@@ -1,0 +1,27 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+
+# Java — Spring Boot convention 4 space
+[*.java]
+indent_size = 4
+
+# TS/JS/JSON — Next.js convention  2 space
+[{*.ts,*.tsx,*.js,*.jsx,*.json}]
+indent_size = 2
+
+# YAML config (application.yml, docker-compose...)
+[*.{yml,yaml}]
+indent_size = 2
+
+# Gradle Kotlin DSL
+[*.kts]
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false
