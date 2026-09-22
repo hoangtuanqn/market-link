@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+.gradle
+build
+target
+*.log
+.env
