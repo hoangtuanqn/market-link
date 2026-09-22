@@ -1,0 +1,114 @@
+# ---------------------------------------------------------------------
+# Hệ điều hành (khác nhau giữa Windows/macOS/Linux -> luôn phải ignore)
+# ---------------------------------------------------------------------
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ---------------------------------------------------------------------
+# VS Code
+# Chỉ ignore phần cấu hình mang tính cá nhân/máy cục bộ.
+# Các file cấu hình dùng chung cho cả team (settings/extensions/launch/tasks)
+# nên được commit để mọi máy có setup giống nhau, tránh xung đột.
+# ---------------------------------------------------------------------
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+.history/
+*.code-workspace
+
+# ---------------------------------------------------------------------
+# IDE khác (nếu có thành viên dùng IntelliJ / Eclipse / NetBeans)
+# ---------------------------------------------------------------------
+.idea/
+*.iml
+*.iws
+*.ipr
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+
+# ---------------------------------------------------------------------
+# Biến môi trường & secrets — không bao giờ commit
+# ---------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.jks
+application-local.yml
+application-local.yaml
+application-local.properties
+
+# ---------------------------------------------------------------------
+# Log files
+# ---------------------------------------------------------------------
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ---------------------------------------------------------------------
+# Backend (Java / Spring Boot / Maven / Gradle)
+# Phòng trường hợp build được chạy ngay tại root hoặc IDE tạo output ở root.
+# ---------------------------------------------------------------------
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+*.class
+*.jar
+!**/.mvn/wrapper/maven-wrapper.jar
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# ---------------------------------------------------------------------
+# Frontend (Node.js / Next.js)
+# ---------------------------------------------------------------------
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+.vercel
+
+# ---------------------------------------------------------------------
+# Khác
+# ---------------------------------------------------------------------
+*.tmp
+*.bak
+*.swp
+*.orig
