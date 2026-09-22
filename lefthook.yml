@@ -1,0 +1,13 @@
+pre-commit:
+  parallel: true
+  commands:
+    frontend-format:
+      root: "frontend/"
+      glob: "*.{ts,tsx,js,jsx,json,css}"
+      run: npx prettier --write {staged_files}
+      stage_fixed: true
+    backend-format:
+      root: "backend/"
+      glob: "**/*.java"
+      run: ./mvnw -q spotless:apply
+      stage_fixed: true
