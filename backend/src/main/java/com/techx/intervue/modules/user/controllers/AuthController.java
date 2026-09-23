@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.user.controllers;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.helpers.CookieHelper;
 import com.techx.intervue.modules.helpers.IpHelper;
 import com.techx.intervue.modules.user.requests.RegisterRequest;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @AllArgsConstructor
-public class AuthController {
+public class AuthController extends BaseController {
 
     private final UserService userService;
     private final AuthConfig authConfig;
