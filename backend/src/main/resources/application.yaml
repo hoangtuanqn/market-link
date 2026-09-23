@@ -8,3 +8,8 @@ spring:
     password: ${MYSQL_PASSWORD:changename}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+jwt:
+  secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
+  expiration: 900000
+  issuer: InterVue
+  refresh-token-ttl-days: 14
