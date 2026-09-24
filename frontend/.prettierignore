@@ -1,7 +1,3 @@
 node_modules
-.next
-out
-build
-next-env.d.ts
-packages/api-client/src/generated
+dist
 *.min.js

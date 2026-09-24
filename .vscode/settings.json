@@ -28,8 +28,8 @@
   "java.format.settings.url": "config/eclipse-java-formatter.xml",
   "java.format.settings.profile": "GoogleStyle",
 
-  "prettier.configPath": "apps/frontend/.prettierrc",
-  "prettier.ignorePath": "apps/frontend/.prettierignore",
+  "prettier.configPath": "frontend/.prettierrc",
+  "prettier.ignorePath": "frontend/.prettierignore",
 
   "files.eol": "\n",
   "files.insertFinalNewline": true,

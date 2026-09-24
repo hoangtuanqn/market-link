@@ -95,15 +95,13 @@ build/
 !**/gradle/wrapper/gradle-wrapper.jar
 
 # ---------------------------------------------------------------------
-# Frontend (Node.js / Next.js)
+# Frontend (Node.js / Vite)
 # ---------------------------------------------------------------------
 node_modules/
-.next/
 out/
 dist/
 coverage/
 *.tsbuildinfo
-.vercel
 
 # ---------------------------------------------------------------------
 # Khác
