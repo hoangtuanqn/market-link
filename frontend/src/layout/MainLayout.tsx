@@ -4,15 +4,17 @@ import AnnouncementBanner from '@/components/AnnouncementBanner';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import { announcement } from '@/data/home';
+import useSession from '@/hooks/useSession';
 
 type MainLayoutProps = {
-  variant?: 'guest' | 'customer';
-  userName?: string;
   cartCount?: number;
   unreadCount?: number;
 };
+const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
+  const { user } = useSession();
+  const variant = user ? 'customer' : 'guest';
+  const userName = user?.fullName || user?.email || '';
 
-const MainLayout = ({ variant, userName, cartCount, unreadCount }: MainLayoutProps) => {
   return (
     <div className="flex min-h-screen flex-col">
       <AnnouncementBanner announcement={announcement} />
