@@ -39,7 +39,7 @@ public class MailService implements MailServiceInterface {
             helper.setText(html, true);
             mailSender.send(message);
         } catch (MessagingException | UnsupportedEncodingException e) {
-            throw new MailSendException("Không tạo được mail gửi tới " + to, e);
+            throw new MailSendException("Could not build the email to " + to, e);
         }
     }
 }

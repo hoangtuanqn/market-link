@@ -5,6 +5,6 @@ import jakarta.validation.constraints.Size;
 
 /** Authorization code mà Google/Facebook trả về redirect_uri của frontend (dùng 1 lần). */
 public record SocialLoginRequest(
-        @NotBlank(message = "Thiếu mã xác thực!")
-                @Size(max = 2048, message = "Mã xác thực không hợp lệ!")
+        @NotBlank(message = "Authorization code is missing.")
+                @Size(max = 2048, message = "Authorization code is not valid.")
                 String code) {}

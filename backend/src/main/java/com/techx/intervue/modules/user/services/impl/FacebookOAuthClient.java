@@ -23,7 +23,7 @@ import org.springframework.web.client.RestClient;
 @Component
 public class FacebookOAuthClient {
 
-    private static final String FAILED = "Đăng nhập Facebook thất bại, vui lòng thử lại!";
+    private static final String FAILED = "Facebook sign-in failed. Please try again.";
 
     private final RestClient restClient;
     private final OAuthProperties.Facebook config;
@@ -37,7 +37,7 @@ public class FacebookOAuthClient {
         if (config == null
                 || !StringUtils.hasText(config.appId())
                 || !StringUtils.hasText(config.appSecret())) {
-            throw new IllegalStateException("Chưa cấu hình app.oauth.facebook");
+            throw new IllegalStateException("app.oauth.facebook is not configured");
         }
         String graph = "https://graph.facebook.com/" + config.graphVersion();
 
@@ -123,7 +123,7 @@ public class FacebookOAuthClient {
             return HexFormat.of()
                     .formatHex(mac.doFinal(accessToken.getBytes(StandardCharsets.UTF_8)));
         } catch (GeneralSecurityException e) {
-            throw new IllegalStateException("Không tạo được appsecret_proof", e);
+            throw new IllegalStateException("Could not create appsecret_proof", e);
         }
     }
 

@@ -66,7 +66,7 @@ public class PasswordResetService implements PasswordResetServiceInterface {
     public void requestReset(String email) {
         String normalized = normalize(email);
         if (isRateLimited(normalized)) {
-            log.info("Quá giới hạn yêu cầu đặt lại mật khẩu, bỏ qua");
+            log.info("Password reset rate limit exceeded, request dropped");
             return;
         }
         jobQueue.enqueue(JOB_SEND_LINK, Map.of("email", normalized));
@@ -114,7 +114,7 @@ public class PasswordResetService implements PasswordResetServiceInterface {
     public void resetPassword(ResetPasswordRequest request) {
         // Kiểm tra trước GETDEL để nhập sai "nhập lại mật khẩu" không làm mất token
         if (!request.newPassword().equals(request.confirmPassword())) {
-            throw new InvalidFieldException("confirmPassword", "Nhập lại mật khẩu không khớp!");
+            throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
         }
 
         String userId =

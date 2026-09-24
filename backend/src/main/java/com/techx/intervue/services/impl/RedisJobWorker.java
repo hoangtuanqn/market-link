@@ -56,7 +56,7 @@ public class RedisJobWorker {
         if (!enabled) return;
         running = true;
         thread = Thread.ofPlatform().name("redis-job-worker").daemon().start(this::loop);
-        log.info("Job worker đã chạy, handler: {}", handlers.keySet());
+        log.info("Job worker started, handlers: {}", handlers.keySet());
     }
 
     @PreDestroy
@@ -72,7 +72,7 @@ public class RedisJobWorker {
                 raw = redis.opsForList().rightPop(RedisJobQueue.QUEUE_KEY, POLL_TIMEOUT);
             } catch (RuntimeException e) {
                 if (!running) return;
-                log.warn("Không đọc được hàng đợi Redis: {}", e.getMessage());
+                log.warn("Could not read the Redis queue: {}", e.getMessage());
                 sleep(REDIS_DOWN_BACKOFF);
                 continue;
             }
@@ -85,12 +85,12 @@ public class RedisJobWorker {
         try {
             job = objectMapper.readValue(raw, QueueJob.class);
         } catch (Exception e) {
-            log.error("Bỏ job không đọc được: {}", e.getMessage());
+            log.error("Dropped unreadable job: {}", e.getMessage());
             return;
         }
         JobHandler handler = handlers.get(job.type());
         if (handler == null) {
-            log.error("Bỏ job không có handler: {}", job.type());
+            log.error("Dropped job with no handler: {}", job.type());
             return;
         }
         try {
@@ -98,10 +98,14 @@ public class RedisJobWorker {
         } catch (Exception e) {
             int attempts = job.attempts() + 1;
             if (attempts < MAX_ATTEMPTS) {
-                log.warn("Job {} lỗi lần {}, thử lại: {}", job.type(), attempts, e.getMessage());
+                log.warn(
+                        "Job {} failed (attempt {}), retrying: {}",
+                        job.type(),
+                        attempts,
+                        e.getMessage());
                 queue.push(new QueueJob(job.type(), job.payload(), attempts));
             } else {
-                log.error("Job {} lỗi {} lần, bỏ qua", job.type(), attempts, e);
+                log.error("Job {} failed {} times, giving up", job.type(), attempts, e);
             }
         }
     }
