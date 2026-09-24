@@ -1,4 +1,4 @@
-package com.techx.intervue.modules.helpers;
+package com.techx.intervue.helpers;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
