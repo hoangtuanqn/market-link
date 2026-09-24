@@ -33,7 +33,7 @@ public class GoogleOAuthClient {
     private static final String JWKS_URI = "https://www.googleapis.com/oauth2/v3/certs";
     private static final Set<String> ISSUERS =
             Set.of("https://accounts.google.com", "accounts.google.com");
-    private static final String FAILED = "Đăng nhập Google thất bại, vui lòng thử lại!";
+    private static final String FAILED = "Google sign-in failed. Please try again.";
 
     private final RestClient restClient;
     private final OAuthProperties.Google config;
@@ -57,7 +57,7 @@ public class GoogleOAuthClient {
         if (config == null
                 || !StringUtils.hasText(config.clientId())
                 || !StringUtils.hasText(config.clientSecret())) {
-            throw new IllegalStateException("Chưa cấu hình app.oauth.google");
+            throw new IllegalStateException("app.oauth.google is not configured");
         }
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("code", code);
