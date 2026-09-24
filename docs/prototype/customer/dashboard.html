@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer dashboard — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-hand ml-muted"><time data-clock></time></p>
+      <h1 class="pt-title">Hi Khang, 3 pickups this weekend</h1>
+      <p class="pt-lead">One order is still waiting for the stall to confirm. Everything else is on track.</p>
+    </div>
+    <a class="ml-btn ml-btn-primary" href="../public/markets.html">Browse this weekend's markets</a>
+  </div>
+
+  <div class="pt-grid-4">
+    <a class="ml-card pt-tile" href="../customer/orders.html"><b>4 upcoming orders</b><span>1 waiting for approval · 2 accepted · 1 ready</span></a>
+    <a class="ml-card pt-tile" href="../customer/favorites.html"><b>8 favorites</b><span>3 stalls · 4 products · 1 market</span></a>
+    <a class="ml-card pt-tile" href="../customer/notifications.html"><b>2 unread notifications</b><span>An order is ready, and goat yogurt is back</span></a>
+    <a class="ml-card pt-tile" href="../customer/account.html"><b>Account</b><span>Nguyễn Minh Khang · Thảo Điền</span></a>
+  </div>
+
+  <section class="pt-section">
+    <div class="pt-between-c"><h2 class="pt-h2">Next pickups</h2><a href="../customer/orders.html">All my orders</a></div>
+    <div class="pt-grid" id="next"></div>
+  </section>
+
+  <section class="pt-section">
+    <div class="pt-between-c"><h2 class="pt-h2">New this week from your favorite stalls</h2><a href="../customer/favorites.html">Favorites</a></div>
+    <div class="pt-grid-tags" id="fav-products"></div>
+  </section>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="SRS 1.6 · 'Customers … securely access their dashboard': the SRS names a customer dashboard but does not list what is on it. Prototype shows next pickups, counts and favorites; confirm the content.">Customer dashboard content is not specified in the SRS</span></p>
+</main>
+<script>
+  document.getElementById('next').innerHTML = PT.orders.filter(function (o) { return ['ready', 'accepted', 'placed'].indexOf(o.status) >= 0; }).slice(0, 3).map(function (o) { return PT.orderTicket(o, { fluid: true }); }).join('');
+  document.getElementById('fav-products').innerHTML = [4, 1, 5].map(function (id) { return PT.productCard(PT.product(id)); }).join('');
+  PT.boot({ role: 'customer', active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

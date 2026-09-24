@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stall profile — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <p class="pt-small ml-muted"><a href="../public/markets.html">Markets</a> · <a href="../public/market.html">Thảo Điền Weekend Market</a> · Cô Tư Garden</p>
+
+  <section class="ml-card pt-panel pt-col">
+    <div class="pt-between">
+      <div class="pt-row" style="gap:16px;flex-wrap:nowrap;align-items:flex-start">
+        <span class="pt-seller-mono" style="width:64px;height:64px;font-size:32px" aria-hidden="true">C</span>
+        <div class="pt-col-2">
+          <h1 class="pt-title-sm">Cô Tư Garden</h1>
+          <p class="pt-body">Nguyễn Thị Tư · <span id="rating"></span></p>
+          <p class="ml-hand pt-measure">“Water spinach, choy sum and herbs from a 2-hectare plot in Củ Chi. Cut the evening before market day.”</p>
+        </div>
+      </div>
+      <div class="pt-col-2" style="align-items:flex-end">
+        <span class="ml-status ml-status-ready" id="approved"></span>
+        <div class="pt-row-2">
+          <button type="button" class="ml-btn ml-btn-secondary" data-fav data-name="Cô Tư Garden" aria-pressed="false">Save stall</button>
+          <a class="ml-btn ml-btn-primary" href="../customer/messages.html">Message the stall</a>
+        </div>
+      </div>
+    </div>
+    <div class="pt-seller-stats" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+      <div><b>4.6</b><span>32 reviews</span></div>
+      <div><b>112</b><span>orders collected</span></div>
+      <div><b>2</b><span>markets</span></div>
+      <div><b>Aug 2026</b><span>selling here since</span></div>
+    </div>
+  </section>
+
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+
+    <div data-panel="stock" class="pt-col">
+      <div class="pt-between-c">
+        <h2 class="pt-h2">This week's stock</h2>
+        <span class="pt-small ml-muted">Updated <time data-clock></time> · 4 products</span>
+      </div>
+      <div id="day-chips"></div>
+      <div class="pt-grid-tags" id="products"></div>
+    </div>
+
+    <div data-panel="reviews" hidden class="pt-col">
+      <div class="ml-card pt-panel pt-col-3">
+        <div class="pt-ratebig"><b>4.6</b><span id="rating2"></span><span class="pt-small ml-muted">32 reviews, every one from a completed order</span></div>
+        <div class="pt-revtags" id="revtags"></div>
+        <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal from Chợ Tốt · Review tags (Ready on time, Fresh as described…) let a shopper read a stall at a glance. The SRS review is a rating plus a comment, so tags need a new table and a step in the review form.">Review tags are a proposal, not in the SRS</span></p>
+      </div>
+      <div class="pt-between-c">
+        <div class="ml-chips" id="rev-filter"></div>
+        <span class="pt-small ml-muted">Newest first</span>
+      </div>
+      <div class="pt-col" id="reviews"></div>
+      <div id="rev-pager"></div>
+    </div>
+
+    <div data-panel="about" hidden class="pt-col">
+      <div class="pt-split">
+        <div class="pt-col-6">
+          <section class="pt-col-3">
+            <h2 class="pt-h2">Where and when</h2>
+            <div id="markets-table"></div>
+            <p class="pt-small ml-muted">Orders close 12 hours before the slot you choose. After that only the stall can change the order.</p>
+          </section>
+          <section class="pt-col-3">
+            <h2 class="pt-h2">About the stall</h2>
+            <p class="pt-body pt-measure">Cô Tư has farmed the plot in Tân Phú Trung for eleven years and has sold at Thảo Điền since the market opened. Greens are cut the evening before market day and carried in that morning, which is why the bunches are still stiff at seven.</p>
+            <p class="pt-body pt-measure">MarketLink does not check licences or organic claims. If that matters to you, ask at the stall.</p>
+            <dl class="pt-facts">
+              <dt>Contact</dt><dd>Nguyễn Thị Tư · 0912 440 540</dd>
+              <dt>Farm address</dt><dd>Hamlet 3, Tân Phú Trung, Củ Chi</dd>
+              <dt>Approved on</dt><dd>05/08/2026 by MarketLink</dd>
+            </dl>
+          </section>
+        </div>
+        <div class="pt-sticky">
+          <div id="map" class="pt-map pt-map-sm" aria-label="Map of the stall"></div>
+          <div class="ml-card pt-panel-4 pt-col-2">
+            <h3 class="pt-h3">Finding the stall</h3>
+            <p class="pt-small">Stall A12 is on the river side of Thảo Điền market, next to the bread stall. Slots are 30 minutes and hold 5 orders each.</p>
+            <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../public/market.html">Pre-order at this market</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="pt-small"><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" id="report">Report this stall</button> <span class="ml-muted">Repeated no-shows, wrong stall location, or anything that breaks the platform guidelines.</span></p>
+</main>
+<script>
+  var f = PT.farmer(1), m = PT.market(1);
+  document.getElementById('rating').innerHTML = PT.rating(4.6, 32);
+  document.getElementById('rating2').innerHTML = PT.rating(4.6);
+  document.getElementById('approved').innerHTML = PT.icons.check() + '<span class="ml-status-text">Approved stall</span>';
+  document.getElementById('revtags').innerHTML = PT.reviewTags[1].map(function (t) { return '<span class="pt-revtag">' + PT.esc(t[0]) + ' <b>' + t[1] + '</b></span>'; }).join('');
+  document.getElementById('tabs').innerHTML = PT.tabs('Stall sections', [{ id: 'stock', label: "This week's stock", count: 4 }, { id: 'reviews', label: 'Reviews', count: 32 }, { id: 'about', label: 'About the stall' }], 'stock');
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Available on', [{ value: 'fri', label: 'Fri', sub: '25/09', disabled: true }, { value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }], 'sat');
+  document.getElementById('products').innerHTML = [1, 2, 7, 19].map(function (id) { return PT.productCard(PT.product(id), { market: false }); }).join('');
+  document.getElementById('rev-filter').innerHTML = PT.chip('All', { selected: true, radio: 'rf', count: 4 }) + PT.chip('About the stall', { radio: 'rf', count: 2 }) + PT.chip('About products', { radio: 'rf', count: 2 });
+  document.getElementById('reviews').innerHTML = PT.reviews.filter(function (r) { return r.farmer === 1; }).map(function (r) { return PT.reviewCard(r, { fluid: true }); }).join('');
+  document.getElementById('rev-pager').innerHTML = PT.pagination(1, 8);
+
+  document.getElementById('markets-table').innerHTML = PT.table(null, [
+    { key: 'm', label: 'Market', render: function (r) { return '<b>' + PT.esc(r.m) + '</b><span class="sub">' + PT.esc(r.a) + '</span>'; } },
+    { key: 'd', label: 'Days' },
+    { key: 'w', label: 'Pickup window' },
+    { key: 's', label: 'Stall' },
+    { key: 'x', label: '', align: 'actions', render: function (r) { return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="' + r.dir + '" target="_blank" rel="noopener">Directions</a>'; } },
+  ], [
+    { m: 'Thảo Điền Weekend Market', a: '12 Quốc Hương, Thảo Điền, Thủ Đức', d: 'Sat, Sun', w: '06:00 – 10:30', s: 'A12', dir: PT.directions(10.8039, 106.7334) },
+    { m: 'Thủ Đức Farmers Market', a: 'Võ Văn Ngân, Bình Thọ, Thủ Đức', d: 'Sun', w: '06:00 – 09:30', s: 'B02', dir: PT.directions(10.8504, 106.7713) },
+  ]);
+
+  document.getElementById('report').addEventListener('click', function () {
+    PT.dialog({ tone: 'danger', title: 'Report Cô Tư Garden?', body: '<p>An admin reads the report. A stall that keeps breaking the guidelines can be suspended, which hides its products and stops new orders. Orders already placed still run.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">What happened?</label><select id="why" class="ml-input"><option>The stall was not there at my pickup time</option><option>The stall location on the map is wrong</option><option>What I collected was not what was listed</option><option>Something else</option></select></div>', keep: 'Cancel', confirm: 'Send report', toast: 'Report sent. An admin will look into it.' });
+  });
+
+  var map = null;
+  function drawMap() { if (map) return; map = PT.map('map', { center: [f.lat, f.lng], zoom: 17, scroll: false, markers: [{ lat: m.lat, lng: m.lng, kind: 'market', label: m.name }, { lat: f.lat, lng: f.lng, kind: 'stall', label: f.stall, selected: true, popup: PT.popup(f.stall, ['Stall A12 · pickup 06:00 – 10:30'], f.lat, f.lng), open: true }] }); }
+  document.body.addEventListener('click', function (e) { if (e.target.closest('[data-tab="about"]')) setTimeout(drawMap, 20); });
+  PT.boot({ active: 'markets' });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

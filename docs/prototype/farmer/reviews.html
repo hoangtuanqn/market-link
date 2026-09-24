@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reviews and replies — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Reviews</h1>
+      <p class="pt-body">What customers said after collecting their orders. A short reply goes a long way, especially on a low rating.</p>
+    </div>
+    <div class="pt-col-2" style="align-items:flex-end"><span id="rating"></span><span class="pt-small ml-muted">Stall 4.6 · products 4.8 · 32 reviews</span></div>
+  </div>
+  <div class="ml-chips" id="chips"></div>
+  <div class="pt-col" id="list"></div>
+  <p class="pt-caption ml-muted">Reviews cannot be removed by the stall. If one breaks the guidelines, report it and the admin decides (FR-074).</p>
+</main>
+<script>
+  document.getElementById('rating').innerHTML = PT.rating(4.6, 32);
+  document.getElementById('chips').innerHTML = PT.chip('All', { selected: true, radio: 'f', count: 4 }) + PT.chip('Needs a reply', { radio: 'f', count: 2 }) + PT.chip('Replied', { radio: 'f', count: 2 }) + PT.chip('About the stall', { radio: 'f' }) + PT.chip('About products', { radio: 'f' });
+  var mine = PT.reviews.filter(function (r) { return r.farmer === 1; });
+  document.getElementById('list').innerHTML = mine.map(function (r, i) {
+    if (r.reply) return PT.reviewCard(r, { fluid: true, actions: '<button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" data-toast="Reply editing is open.">Edit reply</button>' });
+    if (i === 1) return PT.reviewCard(r, { fluid: true }).replace('</article>', '<form class="pt-col-2" style="margin-top:8px"><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="reply' + r.id + '">Your reply, shown under the review</label><textarea id="reply' + r.id + '" class="ml-input" style="min-height:72px" placeholder="Thank you for coming by, Lan Hương. We will pack the choy sum last so it stays fresh until 9."></textarea></div><div class="pt-row-2"><button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Reply posted under Lan Hương\'s review.">Post reply</button><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm">Report review</button></div></form></article>');
+    return PT.reviewCard(r, { fluid: true, actions: '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Reply box opened.">Reply</button><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm">Report review</button>' });
+  }).join('');
+  PT.boot({ role: 'farmer', active: 'reviews', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

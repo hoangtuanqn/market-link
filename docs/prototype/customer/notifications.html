@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notifications — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main pt-main-narrow pt-notes-page">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Notifications</h1>
+      <p class="pt-body">Order accepted, declined or ready, a favorite back in stock, and announcements from MarketLink.</p>
+    </div>
+    <div class="ml-chips"><button type="button" class="ml-chip" aria-pressed="true" data-chip data-chip-group="nf">All</button><button type="button" class="ml-chip" aria-pressed="false" data-chip data-chip-group="nf">Unread<span class="ml-chip-count">2</span></button></div>
+  </div>
+  <div id="notes"></div>
+  <p class="pt-caption ml-muted">In-app only for now (D-11). Email for confirmations and ready-for-pickup is a later addition (FR-043, NICE).</p>
+</main>
+<script>
+  document.getElementById('notes').innerHTML = PT.notes(PT.notifications, { fluid: true });
+  PT.boot({ role: 'customer', active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

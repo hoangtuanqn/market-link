@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product categories — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted">Settings</p>
+      <h1 class="pt-title">Product categories</h1>
+      <p class="pt-body pt-measure">The list Farmers choose from when they add a product, and the filter customers see. Removing a category needs its products moved first.</p>
+    </div>
+    <div class="pt-row-2"><a class="ml-btn ml-btn-secondary" href="../admin/announcements.html">Announcements</a><a class="ml-btn ml-btn-secondary" href="../admin/feedback.html">Feedback inbox</a></div>
+  </div>
+  <div class="pt-split">
+    <div id="table"></div>
+    <form class="ml-card pt-panel pt-col" novalidate>
+      <h2 class="pt-h3">Add a category</h2>
+      <div class="ml-field"><label class="ml-field-label" for="n">Name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="n" class="ml-input" placeholder="e.g. Seafood"><span class="ml-field-hint">In English, sentence case. Shown in handwriting on product tags without a photo.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="o">Position in the filter</label><input id="o" class="ml-input" type="number" value="9"></div>
+      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Category added. Farmers can pick it now.">Add category</button></div>
+    </form>
+  </div>
+</main>
+<script>
+  document.getElementById('table').innerHTML = PT.table('8 categories', [
+    { key: 'name', label: 'Category', render: function (c) { return '<input class="ml-input" value="' + PT.esc(c.name) + '" style="min-height:36px" aria-label="Name of ' + PT.esc(c.name) + '">'; } },
+    { key: 'count', label: 'Products', align: 'num' },
+    { key: 'f', label: 'Stalls', align: 'num', render: function (c) { return PT.farmers.filter(function (f) { return PT.products.some(function (p) { return p.farmer === f.id && p.cat === c.id; }); }).length; } },
+    { key: 'a', label: '', align: 'actions', render: function (c) { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="' + PT.esc(c.name) + ' saved.">Save</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-rm="' + PT.esc(c.name) + '" data-n="' + c.count + '">Remove</button>'; } },
+  ], PT.categories);
+  document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-rm]'); if (!b) return; var n = +b.getAttribute('data-n'); PT.dialog({ tone: 'danger', title: 'Remove ' + b.getAttribute('data-rm') + '?', body: n ? '<p>' + n + ' products use it. Choose where they go.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="to">Move products to</label><select id="to" class="ml-input">' + PT.categories.map(function (c) { return '<option>' + c.name + '</option>'; }).join('') + '</select></div>' : '<p>No products use it.</p>', keep: 'Keep category', confirm: 'Remove category', toast: b.getAttribute('data-rm') + ' removed.' }); });
+  PT.boot({ role: 'admin', active: 'settings', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

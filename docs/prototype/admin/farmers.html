@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farmer approvals — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Farmers</h1>
+      <p class="pt-body pt-measure">Approve a registration before the stall can list products. Suspend a stall to hide its products and stop new orders; its running orders finish as normal (D-09).</p>
+    </div>
+    <form class="ml-search" role="search" style="max-width:420px"><label class="ml-sr" for="q">Search Farmers</label><input id="q" type="search" placeholder="Stall, contact person, phone"><button type="submit" class="ml-btn ml-btn-primary">Search</button></form>
+  </div>
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+    <div id="panels"></div>
+  </div>
+  <section class="pt-section">
+    <h2 class="pt-h3">Other states (FR-084)</h2>
+    <div class="pt-row" style="align-items:flex-start">
+      <div class="ml-state ml-state-empty"><h3 class="ml-state-title">No registrations waiting</h3><p class="ml-state-text">New Farmer sign-ups appear here the moment they register.</p></div>
+      <div class="ml-state ml-state-error" role="alert"><h3 class="ml-state-title">Couldn't load Farmers</h3><p class="ml-state-text">Check your connection and try again.</p><button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button></div>
+    </div>
+  </section>
+</main>
+<script>
+  var S = [['pending', 'Waiting for approval'], ['approved', 'Approved'], ['suspended', 'Suspended'], ['rejected', 'Rejected']];
+  var by = function (s) { return PT.farmers.filter(function (f) { return f.approval === s; }); };
+  document.getElementById('tabs').innerHTML = PT.tabs('Farmers by status', S.map(function (s) { return { id: s[0], label: s[1], count: by(s[0]).length }; }), 'pending');
+  var cols = [
+    { key: 'stall', label: 'Stall', render: function (f) { return '<a href="../admin/farmer.html"><b>' + PT.esc(f.stall) + '</b></a><span class="sub">' + PT.esc(f.person) + ' · ' + f.phone + '</span>'; } },
+    { key: 'm', label: 'Markets', render: function (f) { return f.markets.map(function (id) { return PT.esc(PT.market(id).name); }).join('<br>'); } },
+    { key: 'r', label: 'Registered', render: function (f) { return f.registered; } },
+    { key: 'p', label: 'Products', align: 'num', render: function (f) { return PT.products.filter(function (p) { return p.farmer === f.id; }).length; } },
+    { key: 'rt', label: 'Rating', align: 'num', render: function (f) { return f.rating != null ? f.rating.toFixed(1) + ' <span class="sub">' + f.reviews + ' reviews</span>' : '—'; } },
+    { key: 'a', label: '', align: 'actions', render: function (f) { if (f.approval === 'pending') return '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-approve="' + PT.esc(f.stall) + '">Approve</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-reject="' + PT.esc(f.stall) + '">Reject</button>'; if (f.approval === 'approved') return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmer.html">View</a><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-suspend="' + PT.esc(f.stall) + '">Suspend</button>'; if (f.approval === 'suspended') return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmer.html">View</a><button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="' + PT.esc(f.stall) + ' reinstated. Products are visible again.">Reinstate</button>'; return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/farmer.html">View</a>'; } },
+  ];
+  document.getElementById('panels').innerHTML = S.map(function (s, i) { var rows = by(s[0]).map(function (f) { return Object.assign({ _new: s[0] === 'pending' && f.registered === '23/09/2026' }, f); }); return '<div data-panel="' + s[0] + '"' + (i ? ' hidden' : '') + '>' + (rows.length ? PT.table(null, cols, rows) : PT.state('empty', 'No rejected registrations', 'Rejected Farmers keep their account and can be told why.')) + '</div>'; }).join('');
+  document.body.addEventListener('click', function (e) {
+    var t;
+    if ((t = e.target.closest('[data-approve]'))) PT.dialog({ title: 'Approve ' + t.getAttribute('data-approve') + '?', body: '<p>The stall becomes visible to customers and can list products right away. The Farmer is notified.</p>', keep: 'Not yet', confirm: 'Approve stall', toast: t.getAttribute('data-approve') + ' approved.' });
+    if ((t = e.target.closest('[data-reject]'))) PT.dialog({ tone: 'danger', title: 'Reject ' + t.getAttribute('data-reject') + '?', body: '<p>The Farmer keeps their sign-in but cannot list products.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason the Farmer will see</label><textarea id="why" class="ml-input" style="min-height:72px" placeholder="e.g. We could not reach the contact number."></textarea></div>', keep: 'Keep waiting', confirm: 'Reject registration', toast: t.getAttribute('data-reject') + ' rejected.' });
+    if ((t = e.target.closest('[data-suspend]'))) PT.dialog({ tone: 'danger', title: 'Suspend ' + t.getAttribute('data-suspend') + '?', body: '<p>All products are hidden and no new orders are accepted. Orders already placed continue so customers do not lose what they reserved (D-09).</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why2">Reason the Farmer will see</label><textarea id="why2" class="ml-input" style="min-height:72px"></textarea></div>', keep: 'Keep active', confirm: 'Suspend stall', toast: t.getAttribute('data-suspend') + ' suspended.' });
+  });
+  PT.boot({ role: 'admin', active: 'farmers', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

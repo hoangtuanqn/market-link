@@ -169,12 +169,18 @@ curl http://localhost:8080/ping
 Optionally, test the register API:
 
 ```bash
-curl -i -X POST http://localhost:8080/api/v1/auth/register \
+curl -i -X POST http://localhost:8080/api/v1/auth/register/customer \
   -H "Content-Type: application/json" \
-  -d '{"name":"Test User","email":"test@example.com","phone":"0912345678","password":"123456","confirmPassword":"123456"}'
+  -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","address":"12 Le Loi, Q1","password":"123456","confirmPassword":"123456"}'
 ```
 
-A successful response returns an `accessToken` and the user in the body, plus a refresh token in the `Set-Cookie` header.
+A successful response (`201`) returns an `accessToken` and the user in the body, plus a refresh token in the `Set-Cookie` header.
+
+#### API docs (Swagger UI)
+
+While the backend is running, open **http://localhost:8080/swagger-ui.html** to browse and try every endpoint
+(raw OpenAPI JSON: `/v3/api-docs`). For endpoints that need login, click **Authorize** and paste the
+`accessToken` (without the `Bearer ` prefix). Swagger is disabled in the `prod` profile unless `SWAGGER_ENABLED=true`.
 
 #### Running from an IDE
 

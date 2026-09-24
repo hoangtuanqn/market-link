@@ -50,6 +50,12 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/uploads/**")
                                         .permitAll()
+                                        // Swagger UI + OpenAPI JSON (tắt ở prod qua springdoc.*)
+                                        .requestMatchers(
+                                                "/swagger-ui.html",
+                                                "/swagger-ui/**",
+                                                "/v3/api-docs/**")
+                                        .permitAll()
                                         // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()

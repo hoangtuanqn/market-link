@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markets — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Markets</h1>
+      <p class="pt-body pt-measure">Name, address, operating days, hours and map coordinates for each market. Removing a market hides it from customers; its history stays.</p>
+    </div>
+    <a class="ml-btn ml-btn-primary" href="../admin/market-form.html">Add market</a>
+  </div>
+  <div class="pt-split">
+    <div class="pt-col-3">
+      <div id="table"></div>
+      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-073 · Market holidays or one-off closures (like Thảo Điền on 04/10) are handled today by an announcement. A closure date on the market itself is marked (proposal) in the feature catalog.">One-off market closures are not modelled, only announced</span></p>
+    </div>
+    <div class="pt-sticky"><div id="map" class="pt-map" aria-label="Map of markets"></div></div>
+  </div>
+</main>
+<script>
+  document.getElementById('table').innerHTML = PT.table('4 active markets', [
+    { key: 'name', label: 'Market', render: function (m) { return '<a href="../admin/market-form.html"><b>' + PT.esc(m.name) + '</b></a><span class="sub">' + PT.esc(m.address) + '</span>'; } },
+    { key: 'd', label: 'Days · hours', render: function (m) { return PT.dayNames(m.days) + '<span class="sub">' + m.open + '–' + m.close + '</span>'; } },
+    { key: 'c', label: 'Coordinates', render: function (m) { return '<span class="pt-num">' + m.lat.toFixed(4) + ', ' + m.lng.toFixed(4) + '</span>'; } },
+    { key: 's', label: 'Stalls', align: 'num', render: function (m) { return m.stalls; } },
+    { key: 'a', label: '', align: 'actions', render: function (m) { return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/market-form.html">Edit</a><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-rm="' + PT.esc(m.name) + '" data-n="' + m.stalls + '">Remove</button>'; } },
+  ], PT.markets);
+  PT.map('map', { markers: PT.markets.map(function (m) { return { lat: m.lat, lng: m.lng, kind: 'market', label: m.name, popup: PT.popup(m.name, [m.stalls + ' stalls'], m.lat, m.lng, '../admin/market-form.html') }; }) });
+  document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-rm]'); if (!b) return; PT.dialog({ tone: 'danger', title: 'Remove ' + b.getAttribute('data-rm') + '?', body: '<p>' + b.getAttribute('data-n') + ' stalls sell here. The market disappears from customer pages and the stalls are told. Orders already placed for it continue.</p>', keep: 'Keep market', confirm: 'Remove market', toast: b.getAttribute('data-rm') + ' removed from the list.' }); });
+  PT.boot({ role: 'admin', active: 'markets', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

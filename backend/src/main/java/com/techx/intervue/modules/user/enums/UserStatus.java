@@ -5,10 +5,10 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-public enum RoleType {
-    CUSTOMER,
-    FARMER,
-    ADMIN;
+public enum UserStatus {
+    ACTIVE,
+    INACTIVE,
+    SUSPENDED;
 
     @JsonValue
     public String value() {
@@ -16,9 +16,9 @@ public enum RoleType {
     }
 
     @Converter(autoApply = true)
-    public static class DbConverter extends LowercaseEnumConverter<RoleType> {
+    public static class DbConverter extends LowercaseEnumConverter<UserStatus> {
         public DbConverter() {
-            super(RoleType.class);
+            super(UserStatus.class);
         }
     }
 }
