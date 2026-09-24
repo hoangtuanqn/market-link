@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "vscjava.vscode-java-pack",
+    "redhat.java",
+    "vmware.vscode-spring-boot",
+    "vscjava.vscode-spring-boot-dashboard",
+    "ms-azuretools.vscode-containers",
+    "editorconfig.editorconfig",
+    "redhat.vscode-yaml"
+  ]
+}

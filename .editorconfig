@@ -11,7 +11,7 @@ indent_style = space
 [*.java]
 indent_size = 4
 
-# TS/JS/JSON — Next.js convention  2 space
+# TS/JS/JSON — 2 space
 [{*.ts,*.tsx,*.js,*.jsx,*.json}]
 indent_size = 2
 
