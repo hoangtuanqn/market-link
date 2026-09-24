@@ -1,3 +1,10 @@
+# ---------------------------------------------------------------------
+# docker compose up -d   -> CHỈ mysql + redis (chạy BE/FE trên máy, xem README)
+# make up                -> full stack: + backend (Spring Boot) + frontend (Vite)
+#                           = docker compose --profile app up -d --build
+# make tools             -> thêm Adminer (DB UI) + RedisInsight
+# make prod              -> build & chạy image production (docker-compose.prod.yml)
+# ---------------------------------------------------------------------
 services:
   mysql:
     image: mysql:8.4
@@ -6,10 +13,16 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-intervue_db}
-      MYSQL_USER: ${MYSQL_USER:-intervue_user}
+      MYSQL_USER: ${MYSQL_USER:-intervue}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-intervue_pass}
+      TZ: ${TZ:-Asia/Ho_Chi_Minh}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      # Giữ time_zone của session MySQL là UTC cho khớp serverTimezone=UTC trong JDBC URL
+      - --default-time-zone=+00:00
     ports:
-      - "3306:3306"
+      - "${MYSQL_PORT:-3306}:3306"
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
@@ -23,7 +36,7 @@ services:
     container_name: intervue-redis
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
@@ -33,6 +46,81 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/backend.Dockerfile
+      target: dev
+    image: market-link-backend:dev
+    container_name: intervue-backend
+    profiles: ["app"]
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-intervue_db}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-intervue_db}
+      MYSQL_USER: ${MYSQL_USER:-intervue}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-intervue_pass}
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      TZ: ${TZ:-Asia/Ho_Chi_Minh}
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+      - "${BACKEND_DEBUG_PORT:-5005}:5005" # remote debug (IntelliJ / VS Code attach)
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/pom.xml:/app/pom.xml
+      - m2-cache:/root/.m2
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend.Dockerfile
+      target: dev
+    image: market-link-frontend:dev
+    container_name: intervue-frontend
+    profiles: ["app"]
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # giữ node_modules (có prettier/eslint plugin) của image, không bị host đè
+    depends_on:
+      - backend
+
+  # ----- công cụ quản trị (chỉ chạy với --profile tools) -----
+  adminer:
+    image: adminer:latest
+    container_name: intervue-adminer
+    profiles: ["tools"]
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+    ports:
+      - "${ADMINER_PORT:-8081}:8080"
+    depends_on:
+      - mysql
+
+  redisinsight:
+    image: redis/redisinsight:latest
+    container_name: intervue-redisinsight
+    profiles: ["tools"]
+    ports:
+      - "${REDISINSIGHT_PORT:-5540}:5540"
+    volumes:
+      - redisinsight-data:/data
+    depends_on:
+      - redis
+
 volumes:
   mysql-data:
   redis-data:
+  m2-cache:
+  redisinsight-data:

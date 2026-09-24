@@ -21,9 +21,12 @@ Install the following tools and verify each one with its check command:
 ### Step 1 — Clone the repository
 
 ```bash
-git clone https://github.com/techx-team-project/intervue.git
-cd intervue
+git clone https://github.com/hoangtuanqn/market-link.git
+cd market-link
+git switch dev      # work on dev; main is production
 ```
+
+> Branches, environments (dev / production), commit and PR rules: see **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
 ### Step 2 — Install Git hooks
 
@@ -207,6 +210,36 @@ docker compose up -d                                                  # project 
 cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local  # terminal 1
 cd frontend && npm run dev                                            # terminal 2
 ```
+
+## 3b. Alternative — Run Everything in Docker
+
+Use this if you do not want to install JDK 25 or Node.js. Only Docker Desktop and `make` are needed
+(on Windows, run `make` from WSL or Git Bash).
+
+```bash
+make init   # first time only: create .env, install git hooks
+make up     # mysql + redis + backend (:8080) + frontend (:3000)
+make help   # list every command
+```
+
+- Backend and frontend are in the Compose profile `app`, so plain `docker compose up -d` (Step 4)
+  still starts **only** MySQL and Redis and does not clash with a backend/frontend run on your machine.
+  Do not use both ways at the same time — they use the same ports 8080 and 3000.
+- Source code is mounted into the containers: the frontend hot-reloads; after editing Java run `make be-restart`.
+- The backend container uses the `dev` profile (`application-dev.yaml`, values match `.env.example`),
+  so `application-local.yml` is not needed here.
+- Remote debug the backend by attaching to port `5005` (VS Code config *Attach backend (Docker :5005)*).
+
+| Command | What it does |
+|---|---|
+| `make infra` | Only MySQL + Redis (same as `docker compose up -d`) |
+| `make tools` | Adminer at http://localhost:8081, RedisInsight at http://localhost:5540 |
+| `make logs s=backend` | Follow the logs of one service |
+| `make be-test` | Run backend tests in the container |
+| `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
+| `make mysql` / `make redis` | Open a MySQL / Redis shell |
+| `make prod-init` / `make prod` | Create `.env.production` from the template / build and run production (separate containers and data) |
+| `make down` / `make clean` | Stop the stack / stop and **delete** DB + Redis data |
 
 ## 4. Useful Commands
 
