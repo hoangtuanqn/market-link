@@ -1,10 +1,11 @@
 package com.techx.intervue.modules.user.services.interfaces;
 
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
+import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 
 public interface UserServiceInterface {
-    // AuthResult authenticate(LoginRequest request);
+    AuthResult authenticate(LoginRequest request);
 
     AuthResult registerCustomer(CustomerRegisterRequest request);
 
