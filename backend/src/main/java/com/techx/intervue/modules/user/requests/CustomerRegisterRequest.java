@@ -7,23 +7,23 @@ import jakarta.validation.constraints.Size;
 
 /** FR-001: khách hàng đăng ký phải có họ tên, số điện thoại, email và địa chỉ. */
 public record CustomerRegisterRequest(
-        @NotBlank(message = "Vui lòng nhập họ tên!")
-                @Size(max = 100, message = "Họ tên tối đa 100 ký tự!")
+        @NotBlank(message = "Enter your full name.")
+                @Size(max = 100, message = "Full name can be at most 100 characters.")
                 String fullName,
-        @NotBlank(message = "Vui lòng nhập số điện thoại!")
+        @NotBlank(message = "Enter your phone number.")
                 @Pattern(regexp = RegisterRules.PHONE_REGEX, message = RegisterRules.PHONE_MESSAGE)
                 String phone,
-        @NotBlank(message = "Vui lòng nhập email!")
-                @Email(message = "Email không hợp lệ!")
-                @Size(max = 100, message = "Email tối đa 100 ký tự!")
+        @NotBlank(message = "Enter your email.")
+                @Email(message = "Enter a valid email address.")
+                @Size(max = 100, message = "Email can be at most 100 characters.")
                 String email,
-        @NotBlank(message = "Vui lòng nhập địa chỉ!")
-                @Size(max = 255, message = "Địa chỉ tối đa 255 ký tự!")
+        @NotBlank(message = "Enter your address.")
+                @Size(max = 255, message = "Address can be at most 255 characters.")
                 String address,
-        @NotBlank(message = "Vui lòng nhập mật khẩu!")
+        @NotBlank(message = "Enter your password.")
                 @Size(
                         min = RegisterRules.PASSWORD_MIN,
                         max = RegisterRules.PASSWORD_MAX,
                         message = RegisterRules.PASSWORD_MESSAGE)
                 String password,
-        @NotBlank(message = "Vui lòng nhập lại mật khẩu!") String confirmPassword) {}
+        @NotBlank(message = "Confirm your password.") String confirmPassword) {}
