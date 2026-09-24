@@ -25,6 +25,12 @@ class Helper {
     return fallback;
   }
 
+  /** Mã lỗi backend (error.code), vd INVALID_RESET_TOKEN; không có response thì undefined. */
+  static getErrorCode(error: unknown): string | undefined {
+    if (!(error instanceof AxiosError)) return undefined;
+    return (error.response?.data as Partial<ApiResponse<unknown>> | undefined)?.error?.code;
+  }
+
   /** Lỗi theo từng field (error.details của backend) → { email: '...', password: '...' }. */
   static getFieldErrors(error: unknown): Record<string, string> {
     if (!(error instanceof AxiosError)) return {};
