@@ -53,6 +53,9 @@ public class SecurityConfig {
                                         // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
+                                        // Chatbot FR-090…092: khách vãng lai cũng hỏi được
+                                        .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
+                                        .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .sessionManagement(
