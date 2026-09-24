@@ -8,6 +8,8 @@ import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
 import GoogleCallbackPage from './pages/GoogleCallback';
 import SetPasswordPage from './pages/SetPassword';
+import CustomerDashboardPage from './pages/CustomerDashboard';
+import CustomerAccountPage from './pages/CustomerAccount';
 
 
 const App = () => {
