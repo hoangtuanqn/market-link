@@ -106,6 +106,18 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         return Optional.of(new IssuedResetToken(user.getEmail(), user.getFullName(), rawToken));
     }
 
+    /** Chỉ GET (không GETDEL): link vẫn dùng được cho resetPassword sau khi form hiện ra. */
+    @Override
+    public String verifyToken(String rawToken) {
+        String userId = redis.opsForValue().get(TOKEN_PREFIX + tokenHashUtil.hash(rawToken));
+        if (userId == null) throw new InvalidResetTokenException();
+        return userRepository
+                .findById(Long.valueOf(userId))
+                .filter(u -> u.getStatus() == UserStatus.ACTIVE)
+                .map(User::getEmail)
+                .orElseThrow(InvalidResetTokenException::new);
+    }
+
     /**
      * Bước C + D. GETDEL nên token chỉ dùng được đúng một lần, kể cả khi gửi hai request cùng lúc.
      */

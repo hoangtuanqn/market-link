@@ -14,6 +14,16 @@ export type RegisterInput = {
   confirmPassword: string;
 };
 
+export type ResetPasswordInput = {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
+export type ResetTokenType = {
+  email: string;
+};
+
 export type SocialProvider = 'google' | 'facebook';
 
 /** Same shape for login, register and refresh: the refresh token itself travels in an HttpOnly cookie. */
