@@ -10,6 +10,7 @@ import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
 import com.techx.intervue.modules.user.repositories.SocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
@@ -22,6 +23,7 @@ import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceIn
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.services.impl.BaseService;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
+import com.techx.intervue.services.interfaces.JobQueueInterface;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Locale;
@@ -49,6 +51,7 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final RefreshTokenService refreshTokenService;
     private final BlacklistServiceInterface blacklistService;
     private final AuthConfig authConfig;
+    private final JobQueueInterface jobQueue;
 
     /**
      * FR-006: access token vào blacklist Redis tới lúc hết hạn (JwtAuthFilter chặn theo jti),
@@ -282,6 +285,38 @@ public class UserService extends BaseService implements UserServiceInterface {
                 .createdAt(user.getCreatedAt())
                 .hasPassword(user.getPasswordHash() != null)
                 .build();
+    }
+
+    /**
+     * Đổi mật khẩu: cần đúng mật khẩu hiện tại. Sai thì 400 ở field currentPassword (không dùng 401
+     * vì FE coi 401 là hết phiên và tự refresh). Đổi xong đăng xuất mọi thiết bị: thu hồi mọi
+     * refresh token, xoá session Redis (JwtAuthFilter từ chối mọi access token còn hạn), gửi mail
+     * thông báo.
+     */
+    @Override
+    @Transactional
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        if (!request.newPassword().equals(request.confirmPassword())) {
+            throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
+        }
+        User user = findActiveUser(userId);
+        if (user.getPasswordHash() == null) {
+            throw new InvalidFieldException(
+                    "currentPassword", "Your account has no password yet. Set one first.");
+        }
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
+            throw new InvalidFieldException("currentPassword", "Current password is incorrect.");
+        }
+        if (passwordEncoder.matches(request.newPassword(), user.getPasswordHash())) {
+            throw new InvalidFieldException(
+                    "newPassword", "Use a password different from the current one.");
+        }
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+
+        refreshTokenService.revokeAllTokens(userId);
+        userSessionCache.evict(userId);
+        jobQueue.enqueue(PasswordResetService.JOB_NOTIFY_CHANGED, Map.of("email", user.getEmail()));
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.user.services.interfaces;
 
+import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
@@ -21,6 +22,9 @@ public interface UserServiceInterface {
 
     /** Đặt mật khẩu lần đầu cho tài khoản chưa có mật khẩu (tạo qua Google/Facebook). */
     void setPassword(Long userId, SetPasswordRequest request);
+
+    /** Đổi mật khẩu (cần mật khẩu hiện tại), rồi đăng xuất mọi thiết bị. */
+    void changePassword(Long userId, ChangePasswordRequest request);
 
     /** Thông tin của chính user đang đăng nhập (GET /auth/me). */
     UserResource getProfile(Long userId);
