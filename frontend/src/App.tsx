@@ -19,6 +19,7 @@ import CustomerNotificationsPage from './pages/CustomerNotifications';
 import CustomerOrderEditPage from './pages/CustomerOrderEdit';
 import CustomerOrderPlacedPage from './pages/CustomerOrderPlaced';
 import CustomerReviewPage from './pages/CustomerReview';
+import CustomerBecomeFarmerPage from './pages/CustomerBecomeFarmer';
 
 const App = () => {
   return (
@@ -48,6 +49,7 @@ const App = () => {
           <Route path="orders/:code/edit" element={<CustomerOrderEditPage />} />
           <Route path="orders/placed" element={<CustomerOrderPlacedPage />} />
           <Route path="orders/:code/review" element={<CustomerReviewPage />} />
+          <Route path="become-farmer" element={<CustomerBecomeFarmerPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
