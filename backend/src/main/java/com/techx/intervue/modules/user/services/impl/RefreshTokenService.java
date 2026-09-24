@@ -47,8 +47,13 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         return new IssuedToken(token, entity.getId());
     }
 
+    /**
+     * FR-003: đổi refresh token cũ lấy token mới (rotation). Token cũ bị dùng lại → coi như bị đánh
+     * cắp, thu hồi toàn bộ token của user. dontRollbackOn để việc thu hồi đó không bị rollback theo
+     * exception.
+     */
     @Override
-    @Transactional
+    @Transactional(dontRollbackOn = BadCredentialsException.class)
     public RefreshResult rotateToken(String rawToken) {
         RefreshToken existing =
                 repository

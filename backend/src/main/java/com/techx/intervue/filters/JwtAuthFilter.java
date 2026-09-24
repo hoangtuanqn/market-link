@@ -49,6 +49,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     SignatureException.class, "Token không được tạo bởi hệ thống này",
                     UnsupportedJwtException.class, "Loại token không được hỗ trợ");
 
+    /** Refresh chỉ dùng cookie; access token hết hạn gửi kèm không được làm hỏng request này. */
+    private static final String REFRESH_PATH = "/api/v1/auth/refresh";
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return REFRESH_PATH.equals(request.getServletPath());
+    }
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
