@@ -6,11 +6,14 @@ COMPOSE_APP  := docker compose --profile app
 COMPOSE_PROD := docker compose -p market-link-prod --env-file .env.production -f docker-compose.yml -f docker-compose.prod.yml --profile app
 
 .DEFAULT_GOAL := help
-.PHONY: help init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
+.PHONY: help check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
         format lint be-format be-test fe-install mysql redis clean
 
 help: ## Hiện danh sách lệnh
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n",$$1,$$2}'
+
+check-env: ## Kiểm tra môi trường dev / prod không bị trộn (CI cũng chạy)
+	bash scripts/check-env-separation.sh
 
 init: ## Tạo .env, cài lefthook + plugin frontend trên host (cho IDE / git hook)
 	@test -f .env || cp .env.example .env
@@ -49,7 +52,14 @@ prod-init: ## Tạo .env.production từ mẫu (sau đó phải thay mọi giá 
 	@test -f .env.production || cp .env.production.example .env.production
 	@echo "Đã có .env.production — nhớ thay mọi giá trị <...> trước khi chạy make prod"
 
-prod: ## Build & chạy production (cần .env.production)
+prod: ## Build & chạy production — chỉ từ nhánh main hoặc tag (luật H-8)
+	@branch=$$(git symbolic-ref --quiet --short HEAD || true); \
+	tag=$$(git describe --exact-match --tags HEAD 2>/dev/null || true); \
+	if [ "$$branch" != "main" ] && [ -z "$$tag" ] && [ "$(ALLOW_PROD_FROM_BRANCH)" != "1" ]; then \
+		echo "✗ make prod chỉ chạy từ nhánh main hoặc một tag release (đang ở: $${branch:-detached})."; \
+		echo "  git switch main && git pull   — rồi chạy lại make prod"; exit 1; fi
+	@git diff --quiet HEAD -- . ':!docs' || [ "$(ALLOW_PROD_FROM_BRANCH)" = "1" ] || \
+		(echo "✗ Có thay đổi chưa commit — production phải đúng bằng code trên main" && exit 1)
 	@test -f .env.production || (echo "Thiếu .env.production — chạy make prod-init" && exit 1)
 	@! grep -Eq '^[A-Z_]+=<' .env.production || (echo ".env.production còn giá trị mẫu <...>" && exit 1)
 	$(COMPOSE_PROD) up -d --build
