@@ -73,6 +73,7 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 "/api/v1/auth/logout",
                                                 "/api/v1/auth/set-password",
+                                                "/api/v1/auth/change-password",
                                                 "/api/v1/auth/me")
                                         .authenticated()
                                         // 1. Route AUTH - No JWT
