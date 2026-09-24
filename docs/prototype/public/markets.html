@@ -109,7 +109,7 @@
       // All seven weekdays. A day no market anywhere opens on is shown struck through rather than hidden,
       // so the week always reads the same and nobody clicks into an empty result.
       document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.weekdays.map(function (d) {
-        return { value: d.value, label: d.label, disabled: openOn(d.value).length === 0 };
+        return { value: d.value, label: d.label, date: PT.upcoming(d.dow), disabled: openOn(d.value).length === 0 };
       }), f.day);
 
       var onDay = openOn(f.day);

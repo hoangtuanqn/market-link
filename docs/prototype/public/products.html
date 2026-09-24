@@ -83,7 +83,7 @@
     });
   };
   document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.weekdays.map(function (d) {
-    return { value: d.value, label: d.label, disabled: !sellsOn(d.dow) };
+    return { value: d.value, label: d.label, date: PT.upcoming(d.dow), disabled: !sellsOn(d.dow) };
   }), 'sat');
   document.getElementById('cat-chips').innerHTML = PT.categories.map(function (c, i) { return PT.chip(c.name, { count: c.count, selected: i === 0 }); }).join('');
   // Price bands as a dropdown, like Market below it. Amounts go through PT.vnd, counts come from
