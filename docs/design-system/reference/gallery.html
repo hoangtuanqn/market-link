@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MarketLink design system — reference gallery</title>
+<!--
+  Reference only: open this file in a browser (or serve the repo root) to see every component and the three
+  reference screens. It loads the real stylesheets from frontend/src/styles, so it always matches the app.
+  marketlink-reference.js is a non-production React 18 bundle used only by this page. Build real components in
+  frontend/src as TSX; do not import this script into the app.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<style>
+  .gal { max-width: 1280px; margin: 0 auto; padding: 24px 16px 64px; }
+  .gal-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 24px; margin-bottom: 8px; }
+  .gal-top h1 { margin: 0; font-family: var(--font-hand); font-weight: 400; font-size: 40px; }
+  .gal-nav { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 14px; }
+  .gal a { color: var(--brand); }
+  .gal-nav a, .gal-head a { font-weight: 700; }
+  .gal-group { margin: 40px 0 12px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-muted); }
+  .gal-item { margin: 0 0 20px; }
+  .gal-head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; margin-bottom: 6px; }
+  .gal-head h3 { margin: 0; font-size: 17px; }
+  .gal-head span { font-size: 13px; color: var(--ink-muted); }
+  .gal-frame { overflow-x: auto; border: 1.5px dashed var(--line-strong); border-radius: var(--radius-md); background: var(--surface); }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="./marketlink-reference.js"></script>
+</head>
+<body>
+<div class="gal">
+  <div class="gal-top"><h1>MarketLink design system</h1><nav class="gal-nav"><a href="#g-Brand">Brand</a><a href="#g-Actions">Actions</a><a href="#g-Forms">Forms</a><a href="#g-Filters">Filters</a><a href="#g-Catalogue">Catalogue</a><a href="#g-Farmers">Farmers</a><a href="#g-Orders">Orders</a><a href="#g-Dashboard">Dashboard</a><a href="#g-Feedback">Feedback</a><a href="#g-Map">Map</a><a href="#g-Screens">Screens</a></nav></div>
+  <p class="ml-muted" style="margin:0">Rules: <a href="../README.md">docs/design-system/README.md</a> · Tokens: <a href="../tokens.json">tokens.json</a></p>
+<h2 class="gal-group" id="g-Brand">Brand</h2>
+<section class="gal-item" id="c-Logo">
+  <header class="gal-head"><h3>Logo</h3><span>On paper · on board · mark only</span><a href="../components/Logo.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Logo"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Logo')).render(h('div',{className:'ml-row',style:{gap:40}},
+    h(M.Logo,{size:40}),
+    h('div',{className:'ml-board',style:{padding:'14px 20px',borderRadius:10}}, h(M.Logo,{size:40})),
+    h('span',{style:{color:'var(--brand)'}}, h(M.Logo,{size:48,markOnly:true}))));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-SiteFooter">
+  <header class="gal-head"><h3>SiteFooter</h3><span></span><a href="../components/SiteFooter.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-SiteFooter" style="width:1200px"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-SiteFooter')).render(h(M.SiteFooter));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-SiteHeader">
+  <header class="gal-head"><h3>SiteHeader</h3><span>Customer · Farmer · Guest</span><a href="../components/SiteHeader.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-SiteHeader" style="width:1200px"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-SiteHeader')).render(h('div',null,
+    h(M.SiteHeader,{role:'customer',active:'markets',cartCount:3,unread:2,userName:'Khang'}),
+    h('div',{style:{height:16}}),
+    h(M.SiteHeader,{role:'farmer',active:'incoming',unread:5,userName:'Vườn Cô Tư'}),
+    h('div',{style:{height:16}}),
+    h(M.SiteHeader,{role:'guest',active:'products',cartCount:0})));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Actions">Actions</h2>
+<section class="gal-item" id="c-Button">
+  <header class="gal-head"><h3>Button</h3><span></span><a href="../components/Button.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Button"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Button')).render(h('div',{className:'ml-stack'},
+    h('div',{className:'ml-row',style:{padding:0}}, h(M.Button,{variant:'primary'},'Pre-order'), h(M.Button,{variant:'accent'},'See this week\'s stock'), h(M.Button,{variant:'secondary'},'Save market'), h(M.Button,{variant:'ghost'},'Directions'), h(M.Button,{variant:'danger'},'Cancel order'), h(M.Button,{variant:'danger-fill'},'Confirm cancel')),
+    h('div',{className:'ml-row',style:{padding:0}}, h(M.Button,{variant:'primary',size:'sm'},'Add to cart'), h(M.Button,{variant:'secondary',size:'sm'},'Edit order'), h(M.Button,{disabled:true},'Cutoff passed'), h('span',{className:'ml-muted',style:{fontSize:13}},'A locked button always comes with a written reason.'))));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Forms">Forms</h2>
+<section class="gal-item" id="c-Checkbox">
+  <header class="gal-head"><h3>Checkbox</h3><span>Choose the markets you sell at (FR-060)</span><a href="../components/Checkbox.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Checkbox"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Checkbox')).render(h('div',{className:'ml-stack'},
+    h(M.Checkbox,{label:'Thảo Điền Weekend Market',hint:'Fri – Sun · 06:00–11:00',defaultChecked:true}),
+    h(M.Checkbox,{label:'Thủ Đức Farmers Market',hint:'Sat – Sun · 05:30–10:00'}),
+    h(M.Checkbox,{label:'Bà Chiểu Market (not taking new stalls)',disabled:true})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-Field">
+  <header class="gal-head"><h3>Field</h3><span>Default · error · select · textarea</span><a href="../components/Field.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Field"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Field')).render(h('div',{className:'ml-row',style:{alignItems:'flex-start'}},
+    h(M.Field,{label:'Stall name',required:true,placeholder:'e.g. Vườn Cô Tư',hint:'Customers see this name on the map and on orders.'}),
+    h(M.Field,{label:'Phone number',required:true,defaultValue:'09123',error:'Phone number needs 10 digits.'}),
+    h(M.Field,{label:'Feedback type',as:'select'}, h('option',null,'Bug report'),h('option',null,'Suggestion'),h('option',null,'Question')),
+    h(M.Field,{label:'Message',as:'textarea',placeholder:'Which page did you have trouble with?'})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-SearchBar">
+  <header class="gal-head"><h3>SearchBar</h3><span></span><a href="../components/SearchBar.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-SearchBar"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-SearchBar')).render(h('div',{className:'ml-row'}, h(M.SearchBar,{scope:'product'})));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Filters">Filters</h2>
+<section class="gal-item" id="c-Chip">
+  <header class="gal-head"><h3>Chip</h3><span>Category · price · availability (FR-021)</span><a href="../components/Chip.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Chip"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Chip')).render(h('div',{className:'ml-stack'},
+    h('div',{className:'ml-chips'}, h(M.Chip,{selected:true,count:24},'Leafy greens'), h(M.Chip,{count:18},'Fruit'), h(M.Chip,{count:6},'Dairy'), h(M.Chip,{count:9},'Baked goods'), h(M.Chip,{count:4},'Eggs')),
+    h('div',{className:'ml-chips'}, h(M.Chip,null,'Under 30,000 ₫'), h(M.Chip,{selected:true},'In stock'), h(M.Chip,null,'Near me'))));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-DayChips">
+  <header class="gal-head"><h3>DayChips</h3><span></span><a href="../components/DayChips.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-DayChips"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-DayChips')).render(h('div',{className:'ml-stack'}, h(M.DayChips,{legend:'Market day',defaultValue:'sat',days:[{value:'thu',label:'Thu',sub:'24/09',disabled:true},{value:'fri',label:'Fri',sub:'25/09'},{value:'sat',label:'Sat',sub:'26/09'},{value:'sun',label:'Sun',sub:'27/09'}]})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-Tabs">
+  <header class="gal-head"><h3>Tabs</h3><span></span><a href="../components/Tabs.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Tabs"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Tabs')).render(h('div',{className:'ml-stack'}, h(M.Tabs,{label:'Incoming orders',value:'new',tabs:[{id:'new',label:'Awaiting approval',count:7},{id:'acc',label:'Accepted',count:12},{id:'ready',label:'Ready',count:3},{id:'done',label:'Completed'}]})));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Catalogue">Catalogue</h2>
+<section class="gal-item" id="c-PriceTag">
+  <header class="gal-head"><h3>PriceTag</h3><span></span><a href="../components/PriceTag.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-PriceTag"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-PriceTag')).render(h('div',{className:'ml-row',style:{gap:28}}, h(M.PriceTag,{amount:15000,unit:'bunch'}), h(M.PriceTag,{amount:65000,unit:'piece'}), h(M.PriceTag,{amount:35000,unit:'jar',was:42000}), h(M.PriceTag,{amount:120000,unit:'kg',size:'lg'})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-ProductCard">
+  <header class="gal-head"><h3>ProductCard</h3><span>Default · low stock · sold out (restock alert)</span><a href="../components/ProductCard.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-ProductCard"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-ProductCard')).render(h('div',{className:'ml-row',style:{alignItems:'flex-start',gap:20}},
+    h(M.ProductCard,{name:'Củ Chi water spinach',farmer:'Vườn Cô Tư',market:'Thảo Điền Weekend Market',category:'Leafy greens',price:15000,unit:'bunch',stock:12,flag:'Fresh today'}),
+    h(M.ProductCard,{name:'Green-skin pomelo',farmer:'Nhà vườn Út Hiền',market:'Thủ Đức Farmers Market',category:'Fruit',price:65000,unit:'piece',stock:2}),
+    h(M.ProductCard,{name:'Goat yogurt',farmer:'Trại dê Củ Chi',market:'Thủ Đức Farmers Market',category:'Dairy',price:35000,unit:'jar',stock:0,soldOut:true,favorite:true})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-Rating">
+  <header class="gal-head"><h3>Rating</h3><span>Display · RatingInput (FR-050/051)</span><a href="../components/Rating.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Rating"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Rating')).render(h('div',{className:'ml-stack'}, h(M.Rating,{value:4.6,count:32}), h(M.RatingInput,{legend:'Rate Vườn Cô Tư',defaultValue:4})));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Farmers">Farmers</h2>
+<section class="gal-item" id="c-MarketCard">
+  <header class="gal-head"><h3>MarketCard</h3><span>By market day + save preferred market (FR-010, FR-014)</span><a href="../components/MarketCard.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-MarketCard"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-MarketCard')).render(h('div',{className:'ml-row',style:{alignItems:'flex-start'}},
+    h(M.MarketCard,{name:'Thảo Điền Weekend Market',address:'12 Quốc Hương, Thảo Điền Ward, Thủ Đức City',openDays:[5,6,0],hours:'06:00–11:00',stalls:14,distance:'2.4 km',saved:true}),
+    h(M.MarketCard,{name:'Thủ Đức Farmers Market',address:'Võ Văn Ngân, Bình Thọ Ward, Thủ Đức City',openDays:[6,0],hours:'05:30–10:00',stalls:9,distance:'4.1 km'})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-ReviewCard">
+  <header class="gal-head"><h3>ReviewCard</h3><span>With a Farmer reply (FR-052/053)</span><a href="../components/ReviewCard.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-ReviewCard"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-ReviewCard')).render(h('div',{className:'ml-stack'}, h(M.ReviewCard,{author:'Minh Anh',date:'21/09/2026',target:'Củ Chi water spinach',rating:5,text:'Still crisp, and the bunches are bigger than at the market. It was packed and ready at 7 sharp, no waiting.',reply:{by:'Vườn Cô Tư',date:'21/09/2026',text:'Thank you. We will have choy sum next week too, do stop by.'}})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-StallCard">
+  <header class="gal-head"><h3>StallCard</h3><span></span><a href="../components/StallCard.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-StallCard"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-StallCard')).render(h('div',{className:'ml-row'}, h(M.StallCard,{stallName:'Vườn Cô Tư',contactPerson:'Nguyễn Thị Tư',markets:['Thảo Điền Weekend Market','Thủ Đức Farmers Market'],days:'Saturday, Sunday',pickup:'06:00 – 10:30',rating:4.6,reviews:32,distance:'2.4 km'})));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Orders">Orders</h2>
+<section class="gal-item" id="c-CartGroup">
+  <header class="gal-head"><h3>CartGroup</h3><span>One group = one Farmer = one order (D-01)</span><a href="../components/CartGroup.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-CartGroup"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-CartGroup')).render(h('div',{className:'ml-stack'},
+    h(M.Banner,{tone:'info',title:'Your cart will be split into 2 orders at 2 different stalls.'},'Each stall has its own pickup time and cutoff. You pay each stall on pickup.'),
+    h(M.CartGroup,{index:1,of:2,stallName:'Vườn Cô Tư',market:'Thảo Điền Weekend Market',pickup:'Sat 26/09 · 07:00–07:30',onChangeSlot:function(){},items:[{name:'Củ Chi water spinach',qty:2,unit:'bunch',price:15000,max:12},{name:'Green-skin pomelo',qty:1,unit:'piece',price:65000,max:2}]})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-OrderStatus">
+  <header class="gal-head"><h3>OrderStatus</h3><span></span><a href="../components/OrderStatus.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-OrderStatus"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-OrderStatus')).render(h('div',{className:'ml-row'}, ['placed','accepted','ready','completed','declined','cancelled'].map(function(s){return h(M.OrderStatus,{key:s,status:s});})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-OrderTicket">
+  <header class="gal-head"><h3>OrderTicket</h3><span>Before cutoff · completed</span><a href="../components/OrderTicket.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-OrderTicket"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-OrderTicket')).render(h('div',{className:'ml-row',style:{alignItems:'flex-start',gap:20}},
+    h(M.OrderTicket,{code:'#ML-0412',stallName:'Vườn Cô Tư',market:'Thảo Điền Weekend Market',pickupDate:'Sat 26/09/2026',slot:'07:00–07:30',status:'accepted',cutoff:'19:00 25/09',items:[{name:'Củ Chi water spinach',qty:2,price:15000},{name:'Choy sum',qty:1,price:18000},{name:'Green-skin pomelo',qty:1,price:65000}]}),
+    h(M.OrderTicket,{code:'#ML-0398',stallName:'Trại dê Củ Chi',market:'Thủ Đức Farmers Market',pickupDate:'Sun 20/09/2026',slot:'08:00–08:30',status:'completed',cutoff:'20:00 19/09',locked:true,items:[{name:'Goat yogurt',qty:4,price:35000}],onReview:function(){},onReorder:function(){}})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-QtyStepper">
+  <header class="gal-head"><h3>QtyStepper</h3><span>Never exceeds available stock (D-02)</span><a href="../components/QtyStepper.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-QtyStepper"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-QtyStepper')).render(h('div',{className:'ml-row',style:{gap:32,alignItems:'flex-start'}}, h(M.QtyStepper,{defaultValue:2,max:12,unit:'bunch',label:'Water spinach'}), h(M.QtyStepper,{defaultValue:4,max:4,unit:'jar',label:'Goat yogurt'})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-SlotPicker">
+  <header class="gal-head"><h3>SlotPicker</h3><span></span><a href="../components/SlotPicker.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-SlotPicker"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-SlotPicker')).render(h('div',{className:'ml-stack'}, h(M.SlotPicker,{legend:'Pickup time · Saturday 26/09',defaultValue:'0700',slots:[{value:'0600',time:'06:00–06:30',booked:5,max:5},{value:'0630',time:'06:30–07:00',booked:3,max:5},{value:'0700',time:'07:00–07:30',booked:1,max:5},{value:'0730',time:'07:30–08:00',booked:0,max:5}]})));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Dashboard">Dashboard</h2>
+<section class="gal-item" id="c-DataTable">
+  <header class="gal-head"><h3>DataTable</h3><span>Farmer incoming orders + pagination</span><a href="../components/DataTable.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-DataTable" style="width:1000px"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-DataTable')).render(h('div',{className:'ml-stack'}, h(M.DataTable,{caption:'Incoming orders · Saturday 26/09',
+    columns:[{key:'code',label:'Order'},{key:'who',label:'Customer',render:function(r){return h('span',null,r.who,h('span',{className:'sub'},r.phone));}},{key:'slot',label:'Pickup'},{key:'items',label:'Items',align:'num'},{key:'total',label:'Total',align:'num',render:function(r){return M.vnd(r.total);}},{key:'st',label:'Status',render:function(r){return h(M.OrderStatus,{status:r.st});}},{key:'a',label:'',align:'actions',render:function(r){return r.st==='placed'?[h(M.Button,{key:1,size:'sm',variant:'primary'},'Accept'),h(M.Button,{key:2,size:'sm',variant:'danger'},'Decline')]:r.st==='accepted'?h(M.Button,{size:'sm',variant:'secondary'},'Mark ready'):h(M.Button,{size:'sm',variant:'ghost'},'Xem');}}],
+    rows:[{id:1,_new:true,code:'#ML-0421',who:'Minh Anh',phone:'0903 ••• 218',slot:'07:00–07:30',items:3,total:113000,st:'placed'},
+          {id:2,_new:true,code:'#ML-0420',who:'Trần Phúc',phone:'0912 ••• 540',slot:'07:30–08:00',items:1,total:45000,st:'placed'},
+          {id:3,code:'#ML-0415',who:'Lan Hương',phone:'0987 ••• 031',slot:'06:30–07:00',items:5,total:210000,st:'accepted'},
+          {id:4,code:'#ML-0409',who:'Quốc Bảo',phone:'0938 ••• 776',slot:'06:00–06:30',items:2,total:80000,st:'ready'}]}),
+    h(M.Pagination,{page:2,pages:9})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-Pagination">
+  <header class="gal-head"><h3>Pagination</h3><span></span><a href="../components/Pagination.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Pagination"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Pagination')).render(h('div',{className:'ml-row'}, h(M.Pagination,{page:5,pages:12})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-StatTile">
+  <header class="gal-head"><h3>StatTile</h3><span></span><a href="../components/StatTile.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-StatTile"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-StatTile')).render(h('div',{className:'ml-row',style:{alignItems:'stretch'}},
+    h(M.StatTile,{label:'Total orders',value:'128',note:'23 this week'}),
+    h(M.StatTile,{label:'Awaiting approval',value:'7',note:h('span',null,h('b',null,'3'),' orders close at 19:00'),highlight:true}),
+    h(M.StatTile,{label:'September revenue',value:'8,450,000',note:'in ₫, paid at the stall'})));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Feedback">Feedback</h2>
+<section class="gal-item" id="c-Banner">
+  <header class="gal-head"><h3>Banner</h3><span>Platform announcement (FR-077) · info · warning · error</span><a href="../components/Banner.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Banner"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Banner')).render(h('div',{className:'ml-stack'},
+    h(M.Banner,{tone:'announce',title:'Thảo Điền Weekend Market is closed on Sunday 04/10',onClose:function(){}},'Orders for that day move to Saturday 03/10. Farmers will confirm again.'),
+    h(M.Banner,{tone:'info',title:'Your cart will be split into 2 orders.'},'Each stall has its own pickup time and cutoff.'),
+    h(M.Banner,{tone:'warning',title:'45 minutes left before Vườn Cô Tư closes orders.'},'After 19:00 today you can\'t edit or cancel the order.'),
+    h(M.Banner,{tone:'danger',title:'Can\'t place order: only 1 green-skin pomelo left.'},'Lower the quantity and try again.')));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-ChatMessage">
+  <header class="gal-head"><h3>ChatMessage</h3><span>Shopping assistant — shows the detected intent (FR-090–092)</span><a href="../components/ChatMessage.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-ChatMessage"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-ChatMessage')).render(h('div',{className:'ml-row',style:{alignItems:'flex-start'}}, h('div',{className:'ml-chat'},
+    h(M.ChatMessage,{from:'user',time:'20:14'},'Which market has green-skin pomelo on Saturday morning?'),
+    h(M.ChatMessage,{from:'bot',time:'20:14',intent:'find product',suggestions:['Show the 2 stalls on the map','Pickup times at Út Hiền']},'On Saturday 26/09, 2 stalls have green-skin pomelo: Nhà vườn Út Hiền (Thủ Đức Farmers Market, 2 left) and Vườn Ba Lành (Thảo Điền Weekend Market, 9 left).'))));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-DataState">
+  <header class="gal-head"><h3>DataState</h3><span></span><a href="../components/DataState.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-DataState"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-DataState')).render(h('div',{className:'ml-row',style:{alignItems:'flex-start'}},
+    h(M.DataState,{kind:'loading'}),
+    h(M.DataState,{kind:'empty',title:'No stalls are selling on Thursday',text:'Thảo Điền Weekend Market runs Fri – Sun. Try another day.',action:h(M.Button,{variant:'secondary',size:'sm'},'Show Saturday')}),
+    h(M.DataState,{kind:'error',title:'Couldn\'t load markets',text:'Check your connection and try again.',action:h(M.Button,{variant:'danger',size:'sm'},'Try again')})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-Dialog">
+  <header class="gal-head"><h3>Dialog</h3><span>Confirm order cancellation (FR-034)</span><a href="../components/Dialog.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Dialog"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Dialog')).render(h(M.Dialog,{inline:true,tone:'danger',title:'Cancel order #ML-0412?',actions:[h(M.Button,{key:1,variant:'secondary'},'Keep order'),h(M.Button,{key:2,variant:'danger-fill'},'Cancel order')]},
+    h('p',null,'Vườn Cô Tư is notified right away, and the items you reserved go back to other customers.'),
+    h('p',{className:'ml-muted',style:{fontSize:14}},'You can cancel until 19:00 on 25/09. After that the order is locked.')));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-NotificationList">
+  <header class="gal-head"><h3>NotificationList</h3><span>accepted · declined · ready · restock (FR-041/042)</span><a href="../components/NotificationList.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-NotificationList"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-NotificationList')).render(h('div',{className:'ml-row',style:{alignItems:'flex-start'}}, h(M.NotificationList,{items:[
+    {kind:'ready',title:'Order #ML-0412 is ready',text:'Vườn Cô Tư · pick up 07:00–07:30 today.',time:'06:42',unread:true},
+    {kind:'restock',title:'Goat yogurt is back in stock',text:'Trại dê Củ Chi just added 20 jars.',time:'Yesterday',unread:true},
+    {kind:'accepted',title:'Order #ML-0415 was accepted',text:'Nhà vườn Út Hiền confirmed it.',time:'24/09'},
+    {kind:'declined',title:'Order #ML-0402 was declined',text:'The stall ran out of pomelo. You were not charged.',time:'22/09'}]})));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-Toast">
+  <header class="gal-head"><h3>Toast</h3><span></span><a href="../components/Toast.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-Toast"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-Toast')).render(h('div',{className:'ml-stack'}, h(M.Toast,{actionLabel:'Undo'},'Added water spinach to your cart.'), h(M.Toast,{tone:'error',actionLabel:'Try again'},'Couldn\'t send the order. Check your connection.')));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Map">Map</h2>
+<section class="gal-item" id="c-MapPin">
+  <header class="gal-head"><h3>MapPin</h3><span></span><a href="../components/MapPin.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-MapPin"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-MapPin')).render(h('div',{className:'ml-row',style:{gap:48,padding:24,background:'var(--surface-sunken)',alignItems:'flex-end'}},
+    h(M.MapPin,{kind:'market',label:'Thảo Điền Weekend Market'}), h(M.MapPin,{kind:'stall',label:'Vườn Cô Tư'}), h(M.MapPin,{kind:'stall',label:'Selected',selected:true}), h(M.MapPin,{kind:'market',text:'4',label:'4 markets'})));
+  })();
+  </script>
+</section>
+<h2 class="gal-group" id="g-Screens">Screens</h2>
+<section class="gal-item" id="c-ScreenCartMobile">
+  <header class="gal-head"><h3>ScreenCartMobile</h3><span>Customer · cart on 375px mobile</span><a href="../components/ScreenCartMobile.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-ScreenCartMobile" style="width:375px"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-ScreenCartMobile')).render(h('div',{style:{width:375,margin:'0 auto',background:'var(--surface)',minHeight:1180}},
+    h(M.SiteHeader,{role:'customer',cartCount:3,unread:2,userName:'Khang'}),
+    h('main',{style:{padding:16,display:'flex',flexDirection:'column',gap:16}},
+      h('h1',{className:'ml-display',style:{fontSize:40}},'Cart'),
+      h(M.Banner,{tone:'info',title:'Your cart is split into 2 orders at 2 stalls.'},'Each stall has its own pickup time and cutoff.'),
+      h(M.CartGroup,{index:1,of:2,stallName:'Vườn Cô Tư',market:'Thảo Điền Weekend Market',pickup:'Sat · 07:00–07:30',onChangeSlot:function(){},items:[{name:'Củ Chi water spinach',qty:2,unit:'bunch',price:15000,max:12},{name:'Choy sum',qty:1,unit:'bunch',price:18000,max:8}]}),
+      h(M.CartGroup,{index:2,of:2,stallName:'Nhà vườn Út Hiền',market:'Thủ Đức Farmers Market',onChangeSlot:function(){},items:[{name:'Green-skin pomelo',qty:2,unit:'piece',price:65000,max:2}]}),
+      h(M.SlotPicker,{legend:'Pickup at Út Hiền · Saturday 26/09',slots:[{value:'a',time:'06:00–06:30',booked:5,max:5},{value:'b',time:'06:30–07:00',booked:2,max:5},{value:'c',time:'07:00–07:30',booked:0,max:5}]}),
+      h(M.Button,{variant:'primary',block:true,disabled:true},'Place 2 orders · 178,000 ₫'),
+      h('p',{className:'ml-muted',style:{margin:0,fontSize:13,textAlign:'center'}},'Choose a pickup time at Út Hiền to place your orders.'))));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-ScreenFarmer">
+  <header class="gal-head"><h3>ScreenFarmer</h3><span>Farmer · dashboard + incoming orders (FR-065, FR-068)</span><a href="../components/ScreenFarmer.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-ScreenFarmer" style="width:1200px"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  ReactDOM.createRoot(document.getElementById('demo-ScreenFarmer')).render(h('div',{className:'ml-quiet',style:{minHeight:980}},
+    h(M.SiteHeader,{role:'farmer',active:'incoming',unread:5,userName:'Vườn Cô Tư'}),
+    h('main',{style:{maxWidth:1200,margin:'0 auto',padding:'28px 24px 48px',boxSizing:'border-box',display:'flex',flexDirection:'column',gap:24}},
+      h('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'flex-end',gap:16,flexWrap:'wrap'}},
+        h('div',null,h('div',{className:'ml-overline ml-muted'},'Your stall · Thảo Điền Weekend Market'),h('h1',{className:'ml-display',style:{fontSize:44,marginTop:4}},'Morning, Cô Tư')),
+        h('div',{style:{display:'flex',gap:8}},h(M.Button,{variant:'secondary'},'Apply weekly template'),h(M.Button,{variant:'primary'},'Add product'))),
+      h(M.Banner,{tone:'warning',title:'7 orders are waiting for you. 3 of them close at 19:00 today.'},'Unapproved orders still hold stock.'),
+      h('div',{style:{display:'grid',gridTemplateColumns:'repeat(4, minmax(0,1fr))',gap:16}},
+        h(M.StatTile,{label:'Total orders',value:'128',note:'23 this week'}),
+        h(M.StatTile,{label:'Awaiting approval',value:'7',note:h('span',null,h('b',null,'3'),' orders close at 19:00'),highlight:true}),
+        h(M.StatTile,{label:'September revenue',value:'8,450,000',note:'₫, paid at the stall'}),
+        h(M.StatTile,{label:'Best seller',value:'Water spinach',note:'64 bunches this month'})),
+      h(M.Tabs,{label:'Incoming orders',value:'new',tabs:[{id:'new',label:'Awaiting approval',count:7},{id:'acc',label:'Accepted',count:12},{id:'ready',label:'Ready',count:3},{id:'done',label:'Completed'}]}),
+      h(M.DataTable,{columns:[{key:'code',label:'Order'},{key:'who',label:'Customer'},{key:'slot',label:'Pickup'},{key:'items',label:'Items',align:'num'},{key:'total',label:'Total',align:'num',render:function(r){return M.vnd(r.total);}},{key:'st',label:'Status',render:function(r){return h(M.OrderStatus,{status:r.st});}},{key:'a',label:'',align:'actions',render:function(){return [h(M.Button,{key:1,size:'sm',variant:'primary'},'Accept'),h(M.Button,{key:2,size:'sm',variant:'danger'},'Decline')];}}],
+        rows:[{id:1,_new:true,code:'#ML-0421',who:'Minh Anh',slot:'Sat · 07:00–07:30',items:3,total:113000,st:'placed'},{id:2,_new:true,code:'#ML-0420',who:'Trần Phúc',slot:'Sat · 07:30–08:00',items:1,total:45000,st:'placed'},{id:3,code:'#ML-0419',who:'Lan Hương',slot:'Sat · 06:30–07:00',items:5,total:210000,st:'placed'},{id:4,code:'#ML-0418',who:'Quốc Bảo',slot:'Sun · 06:00–06:30',items:2,total:80000,st:'placed'}]}),
+      h(M.Pagination,{page:1,pages:2}))));
+  })();
+  </script>
+</section>
+<section class="gal-item" id="c-ScreenMarket">
+  <header class="gal-head"><h3>ScreenMarket</h3><span>Customer · market page: search, filters, product tags, map</span><a href="../components/ScreenMarket.md">guide</a></header>
+  <div class="gal-frame"><div id="demo-ScreenMarket" style="width:1200px"></div></div>
+  <script>
+  (function () {
+
+  var M = window.MarketLink, h = React.createElement;
+  var PR=[['Củ Chi water spinach','Vườn Cô Tư','Leafy greens',15000,'bunch',12,'Fresh today'],['Choy sum','Vườn Cô Tư','Leafy greens',18000,'bunch',8],['Green-skin pomelo','Nhà vườn Út Hiền','Fruit',65000,'piece',2],['Goat yogurt','Trại dê Củ Chi','Dairy',35000,'jar',0],['Sourdough loaf','Lò bánh Gió Nam','Baked goods',45000,'loaf',15,'Baked at 5am'],['Free-range eggs','Trại Ba Lành','Eggs',42000,'dozen',20]];
+  function Map(){ return h('div',{className:'ml-card',style:{position:'relative',height:'100%',minHeight:520,background:'var(--surface-sunken)',overflow:'hidden'}},
+      h('div',{style:{position:'absolute',left:16,top:12},className:'ml-overline ml-muted'},'Map · Leaflet + OSM'),
+      h('div',{style:{position:'absolute',left:'40%',top:'38%'}},h(M.MapPin,{kind:'market',label:'Thảo Điền Weekend Market'})),
+      h('div',{style:{position:'absolute',left:'22%',top:'56%'}},h(M.MapPin,{kind:'stall',label:'Vườn Cô Tư',selected:true})),
+      h('div',{style:{position:'absolute',left:'62%',top:'60%'}},h(M.MapPin,{kind:'stall'})),
+      h('div',{style:{position:'absolute',left:'55%',top:'22%'}},h(M.MapPin,{kind:'stall'}))); }
+  ReactDOM.createRoot(document.getElementById('demo-ScreenMarket')).render(h('div',null,
+    h(M.Banner,{tone:'announce',title:'First green-skin pomelos of the season this week',onClose:function(){}},'3 stalls in Thủ Đức are taking pre-orders for Saturday morning.'),
+    h(M.SiteHeader,{role:'customer',active:'markets',cartCount:3,unread:2,userName:'Khang'}),
+    h('main',{style:{maxWidth:1200,margin:'0 auto',padding:'32px 24px 48px',boxSizing:'border-box'}},
+      h('div',{className:'ml-hand ml-muted'},'Saturday 26/09 · 06:00–11:00'),
+      h('h1',{className:'ml-display',style:{fontSize:56,margin:'4px 0 8px'}},'Thảo Điền Weekend Market'),
+      h('p',{style:{margin:'0 0 24px',maxWidth:620,fontSize:18,lineHeight:1.55}},'14 stalls. Pre-order until 19:00 on Friday, then pick up at the stall and pay the Farmer directly.'),
+      h('div',{style:{display:'flex',flexDirection:'column',gap:16,marginBottom:24}},
+        h(M.SearchBar,{scope:'product'}),
+        h('div',{style:{display:'flex',gap:24,flexWrap:'wrap',alignItems:'flex-end'}},
+          h(M.DayChips,{legend:'Market day',defaultValue:'sat',days:[{value:'thu',label:'Thu',sub:'24/09',disabled:true},{value:'fri',label:'Fri',sub:'25/09'},{value:'sat',label:'Sat',sub:'26/09'},{value:'sun',label:'Sun',sub:'27/09'}]}),
+          h('div',{className:'ml-chips'}, h(M.Chip,{selected:true,count:24},'Leafy greens'), h(M.Chip,{count:18},'Fruit'), h(M.Chip,{count:6},'Dairy'), h(M.Chip,{count:9},'Baked goods'), h(M.Chip,null,'In stock')))),
+      h('div',{style:{display:'grid',gridTemplateColumns:'1fr 360px',gap:24,alignItems:'start'}},
+        h('div',{style:{display:'grid',gridTemplateColumns:'repeat(3, minmax(0,1fr))',gap:20}}, PR.map(function(p,i){return h(M.ProductCard,{key:i,name:p[0],farmer:p[1],category:p[2],price:p[3],unit:p[4],stock:p[5],soldOut:p[5]===0,flag:p[6],className:'ml-pcard-fluid',favorite:i===3});})),
+        h('div',{style:{position:'sticky',top:80,display:'flex',flexDirection:'column',gap:16}}, Map(), h(M.StallCard,{stallName:'Vườn Cô Tư',contactPerson:'Nguyễn Thị Tư',markets:['Thảo Điền Weekend Market'],days:'Sat, Sun',pickup:'06:00 – 10:30',rating:4.6,reviews:32,distance:'2.4 km'})))),
+    h(M.SiteFooter)));
+  })();
+  </script>
+</section>
+</div>
+</body>
+</html>
