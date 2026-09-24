@@ -2,10 +2,12 @@ import { useState, type FormEvent } from 'react';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Field } from '@/components/ui/input';
+import useLogout from '@/hooks/useLogout';
 import Notification from '@/utils/notification';
 
 /** Profile editing and change password are proposals, not SRS requirements (feature catalog). */
 const CustomerAccountPage = () => {
+  const logout = useLogout();
   const [name, setName] = useState('Nguyễn Minh Khang');
   const [phone, setPhone] = useState('0903 118 218');
   const [email, setEmail] = useState('khang@example.com');
@@ -103,9 +105,9 @@ const CustomerAccountPage = () => {
           <h2 className="text-h3">Sign out</h2>
           <p className="text-small text-ink-muted">Signs you out on this device only.</p>
         </div>
-        <ButtonLink to="/" variant="secondary">
+        <Button variant="secondary" onClick={logout}>
           Sign out
-        </ButtonLink>
+        </Button>
       </Card>
     </div>
   );

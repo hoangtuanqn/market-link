@@ -117,7 +117,7 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        return issueTokens(user);
+        return issueTokens(user, !Boolean.FALSE.equals(request.rememberMe()));
     }
 
     /**
@@ -137,7 +137,7 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        return buildAuthResult(user, rotated.newRefreshToken());
+        return buildAuthResult(user, rotated.newRefreshToken(), rotated.rememberMe());
     }
 
     /**
@@ -216,11 +216,15 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     private AuthResult issueTokens(User user) {
-        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId());
-        return buildAuthResult(user, refreshToken.rawToken());
+        return issueTokens(user, true);
     }
 
-    private AuthResult buildAuthResult(User user, String rawRefreshToken) {
+    private AuthResult issueTokens(User user, boolean rememberMe) {
+        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId(), rememberMe);
+        return buildAuthResult(user, refreshToken.rawToken(), rememberMe);
+    }
+
+    private AuthResult buildAuthResult(User user, String rawRefreshToken, boolean rememberMe) {
         String accessToken = jwtService.generateToken(user.getId());
 
         Duration ttl = Duration.ofMillis(authConfig.getExpirationTime());
@@ -237,7 +241,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .createdAt(user.getCreatedAt())
                         .hasPassword(user.getPasswordHash() != null)
                         .build();
-        return new AuthResult(accessToken, rawRefreshToken, userResource);
+        return new AuthResult(accessToken, rawRefreshToken, userResource, rememberMe);
     }
 
     /**

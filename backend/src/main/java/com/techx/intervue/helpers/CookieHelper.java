@@ -15,4 +15,20 @@ public class CookieHelper {
                 .maxAge(maxAge)
                 .build();
     }
+
+    /**
+     * rememberMe = false: cookie phiên (không có Max-Age), trình duyệt xoá khi đóng. rememberMe =
+     * true: sống maxAge.
+     */
+    public static ResponseCookie buildRefreshTokenCookie(
+            String token, Duration maxAge, boolean rememberMe) {
+        return rememberMe
+                ? buildRefreshTokenCookie(token, maxAge)
+                : ResponseCookie.from(REFRESH_TOKEN_COOKIE, token)
+                        .httpOnly(true)
+                        .secure(true)
+                        .sameSite("Strict")
+                        .path("/")
+                        .build();
+    }
 }

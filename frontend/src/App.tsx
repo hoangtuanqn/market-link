@@ -28,7 +28,7 @@ const App = () => {
         </Route>
 
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
-        <Route element={<MainLayout variant="customer" userName="Khang" cartCount={2} unreadCount={2} />}>
+        <Route element={<MainLayout />}>
           <Route path="dashboard" element={<CustomerDashboardPage />} />
           <Route path="account" element={<CustomerAccountPage />} />
           <Route path="cart" element={<CustomerCartPage />} />
