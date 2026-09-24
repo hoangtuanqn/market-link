@@ -1,4 +1,4 @@
-package com.techx.intervue.services;
+package com.techx.intervue.services.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;

@@ -9,7 +9,7 @@ import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
-import com.techx.intervue.services.BaseService;
+import com.techx.intervue.services.impl.BaseService;
 import java.time.Duration;
 import java.util.Set;
 import lombok.AllArgsConstructor;
