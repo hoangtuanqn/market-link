@@ -5,6 +5,7 @@ import LoginPage from './pages/Login';
 import RegisterCustomerPage from './pages/RegisterCustomer';
 import RegisterFarmerPage from './pages/RegisterFarmer';
 import ForgotPasswordPage from './pages/ForgotPassword';
+import ResetPasswordPage from './pages/ResetPassword';
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="register-customer" element={<RegisterCustomerPage />} />
           <Route path="register-farmer" element={<RegisterFarmerPage />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="reset-password" element={<ResetPasswordPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
