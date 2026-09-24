@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer detail — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <p class="pt-small ml-muted"><a href="../admin/customers.html">Customers</a> · Nguyễn Minh Khang</p>
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted" id="since"></p>
+      <h1 class="pt-title-sm">Nguyễn Minh Khang</h1>
+      <div id="status"></div>
+    </div>
+    <div class="pt-row-2">
+      <button type="button" class="ml-btn ml-btn-danger" id="off">Deactivate account</button>
+    </div>
+  </div>
+
+  <div id="note"></div>
+
+  <div class="pt-split">
+    <div class="pt-col-6">
+      <section class="pt-col-3">
+        <div class="pt-between-c"><h2 class="pt-h2">Orders</h2><a class="pt-small" href="../admin/orders.html">All orders on the platform</a></div>
+        <div id="orders"></div>
+        <p class="pt-small ml-muted">An admin reads these. Only the stall moves an order through its states (D-04), so there is nothing to change here.</p>
+      </section>
+
+      <section class="pt-col-3">
+        <h2 class="pt-h2">Reviews they wrote</h2>
+        <div id="reviews"></div>
+        <p class="pt-small ml-muted">Hiding a review is done from <a href="../admin/moderation.html">Moderation</a>, where the report that triggered it is visible too (FR-074).</p>
+      </section>
+
+      <section class="pt-col-3">
+        <h2 class="pt-h2">Account history</h2>
+        <ol class="pt-timeline" id="timeline"></ol>
+      </section>
+    </div>
+
+    <aside class="pt-sticky">
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">Contact</h2>
+        <dl class="pt-facts" id="facts"></dl>
+        <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-072 · Which customer details an admin may see is not specified, and this screen is where it matters most: it puts a home address, a full phone number and a purchase history on one page. The prototype shows them read-only and masks nothing. The team has to decide what an admin may see, what should be masked, whether the reading is logged, and whether an admin may edit or delete a customer at all. The same question is already flagged on the customers list.">What an admin may see of a customer is not specified</span></p>
+      </div>
+
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">How they shop</h2>
+        <dl class="pt-facts" id="habits"></dl>
+      </div>
+
+      <div class="ml-card pt-panel-4 pt-col-2">
+        <h3 class="pt-h3">What deactivating does</h3>
+        <p class="pt-small">They cannot sign in or place a new order. Orders already placed are not touched, so a stall still hands over what it has set aside and nobody loses food that was picked for them.</p>
+        <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-072 / D-09 · What happens to a deactivated customer's running orders is not decided. D-09 settles the same question for a suspended Farmer — running orders finish as normal — so the prototype applies that reasoning here, but nothing says it holds for a customer. A customer deactivated for repeated no-shows is exactly the case where letting the orders run is arguable. LEAD to confirm or reject.">Running orders of a deactivated customer: no decision</span></p>
+      </div>
+    </aside>
+  </div>
+</main>
+<script>
+  var C = PT.customers[0];
+  document.getElementById('since').textContent = 'Customer since ' + C.joined + ' · last order 24/09/2026';
+  document.getElementById('status').innerHTML = C.status === 'active'
+    ? '<span class="ml-status ml-status-ready">' + PT.icons.check() + '<span class="ml-status-text">Active</span></span>'
+    : '<span class="ml-status ml-status-cancelled">' + PT.icons.cancelled() + '<span class="ml-status-text">Deactivated</span></span>';
+
+  document.getElementById('facts').innerHTML =
+    '<dt>Email</dt><dd>' + PT.esc(C.email) + '</dd>' +
+    '<dt>Phone</dt><dd>' + C.phone + '</dd>' +
+    '<dt>Address</dt><dd>21 Thảo Điền, Thảo Điền Ward, Thủ Đức City</dd>' +
+    '<dt>Joined</dt><dd>' + C.joined + '</dd>';
+
+  document.getElementById('habits').innerHTML =
+    '<dt>Orders</dt><dd>' + C.orders + '</dd>' +
+    '<dt>Collected</dt><dd>' + (C.orders - 1) + '</dd>' +
+    '<dt>Did not turn up</dt><dd>1 · 12/09/2026</dd>' +
+    '<dt>Market</dt><dd>Thảo Điền Weekend Market</dd>' +
+    '<dt>Buys most from</dt><dd>Cô Tư Garden</dd>';
+
+  /* Their orders across every stall. The admin view is read-only on purpose (D-04). */
+  var mine = PT.farmerOrders.slice(0, 4);
+  document.getElementById('orders').innerHTML = PT.table(null, [
+    { key: 'code', label: 'Order', render: function (o) { return '<a href="../admin/order.html">' + o.code + '</a>'; } },
+    { key: 'stall', label: 'Stall', render: function () { return 'Cô Tư Garden<span class="sub">Thảo Điền Weekend Market</span>'; } },
+    { key: 'slot', label: 'Pickup', render: function (o) { return o.date + ' · ' + o.slot; } },
+    { key: 'items', label: 'Items', align: 'num', render: function (o) { return o.items.length; } },
+    { key: 'total', label: 'Total', align: 'num', render: function (o) { return PT.vnd(PT.orderTotal(o)); } },
+    { key: 'st', label: 'Status', render: function (o) { return PT.status(o.status); } },
+  ], mine);
+
+  document.getElementById('reviews').innerHTML = PT.reviews.slice(0, 2).map(function (r) {
+    return PT.reviewCard(r, { fluid: true, actions: '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/moderation.html">Open in moderation</a>' });
+  }).join('');
+
+  document.getElementById('timeline').innerHTML = [
+    ['accepted', 'Account created', C.joined + ' 20:31', 'Signed up with an email address'],
+    ['completed', 'First order collected', '17/08/2026 07:12', 'Cô Tư Garden · Thảo Điền Weekend Market'],
+    ['cancelled', 'Did not turn up', '12/09/2026 11:00', 'Order #ML-0388 was never collected'],
+    ['placed', 'Last order', '24/09/2026 09:12', 'Awaiting the stall'],
+  ].map(function (h) {
+    return '<li><span class="pt-timeline-dot" style="background:var(--status-' + h[0] + '-bg);color:var(--status-' + h[0] + '-ink)">' + PT.icons[h[0]]() + '</span>' +
+      '<div><b>' + h[1] + '</b><time>' + h[2] + ' · ' + h[3] + '</time></div></li>';
+  }).join('');
+
+  document.getElementById('off').addEventListener('click', function () {
+    PT.dialog({
+      tone: 'danger',
+      title: 'Deactivate ' + PT.esc(C.name) + '?',
+      body: '<p>They cannot sign in or order again until an admin reactivates them. Orders already placed run to the end, so no stall is left holding food nobody collects.</p>' +
+        '<div class="ml-field" style="min-width:0"><label class="ml-field-label" for="dwhy">Reason kept on the account</label><select id="dwhy" class="ml-input"><option>Repeated no-shows</option><option>Abusive language in a review</option><option>Asked for their account to be closed</option><option>Other</option></select></div>',
+      keep: 'Not yet', confirm: 'Deactivate',
+      onConfirm: function (dlg) {
+        var why = dlg.querySelector('#dwhy').value;
+        document.getElementById('status').innerHTML = '<span class="ml-status ml-status-cancelled">' + PT.icons.cancelled() + '<span class="ml-status-text">Deactivated</span></span>';
+        document.getElementById('note').innerHTML = PT.banner('warning', 'Deactivated today.', 'Reason kept on the account: ' + PT.esc(why) + '. Their running orders are not touched.');
+        PT.toast(PT.esc(C.name) + ' deactivated.');
+      },
+    });
+  });
+
+  PT.states(['#orders', '#reviews', '#timeline'], {
+    label: 'this customer',
+    empty: ['That customer is not here any more', 'The account may have been deleted. Open it again from the customers list.'],
+    error: ["Couldn't load the customer", 'Check your connection and try again.'],
+  });
+  PT.boot({ role: 'admin', active: 'customers', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

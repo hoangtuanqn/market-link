@@ -89,8 +89,8 @@
 
   document.getElementById('chips').innerHTML = PT.chip('All', { selected: true, radio: 'os', count: 796 }) + PT.chip('Completed', { radio: 'os', count: 596 }) + PT.chip('Open', { radio: 'os', count: 115 }) + PT.chip('Declined', { radio: 'os', count: 38 }) + PT.chip('Cancelled', { radio: 'os', count: 47 });
   document.getElementById('table').innerHTML = PT.table(null, [
-    { key: 'code', label: 'Order' },
-    { key: 'who', label: 'Customer', render: function (o) { return 'Customer #' + o.c; } },
+    { key: 'code', label: 'Order', render: function (o) { return '<a href="../admin/order.html">' + o.code + '</a>'; } },
+    { key: 'who', label: 'Customer', render: function (o) { return '<a href="../admin/customer.html">Customer #' + o.c + '</a>'; } },
     { key: 'farmer', label: 'Stall', render: function (o) { return PT.esc(PT.farmer(o.farmer).stall); } },
     { key: 'market', label: 'Market', render: function (o) { return PT.esc(PT.market(o.market).name); } },
     { key: 'when', label: 'Pickup', render: function (o) { return o.date + ' · ' + o.slot; } },

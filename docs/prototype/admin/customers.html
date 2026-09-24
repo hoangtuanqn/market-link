@@ -34,7 +34,7 @@
 <script>
   document.getElementById('chips').innerHTML = PT.chip('All', { selected: true, radio: 'f', count: 412 }) + PT.chip('Active', { radio: 'f', count: 409 }) + PT.chip('Deactivated', { radio: 'f', count: 3 }) + PT.chip('Joined this month', { radio: 'f', count: 37 });
   document.getElementById('table').innerHTML = PT.table(null, [
-    { key: 'name', label: 'Customer', render: function (c) { return '<b>' + PT.esc(c.name) + '</b><span class="sub">' + c.email + ' · ' + c.phone + '</span>'; } },
+    { key: 'name', label: 'Customer', render: function (c) { return '<a href="../admin/customer.html"><b>' + PT.esc(c.name) + '</b></a><span class="sub">' + c.email + ' · ' + c.phone + '</span>'; } },
     { key: 'joined', label: 'Joined' },
     { key: 'orders', label: 'Orders', align: 'num' },
     { key: 's', label: 'Status', render: function (c) { return c.status === 'active' ? '<span class="ml-status ml-status-ready">' + PT.icons.check() + '<span class="ml-status-text">Active</span></span>' : '<span class="ml-status ml-status-declined">' + PT.icons.declined() + '<span class="ml-status-text">Deactivated</span></span>' + (c.reason ? '<span class="sub">' + PT.esc(c.reason) + '</span>' : ''); } },

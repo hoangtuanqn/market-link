@@ -274,6 +274,35 @@ a market closure already stops every order.
 Neither has a table. `db/schema.sql` has `markets.operating_days` and nothing for a single date, so
 both carry a TODO proposing `market_closures` and `farmer_absences` to LEAD, who owns the schema (R-02).
 
+## Two screens the Admin was missing
+
+A walk through both panels against the feature catalog found the Farmer complete and the Admin short
+of three things, with two more lists that were dead ends.
+
+- **`admin/customer.html`** — the catalog asks to *view the list **and the information*** of a customer
+  account, and FR-072 opens with *view*, but a name in the list was plain text. The detail screen
+  carries their orders across every stall, the reviews they wrote, an account history, and the
+  deactivate action with the reason kept on the account. It is the screen where an admin sees a home
+  address and a full phone number on one page, so the privacy question already flagged on the list is
+  repeated on it, sharper.
+- **`admin/order.html`** — every order on the platform was listed with a code that could not be
+  opened. The Admin view is deliberately read-only: D-04 gives the transitions to the stall and the
+  cancel to the customer, and an admin is in neither list, so the screen shows the items, the full
+  `order_status_history` (FR-038), the stall, the customer and the slot, and says in a panel why it
+  has no buttons. What it flags is the case nobody has decided: an order stuck in `placed` because
+  the stall stopped answering, which the FR-039 job never sweeps.
+- **Admin password reset** — `admin/login.html` had no way back in. It now links to the Customer reset
+  flow and says plainly that sharing it is a decision nobody has taken, since FR-004 asks for a
+  separate admin area and an admin can change what the platform charges.
+- **`farmer/history.html`** rows now open the order behind the sale, which `farmer/order.html` already
+  rendered.
+- **`admin/feedback.html`** rows now open the whole message with an answer box. It is a dialog rather
+  than a screen on purpose: FR-081 asks only for the form with its three categories, and what happens
+  after a message is sent is still open on `public/feedback.html`.
+
+Edit-in-place lists are not dead ends and were left alone: announcements and categories have Edit and
+Save on the row, `farmer/reviews` replies inline, `farmer/stock-week` edits the numbers inline.
+
 ## Not in this prototype
 
 No API calls, no real sign-in, no persistence between pages. Real components are TSX in `frontend/src/components/`

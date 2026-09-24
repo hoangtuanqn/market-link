@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order detail (Admin) — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <p class="pt-small ml-muted"><a href="../admin/orders.html">Orders</a> · <span id="crumb"></span></p>
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted" id="kicker"></p>
+      <h1 class="pt-title-sm" id="title"></h1>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <div id="readonly"></div>
+
+  <div class="pt-split">
+    <div class="pt-col-6">
+      <section class="pt-col-3">
+        <h2 class="pt-h2">Items</h2>
+        <div id="items"></div>
+        <p class="pt-small ml-muted">Prices are what the stall charged when the order was placed. No money moves through MarketLink; the customer pays at the stall.</p>
+      </section>
+
+      <section class="pt-col-3">
+        <h2 class="pt-h2">Every state it has been in</h2>
+        <ol class="pt-timeline" id="history"></ol>
+        <p class="pt-small ml-muted">Written to <code>order_status_history</code> on every change (FR-038). This is the record an admin reads when a customer and a stall disagree about what happened.</p>
+      </section>
+    </div>
+
+    <aside class="pt-sticky">
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">The stall</h2>
+        <dl class="pt-facts" id="stall"></dl>
+        <div class="pt-row-2"><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmer.html">Stall record</a></div>
+      </div>
+
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">The customer</h2>
+        <dl class="pt-facts" id="who"></dl>
+        <div class="pt-row-2"><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/customer.html">Customer record</a></div>
+      </div>
+
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">Pickup</h2>
+        <dl class="pt-facts" id="pickup"></dl>
+      </div>
+
+      <div class="ml-card pt-panel-4 pt-col-2">
+        <h3 class="pt-h3">Why there are no buttons</h3>
+        <p class="pt-small">An order belongs to one stall and one customer. D-04 gives the stall the transitions and the customer the cancel before cutoff; an admin is not in that list, so this screen reads and does not touch.</p>
+        <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-070 / D-04 · Whether an admin may ever intervene in an order is not decided. The case that forces it: a stall is suspended or simply stops answering while an order sits in placed past its cutoff, and nobody can move it. Today it would sit there until the FR-039 job sweeps ready orders, which never touches a placed one. Options are to let an admin cancel on the customer's behalf with a reason, to extend the auto-complete job to stale placed orders, or to accept that it stays stuck. Each needs a line in D-04 and an entry in order_status_history saying an admin did it.">An admin cannot rescue a stuck order, and nothing says whether they should</span></p>
+      </div>
+    </aside>
+  </div>
+</main>
+<script>
+  var o = PT.farmerOrders[0];
+  var f = PT.farmer(1);
+  var mk = PT.market(1);
+
+  document.getElementById('crumb').textContent = o.code;
+  document.getElementById('kicker').textContent = 'Placed Thu 24/09 at 09:12 · closed Fri 25/09 at 19:00';
+  document.getElementById('title').textContent = o.code + ' · ' + f.stall + ' · ' + o.who;
+  document.getElementById('status').innerHTML = PT.status(o.status);
+
+  document.getElementById('readonly').innerHTML = PT.banner('info', 'An admin reads an order; the stall moves it.',
+    'Every button that changes a state lives on the stall’s own screen, so nothing here can put an order into the wrong state (D-04, R-06).');
+
+  document.getElementById('items').innerHTML = PT.table(null, [
+    { key: 'n', label: 'Product', render: function (i) { var p = PT.product(i.p); return '<b>' + PT.esc(p.name) + '</b><span class="sub">' + PT.esc(PT.category(p.cat).name) + '</span>'; } },
+    { key: 'q', label: 'Quantity', align: 'num', render: function (i) { var p = PT.product(i.p); return PT.units(i.qty, p.unit); } },
+    { key: 'p', label: 'Unit price', align: 'num', render: function (i) { var p = PT.product(i.p); return PT.vnd(p.price) + ' <span class="sub">/ ' + PT.esc(p.unit) + '</span>'; } },
+    { key: 's', label: 'Line total', align: 'num', render: function (i) { return PT.vnd(PT.product(i.p).price * i.qty); } },
+  ], o.items);
+
+  document.getElementById('history').innerHTML = [
+    ['placed', 'Placed by the customer', '24/09/2026 09:12', PT.esc(o.who)],
+  ].map(function (h) {
+    return '<li><span class="pt-timeline-dot" style="background:var(--status-' + h[0] + '-bg);color:var(--status-' + h[0] + '-ink)">' + PT.icons[h[0]]() + '</span>' +
+      '<div><b>' + h[1] + '</b><time>' + h[2] + ' · ' + h[3] + '</time></div></li>';
+  }).join('');
+
+  document.getElementById('stall').innerHTML =
+    '<dt>Stall</dt><dd>' + PT.esc(f.stall) + '</dd>' +
+    '<dt>Contact</dt><dd>' + PT.esc(f.person) + ' · ' + f.phone + '</dd>' +
+    '<dt>Approval</dt><dd>' + f.approval + '</dd>';
+
+  document.getElementById('who').innerHTML =
+    '<dt>Name</dt><dd>' + PT.esc(o.who) + '</dd>' +
+    '<dt>Phone</dt><dd>' + o.phone + '</dd>' +
+    '<dt>Orders on MarketLink</dt><dd>14</dd>';
+
+  document.getElementById('pickup').innerHTML =
+    '<dt>Market</dt><dd>' + PT.esc(mk.name) + '</dd>' +
+    '<dt>Day and slot</dt><dd>' + o.date + ' · ' + o.slot + '</dd>' +
+    '<dt>Cutoff</dt><dd>' + o.cutoff + '</dd>' +
+    '<dt>Total</dt><dd>' + PT.vnd(PT.orderTotal(o)) + '</dd>';
+
+  PT.states(['#items', '#history'], {
+    label: 'this order',
+    empty: ['That order is not here any more', 'It may have been deleted with the account. Open it again from the orders list.'],
+    error: ["Couldn't load the order", 'Check your connection and try again.'],
+  });
+  PT.boot({ role: 'admin', active: 'orders', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

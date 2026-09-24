@@ -277,6 +277,18 @@ window.PT_TODOS = [
  },
  {
   "role": "admin",
+  "file": "customer.html",
+  "screen": "Customer detail",
+  "text": "FR-072 · Which customer details an admin may see is not specified, and this screen is where it matters most: it puts a home address, a full phone number and a purchase history on one page. The prototype shows them read-only and masks nothing. The team has to decide what an admin may see, what should be masked, whether the reading is logged, and whether an admin may edit or delete a customer at all. The same question is already flagged on the customers list."
+ },
+ {
+  "role": "admin",
+  "file": "customer.html",
+  "screen": "Customer detail",
+  "text": "FR-072 / D-09 · What happens to a deactivated customer's running orders is not decided. D-09 settles the same question for a suspended Farmer — running orders finish as normal — so the prototype applies that reasoning here, but nothing says it holds for a customer. A customer deactivated for repeated no-shows is exactly the case where letting the orders run is arguable. LEAD to confirm or reject."
+ },
+ {
+  "role": "admin",
   "file": "customers.html",
   "screen": "Customers",
   "text": "FR-072 · Which customer details an admin may see (address, full phone) and whether an admin can edit or delete a customer is not specified. Prototype shows contact details read-only."
@@ -292,6 +304,18 @@ window.PT_TODOS = [
   "file": "feedback.html",
   "screen": "Feedback inbox",
   "text": "FR-081 · The SRS defines the feedback form, not the admin inbox. The API contract has GET /api/admin/feedbacks. Where it sits in the admin menu and whether admins reply from here needs a decision."
+ },
+ {
+  "role": "admin",
+  "file": "feedback.html",
+  "screen": "Feedback inbox",
+  "text": "FR-081 · The SRS asks for a feedback form with bug, suggestion and query, and stops there. Nothing says an admin answers, by what channel, within what time, or whether the person who wrote it ever sees a reply. The inbox and this answer box are a proposal: they need a new FR, a reply channel that actually exists (email is FR-043, a NICE), and a feedback table with a status and a response. The same gap is flagged on public/feedback.html from the customer side."
+ },
+ {
+  "role": "admin",
+  "file": "login.html",
+  "screen": "Admin sign in",
+  "text": "FR-004 / FR-007 · Resetting an admin password reuses the Customer reset flow here, which is a decision nobody has taken. FR-004 asks for an admin area separate from the Customer and Farmer view, and an admin can approve stalls, deactivate customers and change what the platform charges, so the same emailed link that resets a shopper is arguably not enough. The team has to decide: share the flow, give the admin area its own reset, or require a second admin to do it. The feature catalog lists admin password recovery as a proposal, not as an SRS requirement."
  },
  {
   "role": "admin",
@@ -322,6 +346,12 @@ window.PT_TODOS = [
   "file": "moderation.html",
   "screen": "Moderation",
   "text": "FR-074 · The platform guidelines that define 'inappropriate' (advertising, off-platform contact, abuse…) are not written yet. Moderation reasons in the prototype are examples."
+ },
+ {
+  "role": "admin",
+  "file": "order.html",
+  "screen": "Order detail (Admin)",
+  "text": "FR-070 / D-04 · Whether an admin may ever intervene in an order is not decided. The case that forces it: a stall is suspended or simply stops answering while an order sits in placed past its cutoff, and nobody can move it. Today it would sit there until the FR-039 job sweeps ready orders, which never touches a placed one. Options are to let an admin cancel on the customer's behalf with a reason, to extend the auto-complete job to stale placed orders, or to accept that it stays stuck. Each needs a line in D-04 and an entry in order_status_history saying an admin did it."
  },
  {
   "role": "admin",

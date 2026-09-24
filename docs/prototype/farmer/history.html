@@ -92,7 +92,7 @@
   ], { format: PT.vnd });
 
   var past = PT.farmerOrders.filter(function (o) { return ['completed', 'declined', 'cancelled'].indexOf(o.status) >= 0; });
-  document.getElementById('table').innerHTML = PT.table(null, [{ key: 'd', label: 'Pickup', render: function (r) { return r.date + ' · ' + r.slot; } }, { key: 'code', label: 'Order' }, { key: 'who', label: 'Customer' }, { key: 'i', label: 'Items', render: function (r) { return r.items.map(function (i) { return i.qty + '× ' + PT.esc(PT.product(i.p).name); }).join(', '); } }, { key: 't', label: 'Total', align: 'num', render: function (r) { return PT.vnd(PT.orderTotal(r)); } }, { key: 's', label: 'Status', render: function (r) { return PT.status(r.status); } }], past);
+  document.getElementById('table').innerHTML = PT.table(null, [{ key: 'd', label: 'Pickup', render: function (r) { return r.date + ' · ' + r.slot; } }, { key: 'code', label: 'Order', render: function (r) { return '<a href="../farmer/order.html">' + r.code + '</a>'; } }, { key: 'who', label: 'Customer' }, { key: 'i', label: 'Items', render: function (r) { return r.items.map(function (i) { return i.qty + '× ' + PT.esc(PT.product(i.p).name); }).join(', '); } }, { key: 't', label: 'Total', align: 'num', render: function (r) { return PT.vnd(PT.orderTotal(r)); } }, { key: 's', label: 'Status', render: function (r) { return PT.status(r.status); } }], past);
   document.getElementById('pager').innerHTML = PT.pagination(1, 6);
   PT.states(['#stats', '#best', '#best-table', '#by-market', '#table'], {
     label: 'this history',
