@@ -9,6 +9,17 @@ import { markets } from './home';
 
 export type NotificationType = { kind: NotificationKind; title: string; text?: string; time: string; unread?: boolean };
 
+export const categories = [
+  'Leafy greens',
+  'Fruit',
+  'Dairy',
+  'Baked goods',
+  'Eggs',
+  'Honey & preserves',
+  'Mushrooms',
+  'Herbs',
+];
+
 export const notifications: NotificationType[] = [
   {
     kind: 'invite',
