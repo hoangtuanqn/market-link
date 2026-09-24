@@ -1,4 +1,4 @@
-package com.techx.intervue.helpers;
+package com.techx.intervue.modules.helpers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;

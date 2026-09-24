@@ -1,4 +1,4 @@
-package com.techx.intervue.helpers;
+package com.techx.intervue.modules.helpers;
 
 import java.time.Duration;
 import org.springframework.http.ResponseCookie;
