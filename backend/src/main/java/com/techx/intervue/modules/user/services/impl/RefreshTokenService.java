@@ -30,7 +30,7 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     }
 
     @Override
-    public IssuedToken issueRefreshToken(Long userId) {
+    public IssuedToken issueRefreshToken(Long userId, boolean rememberMe) {
         String token = this.generateRefreshTokenRaw();
         String tokenHash = utils.hash(token);
         RefreshToken entity =
@@ -41,6 +41,7 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
                                 Instant.now()
                                         .plus(authConfig.getRefreshTokenTTLDays(), ChronoUnit.DAYS))
                         .revoked(false)
+                        .rememberMe(rememberMe)
                         .build();
         repository.save(entity);
 
@@ -63,10 +64,12 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         this.checkIsRevoked(existing);
         this.checkExpiryDate(existing);
         existing.setRevoked(true);
-        IssuedToken newToken = this.issueRefreshToken(existing.getUserId());
+        IssuedToken newToken =
+                this.issueRefreshToken(existing.getUserId(), existing.isRememberMe());
         existing.setReplacedByTokenId(newToken.tokenId());
         repository.save(existing);
-        return new RefreshResult(existing.getUserId(), newToken.rawToken());
+        return new RefreshResult(
+                existing.getUserId(), newToken.rawToken(), existing.isRememberMe());
     }
 
     /**
