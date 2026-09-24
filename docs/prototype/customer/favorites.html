@@ -19,28 +19,89 @@
 <body data-role="customer">
 <div id="pt-top"></div>
 <main class="pt-main">
-  <div class="pt-col-2">
-    <h1 class="pt-title">Favorites</h1>
-    <p class="pt-lead">Stalls and products you follow, plus your preferred markets. When a favorite product comes back in stock you get a notification.</p>
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Favorites</h1>
+      <p class="pt-lead">Your wishlist: products you want next time, stalls you go back to, and the markets you shop at. A sold-out favorite tells you when it is back.</p>
+    </div>
+    <a class="ml-btn ml-btn-secondary" href="../public/products.html">Find more to save</a>
   </div>
+
   <div data-tabs-scope class="pt-col">
     <div id="tabs"></div>
-    <div data-panel="stalls" class="pt-grid" id="stalls"></div>
-    <div data-panel="products" hidden class="pt-col">
-      <div id="restock"></div>
-      <div class="pt-grid-tags" id="products"></div>
+
+    <div data-panel="products" class="pt-col">
+      <div id="alert-banner"></div>
+      <div class="pt-between-c">
+        <div class="ml-chips" id="p-filter"></div>
+        <button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Added 3 products to your cart. They will be split by stall at checkout.">Add the 3 in-stock items to cart</button>
+      </div>
+      <ul class="pt-wish" id="wish" data-state-target="loaded"></ul>
+      <div hidden data-state-target="loading" class="pt-col-3" id="skeleton"></div>
+      <div hidden data-state-target="empty"></div>
+      <div hidden data-state-target="error"></div>
+      <p class="pt-small ml-muted">Saving a product does not hold any stock. It is held only when you place the order.</p>
     </div>
+
+    <div data-panel="stalls" hidden class="pt-col">
+      <p class="pt-small ml-muted">Your saved stalls, with what each one is bringing this weekend.</p>
+      <div class="pt-grid" id="stalls"></div>
+    </div>
+
     <div data-panel="markets" hidden class="pt-col">
       <div class="pt-grid-2" id="markets"></div>
-      <p class="pt-small ml-muted">Preferred markets come first in lists and on the map, and their pickup points pre-fill directions from your saved address. <span class="pt-todo" data-todo="FR-014 (SHOULD) · 'route-friendly pickup details' is not defined beyond directions. Prototype: preferred markets sort first and directions start from the saved address.">What 'route-friendly pickup details' means beyond directions</span></p>
+      <p class="pt-small ml-muted">A saved market comes first in lists and on the map, and directions to its stalls start from your saved address. <span class="pt-todo" data-todo="FR-014 (SHOULD) · 'route-friendly pickup details' is not defined beyond directions. The prototype sorts saved markets first and starts directions from the saved address.">What 'route-friendly pickup details' means beyond directions</span></p>
     </div>
   </div>
+
+  <section class="pt-section">
+    <h2 class="pt-h3">Other states of this list (FR-084)</h2>
+    <div class="pt-row-2">
+      <button type="button" class="ml-chip" aria-pressed="true" data-state-demo="loaded">With data</button>
+      <button type="button" class="ml-chip" aria-pressed="false" data-state-demo="loading">Loading</button>
+      <button type="button" class="ml-chip" aria-pressed="false" data-state-demo="empty">Empty</button>
+      <button type="button" class="ml-chip" aria-pressed="false" data-state-demo="error">Error</button>
+    </div>
+  </section>
 </main>
 <script>
-  document.getElementById('tabs').innerHTML = PT.tabs('Favorites', [{ id: 'stalls', label: 'Stalls', count: 3 }, { id: 'products', label: 'Products', count: 4 }, { id: 'markets', label: 'Markets', count: 1 }], 'stalls');
-  document.getElementById('stalls').innerHTML = [1, 3, 4].map(function (id) { return PT.stallCard(PT.farmer(id)).replace('<div class="ml-stall-actions">', '<div class="ml-stall-actions"><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" data-toast="Removed from favorites." data-toast-action="Undo">Remove</button>'); }).join('');
-  document.getElementById('restock').innerHTML = PT.banner('info', 'Restock alerts are on for the 4 products below.', 'You get an in-app notification when a sold-out favorite is listed again.');
-  document.getElementById('products').innerHTML = [4, 1, 5, 14].map(function (id) { var p = Object.assign({}, PT.product(id), { favorite: true }); return PT.productCard(p); }).join('');
+  document.getElementById('tabs').innerHTML = PT.tabs('Saved things', [{ id: 'products', label: 'Products', count: 4 }, { id: 'stalls', label: 'Stalls', count: 3 }, { id: 'markets', label: 'Markets', count: 1 }], 'products');
+  document.getElementById('alert-banner').innerHTML = PT.banner('info', 'One of your four saved products is sold out.', 'Restock alerts are on, so you get a notification the moment the stall lists it again.');
+  document.getElementById('p-filter').innerHTML = PT.chip('All', { selected: true, radio: 'wf', count: 4 }) + PT.chip('In stock now', { radio: 'wf', count: 3 }) + PT.chip('Sold out', { radio: 'wf', count: 1 }) + PT.chip('Price dropped', { radio: 'wf', count: 1 });
+
+  var WISH = [
+    { id: 4, saved: 'Saved 13/09', note: 'Sold out since Sunday', alert: true },
+    { id: 1, saved: 'Saved 19/09' },
+    { id: 14, saved: 'Saved 02/09', was: 195000, note: 'Price dropped 15,000 ₫ since you saved it' },
+    { id: 5, saved: 'Saved 07/09' },
+  ];
+  document.getElementById('wish').innerHTML = WISH.map(function (w) {
+    var p = PT.product(w.id), f = PT.farmer(p.farmer), m = PT.market(f.markets[0]);
+    var soldOut = p.status !== 'available' || p.stock === 0;
+    var stock = soldOut ? '<span class="ml-status ml-status-declined">' + PT.icons.declined() + '<span class="ml-status-text">Sold out</span></span>'
+      : '<span class="ml-status ml-status-ready">' + PT.icons.check() + '<span class="ml-status-text">' + PT.units(p.stock, p.unit) + ' left</span></span>';
+    var action = soldOut
+      ? '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" aria-pressed="true" data-toast="Restock alert is off for ' + PT.esc(p.name) + '.">Alert is on</button>'
+      : '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Added ' + PT.esc(p.name) + ' to your cart." data-toast-action="Undo">Add to cart</button>';
+    return '<li class="ml-card pt-wish-item' + (soldOut ? ' pt-wish-soldout' : '') + '">' +
+      '<span class="pt-wish-thumb" aria-hidden="true">' + PT.esc(PT.category(p.cat).name) + '</span>' +
+      '<div class="pt-wish-main"><b><a class="pt-plain" href="../public/product.html">' + PT.esc(p.name) + '</a></b>' +
+        '<p><a class="pt-plain" href="../public/stall.html">' + PT.esc(f.stall) + '</a> · ' + PT.esc(m.name) + '</p>' +
+        '<div class="pt-wish-meta">' + PT.priceTag(p.price, p.unit, w.was) + stock + '<span class="ml-muted">' + w.saved + '</span>' +
+        (w.note ? '<span class="ml-muted">' + PT.esc(w.note) + '</span>' : '') + '</div></div>' +
+      '<div class="pt-wish-actions">' + action +
+        '<button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" data-remove-wish data-toast="Removed ' + PT.esc(p.name) + ' from your favorites." data-toast-action="Undo">Remove</button></div></li>';
+  }).join('');
+
+  document.getElementById('skeleton').innerHTML = PT.state('loading') + PT.state('loading');
+  document.querySelector('[data-state-target="empty"]').innerHTML = PT.state('empty', 'Nothing saved yet', 'Tap the heart on a product or a stall and it waits for you here, with an alert when a sold-out favorite comes back.', '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../public/products.html">Browse this week\'s products</a>');
+  document.querySelector('[data-state-target="error"]').innerHTML = PT.state('error', "Couldn't load your favorites", 'Check your connection and try again.', '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button>');
+
+  var NEW_THIS_WEEK = { 1: 'Choy sum and Thai basil are back this Saturday', 3: 'Goat cheese and milk, no yogurt until Sunday', 4: 'Rye loaf and sourdough, baked at 5am on Friday' };
+  document.getElementById('stalls').innerHTML = [1, 3, 4].map(function (id) {
+    return PT.stallCard(PT.farmer(id)).replace('<div class="ml-stall-actions">',
+      '<p class="ml-stall-facts" style="font-size:14px;margin:0"><span class="ml-muted">This week</span><span>' + PT.esc(NEW_THIS_WEEK[id]) + '</span></p><div class="ml-stall-actions"><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" data-toast="Removed from your favorites." data-toast-action="Undo">Remove</button>');
+  }).join('');
   document.getElementById('markets').innerHTML = PT.marketCard(PT.market(1));
   PT.boot({ role: 'customer', active: 'favorites' });
 </script>

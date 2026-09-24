@@ -22,11 +22,11 @@
   <p class="pt-small ml-muted"><a href="../customer/orders.html">My orders</a> · <a href="../customer/order.html">Order #ML-0412</a> · Edit</p>
   <div class="pt-col-2">
     <h1 class="pt-title-sm">Edit order #ML-0412</h1>
-    <p class="pt-body">Vườn Cô Tư · Saturday 26/09 · 07:00–07:30. Changes are allowed until <b>19:00 on Friday 25/09</b>.</p>
+    <p class="pt-body">Cô Tư Garden · Saturday 26/09 · 07:00–07:30. Changes are allowed until <b>19:00 on Friday 25/09</b>.</p>
   </div>
   <div id="banner"></div>
   <div id="group"></div>
-  <p class="pt-small ml-muted">You can lower quantities or remove items here. To add something else from Vườn Cô Tư, place a new order (D-07). Quantities are capped at what the stall has left today.</p>
+  <p class="pt-small ml-muted">You can lower quantities or remove items here. To add something else from Cô Tư Garden, place a new order (D-07). Quantities are capped at what the stall has left today.</p>
   <div class="ml-card pt-panel pt-col-3">
     <div class="ml-field" style="min-width:0"><label class="ml-field-label" for="note">Note to the stall</label><textarea id="note" class="ml-input" style="min-height:64px">Please pick the smaller bunches if you can.</textarea></div>
     <div class="pt-form-actions">
@@ -36,9 +36,9 @@
   </div>
 </main>
 <script>
-  document.getElementById('banner').innerHTML = PT.banner('info', 'After you save, the order goes back to Placed and Vườn Cô Tư approves it again.', 'Your stock stays reserved while they review. You get a notification when it is accepted.');
-  document.getElementById('group').innerHTML = PT.cartGroup({ stallName: 'Vườn Cô Tư', market: 'Thảo Điền Weekend Market', pickup: 'Sat 26/09 · 07:00–07:30', items: [{ name: 'Củ Chi water spinach', qty: 2, unit: 'bunch', price: 15000, max: 2 }, { name: 'Choy sum', qty: 1, unit: 'bunch', price: 18000, max: 1 }, { name: 'Green-skin pomelo', qty: 1, unit: 'piece', price: 65000, max: 1 }] });
-  document.getElementById('save').addEventListener('click', function () { PT.dialog({ title: 'Send changes to Vườn Cô Tư?', body: '<p>The order returns to Placed until the stall accepts it again. Your pickup slot is kept.</p>', keep: 'Keep editing', confirm: 'Send changes', onConfirm: function () { location.href = '../customer/order.html'; } }); });
+  document.getElementById('banner').innerHTML = PT.banner('info', 'After you save, the order goes back to Placed and Cô Tư Garden approves it again.', 'Your stock stays reserved while they review. You get a notification when it is accepted.');
+  document.getElementById('group').innerHTML = PT.cartGroup({ stallName: 'Cô Tư Garden', market: 'Thảo Điền Weekend Market', pickup: 'Sat 26/09 · 07:00–07:30', items: [{ name: 'Củ Chi water spinach', qty: 2, unit: 'bunch', price: 15000, max: 2 }, { name: 'Choy sum', qty: 1, unit: 'bunch', price: 18000, max: 1 }, { name: 'Green-skin pomelo', qty: 1, unit: 'piece', price: 65000, max: 1 }] });
+  document.getElementById('save').addEventListener('click', function () { PT.dialog({ title: 'Send changes to Cô Tư Garden?', body: '<p>The order returns to Placed until the stall accepts it again. Your pickup slot is kept.</p>', keep: 'Keep editing', confirm: 'Send changes', onConfirm: function () { location.href = '../customer/order.html'; } }); });
   PT.boot({ role: 'customer', active: 'orders' });
 </script>
 <div id="pt-foot"></div>

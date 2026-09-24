@@ -46,6 +46,8 @@
     <div class="pt-between-c"><h2 class="pt-h2">Latest orders across the platform</h2><span class="pt-small ml-muted">Read-only. Admins do not change order status.</span></div>
     <div id="table"></div>
   </section>
+
+  <p class="pt-caption ml-muted">The market switcher at the top of the sidebar changes what every screen counts. <span class="pt-todo" data-todo="Proposal · Scoping the whole dashboard to one market is not in the SRS. FR-075 puts a market filter on the reports screen only. Decide whether the scope is global and remembered per user, or stays a per-screen filter.">Dashboard-wide market scope is not in the SRS</span></p>
 </main>
 <script>
   document.getElementById('stats').innerHTML = PT.statTile('Farmers', '8', '<b>2</b> waiting for approval · 1 suspended', true) + PT.statTile('Customers', '412', '37 joined this month') + PT.statTile('Markets', '4', 'all active') + PT.statTile('Orders', '1,284', '192 this week · 31,900,000 ₫ completed');

@@ -19,41 +19,124 @@
 <body data-role="guest">
 <div id="pt-top"></div>
 <main class="pt-main">
-  <div class="pt-col-2 pt-measure">
+  <div class="pt-col-2">
     <p class="ml-hand ml-muted">TechWiz 7 · eGreen Basket</p>
     <h1 class="pt-title">About MarketLink</h1>
-    <p class="pt-lead">MarketLink connects Farmers at local farmers markets in Ho Chi Minh City with the people who shop there. Farmers publish what they will bring this week; customers reserve it and pick it up at the stall.</p>
+    <p class="pt-lead">MarketLink connects Farmers at farmers markets around Ho Chi Minh City with the people who shop there. Stalls publish what they will bring this week, you reserve from it, and you collect at the stall.</p>
   </div>
-  <div class="pt-split-wide">
-    <section class="pt-col">
+
+  <div id="carousel"></div>
+  <p class="pt-caption ml-muted">The four photos above are placeholders. <span class="pt-todo" data-todo="Imagery · The About us carousel uses Unsplash placeholder photos, none of them a Vietnamese farmers market. The design system asks for photos shot by the team or licensed with a credit in the ReadMe. Replace all four and add the credits.">Real photos and their credits to add</span></p>
+
+  <section class="pt-split-wide">
+    <div class="pt-col-3">
       <h2 class="pt-h2">Why it exists</h2>
-      <p class="pt-body pt-measure">Market stock is usually announced on a chalkboard or by word of mouth. People arrive to find the good things gone, or make the trip to a stall that is closed for the week. Farmers, in turn, have no easy way to publish their weekly inventory, take pre-orders, or keep in touch with regulars. MarketLink puts the week's stock, the stall's location and a pre-order queue in one place.</p>
-      <h2 class="pt-h2">What it does not do</h2>
-      <ul class="pt-body pt-measure" style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">
-        <li>No online payment. You pay the Farmer at the stall when you pick up.</li>
-        <li>No delivery. Every order is picked up at the market, in the stall's pickup window.</li>
-        <li>No certification. MarketLink does not verify licences or organic claims; ask the Farmer.</li>
-        <li>One account can be shared within a family. The system does not tell people apart inside an account.</li>
+      <p class="pt-body pt-measure">A market morning runs on word of mouth. Stalls chalk up what they brought, regulars ask what is coming next week, and everyone else finds out by walking the rows. That works until you need something in particular, or until the trip across town ends at an empty table.</p>
+      <p class="pt-body pt-measure">Farmers have the same problem from the other side. There is no easy way to tell regulars what the week will hold, to take an order before market day, or to know how much to cut on Friday evening. MarketLink writes both halves down: the stall publishes the week, you reserve from it, and the stall reads the orders before it picks.</p>
+    </div>
+    <div class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">What MarketLink does not do</h2>
+      <ul class="pt-nots">
+        <li><b>No online payment.</b> You pay the Farmer at the stall when you collect. There is no card form anywhere in the product.</li>
+        <li><b>No delivery.</b> Every order is collected at the market, inside the window the stall sets.</li>
+        <li><b>No certification.</b> MarketLink does not check licences or organic claims. Ask the Farmer at the stall.</li>
+        <li><b>No separate family profiles.</b> An account can be shared at home. The system does not tell people apart inside one account.</li>
       </ul>
-      <h2 class="pt-h2">Maps and data</h2>
-      <p class="pt-body pt-measure">Maps use Leaflet with OpenStreetMap tiles. Map data © OpenStreetMap contributors. Product photos are taken by the stalls or the team, or used under a licence credited in the project ReadMe.</p>
-    </section>
-    <section class="pt-col">
+    </div>
+  </section>
+
+  <section class="pt-section">
+    <div class="pt-between">
       <h2 class="pt-h2">The team</h2>
-      <p class="pt-small ml-muted"><span class="pt-todo" data-todo="FR-082 · Team names, roles and photos are not in the repo. Replace the placeholder tiles with the real team (the SRS requires information about the team).">Team members, roles and photos to be added</span></p>
-      <div class="pt-grid-2" id="team"></div>
-      <h2 class="pt-h2">Built with</h2>
+      <span class="pt-small ml-muted">Six people, split by what they own in the repository</span>
+    </div>
+    <p class="pt-small ml-muted"><span class="pt-todo" data-todo="FR-082 · Team names and photos are not in the repository. The roles and ownership below come from .ai/REQUIREMENTS.md; add the real names, and a photo each if the team wants them.">Names and photos to add</span></p>
+    <div class="pt-tiles" id="team"></div>
+  </section>
+
+  <section class="pt-split-wide">
+    <div class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">How it is built</h2>
       <dl class="pt-facts">
         <dt>Frontend</dt><dd>React 19, Vite, TypeScript, Tailwind 4</dd>
         <dt>Backend</dt><dd>Spring Boot, Java 25, MySQL 8, Redis, Flyway</dd>
-        <dt>Maps</dt><dd>Leaflet + OpenStreetMap</dd>
-        <dt>AI tools used</dt><dd><span class="pt-todo" data-todo="SRS 1.6 · All AI tools used must be acknowledged in the documentation. List them here and in the ReadMe.">List of AI tools used, as the SRS requires</span></dd>
+        <dt>Maps</dt><dd>Leaflet with OpenStreetMap tiles, no Google Maps key to expire mid-demo</dd>
+        <dt>Design</dt><dd>The Hang tag design system: one set of tokens, one set of components, one voice</dd>
       </dl>
-    </section>
-  </div>
+    </div>
+    <div class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Credits and data</h2>
+      <dl class="pt-facts">
+        <dt>Map data</dt><dd>© OpenStreetMap contributors</dd>
+        <dt>Photos</dt><dd>Placeholders for now, credited here once the team's own photos are in</dd>
+        <dt>AI tools</dt><dd><span class="pt-todo" data-todo="SRS 1.6 · Every AI tool used must be acknowledged in the submitted documentation. List them here and in the ReadMe before submission.">Tools used, as the SRS requires</span></dd>
+        <dt>Currency and time</dt><dd>Vietnamese đồng, dates dd/MM/yyyy, 24-hour clock, Asia/Ho_Chi_Minh</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="ml-card pt-panel pt-between-c">
+    <div class="pt-col-2">
+      <h2 class="pt-h3">Something to tell us?</h2>
+      <p class="pt-small ml-muted">Questions about an order go to the stall directly. Anything about the platform comes to the team.</p>
+    </div>
+    <div class="pt-row-2">
+      <a class="ml-btn ml-btn-secondary" href="../public/contact.html">Contact us</a>
+      <a class="ml-btn ml-btn-secondary" href="../public/feedback.html">Send feedback</a>
+    </div>
+  </section>
 </main>
 <script>
-  document.getElementById('team').innerHTML = ['LEAD', 'BE1', 'BE2', 'FE1', 'FE2', 'QA'].map(function (r) { return '<div class="ml-card pt-tile"><span class="pt-upload-frame" style="width:100%;aspect-ratio:1/1">Photo</span><b>Name to add</b><span>' + r + ' · role description to add</span></div>'; }).join('');
+  var U = 'https://images.unsplash.com/', SHOT = '?w=1800&q=72&auto=format&fit=crop';
+  document.getElementById('carousel').innerHTML = PT.carouselHTML([
+    {
+      topic: 'Our mission',
+      title: 'End the trip that comes home empty',
+      text: "Stalls announce the week on a chalkboard, so the best of the morning is gone before most people arrive. MarketLink puts every stall's week in one place and holds what you reserve until you collect it.",
+      photo: U + 'photo-1533900298318-6b8da08a523e' + SHOT,
+      alt: 'Stalls at a covered market with produce stacked in wooden crates',
+      note: 'Thảo Điền · 06:40',
+      cta: ["See this weekend's markets", '../public/markets.html'],
+    },
+    {
+      topic: 'How it works',
+      title: 'Reserve on Thursday, collect on Saturday',
+      text: 'Browse what four markets around Ho Chi Minh City will have this weekend and reserve from as many stalls as you like. Each stall gets its own order, its own pickup time, and is paid at the stall.',
+      photo: U + 'photo-1464226184884-fa280b87c399' + SHOT,
+      alt: 'Baskets of carrots, beans and chillies laid out on a market table',
+      note: 'Thủ Đức · Sat 06:00',
+      cta: ["Browse this week's products", '../public/products.html'],
+    },
+    {
+      topic: 'The technology',
+      title: 'Counts that are true the moment you order',
+      text: "A reservation comes out of the stall's count straight away, so two people cannot book the same last two bunches. Pickup slots keep the queue short, and the map pins each stall inside its market.",
+      photo: U + 'photo-1416879595882-3373a0480b5b' + SHOT,
+      alt: 'Seeds and dry soil with a metal scoop',
+      note: '12 bunches left',
+      cta: ['See the market map', '../public/map.html'],
+    },
+    {
+      topic: 'What you get',
+      title: 'The stall knows what to bring',
+      text: 'Farmers read the weekend orders before they harvest, so less comes back unsold. You get the pomelo you planned on, at a time you chose, paid to the person who grew it.',
+      photo: U + 'photo-1574943320219-553eb213f72d' + SHOT,
+      alt: 'A farmer working a flooded rice field with a small tractor',
+      note: 'Củ Chi · Fri harvest',
+      cta: ['Sell at MarketLink', '../public/register-farmer.html'],
+    },
+  ], 'What MarketLink is for');
+  PT.carousel('[data-carousel]');
+
+  document.getElementById('team').innerHTML = [
+    ['LEAD', 'The schema, the API contract and the twelve decisions the rest of the team builds against'],
+    ['BE1', 'Sign-in, roles and the order lifecycle, from placed through to completed'],
+    ['BE2', 'Products, markets, weekly stock, reports and the seed data for the demo'],
+    ['FE1', 'The design system, the public pages, the map and the Customer dashboard'],
+    ['FE2', 'The Farmer and Admin dashboards, and every form in the product'],
+    ['QA / DOC', 'The requirements list, the test data and the documents that go with the submission'],
+  ].map(function (t) { return '<div class="ml-card pt-tile"><p class="ml-overline ml-muted">' + t[0] + '</p><b>Name to add</b><span>' + t[1] + '</span></div>'; }).join('');
+
   PT.boot({ active: 'about' });
 </script>
 <div id="pt-foot"></div>

@@ -26,7 +26,7 @@
 
   <div class="pt-grid-4">
     <div class="ml-card pt-tile"><b>How to open</b><span>Serve the repo root (for example <code>python3 -m http.server</code>) and open <code>docs/prototype/index.html</code>. Maps need a connection for OpenStreetMap tiles.</span></div>
-    <div class="ml-card pt-tile"><b>Demo accounts in the screens</b><span>Customer Khang · Farmer Vườn Cô Tư (Nguyễn Thị Tư) · Admin. Public pages render as a guest; add <code>?as=customer</code> to see them signed in.</span></div>
+    <div class="ml-card pt-tile"><b>Demo accounts in the screens</b><span>Customer Khang · Farmer Cô Tư Garden (Nguyễn Thị Tư) · Admin. Public pages render as a guest; add <code>?as=customer</code> to see them signed in.</span></div>
     <div class="ml-card pt-tile"><b>Prototype bar</b><span>Bottom left on every screen: role, FR ids, a list of all screens and the open questions on that screen.</span></div>
     <div class="ml-card pt-tile"><b>What it is not</b><span>Static HTML with demo data from <code>data.js</code>. No API calls, no real sign-in. Real components are TSX in <code>frontend/src</code>.</span></div>
   </div>
@@ -61,7 +61,7 @@
     <h2 class="pt-h2">Design notes</h2>
     <div class="pt-grid-2">
       <div class="ml-card pt-panel pt-col-2"><h3 class="pt-h3">Followed from the design system</h3><p class="pt-small">Colors only through tokens; Patrick Hand for what the stall or market says (names, prices, greetings, the “From the stall” note) and Chivo for what the system says; one handwritten heading per screen; paper tag cards with the 2 px edge; the punched hole only on product tags; the tilted yellow price tag; dashboards on the lighter <code>surface-quiet</code>; a written reason next to every locked button; “pay at the stall” wherever a total appears; Leaflet + OSM pins with the square/round distinction.</p></div>
-      <div class="ml-card pt-panel pt-col-2"><h3 class="pt-h3">Choices made for these screens</h3><p class="pt-small">Home opens with the week's dates and a green board of which market is open when, instead of a hero photo. Order detail uses a dotted step strip plus a history timeline for FR-038. The Farmer's weekly template is a product × day grid with greyed non-selling days. Admin gets a seventh menu item, Settings, for categories, announcements and the feedback inbox because the SRS lists them but the reference menu had no home for them. Reports use plain proportional bars, no chart library.</p></div>
+      <div class="ml-card pt-panel pt-col-2"><h3 class="pt-h3">Choices made for these screens</h3><p class="pt-small">Home opens with the week's dates and a green board of which market is open when, instead of a hero photo. Order detail uses a dotted step strip plus a history timeline for FR-038. The Farmer's weekly template is a product × day grid with greyed non-selling days. Admin gets a seventh menu item, Settings, for categories, announcements and the feedback inbox because the SRS lists them but the reference menu had no home for them. Reports use plain proportional bars, no chart library. Stall names carry their descriptive half in English (Cô Tư Garden, Củ Chi Goat Farm); people's names and Ho Chi Minh City place names stay as they are, which is a deviation from the brand book's Voice section for FE1 to confirm.</p></div>
     </div>
   </section>
 </main>

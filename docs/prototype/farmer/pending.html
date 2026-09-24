@@ -21,7 +21,7 @@
 <main class="pt-main pt-main-narrow">
   <div class="pt-between">
     <div class="pt-col-2">
-      <p class="ml-overline ml-muted">Bếp bánh Cô Ba · registered 22/09/2026</p>
+      <p class="ml-overline ml-muted">Cô Ba Kitchen · registered 22/09/2026</p>
       <h1 class="pt-title-sm">Your stall is waiting for approval</h1>
     </div>
     <button type="button" class="ml-chip" aria-pressed="false" id="sus">Preview: suspended stall</button>
@@ -38,7 +38,7 @@
     </div>
     <div class="ml-card pt-panel pt-col-2">
       <h2 class="pt-h3">Registration details</h2>
-      <dl class="pt-facts"><dt>Stall</dt><dd>Bếp bánh Cô Ba</dd><dt>Contact</dt><dd>Lý Thị Ba · 0906 222 410</dd><dt>Email</dt><dd>coba@example.com</dd><dt>Market requested</dt><dd>Thủ Đức Farmers Market</dd></dl>
+      <dl class="pt-facts"><dt>Stall</dt><dd>Cô Ba Kitchen</dd><dt>Contact</dt><dd>Lý Thị Ba · 0906 222 410</dd><dt>Email</dt><dd>coba@example.com</dd><dt>Market requested</dt><dd>Thủ Đức Farmers Market</dd></dl>
     </div>
     <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-071 · What a rejected Farmer sees and whether they can re-apply is not specified. The API contract has a reject reason; the screen for it is not designed yet.">Rejected state and re-application are not specified</span></p>
   </div>
@@ -56,8 +56,8 @@
   </div>
 </main>
 <script>
-  document.getElementById('sus').addEventListener('click', function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); document.getElementById('state-pending').hidden = on; document.getElementById('state-suspended').hidden = !on; document.querySelector('h1').textContent = on ? 'Your stall is suspended' : 'Your stall is waiting for approval'; document.querySelector('.ml-overline').textContent = on ? 'Vườn trái cây Long Khánh · suspended 20/09/2026' : 'Bếp bánh Cô Ba · registered 22/09/2026'; });
-  PT.boot({ role: 'farmer', active: null, announce: false, userName: 'Bếp bánh Cô Ba', unread: 0 });
+  document.getElementById('sus').addEventListener('click', function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); document.getElementById('state-pending').hidden = on; document.getElementById('state-suspended').hidden = !on; document.querySelector('.pt-apphead-title b').textContent = on ? 'Your stall is suspended' : 'Your stall is waiting for approval'; document.querySelector('.pt-apphead-sub').textContent = on ? 'Long Khánh Fruit Garden · suspended 20/09/2026' : 'Cô Ba Kitchen · registered 22/09/2026'; });
+  PT.boot({ role: 'farmer', active: null, announce: false, userName: 'Cô Ba Kitchen', unread: 0 });
 </script>
 <div id="pt-foot"></div>
 </body>

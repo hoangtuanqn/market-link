@@ -79,7 +79,7 @@
   document.getElementById('sort-chips').innerHTML = PT.chip('Newest', { selected: true, radio: 'sort' }) + PT.chip('Price, low to high', { radio: 'sort' }) + PT.chip('Price, high to low', { radio: 'sort' }) + PT.chip('Top rated', { radio: 'sort' });
   document.getElementById('products').innerHTML = PT.products.filter(function (p) { return p.status === 'available'; }).slice(0, 12).map(function (p) { return PT.productCard(p); }).join('');
   document.getElementById('skeleton').innerHTML = PT.skeletonCards(6);
-  document.querySelector('[data-state-target="empty"]').innerHTML = PT.state('empty', 'Nothing under 30,000 ₫ in Dairy on Saturday', 'Trại dê Củ Chi starts at 35,000 ₫ a jar. Remove the price filter or try Fruit.', '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Remove price filter</button>');
+  document.querySelector('[data-state-target="empty"]').innerHTML = PT.state('empty', 'Nothing under 30,000 ₫ in Dairy on Saturday', 'Củ Chi Goat Farm starts at 35,000 ₫ a jar. Remove the price filter or try Fruit.', '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Remove price filter</button>');
   document.querySelector('[data-state-target="error"]').innerHTML = PT.state('error', "Couldn't load products", 'Check your connection and try again.', '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button>');
   document.getElementById('pager').innerHTML = '<span class="pt-small ml-muted">Showing 1–12 of 18</span>' + PT.pagination(1, 2);
   PT.boot({ active: 'products' });

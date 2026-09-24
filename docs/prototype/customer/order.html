@@ -23,7 +23,7 @@
   <div class="pt-between">
     <div class="pt-col-2">
       <p class="ml-hand ml-muted">Placed Wed 23/09 at 20:41 · accepted Thu 24/09 at 06:55</p>
-      <h1 class="pt-title-sm">Vườn Cô Tư · Sat 26/09, 07:00–07:30</h1>
+      <h1 class="pt-title-sm">Cô Tư Garden · Sat 26/09, 07:00–07:30</h1>
       <div class="pt-steps" id="steps"></div>
     </div>
     <div class="pt-row-2">
@@ -56,7 +56,7 @@
     <aside class="pt-sticky">
       <div class="ml-card pt-panel pt-col-3" id="actions">
         <h2 class="pt-h3">Change this order</h2>
-        <p class="pt-small" id="cut-text">You can edit quantities, remove items or cancel until <b>19:00 on Friday 25/09</b>. After you edit, Vườn Cô Tư approves the order again.</p>
+        <p class="pt-small" id="cut-text">You can edit quantities, remove items or cancel until <b>19:00 on Friday 25/09</b>. After you edit, Cô Tư Garden approves the order again.</p>
         <a class="ml-btn ml-btn-secondary ml-btn-block" id="edit" href="../customer/order-edit.html">Edit order</a>
         <button type="button" class="ml-btn ml-btn-danger ml-btn-block" id="cancel" data-dialog="cancel-ML-0412">Cancel order</button>
         <p class="pt-caption ml-muted" id="lock-why" hidden>Cutoff passed at 19:00 25/09. To change it, contact the stall directly on 0912 440 540.</p>
@@ -83,7 +83,7 @@
   render(false);
   document.getElementById('lock-toggle').addEventListener('click', function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); render(on); });
   document.getElementById('history').innerHTML = o.history.map(function (h) { return '<li><span class="pt-timeline-dot" style="background:var(--status-' + h[0] + '-bg);color:var(--status-' + h[0] + '-ink)">' + PT.icons[h[0]]() + '</span><div>' + PT.status(h[0]) + '<time>' + h[1] + ' · by ' + h[2] + '</time></div></li>'; }).join('');
-  document.body.addEventListener('click', function (e) { if (e.target.closest('[data-dialog="cancel-ML-0412"]')) PT.dialog({ tone: 'danger', title: 'Cancel order #ML-0412?', body: '<p>Vườn Cô Tư is notified right away, and the 3 bunches you reserved go back to other customers.</p><p class="ml-muted" style="font-size:14px">You can cancel until 19:00 on 25/09. After that the order is locked.</p>', keep: 'Keep order', confirm: 'Cancel order', toast: 'Order #ML-0412 cancelled. Vườn Cô Tư has been told.' }); });
+  document.body.addEventListener('click', function (e) { if (e.target.closest('[data-dialog="cancel-ML-0412"]')) PT.dialog({ tone: 'danger', title: 'Cancel order #ML-0412?', body: '<p>Cô Tư Garden is notified right away, and the 3 bunches you reserved go back to other customers.</p><p class="ml-muted" style="font-size:14px">You can cancel until 19:00 on 25/09. After that the order is locked.</p>', keep: 'Keep order', confirm: 'Cancel order', toast: 'Order #ML-0412 cancelled. Cô Tư Garden has been told.' }); });
   var f = PT.farmer(1);
   PT.map('map', { center: [f.lat, f.lng], zoom: 17, scroll: false, markers: [{ lat: f.lat, lng: f.lng, kind: 'stall', label: 'Stall A12', selected: true }] });
   PT.boot({ role: 'customer', active: 'orders' });

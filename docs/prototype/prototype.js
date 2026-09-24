@@ -19,6 +19,7 @@
       ['register-customer.html', 'Customer registration', 'FR-001'],
       ['register-farmer.html', 'Farmer registration', 'FR-002 FR-071'],
       ['forgot-password.html', 'Forgot password', 'FR-007'],
+      ['reset-password.html', 'Set a new password', 'FR-007'],
       ['about.html', 'About us', 'FR-082'],
       ['contact.html', 'Contact us', 'FR-083'],
       ['feedback.html', 'Feedback form', 'FR-081'],
@@ -35,6 +36,7 @@
       ['notifications.html', 'Notifications', 'FR-041 FR-042'],
       ['account.html', 'Account', 'FR-001 FR-006'],
       ['assistant.html', 'Shopping assistant', 'FR-090 FR-091 FR-092'],
+      ['messages.html', 'Messages with a stall', 'Proposal · no FR yet'],
     ],
     farmer: [
       ['overview.html', 'Overview', 'FR-065 FR-068 FR-069'],
@@ -47,6 +49,7 @@
       ['slots.html', 'Pickup slots', 'FR-032 FR-067'],
       ['history.html', 'Sales history and best sellers', 'FR-069'],
       ['reviews.html', 'Reviews and replies', 'FR-053'],
+      ['messages.html', 'Messages with customers', 'Proposal · no FR yet'],
       ['notifications.html', 'Notifications (Farmer)', 'FR-042'],
       ['pending.html', 'Waiting for approval / suspended', 'FR-071'],
     ],
@@ -111,6 +114,17 @@
     star: function (f) { return '<svg viewBox="0 0 16 16" aria-hidden="true" fill="' + (f ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z"/></svg>'; },
     pencil: function () { return svg('<path d="M11.2 2.3l2.5 2.5L5.5 13H3v-2.5z"/>'); },
     chevronLeft: function () { return svg('<path d="M10 3L5 8l5 5"/>'); },
+    dashboard: function () { return svg('<rect x="2" y="2" width="5.2" height="5.2" rx="1"/><rect x="8.8" y="2" width="5.2" height="5.2" rx="1"/><rect x="2" y="8.8" width="5.2" height="5.2" rx="1"/><rect x="8.8" y="8.8" width="5.2" height="5.2" rx="1"/>'); },
+    box: function () { return svg('<path d="M8 1.8l5.5 3v6.4L8 14.2l-5.5-3V4.8z"/><path d="M2.5 4.8L8 7.8l5.5-3M8 7.8v6.4"/>'); },
+    tag: function () { return svg('<path d="M8.3 1.9H14v5.7L7.6 14 2 8.4z"/><circle cx="11" cy="5" r="1"/>'); },
+    store: function () { return svg('<path d="M2.6 6.4h10.8v7.1H2.6z"/><path d="M1.6 3.4h12.8l.6 3H1z"/><path d="M6.4 13.5V9.7h3.2v3.8"/>'); },
+    users: function () { return svg('<circle cx="6" cy="5.4" r="2.5"/><path d="M1.8 13.6c0-2.3 1.9-4.1 4.2-4.1s4.2 1.8 4.2 4.1"/><path d="M11 3.3a2.5 2.5 0 010 4.6"/><path d="M12.1 9.9c1.3.6 2.1 1.9 2.1 3.7"/>'); },
+    shield: function () { return svg('<path d="M8 1.8l5 1.8v4.1c0 3-2.1 5.2-5 6.5-2.9-1.3-5-3.5-5-6.5V3.6z"/><path d="M5.9 7.9l1.6 1.6 3-3.1"/>'); },
+    chart: function () { return svg('<path d="M2 13.4h12"/><path d="M4.3 11.2V7.3M7.5 11.2V3.6M10.7 11.2V8.6M13.3 11.2V5.6"/>'); },
+    chat: function () { return svg('<path d="M2 3.6h12v7.5H8.2l-3.7 2.6v-2.6H2z"/>'); },
+    sliders: function () { return svg('<path d="M2 4.6h12M2 11.4h12"/><circle cx="6" cy="4.6" r="1.8"/><circle cx="10.4" cy="11.4" r="1.8"/>'); },
+    out: function () { return svg('<path d="M6.3 2.6H3.4a1.2 1.2 0 00-1.2 1.2v8.4a1.2 1.2 0 001.2 1.2h2.9"/><path d="M10.6 11l3-3-3-3"/><path d="M13.6 8H6.4"/>'); },
+    swap: function () { return svg('<path d="M3 5.6h9.4l-2.3-2.3"/><path d="M13 10.4H3.6l2.3 2.3"/>'); },
     chevronRight: function () { return svg('<path d="M6 3l5 5-5 5"/>'); },
     pause: function () { return svg('<path d="M6 3.5v9M10 3.5v9"/>'); },
     play: function () { return svg('<path d="M5.5 3.4l6.2 4.6-6.2 4.6z"/>'); },
@@ -138,7 +152,7 @@
     var items = NAV[role];
     var home = role === 'farmer' ? link('farmer/overview.html') : role === 'admin' ? link('admin/overview.html') : link('public/home.html');
     var tools = '';
-    if (role === 'guest' || role === 'customer') tools += '<a class="ml-hbtn" href="' + link('public/search.html') + '" aria-label="Search">' + I.search() + '</a>';
+    if (role === 'guest' || role === 'customer') tools += '<a class="ml-hbtn pt-hbtn-search" href="' + link('public/search.html') + '" aria-label="Search">' + I.search() + '</a>';
     if (role !== 'guest') {
       var nhref = role === 'customer' ? link('customer/notifications.html') : role === 'farmer' ? link('farmer/notifications.html') : link('admin/overview.html');
       tools += '<a class="ml-hbtn" href="' + nhref + '" aria-label="Notifications' + (o.unread ? ', ' + o.unread + ' unread' : '') + '">' + I.bell() + (o.unread ? '<span class="ml-hbadge" aria-hidden="true">' + o.unread + '</span>' : '') + '</a>';
@@ -206,7 +220,7 @@
   };
   PT.stallCard = function (f, o) {
     o = o || {};
-    var mono = (f.stall || '?').replace(/^(Vườn|Nông trại|Nhà vườn|Trại|Sạp|Lò bánh|Bếp bánh|Mật ong|Nấm sạch|Farm|Garden|Stall)\s+/i, '').charAt(0);
+    var mono = (f.stall || '?').trim().charAt(0);
     var m = PT.market(f.markets[0]);
     return '<article class="ml-card ml-stall' + (o.className ? ' ' + o.className : '') + '"><div class="ml-stall-mono" aria-hidden="true">' + mono + '</div><div><h3 class="ml-stall-name"><a class="pt-plain" href="' + link('public/stall.html') + '">' + esc(f.stall) + '</a></h3><p class="ml-stall-person">' + esc(f.person) + '</p>' + (f.rating != null ? '<div style="margin-top:6px">' + PT.rating(f.rating, f.reviews) + '</div>' : '') + '</div>' +
       '<dl class="ml-stall-facts"><dt>Markets</dt><dd>' + f.markets.map(function (id) { return esc(PT.market(id).name); }).join(', ') + '</dd><dt>Market days</dt><dd>' + f.days + '</dd><dt>Pickup</dt><dd>' + f.pickup + '</dd>' + (f.distance ? '<dt>Distance</dt><dd>' + f.distance + '</dd>' : '') + '</dl>' +
@@ -305,7 +319,8 @@
   };
   PT.chat = function (m) {
     var bot = m.from !== 'user';
-    return '<div class="ml-msg ' + (bot ? 'ml-msg-bot' : 'ml-msg-user') + '"><div class="ml-msg-bubble">' + m.text + '</div><div class="ml-msg-meta">' + (bot ? 'MarketLink assistant' : 'You') + (m.time ? '<span>· ' + m.time + '</span>' : '') + (m.intent ? '<span class="ml-msg-intent">Intent: ' + m.intent + '</span>' : '') + '</div>' + (m.suggestions ? '<div class="ml-msg-suggest">' + m.suggestions.map(function (s) { return '<button type="button" class="ml-chip" aria-pressed="false" data-suggest>' + s + '</button>'; }).join('') + '</div>' : '') + '</div>';
+    var who = m.who || (bot ? 'MarketLink assistant' : 'You');
+    return '<div class="ml-msg ' + (bot ? 'ml-msg-bot' : 'ml-msg-user') + '"><div class="ml-msg-bubble">' + m.text + '</div><div class="ml-msg-meta">' + esc(who) + (m.time ? '<span>· ' + m.time + '</span>' : '') + (m.intent ? '<span class="ml-msg-intent">Intent: ' + m.intent + '</span>' : '') + '</div>' + (m.suggestions ? '<div class="ml-msg-suggest">' + m.suggestions.map(function (s) { return '<button type="button" class="ml-chip" aria-pressed="false" data-suggest>' + s + '</button>'; }).join('') + '</div>' : '') + '</div>';
   };
   PT.todo = function (text) { return '<span class="pt-todo" data-todo>' + text + '</span>'; };
 
@@ -388,6 +403,138 @@
       sheet.innerHTML = kind === 'screens' ? screens() : todoList(); sheet.setAttribute('data-kind', kind); sheet.setAttribute('data-open', 'true');
     });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') sheet.setAttribute('data-open', 'false'); });
+  }
+
+  /* ---------- Dashboard shell (Farmer and Admin) ----------
+     The design system defines one horizontal SiteHeader on `board`. Work screens get a board-green sidebar
+     instead, with grouped navigation and the stall or platform context at the top, and a quiet work-area
+     header carrying the page name, search and the signed-in person. Deviation for FE1 and LEAD to confirm. */
+  var SIDE = {
+    farmer: {
+      badge: 'Farmer', home: 'farmer/overview.html',
+      groups: [
+        ['Today', [
+          ['overview.html', 'Overview', 'dashboard'],
+          ['orders.html', 'Incoming orders', 'ready', 4, ['order.html']],
+          ['slots.html', 'Pickup slots', 'clock'],
+        ]],
+        ['Stock', [
+          ['stock-week.html', "This week's stock", 'box'],
+          ['products.html', 'Products', 'tag', 0, ['product-form.html']],
+        ]],
+        ['Stall', [
+          ['stall-profile.html', 'Stall & pickup', 'store'],
+          ['reviews.html', 'Reviews', 'star'],
+          ['history.html', 'Sales history', 'chart'],
+        ]],
+        ['Inbox', [
+          ['messages.html', 'Messages', 'chat', 1],
+          ['notifications.html', 'Notifications', 'bell', 2],
+        ]],
+        ['Account', [
+          ['pending.html', 'Approval status', 'shield'],
+        ]],
+      ],
+    },
+    admin: {
+      badge: 'Admin', home: 'admin/overview.html',
+      groups: [
+        ['Analytics', [
+          ['overview.html', 'Overview', 'dashboard'],
+          ['reports.html', 'Reports', 'chart'],
+        ]],
+        ['People', [
+          ['farmers.html', 'Farmers', 'users', 2, ['farmer.html']],
+          ['customers.html', 'Customers', 'users'],
+        ]],
+        ['Marketplace', [
+          ['markets.html', 'Markets', 'store', 0, ['market-form.html']],
+          ['moderation.html', 'Moderation', 'shield', 1],
+        ]],
+        ['Platform', [
+          ['categories.html', 'Product categories', 'tag'],
+          ['announcements.html', 'Announcements', 'megaphone'],
+          ['feedback.html', 'Feedback inbox', 'chat', 2],
+        ]],
+      ],
+    },
+  };
+
+  function sidebarHTML(role, file) {
+    var cfg = SIDE[role], u = PT.users[role] || {};
+    var ctx = role === 'farmer'
+      ? { mono: 'C', name: 'Cô Tư Garden', sub: 'Approved · 2 markets' }
+      : { mono: 'M', name: 'MarketLink', sub: 'Platform · 4 markets' };
+    var nav = cfg.groups.map(function (g) {
+      return '<div class="pt-side-group"><h2>' + g[0] + '</h2>' + g[1].map(function (it) {
+        var here = it[0] === file || (it[4] || []).indexOf(file) >= 0;
+        return '<a class="pt-side-link" href="../' + role + '/' + it[0] + '"' + (here ? ' aria-current="page"' : '') + '>' + I[it[2]]() + '<span>' + esc(it[1]) + '</span>' + (it[3] ? '<span class="pt-side-count">' + it[3] + '</span>' : '') + '</a>';
+      }).join('') + '</div>';
+    }).join('');
+    var who = role === 'farmer' ? { mail: 'cotu@example.com', line: 'Farmer · Cô Tư Garden', mono: 'CT' } : { mail: 'admin@marketlink.local', line: 'Admin · whole platform', mono: 'AD' };
+    return '<aside class="pt-side" aria-label="' + cfg.badge + ' navigation">' +
+      '<div class="pt-side-top">' + PT.logo(26, '../' + cfg.home) + '<span class="pt-side-badge">' + cfg.badge + '</span></div>' +
+      '<div class="pt-side-ctx"><span class="pt-side-ctx-mono" aria-hidden="true">' + ctx.mono + '</span><span><b>' + esc(ctx.name) + '</b><span>' + esc(ctx.sub) + '</span></span>' +
+        '<button type="button" data-scope aria-label="Change which market you are looking at">' + I.swap() + '</button></div>' +
+      '<nav class="pt-side-nav" aria-label="Sections">' + nav + '</nav>' +
+      '<div class="pt-side-user"><span class="pt-side-user-mono" aria-hidden="true">' + who.mono + '</span><span><b>' + who.mail + '</b><span>' + esc(who.line) + '</span></span>' +
+        '<a class="pt-side-out" href="../public/login.html">' + I.out() + 'Sign out</a></div></aside>';
+  }
+
+  function appHeadHTML(role, o) {
+    var bell = role === 'farmer'
+      ? '<a class="pt-appbtn" href="../farmer/notifications.html" aria-label="Notifications, 2 unread">' + I.bell() + '<span class="ml-hbadge" aria-hidden="true">2</span></a>' : '';
+    var acct = role === 'farmer' ? '../farmer/stall-profile.html' : '../admin/overview.html';
+    var mono = role === 'farmer' ? 'CT' : 'AD';
+    return '<header class="pt-apphead">' +
+      '<button type="button" class="pt-appbtn pt-appmenu" data-side-open aria-label="Open navigation">' + I.menu() + '</button>' +
+      '<button type="button" class="pt-apphead-back" data-back aria-label="Go back">' + I.chevronLeft() + '</button>' +
+      '<div class="pt-apphead-title"><b></b><div class="pt-apphead-sub"></div></div>' +
+      '<div class="pt-apphead-tools">' +
+        '<div class="pt-appsearch">' + I.search() + '<label class="ml-sr" for="pt-appq">Search</label><input id="pt-appq" type="search" placeholder="' + (role === 'farmer' ? 'Order code or customer' : 'Stall, customer or market') + '"><kbd>⌘K</kbd></div>' +
+        bell + '<a class="pt-appavatar" href="' + acct + '" aria-label="Your account">' + mono + '</a>' +
+      '</div></header>';
+  }
+
+  function mountShell(role, o) {
+    var main = document.querySelector('main');
+    if (!main) return;
+    var file = location.pathname.split('/').pop();
+    var shell = document.createElement('div');
+    shell.className = 'pt-shell';
+    shell.innerHTML = sidebarHTML(role, file) + '<div class="pt-app">' + appHeadHTML(role, o) + '</div>';
+    main.parentNode.insertBefore(shell, main);
+    var app = shell.querySelector('.pt-app');
+    app.appendChild(main);
+    app.insertAdjacentHTML('beforeend', '<div class="pt-appfoot"><span>© 2026 MarketLink · TechWiz 7</span><span>Map data © OpenStreetMap contributors</span></div>');
+    document.body.setAttribute('data-shell', 'true');
+
+    // the page name moves out of the page and into the header, keeping any live element in the kicker
+    var h1 = main.querySelector('h1');
+    var bEl = shell.querySelector('.pt-apphead-title b'), subEl = shell.querySelector('.pt-apphead-sub');
+    if (h1) {
+      bEl.textContent = o.title || h1.textContent.trim();
+      var prev = h1.previousElementSibling;
+      if (prev && /ml-overline|ml-hand/.test(prev.className || '')) { prev.className = ''; subEl.appendChild(prev); }
+      else if (o.subtitle) subEl.textContent = o.subtitle;
+      h1.remove();
+    } else {
+      bEl.textContent = o.title || document.title.split(' — ')[0];
+      if (o.subtitle) subEl.textContent = o.subtitle;
+    }
+
+    shell.querySelector('[data-back]').addEventListener('click', function () { history.length > 1 ? history.back() : (location.href = '../' + SIDE[role].home); });
+    shell.querySelector('[data-side-open]').addEventListener('click', function () { shell.setAttribute('data-side', 'open'); });
+    shell.addEventListener('click', function (e) {
+      if (shell.getAttribute('data-side') === 'open' && !e.target.closest('.pt-side') && !e.target.closest('[data-side-open]')) shell.setAttribute('data-side', 'closed');
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') shell.setAttribute('data-side', 'closed'); });
+    shell.querySelector('[data-scope]').addEventListener('click', function () {
+      var opts = role === 'farmer'
+        ? '<option>All markets</option><option>Thảo Điền Weekend Market</option><option>Thủ Đức Farmers Market</option>'
+        : '<option>All markets</option>' + PT.markets.map(function (m) { return '<option>' + esc(m.name) + '</option>'; }).join('');
+      PT.dialog({ title: 'Which market are you looking at?', body: '<p>Orders, stock and totals on every screen follow this choice.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="scope">Market</label><select id="scope" class="ml-input">' + opts + '</select></div>', keep: 'Cancel', confirm: 'Apply', toast: 'Scope changed. Every screen now shows that market only.' });
+    });
   }
 
   /* ---------- Carousel: full-bleed photo band with a paper tag panel (home page) ----------
@@ -475,8 +622,9 @@
       if ((t = e.target.closest('[data-tab]'))) { var tabs = t.closest('[data-tabs]'); tabs.querySelectorAll('[data-tab]').forEach(function (b) { b.setAttribute('aria-selected', b === t); b.tabIndex = b === t ? 0 : -1; }); var id = t.getAttribute('data-tab'); document.querySelectorAll('[data-panel]').forEach(function (p) { if (p.closest('[data-tabs-scope]') && p.closest('[data-tabs-scope]') !== tabs.closest('[data-tabs-scope]')) return; p.hidden = p.getAttribute('data-panel') !== id; }); }
       if ((t = e.target.closest('[data-inc],[data-dec]'))) { var w = t.closest('[data-qty]'), out = w.querySelector('output'), max = +w.getAttribute('data-max'), min = +w.getAttribute('data-min'), v = +out.textContent + (t.hasAttribute('data-inc') ? 1 : -1); v = Math.max(min, Math.min(max, v)); out.textContent = v; w.querySelector('[data-dec]').disabled = v <= min; w.querySelector('[data-inc]').disabled = v >= max; w.querySelector('.ml-qty-note').textContent = v >= max ? 'Max ' + PT.units(max, w.getAttribute('data-unit')) : PT.units(max, w.getAttribute('data-unit')) + ' left'; var li = t.closest('.ml-cart-item'); if (li) { li.querySelector('.ml-cart-item-sum').textContent = PT.vnd(v * +li.getAttribute('data-price')); recalc(li.closest('[data-cart-group]')); } }
       if ((t = e.target.closest('[data-remove-item]'))) { var li2 = t.closest('.ml-cart-item'), g = li2.closest('[data-cart-group]'); li2.remove(); recalc(g); PT.toast('Removed from your cart.', { action: 'Undo' }); }
-      if ((t = e.target.closest('[data-drawer-open]'))) document.querySelector('[data-drawer]').setAttribute('data-open', 'true');
-      if ((t = e.target.closest('[data-drawer-close]')) || e.target.matches('[data-drawer]')) document.querySelector('[data-drawer]').setAttribute('data-open', 'false');
+      var drawer = document.querySelector('[data-drawer]');
+      if (drawer && e.target.closest('[data-drawer-open]')) drawer.setAttribute('data-open', 'true');
+      if (drawer && (e.target.closest('[data-drawer-close]') || e.target.matches('[data-drawer]'))) drawer.setAttribute('data-open', 'false');
       if ((t = e.target.closest('[data-read-all]'))) { document.querySelectorAll('.ml-note[data-unread="true"]').forEach(function (n) { n.setAttribute('data-unread', 'false'); var d = n.querySelector('.ml-note-dot'); if (d) d.remove(); }); PT.toast('All notifications marked as read.'); }
       if ((t = e.target.closest('[data-state-demo]'))) { var kind2 = t.getAttribute('data-state-demo'); document.querySelectorAll('[data-state-target]').forEach(function (p) { p.hidden = p.getAttribute('data-state-target') !== kind2; }); document.querySelectorAll('[data-state-demo]').forEach(function (b) { b.setAttribute('aria-pressed', b === t); }); }
       if ((t = e.target.closest('[data-confirm-dialog]'))) { var d2 = JSON.parse(t.getAttribute('data-confirm-dialog')); PT.dialog(d2); }
@@ -496,12 +644,17 @@
     var role = params.get('as') || o.role || document.body.getAttribute('data-role') || 'guest';
     document.body.setAttribute('data-role', role);
     var u = PT.users[role] || {};
-    var hdr = PT.header({ role: role, active: o.active, cartCount: role === 'customer' || role === 'guest' ? (o.cartCount != null ? o.cartCount : role === 'customer' ? 3 : 0) : 0, unread: o.unread != null ? o.unread : role === 'customer' ? 2 : role === 'farmer' ? 2 : 0, userName: o.userName || u.name });
-    var top = document.getElementById('pt-top');
-    if (top) top.innerHTML = (o.announce !== false && (role === 'guest' || role === 'customer') ? PT.banner('announce', esc(PT.announcements[0].title), esc(PT.announcements[0].text), { close: true }) : '') + hdr;
-    function renderFoot() { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(); }
-    // pages call boot() from a script placed before #pt-foot, so render the footer once the document is parsed
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderFoot); else renderFoot();
+    var shell = (role === 'farmer' || role === 'admin') && !/admin\/login\.html$/.test(location.pathname);
+    if (shell) {
+      mountShell(role, o);
+    } else {
+      var hdr = PT.header({ role: role, active: o.active, cartCount: role === 'customer' || role === 'guest' ? (o.cartCount != null ? o.cartCount : role === 'customer' ? 3 : 0) : 0, unread: o.unread != null ? o.unread : role === 'customer' ? 2 : role === 'farmer' ? 2 : 0, userName: o.userName || u.name });
+      var top = document.getElementById('pt-top');
+      if (top) top.innerHTML = (o.announce !== false && (role === 'guest' || role === 'customer') ? PT.banner('announce', esc(PT.announcements[0].title), esc(PT.announcements[0].text), { close: true }) : '') + hdr;
+      var renderFoot = function () { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(); };
+      // pages call boot() from a script placed before #pt-foot, so render the footer once the document is parsed
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderFoot); else renderFoot();
+    }
     PT.clock();
     wire();
     bar();

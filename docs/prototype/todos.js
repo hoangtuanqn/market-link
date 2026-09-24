@@ -3,13 +3,19 @@ window.PT_TODOS = [
   "role": "public",
   "file": "about.html",
   "screen": "About us",
-  "text": "FR-082 · Team names, roles and photos are not in the repo. Replace the placeholder tiles with the real team (the SRS requires information about the team)."
+  "text": "Imagery · The About us carousel uses Unsplash placeholder photos, none of them a Vietnamese farmers market. The design system asks for photos shot by the team or licensed with a credit in the ReadMe. Replace all four and add the credits."
  },
  {
   "role": "public",
   "file": "about.html",
   "screen": "About us",
-  "text": "SRS 1.6 · All AI tools used must be acknowledged in the documentation. List them here and in the ReadMe."
+  "text": "FR-082 · Team names and photos are not in the repository. The roles and ownership below come from .ai/REQUIREMENTS.md; add the real names, and a photo each if the team wants them."
+ },
+ {
+  "role": "public",
+  "file": "about.html",
+  "screen": "About us",
+  "text": "SRS 1.6 · Every AI tool used must be acknowledged in the submitted documentation. List them here and in the ReadMe before submission."
  },
  {
   "role": "public",
@@ -27,7 +33,19 @@ window.PT_TODOS = [
   "role": "public",
   "file": "forgot-password.html",
   "screen": "Forgot password",
-  "text": "FR-007 · Token lifetime (30 minutes here) and the email sender are not decided; FR-043 real email is NICE, so the reset email needs its own decision."
+  "text": "FR-007 · The link lifetime shown here is 30 minutes and the sender is unnamed. Real email is FR-043, a NICE, so the team needs to decide how the reset email is actually delivered before this works end to end."
+ },
+ {
+  "role": "public",
+  "file": "login.html",
+  "screen": "Sign in",
+  "text": "Out of scope · Social sign-in is not in the SRS. FR-001 and FR-002 require name, phone, email and address at registration, and a Farmer also needs a stall name and admin approval, none of which a Google or Facebook account supplies. It needs a new FR, an OAuth provider, a users.auth_provider column, a rule for linking a social account to an existing email, and a 'complete your profile' step before the first order."
+ },
+ {
+  "role": "public",
+  "file": "login.html",
+  "screen": "Sign in",
+  "text": "Branding · The two buttons are plain text. Google and Facebook both require their official mark, wording and minimum sizes. Take the assets from each provider's brand guidelines before this ships."
  },
  {
   "role": "public",
@@ -49,6 +67,30 @@ window.PT_TODOS = [
  },
  {
   "role": "public",
+  "file": "product.html",
+  "screen": "Product detail",
+  "text": "FR-062 · The product form takes one image. Whether a stall can upload several photos, and where they are stored, is not decided. The gallery here shows four frames as a proposal."
+ },
+ {
+  "role": "public",
+  "file": "product.html",
+  "screen": "Product detail",
+  "text": "Proposal from Chợ Tốt · Response rate and last-active time build trust on a marketplace, but neither is in the SRS or the schema. Decide whether to measure and store them."
+ },
+ {
+  "role": "public",
+  "file": "product.html",
+  "screen": "Product detail",
+  "text": "FR-062 · The SRS product entity is name, category, price, unit, quantity, description and image. Grown in, cut, and keeps are extra fields this page shows; they need columns and form inputs, or they should be folded into the description."
+ },
+ {
+  "role": "public",
+  "file": "product.html",
+  "screen": "Product detail",
+  "text": "Proposal from Chợ Tốt · Review tags (Ready on time, Fresh as described…) summarise a stall faster than free text. The SRS review is a rating plus a comment, so tags would need a new table and a step in the review form."
+ },
+ {
+  "role": "public",
   "file": "register-customer.html",
   "screen": "Customer registration",
   "text": "FR-001/003 · Password rules (length, complexity) are not defined in the SRS. Prototype shows 'at least 8 characters' as a placeholder rule."
@@ -58,6 +100,18 @@ window.PT_TODOS = [
   "file": "register-farmer.html",
   "screen": "Farmer registration",
   "text": "FR-071 · Approval time and what the admin checks are not specified. Prototype says 'an admin reviews the stall' without a promised time."
+ },
+ {
+  "role": "public",
+  "file": "reset-password.html",
+  "screen": "Set a new password",
+  "text": "FR-001/003/007 · Password rules (length, character classes, blocklist) are not defined anywhere in the SRS or the decisions. Eight characters is a placeholder used across the registration, account and reset screens."
+ },
+ {
+  "role": "public",
+  "file": "stall.html",
+  "screen": "Stall profile",
+  "text": "Proposal from Chợ Tốt · Review tags (Ready on time, Fresh as described…) let a shopper read a stall at a glance. The SRS review is a rating plus a comment, so tags need a new table and a step in the review form."
  },
  {
   "role": "customer",
@@ -81,13 +135,25 @@ window.PT_TODOS = [
   "role": "customer",
   "file": "favorites.html",
   "screen": "Favorites and saved markets",
-  "text": "FR-014 (SHOULD) · 'route-friendly pickup details' is not defined beyond directions. Prototype: preferred markets sort first and directions start from the saved address."
+  "text": "FR-014 (SHOULD) · 'route-friendly pickup details' is not defined beyond directions. The prototype sorts saved markets first and starts directions from the saved address."
+ },
+ {
+  "role": "customer",
+  "file": "messages.html",
+  "screen": "Messages with a stall",
+  "text": "Out of scope · Customer-to-Farmer messaging is not in the SRS or in .ai/REQUIREMENTS.md. R-07 says do not build what is not listed. Needs a new FR, a messages table, an unread badge, and a rule on whether a message can change an order. Note the SRS does list an AI chatbot (FR-090/091), which is a different thing."
  },
  {
   "role": "customer",
   "file": "review.html",
   "screen": "Review stall and products",
   "text": "FR-050/051 · Whether a customer can edit or delete a published review, and whether photos are allowed, is not specified."
+ },
+ {
+  "role": "farmer",
+  "file": "messages.html",
+  "screen": "Messages with customers",
+  "text": "Out of scope · Farmer-to-Customer messaging is not in the SRS or in .ai/REQUIREMENTS.md. R-07 says do not build what is not listed. It also raises questions the SRS does not answer: who may start a thread, whether a stall can be messaged without an order, and how abuse is reported and moderated."
  },
  {
   "role": "farmer",
@@ -100,6 +166,12 @@ window.PT_TODOS = [
   "file": "order.html",
   "screen": "Order detail (Farmer)",
   "text": "FR-065 · Whether the Farmer sees the customer's full phone number and address, and from which status, is not specified. Prototype shows the full phone once the order exists."
+ },
+ {
+  "role": "farmer",
+  "file": "overview.html",
+  "screen": "Overview",
+  "text": "Design system · The SiteHeader guide defines one horizontal bar on `board` for every role. Farmer and Admin now use a board-green sidebar with grouped navigation and a quiet work-area header instead. FE1 and LEAD either fold this into docs/design-system as a second shell, or ask for the top bar back."
  },
  {
   "role": "farmer",
@@ -178,6 +250,12 @@ window.PT_TODOS = [
   "file": "moderation.html",
   "screen": "Moderation",
   "text": "FR-074 · The platform guidelines that define 'inappropriate' (advertising, off-platform contact, abuse…) are not written yet. Moderation reasons in the prototype are examples."
+ },
+ {
+  "role": "admin",
+  "file": "overview.html",
+  "screen": "Admin dashboard",
+  "text": "Proposal · Scoping the whole dashboard to one market is not in the SRS. FR-075 puts a market filter on the reports screen only. Decide whether the scope is global and remembered per user, or stays a per-screen filter."
  },
  {
   "role": "admin",

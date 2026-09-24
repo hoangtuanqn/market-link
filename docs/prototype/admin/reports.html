@@ -54,11 +54,11 @@
   document.getElementById('range').innerHTML = PT.chip('This week', { radio: 'r' }) + PT.chip('September', { selected: true, radio: 'r' }) + PT.chip('Last 3 months', { radio: 'r' }) + PT.chip('All time', { radio: 'r' });
   document.getElementById('stats').innerHTML = PT.statTile('Orders', '796', 'September · all markets') + PT.statTile('Completed revenue', '31,900,000', '₫, paid at the stalls', true) + PT.statTile('Average order', '53,500', '₫ per completed order') + PT.statTile('Decline rate', '4.8%', '38 of 796 orders');
   document.getElementById('table').innerHTML = PT.table(null, [{ key: 'r', label: '#', align: 'num' }, { key: 'f', label: 'Stall' }, { key: 'm', label: 'Markets' }, { key: 'o', label: 'Completed orders', align: 'num' }, { key: 'v', label: 'Revenue', align: 'num', render: function (r) { return PT.vnd(r.v); } }, { key: 'p', label: 'Products listed', align: 'num' }, { key: 'rt', label: 'Rating', align: 'num' }], [
-    { r: 1, f: 'Lò bánh Gió Nam', m: 'Thảo Điền, Phú Mỹ Hưng', o: 128, v: 6400000, p: 3, rt: '4.9' },
-    { r: 2, f: 'Vườn Cô Tư', m: 'Thảo Điền, Thủ Đức', o: 112, v: 8450000, p: 4, rt: '4.6' },
-    { r: 3, f: 'Trại Ba Lành', m: 'Thảo Điền', o: 96, v: 4300000, p: 2, rt: '4.5' },
-    { r: 4, f: 'Nhà vườn Út Hiền', m: 'Thủ Đức', o: 81, v: 5200000, p: 2, rt: '4.8' },
-    { r: 5, f: 'Trại dê Củ Chi', m: 'Thủ Đức, Phú Mỹ Hưng', o: 74, v: 4100000, p: 3, rt: '4.4' },
+    { r: 1, f: 'Gió Nam Bakery', m: 'Thảo Điền, Phú Mỹ Hưng', o: 128, v: 6400000, p: 3, rt: '4.9' },
+    { r: 2, f: 'Cô Tư Garden', m: 'Thảo Điền, Thủ Đức', o: 112, v: 8450000, p: 4, rt: '4.6' },
+    { r: 3, f: 'Ba Lành Farm', m: 'Thảo Điền', o: 96, v: 4300000, p: 2, rt: '4.5' },
+    { r: 4, f: 'Út Hiền Orchard', m: 'Thủ Đức', o: 81, v: 5200000, p: 2, rt: '4.8' },
+    { r: 5, f: 'Củ Chi Goat Farm', m: 'Thủ Đức, Phú Mỹ Hưng', o: 74, v: 4100000, p: 3, rt: '4.4' },
   ]);
   document.getElementById('mtable').innerHTML = PT.table(null, [{ key: 'm', label: 'Market' }, { key: 's', label: 'Stalls', align: 'num' }, { key: 'o', label: 'Orders', align: 'num' }, { key: 'c', label: 'Completed', align: 'num' }, { key: 'd', label: 'Declined', align: 'num' }, { key: 'v', label: 'Revenue', align: 'num', render: function (r) { return PT.vnd(r.v); } }], [
     { m: 'Thảo Điền Weekend Market', s: 14, o: 352, c: 268, d: 14, v: 14200000 }, { m: 'Thủ Đức Farmers Market', s: 9, o: 221, c: 171, d: 11, v: 8900000 }, { m: 'Phú Mỹ Hưng Saturday Market', s: 11, o: 142, c: 104, d: 9, v: 5800000 }, { m: 'Bà Chiểu Green Market', s: 7, o: 81, c: 53, d: 4, v: 3000000 }]);

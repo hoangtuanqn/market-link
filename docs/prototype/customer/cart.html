@@ -30,7 +30,7 @@
       <section class="pt-col-3">
         <div id="group1"></div>
         <details class="ml-card pt-panel-4">
-          <summary class="pt-small" style="cursor:pointer;font-weight:700">Change pickup time at Vườn Cô Tư</summary>
+          <summary class="pt-small" style="cursor:pointer;font-weight:700">Change pickup time at Cô Tư Garden</summary>
           <div class="pt-col" style="margin-top:12px">
             <div id="day1"></div>
             <div id="slots1"></div>
@@ -43,7 +43,7 @@
         <div class="ml-card pt-panel-4 pt-col">
           <div id="day2"></div>
           <div id="slots2"></div>
-          <p class="pt-small ml-muted">Nhà vườn Út Hiền closes orders 12 hours before the slot. For 06:00 on Sunday that is 18:00 on Saturday.</p>
+          <p class="pt-small ml-muted">Út Hiền Orchard closes orders 12 hours before the slot. For 06:00 on Sunday that is 18:00 on Saturday.</p>
         </div>
       </section>
     </div>
@@ -52,13 +52,13 @@
       <div class="ml-card pt-panel pt-col-3" aria-label="Summary">
         <h2 class="pt-h3">Pay at the stalls on pickup</h2>
         <dl class="pt-facts">
-          <dt>Order 1 · Vườn Cô Tư</dt><dd class="pt-price" id="sum1">48,000 ₫</dd>
-          <dt>Order 2 · Nhà vườn Út Hiền</dt><dd class="pt-price" id="sum2">130,000 ₫</dd>
+          <dt>Order 1 · Cô Tư Garden</dt><dd class="pt-price" id="sum1">48,000 ₫</dd>
+          <dt>Order 2 · Út Hiền Orchard</dt><dd class="pt-price" id="sum2">130,000 ₫</dd>
         </dl>
         <div class="pt-between-c" style="border-top:1.5px dashed var(--line-strong);padding-top:12px"><span class="pt-body"><b>Total, both stalls</b></span><span class="ml-cart-total" id="total">178,000 ₫</span></div>
         <div class="ml-field" style="min-width:0"><label class="ml-field-label" for="note">Note to the stalls</label><textarea id="note" class="ml-input" placeholder="e.g. smaller bunches please" style="min-height:64px"></textarea></div>
         <a class="ml-btn ml-btn-primary ml-btn-block" id="place" href="../customer/order-placed.html" aria-disabled="true" tabindex="-1">Place 2 orders</a>
-        <p class="pt-small ml-muted pt-center" id="place-why">Choose a pickup time at Nhà vườn Út Hiền to place your orders.</p>
+        <p class="pt-small ml-muted pt-center" id="place-why">Choose a pickup time at Út Hiền Orchard to place your orders.</p>
         <p class="pt-caption ml-muted">Stock is taken out of the stall's count the moment you place the order (D-02). There is no online payment.</p>
       </div>
     </aside>
@@ -71,13 +71,13 @@
 </main>
 <script>
   document.getElementById('split-banner').innerHTML = PT.banner('info', 'Your cart will be split into 2 orders at 2 different stalls.', 'Each stall has its own pickup time and cutoff, and accepts its order separately. You pay each stall on pickup.');
-  document.getElementById('group1').innerHTML = PT.cartGroup({ index: 1, of: 2, stallName: 'Vườn Cô Tư', market: 'Thảo Điền Weekend Market', pickup: 'Sat 26/09 · 07:00–07:30', items: [{ name: 'Củ Chi water spinach', qty: 2, unit: 'bunch', price: 15000, max: 12 }, { name: 'Choy sum', qty: 1, unit: 'bunch', price: 18000, max: 8 }] });
-  document.getElementById('group2').innerHTML = PT.cartGroup({ index: 2, of: 2, stallName: 'Nhà vườn Út Hiền', market: 'Thủ Đức Farmers Market', pickup: '', items: [{ name: 'Green-skin pomelo', qty: 2, unit: 'piece', price: 65000, max: 2 }] });
+  document.getElementById('group1').innerHTML = PT.cartGroup({ index: 1, of: 2, stallName: 'Cô Tư Garden', market: 'Thảo Điền Weekend Market', pickup: 'Sat 26/09 · 07:00–07:30', items: [{ name: 'Củ Chi water spinach', qty: 2, unit: 'bunch', price: 15000, max: 12 }, { name: 'Choy sum', qty: 1, unit: 'bunch', price: 18000, max: 8 }] });
+  document.getElementById('group2').innerHTML = PT.cartGroup({ index: 2, of: 2, stallName: 'Út Hiền Orchard', market: 'Thủ Đức Farmers Market', pickup: '', items: [{ name: 'Green-skin pomelo', qty: 2, unit: 'piece', price: 65000, max: 2 }] });
   document.getElementById('day1').innerHTML = PT.dayChips('Pickup day', [{ value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }], 'sat', 'day1');
   document.getElementById('slots1').innerHTML = PT.slotPicker('Pickup time · Saturday 26/09 · window 06:00 – 10:30', PT.slots, '0700', 'slot1').replace('data-slots', 'data-slots id="slots1f"');
-  document.getElementById('day2').innerHTML = PT.dayChips('Pickup day at Nhà vườn Út Hiền', [{ value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }], 'sun', 'day2');
+  document.getElementById('day2').innerHTML = PT.dayChips('Pickup day at Út Hiền Orchard', [{ value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }], 'sun', 'day2');
   document.getElementById('slots2').innerHTML = PT.slotPicker('Pickup time · Sunday 27/09 · window 06:00 – 09:30', [{ value: 'a', time: '06:00–06:30', booked: 5, max: 5 }, { value: 'b', time: '06:30–07:00', booked: 2, max: 5 }, { value: 'c', time: '07:00–07:30', booked: 0, max: 5 }, { value: 'd', time: '07:30–08:00', booked: 4, max: 5 }, { value: 'e', time: '08:00–08:30', booked: 0, max: 5 }], null, 'slot2').replace('data-slots', 'data-slots id="slots2f"');
-  document.getElementById('err-banner').innerHTML = PT.banner('danger', "Can't place order 2: only 1 green-skin pomelo left at Nhà vườn Út Hiền.", 'Lower the quantity to 1 and try again. Order 1 was not placed either; both go together.');
+  document.getElementById('err-banner').innerHTML = PT.banner('danger', "Can't place order 2: only 1 green-skin pomelo left at Út Hiền Orchard.", 'Lower the quantity to 1 and try again. Order 1 was not placed either; both go together.');
   function sums() {
     var gs = document.querySelectorAll('[data-cart-group]'); var t = 0;
     gs.forEach(function (g, i) { var v = g.querySelector('[data-group-total]').textContent; document.getElementById('sum' + (i + 1)).textContent = v; t += +v.replace(/[^\d]/g, ''); });

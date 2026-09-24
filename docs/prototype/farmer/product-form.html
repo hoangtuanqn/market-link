@@ -49,7 +49,7 @@
 </main>
 <script>
   document.getElementById('del').addEventListener('click', function () { PT.dialog({ tone: 'danger', title: 'Delete Củ Chi water spinach?', body: '<p>It disappears from the catalogue and from your template. Orders that already include it are not changed.</p>', keep: 'Keep product', confirm: 'Delete product', onConfirm: function () { location.href = '../farmer/products.html'; } }); });
-  document.getElementById('mode').addEventListener('click', function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); document.querySelector('h1').textContent = on ? 'Add a product' : 'Củ Chi water spinach'; document.getElementById('del').hidden = on; ['name', 'price', 'desc', 'flag'].forEach(function (id) { document.getElementById(id).value = on ? '' : document.getElementById(id).defaultValue; }); });
+  document.getElementById('mode').addEventListener('click', function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); document.querySelector('.pt-apphead-title b').textContent = on ? 'Add a product' : 'Củ Chi water spinach'; document.getElementById('del').hidden = on; ['name', 'price', 'desc', 'flag'].forEach(function (id) { document.getElementById(id).value = on ? '' : document.getElementById(id).defaultValue; }); });
   PT.boot({ role: 'farmer', active: 'products', announce: false });
 </script>
 <div id="pt-foot"></div>
