@@ -4,10 +4,9 @@ import AuthApi from '@/api-requests/auth.requests';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Field } from '@/components/ui/input';
-import type { UserType } from '@/types/user.types';
 import Helper from '@/utils/helper';
-import LocalStorage from '@/utils/localstorage';
 import Notification from '@/utils/notification';
+import Session from '@/utils/session';
 
 type FormErrors = Partial<Record<'password' | 'confirmPassword', string>>;
 
@@ -25,26 +24,17 @@ const validate = (password: string, confirm: string): FormErrors => {
   return errors;
 };
 
-const readStoredUser = (): UserType | null => {
-  try {
-    const raw = LocalStorage.getItem('user');
-    return raw ? (JSON.parse(raw) as UserType) : null;
-  } catch {
-    return null;
-  }
-};
-
 /** Sau lần đăng nhập Google đầu tiên: mời đặt mật khẩu để đăng nhập được bằng email + mật khẩu. */
 const SetPasswordPage = () => {
   const navigate = useNavigate();
-  const [user] = useState(readStoredUser);
+  const [user] = useState(Session.getUser);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Chưa đăng nhập thì không đặt mật khẩu được
-  if (!LocalStorage.getItem('access_token')) return <Navigate to="/login" replace />;
+  if (!Session.getAccessToken()) return <Navigate to="/login" replace />;
 
   const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -55,12 +45,12 @@ const SetPasswordPage = () => {
     setIsSubmitting(true);
     try {
       const response = await AuthApi.setPassword({ password, confirmPassword: confirm });
-      if (user) LocalStorage.setItem('user', JSON.stringify({ ...user, hasPassword: true }));
+      Session.updateUser({ hasPassword: true });
       Notification.success({ text: response.message || 'Password saved.' });
       navigate('/', { replace: true });
     } catch (error) {
       if (Helper.getErrorCode(error) === 'PASSWORD_ALREADY_SET') {
-        if (user) LocalStorage.setItem('user', JSON.stringify({ ...user, hasPassword: true }));
+        Session.updateUser({ hasPassword: true });
         Notification.info({ text: Helper.getErrorMessage(error, 'Your account already has a password.') });
         navigate('/', { replace: true });
         return;

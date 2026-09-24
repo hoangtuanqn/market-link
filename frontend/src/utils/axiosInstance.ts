@@ -1,6 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import AuthApi from '@/api-requests/auth.requests';
-import LocalStorage from './localstorage';
+import Session from './session';
 
 const options = {
   baseURL: `${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}/api/v1`,
@@ -17,7 +17,7 @@ export const privateApi = axios.create(options);
 
 privateApi.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = LocalStorage.getItem('access_token');
+    const token = Session.getAccessToken();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -59,12 +59,12 @@ privateApi.interceptors.response.use(
 
     try {
       const { accessToken } = await AuthApi.refreshToken();
-      LocalStorage.setItem('access_token', accessToken);
+      Session.setAccessToken(accessToken);
       processQueue();
       return privateApi(origin);
     } catch (err) {
       processQueue(err);
-      LocalStorage.removeItem('access_token');
+      Session.clear();
       return Promise.reject(err);
     } finally {
       isRefreshing = false;

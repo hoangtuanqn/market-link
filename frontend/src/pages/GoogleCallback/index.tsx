@@ -6,8 +6,8 @@ import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { GOOGLE_OAUTH_STATE_KEY } from '@/constants/oauth';
 import Helper from '@/utils/helper';
-import LocalStorage from '@/utils/localstorage';
 import Notification from '@/utils/notification';
+import Session from '@/utils/session';
 
 /**
  * Bước 2 đăng nhập Google: Google chuyển về đây kèm `code` và `state`. Kiểm tra `state` khớp với lúc bấm nút (chống
@@ -50,10 +50,8 @@ const GoogleCallbackPage = () => {
 
     AuthApi.loginWithSocial('google', code)
       .then((response) => {
-        const { accessToken, user } = response.data;
-        LocalStorage.setItem('login', 'true');
-        LocalStorage.setItem('access_token', accessToken);
-        LocalStorage.setItem('user', JSON.stringify(user));
+        const { user } = response.data;
+        Session.save(response.data);
         Notification.success({ text: response.message || 'Signed in.' });
         // replace: bỏ ?code=&state= khỏi lịch sử trình duyệt. Lần đầu (chưa có mật khẩu) → mời đặt mật khẩu
         navigate(user.hasPassword === false ? '/auth/set-password' : '/', { replace: true });

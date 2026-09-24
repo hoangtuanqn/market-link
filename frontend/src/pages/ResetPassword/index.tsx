@@ -6,8 +6,8 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Field } from '@/components/ui/input';
 import Helper from '@/utils/helper';
-import LocalStorage from '@/utils/localstorage';
 import Notification from '@/utils/notification';
+import Session from '@/utils/session';
 
 type Status = 'checking' | 'invalid' | 'unreachable' | 'ready' | 'done';
 type FormErrors = Partial<Record<'newPassword' | 'confirmPassword', string>>;
@@ -74,9 +74,7 @@ const ResetPasswordPage = () => {
     try {
       const response = await AuthApi.resetPassword({ token, newPassword: password, confirmPassword: confirm });
       // Backend đã huỷ mọi phiên đăng nhập của tài khoản, xoá luôn phiên đang lưu ở trình duyệt này
-      LocalStorage.removeItem('login');
-      LocalStorage.removeItem('access_token');
-      LocalStorage.removeItem('user');
+      Session.clear();
       Notification.success({ text: response.message || 'Your password has been reset. Please sign in again.' });
       setStatus('done');
     } catch (error) {
