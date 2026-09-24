@@ -9,9 +9,10 @@ class AuthApi {
     return response.data;
   };
 
+  /** FR-001. Trả nguyên response chung; thành công thì backend đăng nhập luôn (accessToken + cookie refresh). */
   static register = async (input: RegisterInput) => {
     const response = await publicApi.post<ApiResponse<AuthResultType>>('/auth/register', input);
-    return response.data.data;
+    return response.data;
   };
 
   /** `code` là authorization code Google/Facebook trả về redirect_uri của frontend. */
