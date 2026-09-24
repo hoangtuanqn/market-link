@@ -9,6 +9,7 @@ import ResetPasswordPage from './pages/ResetPassword';
 import GoogleCallbackPage from './pages/GoogleCallback';
 import SetPasswordPage from './pages/SetPassword';
 
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -22,6 +23,12 @@ const App = () => {
           <Route path="reset-password" element={<ResetPasswordPage />} />
           <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
           <Route path="auth/set-password" element={<SetPasswordPage />} />
+        </Route>
+
+        {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
+        <Route element={<MainLayout variant="customer" userName="Khang" cartCount={2} unreadCount={2} />}>
+          <Route path="dashboard" element={<CustomerDashboardPage />} />
+          <Route path="account" element={<CustomerAccountPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -42,6 +42,68 @@ export function CartIcon(props: IconProps) {
   );
 }
 
+export function BellIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M4 11V7a4 4 0 018 0v4l1.2 1.5H2.8z" />
+      <path d="M6.5 14h3" />
+    </Glyph>
+  );
+}
+
+export function ClockIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <circle cx="8" cy="8" r="6" />
+      <path d="M8 5v3.2l2 1.3" />
+    </Glyph>
+  );
+}
+
+export function CheckIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M3 8.5l3.2 3L13 4.5" />
+    </Glyph>
+  );
+}
+
+export function DoubleCheckIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M1.5 8.5l3 3L10 5" />
+      <path d="M7.5 11.3l.3.2L14.5 5" />
+    </Glyph>
+  );
+}
+
+export function ReceiptIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M3 5.5h10l-.8 8H3.8z" />
+      <path d="M5.8 5.5V4.3a2.2 2.2 0 014.4 0v1.2" />
+    </Glyph>
+  );
+}
+
+export function CircleSlashIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <circle cx="8" cy="8" r="6" />
+      <path d="M3.8 12.2l8.4-8.4" />
+    </Glyph>
+  );
+}
+
+export function LockIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <rect x="3" y="7" width="10" height="7" rx="1.5" />
+      <path d="M5.5 7V5a2.5 2.5 0 015 0v2" />
+    </Glyph>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <Glyph {...props}>
