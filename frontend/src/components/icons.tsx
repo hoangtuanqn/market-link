@@ -156,6 +156,23 @@ export function HeartIcon({ filled = false, size = 18 }: { filled?: boolean; siz
   );
 }
 
+export function StarIcon({ filled = false, size = 16 }: { filled?: boolean; size?: number }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      width={size}
+      height={size}
+      aria-hidden="true"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke="currentColor"
+      strokeWidth={1.3}
+      strokeLinejoin="round"
+    >
+      <path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" />
+    </svg>
+  );
+}
+
 /** MarketLink mark: a hang tag on dashed twine. */
 export function LogoMark({ size = 30 }: { size?: number }) {
   return (
