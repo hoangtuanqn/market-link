@@ -22,6 +22,18 @@ export type ResetPasswordInput = {
   confirmPassword: string;
 };
 
+export type UpdateProfileInput = {
+  fullName: string;
+  phone: string;
+  address: string;
+};
+
+export type ChangePasswordInput = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
+
 export type SetPasswordInput = {
   password: string;
   confirmPassword: string;
