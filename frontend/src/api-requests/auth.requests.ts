@@ -3,9 +3,10 @@ import type { AuthResultType, LoginInput, RegisterInput, SocialProvider } from '
 import { privateApi, publicApi } from '@/utils/axiosInstance';
 
 class AuthApi {
+  /** Trả nguyên response chung { success, message, data } để hiển thị đúng message của backend. */
   static login = async (input: LoginInput) => {
     const response = await publicApi.post<ApiResponse<AuthResultType>>('/auth/login', input);
-    return response.data.data;
+    return response.data;
   };
 
   static register = async (input: RegisterInput) => {
