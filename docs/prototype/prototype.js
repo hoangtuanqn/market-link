@@ -23,6 +23,8 @@
       ['about.html', 'About us', 'FR-082'],
       ['contact.html', 'Contact us', 'FR-083'],
       ['feedback.html', 'Feedback form', 'FR-081'],
+      ['terms.html', 'Terms of service', 'Proposal · no FR yet'],
+      ['privacy.html', 'Privacy policy', 'Proposal · no FR yet'],
     ],
     customer: [
       ['dashboard.html', 'Customer dashboard', 'FR-033 FR-036 FR-040'],
@@ -202,7 +204,7 @@
     var cols = [
       ['Shop', [['Markets near you', 'public/markets.html'], ['In season', 'public/products.html'], ['Market map', 'public/map.html'], ['Favorite stalls', 'customer/favorites.html']]],
       ['Sell', [['Register as a Farmer', 'public/register-farmer.html'], ['Handling pre-orders', 'farmer/orders.html'], ['Stall guidelines', 'public/about.html']]],
-      ['MarketLink', [['About us', 'public/about.html'], ['Contact us', 'public/contact.html'], ['Feedback & bug reports', 'public/feedback.html'], ['Sitemap', '../index.html']]],
+      ['MarketLink', [['About us', 'public/about.html'], ['Contact us', 'public/contact.html'], ['Feedback & bug reports', 'public/feedback.html'], ['Terms of service', 'public/terms.html'], ['Privacy policy', 'public/privacy.html'], ['Sitemap', '../index.html']]],
     ];
     return '<footer class="ml-footer"><div class="ml-footer-in"><div>' + PT.logo(30) + '<p>Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.</p></div>' +
       cols.map(function (c) { return '<div><h2>' + c[0] + '</h2><ul>' + c[1].map(function (l) { return '<li><a href="' + (l[1].indexOf('..') === 0 ? l[1] : link(l[1])) + '">' + l[0] + '</a></li>'; }).join('') + '</ul></div>'; }).join('') +
