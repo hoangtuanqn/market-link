@@ -23,6 +23,7 @@ import CustomerReviewPage from './pages/CustomerReview';
 import CustomerBecomeFarmerPage from './pages/CustomerBecomeFarmer';
 import CustomerSettingsPage from './pages/CustomerSettings';
 import CustomerAssistantPage from './pages/CustomerAssistant';
+import MarketsPage from './pages/Markets';
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
           <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
           <Route path="auth/set-password" element={<SetPasswordPage />} />
+          <Route path="markets" element={<MarketsPage />} />
         </Route>
 
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
