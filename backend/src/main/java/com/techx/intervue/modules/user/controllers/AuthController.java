@@ -5,7 +5,9 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.filters.JwtAuthFilter;
 import com.techx.intervue.helpers.CookieHelper;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
+import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
+import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SocialLoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
@@ -14,6 +16,7 @@ import com.techx.intervue.modules.user.resources.RefreshResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
 import com.techx.intervue.modules.user.services.impl.FacebookOAuthClient;
 import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
+import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.validation.Valid;
@@ -40,6 +43,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController extends BaseController {
 
     private final UserServiceInterface userService;
+    private final PasswordResetServiceInterface passwordResetService;
     private final AuthConfig authConfig;
     private final GoogleOAuthClient googleClient;
     private final FacebookOAuthClient facebookClient;
@@ -132,5 +136,31 @@ public class AuthController extends BaseController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .body(ApiResource.success(body, "Làm mới phiên đăng nhập thành công!"));
+    }
+
+    /**
+     * FR-007 bước A: luôn trả cùng một câu dù email có tồn tại hay không, kể cả khi đã vượt giới
+     * hạn 5 lần/giờ. Tạo token và gửi mail chạy ngầm qua hàng đợi Redis.
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResource<Void>> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+        passwordResetService.requestReset(request.email());
+        return ok(null, "Nếu email tồn tại, bạn sẽ nhận được link đặt lại mật khẩu.");
+    }
+
+    /**
+     * FR-007 bước C + D: token dùng một lần. Đổi xong thì mọi phiên đăng nhập cũ bị huỷ, FE chuyển
+     * về trang đăng nhập.
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResource<Void>> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request) {
+        passwordResetService.resetPassword(request);
+        return ResponseEntity.ok()
+                .header("Referrer-Policy", "no-referrer")
+                .body(
+                        ApiResource.success(
+                                null, "Đặt lại mật khẩu thành công, vui lòng đăng nhập lại!"));
     }
 }
