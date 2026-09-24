@@ -6,6 +6,8 @@ import RegisterCustomerPage from './pages/RegisterCustomer';
 import RegisterFarmerPage from './pages/RegisterFarmer';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
+import GoogleCallbackPage from './pages/GoogleCallback';
+import SetPasswordPage from './pages/SetPassword';
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
           <Route path="register/farmer" element={<RegisterFarmerPage />} />
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="reset-password" element={<ResetPasswordPage />} />
+          <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
+          <Route path="auth/set-password" element={<SetPasswordPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
