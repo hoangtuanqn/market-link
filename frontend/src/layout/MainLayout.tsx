@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router';
+import { Navigate, Outlet, useLocation } from 'react-router';
 import { Toaster } from 'sonner';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import Footer from '@/components/Footer';
@@ -10,10 +10,20 @@ type MainLayoutProps = {
   cartCount?: number;
   unreadCount?: number;
 };
+/** Trang bổ sung hồ sơ bắt buộc (tài khoản Google chưa có số điện thoại / địa chỉ). */
+const COMPLETE_PROFILE_PATH = '/auth/complete-profile';
+
 const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
   const { user } = useSession();
+  const { pathname } = useLocation();
   const variant = user ? 'customer' : 'guest';
   const userName = user?.fullName || user?.email || '';
+
+  // Đã đăng nhập mà thiếu số điện thoại / địa chỉ → không vào được trang nào khác tới khi nhập đủ (chỉ có thể đăng xuất)
+  const mustCompleteProfile = user !== null && (!user.phone || !user.address);
+  if (mustCompleteProfile && pathname !== COMPLETE_PROFILE_PATH) {
+    return <Navigate to={COMPLETE_PROFILE_PATH} replace />;
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
