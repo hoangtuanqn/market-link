@@ -9,6 +9,8 @@ public interface UserServiceInterface {
 
     AuthResult registerCustomer(CustomerRegisterRequest request);
 
+    void logout(Long userId, String accessToken, String refreshToken);
+
     // Optional<User> findById(Long userId);
 
     // Optional<User> findByEmail(String email);
