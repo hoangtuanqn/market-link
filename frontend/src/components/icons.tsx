@@ -58,6 +58,16 @@ export function CloseIcon(props: IconProps) {
   );
 }
 
+export function InfoIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <circle cx="8" cy="8" r="6.25" />
+      <path d="M8 7.2v4" />
+      <path d="M8 4.8v.2" />
+    </Glyph>
+  );
+}
+
 export function MegaphoneIcon(props: IconProps) {
   return (
     <Glyph size={18} {...props}>
