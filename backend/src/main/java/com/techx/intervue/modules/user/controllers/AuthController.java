@@ -9,6 +9,7 @@ import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
+import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SocialLoginRequest;
 import com.techx.intervue.modules.user.requests.VerifyResetTokenRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
@@ -141,6 +142,18 @@ public class AuthController extends BaseController {
      * FR-003: gọi khi access token hết hạn. Refresh token chỉ đọc từ cookie HttpOnly (không nhận
      * qua body), trả access token mới và ghi đè cookie bằng refresh token mới.
      */
+    /**
+     * Đặt mật khẩu lần đầu sau khi đăng nhập Google/Facebook (user.hasPassword = false). Cần access
+     * token; tài khoản đã có mật khẩu → 409 PASSWORD_ALREADY_SET.
+     */
+    @PostMapping("/set-password")
+    public ResponseEntity<ApiResource<Void>> setPassword(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @Valid @RequestBody SetPasswordRequest request) {
+        userService.setPassword(user.getId(), request);
+        return ok(null, "Password saved. You can now also sign in with your email.");
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<ApiResource<RefreshResource>> refresh(
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
