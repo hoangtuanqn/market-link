@@ -7,6 +7,7 @@ import RegisterFarmerPage from './pages/RegisterFarmer';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
 import CustomerDashboardPage from './pages/CustomerDashboard';
+import CustomerAccountPage from './pages/CustomerAccount';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
         <Route element={<MainLayout variant="customer" userName="Khang" cartCount={2} unreadCount={2} />}>
           <Route path="dashboard" element={<CustomerDashboardPage />} />
+          <Route path="account" element={<CustomerAccountPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
