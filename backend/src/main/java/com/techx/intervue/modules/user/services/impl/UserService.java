@@ -1,15 +1,18 @@
 package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.modules.user.entities.SocialAccount;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
+import com.techx.intervue.modules.user.repositories.SocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.RefreshResult;
@@ -28,6 +31,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +40,7 @@ public class UserService extends BaseService implements UserServiceInterface {
 
     private final UserSessionCache userSessionCache;
     private final UserRepository userRepository;
+    private final SocialAccountRepository socialAccountRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
@@ -96,10 +101,12 @@ public class UserService extends BaseService implements UserServiceInterface {
         User user =
                 userRepository
                         .findByEmail(email)
+                        // Tài khoản tạo từ Google/Facebook chưa có mật khẩu
                         .filter(
                                 u ->
-                                        passwordEncoder.matches(
-                                                request.password(), u.getPasswordHash()))
+                                        u.getPasswordHash() != null
+                                                && passwordEncoder.matches(
+                                                        request.password(), u.getPasswordHash()))
                         .orElseThrow(
                                 () ->
                                         new BadCredentialsException(
@@ -129,6 +136,80 @@ public class UserService extends BaseService implements UserServiceInterface {
                     "Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!");
         }
         return buildAuthResult(user, rotated.newRefreshToken());
+    }
+
+    /**
+     * Đăng nhập Google/Facebook sau khi backend đã tự xác minh với provider. Tìm theo (provider,
+     * provider_user_id); lần đầu thì gắn vào user cùng email (chỉ khi email đã xác minh) hoặc tạo
+     * customer mới chưa có mật khẩu / số điện thoại.
+     */
+    @Override
+    @Transactional
+    public AuthResult loginWithSocial(SocialProfile profile) {
+        User user =
+                socialAccountRepository
+                        .findByProviderAndProviderUserId(
+                                profile.provider(), profile.providerUserId())
+                        .map(
+                                account ->
+                                        userRepository
+                                                .findById(account.getUserId())
+                                                .orElseThrow(
+                                                        () ->
+                                                                new BadCredentialsException(
+                                                                        "Tài khoản không tồn tại!")))
+                        .orElseGet(() -> linkOrCreateUser(profile));
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new DisabledException(
+                    "Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!");
+        }
+        return issueTokens(user);
+    }
+
+    private User linkOrCreateUser(SocialProfile profile) {
+        if (!StringUtils.hasText(profile.email()) || !profile.emailVerified()) {
+            throw new BadCredentialsException(
+                    "Tài khoản mạng xã hội chưa có email đã xác minh, vui lòng dùng cách khác!");
+        }
+        String email = profile.email().trim().toLowerCase(Locale.ROOT);
+        User user =
+                userRepository
+                        .findByEmail(email)
+                        .orElseGet(
+                                () ->
+                                        userRepository.save(
+                                                User.builder()
+                                                        .fullName(displayName(profile, email))
+                                                        .email(email)
+                                                        .image(fitsColumn(profile.pictureUrl()))
+                                                        .role(RoleType.CUSTOMER)
+                                                        .build()));
+        // Email này đã gắn với một tài khoản khác cùng provider
+        if (socialAccountRepository.existsByUserIdAndProvider(user.getId(), profile.provider())) {
+            throw new DuplicateAccountException(
+                    "email", "Email này đã liên kết với một tài khoản khác cùng loại!");
+        }
+        socialAccountRepository.save(
+                SocialAccount.builder()
+                        .userId(user.getId())
+                        .provider(profile.provider())
+                        .providerUserId(profile.providerUserId())
+                        .email(email)
+                        .build());
+        return user;
+    }
+
+    private static String displayName(SocialProfile profile, String email) {
+        String name =
+                StringUtils.hasText(profile.name())
+                        ? profile.name().trim()
+                        : email.substring(0, email.indexOf('@'));
+        return name.length() > 100 ? name.substring(0, 100) : name;
+    }
+
+    /** users.image là VARCHAR(255); URL ảnh dài hơn (Facebook hay có) thì bỏ qua. */
+    private static String fitsColumn(String url) {
+        return url != null && url.length() <= 255 ? url : null;
     }
 
     private AuthResult issueTokens(User user) {
