@@ -39,6 +39,12 @@ window.PT_TODOS = [
   "role": "public",
   "file": "login.html",
   "screen": "Sign in",
+  "text": "Consent · Asking an existing user to accept the terms every time they sign in is unusual: consent is normally taken once at registration, and an account created before these pages existed has nothing recorded. Three ways to go, LEAD to pick: keep the box on every sign-in as it is here; show a plain line of text with the two links and no checkbox; or ask only once, when the accepted version is older than the current one. Whichever it is, it needs an FR and somewhere to store what was accepted."
+ },
+ {
+  "role": "public",
+  "file": "login.html",
+  "screen": "Sign in",
   "text": "Out of scope · Social sign-in is not in the SRS. FR-001 and FR-002 require name, phone, email and address at registration, and a Farmer also needs a stall name and admin approval, none of which a Google or Facebook account supplies. It needs a new FR, an OAuth provider, a users.auth_provider column, a rule for linking a social account to an existing email, and a 'complete your profile' step before the first order."
  },
  {
@@ -61,9 +67,39 @@ window.PT_TODOS = [
  },
  {
   "role": "public",
-  "file": "markets.html",
-  "screen": "Markets by location and day",
-  "text": "FR-010 · Location filter: the SRS says 'by location' but not whether that is a district list, the browser's location, or a radius from the customer's address. Prototype uses the district list plus the saved address."
+  "file": "privacy.html",
+  "screen": "Privacy policy",
+  "text": "Privacy · Exactly which Customer fields a Farmer sees on an order is not defined. docs/api-contract.md returns the order with its items and history but never lists the customer fields, and db/schema.sql keeps name, phone and address on users with no view in between. LEAD to fix the field list: name and phone are clearly needed for pickup, the home address probably is not."
+ },
+ {
+  "role": "public",
+  "file": "privacy.html",
+  "screen": "Privacy policy",
+  "text": "Privacy · Whether a cookie or consent banner is needed is not decided. Today only sign-in and cart storage are used, which is usually exempt, but the pages also load Google Fonts and OpenStreetMap tiles from third parties. LEAD to decide whether a banner is required, and FE1 to say whether self-hosting the two fonts removes the question."
+ },
+ {
+  "role": "public",
+  "file": "privacy.html",
+  "screen": "Privacy policy",
+  "text": "Privacy · Deleting an account, exporting your data and how long anything is kept are all undefined. .ai/REQUIREMENTS.md has no FR for any of them and docs/api-contract.md has no endpoint; the only delete in the product is the soft delete on products. LEAD to decide whether deletion and export are in scope at all, and to set a retention period for orders, chat_messages and feedbacks."
+ },
+ {
+  "role": "public",
+  "file": "privacy.html",
+  "screen": "Privacy policy",
+  "text": "Privacy · The entity responsible for the data, and an address to send a privacy request to, are not in the repository. Contact us has the same gap open against FR-083. Both pages should end up with the same details."
+ },
+ {
+  "role": "public",
+  "file": "privacy.html",
+  "screen": "Privacy policy",
+  "text": "Privacy · No minimum age is set anywhere in the SRS or the decisions, and registration does not ask for a date of birth. LEAD to decide whether a minimum age applies and whether it is worth asking."
+ },
+ {
+  "role": "public",
+  "file": "privacy.html",
+  "screen": "Privacy policy",
+  "text": "Out of scope · Privacy policy and Terms of service are not in the SRS or in .ai/REQUIREMENTS.md, and R-07 says do not build what is not listed. Both pages exist because the sign-in and registration screens now ask users to accept them. They need a new FR, and the text needs review by someone qualified before submission."
  },
  {
   "role": "public",
@@ -97,6 +133,12 @@ window.PT_TODOS = [
  },
  {
   "role": "public",
+  "file": "register-customer.html",
+  "screen": "Customer registration",
+  "text": "Consent · Accepting the terms at registration is not in the SRS: FR-001 lists name, contact number, email and address, and nothing else. It needs a new FR and a place to record the acceptance — a users.terms_accepted_at column and the version accepted — so the tick is not lost the moment the form is submitted. Farmer registration needs the same treatment."
+ },
+ {
+  "role": "public",
   "file": "register-farmer.html",
   "screen": "Farmer registration",
   "text": "FR-071 · Approval time and what the admin checks are not specified. Prototype says 'an admin reviews the stall' without a promised time."
@@ -112,6 +154,42 @@ window.PT_TODOS = [
   "file": "stall.html",
   "screen": "Stall profile",
   "text": "Proposal from Chợ Tốt · Review tags (Ready on time, Fresh as described…) let a shopper read a stall at a glance. The SRS review is a rating plus a comment, so tags need a new table and a step in the review form."
+ },
+ {
+  "role": "public",
+  "file": "terms.html",
+  "screen": "Terms of service",
+  "text": "Terms · Refunds, no-shows and disputes are not defined anywhere. The SRS, docs/decisions.md and docs/api-contract.md are all silent: there is no payment in the product, so there is no refund flow, no no-show penalty and no dispute queue. LEAD to say whether the platform stays out of it (current wording) or whether a dispute needs an FR, a status and an admin screen."
+ },
+ {
+  "role": "public",
+  "file": "terms.html",
+  "screen": "Terms of service",
+  "text": "FR-072 · What a deactivated Customer sees, and what happens to their orders in progress, is not defined. D-09 covers the suspended Farmer case in detail but says nothing about the Customer side. LEAD to decide: sign-in blocked or read-only, and whether running orders continue as they do for a suspended stall."
+ },
+ {
+  "role": "public",
+  "file": "terms.html",
+  "screen": "Terms of service",
+  "text": "Terms · The legal entity behind MarketLink, its address and its registration are not in the repository. A terms page needs to name who the agreement is with. For the TechWiz submission this may be the team name; LEAD to confirm what goes here."
+ },
+ {
+  "role": "public",
+  "file": "terms.html",
+  "screen": "Terms of service",
+  "text": "Terms · How users are told about a change to the terms is not defined. The platform has in-app notifications and an announcements table an admin can publish to, which would be the obvious channel, but no FR says so and no notification type exists for it."
+ },
+ {
+  "role": "public",
+  "file": "terms.html",
+  "screen": "Terms of service",
+  "text": "Consent · No FR covers accepting the terms and privacy policy, and R-07 says not to build what is not listed. The checkbox now on the sign-in and customer registration screens needs a new FR, plus a decision on storage: a users.terms_accepted_at column, which version was accepted, and what happens to accounts created before this existed. Until then the box is UI only."
+ },
+ {
+  "role": "public",
+  "file": "terms.html",
+  "screen": "Terms of service",
+  "text": "Out of scope · Terms of service and Privacy policy are not in the SRS or in .ai/REQUIREMENTS.md, and R-07 says do not build what is not listed. Both pages exist because the sign-in and registration screens now ask users to accept them. They need a new FR, and the text needs review by someone qualified before submission."
  },
  {
   "role": "customer",

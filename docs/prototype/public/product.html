@@ -1,174 +1,215 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Product detail — MarketLink prototype</title>
-<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
-<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
-<link rel="stylesheet" href="../prototype.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="../data.js"></script>
-<script src="../prototype.js"></script>
-</head>
-<body data-role="guest">
-<div id="pt-top"></div>
-<main class="pt-main">
-  <p class="pt-small ml-muted"><a href="../public/products.html">Products</a> · <a href="../public/products.html">Leafy greens</a> · <a href="../public/stall.html">Cô Tư Garden</a></p>
 
-  <div class="pt-split-wide">
-    <div class="pt-gallery">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product detail — MarketLink prototype</title>
+  <link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+  <link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+  <link rel="stylesheet" href="../prototype.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../data.js"></script>
+  <script src="../prototype.js"></script>
+</head>
+
+<body data-role="guest">
+  <div id="pt-top"></div>
+  <main class="pt-main">
+    <p class="pt-small ml-muted"><a href="../public/products.html">Products</a> · <a
+        href="../public/products.html">Leafy greens</a> · <a href="../public/stall.html">Cô Tư Garden</a></p>
+
+    <div class="pt-split-wide">
       <div class="pt-gallery-main">
         <span class="pt-gallery-flag ml-label">Fresh today</span>
         <span class="pt-gallery-cat">Leafy greens</span>
         <span class="pt-gallery-count">1 / 4</span>
       </div>
+
+      <div class="pt-col">
+        <div class="pt-between">
+          <h1 class="pt-title-sm">Củ Chi water spinach</h1>
+          <button type="button" class="ml-pcard-fav" style="position:static" id="fav" aria-pressed="false"
+            aria-label="Add to favorites: Củ Chi water spinach" data-fav data-name="Củ Chi water spinach"></button>
+        </div>
+        <p class="pt-body">Leafy greens · sold per bunch · <a href="../public/stall.html">Cô Tư Garden</a> · <span
+            id="rating"></span></p>
+
+        <div class="ml-card pt-panel pt-col-3">
+          <div class="pt-row" style="gap:24px">
+            <span id="price"></span>
+            <span class="pt-body"><b>12 bunches</b> left this week</span>
+          </div>
+          <p class="pt-small ml-muted">Stock updated <time data-clock></time>, before this weekend's orders.</p>
+          <div class="pt-row" style="gap:24px">
+            <span id="qty"></span>
+            <button type="button" class="ml-btn ml-btn-primary"
+              data-toast="Added 2 bunches of water spinach to your cart." data-toast-action="Undo">Add to cart</button>
+          </div>
+          <p class="pt-small ml-muted">Stock is held for you when you place the order. You pay 15,000 ₫ a bunch at the
+            stall on pickup.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pt-col-2">
       <div class="pt-gallery-thumbs" role="group" aria-label="Photos of Củ Chi water spinach">
         <button type="button" class="pt-thumb" aria-current="true" aria-label="Photo 1 of 4">1</button>
         <button type="button" class="pt-thumb" aria-label="Photo 2 of 4">2</button>
         <button type="button" class="pt-thumb" aria-label="Photo 3 of 4">3</button>
         <button type="button" class="pt-thumb" aria-label="Photo 4 of 4">4</button>
       </div>
-      <p class="pt-caption ml-muted">Until the stall adds a photo, the tag shows the hand-lettered category. <span class="pt-todo" data-todo="FR-062 · The product form takes one image. Whether a stall can upload several photos, and where they are stored, is not decided. The gallery here shows four frames as a proposal.">One photo or a gallery?</span></p>
+      <p class="pt-caption ml-muted">Until the stall adds a photo, the tag shows the hand-lettered category. <span
+          class="pt-todo"
+          data-todo="FR-062 · The product form takes one image. Whether a stall can upload several photos, and where they are stored, is not decided. The gallery here shows four frames as a proposal.">One
+          photo or a gallery?</span></p>
     </div>
 
-    <div class="pt-col">
-      <div class="pt-between">
-        <h1 class="pt-title-sm">Củ Chi water spinach</h1>
-        <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-fav data-name="Củ Chi water spinach" aria-pressed="false">Save</button>
-      </div>
-      <p class="pt-body">Leafy greens · sold per bunch · <a href="../public/stall.html">Cô Tư Garden</a> · <span id="rating"></span></p>
-
-      <div class="ml-card pt-panel pt-col-3">
-        <div class="pt-row" style="gap:24px">
-          <span id="price"></span>
-          <span class="pt-body"><b>12 bunches</b> left this week</span>
-        </div>
-        <p class="pt-small ml-muted">Stock updated <time data-clock></time>, before this weekend's orders.</p>
-        <div class="pt-row" style="gap:24px">
-          <span id="qty"></span>
-          <button type="button" class="ml-btn ml-btn-primary" data-toast="Added 2 bunches of water spinach to your cart." data-toast-action="Undo">Add to cart</button>
-        </div>
-        <p class="pt-small ml-muted">Stock is held for you when you place the order. You pay 15,000 ₫ a bunch at the stall on pickup.</p>
-      </div>
-
-      <div class="ml-card pt-seller">
-        <span class="pt-seller-mono" aria-hidden="true">C</span>
-        <div>
-          <b class="pt-h3"><a class="pt-plain" href="../public/stall.html">Cô Tư Garden</a></b>
-          <p class="pt-small ml-muted">Nguyễn Thị Tư · selling here since 05/08/2026</p>
-        </div>
-        <div class="pt-seller-stats">
-          <div><b>4.6</b><span>32 reviews</span></div>
-          <div><b>112</b><span>orders collected</span></div>
-          <div><b>2</b><span>markets</span></div>
-        </div>
-        <p class="pt-caption ml-muted" style="grid-column:1/-1">Usually answers within an hour on market days. <span class="pt-todo" data-todo="Proposal from Chợ Tốt · Response rate and last-active time build trust on a marketplace, but neither is in the SRS or the schema. Decide whether to measure and store them.">Response time is not measured yet</span></p>
-        <div class="pt-seller-actions">
-          <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../public/stall.html">See the stall</a>
-          <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../customer/messages.html">Message the stall</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="pt-split-wide">
-    <section class="pt-col-3">
+    <section class="pt-section">
       <h2 class="pt-h2">From the stall</h2>
-      <p class="pt-body pt-measure">Cut on Friday evening, bunches of about 400 g. Best stir-fried with garlic the same day. Grown without pesticides on our plot in Tân Phú Trung. We hold no certification, so come and ask us about it at the stall.</p>
+      <p class="pt-body pt-measure">Cut on Friday evening, bunches of about 400 g. Best stir-fried with garlic the
+        same day. Grown without pesticides on our plot in Tân Phú Trung. We hold no certification, so come and ask us
+        about it at the stall.</p>
+      <div class="pt-split-wide">
+        <div class="ml-card pt-seller">
+          <span class="pt-seller-mono" aria-hidden="true">C</span>
+          <div>
+            <b class="pt-h3"><a class="pt-plain" href="../public/stall.html">Cô Tư Garden</a></b>
+            <p class="pt-small ml-muted">Nguyễn Thị Tư · selling here since 05/08/2026</p>
+          </div>
+          <div class="pt-seller-stats">
+            <div><b>4.6</b><span>32 reviews</span></div>
+            <div><b>112</b><span>orders collected</span></div>
+            <div><b>2</b><span>markets</span></div>
+          </div>
+          <p class="pt-caption ml-muted" style="grid-column:1/-1">Usually answers within an hour on market days. <span
+              class="pt-todo"
+              data-todo="Proposal from Chợ Tốt · Response rate and last-active time build trust on a marketplace, but neither is in the SRS or the schema. Decide whether to measure and store them.">Response
+              time is not measured yet</span></p>
+          <div class="pt-seller-actions">
+            <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../public/stall.html">See the stall</a>
+            <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../customer/messages.html">Message the stall</a>
+          </div>
+        </div>
+        <section class="ml-card pt-panel pt-col-3">
+          <h3 class="pt-h3">Product details</h3>
+          <dl class="pt-facts">
+            <dt>Sold per</dt>
+            <dd>1 bunch, about 400 g</dd>
+            <dt>Grown in</dt>
+            <dd>Tân Phú Trung, Củ Chi</dd>
+            <dt>Cut</dt>
+            <dd>Friday evening, the day before market</dd>
+            <dt>Keeps</dt>
+            <dd>2 days in the fridge, wrapped in paper</dd>
+            <dt>Category</dt>
+            <dd>Leafy greens</dd>
+          </dl>
+          <p class="pt-caption ml-muted"><span class="pt-todo"
+              data-todo="FR-062 · The SRS product entity is name, category, price, unit, quantity, description and image. Grown in, cut, and keeps are extra fields this page shows; they need columns and form inputs, or they should be folded into the description.">Grown
+              in, cut and keeps are not SRS fields</span></p>
+        </section>
+      </div>
     </section>
-    <section class="ml-card pt-panel pt-col-3">
-      <h2 class="pt-h3">Product details</h2>
-      <dl class="pt-facts">
-        <dt>Sold per</dt><dd>1 bunch, about 400 g</dd>
-        <dt>Grown in</dt><dd>Tân Phú Trung, Củ Chi</dd>
-        <dt>Cut</dt><dd>Friday evening, the day before market</dd>
-        <dt>Keeps</dt><dd>2 days in the fridge, wrapped in paper</dd>
-        <dt>Category</dt><dd>Leafy greens</dd>
-      </dl>
-      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-062 · The SRS product entity is name, category, price, unit, quantity, description and image. Grown in, cut, and keeps are extra fields this page shows; they need columns and form inputs, or they should be folded into the description.">Grown in, cut and keeps are not SRS fields</span></p>
+
+    <section class="pt-section">
+      <div class="pt-between-c">
+        <h2 class="pt-h2">Where and when you collect</h2><a href="../public/map.html">See both stalls on the map</a>
+      </div>
+      <div id="pickup"></div>
+      <p class="pt-small ml-muted">Slots hold 5 orders each. A full slot is locked, and the stall stops changes 12 hours
+        before your slot.</p>
     </section>
-  </div>
 
-  <section class="pt-section">
-    <div class="pt-between-c"><h2 class="pt-h2">Where and when you collect</h2><a href="../public/map.html">See both stalls on the map</a></div>
-    <div id="pickup"></div>
-    <p class="pt-small ml-muted">Slots hold 5 orders each. A full slot is locked, and the stall stops changes 12 hours before your slot.</p>
-  </section>
+    <section class="pt-section" aria-labelledby="rev-h">
+      <div class="pt-between-c">
+        <h2 id="rev-h" class="pt-h2">Reviews of this product</h2>
+        <div class="pt-row-2"><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" disabled>Write a
+            review</button><span class="pt-small ml-muted">Available once an order with this product is
+            completed.</span></div>
+      </div>
+      <div class="ml-card pt-panel pt-col-3">
+        <div class="pt-ratebig"><b>4.9</b><span id="rating2"></span><span class="pt-small ml-muted">3 reviews, all from
+            completed orders</span></div>
+        <div class="pt-revtags" id="revtags"></div>
+        <p class="pt-caption ml-muted"><span class="pt-todo"
+            data-todo="Proposal from Chợ Tốt · Review tags (Ready on time, Fresh as described…) summarise a stall faster than free text. The SRS review is a rating plus a comment, so tags would need a new table and a step in the review form.">Review
+            tags are a proposal, not in the SRS</span></p>
+      </div>
+      <div class="pt-grid-2" id="reviews"></div>
+    </section>
 
-  <section class="pt-section" aria-labelledby="rev-h">
-    <div class="pt-between-c">
-      <h2 id="rev-h" class="pt-h2">Reviews of this product</h2>
-      <div class="pt-row-2"><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" disabled>Write a review</button><span class="pt-small ml-muted">Available once an order with this product is completed.</span></div>
-    </div>
-    <div class="ml-card pt-panel pt-col-3">
-      <div class="pt-ratebig"><b>4.9</b><span id="rating2"></span><span class="pt-small ml-muted">3 reviews, all from completed orders</span></div>
-      <div class="pt-revtags" id="revtags"></div>
-      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal from Chợ Tốt · Review tags (Ready on time, Fresh as described…) summarise a stall faster than free text. The SRS review is a rating plus a comment, so tags would need a new table and a step in the review form.">Review tags are a proposal, not in the SRS</span></p>
-    </div>
-    <div class="pt-grid-2" id="reviews"></div>
-  </section>
+    <section class="pt-section">
+      <div class="pt-between-c">
+        <h2 class="pt-h2">Water spinach at other stalls this weekend</h2><span class="pt-small ml-muted">Same vegetable,
+          different plot and price</span>
+      </div>
+      <div id="compare"></div>
+    </section>
 
-  <section class="pt-section">
-    <div class="pt-between-c"><h2 class="pt-h2">Water spinach at other stalls this weekend</h2><span class="pt-small ml-muted">Same vegetable, different plot and price</span></div>
-    <div id="compare"></div>
-  </section>
+    <section class="pt-section">
+      <div class="pt-between-c">
+        <h2 class="pt-h2">Also from Cô Tư Garden this week</h2><a href="../public/stall.html">See the stall</a>
+      </div>
+      <div class="pt-grid-tags" id="more"></div>
+    </section>
 
-  <section class="pt-section">
-    <div class="pt-between-c"><h2 class="pt-h2">Also from Cô Tư Garden this week</h2><a href="../public/stall.html">See the stall</a></div>
-    <div class="pt-grid-tags" id="more"></div>
-  </section>
+    <p class="pt-small"><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" id="report">Report this
+        listing</button> <span class="ml-muted">Wrong price, wrong photo or something that does not belong at a farmers
+        market.</span></p>
+  </main>
+  <script>
+    document.getElementById('fav').innerHTML = PT.icons.heart(false);
+    document.getElementById('rating').innerHTML = PT.rating(4.6, 32);
+    document.getElementById('rating2').innerHTML = PT.rating(4.9);
+    document.getElementById('price').innerHTML = PT.priceTag(15000, 'bunch', null, true);
+    document.getElementById('qty').innerHTML = PT.qty(2, 12, 'bunch', 'Water spinach');
+    document.getElementById('revtags').innerHTML = PT.reviewTags[1].map(function (t) { return '<span class="pt-revtag">' + PT.esc(t[0]) + ' <b>' + t[1] + '</b></span>'; }).join('');
 
-  <p class="pt-small"><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" id="report">Report this listing</button> <span class="ml-muted">Wrong price, wrong photo or something that does not belong at a farmers market.</span></p>
-</main>
-<script>
-  document.getElementById('rating').innerHTML = PT.rating(4.6, 32);
-  document.getElementById('rating2').innerHTML = PT.rating(4.9);
-  document.getElementById('price').innerHTML = PT.priceTag(15000, 'bunch', null, true);
-  document.getElementById('qty').innerHTML = PT.qty(2, 12, 'bunch', 'Water spinach');
-  document.getElementById('revtags').innerHTML = PT.reviewTags[1].map(function (t) { return '<span class="pt-revtag">' + PT.esc(t[0]) + ' <b>' + t[1] + '</b></span>'; }).join('');
+    document.getElementById('pickup').innerHTML = PT.table(null, [
+      { key: 'm', label: 'Market', render: function (r) { return '<b>' + PT.esc(r.m) + '</b><span class="sub">' + PT.esc(r.a) + '</span>'; } },
+      { key: 'd', label: 'Days' },
+      { key: 'w', label: 'Pickup window' },
+      { key: 'f', label: 'Free slots', align: 'num' },
+      { key: 'c', label: 'Orders close' },
+      { key: 'x', label: '', align: 'actions', render: function (r) { return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="' + r.dir + '" target="_blank" rel="noopener">Directions</a>'; } },
+    ], [
+      { m: 'Thảo Điền Weekend Market', a: 'Stall A12 · 12 Quốc Hương, Thảo Điền', d: 'Sat, Sun', w: '06:00 – 10:30', f: '4 of 6', c: '12 hours before your slot', dir: PT.directions(10.8039, 106.7334) },
+      { m: 'Thủ Đức Farmers Market', a: 'Stall B02 · Võ Văn Ngân, Bình Thọ', d: 'Sun', w: '06:00 – 09:30', f: '5 of 5', c: '12 hours before your slot', dir: PT.directions(10.8504, 106.7713) },
+    ]);
 
-  document.getElementById('pickup').innerHTML = PT.table(null, [
-    { key: 'm', label: 'Market', render: function (r) { return '<b>' + PT.esc(r.m) + '</b><span class="sub">' + PT.esc(r.a) + '</span>'; } },
-    { key: 'd', label: 'Days' },
-    { key: 'w', label: 'Pickup window' },
-    { key: 'f', label: 'Free slots', align: 'num' },
-    { key: 'c', label: 'Orders close' },
-    { key: 'x', label: '', align: 'actions', render: function (r) { return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="' + r.dir + '" target="_blank" rel="noopener">Directions</a>'; } },
-  ], [
-    { m: 'Thảo Điền Weekend Market', a: 'Stall A12 · 12 Quốc Hương, Thảo Điền', d: 'Sat, Sun', w: '06:00 – 10:30', f: '4 of 6', c: '12 hours before your slot', dir: PT.directions(10.8039, 106.7334) },
-    { m: 'Thủ Đức Farmers Market', a: 'Stall B02 · Võ Văn Ngân, Bình Thọ', d: 'Sun', w: '06:00 – 09:30', f: '5 of 5', c: '12 hours before your slot', dir: PT.directions(10.8504, 106.7713) },
-  ]);
+    document.getElementById('reviews').innerHTML = PT.reviews.filter(function (r) { return r.product === 1; }).map(function (r) { return PT.reviewCard(r, { fluid: true }); }).join('')
+      + PT.reviewCard({ author: 'Bích Ngọc', date: '19/09/2026', target: 'Củ Chi water spinach', rating: 5, text: 'Bought 3 bunches for a family lunch. Nothing wilted and the stems snapped clean.' }, { fluid: true });
 
-  document.getElementById('reviews').innerHTML = PT.reviews.filter(function (r) { return r.product === 1; }).map(function (r) { return PT.reviewCard(r, { fluid: true }); }).join('')
-    + PT.reviewCard({ author: 'Bích Ngọc', date: '19/09/2026', target: 'Củ Chi water spinach', rating: 5, text: 'Bought 3 bunches for a family lunch. Nothing wilted and the stems snapped clean.' }, { fluid: true });
+    document.getElementById('compare').innerHTML = PT.table(null, [
+      { key: 'p', label: 'Product', render: function (r) { var p = PT.product(r.id); return '<b>' + PT.esc(p.name) + '</b><span class="sub">' + PT.esc(PT.farmer(p.farmer).stall) + '</span>'; } },
+      { key: 'mk', label: 'Market', render: function (r) { return PT.esc(PT.market(PT.farmer(PT.product(r.id).farmer).markets[0]).name); } },
+      { key: 'dy', label: 'Days', render: function (r) { return PT.farmer(PT.product(r.id).farmer).days; } },
+      { key: 'pr', label: 'Price', align: 'num', render: function (r) { var p = PT.product(r.id); return PT.vnd(p.price) + ' <span class="sub">per ' + p.unit + '</span>'; } },
+      { key: 'st', label: 'Left', align: 'num', render: function (r) { var p = PT.product(r.id); return PT.units(p.stock, p.unit); } },
+      { key: 'a', label: '', align: 'actions', render: function (r) { return r.here ? '<span class="ml-muted pt-small">You are here</span>' : '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../public/product.html">View</a>'; } },
+    ], [{ id: 1, here: true }, { id: 21 }]);
 
-  document.getElementById('compare').innerHTML = PT.table(null, [
-    { key: 'p', label: 'Product', render: function (r) { var p = PT.product(r.id); return '<b>' + PT.esc(p.name) + '</b><span class="sub">' + PT.esc(PT.farmer(p.farmer).stall) + '</span>'; } },
-    { key: 'mk', label: 'Market', render: function (r) { return PT.esc(PT.market(PT.farmer(PT.product(r.id).farmer).markets[0]).name); } },
-    { key: 'dy', label: 'Days', render: function (r) { return PT.farmer(PT.product(r.id).farmer).days; } },
-    { key: 'pr', label: 'Price', align: 'num', render: function (r) { var p = PT.product(r.id); return PT.vnd(p.price) + ' <span class="sub">per ' + p.unit + '</span>'; } },
-    { key: 'st', label: 'Left', align: 'num', render: function (r) { var p = PT.product(r.id); return PT.units(p.stock, p.unit); } },
-    { key: 'a', label: '', align: 'actions', render: function (r) { return r.here ? '<span class="ml-muted pt-small">You are here</span>' : '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../public/product.html">View</a>'; } },
-  ], [{ id: 1, here: true }, { id: 21 }]);
+    document.getElementById('more').innerHTML = [2, 7, 19].map(function (id) { return PT.productCard(PT.product(id), { market: false }); }).join('');
 
-  document.getElementById('more').innerHTML = [2, 7, 19].map(function (id) { return PT.productCard(PT.product(id), { market: false }); }).join('');
-
-  document.getElementById('report').addEventListener('click', function () {
-    PT.dialog({ tone: 'danger', title: 'Report this listing?', body: '<p>An admin reads the report and can hide the listing while they check it. The stall is told what was reported.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">What is wrong?</label><select id="why" class="ml-input"><option>The price or the unit is wrong</option><option>The photo is not this product</option><option>It does not belong at a farmers market</option><option>Something else</option></select></div>', keep: 'Cancel', confirm: 'Send report', toast: 'Report sent. An admin will look at this listing.' });
-  });
-  PT.states(['#price', '#pickup', '#reviews', '#compare'], {
-    label: 'this product',
-    empty: ['That product is not on sale any more', 'The stall may have taken it down. Look at what else they have this week.'],
-    error: ['Couldn\'t load the product', 'Check your connection and try again.'],
-  });
-  PT.boot({ active: 'products' });
-</script>
-<div id="pt-foot"></div>
+    document.getElementById('report').addEventListener('click', function () {
+      PT.dialog({ tone: 'danger', title: 'Report this listing?', body: '<p>An admin reads the report and can hide the listing while they check it. The stall is told what was reported.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">What is wrong?</label><select id="why" class="ml-input"><option>The price or the unit is wrong</option><option>The photo is not this product</option><option>It does not belong at a farmers market</option><option>Something else</option></select></div>', keep: 'Cancel', confirm: 'Send report', toast: 'Report sent. An admin will look at this listing.' });
+    });
+    PT.states(['#price', '#pickup', '#reviews', '#compare'], {
+      label: 'this product',
+      empty: ['That product is not on sale any more', 'The stall may have taken it down. Look at what else they have this week.'],
+      error: ['Couldn\'t load the product', 'Check your connection and try again.'],
+    });
+    PT.boot({ active: 'products' });
+  </script>
+  <div id="pt-foot"></div>
 </body>
+
 </html>
