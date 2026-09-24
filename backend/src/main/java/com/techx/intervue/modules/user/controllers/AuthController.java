@@ -9,11 +9,13 @@ import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SocialLoginRequest;
+import com.techx.intervue.modules.user.requests.VerifyResetTokenRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.resources.LoginResource;
 import com.techx.intervue.modules.user.resources.RefreshResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
+import com.techx.intervue.modules.user.resources.ResetTokenResource;
 import com.techx.intervue.modules.user.services.impl.FacebookOAuthClient;
 import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
@@ -146,6 +148,19 @@ public class AuthController extends BaseController {
             @Valid @RequestBody ForgotPasswordRequest request) {
         passwordResetService.requestReset(request.email());
         return ok(null, "If that email is registered, you will receive a password reset link.");
+    }
+
+    /**
+     * FR-007 bước C (trước khi hiện form): kiểm tra link còn dùng được và trả email của tài khoản.
+     * Chỉ đọc token, không xoá — token vẫn dùng được cho /reset-password.
+     */
+    @PostMapping("/reset-password/verify")
+    public ResponseEntity<ApiResource<ResetTokenResource>> verifyResetToken(
+            @Valid @RequestBody VerifyResetTokenRequest request) {
+        String email = passwordResetService.verifyToken(request.token());
+        return ResponseEntity.ok()
+                .header("Referrer-Policy", "no-referrer")
+                .body(ApiResource.success(new ResetTokenResource(email), "This link is valid."));
     }
 
     /**
