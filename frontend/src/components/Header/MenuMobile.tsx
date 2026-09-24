@@ -2,10 +2,10 @@ import { NavLink } from 'react-router';
 import { Button } from '@/components/ui/button';
 import type { NavItem } from '@/constants/nav';
 
-type MenuMobileProps = { items: NavItem[]; onClose: () => void };
+type MenuMobileProps = { items: NavItem[]; onClose: () => void; onSignOut?: () => void };
 
 /** Slide-in drawer for screens below 768px. */
-const MenuMobile = ({ items, onClose }: MenuMobileProps) => {
+const MenuMobile = ({ items, onClose, onSignOut }: MenuMobileProps) => {
   return (
     <div className="bg-scrim fixed inset-0 z-100" onClick={onClose}>
       <div
@@ -27,6 +27,18 @@ const MenuMobile = ({ items, onClose }: MenuMobileProps) => {
             {item.label}
           </NavLink>
         ))}
+        {onSignOut && (
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              onSignOut();
+            }}
+            className="text-on-board block cursor-pointer rounded-sm bg-transparent p-3 text-left text-[17px] font-bold"
+          >
+            Sign out
+          </button>
+        )}
       </div>
     </div>
   );

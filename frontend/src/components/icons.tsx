@@ -104,6 +104,26 @@ export function LockIcon(props: IconProps) {
   );
 }
 
+export function EyeIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" />
+      <circle cx="8" cy="8" r="2" />
+    </Glyph>
+  );
+}
+
+export function EyeOffIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M6.2 4A6.5 6.5 0 018 3.5C12 3.5 14.5 8 14.5 8a11 11 0 01-1.7 2.2" />
+      <path d="M10.6 11.8A6.3 6.3 0 018 12.5C4 12.5 1.5 8 1.5 8a11.3 11.3 0 012.8-3.3" />
+      <path d="M6.6 6.6a2 2 0 002.8 2.8" />
+      <path d="M2 2l12 12" />
+    </Glyph>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <Glyph {...props}>
@@ -152,6 +172,42 @@ export function HeartIcon({ filled = false, size = 18 }: { filled?: boolean; siz
       strokeLinejoin="round"
     >
       <path d="M8 13.5S2 10 2 5.9A3 3 0 018 4.6a3 3 0 016 1.3C14 10 8 13.5 8 13.5z" />
+    </svg>
+  );
+}
+
+export function RestockIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M13.5 8a5.5 5.5 0 11-1.6-3.9" />
+      <path d="M13.5 2.5v2.8h-2.8" />
+    </Glyph>
+  );
+}
+
+export function StoreIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M2.6 6.4h10.8v7.1H2.6z" />
+      <path d="M1.6 3.4h12.8l.6 3H1z" />
+      <path d="M6.4 13.5V9.7h3.2v3.8" />
+    </Glyph>
+  );
+}
+
+export function StarIcon({ filled = false, size = 16 }: { filled?: boolean; size?: number }) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      width={size}
+      height={size}
+      aria-hidden="true"
+      fill={filled ? 'currentColor' : 'none'}
+      stroke="currentColor"
+      strokeWidth={1.3}
+      strokeLinejoin="round"
+    >
+      <path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" />
     </svg>
   );
 }

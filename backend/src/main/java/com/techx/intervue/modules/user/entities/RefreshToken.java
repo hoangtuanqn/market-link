@@ -41,6 +41,11 @@ public class RefreshToken {
     @Builder.Default
     private boolean revoked = false;
 
+    /** false: đăng nhập không chọn "Remember me" → cookie phiên. */
+    @Column(name = "remember_me", nullable = false)
+    @Builder.Default
+    private boolean rememberMe = true;
+
     @Column(name = "replaced_by_token_id")
     private Long replacedByTokenId;
 

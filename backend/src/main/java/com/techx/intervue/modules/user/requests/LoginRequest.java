@@ -7,4 +7,6 @@ import jakarta.validation.constraints.NotBlank;
 public record LoginRequest(
         @NotBlank(message = "Enter your email.") @Email(message = "Enter a valid email address.")
                 String email,
-        @NotBlank(message = "Enter your password.") String password) {}
+        @NotBlank(message = "Enter your password.") String password,
+        /* "Remember me": false → phiên kết thúc khi đóng trình duyệt; không gửi thì coi như true */
+        Boolean rememberMe) {}

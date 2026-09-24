@@ -3,6 +3,7 @@ package com.techx.intervue.modules.user.controllers;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.InvalidResetTokenException;
+import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -101,6 +102,11 @@ public class AuthExceptionHandler {
     @ExceptionHandler(InvalidResetTokenException.class)
     ResponseEntity<ApiResource<Void>> invalidResetToken(InvalidResetTokenException e) {
         return error(HttpStatus.BAD_REQUEST, "INVALID_RESET_TOKEN", e.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(PasswordAlreadySetException.class)
+    ResponseEntity<ApiResource<Void>> passwordAlreadySet(PasswordAlreadySetException e) {
+        return error(HttpStatus.CONFLICT, "PASSWORD_ALREADY_SET", e.getMessage(), List.of());
     }
 
     @ExceptionHandler(DuplicateAccountException.class)

@@ -4,18 +4,24 @@ import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.filters.JwtAuthFilter;
 import com.techx.intervue.helpers.CookieHelper;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
+import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
+import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SocialLoginRequest;
+import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.requests.VerifyResetTokenRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.AuthorizeUrlResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.resources.LoginResource;
 import com.techx.intervue.modules.user.resources.RefreshResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
 import com.techx.intervue.modules.user.resources.ResetTokenResource;
+import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.impl.FacebookOAuthClient;
 import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
@@ -31,11 +37,15 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -57,7 +67,9 @@ public class AuthController extends BaseController {
         AuthResult auth = userService.registerCustomer(request);
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
-                        auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+                        auth.refreshToken(),
+                        Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
+                        auth.rememberMe());
 
         RegisterResource body = new RegisterResource(auth.accessToken(), auth.user());
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -76,6 +88,21 @@ public class AuthController extends BaseController {
      * Đăng nhập Google: FE gửi authorization code (Google redirect về redirect_uri kèm ?code=...).
      * Backend tự đổi code lấy id_token bằng client_secret và verify id_token.
      */
+    /**
+     * Bước 1 của đăng nhập Google: trả URL trang đăng nhập Google. state (chuỗi ngẫu nhiên FE sinh
+     * và giữ lại) được gắn vào URL, Google trả nguyên về trang callback để FE so khớp.
+     */
+    @GetMapping("/google/authorize-url")
+    public ResponseEntity<ApiResource<AuthorizeUrlResource>> googleAuthorizeUrl(
+            @RequestParam(required = false) String state) {
+        if (!StringUtils.hasText(state) || state.length() > 128) {
+            throw new InvalidFieldException("state", "State is missing or too long.");
+        }
+        return ok(
+                new AuthorizeUrlResource(googleClient.authorizeUrl(state)),
+                "Redirecting to Google.");
+    }
+
     @PostMapping("/google")
     public ResponseEntity<ApiResource<LoginResource>> loginWithGoogle(
             @Valid @RequestBody SocialLoginRequest request) {
@@ -92,7 +119,9 @@ public class AuthController extends BaseController {
     private ResponseEntity<ApiResource<LoginResource>> loggedIn(AuthResult auth) {
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
-                        auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+                        auth.refreshToken(),
+                        Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
+                        auth.rememberMe());
 
         LoginResource body = new LoginResource(auth.accessToken(), auth.user());
         return ResponseEntity.ok()
@@ -118,6 +147,35 @@ public class AuthController extends BaseController {
     }
 
     /**
+     * Đặt mật khẩu lần đầu sau khi đăng nhập Google/Facebook (user.hasPassword = false). Cần access
+     * token; tài khoản đã có mật khẩu → 409 PASSWORD_ALREADY_SET.
+     */
+    @PostMapping("/set-password")
+    public ResponseEntity<ApiResource<Void>> setPassword(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @Valid @RequestBody SetPasswordRequest request) {
+        userService.setPassword(user.getId(), request);
+        return ok(null, "Password saved. You can now also sign in with your email.");
+    }
+
+    /**
+     * Đổi mật khẩu trên trang Account. Xong thì mọi phiên (kể cả phiên hiện tại) bị huỷ, cookie
+     * refresh_token bị xoá — người dùng đăng nhập lại bằng mật khẩu mới.
+     */
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResource<Void>> changePassword(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @Valid @RequestBody ChangePasswordRequest request) {
+        userService.changePassword(user.getId(), request);
+        ResponseCookie clearCookie = CookieHelper.buildRefreshTokenCookie("", Duration.ZERO);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
+                .body(
+                        ApiResource.success(
+                                null, "Your password has been changed. Please sign in again."));
+    }
+
+    /**
      * FR-003: gọi khi access token hết hạn. Refresh token chỉ đọc từ cookie HttpOnly (không nhận
      * qua body), trả access token mới và ghi đè cookie bằng refresh token mới.
      */
@@ -131,7 +189,9 @@ public class AuthController extends BaseController {
         AuthResult auth = userService.refresh(refreshToken);
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
-                        auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+                        auth.refreshToken(),
+                        Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
+                        auth.rememberMe());
 
         RefreshResource body = new RefreshResource(auth.accessToken(), auth.user());
         return ResponseEntity.ok()
@@ -176,5 +236,23 @@ public class AuthController extends BaseController {
                 .body(
                         ApiResource.success(
                                 null, "Your password has been reset. Please sign in again."));
+    }
+
+    /** Hồ sơ của chính user đang đăng nhập (trang Account). */
+    @GetMapping("/me")
+    public ResponseEntity<ApiResource<UserResource>> me(
+            @AuthenticationPrincipal CustomUserDetails user) {
+        return ok(userService.getProfile(user.getId()), "Profile loaded.");
+    }
+
+    /**
+     * Sửa họ tên, số điện thoại, địa chỉ của chính mình — id lấy từ access token nên không sửa được
+     * tài khoản khác (R-06). Email không đổi được ở đây.
+     */
+    @PutMapping("/me")
+    public ResponseEntity<ApiResource<UserResource>> updateMe(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @Valid @RequestBody UpdateProfileRequest request) {
+        return ok(userService.updateProfile(user.getId(), request), "Your details are saved.");
     }
 }

@@ -7,10 +7,14 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
+import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
 import com.techx.intervue.modules.user.repositories.SocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
+import com.techx.intervue.modules.user.requests.SetPasswordRequest;
+import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
@@ -19,6 +23,7 @@ import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceIn
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.services.impl.BaseService;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
+import com.techx.intervue.services.interfaces.JobQueueInterface;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Locale;
@@ -46,6 +51,7 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final RefreshTokenService refreshTokenService;
     private final BlacklistServiceInterface blacklistService;
     private final AuthConfig authConfig;
+    private final JobQueueInterface jobQueue;
 
     /**
      * FR-006: access token vào blacklist Redis tới lúc hết hạn (JwtAuthFilter chặn theo jti),
@@ -115,7 +121,7 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        return issueTokens(user);
+        return issueTokens(user, !Boolean.FALSE.equals(request.rememberMe()));
     }
 
     /**
@@ -135,7 +141,7 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        return buildAuthResult(user, rotated.newRefreshToken());
+        return buildAuthResult(user, rotated.newRefreshToken(), rotated.rememberMe());
     }
 
     /**
@@ -213,27 +219,129 @@ public class UserService extends BaseService implements UserServiceInterface {
         return url != null && url.length() <= 255 ? url : null;
     }
 
-    private AuthResult issueTokens(User user) {
-        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId());
-        return buildAuthResult(user, refreshToken.rawToken());
+    @Override
+    public UserResource getProfile(Long userId) {
+        return toResource(findActiveUser(userId));
     }
 
-    private AuthResult buildAuthResult(User user, String rawRefreshToken) {
+    /**
+     * Chỉ sửa được tài khoản của chính mình (userId lấy từ access token, không nhận từ request).
+     * Email giữ nguyên. Số điện thoại trùng với tài khoản khác → 409; hai request đua nhau lọt qua
+     * bước kiểm tra thì UNIQUE của DB chặn (AuthExceptionHandler trả 409).
+     */
+    @Override
+    @Transactional
+    public UserResource updateProfile(Long userId, UpdateProfileRequest request) {
+        User user = findActiveUser(userId);
+        String phone = request.phone().trim();
+        if (userRepository.existsByPhoneAndIdNot(phone, userId)) {
+            throw new DuplicateAccountException(
+                    "phone", "This phone number is already registered.");
+        }
+        user.setFullName(request.fullName().trim());
+        user.setPhone(phone);
+        user.setAddress(request.address().trim());
+        return toResource(userRepository.saveAndFlush(user));
+    }
+
+    private User findActiveUser(Long userId) {
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BadCredentialsException("Account not found."));
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new DisabledException(
+                    "Your account has been locked. Please contact an administrator.");
+        }
+        return user;
+    }
+
+    private AuthResult issueTokens(User user) {
+        return issueTokens(user, true);
+    }
+
+    private AuthResult issueTokens(User user, boolean rememberMe) {
+        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId(), rememberMe);
+        return buildAuthResult(user, refreshToken.rawToken(), rememberMe);
+    }
+
+    private AuthResult buildAuthResult(User user, String rawRefreshToken, boolean rememberMe) {
         String accessToken = jwtService.generateToken(user.getId());
 
         Duration ttl = Duration.ofMillis(authConfig.getExpirationTime());
         userSessionCache.set(user.getId(), user.getEmail(), Set.of(user.getRole()), ttl);
 
-        UserResource userResource =
-                UserResource.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .fullName(user.getFullName())
-                        .phone(user.getPhone())
-                        .address(user.getAddress())
-                        .role(user.getRole())
-                        .createdAt(user.getCreatedAt())
-                        .build();
-        return new AuthResult(accessToken, rawRefreshToken, userResource);
+        return new AuthResult(accessToken, rawRefreshToken, toResource(user), rememberMe);
+    }
+
+    private static UserResource toResource(User user) {
+        return UserResource.builder()
+                .id(user.getId())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .phone(user.getPhone())
+                .address(user.getAddress())
+                .role(user.getRole())
+                .createdAt(user.getCreatedAt())
+                .hasPassword(user.getPasswordHash() != null)
+                .build();
+    }
+
+    /**
+     * Đổi mật khẩu: cần đúng mật khẩu hiện tại. Sai thì 400 ở field currentPassword (không dùng 401
+     * vì FE coi 401 là hết phiên và tự refresh). Đổi xong đăng xuất mọi thiết bị: thu hồi mọi
+     * refresh token, xoá session Redis (JwtAuthFilter từ chối mọi access token còn hạn), gửi mail
+     * thông báo.
+     */
+    @Override
+    @Transactional
+    public void changePassword(Long userId, ChangePasswordRequest request) {
+        if (!request.newPassword().equals(request.confirmPassword())) {
+            throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
+        }
+        User user = findActiveUser(userId);
+        if (user.getPasswordHash() == null) {
+            throw new InvalidFieldException(
+                    "currentPassword", "Your account has no password yet. Set one first.");
+        }
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
+            throw new InvalidFieldException("currentPassword", "Current password is incorrect.");
+        }
+        if (passwordEncoder.matches(request.newPassword(), user.getPasswordHash())) {
+            throw new InvalidFieldException(
+                    "newPassword", "Use a password different from the current one.");
+        }
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+
+        refreshTokenService.revokeAllTokens(userId);
+        userSessionCache.evict(userId);
+        jobQueue.enqueue(PasswordResetService.JOB_NOTIFY_CHANGED, Map.of("email", user.getEmail()));
+    }
+
+    /**
+     * Đặt mật khẩu lần đầu cho tài khoản tạo qua Google/Facebook. Chỉ khi chưa có mật khẩu — đã có
+     * thì phải dùng đổi / quên mật khẩu (409). userId lấy từ access token (R-06). Phiên hiện tại
+     * giữ nguyên.
+     */
+    @Override
+    @Transactional
+    public void setPassword(Long userId, SetPasswordRequest request) {
+        if (!request.password().equals(request.confirmPassword())) {
+            throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
+        }
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BadCredentialsException("Account not found."));
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new DisabledException(
+                    "Your account has been locked. Please contact an administrator.");
+        }
+        if (user.getPasswordHash() != null) {
+            throw new PasswordAlreadySetException();
+        }
+        user.setPasswordHash(passwordEncoder.encode(request.password()));
+        userRepository.save(user);
     }
 }

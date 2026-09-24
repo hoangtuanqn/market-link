@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useLogout from '@/hooks/useLogout';
 import { Link } from 'react-router';
 import { CUSTOMER_NAV, GUEST_NAV } from '@/constants/nav';
 import { BellIcon, CartIcon, MenuIcon, SearchIcon } from '@/components/icons';
@@ -24,10 +25,11 @@ type HeaderProps = {
 
 const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount = 0 }: HeaderProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const logout = useLogout();
   const signedIn = variant === 'customer';
   const navItems = signedIn ? CUSTOMER_NAV : GUEST_NAV;
   const drawerItems = signedIn
-    ? [...navItems, { label: 'Sign out', to: '/login' }]
+    ? [...navItems, { label: 'Account', to: '/account' }]
     : [...navItems, { label: 'Sign in', to: '/login' }, { label: 'Create an account', to: '/register/customer' }];
 
   return (
@@ -97,7 +99,9 @@ const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount =
         <div aria-hidden="true" className="border-twine h-0 border-t-2 border-dashed" />
       </header>
 
-      {menuOpen && <MenuMobile items={drawerItems} onClose={() => setMenuOpen(false)} />}
+      {menuOpen && (
+        <MenuMobile items={drawerItems} onClose={() => setMenuOpen(false)} onSignOut={signedIn ? logout : undefined} />
+      )}
     </>
   );
 };

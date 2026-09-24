@@ -7,8 +7,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
 import type { RegisterInput } from '@/types/auth.types';
 import Helper from '@/utils/helper';
-import LocalStorage from '@/utils/localstorage';
 import Notification from '@/utils/notification';
+import Session from '@/utils/session';
 
 type FormErrors = Partial<Record<keyof RegisterInput, string>>;
 
@@ -84,12 +84,9 @@ const RegisterCustomerPage = () => {
         email: form.email.trim(),
         address: form.address.trim(),
       });
-      const { accessToken, user } = response.data;
 
       // Backend đăng nhập luôn sau khi đăng ký (refresh token nằm trong cookie HttpOnly)
-      LocalStorage.setItem('login', 'true');
-      LocalStorage.setItem('access_token', accessToken);
-      LocalStorage.setItem('user', JSON.stringify(user));
+      Session.save(response.data);
 
       Notification.success({ text: response.message || 'Account created.' });
       navigate('/');

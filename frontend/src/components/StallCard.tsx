@@ -1,0 +1,74 @@
+import type { ReactNode } from 'react';
+import { Link } from 'react-router';
+import Rating from '@/components/Rating';
+import { ButtonAnchor, ButtonLink } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { marketName } from '@/data/customer';
+import Helper from '@/utils/helper';
+
+type StallCardFarmer = {
+  id: number;
+  stall: string;
+  person: string;
+  lat: number;
+  lng: number;
+  markets: number[];
+  days: string;
+  pickup: string;
+  rating?: number;
+  reviews?: number;
+  distance?: string;
+};
+
+/** Design system `.ml-stall` — a monogram, the stall's markets/days/pickup, and where to find it. */
+const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: ReactNode }) => (
+  <Card as="article" className="grid grid-cols-[56px_1fr] gap-x-4 gap-y-3 p-4">
+    <span
+      aria-hidden="true"
+      className="bg-brand text-on-brand font-hand grid size-14 place-items-center rounded-full text-[28px] uppercase"
+    >
+      {farmer.stall.trim().charAt(0)}
+    </span>
+    <div>
+      <h3 className="text-[17px] leading-tight font-bold">
+        <Link to="/stall" className="text-inherit no-underline hover:underline hover:underline-offset-3">
+          {farmer.stall}
+        </Link>
+      </h3>
+      <p className="text-small text-ink-muted mt-0.5">{farmer.person}</p>
+      {farmer.rating != null && (
+        <div className="mt-1.5">
+          <Rating value={farmer.rating} count={farmer.reviews} />
+        </div>
+      )}
+    </div>
+
+    <dl className="text-small col-span-full m-0 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
+      <dt className="text-ink-muted">Markets</dt>
+      <dd className="m-0">{farmer.markets.map((id) => marketName(id)).join(', ')}</dd>
+      <dt className="text-ink-muted">Market days</dt>
+      <dd className="m-0">{farmer.days}</dd>
+      <dt className="text-ink-muted">Pickup</dt>
+      <dd className="m-0">{farmer.pickup}</dd>
+      {farmer.distance && (
+        <>
+          <dt className="text-ink-muted">Distance</dt>
+          <dd className="m-0">{farmer.distance}</dd>
+        </>
+      )}
+    </dl>
+
+    {children}
+
+    <div className="col-span-full flex flex-wrap gap-2">
+      <ButtonLink to="/stall" size="sm">
+        See stall &amp; this week&apos;s stock
+      </ButtonLink>
+      <ButtonAnchor href={Helper.directionsUrl(farmer.lat, farmer.lng)} variant="ghost" size="sm">
+        Directions
+      </ButtonAnchor>
+    </div>
+  </Card>
+);
+
+export default StallCard;

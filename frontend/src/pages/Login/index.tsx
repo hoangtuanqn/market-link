@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import FormLogin from './FormLogin';
+import GoogleLoginButton from './GoogleLoginButton';
 
 /** FR-003 — shared sign-in for Customer and Farmer. Admin uses its own sign-in screen (FR-004). */
 const LoginPage = () => {
@@ -25,9 +26,7 @@ const LoginPage = () => {
       </p>
 
       <div className="flex flex-col gap-2">
-        <ButtonLink to="/register/customer" variant="secondary" className="w-full">
-          Continue with Google
-        </ButtonLink>
+        <GoogleLoginButton />
         <ButtonLink to="/register/customer" variant="secondary" className="w-full">
           Continue with Facebook
         </ButtonLink>

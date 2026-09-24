@@ -1,10 +1,15 @@
 import type { ApiResponse } from '@/types/api.types';
+import type { UserType } from '@/types/user.types';
 import type {
   AuthResultType,
+  AuthorizeUrlType,
+  ChangePasswordInput,
   LoginInput,
   RegisterInput,
   ResetPasswordInput,
   ResetTokenType,
+  SetPasswordInput,
+  UpdateProfileInput,
   SocialProvider,
 } from '@/types/auth.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
@@ -22,10 +27,18 @@ class AuthApi {
     return response.data;
   };
 
+  /** URL trang đăng nhập Google (client_id, redirect_uri lấy từ backend); `state` do FE sinh để chống CSRF. */
+  static googleAuthorizeUrl = async (state: string) => {
+    const response = await publicApi.get<ApiResponse<AuthorizeUrlType>>('/auth/google/authorize-url', {
+      params: { state },
+    });
+    return response.data;
+  };
+
   /** `code` là authorization code Google/Facebook trả về redirect_uri của frontend. */
   static loginWithSocial = async (provider: SocialProvider, code: string) => {
     const response = await publicApi.post<ApiResponse<AuthResultType>>(`/auth/${provider}`, { code });
-    return response.data.data;
+    return response.data;
   };
 
   /** FR-007: luôn trả cùng một message dù email có tồn tại hay không. */
@@ -44,10 +57,34 @@ class AuthApi {
     return response.data;
   };
 
+  /** Đặt mật khẩu lần đầu cho tài khoản tạo qua Google/Facebook (cần đăng nhập). */
+  static setPassword = async (input: SetPasswordInput) => {
+    const response = await privateApi.post<ApiResponse<null>>('/auth/set-password', input);
+    return response.data;
+  };
+
   /** Refresh token nằm trong cookie HttpOnly, không gửi qua body. */
   static refreshToken = async () => {
     const response = await publicApi.post<ApiResponse<AuthResultType>>('/auth/refresh');
     return response.data.data;
+  };
+
+  /** Hồ sơ của chính user đang đăng nhập (trang Account). */
+  static getMe = async () => {
+    const response = await privateApi.get<ApiResponse<UserType>>('/auth/me');
+    return response.data;
+  };
+
+  /** Sửa họ tên, số điện thoại, địa chỉ; email không đổi được. */
+  static updateMe = async (input: UpdateProfileInput) => {
+    const response = await privateApi.put<ApiResponse<UserType>>('/auth/me', input);
+    return response.data;
+  };
+
+  /** Đổi mật khẩu; thành công thì backend đăng xuất mọi thiết bị (kể cả phiên này). */
+  static changePassword = async (input: ChangePasswordInput) => {
+    const response = await privateApi.post<ApiResponse<null>>('/auth/change-password', input);
+    return response.data;
   };
 
   static logout = async () => {
