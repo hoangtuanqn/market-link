@@ -6,6 +6,7 @@ import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,13 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.RestClientException;
 
 /**
- * Trả 400/401/403/409 cho AuthController. Repo chưa có handler chung nên thiếu class này thì lỗi
- * rơi xuống /error và bị trả 401 (giống ChatExceptionHandler).
+ * Trả 400/401/403/409/502/503 cho AuthController. Repo chưa có handler chung nên thiếu class này
+ * thì lỗi rơi xuống /error và bị trả 401 (giống ChatExceptionHandler).
  */
+@Slf4j
 @RestControllerAdvice(assignableTypes = AuthController.class)
 public class AuthExceptionHandler {
 
@@ -37,6 +40,28 @@ public class AuthExceptionHandler {
                                                 .build())
                         .toList();
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
+    }
+
+    /** Google/Facebook không phản hồi, timeout hoặc lỗi 5xx. */
+    @ExceptionHandler(RestClientException.class)
+    ResponseEntity<ApiResource<Void>> providerUnavailable(RestClientException e) {
+        log.warn("Gọi OAuth provider thất bại: {}", e.getMessage());
+        return error(
+                HttpStatus.BAD_GATEWAY,
+                "OAUTH_PROVIDER_ERROR",
+                "Không kết nối được tới Google/Facebook, vui lòng thử lại sau!",
+                List.of());
+    }
+
+    /** Chưa điền client id / secret trong app.oauth.* */
+    @ExceptionHandler(IllegalStateException.class)
+    ResponseEntity<ApiResource<Void>> notConfigured(IllegalStateException e) {
+        log.error(e.getMessage());
+        return error(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                "OAUTH_NOT_CONFIGURED",
+                "Chức năng đăng nhập này chưa được cấu hình!",
+                List.of());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
