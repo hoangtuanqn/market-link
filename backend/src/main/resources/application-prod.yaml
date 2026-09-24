@@ -29,3 +29,10 @@ logging:
 
 jwt:
   secret: ${JWT_SECRET}
+
+# Không công khai tài liệu API ở production. Cần bật (ví dụ cho giám khảo) thì đặt SWAGGER_ENABLED=true
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
