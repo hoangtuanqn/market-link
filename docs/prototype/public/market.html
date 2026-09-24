@@ -72,6 +72,11 @@
   document.getElementById('selected-stall').innerHTML = PT.stallCard(PT.farmer(1), { className: 'pt-selected' }).replace('ml-card ml-stall', 'ml-card ml-stall" style="width:auto');
   var m = PT.market(1);
   PT.map('map', { zoom: 17, center: [m.lat, m.lng], markers: [{ lat: m.lat, lng: m.lng, kind: 'market', label: m.name, popup: PT.popup(m.name, ['Fri, Sat, Sun · 06:00–11:00'], m.lat, m.lng) }].concat(stalls.map(function (f) { return { lat: f.lat, lng: f.lng, kind: 'stall', label: f.id === 1 ? f.stall : '', selected: f.id === 1, popup: PT.popup(f.stall, ['Stall ' + f.stallCode + ' · pickup ' + f.pickup], f.lat, f.lng, '../public/stall.html') }; })) });
+  PT.states(['#stalls', '#products'], {
+    label: 'this market',
+    empty: ['No stalls listed yet', 'Farmers appear here once an admin has approved them for this market.'],
+    error: ['Couldn\'t load the market', 'Check your connection and try again.'],
+  });
   PT.boot({ active: 'markets' });
 </script>
 <div id="pt-foot"></div>

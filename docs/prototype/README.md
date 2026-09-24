@@ -237,17 +237,15 @@ carries the empty and error card, so put the topmost block first. Never point it
 switcher sets `hidden` on every target, so all the panels would open at once. Point it at something
 inside the panel, or at the whole tab section.
 
-**Farmer and Admin are complete**: every data screen in both panels has the four states — overview,
-orders, order detail, products, history, stock-week, slots, reviews, notifications, messages, promote
-for the Farmer; overview, farmers, farmer detail, customers, markets, orders, reports, revenue,
-pricing, moderation, categories, announcements, feedback for the Admin. On the two detail screens
-(`farmer/order`, `admin/farmer`) the empty state reads as *not found*, because a single record is
-either there or it is not.
+**All four roles are done**: 41 of the 64 screens carry the four states, which is every screen that
+loads data. Farmer and Admin cover both panels end to end. Customer covers the dashboard, cart, order
+detail, orders, favorites, notifications, messages and the assistant. Public covers home, markets,
+market, products, product, stall, search and map.
 
-Customer and Public still carry them on `customer/orders`, `customer/favorites`, `public/markets` and
-`public/products` only. `customer/dashboard`, `cart`, `order`, `notifications` and `public/market`,
-`product`, `stall`, `search`, `map` are data screens without them, and FR-084 is a MUST for every
-role, so that is the remaining work.
+On a detail screen the empty state reads as *not found*, because a single record is either there or
+it is not: `farmer/order`, `admin/farmer`, `admin/customer`, `admin/order`, `customer/order`,
+`public/product`. On `customer/assistant` the error state says the assistant is not answering and
+points at search instead, because FR-090 is a SHOULD and shopping must not depend on it.
 
 Forms, settings and sign-in screens are deliberately left out: they have no data to load, so the four
 states do not apply to them.

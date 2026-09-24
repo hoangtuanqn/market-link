@@ -86,6 +86,11 @@
   document.body.addEventListener('click', function (e) { if (e.target.closest('[data-dialog="cancel-ML-0412"]')) PT.dialog({ tone: 'danger', title: 'Cancel order #ML-0412?', body: '<p>Cô Tư Garden is notified right away, and the 3 bunches you reserved go back to other customers.</p><p class="ml-muted" style="font-size:14px">You can cancel until 19:00 on 25/09. After that the order is locked.</p>', keep: 'Keep order', confirm: 'Cancel order', toast: 'Order #ML-0412 cancelled. Cô Tư Garden has been told.' }); });
   var f = PT.farmer(1);
   PT.map('map', { center: [f.lat, f.lng], zoom: 17, scroll: false, markers: [{ lat: f.lat, lng: f.lng, kind: 'stall', label: 'Stall A12', selected: true }] });
+  PT.states(['#ticket', '#steps', '#history'], {
+    label: 'this order',
+    empty: ['That order is not here any more', 'You may have cancelled it, or the link is old. Open it again from your orders.'],
+    error: ['Couldn\'t load the order', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'customer', active: 'orders' });
 </script>
 <div id="pt-foot"></div>

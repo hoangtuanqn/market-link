@@ -84,6 +84,11 @@
     document.getElementById('q').value = '';
     document.querySelector('.pt-chat-log').scrollTop = 1e6;
   });
+  PT.states('#threads', {
+    label: 'these messages',
+    empty: ['No messages', 'Write to a stall about an order you have placed and the thread appears here.'],
+    error: ['Couldn\'t load your messages', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'customer', active: null });
 </script>
 <div id="pt-foot"></div>

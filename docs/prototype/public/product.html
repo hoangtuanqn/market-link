@@ -162,6 +162,11 @@
   document.getElementById('report').addEventListener('click', function () {
     PT.dialog({ tone: 'danger', title: 'Report this listing?', body: '<p>An admin reads the report and can hide the listing while they check it. The stall is told what was reported.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">What is wrong?</label><select id="why" class="ml-input"><option>The price or the unit is wrong</option><option>The photo is not this product</option><option>It does not belong at a farmers market</option><option>Something else</option></select></div>', keep: 'Cancel', confirm: 'Send report', toast: 'Report sent. An admin will look at this listing.' });
   });
+  PT.states(['#price', '#pickup', '#reviews', '#compare'], {
+    label: 'this product',
+    empty: ['That product is not on sale any more', 'The stall may have taken it down. Look at what else they have this week.'],
+    error: ['Couldn\'t load the product', 'Check your connection and try again.'],
+  });
   PT.boot({ active: 'products' });
 </script>
 <div id="pt-foot"></div>

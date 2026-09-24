@@ -89,6 +89,11 @@
     var g = document.querySelectorAll('[data-cart-group] .ml-cart-where')[1]; g.textContent = 'Thủ Đức Farmers Market · Sun 27/09 · ' + e.detail.time;
     var b = document.getElementById('place'); b.removeAttribute('aria-disabled'); b.removeAttribute('tabindex'); document.getElementById('place-why').textContent = 'Both stalls have a pickup time. Each stall confirms its own order.';
   });
+  PT.states(['#group1', '#group2', '#total'], {
+    label: 'your cart',
+    empty: ['Your cart is empty', 'Browse a market and add what you want; the cart splits itself by stall when you order (D-01).'],
+    error: ['Couldn\'t load your cart', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'customer', active: null, cartCount: 3 });
 </script>
 <div id="pt-foot"></div>
