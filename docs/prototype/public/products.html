@@ -56,8 +56,8 @@
       </div>
       <div class="pt-grid-tags" id="products" data-state-target="loaded"></div>
       <div hidden data-state-target="loading" class="pt-grid-tags" id="skeleton"></div>
-      <div hidden data-state-target="empty"></div>
-      <div hidden data-state-target="error"></div>
+      <div class="pt-col" hidden data-state-target="empty"></div>
+      <div class="pt-col" hidden data-state-target="error"></div>
       <div class="pt-between-c" id="pager"></div>
     </div>
   </div>
@@ -80,7 +80,7 @@
   document.getElementById('products').innerHTML = PT.products.filter(function (p) { return p.status === 'available'; }).slice(0, 12).map(function (p) { return PT.productCard(p); }).join('');
   document.getElementById('skeleton').innerHTML = PT.skeletonCards(6);
   document.querySelector('[data-state-target="empty"]').innerHTML = PT.state('empty', 'Nothing under 30,000 ₫ in Dairy on Saturday', 'Củ Chi Goat Farm starts at 35,000 ₫ a jar. Remove the price filter or try Fruit.', '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Remove price filter</button>');
-  document.querySelector('[data-state-target="error"]').innerHTML = PT.state('error', "Couldn't load products", 'Check your connection and try again.', '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button>');
+  document.querySelector('[data-state-target="error"]').innerHTML = PT.loadError('products', 'the <a href="../public/markets.html">markets</a> page shows what is open today');
   document.getElementById('pager').innerHTML = '<span class="pt-small ml-muted">Showing 1–12 of 18</span>' + PT.pagination(1, 2);
   PT.boot({ active: 'products' });
 </script>
