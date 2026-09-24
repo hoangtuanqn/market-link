@@ -14,8 +14,11 @@ import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.services.impl.BaseService;
+import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +38,23 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final BlacklistServiceInterface blacklistService;
     private final AuthConfig authConfig;
+
+    /**
+     * FR-006: access token vào blacklist Redis tới lúc hết hạn (JwtAuthFilter chặn theo jti),
+     * refresh token trong cookie bị thu hồi ở DB nên không đổi được access token mới nữa.
+     */
+    @Override
+    @Transactional
+    public void logout(Long userId, String accessToken, String refreshToken) {
+        Map<String, Object> revoke = jwtService.extractRevoke(accessToken);
+        blacklistService.revoke((String) revoke.get("jti"), (Instant) revoke.get("expiresAt"));
+
+        if (refreshToken != null && !refreshToken.isBlank()) {
+            refreshTokenService.revokeToken(refreshToken, userId);
+        }
+    }
 
     @Override
     @Transactional

@@ -67,6 +67,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth ->
                                 auth
+                                        // Logout cần access token hợp lệ — đặt trước auth/**
+                                        .requestMatchers("/api/v1/auth/logout")
+                                        .authenticated()
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
                                         .permitAll()
