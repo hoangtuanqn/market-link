@@ -335,7 +335,15 @@
   PT.chip = function (label, o) { o = o || {}; return '<button type="button" class="ml-chip" aria-pressed="' + (o.selected ? 'true' : 'false') + '" data-chip' + (o.radio ? ' data-chip-group="' + o.radio + '"' : '') + '>' + (o.selected ? I.check() : '') + label + (o.count != null ? '<span class="ml-chip-count">' + o.count + '</span>' : '') + '</button>'; };
   PT.dayChips = function (legend, days, value, name) {
     name = name || 'market-day';
-    return '<fieldset class="ml-days">' + (legend ? '<legend>' + legend + '</legend>' : '') + days.map(function (d) { return '<label class="ml-day"><input type="radio" name="' + name + '" value="' + d.value + '"' + (d.disabled ? ' disabled' : '') + (value === d.value ? ' checked' : '') + '><span>' + d.label + (d.sub ? '<small>' + d.sub + '</small>' : '') + '</span></label>'; }).join('') + '</fieldset>';
+    // With `date`, the chip carries both the weekday and the date it falls on, stacked in one grid
+    // cell so hover can swap them without the chip changing width. With `sub` it keeps the older
+    // two-line form. Both readings stay in the accessibility tree: "Monday 29/09".
+    return '<fieldset class="ml-days">' + (legend ? '<legend>' + legend + '</legend>' : '') + days.map(function (d) {
+      var body = d.date
+        ? '<span class="pt-day-swap"><b>' + d.label + '</b><b>' + d.date + '</b></span>'
+        : '<span>' + d.label + (d.sub ? '<small>' + d.sub + '</small>' : '') + '</span>';
+      return '<label class="ml-day"><input type="radio" name="' + name + '" value="' + d.value + '"' + (d.disabled ? ' disabled' : '') + (value === d.value ? ' checked' : '') + '>' + body + '</label>';
+    }).join('') + '</fieldset>';
   };
   PT.slotPicker = function (legend, slots, value, name) {
     name = name || 'pickup-slot';
@@ -1037,6 +1045,13 @@
   /* ---------- live clock: <time data-clock> shows the real date and time, e.g. "Thu 24/09 · 14:35" ---------- */
   var pad2 = function (n) { return String(n).padStart(2, '0'); };
   PT.nowLabel = function (withYear) { var d = new Date(); return DOW[d.getDay()] + ' ' + pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + (withYear ? '/' + d.getFullYear() : '') + ' · ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()); };
+  // The next date a weekday falls on, counted from today; today itself counts. Day chips show the
+  // weekday and reveal this on hover, so you can see which market morning you are actually picking.
+  PT.upcoming = function (dow) {
+    var d = new Date();
+    d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7));
+    return pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1);
+  };
   PT.clock = function () {
     function tick() { document.querySelectorAll('[data-clock]').forEach(function (el) { el.textContent = PT.nowLabel(el.getAttribute('data-clock') === 'year'); el.setAttribute('datetime', new Date().toISOString()); }); }
     tick(); setInterval(tick, 15000);

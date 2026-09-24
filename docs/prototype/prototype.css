@@ -349,6 +349,19 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 .pt-gallery-count { position: absolute; right: var(--space-3); bottom: var(--space-3); background: var(--surface-raised); border: 1.5px solid var(--line-strong); border-radius: var(--radius-pill); padding: 2px 10px; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .pt-gallery-flag { position: absolute; left: var(--space-3); top: var(--space-3); background: var(--accent); color: var(--on-accent); padding: 1px 10px 2px; border-radius: var(--radius-sm); }
 .pt-gallery-thumbs { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+
+/* Day chips: hovering one swaps its weekday for the date it falls on. Both sit in the same grid
+   cell, so the chip keeps the width of the longer string and the row never reflows on hover.
+   Keyboard focus does the same, but only :focus-visible, so a mouse click does not leave the
+   chosen chip stuck on its date. Colour is inherited, so the selected and struck-through states
+   read the same either way. */
+.ml-day .pt-day-swap { display: inline-grid; place-items: center; }
+.ml-day .pt-day-swap > b { grid-area: 1 / 1; font-weight: inherit; }
+.ml-day .pt-day-swap > b + b { opacity: 0; font-variant-numeric: tabular-nums; }
+.ml-day:hover .pt-day-swap > b:first-child,
+.ml-day:has(input:focus-visible) .pt-day-swap > b:first-child { opacity: 0; }
+.ml-day:hover .pt-day-swap > b + b,
+.ml-day:has(input:focus-visible) .pt-day-swap > b + b { opacity: 1; }
 .pt-thumb { width: 88px; aspect-ratio: 4 / 3; padding: 0; background: var(--surface-sunken); border: 1.5px solid var(--line-strong); border-radius: 6px; cursor: pointer; display: grid; place-items: center; font-family: var(--font-hand); font-size: 15px; color: var(--ink-muted); }
 .pt-thumb[aria-current='true'] { border-color: var(--brand); box-shadow: inset 0 0 0 2px var(--brand); }
 
