@@ -1,0 +1,56 @@
+package com.techx.intervue.modules.chat.controllers;
+
+import com.techx.intervue.resources.ApiResource;
+import com.techx.intervue.resources.ErrorResource;
+import com.techx.intervue.resources.FieldErrorResource;
+import jakarta.validation.ConstraintViolationException;
+import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+
+/**
+ * Trả 400 cho request chatbot sai. Chỉ áp dụng cho ChatController — hiện repo chưa có handler
+ * chung, lỗi validation rơi xuống /error (không public) và bị trả 401.
+ */
+@RestControllerAdvice(assignableTypes = ChatController.class)
+public class ChatExceptionHandler {
+
+    private static final String MESSAGE = "Dữ liệu gửi lên không hợp lệ!";
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ApiResource<Void>> invalidBody(MethodArgumentNotValidException e) {
+        List<FieldErrorResource> details =
+                e.getBindingResult().getFieldErrors().stream()
+                        .map(
+                                f ->
+                                        FieldErrorResource.builder()
+                                                .field(f.getField())
+                                                .message(f.getDefaultMessage())
+                                                .build())
+                        .toList();
+        return badRequest(details);
+    }
+
+    @ExceptionHandler({
+        HandlerMethodValidationException.class,
+        ConstraintViolationException.class,
+        MissingServletRequestParameterException.class,
+        HttpMessageNotReadableException.class
+    })
+    ResponseEntity<ApiResource<Void>> invalidRequest(Exception e) {
+        return badRequest(List.of(FieldErrorResource.builder().message(MESSAGE).build()));
+    }
+
+    private static ResponseEntity<ApiResource<Void>> badRequest(List<FieldErrorResource> details) {
+        ErrorResource error =
+                ErrorResource.builder().code("VALIDATION_ERROR").details(details).build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResource.error(error, MESSAGE));
+    }
+}
