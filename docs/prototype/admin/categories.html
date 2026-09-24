@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Product categories — MarketLink prototype</title>
+<title>Categories & units — MarketLink prototype</title>
 <link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,30 +22,80 @@
   <div class="pt-between">
     <div class="pt-col-2">
       <p class="ml-overline ml-muted">Settings</p>
-      <h1 class="pt-title">Product categories</h1>
-      <p class="pt-body pt-measure">The list Farmers choose from when they add a product, and the filter customers see. Removing a category needs its products moved first.</p>
+      <h1 class="pt-title">Categories &amp; units</h1>
+      <p class="pt-body pt-measure">The two lists every stall picks from when it adds a product. Categories are yours to set. Units are yours to curate, but a stall can always name its own when nothing here fits.</p>
     </div>
     <div class="pt-row-2"><a class="ml-btn ml-btn-secondary" href="../admin/announcements.html">Announcements</a><a class="ml-btn ml-btn-secondary" href="../admin/feedback.html">Feedback inbox</a></div>
   </div>
-  <div class="pt-split">
-    <div id="table"></div>
-    <form class="ml-card pt-panel pt-col" novalidate>
-      <h2 class="pt-h3">Add a category</h2>
-      <div class="ml-field"><label class="ml-field-label" for="n">Name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="n" class="ml-input" placeholder="e.g. Seafood"><span class="ml-field-hint">In English, sentence case. Shown in handwriting on product tags without a photo.</span></div>
-      <div class="ml-field"><label class="ml-field-label" for="o">Position in the filter</label><input id="o" class="ml-input" type="number" value="9"></div>
-      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Category added. Farmers can pick it now.">Add category</button></div>
-    </form>
+
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+
+    <div data-panel="cats" class="pt-split">
+      <div id="cat-table"></div>
+      <form class="ml-card pt-panel pt-col" novalidate>
+        <h2 class="pt-h3">Add a category</h2>
+        <div class="ml-field"><label class="ml-field-label" for="n">Name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="n" class="ml-input" placeholder="e.g. Seafood"><span class="ml-field-hint">In English, sentence case. Hand-lettered on a product tag that has no photo.</span></div>
+        <div class="ml-field"><label class="ml-field-label" for="o">Position in the filter</label><input id="o" class="ml-input" type="number" value="9"></div>
+        <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Category added. Stalls can pick it now.">Add category</button></div>
+      </form>
+    </div>
+
+    <div data-panel="units" hidden class="pt-col">
+      <div id="unit-note"></div>
+      <div class="pt-split">
+        <div class="pt-col-3">
+          <div id="unit-table"></div>
+          <p class="pt-small ml-muted">A unit is kept as text on the product, so a stall is never blocked by this list. What you curate here is what appears in the picker, and which spellings get merged so reports do not split “bag” from “Bag”.</p>
+        </div>
+        <form class="ml-card pt-panel pt-col" novalidate>
+          <h2 class="pt-h3">Add a unit</h2>
+          <div class="ml-field"><label class="ml-field-label" for="u1">One of them<span class="ml-field-req" aria-hidden="true">*</span></label><input id="u1" class="ml-input" placeholder="tray of 30"></div>
+          <div class="ml-field"><label class="ml-field-label" for="u2">More than one<span class="ml-field-req" aria-hidden="true">*</span></label><input id="u2" class="ml-input" placeholder="trays of 30"><span class="ml-field-hint">English has no rule for this, so it is typed rather than guessed.</span></div>
+          <div class="ml-field"><label class="ml-field-label" for="uk">Kind<span class="ml-field-req" aria-hidden="true">*</span></label><select id="uk" class="ml-input"><option>Weight</option><option>Volume</option><option>Count</option><option>Pack</option></select><span class="ml-field-hint">Reports can only add up quantities of the same kind. A kilo and a bunch never sum.</span></div>
+          <div class="pt-col-2"><span class="ml-field-label">How it will read</span><p class="ml-card pt-panel-4 pt-body" id="u-prev" style="margin:0"></p></div>
+          <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Unit added to the picker.">Add unit</button></div>
+        </form>
+      </div>
+    </div>
   </div>
 </main>
 <script>
-  document.getElementById('table').innerHTML = PT.table('8 categories', [
+  document.getElementById('tabs').innerHTML = PT.tabs('Master data', [{ id: 'cats', label: 'Categories', count: PT.categories.length }, { id: 'units', label: 'Units', count: PT.unitList.length }], 'cats');
+
+  document.getElementById('cat-table').innerHTML = PT.table(PT.categories.length + ' categories', [
     { key: 'name', label: 'Category', render: function (c) { return '<input class="ml-input" value="' + PT.esc(c.name) + '" style="min-height:36px" aria-label="Name of ' + PT.esc(c.name) + '">'; } },
     { key: 'count', label: 'Products', align: 'num' },
     { key: 'f', label: 'Stalls', align: 'num', render: function (c) { return PT.farmers.filter(function (f) { return PT.products.some(function (p) { return p.farmer === f.id && p.cat === c.id; }); }).length; } },
     { key: 'a', label: '', align: 'actions', render: function (c) { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="' + PT.esc(c.name) + ' saved.">Save</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-rm="' + PT.esc(c.name) + '" data-n="' + c.count + '">Remove</button>'; } },
   ], PT.categories);
-  document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-rm]'); if (!b) return; var n = +b.getAttribute('data-n'); PT.dialog({ tone: 'danger', title: 'Remove ' + b.getAttribute('data-rm') + '?', body: n ? '<p>' + n + ' products use it. Choose where they go.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="to">Move products to</label><select id="to" class="ml-input">' + PT.categories.map(function (c) { return '<option>' + c.name + '</option>'; }).join('') + '</select></div>' : '<p>No products use it.</p>', keep: 'Keep category', confirm: 'Remove category', toast: b.getAttribute('data-rm') + ' removed.' }); });
-  PT.boot({ role: 'admin', active: 'settings', announce: false });
+
+  document.getElementById('unit-note').innerHTML = PT.banner('info', 'Two of these units were typed by a stall, not by you.', 'A stall names its own unit when nothing in the picker fits. Promote the ones that catch on, merge the duplicates, and leave the rest alone.');
+  document.getElementById('unit-table').innerHTML = PT.table(PT.unitList.length + ' units', [
+    { key: 'one', label: 'One of them', render: function (u) { return '<b>' + PT.esc(u.one) + '</b>' + (u.builtin ? '' : '<span class="sub">added by ' + PT.esc(u.addedBy) + '</span>'); } },
+    { key: 'many', label: 'More than one', render: function (u) { return '<input class="ml-input" value="' + PT.esc(u.many) + '" style="min-height:36px;width:150px" aria-label="Plural of ' + PT.esc(u.one) + '">'; } },
+    { key: 'kind', label: 'Kind' },
+    { key: 'used', label: 'Products', align: 'num' },
+    { key: 'ex', label: 'Reads as', render: function (u) { return '<span class="ml-muted">' + PT.esc(PT.units(1, u.one, u.many)) + ' · ' + PT.esc(PT.units(12, u.one, u.many)) + '</span>'; } },
+    { key: 'a', label: '', align: 'actions', render: function (u) { return u.builtin ? '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="' + PT.esc(u.one) + ' saved.">Save</button>' : '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="' + PT.esc(u.one) + ' is now in the picker for every stall.">Add to picker</button><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-merge="' + PT.esc(u.one) + '">Merge</button>'; } },
+  ], PT.unitList);
+
+  var u1 = document.getElementById('u1'), u2 = document.getElementById('u2'), up = document.getElementById('u-prev');
+  function prev() { var one = u1.value.trim() || 'unit', many = u2.value.trim() || PT.pluralise(one); u2.placeholder = PT.pluralise(one); up.innerHTML = '<b>' + PT.perUnit(25000, one) + '</b> on the tag · <b>' + PT.units(12, one, many) + '</b> left'; }
+  u1.addEventListener('input', prev); u2.addEventListener('input', prev); prev();
+
+  document.body.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-rm]');
+    if (b) { var n = +b.getAttribute('data-n'); PT.dialog({ tone: 'danger', title: 'Remove ' + b.getAttribute('data-rm') + '?', body: n ? '<p>' + n + ' products use it. Choose where they go.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="to">Move products to</label><select id="to" class="ml-input">' + PT.categories.map(function (c) { return '<option>' + c.name + '</option>'; }).join('') + '</select></div>' : '<p>No products use it.</p>', keep: 'Keep category', confirm: 'Remove category', toast: b.getAttribute('data-rm') + ' removed.' }); }
+    var m = e.target.closest('[data-merge]');
+    if (m) { PT.dialog({ title: 'Merge ' + m.getAttribute('data-merge') + ' into another unit?', body: '<p>Products using it are rewritten to the unit you choose, and past orders keep the unit they were sold under.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="into">Merge into</label><select id="into" class="ml-input">' + PT.unitList.filter(function (u) { return u.builtin; }).map(function (u) { return '<option>' + PT.esc(u.one) + '</option>'; }).join('') + '</select></div>', keep: 'Cancel', confirm: 'Merge', toast: 'Merged. One product was rewritten.' }); }
+  });
+  PT.states('#cat-table', {
+    label: 'these categories',
+    empty: ['No categories yet', 'Add a category and Farmers can file their products under it.'],
+    error: ['Couldn\'t load the categories', 'Check your connection and try again.'],
+  });
+  PT.boot({ role: 'admin', active: null, announce: false });
 </script>
 <div id="pt-foot"></div>
 </body>

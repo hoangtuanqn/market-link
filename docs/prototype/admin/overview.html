@@ -24,35 +24,82 @@
       <p class="ml-overline ml-muted">Platform · <time data-clock="year"></time></p>
       <h1 class="pt-title">MarketLink today</h1>
     </div>
-    <div class="pt-row-2"><a class="ml-btn ml-btn-secondary" href="../admin/announcements.html">Post an announcement</a><a class="ml-btn ml-btn-primary" href="../admin/farmers.html">Review 2 Farmer registrations</a></div>
   </div>
+
   <div class="pt-grid-4" id="stats"></div>
-  <div class="pt-grid-2">
+  <p class="pt-small ml-muted">September 2026 so far, next to August. Every tile opens the detail behind its number.</p>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <div class="pt-between-c">
+      <div class="pt-col-2"><h2 class="pt-h3">Revenue by day</h2><p class="pt-small ml-muted">Completed orders, in millions of ₫. September against August.</p></div>
+      <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/reports.html">Full reports</a>
+    </div>
+    <div id="rev-chart"></div>
+  </section>
+
+  <div class="pt-grid">
     <section class="ml-card pt-panel pt-col-3">
-      <div class="pt-between-c"><h2 class="pt-h3">Needs attention</h2></div>
-      <ul class="pt-body" style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
-        <li class="pt-between-c"><span>2 Farmer registrations waiting</span><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmers.html">Review</a></li>
-        <li class="pt-between-c"><span>1 review reported by a stall</span><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/moderation.html">Moderate</a></li>
-        <li class="pt-between-c"><span>2 open feedback items, 1 bug</span><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/feedback.html">Open inbox</a></li>
-        <li class="pt-between-c"><span>Thảo Điền closure on 04/10 announced</span><a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/announcements.html">Edit</a></li>
+      <h2 class="pt-h3">Needs attention</h2>
+      <ul class="pt-todos">
+        <li><a href="../admin/farmers.html"><b>2</b><span>Farmer applications waiting</span></a></li>
+        <li><a href="../admin/moderation.html"><b>1</b><span>review reported by a stall</span></a></li>
+        <li><a href="../admin/feedback.html"><b>2</b><span>open feedback items, one a bug</span></a></li>
+        <li><a href="../admin/announcements.html"><b>1</b><span>announcement live, Thảo Điền closed 04/10</span></a></li>
       </ul>
     </section>
     <section class="ml-card pt-panel pt-col-3">
-      <div class="pt-between-c"><h2 class="pt-h3">Orders this week by market</h2><a href="../admin/reports.html">Reports</a></div>
-      <ul class="pt-bars"><li><span>Thảo Điền Weekend Market</span><span class="bar"><span style="width:100%"></span></span><span class="val">86</span></li><li><span>Thủ Đức Farmers Market</span><span class="bar"><span style="width:62%"></span></span><span class="val">53</span></li><li><span>Phú Mỹ Hưng Saturday Market</span><span class="bar"><span style="width:40%"></span></span><span class="val">34</span></li><li><span>Bà Chiểu Green Market</span><span class="bar"><span style="width:22%"></span></span><span class="val">19</span></li></ul>
+      <div class="pt-between-c"><h2 class="pt-h3">What MarketLink earned</h2><a href="../admin/revenue.html">Revenue report</a></div>
+      <p class="pt-small ml-muted">September, from stalls buying position. Separate from the money the markets took.</p>
+      <div id="earned"></div>
+    </section>
+    <section class="ml-card pt-panel pt-col-3">
+      <div class="pt-between-c"><h2 class="pt-h3">Orders this week by market</h2><a href="../admin/orders.html">All orders</a></div>
+      <div id="by-market"></div>
     </section>
   </div>
+
   <section class="pt-col-3">
     <div class="pt-between-c"><h2 class="pt-h2">Latest orders across the platform</h2><span class="pt-small ml-muted">Read-only. Admins do not change order status.</span></div>
     <div id="table"></div>
   </section>
-
   <p class="pt-caption ml-muted">The market switcher at the top of the sidebar changes what every screen counts. <span class="pt-todo" data-todo="Proposal · Scoping the whole dashboard to one market is not in the SRS. FR-075 puts a market filter on the reports screen only. Decide whether the scope is global and remembered per user, or stays a per-screen filter.">Dashboard-wide market scope is not in the SRS</span></p>
 </main>
 <script>
-  document.getElementById('stats').innerHTML = PT.statTile('Farmers', '8', '<b>2</b> waiting for approval · 1 suspended', true) + PT.statTile('Customers', '412', '37 joined this month') + PT.statTile('Markets', '4', 'all active') + PT.statTile('Orders', '1,284', '192 this week · 31,900,000 ₫ completed');
+  var S = PT.series;
+  document.getElementById('stats').innerHTML =
+    PT.kpi({ label: 'Farmers', value: '8', note: '2 waiting for approval · 1 suspended', delta: { pct: 14.3, vs: 'vs August' }, spark: S.sparkFarmers, highlight: true, href: '../admin/farmers.html', linkLabel: 'Review applications' }) +
+    PT.kpi({ label: 'Customers', value: '412', note: '37 joined this month', delta: { pct: 9.9, vs: 'vs August' }, spark: S.sparkCustomers, href: '../admin/customers.html', linkLabel: 'Open customers' }) +
+    PT.kpi({ label: 'Markets', value: '4', note: 'all active', delta: { pct: 0, vs: 'vs August' }, spark: S.sparkMarkets, href: '../admin/markets.html', linkLabel: 'Open markets' }) +
+    PT.kpi({ label: 'Orders', value: '1,284', note: '192 this week · 31,900,000 ₫ completed', delta: { pct: 12.7, vs: 'vs August' }, spark: S.sparkOrders, href: '../admin/orders.html', linkLabel: 'Open orders' });
+
+  PT.chart('rev-chart', {
+    type: 'line', height: 250, caption: 'Revenue by day in September against August, in millions of dong',
+    axisLabel: 'Day of the month',
+    labels: S.dayLabels,
+    format: function (v) { return (v / 1e6).toFixed(1); },
+    series: [{ name: 'September', values: S.revenueNow }, { name: 'August', values: S.revenuePrev, compare: true }],
+  });
+
+  var R = PT.platformRevenue;
+  document.getElementById('earned').innerHTML =
+    '<p class="pt-ratebig"><b>' + PT.group(R.total) + '</b><span class="pt-small ml-muted">₫ · ' + ((R.total / R.gmv) * 100).toFixed(1) + '% of the ' + PT.vnd(R.gmv) + ' the markets took</span></p>' +
+    '<dl class="pt-facts pt-facts-num">' + R.sources.map(function (x) {
+      return '<dt>' + PT.esc(x.name) + '</dt><dd>' + PT.vnd(x.amount) + '</dd>';
+    }).join('') + '</dl>';
+  document.getElementById('by-market').innerHTML = PT.barList([
+    { label: 'Thảo Điền Weekend Market', value: 86 },
+    { label: 'Thủ Đức Farmers Market', value: 53 },
+    { label: 'Phú Mỹ Hưng Saturday Market', value: 34 },
+    { label: 'Bà Chiểu Green Market', value: 19 },
+  ], { suffix: 'orders' });
+
   var all = PT.orders.slice(0, 6).map(function (o) { return { code: o.code, farmer: PT.farmer(o.farmer).stall, market: PT.market(o.market).name, when: o.date + ' · ' + o.slot, total: PT.orderTotal(o), status: o.status }; });
   document.getElementById('table').innerHTML = PT.table(null, [{ key: 'code', label: 'Order' }, { key: 'farmer', label: 'Stall' }, { key: 'market', label: 'Market' }, { key: 'when', label: 'Pickup' }, { key: 'total', label: 'Total', align: 'num', render: function (r) { return PT.vnd(r.total); } }, { key: 's', label: 'Status', render: function (r) { return PT.status(r.status); } }], all);
+  PT.states(['#stats', '#earned', '#by-market', '#table'], {
+    label: 'this dashboard',
+    empty: ['Nothing to show yet', 'The platform figures fill in once markets, stalls and orders exist.'],
+    error: ['Couldn\'t load the dashboard', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'admin', active: 'overview', announce: false });
 </script>
 <div id="pt-foot"></div>

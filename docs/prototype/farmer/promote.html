@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Promote & listing allowance — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Promote &amp; listings</h1>
+      <p class="pt-body pt-measure">Listing and selling are free. Paying only moves a product further up a page, or lets you list more in a day than the free allowance.</p>
+    </div>
+    <div class="pt-row-2">
+      <span class="ml-status ml-status-ready" id="credit"></span>
+      <button type="button" class="ml-btn ml-btn-secondary" data-toast="Top-up is arranged with the MarketLink team, then credited here.">Top up credit</button>
+    </div>
+  </div>
+
+  <div id="scope"></div>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Design system · Banner has an `action` slot (components/Banner.md: &quot;one button, optional&quot;) but marketlink-components.css has no class for it, and .ml-banner is a flex row with no flex-wrap. At 375px the dashboard work area is 292px, so any action beside .ml-banner-body starves it: measured 0px wide, with the text broken to one word per line. The prototype now keeps its notes inside the body, but a real action button still collapses the text. FE1 to add .ml-banner-action { flex: none } plus flex-wrap on .ml-banner, or state that an action is desktop-only.">Banner action slot collapses the message at 375px — FE1</span></p>
+
+  <div class="pt-grid-2">
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Listings today</h2>
+      <div id="m-listings"></div>
+      <p class="pt-small ml-muted">The allowance resets at midnight. Editing a product you already listed is always free.</p>
+    </section>
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Bumps this month</h2>
+      <div id="m-bumps"></div>
+      <p class="pt-small ml-muted">A bump moves a product back to the top of its category for the day. It does not change the price or the stock.</p>
+    </section>
+  </div>
+
+  <section class="pt-col-3">
+    <div class="pt-between-c"><h2 class="pt-h2">Pinned right now</h2><span class="pt-small ml-muted">A pinned product sits above the rest, marked Promoted</span></div>
+    <div id="active"></div>
+  </section>
+
+  <section class="pt-col-3">
+    <h2 class="pt-h2">Pin a product</h2>
+    <div class="pt-grid-2" id="pins"></div>
+    <p class="pt-small ml-muted">Slots are limited on purpose: three on a market page, two on the home page. When they are taken you go on a waiting list rather than outbidding anyone.</p>
+  </section>
+
+  <section class="pt-col-3">
+    <h2 class="pt-h2">Bundles</h2>
+    <p class="pt-small ml-muted">Cheaper than buying one at a time, and they run for 30 days.</p>
+    <div class="pt-plans" id="bundles"></div>
+  </section>
+
+  <section class="pt-col-3">
+    <h2 class="pt-h2">One at a time</h2>
+    <div id="extras"></div>
+  </section>
+</main>
+<script>
+  var P = PT.pricing, A = PT.allowance;
+  document.getElementById('credit').innerHTML = PT.icons.check() + '<span class="ml-status-text">Credit ' + PT.vnd(A.credits) + '</span>';
+  document.getElementById('scope').innerHTML = PT.banner('warning', 'Charging Farmers is not in the SRS.', 'The SRS rules out a payment gateway, so credit here is arranged with the team and entered by an admin. A new requirement and a decision on how money is actually taken have to come first.', { todo: '<span class="pt-todo" data-todo="Out of scope · Paid promotion and paid listings are not in .ai/REQUIREMENTS.md, and the SRS says the application will have no payment gateway. It needs a new FR, tables for credit, promotions and transactions, a Flyway migration under R-03, and a decision on how a Farmer actually pays: cash to the team, bank transfer reconciled by an admin, or a gateway the SRS currently forbids.">Paid promotion needs a new FR and a way to take money</span>' });
+
+  function meter(used, total, unit) {
+    var pct = Math.min(100, Math.round((used / total) * 100));
+    var level = pct >= 100 ? 'full' : pct >= 70 ? 'warn' : 'ok';
+    return '<div class="pt-meter"><div class="pt-ratebig"><b>' + (total - used) + '</b><span class="pt-small ml-muted">of ' + total + ' ' + unit + ' left</span></div>' +
+      '<div class="pt-meter-track"><span class="pt-meter-fill" data-level="' + level + '" style="width:' + pct + '%"></span></div>' +
+      '<span class="pt-meter-say">' + used + ' used' + (pct >= 70 ? ' · running low' : '') + '</span></div>';
+  }
+  document.getElementById('m-listings').innerHTML = meter(A.listingsUsed, P.free.listingsPerDay, 'free listings');
+  document.getElementById('m-bumps').innerHTML = meter(A.bumpsUsed, P.free.bumpsPerMonth, 'free bumps');
+
+  document.getElementById('active').innerHTML = PT.table(null, [
+    { key: 'p', label: 'Product', render: function (r) { return '<b>' + PT.esc(PT.product(r.product).name) + '</b><span class="sub">' + PT.esc(r.where) + '</span>'; } },
+    { key: 'u', label: 'Runs until', render: function (r) { return r.until; } },
+    { key: 'v', label: 'Views while pinned', align: 'num', render: function (r) { return PT.group(r.views); } },
+    { key: 'a', label: 'Added to a cart', align: 'num', render: function (r) { return r.added; } },
+    { key: 's', label: 'Paid', align: 'num', render: function (r) { return PT.vnd(r.spent); } },
+    { key: 'x', label: '', align: 'actions', render: function () { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Extended by 3 days for 35,000 ₫.">Extend</button>'; } },
+  ], A.pins);
+
+  document.getElementById('pins').innerHTML = P.pins.map(function (pin) {
+    return '<div class="ml-card pt-panel pt-col-3"><div class="pt-between-c"><h3 class="pt-h3">' + PT.esc(pin.name) + '</h3><span class="pt-small ml-muted">' + pin.slots + ' slots</span></div>' +
+      '<p class="pt-small ml-muted">' + PT.esc(pin.note) + '</p>' +
+      '<div class="ml-field" style="min-width:0"><label class="ml-field-label" for="p-' + pin.key + '">Which product</label><select id="p-' + pin.key + '" class="ml-input">' +
+        [1, 2, 7, 19].map(function (id) { return '<option>' + PT.esc(PT.product(id).name) + '</option>'; }).join('') + '</select></div>' +
+      '<fieldset class="ml-days"><legend>How long</legend>' + pin.days.map(function (d, i) {
+        return '<label class="ml-day"><input type="radio" name="d-' + pin.key + '"' + (i === 1 ? ' checked' : '') + '><span>' + d[0] + (d[0] > 1 ? ' days' : ' day') + '<small>' + PT.vnd(d[1]) + '</small></span></label>';
+      }).join('') + '</fieldset>' +
+      '<button type="button" class="ml-btn ml-btn-primary" data-toast="Pinned. It goes live within a few minutes and you can stop it at any time.">Pin for ' + PT.vnd(pin.days[1][1]) + '</button></div>';
+  }).join('');
+
+  document.getElementById('bundles').innerHTML = P.bundles.map(function (b) {
+    return '<div class="ml-card pt-plan' + (b.best ? ' pt-plan-best' : '') + '"><h3>' + PT.esc(b.name) + '</h3><span class="pt-plan-price">' + PT.vnd(b.price) + '</span>' +
+      '<ul>' + b.lines.map(function (l) { return '<li>' + PT.icons.check() + PT.esc(l) + '</li>'; }).join('') + '</ul>' +
+      '<button type="button" class="ml-btn ' + (b.best ? 'ml-btn-primary' : 'ml-btn-secondary') + '" data-toast="' + PT.esc(b.name) + ' added. The team will confirm the payment and credit it here.">Choose ' + PT.esc(b.name) + '</button></div>';
+  }).join('');
+
+  document.getElementById('extras').innerHTML = PT.table(null, [
+    { key: 'n', label: 'What' }, { key: 'p', label: 'Price', align: 'num', render: function (r) { return PT.vnd(r.price); } },
+    { key: 'a', label: '', align: 'actions', render: function () { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Added to your credit.">Buy</button>'; } },
+  ], P.extras);
+  PT.states(['#m-listings', '#m-bumps', '#pins', '#bundles'], {
+    label: 'this page',
+    empty: ['Nothing promoted yet', 'Listing and selling stay free. Buy a pinned day only when you want a product further up a page.'],
+    error: ['Couldn\'t load your promotions', 'Check your connection and try again.'],
+  });
+  PT.boot({ role: 'farmer', active: null, announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

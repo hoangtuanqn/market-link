@@ -42,12 +42,87 @@
       <p class="pt-caption ml-muted">Drag the square pin to the market entrance. Stalls pin themselves inside the market later.</p>
     </div>
   </form>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <div class="pt-between-c">
+      <div class="pt-col-2" style="max-width:640px">
+        <h2 class="pt-h3">Closed days</h2>
+        <p class="pt-small ml-muted">A day this market does not open, even though it falls on an operating day. Customers see it on the market page and on the home board, and no new orders can be placed for it.</p>
+      </div>
+      <button type="button" class="ml-btn ml-btn-secondary" data-add-closure>Add a closed day</button>
+    </div>
+    <div id="closures"></div>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-073 · One-off market closures have no requirement and no table. db/schema.sql has markets.operating_days but nothing for a single date, so this needs a new FR, a market_closures table (market_id, closed_on, reason, handling, created_by) and a Flyway migration under R-03. LEAD owns schema.sql and the contract (R-02), so this is a proposal, not a change.">Closures need a new FR and a market_closures table</span></p>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="D-04 / D-05 · What happens to orders already placed for a closed day is not decided. The prototype offers three handlings and defaults to moving them, which is the kindest to the customer but assumes the stall sells on the next market day too. Moving an order changes its pickup_date and its cutoff_at, which no decision covers; cancelling has to return stock the way D-02 does for a decline, and the order should end as cancelled rather than declined because the stall did nothing wrong.">Orders already placed for a closed day: no decision yet</span></p>
+  </section>
 </main>
 <script>
   document.getElementById('days').innerHTML = [['Mon', 1], ['Tue', 2], ['Wed', 3], ['Thu', 4], ['Fri', 5], ['Sat', 6], ['Sun', 0]].map(function (d) { return '<label class="ml-day"><input type="checkbox" name="d" value="' + d[1] + '"' + ([5, 6, 0].indexOf(d[1]) >= 0 ? ' checked' : '') + '><span>' + d[0] + '</span></label>'; }).join('');
   var m = PT.market(1);
   var map = PT.map('map', { center: [m.lat, m.lng], zoom: 16, scroll: false, markers: [] });
   if (map) { var mk = L.marker([m.lat, m.lng], { draggable: true, icon: L.divIcon({ html: PT.pinHTML('market', m.name, 'M', true), className: '', iconSize: [34, 48], iconAnchor: [17, 48] }) }).addTo(map); mk.on('dragend', function () { var ll = mk.getLatLng(); document.getElementById('lat').value = ll.lat.toFixed(6); document.getElementById('lng').value = ll.lng.toFixed(6); }); }
+  /* Closed days for this market. The 04/10 closure was already announced on the home page with no
+     screen behind it, so this is where it comes from now. */
+  var MK = 1;
+  var closures = PT.closures.filter(function (c) { return c.market === MK; }).map(function (c) { return Object.assign({}, c); });
+
+  function renderClosures() {
+    var el = document.getElementById('closures');
+    if (!closures.length) {
+      el.innerHTML = PT.state('empty', 'No closed days', 'This market opens on every one of its operating days. Add a closed day when it will not.');
+      return;
+    }
+    el.innerHTML = PT.table(null, [
+      { key: 'd', label: 'Date', render: function (c) { return '<b>' + c.date + '</b><span class="sub">' + c.weekday + '</span>'; } },
+      { key: 'r', label: 'Reason', render: function (c) { return PT.esc(c.reason); } },
+      { key: 'h', label: 'Orders already placed', render: function (c) {
+        if (!c.orders) return '<span class="ml-muted">None yet</span>';
+        return '<b>' + c.orders + '</b> <span class="sub">' + PT.esc(PT.closureHandling[c.handling][0].toLowerCase()) + '</span>';
+      } },
+      { key: 's', label: 'Customers told', render: function (c) { return c.announced ? PT.status('accepted', 'Announced') : '<span class="ml-muted">Not yet</span>'; } },
+      { key: 'a', label: '', align: 'actions', render: function (c) { return '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-rm-closure="' + c.id + '">Remove</button>'; } },
+    ], closures);
+  }
+  renderClosures();
+
+  document.body.addEventListener('click', function (e) {
+    var t;
+    if ((t = e.target.closest('[data-add-closure]'))) {
+      var opts = Object.keys(PT.closureHandling).map(function (k) {
+        var h = PT.closureHandling[k];
+        return '<label class="ml-check"><input type="radio" name="handling" value="' + k + '"' + (k === 'move' ? ' checked' : '') + '><span class="ml-check-box" aria-hidden="true">' + PT.icons.check() + '</span><span class="ml-check-text">' + h[0] + '<small>' + h[1] + '</small></span></label>';
+      }).join('');
+      PT.dialog({
+        title: 'Add a closed day',
+        body: '<div class="pt-col-3">' +
+          '<div class="ml-field" style="min-width:0"><label class="ml-field-label" for="cdate">Date</label><input id="cdate" class="ml-input" type="date" value="2026-10-11"></div>' +
+          '<div class="ml-field" style="min-width:0"><label class="ml-field-label" for="creason">Reason customers will see</label><input id="creason" class="ml-input" placeholder="Ward street works on Quốc Hương"></div>' +
+          '<div class="pt-col-2"><span class="ml-field-label">Orders already placed for that day</span>' + opts + '</div>' +
+          '</div>',
+        keep: 'Cancel', confirm: 'Add closed day',
+        onConfirm: function (dlg) {
+          var d = dlg.querySelector('#cdate');
+          var iso = (d && d.value) || '2026-10-11';
+          var parts = iso.split('-');
+          var reason = (dlg.querySelector('#creason') || {}).value.trim() || 'Not given';
+          var pick = dlg.querySelector('input[name=handling]:checked');
+          closures.push({ id: Date.now(), market: MK, date: parts[2] + '/' + parts[1] + '/' + parts[0],
+            weekday: new Date(iso).toLocaleDateString('en-GB', { weekday: 'long' }), reason: reason,
+            handling: pick ? pick.value : 'move', orders: 0, announced: false, by: 'Admin · today' });
+          renderClosures();
+          PT.toast('Closed day added. Publish an announcement so customers see it.');
+        },
+      });
+    }
+    if ((t = e.target.closest('[data-rm-closure]'))) {
+      var id = t.getAttribute('data-rm-closure');
+      PT.dialog({ tone: 'danger', title: 'Remove this closed day?', body: '<p>The market opens again on that date and customers can order for it.</p>', keep: 'Keep it', confirm: 'Remove', onConfirm: function () {
+        closures = closures.filter(function (c) { return String(c.id) !== String(id); });
+        renderClosures();
+        PT.toast('Closed day removed.');
+      } });
+    }
+  });
   PT.boot({ role: 'admin', active: 'markets', announce: false });
 </script>
 <div id="pt-foot"></div>

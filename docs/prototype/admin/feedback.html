@@ -36,11 +36,39 @@
   var T = { bug: 'Bug report', suggestion: 'Suggestion', query: 'Question' };
   document.getElementById('table').innerHTML = PT.table(null, [
     { key: 'type', label: 'Type', render: function (f) { return T[f.type]; } },
-    { key: 'text', label: 'Message', render: function (f) { return '<span class="pt-small">' + PT.esc(f.text) + '</span>'; } },
+    { key: 'text', label: 'Message', render: function (f) { return '<a href="#" class="pt-small" data-open-fb="' + f.id + '">' + PT.esc(f.text) + '</a>'; } },
     { key: 'from', label: 'From', render: function (f) { return f.from + '<span class="sub">' + f.date + '</span>'; } },
     { key: 's', label: 'Status', render: function (f) { return f.status === 'open' ? '<span class="ml-status ml-status-placed">' + PT.icons.placed() + '<span class="ml-status-text">Open</span></span>' : '<span class="ml-status ml-status-completed">' + PT.icons.completed() + '<span class="ml-status-text">Answered</span></span>'; } },
-    { key: 'a', label: '', align: 'actions', render: function (f) { return f.status === 'open' ? '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Marked as answered.">Mark answered</button>' : '<button type="button" class="ml-btn ml-btn-ghost ml-btn-sm">Reopen</button>'; } },
+    { key: 'a', label: '', align: 'actions', render: function (f) { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-open-fb="' + f.id + '">' + (f.status === 'open' ? 'Read and answer' : 'Read') + '</button>'; } },
   ], PT.feedback.map(function (f) { return Object.assign({ _new: f.status === 'open' && f.type === 'bug' }, f); }));
+  document.getElementById('table').insertAdjacentHTML('afterend',
+    '<p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-081 · The SRS asks for a feedback form with bug, suggestion and query, and stops there. Nothing says an admin answers, by what channel, within what time, or whether the person who wrote it ever sees a reply. The inbox and this answer box are a proposal: they need a new FR, a reply channel that actually exists (email is FR-043, a NICE), and a feedback table with a status and a response. The same gap is flagged on public/feedback.html from the customer side.">Answering feedback is a proposal, not an SRS feature</span></p>');
+  PT.states('#table', {
+    label: 'this inbox',
+    empty: ['No feedback yet', 'Bug reports, suggestions and questions from the feedback form arrive here.'],
+    error: ['Couldn\'t load the feedback inbox', 'Check your connection and try again.'],
+  });
+  /* A row used to be a dead end: the message was clipped and nothing opened it. There is no reply
+     screen because FR-081 only asks for the form with its three categories; what happens after a
+     message is sent is still an open question on public/feedback.html, so this stays a dialog. */
+  document.body.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-open-fb]');
+    if (!t) return;
+    e.preventDefault();
+    var f = PT.feedback.find(function (x) { return String(x.id) === t.getAttribute('data-open-fb'); });
+    if (!f) return;
+    PT.dialog({
+      title: T[f.type] + ' from ' + PT.esc(f.from),
+      body: '<p class="pt-small ml-muted">Sent ' + f.date + ' · ' + (f.status === 'open' ? 'not answered yet' : 'already answered') + '</p>' +
+        '<p class="ml-card pt-panel-4 pt-body">' + PT.esc(f.text) + '</p>' +
+        '<div class="ml-field" style="min-width:0"><label class="ml-field-label" for="fbreply">Your answer</label><textarea id="fbreply" class="ml-input" rows="4" placeholder="Thank you for telling us…"></textarea><span class="ml-field-hint">Where this answer goes is not decided — see the open question on this screen.</span></div>',
+      keep: 'Close', confirm: f.status === 'open' ? 'Send and mark answered' : 'Send again',
+      onConfirm: function (dlg) {
+        var msg = dlg.querySelector('#fbreply').value.trim();
+        PT.toast(msg ? 'Answer saved and the message marked answered.' : 'Marked answered without a reply.');
+      },
+    });
+  });
   PT.boot({ role: 'admin', active: 'settings', announce: false });
 </script>
 <div id="pt-foot"></div>

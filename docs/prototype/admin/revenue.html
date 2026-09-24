@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Platform revenue — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Platform revenue</h1>
+      <p class="pt-body pt-measure">What MarketLink itself earns, and from which stalls. This is a different number from the money the markets take, and the two are never added together.</p>
+    </div>
+    <div class="pt-row-2">
+      <a class="ml-btn ml-btn-secondary" href="../admin/pricing.html">Pricing &amp; allowances</a>
+      <button type="button" class="ml-btn ml-btn-secondary" data-toast="Export started. The CSV covers the period on screen.">Export the period</button>
+    </div>
+  </div>
+
+  <div id="scope"></div>
+  <div id="period"></div>
+  <div class="pt-grid-4" id="stats"></div>
+  <div id="gmv-note"></div>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <div class="pt-col-2"><h2 class="pt-h3">Earned per day</h2><p class="pt-small ml-muted">In thousands of ₫. Income is lumpy because a pin is bought on one day and runs for several.</p></div>
+    <div id="chart"></div>
+  </section>
+
+  <section class="pt-col-3">
+    <div class="pt-between-c"><h2 class="pt-h2">Where it came from</h2><span class="pt-small ml-muted">Four sources, adding to the period total</span></div>
+    <div class="pt-grid-2">
+      <div class="ml-card pt-panel pt-col-2"><h3 class="pt-h3">Share of the period</h3><div id="bars"></div></div>
+      <div class="ml-card pt-panel pt-col-2"><h3 class="pt-h3">Against last month</h3><div id="srcchart"></div></div>
+    </div>
+    <div id="srctable"></div>
+  </section>
+
+  <section class="pt-col-3">
+    <div class="pt-between-c"><h2 class="pt-h2">Who pays</h2><span class="pt-small ml-muted">5 of 8 approved stalls paid something in September</span></div>
+    <div id="stalls"></div>
+    <p class="pt-small ml-muted">Three stalls paid nothing and still sold. That is the design: listing and selling are free, and paying only buys position.</p>
+  </section>
+
+  <section class="pt-col-3">
+    <h2 class="pt-h2">Credit</h2>
+    <div class="pt-grid-4" id="credit"></div>
+    <p class="pt-small ml-muted">Stalls top up with the team, an admin enters the credit, and it is spent as they promote. Money already taken but not yet spent is money the platform still owes in placement.</p>
+  </section>
+</main>
+<script>
+  var R = PT.platformRevenue, S = PT.series;
+  var k = function (v) { return PT.group(Math.round(v / 1000)); };
+  var pct = function (a, b) { return Math.round(((a - b) / b) * 1000) / 10; };
+
+  document.getElementById('scope').innerHTML = PT.banner('warning', 'Charging Farmers is not in the SRS.', 'Everything on this screen depends on a revenue model the requirements do not describe, and on money the platform cannot yet take.', { todo: '<span class="pt-todo" data-todo="Out of scope · Platform revenue reporting depends on the paid-promotion model, which is not in .ai/REQUIREMENTS.md, and the SRS rules out a payment gateway. It needs a new FR and tables for transactions and credit before any of these numbers can be real.">Revenue reporting needs the payment model decided first</span>' });
+  document.getElementById('period').innerHTML = PT.periodBar({ granularity: 'month', label: R.period, days: '30 days', compare: R.comparedWith });
+
+  var take = (R.total / R.gmv) * 100, takePrev = (R.totalPrev / R.gmvPrev) * 100;
+  document.getElementById('stats').innerHTML =
+    PT.kpi({ label: 'Platform revenue', value: PT.group(R.total), note: '₫ earned by MarketLink', delta: { pct: pct(R.total, R.totalPrev) }, highlight: true }) +
+    PT.kpi({ label: 'Take rate', value: take.toFixed(1) + '%', note: 'of what the markets took', delta: { pct: Math.round((take - takePrev) * 10) / 10, unit: ' points' } }) +
+    PT.kpi({ label: 'Paying stalls', value: R.payingStalls + ' of ' + R.approvedStalls, note: 'the rest sell for free', delta: { pct: pct(R.payingStalls, R.payingStallsPrev) } }) +
+    PT.kpi({ label: 'Average per paying stall', value: PT.group(R.total / R.payingStalls), note: '₫ in the period', delta: { pct: pct(R.total / R.payingStalls, R.totalPrev / R.payingStallsPrev) } });
+
+  document.getElementById('gmv-note').innerHTML = PT.banner('info', 'The markets took ' + PT.vnd(R.gmv) + ' in September. MarketLink never touches it.', 'Customers pay their stall in cash at pickup. The ' + PT.vnd(R.total) + ' above is what stalls paid MarketLink for position, which is ' + take.toFixed(1) + '% of the market total.');
+
+  PT.chart('chart', {
+    type: 'column', height: 240, caption: 'Platform revenue per day in September against August, in thousands of dong',
+    axisLabel: 'Day of the month', labels: S.dayLabels, format: k,
+    series: [{ name: 'September', values: R.dailyNow }, { name: 'August', values: R.dailyPrev, compare: true }],
+  });
+
+  document.getElementById('bars').innerHTML = PT.barList(R.sources.map(function (x) { return { label: x.name, value: x.amount }; }), { format: PT.vnd });
+  PT.chart('srcchart', {
+    type: 'column', height: 200, caption: 'Each source of revenue in September against August, in thousands of dong',
+    axisLabel: 'Source', format: k,
+    labels: ['Market pin', 'Home pin', 'Listings', 'Bumps'],
+    series: [{ name: 'September', values: R.sources.map(function (x) { return x.amount; }) }, { name: 'August', values: R.sources.map(function (x) { return x.prev; }), compare: true }],
+  });
+
+  function chg(v) { return '<span class="' + (v >= 0 ? 'pt-up' : 'pt-down') + '">' + (v >= 0 ? '+' : '') + v + '%</span>'; }
+  document.getElementById('srctable').innerHTML = PT.table(null, [
+    { key: 'name', label: 'Source' },
+    { key: 'sold', label: 'What was sold' },
+    { key: 'stalls', label: 'Stalls', align: 'num' },
+    { key: 'prev', label: 'August', align: 'num', render: function (r) { return PT.vnd(r.prev); } },
+    { key: 'amount', label: 'September', align: 'num', render: function (r) { return PT.vnd(r.amount); } },
+    { key: 'c', label: 'Change', align: 'num', render: function (r) { return chg(pct(r.amount, r.prev)); } },
+    { key: 'sh', label: 'Share', align: 'num', render: function (r) { return Math.round((r.amount / R.total) * 100) + '%'; } },
+  ], R.sources);
+
+  document.getElementById('stalls').innerHTML = PT.table(null, [
+    { key: 'stall', label: 'Stall', render: function (r) { return '<a href="../admin/farmers.html"><b>' + PT.esc(r.stall) + '</b></a><span class="sub">' + PT.esc(r.share) + '</span>'; } },
+    { key: 'orders', label: 'Completed orders', align: 'num' },
+    { key: 'spent', label: 'Paid MarketLink', align: 'num', render: function (r) { return PT.vnd(r.spent); } },
+    { key: 'sh', label: 'Share of revenue', align: 'num', render: function (r) { return Math.round((r.spent / R.total) * 100) + '%'; } },
+  ], R.byStall);
+
+  var C = R.credit;
+  document.getElementById('credit').innerHTML =
+    PT.kpi({ label: 'Credit bought', value: PT.group(C.boughtThisPeriod), note: '₫ topped up in the period' }) +
+    PT.kpi({ label: 'Credit spent', value: PT.group(C.spentThisPeriod), note: '₫, which is the revenue above' }) +
+    PT.kpi({ label: 'Still unspent', value: PT.group(C.outstanding), note: '₫ held by ' + C.stallsHolding + ' stalls', highlight: true }) +
+    PT.kpi({ label: 'Owed in placement', value: PT.group(C.outstanding), note: '₫ of pins and listings not yet used' });
+
+  document.querySelector('#credit').insertAdjacentHTML('afterend', '<p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Accounting · Revenue here is recognised when credit is spent, not when a stall tops up, so unspent credit is a liability rather than income. A bundle is treated the same way, which is why bundles are not a fifth source. LEAD and whoever handles the books should confirm that policy before any of it is built.">When is revenue recognised, on top-up or on use?</span></p>');
+  PT.states(['#stats', '#bars', '#srctable', '#stalls'], {
+    label: 'this report',
+    empty: ['Nothing earned in this period', 'MarketLink only earns when a stall buys position or lists past its free allowance. Try a longer period.'],
+    error: ['Couldn\'t load the revenue report', 'Check your connection and try again.'],
+  });
+  PT.boot({ role: 'admin', active: null, announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

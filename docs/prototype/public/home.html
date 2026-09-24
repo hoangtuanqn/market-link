@@ -73,6 +73,11 @@
   document.getElementById('open-list').innerHTML = PT.markets.map(function (m) { return '<li><span><b>' + PT.esc(m.name) + '</b><br><span class="ml-muted">' + PT.dayNames(m.days) + '</span></span><span class="pt-num">' + m.open + '–' + m.close + '</span></li>'; }).join('');
   document.getElementById('home-markets').innerHTML = PT.markets.slice(0, 4).map(function (m) { return PT.marketCard(m); }).join('');
   document.getElementById('home-products').innerHTML = [1, 3, 5, 6, 14, 16].map(function (id) { return PT.productCard(PT.product(id)); }).join('');
+  PT.states(['#open-list', '#home-markets', '#home-products'], {
+    label: 'this page',
+    empty: ['Nothing open this weekend', 'No market is trading on the days ahead. The board fills again as soon as one is.'],
+    error: ['Couldn\'t load the markets', 'Check your connection and try again.'],
+  });
   PT.boot({ active: null });
 </script>
 <div id="pt-foot"></div>

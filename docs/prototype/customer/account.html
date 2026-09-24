@@ -41,13 +41,28 @@
     </div>
     <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-secondary" data-toast="Password changed.">Change password</button></div>
   </form>
+  <div class="ml-card pt-panel pt-between-c" data-sell-invite>
+    <div class="pt-col-2" style="max-width:520px">
+      <h2 class="pt-h3">Sell at MarketLink</h2>
+      <p class="pt-small">If you grow food, this account can become a stall. You keep your orders, favorites and cart, and a panel appears for stock and pickup times once an admin approves you.</p>
+    </div>
+    <a class="ml-btn ml-btn-primary" href="../customer/become-farmer.html">Apply to sell</a>
+  </div>
+
   <div class="ml-card pt-panel pt-between-c">
     <div><h2 class="pt-h3">Sign out</h2><p class="pt-small ml-muted">Signs you out on this device only.</p></div>
     <a class="ml-btn ml-btn-secondary" href="../public/home.html">Sign out</a>
   </div>
   <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Feature catalog · 'View and update personal details' and 'change password' are marked (proposal), not in the SRS. Keep or cut; the API contract has GET /auth/me but no PUT.">Profile editing and change password are proposals, not SRS requirements</span></p>
 </main>
-<script>PT.boot({ role: 'customer', active: null });</script>
+<script>
+  // someone who already runs a stall is not invited to apply for one
+  if (new URLSearchParams(location.search).get('as') === 'farmer') {
+    var inv = document.querySelector('[data-sell-invite]');
+    if (inv) inv.hidden = true;
+  }
+  PT.boot({ role: 'customer', active: null });
+</script>
 <div id="pt-foot"></div>
 </body>
 </html>

@@ -57,6 +57,11 @@
     { key: 's', label: 'Status', render: function (a) { return a.active ? '<span class="ml-status ml-status-ready">' + PT.icons.check() + '<span class="ml-status-text">Live</span></span>' : '<span class="ml-status ml-status-cancelled">' + PT.icons.cancelled() + '<span class="ml-status-text">Ended</span></span>'; } },
     { key: 'a', label: '', align: 'actions', render: function (a) { return a.active ? '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Edit</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-toast="Announcement taken down.">Take down</button>' : '<button type="button" class="ml-btn ml-btn-ghost ml-btn-sm">Reuse</button>'; } },
   ], PT.announcements);
+  PT.states('#table', {
+    label: 'these announcements',
+    empty: ['No announcements', 'Publish one and every signed-in person sees it as a band above the header.'],
+    error: ['Couldn\'t load the announcements', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'admin', active: 'settings', announce: false });
 </script>
 <div id="pt-foot"></div>
