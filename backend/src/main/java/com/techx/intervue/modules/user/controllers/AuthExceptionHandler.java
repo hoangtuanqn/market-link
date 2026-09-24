@@ -10,13 +10,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * Trả 400/409 cho AuthController. Repo chưa có handler chung nên thiếu class này thì lỗi rơi xuống
- * /error và bị trả 401 (giống ChatExceptionHandler).
+ * Trả 400/401/403/409 cho AuthController. Repo chưa có handler chung nên thiếu class này thì lỗi
+ * rơi xuống /error và bị trả 401 (giống ChatExceptionHandler).
  */
 @RestControllerAdvice(assignableTypes = AuthController.class)
 public class AuthExceptionHandler {
@@ -44,6 +46,16 @@ public class AuthExceptionHandler {
                 "VALIDATION_ERROR",
                 INVALID_MESSAGE,
                 List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    ResponseEntity<ApiResource<Void>> badCredentials(BadCredentialsException e) {
+        return error(HttpStatus.UNAUTHORIZED, "INVALID_CREDENTIALS", e.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    ResponseEntity<ApiResource<Void>> disabled(DisabledException e) {
+        return error(HttpStatus.FORBIDDEN, "ACCOUNT_DISABLED", e.getMessage(), List.of());
     }
 
     @ExceptionHandler(InvalidFieldException.class)

@@ -1,7 +1,7 @@
 package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
-import com.techx.intervue.modules.helpers.TokenHashUtil;
+import com.techx.intervue.helpers.TokenHashUtil;
 import com.techx.intervue.modules.user.entities.RefreshToken;
 import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
