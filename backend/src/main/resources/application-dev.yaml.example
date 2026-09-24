@@ -1,0 +1,28 @@
+# ---------------------------------------------------------------------
+# Mẫu cho profile "dev". Copy thành application-dev.yaml (git-ignore) rồi điền giá trị của bạn:
+#   cp application-dev.yaml.example application-dev.yaml
+# Chỉ chứa key nhạy cảm — cấu hình khác nằm ở application.yaml.
+# Giá trị DB mặc định khớp .env.example.
+# ---------------------------------------------------------------------
+spring:
+  datasource:
+    username: ${MYSQL_USER:intervue}
+    password: ${MYSQL_PASSWORD:intervue_pass}
+  # Gmail + App Password (Google Account → Security → App passwords)
+  mail:
+    username: ${MAIL_USERNAME:your-email@gmail.com}
+    password: ${MAIL_PASSWORD:your-gmail-app-password}
+
+jwt:
+  # Secret chỉ dùng cho dev
+  secret: ${JWT_SECRET:ZGV2LW9ubHktand0LXNlY3JldC1tYXJrZXRsaW5rLWRvLW5vdC11c2UtaW4tcHJvZA==}
+
+# Đăng nhập Google / Facebook — thay giá trị mẫu bằng key thật (Google Cloud Console / Meta for Developers)
+app:
+  oauth:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID:your-google-client-id.apps.googleusercontent.com}
+      client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+    facebook:
+      app-id: ${FACEBOOK_APP_ID:your-facebook-app-id}
+      app-secret: ${FACEBOOK_APP_SECRET:your-facebook-app-secret}
