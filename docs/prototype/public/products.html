@@ -20,7 +20,7 @@
 <div id="pt-top"></div>
 <main class="pt-main">
   <div class="pt-col-2">
-    <p class="ml-hand ml-muted">Saturday 26/09 · 4 markets · 9 stalls selling</p>
+    <p class="ml-hand ml-muted">Saturday · 4 markets · 9 stalls selling</p>
     <h1 class="pt-title">Products</h1>
     <p class="pt-lead">Everything the stalls have listed for this week. Filter by category, price, market and day, then add to your cart.</p>
   </div>
@@ -34,9 +34,9 @@
           <span class="ml-field-label">Category</span>
           <div class="ml-chips" id="cat-chips"></div>
         </div>
-        <div class="pt-col-2">
-          <span class="ml-field-label">Price per unit</span>
-          <div class="ml-chips" id="price-chips"></div>
+        <div class="ml-field" style="min-width:0">
+          <label class="ml-field-label" for="price">Price per unit</label>
+          <select id="price" class="ml-input"></select>
         </div>
         <div class="ml-field" style="min-width:0">
           <label class="ml-field-label" for="market">Market</label>
@@ -48,7 +48,7 @@
 
     <div class="pt-col">
       <div class="pt-between-c">
-        <span class="pt-body"><b>18 products</b> match on Saturday 26/09</span>
+        <span class="pt-body"><b>18 products</b> match on Saturday</span>
         <div class="pt-row-2">
           <span class="pt-small ml-muted">Sort</span>
           <div class="ml-chips" id="sort-chips"></div>
@@ -56,8 +56,8 @@
       </div>
       <div class="pt-grid-tags" id="products" data-state-target="loaded"></div>
       <div hidden data-state-target="loading" class="pt-grid-tags" id="skeleton"></div>
-      <div hidden data-state-target="empty"></div>
-      <div hidden data-state-target="error"></div>
+      <div class="pt-col" hidden data-state-target="empty"></div>
+      <div class="pt-col" hidden data-state-target="error"></div>
       <div class="pt-between-c" id="pager"></div>
     </div>
   </div>
@@ -73,14 +73,37 @@
   </section>
 </main>
 <script>
-  document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.week.slice(0, 4).map(function (d) { return { value: d.value, label: d.label, sub: d.sub, disabled: d.value === 'thu' }; }), 'sat');
+  // Same weekday row as Markets: all seven, full names, one line each. A product is buyable on a
+  // day when its stall sells at a market that opens that day, so a day nobody sells on is struck through.
+  var sellsOn = function (dow) {
+    var open = PT.markets.filter(function (m) { return m.days.indexOf(dow) >= 0; }).map(function (m) { return m.id; });
+    return PT.products.some(function (p) {
+      var f = PT.farmer(p.farmer);
+      return f && f.approval === 'approved' && f.markets.some(function (id) { return open.indexOf(id) >= 0; });
+    });
+  };
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.weekdays.map(function (d) {
+    return { value: d.value, label: d.label, date: PT.upcoming(d.dow), disabled: !sellsOn(d.dow) };
+  }), 'sat');
   document.getElementById('cat-chips').innerHTML = PT.categories.map(function (c, i) { return PT.chip(c.name, { count: c.count, selected: i === 0 }); }).join('');
-  document.getElementById('price-chips').innerHTML = PT.chip('Under 30,000 ₫', { radio: 'price' }) + PT.chip('30,000 – 80,000 ₫', { radio: 'price' }) + PT.chip('Over 80,000 ₫', { radio: 'price' });
+  // Price bands as a dropdown, like Market below it. Amounts go through PT.vnd, counts come from
+  // the listed products, so the bands say how much is actually in each one before you pick.
+  var LOW = 30000, HIGH = 80000;
+  var PRICE_BANDS = [
+    ['any', 'Any price', function () { return true; }],
+    ['low', 'Under ' + PT.vnd(LOW), function (p) { return p.price < LOW; }],
+    ['mid', PT.vnd(LOW) + ' – ' + PT.vnd(HIGH), function (p) { return p.price >= LOW && p.price <= HIGH; }],
+    ['high', 'Over ' + PT.vnd(HIGH), function (p) { return p.price > HIGH; }],
+  ];
+  var listed = PT.products.filter(function (p) { var f = PT.farmer(p.farmer); return f && f.approval === 'approved'; });
+  document.getElementById('price').innerHTML = PRICE_BANDS.map(function (b) {
+    return '<option value="' + b[0] + '">' + b[1] + ' (' + listed.filter(b[2]).length + ')</option>';
+  }).join('');
   document.getElementById('sort-chips').innerHTML = PT.chip('Newest', { selected: true, radio: 'sort' }) + PT.chip('Price, low to high', { radio: 'sort' }) + PT.chip('Price, high to low', { radio: 'sort' }) + PT.chip('Top rated', { radio: 'sort' });
   document.getElementById('products').innerHTML = PT.products.filter(function (p) { return p.status === 'available'; }).slice(0, 12).map(function (p) { return PT.productCard(p); }).join('');
   document.getElementById('skeleton').innerHTML = PT.skeletonCards(6);
   document.querySelector('[data-state-target="empty"]').innerHTML = PT.state('empty', 'Nothing under 30,000 ₫ in Dairy on Saturday', 'Củ Chi Goat Farm starts at 35,000 ₫ a jar. Remove the price filter or try Fruit.', '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Remove price filter</button>');
-  document.querySelector('[data-state-target="error"]').innerHTML = PT.state('error', "Couldn't load products", 'Check your connection and try again.', '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button>');
+  document.querySelector('[data-state-target="error"]').innerHTML = PT.loadError('products', 'the <a href="../public/markets.html">markets</a> page shows what is open today');
   document.getElementById('pager').innerHTML = '<span class="pt-small ml-muted">Showing 1–12 of 18</span>' + PT.pagination(1, 2);
   PT.boot({ active: 'products' });
 </script>
