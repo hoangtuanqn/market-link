@@ -11,6 +11,7 @@ import SetPasswordPage from './pages/SetPassword';
 import CustomerDashboardPage from './pages/CustomerDashboard';
 import CustomerAccountPage from './pages/CustomerAccount';
 import CustomerCartPage from './pages/CustomerCart';
+import CustomerOrdersPage from './pages/CustomerOrders';
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="dashboard" element={<CustomerDashboardPage />} />
           <Route path="account" element={<CustomerAccountPage />} />
           <Route path="cart" element={<CustomerCartPage />} />
+          <Route path="orders" element={<CustomerOrdersPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
