@@ -18,6 +18,7 @@ import CustomerMessagesPage from './pages/CustomerMessages';
 import CustomerNotificationsPage from './pages/CustomerNotifications';
 import CustomerOrderEditPage from './pages/CustomerOrderEdit';
 import CustomerOrderPlacedPage from './pages/CustomerOrderPlaced';
+import CustomerReviewPage from './pages/CustomerReview';
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="notifications" element={<CustomerNotificationsPage />} />
           <Route path="orders/:code/edit" element={<CustomerOrderEditPage />} />
           <Route path="orders/placed" element={<CustomerOrderPlacedPage />} />
+          <Route path="orders/:code/review" element={<CustomerReviewPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
