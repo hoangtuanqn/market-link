@@ -64,18 +64,21 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         return new RefreshResult(existing.getUserId(), newToken.rawToken());
     }
 
+    /**
+     * FR-006: thu hồi refresh token khi logout. Chỉ thu hồi token của chính user đó (R-06). Token
+     * không tồn tại hoặc đã thu hồi thì bỏ qua để gọi logout nhiều lần vẫn thành công.
+     */
     @Override
     @Transactional
-    public void revokeToken(String rawToken) {
-        RefreshToken existing =
-                repository
-                        .findByTokenHash(utils.hash(rawToken))
-                        .orElseThrow(
-                                () -> new BadCredentialsException("Refresh token không hợp lệ."));
-        this.checkIsRevoked(existing);
-        this.checkExpiryDate(existing);
-        existing.setRevoked(true);
-        repository.save(existing);
+    public void revokeToken(String rawToken, Long userId) {
+        repository
+                .findByTokenHash(utils.hash(rawToken))
+                .filter(token -> token.getUserId().equals(userId) && !token.isRevoked())
+                .ifPresent(
+                        token -> {
+                            token.setRevoked(true);
+                            repository.save(token);
+                        });
     }
 
     private void checkIsRevoked(RefreshToken entity) {
