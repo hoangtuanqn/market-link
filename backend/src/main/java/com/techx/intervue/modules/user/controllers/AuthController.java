@@ -11,6 +11,7 @@ import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SocialLoginRequest;
+import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.requests.VerifyResetTokenRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.AuthorizeUrlResource;
@@ -19,6 +20,7 @@ import com.techx.intervue.modules.user.resources.LoginResource;
 import com.techx.intervue.modules.user.resources.RefreshResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
 import com.techx.intervue.modules.user.resources.ResetTokenResource;
+import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.impl.FacebookOAuthClient;
 import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
@@ -38,6 +40,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -215,5 +218,23 @@ public class AuthController extends BaseController {
                 .body(
                         ApiResource.success(
                                 null, "Your password has been reset. Please sign in again."));
+    }
+
+    /** Hồ sơ của chính user đang đăng nhập (trang Account). */
+    @GetMapping("/me")
+    public ResponseEntity<ApiResource<UserResource>> me(
+            @AuthenticationPrincipal CustomUserDetails user) {
+        return ok(userService.getProfile(user.getId()), "Profile loaded.");
+    }
+
+    /**
+     * Sửa họ tên, số điện thoại, địa chỉ của chính mình — id lấy từ access token nên không sửa được
+     * tài khoản khác (R-06). Email không đổi được ở đây.
+     */
+    @PutMapping("/me")
+    public ResponseEntity<ApiResource<UserResource>> updateMe(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @Valid @RequestBody UpdateProfileRequest request) {
+        return ok(userService.updateProfile(user.getId(), request), "Your details are saved.");
     }
 }
