@@ -12,6 +12,7 @@ import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
+import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.RefreshResult;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.services.impl.BaseService;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
@@ -110,13 +111,37 @@ public class UserService extends BaseService implements UserServiceInterface {
         return issueTokens(user);
     }
 
+    /**
+     * FR-003: đổi refresh token (cookie) lấy access token mới, refresh token được xoay vòng. Không
+     * bọc @Transactional ở đây: rotateToken tự có transaction, nếu bọc thêm thì exception sẽ
+     * rollback luôn việc thu hồi token khi phát hiện token bị dùng lại.
+     */
+    @Override
+    public AuthResult refresh(String rawRefreshToken) {
+        RefreshResult rotated = refreshTokenService.rotateToken(rawRefreshToken);
+        User user =
+                userRepository
+                        .findById(rotated.userId())
+                        .orElseThrow(
+                                () -> new BadCredentialsException("Refresh token không hợp lệ!"));
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new DisabledException(
+                    "Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!");
+        }
+        return buildAuthResult(user, rotated.newRefreshToken());
+    }
+
     private AuthResult issueTokens(User user) {
+        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId());
+        return buildAuthResult(user, refreshToken.rawToken());
+    }
+
+    private AuthResult buildAuthResult(User user, String rawRefreshToken) {
         String accessToken = jwtService.generateToken(user.getId());
 
         Duration ttl = Duration.ofMillis(authConfig.getExpirationTime());
         userSessionCache.set(user.getId(), user.getEmail(), Set.of(user.getRole()), ttl);
 
-        IssuedToken refreshToken = refreshTokenService.issueRefreshToken(user.getId());
         UserResource userResource =
                 UserResource.builder()
                         .id(user.getId())
@@ -127,6 +152,6 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .role(user.getRole())
                         .createdAt(user.getCreatedAt())
                         .build();
-        return new AuthResult(accessToken, refreshToken.rawToken(), userResource);
+        return new AuthResult(accessToken, rawRefreshToken, userResource);
     }
 }

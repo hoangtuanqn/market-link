@@ -73,8 +73,6 @@ public class SecurityConfig {
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
                                         .permitAll()
-                                        .requestMatchers("/api/v1/refresh")
-                                        .permitAll()
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()

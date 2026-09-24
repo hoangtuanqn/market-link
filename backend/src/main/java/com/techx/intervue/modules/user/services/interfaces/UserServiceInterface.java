@@ -11,6 +11,8 @@ public interface UserServiceInterface {
 
     void logout(Long userId, String accessToken, String refreshToken);
 
+    AuthResult refresh(String rawRefreshToken);
+
     // Optional<User> findById(Long userId);
 
     // Optional<User> findByEmail(String email);
