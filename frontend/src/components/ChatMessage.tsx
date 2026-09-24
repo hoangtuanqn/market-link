@@ -31,13 +31,14 @@ type ChatMessageProps = {
   from: 'user' | 'bot';
   who?: string;
   time?: string;
+  intent?: string;
   children: ReactNode;
   suggestions?: string[];
   onSuggestion?: (s: string) => void;
 };
 
 /** One chat bubble, left for the stall/assistant, right for the customer (design system `.ml-chat`/`.ml-msg`). */
-const ChatMessage = ({ from, who, time, children, suggestions, onSuggestion }: ChatMessageProps) => {
+const ChatMessage = ({ from, who, time, intent, children, suggestions, onSuggestion }: ChatMessageProps) => {
   const bot = from !== 'user';
   return (
     <div
@@ -56,6 +57,7 @@ const ChatMessage = ({ from, who, time, children, suggestions, onSuggestion }: C
       <div className="text-ink-muted flex flex-wrap items-center gap-2 text-[12px]">
         <span>{who ?? (bot ? 'MarketLink assistant' : 'You')}</span>
         {time && <span>· {time}</span>}
+        {intent && <span className="bg-info-bg text-info-ink rounded-full px-2 font-bold">Intent: {intent}</span>}
       </div>
       {suggestions && (
         <div className="mt-0.5 flex flex-wrap gap-2">
