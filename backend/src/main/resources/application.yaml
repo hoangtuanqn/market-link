@@ -1,89 +1,21 @@
-# ---------------------------------------------------------------------
-# Cấu hình chung cho mọi môi trường.
-# Key nhạy cảm (DB, JWT, mail) chỉ để placeholder ở đây và được ghi đè trong
-# application-dev.yaml / application-prod.yaml — hai file này git-ignore,
-# tạo từ application-dev.yaml.example / application-prod.yaml.example.
-# ---------------------------------------------------------------------
 spring:
   application:
     name: intervue
 
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/${MYSQL_DATABASE:intervue_db}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    url: jdbc:mysql://localhost:3306/${MYSQL_DATABASE:intervue_db}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: ${MYSQL_USER:intervue}
     password: ${MYSQL_PASSWORD:changename}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    open-in-view: false
-
-  flyway:
-    # Không bao giờ cho phép xoá schema
-    clean-disabled: true
-
-  # SMTP gửi mail (FR-007). Tài khoản/mật khẩu ghi đè trong application-<profile>.yaml
-  mail:
-    host: ${MAIL_HOST:smtp.gmail.com}
-    port: ${MAIL_PORT:587}
-    username: ${MAIL_USERNAME:}
-    password: ${MAIL_PASSWORD:}
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
-      mail.smtp.connectiontimeout: 10000
-      mail.smtp.timeout: 10000
-      mail.smtp.writetimeout: 10000
-
-server:
-  shutdown: graceful
-  error:
-    include-message: never
-    include-stacktrace: never
-    include-binding-errors: never
-
-logging:
-  level:
-    # Prod đặt APP_LOG_LEVEL=INFO (docker-compose.prod.yml)
-    com.techx.intervue: ${APP_LOG_LEVEL:DEBUG}
-    org.flywaydb: INFO
 
 app:
   cors:
     # Origin của frontend React được phép gọi API, nhiều origin cách nhau dấu phẩy.
     # Mặc định là Vite dev server (frontend/vite.config.ts, cổng 3000). Prod bắt buộc truyền biến.
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
-  # Đăng nhập Google / Facebook. Client id/secret ghi đè trong application-dev.yaml (git-ignore) hoặc
-  # truyền qua biến môi trường; để trống thì endpoint trả 503 "chưa cấu hình".
-  # redirect-uri phải khớp 100% với URI khai báo trên Google Cloud Console / Facebook App và với URI
-  # frontend dùng khi mở trang đăng nhập. Google popup (GIS code client) thì dùng "postmessage".
-  oauth:
-    google:
-      client-id: ${GOOGLE_CLIENT_ID:}
-      client-secret: ${GOOGLE_CLIENT_SECRET:}
-      redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/google/callback}
-    facebook:
-      app-id: ${FACEBOOK_APP_ID:}
-      app-secret: ${FACEBOOK_APP_SECRET:}
-      redirect-uri: ${FACEBOOK_REDIRECT_URI:http://localhost:3000/auth/facebook/callback}
-      graph-version: v23.0
-  mail:
-    from-name: MarketLink
-  # FR-007: link trong mail là <url>?token=<token>; url là trang đặt lại mật khẩu của frontend
-  password-reset:
-    url: ${PASSWORD_RESET_URL:http://localhost:3000/reset-password}
-    token-ttl-seconds: 900
-    max-requests: 5
-    window-seconds: 3600
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
   expiration: 900000
   issuer: InterVue
   refresh-token-ttl-days: 14
-
-# Tài liệu API. Prod tắt bằng SWAGGER_ENABLED=false (docker-compose.prod.yml)
-springdoc:
-  api-docs:
-    enabled: ${SWAGGER_ENABLED:true}
-  swagger-ui:
-    enabled: ${SWAGGER_ENABLED:true}

@@ -25,7 +25,7 @@ public class OpenApiConfig {
                                 .title("MarketLink API")
                                 .version("v1")
                                 .description(
-                                        "Pre-order farm produce from Ho Chi Minh City farmers markets — TechWiz 7."))
+                                        "Đặt trước nông sản tại chợ phiên TP.HCM — TechWiz 7."))
                 .components(
                         new Components()
                                 .addSecuritySchemes(

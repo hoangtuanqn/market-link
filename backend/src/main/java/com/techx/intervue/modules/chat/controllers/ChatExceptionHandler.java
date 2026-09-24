@@ -21,7 +21,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 @RestControllerAdvice(assignableTypes = ChatController.class)
 public class ChatExceptionHandler {
 
-    private static final String MESSAGE = "Some of the information you sent is not valid.";
+    private static final String MESSAGE = "Dữ liệu gửi lên không hợp lệ!";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ApiResource<Void>> invalidBody(MethodArgumentNotValidException e) {

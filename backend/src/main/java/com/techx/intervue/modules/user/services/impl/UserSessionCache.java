@@ -25,7 +25,7 @@ public class UserSessionCache {
             redis.opsForValue()
                     .set(key, objectMapper.writeValueAsString(new SessionData(email, roles)), ttl);
         } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Could not save the session to Redis.", e);
+            throw new IllegalStateException("Không thể lưu session vào redis!", e);
         }
     }
 

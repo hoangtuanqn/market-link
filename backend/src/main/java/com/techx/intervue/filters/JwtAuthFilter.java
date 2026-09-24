@@ -44,10 +44,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private static final Map<Class<? extends JwtException>, String> JWT_ERRORS_MESSAGES =
             Map.of(
-                    MalformedJwtException.class, "Malformed token",
-                    ExpiredJwtException.class, "Token has expired",
-                    SignatureException.class, "Token was not issued by this system",
-                    UnsupportedJwtException.class, "Unsupported token type");
+                    MalformedJwtException.class, "Định dạng token không hợp lệ",
+                    ExpiredJwtException.class, "Token đã hết hạn",
+                    SignatureException.class, "Token không được tạo bởi hệ thống này",
+                    UnsupportedJwtException.class, "Loại token không được hỗ trợ");
 
     /** Refresh chỉ dùng cookie; access token hết hạn gửi kèm không được làm hỏng request này. */
     private static final String REFRESH_PATH = "/api/v1/auth/refresh";
@@ -76,7 +76,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             String jti = jwtService.extractJti(token);
             if (Boolean.TRUE.equals(blacklistService.isRevoked(jti))) {
-                writeErrorResponse(response, "Your token is not valid.");
+                writeErrorResponse(response, "Token của bạn không hợp lệ.");
                 return;
             }
             request.setAttribute(TOKEN_ATTRIBUTE, token);
@@ -88,7 +88,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 if (session == null) {
                     // Session hết hạn hoặc bị evict → force logout
-                    writeErrorResponse(response, "Your session has expired.");
+                    writeErrorResponse(response, "Phiên đăng nhập đã hết hạn.");
                     return;
                 }
 
@@ -117,13 +117,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch (JwtException e) {
-            String message =
-                    JWT_ERRORS_MESSAGES.getOrDefault(e.getClass(), "Token authentication failed.");
+            String message = JWT_ERRORS_MESSAGES.getOrDefault(e.getClass(), "Lỗi xác thực token!");
             writeErrorResponse(response, message);
             return;
 
         } catch (Exception e) {
-            writeErrorResponse(response, "Token authentication failed.");
+            writeErrorResponse(response, "Lỗi xác thực token!");
             return;
         }
         filterChain.doFilter(request, response);

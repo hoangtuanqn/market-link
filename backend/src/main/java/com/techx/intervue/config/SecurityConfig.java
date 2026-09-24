@@ -120,7 +120,7 @@ public class SecurityConfig {
                                                             objectMapper.writeValueAsString(
                                                                     ApiResource.error(
                                                                             error,
-                                                                            "Something went wrong on our side. Please try again later.")));
+                                                                            "Đã có lỗi xảy ra với hệ thống, vui lòng thử lại sau!")));
                                         })))
                 // UsernamePasswordAuthenticationFilter.class chỉ làm mốc để tham chiếu
                 // sau khi chạy qua jwtAuthFiler thì nó sẽ chạy qua bên

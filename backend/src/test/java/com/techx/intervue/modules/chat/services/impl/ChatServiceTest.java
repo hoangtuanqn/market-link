@@ -89,7 +89,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("Cà chua giá bao nhiêu?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PRODUCT_DETAIL);
-        assertThat(reply.reply()).contains("35,000 ₫/kg", "12 kg left", "Vườn Xanh");
+        assertThat(reply.reply()).contains("35.000 ₫/kg", "còn 12 kg", "Vườn Xanh");
         assertThat(reply.results()).extracting("type", "id").containsExactly(tuple("product", 10L));
     }
 
@@ -100,7 +100,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("tìm rau muống ở chợ Bến Thành");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
-        assertThat(reply.reply()).contains("\"rau muong\" at Chợ Bến Thành");
+        assertThat(reply.reply()).contains("\"rau muong\" tại Chợ Bến Thành");
         verify(knowledge).searchProducts("rau muong", 1L, false);
     }
 
@@ -109,7 +109,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("chợ Bến Thành mở cửa mấy giờ");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
-        assertThat(reply.reply()).contains("06:00–11:00", "Sun, Sat");
+        assertThat(reply.reply()).contains("06:00–11:00", "CN, T7");
     }
 
     @Test
@@ -129,7 +129,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("Thứ 7 có farmer nào ở chợ Bến Thành?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FARMER_AVAILABILITY);
-        assertThat(reply.reply()).contains("at Chợ Bến Thành on Sat", "Vườn Xanh", "06:00–10:00");
+        assertThat(reply.reply()).contains("tại Chợ Bến Thành vào T7", "Vườn Xanh", "06:00–10:00");
     }
 
     @Test
@@ -150,7 +150,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("khung giờ lấy hàng của vuon xanh");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PICKUP_WINDOW);
-        assertThat(reply.reply()).contains("Sun · Chợ Bến Thành · 07:00–09:30");
+        assertThat(reply.reply()).contains("CN · Chợ Bến Thành · 07:00–09:30");
     }
 
     @Test
@@ -179,7 +179,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("tìm ' OR 1=1 --");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
-        assertThat(reply.reply()).contains("No products found");
+        assertThat(reply.reply()).contains("chưa tìm thấy");
     }
 
     @Test
