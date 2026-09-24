@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes } from 'react';
+import type { InputHTMLAttributes, SelectHTMLAttributes } from 'react';
 import Helper from '@/utils/helper';
 
 type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -42,6 +42,42 @@ export function Field({ id, label, required, error, hint, className, ...rest }: 
           {hint}
         </span>
       ) : null}
+    </div>
+  );
+}
+
+type SelectFieldProps = SelectHTMLAttributes<HTMLSelectElement> & {
+  label: string;
+  options: string[] | { value: string; label: string }[];
+};
+
+/** Labelled select (design system `.ml-field` + `.ml-input`). */
+export function SelectField({ id, label, options, className, ...rest }: SelectFieldProps) {
+  return (
+    <div className="flex min-w-55 flex-col gap-1.5">
+      <label htmlFor={id} className="text-small text-ink font-bold">
+        {label}
+      </label>
+      <select
+        id={id}
+        className={Helper.cn(
+          'text-body text-ink bg-surface-raised border-line-strong hover:border-ink-muted focus-visible:border-focus focus-visible:outline-focus min-h-11 w-full rounded-sm border-[1.5px] px-3 focus-visible:outline-2 focus-visible:outline-offset-1',
+          className,
+        )}
+        {...rest}
+      >
+        {options.map((o) =>
+          typeof o === 'string' ? (
+            <option key={o} value={o}>
+              {o}
+            </option>
+          ) : (
+            <option key={o.value} value={o.value}>
+              {o.label}
+            </option>
+          ),
+        )}
+      </select>
     </div>
   );
 }
