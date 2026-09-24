@@ -41,6 +41,11 @@
     { key: 's', label: 'Status', render: function (f) { return f.status === 'open' ? '<span class="ml-status ml-status-placed">' + PT.icons.placed() + '<span class="ml-status-text">Open</span></span>' : '<span class="ml-status ml-status-completed">' + PT.icons.completed() + '<span class="ml-status-text">Answered</span></span>'; } },
     { key: 'a', label: '', align: 'actions', render: function (f) { return f.status === 'open' ? '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Marked as answered.">Mark answered</button>' : '<button type="button" class="ml-btn ml-btn-ghost ml-btn-sm">Reopen</button>'; } },
   ], PT.feedback.map(function (f) { return Object.assign({ _new: f.status === 'open' && f.type === 'bug' }, f); }));
+  PT.states('#table', {
+    label: 'this inbox',
+    empty: ['No feedback yet', 'Bug reports, suggestions and questions from the feedback form arrive here.'],
+    error: ['Couldn\'t load the feedback inbox', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'admin', active: 'settings', announce: false });
 </script>
 <div id="pt-foot"></div>

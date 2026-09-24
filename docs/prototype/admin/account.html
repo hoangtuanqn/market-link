@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin profile — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main pt-main-narrow">
+  <div class="pt-between">
+    <div class="pt-row" style="gap:16px;flex-wrap:nowrap;align-items:center">
+      <span class="pt-seller-mono" style="width:56px;height:56px;font-size:24px;font-family:var(--font-sans);font-weight:700" aria-hidden="true">AD</span>
+      <div class="pt-col-2">
+        <h1 class="pt-title-sm">Nguyễn Vận Hành</h1>
+        <p class="pt-small ml-muted">admin@marketlink.local · admin since 28/07/2026</p>
+      </div>
+    </div>
+    <span class="ml-status ml-status-completed" id="badge"></span>
+  </div>
+
+  <form class="ml-card pt-panel pt-col" novalidate>
+    <h2 class="pt-h3">Your details</h2>
+    <div class="pt-form-grid">
+      <div class="ml-field"><label class="ml-field-label" for="name">Full name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Nguyễn Vận Hành"></div>
+      <div class="ml-field"><label class="ml-field-label" for="phone">Phone<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" value="0901 004 128"><span class="ml-field-hint">Used when a stall needs to reach the platform, not shown publicly.</span></div>
+      <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" value="admin@marketlink.local"><span class="ml-field-hint">Also your sign-in.</span></div>
+    </div>
+    <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Your details are saved.">Save changes</button></div>
+  </form>
+
+  <form class="ml-card pt-panel pt-col" novalidate>
+    <h2 class="pt-h3">Password</h2>
+    <p class="pt-small ml-muted">An admin account can approve stalls, deactivate customers and change what the platform charges, so keep this one strong.</p>
+    <div class="pt-form-grid">
+      <div class="ml-field"><label class="ml-field-label" for="cur">Current password</label><input id="cur" class="ml-input" type="password" autocomplete="current-password"></div>
+      <div class="ml-field"><label class="ml-field-label" for="new">New password</label><input id="new" class="ml-input" type="password" autocomplete="new-password"><span class="ml-field-hint">At least 8 characters.</span></div>
+    </div>
+    <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-secondary" data-toast="Password changed. Other sessions were signed out.">Change password</button></div>
+  </form>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <h2 class="pt-h3">Where you are signed in</h2>
+    <div id="sessions"></div>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal · A session list, an audit trail and two-factor sign-in are not in the SRS. FR-004 only asks for a secure admin sign-in on a separate dashboard. An admin can change prices and suspend stalls, so the team should decide how much of this is worth building.">Sessions, audit trail and two-factor are proposals</span></p>
+  </section>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <h2 class="pt-h3">What you changed lately</h2>
+    <div id="audit"></div>
+  </section>
+
+  <div class="ml-card pt-panel pt-between-c">
+    <div><h2 class="pt-h3">Sign out</h2><p class="pt-small ml-muted">Signs you out on this device only.</p></div>
+    <a class="ml-btn ml-btn-secondary" href="../public/login.html">Sign out</a>
+  </div>
+</main>
+<script>
+  document.getElementById('badge').innerHTML = PT.icons.completed() + '<span class="ml-status-text">Full admin</span>';
+  document.getElementById('sessions').innerHTML = PT.table(null, [
+    { key: 'd', label: 'Device' }, { key: 'w', label: 'Where' }, { key: 't', label: 'Last used' },
+    { key: 'a', label: '', align: 'actions', render: function (r) { return r.now ? '<span class="ml-muted pt-small">This device</span>' : '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-toast="Signed out on that device.">Sign out</button>'; } },
+  ], [
+    { d: 'Chrome on macOS', w: 'Ho Chi Minh City', t: 'Now', now: true },
+    { d: 'Safari on iPhone', w: 'Ho Chi Minh City', t: 'Yesterday 18:40' },
+    { d: 'Chrome on Windows', w: 'Ho Chi Minh City', t: '21/09/2026 09:12' },
+  ]);
+  document.getElementById('audit').innerHTML = PT.table(null, [{ key: 'w', label: 'What' }, { key: 'o', label: 'On' }, { key: 't', label: 'When' }], [
+    { w: 'Approved a stall', o: 'Bình Chánh Mushrooms', t: '01/09/2026 08:20' },
+    { w: 'Suspended a stall', o: 'Long Khánh Fruit Garden', t: '20/09/2026 16:05' },
+    { w: 'Changed a price', o: 'Top of one market page, 1 day · 12,000 → 15,000 ₫', t: '01/09/2026 07:55' },
+    { w: 'Published an announcement', o: 'Thảo Điền closed on 04/10', t: '23/09/2026 11:02' },
+  ]);
+  PT.boot({ role: 'admin', active: null, announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

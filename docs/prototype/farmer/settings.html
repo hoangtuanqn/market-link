@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Notifications (Farmer) — MarketLink prototype</title>
+<title>Settings — MarketLink prototype</title>
 <link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,21 +18,16 @@
 </head>
 <body data-role="farmer" class="pt-quiet">
 <div id="pt-top"></div>
-<main class="pt-main pt-main-narrow pt-notes-page">
+<main class="pt-main pt-main-narrow">
   <div class="pt-col-2">
-    <h1 class="pt-title">Notifications</h1>
-    <p class="pt-body">New orders, edits and cancellations from customers, and announcements from MarketLink.</p>
+    <h1 class="pt-title">Settings</h1>
+    <p class="pt-body pt-measure">How the panel looks, what it tells you, and the defaults it uses when you set up a new week.</p>
   </div>
-  <div id="notes"></div>
-  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="D-11 lists 4 notification triggers, all for customers. Notifying the Farmer of a new, edited or cancelled order is marked (proposal) in the feature catalog and needs a decision.">Farmer-side notifications are a proposal, not in D-11</span></p>
+  <div class="pt-col" id="settings"></div>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal · A settings screen is not in the SRS. The selling defaults here overlap FR-060, FR-061 and FR-067, which put cutoff and slot settings on the stall profile. Decide which screen owns them so there is one source of truth.">Selling defaults overlap the stall profile screen</span></p>
 </main>
 <script>
-  document.getElementById('notes').innerHTML = PT.notes(PT.farmerNotifications, { fluid: true });
-  PT.states('#notes', {
-    label: 'these notifications',
-    empty: ['Nothing new', 'You will hear here when an order is placed, changed or cancelled, and when an admin posts an announcement.'],
-    error: ['Couldn\'t load your notifications', 'Check your connection and try again.'],
-  });
+  document.getElementById('settings').innerHTML = PT.settings('farmer');
   PT.boot({ role: 'farmer', active: null, announce: false });
 </script>
 <div id="pt-foot"></div>

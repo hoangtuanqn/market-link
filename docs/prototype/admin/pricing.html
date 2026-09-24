@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing & allowances — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Pricing &amp; allowances</h1>
+      <p class="pt-body pt-measure">What a stall gets free, and what it pays to go beyond it. A change here reaches every stall at the start of the next day, and stalls are told a week before anything goes up.</p>
+    </div>
+    <div class="pt-row-2">
+      <a class="ml-btn ml-btn-secondary" href="../admin/revenue.html">See what it earned</a>
+      <button type="button" class="ml-btn ml-btn-secondary" id="inflate">Adjust every price</button>
+      <button type="button" class="ml-btn ml-btn-primary" data-toast="Prices saved. Stalls will be told a week before they take effect.">Save prices</button>
+    </div>
+  </div>
+
+  <div id="scope"></div>
+
+  <div class="pt-grid-4" id="stats"></div>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <h2 class="pt-h3">Currency and rounding</h2>
+    <ul class="pt-set">
+      <li><div><b>Currency stalls are charged in</b><p>Customers always pay cash at the stall, so this is only what the platform bills a Farmer.</p></div>
+        <div class="ml-field"><label class="ml-sr" for="cur">Currency</label><select id="cur" class="ml-input"><option>₫ Vietnamese đồng</option><option>$ US dollar</option><option>€ Euro</option></select></div></li>
+      <li><div><b>Round prices to</b><p>Keeps the numbers readable on a small screen.</p></div>
+        <div class="ml-field"><label class="ml-sr" for="round">Rounding</label><select id="round" class="ml-input"><option>Nearest 1,000 ₫</option><option>Nearest 500 ₫</option><option>No rounding</option></select></div></li>
+      <li><div><b>Notice before a rise</b><p>How long stalls see a new price before it applies.</p></div>
+        <div class="ml-field"><label class="ml-sr" for="notice">Notice</label><select id="notice" class="ml-input"><option>7 days</option><option>14 days</option><option>30 days</option></select></div></li>
+    </ul>
+  </section>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <h2 class="pt-h3">Free allowance</h2>
+    <p class="pt-small ml-muted">Every approved stall gets this without paying. Set it high enough that a small grower never has to pay.</p>
+    <div class="pt-form-grid">
+      <div class="ml-field"><label class="ml-field-label" for="fl">New listings a day</label><input id="fl" class="ml-input" type="number" value="5"><span class="ml-field-hint">Cô Tư Garden lists 3 on a busy day.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="fb">Bumps a month</label><input id="fb" class="ml-input" type="number" value="10"></div>
+    </div>
+  </section>
+
+  <section class="pt-col-3">
+    <h2 class="pt-h2">Prices</h2>
+    <div id="prices"></div>
+    <p class="pt-small ml-muted">A day pinned on a market page is about 7% of what a stall takes on one market morning. Keep that ratio in view when you change these.</p>
+  </section>
+
+  <section class="pt-col-3">
+    <h2 class="pt-h2">Pinned slots</h2>
+    <div id="slots"></div>
+    <p class="pt-small ml-muted">Scarcity is the product. Raising these numbers earns more today and makes every page look more like advertising.</p>
+  </section>
+
+  <section class="pt-col-3">
+    <h2 class="pt-h2">What this earned</h2>
+    <div id="earned"></div>
+  </section>
+
+  <p class="pt-caption ml-muted">Last changed <b id="last"></b> by <b id="by"></b>.</p>
+</main>
+<script>
+  var P = PT.pricing;
+  document.getElementById('scope').innerHTML = PT.banner('warning', 'Charging Farmers is not in the SRS.', 'The SRS rules out a payment gateway. Until that is resolved, credit is arranged off the platform and entered here by an admin.', { todo: '<span class="pt-todo" data-todo="Out of scope · Platform revenue is not in .ai/REQUIREMENTS.md and the SRS excludes a payment gateway. Needs a new FR, tables for prices, credit and transactions with a price history so an old order keeps the price it was charged, a Flyway migration under R-03, and a rule on who may change a price.">Pricing control needs a new FR and a price history</span>' });
+  document.getElementById('last').textContent = P.lastChanged;
+  document.getElementById('by').textContent = P.changedBy;
+
+  document.getElementById('stats').innerHTML =
+    PT.kpi({ label: 'Promotion revenue', value: PT.group(PT.platformRevenue.total), note: '₫ in September', delta: { pct: 34.6 }, highlight: true, href: '../admin/revenue.html', linkLabel: 'Open the revenue report' }) +
+    PT.kpi({ label: 'Stalls that paid', value: '5', note: 'of 8 approved stalls', delta: { pct: 25 } }) +
+    PT.kpi({ label: 'Pinned days sold', value: '34', note: 'of 150 available', delta: { pct: 21.4 } }) +
+    PT.kpi({ label: 'Stalls over the free limit', value: '2', note: 'on a normal day', delta: { pct: 0 } });
+
+  function money(v) { return '<input class="ml-input" type="number" step="1000" value="' + v + '" style="min-height:36px;width:120px;padding:0 8px;text-align:right">'; }
+  document.getElementById('prices').innerHTML = PT.table(null, [
+    { key: 'n', label: 'What a stall buys' },
+    { key: 'p', label: 'Price in ₫', align: 'num', render: function (r) { return money(r.price); } },
+    { key: 's', label: 'Sold in September', align: 'num' },
+    { key: 'e', label: 'Earned', align: 'num', render: function (r) { return PT.vnd(r.price * r.sold); } },
+  ], P.extras.map(function (e, i) { return Object.assign({ sold: [128, 61][i], s: [128, 61][i] }, e); }));
+
+  document.getElementById('slots').innerHTML = PT.table(null, [
+    { key: 'n', label: 'Where' },
+    { key: 'slots', label: 'Slots at once', align: 'num', render: function (r) { return '<input class="ml-input" type="number" value="' + r.slots + '" style="min-height:36px;width:72px;padding:0 8px;text-align:right">'; } },
+    { key: 'd1', label: '1 day', align: 'num', render: function (r) { return money(r.days[0][1]); } },
+    { key: 'd3', label: '3 days', align: 'num', render: function (r) { return money(r.days[1][1]); } },
+    { key: 'd7', label: '7 days', align: 'num', render: function (r) { return money(r.days[2][1]); } },
+  ], P.pins);
+
+  document.getElementById('earned').innerHTML = PT.barList(PT.platformRevenue.sources.map(function (x) { return { label: x.name, value: x.amount }; }), { format: PT.vnd })
+    + '<p class="pt-small ml-muted" style="margin-top:12px">Totals and the split by stall are on the <a href="../admin/revenue.html">revenue report</a>.</p>';
+
+  document.getElementById('inflate').addEventListener('click', function () {
+    PT.dialog({ title: 'Adjust every price at once?', body: '<p>Moves each price by the same percentage and rounds to the nearest 1,000 ₫. Use it for inflation rather than for a change of strategy.</p><div class="pt-form-grid"><div class="ml-field"><label class="ml-field-label" for="pct">Change by</label><input id="pct" class="ml-input" type="number" step="0.5" value="4.5"><span class="ml-field-hint">Per cent. A negative number lowers them.</span></div><div class="ml-field"><label class="ml-field-label" for="when">Takes effect</label><select id="when" class="ml-input"><option>In 7 days, after stalls are told</option><option>At the start of next month</option></select></div></div><p class="ml-muted" style="font-size:14px">A market-page day would go from 15,000 ₫ to 16,000 ₫.</p>', keep: 'Cancel', confirm: 'Apply to every price', toast: 'Every price moved by 4.5%. Stalls are told today and it applies in 7 days.' });
+  });
+  PT.states(['#stats', '#prices', '#slots'], {
+    label: 'these prices',
+    empty: ['No prices set yet', 'Set what a pinned day and an extra listing cost, and stalls can start buying position.'],
+    error: ['Couldn\'t load the price list', 'Check your connection and try again.'],
+  });
+  PT.boot({ role: 'admin', active: null, announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

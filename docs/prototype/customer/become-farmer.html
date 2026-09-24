@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apply to sell — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main pt-main-narrow">
+  <p class="pt-small ml-muted"><a href="../customer/account.html">Account</a> · Apply to sell</p>
+
+  <div id="state-form" class="pt-col-6">
+    <div class="pt-col-2">
+      <p class="ml-hand ml-muted">Nguyễn Minh Khang · customer since 01/08/2026</p>
+      <h1 class="pt-title">Sell what you grow</h1>
+      <p class="pt-lead">If you grow food, your account can become a stall at one of the four markets. You keep everything you have now and carry on shopping from other stalls.</p>
+    </div>
+
+    <div class="ml-card pt-panel pt-col-2">
+      <h2 class="pt-h3">What happens after you send this</h2>
+      <ol class="pt-body" style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+        <li>An admin reads the application and looks at your photos, usually within a few market days.</li>
+        <li>When it is approved, a stall panel appears in your account for stock, orders and pickup times.</li>
+        <li>You set your markets, days and pickup windows there, then list your first products.</li>
+      </ol>
+    </div>
+
+    <form class="pt-col" novalidate>
+      <ol class="pt-steps-form">
+        <li>
+          <div>
+            <h2>Your stall</h2>
+            <div class="ml-card pt-panel pt-col">
+              <div class="pt-form-grid">
+                <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="stall">Stall name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="stall" class="ml-input" placeholder="e.g. Khang Family Greens"><span class="ml-field-hint">Customers see this on the map and on their orders.</span></div>
+                <div class="ml-field"><label class="ml-field-label" for="person">Contact person<span class="ml-field-req" aria-hidden="true">*</span></label><input id="person" class="ml-input" value="Nguyễn Minh Khang"></div>
+                <div class="ml-field"><label class="ml-field-label" for="phone">Phone<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" value="0903 118 218"><span class="ml-field-hint">Printed on every order so customers can reach you.</span></div>
+                <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="email">Email</label><input id="email" class="ml-input" value="khang@example.com" readonly><span class="ml-field-hint">Your sign-in stays the same.</span></div>
+                <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="about">About the stall</label><textarea id="about" class="ml-input" placeholder="One or two sentences. Who grows it and where."></textarea></div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <h2>What you grow</h2>
+            <div class="ml-card pt-panel pt-col">
+              <div class="pt-col-2">
+                <span class="ml-field-label">Categories<span class="ml-field-req" aria-hidden="true">*</span></span>
+                <div class="pt-col-2" id="cats"></div>
+              </div>
+              <div class="ml-field" style="min-width:0"><label class="ml-field-label" for="crops">Main crops<span class="ml-field-req" aria-hidden="true">*</span></label><input id="crops" class="ml-input" placeholder="Water spinach, choy sum, Thai basil"><span class="ml-field-hint">Separate them with commas. You list real products with prices after approval.</span></div>
+              <div class="ml-field" style="min-width:0"><label class="ml-field-label" for="volume">Roughly how much a week<span class="ml-field-req" aria-hidden="true">*</span></label><input id="volume" class="ml-input" placeholder="About 120 bunches"><span class="ml-field-hint">A rough figure. It helps the admin match you to a market with room.</span></div>
+              <div class="ml-field" style="min-width:0"><label class="ml-field-label" for="method">How you grow it</label><textarea id="method" class="ml-input" placeholder="e.g. No pesticides in the last two seasons."></textarea><span class="ml-field-hint">Optional, and shown on your stall page as your own words. MarketLink does not check or certify any of it.</span></div>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <h2>Where you grow it</h2>
+            <div class="ml-card pt-panel pt-col">
+              <div class="pt-form-grid">
+                <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="plot">Address of the plot<span class="ml-field-req" aria-hidden="true">*</span></label><input id="plot" class="ml-input" placeholder="Hamlet, ward, district"><span class="ml-field-hint">Only the admin sees this. Customers see your stall at the market, not your plot.</span></div>
+                <div class="ml-field"><label class="ml-field-label" for="size">Plot size<span class="ml-field-req" aria-hidden="true">*</span></label><input id="size" class="ml-input" placeholder="5,000 m²"></div>
+                <div class="ml-field"><label class="ml-field-label" for="since">Growing here since<span class="ml-field-req" aria-hidden="true">*</span></label><input id="since" class="ml-input" inputmode="numeric" placeholder="2019"></div>
+              </div>
+              <div class="pt-col-2">
+                <span class="ml-field-label">Pin the plot<span class="ml-field-req" aria-hidden="true">*</span></span>
+                <div id="map" class="pt-map pt-map-xs" aria-label="Pin your plot on the map"></div>
+                <p class="pt-caption ml-muted">Drag the pin to your plot. It is the quickest way for the admin to see the photos match the place.</p>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <h2>Photos of the plot</h2>
+            <div class="ml-card pt-panel pt-col">
+              <p class="pt-body">Two photos are enough and five is the most. One wide shot that shows the whole plot, and one close shot of what is growing right now. Take them in the last 30 days and do not filter them.</p>
+              <div class="pt-evidence" id="uploads"></div>
+              <div class="ml-field" style="min-width:0"><label class="ml-field-label" for="vid">A short video</label><button type="button" class="ml-btn ml-btn-secondary" id="vid">Add a video, up to 60 seconds</button><span class="ml-field-hint">Optional. A slow walk along the beds says more than any photo, and it makes approval faster.</span></div>
+              <div class="ml-banner ml-banner-info" role="status"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="ml-icon"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4"/><path d="M8 4.8v.2"/></svg><div class="ml-banner-body"><p class="ml-banner-title">The admin is checking one thing: that the plot exists and grows what you listed.</p><p class="ml-banner-text">MarketLink does not check licences, food safety or organic claims, and a photo is not a certificate.</p></div></div>
+              <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Schema · Photos, video, crops, plot address, plot size and growing method have no columns in db/schema.sql. They need either new columns on farmer_profiles or a farmer_applications table, a Flyway migration under R-03, and a decision on where the files live and how long they are kept. Only LEAD may change the schema (R-02).">Evidence has no columns in the schema yet</span></p>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <h2>Where you want to sell</h2>
+            <div class="ml-card pt-panel pt-col">
+              <div class="pt-col-2">
+                <span class="ml-field-label">Market<span class="ml-field-req" aria-hidden="true">*</span></span>
+                <div class="pt-col-2" id="markets"></div>
+              </div>
+              <p class="pt-small ml-muted">Pick one to start with. You set your days, pickup windows and cutoff in the stall panel once you are approved, and you can add the other markets later.</p>
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <div>
+            <h2>Before you send</h2>
+            <div class="ml-card pt-panel pt-col">
+              <label class="ml-check"><input type="checkbox" id="t1"><span class="ml-check-box" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="ml-check-text">Everything here is true, and the photos are of my own plot<small>An application with photos that are not yours is rejected and the account can be suspended.</small></span></label>
+              <label class="ml-check"><input type="checkbox" id="t2"><span class="ml-check-box" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="ml-check-text">I will be at the stall in my pickup window<small>Repeated no-shows are the usual reason a stall is suspended.</small></span></label>
+              <label class="ml-check"><input type="checkbox" id="t3"><span class="ml-check-box" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="ml-check-text">I understand customers pay me at the stall<small>There is no online payment and no delivery anywhere in MarketLink.</small></span></label>
+              <div class="pt-form-actions">
+                <button type="submit" class="ml-btn ml-btn-primary">Send the application</button>
+                <a class="ml-btn ml-btn-secondary" href="../customer/account.html">Save and finish later</a>
+              </div>
+              <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Requirements · FR-002 describes Farmer registration as its own sign-up. Applying from an existing Customer account is a second route and needs its own FR. FR-005 also has to be reworded, because a Farmer now keeps every Customer permission instead of being a separate role.">FR-002 and FR-005 need rewording for this route</span> <span class="pt-todo" data-todo="Policy · What a rejected applicant sees, whether they may apply again, and after how long, is not decided. The schema has farmer_profiles.reject_reason but no screen or rule for reapplying.">Reapplying after a rejection is not decided</span></p>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </form>
+  </div>
+
+  <div id="state-sent" class="pt-col-6" hidden>
+    <div class="pt-col-2">
+      <p class="ml-hand ml-muted">Sent <time data-clock></time></p>
+      <h1 class="pt-title">Your application is with an admin</h1>
+      <p class="pt-lead">Nothing changes for you in the meantime. Keep shopping, and watch your notifications for the answer.</p>
+    </div>
+    <div id="sent-banner"></div>
+    <div class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">What you sent</h2>
+      <dl class="pt-facts">
+        <dt>Stall</dt><dd>Khang Family Greens</dd>
+        <dt>Grows</dt><dd>Leafy greens, Herbs · water spinach, choy sum, Thai basil</dd>
+        <dt>Plot</dt><dd>5,000 m² in Hóc Môn, growing since 2019</dd>
+        <dt>Evidence</dt><dd>3 photos and a 48 second video</dd>
+        <dt>Market</dt><dd>Bà Chiểu Green Market</dd>
+      </dl>
+      <div class="pt-row-2">
+        <a class="ml-btn ml-btn-secondary" href="../public/markets.html">Keep shopping</a>
+        <button type="button" class="ml-btn ml-btn-danger" id="withdraw">Withdraw the application</button>
+      </div>
+    </div>
+    <div class="pt-col-3">
+      <h2 class="pt-h2">Progress</h2>
+      <ol class="pt-timeline" id="timeline"></ol>
+    </div>
+  </div>
+
+  <p class="pt-center"><button type="button" class="ml-chip" aria-pressed="false" id="preview">Preview: after sending</button></p>
+</main>
+<script>
+  document.getElementById('cats').innerHTML = PT.categories.map(function (c, i) { return PT.checkbox(PT.esc(c.name), { checked: i === 0 }); }).join('');
+  document.getElementById('markets').innerHTML = PT.markets.map(function (m) { return '<label class="pt-radio"><input type="radio" name="mk"' + (m.id === 4 ? ' checked' : '') + '> ' + PT.esc(m.name) + ' <span class="ml-muted">· ' + PT.dayNames(m.days) + '</span></label>'; }).join('');
+
+  var SHOTS = [['Wide shot of the plot', 'Required'], ['What is growing now', 'Required'], ['Anything else', 'Optional']];
+  document.getElementById('uploads').innerHTML = SHOTS.map(function (p) {
+    return '<div class="pt-evidence-tile"><button type="button" class="pt-evidence-frame pt-evidence-add">Add photo</button><small>' + PT.esc(p[0]) + ' · ' + p[1] + '</small></div>';
+  }).join('');
+
+  PT.map('map', { center: [10.8721, 106.5931], zoom: 14, scroll: false, markers: [{ lat: 10.8721, lng: 106.5931, kind: 'stall', label: 'Your plot', selected: true }] });
+
+  document.getElementById('sent-banner').innerHTML = PT.banner('info', 'You can still buy from other stalls while this is reviewed.', 'Your orders, favorites and cart are untouched. The stall panel appears only once an admin approves.');
+  document.getElementById('timeline').innerHTML = [
+    ['placed', 'Application sent', PT.nowLabel(), 'You'],
+    ['accepted', 'An admin reads it', 'Usually within a few market days', 'MarketLink'],
+    ['ready', 'Stall panel opens', 'After approval', 'MarketLink'],
+  ].map(function (h, i) { return '<li><span class="pt-timeline-dot" style="background:var(--status-' + h[0] + '-bg);color:var(--status-' + h[0] + '-ink)' + (i ? ';opacity:.45' : '') + '">' + PT.icons[h[0]]() + '</span><div><b>' + h[1] + '</b><time>' + h[2] + ' · ' + h[3] + '</time></div></li>'; }).join('');
+
+  var form = document.getElementById('state-form'), sent = document.getElementById('state-sent');
+  function show(on) { form.hidden = on; sent.hidden = !on; document.getElementById('preview').setAttribute('aria-pressed', on); window.scrollTo(0, 0); }
+  document.getElementById('preview').addEventListener('click', function () { show(this.getAttribute('aria-pressed') !== 'true'); });
+  document.querySelector('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!document.getElementById('t1').checked || !document.getElementById('t2').checked || !document.getElementById('t3').checked) {
+      PT.toast('Tick the three boxes at the end before you send.', { tone: 'error' });
+      return;
+    }
+    show(true);
+    PT.toast('Application sent. You will hear from an admin in your notifications.');
+  });
+  document.getElementById('withdraw').addEventListener('click', function () {
+    PT.dialog({ tone: 'danger', title: 'Withdraw the application?', body: '<p>The admin stops reviewing it and your photos are deleted. Your customer account is not affected, and you can apply again whenever you like.</p>', keep: 'Keep it', confirm: 'Withdraw', onConfirm: function () { show(false); PT.toast('Application withdrawn.'); } });
+  });
+  document.getElementById('uploads').addEventListener('click', function (e) { if (e.target.closest('.pt-evidence-add')) PT.toast('Choose a photo from your phone or computer.'); });
+  document.getElementById('vid').addEventListener('click', function () { PT.toast('Choose a video, up to 60 seconds.'); });
+  PT.boot({ role: 'customer', active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

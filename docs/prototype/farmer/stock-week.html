@@ -61,6 +61,11 @@
   document.getElementById('rows').innerHTML = mine.map(function (p) { return '<tr><td><b>' + PT.esc(p.name) + '</b><span class="sub">' + PT.category(p.cat).name + ' · per ' + p.unit + '</span></td><td>' + st(p) + '</td><td class="pt-num">' + PT.vnd(p.price) + '</td><td class="off">—</td><td>' + inp(p.stock + reserved[p.id], p.name + ' Saturday') + '</td><td>' + inp(Math.round((p.stock + reserved[p.id]) * 0.7), p.name + ' Sunday') + '</td><td>' + inp(Math.round((p.stock + reserved[p.id]) * 0.4), p.name + ' Sunday Thủ Đức') + '</td><td class="num">' + reserved[p.id] + '</td></tr>'; }).join('');
   document.getElementById('tpl-rows').innerHTML = mine.map(function (p) { return '<tr><td><b>' + PT.esc(p.name) + '</b><span class="sub">per ' + p.unit + '</span></td><td>' + inp(p.price, p.name + ' price').replace('type="number"', 'type="number" step="1000" style="width:110px"') + '</td><td class="off"></td><td class="off"></td><td class="off"></td><td class="off"></td><td class="off"></td><td>' + inp(p.stock + reserved[p.id], p.name + ' template Saturday') + '</td><td>' + inp(Math.round((p.stock + reserved[p.id]) * 0.7), p.name + ' template Sunday') + '</td></tr>'; }).join('');
   document.getElementById('apply').addEventListener('click', function () { PT.dialog({ title: 'Apply the template to this week?', body: '<p>Saturday and Sunday counts are replaced with the template values. Reserved stock is kept out of the customer-facing count.</p><p class="ml-muted" style="font-size:14px">Edits you made for this week are overwritten.</p>', keep: 'Keep my edits', confirm: 'Apply template', toast: 'Template applied to Sat 26/09 and Sun 27/09.' }); });
+  PT.states('#rows', {
+    label: 'this week\'s stock',
+    empty: ['No products to stock', 'Add a product first, then set how much of it you are bringing to each market day.'],
+    error: ['Couldn\'t load this week\'s stock', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'farmer', active: 'stock', announce: false });
 </script>
 <div id="pt-foot"></div>

@@ -35,6 +35,18 @@
     <a class="ml-card pt-tile" href="../customer/account.html"><b>Account</b><span>Nguyễn Minh Khang · Thảo Điền</span></a>
   </div>
 
+  <section class="ml-card pt-panel pt-between-c" aria-labelledby="sell-h">
+    <div class="pt-col-2" style="max-width:560px">
+      <p class="ml-overline ml-muted">New here</p>
+      <h2 id="sell-h" class="pt-h3">Do you grow something? Sell it at the market</h2>
+      <p class="pt-small">Your account can become a stall at one of the four markets. Apply with a few photos of your plot and an admin reviews it. You carry on shopping either way.</p>
+    </div>
+    <div class="pt-row-2">
+      <a class="ml-btn ml-btn-primary" href="../customer/become-farmer.html">Apply to sell</a>
+      <button type="button" class="ml-btn ml-btn-ghost" data-dismiss-sell>Not now</button>
+    </div>
+  </section>
+
   <section class="pt-section">
     <div class="pt-between-c"><h2 class="pt-h2">Next pickups</h2><a href="../customer/orders.html">All my orders</a></div>
     <div class="pt-grid" id="next"></div>
@@ -49,6 +61,7 @@
 <script>
   document.getElementById('next').innerHTML = PT.orders.filter(function (o) { return ['ready', 'accepted', 'placed'].indexOf(o.status) >= 0; }).slice(0, 3).map(function (o) { return PT.orderTicket(o, { fluid: true }); }).join('');
   document.getElementById('fav-products').innerHTML = [4, 1, 5].map(function (id) { return PT.productCard(PT.product(id)); }).join('');
+  document.querySelector('[data-dismiss-sell]').addEventListener('click', function (e) { e.target.closest('section').remove(); PT.toast('Hidden. You can still apply from your account page.'); });
   PT.boot({ role: 'customer', active: null });
 </script>
 <div id="pt-foot"></div>

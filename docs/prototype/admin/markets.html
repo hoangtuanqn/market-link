@@ -26,13 +26,14 @@
     </div>
     <a class="ml-btn ml-btn-primary" href="../admin/market-form.html">Add market</a>
   </div>
-  <div class="pt-split">
-    <div class="pt-col-3">
-      <div id="table"></div>
-      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-073 · Market holidays or one-off closures (like Thảo Điền on 04/10) are handled today by an announcement. A closure date on the market itself is marked (proposal) in the feature catalog.">One-off market closures are not modelled, only announced</span></p>
-    </div>
-    <div class="pt-sticky"><div id="map" class="pt-map" aria-label="Map of markets"></div></div>
+  <div class="pt-col-3">
+    <div id="table"></div>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-073 · Closed days are now a panel on the market form, so a closure has somewhere to live instead of only being announced. What it still lacks is a requirement and a table: db/schema.sql has markets.operating_days but nothing for a single date. See the open questions on the market form for the schema and for what happens to orders already placed.">Closed days need a table and a requirement</span></p>
   </div>
+  <section class="pt-section">
+    <h2 class="pt-h3">Where they are</h2>
+    <div id="map" class="pt-map pt-map-tall" aria-label="Map of markets"></div>
+  </section>
 </main>
 <script>
   document.getElementById('table').innerHTML = PT.table('4 active markets', [
@@ -44,6 +45,11 @@
   ], PT.markets);
   PT.map('map', { markers: PT.markets.map(function (m) { return { lat: m.lat, lng: m.lng, kind: 'market', label: m.name, popup: PT.popup(m.name, [m.stalls + ' stalls'], m.lat, m.lng, '../admin/market-form.html') }; }) });
   document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-rm]'); if (!b) return; PT.dialog({ tone: 'danger', title: 'Remove ' + b.getAttribute('data-rm') + '?', body: '<p>' + b.getAttribute('data-n') + ' stalls sell here. The market disappears from customer pages and the stalls are told. Orders already placed for it continue.</p>', keep: 'Keep market', confirm: 'Remove market', toast: b.getAttribute('data-rm') + ' removed from the list.' }); });
+  PT.states('#table', {
+    label: 'this list',
+    empty: ['No markets yet', 'Add a market with its address, operating days and map coordinates before Farmers can pick it.'],
+    error: ['Couldn\'t load the markets', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'admin', active: 'markets', announce: false });
 </script>
 <div id="pt-foot"></div>

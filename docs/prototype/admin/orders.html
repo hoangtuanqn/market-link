@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orders across the platform — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Orders</h1>
+      <p class="pt-body pt-measure">Every order on MarketLink, across the four markets. Admins read these; only the stall moves an order through its states.</p>
+    </div>
+    <button type="button" class="ml-btn ml-btn-secondary" data-toast="Export started. The CSV covers the period and filters on screen." id="export">Export the period</button>
+  </div>
+
+  <div id="period"></div>
+
+  <div class="pt-grid-4" id="stats"></div>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <div class="pt-col-2"><h2 class="pt-h3">Orders placed per day</h2><p class="pt-small ml-muted">September against August, the same 30 days.</p></div>
+    <div id="col-chart"></div>
+  </section>
+
+  <div class="pt-grid-2">
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Where they ended up</h2>
+      <div id="by-status"></div>
+      <p class="pt-small ml-muted">Every state carries its own word and glyph, so the rows are told apart by more than the bar.</p>
+    </section>
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">By market</h2>
+      <div id="by-market"></div>
+    </section>
+  </div>
+
+  <section class="pt-col-3">
+    <div class="pt-between-c"><h2 class="pt-h2">The orders</h2><span class="pt-small ml-muted">796 in September</span></div>
+    <div class="pt-row-6">
+      <div class="ml-chips" id="chips"></div>
+      <div class="ml-field" style="min-width:220px"><label class="ml-field-label" for="mk">Market</label><select id="mk" class="ml-input"><option>All markets</option><option>Thảo Điền Weekend Market</option><option>Thủ Đức Farmers Market</option><option>Phú Mỹ Hưng Saturday Market</option><option>Bà Chiểu Green Market</option></select></div>
+    </div>
+    <div id="table"></div>
+    <div class="pt-between-c"><span class="pt-small ml-muted">Showing 1–8 of 796</span><div id="pager"></div></div>
+  </section>
+</main>
+<script>
+  var S = PT.series;
+  document.getElementById('period').innerHTML = PT.periodBar({ granularity: 'month', label: 'September 2026', days: '30 days', compare: 'August 2026' });
+  document.getElementById('stats').innerHTML =
+    PT.kpi({ label: 'Orders placed', value: '796', note: 'across 4 markets', delta: { pct: 12.7 }, spark: S.sparkOrders }) +
+    PT.kpi({ label: 'Completed', value: '596', note: '74.9% of the period', delta: { pct: 9.4 } }) +
+    PT.kpi({ label: 'Declined by a stall', value: '38', note: '4.8% of the period', delta: { pct: 1.1, good: false }, highlight: true }) +
+    PT.kpi({ label: 'Cancelled by a customer', value: '47', note: 'all before the cutoff', delta: { pct: -2.3, good: true } });
+
+  PT.chart('col-chart', {
+    type: 'column', height: 240, caption: 'Orders placed per day in September against August',
+    axisLabel: 'Day of the month', labels: S.dayLabels,
+    series: [{ name: 'September', values: S.ordersNow }, { name: 'August', values: S.ordersPrev, compare: true }],
+  });
+
+  document.getElementById('by-status').innerHTML = PT.barList([
+    { html: PT.status('completed'), value: 596 },
+    { html: PT.status('accepted'), value: 84 },
+    { html: PT.status('placed'), value: 31 },
+    { html: PT.status('cancelled'), value: 47 },
+    { html: PT.status('declined'), value: 38 },
+  ]);
+  document.getElementById('by-market').innerHTML = PT.barList([
+    { label: 'Thảo Điền Weekend Market', value: 352 },
+    { label: 'Thủ Đức Farmers Market', value: 221 },
+    { label: 'Phú Mỹ Hưng Saturday Market', value: 142 },
+    { label: 'Bà Chiểu Green Market', value: 81 },
+  ]);
+
+  document.getElementById('chips').innerHTML = PT.chip('All', { selected: true, radio: 'os', count: 796 }) + PT.chip('Completed', { radio: 'os', count: 596 }) + PT.chip('Open', { radio: 'os', count: 115 }) + PT.chip('Declined', { radio: 'os', count: 38 }) + PT.chip('Cancelled', { radio: 'os', count: 47 });
+  document.getElementById('table').innerHTML = PT.table(null, [
+    { key: 'code', label: 'Order' },
+    { key: 'who', label: 'Customer', render: function (o) { return 'Customer #' + o.c; } },
+    { key: 'farmer', label: 'Stall', render: function (o) { return PT.esc(PT.farmer(o.farmer).stall); } },
+    { key: 'market', label: 'Market', render: function (o) { return PT.esc(PT.market(o.market).name); } },
+    { key: 'when', label: 'Pickup', render: function (o) { return o.date + ' · ' + o.slot; } },
+    { key: 'total', label: 'Total', align: 'num', render: function (o) { return PT.vnd(PT.orderTotal(o)); } },
+    { key: 's', label: 'Status', render: function (o) { return PT.status(o.status); } },
+  ], PT.orders.map(function (o, i) { return Object.assign({ c: 1001 + i }, o); }));
+  document.getElementById('pager').innerHTML = PT.pagination(1, 100);
+  PT.states(['#stats', '#by-status', '#by-market', '#table'], {
+    label: 'this list',
+    empty: ['No orders in this period', 'Try a longer period, or a different market.'],
+    error: ['Couldn\'t load the orders', 'Check your connection and try again.'],
+  });
+  PT.boot({ role: 'admin', active: 'overview', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

@@ -22,22 +22,35 @@
   <div class="pt-between">
     <div class="pt-col-2">
       <h1 class="pt-title">Sales history</h1>
-      <p class="pt-body pt-measure">Completed orders and what sold best. Revenue is the total of completed orders, paid to you at the stall.</p>
+      <p class="pt-body pt-measure">What you sold, and how it compares with the period before. Revenue counts completed orders only, the money customers handed you at the stall.</p>
     </div>
-    <div class="ml-chips" id="range"></div>
+    <button type="button" class="ml-btn ml-btn-secondary" data-toast="Export started. The CSV covers the period and the market on screen.">Export the period</button>
   </div>
+
+  <div id="period"></div>
+  <div class="ml-field" style="max-width:320px"><label class="ml-field-label" for="mk">Market</label><select id="mk" class="ml-input"><option>Both markets</option><option>Thảo Điền Weekend Market</option><option>Thủ Đức Farmers Market</option></select></div>
+
   <div class="pt-grid-4" id="stats"></div>
-  <div class="pt-split-wide">
+
+  <section class="ml-card pt-panel pt-col-3">
+    <div class="pt-col-2"><h2 class="pt-h3">Revenue by market day</h2><p class="pt-small ml-muted">In millions of ₫. You only sell on Saturday and Sunday, so each column is one market morning.</p></div>
+    <div id="rev-chart"></div>
+  </section>
+
+  <div class="pt-grid-2">
     <section class="ml-card pt-panel pt-col-3">
-      <h2 class="pt-h3">Best-selling products · September</h2>
-      <ul class="pt-bars"><li><span>Củ Chi water spinach</span><span class="bar"><span style="width:100%"></span></span><span class="val">64 bunches · 960,000 ₫</span></li><li><span>Choy sum</span><span class="bar"><span style="width:64%"></span></span><span class="val">41 bunches · 738,000 ₫</span></li><li><span>Thai basil</span><span class="bar"><span style="width:59%"></span></span><span class="val">38 bunches · 304,000 ₫</span></li><li><span>Lemongrass</span><span class="bar"><span style="width:31%"></span></span><span class="val">20 bunches · 120,000 ₫</span></li></ul>
+      <h2 class="pt-h3">Best sellers</h2>
+      <p class="pt-small ml-muted">Revenue in September. Quantities are in each product's own unit, so they are never added together.</p>
+      <div id="best"></div>
+      <div id="best-table"></div>
     </section>
     <section class="ml-card pt-panel pt-col-3">
-      <h2 class="pt-h3">By market · September</h2>
-      <ul class="pt-bars"><li><span>Thảo Điền Weekend Market</span><span class="bar"><span style="width:100%"></span></span><span class="val">31 orders · 6,120,000 ₫</span></li><li><span>Thủ Đức Farmers Market</span><span class="bar"><span style="width:38%"></span></span><span class="val">12 orders · 2,330,000 ₫</span></li></ul>
-      <p class="pt-small ml-muted">6 orders were declined and 2 cancelled by customers this month. They are not counted.</p>
+      <h2 class="pt-h3">Where it sold</h2>
+      <div id="by-market"></div>
+      <p class="pt-small ml-muted">6 orders were declined and 2 cancelled this month. Neither counts here.</p>
     </section>
   </div>
+
   <section class="pt-col-3">
     <div class="pt-between-c"><h2 class="pt-h2">Past orders</h2><span class="pt-small ml-muted">Completed, declined and cancelled</span></div>
     <div id="table"></div>
@@ -45,11 +58,47 @@
   </section>
 </main>
 <script>
-  document.getElementById('range').innerHTML = PT.chip('This week', { radio: 'r' }) + PT.chip('September', { selected: true, radio: 'r' }) + PT.chip('Last 3 months', { radio: 'r' }) + PT.chip('All time', { radio: 'r' });
-  document.getElementById('stats').innerHTML = PT.statTile('Total orders', '128', '112 completed · 6 declined · 10 cancelled') + PT.statTile('Pending now', '4', 'Awaiting your approval') + PT.statTile('September revenue', '8,450,000', '₫, completed orders, paid at the stall', true) + PT.statTile('Regulars', '19', 'customers with 3 or more orders');
+  var S = PT.series;
+  document.getElementById('period').innerHTML = PT.periodBar({ granularity: 'month', label: 'September 2026', days: '30 days', compare: 'August 2026' });
+  document.getElementById('stats').innerHTML =
+    PT.kpi({ label: 'Completed orders', value: '112', note: 'of 128 placed with you', delta: { pct: 18.9 } }) +
+    PT.kpi({ label: 'Revenue', value: '8,450,000', note: '₫, paid at the stall', delta: { pct: 21.4 }, highlight: true, spark: [520, 610, 585, 700, 760, 690, 810, 880, 845, 910, 980, 1050] }) +
+    PT.kpi({ label: 'Average order', value: '75,400', note: '₫ per completed order', delta: { pct: 2.1 } }) +
+    PT.kpi({ label: 'You declined', value: '6', note: '4.7% of orders placed with you', delta: { pct: 1.4, good: false } });
+
+  PT.chart('rev-chart', {
+    type: 'column', height: 250, caption: 'Revenue by market day in September against August, in millions of dong',
+    axisLabel: 'Market day', labels: S.farmerDays,
+    format: function (v) { return (v / 1e6).toFixed(1); },
+    series: [{ name: 'September', values: S.farmerRevenueNow }, { name: 'August', values: S.farmerRevenuePrev, compare: true }],
+  });
+
+  document.getElementById('best').innerHTML = PT.barList([
+    { label: 'Củ Chi water spinach', value: 960000 },
+    { label: 'Choy sum', value: 738000 },
+    { label: 'Thai basil', value: 304000 },
+    { label: 'Lemongrass', value: 120000 },
+  ], { format: PT.vnd });
+  document.getElementById('best-table').innerHTML = PT.table(null, [
+    { key: 'n', label: 'Product', render: function (r) { var p = PT.product(r.id); return '<b>' + PT.esc(p.name) + '</b>'; } },
+    { key: 'u', label: 'Sold per', render: function (r) { return PT.esc(PT.product(r.id).unit); } },
+    { key: 'pu', label: 'Price', align: 'num', render: function (r) { var p = PT.product(r.id); return PT.perUnit(p.price, p.unit); } },
+    { key: 'q', label: 'Sold', align: 'num', render: function (r) { var p = PT.product(r.id); return PT.units(r.qty, p.unit, p.plural); } },
+    { key: 'v', label: 'Revenue', align: 'num', render: function (r) { return PT.vnd(r.value); } },
+  ], [{ id: 1, qty: 64, value: 960000 }, { id: 2, qty: 41, value: 738000 }, { id: 7, qty: 38, value: 304000 }, { id: 19, qty: 20, value: 120000 }]);
+  document.getElementById('by-market').innerHTML = PT.barList([
+    { label: 'Thảo Điền Weekend Market', value: 6120000 },
+    { label: 'Thủ Đức Farmers Market', value: 2330000 },
+  ], { format: PT.vnd });
+
   var past = PT.farmerOrders.filter(function (o) { return ['completed', 'declined', 'cancelled'].indexOf(o.status) >= 0; });
   document.getElementById('table').innerHTML = PT.table(null, [{ key: 'd', label: 'Pickup', render: function (r) { return r.date + ' · ' + r.slot; } }, { key: 'code', label: 'Order' }, { key: 'who', label: 'Customer' }, { key: 'i', label: 'Items', render: function (r) { return r.items.map(function (i) { return i.qty + '× ' + PT.esc(PT.product(i.p).name); }).join(', '); } }, { key: 't', label: 'Total', align: 'num', render: function (r) { return PT.vnd(PT.orderTotal(r)); } }, { key: 's', label: 'Status', render: function (r) { return PT.status(r.status); } }], past);
   document.getElementById('pager').innerHTML = PT.pagination(1, 6);
+  PT.states(['#stats', '#best', '#best-table', '#by-market', '#table'], {
+    label: 'this history',
+    empty: ['No sales yet', 'Completed orders are counted here, with your best sellers beside them.'],
+    error: ['Couldn\'t load your sales history', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'farmer', active: 'overview', announce: false });
 </script>
 <div id="pt-foot"></div>
