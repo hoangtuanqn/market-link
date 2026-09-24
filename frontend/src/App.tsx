@@ -16,6 +16,7 @@ import CustomerOrderDetailPage from './pages/CustomerOrderDetail';
 import CustomerFavoritesPage from './pages/CustomerFavorites';
 import CustomerMessagesPage from './pages/CustomerMessages';
 import CustomerNotificationsPage from './pages/CustomerNotifications';
+import CustomerOrderEditPage from './pages/CustomerOrderEdit';
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="favorites" element={<CustomerFavoritesPage />} />
           <Route path="messages" element={<CustomerMessagesPage />} />
           <Route path="notifications" element={<CustomerNotificationsPage />} />
+          <Route path="orders/:code/edit" element={<CustomerOrderEditPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
