@@ -3,6 +3,8 @@ import type { UserType } from './user.types';
 export type LoginInput = {
   email: string;
   password: string;
+  /** False: phiên kết thúc khi đóng trình duyệt (cookie refresh dạng phiên). */
+  rememberMe?: boolean;
 };
 
 export type RegisterInput = {

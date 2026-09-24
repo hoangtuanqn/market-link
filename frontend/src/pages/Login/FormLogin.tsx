@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
 import Helper from '@/utils/helper';
-import LocalStorage from '@/utils/localstorage';
 import Notification from '@/utils/notification';
+import Session from '@/utils/session';
 
 type FieldErrors = Partial<Record<'email' | 'password', string>>;
 
@@ -25,6 +25,7 @@ const FormLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [accepted, setAccepted] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -38,12 +39,9 @@ const FormLogin = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await AuthApi.login({ email: email.trim(), password });
-      const { accessToken, user } = response.data;
-
-      LocalStorage.setItem('login', 'true');
-      LocalStorage.setItem('access_token', accessToken);
-      LocalStorage.setItem('user', JSON.stringify(user));
+      const response = await AuthApi.login({ email: email.trim(), password, rememberMe });
+      // Có "Remember me" → giữ phiên sau khi đóng trình duyệt; không → chỉ trong phiên trình duyệt này
+      Session.save(response.data, rememberMe);
 
       Notification.success({ text: response.message || 'Signed in.' });
       navigate('/');
@@ -81,7 +79,15 @@ const FormLogin = () => {
         disabled={isSubmitting}
       />
 
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-x-4">
+        <Checkbox
+          id="rememberMe"
+          checked={rememberMe}
+          onChange={(e) => setRememberMe(e.target.checked)}
+          disabled={isSubmitting}
+        >
+          Remember me
+        </Checkbox>
         <Link to="/forgot-password" className="text-small text-brand underline">
           Forgot password?
         </Link>
