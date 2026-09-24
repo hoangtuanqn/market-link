@@ -28,7 +28,7 @@ public class RedisJobQueue implements JobQueueInterface {
         try {
             redis.opsForList().leftPush(QUEUE_KEY, objectMapper.writeValueAsString(job));
         } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Không đưa được job vào hàng đợi!", e);
+            throw new IllegalStateException("Could not add the job to the queue.", e);
         }
     }
 }

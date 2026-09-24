@@ -29,11 +29,11 @@ public class PasswordChangedNoticeJob implements JobHandler {
         String at = ZonedDateTime.now(ZONE).format(TIME);
         mailService.sendHtml(
                 payload.get("email"),
-                "Mật khẩu MarketLink vừa được thay đổi",
+                "Your MarketLink password was changed",
                 """
-                <p>Mật khẩu tài khoản MarketLink của bạn vừa được thay đổi lúc %s.</p>
-                <p>Mọi phiên đăng nhập cũ đã bị đăng xuất.</p>
-                <p>Nếu không phải bạn thực hiện, hãy dùng chức năng "Quên mật khẩu" để đặt lại ngay và liên hệ quản trị viên.</p>
+                <p>The password for your MarketLink account was changed at %s.</p>
+                <p>You have been signed out on every device.</p>
+                <p>If this was not you, use "Forgot password" to reset it right away and contact an administrator.</p>
                 <p>MarketLink</p>
                 """
                         .formatted(at));

@@ -35,7 +35,7 @@ public class PasswordResetLinkJob implements JobHandler {
                             String link = config.getUrl() + "?token=" + issued.rawToken();
                             mailService.sendHtml(
                                     issued.email(),
-                                    "Đặt lại mật khẩu MarketLink",
+                                    "Reset your MarketLink password",
                                     body(issued.fullName(), link));
                         });
     }
@@ -44,10 +44,10 @@ public class PasswordResetLinkJob implements JobHandler {
         long minutes = config.getTokenTtlSeconds() / 60;
         String safeLink = HtmlUtils.htmlEscape(link);
         return """
-                <p>Chào %s,</p>
-                <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản MarketLink của bạn.</p>
-                <p><a href="%s">Đặt lại mật khẩu</a></p>
-                <p>Link chỉ dùng được một lần và hết hạn sau %d phút. Nếu bạn không yêu cầu, hãy bỏ qua mail này — mật khẩu của bạn không thay đổi.</p>
+                <p>Hi %s,</p>
+                <p>We received a request to reset the password for your MarketLink account.</p>
+                <p><a href="%s">Reset password</a></p>
+                <p>The link works once and expires in %d minutes. If you did not ask for this, ignore this email — your password stays the same.</p>
                 <p>MarketLink</p>
                 """
                 .formatted(HtmlUtils.htmlEscape(fullName), safeLink, minutes);

@@ -66,16 +66,16 @@ public class UserService extends BaseService implements UserServiceInterface {
     @Transactional
     public AuthResult registerCustomer(CustomerRegisterRequest request) {
         if (!request.password().equals(request.confirmPassword())) {
-            throw new InvalidFieldException("confirmPassword", "Nhập lại mật khẩu không khớp!");
+            throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
         }
         String email = request.email().trim().toLowerCase(Locale.ROOT);
         String phone = request.phone().trim();
         if (userRepository.existsByEmail(email)) {
-            throw new DuplicateAccountException("email", "Email này đã tồn tại trong hệ thống!");
+            throw new DuplicateAccountException("email", "This email is already registered.");
         }
         if (userRepository.existsByPhone(phone)) {
             throw new DuplicateAccountException(
-                    "phone", "Số điện thoại này đã tồn tại trong hệ thống!");
+                    "phone", "This phone number is already registered.");
         }
         User user =
                 userRepository.save(
@@ -110,10 +110,10 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .orElseThrow(
                                 () ->
                                         new BadCredentialsException(
-                                                "Email hoặc mật khẩu không đúng!"));
+                                                "Email or password is incorrect."));
         if (user.getStatus() != UserStatus.ACTIVE) {
             throw new DisabledException(
-                    "Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!");
+                    "Your account has been locked. Please contact an administrator.");
         }
         return issueTokens(user);
     }
@@ -130,10 +130,10 @@ public class UserService extends BaseService implements UserServiceInterface {
                 userRepository
                         .findById(rotated.userId())
                         .orElseThrow(
-                                () -> new BadCredentialsException("Refresh token không hợp lệ!"));
+                                () -> new BadCredentialsException("Refresh token is not valid."));
         if (user.getStatus() != UserStatus.ACTIVE) {
             throw new DisabledException(
-                    "Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!");
+                    "Your account has been locked. Please contact an administrator.");
         }
         return buildAuthResult(user, rotated.newRefreshToken());
     }
@@ -157,11 +157,11 @@ public class UserService extends BaseService implements UserServiceInterface {
                                                 .orElseThrow(
                                                         () ->
                                                                 new BadCredentialsException(
-                                                                        "Tài khoản không tồn tại!")))
+                                                                        "Account not found.")))
                         .orElseGet(() -> linkOrCreateUser(profile));
         if (user.getStatus() != UserStatus.ACTIVE) {
             throw new DisabledException(
-                    "Tài khoản của bạn đã bị khóa, vui lòng liên hệ quản trị viên!");
+                    "Your account has been locked. Please contact an administrator.");
         }
         return issueTokens(user);
     }
@@ -169,7 +169,7 @@ public class UserService extends BaseService implements UserServiceInterface {
     private User linkOrCreateUser(SocialProfile profile) {
         if (!StringUtils.hasText(profile.email()) || !profile.emailVerified()) {
             throw new BadCredentialsException(
-                    "Tài khoản mạng xã hội chưa có email đã xác minh, vui lòng dùng cách khác!");
+                    "Your social account has no verified email. Please use another sign-in method.");
         }
         String email = profile.email().trim().toLowerCase(Locale.ROOT);
         User user =
@@ -187,7 +187,8 @@ public class UserService extends BaseService implements UserServiceInterface {
         // Email này đã gắn với một tài khoản khác cùng provider
         if (socialAccountRepository.existsByUserIdAndProvider(user.getId(), profile.provider())) {
             throw new DuplicateAccountException(
-                    "email", "Email này đã liên kết với một tài khoản khác cùng loại!");
+                    "email",
+                    "This email is already linked to another account from the same provider.");
         }
         socialAccountRepository.save(
                 SocialAccount.builder()

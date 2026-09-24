@@ -60,7 +60,7 @@ public class AuthController extends BaseController {
         RegisterResource body = new RegisterResource(auth.accessToken(), auth.user());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                .body(ApiResource.success(body, "Đăng ký tài khoản thành công!"));
+                .body(ApiResource.success(body, "Account created."));
     }
 
     /** FR-003: dùng chung cho customer, farmer và admin — FE điều hướng theo user.role. */
@@ -95,7 +95,7 @@ public class AuthController extends BaseController {
         LoginResource body = new LoginResource(auth.accessToken(), auth.user());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                .body(ApiResource.success(body, "Đăng nhập thành công!"));
+                .body(ApiResource.success(body, "Signed in."));
     }
 
     /**
@@ -112,7 +112,7 @@ public class AuthController extends BaseController {
         ResponseCookie clearCookie = CookieHelper.buildRefreshTokenCookie("", Duration.ZERO);
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
-                .body(ApiResource.success(null, "Đăng xuất thành công!"));
+                .body(ApiResource.success(null, "Signed out."));
     }
 
     /**
@@ -124,8 +124,7 @@ public class AuthController extends BaseController {
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
                     String refreshToken) {
         if (refreshToken == null || refreshToken.isBlank()) {
-            throw new BadCredentialsException(
-                    "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!");
+            throw new BadCredentialsException("Your session has expired. Please sign in again.");
         }
         AuthResult auth = userService.refresh(refreshToken);
         ResponseCookie refreshCookie =
@@ -135,7 +134,7 @@ public class AuthController extends BaseController {
         RefreshResource body = new RefreshResource(auth.accessToken(), auth.user());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
-                .body(ApiResource.success(body, "Làm mới phiên đăng nhập thành công!"));
+                .body(ApiResource.success(body, "Session refreshed."));
     }
 
     /**
@@ -146,7 +145,7 @@ public class AuthController extends BaseController {
     public ResponseEntity<ApiResource<Void>> forgotPassword(
             @Valid @RequestBody ForgotPasswordRequest request) {
         passwordResetService.requestReset(request.email());
-        return ok(null, "Nếu email tồn tại, bạn sẽ nhận được link đặt lại mật khẩu.");
+        return ok(null, "If that email is registered, you will receive a password reset link.");
     }
 
     /**
@@ -161,6 +160,6 @@ public class AuthController extends BaseController {
                 .header("Referrer-Policy", "no-referrer")
                 .body(
                         ApiResource.success(
-                                null, "Đặt lại mật khẩu thành công, vui lòng đăng nhập lại!"));
+                                null, "Your password has been reset. Please sign in again."));
     }
 }

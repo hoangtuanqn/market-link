@@ -27,7 +27,7 @@ import org.springframework.web.client.RestClientException;
 @RestControllerAdvice(assignableTypes = AuthController.class)
 public class AuthExceptionHandler {
 
-    private static final String INVALID_MESSAGE = "Dữ liệu gửi lên không hợp lệ!";
+    private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ApiResource<Void>> invalidBody(MethodArgumentNotValidException e) {
@@ -46,11 +46,11 @@ public class AuthExceptionHandler {
     /** Google/Facebook không phản hồi, timeout hoặc lỗi 5xx. */
     @ExceptionHandler(RestClientException.class)
     ResponseEntity<ApiResource<Void>> providerUnavailable(RestClientException e) {
-        log.warn("Gọi OAuth provider thất bại: {}", e.getMessage());
+        log.warn("OAuth provider call failed: {}", e.getMessage());
         return error(
                 HttpStatus.BAD_GATEWAY,
                 "OAUTH_PROVIDER_ERROR",
-                "Không kết nối được tới Google/Facebook, vui lòng thử lại sau!",
+                "Could not reach Google or Facebook. Please try again later.",
                 List.of());
     }
 
@@ -61,7 +61,7 @@ public class AuthExceptionHandler {
         return error(
                 HttpStatus.SERVICE_UNAVAILABLE,
                 "OAUTH_NOT_CONFIGURED",
-                "Chức năng đăng nhập này chưa được cấu hình!",
+                "This sign-in method is not set up yet.",
                 List.of());
     }
 
@@ -119,7 +119,7 @@ public class AuthExceptionHandler {
     /** Hai request cùng email/phone lọt qua bước kiểm tra cùng lúc → UNIQUE của DB chặn. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> uniqueViolation(DataIntegrityViolationException e) {
-        String message = "Email hoặc số điện thoại đã tồn tại trong hệ thống!";
+        String message = "This email or phone number is already registered.";
         return error(
                 HttpStatus.CONFLICT,
                 "DUPLICATE_ACCOUNT",
