@@ -9,6 +9,9 @@ public interface RefreshTokenServiceInterface {
 
     public void revokeToken(String rawToken, Long userId);
 
+    /** Thu hồi mọi refresh token của user (đổi mật khẩu → đăng xuất mọi thiết bị). */
+    public void revokeAllTokens(Long userId);
+
     public record RefreshResult(Long userId, String newRefreshToken, boolean rememberMe) {}
 
     public record IssuedToken(String rawToken, Long tokenId) {}
