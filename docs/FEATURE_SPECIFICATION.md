@@ -352,4 +352,5 @@ Mỗi lần chỉnh sửa, thêm một dòng vào **Mục 9** và tăng số phi
 
 ### Tài liệu phiên bản trước
 
-Tham khảo phiên bản tài liệu trước tại [INTERVUE_OVERVIEW.md](./docs/INTERVUE_OVERVIEW.md).
+Tham khảo phiên bản tài liệu trước tại [INTERVUE_OVERVIEW.md](./INTERVUE_OVERVIEW.md).
+
