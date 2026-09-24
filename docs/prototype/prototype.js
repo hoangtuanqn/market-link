@@ -328,6 +328,19 @@
     }
     return s;
   };
+  // One shape for "the list did not load", so every screen says it the same way.
+  // The red block stays short; the longer guidance sits under it in normal ink, because
+  // .ml-state-error paints everything inside it danger-red and a paragraph of that is tiring.
+  // `altHtml` is one more way out, phrased for the screen ("the market map opens on its own page").
+  PT.loadError = function (noun, altHtml) {
+    return PT.state(
+      'error',
+      '<span style="display:inline-flex;align-items:center;gap:8px">' + I.alert() + 'We could not load the ' + esc(noun) + '</span>',
+      'The list did not come back this time. Nothing you saved or ordered is affected.',
+      '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-toast="Loading the ' + esc(noun) + ' again.">Try again</button>'
+    ) + '<p class="pt-small ml-muted pt-measure">This is usually the connection rather than anything you did. If trying again does not help, ' +
+      (altHtml ? altHtml + ', or ' : '') + '<a href="' + link('public/feedback.html') + '">tell us what happened</a> and we will look into it.</p>';
+  };
   var NOTE_STYLE = { accepted: ['accepted', 'status-accepted'], declined: ['declined', 'status-declined'], ready: ['ready', 'status-ready'], restock: ['restock', 'brand-tint'], announce: ['megaphone', 'highlight'], placed: ['placed', 'status-placed'], cancelled: ['cancelled', 'status-cancelled'] };
   PT.notes = function (items, o) {
     o = o || {};

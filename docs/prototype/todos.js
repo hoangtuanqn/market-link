@@ -67,12 +67,6 @@ window.PT_TODOS = [
  },
  {
   "role": "public",
-  "file": "markets.html",
-  "screen": "Markets by location and day",
-  "text": "FR-010 · Location filter: the SRS says 'by location' but not whether that is a district list, the browser's location, or a radius from the customer's address. The prototype lists the districts the markets are actually in and sorts by distance from the saved address. A guest has no saved address, so 'Nearest first' has nothing to measure from until they sign in."
- },
- {
-  "role": "public",
   "file": "privacy.html",
   "screen": "Privacy policy",
   "text": "Privacy · Exactly which Customer fields a Farmer sees on an order is not defined. docs/api-contract.md returns the order with its items and history but never lists the customer fields, and db/schema.sql keeps name, phone and address on users with no view in between. LEAD to fix the field list: name and phone are clearly needed for pickup, the home address probably is not."

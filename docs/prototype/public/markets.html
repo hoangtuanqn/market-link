@@ -175,11 +175,7 @@
     render();
     document.getElementById('skeleton').innerHTML = PT.skeletonMarkets(PAGE_SIZE);
     document.querySelector('[data-state-target="error"]').innerHTML =
-      PT.state('error',
-        '<span style="display:inline-flex;align-items:center;gap:8px">' + PT.icons.alert() + 'We could not load the markets</span>',
-        'The list did not come back this time. Your saved markets and your orders are not affected.',
-        '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-toast="Loading the markets again.">Try again</button>') +
-      '<p class="pt-small ml-muted pt-measure">This is usually the connection rather than anything you did. If trying again does not help, the <a href="../public/map.html">market map</a> opens on its own page, or <a href="../public/feedback.html">tell us what happened</a> and we will look into it.</p>';
+      PT.loadError('markets', 'the <a href="../public/map.html">market map</a> opens on its own page');
 
     PT.boot({ active: 'markets' });
 

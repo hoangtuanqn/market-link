@@ -38,18 +38,22 @@
     <div id="tabs"></div>
     <div class="pt-split" style="margin-top:24px">
       <div class="pt-col">
-        <div data-panel="all" class="pt-col">
-          <p class="pt-small ml-muted">5 results for “pomelo” on Saturday 26/09</p>
-          <h2 class="pt-h3">Stalls</h2>
-          <div class="pt-grid-2" id="stalls"></div>
-          <h2 class="pt-h3">Products</h2>
-          <div class="pt-grid-2" id="products"></div>
-          <h2 class="pt-h3">Markets</h2>
-          <div id="no-markets"></div>
+        <div data-state-target="loaded">
+          <div data-panel="all" class="pt-col">
+            <p class="pt-small ml-muted">5 results for “pomelo” on Saturday 26/09</p>
+            <h2 class="pt-h3">Stalls</h2>
+            <div class="pt-grid-2" id="stalls"></div>
+            <h2 class="pt-h3">Products</h2>
+            <div class="pt-grid-2" id="products"></div>
+            <h2 class="pt-h3">Markets</h2>
+            <div id="no-markets"></div>
+          </div>
+          <div data-panel="market" hidden id="p-market"></div>
+          <div data-panel="farmer" hidden class="pt-grid-2" id="p-farmer"></div>
+          <div data-panel="product" hidden class="pt-grid-2" id="p-product"></div>
         </div>
-        <div data-panel="market" hidden id="p-market"></div>
-        <div data-panel="farmer" hidden class="pt-grid-2" id="p-farmer"></div>
-        <div data-panel="product" hidden class="pt-grid-2" id="p-product"></div>
+        <div class="pt-grid-2" hidden data-state-target="loading" id="skeleton"></div>
+        <div class="pt-col" hidden data-state-target="error"></div>
       </div>
       <div class="pt-sticky">
         <div id="map" class="pt-map" aria-label="Map of results"></div>
@@ -57,6 +61,16 @@
       </div>
     </div>
   </div>
+
+  <section class="pt-section">
+    <h2 class="pt-h3">Other states of this list (FR-084)</h2>
+    <div class="pt-row-2">
+      <button type="button" class="ml-chip" aria-pressed="true" data-state-demo="loaded">With data</button>
+      <button type="button" class="ml-chip" aria-pressed="false" data-state-demo="loading">Loading</button>
+      <button type="button" class="ml-chip" aria-pressed="false" data-state-demo="error">Error</button>
+    </div>
+    <p class="pt-small ml-muted">The empty state is already on the page: “pomelo” matches no market, so the Markets section below the results carries it.</p>
+  </section>
 </main>
 <script>
   document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.week.slice(0, 4).map(function (d) { return { value: d.value, label: d.label, sub: d.sub, disabled: d.value === 'thu' }; }), 'sat');
@@ -70,6 +84,8 @@
   document.getElementById('p-product').innerHTML = prods.map(function (p) { return PT.productCard(p); }).join('');
   document.getElementById('no-markets').innerHTML = PT.state('empty', 'No market is called “pomelo”', 'Markets are matched by name and area. The 2 stalls above sell pomelo at Thủ Đức and Thảo Điền.', '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-tab="farmer">Show the 2 stalls</button>');
   document.getElementById('p-market').innerHTML = document.getElementById('no-markets').innerHTML;
+  document.getElementById('skeleton').innerHTML = PT.skeletonCards(4);
+  document.querySelector('[data-state-target="error"]').innerHTML = PT.loadError('results', 'you can <a href="../public/products.html">browse products</a> by category instead');
   PT.map('map', { markers: stalls.map(function (f) { var m = PT.market(f.markets[0]); return { lat: f.lat, lng: f.lng, kind: 'stall', label: f.stall, popup: PT.popup(f.stall, [m.name, 'Pickup ' + f.pickup], f.lat, f.lng, '../public/stall.html') }; }).concat([1, 2].map(function (id) { var m = PT.market(id); return { lat: m.lat, lng: m.lng, kind: 'market', label: '', popup: PT.popup(m.name, [PT.dayNames(m.days) + ' · ' + m.open + '–' + m.close], m.lat, m.lng, '../public/market.html') }; })) });
   PT.boot({ active: null });
 </script>
