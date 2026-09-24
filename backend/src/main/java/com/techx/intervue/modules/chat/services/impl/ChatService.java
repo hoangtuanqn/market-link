@@ -38,24 +38,24 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ChatService implements ChatServiceInterface {
 
-    private static final String[] DAY_NAMES = {"CN", "T2", "T3", "T4", "T5", "T6", "T7"};
+    private static final String[] DAY_NAMES = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
     private static final int MAX_LINES = 10;
 
     static final String GREETING_REPLY =
-            "Xin chào! Mình là trợ lý MarketLink. Bạn có thể hỏi mình: tìm sản phẩm, giá và tồn"
-                    + " kho, giờ họp chợ, Farmer nào có mặt, hoặc khung giờ nhận hàng.";
+            "Hi, I am the MarketLink assistant. Ask me to find products, check prices and stock,"
+                    + " market hours, which Farmers are at a market, or pickup times.";
     static final String HELP_REPLY =
-            "Bạn có thể hỏi, ví dụ:\n"
-                    + "• \"Tìm cà chua\"\n"
-                    + "• \"Cà chua giá bao nhiêu?\"\n"
-                    + "• \"Chợ Bến Thành mở cửa mấy giờ?\"\n"
-                    + "• \"Thứ 7 có Farmer nào ở chợ Bến Thành?\"\n"
-                    + "• \"Khung giờ lấy hàng của <tên stall>\"";
+            "You can ask, for example:\n"
+                    + "• \"Find tomatoes\"\n"
+                    + "• \"Tomato price\"\n"
+                    + "• \"Ben Thanh market hours\"\n"
+                    + "• \"Farmers at Ben Thanh market on Saturday\"\n"
+                    + "• \"Pickup times for <stall name>\"";
     static final String FALLBACK_REPLY =
-            "Xin lỗi, mình chưa hiểu câu hỏi. Gõ \"giúp\" để xem các câu mình trả lời được.";
+            "Sorry, I did not understand that. Type \"help\" to see what I can answer.";
     static final String DATA_UNAVAILABLE_REPLY =
-            "Xin lỗi, dữ liệu tra cứu đang chưa sẵn sàng. Bạn thử lại sau nhé.";
+            "Sorry, the market data is not available right now. Please try again later.";
 
     private final IntentClassifier classifier;
     private final ChatKnowledgeRepository knowledge;
@@ -138,29 +138,28 @@ public class ChatService implements ChatServiceInterface {
 
         if (keyword.isBlank()) {
             return new Answer(
-                    intent, "Bạn muốn tìm sản phẩm gì? Ví dụ: \"tìm cà chua\".", List.of());
+                    intent,
+                    "What product are you looking for? For example: \"find tomatoes\".",
+                    List.of());
         }
 
         List<ProductRow> products =
                 knowledge.searchProducts(
                         keyword, market == null ? null : market.marketId(), detail);
-        String where = market == null ? "" : " tại " + market.marketName();
+        String where = market == null ? "" : " at " + market.marketName();
         if (products.isEmpty()) {
             return new Answer(
                     intent,
-                    "Mình chưa tìm thấy sản phẩm nào khớp \""
-                            + keyword
-                            + "\""
-                            + where
-                            + ". Bạn thử từ khoá khác nhé.",
+                    "No products found for \"" + keyword + "\"" + where + ". Try another keyword.",
                     List.of());
         }
 
         StringBuilder reply =
                 new StringBuilder(
-                        "Tìm thấy "
+                        "Found "
                                 + products.size()
-                                + " sản phẩm cho \""
+                                + (products.size() == 1 ? " product" : " products")
+                                + " for \""
                                 + keyword
                                 + "\""
                                 + where
@@ -170,8 +169,8 @@ public class ChatService implements ChatServiceInterface {
             String priceUnit = formatPrice(p.price()) + "/" + p.unit();
             String stock =
                     "sold_out".equals(p.status()) || p.stockQuantity() == 0
-                            ? "tạm hết hàng"
-                            : "còn " + p.stockQuantity() + " " + p.unit();
+                            ? "sold out"
+                            : p.stockQuantity() + " " + p.unit() + " left";
             String markets =
                     p.marketNames().isEmpty()
                             ? ""
@@ -205,7 +204,7 @@ public class ChatService implements ChatServiceInterface {
         List<MarketRow> markets = knowledge.activeMarkets();
         if (markets.isEmpty()) {
             return new Answer(
-                    ChatIntent.MARKET_HOURS, "Hiện chưa có chợ nào đang hoạt động.", List.of());
+                    ChatIntent.MARKET_HOURS, "No markets are open at the moment.", List.of());
         }
 
         MarketRow matched =
@@ -222,11 +221,11 @@ public class ChatService implements ChatServiceInterface {
                             .toList();
             heading =
                     shown.isEmpty()
-                            ? "Không có chợ nào họp vào " + DAY_NAMES[parsed.dayOfWeek()] + "."
-                            : "Các chợ họp vào " + DAY_NAMES[parsed.dayOfWeek()] + ":";
+                            ? "No markets open on " + DAY_NAMES[parsed.dayOfWeek()] + "."
+                            : "Markets open on " + DAY_NAMES[parsed.dayOfWeek()] + ":";
         } else {
             shown = markets;
-            heading = "Giờ họp các chợ:";
+            heading = "Market hours:";
         }
 
         List<String> lines =
@@ -236,9 +235,9 @@ public class ChatService implements ChatServiceInterface {
                                         m.marketName()
                                                 + " ("
                                                 + m.address()
-                                                + ") mở "
+                                                + ") opens "
                                                 + formatRange(m.openingTime(), m.closingTime())
-                                                + ", họp vào "
+                                                + ", on "
                                                 + formatDays(m.operatingDays())
                                                 + ".")
                         .toList();
@@ -265,13 +264,11 @@ public class ChatService implements ChatServiceInterface {
                 knowledge.farmerSchedules(null, market == null ? null : market.marketId(), day);
 
         String scope =
-                (market == null ? "" : " tại " + market.marketName())
-                        + (day == null ? "" : " vào " + DAY_NAMES[day]);
+                (market == null ? "" : " at " + market.marketName())
+                        + (day == null ? "" : " on " + DAY_NAMES[day]);
         if (schedules.isEmpty()) {
             return new Answer(
-                    ChatIntent.FARMER_AVAILABILITY,
-                    "Chưa có Farmer nào có mặt" + scope + ".",
-                    List.of());
+                    ChatIntent.FARMER_AVAILABILITY, "No Farmers" + scope + " yet.", List.of());
         }
 
         // Gộp lịch theo Farmer: "Vườn Xanh — Chợ A T7 06:00–10:00; Chợ B CN 07:00–11:00"
@@ -309,9 +306,7 @@ public class ChatService implements ChatServiceInterface {
                                             first.marketName()));
                         });
         return new Answer(
-                ChatIntent.FARMER_AVAILABILITY,
-                joinLines("Farmer có mặt" + scope + ":", lines),
-                results);
+                ChatIntent.FARMER_AVAILABILITY, joinLines("Farmers" + scope + ":", lines), results);
     }
 
     private Answer pickupWindow(ParsedMessage parsed) {
@@ -324,7 +319,7 @@ public class ChatService implements ChatServiceInterface {
         if (farmer == null && market == null) {
             return new Answer(
                     ChatIntent.PICKUP_WINDOW,
-                    "Bạn muốn xem khung giờ nhận hàng của stall hoặc chợ nào? Ví dụ: \"khung giờ lấy hàng ở chợ Bến Thành\".",
+                    "Which stall or market do you want pickup times for? For example: \"pickup times at Ben Thanh market\".",
                     List.of());
         }
 
@@ -335,14 +330,12 @@ public class ChatService implements ChatServiceInterface {
                         market == null ? null : market.marketId(),
                         day);
         String scope =
-                (farmer == null ? "" : " của " + farmer.stallName())
-                        + (market == null ? "" : " tại " + market.marketName())
-                        + (day == null ? "" : " vào " + DAY_NAMES[day]);
+                (farmer == null ? "" : " for " + farmer.stallName())
+                        + (market == null ? "" : " at " + market.marketName())
+                        + (day == null ? "" : " on " + DAY_NAMES[day]);
         if (schedules.isEmpty()) {
             return new Answer(
-                    ChatIntent.PICKUP_WINDOW,
-                    "Chưa có khung giờ nhận hàng" + scope + ".",
-                    List.of());
+                    ChatIntent.PICKUP_WINDOW, "No pickup times" + scope + " yet.", List.of());
         }
 
         List<String> lines =
@@ -369,8 +362,8 @@ public class ChatService implements ChatServiceInterface {
                                         market.address()));
         return new Answer(
                 ChatIntent.PICKUP_WINDOW,
-                joinLines("Khung giờ nhận hàng" + scope + ":", lines)
-                        + "\nLưu ý: sửa/huỷ đơn chỉ được trước giờ cutoff của Farmer.",
+                joinLines("Pickup times" + scope + ":", lines)
+                        + "\nNote: you can edit or cancel an order only before the Farmer's cutoff.",
                 results);
     }
 
@@ -416,7 +409,7 @@ public class ChatService implements ChatServiceInterface {
     }
 
     private static String formatPrice(BigDecimal price) {
-        NumberFormat format = NumberFormat.getIntegerInstance(Locale.of("vi", "VN"));
+        NumberFormat format = NumberFormat.getIntegerInstance(Locale.US);
         return format.format(price) + " ₫";
     }
 
@@ -426,7 +419,7 @@ public class ChatService implements ChatServiceInterface {
 
     private static String formatDays(List<Integer> days) {
         if (days.isEmpty()) {
-            return "(chưa cập nhật)";
+            return "(not set yet)";
         }
         return days.stream().map(d -> DAY_NAMES[d]).collect(Collectors.joining(", "));
     }
@@ -435,7 +428,7 @@ public class ChatService implements ChatServiceInterface {
         StringBuilder text = new StringBuilder(heading);
         lines.stream().limit(MAX_LINES).forEach(line -> text.append("\n• ").append(line));
         if (lines.size() > MAX_LINES) {
-            text.append("\n… và ").append(lines.size() - MAX_LINES).append(" kết quả khác.");
+            text.append("\n… and ").append(lines.size() - MAX_LINES).append(" more.");
         }
         return text.toString();
     }

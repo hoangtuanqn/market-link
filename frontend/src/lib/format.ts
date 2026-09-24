@@ -35,3 +35,11 @@ const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 export function weekday(date: Date): string {
   return WEEKDAYS[date.getDay()];
 }
+
+/** [5, 6, 0] → "Fri, Sat, Sun" (Monday first) */
+export function dayList(days: number[]): string {
+  return [1, 2, 3, 4, 5, 6, 0]
+    .filter((d) => days.includes(d))
+    .map((d) => WEEKDAYS[d])
+    .join(', ');
+}
