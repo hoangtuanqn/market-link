@@ -63,7 +63,11 @@ const Header = ({ cartCount = 0 }: { cartCount?: number }) => {
 
       {menuOpen && (
         <MenuMobile
-          items={[...GUEST_NAV, { label: 'Sign in', to: '/login' }, { label: 'Create an account', to: '/register' }]}
+          items={[
+            ...GUEST_NAV,
+            { label: 'Sign in', to: '/login' },
+            { label: 'Create an account', to: '/register/customer' },
+          ]}
           onClose={() => setMenuOpen(false)}
         />
       )}
