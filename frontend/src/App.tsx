@@ -7,6 +7,7 @@ import RegisterFarmerPage from './pages/RegisterFarmer';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
 import GoogleCallbackPage from './pages/GoogleCallback';
+import CompleteProfilePage from './pages/CompleteProfile';
 import SetPasswordPage from './pages/SetPassword';
 import CustomerDashboardPage from './pages/CustomerDashboard';
 import CustomerAccountPage from './pages/CustomerAccount';
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="reset-password" element={<ResetPasswordPage />} />
           <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
+          <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
           <Route path="auth/set-password" element={<SetPasswordPage />} />
         </Route>
 

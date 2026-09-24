@@ -53,8 +53,9 @@ const GoogleCallbackPage = () => {
         const { user } = response.data;
         Session.save(response.data);
         Notification.success({ text: response.message || 'Signed in.' });
-        // replace: bỏ ?code=&state= khỏi lịch sử trình duyệt. Lần đầu (chưa có mật khẩu) → mời đặt mật khẩu
-        navigate(user.hasPassword === false ? '/auth/set-password' : '/', { replace: true });
+        // replace: bỏ ?code=&state= khỏi lịch sử trình duyệt. Thiếu sđt/địa chỉ → bổ sung hồ sơ; chưa có mật khẩu → đặt
+        // mật khẩu
+        navigate(Helper.nextStepAfterSocialLogin(user), { replace: true });
       })
       .catch((err) => fail(Helper.getErrorMessage(err, 'Google sign-in failed. Please try again.')));
   }, [searchParams, navigate]);
