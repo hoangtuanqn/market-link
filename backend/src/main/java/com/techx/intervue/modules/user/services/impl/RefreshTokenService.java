@@ -89,6 +89,11 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
                         });
     }
 
+    @Override
+    public void revokeAllTokens(Long userId) {
+        repository.revokeAllRefreshTokenByUser(userId);
+    }
+
     private void checkIsRevoked(RefreshToken entity) {
         if (entity.isRevoked()) {
             // revoked hết tất cả những refresh token của người dùng

@@ -1,12 +1,15 @@
 import type { ApiResponse } from '@/types/api.types';
+import type { UserType } from '@/types/user.types';
 import type {
   AuthResultType,
   AuthorizeUrlType,
+  ChangePasswordInput,
   LoginInput,
   RegisterInput,
   ResetPasswordInput,
   ResetTokenType,
   SetPasswordInput,
+  UpdateProfileInput,
   SocialProvider,
 } from '@/types/auth.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
@@ -64,6 +67,24 @@ class AuthApi {
   static refreshToken = async () => {
     const response = await publicApi.post<ApiResponse<AuthResultType>>('/auth/refresh');
     return response.data.data;
+  };
+
+  /** Hồ sơ của chính user đang đăng nhập (trang Account). */
+  static getMe = async () => {
+    const response = await privateApi.get<ApiResponse<UserType>>('/auth/me');
+    return response.data;
+  };
+
+  /** Sửa họ tên, số điện thoại, địa chỉ; email không đổi được. */
+  static updateMe = async (input: UpdateProfileInput) => {
+    const response = await privateApi.put<ApiResponse<UserType>>('/auth/me', input);
+    return response.data;
+  };
+
+  /** Đổi mật khẩu; thành công thì backend đăng xuất mọi thiết bị (kể cả phiên này). */
+  static changePassword = async (input: ChangePasswordInput) => {
+    const response = await privateApi.post<ApiResponse<null>>('/auth/change-password', input);
+    return response.data;
   };
 
   static logout = async () => {
