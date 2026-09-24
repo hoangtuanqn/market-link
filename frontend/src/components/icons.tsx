@@ -104,6 +104,26 @@ export function LockIcon(props: IconProps) {
   );
 }
 
+export function EyeIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M1.5 8S4 3.5 8 3.5 14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z" />
+      <circle cx="8" cy="8" r="2" />
+    </Glyph>
+  );
+}
+
+export function EyeOffIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M6.2 4A6.5 6.5 0 018 3.5C12 3.5 14.5 8 14.5 8a11 11 0 01-1.7 2.2" />
+      <path d="M10.6 11.8A6.3 6.3 0 018 12.5C4 12.5 1.5 8 1.5 8a11.3 11.3 0 012.8-3.3" />
+      <path d="M6.6 6.6a2 2 0 002.8 2.8" />
+      <path d="M2 2l12 12" />
+    </Glyph>
+  );
+}
+
 export function MenuIcon(props: IconProps) {
   return (
     <Glyph {...props}>
