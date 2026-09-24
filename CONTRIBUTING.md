@@ -1,8 +1,54 @@
 # Luật làm việc chung — MarketLink
 
 Áp dụng cho **mọi thành viên và mọi AI assistant**. Không chắc thì hỏi trong nhóm trước khi làm.
-Luật về code và scope (R-01…R-07, Definition of Done) nằm trong `CLAUDE.md`; file này là luật về
-**nhánh, môi trường, commit, PR và release**.
+Luật về code và scope (R-01…R-08, Definition of Done) nằm trong `CLAUDE.md`; file này là luật về
+**nhánh, môi trường, commit, PR và release**. AI agent đọc thêm `AGENTS.md`.
+
+---
+
+## 0. Luật cứng: không trộn `dev` và `main`
+
+`main` là **production** (bản demo/nộp bài), `dev` là **môi trường phát triển**. Trộn hai nhánh này làm
+hỏng cả hai: code chưa test lọt lên production, hoặc cấu hình/secret production lẫn vào dev.
+Vi phạm luật H- nào cũng phải báo LEAD ngay.
+
+| Mã | Luật |
+|---|---|
+| **H-1** | `main` chỉ nhận PR từ `dev` (release) hoặc `hotfix/*`. Không bao giờ nhận `feature/*`, `fix/*`, `docs/*`… |
+| **H-2** | `dev` chỉ nhận PR từ `feature/*`, `fix/*`, `docs/*`, `chore/*`, `refactor/*`, `test/*`, `hotfix/*`, hoặc PR đồng bộ `main → dev` sau hotfix. |
+| **H-3** | Không commit trên `main` hay `dev` ở máy mình. Luôn tạo nhánh làm việc trước khi sửa. |
+| **H-4** | Không push thẳng, force-push, xoá hay reset `main` / `dev`. Mọi thay đổi đi qua Pull Request. |
+| **H-5** | Nhánh làm việc tách từ `dev` và **chỉ cập nhật từ `dev`** (`git rebase origin/dev`). Không `git merge main` vào nhánh làm việc. Riêng `hotfix/*` tách từ `main`. |
+| **H-6** | Không cherry-pick hay copy tay code giữa `main` và `dev`. Code lên `main` chỉ qua release, code về `dev` chỉ qua PR `main → dev`. |
+| **H-7** | Cấu hình không lẫn nhau. Dev: `.env` ← `.env.example`, `application-dev.yaml`, `frontend/.env.development`. Prod: `.env.production` ← `.env.production.example`, `application-prod.yaml`, `docker-compose.prod.yml`, `frontend/.env.production`. Prod không có giá trị mặc định, không đọc DB hay secret của dev. Không commit `.env`, `.env.production`, `application-local.yml`, key. |
+| **H-8** | `make prod` chỉ chạy từ nhánh `main` (hoặc tag release), không có thay đổi chưa commit. Không demo production từ `dev` hay nhánh làm việc. |
+| **H-9** | Thứ tự bắt buộc: mọi thứ vào `dev` trước → CI xanh → release `dev → main` (merge commit) → gắn tag. Sau hotfix phải mở ngay PR `main → dev`. |
+| **H-10** | AI agent tuân thủ H-1…H-9 như người. Ngoài ra AI **không** merge PR, không mở PR release, không force-push, không xoá nhánh, không chạy `make prod`, trừ khi người dùng yêu cầu rõ trong tin nhắn hiện tại. |
+
+### Luật được bảo vệ bằng gì
+
+| Lớp | Chặn | Luật |
+|---|---|---|
+| Git hook trên máy (`scripts/git-guard.sh`, cài bằng `npm install`) | Commit trên `main`/`dev`; push thẳng hay xoá `main`/`dev`; commit file bí mật | H-3, H-4, H-7 |
+| CI `Guard` → **Branch policy** | PR sai luồng, kể cả khi đổi base của PR sau khi mở | H-1, H-2 |
+| CI `Guard` → **Env guard** (`scripts/check-env-separation.sh`, chạy tay: `make check-env`) | Prod có giá trị mặc định, prod kéo profile dev, secret không bắt buộc, DB dev = DB prod, file bí mật trong git | H-7 |
+| `make prod` | Chạy production từ nhánh khác `main` hoặc khi có thay đổi chưa commit | H-8 |
+| `.claude/settings.json` | Claude Code bị cấm push vào `main`/`dev`, force-push, `--no-verify`, `git merge main`; phải hỏi trước khi merge PR | H-4, H-5, H-10 |
+| Branch protection trên GitHub (§11) | Push thẳng, force-push, merge khi CI đỏ, kể cả từ giao diện web | Tất cả |
+
+Git hook chỉ chạy khi đã `npm install` ở root. **Không dùng `--no-verify`.** Vì hook có thể bị né,
+branch protection ở §11 mới là lớp cuối cùng.
+
+### Lỡ vi phạm thì làm gì
+
+| Tình huống | Cách xử lý |
+|---|---|
+| Đã commit trên `dev`/`main` ở máy, **chưa push** | `git switch -c feature/<ten>` (commit đi theo nhánh mới), rồi `git branch -f dev origin/dev` (hoặc `main`) |
+| Đang sửa trên `dev`/`main`, **chưa commit** | `git switch -c feature/<ten>`, thay đổi đi theo nhánh mới |
+| Nhánh làm việc lỡ `git merge main` | Chưa push: `git reset --hard ORIG_HEAD`. Đã push: báo LEAD, tạo lại nhánh từ `dev` rồi cherry-pick commit của mình |
+| PR mở nhầm base `main` | Sửa base sang `dev` (*Edit* cạnh tiêu đề PR). CI Branch policy sẽ đỏ tới khi sửa |
+| Đã merge nhầm vào `main` | **Không** force-push. Báo LEAD, dùng nút *Revert* của PR trên GitHub (tạo PR revert vào `main`), rồi mở PR `main → dev` |
+| Lỡ commit hoặc push secret | Đổi secret đó ngay (mật khẩu DB, `JWT_SECRET`), báo LEAD, rồi xoá file khỏi git. Xoá commit không đủ |
 
 ---
 
@@ -171,7 +217,8 @@ Lỡ commit bí mật thì báo ngay cho LEAD và đổi bí mật đó. Xoá co
 ## 10. Dùng AI
 
 - Được dùng AI (đề khuyến khích), nhưng **mỗi người phải hiểu và giải thích được code mình nộp**, vì giám khảo sẽ hỏi.
-- AI assistant đọc `CLAUDE.md` và file này. Hướng dẫn cho AI được commit chung để cả team dùng như nhau.
+- AI assistant đọc `AGENTS.md`, `CLAUDE.md` và file này. Hướng dẫn cho AI được commit chung để cả team dùng như nhau.
+- Luật cứng H-10 (§0) áp dụng cho AI; Claude Code còn bị chặn thêm bằng `.claude/settings.json`.
 - AI không tự merge PR, không push thẳng vào `dev` hay `main`, không tự tick DONE trong requirements.
 - Ghi công cụ AI đã dùng vào tài liệu nộp bài, theo yêu cầu của đề.
 
@@ -185,10 +232,16 @@ Cần quyền **admin** repo. Vào *Settings → Branches*, hoặc *Rules → Ru
 |---|---|---|
 | Require a pull request before merging | ✅, 1 approval | ✅, 1 approval |
 | Dismiss stale approvals when new commits are pushed | ✅ | ✅ |
-| Require status checks to pass | ✅ `Backend · format + test`, `Frontend · lint + build`, `Docker · build image production` | ✅ `Backend · format + test`, `Frontend · lint + build` |
+| Require status checks to pass | ✅ `Branch policy`, `Env guard`, `Backend · format + test`, `Frontend · lint + build`, `Docker · build image production` | ✅ `Branch policy`, `Env guard`, `Backend · format + test`, `Frontend · lint + build` |
 | Require branches to be up to date before merging | ✅ | ✅ |
 | Block force pushes, restrict deletions | ✅ | ✅ |
 | Allowed merge methods | Merge commit | Squash |
 
 Thêm: *Settings → General → Default branch* = `dev`, để PR mới mặc định nhắm vào `dev`.
 Bật *Automatically delete head branches*.
+
+Làm nhanh bằng script (chủ repo chạy, cần `gh` đăng nhập bằng tài khoản admin):
+
+```bash
+scripts/setup-branch-protection.sh          # tạo ruleset cho main + dev, đặt default branch = dev
+```

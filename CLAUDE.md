@@ -15,7 +15,8 @@ Customer đặt trước → Farmer duyệt → nhận hàng tại stall. Ba vai
 | `docs/chatbot-design.md` | Thiết kế chatbot FR-090…092 | BE2 |
 | `docs/design-system/README.md` | Design system "Hang tag": token, component `ml-*`, giọng văn UI — mọi UI phải theo | FE1 |
 | `README.md` | Hướng dẫn cài đặt và chạy dự án | — |
-| `CONTRIBUTING.md` | Luật nhánh `dev`/`main`, môi trường, commit, PR, release | LEAD |
+| `CONTRIBUTING.md` | Luật nhánh `dev`/`main` (§0 luật cứng H-1…H-10), môi trường, commit, PR, release | LEAD |
+| `AGENTS.md` | Luật git bắt buộc cho mọi AI agent: không trộn `dev` và `main` | LEAD |
 | `docs/ai-tooling.md` | Plugin Claude Code dùng chung (superpowers, harness, code-review…) và cách cài | AI lead |
 
 ## Luật (R-xx được các tài liệu khác viện dẫn)
@@ -29,8 +30,9 @@ Customer đặt trước → Farmer duyệt → nhận hàng tại stall. Ba vai
 - **R-05** · BE và FE lệch nhau thì sửa bên sai, không sửa contract.
 - **R-06** · Mọi endpoint có `:id` phải kiểm tra quyền sở hữu; sai quyền → 403. Chuyển trạng thái đơn sai thứ tự → 409 (D-04).
 - **R-07** · Không làm tính năng không có trong `.ai/REQUIREMENTS.md`. Thấy thiếu thì báo, không tự thêm.
-- **R-08** · Làm việc trên nhánh tách từ `dev`, PR vào `dev`. `main` là production, chỉ nhận release `dev → main`
-  và `hotfix/*`. Không push thẳng hay force-push `dev`/`main`, không commit file bí mật. Chi tiết: `CONTRIBUTING.md`.
+- **R-08** · Không trộn `dev` và `main`: tuân thủ luật cứng H-1…H-10 trong `CONTRIBUTING.md` §0 và `AGENTS.md`.
+  Trước khi sửa file, chạy `git branch --show-current`; đang ở `main`/`dev` thì tạo nhánh từ `origin/dev` trước.
+  Không commit, push, merge hay force-push vào `main`/`dev`; nhánh làm việc chỉ cập nhật từ `dev`.
 
 > R-01, R-03, R-04, R-06 là bản đề xuất do AI soạn khi tạo file này — LEAD xác nhận hoặc sửa.
 
