@@ -7,15 +7,19 @@ import type { ProductType } from '@/types/product.types';
 import { markets } from './home';
 
 export const farmers = [
-  { id: 1, stall: 'Cô Tư Garden' },
-  { id: 2, stall: 'Út Hiền Orchard' },
-  { id: 3, stall: 'Củ Chi Goat Farm' },
-  { id: 4, stall: 'Gió Nam Bakery' },
-  { id: 5, stall: 'Ba Lành Farm' },
+  { id: 1, stall: 'Cô Tư Garden', phone: '0912 440 540', stallCode: 'A12', lat: 10.8039, lng: 106.7334 },
+  { id: 2, stall: 'Út Hiền Orchard', phone: '0987 210 031', stallCode: 'B03', lat: 10.8509, lng: 106.7719 },
+  { id: 3, stall: 'Củ Chi Goat Farm', phone: '0938 776 220', stallCode: 'B07', lat: 10.8503, lng: 106.7711 },
+  { id: 4, stall: 'Gió Nam Bakery', phone: '0908 331 905', stallCode: 'A04', lat: 10.8033, lng: 106.7326 },
+  { id: 5, stall: 'Ba Lành Farm', phone: '0913 002 771', stallCode: 'A09', lat: 10.8041, lng: 106.7336 },
 ];
 
 export function farmerName(id: number): string {
   return farmers.find((f) => f.id === id)?.stall ?? '';
+}
+
+export function farmer(id: number) {
+  return farmers.find((f) => f.id === id);
 }
 
 export function marketName(id: number): string {
@@ -60,6 +64,7 @@ export const orders: OrderType[] = [
       { productId: 2, qty: 1 },
       { productId: 7, qty: 1 },
     ],
+    history: [['placed', '24/09/2026 09:12', 'You']],
   },
   {
     code: '#ML-0412',
@@ -74,6 +79,10 @@ export const orders: OrderType[] = [
       { productId: 2, qty: 1 },
       { productId: 3, qty: 1 },
     ],
+    history: [
+      ['placed', '23/09/2026 20:41', 'You'],
+      ['accepted', '24/09/2026 06:55', 'Cô Tư Garden'],
+    ],
   },
   {
     code: '#ML-0415',
@@ -84,6 +93,10 @@ export const orders: OrderType[] = [
     status: 'accepted',
     cutoff: '18:30 26/09',
     items: [{ productId: 8, qty: 2 }],
+    history: [
+      ['placed', '23/09/2026 21:10', 'You'],
+      ['accepted', '24/09/2026 07:20', 'Út Hiền Orchard'],
+    ],
   },
   {
     code: '#ML-0409',
@@ -98,6 +111,11 @@ export const orders: OrderType[] = [
       { productId: 5, qty: 1 },
       { productId: 10, qty: 1 },
     ],
+    history: [
+      ['placed', '22/09/2026 18:02', 'You'],
+      ['accepted', '22/09/2026 19:30', 'Gió Nam Bakery'],
+      ['ready', '24/09/2026 06:10', 'Gió Nam Bakery'],
+    ],
   },
   {
     code: '#ML-0398',
@@ -110,6 +128,12 @@ export const orders: OrderType[] = [
     locked: true,
     items: [{ productId: 4, qty: 4 }],
     reviewed: false,
+    history: [
+      ['placed', '18/09/2026 12:00', 'You'],
+      ['accepted', '18/09/2026 14:20', 'Củ Chi Goat Farm'],
+      ['ready', '20/09/2026 06:30', 'Củ Chi Goat Farm'],
+      ['completed', '20/09/2026 08:14', 'Củ Chi Goat Farm'],
+    ],
   },
   {
     code: '#ML-0381',
@@ -125,6 +149,12 @@ export const orders: OrderType[] = [
       { productId: 19, qty: 2 },
     ],
     reviewed: true,
+    history: [
+      ['placed', '17/09/2026 20:05', 'You'],
+      ['accepted', '17/09/2026 21:00', 'Cô Tư Garden'],
+      ['ready', '19/09/2026 05:50', 'Cô Tư Garden'],
+      ['completed', '19/09/2026 06:48', 'Cô Tư Garden'],
+    ],
   },
   {
     code: '#ML-0402',
@@ -137,6 +167,10 @@ export const orders: OrderType[] = [
     locked: true,
     items: [{ productId: 3, qty: 3 }],
     reason: 'The stall ran out of pomelo for this weekend.',
+    history: [
+      ['placed', '18/09/2026 10:30', 'You'],
+      ['declined', '18/09/2026 16:45', 'Út Hiền Orchard'],
+    ],
   },
   {
     code: '#ML-0377',
@@ -148,6 +182,11 @@ export const orders: OrderType[] = [
     cutoff: '20:00 12/09',
     locked: true,
     items: [{ productId: 6, qty: 2 }],
+    history: [
+      ['placed', '11/09/2026 09:00', 'You'],
+      ['accepted', '11/09/2026 11:15', 'Ba Lành Farm'],
+      ['cancelled', '12/09/2026 07:40', 'You'],
+    ],
   },
 ];
 

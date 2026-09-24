@@ -1,27 +1,10 @@
-import { CheckIcon, CircleSlashIcon, ClockIcon, CloseIcon, DoubleCheckIcon, ReceiptIcon } from '@/components/icons';
+import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 
-const META: Record<OrderStatus, { label: string; icon: typeof ClockIcon; className: string }> = {
-  placed: { label: 'Placed', icon: ClockIcon, className: 'bg-status-placed-bg text-status-placed-ink' },
-  accepted: { label: 'Accepted', icon: CheckIcon, className: 'bg-status-accepted-bg text-status-accepted-ink' },
-  ready: { label: 'Ready for pickup', icon: ReceiptIcon, className: 'bg-status-ready-bg text-status-ready-ink' },
-  completed: {
-    label: 'Completed',
-    icon: DoubleCheckIcon,
-    className: 'bg-status-completed-bg text-status-completed-ink',
-  },
-  declined: { label: 'Declined', icon: CloseIcon, className: 'bg-status-declined-bg text-status-declined-ink' },
-  cancelled: {
-    label: 'Cancelled',
-    icon: CircleSlashIcon,
-    className: 'bg-status-cancelled-bg text-status-cancelled-ink',
-  },
-};
-
 /** Pill with a glyph and a word, so order state never rests on colour alone (design system `.ml-status`). */
 const OrderStatusBadge = ({ status }: { status: OrderStatus }) => {
-  const { label, icon: Icon, className } = META[status];
+  const { label, icon: Icon, className } = ORDER_STATUS_META[status];
   return (
     <span
       className={Helper.cn(

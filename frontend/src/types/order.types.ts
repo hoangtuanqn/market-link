@@ -4,6 +4,9 @@ export type OrderStatus = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
 
 export type OrderLineType = { productId: number; qty: number };
 
+/** [status, timestamp, by] — FR-038: every status change is recorded with who made it. */
+export type OrderHistoryEntry = [OrderStatus, string, string];
+
 export type OrderType = {
   code: string;
   farmerId: number;
@@ -19,4 +22,5 @@ export type OrderType = {
   reason?: string;
   /** Set when status is 'completed': has the customer already reviewed it. */
   reviewed?: boolean;
+  history: OrderHistoryEntry[];
 };

@@ -6,7 +6,7 @@ type Variant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'onboard' | 'dange
 type Size = 'md' | 'sm';
 
 const base =
-  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm font-sans leading-none font-bold whitespace-nowrap no-underline transition-[background-color,box-shadow] duration-100 disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-ink-muted disabled:shadow-none motion-reduce:transition-none';
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-sm font-sans leading-none font-bold whitespace-nowrap no-underline transition-[background-color,box-shadow] duration-100 disabled:cursor-not-allowed disabled:bg-surface-sunken disabled:text-ink-muted disabled:shadow-none aria-disabled:pointer-events-none aria-disabled:cursor-not-allowed aria-disabled:bg-surface-sunken aria-disabled:text-ink-muted aria-disabled:shadow-none motion-reduce:transition-none';
 
 const variants: Record<Variant, string> = {
   primary: 'bg-brand text-on-brand hover:bg-brand-strong',

@@ -8,8 +8,10 @@ import { vnd } from '@/lib/format';
 import type { OrderType } from '@/types/order.types';
 import Helper from '@/utils/helper';
 
+type OrderTicketProps = { order: OrderType; fluid?: boolean; hideActions?: boolean };
+
 /** Order receipt: pickup details, items, total and the actions for its current status (design system `.ml-ticket`). */
-const OrderTicket = ({ order, fluid }: { order: OrderType; fluid?: boolean }) => {
+const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
   const editable = !order.locked && (order.status === 'placed' || order.status === 'accepted');
   const href = `/orders/${order.code.replace('#', '')}`;
 
@@ -87,7 +89,7 @@ const OrderTicket = ({ order, fluid }: { order: OrderType; fluid?: boolean }) =>
         </p>
       )}
 
-      {editable && (
+      {!hideActions && editable && (
         <div className="flex flex-wrap gap-2">
           <ButtonLink to={`${href}/edit`} variant="secondary" size="sm">
             Edit order
@@ -97,7 +99,8 @@ const OrderTicket = ({ order, fluid }: { order: OrderType; fluid?: boolean }) =>
           </Button>
         </div>
       )}
-      {order.status === 'completed' &&
+      {!hideActions &&
+        order.status === 'completed' &&
         (order.reviewed ? (
           <span className="text-ink-muted text-small">You reviewed this order</span>
         ) : (
