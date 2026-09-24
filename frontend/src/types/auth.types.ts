@@ -20,11 +20,20 @@ export type ResetPasswordInput = {
   confirmPassword: string;
 };
 
+export type SetPasswordInput = {
+  password: string;
+  confirmPassword: string;
+};
+
 export type ResetTokenType = {
   email: string;
 };
 
 export type SocialProvider = 'google' | 'facebook';
+
+export type AuthorizeUrlType = {
+  url: string;
+};
 
 /** Same shape for login, register and refresh: the refresh token itself travels in an HttpOnly cookie. */
 export type AuthResultType = {

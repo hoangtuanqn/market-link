@@ -10,4 +10,6 @@ export type UserType = {
   address?: string;
   role: RoleType;
   createdAt?: string;
+  /** False: tài khoản tạo qua Google/Facebook, chưa đặt mật khẩu. */
+  hasPassword?: boolean;
 };

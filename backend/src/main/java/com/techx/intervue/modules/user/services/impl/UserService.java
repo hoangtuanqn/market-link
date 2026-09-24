@@ -7,10 +7,12 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
+import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
 import com.techx.intervue.modules.user.repositories.SocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
+import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
@@ -233,7 +235,34 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .address(user.getAddress())
                         .role(user.getRole())
                         .createdAt(user.getCreatedAt())
+                        .hasPassword(user.getPasswordHash() != null)
                         .build();
         return new AuthResult(accessToken, rawRefreshToken, userResource);
+    }
+
+    /**
+     * Đặt mật khẩu lần đầu cho tài khoản tạo qua Google/Facebook. Chỉ khi chưa có mật khẩu — đã có
+     * thì phải dùng đổi / quên mật khẩu (409). userId lấy từ access token (R-06). Phiên hiện tại
+     * giữ nguyên.
+     */
+    @Override
+    @Transactional
+    public void setPassword(Long userId, SetPasswordRequest request) {
+        if (!request.password().equals(request.confirmPassword())) {
+            throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
+        }
+        User user =
+                userRepository
+                        .findById(userId)
+                        .orElseThrow(() -> new BadCredentialsException("Account not found."));
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new DisabledException(
+                    "Your account has been locked. Please contact an administrator.");
+        }
+        if (user.getPasswordHash() != null) {
+            throw new PasswordAlreadySetException();
+        }
+        user.setPasswordHash(passwordEncoder.encode(request.password()));
+        userRepository.save(user);
     }
 }

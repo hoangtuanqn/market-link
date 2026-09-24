@@ -4,13 +4,16 @@ import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.filters.JwtAuthFilter;
 import com.techx.intervue.helpers.CookieHelper;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
+import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SocialLoginRequest;
 import com.techx.intervue.modules.user.requests.VerifyResetTokenRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.AuthorizeUrlResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.resources.LoginResource;
 import com.techx.intervue.modules.user.resources.RefreshResource;
@@ -31,11 +34,14 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -76,6 +82,21 @@ public class AuthController extends BaseController {
      * Đăng nhập Google: FE gửi authorization code (Google redirect về redirect_uri kèm ?code=...).
      * Backend tự đổi code lấy id_token bằng client_secret và verify id_token.
      */
+    /**
+     * Bước 1 của đăng nhập Google: trả URL trang đăng nhập Google. state (chuỗi ngẫu nhiên FE sinh
+     * và giữ lại) được gắn vào URL, Google trả nguyên về trang callback để FE so khớp.
+     */
+    @GetMapping("/google/authorize-url")
+    public ResponseEntity<ApiResource<AuthorizeUrlResource>> googleAuthorizeUrl(
+            @RequestParam(required = false) String state) {
+        if (!StringUtils.hasText(state) || state.length() > 128) {
+            throw new InvalidFieldException("state", "State is missing or too long.");
+        }
+        return ok(
+                new AuthorizeUrlResource(googleClient.authorizeUrl(state)),
+                "Redirecting to Google.");
+    }
+
     @PostMapping("/google")
     public ResponseEntity<ApiResource<LoginResource>> loginWithGoogle(
             @Valid @RequestBody SocialLoginRequest request) {
@@ -121,6 +142,18 @@ public class AuthController extends BaseController {
      * FR-003: gọi khi access token hết hạn. Refresh token chỉ đọc từ cookie HttpOnly (không nhận
      * qua body), trả access token mới và ghi đè cookie bằng refresh token mới.
      */
+    /**
+     * Đặt mật khẩu lần đầu sau khi đăng nhập Google/Facebook (user.hasPassword = false). Cần access
+     * token; tài khoản đã có mật khẩu → 409 PASSWORD_ALREADY_SET.
+     */
+    @PostMapping("/set-password")
+    public ResponseEntity<ApiResource<Void>> setPassword(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @Valid @RequestBody SetPasswordRequest request) {
+        userService.setPassword(user.getId(), request);
+        return ok(null, "Password saved. You can now also sign in with your email.");
+    }
+
     @PostMapping("/refresh")
     public ResponseEntity<ApiResource<RefreshResource>> refresh(
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)

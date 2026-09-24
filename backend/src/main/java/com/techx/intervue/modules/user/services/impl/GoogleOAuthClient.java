@@ -21,6 +21,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * Google OAuth2 authorization code flow: đổi code (dùng client_secret) lấy id_token, rồi tự verify
@@ -29,6 +30,7 @@ import org.springframework.web.client.RestClient;
 @Component
 public class GoogleOAuthClient {
 
+    private static final String AUTHORIZE_URI = "https://accounts.google.com/o/oauth2/v2/auth";
     private static final String TOKEN_URI = "https://oauth2.googleapis.com/token";
     private static final String JWKS_URI = "https://www.googleapis.com/oauth2/v3/certs";
     private static final Set<String> ISSUERS =
@@ -51,6 +53,29 @@ public class GoogleOAuthClient {
                         new JwtClaimValidator<List<String>>(
                                 JwtClaimNames.AUD,
                                 aud -> config != null && aud.contains(config.clientId()))));
+    }
+
+    /**
+     * URL trang đăng nhập Google. client_id và redirect_uri lấy từ app.oauth.google nên luôn khớp
+     * với lúc fetchProfile đổi code. state do frontend sinh và tự kiểm tra ở trang callback (chống
+     * CSRF).
+     */
+    public String authorizeUrl(String state) {
+        if (config == null
+                || !StringUtils.hasText(config.clientId())
+                || !StringUtils.hasText(config.redirectUri())) {
+            throw new IllegalStateException("app.oauth.google is not configured");
+        }
+        return UriComponentsBuilder.fromUriString(AUTHORIZE_URI)
+                .queryParam("client_id", config.clientId())
+                .queryParam("redirect_uri", config.redirectUri())
+                .queryParam("response_type", "code")
+                .queryParam("scope", "openid email profile")
+                .queryParam("state", state)
+                .queryParam("prompt", "select_account")
+                .build()
+                .encode()
+                .toUriString();
     }
 
     public SocialProfile fetchProfile(String code) {
