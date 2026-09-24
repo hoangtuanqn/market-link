@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feedback form — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-split-wide">
+    <form class="ml-card pt-auth pt-auth-wide" style="margin:0" novalidate>
+      <div class="pt-col-2"><h1 class="pt-title-sm">Send feedback</h1><p class="pt-small ml-muted">Bug reports, suggestions and questions all go to the team. Pick the type so it reaches the right person.</p></div>
+      <fieldset class="pt-fieldset">
+        <legend>What is it?</legend>
+        <label class="pt-radio"><input type="radio" name="type" value="bug" checked> Bug report: something is not working</label>
+        <label class="pt-radio"><input type="radio" name="type" value="suggestion"> Suggestion: something could be better</label>
+        <label class="pt-radio"><input type="radio" name="type" value="query"> Question: I need an answer</label>
+      </fieldset>
+      <div class="ml-field"><label class="ml-field-label" for="page">Which page?</label><select id="page" class="ml-input"><option>Cart</option><option>Product page</option><option>Market map</option><option>My orders</option><option>Farmer dashboard</option><option>Other</option></select></div>
+      <div class="ml-field"><label class="ml-field-label" for="msg">Message<span class="ml-field-req" aria-hidden="true">*</span></label><textarea id="msg" class="ml-input" placeholder="What did you expect, and what happened instead?"></textarea><span class="ml-field-hint">For a bug, add your phone or browser model.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="email">Email for a reply</label><input id="email" class="ml-input" type="email" value="khang@example.com"><span class="ml-field-hint">Optional. Filled in when you are signed in.</span></div>
+      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Thanks. Your bug report is with the team.">Send feedback</button></div>
+    </form>
+    <aside class="pt-col">
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">Not about the platform?</h2>
+        <p class="pt-small">A late pickup, a missing item or a question about produce is for the stall. Their phone number is on the order ticket, and you can also leave a review after the order is completed.</p>
+        <a href="../customer/orders.html">Go to my orders</a>
+      </div>
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">After you send</h2>
+        <p class="pt-small">Bug reports are read every market day. Answers to questions come by email when you leave one. <span class="pt-todo" data-todo="FR-081 · What happens after feedback is sent (reply channel, response time, visible status) is not specified. The admin inbox exists in the API contract but not in the SRS.">Reply channel and response time are not defined.</span></p>
+      </div>
+    </aside>
+  </div>
+</main>
+<script>PT.boot({ active: null });</script>
+<div id="pt-foot"></div>
+</body>
+</html>

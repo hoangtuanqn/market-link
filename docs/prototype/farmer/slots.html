@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pickup slots — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <p class="pt-small ml-muted"><a href="../farmer/stall-profile.html">Stall &amp; pickup</a> · Pickup slots</p>
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Pickup slots</h1>
+      <p class="pt-body pt-measure">Slots are 30-minute windows inside your pickup window. Each slot takes a limited number of orders so nobody queues for long. A full slot is greyed out for customers.</p>
+    </div>
+    <button type="button" class="ml-btn ml-btn-primary" id="gen">Generate slots for next week</button>
+  </div>
+  <div class="pt-row-6">
+    <div class="ml-field" style="min-width:260px"><label class="ml-field-label" for="mk">Market</label><select id="mk" class="ml-input"><option>Thảo Điền Weekend Market</option><option>Thủ Đức Farmers Market</option></select></div>
+    <div id="day-chips"></div>
+  </div>
+  <div id="table"></div>
+  <div class="pt-grid-2">
+    <div class="ml-card pt-panel pt-col-2">
+      <h2 class="pt-h3">Defaults</h2>
+      <dl class="pt-facts"><dt>Slot length</dt><dd>30 minutes</dd><dt>Orders per slot</dt><dd>5 (D-06)</dd><dt>Window at Thảo Điền</dt><dd>06:00 – 10:30 on Sat, Sun</dd><dt>Cutoff</dt><dd>12 hours before the slot</dd></dl>
+      <p class="pt-small ml-muted">Change the window and days under Stall &amp; pickup. Slots for a day are created from them.</p>
+    </div>
+    <div class="ml-card pt-panel pt-col-2">
+      <h2 class="pt-h3">Closing a slot</h2>
+      <p class="pt-small">Turning a slot off hides it from new orders. Orders already in it stay; contact those customers if you cannot make it.</p>
+      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-067 · Cancelling a whole market day or session (holiday, rain) is marked (proposal) in the feature catalog and not in the SRS; what happens to placed orders then is undecided.">Cancelling a whole market day is not specified</span></p>
+    </div>
+  </div>
+</main>
+<script>
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Day', [{ value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }, { value: 'sat2', label: 'Sat', sub: '03/10' }, { value: 'sun2', label: 'Sun', sub: '04/10', disabled: true }], 'sat');
+  var slots = PT.slots.concat([{ value: '0900', time: '09:00–09:30', booked: 0, max: 5 }, { value: '0930', time: '09:30–10:00', booked: 1, max: 5 }, { value: '1000', time: '10:00–10:30', booked: 0, max: 3, off: true }]);
+  document.getElementById('table').innerHTML = PT.table('Saturday 26/09 · Thảo Điền Weekend Market · 9 slots', [
+    { key: 't', label: 'Slot', render: function (s) { return '<b class="pt-num">' + s.time + '</b>'; } },
+    { key: 'b', label: 'Booked', align: 'num', render: function (s) { return s.booked + ' of ' + s.max + (s.booked >= s.max ? ' <span class="sub">Full</span>' : ''); } },
+    { key: 'm', label: 'Max orders', align: 'num', render: function (s) { return '<input class="ml-input" type="number" min="' + s.booked + '" value="' + s.max + '" style="min-height:36px;width:84px;padding:0 8px;text-align:right" aria-label="Max orders ' + s.time + '">'; } },
+    { key: 'c', label: 'Closes for changes', render: function (s) { return '19:00 25/09'; } },
+    { key: 'o', label: 'Open to new orders', render: function (s) { return '<label class="ml-check" style="padding-top:0;min-height:36px"><input type="checkbox"' + (s.off ? '' : ' checked') + '><span class="ml-check-box" aria-hidden="true">' + PT.icons.check() + '</span><span class="ml-check-text">' + (s.off ? 'Off' : 'On') + '</span></label>'; } },
+  ], slots);
+  document.getElementById('gen').addEventListener('click', function () { PT.dialog({ title: 'Generate slots for 03/10 – 04/10?', body: '<div class="pt-col-3"><div class="pt-form-grid"><div class="ml-field"><label class="ml-field-label" for="len">Slot length</label><select id="len" class="ml-input"><option>30 minutes</option><option>15 minutes</option><option>60 minutes</option></select></div><div class="ml-field"><label class="ml-field-label" for="mx">Orders per slot</label><input id="mx" class="ml-input" type="number" value="5"></div></div><p class="ml-muted" style="font-size:14px">Creates slots from 06:00 to 10:30 on Sat and Sun at Thảo Điền and on Sun at Thủ Đức. Existing slots are not changed.</p></div>', keep: 'Cancel', confirm: 'Generate 27 slots', toast: '27 slots created for 03/10 – 04/10.' }); });
+  PT.boot({ role: 'farmer', active: 'stall', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

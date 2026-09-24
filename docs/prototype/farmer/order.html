@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Order detail (Farmer) — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <p class="pt-small ml-muted"><a href="../farmer/orders.html">Orders</a> · #ML-0421</p>
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-hand ml-muted">Placed Thu 24/09 at 09:12 · closes Fri 25/09 at 19:00</p>
+      <h1 class="pt-title-sm">#ML-0421 · Minh Anh · Sat 26/09, 07:00–07:30</h1>
+      <div id="status"></div>
+    </div>
+    <div class="pt-row-2">
+      <button type="button" class="ml-btn ml-btn-primary" data-toast="Order #ML-0421 accepted. Minh Anh has been told.">Accept order</button>
+      <button type="button" class="ml-btn ml-btn-danger" id="decline">Decline</button>
+    </div>
+  </div>
+
+  <div class="pt-split">
+    <div class="pt-col-6">
+      <section class="pt-col-3">
+        <h2 class="pt-h2">Items</h2>
+        <div id="items"></div>
+        <p class="pt-small ml-muted">Stock shown is what is left after this and other placed orders. Reserved stock is returned if you decline (D-02).</p>
+      </section>
+      <section class="pt-col-3">
+        <h2 class="pt-h2">Note from the customer</h2>
+        <p class="ml-card pt-panel-4 pt-body">“Please pick the smaller bunches if you can.”</p>
+      </section>
+      <section class="pt-col-3">
+        <h2 class="pt-h2">History</h2>
+        <ol class="pt-timeline" id="history"></ol>
+      </section>
+    </div>
+    <aside class="pt-sticky">
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">Customer</h2>
+        <dl class="pt-facts"><dt>Name</dt><dd>Phạm Minh Anh</dd><dt>Phone</dt><dd>0903 552 218</dd><dt>Orders with you</dt><dd>6, all collected</dd></dl>
+        <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-065 · Whether the Farmer sees the customer's full phone number and address, and from which status, is not specified. Prototype shows the full phone once the order exists.">Customer contact visibility to the Farmer is not specified.</span></p>
+      </div>
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">Pickup slot</h2>
+        <dl class="pt-facts"><dt>Market</dt><dd>Thảo Điền Weekend Market, stall A12</dd><dt>Slot</dt><dd>Sat 26/09 · 07:00–07:30</dd><dt>Slot capacity</dt><dd>2 of 5 booked</dd><dt>Pay on pickup</dt><dd class="pt-price">56,000 ₫</dd></dl>
+      </div>
+    </aside>
+  </div>
+</main>
+<script>
+  var o = PT.farmerOrders[0];
+  document.getElementById('status').innerHTML = PT.status('placed');
+  document.getElementById('items').innerHTML = PT.table(null, [{ key: 'n', label: 'Product', render: function (i) { var p = PT.product(i.p); return PT.esc(p.name) + '<span class="sub">' + PT.vnd(p.price) + ' / ' + p.unit + '</span>'; } }, { key: 'q', label: 'Requested', align: 'num', render: function (i) { return PT.units(i.qty, PT.product(i.p).unit); } }, { key: 's', label: 'Left after this order', align: 'num', render: function (i) { return PT.product(i.p).stock; } }, { key: 't', label: 'Amount', align: 'num', render: function (i) { return PT.vnd(i.qty * PT.product(i.p).price); } }], o.items);
+  document.getElementById('history').innerHTML = [['placed', '24/09/2026 09:12', 'Minh Anh']].map(function (h) { return '<li><span class="pt-timeline-dot" style="background:var(--status-' + h[0] + '-bg);color:var(--status-' + h[0] + '-ink)">' + PT.icons[h[0]]() + '</span><div>' + PT.status(h[0]) + '<time>' + h[1] + ' · by ' + h[2] + '</time></div></li>'; }).join('');
+  document.getElementById('decline').addEventListener('click', function () { PT.dialog({ tone: 'danger', title: 'Decline order #ML-0421?', body: '<p>Minh Anh is told right away and 2 bunches of water spinach, 1 choy sum and 1 Thai basil go back to your stock.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason the customer will see</label><select id="why" class="ml-input"><option>Not enough stock</option><option>Not selling on that day</option><option>Cannot make that pickup time</option><option>Other</option></select></div>', keep: 'Keep order', confirm: 'Decline order', toast: 'Order #ML-0421 declined.' }); });
+  PT.boot({ role: 'farmer', active: 'orders', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

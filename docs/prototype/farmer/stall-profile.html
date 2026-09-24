@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stall, markets and pickup — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Stall &amp; pickup</h1>
+      <p class="pt-body pt-measure">What customers see about your stall, the markets you sell at, your operating days and pickup windows, and where the stall is on the map.</p>
+    </div>
+    <span class="ml-status ml-status-completed">Approved on 05/08/2026</span>
+  </div>
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+
+    <form data-panel="stall" class="pt-col" novalidate>
+      <div class="ml-card pt-panel pt-col">
+        <h2 class="pt-h3">Stall details</h2>
+        <div class="pt-form-grid">
+          <div class="ml-field"><label class="ml-field-label" for="stall">Stall name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="stall" class="ml-input" value="Cô Tư Garden"></div>
+          <div class="ml-field"><label class="ml-field-label" for="person">Contact person<span class="ml-field-req" aria-hidden="true">*</span></label><input id="person" class="ml-input" value="Nguyễn Thị Tư"></div>
+          <div class="ml-field"><label class="ml-field-label" for="phone">Phone number<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" value="0912 440 540"><span class="ml-field-hint">Shown to customers on their order ticket.</span></div>
+          <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" value="cotu@example.com"></div>
+          <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="addr">Farm or business address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="addr" class="ml-input" value="Hamlet 3, Tân Phú Trung, Củ Chi"></div>
+          <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="about">About the stall</label><textarea id="about" class="ml-input">Water spinach, choy sum and herbs from a 2-hectare plot in Củ Chi. Cut the evening before market day.</textarea><span class="ml-field-hint">Shown in handwriting on your stall page. One or two sentences.</span></div>
+        </div>
+      </div>
+      <div class="ml-card pt-panel pt-col">
+        <h2 class="pt-h3">Order cutoff</h2>
+        <div class="pt-form-grid">
+          <div class="ml-field"><label class="ml-field-label" for="cut">Stop taking changes this many hours before the pickup slot<span class="ml-field-req" aria-hidden="true">*</span></label><input id="cut" class="ml-input" inputmode="numeric" value="12"><span class="ml-field-hint">For a 07:00 Saturday slot, 12 hours means 19:00 on Friday. Customers cannot edit or cancel after that, and new orders for that slot close too (D-05).</span></div>
+        </div>
+      </div>
+      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Stall details saved.">Save stall details</button></div>
+    </form>
+
+    <div data-panel="markets" hidden class="pt-col">
+      <div class="ml-card pt-panel pt-col">
+        <h2 class="pt-h3">Markets you sell at</h2>
+        <p class="pt-small ml-muted">Tick a market to open its settings. Days and pickup windows are set per market.</p>
+        <div class="pt-col-2" id="market-checks"></div>
+      </div>
+      <div class="ml-card pt-panel pt-col" id="m1">
+        <div class="pt-between-c"><h2 class="pt-h3">Thảo Điền Weekend Market</h2><span class="pt-small ml-muted">Market runs Fri, Sat, Sun · 06:00–11:00</span></div>
+        <div class="pt-form-grid">
+          <div class="ml-field"><label class="ml-field-label" for="code1">Stall code or spot</label><input id="code1" class="ml-input" value="A12"><span class="ml-field-hint">Shown on the order ticket so customers find you.</span></div>
+          <div class="pt-col-2"><span class="ml-field-label">Operating days at this market</span><div class="pt-row-2" id="days1"></div></div>
+          <div class="ml-field"><label class="ml-field-label" for="ps1">Pickup window starts</label><input id="ps1" class="ml-input" type="time" value="06:00"></div>
+          <div class="ml-field"><label class="ml-field-label" for="pe1">Pickup window ends</label><input id="pe1" class="ml-input" type="time" value="10:30"></div>
+        </div>
+        <div class="pt-grid-2">
+          <div class="pt-col-2">
+            <span class="ml-field-label">Stall location</span>
+            <div id="map1" class="pt-map pt-map-sm" aria-label="Pin the stall on the map"></div>
+            <p class="pt-caption ml-muted">Drag the round pin to your spot inside the market. The square pin is the market itself.</p>
+          </div>
+          <div class="pt-col">
+            <div class="ml-field"><label class="ml-field-label" for="lat1">Latitude</label><input id="lat1" class="ml-input" value="10.803900"></div>
+            <div class="ml-field"><label class="ml-field-label" for="lng1">Longitude</label><input id="lng1" class="ml-input" value="106.733400"></div>
+            <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Pin moved to the market entrance. Drag it to your spot.">Use the market's location</button>
+          </div>
+        </div>
+      </div>
+      <div class="ml-card pt-panel pt-col" id="m2">
+        <div class="pt-between-c"><h2 class="pt-h3">Thủ Đức Farmers Market</h2><span class="pt-small ml-muted">Market runs Sat, Sun · 05:30–10:00</span></div>
+        <div class="pt-form-grid">
+          <div class="ml-field"><label class="ml-field-label" for="code2">Stall code or spot</label><input id="code2" class="ml-input" value="B02"></div>
+          <div class="pt-col-2"><span class="ml-field-label">Operating days at this market</span><div class="pt-row-2" id="days2"></div></div>
+          <div class="ml-field"><label class="ml-field-label" for="ps2">Pickup window starts</label><input id="ps2" class="ml-input" type="time" value="06:00"></div>
+          <div class="ml-field"><label class="ml-field-label" for="pe2">Pickup window ends</label><input id="pe2" class="ml-input" type="time" value="09:30"></div>
+          <div class="ml-field"><label class="ml-field-label" for="lat2">Latitude</label><input id="lat2" class="ml-input" value="10.850400"></div>
+          <div class="ml-field"><label class="ml-field-label" for="lng2">Longitude</label><input id="lng2" class="ml-input" value="106.771300"></div>
+        </div>
+      </div>
+      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Markets, days and pickup windows saved. Slots for next week follow the new windows.">Save markets and pickup</button><a class="pt-small" href="../farmer/slots.html">Manage pickup slots</a></div>
+    </div>
+  </div>
+</main>
+<script>
+  document.getElementById('tabs').innerHTML = PT.tabs('Stall settings', [{ id: 'stall', label: 'Stall details' }, { id: 'markets', label: 'Markets, days and pickup', count: 2 }], 'stall');
+  document.getElementById('market-checks').innerHTML = PT.markets.map(function (m) { return PT.checkbox(PT.esc(m.name), { checked: m.id === 1 || m.id === 2, hint: PT.dayNames(m.days) + ' · ' + m.open + '–' + m.close }); }).join('');
+  var days = function (on, name) { return [['Fri', 5], ['Sat', 6], ['Sun', 0]].map(function (d) { return '<label class="ml-day"><input type="checkbox" name="' + name + '" value="' + d[1] + '"' + (on.indexOf(d[1]) >= 0 ? ' checked' : '') + '><span>' + d[0] + '</span></label>'; }).join(''); };
+  document.getElementById('days1').innerHTML = days([6, 0], 'd1');
+  document.getElementById('days2').innerHTML = days([0], 'd2').replace('value="5"', 'value="5" disabled');
+  var f = PT.farmer(1), m = PT.market(1);
+  var map = PT.map('map1', { center: [f.lat, f.lng], zoom: 17, scroll: false, markers: [{ lat: m.lat, lng: m.lng, kind: 'market', label: m.name }] });
+  if (map) { var mk = L.marker([f.lat, f.lng], { draggable: true, icon: L.divIcon({ html: PT.pinHTML('stall', 'Your stall', 'S', true), className: '', iconSize: [34, 48], iconAnchor: [17, 48] }) }).addTo(map); mk.on('dragend', function () { var ll = mk.getLatLng(); document.getElementById('lat1').value = ll.lat.toFixed(6); document.getElementById('lng1').value = ll.lng.toFixed(6); }); }
+  PT.boot({ role: 'farmer', active: 'stall', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

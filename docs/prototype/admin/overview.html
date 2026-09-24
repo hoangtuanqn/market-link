@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin dashboard — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted">Platform · <time data-clock="year"></time></p>
+      <h1 class="pt-title">MarketLink today</h1>
+    </div>
+    <div class="pt-row-2"><a class="ml-btn ml-btn-secondary" href="../admin/announcements.html">Post an announcement</a><a class="ml-btn ml-btn-primary" href="../admin/farmers.html">Review 2 Farmer registrations</a></div>
+  </div>
+  <div class="pt-grid-4" id="stats"></div>
+  <div class="pt-grid-2">
+    <section class="ml-card pt-panel pt-col-3">
+      <div class="pt-between-c"><h2 class="pt-h3">Needs attention</h2></div>
+      <ul class="pt-body" style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <li class="pt-between-c"><span>2 Farmer registrations waiting</span><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmers.html">Review</a></li>
+        <li class="pt-between-c"><span>1 review reported by a stall</span><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/moderation.html">Moderate</a></li>
+        <li class="pt-between-c"><span>2 open feedback items, 1 bug</span><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/feedback.html">Open inbox</a></li>
+        <li class="pt-between-c"><span>Thảo Điền closure on 04/10 announced</span><a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/announcements.html">Edit</a></li>
+      </ul>
+    </section>
+    <section class="ml-card pt-panel pt-col-3">
+      <div class="pt-between-c"><h2 class="pt-h3">Orders this week by market</h2><a href="../admin/reports.html">Reports</a></div>
+      <ul class="pt-bars"><li><span>Thảo Điền Weekend Market</span><span class="bar"><span style="width:100%"></span></span><span class="val">86</span></li><li><span>Thủ Đức Farmers Market</span><span class="bar"><span style="width:62%"></span></span><span class="val">53</span></li><li><span>Phú Mỹ Hưng Saturday Market</span><span class="bar"><span style="width:40%"></span></span><span class="val">34</span></li><li><span>Bà Chiểu Green Market</span><span class="bar"><span style="width:22%"></span></span><span class="val">19</span></li></ul>
+    </section>
+  </div>
+  <section class="pt-col-3">
+    <div class="pt-between-c"><h2 class="pt-h2">Latest orders across the platform</h2><span class="pt-small ml-muted">Read-only. Admins do not change order status.</span></div>
+    <div id="table"></div>
+  </section>
+
+  <p class="pt-caption ml-muted">The market switcher at the top of the sidebar changes what every screen counts. <span class="pt-todo" data-todo="Proposal · Scoping the whole dashboard to one market is not in the SRS. FR-075 puts a market filter on the reports screen only. Decide whether the scope is global and remembered per user, or stays a per-screen filter.">Dashboard-wide market scope is not in the SRS</span></p>
+</main>
+<script>
+  document.getElementById('stats').innerHTML = PT.statTile('Farmers', '8', '<b>2</b> waiting for approval · 1 suspended', true) + PT.statTile('Customers', '412', '37 joined this month') + PT.statTile('Markets', '4', 'all active') + PT.statTile('Orders', '1,284', '192 this week · 31,900,000 ₫ completed');
+  var all = PT.orders.slice(0, 6).map(function (o) { return { code: o.code, farmer: PT.farmer(o.farmer).stall, market: PT.market(o.market).name, when: o.date + ' · ' + o.slot, total: PT.orderTotal(o), status: o.status }; });
+  document.getElementById('table').innerHTML = PT.table(null, [{ key: 'code', label: 'Order' }, { key: 'farmer', label: 'Stall' }, { key: 'market', label: 'Market' }, { key: 'when', label: 'Pickup' }, { key: 'total', label: 'Total', align: 'num', render: function (r) { return PT.vnd(r.total); } }, { key: 's', label: 'Status', render: function (r) { return PT.status(r.status); } }], all);
+  PT.boot({ role: 'admin', active: 'overview', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

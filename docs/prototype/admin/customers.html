@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customers — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Customers</h1>
+      <p class="pt-body pt-measure">Deactivate an account for a policy violation; it can no longer sign in or order. Reactivate when it is resolved. Their past orders stay with the stalls.</p>
+    </div>
+    <form class="ml-search" role="search" style="max-width:420px"><label class="ml-sr" for="q">Search customers</label><input id="q" type="search" placeholder="Name, email or phone"><button type="submit" class="ml-btn ml-btn-primary">Search</button></form>
+  </div>
+  <div class="ml-chips" id="chips"></div>
+  <div id="table"></div>
+  <div class="pt-between-c"><span class="pt-small ml-muted">Showing 1–6 of 412</span><div id="pager"></div></div>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-072 · Which customer details an admin may see (address, full phone) and whether an admin can edit or delete a customer is not specified. Prototype shows contact details read-only.">What an admin may see or edit on a customer is not specified</span></p>
+</main>
+<script>
+  document.getElementById('chips').innerHTML = PT.chip('All', { selected: true, radio: 'f', count: 412 }) + PT.chip('Active', { radio: 'f', count: 409 }) + PT.chip('Deactivated', { radio: 'f', count: 3 }) + PT.chip('Joined this month', { radio: 'f', count: 37 });
+  document.getElementById('table').innerHTML = PT.table(null, [
+    { key: 'name', label: 'Customer', render: function (c) { return '<b>' + PT.esc(c.name) + '</b><span class="sub">' + c.email + ' · ' + c.phone + '</span>'; } },
+    { key: 'joined', label: 'Joined' },
+    { key: 'orders', label: 'Orders', align: 'num' },
+    { key: 's', label: 'Status', render: function (c) { return c.status === 'active' ? '<span class="ml-status ml-status-ready">' + PT.icons.check() + '<span class="ml-status-text">Active</span></span>' : '<span class="ml-status ml-status-declined">' + PT.icons.declined() + '<span class="ml-status-text">Deactivated</span></span>' + (c.reason ? '<span class="sub">' + PT.esc(c.reason) + '</span>' : ''); } },
+    { key: 'a', label: '', align: 'actions', render: function (c) { return c.status === 'active' ? '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-off="' + PT.esc(c.name) + '">Deactivate</button>' : '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="' + PT.esc(c.name) + ' can sign in again.">Reactivate</button>'; } },
+  ], PT.customers);
+  document.getElementById('pager').innerHTML = PT.pagination(1, 69);
+  document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-off]'); if (!b) return; PT.dialog({ tone: 'danger', title: 'Deactivate ' + b.getAttribute('data-off') + '?', body: '<p>They are signed out everywhere and cannot sign in or place orders. Orders already placed stay with the stalls.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason, kept on the account</label><textarea id="why" class="ml-input" style="min-height:72px"></textarea></div>', keep: 'Keep active', confirm: 'Deactivate account', toast: b.getAttribute('data-off') + ' deactivated.' }); });
+  PT.boot({ role: 'admin', active: 'customers', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

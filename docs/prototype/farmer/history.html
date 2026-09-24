@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales history and best sellers — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Sales history</h1>
+      <p class="pt-body pt-measure">Completed orders and what sold best. Revenue is the total of completed orders, paid to you at the stall.</p>
+    </div>
+    <div class="ml-chips" id="range"></div>
+  </div>
+  <div class="pt-grid-4" id="stats"></div>
+  <div class="pt-split-wide">
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Best-selling products · September</h2>
+      <ul class="pt-bars"><li><span>Củ Chi water spinach</span><span class="bar"><span style="width:100%"></span></span><span class="val">64 bunches · 960,000 ₫</span></li><li><span>Choy sum</span><span class="bar"><span style="width:64%"></span></span><span class="val">41 bunches · 738,000 ₫</span></li><li><span>Thai basil</span><span class="bar"><span style="width:59%"></span></span><span class="val">38 bunches · 304,000 ₫</span></li><li><span>Lemongrass</span><span class="bar"><span style="width:31%"></span></span><span class="val">20 bunches · 120,000 ₫</span></li></ul>
+    </section>
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">By market · September</h2>
+      <ul class="pt-bars"><li><span>Thảo Điền Weekend Market</span><span class="bar"><span style="width:100%"></span></span><span class="val">31 orders · 6,120,000 ₫</span></li><li><span>Thủ Đức Farmers Market</span><span class="bar"><span style="width:38%"></span></span><span class="val">12 orders · 2,330,000 ₫</span></li></ul>
+      <p class="pt-small ml-muted">6 orders were declined and 2 cancelled by customers this month. They are not counted.</p>
+    </section>
+  </div>
+  <section class="pt-col-3">
+    <div class="pt-between-c"><h2 class="pt-h2">Past orders</h2><span class="pt-small ml-muted">Completed, declined and cancelled</span></div>
+    <div id="table"></div>
+    <div id="pager"></div>
+  </section>
+</main>
+<script>
+  document.getElementById('range').innerHTML = PT.chip('This week', { radio: 'r' }) + PT.chip('September', { selected: true, radio: 'r' }) + PT.chip('Last 3 months', { radio: 'r' }) + PT.chip('All time', { radio: 'r' });
+  document.getElementById('stats').innerHTML = PT.statTile('Total orders', '128', '112 completed · 6 declined · 10 cancelled') + PT.statTile('Pending now', '4', 'Awaiting your approval') + PT.statTile('September revenue', '8,450,000', '₫, completed orders, paid at the stall', true) + PT.statTile('Regulars', '19', 'customers with 3 or more orders');
+  var past = PT.farmerOrders.filter(function (o) { return ['completed', 'declined', 'cancelled'].indexOf(o.status) >= 0; });
+  document.getElementById('table').innerHTML = PT.table(null, [{ key: 'd', label: 'Pickup', render: function (r) { return r.date + ' · ' + r.slot; } }, { key: 'code', label: 'Order' }, { key: 'who', label: 'Customer' }, { key: 'i', label: 'Items', render: function (r) { return r.items.map(function (i) { return i.qty + '× ' + PT.esc(PT.product(i.p).name); }).join(', '); } }, { key: 't', label: 'Total', align: 'num', render: function (r) { return PT.vnd(PT.orderTotal(r)); } }, { key: 's', label: 'Status', render: function (r) { return PT.status(r.status); } }], past);
+  document.getElementById('pager').innerHTML = PT.pagination(1, 6);
+  PT.boot({ role: 'farmer', active: 'overview', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

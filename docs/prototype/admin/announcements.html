@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Announcements — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted">Settings</p>
+      <h1 class="pt-title">Announcements</h1>
+      <p class="pt-body pt-measure">A platform-wide message shown in the green band above the header and in everyone's notifications. One active announcement at a time keeps it readable.</p>
+    </div>
+    <div class="pt-row-2"><a class="ml-btn ml-btn-secondary" href="../admin/categories.html">Categories</a><a class="ml-btn ml-btn-secondary" href="../admin/feedback.html">Feedback inbox</a></div>
+  </div>
+  <div class="pt-split-wide">
+    <form class="ml-card pt-panel pt-col" novalidate>
+      <h2 class="pt-h3">New announcement</h2>
+      <div class="ml-field"><label class="ml-field-label" for="t">Title<span class="ml-field-req" aria-hidden="true">*</span></label><input id="t" class="ml-input" maxlength="80" placeholder="e.g. Thủ Đức Farmers Market opens at 06:00 from October"><span class="ml-field-hint">One line, sentence case, no exclamation marks. Shown in handwriting.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="b">Detail</label><textarea id="b" class="ml-input" style="min-height:72px" placeholder="One sentence on what changes for customers or stalls."></textarea></div>
+      <div class="pt-form-grid">
+        <div class="ml-field"><label class="ml-field-label" for="aud">Show to</label><select id="aud" class="ml-input"><option>Everyone</option><option>Customers</option><option>Farmers</option></select></div>
+        <div class="ml-field"><label class="ml-field-label" for="mk">About market</label><select id="mk" class="ml-input"><option>Whole platform</option><option>Thảo Điền Weekend Market</option><option>Thủ Đức Farmers Market</option><option>Phú Mỹ Hưng Saturday Market</option><option>Bà Chiểu Green Market</option></select></div>
+        <div class="ml-field"><label class="ml-field-label" for="from">Show from</label><input id="from" class="ml-input" type="date" value="2026-09-24"></div>
+        <div class="ml-field"><label class="ml-field-label" for="to">Until</label><input id="to" class="ml-input" type="date" value="2026-10-04"></div>
+      </div>
+      <div class="pt-col-2"><span class="ml-field-label">Preview</span><div id="preview"></div></div>
+      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Announcement published. It is live in the header now.">Publish</button><button type="button" class="ml-btn ml-btn-secondary">Save as draft</button></div>
+    </form>
+    <section class="pt-col-3">
+      <h2 class="pt-h3">Published and past</h2>
+      <div id="table"></div>
+      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-077 · Audience targeting (everyone / customers / farmers / one market) and scheduling are prototype additions; the SRS only says 'publish platform-wide notifications or announcements'.">Audience and scheduling go beyond the SRS wording</span></p>
+    </section>
+  </div>
+</main>
+<script>
+  document.getElementById('preview').innerHTML = PT.banner('announce', 'Your title appears here', 'And the detail line here, in the green band above the header.', { close: true });
+  document.getElementById('table').innerHTML = PT.table(null, [
+    { key: 'title', label: 'Announcement', render: function (a) { return '<b>' + PT.esc(a.title) + '</b><span class="sub">' + PT.esc(a.text) + '</span>'; } },
+    { key: 'aud', label: 'Show to', render: function (a) { return a.audience; } },
+    { key: 'w', label: 'Window', render: function (a) { return a.from + ' – ' + a.to; } },
+    { key: 's', label: 'Status', render: function (a) { return a.active ? '<span class="ml-status ml-status-ready">' + PT.icons.check() + '<span class="ml-status-text">Live</span></span>' : '<span class="ml-status ml-status-cancelled">' + PT.icons.cancelled() + '<span class="ml-status-text">Ended</span></span>'; } },
+    { key: 'a', label: '', align: 'actions', render: function (a) { return a.active ? '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Edit</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-toast="Announcement taken down.">Take down</button>' : '<button type="button" class="ml-btn ml-btn-ghost ml-btn-sm">Reuse</button>'; } },
+  ], PT.announcements);
+  PT.boot({ role: 'admin', active: 'settings', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

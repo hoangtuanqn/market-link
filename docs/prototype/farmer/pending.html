@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waiting for approval / suspended — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main pt-main-narrow">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted">Cô Ba Kitchen · registered 22/09/2026</p>
+      <h1 class="pt-title-sm">Your stall is waiting for approval</h1>
+    </div>
+    <button type="button" class="ml-chip" aria-pressed="false" id="sus">Preview: suspended stall</button>
+  </div>
+  <div id="state-pending" class="pt-col">
+    <div class="ml-banner ml-banner-info" role="status"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="ml-icon"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4"/><path d="M8 4.8v.2"/></svg><div class="ml-banner-body"><p class="ml-banner-title">An admin is reviewing your registration.</p><p class="ml-banner-text">You will get a notification and an email when it is approved. Until then your stall and products are not visible to customers.</p></div></div>
+    <div class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">What you can do now</h2>
+      <ul class="pt-body" style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px">
+        <li>Fill in your <a href="../farmer/stall-profile.html">stall details</a>, the markets you sell at, your days and pickup windows.</li>
+        <li>Pin your stall on the map so customers can find you on day one.</li>
+        <li>Products can be added once the stall is approved. Prepare names, prices and photos in the meantime.</li>
+      </ul>
+    </div>
+    <div class="ml-card pt-panel pt-col-2">
+      <h2 class="pt-h3">Registration details</h2>
+      <dl class="pt-facts"><dt>Stall</dt><dd>Cô Ba Kitchen</dd><dt>Contact</dt><dd>Lý Thị Ba · 0906 222 410</dd><dt>Email</dt><dd>coba@example.com</dd><dt>Market requested</dt><dd>Thủ Đức Farmers Market</dd></dl>
+    </div>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-071 · What a rejected Farmer sees and whether they can re-apply is not specified. The API contract has a reject reason; the screen for it is not designed yet.">Rejected state and re-application are not specified</span></p>
+  </div>
+  <div id="state-suspended" class="pt-col" hidden>
+    <div class="ml-banner ml-banner-danger" role="alert"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="ml-icon"><path d="M8 1.8l6.5 11.4h-13z"/><path d="M8 6.2v3.3"/><path d="M8 11.4v.1"/></svg><div class="ml-banner-body"><p class="ml-banner-title">Your stall was suspended on 20/09/2026.</p><p class="ml-banner-text">Reason from the admin: repeated no-shows at Phú Mỹ Hưng on 12/09 and 19/09. Your products are hidden and you cannot take new orders.</p></div></div>
+    <div class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Orders already placed still run</h2>
+      <p class="pt-body">Customers who ordered before the suspension keep their orders (D-09). Mark them ready and completed as usual so nobody loses what they reserved.</p>
+      <a class="ml-btn ml-btn-primary" href="../farmer/orders.html">Open current orders</a>
+    </div>
+    <div class="ml-card pt-panel pt-col-2">
+      <h2 class="pt-h3">To be reinstated</h2>
+      <p class="pt-small">Contact the team through <a href="../public/contact.html">Contact us</a>. <span class="pt-todo" data-todo="D-09 · How a suspended Farmer is reinstated (who decides, through which screen) is not specified.">Reinstatement path is not specified</span></p>
+    </div>
+  </div>
+</main>
+<script>
+  document.getElementById('sus').addEventListener('click', function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); document.getElementById('state-pending').hidden = on; document.getElementById('state-suspended').hidden = !on; document.querySelector('.pt-apphead-title b').textContent = on ? 'Your stall is suspended' : 'Your stall is waiting for approval'; document.querySelector('.pt-apphead-sub').textContent = on ? 'Long Khánh Fruit Garden · suspended 20/09/2026' : 'Cô Ba Kitchen · registered 22/09/2026'; });
+  PT.boot({ role: 'farmer', active: null, announce: false, userName: 'Cô Ba Kitchen', unread: 0 });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

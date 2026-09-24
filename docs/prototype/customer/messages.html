@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Messages with a stall — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Messages</h1>
+      <p class="pt-lead">Ask a stall about this week's produce, or settle the details of an order before the cutoff.</p>
+    </div>
+  </div>
+  <div id="scope"></div>
+
+  <div class="pt-split-left">
+    <div class="ml-card" style="overflow:hidden">
+      <div class="pt-chat-head"><b>Conversations</b><span class="pt-small ml-muted">2 stalls</span></div>
+      <ul class="pt-threads" id="threads"></ul>
+    </div>
+
+    <section class="ml-card pt-chat" aria-label="Conversation with Cô Tư Garden">
+      <div class="pt-chat-head">
+        <div>
+          <b>Cô Tư Garden</b>
+          <p class="pt-small ml-muted">Thảo Điền Weekend Market · stall A12 · <a href="../public/stall.html">See the stall</a></p>
+        </div>
+        <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../customer/order.html">Open order #ML-0421</a>
+      </div>
+      <div class="pt-chat-log"><div class="ml-chat" id="log"></div></div>
+      <form class="pt-chat-input">
+        <label class="ml-sr" for="q">Message to Cô Tư Garden</label>
+        <input id="q" class="ml-input" placeholder="Ask about this week's stock or your pickup time">
+        <button type="submit" class="ml-btn ml-btn-primary">Send</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="pt-grid-2">
+    <div class="ml-card pt-panel pt-col-2">
+      <h2 class="pt-h3">What messages are for</h2>
+      <p class="pt-small">Checking that something is still coming, asking the stall to hold a little more, or agreeing a different pickup time. Changes to an order still go through the order itself, so both sides have the same record.</p>
+      <a href="../customer/order.html">Edit order #ML-0421</a>
+    </div>
+    <div class="ml-card pt-panel pt-col-2">
+      <h2 class="pt-h3">What they are not for</h2>
+      <p class="pt-small">There is no price negotiation and no payment here. Prices are set by the stall and you pay at the stall when you collect. A message never changes an order on its own.</p>
+    </div>
+  </div>
+</main>
+<script>
+  document.getElementById('scope').innerHTML = PT.banner('warning', 'Messaging is not in the SRS.', 'Ask the LEAD for a new requirement before this is built. The screen exists so the team can judge whether it is worth the hours.', { action: '<span class="pt-todo" data-todo="Out of scope · Customer-to-Farmer messaging is not in the SRS or in .ai/REQUIREMENTS.md. R-07 says do not build what is not listed. Needs a new FR, a messages table, an unread badge, and a rule on whether a message can change an order. Note the SRS does list an AI chatbot (FR-090/091), which is a different thing.">Needs a new FR before it is built</span>' });
+
+  document.getElementById('threads').innerHTML = [
+    { who: 'Cô Tư Garden', mono: 'C', last: 'Five is fine. Edit the order and I will accept it again.', time: '09:41', current: true },
+    { who: 'Gió Nam Bakery', mono: 'G', last: 'Your rye loaf is out of the oven, come any time after 07:30.', time: 'Yesterday', unread: true },
+  ].map(function (t) { return '<li><button type="button" class="pt-thread" aria-current="' + (t.current ? 'true' : 'false') + '" data-unread="' + (t.unread ? 'true' : 'false') + '"><span class="pt-thread-mono" aria-hidden="true">' + t.mono + '</span><span><b>' + PT.esc(t.who) + '</b><small>' + PT.esc(t.last) + '</small></span><time>' + t.time + '</time></button></li>'; }).join('');
+
+  var ORDER_REF = '<a class="pt-msg-ref" href="../customer/order.html"><b>Order #ML-0421 · Cô Tư Garden</b>Sat 26/09 · 07:00–07:30 · 3 items · 56,000 ₫ · closes 19:00 on 25/09</a>';
+  document.getElementById('log').innerHTML = [
+    { from: 'user', time: '09:12', text: 'Morning. Is the water spinach still cut on Friday this week?' },
+    { from: 'bot', time: '09:20', text: 'Yes, Friday evening as always. I should bring about 20 bunches on Saturday.' },
+    { from: 'user', time: '09:33', text: 'Could you hold 5 bunches instead of 2 on this order?' + ORDER_REF },
+    { from: 'bot', time: '09:41', text: 'Five is fine. Edit the order and I will accept it again, then the count is right on my side too.', suggestions: ['Edit the order now', 'Can I collect at 09:00 instead?', 'Thank you'] },
+  ].map(function (m) { return PT.chat({ from: m.from, who: m.from === 'user' ? 'You' : 'Cô Tư Garden', time: m.time, text: m.text, suggestions: m.suggestions }); }).join('');
+
+  document.querySelector('.pt-chat-input').addEventListener('submit', function (e) {
+    e.preventDefault(); var v = document.getElementById('q').value.trim(); if (!v) return;
+    document.getElementById('log').insertAdjacentHTML('beforeend', PT.chat({ from: 'user', time: '09:46', text: PT.esc(v) }));
+    document.getElementById('q').value = '';
+    document.querySelector('.pt-chat-log').scrollTop = 1e6;
+  });
+  PT.boot({ role: 'customer', active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

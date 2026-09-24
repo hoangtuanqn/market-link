@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <form class="ml-card pt-auth" novalidate>
+    <div class="pt-col-2">
+      <h1 class="pt-title-sm">Sign in</h1>
+      <p class="pt-small ml-muted">Customers and Farmers sign in here. Admins use the <a href="../admin/login.html">separate admin sign-in</a>.</p>
+    </div>
+
+    <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" autocomplete="email" value="khang@example.com"></div>
+    <div class="ml-field ml-field-error"><label class="ml-field-label" for="pw">Password<span class="ml-field-req" aria-hidden="true">*</span></label><input id="pw" class="ml-input" type="password" autocomplete="current-password" aria-invalid="true" aria-describedby="pw-e"><span id="pw-e" class="ml-field-err" role="alert">Email or password is not right. Check both and try again.</span></div>
+
+    <div class="pt-between-c">
+      <label class="ml-check"><input type="checkbox"><span class="ml-check-box" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="ml-check-text">Keep me signed in on this device</span></label>
+      <a class="pt-small" href="../public/forgot-password.html">Forgot password?</a>
+    </div>
+    <a class="ml-btn ml-btn-primary ml-btn-block" href="../customer/dashboard.html">Sign in</a>
+
+    <p class="pt-or">or</p>
+
+    <div class="pt-col-2">
+      <a class="ml-btn ml-btn-secondary ml-btn-block" href="../public/register-customer.html">Continue with Google</a>
+      <a class="ml-btn ml-btn-secondary ml-btn-block" href="../public/register-customer.html">Continue with Facebook</a>
+      <p class="pt-caption ml-muted">Google and Facebook give us your name and email. Your phone number and address are still needed before your first order, so we ask for them once on the next screen.</p>
+      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Out of scope · Social sign-in is not in the SRS. FR-001 and FR-002 require name, phone, email and address at registration, and a Farmer also needs a stall name and admin approval, none of which a Google or Facebook account supplies. It needs a new FR, an OAuth provider, a users.auth_provider column, a rule for linking a social account to an existing email, and a 'complete your profile' step before the first order.">Social sign-in needs a new FR and a profile-completion step</span></p>
+      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Branding · The two buttons are plain text. Google and Facebook both require their official mark, wording and minimum sizes. Take the assets from each provider's brand guidelines before this ships.">Official Google and Facebook marks to add</span></p>
+    </div>
+
+    <p class="pt-small ml-muted">New here? <a href="../public/register-customer.html">Create a customer account</a> or <a href="../public/register-farmer.html">register your stall</a>.</p>
+    <p class="pt-caption ml-muted">Prototype: this sign-in goes to the Customer dashboard. Farmer and Admin flows start from their own screens. <span class="pt-todo" data-todo="FR-003 · Session length and 'keep me signed in': the SRS asks for a secure session but does not say how long a session lasts or whether remember-me exists.">Session length and remember-me are not specified.</span></p>
+  </form>
+</main>
+<script>PT.boot({ active: null, announce: false });</script>
+<div id="pt-foot"></div>
+</body>
+</html>

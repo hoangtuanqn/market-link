@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moderation — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col-2">
+    <h1 class="pt-title">Moderation</h1>
+    <p class="pt-body pt-measure">Hide product listings or reviews that break the guidelines. Hidden items stay in the database with the reason; the owner is told.</p>
+  </div>
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+    <div data-panel="reviews" class="pt-col">
+      <div class="ml-chips" id="rchips"></div>
+      <div class="pt-col" id="reviews"></div>
+    </div>
+    <div data-panel="products" hidden class="pt-col">
+      <form class="ml-search" role="search" style="max-width:420px"><label class="ml-sr" for="q">Search products</label><input id="q" type="search" placeholder="Product or stall"><button type="submit" class="ml-btn ml-btn-primary">Search</button></form>
+      <div id="ptable"></div>
+    </div>
+    <div data-panel="hidden" hidden class="pt-col" id="hidden"></div>
+  </div>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-074 · The platform guidelines that define 'inappropriate' (advertising, off-platform contact, abuse…) are not written yet. Moderation reasons in the prototype are examples.">Content guidelines are not written yet</span></p>
+</main>
+<script>
+  document.getElementById('tabs').innerHTML = PT.tabs('Moderation queues', [{ id: 'reviews', label: 'Reviews', count: 1 }, { id: 'products', label: 'Product listings' }, { id: 'hidden', label: 'Hidden items', count: 2 }], 'reviews');
+  document.getElementById('rchips').innerHTML = PT.chip('Reported', { selected: true, radio: 'r', count: 1 }) + PT.chip('Rated 1 or 2', { radio: 'r', count: 4 }) + PT.chip('Newest', { radio: 'r' });
+  var flagged = PT.reviews.filter(function (r) { return r.flagged; });
+  document.getElementById('reviews').innerHTML = PT.banner('warning', 'Reported by U Minh Forest Honey on 02/09: “Advertising, not a review.”', 'Hiding it removes it from the product and stall pages. The customer is told why.') + flagged.map(function (r) { return PT.reviewCard(r, { fluid: true, actions: '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-hide="review">Hide review</button><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Report dismissed. The review stays visible.">Keep visible</button><a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/customers.html">Customer account</a>' }); }).join('');
+  document.getElementById('ptable').innerHTML = PT.table('Recently listed products', [
+    { key: 'n', label: 'Product', render: function (p) { return '<b>' + PT.esc(p.name) + '</b><span class="sub">' + PT.esc(PT.farmer(p.farmer).stall) + ' · ' + PT.category(p.cat).name + '</span>'; } },
+    { key: 'p', label: 'Price', align: 'num', render: function (p) { return PT.vnd(p.price) + ' <span class="sub">per ' + p.unit + '</span>'; } },
+    { key: 'd', label: 'Description', render: function (p) { return '<span class="pt-small">' + PT.esc(p.desc || '') + '</span>'; } },
+    { key: 'a', label: '', align: 'actions', render: function (p) { return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="../public/product.html">View</a><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-hide="listing">Hide listing</button>'; } },
+  ], [PT.product(14), PT.product(9), PT.product(5), PT.product(20)]);
+  document.getElementById('hidden').innerHTML = PT.table('Hidden items', [{ key: 'w', label: 'Item' }, { key: 'o', label: 'Owner' }, { key: 'r', label: 'Reason' }, { key: 'd', label: 'Hidden on' }, { key: 'a', label: '', align: 'actions', render: function () { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Item is visible again.">Unhide</button>'; } }], [{ w: 'Review on “Straw mushrooms”', o: 'Account 4471', r: 'Advertising', d: '02/09/2026' }, { w: 'Listing “Weight-loss tea”', o: 'Long Khánh Fruit Garden', r: 'Health claim, not produce', d: '19/09/2026' }]);
+  document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-hide]'); if (!b) return; var k = b.getAttribute('data-hide'); PT.dialog({ tone: 'danger', title: 'Hide this ' + k + '?', body: '<p>It is removed from customer pages right away. The ' + (k === 'review' ? 'customer' : 'stall') + ' is told and can contact the team.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason</label><select id="why" class="ml-input"><option>Advertising or off-platform contact</option><option>Abusive language</option><option>Not about the product or stall</option><option>Health or certification claim</option><option>Other</option></select></div>', keep: 'Keep visible', confirm: 'Hide ' + k, toast: 'Hidden. The owner has been told.' }); });
+  PT.boot({ role: 'admin', active: 'moderation', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

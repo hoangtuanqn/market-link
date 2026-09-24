@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact us — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col-2 pt-measure">
+    <h1 class="pt-title">Contact us</h1>
+    <p class="pt-lead">Questions about an order go to the stall directly; their phone number is on your order. For anything about the platform, reach the team here.</p>
+  </div>
+  <div class="pt-split-wide">
+    <section class="pt-col">
+      <div class="ml-card pt-panel pt-col-3">
+        <h2 class="pt-h2">The MarketLink team</h2>
+        <dl class="pt-facts">
+          <dt>Email</dt><dd><span class="pt-todo" data-todo="FR-083 · Team contact email, phone and office address are not in the repo. The SRS asks for static team contact information plus a map of the location.">Team email to add</span></dd>
+          <dt>Phone</dt><dd><span class="pt-todo">Team phone to add</span></dd>
+          <dt>Address</dt><dd><span class="pt-todo">Team address to add. The pin on the map is a placeholder in District 1.</span></dd>
+          <dt>Hours</dt><dd>Mon – Fri, 09:00 – 17:00</dd>
+        </dl>
+      </div>
+      <div class="ml-card pt-panel pt-col-3">
+        <h2 class="pt-h3">Something broken or an idea?</h2>
+        <p class="pt-small">Use the feedback form so it lands in the right queue, with the page and your browser attached.</p>
+        <a class="ml-btn ml-btn-secondary" href="../public/feedback.html">Send feedback</a>
+      </div>
+    </section>
+    <section class="pt-col-2">
+      <div id="map" class="pt-map" aria-label="Map of the team location"></div>
+      <a class="pt-small" href="https://www.openstreetmap.org/directions?to=10.7769%2C106.7009" target="_blank" rel="noopener">Directions to the team</a>
+    </section>
+  </div>
+</main>
+<script>
+  PT.map('map', { center: [10.7769, 106.7009], zoom: 15, scroll: false, markers: [{ lat: 10.7769, lng: 106.7009, kind: 'market', text: 'ML', label: 'MarketLink team (placeholder)', popup: PT.popup('MarketLink team', ['Placeholder pin, District 1'], 10.7769, 106.7009) }] });
+  PT.boot({ active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

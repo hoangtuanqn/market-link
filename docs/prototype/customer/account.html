@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main pt-main-narrow">
+  <div class="pt-col-2">
+    <h1 class="pt-title">Account</h1>
+    <p class="pt-body">Your details are shared with a stall only on the orders you place there.</p>
+  </div>
+  <form class="ml-card pt-panel pt-col" novalidate>
+    <h2 class="pt-h3">Your details</h2>
+    <div class="pt-form-grid">
+      <div class="ml-field"><label class="ml-field-label" for="name">Full name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Nguyễn Minh Khang"></div>
+      <div class="ml-field"><label class="ml-field-label" for="phone">Phone number<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" value="0903 118 218"></div>
+      <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" value="khang@example.com"></div>
+      <div class="ml-field"><label class="ml-field-label" for="addr">Address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="addr" class="ml-input" value="25 Xuân Thủy, Thảo Điền, Thủ Đức"><span class="ml-field-hint">Used for distances and directions.</span></div>
+    </div>
+    <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Your details are saved.">Save changes</button></div>
+  </form>
+  <form class="ml-card pt-panel pt-col" novalidate>
+    <h2 class="pt-h3">Change password</h2>
+    <div class="pt-form-grid">
+      <div class="ml-field"><label class="ml-field-label" for="cur">Current password</label><input id="cur" class="ml-input" type="password" autocomplete="current-password"></div>
+      <div class="ml-field"><label class="ml-field-label" for="new">New password</label><input id="new" class="ml-input" type="password" autocomplete="new-password"><span class="ml-field-hint">At least 8 characters.</span></div>
+    </div>
+    <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-secondary" data-toast="Password changed.">Change password</button></div>
+  </form>
+  <div class="ml-card pt-panel pt-between-c">
+    <div><h2 class="pt-h3">Sign out</h2><p class="pt-small ml-muted">Signs you out on this device only.</p></div>
+    <a class="ml-btn ml-btn-secondary" href="../public/home.html">Sign out</a>
+  </div>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Feature catalog · 'View and update personal details' and 'change password' are marked (proposal), not in the SRS. Keep or cut; the API contract has GET /auth/me but no PUT.">Profile editing and change password are proposals, not SRS requirements</span></p>
+</main>
+<script>PT.boot({ role: 'customer', active: null });</script>
+<div id="pt-foot"></div>
+</body>
+</html>

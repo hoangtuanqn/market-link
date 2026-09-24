@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farmer registration — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col" style="max-width:640px;margin:0 auto;width:100%">
+  <form class="ml-card pt-auth pt-auth-wide" style="margin:24px 0 0" novalidate>
+    <div class="pt-col-2">
+      <h1 class="pt-title-sm">Register your stall</h1>
+      <p class="pt-small ml-muted">After you register, an admin reviews the stall. You can sign in right away and set up your profile, but products go live only after approval (D-09).</p>
+    </div>
+    <div class="pt-form-grid">
+      <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="stall">Stall or business name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="stall" class="ml-input" placeholder="e.g. Cô Tư Garden"><span class="ml-field-hint">Customers see this name on the map and on orders.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="person">Contact person<span class="ml-field-req" aria-hidden="true">*</span></label><input id="person" class="ml-input" autocomplete="name" placeholder="Nguyễn Thị Tư"></div>
+      <div class="ml-field"><label class="ml-field-label" for="phone">Phone number<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" inputmode="tel" autocomplete="tel"></div>
+      <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" autocomplete="email"></div>
+      <div class="ml-field"><label class="ml-field-label" for="address">Farm or business address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="address" class="ml-input" autocomplete="street-address"></div>
+      <div class="ml-field"><label class="ml-field-label" for="pw">Password<span class="ml-field-req" aria-hidden="true">*</span></label><input id="pw" class="ml-input" type="password" autocomplete="new-password"></div>
+      <div class="ml-field"><label class="ml-field-label" for="pw2">Repeat password<span class="ml-field-req" aria-hidden="true">*</span></label><input id="pw2" class="ml-input" type="password" autocomplete="new-password"></div>
+    </div>
+    <div class="ml-banner ml-banner-info" role="status"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="ml-icon"><circle cx="8" cy="8" r="6.25"/><path d="M8 7.2v4"/><path d="M8 4.8v.2"/></svg><div class="ml-banner-body"><p class="ml-banner-title">MarketLink does not check licences or organic certification.</p><p class="ml-banner-text">Approval confirms the stall exists and the contact details work. Say what you grow and how at the stall itself.</p></div></div>
+    <div class="pt-form-actions">
+      <a class="ml-btn ml-btn-primary" href="../farmer/pending.html">Register stall</a>
+      <a class="pt-small" href="../public/login.html">I already have an account</a>
+    </div>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-071 · Approval time and what the admin checks are not specified. Prototype says 'an admin reviews the stall' without a promised time.">How long approval takes and what is checked</span></p>
+  </form>
+  </div>
+</main>
+<script>PT.boot({ active: null, announce: false });</script>
+<div id="pt-foot"></div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Incoming orders — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Orders</h1>
+      <p class="pt-body">Accept or decline new orders before their cutoff, mark them ready on market day, and complete them when the customer has paid.</p>
+    </div>
+    <form class="ml-search" role="search" style="max-width:420px"><label class="ml-sr" for="q">Search orders</label><input id="q" type="search" placeholder="Order code or customer name"><button type="submit" class="ml-btn ml-btn-primary">Search</button></form>
+  </div>
+  <div class="pt-row-6">
+    <div id="day-chips"></div>
+    <div class="ml-field" style="min-width:220px"><label class="ml-field-label" for="mk">Market</label><select id="mk" class="ml-input"><option>Both markets</option><option>Thảo Điền Weekend Market</option><option>Thủ Đức Farmers Market</option></select></div>
+  </div>
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+    <div id="panels"></div>
+    <div class="pt-between-c"><span class="pt-small ml-muted">Status changes are recorded with the time and who made them (FR-038). A change in the wrong order is refused (D-04).</span><div id="pager"></div></div>
+  </div>
+  <section class="pt-section">
+    <h2 class="pt-h3">Other states (FR-084)</h2>
+    <div class="pt-row" style="align-items:flex-start">
+      <div class="ml-card ml-state" role="status" aria-live="polite"><span class="ml-sr">Loading orders</span><span class="ml-skel" style="width:60%;height:20px"></span><span class="ml-skel" style="width:90%;height:14px"></span><span class="ml-skel" style="width:75%;height:14px"></span></div>
+      <div class="ml-state ml-state-empty"><h3 class="ml-state-title">No orders waiting for Sunday yet</h3><p class="ml-state-text">Customers can order until 12 hours before their slot. Check again on Saturday evening.</p></div>
+      <div class="ml-state ml-state-error" role="alert"><h3 class="ml-state-title">Couldn't load orders</h3><p class="ml-state-text">Check your connection and try again.</p><button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button></div>
+    </div>
+  </section>
+</main>
+<script>
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Pickup day', [{ value: 'all', label: 'All', sub: 'days' }, { value: 'fri', label: 'Fri', sub: '25/09' }, { value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }], 'all');
+  var S = ['placed', 'accepted', 'ready', 'completed', 'declined', 'cancelled'], L = { placed: 'Awaiting approval', accepted: 'Accepted', ready: 'Ready', completed: 'Completed', declined: 'Declined', cancelled: 'Cancelled' };
+  var by = function (s) { return PT.farmerOrders.filter(function (o) { return o.status === s; }); };
+  document.getElementById('tabs').innerHTML = PT.tabs('Orders by status', S.map(function (s) { return { id: s, label: L[s], count: by(s).length }; }), 'placed');
+  var cols = [{ key: 'code', label: 'Order', render: function (r) { return '<a href="../farmer/order.html">' + r.code + '</a>'; } }, { key: 'who', label: 'Customer', render: function (r) { return PT.esc(r.who) + '<span class="sub">' + r.phone + '</span>'; } }, { key: 'slot', label: 'Pickup', render: function (r) { return r.date + ' · ' + r.slot; } }, { key: 'cut', label: 'Cutoff', render: function (r) { return r.cutoff; } }, { key: 'items', label: 'Items', align: 'num', render: function (r) { return r.items.length; } }, { key: 'total', label: 'Total', align: 'num', render: function (r) { return PT.vnd(PT.orderTotal(r)); } }, { key: 'st', label: 'Status', render: function (r) { return PT.status(r.status); } }, { key: 'a', label: '', align: 'actions', render: function (r) { if (r.status === 'placed') return '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Order ' + r.code + ' accepted.">Accept</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-decline="' + r.code + '">Decline</button>'; if (r.status === 'accepted') return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Order ' + r.code + ' marked ready.">Mark ready</button>'; if (r.status === 'ready') return '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-complete="' + r.code + '">Mark completed</button>'; return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="../farmer/order.html">View</a>'; } }];
+  document.getElementById('panels').innerHTML = S.map(function (s, i) { return '<div data-panel="' + s + '"' + (i ? ' hidden' : '') + '>' + PT.table(null, cols, by(s).map(function (o) { return Object.assign({ _new: o.isNew }, o); })) + '</div>'; }).join('');
+  document.getElementById('pager').innerHTML = PT.pagination(1, 1);
+  document.body.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-decline]'); if (b) { var code = b.getAttribute('data-decline'); PT.dialog({ tone: 'danger', title: 'Decline order ' + code + '?', body: '<p>The customer is told right away and the items go back to your stock.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason the customer will see</label><select id="why" class="ml-input"><option>Not enough stock</option><option>Not selling on that day</option><option>Cannot make that pickup time</option><option>Other</option></select></div>', keep: 'Keep order', confirm: 'Decline order', toast: 'Order ' + code + ' declined.' }); }
+    var c = e.target.closest('[data-complete]'); if (c) { var code2 = c.getAttribute('data-complete'); PT.dialog({ title: 'Mark ' + code2 + ' as completed?', body: '<p>Do this after the customer has collected the order and paid at the stall. Completed orders count towards your revenue and unlock the customer\'s review.</p><p class="ml-muted" style="font-size:14px">Orders still marked Ready are completed automatically 24 hours after the pickup date (D-03).</p>', keep: 'Not yet', confirm: 'Mark completed', toast: 'Order ' + code2 + ' completed.' }); }
+  });
+  PT.boot({ role: 'farmer', active: 'orders', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>
