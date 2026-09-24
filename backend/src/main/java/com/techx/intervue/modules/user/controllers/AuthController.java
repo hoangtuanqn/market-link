@@ -2,7 +2,7 @@ package com.techx.intervue.modules.user.controllers;
 
 import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.controllers.BaseController;
-import com.techx.intervue.modules.helpers.CookieHelper;
+import com.techx.intervue.helpers.CookieHelper;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
