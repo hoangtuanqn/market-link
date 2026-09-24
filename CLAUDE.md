@@ -13,6 +13,7 @@ Customer đặt trước → Farmer duyệt → nhận hàng tại stall. Ba vai
 | `db/schema.sql` | Schema đích 19 bảng (MySQL 8, utf8mb4) | LEAD |
 | `docs/MarketLink-Feature-Catalog-by-Module-and-Role.md` | Danh mục tính năng theo module và vai | — |
 | `docs/chatbot-design.md` | Thiết kế chatbot FR-090…092 | BE2 |
+| `docs/design-system/README.md` | Design system "Hang tag": token, component `ml-*`, giọng văn UI — mọi UI phải theo | FE1 |
 | `README.md` | Hướng dẫn cài đặt và chạy dự án | — |
 | `CONTRIBUTING.md` | Luật nhánh `dev`/`main`, môi trường, commit, PR, release | LEAD |
 
@@ -51,6 +52,7 @@ AI **không tự tick DONE** trong REQUIREMENTS. Khi xong, báo đủ 7 điều 
 - Backend: Spring Boot 4.1 · **Java 25** · Maven wrapper · MySQL 8 · Redis · Flyway · JWT. Xem `backend/CLAUDE.md`.
 - Frontend: React 19 · Vite · TypeScript · Tailwind 4 (SPA). Xem `frontend/CLAUDE.md`.
 - Bản đồ: Leaflet + OpenStreetMap (D-12), không Google Maps.
+- UI: design system `docs/design-system/` (tokens + Tailwind theme + class `ml-*`), xem `frontend/CLAUDE.md`.
 - Locale: VND `₫`, `dd/MM/yyyy`, 24h, `Asia/Ho_Chi_Minh`.
 
 Hai cách chạy (chi tiết trong `README.md`):
