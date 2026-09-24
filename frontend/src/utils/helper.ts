@@ -1,3 +1,6 @@
+import { AxiosError } from 'axios';
+import type { ApiResponse } from '@/types/api.types';
+
 class Helper {
   /** OpenStreetMap directions to a point, opened in a new tab (D-12). */
   static directionsUrl(lat: number, lng: number) {
@@ -7,6 +10,26 @@ class Helper {
   /** Joins class names, skipping falsy values. */
   static cn(...classes: Array<string | false | null | undefined>) {
     return classes.filter(Boolean).join(' ');
+  }
+
+  /**
+   * Message để hiện cho người dùng: ưu tiên message backend trả về, không có (mất mạng, timeout, response lạ) thì dùng
+   * fallback.
+   */
+  static getErrorMessage(error: unknown, fallback: string) {
+    if (error instanceof AxiosError) {
+      if (!error.response) return 'Could not reach the server. Check your connection and try again.';
+      const message = (error.response.data as Partial<ApiResponse<unknown>> | undefined)?.message;
+      if (message) return message;
+    }
+    return fallback;
+  }
+
+  /** Lỗi theo từng field (error.details của backend) → { email: '...', password: '...' }. */
+  static getFieldErrors(error: unknown): Record<string, string> {
+    if (!(error instanceof AxiosError)) return {};
+    const details = (error.response?.data as Partial<ApiResponse<unknown>> | undefined)?.error?.details ?? [];
+    return Object.fromEntries(details.filter((d) => d.field).map((d) => [d.field, d.message]));
   }
 }
 export default Helper;
