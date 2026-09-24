@@ -14,4 +14,6 @@ public record UserResource(
         String phone,
         String address,
         RoleType role,
-        Instant createdAt) {}
+        Instant createdAt,
+        /* false: tài khoản tạo qua Google/Facebook chưa đặt mật khẩu → FE mời đặt mật khẩu */
+        boolean hasPassword) {}

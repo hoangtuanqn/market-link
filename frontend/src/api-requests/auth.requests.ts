@@ -1,10 +1,12 @@
 import type { ApiResponse } from '@/types/api.types';
 import type {
   AuthResultType,
+  AuthorizeUrlType,
   LoginInput,
   RegisterInput,
   ResetPasswordInput,
   ResetTokenType,
+  SetPasswordInput,
   SocialProvider,
 } from '@/types/auth.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
@@ -22,10 +24,18 @@ class AuthApi {
     return response.data;
   };
 
+  /** URL trang đăng nhập Google (client_id, redirect_uri lấy từ backend); `state` do FE sinh để chống CSRF. */
+  static googleAuthorizeUrl = async (state: string) => {
+    const response = await publicApi.get<ApiResponse<AuthorizeUrlType>>('/auth/google/authorize-url', {
+      params: { state },
+    });
+    return response.data;
+  };
+
   /** `code` là authorization code Google/Facebook trả về redirect_uri của frontend. */
   static loginWithSocial = async (provider: SocialProvider, code: string) => {
     const response = await publicApi.post<ApiResponse<AuthResultType>>(`/auth/${provider}`, { code });
-    return response.data.data;
+    return response.data;
   };
 
   /** FR-007: luôn trả cùng một message dù email có tồn tại hay không. */
@@ -41,6 +51,12 @@ class AuthApi {
 
   static forgotPassword = async (email: string) => {
     const response = await publicApi.post<ApiResponse<null>>('/auth/forgot-password', { email });
+    return response.data;
+  };
+
+  /** Đặt mật khẩu lần đầu cho tài khoản tạo qua Google/Facebook (cần đăng nhập). */
+  static setPassword = async (input: SetPasswordInput) => {
+    const response = await privateApi.post<ApiResponse<null>>('/auth/set-password', input);
     return response.data;
   };
 
