@@ -1,19 +1,17 @@
 package com.techx.intervue.modules.user.entities;
 
-import jakarta.persistence.CascadeType;
+import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.enums.UserStatus;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,21 +30,29 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<UserRole> userRoles = new HashSet<>();
-
-    private String name;
+    @Column(name = "full_name", nullable = false, length = 100)
+    private String fullName;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    private String password;
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
 
-    @Column(unique = true)
+    @Convert(converter = RoleType.DbConverter.class)
+    @Column(nullable = false)
+    private RoleType role;
+
+    @Column(unique = true, nullable = false)
     private String phone;
 
     private String image;
     private String address;
+
+    @Convert(converter = UserStatus.DbConverter.class)
+    @Column(nullable = false)
+    @Builder.Default
+    private UserStatus status = UserStatus.ACTIVE;
 
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
