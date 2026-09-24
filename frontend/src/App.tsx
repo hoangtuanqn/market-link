@@ -20,6 +20,7 @@ import CustomerOrderEditPage from './pages/CustomerOrderEdit';
 import CustomerOrderPlacedPage from './pages/CustomerOrderPlaced';
 import CustomerReviewPage from './pages/CustomerReview';
 import CustomerBecomeFarmerPage from './pages/CustomerBecomeFarmer';
+import CustomerSettingsPage from './pages/CustomerSettings';
 
 const App = () => {
   return (
@@ -50,6 +51,7 @@ const App = () => {
           <Route path="orders/placed" element={<CustomerOrderPlacedPage />} />
           <Route path="orders/:code/review" element={<CustomerReviewPage />} />
           <Route path="become-farmer" element={<CustomerBecomeFarmerPage />} />
+          <Route path="settings" element={<CustomerSettingsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
