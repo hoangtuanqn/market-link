@@ -19,6 +19,10 @@ import CustomerMessagesPage from './pages/CustomerMessages';
 import CustomerNotificationsPage from './pages/CustomerNotifications';
 import CustomerOrderEditPage from './pages/CustomerOrderEdit';
 import CustomerOrderPlacedPage from './pages/CustomerOrderPlaced';
+import CustomerReviewPage from './pages/CustomerReview';
+import CustomerBecomeFarmerPage from './pages/CustomerBecomeFarmer';
+import CustomerSettingsPage from './pages/CustomerSettings';
+import CustomerAssistantPage from './pages/CustomerAssistant';
 
 const App = () => {
   return (
@@ -48,6 +52,10 @@ const App = () => {
           <Route path="notifications" element={<CustomerNotificationsPage />} />
           <Route path="orders/:code/edit" element={<CustomerOrderEditPage />} />
           <Route path="orders/placed" element={<CustomerOrderPlacedPage />} />
+          <Route path="orders/:code/review" element={<CustomerReviewPage />} />
+          <Route path="become-farmer" element={<CustomerBecomeFarmerPage />} />
+          <Route path="settings" element={<CustomerSettingsPage />} />
+          <Route path="assistant" element={<CustomerAssistantPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
