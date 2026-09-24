@@ -31,7 +31,7 @@ const Hero = ({ markets }: { markets: MarketType[] }) => {
 
         <div className="flex flex-wrap items-center gap-2">
           <ButtonLink to="/markets">Browse markets</ButtonLink>
-          <ButtonLink to="/register-farmer" variant="secondary">
+          <ButtonLink to="/register/farmer" variant="secondary">
             Sell at MarketLink
           </ButtonLink>
         </div>

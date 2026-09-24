@@ -14,7 +14,7 @@ const COLUMNS: { title: string; links: { label: string; to: string }[] }[] = [
   {
     title: 'Sell',
     links: [
-      { label: 'Register as a Farmer', to: '/register-farmer' },
+      { label: 'Register as a Farmer', to: '/register/farmer' },
       { label: 'Handling pre-orders', to: '/farmer/orders' },
       { label: 'Stall guidelines', to: '/about' },
     ],

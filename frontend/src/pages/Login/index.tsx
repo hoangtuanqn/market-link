@@ -25,10 +25,10 @@ const LoginPage = () => {
       </p>
 
       <div className="flex flex-col gap-2">
-        <ButtonLink to="/register-customer" variant="secondary" className="w-full">
+        <ButtonLink to="/register/customer" variant="secondary" className="w-full">
           Continue with Google
         </ButtonLink>
-        <ButtonLink to="/register-customer" variant="secondary" className="w-full">
+        <ButtonLink to="/register/customer" variant="secondary" className="w-full">
           Continue with Facebook
         </ButtonLink>
         <p className="text-ink-muted text-[13px]">
@@ -39,11 +39,11 @@ const LoginPage = () => {
 
       <p className="text-small text-ink-muted">
         New here?{' '}
-        <Link to="/register-customer" className="text-brand underline">
+        <Link to="/register/customer" className="text-brand underline">
           Create a customer account
         </Link>{' '}
         or{' '}
-        <Link to="/register-farmer" className="text-brand underline">
+        <Link to="/register/farmer" className="text-brand underline">
           register your stall
         </Link>
         .
