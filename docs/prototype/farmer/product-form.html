@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add or edit product — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main pt-main-narrow">
+  <p class="pt-small ml-muted"><a href="../farmer/products.html">Products</a> · Edit</p>
+  <div class="pt-between">
+    <div class="pt-col-2"><h1 class="pt-title-sm">Củ Chi water spinach</h1><p class="pt-small ml-muted">Listed since 05/08/2026 · 64 sold in September</p></div>
+    <div class="ml-chips"><button type="button" class="ml-chip" aria-pressed="false" id="mode">Preview: add new product</button></div>
+  </div>
+  <form class="ml-card pt-panel pt-col" novalidate>
+    <div class="pt-form-grid">
+      <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="name">Product name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Củ Chi water spinach"><span class="ml-field-hint">In English, with the place or variety if it matters: “Củ Chi water spinach”, “Green-skin pomelo”.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="cat">Category<span class="ml-field-req" aria-hidden="true">*</span></label><select id="cat" class="ml-input"><option>Leafy greens</option><option>Fruit</option><option>Dairy</option><option>Baked goods</option><option>Eggs</option><option>Honey &amp; preserves</option><option>Mushrooms</option><option>Herbs</option></select><span class="ml-field-hint">Categories are managed by the admin.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="unit">Sold per<span class="ml-field-req" aria-hidden="true">*</span></label><select id="unit" class="ml-input"><option>bunch</option><option>kg</option><option>piece</option><option>jar</option><option>loaf</option><option>dozen</option><option>bottle</option></select></div>
+      <div class="ml-field"><label class="ml-field-label" for="price">Price in ₫<span class="ml-field-req" aria-hidden="true">*</span></label><input id="price" class="ml-input" inputmode="numeric" value="15000"><span class="ml-field-hint">Shown as 15,000 ₫ / bunch.</span></div>
+      <div class="ml-field ml-field-error"><label class="ml-field-label" for="qty">Quantity available this week<span class="ml-field-req" aria-hidden="true">*</span></label><input id="qty" class="ml-input" inputmode="numeric" value="-2" aria-invalid="true" aria-describedby="qty-e"><span id="qty-e" class="ml-field-err" role="alert">Quantity must be 0 or more. Use Sold out for none left.</span></div>
+      <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="desc">Description</label><textarea id="desc" class="ml-input">Cut on Friday evening, bunches of about 400 g. Best stir-fried with garlic the same day.</textarea><span class="ml-field-hint">Shown on the product page. Say how it is grown and how to keep it.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="flag">Short tag on the card</label><input id="flag" class="ml-input" value="Fresh today" maxlength="24"><span class="ml-field-hint">Optional, hand-lettered on the tag: “Fresh today”, “Baked at 5am”. <span class="pt-todo" data-todo="FR-062 · The 'flag' text on the product tag is a design-system idea, not an SRS field. Keep it (needs a column) or drop it.">Not an SRS field</span></span></div>
+      <div class="ml-field"><label class="ml-field-label">Status</label><div class="ml-chips" style="margin-top:4px"><button type="button" class="ml-chip" aria-pressed="true" data-chip data-chip-group="st">Available</button><button type="button" class="ml-chip" aria-pressed="false" data-chip data-chip-group="st">Sold out</button><button type="button" class="ml-chip" aria-pressed="false" data-chip data-chip-group="st">Paused</button></div></div>
+    </div>
+    <div class="pt-col-2">
+      <span class="ml-field-label">Photo</span>
+      <div class="pt-upload"><span class="pt-upload-frame">Leafy greens</span><div class="pt-col-2"><p class="pt-small">No photo yet. Until you add one, the tag shows the category in handwriting.</p><div class="pt-row-2"><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Choose photo</button><span class="pt-caption ml-muted">JPG or PNG, 4:3, up to 5 MB. Close up, natural light, on wood or paper.</span></div></div></div>
+      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-062 · Image handling: the API contract sends image_url, so where files are uploaded and stored (local disk, S3-compatible bucket, size limit) is not decided.">Where photos are uploaded and stored is not decided</span></p>
+    </div>
+    <div class="pt-form-actions">
+      <button type="button" class="ml-btn ml-btn-primary" data-toast="Củ Chi water spinach saved.">Save product</button>
+      <a class="ml-btn ml-btn-secondary" href="../farmer/products.html">Cancel</a>
+      <button type="button" class="ml-btn ml-btn-danger pt-right" id="del">Delete product</button>
+    </div>
+  </form>
+</main>
+<script>
+  document.getElementById('del').addEventListener('click', function () { PT.dialog({ tone: 'danger', title: 'Delete Củ Chi water spinach?', body: '<p>It disappears from the catalogue and from your template. Orders that already include it are not changed.</p>', keep: 'Keep product', confirm: 'Delete product', onConfirm: function () { location.href = '../farmer/products.html'; } }); });
+  document.getElementById('mode').addEventListener('click', function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); document.querySelector('h1').textContent = on ? 'Add a product' : 'Củ Chi water spinach'; document.getElementById('del').hidden = on; ['name', 'price', 'desc', 'flag'].forEach(function (id) { document.getElementById(id).value = on ? '' : document.getElementById(id).defaultValue; }); });
+  PT.boot({ role: 'farmer', active: 'products', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

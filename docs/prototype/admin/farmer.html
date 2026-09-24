@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Farmer registration detail — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <p class="pt-small ml-muted"><a href="../admin/farmers.html">Farmers</a> · Bếp bánh Cô Ba</p>
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted">Registered 22/09/2026 · waiting for approval</p>
+      <h1 class="pt-title-sm">Bếp bánh Cô Ba</h1>
+      <span class="ml-status ml-status-placed">Waiting for approval</span>
+    </div>
+    <div class="pt-row-2"><button type="button" class="ml-btn ml-btn-primary" id="ok">Approve stall</button><button type="button" class="ml-btn ml-btn-danger" id="no">Reject</button></div>
+  </div>
+  <div class="pt-split">
+    <div class="pt-col-6">
+      <section class="ml-card pt-panel pt-col-3">
+        <h2 class="pt-h3">Registration details</h2>
+        <dl class="pt-facts"><dt>Stall or business</dt><dd>Bếp bánh Cô Ba</dd><dt>Contact person</dt><dd>Lý Thị Ba</dd><dt>Phone</dt><dd>0906 222 410</dd><dt>Email</dt><dd>coba@example.com</dd><dt>Address</dt><dd>14/3 Kha Vạn Cân, Linh Đông, Thủ Đức</dd><dt>Markets requested</dt><dd>Thủ Đức Farmers Market · Sat, Sun · pickup 06:30 – 09:30</dd><dt>About</dt><dd>Bánh bò and bánh chuối, steamed on the morning of the market.</dd></dl>
+      </section>
+      <section class="ml-card pt-panel pt-col-3">
+        <h2 class="pt-h3">What approval means</h2>
+        <p class="pt-body">MarketLink checks that the stall exists and the contact details work. It does not verify licences or organic claims (SRS constraints). After approval the stall can list products and take orders.</p>
+        <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-071 · The checklist an admin follows before approving (call the contact number, confirm with the market operator, anything else) is not defined.">Approval checklist is not defined</span></p>
+      </section>
+      <section class="pt-col-3">
+        <h2 class="pt-h2">History</h2>
+        <ol class="pt-timeline"><li><span class="pt-timeline-dot" style="background:var(--status-placed-bg);color:var(--status-placed-ink)">' + '</span><div><b>Registered</b><time>22/09/2026 14:08 · by the Farmer</time></div></li></ol>
+      </section>
+    </div>
+    <aside class="pt-sticky">
+      <div id="map" class="pt-map pt-map-sm" aria-label="Requested market"></div>
+      <div class="ml-card pt-panel pt-col-2"><h2 class="pt-h3">Thủ Đức Farmers Market</h2><p class="pt-small">9 stalls approved · 1 waiting. Bếp bánh Cô Ba would be the first baked-goods stall at this market.</p></div>
+    </aside>
+  </div>
+</main>
+<script>
+  document.querySelector('.pt-timeline-dot').innerHTML = PT.icons.placed();
+  document.getElementById('ok').addEventListener('click', function () { PT.dialog({ title: 'Approve Bếp bánh Cô Ba?', body: '<p>The stall becomes visible to customers and can list products right away. Lý Thị Ba is notified.</p>', keep: 'Not yet', confirm: 'Approve stall', onConfirm: function () { location.href = '../admin/farmers.html'; } }); });
+  document.getElementById('no').addEventListener('click', function () { PT.dialog({ tone: 'danger', title: 'Reject Bếp bánh Cô Ba?', body: '<div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason the Farmer will see</label><textarea id="why" class="ml-input" style="min-height:72px"></textarea></div>', keep: 'Keep waiting', confirm: 'Reject registration', toast: 'Registration rejected.' }); });
+  var m = PT.market(2);
+  PT.map('map', { center: [m.lat, m.lng], zoom: 15, scroll: false, markers: [{ lat: m.lat, lng: m.lng, kind: 'market', label: m.name }] });
+  PT.boot({ role: 'admin', active: 'farmers', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

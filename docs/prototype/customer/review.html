@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review stall and products — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main pt-main-narrow">
+  <p class="pt-small ml-muted"><a href="../customer/orders.html">My orders</a> · Order #ML-0398 · Review</p>
+  <div class="pt-col-2">
+    <p class="ml-hand ml-muted">Completed Sun 20/09 at 08:14</p>
+    <h1 class="pt-title-sm">How was Trại dê Củ Chi?</h1>
+    <p class="pt-body">Reviews are tied to this completed order, so other customers see them as a verified purchase. The stall can reply.</p>
+  </div>
+  <form class="pt-col" novalidate>
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">The stall</h2>
+      <div id="rate-stall"></div>
+      <div class="ml-field" style="min-width:0"><label class="ml-field-label" for="c1">Comment</label><textarea id="c1" class="ml-input" placeholder="Was it ready on time? Was the stall easy to find?"></textarea></div>
+    </section>
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Goat yogurt · 4 jars</h2>
+      <div id="rate-p1"></div>
+      <div class="ml-field" style="min-width:0"><label class="ml-field-label" for="c2">Comment</label><textarea id="c2" class="ml-input" placeholder="Taste, freshness, portion size"></textarea></div>
+      <label class="ml-check"><input type="checkbox"><span class="ml-check-box" aria-hidden="true"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3L13 4.5"/></svg></span><span class="ml-check-text">Skip this product</span></label>
+    </section>
+    <div class="pt-form-actions">
+      <button type="button" class="ml-btn ml-btn-primary" data-toast="Thanks. Your review of Trại dê Củ Chi is live.">Publish review</button>
+      <a class="pt-small" href="../customer/orders.html">Not now</a>
+    </div>
+    <p class="pt-caption ml-muted">One review per order for the stall, and one per product in it (D-10). <span class="pt-todo" data-todo="FR-050/051 · Whether a customer can edit or delete a published review, and whether photos are allowed, is not specified.">Editing or deleting a review is not specified.</span></p>
+  </form>
+</main>
+<script>
+  document.getElementById('rate-stall').innerHTML = PT.ratingInput('Rate Trại dê Củ Chi', 'rs', 0);
+  document.getElementById('rate-p1').innerHTML = PT.ratingInput('Rate goat yogurt', 'rp1', 0);
+  PT.boot({ role: 'customer', active: 'orders' });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

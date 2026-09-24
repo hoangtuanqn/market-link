@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customer registration — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <form class="ml-card pt-auth pt-auth-wide" novalidate>
+    <div class="pt-col-2">
+      <h1 class="pt-title-sm">Create a customer account</h1>
+      <p class="pt-small ml-muted">Name, phone number, email and address are required by the platform. The address is used to show distances to markets and to pre-fill directions.</p>
+    </div>
+    <div class="pt-form-grid">
+      <div class="ml-field"><label class="ml-field-label" for="name">Full name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" autocomplete="name" placeholder="Nguyễn Minh Khang"></div>
+      <div class="ml-field ml-field-error"><label class="ml-field-label" for="phone">Phone number<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" inputmode="tel" autocomplete="tel" value="09031" aria-invalid="true" aria-describedby="phone-e"><span id="phone-e" class="ml-field-err" role="alert">Phone number needs 10 digits.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" autocomplete="email"><span class="ml-field-hint">Used to sign in and for order notifications.</span></div>
+      <div class="ml-field"><label class="ml-field-label" for="address">Address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="address" class="ml-input" autocomplete="street-address" placeholder="Street, ward, district"></div>
+      <div class="ml-field"><label class="ml-field-label" for="pw">Password<span class="ml-field-req" aria-hidden="true">*</span></label><input id="pw" class="ml-input" type="password" autocomplete="new-password"><span class="ml-field-hint">At least 8 characters. <span class="pt-todo" data-todo="FR-001/003 · Password rules (length, complexity) are not defined in the SRS. Prototype shows 'at least 8 characters' as a placeholder rule.">Password rules to confirm</span></span></div>
+      <div class="ml-field"><label class="ml-field-label" for="pw2">Repeat password<span class="ml-field-req" aria-hidden="true">*</span></label><input id="pw2" class="ml-input" type="password" autocomplete="new-password"></div>
+    </div>
+    <div class="pt-form-actions">
+      <a class="ml-btn ml-btn-primary" href="../customer/dashboard.html">Create account</a>
+      <a class="pt-small" href="../public/login.html">I already have an account</a>
+    </div>
+    <p class="pt-caption ml-muted">One account can be shared within a family; the system does not tell people apart inside an account (D-08).</p>
+  </form>
+</main>
+<script>PT.boot({ active: null, announce: false });</script>
+<div id="pt-foot"></div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reports — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Reports</h1>
+      <p class="pt-body pt-measure">Orders and revenue across the platform, split by market, and the most active Farmers. Revenue is the total of completed orders; it is paid at the stalls, not through MarketLink.</p>
+    </div>
+    <div class="pt-row-6">
+      <div class="ml-chips" id="range"></div>
+      <div class="ml-field" style="min-width:220px"><label class="ml-field-label" for="mk">Market</label><select id="mk" class="ml-input"><option>All markets</option><option>Thảo Điền Weekend Market</option><option>Thủ Đức Farmers Market</option><option>Phú Mỹ Hưng Saturday Market</option><option>Bà Chiểu Green Market</option></select></div>
+    </div>
+  </div>
+  <div class="pt-grid-4" id="stats"></div>
+  <div class="pt-grid-2">
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Revenue by market · September</h2>
+      <ul class="pt-bars"><li><span>Thảo Điền Weekend Market</span><span class="bar"><span style="width:100%"></span></span><span class="val">14,200,000 ₫</span></li><li><span>Thủ Đức Farmers Market</span><span class="bar"><span style="width:63%"></span></span><span class="val">8,900,000 ₫</span></li><li><span>Phú Mỹ Hưng Saturday Market</span><span class="bar"><span style="width:41%"></span></span><span class="val">5,800,000 ₫</span></li><li><span>Bà Chiểu Green Market</span><span class="bar"><span style="width:21%"></span></span><span class="val">3,000,000 ₫</span></li></ul>
+    </section>
+    <section class="ml-card pt-panel pt-col-3">
+      <h2 class="pt-h3">Orders by status · September</h2>
+      <ul class="pt-bars"><li><span>Completed</span><span class="bar"><span style="width:100%"></span></span><span class="val">596</span></li><li><span>Accepted or ready</span><span class="bar"><span style="width:14%"></span></span><span class="val">84</span></li><li><span>Awaiting approval</span><span class="bar"><span style="width:5%"></span></span><span class="val">31</span></li><li><span>Declined</span><span class="bar"><span style="width:6%"></span></span><span class="val">38</span></li><li><span>Cancelled by customer</span><span class="bar"><span style="width:8%"></span></span><span class="val">47</span></li></ul>
+    </section>
+  </div>
+  <section class="pt-col-3">
+    <div class="pt-between-c"><h2 class="pt-h2">Most active Farmers · September</h2><span class="pt-small ml-muted">By completed orders</span></div>
+    <div id="table"></div>
+  </section>
+  <section class="pt-col-3">
+    <div class="pt-between-c"><h2 class="pt-h2">Orders per market</h2><span class="pt-small ml-muted">September</span></div>
+    <div id="mtable"></div>
+  </section>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-075 · The SRS names three reports (total orders, revenue across markets, most active Farmers) but not the date ranges, whether 'active' means orders or products, or whether reports can be exported. The SRS example schema has a Reports table with generated_by and report_type; whether reports are stored or computed live is undecided.">Report definitions, ranges and export are not specified</span></p>
+</main>
+<script>
+  document.getElementById('range').innerHTML = PT.chip('This week', { radio: 'r' }) + PT.chip('September', { selected: true, radio: 'r' }) + PT.chip('Last 3 months', { radio: 'r' }) + PT.chip('All time', { radio: 'r' });
+  document.getElementById('stats').innerHTML = PT.statTile('Orders', '796', 'September · all markets') + PT.statTile('Completed revenue', '31,900,000', '₫, paid at the stalls', true) + PT.statTile('Average order', '53,500', '₫ per completed order') + PT.statTile('Decline rate', '4.8%', '38 of 796 orders');
+  document.getElementById('table').innerHTML = PT.table(null, [{ key: 'r', label: '#', align: 'num' }, { key: 'f', label: 'Stall' }, { key: 'm', label: 'Markets' }, { key: 'o', label: 'Completed orders', align: 'num' }, { key: 'v', label: 'Revenue', align: 'num', render: function (r) { return PT.vnd(r.v); } }, { key: 'p', label: 'Products listed', align: 'num' }, { key: 'rt', label: 'Rating', align: 'num' }], [
+    { r: 1, f: 'Lò bánh Gió Nam', m: 'Thảo Điền, Phú Mỹ Hưng', o: 128, v: 6400000, p: 3, rt: '4.9' },
+    { r: 2, f: 'Vườn Cô Tư', m: 'Thảo Điền, Thủ Đức', o: 112, v: 8450000, p: 4, rt: '4.6' },
+    { r: 3, f: 'Trại Ba Lành', m: 'Thảo Điền', o: 96, v: 4300000, p: 2, rt: '4.5' },
+    { r: 4, f: 'Nhà vườn Út Hiền', m: 'Thủ Đức', o: 81, v: 5200000, p: 2, rt: '4.8' },
+    { r: 5, f: 'Trại dê Củ Chi', m: 'Thủ Đức, Phú Mỹ Hưng', o: 74, v: 4100000, p: 3, rt: '4.4' },
+  ]);
+  document.getElementById('mtable').innerHTML = PT.table(null, [{ key: 'm', label: 'Market' }, { key: 's', label: 'Stalls', align: 'num' }, { key: 'o', label: 'Orders', align: 'num' }, { key: 'c', label: 'Completed', align: 'num' }, { key: 'd', label: 'Declined', align: 'num' }, { key: 'v', label: 'Revenue', align: 'num', render: function (r) { return PT.vnd(r.v); } }], [
+    { m: 'Thảo Điền Weekend Market', s: 14, o: 352, c: 268, d: 14, v: 14200000 }, { m: 'Thủ Đức Farmers Market', s: 9, o: 221, c: 171, d: 11, v: 8900000 }, { m: 'Phú Mỹ Hưng Saturday Market', s: 11, o: 142, c: 104, d: 9, v: 5800000 }, { m: 'Bà Chiểu Green Market', s: 7, o: 81, c: 53, d: 4, v: 3000000 }]);
+  PT.boot({ role: 'admin', active: 'reports', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Products — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">Products</h1>
+      <p class="pt-body pt-measure">Everything you can list. Mark a product sold out when it runs out on market day, or pause it when it is not in season.</p>
+    </div>
+    <a class="ml-btn ml-btn-primary" href="../farmer/product-form.html">Add product</a>
+  </div>
+  <div class="pt-row-2"><div class="ml-chips" id="chips"></div></div>
+  <div id="table"></div>
+  <p class="pt-small ml-muted">Deleting a product removes it from the catalogue; past orders keep their lines. Photos: 4:3, natural light, on wood or paper.</p>
+  <section class="pt-section">
+    <h2 class="pt-h3">Other states (FR-084)</h2>
+    <div class="pt-row" style="align-items:flex-start">
+      <div class="ml-state ml-state-empty"><h3 class="ml-state-title">No products yet</h3><p class="ml-state-text">Add your first product with a name, category, price, unit and this week's quantity.</p><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../farmer/product-form.html">Add product</a></div>
+      <div class="ml-state ml-state-error" role="alert"><h3 class="ml-state-title">Couldn't load products</h3><p class="ml-state-text">Check your connection and try again.</p><button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button></div>
+    </div>
+  </section>
+</main>
+<script>
+  document.getElementById('chips').innerHTML = PT.chip('All', { selected: true, radio: 'f', count: 5 }) + PT.chip('Available', { radio: 'f', count: 4 }) + PT.chip('Sold out', { radio: 'f', count: 0 }) + PT.chip('Paused', { radio: 'f', count: 1 });
+  var mine = [1, 2, 7, 19].map(PT.product).concat([{ id: 99, name: 'Morning glory, wild', farmer: 1, cat: 1, price: 20000, unit: 'bunch', stock: 0, status: 'unavailable' }]);
+  var label = { available: 'Available', sold_out: 'Sold out', unavailable: 'Paused' };
+  document.getElementById('table').innerHTML = PT.table('5 products', [
+    { key: 'n', label: 'Product', render: function (p) { return '<a href="../farmer/product-form.html"><b>' + PT.esc(p.name) + '</b></a><span class="sub">' + PT.category(p.cat).name + '</span>'; } },
+    { key: 'p', label: 'Price', align: 'num', render: function (p) { return PT.vnd(p.price) + ' <span class="sub">per ' + p.unit + '</span>'; } },
+    { key: 's', label: 'Left this week', align: 'num', render: function (p) { return p.status === 'available' ? PT.units(p.stock, p.unit) : '—'; } },
+    { key: 'r', label: 'Reserved', align: 'num', render: function (p) { return ({ 1: 8, 2: 7, 7: 10, 19: 3 })[p.id] || 0; } },
+    { key: 'st', label: 'Status', render: function (p) { return '<select class="ml-input" style="min-height:36px;padding:0 8px;width:auto" aria-label="Status of ' + PT.esc(p.name) + '" data-status><option value="available"' + (p.status === 'available' ? ' selected' : '') + '>Available</option><option value="sold_out"' + (p.status === 'sold_out' ? ' selected' : '') + '>Sold out</option><option value="unavailable"' + (p.status === 'unavailable' ? ' selected' : '') + '>Paused</option></select>'; } },
+    { key: 'a', label: '', align: 'actions', render: function (p) { return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../farmer/product-form.html">Edit</a><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-del="' + PT.esc(p.name) + '">Delete</button>'; } },
+  ], mine);
+  document.body.addEventListener('change', function (e) { if (e.target.matches('[data-status]')) PT.toast('Status saved. ' + (e.target.value === 'sold_out' ? 'Customers now see “Sold out” and can ask to be told when it is back.' : e.target.value === 'unavailable' ? 'The product is hidden from customers until you set it back.' : 'The product is listed again.')); });
+  document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-del]'); if (!b) return; PT.dialog({ tone: 'danger', title: 'Delete ' + b.getAttribute('data-del') + '?', body: '<p>It disappears from the catalogue and from your template. Orders that already include it are not changed.</p><p class="ml-muted" style="font-size:14px">To stop selling it for a while, choose Paused instead.</p>', keep: 'Keep product', confirm: 'Delete product', toast: b.getAttribute('data-del') + ' deleted.' }); });
+  PT.boot({ role: 'farmer', active: 'products', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

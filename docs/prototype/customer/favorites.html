@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Favorites and saved markets — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col-2">
+    <h1 class="pt-title">Favorites</h1>
+    <p class="pt-lead">Stalls and products you follow, plus your preferred markets. When a favorite product comes back in stock you get a notification.</p>
+  </div>
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+    <div data-panel="stalls" class="pt-grid" id="stalls"></div>
+    <div data-panel="products" hidden class="pt-col">
+      <div id="restock"></div>
+      <div class="pt-grid-tags" id="products"></div>
+    </div>
+    <div data-panel="markets" hidden class="pt-col">
+      <div class="pt-grid-2" id="markets"></div>
+      <p class="pt-small ml-muted">Preferred markets come first in lists and on the map, and their pickup points pre-fill directions from your saved address. <span class="pt-todo" data-todo="FR-014 (SHOULD) · 'route-friendly pickup details' is not defined beyond directions. Prototype: preferred markets sort first and directions start from the saved address.">What 'route-friendly pickup details' means beyond directions</span></p>
+    </div>
+  </div>
+</main>
+<script>
+  document.getElementById('tabs').innerHTML = PT.tabs('Favorites', [{ id: 'stalls', label: 'Stalls', count: 3 }, { id: 'products', label: 'Products', count: 4 }, { id: 'markets', label: 'Markets', count: 1 }], 'stalls');
+  document.getElementById('stalls').innerHTML = [1, 3, 4].map(function (id) { return PT.stallCard(PT.farmer(id)).replace('<div class="ml-stall-actions">', '<div class="ml-stall-actions"><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" data-toast="Removed from favorites." data-toast-action="Undo">Remove</button>'); }).join('');
+  document.getElementById('restock').innerHTML = PT.banner('info', 'Restock alerts are on for the 4 products below.', 'You get an in-app notification when a sold-out favorite is listed again.');
+  document.getElementById('products').innerHTML = [4, 1, 5, 14].map(function (id) { var p = Object.assign({}, PT.product(id), { favorite: true }); return PT.productCard(p); }).join('');
+  document.getElementById('markets').innerHTML = PT.marketCard(PT.market(1));
+  PT.boot({ role: 'customer', active: 'favorites' });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

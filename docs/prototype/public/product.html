@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product detail — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <p class="pt-small ml-muted"><a href="../public/products.html">Products</a> · <a href="../public/products.html">Leafy greens</a> · <a href="../public/stall.html">Vườn Cô Tư</a></p>
+  <div class="pt-split-wide">
+    <div class="pt-col-3">
+      <div class="pt-photo"><span class="pt-photo-hand">Leafy greens</span></div>
+      <div class="pt-thumbs" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="pt-caption ml-muted">No photo yet. The tag shows the hand-lettered category until the stall adds one (design system, Imagery).</p>
+    </div>
+    <div class="pt-col">
+      <div class="pt-col-2">
+        <p class="ml-hand ml-muted">Fresh today · cut Friday evening</p>
+        <h1 class="pt-title-sm">Củ Chi water spinach</h1>
+        <p class="pt-body">Sold by <a href="../public/stall.html">Vườn Cô Tư</a> · <span id="rating"></span></p>
+      </div>
+      <div class="pt-row" style="gap:24px">
+        <span id="price"></span>
+        <span class="pt-body"><b>12 bunches</b> available this week</span>
+      </div>
+      <dl class="pt-facts">
+        <dt>Unit</dt><dd>1 bunch, about 400 g</dd>
+        <dt>Pick up at</dt><dd>Thảo Điền Weekend Market, stall A12 · Sat, Sun · 06:00 – 10:30<br><span class="ml-muted">or Thủ Đức Farmers Market, stall B02 · Sun · 06:00 – 09:30</span></dd>
+        <dt>Orders close</dt><dd>12 hours before your pickup time</dd>
+        <dt>Category</dt><dd>Leafy greens</dd>
+      </dl>
+      <div class="ml-card pt-panel-4 pt-col-3">
+        <div class="pt-row" style="gap:24px">
+          <span id="qty"></span>
+          <button type="button" class="ml-btn ml-btn-primary" data-toast="Added 2 bunches of water spinach to your cart." data-toast-action="Undo">Add to cart</button>
+          <button type="button" class="ml-btn ml-btn-secondary" data-fav data-name="Củ Chi water spinach" aria-pressed="false">Add to favorites</button>
+        </div>
+        <p class="pt-small ml-muted">Stock is held for you when you place the order. You pay 15,000 ₫ a bunch at the stall on pickup.</p>
+      </div>
+      <section class="pt-col-2">
+        <h2 class="pt-h3">From the stall</h2>
+        <p class="pt-body pt-measure">Cut on Friday evening, bunches of about 400 g. Best stir-fried with garlic the same day. Grown without pesticides on our plot in Tân Phú Trung; we do not hold any certification, so come and ask us about it at the stall.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="pt-section" aria-labelledby="rev-h">
+    <div class="pt-between-c">
+      <h2 id="rev-h" class="pt-h2">Reviews of this product</h2>
+      <div class="pt-row-2"><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" disabled>Write a review</button><span class="pt-small ml-muted">Available after an order with this product is completed.</span></div>
+    </div>
+    <p class="pt-body"><span id="rating2"></span> · 2 reviews from completed orders</p>
+    <div class="pt-grid-2" id="reviews"></div>
+  </section>
+
+  <section class="pt-section">
+    <div class="pt-between-c"><h2 class="pt-h2">Also from Vườn Cô Tư this week</h2><a href="../public/stall.html">See the stall</a></div>
+    <div class="pt-grid-tags" id="more"></div>
+  </section>
+</main>
+<script>
+  document.getElementById('rating').innerHTML = PT.rating(4.6, 32);
+  document.getElementById('rating2').innerHTML = PT.rating(5.0);
+  document.getElementById('price').innerHTML = PT.priceTag(15000, 'bunch', null, true);
+  document.getElementById('qty').innerHTML = PT.qty(2, 12, 'bunch', 'Water spinach');
+  document.getElementById('reviews').innerHTML = PT.reviews.filter(function (r) { return r.product === 1; }).map(function (r) { return PT.reviewCard(r, { fluid: true }); }).join('') + PT.reviewCard({ author: 'Bích Ngọc', date: '19/09/2026', target: 'Củ Chi water spinach', rating: 5, text: 'Bought 3 bunches for a family lunch; nothing wilted and the stems snapped clean.' }, { fluid: true });
+  document.getElementById('more').innerHTML = [2, 7, 19].map(function (id) { return PT.productCard(PT.product(id), { market: false }); }).join('');
+  PT.boot({ active: 'products' });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

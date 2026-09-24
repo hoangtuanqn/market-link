@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About us — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col-2 pt-measure">
+    <p class="ml-hand ml-muted">TechWiz 7 · eGreen Basket</p>
+    <h1 class="pt-title">About MarketLink</h1>
+    <p class="pt-lead">MarketLink connects Farmers at local farmers markets in Ho Chi Minh City with the people who shop there. Farmers publish what they will bring this week; customers reserve it and pick it up at the stall.</p>
+  </div>
+  <div class="pt-split-wide">
+    <section class="pt-col">
+      <h2 class="pt-h2">Why it exists</h2>
+      <p class="pt-body pt-measure">Market stock is usually announced on a chalkboard or by word of mouth. People arrive to find the good things gone, or make the trip to a stall that is closed for the week. Farmers, in turn, have no easy way to publish their weekly inventory, take pre-orders, or keep in touch with regulars. MarketLink puts the week's stock, the stall's location and a pre-order queue in one place.</p>
+      <h2 class="pt-h2">What it does not do</h2>
+      <ul class="pt-body pt-measure" style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">
+        <li>No online payment. You pay the Farmer at the stall when you pick up.</li>
+        <li>No delivery. Every order is picked up at the market, in the stall's pickup window.</li>
+        <li>No certification. MarketLink does not verify licences or organic claims; ask the Farmer.</li>
+        <li>One account can be shared within a family. The system does not tell people apart inside an account.</li>
+      </ul>
+      <h2 class="pt-h2">Maps and data</h2>
+      <p class="pt-body pt-measure">Maps use Leaflet with OpenStreetMap tiles. Map data © OpenStreetMap contributors. Product photos are taken by the stalls or the team, or used under a licence credited in the project ReadMe.</p>
+    </section>
+    <section class="pt-col">
+      <h2 class="pt-h2">The team</h2>
+      <p class="pt-small ml-muted"><span class="pt-todo" data-todo="FR-082 · Team names, roles and photos are not in the repo. Replace the placeholder tiles with the real team (the SRS requires information about the team).">Team members, roles and photos to be added</span></p>
+      <div class="pt-grid-2" id="team"></div>
+      <h2 class="pt-h2">Built with</h2>
+      <dl class="pt-facts">
+        <dt>Frontend</dt><dd>React 19, Vite, TypeScript, Tailwind 4</dd>
+        <dt>Backend</dt><dd>Spring Boot, Java 25, MySQL 8, Redis, Flyway</dd>
+        <dt>Maps</dt><dd>Leaflet + OpenStreetMap</dd>
+        <dt>AI tools used</dt><dd><span class="pt-todo" data-todo="SRS 1.6 · All AI tools used must be acknowledged in the documentation. List them here and in the ReadMe.">List of AI tools used, as the SRS requires</span></dd>
+      </dl>
+    </section>
+  </div>
+</main>
+<script>
+  document.getElementById('team').innerHTML = ['LEAD', 'BE1', 'BE2', 'FE1', 'FE2', 'QA'].map(function (r) { return '<div class="ml-card pt-tile"><span class="pt-upload-frame" style="width:100%;aspect-ratio:1/1">Photo</span><b>Name to add</b><span>' + r + ' · role description to add</span></div>'; }).join('');
+  PT.boot({ active: 'about' });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

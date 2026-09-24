@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market map — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-hand ml-muted">Saturday 26/09</p>
+      <h1 class="pt-title">Market map</h1>
+      <p class="pt-lead">All markets and the stalls taking pre-orders on the day you choose. Tap a pin for hours, pickup windows and directions.</p>
+    </div>
+    <div id="day-chips"></div>
+  </div>
+  <div class="pt-row-2">
+    <div class="ml-chips" id="show-chips"></div>
+    <div class="pt-map-legend pt-right"><span>Square, market</span><span>Round, stall</span><span>Ring, selected</span></div>
+  </div>
+  <div id="map" class="pt-map" style="min-height:620px" aria-label="Map of all markets and stalls"></div>
+  <p class="pt-small ml-muted">Directions open in OpenStreetMap in a new tab (D-12). <span class="pt-todo" data-todo="FR-013 · 'Directions to the selected pickup point': the prototype links to OSM directions with the destination only. Whether to pass the customer's saved address as the start point is not decided.">Start point for directions: saved address or the browser's location?</span></p>
+  <section class="pt-section">
+    <h2 class="pt-h2">Open on Saturday</h2>
+    <div class="pt-grid-2" id="markets"></div>
+  </section>
+</main>
+<script>
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.week.slice(0, 4).map(function (d) { return { value: d.value, label: d.label, sub: d.sub, disabled: d.value === 'thu' }; }), 'sat');
+  document.getElementById('show-chips').innerHTML = PT.chip('Markets', { selected: true }) + PT.chip('Stalls', { selected: true }) + PT.chip('Saved only');
+  var open = PT.markets.filter(function (m) { return m.days.indexOf(6) >= 0; });
+  document.getElementById('markets').innerHTML = open.map(function (m) { return PT.marketCard(m); }).join('');
+  var stalls = PT.farmers.filter(function (f) { return f.approval === 'approved' && f.lat; });
+  PT.map('map', { markers: PT.markets.map(function (m) { return { lat: m.lat, lng: m.lng, kind: 'market', label: m.name, popup: PT.popup(m.name, [PT.dayNames(m.days) + ' · ' + m.open + '–' + m.close, m.stalls + ' stalls'], m.lat, m.lng, '../public/market.html') }; }).concat(stalls.map(function (f) { return { lat: f.lat, lng: f.lng, kind: 'stall', popup: PT.popup(f.stall, [f.days + ' · pickup ' + f.pickup], f.lat, f.lng, '../public/stall.html') }; })) });
+  PT.boot({ active: 'map' });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

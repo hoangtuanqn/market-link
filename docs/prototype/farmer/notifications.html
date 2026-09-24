@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notifications (Farmer) — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main pt-main-narrow pt-notes-page">
+  <div class="pt-col-2">
+    <h1 class="pt-title">Notifications</h1>
+    <p class="pt-body">New orders, edits and cancellations from customers, and announcements from MarketLink.</p>
+  </div>
+  <div id="notes"></div>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="D-11 lists 4 notification triggers, all for customers. Notifying the Farmer of a new, edited or cancelled order is marked (proposal) in the feature catalog and needs a decision.">Farmer-side notifications are a proposal, not in D-11</span></p>
+</main>
+<script>
+  document.getElementById('notes').innerHTML = PT.notes(PT.farmerNotifications, { fluid: true });
+  PT.boot({ role: 'farmer', active: null, announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

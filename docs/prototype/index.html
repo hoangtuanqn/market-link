@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MarketLink prototype — all screens</title>
+<link rel="icon" href="../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="prototype.css">
+<script src="data.js"></script>
+<script src="prototype.js"></script>
+<script src="todos.js"></script>
+</head>
+<body class="pt-quiet">
+<header class="ml-header"><div class="ml-header-in"><span class="ml-logo"><svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><path d="M9 8.5h14.5a2 2 0 012 2V26a2.5 2.5 0 01-2.5 2.5H9A2.5 2.5 0 016.5 26V11.5zM18.4 13.2a2.4 2.4 0 10-4.8 0 2.4 2.4 0 104.8 0z" fill="currentColor" fill-rule="evenodd"/><path d="M16 13.2C15.2 8.5 12.6 4.6 8 2.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2.2 2"/></svg><span class="ml-logo-word">MarketLink</span></span><span class="ml-huser">Prototype <b>all screens</b></span><div class="ml-header-tools"><a class="ml-btn ml-btn-accent ml-btn-sm" href="public/home.html">Open the Customer site</a></div></div><div class="ml-header-twine" aria-hidden="true"></div></header>
+<main class="pt-main">
+  <div class="pt-col-2">
+    <p class="ml-hand ml-muted">TechWiz 7 · End-to-End Web Solutions · 24/09/2026</p>
+    <h1 class="pt-title">MarketLink prototype</h1>
+    <p class="pt-lead">Clickable screens for the three roles, built on the Hang tag design system and the requirements in <code>.ai/REQUIREMENTS.md</code>. Everything the SRS or the decisions do not define is marked with a red TODO on the screen and listed at the bottom of this page.</p>
+  </div>
+
+  <div class="pt-grid-4">
+    <div class="ml-card pt-tile"><b>How to open</b><span>Serve the repo root (for example <code>python3 -m http.server</code>) and open <code>docs/prototype/index.html</code>. Maps need a connection for OpenStreetMap tiles.</span></div>
+    <div class="ml-card pt-tile"><b>Demo accounts in the screens</b><span>Customer Khang · Farmer Vườn Cô Tư (Nguyễn Thị Tư) · Admin. Public pages render as a guest; add <code>?as=customer</code> to see them signed in.</span></div>
+    <div class="ml-card pt-tile"><b>Prototype bar</b><span>Bottom left on every screen: role, FR ids, a list of all screens and the open questions on that screen.</span></div>
+    <div class="ml-card pt-tile"><b>What it is not</b><span>Static HTML with demo data from <code>data.js</code>. No API calls, no real sign-in. Real components are TSX in <code>frontend/src</code>.</span></div>
+  </div>
+
+  <section class="pt-section">
+    <h2 class="pt-h2">Screens by role</h2>
+    <div class="pt-index-grid" id="screens"></div>
+  </section>
+
+  <section class="pt-section">
+    <h2 class="pt-h2">Requirements coverage</h2>
+    <p class="pt-body pt-measure">Which screen carries each MUST or SHOULD requirement. Requirements that live in the backend or are cross-cutting have no screen of their own and are listed after the table.</p>
+    <div id="coverage"></div>
+    <div class="ml-card pt-panel pt-col-2">
+      <h3 class="pt-h3">Requirements without a dedicated screen</h3>
+      <ul class="pt-small" style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px">
+        <li>FR-005 RBAC and FR-006 sign out: server-side; the header menu changes per role and sign out sits in Account / the drawer.</li>
+        <li>FR-031 stock deduction, FR-038 status history, FR-039 auto-complete job: backend behaviour; the order detail screens show the history and the 24-hour note.</li>
+        <li>FR-043 real email: NICE, not designed. FR-080 responsive and FR-084 four states: applied on every screen; key lists show their loading, empty and error states inline.</li>
+        <li>FR-100 to FR-102 seed data: <code>data.js</code> mirrors the shape (4 markets, 10 Farmers, orders in all 6 states, one account per role).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="pt-section">
+    <div class="pt-between-c"><h2 class="pt-h2">Open questions</h2><span class="pt-small ml-muted" id="todo-count"></span></div>
+    <p class="pt-body pt-measure">Each item is something the SRS, the decisions or the API contract do not define. The prototype shows one reasonable rendering and marks it; the team decides. Regenerate this list with <code>python3 docs/prototype/collect-todos.py</code>.</p>
+    <div class="ml-card pt-panel"><ul class="pt-index-todo" id="todos"></ul></div>
+  </section>
+
+  <section class="pt-section">
+    <h2 class="pt-h2">Design notes</h2>
+    <div class="pt-grid-2">
+      <div class="ml-card pt-panel pt-col-2"><h3 class="pt-h3">Followed from the design system</h3><p class="pt-small">Colors only through tokens; Patrick Hand for what the stall or market says (names, prices, greetings, the “From the stall” note) and Chivo for what the system says; one handwritten heading per screen; paper tag cards with the 2 px edge; the punched hole only on product tags; the tilted yellow price tag; dashboards on the lighter <code>surface-quiet</code>; a written reason next to every locked button; “pay at the stall” wherever a total appears; Leaflet + OSM pins with the square/round distinction.</p></div>
+      <div class="ml-card pt-panel pt-col-2"><h3 class="pt-h3">Choices made for these screens</h3><p class="pt-small">Home opens with the week's dates and a green board of which market is open when, instead of a hero photo. Order detail uses a dotted step strip plus a history timeline for FR-038. The Farmer's weekly template is a product × day grid with greyed non-selling days. Admin gets a seventh menu item, Settings, for categories, announcements and the feedback inbox because the SRS lists them but the reference menu had no home for them. Reports use plain proportional bars, no chart library.</p></div>
+    </div>
+  </section>
+</main>
+<footer class="ml-footer"><div class="ml-footer-in"><div><span class="ml-logo"><span class="ml-logo-word">MarketLink</span></span><p>Prototype for the TechWiz 7 project. Map data © OpenStreetMap contributors.</p></div><div class="ml-footer-base"><span>docs/prototype · design system: docs/design-system</span><span><a href="../design-system/reference/gallery.html">Component gallery</a></span></div></div></footer>
+<script>
+  var ROLES = [['public', 'Public and guest'], ['customer', 'Customer'], ['farmer', 'Farmer'], ['admin', 'Admin']];
+  document.getElementById('screens').innerHTML = ROLES.map(function (r) { return '<section class="ml-card pt-index-col"><h2>' + r[1] + '</h2><ol>' + PT.SCREENS[r[0]].map(function (s) { return '<li><a href="' + r[0] + '/' + s[0] + '"><b>' + PT.esc(s[1]) + '</b><small>' + s[2] + '</small><span>' + r[0] + '/' + s[0] + '</span></a></li>'; }).join('') + '</ol></section>'; }).join('');
+  var FR = {};
+  ROLES.forEach(function (r) { PT.SCREENS[r[0]].forEach(function (s) { s[2].split(' ').forEach(function (id) { if (!id) return; (FR[id] = FR[id] || []).push([r[0], s[0], s[1]]); }); }); });
+  var ids = Object.keys(FR).sort();
+  document.getElementById('coverage').innerHTML = '<div class="ml-table-wrap"><table class="ml-table"><thead><tr><th scope="col">Requirement</th><th scope="col">Screens</th></tr></thead><tbody>' + ids.map(function (id) { return '<tr><td><b>' + id + '</b></td><td>' + FR[id].map(function (s) { return '<a href="' + s[0] + '/' + s[1] + '">' + PT.esc(s[2]) + '</a>'; }).join(' · ') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+  var todos = window.PT_TODOS || [];
+  document.getElementById('todo-count').textContent = todos.length + ' items across ' + new Set(todos.map(function (t) { return t.file; })).size + ' screens';
+  document.getElementById('todos').innerHTML = todos.map(function (t) { return '<li><span><a href="' + t.role + '/' + t.file + '">' + PT.esc(t.screen) + '</a><br>' + t.role + '</span><span>' + PT.esc(t.text) + '</span></li>'; }).join('');
+</script>
+</body>
+</html>

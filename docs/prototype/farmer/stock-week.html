@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>This week's stock — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted">Week of 22/09 – 28/09 · Thảo Điền Fri–Sun · Thủ Đức Sun</p>
+      <h1 class="pt-title">This week's stock</h1>
+      <p class="pt-body pt-measure">Your weekly template is the starting count for each market day. Apply it, then adjust the days where the harvest is different. Reserved stock is already taken out of what customers see.</p>
+    </div>
+    <div class="pt-row-2"><button type="button" class="ml-btn ml-btn-secondary" id="apply">Apply template to this week</button><button type="button" class="ml-btn ml-btn-primary" data-toast="This week's stock saved. Customers see the new counts now.">Save changes</button></div>
+  </div>
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+    <div data-panel="week" class="pt-col">
+      <div class="ml-card pt-week">
+        <table>
+          <caption class="ml-sr">Stock per product and market day this week</caption>
+          <thead><tr><th scope="col">Product</th><th scope="col">Status</th><th scope="col">Price</th><th scope="col">Fri 25/09<br>Thảo Điền</th><th scope="col">Sat 26/09<br>Thảo Điền</th><th scope="col">Sun 27/09<br>Thảo Điền</th><th scope="col">Sun 27/09<br>Thủ Đức</th><th scope="col" class="num">Reserved</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="pt-small ml-muted">Counts are units available for that day. A blank day means the product is not offered. Fridays are greyed because Vườn Cô Tư does not sell on Friday.</p>
+    </div>
+    <div data-panel="tpl" hidden class="pt-col">
+      <div class="ml-card pt-week">
+        <table>
+          <caption class="ml-sr">Weekly template</caption>
+          <thead><tr><th scope="col">Product</th><th scope="col">Default price</th><th scope="col" class="off">Mon</th><th scope="col" class="off">Tue</th><th scope="col" class="off">Wed</th><th scope="col" class="off">Thu</th><th scope="col" class="off">Fri</th><th scope="col">Sat</th><th scope="col">Sun</th></tr></thead>
+          <tbody id="tpl-rows"></tbody>
+        </table>
+      </div>
+      <div class="pt-row-2"><button type="button" class="ml-btn ml-btn-primary" data-toast="Template saved. It applies from next week unless you apply it now.">Save template</button><span class="pt-small ml-muted">Template days follow your operating days. Change those under Stall &amp; pickup.</span></div>
+      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-063 · Whether the template carries a per-day price (the API contract has default_price) or only quantities, and whether applying it overwrites manual edits for the week, needs a decision.">Template price per day and overwrite behaviour to decide</span></p>
+    </div>
+  </div>
+</main>
+<script>
+  document.getElementById('tabs').innerHTML = PT.tabs('Stock views', [{ id: 'week', label: 'This week' }, { id: 'tpl', label: 'Weekly template' }], 'week');
+  var mine = [1, 2, 7, 19].map(PT.product);
+  var reserved = { 1: 8, 2: 7, 7: 10, 19: 3 };
+  var st = function (p) { return '<select class="ml-input" style="min-height:36px;padding:0 8px;width:auto" aria-label="Status of ' + PT.esc(p.name) + '"><option' + (p.status === 'available' ? ' selected' : '') + '>Available</option><option' + (p.status === 'sold_out' ? ' selected' : '') + '>Sold out</option><option' + (p.status === 'unavailable' ? ' selected' : '') + '>Paused this week</option></select>'; };
+  var inp = function (v, label) { return '<input class="ml-input" type="number" min="0" value="' + v + '" aria-label="' + label + '">'; };
+  document.getElementById('rows').innerHTML = mine.map(function (p) { return '<tr><td><b>' + PT.esc(p.name) + '</b><span class="sub">' + PT.category(p.cat).name + ' · per ' + p.unit + '</span></td><td>' + st(p) + '</td><td class="pt-num">' + PT.vnd(p.price) + '</td><td class="off">—</td><td>' + inp(p.stock + reserved[p.id], p.name + ' Saturday') + '</td><td>' + inp(Math.round((p.stock + reserved[p.id]) * 0.7), p.name + ' Sunday') + '</td><td>' + inp(Math.round((p.stock + reserved[p.id]) * 0.4), p.name + ' Sunday Thủ Đức') + '</td><td class="num">' + reserved[p.id] + '</td></tr>'; }).join('');
+  document.getElementById('tpl-rows').innerHTML = mine.map(function (p) { return '<tr><td><b>' + PT.esc(p.name) + '</b><span class="sub">per ' + p.unit + '</span></td><td>' + inp(p.price, p.name + ' price').replace('type="number"', 'type="number" step="1000" style="width:110px"') + '</td><td class="off"></td><td class="off"></td><td class="off"></td><td class="off"></td><td class="off"></td><td>' + inp(p.stock + reserved[p.id], p.name + ' template Saturday') + '</td><td>' + inp(Math.round((p.stock + reserved[p.id]) * 0.7), p.name + ' template Sunday') + '</td></tr>'; }).join('');
+  document.getElementById('apply').addEventListener('click', function () { PT.dialog({ title: 'Apply the template to this week?', body: '<p>Saturday and Sunday counts are replaced with the template values. Reserved stock is kept out of the customer-facing count.</p><p class="ml-muted" style="font-size:14px">Edits you made for this week are overwritten.</p>', keep: 'Keep my edits', confirm: 'Apply template', toast: 'Template applied to Sat 26/09 and Sun 27/09.' }); });
+  PT.boot({ role: 'farmer', active: 'stock', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add or edit market — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <p class="pt-small ml-muted"><a href="../admin/markets.html">Markets</a> · Edit</p>
+  <div class="pt-between"><h1 class="pt-title-sm">Thảo Điền Weekend Market</h1><span class="pt-small ml-muted">14 stalls · added 01/08/2026</span></div>
+  <form class="pt-split-wide" novalidate>
+    <div class="ml-card pt-panel pt-col">
+      <div class="pt-form-grid">
+        <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="name">Market name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Thảo Điền Weekend Market"></div>
+        <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="addr">Address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="addr" class="ml-input" value="12 Quốc Hương, Thảo Điền Ward, Thủ Đức City"></div>
+        <div class="ml-field"><label class="ml-field-label" for="district">District</label><select id="district" class="ml-input"><option>Thủ Đức</option><option>District 7</option><option>Bình Thạnh</option><option>District 1</option></select></div>
+        <div class="ml-field"><label class="ml-field-label" for="city">City</label><input id="city" class="ml-input" value="Ho Chi Minh City" readonly></div>
+        <div class="pt-col-2" style="grid-column:1/-1"><span class="ml-field-label">Operating days<span class="ml-field-req" aria-hidden="true">*</span></span><div class="pt-row-2" id="days"></div></div>
+        <div class="ml-field"><label class="ml-field-label" for="open">Opens<span class="ml-field-req" aria-hidden="true">*</span></label><input id="open" class="ml-input" type="time" value="06:00"></div>
+        <div class="ml-field"><label class="ml-field-label" for="close">Closes<span class="ml-field-req" aria-hidden="true">*</span></label><input id="close" class="ml-input" type="time" value="11:00"></div>
+        <div class="ml-field"><label class="ml-field-label" for="lat">Latitude<span class="ml-field-req" aria-hidden="true">*</span></label><input id="lat" class="ml-input" value="10.803600"></div>
+        <div class="ml-field"><label class="ml-field-label" for="lng">Longitude<span class="ml-field-req" aria-hidden="true">*</span></label><input id="lng" class="ml-input" value="106.733000"><span class="ml-field-hint">Or drag the pin. Map provider is OpenStreetMap (D-12).</span></div>
+        <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="notes">Notes for stalls</label><textarea id="notes" class="ml-input" style="min-height:72px">Loading from Quốc Hương only. Stalls A01–A20 along the river.</textarea></div>
+      </div>
+      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Thảo Điền Weekend Market saved.">Save market</button><a class="ml-btn ml-btn-secondary" href="../admin/markets.html">Cancel</a></div>
+    </div>
+    <div class="pt-col-2">
+      <div id="map" class="pt-map" aria-label="Pin the market"></div>
+      <p class="pt-caption ml-muted">Drag the square pin to the market entrance. Stalls pin themselves inside the market later.</p>
+    </div>
+  </form>
+</main>
+<script>
+  document.getElementById('days').innerHTML = [['Mon', 1], ['Tue', 2], ['Wed', 3], ['Thu', 4], ['Fri', 5], ['Sat', 6], ['Sun', 0]].map(function (d) { return '<label class="ml-day"><input type="checkbox" name="d" value="' + d[1] + '"' + ([5, 6, 0].indexOf(d[1]) >= 0 ? ' checked' : '') + '><span>' + d[0] + '</span></label>'; }).join('');
+  var m = PT.market(1);
+  var map = PT.map('map', { center: [m.lat, m.lng], zoom: 16, scroll: false, markers: [] });
+  if (map) { var mk = L.marker([m.lat, m.lng], { draggable: true, icon: L.divIcon({ html: PT.pinHTML('market', m.name, 'M', true), className: '', iconSize: [34, 48], iconAnchor: [17, 48] }) }).addTo(map); mk.on('dragend', function () { var ll = mk.getLatLng(); document.getElementById('lat').value = ll.lat.toFixed(6); document.getElementById('lng').value = ll.lng.toFixed(6); }); }
+  PT.boot({ role: 'admin', active: 'markets', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

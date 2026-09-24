@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shopping assistant — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col-2">
+    <p class="ml-hand ml-muted">Optional · FR-090 to FR-092</p>
+    <h1 class="pt-title">Shopping assistant</h1>
+    <p class="pt-lead">Ask where to find something this weekend, when a market opens, or which pickup slots a stall has. Every answer comes from MarketLink's own data.</p>
+  </div>
+  <div class="pt-split">
+    <section class="ml-card pt-chat" aria-label="Assistant conversation">
+      <div class="pt-chat-head"><b>MarketLink assistant</b><span class="pt-small ml-muted">Answers use the live catalogue. Intent shown under each reply.</span></div>
+      <div class="pt-chat-log"><div class="ml-chat" id="log"></div></div>
+      <form class="pt-chat-input"><label class="ml-sr" for="q">Message</label><input id="q" class="ml-input" placeholder="e.g. Who has eggs at Thảo Điền on Saturday?"><button type="submit" class="ml-btn ml-btn-primary">Send</button></form>
+    </section>
+    <aside class="pt-col">
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">What it can answer</h2>
+        <ul class="pt-small" style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px">
+          <li>Find a product across markets and stalls, with how many are left</li>
+          <li>Market days and opening hours</li>
+          <li>Which stalls are at a market on a given day</li>
+          <li>A stall's pickup windows and free slots</li>
+          <li>A product's price, unit and stock</li>
+        </ul>
+      </div>
+      <div class="ml-card pt-panel pt-col-2">
+        <h2 class="pt-h3">How it works</h2>
+        <p class="pt-small">The message is classified into one of a fixed set of intents, and each intent runs a prepared query with parameters. The model never writes SQL (CLAUDE.md R-04). Messages are stored with the intent (FR-092) so the flow can be shown to the judges.</p>
+        <p class="pt-small"><span class="pt-todo" data-todo="FR-090 · Which model or service does the classification (rule-based, a hosted LLM, tawk.to/Zapier as the SRS suggests) is decided in docs/chatbot-design.md, not in the SRS. Prototype shows the UI only.">Provider for intent classification per docs/chatbot-design.md</span></p>
+      </div>
+    </aside>
+  </div>
+</main>
+<script>
+  document.getElementById('log').innerHTML = [
+    { from: 'bot', time: '20:13', text: 'Hi Khang. Ask me what is available this weekend, or when a market opens.', suggestions: ['Where can I get green-skin pomelo on Saturday?', 'When does Bà Chiểu Green Market open?'] },
+    { from: 'user', time: '20:14', text: 'Which market has green-skin pomelo on Saturday morning?' },
+    { from: 'bot', time: '20:14', intent: 'find product', text: 'On Saturday 26/09, 2 stalls have green-skin pomelo: <b>Nhà vườn Út Hiền</b> at Thủ Đức Farmers Market (2 left, 65,000 ₫ a piece) and <b>Trại Ba Lành</b> at Thảo Điền Weekend Market (9 left, 60,000 ₫ a piece).', suggestions: ['Show the 2 stalls on the map', 'Pickup times at Út Hiền'] },
+    { from: 'user', time: '20:15', text: 'Pickup times at Út Hiền' },
+    { from: 'bot', time: '20:15', intent: 'pickup slots', text: 'Nhà vườn Út Hiền picks up 06:00 – 09:30 on Sunday 27/09 at Thủ Đức Farmers Market. Free slots: 06:30, 07:00, 08:00. The 06:00 slot is full. Orders close 12 hours before the slot.', suggestions: ['Add 2 pomelos to my cart', 'Directions to Thủ Đức Farmers Market'] },
+  ].map(PT.chat).join('');
+  document.querySelector('.pt-chat-input').addEventListener('submit', function (e) { e.preventDefault(); var v = document.getElementById('q').value.trim(); if (!v) return; document.getElementById('log').insertAdjacentHTML('beforeend', PT.chat({ from: 'user', time: '20:16', text: PT.esc(v) }) + PT.chat({ from: 'bot', time: '20:16', intent: 'unknown', text: 'I did not understand that. Try a product name, a market, or a stall.', suggestions: ['What is at Thảo Điền on Saturday?'] })); document.getElementById('q').value = ''; document.querySelector('.pt-chat-log').scrollTop = 1e6; });
+  PT.boot({ role: 'customer', active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="farmer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted"><time data-clock></time> · your stall at Thảo Điền Weekend Market · next market day Sat 26/09</p>
+      <h1 class="pt-title">Morning, Cô Tư</h1>
+    </div>
+    <div class="pt-row-2"><a class="ml-btn ml-btn-secondary" href="../farmer/stock-week.html">Apply weekly template</a><a class="ml-btn ml-btn-primary" href="../farmer/product-form.html">Add product</a></div>
+  </div>
+  <div id="warn"></div>
+  <div class="pt-grid-4" id="stats"></div>
+
+  <section data-tabs-scope class="pt-col">
+    <div class="pt-between-c"><h2 class="pt-h2">Incoming orders</h2><a href="../farmer/orders.html">All orders and filters</a></div>
+    <div id="tabs"></div>
+    <div data-panel="new" id="t-new"></div>
+    <div data-panel="acc" hidden id="t-acc"></div>
+    <div data-panel="ready" hidden id="t-ready"></div>
+    <div data-panel="done" hidden id="t-done"></div>
+    <div class="pt-between-c"><span class="pt-small ml-muted">New orders are highlighted until you open them.</span><div id="pager"></div></div>
+  </section>
+
+  <section class="pt-grid-2">
+    <div class="ml-card pt-panel pt-col-3">
+      <div class="pt-between-c"><h2 class="pt-h3">Stock for Saturday</h2><a href="../farmer/stock-week.html">This week's stock</a></div>
+      <ul class="pt-small" style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px">
+        <li class="pt-between-c"><span>Củ Chi water spinach</span><span><b>12</b> left of 20 · 8 reserved</span></li>
+        <li class="pt-between-c"><span>Choy sum</span><span><b>8</b> left of 15 · 7 reserved</span></li>
+        <li class="pt-between-c"><span>Thai basil</span><span><b>30</b> left of 40 · 10 reserved</span></li>
+        <li class="pt-between-c"><span>Lemongrass</span><span><b>22</b> left of 25 · 3 reserved</span></li>
+      </ul>
+    </div>
+    <div class="ml-card pt-panel pt-col-3">
+      <div class="pt-between-c"><h2 class="pt-h3">Best sellers, September</h2><a href="../farmer/history.html">Sales history</a></div>
+      <ul class="pt-bars"><li><span>Water spinach</span><span class="bar"><span style="width:100%"></span></span><span class="val">64 bunches</span></li><li><span>Choy sum</span><span class="bar"><span style="width:64%"></span></span><span class="val">41 bunches</span></li><li><span>Thai basil</span><span class="bar"><span style="width:59%"></span></span><span class="val">38 bunches</span></li><li><span>Lemongrass</span><span class="bar"><span style="width:31%"></span></span><span class="val">20 bunches</span></li></ul>
+    </div>
+  </section>
+</main>
+<script>
+  document.getElementById('warn').innerHTML = PT.banner('warning', '4 orders are waiting for you. 3 of them close at 19:00 tomorrow.', 'Unapproved orders still hold stock. Accept or decline before the cutoff so customers can plan.');
+  document.getElementById('stats').innerHTML = PT.statTile('Total orders', '128', '23 this week') + PT.statTile('Awaiting approval', '4', '<b>3</b> close at 19:00 on 25/09', true) + PT.statTile('September revenue', '8,450,000', '₫, from completed orders, paid at the stall') + PT.statTile('Best seller', 'Water spinach', '64 bunches this month');
+  var by = function (s) { return PT.farmerOrders.filter(function (o) { return o.status === s; }); };
+  document.getElementById('tabs').innerHTML = PT.tabs('Incoming orders', [{ id: 'new', label: 'Awaiting approval', count: by('placed').length }, { id: 'acc', label: 'Accepted', count: by('accepted').length }, { id: 'ready', label: 'Ready', count: by('ready').length }, { id: 'done', label: 'Completed' }], 'new');
+  var cols = [{ key: 'code', label: 'Order' }, { key: 'who', label: 'Customer', render: function (r) { return PT.esc(r.who) + '<span class="sub">' + r.phone + '</span>'; } }, { key: 'slot', label: 'Pickup', render: function (r) { return r.date + ' · ' + r.slot; } }, { key: 'items', label: 'Items', align: 'num', render: function (r) { return r.items.length; } }, { key: 'total', label: 'Total', align: 'num', render: function (r) { return PT.vnd(PT.orderTotal(r)); } }, { key: 'st', label: 'Status', render: function (r) { return PT.status(r.status); } }, { key: 'a', label: '', align: 'actions', render: function (r) { if (r.status === 'placed') return '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Order ' + r.code + ' accepted. ' + PT.esc(r.who) + ' has been told.">Accept</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-decline="' + r.code + '">Decline</button>'; if (r.status === 'accepted') return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Order ' + r.code + ' marked ready. ' + PT.esc(r.who) + ' has been told.">Mark ready</button>'; if (r.status === 'ready') return '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Order ' + r.code + ' completed.">Mark completed</button>'; return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="../farmer/order.html">View</a>'; } }];
+  var rows = function (s) { return by(s).map(function (o) { return Object.assign({ _new: o.isNew }, o); }); };
+  document.getElementById('t-new').innerHTML = PT.table('Awaiting approval · Sat 26/09 and Sun 27/09', cols, rows('placed'));
+  document.getElementById('t-acc').innerHTML = PT.table('Accepted', cols, rows('accepted'));
+  document.getElementById('t-ready').innerHTML = PT.table('Ready for pickup', cols, rows('ready'));
+  document.getElementById('t-done').innerHTML = PT.table('Completed', cols, rows('completed'));
+  document.getElementById('pager').innerHTML = PT.pagination(1, 1);
+  document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-decline]'); if (!b) return; var code = b.getAttribute('data-decline'); PT.dialog({ tone: 'danger', title: 'Decline order ' + code + '?', body: '<p>The customer is told right away and the items go back to your stock.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason the customer will see</label><select id="why" class="ml-input"><option>Not enough stock</option><option>Not selling on that day</option><option>Cannot make that pickup time</option><option>Other</option></select></div>', keep: 'Keep order', confirm: 'Decline order', toast: 'Order ' + code + ' declined. Stock is back in your count.' }); });
+  PT.boot({ role: 'farmer', active: 'overview', announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

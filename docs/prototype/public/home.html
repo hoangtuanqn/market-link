@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Home — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <section class="pt-hero">
+    <div class="pt-col">
+      <p class="ml-hand ml-muted"><time data-clock></time> · market weekend Fri 25 – Sun 27/09</p>
+      <h1 class="pt-title">Pre-order from the farmers market</h1>
+      <p class="pt-lead">Reserve this week's produce from stalls at 4 markets around Ho Chi Minh City. Pick up at the stall and pay the Farmer directly.</p>
+      <form class="ml-search" role="search" action="../public/search.html">
+        <label class="ml-sr" for="s-scope">Search in</label>
+        <select id="s-scope" name="scope"><option value="all">Everything</option><option value="market">Markets</option><option value="farmer">Stalls</option><option value="product">Products</option></select>
+        <label class="ml-sr" for="s-q">Keyword</label>
+        <input id="s-q" name="q" type="search" placeholder="Water spinach, Vườn Cô Tư, Thảo Điền market…">
+        <button type="submit" class="ml-btn ml-btn-primary">Search</button>
+      </form>
+      <div class="pt-row-2">
+        <a class="ml-btn ml-btn-primary" href="../public/markets.html">Browse markets</a>
+        <a class="ml-btn ml-btn-secondary" href="../public/register-farmer.html">Sell at MarketLink</a>
+      </div>
+    </div>
+    <aside class="pt-hero-board" aria-labelledby="open-h">
+      <p class="ml-overline ml-muted">Open this weekend</p>
+      <h2 id="open-h" class="pt-hand">Where the stalls are</h2>
+      <ul id="open-list"></ul>
+      <a class="ml-btn ml-btn-accent" href="../public/map.html">See all 4 markets on the map</a>
+    </aside>
+  </section>
+
+  <section class="pt-section">
+    <div class="pt-between">
+      <h2 class="pt-h2">Markets near you</h2>
+      <span class="pt-small ml-muted">Distances from your saved address in Thảo Điền</span>
+    </div>
+    <div class="pt-grid-2" id="home-markets"></div>
+  </section>
+
+  <section class="pt-section">
+    <div class="pt-between">
+      <h2 class="pt-h2">Fresh this week</h2>
+      <a href="../public/products.html">All products and filters</a>
+    </div>
+    <div class="pt-grid-tags" id="home-products"></div>
+  </section>
+
+  <section class="pt-section">
+    <h2 class="pt-h2">How pre-ordering works</h2>
+    <ol class="pt-steps-how">
+      <li class="ml-card"><h3>Reserve before the cutoff</h3><p>Add products from one or more stalls, pick a pickup time in each stall's window, and place the order. Stock is held for you the moment you order.</p></li>
+      <li class="ml-card"><h3>The Farmer confirms</h3><p>Each stall accepts or declines its own order. You get a notification either way, and you can edit or cancel until the stall's cutoff.</p></li>
+      <li class="ml-card"><h3>Pick up and pay at the stall</h3><p>When the order is marked ready, go to the stall in your time slot, collect it and pay the Farmer directly. There is no online payment.</p></li>
+    </ol>
+  </section>
+</main>
+<script>
+  document.getElementById('open-list').innerHTML = PT.markets.map(function (m) { return '<li><span><b>' + PT.esc(m.name) + '</b><br><span class="ml-muted">' + PT.dayNames(m.days) + '</span></span><span class="pt-num">' + m.open + '–' + m.close + '</span></li>'; }).join('');
+  document.getElementById('home-markets').innerHTML = PT.markets.slice(0, 4).map(function (m) { return PT.marketCard(m); }).join('');
+  document.getElementById('home-products').innerHTML = [1, 3, 5, 6, 14, 16].map(function (id) { return PT.productCard(PT.product(id)); }).join('');
+  PT.boot({ active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

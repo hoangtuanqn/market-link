@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My orders and history — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-between">
+    <div class="pt-col-2">
+      <h1 class="pt-title">My orders</h1>
+      <p class="pt-lead">Upcoming pickups first. Past orders keep their receipts, and you can reorder anything you bought before at today's price and stock.</p>
+    </div>
+    <div class="ml-field" style="min-width:220px"><label class="ml-field-label" for="stall-f">Stall</label><select id="stall-f" class="ml-input"><option>All stalls</option><option>Vườn Cô Tư</option><option>Nhà vườn Út Hiền</option><option>Lò bánh Gió Nam</option><option>Trại dê Củ Chi</option><option>Trại Ba Lành</option></select></div>
+  </div>
+  <div data-tabs-scope class="pt-col">
+    <div id="tabs"></div>
+    <div data-panel="up" class="pt-grid" id="up"></div>
+    <div data-panel="past" hidden class="pt-col">
+      <div class="pt-grid" id="past"></div>
+    </div>
+    <div data-panel="all" hidden class="pt-grid" id="all"></div>
+  </div>
+  <section class="pt-section">
+    <h2 class="pt-h3">Other states (FR-084)</h2>
+    <div class="pt-row" style="align-items:flex-start">
+      <div class="ml-card ml-state" role="status" aria-live="polite"><span class="ml-sr">Loading orders</span><span class="ml-skel" style="width:60%;height:20px"></span><span class="ml-skel" style="width:90%;height:14px"></span><span class="ml-skel" style="width:75%;height:14px"></span></div>
+      <div class="ml-state ml-state-empty"><h3 class="ml-state-title">No upcoming orders</h3><p class="ml-state-text">Stalls at Thảo Điền take pre-orders for Saturday until Friday evening.</p><a class="ml-btn ml-btn-secondary ml-btn-sm" href="../public/markets.html">Browse markets</a></div>
+      <div class="ml-state ml-state-error" role="alert"><h3 class="ml-state-title">Couldn't load your orders</h3><p class="ml-state-text">Check your connection and try again.</p><button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button></div>
+    </div>
+  </section>
+</main>
+<script>
+  var up = PT.orders.filter(function (o) { return ['placed', 'accepted', 'ready'].indexOf(o.status) >= 0; });
+  var past = PT.orders.filter(function (o) { return ['completed', 'declined', 'cancelled'].indexOf(o.status) >= 0; });
+  document.getElementById('tabs').innerHTML = PT.tabs('Orders', [{ id: 'up', label: 'Upcoming', count: up.length }, { id: 'past', label: 'Past', count: past.length }, { id: 'all', label: 'All', count: PT.orders.length }], 'up');
+  document.getElementById('up').innerHTML = up.map(function (o) { return PT.orderTicket(o, { fluid: true }); }).join('');
+  document.getElementById('past').innerHTML = past.map(function (o) { return PT.orderTicket(o, { fluid: true }); }).join('');
+  document.getElementById('all').innerHTML = PT.orders.map(function (o) { return PT.orderTicket(o, { fluid: true }); }).join('');
+  document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-dialog^="cancel-"]'); if (!b) return; var code = '#' + b.getAttribute('data-dialog').replace('cancel-', ''); PT.dialog({ tone: 'danger', title: 'Cancel order ' + code + '?', body: '<p>The stall is notified right away, and the items you reserved go back to other customers.</p><p class="ml-muted" style="font-size:14px">You can cancel until the cutoff shown on the ticket. After that the order is locked.</p>', keep: 'Keep order', confirm: 'Cancel order', toast: 'Order ' + code + ' cancelled. The stall has been told.' }); });
+  PT.boot({ role: 'customer', active: 'orders' });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>
