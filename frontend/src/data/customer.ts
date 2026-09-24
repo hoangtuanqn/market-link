@@ -2,9 +2,60 @@
  * Demo data for the signed-in Customer screens, copied from docs/prototype/data.js. Replace with API calls when the
  * endpoints exist.
  */
+import type { NotificationKind } from '@/constants/notificationKind';
 import type { OrderType } from '@/types/order.types';
 import type { ProductType } from '@/types/product.types';
 import { markets } from './home';
+
+export type NotificationType = { kind: NotificationKind; title: string; text?: string; time: string; unread?: boolean };
+
+export const notifications: NotificationType[] = [
+  {
+    kind: 'invite',
+    title: 'Do you grow something? Sell it at the market',
+    text: 'Your account can become a stall. Apply with a few photos of your plot and an admin reviews it.',
+    time: 'Today',
+    unread: true,
+  },
+  {
+    kind: 'ready',
+    title: 'Order #ML-0409 is ready',
+    text: 'Gió Nam Bakery · pick up 07:30–08:00 on Friday 25/09.',
+    time: '06:10',
+    unread: true,
+  },
+  {
+    kind: 'restock',
+    title: 'Goat yogurt is back in stock',
+    text: 'Củ Chi Goat Farm just added 20 jars.',
+    time: 'Yesterday',
+    unread: true,
+  },
+  {
+    kind: 'accepted',
+    title: 'Order #ML-0412 was accepted',
+    text: 'Cô Tư Garden confirmed it for Saturday 07:00–07:30.',
+    time: '24/09',
+  },
+  {
+    kind: 'accepted',
+    title: 'Order #ML-0415 was accepted',
+    text: 'Út Hiền Orchard confirmed it for Sunday 06:30–07:00.',
+    time: '24/09',
+  },
+  {
+    kind: 'announce',
+    title: 'Thảo Điền Weekend Market is closed on Sunday 04/10',
+    text: 'Orders for that day move to Saturday 03/10.',
+    time: '23/09',
+  },
+  {
+    kind: 'declined',
+    title: 'Order #ML-0402 was declined',
+    text: 'The stall ran out of pomelo. Nothing to pay.',
+    time: '18/09',
+  },
+];
 
 export const farmers = [
   {
