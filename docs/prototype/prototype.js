@@ -23,6 +23,8 @@
       ['about.html', 'About us', 'FR-082'],
       ['contact.html', 'Contact us', 'FR-083'],
       ['feedback.html', 'Feedback form', 'FR-081'],
+      ['terms.html', 'Terms of service', 'Proposal · no FR yet'],
+      ['privacy.html', 'Privacy policy', 'Proposal · no FR yet'],
     ],
     customer: [
       ['dashboard.html', 'Customer dashboard', 'FR-033 FR-036 FR-040'],
@@ -202,7 +204,7 @@
     var cols = [
       ['Shop', [['Markets near you', 'public/markets.html'], ['In season', 'public/products.html'], ['Market map', 'public/map.html'], ['Favorite stalls', 'customer/favorites.html']]],
       ['Sell', [['Register as a Farmer', 'public/register-farmer.html'], ['Handling pre-orders', 'farmer/orders.html'], ['Stall guidelines', 'public/about.html']]],
-      ['MarketLink', [['About us', 'public/about.html'], ['Contact us', 'public/contact.html'], ['Feedback & bug reports', 'public/feedback.html'], ['Sitemap', '../index.html']]],
+      ['MarketLink', [['About us', 'public/about.html'], ['Contact us', 'public/contact.html'], ['Feedback & bug reports', 'public/feedback.html'], ['Terms of service', 'public/terms.html'], ['Privacy policy', 'public/privacy.html'], ['Sitemap', '../index.html']]],
     ];
     return '<footer class="ml-footer"><div class="ml-footer-in"><div>' + PT.logo(30) + '<p>Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.</p></div>' +
       cols.map(function (c) { return '<div><h2>' + c[0] + '</h2><ul>' + c[1].map(function (l) { return '<li><a href="' + (l[1].indexOf('..') === 0 ? l[1] : link(l[1])) + '">' + l[0] + '</a></li>'; }).join('') + '</ul></div>'; }).join('') +
@@ -333,7 +335,15 @@
   PT.chip = function (label, o) { o = o || {}; return '<button type="button" class="ml-chip" aria-pressed="' + (o.selected ? 'true' : 'false') + '" data-chip' + (o.radio ? ' data-chip-group="' + o.radio + '"' : '') + '>' + (o.selected ? I.check() : '') + label + (o.count != null ? '<span class="ml-chip-count">' + o.count + '</span>' : '') + '</button>'; };
   PT.dayChips = function (legend, days, value, name) {
     name = name || 'market-day';
-    return '<fieldset class="ml-days">' + (legend ? '<legend>' + legend + '</legend>' : '') + days.map(function (d) { return '<label class="ml-day"><input type="radio" name="' + name + '" value="' + d.value + '"' + (d.disabled ? ' disabled' : '') + (value === d.value ? ' checked' : '') + '><span>' + d.label + (d.sub ? '<small>' + d.sub + '</small>' : '') + '</span></label>'; }).join('') + '</fieldset>';
+    // With `date`, the chip carries both the weekday and the date it falls on, stacked in one grid
+    // cell so hover can swap them without the chip changing width. With `sub` it keeps the older
+    // two-line form. Both readings stay in the accessibility tree: "Monday 29/09".
+    return '<fieldset class="ml-days">' + (legend ? '<legend>' + legend + '</legend>' : '') + days.map(function (d) {
+      var body = d.date
+        ? '<span class="pt-day-swap"><b>' + d.label + '</b><b>' + d.date + '</b></span>'
+        : '<span>' + d.label + (d.sub ? '<small>' + d.sub + '</small>' : '') + '</span>';
+      return '<label class="ml-day"><input type="radio" name="' + name + '" value="' + d.value + '"' + (d.disabled ? ' disabled' : '') + (value === d.value ? ' checked' : '') + '>' + body + '</label>';
+    }).join('') + '</fieldset>';
   };
   PT.slotPicker = function (legend, slots, value, name) {
     name = name || 'pickup-slot';
@@ -386,6 +396,35 @@
     return '<div class="ml-state ml-state-' + kind + '"' + (kind === 'error' ? ' role="alert"' : '') + '><h3 class="ml-state-title">' + title + '</h3>' + (text ? '<p class="ml-state-text">' + text + '</p>' : '') + (action || '') + '</div>';
   };
   PT.skeletonCards = function (n) { var s = ''; for (var i = 0; i < (n || 3); i++) s += '<div class="ml-card ml-state" role="status" aria-live="polite"><span class="ml-sr">Loading</span><span class="ml-skel" style="width:100%;aspect-ratio:4/3"></span><span class="ml-skel" style="width:70%;height:18px"></span><span class="ml-skel" style="width:45%;height:14px"></span><span class="ml-skel" style="width:35%;height:28px"></span></div>'; return s; };
+  // Market cards carry no photo: they are a 1fr/auto grid of name + save, day cells, meta and actions.
+  // The skeleton mirrors that grid so the page does not change shape when the data lands.
+  PT.skeletonMarkets = function (n) {
+    var s = '';
+    for (var i = 0; i < (n || 3); i++) {
+      s += '<article class="ml-card ml-market"' + (i ? ' aria-hidden="true"' : ' role="status" aria-live="polite"') + '>' +
+        (i ? '' : '<span class="ml-sr">Loading markets</span>') +
+        '<div><span class="ml-skel" style="width:62%;height:28px"></span><span class="ml-skel" style="width:88%;height:14px;margin-top:8px"></span></div>' +
+        '<span class="ml-skel" style="width:32px;height:32px;border-radius:var(--radius-pill)"></span>' +
+        '<span class="ml-skel" style="grid-column:1/-1;width:266px;max-width:100%;height:26px"></span>' +
+        '<span class="ml-skel" style="grid-column:1/-1;width:60%;height:14px"></span>' +
+        '<span class="ml-skel" style="grid-column:1/-1;width:212px;max-width:100%;height:var(--size-control-sm)"></span>' +
+        '</article>';
+    }
+    return s;
+  };
+  // One shape for "the list did not load", so every screen says it the same way.
+  // The red block stays short; the longer guidance sits under it in normal ink, because
+  // .ml-state-error paints everything inside it danger-red and a paragraph of that is tiring.
+  // `altHtml` is one more way out, phrased for the screen ("the market map opens on its own page").
+  PT.loadError = function (noun, altHtml) {
+    return PT.state(
+      'error',
+      '<span style="display:inline-flex;align-items:center;gap:8px">' + I.alert() + 'We could not load the ' + esc(noun) + '</span>',
+      'The list did not come back this time. Nothing you saved or ordered is affected.',
+      '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-toast="Loading the ' + esc(noun) + ' again.">Try again</button>'
+    ) + '<p class="pt-small ml-muted pt-measure">This is usually the connection rather than anything you did. If trying again does not help, ' +
+      (altHtml ? altHtml + ', or ' : '') + '<a href="' + link('public/feedback.html') + '">tell us what happened</a> and we will look into it.</p>';
+  };
   var NOTE_STYLE = { accepted: ['accepted', 'status-accepted'], declined: ['declined', 'status-declined'], ready: ['ready', 'status-ready'], restock: ['restock', 'brand-tint'], announce: ['megaphone', 'highlight'], invite: ['store', 'brand-tint'], placed: ['placed', 'status-placed'], cancelled: ['cancelled', 'status-cancelled'] };
   PT.notes = function (items, o) {
     o = o || {};
@@ -1006,6 +1045,13 @@
   /* ---------- live clock: <time data-clock> shows the real date and time, e.g. "Thu 24/09 · 14:35" ---------- */
   var pad2 = function (n) { return String(n).padStart(2, '0'); };
   PT.nowLabel = function (withYear) { var d = new Date(); return DOW[d.getDay()] + ' ' + pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1) + (withYear ? '/' + d.getFullYear() : '') + ' · ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()); };
+  // The next date a weekday falls on, counted from today; today itself counts. Day chips show the
+  // weekday and reveal this on hover, so you can see which market morning you are actually picking.
+  PT.upcoming = function (dow) {
+    var d = new Date();
+    d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7));
+    return pad2(d.getDate()) + '/' + pad2(d.getMonth() + 1);
+  };
   PT.clock = function () {
     function tick() { document.querySelectorAll('[data-clock]').forEach(function (el) { el.textContent = PT.nowLabel(el.getAttribute('data-clock') === 'year'); el.setAttribute('datetime', new Date().toISOString()); }); }
     tick(); setInterval(tick, 15000);

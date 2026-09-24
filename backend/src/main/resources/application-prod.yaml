@@ -34,6 +34,16 @@ app:
   cors:
     # Domain thật của frontend, vd https://marketlink.example.com — không có mặc định
     allowed-origins: ${CORS_ALLOWED_ORIGINS}
+  # Đăng nhập Google / Facebook — lấy từ biến môi trường. Để trống thì endpoint trả 503 "chưa cấu hình".
+  oauth:
+    google:
+      client-id: ${GOOGLE_CLIENT_ID:}
+      client-secret: ${GOOGLE_CLIENT_SECRET:}
+      redirect-uri: ${GOOGLE_REDIRECT_URI:}
+    facebook:
+      app-id: ${FACEBOOK_APP_ID:}
+      app-secret: ${FACEBOOK_APP_SECRET:}
+      redirect-uri: ${FACEBOOK_REDIRECT_URI:}
 
 # Không công khai tài liệu API ở production. Cần bật (ví dụ cho giám khảo) thì đặt SWAGGER_ENABLED=true
 springdoc:
