@@ -36,14 +36,14 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password_hash")
+    @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
     @Convert(converter = RoleType.DbConverter.class)
     @Column(nullable = false)
     private RoleType role;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String phone;
 
     private String image;

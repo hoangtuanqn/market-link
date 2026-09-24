@@ -1,0 +1,43 @@
+# ---------------------------------------------------------------------
+# Profile "prod" — môi trường production (nhánh main)
+# Mọi giá trị nhạy cảm lấy từ biến môi trường, KHÔNG có mặc định:
+# thiếu biến nào là ứng dụng dừng ngay lúc khởi động thay vì chạy với secret mẫu.
+# Nguồn biến: .env.production trên server (mẫu: .env.production.example)
+# ---------------------------------------------------------------------
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    open-in-view: false
+  flyway:
+    # Không bao giờ cho phép xoá schema ở production
+    clean-disabled: true
+
+server:
+  shutdown: graceful
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+
+logging:
+  level:
+    root: INFO
+    com.techx.intervue: INFO
+
+jwt:
+  secret: ${JWT_SECRET}
+
+app:
+  cors:
+    # Domain thật của frontend, vd https://marketlink.example.com — không có mặc định
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
+
+# Không công khai tài liệu API ở production. Cần bật (ví dụ cho giám khảo) thì đặt SWAGGER_ENABLED=true
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}
