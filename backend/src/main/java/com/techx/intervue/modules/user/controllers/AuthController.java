@@ -8,11 +8,14 @@ import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
+import com.techx.intervue.modules.user.requests.SocialLoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.resources.LoginResource;
 import com.techx.intervue.modules.user.resources.RefreshResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
+import com.techx.intervue.modules.user.services.impl.FacebookOAuthClient;
+import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
@@ -42,6 +45,8 @@ public class AuthController extends BaseController {
     private final UserServiceInterface userService;
     private final PasswordResetServiceInterface passwordResetService;
     private final AuthConfig authConfig;
+    private final GoogleOAuthClient googleClient;
+    private final FacebookOAuthClient facebookClient;
 
     /** FR-001 */
     @PostMapping("/register")
@@ -62,7 +67,27 @@ public class AuthController extends BaseController {
     @PostMapping("/login")
     public ResponseEntity<ApiResource<LoginResource>> login(
             @Valid @RequestBody LoginRequest request) {
-        AuthResult auth = userService.authenticate(request);
+        return loggedIn(userService.authenticate(request));
+    }
+
+    /**
+     * Đăng nhập Google: FE gửi authorization code (Google redirect về redirect_uri kèm ?code=...).
+     * Backend tự đổi code lấy id_token bằng client_secret và verify id_token.
+     */
+    @PostMapping("/google")
+    public ResponseEntity<ApiResource<LoginResource>> loginWithGoogle(
+            @Valid @RequestBody SocialLoginRequest request) {
+        return loggedIn(userService.loginWithSocial(googleClient.fetchProfile(request.code())));
+    }
+
+    /** Đăng nhập Facebook: như Google, backend tự đổi code lấy access token bằng app_secret. */
+    @PostMapping("/facebook")
+    public ResponseEntity<ApiResource<LoginResource>> loginWithFacebook(
+            @Valid @RequestBody SocialLoginRequest request) {
+        return loggedIn(userService.loginWithSocial(facebookClient.fetchProfile(request.code())));
+    }
+
+    private ResponseEntity<ApiResource<LoginResource>> loggedIn(AuthResult auth) {
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
                         auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));

@@ -61,6 +61,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<!-- Verify id_token của Google bằng JWKS (NimbusJwtDecoder) -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-oauth2-jose</artifactId>
+		</dependency>
 
 		<!-- Gửi mail (quên mật khẩu) qua SMTP -->
 		<dependency>
