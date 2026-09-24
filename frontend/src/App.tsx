@@ -8,6 +8,7 @@ import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
 import CustomerDashboardPage from './pages/CustomerDashboard';
 import CustomerAccountPage from './pages/CustomerAccount';
+import CustomerCartPage from './pages/CustomerCart';
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
         <Route element={<MainLayout variant="customer" userName="Khang" cartCount={2} unreadCount={2} />}>
           <Route path="dashboard" element={<CustomerDashboardPage />} />
           <Route path="account" element={<CustomerAccountPage />} />
+          <Route path="cart" element={<CustomerCartPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
