@@ -13,6 +13,12 @@ public interface PasswordResetServiceInterface {
      */
     Optional<IssuedResetToken> issueToken(String email);
 
+    /**
+     * Kiểm tra token còn hiệu lực mà không dùng mất nó (GET, không GETDEL) để FE chỉ hiện form khi
+     * link hợp lệ. Trả email của tài khoản; token sai/hết hạn thì ném InvalidResetTokenException.
+     */
+    String verifyToken(String rawToken);
+
     /** Bước C + D: đổi mật khẩu bằng token, huỷ mọi phiên đăng nhập, gửi mail thông báo. */
     void resetPassword(ResetPasswordRequest request);
 
