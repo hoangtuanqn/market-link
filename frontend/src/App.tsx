@@ -10,6 +10,7 @@ import GoogleCallbackPage from './pages/GoogleCallback';
 import SetPasswordPage from './pages/SetPassword';
 import CustomerDashboardPage from './pages/CustomerDashboard';
 import CustomerAccountPage from './pages/CustomerAccount';
+import CustomerCartPage from './pages/CustomerCart';
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="dashboard" element={<CustomerDashboardPage />} />
           <Route path="account" element={<CustomerAccountPage />} />
+          <Route path="cart" element={<CustomerCartPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
