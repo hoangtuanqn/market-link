@@ -69,7 +69,7 @@ window.PT_TODOS = [
   "role": "public",
   "file": "markets.html",
   "screen": "Markets by location and day",
-  "text": "FR-010 · Location filter: the SRS says 'by location' but not whether that is a district list, the browser's location, or a radius from the customer's address. Prototype uses the district list plus the saved address."
+  "text": "FR-010 · Location filter: the SRS says 'by location' but not whether that is a district list, the browser's location, or a radius from the customer's address. The prototype lists the districts the markets are actually in and sorts by distance from the saved address. A guest has no saved address, so 'Nearest first' has nothing to measure from until they sign in."
  },
  {
   "role": "public",

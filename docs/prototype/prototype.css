@@ -55,6 +55,11 @@ h1, h2, h3, p { margin: 0; }
 .pt-cards { display: flex; flex-wrap: wrap; gap: var(--space-5); align-items: stretch; }
 .pt-cards > .ml-card { flex: 1 1 320px; }
 .pt-cards > .ml-market, .pt-cards > .ml-stall, .pt-grid > .ml-market, .pt-grid > .ml-stall, .pt-grid-2 > .ml-market, .pt-grid-2 > .ml-stall, .pt-grid-2 > .ml-ticket, .pt-grid > .ml-ticket, .pt-col > .ml-market, .pt-col > .ml-stall, .pt-col > .ml-cart, .pt-col > .ml-review, .pt-col > .ml-ticket { width: auto; }
+/* DataState carries flex: 1 1 260px so several states can sit side by side in a demo row.
+   In a results column that basis becomes a 260px HEIGHT and the box stands far taller than its
+   text. Here it sizes to its content and spans the column, so empty and error land on the same
+   footprint as the cards and the loading skeleton above them. */
+.pt-col > .ml-state, .pt-col-3 > .ml-state { flex: none; max-width: none; }
 
 /* map frame (Leaflet + OSM, D-12) */
 .pt-map { position: relative; min-height: 480px; border: 1.5px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface-sunken); overflow: hidden; }

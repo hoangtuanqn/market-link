@@ -1,70 +1,216 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Markets by location and day — MarketLink prototype</title>
-<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
-<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
-<link rel="stylesheet" href="../prototype.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="../data.js"></script>
-<script src="../prototype.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Markets by location and day — MarketLink prototype</title>
+  <link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+  <link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+  <link rel="stylesheet" href="../prototype.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../data.js"></script>
+  <script src="../prototype.js"></script>
 </head>
+
 <body data-role="guest">
-<div id="pt-top"></div>
-<main class="pt-main">
-  <div class="pt-col-2">
-    <p class="ml-hand ml-muted"><time data-clock></time> · Ho Chi Minh City · 4 markets</p>
-    <h1 class="pt-title">Markets</h1>
-    <p class="pt-lead">Choose a day and an area to see which markets are open and which stalls are taking pre-orders.</p>
-  </div>
-
-  <div class="pt-row-6">
-    <div id="day-chips"></div>
-    <div class="ml-field" style="min-width:220px">
-      <label class="ml-field-label" for="district">Area</label>
-      <select id="district" class="ml-input">
-        <option>All of Ho Chi Minh City</option><option>Thủ Đức</option><option>District 7</option><option>Bình Thạnh</option>
-      </select>
-    </div>
+  <div id="pt-top"></div>
+  <main class="pt-main">
     <div class="pt-col-2">
-      <span class="ml-field-label">Sort</span>
-      <div class="ml-chips" id="sort-chips"></div>
+      <p class="ml-hand ml-muted"><time data-clock></time> · Ho Chi Minh City · <span id="kicker">4 markets</span></p>
+      <h1 class="pt-title">Markets</h1>
+      <p class="pt-lead">Pick the day you want to shop, then narrow it down to your area.</p>
     </div>
-  </div>
-  <p class="pt-small ml-muted">Distances are measured from your saved address. <span class="pt-todo" data-todo="FR-010 · Location filter: the SRS says 'by location' but not whether that is a district list, the browser's location, or a radius from the customer's address. Prototype uses the district list plus the saved address.">Location filter: district list, browser location, or radius? Not defined in the SRS.</span></p>
 
-  <div class="pt-split">
-    <div class="pt-col" id="market-list"></div>
-    <div class="pt-sticky">
-      <div id="map" class="pt-map" aria-label="Map of markets"></div>
-      <div class="pt-map-legend"><span>Square pin, market</span><span>Round pin, stall</span></div>
-    </div>
-  </div>
+    <section class="ml-card pt-panel-4 pt-col" aria-label="Filter the markets">
+      <div class="pt-between-c">
+        <div id="day-chips"></div>
+        <button type="button" class="ml-btn ml-btn-ghost ml-btn-sm" style="align-self:flex-start" data-clear>Clear
+          all</button>
+      </div>
+      <div class="pt-row-6">
+        <div class="ml-field" style="min-width:260px">
+          <label class="ml-field-label" for="area">Area</label>
+          <select id="area" class="ml-input"></select>
+        </div>
+        <div class="ml-field" style="min-width:210px">
+          <label class="ml-field-label" for="sort">Sort by</label>
+          <select id="sort" class="ml-input"></select>
+        </div>
+      </div>
+    </section>
 
-  <section class="pt-section" aria-labelledby="states-h">
-    <h2 id="states-h" class="pt-h3">Other states of this screen (FR-084)</h2>
-    <div class="pt-row" style="align-items:flex-start">
-      <div class="ml-card ml-state" role="status" aria-live="polite"><span class="ml-sr">Loading markets</span><span class="ml-skel" style="width:60%;height:20px"></span><span class="ml-skel" style="width:90%;height:14px"></span><span class="ml-skel" style="width:75%;height:14px"></span></div>
-      <div class="ml-state ml-state-empty"><h3 class="ml-state-title">No markets open on Thursday in District 7</h3><p class="ml-state-text">Phú Mỹ Hưng Saturday Market runs on Saturday only. Try Saturday, or widen the area.</p><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Show Saturday</button></div>
-      <div class="ml-state ml-state-error" role="alert"><h3 class="ml-state-title">Couldn't load markets</h3><p class="ml-state-text">Check your connection and try again.</p><button type="button" class="ml-btn ml-btn-danger ml-btn-sm">Try again</button></div>
+    <div class="pt-between-c">
+      <p class="pt-body" id="summary"></p>
     </div>
-  </section>
-</main>
-<script>
-  document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.week.map(function (d) { return { value: d.value, label: d.label, sub: d.sub, disabled: d.value === 'thu' }; }), 'sat');
-  document.getElementById('sort-chips').innerHTML = PT.chip('Nearest first', { selected: true, radio: 'sort' }) + PT.chip('Most stalls', { radio: 'sort' }) + PT.chip('Opens earliest', { radio: 'sort' });
-  var open = PT.markets.filter(function (m) { return m.days.indexOf(6) >= 0; });
-  document.getElementById('market-list').innerHTML = '<p class="pt-small ml-muted">' + open.length + ' markets open on Saturday 26/09</p>' + open.map(function (m) { return PT.marketCard(m).replace('ml-card ml-market', 'ml-card ml-market" style="width:auto'); }).join('');
-  PT.map('map', { markers: PT.markets.map(function (m) { return { lat: m.lat, lng: m.lng, kind: 'market', label: m.name, popup: PT.popup(m.name, [PT.dayNames(m.days) + ' · ' + m.open + '–' + m.close, m.stalls + ' stalls'], m.lat, m.lng, '../public/market.html') }; }) });
-  PT.boot({ active: 'markets' });
-</script>
-<div id="pt-foot"></div>
+
+    <div class="pt-split">
+      <div id="results">
+        <div class="pt-col" data-state-target="loaded">
+          <div class="pt-col" id="market-list"></div>
+          <div class="pt-between-c" id="pager"></div>
+        </div>
+        <div class="pt-col" hidden data-state-target="loading" id="skeleton"></div>
+        <div class="pt-col" hidden data-state-target="error"></div>
+      </div>
+      <div class="pt-sticky">
+        <div id="map" class="pt-map" aria-label="Map of the markets that match"></div>
+        <p class="pt-caption ml-muted">The map follows the filters and shows only the markets in the list.</p>
+      </div>
+    </div>
+
+    <section class="pt-section">
+      <h2 class="pt-h3">Other states of this list (FR-084)</h2>
+      <div class="pt-row-2">
+        <button type="button" class="ml-chip" aria-pressed="true" data-state-demo="loaded">With data</button>
+        <button type="button" class="ml-chip" aria-pressed="false" data-state-demo="loading">Loading</button>
+        <button type="button" class="ml-chip" aria-pressed="false" data-state-demo="error">Error</button>
+      </div>
+      <p class="pt-small ml-muted">The empty state is reachable for real: pick <b>Friday</b> and the area <b>Bình
+          Thạnh</b>. It names what you chose and offers the way out.</p>
+    </section>
+  </main>
+  <script>
+    var PAGE_SIZE = 3;
+    var SORTS = [['near', 'Nearest first'], ['stalls', 'Most stalls'], ['opens', 'Opens earliest']];
+    var DEFAULTS = { day: 'sat', area: 'all', sort: 'near' };
+    var f = Object.assign({}, DEFAULTS), page = 1, map = null;
+
+    var km = function (m) { return parseFloat(m.distance) || 0; };
+    var dayOf = function (v) { return PT.weekdays.filter(function (d) { return d.value === v; })[0]; };
+    var dayLabel = function (v) { var d = dayOf(v); return d ? d.label : ''; };
+    var plural = function (n) { return n + (n === 1 ? ' market' : ' markets'); };
+    var openOn = function (v) { var d = dayOf(v); return d ? PT.markets.filter(function (m) { return m.days.indexOf(d.dow) >= 0; }) : []; };
+
+    // Areas come from the markets themselves, so a new market in a new district needs no edit here (FR-010).
+    var areas = function () {
+      var seen = [];
+      PT.markets.forEach(function (m) { if (seen.indexOf(m.district) < 0) seen.push(m.district); });
+      return seen.sort(function (a, b) { return a.localeCompare(b); });
+    };
+
+    function matches() {
+      return openOn(f.day)
+        .filter(function (m) { return f.area === 'all' || m.district === f.area; })
+        .sort(function (a, b) {
+          if (f.sort === 'stalls') return b.stalls - a.stalls;
+          if (f.sort === 'opens') return a.open.localeCompare(b.open);
+          return km(a) - km(b);
+        });
+    }
+
+    function renderFilters() {
+      // All seven weekdays. A day no market anywhere opens on is shown struck through rather than hidden,
+      // so the week always reads the same and nobody clicks into an empty result.
+      document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.weekdays.map(function (d) {
+        return { value: d.value, label: d.label, disabled: openOn(d.value).length === 0 };
+      }), f.day);
+
+      var onDay = openOn(f.day);
+      var opts = '<option value="all"' + (f.area === 'all' ? ' selected' : '') + '>All areas (' + onDay.length + ')</option>';
+      opts += areas().map(function (a) {
+        var n = onDay.filter(function (m) { return m.district === a; }).length;
+        return '<option value="' + PT.esc(a) + '"' + (f.area === a ? ' selected' : '') + '>' + PT.esc(a) + ' (' + n + ')</option>';
+      }).join('');
+      document.getElementById('area').innerHTML = opts;
+
+      document.getElementById('sort').innerHTML = SORTS.map(function (s) {
+        return '<option value="' + s[0] + '"' + (f.sort === s[0] ? ' selected' : '') + '>' + s[1] + '</option>';
+      }).join('');
+    }
+
+    function renderList() {
+      var all = matches(), pages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+      if (page > pages) page = pages;
+      var from = (page - 1) * PAGE_SIZE, slice = all.slice(from, from + PAGE_SIZE);
+      var where = f.area === 'all' ? '' : ' in ' + f.area;
+
+      document.getElementById('kicker').textContent = plural(all.length);
+      document.getElementById('summary').innerHTML = all.length
+        ? '<b>' + plural(all.length) + '</b> open on ' + dayLabel(f.day) + PT.esc(where)
+        : 'Nothing open on ' + dayLabel(f.day) + PT.esc(where);
+
+      if (!all.length) {
+        var title, text, action;
+        if (f.area !== 'all') {
+          title = 'No markets in ' + f.area + ' on ' + dayLabel(f.day);
+          text = 'Across the whole city ' + plural(openOn(f.day).length) + ' open that day. Widen the area, or pick another day.';
+          action = '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-reset="area">Show all areas</button>';
+        } else {
+          title = 'No markets open on ' + dayLabel(f.day);
+          text = 'Saturday is the busiest day, with ' + plural(openOn('sat').length) + ' open.';
+          action = '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-reset="day">Show Saturday</button>';
+        }
+        document.getElementById('market-list').innerHTML = PT.state('empty', title, text, action);
+        document.getElementById('pager').innerHTML = '';
+      } else {
+        document.getElementById('market-list').innerHTML = slice.map(function (m) {
+          return PT.marketCard(m).replace('ml-card ml-market', 'ml-card ml-market" style="width:auto');
+        }).join('');
+        document.getElementById('pager').innerHTML = pages > 1
+          ? '<span class="pt-small ml-muted">Showing ' + (from + 1) + '–' + (from + slice.length) + ' of ' + all.length + '</span>' + PT.pagination(page, pages)
+          : '<span class="pt-small ml-muted">All ' + plural(all.length) + ' on one page</span>';
+      }
+
+      if (map) { map.remove(); map = null; }
+      var host = document.getElementById('map');
+      host.innerHTML = '';
+      map = PT.map(host, {
+        markers: (all.length ? all : PT.markets).map(function (m) {
+          return {
+            lat: m.lat, lng: m.lng, kind: 'market', label: m.name, selected: slice.indexOf(m) >= 0,
+            popup: PT.popup(m.name, [PT.dayNames(m.days) + ' · ' + m.open + '–' + m.close, m.stalls + ' stalls', m.district], m.lat, m.lng, '../public/market.html')
+          };
+        }),
+      });
+    }
+
+    function render() { renderFilters(); renderList(); }
+    render();
+    document.getElementById('skeleton').innerHTML = PT.skeletonMarkets(PAGE_SIZE);
+    document.querySelector('[data-state-target="error"]').innerHTML =
+      PT.state('error',
+        '<span style="display:inline-flex;align-items:center;gap:8px">' + PT.icons.alert() + 'We could not load the markets</span>',
+        'The list did not come back this time. Your saved markets and your orders are not affected.',
+        '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-toast="Loading the markets again.">Try again</button>') +
+      '<p class="pt-small ml-muted pt-measure">This is usually the connection rather than anything you did. If trying again does not help, the <a href="../public/map.html">market map</a> opens on its own page, or <a href="../public/feedback.html">tell us what happened</a> and we will look into it.</p>';
+
+    PT.boot({ active: 'markets' });
+
+    document.body.addEventListener('click', function (e) {
+      var t;
+      if ((t = e.target.closest('[data-reset]'))) {
+        var what = t.getAttribute('data-reset');
+        if (what === 'area') f.area = 'all';
+        if (what === 'day') f.day = 'sat';
+        page = 1; render(); return;
+      }
+      if (e.target.closest('[data-clear]')) { f = Object.assign({}, DEFAULTS); page = 1; render(); PT.toast('Filters cleared.'); return; }
+      if ((t = e.target.closest('#pager button'))) {
+        if (t.disabled) return;
+        var label = t.getAttribute('aria-label') || '';
+        if (label === 'Previous page') page--;
+        else if (label === 'Next page') page++;
+        else if (/^Page /.test(label)) page = +label.replace('Page ', '');
+        renderList();
+        var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        document.getElementById('market-list').scrollIntoView({ block: 'start', behavior: still ? 'auto' : 'smooth' });
+      }
+    });
+
+    document.body.addEventListener('change', function (e) {
+      if (e.target.closest('#day-chips') && e.target.type === 'radio') { f.day = e.target.value; page = 1; render(); }
+      else if (e.target.id === 'area') { f.area = e.target.value; page = 1; renderList(); }
+      else if (e.target.id === 'sort') { f.sort = e.target.value; page = 1; renderList(); }
+    });
+  </script>
+  <div id="pt-foot"></div>
 </body>
+
 </html>
