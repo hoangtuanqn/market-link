@@ -63,7 +63,9 @@ public class AuthController extends BaseController {
         AuthResult auth = userService.registerCustomer(request);
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
-                        auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+                        auth.refreshToken(),
+                        Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
+                        auth.rememberMe());
 
         RegisterResource body = new RegisterResource(auth.accessToken(), auth.user());
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -113,7 +115,9 @@ public class AuthController extends BaseController {
     private ResponseEntity<ApiResource<LoginResource>> loggedIn(AuthResult auth) {
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
-                        auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+                        auth.refreshToken(),
+                        Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
+                        auth.rememberMe());
 
         LoginResource body = new LoginResource(auth.accessToken(), auth.user());
         return ResponseEntity.ok()
@@ -164,7 +168,9 @@ public class AuthController extends BaseController {
         AuthResult auth = userService.refresh(refreshToken);
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
-                        auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+                        auth.refreshToken(),
+                        Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
+                        auth.rememberMe());
 
         RefreshResource body = new RefreshResource(auth.accessToken(), auth.user());
         return ResponseEntity.ok()
