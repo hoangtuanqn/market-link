@@ -13,6 +13,9 @@ app:
     # Origin của frontend React được phép gọi API, nhiều origin cách nhau dấu phẩy.
     # Mặc định là Vite dev server (frontend/vite.config.ts, cổng 3000). Prod bắt buộc truyền biến.
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  oauth:
+    facebook:
+      graph-version: v23.0
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
