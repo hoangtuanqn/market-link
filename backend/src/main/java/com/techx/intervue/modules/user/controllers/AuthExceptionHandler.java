@@ -2,6 +2,7 @@ package com.techx.intervue.modules.user.controllers;
 
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
+import com.techx.intervue.modules.user.exceptions.InvalidResetTokenException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -69,6 +70,12 @@ public class AuthExceptionHandler {
                                 .field(e.getField())
                                 .message(e.getMessage())
                                 .build()));
+    }
+
+    /** FR-007: token đặt lại mật khẩu sai, đã dùng hoặc hết hạn. */
+    @ExceptionHandler(InvalidResetTokenException.class)
+    ResponseEntity<ApiResource<Void>> invalidResetToken(InvalidResetTokenException e) {
+        return error(HttpStatus.BAD_REQUEST, "INVALID_RESET_TOKEN", e.getMessage(), List.of());
     }
 
     @ExceptionHandler(DuplicateAccountException.class)
