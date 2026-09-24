@@ -44,6 +44,19 @@
       <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-067 · Cancelling a whole market day or session (holiday, rain) is marked (proposal) in the feature catalog and not in the SRS; what happens to placed orders then is undecided.">Cancelling a whole market day is not specified</span></p>
     </div>
   </div>
+
+  <section class="ml-card pt-panel pt-col-3">
+    <div class="pt-between-c">
+      <div class="pt-col-2" style="max-width:640px">
+        <h2 class="pt-h3">Days you are not selling</h2>
+        <p class="pt-small ml-muted">A market day you will miss — a short harvest, illness, a van that will not start. Your stall drops off the market page for that day and takes no new orders. Orders already placed are declined with your reason, and the stock goes back to you (D-02).</p>
+      </div>
+      <button type="button" class="ml-btn ml-btn-secondary" data-add-dayoff>Tell customers you are away</button>
+    </div>
+    <div id="dayoff"></div>
+    <div id="mkclosed"></div>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-067 · Declaring a day away has no requirement and no table. What happens to the orders is already covered — declining returns stock under D-02 and D-04 has the transition — but there is nowhere to record the day itself, so a stall would have to decline each order by hand. This needs a new FR and a farmer_absences table (farmer_id, market_id, absent_on, reason), plus a Flyway migration under R-03. LEAD owns schema.sql (R-02).">Declaring a day away needs a new FR and a table</span></p>
+  </section>
 </main>
 <script>
   document.getElementById('day-chips').innerHTML = PT.dayChips('Day', [{ value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }, { value: 'sat2', label: 'Sat', sub: '03/10' }, { value: 'sun2', label: 'Sun', sub: '04/10', disabled: true }], 'sat');
@@ -56,6 +69,69 @@
     { key: 'o', label: 'Open to new orders', render: function (s) { return '<label class="ml-check" style="padding-top:0;min-height:36px"><input type="checkbox"' + (s.off ? '' : ' checked') + '><span class="ml-check-box" aria-hidden="true">' + PT.icons.check() + '</span><span class="ml-check-text">' + (s.off ? 'Off' : 'On') + '</span></label>'; } },
   ], slots);
   document.getElementById('gen').addEventListener('click', function () { PT.dialog({ title: 'Generate slots for 03/10 – 04/10?', body: '<div class="pt-col-3"><div class="pt-form-grid"><div class="ml-field"><label class="ml-field-label" for="len">Slot length</label><select id="len" class="ml-input"><option>30 minutes</option><option>15 minutes</option><option>60 minutes</option></select></div><div class="ml-field"><label class="ml-field-label" for="mx">Orders per slot</label><input id="mx" class="ml-input" type="number" value="5"></div></div><p class="ml-muted" style="font-size:14px">Creates slots from 06:00 to 10:30 on Sat and Sun at Thảo Điền and on Sun at Thủ Đức. Existing slots are not changed.</p></div>', keep: 'Cancel', confirm: 'Generate 27 slots', toast: '27 slots created for 03/10 – 04/10.' }); });
+  PT.states('#table', {
+    label: 'these slots',
+    empty: ['No slots for this day', 'Generate the slots for a market day and customers can start booking a pickup time.'],
+    error: ['Couldn\'t load your pickup slots', 'Check your connection and try again.'],
+  });
+  /* Days this stall is away, and the days the market itself is shut. A market closure wins: if the
+     market does not open there is nothing for a stall to declare. */
+  var ME = 1;
+  var away = PT.dayOff.filter(function (d) { return d.farmer === ME; }).map(function (d) { return Object.assign({}, d); });
+
+  function renderAway() {
+    var el = document.getElementById('dayoff');
+    if (!away.length) {
+      el.innerHTML = PT.state('empty', 'You are selling on every market day', 'Tell customers in advance if that changes, so nobody turns up to an empty stall.');
+      return;
+    }
+    el.innerHTML = PT.table(null, [
+      { key: 'd', label: 'Date', render: function (d) { return '<b>' + d.date + '</b><span class="sub">' + d.weekday + '</span>'; } },
+      { key: 'm', label: 'Market', render: function (d) { return PT.esc(PT.market(d.market).name); } },
+      { key: 'r', label: 'Reason customers see', render: function (d) { return PT.esc(d.reason); } },
+      { key: 'o', label: 'Orders declined', align: 'num', render: function (d) { return d.orders || '—'; } },
+      { key: 'a', label: '', align: 'actions', render: function (d) { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-rm-dayoff="' + d.id + '">I can make it</button>'; } },
+    ], away);
+  }
+
+  function renderMarketClosed() {
+    var mine = PT.closures.filter(function (c) { return c.market === 1; });
+    var el = document.getElementById('mkclosed');
+    if (!mine.length) { el.innerHTML = ''; return; }
+    el.innerHTML = PT.banner('info', 'The market itself is shut on ' + mine[0].date + '.',
+      PT.esc(mine[0].reason) + '. You do not need to do anything: nobody can order from any stall for that day, and MarketLink has told your customers.');
+  }
+  renderAway();
+  renderMarketClosed();
+
+  document.body.addEventListener('click', function (e) {
+    var t;
+    if ((t = e.target.closest('[data-add-dayoff]'))) {
+      PT.dialog({
+        tone: 'danger',
+        title: 'Tell customers you are away',
+        body: '<div class="pt-col-3">' +
+          '<p class="pt-small">Orders already placed for that day are declined with your reason and the stock returns to you. The customer is told straight away and pays nothing, because nothing is paid until pickup.</p>' +
+          '<div class="ml-field" style="min-width:0"><label class="ml-field-label" for="odate">Market day</label><select id="odate" class="ml-input"><option value="27/09/2026|Sunday|2">Sun 27/09 · Thảo Điền · 2 orders placed</option><option value="03/10/2026|Saturday|0">Sat 03/10 · Thảo Điền · no orders yet</option><option value="04/10/2026|Sunday|0">Sun 04/10 · Thảo Điền · market is shut anyway</option></select></div>' +
+          '<div class="ml-field" style="min-width:0"><label class="ml-field-label" for="oreason">Reason customers will see</label><input id="oreason" class="ml-input" placeholder="Harvest was short after the rain"></div>' +
+          '</div>',
+        keep: 'Not now', confirm: 'Tell them',
+        onConfirm: function (dlg) {
+          var parts = dlg.querySelector('#odate').value.split('|');
+          var reason = (dlg.querySelector('#oreason') || {}).value.trim() || 'Not given';
+          away.push({ id: Date.now(), farmer: ME, market: 1, date: parts[0], weekday: parts[1], reason: reason, orders: +parts[2] });
+          renderAway();
+          PT.toast(+parts[2] ? parts[2] + ' orders declined and the customers told.' : 'Customers can no longer order from you for ' + parts[0] + '.');
+        },
+      });
+    }
+    if ((t = e.target.closest('[data-rm-dayoff]'))) {
+      var id = t.getAttribute('data-rm-dayoff');
+      away = away.filter(function (d) { return String(d.id) !== String(id); });
+      renderAway();
+      PT.toast('You are selling that day again. Declined orders are not brought back; the customer has to order again.');
+    }
+  });
   PT.boot({ role: 'farmer', active: 'stall', announce: false });
 </script>
 <div id="pt-foot"></div>

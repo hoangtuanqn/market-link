@@ -137,6 +137,11 @@
   var map = null;
   function drawMap() { if (map) return; map = PT.map('map', { center: [f.lat, f.lng], zoom: 17, scroll: false, markers: [{ lat: m.lat, lng: m.lng, kind: 'market', label: m.name }, { lat: f.lat, lng: f.lng, kind: 'stall', label: f.stall, selected: true, popup: PT.popup(f.stall, ['Stall A12 · pickup 06:00 – 10:30'], f.lat, f.lng), open: true }] }); }
   document.body.addEventListener('click', function (e) { if (e.target.closest('[data-tab="about"]')) setTimeout(drawMap, 20); });
+  PT.states(['#products', '#reviews', '#markets-table'], {
+    label: 'this stall',
+    empty: ['Nothing for sale this week', 'The stall has not listed anything yet. Save it and you will hear when it does.'],
+    error: ['Couldn\'t load the stall', 'Check your connection and try again.'],
+  });
   PT.boot({ active: 'markets' });
 </script>
 <div id="pt-foot"></div>

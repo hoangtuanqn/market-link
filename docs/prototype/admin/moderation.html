@@ -41,7 +41,7 @@
   document.getElementById('tabs').innerHTML = PT.tabs('Moderation queues', [{ id: 'reviews', label: 'Reviews', count: 1 }, { id: 'products', label: 'Product listings' }, { id: 'hidden', label: 'Hidden items', count: 2 }], 'reviews');
   document.getElementById('rchips').innerHTML = PT.chip('Reported', { selected: true, radio: 'r', count: 1 }) + PT.chip('Rated 1 or 2', { radio: 'r', count: 4 }) + PT.chip('Newest', { radio: 'r' });
   var flagged = PT.reviews.filter(function (r) { return r.flagged; });
-  document.getElementById('reviews').innerHTML = PT.banner('warning', 'Reported by U Minh Forest Honey on 02/09: “Advertising, not a review.”', 'Hiding it removes it from the product and stall pages. The customer is told why.') + flagged.map(function (r) { return PT.reviewCard(r, { fluid: true, actions: '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-hide="review">Hide review</button><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Report dismissed. The review stays visible.">Keep visible</button><a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/customers.html">Customer account</a>' }); }).join('');
+  document.getElementById('reviews').innerHTML = PT.banner('warning', 'Reported by U Minh Forest Honey on 02/09: “Advertising, not a review.”', 'Hiding it removes it from the product and stall pages. The customer is told why.') + flagged.map(function (r) { return PT.reviewCard(r, { fluid: true, actions: '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-hide="review">Hide review</button><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Report dismissed. The review stays visible.">Keep visible</button><a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/customer.html">Customer account</a>' }); }).join('');
   document.getElementById('ptable').innerHTML = PT.table('Recently listed products', [
     { key: 'n', label: 'Product', render: function (p) { return '<b>' + PT.esc(p.name) + '</b><span class="sub">' + PT.esc(PT.farmer(p.farmer).stall) + ' · ' + PT.category(p.cat).name + '</span>'; } },
     { key: 'p', label: 'Price', align: 'num', render: function (p) { return PT.vnd(p.price) + ' <span class="sub">per ' + p.unit + '</span>'; } },
@@ -50,6 +50,11 @@
   ], [PT.product(14), PT.product(9), PT.product(5), PT.product(20)]);
   document.getElementById('hidden').innerHTML = PT.table('Hidden items', [{ key: 'w', label: 'Item' }, { key: 'o', label: 'Owner' }, { key: 'r', label: 'Reason' }, { key: 'd', label: 'Hidden on' }, { key: 'a', label: '', align: 'actions', render: function () { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Item is visible again.">Unhide</button>'; } }], [{ w: 'Review on “Straw mushrooms”', o: 'Account 4471', r: 'Advertising', d: '02/09/2026' }, { w: 'Listing “Weight-loss tea”', o: 'Long Khánh Fruit Garden', r: 'Health claim, not produce', d: '19/09/2026' }]);
   document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-hide]'); if (!b) return; var k = b.getAttribute('data-hide'); PT.dialog({ tone: 'danger', title: 'Hide this ' + k + '?', body: '<p>It is removed from customer pages right away. The ' + (k === 'review' ? 'customer' : 'stall') + ' is told and can contact the team.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason</label><select id="why" class="ml-input"><option>Advertising or off-platform contact</option><option>Abusive language</option><option>Not about the product or stall</option><option>Health or certification claim</option><option>Other</option></select></div>', keep: 'Keep visible', confirm: 'Hide ' + k, toast: 'Hidden. The owner has been told.' }); });
+  PT.states(['#reviews', '#ptable'], {
+    label: 'this queue',
+    empty: ['Nothing to moderate', 'Reported products and reviews arrive here for you to read before hiding anything.'],
+    error: ['Couldn\'t load the moderation queue', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'admin', active: 'moderation', announce: false });
 </script>
 <div id="pt-foot"></div>

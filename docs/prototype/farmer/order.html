@@ -67,6 +67,11 @@
   document.getElementById('items').innerHTML = PT.table(null, [{ key: 'n', label: 'Product', render: function (i) { var p = PT.product(i.p); return PT.esc(p.name) + '<span class="sub">' + PT.vnd(p.price) + ' / ' + p.unit + '</span>'; } }, { key: 'q', label: 'Requested', align: 'num', render: function (i) { return PT.units(i.qty, PT.product(i.p).unit); } }, { key: 's', label: 'Left after this order', align: 'num', render: function (i) { return PT.product(i.p).stock; } }, { key: 't', label: 'Amount', align: 'num', render: function (i) { return PT.vnd(i.qty * PT.product(i.p).price); } }], o.items);
   document.getElementById('history').innerHTML = [['placed', '24/09/2026 09:12', 'Minh Anh']].map(function (h) { return '<li><span class="pt-timeline-dot" style="background:var(--status-' + h[0] + '-bg);color:var(--status-' + h[0] + '-ink)">' + PT.icons[h[0]]() + '</span><div>' + PT.status(h[0]) + '<time>' + h[1] + ' · by ' + h[2] + '</time></div></li>'; }).join('');
   document.getElementById('decline').addEventListener('click', function () { PT.dialog({ tone: 'danger', title: 'Decline order #ML-0421?', body: '<p>Minh Anh is told right away and 2 bunches of water spinach, 1 choy sum and 1 Thai basil go back to your stock.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason the customer will see</label><select id="why" class="ml-input"><option>Not enough stock</option><option>Not selling on that day</option><option>Cannot make that pickup time</option><option>Other</option></select></div>', keep: 'Keep order', confirm: 'Decline order', toast: 'Order #ML-0421 declined.' }); });
+  PT.states(['#status', '#items', '#history'], {
+    label: 'this order',
+    empty: ['That order is not here any more', 'It may have been cancelled by the customer, or the link is old. Open it again from your orders list.'],
+    error: ['Couldn\'t load the order', 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'farmer', active: 'orders', announce: false });
 </script>
 <div id="pt-foot"></div>

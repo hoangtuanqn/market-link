@@ -34,7 +34,7 @@
 <script>
   document.getElementById('chips').innerHTML = PT.chip('All', { selected: true, radio: 'f', count: 412 }) + PT.chip('Active', { radio: 'f', count: 409 }) + PT.chip('Deactivated', { radio: 'f', count: 3 }) + PT.chip('Joined this month', { radio: 'f', count: 37 });
   document.getElementById('table').innerHTML = PT.table(null, [
-    { key: 'name', label: 'Customer', render: function (c) { return '<b>' + PT.esc(c.name) + '</b><span class="sub">' + c.email + ' · ' + c.phone + '</span>'; } },
+    { key: 'name', label: 'Customer', render: function (c) { return '<a href="../admin/customer.html"><b>' + PT.esc(c.name) + '</b></a><span class="sub">' + c.email + ' · ' + c.phone + '</span>'; } },
     { key: 'joined', label: 'Joined' },
     { key: 'orders', label: 'Orders', align: 'num' },
     { key: 's', label: 'Status', render: function (c) { return c.status === 'active' ? '<span class="ml-status ml-status-ready">' + PT.icons.check() + '<span class="ml-status-text">Active</span></span>' : '<span class="ml-status ml-status-declined">' + PT.icons.declined() + '<span class="ml-status-text">Deactivated</span></span>' + (c.reason ? '<span class="sub">' + PT.esc(c.reason) + '</span>' : ''); } },
@@ -42,6 +42,11 @@
   ], PT.customers);
   document.getElementById('pager').innerHTML = PT.pagination(1, 69);
   document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-off]'); if (!b) return; PT.dialog({ tone: 'danger', title: 'Deactivate ' + b.getAttribute('data-off') + '?', body: '<p>They are signed out everywhere and cannot sign in or place orders. Orders already placed stay with the stalls.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason, kept on the account</label><textarea id="why" class="ml-input" style="min-height:72px"></textarea></div>', keep: 'Keep active', confirm: 'Deactivate account', toast: b.getAttribute('data-off') + ' deactivated.' }); });
+  PT.states('#table', {
+    label: 'this list',
+    empty: ['No customers yet', 'Customer accounts appear here as soon as people register on MarketLink.'],
+    error: ["Couldn't load customers", 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'admin', active: 'customers', announce: false });
 </script>
 <div id="pt-foot"></div>

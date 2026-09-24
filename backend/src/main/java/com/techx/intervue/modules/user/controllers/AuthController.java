@@ -9,6 +9,7 @@ import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.resources.LoginResource;
+import com.techx.intervue.modules.user.resources.RefreshResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,5 +84,28 @@ public class AuthController extends BaseController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
                 .body(ApiResource.success(null, "Đăng xuất thành công!"));
+    }
+
+    /**
+     * FR-003: gọi khi access token hết hạn. Refresh token chỉ đọc từ cookie HttpOnly (không nhận
+     * qua body), trả access token mới và ghi đè cookie bằng refresh token mới.
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResource<RefreshResource>> refresh(
+            @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
+                    String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new BadCredentialsException(
+                    "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!");
+        }
+        AuthResult auth = userService.refresh(refreshToken);
+        ResponseCookie refreshCookie =
+                CookieHelper.buildRefreshTokenCookie(
+                        auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+
+        RefreshResource body = new RefreshResource(auth.accessToken(), auth.user());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(ApiResource.success(body, "Làm mới phiên đăng nhập thành công!"));
     }
 }

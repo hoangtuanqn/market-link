@@ -39,6 +39,11 @@
     if (i === 1) return PT.reviewCard(r, { fluid: true }).replace('</article>', '<form class="pt-col-2" style="margin-top:8px"><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="reply' + r.id + '">Your reply, shown under the review</label><textarea id="reply' + r.id + '" class="ml-input" style="min-height:72px" placeholder="Thank you for coming by, Lan Hương. We will pack the choy sum last so it stays fresh until 9."></textarea></div><div class="pt-row-2"><button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Reply posted under Lan Hương\'s review.">Post reply</button><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm">Report review</button></div></form></article>');
     return PT.reviewCard(r, { fluid: true, actions: '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Reply box opened.">Reply</button><button type="button" class="ml-btn ml-btn-ghost ml-btn-sm">Report review</button>' });
   }).join('');
+  PT.states('#list', {
+    label: 'these reviews',
+    empty: ['No reviews yet', 'A customer can review your stall and what they bought once their order is completed (D-10).'],
+    error: ["Couldn't load your reviews", 'Check your connection and try again.'],
+  });
   PT.boot({ role: 'farmer', active: 'reviews', announce: false });
 </script>
 <div id="pt-foot"></div>

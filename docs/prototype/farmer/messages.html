@@ -57,7 +57,7 @@
   </div>
 </main>
 <script>
-  document.getElementById('scope').innerHTML = PT.banner('warning', 'Messaging is not in the SRS.', 'Ask the LEAD for a new requirement before this is built. The screen exists so the team can judge whether it is worth the hours.', { action: '<span class="pt-todo" data-todo="Out of scope · Farmer-to-Customer messaging is not in the SRS or in .ai/REQUIREMENTS.md. R-07 says do not build what is not listed. It also raises questions the SRS does not answer: who may start a thread, whether a stall can be messaged without an order, and how abuse is reported and moderated.">Needs a new FR before it is built</span>' });
+  document.getElementById('scope').innerHTML = PT.banner('warning', 'Messaging is not in the SRS.', 'Ask the LEAD for a new requirement before this is built. The screen exists so the team can judge whether it is worth the hours.', { todo: '<span class="pt-todo" data-todo="Out of scope · Farmer-to-Customer messaging is not in the SRS or in .ai/REQUIREMENTS.md. R-07 says do not build what is not listed. It also raises questions the SRS does not answer: who may start a thread, whether a stall can be messaged without an order, and how abuse is reported and moderated.">Needs a new FR before it is built</span>' });
 
   document.getElementById('threads').innerHTML = [
     { who: 'Nguyễn Minh Khang', mono: 'K', last: 'Could you hold 5 bunches instead of 2 on this order?', time: '09:33', current: true, unread: true },
@@ -77,6 +77,11 @@
     document.getElementById('log').insertAdjacentHTML('beforeend', PT.chat({ from: 'user', who: 'You', time: '09:47', text: PT.esc(v) }));
     document.getElementById('q').value = '';
     document.querySelector('.pt-chat-log').scrollTop = 1e6;
+  });
+  PT.states('#threads', {
+    label: 'these messages',
+    empty: ['No messages', 'A customer can write to you about an order they have placed.'],
+    error: ['Couldn\'t load your messages', 'Check your connection and try again.'],
   });
   PT.boot({ role: 'farmer', active: null, announce: false });
 </script>

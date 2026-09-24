@@ -14,7 +14,7 @@ window.PT = window.PT || {};
 
   PT.users = {
     customer: { name: 'Khang', full: 'Nguyễn Minh Khang', email: 'khang@example.com', phone: '0903 118 218', address: '25 Xuân Thủy, Thảo Điền, Thủ Đức' },
-    farmer: { name: 'Cô Tư Garden', person: 'Nguyễn Thị Tư', email: 'cotu@example.com', phone: '0912 440 540', address: 'Hamlet 3, Tân Phú Trung, Củ Chi' },
+    farmer: { name: 'Cô Tư Garden', short: 'Cô Tư', person: 'Nguyễn Thị Tư', email: 'cotu@example.com', phone: '0912 440 540', address: 'Hamlet 3, Tân Phú Trung, Củ Chi' },
     admin: { name: 'Admin' },
   };
 
@@ -76,6 +76,27 @@ window.PT = window.PT || {};
     { id: 20, name: 'Goat milk', farmer: 3, cat: 3, price: 45000, unit: 'bottle', stock: 14, status: 'available', desc: '500 ml, pasteurised. Drink within 3 days.' },
     { id: 21, name: 'Hóc Môn water spinach', farmer: 6, cat: 1, price: 13000, unit: 'bunch', stock: 24, status: 'available', desc: 'Grown on the riverbank in Hóc Môn. Thinner stems than the Củ Chi variety, about 350 g a bunch.' },
     { id: 22, name: 'Choy sum', farmer: 6, cat: 1, price: 16000, unit: 'bunch', stock: 12, status: 'available', desc: 'Cut Friday afternoon. Bunches of about 400 g.' },
+    { id: 23, name: 'Elephant garlic', farmer: 6, cat: 8, price: 25000, unit: 'bulb', stock: 40, status: 'available', desc: 'One large bulb, milder than ordinary garlic. Keeps for weeks in a dry place.' },
+    { id: 24, name: 'Duck eggs', farmer: 5, cat: 5, price: 95000, unit: 'tray of 30', plural: 'trays of 30', stock: 12, status: 'available', desc: 'Laid this week. Sold by the tray; we do not split them.' },
+    { id: 25, name: 'Dried wood-ear mushrooms', farmer: 8, cat: 7, price: 60000, unit: 'bag', stock: 18, status: 'available', desc: '200 g bag, sun-dried. Soak for 20 minutes before cooking.' },
+  ];
+
+  // The units a stall can pick from, plus any it typed itself. products.unit is already VARCHAR(20) in
+  // db/schema.sql ("kg, bó, quả, hộp…"), so a stall naming its own unit needs no schema change. What is
+  // missing is the plural: English cannot derive "trays of 30" from "tray of 30".
+  PT.unitList = [
+    { one: 'kg', many: 'kg', kind: 'Weight', builtin: true, used: 6 },
+    { one: 'g', many: 'g', kind: 'Weight', builtin: true, used: 0 },
+    { one: 'bunch', many: 'bunches', kind: 'Count', builtin: true, used: 9 },
+    { one: 'piece', many: 'pieces', kind: 'Count', builtin: true, used: 4 },
+    { one: 'bulb', many: 'bulbs', kind: 'Count', builtin: true, used: 1 },
+    { one: 'dozen', many: 'dozen', kind: 'Count', builtin: true, used: 1 },
+    { one: 'bag', many: 'bags', kind: 'Pack', builtin: true, used: 1 },
+    { one: 'jar', many: 'jars', kind: 'Pack', builtin: true, used: 3 },
+    { one: 'bottle', many: 'bottles', kind: 'Pack', builtin: true, used: 1 },
+    { one: 'loaf', many: 'loaves', kind: 'Pack', builtin: true, used: 2 },
+    { one: 'tray of 30', many: 'trays of 30', kind: 'Pack', builtin: false, addedBy: 'Ba Lành Farm', used: 1 },
+    { one: 'basket', many: 'baskets', kind: 'Pack', builtin: false, addedBy: 'Hóc Môn Greens', used: 0 },
   ];
 
   // Orders seen by Customer Khang (FR-101: all 6 states present). One order = one Farmer (D-01).
@@ -117,6 +138,7 @@ window.PT = window.PT || {};
   ];
 
   PT.notifications = [
+    { kind: 'invite', title: 'Do you grow something? Sell it at the market', text: 'Your account can become a stall. Apply with a few photos of your plot and an admin reviews it.', time: 'Today', unread: true },
     { kind: 'ready', title: 'Order #ML-0409 is ready', text: 'Gió Nam Bakery · pick up 07:30–08:00 on Friday 25/09.', time: '06:10', unread: true },
     { kind: 'restock', title: 'Goat yogurt is back in stock', text: 'Củ Chi Goat Farm just added 20 jars.', time: 'Yesterday', unread: true },
     { kind: 'accepted', title: 'Order #ML-0412 was accepted', text: 'Cô Tư Garden confirmed it for Saturday 07:00–07:30.', time: '24/09' },
@@ -130,6 +152,23 @@ window.PT = window.PT || {};
     { kind: 'placed', title: 'New order #ML-0420 from Trần Phúc', text: '2 items · Sat 26/09 · 07:30–08:00.', time: '08:40', unread: true },
     { kind: 'cancelled', title: 'Order #ML-0360 was cancelled by Kim Chi', text: '1 bunch of Thai basil went back to stock.', time: '11/09' },
     { kind: 'announce', title: 'Thảo Điền Weekend Market is closed on Sunday 04/10', text: 'Orders for that day move to Saturday 03/10.', time: '23/09' },
+  ];
+
+  /* One-off market closures. The announcement about Thảo Điền on 04/10 was already on the home page
+     with nothing behind it, so this is where it now comes from. `handling` is what happens to orders
+     already placed for that day; the SRS does not define it, so the screens mark it as an open question. */
+  PT.closures = [
+    { id: 1, market: 1, date: '04/10/2026', weekday: 'Sunday', reason: 'Ward street works on Quốc Hương', handling: 'move', orders: 6, announced: true, by: 'Admin · 23/09/2026' },
+    { id: 2, market: 4, date: '21/10/2026', weekday: 'Wednesday', reason: 'Public holiday', handling: 'cancel', orders: 0, announced: false, by: 'Admin · 24/09/2026' },
+  ];
+  PT.closureHandling = {
+    move: ['Move the orders to the next market day', 'Each customer keeps their order and gets the new pickup date. The stall has to be selling that day too.'],
+    contact: ['Ask each stall to contact its customers', 'Nothing changes automatically. The stall arranges another time or refunds nothing, because no money has changed hands.'],
+    cancel: ['Cancel the orders and tell the customers', 'Stock goes back to the stall (D-02) and the order ends as cancelled, not declined, because the stall did nothing wrong.'],
+  };
+  /* Days a single stall is not attending, even though the market is open. */
+  PT.dayOff = [
+    { id: 1, farmer: 1, market: 1, date: '27/09/2026', weekday: 'Sunday', reason: 'Harvest was short after the rain', orders: 2 },
   ];
 
   PT.announcements = [
@@ -178,6 +217,120 @@ window.PT = window.PT || {};
   // Review tags, chosen by the customer alongside the star rating. Not in the SRS; a proposal.
   PT.reviewTags = {
     1: [['Ready on time', 14], ['Fresh as described', 11], ['Easy to find the stall', 8], ['Friendly', 7], ['Good value', 5], ['Packed well', 3]],
+  };
+
+  // A Customer applying to become a Farmer (FR-002 as an upgrade, FR-071 for the review).
+  // farmer_profiles already links to users.user_id, so the account is reused. The evidence below has no
+  // columns in db/schema.sql yet: see the TODO on customer/become-farmer.html.
+  PT.application = {
+    id: 'AP-0007',
+    userId: 3,
+    person: 'Trần Phúc',
+    email: 'phuc.tran@example.com',
+    phone: '0912 010 540',
+    customerSince: '11/08/2026',
+    ordersCollected: 5,
+    stall: 'Phúc Family Greens',
+    description: 'Half a hectare of leafy greens and herbs behind the house, worked by my wife and me since 2019.',
+    categories: ['Leafy greens', 'Herbs'],
+    crops: 'Water spinach, mustard greens, perilla, Thai basil, spring onion',
+    volume: 'About 120 bunches a week',
+    method: 'No pesticides in the last two seasons. We have no certificate for it.',
+    plotAddress: 'Tổ 4, Xuân Thới Thượng, Hóc Môn',
+    plotLat: 10.8721,
+    plotLng: 106.5931,
+    plotSize: '5,000 m²',
+    farmingSince: '2019',
+    marketWanted: 4,
+    photos: [
+      ['Wide shot of the plot', '22/09/2026'],
+      ['Water spinach beds, cut this week', '22/09/2026'],
+      ['The shade house and water tank', '23/09/2026'],
+    ],
+    video: ['Walk along the beds', '48 seconds', '23/09/2026'],
+    submitted: '23/09/2026 19:24',
+    status: 'pending',
+  };
+
+
+  // Time series for the analytics screens. Generated once and frozen so every screen shows the same numbers.
+  PT.series = {
+    dayLabels: ['01/09', '02/09', '03/09', '04/09', '05/09', '06/09', '07/09', '08/09', '09/09', '10/09', '11/09', '12/09', '13/09', '14/09', '15/09', '16/09', '17/09', '18/09', '19/09', '20/09', '21/09', '22/09', '23/09', '24/09', '25/09', '26/09', '27/09', '28/09', '29/09', '30/09'],
+    revenueNow: [968393, 890808, 1163219, 874767, 1128125, 1051992, 904359, 1150433, 918431, 1136796, 959991, 983204, 1169150, 1390730, 1037510, 1101584, 1324132, 1503042, 1322694, 1241241, 1554986, 1083923, 1518470, 1235030, 1171813, 1170419, 1281944, 1558286, 1240244, 1461065],
+    revenuePrev: [1046678, 922017, 1009451, 779939, 781675, 855194, 1086192, 968111, 916924, 1050470, 990195, 919821, 1160502, 1117984, 902900, 1064723, 1044361, 1215599, 1148934, 940277, 1275817, 865272, 1012566, 1178561, 891353, 1056369, 843753, 1148944, 1198461, 1109786],
+    ordersNow: [32, 23, 30, 28, 28, 27, 33, 35, 28, 31, 22, 32, 31, 37, 35, 26, 28, 33, 23, 30, 26, 25, 25, 36, 26, 28, 31, 39, 27, 33],
+    ordersPrev: [24, 28, 28, 28, 20, 22, 21, 29, 30, 19, 19, 20, 20, 24, 25, 21, 17, 23, 22, 25, 31, 27, 25, 26, 27, 18, 30, 29, 30, 29],
+    farmerDays: ['Sat 05/09', 'Sun 06/09', 'Sat 12/09', 'Sun 13/09', 'Sat 19/09', 'Sun 20/09', 'Sat 26/09'],
+    farmerRevenueNow: [1180000, 720000, 1340000, 810000, 1520000, 900000, 1980000],
+    farmerRevenuePrev: [1050000, 690000, 1120000, 760000, 1260000, 840000, 1430000],
+    sparkFarmers: [4, 4, 5, 5, 6, 6, 6, 7, 7, 8, 8, 8],
+    sparkCustomers: [291, 305, 318, 330, 344, 356, 365, 378, 389, 397, 404, 412],
+    sparkMarkets: [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4],
+    sparkOrders: [712, 764, 803, 845, 889, 931, 986, 1042, 1098, 1156, 1221, 1284],
+  };
+
+
+  // Money the platform makes from Farmers. None of this is in the SRS: see the TODOs on
+  // farmer/promote.html and admin/pricing.html. Prices are in đồng and sized against a stall that
+  // takes roughly 200,000 ₫ on a market morning, so a day pinned on a market page is about 7% of that.
+  PT.pricing = {
+    currency: '₫',
+    lastChanged: '01/09/2026',
+    changedBy: 'admin@marketlink.local',
+    free: { listingsPerDay: 5, bumpsPerMonth: 10 },
+    extras: [
+      { key: 'listing', name: 'One listing past the daily five', price: 2000 },
+      { key: 'bump', name: 'One bump past the monthly ten', price: 3000 },
+    ],
+    pins: [
+      { key: 'market', name: 'Top of one market page', slots: 3, note: 'Seen by everyone browsing that market', days: [[1, 15000], [3, 35000], [7, 70000]] },
+      { key: 'home', name: 'Home page, all four markets', slots: 2, note: 'The scarcest slot on MarketLink', days: [[1, 40000], [3, 100000], [7, 200000]] },
+    ],
+    bundles: [
+      { name: 'Starter', price: 50000, lines: ['30 listings past the daily limit', '10 extra bumps', 'Runs for 30 days'] },
+      { name: 'Market', price: 150000, best: true, lines: ['100 listings past the daily limit', '40 extra bumps', '2 days pinned on a market page', 'Runs for 30 days'] },
+      { name: 'Season', price: 400000, lines: ['No daily listing limit', '120 bumps', '7 days pinned on a market page', 'Runs for 30 days'] },
+    ],
+  };
+
+  // What Cô Tư Garden has used this period.
+  PT.allowance = {
+    listingsUsed: 3, bumpsUsed: 7, credits: 24000,
+    pins: [
+      { product: 1, where: 'Thảo Điền Weekend Market', until: 'Sat 26/09 · 23:59', spent: 35000, views: 412, added: 9 },
+    ],
+  };
+
+
+  // What MarketLink itself earns. Separate from the money customers hand to stalls, which the platform
+  // never touches. Sources add up to `total`; bundles are credit, so they are counted where the credit is
+  // spent rather than a fifth source (see the TODO on admin/revenue.html).
+  PT.platformRevenue = {
+    period: 'September 2026',
+    comparedWith: 'August 2026',
+    total: 2229000,
+    totalPrev: 1656000,
+    gmv: 31900000,
+    gmvPrev: 27690000,
+    payingStalls: 5,
+    payingStallsPrev: 4,
+    approvedStalls: 8,
+    dailyNow: [146000, 127000, 151000, 137000, 69000, 15000, 27000, 40000, 112000, 64000, 210000, 10000, 37000, 98000, 10000, 92000, 49000, 194000, 49000, 96000, 136000, 3000, 53000, 14000, 65000, 2000, 112000, 10000, 87000, 14000],
+    dailyPrev: [21000, 56000, 5000, 137000, 28000, 26000, 6000, 19000, 21000, 32000, 81000, 20000, 150000, 7000, 13000, 17000, 111000, 89000, 82000, 18000, 23000, 24000, 59000, 69000, 183000, 83000, 64000, 145000, 19000, 48000],
+    sources: [
+      { name: 'Pinned on a market page', amount: 1190000, prev: 890000, sold: '79 days', stalls: 4 },
+      { name: 'Pinned on the home page', amount: 600000, prev: 400000, sold: '15 days', stalls: 2 },
+      { name: 'Listings past the daily limit', amount: 256000, prev: 212000, sold: '128 listings', stalls: 3 },
+      { name: 'Bumps past the monthly limit', amount: 183000, prev: 154000, sold: '61 bumps', stalls: 4 },
+    ],
+    byStall: [
+      { stall: 'Gió Nam Bakery', spent: 815000, share: 'Pins, mostly the home page', orders: 128 },
+      { stall: 'Cô Tư Garden', spent: 604000, share: 'Market-page pins and extra listings', orders: 112 },
+      { stall: 'Út Hiền Orchard', spent: 431000, share: 'Market-page pins', orders: 81 },
+      { stall: 'U Minh Forest Honey', spent: 259000, share: 'Extra listings and bumps', orders: 46 },
+      { stall: 'Ba Lành Farm', spent: 120000, share: 'Bumps', orders: 96 },
+    ],
+    credit: { boughtThisPeriod: 2450000, spentThisPeriod: 2229000, outstanding: 486000, stallsHolding: 5 },
   };
 
   // helpers

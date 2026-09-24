@@ -71,6 +71,11 @@
   document.getElementById('no-markets').innerHTML = PT.state('empty', 'No market is called “pomelo”', 'Markets are matched by name and area. The 2 stalls above sell pomelo at Thủ Đức and Thảo Điền.', '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-tab="farmer">Show the 2 stalls</button>');
   document.getElementById('p-market').innerHTML = document.getElementById('no-markets').innerHTML;
   PT.map('map', { markers: stalls.map(function (f) { var m = PT.market(f.markets[0]); return { lat: f.lat, lng: f.lng, kind: 'stall', label: f.stall, popup: PT.popup(f.stall, [m.name, 'Pickup ' + f.pickup], f.lat, f.lng, '../public/stall.html') }; }).concat([1, 2].map(function (id) { var m = PT.market(id); return { lat: m.lat, lng: m.lng, kind: 'market', label: '', popup: PT.popup(m.name, [PT.dayNames(m.days) + ' · ' + m.open + '–' + m.close], m.lat, m.lng, '../public/market.html') }; })) });
+  PT.states(['#products', '#stalls'], {
+    label: 'these results',
+    empty: ['Nothing matched', 'Try a shorter word, or drop a filter. Searching looks at markets, stalls and products at once.'],
+    error: ['Couldn\'t run the search', 'Check your connection and try again.'],
+  });
   PT.boot({ active: null });
 </script>
 <div id="pt-foot"></div>

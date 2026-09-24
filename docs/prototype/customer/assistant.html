@@ -58,6 +58,11 @@
     { from: 'bot', time: '20:15', intent: 'pickup slots', text: 'Út Hiền Orchard picks up 06:00 – 09:30 on Sunday 27/09 at Thủ Đức Farmers Market. Free slots: 06:30, 07:00, 08:00. The 06:00 slot is full. Orders close 12 hours before the slot.', suggestions: ['Add 2 pomelos to my cart', 'Directions to Thủ Đức Farmers Market'] },
   ].map(PT.chat).join('');
   document.querySelector('.pt-chat-input').addEventListener('submit', function (e) { e.preventDefault(); var v = document.getElementById('q').value.trim(); if (!v) return; document.getElementById('log').insertAdjacentHTML('beforeend', PT.chat({ from: 'user', time: '20:16', text: PT.esc(v) }) + PT.chat({ from: 'bot', time: '20:16', intent: 'unknown', text: 'I did not understand that. Try a product name, a market, or a stall.', suggestions: ['What is at Thảo Điền on Saturday?'] })); document.getElementById('q').value = ''; document.querySelector('.pt-chat-log').scrollTop = 1e6; });
+  PT.states('#log', {
+    label: 'this conversation',
+    empty: ['Ask the first question', 'Try a market name, a product, or what time a stall opens. It only answers from what is on MarketLink.'],
+    error: ['The assistant is not answering', 'Search and the market pages still work. The assistant is an extra, not the way to shop (FR-090 is a SHOULD).'],
+  });
   PT.boot({ role: 'customer', active: null });
 </script>
 <div id="pt-foot"></div>

@@ -22,7 +22,7 @@
   <div class="pt-between">
     <div class="pt-col-2">
       <h1 class="pt-title">Farmers</h1>
-      <p class="pt-body pt-measure">Approve a registration before the stall can list products. Suspend a stall to hide its products and stop new orders; its running orders finish as normal (D-09).</p>
+      <p class="pt-body pt-measure">Approve an application before the stall can list products. Most applications come from accounts that already shop here, so each one carries the applicant's order history next to their photos. Suspend a stall to hide its products and stop new orders; its running orders finish as normal (D-09).</p>
     </div>
     <form class="ml-search" role="search" style="max-width:420px"><label class="ml-sr" for="q">Search Farmers</label><input id="q" type="search" placeholder="Stall, contact person, phone"><button type="submit" class="ml-btn ml-btn-primary">Search</button></form>
   </div>
@@ -40,24 +40,57 @@
 </main>
 <script>
   var S = [['pending', 'Waiting for approval'], ['approved', 'Approved'], ['suspended', 'Suspended'], ['rejected', 'Rejected']];
-  var by = function (s) { return PT.farmers.filter(function (f) { return f.approval === s; }); };
-  document.getElementById('tabs').innerHTML = PT.tabs('Farmers by status', S.map(function (s) { return { id: s[0], label: s[1], count: by(s[0]).length }; }), 'pending');
+  /* The admin's own copy. Approving a stall has to move it out of the queue and change the counts, or
+     the screen only claims to have approved it (FR-071, D-09). Nothing is stored: a reload restores
+     the seeded registrations. */
+  var rows = PT.farmers.map(function (f) { return Object.assign({}, f); });
+  var by = function (s) { return rows.filter(function (f) { return f.approval === s; }); };
+  var EMPTY = {
+    pending: ['No registrations waiting', 'New Farmer applications arrive here for review before they can list products.'],
+    approved: ['No approved stalls', 'Approve a registration and the stall appears here, visible to customers.'],
+    suspended: ['No suspended stalls', 'A suspended stall is hidden from customers but finishes the orders it already has (D-09).'],
+    rejected: ['No rejected registrations', 'Rejected Farmers keep their account and can be told why.'],
+  };
+  var tabsEl = document.getElementById('tabs'), panelsEl = document.getElementById('panels');
   var cols = [
     { key: 'stall', label: 'Stall', render: function (f) { return '<a href="../admin/farmer.html"><b>' + PT.esc(f.stall) + '</b></a><span class="sub">' + PT.esc(f.person) + ' · ' + f.phone + '</span>'; } },
     { key: 'm', label: 'Markets', render: function (f) { return f.markets.map(function (id) { return PT.esc(PT.market(id).name); }).join('<br>'); } },
     { key: 'r', label: 'Registered', render: function (f) { return f.registered; } },
     { key: 'p', label: 'Products', align: 'num', render: function (f) { return PT.products.filter(function (p) { return p.farmer === f.id; }).length; } },
     { key: 'rt', label: 'Rating', align: 'num', render: function (f) { return f.rating != null ? f.rating.toFixed(1) + ' <span class="sub">' + f.reviews + ' reviews</span>' : '—'; } },
-    { key: 'a', label: '', align: 'actions', render: function (f) { if (f.approval === 'pending') return '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-approve="' + PT.esc(f.stall) + '">Approve</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-reject="' + PT.esc(f.stall) + '">Reject</button>'; if (f.approval === 'approved') return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmer.html">View</a><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-suspend="' + PT.esc(f.stall) + '">Suspend</button>'; if (f.approval === 'suspended') return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmer.html">View</a><button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="' + PT.esc(f.stall) + ' reinstated. Products are visible again.">Reinstate</button>'; return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/farmer.html">View</a>'; } },
+    { key: 'a', label: '', align: 'actions', render: function (f) { if (f.approval === 'pending') return '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-approve="' + f.id + '">Approve</button><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-reject="' + f.id + '">Reject</button>'; if (f.approval === 'approved') return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmer.html">View</a><button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-suspend="' + f.id + '">Suspend</button>'; if (f.approval === 'suspended') return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="../admin/farmer.html">View</a><button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-reinstate="' + f.id + '">Reinstate</button>'; return '<a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/farmer.html">View</a>'; } },
   ];
-  document.getElementById('panels').innerHTML = S.map(function (s, i) { var rows = by(s[0]).map(function (f) { return Object.assign({ _new: s[0] === 'pending' && f.registered === '23/09/2026' }, f); }); return '<div data-panel="' + s[0] + '"' + (i ? ' hidden' : '') + '>' + (rows.length ? PT.table(null, cols, rows) : PT.state('empty', 'No rejected registrations', 'Rejected Farmers keep their account and can be told why.')) + '</div>'; }).join('');
+
+  function render() {
+    var active = PT.activeTab(tabsEl, 'pending');
+    tabsEl.innerHTML = PT.tabs('Farmers by status', S.map(function (s) { return { id: s[0], label: s[1], count: by(s[0]).length }; }), active);
+    panelsEl.innerHTML = S.map(function (s) {
+      var list = by(s[0]).map(function (f) { return Object.assign({ _new: s[0] === 'pending' && f.registered === '23/09/2026' }, f); });
+      return '<div data-panel="' + s[0] + '"' + (s[0] === active ? '' : ' hidden') + '>' +
+        (list.length ? PT.table(null, cols, list) : PT.state('empty', EMPTY[s[0]][0], EMPTY[s[0]][1])) +
+        '</div>';
+    }).join('');
+    PT.sideCount('farmers.html', by('pending').length);
+  }
+  render();
+
+  function set(id, to, say) {
+    var f = rows.find(function (r) { return String(r.id) === String(id); });
+    if (!f) return;
+    f.approval = to;
+    render();
+    PT.toast(say);
+  }
+  var stallOf = function (id) { var f = rows.find(function (r) { return String(r.id) === String(id); }); return f ? f.stall : ''; };
   document.body.addEventListener('click', function (e) {
     var t;
-    if ((t = e.target.closest('[data-approve]'))) PT.dialog({ title: 'Approve ' + t.getAttribute('data-approve') + '?', body: '<p>The stall becomes visible to customers and can list products right away. The Farmer is notified.</p>', keep: 'Not yet', confirm: 'Approve stall', toast: t.getAttribute('data-approve') + ' approved.' });
-    if ((t = e.target.closest('[data-reject]'))) PT.dialog({ tone: 'danger', title: 'Reject ' + t.getAttribute('data-reject') + '?', body: '<p>The Farmer keeps their sign-in but cannot list products.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason the Farmer will see</label><textarea id="why" class="ml-input" style="min-height:72px" placeholder="e.g. We could not reach the contact number."></textarea></div>', keep: 'Keep waiting', confirm: 'Reject registration', toast: t.getAttribute('data-reject') + ' rejected.' });
-    if ((t = e.target.closest('[data-suspend]'))) PT.dialog({ tone: 'danger', title: 'Suspend ' + t.getAttribute('data-suspend') + '?', body: '<p>All products are hidden and no new orders are accepted. Orders already placed continue so customers do not lose what they reserved (D-09).</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why2">Reason the Farmer will see</label><textarea id="why2" class="ml-input" style="min-height:72px"></textarea></div>', keep: 'Keep active', confirm: 'Suspend stall', toast: t.getAttribute('data-suspend') + ' suspended.' });
+    if ((t = e.target.closest('[data-approve]'))) { var a = t.getAttribute('data-approve'); PT.dialog({ title: 'Approve ' + PT.esc(stallOf(a)) + '?', body: '<p>The stall becomes visible to customers and can list products right away. The Farmer is notified.</p>', keep: 'Not yet', confirm: 'Approve stall', onConfirm: function () { set(a, 'approved', PT.esc(stallOf(a)) + ' approved. The stall can list products now.'); } }); }
+    if ((t = e.target.closest('[data-reject]'))) { var r = t.getAttribute('data-reject'); PT.dialog({ tone: 'danger', title: 'Reject ' + PT.esc(stallOf(r)) + '?', body: '<p>The Farmer keeps their sign-in but cannot list products.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="rwhy">Reason the Farmer will see</label><select id="rwhy" class="ml-input"><option>Details do not match the stall</option><option>Market is full</option><option>Could not reach the contact number</option><option>Other</option></select></div>', keep: 'Not yet', confirm: 'Reject registration', onConfirm: function () { set(r, 'rejected', PT.esc(stallOf(r)) + ' rejected. They keep their account.'); } }); }
+    if ((t = e.target.closest('[data-suspend]'))) { var u = t.getAttribute('data-suspend'); PT.dialog({ tone: 'danger', title: 'Suspend ' + PT.esc(stallOf(u)) + '?', body: '<p>All products are hidden and no new orders are accepted. Orders already placed continue so customers do not lose what they booked (D-09).</p>', keep: 'Not yet', confirm: 'Suspend stall', onConfirm: function () { set(u, 'suspended', PT.esc(stallOf(u)) + ' suspended. Running orders finish as normal.'); } }); }
+    if ((t = e.target.closest('[data-reinstate]'))) { var n = t.getAttribute('data-reinstate'); set(n, 'approved', PT.esc(stallOf(n)) + ' reinstated. Products are visible again.'); }
   });
   PT.boot({ role: 'admin', active: 'farmers', announce: false });
+  PT.sideCount('farmers.html', by('pending').length); // the shell exists only after boot
 </script>
 <div id="pt-foot"></div>
 </body>

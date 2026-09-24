@@ -28,11 +28,15 @@
     <div class="pt-form-grid">
       <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="name">Product name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Củ Chi water spinach"><span class="ml-field-hint">In English, with the place or variety if it matters: “Củ Chi water spinach”, “Green-skin pomelo”.</span></div>
       <div class="ml-field"><label class="ml-field-label" for="cat">Category<span class="ml-field-req" aria-hidden="true">*</span></label><select id="cat" class="ml-input"><option>Leafy greens</option><option>Fruit</option><option>Dairy</option><option>Baked goods</option><option>Eggs</option><option>Honey &amp; preserves</option><option>Mushrooms</option><option>Herbs</option></select><span class="ml-field-hint">Categories are managed by the admin.</span></div>
-      <div class="ml-field"><label class="ml-field-label" for="unit">Sold per<span class="ml-field-req" aria-hidden="true">*</span></label><select id="unit" class="ml-input"><option>bunch</option><option>kg</option><option>piece</option><option>jar</option><option>loaf</option><option>dozen</option><option>bottle</option></select></div>
+      <div class="ml-field"><label class="ml-field-label" for="unit">Sold per<span class="ml-field-req" aria-hidden="true">*</span></label><select id="unit" class="ml-input"></select><span class="ml-field-hint">How a customer buys it: by the kilo, the bunch, the bulb, the bag. Pick one or name your own.</span></div>
+        <div class="ml-field" id="own-unit" hidden><label class="ml-field-label" for="unit-one">Your unit<span class="ml-field-req" aria-hidden="true">*</span></label>
+          <div class="pt-row-2" style="flex-wrap:nowrap"><input id="unit-one" class="ml-input" placeholder="tray of 30" aria-label="Unit, one of them"><input id="unit-many" class="ml-input" placeholder="trays of 30" aria-label="Unit, more than one"></div>
+          <span class="ml-field-hint">One of them, then more than one. We fill the second in for you; change it if the guess is wrong.</span></div>
+        <div class="ml-field" style="grid-column:1/-1"><span class="ml-field-label">How it will read</span><p class="ml-card pt-panel-4 pt-body" id="unit-preview" style="margin:0"></p></div>
       <div class="ml-field"><label class="ml-field-label" for="price">Price in ₫<span class="ml-field-req" aria-hidden="true">*</span></label><input id="price" class="ml-input" inputmode="numeric" value="15000"><span class="ml-field-hint">Shown as 15,000 ₫ / bunch.</span></div>
       <div class="ml-field ml-field-error"><label class="ml-field-label" for="qty">Quantity available this week<span class="ml-field-req" aria-hidden="true">*</span></label><input id="qty" class="ml-input" inputmode="numeric" value="-2" aria-invalid="true" aria-describedby="qty-e"><span id="qty-e" class="ml-field-err" role="alert">Quantity must be 0 or more. Use Sold out for none left.</span></div>
       <div class="ml-field" style="grid-column:1/-1"><label class="ml-field-label" for="desc">Description</label><textarea id="desc" class="ml-input">Cut on Friday evening, bunches of about 400 g. Best stir-fried with garlic the same day.</textarea><span class="ml-field-hint">Shown on the product page. Say how it is grown and how to keep it.</span></div>
-      <div class="ml-field"><label class="ml-field-label" for="flag">Short tag on the card</label><input id="flag" class="ml-input" value="Fresh today" maxlength="24"><span class="ml-field-hint">Optional, hand-lettered on the tag: “Fresh today”, “Baked at 5am”. <span class="pt-todo" data-todo="FR-062 · The 'flag' text on the product tag is a design-system idea, not an SRS field. Keep it (needs a column) or drop it.">Not an SRS field</span></span></div>
+      <div class="ml-field"><label class="ml-field-label" for="flag">Short tag on the card</label><input id="flag" class="ml-input" value="Fresh today" maxlength="24"><span class="ml-field-hint">Optional, hand-lettered on the tag: “Fresh today”, “Baked at 5am”. <span class="pt-todo" data-todo="FR-062 · The 'flag' text on the product tag is a design-system idea, not an SRS field. Keep it (needs a column) or drop it.">Not an SRS field</span> <span class="pt-todo" data-todo="Schema · products.unit is already VARCHAR(20), so a stall naming its own unit needs no migration. The plural has nowhere to live, and English cannot derive the plural of a phrase like tray of 30. Proposal for LEAD: a nullable products.unit_plural VARCHAR(20) falling back to the guess. order_items.unit snapshots the unit at order time, so it needs the plural too.">The plural of a unit has no column yet</span></span></div>
       <div class="ml-field"><label class="ml-field-label">Status</label><div class="ml-chips" style="margin-top:4px"><button type="button" class="ml-chip" aria-pressed="true" data-chip data-chip-group="st">Available</button><button type="button" class="ml-chip" aria-pressed="false" data-chip data-chip-group="st">Sold out</button><button type="button" class="ml-chip" aria-pressed="false" data-chip data-chip-group="st">Paused</button></div></div>
     </div>
     <div class="pt-col-2">
@@ -48,6 +52,26 @@
   </form>
 </main>
 <script>
+  // unit picker: the shared list, then "name your own"
+  var uSel = document.getElementById('unit'), uOwn = document.getElementById('own-unit'),
+      uOne = document.getElementById('unit-one'), uMany = document.getElementById('unit-many'),
+      uPrev = document.getElementById('unit-preview');
+  uSel.innerHTML = PT.unitList.map(function (u) { return '<option value="' + PT.esc(u.one) + '"' + (u.one === 'bunch' ? ' selected' : '') + '>' + PT.esc(u.one) + (u.builtin ? '' : ' \u00b7 added by a stall') + '</option>'; }).join('') + '<option value="__own">Name your own unit\u2026</option>';
+  function currentUnit() {
+    if (uSel.value !== '__own') { var u = PT.unitList.filter(function (x) { return x.one === uSel.value; })[0]; return [u.one, u.many]; }
+    var one = uOne.value.trim() || 'unit';
+    return [one, uMany.value.trim() || PT.pluralise(one)];
+  }
+  function drawPreview() {
+    var u = currentUnit(), price = +(document.getElementById('price').value || 0);
+    uPrev.innerHTML = '<b>' + PT.perUnit(price, u[0]) + '</b> on the tag \u00b7 <b>' + PT.units(12, u[0], u[1]) + '</b> left \u00b7 someone ordering one sees <b>' + PT.units(1, u[0], u[1]) + '</b>';
+  }
+  uSel.addEventListener('change', function () { uOwn.hidden = uSel.value !== '__own'; if (!uOwn.hidden) uOne.focus(); drawPreview(); });
+  uOne.addEventListener('input', function () { uMany.placeholder = PT.pluralise(uOne.value.trim() || 'unit'); drawPreview(); });
+  uMany.addEventListener('input', drawPreview);
+  document.getElementById('price').addEventListener('input', drawPreview);
+  drawPreview();
+
   document.getElementById('del').addEventListener('click', function () { PT.dialog({ tone: 'danger', title: 'Delete Củ Chi water spinach?', body: '<p>It disappears from the catalogue and from your template. Orders that already include it are not changed.</p>', keep: 'Keep product', confirm: 'Delete product', onConfirm: function () { location.href = '../farmer/products.html'; } }); });
   document.getElementById('mode').addEventListener('click', function () { var on = this.getAttribute('aria-pressed') !== 'true'; this.setAttribute('aria-pressed', on); document.querySelector('.pt-apphead-title b').textContent = on ? 'Add a product' : 'Củ Chi water spinach'; document.getElementById('del').hidden = on; ['name', 'price', 'desc', 'flag'].forEach(function (id) { document.getElementById(id).value = on ? '' : document.getElementById(id).defaultValue; }); });
   PT.boot({ role: 'farmer', active: 'products', announce: false });
