@@ -1,0 +1,206 @@
+/*
+ * MarketLink · Hang tag — design tokens for Tailwind v4.
+ * Generated from the MarketLink design system (docs/design-system/tokens.json).
+ * Change the design system first, then regenerate this file. Do not hand-edit values here.
+ *
+ * Raw variables live on :root outside any cascade layer, so they win over Tailwind
+ * defaults that share a name (--radius-md, --font-sans…).
+ */
+
+:root {
+  /* color */
+  --surface: #dcc59d;
+  --surface-quiet: #ece0c6;
+  --surface-raised: #f1e5cb;
+  --surface-sunken: #e6d4b0;
+  --board: #2f4a2a;
+  --on-board: #f1e5cb;
+  --board-muted: #bccaa9;
+  --ink: #2a2016;
+  --ink-muted: #57462f;
+  --line: #c4ab7e;
+  --line-strong: #6e5a3c;
+  --brand: #2f4a2a;
+  --brand-strong: #22371f;
+  --on-brand: #f5ecd9;
+  --brand-tint: #d6dec3;
+  --accent: #e8b33c;
+  --accent-strong: #d6a12b;
+  --on-accent: #2a2016;
+  --price: #2a2016;
+  --focus: #2f4a2a;
+  --danger: #9a2a1f;
+  --on-danger: #ffffff;
+  --danger-bg: #f3dccf;
+  --success: #2f4a2a;
+  --info-bg: #dbe3e5;
+  --info-ink: #284350;
+  --warning-bg: #f6e2ab;
+  --warning-ink: #573a06;
+  --highlight: #f7e7b8;
+  --twine: #8a6a3f;
+  --scrim: rgba(42, 32, 22, 0.55);
+  --pin-market: #2f4a2a;
+  --pin-stall: #e8b33c;
+  --status-placed-bg: #e6d4b0;
+  --status-placed-ink: #4a3a24;
+  --status-accepted-bg: #d9e0e3;
+  --status-accepted-ink: #2b4552;
+  --status-ready-bg: #d6dec3;
+  --status-ready-ink: #2f4a2a;
+  --status-completed-bg: #2f4a2a;
+  --status-completed-ink: #f5ecd9;
+  --status-declined-bg: #f3dccf;
+  --status-declined-ink: #8e271d;
+  --status-cancelled-bg: #e7dcc6;
+  --status-cancelled-ink: #57462f;
+  /* shadow */
+  --shadow-card: 0 2px 0 0 rgba(110, 90, 60, 0.28);
+  --shadow-pop: 0 8px 20px rgba(60, 40, 15, 0.18);
+  --shadow-dialog: 0 24px 48px rgba(42, 32, 22, 0.28);
+  /* spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  /* radius */
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+  /* size */
+  --size-control: 44px;
+  --size-control-sm: 36px;
+  --size-header: 64px;
+  --size-container: 1200px;
+  /* zIndex */
+  --z-header: 40;
+  --z-map-popup: 45;
+  --z-dropdown: 50;
+  --z-dialog: 100;
+  --z-toast: 110;
+  /* breakpoint */
+  --bp-mobile: 375px;
+  --bp-tablet: 768px;
+  --bp-desktop: 1440px;
+  /* fonts: loaded in index.html (Google Fonts, includes the Vietnamese subset) */
+  --font-hand: 'Patrick Hand', 'Chivo', system-ui, sans-serif;
+  --font-sans: 'Chivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+/*
+ * Only MarketLink colors exist as utilities: the default Tailwind palette (zinc, blue, …) is
+ * switched off so prototypes cannot drift away from the tokens.
+ * Examples: bg-surface, bg-surface-raised, text-ink, text-ink-muted, border-line-strong,
+ * bg-brand text-on-brand, bg-accent text-on-accent, bg-board text-on-board, rounded-md, shadow-tag,
+ * font-hand, text-display, text-h1, text-body, text-tag-price.
+ */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+  --font-hand: 'Patrick Hand', 'Chivo', system-ui, sans-serif;
+  --font-sans: 'Chivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, Menlo, monospace;
+  --breakpoint-2xl: 1440px; /* bp-desktop; md = 768px (bp-tablet) is already the default */
+  --text-display: 56px;
+  --text-display--line-height: 62px;
+  --text-display--font-weight: 400;
+  --text-h1: 40px;
+  --text-h1--line-height: 46px;
+  --text-h1--font-weight: 400;
+  --text-hand: 20px;
+  --text-hand--line-height: 24px;
+  --text-hand--font-weight: 400;
+  --text-tag-price: 26px;
+  --text-tag-price--line-height: 28px;
+  --text-tag-price--font-weight: 400;
+  --text-tag-price-lg: 36px;
+  --text-tag-price-lg--line-height: 40px;
+  --text-tag-price-lg--font-weight: 400;
+  --text-h2: 24px;
+  --text-h2--line-height: 32px;
+  --text-h2--font-weight: 700;
+  --text-h3: 18px;
+  --text-h3--line-height: 26px;
+  --text-h3--font-weight: 700;
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-body--font-weight: 400;
+  --text-small: 14px;
+  --text-small--line-height: 20px;
+  --text-small--font-weight: 400;
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 400;
+  --text-overline: 12px;
+  --text-overline--line-height: 16px;
+  --text-overline--font-weight: 700;
+  --text-overline--letter-spacing: 0.08em;
+  --text-button: 15px;
+  --text-button--line-height: 20px;
+  --text-button--font-weight: 700;
+  --text-numeric: 16px;
+  --text-numeric--line-height: 24px;
+  --text-numeric--font-weight: 700;
+}
+
+@theme inline {
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-surface: var(--surface);
+  --color-surface-quiet: var(--surface-quiet);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-board: var(--board);
+  --color-on-board: var(--on-board);
+  --color-board-muted: var(--board-muted);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-on-brand: var(--on-brand);
+  --color-brand-tint: var(--brand-tint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-on-accent: var(--on-accent);
+  --color-price: var(--price);
+  --color-focus: var(--focus);
+  --color-danger: var(--danger);
+  --color-on-danger: var(--on-danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-success: var(--success);
+  --color-info-bg: var(--info-bg);
+  --color-info-ink: var(--info-ink);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-ink: var(--warning-ink);
+  --color-highlight: var(--highlight);
+  --color-twine: var(--twine);
+  --color-scrim: var(--scrim);
+  --color-pin-market: var(--pin-market);
+  --color-pin-stall: var(--pin-stall);
+  --color-status-placed-bg: var(--status-placed-bg);
+  --color-status-placed-ink: var(--status-placed-ink);
+  --color-status-accepted-bg: var(--status-accepted-bg);
+  --color-status-accepted-ink: var(--status-accepted-ink);
+  --color-status-ready-bg: var(--status-ready-bg);
+  --color-status-ready-ink: var(--status-ready-ink);
+  --color-status-completed-bg: var(--status-completed-bg);
+  --color-status-completed-ink: var(--status-completed-ink);
+  --color-status-declined-bg: var(--status-declined-bg);
+  --color-status-declined-ink: var(--status-declined-ink);
+  --color-status-cancelled-bg: var(--status-cancelled-bg);
+  --color-status-cancelled-ink: var(--status-cancelled-ink);
+  /* shadows are renamed so they don't reference themselves */
+  --shadow-tag: var(--shadow-card);
+  --shadow-float: var(--shadow-pop);
+  --shadow-modal: var(--shadow-dialog);
+}
