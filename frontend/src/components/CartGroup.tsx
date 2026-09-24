@@ -5,8 +5,8 @@ import { vnd } from '@/lib/format';
 export type CartLineType = { id: number; name: string; unit: string; price: number; max: number; qty: number };
 
 type CartGroupProps = {
-  index: number;
-  of: number;
+  index?: number;
+  of?: number;
   stallName: string;
   where: string;
   items: CartLineType[];
@@ -22,9 +22,11 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
     <Card className="w-full overflow-hidden">
       <div className="border-line-strong flex items-start justify-between gap-3 border-b-[1.5px] border-dashed p-4">
         <div>
-          <div className="text-ink-muted text-small">
-            Order {index} of {of}
-          </div>
+          {index != null && of != null && (
+            <div className="text-ink-muted text-small">
+              Order {index} of {of}
+            </div>
+          )}
           <h3 className="mt-0.5 text-[18px] font-bold">{stallName}</h3>
           <p className="text-small text-ink-muted mt-0.5">{where}</p>
         </div>
