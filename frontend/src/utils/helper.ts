@@ -1,7 +1,18 @@
 import { AxiosError } from 'axios';
 import type { ApiResponse } from '@/types/api.types';
+import type { UserType } from '@/types/user.types';
 
 class Helper {
+  /**
+   * Trang tiếp theo sau khi đăng nhập Google/Facebook: thiếu số điện thoại / địa chỉ → bổ sung hồ sơ; chưa có mật khẩu
+   * → đặt mật khẩu; đủ rồi → trang chủ.
+   */
+  static nextStepAfterSocialLogin(user: Pick<UserType, 'phone' | 'address' | 'hasPassword'>) {
+    if (!user.phone || !user.address) return '/auth/complete-profile';
+    if (user.hasPassword === false) return '/auth/set-password';
+    return '/';
+  }
+
   /** OpenStreetMap directions to a point, opened in a new tab (D-12). */
   static directionsUrl(lat: number, lng: number) {
     return `https://www.openstreetmap.org/directions?to=${lat}%2C${lng}`;
