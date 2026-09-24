@@ -4,7 +4,9 @@ import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.helpers.CookieHelper;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
+import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.LoginResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
@@ -43,5 +45,20 @@ public class AuthController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .body(ApiResource.success(body, "Đăng ký tài khoản thành công!"));
+    }
+
+    /** FR-003: dùng chung cho customer, farmer và admin — FE điều hướng theo user.role. */
+    @PostMapping("/login")
+    public ResponseEntity<ApiResource<LoginResource>> login(
+            @Valid @RequestBody LoginRequest request) {
+        AuthResult auth = userService.authenticate(request);
+        ResponseCookie refreshCookie =
+                CookieHelper.buildRefreshTokenCookie(
+                        auth.refreshToken(), Duration.ofDays(authConfig.getRefreshTokenTTLDays()));
+
+        LoginResource body = new LoginResource(auth.accessToken(), auth.user());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(ApiResource.success(body, "Đăng nhập thành công!"));
     }
 }
