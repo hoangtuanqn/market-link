@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col-2 pt-measure">
+    <h1 class="pt-title">Privacy policy</h1>
+    <p class="pt-lead">What MarketLink holds about you, why it is held, and who gets to see it. Written from the tables the product actually has, not from a template.</p>
+    <p class="pt-small ml-muted">Version 0.1 · Last updated 24/09/2026 · Applies to Customers, Farmers and visitors</p>
+  </div>
+
+  <div id="scope"></div>
+
+  <div class="pt-split-left">
+    <div class="pt-sticky">
+    <nav class="ml-card pt-panel-4 pt-col-2" aria-label="On this page">
+      <p class="ml-overline ml-muted">On this page</p>
+      <a class="pt-small" href="#collect">1. What we hold</a>
+      <a class="pt-small" href="#why">2. Why we hold it</a>
+      <a class="pt-small" href="#who">3. Who can see it</a>
+      <a class="pt-small" href="#sessions">4. Cookies and sessions</a>
+      <a class="pt-small" href="#assistant">5. The shopping assistant</a>
+      <a class="pt-small" href="#third">6. What these pages load</a>
+      <a class="pt-small" href="#choices">7. Your choices</a>
+      <a class="pt-small" href="#open">8. Still to be decided</a>
+      <p class="pt-caption ml-muted">Read the <a href="../public/terms.html">Terms of service</a> as well. They cover reserving and pickup.</p>
+    </nav>
+    </div>
+
+    <div class="pt-col-6">
+      <section class="pt-section" id="collect">
+        <h2 class="pt-h2">1. What we hold</h2>
+        <p class="pt-body pt-measure">Everything below is something the product stores today. Nothing is collected for advertising, and nothing is sold on.</p>
+        <div class="ml-card pt-panel pt-col-3">
+          <dl class="pt-facts">
+            <dt>Your account</dt><dd>Full name, email, phone number and address. Your password is never stored as you typed it, only as a hash.</dd>
+            <dt>A Farmer's stall</dt><dd>Stall name, contact person, description, the markets and days you sell, your pickup windows and the map position of your stall.</dd>
+            <dt>Your orders</dt><dd>What you reserved and how much, the stall and market, your pickup date and time, the note you left for the stall, and the totals. Product names and prices are copied onto the order so it still reads correctly if the stall changes them later.</dd>
+            <dt>Order history</dt><dd>Every status change on an order, with the time and who made it.</dd>
+            <dt>Reviews</dt><dd>Your rating, your text, which order it came from, and any reply the stall wrote.</dd>
+            <dt>Favorites</dt><dd>The stalls, products and markets you saved.</dd>
+            <dt>Notifications</dt><dd>The messages sent to you about your orders and restocks, and whether you have read them.</dd>
+            <dt>Assistant chats</dt><dd>Your messages, the assistant's replies, and the intent the assistant matched. See section 5.</dd>
+            <dt>Feedback</dt><dd>The type you chose and what you wrote. Feedback can be sent without an account, and then it carries no account with it.</dd>
+          </dl>
+        </div>
+        <p class="pt-body pt-measure">MarketLink does not ask for or store card details, bank details or any payment information, because payment happens at the stall and never through the product.</p>
+      </section>
+
+      <section class="pt-section" id="why">
+        <h2 class="pt-h2">2. Why we hold it</h2>
+        <p class="pt-body pt-measure">Your name and phone number exist so the stall knows who is collecting and can reach you on market morning. Your address exists to show how far a market is and to pre-fill directions. Your email is how you sign in and how you are told about an order.</p>
+        <p class="pt-body pt-measure">Orders and their history exist so both sides can see what was agreed and when it changed. Reviews exist so other shoppers can judge a stall. Favorites exist so you can be told when something you wanted is back in stock.</p>
+      </section>
+
+      <section class="pt-section" id="who">
+        <h2 class="pt-h2">3. Who can see it</h2>
+        <div class="ml-card pt-panel pt-col-3">
+          <dl class="pt-facts">
+            <dt>The stall you order from</dt><dd>Sees your order and enough contact detail to hand it over on market day. It does not see your other stalls' orders.</dd>
+            <dt>Other shoppers</dt><dd>See your reviews and the name on them. They do not see your orders, your contact details or your favorites.</dd>
+            <dt>An admin</dt><dd>Sees accounts and stall registrations in order to approve, suspend or deactivate them, and sees listings and reviews in order to moderate them. Admin reports are counts and totals, not lists of who bought what.</dd>
+            <dt>Anyone else</dt><dd>Nothing. Orders, contact details, favorites and notifications are never shown on a public page.</dd>
+          </dl>
+        </div>
+        <p class="pt-body pt-measure">Every screen that takes an id checks on the server that the record belongs to you before showing it, so changing a number in the address bar does not open someone else's order. <span class="pt-todo" data-todo="Privacy · Exactly which Customer fields a Farmer sees on an order is not defined. docs/api-contract.md returns the order with its items and history but never lists the customer fields, and db/schema.sql keeps name, phone and address on users with no view in between. LEAD to fix the field list: name and phone are clearly needed for pickup, the home address probably is not.">Which customer fields a stall sees is not defined</span></p>
+      </section>
+
+      <section class="pt-section" id="sessions">
+        <h2 class="pt-h2">4. Cookies and sessions</h2>
+        <p class="pt-body pt-measure">When you sign in, MarketLink issues a short-lived token that your browser sends with each request, and a longer-lived token kept in a cookie so you are not signed out every few minutes. Your signed-in session is also cached on the server to keep sign-in fast. Signing out ends both.</p>
+        <p class="pt-body pt-measure">Your cart is kept in your own browser until you place the order. Nothing in your cart reaches the server before you check out.</p>
+        <p class="pt-body pt-measure">MarketLink sets no advertising or analytics cookies. <span class="pt-todo" data-todo="Privacy · Whether a cookie or consent banner is needed is not decided. Today only sign-in and cart storage are used, which is usually exempt, but the pages also load Google Fonts and OpenStreetMap tiles from third parties. LEAD to decide whether a banner is required, and FE1 to say whether self-hosting the two fonts removes the question.">Cookie banner: needed or not</span></p>
+      </section>
+
+      <section class="pt-section" id="assistant">
+        <h2 class="pt-h2">5. The shopping assistant</h2>
+        <p class="pt-body pt-measure">The assistant answers questions about markets, stalls, pickup windows and products. Both sides of the conversation are stored, together with the intent the assistant matched to your question, so the team can see why it answered the way it did.</p>
+        <p class="pt-body pt-measure">A guest can use it too. To keep a conversation together, your browser holds a random session key that is not tied to any account; if you are signed in, the conversation is attached to your account instead.</p>
+        <p class="pt-body pt-measure">Your words are never turned into a database query. The assistant matches your question to one of a fixed set of prepared lookups, so what you type is only ever a search term. Ask it about produce and pickup times, not about anything private.</p>
+      </section>
+
+      <section class="pt-section" id="third">
+        <h2 class="pt-h2">6. What these pages load from elsewhere</h2>
+        <div class="ml-card pt-panel pt-col-3">
+          <dl class="pt-facts">
+            <dt>OpenStreetMap</dt><dd>Map tiles come from OpenStreetMap servers, which see your address and roughly which part of the map you are looking at. Map data is © OpenStreetMap contributors. The directions link opens OpenStreetMap in a new tab.</dd>
+            <dt>Google Fonts</dt><dd>The two typefaces are loaded from Google Fonts, which sees your address when the page opens.</dd>
+          </dl>
+        </div>
+        <p class="pt-body pt-measure">MarketLink does not use Google Maps, so there is no maps key and no account behind the map.</p>
+      </section>
+
+      <section class="pt-section" id="choices">
+        <h2 class="pt-h2">7. Your choices</h2>
+        <p class="pt-body pt-measure">You can see and change your name, phone, email and address from your account page at any time. You can remove anything you saved to favorites, and mark notifications as read.</p>
+        <p class="pt-body pt-measure">Some things stay even after you change them: an order keeps the product names and prices it was placed with, and its status history is not rewritten, because both sides rely on that record. A review you wrote stays until you or an admin takes it down.</p>
+        <p class="pt-body pt-measure"><span class="pt-todo" data-todo="Privacy · Deleting an account, exporting your data and how long anything is kept are all undefined. .ai/REQUIREMENTS.md has no FR for any of them and docs/api-contract.md has no endpoint; the only delete in the product is the soft delete on products. LEAD to decide whether deletion and export are in scope at all, and to set a retention period for orders, chat_messages and feedbacks.">Account deletion, data export and retention are not defined</span></p>
+      </section>
+
+      <section class="pt-section" id="open">
+        <h2 class="pt-h2">8. Still to be decided</h2>
+        <p class="pt-body pt-measure">This page is prototype copy written from what the product actually stores. The points below need a person, not a designer.</p>
+        <div class="ml-card pt-panel pt-col-3">
+          <dl class="pt-facts">
+            <dt>Who is responsible</dt><dd><span class="pt-todo" data-todo="Privacy · The entity responsible for the data, and an address to send a privacy request to, are not in the repository. Contact us has the same gap open against FR-083. Both pages should end up with the same details.">Data controller and a contact address</span></dd>
+            <dt>Retention</dt><dd><span class="pt-todo">How long orders, chats and feedback are kept</span></dd>
+            <dt>Younger users</dt><dd><span class="pt-todo" data-todo="Privacy · No minimum age is set anywhere in the SRS or the decisions, and registration does not ask for a date of birth. LEAD to decide whether a minimum age applies and whether it is worth asking.">Minimum age: undecided</span></dd>
+            <dt>Accepting this policy</dt><dd><span class="pt-todo">Where acceptance is stored — see the Terms page</span></dd>
+          </dl>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="ml-card pt-panel pt-between-c">
+    <div class="pt-col-2">
+      <h2 class="pt-h3">A question about your data?</h2>
+      <p class="pt-small ml-muted">Questions about an order go to the stall directly. Anything about this policy comes to the team.</p>
+    </div>
+    <div class="pt-row-2">
+      <a class="ml-btn ml-btn-secondary" href="../public/terms.html">Terms of service</a>
+      <a class="ml-btn ml-btn-secondary" href="../public/contact.html">Contact us</a>
+    </div>
+  </section>
+</main>
+<script>
+  document.getElementById('scope').innerHTML = PT.banner('warning', 'Prototype copy, not reviewed legal text.', 'Every line below describes data the product really stores, read off db/schema.sql and the twelve decisions. Nothing here has been read by anyone qualified to approve it.', { action: '<span class="pt-todo" data-todo="Out of scope · Privacy policy and Terms of service are not in the SRS or in .ai/REQUIREMENTS.md, and R-07 says do not build what is not listed. Both pages exist because the sign-in and registration screens now ask users to accept them. They need a new FR, and the text needs review by someone qualified before submission.">Needs a new FR and a legal read</span>' });
+  PT.boot({ active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of service — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col-2 pt-measure">
+    <h1 class="pt-title">Terms of service</h1>
+    <p class="pt-lead">What you agree to when you reserve from a stall on MarketLink, and what the stall and the platform agree to in return.</p>
+    <p class="pt-small ml-muted">Version 0.1 · Last updated 24/09/2026 · Applies to Customers, Farmers and visitors</p>
+  </div>
+
+  <div id="scope"></div>
+
+  <div class="pt-split-left">
+    <div class="pt-sticky">
+    <nav class="ml-card pt-panel-4 pt-col-2" aria-label="On this page">
+      <p class="ml-overline ml-muted">On this page</p>
+      <a class="pt-small" href="#what">1. What MarketLink is</a>
+      <a class="pt-small" href="#accounts">2. Your account</a>
+      <a class="pt-small" href="#reserving">3. Reserving from a stall</a>
+      <a class="pt-small" href="#changing">4. Changing or cancelling</a>
+      <a class="pt-small" href="#paying">5. Paying at the stall</a>
+      <a class="pt-small" href="#stalls">6. What a stall agrees to</a>
+      <a class="pt-small" href="#reviews">7. Reviews and content</a>
+      <a class="pt-small" href="#suspension">8. Suspending an account</a>
+      <a class="pt-small" href="#maps">9. Maps and other sources</a>
+      <a class="pt-small" href="#open">10. Still to be decided</a>
+      <p class="pt-caption ml-muted">Read the <a href="../public/privacy.html">Privacy policy</a> as well. It covers what we hold about you.</p>
+    </nav>
+    </div>
+
+    <div class="pt-col-6">
+      <section class="pt-section" id="what">
+        <h2 class="pt-h2">1. What MarketLink is</h2>
+        <p class="pt-body pt-measure">MarketLink lets a stall at a farmers market publish what it will bring this week, and lets you reserve from that list before market day. You collect what you reserved at the stall, inside the pickup window the stall set, and you pay the Farmer there.</p>
+        <div class="ml-card pt-panel pt-col-3">
+          <h3 class="pt-h3">What MarketLink does not do</h3>
+          <ul class="pt-nots">
+            <li><b>It does not take your money.</b> There is no card form and no payment gateway anywhere in the product. Every order is paid to the Farmer at the stall.</li>
+            <li><b>It does not deliver.</b> Every order is collected in person at the market.</li>
+            <li><b>It does not certify a stall.</b> MarketLink does not check licences, farming methods or organic claims. Ask the Farmer at the stall.</li>
+            <li><b>It does not sell to you.</b> The contract of sale is between you and the stall. MarketLink records the reservation and nothing more.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="pt-section" id="accounts">
+        <h2 class="pt-h2">2. Your account</h2>
+        <p class="pt-body pt-measure">There are three kinds of account. A Customer signs up with a name, phone number, email and address. A Farmer signs up with a stall name, a contact person, a phone number, email and address, and cannot list anything until an admin approves the stall. Admins work from a separate sign-in.</p>
+        <p class="pt-body pt-measure">One account may be shared at home. MarketLink does not tell people apart inside a single account, so anything done with your sign-in counts as done by you. Keep your password to yourself and tell us if you think someone else has it.</p>
+        <p class="pt-body pt-measure">The address you give is used to show distances to markets and to pre-fill directions. Your phone number is given to the stall you order from, so they can reach you on market morning.</p>
+      </section>
+
+      <section class="pt-section" id="reserving">
+        <h2 class="pt-h2">3. Reserving from a stall</h2>
+        <p class="pt-body pt-measure">You can put products from several stalls in one cart, but a reservation always belongs to a single stall. When you place it, the cart is split into one order per stall, each with its own market, its own pickup slot and its own cutoff. The confirmation screen shows the split before you commit.</p>
+        <div class="ml-card pt-panel pt-col-3">
+          <h3 class="pt-h3">What happens when you place an order</h3>
+          <dl class="pt-facts">
+            <dt>Stock</dt><dd>What you reserve comes out of the stall's count straight away, so two people cannot book the same last two bunches. You cannot reserve more than the stall has left.</dd>
+            <dt>Slot</dt><dd>You pick a pickup date and a time slot the stall offers. A slot has a limit on how many orders it takes; a full slot is shown greyed out and cannot be chosen.</dd>
+            <dt>Cutoff</dt><dd>Each order gets a cutoff time, counted back from your pickup time by the number of hours the stall sets. Up to that moment you can change or cancel the order yourself.</dd>
+            <dt>Price</dt><dd>The price and unit on your order are the ones shown when you placed it. If the stall changes its price later, your order does not change.</dd>
+          </dl>
+        </div>
+        <p class="pt-body pt-measure">An order moves through placed, accepted, ready for pickup and completed. A stall may also decline an order, and you may cancel one. Every change is recorded with its time, and you can see that history on the order.</p>
+        <p class="pt-body pt-measure">Placing an order is a reservation, not a guarantee. A stall can decline, and it should tell you why when it does. When an order is declined or cancelled, the stock goes back to the stall and nothing is owed on either side.</p>
+      </section>
+
+      <section class="pt-section" id="changing">
+        <h2 class="pt-h2">4. Changing or cancelling an order</h2>
+        <p class="pt-body pt-measure">Before the cutoff you can lower a quantity, drop an item, or cancel the order outright. You cannot add a new product to an order that already exists; start a second order instead, so the stall's counts and slots stay correct.</p>
+        <p class="pt-body pt-measure">Editing an order sends it back to placed, and the stall has to accept it again. That is deliberate: the stall picks and packs against what it accepted.</p>
+        <p class="pt-body pt-measure">After the cutoff the buttons are locked and the screen tells you why, with the time the cutoff passed. From that point only the stall can move the order, and anything else is worked out with the stall directly. An order left at ready is treated as completed 24 hours after its pickup date.</p>
+      </section>
+
+      <section class="pt-section" id="paying">
+        <h2 class="pt-h2">5. Paying at the stall</h2>
+        <p class="pt-body pt-measure">You pay the Farmer directly when you collect, for the amount shown on your order. MarketLink never holds your money, takes no commission through the product, and is not part of the payment.</p>
+        <p class="pt-body pt-measure">Because of that, a refund is something you and the stall settle between you. <span class="pt-todo" data-todo="Terms · Refunds, no-shows and disputes are not defined anywhere. The SRS, docs/decisions.md and docs/api-contract.md are all silent: there is no payment in the product, so there is no refund flow, no no-show penalty and no dispute queue. LEAD to say whether the platform stays out of it (current wording) or whether a dispute needs an FR, a status and an admin screen.">Refunds, no-shows and disputes need a decision</span></p>
+      </section>
+
+      <section class="pt-section" id="stalls">
+        <h2 class="pt-h2">6. What a stall agrees to</h2>
+        <p class="pt-body pt-measure">A Farmer selling through MarketLink agrees to keep the week's list honest: to publish quantities it expects to have, to mark a product sold out or unavailable rather than leave it listed, and to keep the pickup windows it declared for each market and day.</p>
+        <p class="pt-body pt-measure">A stall agrees to answer incoming orders rather than leave them sitting, to give a reason when it declines one, and to hold an accepted order through its pickup window. A stall also agrees that its listings are its own responsibility, including the description, the photo and any claim made about the produce.</p>
+      </section>
+
+      <section class="pt-section" id="reviews">
+        <h2 class="pt-h2">7. Reviews and content</h2>
+        <p class="pt-body pt-measure">You can rate and review a stall and the products you bought once the order is completed, and only for orders that are yours. A stall can reply to a review once, in public.</p>
+        <p class="pt-body pt-measure">Write about the produce and the pickup. An admin can hide a review or a product listing that breaks that, and hidden content stops appearing on the public pages. What you write stays attached to your account name where other shoppers can see it.</p>
+      </section>
+
+      <section class="pt-section" id="suspension">
+        <h2 class="pt-h2">8. Suspending an account</h2>
+        <p class="pt-body pt-measure">An admin approves a stall before it can list anything, and can reject a registration with a reason. A stall that is suspended disappears from the public pages and takes no new orders, but its orders already in progress run to the end so no shopper loses what they reserved. The Farmer can still sign in and see those orders.</p>
+        <p class="pt-body pt-measure">A Customer account can be deactivated by an admin. <span class="pt-todo" data-todo="FR-072 · What a deactivated Customer sees, and what happens to their orders in progress, is not defined. D-09 covers the suspended Farmer case in detail but says nothing about the Customer side. LEAD to decide: sign-in blocked or read-only, and whether running orders continue as they do for a suspended stall.">What a deactivated Customer sees is not defined</span></p>
+      </section>
+
+      <section class="pt-section" id="maps">
+        <h2 class="pt-h2">9. Maps and other sources</h2>
+        <p class="pt-body pt-measure">Market and stall locations are drawn on OpenStreetMap. Map data is © OpenStreetMap contributors, and the directions link opens OpenStreetMap in a new tab. A pin is placed by the market or the stall and is as accurate as they made it.</p>
+        <p class="pt-body pt-measure">Product photos belong to the stall that uploaded them. Photos used on the platform's own pages are credited in the project ReadMe.</p>
+      </section>
+
+      <section class="pt-section" id="open">
+        <h2 class="pt-h2">10. Still to be decided</h2>
+        <p class="pt-body pt-measure">This page is prototype copy written from what the product actually does. The clauses below need a person, not a designer.</p>
+        <div class="ml-card pt-panel pt-col-3">
+          <dl class="pt-facts">
+            <dt>Who publishes this</dt><dd><span class="pt-todo" data-todo="Terms · The legal entity behind MarketLink, its address and its registration are not in the repository. A terms page needs to name who the agreement is with. For the TechWiz submission this may be the team name; LEAD to confirm what goes here.">Legal entity to name</span></dd>
+            <dt>Governing law</dt><dd><span class="pt-todo">Jurisdiction to confirm</span></dd>
+            <dt>Changing these terms</dt><dd><span class="pt-todo" data-todo="Terms · How users are told about a change to the terms is not defined. The platform has in-app notifications and an announcements table an admin can publish to, which would be the obvious channel, but no FR says so and no notification type exists for it.">Notice of changes: channel and notice period</span></dd>
+            <dt>Accepting them</dt><dd><span class="pt-todo" data-todo="Consent · No FR covers accepting the terms and privacy policy, and R-07 says not to build what is not listed. The checkbox now on the sign-in and customer registration screens needs a new FR, plus a decision on storage: a users.terms_accepted_at column, which version was accepted, and what happens to accounts created before this existed. Until then the box is UI only.">Storing who accepted, and which version</span></dd>
+          </dl>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="ml-card pt-panel pt-between-c">
+    <div class="pt-col-2">
+      <h2 class="pt-h3">Something here unclear?</h2>
+      <p class="pt-small ml-muted">Questions about an order go to the stall directly. Anything about these terms comes to the team.</p>
+    </div>
+    <div class="pt-row-2">
+      <a class="ml-btn ml-btn-secondary" href="../public/privacy.html">Privacy policy</a>
+      <a class="ml-btn ml-btn-secondary" href="../public/contact.html">Contact us</a>
+    </div>
+  </section>
+</main>
+<script>
+  document.getElementById('scope').innerHTML = PT.banner('warning', 'Prototype copy, not reviewed legal text.', 'Every clause below describes something the product really does, taken from the requirements and the twelve decisions. Nothing here has been read by anyone qualified to approve it.', { action: '<span class="pt-todo" data-todo="Out of scope · Terms of service and Privacy policy are not in the SRS or in .ai/REQUIREMENTS.md, and R-07 says do not build what is not listed. Both pages exist because the sign-in and registration screens now ask users to accept them. They need a new FR, and the text needs review by someone qualified before submission.">Needs a new FR and a legal read</span>' });
+  PT.boot({ active: null });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>
