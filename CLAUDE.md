@@ -16,6 +16,7 @@ Customer đặt trước → Farmer duyệt → nhận hàng tại stall. Ba vai
 | `docs/design-system/README.md` | Design system "Hang tag": token, component `ml-*`, giọng văn UI — mọi UI phải theo | FE1 |
 | `README.md` | Hướng dẫn cài đặt và chạy dự án | — |
 | `CONTRIBUTING.md` | Luật nhánh `dev`/`main`, môi trường, commit, PR, release | LEAD |
+| `docs/ai-tooling.md` | Plugin Claude Code dùng chung (superpowers, harness, code-review…) và cách cài | AI lead |
 
 ## Luật (R-xx được các tài liệu khác viện dẫn)
 

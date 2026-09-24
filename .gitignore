@@ -72,6 +72,9 @@ application-local.yml
 application-local.yaml
 application-local.properties
 
+# Claude Code: .claude/settings.json dùng chung (commit), settings.local.json là của riêng từng máy
+.claude/settings.local.json
+
 # ---------------------------------------------------------------------
 # Log files
 # ---------------------------------------------------------------------
