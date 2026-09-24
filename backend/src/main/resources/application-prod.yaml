@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------------
+# Profile "prod" — môi trường production (nhánh main)
+# Mọi giá trị nhạy cảm lấy từ biến môi trường, KHÔNG có mặc định:
+# thiếu biến nào là ứng dụng dừng ngay lúc khởi động thay vì chạy với secret mẫu.
+# Nguồn biến: .env.production trên server (mẫu: .env.production.example)
+# ---------------------------------------------------------------------
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    open-in-view: false
+  flyway:
+    # Không bao giờ cho phép xoá schema ở production
+    clean-disabled: true
+
+server:
+  shutdown: graceful
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
+
+logging:
+  level:
+    root: INFO
+    com.techx.intervue: INFO
+
+jwt:
+  secret: ${JWT_SECRET}

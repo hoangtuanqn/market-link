@@ -1,0 +1,21 @@
+# ---------------------------------------------------------------------
+# Profile "dev" — môi trường phát triển (nhánh dev, máy của từng thành viên)
+# Giá trị mặc định khớp .env.example: clone về là chạy được, không cần tạo file bí mật.
+# KHÔNG chứa bí mật thật. Muốn ghi đè riêng máy mình: thêm application-local.yml
+# (git-ignore) và chạy với profiles=dev,local
+# ---------------------------------------------------------------------
+spring:
+  datasource:
+    username: ${MYSQL_USER:intervue}
+    password: ${MYSQL_PASSWORD:intervue_pass}
+  jpa:
+    open-in-view: false
+
+logging:
+  level:
+    com.techx.intervue: DEBUG
+    org.flywaydb: INFO
+
+jwt:
+  # Secret chỉ dùng cho dev — production bắt buộc truyền JWT_SECRET (xem application-prod.yaml)
+  secret: ${JWT_SECRET:ZGV2LW9ubHktand0LXNlY3JldC1tYXJrZXRsaW5rLWRvLW5vdC11c2UtaW4tcHJvZA==}

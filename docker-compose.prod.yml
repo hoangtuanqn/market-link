@@ -1,0 +1,45 @@
+# ---------------------------------------------------------------------
+# Override PRODUCTION (nhánh main): image build sẵn, không mount source,
+# DB/Redis không mở cổng ra ngoài, mọi bí mật lấy từ .env.production.
+#   make prod
+#   = docker compose -p market-link-prod --env-file .env.production \
+#       -f docker-compose.yml -f docker-compose.prod.yml --profile app up -d --build
+# Project riêng (-p market-link-prod) → container, network, volume tách hẳn khỏi dev.
+# ---------------------------------------------------------------------
+services:
+  mysql:
+    container_name: marketlink-prod-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Thiếu MYSQL_ROOT_PASSWORD trong .env.production}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:?Thiếu MYSQL_DATABASE trong .env.production}
+      MYSQL_USER: ${MYSQL_USER:?Thiếu MYSQL_USER trong .env.production}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?Thiếu MYSQL_PASSWORD trong .env.production}
+    ports: !reset []
+
+  redis:
+    container_name: marketlink-prod-redis
+    ports: !reset []
+
+  backend:
+    container_name: marketlink-prod-backend
+    build:
+      target: prod
+    image: market-link-backend:prod
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      JWT_SECRET: ${JWT_SECRET:?Thiếu JWT_SECRET trong .env.production}
+    ports: !override
+      - "${BACKEND_PORT:-8080}:8080"
+    volumes: !reset []
+
+  frontend:
+    container_name: marketlink-prod-frontend
+    build:
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL:?Thiếu VITE_API_URL trong .env.production}
+    image: market-link-frontend:prod
+    environment: !reset [] # nginx phục vụ file tĩnh, API URL đã nhúng lúc build
+    ports: !override
+      - "${FRONTEND_PORT:-80}:3000"
+    volumes: !reset []

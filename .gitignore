@@ -61,6 +61,9 @@ $RECYCLE.BIN/
 .env.*
 !.env.example
 !.env.*.example
+# Env của Vite chỉ chứa biến VITE_* công khai (bị nhúng vào bundle) → được commit
+!frontend/.env.development
+!frontend/.env.production
 *.pem
 *.key
 *.p12
