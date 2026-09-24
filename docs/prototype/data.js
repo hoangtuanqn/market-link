@@ -12,6 +12,19 @@ window.PT = window.PT || {};
     { value: 'wed', label: 'Wed', sub: '30/09', dow: 3 },
   ];
 
+  // The seven weekdays, matching market_operating_days.day_of_week (0 = Sun … 6 = Sat)
+  // and the `day` query on GET /api/markets. Used where the screen browses by weekday
+  // rather than by a dated market morning.
+  PT.weekdays = [
+    { value: 'mon', label: 'Monday', dow: 1 },
+    { value: 'tue', label: 'Tuesday', dow: 2 },
+    { value: 'wed', label: 'Wednesday', dow: 3 },
+    { value: 'thu', label: 'Thursday', dow: 4 },
+    { value: 'fri', label: 'Friday', dow: 5 },
+    { value: 'sat', label: 'Saturday', dow: 6 },
+    { value: 'sun', label: 'Sunday', dow: 0 },
+  ];
+
   PT.users = {
     customer: { name: 'Khang', full: 'Nguyễn Minh Khang', email: 'khang@example.com', phone: '0903 118 218', address: '25 Xuân Thủy, Thảo Điền, Thủ Đức' },
     farmer: { name: 'Cô Tư Garden', person: 'Nguyễn Thị Tư', email: 'cotu@example.com', phone: '0912 440 540', address: 'Hamlet 3, Tân Phú Trung, Củ Chi' },

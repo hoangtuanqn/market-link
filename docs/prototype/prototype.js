@@ -312,6 +312,22 @@
     return '<div class="ml-state ml-state-' + kind + '"' + (kind === 'error' ? ' role="alert"' : '') + '><h3 class="ml-state-title">' + title + '</h3>' + (text ? '<p class="ml-state-text">' + text + '</p>' : '') + (action || '') + '</div>';
   };
   PT.skeletonCards = function (n) { var s = ''; for (var i = 0; i < (n || 3); i++) s += '<div class="ml-card ml-state" role="status" aria-live="polite"><span class="ml-sr">Loading</span><span class="ml-skel" style="width:100%;aspect-ratio:4/3"></span><span class="ml-skel" style="width:70%;height:18px"></span><span class="ml-skel" style="width:45%;height:14px"></span><span class="ml-skel" style="width:35%;height:28px"></span></div>'; return s; };
+  // Market cards carry no photo: they are a 1fr/auto grid of name + save, day cells, meta and actions.
+  // The skeleton mirrors that grid so the page does not change shape when the data lands.
+  PT.skeletonMarkets = function (n) {
+    var s = '';
+    for (var i = 0; i < (n || 3); i++) {
+      s += '<article class="ml-card ml-market"' + (i ? ' aria-hidden="true"' : ' role="status" aria-live="polite"') + '>' +
+        (i ? '' : '<span class="ml-sr">Loading markets</span>') +
+        '<div><span class="ml-skel" style="width:62%;height:28px"></span><span class="ml-skel" style="width:88%;height:14px;margin-top:8px"></span></div>' +
+        '<span class="ml-skel" style="width:32px;height:32px;border-radius:var(--radius-pill)"></span>' +
+        '<span class="ml-skel" style="grid-column:1/-1;width:266px;max-width:100%;height:26px"></span>' +
+        '<span class="ml-skel" style="grid-column:1/-1;width:60%;height:14px"></span>' +
+        '<span class="ml-skel" style="grid-column:1/-1;width:212px;max-width:100%;height:var(--size-control-sm)"></span>' +
+        '</article>';
+    }
+    return s;
+  };
   var NOTE_STYLE = { accepted: ['accepted', 'status-accepted'], declined: ['declined', 'status-declined'], ready: ['ready', 'status-ready'], restock: ['restock', 'brand-tint'], announce: ['megaphone', 'highlight'], placed: ['placed', 'status-placed'], cancelled: ['cancelled', 'status-cancelled'] };
   PT.notes = function (items, o) {
     o = o || {};
