@@ -23,5 +23,10 @@
     "stalls_one": "屋台 {{count}} 軒",
     "stalls_other": "屋台 {{count}} 軒",
     "pickup": "{{days}} · 受け取り {{pickup}}"
+  },
+  "bothOff": {
+    "title": "地図に表示するものがありません",
+    "text": "両方のレイヤーがオフです。マーケットかお店をオンに戻すとピンが表示されます。",
+    "action": "両方表示"
   }
 }

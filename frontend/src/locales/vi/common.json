@@ -65,7 +65,8 @@
     "directions": "Chỉ đường",
     "dismiss": "Ẩn",
     "remove": "Xoá",
-    "tryAgain": "Thử lại"
+    "tryAgain": "Thử lại",
+    "cancel": "Huỷ"
   },
   "admin": {
     "badge": "Quản trị",
@@ -134,7 +135,8 @@
     "aboutUs": "Về chúng tôi",
     "contactUs": "Liên hệ",
     "feedback": "Góp ý & báo lỗi",
-    "mapData": "Dữ liệu bản đồ © những người đóng góp OpenStreetMap"
+    "mapData": "Dữ liệu bản đồ © những người đóng góp OpenStreetMap",
+    "mapDataFrom": "Dữ liệu bản đồ {{credit}}"
   },
   "header": {
     "cart": "Giỏ hàng",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© những người đóng góp {{link}}",
     "open": "Mở",
-    "placeholder": "Bản đồ — {{label}}"
+    "placeholder": "Bản đồ — {{label}}",
+    "stallPickup": "Sạp {{code}} · nhận hàng {{pickup}}",
+    "tilesFailed": "Bản đồ cần kết nối mạng để tải. Danh sách vẫn dùng được khi không có bản đồ.",
+    "yourStall": "Sạp của bạn"
   },
   "marketCard": {
     "save": "Lưu {{name}}",
@@ -350,5 +355,28 @@
     "show": "Xem trang {{n}}: {{topic}}",
     "pause": "Tạm dừng trình chiếu",
     "play": "Phát trình chiếu"
+  },
+  "geo": {
+    "denied": "Bạn đã tắt vị trí cho trang này. Hãy bật lại trong cài đặt trang web của trình duyệt, hoặc dùng một địa chỉ.",
+    "insecure": "Trình duyệt chỉ chia sẻ vị trí qua kết nối bảo mật (https).",
+    "failed": "Thiết bị không xác định được vị trí của bạn. Thử lại, hoặc nhập một địa chỉ.",
+    "finding": "Đang tìm vị trí…"
+  },
+  "directions": {
+    "title": "Chỉ đường đến {{name}}",
+    "question": "Bạn xuất phát từ đâu?",
+    "current": "Vị trí hiện tại của tôi",
+    "currentShared": "Đã chia sẻ",
+    "currentAsk": "Trình duyệt sẽ hỏi bạn trước",
+    "address": "Một địa chỉ",
+    "addressNote": "Một con đường hoặc địa danh ở TP. Hồ Chí Minh.",
+    "addressLabel": "Địa chỉ xuất phát",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "Nhập tên đường và quận là tốt nhất. Bản đồ thường thiếu số nhà, và OpenStreetMap sẽ nhờ bạn chọn một địa điểm khi không tìm thấy.",
+    "useSaved": "Dùng địa chỉ đã lưu",
+    "none": "Tôi sẽ nhập trên bản đồ",
+    "noneNote": "Mở OpenStreetMap với chỉ điểm đến được điền sẵn.",
+    "privacy": "Chỉ đường mở trên openstreetmap.org ở tab mới. MarketLink không theo dõi vị trí của bạn.",
+    "open": "Mở chỉ đường"
   }
 }

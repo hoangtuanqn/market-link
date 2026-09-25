@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import DirectionsButton from '@/components/DirectionsButton';
+import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import OrderTicket from '@/components/OrderTicket';
-import { Button, ButtonAnchor, ButtonLink } from '@/components/ui/button';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
@@ -19,6 +20,7 @@ const STEPS: OrderStatus[] = ['placed', 'accepted', 'ready', 'completed'];
 /** FR-033 FR-034 FR-035 FR-038 — order detail: ticket, pickup point, status history, and the change/cancel panel. */
 const CustomerOrderDetailPage = () => {
   const { t } = useTranslation('CustomerOrderDetail');
+  const { t: tc } = useTranslation();
   const { code } = useParams<{ code: string }>();
   const order = orders.find((o) => o.code.replace('#', '') === code);
   const [previewLocked, setPreviewLocked] = useState(false);
@@ -36,6 +38,24 @@ const CustomerOrderDetailPage = () => {
   const locked = previewLocked || order.locked;
   const effectiveOrder = { ...order, locked };
   const f = farmer(order.farmerId);
+  /**
+   * One pin: the stall you collect from (FR-013). Built on each render rather than memoised — it is a single fixed
+   * point on a page that barely re-renders, and React Compiler rejects manual memoisation of anything derived from the
+   * module-level order list.
+   */
+  const mapMarkers: MapMarker[] =
+    f && f.lat != null && f.lng != null
+      ? [
+          {
+            lat: f.lat,
+            lng: f.lng,
+            kind: 'stall',
+            label: f.stall,
+            selected: true,
+            popup: { title: f.stall, lines: [tc('map.stallPickup', { code: f.stallCode, pickup: f.pickup })] },
+          },
+        ]
+      : [];
   const stepIndex = STEPS.indexOf(order.status);
   const [firstStep, lastStep] = [order.history[0], order.history[order.history.length - 1]];
   const editable = !locked && (order.status === 'placed' || order.status === 'accepted');
@@ -103,17 +123,20 @@ const CustomerOrderDetailPage = () => {
                   <dd className="m-0">{t('pickup.bringText', { total: vnd(orderTotal(order)) })}</dd>
                 </dl>
                 <div className="flex flex-wrap gap-2">
-                  {f && (
-                    <ButtonAnchor href={Helper.directionsUrl(f.lat, f.lng)} variant="secondary" size="sm">
-                      {t('pickup.directions')}
-                    </ButtonAnchor>
+                  {f && f.lat != null && f.lng != null && (
+                    <DirectionsButton to={{ lat: f.lat, lng: f.lng }} name={f.stall} variant="secondary" />
                   )}
                   <ButtonLink to={`/stalls/${order.farmerId}`} variant="ghost" size="sm">
                     {t('pickup.stallPage')}
                   </ButtonLink>
                 </div>
               </Card>
-              <MapPlaceholder label={t('pickup.map', { stall: f?.stallCode ?? '' })} />
+              <MarketMap
+                label={t('pickup.map', { stall: f?.stallCode ?? '' })}
+                markers={mapMarkers}
+                className="min-h-60"
+                scrollWheelZoom={false}
+              />
             </div>
           </section>
 

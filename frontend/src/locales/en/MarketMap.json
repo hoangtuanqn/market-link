@@ -23,5 +23,10 @@
     "stalls_one": "{{count}} stall",
     "stalls_other": "{{count}} stalls",
     "pickup": "{{days}} · pickup {{pickup}}"
+  },
+  "bothOff": {
+    "title": "Nothing to show on the map",
+    "text": "Both layers are switched off. Turn markets or stalls back on to see the pins.",
+    "action": "Show both"
   }
 }

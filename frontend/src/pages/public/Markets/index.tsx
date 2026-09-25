@@ -12,6 +12,8 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import useClock from '@/hooks/useClock';
+import useGeolocation from '@/hooks/useGeolocation';
+import { distanceKm } from '@/lib/geo';
 import useSettings from '@/hooks/useSettings';
 import { markets } from '@/data/home';
 import { dayList, dayName, formatClock, nowLabel, upcoming } from '@/lib/format';
@@ -39,12 +41,16 @@ const openOn = (dow: number) => markets.filter((m) => m.days.includes(dow));
 /** FR-010 — browse markets by location and day. */
 const MarketsPage = () => {
   const { t } = useTranslation('Markets');
+  const { t: tc } = useTranslation();
   const now = useClock();
   const [day, setDay] = useState(6);
   const [area, setArea] = useState('all');
-  const [sort, setSort] = useState('near');
+  const [sort, setSort] = useState('stalls');
   const [page, setPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
+  const { state: geo, request: askLocation, clear: forgetLocation } = useGeolocation();
+  /** Null until the visitor shares where they are; nothing here asks on its own. */
+  const here = geo.status === 'ready' ? geo.at : null;
   /** The demo switcher at the foot of the page; null means "show whatever is really happening". */
   const [override, setOverride] = useState<View | null>(null);
   /** The page whose markets have arrived. Anything else means the list is still on its way. */
@@ -62,6 +68,12 @@ const MarketsPage = () => {
   // Areas come from the markets themselves, so a new market in a new district needs no edit here (FR-010).
   const areas = useMemo(() => [...new Set(markets.map((m) => m.district))].sort((a, b) => a.localeCompare(b)), []);
 
+  // Straight-line distance from the visitor to every market, recomputed only when the position changes.
+  const distances = useMemo(() => {
+    if (!here) return new Map<number, number>();
+    return new Map(markets.map((m) => [m.id, distanceKm(here, { lat: m.lat, lng: m.lng })]));
+  }, [here]);
+
   const { preferredMarket } = useSettings();
   const matches = useMemo(() => {
     const list = onDay.filter((m) => area === 'all' || m.district === area);
@@ -72,9 +84,10 @@ const MarketsPage = () => {
       if (pa !== pb) return pa - pb;
       if (sort === 'stalls') return b.stalls - a.stalls;
       if (sort === 'opens') return a.open.localeCompare(b.open);
-      return parseFloat(a.distance ?? '0') - parseFloat(b.distance ?? '0');
+      // Unknown distances sink to the bottom rather than pretending to be nearby.
+      return (distances.get(a.id) ?? Infinity) - (distances.get(b.id) ?? Infinity);
     });
-  }, [onDay, area, sort, preferredMarket]);
+  }, [onDay, area, sort, preferredMarket, distances]);
 
   const pages = Math.max(1, Math.ceil(matches.length / PAGE_SIZE));
   const currentPage = Math.min(page, pages);
@@ -118,7 +131,7 @@ const MarketsPage = () => {
   const clearAll = () => {
     setDay(6);
     setArea('all');
-    setSort('near');
+    setSort('stalls');
     setPage(1);
     Notification.info({ title: t('cleared.title'), text: t('cleared.text', { day: dayLabel(6) }) });
   };
@@ -185,6 +198,42 @@ const MarketsPage = () => {
             className="min-w-52.5"
           />
         </div>
+
+        {/*
+         * Location is asked for here and nowhere else, and only when this button is pressed. "Nearest first"
+         * is therefore never the default: sorting by a distance we have not measured would be a guess
+         * presented as a fact.
+         */}
+        <div className="border-line flex flex-wrap items-center gap-3 border-t pt-3">
+          {here ? (
+            <>
+              <span className="text-small">{t('location.measured')}</span>
+              <Button variant="ghost" size="sm" onClick={forgetLocation}>
+                {t('location.forget')}
+              </Button>
+            </>
+          ) : (
+            <>
+              <span className="text-small text-ink-muted">
+                {geo.status === 'denied'
+                  ? t('location.denied')
+                  : geo.status === 'unavailable'
+                    ? tc(`geo.${geo.reason}`)
+                    : sort === 'near'
+                      ? t('location.needed')
+                      : t('location.share')}
+              </span>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={askLocation}
+                disabled={geo.status === 'asking' || geo.status === 'denied' || geo.status === 'unavailable'}
+              >
+                {geo.status === 'asking' ? tc('geo.finding') : t('location.use')}
+              </Button>
+            </>
+          )}
+        </div>
       </Card>
 
       <p className="text-body">
@@ -219,7 +268,7 @@ const MarketsPage = () => {
                   // As many placeholders as the page is about to hold, so nothing shifts when the markets land.
                   <MarketCardSkeleton count={slice.length || PAGE_SIZE} />
                 ) : (
-                  slice.map((m) => <MarketCard key={m.id} market={m} />)
+                  slice.map((m) => <MarketCard key={m.id} market={m} distanceKm={distances.get(m.id)} />)
                 )}
               </div>
               {/* The pager stays put while the next page loads, so the button you just pressed does not vanish. */}

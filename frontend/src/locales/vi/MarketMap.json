@@ -23,5 +23,10 @@
     "stalls_one": "{{count}} sạp",
     "stalls_other": "{{count}} sạp",
     "pickup": "{{days}} · nhận hàng {{pickup}}"
+  },
+  "bothOff": {
+    "title": "Không có gì để hiện trên bản đồ",
+    "text": "Cả hai lớp đang tắt. Bật lại chợ hoặc sạp để xem các ghim.",
+    "action": "Hiện cả hai"
   }
 }

@@ -65,7 +65,8 @@
     "directions": "路线",
     "dismiss": "关闭提示",
     "remove": "移除",
-    "tryAgain": "重试"
+    "tryAgain": "重试",
+    "cancel": "取消"
   },
   "admin": {
     "badge": "管理员",
@@ -134,7 +135,8 @@
     "aboutUs": "关于我们",
     "contactUs": "联系我们",
     "feedback": "意见反馈与问题报告",
-    "mapData": "地图数据 © OpenStreetMap 贡献者"
+    "mapData": "地图数据 © OpenStreetMap 贡献者",
+    "mapDataFrom": "地图数据 {{credit}}"
   },
   "header": {
     "cart": "购物车",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© {{link}} 贡献者",
     "open": "打开",
-    "placeholder": "地图 — {{label}}"
+    "placeholder": "地图 — {{label}}",
+    "stallPickup": "摊位 {{code}} · 取货 {{pickup}}",
+    "tilesFailed": "地图图块需要网络连接。没有地图，列表仍可使用。",
+    "yourStall": "你的摊位"
   },
   "marketCard": {
     "save": "收藏{{name}}",
@@ -350,5 +355,28 @@
     "show": "显示第 {{n}} 张：{{topic}}",
     "pause": "暂停轮播",
     "play": "播放轮播"
+  },
+  "geo": {
+    "denied": "你已为本站关闭位置权限。请在浏览器的网站设置中更改，或改用地址。",
+    "insecure": "浏览器只会通过安全连接（https）共享你的位置。",
+    "failed": "你的设备无法确定你的位置。请重试，或改为输入地址。",
+    "finding": "正在定位…"
+  },
+  "directions": {
+    "title": "前往 {{name}} 的路线",
+    "question": "你从哪里出发？",
+    "current": "我的当前位置",
+    "currentShared": "已共享",
+    "currentAsk": "浏览器会先征求你的同意",
+    "address": "一个地址",
+    "addressNote": "胡志明市的一条街道或地标。",
+    "addressLabel": "出发地址",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "填写街道和区效果最好。地图上常常没有门牌号，找不到时 OpenStreetMap 会请你选择一个地点。",
+    "useSaved": "使用我保存的地址",
+    "none": "我会在地图上输入",
+    "noneNote": "打开 OpenStreetMap，只填好目的地。",
+    "privacy": "路线会在新标签页的 openstreetmap.org 中打开。MarketLink 不会追踪你的位置。",
+    "open": "打开路线"
   }
 }

@@ -47,9 +47,8 @@
     "since": "Cultivando aquí desde",
     "pin": "Marca la parcela",
     "map": "Marca tu parcela en el mapa",
-    "lat": "Latitud",
-    "lng": "Longitud",
-    "manualPin": "El pin en el mapa real llegará con la pantalla del mapa. Por ahora, escribe las coordenadas a mano si las sabes."
+    "pinHint": "Arrastra el marcador hasta tu parcela. Es la forma más rápida de que el administrador vea que las fotos coinciden con el lugar.",
+    "yourPlot": "Tu parcela"
   },
   "step4": {
     "title": "Fotos de la parcela",

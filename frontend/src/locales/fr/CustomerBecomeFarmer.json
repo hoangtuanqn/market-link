@@ -47,9 +47,8 @@
     "since": "Cultivé ici depuis",
     "pin": "Épinglez la parcelle",
     "map": "Épinglez votre parcelle sur la carte",
-    "lat": "Latitude",
-    "lng": "Longitude",
-    "manualPin": "L’épingle sur la vraie carte arrivera avec l’écran carte. Pour l’instant, saisissez les coordonnées à la main si vous les connaissez."
+    "pinHint": "Faites glisser l'épingle jusqu'à votre parcelle. C'est le moyen le plus rapide pour l'administrateur de vérifier que les photos correspondent au lieu.",
+    "yourPlot": "Votre parcelle"
   },
   "step4": {
     "title": "Photos de la parcelle",

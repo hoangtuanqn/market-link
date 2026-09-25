@@ -1,7 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,7 @@ import { DataState } from '@/components/ui/data-state';
 import Tabs from '@/components/ui/tabs';
 import { farmer, farmers, products } from '@/data/catalog';
 import { markets } from '@/data/home';
-import { dayName, formatDayMonth } from '@/lib/format';
+import { dayName, formatClock, formatDayMonth } from '@/lib/format';
 
 /** The demo market week, Thursday 24 to Sunday 27 September 2026. */
 const DAY_OPTIONS = [
@@ -25,6 +25,7 @@ const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
 /** FR-023 — search across markets, stalls and products at once, with results on a map. */
 const SearchPage = () => {
   const { t } = useTranslation('Search');
+  const { t: tc } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const scopeParam = searchParams.get('scope') ?? 'all';
   const q = searchParams.get('q') ?? '';
@@ -72,6 +73,37 @@ const SearchPage = () => {
   }, [q, openMarketIds, sort]);
 
   const total = results.markets.length + results.farmers.length + results.products.length;
+
+  // FR-023 asks for results on a map. Products have no coordinates of their own, so a product match is
+  // represented by the stall selling it, which is the place you would actually travel to.
+  const mapMarkers = useMemo<MapMarker[]>(() => {
+    const pins: MapMarker[] = results.markets.map((m) => ({
+      lat: m.lat,
+      lng: m.lng,
+      kind: 'market' as const,
+      label: m.name,
+      popup: {
+        title: m.name,
+        lines: [`${formatClock(m.open)}\u2013${formatClock(m.close)}`, m.district],
+        href: `/markets/${m.id}`,
+      },
+    }));
+    results.farmers.forEach((f) => {
+      if (f.lat == null || f.lng == null) return;
+      pins.push({
+        lat: f.lat,
+        lng: f.lng,
+        kind: 'stall',
+        label: f.stall,
+        popup: {
+          title: f.stall,
+          lines: [tc('map.stallPickup', { code: f.stallCode, pickup: f.pickup })],
+          href: `/stalls/${f.id}`,
+        },
+      });
+    });
+    return pins;
+  }, [results, tc]);
   const dayLabel = dayName(day, 'long');
 
   return (
@@ -238,7 +270,7 @@ const SearchPage = () => {
         </div>
 
         <div className="sticky top-20 flex flex-col gap-2">
-          <MapPlaceholder label={t('map.label')} />
+          <MarketMap label={t('map.label')} markers={mapMarkers} className="min-h-72" />
           <p className="text-small text-ink-muted">{t('map.note')}</p>
         </div>
       </div>

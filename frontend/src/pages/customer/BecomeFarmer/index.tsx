@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import FarmerApi from '@/api-requests/farmer.requests';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import LocationPicker from '@/components/LocationPicker';
+import { CITY } from '@/config/map';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -49,8 +50,8 @@ const CustomerBecomeFarmerPage = () => {
   const [plotAddress, setPlotAddress] = useState('');
   const [plotSize, setPlotSize] = useState('');
   const [growingSinceYear, setGrowingSinceYear] = useState('');
-  const [plotLatitude, setPlotLatitude] = useState('');
-  const [plotLongitude, setPlotLongitude] = useState('');
+  // Vườn là đất trồng, không phải sạp, nên ghim bắt đầu ở giữa thành phố; chưa kéo thì không gửi toạ độ.
+  const [plotPin, setPlotPin] = useState<{ lat: number; lng: number } | null>(null);
 
   const [photos, setPhotos] = useState<PhotoSlot[]>(SHOTS.map((key) => ({ key, url: null, uploading: false })));
   const [video, setVideo] = useState<{ url: string | null; uploading: boolean }>({ url: null, uploading: false });
@@ -145,8 +146,8 @@ const CustomerBecomeFarmerPage = () => {
       plotAddress: plotAddress.trim() || undefined,
       plotSize: plotSize.trim() || undefined,
       growingSinceYear: growingSinceYear ? Number(growingSinceYear) : undefined,
-      plotLatitude: plotLatitude ? Number(plotLatitude) : undefined,
-      plotLongitude: plotLongitude ? Number(plotLongitude) : undefined,
+      plotLatitude: plotPin?.lat,
+      plotLongitude: plotPin?.lng,
       photoUrls: photoUrls.length ? photoUrls : undefined,
       videoUrl: video.url ?? undefined,
       preferredMarketName: selectedMarket?.name,
@@ -507,24 +508,15 @@ const CustomerBecomeFarmerPage = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <span className="text-small font-bold">{t('step3.pin')}</span>
-                <MapPlaceholder label={t('step3.map')} />
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <Field
-                    id="lat"
-                    label={t('step3.lat')}
-                    value={plotLatitude}
-                    onChange={(e) => setPlotLatitude(e.target.value)}
-                    placeholder="10.8721"
-                  />
-                  <Field
-                    id="lng"
-                    label={t('step3.lng')}
-                    value={plotLongitude}
-                    onChange={(e) => setPlotLongitude(e.target.value)}
-                    placeholder="106.5931"
-                  />
-                </div>
-                <p className="text-ink-muted text-[13px]">{t('step3.manualPin')}</p>
+                <LocationPicker
+                  label={t('step3.map')}
+                  className="min-h-60"
+                  lat={plotPin?.lat ?? CITY[0]}
+                  lng={plotPin?.lng ?? CITY[1]}
+                  pinLabel={t('step3.yourPlot')}
+                  onMove={(lat, lng) => setPlotPin({ lat, lng })}
+                />
+                <p className="text-ink-muted text-[13px]">{t('step3.pinHint')}</p>
               </div>
             </Card>
           </FormStep>

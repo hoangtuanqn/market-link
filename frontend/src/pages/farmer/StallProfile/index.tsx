@@ -6,11 +6,11 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
 import Tabs from '@/components/ui/tabs';
+import LocationPicker from '@/components/LocationPicker';
 import { farmer } from '@/data/catalog';
 import { markets } from '@/data/home';
 import { dayList, dayName, formatClock, formatDate } from '@/lib/format';
 import Notification from '@/utils/notification';
-import StallLocationMap from './StallLocationMap';
 
 type MarketSettings = { code: string; days: number[]; start: string; end: string; lat: number; lng: number };
 
@@ -254,14 +254,13 @@ const FarmerStallProfilePage = () => {
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="flex flex-col gap-2">
                       <span className="text-small font-bold">{t('markets.location')}</span>
-                      <StallLocationMap
+                      <LocationPicker
                         label={t('markets.mapLabel')}
                         className="min-h-80"
-                        marketLat={m.lat}
-                        marketLng={m.lng}
-                        marketName={m.name}
-                        stallLat={s.lat}
-                        stallLng={s.lng}
+                        market={{ lat: m.lat, lng: m.lng, name: m.name }}
+                        lat={s.lat}
+                        lng={s.lng}
+                        pinLabel={t('map.yourStall')}
                         onMove={(lat, lng) => updateSettings(id, { lat, lng })}
                       />
                       <p className="text-caption text-ink-muted">{t('markets.mapHint')}</p>

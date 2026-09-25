@@ -62,5 +62,13 @@
       "error": "Error"
     },
     "note": "El estado vacío se puede ver de verdad: elige <b>{{day}}</b> y la zona <b>{{area}}</b>. Indica lo que elegiste y ofrece una salida."
+  },
+  "location": {
+    "measured": "Las distancias se miden desde donde estás.",
+    "forget": "Olvidar mi ubicación",
+    "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador para ordenar por distancia.",
+    "needed": "Ordenar por distancia necesita tu ubicación. Hasta que la compartas, el orden de abajo no cambia.",
+    "share": "Comparte tu ubicación para ver a qué distancia está cada mercado.",
+    "use": "Usar mi ubicación"
   }
 }

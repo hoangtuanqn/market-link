@@ -48,6 +48,9 @@ services:
       target: prod
       args:
         VITE_API_URL: ${VITE_API_URL:?Thiếu VITE_API_URL trong .env.production}
+        # Không bắt buộc: bỏ trống thì bản đồ chạy bằng tile OpenStreetMap
+        VITE_MAP_TILE_URL: ${VITE_MAP_TILE_URL:-}
+        VITE_MAP_ATTRIBUTION: ${VITE_MAP_ATTRIBUTION:-}
     image: market-link-frontend:prod
     environment: !reset [] # nginx phục vụ file tĩnh, API URL đã nhúng lúc build
     ports: !override

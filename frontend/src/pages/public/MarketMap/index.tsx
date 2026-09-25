@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import DayChips from '@/components/DayChips';
 import MarketCard from '@/components/MarketCard';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
+import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState } from '@/components/ui/data-state';
 import { farmers } from '@/data/catalog';
@@ -19,6 +20,8 @@ const DAYS: { value: DayValue; date: Date; disabled?: boolean }[] = [
   { value: 'sun', date: new Date(2026, 8, 27) },
 ];
 const DOW: Record<DayValue, number> = { thu: 4, fri: 5, sat: 6, sun: 0 };
+/** How a stall's trading days are written in the data (`farmer.days`, e.g. "Sat, Sun"). */
+const DAY_ABBR: Record<DayValue, string> = { thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' };
 
 /** FR-012 FR-013 — every market and its approved stalls on the map, for the day you choose. */
 const MarketMapPage = () => {
@@ -35,12 +38,17 @@ const MarketMapPage = () => {
   );
   const openMarketIds = useMemo(() => new Set(openMarkets.map((m) => m.id)), [openMarkets]);
 
+  // A stall is only on the map for a day it actually trades, not every day its market happens to be open.
   const openStalls = useMemo(
     () =>
       farmers.filter(
-        (f) => f.approval === 'approved' && f.lat != null && f.markets.some((id) => openMarketIds.has(id)),
+        (f) =>
+          f.approval === 'approved' &&
+          f.lat != null &&
+          f.days.split(', ').includes(DAY_ABBR[day]) &&
+          f.markets.some((id) => openMarketIds.has(id)),
       ),
-    [openMarketIds],
+    [openMarketIds, day],
   );
 
   const markers = useMemo<MapMarker[]>(() => {
@@ -124,7 +132,26 @@ const MarketMapPage = () => {
         </div>
       </div>
 
-      <MarketMap label={t('mapLabel')} markers={markers} className="min-h-155" />
+      {!showMarkets && !showStalls ? (
+        <DataState
+          title={t('bothOff.title')}
+          text={t('bothOff.text')}
+          action={
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                setShowMarkets(true);
+                setShowStalls(true);
+              }}
+            >
+              {t('bothOff.action')}
+            </Button>
+          }
+        />
+      ) : (
+        <MarketMap label={t('mapLabel')} markers={markers} className="min-h-100 md:min-h-155" />
+      )}
       <p className="text-small text-ink-muted">{t('directions')}</p>
 
       <section className="flex flex-col gap-4">

@@ -2,15 +2,15 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
 import DayChips from '@/components/DayChips';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import DirectionsButton from '@/components/DirectionsButton';
+import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
-import { ButtonAnchor, ButtonLink } from '@/components/ui/button';
+import { ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { categories as CATEGORIES, farmers, products } from '@/data/catalog';
 import { markets } from '@/data/home';
 import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
-import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 /** The demo market week, Thursday 24 to Sunday 27 September 2026. */
@@ -27,6 +27,7 @@ const DOW_ABBR: Record<number, string> = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed
 const MarketDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation('MarketDetail');
+  const { t: tc } = useTranslation();
   const navigate = useNavigate();
   const market = markets.find((m) => m.id === Number(id));
 
@@ -55,6 +56,39 @@ const MarketDetailPage = () => {
     productsToday.forEach((p) => counts.set(p.category, (counts.get(p.category) ?? 0) + 1));
     return counts;
   }, [productsToday]);
+
+  // The market itself plus every stall trading today that has pinned its spot (FR-012).
+  const mapMarkers = useMemo<MapMarker[]>(() => {
+    if (!market) return [];
+    const pins: MapMarker[] = [
+      {
+        lat: market.lat,
+        lng: market.lng,
+        kind: 'market',
+        label: market.name,
+        selected: true,
+        popup: {
+          title: market.name,
+          lines: [`${formatClock(market.open)}\u2013${formatClock(market.close)}`, market.address],
+        },
+      },
+    ];
+    stallsToday.forEach((f) => {
+      if (f.lat == null || f.lng == null) return;
+      pins.push({
+        lat: f.lat,
+        lng: f.lng,
+        kind: 'stall',
+        label: f.stall,
+        popup: {
+          title: f.stall,
+          lines: [tc('map.stallPickup', { code: f.stallCode, pickup: f.pickup })],
+          href: `/stalls/${f.id}`,
+        },
+      });
+    });
+    return pins;
+  }, [market, stallsToday, tc]);
 
   const shownProducts = productsToday.filter((p) => {
     if (category !== 'All' && p.category !== category) return false;
@@ -104,9 +138,7 @@ const MarketDetailPage = () => {
           >
             {saved ? t('save.on') : t('save.off')}
           </Chip>
-          <ButtonAnchor href={Helper.directionsUrl(market.lat, market.lng)} variant="ghost">
-            {t('directions')}
-          </ButtonAnchor>
+          <DirectionsButton to={{ lat: market.lat, lng: market.lng }} name={market.name} size="md" />
         </div>
       </div>
 
@@ -191,7 +223,7 @@ const MarketDetailPage = () => {
         </div>
 
         <div className="sticky top-20 flex flex-col gap-4">
-          <MapPlaceholder label={t('mapLabel', { name: market.name })} />
+          <MarketMap label={t('mapLabel', { name: market.name })} markers={mapMarkers} className="min-h-72" />
           {stallsToday[0] && <StallCard farmer={stallsToday[0]} />}
         </div>
       </div>

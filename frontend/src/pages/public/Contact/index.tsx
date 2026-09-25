@@ -1,7 +1,7 @@
 import MarketMap from '@/components/MarketMap';
 import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import Helper from '@/utils/helper';
+import { directionsUrl } from '@/lib/directions';
 
 const TEAM_LAT = 10.7769;
 const TEAM_LNG = 106.7009;
@@ -63,7 +63,7 @@ const ContactPage = () => {
             ]}
           />
           <a
-            href={Helper.directionsUrl(TEAM_LAT, TEAM_LNG)}
+            href={directionsUrl({ lat: TEAM_LAT, lng: TEAM_LNG })}
             target="_blank"
             rel="noopener noreferrer"
             className="text-small text-brand underline"

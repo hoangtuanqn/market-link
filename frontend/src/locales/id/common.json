@@ -65,7 +65,8 @@
     "directions": "Petunjuk arah",
     "dismiss": "Tutup",
     "remove": "Hapus",
-    "tryAgain": "Coba lagi"
+    "tryAgain": "Coba lagi",
+    "cancel": "Batal"
   },
   "admin": {
     "badge": "Admin",
@@ -134,7 +135,8 @@
     "aboutUs": "Tentang kami",
     "contactUs": "Hubungi kami",
     "feedback": "Masukan & laporan bug",
-    "mapData": "Data peta © kontributor OpenStreetMap"
+    "mapData": "Data peta © kontributor OpenStreetMap",
+    "mapDataFrom": "Data peta {{credit}}"
   },
   "header": {
     "cart": "Keranjang",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© kontributor {{link}}",
     "open": "Buka",
-    "placeholder": "Peta — {{label}}"
+    "placeholder": "Peta — {{label}}",
+    "stallPickup": "Lapak {{code}} · ambil {{pickup}}",
+    "tilesFailed": "Peta memerlukan koneksi. Daftar tetap bisa dipakai tanpa peta.",
+    "yourStall": "Lapak Anda"
   },
   "marketCard": {
     "save": "Simpan {{name}}",
@@ -350,5 +355,28 @@
     "show": "Tampilkan slide {{n}}: {{topic}}",
     "pause": "Jeda tayangan slide",
     "play": "Putar tayangan slide"
+  },
+  "geo": {
+    "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda, atau gunakan alamat.",
+    "insecure": "Browser Anda hanya membagikan lokasi melalui koneksi aman (https).",
+    "failed": "Perangkat Anda tidak dapat menentukan lokasi Anda. Coba lagi, atau ketik alamat.",
+    "finding": "Mencari lokasi Anda…"
+  },
+  "directions": {
+    "title": "Petunjuk arah ke {{name}}",
+    "question": "Anda berangkat dari mana?",
+    "current": "Lokasi saya saat ini",
+    "currentShared": "Sudah dibagikan",
+    "currentAsk": "Browser Anda akan bertanya dulu",
+    "address": "Sebuah alamat",
+    "addressNote": "Jalan atau landmark di Kota Ho Chi Minh.",
+    "addressLabel": "Alamat awal",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "Nama jalan dan distrik paling efektif. Nomor rumah sering tidak ada di peta, dan OpenStreetMap akan meminta Anda memilih tempat jika tidak menemukannya.",
+    "useSaved": "Gunakan alamat tersimpan",
+    "none": "Saya akan mengetiknya di peta",
+    "noneNote": "Membuka OpenStreetMap dengan tujuan saja yang terisi.",
+    "privacy": "Petunjuk arah dibuka di openstreetmap.org di tab baru. MarketLink tidak melacak lokasi Anda.",
+    "open": "Buka petunjuk arah"
   }
 }

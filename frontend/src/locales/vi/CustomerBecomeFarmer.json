@@ -47,9 +47,8 @@
     "since": "Trồng ở đây từ năm",
     "pin": "Ghim vị trí vườn",
     "map": "Ghim vườn của bạn trên bản đồ",
-    "lat": "Vĩ độ",
-    "lng": "Kinh độ",
-    "manualPin": "Ghim trên bản đồ thật sẽ có khi màn bản đồ hoàn thành — hiện tại, nếu biết toạ độ thì bạn nhập tay."
+    "pinHint": "Kéo ghim đến vườn của bạn. Đây là cách nhanh nhất để quản trị viên thấy ảnh khớp với nơi đó.",
+    "yourPlot": "Mảnh đất của bạn"
   },
   "step4": {
     "title": "Ảnh mảnh vườn",

@@ -47,9 +47,8 @@
     "since": "Growing here since",
     "pin": "Pin the plot",
     "map": "Pin your plot on the map",
-    "lat": "Latitude",
-    "lng": "Longitude",
-    "manualPin": "The real map pin lands with the map screen — for now, type the coordinates by hand if you know them."
+    "pinHint": "Drag the pin to your plot. It is the quickest way for the admin to see the photos match the place.",
+    "yourPlot": "Your plot"
   },
   "step4": {
     "title": "Photos of the plot",

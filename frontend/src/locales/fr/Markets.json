@@ -62,5 +62,13 @@
       "error": "Erreur"
     },
     "note": "L'état vide existe pour de vrai : choisissez <b>{{day}}</b> et le quartier <b>{{area}}</b>. Il rappelle votre choix et propose une issue."
+  },
+  "location": {
+    "measured": "Les distances sont mesurées depuis votre position.",
+    "forget": "Oublier ma position",
+    "denied": "Vous avez désactivé la localisation pour ce site. Modifiez-la dans les paramètres du site de votre navigateur pour trier par distance.",
+    "needed": "Le tri par distance nécessite votre position. Tant que vous ne la partagez pas, l’ordre ci-dessous reste le même.",
+    "share": "Partagez votre position pour voir à quelle distance se trouve chaque marché.",
+    "use": "Utiliser ma position"
   }
 }

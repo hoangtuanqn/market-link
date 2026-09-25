@@ -23,5 +23,10 @@
     "stalls_one": "{{count}} 个摊位",
     "stalls_other": "{{count}} 个摊位",
     "pickup": "{{days}} · 取货 {{pickup}}"
+  },
+  "bothOff": {
+    "title": "地图上没有可显示的内容",
+    "text": "两个图层都已关闭。重新打开市集或摊位即可看到标记。",
+    "action": "全部显示"
   }
 }

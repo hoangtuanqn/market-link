@@ -47,9 +47,8 @@
     "since": "Menanam di sini sejak",
     "pin": "Tandai lahan",
     "map": "Tandai lahan Anda di peta",
-    "lat": "Lintang",
-    "lng": "Bujur",
-    "manualPin": "Pin di peta sungguhan hadir bersama layar peta. Untuk sekarang, ketik koordinatnya secara manual jika Anda tahu."
+    "pinHint": "Seret penanda ke lahan Anda. Ini cara tercepat bagi admin untuk melihat foto cocok dengan tempatnya.",
+    "yourPlot": "Lahan Anda"
   },
   "step4": {
     "title": "Foto lahan",

@@ -47,9 +47,8 @@
     "since": "Anbau hier seit",
     "pin": "Fläche markieren",
     "map": "Markieren Sie Ihre Fläche auf der Karte",
-    "lat": "Breitengrad",
-    "lng": "Längengrad",
-    "manualPin": "Die echte Kartennadel kommt mit der Kartenansicht. Gib die Koordinaten bis dahin von Hand ein, wenn du sie kennst."
+    "pinHint": "Ziehen Sie die Markierung auf Ihre Fläche. So sieht der Admin am schnellsten, dass die Fotos zum Ort passen.",
+    "yourPlot": "Ihr Grundstück"
   },
   "step4": {
     "title": "Fotos der Fläche",

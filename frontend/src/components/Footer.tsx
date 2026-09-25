@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { MAP_CREDIT } from '@/config/map';
 import { USER_ROLE } from '@/constants/enums';
 import useSession from '@/hooks/useSession';
 import type common from '@/locales/en/common.json';
@@ -75,7 +76,8 @@ const Footer = () => {
         <div className="border-board-muted text-board-muted col-span-full flex flex-wrap items-center justify-between gap-3 border-t pt-4 text-[13px]">
           <span>© 2026 MarketLink · TechWiz 7</span>
           <LanguageSwitcher />
-          <span>{t('footer.mapData')}</span>
+          {/* Every tile provider requires this credit, so it follows whichever one is configured. */}
+          <span>{MAP_CREDIT ? t('footer.mapDataFrom', { credit: MAP_CREDIT }) : t('footer.mapData')}</span>
         </div>
       </div>
     </footer>
