@@ -1,0 +1,64 @@
+{
+  "notFound": {
+    "title": "That stall is not here any more",
+    "browse": "Browse markets"
+  },
+  "breadcrumb": "Markets",
+  "approved": "Approved stall",
+  "savedToast": "Saved {{name}}.",
+  "save": "Save stall",
+  "message": "Message the stall",
+  "stats": {
+    "reviews_one": "{{count}} review",
+    "reviews_other": "{{count}} reviews",
+    "markets_one": "market",
+    "markets_other": "markets",
+    "since": "selling here since"
+  },
+  "tabs": {
+    "label": "Stall sections",
+    "stock": "This week's stock",
+    "reviews": "Reviews",
+    "about": "About the stall"
+  },
+  "stock": {
+    "count_one": "{{count}} product",
+    "count_other": "{{count}} products",
+    "availableOn": "Available on",
+    "notSelling": "{{stall}} does not sell on {{day}}. Products above are what they carry on their selling days ({{days}})."
+  },
+  "reviews": {
+    "summary_one": "{{count}} review, from a completed order",
+    "summary_other": "{{count}} reviews, every one from a completed order",
+    "all": "All",
+    "farmer": "About the stall",
+    "product": "About products",
+    "newest": "Newest first"
+  },
+  "about": {
+    "whereWhen": "Where and when",
+    "table": {
+      "market": "Market",
+      "days": "Days",
+      "window": "Pickup window",
+      "stall": "Stall",
+      "directions": "Directions"
+    },
+    "cutoffNote_one": "Orders close {{count}} hour before the slot you choose. After that only the stall can change the order.",
+    "cutoffNote_other": "Orders close {{count}} hours before the slot you choose. After that only the stall can change the order.",
+    "disclaimer": "MarketLink does not check licences or organic claims. If that matters to you, ask at the stall.",
+    "contact": "Contact",
+    "email": "Email",
+    "since": "Selling here since",
+    "mapLabel": "Map of {{name}}",
+    "findingTitle": "Finding the stall",
+    "findingText": "Stall {{code}} · pickup window {{window}}. Slots are 30 minutes and hold 5 orders each.",
+    "preorder": "Pre-order at this market"
+  },
+  "report": {
+    "sentTitle": "Report sent",
+    "sentText": "An admin will look into it.",
+    "button": "Report this stall",
+    "note": "Repeated no-shows, wrong stall location, or anything that breaks the platform guidelines."
+  }
+}

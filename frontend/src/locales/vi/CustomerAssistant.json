@@ -1,0 +1,41 @@
+{
+  "eyebrow": "Tuỳ chọn · FR-090 đến FR-092",
+  "title": "Trợ lý mua sắm",
+  "intro": "Hỏi nơi tìm món gì đó cuối tuần này, khi nào chợ mở, hoặc sạp còn khung giờ nhận hàng nào. Mọi câu trả lời đều lấy từ dữ liệu của chính MarketLink.",
+  "conversation": "Cuộc trò chuyện với trợ lý",
+  "botName": "Trợ lý MarketLink",
+  "botNote": "Câu trả lời dùng danh mục trực tiếp. Ý định hiện dưới mỗi câu trả lời.",
+  "message": "Tin nhắn",
+  "placeholder": "vd: Ai có trứng ở Thảo Điền vào thứ Bảy?",
+  "send": "Gửi",
+  "reply": {
+    "greeting": "Chào {{name}}. Hãy hỏi mình cuối tuần này có gì, hoặc khi nào chợ mở.",
+    "pomelo": "{{day}} {{date}}, 2 sạp có bưởi da xanh: <b>Út Hiền Orchard</b> ở Thủ Đức Farmers Market (còn 2, {{price1}}) và <b>Ba Lành Farm</b> ở Thảo Điền Weekend Market (còn 9, {{price2}}).",
+    "slots": "Út Hiền Orchard giao hàng {{from}} – {{to}} {{day}} {{date}} tại Thủ Đức Farmers Market. Khung giờ trống: {{free}}. Khung {{full}} đã kín. Đơn chốt 12 giờ trước khung giờ.",
+    "unknown": "Mình chưa hiểu câu này. Hãy thử tên sản phẩm, tên chợ hoặc tên sạp."
+  },
+  "question": {
+    "pomeloMorning": "Chợ nào có bưởi da xanh vào sáng thứ Bảy?"
+  },
+  "suggest": {
+    "pomeloSat": "Mua bưởi da xanh ở đâu vào thứ Bảy?",
+    "baChieuOpen": "Bà Chiểu Green Market mở cửa khi nào?",
+    "showMap": "Xem 2 sạp trên bản đồ",
+    "slotsUtHien": "Giờ nhận hàng ở Út Hiền",
+    "addPomelos": "Thêm 2 quả bưởi vào giỏ",
+    "directionsThuDuc": "Chỉ đường đến Thủ Đức Farmers Market",
+    "thaoDien": "Thảo Điền có gì vào thứ Bảy?"
+  },
+  "canAnswer": {
+    "title": "Trợ lý trả lời được gì",
+    "product": "Tìm sản phẩm ở các chợ và sạp, kèm số lượng còn lại",
+    "hours": "Ngày họp chợ và giờ mở cửa",
+    "stalls": "Sạp nào có mặt ở một chợ vào một ngày",
+    "slots": "Khung giờ nhận hàng và khung còn trống của một sạp",
+    "price": "Giá, đơn vị và tồn kho của một sản phẩm"
+  },
+  "how": {
+    "title": "Cách hoạt động",
+    "text": "Tin nhắn được phân loại vào một trong các ý định cố định, và mỗi ý định chạy một truy vấn soạn sẵn có tham số. Mô hình không bao giờ viết SQL. Tin nhắn được lưu kèm ý định để có thể trình bày luồng xử lý cho ban giám khảo."
+  }
+}

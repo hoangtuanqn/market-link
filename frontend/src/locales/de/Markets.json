@@ -1,0 +1,66 @@
+{
+  "city": "Ho-Chi-Minh-Stadt",
+  "count_one": "{{count}} Markt",
+  "count_other": "{{count}} Märkte",
+  "title": "Märkte",
+  "intro": "Wählen Sie den Tag, an dem Sie einkaufen möchten, und grenzen Sie dann nach Gegend ein.",
+  "filters": {
+    "label": "Märkte filtern",
+    "day": "Markttag",
+    "clearAll": "Alles zurücksetzen",
+    "area": "Gegend",
+    "allAreas": "Alle Gegenden ({{count}})",
+    "sort": "Sortieren nach"
+  },
+  "sorts": {
+    "near": "Nächste zuerst",
+    "stalls": "Meiste Stände",
+    "opens": "Öffnet am frühesten"
+  },
+  "cleared": {
+    "title": "Filter zurückgesetzt",
+    "text": "Alle Märkte, die am {{day}} geöffnet sind."
+  },
+  "popupStalls_one": "{{count}} Stand",
+  "popupStalls_other": "{{count}} Stände",
+  "summary": {
+    "open_one": "<b>{{count}} Markt</b> am {{day}} geöffnet",
+    "open_other": "<b>{{count}} Märkte</b> am {{day}} geöffnet",
+    "openIn_one": "<b>{{count}} Markt</b> am {{day}} in {{area}} geöffnet",
+    "openIn_other": "<b>{{count}} Märkte</b> am {{day}} in {{area}} geöffnet",
+    "none": "Am {{day}} ist nichts geöffnet",
+    "noneIn": "Am {{day}} ist in {{area}} nichts geöffnet"
+  },
+  "error": {
+    "noun": "Märkte",
+    "alt": "die <link>Marktkarte</link> öffnet sich auf einer eigenen Seite"
+  },
+  "pager": {
+    "showing": "{{from}}–{{to}} von {{total}}",
+    "onePage_one": "{{count}} Markt auf einer Seite",
+    "onePage_other": "Alle {{count}} Märkte auf einer Seite"
+  },
+  "empty": {
+    "areaTitle": "Keine Märkte in {{area}} am {{day}}",
+    "areaText_one": "In der ganzen Stadt hat an diesem Tag {{count}} Markt geöffnet. Erweitern Sie die Gegend oder wählen Sie einen anderen Tag.",
+    "areaText_other": "In der ganzen Stadt haben an diesem Tag {{count}} Märkte geöffnet. Erweitern Sie die Gegend oder wählen Sie einen anderen Tag.",
+    "allAreas": "Alle Gegenden zeigen",
+    "dayTitle": "Am {{day}} hat kein Markt geöffnet",
+    "dayText_one": "Der {{day}} ist der belebteste Tag, mit {{count}} geöffnetem Markt.",
+    "dayText_other": "Der {{day}} ist der belebteste Tag, mit {{count}} geöffneten Märkten.",
+    "showDay": "{{day}} zeigen"
+  },
+  "map": {
+    "label": "Karte der passenden Märkte",
+    "note": "Die Karte folgt den Filtern und zeigt nur die Märkte aus der Liste."
+  },
+  "demo": {
+    "title": "Weitere Zustände dieser Liste (FR-084)",
+    "views": {
+      "loaded": "Mit Daten",
+      "loading": "Wird geladen",
+      "error": "Fehler"
+    },
+    "note": "Der leere Zustand lässt sich wirklich erreichen: Wählen Sie <b>{{day}}</b> und die Gegend <b>{{area}}</b>. Er nennt Ihre Auswahl und bietet einen Ausweg."
+  }
+}

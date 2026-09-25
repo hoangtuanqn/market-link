@@ -1,0 +1,42 @@
+{
+  "title": "お気に入り",
+  "intro": "ほしいものリスト：次に買いたい商品、また行きたいお店、よく行く市場。売り切れのお気に入りは再入荷をお知らせします。",
+  "findMore": "ほかにも探す",
+  "tabs": {
+    "label": "保存したもの",
+    "products": "商品",
+    "stalls": "お店",
+    "markets": "市場"
+  },
+  "banner": {
+    "title": "保存した 4 つの商品のうち 1 つが売り切れです。",
+    "text": "再入荷通知がオンなので、お店が再出品するとすぐにお知らせします。"
+  },
+  "filters": {
+    "all": "すべて",
+    "inStock": "在庫あり",
+    "soldOut": "売り切れ",
+    "priceDropped": "値下げ"
+  },
+  "soldOut": "売り切れ",
+  "left": "残り {{qty}}",
+  "alertOn": "通知オン",
+  "addToCart": "カートに追加",
+  "remove": "削除",
+  "addInStock_one": "在庫のある {{count}} 点をカートに追加",
+  "addInStock_other": "在庫のある {{count}} 点をカートに追加",
+  "toast": {
+    "alertTitle": "再入荷通知",
+    "alertOff": "{{name}} の通知をオフにしました。",
+    "addedTitle": "カートに追加しました",
+    "added": "{{name}} をカートに追加しました。",
+    "addedMany_one": "{{count}} 点の商品をカートに追加しました。注文時にお店ごとに分かれます。",
+    "addedMany_other": "{{count}} 点の商品をカートに追加しました。注文時にお店ごとに分かれます。",
+    "removedTitle": "削除しました",
+    "removed": "{{name}} をお気に入りから削除しました。"
+  },
+  "holdNote": "保存しても在庫は確保されません。確保されるのは注文したときだけです。",
+  "stallsNote": "保存したお店と、それぞれが今週末に持ってくるもの。",
+  "thisWeek": "今週",
+  "marketsNote": "保存した市場はリストと地図で最初に表示され、お店への道順は保存した住所から始まります。"
+}

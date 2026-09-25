@@ -34,6 +34,7 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
         userName={userName}
         userEmail={user?.email}
         avatarUrl={user?.avatarUrl}
+        settingsTo={user?.role === USER_ROLE.FARMER ? '/farmer/settings' : '/settings'}
         cartCount={cartCount}
         unreadCount={unreadCount}
       />

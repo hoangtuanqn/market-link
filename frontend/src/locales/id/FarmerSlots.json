@@ -1,0 +1,88 @@
+{
+  "crumbStall": "Lapak & pengambilan",
+  "title": "Slot pengambilan",
+  "intro": "Slot adalah jendela 30 menit di dalam jam pengambilan Anda. Setiap slot menerima pesanan dalam jumlah terbatas agar tidak ada yang antre lama. Slot yang penuh tampil abu-abu bagi pelanggan.",
+  "market": "Pasar",
+  "day": "Hari",
+  "cancel": "Batal",
+  "minutes_one": "{{count}} menit",
+  "minutes_other": "{{count}} menit",
+  "table": {
+    "slot": "Slot",
+    "booked": "Dipesan",
+    "bookedOf": "{{booked}} dari {{max}}",
+    "full": "Penuh",
+    "max": "Pesanan maks.",
+    "maxFor": "Pesanan maks. {{slot}}",
+    "closes": "Tutup untuk perubahan",
+    "open": "Terima pesanan baru",
+    "off": "Mati",
+    "on": "Aktif",
+    "caption_one": "{{day}} {{date}} · {{market}} · {{count}} slot",
+    "caption_other": "{{day}} {{date}} · {{market}} · {{count}} slot"
+  },
+  "empty": {
+    "title": "Belum ada slot untuk hari ini",
+    "text": "Buat slot untuk hari pasar agar pelanggan bisa mulai memesan waktu pengambilan."
+  },
+  "defaults": {
+    "title": "Bawaan",
+    "length": "Panjang slot",
+    "perSlot": "Pesanan per slot",
+    "windowAt": "Jam di {{market}}",
+    "window": "{{start}} – {{end}} pada {{days}}",
+    "cutoff": "Batas",
+    "cutoffValue_one": "{{count}} jam sebelum slot",
+    "cutoffValue_other": "{{count}} jam sebelum slot",
+    "note": "Ubah jam dan hari di Lapak & pengambilan. Slot untuk setiap hari dibuat dari situ."
+  },
+  "closing": {
+    "title": "Menutup slot",
+    "text": "Mematikan slot menyembunyikannya dari pesanan baru. Pesanan yang sudah ada tetap; hubungi pelanggan tersebut jika Anda tidak bisa datang."
+  },
+  "away": {
+    "title": "Hari Anda tidak berjualan",
+    "intro": "Hari pasar yang akan Anda lewatkan — panen sedikit, sakit, mobil tidak mau menyala. Lapak Anda tidak tampil di halaman pasar hari itu dan tidak menerima pesanan baru. Pesanan yang sudah masuk ditolak dengan alasan Anda, dan stoknya kembali ke Anda (D-02).",
+    "open": "Beri tahu pelanggan Anda libur",
+    "date": "Tanggal",
+    "reasonSeen": "Alasan yang dilihat pelanggan",
+    "declined": "Pesanan ditolak",
+    "backTitle": "Anda berjualan lagi",
+    "backText": "Anda berjualan lagi hari itu. Pesanan yang ditolak tidak dikembalikan; pelanggan harus memesan lagi.",
+    "back": "Saya bisa datang",
+    "emptyTitle": "Anda berjualan di setiap hari pasar",
+    "emptyText": "Beri tahu pelanggan lebih awal jika ada perubahan, agar tidak ada yang datang ke lapak kosong.",
+    "notNow": "Nanti saja",
+    "confirm": "Beri tahu",
+    "declinedTitle": "Pesanan ditolak",
+    "toldTitle": "Pelanggan diberi tahu",
+    "declinedText_one": "{{count}} pesanan ditolak dan pelanggan diberi tahu.",
+    "declinedText_other": "{{count}} pesanan ditolak dan pelanggan diberi tahu.",
+    "toldText": "Pelanggan tidak bisa lagi memesan dari Anda untuk {{date}}.",
+    "dialogText": "Pesanan yang sudah masuk untuk hari itu ditolak dengan alasan Anda dan stoknya kembali ke Anda. Pelanggan langsung diberi tahu dan tidak membayar apa pun, karena pembayaran baru dilakukan saat pengambilan.",
+    "marketDay": "Hari pasar",
+    "reasonLabel": "Alasan yang akan dilihat pelanggan",
+    "seedReason": "Panen sedikit setelah hujan",
+    "notGiven": "Tidak disebutkan",
+    "note": {
+      "placed_one": "{{count}} pesanan masuk",
+      "placed_other": "{{count}} pesanan masuk",
+      "none": "belum ada pesanan",
+      "shut": "pasar memang tutup"
+    }
+  },
+  "closure": {
+    "title": "Pasarnya sendiri tutup pada {{date}}.",
+    "text": "{{reason}}. Anda tidak perlu melakukan apa pun: tidak ada yang bisa memesan dari lapak mana pun untuk hari itu, dan MarketLink sudah memberi tahu pelanggan Anda."
+  },
+  "generate": {
+    "open": "Buat slot untuk minggu depan",
+    "title": "Buat slot untuk {{from}} – {{to}}?",
+    "doneTitle": "Slot dibuat",
+    "doneText_one": "{{count}} slot dibuat untuk {{from}} – {{to}}.",
+    "doneText_other": "{{count}} slot dibuat untuk {{from}} – {{to}}.",
+    "confirm_one": "Buat {{count}} slot",
+    "confirm_other": "Buat {{count}} slot",
+    "text": "Membuat slot dari {{start}} sampai {{end}} pada {{daysA}} di Thảo Điền dan pada {{daysB}} di Thủ Đức. Slot yang sudah ada tidak diubah."
+  }
+}

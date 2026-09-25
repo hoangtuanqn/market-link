@@ -1,0 +1,41 @@
+{
+  "eyebrow": "任意 · FR-090〜FR-092",
+  "title": "お買い物アシスタント",
+  "intro": "今週末どこで何が買えるか、市場がいつ開くか、お店の空いている受け取り枠などを聞いてください。回答はすべて MarketLink のデータに基づいています。",
+  "conversation": "アシスタントとの会話",
+  "botName": "MarketLink アシスタント",
+  "botNote": "回答は最新のカタログを使います。各回答の下にインテントを表示します。",
+  "message": "メッセージ",
+  "placeholder": "例：土曜日に Thảo Điền で卵を売っているのは？",
+  "send": "送信",
+  "reply": {
+    "greeting": "こんにちは、{{name}} さん。今週末に何があるか、市場がいつ開くかを聞いてください。",
+    "pomelo": "{{day}} {{date}} は、2 店が青皮ザボンを扱っています：Thủ Đức Farmers Market の <b>Út Hiền Orchard</b>（残り 2 個、{{price1}}）と Thảo Điền Weekend Market の <b>Ba Lành Farm</b>（残り 9 個、{{price2}}）。",
+    "slots": "Út Hiền Orchard の受け取りは {{day}} {{date}} {{from}} – {{to}}、Thủ Đức Farmers Market です。空き枠：{{free}}。{{full}} の枠は満員です。注文は枠の 12 時間前に締め切ります。",
+    "unknown": "すみません、よく分かりませんでした。商品名、市場名、お店の名前で試してください。"
+  },
+  "question": {
+    "pomeloMorning": "土曜の朝、青皮ザボンがある市場は？"
+  },
+  "suggest": {
+    "pomeloSat": "土曜日に青皮ザボンはどこで買えますか？",
+    "baChieuOpen": "Bà Chiểu Green Market はいつ開きますか？",
+    "showMap": "2 店を地図で表示",
+    "slotsUtHien": "Út Hiền の受け取り時間",
+    "addPomelos": "ザボン 2 個をカートに追加",
+    "directionsThuDuc": "Thủ Đức Farmers Market への道順",
+    "thaoDien": "土曜日の Thảo Điền には何がありますか？"
+  },
+  "canAnswer": {
+    "title": "答えられること",
+    "product": "市場やお店をまたいで商品を探し、残りの数を表示",
+    "hours": "市場の開催日と営業時間",
+    "stalls": "ある日に市場に出ているお店",
+    "slots": "お店の受け取り時間帯と空き枠",
+    "price": "商品の価格、単位、在庫"
+  },
+  "how": {
+    "title": "仕組み",
+    "text": "メッセージは決められたインテントのどれかに分類され、各インテントはパラメーター付きの定型クエリを実行します。モデルが SQL を書くことはありません。流れを審査員に見せられるよう、メッセージはインテントと一緒に保存されます。"
+  }
+}

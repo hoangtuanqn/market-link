@@ -1,0 +1,66 @@
+{
+  "city": "ホーチミン市",
+  "count_one": "{{count}} か所のマーケット",
+  "count_other": "{{count}} か所のマーケット",
+  "title": "マーケット",
+  "intro": "買い物に行きたい日を選び、エリアで絞り込みましょう。",
+  "filters": {
+    "label": "マーケットを絞り込む",
+    "day": "開催日",
+    "clearAll": "すべてクリア",
+    "area": "エリア",
+    "allAreas": "すべてのエリア（{{count}}）",
+    "sort": "並べ替え"
+  },
+  "sorts": {
+    "near": "近い順",
+    "stalls": "店が多い順",
+    "opens": "開始が早い順"
+  },
+  "cleared": {
+    "title": "絞り込みをクリアしました",
+    "text": "{{day}}に開催するすべてのマーケットを表示しています。"
+  },
+  "popupStalls_one": "{{count}} 店",
+  "popupStalls_other": "{{count}} 店",
+  "summary": {
+    "open_one": "{{day}}に <b>{{count}} か所のマーケット</b>が開催",
+    "open_other": "{{day}}に <b>{{count}} か所のマーケット</b>が開催",
+    "openIn_one": "{{day}}に {{area}} で <b>{{count}} か所のマーケット</b>が開催",
+    "openIn_other": "{{day}}に {{area}} で <b>{{count}} か所のマーケット</b>が開催",
+    "none": "{{day}}に開催するマーケットはありません",
+    "noneIn": "{{day}}に {{area}} で開催するマーケットはありません"
+  },
+  "error": {
+    "noun": "マーケット",
+    "alt": "<link>マーケットマップ</link>は別のページで開けます"
+  },
+  "pager": {
+    "showing": "{{total}} 件中 {{from}}–{{to}} 件を表示",
+    "onePage_one": "{{count}} か所のマーケットを 1 ページに表示",
+    "onePage_other": "{{count}} か所すべてを 1 ページに表示"
+  },
+  "empty": {
+    "areaTitle": "{{day}}の {{area}} にはマーケットがありません",
+    "areaText_one": "その日は市内全体で {{count}} か所が開催しています。エリアを広げるか、別の日を選んでください。",
+    "areaText_other": "その日は市内全体で {{count}} か所が開催しています。エリアを広げるか、別の日を選んでください。",
+    "allAreas": "すべてのエリアを表示",
+    "dayTitle": "{{day}}に開催するマーケットはありません",
+    "dayText_one": "{{day}}がいちばん賑わう日で、{{count}} か所が開催しています。",
+    "dayText_other": "{{day}}がいちばん賑わう日で、{{count}} か所が開催しています。",
+    "showDay": "{{day}}を表示"
+  },
+  "map": {
+    "label": "条件に合うマーケットの地図",
+    "note": "地図は絞り込みに合わせて、リストにあるマーケットだけを表示します。"
+  },
+  "demo": {
+    "title": "このリストのほかの状態（FR-084）",
+    "views": {
+      "loaded": "データあり",
+      "loading": "読み込み中",
+      "error": "エラー"
+    },
+    "note": "空の状態は実際に表示できます。<b>{{day}}</b>とエリア<b>{{area}}</b>を選んでください。選んだ条件と、次にできることが表示されます。"
+  }
+}

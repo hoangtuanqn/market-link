@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
@@ -13,6 +14,7 @@ import Session from '@/utils/session';
 import validateLogin, { type LoginFieldErrors as FieldErrors } from './validateLogin';
 
 const FormLogin = () => {
+  const { t } = useTranslation('Login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -40,13 +42,13 @@ const FormLogin = () => {
       // Có "Remember me" → giữ phiên sau khi đóng trình duyệt; không → chỉ trong phiên trình duyệt này
       Session.save(session, rememberMe);
 
-      Notification.success({ text: response.message || 'Signed in.' });
+      Notification.success({ text: response.message || t('toast.signedIn') });
       // Bị RequireAuth chuyển tới đây thì quay lại trang đang mở dở
       navigate((location.state as LoginRedirectState | null)?.from ?? '/', { replace: true });
     } catch (error) {
       // 400: lỗi theo field (VALIDATION_ERROR) → hiện dưới ô nhập; 401/403: message chung của backend
       setErrors(Helper.getFieldErrors(error));
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not sign you in. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('toast.failed')) });
     } finally {
       setIsSubmitting(false);
     }
@@ -56,7 +58,7 @@ const FormLogin = () => {
     <form noValidate onSubmit={handleSubmit} className="flex flex-col gap-4">
       <Field
         id="email"
-        label="Email"
+        label={t('fields.email')}
         type="email"
         required
         autoComplete="email"
@@ -67,7 +69,7 @@ const FormLogin = () => {
       />
       <Field
         id="password"
-        label="Password"
+        label={t('fields.password')}
         type="password"
         required
         autoComplete="current-password"
@@ -84,15 +86,15 @@ const FormLogin = () => {
           onChange={(e) => setRememberMe(e.target.checked)}
           disabled={isSubmitting}
         >
-          Remember me
+          {t('rememberMe')}
         </Checkbox>
         <Link to="/forgot-password" className="text-small text-brand underline">
-          Forgot password?
+          {t('forgotPassword')}
         </Link>
       </div>
 
       <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? 'Signing in…' : 'Sign in'}
+        {isSubmitting ? t('submitting') : t('submit')}
       </Button>
     </form>
   );

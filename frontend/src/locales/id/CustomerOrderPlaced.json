@@ -1,0 +1,14 @@
+{
+  "title_one": "{{count}} pesanan dibuat",
+  "title_other": "{{count}} pesanan dibuat",
+  "intro": "Setiap lapak kini meninjau pesanannya. Anda akan mendapat notifikasi saat pesanan diterima, dan satu lagi saat siap diambil. Stok sudah disisihkan untuk Anda.",
+  "steps": {
+    "title": "Selanjutnya",
+    "review": "{{stalls}} menerima atau menolak sebelum batas waktunya.",
+    "edit": "Anda bisa mengubah atau membatalkan setiap pesanan sampai batas waktunya: {{cutoffs}}.",
+    "cutoffAt": "{{time}} pada {{date}}",
+    "pickup": "Pada hari pasar, lapak menandai pesanan siap. Datang di slot Anda, ambil, dan bayar petani."
+  },
+  "seeOrders": "Lihat pesanan saya",
+  "keepBrowsing": "Lanjut belanja"
+}

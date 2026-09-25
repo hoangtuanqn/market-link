@@ -1,0 +1,43 @@
+{
+  "title": "Créer un compte client",
+  "intro": "Le nom, le numéro de téléphone, l’e-mail et l’adresse sont obligatoires. L’adresse sert à afficher la distance jusqu’aux marchés et à préremplir l’itinéraire.",
+  "fields": {
+    "fullName": "Nom complet",
+    "phone": "Numéro de téléphone",
+    "email": "E-mail",
+    "emailHint": "Pour vous connecter et recevoir les notifications de commande.",
+    "address": "Adresse",
+    "addressPlaceholder": "Rue, quartier, district",
+    "password": "Mot de passe",
+    "passwordHint": "De {{min}} à {{max}} caractères.",
+    "confirmPassword": "Confirmer le mot de passe"
+  },
+  "consent": {
+    "label": "J’ai lu et j’accepte les <terms>Conditions d’utilisation</terms> et la <privacy>Politique de confidentialité</privacy>",
+    "note": "Votre nom et votre numéro de téléphone sont transmis au stand où vous commandez, pour qu’il puisse vous remettre votre commande le jour du marché. Vous payez le producteur au stand."
+  },
+  "submit": "Créer le compte",
+  "submitting": "Création du compte…",
+  "haveAccount": "J’ai déjà un compte",
+  "acceptFirst": "Acceptez les conditions pour créer votre compte.",
+  "sharedAccount": "Un compte peut être partagé en famille ; le système ne distingue pas les personnes au sein d’un compte.",
+  "toast": {
+    "created": "Compte créé.",
+    "failed": "Impossible de créer votre compte. Veuillez réessayer."
+  },
+  "errors": {
+    "fullNameRequired": "Saisissez votre nom complet.",
+    "fullNameMax": "Le nom complet ne peut pas dépasser {{max}} caractères.",
+    "phoneRequired": "Saisissez votre numéro de téléphone.",
+    "phoneInvalid": "Saisissez un numéro de mobile vietnamien valide (10 chiffres).",
+    "emailRequired": "Saisissez votre e-mail.",
+    "emailInvalid": "Saisissez une adresse e-mail valide.",
+    "emailMax": "L’e-mail ne peut pas dépasser {{max}} caractères.",
+    "addressRequired": "Saisissez votre adresse.",
+    "addressMax": "L’adresse ne peut pas dépasser {{max}} caractères.",
+    "passwordRequired": "Saisissez votre mot de passe.",
+    "passwordLength": "Le mot de passe doit comporter de {{min}} à {{max}} caractères.",
+    "confirmRequired": "Confirmez votre mot de passe.",
+    "confirmMismatch": "Les mots de passe ne correspondent pas."
+  }
+}

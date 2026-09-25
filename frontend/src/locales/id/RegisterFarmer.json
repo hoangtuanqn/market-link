@@ -1,0 +1,21 @@
+{
+  "title": "Daftarkan lapak Anda",
+  "intro": "Setelah mendaftar, admin akan meninjau lapak. Anda bisa langsung masuk dan mengatur profil, tetapi produk baru tampil setelah disetujui.",
+  "fields": {
+    "stall": "Nama lapak atau usaha",
+    "stallPlaceholder": "mis. {{example}}",
+    "stallHint": "Pelanggan melihat nama ini di peta dan di pesanan.",
+    "person": "Narahubung",
+    "phone": "Nomor telepon",
+    "email": "Email",
+    "address": "Alamat kebun atau usaha",
+    "password": "Kata sandi",
+    "confirmPassword": "Ulangi kata sandi"
+  },
+  "banner": {
+    "title": "MarketLink tidak memeriksa izin usaha atau sertifikasi organik.",
+    "text": "Persetujuan hanya memastikan lapak itu ada dan kontaknya berfungsi. Ceritakan apa yang Anda tanam dan caranya langsung di lapak."
+  },
+  "submit": "Daftarkan lapak",
+  "haveAccount": "Saya sudah punya akun"
+}

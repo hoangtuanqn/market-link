@@ -1,0 +1,34 @@
+{
+  "greeting_one": "你好 {{name}}，本周末有 {{count}} 个取货",
+  "greeting_other": "你好 {{name}}，本周末有 {{count}} 个取货",
+  "intro": "有一个订单仍在等待摊位确认，其他一切正常。",
+  "browseMarkets": "浏览本周末的市集",
+  "cards": {
+    "upcoming_one": "{{count}} 个待取订单",
+    "upcoming_other": "{{count}} 个待取订单",
+    "upcomingBreakdown": "{{placed}} 个待审核 · {{accepted}} 个已接受 · {{ready}} 个已备好",
+    "favorites_one": "{{count}} 个收藏",
+    "favorites_other": "{{count}} 个收藏",
+    "stalls_one": "{{count}} 个摊位",
+    "stalls_other": "{{count}} 个摊位",
+    "products_one": "{{count}} 个商品",
+    "products_other": "{{count}} 个商品",
+    "markets_one": "{{count}} 个市集",
+    "markets_other": "{{count}} 个市集",
+    "unread_one": "{{count}} 条未读通知",
+    "unread_other": "{{count}} 条未读通知",
+    "unreadText": "一个订单已备好，山羊酸奶也重新上架了",
+    "account": "账户"
+  },
+  "sell": {
+    "overline": "新功能",
+    "title": "你种了什么吗？来市集卖吧",
+    "text": "你的账户可以成为四个市集之一的摊位。提交几张田地照片申请，管理员会进行审核。无论结果如何，你都可以照常购物。",
+    "apply": "申请开摊",
+    "dismiss": "以后再说"
+  },
+  "nextPickups": "即将取货",
+  "allOrders": "我的全部订单",
+  "newFromFavorites": "收藏摊位本周新品",
+  "favorites": "收藏"
+}

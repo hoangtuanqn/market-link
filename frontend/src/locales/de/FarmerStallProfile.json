@@ -1,0 +1,54 @@
+{
+  "title": "Stand und Abholung",
+  "intro": "Was Kunden über Ihren Stand sehen, die Märkte, auf denen Sie verkaufen, Ihre Verkaufstage und Abholzeiten und wo der Stand auf der Karte liegt.",
+  "approved": "Freigegeben am {{date}}",
+  "saved": "Gespeichert",
+  "tabs": {
+    "label": "Standeinstellungen",
+    "stall": "Standdaten",
+    "markets": "Märkte, Tage und Abholung"
+  },
+  "details": {
+    "title": "Standdaten",
+    "stallName": "Name des Stands",
+    "person": "Ansprechperson",
+    "phone": "Telefonnummer",
+    "phoneHint": "Wird Kunden auf ihrem Bestellbeleg angezeigt.",
+    "email": "E-Mail",
+    "address": "Adresse von Hof oder Betrieb",
+    "about": "Über den Stand",
+    "aboutHint": "Erscheint in Handschrift auf Ihrer Standseite. Ein oder zwei Sätze.",
+    "savedText": "Standdaten gespeichert.",
+    "save": "Standdaten speichern"
+  },
+  "cutoff": {
+    "title": "Bestellschluss",
+    "label": "So viele Stunden vor dem Abholfenster keine Änderungen mehr annehmen",
+    "hint_one": "Bei einem Abholfenster um {{slot}} am {{saturday}} bedeutet {{count}} Stunde: {{day}}, {{time}}. Danach können Kunden nichts mehr ändern oder stornieren, und neue Bestellungen für dieses Fenster sind ebenfalls geschlossen (D-05).",
+    "hint_other": "Bei einem Abholfenster um {{slot}} am {{saturday}} bedeuten {{count}} Stunden: {{day}}, {{time}}. Danach können Kunden nichts mehr ändern oder stornieren, und neue Bestellungen für dieses Fenster sind ebenfalls geschlossen (D-05)."
+  },
+  "markets": {
+    "title": "Märkte, auf denen Sie verkaufen",
+    "intro": "Haken Sie einen Markt an, um seine Einstellungen zu öffnen. Tage und Abholzeiten gelten je Markt.",
+    "runs": "Markt geöffnet {{days}} · {{open}}–{{close}}",
+    "code": "Standnummer oder Platz",
+    "codeHint": "Steht auf dem Bestellbeleg, damit Kunden Sie finden.",
+    "days": "Verkaufstage auf diesem Markt",
+    "start": "Abholung ab",
+    "end": "Abholung bis",
+    "location": "Standort",
+    "mapLabel": "Stand auf der Karte markieren",
+    "mapHint": "Ziehen Sie die runde Nadel an Ihren Platz im Markt. Die eckige Nadel ist der Markt selbst.",
+    "lat": "Breitengrad",
+    "lng": "Längengrad",
+    "pinMoved": "Nadel verschoben",
+    "pinMovedText": "Nadel an den Markteingang verschoben. Ziehen Sie sie an Ihren Platz.",
+    "useMarket": "Standort des Markts verwenden",
+    "savedText": "Märkte, Tage und Abholzeiten gespeichert. Die Abholfenster für nächste Woche folgen den neuen Zeiten.",
+    "save": "Märkte und Abholung speichern",
+    "slotsLink": "Abholfenster verwalten"
+  },
+  "map": {
+    "yourStall": "Ihr Stand"
+  }
+}

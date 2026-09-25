@@ -1,0 +1,14 @@
+{
+  "title": "设置",
+  "intro": "你自己的偏好，以及摊位在自行设置前使用的默认值。",
+  "platform": "平台默认值",
+  "platformNote": "目前随你的账户保存。修改后的默认值是否会应用到从未自行设置的摊位，尚待决定。",
+  "cutoff": "默认截单时间",
+  "max": "默认每个时段的订单数",
+  "timezone": "时区",
+  "timezoneNote": "平台上的所有日期和时间都按此时区解读。",
+  "hours_one": "{{count}} 小时",
+  "hours_other": "{{count}} 小时",
+  "orders_one": "{{count}} 单",
+  "orders_other": "{{count}} 单"
+}

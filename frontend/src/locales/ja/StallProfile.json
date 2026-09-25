@@ -1,0 +1,64 @@
+{
+  "notFound": {
+    "title": "この店は見つかりませんでした",
+    "browse": "マーケットを見る"
+  },
+  "breadcrumb": "マーケット",
+  "approved": "審査済みの店",
+  "savedToast": "{{name}} を保存しました。",
+  "save": "店を保存",
+  "message": "店にメッセージ",
+  "stats": {
+    "reviews_one": "{{count}} 件のレビュー",
+    "reviews_other": "{{count}} 件のレビュー",
+    "markets_one": "マーケット",
+    "markets_other": "マーケット",
+    "since": "出店開始日"
+  },
+  "tabs": {
+    "label": "店のセクション",
+    "stock": "今週の在庫",
+    "reviews": "レビュー",
+    "about": "店について"
+  },
+  "stock": {
+    "count_one": "{{count}} 件の商品",
+    "count_other": "{{count}} 件の商品",
+    "availableOn": "販売日",
+    "notSelling": "{{stall}} は{{day}}に販売していません。上の商品は販売日（{{days}}）に扱っているものです。"
+  },
+  "reviews": {
+    "summary_one": "{{count}} 件のレビュー（すべて完了した注文から）",
+    "summary_other": "{{count}} 件のレビュー（すべて完了した注文から）",
+    "all": "すべて",
+    "farmer": "店について",
+    "product": "商品について",
+    "newest": "新しい順"
+  },
+  "about": {
+    "whereWhen": "場所と時間",
+    "table": {
+      "market": "マーケット",
+      "days": "曜日",
+      "window": "受け取り時間帯",
+      "stall": "区画",
+      "directions": "経路"
+    },
+    "cutoffNote_one": "注文は選んだ時間帯の {{count}} 時間前に締め切られます。その後は店だけが注文を変更できます。",
+    "cutoffNote_other": "注文は選んだ時間帯の {{count}} 時間前に締め切られます。その後は店だけが注文を変更できます。",
+    "disclaimer": "MarketLink は許可証や有機表示を確認していません。気になる場合は店でお尋ねください。",
+    "contact": "連絡先",
+    "email": "メール",
+    "since": "出店開始日",
+    "mapLabel": "{{name}} の地図",
+    "findingTitle": "店の探し方",
+    "findingText": "区画 {{code}} · 受け取り時間帯 {{window}}。各枠は 30 分で、5 件まで受け付けます。",
+    "preorder": "このマーケットで予約する"
+  },
+  "report": {
+    "sentTitle": "報告を送信しました",
+    "sentText": "管理者が確認します。",
+    "button": "この店を報告",
+    "note": "度重なる不在、店の位置の誤り、またはプラットフォームのガイドライン違反。"
+  }
+}

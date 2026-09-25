@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Link, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
@@ -28,37 +30,38 @@ const EMPTY_FORM: RegisterInput = {
 };
 
 /** Kiểm tra phía client, cùng luật với CustomerRegisterRequest của backend. */
-const validate = (form: RegisterInput): FormErrors => {
+const validate = (form: RegisterInput, t: TFunction<'RegisterCustomer'>): FormErrors => {
   const errors: FormErrors = {};
   const fullName = form.fullName.trim();
   const email = form.email.trim();
   const address = form.address.trim();
 
-  if (!fullName) errors.fullName = 'Enter your full name.';
-  else if (fullName.length > 100) errors.fullName = 'Full name can be at most 100 characters.';
+  if (!fullName) errors.fullName = t('errors.fullNameRequired');
+  else if (fullName.length > 100) errors.fullName = t('errors.fullNameMax', { max: 100 });
 
-  if (!form.phone.trim()) errors.phone = 'Enter your phone number.';
-  else if (!PHONE_REGEX.test(form.phone.trim())) errors.phone = 'Enter a valid Vietnamese mobile number (10 digits).';
+  if (!form.phone.trim()) errors.phone = t('errors.phoneRequired');
+  else if (!PHONE_REGEX.test(form.phone.trim())) errors.phone = t('errors.phoneInvalid');
 
-  if (!email) errors.email = 'Enter your email.';
-  else if (!EMAIL_REGEX.test(email)) errors.email = 'Enter a valid email address.';
-  else if (email.length > 100) errors.email = 'Email can be at most 100 characters.';
+  if (!email) errors.email = t('errors.emailRequired');
+  else if (!EMAIL_REGEX.test(email)) errors.email = t('errors.emailInvalid');
+  else if (email.length > 100) errors.email = t('errors.emailMax', { max: 100 });
 
-  if (!address) errors.address = 'Enter your address.';
-  else if (address.length > 255) errors.address = 'Address can be at most 255 characters.';
+  if (!address) errors.address = t('errors.addressRequired');
+  else if (address.length > 255) errors.address = t('errors.addressMax', { max: 255 });
 
-  if (!form.password) errors.password = 'Enter your password.';
+  if (!form.password) errors.password = t('errors.passwordRequired');
   else if (form.password.length < PASSWORD_MIN || form.password.length > PASSWORD_MAX)
-    errors.password = `Password must be ${PASSWORD_MIN} to ${PASSWORD_MAX} characters.`;
+    errors.password = t('errors.passwordLength', { min: PASSWORD_MIN, max: PASSWORD_MAX });
 
-  if (!form.confirmPassword) errors.confirmPassword = 'Confirm your password.';
-  else if (form.confirmPassword !== form.password) errors.confirmPassword = 'Passwords do not match.';
+  if (!form.confirmPassword) errors.confirmPassword = t('errors.confirmRequired');
+  else if (form.confirmPassword !== form.password) errors.confirmPassword = t('errors.confirmMismatch');
 
   return errors;
 };
 
 /** FR-001 — Customer registration. */
 const RegisterCustomerPage = () => {
+  const { t } = useTranslation('RegisterCustomer');
   const navigate = useNavigate();
   const [form, setForm] = useState<RegisterInput>(EMPTY_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -71,7 +74,7 @@ const RegisterCustomerPage = () => {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const clientErrors = validate(form);
+    const clientErrors = validate(form, t);
     setErrors(clientErrors);
     if (Object.keys(clientErrors).length > 0) return;
 
@@ -88,13 +91,13 @@ const RegisterCustomerPage = () => {
       // Backend đăng nhập luôn sau khi đăng ký (refresh token nằm trong cookie HttpOnly)
       Session.save(response.data);
 
-      Notification.success({ text: response.message || 'Account created.' });
+      Notification.success({ text: response.message || t('toast.created') });
       navigate('/');
     } catch (error) {
       // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT: lỗi theo field (email, phone, confirmPassword…) hiện dưới ô nhập
       setErrors(Helper.getFieldErrors(error));
       Notification.error({
-        text: Helper.getErrorMessage(error, 'Could not create your account. Please try again.'),
+        text: Helper.getErrorMessage(error, t('toast.failed')),
       });
     } finally {
       setIsSubmitting(false);
@@ -105,17 +108,14 @@ const RegisterCustomerPage = () => {
     <Card className="mx-auto my-8 w-full max-w-160 p-4 md:p-8">
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="font-hand text-h1">Create a customer account</h1>
-          <p className="text-small text-ink-muted">
-            Name, phone number, email and address are required by the platform. The address is used to show distances to
-            markets and to pre-fill directions.
-          </p>
+          <h1 className="font-hand text-h1">{t('title')}</h1>
+          <p className="text-small text-ink-muted">{t('intro')}</p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Field
             id="fullName"
-            label="Full name"
+            label={t('fields.fullName')}
             required
             autoComplete="name"
             placeholder="Nguyen Minh Khang"
@@ -126,7 +126,7 @@ const RegisterCustomerPage = () => {
           />
           <Field
             id="phone"
-            label="Phone number"
+            label={t('fields.phone')}
             required
             type="tel"
             inputMode="tel"
@@ -139,11 +139,11 @@ const RegisterCustomerPage = () => {
           />
           <Field
             id="email"
-            label="Email"
+            label={t('fields.email')}
             type="email"
             required
             autoComplete="email"
-            hint="Used to sign in and for order notifications."
+            hint={t('fields.emailHint')}
             value={form.email}
             onChange={onChange('email')}
             error={errors.email}
@@ -151,10 +151,10 @@ const RegisterCustomerPage = () => {
           />
           <Field
             id="address"
-            label="Address"
+            label={t('fields.address')}
             required
             autoComplete="street-address"
-            placeholder="Street, ward, district"
+            placeholder={t('fields.addressPlaceholder')}
             value={form.address}
             onChange={onChange('address')}
             error={errors.address}
@@ -162,11 +162,11 @@ const RegisterCustomerPage = () => {
           />
           <Field
             id="password"
-            label="Password"
+            label={t('fields.password')}
             type="password"
             required
             autoComplete="new-password"
-            hint={`${PASSWORD_MIN} to ${PASSWORD_MAX} characters.`}
+            hint={t('fields.passwordHint', { min: PASSWORD_MIN, max: PASSWORD_MAX })}
             value={form.password}
             onChange={onChange('password')}
             error={errors.password}
@@ -174,7 +174,7 @@ const RegisterCustomerPage = () => {
           />
           <Field
             id="confirmPassword"
-            label="Repeat password"
+            label={t('fields.confirmPassword')}
             type="password"
             required
             autoComplete="new-password"
@@ -186,36 +186,31 @@ const RegisterCustomerPage = () => {
         </div>
 
         <Checkbox id="consent" required checked={accepted} onChange={(e) => setAccepted(e.target.checked)}>
-          I have read and accept the{' '}
-          <Link to="/terms" className="text-brand underline">
-            Terms of service
-          </Link>{' '}
-          and the{' '}
-          <Link to="/privacy" className="text-brand underline">
-            Privacy policy
-          </Link>
+          <Trans
+            t={t}
+            i18nKey="consent.label"
+            components={{
+              terms: <Link to="/terms" className="text-brand underline" />,
+              privacy: <Link to="/privacy" className="text-brand underline" />,
+            }}
+          />
           <span aria-hidden="true" className="text-danger ml-0.5">
             *
           </span>
-          <small className="text-ink-muted mt-0.5 block text-[13px]">
-            Your name and phone number go to the stall you order from, so they can hand your order over on market day.
-            You pay the Farmer at the stall.
-          </small>
+          <small className="text-ink-muted mt-0.5 block text-[13px]">{t('consent.note')}</small>
         </Checkbox>
 
         <div className="flex flex-wrap items-center gap-2 pt-2">
           <Button type="submit" disabled={!accepted || isSubmitting}>
-            {isSubmitting ? 'Creating account…' : 'Create account'}
+            {isSubmitting ? t('submitting') : t('submit')}
           </Button>
           <Link to="/login" className="text-small text-brand underline">
-            I already have an account
+            {t('haveAccount')}
           </Link>
         </div>
-        {!accepted && <p className="text-ink-muted -mt-2 text-[13px]">Accept the terms to create your account.</p>}
+        {!accepted && <p className="text-ink-muted -mt-2 text-[13px]">{t('acceptFirst')}</p>}
 
-        <p className="text-ink-muted text-[13px]">
-          One account can be shared within a family; the system does not tell people apart inside an account.
-        </p>
+        <p className="text-ink-muted text-[13px]">{t('sharedAccount')}</p>
       </form>
     </Card>
   );

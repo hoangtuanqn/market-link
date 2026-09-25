@@ -1,0 +1,21 @@
+{
+  "loading": {
+    "title": "Đang đăng nhập bằng Google…",
+    "text": "Chỉ mất một giây."
+  },
+  "failed": {
+    "title": "Đăng nhập Google chưa hoàn tất",
+    "text": "Bạn chưa đăng nhập. Tài khoản của bạn không có gì thay đổi.",
+    "backToSignIn": "Quay lại đăng nhập",
+    "registerWithEmail": "Tạo tài khoản bằng email"
+  },
+  "toast": {
+    "signedIn": "Đã đăng nhập."
+  },
+  "errors": {
+    "cancelled": "Bạn đã huỷ đăng nhập Google.",
+    "google": "Google không đăng nhập được cho bạn. Vui lòng thử lại.",
+    "invalidState": "Lần đăng nhập này không hợp lệ. Hãy bắt đầu lại từ trang đăng nhập.",
+    "failed": "Đăng nhập Google thất bại. Vui lòng thử lại."
+  }
+}

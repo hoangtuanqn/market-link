@@ -1,0 +1,88 @@
+{
+  "crumbStall": "Stand und Abholung",
+  "title": "Abholfenster",
+  "intro": "Abholfenster sind 30-Minuten-Abschnitte innerhalb Ihrer Abholzeit. Jedes Fenster nimmt nur eine begrenzte Zahl an Bestellungen an, damit niemand lange ansteht. Ein volles Fenster erscheint für Kunden ausgegraut.",
+  "market": "Markt",
+  "day": "Tag",
+  "cancel": "Abbrechen",
+  "minutes_one": "{{count}} Minute",
+  "minutes_other": "{{count}} Minuten",
+  "table": {
+    "slot": "Fenster",
+    "booked": "Gebucht",
+    "bookedOf": "{{booked}} von {{max}}",
+    "full": "Voll",
+    "max": "Max. Bestellungen",
+    "maxFor": "Max. Bestellungen {{slot}}",
+    "closes": "Änderungsschluss",
+    "open": "Offen für neue Bestellungen",
+    "off": "Aus",
+    "on": "An",
+    "caption_one": "{{day}} {{date}} · {{market}} · {{count}} Fenster",
+    "caption_other": "{{day}} {{date}} · {{market}} · {{count}} Fenster"
+  },
+  "empty": {
+    "title": "Keine Abholfenster an diesem Tag",
+    "text": "Erstellen Sie die Fenster für einen Markttag, dann können Kunden eine Abholzeit buchen."
+  },
+  "defaults": {
+    "title": "Standardwerte",
+    "length": "Fensterlänge",
+    "perSlot": "Bestellungen pro Fenster",
+    "windowAt": "Abholzeit in {{market}}",
+    "window": "{{start}} – {{end}}, {{days}}",
+    "cutoff": "Bestellschluss",
+    "cutoffValue_one": "{{count}} Stunde vor dem Fenster",
+    "cutoffValue_other": "{{count}} Stunden vor dem Fenster",
+    "note": "Abholzeit und Tage ändern Sie unter Stand und Abholung. Die Fenster eines Tages werden daraus erstellt."
+  },
+  "closing": {
+    "title": "Ein Fenster schließen",
+    "text": "Ein ausgeschaltetes Fenster ist für neue Bestellungen nicht mehr sichtbar. Bestehende Bestellungen bleiben; kontaktieren Sie diese Kunden, falls Sie nicht kommen können."
+  },
+  "away": {
+    "title": "Tage, an denen Sie nicht verkaufen",
+    "intro": "Ein Markttag, an dem Sie fehlen – eine magere Ernte, Krankheit, ein Transporter, der nicht anspringt. Ihr Stand verschwindet an diesem Tag von der Marktseite und nimmt keine neuen Bestellungen an. Bereits aufgegebene Bestellungen werden mit Ihrer Begründung abgelehnt, und der Bestand geht an Sie zurück (D-02).",
+    "open": "Kunden über Ihre Abwesenheit informieren",
+    "date": "Datum",
+    "reasonSeen": "Begründung für Kunden",
+    "declined": "Abgelehnte Bestellungen",
+    "backTitle": "Sie verkaufen wieder",
+    "backText": "Sie verkaufen an diesem Tag wieder. Abgelehnte Bestellungen werden nicht wiederhergestellt; der Kunde muss neu bestellen.",
+    "back": "Ich kann kommen",
+    "emptyTitle": "Sie verkaufen an jedem Markttag",
+    "emptyText": "Informieren Sie Kunden rechtzeitig, falls sich das ändert, damit niemand vor einem leeren Stand steht.",
+    "notNow": "Jetzt nicht",
+    "confirm": "Informieren",
+    "declinedTitle": "Bestellungen abgelehnt",
+    "toldTitle": "Kunden informiert",
+    "declinedText_one": "{{count}} Bestellung abgelehnt und der Kunde informiert.",
+    "declinedText_other": "{{count}} Bestellungen abgelehnt und die Kunden informiert.",
+    "toldText": "Kunden können für den {{date}} nicht mehr bei Ihnen bestellen.",
+    "dialogText": "Bereits aufgegebene Bestellungen für diesen Tag werden mit Ihrer Begründung abgelehnt, und der Bestand geht an Sie zurück. Der Kunde wird sofort informiert und zahlt nichts, denn bezahlt wird erst bei der Abholung.",
+    "marketDay": "Markttag",
+    "reasonLabel": "Begründung, die Kunden sehen",
+    "seedReason": "Nach dem Regen fiel die Ernte knapp aus",
+    "notGiven": "Keine Angabe",
+    "note": {
+      "placed_one": "{{count}} Bestellung",
+      "placed_other": "{{count}} Bestellungen",
+      "none": "noch keine Bestellungen",
+      "shut": "Markt ist ohnehin geschlossen"
+    }
+  },
+  "closure": {
+    "title": "Der Markt selbst ist am {{date}} geschlossen.",
+    "text": "{{reason}}. Sie müssen nichts tun: An diesem Tag kann niemand bei einem Stand bestellen, und MarketLink hat Ihre Kunden informiert."
+  },
+  "generate": {
+    "open": "Abholfenster für nächste Woche erstellen",
+    "title": "Abholfenster für {{from}} – {{to}} erstellen?",
+    "doneTitle": "Abholfenster erstellt",
+    "doneText_one": "{{count}} Abholfenster für {{from}} – {{to}} erstellt.",
+    "doneText_other": "{{count}} Abholfenster für {{from}} – {{to}} erstellt.",
+    "confirm_one": "{{count}} Fenster erstellen",
+    "confirm_other": "{{count}} Fenster erstellen",
+    "text": "Erstellt Fenster von {{start}} bis {{end}} am {{daysA}} in Thảo Điền und am {{daysB}} in Thủ Đức. Bestehende Fenster bleiben unverändert."
+  }
+}

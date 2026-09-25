@@ -1,0 +1,84 @@
+{
+  "overline": "Akun Anda",
+  "title": "Keamanan",
+  "loading": "Memuat verifikasi dua langkah",
+  "loadError": {
+    "title": "Tidak dapat memuat verifikasi dua langkah",
+    "text": "Periksa koneksi Anda dan coba lagi.",
+    "retry": "Coba lagi"
+  },
+  "pill": {
+    "on": "Aktif",
+    "off": "Nonaktif"
+  },
+  "error": {
+    "check": "Tidak dapat memeriksa kode. Silakan coba lagi.",
+    "start": "Tidak dapat memulai penyiapan. Silakan coba lagi.",
+    "sixDigits": "Kode terdiri dari enam angka."
+  },
+  "toast": {
+    "accepted": "Kode diterima. Simpan kode pemulihan untuk menyelesaikan.",
+    "on": "Verifikasi dua langkah aktif. Anda akan diminta kode saat masuk berikutnya.",
+    "off": "Verifikasi dua langkah nonaktif.",
+    "regenerated": "Sepuluh kode pemulihan baru. Kode lama tidak berlaku lagi."
+  },
+  "mfa": {
+    "title": "Verifikasi dua langkah",
+    "intro": "Langkah kedua setelah kata sandi, dari aplikasi di ponsel Anda. Admin bisa menyetujui lapak, menonaktifkan pelanggan, dan mengubah tarif platform, jadi kata sandi saja terlalu tipis.",
+    "starting": "Memulai…",
+    "turnOn": "Aktifkan verifikasi dua langkah"
+  },
+  "step1": {
+    "title": "Pindai ini dengan aplikasi autentikator",
+    "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password — yang mana saja. Tidak ada yang dikirim ke mana pun: kode di bawah digambar oleh browser Anda sendiri.",
+    "qr": "Kode QR untuk aplikasi autentikator",
+    "manual": "<b>Tidak bisa memindai?</b> Ketik kunci ini secara manual:",
+    "type": "Jenis",
+    "typeValue": "Berbasis waktu (TOTP)",
+    "algorithm": "Algoritma",
+    "digits": "Digit",
+    "period": "Periode",
+    "seconds_one": "{{count}} detik",
+    "seconds_other": "{{count}} detik"
+  },
+  "step2": {
+    "title": "Ketik kode yang ditampilkan",
+    "text": "Ini memastikan ponsel dan server sepakat soal waktu sebelum apa pun diaktifkan.",
+    "code": "Kode enam digit",
+    "confirm": "Konfirmasi",
+    "confirmed": "Terkonfirmasi"
+  },
+  "step3": {
+    "title": "Simpan kode pemulihan Anda",
+    "text": "Sepuluh kode, masing-masing sekali pakai. Hanya itu cara masuk kembali jika ponsel hilang — dan platform ini hanya punya satu akun admin, jadi kehilangannya membuat semua orang terkunci.",
+    "saved": "Saya sudah menyimpannya",
+    "pending": "Kode muncul di sini setelah kode di atas dikonfirmasi."
+  },
+  "codesLeft": {
+    "label": "Sisa kode pemulihan",
+    "value": "<b>{{left}}</b> dari {{total}}"
+  },
+  "regen": {
+    "open": "Buat kode pemulihan baru",
+    "title": "Buat kode pemulihan baru?",
+    "keep": "Simpan yang lama",
+    "confirm": "Buat kode baru",
+    "text": "Sepuluh kode yang Anda miliki sekarang langsung tidak berlaku. Simpan yang baru sebelum menutup layar ini."
+  },
+  "disable": {
+    "open": "Nonaktifkan",
+    "title": "Nonaktifkan verifikasi dua langkah?",
+    "keep": "Biarkan aktif",
+    "confirm": "Nonaktifkan",
+    "text": "Kata sandi Anda menjadi satu-satunya penghalang antara siapa pun dan persetujuan, akun pelanggan, serta harga platform."
+  },
+  "dialogCode": "Kode dari aplikasi autentikator",
+  "codes": {
+    "copy": "Salin kode",
+    "download": "Unduh",
+    "copied": "Disalin. Simpan di tempat selain ponsel yang berisi aplikasi autentikator.",
+    "copyFailed": "Tidak dapat menyalin. Pilih kode dan salin secara manual.",
+    "downloaded": "Diunduh sebagai {{file}}.",
+    "fileHeading": "Kode pemulihan admin MarketLink"
+  }
+}

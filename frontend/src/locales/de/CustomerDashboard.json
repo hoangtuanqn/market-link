@@ -1,0 +1,34 @@
+{
+  "greeting_one": "Hallo {{name}}, {{count}} Abholung an diesem Wochenende",
+  "greeting_other": "Hallo {{name}}, {{count}} Abholungen an diesem Wochenende",
+  "intro": "Eine Bestellung wartet noch auf die Bestätigung des Stands. Alles andere läuft nach Plan.",
+  "browseMarkets": "Märkte an diesem Wochenende ansehen",
+  "cards": {
+    "upcoming_one": "{{count}} anstehende Bestellung",
+    "upcoming_other": "{{count}} anstehende Bestellungen",
+    "upcomingBreakdown": "Wartet auf Freigabe: {{placed}} · Angenommen: {{accepted}} · Bereit: {{ready}}",
+    "favorites_one": "{{count}} Favorit",
+    "favorites_other": "{{count}} Favoriten",
+    "stalls_one": "{{count}} Stand",
+    "stalls_other": "{{count}} Stände",
+    "products_one": "{{count}} Produkt",
+    "products_other": "{{count}} Produkte",
+    "markets_one": "{{count}} Markt",
+    "markets_other": "{{count}} Märkte",
+    "unread_one": "{{count}} ungelesene Benachrichtigung",
+    "unread_other": "{{count}} ungelesene Benachrichtigungen",
+    "unreadText": "Eine Bestellung ist bereit, und der Ziegenjoghurt ist wieder da",
+    "account": "Konto"
+  },
+  "sell": {
+    "overline": "Neu",
+    "title": "Bauen Sie etwas an? Verkaufen Sie es auf dem Markt",
+    "text": "Ihr Konto kann zu einem Stand auf einem der vier Märkte werden. Bewerben Sie sich mit ein paar Fotos Ihrer Fläche, und ein Admin prüft sie. Einkaufen können Sie so oder so weiterhin.",
+    "apply": "Als Verkäufer bewerben",
+    "dismiss": "Nicht jetzt"
+  },
+  "nextPickups": "Nächste Abholungen",
+  "allOrders": "Alle meine Bestellungen",
+  "newFromFavorites": "Neu diese Woche bei Ihren Lieblingsständen",
+  "favorites": "Favoriten"
+}

@@ -1,0 +1,29 @@
+{
+  "title": "ログイン",
+  "intro": "お客様と生産者はこちらからログインします。管理者は<link>管理者専用のログイン</link>を使ってください。",
+  "fields": {
+    "email": "メールアドレス",
+    "password": "パスワード"
+  },
+  "rememberMe": "ログイン状態を保持",
+  "forgotPassword": "パスワードをお忘れですか？",
+  "submit": "ログイン",
+  "submitting": "ログイン中…",
+  "or": "または",
+  "google": {
+    "continue": "Google で続ける",
+    "opening": "Google を開いています…",
+    "failed": "Google ログインを開始できませんでした。もう一度お試しください。",
+    "note": "Google からは氏名とメールアドレスを受け取ります。最初の注文の前に電話番号と住所が必要なので、次の画面で一度だけお聞きします。"
+  },
+  "newHere": "初めてですか？<customer>お客様アカウントを作成</customer>するか、<farmer>店舗を登録</farmer>してください。",
+  "toast": {
+    "signedIn": "ログインしました。",
+    "failed": "ログインできませんでした。もう一度お試しください。"
+  },
+  "errors": {
+    "emailRequired": "メールアドレスを入力してください。",
+    "emailInvalid": "有効なメールアドレスを入力してください。",
+    "passwordRequired": "パスワードを入力してください。"
+  }
+}

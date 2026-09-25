@@ -1,37 +1,24 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { Chip } from '@/components/ui/chip';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { product } from '@/data/catalog';
-import { units, vnd } from '@/lib/format';
+import { unitPrice, units, vnd } from '@/lib/format';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import Notification from '@/utils/notification';
 
 const FARMER_PRODUCT_IDS = [1, 2, 7, 19, 26];
 const RESERVED: Record<number, number> = { 1: 8, 2: 7, 7: 10, 19: 3 };
 
-const STATUS_LABEL: Record<ProductStatus, string> = {
-  available: 'Available',
-  sold_out: 'Sold out',
-  unavailable: 'Paused',
-};
-const STATUS_TOAST: Record<ProductStatus, string> = {
-  available: 'The product is listed again.',
-  sold_out: 'Customers now see “Sold out” and can ask to be told when it is back.',
-  unavailable: 'The product is hidden from customers until you set it back.',
-};
-
-const FILTERS: { id: 'all' | ProductStatus; label: string }[] = [
-  { id: 'all', label: 'All' },
-  { id: 'available', label: 'Available' },
-  { id: 'sold_out', label: 'Sold out' },
-  { id: 'unavailable', label: 'Paused' },
-];
+const STATUSES: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
+const FILTERS: ('all' | ProductStatus)[] = ['all', ...STATUSES];
 
 /** FR-062 FR-064 — everything this stall can list: price, this week's count, reserved units and status. */
 const FarmerProductsPage = () => {
+  const { t } = useTranslation('FarmerProducts');
   const seeded = FARMER_PRODUCT_IDS.map((id) => product(id)!);
   const [statuses, setStatuses] = useState<Record<number, ProductStatus>>(
     Object.fromEntries(seeded.map((p) => [p.id, p.status])),
@@ -50,7 +37,7 @@ const FarmerProductsPage = () => {
   const columns: TableColumn<ProductType>[] = [
     {
       key: 'n',
-      label: 'Product',
+      label: t('col.product'),
       render: (p) => (
         <>
           <Link
@@ -65,38 +52,42 @@ const FarmerProductsPage = () => {
     },
     {
       key: 'p',
-      label: 'Price',
+      label: t('col.price'),
       align: 'num',
-      render: (p) => (
-        <>
-          {vnd(p.price)} <span className="text-ink-muted font-normal">per {p.unit}</span>
-        </>
-      ),
+      render: (p) => {
+        const price = unitPrice(p.price, p.unit);
+        return (
+          <>
+            {vnd(price.amount)}{' '}
+            <span className="text-ink-muted font-normal">{t('perUnit', { unit: price.unit ?? p.unit })}</span>
+          </>
+        );
+      },
     },
     {
       key: 's',
-      label: 'Left this week',
+      label: t('col.left'),
       align: 'num',
       render: (p) => (statuses[p.id] === 'available' ? units(p.stock, p.unit, p.plural) : '—'),
     },
-    { key: 'r', label: 'Reserved', align: 'num', render: (p) => RESERVED[p.id] ?? 0 },
+    { key: 'r', label: t('col.reserved'), align: 'num', render: (p) => RESERVED[p.id] ?? 0 },
     {
       key: 'st',
-      label: 'Status',
+      label: t('col.status'),
       render: (p) => (
         <select
           value={statuses[p.id]}
-          aria-label={`Status of ${p.name}`}
+          aria-label={t('statusOf', { name: p.name })}
           onChange={(e) => {
             const value = e.target.value as ProductStatus;
             setStatuses((prev) => ({ ...prev, [p.id]: value }));
-            Notification.success({ title: 'Status saved', text: STATUS_TOAST[value] });
+            Notification.success({ title: t('toast.statusSaved'), text: t(`toast.status.${value}`) });
           }}
           className="border-line-strong bg-surface-raised min-h-9 rounded-sm border-[1.5px] px-2 text-[14px]"
         >
-          {(Object.keys(STATUS_LABEL) as ProductStatus[]).map((s) => (
+          {STATUSES.map((s) => (
             <option key={s} value={s}>
-              {STATUS_LABEL[s]}
+              {t(`status.${s}`)}
             </option>
           ))}
         </select>
@@ -109,10 +100,10 @@ const FarmerProductsPage = () => {
       render: (p) => (
         <div className="flex justify-end gap-2">
           <ButtonLink variant="secondary" size="sm" to={`/farmer/products/${p.id}/edit`}>
-            Edit
+            {t('edit')}
           </ButtonLink>
           <Button variant="danger" size="sm" onClick={() => setDeleteTarget(p)}>
-            Delete
+            {t('delete')}
           </Button>
         </div>
       ),
@@ -123,54 +114,52 @@ const FarmerProductsPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">Products</h1>
-          <p className="text-body max-w-160">
-            Everything you can list. Mark a product sold out when it runs out on market day, or pause it when it is not
-            in season.
-          </p>
+          <h1 className="text-h1">{t('title')}</h1>
+          <p className="text-body max-w-160">{t('intro')}</p>
         </div>
-        <ButtonLink to="/farmer/products/new">Add product</ButtonLink>
+        <ButtonLink to="/farmer/products/new">{t('add')}</ButtonLink>
       </div>
 
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
-          <Chip key={f.id} pressed={filter === f.id} onClick={() => setFilter(f.id)}>
-            {f.label} <span className="text-[12px] tabular-nums opacity-80">{counts[f.id]}</span>
+          <Chip key={f} pressed={filter === f} onClick={() => setFilter(f)}>
+            {f === 'all' ? t('filterAll') : t(`status.${f}`)}{' '}
+            <span className="text-[12px] tabular-nums opacity-80">{counts[f]}</span>
           </Chip>
         ))}
       </div>
 
-      <Table caption={`${seeded.length} products`} columns={columns} rows={rows} />
+      <Table caption={t('caption', { count: seeded.length })} columns={columns} rows={rows} />
 
-      <p className="text-small text-ink-muted">
-        Deleting a product removes it from the catalogue; past orders keep their lines. Photos: 4:3, natural light, on
-        wood or paper.
-      </p>
+      <p className="text-small text-ink-muted">{t('footNote')}</p>
 
       <Dialog
         open={deleteTarget !== null}
-        title={`Delete ${deleteTarget?.name ?? ''}?`}
+        title={t('dialog.title', { name: deleteTarget?.name ?? '' })}
         tone="danger"
         onClose={() => setDeleteTarget(null)}
         actions={
           <>
             <Button variant="secondary" onClick={() => setDeleteTarget(null)}>
-              Keep product
+              {t('dialog.keep')}
             </Button>
             <Button
               variant="danger"
               onClick={() => {
-                Notification.success({ title: 'Deleted', text: `${deleteTarget?.name} deleted.` });
+                Notification.success({
+                  title: t('toast.deleted'),
+                  text: t('toast.deletedText', { name: deleteTarget?.name }),
+                });
                 setDeleteTarget(null);
               }}
             >
-              Delete product
+              {t('dialog.confirm')}
             </Button>
           </>
         }
       >
-        <p>It disappears from the catalogue and from your template. Orders that already include it are not changed.</p>
-        <p className="text-ink-muted text-[14px]">To stop selling it for a while, choose Paused instead.</p>
+        <p>{t('dialog.text')}</p>
+        <p className="text-ink-muted text-[14px]">{t('dialog.pauseHint')}</p>
       </Dialog>
     </div>
   );

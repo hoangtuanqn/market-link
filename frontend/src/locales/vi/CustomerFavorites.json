@@ -1,0 +1,42 @@
+{
+  "title": "Yêu thích",
+  "intro": "Danh sách mong muốn của bạn: sản phẩm muốn mua lần sau, sạp bạn hay quay lại, và các chợ bạn hay đi. Món yêu thích đang hết hàng sẽ báo bạn khi có lại.",
+  "findMore": "Tìm thêm để lưu",
+  "tabs": {
+    "label": "Đã lưu",
+    "products": "Sản phẩm",
+    "stalls": "Sạp",
+    "markets": "Chợ"
+  },
+  "banner": {
+    "title": "Một trong bốn sản phẩm bạn lưu đã hết hàng.",
+    "text": "Cảnh báo có hàng lại đang bật, nên bạn sẽ nhận thông báo ngay khi sạp đăng bán lại."
+  },
+  "filters": {
+    "all": "Tất cả",
+    "inStock": "Đang có hàng",
+    "soldOut": "Hết hàng",
+    "priceDropped": "Giảm giá"
+  },
+  "soldOut": "Hết hàng",
+  "left": "Còn {{qty}}",
+  "alertOn": "Đã bật cảnh báo",
+  "addToCart": "Thêm vào giỏ",
+  "remove": "Bỏ",
+  "addInStock_one": "Thêm {{count}} món còn hàng vào giỏ",
+  "addInStock_other": "Thêm {{count}} món còn hàng vào giỏ",
+  "toast": {
+    "alertTitle": "Cảnh báo có hàng lại",
+    "alertOff": "Đã tắt cảnh báo cho {{name}}.",
+    "addedTitle": "Đã thêm vào giỏ",
+    "added": "Đã thêm {{name}} vào giỏ hàng.",
+    "addedMany_one": "Đã thêm {{count}} sản phẩm vào giỏ. Giỏ sẽ được tách theo sạp khi đặt đơn.",
+    "addedMany_other": "Đã thêm {{count}} sản phẩm vào giỏ. Giỏ sẽ được tách theo sạp khi đặt đơn.",
+    "removedTitle": "Đã bỏ",
+    "removed": "Đã bỏ {{name}} khỏi mục yêu thích."
+  },
+  "holdNote": "Lưu sản phẩm không giữ hàng. Hàng chỉ được giữ khi bạn đặt đơn.",
+  "stallsNote": "Các sạp bạn đã lưu, cùng những gì mỗi sạp mang đến cuối tuần này.",
+  "thisWeek": "Tuần này",
+  "marketsNote": "Chợ đã lưu hiện đầu tiên trong danh sách và trên bản đồ, và chỉ đường đến các sạp của chợ bắt đầu từ địa chỉ đã lưu của bạn."
+}

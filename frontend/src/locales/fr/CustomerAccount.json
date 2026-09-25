@@ -1,0 +1,119 @@
+{
+  "title": "Compte",
+  "intro": "Vos informations ne sont partagées avec un stand que pour les commandes que vous y passez.",
+  "sell": {
+    "title": "Vendre sur MarketLink",
+    "text": "Si vous cultivez des aliments, ce compte peut devenir un stand. Vous gardez vos commandes, favoris et panier, et un panneau pour le stock et les créneaux de retrait apparaît dès qu'un administrateur vous approuve.",
+    "apply": "Demander à vendre"
+  },
+  "signOut": {
+    "title": "Se déconnecter",
+    "text": "Vous déconnecte sur cet appareil uniquement.",
+    "button": "Se déconnecter"
+  },
+  "profile": {
+    "title": "Vos informations",
+    "loading": "Chargement de vos informations…",
+    "loadFailed": "Impossible de charger vos informations. Veuillez réessayer.",
+    "signedOut": {
+      "title": "Vous êtes déconnecté.",
+      "text": "Reconnectez-vous pour voir et modifier vos informations.",
+      "signIn": "Se connecter"
+    },
+    "nothingChanged": "Rien n'a été modifié.",
+    "retry": "Réessayer",
+    "fullName": "Nom complet",
+    "phone": "Numéro de téléphone",
+    "email": "E-mail",
+    "emailHint": "Sert à vous connecter. Il ne peut pas être modifié ici.",
+    "address": "Adresse",
+    "addressHint": "Sert pour les distances et les itinéraires.",
+    "save": "Enregistrer les modifications",
+    "saving": "Enregistrement…",
+    "noChanges": "Aucune modification à enregistrer.",
+    "saved": "Vos informations sont enregistrées.",
+    "saveFailed": "Impossible d'enregistrer vos informations. Veuillez réessayer."
+  },
+  "password": {
+    "title": "Changer le mot de passe",
+    "intro": "Vous serez déconnecté sur tous vos appareils et devrez vous reconnecter.",
+    "current": "Mot de passe actuel",
+    "new": "Nouveau mot de passe",
+    "repeat": "Répétez le nouveau mot de passe",
+    "hint": "De {{min}} à {{max}} caractères.",
+    "submit": "Changer le mot de passe",
+    "submitting": "Changement du mot de passe…",
+    "changed": "Votre mot de passe a été changé. Veuillez vous reconnecter.",
+    "failed": "Impossible de changer votre mot de passe. Veuillez réessayer.",
+    "errors": {
+      "currentRequired": "Saisissez votre mot de passe actuel.",
+      "newRequired": "Saisissez un nouveau mot de passe.",
+      "length": "Le mot de passe doit contenir de {{min}} à {{max}} caractères.",
+      "same": "Choisissez un mot de passe différent de l'actuel.",
+      "confirmRequired": "Confirmez votre mot de passe.",
+      "mismatch": "Les mots de passe ne correspondent pas."
+    }
+  },
+  "photo": {
+    "title": "Photo de profil",
+    "intro": "Affichée dans le menu et aux stands sur vos commandes. JPEG, PNG ou une photo prise avec votre appareil.",
+    "upload": "Importer une photo",
+    "take": "Prendre une photo",
+    "remove": "Supprimer la photo",
+    "removing": "Suppression…",
+    "removed": "Votre photo a été supprimée.",
+    "removeFailed": "Impossible de supprimer votre photo. Veuillez réessayer.",
+    "notUsed": "Photo non utilisée"
+  },
+  "photoErrors": {
+    "notPhoto": "Choisissez une photo (JPEG, PNG, HEIC ou WebP).",
+    "tooBig": "Cette photo dépasse {{mb}} Mo. Choisissez-en une plus petite.",
+    "unreadable": "Ce fichier n'est pas une photo lisible.",
+    "noPicture": "La caméra n'a pas encore d'image. Réessayez.",
+    "captureFailed": "Impossible de prendre la photo."
+  },
+  "dialog": {
+    "takeTitle": "Prendre une photo",
+    "frameTitle": "Cadrer votre photo",
+    "frameHelp": "Faites glisser la photo et zoomez jusqu'à ce que votre visage remplisse le cercle.",
+    "cancel": "Annuler",
+    "uploadInstead": "Importer une photo à la place",
+    "take": "Prendre la photo",
+    "retake": "Reprendre",
+    "chooseAnother": "En choisir une autre",
+    "save": "Enregistrer la photo",
+    "saving": "Enregistrement…",
+    "saved": "Votre photo est enregistrée.",
+    "saveFailed": "Impossible d'enregistrer votre photo. Veuillez réessayer.",
+    "takeFailed": "Impossible de prendre la photo. Réessayez.",
+    "unchanged": "Votre photo actuelle reste inchangée."
+  },
+  "camera": {
+    "preview": "Aperçu de la caméra",
+    "starting": "Démarrage de la caméra…",
+    "blocked": {
+      "title": "L'accès à la caméra est bloqué.",
+      "text": "Autorisez la caméra pour ce site dans les réglages du navigateur, ou importez une photo à la place."
+    },
+    "notFound": {
+      "title": "Aucune caméra trouvée.",
+      "text": "Branchez-en une, ou importez une photo à la place."
+    },
+    "busy": {
+      "title": "La caméra est occupée.",
+      "text": "Fermez les autres applications qui l'utilisent et réessayez, ou importez une photo."
+    },
+    "failed": {
+      "title": "La caméra n'a pas pu démarrer.",
+      "text": "Réessayez, ou importez une photo à la place."
+    },
+    "insecure": {
+      "title": "Ce navigateur ne peut pas ouvrir la caméra ici.",
+      "text": "La caméra nécessite une page sécurisée (https). Importez une photo à la place."
+    }
+  },
+  "crop": {
+    "frame": "Cadrage de la photo. Faites glisser, ou utilisez les flèches pour la déplacer et plus ou moins pour zoomer.",
+    "zoom": "Zoom"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "title": "商品",
+  "intro": "你可以上架的所有商品。集市当天卖完时标记为售罄，不当季时暂停。",
+  "add": "添加商品",
+  "filterAll": "全部",
+  "status": {
+    "available": "在售",
+    "sold_out": "售罄",
+    "unavailable": "已暂停"
+  },
+  "caption_one": "{{count}} 件商品",
+  "caption_other": "{{count}} 件商品",
+  "col": {
+    "product": "商品",
+    "price": "价格",
+    "left": "本周剩余",
+    "reserved": "已预订",
+    "status": "状态"
+  },
+  "perUnit": "每{{unit}}",
+  "statusOf": "{{name}}的状态",
+  "edit": "编辑",
+  "delete": "删除",
+  "footNote": "删除商品会将其从商品目录中移除；历史订单保留原有条目。照片：4:3，自然光，放在木板或纸上拍摄。",
+  "toast": {
+    "statusSaved": "状态已保存",
+    "status": {
+      "available": "商品已重新上架。",
+      "sold_out": "顾客现在会看到“售罄”，并可以申请到货提醒。",
+      "unavailable": "商品已对顾客隐藏，直到你重新开启。"
+    },
+    "deleted": "已删除",
+    "deletedText": "已删除 {{name}}。"
+  },
+  "dialog": {
+    "title": "删除 {{name}}？",
+    "keep": "保留商品",
+    "confirm": "删除商品",
+    "text": "它会从商品目录和你的模板中消失。已包含它的订单不会改变。",
+    "pauseHint": "如果只是暂时不卖，请改选“已暂停”。"
+  }
+}

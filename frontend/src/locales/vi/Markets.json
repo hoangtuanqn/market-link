@@ -1,0 +1,66 @@
+{
+  "city": "TP. Hồ Chí Minh",
+  "count_one": "{{count}} chợ",
+  "count_other": "{{count}} chợ",
+  "title": "Các chợ",
+  "intro": "Chọn ngày bạn muốn đi chợ, rồi thu hẹp theo khu vực của bạn.",
+  "filters": {
+    "label": "Lọc danh sách chợ",
+    "day": "Ngày họp chợ",
+    "clearAll": "Xoá tất cả",
+    "area": "Khu vực",
+    "allAreas": "Mọi khu vực ({{count}})",
+    "sort": "Sắp xếp theo"
+  },
+  "sorts": {
+    "near": "Gần nhất trước",
+    "stalls": "Nhiều sạp nhất",
+    "opens": "Mở cửa sớm nhất"
+  },
+  "cleared": {
+    "title": "Đã xoá bộ lọc",
+    "text": "Đang hiện mọi chợ mở vào {{day}}."
+  },
+  "popupStalls_one": "{{count}} sạp",
+  "popupStalls_other": "{{count}} sạp",
+  "summary": {
+    "open_one": "<b>{{count}} chợ</b> mở vào {{day}}",
+    "open_other": "<b>{{count}} chợ</b> mở vào {{day}}",
+    "openIn_one": "<b>{{count}} chợ</b> mở vào {{day}} ở {{area}}",
+    "openIn_other": "<b>{{count}} chợ</b> mở vào {{day}} ở {{area}}",
+    "none": "Không có chợ nào mở vào {{day}}",
+    "noneIn": "Không có chợ nào mở vào {{day}} ở {{area}}"
+  },
+  "error": {
+    "noun": "danh sách chợ",
+    "alt": "<link>bản đồ chợ</link> mở ở một trang riêng"
+  },
+  "pager": {
+    "showing": "Đang hiện {{from}}–{{to}} trong {{total}}",
+    "onePage_one": "{{count}} chợ trên một trang",
+    "onePage_other": "Cả {{count}} chợ trên một trang"
+  },
+  "empty": {
+    "areaTitle": "Không có chợ nào ở {{area}} vào {{day}}",
+    "areaText_one": "Trên toàn thành phố có {{count}} chợ mở vào ngày đó. Hãy mở rộng khu vực hoặc chọn ngày khác.",
+    "areaText_other": "Trên toàn thành phố có {{count}} chợ mở vào ngày đó. Hãy mở rộng khu vực hoặc chọn ngày khác.",
+    "allAreas": "Hiện mọi khu vực",
+    "dayTitle": "Không có chợ nào mở vào {{day}}",
+    "dayText_one": "{{day}} là ngày đông nhất, với {{count}} chợ mở.",
+    "dayText_other": "{{day}} là ngày đông nhất, với {{count}} chợ mở.",
+    "showDay": "Xem {{day}}"
+  },
+  "map": {
+    "label": "Bản đồ các chợ phù hợp",
+    "note": "Bản đồ đi theo bộ lọc và chỉ hiện các chợ trong danh sách."
+  },
+  "demo": {
+    "title": "Các trạng thái khác của danh sách này (FR-084)",
+    "views": {
+      "loaded": "Có dữ liệu",
+      "loading": "Đang tải",
+      "error": "Lỗi"
+    },
+    "note": "Trạng thái trống có thật: chọn <b>{{day}}</b> và khu vực <b>{{area}}</b>. Nó nêu rõ điều bạn đã chọn và gợi ý cách thoát ra."
+  }
+}

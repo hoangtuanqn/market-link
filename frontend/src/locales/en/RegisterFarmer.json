@@ -1,0 +1,21 @@
+{
+  "title": "Register your stall",
+  "intro": "After you register, an admin reviews the stall. You can sign in right away and set up your profile, but products go live only after approval.",
+  "fields": {
+    "stall": "Stall or business name",
+    "stallPlaceholder": "e.g. {{example}}",
+    "stallHint": "Customers see this name on the map and on orders.",
+    "person": "Contact person",
+    "phone": "Phone number",
+    "email": "Email",
+    "address": "Farm or business address",
+    "password": "Password",
+    "confirmPassword": "Repeat password"
+  },
+  "banner": {
+    "title": "MarketLink does not check licences or organic certification.",
+    "text": "Approval confirms the stall exists and the contact details work. Say what you grow and how at the stall itself."
+  },
+  "submit": "Register stall",
+  "haveAccount": "I already have an account"
+}

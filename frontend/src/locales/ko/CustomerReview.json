@@ -1,0 +1,29 @@
+{
+  "myOrders": "내 주문",
+  "breadcrumbOrder": "주문 {{code}}",
+  "breadcrumbReview": "리뷰",
+  "notFound": {
+    "title": "이 주문은 더 이상 없어요",
+    "text": "주문을 취소했거나 링크가 오래되었을 수 있어요. 내 주문에서 다시 열어 주세요."
+  },
+  "completed": "{{date}} 완료",
+  "title": "{{stall}}은(는) 어땠나요?",
+  "intro": "리뷰는 이 완료된 주문에 연결되어 다른 고객에게 인증된 구매로 보여요. 가게는 답글을 달 수 있어요.",
+  "stall": {
+    "title": "가게",
+    "placeholder": "제시간에 준비됐나요? 가게는 찾기 쉬웠나요?"
+  },
+  "product": {
+    "placeholder": "맛, 신선도, 양",
+    "skip": "이 상품 건너뛰기"
+  },
+  "rate": "{{name}} 평가하기",
+  "comment": "코멘트",
+  "submit": "리뷰 게시",
+  "notNow": "나중에",
+  "note": "가게 리뷰는 주문당 하나, 상품 리뷰는 주문 속 상품마다 하나씩이에요.",
+  "toast": {
+    "title": "리뷰를 게시했어요",
+    "text": "감사해요. {{stall}}에 대한 리뷰가 공개되었어요."
+  }
+}

@@ -1,0 +1,319 @@
+{
+  "settings": {
+    "appearance": "Tampilan",
+    "theme": "Tema",
+    "themeNote": "Langsung berlaku. \"Ikuti perangkat\" mengikuti ponsel atau komputer Anda.",
+    "themes": {
+      "light": "Terang",
+      "dark": "Gelap",
+      "system": "Ikuti perangkat"
+    },
+    "language": "Bahasa",
+    "languageNote": "Bahasa untuk menu, tombol, dan pesan. Nama lapak, produk, dan tempat tetap seperti yang ditulis lapak.",
+    "format": "Uang, tanggal, dan satuan",
+    "currency": "Tampilkan harga dalam",
+    "currencyNote": "Anda selalu membayar dengan dong Vietnam di lapak. Mata uang lain ditampilkan di sebelahnya hanya sebagai acuan, dengan kurs tetap per {{date}}.",
+    "currencies": {
+      "VND": "Hanya ₫ dong Vietnam",
+      "USD": "₫ dan $ dolar AS",
+      "EUR": "₫ dan € euro",
+      "JPY": "₫ dan ¥ yen Jepang"
+    },
+    "units": "Berat dan volume",
+    "unitsNote": "Hanya satuan ukur yang dikonversi. Lapak yang menjual per ikat, per umbi, atau per nampan tetap memakai istilahnya sendiri.",
+    "metric": "Metrik · kg, g, liter",
+    "imperial": "Imperial · lb, oz, pint",
+    "date": "Tanggal",
+    "clock": "Jam",
+    "clock24": "24 jam · 19:00",
+    "clock12": "12 jam · 7:00 pm",
+    "preview": "Pratinjau: {{date}} · {{time}} · {{price}}",
+    "notifications": "Notifikasi",
+    "notificationsNote": "Disimpan bersama akun Anda. MarketLink belum mengirim notifikasi; nanti notifikasi akan mengikuti pilihan ini.",
+    "notes": {
+      "customer": {
+        "orderDecided": "Pesanan diterima atau ditolak",
+        "orderReady": "Pesanan siap diambil",
+        "backInStock": "Produk yang disimpan tersedia lagi",
+        "announcements": "Pengumuman dari MarketLink",
+        "stallReply": "Lapak membalas pesan Anda"
+      },
+      "farmer": {
+        "newOrder": "Ada pesanan baru",
+        "orderChanged": "Pelanggan mengubah atau membatalkan pesanan",
+        "cutoffSoon": "Batas waktu tinggal satu jam lagi",
+        "newReview": "Ada ulasan baru untuk lapak Anda",
+        "announcements": "Pengumuman dari MarketLink"
+      },
+      "admin": {
+        "farmerApplication": "Ada pendaftaran Farmer masuk",
+        "reported": "Ulasan atau listing dilaporkan",
+        "newFeedback": "Masukan baru",
+        "marketEdited": "Pasar diedit"
+      }
+    },
+    "save": "Simpan pengaturan",
+    "saving": "Menyimpan…",
+    "saveHint": "Tema langsung berlaku saat dipilih; sisanya saat Anda menyimpan.",
+    "savedTitle": "Tersimpan",
+    "savedText": "Pengaturan Anda sudah disimpan.",
+    "saveError": "Tidak dapat menyimpan pengaturan. Silakan coba lagi."
+  },
+  "actions": {
+    "back": "Kembali",
+    "close": "Tutup",
+    "directions": "Petunjuk arah",
+    "dismiss": "Tutup",
+    "remove": "Hapus",
+    "tryAgain": "Coba lagi"
+  },
+  "admin": {
+    "badge": "Admin",
+    "security": "Keamanan",
+    "signIn": "Masuk admin"
+  },
+  "cart": {
+    "orderOf": "Pesanan {{index}} dari {{of}}",
+    "payAtPickup": "Bayar di lapak saat mengambil"
+  },
+  "chat": {
+    "assistant": "Asisten MarketLink",
+    "you": "Anda",
+    "intent": "Maksud: {{intent}}"
+  },
+  "errors": {
+    "network": "Tidak dapat terhubung ke server. Periksa koneksi Anda lalu coba lagi."
+  },
+  "farmerNav": {
+    "sections": "Bagian",
+    "navigation": "Navigasi Farmer",
+    "home": "MarketLink — Ringkasan Farmer",
+    "badge": "Farmer",
+    "expand": "Bentangkan bilah samping",
+    "collapse": "Ciutkan bilah samping",
+    "approvedMarkets_one": "Disetujui · {{count}} pasar",
+    "approvedMarkets_other": "Disetujui · {{count}} pasar",
+    "changeMarket": "Ganti pasar yang sedang dilihat",
+    "roleStall": "Farmer · {{stall}}",
+    "openNavigation": "Buka navigasi",
+    "searchPlaceholder": "Kode pesanan atau pelanggan",
+    "yourAccount": "Akun Anda",
+    "today": "Hari ini",
+    "overview": "Ringkasan",
+    "incomingOrders": "Pesanan masuk",
+    "pickupSlots": "Jadwal pengambilan",
+    "stock": "Stok",
+    "weekStock": "Stok minggu ini",
+    "products": "Produk",
+    "stall": "Lapak",
+    "stallPickup": "Lapak & pengambilan",
+    "reviews": "Ulasan",
+    "salesHistory": "Riwayat penjualan",
+    "inbox": "Kotak masuk",
+    "messages": "Pesan",
+    "notifications": "Notifikasi",
+    "account": "Akun",
+    "promote": "Promosi & listing",
+    "approval": "Status persetujuan",
+    "settings": "Pengaturan",
+    "shop": "Belanja",
+    "shopMarkets": "Belanja di pasar"
+  },
+  "footer": {
+    "tagline": "Pesan dulu dari pasar tani terdekat, ambil di lapak. Bayar langsung ke Farmer saat mengambil.",
+    "shop": "Belanja",
+    "marketsNearYou": "Pasar di dekat Anda",
+    "inSeason": "Sedang musim",
+    "marketMap": "Peta pasar",
+    "favoriteStalls": "Lapak favorit",
+    "sell": "Jual",
+    "registerFarmer": "Daftar sebagai Farmer",
+    "handlingPreOrders": "Mengelola pra-pesan",
+    "stallGuidelines": "Panduan lapak",
+    "marketLink": "MarketLink",
+    "aboutUs": "Tentang kami",
+    "contactUs": "Hubungi kami",
+    "feedback": "Masukan & laporan bug",
+    "mapData": "Data peta © kontributor OpenStreetMap"
+  },
+  "header": {
+    "cart": "Keranjang",
+    "cartItems_one": "Keranjang, {{count}} barang",
+    "cartItems_other": "Keranjang, {{count}} barang",
+    "hi": "Hai, <b>{{name}}</b>",
+    "main": "Utama",
+    "menu": "Menu",
+    "notifications": "Notifikasi",
+    "notificationsUnread_one": "Notifikasi, {{count}} belum dibaca",
+    "notificationsUnread_other": "Notifikasi, {{count}} belum dibaca",
+    "openMenu": "Buka menu",
+    "search": "Cari"
+  },
+  "kpi": {
+    "noChange": "tidak berubah",
+    "vsBefore": "dibanding periode sebelumnya"
+  },
+  "loadError": {
+    "title": "Kami tidak dapat memuat {{noun}}",
+    "text": "Daftarnya tidak kembali kali ini. Apa pun yang Anda simpan atau pesan tidak terpengaruh.",
+    "help": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <link>ceritakan apa yang terjadi</link> dan kami akan memeriksanya.",
+    "helpAlt": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <alt />, atau <link>ceritakan apa yang terjadi</link> dan kami akan memeriksanya."
+  },
+  "loading": {
+    "markets": "Memuat pasar"
+  },
+  "logo": {
+    "home": "MarketLink — beranda"
+  },
+  "map": {
+    "attribution": "© kontributor {{link}}",
+    "open": "Buka",
+    "placeholder": "Peta — {{label}}"
+  },
+  "marketCard": {
+    "save": "Simpan {{name}}",
+    "unsave": "Batal simpan {{name}}",
+    "days": "Hari pasar",
+    "open": "buka",
+    "closed": "tutup",
+    "hours": "Jam <b>{{open}}–{{close}}</b>",
+    "stalls_one": "<b>{{count}}</b> lapak",
+    "stalls_other": "<b>{{count}}</b> lapak",
+    "away": "<b>{{distance}}</b> dari sini",
+    "seeStalls": "Lihat lapak"
+  },
+  "nav": {
+    "markets": "Pasar",
+    "products": "Produk",
+    "map": "Peta",
+    "aboutUs": "Tentang kami",
+    "myOrders": "Pesanan saya",
+    "favorites": "Favorit",
+    "profile": "Profil",
+    "settings": "Pengaturan",
+    "signIn": "Masuk",
+    "createAccount": "Buat akun",
+    "signOut": "Keluar",
+    "yourAccount": "Akun Anda"
+  },
+  "order": {
+    "code": "Pesanan {{code}}",
+    "market": "Pasar",
+    "pickup": "Pengambilan",
+    "payOnPickup": "Bayar saat mengambil",
+    "declinedReason": "Alasan dari lapak: {{reason}} Tidak ada yang perlu dibayar.",
+    "cancelledNote": "Anda membatalkan pesanan ini sebelum batas waktu. Stok sudah kembali ke lapak.",
+    "lockedNote": "Batas waktu sudah lewat pada {{cutoff}}. Untuk mengubahnya, hubungi lapak secara langsung.",
+    "editableNote": "Ubah atau batalkan sebelum {{cutoff}}. Setelah itu pesanan dikunci.",
+    "edit": "Ubah pesanan",
+    "cancel": "Batalkan pesanan",
+    "reviewed": "Anda sudah mengulas pesanan ini",
+    "review": "Ulas lapak & produk",
+    "reorder": "Pesan lagi"
+  },
+  "orderStatus": {
+    "placed": "Dipesan",
+    "accepted": "Diterima",
+    "ready": "Siap diambil",
+    "completed": "Selesai",
+    "declined": "Ditolak",
+    "cancelled": "Dibatalkan"
+  },
+  "pagination": {
+    "label": "Paginasi",
+    "previous": "Halaman sebelumnya",
+    "next": "Halaman berikutnya",
+    "page": "Halaman {{n}}"
+  },
+  "password": {
+    "show": "Tampilkan kata sandi",
+    "hide": "Sembunyikan kata sandi"
+  },
+  "period": {
+    "length": "Panjang periode",
+    "day": "Hari",
+    "week": "Minggu",
+    "month": "Bulan",
+    "quarter": "Kuartal",
+    "year": "Tahun",
+    "custom": "Kustom",
+    "from": "Dari",
+    "to": "Sampai",
+    "compareWith": "Bandingkan dengan",
+    "cmpBefore": "Periode sebelumnya, panjang sama",
+    "cmpLastYear": "Periode yang sama tahun lalu",
+    "cmpNone": "Tanpa perbandingan",
+    "comparedWith": "dibanding <b>{{compare}}</b>, panjang sama"
+  },
+  "price": {
+    "was": "Sebelumnya"
+  },
+  "product": {
+    "notThisWeek": "Tidak ada minggu ini",
+    "backSoon": "Segera tersedia lagi",
+    "onlyLeft": "Tinggal {{qty}}",
+    "left": "Sisa {{qty}}",
+    "paused": "Dijeda",
+    "soldOut": "Habis",
+    "addFavorite": "Tambahkan ke favorit: {{name}}",
+    "removeFavorite": "Hapus dari favorit: {{name}}",
+    "notifyMe": "Beri tahu saya saat tersedia",
+    "addToCart": "Tambah ke keranjang"
+  },
+  "qty": {
+    "label": "Jumlah ({{unit}})",
+    "decrease": "Kurangi 1",
+    "increase": "Tambah 1",
+    "max": "Maks. {{qty}}",
+    "left": "Sisa {{qty}}"
+  },
+  "rating": {
+    "count_one": "({{count}} ulasan)",
+    "count_other": "({{count}} ulasan)",
+    "sr": "{{value}} dari 5 bintang",
+    "srWithCount_one": "{{value}} dari 5 bintang, {{count}} ulasan",
+    "srWithCount_other": "{{value}} dari 5 bintang, {{count}} ulasan",
+    "stars_one": "{{count}} bintang — {{word}}",
+    "stars_other": "{{count}} bintang — {{word}}",
+    "words": {
+      "none": "belum dinilai",
+      "poor": "Buruk",
+      "fair": "Cukup",
+      "good": "Bagus",
+      "veryGood": "Sangat bagus",
+      "excellent": "Luar biasa"
+    }
+  },
+  "review": {
+    "verified": "Pembelian terverifikasi",
+    "replied": "{{by}} membalas · {{date}}"
+  },
+  "slot": {
+    "full": "Penuh",
+    "left": "Sisa {{left}} dari {{max}}"
+  },
+  "stall": {
+    "markets": "Pasar",
+    "days": "Hari pasar",
+    "pickup": "Pengambilan",
+    "distance": "Jarak",
+    "see": "Lihat lapak & stok minggu ini"
+  },
+  "stock": {
+    "left": "sisa",
+    "reserved": "{{reserved}} dari {{total}} dipesan",
+    "runningLow": "hampir habis",
+    "soldOut": "habis"
+  },
+  "toast": {
+    "signedOut": "Anda sudah keluar."
+  },
+  "validation": {
+    "fullNameRequired": "Masukkan nama lengkap Anda.",
+    "fullNameMax": "Nama lengkap maksimal {{max}} karakter.",
+    "phoneRequired": "Masukkan nomor telepon Anda.",
+    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit).",
+    "addressRequired": "Masukkan alamat Anda.",
+    "addressMax": "Alamat maksimal {{max}} karakter."
+  }
+}

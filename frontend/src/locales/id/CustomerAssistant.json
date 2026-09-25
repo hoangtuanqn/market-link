@@ -1,0 +1,41 @@
+{
+  "eyebrow": "Opsional · FR-090 sampai FR-092",
+  "title": "Asisten belanja",
+  "intro": "Tanyakan di mana mencari sesuatu akhir pekan ini, kapan pasar buka, atau slot ambil apa yang dimiliki sebuah lapak. Setiap jawaban berasal dari data MarketLink sendiri.",
+  "conversation": "Percakapan dengan asisten",
+  "botName": "Asisten MarketLink",
+  "botNote": "Jawaban memakai katalog langsung. Intent ditampilkan di bawah setiap balasan.",
+  "message": "Pesan",
+  "placeholder": "mis. Siapa yang jual telur di Thảo Điền hari Sabtu?",
+  "send": "Kirim",
+  "reply": {
+    "greeting": "Halo {{name}}. Tanyakan apa yang tersedia akhir pekan ini, atau kapan pasar buka.",
+    "pomelo": "Pada {{day}} {{date}}, 2 lapak punya jeruk bali kulit hijau: <b>Út Hiền Orchard</b> di Thủ Đức Farmers Market (sisa 2, {{price1}}) dan <b>Ba Lành Farm</b> di Thảo Điền Weekend Market (sisa 9, {{price2}}).",
+    "slots": "Út Hiền Orchard melayani pengambilan {{from}} – {{to}} pada {{day}} {{date}} di Thủ Đức Farmers Market. Slot kosong: {{free}}. Slot {{full}} penuh. Pesanan ditutup 12 jam sebelum slot.",
+    "unknown": "Saya tidak mengerti. Coba nama produk, pasar, atau lapak."
+  },
+  "question": {
+    "pomeloMorning": "Pasar mana yang punya jeruk bali kulit hijau Sabtu pagi?"
+  },
+  "suggest": {
+    "pomeloSat": "Di mana bisa dapat jeruk bali kulit hijau hari Sabtu?",
+    "baChieuOpen": "Kapan Bà Chiểu Green Market buka?",
+    "showMap": "Tampilkan 2 lapak di peta",
+    "slotsUtHien": "Waktu ambil di Út Hiền",
+    "addPomelos": "Tambahkan 2 jeruk bali ke keranjang",
+    "directionsThuDuc": "Rute ke Thủ Đức Farmers Market",
+    "thaoDien": "Ada apa di Thảo Điền hari Sabtu?"
+  },
+  "canAnswer": {
+    "title": "Yang bisa dijawab",
+    "product": "Cari produk di berbagai pasar dan lapak, beserta sisanya",
+    "hours": "Hari pasar dan jam buka",
+    "stalls": "Lapak mana yang ada di pasar pada hari tertentu",
+    "slots": "Jendela ambil dan slot kosong sebuah lapak",
+    "price": "Harga, satuan, dan stok produk"
+  },
+  "how": {
+    "title": "Cara kerjanya",
+    "text": "Pesan digolongkan ke salah satu intent yang sudah ditetapkan, dan setiap intent menjalankan kueri siap pakai dengan parameter. Model tidak pernah menulis SQL. Pesan disimpan bersama intent-nya agar alurnya bisa ditunjukkan ke juri."
+  }
+}

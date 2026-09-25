@@ -1,0 +1,64 @@
+{
+  "notFound": {
+    "title": "Ce stand n'est plus là",
+    "browse": "Voir les marchés"
+  },
+  "breadcrumb": "Marchés",
+  "approved": "Stand approuvé",
+  "savedToast": "{{name}} enregistré.",
+  "save": "Enregistrer le stand",
+  "message": "Écrire au stand",
+  "stats": {
+    "reviews_one": "{{count}} avis",
+    "reviews_other": "{{count}} avis",
+    "markets_one": "marché",
+    "markets_other": "marchés",
+    "since": "vend ici depuis"
+  },
+  "tabs": {
+    "label": "Sections du stand",
+    "stock": "Stock de la semaine",
+    "reviews": "Avis",
+    "about": "À propos du stand"
+  },
+  "stock": {
+    "count_one": "{{count}} produit",
+    "count_other": "{{count}} produits",
+    "availableOn": "Disponible le",
+    "notSelling": "{{stall}} ne vend pas le {{day}}. Les produits ci-dessus sont ceux proposés les jours de vente ({{days}})."
+  },
+  "reviews": {
+    "summary_one": "{{count}} avis, issu d'une commande terminée",
+    "summary_other": "{{count}} avis, tous issus de commandes terminées",
+    "all": "Tous",
+    "farmer": "Sur le stand",
+    "product": "Sur les produits",
+    "newest": "Plus récents d'abord"
+  },
+  "about": {
+    "whereWhen": "Où et quand",
+    "table": {
+      "market": "Marché",
+      "days": "Jours",
+      "window": "Créneau de retrait",
+      "stall": "Stand",
+      "directions": "Itinéraire"
+    },
+    "cutoffNote_one": "Les commandes ferment {{count}} heure avant le créneau choisi. Ensuite, seul le stand peut modifier la commande.",
+    "cutoffNote_other": "Les commandes ferment {{count}} heures avant le créneau choisi. Ensuite, seul le stand peut modifier la commande.",
+    "disclaimer": "MarketLink ne vérifie ni les licences ni les allégations bio. Si c'est important pour vous, demandez au stand.",
+    "contact": "Contact",
+    "email": "E-mail",
+    "since": "Vend ici depuis",
+    "mapLabel": "Carte de {{name}}",
+    "findingTitle": "Trouver le stand",
+    "findingText": "Stand {{code}} · créneau de retrait {{window}}. Les créneaux durent 30 minutes et acceptent 5 commandes chacun.",
+    "preorder": "Précommander sur ce marché"
+  },
+  "report": {
+    "sentTitle": "Signalement envoyé",
+    "sentText": "Un administrateur va s'en occuper.",
+    "button": "Signaler ce stand",
+    "note": "Absences répétées, mauvais emplacement du stand ou tout ce qui enfreint les règles de la plateforme."
+  }
+}

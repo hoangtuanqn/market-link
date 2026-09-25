@@ -1,4 +1,6 @@
+import type { TFunction } from 'i18next';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -7,48 +9,53 @@ import { Dialog } from '@/components/ui/dialog';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { farmer, marketName, product } from '@/data/catalog';
 import { farmerOrderTotal, farmerOrders, type FarmerOrderLine } from '@/data/farmer';
-import { units, vnd } from '@/lib/format';
+import { perUnit, units, vnd } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Notification from '@/utils/notification';
 
 const STEP_PIPELINE: OrderStatus[] = ['placed', 'accepted', 'ready', 'completed'];
-const DECLINE_REASONS = ['Not enough stock', 'Not selling on that day', 'Cannot make that pickup time', 'Other'];
+const DECLINE_REASONS = [
+  'decline.reasons.stock',
+  'decline.reasons.day',
+  'decline.reasons.time',
+  'decline.reasons.other',
+] as const;
 
 /**
  * What we actually know about each step: no per-event timestamp exists for these seeded orders (only the prototype's
  * single demo order had one), so this notes the cutoff instead of inventing exact clock times.
  */
-function historySteps(status: OrderStatus, cutoff: string, reason?: string) {
+function historySteps(t: TFunction<'FarmerOrderDetail'>, status: OrderStatus, cutoff: string, reason?: string) {
+  const before = t('history.before', { cutoff });
   if (status === 'declined')
     return [
-      { status: 'placed' as const, note: `Before ${cutoff}` },
+      { status: 'placed' as const, note: before },
       { status, note: reason },
     ];
   if (status === 'cancelled')
     return [
-      { status: 'placed' as const, note: `Before ${cutoff}` },
-      { status, note: 'Cancelled by the customer' },
+      { status: 'placed' as const, note: before },
+      { status, note: t('history.cancelled') },
     ];
   const idx = STEP_PIPELINE.indexOf(status);
-  return STEP_PIPELINE.slice(0, idx + 1).map((s, i) => ({ status: s, note: i === 0 ? `Before ${cutoff}` : undefined }));
+  return STEP_PIPELINE.slice(0, idx + 1).map((s, i) => ({ status: s, note: i === 0 ? before : undefined }));
 }
 
 /** FR-065 FR-066 FR-038 — Farmer's view of one order: items, customer, pickup slot and status history. */
 const FarmerOrderDetailPage = () => {
+  const { t, i18n } = useTranslation('FarmerOrderDetail');
   const { code } = useParams<{ code: string }>();
   const seeded = farmerOrders.find((o) => o.code.replace('#', '') === code);
   const [status, setStatus] = useState<OrderStatus | null>(seeded?.status ?? null);
   const [dialog, setDialog] = useState<'decline' | 'complete' | null>(null);
-  const [reason, setReason] = useState(DECLINE_REASONS[0]);
+  const [reason, setReason] = useState<string>(DECLINE_REASONS[0]);
 
   if (!seeded || status === null) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
-        <h1 className="text-h2">That order is not here any more</h1>
-        <p className="text-ink-muted">
-          It may have been cancelled by the customer, or the link is old. Open it again from your orders list.
-        </p>
-        <ButtonLink to="/farmer/orders">My orders</ButtonLink>
+        <h1 className="text-h2">{t('missing.title')}</h1>
+        <p className="text-ink-muted">{t('missing.text')}</p>
+        <ButtonLink to="/farmer/orders">{t('missing.back')}</ButtonLink>
       </div>
     );
   }
@@ -56,26 +63,26 @@ const FarmerOrderDetailPage = () => {
   const order = { ...seeded, status };
   const f = farmer(1)!;
   const total = farmerOrderTotal(order);
-  const itemsText = order.items
-    .map((i) => {
+  const itemsText = new Intl.ListFormat(i18n.language, { style: 'short', type: 'unit' }).format(
+    order.items.map((i) => {
       const p = product(i.productId);
-      return `${units(i.qty, p?.unit, p?.plural)} of ${p?.name ?? 'item'}`;
-    })
-    .join(', ');
+      return t('decline.item', { qty: units(i.qty, p?.unit, p?.plural), name: p?.name ?? t('item') });
+    }),
+  );
   const sameCustomer = farmerOrders.filter((o) => o.who === order.who);
   const completedWithCustomer = sameCustomer.filter((o) => o.status === 'completed').length;
 
   const columns: TableColumn<FarmerOrderLine>[] = [
     {
       key: 'n',
-      label: 'Product',
+      label: t('col.product'),
       render: (i) => {
         const p = product(i.productId);
         return (
           <>
             {p?.name}
             <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">
-              {p ? vnd(p.price) : ''} / {p?.unit}
+              {p ? perUnit(p.price, p.unit) : ''}
             </span>
           </>
         );
@@ -83,26 +90,26 @@ const FarmerOrderDetailPage = () => {
     },
     {
       key: 'q',
-      label: 'Requested',
+      label: t('col.requested'),
       align: 'num',
       render: (i) => units(i.qty, product(i.productId)?.unit, product(i.productId)?.plural),
     },
-    { key: 's', label: 'Left after this order', align: 'num', render: (i) => product(i.productId)?.stock ?? 0 },
-    { key: 't', label: 'Amount', align: 'num', render: (i) => vnd(i.qty * (product(i.productId)?.price ?? 0)) },
+    { key: 's', label: t('col.left'), align: 'num', render: (i) => product(i.productId)?.stock ?? 0 },
+    { key: 't', label: t('col.amount'), align: 'num', render: (i) => vnd(i.qty * (product(i.productId)?.price ?? 0)) },
   ];
 
   return (
     <div className="flex flex-col gap-6">
       <p className="text-small text-ink-muted">
         <Link to="/farmer/orders" className="text-brand underline">
-          Orders
+          {t('crumb')}
         </Link>{' '}
         · {order.code}
       </p>
 
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <p className="font-hand text-hand text-ink-muted">Cutoff {order.cutoff}</p>
+          <p className="font-hand text-hand text-ink-muted">{t('cutoff', { cutoff: order.cutoff })}</p>
           <h1 className="font-hand text-h1">
             {order.code} · {order.who} · {order.date}, {order.slot}
           </h1>
@@ -115,15 +122,15 @@ const FarmerOrderDetailPage = () => {
                 onClick={() => {
                   setStatus('accepted');
                   Notification.success({
-                    title: 'Order accepted',
-                    text: `Order ${order.code} accepted. ${order.who} has been told.`,
+                    title: t('toast.acceptedTitle'),
+                    text: t('toast.acceptedText', { code: order.code, who: order.who }),
                   });
                 }}
               >
-                Accept order
+                {t('actions.accept')}
               </Button>
               <Button variant="danger" onClick={() => setDialog('decline')}>
-                Decline
+                {t('actions.decline')}
               </Button>
             </>
           )}
@@ -132,38 +139,38 @@ const FarmerOrderDetailPage = () => {
               variant="secondary"
               onClick={() => {
                 setStatus('ready');
-                Notification.success({ title: 'Order ready', text: `Order ${order.code} marked ready.` });
+                Notification.success({
+                  title: t('toast.readyTitle'),
+                  text: t('toast.readyText', { code: order.code }),
+                });
               }}
             >
-              Mark ready
+              {t('actions.ready')}
             </Button>
           )}
-          {order.status === 'ready' && <Button onClick={() => setDialog('complete')}>Mark completed</Button>}
+          {order.status === 'ready' && <Button onClick={() => setDialog('complete')}>{t('actions.complete')}</Button>}
         </div>
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="flex flex-col gap-8">
           <section className="flex flex-col gap-3">
-            <h2 className="text-h2">Items</h2>
+            <h2 className="text-h2">{t('items.title')}</h2>
             <Table columns={columns} rows={order.items} />
-            <p className="text-small text-ink-muted">
-              Stock shown is what is left after this and other placed orders. Reserved stock is returned if you decline
-              (D-02).
-            </p>
+            <p className="text-small text-ink-muted">{t('items.note')}</p>
           </section>
 
           {order.note && (
             <section className="flex flex-col gap-3">
-              <h2 className="text-h2">Note from the customer</h2>
-              <Card className="p-4 text-[16px]">“{order.note}”</Card>
+              <h2 className="text-h2">{t('note')}</h2>
+              <Card className="p-4 text-[16px]">{t('quote', { text: order.note })}</Card>
             </section>
           )}
 
           <section className="flex flex-col gap-3">
-            <h2 className="text-h2">History</h2>
+            <h2 className="text-h2">{t('history.title')}</h2>
             <ol className="m-0 flex flex-col p-0">
-              {historySteps(order.status, order.cutoff, order.reason).map((h, i) => (
+              {historySteps(t, order.status, order.cutoff, order.reason).map((h, i) => (
                 <li key={i} className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
                   {i > 0 && (
                     <span
@@ -184,31 +191,33 @@ const FarmerOrderDetailPage = () => {
 
         <aside className="flex flex-col gap-4">
           <Card className="flex flex-col gap-3 p-6">
-            <h2 className="text-h3">Customer</h2>
+            <h2 className="text-h3">{t('customer.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-              <dt className="text-ink-muted">Name</dt>
+              <dt className="text-ink-muted">{t('customer.name')}</dt>
               <dd className="m-0">{order.who}</dd>
-              <dt className="text-ink-muted">Phone</dt>
+              <dt className="text-ink-muted">{t('customer.phone')}</dt>
               <dd className="m-0">{order.phone}</dd>
-              <dt className="text-ink-muted">Orders with you</dt>
+              <dt className="text-ink-muted">{t('customer.ordersWithYou')}</dt>
               <dd className="m-0">
-                {sameCustomer.length} order{sameCustomer.length === 1 ? '' : 's'}
-                {completedWithCustomer ? `, ${completedWithCustomer} collected` : ''}
+                {completedWithCustomer
+                  ? t('customer.withCollected', {
+                      orders: t('customer.orders', { count: sameCustomer.length }),
+                      count: completedWithCustomer,
+                    })
+                  : t('customer.orders', { count: sameCustomer.length })}
               </dd>
             </dl>
           </Card>
           <Card className="flex flex-col gap-3 p-6">
-            <h2 className="text-h3">Pickup slot</h2>
+            <h2 className="text-h3">{t('pickup.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-              <dt className="text-ink-muted">Market</dt>
-              <dd className="m-0">
-                {marketName(1)}, stall {f.stallCode}
-              </dd>
-              <dt className="text-ink-muted">Slot</dt>
+              <dt className="text-ink-muted">{t('pickup.market')}</dt>
+              <dd className="m-0">{t('pickup.marketStall', { market: marketName(1), code: f.stallCode })}</dd>
+              <dt className="text-ink-muted">{t('pickup.slot')}</dt>
               <dd className="m-0">
                 {order.date} · {order.slot}
               </dd>
-              <dt className="text-ink-muted">Pay on pickup</dt>
+              <dt className="text-ink-muted">{t('pickup.pay')}</dt>
               <dd className="text-price m-0">{vnd(total)}</dd>
             </dl>
           </Card>
@@ -217,32 +226,33 @@ const FarmerOrderDetailPage = () => {
 
       <Dialog
         open={dialog === 'decline'}
-        title={`Decline order ${order.code}?`}
+        title={t('decline.title', { code: order.code })}
         tone="danger"
         onClose={() => setDialog(null)}
         actions={
           <>
             <Button variant="secondary" onClick={() => setDialog(null)}>
-              Keep order
+              {t('decline.keep')}
             </Button>
             <Button
               variant="danger"
               onClick={() => {
                 setStatus('declined');
                 setDialog(null);
-                Notification.success({ title: 'Order declined', text: `Order ${order.code} declined.` });
+                Notification.success({
+                  title: t('toast.declinedTitle'),
+                  text: t('toast.declinedText', { code: order.code }),
+                });
               }}
             >
-              Decline order
+              {t('decline.confirm')}
             </Button>
           </>
         }
       >
-        <p>
-          {order.who} is told right away and {itemsText} go back to your stock.
-        </p>
+        <p>{t('decline.text', { who: order.who, items: itemsText })}</p>
         <label className="text-ink-muted mt-2 block text-[13px] font-bold" htmlFor="decline-reason">
-          Reason the customer will see
+          {t('decline.reason')}
         </label>
         <select
           id="decline-reason"
@@ -251,39 +261,39 @@ const FarmerOrderDetailPage = () => {
           className="border-line-strong bg-surface-raised text-body mt-1 min-h-11 w-full rounded-sm border-[1.5px] px-3"
         >
           {DECLINE_REASONS.map((r) => (
-            <option key={r}>{r}</option>
+            <option key={r} value={r}>
+              {t(r)}
+            </option>
           ))}
         </select>
       </Dialog>
 
       <Dialog
         open={dialog === 'complete'}
-        title={`Mark ${order.code} as completed?`}
+        title={t('complete.title', { code: order.code })}
         onClose={() => setDialog(null)}
         actions={
           <>
             <Button variant="secondary" onClick={() => setDialog(null)}>
-              Not yet
+              {t('complete.notYet')}
             </Button>
             <Button
               onClick={() => {
                 setStatus('completed');
                 setDialog(null);
-                Notification.success({ title: 'Order completed', text: `Order ${order.code} completed.` });
+                Notification.success({
+                  title: t('toast.completedTitle'),
+                  text: t('toast.completedText', { code: order.code }),
+                });
               }}
             >
-              Mark completed
+              {t('actions.complete')}
             </Button>
           </>
         }
       >
-        <p>
-          Do this after the customer has collected the order and paid at the stall. Completed orders count towards your
-          revenue and unlock the customer&apos;s review.
-        </p>
-        <p className="text-ink-muted text-[14px]">
-          Orders still marked Ready are completed automatically 24 hours after the pickup date (D-03).
-        </p>
+        <p>{t('complete.text')}</p>
+        <p className="text-ink-muted text-[14px]">{t('complete.auto')}</p>
       </Dialog>
     </div>
   );

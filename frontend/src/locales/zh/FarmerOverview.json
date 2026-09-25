@@ -1,0 +1,92 @@
+{
+  "tabs": {
+    "new": "待确认",
+    "acc": "已接受",
+    "ready": "已备好",
+    "done": "已完成"
+  },
+  "decline": {
+    "reasons": {
+      "stock": "库存不足",
+      "day": "当天不出摊",
+      "time": "赶不上该取货时间",
+      "other": "其他"
+    },
+    "title": "拒绝订单 {{code}}？",
+    "keep": "保留订单",
+    "confirm": "拒绝订单",
+    "text": "顾客会立即收到通知，商品将退回你的库存。",
+    "reason": "顾客将看到的理由"
+  },
+  "col": {
+    "order": "订单",
+    "customer": "顾客",
+    "pickup": "取货",
+    "items": "商品数",
+    "total": "合计",
+    "status": "状态"
+  },
+  "toast": {
+    "acceptedTitle": "订单已接受",
+    "acceptedText": "订单 {{code}} 已接受，已通知 {{who}}。",
+    "readyTitle": "订单已备好",
+    "readyText": "订单 {{code}} 已标记为备好。",
+    "completedTitle": "订单已完成",
+    "completedText": "订单 {{code}} 已完成。",
+    "declinedTitle": "订单已拒绝",
+    "declinedText": "订单 {{code}} 已拒绝，库存已退回。"
+  },
+  "actions": {
+    "accept": "接受",
+    "decline": "拒绝",
+    "ready": "标记为备好",
+    "complete": "标记为完成",
+    "view": "查看"
+  },
+  "captions": {
+    "new": "待确认 · {{sat}} 和 {{sun}}",
+    "ready": "待取货"
+  },
+  "overline": "你在 {{market}} 的摊位 · 下个市集日 {{day}}",
+  "greeting": "早上好，{{name}}",
+  "applyTemplate": "套用每周模板",
+  "addProduct": "添加商品",
+  "banner": {
+    "title_one": "有 {{count}} 个订单在等你处理，其中 {{closing}} 个将于明天 {{time}} 截止。",
+    "title_other": "有 {{count}} 个订单在等你处理，其中 {{closing}} 个将于明天 {{time}} 截止。",
+    "text": "未确认的订单仍占用库存。请在截止前接受或拒绝，方便顾客安排。"
+  },
+  "kpi": {
+    "orders": "订单总数",
+    "ordersNote_one": "本周 {{count}} 个",
+    "ordersNote_other": "本周 {{count}} 个",
+    "vsAugust": "对比 8 月",
+    "openHistory": "打开销售记录",
+    "awaitingNote_one": "<b>{{count}}</b> 个将于 {{date}} {{time}} 截止",
+    "awaitingNote_other": "<b>{{count}}</b> 个将于 {{date}} {{time}} 截止",
+    "vsThursday": "对比平常的周四",
+    "openIncoming": "打开新订单",
+    "revenue": "9 月收入",
+    "revenueNote": "₫，来自已完成订单，在摊位付款",
+    "best": "最畅销",
+    "bestNote": "本月 {{qty}}",
+    "openProducts": "打开商品",
+    "note": "9 月至今，与 8 月对比。每个卡片都可打开对应数字背后的页面。"
+  },
+  "incoming": {
+    "title": "新订单",
+    "all": "全部订单与筛选",
+    "note": "新订单会高亮显示，直到你打开它。"
+  },
+  "stock": {
+    "title": "{{day}}的库存",
+    "link": "本周库存",
+    "note": "已预留表示有订单占用。顾客下单时即从你的库存中扣除。"
+  },
+  "best": {
+    "title": "畅销商品",
+    "link": "销售记录",
+    "note": "9 月售出量，按各自单位计"
+  },
+  "protoNote": "侧边栏及其上方的页头是相对原型新增的。"
+}

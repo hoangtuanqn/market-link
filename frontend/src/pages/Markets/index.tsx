@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import DayChips from '@/components/DayChips';
 import MarketCard from '@/components/MarketCard';
@@ -11,34 +12,19 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import useClock from '@/hooks/useClock';
+import useSettings from '@/hooks/useSettings';
 import { markets } from '@/data/home';
-import { dayList, formatTime, upcoming, weekday } from '@/lib/format';
+import { dayList, dayName, formatClock, nowLabel, upcoming } from '@/lib/format';
 import Notification from '@/utils/notification';
 
 const PAGE_SIZE = 3;
 /** All seven weekdays, Monday first, matching `market_operating_days.day_of_week` (0 = Sunday). */
-const DAY_OPTIONS = [
-  { value: 1, label: 'Monday' },
-  { value: 2, label: 'Tuesday' },
-  { value: 3, label: 'Wednesday' },
-  { value: 4, label: 'Thursday' },
-  { value: 5, label: 'Friday' },
-  { value: 6, label: 'Saturday' },
-  { value: 0, label: 'Sunday' },
-];
-const SORTS = [
-  { value: 'near', label: 'Nearest first' },
-  { value: 'stalls', label: 'Most stalls' },
-  { value: 'opens', label: 'Opens earliest' },
-];
+const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 0];
+const SORTS = ['near', 'stalls', 'opens'] as const;
 /** FR-084: the four states of this list. Empty is reachable for real, so it needs no demo switch. */
-const VIEWS = [
-  { value: 'loaded', label: 'With data' },
-  { value: 'loading', label: 'Loading' },
-  { value: 'error', label: 'Error' },
-] as const;
+const VIEWS = ['loaded', 'loading', 'error'] as const;
 
-type View = (typeof VIEWS)[number]['value'];
+type View = (typeof VIEWS)[number];
 
 /**
  * How long the skeleton is held on the first visit and on every page change. The markets are still demo data in
@@ -47,13 +33,12 @@ type View = (typeof VIEWS)[number]['value'];
  */
 const LOADING_MS = 1200;
 
-const pad = (n: number) => String(n).padStart(2, '0');
-const dayLabel = (dow: number) => DAY_OPTIONS.find((d) => d.value === dow)?.label ?? '';
+const dayLabel = (dow: number) => dayName(dow, 'long');
 const openOn = (dow: number) => markets.filter((m) => m.days.includes(dow));
-const plural = (n: number) => `${n} market${n === 1 ? '' : 's'}`;
 
 /** FR-010 — browse markets by location and day. */
 const MarketsPage = () => {
+  const { t } = useTranslation('Markets');
   const now = useClock();
   const [day, setDay] = useState(6);
   const [area, setArea] = useState('all');
@@ -77,20 +62,24 @@ const MarketsPage = () => {
   // Areas come from the markets themselves, so a new market in a new district needs no edit here (FR-010).
   const areas = useMemo(() => [...new Set(markets.map((m) => m.district))].sort((a, b) => a.localeCompare(b)), []);
 
+  const { preferredMarket } = useSettings();
   const matches = useMemo(() => {
     const list = onDay.filter((m) => area === 'all' || m.district === area);
     return [...list].sort((a, b) => {
+      // Settings → Market you shop at most: that market leads whatever the sort
+      const pa = String(a.id) === preferredMarket ? 0 : 1;
+      const pb = String(b.id) === preferredMarket ? 0 : 1;
+      if (pa !== pb) return pa - pb;
       if (sort === 'stalls') return b.stalls - a.stalls;
       if (sort === 'opens') return a.open.localeCompare(b.open);
       return parseFloat(a.distance ?? '0') - parseFloat(b.distance ?? '0');
     });
-  }, [onDay, area, sort]);
+  }, [onDay, area, sort, preferredMarket]);
 
   const pages = Math.max(1, Math.ceil(matches.length / PAGE_SIZE));
   const currentPage = Math.min(page, pages);
   const from = (currentPage - 1) * PAGE_SIZE;
   const slice = matches.slice(from, from + PAGE_SIZE);
-  const where = area === 'all' ? '' : ` in ${area}`;
 
   // The map follows the filters; with nothing to show it falls back to every market rather than an empty city view.
   const mapMarkers = useMemo<MapMarker[]>(() => {
@@ -104,11 +93,15 @@ const MarketsPage = () => {
       selected: onPage.has(m.id),
       popup: {
         title: m.name,
-        lines: [`${dayList(m.days)} · ${m.open}–${m.close}`, `${m.stalls} stalls`, m.district],
+        lines: [
+          `${dayList(m.days)} · ${formatClock(m.open)}–${formatClock(m.close)}`,
+          t('popupStalls', { count: m.stalls }),
+          m.district,
+        ],
         href: `/markets/${m.id}`,
       },
     }));
-  }, [matches, from]);
+  }, [matches, from, t]);
 
   const setDayAndReset = (d: number) => {
     setDay(d);
@@ -127,7 +120,7 @@ const MarketsPage = () => {
     setArea('all');
     setSort('near');
     setPage(1);
-    Notification.info({ title: 'Filters cleared', text: 'Showing every market open on Saturday.' });
+    Notification.info({ title: t('cleared.title'), text: t('cleared.text', { day: dayLabel(6) }) });
   };
   const goToPage = (p: number) => {
     setPage(p);
@@ -139,45 +132,43 @@ const MarketsPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <p className="font-hand text-hand text-ink-muted">
-          <time dateTime={now.toISOString()}>
-            {weekday(now)} {pad(now.getDate())}/{pad(now.getMonth() + 1)} · {formatTime(now)}
-          </time>{' '}
-          · Ho Chi Minh City · {plural(matches.length)}
+          <time dateTime={now.toISOString()}>{nowLabel(now)}</time> · {t('city')} ·{' '}
+          {t('count', { count: matches.length })}
         </p>
-        <h1 className="font-hand md:text-display my-2 text-[40px] leading-[46px]">Markets</h1>
-        <p className="text-body-lg max-w-155">Pick the day you want to shop, then narrow it down to your area.</p>
+        <h1 className="font-hand md:text-display my-2 text-[40px] leading-[46px]">{t('title')}</h1>
+        <p className="text-body-lg max-w-155">{t('intro')}</p>
       </div>
 
-      <Card as="section" aria-label="Filter the markets" className="flex flex-col gap-4 p-4">
+      <Card as="section" aria-label={t('filters.label')} className="flex flex-col gap-4 p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           {/*
            * A day no market anywhere opens on is shown struck through rather than hidden, so the week always reads the
            * same and nobody clicks into an empty result.
            */}
           <DayChips
-            legend="Market day"
+            legend={t('filters.day')}
             name="market-day"
             value={String(day)}
             onChange={(v) => setDayAndReset(Number(v))}
             options={DAY_OPTIONS.map((d) => ({
-              value: String(d.value),
-              label: d.label,
-              date: upcoming(d.value, now),
-              disabled: openOn(d.value).length === 0,
+              value: String(d),
+              label: dayLabel(d),
+              date: upcoming(d, now),
+              disabled: openOn(d).length === 0,
             }))}
           />
           <Button variant="ghost" size="sm" onClick={clearAll} className="self-start">
-            Clear all
+            {t('filters.clearAll')}
           </Button>
         </div>
         <div className="flex flex-wrap items-end gap-8">
           <SelectField
             id="area"
-            label="Area"
+            label={t('filters.area')}
             value={area}
             onChange={(e) => setAreaAndReset(e.target.value)}
             options={[
-              { value: 'all', label: `All areas (${onDay.length})` },
+              { value: 'all', label: t('filters.allAreas', { count: onDay.length }) },
               ...areas.map((a) => ({
                 value: a,
                 label: `${a} (${onDay.filter((m) => m.district === a).length})`,
@@ -187,10 +178,10 @@ const MarketsPage = () => {
           />
           <SelectField
             id="sort"
-            label="Sort by"
+            label={t('filters.sort')}
             value={sort}
             onChange={(e) => setSortAndReset(e.target.value)}
-            options={SORTS}
+            options={SORTS.map((s) => ({ value: s, label: t(`sorts.${s}`) }))}
             className="min-w-52.5"
           />
         </div>
@@ -198,15 +189,17 @@ const MarketsPage = () => {
 
       <p className="text-body">
         {matches.length ? (
-          <>
-            <b>{plural(matches.length)}</b> open on {dayLabel(day)}
-            {where}
-          </>
+          <Trans
+            t={t}
+            i18nKey={area === 'all' ? 'summary.open' : 'summary.openIn'}
+            count={matches.length}
+            values={{ day: dayLabel(day), area }}
+            components={{ b: <b /> }}
+          />
+        ) : area === 'all' ? (
+          t('summary.none', { day: dayLabel(day) })
         ) : (
-          <>
-            Nothing open on {dayLabel(day)}
-            {where}
-          </>
+          t('summary.noneIn', { day: dayLabel(day), area })
         )}
       </p>
 
@@ -214,12 +207,8 @@ const MarketsPage = () => {
         <div ref={listRef} className="flex flex-col gap-4">
           {view === 'error' ? (
             <LoadError
-              noun="markets"
-              alt={
-                <>
-                  the <Link to="/map">market map</Link> opens on its own page
-                </>
-              }
+              noun={t('error.noun')}
+              alt={<Trans t={t} i18nKey="error.alt" components={{ link: <Link to="/map" /> }} />}
               onRetry={() => setOverride(null)}
             />
           ) : view === 'loading' || matches.length ? (
@@ -238,12 +227,12 @@ const MarketsPage = () => {
                   {pages > 1 ? (
                     <>
                       <span className="text-small text-ink-muted">
-                        Showing {from + 1}–{from + slice.length} of {matches.length}
+                        {t('pager.showing', { from: from + 1, to: from + slice.length, total: matches.length })}
                       </span>
                       <Pagination page={currentPage} pages={pages} onChange={goToPage} />
                     </>
                   ) : (
-                    <span className="text-small text-ink-muted">All {plural(matches.length)} on one page</span>
+                    <span className="text-small text-ink-muted">{t('pager.onePage', { count: matches.length })}</span>
                   )}
                 </div>
               )}
@@ -251,22 +240,22 @@ const MarketsPage = () => {
           ) : area !== 'all' ? (
             <DataState
               className="max-w-none flex-none"
-              title={`No markets in ${area} on ${dayLabel(day)}`}
-              text={`Across the whole city ${plural(onDay.length)} open that day. Widen the area, or pick another day.`}
+              title={t('empty.areaTitle', { area, day: dayLabel(day) })}
+              text={t('empty.areaText', { count: onDay.length })}
               action={
                 <Button variant="secondary" size="sm" onClick={() => setAreaAndReset('all')}>
-                  Show all areas
+                  {t('empty.allAreas')}
                 </Button>
               }
             />
           ) : (
             <DataState
               className="max-w-none flex-none"
-              title={`No markets open on ${dayLabel(day)}`}
-              text={`Saturday is the busiest day, with ${plural(openOn(6).length)} open.`}
+              title={t('empty.dayTitle', { day: dayLabel(day) })}
+              text={t('empty.dayText', { day: dayLabel(6), count: openOn(6).length })}
               action={
                 <Button variant="secondary" size="sm" onClick={() => setDayAndReset(6)}>
-                  Show Saturday
+                  {t('empty.showDay', { day: dayLabel(6) })}
                 </Button>
               }
             />
@@ -274,30 +263,28 @@ const MarketsPage = () => {
         </div>
 
         <div className="flex flex-col gap-4 lg:sticky lg:top-20">
-          <MarketMap label="Map of the markets that match" markers={mapMarkers} className="min-h-80 md:min-h-120" />
-          <p className="text-caption text-ink-muted">
-            The map follows the filters and shows only the markets in the list.
-          </p>
+          <MarketMap label={t('map.label')} markers={mapMarkers} className="min-h-80 md:min-h-120" />
+          <p className="text-caption text-ink-muted">{t('map.note')}</p>
         </div>
       </div>
 
       <section className="mt-2 flex flex-col gap-4">
-        <h2 className="text-h3">Other states of this list (FR-084)</h2>
+        <h2 className="text-h3">{t('demo.title')}</h2>
         {/* "With data" hands the list back to the real loading cycle rather than pinning it open. */}
         <div className="flex flex-wrap items-center gap-2">
           {VIEWS.map((v) => (
-            <Chip
-              key={v.value}
-              pressed={view === v.value}
-              onClick={() => setOverride(v.value === 'loaded' ? null : v.value)}
-            >
-              {v.label}
+            <Chip key={v} pressed={view === v} onClick={() => setOverride(v === 'loaded' ? null : v)}>
+              {t(`demo.views.${v}`)}
             </Chip>
           ))}
         </div>
         <p className="text-small text-ink-muted">
-          The empty state is reachable for real: pick <b>Friday</b> and the area <b>Bình Thạnh</b>. It names what you
-          chose and offers the way out.
+          <Trans
+            t={t}
+            i18nKey="demo.note"
+            values={{ day: dayLabel(5), area: 'Bình Thạnh' }}
+            components={{ b: <b /> }}
+          />
         </p>
       </section>
     </div>

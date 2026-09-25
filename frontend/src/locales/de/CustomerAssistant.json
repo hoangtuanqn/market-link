@@ -1,0 +1,41 @@
+{
+  "eyebrow": "Optional · FR-090 bis FR-092",
+  "title": "Einkaufsassistent",
+  "intro": "Fragen Sie, wo es dieses Wochenende etwas gibt, wann ein Markt öffnet oder welche Abholzeiten ein Stand hat. Jede Antwort stammt aus den eigenen Daten von MarketLink.",
+  "conversation": "Unterhaltung mit dem Assistenten",
+  "botName": "MarketLink-Assistent",
+  "botNote": "Antworten nutzen den aktuellen Katalog. Der Intent steht unter jeder Antwort.",
+  "message": "Nachricht",
+  "placeholder": "z. B. Wer hat am Samstag Eier in Thảo Điền?",
+  "send": "Senden",
+  "reply": {
+    "greeting": "Hallo {{name}}. Fragen Sie mich, was es dieses Wochenende gibt oder wann ein Markt öffnet.",
+    "pomelo": "Am {{day}}, {{date}}, haben 2 Stände grünschalige Pomelo: <b>Út Hiền Orchard</b> auf dem Thủ Đức Farmers Market (noch 2, {{price1}}) und <b>Ba Lành Farm</b> auf dem Thảo Điền Weekend Market (noch 9, {{price2}}).",
+    "slots": "Bei Út Hiền Orchard ist die Abholung am {{day}}, {{date}}, von {{from}} bis {{to}} auf dem Thủ Đức Farmers Market. Freie Zeiten: {{free}}. Die Zeit {{full}} ist ausgebucht. Bestellschluss ist 12 Stunden vor der Abholzeit.",
+    "unknown": "Das habe ich nicht verstanden. Versuchen Sie einen Produkt-, Markt- oder Standnamen."
+  },
+  "question": {
+    "pomeloMorning": "Welcher Markt hat am Samstagmorgen grünschalige Pomelo?"
+  },
+  "suggest": {
+    "pomeloSat": "Wo bekomme ich am Samstag grünschalige Pomelo?",
+    "baChieuOpen": "Wann öffnet Bà Chiểu Green Market?",
+    "showMap": "Die 2 Stände auf der Karte zeigen",
+    "slotsUtHien": "Abholzeiten bei Út Hiền",
+    "addPomelos": "2 Pomelos in den Warenkorb legen",
+    "directionsThuDuc": "Route zum Thủ Đức Farmers Market",
+    "thaoDien": "Was gibt es am Samstag in Thảo Điền?"
+  },
+  "canAnswer": {
+    "title": "Was er beantworten kann",
+    "product": "Ein Produkt auf Märkten und an Ständen finden, mit verbleibender Menge",
+    "hours": "Markttage und Öffnungszeiten",
+    "stalls": "Welche Stände an einem Tag auf einem Markt sind",
+    "slots": "Abholfenster und freie Zeiten eines Stands",
+    "price": "Preis, Einheit und Bestand eines Produkts"
+  },
+  "how": {
+    "title": "So funktioniert es",
+    "text": "Die Nachricht wird einem aus einer festen Menge von Intents zugeordnet, und jeder Intent führt eine vorbereitete Abfrage mit Parametern aus. Das Modell schreibt nie SQL. Nachrichten werden mit dem Intent gespeichert, damit der Ablauf der Jury gezeigt werden kann."
+  }
+}

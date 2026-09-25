@@ -1,0 +1,17 @@
+{
+  "title": "Settings",
+  "intro": "Your own preferences, and the defaults your stall starts from.",
+  "selling": "Selling defaults",
+  "sellingNote": "Saved with your account. They will be used when you generate pickup slots for a new week.",
+  "cutoff": "Order cutoff",
+  "cutoffNote": "How many hours before a pickup slot the order locks.",
+  "slot": "Slot length",
+  "slotNote": "Used when you generate pickup slots for a new week.",
+  "max": "Orders per slot",
+  "hours_one": "{{count}} hour",
+  "hours_other": "{{count}} hours",
+  "minutes_one": "{{count}} minute",
+  "minutes_other": "{{count}} minutes",
+  "orders_one": "{{count}} order",
+  "orders_other": "{{count}} orders"
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Mis pedidos",
+  "intro": "Primero las próximas recogidas. Los pedidos anteriores guardan su recibo y puedes volver a pedir cualquier cosa que ya compraste al precio y stock de hoy.",
+  "stall": "Puesto",
+  "allStalls": "Todos los puestos",
+  "tabs": {
+    "label": "Pedidos",
+    "upcoming": "Próximos",
+    "past": "Anteriores",
+    "all": "Todos"
+  }
+}

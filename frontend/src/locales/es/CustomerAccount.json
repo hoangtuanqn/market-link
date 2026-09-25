@@ -1,0 +1,119 @@
+{
+  "title": "Cuenta",
+  "intro": "Tus datos solo se comparten con un puesto en los pedidos que haces allí.",
+  "sell": {
+    "title": "Vende en MarketLink",
+    "text": "Si cultivas alimentos, esta cuenta puede convertirse en un puesto. Conservas tus pedidos, favoritos y carrito, y aparece un panel para el stock y las horas de recogida cuando un administrador te aprueba.",
+    "apply": "Solicitar vender"
+  },
+  "signOut": {
+    "title": "Cerrar sesión",
+    "text": "Cierra la sesión solo en este dispositivo.",
+    "button": "Cerrar sesión"
+  },
+  "profile": {
+    "title": "Tus datos",
+    "loading": "Cargando tus datos…",
+    "loadFailed": "No se pudieron cargar tus datos. Inténtalo de nuevo.",
+    "signedOut": {
+      "title": "Has cerrado sesión.",
+      "text": "Vuelve a iniciar sesión para ver y editar tus datos.",
+      "signIn": "Iniciar sesión"
+    },
+    "nothingChanged": "No se cambió nada.",
+    "retry": "Reintentar",
+    "fullName": "Nombre completo",
+    "phone": "Número de teléfono",
+    "email": "Correo electrónico",
+    "emailHint": "Se usa para iniciar sesión. No se puede cambiar aquí.",
+    "address": "Dirección",
+    "addressHint": "Se usa para distancias e indicaciones.",
+    "save": "Guardar cambios",
+    "saving": "Guardando…",
+    "noChanges": "No hay cambios que guardar.",
+    "saved": "Tus datos se han guardado.",
+    "saveFailed": "No se pudieron guardar tus datos. Inténtalo de nuevo."
+  },
+  "password": {
+    "title": "Cambiar contraseña",
+    "intro": "Se cerrará tu sesión en todos los dispositivos y tendrás que volver a iniciarla.",
+    "current": "Contraseña actual",
+    "new": "Nueva contraseña",
+    "repeat": "Repite la nueva contraseña",
+    "hint": "De {{min}} a {{max}} caracteres.",
+    "submit": "Cambiar contraseña",
+    "submitting": "Cambiando contraseña…",
+    "changed": "Tu contraseña se ha cambiado. Vuelve a iniciar sesión.",
+    "failed": "No se pudo cambiar tu contraseña. Inténtalo de nuevo.",
+    "errors": {
+      "currentRequired": "Escribe tu contraseña actual.",
+      "newRequired": "Escribe una contraseña nueva.",
+      "length": "La contraseña debe tener de {{min}} a {{max}} caracteres.",
+      "same": "Usa una contraseña distinta de la actual.",
+      "confirmRequired": "Confirma tu contraseña.",
+      "mismatch": "Las contraseñas no coinciden."
+    }
+  },
+  "photo": {
+    "title": "Foto de perfil",
+    "intro": "Se muestra en el menú y a los puestos en tus pedidos. JPEG, PNG o una foto de tu cámara.",
+    "upload": "Subir foto",
+    "take": "Hacer foto",
+    "remove": "Quitar foto",
+    "removing": "Quitando…",
+    "removed": "Se ha quitado tu foto.",
+    "removeFailed": "No se pudo quitar tu foto. Inténtalo de nuevo.",
+    "notUsed": "Foto no usada"
+  },
+  "photoErrors": {
+    "notPhoto": "Elige una foto (JPEG, PNG, HEIC o WebP).",
+    "tooBig": "Esa foto pesa más de {{mb}} MB. Elige una más pequeña.",
+    "unreadable": "Este archivo no es una foto que podamos leer.",
+    "noPicture": "La cámara aún no tiene imagen. Inténtalo de nuevo.",
+    "captureFailed": "No se pudo hacer la foto."
+  },
+  "dialog": {
+    "takeTitle": "Hacer una foto",
+    "frameTitle": "Encuadra tu foto",
+    "frameHelp": "Arrastra para mover la foto y haz zoom hasta que tu cara llene el círculo.",
+    "cancel": "Cancelar",
+    "uploadInstead": "Subir una foto en su lugar",
+    "take": "Hacer foto",
+    "retake": "Repetir",
+    "chooseAnother": "Elegir otra",
+    "save": "Guardar foto",
+    "saving": "Guardando…",
+    "saved": "Tu foto se ha guardado.",
+    "saveFailed": "No se pudo guardar tu foto. Inténtalo de nuevo.",
+    "takeFailed": "No se pudo hacer la foto. Inténtalo de nuevo.",
+    "unchanged": "Tu foto actual no ha cambiado."
+  },
+  "camera": {
+    "preview": "Vista previa de la cámara",
+    "starting": "Iniciando la cámara…",
+    "blocked": {
+      "title": "El acceso a la cámara está bloqueado.",
+      "text": "Permite la cámara para este sitio en los ajustes del navegador, o sube una foto en su lugar."
+    },
+    "notFound": {
+      "title": "No se encontró ninguna cámara.",
+      "text": "Conecta una, o sube una foto en su lugar."
+    },
+    "busy": {
+      "title": "La cámara está ocupada.",
+      "text": "Cierra otras apps que la estén usando e inténtalo de nuevo, o sube una foto."
+    },
+    "failed": {
+      "title": "La cámara no pudo iniciarse.",
+      "text": "Inténtalo de nuevo, o sube una foto en su lugar."
+    },
+    "insecure": {
+      "title": "Este navegador no puede abrir la cámara aquí.",
+      "text": "La cámara necesita una página segura (https). Sube una foto en su lugar."
+    }
+  },
+  "crop": {
+    "frame": "Encuadre de la foto. Arrastra, o usa las flechas para moverla y más o menos para hacer zoom.",
+    "zoom": "Zoom"
+  }
+}

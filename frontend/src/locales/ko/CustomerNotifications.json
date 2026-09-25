@@ -1,0 +1,13 @@
+{
+  "title": "알림",
+  "intro": "주문 수락·거절·준비 완료, 즐겨찾기 상품 재입고, MarketLink 공지.",
+  "filter": {
+    "all": "전체",
+    "unread": "읽지 않음"
+  },
+  "unreadCount_one": "읽지 않음 {{count}}개",
+  "unreadCount_other": "읽지 않음 {{count}}개",
+  "unread": "읽지 않음",
+  "markAllRead": "모두 읽음으로 표시",
+  "note": "지금은 앱 알림만 있어요. 확인 및 픽업 준비 완료 이메일은 나중에 추가될 예정이에요."
+}

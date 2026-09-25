@@ -1,0 +1,9 @@
+{
+  "overline": "Admin area",
+  "hello": "Hello, {{name}}",
+  "fallbackName": "admin",
+  "empty": {
+    "title": "The dashboard is on its way",
+    "text": "Totals for farmers, customers, markets and orders will show here once the admin dashboard is built."
+  }
+}

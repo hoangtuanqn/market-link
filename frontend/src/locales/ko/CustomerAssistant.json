@@ -1,0 +1,41 @@
+{
+  "eyebrow": "선택 사항 · FR-090~FR-092",
+  "title": "쇼핑 도우미",
+  "intro": "이번 주말에 무엇을 어디서 살 수 있는지, 시장이 언제 여는지, 가게에 남은 픽업 시간이 있는지 물어보세요. 모든 답은 MarketLink 자체 데이터에서 나와요.",
+  "conversation": "도우미 대화",
+  "botName": "MarketLink 도우미",
+  "botNote": "실시간 상품 목록으로 답해요. 답마다 아래에 인텐트가 표시돼요.",
+  "message": "메시지",
+  "placeholder": "예: 토요일에 Thảo Điền에서 달걀 파는 곳은?",
+  "send": "보내기",
+  "reply": {
+    "greeting": "안녕하세요, {{name}} 님. 이번 주말에 무엇이 있는지, 시장이 언제 여는지 물어보세요.",
+    "pomelo": "{{day}} {{date}}에 청피 포멜로를 파는 가게는 2곳이에요: Thủ Đức Farmers Market의 <b>Út Hiền Orchard</b>(2개 남음, {{price1}}), Thảo Điền Weekend Market의 <b>Ba Lành Farm</b>(9개 남음, {{price2}}).",
+    "slots": "Út Hiền Orchard는 {{day}} {{date}} {{from}} – {{to}}에 Thủ Đức Farmers Market에서 픽업해요. 빈 시간: {{free}}. {{full}} 시간은 다 찼어요. 주문은 픽업 12시간 전에 마감해요.",
+    "unknown": "이해하지 못했어요. 상품 이름, 시장 또는 가게 이름으로 물어보세요."
+  },
+  "question": {
+    "pomeloMorning": "토요일 아침에 청피 포멜로가 있는 시장은 어디예요?"
+  },
+  "suggest": {
+    "pomeloSat": "토요일에 청피 포멜로는 어디서 살 수 있어요?",
+    "baChieuOpen": "Bà Chiểu Green Market은 언제 열어요?",
+    "showMap": "가게 2곳을 지도에서 보기",
+    "slotsUtHien": "Út Hiền 픽업 시간",
+    "addPomelos": "포멜로 2개 장바구니에 담기",
+    "directionsThuDuc": "Thủ Đức Farmers Market 길 찾기",
+    "thaoDien": "토요일 Thảo Điền에는 뭐가 있어요?"
+  },
+  "canAnswer": {
+    "title": "답할 수 있는 것",
+    "product": "시장과 가게에서 상품 찾기, 남은 수량 포함",
+    "hours": "시장 여는 날과 영업시간",
+    "stalls": "특정 날짜에 시장에 나오는 가게",
+    "slots": "가게의 픽업 시간대와 빈 시간",
+    "price": "상품의 가격, 단위, 재고"
+  },
+  "how": {
+    "title": "작동 방식",
+    "text": "메시지는 정해진 인텐트 중 하나로 분류되고, 인텐트마다 매개변수가 있는 준비된 쿼리를 실행해요. 모델은 SQL을 직접 작성하지 않아요. 심사위원에게 흐름을 보여 줄 수 있도록 메시지는 인텐트와 함께 저장돼요."
+  }
+}

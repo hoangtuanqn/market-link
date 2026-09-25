@@ -1,0 +1,37 @@
+{
+  "title": "Tin nhắn",
+  "intro": "Hỏi sạp về nông sản tuần này, hoặc thống nhất chi tiết đơn hàng trước giờ chốt.",
+  "srs": {
+    "title": "Nhắn tin không có trong SRS.",
+    "text": "Hãy xin LEAD một yêu cầu mới trước khi làm tính năng này. Màn hình này có để nhóm cân nhắc xem có đáng bỏ công hay không."
+  },
+  "conversations": "Cuộc trò chuyện",
+  "stallCount_one": "{{count}} sạp",
+  "stallCount_other": "{{count}} sạp",
+  "time": {
+    "yesterday": "Hôm qua",
+    "now": "vừa xong"
+  },
+  "conversationWith": "Trò chuyện với {{name}}",
+  "seeStall": "Xem sạp",
+  "openOrder": "Mở đơn {{code}}",
+  "you": "Bạn",
+  "orderRef": {
+    "title": "Đơn {{code}} · {{stall}}",
+    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · chốt lúc {{cutoff}} ngày {{cutoffDate}}"
+  },
+  "items_one": "{{count}} món",
+  "items_other": "{{count}} món",
+  "messageTo": "Nhắn cho {{name}}",
+  "placeholder": "Hỏi về hàng tuần này hoặc giờ nhận hàng của bạn",
+  "send": "Gửi",
+  "for": {
+    "title": "Tin nhắn dùng để làm gì",
+    "text": "Hỏi xem món nào đó có còn về không, nhờ sạp giữ thêm một chút, hoặc thống nhất giờ nhận khác. Thay đổi đơn hàng vẫn phải làm trên chính đơn hàng, để hai bên có cùng một bản ghi.",
+    "edit": "Sửa đơn {{code}}"
+  },
+  "notFor": {
+    "title": "Tin nhắn không dùng để làm gì",
+    "text": "Ở đây không mặc cả giá và không thanh toán. Giá do sạp đặt và bạn trả tiền tại sạp khi nhận hàng. Một tin nhắn không bao giờ tự thay đổi đơn hàng."
+  }
+}

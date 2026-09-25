@@ -1,0 +1,39 @@
+{
+  "notFound": {
+    "title": "이 장터는 더 이상 없어요",
+    "browse": "장터 둘러보기"
+  },
+  "intro_one": "가게 {{count}}곳. 가게마다 픽업 12~24시간 전에 주문을 마감해요. 가게에서 받고 농부에게 직접 결제해요.",
+  "intro_other": "가게 {{count}}곳. 가게마다 픽업 12~24시간 전에 주문을 마감해요. 가게에서 받고 농부에게 직접 결제해요.",
+  "toast": {
+    "saved": "{{name}}을(를) 저장했어요.",
+    "removed": "{{name}}을(를) 즐겨찾기에서 뺐어요."
+  },
+  "save": {
+    "on": "저장한 장터",
+    "off": "장터 저장"
+  },
+  "directions": "길찾기",
+  "search": {
+    "scope": "검색 범위",
+    "scopes": {
+      "product": "이 장터의 상품",
+      "farmer": "이 장터의 가게"
+    },
+    "keyword": "키워드",
+    "placeholder": "공심채, 사워도우, 달걀…",
+    "submit": "검색"
+  },
+  "day": "장날",
+  "all": "전체",
+  "inStock": "재고 있음",
+  "available": "{{day}}에 살 수 있는 상품",
+  "productsFrom": "{{stalls}}의 {{products}}",
+  "products_one": "상품 {{count}}개",
+  "products_other": "상품 {{count}}개",
+  "stalls_one": "가게 {{count}}곳",
+  "stalls_other": "가게 {{count}}곳",
+  "mapLabel": "{{name}}와 가게 지도",
+  "stallsTitle": "{{day}} 이 장터의 가게",
+  "stallsNote": "선택한 날에 판매하지 않는 가게는 표시되지 않아요"
+}

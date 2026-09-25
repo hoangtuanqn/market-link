@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { useCallback, useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import AuthApi from '@/api-requests/auth.requests';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -21,6 +22,7 @@ const isUnauthorized = (error: unknown) => error instanceof AxiosError && error.
 
 /** "Your details": lấy hồ sơ bằng GET /auth/me, lưu bằng PUT /auth/me. Email chỉ đọc (dùng để đăng nhập). */
 const ProfileForm = () => {
+  const { t } = useTranslation('CustomerAccount');
   const [status, setStatus] = useState<Status>('loading');
   const [loadError, setLoadError] = useState('');
   const [email, setEmail] = useState('');
@@ -45,10 +47,10 @@ const ProfileForm = () => {
         setStatus('signed-out');
         return;
       }
-      setLoadError(Helper.getErrorMessage(error, 'Could not load your details. Please try again.'));
+      setLoadError(Helper.getErrorMessage(error, t('profile.loadFailed')));
       setStatus('error');
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- tải hồ sơ khi mở trang
@@ -82,11 +84,11 @@ const ProfileForm = () => {
       setSaved(values);
       // Header ("Hi, …") đọc từ phiên nên cập nhật luôn
       Session.updateUser(user);
-      Notification.success({ text: response.message || 'Your details are saved.' });
+      Notification.success({ text: response.message || t('profile.saved') });
     } catch (error) {
       // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (số điện thoại đã có người dùng) → lỗi dưới ô nhập
       setErrors(Helper.getFieldErrors(error));
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not save your details. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('profile.saveFailed')) });
     } finally {
       setIsSaving(false);
     }
@@ -95,8 +97,8 @@ const ProfileForm = () => {
   if (status === 'loading') {
     return (
       <Card className="flex flex-col gap-2 p-6" aria-busy="true">
-        <h2 className="text-h3">Your details</h2>
-        <p className="text-small text-ink-muted">Loading your details…</p>
+        <h2 className="text-h3">{t('profile.title')}</h2>
+        <p className="text-small text-ink-muted">{t('profile.loading')}</p>
       </Card>
     );
   }
@@ -104,12 +106,12 @@ const ProfileForm = () => {
   if (status === 'signed-out') {
     return (
       <Card className="flex flex-col gap-4 p-6">
-        <h2 className="text-h3">Your details</h2>
-        <Banner variant="warning" title="You are signed out.">
-          Sign in again to see and edit your details.
+        <h2 className="text-h3">{t('profile.title')}</h2>
+        <Banner variant="warning" title={t('profile.signedOut.title')}>
+          {t('profile.signedOut.text')}
         </Banner>
         <ButtonLink to="/login" className="self-start">
-          Sign in
+          {t('profile.signedOut.signIn')}
         </ButtonLink>
       </Card>
     );
@@ -118,12 +120,12 @@ const ProfileForm = () => {
   if (status === 'error') {
     return (
       <Card className="flex flex-col gap-4 p-6">
-        <h2 className="text-h3">Your details</h2>
+        <h2 className="text-h3">{t('profile.title')}</h2>
         <Banner variant="danger" title={loadError}>
-          Nothing was changed.
+          {t('profile.nothingChanged')}
         </Banner>
         <Button variant="secondary" className="self-start" onClick={load}>
-          Try again
+          {t('profile.retry')}
         </Button>
       </Card>
     );
@@ -132,11 +134,11 @@ const ProfileForm = () => {
   return (
     <Card className="p-6">
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
-        <h2 className="text-h3">Your details</h2>
+        <h2 className="text-h3">{t('profile.title')}</h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Field
             id="fullName"
-            label="Full name"
+            label={t('profile.fullName')}
             required
             autoComplete="name"
             value={form.fullName}
@@ -146,7 +148,7 @@ const ProfileForm = () => {
           />
           <Field
             id="phone"
-            label="Phone number"
+            label={t('profile.phone')}
             required
             type="tel"
             inputMode="tel"
@@ -159,30 +161,30 @@ const ProfileForm = () => {
           />
           <Field
             id="email"
-            label="Email"
+            label={t('profile.email')}
             type="email"
             value={email}
             readOnly
             disabled
-            hint="Used to sign in. It cannot be changed here."
+            hint={t('profile.emailHint')}
           />
           <Field
             id="address"
-            label="Address"
+            label={t('profile.address')}
             required
             autoComplete="street-address"
             value={form.address}
             onChange={onChange('address')}
             error={errors.address}
-            hint={errors.address ? undefined : 'Used for distances and directions.'}
+            hint={errors.address ? undefined : t('profile.addressHint')}
             disabled={isSaving}
           />
         </div>
         <div className="flex flex-wrap items-center gap-3 pt-2">
           <Button type="submit" disabled={isSaving || !isDirty}>
-            {isSaving ? 'Saving…' : 'Save changes'}
+            {isSaving ? t('profile.saving') : t('profile.save')}
           </Button>
-          {!isDirty && !isSaving && <span className="text-small text-ink-muted">No changes to save.</span>}
+          {!isDirty && !isSaving && <span className="text-small text-ink-muted">{t('profile.noChanges')}</span>}
         </div>
       </form>
     </Card>

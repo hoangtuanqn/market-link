@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { NavLink } from 'react-router';
 import Avatar from '@/components/Avatar';
 import { Button } from '@/components/ui/button';
@@ -13,16 +14,17 @@ type MenuMobileProps = {
 
 /** Slide-in drawer for screens below 768px. */
 const MenuMobile = ({ items, account, onClose, onSignOut }: MenuMobileProps) => {
+  const { t } = useTranslation();
   return (
     <div className="bg-scrim fixed inset-0 z-100" onClick={onClose}>
       <div
         role="dialog"
-        aria-label="Menu"
+        aria-label={t('header.menu')}
         className="bg-board text-on-board absolute inset-y-0 right-0 flex w-75 max-w-[85vw] flex-col gap-2 p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <Button variant="onboard" size="sm" className="self-end" onClick={onClose}>
-          Close
+          {t('actions.close')}
         </Button>
         {account && (
           <div className="border-board-muted mb-1 flex items-center gap-3 border-b px-3 pb-4">
@@ -40,7 +42,7 @@ const MenuMobile = ({ items, account, onClose, onSignOut }: MenuMobileProps) => 
             onClick={onClose}
             className="text-on-board block rounded-sm p-3 text-[17px] font-bold no-underline aria-[current=page]:shadow-[inset_4px_0_0_var(--accent)]"
           >
-            {item.label}
+            {t(`nav.${item.label}`)}
           </NavLink>
         ))}
         {onSignOut && (
@@ -52,7 +54,7 @@ const MenuMobile = ({ items, account, onClose, onSignOut }: MenuMobileProps) => 
             }}
             className="text-on-board block cursor-pointer rounded-sm bg-transparent p-3 text-left text-[17px] font-bold"
           >
-            Sign out
+            {t('nav.signOut')}
           </button>
         )}
       </div>

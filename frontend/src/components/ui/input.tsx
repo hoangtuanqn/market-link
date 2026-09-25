@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useState, type InputHTMLAttributes, type SelectHTMLAttributes } from 'react';
 import { EyeIcon, EyeOffIcon } from '@/components/icons';
 import Helper from '@/utils/helper';
@@ -15,6 +16,7 @@ type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
 export function Field({ id, label, required, error, hint, className, type, disabled, ...rest }: FieldProps) {
   const describedBy = error ? `${id}-err` : hint ? `${id}-hint` : undefined;
   const isPassword = type === 'password';
+  const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
 
   const input = (
@@ -56,8 +58,8 @@ export function Field({ id, label, required, error, hint, className, type, disab
             disabled={disabled}
             aria-controls={id}
             aria-pressed={showPassword}
-            aria-label={showPassword ? 'Hide password' : 'Show password'}
-            title={showPassword ? 'Hide password' : 'Show password'}
+            aria-label={showPassword ? t('password.hide') : t('password.show')}
+            title={showPassword ? t('password.hide') : t('password.show')}
             className="text-ink-muted hover:text-ink focus-visible:outline-focus absolute inset-y-0 right-0 grid w-11 cursor-pointer place-items-center rounded-sm bg-transparent focus-visible:outline-2 focus-visible:-outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:size-4.5"
           >
             {showPassword ? <EyeOffIcon /> : <EyeIcon />}

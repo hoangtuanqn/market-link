@@ -1,0 +1,17 @@
+{
+  "title": "設定",
+  "intro": "あなた自身の設定と、屋台の初期値です。",
+  "selling": "販売の初期値",
+  "sellingNote": "アカウントに保存されます。新しい週の受け取り枠を作るときに使われます。",
+  "cutoff": "注文の締め切り",
+  "cutoffNote": "受け取り枠の何時間前に注文を締め切るか。",
+  "slot": "枠の長さ",
+  "slotNote": "新しい週の受け取り枠を作るときに使われます。",
+  "max": "1 枠あたりの注文数",
+  "hours_one": "{{count}} 時間",
+  "hours_other": "{{count}} 時間",
+  "minutes_one": "{{count}} 分",
+  "minutes_other": "{{count}} 分",
+  "orders_one": "{{count}} 件",
+  "orders_other": "{{count}} 件"
+}

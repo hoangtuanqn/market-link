@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StarIcon } from '@/components/icons';
 import Helper from '@/utils/helper';
 
-const RATE_WORDS = ['not rated', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
+/** Keys under `rating.words.` in common.json, index = number of stars. */
+const RATE_WORDS = ['none', 'poor', 'fair', 'good', 'veryGood', 'excellent'] as const;
 
 type RatingInputProps = {
   legend: string;
@@ -13,8 +15,10 @@ type RatingInputProps = {
 
 /** Five-star rating input with a word readout (design system `.ml-rate`). */
 const RatingInput = ({ legend, name, value, onChange }: RatingInputProps) => {
+  const { t } = useTranslation();
   const [hover, setHover] = useState(0);
   const shown = hover || value;
+  const word = (n: number) => t(`rating.words.${RATE_WORDS[n]}`);
 
   return (
     <fieldset className="m-0 border-0 p-0">
@@ -24,7 +28,7 @@ const RatingInput = ({ legend, name, value, onChange }: RatingInputProps) => {
           {[1, 2, 3, 4, 5].map((n) => (
             <label
               key={n}
-              title={RATE_WORDS[n]}
+              title={word(n)}
               onMouseEnter={() => setHover(n)}
               className={Helper.cn(
                 'grid size-10 cursor-pointer place-items-center',
@@ -40,13 +44,11 @@ const RatingInput = ({ legend, name, value, onChange }: RatingInputProps) => {
                 className="sr-only"
               />
               <StarIcon size={28} filled={shown >= n} />
-              <span className="sr-only">
-                {n} {n === 1 ? 'star' : 'stars'} — {RATE_WORDS[n]}
-              </span>
+              <span className="sr-only">{t('rating.stars', { count: n, word: word(n) })}</span>
             </label>
           ))}
         </div>
-        <span className="font-hand text-[21px]">{RATE_WORDS[shown]}</span>
+        <span className="font-hand text-[21px]">{word(shown)}</span>
       </div>
     </fieldset>
   );

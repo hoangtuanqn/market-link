@@ -1,0 +1,41 @@
+{
+  "eyebrow": "Facultatif · FR-090 à FR-092",
+  "title": "Assistant d'achat",
+  "intro": "Demandez où trouver quelque chose ce week-end, quand un marché ouvre ou quels créneaux de retrait un stand propose. Chaque réponse vient des données de MarketLink.",
+  "conversation": "Conversation avec l'assistant",
+  "botName": "Assistant MarketLink",
+  "botNote": "Les réponses utilisent le catalogue en direct. L'intention s'affiche sous chaque réponse.",
+  "message": "Message",
+  "placeholder": "ex. Qui a des œufs à Thảo Điền samedi ?",
+  "send": "Envoyer",
+  "reply": {
+    "greeting": "Bonjour {{name}}. Demandez-moi ce qui est disponible ce week-end, ou quand un marché ouvre.",
+    "pomelo": "Le {{day}} {{date}}, 2 stands ont du pomelo à peau verte : <b>Út Hiền Orchard</b> au Thủ Đức Farmers Market (2 restants, {{price1}}) et <b>Ba Lành Farm</b> au Thảo Điền Weekend Market (9 restants, {{price2}}).",
+    "slots": "Út Hiền Orchard propose le retrait de {{from}} à {{to}} le {{day}} {{date}} au Thủ Đức Farmers Market. Créneaux libres : {{free}}. Le créneau de {{full}} est complet. Les commandes ferment 12 heures avant le créneau.",
+    "unknown": "Je n'ai pas compris. Essayez un nom de produit, de marché ou de stand."
+  },
+  "question": {
+    "pomeloMorning": "Quel marché a du pomelo à peau verte samedi matin ?"
+  },
+  "suggest": {
+    "pomeloSat": "Où trouver du pomelo à peau verte samedi ?",
+    "baChieuOpen": "Quand ouvre Bà Chiểu Green Market ?",
+    "showMap": "Voir les 2 stands sur la carte",
+    "slotsUtHien": "Horaires de retrait chez Út Hiền",
+    "addPomelos": "Ajouter 2 pomelos à mon panier",
+    "directionsThuDuc": "Itinéraire vers Thủ Đức Farmers Market",
+    "thaoDien": "Qu'y a-t-il à Thảo Điền samedi ?"
+  },
+  "canAnswer": {
+    "title": "Ce qu'il sait répondre",
+    "product": "Trouver un produit sur les marchés et les stands, avec la quantité restante",
+    "hours": "Jours de marché et horaires d'ouverture",
+    "stalls": "Quels stands sont présents à un marché un jour donné",
+    "slots": "Les plages et créneaux libres de retrait d'un stand",
+    "price": "Le prix, l'unité et le stock d'un produit"
+  },
+  "how": {
+    "title": "Comment ça marche",
+    "text": "Le message est classé dans une intention parmi un ensemble fixe, et chaque intention exécute une requête préparée avec des paramètres. Le modèle n'écrit jamais de SQL. Les messages sont enregistrés avec leur intention pour pouvoir montrer le fonctionnement au jury."
+  }
+}
