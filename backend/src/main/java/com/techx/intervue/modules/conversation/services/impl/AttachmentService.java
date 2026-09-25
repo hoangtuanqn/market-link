@@ -27,8 +27,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class AttachmentService implements AttachmentServiceInterface {
 
-    /** Một thư mục phẳng dưới CHAT_UPLOAD_DIR; tên file là UUID nên không đụng nhau. */
-    static final String FOLDER = "images";
+    /**
+     * Một thư mục phẳng dưới CHAT_UPLOAD_DIR; tên file là UUID nên không đụng nhau. Public vì
+     * ChatAttachmentCleanupJob (package khác) xoá file trong đúng thư mục này.
+     */
+    public static final String FOLDER = "images";
 
     private final MessageAttachmentRepository attachments;
     private final FileStorageServiceInterface storage;
