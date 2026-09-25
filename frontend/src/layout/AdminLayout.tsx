@@ -21,7 +21,7 @@ const AdminLayout = () => {
   return (
     <div className="bg-surface-quiet flex min-h-screen flex-col">
       <header className="bg-board text-on-board">
-        <div className="mx-auto flex min-h-16 max-w-300 items-center gap-4 px-4 md:px-6">
+        <div className="mx-auto flex min-h-16 max-w-(--size-container) items-center gap-4 px-4 md:px-6">
           <Logo to={ADMIN_HOME_PATH} />
           {/* màn hẹp: nhường chỗ cho link Security và nút Sign out */}
           <span className="text-small text-board-muted border-board-muted hidden border-l pl-3 sm:inline">Admin</span>
@@ -39,7 +39,7 @@ const AdminLayout = () => {
         <div aria-hidden="true" className="border-twine h-0 border-t-2 border-dashed" />
       </header>
 
-      <main className="mx-auto box-border flex w-full max-w-300 flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
+      <main className="mx-auto box-border flex w-full max-w-(--size-container) flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
         <Outlet />
       </main>
     </div>

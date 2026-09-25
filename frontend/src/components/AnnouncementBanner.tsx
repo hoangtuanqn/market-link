@@ -9,7 +9,7 @@ const AnnouncementBanner = ({ announcement }: { announcement: AnnouncementType }
   return (
     <div role="status" className="bg-board text-on-board border-board-muted border-b-[1.5px]">
       {/* same container and left edge as the header */}
-      <div className="mx-auto flex max-w-300 items-center gap-3 px-4 py-3 md:px-6">
+      <div className="mx-auto flex max-w-(--size-container) items-center gap-3 px-4 py-3 md:px-6">
         <MegaphoneIcon className="text-accent flex-none" />
         <div className="min-w-0 flex-1">
           <p className="font-hand text-[21px] leading-[1.1]">{announcement.title}</p>

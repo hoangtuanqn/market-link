@@ -210,7 +210,8 @@ const MarketsPage = () => {
         )}
       </p>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+      {/* The list runs the full width like the filter card above it; the map sits below it, wide enough to read. */}
+      <div className="flex flex-col gap-6">
         <div ref={listRef} className="flex flex-col gap-4">
           {view === 'error' ? (
             <LoadError
@@ -273,8 +274,8 @@ const MarketsPage = () => {
           )}
         </div>
 
-        <div className="flex flex-col gap-4 lg:sticky lg:top-20">
-          <MarketMap label="Map of the markets that match" markers={mapMarkers} className="min-h-80 md:min-h-120" />
+        <div className="flex flex-col gap-4">
+          <MarketMap label="Map of the markets that match" markers={mapMarkers} className="min-h-100 md:min-h-155" />
           <p className="text-caption text-ink-muted">
             The map follows the filters and shows only the markets in the list.
           </p>
