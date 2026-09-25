@@ -55,6 +55,10 @@
     empty: ['Nothing to moderate', 'Reported products and reviews arrive here for you to read before hiding anything.'],
     error: ['Couldn\'t load the moderation queue', 'Check your connection and try again.'],
   });
+  document.querySelector('main').insertAdjacentHTML('beforeend',
+    '<p class="pt-caption ml-muted"><span class="pt-todo" data-todo="D-13 / FR-005 &middot; Hiding a control is not the control. An admin reading the public site now sees a reason instead of Add to cart and the hearts are disabled, but the server has to refuse as well: POST /orders, /cart, /reviews and /favorites must answer 403 for an admin JWT. Definition of Done item 3 says it in the team own words. Every buying control in the prototype carries data-buy or data-fav, so the exact set to refuse can be grepped.">Admin cannot buy: the server has to refuse it too, not just the UI</span></p>' +
+    '<p class="pt-caption ml-muted"><span class="pt-todo" data-todo="D-13 &middot; The smaller version of the same conflict is open: may a Farmer put their OWN product in their own cart? Today they can. Less serious than the admin case because a Farmer cannot approve or suspend anyone, but it still lets a stall place and complete an order against itself, moving its own revenue figures and unlocking a review of itself under D-10. LEAD to decide: allow, block, or allow but leave those orders out of the stall reports.">May a Farmer order their own product? Undecided</span></p>');
+
   PT.boot({ role: 'admin', active: 'moderation', announce: false });
 </script>
 <div id="pt-foot"></div>

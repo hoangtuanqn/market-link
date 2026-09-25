@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two-step verification — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" data-shell="none" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <form class="ml-card pt-auth" novalidate autocomplete="off">
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted">Admin area · step 2 of 2</p>
+      <h1 class="pt-title-sm">Enter the code from your authenticator</h1>
+      <p class="pt-small ml-muted">Signed in as <b>admin@marketlink.local</b>. <a href="../admin/login.html">Not you?</a></p>
+    </div>
+
+    <div id="alert"></div>
+
+    <div class="ml-field" data-code-field>
+      <label class="ml-field-label" for="code">Six-digit code<span class="ml-field-req" aria-hidden="true">*</span></label>
+      <input id="code" class="ml-input pt-otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" aria-describedby="code-h">
+      <span class="ml-field-hint" id="code-h">The code changes every 30 seconds. <span id="tick" class="pt-num"></span></span>
+    </div>
+
+    <div class="ml-field" data-recovery-field hidden>
+      <label class="ml-field-label" for="rcode">Recovery code<span class="ml-field-req" aria-hidden="true">*</span></label>
+      <input id="rcode" class="ml-input pt-otp-wide" autocomplete="off" maxlength="14" placeholder="xxxx-xxxx-xxxx" aria-describedby="rcode-h">
+      <span class="ml-field-hint" id="rcode-h">One of the codes you saved when you turned this on. Each one works once.</span>
+    </div>
+
+    <button type="button" class="ml-btn ml-btn-primary ml-btn-block" id="go">Verify and sign in</button>
+
+    <p class="pt-small"><button type="button" class="pt-linkbtn" id="swap">Use a recovery code instead</button></p>
+
+    <div class="ml-card pt-panel-4 pt-col-2">
+      <h2 class="pt-h3">What the server checks</h2>
+      <p class="pt-small">The password step did not hand out a session. It put a five-minute pending token in Redis, and only a correct code here turns that into the real JWT, so a stolen password alone reaches nothing.</p>
+      <dl class="pt-facts pt-small">
+        <dt>Algorithm</dt><dd>TOTP, RFC 6238 · HMAC-SHA1 · 6 digits · 30-second step</dd>
+        <dt>Clock skew</dt><dd>The step before and the step after are accepted</dd>
+        <dt>Replay</dt><dd>A used counter is kept in Redis until its step passes, so the same code cannot be sent twice</dd>
+        <dt>Rate limit</dt><dd>5 tries, then a 15-minute lock on the account, through the bucket4j-redis already in <code>pom.xml</code></dd>
+      </dl>
+    </div>
+
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Out of scope · Two-step verification is not in the SRS. §1.7 asks only for &quot;adequate security measures such as authentication&quot;, and FR-003 and FR-004 stop at a secure sign-in on a separate dashboard. The evaluation sheet scores Functionality against the SRS requirements, so this earns nothing there and a little under Source Code. It needs a new FR, an admin_mfa table and a Flyway migration under R-03. Build it after the MUSTs, not before.">Two-step verification needs a new FR before it is built</span></p>
+
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-102 · The seed script publishes one account per role with the credentials printed in the submitted documentation, so the admin password is public by design. Two-step verification on top of a published password protects nothing unless the TOTP secret is withheld too, and then nobody can sign in to mark the project. Proposal: implement it properly but leave it OFF on the seeded admin, and show the enrolment screen instead. LEAD to confirm.">The seeded admin password is published, so 2FA here is a demonstration</span></p>
+  </form>
+</main>
+<script>
+  /* The countdown is real: it is the remaining seconds in the current 30-second TOTP step,
+     which is what a Farmer of an authenticator app sees on their phone. */
+  function tick() {
+    var left = 30 - (Math.floor(Date.now() / 1000) % 30);
+    document.getElementById('tick').textContent = 'This one expires in ' + left + 's.';
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  var onRecovery = false;
+  document.getElementById('swap').addEventListener('click', function () {
+    onRecovery = !onRecovery;
+    document.querySelector('[data-code-field]').hidden = onRecovery;
+    document.querySelector('[data-recovery-field]').hidden = !onRecovery;
+    this.textContent = onRecovery ? 'Use the six-digit code instead' : 'Use a recovery code instead';
+    document.getElementById('alert').innerHTML = '';
+  });
+
+  /* Three outcomes a reviewer should be able to see without a server behind the screen:
+     the code is right, the code is wrong with tries left, and the account is locked. */
+  var tries = 0;
+  document.getElementById('go').addEventListener('click', function () {
+    var el = onRecovery ? document.getElementById('rcode') : document.getElementById('code');
+    var v = el.value.trim();
+    if (!v) { document.getElementById('alert').innerHTML = PT.banner('danger', 'Type the code first.', ''); return; }
+    if (v === '123456' || onRecovery) { location.href = '../admin/overview.html'; return; }
+    tries++;
+    if (tries >= 3) {
+      document.getElementById('alert').innerHTML = PT.banner('danger', 'Too many wrong codes.',
+        'This account is locked for 15 minutes. If you have lost your phone, use a recovery code.');
+      document.getElementById('go').disabled = true;
+      return;
+    }
+    document.getElementById('alert').innerHTML = PT.banner('danger', 'That code is not right.',
+      (3 - tries) + ' more tries before the account is locked for 15 minutes. Check that your phone clock is correct. In this prototype 123456 is accepted.');
+  });
+
+  PT.boot({ role: 'guest', active: null, announce: false });
+  document.querySelector('.ml-header').outerHTML = '<header class="ml-header"><div class="ml-header-in">' + PT.logo(30, '../admin/login.html') + '<span class="ml-huser">Admin sign-in</span></div><div class="ml-header-twine" aria-hidden="true"></div></header>';
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

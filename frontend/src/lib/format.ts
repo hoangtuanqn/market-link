@@ -50,6 +50,11 @@ export function upcoming(dow: number, from: Date = new Date()): string {
   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`;
 }
 
+/** Date → "Thu 24/09 · 14:35" */
+export function nowLabel(date: Date): string {
+  return `${weekday(date)} ${pad(date.getDate())}/${pad(date.getMonth() + 1)} · ${formatTime(date)}`;
+}
+
 /** [5, 6, 0] → "Fri, Sat, Sun" (Monday first) */
 export function dayList(days: number[]): string {
   return [1, 2, 3, 4, 5, 6, 0]
