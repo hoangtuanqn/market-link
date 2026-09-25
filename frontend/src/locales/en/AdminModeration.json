@@ -1,0 +1,72 @@
+{
+  "title": "Moderation",
+  "intro": "Hide product listings or reviews that break the guidelines. Hidden items stay in the database with the reason; the owner is told.",
+  "tabsLabel": "Moderation queues",
+  "tab": {
+    "reviews": "Reviews",
+    "products": "Product listings",
+    "hidden": "Hidden items"
+  },
+  "reviewFilterLabel": "Filter reviews",
+  "reviewFilter": {
+    "reported": "Reported",
+    "lowRated": "Rated 1 or 2",
+    "newest": "Newest"
+  },
+  "report": {
+    "title": "Reported by {{by}} on {{date}}: “{{quote}}”",
+    "text": "Hiding it removes it from the product and stall pages. The customer is told why."
+  },
+  "recentlyListed": "Recently listed products",
+  "search": {
+    "label": "Search products",
+    "placeholder": "Product or stall",
+    "submit": "Search"
+  },
+  "col": {
+    "product": "Product",
+    "price": "Price",
+    "description": "Description",
+    "item": "Item",
+    "owner": "Owner",
+    "reason": "Reason",
+    "hiddenOn": "Hidden on"
+  },
+  "action": {
+    "view": "View",
+    "hideReview": "Hide review",
+    "hideListing": "Hide listing",
+    "keepVisible": "Keep visible",
+    "customerAccount": "Customer account",
+    "unhide": "Unhide",
+    "unhidden": "Item is visible again.",
+    "dismissed": "Report dismissed. The review stays visible."
+  },
+  "hide": {
+    "title": {
+      "review": "Hide this review?",
+      "listing": "Hide this listing?"
+    },
+    "text": {
+      "review": "It is removed from customer pages right away. The customer is told and can contact the team.",
+      "listing": "It is removed from customer pages right away. The stall is told and can contact the team."
+    },
+    "confirm": {
+      "review": "Hide review",
+      "listing": "Hide listing"
+    },
+    "reason": "Reason",
+    "done": "Hidden. The owner has been told."
+  },
+  "reason": {
+    "advertising": "Advertising or off-platform contact",
+    "abusive": "Abusive language",
+    "offTopic": "Not about the product or stall",
+    "claim": "Health or certification claim",
+    "other": "Other"
+  },
+  "empty": {
+    "title": "Nothing to moderate",
+    "text": "Reported products and reviews arrive here for you to read before hiding anything."
+  }
+}
