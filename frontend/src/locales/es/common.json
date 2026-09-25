@@ -65,7 +65,8 @@
     "directions": "Cómo llegar",
     "dismiss": "Descartar",
     "remove": "Quitar",
-    "tryAgain": "Reintentar"
+    "tryAgain": "Reintentar",
+    "cancel": "Cancelar"
   },
   "admin": {
     "badge": "Admin",
@@ -134,7 +135,8 @@
     "aboutUs": "Quiénes somos",
     "contactUs": "Contacto",
     "feedback": "Comentarios y errores",
-    "mapData": "Datos del mapa © colaboradores de OpenStreetMap"
+    "mapData": "Datos del mapa © colaboradores de OpenStreetMap",
+    "mapDataFrom": "Datos del mapa {{credit}}"
   },
   "header": {
     "cart": "Carrito",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© colaboradores de {{link}}",
     "open": "Abrir",
-    "placeholder": "Mapa — {{label}}"
+    "placeholder": "Mapa — {{label}}",
+    "stallPickup": "Puesto {{code}} · recogida {{pickup}}",
+    "tilesFailed": "Las teselas del mapa necesitan conexión. La lista funciona sin ellas.",
+    "yourStall": "Tu puesto"
   },
   "marketCard": {
     "save": "Guardar {{name}}",
@@ -330,7 +335,16 @@
     "announcements": "Anuncios",
     "feedback": "Comentarios",
     "pricing": "Precios",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "analytics": "Analítica",
+    "people": "Personas",
+    "marketplace": "Mercado",
+    "platform": "Plataforma",
+    "navigation": "Navegación de administración",
+    "home": "MarketLink — Resumen de administración",
+    "contextSub": "Plataforma · todo el mercado",
+    "userLine": "Admin · toda la plataforma",
+    "searchPlaceholder": "Puesto, cliente o mercado"
   },
   "carousel": {
     "roleCarousel": "carrusel",
@@ -341,5 +355,28 @@
     "show": "Mostrar la diapositiva {{n}}: {{topic}}",
     "pause": "Pausar la presentación",
     "play": "Reproducir la presentación"
+  },
+  "geo": {
+    "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador o usa una dirección.",
+    "insecure": "Tu navegador solo comparte tu ubicación mediante una conexión segura (https).",
+    "failed": "Tu dispositivo no pudo determinar dónde estás. Inténtalo de nuevo o escribe una dirección.",
+    "finding": "Buscando tu ubicación…"
+  },
+  "directions": {
+    "title": "Cómo llegar a {{name}}",
+    "question": "¿Desde dónde sales?",
+    "current": "Mi ubicación actual",
+    "currentShared": "Ya compartida",
+    "currentAsk": "Tu navegador te lo preguntará primero",
+    "address": "Una dirección",
+    "addressNote": "Una calle o un punto de referencia en Ciudad Ho Chi Minh.",
+    "addressLabel": "Dirección de salida",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "La calle y el distrito funcionan mejor. A menudo faltan los números de casa en el mapa, y OpenStreetMap te pedirá elegir un lugar si no encuentra uno.",
+    "useSaved": "Usar mi dirección guardada",
+    "none": "Lo escribiré en el mapa",
+    "noneNote": "Abre OpenStreetMap solo con el destino rellenado.",
+    "privacy": "Las indicaciones se abren en openstreetmap.org en una pestaña nueva. MarketLink no rastrea dónde estás.",
+    "open": "Abrir indicaciones"
   }
 }

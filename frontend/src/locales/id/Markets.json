@@ -62,5 +62,13 @@
       "error": "Galat"
     },
     "note": "Status kosong bisa muncul sungguhan: pilih <b>{{day}}</b> dan area <b>{{area}}</b>. Status ini menyebut pilihan Anda dan menawarkan jalan keluar."
+  },
+  "location": {
+    "measured": "Jarak diukur dari lokasi Anda.",
+    "forget": "Lupakan lokasi saya",
+    "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda untuk mengurutkan berdasarkan jarak.",
+    "needed": "Mengurutkan berdasarkan jarak memerlukan lokasi Anda. Sebelum Anda membagikannya, urutan di bawah tidak berubah.",
+    "share": "Bagikan lokasi Anda untuk melihat seberapa jauh setiap pasar.",
+    "use": "Gunakan lokasi saya"
   }
 }

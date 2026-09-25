@@ -65,7 +65,8 @@
     "directions": "길찾기",
     "dismiss": "닫기",
     "remove": "삭제",
-    "tryAgain": "다시 시도"
+    "tryAgain": "다시 시도",
+    "cancel": "취소"
   },
   "admin": {
     "badge": "관리자",
@@ -134,7 +135,8 @@
     "aboutUs": "소개",
     "contactUs": "문의하기",
     "feedback": "의견 및 버그 신고",
-    "mapData": "지도 데이터 © OpenStreetMap 기여자"
+    "mapData": "지도 데이터 © OpenStreetMap 기여자",
+    "mapDataFrom": "지도 데이터 {{credit}}"
   },
   "header": {
     "cart": "장바구니",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© {{link}} 기여자",
     "open": "열기",
-    "placeholder": "지도 — {{label}}"
+    "placeholder": "지도 — {{label}}",
+    "stallPickup": "매장 {{code}} · 픽업 {{pickup}}",
+    "tilesFailed": "지도 타일을 불러오려면 연결이 필요합니다. 지도가 없어도 목록은 사용할 수 있습니다.",
+    "yourStall": "내 매장"
   },
   "marketCard": {
     "save": "{{name}} 저장",
@@ -330,7 +335,16 @@
     "announcements": "공지",
     "feedback": "의견",
     "pricing": "요금",
-    "settings": "설정"
+    "settings": "설정",
+    "analytics": "분석",
+    "people": "사용자",
+    "marketplace": "마켓플레이스",
+    "platform": "플랫폼",
+    "navigation": "관리자 탐색",
+    "home": "MarketLink — 관리자 개요",
+    "contextSub": "플랫폼 · 전체 마켓",
+    "userLine": "관리자 · 전체 플랫폼",
+    "searchPlaceholder": "매장, 고객 또는 시장"
   },
   "carousel": {
     "roleCarousel": "캐러셀",
@@ -341,5 +355,28 @@
     "show": "{{n}}번 슬라이드 보기: {{topic}}",
     "pause": "슬라이드쇼 일시 정지",
     "play": "슬라이드쇼 재생"
+  },
+  "geo": {
+    "denied": "이 사이트의 위치 권한을 껐습니다. 브라우저의 사이트 설정에서 변경하거나 주소를 대신 사용하세요.",
+    "insecure": "브라우저는 보안 연결(https)에서만 위치를 공유합니다.",
+    "failed": "기기에서 현재 위치를 알아내지 못했습니다. 다시 시도하거나 주소를 입력하세요.",
+    "finding": "위치 찾는 중…"
+  },
+  "directions": {
+    "title": "{{name}}까지 길찾기",
+    "question": "어디에서 출발하나요?",
+    "current": "내 현재 위치",
+    "currentShared": "이미 공유함",
+    "currentAsk": "브라우저가 먼저 물어봅니다",
+    "address": "주소",
+    "addressNote": "호찌민시의 거리나 랜드마크.",
+    "addressLabel": "출발 주소",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "거리와 군(구)을 입력하는 것이 가장 좋습니다. 지도에 번지가 없는 경우가 많고, 찾지 못하면 OpenStreetMap이 장소를 고르라고 합니다.",
+    "useSaved": "저장된 주소 사용",
+    "none": "지도에서 직접 입력할게요",
+    "noneNote": "목적지만 채운 상태로 OpenStreetMap을 엽니다.",
+    "privacy": "길찾기는 새 탭의 openstreetmap.org에서 열립니다. MarketLink는 위치를 추적하지 않습니다.",
+    "open": "길찾기 열기"
   }
 }

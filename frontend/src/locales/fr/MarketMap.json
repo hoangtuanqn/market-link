@@ -23,5 +23,10 @@
     "stalls_one": "{{count}} stand",
     "stalls_other": "{{count}} stands",
     "pickup": "{{days}} · retrait {{pickup}}"
+  },
+  "bothOff": {
+    "title": "Rien à afficher sur la carte",
+    "text": "Les deux calques sont désactivés. Réactivez les marchés ou les stands pour voir les repères.",
+    "action": "Afficher les deux"
   }
 }

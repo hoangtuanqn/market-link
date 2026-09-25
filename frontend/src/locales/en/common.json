@@ -65,7 +65,8 @@
     "directions": "Directions",
     "dismiss": "Dismiss",
     "remove": "Remove",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "cancel": "Cancel"
   },
   "admin": {
     "badge": "Admin",
@@ -134,7 +135,8 @@
     "aboutUs": "About us",
     "contactUs": "Contact us",
     "feedback": "Feedback & bug reports",
-    "mapData": "Map data © OpenStreetMap contributors"
+    "mapData": "Map data © OpenStreetMap contributors",
+    "mapDataFrom": "Map data {{credit}}"
   },
   "header": {
     "cart": "Cart",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© {{link}} contributors",
     "open": "Open",
-    "placeholder": "Map — {{label}}"
+    "placeholder": "Map — {{label}}",
+    "stallPickup": "Stall {{code}} · pickup {{pickup}}",
+    "tilesFailed": "Map tiles need a connection. The list still works without them.",
+    "yourStall": "Your stall"
   },
   "marketCard": {
     "save": "Save {{name}}",
@@ -330,7 +335,16 @@
     "announcements": "Announcements",
     "feedback": "Feedback",
     "pricing": "Pricing",
-    "settings": "Settings"
+    "settings": "Settings",
+    "analytics": "Analytics",
+    "people": "People",
+    "marketplace": "Marketplace",
+    "platform": "Platform",
+    "navigation": "Admin navigation",
+    "home": "MarketLink — Admin overview",
+    "contextSub": "Platform · whole marketplace",
+    "userLine": "Admin · whole platform",
+    "searchPlaceholder": "Stall, customer or market"
   },
   "carousel": {
     "roleCarousel": "carousel",
@@ -341,5 +355,28 @@
     "show": "Show slide {{n}}: {{topic}}",
     "pause": "Pause the slideshow",
     "play": "Play the slideshow"
+  },
+  "geo": {
+    "denied": "You turned location off for this site. Change it in your browser’s site settings, or use an address instead.",
+    "insecure": "Your browser only shares your location over a secure (https) connection.",
+    "failed": "Your device could not work out where you are. Try again, or type an address instead.",
+    "finding": "Finding you…"
+  },
+  "directions": {
+    "title": "Directions to {{name}}",
+    "question": "Where are you setting off from?",
+    "current": "My current location",
+    "currentShared": "Already shared",
+    "currentAsk": "Your browser will ask first",
+    "address": "An address",
+    "addressNote": "A street or a landmark in Ho Chi Minh City.",
+    "addressLabel": "Starting address",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "Street and district work best. House numbers are often missing from the map, and OpenStreetMap will ask you to pick a place when it cannot find one.",
+    "useSaved": "Use my saved address",
+    "none": "I will type it on the map",
+    "noneNote": "Opens OpenStreetMap with only the destination filled in.",
+    "privacy": "Directions open on openstreetmap.org in a new tab. MarketLink does not track where you are.",
+    "open": "Open directions"
   }
 }

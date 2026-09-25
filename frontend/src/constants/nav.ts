@@ -26,22 +26,5 @@ export const ADMIN_HOME_PATH = '/admin';
 export const ADMIN_VERIFY_PATH = '/admin/verify';
 export const ADMIN_SECURITY_PATH = '/admin/security';
 export const ADMIN_SETTINGS_PATH = '/admin/settings';
-
-/** Admin area sections, in the order of docs/prototype/prototype.js (SCREENS.admin). `label` is a key under `adminNav.`. */
-export type AdminNavItem = { label: Exclude<keyof (typeof common)['adminNav'], 'sections'>; to: string };
-
-export const ADMIN_NAV: AdminNavItem[] = [
-  { label: 'overview', to: ADMIN_HOME_PATH },
-  { label: 'farmers', to: '/admin/farmers' },
-  { label: 'customers', to: '/admin/customers' },
-  { label: 'markets', to: '/admin/markets' },
-  { label: 'moderation', to: '/admin/moderation' },
-  { label: 'orders', to: '/admin/orders' },
-  { label: 'revenue', to: '/admin/revenue' },
-  { label: 'reports', to: '/admin/reports' },
-  { label: 'categories', to: '/admin/categories' },
-  { label: 'announcements', to: '/admin/announcements' },
-  { label: 'feedback', to: '/admin/feedback' },
-  { label: 'pricing', to: '/admin/pricing' },
-  { label: 'settings', to: ADMIN_SETTINGS_PATH },
-];
+/** FR-071/D-09: Admin xem, duyệt, đình chỉ Farmer. */
+export const ADMIN_FARMERS_PATH = '/admin/farmers';

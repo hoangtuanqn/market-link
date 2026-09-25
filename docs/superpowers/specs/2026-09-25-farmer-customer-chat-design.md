@@ -96,7 +96,9 @@ FR-005 (RBAC) phải nói rõ một Farmer giữ nguyên mọi quyền của Cus
 ## 5. Mô hình dữ liệu — đề xuất gửi LEAD
 
 Thay đổi DB chỉ qua migration Flyway mới (**R-03**), đặt tên `V<yyyyMMdd><nnn>__<mo_ta>.sql`, không
-sửa file đã merge. Migration mới nhất hiện tại là `V20260925003` (user_settings, #107), nên chat bắt đầu từ `V20260925005`. Hai PR trùng số thì người merge sau
+sửa file đã merge. `dev` merge rất nhanh trong lúc viết tài liệu này (nhiều PR cùng ngày chiếm số version) — số cụ thể ghi
+dưới đây (005, 006, 010) là số cuối cùng dùng thật cho Plan 1/2, không phải số dự kiến ban đầu. Người thực
+thi Plan 3 phải tự soi lại migration mới nhất trên `dev` lúc đó, không copy số ghi sẵn ở đây. Hai PR trùng số thì người merge sau
 đổi số của mình lên (CONTRIBUTING §7).
 
 ### 5.1 Đợt 1
@@ -147,7 +149,8 @@ CREATE TABLE messages (
   INDEX idx_messages_conv (conversation_id, id)
 ) ENGINE=InnoDB;
 
--- V20260925007__create_message_attachments_and_reports.sql
+-- Số version thật sự chọn lúc thực thi Plan 3 (soi migration mới nhất trên dev khi đó); minh hoạ dưới đây dùng V20260925011.
+-- V20260925011__create_message_attachments_and_reports.sql
 CREATE TABLE message_attachments (
   id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   message_id  BIGINT UNSIGNED NULL,          -- NULL = vừa upload, chưa gắn vào tin nào
@@ -180,7 +183,7 @@ CREATE TABLE message_reports (
   INDEX idx_reports_status (status, created_at)
 ) ENGINE=InnoDB;
 
--- V20260925008__create_user_presence_table.sql
+-- V20260925010__create_user_presence_table.sql
 CREATE TABLE user_presence (
   user_id      BIGINT UNSIGNED PRIMARY KEY,
   last_seen_at DATETIME NOT NULL,
@@ -312,9 +315,10 @@ người đang nối vào đúng instance đã xử lý request** — mất đú
 **Điều broker không làm:** Rabbit *không* cung cấp lịch sử tin nhắn. Lịch sử luôn đọc từ MySQL;
 broker chỉ chuyển tin đang bay.
 
-**Rủi ro đã biết:** nếu relay không kết nối được, backend **không khởi động**, nghĩa là login và mọi
-tính năng khác chết theo chứ không riêng chat. Giảm nhẹ bằng `depends_on: condition: service_healthy`
-và healthcheck cho container rabbitmq; ghi vào README mục Troubleshooting.
+**Đã đo (Plan 2, Task 1):** nếu relay không kết nối được, backend **vẫn khởi động** — `StompBrokerRelayMessageHandler`
+ghi lỗi và tự thử lại; REST hoạt động bình thường, chỉ realtime im lặng cho tới khi broker lên. Vẫn dùng
+`depends_on: condition: service_healthy` + healthcheck cho rabbitmq để demo không có khoảng im lặng đó;
+README mục Troubleshooting có ghi.
 
 ### 7.3 Xác thực trên WebSocket
 
@@ -581,7 +585,7 @@ bản tay ghi trong README: hai trình duyệt, hai tài khoản, gửi và th�
 
 | Rủi ro | Mức | Giảm nhẹ |
 |---|---|---|
-| Rabbit không lên → backend không khởi động → hỏng cả buổi demo | Cao | Healthcheck + `depends_on`, ghi vào Troubleshooting, tập chạy trước buổi demo |
+| Rabbit không lên → realtime im lặng (REST vẫn chạy — đã đo ở Plan 2) | Trung bình | Healthcheck + `depends_on`, Troubleshooting, tập chạy trước buổi demo |
 | Tính năng ngoài đề ăn mất thời gian của 58 MUST | Cao | Quyết định của LEAD; đợt 2 vốn đã bị chặn bởi MUST nên tự giãn ra |
 | Chat bị lẫn với chatbot FR-090 khi trình bày | Trung bình | Khác URL, khác bảng, khác màn; nói rõ trong ReadMe và khi demo |
 | Ảnh riêng tư lộ qua đường dẫn tĩnh | Trung bình | Phục vụ qua endpoint có kiểm quyền, `storage_key` ngẫu nhiên |

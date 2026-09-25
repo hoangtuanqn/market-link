@@ -1,11 +1,6 @@
 {
   "title": "Erzeuger",
-  "intro": "Geben Sie einen Antrag frei, bevor der Stand Produkte einstellen kann. Die meisten Anträge kommen von Konten, die hier schon einkaufen, daher zeigt jeder Antrag neben den Fotos auch die Bestellhistorie der antragstellenden Person. Sperren Sie einen Stand, um seine Produkte auszublenden und neue Bestellungen zu stoppen; laufende Bestellungen werden normal abgeschlossen.",
-  "search": {
-    "label": "Erzeuger suchen",
-    "placeholder": "Stand, Ansprechperson, Telefon",
-    "submit": "Suchen"
-  },
+  "intro": "Gib eine Bewerbung frei, bevor der Stand Produkte einstellen kann. Sperre einen Stand, um seine Produkte zu verbergen und neue Bestellungen zu stoppen; laufende Bestellungen werden normal abgeschlossen.",
   "tabsLabel": "Erzeuger nach Status",
   "status": {
     "pending": "Warten auf Freigabe",
@@ -33,13 +28,10 @@
   },
   "col": {
     "stall": "Stand",
-    "markets": "Märkte",
     "registered": "Registriert",
-    "products": "Produkte",
-    "rating": "Bewertung"
+    "contact": "Kontakt",
+    "email": "E-Mail"
   },
-  "reviews_one": "{{count}} Bewertung",
-  "reviews_other": "{{count}} Bewertungen",
   "action": {
     "approve": "Freigeben",
     "reject": "Ablehnen",
@@ -55,7 +47,7 @@
   },
   "reject": {
     "title": "{{stall}} ablehnen?",
-    "text": "Der Erzeuger kann sich weiter anmelden, aber keine Produkte einstellen.",
+    "text": "Die Person behält ihr Kundenkonto mit allem, was darin ist. Sie erfährt den Grund.",
     "reason": "Grund, den der Erzeuger sieht",
     "confirm": "Antrag ablehnen"
   },
@@ -74,6 +66,22 @@
     "approved": "{{stall}} freigegeben. Der Stand kann jetzt Produkte einstellen.",
     "rejected": "{{stall}} abgelehnt. Das Konto bleibt bestehen.",
     "suspended": "{{stall}} gesperrt. Laufende Bestellungen werden normal abgeschlossen.",
-    "reinstated": "{{stall}} entsperrt. Die Produkte sind wieder sichtbar."
-  }
+    "reinstated": "{{stall}} entsperrt. Die Produkte sind wieder sichtbar.",
+    "failed": "Die Aktion konnte nicht abgeschlossen werden. Bitte versuche es erneut.",
+    "rejectFailed": "Die Bewerbung konnte nicht abgelehnt werden. Bitte versuche es erneut."
+  },
+  "reinstate": {
+    "title": "{{stall}} wieder freigeben?",
+    "text": "Die Produkte sind sofort wieder für Kunden sichtbar.",
+    "confirm": "Stand freigeben"
+  },
+  "keepReviewing": "Weiter prüfen",
+  "loading": "Farmer werden geladen",
+  "loadError": {
+    "title": "Farmer konnten nicht geladen werden",
+    "text": "Prüfe deine Verbindung und versuche es erneut.",
+    "retry": "Erneut versuchen"
+  },
+  "caption_one": "{{count}} Farmer",
+  "caption_other": "{{count}} Farmer"
 }

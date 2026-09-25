@@ -65,7 +65,8 @@
     "directions": "経路",
     "dismiss": "閉じる",
     "remove": "削除",
-    "tryAgain": "もう一度試す"
+    "tryAgain": "もう一度試す",
+    "cancel": "キャンセル"
   },
   "admin": {
     "badge": "管理者",
@@ -134,7 +135,8 @@
     "aboutUs": "私たちについて",
     "contactUs": "お問い合わせ",
     "feedback": "ご意見・不具合の報告",
-    "mapData": "地図データ © OpenStreetMap 寄稿者"
+    "mapData": "地図データ © OpenStreetMap 寄稿者",
+    "mapDataFrom": "地図データ {{credit}}"
   },
   "header": {
     "cart": "カート",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© {{link}} 寄稿者",
     "open": "開く",
-    "placeholder": "地図 — {{label}}"
+    "placeholder": "地図 — {{label}}",
+    "stallPickup": "お店 {{code}} · 受け取り {{pickup}}",
+    "tilesFailed": "地図の表示には接続が必要です。地図がなくてもリストは使えます。",
+    "yourStall": "あなたのお店"
   },
   "marketCard": {
     "save": "{{name}}を保存",
@@ -330,7 +335,16 @@
     "announcements": "お知らせ",
     "feedback": "フィードバック",
     "pricing": "料金",
-    "settings": "設定"
+    "settings": "設定",
+    "analytics": "分析",
+    "people": "ユーザー",
+    "marketplace": "マーケットプレイス",
+    "platform": "プラットフォーム",
+    "navigation": "管理ナビゲーション",
+    "home": "MarketLink — 管理概要",
+    "contextSub": "プラットフォーム · マーケット全体",
+    "userLine": "管理者 · プラットフォーム全体",
+    "searchPlaceholder": "店舗、顧客、市場"
   },
   "carousel": {
     "roleCarousel": "カルーセル",
@@ -341,5 +355,28 @@
     "show": "スライド {{n}} を表示：{{topic}}",
     "pause": "スライドショーを一時停止",
     "play": "スライドショーを再生"
+  },
+  "geo": {
+    "denied": "このサイトの位置情報がオフになっています。ブラウザのサイト設定で変更するか、住所を使ってください。",
+    "insecure": "ブラウザは安全な接続（https）でのみ位置情報を共有します。",
+    "failed": "端末で現在地を特定できませんでした。もう一度試すか、住所を入力してください。",
+    "finding": "現在地を取得中…"
+  },
+  "directions": {
+    "title": "{{name}} への経路",
+    "question": "どこから出発しますか？",
+    "current": "現在地",
+    "currentShared": "共有済み",
+    "currentAsk": "最初にブラウザが確認します",
+    "address": "住所",
+    "addressNote": "ホーチミン市内の通りや目印。",
+    "addressLabel": "出発地の住所",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "通り名と区を入れるのが確実です。地図には番地がないことが多く、見つからないときは OpenStreetMap が場所を選ぶよう求めます。",
+    "useSaved": "保存した住所を使う",
+    "none": "地図上で入力する",
+    "noneNote": "目的地だけを入力した状態で OpenStreetMap を開きます。",
+    "privacy": "経路は新しいタブの openstreetmap.org で開きます。MarketLink はあなたの居場所を追跡しません。",
+    "open": "経路を開く"
   }
 }

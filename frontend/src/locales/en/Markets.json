@@ -62,5 +62,13 @@
       "error": "Error"
     },
     "note": "The empty state is reachable for real: pick <b>{{day}}</b> and the area <b>{{area}}</b>. It names what you chose and offers the way out."
+  },
+  "location": {
+    "measured": "Distances are measured from where you are.",
+    "forget": "Forget my location",
+    "denied": "You turned location off for this site. Change it in your browser’s site settings to sort by distance.",
+    "needed": "Sorting by distance needs your location. Until you share it, the order below is unchanged.",
+    "share": "Share your location to see how far each market is.",
+    "use": "Use my location"
   }
 }

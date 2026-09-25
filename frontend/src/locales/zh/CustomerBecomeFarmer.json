@@ -17,11 +17,12 @@
     "stallNameHint": "顾客会在地图和订单上看到这个名称。",
     "person": "联系人",
     "phone": "电话",
-    "phoneHint": "印在每个订单上，方便顾客联系您。",
     "email": "邮箱",
     "emailHint": "您的登录信息保持不变。",
     "about": "摊位简介",
-    "aboutPlaceholder": "一两句话。谁种的，在哪里种。"
+    "aboutPlaceholder": "一两句话。谁种的，在哪里种。",
+    "address": "地址",
+    "fromAccount": "来自你的账户。如有错误，请先在账户页面修改。"
   },
   "step2": {
     "title": "您种什么",
@@ -46,7 +47,8 @@
     "since": "在此种植始于",
     "pin": "标记地块",
     "map": "在地图上标记您的地块",
-    "pinHint": "把图钉拖到您的地块上。这是管理员确认照片与地点相符的最快方式。"
+    "pinHint": "把图钉拖到您的地块上。这是管理员确认照片与地点相符的最快方式。",
+    "yourPlot": "你的地块"
   },
   "step4": {
     "title": "地块照片",
@@ -56,8 +58,6 @@
       "growing": "正在种植的作物",
       "other": "其他"
     },
-    "required": "必填",
-    "optional": "选填",
     "addPhoto": "添加照片",
     "video": "一段短视频",
     "addVideo": "添加视频，最长 60 秒",
@@ -65,7 +65,11 @@
     "banner": {
       "title": "管理员只核实一件事：地块真实存在，并种植了您列出的作物。",
       "text": "MarketLink 不核查执照、食品安全或有机声明，照片也不是证书。"
-    }
+    },
+    "uploading": "正在上传…",
+    "removePhoto": "移除{{label}}",
+    "videoAdded": "已添加视频",
+    "removeVideo": "移除"
   },
   "step5": {
     "title": "您想在哪里销售",
@@ -81,22 +85,16 @@
     "pay": "我了解顾客在摊位向我付款",
     "payHint": "MarketLink 没有在线支付，也没有配送。",
     "send": "提交申请",
-    "later": "保存，稍后完成"
+    "later": "保存，稍后完成",
+    "sending": "正在发送…"
   },
-  "preview": "预览：提交后",
   "sent": {
-    "eyebrow": "刚刚提交",
     "title": "您的申请正在由管理员审核",
     "intro": "在此期间您的一切照旧。继续购物，并留意通知中的结果。",
-    "banner": {
-      "title": "审核期间，您仍然可以在其他摊位购物。",
-      "text": "您的订单、收藏和购物车都不受影响。只有管理员批准后才会出现摊位面板。"
-    },
     "summary": "您提交的内容",
     "stall": "摊位",
     "grows": "种植",
     "plot": "地块",
-    "plotText": "{{place}} 的 {{size}}，自 {{since}} 年开始种植",
     "evidence": "证明材料",
     "photos_one": "{{count}} 张照片",
     "photos_other": "{{count}} 张照片",
@@ -104,8 +102,16 @@
     "photosAndVideo_other": "{{count}} 张照片和一段视频",
     "market": "市场",
     "keepShopping": "继续购物",
-    "withdraw": "撤回申请",
-    "progress": "进度"
+    "progress": "进度",
+    "about": "简介",
+    "volume": "每周大约",
+    "plotIn": "位于{{place}}",
+    "plotSince": "自 {{year}} 年起种植",
+    "noPhotos": "没有照片",
+    "noPhotosVideo": "没有照片，有一个视频",
+    "status": "状态",
+    "sentOn": "发送日期",
+    "photoAlt": "地块照片"
   },
   "timeline": {
     "placed": {
@@ -128,12 +134,43 @@
     "missingTitle": "缺少勾选",
     "missing": "提交前请勾选最后的三个选项。",
     "sentTitle": "申请已提交",
-    "sent": "管理员的答复会出现在您的通知中。",
-    "withdrawnTitle": "申请已撤回",
-    "withdrawn": "您可以随时重新申请。",
-    "photoTitle": "添加照片",
-    "photo": "从手机或电脑中选择一张照片。",
-    "videoTitle": "添加视频",
-    "video": "选择一段视频，最长 60 秒。"
+    "sent": "管理员的答复会出现在您的通知中。"
+  },
+  "loading": "正在加载申请状态",
+  "loadError": {
+    "title": "无法加载申请状态",
+    "text": "请检查网络连接后重试。",
+    "retry": "重试"
+  },
+  "errors": {
+    "stallName": "请输入摊位名称。",
+    "contactPerson": "请输入联系人。",
+    "photo": "无法上传这张照片，请重试。",
+    "video": "无法上传这个视频，请重试。",
+    "send": "无法发送你的申请，请重试。"
+  },
+  "approval": {
+    "approved": {
+      "title": "你的摊位已获批准",
+      "text": "你的账户现在可以在农户面板中设置摊位——市场、取货时段和商品。"
+    },
+    "rejected": {
+      "title": "你的申请未获批准",
+      "text": "如果你认为这是误判，请通过反馈表联系管理员。"
+    },
+    "suspended": {
+      "title": "你的摊位已被暂停",
+      "text": "你仍可登录，但在管理员解除暂停前，你的商品不会向顾客显示。"
+    }
+  },
+  "suspendedBanner": {
+    "title": "此账户的销售已暂停。",
+    "text": "已下的订单仍会照常完成，只是暂时不能接新订单。"
+  },
+  "statusValue": {
+    "pending": "待审核",
+    "approved": "已批准",
+    "rejected": "已拒绝",
+    "suspended": "已暂停"
   }
 }

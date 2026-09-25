@@ -62,5 +62,13 @@
       "error": "Lỗi"
     },
     "note": "Trạng thái trống có thật: chọn <b>{{day}}</b> và khu vực <b>{{area}}</b>. Nó nêu rõ điều bạn đã chọn và gợi ý cách thoát ra."
+  },
+  "location": {
+    "measured": "Khoảng cách được tính từ vị trí của bạn.",
+    "forget": "Quên vị trí của tôi",
+    "denied": "Bạn đã tắt vị trí cho trang này. Bật lại trong cài đặt trang web của trình duyệt để sắp xếp theo khoảng cách.",
+    "needed": "Sắp xếp theo khoảng cách cần vị trí của bạn. Khi chưa chia sẻ, thứ tự bên dưới giữ nguyên.",
+    "share": "Chia sẻ vị trí để xem mỗi chợ cách bạn bao xa.",
+    "use": "Dùng vị trí của tôi"
   }
 }

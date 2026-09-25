@@ -23,5 +23,10 @@
     "stalls_one": "{{count}} puesto",
     "stalls_other": "{{count}} puestos",
     "pickup": "{{days}} · recogida {{pickup}}"
+  },
+  "bothOff": {
+    "title": "No hay nada que mostrar en el mapa",
+    "text": "Las dos capas están desactivadas. Vuelve a activar mercados o puestos para ver los marcadores.",
+    "action": "Mostrar ambos"
   }
 }

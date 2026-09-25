@@ -65,7 +65,8 @@
     "directions": "Itinéraire",
     "dismiss": "Masquer",
     "remove": "Retirer",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "cancel": "Annuler"
   },
   "admin": {
     "badge": "Admin",
@@ -134,7 +135,8 @@
     "aboutUs": "À propos",
     "contactUs": "Nous contacter",
     "feedback": "Avis et signalement de bugs",
-    "mapData": "Données cartographiques © contributeurs OpenStreetMap"
+    "mapData": "Données cartographiques © contributeurs OpenStreetMap",
+    "mapDataFrom": "Données cartographiques {{credit}}"
   },
   "header": {
     "cart": "Panier",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© contributeurs {{link}}",
     "open": "Ouvrir",
-    "placeholder": "Carte — {{label}}"
+    "placeholder": "Carte — {{label}}",
+    "stallPickup": "Stand {{code}} · retrait {{pickup}}",
+    "tilesFailed": "Les tuiles de la carte ont besoin d’une connexion. La liste fonctionne sans elles.",
+    "yourStall": "Votre stand"
   },
   "marketCard": {
     "save": "Enregistrer {{name}}",
@@ -330,7 +335,16 @@
     "announcements": "Annonces",
     "feedback": "Retours",
     "pricing": "Tarifs",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "analytics": "Analyses",
+    "people": "Personnes",
+    "marketplace": "Marché",
+    "platform": "Plateforme",
+    "navigation": "Navigation admin",
+    "home": "MarketLink — Vue d’ensemble admin",
+    "contextSub": "Plateforme · tout le marché",
+    "userLine": "Admin · toute la plateforme",
+    "searchPlaceholder": "Étal, client ou marché"
   },
   "carousel": {
     "roleCarousel": "carrousel",
@@ -341,5 +355,28 @@
     "show": "Afficher la diapositive {{n}} : {{topic}}",
     "pause": "Mettre le diaporama en pause",
     "play": "Lancer le diaporama"
+  },
+  "geo": {
+    "denied": "Vous avez désactivé la localisation pour ce site. Modifiez-la dans les paramètres du site de votre navigateur, ou utilisez une adresse.",
+    "insecure": "Votre navigateur ne partage votre position que sur une connexion sécurisée (https).",
+    "failed": "Votre appareil n’a pas pu déterminer votre position. Réessayez, ou saisissez une adresse.",
+    "finding": "Localisation…"
+  },
+  "directions": {
+    "title": "Itinéraire vers {{name}}",
+    "question": "D’où partez-vous ?",
+    "current": "Ma position actuelle",
+    "currentShared": "Déjà partagée",
+    "currentAsk": "Votre navigateur vous le demandera d’abord",
+    "address": "Une adresse",
+    "addressNote": "Une rue ou un repère à Hô-Chi-Minh-Ville.",
+    "addressLabel": "Adresse de départ",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "La rue et l’arrondissement donnent les meilleurs résultats. Les numéros manquent souvent sur la carte, et OpenStreetMap vous demandera de choisir un lieu s’il n’en trouve pas.",
+    "useSaved": "Utiliser mon adresse enregistrée",
+    "none": "Je la saisirai sur la carte",
+    "noneNote": "Ouvre OpenStreetMap avec seulement la destination renseignée.",
+    "privacy": "L’itinéraire s’ouvre sur openstreetmap.org dans un nouvel onglet. MarketLink ne suit pas votre position.",
+    "open": "Ouvrir l’itinéraire"
   }
 }

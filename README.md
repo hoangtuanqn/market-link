@@ -240,6 +240,7 @@ make help   # list every command
 |---|---|
 | `make infra` | Only MySQL + Redis (same as `docker compose up -d`) |
 | `make tools` | Adminer at http://localhost:8081, RedisInsight at http://localhost:5540 |
+| RabbitMQ UI | http://localhost:15672 (user/password from `RABBITMQ_USER` / `RABBITMQ_PASSWORD` in `.env`) — chat realtime broker, runs with the stack |
 | `make logs s=backend` | Follow the logs of one service |
 | `make be-test` | Run backend tests in the container |
 | `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
@@ -280,3 +281,5 @@ docker exec -it intervue-redis redis-cli
 | `FlywayValidateException: Migration checksum mismatch` | An already-applied migration file was edited | Revert the edit and add a new migration file instead. On local only, you can reset with `docker compose down -v` |
 | Lombok `cannot find symbol` (getters/setters) in IDE | Annotation processing is disabled | Enable it (see *Running from an IDE*) |
 | Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
+| Backend log `Chat realtime: app.chat.rabbitmq.host is empty` when running on your machine (way A) | Backend runs outside Docker and `RABBITMQ_HOST` is not set | Chat still works with the in-app broker; for the RabbitMQ relay, `export RABBITMQ_HOST=localhost` and map port 61613 in `docker-compose.yml` |
+| `TCP connection failure in session _system_` repeating | RabbitMQ not healthy yet, or the STOMP plugin is off | `docker compose logs rabbitmq`; check `rabbitmq_stomp` in `rabbitmq-plugins list -e`. The backend keeps serving REST and reconnects on its own |

@@ -62,5 +62,13 @@
       "error": "Fehler"
     },
     "note": "Der leere Zustand lässt sich wirklich erreichen: Wählen Sie <b>{{day}}</b> und die Gegend <b>{{area}}</b>. Er nennt Ihre Auswahl und bietet einen Ausweg."
+  },
+  "location": {
+    "measured": "Entfernungen werden von Ihrem Standort aus gemessen.",
+    "forget": "Meinen Standort vergessen",
+    "denied": "Sie haben den Standort für diese Website deaktiviert. Ändern Sie das in den Website-Einstellungen Ihres Browsers, um nach Entfernung zu sortieren.",
+    "needed": "Die Sortierung nach Entfernung braucht Ihren Standort. Bis Sie ihn teilen, bleibt die Reihenfolge unten gleich.",
+    "share": "Teilen Sie Ihren Standort, um zu sehen, wie weit jeder Markt entfernt ist.",
+    "use": "Meinen Standort verwenden"
   }
 }

@@ -1,11 +1,6 @@
 {
   "title": "Productores",
-  "intro": "Aprueba una solicitud antes de que el puesto pueda publicar productos. La mayoría de las solicitudes llegan de cuentas que ya compran aquí, así que cada una muestra el historial de pedidos del solicitante junto a sus fotos. Suspende un puesto para ocultar sus productos y detener los pedidos nuevos; sus pedidos en curso terminan con normalidad.",
-  "search": {
-    "label": "Buscar productores",
-    "placeholder": "Puesto, persona de contacto, teléfono",
-    "submit": "Buscar"
-  },
+  "intro": "Aprueba una solicitud antes de que el puesto pueda publicar productos. Suspende un puesto para ocultar sus productos y detener los pedidos nuevos; los pedidos en curso terminan con normalidad.",
   "tabsLabel": "Productores por estado",
   "status": {
     "pending": "Pendientes de aprobación",
@@ -33,13 +28,10 @@
   },
   "col": {
     "stall": "Puesto",
-    "markets": "Mercados",
     "registered": "Registro",
-    "products": "Productos",
-    "rating": "Valoración"
+    "contact": "Contacto",
+    "email": "Correo"
   },
-  "reviews_one": "{{count}} reseña",
-  "reviews_other": "{{count}} reseñas",
   "action": {
     "approve": "Aprobar",
     "reject": "Rechazar",
@@ -55,7 +47,7 @@
   },
   "reject": {
     "title": "¿Rechazar {{stall}}?",
-    "text": "El productor conserva su acceso, pero no puede publicar productos.",
+    "text": "La persona solicitante conserva su cuenta de cliente y todo lo que contiene. Se le indica el motivo.",
     "reason": "Motivo que verá el productor",
     "confirm": "Rechazar solicitud"
   },
@@ -74,6 +66,22 @@
     "approved": "{{stall}} aprobado. El puesto ya puede publicar productos.",
     "rejected": "{{stall}} rechazado. Conserva su cuenta.",
     "suspended": "{{stall}} suspendido. Los pedidos en curso terminan con normalidad.",
-    "reinstated": "{{stall}} reactivado. Los productos vuelven a estar visibles."
-  }
+    "reinstated": "{{stall}} reactivado. Los productos vuelven a estar visibles.",
+    "failed": "No se pudo completar esa acción. Inténtalo de nuevo.",
+    "rejectFailed": "No se pudo rechazar esta solicitud. Inténtalo de nuevo."
+  },
+  "reinstate": {
+    "title": "¿Reactivar {{stall}}?",
+    "text": "Los productos vuelven a ser visibles para los clientes de inmediato.",
+    "confirm": "Reactivar puesto"
+  },
+  "keepReviewing": "Seguir revisando",
+  "loading": "Cargando agricultores",
+  "loadError": {
+    "title": "No se pudieron cargar los agricultores",
+    "text": "Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar"
+  },
+  "caption_one": "{{count}} agricultor",
+  "caption_other": "{{count}} agricultores"
 }

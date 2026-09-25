@@ -23,5 +23,10 @@
     "stalls_one": "{{count}} Stand",
     "stalls_other": "{{count}} Stände",
     "pickup": "{{days}} · Abholung {{pickup}}"
+  },
+  "bothOff": {
+    "title": "Nichts auf der Karte anzuzeigen",
+    "text": "Beide Ebenen sind ausgeschaltet. Schalten Sie Märkte oder Stände wieder ein, um die Markierungen zu sehen.",
+    "action": "Beide anzeigen"
   }
 }

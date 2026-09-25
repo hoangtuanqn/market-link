@@ -54,6 +54,7 @@ import farmerNotifications from '@/locales/en/FarmerNotifications.json';
 import farmerPending from '@/locales/en/FarmerPending.json';
 import farmerPromote from '@/locales/en/FarmerPromote.json';
 import farmerReviews from '@/locales/en/FarmerReviews.json';
+import adminFarmerDetail from '@/locales/en/AdminFarmerDetail.json';
 import adminFarmers from '@/locales/en/AdminFarmers.json';
 import marketMap from '@/locales/en/MarketMap.json';
 import about from '@/locales/en/About.json';
@@ -111,6 +112,7 @@ export const en = {
   FarmerPromote: farmerPromote,
   FarmerReviews: farmerReviews,
   AdminFarmers: adminFarmers,
+  AdminFarmerDetail: adminFarmerDetail,
   MarketMap: marketMap,
   About: about,
 } as const;

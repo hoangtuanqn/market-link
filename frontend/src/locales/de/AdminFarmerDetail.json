@@ -1,0 +1,71 @@
+{
+  "breadcrumb": "Bewerbung",
+  "loading": "Bewerbung wird geladen",
+  "loadError": {
+    "title": "Diese Bewerbung konnte nicht geladen werden",
+    "text": "Prüfe deine Verbindung und versuche es erneut.",
+    "retry": "Erneut versuchen"
+  },
+  "sentOn": "Gesendet am {{date}}",
+  "approveText": "Die Rolle wird zu Farmer, und im Konto öffnet sich ein Stand-Bereich. Alle Kundenfunktionen bleiben erhalten. Käufer sehen nichts, bis Produkte eingestellt und ein Abholfenster festgelegt sind.",
+  "fromCustomer": {
+    "title": "Diese Bewerbung kommt von einem Konto, das bereits auf MarketLink einkauft.",
+    "text": "Mit der Freigabe wird dasselbe Konto zum Stand; es entsteht kein zweites Konto. Alle Kundenfunktionen bleiben erhalten."
+  },
+  "suspendedBanner": {
+    "title": "Dieser Stand ist gesperrt.",
+    "text": "Seine Produkte bleiben für Kunden verborgen. Bereits aufgegebene Bestellungen laufen normal weiter."
+  },
+  "rejectedBanner": {
+    "title": "Diese Bewerbung wurde abgelehnt.",
+    "text": "Grund, den die Person sieht: {{reason}}"
+  },
+  "photos": {
+    "title": "Fotos der Anbaufläche",
+    "alt": "Foto der Anbaufläche",
+    "video": "Video ansehen",
+    "hint": "Prüfe, ob die Fläche auf den Fotos zur Nadel auf der Karte passt und das anbaut, was angegeben wurde. Lizenzen, Lebensmittelsicherheit oder Bio-Angaben prüfst du nicht."
+  },
+  "grows": {
+    "title": "Was angebaut wird",
+    "categories": "Kategorien",
+    "crops": "Hauptkulturen",
+    "volume": "Menge",
+    "ownWords": "In eigenen Worten:"
+  },
+  "plot": {
+    "title": "Die Anbaufläche",
+    "address": "Adresse",
+    "size": "Größe",
+    "since": "Anbau seit"
+  },
+  "stall": {
+    "title": "Der beantragte Stand",
+    "name": "Name des Stands",
+    "contact": "Kontaktperson",
+    "email": "E-Mail",
+    "description": "Beschreibung",
+    "market": "Gewünschter Markt"
+  },
+  "history": {
+    "title": "Verlauf",
+    "sent": "Bewerbung gesendet",
+    "customer": "Konto als Kunde erstellt"
+  },
+  "applicant": {
+    "title": "Antragsteller",
+    "name": "Name",
+    "since": "Kunde seit",
+    "status": "Kontostatus"
+  },
+  "accountStatus": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "suspended": "Gesperrt"
+  },
+  "map": "Die Anbaufläche und der gewünschte Markt",
+  "approval": {
+    "title": "Was die Freigabe bewirkt",
+    "text": "Die Rolle wird zu Farmer, und ein Stand-Bereich öffnet sich. Mit demselben Konto kann weiter bei anderen Ständen eingekauft werden. Nichts wird angezeigt, bis Produkte eingestellt und ein Abholfenster festgelegt sind."
+  }
+}

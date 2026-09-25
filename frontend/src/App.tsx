@@ -2,65 +2,66 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
 import SettingsSync from './components/SettingsSync';
 import AdminLayout from './layout/AdminLayout';
-import AdminSettingsPage from './pages/AdminSettings';
-import FarmerSettingsPage from './pages/FarmerSettings';
+import AdminSettingsPage from './pages/admin/Settings';
+import FarmerSettingsPage from './pages/farmer/Settings';
 import FarmerLayout from './layout/FarmerLayout';
 import MainLayout from './layout/MainLayout';
 import RequireAuth from './layout/RequireAuth';
-import HomePage from './pages/Home';
-import NotFoundPage from './pages/NotFound';
+import HomePage from './pages/public/Home';
+import NotFoundPage from './pages/public/NotFound';
 import RemountOnParam from './components/RemountOnParam';
-import LoginPage from './pages/Login';
-import RegisterCustomerPage from './pages/RegisterCustomer';
-import RegisterFarmerPage from './pages/RegisterFarmer';
-import ForgotPasswordPage from './pages/ForgotPassword';
-import ResetPasswordPage from './pages/ResetPassword';
-import GoogleCallbackPage from './pages/GoogleCallback';
-import CompleteProfilePage from './pages/CompleteProfile';
-import SetPasswordPage from './pages/SetPassword';
-import CustomerDashboardPage from './pages/CustomerDashboard';
-import CustomerAccountPage from './pages/CustomerAccount';
-import CustomerCartPage from './pages/CustomerCart';
-import CustomerOrdersPage from './pages/CustomerOrders';
-import CustomerOrderDetailPage from './pages/CustomerOrderDetail';
-import CustomerFavoritesPage from './pages/CustomerFavorites';
-import CustomerMessagesPage from './pages/CustomerMessages';
-import CustomerNotificationsPage from './pages/CustomerNotifications';
-import CustomerOrderEditPage from './pages/CustomerOrderEdit';
-import CustomerOrderPlacedPage from './pages/CustomerOrderPlaced';
-import CustomerReviewPage from './pages/CustomerReview';
-import CustomerBecomeFarmerPage from './pages/CustomerBecomeFarmer';
-import CustomerSettingsPage from './pages/CustomerSettings';
-import CustomerAssistantPage from './pages/CustomerAssistant';
-import MarketsPage from './pages/Markets';
-import MarketDetailPage from './pages/MarketDetail';
-import ProductsPage from './pages/Products';
-import ProductDetailPage from './pages/ProductDetail';
-import StallProfilePage from './pages/StallProfile';
-import SearchPage from './pages/Search';
-import MarketMapPage from './pages/MarketMap';
-import AboutPage from './pages/About';
-import ContactPage from './pages/Contact';
-import FeedbackPage from './pages/Feedback';
-import FarmerOverviewPage from './pages/FarmerOverview';
-import FarmerOrdersPage from './pages/FarmerOrders';
-import FarmerOrderDetailPage from './pages/FarmerOrderDetail';
-import FarmerStockWeekPage from './pages/FarmerStockWeek';
-import FarmerProductsPage from './pages/FarmerProducts';
-import FarmerProductFormPage from './pages/FarmerProductForm';
-import FarmerStallProfilePage from './pages/FarmerStallProfile';
-import FarmerSlotsPage from './pages/FarmerSlots';
-import FarmerHistoryPage from './pages/FarmerHistory';
-import FarmerReviewsPage from './pages/FarmerReviews';
-import FarmerMessagesPage from './pages/FarmerMessages';
-import FarmerNotificationsPage from './pages/FarmerNotifications';
-import FarmerPendingPage from './pages/FarmerPending';
-import FarmerPromotePage from './pages/FarmerPromote';
-import AdminLoginPage from './pages/AdminLogin';
-import AdminHomePage from './pages/AdminHome';
-import AdminVerifyPage from './pages/AdminVerify';
-import AdminSecurityPage from './pages/AdminSecurity';
-import AdminFarmersPage from './pages/AdminFarmers';
+import LoginPage from './pages/auth/Login';
+import RegisterCustomerPage from './pages/auth/RegisterCustomer';
+import RegisterFarmerPage from './pages/auth/RegisterFarmer';
+import ForgotPasswordPage from './pages/auth/ForgotPassword';
+import ResetPasswordPage from './pages/auth/ResetPassword';
+import GoogleCallbackPage from './pages/auth/GoogleCallback';
+import CompleteProfilePage from './pages/auth/CompleteProfile';
+import SetPasswordPage from './pages/auth/SetPassword';
+import CustomerDashboardPage from './pages/customer/Dashboard';
+import CustomerAccountPage from './pages/customer/Account';
+import CustomerCartPage from './pages/customer/Cart';
+import CustomerOrdersPage from './pages/customer/Orders';
+import CustomerOrderDetailPage from './pages/customer/OrderDetail';
+import CustomerFavoritesPage from './pages/customer/Favorites';
+import CustomerMessagesPage from './pages/customer/Messages';
+import CustomerNotificationsPage from './pages/customer/Notifications';
+import CustomerOrderEditPage from './pages/customer/OrderEdit';
+import CustomerOrderPlacedPage from './pages/customer/OrderPlaced';
+import CustomerReviewPage from './pages/customer/Review';
+import CustomerBecomeFarmerPage from './pages/customer/BecomeFarmer';
+import CustomerSettingsPage from './pages/customer/Settings';
+import CustomerAssistantPage from './pages/customer/Assistant';
+import MarketsPage from './pages/public/Markets';
+import MarketDetailPage from './pages/public/MarketDetail';
+import ProductsPage from './pages/public/Products';
+import ProductDetailPage from './pages/public/ProductDetail';
+import StallProfilePage from './pages/public/StallProfile';
+import SearchPage from './pages/public/Search';
+import MarketMapPage from './pages/public/MarketMap';
+import AboutPage from './pages/public/About';
+import ContactPage from './pages/public/Contact';
+import FeedbackPage from './pages/public/Feedback';
+import FarmerOverviewPage from './pages/farmer/Overview';
+import FarmerOrdersPage from './pages/farmer/Orders';
+import FarmerOrderDetailPage from './pages/farmer/OrderDetail';
+import FarmerStockWeekPage from './pages/farmer/StockWeek';
+import FarmerProductsPage from './pages/farmer/Products';
+import FarmerProductFormPage from './pages/farmer/ProductForm';
+import FarmerStallProfilePage from './pages/farmer/StallProfile';
+import FarmerSlotsPage from './pages/farmer/Slots';
+import FarmerHistoryPage from './pages/farmer/History';
+import FarmerReviewsPage from './pages/farmer/Reviews';
+import FarmerMessagesPage from './pages/farmer/Messages';
+import FarmerNotificationsPage from './pages/farmer/Notifications';
+import FarmerPendingPage from './pages/farmer/Pending';
+import FarmerPromotePage from './pages/farmer/Promote';
+import AdminLoginPage from './pages/admin/Login';
+import AdminHomePage from './pages/admin/Home';
+import AdminVerifyPage from './pages/admin/Verify';
+import AdminSecurityPage from './pages/admin/Security';
+import AdminFarmersPage from './pages/admin/Farmers';
+import AdminFarmerDetailPage from './pages/admin/FarmerDetail';
 
 const App = () => {
   return (
@@ -198,7 +199,17 @@ const App = () => {
             <Route index element={<AdminHomePage />} />
             <Route path="security" element={<AdminSecurityPage />} />
             <Route path="farmers" element={<AdminFarmersPage />} />
+            <Route
+              path="farmers/:id"
+              element={
+                <RemountOnParam param="id">
+                  <AdminFarmerDetailPage />
+                </RemountOnParam>
+              }
+            />
             <Route path="settings" element={<AdminSettingsPage />} />
+            {/* Mục sidebar chưa làm → 404 ngay trong khung admin, không rơi ra layout Customer */}
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </SettingsSync>

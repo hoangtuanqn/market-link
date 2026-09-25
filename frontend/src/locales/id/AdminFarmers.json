@@ -1,11 +1,6 @@
 {
   "title": "Petani",
-  "intro": "Setujui pendaftaran sebelum lapak bisa memasang produk. Sebagian besar pendaftaran datang dari akun yang sudah berbelanja di sini, jadi setiap pendaftaran menampilkan riwayat pesanan pendaftar di samping fotonya. Tangguhkan lapak untuk menyembunyikan produknya dan menghentikan pesanan baru; pesanan yang sedang berjalan tetap selesai seperti biasa.",
-  "search": {
-    "label": "Cari petani",
-    "placeholder": "Lapak, narahubung, telepon",
-    "submit": "Cari"
-  },
+  "intro": "Setujui pengajuan sebelum lapak dapat memasang produk. Tangguhkan lapak untuk menyembunyikan produknya dan menghentikan pesanan baru; pesanan yang sedang berjalan selesai seperti biasa.",
   "tabsLabel": "Petani menurut status",
   "status": {
     "pending": "Menunggu persetujuan",
@@ -33,13 +28,10 @@
   },
   "col": {
     "stall": "Lapak",
-    "markets": "Pasar",
     "registered": "Terdaftar",
-    "products": "Produk",
-    "rating": "Rating"
+    "contact": "Narahubung",
+    "email": "Email"
   },
-  "reviews_one": "{{count}} ulasan",
-  "reviews_other": "{{count}} ulasan",
   "action": {
     "approve": "Setujui",
     "reject": "Tolak",
@@ -55,7 +47,7 @@
   },
   "reject": {
     "title": "Tolak {{stall}}?",
-    "text": "Petani tetap bisa masuk, tetapi tidak bisa memasang produk.",
+    "text": "Pemohon tetap memiliki akun pelanggan dan semua isinya. Mereka diberi tahu alasannya.",
     "reason": "Alasan yang akan dilihat petani",
     "confirm": "Tolak pendaftaran"
   },
@@ -74,6 +66,22 @@
     "approved": "{{stall}} disetujui. Lapak sekarang bisa memasang produk.",
     "rejected": "{{stall}} ditolak. Akunnya tetap ada.",
     "suspended": "{{stall}} ditangguhkan. Pesanan yang sedang berjalan selesai seperti biasa.",
-    "reinstated": "{{stall}} dipulihkan. Produk terlihat lagi."
-  }
+    "reinstated": "{{stall}} dipulihkan. Produk terlihat lagi.",
+    "failed": "Tindakan itu tidak dapat diselesaikan. Silakan coba lagi.",
+    "rejectFailed": "Pengajuan ini tidak dapat ditolak. Silakan coba lagi."
+  },
+  "reinstate": {
+    "title": "Pulihkan {{stall}}?",
+    "text": "Produk langsung terlihat lagi oleh pelanggan.",
+    "confirm": "Pulihkan lapak"
+  },
+  "keepReviewing": "Lanjut meninjau",
+  "loading": "Memuat petani",
+  "loadError": {
+    "title": "Petani tidak dapat dimuat",
+    "text": "Periksa koneksi Anda lalu coba lagi.",
+    "retry": "Coba lagi"
+  },
+  "caption_one": "{{count}} petani",
+  "caption_other": "{{count}} petani"
 }

@@ -65,7 +65,8 @@
     "directions": "Route",
     "dismiss": "Ausblenden",
     "remove": "Entfernen",
-    "tryAgain": "Erneut versuchen"
+    "tryAgain": "Erneut versuchen",
+    "cancel": "Abbrechen"
   },
   "admin": {
     "badge": "Admin",
@@ -134,7 +135,8 @@
     "aboutUs": "Über uns",
     "contactUs": "Kontakt",
     "feedback": "Feedback & Fehlermeldungen",
-    "mapData": "Kartendaten © OpenStreetMap-Mitwirkende"
+    "mapData": "Kartendaten © OpenStreetMap-Mitwirkende",
+    "mapDataFrom": "Kartendaten {{credit}}"
   },
   "header": {
     "cart": "Warenkorb",
@@ -168,7 +170,10 @@
   "map": {
     "attribution": "© {{link}}-Mitwirkende",
     "open": "Öffnen",
-    "placeholder": "Karte — {{label}}"
+    "placeholder": "Karte — {{label}}",
+    "stallPickup": "Stand {{code}} · Abholung {{pickup}}",
+    "tilesFailed": "Die Kartenkacheln brauchen eine Verbindung. Die Liste funktioniert auch ohne sie.",
+    "yourStall": "Ihr Stand"
   },
   "marketCard": {
     "save": "{{name}} speichern",
@@ -330,7 +335,16 @@
     "announcements": "Ankündigungen",
     "feedback": "Feedback",
     "pricing": "Preise",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "analytics": "Analysen",
+    "people": "Personen",
+    "marketplace": "Marktplatz",
+    "platform": "Plattform",
+    "navigation": "Admin-Navigation",
+    "home": "MarketLink — Admin-Übersicht",
+    "contextSub": "Plattform · gesamter Marktplatz",
+    "userLine": "Admin · gesamte Plattform",
+    "searchPlaceholder": "Stand, Kunde oder Markt"
   },
   "carousel": {
     "roleCarousel": "Karussell",
@@ -341,5 +355,28 @@
     "show": "Folie {{n}} anzeigen: {{topic}}",
     "pause": "Diashow anhalten",
     "play": "Diashow abspielen"
+  },
+  "geo": {
+    "denied": "Sie haben den Standort für diese Website deaktiviert. Ändern Sie das in den Website-Einstellungen Ihres Browsers oder nutzen Sie eine Adresse.",
+    "insecure": "Ihr Browser teilt Ihren Standort nur über eine sichere Verbindung (https).",
+    "failed": "Ihr Gerät konnte Ihren Standort nicht ermitteln. Versuchen Sie es erneut oder geben Sie eine Adresse ein.",
+    "finding": "Standort wird ermittelt…"
+  },
+  "directions": {
+    "title": "Route zu {{name}}",
+    "question": "Wo starten Sie?",
+    "current": "Mein aktueller Standort",
+    "currentShared": "Bereits geteilt",
+    "currentAsk": "Ihr Browser fragt zuerst nach",
+    "address": "Eine Adresse",
+    "addressNote": "Eine Straße oder ein Wahrzeichen in Ho-Chi-Minh-Stadt.",
+    "addressLabel": "Startadresse",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "Straße und Bezirk funktionieren am besten. Hausnummern fehlen oft auf der Karte, und OpenStreetMap lässt Sie einen Ort wählen, wenn es keinen findet.",
+    "useSaved": "Meine gespeicherte Adresse verwenden",
+    "none": "Ich gebe ihn auf der Karte ein",
+    "noneNote": "Öffnet OpenStreetMap, nur mit dem Ziel ausgefüllt.",
+    "privacy": "Die Route öffnet sich auf openstreetmap.org in einem neuen Tab. MarketLink verfolgt Ihren Standort nicht.",
+    "open": "Route öffnen"
   }
 }

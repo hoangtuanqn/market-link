@@ -5,9 +5,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import com.techx.intervue.modules.conversation.entities.Conversation;
+import com.techx.intervue.modules.conversation.realtime.StompChatEventPublisher;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.requests.SendMessageRequest;
-import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ConversationServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.MessageServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
@@ -37,7 +37,10 @@ class MessageServicePublishTimingTest {
     @Autowired UserRepository users;
     @Autowired PlatformTransactionManager txManager;
 
-    @MockitoBean ChatEventPublisherInterface events;
+    // Mock đúng lớp cụ thể: TypingController / PresenceEventListener inject
+    // StompChatEventPublisher,
+    // mock của riêng interface sẽ làm context không có bean kiểu đó.
+    @MockitoBean StompChatEventPublisher events;
 
     User customer;
     User farmer;

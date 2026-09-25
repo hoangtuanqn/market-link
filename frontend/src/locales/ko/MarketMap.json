@@ -23,5 +23,10 @@
     "stalls_one": "매대 {{count}}곳",
     "stalls_other": "매대 {{count}}곳",
     "pickup": "{{days}} · 픽업 {{pickup}}"
+  },
+  "bothOff": {
+    "title": "지도에 표시할 항목이 없습니다",
+    "text": "두 레이어가 모두 꺼져 있습니다. 마켓이나 매장을 다시 켜면 핀이 보입니다.",
+    "action": "모두 표시"
   }
 }
