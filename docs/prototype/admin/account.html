@@ -13,6 +13,9 @@
 <link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
 <link rel="stylesheet" href="../prototype.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- QR is drawn in the browser on purpose: the otpauth URI holds the shared secret, so it must
+     never be sent to an online QR image service. -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 <script src="../data.js"></script>
 <script src="../prototype.js"></script>
 </head>
@@ -50,6 +53,82 @@
     <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-secondary" data-toast="Password changed. Other sessions were signed out.">Change password</button></div>
   </form>
 
+  <section class="ml-card pt-panel pt-col-3" id="mfa">
+    <div class="pt-between-c">
+      <div class="pt-col-2" style="max-width:620px">
+        <h2 class="pt-h3">Two-step verification</h2>
+        <p class="pt-small ml-muted">A second step after your password, from an app on your phone. An admin can approve stalls, deactivate customers and change what the platform charges, so a password on its own is thin.</p>
+      </div>
+      <div id="mfa-state"></div>
+    </div>
+
+    <div id="mfa-off">
+      <button type="button" class="ml-btn ml-btn-primary" id="mfa-start">Turn on two-step verification</button>
+    </div>
+
+    <div id="mfa-setup" hidden class="pt-col-3">
+      <ol class="pt-steps-form">
+        <li>
+          <div>
+            <h2>Scan this with your authenticator</h2>
+            <p class="pt-small ml-muted">Google Authenticator, Microsoft Authenticator, Authy, 1Password — any of them. Nothing is sent anywhere: the code below is drawn by your own browser.</p>
+            <div class="pt-row-4" style="align-items:flex-start;margin-top:12px">
+              <div class="pt-qr" id="qr"></div>
+              <div class="pt-col-2" style="min-width:0">
+                <p class="pt-small"><b>Cannot scan?</b> Type this key in by hand:</p>
+                <p class="pt-secret" id="secret"></p>
+                <dl class="pt-facts pt-small">
+                  <dt>Type</dt><dd>Time-based (TOTP)</dd>
+                  <dt>Algorithm</dt><dd>SHA1</dd>
+                  <dt>Digits</dt><dd>6</dd>
+                  <dt>Period</dt><dd>30 seconds</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h2>Type the code it shows</h2>
+            <p class="pt-small ml-muted">This proves the phone and the server agree on the time before anything is switched on.</p>
+            <div class="pt-row-2" style="align-items:flex-end;margin-top:12px">
+              <div class="ml-field" style="min-width:0;max-width:220px"><label class="ml-field-label" for="confirm">Six-digit code</label><input id="confirm" class="ml-input pt-otp" inputmode="numeric" maxlength="6" placeholder="000000"></div>
+              <button type="button" class="ml-btn ml-btn-primary" id="mfa-confirm">Confirm</button>
+            </div>
+            <p class="pt-small ml-muted" style="margin-top:8px">In this prototype any six digits are accepted.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h2>Save your recovery codes</h2>
+            <p class="pt-small ml-muted">Ten codes, each usable once. They are the only way back in if you lose the phone — and this platform has one admin account, so losing it locks everybody out.</p>
+            <ul class="pt-codes" id="codes" style="margin-top:12px"></ul>
+            <div class="pt-row-2" style="margin-top:12px">
+              <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Copied. Keep them somewhere other than the phone that holds the authenticator.">Copy the codes</button>
+              <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Downloaded as marketlink-recovery-codes.txt.">Download</button>
+              <button type="button" class="ml-btn ml-btn-primary ml-btn-sm" id="mfa-done">I have saved them</button>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div id="mfa-on" hidden class="pt-col-3">
+      <dl class="pt-facts">
+        <dt>Turned on</dt><dd>Today</dd>
+        <dt>Recovery codes left</dt><dd><b id="mfa-left">10</b> of 10</dd>
+      </dl>
+      <ul class="pt-codes" id="codes-on"></ul>
+      <div class="pt-row-2">
+        <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" id="mfa-regen">Make new recovery codes</button>
+        <button type="button" class="ml-btn ml-btn-danger ml-btn-sm" id="mfa-off-btn">Turn it off</button>
+      </div>
+    </div>
+
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Out of scope · Two-step verification is not in the SRS. &sect;1.7 asks only for adequate security measures such as authentication. It needs a new FR, plus admin_mfa(user_id, secret encrypted, enabled, confirmed_at) and mfa_recovery_codes(id, user_id, code_hash, used_at), and a Flyway migration under R-03. LEAD owns schema.sql (R-02). The stack already carries the rest: spring-boot-starter-security, spring-boot-starter-data-redis for the five-minute pending token and the replay guard, and bucket4j-redis for the try limit. TOTP itself is HMAC-SHA1 over a time counter, short enough to write and explain, which the brief asks participants to be able to do.">Two-step verification needs a new FR and two tables</span></p>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-102 · The seed script publishes one account per role with the credentials printed in the submitted documentation, so the admin password is public by design and a second step on top of it protects nothing real. Proposal: ship it working but OFF on the seeded admin so the demo signs in with a password alone, and let this screen show what turning it on looks like. Seeding it ON with a published secret is worse: the same as having no second factor while looking like it has one.">Leave it off on the seeded admin, or the demo cannot sign in</span></p>
+  </section>
+
   <section class="ml-card pt-panel pt-col-3">
     <h2 class="pt-h3">Where you are signed in</h2>
     <div id="sessions"></div>
@@ -67,6 +146,72 @@
   </div>
 </main>
 <script>
+  /* Two-step verification. The secret is invented here for the mockup; in the real thing it comes from
+     the server once, is stored encrypted, and is never shown again after enrolment. */
+  var SECRET = 'JBSWY3DPEHPK3PXP2MZX';
+  var URI = 'otpauth://totp/MarketLink:admin@marketlink.local?secret=' + SECRET +
+    '&issuer=MarketLink&algorithm=SHA1&digits=6&period=30';
+
+  function codeList() {
+    var out = [];
+    for (var i = 0; i < 10; i++) {
+      out.push('<li>' + Math.random().toString(36).slice(2, 6) + '-' + Math.random().toString(36).slice(2, 6) + '-' + Math.random().toString(36).slice(2, 6) + '</li>');
+    }
+    return out.join('');
+  }
+
+  function setState(on) {
+    document.getElementById('mfa-state').innerHTML = on
+      ? '<span class="ml-status ml-status-ready">' + PT.icons.check() + '<span class="ml-status-text">On</span></span>'
+      : '<span class="ml-status ml-status-placed">' + PT.icons.alert() + '<span class="ml-status-text">Off</span></span>';
+    document.getElementById('mfa-off').hidden = on;
+    document.getElementById('mfa-on').hidden = !on;
+    if (on) document.getElementById('mfa-setup').hidden = true;
+  }
+  setState(false);
+
+  document.getElementById('mfa-start').addEventListener('click', function () {
+    document.getElementById('mfa-off').hidden = true;
+    document.getElementById('mfa-setup').hidden = false;
+    document.getElementById('secret').textContent = SECRET.replace(/(.{4})/g, '$1 ').trim();
+    document.getElementById('codes').innerHTML = codeList();
+    // drawn locally; the URI carries the secret and must not reach an online QR service
+    var qr = qrcode(0, 'M');
+    qr.addData(URI);
+    qr.make();
+    document.getElementById('qr').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+  });
+
+  document.getElementById('mfa-confirm').addEventListener('click', function () {
+    var v = document.getElementById('confirm').value.trim();
+    PT.toast(v.length === 6 ? 'Code accepted. Save the recovery codes to finish.' : 'A code is six digits.', v.length === 6 ? {} : { tone: 'error' });
+  });
+
+  document.getElementById('mfa-done').addEventListener('click', function () {
+    document.getElementById('codes-on').innerHTML = codeList();
+    setState(true);
+    PT.toast('Two-step verification is on. You will be asked for a code at the next sign-in.');
+  });
+
+  document.getElementById('mfa-regen').addEventListener('click', function () {
+    PT.dialog({
+      title: 'Make new recovery codes?',
+      body: '<p>The ten you have now stop working straight away. Save the new ones before you close this screen.</p>',
+      keep: 'Keep the old ones', confirm: 'Make new codes',
+      onConfirm: function () { document.getElementById('codes-on').innerHTML = codeList(); PT.toast('Ten new recovery codes. The old ones no longer work.'); },
+    });
+  });
+
+  document.getElementById('mfa-off-btn').addEventListener('click', function () {
+    PT.dialog({
+      tone: 'danger',
+      title: 'Turn off two-step verification?',
+      body: '<p>Your password becomes the only thing standing between anyone and the approvals, the customer accounts and the platform prices.</p>',
+      keep: 'Leave it on', confirm: 'Turn it off',
+      onConfirm: function () { setState(false); PT.toast('Two-step verification is off.'); },
+    });
+  });
+
   document.getElementById('badge').innerHTML = PT.icons.completed() + '<span class="ml-status-text">Full admin</span>';
   document.getElementById('sessions').innerHTML = PT.table(null, [
     { key: 'd', label: 'Device' }, { key: 'w', label: 'Where' }, { key: 't', label: 'Last used' },

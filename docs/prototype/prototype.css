@@ -100,6 +100,21 @@ h1, h2, h3, p { margin: 0; }
 .pt-panel-4 { padding: var(--space-4); }
 .pt-auth { width: 100%; max-width: 460px; margin: var(--space-6) auto; padding: var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); box-sizing: border-box; }
 .pt-auth-wide { max-width: 640px; }
+/* one-time code: wide-spaced digits so a six-digit code is read in one glance */
+.pt-otp { font-family: var(--font-mono); font-size: 28px; letter-spacing: 0.32em; text-align: center; padding-inline: var(--space-3); }
+.pt-otp-wide { font-family: var(--font-mono); font-size: 18px; letter-spacing: 0.08em; text-align: center; }
+/* a button that reads as a link, for a secondary path inside a form */
+.pt-linkbtn { border: 0; background: none; padding: 0; font: inherit; color: var(--brand); font-weight: 700; cursor: pointer; text-decoration: underline; }
+.pt-linkbtn:hover { color: var(--brand-strong); }
+/* recovery codes: a block you copy once and keep */
+.pt-codes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2) var(--space-4); margin: 0; padding: var(--space-4); background: var(--surface-sunken); border: 1.5px solid var(--line-strong); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 15px; }
+.pt-codes li { list-style: none; }
+.pt-codes li[data-used='true'] { color: var(--ink-muted); text-decoration: line-through; }
+/* the QR is drawn in the browser: the shared secret never goes to a third party */
+.pt-qr { width: 180px; height: 180px; flex: none; display: grid; place-items: center; padding: var(--space-3); background: #fff; border: 1.5px solid var(--line-strong); border-radius: var(--radius-sm); box-sizing: border-box; }
+.pt-qr svg { width: 100%; height: 100%; display: block; }
+.pt-secret { font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.06em; word-break: break-all; }
+@media (max-width: 767px) { .pt-codes { grid-template-columns: minmax(0, 1fr); } }
 .pt-upload { border: 1.5px dashed var(--line-strong); border-radius: var(--radius-sm); padding: var(--space-4); display: flex; gap: var(--space-4); align-items: center; background: var(--surface-raised); }
 .pt-upload-frame { width: 120px; aspect-ratio: 4 / 3; background: var(--surface-sunken); border: 1px solid var(--line); border-radius: 6px; display: grid; place-items: center; font-family: var(--font-hand); font-size: 19px; color: var(--ink-muted); flex: none; }
 
@@ -548,6 +563,18 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 /* TODO marker: something the SRS / decisions do not define. Visible on purpose; never ship it. */
 .pt-todo { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1.5px dashed var(--danger); color: var(--danger); background: var(--surface-raised); border-radius: var(--radius-sm); font-family: var(--font-sans); font-size: 12px; font-weight: 700; line-height: 16px; vertical-align: middle; text-transform: none; letter-spacing: 0; white-space: normal; text-align: left; }
 .pt-todo::before { content: 'TODO'; padding-right: 6px; border-right: 1px solid var(--danger); }
+
+/* Admin reading the public site. Not the shopper's green announcement band: this one is built from ink
+   and surface, so it is always the inverse of the page and reads as the platform talking to its staff. */
+.pt-adminbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-5); background: var(--ink); color: var(--surface); font-size: 14px; }
+.pt-adminbar-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; background: var(--accent); color: var(--on-accent); padding: 2px 8px; border-radius: var(--radius-sm); flex: none; }
+.pt-adminbar > span:nth-child(2) { min-width: 0; }
+.pt-adminbar-acts { margin-left: auto; display: flex; gap: var(--space-2); flex: none; }
+@media (max-width: 767px) { .pt-adminbar { padding-inline: var(--space-4); } .pt-adminbar-acts { margin-left: 0; width: 100%; } }
+
+/* A locked action says why, rather than leaving a grey button unexplained (brand book, Voice). */
+.pt-locked { margin: 0; font-size: 13px; line-height: 18px; color: var(--ink-muted); padding: var(--space-2) 0; border-top: 1px dotted var(--line-strong); }
+.pt-locked a { font-weight: 700; }
 /* a TODO that annotates a banner sits under its text, inside the body, never beside it */
 .pt-banner-todo { margin-top: var(--space-2); }
 

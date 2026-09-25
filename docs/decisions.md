@@ -111,6 +111,36 @@ Cột `markets.map_provider` vẫn giữ theo schema đề gợi ý, mặc đị
 
 ---
 
+### D-13 · Admin xem được trang public, nhưng không mua bằng tài khoản admin
+Farmer gộp vào Customer được vì đó là **cùng một người, cùng một nhu cầu**: người bán rau cũng đi chợ
+mua thịt. Admin thì khác về bản chất — đó là **một công việc trên nền tảng**, không phải một kiểu người mua.
+
+**Chốt:**
+- Admin **xem** được mọi trang public. Bắt buộc phải thế: kiểm duyệt một sản phẩm nghĩa là nhìn nó đúng
+  như khách nhìn (FR-074), và `admin/moderation.html` đã dẫn sang `public/product.html`.
+- Admin **không mua** bằng tài khoản admin: không giỏ hàng, không đơn, không review, không yêu thích.
+- Admin muốn mua thật thì dùng **một tài khoản customer riêng**. Tài khoản khác, không phải chế độ khác.
+- Trên trang public, admin thấy **điều hướng của trang public** cộng một thanh *Admin view* dẫn về panel
+  và vào thẳng kiểm duyệt. Menu dashboard thuộc về panel, không thuộc mặt tiền cửa hàng.
+
+**Lý do không cho mua chung tài khoản:**
+1. *Xung đột lợi ích.* Admin duyệt gian hàng, đình chỉ Farmer, ẩn review và đặt giá nền tảng. Cùng tài
+   khoản đó mà đặt hàng và viết review được thì họ review được gian hàng mà chính họ có quyền đình chỉ.
+2. *Truy vết.* FR-038 ghi lịch sử trạng thái đơn. Trộn hành động quản trị với hành động mua hàng trên
+   một tài khoản thì nhật ký không trả lời được "ai làm, với tư cách gì".
+3. *Bán kính thiệt hại.* Phiên admin là phiên quyền cao nhất nền tảng; mang nó đi dạo trang public mở
+   rộng vùng phơi nhiễm mà không đổi lại lợi ích gì.
+
+**Ẩn nút không phải là biện pháp kiểm soát.** `POST /orders`, `/cart`, `/reviews`, `/favorites` phải trả
+**403** với JWT vai admin — Definition of Done điều 3: *"Kiểm tra quyền (role + ownership) ở server,
+không chỉ ẩn nút ở FE"*. Trong prototype mọi điều khiển mua đều mang `data-buy` hoặc `data-fav`, nên
+grep ra được đúng tập hành động server phải từ chối.
+
+**Còn mở, LEAD chốt nốt:** Farmer có được bỏ sản phẩm **của chính mình** vào giỏ không? Đây là phiên bản
+nhỏ của cùng một xung đột. Hiện tại là được.
+
+---
+
 ### Đơn vị và locale
 Tiền tệ **VND**, hiển thị `₫` phân cách hàng nghìn. Ngày `dd/MM/yyyy`, giờ 24h.
 Timezone `Asia/Ho_Chi_Minh`. Lưu DATETIME theo giờ local, ghi rõ trong ReadMe.
