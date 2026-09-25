@@ -1,0 +1,34 @@
+{
+  "greeting_one": "Hi {{name}}, {{count}} pickup this weekend",
+  "greeting_other": "Hi {{name}}, {{count}} pickups this weekend",
+  "intro": "One order is still waiting for the stall to confirm. Everything else is on track.",
+  "browseMarkets": "Browse this weekend's markets",
+  "cards": {
+    "upcoming_one": "{{count}} upcoming order",
+    "upcoming_other": "{{count}} upcoming orders",
+    "upcomingBreakdown": "{{placed}} waiting for approval · {{accepted}} accepted · {{ready}} ready",
+    "favorites_one": "{{count}} favorite",
+    "favorites_other": "{{count}} favorites",
+    "stalls_one": "{{count}} stall",
+    "stalls_other": "{{count}} stalls",
+    "products_one": "{{count}} product",
+    "products_other": "{{count}} products",
+    "markets_one": "{{count}} market",
+    "markets_other": "{{count}} markets",
+    "unread_one": "{{count}} unread notification",
+    "unread_other": "{{count}} unread notifications",
+    "unreadText": "An order is ready, and goat yogurt is back",
+    "account": "Account"
+  },
+  "sell": {
+    "overline": "New here",
+    "title": "Do you grow something? Sell it at the market",
+    "text": "Your account can become a stall at one of the four markets. Apply with a few photos of your plot and an admin reviews it. You carry on shopping either way.",
+    "apply": "Apply to sell",
+    "dismiss": "Not now"
+  },
+  "nextPickups": "Next pickups",
+  "allOrders": "All my orders",
+  "newFromFavorites": "New this week from your favorite stalls",
+  "favorites": "Favorites"
+}

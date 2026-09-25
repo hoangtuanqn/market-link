@@ -1,0 +1,29 @@
+{
+  "myOrders": "Mes commandes",
+  "breadcrumbOrder": "Commande {{code}}",
+  "breadcrumbReview": "Avis",
+  "notFound": {
+    "title": "Cette commande n’est plus disponible",
+    "text": "Vous l’avez peut-être annulée, ou le lien est ancien. Rouvrez-la depuis vos commandes."
+  },
+  "completed": "Terminée le {{date}}",
+  "title": "Comment était {{stall}} ?",
+  "intro": "Les avis sont liés à cette commande terminée : les autres clients les voient comme un achat vérifié. Le stand peut répondre.",
+  "stall": {
+    "title": "Le stand",
+    "placeholder": "Était-ce prêt à l’heure ? Le stand était-il facile à trouver ?"
+  },
+  "product": {
+    "placeholder": "Goût, fraîcheur, portion",
+    "skip": "Ignorer ce produit"
+  },
+  "rate": "Noter {{name}}",
+  "comment": "Commentaire",
+  "submit": "Publier l’avis",
+  "notNow": "Pas maintenant",
+  "note": "Un avis par commande pour le stand, et un par produit de la commande.",
+  "toast": {
+    "title": "Avis publié",
+    "text": "Merci. Votre avis sur {{stall}} est en ligne."
+  }
+}

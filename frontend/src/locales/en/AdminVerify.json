@@ -1,0 +1,35 @@
+{
+  "overline": "Admin area · step 2 of 2",
+  "title": "Enter the code from your authenticator",
+  "signedInAs": "Signed in as <b>{{email}}</b>.",
+  "notYou": "Not you?",
+  "error": {
+    "empty": "Type the code first.",
+    "sixDigits": "Enter the six digits from your authenticator.",
+    "check": "Could not check the code. Please try again."
+  },
+  "alert": {
+    "recoveryOnce": "Each recovery code works once.",
+    "checkClock": "Check that your phone clock is correct.",
+    "locked": "Too many wrong codes."
+  },
+  "toast": {
+    "signedIn": "Signed in."
+  },
+  "recovery": {
+    "label": "Recovery code",
+    "hint": "One of the codes you saved when you turned this on. Each one works once."
+  },
+  "code": {
+    "label": "Six-digit code",
+    "hint": "The code changes every 30 seconds. This one expires in {{seconds}}s."
+  },
+  "submit": "Verify and sign in",
+  "submitting": "Checking…",
+  "locked": "Sign-in is paused for this account.",
+  "backToSignIn": "Back to sign-in",
+  "swap": {
+    "toCode": "Use the six-digit code instead",
+    "toRecovery": "Use a recovery code instead"
+  }
+}

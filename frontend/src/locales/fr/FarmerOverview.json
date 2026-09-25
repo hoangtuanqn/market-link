@@ -1,0 +1,92 @@
+{
+  "tabs": {
+    "new": "En attente",
+    "acc": "Acceptées",
+    "ready": "Prêtes",
+    "done": "Terminées"
+  },
+  "decline": {
+    "reasons": {
+      "stock": "Stock insuffisant",
+      "day": "Je ne vends pas ce jour-là",
+      "time": "Impossible à cette heure de retrait",
+      "other": "Autre"
+    },
+    "title": "Refuser la commande {{code}} ?",
+    "keep": "Garder la commande",
+    "confirm": "Refuser la commande",
+    "text": "Le client est prévenu tout de suite et les articles retournent dans votre stock.",
+    "reason": "Motif que le client verra"
+  },
+  "col": {
+    "order": "Commande",
+    "customer": "Client",
+    "pickup": "Retrait",
+    "items": "Articles",
+    "total": "Total",
+    "status": "Statut"
+  },
+  "toast": {
+    "acceptedTitle": "Commande acceptée",
+    "acceptedText": "Commande {{code}} acceptée. {{who}} a été prévenu.",
+    "readyTitle": "Commande prête",
+    "readyText": "Commande {{code}} marquée comme prête.",
+    "completedTitle": "Commande terminée",
+    "completedText": "Commande {{code}} terminée.",
+    "declinedTitle": "Commande refusée",
+    "declinedText": "Commande {{code}} refusée. Le stock est de nouveau disponible."
+  },
+  "actions": {
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "ready": "Marquer prête",
+    "complete": "Marquer terminée",
+    "view": "Voir"
+  },
+  "captions": {
+    "new": "En attente · {{sat}} et {{sun}}",
+    "ready": "Prêtes à retirer"
+  },
+  "overline": "votre stand à {{market}} · prochain jour de marché {{day}}",
+  "greeting": "Bonjour, {{name}}",
+  "applyTemplate": "Appliquer le modèle hebdomadaire",
+  "addProduct": "Ajouter un produit",
+  "banner": {
+    "title_one": "{{count}} commande vous attend. {{closing}} d'entre elles se ferment demain à {{time}}.",
+    "title_other": "{{count}} commandes vous attendent. {{closing}} d'entre elles se ferment demain à {{time}}.",
+    "text": "Les commandes non validées bloquent toujours du stock. Acceptez ou refusez avant la clôture pour que les clients puissent s'organiser."
+  },
+  "kpi": {
+    "orders": "Commandes au total",
+    "ordersNote_one": "{{count}} cette semaine",
+    "ordersNote_other": "{{count}} cette semaine",
+    "vsAugust": "par rapport à août",
+    "openHistory": "Ouvrir l'historique des ventes",
+    "awaitingNote_one": "<b>{{count}}</b> se ferme à {{time}} le {{date}}",
+    "awaitingNote_other": "<b>{{count}}</b> se ferment à {{time}} le {{date}}",
+    "vsThursday": "par rapport à un jeudi normal",
+    "openIncoming": "Ouvrir les commandes reçues",
+    "revenue": "Chiffre d'affaires de septembre",
+    "revenueNote": "₫, des commandes terminées, payées au stand",
+    "best": "Meilleure vente",
+    "bestNote": "{{qty}} ce mois-ci",
+    "openProducts": "Ouvrir les produits",
+    "note": "Septembre jusqu'ici, comparé à août. Chaque tuile ouvre l'écran derrière son chiffre."
+  },
+  "incoming": {
+    "title": "Commandes reçues",
+    "all": "Toutes les commandes et filtres",
+    "note": "Les nouvelles commandes restent en surbrillance jusqu'à ce que vous les ouvriez."
+  },
+  "stock": {
+    "title": "Stock pour {{day}}",
+    "link": "Stock de la semaine",
+    "note": "Réservé signifie qu'une commande le bloque. Il est déduit de votre stock dès qu'un client commande."
+  },
+  "best": {
+    "title": "Meilleures ventes",
+    "link": "Historique des ventes",
+    "note": "Vendu en septembre, chacun dans son unité"
+  },
+  "protoNote": "La barre latérale et l'en-tête au-dessus sont nouveaux par rapport au prototype."
+}

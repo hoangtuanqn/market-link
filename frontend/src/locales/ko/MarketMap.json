@@ -1,0 +1,27 @@
+{
+  "title": "시장 지도",
+  "intro": "선택한 날의 모든 시장과 사전 주문을 받는 매대예요. 핀을 누르면 운영 시간, 픽업 시간대, 길찾기를 볼 수 있어요.",
+  "marketDay": "장날",
+  "filter": {
+    "markets": "시장",
+    "stalls": "매대",
+    "saved": "저장한 곳만"
+  },
+  "legend": {
+    "market": "네모: 시장",
+    "stall": "동그라미: 매대",
+    "selected": "테두리: 선택됨"
+  },
+  "mapLabel": "모든 시장과 매대 지도",
+  "directions": "길찾기는 새 탭의 OpenStreetMap에서 열려요.",
+  "openOn": "{{day}} 운영",
+  "empty": {
+    "title": "표시할 시장이 없어요",
+    "text": "선택한 날에 맞는 시장이 없어요. 다른 날을 고르거나 필터를 해제해 보세요."
+  },
+  "popup": {
+    "stalls_one": "매대 {{count}}곳",
+    "stalls_other": "매대 {{count}}곳",
+    "pickup": "{{days}} · 픽업 {{pickup}}"
+  }
+}

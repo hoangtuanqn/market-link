@@ -1,0 +1,30 @@
+{
+  "title": "Warenkorb",
+  "products_one": "{{count}} Produkt",
+  "products_other": "{{count}} Produkte",
+  "stalls_one": "{{count}} Stand",
+  "stalls_other": "{{count}} Ständen",
+  "intro": "{{products}} von {{stalls}}. Wählen Sie für jeden Stand eine Abholzeit und geben Sie dann die Bestellungen auf.",
+  "split": {
+    "title": "Ihr Warenkorb wird in 2 Bestellungen bei 2 verschiedenen Ständen aufgeteilt.",
+    "text": "Jeder Stand hat eigene Abholzeiten und Bestellschluss und nimmt seine Bestellung separat an. Sie bezahlen jeden Stand bei der Abholung."
+  },
+  "changeTime": "Abholzeit bei {{stall}} ändern",
+  "pickupDay": "Abholtag",
+  "pickupDayAt": "Abholtag bei {{stall}}",
+  "pickupTime": "Abholzeit · {{day}} {{date}} · Zeitfenster {{from}} – {{to}}",
+  "cutoffNote": "{{stall}} schließt Bestellungen {{hours}} Stunden vor dem Zeitfenster. Für {{slot}} am {{slotDay}} ist das {{cutoff}} am {{cutoffDay}}.",
+  "summary": {
+    "title": "Bei Abholung am Stand bezahlen",
+    "order": "Bestellung {{n}} · {{stall}}",
+    "total": "Gesamt, beide Stände"
+  },
+  "note": {
+    "label": "Notiz an die Stände",
+    "placeholder": "z. B. bitte kleinere Bunde"
+  },
+  "place": "2 Bestellungen aufgeben",
+  "ready": "Beide Stände haben eine Abholzeit. Jeder Stand bestätigt seine eigene Bestellung.",
+  "notReady": "Wählen Sie eine Abholzeit bei {{stall}}, um Ihre Bestellungen aufzugeben.",
+  "stockNote": "Der Bestand wird vom Stand abgezogen, sobald Sie bestellen. Es gibt keine Online-Zahlung."
+}

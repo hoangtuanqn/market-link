@@ -1,7 +1,10 @@
+import i18n from '@/i18n';
 export type BarRow = { label: string; value: number; suffix?: string };
 
+type BarListProps = { rows: BarRow[]; format?: (v: number) => string };
+
 /** Horizontal bar chart, one measure across categories (design system `.pt-bars`). */
-export function BarList({ rows }: { rows: BarRow[] }) {
+export function BarList({ rows, format = (v) => v.toLocaleString(i18n.language) }: BarListProps) {
   const max = Math.max(...rows.map((r) => r.value));
   return (
     <ul className="m-0 flex flex-col gap-3 p-0">
@@ -18,8 +21,7 @@ export function BarList({ rows }: { rows: BarRow[] }) {
             />
           </span>
           <span className="font-bold whitespace-nowrap tabular-nums">
-            {r.value.toLocaleString('en-US')}{' '}
-            {r.suffix && <span className="text-ink-muted font-normal">{r.suffix}</span>}
+            {format(r.value)} {r.suffix && <span className="text-ink-muted font-normal">{r.suffix}</span>}
           </span>
         </li>
       ))}

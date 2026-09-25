@@ -1,0 +1,109 @@
+{
+  "title": "홍보 및 게시",
+  "intro": "게시와 판매는 무료예요. 비용은 상품을 페이지 위쪽에 올리거나, 하루 무료 한도보다 더 많이 게시할 때만 들어요.",
+  "credit": "크레딧 {{amount}}",
+  "action": {
+    "topUp": "크레딧 충전",
+    "extend": "연장",
+    "buy": "구매"
+  },
+  "toast": {
+    "topUpTitle": "충전을 요청했어요",
+    "topUpText": "충전은 MarketLink 팀과 조율한 뒤 여기에 반영돼요.",
+    "pinnedTitle": "고정했어요",
+    "pinnedText": "고정했어요. 몇 분 안에 적용되며 언제든지 중지할 수 있어요.",
+    "extendedTitle": "연장했어요",
+    "extendedText_one": "{{price}}에 {{count}}일 연장했어요.",
+    "extendedText_other": "{{price}}에 {{count}}일 연장했어요.",
+    "bundleTitle": "패키지를 추가했어요",
+    "bundleText": "{{name}}을(를) 추가했어요. 팀이 결제를 확인한 뒤 여기에 반영해요.",
+    "addedTitle": "추가했어요",
+    "addedText": "크레딧에 추가했어요."
+  },
+  "srs": {
+    "title": "Farmer에게 요금을 받는 기능은 SRS에 없어요.",
+    "text": "SRS에서 결제 게이트웨이를 제외했기 때문에, 여기 크레딧은 팀과 조율하고 관리자가 입력해요. 먼저 새 요구 사항과 실제 결제 방식에 대한 결정이 필요해요."
+  },
+  "listings": {
+    "title": "오늘 게시",
+    "text": "한도는 자정에 초기화돼요. 이미 게시한 상품 수정은 항상 무료예요."
+  },
+  "bumps": {
+    "title": "이번 달 끌어올리기",
+    "text": "끌어올리기를 하면 그날 상품이 카테고리 맨 위로 다시 올라가요. 가격이나 재고는 바뀌지 않아요."
+  },
+  "meter": {
+    "left": {
+      "listings_one": "/ 무료 게시 {{count}}개 중 남음",
+      "listings_other": "/ 무료 게시 {{count}}개 중 남음",
+      "bumps_one": "/ 무료 끌어올리기 {{count}}회 중 남음",
+      "bumps_other": "/ 무료 끌어올리기 {{count}}회 중 남음"
+    },
+    "used": "{{used}} 사용함",
+    "low": "얼마 남지 않음"
+  },
+  "pinned": {
+    "title": "지금 고정된 상품",
+    "hint": "고정된 상품은 다른 상품보다 위에 \"홍보\" 표시와 함께 보여요"
+  },
+  "pinSection": {
+    "title": "상품 고정하기",
+    "note": "자리는 일부러 제한했어요. 장터 페이지에 세 자리, 홈페이지에 두 자리예요. 자리가 차면 더 높은 값을 부르는 대신 대기 명단에 올라가요."
+  },
+  "pin": {
+    "market": {
+      "name": "장터 페이지 한 곳의 맨 위",
+      "note": "그 장터를 둘러보는 모든 사람에게 보여요"
+    },
+    "home": {
+      "name": "홈페이지, 장터 네 곳 모두",
+      "note": "MarketLink에서 가장 귀한 자리"
+    },
+    "slots_one": "{{count}}자리",
+    "slots_other": "{{count}}자리",
+    "product": "상품 선택",
+    "duration": "기간",
+    "days_one": "{{count}}일",
+    "days_other": "{{count}}일",
+    "cta": "{{price}}에 고정하기"
+  },
+  "bundles": {
+    "title": "패키지",
+    "intro": "하나씩 사는 것보다 저렴하고, {{days}}일 동안 유효해요.",
+    "choose": "{{name}} 선택"
+  },
+  "bundle": {
+    "starter": "스타터",
+    "market": "마켓",
+    "season": "시즌"
+  },
+  "bundleLine": {
+    "listings_one": "일일 한도 초과 게시 {{count}}개",
+    "listings_other": "일일 한도 초과 게시 {{count}}개",
+    "bumps_one": "추가 끌어올리기 {{count}}회",
+    "bumps_other": "추가 끌어올리기 {{count}}회",
+    "pinDays_one": "장터 페이지 고정 {{count}}일",
+    "pinDays_other": "장터 페이지 고정 {{count}}일",
+    "runs_one": "{{count}}일 동안 유효",
+    "runs_other": "{{count}}일 동안 유효",
+    "noLimit": "일일 게시 한도 없음",
+    "bumpsTotal_one": "끌어올리기 {{count}}회",
+    "bumpsTotal_other": "끌어올리기 {{count}}회"
+  },
+  "extrasSection": {
+    "title": "하나씩 구매"
+  },
+  "extras": {
+    "listing": "하루 다섯 개를 넘는 게시 1개",
+    "bump": "한 달 열 번을 넘는 끌어올리기 1회"
+  },
+  "col": {
+    "product": "상품",
+    "until": "종료 시점",
+    "views": "고정 중 조회수",
+    "added": "장바구니 추가",
+    "paid": "결제 금액",
+    "what": "항목",
+    "price": "가격"
+  }
+}

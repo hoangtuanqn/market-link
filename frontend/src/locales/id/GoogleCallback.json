@@ -1,0 +1,21 @@
+{
+  "loading": {
+    "title": "Masuk dengan Google…",
+    "text": "Hanya sebentar."
+  },
+  "failed": {
+    "title": "Masuk dengan Google tidak selesai",
+    "text": "Anda belum masuk. Tidak ada yang berubah pada akun Anda.",
+    "backToSignIn": "Kembali ke halaman masuk",
+    "registerWithEmail": "Buat akun dengan email saja"
+  },
+  "toast": {
+    "signedIn": "Berhasil masuk."
+  },
+  "errors": {
+    "cancelled": "Anda membatalkan masuk dengan Google.",
+    "google": "Google tidak dapat memasukkan Anda. Silakan coba lagi.",
+    "invalidState": "Upaya masuk ini tidak valid. Mulai lagi dari halaman masuk.",
+    "failed": "Masuk dengan Google gagal. Silakan coba lagi."
+  }
+}

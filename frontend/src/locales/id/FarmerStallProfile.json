@@ -1,0 +1,54 @@
+{
+  "title": "Lapak & pengambilan",
+  "intro": "Yang dilihat pelanggan tentang lapak Anda, pasar tempat Anda berjualan, hari buka dan jendela pengambilan, serta lokasi lapak di peta.",
+  "approved": "Disetujui pada {{date}}",
+  "saved": "Tersimpan",
+  "tabs": {
+    "label": "Pengaturan lapak",
+    "stall": "Detail lapak",
+    "markets": "Pasar, hari, dan pengambilan"
+  },
+  "details": {
+    "title": "Detail lapak",
+    "stallName": "Nama lapak",
+    "person": "Narahubung",
+    "phone": "Nomor telepon",
+    "phoneHint": "Ditampilkan kepada pelanggan di tiket pesanan.",
+    "email": "Email",
+    "address": "Alamat kebun atau usaha",
+    "about": "Tentang lapak",
+    "aboutHint": "Ditampilkan dengan tulisan tangan di halaman lapak Anda. Satu atau dua kalimat.",
+    "savedText": "Detail lapak tersimpan.",
+    "save": "Simpan detail lapak"
+  },
+  "cutoff": {
+    "title": "Batas pesanan",
+    "label": "Berhenti menerima perubahan sekian jam sebelum slot pengambilan",
+    "hint_one": "Untuk slot {{slot}} hari {{saturday}}, {{count}} jam berarti pukul {{time}} hari {{day}}. Setelah itu pelanggan tidak bisa mengubah atau membatalkan, dan pesanan baru untuk slot itu juga ditutup (D-05).",
+    "hint_other": "Untuk slot {{slot}} hari {{saturday}}, {{count}} jam berarti pukul {{time}} hari {{day}}. Setelah itu pelanggan tidak bisa mengubah atau membatalkan, dan pesanan baru untuk slot itu juga ditutup (D-05)."
+  },
+  "markets": {
+    "title": "Pasar tempat Anda berjualan",
+    "intro": "Centang pasar untuk membuka pengaturannya. Hari dan jendela pengambilan diatur per pasar.",
+    "runs": "Pasar buka {{days}} · {{open}}–{{close}}",
+    "code": "Kode atau posisi lapak",
+    "codeHint": "Ditampilkan di tiket pesanan agar pelanggan menemukan Anda.",
+    "days": "Hari buka di pasar ini",
+    "start": "Pengambilan mulai",
+    "end": "Pengambilan selesai",
+    "location": "Lokasi lapak",
+    "mapLabel": "Tandai lapak di peta",
+    "mapHint": "Seret pin bulat ke posisi Anda di dalam pasar. Pin kotak adalah pasarnya.",
+    "lat": "Lintang",
+    "lng": "Bujur",
+    "pinMoved": "Pin dipindahkan",
+    "pinMovedText": "Pin dipindahkan ke pintu masuk pasar. Seret ke posisi Anda.",
+    "useMarket": "Gunakan lokasi pasar",
+    "savedText": "Pasar, hari, dan jendela pengambilan tersimpan. Slot minggu depan mengikuti jendela baru.",
+    "save": "Simpan pasar dan pengambilan",
+    "slotsLink": "Kelola slot pengambilan"
+  },
+  "map": {
+    "yourStall": "Lapak Anda"
+  }
+}

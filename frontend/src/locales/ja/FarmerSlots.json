@@ -1,0 +1,88 @@
+{
+  "crumbStall": "出店と受け取り",
+  "title": "受け取り枠",
+  "intro": "受け取り枠は、受け取り時間帯の中の 30 分ごとの区切りです。各枠の注文数には上限があるので、長く並ぶ人はいません。満員の枠はお客さまにグレーで表示されます。",
+  "market": "マーケット",
+  "day": "日",
+  "cancel": "キャンセル",
+  "minutes_one": "{{count}} 分",
+  "minutes_other": "{{count}} 分",
+  "table": {
+    "slot": "枠",
+    "booked": "予約数",
+    "bookedOf": "{{booked}} / {{max}}",
+    "full": "満員",
+    "max": "最大注文数",
+    "maxFor": "{{slot}} の最大注文数",
+    "closes": "変更締め切り",
+    "open": "新規注文の受付",
+    "off": "停止",
+    "on": "受付中",
+    "caption_one": "{{day}} {{date}} · {{market}} · {{count}} 枠",
+    "caption_other": "{{day}} {{date}} · {{market}} · {{count}} 枠"
+  },
+  "empty": {
+    "title": "この日の枠はありません",
+    "text": "マーケットの日の枠を作ると、お客さまが受け取り時間を予約できるようになります。"
+  },
+  "defaults": {
+    "title": "初期設定",
+    "length": "枠の長さ",
+    "perSlot": "1 枠あたりの注文数",
+    "windowAt": "{{market}} の時間帯",
+    "window": "{{days}} {{start}} – {{end}}",
+    "cutoff": "締め切り",
+    "cutoffValue_one": "枠の {{count}} 時間前",
+    "cutoffValue_other": "枠の {{count}} 時間前",
+    "note": "時間帯と曜日は「出店と受け取り」で変更できます。各日の枠はそこから作られます。"
+  },
+  "closing": {
+    "title": "枠を閉じる",
+    "text": "枠を停止すると新規注文に表示されなくなります。すでに入っている注文はそのまま残ります。行けない場合はそのお客さまに連絡してください。"
+  },
+  "away": {
+    "title": "出店しない日",
+    "intro": "休むマーケットの日です。収穫が少ない、体調不良、車が動かないなど。その日はマーケットのページからお店が外れ、新規注文を受け付けません。すでに入っている注文は理由を添えてお断りし、在庫はあなたに戻ります（D-02）。",
+    "open": "お客さまにお休みを知らせる",
+    "date": "日付",
+    "reasonSeen": "お客さまに表示される理由",
+    "declined": "お断りした注文",
+    "backTitle": "出店を再開しました",
+    "backText": "その日の出店を再開しました。お断りした注文は元に戻らないため、お客さまは注文し直す必要があります。",
+    "back": "出店できます",
+    "emptyTitle": "すべてのマーケットの日に出店します",
+    "emptyText": "予定が変わったら前もってお客さまに知らせて、空の売り場に来てしまう人がいないようにしましょう。",
+    "notNow": "今はしない",
+    "confirm": "知らせる",
+    "declinedTitle": "注文をお断りしました",
+    "toldTitle": "お客さまに知らせました",
+    "declinedText_one": "{{count}} 件の注文をお断りし、お客さまに知らせました。",
+    "declinedText_other": "{{count}} 件の注文をお断りし、お客さまに知らせました。",
+    "toldText": "お客さまは {{date}} 分をもう注文できません。",
+    "dialogText": "その日にすでに入っている注文は理由を添えてお断りし、在庫はあなたに戻ります。お客さまにはすぐに通知され、支払いは発生しません。お支払いは受け取り時だからです。",
+    "marketDay": "マーケットの日",
+    "reasonLabel": "お客さまに表示される理由",
+    "seedReason": "雨のあとで収穫が少なかった",
+    "notGiven": "理由なし",
+    "note": {
+      "placed_one": "注文 {{count}} 件",
+      "placed_other": "注文 {{count}} 件",
+      "none": "まだ注文なし",
+      "shut": "もともとマーケット休業日"
+    }
+  },
+  "closure": {
+    "title": "{{date}} はマーケット自体がお休みです。",
+    "text": "{{reason}}。あなたが何かをする必要はありません。その日はどのお店にも注文できず、MarketLink からお客さまにお知らせ済みです。"
+  },
+  "generate": {
+    "open": "来週の枠を作る",
+    "title": "{{from}} – {{to}} の枠を作りますか？",
+    "doneTitle": "枠を作成しました",
+    "doneText_one": "{{from}} – {{to}} の枠を {{count}} 件作成しました。",
+    "doneText_other": "{{from}} – {{to}} の枠を {{count}} 件作成しました。",
+    "confirm_one": "{{count}} 枠を作成",
+    "confirm_other": "{{count}} 枠を作成",
+    "text": "Thảo Điền では{{daysA}}、Thủ Đức では{{daysB}}に、{{start}} から {{end}} までの枠を作成します。既存の枠は変更されません。"
+  }
+}

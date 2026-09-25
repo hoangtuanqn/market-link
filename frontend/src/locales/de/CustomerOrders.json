@@ -1,0 +1,12 @@
+{
+  "title": "Meine Bestellungen",
+  "intro": "Anstehende Abholungen zuerst. Frühere Bestellungen behalten ihren Beleg, und Sie können alles, was Sie schon gekauft haben, zum heutigen Preis und Bestand erneut bestellen.",
+  "stall": "Stand",
+  "allStalls": "Alle Stände",
+  "tabs": {
+    "label": "Bestellungen",
+    "upcoming": "Anstehend",
+    "past": "Vergangen",
+    "all": "Alle"
+  }
+}

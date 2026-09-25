@@ -1,0 +1,79 @@
+{
+  "products": "商品",
+  "crumb": {
+    "edit": "编辑",
+    "add": "添加"
+  },
+  "addTitle": "添加商品",
+  "notFound": {
+    "title": "这个商品已不在这里",
+    "text": "它可能已被删除。请从商品列表重新打开。"
+  },
+  "name": {
+    "label": "商品名称",
+    "hint": "用英文填写，必要时注明产地或品种：“Củ Chi water spinach”“Green-skin pomelo”。"
+  },
+  "category": {
+    "label": "类别",
+    "hint": "类别由管理员管理。"
+  },
+  "unit": {
+    "label": "销售单位",
+    "addedByStall": "{{unit}} · 由摊位添加",
+    "own": "自定义单位…",
+    "hint": "顾客如何购买：按公斤、按把、按个、按袋。选择一个或自定义。"
+  },
+  "own": {
+    "label": "你的单位",
+    "onePlaceholder": "tray of 30",
+    "one": "单位（单数）",
+    "many": "单位（复数）",
+    "hint": "先填单数，再填复数。第二个我们会帮你填好；猜错了就改一下。"
+  },
+  "preview": {
+    "label": "显示效果",
+    "text": "标签上显示 <b>{{price}}</b> · 剩余 <b>{{left}}</b> · 订购一份的人会看到 <b>{{one}}</b>"
+  },
+  "price": {
+    "label": "价格（₫）",
+    "hint": "显示为 {{price}}。"
+  },
+  "qty": {
+    "label": "本周可售数量",
+    "error": "数量必须为 0 或以上。没有剩余时请用“售罄”。"
+  },
+  "desc": {
+    "label": "描述",
+    "hint": "显示在商品页面上。说说它是怎么种的、怎么保存。"
+  },
+  "flag": {
+    "label": "卡片上的短标签",
+    "hint": "可选，手写在标签上：“今日新鲜”“清晨 5 点出炉”。"
+  },
+  "status": {
+    "label": "状态",
+    "available": "在售",
+    "sold_out": "售罄",
+    "unavailable": "已暂停"
+  },
+  "photo": {
+    "label": "照片",
+    "none": "还没有照片。添加之前，标签上会以手写字显示类别。",
+    "choose": "选择照片",
+    "hint": "JPG 或 PNG，4:3，最大 5 MB。近距离、自然光，放在木板或纸上拍摄。"
+  },
+  "save": "保存商品",
+  "add": "添加商品",
+  "cancel": "取消",
+  "delete": {
+    "button": "删除商品",
+    "title": "删除 {{name}}？",
+    "keep": "保留商品",
+    "text": "它会从商品目录和你的模板中消失。已包含它的订单不会改变。"
+  },
+  "toast": {
+    "saved": "已保存",
+    "savedText": "{{name}} 已保存。",
+    "product": "商品"
+  }
+}

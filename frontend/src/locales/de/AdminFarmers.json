@@ -1,0 +1,79 @@
+{
+  "title": "Erzeuger",
+  "intro": "Geben Sie einen Antrag frei, bevor der Stand Produkte einstellen kann. Die meisten Anträge kommen von Konten, die hier schon einkaufen, daher zeigt jeder Antrag neben den Fotos auch die Bestellhistorie der antragstellenden Person. Sperren Sie einen Stand, um seine Produkte auszublenden und neue Bestellungen zu stoppen; laufende Bestellungen werden normal abgeschlossen.",
+  "search": {
+    "label": "Erzeuger suchen",
+    "placeholder": "Stand, Ansprechperson, Telefon",
+    "submit": "Suchen"
+  },
+  "tabsLabel": "Erzeuger nach Status",
+  "status": {
+    "pending": "Warten auf Freigabe",
+    "approved": "Freigegeben",
+    "suspended": "Gesperrt",
+    "rejected": "Abgelehnt"
+  },
+  "empty": {
+    "pending": {
+      "title": "Keine wartenden Anträge",
+      "text": "Neue Erzeuger-Anträge landen hier zur Prüfung, bevor Produkte eingestellt werden können."
+    },
+    "approved": {
+      "title": "Keine freigegebenen Stände",
+      "text": "Geben Sie einen Antrag frei, dann erscheint der Stand hier und ist für Kunden sichtbar."
+    },
+    "suspended": {
+      "title": "Keine gesperrten Stände",
+      "text": "Ein gesperrter Stand ist für Kunden ausgeblendet, schließt aber die Bestellungen ab, die er schon hat."
+    },
+    "rejected": {
+      "title": "Keine abgelehnten Anträge",
+      "text": "Abgelehnte Erzeuger behalten ihr Konto und können den Grund erfahren."
+    }
+  },
+  "col": {
+    "stall": "Stand",
+    "markets": "Märkte",
+    "registered": "Registriert",
+    "products": "Produkte",
+    "rating": "Bewertung"
+  },
+  "reviews_one": "{{count}} Bewertung",
+  "reviews_other": "{{count}} Bewertungen",
+  "action": {
+    "approve": "Freigeben",
+    "reject": "Ablehnen",
+    "view": "Ansehen",
+    "suspend": "Sperren",
+    "reinstate": "Entsperren"
+  },
+  "notYet": "Noch nicht",
+  "approve": {
+    "title": "{{stall}} freigeben?",
+    "text": "Der Stand wird für Kunden sichtbar und kann sofort Produkte einstellen. Der Erzeuger wird benachrichtigt.",
+    "confirm": "Stand freigeben"
+  },
+  "reject": {
+    "title": "{{stall}} ablehnen?",
+    "text": "Der Erzeuger kann sich weiter anmelden, aber keine Produkte einstellen.",
+    "reason": "Grund, den der Erzeuger sieht",
+    "confirm": "Antrag ablehnen"
+  },
+  "reason": {
+    "mismatch": "Angaben passen nicht zum Stand",
+    "full": "Markt ist voll",
+    "unreachable": "Kontaktnummer nicht erreichbar",
+    "other": "Sonstiges"
+  },
+  "suspend": {
+    "title": "{{stall}} sperren?",
+    "text": "Alle Produkte werden ausgeblendet und keine neuen Bestellungen angenommen. Bereits aufgegebene Bestellungen laufen weiter, damit Kunden nicht verlieren, was sie reserviert haben.",
+    "confirm": "Stand sperren"
+  },
+  "toast": {
+    "approved": "{{stall}} freigegeben. Der Stand kann jetzt Produkte einstellen.",
+    "rejected": "{{stall}} abgelehnt. Das Konto bleibt bestehen.",
+    "suspended": "{{stall}} gesperrt. Laufende Bestellungen werden normal abgeschlossen.",
+    "reinstated": "{{stall}} entsperrt. Die Produkte sind wieder sichtbar."
+  }
+}

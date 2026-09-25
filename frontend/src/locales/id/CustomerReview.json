@@ -1,0 +1,29 @@
+{
+  "myOrders": "Pesanan saya",
+  "breadcrumbOrder": "Pesanan {{code}}",
+  "breadcrumbReview": "Ulasan",
+  "notFound": {
+    "title": "Pesanan itu sudah tidak ada",
+    "text": "Mungkin Anda sudah membatalkannya, atau tautannya sudah lama. Buka lagi dari pesanan Anda."
+  },
+  "completed": "Selesai {{date}}",
+  "title": "Bagaimana {{stall}}?",
+  "intro": "Ulasan terkait dengan pesanan yang selesai ini, jadi pelanggan lain melihatnya sebagai pembelian terverifikasi. Lapak bisa membalas.",
+  "stall": {
+    "title": "Lapak",
+    "placeholder": "Apakah siap tepat waktu? Apakah lapaknya mudah ditemukan?"
+  },
+  "product": {
+    "placeholder": "Rasa, kesegaran, porsi",
+    "skip": "Lewati produk ini"
+  },
+  "rate": "Beri nilai {{name}}",
+  "comment": "Komentar",
+  "submit": "Terbitkan ulasan",
+  "notNow": "Nanti saja",
+  "note": "Satu ulasan per pesanan untuk lapak, dan satu untuk setiap produk di dalamnya.",
+  "toast": {
+    "title": "Ulasan diterbitkan",
+    "text": "Terima kasih. Ulasan Anda tentang {{stall}} sudah tayang."
+  }
+}

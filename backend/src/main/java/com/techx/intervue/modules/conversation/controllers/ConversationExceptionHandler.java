@@ -1,0 +1,124 @@
+package com.techx.intervue.modules.conversation.controllers;
+
+import com.techx.intervue.modules.conversation.exceptions.AccountRestrictedException;
+import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
+import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
+import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
+import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
+import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
+import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
+import com.techx.intervue.resources.ApiResource;
+import com.techx.intervue.resources.ErrorResource;
+import com.techx.intervue.resources.FieldErrorResource;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+/** Mã HTTP theo spec mục 6.3. Chỉ áp cho ConversationController (repo chưa có handler chung). */
+@Slf4j
+@RestControllerAdvice(assignableTypes = ConversationController.class)
+public class ConversationExceptionHandler {
+
+    private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    ResponseEntity<ApiResource<Void>> invalidBody(MethodArgumentNotValidException e) {
+        List<FieldErrorResource> details =
+                e.getBindingResult().getFieldErrors().stream()
+                        .map(
+                                f ->
+                                        FieldErrorResource.builder()
+                                                .field(f.getField())
+                                                .message(f.getDefaultMessage())
+                                                .build())
+                        .toList();
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
+    }
+
+    @ExceptionHandler({
+        HandlerMethodValidationException.class,
+        ConstraintViolationException.class,
+        MissingServletRequestParameterException.class,
+        MethodArgumentTypeMismatchException.class,
+        HttpMessageNotReadableException.class
+    })
+    ResponseEntity<ApiResource<Void>> invalidRequest(Exception e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
+    }
+
+    @ExceptionHandler({
+        SelfConversationException.class,
+        EmptyMessageException.class,
+        UnsupportedMessageKindException.class
+    })
+    ResponseEntity<ApiResource<Void>> badRequest(RuntimeException e) {
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    ResponseEntity<ApiResource<Void>> notFound(EntityNotFoundException e) {
+        return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
+    }
+
+    /** R-06: sai chủ sở hữu → 403, không phải 404, để FE hiện đúng lý do. */
+    @ExceptionHandler(ConversationAccessDeniedException.class)
+    ResponseEntity<ApiResource<Void>> notAMember(ConversationAccessDeniedException e) {
+        return error(HttpStatus.FORBIDDEN, "NOT_A_MEMBER", e.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(StallNotOpenException.class)
+    ResponseEntity<ApiResource<Void>> stallNotOpen(StallNotOpenException e) {
+        return error(HttpStatus.FORBIDDEN, "STALL_NOT_OPEN", e.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(AccountRestrictedException.class)
+    ResponseEntity<ApiResource<Void>> accountRestricted(AccountRestrictedException e) {
+        return error(HttpStatus.FORBIDDEN, "ACCOUNT_RESTRICTED", e.getMessage(), List.of());
+    }
+
+    /** D-09: thread cũ đọc được, gửi thêm thì 409 kèm lý do bằng chữ. */
+    @ExceptionHandler(ConversationClosedException.class)
+    ResponseEntity<ApiResource<Void>> closed(ConversationClosedException e) {
+        return error(HttpStatus.CONFLICT, "CONVERSATION_CLOSED", e.getMessage(), List.of());
+    }
+
+    /** Hai request mở cùng một cặp đúng lúc → UNIQUE chặn một cái; client gọi lại là có thread. */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<ApiResource<Void>> integrity(DataIntegrityViolationException e) {
+        String cause = String.valueOf(e.getMostSpecificCause().getMessage());
+        if (cause.contains("uq_conversation_pair")) {
+            return error(
+                    HttpStatus.CONFLICT,
+                    "CONVERSATION_EXISTS",
+                    "This conversation was just created. Please try again.",
+                    List.of());
+        }
+        log.warn("Data integrity violation: {}", cause);
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
+    }
+
+    private static ResponseEntity<ApiResource<Void>> error(
+            HttpStatus status, String code, String message, List<FieldErrorResource> details) {
+        ErrorResource error = ErrorResource.builder().code(code).details(details).build();
+        return ResponseEntity.status(status).body(ApiResource.error(error, message));
+    }
+}

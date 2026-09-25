@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Banner } from '@/components/ui/banner';
@@ -16,6 +17,7 @@ import Session from '@/utils/session';
  * CSRF), rồi gửi `code` cho backend đổi lấy phiên đăng nhập. `code` chỉ dùng được một lần.
  */
 const GoogleCallbackPage = () => {
+  const { t } = useTranslation('GoogleCallback');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [error, setError] = useState<string>();
@@ -38,15 +40,11 @@ const GoogleCallbackPage = () => {
     };
 
     if (googleError) {
-      fail(
-        googleError === 'access_denied'
-          ? 'You cancelled Google sign-in.'
-          : 'Google could not sign you in. Please try again.',
-      );
+      fail(googleError === 'access_denied' ? t('errors.cancelled') : t('errors.google'));
       return;
     }
     if (!code || !state || !expectedState || state !== expectedState) {
-      fail('This sign-in attempt is not valid. Start again from the sign-in page.');
+      fail(t('errors.invalidState'));
       return;
     }
 
@@ -60,13 +58,14 @@ const GoogleCallbackPage = () => {
         }
         const { user } = session;
         Session.save(session);
-        Notification.success({ text: response.message || 'Signed in.' });
+        Notification.success({ text: response.message || t('toast.signedIn') });
         // replace: bỏ ?code=&state= khỏi lịch sử trình duyệt. Thiếu sđt/địa chỉ → bổ sung hồ sơ; chưa có mật khẩu → đặt
         // mật khẩu
         navigate(Helper.nextStepAfterSocialLogin(user), { replace: true });
       })
-      .catch((err) => fail(Helper.getErrorMessage(err, 'Google sign-in failed. Please try again.')));
-  }, [searchParams, navigate]);
+      .catch((err) => fail(Helper.getErrorMessage(err, t('errors.failed'))));
+    // t đổi khi đổi ngôn ngữ: started chặn chạy lại
+  }, [searchParams, navigate, t]);
 
   return (
     <Card className="mx-auto my-4 flex w-full max-w-115 flex-col gap-4 p-4 md:my-8 md:p-8">
@@ -74,21 +73,21 @@ const GoogleCallbackPage = () => {
       <meta name="referrer" content="no-referrer" />
       {error ? (
         <>
-          <h1 className="font-hand text-h1">Google sign-in did not finish</h1>
+          <h1 className="font-hand text-h1">{t('failed.title')}</h1>
           <Banner variant="danger" title={error}>
-            You are not signed in. Nothing has changed on your account.
+            {t('failed.text')}
           </Banner>
           <ButtonLink to="/login" className="w-full">
-            Back to sign in
+            {t('failed.backToSignIn')}
           </ButtonLink>
           <Link to="/register/customer" className="text-small text-brand underline">
-            Create an account with email instead
+            {t('failed.registerWithEmail')}
           </Link>
         </>
       ) : (
         <div aria-busy="true" className="flex flex-col gap-2">
-          <h1 className="font-hand text-h1">Signing you in with Google…</h1>
-          <p className="text-small text-ink-muted">This takes a second.</p>
+          <h1 className="font-hand text-h1">{t('loading.title')}</h1>
+          <p className="text-small text-ink-muted">{t('loading.text')}</p>
         </div>
       )}
     </Card>

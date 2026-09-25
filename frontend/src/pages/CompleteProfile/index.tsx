@@ -1,4 +1,5 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ import { validateProfile, type ProfileErrors } from '@/utils/validation';
  * khẩu nếu tài khoản chưa có. Không muốn nhập thì chỉ có thể đăng xuất.
  */
 const CompleteProfilePage = () => {
+  const { t } = useTranslation('CompleteProfile');
   const navigate = useNavigate();
   const logout = useLogout();
   const [user] = useState(Session.getUser);
@@ -48,12 +50,12 @@ const CompleteProfilePage = () => {
         address: form.address.trim(),
       });
       Session.updateUser(response.data);
-      Notification.success({ text: response.message || 'Your details are saved.' });
+      Notification.success({ text: response.message || t('toast.saved') });
       navigate(Helper.nextStepAfterSocialLogin({ ...user, ...response.data }), { replace: true });
     } catch (error) {
       // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (số điện thoại đã thuộc tài khoản khác) → lỗi dưới ô nhập
       setErrors(Helper.getFieldErrors(error));
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not save your details. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('toast.failed')) });
       setIsSaving(false);
     }
   };
@@ -62,18 +64,21 @@ const CompleteProfilePage = () => {
     <Card className="mx-auto my-4 w-full max-w-160 p-4 md:my-8 md:p-8">
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="font-hand text-h1">Complete your profile</h1>
+          <h1 className="font-hand text-h1">{t('title')}</h1>
           <p className="text-small text-ink-muted">
-            You signed in with Google as <b className="text-ink break-all">{user.email}</b>. Google gives us your name
-            and email only, so we ask once for your phone number and address. The stall you order from uses them to hand
-            your order over on market day.
+            <Trans
+              t={t}
+              i18nKey="intro"
+              values={{ email: user.email }}
+              components={{ b: <b className="text-ink break-all" /> }}
+            />
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Field
             id="fullName"
-            label="Full name"
+            label={t('fields.fullName')}
             required
             autoComplete="name"
             value={form.fullName}
@@ -83,7 +88,7 @@ const CompleteProfilePage = () => {
           />
           <Field
             id="phone"
-            label="Phone number"
+            label={t('fields.phone')}
             required
             type="tel"
             inputMode="tel"
@@ -97,14 +102,14 @@ const CompleteProfilePage = () => {
           <div className="md:col-span-2">
             <Field
               id="address"
-              label="Address"
+              label={t('fields.address')}
               required
               autoComplete="street-address"
-              placeholder="Street, ward, district"
+              placeholder={t('fields.addressPlaceholder')}
               value={form.address}
               onChange={onChange('address')}
               error={errors.address}
-              hint={errors.address ? undefined : 'Used for distances and directions.'}
+              hint={errors.address ? undefined : t('fields.addressHint')}
               disabled={isSaving}
             />
           </div>
@@ -112,15 +117,13 @@ const CompleteProfilePage = () => {
 
         <div className="flex flex-wrap items-center gap-3 pt-2">
           <Button type="submit" disabled={isSaving}>
-            {isSaving ? 'Saving…' : 'Save and continue'}
+            {isSaving ? t('saving') : t('submit')}
           </Button>
           <Button variant="ghost" onClick={logout} disabled={isSaving}>
-            Sign out
+            {t('signOut')}
           </Button>
         </div>
-        <p className="text-ink-muted text-[13px]">
-          All three fields are required to use MarketLink. If you do not want to add them now, sign out.
-        </p>
+        <p className="text-ink-muted text-[13px]">{t('note')}</p>
       </form>
     </Card>
   );

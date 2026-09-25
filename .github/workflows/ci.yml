@@ -41,6 +41,13 @@ jobs:
           --health-interval=10s --health-timeout=5s --health-retries=5
     env:
       SPRING_PROFILES_ACTIVE: dev
+      # application-dev.yaml bị git-ignore nên runner không có file của profile dev:
+      # Spring rơi về placeholder trong application.yaml (password `changename`) và
+      # Flyway đổ 1045 Access denied. Biến trong khối `services` chỉ tồn tại bên
+      # trong container mysql, không lan ra step — nên phải truyền lại ở job env.
+      MYSQL_DATABASE: intervue_db
+      MYSQL_USER: intervue
+      MYSQL_PASSWORD: intervue_pass
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4

@@ -1,0 +1,79 @@
+{
+  "products": "Products",
+  "crumb": {
+    "edit": "Edit",
+    "add": "Add"
+  },
+  "addTitle": "Add a product",
+  "notFound": {
+    "title": "That product is not here any more",
+    "text": "It may have been deleted. Open it again from your products list."
+  },
+  "name": {
+    "label": "Product name",
+    "hint": "In English, with the place or variety if it matters: “Củ Chi water spinach”, “Green-skin pomelo”."
+  },
+  "category": {
+    "label": "Category",
+    "hint": "Categories are managed by the admin."
+  },
+  "unit": {
+    "label": "Sold per",
+    "addedByStall": "{{unit}} · added by a stall",
+    "own": "Name your own unit…",
+    "hint": "How a customer buys it: by the kilo, the bunch, the bulb, the bag. Pick one or name your own."
+  },
+  "own": {
+    "label": "Your unit",
+    "onePlaceholder": "tray of 30",
+    "one": "Unit, one of them",
+    "many": "Unit, more than one",
+    "hint": "One of them, then more than one. We fill the second in for you; change it if the guess is wrong."
+  },
+  "preview": {
+    "label": "How it will read",
+    "text": "<b>{{price}}</b> on the tag · <b>{{left}}</b> left · someone ordering one sees <b>{{one}}</b>"
+  },
+  "price": {
+    "label": "Price in ₫",
+    "hint": "Shown as {{price}}."
+  },
+  "qty": {
+    "label": "Quantity available this week",
+    "error": "Quantity must be 0 or more. Use Sold out for none left."
+  },
+  "desc": {
+    "label": "Description",
+    "hint": "Shown on the product page. Say how it is grown and how to keep it."
+  },
+  "flag": {
+    "label": "Short tag on the card",
+    "hint": "Optional, hand-lettered on the tag: “Fresh today”, “Baked at 5am”."
+  },
+  "status": {
+    "label": "Status",
+    "available": "Available",
+    "sold_out": "Sold out",
+    "unavailable": "Paused"
+  },
+  "photo": {
+    "label": "Photo",
+    "none": "No photo yet. Until you add one, the tag shows the category in handwriting.",
+    "choose": "Choose photo",
+    "hint": "JPG or PNG, 4:3, up to 5 MB. Close up, natural light, on wood or paper."
+  },
+  "save": "Save product",
+  "add": "Add product",
+  "cancel": "Cancel",
+  "delete": {
+    "button": "Delete product",
+    "title": "Delete {{name}}?",
+    "keep": "Keep product",
+    "text": "It disappears from the catalogue and from your template. Orders that already include it are not changed."
+  },
+  "toast": {
+    "saved": "Saved",
+    "savedText": "{{name}} saved.",
+    "product": "Product"
+  }
+}

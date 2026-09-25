@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import Sparkline from '@/components/Sparkline';
 import { TrendDownIcon, TrendUpIcon } from '@/components/icons';
@@ -19,13 +20,14 @@ type KpiProps = {
 
 /** Stat tile with a period-over-period delta and an optional trend line (design system `.ml-stat`). */
 export function Kpi({ label, value, note, delta, spark, href, linkLabel, highlight }: KpiProps) {
-  const vs = delta?.vs ?? 'vs the period before';
+  const { t } = useTranslation();
+  const vs = delta?.vs ?? t('kpi.vsBefore');
   let deltaEl: ReactNode = null;
   if (delta) {
     if (!delta.pct) {
       deltaEl = (
         <span className="text-ink-muted text-[13px] font-bold">
-          no change <span className="font-normal">{vs}</span>
+          {t('kpi.noChange')} <span className="font-normal">{vs}</span>
         </span>
       );
     } else {
@@ -83,7 +85,7 @@ export function Kpi({ label, value, note, delta, spark, href, linkLabel, highlig
           <Sparkline values={spark} />
         </span>
       )}
-      {href && <span className="sr-only">. {linkLabel ?? 'Open'}</span>}
+      {href && <span className="sr-only">. {linkLabel ?? t('map.open')}</span>}
     </>
   );
 

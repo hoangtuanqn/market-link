@@ -1,0 +1,49 @@
+{
+  "title": "Search",
+  "search": {
+    "scope": "Search in",
+    "scopes": {
+      "all": "Everything",
+      "market": "Markets",
+      "farmer": "Stalls",
+      "product": "Products"
+    },
+    "keyword": "Keyword",
+    "submit": "Search"
+  },
+  "day": "Market day",
+  "sort": "Sort",
+  "sorts": {
+    "best": "Best match",
+    "nearest": "Nearest",
+    "price": "Price",
+    "rating": "Rating"
+  },
+  "tabs": {
+    "label": "Result type",
+    "all": "All",
+    "market": "Markets",
+    "farmer": "Stalls",
+    "product": "Products"
+  },
+  "empty": {
+    "startTitle": "Type something to search",
+    "startText": "Try a product name, a market, or a stall.",
+    "noneTitle": "Nothing matched",
+    "noneText": "Try a shorter word, or drop a filter. Searching looks at markets, stalls and products at once."
+  },
+  "results_one": "{{count}} result for “{{q}}” on {{day}}",
+  "results_other": "{{count}} results for “{{q}}” on {{day}}",
+  "noStalls": "No stalls matched.",
+  "noProducts": "No products matched.",
+  "noMarket": {
+    "title": "No market is called “{{q}}”",
+    "text_one": "Markets are matched by name and area. {{count}} stall above sells something matching “{{q}}”.",
+    "text_other": "Markets are matched by name and area. {{count}} stalls above sell something matching “{{q}}”.",
+    "showStalls": "Show the stalls"
+  },
+  "map": {
+    "label": "Map of results",
+    "note": "Results with a location are pinned. On phones a “List / Map” toggle switches between the two."
+  }
+}

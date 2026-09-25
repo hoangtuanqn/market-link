@@ -1,0 +1,84 @@
+{
+  "overline": "Votre compte",
+  "title": "Sécurité",
+  "loading": "Chargement de la validation en deux étapes",
+  "loadError": {
+    "title": "Impossible de charger la validation en deux étapes",
+    "text": "Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer"
+  },
+  "pill": {
+    "on": "Activée",
+    "off": "Désactivée"
+  },
+  "error": {
+    "check": "Impossible de vérifier le code. Veuillez réessayer.",
+    "start": "Impossible de lancer la configuration. Veuillez réessayer.",
+    "sixDigits": "Un code comporte six chiffres."
+  },
+  "toast": {
+    "accepted": "Code accepté. Enregistrez les codes de récupération pour terminer.",
+    "on": "La validation en deux étapes est activée. Un code vous sera demandé à la prochaine connexion.",
+    "off": "La validation en deux étapes est désactivée.",
+    "regenerated": "Dix nouveaux codes de récupération. Les anciens ne fonctionnent plus."
+  },
+  "mfa": {
+    "title": "Validation en deux étapes",
+    "intro": "Une deuxième étape après votre mot de passe, depuis une application sur votre téléphone. Un admin peut approuver des stands, désactiver des clients et modifier ce que facture la plateforme : un mot de passe seul, c’est trop peu.",
+    "starting": "Démarrage…",
+    "turnOn": "Activer la validation en deux étapes"
+  },
+  "step1": {
+    "title": "Scannez ceci avec votre application d’authentification",
+    "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password — n’importe laquelle. Rien n’est envoyé : le code ci-dessous est dessiné par votre propre navigateur.",
+    "qr": "Code QR pour votre application d’authentification",
+    "manual": "<b>Impossible de scanner ?</b> Saisissez cette clé à la main :",
+    "type": "Type",
+    "typeValue": "Basé sur le temps (TOTP)",
+    "algorithm": "Algorithme",
+    "digits": "Chiffres",
+    "period": "Période",
+    "seconds_one": "{{count}} seconde",
+    "seconds_other": "{{count}} secondes"
+  },
+  "step2": {
+    "title": "Saisissez le code affiché",
+    "text": "Cela prouve que le téléphone et le serveur sont d’accord sur l’heure avant que quoi que ce soit ne soit activé.",
+    "code": "Code à six chiffres",
+    "confirm": "Confirmer",
+    "confirmed": "Confirmé"
+  },
+  "step3": {
+    "title": "Enregistrez vos codes de récupération",
+    "text": "Dix codes, utilisables une fois chacun. C’est le seul moyen de revenir si vous perdez le téléphone — et cette plateforme n’a qu’un compte admin, donc le perdre bloque tout le monde.",
+    "saved": "Je les ai enregistrés",
+    "pending": "Les codes apparaissent ici une fois le code ci-dessus confirmé."
+  },
+  "codesLeft": {
+    "label": "Codes de récupération restants",
+    "value": "<b>{{left}}</b> sur {{total}}"
+  },
+  "regen": {
+    "open": "Créer de nouveaux codes de récupération",
+    "title": "Créer de nouveaux codes de récupération ?",
+    "keep": "Garder les anciens",
+    "confirm": "Créer de nouveaux codes",
+    "text": "Les dix codes actuels cessent de fonctionner immédiatement. Enregistrez les nouveaux avant de fermer cet écran."
+  },
+  "disable": {
+    "open": "La désactiver",
+    "title": "Désactiver la validation en deux étapes ?",
+    "keep": "La laisser activée",
+    "confirm": "La désactiver",
+    "text": "Votre mot de passe devient la seule protection entre n’importe qui et les approbations, les comptes clients et les prix de la plateforme."
+  },
+  "dialogCode": "Code de votre application d’authentification",
+  "codes": {
+    "copy": "Copier les codes",
+    "download": "Télécharger",
+    "copied": "Copiés. Gardez-les ailleurs que sur le téléphone qui contient l’application d’authentification.",
+    "copyFailed": "Impossible de copier. Sélectionnez les codes et copiez-les à la main.",
+    "downloaded": "Téléchargé sous le nom {{file}}.",
+    "fileHeading": "Codes de récupération admin MarketLink"
+  }
+}

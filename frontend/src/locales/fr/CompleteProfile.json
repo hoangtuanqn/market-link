@@ -1,0 +1,19 @@
+{
+  "title": "Compléter votre profil",
+  "intro": "Vous êtes connecté avec Google en tant que <b>{{email}}</b>. Google ne nous transmet que votre nom et votre e-mail : nous vous demandons donc une fois votre numéro de téléphone et votre adresse. Le stand où vous commandez les utilise pour vous remettre votre commande le jour du marché.",
+  "fields": {
+    "fullName": "Nom complet",
+    "phone": "Numéro de téléphone",
+    "address": "Adresse",
+    "addressPlaceholder": "Rue, quartier, district",
+    "addressHint": "Pour les distances et les itinéraires."
+  },
+  "submit": "Enregistrer et continuer",
+  "saving": "Enregistrement…",
+  "signOut": "Se déconnecter",
+  "note": "Les trois champs sont obligatoires pour utiliser MarketLink. Si vous ne souhaitez pas les renseigner maintenant, déconnectez-vous.",
+  "toast": {
+    "saved": "Vos informations sont enregistrées.",
+    "failed": "Impossible d’enregistrer vos informations. Veuillez réessayer."
+  }
+}

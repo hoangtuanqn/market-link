@@ -1,0 +1,14 @@
+{
+  "title_one": "Đã đặt {{count}} đơn",
+  "title_other": "Đã đặt {{count}} đơn",
+  "intro": "Mỗi sạp đang xem đơn của mình. Bạn sẽ nhận thông báo khi đơn được nhận, và một thông báo nữa khi đơn sẵn sàng để lấy. Hàng đã được giữ cho bạn.",
+  "steps": {
+    "title": "Tiếp theo là gì",
+    "review": "{{stalls}} nhận hoặc từ chối đơn trước hạn chót.",
+    "edit": "Bạn có thể sửa hoặc huỷ từng đơn đến hạn chót: {{cutoffs}}.",
+    "cutoffAt": "{{time}} ngày {{date}}",
+    "pickup": "Vào ngày chợ, sạp đánh dấu đơn sẵn sàng. Hãy đến đúng khung giờ, nhận hàng và trả tiền cho nhà vườn."
+  },
+  "seeOrders": "Xem đơn của tôi",
+  "keepBrowsing": "Tiếp tục xem hàng"
+}

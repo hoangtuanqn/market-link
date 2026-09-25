@@ -1,0 +1,13 @@
+{
+  "title": "Notifications",
+  "intro": "Order accepted, declined or ready, a favorite back in stock, and announcements from MarketLink.",
+  "filter": {
+    "all": "All",
+    "unread": "Unread"
+  },
+  "unreadCount_one": "{{count}} unread",
+  "unreadCount_other": "{{count}} unread",
+  "unread": "unread",
+  "markAllRead": "Mark all as read",
+  "note": "In-app only for now. Email for confirmations and ready-for-pickup is a later addition."
+}

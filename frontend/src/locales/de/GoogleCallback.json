@@ -1,0 +1,21 @@
+{
+  "loading": {
+    "title": "Anmeldung mit Google…",
+    "text": "Das dauert nur einen Moment."
+  },
+  "failed": {
+    "title": "Die Google-Anmeldung wurde nicht abgeschlossen",
+    "text": "Sie sind nicht angemeldet. An Ihrem Konto hat sich nichts geändert.",
+    "backToSignIn": "Zurück zur Anmeldung",
+    "registerWithEmail": "Stattdessen ein Konto mit E-Mail erstellen"
+  },
+  "toast": {
+    "signedIn": "Angemeldet."
+  },
+  "errors": {
+    "cancelled": "Sie haben die Google-Anmeldung abgebrochen.",
+    "google": "Google konnte Sie nicht anmelden. Bitte versuchen Sie es erneut.",
+    "invalidState": "Dieser Anmeldeversuch ist ungültig. Beginnen Sie erneut auf der Anmeldeseite.",
+    "failed": "Die Google-Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+  }
+}

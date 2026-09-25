@@ -1,0 +1,17 @@
+{
+  "breadcrumbAccount": "Akun",
+  "title": "Pengaturan",
+  "intro": "Tampilan MarketLink dan apa yang diberitahukannya kepada Anda. Semua di sini hanya untuk Anda; tidak mengubah apa pun bagi lapak.",
+  "shopping": "Belanja",
+  "market": "Pasar tempat Anda paling sering belanja",
+  "marketNote": "Ditampilkan paling atas di halaman Pasar.",
+  "marketNone": "Tidak ada preferensi",
+  "slot": "Waktu pengambilan pilihan",
+  "slotNote": "Disimpan dulu. Akan dipilih otomatis saat lapak punya jadwal itu yang kosong.",
+  "slots": {
+    "earliest": "Paling awal yang kosong",
+    "06-07": "06:00 – 07:00",
+    "07-08": "07:00 – 08:00",
+    "08-09": "08:00 – 09:00"
+  }
+}

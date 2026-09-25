@@ -1,5 +1,7 @@
+import type { TFunction } from 'i18next';
 import L from 'leaflet';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import '@/styles/leaflet-theme.css';
 import Helper from '@/utils/helper';
@@ -45,14 +47,14 @@ const pinHtml = ({ kind, label, text, selected }: MapMarker) =>
   (label ? `<span class="ml-pin-label">${esc(label)}</span>` : '') +
   '</span>';
 
-const popupHtml = (m: MapMarker) => {
+const popupHtml = (m: MapMarker, t: TFunction) => {
   const p = m.popup;
   if (!p) return '';
   return (
     `<b>${esc(p.title)}</b>` +
     p.lines.map((l) => `<span>${esc(l)}</span><br>`).join('') +
-    (p.href ? `<a href="${esc(p.href)}" data-route>Open</a>` : '') +
-    `<a href="${Helper.directionsUrl(m.lat, m.lng)}" target="_blank" rel="noopener">Directions</a>`
+    (p.href ? `<a href="${esc(p.href)}" data-route>${esc(t('map.open'))}</a>` : '') +
+    `<a href="${Helper.directionsUrl(m.lat, m.lng)}" target="_blank" rel="noopener">${esc(t('actions.directions'))}</a>`
   );
 };
 
@@ -66,6 +68,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const host = hostRef.current;
@@ -77,7 +80,9 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     const map = L.map(inner, { scrollWheelZoom, zoomControl: true, attributionControl: true });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: t('map.attribution', {
+        link: '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }),
     }).addTo(map);
 
     // "Open" points into the app, so it navigates instead of reloading the whole page.
@@ -102,7 +107,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
       mapRef.current = null;
       layerRef.current = null;
     };
-  }, [navigate, scrollWheelZoom]);
+  }, [navigate, scrollWheelZoom, t]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -120,7 +125,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
         popupAnchor: [0, -46],
       });
       const marker = L.marker([mk.lat, mk.lng], { icon, title: mk.label ?? '' });
-      if (mk.popup) marker.bindPopup(popupHtml(mk));
+      if (mk.popup) marker.bindPopup(popupHtml(mk, t));
       marker.addTo(layer);
       bounds.push([mk.lat, mk.lng]);
     });
@@ -129,9 +134,10 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     else if (bounds.length > 1) map.fitBounds(bounds, { padding: [40, 40] });
     else if (bounds.length === 1) map.setView(bounds[0], zoom ?? 15);
     else map.setView(CITY, 11);
-  }, [markers, center, zoom]);
+  }, [markers, center, zoom, t]);
 
-  return <div ref={hostRef} role="region" aria-label={label} className={Helper.cn('ml-map', className)} />;
+  // isolate: Leaflet đặt z-index 400–1000 cho các lớp bên trong; không cô lập thì chúng đè lên header sticky (z-40)
+  return <div ref={hostRef} role="region" aria-label={label} className={Helper.cn('ml-map isolate', className)} />;
 };
 
 export default MarketMap;

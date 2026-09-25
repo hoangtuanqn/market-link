@@ -1,0 +1,119 @@
+{
+  "title": "Akun",
+  "intro": "Data Anda hanya dibagikan ke lapak pada pesanan yang Anda buat di sana.",
+  "sell": {
+    "title": "Berjualan di MarketLink",
+    "text": "Jika Anda menanam bahan pangan, akun ini bisa menjadi lapak. Pesanan, favorit, dan keranjang Anda tetap ada, dan panel untuk stok serta waktu ambil muncul setelah admin menyetujui Anda.",
+    "apply": "Daftar untuk berjualan"
+  },
+  "signOut": {
+    "title": "Keluar",
+    "text": "Keluar hanya di perangkat ini.",
+    "button": "Keluar"
+  },
+  "profile": {
+    "title": "Data Anda",
+    "loading": "Memuat data Anda…",
+    "loadFailed": "Tidak dapat memuat data Anda. Silakan coba lagi.",
+    "signedOut": {
+      "title": "Anda sudah keluar.",
+      "text": "Masuk lagi untuk melihat dan mengubah data Anda.",
+      "signIn": "Masuk"
+    },
+    "nothingChanged": "Tidak ada yang diubah.",
+    "retry": "Coba lagi",
+    "fullName": "Nama lengkap",
+    "phone": "Nomor telepon",
+    "email": "Email",
+    "emailHint": "Dipakai untuk masuk. Tidak bisa diubah di sini.",
+    "address": "Alamat",
+    "addressHint": "Dipakai untuk jarak dan rute.",
+    "save": "Simpan perubahan",
+    "saving": "Menyimpan…",
+    "noChanges": "Tidak ada perubahan untuk disimpan.",
+    "saved": "Data Anda sudah disimpan.",
+    "saveFailed": "Tidak dapat menyimpan data Anda. Silakan coba lagi."
+  },
+  "password": {
+    "title": "Ubah kata sandi",
+    "intro": "Anda akan keluar di semua perangkat dan perlu masuk lagi.",
+    "current": "Kata sandi saat ini",
+    "new": "Kata sandi baru",
+    "repeat": "Ulangi kata sandi baru",
+    "hint": "{{min}} sampai {{max}} karakter.",
+    "submit": "Ubah kata sandi",
+    "submitting": "Mengubah kata sandi…",
+    "changed": "Kata sandi Anda sudah diubah. Silakan masuk lagi.",
+    "failed": "Tidak dapat mengubah kata sandi. Silakan coba lagi.",
+    "errors": {
+      "currentRequired": "Masukkan kata sandi saat ini.",
+      "newRequired": "Masukkan kata sandi baru.",
+      "length": "Kata sandi harus {{min}} sampai {{max}} karakter.",
+      "same": "Gunakan kata sandi yang berbeda dari yang sekarang.",
+      "confirmRequired": "Konfirmasi kata sandi Anda.",
+      "mismatch": "Kata sandi tidak cocok."
+    }
+  },
+  "photo": {
+    "title": "Foto profil",
+    "intro": "Ditampilkan di menu dan ke lapak pada pesanan Anda. JPEG, PNG, atau foto dari kamera.",
+    "upload": "Unggah foto",
+    "take": "Ambil foto",
+    "remove": "Hapus foto",
+    "removing": "Menghapus…",
+    "removed": "Foto Anda sudah dihapus.",
+    "removeFailed": "Tidak dapat menghapus foto. Silakan coba lagi.",
+    "notUsed": "Foto tidak dipakai"
+  },
+  "photoErrors": {
+    "notPhoto": "Pilih foto (JPEG, PNG, HEIC, atau WebP).",
+    "tooBig": "Foto itu lebih dari {{mb}} MB. Pilih yang lebih kecil.",
+    "unreadable": "File ini bukan foto yang bisa kami baca.",
+    "noPicture": "Kamera belum menampilkan gambar. Coba lagi.",
+    "captureFailed": "Tidak dapat mengambil foto."
+  },
+  "dialog": {
+    "takeTitle": "Ambil foto",
+    "frameTitle": "Atur foto Anda",
+    "frameHelp": "Geser untuk memindahkan foto dan perbesar sampai wajah Anda memenuhi lingkaran.",
+    "cancel": "Batal",
+    "uploadInstead": "Unggah foto saja",
+    "take": "Ambil foto",
+    "retake": "Ulangi",
+    "chooseAnother": "Pilih yang lain",
+    "save": "Simpan foto",
+    "saving": "Menyimpan…",
+    "saved": "Foto Anda sudah disimpan.",
+    "saveFailed": "Tidak dapat menyimpan foto. Silakan coba lagi.",
+    "takeFailed": "Tidak dapat mengambil foto. Coba lagi.",
+    "unchanged": "Foto Anda saat ini tidak berubah."
+  },
+  "camera": {
+    "preview": "Pratinjau kamera",
+    "starting": "Menyalakan kamera…",
+    "blocked": {
+      "title": "Akses kamera diblokir.",
+      "text": "Izinkan kamera untuk situs ini di pengaturan browser, atau unggah foto saja."
+    },
+    "notFound": {
+      "title": "Kamera tidak ditemukan.",
+      "text": "Colokkan kamera, atau unggah foto saja."
+    },
+    "busy": {
+      "title": "Kamera sedang dipakai.",
+      "text": "Tutup aplikasi lain yang memakainya lalu coba lagi, atau unggah foto."
+    },
+    "failed": {
+      "title": "Kamera tidak dapat dimulai.",
+      "text": "Coba lagi, atau unggah foto saja."
+    },
+    "insecure": {
+      "title": "Browser ini tidak dapat membuka kamera di sini.",
+      "text": "Kamera memerlukan halaman aman (https). Unggah foto saja."
+    }
+  },
+  "crop": {
+    "frame": "Pengaturan foto. Geser, atau gunakan tombol panah untuk memindahkan dan plus atau minus untuk memperbesar.",
+    "zoom": "Perbesar"
+  }
+}

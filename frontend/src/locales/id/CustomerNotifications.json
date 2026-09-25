@@ -1,0 +1,13 @@
+{
+  "title": "Notifikasi",
+  "intro": "Pesanan diterima, ditolak, atau siap, favorit tersedia lagi, dan pengumuman dari MarketLink.",
+  "filter": {
+    "all": "Semua",
+    "unread": "Belum dibaca"
+  },
+  "unreadCount_one": "{{count}} belum dibaca",
+  "unreadCount_other": "{{count}} belum dibaca",
+  "unread": "belum dibaca",
+  "markAllRead": "Tandai semua sudah dibaca",
+  "note": "Untuk saat ini hanya di aplikasi. Email konfirmasi dan siap diambil akan ditambahkan nanti."
+}

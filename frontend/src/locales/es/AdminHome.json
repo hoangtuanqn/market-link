@@ -1,0 +1,9 @@
+{
+  "overline": "Área de admin",
+  "hello": "Hola, {{name}}",
+  "fallbackName": "admin",
+  "empty": {
+    "title": "El panel está en camino",
+    "text": "Los totales de agricultores, clientes, mercados y pedidos aparecerán aquí cuando esté listo el panel de admin."
+  }
+}

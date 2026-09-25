@@ -1,0 +1,46 @@
+{
+  "missing": {
+    "title": "Đơn hàng này không còn nữa",
+    "text": "Có thể bạn đã huỷ đơn, hoặc đường dẫn đã cũ. Hãy mở lại từ danh sách đơn hàng."
+  },
+  "myOrders": "Đơn hàng của tôi",
+  "breadcrumb": "Đơn {{code}}",
+  "placedAt": "Đặt lúc {{time}}",
+  "status": {
+    "placed": "Đã đặt",
+    "accepted": "Đã nhận",
+    "ready": "Sẵn sàng để nhận",
+    "completed": "Hoàn tất",
+    "declined": "Bị từ chối",
+    "cancelled": "Đã huỷ"
+  },
+  "previewLocked": "Xem trước: sau giờ chốt",
+  "pickup": {
+    "title": "Nhận hàng",
+    "where": "{{market}}, sạp {{stall}}",
+    "spot": "Phía bờ sông của chợ, cạnh sạp bánh mì.",
+    "slot": "Khung giờ của bạn",
+    "phone": "Điện thoại sạp",
+    "bring": "Mang theo",
+    "bringText": "{{total}} tiền mặt hoặc chuyển khoản tại sạp",
+    "directions": "Chỉ đường",
+    "stallPage": "Trang sạp",
+    "map": "Điểm nhận hàng tại sạp {{stall}}"
+  },
+  "history": {
+    "title": "Lịch sử",
+    "by": "{{time}} · bởi {{by}}",
+    "note": "Mọi thay đổi trạng thái đều được ghi lại kèm người thực hiện."
+  },
+  "change": {
+    "title": "Thay đổi đơn này",
+    "until": "Bạn có thể sửa số lượng, bỏ món hoặc huỷ đơn đến <b>{{cutoff}}</b>. Sau khi bạn sửa, {{stall}} sẽ duyệt lại đơn.",
+    "edit": "Sửa đơn",
+    "cancel": "Huỷ đơn",
+    "locked": "Đã qua giờ chốt lúc {{cutoff}}. Muốn thay đổi, hãy liên hệ trực tiếp với sạp qua số {{phone}}."
+  },
+  "notify": {
+    "title": "Thông báo cho đơn này",
+    "text": "Bạn đã được báo khi đơn được nhận. Bạn sẽ được báo khi đơn sẵn sàng, hoặc nếu sạp phải từ chối."
+  }
+}

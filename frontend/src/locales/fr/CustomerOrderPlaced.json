@@ -1,0 +1,14 @@
+{
+  "title_one": "{{count}} commande passée",
+  "title_other": "{{count}} commandes passées",
+  "intro": "Chaque stand examine maintenant sa commande. Vous recevez une notification quand elle est acceptée, puis une autre quand elle est prête à retirer. Les produits vous sont déjà réservés.",
+  "steps": {
+    "title": "La suite",
+    "review": "{{stalls}} acceptent ou refusent avant leur heure limite.",
+    "edit": "Vous pouvez modifier ou annuler chaque commande jusqu’à son heure limite : {{cutoffs}}.",
+    "cutoffAt": "{{time}} le {{date}}",
+    "pickup": "Le jour du marché, le stand la marque comme prête. Venez pendant votre créneau, récupérez-la et payez le producteur."
+  },
+  "seeOrders": "Voir mes commandes",
+  "keepBrowsing": "Continuer mes achats"
+}

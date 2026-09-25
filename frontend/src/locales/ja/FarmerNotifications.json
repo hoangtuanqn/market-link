@@ -1,0 +1,16 @@
+{
+  "title": "通知",
+  "intro": "お客さまからの新しい注文・変更・キャンセルと、MarketLink からのお知らせです。",
+  "filter": {
+    "all": "すべて",
+    "unread": "未読"
+  },
+  "unreadCount_one": "未読 {{count}}件",
+  "unreadCount_other": "未読 {{count}}件",
+  "unread": "未読",
+  "markAllRead": "すべて既読にする",
+  "empty": {
+    "title": "新しい通知はありません",
+    "text": "注文が入ったとき、変更やキャンセルがあったとき、管理者がお知らせを投稿したときに、ここでお知らせします。"
+  }
+}

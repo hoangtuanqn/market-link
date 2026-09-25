@@ -1,0 +1,29 @@
+{
+  "myOrders": "My orders",
+  "breadcrumbOrder": "Order {{code}}",
+  "breadcrumbReview": "Review",
+  "notFound": {
+    "title": "That order is not here any more",
+    "text": "You may have cancelled it, or the link is old. Open it again from your orders."
+  },
+  "completed": "Completed {{date}}",
+  "title": "How was {{stall}}?",
+  "intro": "Reviews are tied to this completed order, so other customers see them as a verified purchase. The stall can reply.",
+  "stall": {
+    "title": "The stall",
+    "placeholder": "Was it ready on time? Was the stall easy to find?"
+  },
+  "product": {
+    "placeholder": "Taste, freshness, portion size",
+    "skip": "Skip this product"
+  },
+  "rate": "Rate {{name}}",
+  "comment": "Comment",
+  "submit": "Publish review",
+  "notNow": "Not now",
+  "note": "One review per order for the stall, and one per product in it.",
+  "toast": {
+    "title": "Review published",
+    "text": "Thanks. Your review of {{stall}} is live."
+  }
+}

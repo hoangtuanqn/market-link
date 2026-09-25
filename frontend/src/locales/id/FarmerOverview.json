@@ -1,0 +1,92 @@
+{
+  "tabs": {
+    "new": "Menunggu persetujuan",
+    "acc": "Diterima",
+    "ready": "Siap",
+    "done": "Selesai"
+  },
+  "decline": {
+    "reasons": {
+      "stock": "Stok tidak cukup",
+      "day": "Tidak berjualan hari itu",
+      "time": "Tidak bisa di jam pengambilan itu",
+      "other": "Lainnya"
+    },
+    "title": "Tolak pesanan {{code}}?",
+    "keep": "Pertahankan pesanan",
+    "confirm": "Tolak pesanan",
+    "text": "Pelanggan langsung diberi tahu dan barangnya kembali ke stok Anda.",
+    "reason": "Alasan yang akan dilihat pelanggan"
+  },
+  "col": {
+    "order": "Pesanan",
+    "customer": "Pelanggan",
+    "pickup": "Pengambilan",
+    "items": "Barang",
+    "total": "Total",
+    "status": "Status"
+  },
+  "toast": {
+    "acceptedTitle": "Pesanan diterima",
+    "acceptedText": "Pesanan {{code}} diterima. {{who}} sudah diberi tahu.",
+    "readyTitle": "Pesanan siap",
+    "readyText": "Pesanan {{code}} ditandai siap.",
+    "completedTitle": "Pesanan selesai",
+    "completedText": "Pesanan {{code}} selesai.",
+    "declinedTitle": "Pesanan ditolak",
+    "declinedText": "Pesanan {{code}} ditolak. Stok kembali ke hitungan Anda."
+  },
+  "actions": {
+    "accept": "Terima",
+    "decline": "Tolak",
+    "ready": "Tandai siap",
+    "complete": "Tandai selesai",
+    "view": "Lihat"
+  },
+  "captions": {
+    "new": "Menunggu persetujuan · {{sat}} dan {{sun}}",
+    "ready": "Siap diambil"
+  },
+  "overline": "lapak Anda di {{market}} · hari pasar berikutnya {{day}}",
+  "greeting": "Selamat pagi, {{name}}",
+  "applyTemplate": "Terapkan templat mingguan",
+  "addProduct": "Tambah produk",
+  "banner": {
+    "title_one": "{{count}} pesanan menunggu Anda. {{closing}} di antaranya ditutup pukul {{time}} besok.",
+    "title_other": "{{count}} pesanan menunggu Anda. {{closing}} di antaranya ditutup pukul {{time}} besok.",
+    "text": "Pesanan yang belum disetujui tetap menahan stok. Terima atau tolak sebelum batas waktu agar pelanggan bisa merencanakan."
+  },
+  "kpi": {
+    "orders": "Total pesanan",
+    "ordersNote_one": "{{count}} minggu ini",
+    "ordersNote_other": "{{count}} minggu ini",
+    "vsAugust": "vs Agustus",
+    "openHistory": "Buka riwayat penjualan",
+    "awaitingNote_one": "<b>{{count}}</b> ditutup pukul {{time}} pada {{date}}",
+    "awaitingNote_other": "<b>{{count}}</b> ditutup pukul {{time}} pada {{date}}",
+    "vsThursday": "vs Kamis biasa",
+    "openIncoming": "Buka pesanan masuk",
+    "revenue": "Pendapatan September",
+    "revenueNote": "₫, dari pesanan selesai, dibayar di lapak",
+    "best": "Terlaris",
+    "bestNote": "{{qty}} bulan ini",
+    "openProducts": "Buka produk",
+    "note": "September sejauh ini, dibandingkan Agustus. Setiap kotak membuka layar di balik angkanya."
+  },
+  "incoming": {
+    "title": "Pesanan masuk",
+    "all": "Semua pesanan dan filter",
+    "note": "Pesanan baru disorot sampai Anda membukanya."
+  },
+  "stock": {
+    "title": "Stok untuk {{day}}",
+    "link": "Stok minggu ini",
+    "note": "Dipesan berarti ada pesanan yang menahannya. Jumlah itu langsung dikurangi dari stok saat pelanggan memesan."
+  },
+  "best": {
+    "title": "Terlaris",
+    "link": "Riwayat penjualan",
+    "note": "Terjual pada September, masing-masing dalam satuannya"
+  },
+  "protoNote": "Bilah samping dan header di atasnya adalah bagian baru dari prototipe."
+}

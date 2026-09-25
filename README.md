@@ -169,7 +169,7 @@ curl http://localhost:8080/ping
 Optionally, test the register API:
 
 ```bash
-curl -i -X POST http://localhost:8080/api/v1/auth/register/customer \
+curl -i -X POST http://localhost:8080/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","address":"12 Le Loi, Q1","password":"123456","confirmPassword":"123456"}'
 ```

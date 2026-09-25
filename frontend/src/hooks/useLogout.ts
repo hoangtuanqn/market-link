@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import Notification from '@/utils/notification';
@@ -9,9 +10,10 @@ import Session from '@/utils/session';
  */
 const useLogout = (redirectTo = '/login') => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return async () => {
-    let message = 'Signed out.';
+    let message = t('toast.signedOut');
     try {
       const response = await AuthApi.logout();
       message = response.message || message;

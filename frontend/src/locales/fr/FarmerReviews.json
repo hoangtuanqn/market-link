@@ -1,0 +1,35 @@
+{
+  "title": "Avis",
+  "intro": "Ce que les clients ont dit après avoir retiré leur commande. Une courte réponse compte beaucoup, surtout sur une note basse.",
+  "summary": "Stand {{stall}} · produits {{products}} · {{reviews}}",
+  "reviewCount_one": "{{count}} avis",
+  "reviewCount_other": "{{count}} avis",
+  "filter": {
+    "all": "Tous",
+    "needs": "À répondre",
+    "replied": "Répondu",
+    "stall": "Sur le stand",
+    "products": "Sur les produits"
+  },
+  "toast": {
+    "postedTitle": "Réponse publiée",
+    "postedText": "Réponse publiée sous l’avis de {{name}}.",
+    "editTitle": "Modification de la réponse",
+    "editText": "La modification de la réponse est ouverte."
+  },
+  "action": {
+    "editReply": "Modifier la réponse",
+    "reply": "Répondre",
+    "report": "Signaler l’avis",
+    "post": "Publier la réponse"
+  },
+  "form": {
+    "label": "Votre réponse, affichée sous l’avis",
+    "placeholder": "Merci d’être passé, {{name}}. Nous emballerons la commande avec soin la prochaine fois."
+  },
+  "empty": {
+    "title": "Pas encore d’avis",
+    "text": "Un client peut noter votre stand et ce qu’il a acheté une fois sa commande terminée (D-10)."
+  },
+  "note": "Le stand ne peut pas supprimer un avis. S’il enfreint les règles, signalez-le et l’administrateur décide (FR-074)."
+}

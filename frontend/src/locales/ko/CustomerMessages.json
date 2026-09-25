@@ -1,0 +1,33 @@
+{
+  "title": "메시지",
+  "intro": "이번 주 농산물에 대해 가게에 물어보거나, 마감 전에 주문 세부 사항을 정하세요.",
+  "conversations": "대화",
+  "stallCount_one": "가게 {{count}}곳",
+  "stallCount_other": "가게 {{count}}곳",
+  "time": {
+    "yesterday": "어제",
+    "now": "방금"
+  },
+  "conversationWith": "{{name}}와(과)의 대화",
+  "seeStall": "가게 보기",
+  "openOrder": "주문 {{code}} 열기",
+  "you": "나",
+  "orderRef": {
+    "title": "주문 {{code}} · {{stall}}",
+    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · {{cutoffDate}} {{cutoff}} 마감"
+  },
+  "items_one": "상품 {{count}}개",
+  "items_other": "상품 {{count}}개",
+  "messageTo": "{{name}}에게 보낼 메시지",
+  "placeholder": "이번 주 재고나 픽업 시간을 물어보세요",
+  "send": "보내기",
+  "for": {
+    "title": "메시지는 이럴 때 써요",
+    "text": "물건이 들어오는지 확인하거나, 조금 더 남겨 달라고 부탁하거나, 다른 픽업 시간을 정할 때요. 주문 변경은 주문에서 직접 해야 양쪽 기록이 같아요.",
+    "edit": "주문 {{code}} 수정"
+  },
+  "notFor": {
+    "title": "메시지로 할 수 없는 것",
+    "text": "여기서는 가격 흥정이나 결제를 할 수 없어요. 가격은 가게가 정하고, 결제는 픽업할 때 가게에서 해요. 메시지만으로 주문이 바뀌지는 않아요."
+  }
+}

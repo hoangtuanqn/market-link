@@ -1,0 +1,23 @@
+{
+  "myOrders": "Đơn của tôi",
+  "breadcrumbOrder": "Đơn {{code}}",
+  "breadcrumbEdit": "Sửa",
+  "notFound": {
+    "title": "Đơn này không còn ở đây",
+    "text": "Có thể bạn đã huỷ đơn, hoặc liên kết đã cũ. Hãy mở lại từ danh sách đơn của bạn."
+  },
+  "title": "Sửa đơn {{code}}",
+  "cutoff": "Được sửa đến <b>{{cutoff}}</b>.",
+  "banner": {
+    "title": "Sau khi lưu, đơn quay lại trạng thái Đã đặt và {{stall}} sẽ duyệt lại.",
+    "text": "Hàng vẫn được giữ cho bạn trong lúc họ xem xét. Bạn sẽ nhận thông báo khi đơn được nhận."
+  },
+  "help": "Ở đây bạn có thể giảm số lượng hoặc bỏ bớt món. Muốn thêm món khác từ {{stall}}, hãy đặt đơn mới. Số lượng tối đa bằng số hàng sạp còn lại hôm nay.",
+  "note": "Ghi chú cho sạp",
+  "submit": "Gửi thay đổi để duyệt",
+  "discard": "Bỏ thay đổi",
+  "toast": {
+    "title": "Đã gửi thay đổi",
+    "text": "{{stall}} sẽ xem lại đơn của bạn."
+  }
+}

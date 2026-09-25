@@ -1,0 +1,93 @@
+{
+  "title": "Commandes",
+  "intro": "Acceptez ou refusez les nouvelles commandes avant leur heure limite, marquez-les prêtes le jour du marché et terminez-les une fois le client payé.",
+  "search": {
+    "label": "Rechercher des commandes",
+    "placeholder": "Numéro de commande ou nom du client",
+    "submit": "Rechercher"
+  },
+  "filter": {
+    "day": "Jour de retrait",
+    "all": "Tous",
+    "allDays": "les jours",
+    "market": "Marché",
+    "bothMarkets": "Les deux marchés"
+  },
+  "tabsLabel": "Commandes par statut",
+  "status": {
+    "placed": "En attente de validation",
+    "accepted": "Acceptée",
+    "ready": "Prête",
+    "completed": "Terminée",
+    "declined": "Refusée",
+    "cancelled": "Annulée"
+  },
+  "empty": {
+    "placed": {
+      "title": "Rien ne vous attend",
+      "text": "Les nouvelles précommandes arrivent ici jusqu’à 12 heures avant leur créneau."
+    },
+    "accepted": {
+      "title": "Aucune commande acceptée",
+      "text": "Les commandes que vous acceptez restent ici jusqu’à ce que vous les marquiez prêtes."
+    },
+    "ready": {
+      "title": "Rien de prêt pour l’instant",
+      "text": "Marquez une commande acceptée comme prête dès qu’elle est emballée pour le stand."
+    },
+    "completed": {
+      "title": "Aucune commande terminée",
+      "text": "Une commande est terminée quand le client la retire et paie au stand."
+    },
+    "declined": {
+      "title": "Aucune commande refusée",
+      "text": "Les commandes que vous refusez sont listées ici avec le motif."
+    },
+    "cancelled": {
+      "title": "Aucune commande annulée",
+      "text": "Les clients peuvent annuler jusqu’à l’heure limite (D-05)."
+    }
+  },
+  "col": {
+    "order": "Commande",
+    "customer": "Client",
+    "pickup": "Retrait",
+    "cutoff": "Heure limite",
+    "items": "Articles",
+    "total": "Total",
+    "status": "Statut"
+  },
+  "action": {
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "markReady": "Marquer prête",
+    "markCompleted": "Marquer terminée",
+    "view": "Voir"
+  },
+  "toast": {
+    "accepted": "Commande {{code}} acceptée.",
+    "ready": "Commande {{code}} marquée prête.",
+    "declined": "Commande {{code}} refusée.",
+    "completed": "Commande {{code}} terminée."
+  },
+  "auditNote": "Chaque changement de statut est enregistré avec l’heure et son auteur (FR-038). Un changement dans le mauvais ordre est refusé (D-04).",
+  "decline": {
+    "title": "Refuser la commande {{code}} ?",
+    "keep": "Garder la commande",
+    "confirm": "Refuser la commande",
+    "text": "Le client est prévenu tout de suite et les articles retournent dans votre stock.",
+    "reason": "Motif que verra le client",
+    "reasons": {
+      "stock": "Stock insuffisant",
+      "day": "Pas de vente ce jour-là",
+      "time": "Impossible à cette heure de retrait",
+      "other": "Autre"
+    }
+  },
+  "complete": {
+    "title": "Marquer {{code}} comme terminée ?",
+    "notYet": "Pas encore",
+    "text": "Faites-le une fois que le client a retiré la commande et payé au stand. Les commandes terminées comptent dans votre chiffre d’affaires et permettent au client de laisser un avis.",
+    "auto": "Les commandes encore marquées Prête sont terminées automatiquement 24 heures après la date de retrait (D-03)."
+  }
+}

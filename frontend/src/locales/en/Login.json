@@ -1,0 +1,29 @@
+{
+  "title": "Sign in",
+  "intro": "Customers and Farmers sign in here. Admins use the <link>separate admin sign-in</link>.",
+  "fields": {
+    "email": "Email",
+    "password": "Password"
+  },
+  "rememberMe": "Remember me",
+  "forgotPassword": "Forgot password?",
+  "submit": "Sign in",
+  "submitting": "Signing in…",
+  "or": "or",
+  "google": {
+    "continue": "Continue with Google",
+    "opening": "Opening Google…",
+    "failed": "Could not start Google sign-in. Please try again.",
+    "note": "Google gives us your name and email. Your phone number and address are still needed before your first order, so we ask for them once on the next screen."
+  },
+  "newHere": "New here? <customer>Create a customer account</customer> or <farmer>register your stall</farmer>.",
+  "toast": {
+    "signedIn": "Signed in.",
+    "failed": "Could not sign you in. Please try again."
+  },
+  "errors": {
+    "emailRequired": "Enter your email.",
+    "emailInvalid": "Enter a valid email address.",
+    "passwordRequired": "Enter your password."
+  }
+}

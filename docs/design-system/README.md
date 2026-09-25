@@ -39,7 +39,7 @@ This folder is the source of truth for how MarketLink looks and reads. Every pag
 4. **Shape.** `rounded-sm` (4px) for controls, `rounded-md` (10px) for tags and cards, `rounded-lg` (16px) for dialogs, `rounded-full` for chips and badges. `shadow-tag` for cards (the 2px paper edge), `shadow-float` for dropdowns and toasts, `shadow-modal` for dialogs. Nothing else.
 5. **Breakpoints.** Build mobile-first at 375px, then `md:` (768px) and `2xl:` (1440px). Content container: `mx-auto max-w-(--size-container) px-4 md:px-6` — read the token, never hardcode a width.
 6. **Components use the `ml-*` classes.** Each guide in `components/` names its classes and props; the gallery shows the exact markup. Build the React component in `frontend/src/components/` as TSX, put the `ml-*` classes on the markup, and keep the props the guide lists. Use Tailwind utilities only for page layout (grid, flex, gaps, widths), not to restyle a component.
-7. **Formatting and copy.** Money, units and dates go through `src/lib/format.ts`. Copy follows the Voice section below: English, sentence case, "you", no emoji, no exclamation marks, always explain why something is locked.
+7. **Formatting and copy.** Money, units and dates go through `src/lib/format.ts`, which follows the reader's Settings (language, date format, clock, currency, units). Copy lives in `src/locales/<language>/<page>.json` and is read with `t()`; English is the source. It follows the Voice section below: sentence case, "you", no emoji, no exclamation marks, always explain why something is locked.
 8. **Every data screen** has loading, empty, error and loaded states (FR-084), using `DataState`.
 9. **Starting a new page**: open `reference/gallery.html`, find the closest reference screen (`ScreenMarket`, `ScreenFarmer`, `ScreenCartMobile`) and copy its layout.
 
@@ -59,7 +59,7 @@ MarketLink connects Farmers at local farmers markets with shoppers who pre-order
 
 ## Voice
 
-- Write the UI in English, address the user as "you", keep sentences short. Say what will happen: "Your cart will be split into 2 orders at 2 different stalls."
+- Write the UI in English first (the source language, `src/locales/en`), then translate it into the other nine Settings languages; keep the same tone in each. Address the user as "you", keep sentences short. Say what will happen: "Your cart will be split into 2 orders at 2 different stalls."
 - Name the actual thing on screen: "Vườn Cô Tư · 12 bunches left", not "Product available".
 - Keep Vietnamese proper nouns as they are, with diacritics: stall names (Vườn Cô Tư), people (Nguyễn Thị Tư), places (Thảo Điền, Thủ Đức). Translate everything else, including product names ("Củ Chi water spinach", "Green-skin pomelo").
 - Handwriting (`font-hand`) is the voice of the stall and the market: market names, prices, "Fresh today", Farmer notes, the dashboard greeting ("Morning, Cô Tư"). Print (`font-sans`) is the voice of the system: buttons, forms, order status, errors, tables. Never set buttons, form labels or error messages in handwriting.
@@ -164,4 +164,4 @@ The Screens group has 3 layouts built from the components: the Customer market p
 
 ## What we don't do
 
-No purple-blue gradients. No 16px-rounded cards with a colored left border. No big centered hero text over a blurred photo. No Inter or Roboto. No emoji in front of headings. No three-card "feature" grids with round icons. No handwriting on buttons, forms or error messages. No dark mode until every MUST requirement is done.
+No purple-blue gradients. No 16px-rounded cards with a colored left border. No big centered hero text over a blurred photo. No Inter or Roboto. No emoji in front of headings. No three-card "feature" grids with round icons. No handwriting on buttons, forms or error messages. No colour outside the tokens: the dark theme (`tokens.json` → each colour's `dark` value, `:root[data-theme='dark']`) only works if every surface and text uses a token.

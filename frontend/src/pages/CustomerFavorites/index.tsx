@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import MarketCard from '@/components/MarketCard';
@@ -20,12 +21,13 @@ const NEW_THIS_WEEK: Record<number, string> = {
   4: 'Rye loaf and sourdough, baked at 5am on Friday',
 };
 
-const FILTERS = ['All', 'In stock now', 'Sold out', 'Price dropped'] as const;
+const FILTERS = ['all', 'inStock', 'soldOut', 'priceDropped'] as const;
 type Filter = (typeof FILTERS)[number];
 
 const isSoldOut = (item: WishProductItem) => item.product.status !== 'available' || item.product.stock === 0;
 
 const WishItem = ({ item, onRemove }: { item: WishProductItem; onRemove: () => void }) => {
+  const { t } = useTranslation('CustomerFavorites');
   const p = item.product;
   const soldOut = isSoldOut(item);
 
@@ -56,12 +58,12 @@ const WishItem = ({ item, onRemove }: { item: WishProductItem; onRemove: () => v
           {soldOut ? (
             <span className="bg-status-declined-bg text-status-declined-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 font-bold">
               <CloseIcon size={14} />
-              Sold out
+              {t('soldOut')}
             </span>
           ) : (
             <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 font-bold">
               <CheckIcon size={14} />
-              {units(p.stock, p.unit)} left
+              {t('left', { qty: units(p.stock, p.unit) })}
             </span>
           )}
           <span className="text-ink-muted">{item.saved}</span>
@@ -74,16 +76,20 @@ const WishItem = ({ item, onRemove }: { item: WishProductItem; onRemove: () => v
             variant="secondary"
             size="sm"
             aria-pressed="true"
-            onClick={() => Notification.success({ title: 'Restock alert', text: `Alert is off for ${p.name}.` })}
+            onClick={() =>
+              Notification.success({ title: t('toast.alertTitle'), text: t('toast.alertOff', { name: p.name }) })
+            }
           >
-            Alert is on
+            {t('alertOn')}
           </Button>
         ) : (
           <Button
             size="sm"
-            onClick={() => Notification.success({ title: 'Added to cart', text: `Added ${p.name} to your cart.` })}
+            onClick={() =>
+              Notification.success({ title: t('toast.addedTitle'), text: t('toast.added', { name: p.name }) })
+            }
           >
-            Add to cart
+            {t('addToCart')}
           </Button>
         )}
         <Button
@@ -91,10 +97,10 @@ const WishItem = ({ item, onRemove }: { item: WishProductItem; onRemove: () => v
           size="sm"
           onClick={() => {
             onRemove();
-            Notification.info({ title: 'Removed', text: `Removed ${p.name} from your favorites.` });
+            Notification.info({ title: t('toast.removedTitle'), text: t('toast.removed', { name: p.name }) });
           }}
         >
-          Remove
+          {t('remove')}
         </Button>
       </div>
     </li>
@@ -103,20 +109,21 @@ const WishItem = ({ item, onRemove }: { item: WishProductItem; onRemove: () => v
 
 /** FR-014 — wishlist: saved products, stalls and markets. */
 const CustomerFavoritesPage = () => {
+  const { t } = useTranslation('CustomerFavorites');
   const [tab, setTab] = useState<'products' | 'stalls' | 'markets'>('products');
-  const [filter, setFilter] = useState<Filter>('All');
+  const [filter, setFilter] = useState<Filter>('all');
   const [items, setItems] = useState(wishProducts);
 
   const counts: Record<Filter, number> = {
-    All: items.length,
-    'In stock now': items.filter((i) => !isSoldOut(i)).length,
-    'Sold out': items.filter(isSoldOut).length,
-    'Price dropped': items.filter((i) => i.product.was != null).length,
+    all: items.length,
+    inStock: items.filter((i) => !isSoldOut(i)).length,
+    soldOut: items.filter(isSoldOut).length,
+    priceDropped: items.filter((i) => i.product.was != null).length,
   };
   const shown = items.filter((i) => {
-    if (filter === 'In stock now') return !isSoldOut(i);
-    if (filter === 'Sold out') return isSoldOut(i);
-    if (filter === 'Price dropped') return i.product.was != null;
+    if (filter === 'inStock') return !isSoldOut(i);
+    if (filter === 'soldOut') return isSoldOut(i);
+    if (filter === 'priceDropped') return i.product.was != null;
     return true;
   });
   const inStockCount = items.filter((i) => !isSoldOut(i)).length;
@@ -128,39 +135,34 @@ const CustomerFavoritesPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">Favorites</h1>
-          <p className="text-body-lg max-w-155">
-            Your wishlist: products you want next time, stalls you go back to, and the markets you shop at. A sold-out
-            favorite tells you when it is back.
-          </p>
+          <h1 className="text-h1">{t('title')}</h1>
+          <p className="text-body-lg max-w-155">{t('intro')}</p>
         </div>
         <ButtonLink to="/products" variant="secondary">
-          Find more to save
+          {t('findMore')}
         </ButtonLink>
       </div>
 
       <Tabs
-        label="Saved things"
+        label={t('tabs.label')}
         value={tab}
         onChange={(id) => setTab(id as typeof tab)}
         tabs={[
-          { id: 'products', label: 'Products', count: items.length },
-          { id: 'stalls', label: 'Stalls', count: stallIds.length },
-          { id: 'markets', label: 'Markets', count: savedMarket ? 1 : 0 },
+          { id: 'products', label: t('tabs.products'), count: items.length },
+          { id: 'stalls', label: t('tabs.stalls'), count: stallIds.length },
+          { id: 'markets', label: t('tabs.markets'), count: savedMarket ? 1 : 0 },
         ]}
       />
 
       {tab === 'products' && (
         <div className="flex flex-col gap-4">
-          <Banner title="One of your four saved products is sold out.">
-            Restock alerts are on, so you get a notification the moment the stall lists it again.
-          </Banner>
+          <Banner title={t('banner.title')}>{t('banner.text')}</Banner>
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
               {FILTERS.map((f) => (
                 <Chip key={f} pressed={filter === f} onClick={() => setFilter(f)}>
-                  {f} <span className="text-[12px] tabular-nums opacity-80">{counts[f]}</span>
+                  {t(`filters.${f}`)} <span className="text-[12px] tabular-nums opacity-80">{counts[f]}</span>
                 </Chip>
               ))}
             </div>
@@ -168,12 +170,12 @@ const CustomerFavoritesPage = () => {
               size="sm"
               onClick={() =>
                 Notification.success({
-                  title: 'Added to cart',
-                  text: `Added ${inStockCount} products to your cart. They will be split by stall at checkout.`,
+                  title: t('toast.addedTitle'),
+                  text: t('toast.addedMany', { count: inStockCount }),
                 })
               }
             >
-              Add the {inStockCount} in-stock items to cart
+              {t('addInStock', { count: inStockCount })}
             </Button>
           </div>
 
@@ -186,15 +188,13 @@ const CustomerFavoritesPage = () => {
               />
             ))}
           </ul>
-          <p className="text-small text-ink-muted">
-            Saving a product does not hold any stock. It is held only when you place the order.
-          </p>
+          <p className="text-small text-ink-muted">{t('holdNote')}</p>
         </div>
       )}
 
       {tab === 'stalls' && (
         <div className="flex flex-col gap-4">
-          <p className="text-small text-ink-muted">Your saved stalls, with what each one is bringing this weekend.</p>
+          <p className="text-small text-ink-muted">{t('stallsNote')}</p>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {stallIds.map((id) => {
               const f = farmer(id);
@@ -202,7 +202,7 @@ const CustomerFavoritesPage = () => {
               return (
                 <StallCard key={id} farmer={f}>
                   <p className="text-small col-span-full m-0 flex justify-between gap-3">
-                    <span className="text-ink-muted">This week</span>
+                    <span className="text-ink-muted">{t('thisWeek')}</span>
                     <span>{NEW_THIS_WEEK[id]}</span>
                   </p>
                 </StallCard>
@@ -217,10 +217,7 @@ const CustomerFavoritesPage = () => {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {savedMarket && <MarketCard market={savedMarket} />}
           </div>
-          <p className="text-small text-ink-muted">
-            A saved market comes first in lists and on the map, and directions to its stalls start from your saved
-            address.
-          </p>
+          <p className="text-small text-ink-muted">{t('marketsNote')}</p>
         </div>
       )}
     </div>

@@ -1,0 +1,79 @@
+{
+  "title": "Farmers",
+  "intro": "Approve an application before the stall can list products. Most applications come from accounts that already shop here, so each one carries the applicant's order history next to their photos. Suspend a stall to hide its products and stop new orders; its running orders finish as normal.",
+  "search": {
+    "label": "Search Farmers",
+    "placeholder": "Stall, contact person, phone",
+    "submit": "Search"
+  },
+  "tabsLabel": "Farmers by status",
+  "status": {
+    "pending": "Waiting for approval",
+    "approved": "Approved",
+    "suspended": "Suspended",
+    "rejected": "Rejected"
+  },
+  "empty": {
+    "pending": {
+      "title": "No registrations waiting",
+      "text": "New Farmer applications arrive here for review before they can list products."
+    },
+    "approved": {
+      "title": "No approved stalls",
+      "text": "Approve a registration and the stall appears here, visible to customers."
+    },
+    "suspended": {
+      "title": "No suspended stalls",
+      "text": "A suspended stall is hidden from customers but finishes the orders it already has."
+    },
+    "rejected": {
+      "title": "No rejected registrations",
+      "text": "Rejected Farmers keep their account and can be told why."
+    }
+  },
+  "col": {
+    "stall": "Stall",
+    "markets": "Markets",
+    "registered": "Registered",
+    "products": "Products",
+    "rating": "Rating"
+  },
+  "reviews_one": "{{count}} review",
+  "reviews_other": "{{count}} reviews",
+  "action": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "view": "View",
+    "suspend": "Suspend",
+    "reinstate": "Reinstate"
+  },
+  "notYet": "Not yet",
+  "approve": {
+    "title": "Approve {{stall}}?",
+    "text": "The stall becomes visible to customers and can list products right away. The Farmer is notified.",
+    "confirm": "Approve stall"
+  },
+  "reject": {
+    "title": "Reject {{stall}}?",
+    "text": "The Farmer keeps their sign-in but cannot list products.",
+    "reason": "Reason the Farmer will see",
+    "confirm": "Reject registration"
+  },
+  "reason": {
+    "mismatch": "Details do not match the stall",
+    "full": "Market is full",
+    "unreachable": "Could not reach the contact number",
+    "other": "Other"
+  },
+  "suspend": {
+    "title": "Suspend {{stall}}?",
+    "text": "All products are hidden and no new orders are accepted. Orders already placed continue so customers do not lose what they booked.",
+    "confirm": "Suspend stall"
+  },
+  "toast": {
+    "approved": "{{stall}} approved. The stall can list products now.",
+    "rejected": "{{stall}} rejected. They keep their account.",
+    "suspended": "{{stall}} suspended. Running orders finish as normal.",
+    "reinstated": "{{stall}} reinstated. Products are visible again."
+  }
+}

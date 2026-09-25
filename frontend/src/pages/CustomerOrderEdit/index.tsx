@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
 import CartGroup, { type CartLineType } from '@/components/CartGroup';
 import { Banner } from '@/components/ui/banner';
@@ -9,6 +10,7 @@ import Notification from '@/utils/notification';
 
 /** FR-035 — edit an order before its cutoff; saving returns it to Placed for the stall to approve again (D-07). */
 const CustomerOrderEditPage = () => {
+  const { t } = useTranslation('CustomerOrderEdit');
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
   const order = orders.find((o) => o.code.replace('#', '') === code);
@@ -26,9 +28,9 @@ const CustomerOrderEditPage = () => {
   if (!order) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
-        <h1 className="text-h2">That order is not here any more</h1>
-        <p className="text-ink-muted">You may have cancelled it, or the link is old. Open it again from your orders.</p>
-        <ButtonLink to="/orders">My orders</ButtonLink>
+        <h1 className="text-h2">{t('notFound.title')}</h1>
+        <p className="text-ink-muted">{t('notFound.text')}</p>
+        <ButtonLink to="/orders">{t('myOrders')}</ButtonLink>
       </div>
     );
   }
@@ -37,7 +39,7 @@ const CustomerOrderEditPage = () => {
   const href = `/orders/${code}`;
 
   const onSave = () => {
-    Notification.success({ title: 'Changes sent', text: `${stallName} will review your order again.` });
+    Notification.success({ title: t('toast.title'), text: t('toast.text', { stall: stallName }) });
     navigate(href);
   };
 
@@ -45,25 +47,24 @@ const CustomerOrderEditPage = () => {
     <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
       <p className="text-small text-ink-muted">
         <Link to="/orders" className="text-brand underline">
-          My orders
+          {t('myOrders')}
         </Link>{' '}
         ·{' '}
         <Link to={href} className="text-brand underline">
-          Order {order.code}
+          {t('breadcrumbOrder', { code: order.code })}
         </Link>{' '}
-        · Edit
+        · {t('breadcrumbEdit')}
       </p>
 
       <div className="flex flex-col gap-2">
-        <h1 className="font-hand text-h1">Edit order {order.code}</h1>
+        <h1 className="font-hand text-h1">{t('title', { code: order.code })}</h1>
         <p className="text-body">
-          {stallName} · {order.date}, {order.slot}. Changes are allowed until <b>{order.cutoff}</b>.
+          {stallName} · {order.date}, {order.slot}.{' '}
+          <Trans t={t} i18nKey="cutoff" values={{ cutoff: order.cutoff }} components={{ b: <b /> }} />
         </p>
       </div>
 
-      <Banner title={`After you save, the order goes back to Placed and ${stallName} approves it again.`}>
-        Your stock stays reserved while they review. You get a notification when it is accepted.
-      </Banner>
+      <Banner title={t('banner.title', { stall: stallName })}>{t('banner.text')}</Banner>
 
       <CartGroup
         stallName={stallName}
@@ -73,15 +74,12 @@ const CustomerOrderEditPage = () => {
         onRemove={(id) => setItems((prev) => prev.filter((i) => i.id !== id))}
       />
 
-      <p className="text-small text-ink-muted">
-        You can lower quantities or remove items here. To add something else from {stallName}, place a new order.
-        Quantities are capped at what the stall has left today.
-      </p>
+      <p className="text-small text-ink-muted">{t('help', { stall: stallName })}</p>
 
       <Card className="flex flex-col gap-4 p-6">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="note" className="text-small font-bold">
-            Note to the stall
+            {t('note')}
           </label>
           <textarea
             id="note"
@@ -92,10 +90,10 @@ const CustomerOrderEditPage = () => {
         </div>
         <div className="flex flex-wrap gap-2">
           <Button onClick={onSave} disabled={items.length === 0}>
-            Send changes for approval
+            {t('submit')}
           </Button>
           <ButtonLink to={href} variant="secondary">
-            Discard changes
+            {t('discard')}
           </ButtonLink>
         </div>
       </Card>

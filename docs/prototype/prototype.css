@@ -68,7 +68,8 @@ h1, h2, h3, p { margin: 0; }
 .pt-col > .ml-state, .pt-col-3 > .ml-state { flex: none; max-width: none; }
 
 /* map frame (Leaflet + OSM, D-12) */
-.pt-map { position: relative; min-height: 480px; border: 1.5px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface-sunken); overflow: hidden; }
+/* isolation: Leaflet puts z-index 400–1000 on its panes and controls; without a stacking context of its own they paint over the sticky header */
+.pt-map { position: relative; isolation: isolate; min-height: 480px; border: 1.5px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface-sunken); overflow: hidden; }
 .pt-map-tall { min-height: 620px; }
 .pt-map-sm { min-height: 320px; }
 .pt-map-xs { min-height: 240px; }
@@ -644,7 +645,7 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 .pt-car-pause { width: 36px; border-left: 1px solid var(--line); }
 
 /* wide screens: the 1200px container leaves a lot of paper on 1920px+ monitors, so the prototype widens
-   header, footer and content together to 1360px from 1600px up. Design-system token size-container stays 1200; LEAD to confirm. */
+   header, footer and content together to 1360px from 1600px up. Same step as the design-system token size-container (frontend marketlink-theme.css). */
 /* Platform announcement (FR-077) keeps the design system's green band. Two small additions: a pale rule under it,
    and the same left edge as the header, so it reads as its own strip rather than part of the navigation. */
 .ml-banner-announce {
@@ -709,71 +710,26 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
   main.pt-main-narrow { max-width: 720px; }
 }
 
-/* ---------------------------------------------------------------------------
-   Dark theme. The brand book says "no dark mode until every MUST requirement is
-   done", so this is a proposal for FE1 and LEAD, not an approved part of the system.
-   Every step was re-derived from the same kraft and green hues rather than flipped,
-   and all 26 text-on-surface, status and border pairs were measured: the lowest is
-   board-muted on board at 5.43:1, everything else clears 4.5:1, borders clear 3:1.
-   --------------------------------------------------------------------------- */
-:root[data-theme='dark'] {
-  --surface: #181410;
-  --surface-quiet: #1f1a14;
-  --surface-raised: #272119;
-  --surface-sunken: #12100b;
-  --board: #35532f;
-  --on-board: #f1e5cb;
-  --board-muted: #c1d3af;
-  --ink: #f2e7d2;
-  --ink-muted: #c2ab85;
-  --line: #453a2b;
-  --line-strong: #9d8763;
-  --brand: #8dbb7b;
-  --brand-strong: #a6cd95;
-  --on-brand: #14200f;
-  --brand-tint: #31432b;
-  --accent: #e8b33c;
-  --accent-strong: #f2c260;
-  --on-accent: #2a2016;
-  --price: #f2e7d2;
-  --focus: #a6cd95;
-  --danger: #f09a88;
-  --on-danger: #2a1310;
-  --danger-bg: #40201a;
-  --success: #8dbb7b;
-  --info-bg: #1f2f36;
-  --info-ink: #a9cbd8;
-  --warning-bg: #3a2c0d;
-  --warning-ink: #e9c874;
-  --highlight: #3a3116;
-  --twine: #b39468;
-  --scrim: rgba(8, 6, 4, 0.66);
-  --pin-market: #8dbb7b;
-  --pin-stall: #e8b33c;
-  --status-placed-bg: #33291b;
-  --status-placed-ink: #e2cca7;
-  --status-accepted-bg: #223038;
-  --status-accepted-ink: #b9d4e0;
-  --status-ready-bg: #2a3a24;
-  --status-ready-ink: #bbd8aa;
-  --status-completed-bg: #8dbb7b;
-  --status-completed-ink: #14200f;
-  --status-declined-bg: #3d1f19;
-  --status-declined-ink: #f2a493;
-  --status-cancelled-bg: #2e271c;
-  --status-cancelled-ink: #c6b08b;
-  --shadow-card: 0 2px 0 0 rgba(0, 0, 0, 0.5);
-  --shadow-pop: 0 8px 20px rgba(0, 0, 0, 0.55);
-  --shadow-dialog: 0 24px 48px rgba(0, 0, 0, 0.6);
-  /* chart marks: re-stepped for the dark surface, not flipped. brand-light vs a warm neutral
-     measures CVD ΔE 14.6 and normal-vision 16.7 on #272119, where the light pair does not. */
-  --chart-now: #8dbb7b;
-  --chart-was: #8a7f6d;
-  --side-raised: #24381f;
-}
+/* Dark theme tokens live in frontend/src/styles/marketlink-theme.css (shared with the app). */
 :root[data-theme='dark'] .pt-map .leaflet-tile { filter: brightness(0.72) contrast(1.06) saturate(0.82); }
 :root[data-theme='dark'] .pt-gallery-main, :root[data-theme='dark'] .pt-evidence-frame,
 :root[data-theme='dark'] .pt-wish-thumb, :root[data-theme='dark'] .pt-photo { opacity: 0.92; }
 
 /* chart marks in the default theme, measured on the card surface #f1e5cb */
 :root { --chart-now: #2f4a2a; --chart-was: #8a6a3f; --side-raised: #22371f; }
+
+/* ---------- user menu + avatar (proposal, see docs/superpowers/specs/2026-09-25-avatar-user-menu-design.md) ---------- */
+.pt-avatar { display: inline-grid; place-items: center; flex: none; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-weight: 700; line-height: 1; overflow: hidden; }
+.pt-avatar-accent { background: var(--accent); color: var(--on-accent); }
+.pt-umenu { position: relative; }
+.pt-umenu-btn { cursor: pointer; background: transparent; border-top: 0; border-right: 0; border-bottom: 0; min-height: 44px; font: inherit; font-size: 14px; }
+.pt-umenu-chev { font-size: 12px; }
+.pt-umenu-list { position: absolute; right: 0; top: calc(100% + 8px); z-index: var(--z-dropdown); width: 240px; padding: 6px; background: var(--surface-raised); color: var(--ink); border: 1.5px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-pop); display: flex; flex-direction: column; gap: 2px; box-sizing: border-box; }
+.pt-umenu-list[hidden] { display: none; }
+.pt-umenu-head { display: flex; align-items: center; gap: var(--space-3); padding: 8px 12px 12px; margin-bottom: 4px; border-bottom: 1px solid var(--line); min-width: 0; }
+.pt-umenu-head div { display: flex; flex-direction: column; min-width: 0; }
+.pt-umenu-head div span { font-size: 14px; color: var(--ink-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pt-umenu-list [role='menuitem'] { display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: var(--radius-sm); color: var(--ink); font-weight: 700; font-size: 15px; text-decoration: none; }
+.pt-umenu-list [role='menuitem']:hover, .pt-umenu-list [role='menuitem']:focus-visible { background: var(--surface-sunken); outline: none; }
+@media (max-width: 767px) { .pt-umenu { display: none; } }
+.pt-avatar-card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-5); }

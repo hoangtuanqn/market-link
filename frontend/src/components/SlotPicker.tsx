@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 type SlotOption = { value: string; time: string; booked: number; max: number };
 
 type SlotPickerProps = {
@@ -10,6 +12,7 @@ type SlotPickerProps = {
 
 /** Pickup time-window picker (design system `.ml-slots`). */
 const SlotPicker = ({ legend, name, slots, value, onChange }: SlotPickerProps) => {
+  const { t } = useTranslation();
   return (
     <fieldset className="m-0 grid max-w-150 grid-cols-[repeat(auto-fill,minmax(132px,1fr))] gap-2 border-0 p-0">
       {legend && <legend className="text-small mb-2 p-0 font-bold">{legend}</legend>}
@@ -40,7 +43,7 @@ const SlotPicker = ({ legend, name, slots, value, onChange }: SlotPickerProps) =
                 {s.time}
               </b>
               <small className="text-ink-muted text-[12px]">
-                {full ? 'Fully booked' : `${s.max - s.booked} of ${s.max} left`}
+                {full ? t('slot.full') : t('slot.left', { left: s.max - s.booked, max: s.max })}
               </small>
             </span>
           </label>

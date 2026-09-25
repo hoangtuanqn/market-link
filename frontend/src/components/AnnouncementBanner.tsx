@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { AnnouncementType } from '@/types/market.types';
 import { CloseIcon, MegaphoneIcon } from './icons';
 
 const AnnouncementBanner = ({ announcement }: { announcement: AnnouncementType }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(true);
   if (!open) return null;
 
@@ -17,7 +19,7 @@ const AnnouncementBanner = ({ announcement }: { announcement: AnnouncementType }
         </div>
         <button
           type="button"
-          aria-label="Dismiss"
+          aria-label={t('actions.dismiss')}
           onClick={() => setOpen(false)}
           className="-mr-2 grid size-9 flex-none cursor-pointer place-items-center rounded-sm bg-transparent text-inherit"
         >

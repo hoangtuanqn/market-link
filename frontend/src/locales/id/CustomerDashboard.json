@@ -1,0 +1,34 @@
+{
+  "greeting_one": "Halo {{name}}, {{count}} pengambilan akhir pekan ini",
+  "greeting_other": "Halo {{name}}, {{count}} pengambilan akhir pekan ini",
+  "intro": "Satu pesanan masih menunggu konfirmasi lapak. Selebihnya berjalan lancar.",
+  "browseMarkets": "Lihat pasar akhir pekan ini",
+  "cards": {
+    "upcoming_one": "{{count}} pesanan mendatang",
+    "upcoming_other": "{{count}} pesanan mendatang",
+    "upcomingBreakdown": "{{placed}} menunggu persetujuan · {{accepted}} diterima · {{ready}} siap",
+    "favorites_one": "{{count}} favorit",
+    "favorites_other": "{{count}} favorit",
+    "stalls_one": "{{count}} lapak",
+    "stalls_other": "{{count}} lapak",
+    "products_one": "{{count}} produk",
+    "products_other": "{{count}} produk",
+    "markets_one": "{{count}} pasar",
+    "markets_other": "{{count}} pasar",
+    "unread_one": "{{count}} notifikasi belum dibaca",
+    "unread_other": "{{count}} notifikasi belum dibaca",
+    "unreadText": "Satu pesanan sudah siap, dan yoghurt kambing tersedia lagi",
+    "account": "Akun"
+  },
+  "sell": {
+    "overline": "Baru",
+    "title": "Anda menanam sesuatu? Jual di pasar",
+    "text": "Akun Anda bisa menjadi lapak di salah satu dari empat pasar. Ajukan dengan beberapa foto lahan Anda dan admin akan meninjaunya. Apa pun hasilnya, Anda tetap bisa berbelanja.",
+    "apply": "Ajukan untuk berjualan",
+    "dismiss": "Nanti saja"
+  },
+  "nextPickups": "Pengambilan berikutnya",
+  "allOrders": "Semua pesanan saya",
+  "newFromFavorites": "Baru minggu ini dari lapak favorit Anda",
+  "favorites": "Favorit"
+}

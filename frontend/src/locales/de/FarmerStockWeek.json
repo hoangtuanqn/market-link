@@ -1,0 +1,52 @@
+{
+  "overline": "Woche vom {{from}} – {{to}} · Thảo Điền {{daysA}} · Thủ Đức {{daysB}}",
+  "title": "Bestand dieser Woche",
+  "intro": "Ihre Wochenvorlage ist der Startbestand für jeden Markttag. Wenden Sie sie an und passen Sie dann die Tage an, an denen die Ernte anders ausfällt. Reservierter Bestand ist bereits von dem abgezogen, was Kunden sehen.",
+  "saved": "Gespeichert",
+  "per": "pro {{unit}}",
+  "tabs": {
+    "label": "Bestandsansichten",
+    "week": "Diese Woche",
+    "template": "Wochenvorlage"
+  },
+  "status": {
+    "available": "Verfügbar",
+    "soldOut": "Ausverkauft",
+    "paused": "Diese Woche pausiert"
+  },
+  "col": {
+    "product": "Produkt",
+    "status": "Status",
+    "price": "Preis",
+    "reserved": "Reserviert",
+    "defaultPrice": "Standardpreis"
+  },
+  "aria": {
+    "status": "Status von {{product}}",
+    "day": "{{product}} {{day}}",
+    "dayAt": "{{product}} {{day}} {{market}}",
+    "price": "Preis von {{product}}",
+    "templateDay": "{{product}} Vorlage {{day}}"
+  },
+  "week": {
+    "caption": "Bestand pro Produkt und Markttag in dieser Woche",
+    "note": "Die Mengen sind die an diesem Tag verfügbaren Einheiten. Ein leerer Tag bedeutet, dass das Produkt nicht angeboten wird. Freitage sind ausgegraut, weil {{stall}} freitags nicht verkauft.",
+    "savedText": "Bestand dieser Woche gespeichert. Kunden sehen die neuen Mengen ab sofort.",
+    "save": "Änderungen speichern"
+  },
+  "template": {
+    "savedText": "Vorlage gespeichert. Sie gilt ab nächster Woche, es sei denn, Sie wenden sie jetzt an.",
+    "save": "Vorlage speichern",
+    "note": "Die Tage der Vorlage folgen Ihren Verkaufstagen. Diese ändern Sie unter Stand und Abholung."
+  },
+  "apply": {
+    "open": "Vorlage auf diese Woche anwenden",
+    "title": "Vorlage auf diese Woche anwenden?",
+    "keep": "Meine Änderungen behalten",
+    "doneTitle": "Vorlage angewendet",
+    "doneText": "Vorlage auf {{sat}} und {{sun}} angewendet.",
+    "confirm": "Vorlage anwenden",
+    "text": "Die Mengen für {{sat}} und {{sun}} werden durch die Werte der Vorlage ersetzt. Reservierter Bestand bleibt aus der für Kunden sichtbaren Menge heraus.",
+    "warning": "Ihre Änderungen für diese Woche werden überschrieben."
+  }
+}
