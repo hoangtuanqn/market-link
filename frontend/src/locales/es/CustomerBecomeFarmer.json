@@ -77,7 +77,8 @@
     "photoAlt": "Foto de la parcela",
     "applyAgain": "Volver a solicitar",
     "historyTitle": "Tus solicitudes anteriores",
-    "historyText": "Todas las solicitudes que enviaste, con la respuesta del administrador."
+    "historyText": "Todas las solicitudes que enviaste, con la respuesta del administrador.",
+    "withdraw": "Retirar la solicitud"
   },
   "timeline": {
     "placed": {
@@ -102,7 +103,9 @@
     "sentTitle": "Solicitud enviada",
     "sent": "Recibirás la respuesta de un administrador en tus notificaciones.",
     "savedTitle": "Guardado para después",
-    "saved": "Tus respuestas quedan en este dispositivo. Continúa desde tu cuenta."
+    "saved": "Tus respuestas quedan en este dispositivo. Continúa desde tu cuenta.",
+    "withdrawnTitle": "Solicitud retirada",
+    "withdrawn": "Solicítalo de nuevo cuando quieras."
   },
   "loading": "Cargando el estado de tu solicitud",
   "loadError": {
@@ -125,7 +128,8 @@
     "photoTooLarge": "Esa foto supera {{max}} MB.",
     "videoType": "El vídeo debe ser MP4, WEBM o MOV.",
     "videoTooLarge": "Ese vídeo supera {{max}} MB.",
-    "terms": "Marca las tres casillas antes de enviar."
+    "terms": "Marca las tres casillas antes de enviar.",
+    "withdraw": "No se pudo retirar la solicitud. Inténtalo otra vez."
   },
   "approval": {
     "approved": {
@@ -159,5 +163,11 @@
     "title": "Ya habías empezado esta solicitud",
     "text": "Lo que escribiste el {{date}} sigue aquí.",
     "discard": "Empezar de nuevo"
+  },
+  "withdrawDialog": {
+    "title": "¿Retirar tu solicitud?",
+    "text": "El administrador dejará de verla y no se guarda nada. Puedes solicitarlo de nuevo cuando quieras.",
+    "keep": "Mantenerla",
+    "confirm": "Retirar"
   }
 }

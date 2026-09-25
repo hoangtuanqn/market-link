@@ -77,7 +77,8 @@
     "photoAlt": "Foto der Anbaufläche",
     "applyAgain": "Erneut beantragen",
     "historyTitle": "Deine früheren Anträge",
-    "historyText": "Alle Anträge, die du gesendet hast, mit der Antwort des Admins."
+    "historyText": "Alle Anträge, die du gesendet hast, mit der Antwort des Admins.",
+    "withdraw": "Antrag zurückziehen"
   },
   "timeline": {
     "placed": {
@@ -102,7 +103,9 @@
     "sentTitle": "Antrag gesendet",
     "sent": "Die Antwort eines Admins erhalten Sie in Ihren Benachrichtigungen.",
     "savedTitle": "Für später gespeichert",
-    "saved": "Deine Angaben bleiben auf diesem Gerät. Mach auf der Kontoseite weiter."
+    "saved": "Deine Angaben bleiben auf diesem Gerät. Mach auf der Kontoseite weiter.",
+    "withdrawnTitle": "Antrag zurückgezogen",
+    "withdrawn": "Du kannst jederzeit erneut beantragen."
   },
   "loading": "Status deiner Bewerbung wird geladen",
   "loadError": {
@@ -125,7 +128,8 @@
     "photoTooLarge": "Dieses Foto ist größer als {{max}} MB.",
     "videoType": "Das Video muss MP4, WEBM oder MOV sein.",
     "videoTooLarge": "Dieses Video ist größer als {{max}} MB.",
-    "terms": "Setze alle drei Haken, bevor du sendest."
+    "terms": "Setze alle drei Haken, bevor du sendest.",
+    "withdraw": "Der Antrag konnte nicht zurückgezogen werden. Versuch es erneut."
   },
   "approval": {
     "approved": {
@@ -159,5 +163,11 @@
     "title": "Du hast diesen Antrag schon begonnen",
     "text": "Was du am {{date}} geschrieben hast, ist noch da.",
     "discard": "Neu anfangen"
+  },
+  "withdrawDialog": {
+    "title": "Antrag zurückziehen?",
+    "text": "Der Admin sieht ihn nicht mehr und nichts bleibt erhalten. Du kannst jederzeit erneut beantragen.",
+    "keep": "Behalten",
+    "confirm": "Zurückziehen"
   }
 }

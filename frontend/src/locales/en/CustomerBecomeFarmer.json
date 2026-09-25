@@ -77,7 +77,8 @@
     "photoAlt": "Photo of the plot",
     "applyAgain": "Apply again",
     "historyTitle": "Your earlier applications",
-    "historyText": "Every application you have sent, with what an admin answered."
+    "historyText": "Every application you have sent, with what an admin answered.",
+    "withdraw": "Withdraw the application"
   },
   "timeline": {
     "placed": {
@@ -102,7 +103,9 @@
     "sentTitle": "Application sent",
     "sent": "You will hear from an admin in your notifications.",
     "savedTitle": "Saved for later",
-    "saved": "Your answers stay on this device. Continue from your account page."
+    "saved": "Your answers stay on this device. Continue from your account page.",
+    "withdrawnTitle": "Application withdrawn",
+    "withdrawn": "Apply again whenever you are ready."
   },
   "loading": "Loading your application status",
   "loadError": {
@@ -125,7 +128,8 @@
     "photoTooLarge": "That photo is larger than {{max}} MB.",
     "videoType": "The video must be MP4, WEBM or MOV.",
     "videoTooLarge": "That video is larger than {{max}} MB.",
-    "terms": "Tick all three boxes before you send."
+    "terms": "Tick all three boxes before you send.",
+    "withdraw": "Could not withdraw the application. Please try again."
   },
   "approval": {
     "approved": {
@@ -159,5 +163,11 @@
     "title": "You already started this",
     "text": "We kept what you wrote on {{date}}.",
     "discard": "Start over"
+  },
+  "withdrawDialog": {
+    "title": "Withdraw your application?",
+    "text": "The admin stops seeing it and nothing is kept. You can apply again whenever you are ready.",
+    "keep": "Keep it",
+    "confirm": "Withdraw"
   }
 }

@@ -7,6 +7,7 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataState } from '@/components/ui/data-state';
+import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/input';
 import { FormStep } from '@/components/ui/form-step';
 import { ApplicationHistory } from '@/components/ApplicationHistory';
@@ -119,6 +120,8 @@ const CustomerBecomeFarmerPage = () => {
   const [tick2, setTick2] = useState(false);
   const [tick3, setTick3] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
   /** Ngày của bản nháp đang mở, để nói cho người dùng biết họ đang tiếp tục việc dở dang. */
   const [draftSavedAt, setDraftSavedAt] = useState<string>();
   const navigate = useNavigate();
@@ -184,6 +187,22 @@ const CustomerBecomeFarmerPage = () => {
     });
     Notification.success({ title: t('toast.savedTitle'), text: t('toast.saved') });
     navigate('/account');
+  };
+
+  const withdrawApplication = async () => {
+    setIsWithdrawing(true);
+    try {
+      await FarmerApi.withdraw();
+      setConfirmWithdraw(false);
+      Notification.success({ title: t('toast.withdrawnTitle'), text: t('toast.withdrawn') });
+      // Rút xong là chưa từng nộp: quay về form trắng, không phải màn trạng thái.
+      setStatus({ kind: 'form' });
+      window.scrollTo(0, 0);
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, t('errors.withdraw')) });
+    } finally {
+      setIsWithdrawing(false);
+    }
   };
 
   /** Bỏ nháp: xoá cả trên máy lẫn trên màn hình, form về trắng như lần đầu. */
@@ -456,6 +475,12 @@ const CustomerBecomeFarmerPage = () => {
           <div className="flex flex-wrap gap-2">
             {/* Chỉ đơn bị từ chối mới nộp lại được — server cũng chặn đúng như vậy. */}
             {data.approvalStatus === 'rejected' && <Button onClick={applyAgain}>{t('sent.applyAgain')}</Button>}
+            {/* Đang chờ duyệt thì còn đổi ý được; đã có kết quả rồi thì không còn gì để rút. */}
+            {data.approvalStatus === 'pending' && (
+              <Button variant="danger" disabled={isWithdrawing} onClick={() => setConfirmWithdraw(true)}>
+                {t('sent.withdraw')}
+              </Button>
+            )}
             <ButtonLink to="/markets" variant="secondary">
               {t('sent.keepShopping')}
             </ButtonLink>
@@ -469,6 +494,25 @@ const CustomerBecomeFarmerPage = () => {
             <ApplicationHistory entries={data.history} statusLabel={(s) => t(`statusValue.${s}`)} />
           </section>
         )}
+
+        <Dialog
+          open={confirmWithdraw}
+          tone="danger"
+          title={t('withdrawDialog.title')}
+          onClose={() => setConfirmWithdraw(false)}
+          actions={
+            <>
+              <Button variant="secondary" disabled={isWithdrawing} onClick={() => setConfirmWithdraw(false)}>
+                {t('withdrawDialog.keep')}
+              </Button>
+              <Button variant="dangerFill" disabled={isWithdrawing} onClick={withdrawApplication}>
+                {t('withdrawDialog.confirm')}
+              </Button>
+            </>
+          }
+        >
+          <p>{t('withdrawDialog.text')}</p>
+        </Dialog>
 
         {data.approvalStatus === 'pending' && (
           <div className="flex flex-col gap-3">

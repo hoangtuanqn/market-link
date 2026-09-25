@@ -77,7 +77,8 @@
     "photoAlt": "地块照片",
     "applyAgain": "重新申请",
     "historyTitle": "你提交过的申请",
-    "historyText": "你提交过的每一次申请，以及管理员的答复。"
+    "historyText": "你提交过的每一次申请，以及管理员的答复。",
+    "withdraw": "撤回申请"
   },
   "timeline": {
     "placed": {
@@ -102,7 +103,9 @@
     "sentTitle": "申请已提交",
     "sent": "管理员的答复会出现在您的通知中。",
     "savedTitle": "已保存，稍后继续",
-    "saved": "内容保存在这台设备上。可从账户页面继续。"
+    "saved": "内容保存在这台设备上。可从账户页面继续。",
+    "withdrawnTitle": "申请已撤回",
+    "withdrawn": "你随时可以重新提交。"
   },
   "loading": "正在加载申请状态",
   "loadError": {
@@ -125,7 +128,8 @@
     "photoTooLarge": "这张照片超过 {{max}} MB。",
     "videoType": "视频必须是 MP4、WEBM 或 MOV。",
     "videoTooLarge": "这段视频超过 {{max}} MB。",
-    "terms": "请勾选全部三项后再提交。"
+    "terms": "请勾选全部三项后再提交。",
+    "withdraw": "无法撤回申请，请重试。"
   },
   "approval": {
     "approved": {
@@ -159,5 +163,11 @@
     "title": "你之前填过这份申请",
     "text": "{{date}} 填写的内容都还在。",
     "discard": "重新开始"
+  },
+  "withdrawDialog": {
+    "title": "要撤回你的申请吗？",
+    "text": "管理员将不再看到这份申请，内容也不会保留。你随时可以重新提交。",
+    "keep": "保留",
+    "confirm": "撤回"
   }
 }

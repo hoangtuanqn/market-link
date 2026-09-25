@@ -77,7 +77,8 @@
     "photoAlt": "Ảnh vườn",
     "applyAgain": "Nộp lại đơn",
     "historyTitle": "Các đơn bạn đã gửi",
-    "historyText": "Mọi lần bạn đã nộp, kèm câu trả lời của quản trị viên."
+    "historyText": "Mọi lần bạn đã nộp, kèm câu trả lời của quản trị viên.",
+    "withdraw": "Rút đơn"
   },
   "timeline": {
     "placed": {
@@ -102,7 +103,9 @@
     "sentTitle": "Đã gửi đơn",
     "sent": "Bạn sẽ nhận được phản hồi của quản trị viên trong mục thông báo.",
     "savedTitle": "Đã lưu để làm tiếp",
-    "saved": "Nội dung được giữ trên máy này. Vào trang tài khoản để làm tiếp."
+    "saved": "Nội dung được giữ trên máy này. Vào trang tài khoản để làm tiếp.",
+    "withdrawnTitle": "Đã rút đơn",
+    "withdrawn": "Bạn nộp lại bất cứ lúc nào cũng được."
   },
   "loading": "Đang tải trạng thái đơn đăng ký",
   "loadError": {
@@ -125,7 +128,8 @@
     "photoTooLarge": "Ảnh này lớn hơn {{max}} MB.",
     "videoType": "Video phải là MP4, WEBM hoặc MOV.",
     "videoTooLarge": "Video này lớn hơn {{max}} MB.",
-    "terms": "Đánh dấu cả ba ô trước khi gửi."
+    "terms": "Đánh dấu cả ba ô trước khi gửi.",
+    "withdraw": "Không rút được đơn. Vui lòng thử lại."
   },
   "approval": {
     "approved": {
@@ -159,5 +163,11 @@
     "title": "Bạn đã bắt đầu đơn này",
     "text": "Những gì bạn gõ ngày {{date}} vẫn còn đây.",
     "discard": "Làm lại từ đầu"
+  },
+  "withdrawDialog": {
+    "title": "Rút đơn của bạn?",
+    "text": "Quản trị viên sẽ không còn thấy đơn này và không có gì được giữ lại. Bạn nộp lại lúc nào cũng được.",
+    "keep": "Giữ đơn",
+    "confirm": "Rút đơn"
   }
 }

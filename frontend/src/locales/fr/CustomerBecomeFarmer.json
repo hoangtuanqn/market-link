@@ -77,7 +77,8 @@
     "photoAlt": "Photo de la parcelle",
     "applyAgain": "Refaire une demande",
     "historyTitle": "Vos demandes précédentes",
-    "historyText": "Toutes vos demandes, avec la réponse de l'admin."
+    "historyText": "Toutes vos demandes, avec la réponse de l'admin.",
+    "withdraw": "Retirer la demande"
   },
   "timeline": {
     "placed": {
@@ -102,7 +103,9 @@
     "sentTitle": "Demande envoyée",
     "sent": "La réponse d'un administrateur arrivera dans vos notifications.",
     "savedTitle": "Enregistré pour plus tard",
-    "saved": "Vos réponses restent sur cet appareil. Reprenez depuis votre compte."
+    "saved": "Vos réponses restent sur cet appareil. Reprenez depuis votre compte.",
+    "withdrawnTitle": "Demande retirée",
+    "withdrawn": "Refaites-en une quand vous voulez."
   },
   "loading": "Chargement de l’état de votre demande",
   "loadError": {
@@ -125,7 +128,8 @@
     "photoTooLarge": "Cette photo dépasse {{max}} Mo.",
     "videoType": "La vidéo doit être en MP4, WEBM ou MOV.",
     "videoTooLarge": "Cette vidéo dépasse {{max}} Mo.",
-    "terms": "Cochez les trois cases avant d'envoyer."
+    "terms": "Cochez les trois cases avant d'envoyer.",
+    "withdraw": "Impossible de retirer la demande. Réessayez."
   },
   "approval": {
     "approved": {
@@ -159,5 +163,11 @@
     "title": "Vous aviez commencé cette demande",
     "text": "Ce que vous avez écrit le {{date}} est toujours là.",
     "discard": "Tout recommencer"
+  },
+  "withdrawDialog": {
+    "title": "Retirer votre demande ?",
+    "text": "L'admin ne la voit plus et rien n'est conservé. Vous pouvez refaire une demande quand vous voulez.",
+    "keep": "La garder",
+    "confirm": "Retirer"
   }
 }

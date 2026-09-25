@@ -77,7 +77,8 @@
     "photoAlt": "밭 사진",
     "applyAgain": "다시 신청하기",
     "historyTitle": "이전 신청 내역",
-    "historyText": "보낸 모든 신청과 관리자의 답변입니다."
+    "historyText": "보낸 모든 신청과 관리자의 답변입니다.",
+    "withdraw": "신청 취소"
   },
   "timeline": {
     "placed": {
@@ -102,7 +103,9 @@
     "sentTitle": "신청서를 보냈어요",
     "sent": "관리자의 답은 알림으로 받아요.",
     "savedTitle": "나중에 이어서 하도록 저장했습니다",
-    "saved": "입력한 내용은 이 기기에 남습니다. 계정 페이지에서 이어서 하세요."
+    "saved": "입력한 내용은 이 기기에 남습니다. 계정 페이지에서 이어서 하세요.",
+    "withdrawnTitle": "신청을 취소했습니다",
+    "withdrawn": "언제든 다시 신청할 수 있습니다."
   },
   "loading": "신청 상태를 불러오는 중",
   "loadError": {
@@ -125,7 +128,8 @@
     "photoTooLarge": "이 사진은 {{max}} MB를 넘습니다.",
     "videoType": "동영상은 MP4, WEBM 또는 MOV여야 합니다.",
     "videoTooLarge": "이 동영상은 {{max}} MB를 넘습니다.",
-    "terms": "보내기 전에 세 항목 모두 체크하세요."
+    "terms": "보내기 전에 세 항목 모두 체크하세요.",
+    "withdraw": "신청을 취소하지 못했습니다. 다시 시도하세요."
   },
   "approval": {
     "approved": {
@@ -159,5 +163,11 @@
     "title": "작성 중이던 신청서가 있습니다",
     "text": "{{date}}에 입력한 내용이 그대로 있습니다.",
     "discard": "처음부터 다시"
+  },
+  "withdrawDialog": {
+    "title": "신청을 취소할까요?",
+    "text": "관리자에게 더 이상 보이지 않고 내용도 남지 않습니다. 언제든 다시 신청할 수 있습니다.",
+    "keep": "그대로 두기",
+    "confirm": "취소하기"
   }
 }

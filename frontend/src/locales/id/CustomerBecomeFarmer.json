@@ -77,7 +77,8 @@
     "photoAlt": "Foto lahan",
     "applyAgain": "Ajukan lagi",
     "historyTitle": "Lamaran Anda sebelumnya",
-    "historyText": "Semua lamaran yang Anda kirim, beserta jawaban admin."
+    "historyText": "Semua lamaran yang Anda kirim, beserta jawaban admin.",
+    "withdraw": "Tarik lamaran"
   },
   "timeline": {
     "placed": {
@@ -102,7 +103,9 @@
     "sentTitle": "Pendaftaran dikirim",
     "sent": "Jawaban admin akan masuk ke notifikasi Anda.",
     "savedTitle": "Disimpan untuk nanti",
-    "saved": "Jawaban Anda tersimpan di perangkat ini. Lanjutkan dari halaman akun."
+    "saved": "Jawaban Anda tersimpan di perangkat ini. Lanjutkan dari halaman akun.",
+    "withdrawnTitle": "Lamaran ditarik",
+    "withdrawn": "Anda bisa melamar lagi kapan saja."
   },
   "loading": "Memuat status pengajuan Anda",
   "loadError": {
@@ -125,7 +128,8 @@
     "photoTooLarge": "Foto itu lebih besar dari {{max}} MB.",
     "videoType": "Video harus MP4, WEBM, atau MOV.",
     "videoTooLarge": "Video itu lebih besar dari {{max}} MB.",
-    "terms": "Centang ketiga kotak sebelum mengirim."
+    "terms": "Centang ketiga kotak sebelum mengirim.",
+    "withdraw": "Lamaran tidak bisa ditarik. Coba lagi."
   },
   "approval": {
     "approved": {
@@ -159,5 +163,11 @@
     "title": "Anda sudah mulai mengisi lamaran ini",
     "text": "Yang Anda tulis pada {{date}} masih ada.",
     "discard": "Mulai dari awal"
+  },
+  "withdrawDialog": {
+    "title": "Tarik lamaran Anda?",
+    "text": "Admin tidak akan melihatnya lagi dan tidak ada yang disimpan. Anda bisa melamar lagi kapan saja.",
+    "keep": "Biarkan",
+    "confirm": "Tarik"
   }
 }
