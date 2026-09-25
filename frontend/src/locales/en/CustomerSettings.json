@@ -1,0 +1,17 @@
+{
+  "breadcrumbAccount": "Account",
+  "title": "Settings",
+  "intro": "How MarketLink looks and what it tells you. Everything here is yours alone; it changes nothing for the stalls.",
+  "shopping": "Shopping",
+  "market": "Market you shop at most",
+  "marketNote": "Shown first on the Markets page.",
+  "marketNone": "No preference",
+  "slot": "Pickup time you prefer",
+  "slotNote": "Saved for now. It will be pre-selected when a stall has that slot free.",
+  "slots": {
+    "earliest": "Earliest free",
+    "06-07": "06:00 – 07:00",
+    "07-08": "07:00 – 08:00",
+    "08-09": "08:00 – 09:00"
+  }
+}

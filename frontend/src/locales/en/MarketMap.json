@@ -1,0 +1,27 @@
+{
+  "title": "Market map",
+  "intro": "All markets and the stalls taking pre-orders on the day you choose. Tap a pin for hours, pickup windows and directions.",
+  "marketDay": "Market day",
+  "filter": {
+    "markets": "Markets",
+    "stalls": "Stalls",
+    "saved": "Saved only"
+  },
+  "legend": {
+    "market": "Square, market",
+    "stall": "Round, stall",
+    "selected": "Ring, selected"
+  },
+  "mapLabel": "Map of all markets and stalls",
+  "directions": "Directions open in OpenStreetMap in a new tab.",
+  "openOn": "Open on {{day}}",
+  "empty": {
+    "title": "No markets to show",
+    "text": "Nothing matches the day you picked. Try another day, or clear the filter."
+  },
+  "popup": {
+    "stalls_one": "{{count}} stall",
+    "stalls_other": "{{count}} stalls",
+    "pickup": "{{days}} · pickup {{pickup}}"
+  }
+}

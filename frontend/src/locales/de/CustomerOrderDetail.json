@@ -1,0 +1,46 @@
+{
+  "missing": {
+    "title": "Diese Bestellung gibt es nicht mehr",
+    "text": "Vielleicht haben Sie sie storniert, oder der Link ist veraltet. Öffnen Sie sie erneut über Ihre Bestellungen."
+  },
+  "myOrders": "Meine Bestellungen",
+  "breadcrumb": "Bestellung {{code}}",
+  "placedAt": "Aufgegeben {{time}}",
+  "status": {
+    "placed": "Aufgegeben",
+    "accepted": "Angenommen",
+    "ready": "Abholbereit",
+    "completed": "Abgeschlossen",
+    "declined": "Abgelehnt",
+    "cancelled": "Storniert"
+  },
+  "previewLocked": "Vorschau: nach Bestellschluss",
+  "pickup": {
+    "title": "Abholung",
+    "where": "{{market}}, Stand {{stall}}",
+    "spot": "Flussseite des Markts, neben dem Brotstand.",
+    "slot": "Ihr Zeitfenster",
+    "phone": "Telefon des Stands",
+    "bring": "Mitbringen",
+    "bringText": "{{total}} in bar oder per Überweisung am Stand",
+    "directions": "Route",
+    "stallPage": "Standseite",
+    "map": "Abholpunkt an Stand {{stall}}"
+  },
+  "history": {
+    "title": "Verlauf",
+    "by": "{{time}} · von {{by}}",
+    "note": "Jede Statusänderung wird mit der Person gespeichert, die sie vorgenommen hat."
+  },
+  "change": {
+    "title": "Diese Bestellung ändern",
+    "until": "Bis <b>{{cutoff}}</b> können Sie Mengen ändern, Artikel entfernen oder stornieren. Nach einer Änderung bestätigt {{stall}} die Bestellung erneut.",
+    "edit": "Bestellung bearbeiten",
+    "cancel": "Bestellung stornieren",
+    "locked": "Der Bestellschluss war um {{cutoff}}. Für Änderungen wenden Sie sich direkt unter {{phone}} an den Stand."
+  },
+  "notify": {
+    "title": "Benachrichtigungen zu dieser Bestellung",
+    "text": "Sie wurden informiert, als sie angenommen wurde. Sie werden informiert, wenn sie abholbereit ist oder der Stand sie ablehnen muss."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Lengkapi profil Anda",
+  "intro": "Anda masuk dengan Google sebagai <b>{{email}}</b>. Google hanya memberi kami nama dan email, jadi kami menanyakan nomor telepon dan alamat Anda sekali. Lapak tempat Anda memesan memakainya untuk menyerahkan pesanan pada hari pasar.",
+  "fields": {
+    "fullName": "Nama lengkap",
+    "phone": "Nomor telepon",
+    "address": "Alamat",
+    "addressPlaceholder": "Jalan, kelurahan, distrik",
+    "addressHint": "Dipakai untuk jarak dan petunjuk arah."
+  },
+  "submit": "Simpan dan lanjutkan",
+  "saving": "Menyimpan…",
+  "signOut": "Keluar",
+  "note": "Ketiga kolom wajib diisi untuk memakai MarketLink. Jika belum ingin mengisinya sekarang, silakan keluar.",
+  "toast": {
+    "saved": "Data Anda tersimpan.",
+    "failed": "Tidak dapat menyimpan data Anda. Silakan coba lagi."
+  }
+}

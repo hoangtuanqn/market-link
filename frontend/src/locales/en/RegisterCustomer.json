@@ -1,0 +1,43 @@
+{
+  "title": "Create a customer account",
+  "intro": "Name, phone number, email and address are required by the platform. The address is used to show distances to markets and to pre-fill directions.",
+  "fields": {
+    "fullName": "Full name",
+    "phone": "Phone number",
+    "email": "Email",
+    "emailHint": "Used to sign in and for order notifications.",
+    "address": "Address",
+    "addressPlaceholder": "Street, ward, district",
+    "password": "Password",
+    "passwordHint": "{{min}} to {{max}} characters.",
+    "confirmPassword": "Repeat password"
+  },
+  "consent": {
+    "label": "I have read and accept the <terms>Terms of service</terms> and the <privacy>Privacy policy</privacy>",
+    "note": "Your name and phone number go to the stall you order from, so they can hand your order over on market day. You pay the Farmer at the stall."
+  },
+  "submit": "Create account",
+  "submitting": "Creating account…",
+  "haveAccount": "I already have an account",
+  "acceptFirst": "Accept the terms to create your account.",
+  "sharedAccount": "One account can be shared within a family; the system does not tell people apart inside an account.",
+  "toast": {
+    "created": "Account created.",
+    "failed": "Could not create your account. Please try again."
+  },
+  "errors": {
+    "fullNameRequired": "Enter your full name.",
+    "fullNameMax": "Full name can be at most {{max}} characters.",
+    "phoneRequired": "Enter your phone number.",
+    "phoneInvalid": "Enter a valid Vietnamese mobile number (10 digits).",
+    "emailRequired": "Enter your email.",
+    "emailInvalid": "Enter a valid email address.",
+    "emailMax": "Email can be at most {{max}} characters.",
+    "addressRequired": "Enter your address.",
+    "addressMax": "Address can be at most {{max}} characters.",
+    "passwordRequired": "Enter your password.",
+    "passwordLength": "Password must be {{min}} to {{max}} characters.",
+    "confirmRequired": "Confirm your password.",
+    "confirmMismatch": "Passwords do not match."
+  }
+}

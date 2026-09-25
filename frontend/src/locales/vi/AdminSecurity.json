@@ -1,0 +1,84 @@
+{
+  "overline": "Tài khoản của bạn",
+  "title": "Bảo mật",
+  "loading": "Đang tải xác thực hai bước",
+  "loadError": {
+    "title": "Không tải được xác thực hai bước",
+    "text": "Kiểm tra kết nối rồi thử lại.",
+    "retry": "Thử lại"
+  },
+  "pill": {
+    "on": "Bật",
+    "off": "Tắt"
+  },
+  "error": {
+    "check": "Không kiểm tra được mã. Vui lòng thử lại.",
+    "start": "Không bắt đầu cài đặt được. Vui lòng thử lại.",
+    "sixDigits": "Mã gồm sáu chữ số."
+  },
+  "toast": {
+    "accepted": "Mã hợp lệ. Lưu mã khôi phục để hoàn tất.",
+    "on": "Đã bật xác thực hai bước. Lần đăng nhập tới bạn sẽ được hỏi mã.",
+    "off": "Đã tắt xác thực hai bước.",
+    "regenerated": "Mười mã khôi phục mới. Các mã cũ không còn dùng được."
+  },
+  "mfa": {
+    "title": "Xác thực hai bước",
+    "intro": "Một bước nữa sau mật khẩu, từ ứng dụng trên điện thoại của bạn. Admin có thể duyệt sạp, khoá tài khoản khách và thay đổi phí của nền tảng, nên chỉ một mật khẩu là quá mỏng.",
+    "starting": "Đang bắt đầu…",
+    "turnOn": "Bật xác thực hai bước"
+  },
+  "step1": {
+    "title": "Quét mã này bằng ứng dụng xác thực",
+    "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password — ứng dụng nào cũng được. Không có gì được gửi đi: mã bên dưới do chính trình duyệt của bạn vẽ ra.",
+    "qr": "Mã QR cho ứng dụng xác thực",
+    "manual": "<b>Không quét được?</b> Nhập tay khoá này:",
+    "type": "Loại",
+    "typeValue": "Theo thời gian (TOTP)",
+    "algorithm": "Thuật toán",
+    "digits": "Số chữ số",
+    "period": "Chu kỳ",
+    "seconds_one": "{{count}} giây",
+    "seconds_other": "{{count}} giây"
+  },
+  "step2": {
+    "title": "Nhập mã ứng dụng hiển thị",
+    "text": "Việc này xác nhận điện thoại và máy chủ khớp giờ với nhau trước khi bật bất cứ thứ gì.",
+    "code": "Mã sáu số",
+    "confirm": "Xác nhận",
+    "confirmed": "Đã xác nhận"
+  },
+  "step3": {
+    "title": "Lưu mã khôi phục",
+    "text": "Mười mã, mỗi mã dùng một lần. Đó là cách duy nhất để vào lại nếu bạn mất điện thoại — và nền tảng này chỉ có một tài khoản admin, nên mất nó là mọi người đều bị khoá ngoài.",
+    "saved": "Tôi đã lưu chúng",
+    "pending": "Mã sẽ hiện ở đây khi mã phía trên được xác nhận."
+  },
+  "codesLeft": {
+    "label": "Mã khôi phục còn lại",
+    "value": "<b>{{left}}</b> / {{total}}"
+  },
+  "regen": {
+    "open": "Tạo mã khôi phục mới",
+    "title": "Tạo mã khôi phục mới?",
+    "keep": "Giữ mã cũ",
+    "confirm": "Tạo mã mới",
+    "text": "Mười mã bạn đang có sẽ ngừng hoạt động ngay. Hãy lưu mã mới trước khi đóng màn hình này."
+  },
+  "disable": {
+    "open": "Tắt",
+    "title": "Tắt xác thực hai bước?",
+    "keep": "Giữ bật",
+    "confirm": "Tắt",
+    "text": "Mật khẩu sẽ là thứ duy nhất ngăn bất kỳ ai với việc duyệt sạp, tài khoản khách hàng và giá của nền tảng."
+  },
+  "dialogCode": "Mã từ ứng dụng xác thực",
+  "codes": {
+    "copy": "Sao chép mã",
+    "download": "Tải về",
+    "copied": "Đã sao chép. Hãy cất ở nơi khác, không phải chiếc điện thoại có ứng dụng xác thực.",
+    "copyFailed": "Không sao chép được. Hãy chọn các mã và sao chép thủ công.",
+    "downloaded": "Đã tải về thành {{file}}.",
+    "fileHeading": "Mã khôi phục admin MarketLink"
+  }
+}

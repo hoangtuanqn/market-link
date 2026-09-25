@@ -1,0 +1,84 @@
+{
+  "overline": "Ihr Konto",
+  "title": "Sicherheit",
+  "loading": "Zwei-Schritt-Verifizierung wird geladen",
+  "loadError": {
+    "title": "Zwei-Schritt-Verifizierung konnte nicht geladen werden",
+    "text": "Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "retry": "Erneut versuchen"
+  },
+  "pill": {
+    "on": "An",
+    "off": "Aus"
+  },
+  "error": {
+    "check": "Der Code konnte nicht geprüft werden. Bitte versuchen Sie es erneut.",
+    "start": "Die Einrichtung konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
+    "sixDigits": "Ein Code hat sechs Ziffern."
+  },
+  "toast": {
+    "accepted": "Code akzeptiert. Speichern Sie die Wiederherstellungscodes, um abzuschließen.",
+    "on": "Die Zwei-Schritt-Verifizierung ist aktiviert. Bei der nächsten Anmeldung werden Sie nach einem Code gefragt.",
+    "off": "Die Zwei-Schritt-Verifizierung ist deaktiviert.",
+    "regenerated": "Zehn neue Wiederherstellungscodes. Die alten funktionieren nicht mehr."
+  },
+  "mfa": {
+    "title": "Zwei-Schritt-Verifizierung",
+    "intro": "Ein zweiter Schritt nach Ihrem Passwort, über eine App auf Ihrem Handy. Ein Admin kann Stände freigeben, Kunden deaktivieren und die Gebühren der Plattform ändern – ein Passwort allein ist da zu wenig.",
+    "starting": "Wird gestartet…",
+    "turnOn": "Zwei-Schritt-Verifizierung aktivieren"
+  },
+  "step1": {
+    "title": "Scannen Sie dies mit Ihrer Authenticator-App",
+    "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password – jede davon. Es wird nichts gesendet: Der Code unten wird von Ihrem eigenen Browser gezeichnet.",
+    "qr": "QR-Code für Ihre Authenticator-App",
+    "manual": "<b>Scannen klappt nicht?</b> Geben Sie diesen Schlüssel von Hand ein:",
+    "type": "Typ",
+    "typeValue": "Zeitbasiert (TOTP)",
+    "algorithm": "Algorithmus",
+    "digits": "Ziffern",
+    "period": "Intervall",
+    "seconds_one": "{{count}} Sekunde",
+    "seconds_other": "{{count}} Sekunden"
+  },
+  "step2": {
+    "title": "Geben Sie den angezeigten Code ein",
+    "text": "So wird geprüft, dass Handy und Server bei der Uhrzeit übereinstimmen, bevor etwas aktiviert wird.",
+    "code": "Sechsstelliger Code",
+    "confirm": "Bestätigen",
+    "confirmed": "Bestätigt"
+  },
+  "step3": {
+    "title": "Speichern Sie Ihre Wiederherstellungscodes",
+    "text": "Zehn Codes, jeder einmal verwendbar. Sie sind der einzige Weg zurück, wenn Sie das Handy verlieren – und diese Plattform hat nur ein Admin-Konto, ein Verlust sperrt also alle aus.",
+    "saved": "Ich habe sie gespeichert",
+    "pending": "Die Codes erscheinen hier, sobald der Code oben bestätigt ist."
+  },
+  "codesLeft": {
+    "label": "Verbleibende Wiederherstellungscodes",
+    "value": "<b>{{left}}</b> von {{total}}"
+  },
+  "regen": {
+    "open": "Neue Wiederherstellungscodes erstellen",
+    "title": "Neue Wiederherstellungscodes erstellen?",
+    "keep": "Alte behalten",
+    "confirm": "Neue Codes erstellen",
+    "text": "Die zehn aktuellen Codes funktionieren sofort nicht mehr. Speichern Sie die neuen, bevor Sie diesen Bildschirm schließen."
+  },
+  "disable": {
+    "open": "Deaktivieren",
+    "title": "Zwei-Schritt-Verifizierung deaktivieren?",
+    "keep": "Aktiviert lassen",
+    "confirm": "Deaktivieren",
+    "text": "Dann steht nur noch Ihr Passwort zwischen jedermann und den Freigaben, den Kundenkonten und den Preisen der Plattform."
+  },
+  "dialogCode": "Code aus Ihrer Authenticator-App",
+  "codes": {
+    "copy": "Codes kopieren",
+    "download": "Herunterladen",
+    "copied": "Kopiert. Bewahren Sie sie nicht auf dem Handy mit der Authenticator-App auf.",
+    "copyFailed": "Kopieren nicht möglich. Markieren Sie die Codes und kopieren Sie sie von Hand.",
+    "downloaded": "Als {{file}} heruntergeladen.",
+    "fileHeading": "MarketLink Admin-Wiederherstellungscodes"
+  }
+}

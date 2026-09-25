@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Banner } from '@/components/ui/banner';
 import { BarList } from '@/components/ui/bar-list';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -19,34 +20,44 @@ import {
   stockForSaturday,
   type FarmerOrderType,
 } from '@/data/farmer';
-import { vnd } from '@/lib/format';
+import { dayName, formatClock, formatDayMonth, units, vnd, weekday } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Notification from '@/utils/notification';
 import LiveClock from './LiveClock';
 
 const TABS = [
-  { id: 'new', label: 'Awaiting approval', status: 'placed' as OrderStatus },
-  { id: 'acc', label: 'Accepted', status: 'accepted' as OrderStatus },
-  { id: 'ready', label: 'Ready', status: 'ready' as OrderStatus },
-  { id: 'done', label: 'Completed', status: 'completed' as OrderStatus },
-];
+  { id: 'new', label: 'tabs.new', status: 'placed' as OrderStatus },
+  { id: 'acc', label: 'tabs.acc', status: 'accepted' as OrderStatus },
+  { id: 'ready', label: 'tabs.ready', status: 'ready' as OrderStatus },
+  { id: 'done', label: 'tabs.done', status: 'completed' as OrderStatus },
+] as const;
 
-const DECLINE_REASONS = ['Not enough stock', 'Not selling on that day', 'Cannot make that pickup time', 'Other'];
+const DECLINE_REASONS = [
+  'decline.reasons.stock',
+  'decline.reasons.day',
+  'decline.reasons.time',
+  'decline.reasons.other',
+] as const;
+
+const SAT = new Date(2026, 8, 26);
+const SUN = new Date(2026, 8, 27);
+const dayDate = (d: Date) => `${weekday(d)} ${formatDayMonth(d)}`;
 
 /** FR-065 FR-068 FR-069 — Farmer dashboard: KPIs, incoming orders, stock for Saturday and best sellers. */
 const FarmerOverviewPage = () => {
+  const { t, i18n } = useTranslation('FarmerOverview');
   const [tab, setTab] = useState<'new' | 'acc' | 'ready' | 'done'>('new');
   const [declineCode, setDeclineCode] = useState<string | null>(null);
-  const [reason, setReason] = useState(DECLINE_REASONS[0]);
+  const [reason, setReason] = useState<string>(DECLINE_REASONS[0]);
 
   const by = (status: OrderStatus) => farmerOrders.filter((o) => o.status === status);
   const awaiting = by('placed');
 
   const columns: TableColumn<FarmerOrderType>[] = [
-    { key: 'code', label: 'Order' },
+    { key: 'code', label: t('col.order') },
     {
       key: 'who',
-      label: 'Customer',
+      label: t('col.customer'),
       render: (r) => (
         <>
           {r.who}
@@ -54,10 +65,10 @@ const FarmerOverviewPage = () => {
         </>
       ),
     },
-    { key: 'slot', label: 'Pickup', render: (r) => `${r.date} · ${r.slot}` },
-    { key: 'items', label: 'Items', align: 'num', render: (r) => r.items.length },
-    { key: 'total', label: 'Total', align: 'num', render: (r) => vnd(farmerOrderTotal(r)) },
-    { key: 'st', label: 'Status', render: (r) => <OrderStatusBadge status={r.status} /> },
+    { key: 'slot', label: t('col.pickup'), render: (r) => `${r.date} · ${r.slot}` },
+    { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.items.length },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(farmerOrderTotal(r)) },
+    { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
       label: '',
@@ -70,15 +81,15 @@ const FarmerOverviewPage = () => {
                 size="sm"
                 onClick={() =>
                   Notification.success({
-                    title: 'Order accepted',
-                    text: `Order ${r.code} accepted. ${r.who} has been told.`,
+                    title: t('toast.acceptedTitle'),
+                    text: t('toast.acceptedText', { code: r.code, who: r.who }),
                   })
                 }
               >
-                Accept
+                {t('actions.accept')}
               </Button>
               <Button variant="danger" size="sm" onClick={() => setDeclineCode(r.code)}>
-                Decline
+                {t('actions.decline')}
               </Button>
             </div>
           );
@@ -87,36 +98,43 @@ const FarmerOverviewPage = () => {
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => Notification.success({ title: 'Order ready', text: `Order ${r.code} marked ready.` })}
+              onClick={() =>
+                Notification.success({ title: t('toast.readyTitle'), text: t('toast.readyText', { code: r.code }) })
+              }
             >
-              Mark ready
+              {t('actions.ready')}
             </Button>
           );
         if (r.status === 'ready')
           return (
             <Button
               size="sm"
-              onClick={() => Notification.success({ title: 'Order completed', text: `Order ${r.code} completed.` })}
+              onClick={() =>
+                Notification.success({
+                  title: t('toast.completedTitle'),
+                  text: t('toast.completedText', { code: r.code }),
+                })
+              }
             >
-              Mark completed
+              {t('actions.complete')}
             </Button>
           );
         return (
           <ButtonLink variant="ghost" size="sm" to={`/farmer/orders/${r.code.replace('#', '')}`}>
-            View
+            {t('actions.view')}
           </ButtonLink>
         );
       },
     },
   ];
 
-  const activeTab = TABS.find((t) => t.id === tab)!;
+  const activeTab = TABS.find((x) => x.id === tab)!;
   const rows = by(activeTab.status);
   const captions: Record<typeof tab, string> = {
-    new: 'Awaiting approval · Sat 26/09 and Sun 27/09',
-    acc: 'Accepted',
-    ready: 'Ready for pickup',
-    done: 'Completed',
+    new: t('captions.new', { sat: dayDate(SAT), sun: dayDate(SUN) }),
+    acc: t('tabs.acc'),
+    ready: t('captions.ready'),
+    done: t('tabs.done'),
   };
 
   return (
@@ -124,82 +142,84 @@ const FarmerOverviewPage = () => {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <p className="text-overline text-ink-muted m-0">
-            <LiveClock /> · your stall at {marketName(1)} · next market day Sat 26/09
+            <LiveClock /> · {t('overline', { market: marketName(1), day: dayDate(SAT) })}
           </p>
-          <h1 className="font-hand text-h1">Morning, Cô Tư</h1>
+          <h1 className="font-hand text-h1">{t('greeting', { name: 'Cô Tư' })}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <ButtonLink variant="secondary" to="/farmer/stock">
-            Apply weekly template
+            {t('applyTemplate')}
           </ButtonLink>
-          <ButtonLink to="/farmer/products/new">Add product</ButtonLink>
+          <ButtonLink to="/farmer/products/new">{t('addProduct')}</ButtonLink>
         </div>
       </div>
 
-      <Banner variant="warning" title="4 orders are waiting for you. 3 of them close at 19:00 tomorrow.">
-        Unapproved orders still hold stock. Accept or decline before the cutoff so customers can plan.
+      <Banner variant="warning" title={t('banner.title', { count: 4, closing: 3, time: formatClock('19:00') })}>
+        {t('banner.text')}
       </Banner>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
         <Kpi
-          label="Total orders"
+          label={t('kpi.orders')}
           value="128"
-          note="23 this week"
-          delta={{ pct: 18.9, vs: 'vs August' }}
+          note={t('kpi.ordersNote', { count: 23 })}
+          delta={{ pct: 18.9, vs: t('kpi.vsAugust') }}
           spark={overviewSpark.orders}
           href="/farmer/history"
-          linkLabel="Open sales history"
+          linkLabel={t('kpi.openHistory')}
         />
         <Kpi
-          label="Awaiting approval"
+          label={t('tabs.new')}
           value={awaiting.length}
           note={
-            <>
-              <b>3</b> close at 19:00 on 25/09
-            </>
+            <Trans
+              t={t}
+              i18nKey="kpi.awaitingNote"
+              count={3}
+              values={{ time: formatClock('19:00'), date: formatDayMonth(new Date(2026, 8, 25)) }}
+              components={{ b: <b /> }}
+            />
           }
-          delta={{ pct: 33.3, good: false, vs: 'vs a normal Thursday' }}
+          delta={{ pct: 33.3, good: false, vs: t('kpi.vsThursday') }}
           highlight
           href="/farmer/orders"
-          linkLabel="Open incoming orders"
+          linkLabel={t('kpi.openIncoming')}
         />
         <Kpi
-          label="September revenue"
-          value="8,450,000"
-          note="₫, from completed orders, paid at the stall"
-          delta={{ pct: 21.4, vs: 'vs August' }}
+          label={t('kpi.revenue')}
+          value={new Intl.NumberFormat(i18n.language).format(8_450_000)}
+          note={t('kpi.revenueNote')}
+          delta={{ pct: 21.4, vs: t('kpi.vsAugust') }}
           spark={overviewSpark.revenue}
           href="/farmer/history"
-          linkLabel="Open sales history"
+          linkLabel={t('kpi.openHistory')}
         />
         <Kpi
-          label="Best seller"
+          label={t('kpi.best')}
           value="Water spinach"
-          note="64 bunches this month"
-          delta={{ pct: 11.2, vs: 'vs August' }}
+          note={t('kpi.bestNote', { qty: units(64, 'bunch') })}
+          delta={{ pct: 11.2, vs: t('kpi.vsAugust') }}
           href="/farmer/products"
-          linkLabel="Open products"
+          linkLabel={t('kpi.openProducts')}
         />
       </div>
-      <p className="text-small text-ink-muted -mt-2">
-        September so far, next to August. Every tile opens the screen behind its number.
-      </p>
+      <p className="text-small text-ink-muted -mt-2">{t('kpi.note')}</p>
 
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-h2">Incoming orders</h2>
+          <h2 className="text-h2">{t('incoming.title')}</h2>
           <ButtonLink variant="ghost" to="/farmer/orders">
-            All orders and filters
+            {t('incoming.all')}
           </ButtonLink>
         </div>
         <Tabs
-          label="Incoming orders"
+          label={t('incoming.title')}
           value={tab}
           onChange={(id) => setTab(id as typeof tab)}
-          tabs={TABS.map((t) => ({
-            id: t.id,
-            label: t.label,
-            count: t.id === 'done' ? undefined : by(t.status).length,
+          tabs={TABS.map((x) => ({
+            id: x.id,
+            label: t(x.label),
+            count: x.id === 'done' ? undefined : by(x.status).length,
           }))}
         />
         <Table
@@ -209,7 +229,7 @@ const FarmerOverviewPage = () => {
           rowClassName={(r) => (r.isNew ? '!bg-highlight' : undefined)}
         />
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-small text-ink-muted">New orders are highlighted until you open them.</span>
+          <span className="text-small text-ink-muted">{t('incoming.note')}</span>
           <Pagination page={1} pages={1} onChange={() => {}} />
         </div>
       </section>
@@ -217,58 +237,56 @@ const FarmerOverviewPage = () => {
       <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="flex flex-col gap-3 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-h3">Stock for Saturday</h2>
+            <h2 className="text-h3">{t('stock.title', { day: dayName(6, 'long') })}</h2>
             <ButtonLink variant="ghost" size="sm" to="/farmer/stock">
-              This week's stock
+              {t('stock.link')}
             </ButtonLink>
           </div>
           <StockList rows={stockForSaturday} />
-          <p className="text-small text-ink-muted">
-            Reserved means an order is holding it. Those come off your count the moment a customer orders.
-          </p>
+          <p className="text-small text-ink-muted">{t('stock.note')}</p>
         </Card>
         <Card className="flex flex-col gap-3 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-h3">Best sellers</h2>
+            <h2 className="text-h3">{t('best.title')}</h2>
             <ButtonLink variant="ghost" size="sm" to="/farmer/history">
-              Sales history
+              {t('best.link')}
             </ButtonLink>
           </div>
-          <p className="text-small text-ink-muted -mt-1">Sold in September, each in its own unit</p>
+          <p className="text-small text-ink-muted -mt-1">{t('best.note')}</p>
           <BarList rows={bestSellers} />
         </Card>
       </section>
 
-      <p className="text-caption text-ink-muted">The sidebar and the header above it are new to the prototype.</p>
+      <p className="text-caption text-ink-muted">{t('protoNote')}</p>
 
       <Dialog
         open={declineCode !== null}
-        title={`Decline order ${declineCode ?? ''}?`}
+        title={t('decline.title', { code: declineCode ?? '' })}
         tone="danger"
         onClose={() => setDeclineCode(null)}
         actions={
           <>
             <Button variant="secondary" onClick={() => setDeclineCode(null)}>
-              Keep order
+              {t('decline.keep')}
             </Button>
             <Button
               variant="danger"
               onClick={() => {
                 Notification.success({
-                  title: 'Order declined',
-                  text: `Order ${declineCode} declined. Stock is back in your count.`,
+                  title: t('toast.declinedTitle'),
+                  text: t('toast.declinedText', { code: declineCode }),
                 });
                 setDeclineCode(null);
               }}
             >
-              Decline order
+              {t('decline.confirm')}
             </Button>
           </>
         }
       >
-        <p>The customer is told right away and the items go back to your stock.</p>
+        <p>{t('decline.text')}</p>
         <label className="text-ink-muted mt-2 block text-[13px] font-bold" htmlFor="decline-reason">
-          Reason the customer will see
+          {t('decline.reason')}
         </label>
         <select
           id="decline-reason"
@@ -277,7 +295,9 @@ const FarmerOverviewPage = () => {
           className="border-line-strong bg-surface-raised text-body mt-1 min-h-11 w-full rounded-sm border-[1.5px] px-3"
         >
           {DECLINE_REASONS.map((r) => (
-            <option key={r}>{r}</option>
+            <option key={r} value={r}>
+              {t(r)}
+            </option>
           ))}
         </select>
       </Dialog>

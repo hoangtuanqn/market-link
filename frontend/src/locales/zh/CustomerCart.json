@@ -1,0 +1,30 @@
+{
+  "title": "购物车",
+  "products_one": "{{count}} 件商品",
+  "products_other": "{{count}} 件商品",
+  "stalls_one": "{{count}} 个摊位",
+  "stalls_other": "{{count}} 个摊位",
+  "intro": "来自 {{stalls}} 的 {{products}}。为每个摊位选择取货时间，然后下单。",
+  "split": {
+    "title": "您的购物车将拆分为 2 个订单，分别在 2 个不同的摊位。",
+    "text": "每个摊位有自己的取货时间和截单时间，并分别接受订单。取货时向各摊位付款。"
+  },
+  "changeTime": "更改在 {{stall}} 的取货时间",
+  "pickupDay": "取货日期",
+  "pickupDayAt": "在 {{stall}} 的取货日期",
+  "pickupTime": "取货时间 · {{day}} {{date}} · 时段 {{from}} – {{to}}",
+  "cutoffNote": "{{stall}} 在时段开始前 {{hours}} 小时截单。{{slotDay}} {{slot}} 的时段，截单时间为 {{cutoffDay}} {{cutoff}}。",
+  "summary": {
+    "title": "取货时在摊位付款",
+    "order": "订单 {{n}} · {{stall}}",
+    "total": "合计（两个摊位）"
+  },
+  "note": {
+    "label": "给摊位的备注",
+    "placeholder": "例如：请把每把分小一点"
+  },
+  "place": "提交 2 个订单",
+  "ready": "两个摊位都已选好取货时间。每个摊位各自确认订单。",
+  "notReady": "请选择在 {{stall}} 的取货时间后再下单。",
+  "stockNote": "下单后，库存会立即从摊位的数量中扣除。不支持在线支付。"
+}

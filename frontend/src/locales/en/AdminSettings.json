@@ -1,0 +1,14 @@
+{
+  "title": "Settings",
+  "intro": "Your own preferences, and the defaults a stall starts from until it sets its own.",
+  "platform": "Platform defaults",
+  "platformNote": "Saved with your account for now. Whether a changed default reaches stalls that never set their own is still to be decided.",
+  "cutoff": "Default cutoff",
+  "max": "Default orders per slot",
+  "timezone": "Timezone",
+  "timezoneNote": "Every date and time on the platform is read in this zone.",
+  "hours_one": "{{count}} hour",
+  "hours_other": "{{count}} hours",
+  "orders_one": "{{count}} order",
+  "orders_other": "{{count}} orders"
+}

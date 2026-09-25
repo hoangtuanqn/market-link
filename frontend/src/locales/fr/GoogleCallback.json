@@ -1,0 +1,21 @@
+{
+  "loading": {
+    "title": "Connexion avec Google…",
+    "text": "Cela ne prend qu’une seconde."
+  },
+  "failed": {
+    "title": "La connexion Google n’a pas abouti",
+    "text": "Vous n’êtes pas connecté. Rien n’a changé sur votre compte.",
+    "backToSignIn": "Retour à la connexion",
+    "registerWithEmail": "Créer plutôt un compte avec un e-mail"
+  },
+  "toast": {
+    "signedIn": "Connecté."
+  },
+  "errors": {
+    "cancelled": "Vous avez annulé la connexion Google.",
+    "google": "Google n’a pas pu vous connecter. Veuillez réessayer.",
+    "invalidState": "Cette tentative de connexion n’est pas valide. Recommencez depuis la page de connexion.",
+    "failed": "La connexion Google a échoué. Veuillez réessayer."
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "missing": {
+    "title": "该订单已不存在",
+    "text": "您可能已取消该订单，或链接已过期。请从您的订单中重新打开。"
+  },
+  "myOrders": "我的订单",
+  "breadcrumb": "订单 {{code}}",
+  "placedAt": "下单于 {{time}}",
+  "status": {
+    "placed": "已下单",
+    "accepted": "已接单",
+    "ready": "可取货",
+    "completed": "已完成",
+    "declined": "已拒绝",
+    "cancelled": "已取消"
+  },
+  "previewLocked": "预览：截单后",
+  "pickup": {
+    "title": "取货",
+    "where": "{{market}}，摊位 {{stall}}",
+    "spot": "市场靠河一侧，面包摊旁边。",
+    "slot": "您的时段",
+    "phone": "摊位电话",
+    "bring": "请携带",
+    "bringText": "{{total}}，在摊位用现金或银行转账支付",
+    "directions": "路线",
+    "stallPage": "摊位页面",
+    "map": "摊位 {{stall}} 的取货点"
+  },
+  "history": {
+    "title": "历史记录",
+    "by": "{{time}} · 操作人 {{by}}",
+    "note": "每次状态变更都会记录操作人。"
+  },
+  "change": {
+    "title": "修改此订单",
+    "until": "在 <b>{{cutoff}}</b> 之前，您可以修改数量、删除商品或取消订单。修改后，{{stall}} 会重新确认订单。",
+    "edit": "修改订单",
+    "cancel": "取消订单",
+    "locked": "截单时间 {{cutoff}} 已过。如需修改，请直接致电摊位 {{phone}}。"
+  },
+  "notify": {
+    "title": "此订单的通知",
+    "text": "订单被接受时已通知您。订单可取货时，或摊位不得不拒绝时，您会收到通知。"
+  }
+}

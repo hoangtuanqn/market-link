@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Banner } from '@/components/ui/banner';
@@ -18,6 +19,7 @@ import Session from '@/utils/session';
  * refresh) không bị ghi đè. Chặn thật vẫn là 403 ở từng API admin (FR-005).
  */
 const FormAdminLogin = () => {
+  const { t } = useTranslation('AdminLogin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<LoginFieldErrors>({});
@@ -49,7 +51,7 @@ const FormAdminLogin = () => {
         return;
       }
       Session.save(session, false);
-      Notification.success({ text: response.message || 'Signed in.' });
+      Notification.success({ text: response.message || t('form.signedIn') });
       navigate(ADMIN_HOME_PATH, { replace: true });
     } catch (error) {
       if (Helper.getErrorCode(error) === 'ROLE_NOT_ALLOWED') {
@@ -57,7 +59,7 @@ const FormAdminLogin = () => {
         return;
       }
       setErrors(Helper.getFieldErrors(error));
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not sign you in. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('form.error')) });
     } finally {
       setIsSubmitting(false);
     }
@@ -66,17 +68,17 @@ const FormAdminLogin = () => {
   return (
     <form noValidate onSubmit={handleSubmit} className="flex flex-col gap-4">
       {notAdmin && (
-        <Banner variant="danger" title="This account is not an admin">
-          This sign-in is only for platform admins.{' '}
-          <Link to="/login" className="text-danger underline">
-            Customers and Farmers sign in here
-          </Link>
-          .
+        <Banner variant="danger" title={t('notAdmin.title')}>
+          <Trans
+            t={t}
+            i18nKey="notAdmin.text"
+            components={{ link: <Link to="/login" className="text-danger underline" /> }}
+          />
         </Banner>
       )}
       <Field
         id="email"
-        label="Admin email"
+        label={t('form.email')}
         type="email"
         required
         autoComplete="username"
@@ -87,7 +89,7 @@ const FormAdminLogin = () => {
       />
       <Field
         id="password"
-        label="Password"
+        label={t('form.password')}
         type="password"
         required
         autoComplete="current-password"
@@ -97,7 +99,7 @@ const FormAdminLogin = () => {
         disabled={isSubmitting}
       />
       <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? 'Signing in…' : 'Sign in'}
+        {isSubmitting ? t('form.submitting') : t('form.submit')}
       </Button>
     </form>
   );

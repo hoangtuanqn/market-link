@@ -1,0 +1,14 @@
+{
+  "title": "Einstellungen",
+  "intro": "Ihre eigenen Einstellungen und die Standardwerte eines Stands, bis er eigene festlegt.",
+  "platform": "Plattformvorgaben",
+  "platformNote": "Vorerst mit Ihrem Konto gespeichert. Ob ein geänderter Standardwert auch Stände erreicht, die nie eigene Werte festgelegt haben, ist noch offen.",
+  "cutoff": "Standard-Bestellschluss",
+  "max": "Standard-Bestellungen pro Abholzeit",
+  "timezone": "Zeitzone",
+  "timezoneNote": "Alle Daten und Uhrzeiten auf der Plattform gelten in dieser Zone.",
+  "hours_one": "{{count}} Stunde",
+  "hours_other": "{{count}} Stunden",
+  "orders_one": "{{count}} Bestellung",
+  "orders_other": "{{count}} Bestellungen"
+}

@@ -1,0 +1,30 @@
+{
+  "title": "カート",
+  "products_one": "{{count}} 点の商品",
+  "products_other": "{{count}} 点の商品",
+  "stalls_one": "{{count}} 店",
+  "stalls_other": "{{count}} 店",
+  "intro": "{{stalls}}の{{products}}。お店ごとに受け取り時間を選んでから、注文してください。",
+  "split": {
+    "title": "カートは 2 つのお店で 2 件の注文に分かれます。",
+    "text": "お店ごとに受け取り時間と締め切りがあり、注文も別々に受け付けます。お支払いは受け取り時に各お店で行います。"
+  },
+  "changeTime": "{{stall}} の受け取り時間を変更",
+  "pickupDay": "受け取り日",
+  "pickupDayAt": "{{stall}} の受け取り日",
+  "pickupTime": "受け取り時間 · {{day}} {{date}} · 受付 {{from}} – {{to}}",
+  "cutoffNote": "{{stall}} は受け取り枠の {{hours}} 時間前に注文を締め切ります。{{slotDay}} {{slot}} の枠なら、締め切りは {{cutoffDay}} {{cutoff}} です。",
+  "summary": {
+    "title": "受け取り時にお店で支払い",
+    "order": "注文 {{n}} · {{stall}}",
+    "total": "合計（2 店分）"
+  },
+  "note": {
+    "label": "お店へのメモ",
+    "placeholder": "例：束を小さめにしてください"
+  },
+  "place": "2 件の注文を確定",
+  "ready": "両方のお店で受け取り時間が決まりました。注文はお店ごとに確認されます。",
+  "notReady": "注文するには {{stall}} の受け取り時間を選んでください。",
+  "stockNote": "注文した時点で、在庫はお店の数量から差し引かれます。オンライン決済はありません。"
+}

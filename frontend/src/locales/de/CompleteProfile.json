@@ -1,0 +1,19 @@
+{
+  "title": "Profil vervollständigen",
+  "intro": "Sie haben sich mit Google als <b>{{email}}</b> angemeldet. Google gibt uns nur Ihren Namen und Ihre E-Mail-Adresse, deshalb fragen wir einmal nach Telefonnummer und Adresse. Der Stand, bei dem Sie bestellen, braucht sie, um Ihnen die Bestellung am Markttag zu übergeben.",
+  "fields": {
+    "fullName": "Vollständiger Name",
+    "phone": "Telefonnummer",
+    "address": "Adresse",
+    "addressPlaceholder": "Straße, Bezirk, Stadtteil",
+    "addressHint": "Für Entfernungen und Wegbeschreibungen."
+  },
+  "submit": "Speichern und weiter",
+  "saving": "Wird gespeichert…",
+  "signOut": "Abmelden",
+  "note": "Alle drei Felder sind für die Nutzung von MarketLink erforderlich. Wenn Sie sie jetzt nicht angeben möchten, melden Sie sich ab.",
+  "toast": {
+    "saved": "Ihre Angaben wurden gespeichert.",
+    "failed": "Ihre Angaben konnten nicht gespeichert werden. Bitte versuchen Sie es erneut."
+  }
+}

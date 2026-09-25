@@ -1,3 +1,4 @@
+import i18n from '@/i18n';
 import Helper from '@/utils/helper';
 
 export type ChartSeries = { name: string; values: number[]; compare?: boolean };
@@ -10,7 +11,7 @@ type ColumnChartProps = {
   caption: string;
 };
 
-const group = (n: number) => Math.round(n).toLocaleString('en-US');
+const group = (n: number) => Math.round(n).toLocaleString(i18n.language);
 
 /** Clamps a max value to a "nice" gridline top: 1/2/2.5/5/10 × a power of ten. */
 function niceMax(v: number): number {

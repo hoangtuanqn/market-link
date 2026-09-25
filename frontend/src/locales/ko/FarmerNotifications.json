@@ -1,0 +1,16 @@
+{
+  "title": "알림",
+  "intro": "고객의 새 주문, 수정, 취소와 MarketLink의 공지예요.",
+  "filter": {
+    "all": "전체",
+    "unread": "읽지 않음"
+  },
+  "unreadCount_one": "읽지 않음 {{count}}개",
+  "unreadCount_other": "읽지 않음 {{count}}개",
+  "unread": "읽지 않음",
+  "markAllRead": "모두 읽음으로 표시",
+  "empty": {
+    "title": "새 소식이 없어요",
+    "text": "주문이 들어오거나 변경·취소될 때, 관리자가 공지를 올릴 때 여기에서 알려 드려요."
+  }
+}

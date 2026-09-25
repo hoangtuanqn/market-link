@@ -1,0 +1,17 @@
+{
+  "breadcrumbAccount": "Compte",
+  "title": "Paramètres",
+  "intro": "L’apparence de MarketLink et ce qu’il vous signale. Tout ici ne concerne que vous ; rien ne change pour les stands.",
+  "shopping": "Achats",
+  "market": "Le marché où vous achetez le plus",
+  "marketNote": "Affiché en premier sur la page Marchés.",
+  "marketNone": "Aucune préférence",
+  "slot": "Heure de retrait préférée",
+  "slotNote": "Enregistrée pour l’instant. Elle sera présélectionnée quand un stand aura ce créneau libre.",
+  "slots": {
+    "earliest": "Le plus tôt disponible",
+    "06-07": "06:00 – 07:00",
+    "07-08": "07:00 – 08:00",
+    "08-09": "08:00 – 09:00"
+  }
+}

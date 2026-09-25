@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import Avatar from '@/components/Avatar';
 import { LogOutIcon, SlidersIcon, UsersIcon } from '@/components/icons';
@@ -7,6 +8,8 @@ type UserMenuProps = {
   name: string;
   email?: string;
   avatarUrl?: string;
+  /** Trang Settings theo vai: Customer /settings, Farmer /farmer/settings. */
+  settingsTo?: string;
   onSignOut: () => void;
 };
 
@@ -17,7 +20,8 @@ const item =
  * Nút tài khoản bên phải SiteHeader: ảnh + tên, bấm mở menu Profile / Settings / Sign out (menu button pattern của
  * WAI-ARIA: Esc hoặc bấm ra ngoài thì đóng, mũi tên lên/xuống đi giữa các mục, Home/End về đầu/cuối).
  */
-const UserMenu = ({ name, email, avatarUrl, onSignOut }: UserMenuProps) => {
+const UserMenu = ({ name, email, avatarUrl, settingsTo = '/settings', onSignOut }: UserMenuProps) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -83,7 +87,7 @@ const UserMenu = ({ name, email, avatarUrl, onSignOut }: UserMenuProps) => {
       >
         <Avatar name={name} email={email} url={avatarUrl} size={32} tone="accent" />
         <span>
-          Hi, <b className="text-on-board">{name}</b>
+          <Trans t={t} i18nKey="header.hi" values={{ name }} components={{ b: <b className="text-on-board" /> }} />
         </span>
         <svg
           aria-hidden="true"
@@ -104,7 +108,7 @@ const UserMenu = ({ name, email, avatarUrl, onSignOut }: UserMenuProps) => {
           ref={menuRef}
           id={menuId}
           role="menu"
-          aria-label="Your account"
+          aria-label={t('nav.yourAccount')}
           onKeyDown={onMenuKeyDown}
           className="bg-surface-raised text-ink border-line absolute top-[calc(100%+8px)] right-0 z-(--z-dropdown) flex w-60 flex-col gap-0.5 rounded-md border-[1.5px] p-1.5 shadow-(--shadow-pop)"
         >
@@ -116,10 +120,10 @@ const UserMenu = ({ name, email, avatarUrl, onSignOut }: UserMenuProps) => {
             </div>
           </div>
           <Link role="menuitem" tabIndex={-1} to="/account" onClick={() => close(false)} className={item}>
-            <UsersIcon /> Profile
+            <UsersIcon /> {t('nav.profile')}
           </Link>
-          <Link role="menuitem" tabIndex={-1} to="/settings" onClick={() => close(false)} className={item}>
-            <SlidersIcon /> Settings
+          <Link role="menuitem" tabIndex={-1} to={settingsTo} onClick={() => close(false)} className={item}>
+            <SlidersIcon /> {t('nav.settings')}
           </Link>
           <button
             role="menuitem"
@@ -131,7 +135,7 @@ const UserMenu = ({ name, email, avatarUrl, onSignOut }: UserMenuProps) => {
             }}
             className={item}
           >
-            <LogOutIcon /> Sign out
+            <LogOutIcon /> {t('nav.signOut')}
           </button>
         </div>
       )}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronLeftIcon, ChevronRightIcon, PauseIcon, PlayIcon } from '@/components/icons';
 import { ButtonLink } from '@/components/ui/button';
 import Helper from '@/utils/helper';
@@ -20,6 +21,8 @@ const AUTO_MS = 5000;
  * respects prefers-reduced-motion, and supports arrow keys, dots and a pause toggle.
  */
 const Carousel = ({ slides, label }: { slides: CarouselSlide[]; label: string }) => {
+  const { t, i18n } = useTranslation();
+  const num = (n: number) => new Intl.NumberFormat(i18n.language).format(n);
   const [at, setAt] = useState(0);
   const [wanted, setWanted] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const heldRef = useRef(false);
@@ -78,7 +81,7 @@ const Carousel = ({ slides, label }: { slides: CarouselSlide[]; label: string })
 
   return (
     <section
-      aria-roledescription="carousel"
+      aria-roledescription={t('carousel.roleCarousel')}
       aria-label={label}
       onMouseEnter={() => onHold(true)}
       onMouseLeave={() => onHold(false)}
@@ -91,8 +94,8 @@ const Carousel = ({ slides, label }: { slides: CarouselSlide[]; label: string })
         {slides.map((s, i) => (
           <article
             key={s.topic}
-            aria-roledescription="slide"
-            aria-label={`${i + 1} of ${slides.length}: ${s.topic}`}
+            aria-roledescription={t('carousel.roleSlide')}
+            aria-label={t('carousel.slideOf', { n: num(i + 1), total: num(slides.length), topic: s.topic })}
             inert={i !== at}
             className={Helper.cn(
               'absolute inset-0 flex items-center transition-opacity duration-300',
@@ -133,7 +136,7 @@ const Carousel = ({ slides, label }: { slides: CarouselSlide[]; label: string })
           go(at - 1);
           run();
         }}
-        aria-label="Previous slide"
+        aria-label={t('carousel.previous')}
         className="border-line-strong bg-surface-raised text-ink hover:bg-surface-quiet hover:border-ink absolute bottom-4 left-4 z-2 grid size-9 place-items-center rounded-full border-[1.5px] md:top-1/2 md:bottom-auto md:left-5 md:size-11 md:-translate-y-1/2"
       >
         <ChevronLeftIcon />
@@ -144,7 +147,7 @@ const Carousel = ({ slides, label }: { slides: CarouselSlide[]; label: string })
           go(at + 1);
           run();
         }}
-        aria-label="Next slide"
+        aria-label={t('carousel.next')}
         className="border-line-strong bg-surface-raised text-ink hover:bg-surface-quiet hover:border-ink absolute right-4 bottom-4 z-2 grid size-9 place-items-center rounded-full border-[1.5px] md:top-1/2 md:right-5 md:bottom-auto md:size-11 md:-translate-y-1/2"
       >
         <ChevronRightIcon />
@@ -157,7 +160,7 @@ const Carousel = ({ slides, label }: { slides: CarouselSlide[]; label: string })
               key={s.topic}
               type="button"
               aria-current={i === at}
-              aria-label={`Show slide ${i + 1}: ${s.topic}`}
+              aria-label={t('carousel.show', { n: num(i + 1), topic: s.topic })}
               onClick={() => {
                 go(i);
                 run();
@@ -175,7 +178,7 @@ const Carousel = ({ slides, label }: { slides: CarouselSlide[]; label: string })
           <button
             type="button"
             onClick={() => setWanted((v) => !v)}
-            aria-label={wanted ? 'Pause the slideshow' : 'Play the slideshow'}
+            aria-label={wanted ? t('carousel.pause') : t('carousel.play')}
             className="border-line ml-0.5 grid h-9 w-9 place-items-center border-l"
           >
             {wanted ? <PauseIcon size={14} /> : <PlayIcon size={14} />}

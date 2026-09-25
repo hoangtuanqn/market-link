@@ -224,10 +224,12 @@
     var ini = (words[0].charAt(0) + (words.length > 1 ? words[words.length - 1].charAt(0) : '')).toUpperCase();
     return '<span class="pt-avatar' + (onBoard ? ' pt-avatar-accent' : '') + '" aria-hidden="true" style="width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.4) + 'px">' + esc(ini) + '</span>';
   };
-  PT.footer = function () {
+  PT.footer = function (role) {
+    // Only a Farmer has pre-orders to handle; everyone else is offered the way to become one.
+    var sell = role === 'farmer' ? ['Handling pre-orders', 'farmer/orders.html'] : ['Register as a Farmer', 'public/register-farmer.html'];
     var cols = [
       ['Shop', [['Markets near you', 'public/markets.html'], ['In season', 'public/products.html'], ['Market map', 'public/map.html'], ['Favorite stalls', 'customer/favorites.html']]],
-      ['Sell', [['Register as a Farmer', 'public/register-farmer.html'], ['Handling pre-orders', 'farmer/orders.html'], ['Stall guidelines', 'public/about.html']]],
+      ['Sell', [sell, ['Stall guidelines', 'public/about.html']]],
       ['MarketLink', [['About us', 'public/about.html'], ['Contact us', 'public/contact.html'], ['Feedback & bug reports', 'public/feedback.html'], ['Terms of service', 'public/terms.html'], ['Privacy policy', 'public/privacy.html'], ['Sitemap', '../index.html']]],
     ];
     return '<footer class="ml-footer"><div class="ml-footer-in"><div>' + PT.logo(30) + '<p>Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.</p></div>' +
@@ -1175,7 +1177,7 @@
         : '';
       if (top) top.innerHTML = adminBar + (o.announce !== false && (role === 'guest' || role === 'customer') ? PT.banner('announce', esc(PT.announcements[0].title), esc(PT.announcements[0].text), { close: true }) : '') + hdr;
       PT.lockForAdmin();
-      var renderFoot = function () { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(); };
+      var renderFoot = function () { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(role); };
       // pages call boot() from a script placed before #pt-foot, so render the footer once the document is parsed
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderFoot); else renderFoot();
     }

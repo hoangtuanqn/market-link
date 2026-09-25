@@ -1,0 +1,17 @@
+{
+  "title": "设置",
+  "intro": "你自己的偏好，以及你的摊位使用的默认值。",
+  "selling": "销售默认值",
+  "sellingNote": "随你的账户保存。为新一周生成取货时段时会使用这些值。",
+  "cutoff": "截单时间",
+  "cutoffNote": "取货时段开始前多少小时锁定订单。",
+  "slot": "时段长度",
+  "slotNote": "为新一周生成取货时段时使用。",
+  "max": "每个时段的订单数",
+  "hours_one": "{{count}} 小时",
+  "hours_other": "{{count}} 小时",
+  "minutes_one": "{{count}} 分钟",
+  "minutes_other": "{{count}} 分钟",
+  "orders_one": "{{count}} 单",
+  "orders_other": "{{count}} 单"
+}

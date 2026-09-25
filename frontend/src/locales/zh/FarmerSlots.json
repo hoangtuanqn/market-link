@@ -1,0 +1,88 @@
+{
+  "crumbStall": "摊位与取货",
+  "title": "取货时段",
+  "intro": "时段是取货时间内的 30 分钟区间。每个时段只接受有限数量的订单，这样没人需要久等。已满的时段对顾客显示为灰色。",
+  "market": "市集",
+  "day": "日期",
+  "cancel": "取消",
+  "minutes_one": "{{count}} 分钟",
+  "minutes_other": "{{count}} 分钟",
+  "table": {
+    "slot": "时段",
+    "booked": "已预订",
+    "bookedOf": "{{booked}} / {{max}}",
+    "full": "已满",
+    "max": "订单上限",
+    "maxFor": "{{slot}} 订单上限",
+    "closes": "停止修改时间",
+    "open": "接受新订单",
+    "off": "关",
+    "on": "开",
+    "caption_one": "{{day}} {{date}} · {{market}} · {{count}} 个时段",
+    "caption_other": "{{day}} {{date}} · {{market}} · {{count}} 个时段"
+  },
+  "empty": {
+    "title": "这一天还没有时段",
+    "text": "为某个市集日生成时段后，顾客就可以开始预订取货时间。"
+  },
+  "defaults": {
+    "title": "默认设置",
+    "length": "时段长度",
+    "perSlot": "每个时段订单数",
+    "windowAt": "{{market}} 取货时间",
+    "window": "{{days}} {{start}} – {{end}}",
+    "cutoff": "截止时间",
+    "cutoffValue_one": "时段开始前 {{count}} 小时",
+    "cutoffValue_other": "时段开始前 {{count}} 小时",
+    "note": "在“摊位与取货”中修改取货时间和日期。每天的时段据此生成。"
+  },
+  "closing": {
+    "title": "关闭时段",
+    "text": "关闭时段后，新订单将看不到它。已有订单保留；如果你无法到场，请联系这些顾客。"
+  },
+  "away": {
+    "title": "不出摊的日子",
+    "intro": "你将缺席的市集日——收成不好、生病、车子发动不了。当天你的摊位会从市集页面上消失，不接受新订单。已下的订单会附上你的理由被拒绝，库存退回给你（D-02）。",
+    "open": "告诉顾客你不出摊",
+    "date": "日期",
+    "reasonSeen": "顾客看到的理由",
+    "declined": "被拒订单",
+    "backTitle": "你又恢复出摊了",
+    "backText": "你那天恢复出摊了。已拒绝的订单不会恢复，顾客需要重新下单。",
+    "back": "我能来",
+    "emptyTitle": "你每个市集日都出摊",
+    "emptyText": "如有变化请提前告诉顾客，免得有人白跑一趟。",
+    "notNow": "暂不",
+    "confirm": "通知顾客",
+    "declinedTitle": "订单已拒绝",
+    "toldTitle": "已通知顾客",
+    "declinedText_one": "已拒绝 {{count}} 个订单并通知顾客。",
+    "declinedText_other": "已拒绝 {{count}} 个订单并通知顾客。",
+    "toldText": "顾客无法再为 {{date}} 向你下单。",
+    "dialogText": "当天已下的订单会附上你的理由被拒绝，库存退回给你。顾客会立即收到通知且无需付款，因为取货时才付款。",
+    "marketDay": "市集日",
+    "reasonLabel": "顾客将看到的理由",
+    "seedReason": "下雨后收成不好",
+    "notGiven": "未填写",
+    "note": {
+      "placed_one": "已有 {{count}} 个订单",
+      "placed_other": "已有 {{count}} 个订单",
+      "none": "暂无订单",
+      "shut": "市集本来就休市"
+    }
+  },
+  "closure": {
+    "title": "市集将于 {{date}} 休市。",
+    "text": "{{reason}}。你无需做任何事：当天任何摊位都无法下单，MarketLink 已通知你的顾客。"
+  },
+  "generate": {
+    "open": "生成下周的时段",
+    "title": "为 {{from}} – {{to}} 生成时段？",
+    "doneTitle": "时段已创建",
+    "doneText_one": "已为 {{from}} – {{to}} 创建 {{count}} 个时段。",
+    "doneText_other": "已为 {{from}} – {{to}} 创建 {{count}} 个时段。",
+    "confirm_one": "生成 {{count}} 个时段",
+    "confirm_other": "生成 {{count}} 个时段",
+    "text": "在 Thảo Điền 的{{daysA}}以及 Thủ Đức 的{{daysB}}，从 {{start}} 到 {{end}} 生成时段。已有时段不会改动。"
+  }
+}

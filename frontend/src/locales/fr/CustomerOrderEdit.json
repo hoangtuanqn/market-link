@@ -1,0 +1,23 @@
+{
+  "myOrders": "Mes commandes",
+  "breadcrumbOrder": "Commande {{code}}",
+  "breadcrumbEdit": "Modifier",
+  "notFound": {
+    "title": "Cette commande n’est plus disponible",
+    "text": "Vous l’avez peut-être annulée, ou le lien est ancien. Rouvrez-la depuis vos commandes."
+  },
+  "title": "Modifier la commande {{code}}",
+  "cutoff": "Les modifications sont possibles jusqu’au <b>{{cutoff}}</b>.",
+  "banner": {
+    "title": "Après l’enregistrement, la commande repasse à l’état Passée et {{stall}} la valide à nouveau.",
+    "text": "Vos produits restent réservés pendant l’examen. Vous recevez une notification quand elle est acceptée."
+  },
+  "help": "Ici, vous pouvez réduire les quantités ou retirer des articles. Pour ajouter autre chose de {{stall}}, passez une nouvelle commande. Les quantités sont limitées au stock restant du stand aujourd’hui.",
+  "note": "Note pour le stand",
+  "submit": "Envoyer les modifications pour validation",
+  "discard": "Annuler les modifications",
+  "toast": {
+    "title": "Modifications envoyées",
+    "text": "{{stall}} va réexaminer votre commande."
+  }
+}

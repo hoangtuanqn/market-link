@@ -1,0 +1,79 @@
+{
+  "title": "Petani",
+  "intro": "Setujui pendaftaran sebelum lapak bisa memasang produk. Sebagian besar pendaftaran datang dari akun yang sudah berbelanja di sini, jadi setiap pendaftaran menampilkan riwayat pesanan pendaftar di samping fotonya. Tangguhkan lapak untuk menyembunyikan produknya dan menghentikan pesanan baru; pesanan yang sedang berjalan tetap selesai seperti biasa.",
+  "search": {
+    "label": "Cari petani",
+    "placeholder": "Lapak, narahubung, telepon",
+    "submit": "Cari"
+  },
+  "tabsLabel": "Petani menurut status",
+  "status": {
+    "pending": "Menunggu persetujuan",
+    "approved": "Disetujui",
+    "suspended": "Ditangguhkan",
+    "rejected": "Ditolak"
+  },
+  "empty": {
+    "pending": {
+      "title": "Tidak ada pendaftaran yang menunggu",
+      "text": "Pendaftaran petani baru masuk ke sini untuk ditinjau sebelum mereka bisa memasang produk."
+    },
+    "approved": {
+      "title": "Belum ada lapak yang disetujui",
+      "text": "Setujui pendaftaran dan lapak akan muncul di sini, terlihat oleh pelanggan."
+    },
+    "suspended": {
+      "title": "Tidak ada lapak yang ditangguhkan",
+      "text": "Lapak yang ditangguhkan disembunyikan dari pelanggan, tetapi tetap menyelesaikan pesanan yang sudah ada."
+    },
+    "rejected": {
+      "title": "Tidak ada pendaftaran yang ditolak",
+      "text": "Petani yang ditolak tetap memiliki akun dan bisa diberi tahu alasannya."
+    }
+  },
+  "col": {
+    "stall": "Lapak",
+    "markets": "Pasar",
+    "registered": "Terdaftar",
+    "products": "Produk",
+    "rating": "Rating"
+  },
+  "reviews_one": "{{count}} ulasan",
+  "reviews_other": "{{count}} ulasan",
+  "action": {
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "view": "Lihat",
+    "suspend": "Tangguhkan",
+    "reinstate": "Pulihkan"
+  },
+  "notYet": "Nanti dulu",
+  "approve": {
+    "title": "Setujui {{stall}}?",
+    "text": "Lapak langsung terlihat oleh pelanggan dan bisa memasang produk. Petani akan diberi tahu.",
+    "confirm": "Setujui lapak"
+  },
+  "reject": {
+    "title": "Tolak {{stall}}?",
+    "text": "Petani tetap bisa masuk, tetapi tidak bisa memasang produk.",
+    "reason": "Alasan yang akan dilihat petani",
+    "confirm": "Tolak pendaftaran"
+  },
+  "reason": {
+    "mismatch": "Data tidak cocok dengan lapak",
+    "full": "Pasar sudah penuh",
+    "unreachable": "Nomor kontak tidak bisa dihubungi",
+    "other": "Lainnya"
+  },
+  "suspend": {
+    "title": "Tangguhkan {{stall}}?",
+    "text": "Semua produk disembunyikan dan pesanan baru tidak diterima. Pesanan yang sudah dibuat tetap berjalan agar pelanggan tidak kehilangan yang sudah mereka pesan.",
+    "confirm": "Tangguhkan lapak"
+  },
+  "toast": {
+    "approved": "{{stall}} disetujui. Lapak sekarang bisa memasang produk.",
+    "rejected": "{{stall}} ditolak. Akunnya tetap ada.",
+    "suspended": "{{stall}} ditangguhkan. Pesanan yang sedang berjalan selesai seperti biasa.",
+    "reinstated": "{{stall}} dipulihkan. Produk terlihat lagi."
+  }
+}

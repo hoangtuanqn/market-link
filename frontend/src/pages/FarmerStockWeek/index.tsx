@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog } from '@/components/ui/dialog';
 import Tabs from '@/components/ui/tabs';
-import { product } from '@/data/catalog';
-import { vnd } from '@/lib/format';
+import { farmer, product } from '@/data/catalog';
+import { dayName, formatDayMonth, unitName, vnd, weekday } from '@/lib/format';
 import type { ProductStatus } from '@/types/product.types';
 import Notification from '@/utils/notification';
 
@@ -54,11 +55,17 @@ const OffCell = () => (
   </td>
 );
 
-const STATUS_OPTIONS: { value: ProductStatus; label: string }[] = [
-  { value: 'available', label: 'Available' },
-  { value: 'sold_out', label: 'Sold out' },
-  { value: 'unavailable', label: 'Paused this week' },
-];
+const STATUS_OPTIONS = [
+  { value: 'available', label: 'status.available' },
+  { value: 'sold_out', label: 'status.soldOut' },
+  { value: 'unavailable', label: 'status.paused' },
+] as const satisfies readonly { value: ProductStatus; label: string }[];
+
+const FRI = new Date(2026, 8, 25);
+const SAT = new Date(2026, 8, 26);
+const SUN = new Date(2026, 8, 27);
+/** Monday first, like the template table. */
+const WEEK = [1, 2, 3, 4, 5, 6, 0];
 
 const th =
   'bg-surface-sunken text-ink-muted px-2.5 py-2 text-left text-[12px] font-bold tracking-[0.08em] whitespace-nowrap uppercase';
@@ -66,6 +73,7 @@ const td = 'border-line border-t px-2.5 py-2 align-middle';
 
 /** FR-063 FR-064 — this week's stock per product and market day, and the weekly template it starts from. */
 const FarmerStockWeekPage = () => {
+  const { t } = useTranslation('FarmerStockWeek');
   const [tab, setTab] = useState<'week' | 'tpl'>('week');
   const [rows, setRows] = useState<WeekRow[]>(initialWeekRows);
   const [templateRows, setTemplateRows] = useState<TemplateRow[]>(initialTemplateRows);
@@ -80,37 +88,41 @@ const FarmerStockWeekPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-overline text-ink-muted m-0">Week of 22/09 – 28/09 · Thảo Điền Fri–Sun · Thủ Đức Sun</p>
-          <h1 className="text-h1">This week&apos;s stock</h1>
-          <p className="text-body max-w-160">
-            Your weekly template is the starting count for each market day. Apply it, then adjust the days where the
-            harvest is different. Reserved stock is already taken out of what customers see.
+          <p className="text-overline text-ink-muted m-0">
+            {t('overline', {
+              from: formatDayMonth(new Date(2026, 8, 22)),
+              to: formatDayMonth(new Date(2026, 8, 28)),
+              daysA: `${dayName(5)}–${dayName(0)}`,
+              daysB: dayName(0),
+            })}
           </p>
+          <h1 className="text-h1">{t('title')}</h1>
+          <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" onClick={() => setApplyOpen(true)}>
-            Apply template to this week
+            {t('apply.open')}
           </Button>
           <Button
             onClick={() =>
               Notification.success({
-                title: 'Saved',
-                text: "This week's stock saved. Customers see the new counts now.",
+                title: t('saved'),
+                text: t('week.savedText'),
               })
             }
           >
-            Save changes
+            {t('week.save')}
           </Button>
         </div>
       </div>
 
       <Tabs
-        label="Stock views"
+        label={t('tabs.label')}
         value={tab}
         onChange={(id) => setTab(id as typeof tab)}
         tabs={[
-          { id: 'week', label: 'This week' },
-          { id: 'tpl', label: 'Weekly template' },
+          { id: 'week', label: t('tabs.week') },
+          { id: 'tpl', label: t('tabs.template') },
         ]}
       />
 
@@ -118,33 +130,27 @@ const FarmerStockWeekPage = () => {
         <div className="flex flex-col gap-3">
           <Card className="overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
-              <caption className="sr-only">Stock per product and market day this week</caption>
+              <caption className="sr-only">{t('week.caption')}</caption>
               <thead>
                 <tr>
-                  <th className={th}>Product</th>
-                  <th className={th}>Status</th>
-                  <th className={th}>Price</th>
-                  <th className={th}>
-                    Fri 25/09
-                    <br />
-                    Thảo Điền
-                  </th>
-                  <th className={th}>
-                    Sat 26/09
-                    <br />
-                    Thảo Điền
-                  </th>
-                  <th className={th}>
-                    Sun 27/09
-                    <br />
-                    Thảo Điền
-                  </th>
-                  <th className={th}>
-                    Sun 27/09
-                    <br />
-                    Thủ Đức
-                  </th>
-                  <th className={`${th} text-right`}>Reserved</th>
+                  <th className={th}>{t('col.product')}</th>
+                  <th className={th}>{t('col.status')}</th>
+                  <th className={th}>{t('col.price')}</th>
+                  {(
+                    [
+                      [FRI, 'Thảo Điền'],
+                      [SAT, 'Thảo Điền'],
+                      [SUN, 'Thảo Điền'],
+                      [SUN, 'Thủ Đức'],
+                    ] as const
+                  ).map(([date, market]) => (
+                    <th key={`${date.getDay()}${market}`} className={th}>
+                      {weekday(date)} {formatDayMonth(date)}
+                      <br />
+                      {market}
+                    </th>
+                  ))}
+                  <th className={`${th} text-right`}>{t('col.reserved')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -155,19 +161,19 @@ const FarmerStockWeekPage = () => {
                       <td className={td}>
                         <b>{p.name}</b>
                         <span className="text-ink-muted mt-0.5 block text-[12px] font-normal">
-                          {p.category} · per {p.unit}
+                          {p.category} · {t('per', { unit: unitName(p.unit) })}
                         </span>
                       </td>
                       <td className={td}>
                         <select
                           value={r.status}
                           onChange={(e) => updateRow(r.productId, { status: e.target.value as ProductStatus })}
-                          aria-label={`Status of ${p.name}`}
+                          aria-label={t('aria.status', { product: p.name })}
                           className="border-line-strong bg-surface-raised min-h-9 rounded-sm border-[1.5px] px-2 text-[14px]"
                         >
                           {STATUS_OPTIONS.map((o) => (
                             <option key={o.value} value={o.value}>
-                              {o.label}
+                              {t(o.label)}
                             </option>
                           ))}
                         </select>
@@ -178,21 +184,21 @@ const FarmerStockWeekPage = () => {
                         <NumberInput
                           value={r.sat}
                           onChange={(v) => updateRow(r.productId, { sat: v })}
-                          label={`${p.name} Saturday`}
+                          label={t('aria.day', { product: p.name, day: dayName(6, 'long') })}
                         />
                       </td>
                       <td className={td}>
                         <NumberInput
                           value={r.sunThaoDien}
                           onChange={(v) => updateRow(r.productId, { sunThaoDien: v })}
-                          label={`${p.name} Sunday`}
+                          label={t('aria.day', { product: p.name, day: dayName(0, 'long') })}
                         />
                       </td>
                       <td className={td}>
                         <NumberInput
                           value={r.sunThuDuc}
                           onChange={(v) => updateRow(r.productId, { sunThuDuc: v })}
-                          label={`${p.name} Sunday Thủ Đức`}
+                          label={t('aria.dayAt', { product: p.name, day: dayName(0, 'long'), market: 'Thủ Đức' })}
                         />
                       </td>
                       <td className={`${td} text-right font-bold tabular-nums`}>{RESERVED[r.productId] ?? 0}</td>
@@ -202,10 +208,7 @@ const FarmerStockWeekPage = () => {
               </tbody>
             </table>
           </Card>
-          <p className="text-small text-ink-muted">
-            Counts are units available for that day. A blank day means the product is not offered. Fridays are greyed
-            because Cô Tư Garden does not sell on Friday.
-          </p>
+          <p className="text-small text-ink-muted">{t('week.note', { stall: farmer(1)?.stall })}</p>
         </div>
       )}
 
@@ -213,18 +216,16 @@ const FarmerStockWeekPage = () => {
         <div className="flex flex-col gap-3">
           <Card className="overflow-x-auto">
             <table className="w-full border-collapse text-[14px]">
-              <caption className="sr-only">Weekly template</caption>
+              <caption className="sr-only">{t('tabs.template')}</caption>
               <thead>
                 <tr>
-                  <th className={th}>Product</th>
-                  <th className={th}>Default price</th>
-                  <th className={th}>Mon</th>
-                  <th className={th}>Tue</th>
-                  <th className={th}>Wed</th>
-                  <th className={th}>Thu</th>
-                  <th className={th}>Fri</th>
-                  <th className={th}>Sat</th>
-                  <th className={th}>Sun</th>
+                  <th className={th}>{t('col.product')}</th>
+                  <th className={th}>{t('col.defaultPrice')}</th>
+                  {WEEK.map((d) => (
+                    <th key={d} className={th}>
+                      {dayName(d)}
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
@@ -234,7 +235,9 @@ const FarmerStockWeekPage = () => {
                     <tr key={r.productId}>
                       <td className={td}>
                         <b>{p.name}</b>
-                        <span className="text-ink-muted mt-0.5 block text-[12px] font-normal">per {p.unit}</span>
+                        <span className="text-ink-muted mt-0.5 block text-[12px] font-normal">
+                          {t('per', { unit: unitName(p.unit) })}
+                        </span>
                       </td>
                       <td className={td}>
                         <input
@@ -245,7 +248,7 @@ const FarmerStockWeekPage = () => {
                           onChange={(e) =>
                             updateTemplateRow(r.productId, { price: Math.max(0, Number(e.target.value)) })
                           }
-                          aria-label={`${p.name} price`}
+                          aria-label={t('aria.price', { product: p.name })}
                           className="border-line-strong bg-surface-raised min-h-9 w-27.5 rounded-sm border-[1.5px] px-2 text-right text-[14px] tabular-nums"
                         />
                       </td>
@@ -258,14 +261,14 @@ const FarmerStockWeekPage = () => {
                         <NumberInput
                           value={r.sat}
                           onChange={(v) => updateTemplateRow(r.productId, { sat: v })}
-                          label={`${p.name} template Saturday`}
+                          label={t('aria.templateDay', { product: p.name, day: dayName(6, 'long') })}
                         />
                       </td>
                       <td className={td}>
                         <NumberInput
                           value={r.sun}
                           onChange={(v) => updateTemplateRow(r.productId, { sun: v })}
-                          label={`${p.name} template Sunday`}
+                          label={t('aria.templateDay', { product: p.name, day: dayName(0, 'long') })}
                         />
                       </td>
                     </tr>
@@ -278,48 +281,46 @@ const FarmerStockWeekPage = () => {
             <Button
               onClick={() =>
                 Notification.success({
-                  title: 'Saved',
-                  text: 'Template saved. It applies from next week unless you apply it now.',
+                  title: t('saved'),
+                  text: t('template.savedText'),
                 })
               }
             >
-              Save template
+              {t('template.save')}
             </Button>
-            <span className="text-small text-ink-muted">
-              Template days follow your operating days. Change those under Stall &amp; pickup.
-            </span>
+            <span className="text-small text-ink-muted">{t('template.note')}</span>
           </div>
         </div>
       )}
 
       <Dialog
         open={applyOpen}
-        title="Apply the template to this week?"
+        title={t('apply.title')}
         onClose={() => setApplyOpen(false)}
         actions={
           <>
             <Button variant="secondary" onClick={() => setApplyOpen(false)}>
-              Keep my edits
+              {t('apply.keep')}
             </Button>
             <Button
               onClick={() => {
                 setApplyOpen(false);
                 Notification.success({
-                  title: 'Template applied',
-                  text: 'Template applied to Sat 26/09 and Sun 27/09.',
+                  title: t('apply.doneTitle'),
+                  text: t('apply.doneText', {
+                    sat: `${weekday(SAT)} ${formatDayMonth(SAT)}`,
+                    sun: `${weekday(SUN)} ${formatDayMonth(SUN)}`,
+                  }),
                 });
               }}
             >
-              Apply template
+              {t('apply.confirm')}
             </Button>
           </>
         }
       >
-        <p>
-          Saturday and Sunday counts are replaced with the template values. Reserved stock is kept out of the
-          customer-facing count.
-        </p>
-        <p className="text-ink-muted text-[14px]">Edits you made for this week are overwritten.</p>
+        <p>{t('apply.text', { sat: dayName(6, 'long'), sun: dayName(0, 'long') })}</p>
+        <p className="text-ink-muted text-[14px]">{t('apply.warning')}</p>
       </Dialog>
     </div>
   );

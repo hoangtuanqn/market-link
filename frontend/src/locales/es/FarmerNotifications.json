@@ -1,0 +1,16 @@
+{
+  "title": "Notificaciones",
+  "intro": "Pedidos nuevos, cambios y cancelaciones de los clientes, y anuncios de MarketLink.",
+  "filter": {
+    "all": "Todas",
+    "unread": "Sin leer"
+  },
+  "unreadCount_one": "{{count}} sin leer",
+  "unreadCount_other": "{{count}} sin leer",
+  "unread": "sin leer",
+  "markAllRead": "Marcar todas como leídas",
+  "empty": {
+    "title": "Nada nuevo",
+    "text": "Te avisaremos aquí cuando se haga, cambie o cancele un pedido, y cuando un administrador publique un anuncio."
+  }
+}

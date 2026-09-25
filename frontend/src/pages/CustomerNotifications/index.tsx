@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NOTIFICATION_META } from '@/constants/notificationKind';
 import { Chip } from '@/components/ui/chip';
 import { notifications as INITIAL_NOTIFICATIONS } from '@/data/customer';
@@ -6,6 +7,7 @@ import Helper from '@/utils/helper';
 
 /** FR-060 FR-061 — in-app notifications only for now (D-11); email is a later addition (FR-043, NICE). */
 const CustomerNotificationsPage = () => {
+  const { t } = useTranslation('CustomerNotifications');
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
 
@@ -16,31 +18,31 @@ const CustomerNotificationsPage = () => {
     <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">Notifications</h1>
-          <p className="text-body">
-            Order accepted, declined or ready, a favorite back in stock, and announcements from MarketLink.
-          </p>
+          <h1 className="text-h1">{t('title')}</h1>
+          <p className="text-body">{t('intro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Chip pressed={filter === 'all'} onClick={() => setFilter('all')}>
-            All
+            {t('filter.all')}
           </Chip>
           <Chip pressed={filter === 'unread'} onClick={() => setFilter('unread')}>
-            Unread <span className="text-[12px] tabular-nums opacity-80">{unreadCount}</span>
+            {t('filter.unread')} <span className="text-[12px] tabular-nums opacity-80">{unreadCount}</span>
           </Chip>
         </div>
       </div>
 
-      <section aria-label="Notifications" className="flex flex-col gap-0">
+      <section aria-label={t('title')} className="flex flex-col gap-0">
         <div className="border-line-strong flex items-center justify-between gap-3 border-b-[1.5px] py-2 pr-2 pl-4">
           <b className="text-[16px]">
-            Notifications
+            {t('title')}
             {unreadCount > 0 && (
-              <span className="text-ink-muted ml-1 text-[14px] font-normal">· {unreadCount} unread</span>
+              <span className="text-ink-muted ml-1 text-[14px] font-normal">
+                · {t('unreadCount', { count: unreadCount })}
+              </span>
             )}
           </b>
           <Chip onClick={() => setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))}>
-            Mark all as read
+            {t('markAllRead')}
           </Chip>
         </div>
         <ul className="m-0 flex flex-col p-0">
@@ -65,7 +67,7 @@ const CustomerNotificationsPage = () => {
                         aria-hidden="true"
                         className="bg-brand ml-1.5 inline-block size-2 rounded-full align-middle"
                       >
-                        <span className="sr-only">unread</span>
+                        <span className="sr-only">{t('unread')}</span>
                       </span>
                     )}
                   </p>
@@ -78,9 +80,7 @@ const CustomerNotificationsPage = () => {
         </ul>
       </section>
 
-      <p className="text-ink-muted text-[13px]">
-        In-app only for now. Email for confirmations and ready-for-pickup is a later addition.
-      </p>
+      <p className="text-ink-muted text-[13px]">{t('note')}</p>
     </div>
   );
 };

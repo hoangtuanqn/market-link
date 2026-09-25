@@ -1,0 +1,35 @@
+{
+  "overline": "Espace admin · étape 2 sur 2",
+  "title": "Saisissez le code de votre application d’authentification",
+  "signedInAs": "Connecté en tant que <b>{{email}}</b>.",
+  "notYou": "Ce n’est pas vous ?",
+  "error": {
+    "empty": "Saisissez d’abord le code.",
+    "sixDigits": "Saisissez les six chiffres de votre application d’authentification.",
+    "check": "Impossible de vérifier le code. Veuillez réessayer."
+  },
+  "alert": {
+    "recoveryOnce": "Chaque code de récupération ne fonctionne qu’une fois.",
+    "checkClock": "Vérifiez que l’horloge de votre téléphone est à l’heure.",
+    "locked": "Trop de codes erronés."
+  },
+  "toast": {
+    "signedIn": "Connecté."
+  },
+  "recovery": {
+    "label": "Code de récupération",
+    "hint": "L’un des codes enregistrés lors de l’activation. Chacun ne fonctionne qu’une fois."
+  },
+  "code": {
+    "label": "Code à six chiffres",
+    "hint": "Le code change toutes les 30 secondes. Celui-ci expire dans {{seconds}} s."
+  },
+  "submit": "Vérifier et se connecter",
+  "submitting": "Vérification…",
+  "locked": "La connexion est suspendue pour ce compte.",
+  "backToSignIn": "Retour à la connexion",
+  "swap": {
+    "toCode": "Utiliser plutôt le code à six chiffres",
+    "toRecovery": "Utiliser plutôt un code de récupération"
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "title": "账户",
+  "intro": "您的资料只会在您于某摊位下单时与该摊位共享。",
+  "sell": {
+    "title": "在 MarketLink 上销售",
+    "text": "如果您种植食物，这个账户可以变成一个摊位。您的订单、收藏和购物车都会保留，管理员批准后会出现管理库存和取货时间的面板。",
+    "apply": "申请开店"
+  },
+  "signOut": {
+    "title": "退出登录",
+    "text": "仅在此设备上退出登录。",
+    "button": "退出登录"
+  },
+  "profile": {
+    "title": "您的资料",
+    "loading": "正在加载您的资料…",
+    "loadFailed": "无法加载您的资料，请重试。",
+    "signedOut": {
+      "title": "您已退出登录。",
+      "text": "请重新登录以查看和编辑您的资料。",
+      "signIn": "登录"
+    },
+    "nothingChanged": "没有任何更改。",
+    "retry": "重试",
+    "fullName": "姓名",
+    "phone": "手机号码",
+    "email": "邮箱",
+    "emailHint": "用于登录，无法在此修改。",
+    "address": "地址",
+    "addressHint": "用于计算距离和路线。",
+    "save": "保存更改",
+    "saving": "正在保存…",
+    "noChanges": "没有需要保存的更改。",
+    "saved": "您的资料已保存。",
+    "saveFailed": "无法保存您的资料，请重试。"
+  },
+  "password": {
+    "title": "修改密码",
+    "intro": "您将在所有设备上退出登录，需要重新登录。",
+    "current": "当前密码",
+    "new": "新密码",
+    "repeat": "再次输入新密码",
+    "hint": "{{min}} 到 {{max}} 个字符。",
+    "submit": "修改密码",
+    "submitting": "正在修改密码…",
+    "changed": "密码已修改，请重新登录。",
+    "failed": "无法修改密码，请重试。",
+    "errors": {
+      "currentRequired": "请输入当前密码。",
+      "newRequired": "请输入新密码。",
+      "length": "密码必须为 {{min}} 到 {{max}} 个字符。",
+      "same": "请使用与当前密码不同的密码。",
+      "confirmRequired": "请确认您的密码。",
+      "mismatch": "两次输入的密码不一致。"
+    }
+  },
+  "photo": {
+    "title": "头像",
+    "intro": "显示在菜单中，并在订单上向摊位展示。支持 JPEG、PNG 或相机拍摄的照片。",
+    "upload": "上传照片",
+    "take": "拍照",
+    "remove": "移除照片",
+    "removing": "正在移除…",
+    "removed": "您的照片已移除。",
+    "removeFailed": "无法移除照片，请重试。",
+    "notUsed": "照片未使用"
+  },
+  "photoErrors": {
+    "notPhoto": "请选择一张照片（JPEG、PNG、HEIC 或 WebP）。",
+    "tooBig": "该照片超过 {{mb}} MB，请选择更小的照片。",
+    "unreadable": "无法读取此文件，它不是照片。",
+    "noPicture": "相机还没有画面，请重试。",
+    "captureFailed": "无法拍摄照片。"
+  },
+  "dialog": {
+    "takeTitle": "拍照",
+    "frameTitle": "调整照片",
+    "frameHelp": "拖动照片并缩放，直到您的脸部填满圆圈。",
+    "cancel": "取消",
+    "uploadInstead": "改为上传照片",
+    "take": "拍照",
+    "retake": "重拍",
+    "chooseAnother": "选择其他照片",
+    "save": "保存照片",
+    "saving": "正在保存…",
+    "saved": "您的照片已保存。",
+    "saveFailed": "无法保存照片，请重试。",
+    "takeFailed": "无法拍摄照片，请重试。",
+    "unchanged": "您当前的照片未更改。"
+  },
+  "camera": {
+    "preview": "相机预览",
+    "starting": "正在启动相机…",
+    "blocked": {
+      "title": "相机访问被阻止。",
+      "text": "请在浏览器设置中允许此网站使用相机，或改为上传照片。"
+    },
+    "notFound": {
+      "title": "未找到相机。",
+      "text": "请连接一个相机，或改为上传照片。"
+    },
+    "busy": {
+      "title": "相机正被占用。",
+      "text": "请关闭正在使用相机的其他应用后重试，或上传照片。"
+    },
+    "failed": {
+      "title": "相机无法启动。",
+      "text": "请重试，或改为上传照片。"
+    },
+    "insecure": {
+      "title": "此浏览器无法在这里打开相机。",
+      "text": "相机需要安全（https）页面。请改为上传照片。"
+    }
+  },
+  "crop": {
+    "frame": "照片取景。拖动，或使用方向键移动，用加号或减号缩放。",
+    "zoom": "缩放"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "overline": "Khu vực admin · bước 2/2",
+  "title": "Nhập mã từ ứng dụng xác thực",
+  "signedInAs": "Đang đăng nhập với <b>{{email}}</b>.",
+  "notYou": "Không phải bạn?",
+  "error": {
+    "empty": "Hãy nhập mã trước.",
+    "sixDigits": "Nhập sáu chữ số từ ứng dụng xác thực.",
+    "check": "Không kiểm tra được mã. Vui lòng thử lại."
+  },
+  "alert": {
+    "recoveryOnce": "Mỗi mã khôi phục chỉ dùng được một lần.",
+    "checkClock": "Kiểm tra xem đồng hồ điện thoại có đúng giờ không.",
+    "locked": "Nhập sai quá nhiều lần."
+  },
+  "toast": {
+    "signedIn": "Đã đăng nhập."
+  },
+  "recovery": {
+    "label": "Mã khôi phục",
+    "hint": "Một trong các mã bạn đã lưu khi bật tính năng này. Mỗi mã dùng được một lần."
+  },
+  "code": {
+    "label": "Mã sáu số",
+    "hint": "Mã đổi sau mỗi 30 giây. Mã này hết hạn sau {{seconds}} giây."
+  },
+  "submit": "Xác minh và đăng nhập",
+  "submitting": "Đang kiểm tra…",
+  "locked": "Tài khoản này đang tạm dừng đăng nhập.",
+  "backToSignIn": "Quay lại đăng nhập",
+  "swap": {
+    "toCode": "Dùng mã sáu số",
+    "toRecovery": "Dùng mã khôi phục"
+  }
+}

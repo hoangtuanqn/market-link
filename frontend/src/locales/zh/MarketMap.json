@@ -1,0 +1,27 @@
+{
+  "title": "市集地图",
+  "intro": "你所选日期的所有市集以及接受预订的摊位。点按图钉可查看营业时间、取货时段和路线。",
+  "marketDay": "赶集日",
+  "filter": {
+    "markets": "市集",
+    "stalls": "摊位",
+    "saved": "仅已收藏"
+  },
+  "legend": {
+    "market": "方形：市集",
+    "stall": "圆形：摊位",
+    "selected": "圆环：已选中"
+  },
+  "mapLabel": "所有市集和摊位的地图",
+  "directions": "路线会在新标签页中用 OpenStreetMap 打开。",
+  "openOn": "{{day}}营业",
+  "empty": {
+    "title": "没有可显示的市集",
+    "text": "没有与所选日期匹配的市集。请换一天，或清除筛选。"
+  },
+  "popup": {
+    "stalls_one": "{{count}} 个摊位",
+    "stalls_other": "{{count}} 个摊位",
+    "pickup": "{{days}} · 取货 {{pickup}}"
+  }
+}

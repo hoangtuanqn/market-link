@@ -1,0 +1,109 @@
+{
+  "title": "Promoción y anuncios",
+  "intro": "Publicar y vender es gratis. Pagar solo sube un producto en una página, o te deja publicar en un día más de lo que permite el cupo gratuito.",
+  "credit": "Saldo {{amount}}",
+  "action": {
+    "topUp": "Recargar saldo",
+    "extend": "Ampliar",
+    "buy": "Comprar"
+  },
+  "toast": {
+    "topUpTitle": "Recarga solicitada",
+    "topUpText": "La recarga se acuerda con el equipo de MarketLink y luego se abona aquí.",
+    "pinnedTitle": "Fijado",
+    "pinnedText": "Fijado. Se activa en unos minutos y puedes detenerlo cuando quieras.",
+    "extendedTitle": "Ampliado",
+    "extendedText_one": "Ampliado {{count}} día por {{price}}.",
+    "extendedText_other": "Ampliado {{count}} días por {{price}}.",
+    "bundleTitle": "Paquete añadido",
+    "bundleText": "{{name}} añadido. El equipo confirmará el pago y lo abonará aquí.",
+    "addedTitle": "Añadido",
+    "addedText": "Añadido a tu saldo."
+  },
+  "srs": {
+    "title": "Cobrar a los Farmers no está en el SRS.",
+    "text": "El SRS excluye una pasarela de pago, así que el saldo se acuerda con el equipo y lo introduce un administrador. Primero hacen falta un nuevo requisito y una decisión sobre cómo se cobra realmente."
+  },
+  "listings": {
+    "title": "Anuncios de hoy",
+    "text": "El cupo se reinicia a medianoche. Editar un producto ya publicado siempre es gratis."
+  },
+  "bumps": {
+    "title": "Impulsos este mes",
+    "text": "Un impulso devuelve un producto al principio de su categoría durante el día. No cambia el precio ni el stock."
+  },
+  "meter": {
+    "left": {
+      "listings_one": "de {{count}} anuncio gratis restante",
+      "listings_other": "de {{count}} anuncios gratis restantes",
+      "bumps_one": "de {{count}} impulso gratis restante",
+      "bumps_other": "de {{count}} impulsos gratis restantes"
+    },
+    "used": "{{used}} usados",
+    "low": "quedan pocos"
+  },
+  "pinned": {
+    "title": "Fijados ahora",
+    "hint": "Un producto fijado aparece por encima del resto, marcado como Promocionado"
+  },
+  "pinSection": {
+    "title": "Fijar un producto",
+    "note": "Las plazas son limitadas a propósito: tres en una página de mercado y dos en la página de inicio. Cuando están ocupadas, entras en una lista de espera en lugar de pujar más que nadie."
+  },
+  "pin": {
+    "market": {
+      "name": "Arriba en una página de mercado",
+      "note": "Lo ve todo el que recorre ese mercado"
+    },
+    "home": {
+      "name": "Página de inicio, los cuatro mercados",
+      "note": "La plaza más escasa de MarketLink"
+    },
+    "slots_one": "{{count}} plaza",
+    "slots_other": "{{count}} plazas",
+    "product": "Qué producto",
+    "duration": "Cuánto tiempo",
+    "days_one": "{{count}} día",
+    "days_other": "{{count}} días",
+    "cta": "Fijar por {{price}}"
+  },
+  "bundles": {
+    "title": "Paquetes",
+    "intro": "Más baratos que comprar de uno en uno, y duran {{days}} días.",
+    "choose": "Elegir {{name}}"
+  },
+  "bundle": {
+    "starter": "Inicial",
+    "market": "Mercado",
+    "season": "Temporada"
+  },
+  "bundleLine": {
+    "listings_one": "{{count}} anuncio por encima del límite diario",
+    "listings_other": "{{count}} anuncios por encima del límite diario",
+    "bumps_one": "{{count}} impulso extra",
+    "bumps_other": "{{count}} impulsos extra",
+    "pinDays_one": "{{count}} día fijado en una página de mercado",
+    "pinDays_other": "{{count}} días fijado en una página de mercado",
+    "runs_one": "Dura {{count}} día",
+    "runs_other": "Dura {{count}} días",
+    "noLimit": "Sin límite diario de anuncios",
+    "bumpsTotal_one": "{{count}} impulso",
+    "bumpsTotal_other": "{{count}} impulsos"
+  },
+  "extrasSection": {
+    "title": "De uno en uno"
+  },
+  "extras": {
+    "listing": "Un anuncio por encima de los cinco diarios",
+    "bump": "Un impulso por encima de los diez mensuales"
+  },
+  "col": {
+    "product": "Producto",
+    "until": "Activo hasta",
+    "views": "Vistas mientras está fijado",
+    "added": "Añadido a un carrito",
+    "paid": "Pagado",
+    "what": "Qué",
+    "price": "Precio"
+  }
+}

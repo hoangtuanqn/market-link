@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useState, type SubmitEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Link, useSearchParams } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Banner } from '@/components/ui/banner';
@@ -14,26 +16,27 @@ type FormErrors = Partial<Record<'newPassword' | 'confirmPassword', string>>;
 
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
-const INVALID_LINK_MESSAGE = 'This link is invalid or has expired.';
 
 /** Kiểm tra phía client, cùng luật với ResetPasswordRequest của backend. */
-const validate = (password: string, confirm: string): FormErrors => {
+const validate = (password: string, confirm: string, t: TFunction<'ResetPassword'>): FormErrors => {
   const errors: FormErrors = {};
-  if (!password) errors.newPassword = 'Enter a new password.';
+  if (!password) errors.newPassword = t('errors.passwordRequired');
   else if (password.length < PASSWORD_MIN || password.length > PASSWORD_MAX)
-    errors.newPassword = `Password must be ${PASSWORD_MIN} to ${PASSWORD_MAX} characters.`;
-  if (!confirm) errors.confirmPassword = 'Confirm your password.';
-  else if (confirm !== password) errors.confirmPassword = 'Passwords do not match.';
+    errors.newPassword = t('errors.passwordLength', { min: PASSWORD_MIN, max: PASSWORD_MAX });
+  if (!confirm) errors.confirmPassword = t('errors.confirmRequired');
+  else if (confirm !== password) errors.confirmPassword = t('errors.confirmMismatch');
   return errors;
 };
 
 /** FR-007 — set a new password from the emailed link (step 2 of 2). The form only shows once the link is verified. */
 const ResetPasswordPage = () => {
+  const { t } = useTranslation('ResetPassword');
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token') ?? '';
 
   const [status, setStatus] = useState<Status>(token ? 'checking' : 'invalid');
-  const [invalidMessage, setInvalidMessage] = useState(INVALID_LINK_MESSAGE);
+  // undefined → câu mặc định (dịch lúc render); có giá trị → message của server
+  const [invalidMessage, setInvalidMessage] = useState<string>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -54,7 +57,7 @@ const ResetPasswordPage = () => {
         setStatus('unreachable');
         return;
       }
-      setInvalidMessage(Helper.getErrorMessage(error, INVALID_LINK_MESSAGE));
+      setInvalidMessage(Helper.getErrorMessage(error, '') || undefined);
       setStatus('invalid');
     }
   }, [token]);
@@ -66,7 +69,7 @@ const ResetPasswordPage = () => {
 
   const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const clientErrors = validate(password, confirm);
+    const clientErrors = validate(password, confirm, t);
     setErrors(clientErrors);
     if (Object.keys(clientErrors).length > 0) return;
 
@@ -75,17 +78,17 @@ const ResetPasswordPage = () => {
       const response = await AuthApi.resetPassword({ token, newPassword: password, confirmPassword: confirm });
       // Backend đã huỷ mọi phiên đăng nhập của tài khoản, xoá luôn phiên đang lưu ở trình duyệt này
       Session.clear();
-      Notification.success({ text: response.message || 'Your password has been reset. Please sign in again.' });
+      Notification.success({ text: response.message || t('toast.reset') });
       setStatus('done');
     } catch (error) {
       if (Helper.getErrorCode(error) === 'INVALID_RESET_TOKEN') {
-        setInvalidMessage(Helper.getErrorMessage(error, INVALID_LINK_MESSAGE));
+        setInvalidMessage(Helper.getErrorMessage(error, '') || undefined);
         setStatus('invalid');
         return;
       }
       setErrors(Helper.getFieldErrors(error));
       Notification.error({
-        text: Helper.getErrorMessage(error, 'Could not save your new password. Please try again.'),
+        text: Helper.getErrorMessage(error, t('toast.failed')),
       });
     } finally {
       setIsSubmitting(false);
@@ -96,42 +99,39 @@ const ResetPasswordPage = () => {
     <div className="mx-auto my-4 flex w-full max-w-115 flex-col gap-2 md:my-8">
       {/* Không gửi URL chứa token cho trang khác qua header Referer */}
       <meta name="referrer" content="no-referrer" />
-      <span className="text-small text-ink-muted">Step 2 of 2</span>
+      <span className="text-small text-ink-muted">{t('step', { step: 2, total: 2 })}</span>
 
       {status === 'checking' && (
         <Card className="mt-2 flex flex-col gap-4 p-4 md:p-8" aria-busy="true">
-          <h1 className="font-hand text-h1">Checking your link…</h1>
-          <p className="text-small text-ink-muted">This takes a second.</p>
+          <h1 className="font-hand text-h1">{t('checking.title')}</h1>
+          <p className="text-small text-ink-muted">{t('checking.text')}</p>
         </Card>
       )}
 
       {status === 'unreachable' && (
         <Card className="mt-2 flex flex-col gap-4 p-4 md:p-8">
-          <h1 className="font-hand text-h1">We could not check your link</h1>
-          <Banner variant="warning" title="The server did not answer.">
-            Your link has not been used. Check your connection and try again.
+          <h1 className="font-hand text-h1">{t('unreachable.title')}</h1>
+          <Banner variant="warning" title={t('unreachable.bannerTitle')}>
+            {t('unreachable.bannerText')}
           </Banner>
           <Button className="w-full" onClick={verify}>
-            Try again
+            {t('unreachable.retry')}
           </Button>
         </Card>
       )}
 
       {status === 'invalid' && (
         <Card className="mt-2 flex flex-col gap-4 p-4 md:p-8">
-          <h1 className="font-hand text-h1">This link cannot be used</h1>
-          <Banner variant="danger" title={invalidMessage}>
-            Nothing has changed on the account, and the old password still works.
+          <h1 className="font-hand text-h1">{t('invalid.title')}</h1>
+          <Banner variant="danger" title={invalidMessage ?? t('invalid.defaultMessage')}>
+            {t('invalid.bannerText')}
           </Banner>
-          <p className="text-small text-ink-muted">
-            Reset links work for 15 minutes and only once, and asking for a new one cancels the old one. Ask for a new
-            link and use it straight away.
-          </p>
+          <p className="text-small text-ink-muted">{t('invalid.help', { count: 15 })}</p>
           <ButtonLink to="/forgot-password" className="w-full">
-            Ask for a new link
+            {t('invalid.askNew')}
           </ButtonLink>
           <Link to="/login" className="text-small text-brand underline">
-            Back to sign in
+            {t('backToSignIn')}
           </Link>
         </Card>
       )}
@@ -139,13 +139,13 @@ const ResetPasswordPage = () => {
       {status === 'done' && (
         <Card className="mt-2 flex flex-col gap-4 p-4 md:p-8">
           <div className="flex flex-col gap-2">
-            <h1 className="font-hand text-h1">Password changed</h1>
+            <h1 className="font-hand text-h1">{t('done.title')}</h1>
             <p className="text-body">
-              Sign in to <b>{email}</b> with your new password. Every other device was signed out.
+              <Trans t={t} i18nKey="done.text" values={{ email }} components={{ b: <b /> }} />
             </p>
           </div>
           <ButtonLink to="/login" className="w-full">
-            Go to sign in
+            {t('done.goToSignIn')}
           </ButtonLink>
         </Card>
       )}
@@ -154,10 +154,14 @@ const ResetPasswordPage = () => {
         <Card className="mt-2 p-4 md:p-8">
           <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <h1 className="font-hand text-h1">Choose a new password</h1>
+              <h1 className="font-hand text-h1">{t('form.title')}</h1>
               <p className="text-small text-ink-muted">
-                You are setting a new password for <b className="text-ink break-all">{email}</b>. The link you opened
-                works once.
+                <Trans
+                  t={t}
+                  i18nKey="form.intro"
+                  values={{ email }}
+                  components={{ b: <b className="text-ink break-all" /> }}
+                />
               </p>
             </div>
 
@@ -166,19 +170,19 @@ const ResetPasswordPage = () => {
 
             <Field
               id="newPassword"
-              label="New password"
+              label={t('form.newPassword')}
               type="password"
               required
               autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={errors.newPassword}
-              hint={`${PASSWORD_MIN} to ${PASSWORD_MAX} characters.`}
+              hint={t('form.passwordHint', { min: PASSWORD_MIN, max: PASSWORD_MAX })}
               disabled={isSubmitting}
             />
             <Field
               id="confirmPassword"
-              label="Repeat new password"
+              label={t('form.confirmPassword')}
               type="password"
               required
               autoComplete="new-password"
@@ -189,11 +193,9 @@ const ResetPasswordPage = () => {
             />
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving…' : 'Save new password'}
+              {isSubmitting ? t('form.saving') : t('form.submit')}
             </Button>
-            <p className="text-ink-muted text-[13px]">
-              Saving signs you out everywhere else, so anyone using the old password is locked out.
-            </p>
+            <p className="text-ink-muted text-[13px]">{t('form.note')}</p>
           </form>
         </Card>
       )}

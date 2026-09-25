@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import QtyStepper from '@/components/QtyStepper';
 import { Card } from '@/components/ui/card';
-import { vnd } from '@/lib/format';
+import { perUnit, vnd } from '@/lib/format';
 
 export type CartLineType = { id: number; name: string; unit: string; price: number; max: number; qty: number };
 
@@ -16,6 +17,7 @@ type CartGroupProps = {
 
 /** One order = one Farmer (D-01) — design system `.ml-cart`. */
 const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }: CartGroupProps) => {
+  const { t } = useTranslation();
   const total = items.reduce((sum, i) => sum + i.qty * i.price, 0);
 
   return (
@@ -23,9 +25,7 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
       <div className="border-line-strong flex items-start justify-between gap-3 border-b-[1.5px] border-dashed p-4">
         <div>
           {index != null && of != null && (
-            <div className="text-ink-muted text-small">
-              Order {index} of {of}
-            </div>
+            <div className="text-ink-muted text-small">{t('cart.orderOf', { index, of })}</div>
           )}
           <h3 className="mt-0.5 text-[18px] font-bold">{stallName}</h3>
           <p className="text-small text-ink-muted mt-0.5">{where}</p>
@@ -41,13 +41,13 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
             <span className="font-bold">
               {it.name}
               <span className="text-ink-muted block text-[13px] font-normal">
-                {vnd(it.price)} / {it.unit}{' '}
+                {perUnit(it.price, it.unit)}{' '}
                 <button
                   type="button"
                   onClick={() => onRemove(it.id)}
                   className="text-brand cursor-pointer bg-transparent font-bold underline-offset-4 hover:underline"
                 >
-                  Remove
+                  {t('actions.remove')}
                 </button>
               </span>
             </span>
@@ -60,7 +60,7 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
       </ul>
 
       <div className="bg-surface-sunken flex flex-wrap items-center justify-between gap-3 p-3 px-4">
-        <span className="text-ink-muted text-small">Pay at the stall on pickup</span>
+        <span className="text-ink-muted text-small">{t('cart.payAtPickup')}</span>
         <span className="font-hand text-price text-[28px] tabular-nums">{vnd(total)}</span>
       </div>
     </Card>

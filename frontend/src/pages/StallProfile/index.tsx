@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import DayChips from '@/components/DayChips';
 import MapPlaceholder from '@/components/MapPlaceholder';
@@ -14,14 +15,27 @@ import Tabs from '@/components/ui/tabs';
 import { Table } from '@/components/ui/table';
 import { farmer, marketName, products, reviewTags, reviewsForFarmer } from '@/data/catalog';
 import { markets } from '@/data/home';
+import { dayList, dayName, formatClock, formatDate } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
+/** How the demo data spells a stall's selling days ("Sat, Sun"); used to match, never shown. */
 const DOW_ABBR: Record<number, string> = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' };
+/** The demo window "06:00 – 10:30" and date "02/08/2026", shown through format.ts (clock and date settings). */
+const pickupWindow = (pickup: string) =>
+  pickup
+    .split('–')
+    .map((s) => formatClock(s.trim()))
+    .join(' – ');
+const dmy = (s: string) => {
+  const [d, m, y] = s.split('/').map(Number);
+  return y ? formatDate(new Date(y, m - 1, d)) : s;
+};
 const REVIEWS_PER_PAGE = 6;
 
 /** FR-011 — a stall's profile: this week's stock, reviews, and where to collect. */
 const StallProfilePage = () => {
+  const { t } = useTranslation('StallProfile');
   const { id } = useParams<{ id: string }>();
   // Gian hàng chờ duyệt / bị đình chỉ không có trang công khai (trang Products cũng chỉ hiện gian đã duyệt)
   const found = farmer(Number(id));
@@ -37,13 +51,16 @@ const StallProfilePage = () => {
   if (!f) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
-        <h1 className="text-h2">That stall is not here any more</h1>
-        <ButtonLink to="/markets">Browse markets</ButtonLink>
+        <h1 className="text-h2">{t('notFound.title')}</h1>
+        <ButtonLink to="/markets">{t('notFound.browse')}</ButtonLink>
       </div>
     );
   }
 
   const stallProducts = products.filter((p) => p.farmerId === f.id);
+  const days = dayList(availableDays);
+  const pickup = pickupWindow(f.pickup);
+  const since = dmy(f.registered);
 
   const allReviews = reviewsForFarmer(f.id);
   const filteredReviews = reviewFilter === 'all' ? allReviews : allReviews.filter((r) => r.targetType === reviewFilter);
@@ -55,7 +72,7 @@ const StallProfilePage = () => {
     <div className="flex flex-col gap-6">
       <p className="text-small text-ink-muted">
         <Link to="/markets" className="text-brand underline">
-          Markets
+          {t('breadcrumb')}
         </Link>{' '}
         ·{' '}
         <Link to={`/markets/${f.markets[0]}`} className="text-brand underline">
@@ -85,56 +102,58 @@ const StallProfilePage = () => {
             {f.approval === 'approved' && (
               <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] font-bold">
                 <CheckIcon size={14} />
-                Approved stall
+                {t('approved')}
               </span>
             )}
             <div className="flex flex-wrap justify-end gap-2">
-              <Chip onClick={() => Notification.success({ text: `Saved ${f.stall}.` })}>Save stall</Chip>
-              <ButtonLink to="/messages">Message the stall</ButtonLink>
+              <Chip onClick={() => Notification.success({ text: t('savedToast', { name: f.stall }) })}>
+                {t('save')}
+              </Chip>
+              <ButtonLink to="/messages">{t('message')}</ButtonLink>
             </div>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
           <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
             <b className="block text-[17px] tabular-nums">{f.rating ?? '—'}</b>
-            <span className="text-ink-muted text-[12px]">{f.reviews} reviews</span>
+            <span className="text-ink-muted text-[12px]">{t('stats.reviews', { count: f.reviews })}</span>
           </div>
           <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
             <b className="block text-[17px] tabular-nums">{f.markets.length}</b>
-            <span className="text-ink-muted text-[12px]">markets</span>
+            <span className="text-ink-muted text-[12px]">{t('stats.markets', { count: f.markets.length })}</span>
           </div>
           <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
-            <b className="block text-[17px] tabular-nums">{f.registered}</b>
-            <span className="text-ink-muted text-[12px]">selling here since</span>
+            <b className="block text-[17px] tabular-nums">{since}</b>
+            <span className="text-ink-muted text-[12px]">{t('stats.since')}</span>
           </div>
         </div>
       </Card>
 
       <Tabs
-        label="Stall sections"
+        label={t('tabs.label')}
         value={tab}
         onChange={(id) => setTab(id as typeof tab)}
         tabs={[
-          { id: 'stock', label: "This week's stock", count: stallProducts.length },
-          { id: 'reviews', label: 'Reviews', count: allReviews.length },
-          { id: 'about', label: 'About the stall' },
+          { id: 'stock', label: t('tabs.stock'), count: stallProducts.length },
+          { id: 'reviews', label: t('tabs.reviews'), count: allReviews.length },
+          { id: 'about', label: t('tabs.about') },
         ]}
       />
 
       {tab === 'stock' && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="text-h2">This week&apos;s stock</h2>
-            <span className="text-small text-ink-muted">{stallProducts.length} products</span>
+            <h2 className="text-h2">{t('tabs.stock')}</h2>
+            <span className="text-small text-ink-muted">{t('stock.count', { count: stallProducts.length })}</span>
           </div>
           <DayChips
-            legend="Available on"
+            legend={t('stock.availableOn')}
             name="stall-day"
             value={String(day)}
             onChange={(v) => setDay(Number(v))}
             options={[1, 2, 3, 4, 5, 6, 0].map((d) => ({
               value: String(d),
-              label: DOW_ABBR[d],
+              label: dayName(d),
               disabled: !availableDays.includes(d),
             }))}
           />
@@ -145,8 +164,7 @@ const StallProfilePage = () => {
           </div>
           {!availableDays.includes(day) && (
             <p className="text-small text-ink-muted">
-              {f.stall} does not sell on {DOW_ABBR[day]}. Products above are what they carry on their selling days (
-              {f.days}).
+              {t('stock.notSelling', { stall: f.stall, day: dayName(day, 'long'), days })}
             </p>
           )}
         </div>
@@ -158,7 +176,7 @@ const StallProfilePage = () => {
             <div className="flex flex-wrap items-baseline gap-3">
               <b className="font-hand text-[48px] leading-none tabular-nums">{f.rating ?? '—'}</b>
               {f.rating != null && <Rating value={f.rating} />}
-              <span className="text-small text-ink-muted">{f.reviews} reviews, every one from a completed order</span>
+              <span className="text-small text-ink-muted">{t('reviews.summary', { count: f.reviews })}</span>
             </div>
             {reviewTags[f.id] && (
               <div className="flex flex-wrap gap-2">
@@ -183,7 +201,7 @@ const StallProfilePage = () => {
                   setReviewPage(1);
                 }}
               >
-                All <span className="text-[12px] tabular-nums opacity-80">{allReviews.length}</span>
+                {t('reviews.all')} <span className="text-[12px] tabular-nums opacity-80">{allReviews.length}</span>
               </Chip>
               <Chip
                 pressed={reviewFilter === 'farmer'}
@@ -192,7 +210,7 @@ const StallProfilePage = () => {
                   setReviewPage(1);
                 }}
               >
-                About the stall{' '}
+                {t('reviews.farmer')}{' '}
                 <span className="text-[12px] tabular-nums opacity-80">
                   {allReviews.filter((r) => r.targetType === 'farmer').length}
                 </span>
@@ -204,13 +222,13 @@ const StallProfilePage = () => {
                   setReviewPage(1);
                 }}
               >
-                About products{' '}
+                {t('reviews.product')}{' '}
                 <span className="text-[12px] tabular-nums opacity-80">
                   {allReviews.filter((r) => r.targetType === 'product').length}
                 </span>
               </Chip>
             </div>
-            <span className="text-small text-ink-muted">Newest first</span>
+            <span className="text-small text-ink-muted">{t('reviews.newest')}</span>
           </div>
 
           <div className="flex flex-col gap-4">
@@ -237,12 +255,12 @@ const StallProfilePage = () => {
         <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
           <div className="flex flex-col gap-8">
             <section className="flex flex-col gap-3">
-              <h2 className="text-h2">Where and when</h2>
+              <h2 className="text-h2">{t('about.whereWhen')}</h2>
               <Table
                 columns={[
                   {
                     key: 'market',
-                    label: 'Market',
+                    label: t('about.table.market'),
                     render: (row: { id: number }) => {
                       const m = markets.find((mm) => mm.id === row.id)!;
                       return (
@@ -253,9 +271,9 @@ const StallProfilePage = () => {
                       );
                     },
                   },
-                  { key: 'days', label: 'Days', render: () => f.days },
-                  { key: 'window', label: 'Pickup window', render: () => f.pickup },
-                  { key: 'stall', label: 'Stall', render: () => f.stallCode },
+                  { key: 'days', label: t('about.table.days'), render: () => days },
+                  { key: 'window', label: t('about.table.window'), render: () => pickup },
+                  { key: 'stall', label: t('about.table.stall'), render: () => f.stallCode },
                   {
                     key: 'dir',
                     label: '',
@@ -264,7 +282,7 @@ const StallProfilePage = () => {
                       const m = markets.find((mm) => mm.id === row.id)!;
                       return (
                         <ButtonAnchor href={Helper.directionsUrl(m.lat, m.lng)} variant="ghost" size="sm">
-                          Directions
+                          {t('about.table.directions')}
                         </ButtonAnchor>
                       );
                     },
@@ -272,40 +290,33 @@ const StallProfilePage = () => {
                 ]}
                 rows={f.markets.map((id) => ({ id }))}
               />
-              <p className="text-small text-ink-muted">
-                Orders close {f.cutoffHours} hours before the slot you choose. After that only the stall can change the
-                order.
-              </p>
+              <p className="text-small text-ink-muted">{t('about.cutoffNote', { count: f.cutoffHours })}</p>
             </section>
 
             <section className="flex flex-col gap-3">
-              <h2 className="text-h2">About the stall</h2>
+              <h2 className="text-h2">{t('tabs.about')}</h2>
               <p className="text-body max-w-155">{f.about}</p>
-              <p className="text-body max-w-155">
-                MarketLink does not check licences or organic claims. If that matters to you, ask at the stall.
-              </p>
+              <p className="text-body max-w-155">{t('about.disclaimer')}</p>
               <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-                <dt className="text-ink-muted">Contact</dt>
+                <dt className="text-ink-muted">{t('about.contact')}</dt>
                 <dd className="m-0">
                   {f.person} · {f.phone}
                 </dd>
-                <dt className="text-ink-muted">Email</dt>
+                <dt className="text-ink-muted">{t('about.email')}</dt>
                 <dd className="m-0">{f.email}</dd>
-                <dt className="text-ink-muted">Selling here since</dt>
-                <dd className="m-0">{f.registered}</dd>
+                <dt className="text-ink-muted">{t('about.since')}</dt>
+                <dd className="m-0">{since}</dd>
               </dl>
             </section>
           </div>
 
           <div className="flex flex-col gap-4">
-            <MapPlaceholder label={`Map of ${f.stall}`} />
+            <MapPlaceholder label={t('about.mapLabel', { name: f.stall })} />
             <Card className="flex flex-col gap-2 p-4">
-              <h3 className="text-h3">Finding the stall</h3>
-              <p className="text-small">
-                Stall {f.stallCode} · pickup window {f.pickup}. Slots are 30 minutes and hold 5 orders each.
-              </p>
+              <h3 className="text-h3">{t('about.findingTitle')}</h3>
+              <p className="text-small">{t('about.findingText', { code: f.stallCode, window: pickup })}</p>
               <ButtonLink to={`/markets/${f.markets[0]}`} variant="secondary" size="sm">
-                Pre-order at this market
+                {t('about.preorder')}
               </ButtonLink>
             </Card>
           </div>
@@ -316,13 +327,11 @@ const StallProfilePage = () => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => Notification.success({ title: 'Report sent', text: 'An admin will look into it.' })}
+          onClick={() => Notification.success({ title: t('report.sentTitle'), text: t('report.sentText') })}
         >
-          Report this stall
+          {t('report.button')}
         </Button>{' '}
-        <span className="text-ink-muted">
-          Repeated no-shows, wrong stall location, or anything that breaks the platform guidelines.
-        </span>
+        <span className="text-ink-muted">{t('report.note')}</span>
       </p>
     </div>
   );

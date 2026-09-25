@@ -1,4 +1,5 @@
 import { useEffect, useState, type SubmitEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Banner } from '@/components/ui/banner';
@@ -13,10 +14,10 @@ const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const LINK_TTL_MINUTES = 15;
 /** "Send it again" chỉ bấm được sau mỗi 60 giây. */
 const RESEND_COOLDOWN_SECONDS = 60;
-const DEFAULT_SENT_MESSAGE = 'If that email is registered, you will receive a password reset link.';
 
 /** FR-007 — request a password reset link. */
 const ForgotPasswordPage = () => {
+  const { t } = useTranslation('ForgotPassword');
   const [step, setStep] = useState<'ask' | 'sent'>('ask');
   const [email, setEmail] = useState('');
   const [sentTo, setSentTo] = useState('');
@@ -36,7 +37,7 @@ const ForgotPasswordPage = () => {
     setIsSubmitting(true);
     try {
       const response = await AuthApi.forgotPassword(address);
-      Notification.success({ text: response.message || DEFAULT_SENT_MESSAGE });
+      Notification.success({ text: response.message || t('toast.sent') });
       setSentTo(address);
       setStep('sent');
       setCooldown(RESEND_COOLDOWN_SECONDS);
@@ -44,7 +45,7 @@ const ForgotPasswordPage = () => {
       const fieldError = Helper.getFieldErrors(err).email;
       setError(fieldError);
       if (fieldError) setStep('ask');
-      Notification.error({ text: Helper.getErrorMessage(err, 'Could not send the reset link. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(err, t('toast.failed')) });
     } finally {
       setIsSubmitting(false);
     }
@@ -54,11 +55,11 @@ const ForgotPasswordPage = () => {
     e.preventDefault();
     const value = email.trim();
     if (!value) {
-      setError('Enter your email.');
+      setError(t('errors.emailRequired'));
       return;
     }
     if (!EMAIL_RE.test(value)) {
-      setError('Enter an email address like name@example.com.');
+      setError(t('errors.emailInvalid'));
       return;
     }
     setError(undefined);
@@ -69,21 +70,22 @@ const ForgotPasswordPage = () => {
     return (
       <Card className="mx-auto my-8 flex w-full max-w-115 flex-col gap-4 p-4 md:p-8">
         <div className="flex flex-col gap-2">
-          <h1 className="font-hand text-h1">Check your email</h1>
+          <h1 className="font-hand text-h1">{t('sent.title')}</h1>
           <p className="text-body">
-            If <b>{sentTo}</b> has an account, a link to choose a new password is on its way. It works once, for{' '}
-            {LINK_TTL_MINUTES} minutes.
+            <Trans
+              t={t}
+              i18nKey="sent.text"
+              values={{ email: sentTo }}
+              count={LINK_TTL_MINUTES}
+              components={{ b: <b /> }}
+            />
           </p>
         </div>
 
-        <Banner title="We answer the same way whether or not the address has an account.">
-          That stops anyone using this form to find out who is registered on MarketLink.
-        </Banner>
+        <Banner title={t('sent.bannerTitle')}>{t('sent.bannerText')}</Banner>
 
         <div className="flex flex-col gap-2">
-          <p className="text-small text-ink-muted">
-            Nothing after a minute? Look in spam, or send it again. Sending again replaces the earlier link.
-          </p>
+          <p className="text-small text-ink-muted">{t('sent.help')}</p>
           <div className="flex flex-wrap items-center gap-3">
             <Button
               variant="secondary"
@@ -91,16 +93,16 @@ const ForgotPasswordPage = () => {
               onClick={() => requestLink(sentTo)}
               aria-live="polite"
             >
-              {isSubmitting ? 'Sending…' : cooldown > 0 ? `Send it again in ${cooldown}s` : 'Send it again'}
+              {isSubmitting ? t('sending') : cooldown > 0 ? t('sent.resendIn', { count: cooldown }) : t('sent.resend')}
             </Button>
             <Button variant="ghost" disabled={isSubmitting} onClick={() => setStep('ask')}>
-              Use another address
+              {t('sent.otherAddress')}
             </Button>
           </div>
         </div>
 
         <Link to="/login" className="text-small text-brand underline">
-          Back to sign in
+          {t('backToSignIn')}
         </Link>
       </Card>
     );
@@ -109,17 +111,14 @@ const ForgotPasswordPage = () => {
   return (
     <Card className="mx-auto my-8 flex w-full max-w-115 flex-col gap-4 p-4 md:p-8">
       <div className="flex flex-col gap-2">
-        <h1 className="font-hand text-h1">Forgot your password?</h1>
-        <p className="text-small text-ink-muted">
-          Enter the email you signed up with. If it matches an account, we send a link that lets you choose a new
-          password.
-        </p>
+        <h1 className="font-hand text-h1">{t('title')}</h1>
+        <p className="text-small text-ink-muted">{t('intro')}</p>
       </div>
 
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
         <Field
           id="email"
-          label="Email"
+          label={t('email')}
           type="email"
           required
           autoComplete="email"
@@ -127,16 +126,16 @@ const ForgotPasswordPage = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           error={error}
-          hint={error ? undefined : 'The same address you use to sign in.'}
+          hint={error ? undefined : t('emailHint')}
           disabled={isSubmitting}
         />
         <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Sending…' : 'Send reset link'}
+          {isSubmitting ? t('sending') : t('submit')}
         </Button>
       </form>
 
       <Link to="/login" className="text-small text-brand underline">
-        Back to sign in
+        {t('backToSignIn')}
       </Link>
     </Card>
   );

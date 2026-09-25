@@ -1,27 +1,31 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import Notification from '@/utils/notification';
 
+const FILE_NAME = 'marketlink-recovery-codes.txt';
+
 /** FR-008 — danh sách mã khôi phục vừa sinh: chỉ hiện một lần, có nút chép / tải về. */
 const RecoveryCodes = ({ codes }: { codes: string[] }) => {
+  const { t } = useTranslation('AdminSecurity');
   const text = codes.join('\n');
 
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(text);
-      Notification.success({ text: 'Copied. Keep them somewhere other than the phone that holds the authenticator.' });
+      Notification.success({ text: t('codes.copied') });
     } catch {
-      Notification.error({ text: 'Could not copy. Select the codes and copy them by hand.' });
+      Notification.error({ text: t('codes.copyFailed') });
     }
   };
 
   const download = () => {
-    const url = URL.createObjectURL(new Blob([`MarketLink admin recovery codes\n\n${text}\n`], { type: 'text/plain' }));
+    const url = URL.createObjectURL(new Blob([`${t('codes.fileHeading')}\n\n${text}\n`], { type: 'text/plain' }));
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'marketlink-recovery-codes.txt';
+    link.download = FILE_NAME;
     link.click();
     URL.revokeObjectURL(url);
-    Notification.success({ text: 'Downloaded as marketlink-recovery-codes.txt.' });
+    Notification.success({ text: t('codes.downloaded', { file: FILE_NAME }) });
   };
 
   return (
@@ -33,10 +37,10 @@ const RecoveryCodes = ({ codes }: { codes: string[] }) => {
       </ul>
       <div className="flex flex-wrap gap-2">
         <Button variant="secondary" size="sm" onClick={copy}>
-          Copy the codes
+          {t('codes.copy')}
         </Button>
         <Button variant="secondary" size="sm" onClick={download}>
-          Download
+          {t('codes.download')}
         </Button>
       </div>
     </div>

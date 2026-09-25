@@ -1,0 +1,16 @@
+{
+  "title": "Notifications",
+  "intro": "Nouvelles commandes, modifications et annulations des clients, et annonces de MarketLink.",
+  "filter": {
+    "all": "Toutes",
+    "unread": "Non lues"
+  },
+  "unreadCount_one": "{{count}} non lue",
+  "unreadCount_other": "{{count}} non lues",
+  "unread": "non lue",
+  "markAllRead": "Tout marquer comme lu",
+  "empty": {
+    "title": "Rien de nouveau",
+    "text": "Vous serez prévenu ici quand une commande est passée, modifiée ou annulée, et quand un administrateur publie une annonce."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Einstellungen",
+  "intro": "Ihre eigenen Einstellungen und die Standardwerte, mit denen Ihr Stand startet.",
+  "selling": "Verkaufsvorgaben",
+  "sellingNote": "Werden mit Ihrem Konto gespeichert. Sie gelten, wenn Sie Abholzeiten für eine neue Woche erstellen.",
+  "cutoff": "Bestellschluss",
+  "cutoffNote": "Wie viele Stunden vor einer Abholzeit die Bestellung gesperrt wird.",
+  "slot": "Länge einer Abholzeit",
+  "slotNote": "Wird verwendet, wenn Sie Abholzeiten für eine neue Woche erstellen.",
+  "max": "Bestellungen pro Abholzeit",
+  "hours_one": "{{count}} Stunde",
+  "hours_other": "{{count}} Stunden",
+  "minutes_one": "{{count}} Minute",
+  "minutes_other": "{{count}} Minuten",
+  "orders_one": "{{count}} Bestellung",
+  "orders_other": "{{count}} Bestellungen"
+}

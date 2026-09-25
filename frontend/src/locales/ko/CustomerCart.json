@@ -1,0 +1,30 @@
+{
+  "title": "장바구니",
+  "products_one": "상품 {{count}}개",
+  "products_other": "상품 {{count}}개",
+  "stalls_one": "가게 {{count}}곳",
+  "stalls_other": "가게 {{count}}곳",
+  "intro": "{{stalls}}의 {{products}}. 가게마다 픽업 시간을 고른 뒤 주문하세요.",
+  "split": {
+    "title": "장바구니가 서로 다른 가게 2곳의 주문 2건으로 나뉘어요.",
+    "text": "가게마다 픽업 시간과 주문 마감이 따로 있고, 주문도 따로 받아요. 결제는 픽업할 때 각 가게에서 해요."
+  },
+  "changeTime": "{{stall}} 픽업 시간 변경",
+  "pickupDay": "픽업 날짜",
+  "pickupDayAt": "{{stall}} 픽업 날짜",
+  "pickupTime": "픽업 시간 · {{day}} {{date}} · 운영 {{from}} – {{to}}",
+  "cutoffNote": "{{stall}}은(는) 픽업 시간 {{hours}}시간 전에 주문을 마감해요. {{slotDay}} {{slot}} 픽업이면 마감은 {{cutoffDay}} {{cutoff}}예요.",
+  "summary": {
+    "title": "픽업할 때 가게에서 결제",
+    "order": "주문 {{n}} · {{stall}}",
+    "total": "합계 (두 가게)"
+  },
+  "note": {
+    "label": "가게에 남길 메모",
+    "placeholder": "예: 묶음을 작게 해 주세요"
+  },
+  "place": "주문 2건 하기",
+  "ready": "두 가게 모두 픽업 시간이 정해졌어요. 주문은 가게마다 따로 확인해요.",
+  "notReady": "주문하려면 {{stall}} 픽업 시간을 고르세요.",
+  "stockNote": "주문하는 순간 가게 재고에서 수량이 빠져요. 온라인 결제는 없어요."
+}

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { Chip } from '@/components/ui/chip';
 import Helper from '@/utils/helper';
@@ -42,6 +43,7 @@ type ChatMessageProps = {
 
 /** One chat bubble, left for the stall/assistant, right for the customer (design system `.ml-chat`/`.ml-msg`). */
 const ChatMessage = ({ from, who, time, intent, children, suggestions, onSuggestion }: ChatMessageProps) => {
+  const { t } = useTranslation();
   const bot = from !== 'user';
   return (
     <div
@@ -58,9 +60,11 @@ const ChatMessage = ({ from, who, time, intent, children, suggestions, onSuggest
         {children}
       </div>
       <div className="text-ink-muted flex flex-wrap items-center gap-2 text-[12px]">
-        <span>{who ?? (bot ? 'MarketLink assistant' : 'You')}</span>
+        <span>{who ?? (bot ? t('chat.assistant') : t('chat.you'))}</span>
         {time && <span>· {time}</span>}
-        {intent && <span className="bg-info-bg text-info-ink rounded-full px-2 font-bold">Intent: {intent}</span>}
+        {intent && (
+          <span className="bg-info-bg text-info-ink rounded-full px-2 font-bold">{t('chat.intent', { intent })}</span>
+        )}
       </div>
       {suggestions && (
         <div className="mt-0.5 flex flex-wrap gap-2">

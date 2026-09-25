@@ -1,0 +1,34 @@
+{
+  "greeting_one": "{{name}}さん、今週末の受け取りは{{count}}件です",
+  "greeting_other": "{{name}}さん、今週末の受け取りは{{count}}件です",
+  "intro": "1件の注文がまだ店舗の確認待ちです。ほかはすべて順調です。",
+  "browseMarkets": "今週末のマーケットを見る",
+  "cards": {
+    "upcoming_one": "今後の注文 {{count}}件",
+    "upcoming_other": "今後の注文 {{count}}件",
+    "upcomingBreakdown": "承認待ち {{placed}} · 承認済み {{accepted}} · 準備完了 {{ready}}",
+    "favorites_one": "お気に入り {{count}}件",
+    "favorites_other": "お気に入り {{count}}件",
+    "stalls_one": "店舗 {{count}}",
+    "stalls_other": "店舗 {{count}}",
+    "products_one": "商品 {{count}}",
+    "products_other": "商品 {{count}}",
+    "markets_one": "マーケット {{count}}",
+    "markets_other": "マーケット {{count}}",
+    "unread_one": "未読の通知 {{count}}件",
+    "unread_other": "未読の通知 {{count}}件",
+    "unreadText": "注文の準備ができ、ヤギのヨーグルトが再入荷しました",
+    "account": "アカウント"
+  },
+  "sell": {
+    "overline": "新着",
+    "title": "何か育てていますか？マーケットで売ってみましょう",
+    "text": "あなたのアカウントを4つのマーケットのいずれかの店舗にできます。畑の写真を何枚か添えて申請すると、管理者が審査します。どちらにしても、お買い物はそのまま続けられます。",
+    "apply": "出店を申請",
+    "dismiss": "今はしない"
+  },
+  "nextPickups": "次の受け取り",
+  "allOrders": "すべての注文",
+  "newFromFavorites": "お気に入り店舗の今週の新商品",
+  "favorites": "お気に入り"
+}

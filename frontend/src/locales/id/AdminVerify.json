@@ -1,0 +1,35 @@
+{
+  "overline": "Area admin · langkah 2 dari 2",
+  "title": "Masukkan kode dari aplikasi autentikator",
+  "signedInAs": "Masuk sebagai <b>{{email}}</b>.",
+  "notYou": "Bukan Anda?",
+  "error": {
+    "empty": "Ketik kodenya dulu.",
+    "sixDigits": "Masukkan enam angka dari aplikasi autentikator Anda.",
+    "check": "Tidak dapat memeriksa kode. Silakan coba lagi."
+  },
+  "alert": {
+    "recoveryOnce": "Setiap kode pemulihan hanya berlaku sekali.",
+    "checkClock": "Pastikan jam ponsel Anda sudah benar.",
+    "locked": "Terlalu banyak kode salah."
+  },
+  "toast": {
+    "signedIn": "Berhasil masuk."
+  },
+  "recovery": {
+    "label": "Kode pemulihan",
+    "hint": "Salah satu kode yang Anda simpan saat mengaktifkan fitur ini. Masing-masing hanya berlaku sekali."
+  },
+  "code": {
+    "label": "Kode enam digit",
+    "hint": "Kode berganti setiap 30 detik. Kode ini kedaluwarsa dalam {{seconds}} detik."
+  },
+  "submit": "Verifikasi dan masuk",
+  "submitting": "Memeriksa…",
+  "locked": "Proses masuk untuk akun ini dijeda.",
+  "backToSignIn": "Kembali ke halaman masuk",
+  "swap": {
+    "toCode": "Gunakan kode enam digit saja",
+    "toRecovery": "Gunakan kode pemulihan saja"
+  }
+}

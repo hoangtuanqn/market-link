@@ -1,0 +1,89 @@
+{
+  "title": "Pesanan",
+  "intro": "Terima atau tolak pesanan baru sebelum batas waktunya, tandai siap pada hari pasar, dan selesaikan setelah pelanggan membayar.",
+  "search": { "label": "Cari pesanan", "placeholder": "Kode pesanan atau nama pelanggan", "submit": "Cari" },
+  "filter": {
+    "day": "Hari pengambilan",
+    "all": "Semua",
+    "allDays": "hari",
+    "market": "Pasar",
+    "bothMarkets": "Kedua pasar"
+  },
+  "tabsLabel": "Pesanan menurut status",
+  "status": {
+    "placed": "Menunggu persetujuan",
+    "accepted": "Diterima",
+    "ready": "Siap",
+    "completed": "Selesai",
+    "declined": "Ditolak",
+    "cancelled": "Dibatalkan"
+  },
+  "empty": {
+    "placed": {
+      "title": "Tidak ada yang menunggu Anda",
+      "text": "Pre-order baru masuk ke sini hingga 12 jam sebelum slotnya."
+    },
+    "accepted": {
+      "title": "Tidak ada pesanan yang diterima",
+      "text": "Pesanan yang Anda terima menunggu di sini sampai Anda menandainya siap."
+    },
+    "ready": {
+      "title": "Belum ada yang siap",
+      "text": "Tandai pesanan yang diterima sebagai siap setelah dikemas untuk lapak."
+    },
+    "completed": {
+      "title": "Tidak ada pesanan selesai",
+      "text": "Pesanan selesai saat pelanggan mengambil dan membayar di lapak."
+    },
+    "declined": {
+      "title": "Tidak ada pesanan ditolak",
+      "text": "Pesanan yang Anda tolak tercantum di sini beserta alasannya."
+    },
+    "cancelled": {
+      "title": "Tidak ada pesanan dibatalkan",
+      "text": "Pelanggan bisa membatalkan hingga batas waktu (D-05)."
+    }
+  },
+  "col": {
+    "order": "Pesanan",
+    "customer": "Pelanggan",
+    "pickup": "Pengambilan",
+    "cutoff": "Batas waktu",
+    "items": "Item",
+    "total": "Total",
+    "status": "Status"
+  },
+  "action": {
+    "accept": "Terima",
+    "decline": "Tolak",
+    "markReady": "Tandai siap",
+    "markCompleted": "Tandai selesai",
+    "view": "Lihat"
+  },
+  "toast": {
+    "accepted": "Pesanan {{code}} diterima.",
+    "ready": "Pesanan {{code}} ditandai siap.",
+    "declined": "Pesanan {{code}} ditolak.",
+    "completed": "Pesanan {{code}} selesai."
+  },
+  "auditNote": "Setiap perubahan status dicatat beserta waktu dan pelakunya (FR-038). Perubahan dengan urutan yang salah ditolak (D-04).",
+  "decline": {
+    "title": "Tolak pesanan {{code}}?",
+    "keep": "Simpan pesanan",
+    "confirm": "Tolak pesanan",
+    "text": "Pelanggan langsung diberi tahu dan barangnya kembali ke stok Anda.",
+    "reason": "Alasan yang akan dilihat pelanggan",
+    "reasons": {
+      "stock": "Stok tidak cukup",
+      "day": "Tidak berjualan hari itu",
+      "time": "Tidak bisa di jam pengambilan itu",
+      "other": "Lainnya"
+    }
+  },
+  "complete": {
+    "title": "Tandai {{code}} sebagai selesai?",
+    "notYet": "Belum",
+    "text": "Lakukan ini setelah pelanggan mengambil pesanan dan membayar di lapak. Pesanan selesai dihitung dalam pendapatan Anda dan membuka ulasan pelanggan.",
+    "auto": "Pesanan yang masih berstatus Siap otomatis selesai 24 jam setelah tanggal pengambilan (D-03)."
+  }
+}

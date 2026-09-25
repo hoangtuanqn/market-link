@@ -1,0 +1,35 @@
+{
+  "title": "Đánh giá",
+  "intro": "Khách nói gì sau khi nhận đơn. Một lời đáp ngắn cũng rất có ích, nhất là với đánh giá thấp.",
+  "summary": "Sạp {{stall}} · sản phẩm {{products}} · {{reviews}}",
+  "reviewCount_one": "{{count}} đánh giá",
+  "reviewCount_other": "{{count}} đánh giá",
+  "filter": {
+    "all": "Tất cả",
+    "needs": "Cần trả lời",
+    "replied": "Đã trả lời",
+    "stall": "Về sạp",
+    "products": "Về sản phẩm"
+  },
+  "toast": {
+    "postedTitle": "Đã đăng trả lời",
+    "postedText": "Đã đăng trả lời dưới đánh giá của {{name}}.",
+    "editTitle": "Sửa trả lời",
+    "editText": "Đã mở phần sửa trả lời."
+  },
+  "action": {
+    "editReply": "Sửa trả lời",
+    "reply": "Trả lời",
+    "report": "Báo cáo đánh giá",
+    "post": "Đăng trả lời"
+  },
+  "form": {
+    "label": "Trả lời của bạn, hiện dưới đánh giá",
+    "placeholder": "Cảm ơn {{name}} đã ghé sạp. Lần sau chúng tôi sẽ đóng gói đơn cẩn thận hơn."
+  },
+  "empty": {
+    "title": "Chưa có đánh giá",
+    "text": "Khách có thể đánh giá sạp và món đã mua khi đơn hàng hoàn tất (D-10)."
+  },
+  "note": "Sạp không thể xoá đánh giá. Nếu một đánh giá vi phạm quy định, hãy báo cáo và quản trị viên sẽ quyết định (FR-074)."
+}

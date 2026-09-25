@@ -1,0 +1,33 @@
+{
+  "title": "メッセージ",
+  "intro": "今週の農産物についてお店に聞いたり、締め切り前に注文の詳細を決めたりできます。",
+  "conversations": "会話",
+  "stallCount_one": "{{count}} 店",
+  "stallCount_other": "{{count}} 店",
+  "time": {
+    "yesterday": "昨日",
+    "now": "たった今"
+  },
+  "conversationWith": "{{name}} との会話",
+  "seeStall": "お店を見る",
+  "openOrder": "注文 {{code}} を開く",
+  "you": "あなた",
+  "orderRef": {
+    "title": "注文 {{code}} · {{stall}}",
+    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · {{cutoffDate}} {{cutoff}} 締め切り"
+  },
+  "items_one": "{{count}} 点",
+  "items_other": "{{count}} 点",
+  "messageTo": "{{name}} へのメッセージ",
+  "placeholder": "今週の在庫や受け取り時間について聞く",
+  "send": "送信",
+  "for": {
+    "title": "メッセージの使いみち",
+    "text": "入荷予定の確認、少し多めに取り置きのお願い、別の受け取り時間の相談など。注文の変更は注文画面で行うので、双方が同じ記録を持てます。",
+    "edit": "注文 {{code}} を編集"
+  },
+  "notFor": {
+    "title": "メッセージでできないこと",
+    "text": "値段の交渉や支払いはここではできません。価格はお店が決め、支払いは受け取り時にお店で行います。メッセージだけで注文が変わることはありません。"
+  }
+}

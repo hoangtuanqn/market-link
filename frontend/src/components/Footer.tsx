@@ -1,56 +1,70 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { USER_ROLE } from '@/constants/enums';
+import useSession from '@/hooks/useSession';
+import type common from '@/locales/en/common.json';
+import LanguageSwitcher from './LanguageSwitcher';
 import Logo from './Logo';
 
-const COLUMNS: { title: string; links: { label: string; to: string }[] }[] = [
+type FooterKey = keyof (typeof common)['footer'];
+type FooterLink = { label: FooterKey; to: string; show?: 'farmer' | 'notFarmer' };
+
+/**
+ * Keys under `footer.` in common.json; the text is looked up when rendering. Only a Farmer has pre-orders to handle;
+ * everyone else is offered the way to become one.
+ */
+const COLUMNS: { title: FooterKey; links: FooterLink[] }[] = [
   {
-    title: 'Shop',
+    title: 'shop',
     links: [
-      { label: 'Markets near you', to: '/markets' },
-      { label: 'In season', to: '/products' },
-      { label: 'Market map', to: '/map' },
-      { label: 'Favorite stalls', to: '/favorites' },
+      { label: 'marketsNearYou', to: '/markets' },
+      { label: 'inSeason', to: '/products' },
+      { label: 'marketMap', to: '/map' },
+      { label: 'favoriteStalls', to: '/favorites' },
     ],
   },
   {
-    title: 'Sell',
+    title: 'sell',
     links: [
-      { label: 'Register as a Farmer', to: '/register/farmer' },
-      { label: 'Handling pre-orders', to: '/farmer/orders' },
-      { label: 'Stall guidelines', to: '/about' },
+      { label: 'registerFarmer', to: '/register/farmer', show: 'notFarmer' },
+      { label: 'handlingPreOrders', to: '/farmer/orders', show: 'farmer' },
+      { label: 'stallGuidelines', to: '/about' },
     ],
   },
   {
-    title: 'MarketLink',
+    title: 'marketLink',
     links: [
-      { label: 'About us', to: '/about' },
-      { label: 'Contact us', to: '/contact' },
-      { label: 'Feedback & bug reports', to: '/feedback' },
+      { label: 'aboutUs', to: '/about' },
+      { label: 'contactUs', to: '/contact' },
+      { label: 'feedback', to: '/feedback' },
     ],
   },
 ];
 
 const Footer = () => {
+  const { t } = useTranslation();
+  const { user } = useSession();
+  const isFarmer = user?.role === USER_ROLE.FARMER;
+  const visible = (link: FooterLink) => !link.show || (link.show === 'farmer' ? isFarmer : !isFarmer);
   return (
     <footer className="bg-board text-on-board">
       <div className="mx-auto grid max-w-300 grid-cols-2 gap-8 px-4 pt-8 pb-4 md:grid-cols-[1.4fr_repeat(3,1fr)] md:px-6 md:pt-12 md:pb-6">
         <div className="col-span-full md:col-span-1">
           <Logo />
-          <p className="text-small text-board-muted mt-3 max-w-75">
-            Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.
-          </p>
+          <p className="text-small text-board-muted mt-3 max-w-75">{t('footer.tagline')}</p>
         </div>
 
         {COLUMNS.map((col) => (
           <div key={col.title}>
-            <h2 className="text-overline text-board-muted mb-3 uppercase">{col.title}</h2>
+            <h2 className="text-overline text-board-muted mb-3 uppercase">{t(`footer.${col.title}`)}</h2>
             <ul className="flex flex-col gap-2">
-              {col.links.map((link) => (
+              {col.links.filter(visible).map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.to}
                     className="text-on-board text-[15px] no-underline hover:underline hover:underline-offset-3"
                   >
-                    {link.label}
+                    {t(`footer.${link.label}`)}
                   </Link>
                 </li>
               ))}
@@ -58,9 +72,10 @@ const Footer = () => {
           </div>
         ))}
 
-        <div className="border-board-muted text-board-muted col-span-full flex flex-wrap justify-between gap-3 border-t pt-4 text-[13px]">
+        <div className="border-board-muted text-board-muted col-span-full flex flex-wrap items-center justify-between gap-3 border-t pt-4 text-[13px]">
           <span>© 2026 MarketLink · TechWiz 7</span>
-          <span>Map data © OpenStreetMap contributors</span>
+          <LanguageSwitcher />
+          <span>{t('footer.mapData')}</span>
         </div>
       </div>
     </footer>

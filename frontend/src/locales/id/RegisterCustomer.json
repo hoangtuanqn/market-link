@@ -1,0 +1,43 @@
+{
+  "title": "Buat akun pelanggan",
+  "intro": "Nama, nomor telepon, email, dan alamat wajib diisi. Alamat dipakai untuk menampilkan jarak ke pasar dan mengisi petunjuk arah.",
+  "fields": {
+    "fullName": "Nama lengkap",
+    "phone": "Nomor telepon",
+    "email": "Email",
+    "emailHint": "Dipakai untuk masuk dan notifikasi pesanan.",
+    "address": "Alamat",
+    "addressPlaceholder": "Jalan, kelurahan, distrik",
+    "password": "Kata sandi",
+    "passwordHint": "{{min}} sampai {{max}} karakter.",
+    "confirmPassword": "Ulangi kata sandi"
+  },
+  "consent": {
+    "label": "Saya telah membaca dan menyetujui <terms>Ketentuan layanan</terms> dan <privacy>Kebijakan privasi</privacy>",
+    "note": "Nama dan nomor telepon Anda dikirim ke lapak tempat Anda memesan, agar mereka bisa menyerahkan pesanan pada hari pasar. Anda membayar petani di lapak."
+  },
+  "submit": "Buat akun",
+  "submitting": "Membuat akun…",
+  "haveAccount": "Saya sudah punya akun",
+  "acceptFirst": "Setujui ketentuan untuk membuat akun.",
+  "sharedAccount": "Satu akun bisa dipakai bersama dalam keluarga; sistem tidak membedakan orang di dalam satu akun.",
+  "toast": {
+    "created": "Akun dibuat.",
+    "failed": "Tidak dapat membuat akun. Silakan coba lagi."
+  },
+  "errors": {
+    "fullNameRequired": "Masukkan nama lengkap.",
+    "fullNameMax": "Nama lengkap maksimal {{max}} karakter.",
+    "phoneRequired": "Masukkan nomor telepon.",
+    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit).",
+    "emailRequired": "Masukkan email.",
+    "emailInvalid": "Masukkan alamat email yang valid.",
+    "emailMax": "Email maksimal {{max}} karakter.",
+    "addressRequired": "Masukkan alamat.",
+    "addressMax": "Alamat maksimal {{max}} karakter.",
+    "passwordRequired": "Masukkan kata sandi.",
+    "passwordLength": "Kata sandi harus {{min}} sampai {{max}} karakter.",
+    "confirmRequired": "Konfirmasi kata sandi.",
+    "confirmMismatch": "Kata sandi tidak cocok."
+  }
+}

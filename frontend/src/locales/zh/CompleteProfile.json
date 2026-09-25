@@ -1,0 +1,19 @@
+{
+  "title": "完善个人资料",
+  "intro": "你已使用 Google 账户 <b>{{email}}</b> 登录。Google 只提供你的姓名和邮箱，所以我们会询问一次你的手机号和地址。你下单的摊位会用它们在市集当天把订单交给你。",
+  "fields": {
+    "fullName": "姓名",
+    "phone": "手机号",
+    "address": "地址",
+    "addressPlaceholder": "街道、坊、郡",
+    "addressHint": "用于计算距离和路线。"
+  },
+  "submit": "保存并继续",
+  "saving": "正在保存…",
+  "signOut": "退出登录",
+  "note": "使用 MarketLink 必须填写这三项。如果现在不想填写，请退出登录。",
+  "toast": {
+    "saved": "你的资料已保存。",
+    "failed": "无法保存你的资料，请重试。"
+  }
+}

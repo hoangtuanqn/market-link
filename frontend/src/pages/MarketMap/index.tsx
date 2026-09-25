@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import DayChips from '@/components/DayChips';
 import MarketCard from '@/components/MarketCard';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
@@ -6,21 +7,22 @@ import { Chip } from '@/components/ui/chip';
 import { DataState } from '@/components/ui/data-state';
 import { farmers } from '@/data/catalog';
 import { markets } from '@/data/home';
-import { dayList } from '@/lib/format';
+import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
 
 type DayValue = 'thu' | 'fri' | 'sat' | 'sun';
 
-const DAY_OPTIONS: { value: DayValue; label: string; sub: string; disabled?: boolean }[] = [
-  { value: 'thu', label: 'Thu', sub: '24/09', disabled: true },
-  { value: 'fri', label: 'Fri', sub: '25/09' },
-  { value: 'sat', label: 'Sat', sub: '26/09' },
-  { value: 'sun', label: 'Sun', sub: '27/09' },
+/** The demo market week (24–27/09/2026); labels come from format.ts so they follow the language and date order. */
+const DAYS: { value: DayValue; date: Date; disabled?: boolean }[] = [
+  { value: 'thu', date: new Date(2026, 8, 24), disabled: true },
+  { value: 'fri', date: new Date(2026, 8, 25) },
+  { value: 'sat', date: new Date(2026, 8, 26) },
+  { value: 'sun', date: new Date(2026, 8, 27) },
 ];
 const DOW: Record<DayValue, number> = { thu: 4, fri: 5, sat: 6, sun: 0 };
-const DAY_FULL: Record<DayValue, string> = { thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
 
 /** FR-012 FR-013 — every market and its approved stalls on the map, for the day you choose. */
 const MarketMapPage = () => {
+  const { t } = useTranslation('MarketMap');
   const [day, setDay] = useState<DayValue>('sat');
   const [showMarkets, setShowMarkets] = useState(true);
   const [showStalls, setShowStalls] = useState(true);
@@ -52,7 +54,10 @@ const MarketMapPage = () => {
           label: m.name,
           popup: {
             title: m.name,
-            lines: [`${dayList(m.days)} · ${m.open}–${m.close}`, `${m.stalls} stalls`],
+            lines: [
+              `${dayList(m.days)} · ${formatClock(m.open)}–${formatClock(m.close)}`,
+              t('popup.stalls', { count: m.stalls }),
+            ],
             href: `/markets/${m.id}`,
           },
         })),
@@ -63,29 +68,38 @@ const MarketMapPage = () => {
           lat: f.lat!,
           lng: f.lng!,
           kind: 'stall' as const,
-          popup: { title: f.stall, lines: [`${f.days} · pickup ${f.pickup}`], href: `/stalls/${f.id}` },
+          popup: {
+            title: f.stall,
+            lines: [t('popup.pickup', { days: f.days, pickup: f.pickup })],
+            href: `/stalls/${f.id}`,
+          },
         })),
       );
     return out;
-  }, [openMarkets, openStalls, showMarkets, showStalls]);
+  }, [openMarkets, openStalls, showMarkets, showStalls, t]);
+
+  const picked = DAYS.find((d) => d.value === day)!;
+  const pickedName = dayName(DOW[day], 'long');
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <p className="font-hand text-hand text-ink-muted">
-            {DAY_FULL[day]} {DAY_OPTIONS.find((d) => d.value === day)?.sub}
+            {pickedName} {formatDayMonth(picked.date)}
           </p>
-          <h1 className="text-h1">Market map</h1>
-          <p className="text-body-lg max-w-160">
-            All markets and the stalls taking pre-orders on the day you choose. Tap a pin for hours, pickup windows and
-            directions.
-          </p>
+          <h1 className="text-h1">{t('title')}</h1>
+          <p className="text-body-lg max-w-160">{t('intro')}</p>
         </div>
         <DayChips
-          legend="Market day"
+          legend={t('marketDay')}
           name="map-day"
-          options={DAY_OPTIONS}
+          options={DAYS.map((d) => ({
+            value: d.value,
+            label: dayName(DOW[d.value]),
+            sub: formatDayMonth(d.date),
+            disabled: d.disabled,
+          }))}
           value={day}
           onChange={(v) => setDay(v as DayValue)}
         />
@@ -94,27 +108,27 @@ const MarketMapPage = () => {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap gap-2">
           <Chip pressed={showMarkets} onClick={() => setShowMarkets((v) => !v)}>
-            Markets
+            {t('filter.markets')}
           </Chip>
           <Chip pressed={showStalls} onClick={() => setShowStalls((v) => !v)}>
-            Stalls
+            {t('filter.stalls')}
           </Chip>
           <Chip pressed={savedOnly} onClick={() => setSavedOnly((v) => !v)}>
-            Saved only
+            {t('filter.saved')}
           </Chip>
         </div>
         <div className="text-small text-ink-muted flex flex-wrap gap-4">
-          <span>Square, market</span>
-          <span>Round, stall</span>
-          <span>Ring, selected</span>
+          <span>{t('legend.market')}</span>
+          <span>{t('legend.stall')}</span>
+          <span>{t('legend.selected')}</span>
         </div>
       </div>
 
-      <MarketMap label="Map of all markets and stalls" markers={markers} className="min-h-155" />
-      <p className="text-small text-ink-muted">Directions open in OpenStreetMap in a new tab (D-12).</p>
+      <MarketMap label={t('mapLabel')} markers={markers} className="min-h-155" />
+      <p className="text-small text-ink-muted">{t('directions')}</p>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-h2">Open on {DAY_FULL[day]}</h2>
+        <h2 className="text-h2">{t('openOn', { day: pickedName })}</h2>
         {openMarkets.length ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {openMarkets.map((m) => (
@@ -122,10 +136,7 @@ const MarketMapPage = () => {
             ))}
           </div>
         ) : (
-          <DataState
-            title="No markets to show"
-            text="Nothing matches the day you picked. Try another day, or clear the filter."
-          />
+          <DataState title={t('empty.title')} text={t('empty.text')} />
         )}
       </section>
     </div>

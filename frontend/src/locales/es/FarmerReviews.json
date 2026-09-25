@@ -1,0 +1,35 @@
+{
+  "title": "Reseñas",
+  "intro": "Lo que dijeron los clientes tras recoger sus pedidos. Una respuesta breve ayuda mucho, sobre todo ante una nota baja.",
+  "summary": "Puesto {{stall}} · productos {{products}} · {{reviews}}",
+  "reviewCount_one": "{{count}} reseña",
+  "reviewCount_other": "{{count}} reseñas",
+  "filter": {
+    "all": "Todas",
+    "needs": "Por responder",
+    "replied": "Respondidas",
+    "stall": "Sobre el puesto",
+    "products": "Sobre productos"
+  },
+  "toast": {
+    "postedTitle": "Respuesta publicada",
+    "postedText": "Respuesta publicada bajo la reseña de {{name}}.",
+    "editTitle": "Edición de respuesta",
+    "editText": "La edición de la respuesta está abierta."
+  },
+  "action": {
+    "editReply": "Editar respuesta",
+    "reply": "Responder",
+    "report": "Denunciar reseña",
+    "post": "Publicar respuesta"
+  },
+  "form": {
+    "label": "Tu respuesta, se muestra bajo la reseña",
+    "placeholder": "Gracias por pasar, {{name}}. La próxima vez empaquetaremos el pedido con más cuidado."
+  },
+  "empty": {
+    "title": "Aún no hay reseñas",
+    "text": "Un cliente puede reseñar tu puesto y lo que compró cuando su pedido se completa (D-10)."
+  },
+  "note": "El puesto no puede eliminar reseñas. Si una incumple las normas, denúnciala y el administrador decide (FR-074)."
+}

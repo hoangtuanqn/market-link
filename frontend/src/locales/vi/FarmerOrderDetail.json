@@ -1,0 +1,80 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "Không đủ hàng",
+      "day": "Không bán vào ngày đó",
+      "time": "Không kịp giờ nhận hàng đó",
+      "other": "Khác"
+    },
+    "item": "{{qty}} {{name}}",
+    "title": "Từ chối đơn {{code}}?",
+    "keep": "Giữ đơn",
+    "confirm": "Từ chối đơn",
+    "text": "{{who}} được báo ngay và {{items}} được trả về kho của bạn.",
+    "reason": "Lý do khách sẽ thấy"
+  },
+  "history": {
+    "before": "Trước {{cutoff}}",
+    "cancelled": "Khách đã huỷ",
+    "title": "Lịch sử"
+  },
+  "missing": {
+    "title": "Đơn này không còn ở đây",
+    "text": "Có thể khách đã huỷ đơn, hoặc đường dẫn đã cũ. Hãy mở lại từ danh sách đơn của bạn.",
+    "back": "Đơn của tôi"
+  },
+  "item": "món",
+  "col": {
+    "product": "Sản phẩm",
+    "requested": "Số lượng đặt",
+    "left": "Còn lại sau đơn này",
+    "amount": "Thành tiền"
+  },
+  "crumb": "Đơn hàng",
+  "cutoff": "Chốt {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "Đã nhận đơn",
+    "acceptedText": "Đã nhận đơn {{code}}. {{who}} đã được báo.",
+    "readyTitle": "Đơn đã sẵn sàng",
+    "readyText": "Đã đánh dấu đơn {{code}} sẵn sàng.",
+    "completedTitle": "Đơn đã hoàn tất",
+    "completedText": "Đơn {{code}} đã hoàn tất.",
+    "declinedTitle": "Đã từ chối đơn",
+    "declinedText": "Đã từ chối đơn {{code}}."
+  },
+  "actions": {
+    "accept": "Nhận đơn",
+    "decline": "Từ chối",
+    "ready": "Đánh dấu sẵn sàng",
+    "complete": "Đánh dấu hoàn tất"
+  },
+  "items": {
+    "title": "Món hàng",
+    "note": "Số hàng hiển thị là phần còn lại sau đơn này và các đơn đã đặt khác. Hàng đã giữ được trả lại nếu bạn từ chối (D-02)."
+  },
+  "note": "Ghi chú của khách",
+  "quote": "“{{text}}”",
+  "customer": {
+    "title": "Khách hàng",
+    "name": "Tên",
+    "phone": "Điện thoại",
+    "ordersWithYou": "Số đơn với bạn",
+    "orders_one": "{{count}} đơn",
+    "orders_other": "{{count}} đơn",
+    "withCollected_one": "{{orders}}, đã nhận {{count}}",
+    "withCollected_other": "{{orders}}, đã nhận {{count}}"
+  },
+  "pickup": {
+    "title": "Khung giờ nhận hàng",
+    "market": "Chợ",
+    "marketStall": "{{market}}, gian {{code}}",
+    "slot": "Khung giờ",
+    "pay": "Trả khi nhận hàng"
+  },
+  "complete": {
+    "title": "Đánh dấu {{code}} là hoàn tất?",
+    "notYet": "Chưa",
+    "text": "Chỉ làm khi khách đã nhận hàng và trả tiền tại sạp. Đơn hoàn tất được tính vào doanh thu và mở phần đánh giá cho khách.",
+    "auto": "Các đơn vẫn ở trạng thái Sẵn sàng sẽ tự hoàn tất 24 giờ sau ngày nhận hàng (D-03)."
+  }
+}
