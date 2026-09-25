@@ -1,0 +1,74 @@
+{
+  "title": "报表",
+  "intro": "全平台的订单与营收，按集市拆分，以及卖得最多的农户。营收是已完成订单的总额，钱付给摊位，不经过 MarketLink。",
+  "days_other": "{{count}} 天",
+  "points": " 个百分点",
+  "market": "集市",
+  "allMarkets": "全部集市",
+  "export": {
+    "button": "导出本期数据",
+    "title": "导出已开始",
+    "text": "CSV 文件覆盖屏幕上的时间段和集市。"
+  },
+  "kpi": {
+    "orders": "订单",
+    "ordersNote": "{{month}}，全部集市",
+    "revenue": "已完成营收",
+    "revenueNote": "₫，在摊位付款",
+    "average": "客单价",
+    "averageNote": "每笔已完成订单 ₫",
+    "declineRate": "拒单率",
+    "declineNote": "{{total}} 单中的 {{declined}} 单"
+  },
+  "axis": {
+    "dayOfMonth": "日期"
+  },
+  "revenueChart": {
+    "title": "每日营收",
+    "note": "已完成订单，单位百万₫。{{now}} 对比 {{prev}} 同样的 30 天。",
+    "caption": "{{now}} 与 {{prev}} 的每日营收，单位百万越南盾"
+  },
+  "ordersChart": {
+    "title": "每日下单量",
+    "note": "所有订单，无论最终是什么状态。",
+    "caption": "{{now}} 与 {{prev}} 的每日下单量"
+  },
+  "byMarket": {
+    "title": "各集市营收",
+    "note": "四个集市使用同一个度量，所以每根长条颜色相同。长度说明一切。"
+  },
+  "byStatus": {
+    "title": "按状态分的订单"
+  },
+  "topFarmers": {
+    "title": "最活跃的农户",
+    "note": "按本期已完成订单数排序"
+  },
+  "topProducts": {
+    "title": "热销商品",
+    "note": "各自按摊位所用的单位计",
+    "unitsNote": "数量只在同一单位内相加。一公斤蘑菇和一盘鸡蛋是两回事，所以平台从不给出一个总数量。"
+  },
+  "sideBySide": {
+    "title": "各集市对比",
+    "note": "同一时期，每个数字都附上变化幅度"
+  },
+  "col": {
+    "stall": "摊位",
+    "markets": "集市",
+    "completedOrders": "已完成订单",
+    "revenue": "营收",
+    "productsListed": "在售商品数",
+    "rating": "评分",
+    "product": "商品",
+    "soldPer": "计价单位",
+    "price": "价格",
+    "sold": "已售",
+    "market": "集市",
+    "stalls": "摊位数",
+    "orders": "订单",
+    "change": "变化",
+    "completed": "已完成",
+    "declined": "已拒单"
+  }
+}

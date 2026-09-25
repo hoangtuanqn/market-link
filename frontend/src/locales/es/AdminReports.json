@@ -1,0 +1,75 @@
+{
+  "title": "Informes",
+  "intro": "Pedidos e ingresos de toda la plataforma, por mercado, y los productores que más venden. Los ingresos son el total de pedidos completados, pagados a los puestos y no a través de MarketLink.",
+  "days_one": "{{count}} día",
+  "days_other": "{{count}} días",
+  "points": " puntos",
+  "market": "Mercado",
+  "allMarkets": "Todos los mercados",
+  "export": {
+    "button": "Exportar el periodo",
+    "title": "Exportación iniciada",
+    "text": "El CSV recoge el periodo y el mercado que se ven en pantalla."
+  },
+  "kpi": {
+    "orders": "Pedidos",
+    "ordersNote": "{{month}}, todos los mercados",
+    "revenue": "Ingresos completados",
+    "revenueNote": "₫, pagados en los puestos",
+    "average": "Pedido medio",
+    "averageNote": "₫ por pedido completado",
+    "declineRate": "Tasa de rechazo",
+    "declineNote": "{{declined}} de {{total}} pedidos"
+  },
+  "axis": {
+    "dayOfMonth": "Día del mes"
+  },
+  "revenueChart": {
+    "title": "Ingresos por día",
+    "note": "Pedidos completados, en millones de ₫. {{now}} frente a los mismos 30 días de {{prev}}.",
+    "caption": "Ingresos por día en {{now}} frente a {{prev}}, en millones de dongs"
+  },
+  "ordersChart": {
+    "title": "Pedidos realizados por día",
+    "note": "Todos los pedidos, acabaran como acabaran.",
+    "caption": "Pedidos realizados por día en {{now}} frente a {{prev}}"
+  },
+  "byMarket": {
+    "title": "Ingresos por mercado",
+    "note": "Una sola medida en cuatro mercados, así que todas las barras son del mismo color. La longitud lo dice todo."
+  },
+  "byStatus": {
+    "title": "Pedidos por estado"
+  },
+  "topFarmers": {
+    "title": "Productores más activos",
+    "note": "Por pedidos completados en el periodo"
+  },
+  "topProducts": {
+    "title": "Productos más vendidos",
+    "note": "Cada uno en la unidad que usa su puesto",
+    "unitsNote": "Las cantidades solo se suman dentro de una misma unidad. Un kilo de setas y una bandeja de huevos son cosas distintas, así que la plataforma nunca da una cantidad total única."
+  },
+  "sideBySide": {
+    "title": "Mercados uno al lado del otro",
+    "note": "Mismo periodo, con la variación en cada cifra"
+  },
+  "col": {
+    "stall": "Puesto",
+    "markets": "Mercados",
+    "completedOrders": "Pedidos completados",
+    "revenue": "Ingresos",
+    "productsListed": "Productos publicados",
+    "rating": "Valoración",
+    "product": "Producto",
+    "soldPer": "Se vende por",
+    "price": "Precio",
+    "sold": "Vendido",
+    "market": "Mercado",
+    "stalls": "Puestos",
+    "orders": "Pedidos",
+    "change": "Variación",
+    "completed": "Completados",
+    "declined": "Rechazados"
+  }
+}

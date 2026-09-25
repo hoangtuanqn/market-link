@@ -1,0 +1,75 @@
+{
+  "title": "Báo cáo",
+  "intro": "Đơn hàng và doanh thu trên toàn sàn, tách theo chợ, cùng những nhà vườn bán nhiều nhất. Doanh thu là tổng các đơn đã hoàn tất, tiền trả cho sạp chứ không đi qua MarketLink.",
+  "days_one": "{{count}} ngày",
+  "days_other": "{{count}} ngày",
+  "points": " điểm",
+  "market": "Chợ",
+  "allMarkets": "Tất cả các chợ",
+  "export": {
+    "button": "Xuất dữ liệu kỳ này",
+    "title": "Đã bắt đầu xuất",
+    "text": "File CSV lấy đúng kỳ và chợ đang hiển thị."
+  },
+  "kpi": {
+    "orders": "Đơn hàng",
+    "ordersNote": "{{month}}, tất cả các chợ",
+    "revenue": "Doanh thu đã hoàn tất",
+    "revenueNote": "₫, trả tại sạp",
+    "average": "Giá trị đơn trung bình",
+    "averageNote": "₫ mỗi đơn đã hoàn tất",
+    "declineRate": "Tỷ lệ từ chối",
+    "declineNote": "{{declined}} trên {{total}} đơn"
+  },
+  "axis": {
+    "dayOfMonth": "Ngày trong tháng"
+  },
+  "revenueChart": {
+    "title": "Doanh thu theo ngày",
+    "note": "Đơn đã hoàn tất, đơn vị triệu ₫. {{now}} so với cùng 30 ngày của {{prev}}.",
+    "caption": "Doanh thu theo ngày của {{now}} so với {{prev}}, đơn vị triệu đồng"
+  },
+  "ordersChart": {
+    "title": "Số đơn đặt mỗi ngày",
+    "note": "Mọi đơn, bất kể kết thúc ở trạng thái nào.",
+    "caption": "Số đơn đặt mỗi ngày của {{now}} so với {{prev}}"
+  },
+  "byMarket": {
+    "title": "Doanh thu theo chợ",
+    "note": "Một thước đo qua bốn chợ, nên mọi thanh cùng một màu. Độ dài nói lên tất cả."
+  },
+  "byStatus": {
+    "title": "Đơn theo trạng thái"
+  },
+  "topFarmers": {
+    "title": "Nhà vườn bán nhiều nhất",
+    "note": "Tính theo số đơn đã hoàn tất trong kỳ"
+  },
+  "topProducts": {
+    "title": "Sản phẩm bán chạy",
+    "note": "Mỗi sản phẩm tính theo đơn vị mà sạp của nó bán",
+    "unitsNote": "Số lượng chỉ cộng dồn trong cùng một đơn vị. Một ký nấm và một khay trứng là hai thứ khác nhau, nên nền tảng không bao giờ báo một tổng số lượng chung."
+  },
+  "sideBySide": {
+    "title": "Các chợ đặt cạnh nhau",
+    "note": "Cùng kỳ, kèm mức thay đổi trên từng con số"
+  },
+  "col": {
+    "stall": "Sạp",
+    "markets": "Chợ",
+    "completedOrders": "Đơn đã hoàn tất",
+    "revenue": "Doanh thu",
+    "productsListed": "Sản phẩm đang đăng",
+    "rating": "Đánh giá",
+    "product": "Sản phẩm",
+    "soldPer": "Bán theo",
+    "price": "Giá",
+    "sold": "Đã bán",
+    "market": "Chợ",
+    "stalls": "Số sạp",
+    "orders": "Đơn hàng",
+    "change": "Thay đổi",
+    "completed": "Hoàn tất",
+    "declined": "Bị từ chối"
+  }
+}
