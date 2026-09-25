@@ -9,6 +9,7 @@ import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.ForgotPasswordRequest;
 import com.techx.intervue.modules.user.requests.LoginRequest;
+import com.techx.intervue.modules.user.requests.MfaVerifyRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SocialLoginRequest;
@@ -107,7 +108,24 @@ public class AuthController extends BaseController {
         return loggedIn(userService.loginWithSocial(googleClient.fetchProfile(request.code())));
     }
 
+    /**
+     * FR-008: bước 2 của đăng nhập admin đã bật xác thực hai bước. Mã đúng → cấp phiên + cookie như
+     * đăng nhập thường; sai → 400 MFA_CODE_INVALID, sai quá 5 lần → 429 MFA_LOCKED.
+     */
+    @PostMapping("/mfa/verify")
+    public ResponseEntity<ApiResource<LoginResource>> verifyMfa(
+            @Valid @RequestBody MfaVerifyRequest request) {
+        return loggedIn(
+                userService.completeMfaLogin(
+                        request.mfaToken(), request.code(), request.recoveryCode()));
+    }
+
     private ResponseEntity<ApiResource<LoginResource>> loggedIn(AuthResult auth) {
+        if (auth.mfaRequired()) {
+            // chưa có phiên: không set cookie, FE chuyển sang màn nhập mã
+            LoginResource pending = new LoginResource(null, auth.user(), true, auth.mfaToken());
+            return ok(pending, "Enter the code from your authenticator.");
+        }
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
                         auth.refreshToken(),

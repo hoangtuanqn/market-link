@@ -74,7 +74,14 @@ public class SecurityConfig {
                                                 "/api/v1/auth/logout",
                                                 "/api/v1/auth/set-password",
                                                 "/api/v1/auth/change-password",
-                                                "/api/v1/auth/me")
+                                                "/api/v1/auth/me",
+                                                // FR-008: bật / tắt 2FA (verify lúc đăng nhập vẫn
+                                                // public)
+                                                "/api/v1/auth/mfa",
+                                                "/api/v1/auth/mfa/setup",
+                                                "/api/v1/auth/mfa/enable",
+                                                "/api/v1/auth/mfa/disable",
+                                                "/api/v1/auth/mfa/recovery-codes")
                                         .authenticated()
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")

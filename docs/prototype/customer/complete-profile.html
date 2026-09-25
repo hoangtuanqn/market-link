@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finish your account — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="customer" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <form class="ml-card pt-auth pt-auth-wide" novalidate>
+    <div class="pt-col-2">
+      <p class="ml-overline ml-muted">One more step</p>
+      <h1 class="pt-title-sm">Two things Google could not tell us</h1>
+      <p class="pt-small ml-muted">You are signed in. A stall needs to reach you about the order you collect, and needs to know roughly where you are ordering from, and Google hands over neither.</p>
+    </div>
+
+    <div id="from-google"></div>
+
+    <div class="pt-form-grid">
+      <div class="ml-field" style="grid-column:1/-1">
+        <label class="ml-field-label" for="phone">Contact number<span class="ml-field-req" aria-hidden="true">*</span></label>
+        <input id="phone" class="ml-input" type="tel" inputmode="tel" autocomplete="tel" placeholder="0903 118 218" aria-describedby="phone-h">
+        <span class="ml-field-hint" id="phone-h">The stall calls this number if something about your order changes. It is not shown to other shoppers.</span>
+      </div>
+      <div class="ml-field" style="grid-column:1/-1">
+        <label class="ml-field-label" for="addr">Address<span class="ml-field-req" aria-hidden="true">*</span></label>
+        <input id="addr" class="ml-input" autocomplete="street-address" placeholder="21 Thảo Điền, Thảo Điền Ward, Thủ Đức City" aria-describedby="addr-h">
+        <span class="ml-field-hint" id="addr-h">Used to sort markets by how near they are and to work out directions to a pickup point. Nothing is delivered — you always collect at the stall.</span>
+      </div>
+    </div>
+
+    <div id="err"></div>
+
+    <div class="pt-col-2">
+      <button type="button" class="ml-btn ml-btn-primary ml-btn-block" id="save">Save and start shopping</button>
+      <a class="ml-btn ml-btn-ghost ml-btn-block" href="../public/markets.html" id="later">Look around first</a>
+    </div>
+
+    <div class="ml-card pt-panel-4 pt-col-2">
+      <h2 class="pt-h3">Why you are being asked now</h2>
+      <p class="pt-small">Signing up with an email address asks for these on the registration form (FR-001). Signing in with Google skips that form, so the same two answers are collected here instead. You can browse without them; they are required before the first order, not before looking.</p>
+    </div>
+
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-001 · This screen fills a hole that is already in the merged code. V20260924003__create_user_social_accounts_table.sql made users.password_hash and users.phone nullable so a Google account can exist without them, but FR-001 requires a contact number and an address at registration and nothing yet forces them in. It needs an FR of its own and one decision: where the block goes. The prototype lets the person browse and blocks at checkout, which is the kindest reading of the requirement, but blocking at sign-in is also defensible and is simpler to build. LEAD to pick one.">Where an unfinished profile is blocked is not decided</span></p>
+
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-001 / D-08 · Two smaller questions this screen raises. A Google account can come with an email that already belongs to a password account here, and nothing says whether the two are linked, kept apart, or the sign-in is refused; the social table has a unique key on (provider, provider_user_id) but that does not answer it. And an address typed once is treated as the only address, while D-08 allows a household to share one account, where a second address is likely. Neither is in the SRS.">Linking a Google account to an existing email is undefined</span></p>
+  </form>
+</main>
+<script>
+  /* What Google actually hands back: the sub, the name, the email and a picture. Shown read-only so
+     the person can see exactly what was taken, which is also what makes the two empty fields obvious. */
+  document.getElementById('from-google').innerHTML =
+    '<div class="ml-card pt-panel-4 pt-col-2">' +
+    '<h2 class="pt-h3">From your Google account</h2>' +
+    '<dl class="pt-facts pt-small">' +
+    '<dt>Name</dt><dd>Nguyễn Minh Khang</dd>' +
+    '<dt>Email</dt><dd>khang@example.com <span class="ml-muted">· verified by Google</span></dd>' +
+    '</dl>' +
+    '<p class="pt-small ml-muted">Wrong account? <a href="../public/login.html">Sign in with a different one</a>.</p>' +
+    '</div>';
+
+  function bad(el, msg) {
+    el.setAttribute('aria-invalid', 'true');
+    return msg;
+  }
+  document.getElementById('save').addEventListener('click', function () {
+    var phone = document.getElementById('phone'), addr = document.getElementById('addr');
+    phone.removeAttribute('aria-invalid');
+    addr.removeAttribute('aria-invalid');
+    var errs = [];
+    var p = phone.value.replace(/\s+/g, '');
+    if (!p) errs.push(bad(phone, 'a contact number'));
+    else if (!/^0\d{9}$/.test(p)) errs.push(bad(phone, 'a Vietnamese mobile number, ten digits starting with 0'));
+    if (!addr.value.trim()) errs.push(bad(addr, 'an address'));
+
+    if (errs.length) {
+      document.getElementById('err').innerHTML = PT.banner('danger', 'We still need ' + errs.join(' and ') + '.',
+        'Both are kept private. The stall sees the number only for an order you have placed.');
+      return;
+    }
+    document.getElementById('err').innerHTML = '';
+    PT.toast('Your account is complete. You can order now.');
+    setTimeout(function () { location.href = '../customer/dashboard.html'; }, 600);
+  });
+
+  /* Browsing without the two answers is allowed; the cart is where it stops. */
+  document.getElementById('later').addEventListener('click', function (e) {
+    e.preventDefault();
+    PT.dialog({
+      title: 'Look around without finishing?',
+      body: '<p>You can browse every market and stall. When you come to place an order we will ask for these two again, because the stall cannot hand over food it has no way to ask you about.</p>',
+      keep: 'Finish now', confirm: 'Look around',
+      onConfirm: function () { location.href = '../public/markets.html'; },
+    });
+  });
+
+  PT.boot({ role: 'customer', active: null, announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>
