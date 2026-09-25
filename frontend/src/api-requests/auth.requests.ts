@@ -91,5 +91,16 @@ class AuthApi {
     const response = await privateApi.post<ApiResponse<null>>('/auth/logout');
     return response.data;
   };
+
+  /**
+   * Thu hồi một phiên vừa đăng nhập nhưng không giữ lại (vd. Customer đăng nhập ở trang admin). Không qua privateApi vì
+   * interceptor sẽ gắn token của phiên đang lưu thay cho token này.
+   */
+  static revokeSession = async (accessToken: string) => {
+    const response = await publicApi.post<ApiResponse<null>>('/auth/logout', null, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+    return response.data;
+  };
 }
 export default AuthApi;
