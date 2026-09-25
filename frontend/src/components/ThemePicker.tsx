@@ -10,7 +10,10 @@ const THEMES = [
 
 export type ThemeChoice = (typeof THEMES)[number]['id'];
 
-/** Three-way theme swatch picker (design system `.pt-themes`); the choice applies at once (src/lib/settings.ts). */
+/**
+ * Three-way theme swatch picker, laid out after `.pt-themes` in docs/prototype/prototype.css, which is prototype
+ * scaffolding rather than the design system. The choice applies at once (src/lib/settings.ts).
+ */
 const ThemePicker = ({ value, onChange }: { value: ThemeChoice; onChange: (v: ThemeChoice) => void }) => {
   const { t: tr } = useTranslation();
   return (

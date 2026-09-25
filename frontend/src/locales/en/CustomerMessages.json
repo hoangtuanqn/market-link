@@ -1,10 +1,6 @@
 {
   "title": "Messages",
   "intro": "Ask a stall about this week's produce, or settle the details of an order before the cutoff.",
-  "srs": {
-    "title": "Messaging is not in the SRS.",
-    "text": "Ask the LEAD for a new requirement before this is built. The screen exists so the team can judge whether it is worth the hours."
-  },
   "conversations": "Conversations",
   "stallCount_one": "{{count}} stall",
   "stallCount_other": "{{count}} stalls",

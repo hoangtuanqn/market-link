@@ -1,10 +1,6 @@
 {
   "title": "Messages",
   "intro": "Posez une question à un stand sur les produits de la semaine, ou réglez les détails d'une commande avant l'heure limite.",
-  "srs": {
-    "title": "La messagerie ne figure pas dans le SRS.",
-    "text": "Demandez au LEAD une nouvelle exigence avant de la développer. Cet écran existe pour que l'équipe juge si cela vaut les heures."
-  },
   "conversations": "Conversations",
   "stallCount_one": "{{count}} stand",
   "stallCount_other": "{{count}} stands",

@@ -2,7 +2,6 @@ import { useState, type FormEvent, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import ChatMessage, { MessageOrderRef } from '@/components/ChatMessage';
-import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { dayName, formatClock, formatDayMonth, vnd } from '@/lib/format';
@@ -133,10 +132,6 @@ const CustomerMessagesPage = () => {
         <h1 className="text-h1">{t('title')}</h1>
         <p className="text-body-lg">{t('intro')}</p>
       </div>
-
-      <Banner variant="warning" title={t('srs.title')}>
-        {t('srs.text')}
-      </Banner>
 
       <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
         <Card className="overflow-hidden">

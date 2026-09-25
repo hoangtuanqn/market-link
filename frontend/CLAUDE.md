@@ -34,3 +34,24 @@
 - Spacing theo token: `p-1/2/3/4/6/8/12/16` (4 → 64px). Không dùng `p-5`, `p-7` hay giá trị tuỳ ý `p-[18px]`.
 - Không sửa tay `src/styles/marketlink-*.css` và `docs/design-system/tokens.json`: muốn đổi style thì đổi design system
   rồi sinh lại cả ba file cùng lúc.
+
+## Prototype là bản hướng dẫn, không phải sản phẩm
+
+`docs/prototype/` dựng để **hướng dẫn code** và để LEAD/FE1 duyệt. Sản phẩm trong `frontend/` là thứ
+**người dùng thật sự sài**. Chép bố cục và câu chữ từ prototype thì được, nhưng **bốn thứ sau không bao
+giờ được sang app**:
+
+| Chỉ có trong prototype | Là gì |
+|---|---|
+| `data-state-demo`, `data-state-target` | công tắc bật thử 4 trạng thái FR-084. App chọn trạng thái theo request thật |
+| `pt-todo`, `data-todo` | chip TODO đỏ ghi những gì SRS chưa định nghĩa |
+| `.pt-bar`, `.pt-sheet` | thanh điều hướng giữa các màn ở đáy trang |
+| `.pt-adminbar`, các mục "Other states (FR-084)" | dải và khối dựng cho người duyệt xem |
+
+Class `pt-*` **không phải design system**. Chúng nằm trong `docs/prototype/prototype.css`, là bố cục riêng
+của prototype. Design system là `ml-*` trong `src/styles/marketlink-components.css`. Thấy `pt-*` trong
+prototype thì **dựng lại bằng Tailwind trong app**, đừng chép class sang — app không nạp file CSS đó, nên
+class sẽ không có định nghĩa và phần tử mất style mà không báo lỗi gì.
+
+Câu chữ viết cho người duyệt cũng ở lại prototype. Ví dụ dòng "The map follows the filters and shows only
+the markets in the list." là lời giải thích cho người đọc bản mẫu; người dùng thật không cần ai nói câu đó.

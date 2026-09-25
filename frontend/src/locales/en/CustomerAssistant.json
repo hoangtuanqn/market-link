@@ -1,5 +1,4 @@
 {
-  "eyebrow": "Optional · FR-090 to FR-092",
   "title": "Shopping assistant",
   "intro": "Ask where to find something this weekend, when a market opens, or which pickup slots a stall has. Every answer comes from MarketLink's own data.",
   "conversation": "Assistant conversation",
@@ -36,6 +35,6 @@
   },
   "how": {
     "title": "How it works",
-    "text": "The message is classified into one of a fixed set of intents, and each intent runs a prepared query with parameters. The model never writes SQL. Messages are stored with the intent so the flow can be shown to the judges."
+    "text": "Your question is matched to one of a fixed set of intents, and each intent runs a prepared query against MarketLink's own data. Answers never come from anywhere else, and the assistant cannot change anything — it only reads."
   }
 }

@@ -1,10 +1,6 @@
 {
   "title": "Pesan",
   "intro": "Tanyakan hasil panen minggu ini ke lapak, atau sepakati detail pesanan sebelum batas pesan.",
-  "srs": {
-    "title": "Fitur pesan tidak ada di SRS.",
-    "text": "Minta LEAD membuat kebutuhan baru sebelum ini dibangun. Layar ini ada agar tim bisa menilai apakah sepadan dengan waktunya."
-  },
   "conversations": "Percakapan",
   "stallCount_one": "{{count}} lapak",
   "stallCount_other": "{{count}} lapak",

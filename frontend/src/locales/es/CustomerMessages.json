@@ -1,10 +1,6 @@
 {
   "title": "Mensajes",
   "intro": "Pregunta a un puesto por los productos de esta semana o cierra los detalles de un pedido antes de la hora límite.",
-  "srs": {
-    "title": "La mensajería no está en el SRS.",
-    "text": "Pide al LEAD un nuevo requisito antes de construirla. Esta pantalla existe para que el equipo valore si merece las horas."
-  },
   "conversations": "Conversaciones",
   "stallCount_one": "{{count}} puesto",
   "stallCount_other": "{{count}} puestos",

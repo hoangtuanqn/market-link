@@ -1,10 +1,6 @@
 {
   "title": "Nachrichten",
   "intro": "Fragen Sie einen Stand nach den Produkten dieser Woche oder klären Sie Details einer Bestellung vor dem Bestellschluss.",
-  "srs": {
-    "title": "Nachrichten sind nicht im SRS.",
-    "text": "Bitten Sie den LEAD um eine neue Anforderung, bevor dies gebaut wird. Die Seite existiert, damit das Team abwägen kann, ob sich der Aufwand lohnt."
-  },
   "conversations": "Unterhaltungen",
   "stallCount_one": "{{count}} Stand",
   "stallCount_other": "{{count}} Stände",

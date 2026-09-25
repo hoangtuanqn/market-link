@@ -92,7 +92,7 @@ app:
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
   expiration: 900000
-  issuer: InterVue
+  issuer: MarketLink
   refresh-token-ttl-days: 14
 
 # Tài liệu API. Prod tắt bằng SWAGGER_ENABLED=false (docker-compose.prod.yml)

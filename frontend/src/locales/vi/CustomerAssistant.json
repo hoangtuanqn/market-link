@@ -1,5 +1,4 @@
 {
-  "eyebrow": "Tuỳ chọn · FR-090 đến FR-092",
   "title": "Trợ lý mua sắm",
   "intro": "Hỏi nơi tìm món gì đó cuối tuần này, khi nào chợ mở, hoặc sạp còn khung giờ nhận hàng nào. Mọi câu trả lời đều lấy từ dữ liệu của chính MarketLink.",
   "conversation": "Cuộc trò chuyện với trợ lý",
@@ -36,6 +35,6 @@
   },
   "how": {
     "title": "Cách hoạt động",
-    "text": "Tin nhắn được phân loại vào một trong các ý định cố định, và mỗi ý định chạy một truy vấn soạn sẵn có tham số. Mô hình không bao giờ viết SQL. Tin nhắn được lưu kèm ý định để có thể trình bày luồng xử lý cho ban giám khảo."
+    "text": "Câu hỏi của bạn được khớp với một trong số các ý định có sẵn, và mỗi ý định chạy một truy vấn soạn sẵn trên dữ liệu của chính MarketLink. Câu trả lời không bao giờ lấy từ nơi khác, và trợ lý không thể thay đổi gì — nó chỉ đọc."
   }
 }

@@ -1,10 +1,6 @@
 {
   "title": "메시지",
   "intro": "이번 주 농산물에 대해 가게에 물어보거나, 마감 전에 주문 세부 사항을 정하세요.",
-  "srs": {
-    "title": "메시지 기능은 SRS에 없어요.",
-    "text": "만들기 전에 LEAD에게 새 요구 사항을 요청하세요. 이 화면은 팀이 시간을 들일 가치가 있는지 판단하도록 만든 거예요."
-  },
   "conversations": "대화",
   "stallCount_one": "가게 {{count}}곳",
   "stallCount_other": "가게 {{count}}곳",

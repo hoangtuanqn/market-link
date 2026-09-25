@@ -1,10 +1,6 @@
 {
   "title": "Tin nhắn",
   "intro": "Hỏi sạp về nông sản tuần này, hoặc thống nhất chi tiết đơn hàng trước giờ chốt.",
-  "srs": {
-    "title": "Nhắn tin không có trong SRS.",
-    "text": "Hãy xin LEAD một yêu cầu mới trước khi làm tính năng này. Màn hình này có để nhóm cân nhắc xem có đáng bỏ công hay không."
-  },
   "conversations": "Cuộc trò chuyện",
   "stallCount_one": "{{count}} sạp",
   "stallCount_other": "{{count}} sạp",

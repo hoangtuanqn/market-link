@@ -1,5 +1,4 @@
 {
-  "eyebrow": "Opsional · FR-090 sampai FR-092",
   "title": "Asisten belanja",
   "intro": "Tanyakan di mana mencari sesuatu akhir pekan ini, kapan pasar buka, atau slot ambil apa yang dimiliki sebuah lapak. Setiap jawaban berasal dari data MarketLink sendiri.",
   "conversation": "Percakapan dengan asisten",
@@ -36,6 +35,6 @@
   },
   "how": {
     "title": "Cara kerjanya",
-    "text": "Pesan digolongkan ke salah satu intent yang sudah ditetapkan, dan setiap intent menjalankan kueri siap pakai dengan parameter. Model tidak pernah menulis SQL. Pesan disimpan bersama intent-nya agar alurnya bisa ditunjukkan ke juri."
+    "text": "Pertanyaan Anda dicocokkan dengan salah satu dari sekumpulan maksud yang sudah ditentukan, dan setiap maksud menjalankan kueri siap pakai pada data MarketLink sendiri. Jawaban tidak pernah berasal dari tempat lain, dan asisten tidak bisa mengubah apa pun — ia hanya membaca."
   }
 }

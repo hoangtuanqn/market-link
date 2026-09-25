@@ -1,5 +1,4 @@
 {
-  "eyebrow": "Optional · FR-090 bis FR-092",
   "title": "Einkaufsassistent",
   "intro": "Fragen Sie, wo es dieses Wochenende etwas gibt, wann ein Markt öffnet oder welche Abholzeiten ein Stand hat. Jede Antwort stammt aus den eigenen Daten von MarketLink.",
   "conversation": "Unterhaltung mit dem Assistenten",
@@ -36,6 +35,6 @@
   },
   "how": {
     "title": "So funktioniert es",
-    "text": "Die Nachricht wird einem aus einer festen Menge von Intents zugeordnet, und jeder Intent führt eine vorbereitete Abfrage mit Parametern aus. Das Modell schreibt nie SQL. Nachrichten werden mit dem Intent gespeichert, damit der Ablauf der Jury gezeigt werden kann."
+    "text": "Ihre Frage wird einer von festgelegten Absichten zugeordnet, und jede Absicht führt eine vorbereitete Abfrage auf den eigenen Daten von MarketLink aus. Antworten kommen nie von anderswo, und der Assistent kann nichts ändern – er liest nur."
   }
 }

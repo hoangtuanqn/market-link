@@ -1,5 +1,4 @@
 {
-  "eyebrow": "Facultatif · FR-090 à FR-092",
   "title": "Assistant d'achat",
   "intro": "Demandez où trouver quelque chose ce week-end, quand un marché ouvre ou quels créneaux de retrait un stand propose. Chaque réponse vient des données de MarketLink.",
   "conversation": "Conversation avec l'assistant",
@@ -36,6 +35,6 @@
   },
   "how": {
     "title": "Comment ça marche",
-    "text": "Le message est classé dans une intention parmi un ensemble fixe, et chaque intention exécute une requête préparée avec des paramètres. Le modèle n'écrit jamais de SQL. Les messages sont enregistrés avec leur intention pour pouvoir montrer le fonctionnement au jury."
+    "text": "Votre question est associée à l'une des intentions d'une liste fixe, et chaque intention exécute une requête préparée sur les données de MarketLink. Les réponses ne viennent de nulle part ailleurs, et l'assistant ne peut rien modifier : il ne fait que lire."
   }
 }
