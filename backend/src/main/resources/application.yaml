@@ -93,6 +93,14 @@ app:
     pending-ttl-seconds: 300
     max-attempts: 5
     lock-seconds: 900
+  # FR-111: chat realtime. Host rỗng = simple broker trong app (CI/test); docker compose và prod
+  # đặt RABBITMQ_HOST để relay sang RabbitMQ (plugin rabbitmq_stomp, cổng 61613).
+  chat:
+    rabbitmq:
+      host: ${RABBITMQ_HOST:}
+      stomp-port: ${RABBITMQ_STOMP_PORT:61613}
+      user: ${RABBITMQ_USER:guest}
+      password: ${RABBITMQ_PASSWORD:guest}
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}

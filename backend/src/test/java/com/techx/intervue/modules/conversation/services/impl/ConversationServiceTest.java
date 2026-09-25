@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -16,6 +17,7 @@ import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
+import com.techx.intervue.modules.conversation.realtime.PresenceService;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.requests.OpenConversationRequest;
@@ -31,6 +33,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +50,7 @@ class ConversationServiceTest {
     UserRepository users;
     StallAccessPolicyInterface policy;
     ChatEventPublisherInterface events;
+    PresenceService presence;
     ConversationService service;
 
     User customer =
@@ -71,6 +75,8 @@ class ConversationServiceTest {
         users = mock(UserRepository.class);
         policy = mock(StallAccessPolicyInterface.class);
         events = mock(ChatEventPublisherInterface.class);
+        presence = mock(PresenceService.class);
+        when(presence.snapshot(any())).thenReturn(Map.of());
         Clock clock = Clock.fixed(NOW, ZoneId.of("Asia/Ho_Chi_Minh"));
         service =
                 new ConversationService(
@@ -80,6 +86,7 @@ class ConversationServiceTest {
                         policy,
                         events,
                         new ConversationLookup(conversations),
+                        presence,
                         clock);
         when(users.findById(7L)).thenReturn(Optional.of(customer));
         when(users.findById(3L)).thenReturn(Optional.of(farmer));
@@ -227,5 +234,23 @@ class ConversationServiceTest {
         assertThatThrownBy(() -> service.markRead(9L, 42L))
                 .isInstanceOf(ConversationAccessDeniedException.class);
         verify(conversations, never()).save(any());
+    }
+
+    @Test
+    void listMineCarriesPresenceOfTheOtherParticipant() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
+        when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
+        Instant seen = Instant.parse("2026-09-25T05:48:00Z");
+        // service truyền Set (others.keySet()); Mockito so khớp bằng equals nên không stub bằng
+        // List
+        when(presence.snapshot(argThat(ids -> ids.contains(3L))))
+                .thenReturn(Map.of(3L, new PresenceService.PresenceInfo(false, seen)));
+
+        var page = service.listMine(7L, 1, 20);
+
+        assertThat(page.items().get(0).other().online()).isFalse();
+        assertThat(page.items().get(0).other().lastSeenAt()).isEqualTo(seen);
     }
 }
