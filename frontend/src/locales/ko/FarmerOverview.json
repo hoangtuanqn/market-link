@@ -1,0 +1,92 @@
+{
+  "tabs": {
+    "new": "승인 대기",
+    "acc": "수락됨",
+    "ready": "준비 완료",
+    "done": "완료"
+  },
+  "decline": {
+    "reasons": {
+      "stock": "재고 부족",
+      "day": "그날은 판매하지 않음",
+      "time": "그 픽업 시간은 어려움",
+      "other": "기타"
+    },
+    "title": "주문 {{code}}을(를) 거절할까요?",
+    "keep": "주문 유지",
+    "confirm": "주문 거절",
+    "text": "고객에게 바로 알림이 가고 상품은 재고로 돌아와요.",
+    "reason": "고객에게 보일 사유"
+  },
+  "col": {
+    "order": "주문",
+    "customer": "고객",
+    "pickup": "픽업",
+    "items": "품목",
+    "total": "합계",
+    "status": "상태"
+  },
+  "toast": {
+    "acceptedTitle": "주문을 수락했어요",
+    "acceptedText": "주문 {{code}}을(를) 수락했어요. {{who}}님께 알렸어요.",
+    "readyTitle": "주문 준비 완료",
+    "readyText": "주문 {{code}}을(를) 준비 완료로 표시했어요.",
+    "completedTitle": "주문 완료",
+    "completedText": "주문 {{code}}이(가) 완료됐어요.",
+    "declinedTitle": "주문을 거절했어요",
+    "declinedText": "주문 {{code}}을(를) 거절했어요. 재고가 다시 늘었어요."
+  },
+  "actions": {
+    "accept": "수락",
+    "decline": "거절",
+    "ready": "준비 완료로 표시",
+    "complete": "완료로 표시",
+    "view": "보기"
+  },
+  "captions": {
+    "new": "승인 대기 · {{sat}}, {{sun}}",
+    "ready": "픽업 준비 완료"
+  },
+  "overline": "{{market}}의 내 매장 · 다음 마켓 날 {{day}}",
+  "greeting": "좋은 아침이에요, {{name}}님",
+  "applyTemplate": "주간 템플릿 적용",
+  "addProduct": "상품 추가",
+  "banner": {
+    "title_one": "주문 {{count}}건이 기다리고 있어요. 그중 {{closing}}건은 내일 {{time}}에 마감돼요.",
+    "title_other": "주문 {{count}}건이 기다리고 있어요. 그중 {{closing}}건은 내일 {{time}}에 마감돼요.",
+    "text": "승인하지 않은 주문도 재고를 잡고 있어요. 고객이 계획을 세울 수 있도록 마감 전에 수락하거나 거절하세요."
+  },
+  "kpi": {
+    "orders": "전체 주문",
+    "ordersNote_one": "이번 주 {{count}}건",
+    "ordersNote_other": "이번 주 {{count}}건",
+    "vsAugust": "8월 대비",
+    "openHistory": "판매 내역 열기",
+    "awaitingNote_one": "<b>{{count}}</b>건이 {{date}} {{time}}에 마감",
+    "awaitingNote_other": "<b>{{count}}</b>건이 {{date}} {{time}}에 마감",
+    "vsThursday": "평소 목요일 대비",
+    "openIncoming": "새 주문 열기",
+    "revenue": "9월 매출",
+    "revenueNote": "₫, 완료된 주문 기준, 매장에서 결제",
+    "best": "베스트셀러",
+    "bestNote": "이번 달 {{qty}}",
+    "openProducts": "상품 열기",
+    "note": "9월 현재까지를 8월과 비교했어요. 타일마다 숫자 뒤의 화면이 열려요."
+  },
+  "incoming": {
+    "title": "새 주문",
+    "all": "전체 주문과 필터",
+    "note": "새 주문은 열어 볼 때까지 강조 표시돼요."
+  },
+  "stock": {
+    "title": "{{day}} 재고",
+    "link": "이번 주 재고",
+    "note": "예약됨은 주문이 잡고 있는 수량이에요. 고객이 주문하는 순간 재고에서 빠져요."
+  },
+  "best": {
+    "title": "베스트셀러",
+    "link": "판매 내역",
+    "note": "9월 판매량, 상품별 단위 기준"
+  },
+  "protoNote": "사이드바와 그 위의 헤더는 프로토타입에서 새로 추가된 부분이에요."
+}

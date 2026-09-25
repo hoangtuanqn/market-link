@@ -1,0 +1,104 @@
+{
+  "title": "About MarketLink",
+  "intro": "MarketLink connects Farmers at farmers markets around Ho Chi Minh City with the people who shop there. Stalls publish what they will bring this week, you reserve from it, and you collect at the stall.",
+  "carouselLabel": "What MarketLink is for",
+  "photosNote": "The four photos above are placeholders.",
+  "slides": {
+    "mission": {
+      "topic": "Our mission",
+      "title": "End the trip that comes home empty",
+      "text": "Stalls announce the week on a chalkboard, so the best of the morning is gone before most people arrive. MarketLink puts every stall's week in one place and holds what you reserve until you collect it.",
+      "alt": "Stalls at a covered market with produce stacked in wooden crates",
+      "cta": "See this weekend's markets"
+    },
+    "howItWorks": {
+      "topic": "How it works",
+      "title": "Reserve on Thursday, collect on Saturday",
+      "text": "Browse what four markets around Ho Chi Minh City will have this weekend and reserve from as many stalls as you like. Each stall gets its own order, its own pickup time, and is paid at the stall.",
+      "alt": "Baskets of carrots, beans and chillies laid out on a market table",
+      "cta": "Browse this week's products"
+    },
+    "technology": {
+      "topic": "The technology",
+      "title": "Counts that are true the moment you order",
+      "text": "A reservation comes out of the stall's count straight away, so two people cannot book the same last two bunches. Pickup slots keep the queue short, and the map pins each stall inside its market.",
+      "alt": "Seeds and dry soil with a metal scoop",
+      "note_one": "{{n}} bunch left",
+      "note_other": "{{n}} bunches left",
+      "cta": "See the market map"
+    },
+    "benefit": {
+      "topic": "What you get",
+      "title": "The stall knows what to bring",
+      "text": "Farmers read the weekend orders before they harvest, so less comes back unsold. You get the pomelo you planned on, at a time you chose, paid to the person who grew it.",
+      "alt": "A farmer working a flooded rice field with a small tractor",
+      "note": "{{place}} · {{day}} harvest",
+      "cta": "Sell at MarketLink"
+    }
+  },
+  "why": {
+    "title": "Why it exists",
+    "shoppers": "A market morning runs on word of mouth. Stalls chalk up what they brought, regulars ask what is coming next week, and everyone else finds out by walking the rows. That works until you need something in particular, or until the trip across town ends at an empty table.",
+    "farmers": "Farmers have the same problem from the other side. There is no easy way to tell regulars what the week will hold, to take an order before market day, or to know how much to cut on Friday evening. MarketLink writes both halves down: the stall publishes the week, you reserve from it, and the stall reads the orders before it picks."
+  },
+  "limits": {
+    "title": "What MarketLink does not do",
+    "payment": "<b>No online payment.</b> You pay the Farmer at the stall when you collect. There is no card form anywhere in the product.",
+    "delivery": "<b>No delivery.</b> Every order is collected at the market, inside the window the stall sets.",
+    "certification": "<b>No certification.</b> MarketLink does not check licences or organic claims. Ask the Farmer at the stall.",
+    "profiles": "<b>No separate family profiles.</b> An account can be shared at home. The system does not tell people apart inside one account."
+  },
+  "team": {
+    "title": "The team",
+    "subtitle": "Six people, split by what they own in the repository",
+    "namePending": "Name to add",
+    "lead": {
+      "role": "Team lead",
+      "note": "The schema, the API contract and the twelve decisions the rest of the team builds against"
+    },
+    "be1": {
+      "role": "Backend",
+      "note": "Sign-in, roles and the order lifecycle, from placed through to completed"
+    },
+    "be2": {
+      "role": "Backend",
+      "note": "Products, markets, weekly stock, reports and the seed data for the demo"
+    },
+    "fe1": {
+      "role": "Frontend",
+      "note": "The design system, the public pages, the map and the Customer dashboard"
+    },
+    "fe2": {
+      "role": "Frontend",
+      "note": "The Farmer and Admin dashboards, and every form in the product"
+    },
+    "qa": {
+      "role": "Quality and documents",
+      "note": "The requirements list, the test data and the documents that go with the submission"
+    }
+  },
+  "stack": {
+    "title": "How it is built",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "maps": "Maps",
+    "mapsValue": "Leaflet with OpenStreetMap tiles",
+    "design": "Design",
+    "designValue": "The Hang tag design system: one set of tokens, one set of components, one voice"
+  },
+  "credits": {
+    "title": "Credits and data",
+    "mapData": "Map data",
+    "mapDataValue": "© OpenStreetMap contributors",
+    "photos": "Photos",
+    "photosValue": "Placeholders for now, credited here once the team's own photos are in",
+    "locale": "Currency and time",
+    "localeValue": "Vietnamese đồng, dates {{format}}, 24-hour clock, {{zone}}"
+  },
+  "contact": {
+    "title": "Something to tell us?",
+    "text": "Questions about an order go to the stall directly. Anything about the platform comes to the team.",
+    "contactUs": "Contact us",
+    "feedback": "Send feedback"
+  }
+}

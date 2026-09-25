@@ -1,14 +1,16 @@
 import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import Helper from '@/utils/helper';
 import { Card } from './card';
 
+/** Labels live under `period.` in common.json. */
 const GRANULARITIES = [
-  { id: 'day', label: 'Day' },
-  { id: 'week', label: 'Week' },
-  { id: 'month', label: 'Month' },
-  { id: 'quarter', label: 'Quarter' },
-  { id: 'year', label: 'Year' },
-  { id: 'custom', label: 'Custom' },
+  { id: 'day' },
+  { id: 'week' },
+  { id: 'month' },
+  { id: 'quarter' },
+  { id: 'year' },
+  { id: 'custom' },
 ] as const;
 
 type PeriodBarProps = {
@@ -21,11 +23,12 @@ type PeriodBarProps = {
 
 /** Period length, the two dates, and what it is compared against (design system `.pt-period`). */
 export function PeriodBar({ from = '2026-09-01', to = '2026-09-30', label, days, compare }: PeriodBarProps) {
+  const { t } = useTranslation();
   const [granularity, setGranularity] = useState<(typeof GRANULARITIES)[number]['id']>('month');
 
   return (
     <Card className="flex flex-col gap-4 p-4">
-      <div role="tablist" aria-label="Period length" className="bg-surface-sunken flex gap-0.5 rounded-sm p-0.75">
+      <div role="tablist" aria-label={t('period.length')} className="bg-surface-sunken flex gap-0.5 rounded-sm p-0.75">
         {GRANULARITIES.map((g) => (
           <button
             key={g.id}
@@ -38,14 +41,14 @@ export function PeriodBar({ from = '2026-09-01', to = '2026-09-30', label, days,
               granularity === g.id ? 'bg-surface-raised shadow-tag text-ink' : 'text-ink-muted hover:text-ink',
             )}
           >
-            {g.label}
+            {t(`period.${g.id}`)}
           </button>
         ))}
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="pt-from" className="text-small font-bold">
-            From
+            {t('period.from')}
           </label>
           <input
             id="pt-from"
@@ -56,7 +59,7 @@ export function PeriodBar({ from = '2026-09-01', to = '2026-09-30', label, days,
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="pt-to" className="text-small font-bold">
-            To
+            {t('period.to')}
           </label>
           <input
             id="pt-to"
@@ -67,12 +70,12 @@ export function PeriodBar({ from = '2026-09-01', to = '2026-09-30', label, days,
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="pt-cmp" className="text-small font-bold">
-            Compare with
+            {t('period.compareWith')}
           </label>
           <select id="pt-cmp" className="border-line-strong bg-surface-raised min-h-11 rounded-sm border-[1.5px] px-3">
-            <option>The period before, same length</option>
-            <option>The same period last year</option>
-            <option>No comparison</option>
+            <option>{t('period.cmpBefore')}</option>
+            <option>{t('period.cmpLastYear')}</option>
+            <option>{t('period.cmpNone')}</option>
           </select>
         </div>
       </div>
@@ -80,7 +83,7 @@ export function PeriodBar({ from = '2026-09-01', to = '2026-09-30', label, days,
         <b>{label}</b> · {days}
         <span className="text-ink-muted">
           {' '}
-          compared with <b>{compare}</b>, the same length
+          <Trans t={t} i18nKey="period.comparedWith" values={{ compare }} components={{ b: <b /> }} />
         </span>
       </p>
     </Card>

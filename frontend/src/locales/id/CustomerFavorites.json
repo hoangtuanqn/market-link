@@ -1,0 +1,42 @@
+{
+  "title": "Favorit",
+  "intro": "Daftar keinginan Anda: produk yang ingin dibeli lain kali, lapak langganan, dan pasar tempat Anda belanja. Favorit yang habis akan memberi tahu saat tersedia lagi.",
+  "findMore": "Cari lagi untuk disimpan",
+  "tabs": {
+    "label": "Yang disimpan",
+    "products": "Produk",
+    "stalls": "Lapak",
+    "markets": "Pasar"
+  },
+  "banner": {
+    "title": "Satu dari empat produk yang Anda simpan sedang habis.",
+    "text": "Peringatan stok kembali aktif, jadi Anda langsung mendapat notifikasi begitu lapak menjualnya lagi."
+  },
+  "filters": {
+    "all": "Semua",
+    "inStock": "Ada stok",
+    "soldOut": "Habis",
+    "priceDropped": "Harga turun"
+  },
+  "soldOut": "Habis",
+  "left": "Sisa {{qty}}",
+  "alertOn": "Peringatan aktif",
+  "addToCart": "Tambah ke keranjang",
+  "remove": "Hapus",
+  "addInStock_one": "Tambahkan {{count}} barang yang ada stok ke keranjang",
+  "addInStock_other": "Tambahkan {{count}} barang yang ada stok ke keranjang",
+  "toast": {
+    "alertTitle": "Peringatan stok kembali",
+    "alertOff": "Peringatan untuk {{name}} dimatikan.",
+    "addedTitle": "Ditambahkan ke keranjang",
+    "added": "{{name}} ditambahkan ke keranjang Anda.",
+    "addedMany_one": "{{count}} produk ditambahkan ke keranjang. Akan dibagi per lapak saat checkout.",
+    "addedMany_other": "{{count}} produk ditambahkan ke keranjang. Akan dibagi per lapak saat checkout.",
+    "removedTitle": "Dihapus",
+    "removed": "{{name}} dihapus dari favorit Anda."
+  },
+  "holdNote": "Menyimpan produk tidak menahan stok. Stok hanya ditahan saat Anda memesan.",
+  "stallsNote": "Lapak yang Anda simpan, beserta apa yang dibawa masing-masing akhir pekan ini.",
+  "thisWeek": "Minggu ini",
+  "marketsNote": "Pasar yang disimpan tampil pertama di daftar dan di peta, dan rute ke lapaknya dimulai dari alamat yang Anda simpan."
+}

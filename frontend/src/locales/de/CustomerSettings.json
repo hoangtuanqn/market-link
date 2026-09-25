@@ -1,0 +1,17 @@
+{
+  "breadcrumbAccount": "Konto",
+  "title": "Einstellungen",
+  "intro": "Wie MarketLink aussieht und worüber es Sie informiert. Alles hier gilt nur für Sie; für die Stände ändert sich nichts.",
+  "shopping": "Einkaufen",
+  "market": "Markt, auf dem Sie am häufigsten einkaufen",
+  "marketNote": "Wird auf der Seite „Märkte“ zuerst angezeigt.",
+  "marketNone": "Keine Vorliebe",
+  "slot": "Bevorzugte Abholzeit",
+  "slotNote": "Vorerst nur gespeichert. Sie wird vorausgewählt, wenn ein Stand diese Zeit frei hat.",
+  "slots": {
+    "earliest": "Frühestmöglich",
+    "06-07": "06:00 – 07:00",
+    "07-08": "07:00 – 08:00",
+    "08-09": "08:00 – 09:00"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Thông báo",
+  "intro": "Đơn mới, đơn được sửa hoặc bị huỷ từ khách, và thông báo từ MarketLink.",
+  "filter": {
+    "all": "Tất cả",
+    "unread": "Chưa đọc"
+  },
+  "unreadCount_one": "{{count}} chưa đọc",
+  "unreadCount_other": "{{count}} chưa đọc",
+  "unread": "chưa đọc",
+  "markAllRead": "Đánh dấu đã đọc tất cả",
+  "empty": {
+    "title": "Không có gì mới",
+    "text": "Bạn sẽ được báo ở đây khi có đơn mới, đơn được sửa hoặc bị huỷ, và khi quản trị viên đăng thông báo."
+  }
+}

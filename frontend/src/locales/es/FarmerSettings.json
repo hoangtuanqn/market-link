@@ -1,0 +1,17 @@
+{
+  "title": "Ajustes",
+  "intro": "Tus preferencias y los valores predeterminados con los que empieza tu puesto.",
+  "selling": "Valores de venta predeterminados",
+  "sellingNote": "Se guardan con tu cuenta. Se usarán al generar los horarios de recogida de una semana nueva.",
+  "cutoff": "Hora límite de pedidos",
+  "cutoffNote": "Cuántas horas antes de un horario de recogida se bloquea el pedido.",
+  "slot": "Duración del horario",
+  "slotNote": "Se usa al generar los horarios de recogida de una semana nueva.",
+  "max": "Pedidos por horario",
+  "hours_one": "{{count}} hora",
+  "hours_other": "{{count}} horas",
+  "minutes_one": "{{count}} minuto",
+  "minutes_other": "{{count}} minutos",
+  "orders_one": "{{count}} pedido",
+  "orders_other": "{{count}} pedidos"
+}

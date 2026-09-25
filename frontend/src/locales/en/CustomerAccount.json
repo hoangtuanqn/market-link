@@ -1,0 +1,119 @@
+{
+  "title": "Account",
+  "intro": "Your details are shared with a stall only on the orders you place there.",
+  "sell": {
+    "title": "Sell at MarketLink",
+    "text": "If you grow food, this account can become a stall. You keep your orders, favorites and cart, and a panel appears for stock and pickup times once an admin approves you.",
+    "apply": "Apply to sell"
+  },
+  "signOut": {
+    "title": "Sign out",
+    "text": "Signs you out on this device only.",
+    "button": "Sign out"
+  },
+  "profile": {
+    "title": "Your details",
+    "loading": "Loading your details…",
+    "loadFailed": "Could not load your details. Please try again.",
+    "signedOut": {
+      "title": "You are signed out.",
+      "text": "Sign in again to see and edit your details.",
+      "signIn": "Sign in"
+    },
+    "nothingChanged": "Nothing was changed.",
+    "retry": "Try again",
+    "fullName": "Full name",
+    "phone": "Phone number",
+    "email": "Email",
+    "emailHint": "Used to sign in. It cannot be changed here.",
+    "address": "Address",
+    "addressHint": "Used for distances and directions.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "noChanges": "No changes to save.",
+    "saved": "Your details are saved.",
+    "saveFailed": "Could not save your details. Please try again."
+  },
+  "password": {
+    "title": "Change password",
+    "intro": "You will be signed out on every device and asked to sign in again.",
+    "current": "Current password",
+    "new": "New password",
+    "repeat": "Repeat new password",
+    "hint": "{{min}} to {{max}} characters.",
+    "submit": "Change password",
+    "submitting": "Changing password…",
+    "changed": "Your password has been changed. Please sign in again.",
+    "failed": "Could not change your password. Please try again.",
+    "errors": {
+      "currentRequired": "Enter your current password.",
+      "newRequired": "Enter a new password.",
+      "length": "Password must be {{min}} to {{max}} characters.",
+      "same": "Use a password different from the current one.",
+      "confirmRequired": "Confirm your password.",
+      "mismatch": "Passwords do not match."
+    }
+  },
+  "photo": {
+    "title": "Profile photo",
+    "intro": "Shown in the menu and to stalls on your orders. JPEG, PNG or a photo from your camera.",
+    "upload": "Upload photo",
+    "take": "Take photo",
+    "remove": "Remove photo",
+    "removing": "Removing…",
+    "removed": "Your photo is removed.",
+    "removeFailed": "Could not remove your photo. Please try again.",
+    "notUsed": "Photo not used"
+  },
+  "photoErrors": {
+    "notPhoto": "Choose a photo (JPEG, PNG, HEIC or WebP).",
+    "tooBig": "That photo is over {{mb}} MB. Choose a smaller one.",
+    "unreadable": "This file is not a photo we can read.",
+    "noPicture": "The camera has no picture yet. Try again.",
+    "captureFailed": "Could not take the photo."
+  },
+  "dialog": {
+    "takeTitle": "Take a photo",
+    "frameTitle": "Frame your photo",
+    "frameHelp": "Drag to move the photo and zoom until your face fills the circle.",
+    "cancel": "Cancel",
+    "uploadInstead": "Upload a photo instead",
+    "take": "Take photo",
+    "retake": "Retake",
+    "chooseAnother": "Choose another",
+    "save": "Save photo",
+    "saving": "Saving…",
+    "saved": "Your photo is saved.",
+    "saveFailed": "Could not save your photo. Please try again.",
+    "takeFailed": "Could not take the photo. Try again.",
+    "unchanged": "Your current photo is unchanged."
+  },
+  "camera": {
+    "preview": "Camera preview",
+    "starting": "Starting the camera…",
+    "blocked": {
+      "title": "Camera access is blocked.",
+      "text": "Allow the camera for this site in your browser settings, or upload a photo instead."
+    },
+    "notFound": {
+      "title": "No camera was found.",
+      "text": "Plug one in, or upload a photo instead."
+    },
+    "busy": {
+      "title": "The camera is busy.",
+      "text": "Close other apps using it and try again, or upload a photo."
+    },
+    "failed": {
+      "title": "The camera could not start.",
+      "text": "Try again, or upload a photo instead."
+    },
+    "insecure": {
+      "title": "This browser cannot open the camera here.",
+      "text": "The camera needs a secure (https) page. Upload a photo instead."
+    }
+  },
+  "crop": {
+    "frame": "Photo framing. Drag, or use the arrow keys to move it and plus or minus to zoom.",
+    "zoom": "Zoom"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "title_one": "{{count}} order placed",
+  "title_other": "{{count}} orders placed",
+  "intro": "Each stall now reviews its order. You get a notification when it is accepted, and another when it is ready to pick up. Stock is already held for you.",
+  "steps": {
+    "title": "What happens next",
+    "review": "{{stalls}} accept or decline before their cutoff.",
+    "edit": "You can edit or cancel each order until its cutoff: {{cutoffs}}.",
+    "cutoffAt": "{{time}} on {{date}}",
+    "pickup": "On market day the stall marks it ready. Go in your slot, collect and pay the Farmer."
+  },
+  "seeOrders": "See my orders",
+  "keepBrowsing": "Keep browsing"
+}

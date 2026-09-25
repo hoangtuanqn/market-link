@@ -1,0 +1,83 @@
+{
+  "title": "Bestellungen",
+  "intro": "Nehmen Sie neue Bestellungen vor ihrem Annahmeschluss an oder lehnen Sie sie ab, markieren Sie sie am Markttag als bereit und schließen Sie sie ab, wenn der Kunde bezahlt hat.",
+  "search": { "label": "Bestellungen suchen", "placeholder": "Bestellnummer oder Kundenname", "submit": "Suchen" },
+  "filter": { "day": "Abholtag", "all": "Alle", "allDays": "Tage", "market": "Markt", "bothMarkets": "Beide Märkte" },
+  "tabsLabel": "Bestellungen nach Status",
+  "status": {
+    "placed": "Wartet auf Annahme",
+    "accepted": "Angenommen",
+    "ready": "Bereit",
+    "completed": "Abgeschlossen",
+    "declined": "Abgelehnt",
+    "cancelled": "Storniert"
+  },
+  "empty": {
+    "placed": {
+      "title": "Nichts wartet auf Sie",
+      "text": "Neue Vorbestellungen landen hier bis 12 Stunden vor ihrem Zeitfenster."
+    },
+    "accepted": {
+      "title": "Keine angenommenen Bestellungen",
+      "text": "Angenommene Bestellungen warten hier, bis Sie sie als bereit markieren."
+    },
+    "ready": {
+      "title": "Noch nichts bereit",
+      "text": "Markieren Sie eine angenommene Bestellung als bereit, sobald sie für den Stand gepackt ist."
+    },
+    "completed": {
+      "title": "Keine abgeschlossenen Bestellungen",
+      "text": "Eine Bestellung ist abgeschlossen, wenn der Kunde sie am Stand abholt und bezahlt."
+    },
+    "declined": {
+      "title": "Keine abgelehnten Bestellungen",
+      "text": "Bestellungen, die Sie ablehnen, stehen hier mit dem Grund."
+    },
+    "cancelled": {
+      "title": "Keine stornierten Bestellungen",
+      "text": "Kunden können bis zum Annahmeschluss stornieren (D-05)."
+    }
+  },
+  "col": {
+    "order": "Bestellung",
+    "customer": "Kunde",
+    "pickup": "Abholung",
+    "cutoff": "Annahmeschluss",
+    "items": "Artikel",
+    "total": "Summe",
+    "status": "Status"
+  },
+  "action": {
+    "accept": "Annehmen",
+    "decline": "Ablehnen",
+    "markReady": "Als bereit markieren",
+    "markCompleted": "Als abgeschlossen markieren",
+    "view": "Ansehen"
+  },
+  "toast": {
+    "accepted": "Bestellung {{code}} angenommen.",
+    "ready": "Bestellung {{code}} als bereit markiert.",
+    "declined": "Bestellung {{code}} abgelehnt.",
+    "completed": "Bestellung {{code}} abgeschlossen."
+  },
+  "auditNote": "Jede Statusänderung wird mit Uhrzeit und Person gespeichert (FR-038). Eine Änderung in falscher Reihenfolge wird abgewiesen (D-04).",
+  "decline": {
+    "title": "Bestellung {{code}} ablehnen?",
+    "keep": "Bestellung behalten",
+    "confirm": "Bestellung ablehnen",
+    "text": "Der Kunde wird sofort benachrichtigt und die Artikel gehen zurück in Ihren Bestand.",
+    "reason": "Grund, den der Kunde sieht",
+    "reasons": {
+      "stock": "Nicht genug Vorrat",
+      "day": "An dem Tag kein Verkauf",
+      "time": "Diese Abholzeit ist nicht möglich",
+      "other": "Sonstiges"
+    }
+  },
+  "complete": {
+    "title": "{{code}} als abgeschlossen markieren?",
+    "notYet": "Noch nicht",
+    "text": "Tun Sie das, nachdem der Kunde die Bestellung abgeholt und am Stand bezahlt hat. Abgeschlossene Bestellungen zählen zu Ihrem Umsatz und schalten die Bewertung des Kunden frei.",
+    "auto": "Bestellungen, die noch auf Bereit stehen, werden 24 Stunden nach dem Abholdatum automatisch abgeschlossen (D-03)."
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "products": "Produits",
+  "crumb": {
+    "edit": "Modifier",
+    "add": "Ajouter"
+  },
+  "addTitle": "Ajouter un produit",
+  "notFound": {
+    "title": "Ce produit n’est plus là",
+    "text": "Il a peut-être été supprimé. Rouvrez-le depuis votre liste de produits."
+  },
+  "name": {
+    "label": "Nom du produit",
+    "hint": "En anglais, avec le lieu ou la variété si c’est important : « Củ Chi water spinach », « Green-skin pomelo »."
+  },
+  "category": {
+    "label": "Catégorie",
+    "hint": "Les catégories sont gérées par l’admin."
+  },
+  "unit": {
+    "label": "Vendu à",
+    "addedByStall": "{{unit}} · ajouté par un stand",
+    "own": "Nommer votre propre unité…",
+    "hint": "Comment un client l’achète : au kilo, à la botte, à la pièce, au sac. Choisissez-en une ou nommez la vôtre."
+  },
+  "own": {
+    "label": "Votre unité",
+    "onePlaceholder": "tray of 30",
+    "one": "Unité, au singulier",
+    "many": "Unité, au pluriel",
+    "hint": "Le singulier, puis le pluriel. Nous remplissons le second pour vous ; corrigez-le si la supposition est fausse."
+  },
+  "preview": {
+    "label": "Ce que verront les clients",
+    "text": "<b>{{price}}</b> sur l’étiquette · <b>{{left}}</b> restants · qui en commande un voit <b>{{one}}</b>"
+  },
+  "price": {
+    "label": "Prix en ₫",
+    "hint": "Affiché ainsi : {{price}}."
+  },
+  "qty": {
+    "label": "Quantité disponible cette semaine",
+    "error": "La quantité doit être de 0 ou plus. Utilisez Épuisé s’il n’en reste plus."
+  },
+  "desc": {
+    "label": "Description",
+    "hint": "Affichée sur la page du produit. Dites comment il est cultivé et comment le conserver."
+  },
+  "flag": {
+    "label": "Petite mention sur la carte",
+    "hint": "Facultatif, écrit à la main sur l’étiquette : « Frais du jour », « Cuit à 5 h »."
+  },
+  "status": {
+    "label": "Statut",
+    "available": "Disponible",
+    "sold_out": "Épuisé",
+    "unavailable": "En pause"
+  },
+  "photo": {
+    "label": "Photo",
+    "none": "Pas encore de photo. Tant que vous n’en ajoutez pas, l’étiquette affiche la catégorie à la main.",
+    "choose": "Choisir une photo",
+    "hint": "JPG ou PNG, 4:3, 5 Mo maximum. En gros plan, à la lumière naturelle, sur du bois ou du papier."
+  },
+  "save": "Enregistrer le produit",
+  "add": "Ajouter le produit",
+  "cancel": "Annuler",
+  "delete": {
+    "button": "Supprimer le produit",
+    "title": "Supprimer {{name}} ?",
+    "keep": "Garder le produit",
+    "text": "Il disparaît du catalogue et de votre modèle. Les commandes qui le contiennent déjà ne changent pas."
+  },
+  "toast": {
+    "saved": "Enregistré",
+    "savedText": "{{name}} enregistré.",
+    "product": "Produit"
+  }
+}

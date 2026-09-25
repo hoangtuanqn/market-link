@@ -1,0 +1,43 @@
+{
+  "title": "고객 계정 만들기",
+  "intro": "이름, 전화번호, 이메일, 주소는 필수예요. 주소는 시장까지의 거리를 보여 주고 길찾기를 미리 채우는 데 쓰여요.",
+  "fields": {
+    "fullName": "이름",
+    "phone": "전화번호",
+    "email": "이메일",
+    "emailHint": "로그인과 주문 알림에 쓰여요.",
+    "address": "주소",
+    "addressPlaceholder": "도로, 동, 군",
+    "password": "비밀번호",
+    "passwordHint": "{{min}}~{{max}}자.",
+    "confirmPassword": "비밀번호 다시 입력"
+  },
+  "consent": {
+    "label": "<terms>서비스 약관</terms> 및 <privacy>개인정보 처리방침</privacy>을 읽었으며 동의합니다",
+    "note": "이름과 전화번호는 주문한 가게에 전달되어 장날에 주문을 건네받는 데 쓰여요. 결제는 가게에서 농가에 직접 해요."
+  },
+  "submit": "계정 만들기",
+  "submitting": "계정 만드는 중…",
+  "haveAccount": "이미 계정이 있어요",
+  "acceptFirst": "계정을 만들려면 약관에 동의해 주세요.",
+  "sharedAccount": "한 계정을 가족이 함께 쓸 수 있어요. 시스템은 한 계정 안의 사람을 구분하지 않아요.",
+  "toast": {
+    "created": "계정을 만들었어요.",
+    "failed": "계정을 만들지 못했어요. 다시 시도해 주세요."
+  },
+  "errors": {
+    "fullNameRequired": "이름을 입력해 주세요.",
+    "fullNameMax": "이름은 최대 {{max}}자까지 입력할 수 있어요.",
+    "phoneRequired": "전화번호를 입력해 주세요.",
+    "phoneInvalid": "올바른 베트남 휴대폰 번호(10자리)를 입력해 주세요.",
+    "emailRequired": "이메일을 입력해 주세요.",
+    "emailInvalid": "올바른 이메일 주소를 입력해 주세요.",
+    "emailMax": "이메일은 최대 {{max}}자까지 입력할 수 있어요.",
+    "addressRequired": "주소를 입력해 주세요.",
+    "addressMax": "주소는 최대 {{max}}자까지 입력할 수 있어요.",
+    "passwordRequired": "비밀번호를 입력해 주세요.",
+    "passwordLength": "비밀번호는 {{min}}~{{max}}자여야 해요.",
+    "confirmRequired": "비밀번호를 한 번 더 입력해 주세요.",
+    "confirmMismatch": "비밀번호가 일치하지 않아요."
+  }
+}

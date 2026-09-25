@@ -1,0 +1,13 @@
+{
+  "title": "通知",
+  "intro": "订单被接受、拒绝或已备好，收藏商品重新到货，以及 MarketLink 的公告。",
+  "filter": {
+    "all": "全部",
+    "unread": "未读"
+  },
+  "unreadCount_one": "{{count}} 条未读",
+  "unreadCount_other": "{{count}} 条未读",
+  "unread": "未读",
+  "markAllRead": "全部标为已读",
+  "note": "目前仅提供应用内通知。确认和取货提醒邮件将在之后推出。"
+}

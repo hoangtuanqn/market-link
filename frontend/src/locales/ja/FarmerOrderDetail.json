@@ -1,0 +1,80 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "在庫が足りない",
+      "day": "その日は出店しない",
+      "time": "その受け取り時間に対応できない",
+      "other": "その他"
+    },
+    "item": "{{name}} {{qty}}",
+    "title": "注文 {{code}} をお断りしますか？",
+    "keep": "注文を残す",
+    "confirm": "注文をお断りする",
+    "text": "{{who}} さんにすぐ通知され、{{items}}は在庫に戻ります。",
+    "reason": "お客さまに表示される理由"
+  },
+  "history": {
+    "before": "{{cutoff}} より前",
+    "cancelled": "お客さまがキャンセル",
+    "title": "履歴"
+  },
+  "missing": {
+    "title": "この注文はもうありません",
+    "text": "お客さまがキャンセルしたか、リンクが古い可能性があります。注文一覧から開き直してください。",
+    "back": "注文一覧"
+  },
+  "item": "商品",
+  "col": {
+    "product": "商品",
+    "requested": "注文数",
+    "left": "この注文後の残り",
+    "amount": "金額"
+  },
+  "crumb": "注文",
+  "cutoff": "締め切り {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "注文を受け付けました",
+    "acceptedText": "注文 {{code}} を受け付け、{{who}} さんに通知しました。",
+    "readyTitle": "準備ができました",
+    "readyText": "注文 {{code}} を準備完了にしました。",
+    "completedTitle": "注文が完了しました",
+    "completedText": "注文 {{code}} が完了しました。",
+    "declinedTitle": "注文をお断りしました",
+    "declinedText": "注文 {{code}} をお断りしました。"
+  },
+  "actions": {
+    "accept": "注文を受け付ける",
+    "decline": "お断りする",
+    "ready": "準備完了にする",
+    "complete": "完了にする"
+  },
+  "items": {
+    "title": "商品",
+    "note": "表示の在庫は、この注文とほかの注文を差し引いた残りです。お断りすると予約分の在庫は戻ります（D-02）。"
+  },
+  "note": "お客さまからのメモ",
+  "quote": "「{{text}}」",
+  "customer": {
+    "title": "お客さま",
+    "name": "名前",
+    "phone": "電話",
+    "ordersWithYou": "あなたのお店での注文",
+    "orders_one": "{{count}} 件",
+    "orders_other": "{{count}} 件",
+    "withCollected_one": "{{orders}}、うち受け取り済み {{count}} 件",
+    "withCollected_other": "{{orders}}、うち受け取り済み {{count}} 件"
+  },
+  "pickup": {
+    "title": "受け取り枠",
+    "market": "マーケット",
+    "marketStall": "{{market}}、区画 {{code}}",
+    "slot": "枠",
+    "pay": "受け取り時に支払い"
+  },
+  "complete": {
+    "title": "{{code}} を完了にしますか？",
+    "notYet": "まだしない",
+    "text": "お客さまが注文を受け取り、お店で支払いを済ませてから行ってください。完了した注文は売上に加算され、お客さまがレビューを書けるようになります。",
+    "auto": "「準備完了」のままの注文は、受け取り日の 24 時間後に自動で完了になります（D-03）。"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "markets_one": "{{count}} market",
+  "markets_other": "{{count}} markets",
+  "stallsSelling_one": "{{count}} stall selling",
+  "stallsSelling_other": "{{count}} stalls selling",
+  "title": "Products",
+  "intro": "Everything the stalls have listed for this week. Filter by category, price, market and day, then add to your cart.",
+  "filters": {
+    "title": "Filters",
+    "clearAll": "Clear all",
+    "day": "Market day",
+    "category": "Category",
+    "price": "Price per unit",
+    "market": "Market",
+    "allMarkets": "All markets",
+    "inStock": "In stock only",
+    "inStockNote": "Hides sold-out and paused products"
+  },
+  "price": {
+    "any": "Any price",
+    "low": "Under {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Over {{high}}"
+  },
+  "summary_one": "<b>{{count}} product</b> matches on {{day}}",
+  "summary_other": "<b>{{count}} products</b> match on {{day}}",
+  "sort": "Sort",
+  "sorts": {
+    "newest": "Newest",
+    "priceAsc": "Price, low to high",
+    "priceDesc": "Price, high to low",
+    "rating": "Top rated"
+  },
+  "pager": {
+    "showing": "Showing {{from}}–{{to}} of {{total}}",
+    "onePage_one": "{{count}} product on one page",
+    "onePage_other": "All {{count}} products on one page"
+  },
+  "empty": {
+    "title": "Nothing matches these filters",
+    "text": "Try removing the price filter, or widen it to another category or market.",
+    "clear": "Clear all filters"
+  }
+}

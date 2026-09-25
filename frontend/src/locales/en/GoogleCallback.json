@@ -1,0 +1,21 @@
+{
+  "loading": {
+    "title": "Signing you in with Google…",
+    "text": "This takes a second."
+  },
+  "failed": {
+    "title": "Google sign-in did not finish",
+    "text": "You are not signed in. Nothing has changed on your account.",
+    "backToSignIn": "Back to sign in",
+    "registerWithEmail": "Create an account with email instead"
+  },
+  "toast": {
+    "signedIn": "Signed in."
+  },
+  "errors": {
+    "cancelled": "You cancelled Google sign-in.",
+    "google": "Google could not sign you in. Please try again.",
+    "invalidState": "This sign-in attempt is not valid. Start again from the sign-in page.",
+    "failed": "Google sign-in failed. Please try again."
+  }
+}

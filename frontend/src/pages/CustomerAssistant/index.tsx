@@ -1,51 +1,47 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useState, type FormEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import ChatMessage from '@/components/ChatMessage';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { dayName, formatClock, formatDayMonth, perUnit } from '@/lib/format';
 
-type LogEntry = { from: 'user' | 'bot'; time: string; intent?: string; content: ReactNode; suggestions?: string[] };
+type Suggestion =
+  'pomeloSat' | 'baChieuOpen' | 'showMap' | 'slotsUtHien' | 'addPomelos' | 'directionsThuDuc' | 'thaoDien';
+type Reply = 'greeting' | 'pomelo' | 'slots' | 'unknown';
+
+/** What a message says: a prepared reply (translated when shown), a suggestion the user tapped, or typed text. */
+type Say = { reply: Reply } | { suggestion: Suggestion } | { question: 'pomeloMorning' } | { text: string };
+
+type LogEntry = { from: 'user' | 'bot'; time: string; intent?: string; say: Say; suggestions?: Suggestion[] };
+
+const SAT = new Date(2026, 8, 26);
+const SUN = new Date(2026, 8, 27);
 
 const INITIAL_LOG: LogEntry[] = [
-  {
-    from: 'bot',
-    time: '20:13',
-    content: 'Hi Khang. Ask me what is available this weekend, or when a market opens.',
-    suggestions: ['Where can I get green-skin pomelo on Saturday?', 'When does Bà Chiểu Green Market open?'],
-  },
-  { from: 'user', time: '20:14', content: 'Which market has green-skin pomelo on Saturday morning?' },
+  { from: 'bot', time: '20:13', say: { reply: 'greeting' }, suggestions: ['pomeloSat', 'baChieuOpen'] },
+  { from: 'user', time: '20:14', say: { question: 'pomeloMorning' } },
   {
     from: 'bot',
     time: '20:14',
     intent: 'find product',
-    content: (
-      <>
-        On Saturday 26/09, 2 stalls have green-skin pomelo: <b>Út Hiền Orchard</b> at Thủ Đức Farmers Market (2 left,
-        65,000 ₫ a piece) and <b>Ba Lành Farm</b> at Thảo Điền Weekend Market (9 left, 60,000 ₫ a piece).
-      </>
-    ),
-    suggestions: ['Show the 2 stalls on the map', 'Pickup times at Út Hiền'],
+    say: { reply: 'pomelo' },
+    suggestions: ['showMap', 'slotsUtHien'],
   },
-  { from: 'user', time: '20:15', content: 'Pickup times at Út Hiền' },
+  { from: 'user', time: '20:15', say: { suggestion: 'slotsUtHien' } },
   {
     from: 'bot',
     time: '20:15',
     intent: 'pickup slots',
-    content:
-      'Út Hiền Orchard picks up 06:00 – 09:30 on Sunday 27/09 at Thủ Đức Farmers Market. Free slots: 06:30, 07:00, 08:00. The 06:00 slot is full. Orders close 12 hours before the slot.',
-    suggestions: ['Add 2 pomelos to my cart', 'Directions to Thủ Đức Farmers Market'],
+    say: { reply: 'slots' },
+    suggestions: ['addPomelos', 'directionsThuDuc'],
   },
 ];
 
-const CAN_ANSWER = [
-  'Find a product across markets and stalls, with how many are left',
-  'Market days and opening hours',
-  'Which stalls are at a market on a given day',
-  "A stall's pickup windows and free slots",
-  "A product's price, unit and stock",
-];
+const CAN_ANSWER = ['product', 'hours', 'stalls', 'slots', 'price'] as const;
 
 /** FR-090 FR-091 FR-092, Optional (SHOULD) — intent → prepared query with parameters, never LLM-generated SQL (R-04). */
 const CustomerAssistantPage = () => {
+  const { t } = useTranslation('CustomerAssistant');
   const [log, setLog] = useState(INITIAL_LOG);
   const [draft, setDraft] = useState('');
 
@@ -54,15 +50,48 @@ const CustomerAssistantPage = () => {
     if (!value) return;
     setLog((prev) => [
       ...prev,
-      { from: 'user', time: '20:16', content: value },
-      {
-        from: 'bot',
-        time: '20:16',
-        intent: 'unknown',
-        content: 'I did not understand that. Try a product name, a market, or a stall.',
-        suggestions: ['What is at Thảo Điền on Saturday?'],
-      },
+      { from: 'user', time: '20:16', say: { text: value } },
+      { from: 'bot', time: '20:16', intent: 'unknown', say: { reply: 'unknown' }, suggestions: ['thaoDien'] },
     ]);
+  };
+
+  const reply = (r: Reply) => {
+    switch (r) {
+      case 'greeting':
+        return t('reply.greeting', { name: 'Khang' });
+      case 'pomelo':
+        return (
+          <Trans
+            t={t}
+            i18nKey="reply.pomelo"
+            values={{
+              day: dayName(6, 'long'),
+              date: formatDayMonth(SAT),
+              price1: perUnit(65000, 'piece'),
+              price2: perUnit(60000, 'piece'),
+            }}
+            components={{ b: <b /> }}
+          />
+        );
+      case 'slots':
+        return t('reply.slots', {
+          from: formatClock('06:00'),
+          to: formatClock('09:30'),
+          day: dayName(0, 'long'),
+          date: formatDayMonth(SUN),
+          free: ['06:30', '07:00', '08:00'].map(formatClock).join(', '),
+          full: formatClock('06:00'),
+        });
+      default:
+        return t('reply.unknown');
+    }
+  };
+
+  const content = (say: Say) => {
+    if ('reply' in say) return reply(say.reply);
+    if ('suggestion' in say) return t(`suggest.${say.suggestion}`);
+    if ('question' in say) return t(`question.${say.question}`);
+    return say.text;
   };
 
   const onSend = (e: FormEvent) => {
@@ -74,24 +103,18 @@ const CustomerAssistantPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <p className="font-hand text-hand text-ink-muted">Optional · FR-090 to FR-092</p>
-        <h1 className="text-h1">Shopping assistant</h1>
-        <p className="text-body-lg max-w-155">
-          Ask where to find something this weekend, when a market opens, or which pickup slots a stall has. Every answer
-          comes from MarketLink&apos;s own data.
-        </p>
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body-lg max-w-155">{t('intro')}</p>
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <section
-          aria-label="Assistant conversation"
+          aria-label={t('conversation')}
           className="border-line-strong bg-surface-raised shadow-tag grid h-160 grid-rows-[auto_1fr_auto] rounded-md border-[1.5px]"
         >
           <div className="border-line-strong flex items-center justify-between gap-3 border-b-[1.5px] p-3 px-4">
-            <b>MarketLink assistant</b>
-            <span className="text-small text-ink-muted">
-              Answers use the live catalogue. Intent shown under each reply.
-            </span>
+            <b>{t('botName')}</b>
+            <span className="text-small text-ink-muted">{t('botNote')}</span>
           </div>
 
           <div className="flex flex-col gap-3 overflow-y-auto p-4">
@@ -99,47 +122,43 @@ const CustomerAssistantPage = () => {
               <ChatMessage
                 key={i}
                 from={m.from}
-                time={m.time}
+                time={formatClock(m.time)}
                 intent={m.intent}
-                suggestions={m.suggestions}
+                suggestions={m.suggestions?.map((x) => t(`suggest.${x}`))}
                 onSuggestion={ask}
               >
-                {m.content}
+                {content(m.say)}
               </ChatMessage>
             ))}
           </div>
 
           <form onSubmit={onSend} className="border-line-strong flex items-center gap-2 border-t-[1.5px] p-3 px-4">
             <label htmlFor="q" className="sr-only">
-              Message
+              {t('message')}
             </label>
             <input
               id="q"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder="e.g. Who has eggs at Thảo Điền on Saturday?"
+              placeholder={t('placeholder')}
               className="border-line-strong bg-surface-raised text-body focus-visible:border-focus focus-visible:outline-focus min-h-11 flex-1 rounded-sm border-[1.5px] px-3 focus-visible:outline-2 focus-visible:outline-offset-1"
             />
-            <Button type="submit">Send</Button>
+            <Button type="submit">{t('send')}</Button>
           </form>
         </section>
 
         <aside className="flex flex-col gap-4">
           <Card className="flex flex-col gap-2 p-6">
-            <h2 className="text-h3">What it can answer</h2>
+            <h2 className="text-h3">{t('canAnswer.title')}</h2>
             <ul className="text-small m-0 flex list-disc flex-col gap-1.5 pl-4.5">
               {CAN_ANSWER.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item}>{t(`canAnswer.${item}`)}</li>
               ))}
             </ul>
           </Card>
           <Card className="flex flex-col gap-2 p-6">
-            <h2 className="text-h3">How it works</h2>
-            <p className="text-small">
-              The message is classified into one of a fixed set of intents, and each intent runs a prepared query with
-              parameters. The model never writes SQL. Messages are stored with the intent so the flow can be shown to
-              the judges.
-            </p>
+            <h2 className="text-h3">{t('how.title')}</h2>
+            <p className="text-small">{t('how.text')}</p>
           </Card>
         </aside>
       </div>

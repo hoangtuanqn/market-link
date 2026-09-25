@@ -29,7 +29,9 @@ RUN ./mvnw -B -q package -DskipTests \
 # ---------- prod ----------
 FROM eclipse-temurin:25-jre AS prod
 WORKDIR /app
-RUN groupadd -r spring && useradd -r -g spring spring
+# volume uploads-data được khởi tạo từ /app/uploads, nên user spring ghi được ảnh tải lên
+RUN groupadd -r spring && useradd -r -g spring spring \
+    && mkdir -p /app/uploads && chown spring:spring /app/uploads
 COPY --from=build /app/app.jar app.jar
 USER spring
 EXPOSE 8080

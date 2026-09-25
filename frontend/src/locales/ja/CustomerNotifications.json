@@ -1,0 +1,13 @@
+{
+  "title": "通知",
+  "intro": "注文の承認・辞退・準備完了、お気に入りの再入荷、MarketLink からのお知らせ。",
+  "filter": {
+    "all": "すべて",
+    "unread": "未読"
+  },
+  "unreadCount_one": "未読 {{count}}件",
+  "unreadCount_other": "未読 {{count}}件",
+  "unread": "未読",
+  "markAllRead": "すべて既読にする",
+  "note": "現在はアプリ内通知のみです。確認や受け取り準備完了のメールは今後追加予定です。"
+}

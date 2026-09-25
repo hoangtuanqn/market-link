@@ -1,0 +1,44 @@
+{
+  "markets_one": "{{count}} 个市集",
+  "markets_other": "{{count}} 个市集",
+  "stallsSelling_one": "{{count}} 个摊位在售",
+  "stallsSelling_other": "{{count}} 个摊位在售",
+  "title": "商品",
+  "intro": "各摊位本周上架的全部商品。按类别、价格、市集和日期筛选，然后加入购物车。",
+  "filters": {
+    "title": "筛选",
+    "clearAll": "全部清除",
+    "day": "市集日",
+    "category": "类别",
+    "price": "单价",
+    "market": "市集",
+    "allMarkets": "所有市集",
+    "inStock": "仅显示有货",
+    "inStockNote": "隐藏已售罄和暂停销售的商品"
+  },
+  "price": {
+    "any": "不限价格",
+    "low": "低于 {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "高于 {{high}}"
+  },
+  "summary_one": "{{day}}有 <b>{{count}} 件商品</b>符合",
+  "summary_other": "{{day}}有 <b>{{count}} 件商品</b>符合",
+  "sort": "排序",
+  "sorts": {
+    "newest": "最新",
+    "priceAsc": "价格从低到高",
+    "priceDesc": "价格从高到低",
+    "rating": "评分最高"
+  },
+  "pager": {
+    "showing": "显示第 {{from}}–{{to}} 件，共 {{total}} 件",
+    "onePage_one": "{{count}} 件商品，全部在一页",
+    "onePage_other": "全部 {{count}} 件商品都在一页"
+  },
+  "empty": {
+    "title": "没有符合这些筛选条件的商品",
+    "text": "试试去掉价格筛选，或扩大到其他类别或市集。",
+    "clear": "清除所有筛选"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "title": "Products",
+  "intro": "Everything you can list. Mark a product sold out when it runs out on market day, or pause it when it is not in season.",
+  "add": "Add product",
+  "filterAll": "All",
+  "status": {
+    "available": "Available",
+    "sold_out": "Sold out",
+    "unavailable": "Paused"
+  },
+  "caption_one": "{{count}} product",
+  "caption_other": "{{count}} products",
+  "col": {
+    "product": "Product",
+    "price": "Price",
+    "left": "Left this week",
+    "reserved": "Reserved",
+    "status": "Status"
+  },
+  "perUnit": "per {{unit}}",
+  "statusOf": "Status of {{name}}",
+  "edit": "Edit",
+  "delete": "Delete",
+  "footNote": "Deleting a product removes it from the catalogue; past orders keep their lines. Photos: 4:3, natural light, on wood or paper.",
+  "toast": {
+    "statusSaved": "Status saved",
+    "status": {
+      "available": "The product is listed again.",
+      "sold_out": "Customers now see “Sold out” and can ask to be told when it is back.",
+      "unavailable": "The product is hidden from customers until you set it back."
+    },
+    "deleted": "Deleted",
+    "deletedText": "{{name}} deleted."
+  },
+  "dialog": {
+    "title": "Delete {{name}}?",
+    "keep": "Keep product",
+    "confirm": "Delete product",
+    "text": "It disappears from the catalogue and from your template. Orders that already include it are not changed.",
+    "pauseHint": "To stop selling it for a while, choose Paused instead."
+  }
+}

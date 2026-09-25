@@ -1,0 +1,19 @@
+{
+  "title": "Complete your profile",
+  "intro": "You signed in with Google as <b>{{email}}</b>. Google gives us your name and email only, so we ask once for your phone number and address. The stall you order from uses them to hand your order over on market day.",
+  "fields": {
+    "fullName": "Full name",
+    "phone": "Phone number",
+    "address": "Address",
+    "addressPlaceholder": "Street, ward, district",
+    "addressHint": "Used for distances and directions."
+  },
+  "submit": "Save and continue",
+  "saving": "Saving…",
+  "signOut": "Sign out",
+  "note": "All three fields are required to use MarketLink. If you do not want to add them now, sign out.",
+  "toast": {
+    "saved": "Your details are saved.",
+    "failed": "Could not save your details. Please try again."
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "overline": "Admin-Bereich · Schritt 2 von 2",
+  "title": "Geben Sie den Code aus Ihrer Authenticator-App ein",
+  "signedInAs": "Angemeldet als <b>{{email}}</b>.",
+  "notYou": "Nicht Sie?",
+  "error": {
+    "empty": "Geben Sie zuerst den Code ein.",
+    "sixDigits": "Geben Sie die sechs Ziffern aus Ihrer Authenticator-App ein.",
+    "check": "Der Code konnte nicht geprüft werden. Bitte versuchen Sie es erneut."
+  },
+  "alert": {
+    "recoveryOnce": "Jeder Wiederherstellungscode funktioniert nur einmal.",
+    "checkClock": "Prüfen Sie, ob die Uhr Ihres Handys richtig geht.",
+    "locked": "Zu viele falsche Codes."
+  },
+  "toast": {
+    "signedIn": "Angemeldet."
+  },
+  "recovery": {
+    "label": "Wiederherstellungscode",
+    "hint": "Einer der Codes, die Sie beim Aktivieren gespeichert haben. Jeder funktioniert nur einmal."
+  },
+  "code": {
+    "label": "Sechsstelliger Code",
+    "hint": "Der Code ändert sich alle 30 Sekunden. Dieser läuft in {{seconds}} s ab."
+  },
+  "submit": "Prüfen und anmelden",
+  "submitting": "Wird geprüft…",
+  "locked": "Die Anmeldung für dieses Konto ist pausiert.",
+  "backToSignIn": "Zurück zur Anmeldung",
+  "swap": {
+    "toCode": "Stattdessen den sechsstelligen Code verwenden",
+    "toRecovery": "Stattdessen einen Wiederherstellungscode verwenden"
+  }
+}

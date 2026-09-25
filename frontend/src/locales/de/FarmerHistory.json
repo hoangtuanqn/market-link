@@ -1,0 +1,52 @@
+{
+  "title": "Verkaufsverlauf",
+  "intro": "Was Sie verkauft haben und wie es im Vergleich zum Vorzeitraum aussieht. Der Umsatz zählt nur abgeschlossene Bestellungen, also das Geld, das Kunden Ihnen am Stand gegeben haben.",
+  "export": {
+    "button": "Zeitraum exportieren",
+    "title": "Export gestartet",
+    "text": "Export gestartet. Die CSV-Datei umfasst den angezeigten Zeitraum und Markt."
+  },
+  "days_one": "{{count}} Tag",
+  "days_other": "{{count}} Tage",
+  "market": "Markt",
+  "bothMarkets": "Beide Märkte",
+  "kpi": {
+    "completed": "Abgeschlossene Bestellungen",
+    "completedNote": "von {{total}} bei Ihnen aufgegebenen",
+    "revenue": "Umsatz",
+    "revenueNote": "₫, am Stand bezahlt",
+    "average": "Durchschnittliche Bestellung",
+    "averageNote": "₫ pro abgeschlossener Bestellung",
+    "declined": "Von Ihnen abgelehnt",
+    "declinedNote": "{{pct}} % der bei Ihnen aufgegebenen Bestellungen"
+  },
+  "byDay": {
+    "title": "Umsatz nach Markttag",
+    "note": "In Millionen ₫. Sie verkaufen nur samstags und sonntags, daher steht jede Säule für einen Marktmorgen.",
+    "caption": "Umsatz nach Markttag im {{now}} im Vergleich zum {{prev}}, in Millionen Dong"
+  },
+  "best": {
+    "title": "Bestseller",
+    "note": "Umsatz im {{month}}. Mengen stehen in der jeweiligen Einheit des Produkts und werden daher nie addiert.",
+    "product": "Produkt",
+    "soldPer": "Verkauft pro",
+    "price": "Preis",
+    "sold": "Verkauft",
+    "revenue": "Umsatz"
+  },
+  "where": {
+    "title": "Wo verkauft wurde",
+    "note_one": "Diesen Monat wurde {{count}} Bestellung abgelehnt und {{cancelled}} storniert. Beides zählt hier nicht.",
+    "note_other": "Diesen Monat wurden {{count}} Bestellungen abgelehnt und {{cancelled}} storniert. Beides zählt hier nicht."
+  },
+  "past": { "title": "Frühere Bestellungen", "note": "Abgeschlossen, abgelehnt und storniert" },
+  "col": {
+    "pickup": "Abholung",
+    "order": "Bestellung",
+    "customer": "Kunde",
+    "items": "Artikel",
+    "total": "Summe",
+    "status": "Status"
+  },
+  "itemLine": "{{qty}}× {{name}}"
+}

@@ -1,0 +1,42 @@
+{
+  "title": "Produk",
+  "intro": "Semua yang bisa Anda jual. Tandai produk habis saat habis pada hari pasar, atau jeda saat sedang tidak musim.",
+  "add": "Tambah produk",
+  "filterAll": "Semua",
+  "status": {
+    "available": "Tersedia",
+    "sold_out": "Habis",
+    "unavailable": "Dijeda"
+  },
+  "caption_one": "{{count}} produk",
+  "caption_other": "{{count}} produk",
+  "col": {
+    "product": "Produk",
+    "price": "Harga",
+    "left": "Sisa minggu ini",
+    "reserved": "Dipesan",
+    "status": "Status"
+  },
+  "perUnit": "per {{unit}}",
+  "statusOf": "Status {{name}}",
+  "edit": "Ubah",
+  "delete": "Hapus",
+  "footNote": "Menghapus produk akan mengeluarkannya dari katalog; pesanan lama tetap menyimpan barisnya. Foto: 4:3, cahaya alami, di atas kayu atau kertas.",
+  "toast": {
+    "statusSaved": "Status disimpan",
+    "status": {
+      "available": "Produk dijual lagi.",
+      "sold_out": "Pelanggan kini melihat “Habis” dan bisa minta diberi tahu saat tersedia lagi.",
+      "unavailable": "Produk disembunyikan dari pelanggan sampai Anda mengaktifkannya lagi."
+    },
+    "deleted": "Dihapus",
+    "deletedText": "{{name}} dihapus."
+  },
+  "dialog": {
+    "title": "Hapus {{name}}?",
+    "keep": "Simpan produk",
+    "confirm": "Hapus produk",
+    "text": "Produk hilang dari katalog dan dari template Anda. Pesanan yang sudah memuatnya tidak berubah.",
+    "pauseHint": "Untuk berhenti menjualnya sementara, pilih Dijeda saja."
+  }
+}

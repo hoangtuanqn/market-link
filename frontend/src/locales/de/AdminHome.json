@@ -1,0 +1,9 @@
+{
+  "overline": "Admin-Bereich",
+  "hello": "Hallo, {{name}}",
+  "fallbackName": "Admin",
+  "empty": {
+    "title": "Das Dashboard ist in Arbeit",
+    "text": "Summen für Landwirte, Kunden, Märkte und Bestellungen erscheinen hier, sobald das Admin-Dashboard fertig ist."
+  }
+}

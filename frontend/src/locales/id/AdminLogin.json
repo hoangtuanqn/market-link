@@ -1,0 +1,17 @@
+{
+  "overline": "Area admin",
+  "title": "Masuk untuk mengelola MarketLink",
+  "intro": "Halaman masuk ini hanya untuk admin platform dan mengarah ke dasbor terpisah. Pelanggan dan Petani <link>masuk di sini</link>.",
+  "notAdmin": {
+    "title": "Akun ini bukan admin",
+    "text": "Halaman masuk ini hanya untuk admin platform. <link>Pelanggan dan Petani masuk di sini</link>."
+  },
+  "form": {
+    "email": "Email admin",
+    "password": "Kata sandi",
+    "submit": "Masuk",
+    "submitting": "Sedang masuk…",
+    "signedIn": "Berhasil masuk.",
+    "error": "Tidak dapat memasukkan Anda. Silakan coba lagi."
+  }
+}

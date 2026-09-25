@@ -1,0 +1,80 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "库存不足",
+      "day": "当天不出摊",
+      "time": "赶不上该取货时间",
+      "other": "其他"
+    },
+    "item": "{{name}} {{qty}}",
+    "title": "拒绝订单 {{code}}？",
+    "keep": "保留订单",
+    "confirm": "拒绝订单",
+    "text": "{{who}} 会立即收到通知，{{items}}将退回你的库存。",
+    "reason": "顾客将看到的理由"
+  },
+  "history": {
+    "before": "{{cutoff}} 之前",
+    "cancelled": "顾客已取消",
+    "title": "记录"
+  },
+  "missing": {
+    "title": "这个订单已经不在了",
+    "text": "可能已被顾客取消，或者链接已过期。请从订单列表重新打开。",
+    "back": "我的订单"
+  },
+  "item": "商品",
+  "col": {
+    "product": "商品",
+    "requested": "订购数量",
+    "left": "此单后剩余",
+    "amount": "金额"
+  },
+  "crumb": "订单",
+  "cutoff": "截止 {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "订单已接受",
+    "acceptedText": "订单 {{code}} 已接受，已通知 {{who}}。",
+    "readyTitle": "订单已备好",
+    "readyText": "订单 {{code}} 已标记为备好。",
+    "completedTitle": "订单已完成",
+    "completedText": "订单 {{code}} 已完成。",
+    "declinedTitle": "订单已拒绝",
+    "declinedText": "订单 {{code}} 已拒绝。"
+  },
+  "actions": {
+    "accept": "接受订单",
+    "decline": "拒绝",
+    "ready": "标记为备好",
+    "complete": "标记为完成"
+  },
+  "items": {
+    "title": "商品",
+    "note": "显示的库存是扣除此单及其他已下订单后的剩余。如果你拒绝，预留库存会退回（D-02）。"
+  },
+  "note": "顾客留言",
+  "quote": "“{{text}}”",
+  "customer": {
+    "title": "顾客",
+    "name": "姓名",
+    "phone": "电话",
+    "ordersWithYou": "在你这里的订单",
+    "orders_one": "{{count}} 个订单",
+    "orders_other": "{{count}} 个订单",
+    "withCollected_one": "{{orders}}，已取 {{count}} 个",
+    "withCollected_other": "{{orders}}，已取 {{count}} 个"
+  },
+  "pickup": {
+    "title": "取货时段",
+    "market": "市集",
+    "marketStall": "{{market}}，摊位 {{code}}",
+    "slot": "时段",
+    "pay": "取货时付款"
+  },
+  "complete": {
+    "title": "将 {{code}} 标记为完成？",
+    "notYet": "暂不",
+    "text": "请在顾客取货并在摊位付款后再操作。已完成的订单计入你的收入，顾客也可以开始评价。",
+    "auto": "仍为“已备好”的订单会在取货日 24 小时后自动完成（D-03）。"
+  }
+}

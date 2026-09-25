@@ -1,0 +1,21 @@
+{
+  "loading": {
+    "title": "Google로 로그인하는 중…",
+    "text": "잠시만 기다려 주세요."
+  },
+  "failed": {
+    "title": "Google 로그인이 완료되지 않았어요",
+    "text": "로그인되지 않았어요. 계정에는 아무 변화가 없어요.",
+    "backToSignIn": "로그인으로 돌아가기",
+    "registerWithEmail": "대신 이메일로 계정 만들기"
+  },
+  "toast": {
+    "signedIn": "로그인했어요."
+  },
+  "errors": {
+    "cancelled": "Google 로그인을 취소했어요.",
+    "google": "Google에서 로그인하지 못했어요. 다시 시도해 주세요.",
+    "invalidState": "올바르지 않은 로그인 시도예요. 로그인 페이지에서 다시 시작해 주세요.",
+    "failed": "Google 로그인에 실패했어요. 다시 시도해 주세요."
+  }
+}

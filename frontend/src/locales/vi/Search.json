@@ -1,0 +1,49 @@
+{
+  "title": "Tìm kiếm",
+  "search": {
+    "scope": "Tìm trong",
+    "scopes": {
+      "all": "Tất cả",
+      "market": "Chợ",
+      "farmer": "Sạp",
+      "product": "Sản phẩm"
+    },
+    "keyword": "Từ khoá",
+    "submit": "Tìm"
+  },
+  "day": "Ngày họp chợ",
+  "sort": "Sắp xếp",
+  "sorts": {
+    "best": "Phù hợp nhất",
+    "nearest": "Gần nhất",
+    "price": "Giá",
+    "rating": "Đánh giá"
+  },
+  "tabs": {
+    "label": "Loại kết quả",
+    "all": "Tất cả",
+    "market": "Chợ",
+    "farmer": "Sạp",
+    "product": "Sản phẩm"
+  },
+  "empty": {
+    "startTitle": "Hãy gõ gì đó để tìm",
+    "startText": "Thử tên sản phẩm, tên chợ hoặc tên sạp.",
+    "noneTitle": "Không có kết quả",
+    "noneText": "Thử một từ ngắn hơn, hoặc bỏ bớt bộ lọc. Tìm kiếm xem cùng lúc cả chợ, sạp và sản phẩm."
+  },
+  "results_one": "{{count}} kết quả cho “{{q}}” vào {{day}}",
+  "results_other": "{{count}} kết quả cho “{{q}}” vào {{day}}",
+  "noStalls": "Không có sạp nào phù hợp.",
+  "noProducts": "Không có sản phẩm nào phù hợp.",
+  "noMarket": {
+    "title": "Không có chợ nào tên “{{q}}”",
+    "text_one": "Chợ được tìm theo tên và khu vực. {{count}} sạp ở trên có bán thứ khớp với “{{q}}”.",
+    "text_other": "Chợ được tìm theo tên và khu vực. {{count}} sạp ở trên có bán thứ khớp với “{{q}}”.",
+    "showStalls": "Xem các sạp"
+  },
+  "map": {
+    "label": "Bản đồ kết quả",
+    "note": "Kết quả có vị trí sẽ được ghim. Trên điện thoại, nút “Danh sách / Bản đồ” chuyển qua lại giữa hai chế độ."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "greeting_one": "{{name}}님, 이번 주말 픽업이 {{count}}건 있어요",
+  "greeting_other": "{{name}}님, 이번 주말 픽업이 {{count}}건 있어요",
+  "intro": "주문 하나가 아직 가게의 확인을 기다리고 있어요. 나머지는 모두 순조로워요.",
+  "browseMarkets": "이번 주말 시장 둘러보기",
+  "cards": {
+    "upcoming_one": "예정된 주문 {{count}}건",
+    "upcoming_other": "예정된 주문 {{count}}건",
+    "upcomingBreakdown": "승인 대기 {{placed}} · 수락됨 {{accepted}} · 준비 완료 {{ready}}",
+    "favorites_one": "즐겨찾기 {{count}}개",
+    "favorites_other": "즐겨찾기 {{count}}개",
+    "stalls_one": "가게 {{count}}곳",
+    "stalls_other": "가게 {{count}}곳",
+    "products_one": "상품 {{count}}개",
+    "products_other": "상품 {{count}}개",
+    "markets_one": "시장 {{count}}곳",
+    "markets_other": "시장 {{count}}곳",
+    "unread_one": "읽지 않은 알림 {{count}}개",
+    "unread_other": "읽지 않은 알림 {{count}}개",
+    "unreadText": "주문 하나가 준비됐고, 염소 요거트가 다시 들어왔어요",
+    "account": "계정"
+  },
+  "sell": {
+    "overline": "새 소식",
+    "title": "직접 키우는 게 있나요? 시장에서 팔아 보세요",
+    "text": "내 계정을 네 개 시장 중 한 곳의 가게로 만들 수 있어요. 밭 사진 몇 장과 함께 신청하면 관리자가 검토해요. 어느 쪽이든 쇼핑은 그대로 계속할 수 있어요.",
+    "apply": "판매 신청하기",
+    "dismiss": "나중에"
+  },
+  "nextPickups": "다음 픽업",
+  "allOrders": "내 주문 전체",
+  "newFromFavorites": "즐겨찾는 가게의 이번 주 신상품",
+  "favorites": "즐겨찾기"
+}

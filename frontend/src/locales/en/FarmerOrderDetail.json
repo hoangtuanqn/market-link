@@ -1,0 +1,80 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "Not enough stock",
+      "day": "Not selling on that day",
+      "time": "Cannot make that pickup time",
+      "other": "Other"
+    },
+    "item": "{{qty}} of {{name}}",
+    "title": "Decline order {{code}}?",
+    "keep": "Keep order",
+    "confirm": "Decline order",
+    "text": "{{who}} is told right away and {{items}} go back to your stock.",
+    "reason": "Reason the customer will see"
+  },
+  "history": {
+    "before": "Before {{cutoff}}",
+    "cancelled": "Cancelled by the customer",
+    "title": "History"
+  },
+  "missing": {
+    "title": "That order is not here any more",
+    "text": "It may have been cancelled by the customer, or the link is old. Open it again from your orders list.",
+    "back": "My orders"
+  },
+  "item": "item",
+  "col": {
+    "product": "Product",
+    "requested": "Requested",
+    "left": "Left after this order",
+    "amount": "Amount"
+  },
+  "crumb": "Orders",
+  "cutoff": "Cutoff {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "Order accepted",
+    "acceptedText": "Order {{code}} accepted. {{who}} has been told.",
+    "readyTitle": "Order ready",
+    "readyText": "Order {{code}} marked ready.",
+    "completedTitle": "Order completed",
+    "completedText": "Order {{code}} completed.",
+    "declinedTitle": "Order declined",
+    "declinedText": "Order {{code}} declined."
+  },
+  "actions": {
+    "accept": "Accept order",
+    "decline": "Decline",
+    "ready": "Mark ready",
+    "complete": "Mark completed"
+  },
+  "items": {
+    "title": "Items",
+    "note": "Stock shown is what is left after this and other placed orders. Reserved stock is returned if you decline (D-02)."
+  },
+  "note": "Note from the customer",
+  "quote": "“{{text}}”",
+  "customer": {
+    "title": "Customer",
+    "name": "Name",
+    "phone": "Phone",
+    "ordersWithYou": "Orders with you",
+    "orders_one": "{{count}} order",
+    "orders_other": "{{count}} orders",
+    "withCollected_one": "{{orders}}, {{count}} collected",
+    "withCollected_other": "{{orders}}, {{count}} collected"
+  },
+  "pickup": {
+    "title": "Pickup slot",
+    "market": "Market",
+    "marketStall": "{{market}}, stall {{code}}",
+    "slot": "Slot",
+    "pay": "Pay on pickup"
+  },
+  "complete": {
+    "title": "Mark {{code}} as completed?",
+    "notYet": "Not yet",
+    "text": "Do this after the customer has collected the order and paid at the stall. Completed orders count towards your revenue and unlock the customer's review.",
+    "auto": "Orders still marked Ready are completed automatically 24 hours after the pickup date (D-03)."
+  }
+}

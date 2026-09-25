@@ -1,0 +1,23 @@
+{
+  "myOrders": "Mis pedidos",
+  "breadcrumbOrder": "Pedido {{code}}",
+  "breadcrumbEdit": "Editar",
+  "notFound": {
+    "title": "Ese pedido ya no está aquí",
+    "text": "Puede que lo hayas cancelado o que el enlace sea antiguo. Ábrelo de nuevo desde tus pedidos."
+  },
+  "title": "Editar pedido {{code}}",
+  "cutoff": "Puedes hacer cambios hasta <b>{{cutoff}}</b>.",
+  "banner": {
+    "title": "Al guardar, el pedido vuelve a Realizado y {{stall}} lo aprueba de nuevo.",
+    "text": "Tus productos siguen reservados mientras lo revisan. Recibirás una notificación cuando se acepte."
+  },
+  "help": "Aquí puedes reducir cantidades o quitar artículos. Para añadir algo más de {{stall}}, haz un pedido nuevo. Las cantidades tienen como límite lo que le queda hoy al puesto.",
+  "note": "Nota para el puesto",
+  "submit": "Enviar cambios para aprobación",
+  "discard": "Descartar cambios",
+  "toast": {
+    "title": "Cambios enviados",
+    "text": "{{stall}} revisará tu pedido de nuevo."
+  }
+}

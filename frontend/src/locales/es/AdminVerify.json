@@ -1,0 +1,35 @@
+{
+  "overline": "Área de admin · paso 2 de 2",
+  "title": "Introduce el código de tu app de autenticación",
+  "signedInAs": "Has iniciado sesión como <b>{{email}}</b>.",
+  "notYou": "¿No eres tú?",
+  "error": {
+    "empty": "Escribe primero el código.",
+    "sixDigits": "Introduce los seis dígitos de tu app de autenticación.",
+    "check": "No se pudo comprobar el código. Inténtalo de nuevo."
+  },
+  "alert": {
+    "recoveryOnce": "Cada código de recuperación funciona una sola vez.",
+    "checkClock": "Comprueba que el reloj de tu teléfono esté en hora.",
+    "locked": "Demasiados códigos incorrectos."
+  },
+  "toast": {
+    "signedIn": "Sesión iniciada."
+  },
+  "recovery": {
+    "label": "Código de recuperación",
+    "hint": "Uno de los códigos que guardaste al activar esta función. Cada uno funciona una sola vez."
+  },
+  "code": {
+    "label": "Código de seis dígitos",
+    "hint": "El código cambia cada 30 segundos. Este caduca en {{seconds}} s."
+  },
+  "submit": "Verificar e iniciar sesión",
+  "submitting": "Comprobando…",
+  "locked": "El inicio de sesión está en pausa para esta cuenta.",
+  "backToSignIn": "Volver a iniciar sesión",
+  "swap": {
+    "toCode": "Usar el código de seis dígitos",
+    "toRecovery": "Usar un código de recuperación"
+  }
+}

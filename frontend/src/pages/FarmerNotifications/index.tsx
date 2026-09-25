@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Chip } from '@/components/ui/chip';
 import { DataState } from '@/components/ui/data-state';
 import { NOTIFICATION_META } from '@/constants/notificationKind';
@@ -7,6 +8,7 @@ import Helper from '@/utils/helper';
 
 /** FR-042 — new, edited or cancelled orders, and announcements from MarketLink (proposal, not yet in D-11). */
 const FarmerNotificationsPage = () => {
+  const { t } = useTranslation('FarmerNotifications');
   const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
 
@@ -17,32 +19,32 @@ const FarmerNotificationsPage = () => {
     <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">Notifications</h1>
-          <p className="text-body">
-            New orders, edits and cancellations from customers, and announcements from MarketLink.
-          </p>
+          <h1 className="text-h1">{t('title')}</h1>
+          <p className="text-body">{t('intro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Chip pressed={filter === 'all'} onClick={() => setFilter('all')}>
-            All
+            {t('filter.all')}
           </Chip>
           <Chip pressed={filter === 'unread'} onClick={() => setFilter('unread')}>
-            Unread <span className="text-[12px] tabular-nums opacity-80">{unreadCount}</span>
+            {t('filter.unread')} <span className="text-[12px] tabular-nums opacity-80">{unreadCount}</span>
           </Chip>
         </div>
       </div>
 
       {shown.length ? (
-        <section aria-label="Notifications" className="flex flex-col gap-0">
+        <section aria-label={t('title')} className="flex flex-col gap-0">
           <div className="border-line-strong flex items-center justify-between gap-3 border-b-[1.5px] py-2 pr-2 pl-4">
             <b className="text-[16px]">
-              Notifications
+              {t('title')}
               {unreadCount > 0 && (
-                <span className="text-ink-muted ml-1 text-[14px] font-normal">· {unreadCount} unread</span>
+                <span className="text-ink-muted ml-1 text-[14px] font-normal">
+                  · {t('unreadCount', { count: unreadCount })}
+                </span>
               )}
             </b>
             <Chip onClick={() => setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))}>
-              Mark all as read
+              {t('markAllRead')}
             </Chip>
           </div>
           <ul className="m-0 flex flex-col p-0">
@@ -67,7 +69,7 @@ const FarmerNotificationsPage = () => {
                           aria-hidden="true"
                           className="bg-brand ml-1.5 inline-block size-2 rounded-full align-middle"
                         >
-                          <span className="sr-only">unread</span>
+                          <span className="sr-only">{t('unread')}</span>
                         </span>
                       )}
                     </p>
@@ -80,10 +82,7 @@ const FarmerNotificationsPage = () => {
           </ul>
         </section>
       ) : (
-        <DataState
-          title="Nothing new"
-          text="You will hear here when an order is placed, changed or cancelled, and when an admin posts an announcement."
-        />
+        <DataState title={t('empty.title')} text={t('empty.text')} />
       )}
     </div>
   );

@@ -1,4 +1,6 @@
+import type { TFunction } from 'i18next';
 import { useState, type SubmitEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
@@ -14,15 +16,15 @@ type FormErrors = Partial<Record<'currentPassword' | 'newPassword' | 'confirmPas
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
-const validate = (current: string, next: string, confirm: string): FormErrors => {
+const validate = (t: TFunction<'CustomerAccount'>, current: string, next: string, confirm: string): FormErrors => {
   const errors: FormErrors = {};
-  if (!current) errors.currentPassword = 'Enter your current password.';
-  if (!next) errors.newPassword = 'Enter a new password.';
+  if (!current) errors.currentPassword = t('password.errors.currentRequired');
+  if (!next) errors.newPassword = t('password.errors.newRequired');
   else if (next.length < PASSWORD_MIN || next.length > PASSWORD_MAX)
-    errors.newPassword = `Password must be ${PASSWORD_MIN} to ${PASSWORD_MAX} characters.`;
-  else if (current && next === current) errors.newPassword = 'Use a password different from the current one.';
-  if (!confirm) errors.confirmPassword = 'Confirm your password.';
-  else if (confirm !== next) errors.confirmPassword = 'Passwords do not match.';
+    errors.newPassword = t('password.errors.length', { min: PASSWORD_MIN, max: PASSWORD_MAX });
+  else if (current && next === current) errors.newPassword = t('password.errors.same');
+  if (!confirm) errors.confirmPassword = t('password.errors.confirmRequired');
+  else if (confirm !== next) errors.confirmPassword = t('password.errors.mismatch');
   return errors;
 };
 
@@ -31,6 +33,7 @@ const validate = (current: string, next: string, confirm: string): FormErrors =>
  * và đưa về trang đăng nhập.
  */
 const ChangePasswordForm = () => {
+  const { t } = useTranslation('CustomerAccount');
   const navigate = useNavigate();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -40,7 +43,7 @@ const ChangePasswordForm = () => {
 
   const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const clientErrors = validate(currentPassword, newPassword, confirmPassword);
+    const clientErrors = validate(t, currentPassword, newPassword, confirmPassword);
     setErrors(clientErrors);
     if (Object.keys(clientErrors).length > 0) return;
 
@@ -48,12 +51,12 @@ const ChangePasswordForm = () => {
     try {
       const response = await AuthApi.changePassword({ currentPassword, newPassword, confirmPassword });
       Session.clear();
-      Notification.success({ text: response.message || 'Your password has been changed. Please sign in again.' });
+      Notification.success({ text: response.message || t('password.changed') });
       navigate('/login', { replace: true });
     } catch (error) {
       // 400: mật khẩu hiện tại sai / mật khẩu mới không hợp lệ → lỗi dưới ô nhập
       setErrors(Helper.getFieldErrors(error));
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not change your password. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('password.failed')) });
       setIsSubmitting(false);
     }
   };
@@ -62,10 +65,8 @@ const ChangePasswordForm = () => {
     <Card className="p-6">
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <h2 className="text-h3">Change password</h2>
-          <p className="text-small text-ink-muted">
-            You will be signed out on every device and asked to sign in again.
-          </p>
+          <h2 className="text-h3">{t('password.title')}</h2>
+          <p className="text-small text-ink-muted">{t('password.intro')}</p>
         </div>
 
         {/* Cho trình quản lý mật khẩu biết mật khẩu thuộc tài khoản nào */}
@@ -80,7 +81,7 @@ const ChangePasswordForm = () => {
 
         <Field
           id="currentPassword"
-          label="Current password"
+          label={t('password.current')}
           type="password"
           required
           autoComplete="current-password"
@@ -92,19 +93,19 @@ const ChangePasswordForm = () => {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Field
             id="newPassword"
-            label="New password"
+            label={t('password.new')}
             type="password"
             required
             autoComplete="new-password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             error={errors.newPassword}
-            hint={`${PASSWORD_MIN} to ${PASSWORD_MAX} characters.`}
+            hint={t('password.hint', { min: PASSWORD_MIN, max: PASSWORD_MAX })}
             disabled={isSubmitting}
           />
           <Field
             id="confirmPassword"
-            label="Repeat new password"
+            label={t('password.repeat')}
             type="password"
             required
             autoComplete="new-password"
@@ -116,7 +117,7 @@ const ChangePasswordForm = () => {
         </div>
         <div className="pt-2">
           <Button type="submit" variant="secondary" disabled={isSubmitting}>
-            {isSubmitting ? 'Changing password…' : 'Change password'}
+            {isSubmitting ? t('password.submitting') : t('password.submit')}
           </Button>
         </div>
       </form>

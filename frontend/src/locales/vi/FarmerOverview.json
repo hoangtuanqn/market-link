@@ -1,0 +1,92 @@
+{
+  "tabs": {
+    "new": "Chờ duyệt",
+    "acc": "Đã nhận",
+    "ready": "Sẵn sàng",
+    "done": "Hoàn tất"
+  },
+  "decline": {
+    "reasons": {
+      "stock": "Không đủ hàng",
+      "day": "Không bán vào ngày đó",
+      "time": "Không kịp giờ nhận hàng đó",
+      "other": "Khác"
+    },
+    "title": "Từ chối đơn {{code}}?",
+    "keep": "Giữ đơn",
+    "confirm": "Từ chối đơn",
+    "text": "Khách được báo ngay và hàng được trả về kho của bạn.",
+    "reason": "Lý do khách sẽ thấy"
+  },
+  "col": {
+    "order": "Đơn",
+    "customer": "Khách",
+    "pickup": "Nhận hàng",
+    "items": "Món",
+    "total": "Tổng",
+    "status": "Trạng thái"
+  },
+  "toast": {
+    "acceptedTitle": "Đã nhận đơn",
+    "acceptedText": "Đã nhận đơn {{code}}. {{who}} đã được báo.",
+    "readyTitle": "Đơn đã sẵn sàng",
+    "readyText": "Đã đánh dấu đơn {{code}} sẵn sàng.",
+    "completedTitle": "Đơn đã hoàn tất",
+    "completedText": "Đơn {{code}} đã hoàn tất.",
+    "declinedTitle": "Đã từ chối đơn",
+    "declinedText": "Đã từ chối đơn {{code}}. Hàng đã được cộng lại vào kho."
+  },
+  "actions": {
+    "accept": "Nhận",
+    "decline": "Từ chối",
+    "ready": "Đánh dấu sẵn sàng",
+    "complete": "Đánh dấu hoàn tất",
+    "view": "Xem"
+  },
+  "captions": {
+    "new": "Chờ duyệt · {{sat}} và {{sun}}",
+    "ready": "Sẵn sàng để nhận"
+  },
+  "overline": "Sạp của bạn tại {{market}} · ngày chợ tới {{day}}",
+  "greeting": "Chào buổi sáng, {{name}}",
+  "applyTemplate": "Áp dụng mẫu hằng tuần",
+  "addProduct": "Thêm sản phẩm",
+  "banner": {
+    "title_one": "{{count}} đơn đang chờ bạn. {{closing}} đơn trong đó chốt lúc {{time}} ngày mai.",
+    "title_other": "{{count}} đơn đang chờ bạn. {{closing}} đơn trong đó chốt lúc {{time}} ngày mai.",
+    "text": "Đơn chưa duyệt vẫn giữ hàng. Hãy nhận hoặc từ chối trước hạn chốt để khách chủ động."
+  },
+  "kpi": {
+    "orders": "Tổng số đơn",
+    "ordersNote_one": "{{count}} đơn tuần này",
+    "ordersNote_other": "{{count}} đơn tuần này",
+    "vsAugust": "so với tháng 8",
+    "openHistory": "Mở lịch sử bán hàng",
+    "awaitingNote_one": "<b>{{count}}</b> đơn chốt lúc {{time}} ngày {{date}}",
+    "awaitingNote_other": "<b>{{count}}</b> đơn chốt lúc {{time}} ngày {{date}}",
+    "vsThursday": "so với một thứ Năm bình thường",
+    "openIncoming": "Mở đơn mới đến",
+    "revenue": "Doanh thu tháng 9",
+    "revenueNote": "₫, từ các đơn đã hoàn tất, thanh toán tại sạp",
+    "best": "Bán chạy nhất",
+    "bestNote": "{{qty}} tháng này",
+    "openProducts": "Mở sản phẩm",
+    "note": "Tháng 9 tính đến nay, so với tháng 8. Mỗi ô mở màn hình đứng sau con số đó."
+  },
+  "incoming": {
+    "title": "Đơn mới đến",
+    "all": "Tất cả đơn và bộ lọc",
+    "note": "Đơn mới được tô sáng cho đến khi bạn mở."
+  },
+  "stock": {
+    "title": "Hàng cho {{day}}",
+    "link": "Hàng tuần này",
+    "note": "Đã giữ nghĩa là có đơn đang giữ hàng đó. Số này được trừ khỏi kho ngay khi khách đặt."
+  },
+  "best": {
+    "title": "Bán chạy",
+    "link": "Lịch sử bán hàng",
+    "note": "Đã bán trong tháng 9, mỗi món theo đơn vị riêng"
+  },
+  "protoNote": "Thanh bên và phần đầu trang phía trên là mới so với prototype."
+}

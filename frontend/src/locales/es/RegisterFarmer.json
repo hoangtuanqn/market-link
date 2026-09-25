@@ -1,0 +1,21 @@
+{
+  "title": "Registra tu puesto",
+  "intro": "Después de registrarte, un administrador revisa el puesto. Puedes iniciar sesión enseguida y configurar tu perfil, pero los productos solo se publican tras la aprobación.",
+  "fields": {
+    "stall": "Nombre del puesto o negocio",
+    "stallPlaceholder": "p. ej. {{example}}",
+    "stallHint": "Los clientes ven este nombre en el mapa y en los pedidos.",
+    "person": "Persona de contacto",
+    "phone": "Número de teléfono",
+    "email": "Correo electrónico",
+    "address": "Dirección de la finca o negocio",
+    "password": "Contraseña",
+    "confirmPassword": "Repite la contraseña"
+  },
+  "banner": {
+    "title": "MarketLink no comprueba licencias ni certificaciones ecológicas.",
+    "text": "La aprobación confirma que el puesto existe y que los datos de contacto funcionan. Explica qué cultivas y cómo en el propio puesto."
+  },
+  "submit": "Registrar puesto",
+  "haveAccount": "Ya tengo una cuenta"
+}

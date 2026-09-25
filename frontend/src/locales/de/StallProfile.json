@@ -1,0 +1,64 @@
+{
+  "notFound": {
+    "title": "Diesen Stand gibt es hier nicht mehr",
+    "browse": "Märkte ansehen"
+  },
+  "breadcrumb": "Märkte",
+  "approved": "Geprüfter Stand",
+  "savedToast": "{{name}} gespeichert.",
+  "save": "Stand speichern",
+  "message": "Stand anschreiben",
+  "stats": {
+    "reviews_one": "{{count}} Bewertung",
+    "reviews_other": "{{count}} Bewertungen",
+    "markets_one": "Markt",
+    "markets_other": "Märkte",
+    "since": "verkauft hier seit"
+  },
+  "tabs": {
+    "label": "Bereiche des Stands",
+    "stock": "Bestand dieser Woche",
+    "reviews": "Bewertungen",
+    "about": "Über den Stand"
+  },
+  "stock": {
+    "count_one": "{{count}} Produkt",
+    "count_other": "{{count}} Produkte",
+    "availableOn": "Erhältlich am",
+    "notSelling": "{{stall}} verkauft nicht am {{day}}. Die Produkte oben gibt es an den Verkaufstagen ({{days}})."
+  },
+  "reviews": {
+    "summary_one": "{{count}} Bewertung aus einer abgeschlossenen Bestellung",
+    "summary_other": "{{count}} Bewertungen, jede aus einer abgeschlossenen Bestellung",
+    "all": "Alle",
+    "farmer": "Zum Stand",
+    "product": "Zu Produkten",
+    "newest": "Neueste zuerst"
+  },
+  "about": {
+    "whereWhen": "Wo und wann",
+    "table": {
+      "market": "Markt",
+      "days": "Tage",
+      "window": "Abholzeitfenster",
+      "stall": "Stand",
+      "directions": "Route"
+    },
+    "cutoffNote_one": "Bestellschluss ist {{count}} Stunde vor dem gewählten Zeitfenster. Danach kann nur der Stand die Bestellung ändern.",
+    "cutoffNote_other": "Bestellschluss ist {{count}} Stunden vor dem gewählten Zeitfenster. Danach kann nur der Stand die Bestellung ändern.",
+    "disclaimer": "MarketLink prüft keine Lizenzen oder Bio-Angaben. Wenn Ihnen das wichtig ist, fragen Sie am Stand.",
+    "contact": "Kontakt",
+    "email": "E-Mail",
+    "since": "Verkauft hier seit",
+    "mapLabel": "Karte von {{name}}",
+    "findingTitle": "Den Stand finden",
+    "findingText": "Stand {{code}} · Abholzeitfenster {{window}}. Zeitfenster dauern 30 Minuten und fassen je 5 Bestellungen.",
+    "preorder": "Auf diesem Markt vorbestellen"
+  },
+  "report": {
+    "sentTitle": "Meldung gesendet",
+    "sentText": "Ein Admin sieht sich das an.",
+    "button": "Diesen Stand melden",
+    "note": "Wiederholtes Nichterscheinen, falscher Standort oder alles, was gegen die Plattformregeln verstößt."
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "city": "Ho Chi Minh City",
+  "count_one": "{{count}} market",
+  "count_other": "{{count}} markets",
+  "title": "Markets",
+  "intro": "Pick the day you want to shop, then narrow it down to your area.",
+  "filters": {
+    "label": "Filter the markets",
+    "day": "Market day",
+    "clearAll": "Clear all",
+    "area": "Area",
+    "allAreas": "All areas ({{count}})",
+    "sort": "Sort by"
+  },
+  "sorts": {
+    "near": "Nearest first",
+    "stalls": "Most stalls",
+    "opens": "Opens earliest"
+  },
+  "cleared": {
+    "title": "Filters cleared",
+    "text": "Showing every market open on {{day}}."
+  },
+  "popupStalls_one": "{{count}} stall",
+  "popupStalls_other": "{{count}} stalls",
+  "summary": {
+    "open_one": "<b>{{count}} market</b> open on {{day}}",
+    "open_other": "<b>{{count}} markets</b> open on {{day}}",
+    "openIn_one": "<b>{{count}} market</b> open on {{day}} in {{area}}",
+    "openIn_other": "<b>{{count}} markets</b> open on {{day}} in {{area}}",
+    "none": "Nothing open on {{day}}",
+    "noneIn": "Nothing open on {{day}} in {{area}}"
+  },
+  "error": {
+    "noun": "markets",
+    "alt": "the <link>market map</link> opens on its own page"
+  },
+  "pager": {
+    "showing": "Showing {{from}}–{{to}} of {{total}}",
+    "onePage_one": "{{count}} market on one page",
+    "onePage_other": "All {{count}} markets on one page"
+  },
+  "empty": {
+    "areaTitle": "No markets in {{area}} on {{day}}",
+    "areaText_one": "Across the whole city {{count}} market is open that day. Widen the area, or pick another day.",
+    "areaText_other": "Across the whole city {{count}} markets are open that day. Widen the area, or pick another day.",
+    "allAreas": "Show all areas",
+    "dayTitle": "No markets open on {{day}}",
+    "dayText_one": "{{day}} is the busiest day, with {{count}} market open.",
+    "dayText_other": "{{day}} is the busiest day, with {{count}} markets open.",
+    "showDay": "Show {{day}}"
+  },
+  "map": {
+    "label": "Map of the markets that match",
+    "note": "The map follows the filters and shows only the markets in the list."
+  },
+  "demo": {
+    "title": "Other states of this list (FR-084)",
+    "views": {
+      "loaded": "With data",
+      "loading": "Loading",
+      "error": "Error"
+    },
+    "note": "The empty state is reachable for real: pick <b>{{day}}</b> and the area <b>{{area}}</b>. It names what you chose and offers the way out."
+  }
+}

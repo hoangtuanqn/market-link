@@ -1,0 +1,13 @@
+{
+  "title": "Thông báo",
+  "intro": "Đơn được nhận, bị từ chối hoặc đã sẵn sàng, món yêu thích có hàng lại, và thông báo từ MarketLink.",
+  "filter": {
+    "all": "Tất cả",
+    "unread": "Chưa đọc"
+  },
+  "unreadCount_one": "{{count}} chưa đọc",
+  "unreadCount_other": "{{count}} chưa đọc",
+  "unread": "chưa đọc",
+  "markAllRead": "Đánh dấu đã đọc tất cả",
+  "note": "Hiện chỉ có thông báo trong ứng dụng. Email xác nhận và báo sẵn sàng nhận hàng sẽ có sau."
+}

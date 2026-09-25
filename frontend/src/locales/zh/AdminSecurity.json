@@ -1,0 +1,84 @@
+{
+  "overline": "你的账户",
+  "title": "安全",
+  "loading": "正在加载两步验证",
+  "loadError": {
+    "title": "无法加载两步验证",
+    "text": "请检查网络连接后重试。",
+    "retry": "重试"
+  },
+  "pill": {
+    "on": "已开启",
+    "off": "已关闭"
+  },
+  "error": {
+    "check": "无法验证代码，请重试。",
+    "start": "无法开始设置，请重试。",
+    "sixDigits": "验证码是六位数字。"
+  },
+  "toast": {
+    "accepted": "验证码正确。保存恢复码即可完成。",
+    "on": "两步验证已开启。下次登录时会要求输入验证码。",
+    "off": "两步验证已关闭。",
+    "regenerated": "已生成十个新的恢复码。旧的恢复码不再有效。"
+  },
+  "mfa": {
+    "title": "两步验证",
+    "intro": "在密码之后再加一步，由你手机上的应用提供。管理员可以审批摊位、停用顾客账户、修改平台收费，所以只靠密码并不够安全。",
+    "starting": "正在开始…",
+    "turnOn": "开启两步验证"
+  },
+  "step1": {
+    "title": "用验证器扫描此码",
+    "text": "Google Authenticator、Microsoft Authenticator、Authy、1Password——任何一个都可以。不会发送任何数据：下面的二维码由你自己的浏览器生成。",
+    "qr": "验证器应用的二维码",
+    "manual": "<b>无法扫描？</b>请手动输入此密钥：",
+    "type": "类型",
+    "typeValue": "基于时间（TOTP）",
+    "algorithm": "算法",
+    "digits": "位数",
+    "period": "周期",
+    "seconds_one": "{{count}} 秒",
+    "seconds_other": "{{count}} 秒"
+  },
+  "step2": {
+    "title": "输入它显示的验证码",
+    "text": "这可以在开启之前确认手机和服务器的时间一致。",
+    "code": "六位验证码",
+    "confirm": "确认",
+    "confirmed": "已确认"
+  },
+  "step3": {
+    "title": "保存恢复码",
+    "text": "十个恢复码，每个只能用一次。丢失手机时，这是唯一的登录方式——而本平台只有一个管理员账户，丢失它会让所有人都无法进入。",
+    "saved": "我已保存",
+    "pending": "上面的验证码确认后，恢复码会显示在这里。"
+  },
+  "codesLeft": {
+    "label": "剩余恢复码",
+    "value": "<b>{{left}}</b> / {{total}}"
+  },
+  "regen": {
+    "open": "生成新的恢复码",
+    "title": "生成新的恢复码？",
+    "keep": "保留旧的",
+    "confirm": "生成新码",
+    "text": "你现有的十个恢复码会立即失效。关闭此页面前请保存新的恢复码。"
+  },
+  "disable": {
+    "open": "关闭",
+    "title": "关闭两步验证？",
+    "keep": "保持开启",
+    "confirm": "关闭",
+    "text": "你的密码将成为阻挡任何人进行审批、访问顾客账户和修改平台价格的唯一屏障。"
+  },
+  "dialogCode": "验证器中的验证码",
+  "codes": {
+    "copy": "复制恢复码",
+    "download": "下载",
+    "copied": "已复制。请存放在装有验证器的手机之外的地方。",
+    "copyFailed": "无法复制。请选中恢复码后手动复制。",
+    "downloaded": "已下载为 {{file}}。",
+    "fileHeading": "MarketLink 管理员恢复码"
+  }
+}

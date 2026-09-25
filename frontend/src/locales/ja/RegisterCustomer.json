@@ -1,0 +1,43 @@
+{
+  "title": "お客様アカウントを作成",
+  "intro": "氏名、電話番号、メールアドレス、住所の入力が必要です。住所はマーケットまでの距離の表示と、道案内の入力に使います。",
+  "fields": {
+    "fullName": "氏名",
+    "phone": "電話番号",
+    "email": "メールアドレス",
+    "emailHint": "ログインと注文のお知らせに使います。",
+    "address": "住所",
+    "addressPlaceholder": "通り、坊、区",
+    "password": "パスワード",
+    "passwordHint": "{{min}}〜{{max}}文字。",
+    "confirmPassword": "パスワード（確認）"
+  },
+  "consent": {
+    "label": "<terms>利用規約</terms>と<privacy>プライバシーポリシー</privacy>を読み、同意します",
+    "note": "氏名と電話番号は注文先の店舗に伝わり、マーケット当日の受け渡しに使われます。お支払いは店舗で生産者に直接行います。"
+  },
+  "submit": "アカウントを作成",
+  "submitting": "アカウントを作成中…",
+  "haveAccount": "すでにアカウントをお持ちの方",
+  "acceptFirst": "アカウントを作成するには規約に同意してください。",
+  "sharedAccount": "1つのアカウントを家族で共有できます。アカウント内の個人は区別されません。",
+  "toast": {
+    "created": "アカウントを作成しました。",
+    "failed": "アカウントを作成できませんでした。もう一度お試しください。"
+  },
+  "errors": {
+    "fullNameRequired": "氏名を入力してください。",
+    "fullNameMax": "氏名は{{max}}文字以内で入力してください。",
+    "phoneRequired": "電話番号を入力してください。",
+    "phoneInvalid": "有効なベトナムの携帯電話番号（10桁）を入力してください。",
+    "emailRequired": "メールアドレスを入力してください。",
+    "emailInvalid": "有効なメールアドレスを入力してください。",
+    "emailMax": "メールアドレスは{{max}}文字以内で入力してください。",
+    "addressRequired": "住所を入力してください。",
+    "addressMax": "住所は{{max}}文字以内で入力してください。",
+    "passwordRequired": "パスワードを入力してください。",
+    "passwordLength": "パスワードは{{min}}〜{{max}}文字で入力してください。",
+    "confirmRequired": "確認用のパスワードを入力してください。",
+    "confirmMismatch": "パスワードが一致しません。"
+  }
+}

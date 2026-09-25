@@ -1,0 +1,17 @@
+{
+  "overline": "Khu vực admin",
+  "title": "Đăng nhập để quản lý MarketLink",
+  "intro": "Trang đăng nhập này chỉ dành cho admin nền tảng và dẫn tới một bảng điều khiển riêng. Khách hàng và nhà vườn <link>đăng nhập tại đây</link>.",
+  "notAdmin": {
+    "title": "Tài khoản này không phải admin",
+    "text": "Trang đăng nhập này chỉ dành cho admin nền tảng. <link>Khách hàng và nhà vườn đăng nhập tại đây</link>."
+  },
+  "form": {
+    "email": "Email admin",
+    "password": "Mật khẩu",
+    "submit": "Đăng nhập",
+    "submitting": "Đang đăng nhập…",
+    "signedIn": "Đã đăng nhập.",
+    "error": "Không đăng nhập được. Vui lòng thử lại."
+  }
+}

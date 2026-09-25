@@ -1,0 +1,19 @@
+{
+  "title": "Completa tu perfil",
+  "intro": "Iniciaste sesión con Google como <b>{{email}}</b>. Google solo nos da tu nombre y tu correo, así que te pedimos una vez tu teléfono y tu dirección. El puesto donde haces el pedido los usa para entregártelo el día de mercado.",
+  "fields": {
+    "fullName": "Nombre completo",
+    "phone": "Número de teléfono",
+    "address": "Dirección",
+    "addressPlaceholder": "Calle, barrio, distrito",
+    "addressHint": "Para distancias e indicaciones."
+  },
+  "submit": "Guardar y continuar",
+  "saving": "Guardando…",
+  "signOut": "Cerrar sesión",
+  "note": "Los tres campos son obligatorios para usar MarketLink. Si no quieres añadirlos ahora, cierra sesión.",
+  "toast": {
+    "saved": "Tus datos se han guardado.",
+    "failed": "No se pudieron guardar tus datos. Inténtalo de nuevo."
+  }
+}

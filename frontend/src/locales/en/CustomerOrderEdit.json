@@ -1,0 +1,23 @@
+{
+  "myOrders": "My orders",
+  "breadcrumbOrder": "Order {{code}}",
+  "breadcrumbEdit": "Edit",
+  "notFound": {
+    "title": "That order is not here any more",
+    "text": "You may have cancelled it, or the link is old. Open it again from your orders."
+  },
+  "title": "Edit order {{code}}",
+  "cutoff": "Changes are allowed until <b>{{cutoff}}</b>.",
+  "banner": {
+    "title": "After you save, the order goes back to Placed and {{stall}} approves it again.",
+    "text": "Your stock stays reserved while they review. You get a notification when it is accepted."
+  },
+  "help": "You can lower quantities or remove items here. To add something else from {{stall}}, place a new order. Quantities are capped at what the stall has left today.",
+  "note": "Note to the stall",
+  "submit": "Send changes for approval",
+  "discard": "Discard changes",
+  "toast": {
+    "title": "Changes sent",
+    "text": "{{stall}} will review your order again."
+  }
+}

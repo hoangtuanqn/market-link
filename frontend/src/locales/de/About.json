@@ -1,0 +1,104 @@
+{
+  "title": "Über MarketLink",
+  "intro": "MarketLink verbindet Farmer auf Bauernmärkten rund um Ho-Chi-Minh-Stadt mit den Menschen, die dort einkaufen. Stände veröffentlichen, was sie diese Woche mitbringen, Sie reservieren daraus und holen es am Stand ab.",
+  "carouselLabel": "Wofür MarketLink da ist",
+  "photosNote": "Die vier Fotos oben sind Platzhalter.",
+  "slides": {
+    "mission": {
+      "topic": "Unsere Mission",
+      "title": "Schluss mit dem Weg, der mit leeren Händen endet",
+      "text": "Stände schreiben die Woche auf eine Kreidetafel, deshalb ist das Beste des Morgens weg, bevor die meisten ankommen. MarketLink bündelt die Woche jedes Stands an einem Ort und legt zurück, was Sie reservieren, bis Sie es abholen.",
+      "alt": "Stände in einer Markthalle mit Obst und Gemüse in Holzkisten",
+      "cta": "Märkte an diesem Wochenende ansehen"
+    },
+    "howItWorks": {
+      "topic": "So funktioniert's",
+      "title": "Am Donnerstag reservieren, am Samstag abholen",
+      "text": "Sehen Sie, was vier Märkte rund um Ho-Chi-Minh-Stadt an diesem Wochenende haben, und reservieren Sie bei so vielen Ständen, wie Sie möchten. Jeder Stand bekommt eine eigene Bestellung, eine eigene Abholzeit und wird am Stand bezahlt.",
+      "alt": "Körbe mit Karotten, Bohnen und Chilis auf einem Markttisch",
+      "cta": "Produkte dieser Woche ansehen"
+    },
+    "technology": {
+      "topic": "Die Technik",
+      "title": "Mengen, die im Moment der Bestellung stimmen",
+      "text": "Eine Reservierung wird sofort vom Bestand des Stands abgezogen, sodass nicht zwei Personen dieselben letzten zwei Bund buchen können. Abholzeitfenster halten die Schlange kurz, und die Karte zeigt jeden Stand in seinem Markt.",
+      "alt": "Samen und trockene Erde mit einer Metallschaufel",
+      "note_one": "Noch {{n}} Bund",
+      "note_other": "Noch {{n}} Bund",
+      "cta": "Marktkarte ansehen"
+    },
+    "benefit": {
+      "topic": "Was Sie davon haben",
+      "title": "Der Stand weiß, was er mitbringen soll",
+      "text": "Farmer lesen die Wochenendbestellungen vor der Ernte, dadurch geht weniger unverkauft zurück. Sie bekommen die Pomelo, mit der Sie gerechnet haben, zu der Zeit, die Sie gewählt haben, bezahlt an die Person, die sie angebaut hat.",
+      "alt": "Ein Bauer bearbeitet mit einem kleinen Traktor ein geflutetes Reisfeld",
+      "note": "{{place}} · Ernte am {{day}}",
+      "cta": "Auf MarketLink verkaufen"
+    }
+  },
+  "why": {
+    "title": "Warum es MarketLink gibt",
+    "shoppers": "Ein Marktmorgen lebt von Mundpropaganda. Stände schreiben mit Kreide an, was sie mitgebracht haben, Stammkunden fragen, was nächste Woche kommt, und alle anderen erfahren es erst beim Gang durch die Reihen. Das funktioniert, bis Sie etwas Bestimmtes brauchen oder bis der Weg quer durch die Stadt an einem leeren Tisch endet.",
+    "farmers": "Farmer haben dasselbe Problem von der anderen Seite. Es gibt keinen einfachen Weg, Stammkunden zu sagen, was die Woche bringt, vor dem Markttag eine Bestellung anzunehmen oder zu wissen, wie viel man am Freitagabend schneiden soll. MarketLink hält beide Seiten fest: Der Stand veröffentlicht die Woche, Sie reservieren daraus, und der Stand liest die Bestellungen, bevor er erntet."
+  },
+  "limits": {
+    "title": "Was MarketLink nicht macht",
+    "payment": "<b>Keine Onlinezahlung.</b> Sie bezahlen den Farmer bei der Abholung am Stand. Nirgends im Produkt gibt es ein Formular für Kartendaten.",
+    "delivery": "<b>Keine Lieferung.</b> Jede Bestellung wird auf dem Markt abgeholt, im Zeitfenster, das der Stand festlegt.",
+    "certification": "<b>Keine Zertifizierung.</b> MarketLink prüft weder Lizenzen noch Bio-Angaben. Fragen Sie den Farmer am Stand.",
+    "profiles": "<b>Keine getrennten Familienprofile.</b> Ein Konto kann im Haushalt geteilt werden. Das System unterscheidet nicht zwischen Personen innerhalb eines Kontos."
+  },
+  "team": {
+    "title": "Das Team",
+    "subtitle": "Sechs Personen, aufgeteilt nach ihren Bereichen im Repository",
+    "namePending": "Name folgt",
+    "lead": {
+      "role": "Teamleitung",
+      "note": "Das Schema, der API-Vertrag und die zwölf Entscheidungen, auf denen das restliche Team aufbaut"
+    },
+    "be1": {
+      "role": "Backend",
+      "note": "Anmeldung, Rollen und der Lebenszyklus einer Bestellung, von der Aufgabe bis zum Abschluss"
+    },
+    "be2": {
+      "role": "Backend",
+      "note": "Produkte, Märkte, Wochenbestand, Berichte und die Beispieldaten für die Demo"
+    },
+    "fe1": {
+      "role": "Frontend",
+      "note": "Das Designsystem, die öffentlichen Seiten, die Karte und das Customer-Dashboard"
+    },
+    "fe2": {
+      "role": "Frontend",
+      "note": "Die Dashboards für Farmer und Admin sowie jedes Formular im Produkt"
+    },
+    "qa": {
+      "role": "Qualität und Dokumentation",
+      "note": "Die Anforderungsliste, die Testdaten und die Dokumente, die zur Einreichung gehören"
+    }
+  },
+  "stack": {
+    "title": "Wie es gebaut ist",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "maps": "Karten",
+    "mapsValue": "Leaflet mit OpenStreetMap-Kacheln",
+    "design": "Design",
+    "designValue": "Das Designsystem Hang tag: ein Satz Tokens, ein Satz Komponenten, eine Stimme"
+  },
+  "credits": {
+    "title": "Quellen und Daten",
+    "mapData": "Kartendaten",
+    "mapDataValue": "© OpenStreetMap-Mitwirkende",
+    "photos": "Fotos",
+    "photosValue": "Vorerst Platzhalter; die Quellen stehen hier, sobald die eigenen Fotos des Teams da sind",
+    "locale": "Währung und Zeit",
+    "localeValue": "Vietnamesischer Đồng, Datum im Format {{format}}, 24-Stunden-Uhr, {{zone}}"
+  },
+  "contact": {
+    "title": "Möchten Sie uns etwas mitteilen?",
+    "text": "Fragen zu einer Bestellung richten Sie direkt an den Stand. Alles zur Plattform geht an das Team.",
+    "contactUs": "Kontakt",
+    "feedback": "Feedback senden"
+  }
+}

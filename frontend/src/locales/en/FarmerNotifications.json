@@ -1,0 +1,16 @@
+{
+  "title": "Notifications",
+  "intro": "New orders, edits and cancellations from customers, and announcements from MarketLink.",
+  "filter": {
+    "all": "All",
+    "unread": "Unread"
+  },
+  "unreadCount_one": "{{count}} unread",
+  "unreadCount_other": "{{count}} unread",
+  "unread": "unread",
+  "markAllRead": "Mark all as read",
+  "empty": {
+    "title": "Nothing new",
+    "text": "You will hear here when an order is placed, changed or cancelled, and when an admin posts an announcement."
+  }
+}

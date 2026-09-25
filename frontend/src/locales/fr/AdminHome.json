@@ -1,0 +1,9 @@
+{
+  "overline": "Espace admin",
+  "hello": "Bonjour, {{name}}",
+  "fallbackName": "admin",
+  "empty": {
+    "title": "Le tableau de bord arrive bientôt",
+    "text": "Les totaux des agriculteurs, clients, marchés et commandes s’afficheront ici une fois le tableau de bord admin construit."
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
 import RatingInput from '@/components/RatingInput';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import Notification from '@/utils/notification';
 
 /** FR-050 FR-051 D-10 — one review per order for the stall, and one per product in it. */
 const CustomerReviewPage = () => {
+  const { t } = useTranslation('CustomerReview');
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
   const order = orders.find((o) => o.code.replace('#', '') === code);
@@ -23,9 +25,9 @@ const CustomerReviewPage = () => {
   if (!order) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
-        <h1 className="text-h2">That order is not here any more</h1>
-        <p className="text-ink-muted">You may have cancelled it, or the link is old. Open it again from your orders.</p>
-        <ButtonLink to="/orders">My orders</ButtonLink>
+        <h1 className="text-h2">{t('notFound.title')}</h1>
+        <p className="text-ink-muted">{t('notFound.text')}</p>
+        <ButtonLink to="/orders">{t('myOrders')}</ButtonLink>
       </div>
     );
   }
@@ -34,7 +36,7 @@ const CustomerReviewPage = () => {
   const completedAt = order.history[order.history.length - 1][1];
 
   const onPublish = () => {
-    Notification.success({ title: 'Review published', text: `Thanks. Your review of ${stallName} is live.` });
+    Notification.success({ title: t('toast.title'), text: t('toast.text', { stall: stallName }) });
     navigate('/orders');
   };
 
@@ -42,33 +44,35 @@ const CustomerReviewPage = () => {
     <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
       <p className="text-small text-ink-muted">
         <Link to="/orders" className="text-brand underline">
-          My orders
+          {t('myOrders')}
         </Link>{' '}
-        · Order {order.code} · Review
+        · {t('breadcrumbOrder', { code: order.code })} · {t('breadcrumbReview')}
       </p>
 
       <div className="flex flex-col gap-2">
-        <p className="font-hand text-hand text-ink-muted">Completed {completedAt}</p>
-        <h1 className="font-hand text-h1">How was {stallName}?</h1>
-        <p className="text-body">
-          Reviews are tied to this completed order, so other customers see them as a verified purchase. The stall can
-          reply.
-        </p>
+        <p className="font-hand text-hand text-ink-muted">{t('completed', { date: completedAt })}</p>
+        <h1 className="font-hand text-h1">{t('title', { stall: stallName })}</h1>
+        <p className="text-body">{t('intro')}</p>
       </div>
 
       <div className="flex flex-col gap-4">
         <Card className="flex flex-col gap-4 p-6">
-          <h2 className="text-h3">The stall</h2>
-          <RatingInput legend={`Rate ${stallName}`} name="rs" value={stallRating} onChange={setStallRating} />
+          <h2 className="text-h3">{t('stall.title')}</h2>
+          <RatingInput
+            legend={t('rate', { name: stallName })}
+            name="rs"
+            value={stallRating}
+            onChange={setStallRating}
+          />
           <div className="flex flex-col gap-1.5">
             <label htmlFor="c1" className="text-small font-bold">
-              Comment
+              {t('comment')}
             </label>
             <textarea
               id="c1"
               value={stallComment}
               onChange={(e) => setStallComment(e.target.value)}
-              placeholder="Was it ready on time? Was the stall easy to find?"
+              placeholder={t('stall.placeholder')}
               className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
             />
           </div>
@@ -86,20 +90,20 @@ const CustomerReviewPage = () => {
               {!isSkipped && (
                 <>
                   <RatingInput
-                    legend={`Rate ${p.name}`}
+                    legend={t('rate', { name: p.name })}
                     name={`rp${line.productId}`}
                     value={productRatings[line.productId] ?? 0}
                     onChange={(v) => setProductRatings((prev) => ({ ...prev, [line.productId]: v }))}
                   />
                   <div className="flex flex-col gap-1.5">
                     <label htmlFor={`c-${line.productId}`} className="text-small font-bold">
-                      Comment
+                      {t('comment')}
                     </label>
                     <textarea
                       id={`c-${line.productId}`}
                       value={productComments[line.productId] ?? ''}
                       onChange={(e) => setProductComments((prev) => ({ ...prev, [line.productId]: e.target.value }))}
-                      placeholder="Taste, freshness, portion size"
+                      placeholder={t('product.placeholder')}
                       className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
                     />
                   </div>
@@ -110,7 +114,7 @@ const CustomerReviewPage = () => {
                 checked={isSkipped}
                 onChange={(e) => setSkipped((prev) => ({ ...prev, [line.productId]: e.target.checked }))}
               >
-                Skip this product
+                {t('product.skip')}
               </Checkbox>
             </Card>
           );
@@ -118,13 +122,13 @@ const CustomerReviewPage = () => {
 
         <div className="flex flex-wrap items-center gap-3">
           <Button onClick={onPublish} disabled={stallRating === 0}>
-            Publish review
+            {t('submit')}
           </Button>
           <Link to="/orders" className="text-small text-brand underline">
-            Not now
+            {t('notNow')}
           </Link>
         </div>
-        <p className="text-ink-muted text-[13px]">One review per order for the stall, and one per product in it.</p>
+        <p className="text-ink-muted text-[13px]">{t('note')}</p>
       </div>
     </div>
   );

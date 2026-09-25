@@ -1,0 +1,40 @@
+{
+  "title": "Asistente de compras",
+  "intro": "Pregunta dónde encontrar algo este fin de semana, cuándo abre un mercado o qué horas de recogida tiene un puesto. Cada respuesta sale de los datos de MarketLink.",
+  "conversation": "Conversación con el asistente",
+  "botName": "Asistente de MarketLink",
+  "botNote": "Las respuestas usan el catálogo en vivo. La intención se muestra debajo de cada respuesta.",
+  "message": "Mensaje",
+  "placeholder": "p. ej. ¿Quién tiene huevos en Thảo Điền el sábado?",
+  "send": "Enviar",
+  "reply": {
+    "greeting": "Hola, {{name}}. Pregúntame qué hay disponible este fin de semana o cuándo abre un mercado.",
+    "pomelo": "El {{day}} {{date}}, 2 puestos tienen pomelo de piel verde: <b>Út Hiền Orchard</b> en Thủ Đức Farmers Market (quedan 2, {{price1}}) y <b>Ba Lành Farm</b> en Thảo Điền Weekend Market (quedan 9, {{price2}}).",
+    "slots": "Út Hiền Orchard entrega de {{from}} a {{to}} el {{day}} {{date}} en Thủ Đức Farmers Market. Horas libres: {{free}}. La de las {{full}} está llena. Los pedidos cierran 12 horas antes de la hora de recogida.",
+    "unknown": "No lo he entendido. Prueba con el nombre de un producto, un mercado o un puesto."
+  },
+  "question": {
+    "pomeloMorning": "¿Qué mercado tiene pomelo de piel verde el sábado por la mañana?"
+  },
+  "suggest": {
+    "pomeloSat": "¿Dónde consigo pomelo de piel verde el sábado?",
+    "baChieuOpen": "¿Cuándo abre Bà Chiểu Green Market?",
+    "showMap": "Ver los 2 puestos en el mapa",
+    "slotsUtHien": "Horas de recogida en Út Hiền",
+    "addPomelos": "Añadir 2 pomelos a mi carrito",
+    "directionsThuDuc": "Cómo llegar a Thủ Đức Farmers Market",
+    "thaoDien": "¿Qué hay en Thảo Điền el sábado?"
+  },
+  "canAnswer": {
+    "title": "Qué puede responder",
+    "product": "Buscar un producto en mercados y puestos, con cuántos quedan",
+    "hours": "Días de mercado y horario de apertura",
+    "stalls": "Qué puestos hay en un mercado un día concreto",
+    "slots": "Franjas de recogida y horas libres de un puesto",
+    "price": "Precio, unidad y stock de un producto"
+  },
+  "how": {
+    "title": "Cómo funciona",
+    "text": "Tu pregunta se asocia a una de un conjunto fijo de intenciones, y cada intención ejecuta una consulta preparada sobre los datos de MarketLink. Las respuestas nunca vienen de otro lugar, y el asistente no puede cambiar nada: solo lee."
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "title": "Ajustes",
+  "intro": "Tus preferencias y los valores predeterminados de un puesto hasta que defina los suyos.",
+  "platform": "Valores predeterminados de la plataforma",
+  "platformNote": "Por ahora se guardan con tu cuenta. Aún está por decidir si un valor cambiado llega a los puestos que nunca definieron el suyo.",
+  "cutoff": "Hora límite predeterminada",
+  "max": "Pedidos por horario predeterminados",
+  "timezone": "Zona horaria",
+  "timezoneNote": "Todas las fechas y horas de la plataforma se leen en esta zona.",
+  "hours_one": "{{count}} hora",
+  "hours_other": "{{count}} horas",
+  "orders_one": "{{count}} pedido",
+  "orders_other": "{{count}} pedidos"
+}

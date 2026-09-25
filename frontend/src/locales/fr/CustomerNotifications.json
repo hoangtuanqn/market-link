@@ -1,0 +1,13 @@
+{
+  "title": "Notifications",
+  "intro": "Commande acceptée, refusée ou prête, favori de nouveau en stock et annonces de MarketLink.",
+  "filter": {
+    "all": "Toutes",
+    "unread": "Non lues"
+  },
+  "unreadCount_one": "{{count}} non lue",
+  "unreadCount_other": "{{count}} non lues",
+  "unread": "non lue",
+  "markAllRead": "Tout marquer comme lu",
+  "note": "Uniquement dans l’application pour l’instant. Les e-mails de confirmation et de retrait arriveront plus tard."
+}

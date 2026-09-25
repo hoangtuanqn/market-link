@@ -1,0 +1,17 @@
+{
+  "breadcrumbAccount": "Cuenta",
+  "title": "Ajustes",
+  "intro": "Cómo se ve MarketLink y qué te avisa. Todo lo de aquí es solo tuyo; no cambia nada para los puestos.",
+  "shopping": "Compras",
+  "market": "El mercado donde más compras",
+  "marketNote": "Aparece primero en la página de Mercados.",
+  "marketNone": "Sin preferencia",
+  "slot": "Hora de recogida preferida",
+  "slotNote": "Por ahora se guarda. Se preseleccionará cuando un puesto tenga ese horario libre.",
+  "slots": {
+    "earliest": "El primero libre",
+    "06-07": "06:00 – 07:00",
+    "07-08": "07:00 – 08:00",
+    "08-09": "08:00 – 09:00"
+  }
+}

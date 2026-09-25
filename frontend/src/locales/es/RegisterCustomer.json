@@ -1,0 +1,43 @@
+{
+  "title": "Crear una cuenta de cliente",
+  "intro": "El nombre, el teléfono, el correo y la dirección son obligatorios. La dirección se usa para mostrar la distancia a los mercados y rellenar las indicaciones.",
+  "fields": {
+    "fullName": "Nombre completo",
+    "phone": "Número de teléfono",
+    "email": "Correo electrónico",
+    "emailHint": "Para iniciar sesión y recibir avisos de pedidos.",
+    "address": "Dirección",
+    "addressPlaceholder": "Calle, barrio, distrito",
+    "password": "Contraseña",
+    "passwordHint": "De {{min}} a {{max}} caracteres.",
+    "confirmPassword": "Repite la contraseña"
+  },
+  "consent": {
+    "label": "He leído y acepto los <terms>Términos del servicio</terms> y la <privacy>Política de privacidad</privacy>",
+    "note": "Tu nombre y teléfono llegan al puesto donde haces el pedido, para que te lo entreguen el día de mercado. Pagas al productor en el puesto."
+  },
+  "submit": "Crear cuenta",
+  "submitting": "Creando cuenta…",
+  "haveAccount": "Ya tengo una cuenta",
+  "acceptFirst": "Acepta los términos para crear tu cuenta.",
+  "sharedAccount": "Una cuenta se puede compartir en familia; el sistema no distingue a las personas dentro de una cuenta.",
+  "toast": {
+    "created": "Cuenta creada.",
+    "failed": "No se pudo crear tu cuenta. Inténtalo de nuevo."
+  },
+  "errors": {
+    "fullNameRequired": "Escribe tu nombre completo.",
+    "fullNameMax": "El nombre completo puede tener como máximo {{max}} caracteres.",
+    "phoneRequired": "Escribe tu número de teléfono.",
+    "phoneInvalid": "Escribe un móvil vietnamita válido (10 dígitos).",
+    "emailRequired": "Escribe tu correo.",
+    "emailInvalid": "Escribe un correo electrónico válido.",
+    "emailMax": "El correo puede tener como máximo {{max}} caracteres.",
+    "addressRequired": "Escribe tu dirección.",
+    "addressMax": "La dirección puede tener como máximo {{max}} caracteres.",
+    "passwordRequired": "Escribe tu contraseña.",
+    "passwordLength": "La contraseña debe tener de {{min}} a {{max}} caracteres.",
+    "confirmRequired": "Confirma tu contraseña.",
+    "confirmMismatch": "Las contraseñas no coinciden."
+  }
+}
