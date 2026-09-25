@@ -393,5 +393,17 @@
     "gold": "ゴールド",
     "diamond": "ダイヤモンド",
     "badge": "{{tier}} ランク"
+  },
+  "video": {
+    "play": "動画を再生",
+    "preview": "動画",
+    "close": "閉じる"
+  },
+  "application": {
+    "attempt": "{{n}} 回目の申請",
+    "sentOn": "{{date}} に送信",
+    "answeredOn": "{{date}} に回答",
+    "reason": "理由:",
+    "photoAlt": "{{n}} 回目の申請の写真"
   }
 }

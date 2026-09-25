@@ -393,5 +393,17 @@
     "gold": "Or",
     "diamond": "Diamant",
     "badge": "Niveau {{tier}}"
+  },
+  "video": {
+    "play": "Lire la vidéo",
+    "preview": "Vidéo",
+    "close": "Fermer"
+  },
+  "application": {
+    "attempt": "Demande {{n}}",
+    "sentOn": "Envoyée le {{date}}",
+    "answeredOn": "réponse le {{date}}",
+    "reason": "Motif :",
+    "photoAlt": "Photo de la demande {{n}}"
   }
 }

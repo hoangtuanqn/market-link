@@ -393,5 +393,17 @@
     "gold": "Gold",
     "diamond": "Diamant",
     "badge": "Stufe {{tier}}"
+  },
+  "video": {
+    "play": "Video abspielen",
+    "preview": "Video",
+    "close": "Schließen"
+  },
+  "application": {
+    "attempt": "Antrag {{n}}",
+    "sentOn": "Gesendet am {{date}}",
+    "answeredOn": "beantwortet am {{date}}",
+    "reason": "Grund:",
+    "photoAlt": "Foto aus Antrag {{n}}"
   }
 }

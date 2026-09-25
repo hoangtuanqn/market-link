@@ -393,5 +393,17 @@
     "gold": "Vàng",
     "diamond": "Kim cương",
     "badge": "Hạng {{tier}}"
+  },
+  "video": {
+    "play": "Xem video",
+    "preview": "Video",
+    "close": "Đóng"
+  },
+  "application": {
+    "attempt": "Lần nộp {{n}}",
+    "sentOn": "Gửi {{date}}",
+    "answeredOn": "trả lời {{date}}",
+    "reason": "Lý do:",
+    "photoAlt": "Ảnh của lần nộp {{n}}"
   }
 }
