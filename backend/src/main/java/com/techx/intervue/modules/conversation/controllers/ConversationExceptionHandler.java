@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.conversation.controllers;
 
 import com.techx.intervue.modules.conversation.exceptions.AccountRestrictedException;
+import com.techx.intervue.modules.conversation.exceptions.AttachmentAlreadyUsedException;
+import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
@@ -106,6 +108,18 @@ public class ConversationExceptionHandler {
     @ExceptionHandler(RateLimitedException.class)
     ResponseEntity<ApiResource<Void>> tooManyRequests(RateLimitedException e) {
         return error(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMITED", e.getMessage(), List.of());
+    }
+
+    /** R-06: ảnh của người khác → 403, không phải 404. */
+    @ExceptionHandler(AttachmentNotYoursException.class)
+    ResponseEntity<ApiResource<Void>> notYourAttachment(AttachmentNotYoursException e) {
+        return error(HttpStatus.FORBIDDEN, "ATTACHMENT_NOT_YOURS", e.getMessage(), List.of());
+    }
+
+    /** Một ảnh chỉ gắn vào đúng một tin → 409. */
+    @ExceptionHandler(AttachmentAlreadyUsedException.class)
+    ResponseEntity<ApiResource<Void>> attachmentUsed(AttachmentAlreadyUsedException e) {
+        return error(HttpStatus.CONFLICT, "ATTACHMENT_ALREADY_USED", e.getMessage(), List.of());
     }
 
     /** Spec §6.3 — 413. */

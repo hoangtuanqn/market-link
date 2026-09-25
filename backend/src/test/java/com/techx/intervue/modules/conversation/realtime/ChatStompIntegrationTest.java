@@ -152,7 +152,7 @@ class ChatStompIntegrationTest {
         messageService.send(
                 customer.getId(),
                 thread.getId(),
-                new SendMessageRequest(null, "Still fresh?", null, null));
+                new SendMessageRequest(null, "Still fresh?", null, null, null));
 
         String frame = inbox.poll(5, TimeUnit.SECONDS);
         assertThat(frame)
@@ -176,7 +176,7 @@ class ChatStompIntegrationTest {
         messageService.send(
                 customer.getId(),
                 thread.getId(),
-                new SendMessageRequest(null, "hello", null, null));
+                new SendMessageRequest(null, "hello", null, null, null));
 
         assertThat(threads.poll(5, TimeUnit.SECONDS)).isNotNull().contains("\"unreadCount\":0");
         // thiết bị khác của chính người gửi cũng nhận bong bóng (FE khử trùng theo id)

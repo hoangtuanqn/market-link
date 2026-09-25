@@ -98,7 +98,7 @@ class MessageServicePublishTimingTest {
                             messageService.send(
                                     customer.getId(),
                                     thread.getId(),
-                                    new SendMessageRequest(null, "hello", null, null));
+                                    new SendMessageRequest(null, "hello", null, null, null));
                             verify(events, never()).messageCreated(any(), any());
                         });
 

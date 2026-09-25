@@ -2,6 +2,7 @@ package com.techx.intervue.modules.conversation.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.techx.intervue.modules.conversation.entities.Message;
+import com.techx.intervue.modules.conversation.entities.MessageAttachment;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import java.time.Instant;
 import lombok.Builder;
@@ -16,9 +17,14 @@ public record MessageResource(
         String body,
         Long productId,
         Long orderId,
+        AttachmentResource attachment,
         Instant createdAt) {
 
     public static MessageResource from(Message m) {
+        return from(m, null);
+    }
+
+    public static MessageResource from(Message m, MessageAttachment attachment) {
         return MessageResource.builder()
                 .id(m.getId())
                 .conversationId(m.getConversationId())
@@ -27,6 +33,13 @@ public record MessageResource(
                 .body(m.getBody())
                 .productId(m.getProductId())
                 .orderId(m.getOrderId())
+                .attachment(
+                        attachment == null
+                                ? null
+                                : AttachmentResource.of(
+                                        attachment.getId(),
+                                        attachment.getWidth(),
+                                        attachment.getHeight()))
                 .createdAt(m.getCreatedAt())
                 .build();
     }
