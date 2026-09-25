@@ -178,7 +178,7 @@ class ChatStompIntegrationTest {
         messageService.send(
                 customer.getId(),
                 thread.getId(),
-                new SendMessageRequest(null, "Còn xoài không?", null, null));
+                new SendMessageRequest(null, "Còn xoài không?", null, null, null));
 
         String frame = popups.poll(5, TimeUnit.SECONDS);
         assertThat(frame)
