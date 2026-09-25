@@ -39,6 +39,7 @@ import FarmerOverviewPage from './pages/FarmerOverview';
 import FarmerOrdersPage from './pages/FarmerOrders';
 import FarmerOrderDetailPage from './pages/FarmerOrderDetail';
 import FarmerStockWeekPage from './pages/FarmerStockWeek';
+import FarmerProductsPage from './pages/FarmerProducts';
 import AdminLoginPage from './pages/AdminLogin';
 import AdminHomePage from './pages/AdminHome';
 import AdminVerifyPage from './pages/AdminVerify';
@@ -146,6 +147,7 @@ const App = () => {
             }
           />
           <Route path="stock" element={<FarmerStockWeekPage />} />
+          <Route path="products" element={<FarmerProductsPage />} />
         </Route>
 
         {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
