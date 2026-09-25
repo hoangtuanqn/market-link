@@ -31,7 +31,7 @@ const Hero = ({ markets }: { markets: MarketType[] }) => {
 
         <div className="flex flex-wrap items-center gap-2">
           <ButtonLink to="/markets">{t('hero.browse')}</ButtonLink>
-          <ButtonLink to="/register/farmer" variant="secondary">
+          <ButtonLink to="/become-farmer" variant="secondary">
             {t('hero.sell')}
           </ButtonLink>
         </div>

@@ -27,7 +27,7 @@ const COLUMNS: { title: FooterKey; links: FooterLink[] }[] = [
   {
     title: 'sell',
     links: [
-      { label: 'registerFarmer', to: '/register/farmer', show: 'notFarmer' },
+      { label: 'registerFarmer', to: '/become-farmer', show: 'notFarmer' },
       { label: 'handlingPreOrders', to: '/farmer/orders', show: 'farmer' },
       { label: 'stallGuidelines', to: '/about' },
     ],

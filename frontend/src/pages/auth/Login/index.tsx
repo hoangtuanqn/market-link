@@ -52,7 +52,7 @@ const LoginPage = () => {
           i18nKey="newHere"
           components={{
             customer: <Link to="/register/customer" className="text-brand underline" />,
-            farmer: <Link to="/register/farmer" className="text-brand underline" />,
+            farmer: <Link to="/become-farmer" className="text-brand underline" />,
           }}
         />
       </p>

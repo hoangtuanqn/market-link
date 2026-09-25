@@ -42,7 +42,6 @@ import notFound from '@/locales/en/NotFound.json';
 import productDetail from '@/locales/en/ProductDetail.json';
 import products from '@/locales/en/Products.json';
 import registerCustomer from '@/locales/en/RegisterCustomer.json';
-import registerFarmer from '@/locales/en/RegisterFarmer.json';
 import resetPassword from '@/locales/en/ResetPassword.json';
 import search from '@/locales/en/Search.json';
 import setPassword from '@/locales/en/SetPassword.json';
@@ -99,7 +98,6 @@ export const en = {
   ProductDetail: productDetail,
   Products: products,
   RegisterCustomer: registerCustomer,
-  RegisterFarmer: registerFarmer,
   ResetPassword: resetPassword,
   Search: search,
   SetPassword: setPassword,

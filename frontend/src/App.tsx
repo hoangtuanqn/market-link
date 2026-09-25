@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
 import SettingsSync from './components/SettingsSync';
 import AdminLayout from './layout/AdminLayout';
@@ -12,7 +12,6 @@ import NotFoundPage from './pages/public/NotFound';
 import RemountOnParam from './components/RemountOnParam';
 import LoginPage from './pages/auth/Login';
 import RegisterCustomerPage from './pages/auth/RegisterCustomer';
-import RegisterFarmerPage from './pages/auth/RegisterFarmer';
 import ForgotPasswordPage from './pages/auth/ForgotPassword';
 import ResetPasswordPage from './pages/auth/ResetPassword';
 import GoogleCallbackPage from './pages/auth/GoogleCallback';
@@ -73,7 +72,8 @@ const App = () => {
             <Route index element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register/customer" element={<RegisterCustomerPage />} />
-            <Route path="register/farmer" element={<RegisterFarmerPage />} />
+            {/* FR-002: không đăng ký sạp riêng — tạo tài khoản customer trước, rồi nộp đơn Farmer ở /become-farmer */}
+            <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="reset-password" element={<ResetPasswordPage />} />
             <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
