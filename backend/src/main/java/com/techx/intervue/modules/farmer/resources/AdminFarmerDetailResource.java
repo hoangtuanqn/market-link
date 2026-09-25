@@ -21,8 +21,12 @@ public record AdminFarmerDetailResource(
         String address,
         ApprovalStatus approvalStatus,
         String rejectReason,
+        String suspendReason,
         Instant approvedAt,
+        Instant suspendedAt,
         Instant createdAt,
+        /** Mọi lần tài khoản này nộp đơn, mới nhất trước. */
+        List<FarmerApplicationHistoryResource> history,
         /** Tài khoản Customer đã có từ trước — không phải ngày tạo hồ sơ Farmer này. */
         Instant customerSince,
         UserStatus accountStatus) {}

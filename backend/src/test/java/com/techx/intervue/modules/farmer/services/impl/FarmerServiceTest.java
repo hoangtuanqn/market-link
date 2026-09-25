@@ -8,14 +8,17 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.farmer.entities.FarmerApplicationHistory;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerApplicationExistsException;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.exceptions.InvalidApprovalTransitionException;
+import com.techx.intervue.modules.farmer.repositories.FarmerApplicationHistoryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.farmer.requests.FarmerApplicationRequest;
 import com.techx.intervue.modules.farmer.requests.RejectFarmerRequest;
+import com.techx.intervue.modules.farmer.requests.SuspendFarmerRequest;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.user.entities.User;
@@ -27,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class FarmerServiceTest {
 
@@ -35,6 +39,7 @@ class FarmerServiceTest {
     private static final long ADMIN_ID = 99L;
 
     private FarmerProfileRepository farmerProfileRepository;
+    private FarmerApplicationHistoryRepository historyRepository;
     private UserRepository userRepository;
     private UserSessionCache userSessionCache;
     private FarmerService service;
@@ -42,9 +47,19 @@ class FarmerServiceTest {
     @BeforeEach
     void setUp() {
         farmerProfileRepository = mock(FarmerProfileRepository.class);
+        historyRepository = mock(FarmerApplicationHistoryRepository.class);
+        when(historyRepository.findByUserIdOrderByAttemptDesc(any())).thenReturn(List.of());
+        when(historyRepository.findFirstByUserIdOrderByAttemptDesc(any()))
+                .thenReturn(Optional.empty());
+        when(historyRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         userRepository = mock(UserRepository.class);
         userSessionCache = mock(UserSessionCache.class);
-        service = new FarmerService(farmerProfileRepository, userRepository, userSessionCache);
+        service =
+                new FarmerService(
+                        farmerProfileRepository,
+                        historyRepository,
+                        userRepository,
+                        userSessionCache);
     }
 
     private static FarmerProfile pendingProfile() {
@@ -72,7 +87,7 @@ class FarmerServiceTest {
 
     @Test
     void apply_createsPendingProfile_whenNoneExists() {
-        when(farmerProfileRepository.existsByUserId(USER_ID)).thenReturn(false);
+        when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         FarmerProfileResource result =
@@ -85,7 +100,7 @@ class FarmerServiceTest {
 
     @Test
     void apply_persistsDescriptionAndEvidence_whenProvided() {
-        when(farmerProfileRepository.existsByUserId(USER_ID)).thenReturn(false);
+        when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         FarmerApplicationRequest request =
@@ -110,11 +125,37 @@ class FarmerServiceTest {
 
     @Test
     void apply_throws_whenAlreadyApplied() {
-        when(farmerProfileRepository.existsByUserId(USER_ID)).thenReturn(true);
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(pendingProfile()));
 
         assertThatThrownBy(() -> service.apply(USER_ID, minimalRequest("Stall", "Person")))
                 .isInstanceOf(FarmerApplicationExistsException.class);
         verify(farmerProfileRepository, never()).save(any());
+    }
+
+    /** Bị từ chối không còn là ngõ cụt: đơn cũ bị ghi đè, lần nộp mới được ghi vào lịch sử. */
+    @Test
+    void apply_reopensTheRejectedApplication_andRecordsANewAttempt() {
+        FarmerProfile rejected = pendingProfile();
+        rejected.setApprovalStatus(ApprovalStatus.REJECTED);
+        rejected.setRejectReason("Photos do not show the plot");
+        when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.of(rejected));
+        when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(historyRepository.countByUserId(USER_ID)).thenReturn(1L);
+
+        FarmerProfileResource result =
+                service.apply(USER_ID, minimalRequest("Second try", "Khang"));
+
+        assertThat(result.approvalStatus()).isEqualTo(ApprovalStatus.PENDING);
+        assertThat(result.rejectReason()).isNull();
+        assertThat(rejected.getRejectReason()).isNull();
+
+        ArgumentCaptor<FarmerApplicationHistory> saved =
+                ArgumentCaptor.forClass(FarmerApplicationHistory.class);
+        verify(historyRepository).save(saved.capture());
+        assertThat(saved.getValue().getAttempt()).isEqualTo(2);
+        assertThat(saved.getValue().getStallName()).isEqualTo("Second try");
+        assertThat(saved.getValue().getStatus()).isEqualTo(ApprovalStatus.PENDING);
     }
 
     @Test
@@ -170,7 +211,7 @@ class FarmerServiceTest {
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        service.suspend(FARMER_ID);
+        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows"), ADMIN_ID);
 
         verify(userSessionCache, never()).updateRoles(any(), any());
     }
@@ -204,7 +245,8 @@ class FarmerServiceTest {
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        AdminFarmerDetailResource result = service.suspend(FARMER_ID);
+        AdminFarmerDetailResource result =
+                service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows"), ADMIN_ID);
 
         assertThat(result.approvalStatus()).isEqualTo(ApprovalStatus.SUSPENDED);
         assertThat(owner.getRole()).isEqualTo(RoleType.FARMER);
@@ -216,7 +258,12 @@ class FarmerServiceTest {
         FarmerProfile profile = pendingProfile();
         when(farmerProfileRepository.findById(FARMER_ID)).thenReturn(Optional.of(profile));
 
-        assertThatThrownBy(() -> service.suspend(FARMER_ID))
+        assertThatThrownBy(
+                        () ->
+                                service.suspend(
+                                        FARMER_ID,
+                                        new SuspendFarmerRequest("Repeated no-shows"),
+                                        ADMIN_ID))
                 .isInstanceOf(InvalidApprovalTransitionException.class);
     }
 
@@ -229,7 +276,7 @@ class FarmerServiceTest {
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         AdminFarmerDetailResource result =
-                service.reject(FARMER_ID, new RejectFarmerRequest(" Market is full "));
+                service.reject(FARMER_ID, new RejectFarmerRequest(" Market is full "), ADMIN_ID);
 
         assertThat(result.approvalStatus()).isEqualTo(ApprovalStatus.REJECTED);
         assertThat(result.rejectReason()).isEqualTo("Market is full");
@@ -243,7 +290,8 @@ class FarmerServiceTest {
         profile.setApprovalStatus(ApprovalStatus.APPROVED);
         when(farmerProfileRepository.findById(FARMER_ID)).thenReturn(Optional.of(profile));
 
-        assertThatThrownBy(() -> service.reject(FARMER_ID, new RejectFarmerRequest("Other")))
+        assertThatThrownBy(
+                        () -> service.reject(FARMER_ID, new RejectFarmerRequest("Other"), ADMIN_ID))
                 .isInstanceOf(InvalidApprovalTransitionException.class);
     }
 
