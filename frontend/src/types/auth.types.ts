@@ -56,3 +56,35 @@ export type AuthResultType = {
   accessToken: string;
   user: UserType;
 };
+
+/**
+ * FR-008: admin đã bật xác thực hai bước → login (và đăng nhập Google) chưa cấp phiên: `mfaRequired = true`,
+ * `accessToken = null`, gửi `mfaToken` kèm mã tới POST /auth/mfa/verify.
+ */
+export type LoginResultType = Omit<AuthResultType, 'accessToken'> & {
+  accessToken: string | null;
+  mfaRequired?: boolean;
+  mfaToken?: string | null;
+};
+
+/** Gửi `code` (6 số) hoặc `recoveryCode` (xxxx-xxxx-xxxx). */
+export type MfaVerifyInput = {
+  mfaToken: string;
+  code?: string;
+  recoveryCode?: string;
+};
+
+export type MfaStatusType = {
+  enabled: boolean;
+  recoveryCodesLeft: number;
+};
+
+/** `otpauthUri` chứa khoá bí mật: QR vẽ ngay trong trình duyệt, không gửi cho dịch vụ bên ngoài. */
+export type MfaSetupType = {
+  secret: string;
+  otpauthUri: string;
+};
+
+export type MfaRecoveryCodesType = {
+  codes: string[];
+};

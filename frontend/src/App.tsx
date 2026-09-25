@@ -33,6 +33,8 @@ import StallProfilePage from './pages/StallProfile';
 import SearchPage from './pages/Search';
 import AdminLoginPage from './pages/AdminLogin';
 import AdminHomePage from './pages/AdminHome';
+import AdminVerifyPage from './pages/AdminVerify';
+import AdminSecurityPage from './pages/AdminSecurity';
 
 const App = () => {
   return (
@@ -76,8 +78,11 @@ const App = () => {
 
         {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
         <Route path="admin/login" element={<AdminLoginPage />} />
+        {/* FR-008: bước 2 đăng nhập admin, chưa có phiên nên nằm ngoài AdminLayout. */}
+        <Route path="admin/verify" element={<AdminVerifyPage />} />
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<AdminHomePage />} />
+          <Route path="security" element={<AdminSecurityPage />} />
         </Route>
       </Routes>
       <AppToaster />
