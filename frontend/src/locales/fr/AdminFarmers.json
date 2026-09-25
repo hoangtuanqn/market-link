@@ -1,0 +1,79 @@
+{
+  "title": "Producteurs",
+  "intro": "Validez une candidature avant que le stand puisse proposer des produits. La plupart des candidatures viennent de comptes qui achètent déjà ici : chacune affiche donc l’historique de commandes du candidat à côté de ses photos. Suspendez un stand pour masquer ses produits et arrêter les nouvelles commandes ; ses commandes en cours se terminent normalement.",
+  "search": {
+    "label": "Rechercher des producteurs",
+    "placeholder": "Stand, contact, téléphone",
+    "submit": "Rechercher"
+  },
+  "tabsLabel": "Producteurs par statut",
+  "status": {
+    "pending": "En attente de validation",
+    "approved": "Validés",
+    "suspended": "Suspendus",
+    "rejected": "Refusés"
+  },
+  "empty": {
+    "pending": {
+      "title": "Aucune candidature en attente",
+      "text": "Les nouvelles candidatures de producteurs arrivent ici pour examen avant de pouvoir proposer des produits."
+    },
+    "approved": {
+      "title": "Aucun stand validé",
+      "text": "Validez une candidature et le stand apparaît ici, visible par les clients."
+    },
+    "suspended": {
+      "title": "Aucun stand suspendu",
+      "text": "Un stand suspendu est masqué pour les clients mais termine les commandes qu’il a déjà."
+    },
+    "rejected": {
+      "title": "Aucune candidature refusée",
+      "text": "Les producteurs refusés gardent leur compte et peuvent être informés du motif."
+    }
+  },
+  "col": {
+    "stall": "Stand",
+    "markets": "Marchés",
+    "registered": "Inscription",
+    "products": "Produits",
+    "rating": "Note"
+  },
+  "reviews_one": "{{count}} avis",
+  "reviews_other": "{{count}} avis",
+  "action": {
+    "approve": "Valider",
+    "reject": "Refuser",
+    "view": "Voir",
+    "suspend": "Suspendre",
+    "reinstate": "Rétablir"
+  },
+  "notYet": "Pas maintenant",
+  "approve": {
+    "title": "Valider {{stall}} ?",
+    "text": "Le stand devient visible par les clients et peut proposer des produits tout de suite. Le producteur est prévenu.",
+    "confirm": "Valider le stand"
+  },
+  "reject": {
+    "title": "Refuser {{stall}} ?",
+    "text": "Le producteur garde son accès mais ne peut pas proposer de produits.",
+    "reason": "Motif que verra le producteur",
+    "confirm": "Refuser la candidature"
+  },
+  "reason": {
+    "mismatch": "Les informations ne correspondent pas au stand",
+    "full": "Le marché est complet",
+    "unreachable": "Impossible de joindre le numéro de contact",
+    "other": "Autre"
+  },
+  "suspend": {
+    "title": "Suspendre {{stall}} ?",
+    "text": "Tous les produits sont masqués et aucune nouvelle commande n’est acceptée. Les commandes déjà passées continuent, pour que les clients ne perdent pas ce qu’ils ont réservé.",
+    "confirm": "Suspendre le stand"
+  },
+  "toast": {
+    "approved": "{{stall}} validé. Le stand peut proposer des produits dès maintenant.",
+    "rejected": "{{stall}} refusé. Il garde son compte.",
+    "suspended": "{{stall}} suspendu. Les commandes en cours se terminent normalement.",
+    "reinstated": "{{stall}} rétabli. Les produits sont de nouveau visibles."
+  }
+}

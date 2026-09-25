@@ -128,12 +128,7 @@ const FarmerLayout = () => {
       <nav aria-label={t('farmerNav.sections')} className="flex flex-1 flex-col gap-4">
         {NAV.map((g) => (
           <div key={g.heading} className="flex flex-col gap-0.5">
-            <h2
-              className={Helper.cn(
-                'text-board-muted text-overline m-0 px-3',
-                folded && 'sr-only lg:not-sr-only lg:px-3',
-              )}
-            >
+            <h2 className={Helper.cn('text-board-muted text-overline m-0 px-3', folded && 'lg:sr-only')}>
               {t(`farmerNav.${g.heading}`)}
             </h2>
             {g.items.map((it) => (
@@ -192,6 +187,7 @@ const FarmerLayout = () => {
         aria-label={t('farmerNav.navigation')}
         className={Helper.cn(
           'bg-board text-on-board fixed inset-y-0 left-0 z-100 flex w-71 -translate-x-full flex-col gap-4 overflow-y-auto p-3 transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0',
+          '[scrollbar-width:thin] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--brand-strong)] [&::-webkit-scrollbar-track]:bg-transparent',
           mobileOpen && 'translate-x-0',
           folded && 'lg:w-17 lg:items-center lg:px-2',
         )}
@@ -203,13 +199,16 @@ const FarmerLayout = () => {
             className="text-on-board inline-flex items-center gap-2 no-underline"
           >
             <LogoMark size={26} />
-            {!folded && <span className="font-hand text-xl leading-none">MarketLink</span>}
+            <span className={Helper.cn('font-hand text-xl leading-none', folded && 'lg:hidden')}>MarketLink</span>
           </Link>
-          {!folded && (
-            <span className="bg-accent text-on-accent rounded-sm px-2 py-0.5 text-[11px] font-bold tracking-[0.08em] uppercase">
-              {t('farmerNav.badge')}
-            </span>
-          )}
+          <span
+            className={Helper.cn(
+              'bg-accent text-on-accent rounded-sm px-2 py-0.5 text-[11px] font-bold tracking-[0.08em] uppercase',
+              folded && 'lg:hidden',
+            )}
+          >
+            {t('farmerNav.badge')}
+          </span>
           <button
             type="button"
             onClick={toggleFold}
@@ -230,23 +229,22 @@ const FarmerLayout = () => {
           <span className="bg-accent text-on-accent font-hand grid size-9 place-items-center rounded-full text-[20px]">
             {f.stall.charAt(0)}
           </span>
-          {!folded && (
-            <span className="min-w-0">
-              <b className="font-hand block truncate text-[21px] leading-tight font-normal">{f.stall}</b>
-              <span className="text-board-muted block text-[12px]">
-                {t('farmerNav.approvedMarkets', { count: f.markets.length })}
-              </span>
+          <span className={Helper.cn('min-w-0', folded && 'lg:hidden')}>
+            <b className="font-hand block truncate text-[21px] leading-tight font-normal">{f.stall}</b>
+            <span className="text-board-muted block text-[12px]">
+              {t('farmerNav.approvedMarkets', { count: f.markets.length })}
             </span>
-          )}
-          {!folded && (
-            <button
-              type="button"
-              aria-label={t('farmerNav.changeMarket')}
-              className="text-on-board hover:bg-board grid size-8 place-items-center rounded-sm"
-            >
-              <SwapIcon />
-            </button>
-          )}
+          </span>
+          <button
+            type="button"
+            aria-label={t('farmerNav.changeMarket')}
+            className={Helper.cn(
+              'text-on-board hover:bg-board grid size-8 place-items-center rounded-sm',
+              folded && 'lg:hidden',
+            )}
+          >
+            <SwapIcon />
+          </button>
         </div>
 
         {nav}
@@ -255,14 +253,12 @@ const FarmerLayout = () => {
           <span className="bg-board-muted text-board grid size-9 place-items-center rounded-full text-[13px] font-bold">
             CT
           </span>
-          {!folded && (
-            <span className="min-w-0">
-              <b className="block truncate text-[13px] font-medium">cotu@example.com</b>
-              <span className="text-board-muted block text-[12px]">
-                {t('farmerNav.roleStall', { stall: 'Cô Tư Garden' })}
-              </span>
+          <span className={Helper.cn('min-w-0', folded && 'lg:hidden')}>
+            <b className="block truncate text-[13px] font-medium">cotu@example.com</b>
+            <span className="text-board-muted block text-[12px]">
+              {t('farmerNav.roleStall', { stall: 'Cô Tư Garden' })}
             </span>
-          )}
+          </span>
           <Link
             to="/login"
             className={Helper.cn(
@@ -271,7 +267,7 @@ const FarmerLayout = () => {
             )}
           >
             <LogOutIcon />
-            {!folded && t('nav.signOut')}
+            <span className={folded ? 'lg:hidden' : undefined}>{t('nav.signOut')}</span>
           </Link>
         </div>
       </aside>

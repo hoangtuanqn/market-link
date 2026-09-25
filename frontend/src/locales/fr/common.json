@@ -315,5 +315,21 @@
     "phoneInvalid": "Saisissez un numéro de mobile vietnamien valide (10 chiffres).",
     "addressRequired": "Saisissez votre adresse.",
     "addressMax": "L’adresse ne peut pas dépasser {{max}} caractères."
+  },
+  "adminNav": {
+    "sections": "Sections d’administration",
+    "overview": "Vue d’ensemble",
+    "farmers": "Producteurs",
+    "customers": "Clients",
+    "markets": "Marchés",
+    "moderation": "Modération",
+    "orders": "Commandes",
+    "revenue": "Revenus",
+    "reports": "Rapports",
+    "categories": "Catégories",
+    "announcements": "Annonces",
+    "feedback": "Retours",
+    "pricing": "Tarifs",
+    "settings": "Paramètres"
   }
 }

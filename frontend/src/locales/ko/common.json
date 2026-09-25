@@ -315,5 +315,21 @@
     "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요.",
     "addressRequired": "주소를 입력해 주세요.",
     "addressMax": "주소는 최대 {{max}}자까지 입력할 수 있어요."
+  },
+  "adminNav": {
+    "sections": "관리 메뉴",
+    "overview": "개요",
+    "farmers": "농가",
+    "customers": "고객",
+    "markets": "시장",
+    "moderation": "검토",
+    "orders": "주문",
+    "revenue": "수익",
+    "reports": "보고서",
+    "categories": "카테고리",
+    "announcements": "공지",
+    "feedback": "의견",
+    "pricing": "요금",
+    "settings": "설정"
   }
 }

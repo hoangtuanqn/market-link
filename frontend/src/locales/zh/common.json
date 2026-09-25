@@ -315,5 +315,21 @@
     "phoneInvalid": "请输入有效的越南手机号码（10 位数字）。",
     "addressRequired": "请输入你的地址。",
     "addressMax": "地址最多 {{max}} 个字符。"
+  },
+  "adminNav": {
+    "sections": "管理区域",
+    "overview": "概览",
+    "farmers": "农户",
+    "customers": "顾客",
+    "markets": "市集",
+    "moderation": "内容审核",
+    "orders": "订单",
+    "revenue": "收入",
+    "reports": "报表",
+    "categories": "分类",
+    "announcements": "公告",
+    "feedback": "反馈",
+    "pricing": "定价",
+    "settings": "设置"
   }
 }

@@ -315,5 +315,21 @@
     "phoneInvalid": "กรอกหมายเลขมือถือเวียดนามที่ถูกต้อง (10 หลัก)",
     "addressRequired": "กรอกที่อยู่",
     "addressMax": "ที่อยู่ยาวได้ไม่เกิน {{max}} ตัวอักษร"
+  },
+  "adminNav": {
+    "sections": "เมนูผู้ดูแล",
+    "overview": "ภาพรวม",
+    "farmers": "เกษตรกร",
+    "customers": "ลูกค้า",
+    "markets": "ตลาด",
+    "moderation": "การตรวจสอบ",
+    "orders": "คำสั่งซื้อ",
+    "revenue": "รายได้",
+    "reports": "รายงาน",
+    "categories": "หมวดหมู่",
+    "announcements": "ประกาศ",
+    "feedback": "ความคิดเห็น",
+    "pricing": "ราคา",
+    "settings": "การตั้งค่า"
   }
 }

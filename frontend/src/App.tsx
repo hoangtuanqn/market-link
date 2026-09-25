@@ -56,6 +56,7 @@ import AdminLoginPage from './pages/AdminLogin';
 import AdminHomePage from './pages/AdminHome';
 import AdminVerifyPage from './pages/AdminVerify';
 import AdminSecurityPage from './pages/AdminSecurity';
+import AdminFarmersPage from './pages/AdminFarmers';
 
 const App = () => {
   return (
@@ -188,6 +189,7 @@ const App = () => {
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<AdminHomePage />} />
             <Route path="security" element={<AdminSecurityPage />} />
+            <Route path="farmers" element={<AdminFarmersPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />
           </Route>
         </Routes>
