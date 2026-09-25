@@ -2,17 +2,24 @@ package com.techx.intervue.modules.notification.services.impl;
 
 import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.notification.entities.Notification;
+import com.techx.intervue.modules.notification.enums.NotificationKind;
+import com.techx.intervue.modules.notification.exceptions.NotificationAccessDeniedException;
+import com.techx.intervue.modules.notification.exceptions.TestNotificationTooSoonException;
 import com.techx.intervue.modules.notification.repositories.NotificationRepository;
 import com.techx.intervue.modules.notification.resources.Alert;
 import com.techx.intervue.modules.notification.resources.NotificationEvent;
 import com.techx.intervue.modules.notification.resources.NotificationPayload;
+import com.techx.intervue.modules.notification.resources.NotificationResource;
 import com.techx.intervue.modules.notification.resources.RenderedText;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationDeliveryInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPreferenceServiceInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.user.entities.UserSettings;
 import com.techx.intervue.modules.user.repositories.UserSettingsRepository;
+import com.techx.intervue.resources.PageResource;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -21,6 +28,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +43,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class NotificationService implements NotificationServiceInterface {
+
+    static final String TEST_KEY = "notif:test:";
+    private static final Duration TEST_COOLDOWN = Duration.ofSeconds(10);
 
     private final NotificationRepository notifications;
     private final NotificationPreferenceServiceInterface prefs;
@@ -81,6 +94,60 @@ public class NotificationService implements NotificationServiceInterface {
     @Transactional
     public void notifyAdmins(NotificationEvent event) {
         dispatch(notifications.activeAdminIds(), event);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<NotificationResource> list(
+            Long userId, Boolean isRead, int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Notification> result =
+                isRead == null
+                        ? notifications.findByUserIdOrderByCreatedAtDescIdDesc(userId, pageable)
+                        : notifications.findByUserIdAndReadOrderByCreatedAtDescIdDesc(
+                                userId, isRead, pageable);
+        return PageResource.<NotificationResource>builder()
+                .items(result.map(NotificationResource::from).getContent())
+                .page(page)
+                .pageSize(size)
+                .total(result.getTotalElements())
+                .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public long unreadCount(Long userId) {
+        return notifications.countByUserIdAndReadFalse(userId);
+    }
+
+    @Override
+    @Transactional
+    public void markRead(Long userId, Long notificationId) {
+        Notification n =
+                notifications
+                        .findById(notificationId)
+                        .orElseThrow(() -> new EntityNotFoundException("Notification not found."));
+        if (!n.getUserId().equals(userId)) {
+            throw new NotificationAccessDeniedException();
+        }
+        n.setRead(true);
+    }
+
+    @Override
+    @Transactional
+    public int markAllRead(Long userId) {
+        return notifications.markAllRead(userId);
+    }
+
+    @Override
+    public void sendTest(Long userId) {
+        Boolean first = redis.opsForValue().setIfAbsent(TEST_KEY + userId, "1", TEST_COOLDOWN);
+        if (!Boolean.TRUE.equals(first)) {
+            throw new TestNotificationTooSoonException();
+        }
+        dispatch(
+                List.of(userId),
+                NotificationEvent.of(NotificationKind.TEST, "/settings", Map.of()));
     }
 
     private void push(
