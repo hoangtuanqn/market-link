@@ -111,7 +111,7 @@ class StompAuthInterceptorTest {
 
     @Test
     void subscribeToOwnUserQueueIsAllowed() {
-        Message<byte[]> sub = frame(StompCommand.SUBSCRIBE, null, "/user/queue/messages");
+        Message<byte[]> sub = frame(StompCommand.SUBSCRIBE, null, "/user/topic/messages");
         assertThat(interceptor.preSend(withUser(sub, "7"), channel)).isNotNull();
     }
 
@@ -119,7 +119,10 @@ class StompAuthInterceptorTest {
     void subscribeOutsideUserQueueIsRejected() {
         for (String dest :
                 new String[] {
-                    "/queue/messages-user9abc", "/topic/conversations/42", "/user/topic/x"
+                    "/queue/messages-user9abc",
+                    "/topic/messages-user9abc",
+                    "/user/queue/messages",
+                    "/user/x/topic/messages"
                 }) {
             assertThatThrownBy(
                             () ->
@@ -154,5 +157,75 @@ class StompAuthInterceptorTest {
                                 interceptor.preSend(
                                         frame(StompCommand.SEND, null, "/app/typing"), channel))
                 .isInstanceOf(AccessDeniedException.class);
+    }
+
+    /**
+     * STOMP là bí danh của CONNECT (STOMP 1.2): phải xác thực y hệt, không được lọt qua default.
+     */
+    @Test
+    void stompFrameIsAuthenticatedLikeConnect() {
+        assertThatThrownBy(
+                        () -> interceptor.preSend(frame(StompCommand.STOMP, null, null), channel))
+                .isInstanceOf(BadCredentialsException.class);
+        Message<?> out =
+                interceptor.preSend(frame(StompCommand.STOMP, "Bearer good", null), channel);
+        assertThat(StompHeaderAccessor.wrap(out).getUser().getName()).isEqualTo("7");
+    }
+
+    /**
+     * MESSAGE là frame server → client; client gửi lên là tiêm sự kiện giả vào queue người khác.
+     */
+    @Test
+    void messageFrameFromAClientIsRejectedEvenWithAPrincipal() {
+        assertThatThrownBy(
+                        () ->
+                                interceptor.preSend(
+                                        withUser(
+                                                frame(
+                                                        StompCommand.MESSAGE,
+                                                        null,
+                                                        "/user/3/topic/messages"),
+                                                "7"),
+                                        channel))
+                .isInstanceOf(AccessDeniedException.class);
+        assertThatThrownBy(
+                        () ->
+                                interceptor.preSend(
+                                        frame(StompCommand.MESSAGE, null, "/user/3/topic/messages"),
+                                        channel))
+                .isInstanceOf(AccessDeniedException.class);
+    }
+
+    @Test
+    void serverOnlyFramesAreRejected() {
+        for (StompCommand cmd :
+                new StompCommand[] {
+                    StompCommand.CONNECTED, StompCommand.RECEIPT, StompCommand.ERROR
+                }) {
+            assertThatThrownBy(
+                            () ->
+                                    interceptor.preSend(
+                                            withUser(frame(cmd, null, null), "7"), channel))
+                    .as(cmd.name())
+                    .isInstanceOf(AccessDeniedException.class);
+        }
+    }
+
+    @Test
+    void housekeepingFramesNeedAPrincipalButNoDestinationCheck() {
+        for (StompCommand cmd :
+                new StompCommand[] {
+                    StompCommand.UNSUBSCRIBE,
+                    StompCommand.DISCONNECT,
+                    StompCommand.ACK,
+                    StompCommand.NACK
+                }) {
+            assertThat(interceptor.preSend(withUser(frame(cmd, null, null), "7"), channel))
+                    .as(cmd.name())
+                    .isNotNull();
+            assertThatThrownBy(() -> interceptor.preSend(frame(cmd, null, null), channel))
+                    .as(cmd.name() + " without principal")
+                    .isInstanceOf(AccessDeniedException.class);
+        }
     }
 }

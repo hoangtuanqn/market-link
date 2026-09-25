@@ -126,8 +126,8 @@ class ChatStompIntegrationTest {
     @Test
     void aMessageSentOverRestArrivesAtTheRecipientOverStomp() throws Exception {
         StompSession farmerSession = connectAs(farmer);
-        BlockingQueue<String> inbox = subscribe(farmerSession, "/user/queue/messages");
-        BlockingQueue<String> threads = subscribe(farmerSession, "/user/queue/conversations");
+        BlockingQueue<String> inbox = subscribe(farmerSession, "/user/topic/messages");
+        BlockingQueue<String> threads = subscribe(farmerSession, "/user/topic/conversations");
         Thread.sleep(300); // để SUBSCRIBE tới broker trước khi gửi
 
         messageService.send(
@@ -148,10 +148,10 @@ class ChatStompIntegrationTest {
     }
 
     @Test
-    void theSenderGetsAThreadUpdateButNotTheirOwnMessage() throws Exception {
+    void theSenderGetsTheMessageAndAThreadUpdateOnEveryDevice() throws Exception {
         StompSession customerSession = connectAs(customer);
-        BlockingQueue<String> inbox = subscribe(customerSession, "/user/queue/messages");
-        BlockingQueue<String> threads = subscribe(customerSession, "/user/queue/conversations");
+        BlockingQueue<String> inbox = subscribe(customerSession, "/user/topic/messages");
+        BlockingQueue<String> threads = subscribe(customerSession, "/user/topic/conversations");
         Thread.sleep(300);
 
         messageService.send(
@@ -160,7 +160,8 @@ class ChatStompIntegrationTest {
                 new SendMessageRequest(null, "hello", null, null));
 
         assertThat(threads.poll(5, TimeUnit.SECONDS)).isNotNull().contains("\"unreadCount\":0");
-        assertThat(inbox.poll(1, TimeUnit.SECONDS)).isNull();
+        // thiết bị khác của chính người gửi cũng nhận bong bóng (FE khử trùng theo id)
+        assertThat(inbox.poll(5, TimeUnit.SECONDS)).isNotNull().contains("\"body\":\"hello\"");
     }
 
     @Test
@@ -183,7 +184,7 @@ class ChatStompIntegrationTest {
     void typingReachesTheOtherMember() throws Exception {
         StompSession customerSession = connectAs(customer);
         StompSession farmerSession = connectAs(farmer);
-        BlockingQueue<String> typing = subscribe(farmerSession, "/user/queue/typing");
+        BlockingQueue<String> typing = subscribe(farmerSession, "/user/topic/typing");
         Thread.sleep(300);
 
         StompHeaders h = new StompHeaders();

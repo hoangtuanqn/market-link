@@ -23,10 +23,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StompChatEventPublisher implements ChatEventPublisherInterface {
 
-    public static final String MESSAGES = "/queue/messages";
-    public static final String CONVERSATIONS = "/queue/conversations";
-    public static final String TYPING = "/queue/typing";
-    public static final String PRESENCE = "/queue/presence";
+    // /topic thay vì /queue: trên RabbitMQ, /queue/<x> tạo queue durable không tự xoá — mỗi phiên
+    // WebSocket để lại 4 queue mồ côi; /topic/<x> là queue exclusive auto-delete, biến mất khi
+    // ngắt.
+    public static final String MESSAGES = "/topic/messages";
+    public static final String CONVERSATIONS = "/topic/conversations";
+    public static final String TYPING = "/topic/typing";
+    public static final String PRESENCE = "/topic/presence";
 
     private final SimpMessagingTemplate template;
     private final MessageRepository messages;
@@ -35,6 +38,8 @@ public class StompChatEventPublisher implements ChatEventPublisherInterface {
     public void messageCreated(Conversation conversation, MessageResource message) {
         Long recipient = conversation.otherMember(message.senderId());
         send(recipient, MESSAGES, message);
+        // Thiết bị khác của chính người gửi cũng cần bong bóng; tab đã gửi khử trùng theo id.
+        send(message.senderId(), MESSAGES, message);
         send(recipient, CONVERSATIONS, updated(conversation, unreadFor(recipient, conversation)));
         send(message.senderId(), CONVERSATIONS, updated(conversation, 0L));
     }

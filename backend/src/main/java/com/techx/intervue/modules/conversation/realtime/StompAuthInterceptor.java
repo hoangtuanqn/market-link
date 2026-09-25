@@ -24,15 +24,17 @@ import org.springframework.stereotype.Component;
 /**
  * Spec 7.3 / 7.4. CONNECT: JWT ở header Authorization, kiểm đúng như JwtAuthFilter (blacklist jti,
  * session trong Redis, mốc revoke). Principal.getName() = userId để service phát tin theo id.
- * SUBSCRIBE: chỉ /user/queue/**. SEND: chỉ /app/**. Ném exception → Spring trả frame ERROR và đóng
- * kết nối; client chưa xác thực không bao giờ được giữ phiên.
+ * CONNECT và bí danh STOMP (1.2) xác thực như nhau. SUBSCRIBE: chỉ /user/topic/**. SEND: chỉ
+ * /app/**. MESSAGE và các frame server→client (CONNECTED, RECEIPT, ERROR) mà client gửi lên là tiêm
+ * sự kiện giả → từ chối. Ném exception → Spring trả frame ERROR và đóng kết nối; client chưa xác
+ * thực không bao giờ được giữ phiên.
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class StompAuthInterceptor implements ChannelInterceptor {
 
-    public static final String USER_QUEUE_PREFIX = "/user/queue/";
+    public static final String USER_TOPIC_PREFIX = "/user/topic/";
     private static final String APP_PREFIX = "/app/";
 
     private final JwtServiceInterface jwtService;
@@ -47,12 +49,12 @@ public class StompAuthInterceptor implements ChannelInterceptor {
             return message;
         }
         switch (accessor.getCommand()) {
-            case CONNECT ->
+            case CONNECT, STOMP ->
                     accessor.setUser(authenticate(accessor.getFirstNativeHeader("Authorization")));
             case SUBSCRIBE -> {
                 requireUser(accessor);
                 String dest = accessor.getDestination();
-                if (dest == null || !dest.startsWith(USER_QUEUE_PREFIX)) {
+                if (dest == null || !dest.startsWith(USER_TOPIC_PREFIX)) {
                     throw new AccessDeniedException("You can only subscribe to your own queues.");
                 }
             }
@@ -63,7 +65,11 @@ public class StompAuthInterceptor implements ChannelInterceptor {
                     throw new AccessDeniedException("Messages are sent over the REST API.");
                 }
             }
-            default -> {}
+            // Frame quản lý phiên: cần danh tính, không có destination để kiểm
+            case UNSUBSCRIBE, DISCONNECT, ACK, NACK, BEGIN, COMMIT, ABORT -> requireUser(accessor);
+            // MESSAGE / CONNECTED / RECEIPT / ERROR là frame server→client: client gửi lên là giả
+            // mạo
+            default -> throw new AccessDeniedException("Unexpected frame.");
         }
         return message;
     }

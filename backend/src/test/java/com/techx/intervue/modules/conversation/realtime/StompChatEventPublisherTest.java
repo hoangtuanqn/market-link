@@ -62,22 +62,26 @@ class StompChatEventPublisherTest {
     void newMessageGoesToTheRecipientQueueAndBothConversationQueues() {
         publisher.messageCreated(thread, msg(7L));
 
-        verify(template).convertAndSendToUser("3", "/queue/messages", msg(7L));
+        verify(template).convertAndSendToUser("3", "/topic/messages", msg(7L));
         ArgumentCaptor<ConversationEvent> ev = ArgumentCaptor.forClass(ConversationEvent.class);
-        verify(template).convertAndSendToUser(eq("3"), eq("/queue/conversations"), ev.capture());
+        verify(template).convertAndSendToUser(eq("3"), eq("/topic/conversations"), ev.capture());
         assertThat(ev.getValue().type()).isEqualTo("updated");
         assertThat(ev.getValue().unreadCount()).isEqualTo(2L);
         assertThat(ev.getValue().lastMessageText()).isEqualTo("Five bunches left");
         verify(template)
                 .convertAndSendToUser(
-                        eq("7"), eq("/queue/conversations"), any(ConversationEvent.class));
+                        eq("7"), eq("/topic/conversations"), any(ConversationEvent.class));
     }
 
+    /**
+     * Người gửi mở thread trên máy khác (điện thoại): máy đó cũng phải thấy bong bóng, FE khử trùng
+     * theo id.
+     */
     @Test
-    void theSenderDoesNotReceiveTheirOwnMessageOnTheMessagesQueue() {
+    void theSenderAlsoGetsTheMessageForTheirOtherDevices() {
         publisher.messageCreated(thread, msg(7L));
 
-        verify(template, never()).convertAndSendToUser(eq("7"), eq("/queue/messages"), any());
+        verify(template).convertAndSendToUser("7", "/topic/messages", msg(7L));
     }
 
     @Test
@@ -85,7 +89,7 @@ class StompChatEventPublisherTest {
         publisher.conversationRead(thread, 3L, NOW);
 
         ArgumentCaptor<ConversationEvent> ev = ArgumentCaptor.forClass(ConversationEvent.class);
-        verify(template).convertAndSendToUser(eq("7"), eq("/queue/conversations"), ev.capture());
+        verify(template).convertAndSendToUser(eq("7"), eq("/topic/conversations"), ev.capture());
         assertThat(ev.getValue().type()).isEqualTo("read");
         assertThat(ev.getValue().readerId()).isEqualTo(3L);
         assertThat(ev.getValue().readAt()).isEqualTo(NOW);
@@ -98,7 +102,7 @@ class StompChatEventPublisherTest {
     void publishingToAnOfflineRecipientDoesNotThrow() {
         doThrow(new MessagingException("no session"))
                 .when(template)
-                .convertAndSendToUser(eq("3"), eq("/queue/messages"), any());
+                .convertAndSendToUser(eq("3"), eq("/topic/messages"), any());
 
         assertThatCode(() -> publisher.messageCreated(thread, msg(7L))).doesNotThrowAnyException();
     }

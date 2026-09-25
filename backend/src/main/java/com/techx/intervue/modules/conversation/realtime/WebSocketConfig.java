@@ -48,7 +48,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setUserDestinationPrefix(USER_PREFIX);
         if (props.relayEnabled()) {
             ChatRealtimeProperties.Rabbitmq r = props.rabbitmq();
-            registry.enableStompBrokerRelay("/queue", "/topic")
+            registry.enableStompBrokerRelay("/topic")
                     .setRelayHost(r.host())
                     .setRelayPort(r.stompPort())
                     .setClientLogin(r.user())
@@ -61,7 +61,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     .setUserRegistryBroadcast("/topic/user-registry");
             log.info("Chat realtime: STOMP relay via RabbitMQ at {}:{}", r.host(), r.stompPort());
         } else {
-            registry.enableSimpleBroker("/queue", "/topic");
+            registry.enableSimpleBroker("/topic");
             log.warn(
                     "Chat realtime: app.chat.rabbitmq.host is empty, using the in-app simple broker (single instance only)");
         }
