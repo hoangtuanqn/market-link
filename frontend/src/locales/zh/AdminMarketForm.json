@@ -1,0 +1,86 @@
+{
+  "allMarkets": "集市",
+  "crumbNew": "新增",
+  "crumbEdit": "编辑",
+  "titleNew": "新集市",
+  "city": "胡志明市",
+  "meta": "{{stalls}} 个摊位 · 添加于 {{added}}",
+  "missing": {
+    "title": "这个集市已经不在了",
+    "text": "它可能已被移除。请从集市列表重新打开。"
+  },
+  "field": {
+    "name": "集市名称",
+    "address": "地址",
+    "district": "区",
+    "city": "城市",
+    "days": "营业日",
+    "open": "开市时间",
+    "close": "收市时间",
+    "lat": "纬度",
+    "lng": "经度",
+    "lngHint": "也可以直接拖动图钉。地图数据来自 OpenStreetMap。",
+    "notes": "给摊位的说明"
+  },
+  "pin": {
+    "label": "标注集市位置",
+    "note": "把图钉拖到集市入口。摊位之后会在集市内部标注自己的位置。"
+  },
+  "action": {
+    "save": "保存集市",
+    "cancel": "取消"
+  },
+  "toast": {
+    "saved": "已保存 {{name}}。"
+  },
+  "closures": {
+    "title": "休市日",
+    "intro": "即便落在营业日，集市当天也不开门。顾客会在集市页面和首页看板上看到，并且无法为那天下新订单。",
+    "add": "添加休市日",
+    "addConfirm": "添加休市日",
+    "added": "已添加休市日。请发布一条公告让顾客知道。",
+    "removed": "已删除休市日。",
+    "remove": "删除",
+    "removeTitle": "删除这个休市日？",
+    "removeText": "集市那天会照常开门，顾客可以下单。",
+    "keep": "保留",
+    "announced": "已公告",
+    "notYet": "尚未",
+    "noneYet": "暂无",
+    "noReason": "未填写",
+    "byAdminToday": "管理员 · 今天",
+    "col": {
+      "date": "日期",
+      "reason": "原因",
+      "orders": "已下的订单",
+      "told": "已通知顾客"
+    },
+    "field": {
+      "date": "日期",
+      "reason": "顾客会看到的原因",
+      "reasonPlaceholder": "Quốc Hương 路段市政施工",
+      "handling": "那天已经下过的订单怎么处理"
+    },
+    "empty": {
+      "title": "没有休市日",
+      "text": "这个集市每个营业日都开门。哪天不开再添加休市日。"
+    }
+  },
+  "handling": {
+    "move": {
+      "title": "把订单顺延到下一个集市日",
+      "short": "顺延到下一个集市日",
+      "text": "顾客保留订单并收到新的取货日期。前提是摊位那天也出摊。"
+    },
+    "contact": {
+      "title": "让每个摊位自行联系顾客",
+      "short": "摊位自行联系顾客",
+      "text": "系统不做任何自动处理。摊位另约时间，也不用退款，因为本来就没有付过钱。"
+    },
+    "cancel": {
+      "title": "取消订单并通知顾客",
+      "short": "已取消并通知顾客",
+      "text": "库存退回摊位，订单以「已取消」而非「已拒单」结束，因为摊位并没有做错什么。"
+    }
+  }
+}

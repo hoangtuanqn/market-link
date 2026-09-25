@@ -1,0 +1,37 @@
+{
+  "title": "Chợ",
+  "intro": "Tên, địa chỉ, ngày họp, giờ mở cửa và toạ độ bản đồ của từng chợ. Gỡ một chợ thì chợ đó ẩn với khách hàng; lịch sử vẫn còn.",
+  "caption_one": "{{count}} chợ đang hoạt động",
+  "caption_other": "{{count}} chợ đang hoạt động",
+  "stalls_one": "{{count}} sạp",
+  "stalls_other": "{{count}} sạp",
+  "col": {
+    "market": "Chợ",
+    "days": "Ngày họp · giờ",
+    "coordinates": "Toạ độ",
+    "stalls": "Số sạp"
+  },
+  "action": {
+    "add": "Thêm chợ",
+    "edit": "Sửa",
+    "remove": "Gỡ"
+  },
+  "map": {
+    "title": "Vị trí các chợ",
+    "label": "Bản đồ các chợ"
+  },
+  "empty": {
+    "title": "Chưa có chợ nào",
+    "text": "Thêm một chợ kèm địa chỉ, ngày họp và toạ độ bản đồ thì nhà vườn mới chọn được."
+  },
+  "remove": {
+    "title": "Gỡ {{name}}?",
+    "text_one": "{{count}} sạp đang bán ở đây. Chợ sẽ biến mất khỏi trang khách hàng và sạp được báo. Các đơn đã đặt cho chợ này vẫn tiếp tục.",
+    "text_other": "{{count}} sạp đang bán ở đây. Chợ sẽ biến mất khỏi trang khách hàng và các sạp được báo. Các đơn đã đặt cho chợ này vẫn tiếp tục.",
+    "keep": "Giữ chợ",
+    "confirm": "Gỡ chợ"
+  },
+  "toast": {
+    "removed": "Đã gỡ {{name}} khỏi danh sách."
+  }
+}
