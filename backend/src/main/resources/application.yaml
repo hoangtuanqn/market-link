@@ -121,6 +121,10 @@ app:
       messages-per-minute: ${CHAT_MESSAGES_PER_MINUTE:30}
       images-per-hour: ${CHAT_IMAGES_PER_HOUR:10}
       conversations-per-hour: ${CHAT_CONVERSATIONS_PER_HOUR:20}
+    # Spec §8.2: ảnh chat nằm TÁCH khỏi app.storage.dir (thư mục đó phục vụ công khai qua /uploads).
+    # Docker: volume chat-uploads ở /var/lib/marketlink/chat.
+    upload-dir: ${CHAT_UPLOAD_DIR:./chat-uploads}
+    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:5242880}
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
