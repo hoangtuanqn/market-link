@@ -81,5 +81,7 @@ Code khởi tạo từ dự án cũ InterVue nên còn lệch so với tài li�
 - Package Java vẫn là `com.techx.intervue`, DB mặc định `intervue_db`.
 - Migration thật khác `db/schema.sql`: `users.id BIGINT UNSIGNED`, cột `name`/`password`, bảng `roles`
   với `ADMIN/USER/EDITOR` thay vì `customer/farmer/admin`. Chưa có migration cho markets, products, orders…
-- Code dùng prefix `/api/v1` và JSON camelCase; contract ghi `/api` và snake_case.
-  **LEAD cần chốt một bên** (R-05). Code mới tạm theo code hiện có (`/api/v1`, camelCase).
+- ~~Code dùng prefix `/api/v1` và JSON camelCase; contract ghi `/api` và snake_case.~~
+  **LEAD đã chốt 25/09/2026:** toàn dự án dùng `/api/v1` và JSON `camelCase`; cột database giữ
+  `snake_case`. `docs/api-contract.md` đã viết lại theo quyết định này và bổ sung đủ các endpoint
+  auth đang chạy thật. Không còn chỗ nào phải "tạm theo code hiện có" nữa.

@@ -67,8 +67,8 @@ Ký tự `%`, `_`, `\` trong keyword được escape trước khi truyền vào.
 
 - `sessionKey`: FE tự sinh (UUID) và lưu localStorage, 8–64 ký tự `[A-Za-z0-9_-]`. `message`: 1–500 ký tự.
 - `results[]`: `{ type: "product"|"market"|"farmer", id, title, subtitle }`, để FE render link/thẻ.
-- Lệch contract: contract ghi `/api/chat`, `session_key`. Code theo quy ước hiện có (`/api/v1`, camelCase) —
-  chờ LEAD chốt (xem `CLAUDE.md`).
+- Khớp contract: LEAD chốt `/api/v1` và `camelCase` cho toàn dự án ngày 25/09/2026, nên hai endpoint
+  trên là chuẩn. Xem mục Quy ước trong `docs/api-contract.md`.
 
 ## Kịch bản demo cho giám khảo
 
