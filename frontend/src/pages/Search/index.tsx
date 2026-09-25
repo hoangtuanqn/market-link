@@ -1,4 +1,5 @@
 import { useMemo, useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
@@ -9,17 +10,22 @@ import { DataState } from '@/components/ui/data-state';
 import Tabs from '@/components/ui/tabs';
 import { farmer, farmers, products } from '@/data/catalog';
 import { markets } from '@/data/home';
+import { dayName, formatClock, formatDayMonth } from '@/lib/format';
 
+/** The demo market week, Thursday 24 to Sunday 27 September 2026. */
 const DAY_OPTIONS = [
-  { value: 4, label: 'Thu', sub: '24/09' },
-  { value: 5, label: 'Fri', sub: '25/09' },
-  { value: 6, label: 'Sat', sub: '26/09' },
-  { value: 0, label: 'Sun', sub: '27/09' },
+  { value: 4, date: new Date(2026, 8, 24) },
+  { value: 5, date: new Date(2026, 8, 25) },
+  { value: 6, date: new Date(2026, 8, 26) },
+  { value: 0, date: new Date(2026, 8, 27) },
 ];
-const SORTS = ['Best match', 'Nearest', 'Price', 'Rating'] as const;
+const SORTS = ['best', 'nearest', 'price', 'rating'] as const;
+const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
 
 /** FR-023 — search across markets, stalls and products at once, with results on a map. */
 const SearchPage = () => {
+  const { t } = useTranslation('Search');
+  const { t: tc } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const scopeParam = searchParams.get('scope') ?? 'all';
   const q = searchParams.get('q') ?? '';
@@ -27,7 +33,7 @@ const SearchPage = () => {
   const [draftScope, setDraftScope] = useState(scopeParam);
   const [draftQ, setDraftQ] = useState(q);
   const [day, setDay] = useState(6);
-  const [sort, setSort] = useState<(typeof SORTS)[number]>('Best match');
+  const [sort, setSort] = useState<(typeof SORTS)[number]>('best');
   const [tab, setTab] = useState<'all' | 'market' | 'farmer' | 'product'>('all');
 
   const onSubmit = (e: FormEvent) => {
@@ -52,9 +58,9 @@ const SearchPage = () => {
     matchedFarmers = matchedFarmers.filter((f) => f.markets.some((id) => openMarketIds.has(id)));
     matchedProducts = matchedProducts.filter((p) => farmer(p.farmerId!)?.markets.some((id) => openMarketIds.has(id)));
 
-    if (sort === 'Price') matchedProducts = [...matchedProducts].sort((a, b) => a.price - b.price);
-    if (sort === 'Rating') matchedFarmers = [...matchedFarmers].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-    if (sort === 'Nearest') {
+    if (sort === 'price') matchedProducts = [...matchedProducts].sort((a, b) => a.price - b.price);
+    if (sort === 'rating') matchedFarmers = [...matchedFarmers].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    if (sort === 'nearest') {
       matchedFarmers = [...matchedFarmers].sort(
         (a, b) => parseFloat(a.distance ?? '0') - parseFloat(b.distance ?? '0'),
       );
@@ -78,7 +84,7 @@ const SearchPage = () => {
       label: m.name,
       popup: {
         title: m.name,
-        lines: [`${m.open}\u2013${m.close}`, m.district],
+        lines: [`${formatClock(m.open)}\u2013${formatClock(m.close)}`, m.district],
         href: `/markets/${m.id}`,
       },
     }));
@@ -91,19 +97,19 @@ const SearchPage = () => {
         label: f.stall,
         popup: {
           title: f.stall,
-          lines: [`Stall ${f.stallCode} \u00b7 pickup ${f.pickup}`],
+          lines: [tc('map.stallPickup', { code: f.stallCode, pickup: f.pickup })],
           href: `/stalls/${f.id}`,
         },
       });
     });
     return pins;
-  }, [results]);
-  const dayLabel = DAY_OPTIONS.find((d) => d.value === day)?.label ?? '';
+  }, [results, tc]);
+  const dayLabel = dayName(day, 'long');
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <h1 className="text-h1">Search</h1>
+        <h1 className="text-h1">{t('title')}</h1>
         <form
           key={`${scopeParam}:${q}`}
           onSubmit={onSubmit}
@@ -111,7 +117,7 @@ const SearchPage = () => {
           className="border-line-strong bg-surface-raised focus-within:outline-focus flex w-full max-w-160 items-stretch overflow-hidden rounded-sm border-[1.5px] focus-within:outline-2 focus-within:outline-offset-1"
         >
           <label className="sr-only" htmlFor="q-scope">
-            Search in
+            {t('search.scope')}
           </label>
           <select
             id="q-scope"
@@ -119,13 +125,14 @@ const SearchPage = () => {
             onChange={(e) => setDraftScope(e.target.value)}
             className="border-line-strong bg-surface-sunken text-small text-ink min-h-11 border-r-[1.5px] px-3 font-bold focus:outline-none"
           >
-            <option value="all">Everything</option>
-            <option value="market">Markets</option>
-            <option value="farmer">Stalls</option>
-            <option value="product">Products</option>
+            {SCOPES.map((s) => (
+              <option key={s} value={s}>
+                {t(`search.scopes.${s}`)}
+              </option>
+            ))}
           </select>
           <label className="sr-only" htmlFor="q">
-            Keyword
+            {t('search.keyword')}
           </label>
           <input
             id="q"
@@ -135,13 +142,13 @@ const SearchPage = () => {
             className="text-body text-ink min-h-11 min-w-0 flex-1 bg-transparent px-3 focus:outline-none"
           />
           <button type="submit" className="bg-brand text-on-brand min-h-11 cursor-pointer px-4 font-bold">
-            Search
+            {t('search.submit')}
           </button>
         </form>
 
         <div className="flex flex-wrap items-start gap-6">
           <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
-            <legend className="text-small mb-2 p-0 font-bold">Market day</legend>
+            <legend className="text-small mb-2 p-0 font-bold">{t('day')}</legend>
             <div className="flex flex-wrap gap-2">
               {DAY_OPTIONS.map((d) => (
                 <label key={d.value} className="relative">
@@ -153,19 +160,21 @@ const SearchPage = () => {
                     className="peer absolute inset-0 m-0 cursor-pointer opacity-0"
                   />
                   <span className="border-line-strong bg-surface-raised peer-checked:bg-brand peer-checked:text-on-brand flex min-h-11 min-w-14 flex-col items-center justify-center rounded-full px-2.5 py-1 text-[14px] font-bold shadow-[inset_0_0_0_1.5px_var(--line-strong)] peer-checked:shadow-none">
-                    {d.label}
-                    <small className="text-ink-muted text-[12px] font-normal peer-checked:text-inherit">{d.sub}</small>
+                    {dayName(d.value)}
+                    <small className="text-ink-muted text-[12px] font-normal peer-checked:text-inherit">
+                      {formatDayMonth(d.date)}
+                    </small>
                   </span>
                 </label>
               ))}
             </div>
           </fieldset>
           <div className="flex flex-col gap-2">
-            <span className="text-small font-bold">Sort</span>
+            <span className="text-small font-bold">{t('sort')}</span>
             <div className="flex flex-wrap gap-2">
               {SORTS.map((s) => (
                 <Chip key={s} pressed={sort === s} onClick={() => setSort(s)}>
-                  {s}
+                  {t(`sorts.${s}`)}
                 </Chip>
               ))}
             </div>
@@ -174,35 +183,30 @@ const SearchPage = () => {
       </div>
 
       <Tabs
-        label="Result type"
+        label={t('tabs.label')}
         value={tab}
         onChange={(id) => setTab(id as typeof tab)}
         tabs={[
-          { id: 'all', label: 'All', count: total },
-          { id: 'market', label: 'Markets', count: results.markets.length },
-          { id: 'farmer', label: 'Stalls', count: results.farmers.length },
-          { id: 'product', label: 'Products', count: results.products.length },
+          { id: 'all', label: t('tabs.all'), count: total },
+          { id: 'market', label: t('tabs.market'), count: results.markets.length },
+          { id: 'farmer', label: t('tabs.farmer'), count: results.farmers.length },
+          { id: 'product', label: t('tabs.product'), count: results.products.length },
         ]}
       />
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-6">
           {q.trim() === '' ? (
-            <DataState title="Type something to search" text="Try a product name, a market, or a stall." />
+            <DataState title={t('empty.startTitle')} text={t('empty.startText')} />
           ) : total === 0 ? (
-            <DataState
-              title="Nothing matched"
-              text="Try a shorter word, or drop a filter. Searching looks at markets, stalls and products at once."
-            />
+            <DataState title={t('empty.noneTitle')} text={t('empty.noneText')} />
           ) : (
             <>
-              <p className="text-small text-ink-muted">
-                {total} results for &ldquo;{q}&rdquo; on {dayLabel}
-              </p>
+              <p className="text-small text-ink-muted">{t('results', { count: total, q, day: dayLabel })}</p>
 
               {(tab === 'all' || tab === 'farmer') && (
                 <section className="flex flex-col gap-4">
-                  <h2 className="text-h3">Stalls</h2>
+                  <h2 className="text-h3">{t('tabs.farmer')}</h2>
                   {results.farmers.length ? (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       {results.farmers.map((f) => (
@@ -210,14 +214,14 @@ const SearchPage = () => {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-small text-ink-muted">No stalls matched.</p>
+                    <p className="text-small text-ink-muted">{t('noStalls')}</p>
                   )}
                 </section>
               )}
 
               {(tab === 'all' || tab === 'product') && (
                 <section className="flex flex-col gap-4">
-                  <h2 className="text-h3">Products</h2>
+                  <h2 className="text-h3">{t('tabs.product')}</h2>
                   {results.products.length ? (
                     <div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
                       {results.products.map((p) => (
@@ -225,14 +229,14 @@ const SearchPage = () => {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-small text-ink-muted">No products matched.</p>
+                    <p className="text-small text-ink-muted">{t('noProducts')}</p>
                   )}
                 </section>
               )}
 
               {(tab === 'all' || tab === 'market') && (
                 <section className="flex flex-col gap-4">
-                  <h2 className="text-h3">Markets</h2>
+                  <h2 className="text-h3">{t('tabs.market')}</h2>
                   {results.markets.length ? (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       {results.markets.map((m) => (
@@ -248,12 +252,12 @@ const SearchPage = () => {
                     </div>
                   ) : (
                     <DataState
-                      title={`No market is called "${q}"`}
-                      text={`Markets are matched by name and area. ${results.farmers.length} stalls above sell something matching "${q}".`}
+                      title={t('noMarket.title', { q })}
+                      text={t('noMarket.text', { count: results.farmers.length, q })}
                       action={
                         results.farmers.length > 0 && (
                           <Button variant="secondary" size="sm" onClick={() => setTab('farmer')}>
-                            Show the stalls
+                            {t('noMarket.showStalls')}
                           </Button>
                         )
                       }
@@ -266,10 +270,8 @@ const SearchPage = () => {
         </div>
 
         <div className="sticky top-20 flex flex-col gap-2">
-          <MarketMap label="Map of results" markers={mapMarkers} className="min-h-72" />
-          <p className="text-small text-ink-muted">
-            Results with a location are pinned. On phones a &ldquo;List / Map&rdquo; toggle switches between the two.
-          </p>
+          <MarketMap label={t('map.label')} markers={mapMarkers} className="min-h-72" />
+          <p className="text-small text-ink-muted">{t('map.note')}</p>
         </div>
       </div>
     </div>

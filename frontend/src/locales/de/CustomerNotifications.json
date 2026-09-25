@@ -1,0 +1,13 @@
+{
+  "title": "Benachrichtigungen",
+  "intro": "Bestellung angenommen, abgelehnt oder bereit, ein Favorit wieder vorrätig und Mitteilungen von MarketLink.",
+  "filter": {
+    "all": "Alle",
+    "unread": "Ungelesen"
+  },
+  "unreadCount_one": "{{count}} ungelesen",
+  "unreadCount_other": "{{count}} ungelesen",
+  "unread": "ungelesen",
+  "markAllRead": "Alle als gelesen markieren",
+  "note": "Vorerst nur in der App. E-Mails für Bestätigungen und Abholbereitschaft kommen später dazu."
+}

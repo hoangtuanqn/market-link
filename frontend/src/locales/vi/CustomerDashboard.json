@@ -1,0 +1,34 @@
+{
+  "greeting_one": "Chào {{name}}, cuối tuần này có {{count}} đơn cần nhận",
+  "greeting_other": "Chào {{name}}, cuối tuần này có {{count}} đơn cần nhận",
+  "intro": "Một đơn vẫn đang chờ sạp xác nhận. Mọi thứ khác đều ổn.",
+  "browseMarkets": "Xem các chợ cuối tuần này",
+  "cards": {
+    "upcoming_one": "{{count}} đơn sắp tới",
+    "upcoming_other": "{{count}} đơn sắp tới",
+    "upcomingBreakdown": "{{placed}} chờ duyệt · {{accepted}} đã nhận · {{ready}} sẵn sàng",
+    "favorites_one": "{{count}} mục yêu thích",
+    "favorites_other": "{{count}} mục yêu thích",
+    "stalls_one": "{{count}} sạp",
+    "stalls_other": "{{count}} sạp",
+    "products_one": "{{count}} sản phẩm",
+    "products_other": "{{count}} sản phẩm",
+    "markets_one": "{{count}} chợ",
+    "markets_other": "{{count}} chợ",
+    "unread_one": "{{count}} thông báo chưa đọc",
+    "unread_other": "{{count}} thông báo chưa đọc",
+    "unreadText": "Một đơn đã sẵn sàng, và sữa chua dê đã có lại",
+    "account": "Tài khoản"
+  },
+  "sell": {
+    "overline": "Mới",
+    "title": "Bạn có trồng gì không? Hãy bán ở chợ",
+    "text": "Tài khoản của bạn có thể trở thành một sạp ở một trong bốn chợ. Gửi đơn kèm vài ảnh vườn của bạn và quản trị viên sẽ xét duyệt. Dù thế nào bạn vẫn mua sắm như bình thường.",
+    "apply": "Đăng ký bán hàng",
+    "dismiss": "Để sau"
+  },
+  "nextPickups": "Đơn nhận sắp tới",
+  "allOrders": "Tất cả đơn của tôi",
+  "newFromFavorites": "Mới tuần này từ các sạp yêu thích",
+  "favorites": "Yêu thích"
+}

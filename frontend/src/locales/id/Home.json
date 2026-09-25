@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "weekend": "akhir pekan pasar {{from}} – {{to}}",
+    "title": "Pesan dulu dari pasar petani",
+    "intro_one": "Pesan hasil panen minggu ini dari lapak di {{count}} pasar di sekitar Kota Ho Chi Minh. Ambil di lapak dan bayar langsung ke petani.",
+    "intro_other": "Pesan hasil panen minggu ini dari lapak di {{count}} pasar di sekitar Kota Ho Chi Minh. Ambil di lapak dan bayar langsung ke petani.",
+    "browse": "Lihat pasar",
+    "sell": "Berjualan di MarketLink"
+  },
+  "search": {
+    "scope": "Cari di",
+    "scopes": {
+      "all": "Semua",
+      "market": "Pasar",
+      "farmer": "Lapak",
+      "product": "Produk"
+    },
+    "keyword": "Kata kunci",
+    "placeholder": "Kangkung, Cô Tư Garden, pasar Thảo Điền…",
+    "submit": "Cari"
+  },
+  "board": {
+    "overline": "Buka akhir pekan ini",
+    "title": "Di mana lapaknya",
+    "seeAll_one": "Lihat pasar di peta",
+    "seeAll_other": "Lihat semua {{count}} pasar di peta"
+  },
+  "nearby": {
+    "title": "Pasar di dekat Anda",
+    "note": "Jarak dari alamat tersimpan Anda di Thảo Điền"
+  },
+  "fresh": {
+    "title": "Segar minggu ini",
+    "all": "Semua produk dan filter"
+  },
+  "how": {
+    "title": "Cara kerja pesan dulu",
+    "steps": {
+      "reserve": {
+        "title": "Pesan sebelum batas waktu",
+        "text": "Tambahkan produk dari satu atau beberapa lapak, pilih waktu ambil dalam jadwal tiap lapak, lalu pesan. Stok langsung disisihkan untuk Anda saat memesan."
+      },
+      "confirm": {
+        "title": "Petani mengonfirmasi",
+        "text": "Setiap lapak menerima atau menolak pesanannya sendiri. Anda mendapat notifikasi apa pun hasilnya, dan bisa mengubah atau membatalkan sampai batas waktu lapak."
+      },
+      "pickup": {
+        "title": "Ambil dan bayar di lapak",
+        "text": "Saat pesanan ditandai siap, datanglah ke lapak di jadwal Anda, ambil pesanan, dan bayar langsung ke petani. Tidak ada pembayaran online."
+      }
+    }
+  }
+}

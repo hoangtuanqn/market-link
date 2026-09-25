@@ -1,0 +1,74 @@
+{
+  "city": "호찌민시",
+  "count_one": "장터 {{count}}곳",
+  "count_other": "장터 {{count}}곳",
+  "title": "장터",
+  "intro": "장 보러 갈 요일을 고른 다음, 지역으로 좁혀 보세요.",
+  "filters": {
+    "label": "장터 필터",
+    "day": "장날",
+    "clearAll": "모두 지우기",
+    "area": "지역",
+    "allAreas": "모든 지역 ({{count}})",
+    "sort": "정렬"
+  },
+  "sorts": {
+    "near": "가까운 순",
+    "stalls": "가게 많은 순",
+    "opens": "일찍 여는 순"
+  },
+  "cleared": {
+    "title": "필터를 지웠어요",
+    "text": "{{day}}에 여는 장터를 모두 보여 드려요."
+  },
+  "popupStalls_one": "가게 {{count}}곳",
+  "popupStalls_other": "가게 {{count}}곳",
+  "summary": {
+    "open_one": "{{day}}에 <b>장터 {{count}}곳</b>이 열려요",
+    "open_other": "{{day}}에 <b>장터 {{count}}곳</b>이 열려요",
+    "openIn_one": "{{day}}에 {{area}}에서 <b>장터 {{count}}곳</b>이 열려요",
+    "openIn_other": "{{day}}에 {{area}}에서 <b>장터 {{count}}곳</b>이 열려요",
+    "none": "{{day}}에 여는 장터가 없어요",
+    "noneIn": "{{day}}에 {{area}}에서 여는 장터가 없어요"
+  },
+  "error": {
+    "noun": "장터",
+    "alt": "<link>장터 지도</link>는 별도 페이지에서 열 수 있어요"
+  },
+  "pager": {
+    "showing": "{{total}}곳 중 {{from}}–{{to}}",
+    "onePage_one": "장터 {{count}}곳을 한 페이지에",
+    "onePage_other": "장터 {{count}}곳 모두 한 페이지에"
+  },
+  "empty": {
+    "areaTitle": "{{day}}에 {{area}}에는 장터가 없어요",
+    "areaText_one": "그날 시 전체에서 장터 {{count}}곳이 열려요. 지역을 넓히거나 다른 요일을 골라 보세요.",
+    "areaText_other": "그날 시 전체에서 장터 {{count}}곳이 열려요. 지역을 넓히거나 다른 요일을 골라 보세요.",
+    "allAreas": "모든 지역 보기",
+    "dayTitle": "{{day}}에 여는 장터가 없어요",
+    "dayText_one": "{{day}}이 가장 붐비는 날로, 장터 {{count}}곳이 열려요.",
+    "dayText_other": "{{day}}이 가장 붐비는 날로, 장터 {{count}}곳이 열려요.",
+    "showDay": "{{day}} 보기"
+  },
+  "map": {
+    "label": "조건에 맞는 장터 지도",
+    "note": "지도는 필터를 따라 목록에 있는 장터만 보여 줘요."
+  },
+  "demo": {
+    "title": "이 목록의 다른 상태 (FR-084)",
+    "views": {
+      "loaded": "데이터 있음",
+      "loading": "불러오는 중",
+      "error": "오류"
+    },
+    "note": "빈 상태는 실제로 볼 수 있어요. <b>{{day}}</b>과 지역 <b>{{area}}</b>을 골라 보세요. 고른 조건과 다음에 할 일을 알려 줘요."
+  },
+  "location": {
+    "measured": "거리는 현재 위치에서 잰 값입니다.",
+    "forget": "내 위치 지우기",
+    "denied": "이 사이트의 위치 권한을 껐습니다. 거리순으로 정렬하려면 브라우저의 사이트 설정에서 변경하세요.",
+    "needed": "거리순 정렬에는 위치가 필요합니다. 공유하기 전까지 아래 순서는 바뀌지 않습니다.",
+    "share": "위치를 공유하면 각 마켓까지의 거리를 볼 수 있습니다.",
+    "use": "내 위치 사용"
+  }
+}

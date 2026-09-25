@@ -1,0 +1,35 @@
+{
+  "title": "리뷰",
+  "intro": "주문을 받아 간 고객들이 남긴 말이에요. 짧은 답글도 큰 도움이 돼요. 특히 낮은 평점에는 꼭 답해 주세요.",
+  "summary": "매대 {{stall}} · 상품 {{products}} · {{reviews}}",
+  "reviewCount_one": "리뷰 {{count}}개",
+  "reviewCount_other": "리뷰 {{count}}개",
+  "filter": {
+    "all": "전체",
+    "needs": "답글 필요",
+    "replied": "답글 완료",
+    "stall": "매대 리뷰",
+    "products": "상품 리뷰"
+  },
+  "toast": {
+    "postedTitle": "답글을 올렸어요",
+    "postedText": "{{name}} 님의 리뷰에 답글을 올렸어요.",
+    "editTitle": "답글 수정",
+    "editText": "답글을 수정할 수 있어요."
+  },
+  "action": {
+    "editReply": "답글 수정",
+    "reply": "답글",
+    "report": "리뷰 신고",
+    "post": "답글 올리기"
+  },
+  "form": {
+    "label": "내 답글 (리뷰 아래에 표시돼요)",
+    "placeholder": "{{name}} 님, 들러 주셔서 감사해요. 다음에는 더 꼼꼼하게 포장할게요."
+  },
+  "empty": {
+    "title": "아직 리뷰가 없어요",
+    "text": "주문이 완료되면 고객이 매대와 구매한 상품을 리뷰할 수 있어요(D-10)."
+  },
+  "note": "매대는 리뷰를 삭제할 수 없어요. 가이드라인을 어긴 리뷰는 신고하면 관리자가 판단해요(FR-074)."
+}

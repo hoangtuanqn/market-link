@@ -1,0 +1,373 @@
+{
+  "settings": {
+    "appearance": "Giao diện",
+    "theme": "Chủ đề",
+    "themeNote": "Áp dụng ngay. Theo thiết bị sẽ đi theo điện thoại hoặc máy tính của bạn.",
+    "themes": {
+      "light": "Sáng",
+      "dark": "Tối",
+      "system": "Theo thiết bị"
+    },
+    "language": "Ngôn ngữ",
+    "languageNote": "Ngôn ngữ của menu, nút và thông báo. Tên sạp, sản phẩm và địa điểm giữ nguyên như sạp đã viết.",
+    "format": "Tiền, ngày và đơn vị",
+    "currency": "Hiển thị giá bằng",
+    "currencyNote": "Bạn luôn trả bằng đồng Việt Nam tại sạp. Tiền tệ khác chỉ hiện bên cạnh để tham khảo, theo tỷ giá cố định ngày {{date}}.",
+    "currencies": {
+      "VND": "Chỉ ₫ đồng Việt Nam",
+      "USD": "₫ và $ đô la Mỹ",
+      "EUR": "₫ và € euro",
+      "JPY": "₫ và ¥ yên Nhật"
+    },
+    "units": "Khối lượng và thể tích",
+    "unitsNote": "Chỉ đổi những đơn vị đo lường. Sạp bán theo bó, theo củ hay theo khay thì giữ nguyên cách gọi của sạp.",
+    "metric": "Hệ mét · kg, g, lít",
+    "imperial": "Hệ Anh · lb, oz, pint",
+    "date": "Ngày",
+    "clock": "Đồng hồ",
+    "clock24": "24 giờ · 19:00",
+    "clock12": "12 giờ · 7:00 pm",
+    "preview": "Xem trước: {{date}} · {{time}} · {{price}}",
+    "notifications": "Thông báo",
+    "notificationsNote": "Lưu cùng tài khoản của bạn. MarketLink chưa gửi thông báo; khi có, thông báo sẽ theo các lựa chọn này.",
+    "notes": {
+      "customer": {
+        "orderDecided": "Đơn được nhận hoặc bị từ chối",
+        "orderReady": "Đơn đã sẵn sàng để nhận",
+        "backInStock": "Sản phẩm đã lưu có hàng trở lại",
+        "announcements": "Thông báo từ MarketLink",
+        "stallReply": "Sạp trả lời tin nhắn của bạn"
+      },
+      "farmer": {
+        "newOrder": "Có đơn mới",
+        "orderChanged": "Khách sửa hoặc huỷ đơn",
+        "cutoffSoon": "Còn một giờ nữa là tới giờ chốt",
+        "newReview": "Có đánh giá mới về sạp của bạn",
+        "announcements": "Thông báo từ MarketLink"
+      },
+      "admin": {
+        "farmerApplication": "Có đơn đăng ký nhà vườn mới",
+        "reported": "Một đánh giá hoặc tin đăng bị báo cáo",
+        "newFeedback": "Góp ý mới",
+        "marketEdited": "Một chợ được chỉnh sửa"
+      }
+    },
+    "save": "Lưu cài đặt",
+    "saving": "Đang lưu…",
+    "saveHint": "Chủ đề áp dụng ngay khi chọn; các mục khác áp dụng khi bạn lưu.",
+    "savedTitle": "Đã lưu",
+    "savedText": "Cài đặt của bạn đã được lưu.",
+    "saveError": "Không lưu được cài đặt. Vui lòng thử lại."
+  },
+  "actions": {
+    "back": "Quay lại",
+    "close": "Đóng",
+    "directions": "Chỉ đường",
+    "dismiss": "Ẩn",
+    "remove": "Xoá",
+    "tryAgain": "Thử lại",
+    "cancel": "Huỷ"
+  },
+  "admin": {
+    "badge": "Quản trị",
+    "security": "Bảo mật",
+    "signIn": "Đăng nhập quản trị"
+  },
+  "cart": {
+    "orderOf": "Đơn {{index}} / {{of}}",
+    "payAtPickup": "Trả tiền tại sạp khi nhận hàng"
+  },
+  "chat": {
+    "assistant": "Trợ lý MarketLink",
+    "you": "Bạn",
+    "intent": "Ý định: {{intent}}"
+  },
+  "errors": {
+    "network": "Không kết nối được máy chủ. Kiểm tra kết nối mạng rồi thử lại."
+  },
+  "farmerNav": {
+    "sections": "Mục",
+    "navigation": "Điều hướng nhà vườn",
+    "home": "MarketLink — Tổng quan nhà vườn",
+    "badge": "Nhà vườn",
+    "expand": "Mở rộng thanh bên",
+    "collapse": "Thu gọn thanh bên",
+    "approvedMarkets_one": "Đã duyệt · {{count}} chợ",
+    "approvedMarkets_other": "Đã duyệt · {{count}} chợ",
+    "changeMarket": "Đổi chợ đang xem",
+    "roleStall": "Nhà vườn · {{stall}}",
+    "openNavigation": "Mở điều hướng",
+    "searchPlaceholder": "Mã đơn hoặc tên khách",
+    "yourAccount": "Tài khoản của bạn",
+    "today": "Hôm nay",
+    "overview": "Tổng quan",
+    "incomingOrders": "Đơn mới đến",
+    "pickupSlots": "Khung giờ nhận hàng",
+    "stock": "Hàng",
+    "weekStock": "Hàng tuần này",
+    "products": "Sản phẩm",
+    "stall": "Sạp",
+    "stallPickup": "Sạp & nhận hàng",
+    "reviews": "Đánh giá",
+    "salesHistory": "Lịch sử bán hàng",
+    "inbox": "Hộp thư",
+    "messages": "Tin nhắn",
+    "notifications": "Thông báo",
+    "account": "Tài khoản",
+    "promote": "Quảng bá & tin đăng",
+    "approval": "Trạng thái duyệt",
+    "settings": "Cài đặt",
+    "shop": "Mua sắm",
+    "shopMarkets": "Mua ở các chợ"
+  },
+  "footer": {
+    "tagline": "Đặt trước ở chợ phiên gần bạn, nhận hàng tại sạp. Trả tiền trực tiếp cho nhà vườn khi nhận.",
+    "shop": "Mua",
+    "marketsNearYou": "Chợ gần bạn",
+    "inSeason": "Đang vào mùa",
+    "marketMap": "Bản đồ chợ",
+    "favoriteStalls": "Sạp yêu thích",
+    "sell": "Bán",
+    "registerFarmer": "Đăng ký làm nhà vườn",
+    "handlingPreOrders": "Xử lý đơn đặt trước",
+    "stallGuidelines": "Quy định cho sạp",
+    "marketLink": "MarketLink",
+    "aboutUs": "Về chúng tôi",
+    "contactUs": "Liên hệ",
+    "feedback": "Góp ý & báo lỗi",
+    "mapData": "Dữ liệu bản đồ © những người đóng góp OpenStreetMap",
+    "mapDataFrom": "Dữ liệu bản đồ {{credit}}"
+  },
+  "header": {
+    "cart": "Giỏ hàng",
+    "cartItems_one": "Giỏ hàng, {{count}} món",
+    "cartItems_other": "Giỏ hàng, {{count}} món",
+    "hi": "Chào, <b>{{name}}</b>",
+    "main": "Chính",
+    "menu": "Menu",
+    "notifications": "Thông báo",
+    "notificationsUnread_one": "Thông báo, {{count}} chưa đọc",
+    "notificationsUnread_other": "Thông báo, {{count}} chưa đọc",
+    "openMenu": "Mở menu",
+    "search": "Tìm kiếm"
+  },
+  "kpi": {
+    "noChange": "không đổi",
+    "vsBefore": "so với kỳ trước"
+  },
+  "loadError": {
+    "title": "Chưa tải được {{noun}}",
+    "text": "Lần này danh sách chưa về. Những gì bạn đã lưu hoặc đã đặt không bị ảnh hưởng.",
+    "help": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <link>hãy cho chúng tôi biết chuyện gì xảy ra</link> và chúng tôi sẽ xem xét.",
+    "helpAlt": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <alt />, hoặc <link>cho chúng tôi biết chuyện gì xảy ra</link> và chúng tôi sẽ xem xét."
+  },
+  "loading": {
+    "markets": "Đang tải danh sách chợ"
+  },
+  "logo": {
+    "home": "MarketLink — trang chủ"
+  },
+  "map": {
+    "attribution": "© những người đóng góp {{link}}",
+    "open": "Mở",
+    "placeholder": "Bản đồ — {{label}}",
+    "stallPickup": "Sạp {{code}} · nhận hàng {{pickup}}",
+    "tilesFailed": "Bản đồ cần kết nối mạng để tải. Danh sách vẫn dùng được khi không có bản đồ.",
+    "yourStall": "Sạp của bạn"
+  },
+  "marketCard": {
+    "save": "Lưu {{name}}",
+    "unsave": "Bỏ lưu {{name}}",
+    "days": "Ngày họp chợ",
+    "open": "mở",
+    "closed": "nghỉ",
+    "hours": "Giờ <b>{{open}}–{{close}}</b>",
+    "stalls_one": "<b>{{count}}</b> sạp",
+    "stalls_other": "<b>{{count}}</b> sạp",
+    "away": "cách <b>{{distance}}</b>",
+    "seeStalls": "Xem các sạp"
+  },
+  "nav": {
+    "markets": "Chợ",
+    "products": "Sản phẩm",
+    "map": "Bản đồ",
+    "aboutUs": "Về chúng tôi",
+    "myOrders": "Đơn của tôi",
+    "favorites": "Yêu thích",
+    "profile": "Hồ sơ",
+    "settings": "Cài đặt",
+    "signIn": "Đăng nhập",
+    "createAccount": "Tạo tài khoản",
+    "signOut": "Đăng xuất",
+    "yourAccount": "Tài khoản của bạn"
+  },
+  "order": {
+    "code": "Đơn {{code}}",
+    "market": "Chợ",
+    "pickup": "Nhận hàng",
+    "payOnPickup": "Trả khi nhận hàng",
+    "declinedReason": "Lý do từ sạp: {{reason}} Bạn không phải trả gì.",
+    "cancelledNote": "Bạn đã huỷ đơn này trước giờ chốt. Hàng đã trả lại cho sạp.",
+    "lockedNote": "Đã qua giờ chốt lúc {{cutoff}}. Muốn thay đổi, hãy liên hệ trực tiếp với sạp.",
+    "editableNote": "Sửa hoặc huỷ trước {{cutoff}}. Sau đó đơn sẽ bị khoá.",
+    "edit": "Sửa đơn",
+    "cancel": "Huỷ đơn",
+    "reviewed": "Bạn đã đánh giá đơn này",
+    "review": "Đánh giá sạp & sản phẩm",
+    "reorder": "Đặt lại"
+  },
+  "orderStatus": {
+    "placed": "Đã đặt",
+    "accepted": "Đã nhận",
+    "ready": "Sẵn sàng nhận",
+    "completed": "Hoàn tất",
+    "declined": "Bị từ chối",
+    "cancelled": "Đã huỷ"
+  },
+  "pagination": {
+    "label": "Phân trang",
+    "previous": "Trang trước",
+    "next": "Trang sau",
+    "page": "Trang {{n}}"
+  },
+  "password": {
+    "show": "Hiện mật khẩu",
+    "hide": "Ẩn mật khẩu"
+  },
+  "period": {
+    "length": "Độ dài kỳ",
+    "day": "Ngày",
+    "week": "Tuần",
+    "month": "Tháng",
+    "quarter": "Quý",
+    "year": "Năm",
+    "custom": "Tuỳ chọn",
+    "from": "Từ",
+    "to": "Đến",
+    "compareWith": "So sánh với",
+    "cmpBefore": "Kỳ trước, cùng độ dài",
+    "cmpLastYear": "Cùng kỳ năm ngoái",
+    "cmpNone": "Không so sánh",
+    "comparedWith": "so với <b>{{compare}}</b>, cùng độ dài"
+  },
+  "price": {
+    "was": "Giá cũ"
+  },
+  "product": {
+    "notThisWeek": "Tuần này không bán",
+    "backSoon": "Sắp có lại",
+    "onlyLeft": "Chỉ còn {{qty}}",
+    "left": "Còn {{qty}}",
+    "paused": "Tạm ngừng",
+    "soldOut": "Hết hàng",
+    "addFavorite": "Thêm vào yêu thích: {{name}}",
+    "removeFavorite": "Bỏ khỏi yêu thích: {{name}}",
+    "notifyMe": "Báo tôi khi có lại",
+    "addToCart": "Thêm vào giỏ"
+  },
+  "qty": {
+    "label": "Số lượng {{unit}}",
+    "decrease": "Giảm 1",
+    "increase": "Tăng 1",
+    "max": "Tối đa {{qty}}",
+    "left": "Còn {{qty}}"
+  },
+  "rating": {
+    "count_one": "({{count}} đánh giá)",
+    "count_other": "({{count}} đánh giá)",
+    "sr": "{{value}} trên 5 sao",
+    "srWithCount_one": "{{value}} trên 5 sao, {{count}} đánh giá",
+    "srWithCount_other": "{{value}} trên 5 sao, {{count}} đánh giá",
+    "stars_one": "{{count}} sao — {{word}}",
+    "stars_other": "{{count}} sao — {{word}}",
+    "words": {
+      "none": "chưa chấm",
+      "poor": "Kém",
+      "fair": "Tạm được",
+      "good": "Tốt",
+      "veryGood": "Rất tốt",
+      "excellent": "Xuất sắc"
+    }
+  },
+  "review": {
+    "verified": "Đã mua hàng",
+    "replied": "{{by}} đã trả lời · {{date}}"
+  },
+  "slot": {
+    "full": "Đã kín chỗ",
+    "left": "Còn {{left}} / {{max}}"
+  },
+  "stall": {
+    "markets": "Chợ",
+    "days": "Ngày họp chợ",
+    "pickup": "Nhận hàng",
+    "distance": "Khoảng cách",
+    "see": "Xem sạp & hàng tuần này"
+  },
+  "stock": {
+    "left": "còn",
+    "reserved": "Đã giữ {{reserved}} / {{total}}",
+    "runningLow": "sắp hết",
+    "soldOut": "hết hàng"
+  },
+  "toast": {
+    "signedOut": "Đã đăng xuất."
+  },
+  "validation": {
+    "fullNameRequired": "Nhập họ và tên của bạn.",
+    "fullNameMax": "Họ và tên tối đa {{max}} ký tự.",
+    "phoneRequired": "Nhập số điện thoại của bạn.",
+    "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số).",
+    "addressRequired": "Nhập địa chỉ của bạn.",
+    "addressMax": "Địa chỉ tối đa {{max}} ký tự."
+  },
+  "adminNav": {
+    "sections": "Các mục quản trị",
+    "overview": "Tổng quan",
+    "farmers": "Nhà vườn",
+    "customers": "Khách hàng",
+    "markets": "Chợ",
+    "moderation": "Kiểm duyệt",
+    "orders": "Đơn hàng",
+    "revenue": "Doanh thu",
+    "reports": "Báo cáo",
+    "categories": "Danh mục",
+    "announcements": "Thông báo",
+    "feedback": "Góp ý",
+    "pricing": "Bảng giá",
+    "settings": "Cài đặt"
+  },
+  "carousel": {
+    "roleCarousel": "băng trình chiếu",
+    "roleSlide": "trang chiếu",
+    "slideOf": "{{n}} / {{total}}: {{topic}}",
+    "previous": "Trang trước",
+    "next": "Trang sau",
+    "show": "Xem trang {{n}}: {{topic}}",
+    "pause": "Tạm dừng trình chiếu",
+    "play": "Phát trình chiếu"
+  },
+  "geo": {
+    "denied": "Bạn đã tắt vị trí cho trang này. Hãy bật lại trong cài đặt trang web của trình duyệt, hoặc dùng một địa chỉ.",
+    "insecure": "Trình duyệt chỉ chia sẻ vị trí qua kết nối bảo mật (https).",
+    "failed": "Thiết bị không xác định được vị trí của bạn. Thử lại, hoặc nhập một địa chỉ.",
+    "finding": "Đang tìm vị trí…"
+  },
+  "directions": {
+    "title": "Chỉ đường đến {{name}}",
+    "question": "Bạn xuất phát từ đâu?",
+    "current": "Vị trí hiện tại của tôi",
+    "currentShared": "Đã chia sẻ",
+    "currentAsk": "Trình duyệt sẽ hỏi bạn trước",
+    "address": "Một địa chỉ",
+    "addressNote": "Một con đường hoặc địa danh ở TP. Hồ Chí Minh.",
+    "addressLabel": "Địa chỉ xuất phát",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "Nhập tên đường và quận là tốt nhất. Bản đồ thường thiếu số nhà, và OpenStreetMap sẽ nhờ bạn chọn một địa điểm khi không tìm thấy.",
+    "useSaved": "Dùng địa chỉ đã lưu",
+    "none": "Tôi sẽ nhập trên bản đồ",
+    "noneNote": "Mở OpenStreetMap với chỉ điểm đến được điền sẵn.",
+    "privacy": "Chỉ đường mở trên openstreetmap.org ở tab mới. MarketLink không theo dõi vị trí của bạn.",
+    "open": "Mở chỉ đường"
+  }
+}

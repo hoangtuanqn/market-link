@@ -1,0 +1,21 @@
+{
+  "title": "Ihren Stand registrieren",
+  "intro": "Nach der Registrierung prüft ein Admin den Stand. Sie können sich sofort anmelden und Ihr Profil einrichten, aber Produkte werden erst nach der Freigabe sichtbar.",
+  "fields": {
+    "stall": "Name des Stands oder Betriebs",
+    "stallPlaceholder": "z. B. {{example}}",
+    "stallHint": "Kunden sehen diesen Namen auf der Karte und in Bestellungen.",
+    "person": "Ansprechpartner",
+    "phone": "Telefonnummer",
+    "email": "E-Mail",
+    "address": "Adresse des Hofs oder Betriebs",
+    "password": "Passwort",
+    "confirmPassword": "Passwort wiederholen"
+  },
+  "banner": {
+    "title": "MarketLink prüft keine Lizenzen oder Bio-Zertifizierungen.",
+    "text": "Die Freigabe bestätigt, dass es den Stand gibt und die Kontaktdaten funktionieren. Erzählen Sie am Stand selbst, was Sie wie anbauen."
+  },
+  "submit": "Stand registrieren",
+  "haveAccount": "Ich habe schon ein Konto"
+}

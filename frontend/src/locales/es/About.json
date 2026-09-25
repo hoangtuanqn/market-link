@@ -1,0 +1,104 @@
+{
+  "title": "Sobre MarketLink",
+  "intro": "MarketLink conecta a los Farmers de los mercados de agricultores de Ciudad Ho Chi Minh con las personas que compran allí. Los puestos publican lo que traerán esta semana, tú reservas y lo recoges en el puesto.",
+  "carouselLabel": "Para qué sirve MarketLink",
+  "photosNote": "Las cuatro fotos de arriba son provisionales.",
+  "slides": {
+    "mission": {
+      "topic": "Nuestra misión",
+      "title": "Se acabó volver a casa con las manos vacías",
+      "text": "Los puestos anuncian la semana en una pizarra, así que lo mejor de la mañana se acaba antes de que llegue la mayoría. MarketLink reúne la semana de cada puesto en un solo lugar y guarda lo que reservas hasta que lo recoges.",
+      "alt": "Puestos en un mercado cubierto con productos apilados en cajas de madera",
+      "cta": "Ver los mercados de este fin de semana"
+    },
+    "howItWorks": {
+      "topic": "Cómo funciona",
+      "title": "Reserva el jueves, recoge el sábado",
+      "text": "Mira lo que tendrán este fin de semana cuatro mercados de Ciudad Ho Chi Minh y reserva en tantos puestos como quieras. Cada puesto tiene su propio pedido, su propia hora de recogida y se paga en el puesto.",
+      "alt": "Cestas de zanahorias, judías y chiles sobre una mesa de mercado",
+      "cta": "Ver los productos de esta semana"
+    },
+    "technology": {
+      "topic": "La tecnología",
+      "title": "Cantidades exactas desde el momento en que pides",
+      "text": "Una reserva se descuenta al instante de las existencias del puesto, así que dos personas no pueden reservar los mismos dos últimos manojos. Las franjas de recogida acortan la cola y el mapa sitúa cada puesto dentro de su mercado.",
+      "alt": "Semillas y tierra seca con una pala de metal",
+      "note_one": "Queda {{n}} manojo",
+      "note_other": "Quedan {{n}} manojos",
+      "cta": "Ver el mapa de mercados"
+    },
+    "benefit": {
+      "topic": "Lo que obtienes",
+      "title": "El puesto sabe qué traer",
+      "text": "Los Farmers leen los pedidos del fin de semana antes de cosechar, así que vuelve menos sin vender. Tú te llevas el pomelo que tenías pensado, a la hora que elegiste, pagado a quien lo cultivó.",
+      "alt": "Un agricultor trabajando un arrozal inundado con un tractor pequeño",
+      "note": "{{place}} · cosecha {{day}}",
+      "cta": "Vende en MarketLink"
+    }
+  },
+  "why": {
+    "title": "Por qué existe",
+    "shoppers": "Una mañana de mercado funciona con el boca a boca. Los puestos escriben con tiza lo que han traído, los habituales preguntan qué llegará la semana que viene y los demás se enteran recorriendo los pasillos. Eso funciona hasta que necesitas algo en concreto, o hasta que cruzar la ciudad termina delante de una mesa vacía.",
+    "farmers": "Los Farmers tienen el mismo problema desde el otro lado. No hay una forma sencilla de contar a los habituales qué traerá la semana, de aceptar un pedido antes del día de mercado ni de saber cuánto cortar el viernes por la tarde. MarketLink pone por escrito las dos mitades: el puesto publica la semana, tú reservas y el puesto lee los pedidos antes de cosechar."
+  },
+  "limits": {
+    "title": "Lo que MarketLink no hace",
+    "payment": "<b>Sin pago en línea.</b> Pagas al Farmer en el puesto cuando recoges. No hay ningún formulario de tarjeta en todo el producto.",
+    "delivery": "<b>Sin envío a domicilio.</b> Todos los pedidos se recogen en el mercado, dentro de la franja que fija el puesto.",
+    "certification": "<b>Sin certificación.</b> MarketLink no comprueba licencias ni declaraciones ecológicas. Pregunta al Farmer en el puesto.",
+    "profiles": "<b>Sin perfiles familiares separados.</b> Una cuenta se puede compartir en casa. El sistema no distingue entre personas dentro de una misma cuenta."
+  },
+  "team": {
+    "title": "El equipo",
+    "subtitle": "Seis personas, repartidas según lo que cada una lleva en el repositorio",
+    "namePending": "Nombre por añadir",
+    "lead": {
+      "role": "Jefe de equipo",
+      "note": "El esquema, el contrato de la API y las doce decisiones sobre las que construye el resto del equipo"
+    },
+    "be1": {
+      "role": "Backend",
+      "note": "El inicio de sesión, los roles y el ciclo de vida del pedido, desde que se hace hasta que se completa"
+    },
+    "be2": {
+      "role": "Backend",
+      "note": "Productos, mercados, existencias semanales, informes y los datos de ejemplo para la demo"
+    },
+    "fe1": {
+      "role": "Frontend",
+      "note": "El sistema de diseño, las páginas públicas, el mapa y el panel del Customer"
+    },
+    "fe2": {
+      "role": "Frontend",
+      "note": "Los paneles de Farmer y Admin, y todos los formularios del producto"
+    },
+    "qa": {
+      "role": "Calidad y documentación",
+      "note": "La lista de requisitos, los datos de prueba y los documentos que acompañan la entrega"
+    }
+  },
+  "stack": {
+    "title": "Cómo está hecho",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "maps": "Mapas",
+    "mapsValue": "Leaflet con teselas de OpenStreetMap",
+    "design": "Diseño",
+    "designValue": "El sistema de diseño Hang tag: un conjunto de tokens, un conjunto de componentes, una sola voz"
+  },
+  "credits": {
+    "title": "Créditos y datos",
+    "mapData": "Datos del mapa",
+    "mapDataValue": "© colaboradores de OpenStreetMap",
+    "photos": "Fotos",
+    "photosValue": "Provisionales por ahora; aquí aparecerán los créditos cuando tengamos las fotos del equipo",
+    "locale": "Moneda y hora",
+    "localeValue": "Dong vietnamita, fechas {{format}}, reloj de 24 horas, {{zone}}"
+  },
+  "contact": {
+    "title": "¿Quieres contarnos algo?",
+    "text": "Las preguntas sobre un pedido van directamente al puesto. Todo lo relacionado con la plataforma, al equipo.",
+    "contactUs": "Contacto",
+    "feedback": "Enviar comentarios"
+  }
+}

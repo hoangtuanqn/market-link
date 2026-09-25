@@ -1,0 +1,17 @@
+{
+  "title": "Pengaturan",
+  "intro": "Preferensi Anda sendiri, dan nilai bawaan yang dipakai lapak Anda.",
+  "selling": "Bawaan penjualan",
+  "sellingNote": "Disimpan bersama akun Anda. Dipakai saat Anda membuat jadwal pengambilan untuk minggu baru.",
+  "cutoff": "Batas waktu pesanan",
+  "cutoffNote": "Berapa jam sebelum jadwal pengambilan pesanan dikunci.",
+  "slot": "Panjang jadwal",
+  "slotNote": "Dipakai saat Anda membuat jadwal pengambilan untuk minggu baru.",
+  "max": "Pesanan per jadwal",
+  "hours_one": "{{count}} jam",
+  "hours_other": "{{count}} jam",
+  "minutes_one": "{{count}} menit",
+  "minutes_other": "{{count}} menit",
+  "orders_one": "{{count}} pesanan",
+  "orders_other": "{{count}} pesanan"
+}

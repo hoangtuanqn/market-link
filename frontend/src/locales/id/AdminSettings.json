@@ -1,0 +1,14 @@
+{
+  "title": "Pengaturan",
+  "intro": "Preferensi Anda sendiri, dan nilai bawaan lapak sampai lapak mengatur sendiri.",
+  "platform": "Bawaan platform",
+  "platformNote": "Untuk sementara disimpan bersama akun Anda. Apakah bawaan yang diubah berlaku bagi lapak yang belum pernah mengatur sendiri masih akan diputuskan.",
+  "cutoff": "Batas waktu bawaan",
+  "max": "Pesanan per jadwal bawaan",
+  "timezone": "Zona waktu",
+  "timezoneNote": "Semua tanggal dan waktu di platform dibaca dalam zona ini.",
+  "hours_one": "{{count}} jam",
+  "hours_other": "{{count}} jam",
+  "orders_one": "{{count}} pesanan",
+  "orders_other": "{{count}} pesanan"
+}

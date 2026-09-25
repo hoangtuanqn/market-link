@@ -1,0 +1,17 @@
+{
+  "title": "설정",
+  "intro": "내 설정과 매대의 기본값이에요.",
+  "selling": "판매 기본값",
+  "sellingNote": "계정에 저장돼요. 새 주의 픽업 시간대를 만들 때 사용돼요.",
+  "cutoff": "주문 마감",
+  "cutoffNote": "픽업 시간대 몇 시간 전에 주문을 잠글지 정해요.",
+  "slot": "시간대 길이",
+  "slotNote": "새 주의 픽업 시간대를 만들 때 사용돼요.",
+  "max": "시간대별 주문 수",
+  "hours_one": "{{count}}시간",
+  "hours_other": "{{count}}시간",
+  "minutes_one": "{{count}}분",
+  "minutes_other": "{{count}}분",
+  "orders_one": "주문 {{count}}건",
+  "orders_other": "주문 {{count}}건"
+}

@@ -1,0 +1,140 @@
+{
+  "breadcrumbAccount": "Cuenta",
+  "breadcrumb": "Solicitar vender",
+  "since": "{{name}} · cliente desde el {{date}}",
+  "title": "Vende lo que cultivas",
+  "intro": "Si cultivas alimentos, tu cuenta puede convertirse en un puesto en uno de los cuatro mercados. Conservas todo lo que tienes y sigues comprando en otros puestos.",
+  "next": {
+    "title": "Qué pasa después de enviarlo",
+    "read": "Un administrador lee la solicitud y mira tus fotos, normalmente en unos pocos días de mercado.",
+    "panel": "Cuando se aprueba, aparece en tu cuenta un panel del puesto para el stock, los pedidos y las horas de recogida.",
+    "setup": "Allí eliges tus mercados, días y franjas de recogida, y publicas tus primeros productos."
+  },
+  "step1": {
+    "title": "Tu puesto",
+    "stallName": "Nombre del puesto",
+    "stallNamePlaceholder": "p. ej. Verduras de la familia Khang",
+    "stallNameHint": "Los clientes lo ven en el mapa y en sus pedidos.",
+    "person": "Persona de contacto",
+    "phone": "Teléfono",
+    "phoneHint": "Aparece en cada pedido para que los clientes puedan contactarte.",
+    "email": "Correo electrónico",
+    "emailHint": "Tu inicio de sesión no cambia.",
+    "about": "Sobre el puesto",
+    "aboutPlaceholder": "Una o dos frases. Quién lo cultiva y dónde."
+  },
+  "step2": {
+    "title": "Qué cultivas",
+    "categories": "Categorías",
+    "crops": "Cultivos principales",
+    "cropsPlaceholder": "Espinaca de agua, choy sum, albahaca tailandesa",
+    "cropsHint": "Sepáralos con comas. Publicarás productos reales con precio tras la aprobación.",
+    "volume": "Cantidad aproximada por semana",
+    "volumePlaceholder": "Unos 120 manojos",
+    "volumeHint": "Una cifra aproximada. Ayuda al administrador a asignarte un mercado con sitio.",
+    "method": "Cómo lo cultivas",
+    "methodPlaceholder": "p. ej. Sin pesticidas en las dos últimas temporadas.",
+    "methodHint": "Opcional, y se muestra en la página de tu puesto con tus propias palabras. MarketLink no lo comprueba ni lo certifica."
+  },
+  "step3": {
+    "title": "Dónde lo cultivas",
+    "plot": "Dirección de la parcela",
+    "plotPlaceholder": "Aldea, barrio, distrito",
+    "plotHint": "Solo lo ve el administrador. Los clientes ven tu puesto en el mercado, no tu parcela.",
+    "size": "Tamaño de la parcela",
+    "sizePlaceholder": "5.000 m²",
+    "since": "Cultivando aquí desde",
+    "pin": "Marca la parcela",
+    "map": "Marca tu parcela en el mapa",
+    "pinHint": "Arrastra el marcador hasta tu parcela. Es la forma más rápida de que el administrador vea que las fotos coinciden con el lugar.",
+    "yourPlot": "Tu parcela"
+  },
+  "step4": {
+    "title": "Fotos de la parcela",
+    "intro": "Con dos fotos basta y cinco es el máximo. Una foto general que muestre toda la parcela y un primer plano de lo que crece ahora. Hazlas en los últimos 30 días y sin filtros.",
+    "shots": {
+      "wide": "Foto general de la parcela",
+      "growing": "Lo que crece ahora",
+      "other": "Otra cosa"
+    },
+    "required": "Obligatoria",
+    "optional": "Opcional",
+    "addPhoto": "Añadir foto",
+    "video": "Un vídeo corto",
+    "addVideo": "Añadir un vídeo, hasta 60 segundos",
+    "videoHint": "Opcional. Un paseo lento entre los bancales dice más que cualquier foto y agiliza la aprobación.",
+    "banner": {
+      "title": "El administrador comprueba una sola cosa: que la parcela existe y cultiva lo que has indicado.",
+      "text": "MarketLink no comprueba licencias, seguridad alimentaria ni declaraciones ecológicas, y una foto no es un certificado."
+    }
+  },
+  "step5": {
+    "title": "Dónde quieres vender",
+    "market": "Mercado",
+    "hint": "Elige uno para empezar. Cuando te aprueben, configurarás tus días, franjas de recogida y hora límite en el panel del puesto, y podrás añadir los otros mercados más tarde."
+  },
+  "step6": {
+    "title": "Antes de enviar",
+    "true": "Todo lo que pongo aquí es cierto, y las fotos son de mi propia parcela",
+    "trueHint": "Una solicitud con fotos que no son tuyas se rechaza y la cuenta puede suspenderse.",
+    "present": "Estaré en el puesto durante mi franja de recogida",
+    "presentHint": "Las ausencias repetidas son el motivo habitual de suspensión de un puesto.",
+    "pay": "Entiendo que los clientes me pagan en el puesto",
+    "payHint": "En MarketLink no hay pago en línea ni envíos.",
+    "send": "Enviar la solicitud",
+    "later": "Guardar y terminar más tarde"
+  },
+  "preview": "Vista previa: después de enviar",
+  "sent": {
+    "eyebrow": "Enviada ahora mismo",
+    "title": "Tu solicitud está con un administrador",
+    "intro": "Mientras tanto no cambia nada para ti. Sigue comprando y atento a tus notificaciones para la respuesta.",
+    "banner": {
+      "title": "Puedes seguir comprando en otros puestos mientras se revisa.",
+      "text": "Tus pedidos, favoritos y carrito siguen intactos. El panel del puesto aparece solo cuando un administrador la aprueba."
+    },
+    "summary": "Lo que enviaste",
+    "stall": "Puesto",
+    "grows": "Cultiva",
+    "plot": "Parcela",
+    "plotText": "{{size}} en {{place}}, cultivando desde {{since}}",
+    "evidence": "Pruebas",
+    "photos_one": "{{count}} foto",
+    "photos_other": "{{count}} fotos",
+    "photosAndVideo_one": "{{count}} foto y un vídeo",
+    "photosAndVideo_other": "{{count}} fotos y un vídeo",
+    "market": "Mercado",
+    "keepShopping": "Seguir comprando",
+    "withdraw": "Retirar la solicitud",
+    "progress": "Progreso"
+  },
+  "timeline": {
+    "placed": {
+      "title": "Solicitud enviada",
+      "note": "Ahora mismo",
+      "by": "Tú"
+    },
+    "accepted": {
+      "title": "Un administrador la lee",
+      "note": "Normalmente en unos pocos días de mercado",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "Se abre el panel del puesto",
+      "note": "Tras la aprobación",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "missingTitle": "Faltan casillas",
+    "missing": "Marca las tres casillas del final antes de enviar.",
+    "sentTitle": "Solicitud enviada",
+    "sent": "Recibirás la respuesta de un administrador en tus notificaciones.",
+    "withdrawnTitle": "Solicitud retirada",
+    "withdrawn": "Puedes volver a solicitarlo cuando quieras.",
+    "photoTitle": "Añadir una foto",
+    "photo": "Elige una foto de tu móvil u ordenador.",
+    "videoTitle": "Añadir un vídeo",
+    "video": "Elige un vídeo de hasta 60 segundos."
+  }
+}

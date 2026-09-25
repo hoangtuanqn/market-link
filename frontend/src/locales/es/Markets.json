@@ -1,0 +1,74 @@
+{
+  "city": "Ciudad Ho Chi Minh",
+  "count_one": "{{count}} mercado",
+  "count_other": "{{count}} mercados",
+  "title": "Mercados",
+  "intro": "Elige el día en que quieres comprar y luego filtra por tu zona.",
+  "filters": {
+    "label": "Filtrar los mercados",
+    "day": "Día de mercado",
+    "clearAll": "Borrar todo",
+    "area": "Zona",
+    "allAreas": "Todas las zonas ({{count}})",
+    "sort": "Ordenar por"
+  },
+  "sorts": {
+    "near": "Más cercanos primero",
+    "stalls": "Más puestos",
+    "opens": "Abren antes"
+  },
+  "cleared": {
+    "title": "Filtros borrados",
+    "text": "Mostrando todos los mercados abiertos el {{day}}."
+  },
+  "popupStalls_one": "{{count}} puesto",
+  "popupStalls_other": "{{count}} puestos",
+  "summary": {
+    "open_one": "<b>{{count}} mercado</b> abierto el {{day}}",
+    "open_other": "<b>{{count}} mercados</b> abiertos el {{day}}",
+    "openIn_one": "<b>{{count}} mercado</b> abierto el {{day}} en {{area}}",
+    "openIn_other": "<b>{{count}} mercados</b> abiertos el {{day}} en {{area}}",
+    "none": "Nada abierto el {{day}}",
+    "noneIn": "Nada abierto el {{day}} en {{area}}"
+  },
+  "error": {
+    "noun": "mercados",
+    "alt": "el <link>mapa de mercados</link> se abre en su propia página"
+  },
+  "pager": {
+    "showing": "Mostrando {{from}}–{{to}} de {{total}}",
+    "onePage_one": "{{count}} mercado en una página",
+    "onePage_other": "Los {{count}} mercados en una página"
+  },
+  "empty": {
+    "areaTitle": "No hay mercados en {{area}} el {{day}}",
+    "areaText_one": "En toda la ciudad hay {{count}} mercado abierto ese día. Amplía la zona o elige otro día.",
+    "areaText_other": "En toda la ciudad hay {{count}} mercados abiertos ese día. Amplía la zona o elige otro día.",
+    "allAreas": "Ver todas las zonas",
+    "dayTitle": "No hay mercados abiertos el {{day}}",
+    "dayText_one": "El {{day}} es el día con más movimiento, con {{count}} mercado abierto.",
+    "dayText_other": "El {{day}} es el día con más movimiento, con {{count}} mercados abiertos.",
+    "showDay": "Ver el {{day}}"
+  },
+  "map": {
+    "label": "Mapa de los mercados que coinciden",
+    "note": "El mapa sigue los filtros y solo muestra los mercados de la lista."
+  },
+  "demo": {
+    "title": "Otros estados de esta lista (FR-084)",
+    "views": {
+      "loaded": "Con datos",
+      "loading": "Cargando",
+      "error": "Error"
+    },
+    "note": "El estado vacío se puede ver de verdad: elige <b>{{day}}</b> y la zona <b>{{area}}</b>. Indica lo que elegiste y ofrece una salida."
+  },
+  "location": {
+    "measured": "Las distancias se miden desde donde estás.",
+    "forget": "Olvidar mi ubicación",
+    "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador para ordenar por distancia.",
+    "needed": "Ordenar por distancia necesita tu ubicación. Hasta que la compartas, el orden de abajo no cambia.",
+    "share": "Comparte tu ubicación para ver a qué distancia está cada mercado.",
+    "use": "Usar mi ubicación"
+  }
+}

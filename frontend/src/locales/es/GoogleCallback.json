@@ -1,0 +1,21 @@
+{
+  "loading": {
+    "title": "Iniciando sesión con Google…",
+    "text": "Solo tarda un segundo."
+  },
+  "failed": {
+    "title": "El acceso con Google no terminó",
+    "text": "No has iniciado sesión. No ha cambiado nada en tu cuenta.",
+    "backToSignIn": "Volver a iniciar sesión",
+    "registerWithEmail": "Crear una cuenta con correo"
+  },
+  "toast": {
+    "signedIn": "Sesión iniciada."
+  },
+  "errors": {
+    "cancelled": "Cancelaste el acceso con Google.",
+    "google": "Google no pudo iniciar tu sesión. Inténtalo de nuevo.",
+    "invalidState": "Este intento de acceso no es válido. Empieza de nuevo desde la página de inicio de sesión.",
+    "failed": "Falló el acceso con Google. Inténtalo de nuevo."
+  }
+}

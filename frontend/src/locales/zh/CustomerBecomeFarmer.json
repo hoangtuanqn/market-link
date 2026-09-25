@@ -1,0 +1,140 @@
+{
+  "breadcrumbAccount": "账户",
+  "breadcrumb": "申请开店",
+  "since": "{{name}} · 自 {{date}} 起成为顾客",
+  "title": "出售您种植的作物",
+  "intro": "如果您种植食物，您的账户可以成为四个市场之一的摊位。您现有的一切都会保留，并且可以继续在其他摊位购物。",
+  "next": {
+    "title": "提交后会发生什么",
+    "read": "管理员会审阅申请并查看您的照片，通常在几个市集日内完成。",
+    "panel": "批准后，您的账户中会出现摊位面板，用于管理库存、订单和取货时间。",
+    "setup": "您在那里设置市场、日期和取货时段，然后上架第一批商品。"
+  },
+  "step1": {
+    "title": "您的摊位",
+    "stallName": "摊位名称",
+    "stallNamePlaceholder": "例如：Khang 家的蔬菜",
+    "stallNameHint": "顾客会在地图和订单上看到这个名称。",
+    "person": "联系人",
+    "phone": "电话",
+    "phoneHint": "印在每个订单上，方便顾客联系您。",
+    "email": "邮箱",
+    "emailHint": "您的登录信息保持不变。",
+    "about": "摊位简介",
+    "aboutPlaceholder": "一两句话。谁种的，在哪里种。"
+  },
+  "step2": {
+    "title": "您种什么",
+    "categories": "类别",
+    "crops": "主要作物",
+    "cropsPlaceholder": "空心菜、菜心、泰国罗勒",
+    "cropsHint": "用逗号分隔。批准后再上架带价格的实际商品。",
+    "volume": "每周大约多少",
+    "volumePlaceholder": "大约 120 把",
+    "volumeHint": "粗略估计即可，帮助管理员为您匹配有空位的市场。",
+    "method": "您如何种植",
+    "methodPlaceholder": "例如：最近两季未使用农药。",
+    "methodHint": "选填，会以您自己的话显示在摊位页面上。MarketLink 不会核实或认证这些内容。"
+  },
+  "step3": {
+    "title": "您在哪里种植",
+    "plot": "地块地址",
+    "plotPlaceholder": "村、坊、郡",
+    "plotHint": "只有管理员能看到。顾客看到的是您在市场的摊位，而不是您的地块。",
+    "size": "地块面积",
+    "sizePlaceholder": "5,000 m²",
+    "since": "在此种植始于",
+    "pin": "标记地块",
+    "map": "在地图上标记您的地块",
+    "pinHint": "把图钉拖到您的地块上。这是管理员确认照片与地点相符的最快方式。",
+    "yourPlot": "你的地块"
+  },
+  "step4": {
+    "title": "地块照片",
+    "intro": "两张照片就够，最多五张。一张拍下整个地块的全景，一张拍下正在生长的作物特写。请在最近 30 天内拍摄，不要加滤镜。",
+    "shots": {
+      "wide": "地块全景",
+      "growing": "正在种植的作物",
+      "other": "其他"
+    },
+    "required": "必填",
+    "optional": "选填",
+    "addPhoto": "添加照片",
+    "video": "一段短视频",
+    "addVideo": "添加视频，最长 60 秒",
+    "videoHint": "选填。沿着菜畦慢慢走一圈，比任何照片都更有说服力，也能加快审批。",
+    "banner": {
+      "title": "管理员只核实一件事：地块真实存在，并种植了您列出的作物。",
+      "text": "MarketLink 不核查执照、食品安全或有机声明，照片也不是证书。"
+    }
+  },
+  "step5": {
+    "title": "您想在哪里销售",
+    "market": "市场",
+    "hint": "先选一个开始。获批后在摊位面板中设置日期、取货时段和截单时间，之后还可以添加其他市场。"
+  },
+  "step6": {
+    "title": "提交之前",
+    "true": "这里的所有信息都真实，照片拍的是我自己的地块",
+    "trueHint": "使用非本人照片的申请会被拒绝，账户也可能被暂停。",
+    "present": "我会在取货时段内在摊位",
+    "presentHint": "多次缺席是摊位被暂停的常见原因。",
+    "pay": "我了解顾客在摊位向我付款",
+    "payHint": "MarketLink 没有在线支付，也没有配送。",
+    "send": "提交申请",
+    "later": "保存，稍后完成"
+  },
+  "preview": "预览：提交后",
+  "sent": {
+    "eyebrow": "刚刚提交",
+    "title": "您的申请正在由管理员审核",
+    "intro": "在此期间您的一切照旧。继续购物，并留意通知中的结果。",
+    "banner": {
+      "title": "审核期间，您仍然可以在其他摊位购物。",
+      "text": "您的订单、收藏和购物车都不受影响。只有管理员批准后才会出现摊位面板。"
+    },
+    "summary": "您提交的内容",
+    "stall": "摊位",
+    "grows": "种植",
+    "plot": "地块",
+    "plotText": "{{place}} 的 {{size}}，自 {{since}} 年开始种植",
+    "evidence": "证明材料",
+    "photos_one": "{{count}} 张照片",
+    "photos_other": "{{count}} 张照片",
+    "photosAndVideo_one": "{{count}} 张照片和一段视频",
+    "photosAndVideo_other": "{{count}} 张照片和一段视频",
+    "market": "市场",
+    "keepShopping": "继续购物",
+    "withdraw": "撤回申请",
+    "progress": "进度"
+  },
+  "timeline": {
+    "placed": {
+      "title": "申请已提交",
+      "note": "刚刚",
+      "by": "你"
+    },
+    "accepted": {
+      "title": "管理员审阅",
+      "note": "通常在几个市集日内",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "摊位面板开放",
+      "note": "获批后",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "missingTitle": "缺少勾选",
+    "missing": "提交前请勾选最后的三个选项。",
+    "sentTitle": "申请已提交",
+    "sent": "管理员的答复会出现在您的通知中。",
+    "withdrawnTitle": "申请已撤回",
+    "withdrawn": "您可以随时重新申请。",
+    "photoTitle": "添加照片",
+    "photo": "从手机或电脑中选择一张照片。",
+    "videoTitle": "添加视频",
+    "video": "选择一段视频，最长 60 秒。"
+  }
+}

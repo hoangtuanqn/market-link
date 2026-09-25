@@ -1,0 +1,44 @@
+{
+  "markets_one": "{{count}} か所のマーケット",
+  "markets_other": "{{count}} か所のマーケット",
+  "stallsSelling_one": "{{count}} 店が販売中",
+  "stallsSelling_other": "{{count}} 店が販売中",
+  "title": "商品",
+  "intro": "各店が今週出品しているすべての商品です。カテゴリ、価格、マーケット、曜日で絞り込んでカートに追加できます。",
+  "filters": {
+    "title": "絞り込み",
+    "clearAll": "すべてクリア",
+    "day": "開催日",
+    "category": "カテゴリ",
+    "price": "単価",
+    "market": "マーケット",
+    "allMarkets": "すべてのマーケット",
+    "inStock": "在庫ありのみ",
+    "inStockNote": "売り切れと販売停止中の商品を隠します"
+  },
+  "price": {
+    "any": "すべての価格",
+    "low": "{{low}} 未満",
+    "mid": "{{low}} – {{high}}",
+    "high": "{{high}} 超"
+  },
+  "summary_one": "{{day}}に一致する商品 <b>{{count}} 件</b>",
+  "summary_other": "{{day}}に一致する商品 <b>{{count}} 件</b>",
+  "sort": "並べ替え",
+  "sorts": {
+    "newest": "新着順",
+    "priceAsc": "価格の安い順",
+    "priceDesc": "価格の高い順",
+    "rating": "評価の高い順"
+  },
+  "pager": {
+    "showing": "{{total}} 件中 {{from}}–{{to}} 件を表示",
+    "onePage_one": "{{count}} 件の商品を 1 ページに表示",
+    "onePage_other": "{{count}} 件すべてを 1 ページに表示"
+  },
+  "empty": {
+    "title": "この条件に一致する商品はありません",
+    "text": "価格の絞り込みを外すか、ほかのカテゴリやマーケットに広げてみてください。",
+    "clear": "絞り込みをすべてクリア"
+  }
+}

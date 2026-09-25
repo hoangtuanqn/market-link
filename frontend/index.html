@@ -15,6 +15,16 @@
       rel="stylesheet"
     />
     <title>MarketLink</title>
+    <!-- Theme trước khi vẽ trang (không nháy sáng ở chế độ tối). Cùng khoá và luật với src/lib/settings.ts. -->
+    <script>
+      try {
+        var s = JSON.parse(localStorage.getItem('ml-settings') || '{}');
+        var dark = s.theme === 'dark' || (s.theme === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+        if (s.language) document.documentElement.lang = s.language;
+      } catch (e) {}
+    </script>
   </head>
   <body class="flex min-h-full flex-col">
     <div id="root" class="flex flex-1 flex-col"></div>

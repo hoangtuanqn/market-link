@@ -1,0 +1,34 @@
+{
+  "greeting_one": "Bonjour {{name}}, {{count}} retrait ce week-end",
+  "greeting_other": "Bonjour {{name}}, {{count}} retraits ce week-end",
+  "intro": "Une commande attend encore la confirmation du stand. Tout le reste est en bonne voie.",
+  "browseMarkets": "Voir les marchés de ce week-end",
+  "cards": {
+    "upcoming_one": "{{count}} commande à venir",
+    "upcoming_other": "{{count}} commandes à venir",
+    "upcomingBreakdown": "En attente de validation : {{placed}} · Acceptées : {{accepted}} · Prêtes : {{ready}}",
+    "favorites_one": "{{count}} favori",
+    "favorites_other": "{{count}} favoris",
+    "stalls_one": "{{count}} stand",
+    "stalls_other": "{{count}} stands",
+    "products_one": "{{count}} produit",
+    "products_other": "{{count}} produits",
+    "markets_one": "{{count}} marché",
+    "markets_other": "{{count}} marchés",
+    "unread_one": "{{count}} notification non lue",
+    "unread_other": "{{count}} notifications non lues",
+    "unreadText": "Une commande est prête, et le yaourt de chèvre est de retour",
+    "account": "Compte"
+  },
+  "sell": {
+    "overline": "Nouveau",
+    "title": "Vous cultivez quelque chose ? Vendez-le au marché",
+    "text": "Votre compte peut devenir un stand dans l’un des quatre marchés. Postulez avec quelques photos de votre parcelle et un administrateur l’examine. Dans tous les cas, vous continuez vos achats.",
+    "apply": "Postuler pour vendre",
+    "dismiss": "Pas maintenant"
+  },
+  "nextPickups": "Prochains retraits",
+  "allOrders": "Toutes mes commandes",
+  "newFromFavorites": "Nouveautés de la semaine chez vos stands favoris",
+  "favorites": "Favoris"
+}

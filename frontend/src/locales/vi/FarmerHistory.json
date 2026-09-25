@@ -1,0 +1,55 @@
+{
+  "title": "Lịch sử bán hàng",
+  "intro": "Bạn đã bán gì, và so với kỳ trước ra sao. Doanh thu chỉ tính đơn đã hoàn tất, tức số tiền khách trả bạn tại sạp.",
+  "export": {
+    "button": "Xuất dữ liệu kỳ này",
+    "title": "Đã bắt đầu xuất",
+    "text": "Đã bắt đầu xuất. File CSV gồm kỳ và chợ đang hiển thị."
+  },
+  "days_one": "{{count}} ngày",
+  "days_other": "{{count}} ngày",
+  "market": "Chợ",
+  "bothMarkets": "Cả hai chợ",
+  "kpi": {
+    "completed": "Đơn hoàn tất",
+    "completedNote": "trên {{total}} đơn đặt với bạn",
+    "revenue": "Doanh thu",
+    "revenueNote": "₫, trả tại sạp",
+    "average": "Giá trị đơn trung bình",
+    "averageNote": "₫ mỗi đơn hoàn tất",
+    "declined": "Bạn đã từ chối",
+    "declinedNote": "{{pct}}% số đơn đặt với bạn"
+  },
+  "byDay": {
+    "title": "Doanh thu theo ngày chợ",
+    "note": "Đơn vị triệu ₫. Bạn chỉ bán thứ Bảy và Chủ nhật, nên mỗi cột là một buổi chợ.",
+    "caption": "Doanh thu theo ngày chợ trong {{now}} so với {{prev}}, đơn vị triệu đồng"
+  },
+  "best": {
+    "title": "Bán chạy nhất",
+    "note": "Doanh thu trong {{month}}. Số lượng tính theo đơn vị riêng của từng sản phẩm, nên không bao giờ cộng dồn.",
+    "product": "Sản phẩm",
+    "soldPer": "Bán theo",
+    "price": "Giá",
+    "sold": "Đã bán",
+    "revenue": "Doanh thu"
+  },
+  "where": {
+    "title": "Bán ở đâu",
+    "note_one": "Tháng này có {{count}} đơn bị từ chối và {{cancelled}} đơn bị huỷ. Cả hai đều không được tính ở đây.",
+    "note_other": "Tháng này có {{count}} đơn bị từ chối và {{cancelled}} đơn bị huỷ. Cả hai đều không được tính ở đây."
+  },
+  "past": {
+    "title": "Đơn đã qua",
+    "note": "Hoàn tất, bị từ chối và bị huỷ"
+  },
+  "col": {
+    "pickup": "Nhận hàng",
+    "order": "Đơn",
+    "customer": "Khách hàng",
+    "items": "Món",
+    "total": "Tổng",
+    "status": "Trạng thái"
+  },
+  "itemLine": "{{qty}}× {{name}}"
+}

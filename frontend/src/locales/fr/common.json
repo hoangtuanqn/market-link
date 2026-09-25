@@ -1,0 +1,373 @@
+{
+  "settings": {
+    "appearance": "Apparence",
+    "theme": "Thème",
+    "themeNote": "S’applique immédiatement. « Comme l’appareil » suit votre téléphone ou votre ordinateur.",
+    "themes": {
+      "light": "Clair",
+      "dark": "Sombre",
+      "system": "Comme l’appareil"
+    },
+    "language": "Langue",
+    "languageNote": "La langue des menus, des boutons et des messages. Les noms de stands, de produits et de lieux restent tels que le stand les a écrits.",
+    "format": "Argent, dates et unités",
+    "currency": "Afficher les prix en",
+    "currencyNote": "Vous payez toujours en dôngs vietnamiens au stand. Une autre devise est affichée à côté à titre indicatif, à des taux fixes du {{date}}.",
+    "currencies": {
+      "VND": "₫ dông vietnamien uniquement",
+      "USD": "₫ et $ dollar américain",
+      "EUR": "₫ et € euro",
+      "JPY": "₫ et ¥ yen japonais"
+    },
+    "units": "Poids et volumes",
+    "unitsNote": "Seules les unités de mesure sont converties. Un stand qui vend à la botte, à la tête ou à la barquette garde son propre mot.",
+    "metric": "Métrique · kg, g, litre",
+    "imperial": "Impérial · lb, oz, pinte",
+    "date": "Date",
+    "clock": "Heure",
+    "clock24": "24 heures · 19:00",
+    "clock12": "12 heures · 7:00 pm",
+    "preview": "Aperçu : {{date}} · {{time}} · {{price}}",
+    "notifications": "Notifications",
+    "notificationsNote": "Enregistré avec votre compte. MarketLink n’envoie pas encore de notifications ; elles suivront ces choix le moment venu.",
+    "notes": {
+      "customer": {
+        "orderDecided": "Une commande est acceptée ou refusée",
+        "orderReady": "Une commande est prête à être retirée",
+        "backInStock": "Un produit enregistré est de nouveau disponible",
+        "announcements": "Annonces de MarketLink",
+        "stallReply": "Un stand répond à votre message"
+      },
+      "farmer": {
+        "newOrder": "Une nouvelle commande arrive",
+        "orderChanged": "Un client modifie ou annule une commande",
+        "cutoffSoon": "L’heure limite est dans une heure",
+        "newReview": "Un nouvel avis sur votre stand",
+        "announcements": "Annonces de MarketLink"
+      },
+      "admin": {
+        "farmerApplication": "Une candidature Farmer arrive",
+        "reported": "Un avis ou une annonce est signalé",
+        "newFeedback": "Nouveau retour",
+        "marketEdited": "Un marché est modifié"
+      }
+    },
+    "save": "Enregistrer les paramètres",
+    "saving": "Enregistrement…",
+    "saveHint": "Le thème s’applique dès que vous le choisissez ; le reste, à l’enregistrement.",
+    "savedTitle": "Enregistré",
+    "savedText": "Vos paramètres sont enregistrés.",
+    "saveError": "Impossible d’enregistrer vos paramètres. Veuillez réessayer."
+  },
+  "actions": {
+    "back": "Retour",
+    "close": "Fermer",
+    "directions": "Itinéraire",
+    "dismiss": "Masquer",
+    "remove": "Retirer",
+    "tryAgain": "Réessayer",
+    "cancel": "Annuler"
+  },
+  "admin": {
+    "badge": "Admin",
+    "security": "Sécurité",
+    "signIn": "Connexion admin"
+  },
+  "cart": {
+    "orderOf": "Commande {{index}} sur {{of}}",
+    "payAtPickup": "Paiement au stand lors du retrait"
+  },
+  "chat": {
+    "assistant": "Assistant MarketLink",
+    "you": "Vous",
+    "intent": "Intention : {{intent}}"
+  },
+  "errors": {
+    "network": "Impossible de joindre le serveur. Vérifiez votre connexion et réessayez."
+  },
+  "farmerNav": {
+    "sections": "Rubriques",
+    "navigation": "Navigation Farmer",
+    "home": "MarketLink — Vue d’ensemble Farmer",
+    "badge": "Farmer",
+    "expand": "Déplier la barre latérale",
+    "collapse": "Replier la barre latérale",
+    "approvedMarkets_one": "Validé · {{count}} marché",
+    "approvedMarkets_other": "Validé · {{count}} marchés",
+    "changeMarket": "Changer de marché affiché",
+    "roleStall": "Farmer · {{stall}}",
+    "openNavigation": "Ouvrir la navigation",
+    "searchPlaceholder": "N° de commande ou client",
+    "yourAccount": "Votre compte",
+    "today": "Aujourd’hui",
+    "overview": "Vue d’ensemble",
+    "incomingOrders": "Commandes reçues",
+    "pickupSlots": "Créneaux de retrait",
+    "stock": "Stock",
+    "weekStock": "Stock de la semaine",
+    "products": "Produits",
+    "stall": "Stand",
+    "stallPickup": "Stand et retrait",
+    "reviews": "Avis",
+    "salesHistory": "Historique des ventes",
+    "inbox": "Boîte de réception",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "account": "Compte",
+    "promote": "Promotion et annonces",
+    "approval": "État de la validation",
+    "settings": "Paramètres",
+    "shop": "Achats",
+    "shopMarkets": "Faire ses courses au marché"
+  },
+  "footer": {
+    "tagline": "Réservez auprès de votre marché de producteurs, retirez au stand. Payez le Farmer directement au retrait.",
+    "shop": "Acheter",
+    "marketsNearYou": "Marchés près de chez vous",
+    "inSeason": "De saison",
+    "marketMap": "Carte des marchés",
+    "favoriteStalls": "Stands favoris",
+    "sell": "Vendre",
+    "registerFarmer": "Devenir Farmer",
+    "handlingPreOrders": "Gérer les précommandes",
+    "stallGuidelines": "Règles des stands",
+    "marketLink": "MarketLink",
+    "aboutUs": "À propos",
+    "contactUs": "Nous contacter",
+    "feedback": "Avis et signalement de bugs",
+    "mapData": "Données cartographiques © contributeurs OpenStreetMap",
+    "mapDataFrom": "Données cartographiques {{credit}}"
+  },
+  "header": {
+    "cart": "Panier",
+    "cartItems_one": "Panier, {{count}} article",
+    "cartItems_other": "Panier, {{count}} articles",
+    "hi": "Bonjour, <b>{{name}}</b>",
+    "main": "Principale",
+    "menu": "Menu",
+    "notifications": "Notifications",
+    "notificationsUnread_one": "Notifications, {{count}} non lue",
+    "notificationsUnread_other": "Notifications, {{count}} non lues",
+    "openMenu": "Ouvrir le menu",
+    "search": "Rechercher"
+  },
+  "kpi": {
+    "noChange": "aucun changement",
+    "vsBefore": "par rapport à la période précédente"
+  },
+  "loadError": {
+    "title": "Impossible de charger les {{noun}}",
+    "text": "La liste n’est pas arrivée cette fois-ci. Ce que vous avez enregistré ou commandé n’est pas concerné.",
+    "help": "C’est généralement la connexion, pas quelque chose que vous avez fait. Si réessayer ne suffit pas, <link>dites-nous ce qui s’est passé</link> et nous examinerons le problème.",
+    "helpAlt": "C’est généralement la connexion, pas quelque chose que vous avez fait. Si réessayer ne suffit pas, <alt />, ou <link>dites-nous ce qui s’est passé</link> et nous examinerons le problème."
+  },
+  "loading": {
+    "markets": "Chargement des marchés"
+  },
+  "logo": {
+    "home": "MarketLink — accueil"
+  },
+  "map": {
+    "attribution": "© contributeurs {{link}}",
+    "open": "Ouvrir",
+    "placeholder": "Carte — {{label}}",
+    "stallPickup": "Stand {{code}} · retrait {{pickup}}",
+    "tilesFailed": "Les tuiles de la carte ont besoin d’une connexion. La liste fonctionne sans elles.",
+    "yourStall": "Votre stand"
+  },
+  "marketCard": {
+    "save": "Enregistrer {{name}}",
+    "unsave": "Retirer {{name}} des favoris",
+    "days": "Jours de marché",
+    "open": "ouvert",
+    "closed": "fermé",
+    "hours": "Horaires <b>{{open}}–{{close}}</b>",
+    "stalls_one": "<b>{{count}}</b> stand",
+    "stalls_other": "<b>{{count}}</b> stands",
+    "away": "à <b>{{distance}}</b>",
+    "seeStalls": "Voir les stands"
+  },
+  "nav": {
+    "markets": "Marchés",
+    "products": "Produits",
+    "map": "Carte",
+    "aboutUs": "À propos",
+    "myOrders": "Mes commandes",
+    "favorites": "Favoris",
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "signIn": "Se connecter",
+    "createAccount": "Créer un compte",
+    "signOut": "Se déconnecter",
+    "yourAccount": "Votre compte"
+  },
+  "order": {
+    "code": "Commande {{code}}",
+    "market": "Marché",
+    "pickup": "Retrait",
+    "payOnPickup": "À payer au retrait",
+    "declinedReason": "Motif du stand : {{reason}} Rien à payer.",
+    "cancelledNote": "Vous avez annulé cette commande avant l’heure limite. Le stock est revenu au stand.",
+    "lockedNote": "L’heure limite est passée ({{cutoff}}). Pour la modifier, contactez directement le stand.",
+    "editableNote": "Modifiez ou annulez avant {{cutoff}}. Ensuite, la commande est verrouillée.",
+    "edit": "Modifier la commande",
+    "cancel": "Annuler la commande",
+    "reviewed": "Vous avez donné votre avis sur cette commande",
+    "review": "Évaluer le stand et les produits",
+    "reorder": "Commander à nouveau"
+  },
+  "orderStatus": {
+    "placed": "Passée",
+    "accepted": "Acceptée",
+    "ready": "Prête à retirer",
+    "completed": "Terminée",
+    "declined": "Refusée",
+    "cancelled": "Annulée"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Page précédente",
+    "next": "Page suivante",
+    "page": "Page {{n}}"
+  },
+  "password": {
+    "show": "Afficher le mot de passe",
+    "hide": "Masquer le mot de passe"
+  },
+  "period": {
+    "length": "Durée de la période",
+    "day": "Jour",
+    "week": "Semaine",
+    "month": "Mois",
+    "quarter": "Trimestre",
+    "year": "Année",
+    "custom": "Personnalisée",
+    "from": "Du",
+    "to": "Au",
+    "compareWith": "Comparer avec",
+    "cmpBefore": "La période précédente, même durée",
+    "cmpLastYear": "La même période l’an dernier",
+    "cmpNone": "Aucune comparaison",
+    "comparedWith": "par rapport à <b>{{compare}}</b>, même durée"
+  },
+  "price": {
+    "was": "Avant"
+  },
+  "product": {
+    "notThisWeek": "Pas cette semaine",
+    "backSoon": "Bientôt de retour",
+    "onlyLeft": "Plus que {{qty}}",
+    "left": "{{qty}} restant(s)",
+    "paused": "En pause",
+    "soldOut": "Épuisé",
+    "addFavorite": "Ajouter aux favoris : {{name}}",
+    "removeFavorite": "Retirer des favoris : {{name}}",
+    "notifyMe": "Me prévenir du retour",
+    "addToCart": "Ajouter au panier"
+  },
+  "qty": {
+    "label": "Quantité ({{unit}})",
+    "decrease": "Diminuer de 1",
+    "increase": "Augmenter de 1",
+    "max": "Max. {{qty}}",
+    "left": "{{qty}} restant(s)"
+  },
+  "rating": {
+    "count_one": "({{count}} avis)",
+    "count_other": "({{count}} avis)",
+    "sr": "{{value}} sur 5 étoiles",
+    "srWithCount_one": "{{value}} sur 5 étoiles, {{count}} avis",
+    "srWithCount_other": "{{value}} sur 5 étoiles, {{count}} avis",
+    "stars_one": "{{count}} étoile — {{word}}",
+    "stars_other": "{{count}} étoiles — {{word}}",
+    "words": {
+      "none": "non noté",
+      "poor": "Médiocre",
+      "fair": "Passable",
+      "good": "Bien",
+      "veryGood": "Très bien",
+      "excellent": "Excellent"
+    }
+  },
+  "review": {
+    "verified": "Achat vérifié",
+    "replied": "Réponse de {{by}} · {{date}}"
+  },
+  "slot": {
+    "full": "Complet",
+    "left": "{{left}} sur {{max}} restant(s)"
+  },
+  "stall": {
+    "markets": "Marchés",
+    "days": "Jours de marché",
+    "pickup": "Retrait",
+    "distance": "Distance",
+    "see": "Voir le stand et le stock de la semaine"
+  },
+  "stock": {
+    "left": "restant(s)",
+    "reserved": "{{reserved}} sur {{total}} réservé(s)",
+    "runningLow": "bientôt épuisé",
+    "soldOut": "épuisé"
+  },
+  "toast": {
+    "signedOut": "Vous êtes déconnecté."
+  },
+  "validation": {
+    "fullNameRequired": "Saisissez votre nom complet.",
+    "fullNameMax": "Le nom complet ne peut pas dépasser {{max}} caractères.",
+    "phoneRequired": "Saisissez votre numéro de téléphone.",
+    "phoneInvalid": "Saisissez un numéro de mobile vietnamien valide (10 chiffres).",
+    "addressRequired": "Saisissez votre adresse.",
+    "addressMax": "L’adresse ne peut pas dépasser {{max}} caractères."
+  },
+  "adminNav": {
+    "sections": "Sections d’administration",
+    "overview": "Vue d’ensemble",
+    "farmers": "Producteurs",
+    "customers": "Clients",
+    "markets": "Marchés",
+    "moderation": "Modération",
+    "orders": "Commandes",
+    "revenue": "Revenus",
+    "reports": "Rapports",
+    "categories": "Catégories",
+    "announcements": "Annonces",
+    "feedback": "Retours",
+    "pricing": "Tarifs",
+    "settings": "Paramètres"
+  },
+  "carousel": {
+    "roleCarousel": "carrousel",
+    "roleSlide": "diapositive",
+    "slideOf": "{{n}} sur {{total}} : {{topic}}",
+    "previous": "Diapositive précédente",
+    "next": "Diapositive suivante",
+    "show": "Afficher la diapositive {{n}} : {{topic}}",
+    "pause": "Mettre le diaporama en pause",
+    "play": "Lancer le diaporama"
+  },
+  "geo": {
+    "denied": "Vous avez désactivé la localisation pour ce site. Modifiez-la dans les paramètres du site de votre navigateur, ou utilisez une adresse.",
+    "insecure": "Votre navigateur ne partage votre position que sur une connexion sécurisée (https).",
+    "failed": "Votre appareil n’a pas pu déterminer votre position. Réessayez, ou saisissez une adresse.",
+    "finding": "Localisation…"
+  },
+  "directions": {
+    "title": "Itinéraire vers {{name}}",
+    "question": "D’où partez-vous ?",
+    "current": "Ma position actuelle",
+    "currentShared": "Déjà partagée",
+    "currentAsk": "Votre navigateur vous le demandera d’abord",
+    "address": "Une adresse",
+    "addressNote": "Une rue ou un repère à Hô-Chi-Minh-Ville.",
+    "addressLabel": "Adresse de départ",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "La rue et l’arrondissement donnent les meilleurs résultats. Les numéros manquent souvent sur la carte, et OpenStreetMap vous demandera de choisir un lieu s’il n’en trouve pas.",
+    "useSaved": "Utiliser mon adresse enregistrée",
+    "none": "Je la saisirai sur la carte",
+    "noneNote": "Ouvre OpenStreetMap avec seulement la destination renseignée.",
+    "privacy": "L’itinéraire s’ouvre sur openstreetmap.org dans un nouvel onglet. MarketLink ne suit pas votre position.",
+    "open": "Ouvrir l’itinéraire"
+  }
+}

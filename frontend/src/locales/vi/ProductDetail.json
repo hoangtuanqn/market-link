@@ -1,0 +1,84 @@
+{
+  "notFound": {
+    "title": "Sản phẩm này không còn bán nữa",
+    "text": "Có thể sạp đã gỡ xuống. Hãy xem họ còn gì khác trong tuần này.",
+    "browse": "Xem sản phẩm"
+  },
+  "breadcrumb": "Sản phẩm",
+  "photo": "Ảnh {{name}}",
+  "favorite": {
+    "add": "Thêm vào yêu thích: {{name}}",
+    "remove": "Bỏ khỏi yêu thích: {{name}}"
+  },
+  "soldPer": "bán theo {{unit}}",
+  "left": "còn <b>{{qty}}</b> trong tuần này",
+  "stockUpdated": "Tồn kho cập nhật hôm nay, trước các đơn cuối tuần này.",
+  "notifyMe": "Báo cho tôi khi có lại",
+  "added": {
+    "title": "Đã thêm vào giỏ",
+    "text": "Đã thêm {{qty}} {{name}} vào giỏ hàng."
+  },
+  "addToCart": "Thêm vào giỏ",
+  "payNote": "Hàng được giữ cho bạn khi bạn đặt đơn. Bạn trả {{price}} tại sạp khi nhận hàng.",
+  "fromStall": "Từ sạp",
+  "sellingSince": "bán ở đây từ {{date}}",
+  "stats": {
+    "reviews_one": "{{count}} đánh giá",
+    "reviews_other": "{{count}} đánh giá",
+    "markets_one": "chợ",
+    "markets_other": "chợ",
+    "hours_one": "{{count}} giờ",
+    "hours_other": "{{count}} giờ",
+    "cutoff": "chốt đơn trước"
+  },
+  "seeStall": "Xem sạp",
+  "messageStall": "Nhắn tin cho sạp",
+  "details": {
+    "title": "Chi tiết sản phẩm",
+    "soldPer": "Bán theo",
+    "category": "Loại",
+    "stall": "Sạp",
+    "market": "Chợ"
+  },
+  "collect": {
+    "title": "Nhận hàng ở đâu và khi nào",
+    "map": "Xem trên bản đồ",
+    "note": "Mỗi khung giờ nhận tối đa 5 đơn. Khung đã đủ sẽ bị khoá, và sạp ngừng nhận thay đổi trước giờ chốt ở trên."
+  },
+  "table": {
+    "market": "Chợ",
+    "stallCode": "Sạp {{code}}",
+    "days": "Ngày",
+    "window": "Khung giờ nhận",
+    "cutoff": "Chốt đơn",
+    "cutoffValue_one": "{{count}} giờ trước khung giờ của bạn",
+    "cutoffValue_other": "{{count}} giờ trước khung giờ của bạn",
+    "product": "Sản phẩm",
+    "price": "Giá",
+    "perUnit": "mỗi {{unit}}",
+    "left": "Còn lại"
+  },
+  "directions": "Chỉ đường",
+  "reviews": {
+    "title": "Đánh giá sản phẩm này",
+    "write": "Viết đánh giá",
+    "writeNote": "Mở khi một đơn có sản phẩm này đã hoàn tất.",
+    "summary_one": "{{count}} đánh giá, tất cả từ đơn đã hoàn tất",
+    "summary_other": "{{count}} đánh giá, tất cả từ đơn đã hoàn tất"
+  },
+  "similar": {
+    "title": "{{name}} ở các sạp khác cuối tuần này",
+    "note": "Cùng loại rau, khác vườn và khác giá",
+    "here": "Bạn đang xem",
+    "view": "Xem"
+  },
+  "also": {
+    "title": "Còn có ở {{stall}} tuần này"
+  },
+  "report": {
+    "sentTitle": "Đã gửi báo cáo",
+    "sentText": "Quản trị viên sẽ xem xét tin đăng này.",
+    "button": "Báo cáo tin đăng này",
+    "note": "Sai giá, sai ảnh hoặc thứ không nên có ở chợ nông sản."
+  }
+}

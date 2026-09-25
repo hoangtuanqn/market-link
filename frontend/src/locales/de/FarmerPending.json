@@ -1,0 +1,41 @@
+{
+  "overline": {
+    "suspended": "{{stall}} · gesperrt am {{date}}",
+    "registered": "{{stall}} · registriert am {{date}}"
+  },
+  "title": {
+    "pending": "Ihr Stand wartet auf Freigabe",
+    "suspended": "Ihr Stand ist gesperrt"
+  },
+  "previewToggle": "Vorschau: gesperrter Stand",
+  "reviewing": {
+    "title": "Ein Admin prüft Ihre Registrierung.",
+    "text": "Sie erhalten eine Benachrichtigung und eine E-Mail, sobald er freigegeben ist. Bis dahin sind Ihr Stand und Ihre Produkte für Kunden nicht sichtbar."
+  },
+  "now": {
+    "title": "Was Sie jetzt tun können",
+    "details": "Füllen Sie die <link>Standangaben</link> aus: die Märkte, auf denen Sie verkaufen, Ihre Tage und Abholzeitfenster.",
+    "pin": "Markieren Sie Ihren Stand auf der Karte, damit Kunden Sie ab dem ersten Tag finden.",
+    "products": "Produkte können Sie hinzufügen, sobald der Stand freigegeben ist. Bereiten Sie bis dahin Namen, Preise und Fotos vor."
+  },
+  "details": {
+    "title": "Registrierungsdaten",
+    "stall": "Stand",
+    "contact": "Kontakt",
+    "email": "E-Mail",
+    "market": "Gewünschter Markt"
+  },
+  "suspended": {
+    "title": "Ihr Stand wurde am {{date}} gesperrt.",
+    "text": "Begründung des Admins: {{reason}} Ihre Produkte sind ausgeblendet und Sie können keine neuen Bestellungen annehmen."
+  },
+  "running": {
+    "title": "Bereits aufgegebene Bestellungen laufen weiter",
+    "text": "Kunden, die vor der Sperre bestellt haben, behalten ihre Bestellungen (D-09). Markieren Sie sie wie gewohnt als bereit und abgeschlossen, damit niemand verliert, was er reserviert hat.",
+    "link": "Aktuelle Bestellungen öffnen"
+  },
+  "reinstate": {
+    "title": "Zur Wiederfreigabe",
+    "text": "Kontaktieren Sie das Team über <link>Kontakt</link>."
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "notFound": {
+    "title": "Produk itu sudah tidak dijual",
+    "text": "Lapak mungkin sudah menurunkannya. Lihat apa lagi yang mereka jual minggu ini.",
+    "browse": "Lihat produk"
+  },
+  "breadcrumb": "Produk",
+  "photo": "Foto {{name}}",
+  "favorite": {
+    "add": "Tambahkan ke favorit: {{name}}",
+    "remove": "Hapus dari favorit: {{name}}"
+  },
+  "soldPer": "dijual per {{unit}}",
+  "left": "Sisa <b>{{qty}}</b> minggu ini",
+  "stockUpdated": "Stok diperbarui hari ini, sebelum pesanan akhir pekan ini.",
+  "notifyMe": "Kabari saat tersedia lagi",
+  "added": {
+    "title": "Ditambahkan ke keranjang",
+    "text": "{{qty}} {{name}} ditambahkan ke keranjang Anda."
+  },
+  "addToCart": "Tambah ke keranjang",
+  "payNote": "Stok disisihkan untuk Anda saat memesan. Anda membayar {{price}} di lapak saat pengambilan.",
+  "fromStall": "Dari lapak",
+  "sellingSince": "berjualan di sini sejak {{date}}",
+  "stats": {
+    "reviews_one": "{{count}} ulasan",
+    "reviews_other": "{{count}} ulasan",
+    "markets_one": "pasar",
+    "markets_other": "pasar",
+    "hours_one": "{{count}} jam",
+    "hours_other": "{{count}} jam",
+    "cutoff": "batas pesanan"
+  },
+  "seeStall": "Lihat lapak",
+  "messageStall": "Kirim pesan ke lapak",
+  "details": {
+    "title": "Detail produk",
+    "soldPer": "Dijual per",
+    "category": "Kategori",
+    "stall": "Lapak",
+    "market": "Pasar"
+  },
+  "collect": {
+    "title": "Di mana dan kapan mengambil",
+    "map": "Lihat di peta",
+    "note": "Setiap slot menampung 5 pesanan. Slot yang penuh dikunci, dan lapak berhenti menerima perubahan sebelum batas waktu di atas."
+  },
+  "table": {
+    "market": "Pasar",
+    "stallCode": "Lapak {{code}}",
+    "days": "Hari",
+    "window": "Jam pengambilan",
+    "cutoff": "Batas pesanan",
+    "cutoffValue_one": "{{count}} jam sebelum slot Anda",
+    "cutoffValue_other": "{{count}} jam sebelum slot Anda",
+    "product": "Produk",
+    "price": "Harga",
+    "perUnit": "per {{unit}}",
+    "left": "Sisa"
+  },
+  "directions": "Petunjuk arah",
+  "reviews": {
+    "title": "Ulasan produk ini",
+    "write": "Tulis ulasan",
+    "writeNote": "Tersedia setelah pesanan dengan produk ini selesai.",
+    "summary_one": "{{count}} ulasan, semuanya dari pesanan yang selesai",
+    "summary_other": "{{count}} ulasan, semuanya dari pesanan yang selesai"
+  },
+  "similar": {
+    "title": "{{name}} di lapak lain akhir pekan ini",
+    "note": "Sayur yang sama, kebun dan harga berbeda",
+    "here": "Anda di sini",
+    "view": "Lihat"
+  },
+  "also": {
+    "title": "Juga dari {{stall}} minggu ini"
+  },
+  "report": {
+    "sentTitle": "Laporan terkirim",
+    "sentText": "Admin akan memeriksa produk ini.",
+    "button": "Laporkan produk ini",
+    "note": "Harga salah, foto salah, atau sesuatu yang tidak pantas ada di pasar petani."
+  }
+}

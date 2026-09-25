@@ -1,0 +1,140 @@
+{
+  "breadcrumbAccount": "Konto",
+  "breadcrumb": "Verkauf beantragen",
+  "since": "{{name}} · Kunde seit {{date}}",
+  "title": "Verkaufen Sie, was Sie anbauen",
+  "intro": "Wenn Sie Lebensmittel anbauen, kann Ihr Konto zu einem Stand auf einem der vier Märkte werden. Sie behalten alles, was Sie jetzt haben, und kaufen weiter bei anderen Ständen ein.",
+  "next": {
+    "title": "Was nach dem Absenden passiert",
+    "read": "Ein Admin liest den Antrag und sieht sich Ihre Fotos an, meist innerhalb weniger Markttage.",
+    "panel": "Nach der Freigabe erscheint in Ihrem Konto ein Standbereich für Bestand, Bestellungen und Abholzeiten.",
+    "setup": "Dort legen Sie Märkte, Tage und Abholfenster fest und stellen Ihre ersten Produkte ein."
+  },
+  "step1": {
+    "title": "Ihr Stand",
+    "stallName": "Name des Stands",
+    "stallNamePlaceholder": "z. B. Gemüse der Familie Khang",
+    "stallNameHint": "Kunden sehen ihn auf der Karte und auf ihren Bestellungen.",
+    "person": "Ansprechperson",
+    "phone": "Telefon",
+    "phoneHint": "Steht auf jeder Bestellung, damit Kunden Sie erreichen.",
+    "email": "E-Mail",
+    "emailHint": "Ihre Anmeldung bleibt gleich.",
+    "about": "Über den Stand",
+    "aboutPlaceholder": "Ein oder zwei Sätze. Wer baut es an und wo."
+  },
+  "step2": {
+    "title": "Was Sie anbauen",
+    "categories": "Kategorien",
+    "crops": "Hauptkulturen",
+    "cropsPlaceholder": "Wasserspinat, Choy Sum, Thai-Basilikum",
+    "cropsHint": "Mit Kommas trennen. Echte Produkte mit Preisen stellen Sie nach der Freigabe ein.",
+    "volume": "Ungefähre Menge pro Woche",
+    "volumePlaceholder": "Etwa 120 Bund",
+    "volumeHint": "Eine grobe Zahl. Sie hilft dem Admin, Ihnen einen Markt mit Platz zuzuordnen.",
+    "method": "Wie Sie anbauen",
+    "methodPlaceholder": "z. B. Keine Pestizide in den letzten zwei Saisons.",
+    "methodHint": "Optional und auf Ihrer Standseite in Ihren eigenen Worten zu sehen. MarketLink prüft oder zertifiziert nichts davon."
+  },
+  "step3": {
+    "title": "Wo Sie anbauen",
+    "plot": "Adresse der Fläche",
+    "plotPlaceholder": "Weiler, Bezirk, Kreis",
+    "plotHint": "Nur der Admin sieht das. Kunden sehen Ihren Stand auf dem Markt, nicht Ihre Fläche.",
+    "size": "Größe der Fläche",
+    "sizePlaceholder": "5.000 m²",
+    "since": "Anbau hier seit",
+    "pin": "Fläche markieren",
+    "map": "Markieren Sie Ihre Fläche auf der Karte",
+    "pinHint": "Ziehen Sie die Markierung auf Ihre Fläche. So sieht der Admin am schnellsten, dass die Fotos zum Ort passen.",
+    "yourPlot": "Ihr Grundstück"
+  },
+  "step4": {
+    "title": "Fotos der Fläche",
+    "intro": "Zwei Fotos genügen, höchstens fünf. Eine Totale, die die ganze Fläche zeigt, und eine Nahaufnahme dessen, was gerade wächst. Aufgenommen in den letzten 30 Tagen und ohne Filter.",
+    "shots": {
+      "wide": "Totale der Fläche",
+      "growing": "Was gerade wächst",
+      "other": "Sonstiges"
+    },
+    "required": "Erforderlich",
+    "optional": "Optional",
+    "addPhoto": "Foto hinzufügen",
+    "video": "Ein kurzes Video",
+    "addVideo": "Video hinzufügen, bis 60 Sekunden",
+    "videoHint": "Optional. Ein langsamer Gang an den Beeten entlang sagt mehr als jedes Foto und beschleunigt die Freigabe.",
+    "banner": {
+      "title": "Der Admin prüft nur eines: dass es die Fläche gibt und dort wächst, was Sie angegeben haben.",
+      "text": "MarketLink prüft keine Lizenzen, Lebensmittelsicherheit oder Bio-Angaben, und ein Foto ist kein Zertifikat."
+    }
+  },
+  "step5": {
+    "title": "Wo Sie verkaufen möchten",
+    "market": "Markt",
+    "hint": "Wählen Sie zunächst einen. Tage, Abholfenster und Bestellschluss legen Sie nach der Freigabe im Standbereich fest, und weitere Märkte können Sie später hinzufügen."
+  },
+  "step6": {
+    "title": "Vor dem Absenden",
+    "true": "Alle Angaben sind wahr, und die Fotos zeigen meine eigene Fläche",
+    "trueHint": "Ein Antrag mit fremden Fotos wird abgelehnt, und das Konto kann gesperrt werden.",
+    "present": "Ich bin während meines Abholfensters am Stand",
+    "presentHint": "Wiederholtes Nichterscheinen ist der häufigste Grund für die Sperrung eines Stands.",
+    "pay": "Mir ist klar, dass Kunden mich am Stand bezahlen",
+    "payHint": "MarketLink hat weder Online-Zahlung noch Lieferung.",
+    "send": "Antrag absenden",
+    "later": "Speichern und später fertigstellen"
+  },
+  "preview": "Vorschau: nach dem Absenden",
+  "sent": {
+    "eyebrow": "Gerade gesendet",
+    "title": "Ihr Antrag liegt bei einem Admin",
+    "intro": "In der Zwischenzeit ändert sich für Sie nichts. Kaufen Sie weiter ein und achten Sie auf Ihre Benachrichtigungen.",
+    "banner": {
+      "title": "Während der Prüfung können Sie weiter bei anderen Ständen kaufen.",
+      "text": "Ihre Bestellungen, Favoriten und Ihr Warenkorb bleiben unverändert. Der Standbereich erscheint erst nach der Freigabe durch einen Admin."
+    },
+    "summary": "Was Sie gesendet haben",
+    "stall": "Stand",
+    "grows": "Baut an",
+    "plot": "Fläche",
+    "plotText": "{{size}} in {{place}}, Anbau seit {{since}}",
+    "evidence": "Nachweise",
+    "photos_one": "{{count}} Foto",
+    "photos_other": "{{count}} Fotos",
+    "photosAndVideo_one": "{{count}} Foto und ein Video",
+    "photosAndVideo_other": "{{count}} Fotos und ein Video",
+    "market": "Markt",
+    "keepShopping": "Weiter einkaufen",
+    "withdraw": "Antrag zurückziehen",
+    "progress": "Fortschritt"
+  },
+  "timeline": {
+    "placed": {
+      "title": "Antrag gesendet",
+      "note": "Gerade eben",
+      "by": "Sie"
+    },
+    "accepted": {
+      "title": "Ein Admin liest ihn",
+      "note": "Meist innerhalb weniger Markttage",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "Standbereich wird geöffnet",
+      "note": "Nach der Freigabe",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "missingTitle": "Fehlende Häkchen",
+    "missing": "Setzen Sie vor dem Absenden die drei Häkchen am Ende.",
+    "sentTitle": "Antrag gesendet",
+    "sent": "Die Antwort eines Admins erhalten Sie in Ihren Benachrichtigungen.",
+    "withdrawnTitle": "Antrag zurückgezogen",
+    "withdrawn": "Sie können jederzeit erneut einen Antrag stellen.",
+    "photoTitle": "Foto hinzufügen",
+    "photo": "Wählen Sie ein Foto von Ihrem Handy oder Computer.",
+    "videoTitle": "Video hinzufügen",
+    "video": "Wählen Sie ein Video bis 60 Sekunden."
+  }
+}

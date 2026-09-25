@@ -1,0 +1,39 @@
+{
+  "notFound": {
+    "title": "Pasar itu sudah tidak ada di sini",
+    "browse": "Lihat pasar"
+  },
+  "intro_one": "{{count}} lapak. Setiap lapak menutup pesanannya sendiri 12 sampai 24 jam sebelum pengambilan. Ambil di lapak dan bayar langsung ke petani.",
+  "intro_other": "{{count}} lapak. Setiap lapak menutup pesanannya sendiri 12 sampai 24 jam sebelum pengambilan. Ambil di lapak dan bayar langsung ke petani.",
+  "toast": {
+    "saved": "{{name}} disimpan.",
+    "removed": "{{name}} dihapus dari favorit."
+  },
+  "save": {
+    "on": "Pasar disimpan",
+    "off": "Simpan pasar"
+  },
+  "directions": "Petunjuk arah",
+  "search": {
+    "scope": "Cari di",
+    "scopes": {
+      "product": "Produk di pasar ini",
+      "farmer": "Lapak di pasar ini"
+    },
+    "keyword": "Kata kunci",
+    "placeholder": "Kangkung, roti sourdough, telur…",
+    "submit": "Cari"
+  },
+  "day": "Hari pasar",
+  "all": "Semua",
+  "inStock": "Tersedia",
+  "available": "Tersedia hari {{day}}",
+  "productsFrom": "{{products}} dari {{stalls}}",
+  "products_one": "{{count}} produk",
+  "products_other": "{{count}} produk",
+  "stalls_one": "{{count}} lapak",
+  "stalls_other": "{{count}} lapak",
+  "mapLabel": "Peta {{name}} dan lapaknya",
+  "stallsTitle": "Lapak di pasar ini hari {{day}}",
+  "stallsNote": "Lapak yang tidak berjualan pada hari yang dipilih tidak ditampilkan"
+}

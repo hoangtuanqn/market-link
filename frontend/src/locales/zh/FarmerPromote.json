@@ -1,0 +1,109 @@
+{
+  "title": "推广与商品展示",
+  "intro": "上架和销售都是免费的。付费只会让商品在页面上排得更靠前，或让你一天内上架超过免费额度。",
+  "credit": "余额 {{amount}}",
+  "action": {
+    "topUp": "充值",
+    "extend": "延长",
+    "buy": "购买"
+  },
+  "toast": {
+    "topUpTitle": "已申请充值",
+    "topUpText": "充值需与 MarketLink 团队约定，之后会记入这里。",
+    "pinnedTitle": "已置顶",
+    "pinnedText": "已置顶。几分钟内生效，你可以随时停止。",
+    "extendedTitle": "已延长",
+    "extendedText_one": "已延长 {{count}} 天，费用 {{price}}。",
+    "extendedText_other": "已延长 {{count}} 天，费用 {{price}}。",
+    "bundleTitle": "已添加套餐",
+    "bundleText": "已添加 {{name}}。团队确认付款后会记入这里。",
+    "addedTitle": "已添加",
+    "addedText": "已记入你的余额。"
+  },
+  "srs": {
+    "title": "向农户收费不在 SRS 中。",
+    "text": "SRS 排除了支付网关，因此这里的余额需与团队约定并由管理员录入。必须先有新需求，并决定实际如何收款。"
+  },
+  "listings": {
+    "title": "今日上架",
+    "text": "额度在午夜重置。编辑已上架的商品始终免费。"
+  },
+  "bumps": {
+    "title": "本月刷新",
+    "text": "刷新会让商品当天回到所在分类的顶部，不会改变价格或库存。"
+  },
+  "meter": {
+    "left": {
+      "listings_one": "/ {{count}} 条免费上架剩余",
+      "listings_other": "/ {{count}} 条免费上架剩余",
+      "bumps_one": "/ {{count}} 次免费刷新剩余",
+      "bumps_other": "/ {{count}} 次免费刷新剩余"
+    },
+    "used": "已用 {{used}}",
+    "low": "即将用完"
+  },
+  "pinned": {
+    "title": "当前置顶",
+    "hint": "置顶商品会排在其他商品上方，并标记为“推广”"
+  },
+  "pinSection": {
+    "title": "置顶商品",
+    "note": "名额有意限制：集市页三个，首页两个。名额满后你会进入候补名单，而不是和别人竞价。"
+  },
+  "pin": {
+    "market": {
+      "name": "单个集市页顶部",
+      "note": "浏览该集市的所有人都能看到"
+    },
+    "home": {
+      "name": "首页，全部四个集市",
+      "note": "MarketLink 上最稀缺的位置"
+    },
+    "slots_one": "{{count}} 个名额",
+    "slots_other": "{{count}} 个名额",
+    "product": "选择商品",
+    "duration": "时长",
+    "days_one": "{{count}} 天",
+    "days_other": "{{count}} 天",
+    "cta": "以 {{price}} 置顶"
+  },
+  "bundles": {
+    "title": "套餐",
+    "intro": "比单次购买更便宜，有效期 {{days}} 天。",
+    "choose": "选择{{name}}"
+  },
+  "bundle": {
+    "starter": "入门套餐",
+    "market": "集市套餐",
+    "season": "季节套餐"
+  },
+  "bundleLine": {
+    "listings_one": "超出每日上限 {{count}} 条上架",
+    "listings_other": "超出每日上限 {{count}} 条上架",
+    "bumps_one": "额外 {{count}} 次刷新",
+    "bumps_other": "额外 {{count}} 次刷新",
+    "pinDays_one": "集市页置顶 {{count}} 天",
+    "pinDays_other": "集市页置顶 {{count}} 天",
+    "runs_one": "有效期 {{count}} 天",
+    "runs_other": "有效期 {{count}} 天",
+    "noLimit": "每日上架不限量",
+    "bumpsTotal_one": "{{count}} 次刷新",
+    "bumpsTotal_other": "{{count}} 次刷新"
+  },
+  "extrasSection": {
+    "title": "单次购买"
+  },
+  "extras": {
+    "listing": "超出每日五条后的一条上架",
+    "bump": "超出每月十次后的一次刷新"
+  },
+  "col": {
+    "product": "商品",
+    "until": "有效期至",
+    "views": "置顶期间浏览量",
+    "added": "加入购物车",
+    "paid": "已付",
+    "what": "项目",
+    "price": "价格"
+  }
+}

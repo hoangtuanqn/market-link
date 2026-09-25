@@ -1,0 +1,32 @@
+{
+  "title": "Bản đồ chợ",
+  "intro": "Tất cả các chợ và những sạp nhận đặt trước vào ngày bạn chọn. Chạm vào ghim để xem giờ mở cửa, khung giờ nhận hàng và chỉ đường.",
+  "marketDay": "Ngày họp chợ",
+  "filter": {
+    "markets": "Chợ",
+    "stalls": "Sạp",
+    "saved": "Chỉ mục đã lưu"
+  },
+  "legend": {
+    "market": "Hình vuông: chợ",
+    "stall": "Hình tròn: sạp",
+    "selected": "Vòng viền: đang chọn"
+  },
+  "mapLabel": "Bản đồ tất cả chợ và sạp",
+  "directions": "Chỉ đường mở trong OpenStreetMap ở tab mới.",
+  "openOn": "Mở cửa vào {{day}}",
+  "empty": {
+    "title": "Không có chợ nào",
+    "text": "Không có chợ nào khớp với ngày bạn chọn. Hãy chọn ngày khác hoặc bỏ bộ lọc."
+  },
+  "popup": {
+    "stalls_one": "{{count}} sạp",
+    "stalls_other": "{{count}} sạp",
+    "pickup": "{{days}} · nhận hàng {{pickup}}"
+  },
+  "bothOff": {
+    "title": "Không có gì để hiện trên bản đồ",
+    "text": "Cả hai lớp đang tắt. Bật lại chợ hoặc sạp để xem các ghim.",
+    "action": "Hiện cả hai"
+  }
+}

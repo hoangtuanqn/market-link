@@ -1,7 +1,8 @@
 import L from 'leaflet';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import '@/styles/leaflet-theme.css';
-import { CITY, MAX_ZOOM, TILE_ATTRIBUTION, TILE_URL } from '@/config/map';
+import { CITY, MAX_ZOOM, TILE_URL, tileAttribution } from '@/config/map';
 import Helper from '@/utils/helper';
 
 const pinHtml = (kind: 'market' | 'stall', label: string, text: string, selected?: boolean) =>
@@ -18,7 +19,7 @@ type LocationPickerProps = {
   /** Longitude of the pin being placed. */
   lng: number;
   onMove: (lat: number, lng: number) => void;
-  /** Name under the draggable pin. */
+  /** Name under the draggable pin; defaults to "Your stall" in the reader's language. */
   pinLabel?: string;
   /** The market this pin sits in, drawn as a fixed square pin for context. Omit for a plain picker. */
   market?: { lat: number; lng: number; name: string };
@@ -34,9 +35,12 @@ const LocationPicker = ({
   lat,
   lng,
   onMove,
-  pinLabel = 'Your stall',
+  pinLabel: pinLabelProp,
   market,
 }: LocationPickerProps) => {
+  const { t } = useTranslation();
+  const pinLabel = pinLabelProp ?? t('map.yourStall');
+  const attribution = tileAttribution(t);
   const hostRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<L.Marker | null>(null);
   const onMoveRef = useRef(onMove);
@@ -55,7 +59,7 @@ const LocationPicker = ({
     const inner = document.createElement('div');
     host.appendChild(inner);
     const map = L.map(inner, { zoomControl: true, attributionControl: true, scrollWheelZoom: false });
-    L.tileLayer(TILE_URL, { maxZoom: MAX_ZOOM, attribution: TILE_ATTRIBUTION }).addTo(map);
+    L.tileLayer(TILE_URL, { maxZoom: MAX_ZOOM, attribution }).addTo(map);
     // Centre on the market when there is one, otherwise on the pin itself; the city is the last resort.
     if (marketLat != null && marketLng != null) map.setView([marketLat, marketLng], 17);
     else map.setView(Number.isFinite(lat) && Number.isFinite(lng) ? [lat, lng] : CITY, 15);
@@ -96,9 +100,9 @@ const LocationPicker = ({
       inner.remove();
       pinRef.current = null;
     };
-    // Only a change of market rebuilds the map; pin moves are applied to the existing marker below.
+    // Only a change of market (or of language) rebuilds the map; pin moves are applied to the existing marker below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [marketLat, marketLng, marketName, pinLabel]);
+  }, [marketLat, marketLng, marketName, pinLabel, attribution]);
 
   // Keeps the pin in sync when the coordinates change from outside a drag (typing lat/lng, "use the market's location").
   useEffect(() => {

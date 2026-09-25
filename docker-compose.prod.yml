@@ -38,7 +38,9 @@ services:
       SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
     ports: !override
       - "${BACKEND_PORT:-8080}:8080"
-    volumes: !reset []
+    # Không mount source; chỉ giữ ảnh người dùng tải lên (project prod → volume riêng với dev)
+    volumes: !override
+      - uploads-data:/app/uploads
 
   frontend:
     container_name: marketlink-prod-frontend

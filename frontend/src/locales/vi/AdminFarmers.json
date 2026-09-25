@@ -1,0 +1,79 @@
+{
+  "title": "Nhà vườn",
+  "intro": "Duyệt đơn đăng ký trước khi sạp được đăng sản phẩm. Phần lớn đơn đến từ những tài khoản đã mua sắm ở đây, nên mỗi đơn kèm lịch sử mua hàng của người đăng ký bên cạnh ảnh của họ. Tạm ngưng một sạp để ẩn sản phẩm và dừng nhận đơn mới; các đơn đang chạy vẫn hoàn tất như bình thường.",
+  "search": {
+    "label": "Tìm nhà vườn",
+    "placeholder": "Sạp, người liên hệ, số điện thoại",
+    "submit": "Tìm"
+  },
+  "tabsLabel": "Nhà vườn theo trạng thái",
+  "status": {
+    "pending": "Chờ duyệt",
+    "approved": "Đã duyệt",
+    "suspended": "Tạm ngưng",
+    "rejected": "Đã từ chối"
+  },
+  "empty": {
+    "pending": {
+      "title": "Không có đơn đăng ký nào đang chờ",
+      "text": "Đơn đăng ký nhà vườn mới sẽ đến đây để xét duyệt trước khi họ được đăng sản phẩm."
+    },
+    "approved": {
+      "title": "Chưa có sạp nào được duyệt",
+      "text": "Duyệt một đơn đăng ký và sạp sẽ hiện ở đây, khách hàng nhìn thấy được."
+    },
+    "suspended": {
+      "title": "Không có sạp nào bị tạm ngưng",
+      "text": "Sạp bị tạm ngưng sẽ ẩn với khách hàng nhưng vẫn hoàn tất các đơn đã có."
+    },
+    "rejected": {
+      "title": "Không có đơn đăng ký nào bị từ chối",
+      "text": "Nhà vườn bị từ chối vẫn giữ tài khoản và có thể được cho biết lý do."
+    }
+  },
+  "col": {
+    "stall": "Sạp",
+    "markets": "Chợ",
+    "registered": "Ngày đăng ký",
+    "products": "Sản phẩm",
+    "rating": "Đánh giá"
+  },
+  "reviews_one": "{{count}} đánh giá",
+  "reviews_other": "{{count}} đánh giá",
+  "action": {
+    "approve": "Duyệt",
+    "reject": "Từ chối",
+    "view": "Xem",
+    "suspend": "Tạm ngưng",
+    "reinstate": "Khôi phục"
+  },
+  "notYet": "Để sau",
+  "approve": {
+    "title": "Duyệt {{stall}}?",
+    "text": "Sạp sẽ hiện với khách hàng và có thể đăng sản phẩm ngay. Nhà vườn sẽ được thông báo.",
+    "confirm": "Duyệt sạp"
+  },
+  "reject": {
+    "title": "Từ chối {{stall}}?",
+    "text": "Nhà vườn vẫn đăng nhập được nhưng không thể đăng sản phẩm.",
+    "reason": "Lý do nhà vườn sẽ thấy",
+    "confirm": "Từ chối đơn đăng ký"
+  },
+  "reason": {
+    "mismatch": "Thông tin không khớp với sạp",
+    "full": "Chợ đã đủ sạp",
+    "unreachable": "Không liên lạc được số điện thoại",
+    "other": "Khác"
+  },
+  "suspend": {
+    "title": "Tạm ngưng {{stall}}?",
+    "text": "Mọi sản phẩm bị ẩn và không nhận đơn mới. Các đơn đã đặt vẫn tiếp tục để khách không mất những gì họ đã đặt.",
+    "confirm": "Tạm ngưng sạp"
+  },
+  "toast": {
+    "approved": "Đã duyệt {{stall}}. Sạp có thể đăng sản phẩm ngay bây giờ.",
+    "rejected": "Đã từ chối {{stall}}. Họ vẫn giữ tài khoản.",
+    "suspended": "Đã tạm ngưng {{stall}}. Các đơn đang chạy vẫn hoàn tất như bình thường.",
+    "reinstated": "Đã khôi phục {{stall}}. Sản phẩm hiển thị trở lại."
+  }
+}

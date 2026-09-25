@@ -1,0 +1,44 @@
+{
+  "markets_one": "{{count}} chợ",
+  "markets_other": "{{count}} chợ",
+  "stallsSelling_one": "{{count}} sạp đang bán",
+  "stallsSelling_other": "{{count}} sạp đang bán",
+  "title": "Sản phẩm",
+  "intro": "Mọi thứ các sạp đã đăng cho tuần này. Lọc theo loại, giá, chợ và ngày, rồi thêm vào giỏ hàng.",
+  "filters": {
+    "title": "Bộ lọc",
+    "clearAll": "Xoá tất cả",
+    "day": "Ngày họp chợ",
+    "category": "Loại",
+    "price": "Giá mỗi đơn vị",
+    "market": "Chợ",
+    "allMarkets": "Mọi chợ",
+    "inStock": "Chỉ hàng còn",
+    "inStockNote": "Ẩn sản phẩm đã hết hoặc tạm ngừng bán"
+  },
+  "price": {
+    "any": "Mọi mức giá",
+    "low": "Dưới {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Trên {{high}}"
+  },
+  "summary_one": "<b>{{count}} sản phẩm</b> phù hợp vào {{day}}",
+  "summary_other": "<b>{{count}} sản phẩm</b> phù hợp vào {{day}}",
+  "sort": "Sắp xếp",
+  "sorts": {
+    "newest": "Mới nhất",
+    "priceAsc": "Giá thấp đến cao",
+    "priceDesc": "Giá cao đến thấp",
+    "rating": "Đánh giá cao nhất"
+  },
+  "pager": {
+    "showing": "Đang hiện {{from}}–{{to}} trong {{total}}",
+    "onePage_one": "{{count}} sản phẩm trên một trang",
+    "onePage_other": "Cả {{count}} sản phẩm trên một trang"
+  },
+  "empty": {
+    "title": "Không có gì khớp với bộ lọc này",
+    "text": "Thử bỏ bộ lọc giá, hoặc mở rộng sang loại hay chợ khác.",
+    "clear": "Xoá mọi bộ lọc"
+  }
+}

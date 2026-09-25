@@ -1,0 +1,109 @@
+{
+  "title": "Werbung & Einträge",
+  "intro": "Einstellen und Verkaufen sind kostenlos. Bezahlen schiebt ein Produkt nur weiter nach oben auf einer Seite oder erlaubt mehr Einträge pro Tag als das Gratiskontingent.",
+  "credit": "Guthaben {{amount}}",
+  "action": {
+    "topUp": "Guthaben aufladen",
+    "extend": "Verlängern",
+    "buy": "Kaufen"
+  },
+  "toast": {
+    "topUpTitle": "Aufladung angefragt",
+    "topUpText": "Die Aufladung wird mit dem MarketLink-Team vereinbart und dann hier gutgeschrieben.",
+    "pinnedTitle": "Angeheftet",
+    "pinnedText": "Angeheftet. Es ist in wenigen Minuten sichtbar und Sie können es jederzeit beenden.",
+    "extendedTitle": "Verlängert",
+    "extendedText_one": "Um {{count}} Tag für {{price}} verlängert.",
+    "extendedText_other": "Um {{count}} Tage für {{price}} verlängert.",
+    "bundleTitle": "Paket hinzugefügt",
+    "bundleText": "{{name}} hinzugefügt. Das Team bestätigt die Zahlung und schreibt sie hier gut.",
+    "addedTitle": "Hinzugefügt",
+    "addedText": "Ihrem Guthaben hinzugefügt."
+  },
+  "srs": {
+    "title": "Gebühren für Farmer sind nicht im SRS.",
+    "text": "Das SRS schließt ein Zahlungsgateway aus, daher wird Guthaben mit dem Team vereinbart und von einem Admin eingetragen. Zuerst braucht es eine neue Anforderung und eine Entscheidung, wie Geld tatsächlich eingenommen wird."
+  },
+  "listings": {
+    "title": "Einträge heute",
+    "text": "Das Kontingent wird um Mitternacht zurückgesetzt. Ein bereits eingestelltes Produkt zu bearbeiten ist immer kostenlos."
+  },
+  "bumps": {
+    "title": "Hochschieben diesen Monat",
+    "text": "Hochschieben bringt ein Produkt für den Tag wieder an die Spitze seiner Kategorie. Preis und Bestand ändern sich nicht."
+  },
+  "meter": {
+    "left": {
+      "listings_one": "von {{count}} Gratis-Eintrag übrig",
+      "listings_other": "von {{count}} Gratis-Einträgen übrig",
+      "bumps_one": "von {{count}} Gratis-Hochschieben übrig",
+      "bumps_other": "von {{count}} Gratis-Hochschieben übrig"
+    },
+    "used": "{{used}} verbraucht",
+    "low": "fast aufgebraucht"
+  },
+  "pinned": {
+    "title": "Aktuell angeheftet",
+    "hint": "Ein angeheftetes Produkt steht über den anderen, markiert als Beworben"
+  },
+  "pinSection": {
+    "title": "Produkt anheften",
+    "note": "Die Plätze sind bewusst begrenzt: drei auf einer Marktseite, zwei auf der Startseite. Sind sie belegt, kommen Sie auf eine Warteliste, statt andere zu überbieten."
+  },
+  "pin": {
+    "market": {
+      "name": "Oben auf einer Marktseite",
+      "note": "Sichtbar für alle, die diesen Markt durchstöbern"
+    },
+    "home": {
+      "name": "Startseite, alle vier Märkte",
+      "note": "Der knappste Platz auf MarketLink"
+    },
+    "slots_one": "{{count}} Platz",
+    "slots_other": "{{count}} Plätze",
+    "product": "Welches Produkt",
+    "duration": "Wie lange",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage",
+    "cta": "Für {{price}} anheften"
+  },
+  "bundles": {
+    "title": "Pakete",
+    "intro": "Günstiger als einzeln und {{days}} Tage gültig.",
+    "choose": "{{name}} wählen"
+  },
+  "bundle": {
+    "starter": "Starter",
+    "market": "Markt",
+    "season": "Saison"
+  },
+  "bundleLine": {
+    "listings_one": "{{count}} Eintrag über dem Tageslimit",
+    "listings_other": "{{count}} Einträge über dem Tageslimit",
+    "bumps_one": "{{count}} zusätzliches Hochschieben",
+    "bumps_other": "{{count}} zusätzliche Hochschieben",
+    "pinDays_one": "{{count}} Tag angeheftet auf einer Marktseite",
+    "pinDays_other": "{{count}} Tage angeheftet auf einer Marktseite",
+    "runs_one": "{{count}} Tag gültig",
+    "runs_other": "{{count}} Tage gültig",
+    "noLimit": "Kein tägliches Eintragslimit",
+    "bumpsTotal_one": "{{count}} Hochschieben",
+    "bumpsTotal_other": "{{count}} Hochschieben"
+  },
+  "extrasSection": {
+    "title": "Einzeln"
+  },
+  "extras": {
+    "listing": "Ein Eintrag über die täglichen fünf hinaus",
+    "bump": "Ein Hochschieben über die monatlichen zehn hinaus"
+  },
+  "col": {
+    "product": "Produkt",
+    "until": "Läuft bis",
+    "views": "Aufrufe während angeheftet",
+    "added": "In einen Warenkorb gelegt",
+    "paid": "Bezahlt",
+    "what": "Was",
+    "price": "Preis"
+  }
+}

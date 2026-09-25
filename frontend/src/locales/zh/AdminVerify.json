@@ -1,0 +1,35 @@
+{
+  "overline": "管理后台 · 第 2 步，共 2 步",
+  "title": "输入验证器中的验证码",
+  "signedInAs": "当前登录账号：<b>{{email}}</b>。",
+  "notYou": "不是你？",
+  "error": {
+    "empty": "请先输入验证码。",
+    "sixDigits": "请输入验证器中的六位数字。",
+    "check": "无法验证代码，请重试。"
+  },
+  "alert": {
+    "recoveryOnce": "每个恢复码只能使用一次。",
+    "checkClock": "请检查手机时间是否正确。",
+    "locked": "错误次数过多。"
+  },
+  "toast": {
+    "signedIn": "已登录。"
+  },
+  "recovery": {
+    "label": "恢复码",
+    "hint": "开启此功能时保存的恢复码之一。每个只能使用一次。"
+  },
+  "code": {
+    "label": "六位验证码",
+    "hint": "验证码每 30 秒更换一次。当前验证码将在 {{seconds}} 秒后过期。"
+  },
+  "submit": "验证并登录",
+  "submitting": "正在验证…",
+  "locked": "此账户的登录已暂停。",
+  "backToSignIn": "返回登录",
+  "swap": {
+    "toCode": "改用六位验证码",
+    "toRecovery": "改用恢复码"
+  }
+}

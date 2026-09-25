@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import LocationPicker from '@/components/LocationPicker';
 import { CITY } from '@/config/map';
@@ -12,23 +13,21 @@ import { FormStep } from '@/components/ui/form-step';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import { categories } from '@/data/customer';
 import { markets } from '@/data/home';
-import { dayList } from '@/lib/format';
+import { dayList, formatDate } from '@/lib/format';
 import Notification from '@/utils/notification';
 
 const SHOTS = [
-  ['Wide shot of the plot', 'Required'],
-  ['What is growing now', 'Required'],
-  ['Anything else', 'Optional'],
+  ['wide', 'required'],
+  ['growing', 'required'],
+  ['other', 'optional'],
 ] as const;
 
-const TIMELINE: { key: 'placed' | 'accepted' | 'ready'; title: string; note: string; by: string }[] = [
-  { key: 'placed', title: 'Application sent', note: 'Just now', by: 'You' },
-  { key: 'accepted', title: 'An admin reads it', note: 'Usually within a few market days', by: 'MarketLink' },
-  { key: 'ready', title: 'Stall panel opens', note: 'After approval', by: 'MarketLink' },
-];
+/** Keys are order statuses only for the icon and colour; the text is `timeline.<key>`. */
+const TIMELINE = ['placed', 'accepted', 'ready'] as const;
 
 /** FR-002 (second route, applying from an existing Customer account — needs its own FR, see the caption below). */
 const CustomerBecomeFarmerPage = () => {
+  const { t } = useTranslation('CustomerBecomeFarmer');
   const [sent, setSent] = useState(false);
   const [stallName, setStallName] = useState('');
   const [person, setPerson] = useState('Nguyễn Minh Khang');
@@ -46,9 +45,9 @@ const CustomerBecomeFarmerPage = () => {
   const [marketId, setMarketId] = useState(4);
   // The plot is farmland, not the stall, so it starts on the city rather than on any market.
   const [plotPin, setPlotPin] = useState({ lat: CITY[0], lng: CITY[1] });
-  const [t1, setT1] = useState(false);
-  const [t2, setT2] = useState(false);
-  const [t3, setT3] = useState(false);
+  const [tick1, setTick1] = useState(false);
+  const [tick2, setTick2] = useState(false);
+  const [tick3, setTick3] = useState(false);
 
   const toggleCat = (name: string) => {
     setSelectedCats((prev) => (prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]));
@@ -56,13 +55,13 @@ const CustomerBecomeFarmerPage = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!t1 || !t2 || !t3) {
-      Notification.error({ title: 'Missing boxes', text: 'Tick the three boxes at the end before you send.' });
+    if (!tick1 || !tick2 || !tick3) {
+      Notification.error({ title: t('toast.missingTitle'), text: t('toast.missing') });
       return;
     }
     setSent(true);
     window.scrollTo(0, 0);
-    Notification.success({ title: 'Application sent', text: 'You will hear from an admin in your notifications.' });
+    Notification.success({ title: t('toast.sentTitle'), text: t('toast.sent') });
   };
 
   const selectedMarket = markets.find((m) => m.id === marketId);
@@ -72,66 +71,61 @@ const CustomerBecomeFarmerPage = () => {
       <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
         <p className="text-small text-ink-muted">
           <Link to="/account" className="text-brand underline">
-            Account
+            {t('breadcrumbAccount')}
           </Link>{' '}
-          · Apply to sell
+          · {t('breadcrumb')}
         </p>
 
         <div className="flex flex-col gap-2">
-          <p className="font-hand text-hand text-ink-muted">Sent just now</p>
-          <h1 className="text-h1">Your application is with an admin</h1>
-          <p className="text-body-lg">
-            Nothing changes for you in the meantime. Keep shopping, and watch your notifications for the answer.
-          </p>
+          <p className="font-hand text-hand text-ink-muted">{t('sent.eyebrow')}</p>
+          <h1 className="text-h1">{t('sent.title')}</h1>
+          <p className="text-body-lg">{t('sent.intro')}</p>
         </div>
 
-        <Banner title="You can still buy from other stalls while this is reviewed.">
-          Your orders, favorites and cart are untouched. The stall panel appears only once an admin approves.
-        </Banner>
+        <Banner title={t('sent.banner.title')}>{t('sent.banner.text')}</Banner>
 
         <Card className="flex flex-col gap-4 p-6">
-          <h2 className="text-h3">What you sent</h2>
+          <h2 className="text-h3">{t('sent.summary')}</h2>
           <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-            <dt className="text-ink-muted">Stall</dt>
+            <dt className="text-ink-muted">{t('sent.stall')}</dt>
             <dd className="m-0">{stallName || '—'}</dd>
-            <dt className="text-ink-muted">Grows</dt>
+            <dt className="text-ink-muted">{t('sent.grows')}</dt>
             <dd className="m-0">
               {selectedCats.join(', ') || '—'}
               {crops && ` · ${crops}`}
             </dd>
-            <dt className="text-ink-muted">Plot</dt>
+            <dt className="text-ink-muted">{t('sent.plot')}</dt>
             <dd className="m-0">
-              {plotSize || '—'} in {plot || '—'}, growing since {since || '—'}
+              {t('sent.plotText', { size: plotSize || '—', place: plot || '—', since: since || '—' })}
             </dd>
-            <dt className="text-ink-muted">Evidence</dt>
+            <dt className="text-ink-muted">{t('sent.evidence')}</dt>
             <dd className="m-0">
-              {photoCount} photo{photoCount === 1 ? '' : 's'}
-              {hasVideo ? ' and a video' : ''}
+              {hasVideo ? t('sent.photosAndVideo', { count: photoCount }) : t('sent.photos', { count: photoCount })}
             </dd>
-            <dt className="text-ink-muted">Market</dt>
+            <dt className="text-ink-muted">{t('sent.market')}</dt>
             <dd className="m-0">{selectedMarket?.name}</dd>
           </dl>
           <div className="flex flex-wrap gap-2">
             <ButtonLink to="/markets" variant="secondary">
-              Keep shopping
+              {t('sent.keepShopping')}
             </ButtonLink>
             <Button
               variant="danger"
               onClick={() => {
                 setSent(false);
-                Notification.info({ title: 'Application withdrawn', text: 'You can apply again whenever you like.' });
+                Notification.info({ title: t('toast.withdrawnTitle'), text: t('toast.withdrawn') });
               }}
             >
-              Withdraw the application
+              {t('sent.withdraw')}
             </Button>
           </div>
         </Card>
 
         <div className="flex flex-col gap-3">
-          <h2 className="text-h2">Progress</h2>
+          <h2 className="text-h2">{t('sent.progress')}</h2>
           <ol className="m-0 flex flex-col p-0">
-            {TIMELINE.map((t, i) => (
-              <li key={t.key} className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
+            {TIMELINE.map((key, i) => (
+              <li key={key} className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
                 {i > 0 && (
                   <span
                     aria-hidden="true"
@@ -139,17 +133,17 @@ const CustomerBecomeFarmerPage = () => {
                   />
                 )}
                 <span
-                  className={`grid size-7 flex-none place-items-center rounded-full ${ORDER_STATUS_META[t.key].className} ${i > 0 ? 'opacity-45' : ''}`}
+                  className={`grid size-7 flex-none place-items-center rounded-full ${ORDER_STATUS_META[key].className} ${i > 0 ? 'opacity-45' : ''}`}
                 >
                   {(() => {
-                    const Icon = ORDER_STATUS_META[t.key].icon;
+                    const Icon = ORDER_STATUS_META[key].icon;
                     return <Icon size={14} />;
                   })()}
                 </span>
                 <div>
-                  <b className="text-[15px]">{t.title}</b>
+                  <b className="text-[15px]">{t(`timeline.${key}.title`)}</b>
                   <time className="text-ink-muted block text-[13px]">
-                    {t.note} · {t.by}
+                    {t(`timeline.${key}.note`)} · {t(`timeline.${key}.by`)}
                   </time>
                 </div>
               </li>
@@ -159,7 +153,7 @@ const CustomerBecomeFarmerPage = () => {
 
         <p className="text-center">
           <Chip pressed onClick={() => setSent(false)}>
-            Preview: after sending
+            {t('preview')}
           </Chip>
         </p>
       </div>
@@ -170,88 +164,88 @@ const CustomerBecomeFarmerPage = () => {
     <div className="mx-auto flex w-full max-w-180 flex-col gap-8">
       <p className="text-small text-ink-muted">
         <Link to="/account" className="text-brand underline">
-          Account
+          {t('breadcrumbAccount')}
         </Link>{' '}
-        · Apply to sell
+        · {t('breadcrumb')}
       </p>
 
       <div className="flex flex-col gap-2">
-        <p className="font-hand text-hand text-ink-muted">Nguyễn Minh Khang · customer since 01/08/2026</p>
-        <h1 className="text-h1">Sell what you grow</h1>
-        <p className="text-body-lg">
-          If you grow food, your account can become a stall at one of the four markets. You keep everything you have now
-          and carry on shopping from other stalls.
+        <p className="font-hand text-hand text-ink-muted">
+          {t('since', { name: 'Nguyễn Minh Khang', date: formatDate(new Date(2026, 7, 1)) })}
         </p>
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body-lg">{t('intro')}</p>
       </div>
 
       <Card className="flex flex-col gap-3 p-6">
-        <h2 className="text-h3">What happens after you send this</h2>
+        <h2 className="text-h3">{t('next.title')}</h2>
         <ol className="text-body m-0 flex list-decimal flex-col gap-1.5 pl-5">
-          <li>An admin reads the application and looks at your photos, usually within a few market days.</li>
-          <li>When it is approved, a stall panel appears in your account for stock, orders and pickup times.</li>
-          <li>You set your markets, days and pickup windows there, then list your first products.</li>
+          <li>{t('next.read')}</li>
+          <li>{t('next.panel')}</li>
+          <li>{t('next.setup')}</li>
         </ol>
       </Card>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-8">
         <ol className="m-0 flex flex-col gap-8 p-0">
-          <FormStep n={1} title="Your stall">
+          <FormStep n={1} title={t('step1.title')}>
             <Card className="flex flex-col gap-4 p-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Field
                   id="stall"
-                  label="Stall name"
+                  label={t('step1.stallName')}
                   required
-                  placeholder="e.g. Khang Family Greens"
+                  placeholder={t('step1.stallNamePlaceholder')}
                   value={stallName}
                   onChange={(e) => setStallName(e.target.value)}
-                  hint="Customers see this on the map and on their orders."
+                  hint={t('step1.stallNameHint')}
                   className="md:col-span-2"
                 />
                 <Field
                   id="person"
-                  label="Contact person"
+                  label={t('step1.person')}
                   required
                   value={person}
                   onChange={(e) => setPerson(e.target.value)}
                 />
                 <Field
                   id="phone"
-                  label="Phone"
+                  label={t('step1.phone')}
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  hint="Printed on every order so customers can reach you."
+                  hint={t('step1.phoneHint')}
                 />
                 <Field
                   id="email"
-                  label="Email"
+                  label={t('step1.email')}
                   value="khang@example.com"
                   readOnly
-                  hint="Your sign-in stays the same."
+                  hint={t('step1.emailHint')}
                   className="md:col-span-2"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="about" className="text-small font-bold">
-                  About the stall
+                  {t('step1.about')}
                 </label>
                 <textarea
                   id="about"
                   value={about}
                   onChange={(e) => setAbout(e.target.value)}
-                  placeholder="One or two sentences. Who grows it and where."
+                  placeholder={t('step1.aboutPlaceholder')}
                   className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
                 />
               </div>
             </Card>
           </FormStep>
 
-          <FormStep n={2} title="What you grow">
+          <FormStep n={2} title={t('step2.title')}>
             <Card className="flex flex-col gap-4 p-6">
               <div className="flex flex-col gap-2">
                 <span className="text-small font-bold">
-                  Categories<span className="text-danger ml-0.5">*</span>
+                  {t('step2.categories')}
+                  <span className="text-danger ml-0.5">*</span>
                 </span>
                 <div className="flex flex-col gap-2">
                   {categories.map((c) => (
@@ -263,65 +257,62 @@ const CustomerBecomeFarmerPage = () => {
               </div>
               <Field
                 id="crops"
-                label="Main crops"
+                label={t('step2.crops')}
                 required
                 value={crops}
                 onChange={(e) => setCrops(e.target.value)}
-                placeholder="Water spinach, choy sum, Thai basil"
-                hint="Separate them with commas. You list real products with prices after approval."
+                placeholder={t('step2.cropsPlaceholder')}
+                hint={t('step2.cropsHint')}
               />
               <Field
                 id="volume"
-                label="Roughly how much a week"
+                label={t('step2.volume')}
                 required
                 value={volume}
                 onChange={(e) => setVolume(e.target.value)}
-                placeholder="About 120 bunches"
-                hint="A rough figure. It helps the admin match you to a market with room."
+                placeholder={t('step2.volumePlaceholder')}
+                hint={t('step2.volumeHint')}
               />
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="method" className="text-small font-bold">
-                  How you grow it
+                  {t('step2.method')}
                 </label>
                 <textarea
                   id="method"
                   value={method}
                   onChange={(e) => setMethod(e.target.value)}
-                  placeholder="e.g. No pesticides in the last two seasons."
+                  placeholder={t('step2.methodPlaceholder')}
                   className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
                 />
-                <span className="text-ink-muted text-[13px]">
-                  Optional, and shown on your stall page as your own words. MarketLink does not check or certify any of
-                  it.
-                </span>
+                <span className="text-ink-muted text-[13px]">{t('step2.methodHint')}</span>
               </div>
             </Card>
           </FormStep>
 
-          <FormStep n={3} title="Where you grow it">
+          <FormStep n={3} title={t('step3.title')}>
             <Card className="flex flex-col gap-4 p-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Field
                   id="plot"
-                  label="Address of the plot"
+                  label={t('step3.plot')}
                   required
                   value={plot}
                   onChange={(e) => setPlot(e.target.value)}
-                  placeholder="Hamlet, ward, district"
-                  hint="Only the admin sees this. Customers see your stall at the market, not your plot."
+                  placeholder={t('step3.plotPlaceholder')}
+                  hint={t('step3.plotHint')}
                   className="md:col-span-2"
                 />
                 <Field
                   id="size"
-                  label="Plot size"
+                  label={t('step3.size')}
                   required
                   value={plotSize}
                   onChange={(e) => setPlotSize(e.target.value)}
-                  placeholder="5,000 m²"
+                  placeholder={t('step3.sizePlaceholder')}
                 />
                 <Field
                   id="since"
-                  label="Growing here since"
+                  label={t('step3.since')}
                   required
                   inputMode="numeric"
                   value={since}
@@ -331,29 +322,25 @@ const CustomerBecomeFarmerPage = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <span className="text-small font-bold">
-                  Pin the plot<span className="text-danger ml-0.5">*</span>
+                  {t('step3.pin')}
+                  <span className="text-danger ml-0.5">*</span>
                 </span>
                 <LocationPicker
-                  label="Pin your plot on the map"
+                  label={t('step3.map')}
                   className="min-h-60"
                   lat={plotPin.lat}
                   lng={plotPin.lng}
-                  pinLabel="Your plot"
+                  pinLabel={t('step3.yourPlot')}
                   onMove={(lat, lng) => setPlotPin({ lat, lng })}
                 />
-                <p className="text-ink-muted text-[13px]">
-                  Drag the pin to your plot. It is the quickest way for the admin to see the photos match the place.
-                </p>
+                <p className="text-ink-muted text-[13px]">{t('step3.pinHint')}</p>
               </div>
             </Card>
           </FormStep>
 
-          <FormStep n={4} title="Photos of the plot">
+          <FormStep n={4} title={t('step4.title')}>
             <Card className="flex flex-col gap-4 p-6">
-              <p className="text-body">
-                Two photos are enough and five is the most. One wide shot that shows the whole plot, and one close shot
-                of what is growing right now. Take them in the last 30 days and do not filter them.
-              </p>
+              <p className="text-body">{t('step4.intro')}</p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {SHOTS.map(([label, req]) => (
                   <div key={label} className="flex flex-col gap-1.5">
@@ -362,23 +349,23 @@ const CustomerBecomeFarmerPage = () => {
                       onClick={() => {
                         setPhotoCount((n) => n + 1);
                         Notification.info({
-                          title: 'Add a photo',
-                          text: 'Choose a photo from your phone or computer.',
+                          title: t('toast.photoTitle'),
+                          text: t('toast.photo'),
                         });
                       }}
                       className="border-line-strong text-ink aspect-4/3 cursor-pointer rounded-md border-2 border-dashed bg-transparent text-[14px] font-bold"
                     >
-                      Add photo
+                      {t('step4.addPhoto')}
                     </button>
                     <small className="text-ink-muted text-[12px]">
-                      {label} · {req}
+                      {t(`step4.shots.${label}`)} · {t(`step4.${req}`)}
                     </small>
                   </div>
                 ))}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="vid" className="text-small font-bold">
-                  A short video
+                  {t('step4.video')}
                 </label>
                 <Button
                   variant="secondary"
@@ -386,27 +373,24 @@ const CustomerBecomeFarmerPage = () => {
                   type="button"
                   onClick={() => {
                     setHasVideo(true);
-                    Notification.info({ title: 'Add a video', text: 'Choose a video, up to 60 seconds.' });
+                    Notification.info({ title: t('toast.videoTitle'), text: t('toast.video') });
                   }}
                   className="w-fit"
                 >
-                  Add a video, up to 60 seconds
+                  {t('step4.addVideo')}
                 </Button>
-                <span className="text-ink-muted text-[13px]">
-                  Optional. A slow walk along the beds says more than any photo, and it makes approval faster.
-                </span>
+                <span className="text-ink-muted text-[13px]">{t('step4.videoHint')}</span>
               </div>
-              <Banner title="The admin is checking one thing: that the plot exists and grows what you listed.">
-                MarketLink does not check licences, food safety or organic claims, and a photo is not a certificate.
-              </Banner>
+              <Banner title={t('step4.banner.title')}>{t('step4.banner.text')}</Banner>
             </Card>
           </FormStep>
 
-          <FormStep n={5} title="Where you want to sell">
+          <FormStep n={5} title={t('step5.title')}>
             <Card className="flex flex-col gap-4 p-6">
               <div className="flex flex-col gap-2">
                 <span className="text-small font-bold">
-                  Market<span className="text-danger ml-0.5">*</span>
+                  {t('step5.market')}
+                  <span className="text-danger ml-0.5">*</span>
                 </span>
                 <div className="flex flex-col gap-2">
                   {markets.map((m) => (
@@ -423,37 +407,28 @@ const CustomerBecomeFarmerPage = () => {
                   ))}
                 </div>
               </div>
-              <p className="text-small text-ink-muted">
-                Pick one to start with. You set your days, pickup windows and cutoff in the stall panel once you are
-                approved, and you can add the other markets later.
-              </p>
+              <p className="text-small text-ink-muted">{t('step5.hint')}</p>
             </Card>
           </FormStep>
 
-          <FormStep n={6} title="Before you send">
+          <FormStep n={6} title={t('step6.title')}>
             <Card className="flex flex-col gap-4 p-6">
-              <Checkbox id="t1" checked={t1} onChange={(e) => setT1(e.target.checked)}>
-                Everything here is true, and the photos are of my own plot
-                <small className="text-ink-muted mt-0.5 block text-[13px]">
-                  An application with photos that are not yours is rejected and the account can be suspended.
-                </small>
+              <Checkbox id="t1" checked={tick1} onChange={(e) => setTick1(e.target.checked)}>
+                {t('step6.true')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.trueHint')}</small>
               </Checkbox>
-              <Checkbox id="t2" checked={t2} onChange={(e) => setT2(e.target.checked)}>
-                I will be at the stall in my pickup window
-                <small className="text-ink-muted mt-0.5 block text-[13px]">
-                  Repeated no-shows are the usual reason a stall is suspended.
-                </small>
+              <Checkbox id="t2" checked={tick2} onChange={(e) => setTick2(e.target.checked)}>
+                {t('step6.present')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.presentHint')}</small>
               </Checkbox>
-              <Checkbox id="t3" checked={t3} onChange={(e) => setT3(e.target.checked)}>
-                I understand customers pay me at the stall
-                <small className="text-ink-muted mt-0.5 block text-[13px]">
-                  There is no online payment and no delivery anywhere in MarketLink.
-                </small>
+              <Checkbox id="t3" checked={tick3} onChange={(e) => setTick3(e.target.checked)}>
+                {t('step6.pay')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.payHint')}</small>
               </Checkbox>
               <div className="flex flex-wrap gap-2">
-                <Button type="submit">Send the application</Button>
+                <Button type="submit">{t('step6.send')}</Button>
                 <ButtonLink to="/account" variant="secondary">
-                  Save and finish later
+                  {t('step6.later')}
                 </ButtonLink>
               </div>
             </Card>
@@ -463,7 +438,7 @@ const CustomerBecomeFarmerPage = () => {
 
       <p className="text-center">
         <Chip pressed={false} onClick={() => setSent(true)}>
-          Preview: after sending
+          {t('preview')}
         </Chip>
       </p>
     </div>

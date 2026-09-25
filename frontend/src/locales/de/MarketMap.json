@@ -1,0 +1,32 @@
+{
+  "title": "Marktkarte",
+  "intro": "Alle Märkte und die Stände, die am gewählten Tag Vorbestellungen annehmen. Tippen Sie auf eine Markierung für Öffnungszeiten, Abholzeiten und Route.",
+  "marketDay": "Markttag",
+  "filter": {
+    "markets": "Märkte",
+    "stalls": "Stände",
+    "saved": "Nur gespeicherte"
+  },
+  "legend": {
+    "market": "Quadrat: Markt",
+    "stall": "Kreis: Stand",
+    "selected": "Ring: ausgewählt"
+  },
+  "mapLabel": "Karte aller Märkte und Stände",
+  "directions": "Die Route öffnet sich in OpenStreetMap in einem neuen Tab.",
+  "openOn": "Geöffnet am {{day}}",
+  "empty": {
+    "title": "Keine Märkte anzuzeigen",
+    "text": "Für den gewählten Tag passt nichts. Wählen Sie einen anderen Tag oder entfernen Sie den Filter."
+  },
+  "popup": {
+    "stalls_one": "{{count}} Stand",
+    "stalls_other": "{{count}} Stände",
+    "pickup": "{{days}} · Abholung {{pickup}}"
+  },
+  "bothOff": {
+    "title": "Nichts auf der Karte anzuzeigen",
+    "text": "Beide Ebenen sind ausgeschaltet. Schalten Sie Märkte oder Stände wieder ein, um die Markierungen zu sehen.",
+    "action": "Beide anzeigen"
+  }
+}

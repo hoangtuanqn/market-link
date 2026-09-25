@@ -1,0 +1,14 @@
+{
+  "title": "Cài đặt",
+  "intro": "Tuỳ chọn của riêng bạn, và các giá trị mặc định cho sạp tới khi sạp tự đặt.",
+  "platform": "Mặc định của nền tảng",
+  "platformNote": "Tạm thời lưu cùng tài khoản của bạn. Việc mặc định mới có áp dụng cho các sạp chưa tự đặt hay không vẫn chưa được quyết định.",
+  "cutoff": "Giờ chốt mặc định",
+  "max": "Số đơn mặc định mỗi khung giờ",
+  "timezone": "Múi giờ",
+  "timezoneNote": "Mọi ngày giờ trên nền tảng đều được hiểu theo múi giờ này.",
+  "hours_one": "{{count}} giờ",
+  "hours_other": "{{count}} giờ",
+  "orders_one": "{{count}} đơn",
+  "orders_other": "{{count}} đơn"
+}

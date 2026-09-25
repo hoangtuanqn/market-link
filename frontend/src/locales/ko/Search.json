@@ -1,0 +1,49 @@
+{
+  "title": "검색",
+  "search": {
+    "scope": "검색 범위",
+    "scopes": {
+      "all": "전체",
+      "market": "장터",
+      "farmer": "가게",
+      "product": "상품"
+    },
+    "keyword": "키워드",
+    "submit": "검색"
+  },
+  "day": "장날",
+  "sort": "정렬",
+  "sorts": {
+    "best": "관련도순",
+    "nearest": "가까운 순",
+    "price": "가격",
+    "rating": "평점"
+  },
+  "tabs": {
+    "label": "결과 유형",
+    "all": "전체",
+    "market": "장터",
+    "farmer": "가게",
+    "product": "상품"
+  },
+  "empty": {
+    "startTitle": "검색어를 입력하세요",
+    "startText": "상품 이름, 장터, 가게 이름으로 찾아 보세요.",
+    "noneTitle": "일치하는 결과가 없어요",
+    "noneText": "더 짧은 단어로 찾거나 필터를 하나 빼 보세요. 검색은 장터, 가게, 상품을 한꺼번에 찾아요."
+  },
+  "results_one": "{{day}} “{{q}}” 검색 결과 {{count}}개",
+  "results_other": "{{day}} “{{q}}” 검색 결과 {{count}}개",
+  "noStalls": "일치하는 가게가 없어요.",
+  "noProducts": "일치하는 상품이 없어요.",
+  "noMarket": {
+    "title": "“{{q}}”라는 장터가 없어요",
+    "text_one": "장터는 이름과 지역으로 찾아요. 위의 가게 {{count}}곳이 “{{q}}”와 맞는 상품을 팔아요.",
+    "text_other": "장터는 이름과 지역으로 찾아요. 위의 가게 {{count}}곳이 “{{q}}”와 맞는 상품을 팔아요.",
+    "showStalls": "가게 보기"
+  },
+  "map": {
+    "label": "검색 결과 지도",
+    "note": "위치가 있는 결과는 지도에 표시돼요. 휴대폰에서는 “목록 / 지도” 버튼으로 전환해요."
+  }
+}

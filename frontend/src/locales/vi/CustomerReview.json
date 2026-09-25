@@ -1,0 +1,29 @@
+{
+  "myOrders": "Đơn của tôi",
+  "breadcrumbOrder": "Đơn {{code}}",
+  "breadcrumbReview": "Đánh giá",
+  "notFound": {
+    "title": "Đơn này không còn ở đây",
+    "text": "Có thể bạn đã huỷ đơn, hoặc liên kết đã cũ. Hãy mở lại từ danh sách đơn của bạn."
+  },
+  "completed": "Hoàn tất {{date}}",
+  "title": "{{stall}} thế nào?",
+  "intro": "Đánh giá gắn với đơn đã hoàn tất này, nên khách khác thấy đây là giao dịch đã xác thực. Sạp có thể trả lời.",
+  "stall": {
+    "title": "Sạp",
+    "placeholder": "Đơn có sẵn đúng giờ không? Sạp có dễ tìm không?"
+  },
+  "product": {
+    "placeholder": "Hương vị, độ tươi, khẩu phần",
+    "skip": "Bỏ qua sản phẩm này"
+  },
+  "rate": "Chấm điểm {{name}}",
+  "comment": "Nhận xét",
+  "submit": "Đăng đánh giá",
+  "notNow": "Để sau",
+  "note": "Mỗi đơn có một đánh giá cho sạp, và một đánh giá cho mỗi sản phẩm trong đơn.",
+  "toast": {
+    "title": "Đã đăng đánh giá",
+    "text": "Cảm ơn bạn. Đánh giá của bạn về {{stall}} đã được đăng."
+  }
+}

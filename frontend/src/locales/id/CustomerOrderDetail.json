@@ -1,0 +1,46 @@
+{
+  "missing": {
+    "title": "Pesanan itu sudah tidak ada",
+    "text": "Mungkin Anda sudah membatalkannya, atau tautannya sudah lama. Buka lagi dari pesanan Anda."
+  },
+  "myOrders": "Pesanan saya",
+  "breadcrumb": "Pesanan {{code}}",
+  "placedAt": "Dipesan {{time}}",
+  "status": {
+    "placed": "Dipesan",
+    "accepted": "Diterima",
+    "ready": "Siap diambil",
+    "completed": "Selesai",
+    "declined": "Ditolak",
+    "cancelled": "Dibatalkan"
+  },
+  "previewLocked": "Pratinjau: setelah batas pesan",
+  "pickup": {
+    "title": "Pengambilan",
+    "where": "{{market}}, lapak {{stall}}",
+    "spot": "Sisi sungai pasar, di sebelah lapak roti.",
+    "slot": "Slot Anda",
+    "phone": "Telepon lapak",
+    "bring": "Bawa",
+    "bringText": "{{total}} tunai atau transfer bank di lapak",
+    "directions": "Rute",
+    "stallPage": "Halaman lapak",
+    "map": "Titik ambil di lapak {{stall}}"
+  },
+  "history": {
+    "title": "Riwayat",
+    "by": "{{time}} · oleh {{by}}",
+    "note": "Setiap perubahan status dicatat bersama siapa yang mengubahnya."
+  },
+  "change": {
+    "title": "Ubah pesanan ini",
+    "until": "Anda dapat mengubah jumlah, menghapus barang, atau membatalkan sampai <b>{{cutoff}}</b>. Setelah Anda mengubah, {{stall}} menyetujui pesanan lagi.",
+    "edit": "Ubah pesanan",
+    "cancel": "Batalkan pesanan",
+    "locked": "Batas pesan sudah lewat pada {{cutoff}}. Untuk mengubahnya, hubungi lapak langsung di {{phone}}."
+  },
+  "notify": {
+    "title": "Notifikasi untuk pesanan ini",
+    "text": "Anda sudah diberi tahu saat pesanan diterima. Anda akan diberi tahu saat siap, atau jika lapak harus menolaknya."
+  }
+}

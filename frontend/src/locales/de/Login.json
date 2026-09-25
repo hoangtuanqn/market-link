@@ -1,0 +1,29 @@
+{
+  "title": "Anmelden",
+  "intro": "Kunden und Erzeuger melden sich hier an. Admins nutzen die <link>separate Admin-Anmeldung</link>.",
+  "fields": {
+    "email": "E-Mail",
+    "password": "Passwort"
+  },
+  "rememberMe": "Angemeldet bleiben",
+  "forgotPassword": "Passwort vergessen?",
+  "submit": "Anmelden",
+  "submitting": "Anmeldung läuft…",
+  "or": "oder",
+  "google": {
+    "continue": "Weiter mit Google",
+    "opening": "Google wird geöffnet…",
+    "failed": "Die Google-Anmeldung konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
+    "note": "Google gibt uns Ihren Namen und Ihre E-Mail-Adresse. Telefonnummer und Adresse brauchen wir trotzdem vor Ihrer ersten Bestellung, deshalb fragen wir sie einmal auf der nächsten Seite ab."
+  },
+  "newHere": "Neu hier? <customer>Kundenkonto erstellen</customer> oder <farmer>Ihren Stand registrieren</farmer>.",
+  "toast": {
+    "signedIn": "Angemeldet.",
+    "failed": "Sie konnten nicht angemeldet werden. Bitte versuchen Sie es erneut."
+  },
+  "errors": {
+    "emailRequired": "Geben Sie Ihre E-Mail-Adresse ein.",
+    "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein.",
+    "passwordRequired": "Geben Sie Ihr Passwort ein."
+  }
+}

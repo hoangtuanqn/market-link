@@ -1,0 +1,104 @@
+{
+  "title": "À propos de MarketLink",
+  "intro": "MarketLink relie les Farmers des marchés de producteurs autour de Hô Chi Minh-Ville aux personnes qui y font leurs courses. Les stands publient ce qu'ils apporteront cette semaine, vous réservez parmi ces produits et vous retirez au stand.",
+  "carouselLabel": "À quoi sert MarketLink",
+  "photosNote": "Les quatre photos ci-dessus sont provisoires.",
+  "slides": {
+    "mission": {
+      "topic": "Notre mission",
+      "title": "Finis les allers-retours pour rien",
+      "text": "Les stands annoncent la semaine sur une ardoise, si bien que le meilleur de la matinée part avant l'arrivée de la plupart des gens. MarketLink réunit la semaine de chaque stand au même endroit et garde ce que vous réservez jusqu'à ce que vous veniez le chercher.",
+      "alt": "Stands dans un marché couvert, produits empilés dans des cagettes en bois",
+      "cta": "Voir les marchés de ce week-end"
+    },
+    "howItWorks": {
+      "topic": "Comment ça marche",
+      "title": "Réservez le jeudi, retirez le samedi",
+      "text": "Découvrez ce que quatre marchés autour de Hô Chi Minh-Ville proposeront ce week-end et réservez auprès d'autant de stands que vous le souhaitez. Chaque stand a sa propre commande, son propre horaire de retrait, et se règle au stand.",
+      "alt": "Paniers de carottes, de haricots et de piments sur une table de marché",
+      "cta": "Voir les produits de la semaine"
+    },
+    "technology": {
+      "topic": "La technologie",
+      "title": "Des quantités justes dès que vous commandez",
+      "text": "Une réservation est déduite tout de suite du stock du stand : deux personnes ne peuvent donc pas réserver les deux dernières bottes. Les créneaux de retrait raccourcissent la file, et la carte situe chaque stand dans son marché.",
+      "alt": "Graines et terre sèche avec une pelle en métal",
+      "note_one": "{{n}} botte restante",
+      "note_other": "{{n}} bottes restantes",
+      "cta": "Voir la carte des marchés"
+    },
+    "benefit": {
+      "topic": "Ce que vous y gagnez",
+      "title": "Le stand sait quoi apporter",
+      "text": "Les Farmers lisent les commandes du week-end avant de récolter, donc moins d'invendus repartent. Vous obtenez le pomélo prévu, à l'heure choisie, payé à la personne qui l'a cultivé.",
+      "alt": "Un agriculteur travaillant une rizière inondée avec un petit tracteur",
+      "note": "{{place}} · récolte {{day}}",
+      "cta": "Vendre sur MarketLink"
+    }
+  },
+  "why": {
+    "title": "Pourquoi MarketLink existe",
+    "shoppers": "Une matinée de marché fonctionne au bouche-à-oreille. Les stands écrivent à la craie ce qu'ils ont apporté, les habitués demandent ce qui arrive la semaine suivante, et les autres le découvrent en parcourant les allées. Cela fonctionne jusqu'au jour où vous cherchez quelque chose de précis, ou jusqu'à ce que la traversée de la ville se termine devant une table vide.",
+    "farmers": "Les Farmers ont le même problème, de l'autre côté. Il n'existe pas de moyen simple d'annoncer aux habitués ce que la semaine réserve, de prendre une commande avant le jour du marché ou de savoir combien couper le vendredi soir. MarketLink met les deux côtés par écrit : le stand publie sa semaine, vous réservez, et le stand lit les commandes avant la cueillette."
+  },
+  "limits": {
+    "title": "Ce que MarketLink ne fait pas",
+    "payment": "<b>Pas de paiement en ligne.</b> Vous payez le Farmer au stand au moment du retrait. Il n'y a aucun formulaire de carte bancaire dans le produit.",
+    "delivery": "<b>Pas de livraison.</b> Chaque commande se retire au marché, dans le créneau fixé par le stand.",
+    "certification": "<b>Pas de certification.</b> MarketLink ne vérifie ni les licences ni les mentions bio. Posez la question au Farmer au stand.",
+    "profiles": "<b>Pas de profils séparés pour la famille.</b> Un compte peut être partagé à la maison. Le système ne distingue pas les personnes au sein d'un même compte."
+  },
+  "team": {
+    "title": "L'équipe",
+    "subtitle": "Six personnes, réparties selon ce dont chacune est responsable dans le dépôt",
+    "namePending": "Nom à ajouter",
+    "lead": {
+      "role": "Chef d'équipe",
+      "note": "Le schéma, le contrat d'API et les douze décisions sur lesquelles s'appuie le reste de l'équipe"
+    },
+    "be1": {
+      "role": "Backend",
+      "note": "La connexion, les rôles et le cycle de vie des commandes, de la passation jusqu'à la fin"
+    },
+    "be2": {
+      "role": "Backend",
+      "note": "Les produits, les marchés, le stock hebdomadaire, les rapports et les données de démonstration"
+    },
+    "fe1": {
+      "role": "Frontend",
+      "note": "Le design system, les pages publiques, la carte et le tableau de bord Customer"
+    },
+    "fe2": {
+      "role": "Frontend",
+      "note": "Les tableaux de bord Farmer et Admin, et tous les formulaires du produit"
+    },
+    "qa": {
+      "role": "Qualité et documentation",
+      "note": "La liste des exigences, les données de test et les documents joints au dossier"
+    }
+  },
+  "stack": {
+    "title": "Comment il est construit",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "maps": "Cartes",
+    "mapsValue": "Leaflet avec les tuiles OpenStreetMap",
+    "design": "Design",
+    "designValue": "Le design system Hang tag : un seul jeu de tokens, un seul jeu de composants, une seule voix"
+  },
+  "credits": {
+    "title": "Crédits et données",
+    "mapData": "Données cartographiques",
+    "mapDataValue": "© contributeurs OpenStreetMap",
+    "photos": "Photos",
+    "photosValue": "Provisoires pour l'instant, créditées ici dès que les photos de l'équipe seront prêtes",
+    "locale": "Devise et heure",
+    "localeValue": "Dông vietnamien, dates au format {{format}}, horloge 24 heures, {{zone}}"
+  },
+  "contact": {
+    "title": "Quelque chose à nous dire ?",
+    "text": "Les questions sur une commande s'adressent directement au stand. Tout ce qui concerne la plateforme revient à l'équipe.",
+    "contactUs": "Nous contacter",
+    "feedback": "Envoyer un avis"
+  }
+}

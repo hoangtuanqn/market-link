@@ -1,0 +1,109 @@
+{
+  "title": "プロモーションと掲載",
+  "intro": "掲載も販売も無料です。料金がかかるのは、商品をページの上のほうに表示するときと、1日の無料枠を超えて掲載するときだけです。",
+  "credit": "クレジット {{amount}}",
+  "action": {
+    "topUp": "クレジットをチャージ",
+    "extend": "延長",
+    "buy": "購入"
+  },
+  "toast": {
+    "topUpTitle": "チャージを依頼しました",
+    "topUpText": "チャージは MarketLink チームと調整したうえで、ここに反映されます。",
+    "pinnedTitle": "ピン留めしました",
+    "pinnedText": "ピン留めしました。数分以内に反映され、いつでも停止できます。",
+    "extendedTitle": "延長しました",
+    "extendedText_one": "{{count}} 日延長しました（{{price}}）。",
+    "extendedText_other": "{{count}} 日延長しました（{{price}}）。",
+    "bundleTitle": "パックを追加しました",
+    "bundleText": "{{name}} を追加しました。チームが支払いを確認し、ここに反映します。",
+    "addedTitle": "追加しました",
+    "addedText": "クレジットに追加しました。"
+  },
+  "srs": {
+    "title": "Farmer への課金は SRS に含まれていません。",
+    "text": "SRS では決済ゲートウェイを対象外としているため、ここでのクレジットはチームと調整し、管理者が入力します。まず新しい要件と、実際にどう集金するかの決定が必要です。"
+  },
+  "listings": {
+    "title": "今日の掲載",
+    "text": "無料枠は深夜0時にリセットされます。掲載済みの商品の編集はいつでも無料です。"
+  },
+  "bumps": {
+    "title": "今月のバンプ",
+    "text": "バンプすると、その日は商品がカテゴリの先頭に戻ります。価格や在庫は変わりません。"
+  },
+  "meter": {
+    "left": {
+      "listings_one": "/ 無料掲載 {{count}} 件中の残り",
+      "listings_other": "/ 無料掲載 {{count}} 件中の残り",
+      "bumps_one": "/ 無料バンプ {{count}} 回中の残り",
+      "bumps_other": "/ 無料バンプ {{count}} 回中の残り"
+    },
+    "used": "使用済み {{used}}",
+    "low": "残りわずか"
+  },
+  "pinned": {
+    "title": "現在ピン留め中",
+    "hint": "ピン留めした商品は他の商品より上に「プロモーション」付きで表示されます"
+  },
+  "pinSection": {
+    "title": "商品をピン留め",
+    "note": "枠は意図的に限られています。市場ページに3枠、トップページに2枠です。埋まっている場合は、入札で競うのではなく順番待ちになります。"
+  },
+  "pin": {
+    "market": {
+      "name": "1つの市場ページの先頭",
+      "note": "その市場を見ている全員に表示されます"
+    },
+    "home": {
+      "name": "トップページ（4つの市場すべて）",
+      "note": "MarketLink でいちばん希少な枠"
+    },
+    "slots_one": "{{count}} 枠",
+    "slots_other": "{{count}} 枠",
+    "product": "どの商品",
+    "duration": "期間",
+    "days_one": "{{count}} 日",
+    "days_other": "{{count}} 日",
+    "cta": "{{price}} でピン留め"
+  },
+  "bundles": {
+    "title": "パック",
+    "intro": "1回ずつ買うより安く、{{days}} 日間有効です。",
+    "choose": "{{name}} を選ぶ"
+  },
+  "bundle": {
+    "starter": "スターター",
+    "market": "マーケット",
+    "season": "シーズン"
+  },
+  "bundleLine": {
+    "listings_one": "1日の上限を超える掲載 {{count}} 件",
+    "listings_other": "1日の上限を超える掲載 {{count}} 件",
+    "bumps_one": "追加バンプ {{count}} 回",
+    "bumps_other": "追加バンプ {{count}} 回",
+    "pinDays_one": "市場ページにピン留め {{count}} 日",
+    "pinDays_other": "市場ページにピン留め {{count}} 日",
+    "runs_one": "{{count}} 日間有効",
+    "runs_other": "{{count}} 日間有効",
+    "noLimit": "1日の掲載数の上限なし",
+    "bumpsTotal_one": "バンプ {{count}} 回",
+    "bumpsTotal_other": "バンプ {{count}} 回"
+  },
+  "extrasSection": {
+    "title": "1回ずつ購入"
+  },
+  "extras": {
+    "listing": "1日5件を超える掲載1件",
+    "bump": "月10回を超えるバンプ1回"
+  },
+  "col": {
+    "product": "商品",
+    "until": "終了日時",
+    "views": "ピン留め中の表示回数",
+    "added": "カートに追加",
+    "paid": "支払額",
+    "what": "内容",
+    "price": "価格"
+  }
+}

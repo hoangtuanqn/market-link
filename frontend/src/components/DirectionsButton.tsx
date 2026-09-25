@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/input';
@@ -28,6 +29,7 @@ type Kind = StartChoice['kind'];
  * The choice is remembered, so the second market you look at costs one click.
  */
 const DirectionsButton = ({ to, name, variant = 'ghost', size = 'sm', className }: DirectionsButtonProps) => {
+  const { t } = useTranslation();
   const { state, request } = useGeolocation();
   const { user } = useSession();
   const savedAddress = user?.address?.trim() ?? '';
@@ -41,12 +43,12 @@ const DirectionsButton = ({ to, name, variant = 'ghost', size = 'sm', className 
   const blocked = state.status === 'denied' || state.status === 'unavailable';
   const locationNote =
     state.status === 'denied'
-      ? 'You turned location off for this site. Change it in your browser’s site settings, or use an address instead.'
+      ? t('geo.denied')
       : state.status === 'unavailable'
-        ? state.reason
+        ? t(`geo.${state.reason}`)
         : state.status === 'ready'
-          ? 'Already shared'
-          : 'Your browser will ask first';
+          ? t('directions.currentShared')
+          : t('directions.currentAsk');
 
   const openDialog = () => {
     const remembered = rememberedChoice();
@@ -120,53 +122,51 @@ const DirectionsButton = ({ to, name, variant = 'ghost', size = 'sm', className 
   return (
     <>
       <Button variant={variant} size={size} className={className} onClick={openDialog}>
-        Directions
+        {t('actions.directions')}
       </Button>
 
       <Dialog
         open={open}
-        title={`Directions to ${name}`}
+        title={t('directions.title', { name })}
         onClose={close}
         actions={
           <>
             <Button variant="secondary" onClick={close}>
-              Cancel
+              {t('actions.cancel')}
             </Button>
             <Button onClick={() => void confirm()} disabled={waiting || (kind === 'address' && typed.trim() === '')}>
-              {waiting ? 'Finding you…' : 'Open directions'}
+              {waiting ? t('geo.finding') : t('directions.open')}
             </Button>
           </>
         }
       >
         <div className="flex flex-col gap-3">
-          <p className="text-body m-0">Where are you setting off from?</p>
+          <p className="text-body m-0">{t('directions.question')}</p>
 
-          {startOption('current', 'My current location', locationNote, blocked)}
+          {startOption('current', t('directions.current'), locationNote, blocked)}
 
-          {startOption('address', 'An address', 'A street or a landmark in Ho Chi Minh City.')}
+          {startOption('address', t('directions.address'), t('directions.addressNote'))}
           {kind === 'address' && (
             <div className="flex flex-col gap-2">
               <Field
                 id="directions-from"
-                label="Starting address"
+                label={t('directions.addressLabel')}
                 value={typed}
                 onChange={(e) => setTyped(e.target.value)}
-                placeholder="Lê Lợi, Quận 1"
-                hint="Street and district work best. House numbers are often missing from the map, and OpenStreetMap will ask you to pick a place when it cannot find one."
+                placeholder={t('directions.addressPlaceholder')}
+                hint={t('directions.addressHint')}
               />
               {savedAddress !== '' && savedAddress !== typed.trim() && (
                 <Button variant="ghost" size="sm" className="self-start" onClick={() => setTyped(savedAddress)}>
-                  Use my saved address
+                  {t('directions.useSaved')}
                 </Button>
               )}
             </div>
           )}
 
-          {startOption('none', 'I will type it on the map', 'Opens OpenStreetMap with only the destination filled in.')}
+          {startOption('none', t('directions.none'), t('directions.noneNote'))}
 
-          <p className="text-caption text-ink-muted m-0">
-            Directions open on openstreetmap.org in a new tab. MarketLink does not track where you are.
-          </p>
+          <p className="text-caption text-ink-muted m-0">{t('directions.privacy')}</p>
         </div>
       </Dialog>
     </>

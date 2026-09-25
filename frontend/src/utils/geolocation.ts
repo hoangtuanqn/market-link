@@ -10,13 +10,16 @@ import type { LatLng } from '@/lib/geo';
  * a page loads is the pattern browsers penalise and people refuse, and a refusal is permanent until they go and change
  * it in site settings.
  */
+export type GeoFailure = 'insecure' | 'failed';
+
 export type GeoState =
   | { status: 'idle' }
   | { status: 'asking' }
   | { status: 'ready'; at: LatLng }
   /** The person said no. Nothing we can do from JavaScript; they have to change it in site settings. */
   | { status: 'denied' }
-  | { status: 'unavailable'; reason: string };
+  /** `insecure`: served over plain http. `failed`: the device could not fix a position. Worded by `geo.<reason>`. */
+  | { status: 'unavailable'; reason: GeoFailure };
 
 const KEY = 'geo_position';
 const CHANGE_EVENT = 'geo-change';
@@ -65,10 +68,7 @@ class Geolocation {
     // Geolocation is a secure-context API: over plain http it is simply absent. localhost counts as secure,
     // so this only bites a deployment served without https.
     if (!window.isSecureContext || !('geolocation' in navigator)) {
-      set({
-        status: 'unavailable',
-        reason: 'Your browser only shares your location over a secure (https) connection.',
-      });
+      set({ status: 'unavailable', reason: 'insecure' });
       return Promise.resolve(state);
     }
 
@@ -87,12 +87,7 @@ class Geolocation {
         },
         (error) => {
           set(
-            error.code === error.PERMISSION_DENIED
-              ? { status: 'denied' }
-              : {
-                  status: 'unavailable',
-                  reason: 'Your device could not work out where you are. Try again, or type an address instead.',
-                },
+            error.code === error.PERMISSION_DENIED ? { status: 'denied' } : { status: 'unavailable', reason: 'failed' },
           );
           resolve(state);
         },

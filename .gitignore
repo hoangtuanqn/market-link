@@ -93,6 +93,8 @@ yarn-error.log*
 # Phòng trường hợp build được chạy ngay tại root hoặc IDE tạo output ở root.
 # ---------------------------------------------------------------------
 target/
+# Ảnh người dùng tải lên khi chạy backend trên máy (app.storage.dir mặc định)
+backend/uploads/
 !**/src/main/**/target/
 !**/src/test/**/target/
 build/

@@ -1,0 +1,14 @@
+{
+  "title_one": "{{count}} pedido realizado",
+  "title_other": "{{count}} pedidos realizados",
+  "intro": "Cada puesto revisa ahora su pedido. Recibirás una notificación cuando se acepte y otra cuando esté listo para recoger. Los productos ya están reservados para ti.",
+  "steps": {
+    "title": "Qué pasa ahora",
+    "review": "{{stalls}} aceptan o rechazan antes de su hora límite.",
+    "edit": "Puedes editar o cancelar cada pedido hasta su hora límite: {{cutoffs}}.",
+    "cutoffAt": "{{time}} del {{date}}",
+    "pickup": "El día de mercado el puesto lo marca como listo. Ve en tu franja horaria, recógelo y paga al productor."
+  },
+  "seeOrders": "Ver mis pedidos",
+  "keepBrowsing": "Seguir comprando"
+}

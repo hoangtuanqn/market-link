@@ -1,4 +1,6 @@
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { dayName, formatClock } from '@/lib/format';
 import { formatDistance } from '@/lib/geo';
 import type { MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
@@ -7,15 +9,8 @@ import { ButtonLink } from './ui/button';
 import { Card } from './ui/card';
 import DirectionsButton from './DirectionsButton';
 
-const WEEK: [string, number][] = [
-  ['Mon', 1],
-  ['Tue', 2],
-  ['Wed', 3],
-  ['Thu', 4],
-  ['Fri', 5],
-  ['Sat', 6],
-  ['Sun', 0],
-];
+/** Monday first; names come from `dayName` in the reader's language. */
+const WEEK = [1, 2, 3, 4, 5, 6, 0];
 
 type MarketCardProps = {
   market: MarketType;
@@ -24,6 +19,7 @@ type MarketCardProps = {
 };
 
 const MarketCard = ({ market, distanceKm }: MarketCardProps) => {
+  const { t } = useTranslation();
   const href = `/markets/${market.id}`;
   const away = distanceKm != null ? formatDistance(distanceKm) : market.distance;
 
@@ -40,24 +36,24 @@ const MarketCard = ({ market, distanceKm }: MarketCardProps) => {
 
       <FavoriteButton
         initial={market.saved}
-        labelOff={`Save ${market.name}`}
-        labelOn={`Unsave ${market.name}`}
+        labelOff={t('marketCard.save', { name: market.name })}
+        labelOn={t('marketCard.unsave', { name: market.name })}
         className="self-start"
       />
 
-      <ul aria-label="Market days" className="col-span-full mt-1 flex flex-wrap gap-1">
-        {WEEK.map(([label, dow]) => {
+      <ul aria-label={t('marketCard.days')} className="col-span-full mt-1 flex flex-wrap gap-1">
+        {WEEK.map((dow) => {
           const open = market.days.includes(dow);
           return (
             <li
-              key={label}
+              key={dow}
               className={Helper.cn(
                 'min-w-8.5 rounded-sm py-0.75 text-center text-[13px] font-bold',
                 open ? 'bg-brand text-on-brand' : 'bg-surface-sunken text-ink-muted',
               )}
             >
-              {label}
-              <span className="sr-only">{open ? ' open' : ' closed'}</span>
+              {dayName(dow)}
+              <span className="sr-only"> {open ? t('marketCard.open') : t('marketCard.closed')}</span>
             </li>
           );
         })}
@@ -65,24 +61,26 @@ const MarketCard = ({ market, distanceKm }: MarketCardProps) => {
 
       <p className="text-small text-ink-muted [&_b]:text-ink col-span-full flex flex-wrap gap-4 [&_b]:tabular-nums">
         <span>
-          Hours{' '}
-          <b>
-            {market.open}–{market.close}
-          </b>
+          <Trans
+            t={t}
+            i18nKey="marketCard.hours"
+            values={{ open: formatClock(market.open), close: formatClock(market.close) }}
+            components={{ b: <b /> }}
+          />
         </span>
         <span>
-          <b>{market.stalls}</b> stalls
+          <Trans t={t} i18nKey="marketCard.stalls" count={market.stalls} components={{ b: <b /> }} />
         </span>
         {away && (
           <span>
-            <b>{away}</b> away
+            <Trans t={t} i18nKey="marketCard.away" values={{ distance: away }} components={{ b: <b /> }} />
           </span>
         )}
       </p>
 
       <div className="col-span-full mt-1 flex flex-wrap gap-2">
         <ButtonLink to={href} size="sm">
-          See stalls
+          {t('marketCard.seeStalls')}
         </ButtonLink>
         <DirectionsButton to={{ lat: market.lat, lng: market.lng }} name={market.name} />
       </div>

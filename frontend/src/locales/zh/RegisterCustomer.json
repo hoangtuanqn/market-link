@@ -1,0 +1,43 @@
+{
+  "title": "创建顾客账户",
+  "intro": "平台要求填写姓名、手机号、邮箱和地址。地址用于显示到各市场的距离并预填路线。",
+  "fields": {
+    "fullName": "姓名",
+    "phone": "手机号",
+    "email": "邮箱",
+    "emailHint": "用于登录和接收订单通知。",
+    "address": "地址",
+    "addressPlaceholder": "街道、坊、郡",
+    "password": "密码",
+    "passwordHint": "{{min}} 至 {{max}} 个字符。",
+    "confirmPassword": "再次输入密码"
+  },
+  "consent": {
+    "label": "我已阅读并接受<terms>服务条款</terms>和<privacy>隐私政策</privacy>",
+    "note": "你的姓名和手机号会发给你下单的摊位，方便他们在市集当天把订单交给你。你在摊位向农户付款。"
+  },
+  "submit": "创建账户",
+  "submitting": "正在创建账户…",
+  "haveAccount": "我已有账户",
+  "acceptFirst": "接受条款后才能创建账户。",
+  "sharedAccount": "一个账户可以全家共用；系统不会区分同一账户中的不同人。",
+  "toast": {
+    "created": "账户已创建。",
+    "failed": "无法创建账户，请重试。"
+  },
+  "errors": {
+    "fullNameRequired": "请输入姓名。",
+    "fullNameMax": "姓名最多 {{max}} 个字符。",
+    "phoneRequired": "请输入手机号。",
+    "phoneInvalid": "请输入有效的越南手机号（10 位数字）。",
+    "emailRequired": "请输入邮箱。",
+    "emailInvalid": "请输入有效的邮箱地址。",
+    "emailMax": "邮箱最多 {{max}} 个字符。",
+    "addressRequired": "请输入地址。",
+    "addressMax": "地址最多 {{max}} 个字符。",
+    "passwordRequired": "请输入密码。",
+    "passwordLength": "密码长度须为 {{min}} 至 {{max}} 个字符。",
+    "confirmRequired": "请确认密码。",
+    "confirmMismatch": "两次输入的密码不一致。"
+  }
+}

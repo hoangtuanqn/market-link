@@ -1,0 +1,140 @@
+{
+  "breadcrumbAccount": "Compte",
+  "breadcrumb": "Demander à vendre",
+  "since": "{{name}} · client depuis le {{date}}",
+  "title": "Vendez ce que vous cultivez",
+  "intro": "Si vous cultivez des aliments, votre compte peut devenir un stand sur l'un des quatre marchés. Vous gardez tout ce que vous avez et continuez à acheter auprès des autres stands.",
+  "next": {
+    "title": "Ce qui se passe après l'envoi",
+    "read": "Un administrateur lit la demande et regarde vos photos, généralement en quelques jours de marché.",
+    "panel": "Une fois approuvée, un panneau de stand apparaît dans votre compte pour le stock, les commandes et les créneaux de retrait.",
+    "setup": "Vous y choisissez vos marchés, vos jours et vos créneaux, puis publiez vos premiers produits."
+  },
+  "step1": {
+    "title": "Votre stand",
+    "stallName": "Nom du stand",
+    "stallNamePlaceholder": "ex. Les légumes de la famille Khang",
+    "stallNameHint": "Les clients le voient sur la carte et sur leurs commandes.",
+    "person": "Personne à contacter",
+    "phone": "Téléphone",
+    "phoneHint": "Imprimé sur chaque commande pour que les clients puissent vous joindre.",
+    "email": "E-mail",
+    "emailHint": "Votre identifiant de connexion ne change pas.",
+    "about": "À propos du stand",
+    "aboutPlaceholder": "Une ou deux phrases. Qui cultive et où."
+  },
+  "step2": {
+    "title": "Ce que vous cultivez",
+    "categories": "Catégories",
+    "crops": "Cultures principales",
+    "cropsPlaceholder": "Liseron d'eau, choy sum, basilic thaï",
+    "cropsHint": "Séparez-les par des virgules. Vous publierez de vrais produits avec leurs prix après approbation.",
+    "volume": "Quantité approximative par semaine",
+    "volumePlaceholder": "Environ 120 bottes",
+    "volumeHint": "Un chiffre approximatif. Il aide l'administrateur à vous placer sur un marché qui a de la place.",
+    "method": "Votre façon de cultiver",
+    "methodPlaceholder": "ex. Aucun pesticide ces deux dernières saisons.",
+    "methodHint": "Facultatif, affiché sur la page de votre stand avec vos propres mots. MarketLink ne vérifie ni ne certifie rien de tout cela."
+  },
+  "step3": {
+    "title": "Où vous cultivez",
+    "plot": "Adresse de la parcelle",
+    "plotPlaceholder": "Hameau, quartier, district",
+    "plotHint": "Seul l'administrateur le voit. Les clients voient votre stand au marché, pas votre parcelle.",
+    "size": "Surface de la parcelle",
+    "sizePlaceholder": "5 000 m²",
+    "since": "Cultivé ici depuis",
+    "pin": "Épinglez la parcelle",
+    "map": "Épinglez votre parcelle sur la carte",
+    "pinHint": "Faites glisser l'épingle jusqu'à votre parcelle. C'est le moyen le plus rapide pour l'administrateur de vérifier que les photos correspondent au lieu.",
+    "yourPlot": "Votre parcelle"
+  },
+  "step4": {
+    "title": "Photos de la parcelle",
+    "intro": "Deux photos suffisent, cinq au maximum. Une vue d'ensemble de toute la parcelle, et un gros plan de ce qui pousse en ce moment. Prenez-les dans les 30 derniers jours, sans filtre.",
+    "shots": {
+      "wide": "Vue d'ensemble de la parcelle",
+      "growing": "Ce qui pousse en ce moment",
+      "other": "Autre chose"
+    },
+    "required": "Obligatoire",
+    "optional": "Facultatif",
+    "addPhoto": "Ajouter une photo",
+    "video": "Une courte vidéo",
+    "addVideo": "Ajouter une vidéo, 60 secondes maximum",
+    "videoHint": "Facultatif. Une lente promenade le long des rangs en dit plus que n'importe quelle photo, et accélère l'approbation.",
+    "banner": {
+      "title": "L'administrateur vérifie une seule chose : que la parcelle existe et produit ce que vous avez indiqué.",
+      "text": "MarketLink ne vérifie ni licences, ni sécurité alimentaire, ni allégations bio, et une photo n'est pas un certificat."
+    }
+  },
+  "step5": {
+    "title": "Où vous voulez vendre",
+    "market": "Marché",
+    "hint": "Choisissez-en un pour commencer. Vous réglerez vos jours, créneaux de retrait et heure limite dans le panneau du stand une fois approuvé, et pourrez ajouter les autres marchés plus tard."
+  },
+  "step6": {
+    "title": "Avant d'envoyer",
+    "true": "Tout ce qui est indiqué ici est vrai, et les photos sont de ma propre parcelle",
+    "trueHint": "Une demande avec des photos qui ne sont pas les vôtres est refusée et le compte peut être suspendu.",
+    "present": "Je serai au stand pendant mon créneau de retrait",
+    "presentHint": "Les absences répétées sont la raison habituelle de suspension d'un stand.",
+    "pay": "Je comprends que les clients me paient au stand",
+    "payHint": "Il n'y a ni paiement en ligne ni livraison sur MarketLink.",
+    "send": "Envoyer la demande",
+    "later": "Enregistrer et terminer plus tard"
+  },
+  "preview": "Aperçu : après l'envoi",
+  "sent": {
+    "eyebrow": "Envoyée à l'instant",
+    "title": "Votre demande est entre les mains d'un administrateur",
+    "intro": "Rien ne change pour vous en attendant. Continuez vos achats et surveillez vos notifications pour la réponse.",
+    "banner": {
+      "title": "Vous pouvez toujours acheter auprès d'autres stands pendant l'examen.",
+      "text": "Vos commandes, favoris et panier restent intacts. Le panneau du stand n'apparaît qu'après l'approbation d'un administrateur."
+    },
+    "summary": "Ce que vous avez envoyé",
+    "stall": "Stand",
+    "grows": "Cultures",
+    "plot": "Parcelle",
+    "plotText": "{{size}} à {{place}}, cultivée depuis {{since}}",
+    "evidence": "Justificatifs",
+    "photos_one": "{{count}} photo",
+    "photos_other": "{{count}} photos",
+    "photosAndVideo_one": "{{count}} photo et une vidéo",
+    "photosAndVideo_other": "{{count}} photos et une vidéo",
+    "market": "Marché",
+    "keepShopping": "Continuer mes achats",
+    "withdraw": "Retirer la demande",
+    "progress": "Avancement"
+  },
+  "timeline": {
+    "placed": {
+      "title": "Demande envoyée",
+      "note": "À l'instant",
+      "by": "Vous"
+    },
+    "accepted": {
+      "title": "Un administrateur la lit",
+      "note": "Généralement en quelques jours de marché",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "Ouverture du panneau du stand",
+      "note": "Après approbation",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "missingTitle": "Cases manquantes",
+    "missing": "Cochez les trois cases à la fin avant d'envoyer.",
+    "sentTitle": "Demande envoyée",
+    "sent": "La réponse d'un administrateur arrivera dans vos notifications.",
+    "withdrawnTitle": "Demande retirée",
+    "withdrawn": "Vous pouvez refaire une demande quand vous voulez.",
+    "photoTitle": "Ajouter une photo",
+    "photo": "Choisissez une photo sur votre téléphone ou votre ordinateur.",
+    "videoTitle": "Ajouter une vidéo",
+    "video": "Choisissez une vidéo de 60 secondes maximum."
+  }
+}

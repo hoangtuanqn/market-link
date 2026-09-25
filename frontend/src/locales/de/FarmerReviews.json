@@ -1,0 +1,35 @@
+{
+  "title": "Bewertungen",
+  "intro": "Was Kunden nach dem Abholen ihrer Bestellung gesagt haben. Eine kurze Antwort bewirkt viel, besonders bei einer schlechten Bewertung.",
+  "summary": "Stand {{stall}} · Produkte {{products}} · {{reviews}}",
+  "reviewCount_one": "{{count}} Bewertung",
+  "reviewCount_other": "{{count}} Bewertungen",
+  "filter": {
+    "all": "Alle",
+    "needs": "Antwort nötig",
+    "replied": "Beantwortet",
+    "stall": "Zum Stand",
+    "products": "Zu Produkten"
+  },
+  "toast": {
+    "postedTitle": "Antwort veröffentlicht",
+    "postedText": "Antwort unter der Bewertung von {{name}} veröffentlicht.",
+    "editTitle": "Antwort bearbeiten",
+    "editText": "Die Antwort kann jetzt bearbeitet werden."
+  },
+  "action": {
+    "editReply": "Antwort bearbeiten",
+    "reply": "Antworten",
+    "report": "Bewertung melden",
+    "post": "Antwort veröffentlichen"
+  },
+  "form": {
+    "label": "Ihre Antwort, unter der Bewertung angezeigt",
+    "placeholder": "Danke für Ihren Besuch, {{name}}. Beim nächsten Mal packen wir die Bestellung sorgfältiger."
+  },
+  "empty": {
+    "title": "Noch keine Bewertungen",
+    "text": "Ein Kunde kann Ihren Stand und seine Einkäufe bewerten, sobald die Bestellung abgeschlossen ist (D-10)."
+  },
+  "note": "Der Stand kann Bewertungen nicht entfernen. Verstößt eine gegen die Richtlinien, melden Sie sie, und der Admin entscheidet (FR-074)."
+}

@@ -1,0 +1,23 @@
+{
+  "myOrders": "Meine Bestellungen",
+  "breadcrumbOrder": "Bestellung {{code}}",
+  "breadcrumbEdit": "Bearbeiten",
+  "notFound": {
+    "title": "Diese Bestellung gibt es hier nicht mehr",
+    "text": "Vielleicht haben Sie sie storniert, oder der Link ist veraltet. Öffnen Sie sie erneut über Ihre Bestellungen."
+  },
+  "title": "Bestellung {{code}} bearbeiten",
+  "cutoff": "Änderungen sind bis <b>{{cutoff}}</b> möglich.",
+  "banner": {
+    "title": "Nach dem Speichern geht die Bestellung zurück auf „Aufgegeben“, und {{stall}} gibt sie erneut frei.",
+    "text": "Ihre Ware bleibt während der Prüfung reserviert. Sie erhalten eine Benachrichtigung, sobald sie angenommen wird."
+  },
+  "help": "Hier können Sie Mengen verringern oder Artikel entfernen. Um etwas anderes von {{stall}} hinzuzufügen, geben Sie eine neue Bestellung auf. Die Mengen sind auf den heutigen Restbestand des Stands begrenzt.",
+  "note": "Notiz an den Stand",
+  "submit": "Änderungen zur Freigabe senden",
+  "discard": "Änderungen verwerfen",
+  "toast": {
+    "title": "Änderungen gesendet",
+    "text": "{{stall}} prüft Ihre Bestellung erneut."
+  }
+}

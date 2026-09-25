@@ -1,0 +1,52 @@
+{
+  "overline": "Tuần {{from}} – {{to}} · Thảo Điền {{daysA}} · Thủ Đức {{daysB}}",
+  "title": "Hàng tuần này",
+  "intro": "Mẫu hằng tuần là số lượng khởi đầu cho mỗi ngày chợ. Áp dụng mẫu, rồi chỉnh những ngày thu hoạch khác đi. Hàng đã giữ chỗ đã được trừ khỏi số khách thấy.",
+  "saved": "Đã lưu",
+  "per": "theo {{unit}}",
+  "tabs": {
+    "label": "Chế độ xem hàng",
+    "week": "Tuần này",
+    "template": "Mẫu hằng tuần"
+  },
+  "status": {
+    "available": "Còn hàng",
+    "soldOut": "Hết hàng",
+    "paused": "Tạm ngừng tuần này"
+  },
+  "col": {
+    "product": "Sản phẩm",
+    "status": "Trạng thái",
+    "price": "Giá",
+    "reserved": "Đã giữ",
+    "defaultPrice": "Giá mặc định"
+  },
+  "aria": {
+    "status": "Trạng thái của {{product}}",
+    "day": "{{product}} {{day}}",
+    "dayAt": "{{product}} {{day}} {{market}}",
+    "price": "Giá {{product}}",
+    "templateDay": "{{product}} mẫu {{day}}"
+  },
+  "week": {
+    "caption": "Số lượng theo sản phẩm và ngày chợ tuần này",
+    "note": "Số lượng là số đơn vị có bán trong ngày đó. Ô trống nghĩa là không bán sản phẩm đó. Thứ Sáu hiện màu xám vì {{stall}} không bán vào Thứ Sáu.",
+    "savedText": "Đã lưu hàng tuần này. Khách thấy số lượng mới ngay bây giờ.",
+    "save": "Lưu thay đổi"
+  },
+  "template": {
+    "savedText": "Đã lưu mẫu. Mẫu áp dụng từ tuần sau, trừ khi bạn áp dụng ngay.",
+    "save": "Lưu mẫu",
+    "note": "Ngày trong mẫu theo ngày hoạt động của bạn. Đổi ngày đó trong Sạp & nhận hàng."
+  },
+  "apply": {
+    "open": "Áp dụng mẫu cho tuần này",
+    "title": "Áp dụng mẫu cho tuần này?",
+    "keep": "Giữ bản chỉnh của tôi",
+    "doneTitle": "Đã áp dụng mẫu",
+    "doneText": "Đã áp dụng mẫu cho {{sat}} và {{sun}}.",
+    "confirm": "Áp dụng mẫu",
+    "text": "Số lượng {{sat}} và {{sun}} được thay bằng giá trị trong mẫu. Hàng đã giữ chỗ không tính vào số khách thấy.",
+    "warning": "Những chỉnh sửa của bạn cho tuần này sẽ bị ghi đè."
+  }
+}

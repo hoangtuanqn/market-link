@@ -1,0 +1,74 @@
+{
+  "city": "胡志明市",
+  "count_one": "{{count}} 个市集",
+  "count_other": "{{count}} 个市集",
+  "title": "市集",
+  "intro": "选择你想去逛的日子，再按区域缩小范围。",
+  "filters": {
+    "label": "筛选市集",
+    "day": "市集日",
+    "clearAll": "全部清除",
+    "area": "区域",
+    "allAreas": "所有区域（{{count}}）",
+    "sort": "排序方式"
+  },
+  "sorts": {
+    "near": "由近到远",
+    "stalls": "摊位最多",
+    "opens": "最早开市"
+  },
+  "cleared": {
+    "title": "已清除筛选",
+    "text": "正在显示{{day}}开放的所有市集。"
+  },
+  "popupStalls_one": "{{count}} 个摊位",
+  "popupStalls_other": "{{count}} 个摊位",
+  "summary": {
+    "open_one": "{{day}}有 <b>{{count}} 个市集</b>开放",
+    "open_other": "{{day}}有 <b>{{count}} 个市集</b>开放",
+    "openIn_one": "{{day}}在 {{area}} 有 <b>{{count}} 个市集</b>开放",
+    "openIn_other": "{{day}}在 {{area}} 有 <b>{{count}} 个市集</b>开放",
+    "none": "{{day}}没有市集开放",
+    "noneIn": "{{day}}在 {{area}} 没有市集开放"
+  },
+  "error": {
+    "noun": "市集",
+    "alt": "<link>市集地图</link>在单独的页面打开"
+  },
+  "pager": {
+    "showing": "显示第 {{from}}–{{to}} 个，共 {{total}} 个",
+    "onePage_one": "{{count}} 个市集，全部在一页",
+    "onePage_other": "全部 {{count}} 个市集都在一页"
+  },
+  "empty": {
+    "areaTitle": "{{day}}在 {{area}} 没有市集",
+    "areaText_one": "当天全市共有 {{count}} 个市集开放。扩大区域，或换一天看看。",
+    "areaText_other": "当天全市共有 {{count}} 个市集开放。扩大区域，或换一天看看。",
+    "allAreas": "显示所有区域",
+    "dayTitle": "{{day}}没有市集开放",
+    "dayText_one": "{{day}}最热闹，有 {{count}} 个市集开放。",
+    "dayText_other": "{{day}}最热闹，有 {{count}} 个市集开放。",
+    "showDay": "查看{{day}}"
+  },
+  "map": {
+    "label": "符合条件的市集地图",
+    "note": "地图随筛选条件变化，只显示列表中的市集。"
+  },
+  "demo": {
+    "title": "此列表的其他状态（FR-084）",
+    "views": {
+      "loaded": "有数据",
+      "loading": "加载中",
+      "error": "出错"
+    },
+    "note": "空状态可以真实出现：选择<b>{{day}}</b>和区域<b>{{area}}</b>。它会说明你选了什么，并给出解决办法。"
+  },
+  "location": {
+    "measured": "距离从你所在的位置计算。",
+    "forget": "忘记我的位置",
+    "denied": "你已为本站关闭位置权限。请在浏览器的网站设置中更改，才能按距离排序。",
+    "needed": "按距离排序需要你的位置。在你共享之前，下面的顺序不变。",
+    "share": "共享你的位置，查看每个市集有多远。",
+    "use": "使用我的位置"
+  }
+}

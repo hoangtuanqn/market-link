@@ -1,0 +1,52 @@
+{
+  "title": "販売履歴",
+  "intro": "何が売れたか、前の期間と比べてどうだったかを確認できます。売上は完了した注文のみ、つまりお客様が店頭で支払った金額です。",
+  "export": {
+    "button": "この期間をエクスポート",
+    "title": "エクスポートを開始しました",
+    "text": "エクスポートを開始しました。CSV には画面に表示中の期間と市場が含まれます。"
+  },
+  "days_one": "{{count}} 日間",
+  "days_other": "{{count}} 日間",
+  "market": "市場",
+  "bothMarkets": "両方の市場",
+  "kpi": {
+    "completed": "完了した注文",
+    "completedNote": "受けた注文 {{total}} 件中",
+    "revenue": "売上",
+    "revenueNote": "₫、店頭で支払い",
+    "average": "平均注文額",
+    "averageNote": "完了した注文 1 件あたりの ₫",
+    "declined": "辞退した注文",
+    "declinedNote": "受けた注文の {{pct}}%"
+  },
+  "byDay": {
+    "title": "市場の日ごとの売上",
+    "note": "単位は百万 ₫。土曜と日曜だけ出店しているので、1 本の棒が市場の朝 1 回分です。",
+    "caption": "{{now}}と{{prev}}の市場の日ごとの売上比較（単位：百万ドン）"
+  },
+  "best": {
+    "title": "売れ筋",
+    "note": "{{month}}の売上です。数量は商品ごとの単位なので、合算はしません。",
+    "product": "商品",
+    "soldPer": "販売単位",
+    "price": "価格",
+    "sold": "販売数",
+    "revenue": "売上"
+  },
+  "where": {
+    "title": "販売した市場",
+    "note_one": "今月は {{count}} 件の注文を辞退し、{{cancelled}} 件がキャンセルされました。どちらもここには含まれません。",
+    "note_other": "今月は {{count}} 件の注文を辞退し、{{cancelled}} 件がキャンセルされました。どちらもここには含まれません。"
+  },
+  "past": { "title": "過去の注文", "note": "完了・辞退・キャンセル" },
+  "col": {
+    "pickup": "受け取り",
+    "order": "注文",
+    "customer": "お客様",
+    "items": "品目",
+    "total": "合計",
+    "status": "ステータス"
+  },
+  "itemLine": "{{qty}}× {{name}}"
+}

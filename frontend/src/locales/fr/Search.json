@@ -1,0 +1,49 @@
+{
+  "title": "Rechercher",
+  "search": {
+    "scope": "Rechercher dans",
+    "scopes": {
+      "all": "Tout",
+      "market": "Marchés",
+      "farmer": "Stands",
+      "product": "Produits"
+    },
+    "keyword": "Mot-clé",
+    "submit": "Rechercher"
+  },
+  "day": "Jour de marché",
+  "sort": "Trier",
+  "sorts": {
+    "best": "Pertinence",
+    "nearest": "Les plus proches",
+    "price": "Prix",
+    "rating": "Note"
+  },
+  "tabs": {
+    "label": "Type de résultat",
+    "all": "Tout",
+    "market": "Marchés",
+    "farmer": "Stands",
+    "product": "Produits"
+  },
+  "empty": {
+    "startTitle": "Saisissez un mot pour rechercher",
+    "startText": "Essayez un nom de produit, un marché ou un stand.",
+    "noneTitle": "Aucun résultat",
+    "noneText": "Essayez un mot plus court, ou retirez un filtre. La recherche porte à la fois sur les marchés, les stands et les produits."
+  },
+  "results_one": "{{count}} résultat pour « {{q}} » le {{day}}",
+  "results_other": "{{count}} résultats pour « {{q}} » le {{day}}",
+  "noStalls": "Aucun stand ne correspond.",
+  "noProducts": "Aucun produit ne correspond.",
+  "noMarket": {
+    "title": "Aucun marché ne s'appelle « {{q}} »",
+    "text_one": "Les marchés sont recherchés par nom et par quartier. {{count}} stand ci-dessus vend quelque chose correspondant à « {{q}} ».",
+    "text_other": "Les marchés sont recherchés par nom et par quartier. {{count}} stands ci-dessus vendent quelque chose correspondant à « {{q}} ».",
+    "showStalls": "Voir les stands"
+  },
+  "map": {
+    "label": "Carte des résultats",
+    "note": "Les résultats avec une adresse sont épinglés. Sur mobile, un bouton « Liste / Carte » permet de passer de l'un à l'autre."
+  }
+}

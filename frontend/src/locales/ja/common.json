@@ -1,0 +1,373 @@
+{
+  "settings": {
+    "appearance": "表示",
+    "theme": "テーマ",
+    "themeNote": "すぐに反映されます。「デバイスに合わせる」はスマートフォンやパソコンの設定に従います。",
+    "themes": {
+      "light": "ライト",
+      "dark": "ダーク",
+      "system": "デバイスに合わせる"
+    },
+    "language": "言語",
+    "languageNote": "メニュー、ボタン、メッセージの言語です。屋台名、商品名、地名は屋台が書いたとおりに表示されます。",
+    "format": "金額・日付・単位",
+    "currency": "価格の表示",
+    "currencyNote": "屋台では常にベトナムドンでお支払いいただきます。ほかの通貨は参考として横に表示され、{{date}} 時点の固定レートで換算します。",
+    "currencies": {
+      "VND": "₫ ベトナムドンのみ",
+      "USD": "₫ と $ 米ドル",
+      "EUR": "₫ と € ユーロ",
+      "JPY": "₫ と ¥ 日本円"
+    },
+    "units": "重さと容量",
+    "unitsNote": "計量単位だけを換算します。束、個、トレイ単位で売る屋台はその呼び方のままです。",
+    "metric": "メートル法 · kg、g、リットル",
+    "imperial": "ヤード・ポンド法 · lb、oz、パイント",
+    "date": "日付",
+    "clock": "時刻",
+    "clock24": "24 時間表示 · 19:00",
+    "clock12": "12 時間表示 · 7:00 pm",
+    "preview": "プレビュー：{{date}} · {{time}} · {{price}}",
+    "notifications": "お知らせ",
+    "notificationsNote": "アカウントに保存されます。MarketLink はまだお知らせを送信していませんが、送信を始めたらこの選択に従います。",
+    "notes": {
+      "customer": {
+        "orderDecided": "注文が受け付けられた、またはお断りされた",
+        "orderReady": "注文の受け取り準備ができた",
+        "backInStock": "保存した商品が再入荷した",
+        "announcements": "MarketLink からのお知らせ",
+        "stallReply": "屋台がメッセージに返信した"
+      },
+      "farmer": {
+        "newOrder": "新しい注文が届いた",
+        "orderChanged": "お客様が注文を変更またはキャンセルした",
+        "cutoffSoon": "締め切りまであと 1 時間",
+        "newReview": "屋台に新しいレビューが付いた",
+        "announcements": "MarketLink からのお知らせ"
+      },
+      "admin": {
+        "farmerApplication": "Farmer の申請が届いた",
+        "reported": "レビューまたは掲載が報告された",
+        "newFeedback": "新しいご意見",
+        "marketEdited": "マーケットが編集された"
+      }
+    },
+    "save": "設定を保存",
+    "saving": "保存中…",
+    "saveHint": "テーマは選んだ時点で反映され、その他は保存したときに反映されます。",
+    "savedTitle": "保存しました",
+    "savedText": "設定を保存しました。",
+    "saveError": "設定を保存できませんでした。もう一度お試しください。"
+  },
+  "actions": {
+    "back": "戻る",
+    "close": "閉じる",
+    "directions": "経路",
+    "dismiss": "閉じる",
+    "remove": "削除",
+    "tryAgain": "もう一度試す",
+    "cancel": "キャンセル"
+  },
+  "admin": {
+    "badge": "管理者",
+    "security": "セキュリティ",
+    "signIn": "管理者ログイン"
+  },
+  "cart": {
+    "orderOf": "注文 {{index}} / {{of}}",
+    "payAtPickup": "受け取り時に屋台で支払い"
+  },
+  "chat": {
+    "assistant": "MarketLink アシスタント",
+    "you": "あなた",
+    "intent": "インテント：{{intent}}"
+  },
+  "errors": {
+    "network": "サーバーに接続できませんでした。接続を確認してもう一度お試しください。"
+  },
+  "farmerNav": {
+    "sections": "セクション",
+    "navigation": "Farmer ナビゲーション",
+    "home": "MarketLink — Farmer の概要",
+    "badge": "Farmer",
+    "expand": "サイドバーを広げる",
+    "collapse": "サイドバーをたたむ",
+    "approvedMarkets_one": "承認済み · {{count}} マーケット",
+    "approvedMarkets_other": "承認済み · {{count}} マーケット",
+    "changeMarket": "表示するマーケットを変更",
+    "roleStall": "Farmer · {{stall}}",
+    "openNavigation": "ナビゲーションを開く",
+    "searchPlaceholder": "注文番号またはお客様",
+    "yourAccount": "アカウント",
+    "today": "今日",
+    "overview": "概要",
+    "incomingOrders": "届いた注文",
+    "pickupSlots": "受け取り枠",
+    "stock": "在庫",
+    "weekStock": "今週の在庫",
+    "products": "商品",
+    "stall": "屋台",
+    "stallPickup": "屋台と受け取り",
+    "reviews": "レビュー",
+    "salesHistory": "販売履歴",
+    "inbox": "受信箱",
+    "messages": "メッセージ",
+    "notifications": "お知らせ",
+    "account": "アカウント",
+    "promote": "プロモーションと掲載",
+    "approval": "審査状況",
+    "settings": "設定",
+    "shop": "買い物",
+    "shopMarkets": "マーケットで買い物"
+  },
+  "footer": {
+    "tagline": "近くのファーマーズマーケットで予約して、屋台で受け取り。代金は受け取り時に Farmer へ直接お支払いください。",
+    "shop": "買う",
+    "marketsNearYou": "近くのマーケット",
+    "inSeason": "旬のもの",
+    "marketMap": "マーケットマップ",
+    "favoriteStalls": "お気に入りの屋台",
+    "sell": "売る",
+    "registerFarmer": "Farmer として登録",
+    "handlingPreOrders": "予約注文の扱い方",
+    "stallGuidelines": "屋台のガイドライン",
+    "marketLink": "MarketLink",
+    "aboutUs": "私たちについて",
+    "contactUs": "お問い合わせ",
+    "feedback": "ご意見・不具合の報告",
+    "mapData": "地図データ © OpenStreetMap 寄稿者",
+    "mapDataFrom": "地図データ {{credit}}"
+  },
+  "header": {
+    "cart": "カート",
+    "cartItems_one": "カート、{{count}} 点",
+    "cartItems_other": "カート、{{count}} 点",
+    "hi": "こんにちは、<b>{{name}}</b> さん",
+    "main": "メイン",
+    "menu": "メニュー",
+    "notifications": "お知らせ",
+    "notificationsUnread_one": "お知らせ、未読 {{count}} 件",
+    "notificationsUnread_other": "お知らせ、未読 {{count}} 件",
+    "openMenu": "メニューを開く",
+    "search": "検索"
+  },
+  "kpi": {
+    "noChange": "変化なし",
+    "vsBefore": "前の期間との比較"
+  },
+  "loadError": {
+    "title": "{{noun}}を読み込めませんでした",
+    "text": "今回はリストが返ってきませんでした。保存したものや注文したものには影響ありません。",
+    "help": "たいていは接続の問題で、あなたの操作が原因ではありません。もう一度試しても解決しない場合は、<link>何が起きたかお知らせください</link>。確認いたします。",
+    "helpAlt": "たいていは接続の問題で、あなたの操作が原因ではありません。もう一度試しても解決しない場合は、<alt />、または<link>何が起きたかお知らせください</link>。確認いたします。"
+  },
+  "loading": {
+    "markets": "マーケットを読み込み中"
+  },
+  "logo": {
+    "home": "MarketLink — ホーム"
+  },
+  "map": {
+    "attribution": "© {{link}} 寄稿者",
+    "open": "開く",
+    "placeholder": "地図 — {{label}}",
+    "stallPickup": "お店 {{code}} · 受け取り {{pickup}}",
+    "tilesFailed": "地図の表示には接続が必要です。地図がなくてもリストは使えます。",
+    "yourStall": "あなたのお店"
+  },
+  "marketCard": {
+    "save": "{{name}}を保存",
+    "unsave": "{{name}}の保存を解除",
+    "days": "開催日",
+    "open": "開催",
+    "closed": "休み",
+    "hours": "営業時間 <b>{{open}}–{{close}}</b>",
+    "stalls_one": "屋台 <b>{{count}}</b> 軒",
+    "stalls_other": "屋台 <b>{{count}}</b> 軒",
+    "away": "<b>{{distance}}</b> 先",
+    "seeStalls": "屋台を見る"
+  },
+  "nav": {
+    "markets": "マーケット",
+    "products": "商品",
+    "map": "地図",
+    "aboutUs": "私たちについて",
+    "myOrders": "注文履歴",
+    "favorites": "お気に入り",
+    "profile": "プロフィール",
+    "settings": "設定",
+    "signIn": "ログイン",
+    "createAccount": "アカウントを作成",
+    "signOut": "ログアウト",
+    "yourAccount": "アカウント"
+  },
+  "order": {
+    "code": "注文 {{code}}",
+    "market": "マーケット",
+    "pickup": "受け取り",
+    "payOnPickup": "受け取り時に支払い",
+    "declinedReason": "屋台からの理由：{{reason}} お支払いは不要です。",
+    "cancelledNote": "締め切り前にこの注文をキャンセルしました。在庫は屋台に戻りました。",
+    "lockedNote": "{{cutoff}} に締め切りました。変更するには屋台に直接ご連絡ください。",
+    "editableNote": "{{cutoff}} までに変更またはキャンセルしてください。それ以降は注文が確定します。",
+    "edit": "注文を変更",
+    "cancel": "注文をキャンセル",
+    "reviewed": "この注文はレビュー済みです",
+    "review": "屋台と商品をレビュー",
+    "reorder": "もう一度注文"
+  },
+  "orderStatus": {
+    "placed": "注文済み",
+    "accepted": "受付済み",
+    "ready": "受け取り可能",
+    "completed": "完了",
+    "declined": "お断り",
+    "cancelled": "キャンセル済み"
+  },
+  "pagination": {
+    "label": "ページ送り",
+    "previous": "前のページ",
+    "next": "次のページ",
+    "page": "{{n}} ページ"
+  },
+  "password": {
+    "show": "パスワードを表示",
+    "hide": "パスワードを隠す"
+  },
+  "period": {
+    "length": "期間の長さ",
+    "day": "日",
+    "week": "週",
+    "month": "月",
+    "quarter": "四半期",
+    "year": "年",
+    "custom": "カスタム",
+    "from": "開始",
+    "to": "終了",
+    "compareWith": "比較対象",
+    "cmpBefore": "直前の同じ長さの期間",
+    "cmpLastYear": "前年の同じ期間",
+    "cmpNone": "比較しない",
+    "comparedWith": "<b>{{compare}}</b>（同じ長さ）と比較"
+  },
+  "price": {
+    "was": "通常価格"
+  },
+  "product": {
+    "notThisWeek": "今週はお休み",
+    "backSoon": "まもなく再入荷",
+    "onlyLeft": "残りわずか {{qty}}",
+    "left": "残り {{qty}}",
+    "paused": "一時停止中",
+    "soldOut": "売り切れ",
+    "addFavorite": "お気に入りに追加：{{name}}",
+    "removeFavorite": "お気に入りから削除：{{name}}",
+    "notifyMe": "再入荷を知らせる",
+    "addToCart": "カートに追加"
+  },
+  "qty": {
+    "label": "数量（{{unit}}）",
+    "decrease": "1 減らす",
+    "increase": "1 増やす",
+    "max": "最大 {{qty}}",
+    "left": "残り {{qty}}"
+  },
+  "rating": {
+    "count_one": "（{{count}} 件のレビュー）",
+    "count_other": "（{{count}} 件のレビュー）",
+    "sr": "5 つ星中 {{value}}",
+    "srWithCount_one": "5 つ星中 {{value}}、レビュー {{count}} 件",
+    "srWithCount_other": "5 つ星中 {{value}}、レビュー {{count}} 件",
+    "stars_one": "星 {{count}} つ — {{word}}",
+    "stars_other": "星 {{count}} つ — {{word}}",
+    "words": {
+      "none": "未評価",
+      "poor": "よくない",
+      "fair": "まあまあ",
+      "good": "よい",
+      "veryGood": "とてもよい",
+      "excellent": "最高"
+    }
+  },
+  "review": {
+    "verified": "購入済み",
+    "replied": "{{by}} が返信 · {{date}}"
+  },
+  "slot": {
+    "full": "満員",
+    "left": "残り {{left}} / {{max}}"
+  },
+  "stall": {
+    "markets": "マーケット",
+    "days": "開催日",
+    "pickup": "受け取り",
+    "distance": "距離",
+    "see": "屋台と今週の在庫を見る"
+  },
+  "stock": {
+    "left": "残り",
+    "reserved": "{{total}} 中 {{reserved}} 予約済み",
+    "runningLow": "残りわずか",
+    "soldOut": "売り切れ"
+  },
+  "toast": {
+    "signedOut": "ログアウトしました。"
+  },
+  "validation": {
+    "fullNameRequired": "氏名を入力してください。",
+    "fullNameMax": "氏名は {{max}} 文字以内で入力してください。",
+    "phoneRequired": "電話番号を入力してください。",
+    "phoneInvalid": "有効なベトナムの携帯電話番号（10 桁）を入力してください。",
+    "addressRequired": "住所を入力してください。",
+    "addressMax": "住所は {{max}} 文字以内で入力してください。"
+  },
+  "adminNav": {
+    "sections": "管理メニュー",
+    "overview": "概要",
+    "farmers": "農家",
+    "customers": "お客様",
+    "markets": "マーケット",
+    "moderation": "モデレーション",
+    "orders": "注文",
+    "revenue": "収益",
+    "reports": "レポート",
+    "categories": "カテゴリ",
+    "announcements": "お知らせ",
+    "feedback": "フィードバック",
+    "pricing": "料金",
+    "settings": "設定"
+  },
+  "carousel": {
+    "roleCarousel": "カルーセル",
+    "roleSlide": "スライド",
+    "slideOf": "{{n}} / {{total}}：{{topic}}",
+    "previous": "前のスライド",
+    "next": "次のスライド",
+    "show": "スライド {{n}} を表示：{{topic}}",
+    "pause": "スライドショーを一時停止",
+    "play": "スライドショーを再生"
+  },
+  "geo": {
+    "denied": "このサイトの位置情報がオフになっています。ブラウザのサイト設定で変更するか、住所を使ってください。",
+    "insecure": "ブラウザは安全な接続（https）でのみ位置情報を共有します。",
+    "failed": "端末で現在地を特定できませんでした。もう一度試すか、住所を入力してください。",
+    "finding": "現在地を取得中…"
+  },
+  "directions": {
+    "title": "{{name}} への経路",
+    "question": "どこから出発しますか？",
+    "current": "現在地",
+    "currentShared": "共有済み",
+    "currentAsk": "最初にブラウザが確認します",
+    "address": "住所",
+    "addressNote": "ホーチミン市内の通りや目印。",
+    "addressLabel": "出発地の住所",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "通り名と区を入れるのが確実です。地図には番地がないことが多く、見つからないときは OpenStreetMap が場所を選ぶよう求めます。",
+    "useSaved": "保存した住所を使う",
+    "none": "地図上で入力する",
+    "noneNote": "目的地だけを入力した状態で OpenStreetMap を開きます。",
+    "privacy": "経路は新しいタブの openstreetmap.org で開きます。MarketLink はあなたの居場所を追跡しません。",
+    "open": "経路を開く"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "city": "Hô Chi Minh-Ville",
+  "count_one": "{{count}} marché",
+  "count_other": "{{count}} marchés",
+  "title": "Marchés",
+  "intro": "Choisissez le jour où vous voulez faire vos courses, puis affinez par quartier.",
+  "filters": {
+    "label": "Filtrer les marchés",
+    "day": "Jour de marché",
+    "clearAll": "Tout effacer",
+    "area": "Quartier",
+    "allAreas": "Tous les quartiers ({{count}})",
+    "sort": "Trier par"
+  },
+  "sorts": {
+    "near": "Les plus proches",
+    "stalls": "Le plus de stands",
+    "opens": "Ouverture la plus tôt"
+  },
+  "cleared": {
+    "title": "Filtres effacés",
+    "text": "Affichage de tous les marchés ouverts le {{day}}."
+  },
+  "popupStalls_one": "{{count}} stand",
+  "popupStalls_other": "{{count}} stands",
+  "summary": {
+    "open_one": "<b>{{count}} marché</b> ouvert le {{day}}",
+    "open_other": "<b>{{count}} marchés</b> ouverts le {{day}}",
+    "openIn_one": "<b>{{count}} marché</b> ouvert le {{day}} à {{area}}",
+    "openIn_other": "<b>{{count}} marchés</b> ouverts le {{day}} à {{area}}",
+    "none": "Rien d'ouvert le {{day}}",
+    "noneIn": "Rien d'ouvert le {{day}} à {{area}}"
+  },
+  "error": {
+    "noun": "marchés",
+    "alt": "la <link>carte des marchés</link> s'ouvre sur sa propre page"
+  },
+  "pager": {
+    "showing": "{{from}}–{{to}} sur {{total}}",
+    "onePage_one": "{{count}} marché sur une page",
+    "onePage_other": "Les {{count}} marchés sur une page"
+  },
+  "empty": {
+    "areaTitle": "Aucun marché à {{area}} le {{day}}",
+    "areaText_one": "Dans toute la ville, {{count}} marché est ouvert ce jour-là. Élargissez le quartier ou choisissez un autre jour.",
+    "areaText_other": "Dans toute la ville, {{count}} marchés sont ouverts ce jour-là. Élargissez le quartier ou choisissez un autre jour.",
+    "allAreas": "Voir tous les quartiers",
+    "dayTitle": "Aucun marché ouvert le {{day}}",
+    "dayText_one": "Le {{day}} est le jour le plus animé, avec {{count}} marché ouvert.",
+    "dayText_other": "Le {{day}} est le jour le plus animé, avec {{count}} marchés ouverts.",
+    "showDay": "Voir le {{day}}"
+  },
+  "map": {
+    "label": "Carte des marchés correspondants",
+    "note": "La carte suit les filtres et n'affiche que les marchés de la liste."
+  },
+  "demo": {
+    "title": "Autres états de cette liste (FR-084)",
+    "views": {
+      "loaded": "Avec données",
+      "loading": "Chargement",
+      "error": "Erreur"
+    },
+    "note": "L'état vide existe pour de vrai : choisissez <b>{{day}}</b> et le quartier <b>{{area}}</b>. Il rappelle votre choix et propose une issue."
+  },
+  "location": {
+    "measured": "Les distances sont mesurées depuis votre position.",
+    "forget": "Oublier ma position",
+    "denied": "Vous avez désactivé la localisation pour ce site. Modifiez-la dans les paramètres du site de votre navigateur pour trier par distance.",
+    "needed": "Le tri par distance nécessite votre position. Tant que vous ne la partagez pas, l’ordre ci-dessous reste le même.",
+    "share": "Partagez votre position pour voir à quelle distance se trouve chaque marché.",
+    "use": "Utiliser ma position"
+  }
+}

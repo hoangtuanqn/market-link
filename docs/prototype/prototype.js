@@ -196,9 +196,20 @@
     if (role === 'farmer') tools += '<a class="ml-btn ml-btn-accent ml-btn-sm" href="' + link('farmer/overview.html') + '">Stall panel</a>';
     if (role === 'guest') tools += '<a class="ml-btn ml-btn-accent ml-btn-sm" href="' + link('public/login.html') + '">Sign in</a>';
     else {
-      var who = role === 'admin' ? 'Admin' : 'Hi,';
-      var acct = role === 'admin' ? link('admin/overview.html') : link('customer/account.html');
-      tools += '<a class="ml-huser pt-plain" href="' + acct + '">' + who + ' <b>' + esc(role === 'farmer' ? (u.short || o.userName) : o.userName) + '</b></a>';
+      var shown = role === 'farmer' ? (u.short || o.userName) : o.userName;
+      if (role === 'admin') {
+        tools += '<a class="ml-huser pt-plain" href="' + link('admin/overview.html') + '">Admin <b>' + esc(shown) + '</b></a>';
+      } else {
+        // Proposal (not in the SRS): photo + menu with Profile, Settings, Sign out. Built in the app as UserMenu.
+        var settings = role === 'farmer' ? link('farmer/settings.html') : link('customer/settings.html');
+        tools += '<div class="pt-umenu"><button type="button" class="ml-huser pt-umenu-btn" aria-haspopup="menu" aria-expanded="false" data-umenu>' +
+          PT.avatar(o.userName, 32, true) + '<span>Hi, <b>' + esc(shown) + '</b></span><span class="pt-umenu-chev" aria-hidden="true">▾</span></button>' +
+          '<div class="pt-umenu-list" role="menu" aria-label="Your account" hidden>' +
+          '<div class="pt-umenu-head">' + PT.avatar(o.userName, 40) + '<div><b>' + esc(o.userName) + '</b>' + (u.email ? '<span>' + esc(u.email) + '</span>' : '') + '</div></div>' +
+          '<a role="menuitem" href="' + link('customer/account.html') + '">Profile</a>' +
+          '<a role="menuitem" href="' + settings + '">Settings</a>' +
+          '<a role="menuitem" href="' + link('public/login.html') + '">Sign out</a></div></div>';
+      }
     }
     tools += '<button type="button" class="ml-hbtn ml-hmenu" aria-label="Open menu" data-drawer-open>' + I.menu() + '</button>';
     var nav = items.map(function (it) { return '<li><a href="' + link(it[2]) + '"' + (o.active === it[0] ? ' aria-current="page"' : '') + '>' + it[1] + '</a></li>'; }).join('');
@@ -207,10 +218,18 @@
       (role === 'guest' ? '<a href="' + link('public/login.html') + '">Sign in</a><a href="' + link('public/register-customer.html') + '">Create an account</a>' : '<a href="' + link('public/login.html') + '">Sign out</a>') + '</div></div>';
     return '<header class="ml-header"><div class="ml-header-in">' + PT.logo(30, home) + '<nav aria-label="Main"><ul class="ml-nav">' + nav + '</ul></nav><div class="ml-header-tools">' + tools + '</div></div><div class="ml-header-twine" aria-hidden="true"></div></header>' + drawer;
   };
-  PT.footer = function () {
+  /* Initials in a circle; `onBoard` uses accent because brand is nearly the board colour. */
+  PT.avatar = function (name, size, onBoard) {
+    var words = String(name || '?').trim().split(/\s+/);
+    var ini = (words[0].charAt(0) + (words.length > 1 ? words[words.length - 1].charAt(0) : '')).toUpperCase();
+    return '<span class="pt-avatar' + (onBoard ? ' pt-avatar-accent' : '') + '" aria-hidden="true" style="width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.4) + 'px">' + esc(ini) + '</span>';
+  };
+  PT.footer = function (role) {
+    // Only a Farmer has pre-orders to handle; everyone else is offered the way to become one.
+    var sell = role === 'farmer' ? ['Handling pre-orders', 'farmer/orders.html'] : ['Register as a Farmer', 'public/register-farmer.html'];
     var cols = [
       ['Shop', [['Markets near you', 'public/markets.html'], ['In season', 'public/products.html'], ['Market map', 'public/map.html'], ['Favorite stalls', 'customer/favorites.html']]],
-      ['Sell', [['Register as a Farmer', 'public/register-farmer.html'], ['Handling pre-orders', 'farmer/orders.html'], ['Stall guidelines', 'public/about.html']]],
+      ['Sell', [sell, ['Stall guidelines', 'public/about.html']]],
       ['MarketLink', [['About us', 'public/about.html'], ['Contact us', 'public/contact.html'], ['Feedback & bug reports', 'public/feedback.html'], ['Terms of service', 'public/terms.html'], ['Privacy policy', 'public/privacy.html'], ['Sitemap', '../index.html']]],
     ];
     return '<footer class="ml-footer"><div class="ml-footer-in"><div>' + PT.logo(30) + '<p>Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.</p></div>' +
@@ -1088,6 +1107,9 @@
       if ((t = e.target.closest('[data-tab]'))) { var tabs = t.closest('[data-tabs]'); tabs.querySelectorAll('[data-tab]').forEach(function (b) { b.setAttribute('aria-selected', b === t); b.tabIndex = b === t ? 0 : -1; }); var id = t.getAttribute('data-tab'); document.querySelectorAll('[data-panel]').forEach(function (p) { if (p.closest('[data-tabs-scope]') && p.closest('[data-tabs-scope]') !== tabs.closest('[data-tabs-scope]')) return; p.hidden = p.getAttribute('data-panel') !== id; }); }
       if ((t = e.target.closest('[data-inc],[data-dec]'))) { var w = t.closest('[data-qty]'), out = w.querySelector('output'), max = +w.getAttribute('data-max'), min = +w.getAttribute('data-min'), v = +out.textContent + (t.hasAttribute('data-inc') ? 1 : -1); v = Math.max(min, Math.min(max, v)); out.textContent = v; w.querySelector('[data-dec]').disabled = v <= min; w.querySelector('[data-inc]').disabled = v >= max; w.querySelector('.ml-qty-note').textContent = v >= max ? 'Max ' + PT.units(max, w.getAttribute('data-unit')) : PT.units(max, w.getAttribute('data-unit')) + ' left'; var li = t.closest('.ml-cart-item'); if (li) { li.querySelector('.ml-cart-item-sum').textContent = PT.vnd(v * +li.getAttribute('data-price')); recalc(li.closest('[data-cart-group]')); } }
       if ((t = e.target.closest('[data-remove-item]'))) { var li2 = t.closest('.ml-cart-item'), g = li2.closest('[data-cart-group]'); li2.remove(); recalc(g); PT.toast('Removed from your cart.', { action: 'Undo' }); }
+      var um = e.target.closest('[data-umenu]'), openList = document.querySelector('.pt-umenu-list:not([hidden])');
+      if (openList && !e.target.closest('.pt-umenu')) { openList.hidden = true; openList.previousElementSibling.setAttribute('aria-expanded', 'false'); }
+      if (um) { var list = um.nextElementSibling, show = list.hidden; list.hidden = !show; um.setAttribute('aria-expanded', show); if (show) list.querySelector('[role="menuitem"]').focus(); }
       var drawer = document.querySelector('[data-drawer]');
       if (drawer && e.target.closest('[data-drawer-open]')) drawer.setAttribute('data-open', 'true');
       if (drawer && (e.target.closest('[data-drawer-close]') || e.target.matches('[data-drawer]'))) drawer.setAttribute('data-open', 'false');
@@ -1095,6 +1117,13 @@
       if ((t = e.target.closest('[data-state-demo]'))) { var kind2 = t.getAttribute('data-state-demo'); document.querySelectorAll('[data-state-target]').forEach(function (p) { p.hidden = p.getAttribute('data-state-target') !== kind2; }); document.querySelectorAll('[data-state-demo]').forEach(function (b) { b.setAttribute('aria-pressed', b === t); }); }
       if ((t = e.target.closest('[data-theme-pick]'))) PT.theme.set(t.getAttribute('data-theme-pick'));
       if ((t = e.target.closest('[data-confirm-dialog]'))) { var d2 = JSON.parse(t.getAttribute('data-confirm-dialog')); PT.dialog(d2); }
+    });
+    document.body.addEventListener('keydown', function (e) {
+      var list = e.target.closest && e.target.closest('.pt-umenu-list');
+      if (!list) return;
+      var items = Array.prototype.slice.call(list.querySelectorAll('[role="menuitem"]')), i = items.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus(); }
+      if (e.key === 'Escape') { list.hidden = true; var b = list.previousElementSibling; b.setAttribute('aria-expanded', 'false'); b.focus(); }
     });
     document.body.addEventListener('change', function (e) {
       var r = e.target.closest('[data-rate]'); if (r && e.target.type === 'radio') r.querySelector('.ml-rate-hint').textContent = RATE_WORDS[+e.target.value];
@@ -1148,7 +1177,7 @@
         : '';
       if (top) top.innerHTML = adminBar + (o.announce !== false && (role === 'guest' || role === 'customer') ? PT.banner('announce', esc(PT.announcements[0].title), esc(PT.announcements[0].text), { close: true }) : '') + hdr;
       PT.lockForAdmin();
-      var renderFoot = function () { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(); };
+      var renderFoot = function () { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(role); };
       // pages call boot() from a script placed before #pt-foot, so render the footer once the document is parsed
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderFoot); else renderFoot();
     }

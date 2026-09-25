@@ -1,0 +1,44 @@
+{
+  "markets_one": "{{count}} Markt",
+  "markets_other": "{{count}} Märkte",
+  "stallsSelling_one": "{{count}} Stand verkauft",
+  "stallsSelling_other": "{{count}} Stände verkaufen",
+  "title": "Produkte",
+  "intro": "Alles, was die Stände für diese Woche eingestellt haben. Filtern Sie nach Kategorie, Preis, Markt und Tag und legen Sie es in den Warenkorb.",
+  "filters": {
+    "title": "Filter",
+    "clearAll": "Alles zurücksetzen",
+    "day": "Markttag",
+    "category": "Kategorie",
+    "price": "Preis pro Einheit",
+    "market": "Markt",
+    "allMarkets": "Alle Märkte",
+    "inStock": "Nur vorrätige",
+    "inStockNote": "Blendet ausverkaufte und pausierte Produkte aus"
+  },
+  "price": {
+    "any": "Jeder Preis",
+    "low": "Unter {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Über {{high}}"
+  },
+  "summary_one": "<b>{{count}} Produkt</b> passt am {{day}}",
+  "summary_other": "<b>{{count}} Produkte</b> passen am {{day}}",
+  "sort": "Sortieren",
+  "sorts": {
+    "newest": "Neueste",
+    "priceAsc": "Preis aufsteigend",
+    "priceDesc": "Preis absteigend",
+    "rating": "Beste Bewertung"
+  },
+  "pager": {
+    "showing": "{{from}}–{{to}} von {{total}}",
+    "onePage_one": "{{count}} Produkt auf einer Seite",
+    "onePage_other": "Alle {{count}} Produkte auf einer Seite"
+  },
+  "empty": {
+    "title": "Nichts passt zu diesen Filtern",
+    "text": "Entfernen Sie den Preisfilter oder erweitern Sie auf eine andere Kategorie oder einen anderen Markt.",
+    "clear": "Alle Filter zurücksetzen"
+  }
+}

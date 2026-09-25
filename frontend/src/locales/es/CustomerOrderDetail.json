@@ -1,0 +1,46 @@
+{
+  "missing": {
+    "title": "Ese pedido ya no está aquí",
+    "text": "Puede que lo hayas cancelado o que el enlace sea antiguo. Ábrelo de nuevo desde tus pedidos."
+  },
+  "myOrders": "Mis pedidos",
+  "breadcrumb": "Pedido {{code}}",
+  "placedAt": "Hecho el {{time}}",
+  "status": {
+    "placed": "Realizado",
+    "accepted": "Aceptado",
+    "ready": "Listo para recoger",
+    "completed": "Completado",
+    "declined": "Rechazado",
+    "cancelled": "Cancelado"
+  },
+  "previewLocked": "Vista previa: después de la hora límite",
+  "pickup": {
+    "title": "Recogida",
+    "where": "{{market}}, puesto {{stall}}",
+    "spot": "Del lado del río del mercado, junto al puesto de pan.",
+    "slot": "Tu hora",
+    "phone": "Teléfono del puesto",
+    "bring": "Lleva",
+    "bringText": "{{total}} en efectivo o transferencia en el puesto",
+    "directions": "Cómo llegar",
+    "stallPage": "Página del puesto",
+    "map": "Punto de recogida en el puesto {{stall}}"
+  },
+  "history": {
+    "title": "Historial",
+    "by": "{{time}} · por {{by}}",
+    "note": "Cada cambio de estado queda registrado con quién lo hizo."
+  },
+  "change": {
+    "title": "Cambiar este pedido",
+    "until": "Puedes cambiar cantidades, quitar productos o cancelar hasta las <b>{{cutoff}}</b>. Después de editarlo, {{stall}} vuelve a aprobar el pedido.",
+    "edit": "Editar pedido",
+    "cancel": "Cancelar pedido",
+    "locked": "La hora límite pasó a las {{cutoff}}. Para cambiarlo, contacta directamente con el puesto al {{phone}}."
+  },
+  "notify": {
+    "title": "Notificaciones de este pedido",
+    "text": "Te avisamos cuando se aceptó. Te avisaremos cuando esté listo, o si el puesto tiene que rechazarlo."
+  }
+}

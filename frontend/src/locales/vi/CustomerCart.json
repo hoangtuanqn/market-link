@@ -1,0 +1,30 @@
+{
+  "title": "Giỏ hàng",
+  "products_one": "{{count}} sản phẩm",
+  "products_other": "{{count}} sản phẩm",
+  "stalls_one": "{{count}} sạp",
+  "stalls_other": "{{count}} sạp",
+  "intro": "{{products}} từ {{stalls}}. Chọn giờ nhận hàng cho từng sạp, rồi đặt đơn.",
+  "split": {
+    "title": "Giỏ hàng của bạn sẽ được tách thành 2 đơn ở 2 sạp khác nhau.",
+    "text": "Mỗi sạp có giờ nhận hàng và giờ chốt đơn riêng, và nhận đơn riêng. Bạn trả tiền cho từng sạp khi nhận hàng."
+  },
+  "changeTime": "Đổi giờ nhận hàng ở {{stall}}",
+  "pickupDay": "Ngày nhận hàng",
+  "pickupDayAt": "Ngày nhận hàng ở {{stall}}",
+  "pickupTime": "Giờ nhận hàng · {{day}} {{date}} · khung {{from}} – {{to}}",
+  "cutoffNote": "{{stall}} chốt đơn {{hours}} giờ trước khung giờ. Với {{slot}} {{slotDay}}, giờ chốt là {{cutoff}} {{cutoffDay}}.",
+  "summary": {
+    "title": "Trả tiền tại sạp khi nhận hàng",
+    "order": "Đơn {{n}} · {{stall}}",
+    "total": "Tổng cộng, cả hai sạp"
+  },
+  "note": {
+    "label": "Ghi chú cho các sạp",
+    "placeholder": "vd: bó nhỏ hơn giúp mình"
+  },
+  "place": "Đặt 2 đơn",
+  "ready": "Cả hai sạp đã có giờ nhận hàng. Mỗi sạp tự xác nhận đơn của mình.",
+  "notReady": "Chọn giờ nhận hàng ở {{stall}} để đặt đơn.",
+  "stockNote": "Hàng được trừ khỏi số lượng của sạp ngay khi bạn đặt đơn. Không có thanh toán trực tuyến."
+}

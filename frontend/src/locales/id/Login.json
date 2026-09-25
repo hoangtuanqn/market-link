@@ -1,0 +1,29 @@
+{
+  "title": "Masuk",
+  "intro": "Pelanggan dan petani masuk di sini. Admin memakai <link>halaman masuk admin terpisah</link>.",
+  "fields": {
+    "email": "Email",
+    "password": "Kata sandi"
+  },
+  "rememberMe": "Ingat saya",
+  "forgotPassword": "Lupa kata sandi?",
+  "submit": "Masuk",
+  "submitting": "Sedang masuk…",
+  "or": "atau",
+  "google": {
+    "continue": "Lanjutkan dengan Google",
+    "opening": "Membuka Google…",
+    "failed": "Tidak dapat memulai masuk dengan Google. Silakan coba lagi.",
+    "note": "Google memberi kami nama dan email Anda. Nomor telepon dan alamat tetap diperlukan sebelum pesanan pertama, jadi kami menanyakannya sekali di layar berikutnya."
+  },
+  "newHere": "Baru di sini? <customer>Buat akun pelanggan</customer> atau <farmer>daftarkan lapak Anda</farmer>.",
+  "toast": {
+    "signedIn": "Berhasil masuk.",
+    "failed": "Tidak dapat masuk. Silakan coba lagi."
+  },
+  "errors": {
+    "emailRequired": "Masukkan email.",
+    "emailInvalid": "Masukkan alamat email yang valid.",
+    "passwordRequired": "Masukkan kata sandi."
+  }
+}

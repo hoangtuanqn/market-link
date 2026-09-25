@@ -1,0 +1,17 @@
+{
+  "breadcrumbAccount": "Tài khoản",
+  "title": "Cài đặt",
+  "intro": "MarketLink trông thế nào và báo cho bạn những gì. Mọi thứ ở đây chỉ của riêng bạn; không thay đổi gì với các sạp.",
+  "shopping": "Mua sắm",
+  "market": "Chợ bạn hay mua nhất",
+  "marketNote": "Hiện đầu tiên ở trang Chợ.",
+  "marketNone": "Không chọn",
+  "slot": "Giờ nhận hàng bạn thích",
+  "slotNote": "Lưu lại trước. Giờ này sẽ được chọn sẵn khi sạp còn trống khung giờ đó.",
+  "slots": {
+    "earliest": "Sớm nhất còn trống",
+    "06-07": "06:00 – 07:00",
+    "07-08": "07:00 – 08:00",
+    "08-09": "08:00 – 09:00"
+  }
+}

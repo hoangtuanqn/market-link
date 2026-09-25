@@ -1,8 +1,10 @@
+import type { TFunction } from 'i18next';
 import L from 'leaflet';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import '@/styles/leaflet-theme.css';
-import { CITY, MAX_ZOOM, TILE_ATTRIBUTION, TILE_URL } from '@/config/map';
+import { CITY, MAX_ZOOM, TILE_URL, tileAttribution } from '@/config/map';
 import { directionsUrl, resolveRemembered } from '@/lib/directions';
 import Geolocation from '@/utils/geolocation';
 import Helper from '@/utils/helper';
@@ -50,7 +52,7 @@ const pinHtml = ({ kind, label, text, selected }: MapMarker) =>
  * visitor last chose — including a location they shared after this map was rendered. A popup is plain HTML inside
  * Leaflet and cannot open the React dialog, so it silently uses that remembered choice.
  */
-const popupHtml = (m: MapMarker) => {
+const popupHtml = (m: MapMarker, t: TFunction) => {
   const p = m.popup;
   if (!p) return '';
   const geo = Geolocation.get();
@@ -58,8 +60,8 @@ const popupHtml = (m: MapMarker) => {
   return (
     `<b>${esc(p.title)}</b>` +
     p.lines.map((l) => `<span>${esc(l)}</span><br>`).join('') +
-    (p.href ? `<a href="${esc(p.href)}" data-route>Open</a>` : '') +
-    `<a href="${esc(directionsUrl({ lat: m.lat, lng: m.lng }, from))}" target="_blank" rel="noopener">Directions</a>`
+    (p.href ? `<a href="${esc(p.href)}" data-route>${esc(t('map.open'))}</a>` : '') +
+    `<a href="${esc(directionsUrl({ lat: m.lat, lng: m.lng }, from))}" target="_blank" rel="noopener">${esc(t('actions.directions'))}</a>`
   );
 };
 
@@ -75,6 +77,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
   const navigate = useNavigate();
   /** Tiles come over the network, so losing them is a state this frame has to be able to show (FR-084). */
   const [tilesFailed, setTilesFailed] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const host = hostRef.current;
@@ -84,7 +87,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     const inner = document.createElement('div');
     host.appendChild(inner);
     const map = L.map(inner, { scrollWheelZoom, zoomControl: true, attributionControl: true });
-    const tiles = L.tileLayer(TILE_URL, { maxZoom: MAX_ZOOM, attribution: TILE_ATTRIBUTION }).addTo(map);
+    const tiles = L.tileLayer(TILE_URL, { maxZoom: MAX_ZOOM, attribution: tileAttribution(t) }).addTo(map);
     // A tile 404s at the edge of the world as well, so the note goes up on failure and comes down as soon as
     // any tile arrives, rather than latching on the first error.
     tiles.on('tileerror', () => setTilesFailed(true));
@@ -112,7 +115,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
       mapRef.current = null;
       layerRef.current = null;
     };
-  }, [navigate, scrollWheelZoom]);
+  }, [navigate, scrollWheelZoom, t]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -130,7 +133,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
         popupAnchor: [0, -46],
       });
       const marker = L.marker([mk.lat, mk.lng], { icon, title: mk.label ?? '' });
-      if (mk.popup) marker.bindPopup(() => popupHtml(mk));
+      if (mk.popup) marker.bindPopup(() => popupHtml(mk, t));
       marker.addTo(layer);
       bounds.push([mk.lat, mk.lng]);
     });
@@ -139,16 +142,14 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     else if (bounds.length > 1) map.fitBounds(bounds, { padding: [40, 40] });
     else if (bounds.length === 1) map.setView(bounds[0], zoom ?? 15);
     else map.setView(CITY, 11);
-  }, [markers, center, zoom]);
+  }, [markers, center, zoom, t]);
 
   // isolate: Leaflet đặt z-index 400–1000 cho các lớp bên trong; không cô lập thì chúng đè lên header sticky (z-40)
   return (
     <div role="region" aria-label={label} className={Helper.cn('ml-map isolate', className)}>
       {/* Leaflet owns this child outright; the note stays a sibling so React never fights it over the DOM. */}
       <div ref={hostRef} className="absolute inset-0" />
-      {tilesFailed && (
-        <p className="ml-map-note m-0">Map tiles need a connection. The list still works without them.</p>
-      )}
+      {tilesFailed && <p className="ml-map-note m-0">{t('map.tilesFailed')}</p>}
     </div>
   );
 };

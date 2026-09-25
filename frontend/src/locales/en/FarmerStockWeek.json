@@ -1,0 +1,52 @@
+{
+  "overline": "Week of {{from}} – {{to}} · Thảo Điền {{daysA}} · Thủ Đức {{daysB}}",
+  "title": "This week's stock",
+  "intro": "Your weekly template is the starting count for each market day. Apply it, then adjust the days where the harvest is different. Reserved stock is already taken out of what customers see.",
+  "saved": "Saved",
+  "per": "per {{unit}}",
+  "tabs": {
+    "label": "Stock views",
+    "week": "This week",
+    "template": "Weekly template"
+  },
+  "status": {
+    "available": "Available",
+    "soldOut": "Sold out",
+    "paused": "Paused this week"
+  },
+  "col": {
+    "product": "Product",
+    "status": "Status",
+    "price": "Price",
+    "reserved": "Reserved",
+    "defaultPrice": "Default price"
+  },
+  "aria": {
+    "status": "Status of {{product}}",
+    "day": "{{product}} {{day}}",
+    "dayAt": "{{product}} {{day}} {{market}}",
+    "price": "{{product}} price",
+    "templateDay": "{{product}} template {{day}}"
+  },
+  "week": {
+    "caption": "Stock per product and market day this week",
+    "note": "Counts are units available for that day. A blank day means the product is not offered. Fridays are greyed because {{stall}} does not sell on Friday.",
+    "savedText": "This week's stock saved. Customers see the new counts now.",
+    "save": "Save changes"
+  },
+  "template": {
+    "savedText": "Template saved. It applies from next week unless you apply it now.",
+    "save": "Save template",
+    "note": "Template days follow your operating days. Change those under Stall & pickup."
+  },
+  "apply": {
+    "open": "Apply template to this week",
+    "title": "Apply the template to this week?",
+    "keep": "Keep my edits",
+    "doneTitle": "Template applied",
+    "doneText": "Template applied to {{sat}} and {{sun}}.",
+    "confirm": "Apply template",
+    "text": "{{sat}} and {{sun}} counts are replaced with the template values. Reserved stock is kept out of the customer-facing count.",
+    "warning": "Edits you made for this week are overwritten."
+  }
+}

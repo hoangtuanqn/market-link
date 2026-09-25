@@ -1,4 +1,5 @@
-import { units } from '@/lib/format';
+import { useTranslation } from 'react-i18next';
+import { unitName, units } from '@/lib/format';
 
 type QtyStepperProps = {
   value: number;
@@ -11,18 +12,22 @@ type QtyStepperProps = {
 
 /** Plus/minus stepper with the stock left underneath (design system `.ml-qty`). */
 const QtyStepper = ({ value, max, unit, plural, min = 1, onChange }: QtyStepperProps) => {
-  const note = value >= max ? `Max ${units(max, unit, plural)}` : `${units(max - value, unit, plural)} left`;
+  const { t } = useTranslation();
+  const note =
+    value >= max
+      ? t('qty.max', { qty: units(max, unit, plural) })
+      : t('qty.left', { qty: units(max - value, unit, plural) });
 
   return (
     <span className="inline-flex flex-col items-center gap-0.5">
       <span
         role="group"
-        aria-label={`Quantity ${unit}`}
+        aria-label={t('qty.label', { unit: unitName(unit) })}
         className="border-line-strong bg-surface-raised inline-flex items-center rounded-sm border-[1.5px]"
       >
         <button
           type="button"
-          aria-label="Decrease by 1"
+          aria-label={t('qty.decrease')}
           disabled={value <= min}
           onClick={() => onChange(value - 1)}
           className="disabled:text-line-strong grid size-10 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
@@ -34,7 +39,7 @@ const QtyStepper = ({ value, max, unit, plural, min = 1, onChange }: QtyStepperP
         </output>
         <button
           type="button"
-          aria-label="Increase by 1"
+          aria-label={t('qty.increase')}
           disabled={value >= max}
           onClick={() => onChange(value + 1)}
           className="disabled:text-line-strong grid size-10 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"

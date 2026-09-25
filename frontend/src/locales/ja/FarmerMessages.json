@@ -1,0 +1,37 @@
+{
+  "title": "メッセージ",
+  "intro": "今週の在庫や受け取り時間についてのお客さまからの質問です。お客さまが自分で注文を変更できるよう、締め切り前に返信してください。",
+  "srs": {
+    "title": "メッセージ機能は SRS に含まれていません。",
+    "text": "作る前に LEAD に新しい要件を依頼してください。この画面は、工数をかける価値があるかチームで判断するためのものです。"
+  },
+  "conversations": "会話",
+  "unanswered_one": "未返信 {{count}} 件",
+  "unanswered_other": "未返信 {{count}} 件",
+  "time": {
+    "yesterday": "昨日",
+    "now": "たった今"
+  },
+  "note": {
+    "orders_one": "あなたの屋台での注文 {{count}} 件",
+    "orders_other": "あなたの屋台での注文 {{count}} 件",
+    "withCollected": "{{orders}}、受け取り済み {{collected}} 件"
+  },
+  "conversationWith": "{{name}} との会話",
+  "openOrder": "注文 {{code}} を開く",
+  "you": "あなた",
+  "orderRef": {
+    "title": "注文 {{code}} · {{name}}",
+    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · {{cutoffDate}} {{cutoff}} 締め切り"
+  },
+  "items_one": "{{count}} 点",
+  "items_other": "{{count}} 点",
+  "replyTo": "{{name}} に返信",
+  "placeholder": "在庫や受け取り時間について返信",
+  "send": "送信",
+  "notOrder": {
+    "title": "メッセージでは注文は変わりません",
+    "text": "ここで変更に合意しても、それは半分だけです。お客さまが注文を編集すると、注文は「注文済み」としてあなたに戻り、もう一度承認します。こうすることで在庫数と受け取り枠が正しく保たれます。",
+    "link": "届いた注文へ"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "title": "Carrito",
+  "products_one": "{{count}} producto",
+  "products_other": "{{count}} productos",
+  "stalls_one": "{{count}} puesto",
+  "stalls_other": "{{count}} puestos",
+  "intro": "{{products}} de {{stalls}}. Elige una hora de recogida para cada puesto y haz los pedidos.",
+  "split": {
+    "title": "Tu carrito se dividirá en 2 pedidos en 2 puestos distintos.",
+    "text": "Cada puesto tiene su propia hora de recogida y hora límite, y acepta su pedido por separado. Pagas a cada puesto al recoger."
+  },
+  "changeTime": "Cambiar la hora de recogida en {{stall}}",
+  "pickupDay": "Día de recogida",
+  "pickupDayAt": "Día de recogida en {{stall}}",
+  "pickupTime": "Hora de recogida · {{day}} {{date}} · franja {{from}} – {{to}}",
+  "cutoffNote": "{{stall}} cierra los pedidos {{hours}} horas antes de la franja. Para las {{slot}} del {{slotDay}}, es a las {{cutoff}} del {{cutoffDay}}.",
+  "summary": {
+    "title": "Paga en los puestos al recoger",
+    "order": "Pedido {{n}} · {{stall}}",
+    "total": "Total, ambos puestos"
+  },
+  "note": {
+    "label": "Nota para los puestos",
+    "placeholder": "p. ej. manojos más pequeños, por favor"
+  },
+  "place": "Hacer 2 pedidos",
+  "ready": "Ambos puestos tienen hora de recogida. Cada puesto confirma su propio pedido.",
+  "notReady": "Elige una hora de recogida en {{stall}} para hacer tus pedidos.",
+  "stockNote": "El stock se descuenta del puesto en cuanto haces el pedido. No hay pago en línea."
+}

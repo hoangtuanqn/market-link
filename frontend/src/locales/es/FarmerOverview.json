@@ -1,0 +1,92 @@
+{
+  "tabs": {
+    "new": "Pendientes de aprobar",
+    "acc": "Aceptados",
+    "ready": "Listos",
+    "done": "Completados"
+  },
+  "decline": {
+    "reasons": {
+      "stock": "No hay suficiente stock",
+      "day": "No vendo ese día",
+      "time": "No puedo a esa hora de recogida",
+      "other": "Otro"
+    },
+    "title": "¿Rechazar el pedido {{code}}?",
+    "keep": "Mantener pedido",
+    "confirm": "Rechazar pedido",
+    "text": "Se avisa al cliente al momento y los productos vuelven a tu stock.",
+    "reason": "Motivo que verá el cliente"
+  },
+  "col": {
+    "order": "Pedido",
+    "customer": "Cliente",
+    "pickup": "Recogida",
+    "items": "Artículos",
+    "total": "Total",
+    "status": "Estado"
+  },
+  "toast": {
+    "acceptedTitle": "Pedido aceptado",
+    "acceptedText": "Pedido {{code}} aceptado. Se ha avisado a {{who}}.",
+    "readyTitle": "Pedido listo",
+    "readyText": "Pedido {{code}} marcado como listo.",
+    "completedTitle": "Pedido completado",
+    "completedText": "Pedido {{code}} completado.",
+    "declinedTitle": "Pedido rechazado",
+    "declinedText": "Pedido {{code}} rechazado. El stock vuelve a tu recuento."
+  },
+  "actions": {
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "ready": "Marcar como listo",
+    "complete": "Marcar como completado",
+    "view": "Ver"
+  },
+  "captions": {
+    "new": "Pendientes de aprobar · {{sat}} y {{sun}}",
+    "ready": "Listos para recoger"
+  },
+  "overline": "tu puesto en {{market}} · próximo día de mercado {{day}}",
+  "greeting": "Buenos días, {{name}}",
+  "applyTemplate": "Aplicar plantilla semanal",
+  "addProduct": "Añadir producto",
+  "banner": {
+    "title_one": "Tienes {{count}} pedido esperando. {{closing}} de ellos cierran mañana a las {{time}}.",
+    "title_other": "Tienes {{count}} pedidos esperando. {{closing}} de ellos cierran mañana a las {{time}}.",
+    "text": "Los pedidos sin aprobar siguen reservando stock. Acepta o rechaza antes del cierre para que los clientes puedan organizarse."
+  },
+  "kpi": {
+    "orders": "Pedidos totales",
+    "ordersNote_one": "{{count}} esta semana",
+    "ordersNote_other": "{{count}} esta semana",
+    "vsAugust": "frente a agosto",
+    "openHistory": "Abrir historial de ventas",
+    "awaitingNote_one": "<b>{{count}}</b> cierra a las {{time}} del {{date}}",
+    "awaitingNote_other": "<b>{{count}}</b> cierran a las {{time}} del {{date}}",
+    "vsThursday": "frente a un jueves normal",
+    "openIncoming": "Abrir pedidos entrantes",
+    "revenue": "Ingresos de septiembre",
+    "revenueNote": "₫, de pedidos completados, pagados en el puesto",
+    "best": "Más vendido",
+    "bestNote": "{{qty}} este mes",
+    "openProducts": "Abrir productos",
+    "note": "Septiembre hasta ahora, junto a agosto. Cada tarjeta abre la pantalla que hay detrás de su cifra."
+  },
+  "incoming": {
+    "title": "Pedidos entrantes",
+    "all": "Todos los pedidos y filtros",
+    "note": "Los pedidos nuevos se resaltan hasta que los abres."
+  },
+  "stock": {
+    "title": "Stock para el {{day}}",
+    "link": "Stock de esta semana",
+    "note": "Reservado significa que un pedido lo tiene apartado. Se descuenta de tu recuento en cuanto un cliente hace el pedido."
+  },
+  "best": {
+    "title": "Más vendidos",
+    "link": "Historial de ventas",
+    "note": "Vendido en septiembre, cada uno en su unidad"
+  },
+  "protoNote": "La barra lateral y el encabezado de arriba son nuevos respecto al prototipo."
+}

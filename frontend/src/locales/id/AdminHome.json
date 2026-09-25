@@ -1,0 +1,9 @@
+{
+  "overline": "Area admin",
+  "hello": "Halo, {{name}}",
+  "fallbackName": "admin",
+  "empty": {
+    "title": "Dasbor sedang disiapkan",
+    "text": "Total petani, pelanggan, pasar, dan pesanan akan muncul di sini setelah dasbor admin selesai dibuat."
+  }
+}

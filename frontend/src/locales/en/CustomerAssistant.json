@@ -1,0 +1,40 @@
+{
+  "title": "Shopping assistant",
+  "intro": "Ask where to find something this weekend, when a market opens, or which pickup slots a stall has. Every answer comes from MarketLink's own data.",
+  "conversation": "Assistant conversation",
+  "botName": "MarketLink assistant",
+  "botNote": "Answers use the live catalogue. Intent shown under each reply.",
+  "message": "Message",
+  "placeholder": "e.g. Who has eggs at Thảo Điền on Saturday?",
+  "send": "Send",
+  "reply": {
+    "greeting": "Hi {{name}}. Ask me what is available this weekend, or when a market opens.",
+    "pomelo": "On {{day}} {{date}}, 2 stalls have green-skin pomelo: <b>Út Hiền Orchard</b> at Thủ Đức Farmers Market (2 left, {{price1}}) and <b>Ba Lành Farm</b> at Thảo Điền Weekend Market (9 left, {{price2}}).",
+    "slots": "Út Hiền Orchard picks up {{from}} – {{to}} on {{day}} {{date}} at Thủ Đức Farmers Market. Free slots: {{free}}. The {{full}} slot is full. Orders close 12 hours before the slot.",
+    "unknown": "I did not understand that. Try a product name, a market, or a stall."
+  },
+  "question": {
+    "pomeloMorning": "Which market has green-skin pomelo on Saturday morning?"
+  },
+  "suggest": {
+    "pomeloSat": "Where can I get green-skin pomelo on Saturday?",
+    "baChieuOpen": "When does Bà Chiểu Green Market open?",
+    "showMap": "Show the 2 stalls on the map",
+    "slotsUtHien": "Pickup times at Út Hiền",
+    "addPomelos": "Add 2 pomelos to my cart",
+    "directionsThuDuc": "Directions to Thủ Đức Farmers Market",
+    "thaoDien": "What is at Thảo Điền on Saturday?"
+  },
+  "canAnswer": {
+    "title": "What it can answer",
+    "product": "Find a product across markets and stalls, with how many are left",
+    "hours": "Market days and opening hours",
+    "stalls": "Which stalls are at a market on a given day",
+    "slots": "A stall's pickup windows and free slots",
+    "price": "A product's price, unit and stock"
+  },
+  "how": {
+    "title": "How it works",
+    "text": "Your question is matched to one of a fixed set of intents, and each intent runs a prepared query against MarketLink's own data. Answers never come from anywhere else, and the assistant cannot change anything — it only reads."
+  }
+}

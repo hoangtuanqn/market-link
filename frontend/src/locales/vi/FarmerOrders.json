@@ -1,0 +1,93 @@
+{
+  "title": "Đơn hàng",
+  "intro": "Nhận hoặc từ chối đơn mới trước giờ chốt, đánh dấu sẵn sàng vào ngày chợ, và hoàn tất khi khách đã trả tiền.",
+  "search": {
+    "label": "Tìm đơn hàng",
+    "placeholder": "Mã đơn hoặc tên khách",
+    "submit": "Tìm"
+  },
+  "filter": {
+    "day": "Ngày nhận hàng",
+    "all": "Tất cả",
+    "allDays": "các ngày",
+    "market": "Chợ",
+    "bothMarkets": "Cả hai chợ"
+  },
+  "tabsLabel": "Đơn hàng theo trạng thái",
+  "status": {
+    "placed": "Chờ duyệt",
+    "accepted": "Đã nhận",
+    "ready": "Sẵn sàng",
+    "completed": "Hoàn tất",
+    "declined": "Đã từ chối",
+    "cancelled": "Đã huỷ"
+  },
+  "empty": {
+    "placed": {
+      "title": "Không có đơn nào đang chờ bạn",
+      "text": "Đơn đặt trước mới hiện ở đây cho đến 12 giờ trước khung giờ nhận."
+    },
+    "accepted": {
+      "title": "Chưa có đơn đã nhận",
+      "text": "Đơn bạn nhận nằm ở đây cho đến khi bạn đánh dấu sẵn sàng."
+    },
+    "ready": {
+      "title": "Chưa có đơn sẵn sàng",
+      "text": "Đánh dấu đơn đã nhận là sẵn sàng khi đã đóng gói xong cho sạp."
+    },
+    "completed": {
+      "title": "Chưa có đơn hoàn tất",
+      "text": "Đơn hoàn tất khi khách nhận hàng và trả tiền tại sạp."
+    },
+    "declined": {
+      "title": "Chưa có đơn bị từ chối",
+      "text": "Đơn bạn từ chối được liệt kê ở đây kèm lý do."
+    },
+    "cancelled": {
+      "title": "Chưa có đơn bị huỷ",
+      "text": "Khách có thể huỷ đến giờ chốt (D-05)."
+    }
+  },
+  "col": {
+    "order": "Đơn",
+    "customer": "Khách hàng",
+    "pickup": "Nhận hàng",
+    "cutoff": "Giờ chốt",
+    "items": "Món",
+    "total": "Tổng",
+    "status": "Trạng thái"
+  },
+  "action": {
+    "accept": "Nhận đơn",
+    "decline": "Từ chối",
+    "markReady": "Đánh dấu sẵn sàng",
+    "markCompleted": "Đánh dấu hoàn tất",
+    "view": "Xem"
+  },
+  "toast": {
+    "accepted": "Đã nhận đơn {{code}}.",
+    "ready": "Đơn {{code}} đã được đánh dấu sẵn sàng.",
+    "declined": "Đã từ chối đơn {{code}}.",
+    "completed": "Đơn {{code}} đã hoàn tất."
+  },
+  "auditNote": "Mỗi lần đổi trạng thái đều được ghi lại thời gian và người thực hiện (FR-038). Đổi sai thứ tự sẽ bị từ chối (D-04).",
+  "decline": {
+    "title": "Từ chối đơn {{code}}?",
+    "keep": "Giữ đơn",
+    "confirm": "Từ chối đơn",
+    "text": "Khách được báo ngay và hàng được trả lại vào kho của bạn.",
+    "reason": "Lý do khách sẽ thấy",
+    "reasons": {
+      "stock": "Không đủ hàng",
+      "day": "Không bán vào ngày đó",
+      "time": "Không kịp giờ nhận đó",
+      "other": "Lý do khác"
+    }
+  },
+  "complete": {
+    "title": "Đánh dấu {{code}} là hoàn tất?",
+    "notYet": "Chưa",
+    "text": "Làm việc này sau khi khách đã nhận hàng và trả tiền tại sạp. Đơn hoàn tất được tính vào doanh thu của bạn và mở quyền đánh giá cho khách.",
+    "auto": "Đơn vẫn ở trạng thái Sẵn sàng sẽ tự hoàn tất 24 giờ sau ngày nhận hàng (D-03)."
+  }
+}
