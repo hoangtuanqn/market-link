@@ -4,7 +4,16 @@
   "sell": {
     "title": "Berjualan di MarketLink",
     "text": "Jika Anda menanam bahan pangan, akun ini bisa menjadi lapak. Pesanan, favorit, dan keranjang Anda tetap ada, dan panel untuk stok serta waktu ambil muncul setelah admin menyetujui Anda.",
-    "apply": "Daftar untuk berjualan"
+    "apply": "Daftar untuk berjualan",
+    "view": "Lihat lamaran Anda",
+    "panel": "Buka panel petani",
+    "loading": "Memeriksa lamaran Anda",
+    "status": {
+      "pending": "Lamaran Anda ada di admin. Sampai ada jawaban, tidak ada yang berubah.",
+      "approved": "Lapak Anda disetujui. Atur pasar, jam pengambilan, dan produk di panel petani.",
+      "rejected": "Lamaran Anda tidak disetujui. Buka untuk melihat yang sudah dikirim.",
+      "suspended": "Lapak Anda ditangguhkan. Anda tetap bisa berbelanja sebagai pembeli."
+    }
   },
   "signOut": {
     "title": "Keluar",

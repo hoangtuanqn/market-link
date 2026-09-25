@@ -4,7 +4,16 @@
   "sell": {
     "title": "Bán hàng trên MarketLink",
     "text": "Nếu bạn trồng thực phẩm, tài khoản này có thể trở thành một sạp. Bạn giữ nguyên đơn hàng, mục yêu thích và giỏ hàng, và một bảng quản lý hàng tồn và giờ nhận hàng sẽ xuất hiện khi quản trị viên duyệt.",
-    "apply": "Đăng ký bán hàng"
+    "apply": "Đăng ký bán hàng",
+    "view": "Xem đơn của bạn",
+    "panel": "Mở bảng quản lý sạp",
+    "loading": "Đang kiểm tra đơn của bạn",
+    "status": {
+      "pending": "Đơn của bạn đang chờ quản trị viên. Mọi thứ khác giữ nguyên cho tới khi có trả lời.",
+      "approved": "Sạp của bạn đã được duyệt. Chọn chợ, giờ nhận hàng và sản phẩm trong bảng quản lý sạp.",
+      "rejected": "Đơn của bạn không được duyệt. Mở ra để xem lại nội dung đã gửi.",
+      "suspended": "Sạp của bạn đang bị đình chỉ. Bạn vẫn mua hàng bình thường."
+    }
   },
   "signOut": {
     "title": "Đăng xuất",
