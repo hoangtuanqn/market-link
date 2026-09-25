@@ -21,7 +21,7 @@ import {
   type FarmerOrderType,
 } from '@/data/farmer';
 import { perUnit, unitName, units, vnd } from '@/lib/format';
-import { clockRange, marketDay } from '@/pages/FarmerOrders/demoDates';
+import { clockRange, marketDay } from '@/pages/farmer/Orders/demoDates';
 import type { OrderStatus } from '@/types/order.types';
 import Notification from '@/utils/notification';
 

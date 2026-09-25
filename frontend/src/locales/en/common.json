@@ -335,7 +335,16 @@
     "announcements": "Announcements",
     "feedback": "Feedback",
     "pricing": "Pricing",
-    "settings": "Settings"
+    "settings": "Settings",
+    "analytics": "Analytics",
+    "people": "People",
+    "marketplace": "Marketplace",
+    "platform": "Platform",
+    "navigation": "Admin navigation",
+    "home": "MarketLink — Admin overview",
+    "contextSub": "Platform · whole marketplace",
+    "userLine": "Admin · whole platform",
+    "searchPlaceholder": "Stall, customer or market"
   },
   "carousel": {
     "roleCarousel": "carousel",

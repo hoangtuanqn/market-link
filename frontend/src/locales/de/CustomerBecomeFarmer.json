@@ -17,11 +17,12 @@
     "stallNameHint": "Kunden sehen ihn auf der Karte und auf ihren Bestellungen.",
     "person": "Ansprechperson",
     "phone": "Telefon",
-    "phoneHint": "Steht auf jeder Bestellung, damit Kunden Sie erreichen.",
     "email": "E-Mail",
     "emailHint": "Ihre Anmeldung bleibt gleich.",
     "about": "Über den Stand",
-    "aboutPlaceholder": "Ein oder zwei Sätze. Wer baut es an und wo."
+    "aboutPlaceholder": "Ein oder zwei Sätze. Wer baut es an und wo.",
+    "address": "Adresse",
+    "fromAccount": "Aus deinem Konto. Wenn es nicht stimmt, ändere es zuerst auf der Kontoseite."
   },
   "step2": {
     "title": "Was Sie anbauen",
@@ -57,8 +58,6 @@
       "growing": "Was gerade wächst",
       "other": "Sonstiges"
     },
-    "required": "Erforderlich",
-    "optional": "Optional",
     "addPhoto": "Foto hinzufügen",
     "video": "Ein kurzes Video",
     "addVideo": "Video hinzufügen, bis 60 Sekunden",
@@ -66,7 +65,11 @@
     "banner": {
       "title": "Der Admin prüft nur eines: dass es die Fläche gibt und dort wächst, was Sie angegeben haben.",
       "text": "MarketLink prüft keine Lizenzen, Lebensmittelsicherheit oder Bio-Angaben, und ein Foto ist kein Zertifikat."
-    }
+    },
+    "uploading": "Wird hochgeladen…",
+    "removePhoto": "{{label}} entfernen",
+    "videoAdded": "Video hinzugefügt",
+    "removeVideo": "Entfernen"
   },
   "step5": {
     "title": "Wo Sie verkaufen möchten",
@@ -82,22 +85,16 @@
     "pay": "Mir ist klar, dass Kunden mich am Stand bezahlen",
     "payHint": "MarketLink hat weder Online-Zahlung noch Lieferung.",
     "send": "Antrag absenden",
-    "later": "Speichern und später fertigstellen"
+    "later": "Speichern und später fertigstellen",
+    "sending": "Wird gesendet…"
   },
-  "preview": "Vorschau: nach dem Absenden",
   "sent": {
-    "eyebrow": "Gerade gesendet",
     "title": "Ihr Antrag liegt bei einem Admin",
     "intro": "In der Zwischenzeit ändert sich für Sie nichts. Kaufen Sie weiter ein und achten Sie auf Ihre Benachrichtigungen.",
-    "banner": {
-      "title": "Während der Prüfung können Sie weiter bei anderen Ständen kaufen.",
-      "text": "Ihre Bestellungen, Favoriten und Ihr Warenkorb bleiben unverändert. Der Standbereich erscheint erst nach der Freigabe durch einen Admin."
-    },
     "summary": "Was Sie gesendet haben",
     "stall": "Stand",
     "grows": "Baut an",
     "plot": "Fläche",
-    "plotText": "{{size}} in {{place}}, Anbau seit {{since}}",
     "evidence": "Nachweise",
     "photos_one": "{{count}} Foto",
     "photos_other": "{{count}} Fotos",
@@ -105,8 +102,16 @@
     "photosAndVideo_other": "{{count}} Fotos und ein Video",
     "market": "Markt",
     "keepShopping": "Weiter einkaufen",
-    "withdraw": "Antrag zurückziehen",
-    "progress": "Fortschritt"
+    "progress": "Fortschritt",
+    "about": "Über den Stand",
+    "volume": "Ungefähr pro Woche",
+    "plotIn": "in {{place}}",
+    "plotSince": "Anbau seit {{year}}",
+    "noPhotos": "Keine Fotos",
+    "noPhotosVideo": "Keine Fotos, aber ein Video",
+    "status": "Status",
+    "sentOn": "Gesendet",
+    "photoAlt": "Foto der Anbaufläche"
   },
   "timeline": {
     "placed": {
@@ -129,12 +134,43 @@
     "missingTitle": "Fehlende Häkchen",
     "missing": "Setzen Sie vor dem Absenden die drei Häkchen am Ende.",
     "sentTitle": "Antrag gesendet",
-    "sent": "Die Antwort eines Admins erhalten Sie in Ihren Benachrichtigungen.",
-    "withdrawnTitle": "Antrag zurückgezogen",
-    "withdrawn": "Sie können jederzeit erneut einen Antrag stellen.",
-    "photoTitle": "Foto hinzufügen",
-    "photo": "Wählen Sie ein Foto von Ihrem Handy oder Computer.",
-    "videoTitle": "Video hinzufügen",
-    "video": "Wählen Sie ein Video bis 60 Sekunden."
+    "sent": "Die Antwort eines Admins erhalten Sie in Ihren Benachrichtigungen."
+  },
+  "loading": "Status deiner Bewerbung wird geladen",
+  "loadError": {
+    "title": "Der Status deiner Bewerbung konnte nicht geladen werden",
+    "text": "Prüfe deine Verbindung und versuche es erneut.",
+    "retry": "Erneut versuchen"
+  },
+  "errors": {
+    "stallName": "Gib den Namen deines Stands ein.",
+    "contactPerson": "Gib eine Kontaktperson ein.",
+    "photo": "Das Foto konnte nicht hochgeladen werden. Bitte versuche es erneut.",
+    "video": "Das Video konnte nicht hochgeladen werden. Bitte versuche es erneut.",
+    "send": "Deine Bewerbung konnte nicht gesendet werden. Bitte versuche es erneut."
+  },
+  "approval": {
+    "approved": {
+      "title": "Dein Stand ist freigegeben",
+      "text": "Dein Konto kann jetzt im Farmer-Bereich einen Stand einrichten: Märkte, Abholzeiten und Produkte."
+    },
+    "rejected": {
+      "title": "Deine Bewerbung wurde nicht angenommen",
+      "text": "Wenn du denkst, dass das ein Fehler ist, schreib einem Admin über das Feedback-Formular."
+    },
+    "suspended": {
+      "title": "Dein Stand ist gesperrt",
+      "text": "Du kannst dich weiter anmelden, aber deine Produkte bleiben für Kunden verborgen, bis ein Admin die Sperre aufhebt."
+    }
+  },
+  "suspendedBanner": {
+    "title": "Der Verkauf ist für dieses Konto pausiert.",
+    "text": "Bereits aufgegebene Bestellungen laufen normal weiter; du kannst vorerst nur keine neuen annehmen."
+  },
+  "statusValue": {
+    "pending": "Ausstehend",
+    "approved": "Angenommen",
+    "rejected": "Abgelehnt",
+    "suspended": "Gesperrt"
   }
 }

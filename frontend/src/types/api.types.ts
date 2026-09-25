@@ -17,3 +17,11 @@ export type ApiResponse<T> = {
   traceId?: string;
   timestamp: string;
 };
+
+/** Shape of a paginated `data` (backend: resources/PageResource.java). */
+export type PageType<T> = {
+  items: T[];
+  page: number;
+  pageSize: number;
+  total: number;
+};

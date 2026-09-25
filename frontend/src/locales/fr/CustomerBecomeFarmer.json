@@ -17,11 +17,12 @@
     "stallNameHint": "Les clients le voient sur la carte et sur leurs commandes.",
     "person": "Personne à contacter",
     "phone": "Téléphone",
-    "phoneHint": "Imprimé sur chaque commande pour que les clients puissent vous joindre.",
     "email": "E-mail",
     "emailHint": "Votre identifiant de connexion ne change pas.",
     "about": "À propos du stand",
-    "aboutPlaceholder": "Une ou deux phrases. Qui cultive et où."
+    "aboutPlaceholder": "Une ou deux phrases. Qui cultive et où.",
+    "address": "Adresse",
+    "fromAccount": "Repris de votre compte. S’il est faux, modifiez-le d’abord sur la page Compte."
   },
   "step2": {
     "title": "Ce que vous cultivez",
@@ -57,8 +58,6 @@
       "growing": "Ce qui pousse en ce moment",
       "other": "Autre chose"
     },
-    "required": "Obligatoire",
-    "optional": "Facultatif",
     "addPhoto": "Ajouter une photo",
     "video": "Une courte vidéo",
     "addVideo": "Ajouter une vidéo, 60 secondes maximum",
@@ -66,7 +65,11 @@
     "banner": {
       "title": "L'administrateur vérifie une seule chose : que la parcelle existe et produit ce que vous avez indiqué.",
       "text": "MarketLink ne vérifie ni licences, ni sécurité alimentaire, ni allégations bio, et une photo n'est pas un certificat."
-    }
+    },
+    "uploading": "Envoi en cours…",
+    "removePhoto": "Retirer : {{label}}",
+    "videoAdded": "Vidéo ajoutée",
+    "removeVideo": "Retirer"
   },
   "step5": {
     "title": "Où vous voulez vendre",
@@ -82,22 +85,16 @@
     "pay": "Je comprends que les clients me paient au stand",
     "payHint": "Il n'y a ni paiement en ligne ni livraison sur MarketLink.",
     "send": "Envoyer la demande",
-    "later": "Enregistrer et terminer plus tard"
+    "later": "Enregistrer et terminer plus tard",
+    "sending": "Envoi…"
   },
-  "preview": "Aperçu : après l'envoi",
   "sent": {
-    "eyebrow": "Envoyée à l'instant",
     "title": "Votre demande est entre les mains d'un administrateur",
     "intro": "Rien ne change pour vous en attendant. Continuez vos achats et surveillez vos notifications pour la réponse.",
-    "banner": {
-      "title": "Vous pouvez toujours acheter auprès d'autres stands pendant l'examen.",
-      "text": "Vos commandes, favoris et panier restent intacts. Le panneau du stand n'apparaît qu'après l'approbation d'un administrateur."
-    },
     "summary": "Ce que vous avez envoyé",
     "stall": "Stand",
     "grows": "Cultures",
     "plot": "Parcelle",
-    "plotText": "{{size}} à {{place}}, cultivée depuis {{since}}",
     "evidence": "Justificatifs",
     "photos_one": "{{count}} photo",
     "photos_other": "{{count}} photos",
@@ -105,8 +102,16 @@
     "photosAndVideo_other": "{{count}} photos et une vidéo",
     "market": "Marché",
     "keepShopping": "Continuer mes achats",
-    "withdraw": "Retirer la demande",
-    "progress": "Avancement"
+    "progress": "Avancement",
+    "about": "Présentation",
+    "volume": "Environ par semaine",
+    "plotIn": "à {{place}}",
+    "plotSince": "cultivée depuis {{year}}",
+    "noPhotos": "Aucune photo",
+    "noPhotosVideo": "Aucune photo, et une vidéo",
+    "status": "État",
+    "sentOn": "Envoyée le",
+    "photoAlt": "Photo de la parcelle"
   },
   "timeline": {
     "placed": {
@@ -129,12 +134,43 @@
     "missingTitle": "Cases manquantes",
     "missing": "Cochez les trois cases à la fin avant d'envoyer.",
     "sentTitle": "Demande envoyée",
-    "sent": "La réponse d'un administrateur arrivera dans vos notifications.",
-    "withdrawnTitle": "Demande retirée",
-    "withdrawn": "Vous pouvez refaire une demande quand vous voulez.",
-    "photoTitle": "Ajouter une photo",
-    "photo": "Choisissez une photo sur votre téléphone ou votre ordinateur.",
-    "videoTitle": "Ajouter une vidéo",
-    "video": "Choisissez une vidéo de 60 secondes maximum."
+    "sent": "La réponse d'un administrateur arrivera dans vos notifications."
+  },
+  "loading": "Chargement de l’état de votre demande",
+  "loadError": {
+    "title": "Impossible de charger l’état de votre demande",
+    "text": "Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer"
+  },
+  "errors": {
+    "stallName": "Indiquez le nom de votre étal.",
+    "contactPerson": "Indiquez une personne à contacter.",
+    "photo": "Impossible d’envoyer cette photo. Réessayez.",
+    "video": "Impossible d’envoyer cette vidéo. Réessayez.",
+    "send": "Impossible d’envoyer votre demande. Réessayez."
+  },
+  "approval": {
+    "approved": {
+      "title": "Votre étal est approuvé",
+      "text": "Votre compte peut maintenant configurer un étal — marchés, créneaux de retrait et produits — depuis l’espace Farmer."
+    },
+    "rejected": {
+      "title": "Votre demande n’a pas été approuvée",
+      "text": "Si vous pensez qu’il s’agit d’une erreur, contactez un admin via le formulaire de retour."
+    },
+    "suspended": {
+      "title": "Votre étal est suspendu",
+      "text": "Vous pouvez toujours vous connecter, mais vos produits restent masqués aux clients jusqu’à ce qu’un admin lève la suspension."
+    }
+  },
+  "suspendedBanner": {
+    "title": "La vente est en pause sur ce compte.",
+    "text": "Les commandes déjà passées suivent leur cours ; vous ne pouvez simplement plus en recevoir de nouvelles pour l’instant."
+  },
+  "statusValue": {
+    "pending": "En attente",
+    "approved": "Approuvée",
+    "rejected": "Refusée",
+    "suspended": "Suspendu"
   }
 }

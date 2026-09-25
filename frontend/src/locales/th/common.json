@@ -335,7 +335,16 @@
     "announcements": "ประกาศ",
     "feedback": "ความคิดเห็น",
     "pricing": "ราคา",
-    "settings": "การตั้งค่า"
+    "settings": "การตั้งค่า",
+    "analytics": "การวิเคราะห์",
+    "people": "ผู้ใช้",
+    "marketplace": "ตลาด",
+    "platform": "แพลตฟอร์ม",
+    "navigation": "การนำทางผู้ดูแล",
+    "home": "MarketLink — ภาพรวมผู้ดูแล",
+    "contextSub": "แพลตฟอร์ม · ทั้งตลาด",
+    "userLine": "ผู้ดูแล · ทั้งแพลตฟอร์ม",
+    "searchPlaceholder": "แผง ลูกค้า หรือตลาด"
   },
   "carousel": {
     "roleCarousel": "ภาพสไลด์",

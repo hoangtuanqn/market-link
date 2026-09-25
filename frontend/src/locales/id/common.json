@@ -335,7 +335,16 @@
     "announcements": "Pengumuman",
     "feedback": "Masukan",
     "pricing": "Harga",
-    "settings": "Pengaturan"
+    "settings": "Pengaturan",
+    "analytics": "Analitik",
+    "people": "Pengguna",
+    "marketplace": "Pasar",
+    "platform": "Platform",
+    "navigation": "Navigasi admin",
+    "home": "MarketLink — Ringkasan admin",
+    "contextSub": "Platform · seluruh pasar",
+    "userLine": "Admin · seluruh platform",
+    "searchPlaceholder": "Lapak, pelanggan, atau pasar"
   },
   "carousel": {
     "roleCarousel": "korsel",

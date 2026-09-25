@@ -335,7 +335,16 @@
     "announcements": "Anuncios",
     "feedback": "Comentarios",
     "pricing": "Precios",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "analytics": "Analítica",
+    "people": "Personas",
+    "marketplace": "Mercado",
+    "platform": "Plataforma",
+    "navigation": "Navegación de administración",
+    "home": "MarketLink — Resumen de administración",
+    "contextSub": "Plataforma · todo el mercado",
+    "userLine": "Admin · toda la plataforma",
+    "searchPlaceholder": "Puesto, cliente o mercado"
   },
   "carousel": {
     "roleCarousel": "carrusel",

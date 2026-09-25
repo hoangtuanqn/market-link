@@ -17,11 +17,12 @@
     "stallNameHint": "Khách hàng thấy tên này trên bản đồ và trên đơn hàng.",
     "person": "Người liên hệ",
     "phone": "Điện thoại",
-    "phoneHint": "In trên mọi đơn hàng để khách liên lạc được với bạn.",
     "email": "Email",
     "emailHint": "Thông tin đăng nhập của bạn giữ nguyên.",
     "about": "Giới thiệu sạp",
-    "aboutPlaceholder": "Một hoặc hai câu. Ai trồng và trồng ở đâu."
+    "aboutPlaceholder": "Một hoặc hai câu. Ai trồng và trồng ở đâu.",
+    "address": "Địa chỉ",
+    "fromAccount": "Lấy từ tài khoản của bạn. Nếu sai, hãy sửa ở trang Tài khoản trước."
   },
   "step2": {
     "title": "Bạn trồng gì",
@@ -57,8 +58,6 @@
       "growing": "Những gì đang trồng",
       "other": "Ảnh khác"
     },
-    "required": "Bắt buộc",
-    "optional": "Không bắt buộc",
     "addPhoto": "Thêm ảnh",
     "video": "Một video ngắn",
     "addVideo": "Thêm video, tối đa 60 giây",
@@ -66,7 +65,11 @@
     "banner": {
       "title": "Quản trị viên chỉ kiểm tra một điều: mảnh vườn có thật và trồng những gì bạn kê khai.",
       "text": "MarketLink không kiểm tra giấy phép, an toàn thực phẩm hay chứng nhận hữu cơ, và ảnh không phải là giấy chứng nhận."
-    }
+    },
+    "uploading": "Đang tải lên…",
+    "removePhoto": "Xoá {{label}}",
+    "videoAdded": "Đã thêm video",
+    "removeVideo": "Xoá"
   },
   "step5": {
     "title": "Nơi bạn muốn bán",
@@ -82,22 +85,16 @@
     "pay": "Tôi hiểu rằng khách trả tiền cho tôi tại sạp",
     "payHint": "MarketLink không có thanh toán trực tuyến và không giao hàng.",
     "send": "Gửi đơn đăng ký",
-    "later": "Lưu và làm tiếp sau"
+    "later": "Lưu và làm tiếp sau",
+    "sending": "Đang gửi…"
   },
-  "preview": "Xem trước: sau khi gửi",
   "sent": {
-    "eyebrow": "Vừa gửi",
     "title": "Đơn đăng ký của bạn đang chờ quản trị viên",
     "intro": "Trong lúc chờ, không có gì thay đổi với bạn. Cứ mua sắm bình thường và theo dõi thông báo để nhận câu trả lời.",
-    "banner": {
-      "title": "Bạn vẫn mua được từ các sạp khác trong khi đơn đang được xem xét.",
-      "text": "Đơn hàng, mục yêu thích và giỏ hàng của bạn vẫn nguyên. Bảng quản lý sạp chỉ xuất hiện khi quản trị viên duyệt."
-    },
     "summary": "Những gì bạn đã gửi",
     "stall": "Sạp",
     "grows": "Trồng",
     "plot": "Vườn",
-    "plotText": "{{size}} tại {{place}}, trồng từ {{since}}",
     "evidence": "Minh chứng",
     "photos_one": "{{count}} ảnh",
     "photos_other": "{{count}} ảnh",
@@ -105,8 +102,16 @@
     "photosAndVideo_other": "{{count}} ảnh và một video",
     "market": "Chợ",
     "keepShopping": "Tiếp tục mua sắm",
-    "withdraw": "Rút đơn đăng ký",
-    "progress": "Tiến độ"
+    "progress": "Tiến độ",
+    "about": "Giới thiệu",
+    "volume": "Khoảng mỗi tuần",
+    "plotIn": "tại {{place}}",
+    "plotSince": "trồng từ năm {{year}}",
+    "noPhotos": "Không có ảnh",
+    "noPhotosVideo": "Không có ảnh, có một video",
+    "status": "Trạng thái",
+    "sentOn": "Ngày gửi",
+    "photoAlt": "Ảnh vườn"
   },
   "timeline": {
     "placed": {
@@ -129,12 +134,43 @@
     "missingTitle": "Còn thiếu ô đánh dấu",
     "missing": "Hãy đánh dấu ba ô ở cuối trước khi gửi.",
     "sentTitle": "Đã gửi đơn",
-    "sent": "Bạn sẽ nhận được phản hồi của quản trị viên trong mục thông báo.",
-    "withdrawnTitle": "Đã rút đơn",
-    "withdrawn": "Bạn có thể đăng ký lại bất cứ lúc nào.",
-    "photoTitle": "Thêm ảnh",
-    "photo": "Chọn một ảnh từ điện thoại hoặc máy tính.",
-    "videoTitle": "Thêm video",
-    "video": "Chọn một video, tối đa 60 giây."
+    "sent": "Bạn sẽ nhận được phản hồi của quản trị viên trong mục thông báo."
+  },
+  "loading": "Đang tải trạng thái đơn đăng ký",
+  "loadError": {
+    "title": "Không tải được trạng thái đơn đăng ký",
+    "text": "Kiểm tra kết nối rồi thử lại.",
+    "retry": "Thử lại"
+  },
+  "errors": {
+    "stallName": "Nhập tên sạp của bạn.",
+    "contactPerson": "Nhập người liên hệ.",
+    "photo": "Không tải lên được ảnh này. Vui lòng thử lại.",
+    "video": "Không tải lên được video này. Vui lòng thử lại.",
+    "send": "Không gửi được đơn đăng ký. Vui lòng thử lại."
+  },
+  "approval": {
+    "approved": {
+      "title": "Sạp của bạn đã được duyệt",
+      "text": "Giờ tài khoản của bạn có thể thiết lập sạp — chợ, khung giờ nhận hàng và sản phẩm — trong bảng điều khiển Farmer."
+    },
+    "rejected": {
+      "title": "Đơn đăng ký của bạn chưa được duyệt",
+      "text": "Nếu bạn nghĩ đây là nhầm lẫn, hãy liên hệ admin qua biểu mẫu góp ý."
+    },
+    "suspended": {
+      "title": "Sạp của bạn đang bị tạm ngưng",
+      "text": "Bạn vẫn đăng nhập được, nhưng sản phẩm bị ẩn khỏi khách cho đến khi admin gỡ tạm ngưng."
+    }
+  },
+  "suspendedBanner": {
+    "title": "Tài khoản này đang tạm ngưng bán hàng.",
+    "text": "Các đơn đã đặt vẫn tiếp tục như bình thường; bạn chỉ tạm thời không nhận đơn mới."
+  },
+  "statusValue": {
+    "pending": "Chờ duyệt",
+    "approved": "Đã duyệt",
+    "rejected": "Đã từ chối",
+    "suspended": "Tạm ngưng"
   }
 }

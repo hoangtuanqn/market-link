@@ -335,7 +335,16 @@
     "announcements": "Annonces",
     "feedback": "Retours",
     "pricing": "Tarifs",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "analytics": "Analyses",
+    "people": "Personnes",
+    "marketplace": "Marché",
+    "platform": "Plateforme",
+    "navigation": "Navigation admin",
+    "home": "MarketLink — Vue d’ensemble admin",
+    "contextSub": "Plateforme · tout le marché",
+    "userLine": "Admin · toute la plateforme",
+    "searchPlaceholder": "Étal, client ou marché"
   },
   "carousel": {
     "roleCarousel": "carrousel",

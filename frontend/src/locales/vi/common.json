@@ -335,7 +335,16 @@
     "announcements": "Thông báo",
     "feedback": "Góp ý",
     "pricing": "Bảng giá",
-    "settings": "Cài đặt"
+    "settings": "Cài đặt",
+    "analytics": "Phân tích",
+    "people": "Người dùng",
+    "marketplace": "Chợ",
+    "platform": "Nền tảng",
+    "navigation": "Điều hướng quản trị",
+    "home": "MarketLink — Tổng quan quản trị",
+    "contextSub": "Nền tảng · toàn bộ chợ",
+    "userLine": "Quản trị viên · toàn nền tảng",
+    "searchPlaceholder": "Sạp, khách hàng hoặc chợ"
   },
   "carousel": {
     "roleCarousel": "băng trình chiếu",
