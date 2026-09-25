@@ -35,6 +35,8 @@ const ProfileForm = () => {
       const { data: user } = await AuthApi.getMe();
       const values = { fullName: user.fullName ?? '', phone: user.phone ?? '', address: user.address ?? '' };
       setEmail(user.email);
+      // Phiên đăng nhập từ trước khi có avatarUrl (hoặc đổi ảnh ở tab khác) → lấy bản mới nhất từ server
+      Session.updateUser({ avatarUrl: user.avatarUrl });
       setForm(values);
       setSaved(values);
       setStatus('ready');

@@ -778,3 +778,19 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 
 /* chart marks in the default theme, measured on the card surface #f1e5cb */
 :root { --chart-now: #2f4a2a; --chart-was: #8a6a3f; --side-raised: #22371f; }
+
+/* ---------- user menu + avatar (proposal, see docs/superpowers/specs/2026-09-25-avatar-user-menu-design.md) ---------- */
+.pt-avatar { display: inline-grid; place-items: center; flex: none; border-radius: 999px; background: var(--brand); color: var(--on-brand); font-weight: 700; line-height: 1; overflow: hidden; }
+.pt-avatar-accent { background: var(--accent); color: var(--on-accent); }
+.pt-umenu { position: relative; }
+.pt-umenu-btn { cursor: pointer; background: transparent; border-top: 0; border-right: 0; border-bottom: 0; min-height: 44px; font: inherit; font-size: 14px; }
+.pt-umenu-chev { font-size: 12px; }
+.pt-umenu-list { position: absolute; right: 0; top: calc(100% + 8px); z-index: var(--z-dropdown); width: 240px; padding: 6px; background: var(--surface-raised); color: var(--ink); border: 1.5px solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-pop); display: flex; flex-direction: column; gap: 2px; box-sizing: border-box; }
+.pt-umenu-list[hidden] { display: none; }
+.pt-umenu-head { display: flex; align-items: center; gap: var(--space-3); padding: 8px 12px 12px; margin-bottom: 4px; border-bottom: 1px solid var(--line); min-width: 0; }
+.pt-umenu-head div { display: flex; flex-direction: column; min-width: 0; }
+.pt-umenu-head div span { font-size: 14px; color: var(--ink-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pt-umenu-list [role='menuitem'] { display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: var(--radius-sm); color: var(--ink); font-weight: 700; font-size: 15px; text-decoration: none; }
+.pt-umenu-list [role='menuitem']:hover, .pt-umenu-list [role='menuitem']:focus-visible { background: var(--surface-sunken); outline: none; }
+@media (max-width: 767px) { .pt-umenu { display: none; } }
+.pt-avatar-card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-5); }

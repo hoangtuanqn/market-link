@@ -332,7 +332,8 @@ public class UserService extends BaseService implements UserServiceInterface {
         return new AuthResult(accessToken, rawRefreshToken, toResource(user), rememberMe);
     }
 
-    private static UserResource toResource(User user) {
+    /** Dùng chung với AvatarService. */
+    static UserResource toResource(User user) {
         return UserResource.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -342,6 +343,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                 .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .hasPassword(user.getPasswordHash() != null)
+                .avatarUrl(user.getImage())
                 .build();
     }
 

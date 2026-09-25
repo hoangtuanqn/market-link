@@ -17,6 +17,12 @@ spring:
   jpa:
     open-in-view: false
 
+  # Ảnh đại diện: service chặn ở 2 MB với thông báo rõ; ngưỡng ở đây chỉ là trần an toàn
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
   flyway:
     # Không bao giờ cho phép xoá schema
     clean-disabled: true
@@ -48,6 +54,9 @@ logging:
     org.flywaydb: INFO
 
 app:
+  # File người dùng tải lên (ảnh đại diện). Docker: volume uploads-data ở /app/uploads
+  storage:
+    dir: ${STORAGE_DIR:./uploads}
   cors:
     # Origin của frontend React được phép gọi API, nhiều origin cách nhau dấu phẩy.
     # Mặc định là Vite dev server (frontend/vite.config.ts, cổng 3000). Prod bắt buộc truyền biến.
