@@ -8,9 +8,11 @@ type SettingsRowProps = {
   children?: ReactNode;
 };
 
-/** One row of a settings section: a label, an optional note, and its control.
- *  Laid out after `.pt-set` in docs/prototype/prototype.css — that is prototype scaffolding, not the
- *  design system, so the look is rebuilt here in Tailwind rather than borrowed. */
+/**
+ * One row of a settings section: a label, an optional note, and its control. Laid out after `.pt-set` in
+ * docs/prototype/prototype.css — that is prototype scaffolding, not the design system, so the look is rebuilt here in
+ * Tailwind rather than borrowed.
+ */
 const SettingsRow = ({ title, note, wide, children }: SettingsRowProps) => (
   <li
     className={Helper.cn(

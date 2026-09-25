@@ -135,9 +135,9 @@ const CustomerAssistantPage = () => {
           <Card className="flex flex-col gap-2 p-6">
             <h2 className="text-h3">How it works</h2>
             <p className="text-small">
-              Your question is matched to one of a fixed set of intents, and each intent runs a prepared query
-              against MarketLink&apos;s own data. Answers never come from anywhere else, and the assistant cannot
-              change anything — it only reads.
+              Your question is matched to one of a fixed set of intents, and each intent runs a prepared query against
+              MarketLink&apos;s own data. Answers never come from anywhere else, and the assistant cannot change
+              anything — it only reads.
             </p>
           </Card>
         </aside>
