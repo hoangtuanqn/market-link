@@ -10,12 +10,12 @@ type StallCardFarmer = {
   id: number;
   stall: string;
   person: string;
-  lat: number;
-  lng: number;
+  lat: number | null;
+  lng: number | null;
   markets: number[];
   days: string;
   pickup: string;
-  rating?: number;
+  rating?: number | null;
   reviews?: number;
   distance?: string;
 };
@@ -64,9 +64,11 @@ const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: R
       <ButtonLink to="/stall" size="sm">
         See stall &amp; this week&apos;s stock
       </ButtonLink>
-      <ButtonAnchor href={Helper.directionsUrl(farmer.lat, farmer.lng)} variant="ghost" size="sm">
-        Directions
-      </ButtonAnchor>
+      {farmer.lat != null && farmer.lng != null && (
+        <ButtonAnchor href={Helper.directionsUrl(farmer.lat, farmer.lng)} variant="ghost" size="sm">
+          Directions
+        </ButtonAnchor>
+      )}
     </div>
   </Card>
 );
