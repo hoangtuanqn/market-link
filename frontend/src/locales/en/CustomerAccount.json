@@ -35,6 +35,9 @@
     "saveFailed": "Could not save your details. Please try again."
   },
   "password": {
+    "section": "Password & security",
+    "row": "Password",
+    "rowNote": "The password you sign in with by email.",
     "title": "Change password",
     "intro": "You will be signed out on every device and asked to sign in again.",
     "current": "Current password",
@@ -43,6 +46,7 @@
     "hint": "{{min}} to {{max}} characters.",
     "submit": "Change password",
     "submitting": "Changing password…",
+    "cancel": "Cancel",
     "changed": "Your password has been changed. Please sign in again.",
     "failed": "Could not change your password. Please try again.",
     "errors": {

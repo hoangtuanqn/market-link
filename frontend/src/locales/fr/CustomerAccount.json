@@ -35,6 +35,9 @@
     "saveFailed": "Impossible d'enregistrer vos informations. Veuillez réessayer."
   },
   "password": {
+    "section": "Mot de passe et sécurité",
+    "row": "Mot de passe",
+    "rowNote": "Le mot de passe que vous utilisez pour vous connecter par e-mail.",
     "title": "Changer le mot de passe",
     "intro": "Vous serez déconnecté sur tous vos appareils et devrez vous reconnecter.",
     "current": "Mot de passe actuel",
@@ -43,6 +46,7 @@
     "hint": "De {{min}} à {{max}} caractères.",
     "submit": "Changer le mot de passe",
     "submitting": "Changement du mot de passe…",
+    "cancel": "Annuler",
     "changed": "Votre mot de passe a été changé. Veuillez vous reconnecter.",
     "failed": "Impossible de changer votre mot de passe. Veuillez réessayer.",
     "errors": {

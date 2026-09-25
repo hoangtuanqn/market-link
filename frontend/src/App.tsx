@@ -19,6 +19,7 @@ import CompleteProfilePage from './pages/auth/CompleteProfile';
 import SetPasswordPage from './pages/auth/SetPassword';
 import CustomerDashboardPage from './pages/customer/Dashboard';
 import CustomerAccountPage from './pages/customer/Account';
+import ChangePasswordPage from './pages/customer/ChangePassword';
 import CustomerCartPage from './pages/customer/Cart';
 import CustomerOrdersPage from './pages/customer/Orders';
 import CustomerOrderDetailPage from './pages/customer/OrderDetail';
@@ -116,6 +117,7 @@ const App = () => {
             <Route element={<RequireAuth />}>
               <Route path="dashboard" element={<CustomerDashboardPage />} />
               <Route path="account" element={<CustomerAccountPage />} />
+              <Route path="account/password" element={<ChangePasswordPage />} />
               <Route path="cart" element={<CustomerCartPage />} />
               <Route path="orders" element={<CustomerOrdersPage />} />
               <Route

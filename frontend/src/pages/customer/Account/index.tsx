@@ -3,7 +3,7 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import useLogout from '@/hooks/useLogout';
 import AvatarCard from './AvatarCard';
-import ChangePasswordForm from './ChangePasswordForm';
+import PasswordCard from './PasswordCard';
 import ProfileForm from './ProfileForm';
 
 /** Profile editing and change password are proposals, not SRS requirements (feature catalog). */
@@ -21,7 +21,7 @@ const CustomerAccountPage = () => {
 
       <ProfileForm />
 
-      <ChangePasswordForm />
+      <PasswordCard />
 
       <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
         <div className="flex max-w-130 flex-col gap-2">

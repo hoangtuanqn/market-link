@@ -35,6 +35,9 @@
     "saveFailed": "No se pudieron guardar tus datos. Inténtalo de nuevo."
   },
   "password": {
+    "section": "Contraseña y seguridad",
+    "row": "Contraseña",
+    "rowNote": "La contraseña con la que inicias sesión con tu correo.",
     "title": "Cambiar contraseña",
     "intro": "Se cerrará tu sesión en todos los dispositivos y tendrás que volver a iniciarla.",
     "current": "Contraseña actual",
@@ -43,6 +46,7 @@
     "hint": "De {{min}} a {{max}} caracteres.",
     "submit": "Cambiar contraseña",
     "submitting": "Cambiando contraseña…",
+    "cancel": "Cancelar",
     "changed": "Tu contraseña se ha cambiado. Vuelve a iniciar sesión.",
     "failed": "No se pudo cambiar tu contraseña. Inténtalo de nuevo.",
     "errors": {
