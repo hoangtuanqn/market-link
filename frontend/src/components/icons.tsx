@@ -150,6 +150,16 @@ export function InfoIcon(props: IconProps) {
   );
 }
 
+export function AlertIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M8 1.8l6.5 11.4h-13z" />
+      <path d="M8 6.2v3.3" />
+      <path d="M8 11.4v.1" />
+    </Glyph>
+  );
+}
+
 export function MegaphoneIcon(props: IconProps) {
   return (
     <Glyph size={18} {...props}>
