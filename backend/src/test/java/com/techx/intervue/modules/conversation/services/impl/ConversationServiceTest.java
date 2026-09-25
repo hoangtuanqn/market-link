@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -12,6 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.conversation.entities.Conversation;
+import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
@@ -33,6 +35,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 class ConversationServiceTest {
 
@@ -141,6 +145,71 @@ class ConversationServiceTest {
                 .isInstanceOf(StallNotOpenException.class);
         verify(policy).assertCanStart(customer);
         verify(conversations, never()).findByUserAIdAndUserBId(anyLong(), anyLong());
+        verify(conversations, never()).save(any());
+    }
+
+    @Test
+    void listMineMapsTheOtherParticipantAndUnreadCount() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        c.noteNewMessage("Five bunches left", NOW);
+        when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
+        when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
+        MessageRepository.UnreadRow row = mock(MessageRepository.UnreadRow.class);
+        when(row.getConversationId()).thenReturn(42L);
+        when(row.getTotal()).thenReturn(2L);
+        when(messages.countUnreadByConversation(7L, List.of(42L))).thenReturn(List.of(row));
+
+        var page = service.listMine(7L, 1, 20);
+
+        assertThat(page.total()).isEqualTo(1);
+        assertThat(page.page()).isEqualTo(1);
+        assertThat(page.items()).hasSize(1);
+        assertThat(page.items().get(0).other().fullName()).isEqualTo("Cô Tư");
+        assertThat(page.items().get(0).lastMessageText()).isEqualTo("Five bunches left");
+        assertThat(page.items().get(0).unreadCount()).isEqualTo(2L);
+    }
+
+    @Test
+    void listMineWithNoThreadsDoesNotQueryUnreadOrUsers() {
+        when(conversations.findMine(eq(7L), any())).thenReturn(Page.empty());
+
+        var page = service.listMine(7L, 1, 20);
+
+        assertThat(page.items()).isEmpty();
+        verify(messages, never()).countUnreadByConversation(anyLong(), anyCollection());
+        verify(users, never()).findAllById(any());
+    }
+
+    @Test
+    void unreadCountComesStraightFromTheRepository() {
+        when(messages.countUnread(7L)).thenReturn(4L);
+
+        assertThat(service.unreadCount(7L).count()).isEqualTo(4L);
+    }
+
+    @Test
+    void markReadSetsTheCallersMarkerAndPublishes() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        when(conversations.findById(42L)).thenReturn(Optional.of(c));
+
+        service.markRead(7L, 42L);
+
+        assertThat(c.readAtOf(7L)).isEqualTo(NOW);
+        assertThat(c.readAtOf(3L)).isNull();
+        verify(conversations).save(c);
+        verify(events).conversationRead(c, 7L, NOW);
+    }
+
+    @Test
+    void markReadByANonMemberIsForbidden() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        when(conversations.findById(42L)).thenReturn(Optional.of(c));
+
+        assertThatThrownBy(() -> service.markRead(9L, 42L))
+                .isInstanceOf(ConversationAccessDeniedException.class);
         verify(conversations, never()).save(any());
     }
 }

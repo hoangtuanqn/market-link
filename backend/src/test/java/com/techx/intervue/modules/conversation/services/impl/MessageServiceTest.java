@@ -3,6 +3,7 @@ package com.techx.intervue.modules.conversation.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -27,10 +28,12 @@ import com.techx.intervue.modules.user.repositories.UserRepository;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.data.domain.Pageable;
 
 class MessageServiceTest {
 
@@ -169,5 +172,41 @@ class MessageServiceTest {
         ArgumentCaptor<Message> saved = ArgumentCaptor.forClass(Message.class);
         verify(messages).save(saved.capture());
         assertThat(saved.getValue().getBody()).hasSize(2000);
+    }
+
+    @Test
+    void listWithoutBeforeUsesTheFirstPageQuery() {
+        Message m = Message.builder().id(5L).conversationId(42L).senderId(3L).body("hi").build();
+        when(messages.findByConversationIdAndHiddenAtIsNullOrderByIdDesc(eq(42L), any()))
+                .thenReturn(List.of(m));
+
+        List<MessageResource> result = service.list(7L, 42L, null, 30);
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).id()).isEqualTo(5L);
+        verify(messages, never())
+                .findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
+                        any(), any(), any());
+    }
+
+    @Test
+    void listPassesTheConversationIdToTheRepositoryEvenWithBefore() {
+        service.list(7L, 42L, 500L, 30);
+
+        ArgumentCaptor<Long> conversationId = ArgumentCaptor.forClass(Long.class);
+        verify(messages)
+                .findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
+                        conversationId.capture(), eq(500L), any());
+        assertThat(conversationId.getValue()).isEqualTo(42L);
+    }
+
+    @Test
+    void listClampsPageSizeToFifty() {
+        service.list(7L, 42L, null, 500);
+
+        ArgumentCaptor<Pageable> page = ArgumentCaptor.forClass(Pageable.class);
+        verify(messages)
+                .findByConversationIdAndHiddenAtIsNullOrderByIdDesc(eq(42L), page.capture());
+        assertThat(page.getValue().getPageSize()).isEqualTo(MessageService.MAX_PAGE);
     }
 }
