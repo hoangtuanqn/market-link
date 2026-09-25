@@ -22,7 +22,6 @@ import com.techx.intervue.modules.user.resources.RefreshResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
 import com.techx.intervue.modules.user.resources.ResetTokenResource;
 import com.techx.intervue.modules.user.resources.UserResource;
-import com.techx.intervue.modules.user.services.impl.FacebookOAuthClient;
 import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
@@ -58,7 +57,6 @@ public class AuthController extends BaseController {
     private final PasswordResetServiceInterface passwordResetService;
     private final AuthConfig authConfig;
     private final GoogleOAuthClient googleClient;
-    private final FacebookOAuthClient facebookClient;
 
     /** FR-001 */
     @PostMapping("/register")
@@ -109,13 +107,6 @@ public class AuthController extends BaseController {
         return loggedIn(userService.loginWithSocial(googleClient.fetchProfile(request.code())));
     }
 
-    /** Đăng nhập Facebook: như Google, backend tự đổi code lấy access token bằng app_secret. */
-    @PostMapping("/facebook")
-    public ResponseEntity<ApiResource<LoginResource>> loginWithFacebook(
-            @Valid @RequestBody SocialLoginRequest request) {
-        return loggedIn(userService.loginWithSocial(facebookClient.fetchProfile(request.code())));
-    }
-
     private ResponseEntity<ApiResource<LoginResource>> loggedIn(AuthResult auth) {
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
@@ -147,8 +138,8 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * Đặt mật khẩu lần đầu sau khi đăng nhập Google/Facebook (user.hasPassword = false). Cần access
-     * token; tài khoản đã có mật khẩu → 409 PASSWORD_ALREADY_SET.
+     * Đặt mật khẩu lần đầu sau khi đăng nhập Google (user.hasPassword = false). Cần access token;
+     * tài khoản đã có mật khẩu → 409 PASSWORD_ALREADY_SET.
      */
     @PostMapping("/set-password")
     public ResponseEntity<ApiResource<Void>> setPassword(

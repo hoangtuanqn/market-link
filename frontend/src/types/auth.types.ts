@@ -43,7 +43,7 @@ export type ResetTokenType = {
   email: string;
 };
 
-export type SocialProvider = 'google' | 'facebook';
+export type SocialProvider = 'google';
 
 export type AuthorizeUrlType = {
   url: string;

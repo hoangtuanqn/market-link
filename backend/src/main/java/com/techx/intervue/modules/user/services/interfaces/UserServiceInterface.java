@@ -20,7 +20,7 @@ public interface UserServiceInterface {
 
     AuthResult loginWithSocial(SocialProfile profile);
 
-    /** Đặt mật khẩu lần đầu cho tài khoản chưa có mật khẩu (tạo qua Google/Facebook). */
+    /** Đặt mật khẩu lần đầu cho tài khoản chưa có mật khẩu (tạo qua Google). */
     void setPassword(Long userId, SetPasswordRequest request);
 
     /** Đổi mật khẩu (cần mật khẩu hiện tại), rồi đăng xuất mọi thiết bị. */

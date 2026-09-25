@@ -44,14 +44,14 @@ public class AuthExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
-    /** Google/Facebook không phản hồi, timeout hoặc lỗi 5xx. */
+    /** Google không phản hồi, timeout hoặc lỗi 5xx. */
     @ExceptionHandler(RestClientException.class)
     ResponseEntity<ApiResource<Void>> providerUnavailable(RestClientException e) {
         log.warn("OAuth provider call failed: {}", e.getMessage());
         return error(
                 HttpStatus.BAD_GATEWAY,
                 "OAUTH_PROVIDER_ERROR",
-                "Could not reach Google or Facebook. Please try again later.",
+                "Could not reach Google. Please try again later.",
                 List.of());
     }
 

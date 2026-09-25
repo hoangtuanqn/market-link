@@ -107,7 +107,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         User user =
                 userRepository
                         .findByEmail(email)
-                        // Tài khoản tạo từ Google/Facebook chưa có mật khẩu
+                        // Tài khoản tạo từ Google chưa có mật khẩu
                         .filter(
                                 u ->
                                         u.getPasswordHash() != null
@@ -145,7 +145,7 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * Đăng nhập Google/Facebook sau khi backend đã tự xác minh với provider. Tìm theo (provider,
+     * Đăng nhập Google sau khi backend đã tự xác minh với provider. Tìm theo (provider,
      * provider_user_id); lần đầu thì gắn vào user cùng email (chỉ khi email đã xác minh) hoặc tạo
      * customer mới chưa có mật khẩu / số điện thoại.
      */
@@ -214,7 +214,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         return name.length() > 100 ? name.substring(0, 100) : name;
     }
 
-    /** users.image là VARCHAR(255); URL ảnh dài hơn (Facebook hay có) thì bỏ qua. */
+    /** users.image là VARCHAR(255); URL ảnh dài hơn thì bỏ qua. */
     private static String fitsColumn(String url) {
         return url != null && url.length() <= 255 ? url : null;
     }
@@ -320,9 +320,8 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * Đặt mật khẩu lần đầu cho tài khoản tạo qua Google/Facebook. Chỉ khi chưa có mật khẩu — đã có
-     * thì phải dùng đổi / quên mật khẩu (409). userId lấy từ access token (R-06). Phiên hiện tại
-     * giữ nguyên.
+     * Đặt mật khẩu lần đầu cho tài khoản tạo qua Google. Chỉ khi chưa có mật khẩu — đã có thì phải
+     * dùng đổi / quên mật khẩu (409). userId lấy từ access token (R-06). Phiên hiện tại giữ nguyên.
      */
     @Override
     @Transactional

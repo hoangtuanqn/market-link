@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Liên kết một user với tài khoản Google/Facebook qua provider_user_id (không qua email). */
+/** Liên kết một user với tài khoản Google qua provider_user_id (không qua email). */
 @Entity
 @Getter
 @Setter

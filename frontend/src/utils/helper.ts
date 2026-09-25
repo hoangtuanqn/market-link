@@ -4,7 +4,7 @@ import type { UserType } from '@/types/user.types';
 
 class Helper {
   /**
-   * Trang tiếp theo sau khi đăng nhập Google/Facebook: thiếu số điện thoại / địa chỉ → bổ sung hồ sơ; chưa có mật khẩu
+   * Trang tiếp theo sau khi đăng nhập Google: thiếu số điện thoại / địa chỉ → bổ sung hồ sơ; chưa có mật khẩu
    * → đặt mật khẩu; đủ rồi → trang chủ.
    */
   static nextStepAfterSocialLogin(user: Pick<UserType, 'phone' | 'address' | 'hasPassword'>) {
