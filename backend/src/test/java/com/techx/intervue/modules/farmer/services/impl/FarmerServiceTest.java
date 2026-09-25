@@ -20,8 +20,10 @@ import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,6 +71,25 @@ class FarmerServiceTest {
                 contactPerson,
                 null,
                 null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    private static FarmerApplicationRequest requestWithCategories(List<String> categories) {
+        return new FarmerApplicationRequest(
+                "Khang Family Greens",
+                "Khang",
+                null,
+                categories,
                 null,
                 null,
                 null,
@@ -163,6 +184,23 @@ class FarmerServiceTest {
         assertThat(owner.getRole()).isEqualTo(RoleType.FARMER);
         assertThat(profile.getApprovedBy()).isEqualTo(ADMIN_ID);
         assertThat(profile.getApprovedAt()).isNotNull();
+    }
+
+    /**
+     * categories lưu nối bằng ';' vào VARCHAR(255): quá dài thì phải là 400 có tên field, không
+     * phải DataIntegrityViolationException rơi xuống /error rồi FE đọc thành 401.
+     */
+    @Test
+    void apply_rejectsCategories_whenTheJoinedValueDoesNotFitTheColumn() {
+        when(farmerProfileRepository.existsByUserId(USER_ID)).thenReturn(false);
+        when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        List<String> tooMany = Collections.nCopies(20, "x".repeat(40));
+
+        assertThatThrownBy(() -> service.apply(USER_ID, requestWithCategories(tooMany)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting(e -> ((InvalidFieldException) e).getField())
+                .isEqualTo("categories");
+        verify(farmerProfileRepository, never()).save(any());
     }
 
     @Test

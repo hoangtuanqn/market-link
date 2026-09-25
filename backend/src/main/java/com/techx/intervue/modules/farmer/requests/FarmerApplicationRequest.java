@@ -44,7 +44,10 @@ public record FarmerApplicationRequest(
         @DecimalMin(value = "-180", message = "Longitude must be between -180 and 180.")
                 @DecimalMax(value = "180", message = "Longitude must be between -180 and 180.")
                 BigDecimal plotLongitude,
-        @Size(max = 5, message = "At most 5 photos.") List<String> photoUrls,
-        String videoUrl,
+        // Độ dài từng URL phải khớp cột lưu: dài hơn thì DB ném lỗi và FE đọc thành 401, không
+        // phải 400.
+        @Size(max = 5, message = "At most 5 photos.")
+                List<@Size(max = 255, message = "Photo link is too long.") String> photoUrls,
+        @Size(max = 255, message = "Video link is too long.") String videoUrl,
         @Size(max = 120, message = "Keep the market name under 120 characters.")
                 String preferredMarketName) {}

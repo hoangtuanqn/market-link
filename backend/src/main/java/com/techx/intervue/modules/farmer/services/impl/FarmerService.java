@@ -14,6 +14,7 @@ import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.resources.PageResource;
 import java.time.Instant;
@@ -45,6 +46,9 @@ public class FarmerService implements FarmerServiceInterface {
 
     private static final String LIST_SEPARATOR = ";";
 
+    /** Bằng đúng độ rộng cột farmer_profiles.categories — DB không phải là nơi báo lỗi form. */
+    private static final int CATEGORIES_MAX_LENGTH = 255;
+
     private final FarmerProfileRepository farmerProfileRepository;
     private final UserRepository userRepository;
 
@@ -57,6 +61,10 @@ public class FarmerService implements FarmerServiceInterface {
         if (farmerProfileRepository.existsByUserId(userId)) {
             throw new FarmerApplicationExistsException();
         }
+        String categories = joinList(request.categories());
+        if (categories != null && categories.length() > CATEGORIES_MAX_LENGTH) {
+            throw new InvalidFieldException("categories", "Choose fewer or shorter categories.");
+        }
         FarmerProfile profile =
                 farmerProfileRepository.save(
                         FarmerProfile.builder()
@@ -64,7 +72,7 @@ public class FarmerService implements FarmerServiceInterface {
                                 .stallName(request.stallName().trim())
                                 .contactPerson(request.contactPerson().trim())
                                 .description(normalize(request.description()))
-                                .categories(joinList(request.categories()))
+                                .categories(categories)
                                 .mainCrops(normalize(request.mainCrops()))
                                 .weeklyVolume(normalize(request.weeklyVolume()))
                                 .growingMethod(normalize(request.growingMethod()))
