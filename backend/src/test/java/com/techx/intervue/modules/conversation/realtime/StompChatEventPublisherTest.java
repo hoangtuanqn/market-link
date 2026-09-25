@@ -89,6 +89,8 @@ class StompChatEventPublisherTest {
         assertThat(ev.getValue().type()).isEqualTo("read");
         assertThat(ev.getValue().readerId()).isEqualTo(3L);
         assertThat(ev.getValue().readAt()).isEqualTo(NOW);
+        // "read" không phải cập nhật badge: unreadCount phải vắng mặt, không phải 0
+        assertThat(ev.getValue().unreadCount()).isNull();
         verify(template, never()).convertAndSendToUser(eq("3"), any(), any());
     }
 
