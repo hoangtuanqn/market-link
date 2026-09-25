@@ -8,17 +8,25 @@ export function vnd(amount: number): string {
 }
 
 /**
+ * English cannot derive the plural of an arbitrary unit phrase ("tray of 30" → "trays of 30"), so this is only the
+ * guess a form offers by default; a stall can override it (see `units`' third argument).
+ */
+export function guessPlural(unit: string): string {
+  if (UNIT_SAME.has(unit)) return unit;
+  if (unit === 'loaf') return 'loaves';
+  if (/(ch|sh|s|x)$/.test(unit)) return `${unit}es`;
+  if (/[^aeiou]y$/.test(unit)) return `${unit.slice(0, -1)}ies`;
+  return `${unit}s`;
+}
+
+/**
  * English plural for a sale unit: (3, 'bunch') → "3 bunches", (2, 'loaf') → "2 loaves", (1, 'kg') → "1 kg". Pass the
  * stall's own plural (e.g. "trays of 30") as the third argument when the unit doesn't just take an "s".
  */
 export function units(count: number, unit?: string, plural?: string): string {
   if (!unit) return String(count);
   if (count === 1 || UNIT_SAME.has(unit)) return `${count} ${unit}`;
-  if (plural) return `${count} ${plural}`;
-  if (unit === 'loaf') return `${count} loaves`;
-  if (/(ch|sh|s|x)$/.test(unit)) return `${count} ${unit}es`;
-  if (/[^aeiou]y$/.test(unit)) return `${count} ${unit.slice(0, -1)}ies`;
-  return `${count} ${unit}s`;
+  return `${count} ${plural || guessPlural(unit)}`;
 }
 
 const pad = (n: number) => String(n).padStart(2, '0');
