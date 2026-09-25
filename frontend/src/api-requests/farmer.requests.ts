@@ -15,6 +15,12 @@ class FarmerApi {
     return response.data;
   };
 
+  /** Rút đơn khi còn đang chờ duyệt; sau đó tài khoản nộp lại từ đầu được. */
+  static withdraw = async () => {
+    const response = await privateApi.delete<ApiResponse<null>>('/farmer/apply');
+    return response.data;
+  };
+
   /** Ảnh/video đính kèm, tải lên trước khi gửi form chính (docs/prototype/customer/become-farmer.html). */
   static uploadFile = async (file: File, kind: 'photo' | 'video') => {
     const form = new FormData();

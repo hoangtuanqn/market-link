@@ -35,21 +35,7 @@ class FarmerApplicationRequestTest {
 
     private static FarmerApplicationRequest with(List<String> photoUrls, String videoUrl) {
         return new FarmerApplicationRequest(
-                "Khang Family Greens",
-                "Khang",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                photoUrls,
-                videoUrl,
-                null);
+                "Khang Family Greens", "Khang", null, photoUrls, videoUrl);
     }
 
     private static Set<String> invalidFields(FarmerApplicationRequest request) {

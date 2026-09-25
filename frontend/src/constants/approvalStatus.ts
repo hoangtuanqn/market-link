@@ -9,5 +9,5 @@ export const APPROVAL_STATUS_META: Record<FarmerApproval, { icon: typeof ClockIc
   suspended: { icon: CircleSlashIcon, className: 'bg-status-declined-bg text-status-declined-ink' },
 };
 
-/** Lý do từ chối (`AdminFarmers:reason.<key>`). Server lưu đúng câu admin chọn, người nộp đơn đọc lại câu đó. */
-export const REJECT_REASONS = ['mismatch', 'full', 'unreachable', 'other'] as const;
+/** Bằng đúng @Size của RejectFarmerRequest / SuspendFarmerRequest — client báo trước, server chốt. */
+export const REASON_MAX = 255;

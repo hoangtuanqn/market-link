@@ -6,9 +6,9 @@
   "intro": "Si vous cultivez des aliments, votre compte peut devenir un stand sur l'un des quatre marchés. Vous gardez tout ce que vous avez et continuez à acheter auprès des autres stands.",
   "next": {
     "title": "Ce qui se passe après l'envoi",
-    "read": "Un administrateur lit la demande et regarde vos photos, généralement en quelques jours de marché.",
-    "panel": "Une fois approuvée, un panneau de stand apparaît dans votre compte pour le stock, les commandes et les créneaux de retrait.",
-    "setup": "Vous y choisissez vos marchés, vos jours et vos créneaux, puis publiez vos premiers produits."
+    "read": "Un admin examine votre demande et vos photos.",
+    "panel": "Une fois validé, un panneau de stand s'ouvre dans votre compte.",
+    "setup": "Vous y réglez marchés, horaires de retrait et produits."
   },
   "step1": {
     "title": "Votre stand",
@@ -22,68 +22,37 @@
     "about": "À propos du stand",
     "aboutPlaceholder": "Une ou deux phrases. Qui cultive et où.",
     "address": "Adresse",
-    "fromAccount": "Repris de votre compte. S’il est faux, modifiez-le d’abord sur la page Compte."
+    "fromAccount": "Depuis votre compte. Modifiable sur la page Compte.",
+    "aboutCount": "{{used}} sur {{max}} caractères"
   },
   "step2": {
-    "title": "Ce que vous cultivez",
-    "categories": "Catégories",
-    "crops": "Cultures principales",
-    "cropsPlaceholder": "Liseron d'eau, choy sum, basilic thaï",
-    "cropsHint": "Séparez-les par des virgules. Vous publierez de vrais produits avec leurs prix après approbation.",
-    "volume": "Quantité approximative par semaine",
-    "volumePlaceholder": "Environ 120 bottes",
-    "volumeHint": "Un chiffre approximatif. Il aide l'administrateur à vous placer sur un marché qui a de la place.",
-    "method": "Votre façon de cultiver",
-    "methodPlaceholder": "ex. Aucun pesticide ces deux dernières saisons.",
-    "methodHint": "Facultatif, affiché sur la page de votre stand avec vos propres mots. MarketLink ne vérifie ni ne certifie rien de tout cela."
-  },
-  "step3": {
-    "title": "Où vous cultivez",
-    "plot": "Adresse de la parcelle",
-    "plotPlaceholder": "Hameau, quartier, district",
-    "plotHint": "Seul l'administrateur le voit. Les clients voient votre stand au marché, pas votre parcelle.",
-    "size": "Surface de la parcelle",
-    "sizePlaceholder": "5 000 m²",
-    "since": "Cultivé ici depuis",
-    "pin": "Épinglez la parcelle",
-    "map": "Épinglez votre parcelle sur la carte",
-    "pinHint": "Faites glisser l'épingle jusqu'à votre parcelle. C'est le moyen le plus rapide pour l'administrateur de vérifier que les photos correspondent au lieu.",
-    "yourPlot": "Votre parcelle"
-  },
-  "step4": {
     "title": "Photos de la parcelle",
-    "intro": "Deux photos suffisent, cinq au maximum. Une vue d'ensemble de toute la parcelle, et un gros plan de ce qui pousse en ce moment. Prenez-les dans les 30 derniers jours, sans filtre.",
-    "shots": {
-      "wide": "Vue d'ensemble de la parcelle",
-      "growing": "Ce qui pousse en ce moment",
-      "other": "Autre chose"
-    },
+    "intro": "Une vue d'ensemble et une vue rapprochée, prises dans les 30 derniers jours. Sans filtre.",
     "addPhoto": "Ajouter une photo",
     "video": "Une courte vidéo",
     "addVideo": "Ajouter une vidéo, 60 secondes maximum",
-    "videoHint": "Facultatif. Une lente promenade le long des rangs en dit plus que n'importe quelle photo, et accélère l'approbation.",
+    "videoHint": "Facultatif. Une marche lente le long des planches accélère la validation.",
     "banner": {
-      "title": "L'administrateur vérifie une seule chose : que la parcelle existe et produit ce que vous avez indiqué.",
-      "text": "MarketLink ne vérifie ni licences, ni sécurité alimentaire, ni allégations bio, et une photo n'est pas un certificat."
+      "title": "L'admin vérifie seulement que la parcelle existe.",
+      "text": "MarketLink ne vérifie ni licences, ni sécurité alimentaire, ni label bio."
     },
     "uploading": "Envoi en cours…",
     "removePhoto": "Retirer : {{label}}",
     "videoAdded": "Vidéo ajoutée",
-    "removeVideo": "Retirer"
+    "removeVideo": "Retirer",
+    "photoHint": "Au moins une photo est requise. JPEG, PNG ou WEBP, {{max}} Mo maximum par photo.",
+    "videoLimit": "{{max}} Mo maximum.",
+    "photoLabel": "Photo {{n}}",
+    "addPhotoLabel": "Ajouter la photo {{n}}"
   },
-  "step5": {
-    "title": "Où vous voulez vendre",
-    "market": "Marché",
-    "hint": "Choisissez-en un pour commencer. Vous réglerez vos jours, créneaux de retrait et heure limite dans le panneau du stand une fois approuvé, et pourrez ajouter les autres marchés plus tard."
-  },
-  "step6": {
+  "step3": {
     "title": "Avant d'envoyer",
-    "true": "Tout ce qui est indiqué ici est vrai, et les photos sont de ma propre parcelle",
-    "trueHint": "Une demande avec des photos qui ne sont pas les vôtres est refusée et le compte peut être suspendu.",
+    "true": "Les informations et les photos sont les miennes et exactes",
+    "trueHint": "De fausses photos entraînent un refus ou une suspension.",
     "present": "Je serai au stand pendant mon créneau de retrait",
-    "presentHint": "Les absences répétées sont la raison habituelle de suspension d'un stand.",
-    "pay": "Je comprends que les clients me paient au stand",
-    "payHint": "Il n'y a ni paiement en ligne ni livraison sur MarketLink.",
+    "presentHint": "Les absences répétées entraînent une suspension.",
+    "pay": "Les clients me paient au stand",
+    "payHint": "MarketLink n'a ni paiement en ligne ni livraison.",
     "send": "Envoyer la demande",
     "later": "Enregistrer et terminer plus tard",
     "sending": "Envoi…"
@@ -93,25 +62,23 @@
     "intro": "Rien ne change pour vous en attendant. Continuez vos achats et surveillez vos notifications pour la réponse.",
     "summary": "Ce que vous avez envoyé",
     "stall": "Stand",
-    "grows": "Cultures",
-    "plot": "Parcelle",
     "evidence": "Justificatifs",
     "photos_one": "{{count}} photo",
     "photos_other": "{{count}} photos",
     "photosAndVideo_one": "{{count}} photo et une vidéo",
     "photosAndVideo_other": "{{count}} photos et une vidéo",
-    "market": "Marché",
     "keepShopping": "Continuer mes achats",
     "progress": "Avancement",
     "about": "Présentation",
-    "volume": "Environ par semaine",
-    "plotIn": "à {{place}}",
-    "plotSince": "cultivée depuis {{year}}",
     "noPhotos": "Aucune photo",
     "noPhotosVideo": "Aucune photo, et une vidéo",
     "status": "État",
     "sentOn": "Envoyée le",
-    "photoAlt": "Photo de la parcelle"
+    "photoAlt": "Photo de la parcelle",
+    "applyAgain": "Refaire une demande",
+    "historyTitle": "Vos demandes précédentes",
+    "historyText": "Toutes vos demandes, avec la réponse de l'admin.",
+    "withdraw": "Retirer la demande"
   },
   "timeline": {
     "placed": {
@@ -131,10 +98,14 @@
     }
   },
   "toast": {
-    "missingTitle": "Cases manquantes",
-    "missing": "Cochez les trois cases à la fin avant d'envoyer.",
+    "fixTitle": "Vérifiez le formulaire",
+    "fix": "Nous avons signalé ce qu'il reste à compléter.",
     "sentTitle": "Demande envoyée",
-    "sent": "La réponse d'un administrateur arrivera dans vos notifications."
+    "sent": "La réponse d'un administrateur arrivera dans vos notifications.",
+    "savedTitle": "Enregistré pour plus tard",
+    "saved": "Vos réponses restent sur cet appareil. Reprenez depuis votre compte.",
+    "withdrawnTitle": "Demande retirée",
+    "withdrawn": "Refaites-en une quand vous voulez."
   },
   "loading": "Chargement de l’état de votre demande",
   "loadError": {
@@ -147,7 +118,18 @@
     "contactPerson": "Indiquez une personne à contacter.",
     "photo": "Impossible d’envoyer cette photo. Réessayez.",
     "video": "Impossible d’envoyer cette vidéo. Réessayez.",
-    "send": "Impossible d’envoyer votre demande. Réessayez."
+    "send": "Impossible d’envoyer votre demande. Réessayez.",
+    "stallNameLong": "Le nom du stand ne doit pas dépasser {{max}} caractères.",
+    "contactPersonLong": "Le nom du contact ne doit pas dépasser {{max}} caractères.",
+    "descriptionLong": "La description ne doit pas dépasser {{max}} caractères.",
+    "photoRequired": "Ajoutez au moins une photo de la parcelle.",
+    "uploadInProgress": "Attendez la fin de l'envoi avant de valider.",
+    "photoType": "Les photos doivent être en JPEG, PNG ou WEBP.",
+    "photoTooLarge": "Cette photo dépasse {{max}} Mo.",
+    "videoType": "La vidéo doit être en MP4, WEBM ou MOV.",
+    "videoTooLarge": "Cette vidéo dépasse {{max}} Mo.",
+    "terms": "Cochez les trois cases avant d'envoyer.",
+    "withdraw": "Impossible de retirer la demande. Réessayez."
   },
   "approval": {
     "approved": {
@@ -172,5 +154,20 @@
     "approved": "Approuvée",
     "rejected": "Refusée",
     "suspended": "Suspendu"
+  },
+  "rejectedBanner": {
+    "title": "Pourquoi elle n'a pas été validée",
+    "noReason": "Aucun motif enregistré. Écrivez à un admin depuis le formulaire de retour."
+  },
+  "draft": {
+    "title": "Vous aviez commencé cette demande",
+    "text": "Ce que vous avez écrit le {{date}} est toujours là.",
+    "discard": "Tout recommencer"
+  },
+  "withdrawDialog": {
+    "title": "Retirer votre demande ?",
+    "text": "L'admin ne la voit plus et rien n'est conservé. Vous pouvez refaire une demande quand vous voulez.",
+    "keep": "La garder",
+    "confirm": "Retirer"
   }
 }

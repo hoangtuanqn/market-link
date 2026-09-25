@@ -393,5 +393,17 @@
     "gold": "黄金",
     "diamond": "钻石",
     "badge": "{{tier}} 等级"
+  },
+  "video": {
+    "play": "播放视频",
+    "preview": "视频",
+    "close": "关闭"
+  },
+  "application": {
+    "attempt": "第 {{n}} 次申请",
+    "sentOn": "提交于 {{date}}",
+    "answeredOn": "答复于 {{date}}",
+    "reason": "理由：",
+    "photoAlt": "第 {{n}} 次申请的照片"
   }
 }

@@ -3,8 +3,20 @@
   "intro": "Your details are shared with a stall only on the orders you place there.",
   "sell": {
     "title": "Sell at MarketLink",
-    "text": "If you grow food, this account can become a stall. You keep your orders, favorites and cart, and a panel appears for stock and pickup times once an admin approves you.",
-    "apply": "Apply to sell"
+    "text": "Apply to sell with your current account. Once approved, you can manage your stall while keeping your orders and favorites.",
+    "apply": "Apply to sell",
+    "view": "View your application",
+    "panel": "Open the farmer panel",
+    "loading": "Checking your application",
+    "status": {
+      "pending": "Your application is with an admin. Nothing changes for you until they answer.",
+      "approved": "Your stall is approved. Set markets, pickup windows and products in the farmer panel.",
+      "rejected": "Your application was not approved. Open it to see what was sent.",
+      "suspended": "Your stall is suspended. You can still shop as a customer."
+    },
+    "draft": "You have an unfinished application. Continue where you left off.",
+    "continue": "Finish your application",
+    "history": "See your earlier applications"
   },
   "signOut": {
     "title": "Sign out",

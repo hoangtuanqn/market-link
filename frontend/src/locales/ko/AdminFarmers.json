@@ -1,6 +1,11 @@
 {
   "title": "농가",
   "intro": "매장이 상품을 올리기 전에 신청을 승인하세요. 매장을 정지하면 상품이 숨겨지고 새 주문이 중단되며, 진행 중인 주문은 정상적으로 마무리됩니다.",
+  "search": {
+    "label": "농부 검색",
+    "placeholder": "가게, 담당자, 전화번호",
+    "submit": "검색"
+  },
   "tabsLabel": "상태별 농가",
   "status": {
     "pending": "승인 대기",
@@ -29,7 +34,6 @@
   "col": {
     "stall": "매대",
     "registered": "등록일",
-    "contact": "연락처",
     "email": "이메일"
   },
   "action": {
@@ -49,18 +53,21 @@
     "title": "{{stall}}을(를) 거절할까요?",
     "text": "신청자는 고객 계정과 그 안의 모든 것을 그대로 유지하며, 거절 사유를 안내받습니다.",
     "reason": "농가에게 보일 이유",
-    "confirm": "신청 거절"
-  },
-  "reason": {
-    "mismatch": "정보가 매대와 맞지 않음",
-    "full": "시장 자리가 다 참",
-    "unreachable": "연락처로 연락이 안 됨",
-    "other": "기타"
+    "confirm": "신청 거절",
+    "placeholder": "이 가게가 승인되려면 무엇을 고쳐야 하는지 적으세요.",
+    "hint": "{{used}} / {{max}}자. 신청자가 이 문장을 그대로 읽습니다.",
+    "required": "신청자가 볼 사유를 적으세요.",
+    "tooLong": "사유는 {{max}}자 이내로 적으세요."
   },
   "suspend": {
     "title": "{{stall}}을(를) 정지할까요?",
     "text": "모든 상품이 숨겨지고 새 주문을 받지 않아요. 이미 들어온 주문은 계속되므로 고객이 예약한 것을 잃지 않아요.",
-    "confirm": "매대 정지"
+    "confirm": "매대 정지",
+    "reason": "농가에게 보일 이유",
+    "placeholder": "다시 판매하려면 무엇을 고쳐야 하는지 적으세요.",
+    "hint": "{{used}} / {{max}}자. 농부가 이 문장을 그대로 읽습니다.",
+    "required": "농부가 볼 사유를 적으세요.",
+    "tooLong": "사유는 {{max}}자 이내로 적으세요."
   },
   "toast": {
     "approved": "{{stall}}을(를) 승인했어요. 이제 매대가 상품을 올릴 수 있어요.",
@@ -83,5 +90,6 @@
     "retry": "다시 시도"
   },
   "caption_one": "농부 {{count}}명",
-  "caption_other": "농부 {{count}}명"
+  "caption_other": "농부 {{count}}명",
+  "showing": "{{total}}개 중 {{from}}–{{to}}개 표시"
 }

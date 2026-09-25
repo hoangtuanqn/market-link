@@ -3,10 +3,12 @@ package com.techx.intervue.modules.farmer.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.farmer.resources.UploadedFileResource;
 import com.techx.intervue.modules.farmer.services.impl.FarmerUploadService;
+import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,8 +30,10 @@ public class FarmerUploadController extends BaseController {
 
     @PostMapping
     public ResponseEntity<ApiResource<UploadedFileResource>> upload(
-            @RequestParam String kind, @RequestParam MultipartFile file) {
-        String url = uploadService.store(kind, file);
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam String kind,
+            @RequestParam MultipartFile file) {
+        String url = uploadService.store(user.getId(), kind, file);
         return created(new UploadedFileResource(url), "File uploaded.");
     }
 }

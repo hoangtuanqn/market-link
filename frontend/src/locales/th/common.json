@@ -393,5 +393,17 @@
     "gold": "โกลด์",
     "diamond": "ไดมอนด์",
     "badge": "ระดับ {{tier}}"
+  },
+  "video": {
+    "play": "เล่นวิดีโอ",
+    "preview": "วิดีโอ",
+    "close": "ปิด"
+  },
+  "application": {
+    "attempt": "การสมัครครั้งที่ {{n}}",
+    "sentOn": "ส่งเมื่อ {{date}}",
+    "answeredOn": "ตอบเมื่อ {{date}}",
+    "reason": "เหตุผล:",
+    "photoAlt": "รูปจากการสมัครครั้งที่ {{n}}"
   }
 }

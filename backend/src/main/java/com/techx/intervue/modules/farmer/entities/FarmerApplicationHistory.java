@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
@@ -17,20 +16,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Một lần nộp đơn xin thành Farmer, chụp lại nội dung lúc nộp. {@code farmer_profiles} bị ghi đè
+ * khi nộp lại nên không giữ được lịch sử; bảng này giữ, để người nộp và Admin đều đối chiếu được
+ * lần trước bị từ chối vì lý do gì.
+ */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "farmer_profiles")
-public class FarmerProfile {
+@Table(name = "farmer_application_history")
+public class FarmerApplicationHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true)
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    /** Lần nộp thứ mấy của tài khoản này, bắt đầu từ 1. */
+    @Column(name = "attempt", nullable = false)
+    private Integer attempt;
 
     @Column(name = "stall_name", nullable = false, length = 120)
     private String stallName;
@@ -38,11 +46,10 @@ public class FarmerProfile {
     @Column(name = "contact_person", nullable = false, length = 100)
     private String contactPerson;
 
-    /** "About the stall" — optional, shown on the future stall page as the farmer's own words. */
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    /** Nhiều path cách nhau bởi ';' — xem FarmerService#joinList/#splitList. */
+    /** Nhiều path cách nhau bởi ';' — cùng quy ước với farmer_profiles. */
     @Column(name = "photo_paths", columnDefinition = "TEXT")
     private String photoPaths;
 
@@ -50,44 +57,26 @@ public class FarmerProfile {
     private String videoPath;
 
     @Convert(converter = ApprovalStatus.DbConverter.class)
-    @Column(name = "approval_status", nullable = false)
+    @Column(name = "status", nullable = false)
     @Builder.Default
-    private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
+    private ApprovalStatus status = ApprovalStatus.PENDING;
 
-    /** Lý do Admin từ chối — chỉ có giá trị khi approvalStatus = REJECTED. */
     @Column(name = "reject_reason", length = 255)
     private String rejectReason;
 
-    /** Lý do Admin đình chỉ — chỉ có giá trị khi approvalStatus = SUSPENDED. */
-    @Column(name = "suspend_reason", length = 255)
-    private String suspendReason;
+    @Column(name = "decided_by")
+    private Long decidedBy;
 
-    @Column(name = "approved_by")
-    private Long approvedBy;
+    @Column(name = "decided_at")
+    private Instant decidedAt;
 
-    @Column(name = "approved_at")
-    private Instant approvedAt;
-
-    @Column(name = "suspended_by")
-    private Long suspendedBy;
-
-    @Column(name = "suspended_at")
-    private Instant suspendedAt;
-
-    @Column(name = "created_at", updatable = false)
-    private Instant createdAt;
-
-    @Column(name = "updated_at")
-    private Instant updatedAt;
+    @Column(name = "submitted_at", updatable = false)
+    private Instant submittedAt;
 
     @PrePersist
     protected void onCreated() {
-        createdAt = Instant.now();
-        updatedAt = createdAt;
-    }
-
-    @PreUpdate
-    protected void onUpdated() {
-        updatedAt = Instant.now();
+        if (submittedAt == null) {
+            submittedAt = Instant.now();
+        }
     }
 }

@@ -1,35 +1,103 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import FarmerApi from '@/api-requests/farmer.requests';
-import LocationPicker from '@/components/LocationPicker';
-import { CITY } from '@/config/map';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataState } from '@/components/ui/data-state';
+import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/input';
 import { FormStep } from '@/components/ui/form-step';
+import { ApplicationHistory } from '@/components/ApplicationHistory';
+import { VideoThumb } from '@/components/VideoThumb';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
-import { categories } from '@/data/customer';
-import { markets } from '@/data/home';
 import useSession from '@/hooks/useSession';
-import { dayList, formatDate } from '@/lib/format';
+import { clearDraft, readDraft, saveDraft } from '@/lib/farmerDraft';
+import { formatDate } from '@/lib/format';
 import type { FarmerApplicationInput, FarmerProfileType } from '@/types/farmer.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'form' } | { kind: 'applied'; data: FarmerProfileType };
 
-type FormErrors = { stallName?: string; contactPerson?: string };
+type FormErrors = {
+  stallName?: string;
+  contactPerson?: string;
+  description?: string;
+  photos?: string;
+  terms?: string;
+};
+
+/** Bằng đúng @Size của FarmerApplicationRequest — client báo trước, server vẫn là nơi chốt. */
+const MAX = { stallName: 120, contactPerson: 100, description: 2000 };
+
+/** Bằng PHOTO_MAX_BYTES / VIDEO_MAX_BYTES của FarmerUploadService. */
+const PHOTO_MAX_MB = 8;
+const VIDEO_MAX_MB = 40;
+const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
+
+/** Thứ tự trên màn hình: lỗi đầu tiên theo thứ tự này là chỗ được cuộn tới và focus. */
+const ERROR_ORDER: (keyof FormErrors)[] = ['stallName', 'contactPerson', 'description', 'photos', 'terms'];
+
+/** Phần tử nhận focus cho mỗi lỗi; khối ảnh không có input nên focus chính nút thêm ảnh đầu tiên. */
+const ERROR_ANCHOR: Record<keyof FormErrors, string> = {
+  stallName: 'stall',
+  contactPerson: 'person',
+  description: 'about',
+  photos: 'photos',
+  terms: 't1',
+};
 
 /** Keys are order statuses only for the icon and colour; the text is `timeline.<key>`. */
 const TIMELINE = ['placed', 'accepted', 'ready'] as const;
 
-/** Photo slots in order; the label is `step4.shots.<key>`. */
+/** Ba ô ảnh; ô đầu bắt buộc. Nhãn hiển thị đã bỏ, chỉ còn số thứ tự cho trình đọc màn hình. */
 const SHOTS = ['wide', 'growing', 'other'] as const;
 type PhotoSlot = { key: (typeof SHOTS)[number]; url: string | null; uploading: boolean };
+
+type VideoSlot = { url: string | null; uploading: boolean; poster: string | null };
+
+/**
+ * Cắt một khung hình từ chính file trên máy để làm ảnh đại diện — không phải tải video về lần nữa, và không phụ thuộc
+ * vào việc server có hỗ trợ range request hay không. Hỏng thì trả null, lúc đó thẻ <video> tự lấy khung đầu tiên.
+ */
+const grabPoster = (file: File): Promise<string | null> =>
+  new Promise((resolve) => {
+    const objectUrl = URL.createObjectURL(file);
+    const probe = document.createElement('video');
+    const finish = (poster: string | null) => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(poster);
+    };
+
+    probe.preload = 'metadata';
+    probe.muted = true;
+    probe.playsInline = true;
+    probe.src = objectUrl;
+    // Khung 0 giây thường đen; lấy quanh giây đầu tiên, hoặc giữa video nếu quá ngắn.
+    probe.onloadeddata = () => {
+      probe.currentTime = Math.min(1, (probe.duration || 2) / 2);
+    };
+    probe.onseeked = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = probe.videoWidth;
+      canvas.height = probe.videoHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx || !canvas.width) return finish(null);
+      ctx.drawImage(probe, 0, 0, canvas.width, canvas.height);
+      try {
+        finish(canvas.toDataURL('image/jpeg', 0.7));
+      } catch {
+        finish(null);
+      }
+    };
+    probe.onerror = () => finish(null);
+  });
+
+const apiBase = () => import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
 
 /** FR-002 (second route, applying from an existing Customer account — needs its own FR, see the caption below). */
 const CustomerBecomeFarmerPage = () => {
@@ -42,36 +110,41 @@ const CustomerBecomeFarmerPage = () => {
   const [description, setDescription] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
 
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [mainCrops, setMainCrops] = useState('');
-  const [weeklyVolume, setWeeklyVolume] = useState('');
-  const [growingMethod, setGrowingMethod] = useState('');
-
-  const [plotAddress, setPlotAddress] = useState('');
-  const [plotSize, setPlotSize] = useState('');
-  const [growingSinceYear, setGrowingSinceYear] = useState('');
-  // Vườn là đất trồng, không phải sạp, nên ghim bắt đầu ở giữa thành phố; chưa kéo thì không gửi toạ độ.
-  const [plotPin, setPlotPin] = useState<{ lat: number; lng: number } | null>(null);
-
   const [photos, setPhotos] = useState<PhotoSlot[]>(SHOTS.map((key) => ({ key, url: null, uploading: false })));
-  const [video, setVideo] = useState<{ url: string | null; uploading: boolean }>({ url: null, uploading: false });
+  const [video, setVideo] = useState<VideoSlot>({ url: null, uploading: false, poster: null });
   const photoInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const [photoSlotIndex, setPhotoSlotIndex] = useState(0);
-
-  const [marketId, setMarketId] = useState(markets[0]?.id);
 
   const [tick1, setTick1] = useState(false);
   const [tick2, setTick2] = useState(false);
   const [tick3, setTick3] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  /** Ngày của bản nháp đang mở, để nói cho người dùng biết họ đang tiếp tục việc dở dang. */
+  const [draftSavedAt, setDraftSavedAt] = useState<string>();
+  const navigate = useNavigate();
 
   // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
   const fetchStatus = useCallback(() => {
     FarmerApi.myApplication()
-      .then((response) => setStatus(response.data ? { kind: 'applied', data: response.data } : { kind: 'form' }))
+      .then((response) => {
+        if (response.data) return setStatus({ kind: 'applied', data: response.data });
+        // Chưa nộp đơn nào: mở lại đúng những gì họ đã gõ lần trước rồi bấm "để sau làm tiếp".
+        const draft = readDraft(user?.id);
+        if (draft) {
+          setStallName(draft.stallName);
+          setContactPerson(draft.contactPerson);
+          setDescription(draft.description);
+          setPhotos(SHOTS.map((key, i) => ({ key, url: draft.photoUrls[i] ?? null, uploading: false })));
+          setVideo({ url: draft.videoUrl, uploading: false, poster: null });
+          setDraftSavedAt(draft.savedAt);
+        }
+        setStatus({ kind: 'form' });
+      })
       .catch(() => setStatus({ kind: 'error' }));
-  }, []);
+  }, [user?.id]);
 
   useEffect(fetchStatus, [fetchStatus]);
 
@@ -80,24 +153,112 @@ const CustomerBecomeFarmerPage = () => {
     fetchStatus();
   };
 
-  const toggleCategory = (name: string) => {
-    setSelectedCategories((prev) => (prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name]));
+  /**
+   * Nộp lại sau khi bị từ chối: mở lại form với nội dung lần trước để người nộp sửa đúng chỗ Admin chê, không phải gõ
+   * lại từ đầu. Ba ô cam kết thì phải tick lại — đó là cam kết cho đơn mới.
+   */
+  const applyAgain = () => {
+    if (status.kind !== 'applied') return;
+    const previous = status.data;
+    setStallName(previous.stallName);
+    setContactPerson(previous.contactPerson);
+    setDescription(previous.description ?? '');
+    setPhotos(SHOTS.map((key, i) => ({ key, url: previous.photoUrls?.[i] ?? null, uploading: false })));
+    setVideo({ url: previous.videoUrl ?? null, uploading: false, poster: null });
+    setTick1(false);
+    setTick2(false);
+    setTick3(false);
+    setErrors({});
+    setStatus({ kind: 'form' });
+    window.scrollTo(0, 0);
   };
+
+  /**
+   * "Lưu, để sau làm tiếp": giữ nguyên những gì đã gõ (ảnh đã nằm trên server nên chỉ lưu đường dẫn) rồi trả người dùng
+   * về trang tài khoản, nơi có nút tiếp tục.
+   */
+  const saveAndLeave = () => {
+    saveDraft(user?.id, {
+      stallName,
+      contactPerson,
+      description,
+      photoUrls: photos.map((p) => p.url).filter((url): url is string => url !== null),
+      videoUrl: video.url,
+    });
+    Notification.success({ title: t('toast.savedTitle'), text: t('toast.saved') });
+    navigate('/account');
+  };
+
+  const withdrawApplication = async () => {
+    setIsWithdrawing(true);
+    try {
+      await FarmerApi.withdraw();
+      setConfirmWithdraw(false);
+      Notification.success({ title: t('toast.withdrawnTitle'), text: t('toast.withdrawn') });
+      // Rút xong là chưa từng nộp: quay về form trắng, không phải màn trạng thái.
+      setStatus({ kind: 'form' });
+      window.scrollTo(0, 0);
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, t('errors.withdraw')) });
+    } finally {
+      setIsWithdrawing(false);
+    }
+  };
+
+  /** Bỏ nháp: xoá cả trên máy lẫn trên màn hình, form về trắng như lần đầu. */
+  const discardDraft = () => {
+    clearDraft(user?.id);
+    setDraftSavedAt(undefined);
+    setStallName('');
+    setContactPerson(user?.fullName ?? '');
+    setDescription('');
+    setPhotos(SHOTS.map((key) => ({ key, url: null, uploading: false })));
+    setVideo({ url: null, uploading: false, poster: null });
+    setErrors({});
+  };
+
+  /** Sửa xong thì dòng đỏ biến mất ngay, không phải đợi bấm Gửi lần nữa. */
+  const clearError = (key: keyof FormErrors) =>
+    setErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
 
   const pickPhoto = (index: number) => {
     setPhotoSlotIndex(index);
     photoInputRef.current?.click();
   };
 
+  /** Chặn tại chỗ những gì server sẽ chặn, để người dùng không phải tải xong 40MB mới biết sai. */
+  const fileError = (file: File, kind: 'photo' | 'video') => {
+    const isPhoto = kind === 'photo';
+    const types = isPhoto ? PHOTO_TYPES : VIDEO_TYPES;
+    const maxMb = isPhoto ? PHOTO_MAX_MB : VIDEO_MAX_MB;
+    if (!types.includes(file.type)) return t(isPhoto ? 'errors.photoType' : 'errors.videoType');
+    if (file.size > maxMb * 1024 * 1024) {
+      return t(isPhoto ? 'errors.photoTooLarge' : 'errors.videoTooLarge', { max: maxMb });
+    }
+    return null;
+  };
+
   const onPhotoChosen = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
+    const rejected = fileError(file, 'photo');
+    if (rejected) {
+      setErrors((prev) => ({ ...prev, photos: rejected }));
+      Notification.error({ text: rejected });
+      return;
+    }
     const index = photoSlotIndex;
     setPhotos((prev) => prev.map((p, i) => (i === index ? { ...p, uploading: true } : p)));
     try {
       const response = await FarmerApi.uploadFile(file, 'photo');
       setPhotos((prev) => prev.map((p, i) => (i === index ? { ...p, url: response.data.url, uploading: false } : p)));
+      clearError('photos');
     } catch (error) {
       setPhotos((prev) => prev.map((p, i) => (i === index ? { ...p, uploading: false } : p)));
       Notification.error({ text: Helper.getErrorMessage(error, t('errors.photo')) });
@@ -108,29 +269,69 @@ const CustomerBecomeFarmerPage = () => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
-    setVideo({ url: null, uploading: true });
+    const rejected = fileError(file, 'video');
+    if (rejected) {
+      setErrors((prev) => ({ ...prev, photos: rejected }));
+      Notification.error({ text: rejected });
+      return;
+    }
+    setVideo({ url: null, uploading: true, poster: null });
     try {
-      const response = await FarmerApi.uploadFile(file, 'video');
-      setVideo({ url: response.data.url, uploading: false });
+      // Dựng ảnh đại diện song song với lúc tải lên, không bắt người dùng chờ thêm một nhịp.
+      const [response, poster] = await Promise.all([FarmerApi.uploadFile(file, 'video'), grabPoster(file)]);
+      setVideo({ url: response.data.url, uploading: false, poster });
     } catch (error) {
-      setVideo({ url: null, uploading: false });
+      setVideo({ url: null, uploading: false, poster: null });
       Notification.error({ text: Helper.getErrorMessage(error, t('errors.video')) });
     }
   };
 
-  const selectedMarket = markets.find((m) => m.id === marketId);
+  const validate = (): FormErrors => {
+    const next: FormErrors = {};
+    const stall = stallName.trim();
+    const person = contactPerson.trim();
+    const about = description.trim();
+
+    if (!stall) next.stallName = t('errors.stallName');
+    else if (stall.length > MAX.stallName) next.stallName = t('errors.stallNameLong', { max: MAX.stallName });
+
+    if (!person) next.contactPerson = t('errors.contactPerson');
+    else if (person.length > MAX.contactPerson) {
+      next.contactPerson = t('errors.contactPersonLong', { max: MAX.contactPerson });
+    }
+
+    if (about.length > MAX.description) next.description = t('errors.descriptionLong', { max: MAX.description });
+
+    // Gửi khi ảnh chưa tải xong thì đơn đi thiếu ảnh mà không ai biết — chặn hẳn.
+    if (photos.some((p) => p.uploading) || video.uploading) next.photos = t('errors.uploadInProgress');
+    else if (!photos.some((p) => p.url)) next.photos = t('errors.photoRequired');
+
+    if (!tick1 || !tick2 || !tick3) next.terms = t('errors.terms');
+
+    return next;
+  };
+
+  /** Lỗi ở đầu form mà nút Gửi ở cuối: không cuộn tới thì người dùng tưởng bấm không ăn. */
+  const focusFirstError = (found: FormErrors) => {
+    const key = ERROR_ORDER.find((k) => found[k]);
+    if (!key) return;
+    const node = document.getElementById(ERROR_ANCHOR[key]);
+    if (!node) return;
+    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Khối ảnh là một <div>, không tự nhận focus được: lấy nút thêm ảnh đầu tiên bên trong.
+    const target = node.matches('input, textarea, button') ? node : node.querySelector<HTMLElement>('button, input');
+    target?.focus({ preventScroll: true });
+  };
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
 
-    const nextErrors: FormErrors = {};
-    if (!stallName.trim()) nextErrors.stallName = t('errors.stallName');
-    if (!contactPerson.trim()) nextErrors.contactPerson = t('errors.contactPerson');
+    const nextErrors = validate();
     setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) return;
-
-    if (!tick1 || !tick2 || !tick3) {
-      Notification.error({ title: t('toast.missingTitle'), text: t('toast.missing') });
+    if (Object.keys(nextErrors).length > 0) {
+      focusFirstError(nextErrors);
+      Notification.error({ title: t('toast.fixTitle'), text: t('toast.fix') });
       return;
     }
 
@@ -139,28 +340,27 @@ const CustomerBecomeFarmerPage = () => {
       stallName: stallName.trim(),
       contactPerson: contactPerson.trim(),
       description: description.trim() || undefined,
-      categories: selectedCategories.length ? selectedCategories : undefined,
-      mainCrops: mainCrops.trim() || undefined,
-      weeklyVolume: weeklyVolume.trim() || undefined,
-      growingMethod: growingMethod.trim() || undefined,
-      plotAddress: plotAddress.trim() || undefined,
-      plotSize: plotSize.trim() || undefined,
-      growingSinceYear: growingSinceYear ? Number(growingSinceYear) : undefined,
-      plotLatitude: plotPin?.lat,
-      plotLongitude: plotPin?.lng,
-      photoUrls: photoUrls.length ? photoUrls : undefined,
+      photoUrls,
       videoUrl: video.url ?? undefined,
-      preferredMarketName: selectedMarket?.name,
     };
 
     setIsSubmitting(true);
     try {
       const response = await FarmerApi.apply(input);
+      clearDraft(user?.id);
+      setDraftSavedAt(undefined);
       setStatus({ kind: 'applied', data: response.data });
       window.scrollTo(0, 0);
       Notification.success({ title: t('toast.sentTitle'), text: t('toast.sent') });
     } catch (error) {
-      setErrors(Helper.getFieldErrors(error));
+      // Lỗi theo field của server: photoUrls/videoUrl gộp về dòng đỏ của khối ảnh.
+      const fromServer = Helper.getFieldErrors(error);
+      setErrors({
+        stallName: fromServer.stallName,
+        contactPerson: fromServer.contactPerson,
+        description: fromServer.description,
+        photos: fromServer.photoUrls ?? fromServer.videoUrl ?? fromServer.file,
+      });
       Notification.error({
         text: Helper.getErrorMessage(error, t('errors.send')),
       });
@@ -223,7 +423,15 @@ const CustomerBecomeFarmerPage = () => {
 
         {data.approvalStatus === 'suspended' && (
           <Banner variant="warning" title={t('suspendedBanner.title')}>
-            {t('suspendedBanner.text')}
+            {/* Lý do đình chỉ do Admin viết; chưa có thì vẫn nói rõ chuyện gì đang xảy ra. */}
+            {data.suspendReason ?? t('suspendedBanner.text')}
+          </Banner>
+        )}
+
+        {/* Bị từ chối mà không biết vì sao thì nộp lại cũng sai y như cũ. */}
+        {data.approvalStatus === 'rejected' && (
+          <Banner variant="danger" title={t('rejectedBanner.title')}>
+            {data.rejectReason ?? t('rejectedBanner.noReason')}
           </Banner>
         )}
 
@@ -240,41 +448,10 @@ const CustomerBecomeFarmerPage = () => {
                 <dd className="m-0">{data.description}</dd>
               </>
             )}
-            {!!data.categories?.length && (
-              <>
-                <dt className="text-ink-muted">{t('sent.grows')}</dt>
-                <dd className="m-0">
-                  {data.categories.join(', ')}
-                  {data.mainCrops && ` · ${data.mainCrops}`}
-                </dd>
-              </>
-            )}
-            {data.weeklyVolume && (
-              <>
-                <dt className="text-ink-muted">{t('sent.volume')}</dt>
-                <dd className="m-0">{data.weeklyVolume}</dd>
-              </>
-            )}
-            {(data.plotAddress || data.plotSize || data.growingSinceYear) && (
-              <>
-                <dt className="text-ink-muted">{t('sent.plot')}</dt>
-                <dd className="m-0">
-                  {data.plotSize || '—'}
-                  {data.plotAddress && ` ${t('sent.plotIn', { place: data.plotAddress })}`}
-                  {data.growingSinceYear && `, ${t('sent.plotSince', { year: data.growingSinceYear })}`}
-                </dd>
-              </>
-            )}
             {(!!data.photoUrls?.length || data.videoUrl) && (
               <>
                 <dt className="text-ink-muted">{t('sent.evidence')}</dt>
                 <dd className="m-0">{evidence}</dd>
-              </>
-            )}
-            {data.preferredMarketName && (
-              <>
-                <dt className="text-ink-muted">{t('sent.market')}</dt>
-                <dd className="m-0">{data.preferredMarketName}</dd>
               </>
             )}
             <dt className="text-ink-muted">{t('sent.status')}</dt>
@@ -282,24 +459,60 @@ const CustomerBecomeFarmerPage = () => {
             <dt className="text-ink-muted">{t('sent.sentOn')}</dt>
             <dd className="m-0">{formatDate(new Date(data.createdAt))}</dd>
           </dl>
-          {!!data.photoUrls?.length && (
-            <div className="flex flex-wrap gap-2">
-              {data.photoUrls.map((url) => (
+          {(!!data.photoUrls?.length || data.videoUrl) && (
+            <div className="flex flex-wrap items-center gap-2">
+              {data.photoUrls?.map((url) => (
                 <img
                   key={url}
-                  src={`${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${url}`}
+                  src={`${apiBase()}${url}`}
                   alt={t('sent.photoAlt')}
                   className="border-line-strong size-20 rounded-sm border-[1.5px] object-cover"
                 />
               ))}
+              {data.videoUrl && <VideoThumb url={data.videoUrl} />}
             </div>
           )}
           <div className="flex flex-wrap gap-2">
+            {/* Chỉ đơn bị từ chối mới nộp lại được — server cũng chặn đúng như vậy. */}
+            {data.approvalStatus === 'rejected' && <Button onClick={applyAgain}>{t('sent.applyAgain')}</Button>}
+            {/* Đang chờ duyệt thì còn đổi ý được; đã có kết quả rồi thì không còn gì để rút. */}
+            {data.approvalStatus === 'pending' && (
+              <Button variant="danger" disabled={isWithdrawing} onClick={() => setConfirmWithdraw(true)}>
+                {t('sent.withdraw')}
+              </Button>
+            )}
             <ButtonLink to="/markets" variant="secondary">
               {t('sent.keepShopping')}
             </ButtonLink>
           </div>
         </Card>
+
+        {data.history.length > 1 && (
+          <section className="flex flex-col gap-3">
+            <h2 className="text-h2">{t('sent.historyTitle')}</h2>
+            <p className="text-body">{t('sent.historyText')}</p>
+            <ApplicationHistory entries={data.history} statusLabel={(s) => t(`statusValue.${s}`)} />
+          </section>
+        )}
+
+        <Dialog
+          open={confirmWithdraw}
+          tone="danger"
+          title={t('withdrawDialog.title')}
+          onClose={() => setConfirmWithdraw(false)}
+          actions={
+            <>
+              <Button variant="secondary" disabled={isWithdrawing} onClick={() => setConfirmWithdraw(false)}>
+                {t('withdrawDialog.keep')}
+              </Button>
+              <Button variant="dangerFill" disabled={isWithdrawing} onClick={withdrawApplication}>
+                {t('withdrawDialog.confirm')}
+              </Button>
+            </>
+          }
+        >
+          <p>{t('withdrawDialog.text')}</p>
+        </Dialog>
 
         {data.approvalStatus === 'pending' && (
           <div className="flex flex-col gap-3">
@@ -357,6 +570,16 @@ const CustomerBecomeFarmerPage = () => {
         <p className="text-body-lg">{t('intro')}</p>
       </div>
 
+      {/* Mở lại từ nháp: nói rõ đây là việc dở dang, và cho đường bỏ nháp làm lại từ đầu. */}
+      {draftSavedAt && (
+        <Banner title={t('draft.title')}>
+          {t('draft.text', { date: formatDate(new Date(draftSavedAt)) })}{' '}
+          <button type="button" onClick={discardDraft} className="text-brand cursor-pointer bg-transparent underline">
+            {t('draft.discard')}
+          </button>
+        </Banner>
+      )}
+
       <Card className="flex flex-col gap-3 p-6">
         <h2 className="text-h3">{t('next.title')}</h2>
         <ol className="text-body m-0 flex list-decimal flex-col gap-1.5 pl-5">
@@ -366,7 +589,9 @@ const CustomerBecomeFarmerPage = () => {
         </ol>
       </Card>
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-8">
+      {/* noValidate: tắt bong bóng mặc định của trình duyệt (chữ không dịch được, che mất dòng lỗi của
+          chính form). `required` vẫn giữ cho trình đọc màn hình và dấu sao trên nhãn. */}
+      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-8">
         <ol className="m-0 flex flex-col gap-8 p-0">
           <FormStep n={1} title={t('step1.title')}>
             <Card className="flex flex-col gap-4 p-6">
@@ -377,7 +602,10 @@ const CustomerBecomeFarmerPage = () => {
                   required
                   placeholder={t('step1.stallNamePlaceholder')}
                   value={stallName}
-                  onChange={(e) => setStallName(e.target.value)}
+                  onChange={(e) => {
+                    setStallName(e.target.value);
+                    clearError('stallName');
+                  }}
                   hint={t('step1.stallNameHint')}
                   error={errors.stallName}
                   disabled={isSubmitting}
@@ -388,7 +616,10 @@ const CustomerBecomeFarmerPage = () => {
                   label={t('step1.person')}
                   required
                   value={contactPerson}
-                  onChange={(e) => setContactPerson(e.target.value)}
+                  onChange={(e) => {
+                    setContactPerson(e.target.value);
+                    clearError('contactPerson');
+                  }}
                   error={errors.contactPerson}
                   disabled={isSubmitting}
                 />
@@ -421,109 +652,33 @@ const CustomerBecomeFarmerPage = () => {
                 <textarea
                   id="about"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    clearError('description');
+                  }}
                   placeholder={t('step1.aboutPlaceholder')}
-                  className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
+                  aria-invalid={!!errors.description}
+                  aria-describedby="about-note"
+                  disabled={isSubmitting}
+                  className={`bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3 ${
+                    errors.description ? 'border-danger' : 'border-line-strong'
+                  }`}
                 />
+                <span
+                  id="about-note"
+                  role={errors.description ? 'alert' : undefined}
+                  className={`text-[13px] ${errors.description ? 'text-danger' : 'text-ink-muted'}`}
+                >
+                  {errors.description ??
+                    t('step1.aboutCount', { used: description.trim().length, max: MAX.description })}
+                </span>
               </div>
             </Card>
           </FormStep>
 
           <FormStep n={2} title={t('step2.title')}>
             <Card className="flex flex-col gap-4 p-6">
-              <div className="flex flex-col gap-2">
-                <span className="text-small font-bold">{t('step2.categories')}</span>
-                <div className="flex flex-col gap-2">
-                  {categories.map((c) => (
-                    <Checkbox
-                      key={c}
-                      id={`cat-${c}`}
-                      checked={selectedCategories.includes(c)}
-                      onChange={() => toggleCategory(c)}
-                    >
-                      {c}
-                    </Checkbox>
-                  ))}
-                </div>
-              </div>
-              <Field
-                id="crops"
-                label={t('step2.crops')}
-                value={mainCrops}
-                onChange={(e) => setMainCrops(e.target.value)}
-                placeholder={t('step2.cropsPlaceholder')}
-                hint={t('step2.cropsHint')}
-              />
-              <Field
-                id="volume"
-                label={t('step2.volume')}
-                value={weeklyVolume}
-                onChange={(e) => setWeeklyVolume(e.target.value)}
-                placeholder={t('step2.volumePlaceholder')}
-                hint={t('step2.volumeHint')}
-              />
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="method" className="text-small font-bold">
-                  {t('step2.method')}
-                </label>
-                <textarea
-                  id="method"
-                  value={growingMethod}
-                  onChange={(e) => setGrowingMethod(e.target.value)}
-                  placeholder={t('step2.methodPlaceholder')}
-                  className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
-                />
-                <span className="text-ink-muted text-[13px]">{t('step2.methodHint')}</span>
-              </div>
-            </Card>
-          </FormStep>
-
-          <FormStep n={3} title={t('step3.title')}>
-            <Card className="flex flex-col gap-4 p-6">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <Field
-                  id="plot"
-                  label={t('step3.plot')}
-                  value={plotAddress}
-                  onChange={(e) => setPlotAddress(e.target.value)}
-                  placeholder={t('step3.plotPlaceholder')}
-                  hint={t('step3.plotHint')}
-                  className="md:col-span-2"
-                />
-                <Field
-                  id="size"
-                  label={t('step3.size')}
-                  value={plotSize}
-                  onChange={(e) => setPlotSize(e.target.value)}
-                  placeholder={t('step3.sizePlaceholder')}
-                />
-                <Field
-                  id="since"
-                  label={t('step3.since')}
-                  inputMode="numeric"
-                  value={growingSinceYear}
-                  onChange={(e) => setGrowingSinceYear(e.target.value.replace(/\D/g, ''))}
-                  placeholder="2019"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-small font-bold">{t('step3.pin')}</span>
-                <LocationPicker
-                  label={t('step3.map')}
-                  className="min-h-60"
-                  lat={plotPin?.lat ?? CITY[0]}
-                  lng={plotPin?.lng ?? CITY[1]}
-                  pinLabel={t('step3.yourPlot')}
-                  onMove={(lat, lng) => setPlotPin({ lat, lng })}
-                />
-                <p className="text-ink-muted text-[13px]">{t('step3.pinHint')}</p>
-              </div>
-            </Card>
-          </FormStep>
-
-          <FormStep n={4} title={t('step4.title')}>
-            <Card className="flex flex-col gap-4 p-6">
-              <p className="text-body">{t('step4.intro')}</p>
+              <p className="text-body">{t('step2.intro')}</p>
               <input
                 ref={photoInputRef}
                 type="file"
@@ -531,42 +686,57 @@ const CustomerBecomeFarmerPage = () => {
                 className="hidden"
                 onChange={onPhotoChosen}
               />
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                {photos.map((p, i) => (
-                  <div key={p.key} className="flex flex-col gap-1.5">
-                    {p.url ? (
-                      <div className="relative">
-                        <img
-                          src={`${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${p.url}`}
-                          alt={t(`step4.shots.${p.key}`)}
-                          className="aspect-4/3 w-full rounded-md object-cover"
-                        />
+              <div id="photos" className="flex flex-col gap-2">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                  {photos.map((p, i) => (
+                    // Nhãn dưới mỗi ô đã bỏ; ảnh vẫn cần tên cho trình đọc màn hình nên đánh số.
+                    <div key={p.key}>
+                      {p.url ? (
+                        <div className="relative">
+                          <img
+                            src={`${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${p.url}`}
+                            alt={t('step2.photoLabel', { n: i + 1 })}
+                            className="aspect-4/3 w-full rounded-md object-cover"
+                          />
+                          <button
+                            type="button"
+                            disabled={isSubmitting}
+                            onClick={() =>
+                              setPhotos((prev) => prev.map((x, xi) => (xi === i ? { ...x, url: null } : x)))
+                            }
+                            className="bg-surface-raised text-ink absolute top-1 right-1 grid size-6 cursor-pointer place-items-center rounded-full text-[13px] font-bold"
+                            aria-label={t('step2.removePhoto', { label: t('step2.photoLabel', { n: i + 1 }) })}
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ) : (
                         <button
                           type="button"
-                          onClick={() => setPhotos((prev) => prev.map((x, xi) => (xi === i ? { ...x, url: null } : x)))}
-                          className="bg-surface-raised text-ink absolute top-1 right-1 grid size-6 cursor-pointer place-items-center rounded-full text-[13px] font-bold"
-                          aria-label={t('step4.removePhoto', { label: t(`step4.shots.${p.key}`) })}
+                          onClick={() => pickPhoto(i)}
+                          disabled={p.uploading || isSubmitting}
+                          aria-label={t('step2.addPhotoLabel', { n: i + 1 })}
+                          aria-invalid={i === 0 && !!errors.photos}
+                          className={`text-ink aspect-4/3 w-full cursor-pointer rounded-md border-2 border-dashed bg-transparent text-[14px] font-bold disabled:opacity-50 ${
+                            i === 0 && errors.photos ? 'border-danger' : 'border-line-strong'
+                          }`}
                         >
-                          ×
+                          {p.uploading ? t('step2.uploading') : t('step2.addPhoto')}
                         </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => pickPhoto(i)}
-                        disabled={p.uploading}
-                        className="border-line-strong text-ink aspect-4/3 cursor-pointer rounded-md border-2 border-dashed bg-transparent text-[14px] font-bold disabled:opacity-50"
-                      >
-                        {p.uploading ? t('step4.uploading') : t('step4.addPhoto')}
-                      </button>
-                    )}
-                    <small className="text-ink-muted text-[12px]">{t(`step4.shots.${p.key}`)}</small>
-                  </div>
-                ))}
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <span
+                  role={errors.photos ? 'alert' : undefined}
+                  className={`text-[13px] ${errors.photos ? 'text-danger' : 'text-ink-muted'}`}
+                >
+                  {errors.photos ?? t('step2.photoHint', { max: PHOTO_MAX_MB })}
+                </span>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="vid" className="text-small font-bold">
-                  {t('step4.video')}
+                  {t('step2.video')}
                 </label>
                 <input
                   ref={videoInputRef}
@@ -576,79 +746,94 @@ const CustomerBecomeFarmerPage = () => {
                   onChange={onVideoChosen}
                 />
                 {video.url ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-small">{t('step4.videoAdded')}</span>
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      type="button"
-                      onClick={() => setVideo({ url: null, uploading: false })}
-                    >
-                      {t('step4.removeVideo')}
-                    </Button>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <VideoThumb url={video.url} poster={video.poster} big />
+                    <div className="flex flex-col items-start gap-1.5">
+                      <span className="text-small">{t('step2.videoAdded')}</span>
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        type="button"
+                        disabled={isSubmitting}
+                        onClick={() => setVideo({ url: null, uploading: false, poster: null })}
+                      >
+                        {t('step2.removeVideo')}
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <Button
                     variant="secondary"
                     id="vid"
                     type="button"
-                    disabled={video.uploading}
+                    disabled={video.uploading || isSubmitting}
                     onClick={() => videoInputRef.current?.click()}
                     className="w-fit"
                   >
-                    {video.uploading ? t('step4.uploading') : t('step4.addVideo')}
+                    {video.uploading ? t('step2.uploading') : t('step2.addVideo')}
                   </Button>
                 )}
-                <span className="text-ink-muted text-[13px]">{t('step4.videoHint')}</span>
+                <span className="text-ink-muted text-[13px]">
+                  {t('step2.videoHint')} {t('step2.videoLimit', { max: VIDEO_MAX_MB })}
+                </span>
               </div>
-              <Banner title={t('step4.banner.title')}>{t('step4.banner.text')}</Banner>
+              <Banner title={t('step2.banner.title')}>{t('step2.banner.text')}</Banner>
             </Card>
           </FormStep>
 
-          <FormStep n={5} title={t('step5.title')}>
+          <FormStep n={3} title={t('step3.title')}>
             <Card className="flex flex-col gap-4 p-6">
-              <div className="flex flex-col gap-2">
-                <span className="text-small font-bold">{t('step5.market')}</span>
-                <div className="flex flex-col gap-2">
-                  {markets.map((m) => (
-                    <label key={m.id} className="flex items-center gap-2 text-[15px]">
-                      <input
-                        type="radio"
-                        name="mk"
-                        checked={marketId === m.id}
-                        onChange={() => setMarketId(m.id)}
-                        className="accent-brand size-4.5"
-                      />
-                      {m.name} <span className="text-ink-muted">· {dayList(m.days)}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-              <p className="text-small text-ink-muted">{t('step5.hint')}</p>
-            </Card>
-          </FormStep>
-
-          <FormStep n={6} title={t('step6.title')}>
-            <Card className="flex flex-col gap-4 p-6">
-              <Checkbox id="t1" checked={tick1} onChange={(e) => setTick1(e.target.checked)}>
-                {t('step6.true')}
-                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.trueHint')}</small>
+              {errors.terms && (
+                <p role="alert" className="text-danger m-0 text-[15px] font-bold">
+                  {errors.terms}
+                </p>
+              )}
+              <Checkbox
+                id="t1"
+                checked={tick1}
+                disabled={isSubmitting}
+                aria-invalid={!!errors.terms && !tick1}
+                onChange={(e) => {
+                  setTick1(e.target.checked);
+                  clearError('terms');
+                }}
+              >
+                {t('step3.true')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step3.trueHint')}</small>
               </Checkbox>
-              <Checkbox id="t2" checked={tick2} onChange={(e) => setTick2(e.target.checked)}>
-                {t('step6.present')}
-                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.presentHint')}</small>
+              <Checkbox
+                id="t2"
+                checked={tick2}
+                disabled={isSubmitting}
+                aria-invalid={!!errors.terms && !tick2}
+                onChange={(e) => {
+                  setTick2(e.target.checked);
+                  clearError('terms');
+                }}
+              >
+                {t('step3.present')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step3.presentHint')}</small>
               </Checkbox>
-              <Checkbox id="t3" checked={tick3} onChange={(e) => setTick3(e.target.checked)}>
-                {t('step6.pay')}
-                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.payHint')}</small>
+              <Checkbox
+                id="t3"
+                checked={tick3}
+                disabled={isSubmitting}
+                aria-invalid={!!errors.terms && !tick3}
+                onChange={(e) => {
+                  setTick3(e.target.checked);
+                  clearError('terms');
+                }}
+              >
+                {t('step3.pay')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step3.payHint')}</small>
               </Checkbox>
               <div className="flex flex-wrap gap-2">
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? t('step6.sending') : t('step6.send')}
+                  {isSubmitting ? t('step3.sending') : t('step3.send')}
                 </Button>
-                <ButtonLink to="/account" variant="secondary">
-                  {t('step6.later')}
-                </ButtonLink>
+                <Button type="button" variant="secondary" disabled={isSubmitting} onClick={saveAndLeave}>
+                  {t('step3.later')}
+                </Button>
               </div>
             </Card>
           </FormStep>

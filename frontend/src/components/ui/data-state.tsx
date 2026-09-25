@@ -10,17 +10,25 @@ type DataStateProps = {
   title: ReactNode;
   text: string;
   action?: ReactNode;
+  /**
+   * Chiếm hết chỗ trống còn lại và căn giữa, thay vì là một khối nhỏ nép trái. Dùng khi khối này là thứ duy nhất trong
+   * vùng nội dung — một danh sách rỗng chiếm cả trang đọc rõ hơn là một hộp bé.
+   */
+  fill?: boolean;
   className?: string;
 };
 
 /** A block's empty or error state (design system `.ml-state`, FR-084). */
-export function DataState({ variant = 'empty', title, text, action, className }: DataStateProps) {
+export function DataState({ variant = 'empty', title, text, action, fill, className }: DataStateProps) {
   const error = variant === 'error';
   return (
     <div
       role={error ? 'alert' : undefined}
       className={Helper.cn(
-        'flex max-w-105 min-w-65 flex-1 flex-col items-start gap-2 rounded-md p-6',
+        'flex flex-col gap-2 rounded-md p-6',
+        fill
+          ? 'min-h-80 w-full flex-1 items-center justify-center text-center'
+          : 'max-w-105 min-w-65 flex-1 items-start',
         error ? 'bg-danger-bg border-danger border-[1.5px]' : 'border-line-strong border-[1.5px] border-dashed',
         className,
       )}

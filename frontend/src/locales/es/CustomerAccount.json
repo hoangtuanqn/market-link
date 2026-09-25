@@ -4,7 +4,19 @@
   "sell": {
     "title": "Vende en MarketLink",
     "text": "Si cultivas alimentos, esta cuenta puede convertirse en un puesto. Conservas tus pedidos, favoritos y carrito, y aparece un panel para el stock y las horas de recogida cuando un administrador te aprueba.",
-    "apply": "Solicitar vender"
+    "apply": "Solicitar vender",
+    "view": "Ver tu solicitud",
+    "panel": "Abrir el panel de productor",
+    "loading": "Comprobando tu solicitud",
+    "status": {
+      "pending": "Tu solicitud está con un administrador. Nada cambia para ti hasta que responda.",
+      "approved": "Tu puesto está aprobado. Configura mercados, horarios de recogida y productos en el panel de productor.",
+      "rejected": "Tu solicitud no fue aprobada. Ábrela para ver lo que enviaste.",
+      "suspended": "Tu puesto está suspendido. Puedes seguir comprando como cliente."
+    },
+    "draft": "Tienes una solicitud sin terminar. Continúa donde la dejaste.",
+    "continue": "Termina tu solicitud",
+    "history": "Ver tus solicitudes anteriores"
   },
   "signOut": {
     "title": "Cerrar sesión",

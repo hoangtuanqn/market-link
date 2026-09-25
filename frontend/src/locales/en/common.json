@@ -393,5 +393,17 @@
     "gold": "Gold",
     "diamond": "Diamond",
     "badge": "{{tier}} tier"
+  },
+  "video": {
+    "play": "Play the video",
+    "preview": "Video",
+    "close": "Close"
+  },
+  "application": {
+    "attempt": "Attempt {{n}}",
+    "sentOn": "Sent {{date}}",
+    "answeredOn": "answered {{date}}",
+    "reason": "Reason:",
+    "photoAlt": "Photo from attempt {{n}}"
   }
 }

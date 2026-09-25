@@ -393,5 +393,17 @@
     "gold": "Emas",
     "diamond": "Berlian",
     "badge": "Tingkat {{tier}}"
+  },
+  "video": {
+    "play": "Putar video",
+    "preview": "Video",
+    "close": "Tutup"
+  },
+  "application": {
+    "attempt": "Lamaran ke-{{n}}",
+    "sentOn": "Dikirim {{date}}",
+    "answeredOn": "dijawab {{date}}",
+    "reason": "Alasan:",
+    "photoAlt": "Foto dari lamaran ke-{{n}}"
   }
 }

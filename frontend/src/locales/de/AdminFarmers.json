@@ -1,6 +1,11 @@
 {
   "title": "Erzeuger",
   "intro": "Gib eine Bewerbung frei, bevor der Stand Produkte einstellen kann. Sperre einen Stand, um seine Produkte zu verbergen und neue Bestellungen zu stoppen; laufende Bestellungen werden normal abgeschlossen.",
+  "search": {
+    "label": "Erzeuger suchen",
+    "placeholder": "Stand, Kontaktperson, Telefon",
+    "submit": "Suchen"
+  },
   "tabsLabel": "Erzeuger nach Status",
   "status": {
     "pending": "Warten auf Freigabe",
@@ -29,7 +34,6 @@
   "col": {
     "stall": "Stand",
     "registered": "Registriert",
-    "contact": "Kontakt",
     "email": "E-Mail"
   },
   "action": {
@@ -49,18 +53,21 @@
     "title": "{{stall}} ablehnen?",
     "text": "Die Person behält ihr Kundenkonto mit allem, was darin ist. Sie erfährt den Grund.",
     "reason": "Grund, den der Erzeuger sieht",
-    "confirm": "Antrag ablehnen"
-  },
-  "reason": {
-    "mismatch": "Angaben passen nicht zum Stand",
-    "full": "Markt ist voll",
-    "unreachable": "Kontaktnummer nicht erreichbar",
-    "other": "Sonstiges"
+    "confirm": "Antrag ablehnen",
+    "placeholder": "Schreibe, was sich ändern muss, damit dieser Stand freigegeben wird.",
+    "hint": "{{used}} von {{max}} Zeichen. Die antragstellende Person liest das wörtlich.",
+    "required": "Schreibe den Grund, den die antragstellende Person sieht.",
+    "tooLong": "Der Grund darf höchstens {{max}} Zeichen haben."
   },
   "suspend": {
     "title": "{{stall}} sperren?",
     "text": "Alle Produkte werden ausgeblendet und keine neuen Bestellungen angenommen. Bereits aufgegebene Bestellungen laufen weiter, damit Kunden nicht verlieren, was sie reserviert haben.",
-    "confirm": "Stand sperren"
+    "confirm": "Stand sperren",
+    "reason": "Grund, den der Erzeuger sieht",
+    "placeholder": "Schreibe, was der Stand ändern muss, um wieder zu verkaufen.",
+    "hint": "{{used}} von {{max}} Zeichen. Die erzeugende Person liest das wörtlich.",
+    "required": "Schreibe den Grund, den die erzeugende Person sieht.",
+    "tooLong": "Der Grund darf höchstens {{max}} Zeichen haben."
   },
   "toast": {
     "approved": "{{stall}} freigegeben. Der Stand kann jetzt Produkte einstellen.",
@@ -83,5 +90,6 @@
     "retry": "Erneut versuchen"
   },
   "caption_one": "{{count}} Farmer",
-  "caption_other": "{{count}} Farmer"
+  "caption_other": "{{count}} Farmer",
+  "showing": "{{from}}–{{to}} von {{total}} werden angezeigt"
 }

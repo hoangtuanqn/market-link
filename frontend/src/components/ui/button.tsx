@@ -2,7 +2,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
 import { Link, type LinkProps } from 'react-router';
 import Helper from '@/utils/helper';
 
-type Variant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'onboard' | 'danger';
+type Variant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'onboard' | 'danger' | 'dangerFill';
 type Size = 'md' | 'sm';
 
 const base =
@@ -16,6 +16,8 @@ const variants: Record<Variant, string> = {
   ghost: 'bg-transparent text-brand underline-offset-4 hover:underline',
   onboard: 'bg-transparent text-on-board shadow-[inset_0_0_0_1.5px_var(--board-muted)]',
   danger: 'bg-surface-raised text-danger shadow-[inset_0_0_0_1.5px_var(--danger)] hover:bg-danger-bg',
+  // `.ml-btn-danger-fill`: nút xác nhận của hộp thoại nguy hiểm. Design system không đặt hover cho nó.
+  dangerFill: 'bg-danger text-on-danger',
 };
 
 const sizes: Record<Size, string> = {
