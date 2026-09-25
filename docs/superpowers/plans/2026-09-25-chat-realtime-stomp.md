@@ -16,7 +16,11 @@ Plan 1 (`docs/superpowers/plans/2026-09-25-chat-backend-conversations.md`) đã 
 
 - **R-01**: commit gắn `FR-111` (realtime), `FR-112` (đang gõ / đã xem / online), `FR-113` (badge realtime).
 - **R-02**: không sửa `db/schema.sql`, `docs/api-contract.md`, `docs/decisions.md`.
-- **R-03**: migration mới `V20260925005__create_user_presence_table.sql` (spec đánh số 006 và để 005 cho attachments; đổi lại cho không có lỗ hổng số — ghi trong ledger). Không sửa migration đã merge.
+- **R-03**: migration mới `V20260925010__create_user_presence_table.sql`. Số đổi hai lần trong lúc viết plan
+  này: dev đã đổi `conversations`/`messages` từ 003/004 sang 005/006 (trùng `user_settings`, #107), rồi
+  007–009 bị một PR khác (farmer_profiles) chiếm trong lúc rebase. `dev` đang merge rất nhanh — mỗi lần
+  rebase phải soi lại số cao nhất thật sự, không tin số đã ghi trong tài liệu trước đó. Migration này
+  chưa merge nên tự đổi số được, không phạm R-03.
 - **R-04**: SQL tham số hoá; **R-06**: `/app/typing` kiểm tư cách thành viên trước khi chuyển tiếp.
 - **R-08 / AGENTS.md**: nhánh `feature/FR-111-chat-realtime` tách từ `feature/FR-110-chat-conversations`; PR vào `dev` **sau khi** #108 merge (hoặc PR stacked, base = nhánh FR-110 — LEAD chọn). Không push `dev`/`main`.
 - Spec §7.3: JWT ở header `Authorization` của frame `CONNECT`; **không** qua query string.
@@ -1086,7 +1090,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ### Task 6: Online / offline / "hoạt động lần cuối"
 
 **Files:**
-- Create: `backend/src/main/resources/db/migration/V20260925005__create_user_presence_table.sql`
+- Create: `backend/src/main/resources/db/migration/V20260925010__create_user_presence_table.sql`
 - Create: `backend/src/main/java/com/techx/intervue/modules/conversation/entities/UserPresence.java`
 - Create: `backend/src/main/java/com/techx/intervue/modules/conversation/repositories/UserPresenceRepository.java`
 - Modify: `backend/src/main/java/com/techx/intervue/modules/conversation/repositories/ConversationRepository.java` (thêm `findOtherMemberIds`)
@@ -1566,7 +1570,7 @@ Chạy `ConversationServiceTest` → 12/12.
 ```bash
 docker compose exec -T backend ./mvnw -B test -Dtest='ConversationServiceTest,PresenceServiceTest,PresenceEventListenerTest,MessageRepositoryTest'
 docker compose exec -T backend ./mvnw -q spotless:apply
-git add backend/src/main/resources/db/migration/V20260925005__create_user_presence_table.sql backend/src/main/java/com/techx/intervue/modules/conversation backend/src/test/java/com/techx/intervue/modules/conversation
+git add backend/src/main/resources/db/migration/V20260925010__create_user_presence_table.sql backend/src/main/java/com/techx/intervue/modules/conversation backend/src/test/java/com/techx/intervue/modules/conversation
 git commit -m "feat(FR-112): online, offline and last-seen presence
 
 Open STOMP sessions per user live in Redis (30 min TTL); the last-seen
@@ -1881,7 +1885,7 @@ Plan **2/4** của spec `docs/superpowers/specs/2026-09-25-farmer-customer-chat-
 - [x] PR vào đúng nhánh
 - [ ] CI xanh (chờ run)
 - [x] Không có file bí mật
-- [x] Đổi DB → migration mới `V20260925005__create_user_presence_table.sql`
+- [x] Đổi DB → migration mới `V20260925010__create_user_presence_table.sql`
 - [ ] Đổi API → `docs/api-contract.md` chưa có STOMP; spec §7.4 là đề xuất cho LEAD
 - [x] Thêm biến môi trường → đã cập nhật `.env.example`, `.env.production.example`, `application.yaml`, `application-prod.yaml.example`, hai file compose
 - [x] UI: không áp dụng
