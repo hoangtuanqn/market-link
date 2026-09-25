@@ -1,0 +1,46 @@
+{
+  "details": {
+    "title": "Vos informations",
+    "name": "Nom complet",
+    "phone": "Téléphone",
+    "phoneHint": "Utilisé quand un étal a besoin de joindre la plateforme ; jamais affiché publiquement.",
+    "email": "E-mail",
+    "emailHint": "C'est aussi votre identifiant. Demandez à un autre administrateur s'il doit changer.",
+    "submit": "Enregistrer les modifications",
+    "saving": "Enregistrement…",
+    "saved": "Vos informations sont enregistrées.",
+    "failed": "Impossible d'enregistrer vos informations.",
+    "errors": {
+      "nameRequired": "Saisissez votre nom complet.",
+      "phoneRequired": "Saisissez un numéro de téléphone."
+    }
+  },
+  "password": {
+    "title": "Mot de passe",
+    "intro": "Un compte administrateur peut approuver des étals, désactiver des clients et modifier les tarifs de la plateforme : gardez celui-ci solide.",
+    "current": "Mot de passe actuel",
+    "new": "Nouveau mot de passe",
+    "repeat": "Répétez le nouveau mot de passe",
+    "hint": "Entre {{min}} et {{max}} caractères.",
+    "submit": "Changer le mot de passe",
+    "submitting": "Modification…",
+    "changed": "Mot de passe changé. Les autres sessions ont été déconnectées.",
+    "failed": "Impossible de changer votre mot de passe.",
+    "errors": {
+      "currentRequired": "Saisissez votre mot de passe actuel.",
+      "newRequired": "Saisissez un nouveau mot de passe.",
+      "length": "Utilisez entre {{min}} et {{max}} caractères.",
+      "same": "Le nouveau mot de passe doit différer de l'actuel.",
+      "confirmRequired": "Répétez le nouveau mot de passe.",
+      "mismatch": "Les deux mots de passe ne correspondent pas."
+    }
+  },
+  "mfa": {
+    "title": "Vérification en deux étapes",
+    "intro": "Une seconde étape après votre mot de passe, depuis une application sur votre téléphone. Un administrateur peut approuver des étals, désactiver des clients et modifier les tarifs de la plateforme : un simple mot de passe est un peu mince.",
+    "on": "Activée",
+    "off": "Désactivée",
+    "turnOn": "Activer la vérification en deux étapes",
+    "manage": "Gérer la vérification en deux étapes"
+  }
+}
