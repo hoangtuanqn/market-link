@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.notification.services.interfaces;
 
+import com.techx.intervue.modules.notification.entities.Announcement;
 import com.techx.intervue.modules.notification.resources.NotificationEvent;
 import com.techx.intervue.modules.notification.resources.NotificationResource;
 import com.techx.intervue.resources.PageResource;
@@ -12,6 +13,12 @@ public interface NotificationServiceInterface {
      * transaction của người gọi để dòng notifications cùng commit với thay đổi gây ra nó.
      */
     void dispatch(Collection<Long> recipients, NotificationEvent event);
+
+    /**
+     * FR-077: một dòng cho mỗi user active thuộc audience (một câu INSERT … SELECT), rồi đẩy sau
+     * commit cho từng người.
+     */
+    void broadcastAnnouncement(Announcement announcement);
 
     /** dispatch tới mọi admin đang active. */
     void notifyAdmins(NotificationEvent event);

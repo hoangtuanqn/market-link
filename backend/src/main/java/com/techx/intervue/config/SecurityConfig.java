@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -114,6 +115,10 @@ public class SecurityConfig {
                                         .permitAll()
                                         // Chatbot FR-090…092: khách vãng lai cũng hỏi được
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
+                                        .permitAll()
+                                        // FR-077: banner thông báo ở trang public
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/api/v1/announcements/active")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())

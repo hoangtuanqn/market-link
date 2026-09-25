@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.notification.controllers;
 
+import com.techx.intervue.modules.notification.exceptions.InvalidAnnouncementException;
 import com.techx.intervue.modules.notification.exceptions.InvalidNotificationPreferenceException;
 import com.techx.intervue.modules.notification.exceptions.NotificationAccessDeniedException;
 import com.techx.intervue.modules.notification.exceptions.TestNotificationTooSoonException;
@@ -20,7 +21,12 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /** Mã HTTP theo spec §6 cho các controller của module thông báo (repo chưa có handler chung). */
-@RestControllerAdvice(assignableTypes = NotificationController.class)
+@RestControllerAdvice(
+        assignableTypes = {
+            NotificationController.class,
+            AdminAnnouncementController.class,
+            PublicAnnouncementController.class
+        })
 public class NotificationExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
@@ -54,7 +60,10 @@ public class NotificationExceptionHandler {
                 List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
     }
 
-    @ExceptionHandler(InvalidNotificationPreferenceException.class)
+    @ExceptionHandler({
+        InvalidNotificationPreferenceException.class,
+        InvalidAnnouncementException.class
+    })
     ResponseEntity<ApiResource<Void>> badRequest(RuntimeException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
     }

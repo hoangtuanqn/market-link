@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.notification.services.impl;
 
 import com.techx.intervue.helpers.TransactionHelper;
+import com.techx.intervue.modules.notification.entities.Announcement;
 import com.techx.intervue.modules.notification.entities.Notification;
 import com.techx.intervue.modules.notification.enums.NotificationKind;
 import com.techx.intervue.modules.notification.exceptions.NotificationAccessDeniedException;
@@ -87,6 +88,52 @@ public class NotificationService implements NotificationServiceInterface {
                             ? clock.instant()
                             : saved.getCreatedAt();
             TransactionHelper.afterCommit(() -> push(userId, event, text, id, createdAt));
+        }
+    }
+
+    @Override
+    @Transactional
+    public void broadcastAnnouncement(Announcement a) {
+        notifications.fanOutAnnouncement(
+                a.getId(), a.getTitle(), a.getContent(), a.getAudience().roleCodes());
+        TransactionHelper.afterCommit(() -> pushAnnouncement(a));
+    }
+
+    private void pushAnnouncement(Announcement a) {
+        List<NotificationRepository.Recipient> recipients = notifications.recipientsOf(a.getId());
+        if (recipients.isEmpty()) {
+            return;
+        }
+        Map<Long, Long> unread =
+                notifications
+                        .unreadCounts(
+                                recipients.stream()
+                                        .map(NotificationRepository.Recipient::getUserId)
+                                        .toList())
+                        .stream()
+                        .collect(
+                                Collectors.toMap(
+                                        NotificationRepository.UnreadRow::getUserId,
+                                        NotificationRepository.UnreadRow::getTotal));
+        Instant now = clock.instant();
+        for (NotificationRepository.Recipient r : recipients) {
+            try {
+                delivery.deliver(
+                        r.getUserId(),
+                        new NotificationPayload(
+                                r.getId(),
+                                NotificationKind.ANNOUNCEMENT.code(),
+                                a.getTitle(),
+                                a.getContent(),
+                                r.getLink(),
+                                r.getCreatedAt(),
+                                true,
+                                unread.getOrDefault(r.getUserId(), 0L),
+                                prefs.alertFor(r.getUserId(), NotificationKind.ANNOUNCEMENT, now),
+                                null));
+            } catch (RuntimeException e) {
+                log.warn("Announcement push to user {} failed: {}", r.getUserId(), e.getMessage());
+            }
         }
     }
 
