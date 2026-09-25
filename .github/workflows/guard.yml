@@ -1,0 +1,52 @@
+# Guard: không trộn môi trường dev và main (CONTRIBUTING.md §0)
+#   Branch policy — PR chỉ được đi đúng luồng:  feature/* → dev → main,  hotfix/* → main → dev
+#   Env guard     — cấu hình dev / production không lẫn vào nhau, không có bí mật trong git
+# Chủ repo đặt 2 check này là "required" cho cả main và dev (CONTRIBUTING.md §11).
+name: Guard
+
+on:
+  pull_request:
+    branches: [dev, main]
+    # edited: chạy lại khi ai đó đổi base của PR (vd. từ dev sang main)
+    types: [opened, synchronize, reopened, edited]
+  push:
+    branches: [dev, main]
+
+jobs:
+  branch-policy:
+    name: Branch policy
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR source → target
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+        run: |
+          echo "PR: $HEAD → $BASE"
+          case "$BASE" in
+            main)
+              # Production chỉ nhận release từ dev hoặc hotfix
+              if [[ "$HEAD" == "dev" || "$HEAD" == hotfix/* ]]; then
+                echo "✓ Hợp lệ"; exit 0
+              fi
+              echo "::error::'$HEAD' không được merge vào main. main chỉ nhận PR từ 'dev' (release) hoặc 'hotfix/*'. Đổi base của PR sang dev (luật H-1)."
+              exit 1
+              ;;
+            dev)
+              # dev nhận nhánh làm việc, hoặc main khi đồng bộ ngược sau hotfix
+              if [[ "$HEAD" == "main" || "$HEAD" =~ ^(feature|fix|docs|chore|refactor|test|hotfix)/ ]]; then
+                echo "✓ Hợp lệ"; exit 0
+              fi
+              echo "::error::Tên nhánh '$HEAD' không đúng quy ước. Dùng feature/*, fix/*, docs/*, chore/*, refactor/*, test/*, hotfix/* (luật H-2)."
+              exit 1
+              ;;
+          esac
+
+  env-guard:
+    name: Env guard
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dev / production configuration is not mixed
+        run: bash scripts/check-env-separation.sh

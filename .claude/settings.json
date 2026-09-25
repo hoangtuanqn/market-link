@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "Bash(git push origin main:*)",
+      "Bash(git push origin dev:*)",
+      "Bash(git push origin HEAD:main:*)",
+      "Bash(git push origin HEAD:dev:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push --force origin main:*)",
+      "Bash(git push --force origin dev:*)",
+      "Bash(git push origin --delete main:*)",
+      "Bash(git push origin --delete dev:*)",
+      "Bash(git push origin :main:*)",
+      "Bash(git push origin :dev:*)",
+      "Bash(git commit --no-verify:*)",
+      "Bash(git push --no-verify:*)",
+      "Bash(git merge origin/main:*)",
+      "Bash(git merge main:*)",
+      "Read(./.env)",
+      "Read(./.env.production)",
+      "Read(./backend/src/main/resources/application-local.yml)"
+    ],
+    "ask": [
+      "Bash(gh pr merge:*)",
+      "Bash(gh pr create --base main:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(git push --force-with-lease:*)",
+      "Bash(git branch -D:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git rebase:*)",
+      "Bash(make prod:*)",
+      "Bash(make clean:*)"
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "harness-marketplace": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/revfactory/harness.git"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "harness@harness-marketplace": true,
+    "code-review@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "context7@claude-plugins-official": true
+  }
+}
