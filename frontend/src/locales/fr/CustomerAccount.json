@@ -13,7 +13,10 @@
       "approved": "Votre stand est validé. Réglez marchés, créneaux de retrait et produits dans le panneau producteur.",
       "rejected": "Votre demande a été refusée. Ouvrez-la pour revoir ce qui a été envoyé.",
       "suspended": "Votre stand est suspendu. Vous pouvez continuer à acheter comme client."
-    }
+    },
+    "draft": "Vous avez une demande inachevée. Reprenez où vous en étiez.",
+    "continue": "Terminer votre demande",
+    "history": "Voir vos demandes précédentes"
   },
   "signOut": {
     "title": "Se déconnecter",

@@ -13,7 +13,10 @@
       "approved": "Dein Stand ist freigegeben. Märkte, Abholzeiten und Produkte legst du im Erzeugerbereich fest.",
       "rejected": "Dein Antrag wurde nicht genehmigt. Öffne ihn, um das Gesendete zu sehen.",
       "suspended": "Dein Stand ist gesperrt. Als Kundin oder Kunde kaufst du weiter ein."
-    }
+    },
+    "draft": "Du hast einen unfertigen Antrag. Mach dort weiter, wo du aufgehört hast.",
+    "continue": "Antrag fertig ausfüllen",
+    "history": "Frühere Anträge ansehen"
   },
   "signOut": {
     "title": "Abmelden",

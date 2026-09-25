@@ -13,7 +13,10 @@
       "approved": "Sạp của bạn đã được duyệt. Chọn chợ, giờ nhận hàng và sản phẩm trong bảng quản lý sạp.",
       "rejected": "Đơn của bạn không được duyệt. Mở ra để xem lại nội dung đã gửi.",
       "suspended": "Sạp của bạn đang bị đình chỉ. Bạn vẫn mua hàng bình thường."
-    }
+    },
+    "draft": "Bạn có một đơn còn dở dang. Tiếp tục chỗ đang bỏ ngang.",
+    "continue": "Hoàn tất đơn của bạn",
+    "history": "Xem các đơn đã gửi trước đây"
   },
   "signOut": {
     "title": "Đăng xuất",

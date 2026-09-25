@@ -13,7 +13,10 @@
       "approved": "Lapak Anda disetujui. Atur pasar, jam pengambilan, dan produk di panel petani.",
       "rejected": "Lamaran Anda tidak disetujui. Buka untuk melihat yang sudah dikirim.",
       "suspended": "Lapak Anda ditangguhkan. Anda tetap bisa berbelanja sebagai pembeli."
-    }
+    },
+    "draft": "Ada lamaran yang belum selesai. Lanjutkan dari tempat Anda berhenti.",
+    "continue": "Selesaikan lamaran Anda",
+    "history": "Lihat lamaran sebelumnya"
   },
   "signOut": {
     "title": "Keluar",

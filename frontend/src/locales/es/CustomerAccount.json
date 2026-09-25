@@ -13,7 +13,10 @@
       "approved": "Tu puesto está aprobado. Configura mercados, horarios de recogida y productos en el panel de productor.",
       "rejected": "Tu solicitud no fue aprobada. Ábrela para ver lo que enviaste.",
       "suspended": "Tu puesto está suspendido. Puedes seguir comprando como cliente."
-    }
+    },
+    "draft": "Tienes una solicitud sin terminar. Continúa donde la dejaste.",
+    "continue": "Termina tu solicitud",
+    "history": "Ver tus solicitudes anteriores"
   },
   "signOut": {
     "title": "Cerrar sesión",
