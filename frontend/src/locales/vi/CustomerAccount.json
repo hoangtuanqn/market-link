@@ -35,6 +35,9 @@
     "saveFailed": "Không lưu được thông tin của bạn. Vui lòng thử lại."
   },
   "password": {
+    "section": "Mật khẩu & bảo mật",
+    "row": "Mật khẩu",
+    "rowNote": "Mật khẩu bạn dùng khi đăng nhập bằng email.",
     "title": "Đổi mật khẩu",
     "intro": "Bạn sẽ bị đăng xuất trên mọi thiết bị và cần đăng nhập lại.",
     "current": "Mật khẩu hiện tại",
@@ -43,6 +46,7 @@
     "hint": "Từ {{min}} đến {{max}} ký tự.",
     "submit": "Đổi mật khẩu",
     "submitting": "Đang đổi mật khẩu…",
+    "cancel": "Huỷ",
     "changed": "Đã đổi mật khẩu. Vui lòng đăng nhập lại.",
     "failed": "Không đổi được mật khẩu. Vui lòng thử lại.",
     "errors": {

@@ -35,6 +35,9 @@
     "saveFailed": "Tidak dapat menyimpan data Anda. Silakan coba lagi."
   },
   "password": {
+    "section": "Kata sandi & keamanan",
+    "row": "Kata sandi",
+    "rowNote": "Kata sandi yang Anda pakai untuk masuk dengan email.",
     "title": "Ubah kata sandi",
     "intro": "Anda akan keluar di semua perangkat dan perlu masuk lagi.",
     "current": "Kata sandi saat ini",
@@ -43,6 +46,7 @@
     "hint": "{{min}} sampai {{max}} karakter.",
     "submit": "Ubah kata sandi",
     "submitting": "Mengubah kata sandi…",
+    "cancel": "Batal",
     "changed": "Kata sandi Anda sudah diubah. Silakan masuk lagi.",
     "failed": "Tidak dapat mengubah kata sandi. Silakan coba lagi.",
     "errors": {

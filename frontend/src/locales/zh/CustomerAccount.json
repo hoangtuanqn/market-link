@@ -35,6 +35,9 @@
     "saveFailed": "无法保存您的资料，请重试。"
   },
   "password": {
+    "section": "密码与安全",
+    "row": "密码",
+    "rowNote": "你用邮箱登录时使用的密码。",
     "title": "修改密码",
     "intro": "您将在所有设备上退出登录，需要重新登录。",
     "current": "当前密码",
@@ -43,6 +46,7 @@
     "hint": "{{min}} 到 {{max}} 个字符。",
     "submit": "修改密码",
     "submitting": "正在修改密码…",
+    "cancel": "取消",
     "changed": "密码已修改，请重新登录。",
     "failed": "无法修改密码，请重试。",
     "errors": {
