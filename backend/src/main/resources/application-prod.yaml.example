@@ -16,3 +16,8 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
+
+# FR-008: khoá mã hoá TOTP của admin, không có giá trị mặc định ở prod
+app:
+  mfa:
+    encryption-key: ${MFA_ENCRYPTION_KEY}
