@@ -1,7 +1,6 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import ChatMessage, { MessageOrderRef } from '@/components/ChatMessage';
-import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import Helper from '@/utils/helper';
@@ -108,11 +107,6 @@ const CustomerMessagesPage = () => {
           Ask a stall about this week&apos;s produce, or settle the details of an order before the cutoff.
         </p>
       </div>
-
-      <Banner variant="warning" title="Messaging is not in the SRS.">
-        Ask the LEAD for a new requirement before this is built. The screen exists so the team can judge whether it is
-        worth the hours.
-      </Banner>
 
       <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
         <Card className="overflow-hidden">

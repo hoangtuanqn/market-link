@@ -9,8 +9,9 @@ const THEMES = [
 export type ThemeChoice = (typeof THEMES)[number]['id'];
 
 /**
- * Three-way theme swatch picker (design system `.pt-themes`). Selection is stored locally only: the app has no dark
- * stylesheet yet, so picking "Dark" does not change how the page looks.
+ * Three-way theme swatch picker, laid out after `.pt-themes` in docs/prototype/prototype.css, which is prototype
+ * scaffolding rather than the design system. Selection is stored locally only: the app has no dark stylesheet yet, so
+ * picking "Dark" does not change how the page looks.
  */
 const ThemePicker = ({ value, onChange }: { value: ThemeChoice; onChange: (v: ThemeChoice) => void }) => (
   <div className="flex gap-2" role="group" aria-label="Theme">
