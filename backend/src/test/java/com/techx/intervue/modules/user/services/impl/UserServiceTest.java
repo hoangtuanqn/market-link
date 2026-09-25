@@ -20,6 +20,7 @@ import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.SocialProfile;
+import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import com.techx.intervue.services.interfaces.JobQueueInterface;
@@ -65,7 +66,9 @@ class UserServiceTest {
                         refreshTokenService,
                         mock(BlacklistServiceInterface.class),
                         authConfig,
-                        jobQueue);
+                        jobQueue,
+                        // FR-008: chưa ai bật 2FA → đăng nhập như cũ
+                        mock(MfaServiceInterface.class));
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(passwordEncoder.matches(PASSWORD, "hash")).thenReturn(true);
         when(jwtService.generateToken(anyLong())).thenReturn("access");
