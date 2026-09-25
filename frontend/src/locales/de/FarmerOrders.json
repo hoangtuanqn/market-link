@@ -2,7 +2,7 @@
   "title": "Bestellungen",
   "intro": "Nehmen Sie neue Bestellungen vor ihrem Annahmeschluss an oder lehnen Sie sie ab, markieren Sie sie am Markttag als bereit und schließen Sie sie ab, wenn der Kunde bezahlt hat.",
   "search": { "label": "Bestellungen suchen", "placeholder": "Bestellnummer oder Kundenname", "submit": "Suchen" },
-  "filter": { "day": "Abholtag", "all": "Alle", "allDays": "Tage", "market": "Markt", "bothMarkets": "Beide Märkte" },
+  "filter": { "day": "Abholtag", "all": "Alle", "market": "Markt", "bothMarkets": "Beide Märkte" },
   "tabsLabel": "Bestellungen nach Status",
   "status": {
     "placed": "Wartet auf Annahme",

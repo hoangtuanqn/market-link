@@ -9,7 +9,6 @@
   "filter": {
     "day": "Pickup day",
     "all": "All",
-    "allDays": "days",
     "market": "Market",
     "bothMarkets": "Both markets"
   },

@@ -25,7 +25,7 @@ const MarketCardSkeleton = ({ count = 3 }: { count?: number }) => {
             <span className="ml-skel mt-2 h-3.5 w-[88%]" />
           </div>
           <span className="ml-skel size-8 self-start rounded-full" />
-          <span className="ml-skel col-span-full h-6.5 w-[266px] max-w-full" />
+          <span className="ml-skel col-span-full h-8 w-[448px] max-w-full" />
           <span className="ml-skel col-span-full h-3.5 w-[60%]" />
           <span className="ml-skel col-span-full h-[var(--size-control-sm)] w-[212px] max-w-full" />
         </Card>

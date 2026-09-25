@@ -59,7 +59,7 @@
   </section>
 </main>
 <script>
-  document.getElementById('day-chips').innerHTML = PT.dayChips('Day', [{ value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }, { value: 'sat2', label: 'Sat', sub: '03/10' }, { value: 'sun2', label: 'Sun', sub: '04/10', disabled: true }], 'sat');
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Day', [{ value: 'sat', label: 'Saturday', date: '26/09' }, { value: 'sun', label: 'Sunday', date: '27/09' }, { value: 'sat2', label: 'Saturday', date: '03/10' }, { value: 'sun2', label: 'Sunday', date: '04/10', disabled: true }], 'sat');
   var slots = PT.slots.concat([{ value: '0900', time: '09:00–09:30', booked: 0, max: 5 }, { value: '0930', time: '09:30–10:00', booked: 1, max: 5 }, { value: '1000', time: '10:00–10:30', booked: 0, max: 3, off: true }]);
   document.getElementById('table').innerHTML = PT.table('Saturday 26/09 · Thảo Điền Weekend Market · 9 slots', [
     { key: 't', label: 'Slot', render: function (s) { return '<b class="pt-num">' + s.time + '</b>'; } },

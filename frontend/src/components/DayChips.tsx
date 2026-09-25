@@ -1,4 +1,4 @@
-type DayOption = { value: string; label: string; sub?: string; date?: string; disabled?: boolean };
+type DayOption = { value: string; label: string; date?: string; disabled?: boolean };
 
 type DayChipsProps = {
   legend?: string;
@@ -10,8 +10,8 @@ type DayChipsProps = {
 
 /**
  * Weekday pill picker (design system `.ml-days`). With `date` the chip carries both the weekday and the date it falls
- * on, stacked in one grid cell so hover can swap them without the chip changing width; with `sub` it keeps the older
- * two-line form. Both readings stay in the accessibility tree: "Monday 29/09".
+ * on, stacked in one grid cell so hover can swap them without the chip changing width. Both readings stay in the
+ * accessibility tree: "Monday 29/09". Without `date` (an "All" choice) it is just the label.
  */
 const DayChips = ({ legend, name, options, value, onChange }: DayChipsProps) => {
   return (
@@ -30,7 +30,7 @@ const DayChips = ({ legend, name, options, value, onChange }: DayChipsProps) => 
           />
           <span
             className={
-              'border-line-strong bg-surface-raised peer-checked:bg-brand peer-checked:text-on-brand peer-focus-visible:outline-focus flex min-h-11 min-w-14 flex-col items-center justify-center rounded-full px-2.5 py-1 text-[14px] leading-[1.1] font-bold shadow-[inset_0_0_0_1.5px_var(--line-strong)] peer-checked:shadow-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-checked:[&_small]:text-inherit' +
+              'border-line-strong bg-surface-raised peer-checked:bg-brand peer-checked:text-on-brand peer-focus-visible:outline-focus flex min-h-11 min-w-14 flex-col items-center justify-center rounded-full px-2.5 py-1 text-[14px] leading-[1.1] font-bold shadow-[inset_0_0_0_1.5px_var(--line-strong)] peer-checked:shadow-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2' +
               // Hover, and keyboard focus only, swap the weekday for its date. Colour is inherited, so the selected
               // and struck-through states read the same either way.
               ' group-hover:[&_b:first-child]:opacity-0 group-hover:[&_b:last-child]:opacity-100' +
@@ -44,10 +44,7 @@ const DayChips = ({ legend, name, options, value, onChange }: DayChipsProps) => 
                 <b className="tabular-nums opacity-0">{d.date}</b>
               </span>
             ) : (
-              <>
-                {d.label}
-                {d.sub && <small className="text-ink-muted text-[12px] font-normal">{d.sub}</small>}
-              </>
+              d.label
             )}
           </span>
         </label>

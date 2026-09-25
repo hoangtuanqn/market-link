@@ -154,8 +154,12 @@ const FarmerOrdersPage = () => {
           legend={t('filter.day')}
           name="pickup-day"
           options={[
-            { value: 'all', label: t('filter.all'), sub: t('filter.allDays') },
-            ...DAY_OPTIONS.map((d) => ({ value: d.value, label: dayName(d.dow), sub: formatDayMonth(d.date) })),
+            { value: 'all', label: t('filter.all') },
+            ...DAY_OPTIONS.map((d) => ({
+              value: d.value,
+              label: dayName(d.dow, 'long'),
+              date: formatDayMonth(d.date),
+            })),
           ]}
           value={day}
           onChange={setDay}

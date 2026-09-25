@@ -16,7 +16,7 @@
     "failed": "Không mở được đăng nhập Google. Vui lòng thử lại.",
     "note": "Google cho chúng tôi biết tên và email của bạn. Số điện thoại và địa chỉ vẫn cần có trước đơn hàng đầu tiên, nên chúng tôi sẽ hỏi một lần ở màn hình tiếp theo."
   },
-  "newHere": "Lần đầu đến đây? <customer>Tạo tài khoản khách hàng</customer>. Muốn bán hàng thì đăng nhập rồi <farmer>đăng ký làm nhà vườn</farmer> trong tài khoản.",
+  "newHere": "Chưa có tài khoản? <customer>Đăng ký</customer>",
   "toast": {
     "signedIn": "Đã đăng nhập.",
     "failed": "Không đăng nhập được. Vui lòng thử lại."

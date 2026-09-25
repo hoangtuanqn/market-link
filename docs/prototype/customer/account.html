@@ -23,38 +23,38 @@
     <h1 class="pt-title">Account</h1>
     <p class="pt-body">Your details are shared with a stall only on the orders you place there.</p>
   </div>
-  <section class="ml-card pt-panel pt-avatar-card" aria-labelledby="photo-title">
-    <span class="pt-avatar" aria-hidden="true" style="width:88px;height:88px;font-size:35px">NK</span>
-    <div class="pt-col-3">
-      <div>
-        <h2 class="pt-h3" id="photo-title">Profile photo</h2>
-        <p class="pt-small ml-muted">Shown in the menu and to stalls on your orders. JPEG, PNG or a photo from your camera.</p>
+  <div class="ml-card pt-panel pt-col-6">
+    <section class="pt-avatar-card" aria-labelledby="photo-title">
+      <span class="pt-avatar" aria-hidden="true" style="width:88px;height:88px;font-size:35px">NK</span>
+      <div class="pt-col-3">
+        <div>
+          <h2 class="pt-h3" id="photo-title">Profile photo</h2>
+          <p class="pt-small ml-muted">Shown in the menu and to stalls on your orders. JPEG, PNG or a photo from your camera.</p>
+        </div>
+        <div class="pt-row-2">
+          <button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="In the app: pick a photo, then drag and zoom it inside a round frame before saving.">Upload photo</button>
+          <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="In the app: the camera opens in a dialog, then the same framing step.">Take photo</button>
+        </div>
+        <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal · A profile photo is not in the SRS. API proposed in docs/proposals/avatar-api.md; LEAD to confirm.">Not in the SRS</span></p>
       </div>
-      <div class="pt-row-2">
-        <button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="In the app: pick a photo, then drag and zoom it inside a round frame before saving.">Upload photo</button>
-        <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="In the app: the camera opens in a dialog, then the same framing step.">Take photo</button>
+    </section>
+    <div aria-hidden="true" style="border-top:1px solid var(--line)"></div>
+    <form class="pt-col" novalidate>
+      <h2 class="pt-h3">Your details</h2>
+      <div class="pt-form-grid">
+        <div class="ml-field"><label class="ml-field-label" for="name">Full name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Nguyễn Minh Khang"></div>
+        <div class="ml-field"><label class="ml-field-label" for="phone">Phone number<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" value="0903 118 218"></div>
+        <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" value="khang@example.com"></div>
+        <div class="ml-field"><label class="ml-field-label" for="addr">Address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="addr" class="ml-input" value="25 Xuân Thủy, Thảo Điền, Thủ Đức"><span class="ml-field-hint">Used for distances and directions.</span></div>
       </div>
-      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal · A profile photo is not in the SRS. API proposed in docs/proposals/avatar-api.md; LEAD to confirm.">Not in the SRS</span></p>
-    </div>
-  </section>
-  <form class="ml-card pt-panel pt-col" novalidate>
-    <h2 class="pt-h3">Your details</h2>
-    <div class="pt-form-grid">
-      <div class="ml-field"><label class="ml-field-label" for="name">Full name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Nguyễn Minh Khang"></div>
-      <div class="ml-field"><label class="ml-field-label" for="phone">Phone number<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" value="0903 118 218"></div>
-      <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" value="khang@example.com"></div>
-      <div class="ml-field"><label class="ml-field-label" for="addr">Address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="addr" class="ml-input" value="25 Xuân Thủy, Thảo Điền, Thủ Đức"><span class="ml-field-hint">Used for distances and directions.</span></div>
-    </div>
-    <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Your details are saved.">Save changes</button></div>
-  </form>
-  <form class="ml-card pt-panel pt-col" novalidate>
-    <h2 class="pt-h3">Change password</h2>
-    <div class="pt-form-grid">
-      <div class="ml-field"><label class="ml-field-label" for="cur">Current password</label><input id="cur" class="ml-input" type="password" autocomplete="current-password"></div>
-      <div class="ml-field"><label class="ml-field-label" for="new">New password</label><input id="new" class="ml-input" type="password" autocomplete="new-password"><span class="ml-field-hint">At least 8 characters.</span></div>
-    </div>
-    <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-secondary" data-toast="Password changed.">Change password</button></div>
-  </form>
+      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Your details are saved.">Save changes</button></div>
+    </form>
+  </div>
+  <a class="ml-card pt-panel pt-between-c pt-plain" href="../customer/change-password.html" aria-labelledby="pw-title">
+    <div class="pt-col-3"><h2 class="pt-h3" id="pw-title">Password &amp; security</h2><span><b class="pt-body" style="display:block">Password</b><span class="pt-caption ml-muted">The password you sign in with by email.</span></span></div>
+    <span aria-hidden="true" class="ml-muted" style="font-size:22px">›</span>
+  </a>
+
   <div class="ml-card pt-panel pt-between-c" data-sell-invite>
     <div class="pt-col-2" style="max-width:520px">
       <h2 class="pt-h3">Sell at MarketLink</h2>
@@ -67,7 +67,7 @@
     <div><h2 class="pt-h3">Sign out</h2><p class="pt-small ml-muted">Signs you out on this device only.</p></div>
     <a class="ml-btn ml-btn-secondary" href="../public/home.html">Sign out</a>
   </div>
-  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Feature catalog · 'View and update personal details' and 'change password' are marked (proposal), not in the SRS. Keep or cut; the API contract has GET /auth/me but no PUT.">Profile editing and change password are proposals, not SRS requirements</span></p>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Feature catalog · 'View and update personal details' and 'change password' are marked (proposal), not in the SRS. Keep or cut; the API contract has GET /auth/me but no PUT.">Profile editing and change password (its own page) are proposals, not SRS requirements</span></p>
 </main>
 <script>
   // someone who already runs a stall is not invited to apply for one

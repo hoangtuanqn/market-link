@@ -73,7 +73,7 @@
   </section>
 </main>
 <script>
-  document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.week.slice(0, 4).map(function (d) { return { value: d.value, label: d.label, sub: d.sub, disabled: d.value === 'thu' }; }), 'sat');
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.week.slice(0, 4).map(function (d) { return { value: d.value, label: d.long, date: d.sub, disabled: d.value === 'thu' }; }), 'sat');
   document.getElementById('sort-chips').innerHTML = PT.chip('Best match', { selected: true, radio: 'sort' }) + PT.chip('Nearest', { radio: 'sort' }) + PT.chip('Price', { radio: 'sort' }) + PT.chip('Rating', { radio: 'sort' });
   document.getElementById('tabs').innerHTML = PT.tabs('Result type', [{ id: 'all', label: 'All', count: 5 }, { id: 'market', label: 'Markets', count: 0 }, { id: 'farmer', label: 'Stalls', count: 2 }, { id: 'product', label: 'Products', count: 3 }], 'all');
   var stalls = [2, 5].map(PT.farmer);

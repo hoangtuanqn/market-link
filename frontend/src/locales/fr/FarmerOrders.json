@@ -9,7 +9,6 @@
   "filter": {
     "day": "Jour de retrait",
     "all": "Tous",
-    "allDays": "les jours",
     "market": "Marché",
     "bothMarkets": "Les deux marchés"
   },

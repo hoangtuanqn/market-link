@@ -1,0 +1,166 @@
+{
+  "title": "Chính sách quyền riêng tư",
+  "lead": "MarketLink lưu gì về bạn, vì sao lưu, và ai được xem. Viết từ đúng những bảng dữ liệu mà sản phẩm thật sự có, không phải từ một mẫu có sẵn.",
+  "meta": "Phiên bản 0.1 · Cập nhật lần cuối {{date}} · Áp dụng cho Khách hàng, Nhà vườn và khách ghé thăm",
+  "onThisPage": "Trong trang này",
+  "seeAlso": "Đọc thêm <link>Điều khoản dịch vụ</link>. Phần đó nói về việc đặt trước và nhận hàng.",
+  "sections": [
+    {
+      "id": "collect",
+      "title": "Chúng tôi lưu những gì",
+      "blocks": [
+        {
+          "p": "Mọi thứ bên dưới đều là thứ sản phẩm đang lưu hôm nay. Không thu thập gì cho quảng cáo, và không bán lại cho ai."
+        },
+        {
+          "facts": {
+            "items": [
+              [
+                "Tài khoản của bạn",
+                "Họ tên, email, số điện thoại và địa chỉ. Mật khẩu của bạn không bao giờ được lưu đúng như bạn gõ, chỉ lưu dưới dạng băm."
+              ],
+              [
+                "Sạp của nhà vườn",
+                "Tên sạp, người liên hệ, mô tả, các chợ và các ngày bạn bán, khung giờ nhận và vị trí sạp của bạn trên bản đồ."
+              ],
+              [
+                "Đơn hàng của bạn",
+                "Bạn đặt gì và bao nhiêu, sạp và chợ nào, ngày giờ nhận, lời nhắn bạn để lại cho sạp, và các khoản tổng. Tên và giá sản phẩm được chép sang đơn để đơn vẫn đọc đúng nếu sau này sạp đổi chúng."
+              ],
+              ["Lịch sử đơn hàng", "Mọi lần đổi trạng thái trên một đơn, kèm thời điểm và ai đã đổi."],
+              [
+                "Đánh giá",
+                "Điểm bạn chấm, nội dung bạn viết, đơn nào sinh ra đánh giá đó, và câu trả lời của sạp nếu có."
+              ],
+              ["Yêu thích", "Những sạp, sản phẩm và chợ bạn đã lưu."],
+              ["Tin nhắn", "Những gì bạn và một sạp viết cho nhau trong Tin nhắn, và thời điểm mỗi tin được đọc."],
+              ["Thông báo", "Những thông báo gửi cho bạn về đơn hàng và hàng về lại, và bạn đã đọc hay chưa."],
+              [
+                "Trò chuyện với trợ lý",
+                "Tin nhắn của bạn, câu trả lời của trợ lý, và ý định mà trợ lý khớp được. Xem mục 5."
+              ],
+              [
+                "Góp ý",
+                "Loại bạn chọn và nội dung bạn viết. Góp ý có thể gửi mà không cần tài khoản, khi đó nó không đi kèm tài khoản nào."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink không hỏi và không lưu thông tin thẻ, thông tin ngân hàng hay bất kỳ dữ liệu thanh toán nào, vì việc trả tiền diễn ra tại sạp chứ không bao giờ đi qua sản phẩm."
+        }
+      ]
+    },
+    {
+      "id": "why",
+      "title": "Vì sao chúng tôi lưu",
+      "blocks": [
+        {
+          "p": "Tên và số điện thoại của bạn tồn tại để sạp biết ai tới nhận và liên lạc được vào sáng ngày họp chợ. Địa chỉ của bạn tồn tại để hiện chợ cách bao xa và điền sẵn chỉ đường. Email là cách bạn đăng nhập và là cách bạn được báo về đơn hàng."
+        },
+        {
+          "p": "Đơn hàng và lịch sử của chúng tồn tại để hai bên cùng thấy đã thoả thuận gì và đổi lúc nào. Đánh giá tồn tại để người mua khác có cơ sở nhìn nhận một sạp. Yêu thích tồn tại để bạn được báo khi thứ bạn muốn có hàng trở lại."
+        }
+      ]
+    },
+    {
+      "id": "who",
+      "title": "Ai được xem",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "Sạp bạn đặt hàng",
+                "Thấy đơn của bạn và đủ thông tin liên hệ để giao hàng vào ngày họp chợ, cùng những tin nhắn bạn gửi cho họ. Họ không thấy các đơn của bạn với sạp khác."
+              ],
+              [
+                "Người mua khác",
+                "Thấy các đánh giá của bạn và tên gắn trên đó. Họ không thấy đơn hàng, thông tin liên hệ hay mục yêu thích của bạn."
+              ],
+              [
+                "Quản trị viên",
+                "Thấy tài khoản và đơn đăng ký nhà vườn để duyệt, tạm khoá hoặc vô hiệu hoá, và thấy nội dung đăng bán cùng đánh giá để kiểm duyệt. Báo cáo cho quản trị viên là các con số tổng hợp, không phải danh sách ai mua gì."
+              ],
+              [
+                "Người khác",
+                "Không thấy gì cả. Đơn hàng, thông tin liên hệ, mục yêu thích và thông báo không bao giờ hiện trên trang công khai."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Mọi màn hình nhận một mã đều được máy chủ kiểm tra rằng bản ghi đó là của bạn trước khi hiện ra, nên đổi một con số trên thanh địa chỉ không mở được đơn của người khác."
+        }
+      ]
+    },
+    {
+      "id": "sessions",
+      "title": "Cookie và phiên đăng nhập",
+      "blocks": [
+        {
+          "p": "Khi bạn đăng nhập, MarketLink cấp một token ngắn hạn mà trình duyệt gửi kèm mỗi yêu cầu, và một token dài hạn hơn giữ trong cookie để bạn không bị đăng xuất sau vài phút. Phiên đăng nhập của bạn cũng được lưu đệm trên máy chủ để đăng nhập nhanh. Đăng xuất sẽ kết thúc cả hai."
+        },
+        {
+          "p": "Giỏ hàng của bạn nằm trong chính trình duyệt của bạn cho tới khi bạn đặt đơn. Không có gì trong giỏ đi tới máy chủ trước khi bạn chốt đơn."
+        },
+        {
+          "p": "MarketLink không đặt cookie quảng cáo hay cookie phân tích nào."
+        }
+      ]
+    },
+    {
+      "id": "assistant",
+      "title": "Trợ lý mua sắm",
+      "blocks": [
+        {
+          "p": "Trợ lý trả lời các câu hỏi về chợ, sạp, khung giờ nhận và sản phẩm. Cả hai chiều của cuộc trò chuyện đều được lưu, cùng với ý định mà trợ lý khớp với câu hỏi của bạn, để đội ngũ hiểu vì sao nó trả lời như vậy."
+        },
+        {
+          "p": "Khách chưa đăng nhập cũng dùng được. Để giữ cuộc trò chuyện liền mạch, trình duyệt của bạn giữ một khoá phiên ngẫu nhiên không gắn với tài khoản nào; nếu bạn đã đăng nhập thì cuộc trò chuyện được gắn vào tài khoản của bạn."
+        },
+        {
+          "p": "Lời bạn viết không bao giờ bị biến thành câu truy vấn cơ sở dữ liệu. Trợ lý khớp câu hỏi của bạn vào một trong các truy vấn đã chuẩn bị sẵn, nên thứ bạn gõ chỉ là từ khoá tìm kiếm. Hãy hỏi về nông sản và giờ nhận hàng, đừng hỏi về chuyện riêng tư."
+        }
+      ]
+    },
+    {
+      "id": "third",
+      "title": "Các trang này tải gì từ bên ngoài",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "OpenStreetMap",
+                "Các ô bản đồ đến từ máy chủ OpenStreetMap, nơi thấy địa chỉ IP của bạn và đại khái bạn đang xem vùng nào trên bản đồ. Dữ liệu bản đồ thuộc © những người đóng góp cho OpenStreetMap. Liên kết chỉ đường mở OpenStreetMap trong tab mới."
+              ],
+              ["Google Fonts", "Hai bộ chữ được tải từ Google Fonts, nơi thấy địa chỉ IP của bạn khi trang mở."]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink không dùng Google Maps, nên không có khoá bản đồ và không có tài khoản nào đứng sau bản đồ."
+        }
+      ]
+    },
+    {
+      "id": "choices",
+      "title": "Lựa chọn của bạn",
+      "blocks": [
+        {
+          "p": "Bạn có thể xem và đổi tên, số điện thoại, email và địa chỉ ở trang tài khoản bất cứ lúc nào. Bạn có thể bỏ bất cứ thứ gì đã lưu vào yêu thích, và đánh dấu thông báo là đã đọc."
+        },
+        {
+          "p": "Một số thứ vẫn giữ nguyên kể cả sau khi bạn đổi: đơn hàng giữ tên và giá sản phẩm lúc đặt, và lịch sử trạng thái của nó không bị viết lại, vì hai bên đều dựa vào bản ghi đó. Đánh giá bạn viết vẫn còn cho tới khi bạn hoặc quản trị viên gỡ xuống."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Có thắc mắc về dữ liệu của bạn?",
+    "text": "Thắc mắc về một đơn hàng thì hỏi thẳng sạp. Mọi chuyện về chính sách này thì gửi tới đội ngũ.",
+    "terms": "Điều khoản dịch vụ",
+    "contact": "Liên hệ"
+  }
+}

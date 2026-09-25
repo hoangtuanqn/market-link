@@ -59,6 +59,8 @@ import marketMap from '@/locales/en/MarketMap.json';
 import about from '@/locales/en/About.json';
 import contact from '@/locales/en/Contact.json';
 import feedback from '@/locales/en/Feedback.json';
+import privacy from '@/locales/en/Privacy.json';
+import terms from '@/locales/en/Terms.json';
 
 export const en = {
   common: common,
@@ -117,6 +119,8 @@ export const en = {
   About: about,
   Contact: contact,
   Feedback: feedback,
+  Terms: terms,
+  Privacy: privacy,
 } as const;
 
 export type Namespace = keyof typeof en;

@@ -163,8 +163,8 @@ const FarmerSlotsPage = () => {
           name="slot-day"
           options={DAY_OPTIONS.map((d) => ({
             value: d.value,
-            label: weekday(d.date),
-            sub: formatDayMonth(d.date),
+            label: dayName(d.date.getDay(), 'long'),
+            date: formatDayMonth(d.date),
             disabled: d.disabled,
           }))}
           value={day}

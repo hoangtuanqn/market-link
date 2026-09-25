@@ -41,14 +41,14 @@ const MarketCard = ({ market, distanceKm }: MarketCardProps) => {
         className="self-start"
       />
 
-      <ul aria-label={t('marketCard.days')} className="col-span-full mt-1 flex flex-wrap gap-1">
+      <ul aria-label={t('marketCard.days')} className="col-span-full mt-1 grid max-w-md grid-cols-7 gap-1 sm:gap-2">
         {WEEK.map((dow) => {
           const open = market.days.includes(dow);
           return (
             <li
               key={dow}
               className={Helper.cn(
-                'min-w-8.5 rounded-sm py-0.75 text-center text-[13px] font-bold',
+                'rounded-sm py-1.5 text-center text-[13px] font-bold whitespace-nowrap sm:px-1',
                 open ? 'bg-brand text-on-brand' : 'bg-surface-sunken text-ink-muted',
               )}
             >
