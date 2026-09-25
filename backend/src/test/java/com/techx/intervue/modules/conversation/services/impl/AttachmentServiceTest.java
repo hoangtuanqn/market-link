@@ -9,20 +9,31 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.entities.MessageAttachment;
+import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
+import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
 import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
+import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AttachmentResource;
+import com.techx.intervue.modules.conversation.services.interfaces.AttachmentServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.services.interfaces.FileStorageServiceInterface;
+import jakarta.persistence.EntityNotFoundException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.Optional;
 import javax.imageio.ImageIO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
@@ -34,13 +45,21 @@ class AttachmentServiceTest {
     MessageAttachmentRepository attachments;
     FileStorageServiceInterface storage;
     ChatRateLimiterInterface rateLimiter;
+    MessageRepository messages;
+    ConversationLookup lookup;
     AttachmentService service;
 
+    @TempDir Path tmp;
+    Path fileOnDisk;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         attachments = mock(MessageAttachmentRepository.class);
         storage = mock(FileStorageServiceInterface.class);
         rateLimiter = mock(ChatRateLimiterInterface.class);
+        messages = mock(MessageRepository.class);
+        lookup = mock(ConversationLookup.class);
+        fileOnDisk = Files.write(tmp.resolve("x.jpg"), new byte[] {1, 2, 3});
         when(attachments.save(any(MessageAttachment.class)))
                 .thenAnswer(
                         inv -> {
@@ -48,7 +67,10 @@ class AttachmentServiceTest {
                             a.setId(55L);
                             return a;
                         });
-        service = new AttachmentService(attachments, storage, rateLimiter, MAX_BYTES);
+        // Thứ tự khớp constructor: attachments, storage, rateLimiter, maxBytes, messages, lookup
+        service =
+                new AttachmentService(
+                        attachments, storage, rateLimiter, MAX_BYTES, messages, lookup);
     }
 
     @Test
@@ -143,5 +165,102 @@ class AttachmentServiceTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ImageIO.write(image, "png", out);
         return out.toByteArray();
+    }
+
+    @Test
+    void theUploaderCanSeeTheirOwnPhotoBeforeItIsSent() {
+        MessageAttachment upload = stored(55L, 7L, null);
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload));
+        when(storage.find(AttachmentService.FOLDER, upload.getStorageKey()))
+                .thenReturn(Optional.of(fileOnDisk));
+
+        AttachmentServiceInterface.StoredFile file = service.read(7L, 55L);
+
+        assertThat(file.mime()).isEqualTo("image/jpeg");
+        assertThat(file.sizeBytes()).isEqualTo(100);
+    }
+
+    @Test
+    void nobodyElseCanSeeAnUploadThatIsNotOnAMessageYet() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, null)));
+
+        assertThatThrownBy(() -> service.read(3L, 55L))
+                .isInstanceOf(ConversationAccessDeniedException.class);
+    }
+
+    @Test
+    void aMemberOfTheThreadCanSeeAPhotoTheyDidNotUpload() {
+        MessageAttachment upload = stored(55L, 7L, 101L);
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+        when(storage.find(AttachmentService.FOLDER, upload.getStorageKey()))
+                .thenReturn(Optional.of(fileOnDisk));
+
+        assertThat(service.read(3L, 55L).mime()).isEqualTo("image/jpeg");
+        verify(lookup).requireMember(3L, 42L);
+    }
+
+    @Test
+    void someoneOutsideTheThreadGetsRefused() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+        Mockito.doThrow(new ConversationAccessDeniedException())
+                .when(lookup)
+                .requireMember(99L, 42L);
+
+        assertThatThrownBy(() -> service.read(99L, 55L))
+                .isInstanceOf(ConversationAccessDeniedException.class);
+        verify(storage, never()).find(anyString(), anyString());
+    }
+
+    /** Review Focus #5. */
+    @Test
+    void hiddenMessageHidesItsPhotoToo() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
+        when(messages.findById(101L))
+                .thenReturn(
+                        Optional.of(messageIn(101L, 42L, Instant.parse("2026-09-25T06:00:00Z"))));
+
+        assertThatThrownBy(() -> service.read(3L, 55L)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void aRecordWithNoFileOnDiskIsNotFound() {
+        MessageAttachment upload = stored(55L, 7L, null);
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload));
+        when(storage.find(AttachmentService.FOLDER, upload.getStorageKey()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.read(7L, 55L)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void anUnknownAttachmentIdIsNotFound() {
+        when(attachments.findById(55L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.read(7L, 55L)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    private static MessageAttachment stored(Long id, Long uploaderId, Long messageId) {
+        return MessageAttachment.builder()
+                .id(id)
+                .uploaderId(uploaderId)
+                .messageId(messageId)
+                .storageKey(id + "-key.jpg")
+                .mime("image/jpeg")
+                .sizeBytes(100)
+                .width(800)
+                .height(600)
+                .build();
+    }
+
+    private static Message messageIn(Long id, Long conversationId, Instant hiddenAt) {
+        return Message.builder()
+                .id(id)
+                .conversationId(conversationId)
+                .senderId(7L)
+                .kind(MessageKind.IMAGE)
+                .hiddenAt(hiddenAt)
+                .build();
     }
 }

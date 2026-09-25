@@ -32,9 +32,18 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-/** Mã HTTP theo spec mục 6.3. Chỉ áp cho ConversationController (repo chưa có handler chung). */
+/**
+ * Mã HTTP theo spec mục 6.3 (repo chưa có handler chung nên advice này chỉ áp cho controller của
+ * module chat). Thêm controller mới vào module thì phải thêm vào assignableTypes dưới đây, nếu
+ * không mọi exception của nó thành 500 — ConversationExceptionHandlerScopeTest ghim điều đó.
+ */
 @Slf4j
-@RestControllerAdvice(assignableTypes = {ConversationController.class, AttachmentController.class})
+@RestControllerAdvice(
+        assignableTypes = {
+            ConversationController.class,
+            AttachmentController.class,
+            AttachmentDownloadController.class
+        })
 public class ConversationExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
