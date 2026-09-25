@@ -37,6 +37,7 @@
       ['favorites.html', 'Favorites and saved markets', 'FR-014 FR-040 FR-041'],
       ['notifications.html', 'Notifications', 'FR-041 FR-042'],
       ['account.html', 'Account', 'FR-001 FR-006'],
+      ['complete-profile.html', 'Finish your account after Google', 'FR-001 · gap in merged code'],
       ['become-farmer.html', 'Apply to sell', 'FR-002 FR-071 · proposal'],
       ['assistant.html', 'Shopping assistant', 'FR-090 FR-091 FR-092'],
       ['settings.html', 'Settings', 'proposal'],
@@ -61,6 +62,7 @@
     ],
     admin: [
       ['login.html', 'Admin sign in', 'FR-004'],
+      ['verify.html', 'Two-step verification', 'FR-004 · proposal'],
       ['overview.html', 'Admin dashboard', 'FR-070'],
       ['farmers.html', 'Farmer approvals', 'FR-071'],
       ['farmer.html', 'Farmer registration detail', 'FR-071'],
@@ -177,7 +179,12 @@
   PT.header = function (o) {
     var role = o.role || 'guest';
     var u = PT.users[role] || {};
-    var items = NAV[role];
+    /* An admin reading the public site gets the public site's own navigation. The dashboard menu belongs
+       in the panel, and the way back is on the Admin view strip above this header (D-13). Seven dashboard
+       items in the storefront header also pushed the page 31px past its own width at 1024. */
+    var onPublic = !/\/(farmer|admin)\//.test(location.pathname);
+    var navRole = role === 'admin' && onPublic ? 'guest' : role;
+    var items = NAV[navRole];
     var home = role === 'farmer' ? link('farmer/overview.html') : role === 'admin' ? link('admin/overview.html') : link('public/home.html');
     var tools = '';
     if (role !== 'admin') tools += '<a class="ml-hbtn pt-hbtn-search" href="' + link('public/search.html') + '" aria-label="Search">' + I.search() + '</a>';
@@ -234,20 +241,32 @@
     for (var n = 5; n >= 1; n--) out += '<input type="radio" id="' + name + '-' + n + '" name="' + name + '" value="' + n + '"' + (value === n ? ' checked' : '') + '><label for="' + name + '-' + n + '" title="' + RATE_WORDS[n] + '">' + I.star(false) + '<span class="ml-sr">' + n + (n === 1 ? ' star — ' : ' stars — ') + RATE_WORDS[n] + '</span></label>';
     return '<fieldset class="ml-rate" data-rate><legend>' + legend + '</legend><div class="ml-rate-line"><div class="ml-rate-row">' + out + '</div><span class="ml-rate-hint" aria-live="polite">' + RATE_WORDS[value || 0] + '</span></div></fieldset>';
   };
+  /* Who is looking. An admin may read every public page — moderation means seeing a listing exactly as a
+     shopper sees it — but may not buy with that account: the same person approves the stall, hides the
+     review and sets the price (D-13). The server refuses too; hiding a button is not the control (FR-005). */
+  PT.viewRole = function () {
+    var q = new URLSearchParams(location.search).get('as');
+    return q || document.body.getAttribute('data-role') || 'guest';
+  };
+  PT.adminLock = function (what) {
+    return '<p class="pt-locked">' + esc(what) + ' is off for admins. <a href="' + link('admin/overview.html') + '">Your panel</a>, or use a customer account to shop.</p>';
+  };
   PT.productCard = function (p, o) {
     o = o || {};
     var f = PT.farmer(p.farmer), cat = PT.category(p.cat);
     var soldOut = p.status !== 'available' || p.stock === 0;
+    var admin = PT.viewRole() === 'admin';
     var low = !soldOut && p.stock <= 3;
     var href = o.href || link('public/product.html');
     var stock = soldOut ? (p.status === 'unavailable' ? 'Not this week' : 'Back soon') : (low ? 'Only ' : '') + PT.units(p.stock, p.unit, p.plural) + ' left';
     var market = o.market === false ? '' : ' · ' + PT.market(f.markets[0]).name;
     return '<article class="ml-card ml-pcard' + (soldOut ? ' ml-pcard-soldout' : '') + (o.fluid !== false ? ' ml-pcard-fluid' : '') + '">' +
       '<div class="ml-pcard-img"><span class="ml-pcard-cat ml-label">' + cat.name + '</span>' + (p.flag && !soldOut ? '<span class="ml-pcard-flag ml-label">' + p.flag + '</span>' : '') + (soldOut ? '<span class="ml-pcard-flag ml-pcard-flag-out ml-label">' + (p.status === 'unavailable' ? 'Paused' : 'Sold out') + '</span>' : '') +
-      '<button type="button" class="ml-pcard-fav" aria-pressed="' + (p.favorite ? 'true' : 'false') + '" aria-label="' + (p.favorite ? 'Remove from favorites: ' : 'Add to favorites: ') + esc(p.name) + '" data-fav data-name="' + esc(p.name) + '">' + I.heart(p.favorite) + '</button></div>' +
+      '<button type="button" class="ml-pcard-fav" aria-pressed="' + (p.favorite ? 'true' : 'false') + '"' + (admin ? ' disabled aria-label="Favorites are off for admins"' : ' aria-label="' + (p.favorite ? 'Remove from favorites: ' : 'Add to favorites: ') + esc(p.name) + '" data-fav data-name="' + esc(p.name) + '"') + '>' + I.heart(p.favorite) + '</button></div>' +
       '<div class="ml-pcard-body"><h3 class="ml-pcard-name"><a class="pt-plain" href="' + href + '">' + esc(p.name) + '</a></h3><p class="ml-pcard-meta">' + esc(f.stall) + market + '</p>' +
       '<div class="ml-pcard-foot">' + PT.priceTag(p.price, p.unit, p.was) + '<span class="ml-pcard-stock' + (low ? ' ml-pcard-stock-low' : '') + '">' + stock + '</span></div>' +
-      (soldOut ? '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="We will tell you when ' + esc(p.name) + ' is back.">Notify me when back</button>' : '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Added ' + esc(p.name) + ' to your cart." data-toast-action="Undo">Add to cart</button>') +
+      (admin ? PT.adminLock('Ordering')
+        : soldOut ? '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="We will tell you when ' + esc(p.name) + ' is back.">Notify me when back</button>' : '<button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="Added ' + esc(p.name) + ' to your cart." data-toast-action="Undo">Add to cart</button>') +
       '</div></article>';
   };
   PT.stallCard = function (f, o) {
@@ -1063,6 +1082,7 @@
       var t;
       if ((t = e.target.closest('[data-toast]'))) { PT.toast(t.getAttribute('data-toast'), { action: t.getAttribute('data-toast-action'), tone: t.getAttribute('data-toast-tone') }); }
       if ((t = e.target.closest('[data-dismiss]'))) { var bn = t.closest('.ml-banner'); if (bn) bn.remove(); }
+      if ((t = e.target.closest('[data-fav]')) && PT.viewRole() === 'admin') { PT.toast('Favorites are off for admins. Use a customer account to save things.', { tone: 'error' }); return; }
       if ((t = e.target.closest('[data-fav]'))) { var on = t.getAttribute('aria-pressed') !== 'true'; t.setAttribute('aria-pressed', on); t.innerHTML = I.heart(on); var kind = t.getAttribute('data-fav-kind'); PT.toast((on ? (kind === 'market' ? 'Saved ' : 'Added ') : (kind === 'market' ? 'Removed ' : 'Removed ')) + t.getAttribute('data-name') + (on ? (kind === 'market' ? ' as a preferred market.' : ' to your favorites. You will hear when it is back in stock.') : (kind === 'market' ? ' from preferred markets.' : ' from your favorites.'))); }
       if ((t = e.target.closest('[data-chip]'))) { var grp = t.getAttribute('data-chip-group'); if (grp) document.querySelectorAll('[data-chip-group="' + grp + '"]').forEach(function (c) { if (c !== t) { c.setAttribute('aria-pressed', 'false'); var s = c.querySelector('svg'); if (s) s.remove(); } }); var pressed = t.getAttribute('aria-pressed') !== 'true'; if (grp && !pressed) return; t.setAttribute('aria-pressed', pressed); var ic = t.querySelector('svg'); if (pressed && !ic) t.insertAdjacentHTML('afterbegin', I.check()); if (!pressed && ic) ic.remove(); }
       if ((t = e.target.closest('[data-tab]'))) { var tabs = t.closest('[data-tabs]'); tabs.querySelectorAll('[data-tab]').forEach(function (b) { b.setAttribute('aria-selected', b === t); b.tabIndex = b === t ? 0 : -1; }); var id = t.getAttribute('data-tab'); document.querySelectorAll('[data-panel]').forEach(function (p) { if (p.closest('[data-tabs-scope]') && p.closest('[data-tabs-scope]') !== tabs.closest('[data-tabs-scope]')) return; p.hidden = p.getAttribute('data-panel') !== id; }); }
@@ -1085,19 +1105,49 @@
   }
 
   /* ---------- boot: header, announcement, footer, bar ---------- */
+  /* Buying controls written straight into a page rather than generated by a component. Marking them
+     data-buy does two jobs: the prototype can lock them for an admin, and the team can grep for the exact
+     set of actions the server has to refuse as well (FR-005, and Definition of Done item 3: "Kiem tra
+     quyen (role + ownership) o server, khong chi an nut o FE"). */
+  PT.lockForAdmin = function () {
+    if (PT.viewRole() !== 'admin') return;
+    document.querySelectorAll('[data-buy]').forEach(function (b) {
+      b.insertAdjacentHTML('afterend', PT.adminLock(b.getAttribute('data-buy') || 'This'));
+      b.remove();
+    });
+    document.querySelectorAll('[data-fav]').forEach(function (b) {
+      b.disabled = true;
+      b.setAttribute('aria-label', 'Favorites are off for admins');
+      b.removeAttribute('data-fav');
+    });
+  };
   PT.boot = function (o) {
     o = o || {};
     var params = new URLSearchParams(location.search);
     var role = params.get('as') || o.role || document.body.getAttribute('data-role') || 'guest';
     document.body.setAttribute('data-role', role);
     var u = PT.users[role] || {};
-    var shell = /\/(farmer|admin)\/[^/]+$/.test(location.pathname) && !/admin\/login\.html$/.test(location.pathname);
+    // A page under farmer/ or admin/ gets the dashboard shell unless it says otherwise. Sign-in and the
+    // second step are inside admin/ but belong to nobody yet, so they opt out with data-shell="none"
+    // rather than growing a list of exceptions with every new auth screen.
+    var shell = /\/(farmer|admin)\/[^/]+$/.test(location.pathname)
+      && document.body.getAttribute('data-shell') !== 'none'
+      && !/admin\/login\.html$/.test(location.pathname);
     if (shell) {
       mountShell(role, o);
     } else {
       var hdr = PT.header({ role: role, active: o.active, cartCount: role === 'customer' || role === 'guest' ? (o.cartCount != null ? o.cartCount : role === 'customer' ? 3 : 0) : 0, unread: o.unread != null ? o.unread : role === 'customer' ? 2 : role === 'farmer' ? 2 : 0, userName: o.userName || u.name });
       var top = document.getElementById('pt-top');
-      if (top) top.innerHTML = (o.announce !== false && (role === 'guest' || role === 'customer') ? PT.banner('announce', esc(PT.announcements[0].title), esc(PT.announcements[0].text), { close: true }) : '') + hdr;
+      // An admin reading the public site gets a strip saying so, with the way back to the panel and a
+      // shortcut into moderation. It replaces the shopper's announcement band, which is not for them.
+      var adminBar = role === 'admin'
+        ? '<div class="pt-adminbar"><span class="pt-adminbar-tag">Admin view</span>'
+          + '<span>You are reading the public site. Ordering, favorites and reviews are off for this account.</span>'
+          + '<span class="pt-adminbar-acts"><a class="ml-btn ml-btn-secondary ml-btn-sm" href="' + link('admin/moderation.html') + '">Moderate this</a>'
+          + '<a class="ml-btn ml-btn-primary ml-btn-sm" href="' + link('admin/overview.html') + '">Admin panel</a></span></div>'
+        : '';
+      if (top) top.innerHTML = adminBar + (o.announce !== false && (role === 'guest' || role === 'customer') ? PT.banner('announce', esc(PT.announcements[0].title), esc(PT.announcements[0].text), { close: true }) : '') + hdr;
+      PT.lockForAdmin();
       var renderFoot = function () { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(); };
       // pages call boot() from a script placed before #pt-foot, so render the footer once the document is parsed
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderFoot); else renderFoot();
