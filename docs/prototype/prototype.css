@@ -68,7 +68,8 @@ h1, h2, h3, p { margin: 0; }
 .pt-col > .ml-state, .pt-col-3 > .ml-state { flex: none; max-width: none; }
 
 /* map frame (Leaflet + OSM, D-12) */
-.pt-map { position: relative; min-height: 480px; border: 1.5px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface-sunken); overflow: hidden; }
+/* isolation: Leaflet puts z-index 400–1000 on its panes and controls; without a stacking context of its own they paint over the sticky header */
+.pt-map { position: relative; isolation: isolate; min-height: 480px; border: 1.5px solid var(--line-strong); border-radius: var(--radius-md); background: var(--surface-sunken); overflow: hidden; }
 .pt-map-tall { min-height: 620px; }
 .pt-map-sm { min-height: 320px; }
 .pt-map-xs { min-height: 240px; }

@@ -131,7 +131,8 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     else map.setView(CITY, 11);
   }, [markers, center, zoom]);
 
-  return <div ref={hostRef} role="region" aria-label={label} className={Helper.cn('ml-map', className)} />;
+  // isolate: Leaflet đặt z-index 400–1000 cho các lớp bên trong; không cô lập thì chúng đè lên header sticky (z-40)
+  return <div ref={hostRef} role="region" aria-label={label} className={Helper.cn('ml-map isolate', className)} />;
 };
 
 export default MarketMap;
