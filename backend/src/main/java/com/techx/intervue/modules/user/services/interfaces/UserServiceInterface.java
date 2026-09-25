@@ -12,6 +12,9 @@ import com.techx.intervue.modules.user.resources.UserResource;
 public interface UserServiceInterface {
     AuthResult authenticate(LoginRequest request);
 
+    /** FR-008: bước 2 của đăng nhập admin đã bật xác thực hai bước. */
+    AuthResult completeMfaLogin(String mfaToken, String code, String recoveryCode);
+
     AuthResult registerCustomer(CustomerRegisterRequest request);
 
     void logout(Long userId, String accessToken, String refreshToken);

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, type ComponentType } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
-import { Toaster } from 'sonner';
 import {
   BellIcon,
   BoxIcon,
@@ -333,22 +332,6 @@ const FarmerLayout = () => {
           <span>Map data © OpenStreetMap contributors</span>
         </footer>
       </div>
-
-      <Toaster
-        position="top-center"
-        visibleToasts={5}
-        closeButton
-        toastOptions={{
-          duration: 4000,
-          classNames: {
-            toast: '!rounded-md !border-line-strong !bg-surface-raised !text-ink !shadow-float !font-sans',
-            description: '!text-ink-muted',
-            success: '[&_[data-icon]]:!text-success',
-            error: '!border-danger [&_[data-icon]]:!text-danger',
-            warning: '[&_[data-icon]]:!text-warning-ink',
-          },
-        }}
-      />
     </div>
   );
 };

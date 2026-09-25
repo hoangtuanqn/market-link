@@ -241,37 +241,46 @@ const FarmerOverviewPage = () => {
 
       <p className="text-caption text-ink-muted">The sidebar and the header above it are new to the prototype.</p>
 
-      {declineCode && (
-        <Dialog
-          title={`Decline order ${declineCode}?`}
-          tone="danger"
-          keepLabel="Keep order"
-          confirmLabel="Decline order"
-          onClose={() => setDeclineCode(null)}
-          onConfirm={() => {
-            Notification.success({
-              title: 'Order declined',
-              text: `Order ${declineCode} declined. Stock is back in your count.`,
-            });
-            setDeclineCode(null);
-          }}
+      <Dialog
+        open={declineCode !== null}
+        title={`Decline order ${declineCode ?? ''}?`}
+        tone="danger"
+        onClose={() => setDeclineCode(null)}
+        actions={
+          <>
+            <Button variant="secondary" onClick={() => setDeclineCode(null)}>
+              Keep order
+            </Button>
+            <Button
+              variant="danger"
+              onClick={() => {
+                Notification.success({
+                  title: 'Order declined',
+                  text: `Order ${declineCode} declined. Stock is back in your count.`,
+                });
+                setDeclineCode(null);
+              }}
+            >
+              Decline order
+            </Button>
+          </>
+        }
+      >
+        <p>The customer is told right away and the items go back to your stock.</p>
+        <label className="text-ink-muted mt-2 block text-[13px] font-bold" htmlFor="decline-reason">
+          Reason the customer will see
+        </label>
+        <select
+          id="decline-reason"
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+          className="border-line-strong bg-surface-raised text-body mt-1 min-h-11 w-full rounded-sm border-[1.5px] px-3"
         >
-          <p>The customer is told right away and the items go back to your stock.</p>
-          <label className="text-ink-muted mt-2 block text-[13px] font-bold" htmlFor="decline-reason">
-            Reason the customer will see
-          </label>
-          <select
-            id="decline-reason"
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            className="border-line-strong bg-surface-raised text-body mt-1 min-h-11 w-full rounded-sm border-[1.5px] px-3"
-          >
-            {DECLINE_REASONS.map((r) => (
-              <option key={r}>{r}</option>
-            ))}
-          </select>
-        </Dialog>
-      )}
+          {DECLINE_REASONS.map((r) => (
+            <option key={r}>{r}</option>
+          ))}
+        </select>
+      </Dialog>
     </div>
   );
 };

@@ -5,9 +5,9 @@ import Session from '@/utils/session';
 
 /**
  * Đăng xuất trên thiết bị này: backend thu hồi access + refresh token và xoá cookie, FE xoá phiên. Lỗi mạng hay token
- * đã hết hạn vẫn xoá phiên ở trình duyệt.
+ * đã hết hạn vẫn xoá phiên ở trình duyệt. `redirectTo`: trang đăng nhập để quay về (admin dùng /admin/login).
  */
-const useLogout = () => {
+const useLogout = (redirectTo = '/login') => {
   const navigate = useNavigate();
 
   return async () => {
@@ -20,7 +20,7 @@ const useLogout = () => {
     }
     Session.clear();
     Notification.success({ text: message });
-    navigate('/login', { replace: true });
+    navigate(redirectTo, { replace: true });
   };
 };
 

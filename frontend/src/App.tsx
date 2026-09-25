@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
+import AppToaster from './components/AppToaster';
+import AdminLayout from './layout/AdminLayout';
 import FarmerLayout from './layout/FarmerLayout';
 import MainLayout from './layout/MainLayout';
 import HomePage from './pages/Home';
@@ -31,6 +33,10 @@ import ProductDetailPage from './pages/ProductDetail';
 import StallProfilePage from './pages/StallProfile';
 import SearchPage from './pages/Search';
 import FarmerOverviewPage from './pages/FarmerOverview';
+import AdminLoginPage from './pages/AdminLogin';
+import AdminHomePage from './pages/AdminHome';
+import AdminVerifyPage from './pages/AdminVerify';
+import AdminSecurityPage from './pages/AdminSecurity';
 
 const App = () => {
   return (
@@ -76,7 +82,17 @@ const App = () => {
         <Route path="/farmer" element={<FarmerLayout />}>
           <Route index element={<FarmerOverviewPage />} />
         </Route>
+
+        {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
+        <Route path="admin/login" element={<AdminLoginPage />} />
+        {/* FR-008: bước 2 đăng nhập admin, chưa có phiên nên nằm ngoài AdminLayout. */}
+        <Route path="admin/verify" element={<AdminVerifyPage />} />
+        <Route path="admin" element={<AdminLayout />}>
+          <Route index element={<AdminHomePage />} />
+          <Route path="security" element={<AdminSecurityPage />} />
+        </Route>
       </Routes>
+      <AppToaster />
     </BrowserRouter>
   );
 };
