@@ -1,0 +1,57 @@
+{
+  "title": "订单",
+  "intro": "MarketLink 上四个集市的全部订单。管理员只读；只有摊位能推进订单状态。",
+  "days_other": "{{count}} 天",
+  "export": {
+    "button": "导出本期数据",
+    "title": "导出已开始",
+    "text": "CSV 文件覆盖屏幕上的时间段和筛选条件。"
+  },
+  "kpi": {
+    "placed": "已下单",
+    "placedNote": "覆盖 {{count}} 个集市",
+    "completed": "已完成",
+    "declined": "摊位拒单",
+    "cancelled": "顾客取消",
+    "cancelledNote": "全部在截单前",
+    "share": "占本期 {{pct}}%"
+  },
+  "perDay": {
+    "title": "每日下单量",
+    "note": "{{now}} 对比 {{prev}}，同样是 30 天。",
+    "caption": "{{now}} 与 {{prev}} 的每日下单量",
+    "axis": "日期"
+  },
+  "byStatus": {
+    "title": "订单最终去向",
+    "note": "每种状态都有自己的文字和图形，所以不靠长条也能分辨。"
+  },
+  "byMarket": {
+    "title": "按集市"
+  },
+  "list": {
+    "title": "订单列表",
+    "inPeriod": "{{month}} 共 {{count}} 单",
+    "filterLabel": "按状态筛选订单",
+    "market": "集市",
+    "allMarkets": "全部集市",
+    "showing": "显示第 {{from}}–{{to}} 条，共 {{total}} 条"
+  },
+  "filter": {
+    "all": "全部",
+    "completed": "已完成",
+    "open": "进行中",
+    "declined": "已拒单",
+    "cancelled": "已取消"
+  },
+  "customerNo": "顾客 #{{n}}",
+  "col": {
+    "order": "订单",
+    "customer": "顾客",
+    "stall": "摊位",
+    "market": "集市",
+    "pickup": "取货",
+    "total": "合计",
+    "status": "状态"
+  }
+}

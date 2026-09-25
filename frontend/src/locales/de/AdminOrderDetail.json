@@ -1,0 +1,58 @@
+{
+  "allOrders": "Bestellungen",
+  "kicker": "Aufgegeben am {{placed}} · Annahmeschluss {{cutoff}}",
+  "missing": {
+    "title": "Diese Bestellung gibt es nicht mehr",
+    "text": "Sie wurde vielleicht mit dem Konto gelöscht. Öffne sie erneut über die Bestellliste."
+  },
+  "readOnly": {
+    "title": "Ein Administrator liest eine Bestellung; bewegen tut sie der Stand.",
+    "text": "Alle Schaltflächen, die einen Status ändern, liegen auf dem Bildschirm des Standes. Von hier aus kann also nichts eine Bestellung in den falschen Status bringen."
+  },
+  "items": {
+    "title": "Artikel",
+    "note": "Die Preise sind die, die der Stand zum Zeitpunkt der Bestellung verlangt hat. Über MarketLink fließt kein Geld; bezahlt wird am Stand."
+  },
+  "history": {
+    "title": "Alle Status, die sie durchlaufen hat",
+    "by": "{{time}} · {{by}}",
+    "note": "Jede Statusänderung wird samt der Person festgehalten, die sie vorgenommen hat. Genau das liest ein Administrator, wenn Kundschaft und Stand sich uneinig sind."
+  },
+  "stall": {
+    "title": "Der Stand",
+    "stall": "Stand",
+    "contact": "Kontakt",
+    "approval": "Freigabe",
+    "record": "Standakte"
+  },
+  "approval": {
+    "pending": "Wartet auf Freigabe",
+    "approved": "Freigegeben",
+    "rejected": "Abgelehnt",
+    "suspended": "Gesperrt"
+  },
+  "customer": {
+    "title": "Die Kundschaft",
+    "name": "Name",
+    "phone": "Telefon",
+    "orders": "Bestellungen auf MarketLink",
+    "record": "Kundenakte"
+  },
+  "pickup": {
+    "title": "Abholung",
+    "market": "Markt",
+    "slot": "Tag und Zeitfenster",
+    "cutoff": "Annahmeschluss",
+    "total": "Summe"
+  },
+  "noButtons": {
+    "title": "Warum es hier keine Schaltflächen gibt",
+    "text": "Eine Bestellung gehört einem Stand und einer Person. Der Stand hat die Statuswechsel, die Kundschaft darf vor Annahmeschluss stornieren; der Administrator steht nicht auf dieser Liste, also liest dieser Bildschirm nur."
+  },
+  "col": {
+    "product": "Produkt",
+    "quantity": "Menge",
+    "unitPrice": "Einzelpreis",
+    "lineTotal": "Zeilensumme"
+  }
+}

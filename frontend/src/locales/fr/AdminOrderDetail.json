@@ -1,0 +1,58 @@
+{
+  "allOrders": "Commandes",
+  "kicker": "Passée le {{placed}} · clôture le {{cutoff}}",
+  "missing": {
+    "title": "Cette commande n'existe plus",
+    "text": "Elle a peut-être été supprimée avec le compte. Rouvrez-la depuis la liste des commandes."
+  },
+  "readOnly": {
+    "title": "Un administrateur lit une commande ; c'est l'étal qui la fait avancer.",
+    "text": "Tous les boutons qui changent un statut sont sur l'écran de l'étal, donc rien ici ne peut placer une commande dans le mauvais état."
+  },
+  "items": {
+    "title": "Articles",
+    "note": "Les prix sont ceux affichés par l'étal au moment de la commande. Aucun argent ne transite par MarketLink ; le client paie à l'étal."
+  },
+  "history": {
+    "title": "Tous les statuts traversés",
+    "by": "{{time}} · {{by}}",
+    "note": "Chaque changement de statut est enregistré avec son auteur. C'est ce relevé que lit un administrateur quand un client et un étal ne racontent pas la même chose."
+  },
+  "stall": {
+    "title": "L'étal",
+    "stall": "Étal",
+    "contact": "Contact",
+    "approval": "Approbation",
+    "record": "Fiche de l'étal"
+  },
+  "approval": {
+    "pending": "En attente d'approbation",
+    "approved": "Approuvé",
+    "rejected": "Refusé",
+    "suspended": "Suspendu"
+  },
+  "customer": {
+    "title": "Le client",
+    "name": "Nom",
+    "phone": "Téléphone",
+    "orders": "Commandes sur MarketLink",
+    "record": "Fiche du client"
+  },
+  "pickup": {
+    "title": "Retrait",
+    "market": "Marché",
+    "slot": "Jour et créneau",
+    "cutoff": "Clôture",
+    "total": "Total"
+  },
+  "noButtons": {
+    "title": "Pourquoi il n'y a aucun bouton",
+    "text": "Une commande appartient à un étal et à un client. L'étal a les transitions et le client peut annuler avant la clôture ; l'administrateur n'est pas dans cette liste, donc cet écran lit sans toucher."
+  },
+  "col": {
+    "product": "Produit",
+    "quantity": "Quantité",
+    "unitPrice": "Prix unitaire",
+    "lineTotal": "Total ligne"
+  }
+}

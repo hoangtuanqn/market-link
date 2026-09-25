@@ -1,0 +1,58 @@
+{
+  "allOrders": "Pedidos",
+  "kicker": "Realizado el {{placed}} · cierra el {{cutoff}}",
+  "missing": {
+    "title": "Ese pedido ya no está aquí",
+    "text": "Puede que se borrara junto con la cuenta. Vuelve a abrirlo desde la lista de pedidos."
+  },
+  "readOnly": {
+    "title": "Un administrador lee un pedido; quien lo mueve es el puesto.",
+    "text": "Todos los botones que cambian un estado están en la pantalla del propio puesto, así que nada de aquí puede dejar un pedido en el estado equivocado."
+  },
+  "items": {
+    "title": "Artículos",
+    "note": "Los precios son los que tenía el puesto al hacerse el pedido. Por MarketLink no pasa dinero; el cliente paga en el puesto."
+  },
+  "history": {
+    "title": "Todos los estados por los que ha pasado",
+    "by": "{{time}} · {{by}}",
+    "note": "Cada cambio de estado se registra junto con quién lo hizo. Es el registro que lee un administrador cuando un cliente y un puesto no cuentan lo mismo."
+  },
+  "stall": {
+    "title": "El puesto",
+    "stall": "Puesto",
+    "contact": "Contacto",
+    "approval": "Aprobación",
+    "record": "Ficha del puesto"
+  },
+  "approval": {
+    "pending": "Pendiente de aprobación",
+    "approved": "Aprobado",
+    "rejected": "Rechazado",
+    "suspended": "Suspendido"
+  },
+  "customer": {
+    "title": "El cliente",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "orders": "Pedidos en MarketLink",
+    "record": "Ficha del cliente"
+  },
+  "pickup": {
+    "title": "Recogida",
+    "market": "Mercado",
+    "slot": "Día y franja",
+    "cutoff": "Cierre",
+    "total": "Total"
+  },
+  "noButtons": {
+    "title": "Por qué aquí no hay botones",
+    "text": "Un pedido pertenece a un puesto y a un cliente. El puesto tiene las transiciones y el cliente puede cancelar antes del cierre; el administrador no está en esa lista, así que esta pantalla lee y no toca."
+  },
+  "col": {
+    "product": "Producto",
+    "quantity": "Cantidad",
+    "unitPrice": "Precio unitario",
+    "lineTotal": "Total línea"
+  }
+}

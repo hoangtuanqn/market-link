@@ -1,0 +1,58 @@
+{
+  "allOrders": "Pesanan",
+  "kicker": "Dipesan {{placed}} · ditutup {{cutoff}}",
+  "missing": {
+    "title": "Pesanan itu sudah tidak ada",
+    "text": "Mungkin terhapus bersama akunnya. Buka lagi dari daftar pesanan."
+  },
+  "readOnly": {
+    "title": "Admin membaca pesanan; yang memindahkannya adalah lapak.",
+    "text": "Semua tombol yang mengubah status ada di layar lapak itu sendiri, jadi tidak ada di sini yang bisa membuat pesanan masuk ke status yang salah."
+  },
+  "items": {
+    "title": "Barang",
+    "note": "Harga adalah harga lapak saat pesanan dibuat. Tidak ada uang yang lewat MarketLink; pelanggan membayar di lapak."
+  },
+  "history": {
+    "title": "Semua status yang pernah dilalui",
+    "by": "{{time}} · {{by}}",
+    "note": "Setiap perubahan status dicatat beserta pelakunya. Catatan inilah yang dibaca admin ketika pelanggan dan lapak berbeda cerita."
+  },
+  "stall": {
+    "title": "Lapaknya",
+    "stall": "Lapak",
+    "contact": "Kontak",
+    "approval": "Persetujuan",
+    "record": "Data lapak"
+  },
+  "approval": {
+    "pending": "Menunggu persetujuan",
+    "approved": "Disetujui",
+    "rejected": "Ditolak",
+    "suspended": "Ditangguhkan"
+  },
+  "customer": {
+    "title": "Pelanggannya",
+    "name": "Nama",
+    "phone": "Telepon",
+    "orders": "Pesanan di MarketLink",
+    "record": "Data pelanggan"
+  },
+  "pickup": {
+    "title": "Pengambilan",
+    "market": "Pasar",
+    "slot": "Hari dan slot",
+    "cutoff": "Batas waktu",
+    "total": "Total"
+  },
+  "noButtons": {
+    "title": "Kenapa di sini tidak ada tombol",
+    "text": "Satu pesanan milik satu lapak dan satu pelanggan. Lapak yang memindahkan status dan pelanggan boleh membatalkan sebelum batas waktu; admin tidak ada dalam daftar itu, jadi layar ini hanya membaca."
+  },
+  "col": {
+    "product": "Produk",
+    "quantity": "Jumlah",
+    "unitPrice": "Harga satuan",
+    "lineTotal": "Total baris"
+  }
+}
