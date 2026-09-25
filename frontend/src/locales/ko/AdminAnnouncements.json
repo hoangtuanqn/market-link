@@ -1,0 +1,59 @@
+{
+  "overline": "설정",
+  "title": "공지",
+  "intro": "플랫폼 전체에 보내는 한 줄로, 헤더 위 초록 띠와 모두의 알림에 나타납니다. 한 번에 하나만 두어야 읽힙니다.",
+  "link": {
+    "categories": "분류",
+    "feedback": "의견함"
+  },
+  "form": {
+    "title": "새 공지",
+    "headline": "제목",
+    "headlinePlaceholder": "예: Thủ Đức 장터가 10월부터 06:00에 엽니다",
+    "headlineHint": "한 줄, 문장 첫 글자만 대문자, 느낌표 없이. 손글씨로 표시됩니다.",
+    "detail": "내용",
+    "detailPlaceholder": "고객이나 가게에 무엇이 달라지는지 한 문장으로.",
+    "showTo": "보여줄 대상",
+    "aboutMarket": "관련 장터",
+    "wholePlatform": "플랫폼 전체",
+    "from": "노출 시작",
+    "to": "노출 종료",
+    "preview": "미리보기",
+    "previewTitle": "여기에 제목이 나옵니다",
+    "previewText": "내용 줄은 여기, 헤더 위 초록 띠 안에 나옵니다."
+  },
+  "audience": {
+    "Everyone": "모두",
+    "Customers": "고객",
+    "Farmers": "농가"
+  },
+  "list": {
+    "title": "노출 중과 지난 공지"
+  },
+  "col": {
+    "announcement": "공지",
+    "showTo": "보여줄 대상",
+    "window": "기간",
+    "status": "상태"
+  },
+  "status": {
+    "live": "노출 중",
+    "ended": "종료됨"
+  },
+  "action": {
+    "publish": "게시",
+    "saveDraft": "임시 저장",
+    "edit": "수정",
+    "takeDown": "내리기",
+    "reuse": "다시 쓰기"
+  },
+  "empty": {
+    "title": "공지가 없습니다",
+    "text": "하나 올리면 로그인한 모든 사람이 헤더 위 띠에서 보게 됩니다."
+  },
+  "toast": {
+    "published": "공지를 게시했습니다. 지금 헤더에 나오고 있습니다.",
+    "draftSaved": "임시 저장했습니다.",
+    "takenDown": "공지를 내렸습니다."
+  }
+}

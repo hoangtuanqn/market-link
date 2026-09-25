@@ -1,0 +1,59 @@
+{
+  "overline": "Pengaturan",
+  "title": "Pengumuman",
+  "intro": "Satu pesan untuk seluruh platform, tampil di pita hijau di atas kepala halaman dan di notifikasi semua orang. Satu pengumuman aktif dalam satu waktu supaya tetap terbaca.",
+  "link": {
+    "categories": "Kategori",
+    "feedback": "Kotak masukan"
+  },
+  "form": {
+    "title": "Pengumuman baru",
+    "headline": "Judul",
+    "headlinePlaceholder": "mis. Pasar Thủ Đức buka pukul 06.00 mulai Oktober",
+    "headlineHint": "Satu baris, huruf besar hanya di awal, tanpa tanda seru. Ditampilkan dengan tulisan tangan.",
+    "detail": "Rincian",
+    "detailPlaceholder": "Satu kalimat tentang apa yang berubah bagi pelanggan atau lapak.",
+    "showTo": "Tampilkan untuk",
+    "aboutMarket": "Tentang pasar",
+    "wholePlatform": "Seluruh platform",
+    "from": "Tampilkan sejak",
+    "to": "Sampai",
+    "preview": "Pratinjau",
+    "previewTitle": "Judul Anda muncul di sini",
+    "previewText": "Dan baris rinciannya di sini, di pita hijau di atas kepala halaman."
+  },
+  "audience": {
+    "Everyone": "Semua orang",
+    "Customers": "Pelanggan",
+    "Farmers": "Petani"
+  },
+  "list": {
+    "title": "Sudah terbit dan yang lalu"
+  },
+  "col": {
+    "announcement": "Pengumuman",
+    "showTo": "Tampilkan untuk",
+    "window": "Rentang waktu",
+    "status": "Status"
+  },
+  "status": {
+    "live": "Tayang",
+    "ended": "Selesai"
+  },
+  "action": {
+    "publish": "Terbitkan",
+    "saveDraft": "Simpan sebagai draf",
+    "edit": "Ubah",
+    "takeDown": "Turunkan",
+    "reuse": "Pakai lagi"
+  },
+  "empty": {
+    "title": "Belum ada pengumuman",
+    "text": "Terbitkan satu dan semua orang yang masuk akan melihatnya di pita di atas kepala halaman."
+  },
+  "toast": {
+    "published": "Pengumuman terbit. Sekarang sudah tayang di kepala halaman.",
+    "draftSaved": "Tersimpan sebagai draf.",
+    "takenDown": "Pengumuman diturunkan."
+  }
+}

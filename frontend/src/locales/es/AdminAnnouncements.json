@@ -1,0 +1,59 @@
+{
+  "overline": "Ajustes",
+  "title": "Avisos",
+  "intro": "Un mensaje para toda la plataforma, visible en la banda verde sobre la cabecera y en las notificaciones de todos. Un solo aviso activo a la vez para que se lea.",
+  "link": {
+    "categories": "Categorías",
+    "feedback": "Buzón de comentarios"
+  },
+  "form": {
+    "title": "Aviso nuevo",
+    "headline": "Título",
+    "headlinePlaceholder": "p. ej. El mercado de Thủ Đức abre a las 06:00 desde octubre",
+    "headlineHint": "Una línea, con mayúscula solo al principio, sin signos de exclamación. Se muestra a mano.",
+    "detail": "Detalle",
+    "detailPlaceholder": "Una frase sobre qué cambia para los clientes o los puestos.",
+    "showTo": "Mostrar a",
+    "aboutMarket": "Sobre el mercado",
+    "wholePlatform": "Toda la plataforma",
+    "from": "Mostrar desde",
+    "to": "Hasta",
+    "preview": "Vista previa",
+    "previewTitle": "Aquí aparece tu título",
+    "previewText": "Y aquí la línea de detalle, en la banda verde sobre la cabecera."
+  },
+  "audience": {
+    "Everyone": "Todo el mundo",
+    "Customers": "Clientes",
+    "Farmers": "Productores"
+  },
+  "list": {
+    "title": "Publicados y pasados"
+  },
+  "col": {
+    "announcement": "Aviso",
+    "showTo": "Mostrar a",
+    "window": "Periodo",
+    "status": "Estado"
+  },
+  "status": {
+    "live": "Activo",
+    "ended": "Terminado"
+  },
+  "action": {
+    "publish": "Publicar",
+    "saveDraft": "Guardar como borrador",
+    "edit": "Editar",
+    "takeDown": "Retirar",
+    "reuse": "Reutilizar"
+  },
+  "empty": {
+    "title": "No hay avisos",
+    "text": "Publica uno y todas las personas con sesión iniciada lo verán en la banda sobre la cabecera."
+  },
+  "toast": {
+    "published": "Aviso publicado. Ya está activo en la cabecera.",
+    "draftSaved": "Guardado como borrador.",
+    "takenDown": "Aviso retirado."
+  }
+}

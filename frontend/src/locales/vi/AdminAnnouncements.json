@@ -1,0 +1,59 @@
+{
+  "overline": "Cài đặt",
+  "title": "Thông báo",
+  "intro": "Một thông điệp cho toàn sàn, hiện ở dải màu xanh phía trên header và trong phần thông báo của mọi người. Mỗi lần chỉ chạy một thông báo thì người ta mới đọc.",
+  "link": {
+    "categories": "Danh mục",
+    "feedback": "Hộp thư góp ý"
+  },
+  "form": {
+    "title": "Thông báo mới",
+    "headline": "Tiêu đề",
+    "headlinePlaceholder": "ví dụ Chợ Thủ Đức mở cửa từ 06:00 kể từ tháng 10",
+    "headlineHint": "Một dòng, viết hoa như câu thường, không dùng dấu chấm than. Hiển thị bằng chữ viết tay.",
+    "detail": "Nội dung",
+    "detailPlaceholder": "Một câu về việc gì thay đổi với khách hàng hoặc các sạp.",
+    "showTo": "Hiện cho",
+    "aboutMarket": "Về chợ",
+    "wholePlatform": "Toàn sàn",
+    "from": "Hiện từ",
+    "to": "Đến hết",
+    "preview": "Xem trước",
+    "previewTitle": "Tiêu đề của bạn hiện ở đây",
+    "previewText": "Còn dòng nội dung ở đây, trong dải màu xanh phía trên header."
+  },
+  "audience": {
+    "Everyone": "Mọi người",
+    "Customers": "Khách hàng",
+    "Farmers": "Nhà vườn"
+  },
+  "list": {
+    "title": "Đã đăng và đã hết hạn"
+  },
+  "col": {
+    "announcement": "Thông báo",
+    "showTo": "Hiện cho",
+    "window": "Khoảng thời gian",
+    "status": "Trạng thái"
+  },
+  "status": {
+    "live": "Đang chạy",
+    "ended": "Đã kết thúc"
+  },
+  "action": {
+    "publish": "Đăng",
+    "saveDraft": "Lưu nháp",
+    "edit": "Sửa",
+    "takeDown": "Gỡ xuống",
+    "reuse": "Dùng lại"
+  },
+  "empty": {
+    "title": "Chưa có thông báo nào",
+    "text": "Đăng một cái và mọi người đã đăng nhập đều thấy nó ở dải phía trên header."
+  },
+  "toast": {
+    "published": "Đã đăng thông báo. Nó đang chạy trên header rồi.",
+    "draftSaved": "Đã lưu nháp.",
+    "takenDown": "Đã gỡ thông báo xuống."
+  }
+}
