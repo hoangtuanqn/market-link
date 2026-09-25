@@ -81,6 +81,8 @@ public class MessageService implements MessageServiceInterface {
         // Chỉ phát khi đã commit: Plan 2 cắm STOMP vào seam này mà không được phát row chưa tồn
         // tại.
         TransactionHelper.afterCommit(() -> events.messageCreated(conversation, resource));
+        // Trả lời nghĩa là đã đọc tới đây: bên kia thấy "đã xem" mà không cần ta gọi /read.
+        TransactionHelper.afterCommit(() -> events.conversationRead(conversation, meId, now));
         return resource;
     }
 

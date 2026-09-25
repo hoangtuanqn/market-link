@@ -109,6 +109,8 @@ class MessageServiceTest {
         assertThat(thread.readAtOf(7L)).isEqualTo(NOW);
         verify(conversations).save(thread);
         verify(events).messageCreated(thread, result);
+        // Trả lời nghĩa là đã đọc tới đây: bên kia phải nhận "đã xem" (review Plan 1, minor #4)
+        verify(events).conversationRead(thread, 7L, NOW);
     }
 
     @Test
