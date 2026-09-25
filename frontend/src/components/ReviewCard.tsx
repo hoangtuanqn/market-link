@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckIcon } from '@/components/icons';
 import Rating from '@/components/Rating';
@@ -13,10 +14,25 @@ type ReviewCardProps = {
   verified?: boolean;
   reply?: { by: string; date: string; text: string };
   fluid?: boolean;
+  /** Reply/Report buttons, shown under the reply (or the review, when there isn't one). */
+  actions?: ReactNode;
+  /** The stall's own reply-composer form, appended below everything else. */
+  children?: ReactNode;
 };
 
 /** One rating + comment, optionally with the stall's reply (design system `.ml-review`). */
-const ReviewCard = ({ author, date, target, rating, text, verified = true, reply, fluid }: ReviewCardProps) => {
+const ReviewCard = ({
+  author,
+  date,
+  target,
+  rating,
+  text,
+  verified = true,
+  reply,
+  fluid,
+  actions,
+  children,
+}: ReviewCardProps) => {
   const { t } = useTranslation();
   return (
     <Card as="article" className={Helper.cn('flex flex-col gap-2 p-4', fluid ? 'w-full' : 'w-140 max-w-full')}>
@@ -43,6 +59,8 @@ const ReviewCard = ({ author, date, target, rating, text, verified = true, reply
           {reply.text}
         </div>
       )}
+      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
+      {children}
     </Card>
   );
 };

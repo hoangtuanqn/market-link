@@ -18,7 +18,10 @@ const DEFAULTS = [
   { key: 'sell.max', label: 'max', note: undefined, values: ['3', '5', '8', '10'], fallback: '5', unit: 'orders' },
 ] as const;
 
-/** Farmer settings, inside the stall panel shell. */
+/**
+ * Farmer settings, inside the stall panel shell. Not in the SRS, and the Selling defaults overlap FR-060, FR-061 and
+ * FR-067, which put cutoff and slot settings on the stall profile: ask LEAD/FE1 which screen owns them.
+ */
 const FarmerSettingsPage = () => {
   const { t } = useTranslation('FarmerSettings');
   return (
