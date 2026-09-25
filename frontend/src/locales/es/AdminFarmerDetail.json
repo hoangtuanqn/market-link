@@ -8,10 +8,6 @@
   },
   "sentOn": "Enviada el {{date}}",
   "approveText": "Su rol pasa a ser agricultor y se abre un panel de puesto en su cuenta. Conserva todas las funciones de cliente que tiene ahora. Los compradores no ven nada hasta que añada productos y fije un horario de recogida.",
-  "fromCustomer": {
-    "title": "Esta solicitud viene de una cuenta que ya compra en MarketLink.",
-    "text": "Al aprobarla, la misma cuenta se convierte en puesto; no se crea una segunda cuenta. Conserva todas las funciones de cliente que tiene ahora."
-  },
   "suspendedBanner": {
     "title": "Este puesto está suspendido.",
     "text": "Sus productos quedan ocultos para los clientes. Los pedidos ya realizados siguen su curso."
@@ -23,7 +19,6 @@
   "photos": {
     "title": "Fotos de la parcela",
     "alt": "Foto de la parcela",
-    "video": "Ver video",
     "hint": "Comprueba que la parcela de las fotos coincide con el pin del mapa y cultiva lo que indicó la persona solicitante. No revisas licencias, seguridad alimentaria ni afirmaciones de cultivo orgánico."
   },
   "stall": {
@@ -35,8 +30,11 @@
   },
   "history": {
     "title": "Historial",
+    "suspended": "Suspendido",
+    "approved": "Aprobada",
     "sent": "Solicitud enviada",
-    "customer": "Cuenta creada como cliente"
+    "customer": "Cuenta creada como cliente",
+    "byAdmin": "Un administrador"
   },
   "applicant": {
     "title": "Solicitante",
@@ -52,5 +50,9 @@
   "approval": {
     "title": "Qué hace la aprobación",
     "text": "Su rol pasa a ser agricultor y se abre un panel de puesto. Sigue comprando en otros puestos con la misma cuenta. No se publica nada hasta que añada productos y fije un horario de recogida."
+  },
+  "attempts": {
+    "title": "Historial de solicitudes",
+    "text": "Cada solicitud de esta cuenta, con lo que envió y lo que se respondió."
   }
 }

@@ -7,16 +7,23 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
-import { SelectField } from '@/components/ui/input';
-import { APPROVAL_STATUS_META, REJECT_REASONS } from '@/constants/approvalStatus';
+import { ApplicationHistory } from '@/components/ApplicationHistory';
+import { ReasonField } from '@/components/ReasonField';
+import { VideoThumb } from '@/components/VideoThumb';
+import { APPROVAL_STATUS_META, REASON_MAX } from '@/constants/approvalStatus';
+import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
 import type { AdminFarmerDetailType } from '@/types/farmer.types';
+import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; data: AdminFarmerDetailType };
 type DialogKind = 'approve' | 'reject' | 'suspend' | 'reinstate';
+
+/** Mốc trong khối History; nhãn là `history.<key>`. */
+type HistoryKey = 'suspended' | 'approved' | 'sent' | 'customer';
 
 /** Toast sau khi thao tác xong: `AdminFarmers:toast.<key>`. */
 const DONE_TOAST = { approve: 'approved', reject: 'rejected', suspend: 'suspended', reinstate: 'reinstated' } as const;
@@ -28,12 +35,13 @@ const AdminFarmerDetailPage = () => {
   const { t } = useTranslation('AdminFarmerDetail');
   // hộp thoại, trạng thái, lý do từ chối và toast dùng chung với trang danh sách
   const { t: tf } = useTranslation('AdminFarmers');
-  const rejectReasons = REJECT_REASONS.map((key) => tf(`reason.${key}`));
   const { id } = useParams<{ id: string }>();
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
   const [busy, setBusy] = useState(false);
   const [dialog, setDialog] = useState<DialogKind | null>(null);
-  const [rejectReason, setRejectReason] = useState('');
+  /** Lý do dùng cho cả từ chối và đình chỉ — mỗi lúc chỉ mở được một hộp thoại. */
+  const [reason, setReason] = useState('');
+  const [reasonError, setReasonError] = useState<string>();
 
   // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
   const fetchDetail = useCallback(() => {
@@ -50,21 +58,46 @@ const AdminFarmerDetailPage = () => {
   };
 
   const openDialog = (kind: DialogKind) => {
-    setRejectReason(rejectReasons[0]);
+    setReason('');
+    setReasonError(undefined);
     setDialog(kind);
+  };
+
+  /**
+   * Mốc lịch sử dựng từ dữ liệu thật, mới nhất ở trên. Từ chối không có mốc riêng ở đây vì nó thuộc về một lần nộp đơn
+   * cụ thể — xem khối "Lịch sử nộp đơn" ngay dưới.
+   */
+  const historyOf = (f: AdminFarmerDetailType) => {
+    const entries: { key: HistoryKey; status: OrderStatus; at: string; by: string }[] = [];
+    if (f.approvedAt) {
+      entries.push({ key: 'approved', status: 'completed', at: f.approvedAt, by: t('history.byAdmin') });
+    }
+    if (f.suspendedAt) {
+      entries.push({ key: 'suspended', status: 'declined', at: f.suspendedAt, by: t('history.byAdmin') });
+    }
+    entries.push({ key: 'sent', status: 'placed', at: f.createdAt, by: f.contactPerson });
+    entries.push({ key: 'customer', status: 'accepted', at: f.customerSince, by: f.contactPerson });
+    return entries;
   };
 
   const confirmDialog = async () => {
     if (!dialog) return;
+    // Server bắt buộc reason cho cả hai (@NotBlank, tối đa 255) — chặn ở đây để admin không mất hộp thoại.
+    const written = reason.trim();
+    if (dialog === 'reject' || dialog === 'suspend') {
+      if (!written) return setReasonError(tf(`${dialog}.required`));
+      if (written.length > REASON_MAX) return setReasonError(tf(`${dialog}.tooLong`, { max: REASON_MAX }));
+      setReasonError(undefined);
+    }
     setBusy(true);
     try {
       const response =
         dialog === 'approve'
           ? await AdminFarmerApi.approve(Number(id))
           : dialog === 'reject'
-            ? await AdminFarmerApi.reject(Number(id), rejectReason)
+            ? await AdminFarmerApi.reject(Number(id), written)
             : dialog === 'suspend'
-              ? await AdminFarmerApi.suspend(Number(id))
+              ? await AdminFarmerApi.suspend(Number(id), written)
               : await AdminFarmerApi.reinstate(Number(id));
       setStatus({ kind: 'ready', data: response.data });
       setDialog(null);
@@ -120,16 +153,18 @@ const AdminFarmerDetailPage = () => {
                   <p className="text-overline text-ink-muted uppercase">
                     {t('sentOn', { date: formatDate(new Date(f.createdAt)) })}
                   </p>
-                  <h1 className="text-h1">{f.stallName}</h1>
-                  <span
-                    className={Helper.cn(
-                      'inline-flex w-fit items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold',
-                      meta.className,
-                    )}
-                  >
-                    <Icon size={14} />
-                    {tf(`status.${f.approvalStatus}`)}
-                  </span>
+                  <div className="flex items-center gap-4">
+                    <h1 className="text-h1">{f.stallName}</h1>
+                    <span
+                      className={Helper.cn(
+                        'inline-flex w-fit items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold',
+                        meta.className,
+                      )}
+                    >
+                      <Icon size={14} />
+                      {tf(`status.${f.approvalStatus}`)}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {f.approvalStatus === 'pending' && (
@@ -155,11 +190,9 @@ const AdminFarmerDetailPage = () => {
                 </div>
               </div>
 
-              <Banner title={t('fromCustomer.title')}>{t('fromCustomer.text')}</Banner>
-
               {f.approvalStatus === 'suspended' && (
                 <Banner variant="warning" title={t('suspendedBanner.title')}>
-                  {t('suspendedBanner.text')}
+                  {f.suspendReason ?? t('suspendedBanner.text')}
                 </Banner>
               )}
 
@@ -184,16 +217,8 @@ const AdminFarmerDetailPage = () => {
                             />
                           </a>
                         ))}
-                        {f.videoUrl && (
-                          <a
-                            href={fileUrl(f.videoUrl)}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="border-line-strong bg-surface-sunken text-small flex size-28 flex-col items-center justify-center gap-1 rounded-sm border-[1.5px] text-center"
-                          >
-                            {t('photos.video')}
-                          </a>
-                        )}
+                        {/* Video xem ngay tại chỗ, không phải mở tab mới rồi mất ngữ cảnh đang duyệt. */}
+                        {f.videoUrl && <VideoThumb url={f.videoUrl} className="size-28" />}
                       </div>
                       <p className="text-small text-ink-muted">{t('photos.hint')}</p>
                     </section>
@@ -221,27 +246,42 @@ const AdminFarmerDetailPage = () => {
                     </Card>
                   </section>
 
+                  {/* docs/prototype/admin/farmer.html: mỗi mốc là một chấm màu theo trạng thái + icon,
+                      rồi tiêu đề và dòng "ngày · ai làm". Mới nhất ở trên. */}
+                  {f.history.length > 0 && (
+                    <section className="flex flex-col gap-3">
+                      <h2 className="text-h2">{t('attempts.title')}</h2>
+                      <p className="text-small text-ink-muted">{t('attempts.text')}</p>
+                      <ApplicationHistory entries={f.history} statusLabel={(s) => tf(`status.${s}`)} />
+                    </section>
+                  )}
+
                   <section className="flex flex-col gap-3">
                     <h2 className="text-h2">{t('history.title')}</h2>
                     <ol className="m-0 flex flex-col p-0">
-                      <li className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
-                        <span className="bg-surface-sunken grid size-7 flex-none place-items-center rounded-full" />
-                        <div>
-                          <b className="text-[15px]">{t('history.sent')}</b>
-                          <p className="text-ink-muted mt-0.5 text-[13px]">{formatDate(new Date(f.createdAt))}</p>
-                        </div>
-                      </li>
-                      <li className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
-                        <span
-                          aria-hidden="true"
-                          className="border-line-strong absolute -top-2 left-3.25 h-4 border-l-2 border-dotted"
-                        />
-                        <span className="bg-surface-sunken grid size-7 flex-none place-items-center rounded-full opacity-45" />
-                        <div>
-                          <b className="text-[15px]">{t('history.customer')}</b>
-                          <p className="text-ink-muted mt-0.5 text-[13px]">{formatDate(new Date(f.customerSince))}</p>
-                        </div>
-                      </li>
+                      {historyOf(f).map((entry, i) => {
+                        const meta = ORDER_STATUS_META[entry.status];
+                        const Icon = meta.icon;
+                        return (
+                          <li key={entry.key} className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
+                            {i > 0 && (
+                              <span
+                                aria-hidden="true"
+                                className="border-line-strong absolute -top-2 left-3.25 h-4 border-l-2 border-dotted"
+                              />
+                            )}
+                            <span className={`grid size-7 flex-none place-items-center rounded-full ${meta.className}`}>
+                              <Icon size={14} />
+                            </span>
+                            <div>
+                              <b className="text-[15px]">{t(`history.${entry.key}`)}</b>
+                              <time className="text-ink-muted mt-0.5 block text-[13px]">
+                                {formatDate(new Date(entry.at))} · {entry.by}
+                              </time>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ol>
                   </section>
                 </div>
@@ -280,7 +320,7 @@ const AdminFarmerDetailPage = () => {
               {dialog === 'reject' ? tf('keepReviewing') : tf('notYet')}
             </Button>
             <Button
-              variant={dialog === 'reject' || dialog === 'suspend' ? 'danger' : 'primary'}
+              variant={dialog === 'reject' || dialog === 'suspend' ? 'dangerFill' : 'primary'}
               onClick={confirmDialog}
               disabled={busy}
             >
@@ -292,13 +332,15 @@ const AdminFarmerDetailPage = () => {
         <div className="flex flex-col gap-3">
           {/* duyệt từ trang chi tiết nói rõ hơn: vai đổi thành Farmer, vẫn giữ mọi thứ của Customer */}
           <p>{dialog === 'approve' ? t('approveText') : dialog ? tf(`${dialog}.text`) : ''}</p>
-          {dialog === 'reject' && (
-            <SelectField
-              id="reject-reason"
-              label={tf('reject.reason')}
-              value={rejectReason}
-              onChange={(e) => setRejectReason(e.target.value)}
-              options={rejectReasons}
+          {(dialog === 'reject' || dialog === 'suspend') && (
+            <ReasonField
+              kind={dialog}
+              value={reason}
+              error={reasonError}
+              onChange={(next) => {
+                setReason(next);
+                if (reasonError) setReasonError(undefined);
+              }}
             />
           )}
         </div>

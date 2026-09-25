@@ -8,10 +8,6 @@
   },
   "sentOn": "Gesendet am {{date}}",
   "approveText": "Die Rolle wird zu Farmer, und im Konto öffnet sich ein Stand-Bereich. Alle Kundenfunktionen bleiben erhalten. Käufer sehen nichts, bis Produkte eingestellt und ein Abholfenster festgelegt sind.",
-  "fromCustomer": {
-    "title": "Diese Bewerbung kommt von einem Konto, das bereits auf MarketLink einkauft.",
-    "text": "Mit der Freigabe wird dasselbe Konto zum Stand; es entsteht kein zweites Konto. Alle Kundenfunktionen bleiben erhalten."
-  },
   "suspendedBanner": {
     "title": "Dieser Stand ist gesperrt.",
     "text": "Seine Produkte bleiben für Kunden verborgen. Bereits aufgegebene Bestellungen laufen normal weiter."
@@ -23,7 +19,6 @@
   "photos": {
     "title": "Fotos der Anbaufläche",
     "alt": "Foto der Anbaufläche",
-    "video": "Video ansehen",
     "hint": "Prüfe, ob die Fläche auf den Fotos zur Nadel auf der Karte passt und das anbaut, was angegeben wurde. Lizenzen, Lebensmittelsicherheit oder Bio-Angaben prüfst du nicht."
   },
   "stall": {
@@ -35,8 +30,11 @@
   },
   "history": {
     "title": "Verlauf",
+    "suspended": "Gesperrt",
+    "approved": "Freigegeben",
     "sent": "Bewerbung gesendet",
-    "customer": "Konto als Kunde erstellt"
+    "customer": "Konto als Kunde erstellt",
+    "byAdmin": "Ein Admin"
   },
   "applicant": {
     "title": "Antragsteller",
@@ -52,5 +50,9 @@
   "approval": {
     "title": "Was die Freigabe bewirkt",
     "text": "Die Rolle wird zu Farmer, und ein Stand-Bereich öffnet sich. Mit demselben Konto kann weiter bei anderen Ständen eingekauft werden. Nichts wird angezeigt, bis Produkte eingestellt und ein Abholfenster festgelegt sind."
+  },
+  "attempts": {
+    "title": "Antragsverlauf",
+    "text": "Jeder Antrag dieses Kontos, mit Inhalt und Antwort."
   }
 }

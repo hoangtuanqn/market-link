@@ -8,10 +8,6 @@
   },
   "sentOn": "Dikirim {{date}}",
   "approveText": "Perannya menjadi Petani dan panel lapak terbuka di akunnya. Semua fitur pelanggan yang dimiliki tetap ada. Pembeli belum melihat apa pun sampai produk ditambahkan dan jam pengambilan diatur.",
-  "fromCustomer": {
-    "title": "Pengajuan ini berasal dari akun yang sudah berbelanja di MarketLink.",
-    "text": "Menyetujui akan mengubah akun yang sama menjadi lapak; tidak ada akun kedua yang dibuat. Semua fitur pelanggan yang dimiliki tetap ada."
-  },
   "suspendedBanner": {
     "title": "Lapak ini ditangguhkan.",
     "text": "Produknya tetap tersembunyi dari pelanggan. Pesanan yang sudah masuk tetap berjalan."
@@ -23,7 +19,6 @@
   "photos": {
     "title": "Foto lahan",
     "alt": "Foto lahan",
-    "video": "Tonton video",
     "hint": "Periksa apakah lahan di foto cocok dengan pin di peta dan menanam apa yang dicantumkan pemohon. Anda tidak memeriksa izin, keamanan pangan, atau klaim organik."
   },
   "stall": {
@@ -35,8 +30,11 @@
   },
   "history": {
     "title": "Riwayat",
+    "suspended": "Ditangguhkan",
+    "approved": "Disetujui",
     "sent": "Pengajuan dikirim",
-    "customer": "Akun dibuat sebagai pelanggan"
+    "customer": "Akun dibuat sebagai pelanggan",
+    "byAdmin": "Admin"
   },
   "applicant": {
     "title": "Pemohon",
@@ -52,5 +50,9 @@
   "approval": {
     "title": "Apa yang terjadi saat disetujui",
     "text": "Perannya menjadi Petani dan panel lapak terbuka. Mereka tetap bisa membeli dari lapak lain dengan akun yang sama. Belum ada yang tampil sampai produk ditambahkan dan jam pengambilan diatur."
+  },
+  "attempts": {
+    "title": "Riwayat lamaran",
+    "text": "Setiap kali akun ini melamar, beserta isinya dan jawabannya."
   }
 }
