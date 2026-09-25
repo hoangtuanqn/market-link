@@ -4,8 +4,47 @@
  */
 import type { BarRow } from '@/components/ui/bar-list';
 import type { StockRow } from '@/components/ui/stock-list';
+import type { NotificationKind } from '@/constants/notificationKind';
 import type { OrderStatus } from '@/types/order.types';
 import { product } from './catalog';
+
+export type FarmerNotificationType = {
+  kind: NotificationKind;
+  title: string;
+  text?: string;
+  time: string;
+  unread?: boolean;
+};
+
+/** FR-042 — new, edited or cancelled orders, and admin announcements (proposal, not yet in D-11). */
+export const farmerNotifications: FarmerNotificationType[] = [
+  {
+    kind: 'placed',
+    title: 'New order #ML-0421 from Minh Anh',
+    text: '3 items · Sat 26/09 · 07:00–07:30. Closes at 19:00 on 25/09.',
+    time: '09:12',
+    unread: true,
+  },
+  {
+    kind: 'placed',
+    title: 'New order #ML-0420 from Trần Phúc',
+    text: '2 items · Sat 26/09 · 07:30–08:00.',
+    time: '08:40',
+    unread: true,
+  },
+  {
+    kind: 'cancelled',
+    title: 'Order #ML-0360 was cancelled by Kim Chi',
+    text: '1 bunch of Thai basil went back to stock.',
+    time: '11/09',
+  },
+  {
+    kind: 'announce',
+    title: 'Thảo Điền Weekend Market is closed on Sunday 04/10',
+    text: 'Orders for that day move to Saturday 03/10.',
+    time: '23/09',
+  },
+];
 
 export type FarmerOrderLine = { productId: number; qty: number };
 
