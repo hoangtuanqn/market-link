@@ -241,6 +241,7 @@ make help   # list every command
 | `make infra` | Only MySQL + Redis (same as `docker compose up -d`) |
 | `make tools` | Adminer at http://localhost:8081, RedisInsight at http://localhost:5540 |
 | RabbitMQ UI | http://localhost:15672 (user/password from `RABBITMQ_USER` / `RABBITMQ_PASSWORD` in `.env`) — realtime broker for chat and notifications (`/user/topic/notifications`, see `docs/api-contract.md` §9), runs with the stack |
+| Chat photos | Stored on the `chat-uploads` volume at `CHAT_UPLOAD_DIR` (default `/var/lib/marketlink/chat`), **not** under `/uploads`. They are only served through `GET /api/v1/attachments/{id}`, which checks that you are in the conversation. Limits: `CHAT_MAX_UPLOAD_BYTES` (5 MB), `CHAT_MESSAGES_PER_MINUTE` (30), `CHAT_IMAGES_PER_HOUR` (10), `CHAT_CONVERSATIONS_PER_HOUR` (20) |
 | `make logs s=backend` | Follow the logs of one service |
 | `make be-test` | Run backend tests in the container |
 | `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
@@ -283,3 +284,6 @@ docker exec -it intervue-redis redis-cli
 | Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
 | Backend log `Chat realtime: app.chat.rabbitmq.host is empty` when running on your machine (way A) | Backend runs outside Docker and `RABBITMQ_HOST` is not set | Chat still works with the in-app broker; for the RabbitMQ relay, `export RABBITMQ_HOST=localhost` and map port 61613 in `docker-compose.yml` |
 | `TCP connection failure in session _system_` repeating | RabbitMQ not healthy yet, or the STOMP plugin is off | `docker compose logs rabbitmq`; check `rabbitmq_stomp` in `rabbitmq-plugins list -e`. The backend keeps serving REST and reconnects on its own |
+| Chat photos return 404 after rebuilding containers | The `chat-uploads` volume was removed; the database rows survive but the files are gone | Stop with `docker compose down` (**without** `-v`) to keep volumes. Photos live on `chat-uploads`, separate from `uploads-data` |
+| `POST /api/v1/attachments` returns 415 for a photo that opens fine on your machine | The file is not JPEG/PNG/WebP — the server reads magic bytes and ignores the file extension and `Content-Type` | Re-save it as JPEG or PNG |
+| `<img src="/api/v1/attachments/5">` shows a broken image | That endpoint checks the JWT in the `Authorization` header, and `<img>` does not send it | `fetch` the URL with the header, then render `URL.createObjectURL(blob)` |

@@ -1,0 +1,175 @@
+{
+  "title": "Datenschutzerklärung",
+  "lead": "Was MarketLink über dich speichert, warum es gespeichert wird und wer es sehen darf. Geschrieben anhand der Tabellen, die das Produkt tatsächlich hat, nicht nach einer Vorlage.",
+  "meta": "Version 0.1 · Zuletzt aktualisiert {{date}} · Gilt für Customers, Farmers und Besucher",
+  "onThisPage": "Auf dieser Seite",
+  "seeAlso": "Lies auch die <link>Nutzungsbedingungen</link>. Sie behandeln Reservierung und Abholung.",
+  "sections": [
+    {
+      "id": "collect",
+      "title": "Was wir speichern",
+      "blocks": [
+        {
+          "p": "Alles unten ist etwas, das das Produkt heute speichert. Nichts wird für Werbung erhoben, und nichts wird weiterverkauft."
+        },
+        {
+          "facts": {
+            "items": [
+              [
+                "Dein Konto",
+                "Vollständiger Name, E-Mail, Telefonnummer und Adresse. Dein Passwort wird nie so gespeichert, wie du es eingetippt hast, sondern nur als Hash."
+              ],
+              [
+                "Der Stand eines Farmers",
+                "Standname, Ansprechperson, Beschreibung, die Märkte und Tage, an denen du verkaufst, deine Abholfenster und die Kartenposition deines Standes."
+              ],
+              [
+                "Deine Bestellungen",
+                "Was du reserviert hast und wie viel, Stand und Markt, dein Abholdatum und die Uhrzeit, die Notiz, die du dem Stand hinterlassen hast, und die Summen. Produktnamen und Preise werden in die Bestellung kopiert, damit sie richtig lesbar bleibt, wenn der Stand sie später ändert."
+              ],
+              ["Bestellverlauf", "Jede Statusänderung an einer Bestellung, mit Zeit und Urheber."],
+              [
+                "Bewertungen",
+                "Deine Wertung, dein Text, aus welcher Bestellung sie stammt, und eine etwaige Antwort des Standes."
+              ],
+              ["Favoriten", "Die Stände, Produkte und Märkte, die du gespeichert hast."],
+              [
+                "Nachrichten",
+                "Was du und ein Stand euch in Nachrichten schreibt, und wann jede Nachricht gelesen wurde."
+              ],
+              [
+                "Benachrichtigungen",
+                "Die Nachrichten, die dir zu deinen Bestellungen und zu neuer Ware geschickt werden, und ob du sie gelesen hast."
+              ],
+              [
+                "Assistenz-Chats",
+                "Deine Nachrichten, die Antworten des Assistenten und die Absicht, die er zugeordnet hat. Siehe Abschnitt 5."
+              ],
+              [
+                "Feedback",
+                "Die Art, die du gewählt hast, und was du geschrieben hast. Feedback kann ohne Konto gesendet werden und trägt dann kein Konto mit sich."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink fragt keine Kartendaten, Bankdaten oder Zahlungsinformationen ab und speichert sie nicht, weil die Zahlung am Stand erfolgt und nie über das Produkt läuft."
+        }
+      ]
+    },
+    {
+      "id": "why",
+      "title": "Warum wir es speichern",
+      "blocks": [
+        {
+          "p": "Dein Name und deine Telefonnummer gibt es, damit der Stand weiß, wer abholt, und dich am Marktmorgen erreichen kann. Deine Adresse gibt es, um zu zeigen, wie weit ein Markt entfernt ist, und um die Route vorauszufüllen. Deine E-Mail ist dein Anmeldeweg und der Weg, auf dem du von einer Bestellung erfährst."
+        },
+        {
+          "p": "Bestellungen und ihren Verlauf gibt es, damit beide Seiten sehen, was vereinbart wurde und wann es sich geändert hat. Bewertungen gibt es, damit andere Käufer einen Stand einschätzen können. Favoriten gibt es, damit dir Bescheid gegeben werden kann, wenn etwas, das du wolltest, wieder da ist."
+        }
+      ]
+    },
+    {
+      "id": "who",
+      "title": "Wer es sehen kann",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "Der Stand, bei dem du bestellst",
+                "Sieht deine Bestellung und genug Kontaktdaten, um sie am Markttag zu übergeben, sowie die Nachrichten, die du ihm schickst. Deine Bestellungen bei anderen Ständen sieht er nicht."
+              ],
+              [
+                "Andere Käufer",
+                "Sehen deine Bewertungen und den Namen daran. Deine Bestellungen, Kontaktdaten und Favoriten sehen sie nicht."
+              ],
+              [
+                "Ein Admin",
+                "Sieht Konten und Farmer-Anträge, um sie freizugeben, zu sperren oder zu deaktivieren, und sieht Einträge und Bewertungen, um sie zu moderieren. Admin-Berichte sind Anzahlen und Summen, keine Listen, wer was gekauft hat."
+              ],
+              [
+                "Alle anderen",
+                "Nichts. Bestellungen, Kontaktdaten, Favoriten und Benachrichtigungen erscheinen nie auf einer öffentlichen Seite."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Jeder Bildschirm, der eine ID entgegennimmt, prüft auf dem Server, ob der Datensatz dir gehört, bevor er ihn anzeigt. Eine geänderte Zahl in der Adressleiste öffnet also nicht die Bestellung einer anderen Person."
+        }
+      ]
+    },
+    {
+      "id": "sessions",
+      "title": "Cookies und Sitzungen",
+      "blocks": [
+        {
+          "p": "Bei der Anmeldung stellt MarketLink ein kurzlebiges Token aus, das dein Browser mit jeder Anfrage mitschickt, und ein längerlebiges Token in einem Cookie, damit du nicht alle paar Minuten abgemeldet wirst. Deine angemeldete Sitzung wird zusätzlich auf dem Server zwischengespeichert, damit die Anmeldung schnell bleibt. Das Abmelden beendet beides."
+        },
+        {
+          "p": "Dein Warenkorb bleibt in deinem eigenen Browser, bis du bestellst. Nichts aus dem Warenkorb erreicht den Server, bevor du abschickst."
+        },
+        {
+          "p": "MarketLink setzt keine Werbe- oder Analyse-Cookies."
+        }
+      ]
+    },
+    {
+      "id": "assistant",
+      "title": "Der Einkaufsassistent",
+      "blocks": [
+        {
+          "p": "Der Assistent beantwortet Fragen zu Märkten, Ständen, Abholfenstern und Produkten. Beide Seiten des Gesprächs werden gespeichert, zusammen mit der Absicht, die der Assistent deiner Frage zugeordnet hat, damit das Team nachvollziehen kann, warum er so geantwortet hat."
+        },
+        {
+          "p": "Auch ohne Konto kann man ihn nutzen. Damit ein Gespräch zusammenbleibt, hält dein Browser einen zufälligen Sitzungsschlüssel, der an kein Konto gebunden ist; bist du angemeldet, hängt das Gespräch stattdessen an deinem Konto."
+        },
+        {
+          "p": "Deine Worte werden nie in eine Datenbankabfrage verwandelt. Der Assistent ordnet deine Frage einer festen Menge vorbereiteter Abfragen zu, deshalb ist das, was du tippst, immer nur ein Suchbegriff. Frag ihn nach Ware und Abholzeiten, nicht nach Privatem."
+        }
+      ]
+    },
+    {
+      "id": "third",
+      "title": "Was diese Seiten von außerhalb laden",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "OpenStreetMap",
+                "Die Kartenkacheln kommen von OpenStreetMap-Servern, die deine IP-Adresse sehen und ungefähr, welchen Teil der Karte du ansiehst. Die Kartendaten sind © OpenStreetMap-Mitwirkende. Der Routenlink öffnet OpenStreetMap in einem neuen Tab."
+              ],
+              [
+                "Google Fonts",
+                "Die beiden Schriften werden von Google Fonts geladen, das beim Öffnen der Seite deine IP-Adresse sieht."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink nutzt kein Google Maps, es gibt also keinen Karten-Key und kein Konto hinter der Karte."
+        }
+      ]
+    },
+    {
+      "id": "choices",
+      "title": "Deine Möglichkeiten",
+      "blocks": [
+        {
+          "p": "Name, Telefon, E-Mail und Adresse kannst du jederzeit auf deiner Kontoseite ansehen und ändern. Du kannst alles aus den Favoriten entfernen und Benachrichtigungen als gelesen markieren."
+        },
+        {
+          "p": "Manches bleibt auch nach einer Änderung: Eine Bestellung behält die Produktnamen und Preise, mit denen sie aufgegeben wurde, und ihr Statusverlauf wird nicht umgeschrieben, weil sich beide Seiten darauf verlassen. Eine Bewertung, die du geschrieben hast, bleibt, bis du oder ein Admin sie entfernt."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Eine Frage zu deinen Daten?",
+    "text": "Fragen zu einer Bestellung gehen direkt an den Stand. Alles zu dieser Erklärung kommt zum Team.",
+    "terms": "Nutzungsbedingungen",
+    "contact": "Kontakt"
+  }
+}

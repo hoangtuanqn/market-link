@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import useLogout from '@/hooks/useLogout';
 import { Link } from 'react-router';
 import { CUSTOMER_NAV, GUEST_NAV, type NavItem } from '@/constants/nav';
-import { BellIcon, CartIcon, MenuIcon, SearchIcon } from '@/components/icons';
+import { BellIcon, CartIcon, ChatIcon, MenuIcon, SearchIcon } from '@/components/icons';
 import Logo from '@/components/Logo';
+import type { Tier } from '@/types/achievement.types';
 import { ButtonLink } from '@/components/ui/button';
 import Helper from '@/utils/helper';
 import MenuMobile from './MenuMobile';
@@ -23,7 +24,11 @@ type HeaderProps = {
   userName?: string;
   userEmail?: string;
   avatarUrl?: string;
+  /** Hạng thành tích của chính mình: viền quanh ảnh trên header và drawer. */
+  tier?: Tier;
   settingsTo?: string;
+  /** Hộp thư theo vai: Customer /messages, Farmer /farmer/messages. */
+  messagesTo?: string;
   cartCount?: number;
   unreadCount?: number;
 };
@@ -33,7 +38,9 @@ const Header = ({
   userName = '',
   userEmail,
   avatarUrl,
+  tier,
   settingsTo = '/settings',
+  messagesTo = '/messages',
   cartCount = 0,
   unreadCount = 0,
 }: HeaderProps) => {
@@ -43,7 +50,12 @@ const Header = ({
   const signedIn = variant === 'customer';
   const navItems = signedIn ? CUSTOMER_NAV : GUEST_NAV;
   const drawerItems: NavItem[] = signedIn
-    ? [...navItems, { label: 'profile', to: '/account' }, { label: 'settings', to: settingsTo }]
+    ? [
+        ...navItems,
+        { label: 'messages', to: messagesTo },
+        { label: 'profile', to: '/account' },
+        { label: 'settings', to: settingsTo },
+      ]
     : [...navItems, { label: 'signIn', to: '/login' }, { label: 'createAccount', to: '/register/customer' }];
 
   return (
@@ -66,6 +78,12 @@ const Header = ({
             <Link to="/search" aria-label={t('header.search')} className={Helper.cn(iconButton, 'max-md:hidden')}>
               <SearchIcon />
             </Link>
+            {/* Tin nhắn và thông báo là hai biểu tượng riêng, không gộp (spec chat §9.1) */}
+            {signedIn && (
+              <Link to={messagesTo} aria-label={t('header.messages')} className={iconButton}>
+                <ChatIcon />
+              </Link>
+            )}
             {signedIn && (
               <Link
                 to="/notifications"
@@ -99,6 +117,7 @@ const Header = ({
                 name={userName}
                 email={userEmail}
                 avatarUrl={avatarUrl}
+                tier={tier}
                 settingsTo={settingsTo}
                 onSignOut={logout}
               />
@@ -123,7 +142,7 @@ const Header = ({
       {menuOpen && (
         <MenuMobile
           items={drawerItems}
-          account={signedIn ? { name: userName, email: userEmail, avatarUrl } : undefined}
+          account={signedIn ? { name: userName, email: userEmail, avatarUrl, tier } : undefined}
           onClose={() => setMenuOpen(false)}
           onSignOut={signedIn ? logout : undefined}
         />

@@ -63,10 +63,6 @@
     "intro": "Hiện trong menu và cho các sạp trên đơn hàng của bạn. JPEG, PNG hoặc ảnh chụp từ camera.",
     "upload": "Tải ảnh lên",
     "take": "Chụp ảnh",
-    "remove": "Gỡ ảnh",
-    "removing": "Đang gỡ…",
-    "removed": "Đã gỡ ảnh của bạn.",
-    "removeFailed": "Không gỡ được ảnh. Vui lòng thử lại.",
     "notUsed": "Không dùng được ảnh"
   },
   "photoErrors": {
@@ -119,5 +115,70 @@
   "crop": {
     "frame": "Căn chỉnh ảnh. Kéo, hoặc dùng phím mũi tên để di chuyển và phím cộng hoặc trừ để phóng to thu nhỏ.",
     "zoom": "Thu phóng"
+  },
+  "achievements": {
+    "title": "Thành tích cá nhân",
+    "intro": "Tính từ các đơn bạn đã nhận tại sạp. Chỉ mình bạn thấy các con số này.",
+    "loading": "Đang tải thành tích…",
+    "loadFailed": "Không tải được thành tích.",
+    "completed": "Đơn đã nhận",
+    "cancelled": "Bạn đã huỷ",
+    "declined": "Sạp từ chối",
+    "inProgress": "Đang xử lý",
+    "spent": "Tổng đã chi",
+    "rate": "Tỉ lệ hoàn tất",
+    "rateNone": "—",
+    "nextTitle": "Đang tiến tới hạng {{tier}}",
+    "ofGoal": "{{value}} / {{goal}}",
+    "rateNeeded": "Bạn cũng cần tỉ lệ hoàn tất từ {{rate}}% trở lên. Đơn bị sạp từ chối không bao giờ bị tính cho bạn.",
+    "top": "Bạn đang ở hạng cao nhất. Cảm ơn bạn đã đi chợ cùng MarketLink.",
+    "youAreHere": "Hạng của bạn",
+    "perks": {
+      "bronze": "Viền đồng quanh ảnh đại diện",
+      "silver": "Viền bạc dày hơn",
+      "gold": "Viền vàng kèm dấu sao",
+      "diamond": "Viền kim cương lấp lánh kèm viên đá"
+    },
+    "unavailable": {
+      "title": "Chưa có số liệu đơn hàng",
+      "text": "Hạng và các con số sẽ tự cập nhật khi đơn hàng của bạn được ghi nhận."
+    },
+    "privacy": "Sạp và người mua khác thấy hạng cạnh tên bạn, không bao giờ thấy các con số này.",
+    "hero": {
+      "overline": "Thẻ thành viên của bạn",
+      "line_one": "{{name}}, bạn đã nhận {{count}} đơn và chi {{amount}} ở chợ.",
+      "line_other": "{{name}}, bạn đã nhận {{count}} đơn và chi {{amount}} ở chợ.",
+      "welcome": "Chào mừng {{name}} tới chợ. Nhận những đơn đầu tiên để lên hạng nhé.",
+      "since": "Thành viên từ {{date}}"
+    },
+    "titles": {
+      "bronze": "Mới đi chợ",
+      "silver": "Khách quen của chợ",
+      "gold": "Khách ruột của các sạp",
+      "diamond": "Người giữ lửa chợ phiên"
+    },
+    "yourPerksTitle": "Đặc quyền của bạn",
+    "yourPerks": {
+      "bronze": [
+        "Viền đồng quanh ảnh đại diện, trên menu và trang hồ sơ",
+        "Hạng hiện cạnh tên bạn trong đánh giá và tin nhắn"
+      ],
+      "silver": [
+        "Viền bạc dày hơn quanh ảnh đại diện",
+        "Sạp thấy hạng Bạc cạnh tên bạn trên đơn hàng và tin nhắn",
+        "Đánh giá của bạn mang huy hiệu hạng Bạc"
+      ],
+      "gold": [
+        "Viền vàng kèm dấu sao ở góc ảnh đại diện",
+        "Sạp thấy hạng Vàng cạnh tên bạn trên đơn hàng và tin nhắn",
+        "Đánh giá của bạn mang huy hiệu hạng Vàng"
+      ],
+      "diamond": [
+        "Viền kim cương lấp lánh kèm viên đá ở góc ảnh đại diện",
+        "Sạp thấy hạng Kim cương cạnh tên bạn trên đơn hàng và tin nhắn",
+        "Đánh giá của bạn mang huy hiệu hạng Kim cương",
+        "Thẻ thành viên lấp lánh trên trang hồ sơ"
+      ]
+    }
   }
 }

@@ -3,6 +3,9 @@
    Tailwind is not available in a static file, so the layout utilities the app would write with Tailwind live here.
    Every value is a token. */
 
+/* Tier frames and badges are shared with the app (not the design system yet: see the file header). */
+@import url('../../frontend/src/styles/tiers.css');
+
 @layer components {
 [hidden] { display: none !important; }
 body { min-height: 100vh; display: flex; flex-direction: column; }
@@ -500,7 +503,7 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 
 /* messages: conversation list beside one thread */
 .pt-threads { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; max-height: 640px; overflow-y: auto; }
-.pt-thread { display: grid; grid-template-columns: 44px 1fr auto; gap: var(--space-3); width: 100%; padding: var(--space-3) var(--space-4); border: 0; border-top: 1px solid var(--line); background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; align-items: start; }
+.pt-thread { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-3); width: 100%; padding: var(--space-3) var(--space-4); border: 0; border-top: 1px solid var(--line); background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; align-items: start; }
 .pt-threads li:first-child .pt-thread { border-top: 0; }
 .pt-thread:hover { background: var(--surface-quiet); }
 .pt-thread[aria-current='true'] { background: var(--brand-tint); }
@@ -733,3 +736,30 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 .pt-umenu-list [role='menuitem']:hover, .pt-umenu-list [role='menuitem']:focus-visible { background: var(--surface-sunken); outline: none; }
 @media (max-width: 767px) { .pt-umenu { display: none; } }
 .pt-avatar-card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-5); }
+
+/* Market card week strip: seven equal cells with room between them, instead of the design system's
+   tight run of 34px cells. Mirrors MarketCard.tsx in the app; phones drop the gap and side padding
+   so "Thứ 2" still fits at 375px. */
+.ml-market-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--space-1); max-width: 448px; }
+.ml-market-days li { min-width: 0; padding: 6px 0; white-space: nowrap; }
+@media (min-width: 640px) {
+  .ml-market-days { gap: var(--space-2); }
+  .ml-market-days li { padding-inline: 4px; }
+}
+
+/* Your achievements (account.html): figures, the way to the next tier, and the four tiers side by side */
+.pt-achieve-figures { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); margin: 0; }
+.pt-achieve-figures > div { background: var(--surface-quiet); border-radius: var(--radius-sm); padding: var(--space-3); display: flex; flex-direction: column; gap: 2px; }
+.pt-achieve-figures dt { font-size: 13px; color: var(--ink-muted); }
+.pt-achieve-figures dd { margin: 0; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pt-tier-ladder { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+.pt-tier-ladder li { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); text-align: center; padding: var(--space-3); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.pt-tier-ladder li[aria-current='true'] { border: 2px solid var(--brand); background: var(--brand-tint); }
+.pt-tier-ladder small { font-size: 12px; line-height: 16px; color: var(--ink-muted); }
+@media (max-width: 767px) {
+  .pt-achieve-figures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pt-tier-ladder { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.pt-perks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.pt-perks li { display: flex; align-items: flex-start; gap: var(--space-2); font-size: 14px; line-height: 20px; }
+.pt-perks .ml-tier-dot { margin-top: 4px; }

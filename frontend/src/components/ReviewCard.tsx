@@ -2,11 +2,15 @@ import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckIcon } from '@/components/icons';
 import Rating from '@/components/Rating';
+import TierBadge from '@/components/TierBadge';
+import type { Tier } from '@/types/achievement.types';
 import { Card } from '@/components/ui/card';
 import Helper from '@/utils/helper';
 
 type ReviewCardProps = {
   author: string;
+  /** Hạng thành tích của người viết — chỉ hạng, không có số liệu. */
+  authorTier?: Tier;
   date: string;
   target?: string;
   rating: number;
@@ -23,6 +27,7 @@ type ReviewCardProps = {
 /** One rating + comment, optionally with the stall's reply (design system `.ml-review`). */
 const ReviewCard = ({
   author,
+  authorTier,
   date,
   target,
   rating,
@@ -39,6 +44,7 @@ const ReviewCard = ({
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div className="flex flex-wrap items-baseline gap-2">
           <span className="font-bold">{author}</span>
+          {authorTier && <TierBadge tier={authorTier} />}
           {verified && (
             <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center gap-1 rounded-full px-2 py-px text-[12px] font-bold">
               <CheckIcon size={12} />

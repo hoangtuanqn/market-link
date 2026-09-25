@@ -38,6 +38,8 @@ const COLUMNS: { title: FooterKey; links: FooterLink[] }[] = [
       { label: 'aboutUs', to: '/about' },
       { label: 'contactUs', to: '/contact' },
       { label: 'feedback', to: '/feedback' },
+      { label: 'terms', to: '/terms' },
+      { label: 'privacy', to: '/privacy' },
     ],
   },
 ];

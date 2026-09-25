@@ -2,11 +2,15 @@ import { useTranslation } from 'react-i18next';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import useLogout from '@/hooks/useLogout';
+import AchievementsCard from './AchievementsCard';
 import AvatarCard from './AvatarCard';
 import PasswordCard from './PasswordCard';
 import ProfileForm from './ProfileForm';
 
-/** Profile editing and change password are proposals, not SRS requirements (feature catalog). */
+/**
+ * Profile editing and change password are proposals, not SRS requirements (feature catalog). Photo and details share
+ * one card; "Password & security" opens its own page (/account/password, PR #125).
+ */
 const CustomerAccountPage = () => {
   const { t } = useTranslation('CustomerAccount');
   const logout = useLogout();
@@ -17,9 +21,13 @@ const CustomerAccountPage = () => {
         <p className="text-body">{t('intro')}</p>
       </div>
 
-      <AvatarCard />
+      <Card className="flex flex-col gap-6 p-6">
+        <AvatarCard />
+        <div aria-hidden="true" className="border-line border-t" />
+        <ProfileForm />
+      </Card>
 
-      <ProfileForm />
+      <AchievementsCard />
 
       <PasswordCard />
 

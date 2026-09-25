@@ -1,0 +1,172 @@
+{
+  "title": "Politique de confidentialité",
+  "lead": "Ce que MarketLink conserve à votre sujet, pourquoi, et qui peut le voir. Écrit à partir des tables que le produit possède réellement, pas d'un modèle.",
+  "meta": "Version 0.1 · Dernière mise à jour {{date}} · S'applique aux Customers, aux Farmers et aux visiteurs",
+  "onThisPage": "Sur cette page",
+  "seeAlso": "Lisez aussi les <link>Conditions d'utilisation</link>. Elles traitent de la réservation et du retrait.",
+  "sections": [
+    {
+      "id": "collect",
+      "title": "Ce que nous conservons",
+      "blocks": [
+        {
+          "p": "Tout ce qui suit est réellement stocké par le produit aujourd'hui. Rien n'est collecté à des fins publicitaires, et rien n'est revendu."
+        },
+        {
+          "facts": {
+            "items": [
+              [
+                "Votre compte",
+                "Nom complet, e-mail, numéro de téléphone et adresse. Votre mot de passe n'est jamais conservé tel que vous l'avez saisi, seulement sous forme de hachage."
+              ],
+              [
+                "Le stand d'un Farmer",
+                "Nom du stand, personne à contacter, description, les marchés et les jours où vous vendez, vos créneaux de retrait et la position de votre stand sur la carte."
+              ],
+              [
+                "Vos commandes",
+                "Ce que vous avez réservé et en quelle quantité, le stand et le marché, votre date et heure de retrait, le mot laissé au stand, et les totaux. Les noms et les prix des produits sont recopiés sur la commande, pour qu'elle reste lisible correctement si le stand les change plus tard."
+              ],
+              ["Historique des commandes", "Chaque changement de statut d'une commande, avec l'heure et l'auteur."],
+              ["Avis", "Votre note, votre texte, la commande dont il provient, et la réponse éventuelle du stand."],
+              ["Favoris", "Les stands, produits et marchés que vous avez enregistrés."],
+              [
+                "Messages",
+                "Ce que vous et un stand vous écrivez dans Messages, et le moment où chaque message a été lu."
+              ],
+              [
+                "Notifications",
+                "Les messages qui vous sont envoyés au sujet de vos commandes et des réapprovisionnements, et le fait que vous les ayez lus ou non."
+              ],
+              [
+                "Conversations avec l'assistant",
+                "Vos messages, les réponses de l'assistant et l'intention qu'il a reconnue. Voir la section 5."
+              ],
+              [
+                "Retours",
+                "Le type que vous avez choisi et ce que vous avez écrit. Un retour peut être envoyé sans compte, et il n'emporte alors aucun compte avec lui."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink ne demande ni ne conserve de données de carte, de coordonnées bancaires ou d'informations de paiement, parce que le paiement a lieu au stand et jamais via le produit."
+        }
+      ]
+    },
+    {
+      "id": "why",
+      "title": "Pourquoi nous le conservons",
+      "blocks": [
+        {
+          "p": "Votre nom et votre téléphone existent pour que le stand sache qui vient retirer et puisse vous joindre le matin du marché. Votre adresse existe pour montrer la distance jusqu'à un marché et pré-remplir l'itinéraire. Votre e-mail est la façon dont vous vous connectez et dont vous êtes informé d'une commande."
+        },
+        {
+          "p": "Les commandes et leur historique existent pour que les deux parties voient ce qui a été convenu et quand cela a changé. Les avis existent pour que d'autres acheteurs puissent juger un stand. Les favoris existent pour qu'on puisse vous prévenir quand ce que vous vouliez est de nouveau disponible."
+        }
+      ]
+    },
+    {
+      "id": "who",
+      "title": "Qui peut le voir",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "Le stand auprès duquel vous commandez",
+                "Voit votre commande et assez de coordonnées pour vous la remettre le jour du marché, ainsi que les messages que vous lui envoyez. Il ne voit pas vos commandes chez d'autres stands."
+              ],
+              [
+                "Les autres acheteurs",
+                "Voient vos avis et le nom qui y figure. Ils ne voient ni vos commandes, ni vos coordonnées, ni vos favoris."
+              ],
+              [
+                "Un administrateur",
+                "Voit les comptes et les candidatures de Farmer pour les approuver, les suspendre ou les désactiver, et voit les annonces et les avis pour les modérer. Les rapports d'administration sont des comptages et des totaux, pas des listes de qui a acheté quoi."
+              ],
+              [
+                "Qui que ce soit d'autre",
+                "Rien. Les commandes, les coordonnées, les favoris et les notifications ne sont jamais affichés sur une page publique."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Chaque écran qui reçoit un identifiant vérifie côté serveur que l'enregistrement vous appartient avant de l'afficher : changer un numéro dans la barre d'adresse n'ouvre donc pas la commande de quelqu'un d'autre."
+        }
+      ]
+    },
+    {
+      "id": "sessions",
+      "title": "Cookies et sessions",
+      "blocks": [
+        {
+          "p": "Lorsque vous vous connectez, MarketLink émet un jeton de courte durée que votre navigateur envoie à chaque requête, et un jeton de plus longue durée conservé dans un cookie pour ne pas vous déconnecter toutes les quelques minutes. Votre session connectée est aussi mise en cache sur le serveur pour accélérer la connexion. La déconnexion met fin aux deux."
+        },
+        {
+          "p": "Votre panier reste dans votre propre navigateur jusqu'à ce que vous passiez commande. Rien de ce qu'il contient n'atteint le serveur avant la validation."
+        },
+        {
+          "p": "MarketLink ne dépose aucun cookie publicitaire ni de mesure d'audience."
+        }
+      ]
+    },
+    {
+      "id": "assistant",
+      "title": "L'assistant de courses",
+      "blocks": [
+        {
+          "p": "L'assistant répond aux questions sur les marchés, les stands, les créneaux de retrait et les produits. Les deux côtés de la conversation sont conservés, avec l'intention que l'assistant a associée à votre question, pour que l'équipe voie pourquoi il a répondu ainsi."
+        },
+        {
+          "p": "Un visiteur non connecté peut aussi l'utiliser. Pour garder une conversation d'un seul tenant, votre navigateur conserve une clé de session aléatoire qui n'est rattachée à aucun compte ; si vous êtes connecté, la conversation est rattachée à votre compte."
+        },
+        {
+          "p": "Vos mots ne sont jamais transformés en requête de base de données. L'assistant fait correspondre votre question à l'une des recherches préparées d'avance, si bien que ce que vous tapez n'est jamais qu'un terme de recherche. Interrogez-le sur les produits et les heures de retrait, pas sur des sujets privés."
+        }
+      ]
+    },
+    {
+      "id": "third",
+      "title": "Ce que ces pages chargent depuis l'extérieur",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "OpenStreetMap",
+                "Les tuiles de carte viennent des serveurs d'OpenStreetMap, qui voient votre adresse IP et à peu près quelle partie de la carte vous regardez. Les données cartographiques sont © les contributeurs d'OpenStreetMap. Le lien d'itinéraire ouvre OpenStreetMap dans un nouvel onglet."
+              ],
+              [
+                "Google Fonts",
+                "Les deux polices sont chargées depuis Google Fonts, qui voit votre adresse IP à l'ouverture de la page."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink n'utilise pas Google Maps : il n'y a donc pas de clé de cartographie ni de compte derrière la carte."
+        }
+      ]
+    },
+    {
+      "id": "choices",
+      "title": "Vos choix",
+      "blocks": [
+        {
+          "p": "Vous pouvez consulter et modifier votre nom, votre téléphone, votre e-mail et votre adresse depuis la page de votre compte à tout moment. Vous pouvez retirer ce que vous avez mis en favoris et marquer les notifications comme lues."
+        },
+        {
+          "p": "Certaines choses demeurent même après modification : une commande garde les noms et les prix des produits au moment où elle a été passée, et son historique de statuts n'est pas réécrit, parce que les deux parties s'appuient dessus. Un avis que vous avez écrit reste jusqu'à ce que vous ou un administrateur le retiriez."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Une question sur vos données ?",
+    "text": "Les questions sur une commande vont directement au stand. Tout ce qui concerne cette politique revient à l'équipe.",
+    "terms": "Conditions d'utilisation",
+    "contact": "Nous contacter"
+  }
+}

@@ -57,6 +57,7 @@
   "customer": {
     "title": "Pelanggan",
     "name": "Nama",
+    "tier": "Tingkat",
     "phone": "Telepon",
     "ordersWithYou": "Pesanan dengan Anda",
     "orders_one": "{{count}} pesanan",

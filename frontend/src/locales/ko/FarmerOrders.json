@@ -2,7 +2,7 @@
   "title": "주문",
   "intro": "마감 전에 새 주문을 수락하거나 거절하고, 장날에 준비 완료로 표시한 뒤, 고객이 결제하면 완료하세요.",
   "search": { "label": "주문 검색", "placeholder": "주문 번호 또는 고객 이름", "submit": "검색" },
-  "filter": { "day": "픽업일", "all": "전체", "allDays": "날짜", "market": "장터", "bothMarkets": "두 장터 모두" },
+  "filter": { "day": "픽업일", "all": "전체", "market": "장터", "bothMarkets": "두 장터 모두" },
   "tabsLabel": "상태별 주문",
   "status": {
     "placed": "승인 대기",

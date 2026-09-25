@@ -78,6 +78,7 @@ public class SecurityConfig {
                                                 "/api/v1/auth/me",
                                                 "/api/v1/auth/me/avatar",
                                                 "/api/v1/auth/me/settings",
+                                                "/api/v1/auth/me/achievements",
                                                 // FR-008: bật / tắt 2FA (verify lúc đăng nhập vẫn
                                                 // public)
                                                 "/api/v1/auth/mfa",

@@ -135,6 +135,8 @@
     "aboutUs": "私たちについて",
     "contactUs": "お問い合わせ",
     "feedback": "ご意見・不具合の報告",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
     "mapData": "地図データ © OpenStreetMap 寄稿者",
     "mapDataFrom": "地図データ {{credit}}"
   },
@@ -145,6 +147,7 @@
     "hi": "こんにちは、<b>{{name}}</b> さん",
     "main": "メイン",
     "menu": "メニュー",
+    "messages": "メッセージ",
     "notifications": "お知らせ",
     "notificationsUnread_one": "お知らせ、未読 {{count}} 件",
     "notificationsUnread_other": "お知らせ、未読 {{count}} 件",
@@ -194,6 +197,7 @@
     "aboutUs": "私たちについて",
     "myOrders": "注文履歴",
     "favorites": "お気に入り",
+    "messages": "メッセージ",
     "profile": "プロフィール",
     "settings": "設定",
     "signIn": "ログイン",
@@ -378,5 +382,12 @@
     "noneNote": "目的地だけを入力した状態で OpenStreetMap を開きます。",
     "privacy": "経路は新しいタブの openstreetmap.org で開きます。MarketLink はあなたの居場所を追跡しません。",
     "open": "経路を開く"
+  },
+  "tier": {
+    "bronze": "ブロンズ",
+    "silver": "シルバー",
+    "gold": "ゴールド",
+    "diamond": "ダイヤモンド",
+    "badge": "{{tier}} ランク"
   }
 }

@@ -15,6 +15,7 @@ import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
+import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
 import com.techx.intervue.modules.conversation.realtime.PresenceService;
@@ -23,6 +24,7 @@ import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.requests.OpenConversationRequest;
 import com.techx.intervue.modules.conversation.resources.ConversationResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
@@ -50,6 +52,7 @@ class ConversationServiceTest {
     UserRepository users;
     StallAccessPolicyInterface policy;
     ChatEventPublisherInterface events;
+    ChatRateLimiterInterface rateLimiter;
     PresenceService presence;
     ConversationService service;
 
@@ -75,6 +78,7 @@ class ConversationServiceTest {
         users = mock(UserRepository.class);
         policy = mock(StallAccessPolicyInterface.class);
         events = mock(ChatEventPublisherInterface.class);
+        rateLimiter = mock(ChatRateLimiterInterface.class);
         presence = mock(PresenceService.class);
         when(presence.snapshot(any())).thenReturn(Map.of());
         Clock clock = Clock.fixed(NOW, ZoneId.of("Asia/Ho_Chi_Minh"));
@@ -87,7 +91,8 @@ class ConversationServiceTest {
                         events,
                         new ConversationLookup(conversations),
                         presence,
-                        clock);
+                        clock,
+                        rateLimiter);
         when(users.findById(7L)).thenReturn(Optional.of(customer));
         when(users.findById(3L)).thenReturn(Optional.of(farmer));
         when(messages.countUnreadByConversation(anyLong(), anyCollection())).thenReturn(List.of());
@@ -252,5 +257,46 @@ class ConversationServiceTest {
 
         assertThat(page.items().get(0).other().online()).isFalse();
         assertThat(page.items().get(0).other().lastSeenAt()).isEqualTo(seen);
+    }
+
+    @Test
+    void refusesToOpenANewThreadWhenTheUserIsOverTheHourlyLimit() {
+        org.mockito.Mockito.doThrow(new RateLimitedException("too many"))
+                .when(rateLimiter)
+                .check(7L, ChatRateLimiterInterface.Action.CONVERSATION);
+
+        assertThatThrownBy(() -> service.open(7L, new OpenConversationRequest(3L)))
+                .isInstanceOf(RateLimitedException.class);
+        verify(conversations, never()).save(any(Conversation.class));
+    }
+
+    /**
+     * open() là idempotent (spec §6.1). Hạn mức §8.4 đếm "thread MỚI mỗi giờ", nên mở lại một
+     * thread đã có không được tiêu lượt — nếu không, FE gọi POST /conversations mỗi lần mở khung
+     * chat sẽ tự khoá người dùng khỏi chính cuộc trò chuyện của họ.
+     */
+    @Test
+    void reopeningAnExistingThreadDoesNotSpendARateLimitToken() {
+        Conversation existing = Conversation.between(7L, 3L);
+        existing.setId(42L);
+        when(conversations.findByUserAIdAndUserBId(anyLong(), anyLong()))
+                .thenReturn(Optional.of(existing));
+
+        service.open(7L, new OpenConversationRequest(3L));
+
+        verify(rateLimiter, never())
+                .check(
+                        anyLong(),
+                        org.mockito.ArgumentMatchers.any(ChatRateLimiterInterface.Action.class));
+    }
+
+    @Test
+    void openingABrandNewThreadDoesSpendARateLimitToken() {
+        when(conversations.findByUserAIdAndUserBId(anyLong(), anyLong()))
+                .thenReturn(Optional.empty());
+
+        service.open(7L, new OpenConversationRequest(3L));
+
+        verify(rateLimiter).check(7L, ChatRateLimiterInterface.Action.CONVERSATION);
     }
 }

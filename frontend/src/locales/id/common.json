@@ -135,6 +135,8 @@
     "aboutUs": "Tentang kami",
     "contactUs": "Hubungi kami",
     "feedback": "Masukan & laporan bug",
+    "terms": "Ketentuan layanan",
+    "privacy": "Kebijakan privasi",
     "mapData": "Data peta © kontributor OpenStreetMap",
     "mapDataFrom": "Data peta {{credit}}"
   },
@@ -145,6 +147,7 @@
     "hi": "Hai, <b>{{name}}</b>",
     "main": "Utama",
     "menu": "Menu",
+    "messages": "Pesan",
     "notifications": "Notifikasi",
     "notificationsUnread_one": "Notifikasi, {{count}} belum dibaca",
     "notificationsUnread_other": "Notifikasi, {{count}} belum dibaca",
@@ -194,6 +197,7 @@
     "aboutUs": "Tentang kami",
     "myOrders": "Pesanan saya",
     "favorites": "Favorit",
+    "messages": "Pesan",
     "profile": "Profil",
     "settings": "Pengaturan",
     "signIn": "Masuk",
@@ -378,5 +382,12 @@
     "noneNote": "Membuka OpenStreetMap dengan tujuan saja yang terisi.",
     "privacy": "Petunjuk arah dibuka di openstreetmap.org di tab baru. MarketLink tidak melacak lokasi Anda.",
     "open": "Buka petunjuk arah"
+  },
+  "tier": {
+    "bronze": "Perunggu",
+    "silver": "Perak",
+    "gold": "Emas",
+    "diamond": "Berlian",
+    "badge": "Tingkat {{tier}}"
   }
 }

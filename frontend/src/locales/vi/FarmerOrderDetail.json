@@ -57,6 +57,7 @@
   "customer": {
     "title": "Khách hàng",
     "name": "Tên",
+    "tier": "Hạng",
     "phone": "Điện thoại",
     "ordersWithYou": "Số đơn với bạn",
     "orders_one": "{{count}} đơn",

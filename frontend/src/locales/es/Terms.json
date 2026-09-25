@@ -1,0 +1,172 @@
+{
+  "title": "Términos del servicio",
+  "lead": "Lo que aceptas cuando reservas en un puesto de MarketLink, y lo que el puesto y la plataforma aceptan a cambio.",
+  "meta": "Versión 0.1 · Última actualización {{date}} · Se aplica a Customers, Farmers y visitantes",
+  "onThisPage": "En esta página",
+  "seeAlso": "Lee también la <link>Política de privacidad</link>. Explica qué guardamos sobre ti.",
+  "sections": [
+    {
+      "id": "what",
+      "title": "Qué es MarketLink",
+      "blocks": [
+        {
+          "p": "MarketLink permite que un puesto de un mercado de agricultores publique lo que traerá esta semana, y te permite reservar de esa lista antes del día de mercado. Recoges lo reservado en el puesto, dentro de la franja de recogida que fijó el puesto, y pagas allí al Farmer."
+        },
+        {
+          "nots": {
+            "title": "Lo que MarketLink no hace",
+            "items": [
+              [
+                "No se queda con tu dinero.",
+                "En ningún lugar del producto hay un formulario de tarjeta ni una pasarela de pago. Cada pedido se paga al Farmer en el puesto."
+              ],
+              ["No reparte a domicilio.", "Cada pedido se recoge en persona en el mercado."],
+              [
+                "No certifica a un puesto.",
+                "MarketLink no comprueba licencias, métodos de cultivo ni afirmaciones sobre producto ecológico. Pregunta al Farmer en el puesto."
+              ],
+              [
+                "No te vende nada.",
+                "El contrato de compraventa es entre tú y el puesto. MarketLink registra la reserva y nada más."
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "accounts",
+      "title": "Tu cuenta",
+      "blocks": [
+        {
+          "p": "Hay tres tipos de cuenta. Un Customer se registra con nombre, teléfono, correo y dirección. Para vender, un Customer solicita desde su cuenta convertirse en Farmer, añadiendo el nombre del puesto y una persona de contacto; el puesto no puede publicar nada hasta que un administrador lo apruebe. Los administradores entran por un acceso aparte."
+        },
+        {
+          "p": "Una cuenta puede compartirse en casa. MarketLink no distingue a las personas dentro de una misma cuenta, así que todo lo hecho con tu acceso cuenta como hecho por ti. Guarda tu contraseña y avísanos si crees que alguien más la tiene."
+        },
+        {
+          "p": "La dirección que das se usa para mostrar la distancia a los mercados y para rellenar la ruta de antemano. Tu teléfono se le da al puesto en el que pides, para que puedan localizarte la mañana del mercado."
+        }
+      ]
+    },
+    {
+      "id": "reserving",
+      "title": "Reservar en un puesto",
+      "blocks": [
+        {
+          "p": "Puedes poner productos de varios puestos en un mismo carrito, pero una reserva pertenece siempre a un único puesto. Al confirmar, el carrito se divide en un pedido por puesto, cada uno con su mercado, su franja de recogida y su hora límite. La pantalla de confirmación muestra esa división antes de que te comprometas."
+        },
+        {
+          "facts": {
+            "title": "Qué pasa cuando haces un pedido",
+            "items": [
+              [
+                "Existencias",
+                "Lo que reservas sale de inmediato del recuento del puesto, así que dos personas no pueden reservar los mismos dos últimos manojos. No puedes reservar más de lo que le queda al puesto."
+              ],
+              [
+                "Franja",
+                "Eliges una fecha de recogida y una franja horaria que ofrece el puesto. Cada franja tiene un límite de pedidos; una franja llena aparece atenuada y no se puede elegir."
+              ],
+              [
+                "Hora límite",
+                "Cada pedido tiene una hora límite, contada hacia atrás desde tu hora de recogida según las horas que fije el puesto. Hasta ese momento puedes cambiar o cancelar el pedido tú mismo."
+              ],
+              [
+                "Precio",
+                "El precio y la unidad de tu pedido son los que se mostraban cuando lo hiciste. Si el puesto cambia su precio después, tu pedido no cambia."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Un pedido pasa por hecho, aceptado, listo para recoger y completado. Un puesto también puede rechazar un pedido, y tú puedes cancelar uno. Cada cambio queda registrado con su hora, y puedes ver ese historial en el pedido."
+        },
+        {
+          "p": "Hacer un pedido es una reserva, no una garantía. Un puesto puede rechazarlo, y debería decirte por qué. Cuando un pedido se rechaza o se cancela, las existencias vuelven al puesto y ninguna parte debe nada."
+        }
+      ]
+    },
+    {
+      "id": "changing",
+      "title": "Cambiar o cancelar un pedido",
+      "blocks": [
+        {
+          "p": "Antes de la hora límite puedes bajar una cantidad, quitar un artículo o cancelar el pedido entero. No puedes añadir un producto nuevo a un pedido que ya existe; haz un segundo pedido, para que los recuentos y las franjas del puesto sigan siendo correctos."
+        },
+        {
+          "p": "Editar un pedido lo devuelve al estado hecho, y el puesto tiene que aceptarlo otra vez. Es a propósito: el puesto prepara y empaqueta según lo que aceptó."
+        },
+        {
+          "p": "Pasada la hora límite los botones se bloquean y la pantalla te dice por qué, con la hora en que venció. A partir de ahí solo el puesto puede mover el pedido, y lo demás se resuelve directamente con él. Un pedido que se queda en listo se da por completado 24 horas después de su fecha de recogida."
+        }
+      ]
+    },
+    {
+      "id": "paying",
+      "title": "Pagar en el puesto",
+      "blocks": [
+        {
+          "p": "Pagas al Farmer directamente al recoger, el importe que figura en tu pedido. MarketLink nunca retiene tu dinero, no cobra comisión a través del producto y no participa en el pago."
+        },
+        {
+          "p": "Por eso, una devolución es algo que arregláis entre el puesto y tú."
+        }
+      ]
+    },
+    {
+      "id": "stalls",
+      "title": "A qué se compromete un puesto",
+      "blocks": [
+        {
+          "p": "Un Farmer que vende por MarketLink se compromete a mantener honesta la lista de la semana: publicar las cantidades que espera tener, marcar un producto como agotado o no disponible en vez de dejarlo en la lista, y respetar las franjas de recogida que declaró para cada mercado y cada día."
+        },
+        {
+          "p": "Un puesto se compromete a responder los pedidos que entran en lugar de dejarlos parados, a dar un motivo cuando rechaza uno, y a mantener un pedido aceptado durante toda su franja de recogida. Un puesto también acepta que sus publicaciones son responsabilidad suya, incluida la descripción, la foto y cualquier afirmación sobre el producto."
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "title": "Reseñas y contenido",
+      "blocks": [
+        {
+          "p": "Puedes puntuar y reseñar un puesto y los productos que compraste una vez completado el pedido, y solo para pedidos tuyos. Un puesto puede responder una vez, en público."
+        },
+        {
+          "p": "Escribe sobre el producto y la recogida. Un administrador puede ocultar una reseña o una publicación que incumpla eso, y el contenido oculto deja de aparecer en las páginas públicas. Lo que escribes queda unido al nombre de tu cuenta, donde otros compradores pueden verlo."
+        }
+      ]
+    },
+    {
+      "id": "suspension",
+      "title": "Suspender una cuenta",
+      "blocks": [
+        {
+          "p": "Un administrador aprueba un puesto antes de que pueda publicar nada, y puede rechazar una solicitud con un motivo. Un puesto suspendido desaparece de las páginas públicas y no acepta pedidos nuevos, pero los que ya están en marcha llegan hasta el final para que ningún comprador pierda lo que reservó. El Farmer puede seguir entrando y ver esos pedidos."
+        },
+        {
+          "p": "Un administrador puede desactivar una cuenta de Customer."
+        }
+      ]
+    },
+    {
+      "id": "maps",
+      "title": "Mapas y otras fuentes",
+      "blocks": [
+        {
+          "p": "Las ubicaciones de mercados y puestos se dibujan sobre OpenStreetMap. Los datos del mapa son © colaboradores de OpenStreetMap, y el enlace de indicaciones abre OpenStreetMap en una pestaña nueva. El marcador lo coloca el mercado o el puesto y es tan preciso como ellos lo hayan puesto."
+        },
+        {
+          "p": "Las fotos de producto pertenecen al puesto que las subió. Las fotos usadas en las páginas propias de la plataforma se acreditan en el ReadMe del proyecto."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "¿Hay algo que no queda claro?",
+    "text": "Las dudas sobre un pedido van directamente al puesto. Cualquier cosa sobre estos términos llega al equipo.",
+    "privacy": "Política de privacidad",
+    "contact": "Contáctanos"
+  }
+}

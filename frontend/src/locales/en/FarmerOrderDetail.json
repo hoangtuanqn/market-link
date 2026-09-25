@@ -57,6 +57,7 @@
   "customer": {
     "title": "Customer",
     "name": "Name",
+    "tier": "Tier",
     "phone": "Phone",
     "ordersWithYou": "Orders with you",
     "orders_one": "{{count}} order",

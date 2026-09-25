@@ -184,8 +184,8 @@ const MarketDetailPage = () => {
             onChange={(v) => setDay(Number(v))}
             options={DAY_OPTIONS.map((d) => ({
               value: String(d.value),
-              label: dayName(d.value),
-              sub: formatDayMonth(d.date),
+              label: dayName(d.value, 'long'),
+              date: formatDayMonth(d.date),
             }))}
           />
           <div className="flex flex-wrap gap-2">

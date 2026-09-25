@@ -135,6 +135,8 @@
     "aboutUs": "Về chúng tôi",
     "contactUs": "Liên hệ",
     "feedback": "Góp ý & báo lỗi",
+    "terms": "Điều khoản dịch vụ",
+    "privacy": "Chính sách quyền riêng tư",
     "mapData": "Dữ liệu bản đồ © những người đóng góp OpenStreetMap",
     "mapDataFrom": "Dữ liệu bản đồ {{credit}}"
   },
@@ -145,6 +147,7 @@
     "hi": "Chào, <b>{{name}}</b>",
     "main": "Chính",
     "menu": "Menu",
+    "messages": "Tin nhắn",
     "notifications": "Thông báo",
     "notificationsUnread_one": "Thông báo, {{count}} chưa đọc",
     "notificationsUnread_other": "Thông báo, {{count}} chưa đọc",
@@ -194,6 +197,7 @@
     "aboutUs": "Về chúng tôi",
     "myOrders": "Đơn của tôi",
     "favorites": "Yêu thích",
+    "messages": "Tin nhắn",
     "profile": "Hồ sơ",
     "settings": "Cài đặt",
     "signIn": "Đăng nhập",
@@ -378,5 +382,12 @@
     "noneNote": "Mở OpenStreetMap với chỉ điểm đến được điền sẵn.",
     "privacy": "Chỉ đường mở trên openstreetmap.org ở tab mới. MarketLink không theo dõi vị trí của bạn.",
     "open": "Mở chỉ đường"
+  },
+  "tier": {
+    "bronze": "Đồng",
+    "silver": "Bạc",
+    "gold": "Vàng",
+    "diamond": "Kim cương",
+    "badge": "Hạng {{tier}}"
   }
 }

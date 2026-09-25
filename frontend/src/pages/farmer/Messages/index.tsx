@@ -6,6 +6,8 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { dayName, formatClock, formatDayMonth, vnd } from '@/lib/format';
 import Helper from '@/utils/helper';
+import TierBadge from '@/components/TierBadge';
+import { demoTierOf } from '@/data/tiers';
 
 /** A time is a 24-hour clock ("09:33"), a day and month ("22/09"), or one of the words below. */
 type When = string;
@@ -166,15 +168,19 @@ const FarmerMessagesPage = () => {
                   aria-current={th.id === activeId}
                   onClick={() => setActiveId(th.id)}
                   className={Helper.cn(
-                    'border-line hover:bg-surface-quiet grid w-full grid-cols-[44px_1fr_auto] items-start gap-3 border-t p-3 px-4 text-left first:border-t-0',
+                    'border-line hover:bg-surface-quiet grid w-full grid-cols-[auto_1fr_auto] items-start gap-3 border-t p-3 px-4 text-left first:border-t-0',
                     th.id === activeId && 'bg-brand-tint',
                   )}
                 >
+                  {/* Viền theo hạng của khách: sạp thấy hạng, không thấy số liệu */}
                   <span
-                    className="bg-brand text-on-brand font-hand grid size-11 place-items-center rounded-full text-[22px]"
                     aria-hidden="true"
+                    data-tier={demoTierOf(th.who)}
+                    className={Helper.cn(demoTierOf(th.who) && 'ml-tier-ring')}
                   >
-                    {th.mono}
+                    <span className="bg-brand text-on-brand font-hand grid size-11 place-items-center rounded-full text-[22px]">
+                      {th.mono}
+                    </span>
                   </span>
                   <span>
                     <b className="block text-[15px]">
@@ -201,7 +207,10 @@ const FarmerMessagesPage = () => {
         >
           <div className="border-line-strong flex flex-wrap items-center justify-between gap-3 border-b-[1.5px] p-3 px-4">
             <div>
-              <b>{active.who}</b>
+              <span className="flex flex-wrap items-center gap-2">
+                <b>{active.who}</b>
+                {demoTierOf(active.who) && <TierBadge tier={demoTierOf(active.who)!} />}
+              </span>
               <p className="text-small text-ink-muted mt-0.5">{note(active)}</p>
             </div>
             {active.orderHref && (

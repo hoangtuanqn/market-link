@@ -14,6 +14,7 @@ import com.techx.intervue.modules.conversation.resources.PagedResource;
 import com.techx.intervue.modules.conversation.resources.ParticipantResource;
 import com.techx.intervue.modules.conversation.resources.UnreadCountResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ConversationServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
 import com.techx.intervue.modules.user.entities.User;
@@ -44,6 +45,7 @@ public class ConversationService implements ConversationServiceInterface {
     private final ConversationLookup lookup;
     private final PresenceService presence;
     private final Clock clock;
+    private final ChatRateLimiterInterface rateLimiter;
 
     @Override
     @Transactional
@@ -63,6 +65,11 @@ public class ConversationService implements ConversationServiceInterface {
                         .findByUserAIdAndUserBId(pair.getUserAId(), pair.getUserBId())
                         .orElseGet(
                                 () -> {
+                                    // Hạn mức §8.4 đếm thread MỚI. open() là idempotent (spec
+                                    // §6.1), nên mở lại thread đã có không tiêu lượt — nếu tính cả
+                                    // lượt gọi thì FE mở khung chat vài chục lần là tự khoá mình.
+                                    rateLimiter.check(
+                                            meId, ChatRateLimiterInterface.Action.CONVERSATION);
                                     policy.assertCanBeMessaged(target);
                                     return conversations.save(pair);
                                 });

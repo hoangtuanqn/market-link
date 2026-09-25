@@ -1,0 +1,168 @@
+{
+  "title": "Terms of service",
+  "lead": "What you agree to when you reserve from a stall on MarketLink, and what the stall and the platform agree to in return.",
+  "meta": "Version 0.1 · Last updated {{date}} · Applies to Customers, Farmers and visitors",
+  "onThisPage": "On this page",
+  "seeAlso": "Read the <link>Privacy policy</link> as well. It covers what we hold about you.",
+  "sections": [
+    {
+      "id": "what",
+      "title": "What MarketLink is",
+      "blocks": [
+        {
+          "p": "MarketLink lets a stall at a farmers market publish what it will bring this week, and lets you reserve from that list before market day. You collect what you reserved at the stall, inside the pickup window the stall set, and you pay the Farmer there."
+        },
+        {
+          "nots": {
+            "title": "What MarketLink does not do",
+            "items": [
+              [
+                "It does not take your money.",
+                "There is no card form and no payment gateway anywhere in the product. Every order is paid to the Farmer at the stall."
+              ],
+              ["It does not deliver.", "Every order is collected in person at the market."],
+              [
+                "It does not certify a stall.",
+                "MarketLink does not check licences, farming methods or organic claims. Ask the Farmer at the stall."
+              ],
+              [
+                "It does not sell to you.",
+                "The contract of sale is between you and the stall. MarketLink records the reservation and nothing more."
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "accounts",
+      "title": "Your account",
+      "blocks": [
+        {
+          "p": "There are three kinds of account. A Customer signs up with a name, phone number, email and address. To sell, a Customer applies from their account to become a Farmer, adding a stall name and a contact person, and the stall cannot list anything until an admin approves it. Admins work from a separate sign-in."
+        },
+        {
+          "p": "One account may be shared at home. MarketLink does not tell people apart inside a single account, so anything done with your sign-in counts as done by you. Keep your password to yourself and tell us if you think someone else has it."
+        },
+        {
+          "p": "The address you give is used to show distances to markets and to pre-fill directions. Your phone number is given to the stall you order from, so they can reach you on market morning."
+        }
+      ]
+    },
+    {
+      "id": "reserving",
+      "title": "Reserving from a stall",
+      "blocks": [
+        {
+          "p": "You can put products from several stalls in one cart, but a reservation always belongs to a single stall. When you place it, the cart is split into one order per stall, each with its own market, its own pickup slot and its own cutoff. The confirmation screen shows the split before you commit."
+        },
+        {
+          "facts": {
+            "title": "What happens when you place an order",
+            "items": [
+              [
+                "Stock",
+                "What you reserve comes out of the stall's count straight away, so two people cannot book the same last two bunches. You cannot reserve more than the stall has left."
+              ],
+              [
+                "Slot",
+                "You pick a pickup date and a time slot the stall offers. A slot has a limit on how many orders it takes; a full slot is shown greyed out and cannot be chosen."
+              ],
+              [
+                "Cutoff",
+                "Each order gets a cutoff time, counted back from your pickup time by the number of hours the stall sets. Up to that moment you can change or cancel the order yourself."
+              ],
+              [
+                "Price",
+                "The price and unit on your order are the ones shown when you placed it. If the stall changes its price later, your order does not change."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "An order moves through placed, accepted, ready for pickup and completed. A stall may also decline an order, and you may cancel one. Every change is recorded with its time, and you can see that history on the order."
+        },
+        {
+          "p": "Placing an order is a reservation, not a guarantee. A stall can decline, and it should tell you why when it does. When an order is declined or cancelled, the stock goes back to the stall and nothing is owed on either side."
+        }
+      ]
+    },
+    {
+      "id": "changing",
+      "title": "Changing or cancelling an order",
+      "blocks": [
+        {
+          "p": "Before the cutoff you can lower a quantity, drop an item, or cancel the order outright. You cannot add a new product to an order that already exists; start a second order instead, so the stall's counts and slots stay correct."
+        },
+        {
+          "p": "Editing an order sends it back to placed, and the stall has to accept it again. That is deliberate: the stall picks and packs against what it accepted."
+        },
+        {
+          "p": "After the cutoff the buttons are locked and the screen tells you why, with the time the cutoff passed. From that point only the stall can move the order, and anything else is worked out with the stall directly. An order left at ready is treated as completed 24 hours after its pickup date."
+        }
+      ]
+    },
+    {
+      "id": "paying",
+      "title": "Paying at the stall",
+      "blocks": [
+        {
+          "p": "You pay the Farmer directly when you collect, for the amount shown on your order. MarketLink never holds your money, takes no commission through the product, and is not part of the payment."
+        },
+        { "p": "Because of that, a refund is something you and the stall settle between you." }
+      ]
+    },
+    {
+      "id": "stalls",
+      "title": "What a stall agrees to",
+      "blocks": [
+        {
+          "p": "A Farmer selling through MarketLink agrees to keep the week's list honest: to publish quantities it expects to have, to mark a product sold out or unavailable rather than leave it listed, and to keep the pickup windows it declared for each market and day."
+        },
+        {
+          "p": "A stall agrees to answer incoming orders rather than leave them sitting, to give a reason when it declines one, and to hold an accepted order through its pickup window. A stall also agrees that its listings are its own responsibility, including the description, the photo and any claim made about the produce."
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "title": "Reviews and content",
+      "blocks": [
+        {
+          "p": "You can rate and review a stall and the products you bought once the order is completed, and only for orders that are yours. A stall can reply to a review once, in public."
+        },
+        {
+          "p": "Write about the produce and the pickup. An admin can hide a review or a product listing that breaks that, and hidden content stops appearing on the public pages. What you write stays attached to your account name where other shoppers can see it."
+        }
+      ]
+    },
+    {
+      "id": "suspension",
+      "title": "Suspending an account",
+      "blocks": [
+        {
+          "p": "An admin approves a stall before it can list anything, and can reject an application with a reason. A stall that is suspended disappears from the public pages and takes no new orders, but its orders already in progress run to the end so no shopper loses what they reserved. The Farmer can still sign in and see those orders."
+        },
+        { "p": "A Customer account can be deactivated by an admin." }
+      ]
+    },
+    {
+      "id": "maps",
+      "title": "Maps and other sources",
+      "blocks": [
+        {
+          "p": "Market and stall locations are drawn on OpenStreetMap. Map data is © OpenStreetMap contributors, and the directions link opens OpenStreetMap in a new tab. A pin is placed by the market or the stall and is as accurate as they made it."
+        },
+        {
+          "p": "Product photos belong to the stall that uploaded them. Photos used on the platform's own pages are credited in the project ReadMe."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Something here unclear?",
+    "text": "Questions about an order go to the stall directly. Anything about these terms comes to the team.",
+    "privacy": "Privacy policy",
+    "contact": "Contact us"
+  }
+}

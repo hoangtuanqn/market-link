@@ -55,6 +55,21 @@ logging:
     org.flywaydb: INFO
 
 app:
+  # Thành tích cá nhân (không có trong SRS, LEAD yêu cầu): ngưỡng lên hạng. Phải đạt đủ cả ba —
+  # số đơn hoàn tất, tổng đã chi (₫, chỉ đơn hoàn tất), tỉ lệ hoàn tất (% trên hoàn tất + tự huỷ).
+  tiers:
+    silver:
+      min-completed: 5
+      min-spent: 500000
+      min-completion-rate: 60
+    gold:
+      min-completed: 15
+      min-spent: 2000000
+      min-completion-rate: 75
+    diamond:
+      min-completed: 40
+      min-spent: 6000000
+      min-completion-rate: 85
   # File người dùng tải lên (ảnh đại diện). Docker: volume uploads-data ở /app/uploads
   storage:
     dir: ${STORAGE_DIR:./uploads}
@@ -101,6 +116,15 @@ app:
       stomp-port: ${RABBITMQ_STOMP_PORT:61613}
       user: ${RABBITMQ_USER:guest}
       password: ${RABBITMQ_PASSWORD:guest}
+    # Spec §8.4: chống rải tin. Mỗi user một bucket trên Redis (bucket4j).
+    limits:
+      messages-per-minute: ${CHAT_MESSAGES_PER_MINUTE:30}
+      images-per-hour: ${CHAT_IMAGES_PER_HOUR:10}
+      conversations-per-hour: ${CHAT_CONVERSATIONS_PER_HOUR:20}
+    # Spec §8.2: ảnh chat nằm TÁCH khỏi app.storage.dir (thư mục đó phục vụ công khai qua /uploads).
+    # Docker: volume chat-uploads ở /var/lib/marketlink/chat.
+    upload-dir: ${CHAT_UPLOAD_DIR:./chat-uploads}
+    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:5242880}
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}

@@ -11,11 +11,15 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 /** Lưu file trên đĩa dưới app.storage.dir (Docker: volume uploads-data ở /app/uploads). */
 @Slf4j
 @Service
+// Bean mặc định cho ảnh đại diện và file đơn xin thành Farmer. ChatModuleConfig dựng một bean thứ
+// hai cùng kiểu, gốc khác, cho ảnh chat (spec §8.2) — @Primary để các chỗ inject cũ không mơ hồ.
+@Primary
 public class LocalFileStorageService implements FileStorageServiceInterface {
 
     private static final Pattern FOLDER = Pattern.compile("[a-z0-9-]+");

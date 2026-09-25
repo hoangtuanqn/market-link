@@ -403,6 +403,92 @@ Cùng kết nối `/ws` với chat (JWT ở frame CONNECT). Mỗi thông báo t�
 
 ---
 
+## 12. Chat người–người — FR-110…117 (ngoài đề)
+
+> **Không nhầm với chatbot ở mục 11.** Đây là nhắn tin giữa hai con người (Customer ↔ Farmer),
+> đường dẫn `/api/v1/conversations`, bảng `conversations` / `messages`. Chatbot FR-090 ở
+> `/api/v1/chat`, bảng `chat_messages`. Tính năng này **không có trong đề** — thiết kế và cảnh báo
+> phạm vi ở `docs/superpowers/specs/2026-09-25-farmer-customer-chat-design.md`.
+
+Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng lai không có chat.
+
+| Method | Path | Role | Trạng thái | Body / query | data |
+|---|---|---|---|---|---|
+| POST | `/api/v1/conversations` | Thành viên | **Đã có** | `{ farmerUserId }` | Thread; idempotent — có rồi thì trả lại cái cũ |
+| GET | `/api/v1/conversations` | Thành viên | **Đã có** | query `page`, `size` | `{ items[], page, size, total }`, mới nhất trước |
+| GET | `/api/v1/conversations/unread-count` | Thành viên | **Đã có** | | `{ count }` |
+| GET | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | query `before`, `size` | `[MessageResource]`, keyset, mới nhất trước |
+| POST | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | `{ kind?, body?, productId?, orderId?, attachmentId? }` | 201 · `MessageResource` |
+| POST | `/api/v1/conversations/{id}/read` | Thành viên | **Đã có** | | `null` |
+| POST | `/api/v1/attachments` | Thành viên | **Đã có** | `multipart/form-data`, field `file` | 201 · `{ attachmentId, url, width, height }` |
+| GET | `/api/v1/attachments/{id}` | Thành viên | **Đã có** | | **File nhị phân** — xem ghi chú |
+| POST | `/api/v1/messages/{id}/report` | Thành viên | Chưa làm | `{ reason, note? }` | 201 |
+| GET | `/api/v1/admin/message-reports` | Admin | Chưa làm | query `status`, `page` | Danh sách tin bị báo cáo |
+| PATCH | `/api/v1/admin/messages/{id}/hide` | Admin | Chưa làm | | Ẩn mềm, ghi `hiddenBy` + `hiddenAt` |
+
+**`MessageResource`**
+
+```json
+{
+  "id": 36, "conversationId": 61, "senderId": 124,
+  "kind": "text",
+  "body": "Rau còn tươi không chị?",
+  "productId": null, "orderId": null,
+  "attachment": null,
+  "createdAt": "2026-09-25T11:50:35.546035Z"
+}
+```
+
+- `kind` là `"text"` | `"image"` (`"offer"` và `"system"` là đợt 2, gửi lên bây giờ trả 400).
+- `kind: "text"` cần `body`; `kind: "image"` cần `attachmentId` và **không** cần `body`.
+- `attachment` chỉ có mặt khi tin là ảnh: `{ attachmentId, url, width, height }`.
+  Trường nào `null` thì **vắng mặt hẳn** khỏi JSON (`@JsonInclude(NON_NULL)`).
+- Tin bị admin ẩn **không xuất hiện** trong danh sách, và ảnh của nó trả 404.
+
+**Ảnh — `GET /api/v1/attachments/{id}`**
+
+- Trả **file nhị phân**, **không** bọc `ApiResource`. Đây là ngoại lệ có chủ ý của quy ước envelope,
+  giống mọi endpoint tải file. Lỗi thì vẫn trả envelope bình thường.
+- Header: `Content-Type` theo file thật, `Cache-Control: max-age=86400, private`,
+  `Content-Disposition: inline`, `X-Content-Type-Options: nosniff`.
+- Kiểm quyền: ảnh chưa gắn vào tin nào thì **chỉ người upload** xem được; ảnh đã gắn thì **cả hai
+  thành viên** của thread xem được, người ngoài nhận 403.
+- Ảnh **không** phục vụ qua `/uploads/**`. Thư mục lưu là `CHAT_UPLOAD_DIR`, tách hẳn khỏi
+  `app.storage.dir`, nên không có đường dẫn tĩnh nào đoán được.
+- Upload: jpg/png/webp, tối đa **5 MB**, kiểu kết luận từ **magic bytes** chứ không từ
+  `Content-Type` client gửi. JPEG/PNG được mã hoá lại thành JPEG nên EXIF rụng hết.
+  Ảnh upload mà 24 giờ không gửi thì job dọn đi.
+
+⚠️ **Ghi chú cho frontend:** JWT đi trong header `Authorization`, **không** trong cookie, nên
+`<img src="/api/v1/attachments/5">` sẽ trả **401**. Client phải `fetch` kèm header rồi
+`URL.createObjectURL(blob)`.
+
+**Realtime — `/ws`**
+
+- WebSocket thuần (không SockJS), client dùng `@stomp/stompjs`. JWT gửi ở header `Authorization`
+  của frame `CONNECT`, không phải ở handshake HTTP.
+- Nhận sự kiện tại `/user/topic/messages` (tin mới), `/user/topic/conversations`
+  (`{ type: "updated" | "read", … }`), `/user/topic/presence`, `/user/topic/typing`.
+- Gửi "đang gõ" tại `/app/typing`. Đây là thứ duy nhất đi *vào* bằng STOMP; tin nhắn luôn gửi
+  bằng REST rồi server mới phát đi.
+
+**Mã lỗi riêng của khối này** (ngoài các mã chung ở đầu tài liệu)
+
+| Mã | `error.code` | Khi nào |
+|---|---|---|
+| 400 | `VALIDATION_ERROR` | Tự nhắn cho chính mình · tin text rỗng · `kind` chưa hỗ trợ · ảnh quá 4096 px mỗi cạnh |
+| 403 | `NOT_A_MEMBER` | Không thuộc thread |
+| 403 | `STALL_NOT_OPEN` | Stall chưa được duyệt hoặc đang bị đình chỉ — không mở thread mới được |
+| 403 | `ACCOUNT_RESTRICTED` | Tài khoản không còn `active` |
+| 403 | `ATTACHMENT_NOT_YOURS` | Gắn ảnh của người khác vào tin của mình |
+| 409 | `CONVERSATION_CLOSED` | Stall bị đình chỉ — thread cũ vẫn **đọc** được, chỉ không gửi thêm (D-09) |
+| 409 | `ATTACHMENT_ALREADY_USED` | Một ảnh chỉ gắn được vào đúng một tin |
+| 413 | `ATTACHMENT_TOO_LARGE` | Ảnh quá 5 MB |
+| 415 | `UNSUPPORTED_IMAGE_TYPE` | Không phải jpg/png/webp (kết luận từ magic bytes) |
+| 429 | `RATE_LIMITED` | 30 tin/phút · 10 ảnh/giờ · 20 thread mới/giờ, mỗi mức tính theo từng user |
+
+---
+
 **Quy tắc bổ sung:** mọi endpoint có `{id}` phải kiểm tra quyền sở hữu trước khi trả dữ liệu.
 Farmer chỉ thấy đơn của mình, Customer chỉ thấy đơn của mình. Giám khảo sẽ test bằng cách đổi id
 trên URL.

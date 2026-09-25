@@ -63,10 +63,6 @@
     "intro": "Se muestra en el menú y a los puestos en tus pedidos. JPEG, PNG o una foto de tu cámara.",
     "upload": "Subir foto",
     "take": "Hacer foto",
-    "remove": "Quitar foto",
-    "removing": "Quitando…",
-    "removed": "Se ha quitado tu foto.",
-    "removeFailed": "No se pudo quitar tu foto. Inténtalo de nuevo.",
     "notUsed": "Foto no usada"
   },
   "photoErrors": {
@@ -119,5 +115,70 @@
   "crop": {
     "frame": "Encuadre de la foto. Arrastra, o usa las flechas para moverla y más o menos para hacer zoom.",
     "zoom": "Zoom"
+  },
+  "achievements": {
+    "title": "Tus logros",
+    "intro": "Se cuentan a partir de los pedidos que recogiste en los puestos. Solo tú ves estas cifras.",
+    "loading": "Cargando tus logros…",
+    "loadFailed": "No se pudieron cargar tus logros.",
+    "completed": "Pedidos recogidos",
+    "cancelled": "Cancelados por ti",
+    "declined": "Rechazados por el puesto",
+    "inProgress": "En curso",
+    "spent": "Total gastado",
+    "rate": "Tasa de finalización",
+    "rateNone": "—",
+    "nextTitle": "Camino a {{tier}}",
+    "ofGoal": "{{value}} de {{goal}}",
+    "rateNeeded": "También necesitas una tasa de finalización de al menos el {{rate}} %. Los pedidos que rechazó el puesto nunca cuentan en tu contra.",
+    "top": "Estás en el nivel más alto. Gracias por comprar en el mercado.",
+    "youAreHere": "Tu nivel",
+    "perks": {
+      "bronze": "Marco de bronce alrededor de tu foto",
+      "silver": "Un marco de plata más grueso",
+      "gold": "Marco de oro con una estrella",
+      "diamond": "Marco de diamante brillante con una gema"
+    },
+    "unavailable": {
+      "title": "Aún no hay cifras de pedidos",
+      "text": "Tu nivel y tus cifras se rellenan solos en cuanto se registren tus pedidos."
+    },
+    "privacy": "Los puestos y otros compradores ven tu nivel junto a tu nombre, nunca estas cifras.",
+    "hero": {
+      "overline": "Tu membresía",
+      "line_one": "{{name}}, has recogido {{count}} pedido y gastado {{amount}} en el mercado.",
+      "line_other": "{{name}}, has recogido {{count}} pedidos y gastado {{amount}} en el mercado.",
+      "welcome": "Bienvenido al mercado, {{name}}. Recoge tus primeros pedidos para ir subiendo de nivel.",
+      "since": "Miembro desde {{date}}"
+    },
+    "titles": {
+      "bronze": "Nuevo en el mercado",
+      "silver": "Una cara conocida",
+      "gold": "Un habitual de los puestos",
+      "diamond": "Guardián del fuego del mercado"
+    },
+    "yourPerksTitle": "Tus ventajas",
+    "yourPerks": {
+      "bronze": [
+        "Un marco de bronce alrededor de tu foto, en el menú y en tu perfil",
+        "Tu nivel junto a tu nombre en las reseñas y en los mensajes"
+      ],
+      "silver": [
+        "Un marco de plata más grueso alrededor de tu foto",
+        "Los puestos ven el nivel Plata junto a tu nombre en los pedidos y en los mensajes",
+        "Tus reseñas llevan la insignia del nivel Plata"
+      ],
+      "gold": [
+        "Un marco de oro con una estrella en la esquina de tu foto",
+        "Los puestos ven el nivel Oro junto a tu nombre en los pedidos y en los mensajes",
+        "Tus reseñas llevan la insignia del nivel Oro"
+      ],
+      "diamond": [
+        "Un marco de diamante brillante con una gema en la esquina de tu foto",
+        "Los puestos ven el nivel Diamante junto a tu nombre en los pedidos y en los mensajes",
+        "Tus reseñas llevan la insignia del nivel Diamante",
+        "Una tarjeta de socio reluciente en tu perfil"
+      ]
+    }
   }
 }

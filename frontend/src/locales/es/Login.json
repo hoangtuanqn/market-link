@@ -16,7 +16,7 @@
     "failed": "No se pudo iniciar el acceso con Google. Inténtalo de nuevo.",
     "note": "Google nos da tu nombre y tu correo. Aun así necesitamos tu teléfono y tu dirección antes de tu primer pedido, así que te los pedimos una vez en la siguiente pantalla."
   },
-  "newHere": "¿Eres nuevo? <customer>Crea una cuenta de cliente</customer>. Para vender, inicia sesión y <farmer>solicita ser Farmer</farmer> desde tu cuenta.",
+  "newHere": "¿No tienes cuenta? <customer>Regístrate</customer>",
   "toast": {
     "signedIn": "Sesión iniciada.",
     "failed": "No se pudo iniciar sesión. Inténtalo de nuevo."

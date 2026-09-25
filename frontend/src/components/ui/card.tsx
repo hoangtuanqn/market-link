@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'react';
 import Helper from '@/utils/helper';
 
-type CardProps = HTMLAttributes<HTMLElement> & { as?: 'article' | 'div' | 'li' | 'form' | 'section' };
+type CardProps = HTMLAttributes<HTMLElement> & { as?: 'article' | 'div' | 'li' | 'form' | 'nav' | 'section' };
 
 /** Paper tag: raised surface, strong line border, card shadow. */
 export function Card({ as: Tag = 'div', className, ...rest }: CardProps) {
