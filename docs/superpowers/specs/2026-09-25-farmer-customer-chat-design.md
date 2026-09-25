@@ -312,9 +312,10 @@ người đang nối vào đúng instance đã xử lý request** — mất đú
 **Điều broker không làm:** Rabbit *không* cung cấp lịch sử tin nhắn. Lịch sử luôn đọc từ MySQL;
 broker chỉ chuyển tin đang bay.
 
-**Rủi ro đã biết:** nếu relay không kết nối được, backend **không khởi động**, nghĩa là login và mọi
-tính năng khác chết theo chứ không riêng chat. Giảm nhẹ bằng `depends_on: condition: service_healthy`
-và healthcheck cho container rabbitmq; ghi vào README mục Troubleshooting.
+**Đã đo (Plan 2, Task 1):** nếu relay không kết nối được, backend **vẫn khởi động** — `StompBrokerRelayMessageHandler`
+ghi lỗi và tự thử lại; REST hoạt động bình thường, chỉ realtime im lặng cho tới khi broker lên. Vẫn dùng
+`depends_on: condition: service_healthy` + healthcheck cho rabbitmq để demo không có khoảng im lặng đó;
+README mục Troubleshooting có ghi.
 
 ### 7.3 Xác thực trên WebSocket
 
@@ -581,7 +582,7 @@ bản tay ghi trong README: hai trình duyệt, hai tài khoản, gửi và th�
 
 | Rủi ro | Mức | Giảm nhẹ |
 |---|---|---|
-| Rabbit không lên → backend không khởi động → hỏng cả buổi demo | Cao | Healthcheck + `depends_on`, ghi vào Troubleshooting, tập chạy trước buổi demo |
+| Rabbit không lên → realtime im lặng (REST vẫn chạy — đã đo ở Plan 2) | Trung bình | Healthcheck + `depends_on`, Troubleshooting, tập chạy trước buổi demo |
 | Tính năng ngoài đề ăn mất thời gian của 58 MUST | Cao | Quyết định của LEAD; đợt 2 vốn đã bị chặn bởi MUST nên tự giãn ra |
 | Chat bị lẫn với chatbot FR-090 khi trình bày | Trung bình | Khác URL, khác bảng, khác màn; nói rõ trong ReadMe và khi demo |
 | Ảnh riêng tư lộ qua đường dẫn tĩnh | Trung bình | Phục vụ qua endpoint có kiểm quyền, `storage_key` ngẫu nhiên |

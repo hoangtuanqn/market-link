@@ -1645,6 +1645,7 @@ import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
@@ -1696,7 +1697,7 @@ class ChatStompIntegrationTest {
     private StompSession connectAs(User u) throws Exception {
         StompHeaders headers = new StompHeaders();
         headers.add("Authorization", "Bearer " + jwt.generateToken(u.getId()));
-        return client.connectAsync("ws://localhost:" + port + WebSocketConfig.ENDPOINT, null, headers, new StompSessionHandlerAdapter() {})
+        return client.connectAsync("ws://localhost:" + port + WebSocketConfig.ENDPOINT, (WebSocketHttpHeaders) null, headers, new StompSessionHandlerAdapter() {})
                 .get(5, TimeUnit.SECONDS);
     }
 
@@ -1743,7 +1744,7 @@ class ChatStompIntegrationTest {
         headers.add("Authorization", "Bearer not-a-jwt");
 
         assertThatThrownBy(() ->
-                        client.connectAsync("ws://localhost:" + port + WebSocketConfig.ENDPOINT, null, headers, new StompSessionHandlerAdapter() {})
+                        client.connectAsync("ws://localhost:" + port + WebSocketConfig.ENDPOINT, (WebSocketHttpHeaders) null, headers, new StompSessionHandlerAdapter() {})
                                 .get(5, TimeUnit.SECONDS))
                 .isInstanceOf(ExecutionException.class);
     }
