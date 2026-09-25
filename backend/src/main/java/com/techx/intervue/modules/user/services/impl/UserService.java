@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.user.entities.SocialAccount;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
@@ -181,6 +182,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         User user =
                 userRepository
                         .findByEmail(email)
+                        .map(existing -> claimByVerifiedEmail(existing, profile))
                         .orElseGet(
                                 () ->
                                         userRepository.save(
@@ -190,12 +192,6 @@ public class UserService extends BaseService implements UserServiceInterface {
                                                         .image(fitsColumn(profile.pictureUrl()))
                                                         .role(RoleType.CUSTOMER)
                                                         .build()));
-        // Email này đã gắn với một tài khoản khác cùng provider
-        if (socialAccountRepository.existsByUserIdAndProvider(user.getId(), profile.provider())) {
-            throw new DuplicateAccountException(
-                    "email",
-                    "This email is already linked to another account from the same provider.");
-        }
         socialAccountRepository.save(
                 SocialAccount.builder()
                         .userId(user.getId())
@@ -203,6 +199,29 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .providerUserId(profile.providerUserId())
                         .email(email)
                         .build());
+        return user;
+    }
+
+    /**
+     * Gắn Google vào tài khoản có sẵn cùng email. Đăng ký bằng email không xác minh email, nên mật
+     * khẩu hiện có có thể do người khác đặt trước (chiếm trước tài khoản). Provider đã xác minh chủ
+     * email → xoá mật khẩu đó, thu hồi mọi refresh token và session; chủ thật đặt lại mật khẩu ở
+     * bước set-password (hasPassword = false).
+     */
+    private User claimByVerifiedEmail(User user, SocialProfile profile) {
+        // Email này đã gắn với một tài khoản khác cùng provider
+        if (socialAccountRepository.existsByUserIdAndProvider(user.getId(), profile.provider())) {
+            throw new DuplicateAccountException(
+                    "email",
+                    "This email is already linked to another account from the same provider.");
+        }
+        if (user.getPasswordHash() != null) {
+            user.setPasswordHash(null);
+            userRepository.save(user);
+            refreshTokenService.revokeAllTokens(user.getId());
+            // Chạy ngay (không đợi commit): session mới của chủ thật được ghi ở issueTokens sau đó
+            userSessionCache.revokeAll(user.getId());
+        }
         return user;
     }
 
@@ -290,8 +309,8 @@ public class UserService extends BaseService implements UserServiceInterface {
     /**
      * Đổi mật khẩu: cần đúng mật khẩu hiện tại. Sai thì 400 ở field currentPassword (không dùng 401
      * vì FE coi 401 là hết phiên và tự refresh). Đổi xong đăng xuất mọi thiết bị: thu hồi mọi
-     * refresh token, xoá session Redis (JwtAuthFilter từ chối mọi access token còn hạn), gửi mail
-     * thông báo.
+     * refresh token, sau khi commit thì revokeAll session Redis (JwtAuthFilter từ chối mọi access
+     * token cấp trước đó) và gửi mail thông báo.
      */
     @Override
     @Transactional
@@ -315,8 +334,14 @@ public class UserService extends BaseService implements UserServiceInterface {
         userRepository.save(user);
 
         refreshTokenService.revokeAllTokens(userId);
-        userSessionCache.evict(userId);
-        jobQueue.enqueue(PasswordResetService.JOB_NOTIFY_CHANGED, Map.of("email", user.getEmail()));
+        String email = user.getEmail();
+        // Commit lỗi thì mật khẩu chưa đổi: không đá văng phiên, không gửi mail
+        TransactionHelper.afterCommit(
+                () -> {
+                    userSessionCache.revokeAll(userId);
+                    jobQueue.enqueue(
+                            PasswordResetService.JOB_NOTIFY_CHANGED, Map.of("email", email));
+                });
     }
 
     /**

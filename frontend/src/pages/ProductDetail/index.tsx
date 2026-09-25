@@ -39,6 +39,15 @@ const ProductDetailPage = () => {
   }
 
   const f = p.farmerId != null ? farmer(p.farmerId) : undefined;
+  // Chỉ gian hàng đã duyệt mới có trang công khai; thiếu farmerId thì không dựng link /stalls/undefined
+  const stallLink =
+    f?.approval === 'approved' ? (
+      <Link to={`/stalls/${f.id}`} className="text-brand underline">
+        {p.stall}
+      </Link>
+    ) : (
+      p.stall
+    );
   const soldOut = p.status !== 'available' || p.stock === 0;
 
   const genericName = p.name.split(' ').slice(-2).join(' ').toLowerCase();
@@ -62,10 +71,7 @@ const ProductDetailPage = () => {
         <Link to="/products" className="text-brand underline">
           {p.category}
         </Link>{' '}
-        ·{' '}
-        <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
-          {p.stall}
-        </Link>
+        · {stallLink}
       </p>
 
       <div className="grid items-stretch gap-6 lg:grid-cols-2">
@@ -81,10 +87,7 @@ const ProductDetailPage = () => {
             />
           </div>
           <p className="text-body">
-            {p.category} · sold per {p.unit} ·{' '}
-            <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
-              {p.stall}
-            </Link>{' '}
+            {p.category} · sold per {p.unit} · {stallLink}{' '}
             {f?.rating != null && <Rating value={f.rating} count={f.reviews} />}
           </p>
 

@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
+import type { LoginRedirectState } from '@/layout/RequireAuth';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
@@ -28,6 +29,7 @@ const FormLogin = () => {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -43,7 +45,8 @@ const FormLogin = () => {
       Session.save(response.data, rememberMe);
 
       Notification.success({ text: response.message || 'Signed in.' });
-      navigate('/');
+      // Bị RequireAuth chuyển tới đây thì quay lại trang đang mở dở
+      navigate((location.state as LoginRedirectState | null)?.from ?? '/', { replace: true });
     } catch (error) {
       // 400: lỗi theo field (VALIDATION_ERROR) → hiện dưới ô nhập; 401/403: message chung của backend
       setErrors(Helper.getFieldErrors(error));
@@ -92,11 +95,9 @@ const FormLogin = () => {
         </Link>
       </div>
 
-
       <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? 'Signing in…' : 'Sign in'}
       </Button>
-
     </form>
   );
 };

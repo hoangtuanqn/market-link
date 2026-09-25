@@ -16,6 +16,6 @@ public class AuthConfig {
     @Value("${jwt.issuer}")
     private String issuer;
 
-    @Value("${jwt.refresh-token-ttl-days}")
-    private Integer refreshTokenTTLDays = 14;
+    @Value("${jwt.refresh-token-ttl-days:14}")
+    private Integer refreshTokenTTLDays;
 }

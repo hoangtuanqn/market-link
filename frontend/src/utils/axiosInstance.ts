@@ -28,14 +28,31 @@ privateApi.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-let isRefreshing = false; // đang gọi refresh token
-let refreshQueue: Array<{
-  resolve: () => void;
-  reject: (err: unknown) => void;
-}> = []; // các request 401 chờ refresh xong để gọi lại
-const processQueue = (error?: unknown) => {
-  refreshQueue.forEach((p) => (error ? p.reject(error) : p.resolve()));
-  refreshQueue = [];
+/** Tên khoá Web Locks dùng chung giữa các tab cùng origin. */
+const REFRESH_LOCK = 'marketlink-refresh-token';
+
+/** Chạy lần lượt giữa các tab (Web Locks); trình duyệt không hỗ trợ thì chạy luôn. */
+const withRefreshLock = <T>(task: () => Promise<T>): Promise<T> =>
+  navigator.locks ? navigator.locks.request(REFRESH_LOCK, task) : task();
+
+let refreshPromise: Promise<string> | null = null; // refresh đang chạy trong tab này, các request 401 dùng chung
+
+/**
+ * Lấy access token mới. Backend xoay vòng refresh token mỗi lần gọi, nên hai tab cùng refresh bằng một cookie thì tab
+ * đến sau bị từ chối: khoá giữa các tab để chúng refresh lần lượt, và nếu tab khác vừa có token mới (khác token của
+ * request bị 401) thì dùng luôn, không gọi refresh nữa.
+ */
+const refreshAccessToken = (staleToken: string | null) => {
+  refreshPromise ??= withRefreshLock(async () => {
+    const current = Session.getAccessToken();
+    if (current && current !== staleToken) return current;
+    const result = await AuthApi.refreshToken();
+    Session.refreshed(result);
+    return result.accessToken;
+  }).finally(() => {
+    refreshPromise = null;
+  });
+  return refreshPromise;
 };
 
 privateApi.interceptors.response.use(
@@ -48,26 +65,16 @@ privateApi.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (isRefreshing) {
-      return new Promise((resolve, reject) => {
-        refreshQueue.push({ resolve: () => resolve(privateApi(origin)), reject });
-      });
-    }
-
-    isRefreshing = true;
+    // đánh dấu trước khi chờ: request gọi lại mà vẫn 401 thì không refresh thêm lần nữa
     origin._retry = true;
+    const staleToken = String(origin.headers.Authorization ?? '').replace(/^Bearer /, '') || null;
 
     try {
-      const { accessToken } = await AuthApi.refreshToken();
-      Session.setAccessToken(accessToken);
-      processQueue();
-      return privateApi(origin);
+      await refreshAccessToken(staleToken);
+      return privateApi(origin); // interceptor request gắn token mới từ Session
     } catch (err) {
-      processQueue(err);
       Session.clear();
       return Promise.reject(err);
-    } finally {
-      isRefreshing = false;
     }
   },
 );

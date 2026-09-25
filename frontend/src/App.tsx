@@ -1,6 +1,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import MainLayout from './layout/MainLayout';
+import RequireAuth from './layout/RequireAuth';
 import HomePage from './pages/Home';
+import NotFoundPage from './pages/NotFound';
+import RemountOnParam from './components/RemountOnParam';
 import LoginPage from './pages/Login';
 import RegisterCustomerPage from './pages/RegisterCustomer';
 import RegisterFarmerPage from './pages/RegisterFarmer';
@@ -44,28 +47,77 @@ const App = () => {
           <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
           <Route path="auth/set-password" element={<SetPasswordPage />} />
           <Route path="markets" element={<MarketsPage />} />
-          <Route path="markets/:id" element={<MarketDetailPage />} />
+          <Route
+            path="markets/:id"
+            element={
+              <RemountOnParam param="id">
+                <MarketDetailPage />
+              </RemountOnParam>
+            }
+          />
           <Route path="products" element={<ProductsPage />} />
-          <Route path="products/:id" element={<ProductDetailPage />} />
-          <Route path="stalls/:id" element={<StallProfilePage />} />
+          <Route
+            path="products/:id"
+            element={
+              <RemountOnParam param="id">
+                <ProductDetailPage />
+              </RemountOnParam>
+            }
+          />
+          <Route
+            path="stalls/:id"
+            element={
+              <RemountOnParam param="id">
+                <StallProfilePage />
+              </RemountOnParam>
+            }
+          />
         </Route>
 
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
         <Route element={<MainLayout />}>
-          <Route path="dashboard" element={<CustomerDashboardPage />} />
-          <Route path="account" element={<CustomerAccountPage />} />
-          <Route path="cart" element={<CustomerCartPage />} />
-          <Route path="orders" element={<CustomerOrdersPage />} />
-          <Route path="orders/:code" element={<CustomerOrderDetailPage />} />
-          <Route path="favorites" element={<CustomerFavoritesPage />} />
-          <Route path="messages" element={<CustomerMessagesPage />} />
-          <Route path="notifications" element={<CustomerNotificationsPage />} />
-          <Route path="orders/:code/edit" element={<CustomerOrderEditPage />} />
-          <Route path="orders/placed" element={<CustomerOrderPlacedPage />} />
-          <Route path="orders/:code/review" element={<CustomerReviewPage />} />
-          <Route path="become-farmer" element={<CustomerBecomeFarmerPage />} />
-          <Route path="settings" element={<CustomerSettingsPage />} />
-          <Route path="assistant" element={<CustomerAssistantPage />} />
+          <Route element={<RequireAuth />}>
+            <Route path="dashboard" element={<CustomerDashboardPage />} />
+            <Route path="account" element={<CustomerAccountPage />} />
+            <Route path="cart" element={<CustomerCartPage />} />
+            <Route path="orders" element={<CustomerOrdersPage />} />
+            <Route
+              path="orders/:code"
+              element={
+                <RemountOnParam param="code">
+                  <CustomerOrderDetailPage />
+                </RemountOnParam>
+              }
+            />
+            <Route path="favorites" element={<CustomerFavoritesPage />} />
+            <Route path="messages" element={<CustomerMessagesPage />} />
+            <Route path="notifications" element={<CustomerNotificationsPage />} />
+            <Route
+              path="orders/:code/edit"
+              element={
+                <RemountOnParam param="code">
+                  <CustomerOrderEditPage />
+                </RemountOnParam>
+              }
+            />
+            <Route path="orders/placed" element={<CustomerOrderPlacedPage />} />
+            <Route
+              path="orders/:code/review"
+              element={
+                <RemountOnParam param="code">
+                  <CustomerReviewPage />
+                </RemountOnParam>
+              }
+            />
+            <Route path="become-farmer" element={<CustomerBecomeFarmerPage />} />
+            <Route path="settings" element={<CustomerSettingsPage />} />
+            <Route path="assistant" element={<CustomerAssistantPage />} />
+          </Route>
+        </Route>
+
+        {/* Đường dẫn lạ / trang chưa làm (search, map, about…) → 404 thay vì màn hình trắng */}
+        <Route element={<MainLayout />}>
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

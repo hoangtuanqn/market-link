@@ -2,6 +2,7 @@ package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.PasswordResetConfig;
 import com.techx.intervue.helpers.TokenHashUtil;
+import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * <pre>
  * ratelimit:pwreset:{email}   số lần yêu cầu trong cửa sổ 1 giờ
+ * ratelimit:pwreset-ip:{ip}   số lần yêu cầu từ một IP trong cửa sổ 1 giờ
  * pwreset:token:{hash}        → user_id
  * pwreset:user:{user_id}      → hash (để xoá token cũ khi yêu cầu lại)
  * </pre>
@@ -43,6 +45,7 @@ public class PasswordResetService implements PasswordResetServiceInterface {
     public static final String JOB_NOTIFY_CHANGED = "password-reset.notify-changed";
 
     static final String RATE_LIMIT_PREFIX = "ratelimit:pwreset:";
+    static final String RATE_LIMIT_IP_PREFIX = "ratelimit:pwreset-ip:";
     static final String TOKEN_PREFIX = "pwreset:token:";
     static final String USER_PREFIX = "pwreset:user:";
 
@@ -63,9 +66,12 @@ public class PasswordResetService implements PasswordResetServiceInterface {
      * user + tạo token + gửi mail do worker làm nên thời gian phản hồi không lộ gì.
      */
     @Override
-    public void requestReset(String email) {
+    public void requestReset(String email, String clientIp) {
         String normalized = normalize(email);
-        if (isRateLimited(normalized)) {
+        // Theo IP trước: một IP gửi hàng loạt email khác nhau thì mỗi email chỉ 1 lần nên lọt
+        // giới hạn theo email, nhưng vẫn làm đầy Redis / hàng đợi mail
+        if (isRateLimited(RATE_LIMIT_IP_PREFIX + clientIp, config.getMaxRequestsPerIp())
+                || isRateLimited(RATE_LIMIT_PREFIX + normalized, config.getMaxRequests())) {
             log.info("Password reset rate limit exceeded, request dropped");
             return;
         }
@@ -73,8 +79,7 @@ public class PasswordResetService implements PasswordResetServiceInterface {
     }
 
     /** INCR, lần đầu thì đặt EXPIRE. Nếu key bị mất TTL (crash giữa hai lệnh) thì đặt lại. */
-    private boolean isRateLimited(String email) {
-        String key = RATE_LIMIT_PREFIX + email;
+    private boolean isRateLimited(String key, long maxRequests) {
         Long count = redis.opsForValue().increment(key);
         Duration window = Duration.ofSeconds(config.getWindowSeconds());
         if (count == null || count == 1) {
@@ -82,7 +87,7 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         } else if (redis.getExpire(key) == -1) {
             redis.expire(key, window);
         }
-        return count != null && count > config.getMaxRequests();
+        return count != null && count > maxRequests;
     }
 
     /** Bước B. Chỉ tài khoản đang hoạt động mới được cấp token. */
@@ -129,9 +134,9 @@ public class PasswordResetService implements PasswordResetServiceInterface {
             throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
         }
 
-        String userId =
-                redis.opsForValue()
-                        .getAndDelete(TOKEN_PREFIX + tokenHashUtil.hash(request.token()));
+        String tokenKey = TOKEN_PREFIX + tokenHashUtil.hash(request.token());
+        Long ttlSeconds = redis.getExpire(tokenKey);
+        String userId = redis.opsForValue().getAndDelete(tokenKey);
         if (userId == null) throw new InvalidResetTokenException();
 
         User user =
@@ -143,15 +148,29 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
 
-        // Xoá luôn token khác còn treo (nếu user bấm "gửi lại" sau khi đã nhận link này)
-        deletePendingToken(user.getId());
-
-        // Bước D: huỷ mọi phiên. Refresh token bị thu hồi ở DB; xoá session Redis thì JwtAuthFilter
-        // từ chối mọi access token còn hạn của user này.
+        // Bước D: huỷ mọi phiên. Refresh token bị thu hồi ở DB (cùng transaction); phần Redis và
+        // mail
+        // chỉ chạy sau khi commit. Commit lỗi thì trả lại token để user thử lại bằng chính link
+        // này.
         refreshTokenRepository.revokeAllRefreshTokenByUser(user.getId());
-        userSessionCache.evict(user.getId());
+        Long id = user.getId();
+        String email = user.getEmail();
+        TransactionHelper.afterCompletion(
+                () -> {
+                    // Xoá luôn token khác còn treo (nếu user bấm "gửi lại" sau khi đã nhận link
+                    // này)
+                    deletePendingToken(id);
+                    // JwtAuthFilter từ chối mọi access token cấp trước thời điểm này
+                    userSessionCache.revokeAll(id);
+                    jobQueue.enqueue(JOB_NOTIFY_CHANGED, Map.of("email", email));
+                },
+                () -> restoreToken(tokenKey, userId, ttlSeconds));
+    }
 
-        jobQueue.enqueue(JOB_NOTIFY_CHANGED, Map.of("email", user.getEmail()));
+    private void restoreToken(String tokenKey, String userId, Long ttlSeconds) {
+        if (ttlSeconds != null && ttlSeconds > 0) {
+            redis.opsForValue().set(tokenKey, userId, Duration.ofSeconds(ttlSeconds));
+        }
     }
 
     private void deletePendingToken(Long userId) {
