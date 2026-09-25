@@ -1,11 +1,18 @@
 import { NavLink } from 'react-router';
+import Avatar from '@/components/Avatar';
 import { Button } from '@/components/ui/button';
 import type { NavItem } from '@/constants/nav';
 
-type MenuMobileProps = { items: NavItem[]; onClose: () => void; onSignOut?: () => void };
+type MenuMobileProps = {
+  items: NavItem[];
+  /** Người đang đăng nhập, hiện ở đầu drawer. */
+  account?: { name: string; email?: string; avatarUrl?: string };
+  onClose: () => void;
+  onSignOut?: () => void;
+};
 
 /** Slide-in drawer for screens below 768px. */
-const MenuMobile = ({ items, onClose, onSignOut }: MenuMobileProps) => {
+const MenuMobile = ({ items, account, onClose, onSignOut }: MenuMobileProps) => {
   return (
     <div className="bg-scrim fixed inset-0 z-100" onClick={onClose}>
       <div
@@ -17,6 +24,15 @@ const MenuMobile = ({ items, onClose, onSignOut }: MenuMobileProps) => {
         <Button variant="onboard" size="sm" className="self-end" onClick={onClose}>
           Close
         </Button>
+        {account && (
+          <div className="border-board-muted mb-1 flex items-center gap-3 border-b px-3 pb-4">
+            <Avatar name={account.name} email={account.email} url={account.avatarUrl} size={44} tone="accent" />
+            <div className="min-w-0">
+              <p className="truncate text-[17px] font-bold">{account.name}</p>
+              {account.email && <p className="text-small text-board-muted truncate">{account.email}</p>}
+            </div>
+          </div>
+        )}
         {items.map((item) => (
           <NavLink
             key={item.to}

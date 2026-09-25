@@ -8,6 +8,7 @@ import { ButtonLink } from '@/components/ui/button';
 import Helper from '@/utils/helper';
 import MenuMobile from './MenuMobile';
 import NavLink from './NavLink';
+import UserMenu from './UserMenu';
 
 const iconButton =
   'relative grid size-11 cursor-pointer place-items-center rounded-sm bg-transparent text-on-board hover:shadow-[inset_0_0_0_1.5px_var(--board-muted)] [&_svg]:size-5.5';
@@ -19,17 +20,26 @@ type HeaderProps = {
   /** 'customer' also covers a Farmer away from their stall panel (README, "Two shells"). */
   variant?: 'guest' | 'customer';
   userName?: string;
+  userEmail?: string;
+  avatarUrl?: string;
   cartCount?: number;
   unreadCount?: number;
 };
 
-const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount = 0 }: HeaderProps) => {
+const Header = ({
+  variant = 'guest',
+  userName = '',
+  userEmail,
+  avatarUrl,
+  cartCount = 0,
+  unreadCount = 0,
+}: HeaderProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const logout = useLogout();
   const signedIn = variant === 'customer';
   const navItems = signedIn ? CUSTOMER_NAV : GUEST_NAV;
   const drawerItems = signedIn
-    ? [...navItems, { label: 'Account', to: '/account' }]
+    ? [...navItems, { label: 'Profile', to: '/account' }, { label: 'Settings', to: '/settings' }]
     : [...navItems, { label: 'Sign in', to: '/login' }, { label: 'Create an account', to: '/register/customer' }];
 
   return (
@@ -75,12 +85,7 @@ const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount =
               )}
             </Link>
             {signedIn ? (
-              <Link
-                to="/account"
-                className="text-small text-board-muted border-board-muted ml-1 hidden items-center gap-2 border-l pl-3 no-underline md:inline-flex"
-              >
-                Hi, <b className="text-on-board">{userName}</b>
-              </Link>
+              <UserMenu name={userName} email={userEmail} avatarUrl={avatarUrl} onSignOut={logout} />
             ) : (
               <ButtonLink to="/login" variant="accent" size="sm">
                 Sign in
@@ -100,7 +105,12 @@ const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount =
       </header>
 
       {menuOpen && (
-        <MenuMobile items={drawerItems} onClose={() => setMenuOpen(false)} onSignOut={signedIn ? logout : undefined} />
+        <MenuMobile
+          items={drawerItems}
+          account={signedIn ? { name: userName, email: userEmail, avatarUrl } : undefined}
+          onClose={() => setMenuOpen(false)}
+          onSignOut={signedIn ? logout : undefined}
+        />
       )}
     </>
   );
