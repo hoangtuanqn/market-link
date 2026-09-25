@@ -37,7 +37,12 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
  */
 @Slf4j
 @RestControllerAdvice(
-        assignableTypes = {AuthController.class, MfaController.class, AvatarController.class})
+        assignableTypes = {
+            AuthController.class,
+            MfaController.class,
+            AvatarController.class,
+            SettingsController.class
+        })
 public class AuthExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
