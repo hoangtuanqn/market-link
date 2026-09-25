@@ -22,10 +22,12 @@ import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -37,13 +39,15 @@ class FarmerServiceTest {
 
     private FarmerProfileRepository farmerProfileRepository;
     private UserRepository userRepository;
+    private UserSessionCache userSessionCache;
     private FarmerService service;
 
     @BeforeEach
     void setUp() {
         farmerProfileRepository = mock(FarmerProfileRepository.class);
         userRepository = mock(UserRepository.class);
-        service = new FarmerService(farmerProfileRepository, userRepository);
+        userSessionCache = mock(UserSessionCache.class);
+        service = new FarmerService(farmerProfileRepository, userRepository, userSessionCache);
     }
 
     private static FarmerProfile pendingProfile() {
@@ -184,6 +188,40 @@ class FarmerServiceTest {
         assertThat(owner.getRole()).isEqualTo(RoleType.FARMER);
         assertThat(profile.getApprovedBy()).isEqualTo(ADMIN_ID);
         assertThat(profile.getApprovedAt()).isNotNull();
+    }
+
+    /**
+     * JwtAuthFilter dựng authority từ UserSessionCache chứ không từ claim của token: chỉ ghi
+     * users.role thì Farmer vừa được duyệt vẫn mang ROLE_CUSTOMER tới hết TTL access token.
+     */
+    @Test
+    void approve_refreshesCachedSessionRole_soTheNewRoleAppliesOnTheNextRequest() {
+        FarmerProfile profile = pendingProfile();
+        User owner = customer();
+        when(farmerProfileRepository.findById(FARMER_ID)).thenReturn(Optional.of(profile));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
+        when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        service.approve(FARMER_ID, ADMIN_ID);
+
+        verify(userSessionCache).updateRoles(USER_ID, Set.of(RoleType.FARMER));
+    }
+
+    /** Suspend không đổi role (D-09: vẫn là farmer, vẫn đăng nhập được) nên không đụng phiên. */
+    @Test
+    void suspend_leavesTheCachedSessionAlone() {
+        FarmerProfile profile = pendingProfile();
+        profile.setApprovalStatus(ApprovalStatus.APPROVED);
+        User owner = customer();
+        owner.setRole(RoleType.FARMER);
+        when(farmerProfileRepository.findById(FARMER_ID)).thenReturn(Optional.of(profile));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
+        when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+
+        service.suspend(FARMER_ID);
+
+        verify(userSessionCache, never()).updateRoles(any(), any());
     }
 
     /**

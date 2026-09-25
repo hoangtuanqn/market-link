@@ -16,10 +16,12 @@ import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.resources.PageResource;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,6 +53,7 @@ public class FarmerService implements FarmerServiceInterface {
 
     private final FarmerProfileRepository farmerProfileRepository;
     private final UserRepository userRepository;
+    private final UserSessionCache userSessionCache;
 
     /**
      * §4: tạo hồ sơ PENDING, không nhận approval_status từ client. Một tài khoản chỉ nộp một lần.
@@ -144,6 +147,9 @@ public class FarmerService implements FarmerServiceInterface {
         User owner = findOwnerOrThrow(profile);
         owner.setRole(RoleType.FARMER);
         userRepository.save(owner);
+        // JwtAuthFilter đọc role từ phiên trong Redis, không từ claim: không ghi lại thì Farmer
+        // vừa duyệt vẫn mang ROLE_CUSTOMER tới hết TTL access token.
+        userSessionCache.updateRoles(owner.getId(), Set.of(RoleType.FARMER));
 
         return toDetailResource(profile, owner);
     }
