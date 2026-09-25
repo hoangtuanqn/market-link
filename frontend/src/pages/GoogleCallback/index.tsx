@@ -5,7 +5,9 @@ import { Banner } from '@/components/ui/banner';
 import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { GOOGLE_OAUTH_STATE_KEY } from '@/constants/oauth';
+import { ADMIN_VERIFY_PATH } from '@/constants/nav';
 import Helper from '@/utils/helper';
+import { splitLoginResult } from '@/utils/mfa';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 
@@ -50,8 +52,14 @@ const GoogleCallbackPage = () => {
 
     AuthApi.loginWithSocial('google', code)
       .then((response) => {
-        const { user } = response.data;
-        Session.save(response.data);
+        const { pending, session } = splitLoginResult(response.data, true);
+        if (pending) {
+          // FR-008: đăng nhập Google không bỏ qua được bước 2 của admin
+          navigate(ADMIN_VERIFY_PATH, { replace: true, state: pending });
+          return;
+        }
+        const { user } = session;
+        Session.save(session);
         Notification.success({ text: response.message || 'Signed in.' });
         // replace: bỏ ?code=&state= khỏi lịch sử trình duyệt. Thiếu sđt/địa chỉ → bổ sung hồ sơ; chưa có mật khẩu → đặt
         // mật khẩu

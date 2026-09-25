@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
+import AppToaster from './components/AppToaster';
+import AdminLayout from './layout/AdminLayout';
 import MainLayout from './layout/MainLayout';
 import RequireAuth from './layout/RequireAuth';
 import HomePage from './pages/Home';
@@ -31,6 +33,11 @@ import MarketDetailPage from './pages/MarketDetail';
 import ProductsPage from './pages/Products';
 import ProductDetailPage from './pages/ProductDetail';
 import StallProfilePage from './pages/StallProfile';
+import SearchPage from './pages/Search';
+import AdminLoginPage from './pages/AdminLogin';
+import AdminHomePage from './pages/AdminHome';
+import AdminVerifyPage from './pages/AdminVerify';
+import AdminSecurityPage from './pages/AdminSecurity';
 
 const App = () => {
   return (
@@ -72,6 +79,7 @@ const App = () => {
               </RemountOnParam>
             }
           />
+          <Route path="search" element={<SearchPage />} />
         </Route>
 
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
@@ -119,7 +127,17 @@ const App = () => {
         <Route element={<MainLayout />}>
           <Route path="*" element={<NotFoundPage />} />
         </Route>
+
+        {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
+        <Route path="admin/login" element={<AdminLoginPage />} />
+        {/* FR-008: bước 2 đăng nhập admin, chưa có phiên nên nằm ngoài AdminLayout. */}
+        <Route path="admin/verify" element={<AdminVerifyPage />} />
+        <Route path="admin" element={<AdminLayout />}>
+          <Route index element={<AdminHomePage />} />
+          <Route path="security" element={<AdminSecurityPage />} />
+        </Route>
       </Routes>
+      <AppToaster />
     </BrowserRouter>
   );
 };

@@ -60,17 +60,14 @@
       <p class="pt-or">or</p>
 
       <div class="pt-col-2">
-        <a class="ml-btn ml-btn-secondary ml-btn-block" href="../public/register-customer.html">Continue with Google</a>
-        <a class="ml-btn ml-btn-secondary ml-btn-block" href="../public/register-customer.html">Continue with
-          Facebook</a>
-        <p class="pt-caption ml-muted">Google and Facebook give us your name and email. Your phone number and address
+        <a class="ml-btn ml-btn-secondary ml-btn-block" href="../customer/complete-profile.html">Continue with Google</a>
+        <p class="pt-caption ml-muted">Google gives us your name and email. Your phone number and address
           are still needed before your first order, so we ask for them once on the next screen.</p>
         <p class="pt-caption ml-muted"><span class="pt-todo"
-            data-todo="Out of scope · Social sign-in is not in the SRS. FR-001 and FR-002 require name, phone, email and address at registration, and a Farmer also needs a stall name and admin approval, none of which a Google or Facebook account supplies. It needs a new FR, an OAuth provider, a users.auth_provider column, a rule for linking a social account to an existing email, and a 'complete your profile' step before the first order.">Social
+            data-todo="Partly built · Google sign-in is no longer a proposal: GoogleOAuthClient and the migration V20260924003__create_user_social_accounts_table.sql are merged, linking on the Google sub rather than the email, and Facebook was dropped on purpose. Two things are still open. First, that migration made users.password_hash and users.phone nullable, but FR-001 requires a contact number and an address and a stall has to be able to ring a customer about an order, and nothing yet forces those in — hence the complete-your-profile screen next to this one, which still needs an FR and a rule for when it is enforced. Second, GoogleOAuthClient knows nothing about roles, so if the admin area ever accepts Google it needs an allowlist of which Google accounts may be admin, or FR-004's separate admin area becomes a button anyone with a Google account can press.">Social
             sign-in needs a new FR and a profile-completion step</span></p>
         <p class="pt-caption ml-muted"><span class="pt-todo"
-            data-todo="Branding · The two buttons are plain text. Google and Facebook both require their official mark, wording and minimum sizes. Take the assets from each provider's brand guidelines before this ships.">Official
-            Google and Facebook marks to add</span></p>
+            data-todo="Branding · The button is plain text. Google requires its official mark, wording and minimum sizes for a "Continue with Google" button. Take the assets from the Google Identity brand guidelines before this ships.">Official Google mark to add</span></p>
       </div>
 
       <p class="pt-small ml-muted">New here? <a href="../public/register-customer.html">Create a customer account</a> or
