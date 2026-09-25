@@ -89,6 +89,10 @@ public class SecurityConfig {
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()
+                                        // Lỗi chưa được handler nào bắt được forward tới /error:
+                                        // không public thì bị trả 401 và FE tưởng hết phiên
+                                        .requestMatchers("/error")
+                                        .permitAll()
                                         .requestMatchers("/uploads/**")
                                         .permitAll()
                                         // Swagger UI + OpenAPI JSON (tắt ở prod qua springdoc.*)

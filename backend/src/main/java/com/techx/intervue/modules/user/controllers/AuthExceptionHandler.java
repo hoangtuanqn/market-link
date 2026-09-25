@@ -7,6 +7,7 @@ import com.techx.intervue.modules.user.exceptions.MfaCodeInvalidException;
 import com.techx.intervue.modules.user.exceptions.MfaLockedException;
 import com.techx.intervue.modules.user.exceptions.MfaStateException;
 import com.techx.intervue.modules.user.exceptions.MfaTokenInvalidException;
+import com.techx.intervue.modules.user.exceptions.OAuthNotConfiguredException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
 import com.techx.intervue.modules.user.exceptions.RoleMismatchException;
 import com.techx.intervue.resources.ApiResource;
@@ -14,6 +15,7 @@ import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -63,13 +65,28 @@ public class AuthExceptionHandler {
     }
 
     /** Chưa điền client id / secret trong app.oauth.* */
-    @ExceptionHandler(IllegalStateException.class)
-    ResponseEntity<ApiResource<Void>> notConfigured(IllegalStateException e) {
+    @ExceptionHandler(OAuthNotConfiguredException.class)
+    ResponseEntity<ApiResource<Void>> notConfigured(OAuthNotConfiguredException e) {
         log.error(e.getMessage());
         return error(
                 HttpStatus.SERVICE_UNAVAILABLE,
                 "OAUTH_NOT_CONFIGURED",
                 "This sign-in method is not set up yet.",
+                List.of());
+    }
+
+    /**
+     * Redis / hàng đợi / DB không phản hồi (UserSessionCache, RedisJobQueue ném
+     * IllegalStateException; Redis rớt ném DataAccessException). DataIntegrityViolationException có
+     * handler riêng cụ thể hơn nên không rơi vào đây.
+     */
+    @ExceptionHandler({IllegalStateException.class, DataAccessException.class})
+    ResponseEntity<ApiResource<Void>> unavailable(RuntimeException e) {
+        log.error("Auth request failed: {}", e.getMessage());
+        return error(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                "SERVICE_UNAVAILABLE",
+                "Something went wrong on our side. Please try again later.",
                 List.of());
     }
 
@@ -134,15 +151,33 @@ public class AuthExceptionHandler {
                                 .build()));
     }
 
-    /** Hai request cùng email/phone lọt qua bước kiểm tra cùng lúc → UNIQUE của DB chặn. */
+    /**
+     * Hai request cùng email/phone lọt qua bước kiểm tra cùng lúc → UNIQUE của DB chặn. Phân biệt
+     * theo tên key trong message của MySQL ("Duplicate entry '...' for key 'users.email'"); lỗi
+     * khác (dữ liệu quá dài...) không phải trùng tài khoản → 400.
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> uniqueViolation(DataIntegrityViolationException e) {
-        String message = "This email or phone number is already registered.";
+        String cause = String.valueOf(e.getMostSpecificCause().getMessage());
+        if (cause.contains("users.email")) {
+            return duplicate(
+                    new DuplicateAccountException("email", "This email is already registered."));
+        }
+        if (cause.contains("users.phone")) {
+            return duplicate(
+                    new DuplicateAccountException(
+                            "phone", "This phone number is already registered."));
+        }
+        if (cause.contains("uq_social_")) {
+            String message = "This Google account is already linked. Please try again.";
+            return error(HttpStatus.CONFLICT, "DUPLICATE_ACCOUNT", message, List.of());
+        }
+        log.warn("Data integrity violation: {}", cause);
         return error(
-                HttpStatus.CONFLICT,
-                "DUPLICATE_ACCOUNT",
-                message,
-                List.of(FieldErrorResource.builder().message(message).build()));
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
     }
 
     /** FR-008: token chờ nhập mã sai / hết hạn → phải đăng nhập lại. */

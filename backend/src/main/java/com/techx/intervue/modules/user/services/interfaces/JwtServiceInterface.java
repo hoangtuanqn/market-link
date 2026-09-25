@@ -2,6 +2,7 @@ package com.techx.intervue.modules.user.services.interfaces;
 
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import io.jsonwebtoken.Claims;
+import java.time.Instant;
 import java.util.Map;
 
 public interface JwtServiceInterface {
@@ -14,6 +15,8 @@ public interface JwtServiceInterface {
     public Long extractSubject(String token);
 
     public String extractJti(String token);
+
+    public Instant extractIssuedAt(String token);
 
     public Map<String, Object> extractRevoke(String token);
 

@@ -14,8 +14,11 @@ const CHANGE_EVENT = 'session-change';
 
 const stores = (): Storage[] => [localStorage, sessionStorage];
 
-/** Nơi đang giữ phiên hiện tại (mặc định localStorage). */
-const activeStore = (): Storage => stores().find((s) => s.getItem(TOKEN_KEY)) ?? localStorage;
+/** Nơi đang giữ phiên hiện tại; null nếu tab này chưa có phiên. */
+const sessionStore = (): Storage | null => stores().find((s) => s.getItem(TOKEN_KEY)) ?? null;
+
+/** Nơi đọc / ghi phiên (mặc định localStorage). */
+const activeStore = (): Storage => sessionStore() ?? localStorage;
 
 const emit = () => window.dispatchEvent(new Event(CHANGE_EVENT));
 
@@ -33,9 +36,20 @@ class Session {
     return activeStore().getItem(TOKEN_KEY);
   }
 
-  /** Access token mới sau khi refresh: ghi vào đúng nơi phiên đang ở. */
-  static setAccessToken(token: string) {
-    activeStore().setItem(TOKEN_KEY, token);
+  /**
+   * Phiên mới sau khi refresh: ghi vào đúng nơi phiên đang ở. Tab chưa có phiên (vd. mở tab mới khi đăng nhập không
+   * "Remember me" — sessionStorage riêng từng tab, cookie refresh vẫn còn) thì lưu như phiên không nhớ, không ghi vào
+   * localStorage để phiên không sống tiếp sau khi đóng trình duyệt.
+   */
+  static refreshed(result: { accessToken: string; user: UserType }) {
+    const store = sessionStore();
+    if (!store) {
+      Session.save(result, false);
+      return;
+    }
+    store.setItem(TOKEN_KEY, result.accessToken);
+    store.setItem(USER_KEY, JSON.stringify(result.user));
+    emit();
   }
 
   static getUser(): UserType | null {

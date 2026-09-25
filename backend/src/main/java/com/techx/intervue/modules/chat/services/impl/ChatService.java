@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -97,12 +98,18 @@ public class ChatService implements ChatServiceInterface {
         return new ChatReplyResource(answer.reply(), answer.intent(), answer.results());
     }
 
+    /**
+     * sessionKey do client tự sinh và endpoint public, nên biết key không đủ để đọc lịch sử: user
+     * đã đăng nhập chỉ thấy tin của chính mình, khách vãng lai chỉ thấy tin không gắn user nào
+     * (R-06).
+     */
     @Override
-    public List<ChatMessageResource> history(String sessionKey) {
+    public List<ChatMessageResource> history(String sessionKey, Long userId) {
         List<ChatMessage> latest =
                 new ArrayList<>(messages.findTop50BySessionKeyOrderByIdDesc(sessionKey));
         java.util.Collections.reverse(latest);
         return latest.stream()
+                .filter(m -> Objects.equals(m.getUserId(), userId))
                 .map(
                         m ->
                                 new ChatMessageResource(

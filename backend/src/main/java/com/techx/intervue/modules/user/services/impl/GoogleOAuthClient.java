@@ -3,6 +3,7 @@ package com.techx.intervue.modules.user.services.impl;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.techx.intervue.config.OAuthProperties;
 import com.techx.intervue.modules.user.enums.SocialProvider;
+import com.techx.intervue.modules.user.exceptions.OAuthNotConfiguredException;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import java.util.List;
 import java.util.Set;
@@ -64,7 +65,7 @@ public class GoogleOAuthClient {
         if (config == null
                 || !StringUtils.hasText(config.clientId())
                 || !StringUtils.hasText(config.redirectUri())) {
-            throw new IllegalStateException("app.oauth.google is not configured");
+            throw new OAuthNotConfiguredException("google");
         }
         return UriComponentsBuilder.fromUriString(AUTHORIZE_URI)
                 .queryParam("client_id", config.clientId())
@@ -82,7 +83,7 @@ public class GoogleOAuthClient {
         if (config == null
                 || !StringUtils.hasText(config.clientId())
                 || !StringUtils.hasText(config.clientSecret())) {
-            throw new IllegalStateException("app.oauth.google is not configured");
+            throw new OAuthNotConfiguredException("google");
         }
         MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
         form.add("code", code);

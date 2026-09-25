@@ -4,6 +4,7 @@ import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.filters.JwtAuthFilter;
 import com.techx.intervue.helpers.CookieHelper;
+import com.techx.intervue.helpers.IpHelper;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
@@ -27,6 +28,7 @@ import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.time.Duration;
 import lombok.AllArgsConstructor;
@@ -214,8 +216,8 @@ public class AuthController extends BaseController {
      */
     @PostMapping("/forgot-password")
     public ResponseEntity<ApiResource<Void>> forgotPassword(
-            @Valid @RequestBody ForgotPasswordRequest request) {
-        passwordResetService.requestReset(request.email());
+            @Valid @RequestBody ForgotPasswordRequest request, HttpServletRequest httpRequest) {
+        passwordResetService.requestReset(request.email(), IpHelper.getClientIp(httpRequest));
         return ok(null, "If that email is registered, you will receive a password reset link.");
     }
 

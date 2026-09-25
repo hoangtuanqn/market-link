@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -92,6 +93,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     return;
                 }
 
+                // Token cấp trước lần đăng xuất mọi thiết bị (đổi / đặt lại mật khẩu)
+                if (userSessionCache.isRevoked(userId, jwtService.extractIssuedAt(token))) {
+                    writeErrorResponse(response, "Your session has expired.");
+                    return;
+                }
+
                 // Load permissions từ Redis cache theo roles
                 // Set<String> permissions = permissionCacheService.getPermissionsByRoles(
                 // session.roles().stream().toList());
@@ -122,6 +129,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             writeErrorResponse(response, message);
             return;
 
+        } catch (DataAccessException e) {
+            // Redis / DB lỗi không phải lỗi của token: trả 503 để FE không refresh rồi đăng xuất
+            // user
+            log.error("Could not check the access token: {}", e.getMessage());
+            writeErrorResponse(
+                    response,
+                    HttpServletResponse.SC_SERVICE_UNAVAILABLE,
+                    "SERVICE_UNAVAILABLE",
+                    "Something went wrong on our side. Please try again later.");
+            return;
         } catch (Exception e) {
             writeErrorResponse(response, "Token authentication failed.");
             return;
@@ -131,8 +148,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private void writeErrorResponse(HttpServletResponse response, String message)
             throws IOException {
-        ErrorResource error = ErrorResource.builder().code("UNAUTHORIZED").build();
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        writeErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "UNAUTHORIZED", message);
+    }
+
+    private void writeErrorResponse(
+            HttpServletResponse response, int status, String code, String message)
+            throws IOException {
+        ErrorResource error = ErrorResource.builder().code(code).build();
+        response.setStatus(status);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         response.getWriter()

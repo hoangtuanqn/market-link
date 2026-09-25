@@ -23,10 +23,14 @@ const REVIEWS_PER_PAGE = 6;
 /** FR-011 — a stall's profile: this week's stock, reviews, and where to collect. */
 const StallProfilePage = () => {
   const { id } = useParams<{ id: string }>();
-  const f = farmer(Number(id));
+  // Gian hàng chờ duyệt / bị đình chỉ không có trang công khai (trang Products cũng chỉ hiện gian đã duyệt)
+  const found = farmer(Number(id));
+  const f = found?.approval === 'approved' ? found : undefined;
+  const availableDays = f ? [1, 2, 3, 4, 5, 6, 0].filter((d) => f.days.split(', ').includes(DOW_ABBR[d])) : [];
 
   const [tab, setTab] = useState<'stock' | 'reviews' | 'about'>('stock');
-  const [day, setDay] = useState(6);
+  // Mặc định chọn ngày bán đầu tiên của gian hàng, không cố định Thứ 7
+  const [day, setDay] = useState(availableDays[0] ?? 6);
   const [reviewFilter, setReviewFilter] = useState<'all' | 'farmer' | 'product'>('all');
   const [reviewPage, setReviewPage] = useState(1);
 
@@ -40,7 +44,6 @@ const StallProfilePage = () => {
   }
 
   const stallProducts = products.filter((p) => p.farmerId === f.id);
-  const availableDays = [1, 2, 3, 4, 5, 6, 0].filter((d) => f.days.split(', ').includes(DOW_ABBR[d]));
 
   const allReviews = reviewsForFarmer(f.id);
   const filteredReviews = reviewFilter === 'all' ? allReviews : allReviews.filter((r) => r.targetType === reviewFilter);
