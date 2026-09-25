@@ -58,11 +58,21 @@ public class FarmerProfile {
     @Column(name = "reject_reason", length = 255)
     private String rejectReason;
 
+    /** Lý do Admin đình chỉ — chỉ có giá trị khi approvalStatus = SUSPENDED. */
+    @Column(name = "suspend_reason", length = 255)
+    private String suspendReason;
+
     @Column(name = "approved_by")
     private Long approvedBy;
 
     @Column(name = "approved_at")
     private Instant approvedAt;
+
+    @Column(name = "suspended_by")
+    private Long suspendedBy;
+
+    @Column(name = "suspended_at")
+    private Instant suspendedAt;
 
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
