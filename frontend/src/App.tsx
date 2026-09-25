@@ -49,6 +49,7 @@ import FarmerMessagesPage from './pages/FarmerMessages';
 import FarmerNotificationsPage from './pages/FarmerNotifications';
 import FarmerPendingPage from './pages/FarmerPending';
 import FarmerPromotePage from './pages/FarmerPromote';
+import FarmerSettingsPage from './pages/FarmerSettings';
 import AdminLoginPage from './pages/AdminLogin';
 import AdminHomePage from './pages/AdminHome';
 import AdminVerifyPage from './pages/AdminVerify';
@@ -174,6 +175,7 @@ const App = () => {
           <Route path="notifications" element={<FarmerNotificationsPage />} />
           <Route path="pending" element={<FarmerPendingPage />} />
           <Route path="promote" element={<FarmerPromotePage />} />
+          <Route path="settings" element={<FarmerSettingsPage />} />
         </Route>
 
         {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
