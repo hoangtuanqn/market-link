@@ -53,7 +53,10 @@ const FarmerProductsPage = () => {
       label: 'Product',
       render: (p) => (
         <>
-          <Link to="/farmer/products/new" className="text-brand font-bold underline-offset-2 hover:underline">
+          <Link
+            to={`/farmer/products/${p.id}/edit`}
+            className="text-brand font-bold underline-offset-2 hover:underline"
+          >
             {p.name}
           </Link>
           <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">{p.category}</span>
@@ -105,7 +108,7 @@ const FarmerProductsPage = () => {
       align: 'actions',
       render: (p) => (
         <div className="flex justify-end gap-2">
-          <ButtonLink variant="secondary" size="sm" to="/farmer/products/new">
+          <ButtonLink variant="secondary" size="sm" to={`/farmer/products/${p.id}/edit`}>
             Edit
           </ButtonLink>
           <Button variant="danger" size="sm" onClick={() => setDeleteTarget(p)}>
