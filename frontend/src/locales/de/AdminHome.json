@@ -1,9 +1,61 @@
 {
-  "overline": "Admin-Bereich",
-  "hello": "Hallo, {{name}}",
-  "fallbackName": "Admin",
-  "empty": {
-    "title": "Das Dashboard ist in Arbeit",
-    "text": "Summen für Landwirte, Kunden, Märkte und Bestellungen erscheinen hier, sobald das Admin-Dashboard fertig ist."
+  "overline": "Plattform · {{year}}",
+  "title": "MarketLink heute",
+  "vs": "gegenüber {{month}}",
+  "tilesNote": "{{now}} bis jetzt, neben {{prev}}. Jede Kachel öffnet, was hinter ihrer Zahl steckt.",
+  "kpi": {
+    "farmers": "Erzeuger",
+    "farmersNote": "{{waiting}} warten auf Freigabe · {{suspended}} gesperrt",
+    "farmersLink": "Anträge prüfen",
+    "customers": "Kundinnen und Kunden",
+    "customersNote": "{{count}} in diesem Monat dazugekommen",
+    "customersLink": "Kundenliste öffnen",
+    "markets": "Märkte",
+    "marketsNote": "alle aktiv",
+    "marketsLink": "Marktliste öffnen",
+    "orders": "Bestellungen",
+    "ordersNote": "{{week}} diese Woche · {{total}} abgeschlossen",
+    "ordersLink": "Bestellungen öffnen"
+  },
+  "revenue": {
+    "title": "Umsatz pro Tag",
+    "note": "Abgeschlossene Bestellungen, in Millionen ₫. {{now}} gegen {{prev}}.",
+    "caption": "Umsatz pro Tag im {{now}} gegen {{prev}}, in Millionen Dong",
+    "axis": "Tag des Monats",
+    "reports": "Vollständige Berichte"
+  },
+  "attention": {
+    "title": "Braucht Aufmerksamkeit",
+    "farmers_one": "Erzeugerantrag wartet",
+    "farmers_other": "Erzeugeranträge warten",
+    "reported_one": "von einem Stand gemeldete Bewertung",
+    "reported_other": "von einem Stand gemeldete Bewertungen",
+    "feedback_one": "offene Rückmeldung",
+    "feedback_other": "offene Rückmeldungen, eine davon ein Fehler",
+    "announcements_one": "Hinweis läuft, Thảo Điền am 04.10. geschlossen",
+    "announcements_other": "Hinweise laufen"
+  },
+  "earned": {
+    "title": "Was MarketLink verdient hat",
+    "link": "Umsatzbericht",
+    "note": "{{month}}, von Ständen, die Platzierung kaufen. Getrennt von dem Geld, das die Märkte eingenommen haben.",
+    "of": "₫ · das sind {{pct}} % der {{gmv}}, die die Märkte eingenommen haben"
+  },
+  "byMarket": {
+    "title": "Bestellungen dieser Woche nach Markt",
+    "link": "Alle Bestellungen",
+    "suffix": "Bestellungen"
+  },
+  "latest": {
+    "title": "Neueste Bestellungen auf der ganzen Plattform",
+    "readOnly": "Nur lesen. Administratoren ändern keinen Bestellstatus."
+  },
+  "col": {
+    "order": "Bestellung",
+    "stall": "Stand",
+    "market": "Markt",
+    "pickup": "Abholung",
+    "total": "Summe",
+    "status": "Status"
   }
 }

@@ -1,9 +1,57 @@
 {
-  "overline": "관리자 영역",
-  "hello": "안녕하세요, {{name}}님",
-  "fallbackName": "관리자",
-  "empty": {
-    "title": "대시보드를 준비하고 있어요",
-    "text": "관리자 대시보드가 완성되면 농부, 고객, 장터, 주문 합계가 여기에 표시돼요."
+  "overline": "플랫폼 · {{year}}",
+  "title": "오늘의 MarketLink",
+  "vs": "{{month}} 대비",
+  "tilesNote": "{{now}} 현재까지, {{prev}}와 나란히 봅니다. 어느 타일이든 눌러 그 숫자의 내역을 열 수 있습니다.",
+  "kpi": {
+    "farmers": "농가",
+    "farmersNote": "승인 대기 {{waiting}}건 · 정지 {{suspended}}건",
+    "farmersLink": "신청 검토하기",
+    "customers": "고객",
+    "customersNote": "이번 달 {{count}}명 가입",
+    "customersLink": "고객 목록 열기",
+    "markets": "장터",
+    "marketsNote": "모두 운영 중",
+    "marketsLink": "장터 목록 열기",
+    "orders": "주문",
+    "ordersNote": "이번 주 {{week}}건 · 완료 {{total}}",
+    "ordersLink": "주문 목록 열기"
+  },
+  "revenue": {
+    "title": "일별 매출",
+    "note": "완료된 주문, 단위는 백만 ₫. {{now}}과 {{prev}} 비교.",
+    "caption": "{{now}}과 {{prev}}의 일별 매출, 단위는 백만 동",
+    "axis": "날짜",
+    "reports": "전체 리포트 보기"
+  },
+  "attention": {
+    "title": "처리가 필요한 일",
+    "farmers_other": "건의 농가 신청이 대기 중",
+    "reported_other": "건의 신고된 후기",
+    "feedback_other": "건의 미처리 의견, 그중 하나는 버그",
+    "announcements_other": "건의 공지가 노출 중, Thảo Điền 10월 4일 휴장"
+  },
+  "earned": {
+    "title": "MarketLink의 수입",
+    "link": "매출 리포트",
+    "note": "{{month}}, 노출 자리를 산 가게에서 들어온 돈입니다. 장터가 가져간 돈과는 따로 셉니다.",
+    "of": "₫ · 장터가 가져간 {{gmv}}의 {{pct}}%"
+  },
+  "byMarket": {
+    "title": "이번 주 장터별 주문",
+    "link": "모든 주문",
+    "suffix": "건"
+  },
+  "latest": {
+    "title": "플랫폼 전체 최근 주문",
+    "readOnly": "읽기 전용. 관리자는 주문 상태를 바꾸지 않습니다."
+  },
+  "col": {
+    "order": "주문",
+    "stall": "가게",
+    "market": "장터",
+    "pickup": "수령",
+    "total": "합계",
+    "status": "상태"
   }
 }

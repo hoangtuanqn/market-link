@@ -1,9 +1,65 @@
 {
-  "overline": "Espace admin",
-  "hello": "Bonjour, {{name}}",
-  "fallbackName": "admin",
-  "empty": {
-    "title": "Le tableau de bord arrive bientôt",
-    "text": "Les totaux des agriculteurs, clients, marchés et commandes s’afficheront ici une fois le tableau de bord admin construit."
+  "overline": "Plateforme · {{year}}",
+  "title": "MarketLink aujourd'hui",
+  "vs": "contre {{month}}",
+  "tilesNote": "{{now}} jusqu'ici, à côté de {{prev}}. Chaque tuile ouvre le détail derrière son chiffre.",
+  "kpi": {
+    "farmers": "Producteurs",
+    "farmersNote": "{{waiting}} en attente d'approbation · {{suspended}} suspendus",
+    "farmersLink": "Examiner les demandes",
+    "customers": "Clients",
+    "customersNote": "{{count}} inscrits ce mois-ci",
+    "customersLink": "Ouvrir les clients",
+    "markets": "Marchés",
+    "marketsNote": "tous actifs",
+    "marketsLink": "Ouvrir les marchés",
+    "orders": "Commandes",
+    "ordersNote": "{{week}} cette semaine · {{total}} terminées",
+    "ordersLink": "Ouvrir les commandes"
+  },
+  "revenue": {
+    "title": "Chiffre d'affaires par jour",
+    "note": "Commandes terminées, en millions de ₫. {{now}} face à {{prev}}.",
+    "caption": "Chiffre d'affaires par jour en {{now}} face à {{prev}}, en millions de dongs",
+    "axis": "Jour du mois",
+    "reports": "Rapports complets"
+  },
+  "attention": {
+    "title": "À traiter",
+    "farmers_one": "demande de producteur en attente",
+    "farmers_many": "demandes de producteurs en attente",
+    "farmers_other": "demandes de producteurs en attente",
+    "reported_one": "avis signalé par un étal",
+    "reported_many": "avis signalés par un étal",
+    "reported_other": "avis signalés par un étal",
+    "feedback_one": "retour ouvert",
+    "feedback_many": "retours ouverts, dont un bug",
+    "feedback_other": "retours ouverts, dont un bug",
+    "announcements_one": "annonce en ligne, Thảo Điền fermé le 04/10",
+    "announcements_many": "annonces en ligne",
+    "announcements_other": "annonces en ligne"
+  },
+  "earned": {
+    "title": "Ce que MarketLink a gagné",
+    "link": "Rapport de revenus",
+    "note": "{{month}}, versé par les étals qui achètent de la visibilité. Distinct de l'argent encaissé par les marchés.",
+    "of": "₫ · soit {{pct}} % des {{gmv}} encaissés par les marchés"
+  },
+  "byMarket": {
+    "title": "Commandes de la semaine par marché",
+    "link": "Toutes les commandes",
+    "suffix": "commandes"
+  },
+  "latest": {
+    "title": "Dernières commandes de la plateforme",
+    "readOnly": "Lecture seule. Les administrateurs ne changent pas le statut d'une commande."
+  },
+  "col": {
+    "order": "Commande",
+    "stall": "Étal",
+    "market": "Marché",
+    "pickup": "Retrait",
+    "total": "Total",
+    "status": "Statut"
   }
 }
