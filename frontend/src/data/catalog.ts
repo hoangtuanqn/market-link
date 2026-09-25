@@ -555,6 +555,17 @@ const RAW_PRODUCTS: RawProduct[] = [
     status: 'available',
     desc: '200 g bag, sun-dried. Soak for 20 minutes before cooking.',
   },
+  {
+    id: 26,
+    name: 'Morning glory, wild',
+    farmerId: 1,
+    cat: 1,
+    price: 20000,
+    unit: 'bunch',
+    stock: 0,
+    status: 'unavailable',
+    desc: 'Foraged, not farmed — only listed when there is enough for a full week.',
+  },
 ];
 
 /**

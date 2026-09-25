@@ -38,6 +38,11 @@ import SearchPage from './pages/Search';
 import FarmerOverviewPage from './pages/FarmerOverview';
 import FarmerOrdersPage from './pages/FarmerOrders';
 import FarmerOrderDetailPage from './pages/FarmerOrderDetail';
+import FarmerStockWeekPage from './pages/FarmerStockWeek';
+import FarmerProductsPage from './pages/FarmerProducts';
+import FarmerProductFormPage from './pages/FarmerProductForm';
+import FarmerStallProfilePage from './pages/FarmerStallProfile';
+import FarmerSlotsPage from './pages/FarmerSlots';
 import AdminLoginPage from './pages/AdminLogin';
 import AdminHomePage from './pages/AdminHome';
 import AdminVerifyPage from './pages/AdminVerify';
@@ -144,6 +149,19 @@ const App = () => {
               </RemountOnParam>
             }
           />
+          <Route path="stock" element={<FarmerStockWeekPage />} />
+          <Route path="products" element={<FarmerProductsPage />} />
+          <Route path="products/new" element={<FarmerProductFormPage />} />
+          <Route
+            path="products/:id/edit"
+            element={
+              <RemountOnParam param="id">
+                <FarmerProductFormPage />
+              </RemountOnParam>
+            }
+          />
+          <Route path="stall" element={<FarmerStallProfilePage />} />
+          <Route path="slots" element={<FarmerSlotsPage />} />
         </Route>
 
         {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
