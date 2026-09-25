@@ -88,6 +88,12 @@ public class SecurityConfig {
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
                                         .permitAll()
+                                        // FR-111: WebSocket handshake không mang header
+                                        // Authorization;
+                                        // JWT được kiểm ở frame STOMP CONNECT
+                                        // (StompAuthInterceptor)
+                                        .requestMatchers("/ws", "/ws/**")
+                                        .permitAll()
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()
