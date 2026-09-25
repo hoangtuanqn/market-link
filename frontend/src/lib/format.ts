@@ -43,6 +43,7 @@ export function weekday(date: Date): string {
 /** Date → "Thu 24/09 · 14:35" */
 export function nowLabel(date: Date): string {
   return `${weekday(date)} ${pad(date.getDate())}/${pad(date.getMonth() + 1)} · ${formatTime(date)}`;
+}
 
 /**
  * The next date a weekday falls on, counted from today; today itself counts. (6) → "26/09". Day chips show the weekday
