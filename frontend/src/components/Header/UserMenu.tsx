@@ -3,11 +3,14 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import Avatar from '@/components/Avatar';
 import { LogOutIcon, SlidersIcon, UsersIcon } from '@/components/icons';
+import TierBadge from '@/components/TierBadge';
+import type { Tier } from '@/types/achievement.types';
 
 type UserMenuProps = {
   name: string;
   email?: string;
   avatarUrl?: string;
+  tier?: Tier;
   /** Trang Settings theo vai: Customer /settings, Farmer /farmer/settings. */
   settingsTo?: string;
   onSignOut: () => void;
@@ -20,7 +23,7 @@ const item =
  * Nút tài khoản bên phải SiteHeader: ảnh + tên, bấm mở menu Profile / Settings / Sign out (menu button pattern của
  * WAI-ARIA: Esc hoặc bấm ra ngoài thì đóng, mũi tên lên/xuống đi giữa các mục, Home/End về đầu/cuối).
  */
-const UserMenu = ({ name, email, avatarUrl, settingsTo = '/settings', onSignOut }: UserMenuProps) => {
+const UserMenu = ({ name, email, avatarUrl, tier, settingsTo = '/settings', onSignOut }: UserMenuProps) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const menuId = useId();
@@ -85,7 +88,15 @@ const UserMenu = ({ name, email, avatarUrl, settingsTo = '/settings', onSignOut 
         onKeyDown={onButtonKeyDown}
         className="text-small text-board-muted border-board-muted hover:text-on-board flex min-h-11 cursor-pointer items-center gap-2 border-0 border-l-[1.5px] border-solid bg-transparent pr-1 pl-3"
       >
-        <Avatar name={name} email={email} url={avatarUrl} size={32} tone="accent" />
+        <Avatar
+          name={name}
+          email={email}
+          url={avatarUrl}
+          size={32}
+          tone="accent"
+          tier={tier}
+          className="[--tier-gap:var(--board)]"
+        />
         <span>
           <Trans t={t} i18nKey="header.hi" values={{ name }} components={{ b: <b className="text-on-board" /> }} />
         </span>
@@ -113,10 +124,11 @@ const UserMenu = ({ name, email, avatarUrl, settingsTo = '/settings', onSignOut 
           className="bg-surface-raised text-ink border-line absolute top-[calc(100%+8px)] right-0 z-(--z-dropdown) flex w-60 flex-col gap-0.5 rounded-md border-[1.5px] p-1.5 shadow-(--shadow-pop)"
         >
           <div className="border-line mb-1 flex items-center gap-3 border-b px-3 pt-2 pb-3">
-            <Avatar name={name} email={email} url={avatarUrl} size={40} />
+            <Avatar name={name} email={email} url={avatarUrl} size={40} tier={tier} />
             <div className="min-w-0">
               <p className="truncate text-[15px] font-bold">{name}</p>
               {email && <p className="text-small text-ink-muted truncate">{email}</p>}
+              {tier && <TierBadge tier={tier} className="mt-1" />}
             </div>
           </div>
           <Link role="menuitem" tabIndex={-1} to="/account" onClick={() => close(false)} className={item}>

@@ -1,0 +1,240 @@
+/*
+ * Hạng thành tích (Đồng / Bạc / Vàng / Kim cương): viền quanh ảnh đại diện và huy hiệu hạng.
+ *
+ * KHÔNG thuộc design system — tính năng đề xuất ngoài SRS (LEAD yêu cầu 26/09/2026). Design system chưa
+ * có màu kim loại nên chúng nằm riêng ở đây thay vì sửa tay marketlink-*.css. FE1: khi gộp vào design
+ * system thì chuyển các biến --tier-* sang tokens.json, sinh lại, rồi xoá file này.
+ *
+ * Viết bằng CSS thuần (không @apply) để prototype nạp chung được: docs/prototype/prototype.css @import
+ * file này, còn app dùng các lớp ml-tier-* và utility bg-tier-* / text-tier-*.
+ */
+
+:root {
+  --tier-bronze-ring: linear-gradient(135deg, #f2b98a 0%, #c47a3e 45%, #8f4d1f 100%);
+  --tier-silver-ring: linear-gradient(135deg, #f4f6f8 0%, #aab2bb 45%, #6f7882 100%);
+  --tier-gold-ring: linear-gradient(135deg, #fbe7a1 0%, #e0a91f 45%, #a6720a 100%);
+  --tier-diamond-ring: conic-gradient(from 200deg, #7fdbff, #7b61ff, #ff8bd1, #7fdbff, #b8f1ff, #7fdbff);
+  --tier-diamond-glow: 0 0 0 1px #7b61ff33, 0 0 14px #7b61ff55;
+  --tier-diamond-stripe: linear-gradient(90deg, #7fdbff, #7b61ff 40%, #ff8bd1 70%, #7fdbff);
+  --tier-diamond-sparkle: #7b61ff59;
+
+  --tier-bronze-bg: #f1dcc6;
+  --tier-bronze-ink: #6b3d17;
+  --tier-silver-bg: #e3e6ea;
+  --tier-silver-ink: #3f4750;
+  --tier-gold-bg: #f6e3a4;
+  --tier-gold-ink: #664600;
+  --tier-diamond-bg: #e2e0ff;
+  --tier-diamond-ink: #3a2b8f;
+}
+
+:root[data-theme='dark'] {
+  --tier-diamond-sparkle: #cfc7ff66;
+  --tier-diamond-glow: 0 0 0 1px #9d8bff55, 0 0 16px #9d8bff66;
+
+  --tier-bronze-bg: #3b2616;
+  --tier-bronze-ink: #f0c49c;
+  --tier-silver-bg: #2d3237;
+  --tier-silver-ink: #dde2e7;
+  --tier-gold-bg: #3d3010;
+  --tier-gold-ink: #f6d77a;
+  --tier-diamond-bg: #2a2550;
+  --tier-diamond-ink: #cfc7ff;
+}
+
+@theme inline {
+  --color-tier-bronze-bg: var(--tier-bronze-bg);
+  --color-tier-bronze-ink: var(--tier-bronze-ink);
+  --color-tier-silver-bg: var(--tier-silver-bg);
+  --color-tier-silver-ink: var(--tier-silver-ink);
+  --color-tier-gold-bg: var(--tier-gold-bg);
+  --color-tier-gold-ink: var(--tier-gold-ink);
+  --color-tier-diamond-bg: var(--tier-diamond-bg);
+  --color-tier-diamond-ink: var(--tier-diamond-ink);
+}
+
+/*
+ * Viền: vòng gradient bao ngoài ảnh, cách ảnh một khe màu nền (--tier-gap). Trên header / drawer (nền
+ * board) đặt --tier-gap: var(--board). Hạng càng cao viền càng dày; Vàng và Kim cương có thêm dấu ở góc.
+ */
+.ml-tier-ring {
+  --tier-gap: var(--surface-raised);
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-sizing: content-box;
+  width: max-content;
+  height: max-content;
+  border-radius: 9999px;
+  padding: var(--tier-ring-width, 3px);
+  background: var(--tier-bronze-ring);
+}
+.ml-tier-ring > :first-child {
+  box-shadow: 0 0 0 2px var(--tier-gap);
+}
+.ml-tier-ring[data-tier='silver'] {
+  --tier-ring-width: 3px;
+  background: var(--tier-silver-ring);
+}
+.ml-tier-ring[data-tier='gold'] {
+  --tier-ring-width: 4px;
+  background: var(--tier-gold-ring);
+}
+.ml-tier-ring[data-tier='diamond'] {
+  --tier-ring-width: 4px;
+  background: var(--tier-diamond-ring);
+  box-shadow: var(--tier-diamond-glow);
+}
+
+/* Dấu ở góc dưới phải cho Vàng (sao) và Kim cương (viên kim cương), chỉ ở ảnh từ 40px trở lên. */
+.ml-tier-mark {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 34%;
+  min-width: 16px;
+  max-width: 28px;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  box-shadow: 0 0 0 2px var(--tier-gap);
+}
+.ml-tier-ring[data-tier='gold'] .ml-tier-mark {
+  background: var(--tier-gold-ring);
+  color: #5a3d00;
+}
+.ml-tier-ring[data-tier='diamond'] .ml-tier-mark {
+  background: var(--tier-diamond-ring);
+  color: #ffffff;
+}
+.ml-tier-mark svg {
+  width: 62%;
+  height: 62%;
+}
+
+/* Huy hiệu hạng: viên thuốc nhỏ cạnh tên, chấm màu hạng đi trước chữ. */
+.ml-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 8px 1px 5px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.ml-tier-badge::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--tier-dot);
+}
+.ml-tier-badge[data-tier='bronze'] {
+  --tier-dot: var(--tier-bronze-ring);
+  background: var(--tier-bronze-bg);
+  color: var(--tier-bronze-ink);
+}
+.ml-tier-badge[data-tier='silver'] {
+  --tier-dot: var(--tier-silver-ring);
+  background: var(--tier-silver-bg);
+  color: var(--tier-silver-ink);
+}
+.ml-tier-badge[data-tier='gold'] {
+  --tier-dot: var(--tier-gold-ring);
+  background: var(--tier-gold-bg);
+  color: var(--tier-gold-ink);
+}
+.ml-tier-badge[data-tier='diamond'] {
+  --tier-dot: var(--tier-diamond-ring);
+  background: var(--tier-diamond-bg);
+  color: var(--tier-diamond-ink);
+}
+
+/*
+ * Bảng hạng cá nhân (trang Account): tô theo màu hạng, dải kim loại chạy ở mép trên, Kim cương thêm hoa văn
+ * lấp lánh. Chữ dùng --tier-*-ink nên đủ tương phản ở cả hai theme.
+ */
+.ml-tier-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  padding: 20px var(--space-4) var(--space-4);
+  background: var(--tier-panel-bg);
+  color: var(--tier-panel-ink);
+}
+.ml-tier-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 6px;
+  background: var(--tier-panel-ring);
+}
+.ml-tier-panel[data-tier='bronze'] {
+  --tier-panel-bg: var(--tier-bronze-bg);
+  --tier-panel-ink: var(--tier-bronze-ink);
+  --tier-panel-ring: var(--tier-bronze-ring);
+}
+.ml-tier-panel[data-tier='silver'] {
+  --tier-panel-bg: var(--tier-silver-bg);
+  --tier-panel-ink: var(--tier-silver-ink);
+  --tier-panel-ring: var(--tier-silver-ring);
+}
+.ml-tier-panel[data-tier='gold'] {
+  --tier-panel-bg: var(--tier-gold-bg);
+  --tier-panel-ink: var(--tier-gold-ink);
+  --tier-panel-ring: var(--tier-gold-ring);
+}
+.ml-tier-panel[data-tier='diamond'] {
+  --tier-panel-bg: var(--tier-diamond-bg);
+  --tier-panel-ink: var(--tier-diamond-ink);
+  --tier-panel-ring: var(--tier-diamond-stripe);
+  background-image:
+    radial-gradient(circle at 58% 24%, var(--tier-diamond-sparkle) 0 2px, transparent 2.5px),
+    radial-gradient(circle at 76% 62%, var(--tier-diamond-sparkle) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 90% 30%, var(--tier-diamond-sparkle) 0 2.5px, transparent 3px),
+    radial-gradient(circle at 84% 86%, var(--tier-diamond-sparkle) 0 1.5px, transparent 2px),
+    radial-gradient(circle at 96% 58%, var(--tier-diamond-sparkle) 0 1px, transparent 1.5px);
+  background-color: var(--tier-diamond-bg);
+}
+.ml-tier-panel .ml-tier-ring {
+  --tier-gap: var(--tier-panel-bg);
+}
+
+/* Thanh tiến độ mang màu của hạng đang hướng tới. */
+.ml-tier-fill {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--brand);
+}
+.ml-tier-fill[data-tier='silver'] {
+  background: var(--tier-silver-ring);
+}
+.ml-tier-fill[data-tier='gold'] {
+  background: var(--tier-gold-ring);
+}
+.ml-tier-fill[data-tier='diamond'] {
+  background: var(--tier-diamond-ring);
+}
+
+/* Chấm màu hạng đầu dòng (danh sách đặc quyền). */
+.ml-tier-dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--tier-bronze-ring);
+}
+.ml-tier-dot[data-tier='silver'] {
+  background: var(--tier-silver-ring);
+}
+.ml-tier-dot[data-tier='gold'] {
+  background: var(--tier-gold-ring);
+}
+.ml-tier-dot[data-tier='diamond'] {
+  background: var(--tier-diamond-ring);
+}

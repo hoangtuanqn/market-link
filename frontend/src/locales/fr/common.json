@@ -382,5 +382,12 @@
     "noneNote": "Ouvre OpenStreetMap avec seulement la destination renseignée.",
     "privacy": "L’itinéraire s’ouvre sur openstreetmap.org dans un nouvel onglet. MarketLink ne suit pas votre position.",
     "open": "Ouvrir l’itinéraire"
+  },
+  "tier": {
+    "bronze": "Bronze",
+    "silver": "Argent",
+    "gold": "Or",
+    "diamond": "Diamant",
+    "badge": "Niveau {{tier}}"
   }
 }

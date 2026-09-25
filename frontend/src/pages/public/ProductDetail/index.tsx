@@ -15,6 +15,7 @@ import { farmer, product, products, reviewTags, reviewsForProduct } from '@/data
 import { markets } from '@/data/home';
 import { dayList, formatClock, formatDate, perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
 import Notification from '@/utils/notification';
+import { demoTierOf } from '@/data/tiers';
 
 const EXTRA_REVIEW = {
   author: 'Bích Ngọc',
@@ -294,7 +295,15 @@ const ProductDetailPage = () => {
         </Card>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {allReviews.map((r, i) => (
-            <ReviewCard key={i} author={r.author} date={r.date} rating={r.rating} text={r.text} fluid />
+            <ReviewCard
+              key={i}
+              author={r.author}
+              authorTier={demoTierOf(r.author)}
+              date={r.date}
+              rating={r.rating}
+              text={r.text}
+              fluid
+            />
           ))}
         </div>
       </section>

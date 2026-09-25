@@ -207,9 +207,9 @@
         // Proposal (not in the SRS): photo + menu with Profile, Settings, Sign out. Built in the app as UserMenu.
         var settings = role === 'farmer' ? link('farmer/settings.html') : link('customer/settings.html');
         tools += '<div class="pt-umenu"><button type="button" class="ml-huser pt-umenu-btn" aria-haspopup="menu" aria-expanded="false" data-umenu>' +
-          PT.avatar(o.userName, 32, true) + '<span>Hi, <b>' + esc(shown) + '</b></span><span class="pt-umenu-chev" aria-hidden="true">▾</span></button>' +
+          PT.avatar(o.userName, 32, true, u.tier) + '<span>Hi, <b>' + esc(shown) + '</b></span><span class="pt-umenu-chev" aria-hidden="true">▾</span></button>' +
           '<div class="pt-umenu-list" role="menu" aria-label="Your account" hidden>' +
-          '<div class="pt-umenu-head">' + PT.avatar(o.userName, 40) + '<div><b>' + esc(o.userName) + '</b>' + (u.email ? '<span>' + esc(u.email) + '</span>' : '') + '</div></div>' +
+          '<div class="pt-umenu-head">' + PT.avatar(o.userName, 40, false, u.tier) + '<div><b>' + esc(o.userName) + '</b>' + (u.email ? '<span>' + esc(u.email) + '</span>' : '') + PT.tierBadge(u.tier) + '</div></div>' +
           '<a role="menuitem" href="' + link('customer/account.html') + '">Profile</a>' +
           '<a role="menuitem" href="' + settings + '">Settings</a>' +
           '<a role="menuitem" href="' + link('public/login.html') + '">Sign out</a></div></div>';
@@ -224,10 +224,27 @@
     return '<header class="ml-header"><div class="ml-header-in">' + PT.logo(30, home) + '<nav aria-label="Main"><ul class="ml-nav">' + nav + '</ul></nav><div class="ml-header-tools">' + tools + '</div></div><div class="ml-header-twine" aria-hidden="true"></div></header>' + drawer;
   };
   /* Initials in a circle; `onBoard` uses accent because brand is nearly the board colour. */
-  PT.avatar = function (name, size, onBoard) {
+  PT.avatar = function (name, size, onBoard, tier) {
     var words = String(name || '?').trim().split(/\s+/);
     var ini = (words[0].charAt(0) + (words.length > 1 ? words[words.length - 1].charAt(0) : '')).toUpperCase();
-    return '<span class="pt-avatar' + (onBoard ? ' pt-avatar-accent' : '') + '" aria-hidden="true" style="width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.4) + 'px">' + esc(ini) + '</span>';
+    var face = '<span class="pt-avatar' + (onBoard ? ' pt-avatar-accent' : '') + '" aria-hidden="true" style="width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.4) + 'px">' + esc(ini) + '</span>';
+    return tier ? PT.tierRing(face, tier, size, onBoard) : face;
+  };
+
+  /* ---------- Your achievements (proposal, not in the SRS): tier frames and badges, src/styles/tiers.css ---------- */
+  var TIER_NAMES = { bronze: 'Bronze', silver: 'Silver', gold: 'Gold', diamond: 'Diamond' };
+  // Demo tiers by display name. The app reads them from the API (AchievementService.tiersFor) once reviews,
+  // orders and messages return them; until then frontend/src/data/tiers.ts holds the same list.
+  var DEMO_TIERS = { 'Minh Anh': 'gold', 'Phạm Minh Anh': 'gold', 'Lan Hương': 'silver', 'Lê Lan Hương': 'silver', 'Quốc Bảo': 'diamond', 'Thu Thảo': 'bronze', 'Hồng Nhung': 'silver', 'Văn Long': 'bronze', 'Bích Ngọc': 'gold', 'Minh Khang': 'silver', 'Nguyễn Minh Khang': 'silver', 'Kim Chi': 'bronze', 'Trần Phúc': 'diamond', 'Đức Anh': 'bronze' };
+  PT.tierOf = function (name) { return DEMO_TIERS[name]; };
+  PT.tierName = function (tier) { return TIER_NAMES[tier]; };
+  PT.tierBadge = function (tier) { return tier ? '<span class="ml-tier-badge" data-tier="' + tier + '">' + TIER_NAMES[tier] + ' tier</span>' : ''; };
+  var STAR = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1.5l1.9 4 4.3.5-3.2 2.9.9 4.3L8 11.1l-3.9 2.1.9-4.3L1.8 6l4.3-.5z"/></svg>';
+  var GEM = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4.2 2.5h7.6L15 6.4 8 14 1 6.4zM3.6 6.4l4.4 5 4.4-5z"/></svg>';
+  /* Wraps any round face in its tier frame; gold and diamond add a corner mark from 40px up. */
+  PT.tierRing = function (face, tier, size, onBoard) {
+    var mark = size >= 40 && (tier === 'gold' ? STAR : tier === 'diamond' ? GEM : '');
+    return '<span class="ml-tier-ring" data-tier="' + tier + '" aria-hidden="true"' + (onBoard ? ' style="--tier-gap:var(--board)"' : '') + '>' + face + (mark ? '<span class="ml-tier-mark">' + mark + '</span>' : '') + '</span>';
   };
   PT.footer = function (role) {
     // Only a Farmer has pre-orders to handle; everyone else is offered the way to become one.
@@ -313,7 +330,7 @@
   };
   PT.reviewCard = function (r, o) {
     o = o || {};
-    return '<article class="ml-card ml-review' + (o.fluid ? ' pt-fluid' : '') + '"' + (o.fluid ? ' style="width:auto"' : '') + '><div class="ml-review-head"><div class="ml-review-who"><span class="ml-review-author">' + esc(r.author) + '</span>' + (r.verified !== false ? '<span class="ml-review-verified">' + I.check() + 'Verified purchase</span>' : '') + '</div><span class="ml-review-meta">' + r.date + (r.target ? ' · ' + esc(r.target) : '') + '</span></div>' +
+    return '<article class="ml-card ml-review' + (o.fluid ? ' pt-fluid' : '') + '"' + (o.fluid ? ' style="width:auto"' : '') + '><div class="ml-review-head"><div class="ml-review-who"><span class="ml-review-author">' + esc(r.author) + '</span>' + PT.tierBadge(PT.tierOf(r.author)) + (r.verified !== false ? '<span class="ml-review-verified">' + I.check() + 'Verified purchase</span>' : '') + '</div><span class="ml-review-meta">' + r.date + (r.target ? ' · ' + esc(r.target) : '') + '</span></div>' +
       PT.rating(r.rating) + '<p class="ml-review-text">' + esc(r.text) + '</p>' +
       (r.reply ? '<div class="ml-review-reply"><b>' + esc(r.reply.by) + ' replied · ' + r.reply.date + '</b>' + esc(r.reply.text) + '</div>' : '') +
       (o.actions ? '<div class="ml-ticket-actions">' + o.actions + '</div>' : '') + '</article>';

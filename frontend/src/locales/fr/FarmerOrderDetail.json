@@ -57,6 +57,7 @@
   "customer": {
     "title": "Client",
     "name": "Nom",
+    "tier": "Niveau",
     "phone": "Téléphone",
     "ordersWithYou": "Commandes chez vous",
     "orders_one": "{{count}} commande",

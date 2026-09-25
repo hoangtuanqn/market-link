@@ -57,6 +57,7 @@
   "customer": {
     "title": "お客さま",
     "name": "名前",
+    "tier": "ランク",
     "phone": "電話",
     "ordersWithYou": "あなたのお店での注文",
     "orders_one": "{{count}} 件",

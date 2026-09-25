@@ -36,7 +36,7 @@
     <section class="ml-card pt-chat" aria-label="Conversation with Minh Khang">
       <div class="pt-chat-head">
         <div>
-          <b>Nguyễn Minh Khang</b>
+          <div class="pt-row-2"><b>Nguyễn Minh Khang</b><span class="ml-tier-badge" data-tier="silver">Silver tier</span></div>
           <p class="pt-small ml-muted">6 orders collected · 0903 ••• 218</p>
         </div>
         <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../farmer/order.html">Open order #ML-0421</a>
@@ -63,7 +63,7 @@
     { who: 'Nguyễn Minh Khang', mono: 'K', last: 'Could you hold 5 bunches instead of 2 on this order?', time: '09:33', current: true, unread: true },
     { who: 'Phạm Minh Anh', mono: 'A', last: 'Thank you, see you Saturday.', time: 'Yesterday' },
     { who: 'Lê Lan Hương', mono: 'H', last: 'Is the choy sum coming back next week?', time: '22/09' },
-  ].map(function (t) { return '<li><button type="button" class="pt-thread" aria-current="' + (t.current ? 'true' : 'false') + '" data-unread="' + (t.unread ? 'true' : 'false') + '"><span class="pt-thread-mono" aria-hidden="true">' + t.mono + '</span><span><b>' + PT.esc(t.who) + '</b><small>' + PT.esc(t.last) + '</small></span><time>' + t.time + '</time></button></li>'; }).join('');
+  ].map(function (t) { return '<li><button type="button" class="pt-thread" aria-current="' + (t.current ? 'true' : 'false') + '" data-unread="' + (t.unread ? 'true' : 'false') + '">' + (PT.tierOf(t.who) ? PT.tierRing('<span class="pt-thread-mono">' + t.mono + '</span>', PT.tierOf(t.who), 44) : '<span class="pt-thread-mono" aria-hidden="true">' + t.mono + '</span>') + '<span><b>' + PT.esc(t.who) + '</b><small>' + PT.esc(t.last) + '</small></span><time>' + t.time + '</time></button></li>'; }).join('');
 
   var ORDER_REF = '<a class="pt-msg-ref" href="../farmer/order.html"><b>Order #ML-0421 · Minh Khang</b>Sat 26/09 · 07:00–07:30 · 3 items · 56,000 ₫ · closes 19:00 on 25/09</a>';
   document.getElementById('log').innerHTML = [

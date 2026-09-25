@@ -2,6 +2,7 @@ import { useRef, useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import Avatar from '@/components/Avatar';
 import { Button } from '@/components/ui/button';
+import useMyAchievements from '@/hooks/useMyAchievements';
 import useSession from '@/hooks/useSession';
 import type { UserType } from '@/types/user.types';
 import Notification from '@/utils/notification';
@@ -17,6 +18,9 @@ import PhotoDialog, { type PhotoSource } from './photo/PhotoDialog';
 const AvatarCard = () => {
   const { t } = useTranslation('CustomerAccount');
   const { user } = useSession();
+  const { state: achievements } = useMyAchievements();
+  // Ai đăng nhập cũng có ít nhất viền Đồng, kể cả khi số liệu chưa tải xong hoặc tải lỗi
+  const tier = achievements.status === 'ready' ? achievements.data.tier : 'bronze';
   const inputRef = useRef<HTMLInputElement>(null);
   const [source, setSource] = useState<PhotoSource | null>(null);
 
@@ -54,7 +58,7 @@ const AvatarCard = () => {
 
   return (
     <section aria-labelledby="photo-title" className="flex flex-wrap items-center gap-5">
-      <Avatar name={user.fullName} email={user.email} url={user.avatarUrl} size={88} />
+      <Avatar name={user.fullName} email={user.email} url={user.avatarUrl} size={88} tier={tier} />
       <div className="flex min-w-0 flex-1 flex-col gap-3">
         <div>
           <h2 id="photo-title" className="text-h3">

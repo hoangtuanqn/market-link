@@ -55,6 +55,21 @@ logging:
     org.flywaydb: INFO
 
 app:
+  # Thành tích cá nhân (không có trong SRS, LEAD yêu cầu): ngưỡng lên hạng. Phải đạt đủ cả ba —
+  # số đơn hoàn tất, tổng đã chi (₫, chỉ đơn hoàn tất), tỉ lệ hoàn tất (% trên hoàn tất + tự huỷ).
+  tiers:
+    silver:
+      min-completed: 5
+      min-spent: 500000
+      min-completion-rate: 60
+    gold:
+      min-completed: 15
+      min-spent: 2000000
+      min-completion-rate: 75
+    diamond:
+      min-completed: 40
+      min-spent: 6000000
+      min-completion-rate: 85
   # File người dùng tải lên (ảnh đại diện). Docker: volume uploads-data ở /app/uploads
   storage:
     dir: ${STORAGE_DIR:./uploads}

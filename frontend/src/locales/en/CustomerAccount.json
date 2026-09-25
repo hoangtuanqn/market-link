@@ -115,5 +115,70 @@
   "crop": {
     "frame": "Photo framing. Drag, or use the arrow keys to move it and plus or minus to zoom.",
     "zoom": "Zoom"
+  },
+  "achievements": {
+    "title": "Your achievements",
+    "intro": "Counted from the orders you collected at the stalls. Only you see these figures.",
+    "loading": "Loading your achievements…",
+    "loadFailed": "Could not load your achievements.",
+    "completed": "Orders collected",
+    "cancelled": "Cancelled by you",
+    "declined": "Declined by the stall",
+    "inProgress": "In progress",
+    "spent": "Total spent",
+    "rate": "Completion rate",
+    "rateNone": "—",
+    "nextTitle": "On your way to {{tier}}",
+    "ofGoal": "{{value}} of {{goal}}",
+    "rateNeeded": "You also need a completion rate of at least {{rate}}%. Orders the stall declined never count against you.",
+    "top": "You are at the top tier. Thank you for shopping at the market.",
+    "youAreHere": "Your tier",
+    "perks": {
+      "bronze": "Bronze frame around your photo",
+      "silver": "A thicker silver frame",
+      "gold": "Gold frame with a star",
+      "diamond": "Shimmering diamond frame with a gem"
+    },
+    "unavailable": {
+      "title": "No order figures yet",
+      "text": "Your tier and figures fill in by themselves once your orders are recorded."
+    },
+    "privacy": "Stalls and other shoppers see your tier next to your name, never these figures.",
+    "hero": {
+      "overline": "Your membership",
+      "line_one": "{{name}}, you have collected {{count}} order and spent {{amount}} at the market.",
+      "line_other": "{{name}}, you have collected {{count}} orders and spent {{amount}} at the market.",
+      "welcome": "Welcome to the market, {{name}}. Collect your first orders to climb the tiers.",
+      "since": "Member since {{date}}"
+    },
+    "titles": {
+      "bronze": "New to the market",
+      "silver": "A familiar face",
+      "gold": "A regular at the stalls",
+      "diamond": "Keeper of the market fire"
+    },
+    "yourPerksTitle": "Your perks",
+    "yourPerks": {
+      "bronze": [
+        "A bronze frame around your photo, in the menu and on your profile",
+        "Your tier next to your name on reviews and in messages"
+      ],
+      "silver": [
+        "A thicker silver frame around your photo",
+        "Stalls see Silver tier next to your name on orders and in messages",
+        "Your reviews carry the Silver tier badge"
+      ],
+      "gold": [
+        "A gold frame with a star at the corner of your photo",
+        "Stalls see Gold tier next to your name on orders and in messages",
+        "Your reviews carry the Gold tier badge"
+      ],
+      "diamond": [
+        "A shimmering diamond frame with a gem at the corner of your photo",
+        "Stalls see Diamond tier next to your name on orders and in messages",
+        "Your reviews carry the Diamond tier badge",
+        "A sparkling membership card on your profile"
+      ]
+    }
   }
 }
