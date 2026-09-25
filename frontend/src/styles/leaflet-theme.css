@@ -1,0 +1,74 @@
+/*
+ * Leaflet + OpenStreetMap skin for the MarketLink map frame (D-12).
+ * Ported from docs/prototype/prototype.css (`.pt-map`), scoped to `.ml-map` so it only dresses our own frames.
+ * Reads tokens only; no hex. Not generated from the design system, so it is safe to edit by hand.
+ */
+@import 'leaflet/dist/leaflet.css';
+
+.ml-map {
+  position: relative;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.ml-map .leaflet-container {
+  position: absolute;
+  inset: 0;
+  font-family: var(--font-sans);
+  background: var(--surface-sunken);
+}
+.ml-map .leaflet-popup-content-wrapper {
+  background: var(--surface-raised);
+  color: var(--ink);
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
+}
+.ml-map .leaflet-popup-content {
+  margin: var(--space-3) var(--space-4);
+  font-size: 14px;
+  line-height: 20px;
+}
+.ml-map .leaflet-popup-tip {
+  background: var(--surface-raised);
+}
+.ml-map .leaflet-popup-content b {
+  display: block;
+  font-size: 15px;
+}
+.ml-map .leaflet-popup-content a {
+  display: inline-block;
+  margin-top: 6px;
+  margin-right: 12px;
+  font-weight: 700;
+}
+.ml-map .leaflet-control-attribution {
+  font-size: 11px;
+  background: var(--surface-raised);
+  color: var(--ink-muted);
+}
+.ml-map .leaflet-control-attribution a {
+  color: var(--brand);
+}
+.ml-map .leaflet-bar a {
+  background: var(--surface-raised);
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.ml-map .leaflet-div-icon {
+  background: transparent;
+  border: 0;
+}
+/* "Map tiles need a connection", sitting over the frame rather than replacing it. */
+.ml-map-note {
+  position: absolute;
+  z-index: 500;
+  left: var(--space-3);
+  top: var(--space-3);
+  background: var(--surface-raised);
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 13px;
+}

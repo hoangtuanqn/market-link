@@ -16,4 +16,8 @@ export type ProductType = {
   flag?: string;
   status: ProductStatus;
   favorite?: boolean;
+  desc?: string;
+  /** English plural for the unit when it doesn't just take an "s", e.g. "tray of 30" → "trays of 30". */
+  plural?: string;
+  farmerId?: number;
 };

@@ -45,13 +45,13 @@ window.PT_TODOS = [
   "role": "public",
   "file": "login.html",
   "screen": "Sign in",
-  "text": "Out of scope · Social sign-in is not in the SRS. FR-001 and FR-002 require name, phone, email and address at registration, and a Farmer also needs a stall name and admin approval, none of which a Google or Facebook account supplies. It needs a new FR, an OAuth provider, a users.auth_provider column, a rule for linking a social account to an existing email, and a 'complete your profile' step before the first order."
+  "text": "Partly built · Google sign-in is no longer a proposal: GoogleOAuthClient and the migration V20260924003__create_user_social_accounts_table.sql are merged, linking on the Google sub rather than the email, and Facebook was dropped on purpose. Two things are still open. First, that migration made users.password_hash and users.phone nullable, but FR-001 requires a contact number and an address and a stall has to be able to ring a customer about an order, and nothing yet forces those in — hence the complete-your-profile screen next to this one, which still needs an FR and a rule for when it is enforced. Second, GoogleOAuthClient knows nothing about roles, so if the admin area ever accepts Google it needs an allowlist of which Google accounts may be admin, or FR-004's separate admin area becomes a button anyone with a Google account can press."
  },
  {
   "role": "public",
   "file": "login.html",
   "screen": "Sign in",
-  "text": "Branding · The two buttons are plain text. Google and Facebook both require their official mark, wording and minimum sizes. Take the assets from each provider's brand guidelines before this ships."
+  "text": "Branding · The button is plain text. Google requires its official mark, wording and minimum sizes for a "
  },
  {
   "role": "public",
@@ -223,6 +223,18 @@ window.PT_TODOS = [
  },
  {
   "role": "customer",
+  "file": "complete-profile.html",
+  "screen": "Finish your account",
+  "text": "FR-001 · This screen fills a hole that is already in the merged code. V20260924003__create_user_social_accounts_table.sql made users.password_hash and users.phone nullable so a Google account can exist without them, but FR-001 requires a contact number and an address at registration and nothing yet forces them in. It needs an FR of its own and one decision: where the block goes. The prototype lets the person browse and blocks at checkout, which is the kindest reading of the requirement, but blocking at sign-in is also defensible and is simpler to build. LEAD to pick one."
+ },
+ {
+  "role": "customer",
+  "file": "complete-profile.html",
+  "screen": "Finish your account",
+  "text": "FR-001 / D-08 · Two smaller questions this screen raises. A Google account can come with an email that already belongs to a password account here, and nothing says whether the two are linked, kept apart, or the sign-in is refused; the social table has a unique key on (provider, provider_user_id) but that does not answer it. And an address typed once is treated as the only address, while D-08 allows a household to share one account, where a second address is likely. Neither is in the SRS."
+ },
+ {
+  "role": "customer",
   "file": "dashboard.html",
   "screen": "Customer dashboard",
   "text": "SRS 1.6 · 'Customers … securely access their dashboard': the SRS names a customer dashboard but does not list what is on it. Prototype shows next pickups, counts and favorites; confirm the content."
@@ -345,6 +357,18 @@ window.PT_TODOS = [
   "role": "admin",
   "file": "account.html",
   "screen": "Admin profile",
+  "text": "Out of scope · Two-step verification is not in the SRS. §1.7 asks only for adequate security measures such as authentication. It needs a new FR, plus admin_mfa(user_id, secret encrypted, enabled, confirmed_at) and mfa_recovery_codes(id, user_id, code_hash, used_at), and a Flyway migration under R-03. LEAD owns schema.sql (R-02). The stack already carries the rest: spring-boot-starter-security, spring-boot-starter-data-redis for the five-minute pending token and the replay guard, and bucket4j-redis for the try limit. TOTP itself is HMAC-SHA1 over a time counter, short enough to write and explain, which the brief asks participants to be able to do."
+ },
+ {
+  "role": "admin",
+  "file": "account.html",
+  "screen": "Admin profile",
+  "text": "FR-102 · The seed script publishes one account per role with the credentials printed in the submitted documentation, so the admin password is public by design and a second step on top of it protects nothing real. Proposal: ship it working but OFF on the seeded admin so the demo signs in with a password alone, and let this screen show what turning it on looks like. Seeding it ON with a published secret is worse: the same as having no second factor while looking like it has one."
+ },
+ {
+  "role": "admin",
+  "file": "account.html",
+  "screen": "Admin profile",
   "text": "Proposal · A session list, an audit trail and two-factor sign-in are not in the SRS. FR-004 only asks for a secure admin sign-in on a separate dashboard. An admin can change prices and suspend stalls, so the team should decide how much of this is worth building."
  },
  {
@@ -393,6 +417,12 @@ window.PT_TODOS = [
   "role": "admin",
   "file": "login.html",
   "screen": "Admin sign in",
+  "text": "FR-004 / FR-007 · Resetting an admin password reuses the Customer reset flow here, which is a decision nobody has taken. FR-004 asks for an admin area separate from the Customer and Farmer view, and an admin can approve stalls, deactivate customers and change what the platform charges, so the same emailed link that resets a shopper is arguably not enough. Decide: share the flow, give the admin area its own reset, or require a second admin to do it. The feature catalog lists admin password recovery as a proposal, not an SRS requirement."
+ },
+ {
+  "role": "admin",
+  "file": "login.html",
+  "screen": "Admin sign in",
   "text": "FR-004 / FR-007 · Resetting an admin password reuses the Customer reset flow here, which is a decision nobody has taken. FR-004 asks for an admin area separate from the Customer and Farmer view, and an admin can approve stalls, deactivate customers and change what the platform charges, so the same emailed link that resets a shopper is arguably not enough. The team has to decide: share the flow, give the admin area its own reset, or require a second admin to do it. The feature catalog lists admin password recovery as a proposal, not as an SRS requirement."
  },
  {
@@ -424,6 +454,18 @@ window.PT_TODOS = [
   "file": "moderation.html",
   "screen": "Moderation",
   "text": "FR-074 · The platform guidelines that define 'inappropriate' (advertising, off-platform contact, abuse…) are not written yet. Moderation reasons in the prototype are examples."
+ },
+ {
+  "role": "admin",
+  "file": "moderation.html",
+  "screen": "Moderation",
+  "text": "D-13 / FR-005 · Hiding a control is not the control. An admin reading the public site now sees a reason instead of Add to cart and the hearts are disabled, but the server has to refuse as well: POST /orders, /cart, /reviews and /favorites must answer 403 for an admin JWT. Definition of Done item 3 says it in the team own words. Every buying control in the prototype carries data-buy or data-fav, so the exact set to refuse can be grepped."
+ },
+ {
+  "role": "admin",
+  "file": "moderation.html",
+  "screen": "Moderation",
+  "text": "D-13 · The smaller version of the same conflict is open: may a Farmer put their OWN product in their own cart? Today they can. Less serious than the admin case because a Farmer cannot approve or suspend anyone, but it still lets a stall place and complete an order against itself, moving its own revenue figures and unlocking a review of itself under D-10. LEAD to decide: allow, block, or allow but leave those orders out of the stall reports."
  },
  {
   "role": "admin",
@@ -472,5 +514,17 @@ window.PT_TODOS = [
   "file": "settings.html",
   "screen": "Settings",
   "text": "Proposal · Platform defaults are not in the SRS. Whether changing a default rewrites stalls that never touched theirs, or only applies to new stalls, has to be decided before this is built."
+ },
+ {
+  "role": "admin",
+  "file": "verify.html",
+  "screen": "Two-step verification",
+  "text": "Out of scope · Two-step verification is not in the SRS. §1.7 asks only for \"adequate security measures such as authentication\", and FR-003 and FR-004 stop at a secure sign-in on a separate dashboard. The evaluation sheet scores Functionality against the SRS requirements, so this earns nothing there and a little under Source Code. It needs a new FR, an admin_mfa table and a Flyway migration under R-03. Build it after the MUSTs, not before."
+ },
+ {
+  "role": "admin",
+  "file": "verify.html",
+  "screen": "Two-step verification",
+  "text": "FR-102 · The seed script publishes one account per role with the credentials printed in the submitted documentation, so the admin password is public by design. Two-step verification on top of a published password protects nothing unless the TOTP secret is withheld too, and then nobody can sign in to mark the project. Proposal: implement it properly but leave it OFF on the seeded admin, and show the enrolment screen instead. LEAD to confirm."
  }
 ];

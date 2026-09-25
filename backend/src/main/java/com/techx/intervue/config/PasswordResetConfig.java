@@ -21,4 +21,10 @@ public class PasswordResetConfig {
 
     @Value("${app.password-reset.window-seconds:3600}")
     private long windowSeconds;
+
+    /**
+     * Số lần gửi yêu cầu tối đa từ một IP trong window-seconds (chặn spam nhiều email khác nhau).
+     */
+    @Value("${app.password-reset.max-requests-per-ip:20}")
+    private long maxRequestsPerIp;
 }

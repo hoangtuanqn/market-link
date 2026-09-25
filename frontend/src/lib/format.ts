@@ -7,10 +7,14 @@ export function vnd(amount: number): string {
   return `${Math.round(amount).toLocaleString('en-US')}\u00a0₫`;
 }
 
-/** English plural for a sale unit: (3, 'bunch') → "3 bunches", (2, 'loaf') → "2 loaves", (1, 'kg') → "1 kg" */
-export function units(count: number, unit?: string): string {
+/**
+ * English plural for a sale unit: (3, 'bunch') → "3 bunches", (2, 'loaf') → "2 loaves", (1, 'kg') → "1 kg". Pass the
+ * stall's own plural (e.g. "trays of 30") as the third argument when the unit doesn't just take an "s".
+ */
+export function units(count: number, unit?: string, plural?: string): string {
   if (!unit) return String(count);
   if (count === 1 || UNIT_SAME.has(unit)) return `${count} ${unit}`;
+  if (plural) return `${count} ${plural}`;
   if (unit === 'loaf') return `${count} loaves`;
   if (/(ch|sh|s|x)$/.test(unit)) return `${count} ${unit}es`;
   if (/[^aeiou]y$/.test(unit)) return `${count} ${unit.slice(0, -1)}ies`;
@@ -34,6 +38,21 @@ const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const;
 /** Date → "Sat" */
 export function weekday(date: Date): string {
   return WEEKDAYS[date.getDay()];
+}
+
+/**
+ * The next date a weekday falls on, counted from today; today itself counts. (6) → "26/09". Day chips show the weekday
+ * and reveal this on hover, so you can see which market morning you are actually picking.
+ */
+export function upcoming(dow: number, from: Date = new Date()): string {
+  const d = new Date(from);
+  d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7));
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`;
+}
+
+/** Date → "Thu 24/09 · 14:35" */
+export function nowLabel(date: Date): string {
+  return `${weekday(date)} ${pad(date.getDate())}/${pad(date.getMonth() + 1)} · ${formatTime(date)}`;
 }
 
 /** [5, 6, 0] → "Fri, Sat, Sun" (Monday first) */

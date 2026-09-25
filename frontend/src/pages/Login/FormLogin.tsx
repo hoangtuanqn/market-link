@@ -1,25 +1,16 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
+import { ADMIN_VERIFY_PATH } from '@/constants/nav';
+import type { LoginRedirectState } from '@/layout/RequireAuth';
 import Helper from '@/utils/helper';
+import { splitLoginResult } from '@/utils/mfa';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
-
-type FieldErrors = Partial<Record<'email' | 'password', string>>;
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/** Kiểm tra phía client, cùng luật với LoginRequest của backend. */
-const validate = (email: string, password: string): FieldErrors => {
-  const errors: FieldErrors = {};
-  if (!email.trim()) errors.email = 'Enter your email.';
-  else if (!EMAIL_REGEX.test(email.trim())) errors.email = 'Enter a valid email address.';
-  if (!password) errors.password = 'Enter your password.';
-  return errors;
-};
+import validateLogin, { type LoginFieldErrors as FieldErrors } from './validateLogin';
 
 const FormLogin = () => {
   const [email, setEmail] = useState('');
@@ -28,22 +19,30 @@ const FormLogin = () => {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const clientErrors = validate(email, password);
+    const clientErrors = validateLogin(email, password);
     setErrors(clientErrors);
     if (Object.keys(clientErrors).length > 0) return;
 
     setIsSubmitting(true);
     try {
       const response = await AuthApi.login({ email: email.trim(), password, rememberMe });
+      const { pending, session } = splitLoginResult(response.data, rememberMe);
+      if (pending) {
+        // FR-008: admin đã bật xác thực hai bước đăng nhập ở đây → cũng phải qua màn nhập mã
+        navigate(ADMIN_VERIFY_PATH, { state: pending });
+        return;
+      }
       // Có "Remember me" → giữ phiên sau khi đóng trình duyệt; không → chỉ trong phiên trình duyệt này
-      Session.save(response.data, rememberMe);
+      Session.save(session, rememberMe);
 
       Notification.success({ text: response.message || 'Signed in.' });
-      navigate('/');
+      // Bị RequireAuth chuyển tới đây thì quay lại trang đang mở dở
+      navigate((location.state as LoginRedirectState | null)?.from ?? '/', { replace: true });
     } catch (error) {
       // 400: lỗi theo field (VALIDATION_ERROR) → hiện dưới ô nhập; 401/403: message chung của backend
       setErrors(Helper.getFieldErrors(error));
@@ -92,11 +91,9 @@ const FormLogin = () => {
         </Link>
       </div>
 
-
       <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? 'Signing in…' : 'Sign in'}
       </Button>
-
     </form>
   );
 };

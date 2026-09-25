@@ -207,6 +207,33 @@ class ChatServiceTest {
     }
 
     @Test
+    void historyOnlyShowsMessagesOfTheCaller() {
+        when(messages.findTop50BySessionKeyOrderByIdDesc(SESSION))
+                .thenReturn(
+                        List.of(
+                                message(3L, 42L, "của user 42"),
+                                message(2L, null, "của khách"),
+                                message(1L, 7L, "của user 7")));
+
+        assertThat(service.history(SESSION, 42L))
+                .extracting("message")
+                .containsExactly("của user 42");
+        assertThat(service.history(SESSION, null))
+                .extracting("message")
+                .containsExactly("của khách");
+    }
+
+    private static ChatMessage message(Long id, Long userId, String text) {
+        return ChatMessage.builder()
+                .id(id)
+                .sessionKey(SESSION)
+                .userId(userId)
+                .role(ChatMessage.ROLE_USER)
+                .message(text)
+                .build();
+    }
+
+    @Test
     void coreNameStripsCommonPrefixes() {
         assertThat(ChatService.coreName("Chợ Bến Thành")).isEqualTo("ben thanh");
         assertThat(ChatService.coreName("Sạp Cô Ba")).isEqualTo("co ba");

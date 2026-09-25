@@ -42,7 +42,9 @@ public class ChatController extends BaseController {
     public ResponseEntity<ApiResource<List<ChatMessageResource>>> history(
             @RequestParam
                     @Pattern(regexp = "^[A-Za-z0-9_-]{8,64}$", message = "Session key invalid!")
-                    String sessionKey) {
-        return ok(chatService.history(sessionKey), "OK");
+                    String sessionKey,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        Long userId = user == null ? null : user.getId();
+        return ok(chatService.history(sessionKey, userId), "OK");
     }
 }

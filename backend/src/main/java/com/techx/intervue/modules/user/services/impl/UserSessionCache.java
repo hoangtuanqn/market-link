@@ -2,8 +2,10 @@ package com.techx.intervue.modules.user.services.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.modules.user.enums.RoleType;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,7 +17,13 @@ public class UserSessionCache {
 
     private final RedisTemplate<String, String> redis;
     private final ObjectMapper objectMapper;
+    private final AuthConfig authConfig;
     private static final String KEY_PREFIX = "user:session:";
+
+    /**
+     * Mốc (epoch giây): access token có iat trước mốc này bị từ chối dù session đã được ghi lại.
+     */
+    private static final String REVOKED_BEFORE_PREFIX = "user:revoked-before:";
 
     public record SessionData(String email, Set<RoleType> roles) {}
 
@@ -42,5 +50,25 @@ public class UserSessionCache {
 
     public void evict(Long userId) {
         redis.delete(KEY_PREFIX + userId);
+    }
+
+    /**
+     * Đăng xuất mọi thiết bị (đổi / đặt lại mật khẩu...). Chỉ xoá session là chưa đủ: user đăng
+     * nhập lại thì session được ghi lại và access token cũ (bị lộ) hợp lệ trở lại. Nên ghi thêm mốc
+     * thời gian, giữ đúng bằng thời gian sống của access token (sau đó mọi token cũ đã hết hạn).
+     */
+    public void revokeAll(Long userId) {
+        evict(userId);
+        redis.opsForValue()
+                .set(
+                        REVOKED_BEFORE_PREFIX + userId,
+                        String.valueOf(Instant.now().toEpochMilli()),
+                        Duration.ofMillis(authConfig.getExpirationTime()));
+    }
+
+    /** Token cấp trước lần revokeAll gần nhất (issuedAt lấy từ JwtService.extractIssuedAt). */
+    public boolean isRevoked(Long userId, Instant issuedAt) {
+        String raw = redis.opsForValue().get(REVOKED_BEFORE_PREFIX + userId);
+        return raw != null && issuedAt.toEpochMilli() < Long.parseLong(raw);
     }
 }

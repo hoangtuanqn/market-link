@@ -4,8 +4,11 @@ import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
 import java.util.Optional;
 
 public interface PasswordResetServiceInterface {
-    /** Bước A: rate limit rồi đẩy job vào hàng đợi. Không báo email có tồn tại hay không. */
-    void requestReset(String email);
+    /**
+     * Bước A: rate limit (theo email và theo IP) rồi đẩy job vào hàng đợi. Không báo email có tồn
+     * tại hay không.
+     */
+    void requestReset(String email, String clientIp);
 
     /**
      * Bước B (chạy trong worker): tạo token mới cho email, xoá token cũ. Trả token gốc để gửi mail,

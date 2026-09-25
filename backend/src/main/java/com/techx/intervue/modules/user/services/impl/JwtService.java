@@ -6,6 +6,7 @@ import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class JwtService implements JwtServiceInterface {
+    private static final String ISSUED_AT_MS = "iat_ms";
     private final Long expirationTime;
     private final String issuer;
     private final SecretKey key;
@@ -34,6 +36,8 @@ public class JwtService implements JwtServiceInterface {
                 .claim("jti", UUID.randomUUID().toString())
                 .issuer(issuer)
                 .issuedAt(now)
+                // iat chỉ chính xác tới giây; UserSessionCache.isRevoked cần so tới mili giây
+                .claim(ISSUED_AT_MS, now.getTime())
                 .expiration(expiredAt)
                 .signWith(key) // tự động chọn thuật toán HS256, HS384, ... theo độ dài key của mình
                 // cho phù
@@ -65,6 +69,14 @@ public class JwtService implements JwtServiceInterface {
         return claims.get("jti", String.class);
     }
 
+    /** Thời điểm cấp token, chính xác tới mili giây (token cũ chưa có claim thì dùng iat). */
+    @Override
+    public Instant extractIssuedAt(String token) {
+        Claims claims = extractAllClaims(token);
+        Long millis = claims.get(ISSUED_AT_MS, Long.class);
+        return millis != null ? Instant.ofEpochMilli(millis) : claims.getIssuedAt().toInstant();
+    }
+
     @Override
     public Map<String, Object> extractRevoke(String token) {
         Claims claims = extractAllClaims(token);
@@ -79,6 +91,8 @@ public class JwtService implements JwtServiceInterface {
     public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) this.key)
+                // Token ký cùng secret nhưng do hệ khác phát hành thì không nhận
+                .requireIssuer(issuer)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

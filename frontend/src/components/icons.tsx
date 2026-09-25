@@ -1,6 +1,6 @@
 import type { ReactNode, SVGProps } from 'react';
 
-type IconProps = SVGProps<SVGSVGElement> & { size?: number };
+export type IconProps = SVGProps<SVGSVGElement> & { size?: number };
 
 /** 16px glyph, 1.75 stroke, currentColor (design system icon style). */
 function Glyph({ size = 16, children, ...rest }: IconProps & { children: ReactNode }) {
@@ -150,6 +150,16 @@ export function InfoIcon(props: IconProps) {
   );
 }
 
+export function AlertIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M8 1.8l6.5 11.4h-13z" />
+      <path d="M8 6.2v3.3" />
+      <path d="M8 11.4v.1" />
+    </Glyph>
+  );
+}
+
 export function MegaphoneIcon(props: IconProps) {
   return (
     <Glyph size={18} {...props}>
@@ -209,6 +219,136 @@ export function StarIcon({ filled = false, size = 16 }: { filled?: boolean; size
     >
       <path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" />
     </svg>
+  );
+}
+
+export function DashboardIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <rect x="2" y="2" width="5.2" height="5.2" rx="1" />
+      <rect x="8.8" y="2" width="5.2" height="5.2" rx="1" />
+      <rect x="2" y="8.8" width="5.2" height="5.2" rx="1" />
+      <rect x="8.8" y="8.8" width="5.2" height="5.2" rx="1" />
+    </Glyph>
+  );
+}
+
+export function BoxIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M8 1.8l5.5 3v6.4L8 14.2l-5.5-3V4.8z" />
+      <path d="M2.5 4.8L8 7.8l5.5-3M8 7.8v6.4" />
+    </Glyph>
+  );
+}
+
+export function TagIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M8.3 1.9H14v5.7L7.6 14 2 8.4z" />
+      <circle cx="11" cy="5" r="1" />
+    </Glyph>
+  );
+}
+
+export function ChartIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M2 13.4h12" />
+      <path d="M4.3 11.2V7.3M7.5 11.2V3.6M10.7 11.2V8.6M13.3 11.2V5.6" />
+    </Glyph>
+  );
+}
+
+export function ChatIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M2 3.6h12v7.5H8.2l-3.7 2.6v-2.6H2z" />
+    </Glyph>
+  );
+}
+
+export function UsersIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <circle cx="6" cy="5.4" r="2.5" />
+      <path d="M1.8 13.6c0-2.3 1.9-4.1 4.2-4.1s4.2 1.8 4.2 4.1" />
+      <path d="M11 3.3a2.5 2.5 0 010 4.6" />
+      <path d="M12.1 9.9c1.3.6 2.1 1.9 2.1 3.7" />
+    </Glyph>
+  );
+}
+
+export function ShieldIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M8 1.8l5 1.8v4.1c0 3-2.1 5.2-5 6.5-2.9-1.3-5-3.5-5-6.5V3.6z" />
+      <path d="M5.9 7.9l1.6 1.6 3-3.1" />
+    </Glyph>
+  );
+}
+
+export function SlidersIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M2 4.6h12M2 11.4h12" />
+      <circle cx="6" cy="4.6" r="1.8" />
+      <circle cx="10.4" cy="11.4" r="1.8" />
+    </Glyph>
+  );
+}
+
+export function LogOutIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M6.3 2.6H3.4a1.2 1.2 0 00-1.2 1.2v8.4a1.2 1.2 0 001.2 1.2h2.9" />
+      <path d="M10.6 11l3-3-3-3" />
+      <path d="M13.6 8H6.4" />
+    </Glyph>
+  );
+}
+
+export function FoldIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <rect x="2" y="2.6" width="12" height="10.8" rx="1.6" />
+      <path d="M6.4 2.6v10.8" />
+    </Glyph>
+  );
+}
+
+export function SwapIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M3 5.6h9.4l-2.3-2.3" />
+      <path d="M13 10.4H3.6l2.3 2.3" />
+    </Glyph>
+  );
+}
+
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M10 3L5 8l5 5" />
+    </Glyph>
+  );
+}
+
+export function TrendUpIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M2.4 11.6L6.4 7.2l2.9 2.9 4.3-4.9" />
+      <path d="M10.6 5.2h3.4v3.3" />
+    </Glyph>
+  );
+}
+
+export function TrendDownIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M2.4 4.4L6.4 8.8l2.9-2.9 4.3 4.9" />
+      <path d="M10.6 10.8h3.4V7.5" />
+    </Glyph>
   );
 }
 

@@ -68,7 +68,17 @@ app:
     url: ${PASSWORD_RESET_URL:http://localhost:3000/reset-password}
     token-ttl-seconds: 900
     max-requests: 5
+    # Chặn một IP gửi hàng loạt email khác nhau
+    max-requests-per-ip: 20
     window-seconds: 3600
+  # FR-008: xác thực hai bước TOTP cho admin. encryption-key = 32 byte Base64 mã hoá khoá TOTP trong DB
+  # (openssl rand -base64 32). Giá trị mặc định chỉ dùng cho dev; prod bắt buộc MFA_ENCRYPTION_KEY.
+  mfa:
+    encryption-key: ${MFA_ENCRYPTION_KEY:ZGV2LW9ubHktbWZhLWtleS1tYXJrZXRsaW5rLTAwMDA=}
+    issuer: MarketLink
+    pending-ttl-seconds: 300
+    max-attempts: 5
+    lock-seconds: 900
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}

@@ -10,8 +10,10 @@ import { Card } from './ui/card';
 
 const LOW_STOCK = 3;
 
+type ProductCardProps = { product: ProductType; showMarket?: boolean };
+
 /** Hang tag with a punched hole: photo area, name, stall, price and stock. */
-const ProductCard = ({ product }: { product: ProductType }) => {
+const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
   const paused = product.status === PRODUCT_STATUS.UNAVAILABLE;
   const soldOut = product.status !== PRODUCT_STATUS.AVAILABLE || product.stock === 0;
   const low = !soldOut && product.stock <= LOW_STOCK;
@@ -19,7 +21,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
     ? paused
       ? 'Not this week'
       : 'Back soon'
-    : `${low ? 'Only ' : ''}${units(product.stock, product.unit)} left`;
+    : `${low ? 'Only ' : ''}${units(product.stock, product.unit, product.plural)} left`;
   const href = `/products/${product.id}`;
 
   return (
@@ -62,7 +64,8 @@ const ProductCard = ({ product }: { product: ProductType }) => {
           </Link>
         </h3>
         <p className="text-small text-ink-muted">
-          {product.stall} · {product.marketName}
+          {product.stall}
+          {showMarket && ` · ${product.marketName}`}
         </p>
         <div className="my-1 flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
           <PriceTag amount={product.price} unit={product.unit} was={product.was} />

@@ -7,6 +7,7 @@ import com.techx.intervue.modules.user.repositories.RefreshTokenRepository;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface;
 import jakarta.transaction.Transactional;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -19,6 +20,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @AllArgsConstructor
 public class RefreshTokenService implements RefreshTokenServiceInterface {
+    /**
+     * Hai tab cùng refresh bằng một cookie: request đến sau thấy token vừa bị xoay vòng. Trong
+     * khoảng này chỉ từ chối, không coi là bị đánh cắp (không thu hồi toàn bộ token của user).
+     */
+    static final Duration ROTATION_GRACE = Duration.ofSeconds(30);
+
     private JwtServiceInterface jwtService;
     private RefreshTokenRepository repository;
     private AuthConfig authConfig;
@@ -96,11 +103,22 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
 
     private void checkIsRevoked(RefreshToken entity) {
         if (entity.isRevoked()) {
+            if (isJustRotated(entity)) {
+                log.warn("Refresh token was just rotated, rejected without revoking the user.");
+                throw new BadCredentialsException("Refresh token is not valid.");
+            }
             // revoked hết tất cả những refresh token của người dùng
             repository.revokeAllRefreshTokenByUser(entity.getUserId());
             log.error("Refresh token reuse detected, revoked all tokens of the user.");
             throw new BadCredentialsException("Refresh token is not valid.");
         }
+    }
+
+    /** Token bị thu hồi do xoay vòng (không phải do logout) và vừa mới xoay. */
+    private static boolean isJustRotated(RefreshToken entity) {
+        return entity.getReplacedByTokenId() != null
+                && entity.getUpdatedAt() != null
+                && entity.getUpdatedAt().isAfter(Instant.now().minus(ROTATION_GRACE));
     }
 
     private void checkExpiryDate(RefreshToken entity) {

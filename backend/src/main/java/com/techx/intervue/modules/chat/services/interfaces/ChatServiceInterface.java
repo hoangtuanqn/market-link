@@ -8,5 +8,5 @@ import java.util.List;
 public interface ChatServiceInterface {
     ChatReplyResource reply(ChatRequest request, Long userId);
 
-    List<ChatMessageResource> history(String sessionKey);
+    List<ChatMessageResource> history(String sessionKey, Long userId);
 }

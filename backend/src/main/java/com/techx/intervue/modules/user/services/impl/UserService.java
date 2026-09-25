@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.user.entities.SocialAccount;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
@@ -8,6 +9,7 @@ import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
+import com.techx.intervue.modules.user.exceptions.RoleMismatchException;
 import com.techx.intervue.modules.user.repositories.SocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
@@ -18,6 +20,8 @@ import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
+import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface.PendingLogin;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.RefreshResult;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
@@ -52,6 +56,7 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final BlacklistServiceInterface blacklistService;
     private final AuthConfig authConfig;
     private final JobQueueInterface jobQueue;
+    private final MfaServiceInterface mfaService;
 
     /**
      * FR-006: access token vào blacklist Redis tới lúc hết hạn (JwtAuthFilter chặn theo jti),
@@ -121,7 +126,30 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        return issueTokens(user, !Boolean.FALSE.equals(request.rememberMe()));
+        // Kiểm tra trước khi cấp token: không phát cookie refresh cho tài khoản sai role
+        if (request.requiredRole() != null && user.getRole() != request.requiredRole()) {
+            throw new RoleMismatchException();
+        }
+        return issueTokensOrChallenge(user, !Boolean.FALSE.equals(request.rememberMe()));
+    }
+
+    /**
+     * FR-008: bước 2 sau khi nhập mã TOTP / mã khôi phục đúng. Kiểm tra lại trạng thái tài khoản vì
+     * admin có thể bị khoá trong 5 phút chờ nhập mã.
+     */
+    @Override
+    @Transactional
+    public AuthResult completeMfaLogin(String mfaToken, String code, String recoveryCode) {
+        PendingLogin pending = mfaService.verifyChallenge(mfaToken, code, recoveryCode);
+        User user =
+                userRepository
+                        .findById(pending.userId())
+                        .orElseThrow(() -> new BadCredentialsException("Account not found."));
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new DisabledException(
+                    "Your account has been locked. Please contact an administrator.");
+        }
+        return issueTokens(user, pending.rememberMe());
     }
 
     /**
@@ -169,7 +197,8 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        return issueTokens(user);
+        // FR-008: đăng nhập Google không được bỏ qua bước 2
+        return issueTokensOrChallenge(user, true);
     }
 
     private User linkOrCreateUser(SocialProfile profile) {
@@ -181,6 +210,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         User user =
                 userRepository
                         .findByEmail(email)
+                        .map(existing -> claimByVerifiedEmail(existing, profile))
                         .orElseGet(
                                 () ->
                                         userRepository.save(
@@ -190,12 +220,6 @@ public class UserService extends BaseService implements UserServiceInterface {
                                                         .image(fitsColumn(profile.pictureUrl()))
                                                         .role(RoleType.CUSTOMER)
                                                         .build()));
-        // Email này đã gắn với một tài khoản khác cùng provider
-        if (socialAccountRepository.existsByUserIdAndProvider(user.getId(), profile.provider())) {
-            throw new DuplicateAccountException(
-                    "email",
-                    "This email is already linked to another account from the same provider.");
-        }
         socialAccountRepository.save(
                 SocialAccount.builder()
                         .userId(user.getId())
@@ -203,6 +227,29 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .providerUserId(profile.providerUserId())
                         .email(email)
                         .build());
+        return user;
+    }
+
+    /**
+     * Gắn Google vào tài khoản có sẵn cùng email. Đăng ký bằng email không xác minh email, nên mật
+     * khẩu hiện có có thể do người khác đặt trước (chiếm trước tài khoản). Provider đã xác minh chủ
+     * email → xoá mật khẩu đó, thu hồi mọi refresh token và session; chủ thật đặt lại mật khẩu ở
+     * bước set-password (hasPassword = false).
+     */
+    private User claimByVerifiedEmail(User user, SocialProfile profile) {
+        // Email này đã gắn với một tài khoản khác cùng provider
+        if (socialAccountRepository.existsByUserIdAndProvider(user.getId(), profile.provider())) {
+            throw new DuplicateAccountException(
+                    "email",
+                    "This email is already linked to another account from the same provider.");
+        }
+        if (user.getPasswordHash() != null) {
+            user.setPasswordHash(null);
+            userRepository.save(user);
+            refreshTokenService.revokeAllTokens(user.getId());
+            // Chạy ngay (không đợi commit): session mới của chủ thật được ghi ở issueTokens sau đó
+            userSessionCache.revokeAll(user.getId());
+        }
         return user;
     }
 
@@ -256,6 +303,17 @@ public class UserService extends BaseService implements UserServiceInterface {
         return user;
     }
 
+    /** FR-008: admin đã bật 2FA → chỉ trả token chờ; còn lại cấp phiên như cũ. */
+    private AuthResult issueTokensOrChallenge(User user, boolean rememberMe) {
+        if (user.getRole() == RoleType.ADMIN && mfaService.isEnabled(user.getId())) {
+            return AuthResult.mfaPending(
+                    toResource(user),
+                    rememberMe,
+                    mfaService.startChallenge(user.getId(), rememberMe));
+        }
+        return issueTokens(user, rememberMe);
+    }
+
     private AuthResult issueTokens(User user) {
         return issueTokens(user, true);
     }
@@ -290,8 +348,8 @@ public class UserService extends BaseService implements UserServiceInterface {
     /**
      * Đổi mật khẩu: cần đúng mật khẩu hiện tại. Sai thì 400 ở field currentPassword (không dùng 401
      * vì FE coi 401 là hết phiên và tự refresh). Đổi xong đăng xuất mọi thiết bị: thu hồi mọi
-     * refresh token, xoá session Redis (JwtAuthFilter từ chối mọi access token còn hạn), gửi mail
-     * thông báo.
+     * refresh token, sau khi commit thì revokeAll session Redis (JwtAuthFilter từ chối mọi access
+     * token cấp trước đó) và gửi mail thông báo.
      */
     @Override
     @Transactional
@@ -315,8 +373,14 @@ public class UserService extends BaseService implements UserServiceInterface {
         userRepository.save(user);
 
         refreshTokenService.revokeAllTokens(userId);
-        userSessionCache.evict(userId);
-        jobQueue.enqueue(PasswordResetService.JOB_NOTIFY_CHANGED, Map.of("email", user.getEmail()));
+        String email = user.getEmail();
+        // Commit lỗi thì mật khẩu chưa đổi: không đá văng phiên, không gửi mail
+        TransactionHelper.afterCommit(
+                () -> {
+                    userSessionCache.revokeAll(userId);
+                    jobQueue.enqueue(
+                            PasswordResetService.JOB_NOTIFY_CHANGED, Map.of("email", email));
+                });
     }
 
     /**

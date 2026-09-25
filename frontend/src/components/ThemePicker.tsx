@@ -21,8 +21,8 @@ const ThemePicker = ({ value, onChange }: { value: ThemeChoice; onChange: (v: Th
         aria-pressed={value === t.id}
         onClick={() => onChange(t.id)}
         className={Helper.cn(
-          'border-line-strong flex flex-1 cursor-pointer flex-col overflow-hidden rounded-sm border-[1.5px] bg-transparent p-0',
-          value === t.id && 'border-brand shadow-[inset_0_0_0_2px_var(--brand)]',
+          'flex flex-1 cursor-pointer flex-col overflow-hidden rounded-sm border-[1.5px] bg-transparent p-0',
+          value === t.id ? 'border-brand shadow-[inset_0_0_0_2px_var(--brand)]' : 'border-line-strong',
         )}
       >
         <span className="grid h-10 grid-cols-2" aria-hidden="true">
