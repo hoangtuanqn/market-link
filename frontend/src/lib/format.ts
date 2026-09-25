@@ -40,6 +40,16 @@ export function weekday(date: Date): string {
   return WEEKDAYS[date.getDay()];
 }
 
+/**
+ * The next date a weekday falls on, counted from today; today itself counts. (6) → "26/09". Day chips show the weekday
+ * and reveal this on hover, so you can see which market morning you are actually picking.
+ */
+export function upcoming(dow: number, from: Date = new Date()): string {
+  const d = new Date(from);
+  d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7));
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}`;
+}
+
 /** Date → "Thu 24/09 · 14:35" */
 export function nowLabel(date: Date): string {
   return `${weekday(date)} ${pad(date.getDate())}/${pad(date.getMonth() + 1)} · ${formatTime(date)}`;

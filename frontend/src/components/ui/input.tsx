@@ -26,9 +26,11 @@ export function Field({ id, label, required, error, hint, className, type, disab
       aria-invalid={!!error}
       aria-describedby={describedBy}
       className={Helper.cn(
-        'text-body text-ink placeholder:text-ink-muted bg-surface-raised border-line-strong hover:border-ink-muted focus-visible:border-focus focus-visible:outline-focus min-h-11 w-full rounded-sm border-[1.5px] px-3 focus-visible:outline-2 focus-visible:outline-offset-1',
+        'text-body text-ink placeholder:text-ink-muted bg-surface-raised focus-visible:border-focus focus-visible:outline-focus min-h-11 w-full rounded-sm border-[1.5px] px-3 focus-visible:outline-2 focus-visible:outline-offset-1',
         isPassword && 'pr-11',
-        error && 'border-danger',
+        // Exclusive, not layered: Helper.cn only joins strings, so a resting border left in place would win over the
+        // error border on whichever utility Tailwind happens to emit last.
+        error ? 'border-danger' : 'border-line-strong hover:border-ink-muted',
         className,
       )}
       {...rest}
