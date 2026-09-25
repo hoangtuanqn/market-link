@@ -11,7 +11,7 @@ import org.springframework.web.client.RestClient;
 @EnableConfigurationProperties(OAuthProperties.class)
 public class OAuthConfig {
 
-    /** HTTP client gọi Google/Facebook, có timeout để request login không treo vô hạn. */
+    /** HTTP client gọi Google, có timeout để request login không treo vô hạn. */
     @Bean
     RestClient oauthRestClient() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();

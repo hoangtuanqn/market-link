@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import FormLogin from './FormLogin';
 import GoogleLoginButton from './GoogleLoginButton';
@@ -27,12 +26,9 @@ const LoginPage = () => {
 
       <div className="flex flex-col gap-2">
         <GoogleLoginButton />
-        <ButtonLink to="/register/customer" variant="secondary" className="w-full">
-          Continue with Facebook
-        </ButtonLink>
         <p className="text-ink-muted text-[13px]">
-          Google and Facebook give us your name and email. Your phone number and address are still needed before your
-          first order, so we ask for them once on the next screen.
+          Google gives us your name and email. Your phone number and address are still needed before your first order,
+          so we ask for them once on the next screen.
         </p>
       </div>
 

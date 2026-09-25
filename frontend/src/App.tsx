@@ -7,6 +7,7 @@ import RegisterFarmerPage from './pages/RegisterFarmer';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import ResetPasswordPage from './pages/ResetPassword';
 import GoogleCallbackPage from './pages/GoogleCallback';
+import CompleteProfilePage from './pages/CompleteProfile';
 import SetPasswordPage from './pages/SetPassword';
 import CustomerDashboardPage from './pages/CustomerDashboard';
 import CustomerAccountPage from './pages/CustomerAccount';
@@ -16,6 +17,13 @@ import CustomerOrderDetailPage from './pages/CustomerOrderDetail';
 import CustomerFavoritesPage from './pages/CustomerFavorites';
 import CustomerMessagesPage from './pages/CustomerMessages';
 import CustomerNotificationsPage from './pages/CustomerNotifications';
+import CustomerOrderEditPage from './pages/CustomerOrderEdit';
+import CustomerOrderPlacedPage from './pages/CustomerOrderPlaced';
+import CustomerReviewPage from './pages/CustomerReview';
+import CustomerBecomeFarmerPage from './pages/CustomerBecomeFarmer';
+import CustomerSettingsPage from './pages/CustomerSettings';
+import CustomerAssistantPage from './pages/CustomerAssistant';
+import MarketsPage from './pages/Markets';
 
 const App = () => {
   return (
@@ -29,7 +37,9 @@ const App = () => {
           <Route path="forgot-password" element={<ForgotPasswordPage />} />
           <Route path="reset-password" element={<ResetPasswordPage />} />
           <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
+          <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
           <Route path="auth/set-password" element={<SetPasswordPage />} />
+          <Route path="markets" element={<MarketsPage />} />
         </Route>
 
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
@@ -42,6 +52,12 @@ const App = () => {
           <Route path="favorites" element={<CustomerFavoritesPage />} />
           <Route path="messages" element={<CustomerMessagesPage />} />
           <Route path="notifications" element={<CustomerNotificationsPage />} />
+          <Route path="orders/:code/edit" element={<CustomerOrderEditPage />} />
+          <Route path="orders/placed" element={<CustomerOrderPlacedPage />} />
+          <Route path="orders/:code/review" element={<CustomerReviewPage />} />
+          <Route path="become-farmer" element={<CustomerBecomeFarmerPage />} />
+          <Route path="settings" element={<CustomerSettingsPage />} />
+          <Route path="assistant" element={<CustomerAssistantPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

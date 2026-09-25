@@ -52,20 +52,15 @@ app:
     # Origin của frontend React được phép gọi API, nhiều origin cách nhau dấu phẩy.
     # Mặc định là Vite dev server (frontend/vite.config.ts, cổng 3000). Prod bắt buộc truyền biến.
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
-  # Đăng nhập Google / Facebook. Client id/secret ghi đè trong application-dev.yaml (git-ignore) hoặc
+  # Đăng nhập Google. Client id/secret ghi đè trong application-dev.yaml (git-ignore) hoặc
   # truyền qua biến môi trường; để trống thì endpoint trả 503 "chưa cấu hình".
-  # redirect-uri phải khớp 100% với URI khai báo trên Google Cloud Console / Facebook App và với URI
+  # redirect-uri phải khớp 100% với URI khai báo trên Google Cloud Console và với URI
   # frontend dùng khi mở trang đăng nhập. Google popup (GIS code client) thì dùng "postmessage".
   oauth:
     google:
       client-id: ${GOOGLE_CLIENT_ID:}
       client-secret: ${GOOGLE_CLIENT_SECRET:}
       redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/google/callback}
-    facebook:
-      app-id: ${FACEBOOK_APP_ID:}
-      app-secret: ${FACEBOOK_APP_SECRET:}
-      redirect-uri: ${FACEBOOK_REDIRECT_URI:http://localhost:3000/auth/facebook/callback}
-      graph-version: v23.0
   mail:
     from-name: MarketLink
   # FR-007: link trong mail là <url>?token=<token>; url là trang đặt lại mật khẩu của frontend

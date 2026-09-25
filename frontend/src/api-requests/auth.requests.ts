@@ -35,7 +35,7 @@ class AuthApi {
     return response.data;
   };
 
-  /** `code` là authorization code Google/Facebook trả về redirect_uri của frontend. */
+  /** `code` là authorization code Google trả về redirect_uri của frontend. */
   static loginWithSocial = async (provider: SocialProvider, code: string) => {
     const response = await publicApi.post<ApiResponse<AuthResultType>>(`/auth/${provider}`, { code });
     return response.data;
@@ -57,7 +57,7 @@ class AuthApi {
     return response.data;
   };
 
-  /** Đặt mật khẩu lần đầu cho tài khoản tạo qua Google/Facebook (cần đăng nhập). */
+  /** Đặt mật khẩu lần đầu cho tài khoản tạo qua Google (cần đăng nhập). */
   static setPassword = async (input: SetPasswordInput) => {
     const response = await privateApi.post<ApiResponse<null>>('/auth/set-password', input);
     return response.data;

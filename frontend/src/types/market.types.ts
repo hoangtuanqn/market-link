@@ -2,6 +2,7 @@ export type MarketType = {
   id: number;
   name: string;
   address: string;
+  district: string;
   /** Day of week, 0 = Sunday … 6 = Saturday */
   days: number[];
   open: string;

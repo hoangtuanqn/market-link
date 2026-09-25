@@ -2,7 +2,7 @@ package com.techx.intervue.modules.user.resources;
 
 import com.techx.intervue.modules.user.enums.SocialProvider;
 
-/** Thông tin người dùng đã được backend xác minh trực tiếp với Google/Facebook. */
+/** Thông tin người dùng đã được backend xác minh trực tiếp với Google. */
 public record SocialProfile(
         SocialProvider provider,
         String providerUserId,

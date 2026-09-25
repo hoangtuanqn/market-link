@@ -80,13 +80,15 @@ export function Field({ id, label, required, error, hint, className, type, disab
 type SelectFieldProps = SelectHTMLAttributes<HTMLSelectElement> & {
   label: string;
   options: string[] | { value: string; label: string }[];
+  /** Hide the label visually when it's already shown by a surrounding row (kept for screen readers). */
+  hideLabel?: boolean;
 };
 
 /** Labelled select (design system `.ml-field` + `.ml-input`). */
-export function SelectField({ id, label, options, className, ...rest }: SelectFieldProps) {
+export function SelectField({ id, label, options, hideLabel, className, ...rest }: SelectFieldProps) {
   return (
     <div className="flex min-w-55 flex-col gap-1.5">
-      <label htmlFor={id} className="text-small text-ink font-bold">
+      <label htmlFor={id} className={Helper.cn('text-small text-ink font-bold', hideLabel && 'sr-only')}>
         {label}
       </label>
       <select
