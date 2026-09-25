@@ -74,7 +74,6 @@ const CustomerAssistantPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <p className="font-hand text-hand text-ink-muted">Optional · FR-090 to FR-092</p>
         <h1 className="text-h1">Shopping assistant</h1>
         <p className="text-body-lg max-w-155">
           Ask where to find something this weekend, when a market opens, or which pickup slots a stall has. Every answer
@@ -136,9 +135,9 @@ const CustomerAssistantPage = () => {
           <Card className="flex flex-col gap-2 p-6">
             <h2 className="text-h3">How it works</h2>
             <p className="text-small">
-              The message is classified into one of a fixed set of intents, and each intent runs a prepared query with
-              parameters. The model never writes SQL. Messages are stored with the intent so the flow can be shown to
-              the judges.
+              Your question is matched to one of a fixed set of intents, and each intent runs a prepared query
+              against MarketLink&apos;s own data. Answers never come from anywhere else, and the assistant cannot
+              change anything — it only reads.
             </p>
           </Card>
         </aside>

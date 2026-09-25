@@ -201,7 +201,7 @@ window.PT_TODOS = [
   "role": "customer",
   "file": "assistant.html",
   "screen": "Shopping assistant",
-  "text": "FR-090 · Which model or service does the classification (rule-based, a hosted LLM, tawk.to/Zapier as the SRS suggests) is decided in docs/chatbot-design.md, not in the SRS. Prototype shows the UI only."
+  "text": "FR-090 to FR-092 are optional in the SRS and SHOULD in .ai/REQUIREMENTS.md, so the whole screen can be cut if hours run short. That fact used to sit in a kicker above the heading, where a real user would have read "
  },
  {
   "role": "customer",

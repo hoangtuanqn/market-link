@@ -20,7 +20,6 @@
 <div id="pt-top"></div>
 <main class="pt-main">
   <div class="pt-col-2">
-    <p class="ml-hand ml-muted">Optional · FR-090 to FR-092</p>
     <h1 class="pt-title">Shopping assistant</h1>
     <p class="pt-lead">Ask where to find something this weekend, when a market opens, or which pickup slots a stall has. Every answer comes from MarketLink's own data.</p>
   </div>
@@ -44,7 +43,7 @@
       <div class="ml-card pt-panel pt-col-2">
         <h2 class="pt-h3">How it works</h2>
         <p class="pt-small">The message is classified into one of a fixed set of intents, and each intent runs a prepared query with parameters. The model never writes SQL (CLAUDE.md R-04). Messages are stored with the intent (FR-092) so the flow can be shown to the judges.</p>
-        <p class="pt-small"><span class="pt-todo" data-todo="FR-090 · Which model or service does the classification (rule-based, a hosted LLM, tawk.to/Zapier as the SRS suggests) is decided in docs/chatbot-design.md, not in the SRS. Prototype shows the UI only.">Provider for intent classification per docs/chatbot-design.md</span></p>
+        <p class="pt-small"><span class="pt-todo" data-todo="FR-090 to FR-092 are optional in the SRS and SHOULD in .ai/REQUIREMENTS.md, so the whole screen can be cut if hours run short. That fact used to sit in a kicker above the heading, where a real user would have read "Optional · FR-090 to FR-092" on their own screen; it belongs here instead, and the FR ids are already on the prototype bar. Still open: which model or service does the classification (rule-based, a hosted LLM, tawk.to/Zapier as the SRS suggests) is decided in docs/chatbot-design.md, not in the SRS. The prototype shows the UI only.">Provider for intent classification per docs/chatbot-design.md</span></p>
       </div>
     </aside>
   </div>
