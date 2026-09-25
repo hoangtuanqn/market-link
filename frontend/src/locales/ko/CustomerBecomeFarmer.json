@@ -6,9 +6,9 @@
   "intro": "식재료를 기른다면 계정을 네 시장 중 한 곳의 가게로 만들 수 있어요. 지금 가진 건 모두 그대로이고, 다른 가게에서 계속 장을 볼 수 있어요.",
   "next": {
     "title": "보낸 뒤에는 이렇게 진행돼요",
-    "read": "관리자가 신청서를 읽고 사진을 확인해요. 보통 장날 몇 번 안에 끝나요.",
-    "panel": "승인되면 재고, 주문, 픽업 시간을 관리하는 가게 패널이 계정에 나타나요.",
-    "setup": "거기서 시장, 요일, 픽업 시간대를 정하고 첫 상품을 올려요."
+    "read": "관리자가 신청서와 사진을 검토합니다.",
+    "panel": "승인되면 계정에 가게 패널이 열립니다.",
+    "setup": "거기서 마켓, 수령 시간, 상품을 설정합니다."
   },
   "step1": {
     "title": "내 가게",
@@ -22,68 +22,40 @@
     "about": "가게 소개",
     "aboutPlaceholder": "한두 문장으로. 누가 어디서 기르는지.",
     "address": "주소",
-    "fromAccount": "계정 정보에서 가져왔습니다. 틀렸다면 먼저 계정 페이지에서 바꾸세요."
+    "fromAccount": "계정 정보입니다. 계정 페이지에서 변경하세요.",
+    "aboutCount": "{{used}} / {{max}}자"
   },
   "step2": {
-    "title": "기르는 것",
-    "categories": "카테고리",
-    "crops": "주요 작물",
-    "cropsPlaceholder": "공심채, 채심, 타이 바질",
-    "cropsHint": "쉼표로 구분하세요. 가격이 있는 실제 상품은 승인 후에 올려요.",
-    "volume": "일주일에 대략 얼마나",
-    "volumePlaceholder": "약 120단",
-    "volumeHint": "대략적인 숫자면 돼요. 관리자가 자리가 있는 시장을 찾는 데 도움이 돼요.",
-    "method": "기르는 방법",
-    "methodPlaceholder": "예: 최근 두 시즌 동안 농약을 쓰지 않았어요.",
-    "methodHint": "선택 사항이며, 가게 페이지에 내 말 그대로 표시돼요. MarketLink는 내용을 확인하거나 인증하지 않아요."
-  },
-  "step3": {
-    "title": "기르는 곳",
-    "plot": "밭 주소",
-    "plotPlaceholder": "마을, 동, 군",
-    "plotHint": "관리자만 볼 수 있어요. 고객은 밭이 아니라 시장의 가게를 봐요.",
-    "size": "밭 면적",
-    "sizePlaceholder": "5,000 m²",
-    "since": "이곳에서 기른 해",
-    "pin": "밭 위치 표시",
-    "map": "지도에 밭 위치 표시",
-    "pinHint": "핀을 밭으로 끌어다 놓으세요. 사진이 그 장소와 맞는지 관리자가 가장 빨리 확인할 수 있어요.",
-    "yourPlot": "내 농지"
-  },
-  "step4": {
     "title": "밭 사진",
-    "intro": "사진은 두 장이면 충분하고 최대 다섯 장이에요. 밭 전체가 보이는 넓은 사진 한 장, 지금 자라는 작물을 가까이 찍은 사진 한 장. 최근 30일 안에 찍고 필터는 쓰지 마세요.",
-    "shots": {
-      "wide": "밭 전체 사진",
-      "growing": "지금 자라는 작물",
-      "other": "기타"
-    },
+    "intro": "전체가 보이는 사진 한 장과 가까이 찍은 사진 한 장. 최근 30일 이내, 보정 없이.",
     "addPhoto": "사진 추가",
     "video": "짧은 동영상",
     "addVideo": "동영상 추가(최대 60초)",
-    "videoHint": "선택 사항이에요. 이랑을 따라 천천히 걷는 영상이 어떤 사진보다 잘 보여 주고, 승인도 빨라져요.",
+    "videoHint": "선택 사항입니다. 밭을 천천히 걷는 영상은 승인을 앞당깁니다.",
     "banner": {
-      "title": "관리자는 한 가지만 확인해요: 밭이 실제로 있고 적은 작물을 기르는지.",
-      "text": "MarketLink는 허가, 식품 안전, 유기농 주장을 확인하지 않으며, 사진은 인증서가 아니에요."
+      "title": "관리자는 밭이 실제로 있는지만 확인합니다.",
+      "text": "MarketLink는 허가증, 식품 안전, 유기농 인증을 확인하지 않습니다."
     },
     "uploading": "업로드 중…",
     "removePhoto": "{{label}} 삭제",
     "videoAdded": "동영상이 추가됨",
-    "removeVideo": "삭제"
+    "removeVideo": "삭제",
+    "photoHint": "사진은 최소 1장이 필요합니다. JPEG, PNG 또는 WEBP, 장당 최대 {{max}} MB.",
+    "videoLimit": "최대 {{max}} MB.",
+    "photoLabel": "사진 {{n}}",
+    "addPhotoLabel": "사진 {{n}} 추가",
+    "videoPreview": "내 동영상",
+    "closeVideo": "닫기",
+    "playVideo": "추가한 동영상 재생"
   },
-  "step5": {
-    "title": "판매하고 싶은 곳",
-    "market": "시장",
-    "hint": "먼저 한 곳을 고르세요. 승인되면 가게 패널에서 요일, 픽업 시간대, 마감을 정하고, 다른 시장은 나중에 추가할 수 있어요."
-  },
-  "step6": {
+  "step3": {
     "title": "보내기 전에",
-    "true": "여기 적은 내용은 모두 사실이며, 사진은 내 밭을 찍은 거예요",
-    "trueHint": "내 것이 아닌 사진으로 신청하면 거절되고 계정이 정지될 수 있어요.",
-    "present": "픽업 시간대에 가게에 있을게요",
-    "presentHint": "자주 나타나지 않는 것이 가게가 정지되는 가장 흔한 이유예요.",
-    "pay": "고객이 가게에서 나에게 결제한다는 것을 이해해요",
-    "payHint": "MarketLink에는 온라인 결제도 배송도 없어요.",
+    "true": "적은 내용과 사진은 제 것이며 사실입니다",
+    "trueHint": "남의 사진은 반려 또는 정지 사유입니다.",
+    "present": "수령 시간에 가게에 있겠습니다",
+    "presentHint": "반복된 미출석은 정지 사유입니다.",
+    "pay": "손님은 가게에서 저에게 결제합니다",
+    "payHint": "MarketLink에는 온라인 결제와 배송이 없습니다.",
     "send": "신청서 보내기",
     "later": "저장하고 나중에 마치기",
     "sending": "보내는 중…"
@@ -93,20 +65,14 @@
     "intro": "그동안 달라지는 건 없어요. 계속 장을 보고, 결과는 알림에서 확인하세요.",
     "summary": "보낸 내용",
     "stall": "가게",
-    "grows": "기르는 것",
-    "plot": "밭",
     "evidence": "증빙",
     "photos_one": "사진 {{count}}장",
     "photos_other": "사진 {{count}}장",
     "photosAndVideo_one": "사진 {{count}}장과 동영상",
     "photosAndVideo_other": "사진 {{count}}장과 동영상",
-    "market": "시장",
     "keepShopping": "계속 장보기",
     "progress": "진행 상황",
     "about": "소개",
-    "volume": "주당 대략",
-    "plotIn": "{{place}} 소재",
-    "plotSince": "{{year}}년부터 재배",
     "noPhotos": "사진 없음",
     "noPhotosVideo": "사진 없음, 동영상 1개",
     "status": "상태",
@@ -131,8 +97,8 @@
     }
   },
   "toast": {
-    "missingTitle": "체크하지 않은 항목",
-    "missing": "보내기 전에 마지막 세 칸에 체크하세요.",
+    "fixTitle": "양식을 확인하세요",
+    "fix": "아직 필요한 부분을 표시했습니다.",
     "sentTitle": "신청서를 보냈어요",
     "sent": "관리자의 답은 알림으로 받아요."
   },
@@ -147,7 +113,17 @@
     "contactPerson": "연락 담당자를 입력하세요.",
     "photo": "사진을 업로드하지 못했습니다. 다시 시도하세요.",
     "video": "동영상을 업로드하지 못했습니다. 다시 시도하세요.",
-    "send": "신청서를 보내지 못했습니다. 다시 시도하세요."
+    "send": "신청서를 보내지 못했습니다. 다시 시도하세요.",
+    "stallNameLong": "가게 이름은 {{max}}자 이내로 입력하세요.",
+    "contactPersonLong": "담당자 이름은 {{max}}자 이내로 입력하세요.",
+    "descriptionLong": "소개글은 {{max}}자 이내로 입력하세요.",
+    "photoRequired": "밭 사진을 최소 한 장 추가하세요.",
+    "uploadInProgress": "업로드가 끝난 뒤에 보내세요.",
+    "photoType": "사진은 JPEG, PNG 또는 WEBP여야 합니다.",
+    "photoTooLarge": "이 사진은 {{max}} MB를 넘습니다.",
+    "videoType": "동영상은 MP4, WEBM 또는 MOV여야 합니다.",
+    "videoTooLarge": "이 동영상은 {{max}} MB를 넘습니다.",
+    "terms": "보내기 전에 세 항목 모두 체크하세요."
   },
   "approval": {
     "approved": {

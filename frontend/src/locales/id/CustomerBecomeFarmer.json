@@ -6,9 +6,9 @@
   "intro": "Jika Anda menanam bahan pangan, akun Anda bisa menjadi lapak di salah satu dari empat pasar. Semua yang Anda punya tetap ada, dan Anda tetap bisa belanja dari lapak lain.",
   "next": {
     "title": "Yang terjadi setelah Anda mengirim",
-    "read": "Admin membaca pendaftaran dan melihat foto Anda, biasanya dalam beberapa hari pasar.",
-    "panel": "Setelah disetujui, panel lapak muncul di akun Anda untuk stok, pesanan, dan waktu ambil.",
-    "setup": "Di sana Anda mengatur pasar, hari, dan jendela ambil, lalu mengunggah produk pertama."
+    "read": "Admin meninjau lamaran dan foto Anda.",
+    "panel": "Setelah disetujui, panel lapak muncul di akun Anda.",
+    "setup": "Di sana Anda mengatur pasar, jam pengambilan, dan produk."
   },
   "step1": {
     "title": "Lapak Anda",
@@ -22,68 +22,40 @@
     "about": "Tentang lapak",
     "aboutPlaceholder": "Satu atau dua kalimat. Siapa yang menanam dan di mana.",
     "address": "Alamat",
-    "fromAccount": "Dari akun Anda. Jika salah, ubah dulu di halaman Akun."
+    "fromAccount": "Dari akun Anda. Ubah di halaman Akun.",
+    "aboutCount": "{{used}} dari {{max}} karakter"
   },
   "step2": {
-    "title": "Yang Anda tanam",
-    "categories": "Kategori",
-    "crops": "Tanaman utama",
-    "cropsPlaceholder": "Kangkung, sawi hijau, kemangi",
-    "cropsHint": "Pisahkan dengan koma. Anda mengunggah produk nyata dengan harga setelah disetujui.",
-    "volume": "Kira-kira berapa per minggu",
-    "volumePlaceholder": "Sekitar 120 ikat",
-    "volumeHint": "Angka kasar saja. Membantu admin mencocokkan Anda dengan pasar yang masih ada tempat.",
-    "method": "Cara Anda menanam",
-    "methodPlaceholder": "mis. Tanpa pestisida dalam dua musim terakhir.",
-    "methodHint": "Opsional, dan ditampilkan di halaman lapak sebagai kata-kata Anda sendiri. MarketLink tidak memeriksa atau menyertifikasinya."
-  },
-  "step3": {
-    "title": "Tempat Anda menanam",
-    "plot": "Alamat lahan",
-    "plotPlaceholder": "Dusun, kelurahan, kecamatan",
-    "plotHint": "Hanya admin yang melihat ini. Pelanggan melihat lapak Anda di pasar, bukan lahan Anda.",
-    "size": "Luas lahan",
-    "sizePlaceholder": "5.000 m²",
-    "since": "Menanam di sini sejak",
-    "pin": "Tandai lahan",
-    "map": "Tandai lahan Anda di peta",
-    "pinHint": "Seret penanda ke lahan Anda. Ini cara tercepat bagi admin untuk melihat foto cocok dengan tempatnya.",
-    "yourPlot": "Lahan Anda"
-  },
-  "step4": {
     "title": "Foto lahan",
-    "intro": "Dua foto sudah cukup dan lima paling banyak. Satu foto lebar yang menampilkan seluruh lahan, dan satu foto dekat dari yang sedang tumbuh sekarang. Ambil dalam 30 hari terakhir dan tanpa filter.",
-    "shots": {
-      "wide": "Foto lebar lahan",
-      "growing": "Yang sedang tumbuh",
-      "other": "Lainnya"
-    },
+    "intro": "Satu foto lebar dan satu foto dekat, diambil dalam 30 hari terakhir. Tanpa filter.",
     "addPhoto": "Tambah foto",
     "video": "Video singkat",
     "addVideo": "Tambah video, maksimal 60 detik",
-    "videoHint": "Opsional. Berjalan pelan menyusuri bedengan lebih meyakinkan dari foto apa pun, dan mempercepat persetujuan.",
+    "videoHint": "Opsional. Video berjalan pelan menyusuri bedengan mempercepat persetujuan.",
     "banner": {
-      "title": "Admin hanya memeriksa satu hal: lahannya ada dan menanam yang Anda cantumkan.",
-      "text": "MarketLink tidak memeriksa izin, keamanan pangan, atau klaim organik, dan foto bukan sertifikat."
+      "title": "Admin hanya memastikan lahan itu benar ada.",
+      "text": "MarketLink tidak memverifikasi izin, keamanan pangan, atau klaim organik."
     },
     "uploading": "Mengunggah…",
     "removePhoto": "Hapus {{label}}",
     "videoAdded": "Video ditambahkan",
-    "removeVideo": "Hapus"
+    "removeVideo": "Hapus",
+    "photoHint": "Perlu setidaknya satu foto. JPEG, PNG, atau WEBP, maksimal {{max}} MB per foto.",
+    "videoLimit": "Maksimal {{max}} MB.",
+    "photoLabel": "Foto {{n}}",
+    "addPhotoLabel": "Tambah foto {{n}}",
+    "videoPreview": "Video Anda",
+    "closeVideo": "Tutup",
+    "playVideo": "Putar video yang Anda tambahkan"
   },
-  "step5": {
-    "title": "Tempat Anda ingin berjualan",
-    "market": "Pasar",
-    "hint": "Pilih satu untuk memulai. Setelah disetujui, Anda mengatur hari, jendela ambil, dan batas pesan di panel lapak, dan bisa menambah pasar lain nanti."
-  },
-  "step6": {
+  "step3": {
     "title": "Sebelum mengirim",
-    "true": "Semua yang ada di sini benar, dan fotonya adalah lahan saya sendiri",
-    "trueHint": "Pendaftaran dengan foto yang bukan milik Anda akan ditolak dan akun bisa ditangguhkan.",
-    "present": "Saya akan ada di lapak selama jendela ambil",
-    "presentHint": "Sering tidak hadir adalah alasan umum lapak ditangguhkan.",
-    "pay": "Saya paham pelanggan membayar saya di lapak",
-    "payHint": "Tidak ada pembayaran online dan tidak ada pengiriman di MarketLink.",
+    "true": "Data dan foto ini milik saya dan benar",
+    "trueHint": "Foto milik orang lain berakibat penolakan atau penangguhan.",
+    "present": "Saya akan ada di lapak pada jam pengambilan",
+    "presentHint": "Berulang kali tidak hadir berakibat penangguhan.",
+    "pay": "Pembeli membayar saya di lapak",
+    "payHint": "MarketLink tidak punya pembayaran online maupun pengiriman.",
     "send": "Kirim pendaftaran",
     "later": "Simpan dan lanjutkan nanti",
     "sending": "Mengirim…"
@@ -93,20 +65,14 @@
     "intro": "Sementara itu tidak ada yang berubah. Terus belanja, dan pantau notifikasi untuk jawabannya.",
     "summary": "Yang Anda kirim",
     "stall": "Lapak",
-    "grows": "Menanam",
-    "plot": "Lahan",
     "evidence": "Bukti",
     "photos_one": "{{count}} foto",
     "photos_other": "{{count}} foto",
     "photosAndVideo_one": "{{count}} foto dan satu video",
     "photosAndVideo_other": "{{count}} foto dan satu video",
-    "market": "Pasar",
     "keepShopping": "Lanjut belanja",
     "progress": "Progres",
     "about": "Tentang",
-    "volume": "Kira-kira per minggu",
-    "plotIn": "di {{place}}",
-    "plotSince": "ditanami sejak {{year}}",
     "noPhotos": "Tanpa foto",
     "noPhotosVideo": "Tanpa foto, dan satu video",
     "status": "Status",
@@ -131,8 +97,8 @@
     }
   },
   "toast": {
-    "missingTitle": "Kotak belum dicentang",
-    "missing": "Centang tiga kotak di bagian akhir sebelum mengirim.",
+    "fixTitle": "Periksa formulir",
+    "fix": "Kami menandai bagian yang masih kurang.",
     "sentTitle": "Pendaftaran dikirim",
     "sent": "Jawaban admin akan masuk ke notifikasi Anda."
   },
@@ -147,7 +113,17 @@
     "contactPerson": "Masukkan nama narahubung.",
     "photo": "Foto itu tidak dapat diunggah. Silakan coba lagi.",
     "video": "Video itu tidak dapat diunggah. Silakan coba lagi.",
-    "send": "Pengajuan Anda tidak dapat dikirim. Silakan coba lagi."
+    "send": "Pengajuan Anda tidak dapat dikirim. Silakan coba lagi.",
+    "stallNameLong": "Nama lapak maksimal {{max}} karakter.",
+    "contactPersonLong": "Nama narahubung maksimal {{max}} karakter.",
+    "descriptionLong": "Deskripsi maksimal {{max}} karakter.",
+    "photoRequired": "Tambahkan setidaknya satu foto lahan.",
+    "uploadInProgress": "Tunggu unggahan selesai, lalu kirim.",
+    "photoType": "Foto harus JPEG, PNG, atau WEBP.",
+    "photoTooLarge": "Foto itu lebih besar dari {{max}} MB.",
+    "videoType": "Video harus MP4, WEBM, atau MOV.",
+    "videoTooLarge": "Video itu lebih besar dari {{max}} MB.",
+    "terms": "Centang ketiga kotak sebelum mengirim."
   },
   "approval": {
     "approved": {

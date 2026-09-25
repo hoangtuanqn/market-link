@@ -6,9 +6,9 @@
   "intro": "Nếu bạn trồng thực phẩm, tài khoản của bạn có thể trở thành một sạp ở một trong bốn chợ. Bạn giữ mọi thứ đang có và vẫn mua hàng từ các sạp khác như bình thường.",
   "next": {
     "title": "Điều gì xảy ra sau khi bạn gửi",
-    "read": "Quản trị viên đọc đơn đăng ký và xem ảnh của bạn, thường trong vòng vài phiên chợ.",
-    "panel": "Khi được duyệt, bảng quản lý sạp sẽ xuất hiện trong tài khoản của bạn để quản lý hàng tồn, đơn hàng và giờ nhận hàng.",
-    "setup": "Bạn đặt chợ, ngày bán và khung giờ nhận hàng ở đó, rồi đăng những sản phẩm đầu tiên."
+    "read": "Quản trị viên xem đơn và ảnh của bạn.",
+    "panel": "Được duyệt thì bảng quản lý sạp hiện trong tài khoản.",
+    "setup": "Ở đó bạn chọn chợ, giờ nhận hàng và đăng sản phẩm."
   },
   "step1": {
     "title": "Sạp của bạn",
@@ -22,68 +22,40 @@
     "about": "Giới thiệu sạp",
     "aboutPlaceholder": "Một hoặc hai câu. Ai trồng và trồng ở đâu.",
     "address": "Địa chỉ",
-    "fromAccount": "Lấy từ tài khoản của bạn. Nếu sai, hãy sửa ở trang Tài khoản trước."
+    "fromAccount": "Lấy từ tài khoản. Sửa ở trang Tài khoản.",
+    "aboutCount": "{{used}} trên {{max}} ký tự"
   },
   "step2": {
-    "title": "Bạn trồng gì",
-    "categories": "Danh mục",
-    "crops": "Cây trồng chính",
-    "cropsPlaceholder": "Rau muống, cải ngọt, húng quế",
-    "cropsHint": "Phân cách bằng dấu phẩy. Bạn đăng sản phẩm thật kèm giá sau khi được duyệt.",
-    "volume": "Khoảng bao nhiêu mỗi tuần",
-    "volumePlaceholder": "Khoảng 120 bó",
-    "volumeHint": "Con số ước chừng. Giúp quản trị viên xếp bạn vào chợ còn chỗ.",
-    "method": "Bạn trồng như thế nào",
-    "methodPlaceholder": "vd: Không dùng thuốc trừ sâu trong hai vụ gần nhất.",
-    "methodHint": "Không bắt buộc, và hiện trên trang sạp như lời của chính bạn. MarketLink không kiểm tra hay chứng nhận nội dung này."
-  },
-  "step3": {
-    "title": "Bạn trồng ở đâu",
-    "plot": "Địa chỉ mảnh vườn",
-    "plotPlaceholder": "Ấp, phường/xã, quận/huyện",
-    "plotHint": "Chỉ quản trị viên thấy thông tin này. Khách hàng thấy sạp của bạn ở chợ, không thấy vườn của bạn.",
-    "size": "Diện tích vườn",
-    "sizePlaceholder": "5.000 m²",
-    "since": "Trồng ở đây từ năm",
-    "pin": "Ghim vị trí vườn",
-    "map": "Ghim vườn của bạn trên bản đồ",
-    "pinHint": "Kéo ghim đến vườn của bạn. Đây là cách nhanh nhất để quản trị viên thấy ảnh khớp với nơi đó.",
-    "yourPlot": "Mảnh đất của bạn"
-  },
-  "step4": {
     "title": "Ảnh mảnh vườn",
-    "intro": "Hai ảnh là đủ và tối đa năm ảnh. Một ảnh toàn cảnh cho thấy cả mảnh vườn, và một ảnh cận cảnh những gì đang trồng. Chụp trong 30 ngày gần nhất và không dùng bộ lọc.",
-    "shots": {
-      "wide": "Ảnh toàn cảnh vườn",
-      "growing": "Những gì đang trồng",
-      "other": "Ảnh khác"
-    },
+    "intro": "Một ảnh toàn cảnh và một ảnh cận, chụp trong 30 ngày gần đây. Không dùng bộ lọc.",
     "addPhoto": "Thêm ảnh",
     "video": "Một video ngắn",
     "addVideo": "Thêm video, tối đa 60 giây",
-    "videoHint": "Không bắt buộc. Một đoạn đi chậm dọc các luống nói nhiều hơn mọi bức ảnh, và giúp duyệt nhanh hơn.",
+    "videoHint": "Không bắt buộc. Một đoạn đi chậm dọc luống giúp duyệt nhanh hơn.",
     "banner": {
-      "title": "Quản trị viên chỉ kiểm tra một điều: mảnh vườn có thật và trồng những gì bạn kê khai.",
-      "text": "MarketLink không kiểm tra giấy phép, an toàn thực phẩm hay chứng nhận hữu cơ, và ảnh không phải là giấy chứng nhận."
+      "title": "Quản trị viên chỉ kiểm tra khu vườn có thật.",
+      "text": "MarketLink không xác minh giấy phép, an toàn thực phẩm hay chứng nhận hữu cơ."
     },
     "uploading": "Đang tải lên…",
     "removePhoto": "Xoá {{label}}",
     "videoAdded": "Đã thêm video",
-    "removeVideo": "Xoá"
+    "removeVideo": "Xoá",
+    "photoHint": "Cần ít nhất một ảnh. JPEG, PNG hoặc WEBP, mỗi ảnh tối đa {{max}} MB.",
+    "videoLimit": "Tối đa {{max}} MB.",
+    "photoLabel": "Ảnh {{n}}",
+    "addPhotoLabel": "Thêm ảnh {{n}}",
+    "videoPreview": "Video của bạn",
+    "closeVideo": "Đóng",
+    "playVideo": "Xem video bạn đã thêm"
   },
-  "step5": {
-    "title": "Nơi bạn muốn bán",
-    "market": "Chợ",
-    "hint": "Chọn một chợ để bắt đầu. Bạn đặt ngày bán, khung giờ nhận hàng và giờ chốt đơn trong bảng quản lý sạp sau khi được duyệt, và có thể thêm các chợ khác sau."
-  },
-  "step6": {
+  "step3": {
     "title": "Trước khi gửi",
-    "true": "Mọi thông tin ở đây là thật, và ảnh chụp đúng vườn của tôi",
-    "trueHint": "Đơn đăng ký có ảnh không phải của bạn sẽ bị từ chối và tài khoản có thể bị tạm khoá.",
+    "true": "Thông tin và ảnh là của tôi và đúng sự thật",
+    "trueHint": "Ảnh không phải của bạn sẽ bị từ chối hoặc đình chỉ.",
     "present": "Tôi sẽ có mặt tại sạp trong khung giờ nhận hàng",
-    "presentHint": "Vắng mặt nhiều lần là lý do thường gặp khiến sạp bị tạm khoá.",
-    "pay": "Tôi hiểu rằng khách trả tiền cho tôi tại sạp",
-    "payHint": "MarketLink không có thanh toán trực tuyến và không giao hàng.",
+    "presentHint": "Vắng mặt nhiều lần sẽ bị đình chỉ.",
+    "pay": "Khách trả tiền cho tôi tại sạp",
+    "payHint": "MarketLink không thanh toán trực tuyến và không giao hàng.",
     "send": "Gửi đơn đăng ký",
     "later": "Lưu và làm tiếp sau",
     "sending": "Đang gửi…"
@@ -93,20 +65,14 @@
     "intro": "Trong lúc chờ, không có gì thay đổi với bạn. Cứ mua sắm bình thường và theo dõi thông báo để nhận câu trả lời.",
     "summary": "Những gì bạn đã gửi",
     "stall": "Sạp",
-    "grows": "Trồng",
-    "plot": "Vườn",
     "evidence": "Minh chứng",
     "photos_one": "{{count}} ảnh",
     "photos_other": "{{count}} ảnh",
     "photosAndVideo_one": "{{count}} ảnh và một video",
     "photosAndVideo_other": "{{count}} ảnh và một video",
-    "market": "Chợ",
     "keepShopping": "Tiếp tục mua sắm",
     "progress": "Tiến độ",
     "about": "Giới thiệu",
-    "volume": "Khoảng mỗi tuần",
-    "plotIn": "tại {{place}}",
-    "plotSince": "trồng từ năm {{year}}",
     "noPhotos": "Không có ảnh",
     "noPhotosVideo": "Không có ảnh, có một video",
     "status": "Trạng thái",
@@ -131,8 +97,8 @@
     }
   },
   "toast": {
-    "missingTitle": "Còn thiếu ô đánh dấu",
-    "missing": "Hãy đánh dấu ba ô ở cuối trước khi gửi.",
+    "fixTitle": "Xem lại biểu mẫu",
+    "fix": "Những chỗ còn thiếu đã được đánh dấu.",
     "sentTitle": "Đã gửi đơn",
     "sent": "Bạn sẽ nhận được phản hồi của quản trị viên trong mục thông báo."
   },
@@ -147,7 +113,17 @@
     "contactPerson": "Nhập người liên hệ.",
     "photo": "Không tải lên được ảnh này. Vui lòng thử lại.",
     "video": "Không tải lên được video này. Vui lòng thử lại.",
-    "send": "Không gửi được đơn đăng ký. Vui lòng thử lại."
+    "send": "Không gửi được đơn đăng ký. Vui lòng thử lại.",
+    "stallNameLong": "Tên sạp không quá {{max}} ký tự.",
+    "contactPersonLong": "Tên người liên hệ không quá {{max}} ký tự.",
+    "descriptionLong": "Phần giới thiệu không quá {{max}} ký tự.",
+    "photoRequired": "Thêm ít nhất một ảnh khu vườn.",
+    "uploadInProgress": "Đợi tải ảnh xong rồi hãy gửi.",
+    "photoType": "Ảnh phải là JPEG, PNG hoặc WEBP.",
+    "photoTooLarge": "Ảnh này lớn hơn {{max}} MB.",
+    "videoType": "Video phải là MP4, WEBM hoặc MOV.",
+    "videoTooLarge": "Video này lớn hơn {{max}} MB.",
+    "terms": "Đánh dấu cả ba ô trước khi gửi."
   },
   "approval": {
     "approved": {

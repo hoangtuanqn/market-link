@@ -6,9 +6,9 @@
   "intro": "Wenn Sie Lebensmittel anbauen, kann Ihr Konto zu einem Stand auf einem der vier Märkte werden. Sie behalten alles, was Sie jetzt haben, und kaufen weiter bei anderen Ständen ein.",
   "next": {
     "title": "Was nach dem Absenden passiert",
-    "read": "Ein Admin liest den Antrag und sieht sich Ihre Fotos an, meist innerhalb weniger Markttage.",
-    "panel": "Nach der Freigabe erscheint in Ihrem Konto ein Standbereich für Bestand, Bestellungen und Abholzeiten.",
-    "setup": "Dort legen Sie Märkte, Tage und Abholfenster fest und stellen Ihre ersten Produkte ein."
+    "read": "Ein Admin prüft deinen Antrag und deine Fotos.",
+    "panel": "Nach der Freigabe erscheint ein Standbereich in deinem Konto.",
+    "setup": "Dort legst du Märkte, Abholzeiten und Produkte fest."
   },
   "step1": {
     "title": "Ihr Stand",
@@ -22,68 +22,40 @@
     "about": "Über den Stand",
     "aboutPlaceholder": "Ein oder zwei Sätze. Wer baut es an und wo.",
     "address": "Adresse",
-    "fromAccount": "Aus deinem Konto. Wenn es nicht stimmt, ändere es zuerst auf der Kontoseite."
+    "fromAccount": "Aus deinem Konto. Änderbar auf der Kontoseite.",
+    "aboutCount": "{{used}} von {{max}} Zeichen"
   },
   "step2": {
-    "title": "Was Sie anbauen",
-    "categories": "Kategorien",
-    "crops": "Hauptkulturen",
-    "cropsPlaceholder": "Wasserspinat, Choy Sum, Thai-Basilikum",
-    "cropsHint": "Mit Kommas trennen. Echte Produkte mit Preisen stellen Sie nach der Freigabe ein.",
-    "volume": "Ungefähre Menge pro Woche",
-    "volumePlaceholder": "Etwa 120 Bund",
-    "volumeHint": "Eine grobe Zahl. Sie hilft dem Admin, Ihnen einen Markt mit Platz zuzuordnen.",
-    "method": "Wie Sie anbauen",
-    "methodPlaceholder": "z. B. Keine Pestizide in den letzten zwei Saisons.",
-    "methodHint": "Optional und auf Ihrer Standseite in Ihren eigenen Worten zu sehen. MarketLink prüft oder zertifiziert nichts davon."
-  },
-  "step3": {
-    "title": "Wo Sie anbauen",
-    "plot": "Adresse der Fläche",
-    "plotPlaceholder": "Weiler, Bezirk, Kreis",
-    "plotHint": "Nur der Admin sieht das. Kunden sehen Ihren Stand auf dem Markt, nicht Ihre Fläche.",
-    "size": "Größe der Fläche",
-    "sizePlaceholder": "5.000 m²",
-    "since": "Anbau hier seit",
-    "pin": "Fläche markieren",
-    "map": "Markieren Sie Ihre Fläche auf der Karte",
-    "pinHint": "Ziehen Sie die Markierung auf Ihre Fläche. So sieht der Admin am schnellsten, dass die Fotos zum Ort passen.",
-    "yourPlot": "Ihr Grundstück"
-  },
-  "step4": {
     "title": "Fotos der Fläche",
-    "intro": "Zwei Fotos genügen, höchstens fünf. Eine Totale, die die ganze Fläche zeigt, und eine Nahaufnahme dessen, was gerade wächst. Aufgenommen in den letzten 30 Tagen und ohne Filter.",
-    "shots": {
-      "wide": "Totale der Fläche",
-      "growing": "Was gerade wächst",
-      "other": "Sonstiges"
-    },
+    "intro": "Eine Gesamtaufnahme und eine Nahaufnahme, höchstens 30 Tage alt. Ohne Filter.",
     "addPhoto": "Foto hinzufügen",
     "video": "Ein kurzes Video",
     "addVideo": "Video hinzufügen, bis 60 Sekunden",
-    "videoHint": "Optional. Ein langsamer Gang an den Beeten entlang sagt mehr als jedes Foto und beschleunigt die Freigabe.",
+    "videoHint": "Optional. Ein langsamer Gang an den Beeten entlang beschleunigt die Freigabe.",
     "banner": {
-      "title": "Der Admin prüft nur eines: dass es die Fläche gibt und dort wächst, was Sie angegeben haben.",
-      "text": "MarketLink prüft keine Lizenzen, Lebensmittelsicherheit oder Bio-Angaben, und ein Foto ist kein Zertifikat."
+      "title": "Der Admin prüft nur, ob die Fläche existiert.",
+      "text": "MarketLink prüft keine Lizenzen, Lebensmittelsicherheit oder Bio-Siegel."
     },
     "uploading": "Wird hochgeladen…",
     "removePhoto": "{{label}} entfernen",
     "videoAdded": "Video hinzugefügt",
-    "removeVideo": "Entfernen"
+    "removeVideo": "Entfernen",
+    "photoHint": "Mindestens ein Foto ist nötig. JPEG, PNG oder WEBP, höchstens {{max}} MB pro Foto.",
+    "videoLimit": "Höchstens {{max}} MB.",
+    "photoLabel": "Foto {{n}}",
+    "addPhotoLabel": "Foto {{n}} hinzufügen",
+    "videoPreview": "Dein Video",
+    "closeVideo": "Schließen",
+    "playVideo": "Hinzugefügtes Video abspielen"
   },
-  "step5": {
-    "title": "Wo Sie verkaufen möchten",
-    "market": "Markt",
-    "hint": "Wählen Sie zunächst einen. Tage, Abholfenster und Bestellschluss legen Sie nach der Freigabe im Standbereich fest, und weitere Märkte können Sie später hinzufügen."
-  },
-  "step6": {
+  "step3": {
     "title": "Vor dem Absenden",
-    "true": "Alle Angaben sind wahr, und die Fotos zeigen meine eigene Fläche",
-    "trueHint": "Ein Antrag mit fremden Fotos wird abgelehnt, und das Konto kann gesperrt werden.",
+    "true": "Die Angaben und Fotos sind meine und korrekt",
+    "trueHint": "Fremde Fotos führen zu Ablehnung oder Sperrung.",
     "present": "Ich bin während meines Abholfensters am Stand",
-    "presentHint": "Wiederholtes Nichterscheinen ist der häufigste Grund für die Sperrung eines Stands.",
-    "pay": "Mir ist klar, dass Kunden mich am Stand bezahlen",
-    "payHint": "MarketLink hat weder Online-Zahlung noch Lieferung.",
+    "presentHint": "Wiederholtes Fernbleiben führt zur Sperrung.",
+    "pay": "Kundinnen und Kunden zahlen bei mir am Stand",
+    "payHint": "MarketLink hat keine Onlinezahlung und keine Lieferung.",
     "send": "Antrag absenden",
     "later": "Speichern und später fertigstellen",
     "sending": "Wird gesendet…"
@@ -93,20 +65,14 @@
     "intro": "In der Zwischenzeit ändert sich für Sie nichts. Kaufen Sie weiter ein und achten Sie auf Ihre Benachrichtigungen.",
     "summary": "Was Sie gesendet haben",
     "stall": "Stand",
-    "grows": "Baut an",
-    "plot": "Fläche",
     "evidence": "Nachweise",
     "photos_one": "{{count}} Foto",
     "photos_other": "{{count}} Fotos",
     "photosAndVideo_one": "{{count}} Foto und ein Video",
     "photosAndVideo_other": "{{count}} Fotos und ein Video",
-    "market": "Markt",
     "keepShopping": "Weiter einkaufen",
     "progress": "Fortschritt",
     "about": "Über den Stand",
-    "volume": "Ungefähr pro Woche",
-    "plotIn": "in {{place}}",
-    "plotSince": "Anbau seit {{year}}",
     "noPhotos": "Keine Fotos",
     "noPhotosVideo": "Keine Fotos, aber ein Video",
     "status": "Status",
@@ -131,8 +97,8 @@
     }
   },
   "toast": {
-    "missingTitle": "Fehlende Häkchen",
-    "missing": "Setzen Sie vor dem Absenden die drei Häkchen am Ende.",
+    "fixTitle": "Formular prüfen",
+    "fix": "Wir haben markiert, was noch fehlt.",
     "sentTitle": "Antrag gesendet",
     "sent": "Die Antwort eines Admins erhalten Sie in Ihren Benachrichtigungen."
   },
@@ -147,7 +113,17 @@
     "contactPerson": "Gib eine Kontaktperson ein.",
     "photo": "Das Foto konnte nicht hochgeladen werden. Bitte versuche es erneut.",
     "video": "Das Video konnte nicht hochgeladen werden. Bitte versuche es erneut.",
-    "send": "Deine Bewerbung konnte nicht gesendet werden. Bitte versuche es erneut."
+    "send": "Deine Bewerbung konnte nicht gesendet werden. Bitte versuche es erneut.",
+    "stallNameLong": "Der Standname darf höchstens {{max}} Zeichen haben.",
+    "contactPersonLong": "Der Name der Kontaktperson darf höchstens {{max}} Zeichen haben.",
+    "descriptionLong": "Die Beschreibung darf höchstens {{max}} Zeichen haben.",
+    "photoRequired": "Füge mindestens ein Foto der Fläche hinzu.",
+    "uploadInProgress": "Warte, bis der Upload fertig ist, und sende dann.",
+    "photoType": "Fotos müssen JPEG, PNG oder WEBP sein.",
+    "photoTooLarge": "Dieses Foto ist größer als {{max}} MB.",
+    "videoType": "Das Video muss MP4, WEBM oder MOV sein.",
+    "videoTooLarge": "Dieses Video ist größer als {{max}} MB.",
+    "terms": "Setze alle drei Haken, bevor du sendest."
   },
   "approval": {
     "approved": {

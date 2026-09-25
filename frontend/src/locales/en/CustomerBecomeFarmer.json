@@ -2,13 +2,13 @@
   "breadcrumbAccount": "Account",
   "breadcrumb": "Apply to sell",
   "since": "{{name}} · customer since {{date}}",
-  "title": "Sell what you grow",
-  "intro": "If you grow food, your account can become a stall at one of the four markets. You keep everything you have now and carry on shopping from other stalls.",
+  "title": "Apply to sell on MarketLink",
+  "intro": "Tell us about your stall and contact details. An admin will review your application before you can list products.",
   "next": {
     "title": "What happens after you send this",
-    "read": "An admin reads the application and looks at your photos, usually within a few market days.",
-    "panel": "When it is approved, a stall panel appears in your account for stock, orders and pickup times.",
-    "setup": "You set your markets, days and pickup windows there, then list your first products."
+    "read": "An admin reviews your application and photos.",
+    "panel": "Once approved, a stall panel opens in your account.",
+    "setup": "There you set markets, pickup times and products."
   },
   "step1": {
     "title": "Your stall",
@@ -22,68 +22,40 @@
     "about": "About the stall",
     "aboutPlaceholder": "One or two sentences. Who grows it and where.",
     "address": "Address",
-    "fromAccount": "From your account. Change it on the Account page first if it's wrong."
+    "fromAccount": "From your account. Change it on the Account page.",
+    "aboutCount": "{{used}} of {{max}} characters"
   },
   "step2": {
-    "title": "What you grow",
-    "categories": "Categories",
-    "crops": "Main crops",
-    "cropsPlaceholder": "Water spinach, choy sum, Thai basil",
-    "cropsHint": "Separate them with commas. You list real products with prices after approval.",
-    "volume": "Roughly how much a week",
-    "volumePlaceholder": "About 120 bunches",
-    "volumeHint": "A rough figure. It helps the admin match you to a market with room.",
-    "method": "How you grow it",
-    "methodPlaceholder": "e.g. No pesticides in the last two seasons.",
-    "methodHint": "Optional, and shown on your stall page as your own words. MarketLink does not check or certify any of it."
-  },
-  "step3": {
-    "title": "Where you grow it",
-    "plot": "Address of the plot",
-    "plotPlaceholder": "Hamlet, ward, district",
-    "plotHint": "Only the admin sees this. Customers see your stall at the market, not your plot.",
-    "size": "Plot size",
-    "sizePlaceholder": "5,000 m²",
-    "since": "Growing here since",
-    "pin": "Pin the plot",
-    "map": "Pin your plot on the map",
-    "pinHint": "Drag the pin to your plot. It is the quickest way for the admin to see the photos match the place.",
-    "yourPlot": "Your plot"
-  },
-  "step4": {
     "title": "Photos of the plot",
-    "intro": "Two photos are enough and five is the most. One wide shot that shows the whole plot, and one close shot of what is growing right now. Take them in the last 30 days and do not filter them.",
-    "shots": {
-      "wide": "Wide shot of the plot",
-      "growing": "What is growing now",
-      "other": "Anything else"
-    },
+    "intro": "One wide shot and one close shot, taken in the last 30 days. No filters.",
     "addPhoto": "Add photo",
     "video": "A short video",
     "addVideo": "Add a video, up to 60 seconds",
-    "videoHint": "Optional. A slow walk along the beds says more than any photo, and it makes approval faster.",
+    "videoHint": "Optional. A slow walk along the beds speeds up approval.",
     "banner": {
-      "title": "The admin is checking one thing: that the plot exists and grows what you listed.",
-      "text": "MarketLink does not check licences, food safety or organic claims, and a photo is not a certificate."
+      "title": "The admin only checks that the plot exists.",
+      "text": "MarketLink does not verify licences, food safety or organic claims."
     },
     "uploading": "Uploading…",
     "removePhoto": "Remove {{label}}",
     "videoAdded": "Video added",
-    "removeVideo": "Remove"
+    "removeVideo": "Remove",
+    "photoHint": "At least one photo is required. JPEG, PNG or WEBP, up to {{max}} MB each.",
+    "videoLimit": "Up to {{max}} MB.",
+    "photoLabel": "Photo {{n}}",
+    "addPhotoLabel": "Add photo {{n}}",
+    "videoPreview": "Your video",
+    "closeVideo": "Close",
+    "playVideo": "Play the video you added"
   },
-  "step5": {
-    "title": "Where you want to sell",
-    "market": "Market",
-    "hint": "Pick one to start with. You set your days, pickup windows and cutoff in the stall panel once you are approved, and you can add the other markets later."
-  },
-  "step6": {
+  "step3": {
     "title": "Before you send",
-    "true": "Everything here is true, and the photos are of my own plot",
-    "trueHint": "An application with photos that are not yours is rejected and the account can be suspended.",
-    "present": "I will be at the stall in my pickup window",
-    "presentHint": "Repeated no-shows are the usual reason a stall is suspended.",
-    "pay": "I understand customers pay me at the stall",
-    "payHint": "There is no online payment and no delivery anywhere in MarketLink.",
+    "true": "The details and photos are mine and accurate",
+    "trueHint": "False photos lead to rejection or suspension.",
+    "present": "I will be at the stall during my pickup window",
+    "presentHint": "Repeated no-shows lead to suspension.",
+    "pay": "Customers pay me at the stall",
+    "payHint": "MarketLink has no online payment or delivery.",
     "send": "Send the application",
     "later": "Save and finish later",
     "sending": "Sending…"
@@ -93,20 +65,14 @@
     "intro": "Nothing changes for you in the meantime. Keep shopping, and watch your notifications for the answer.",
     "summary": "What you sent",
     "stall": "Stall",
-    "grows": "Grows",
-    "plot": "Plot",
     "evidence": "Evidence",
     "photos_one": "{{count}} photo",
     "photos_other": "{{count}} photos",
     "photosAndVideo_one": "{{count}} photo and a video",
     "photosAndVideo_other": "{{count}} photos and a video",
-    "market": "Market",
     "keepShopping": "Keep shopping",
     "progress": "Progress",
     "about": "About",
-    "volume": "Roughly a week",
-    "plotIn": "in {{place}}",
-    "plotSince": "growing since {{year}}",
     "noPhotos": "No photos",
     "noPhotosVideo": "No photos, and a video",
     "status": "Status",
@@ -131,8 +97,8 @@
     }
   },
   "toast": {
-    "missingTitle": "Missing boxes",
-    "missing": "Tick the three boxes at the end before you send.",
+    "fixTitle": "Check the form",
+    "fix": "We marked what still needs your attention.",
     "sentTitle": "Application sent",
     "sent": "You will hear from an admin in your notifications."
   },
@@ -147,7 +113,17 @@
     "contactPerson": "Enter a contact person.",
     "photo": "Could not upload that photo. Please try again.",
     "video": "Could not upload that video. Please try again.",
-    "send": "Could not send your application. Please try again."
+    "send": "Could not send your application. Please try again.",
+    "stallNameLong": "Keep the stall name under {{max}} characters.",
+    "contactPersonLong": "Keep the contact person under {{max}} characters.",
+    "descriptionLong": "Keep the description under {{max}} characters.",
+    "photoRequired": "Add at least one photo of the plot.",
+    "uploadInProgress": "Wait until the upload finishes, then send.",
+    "photoType": "Photos must be JPEG, PNG or WEBP.",
+    "photoTooLarge": "That photo is larger than {{max}} MB.",
+    "videoType": "The video must be MP4, WEBM or MOV.",
+    "videoTooLarge": "That video is larger than {{max}} MB.",
+    "terms": "Tick all three boxes before you send."
   },
   "approval": {
     "approved": {
