@@ -1,0 +1,40 @@
+{
+  "title": "Envoyer un retour",
+  "intro": "Les bugs, les suggestions et les questions arrivent tous chez l'équipe. Choisissez le type pour que votre message aille à la bonne personne.",
+  "typeLegend": "De quoi s'agit-il ?",
+  "types": {
+    "bug": "Signalement de bug : quelque chose ne fonctionne pas",
+    "suggestion": "Suggestion : quelque chose pourrait être mieux",
+    "query": "Question : j'ai besoin d'une réponse"
+  },
+  "pageLabel": "Quelle page ?",
+  "pages": {
+    "cart": "Panier",
+    "product": "Page produit",
+    "map": "Carte des marchés",
+    "orders": "Mes commandes",
+    "farmer": "Tableau de bord Farmer",
+    "other": "Autre"
+  },
+  "messageLabel": "Message",
+  "messagePlaceholder": "Qu'attendiez-vous, et que s'est-il passé à la place ?",
+  "messageHint": "Pour un bug, ajoutez votre téléphone ou votre navigateur.",
+  "emailLabel": "E-mail pour la réponse",
+  "emailHint": "Facultatif. Rempli quand vous êtes connecté.",
+  "submit": "Envoyer un retour",
+  "sent": {
+    "title": "Envoyé",
+    "bug": "Merci. Votre signalement de bug est arrivé chez l'équipe.",
+    "suggestion": "Merci. Votre suggestion est arrivée chez l'équipe.",
+    "query": "Merci. Votre question est arrivée chez l'équipe."
+  },
+  "notPlatform": {
+    "title": "Ce n'est pas à propos de la plateforme ?",
+    "text": "Un retrait en retard, un article manquant ou une question sur les produits, c'est pour le stand. Son numéro figure sur le ticket de commande, et vous pouvez aussi laisser un avis une fois la commande terminée.",
+    "cta": "Voir mes commandes"
+  },
+  "after": {
+    "title": "Après l'envoi",
+    "text": "Les signalements de bug sont lus chaque jour de marché. Les réponses aux questions arrivent par e-mail si vous en laissez une."
+  }
+}

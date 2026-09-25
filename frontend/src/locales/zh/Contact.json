@@ -1,0 +1,26 @@
+{
+  "title": "联系我们",
+  "intro": "订单相关的问题请直接联系摊位，摊位电话就在你的订单上。与平台有关的事情，请在这里联系团队。",
+  "team": {
+    "title": "MarketLink 团队",
+    "email": "邮箱",
+    "phone": "电话",
+    "address": "地址",
+    "hours": "服务时间",
+    "toAdd": "待补充",
+    "addressValue": "待补充。地图上的标记是第一郡的临时位置。",
+    "hoursValue": "周一至周五，09:00 – 17:00"
+  },
+  "feedback": {
+    "title": "发现问题或有好点子？",
+    "text": "请用反馈表单提交，这样会连同页面和浏览器信息一起进入正确的处理队列。",
+    "cta": "发送反馈"
+  },
+  "map": {
+    "label": "团队位置地图",
+    "markerLabel": "MarketLink 团队（临时位置）",
+    "popupTitle": "MarketLink 团队",
+    "popupLine": "临时标记，第一郡",
+    "directions": "前往团队的路线"
+  }
+}
