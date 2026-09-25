@@ -44,9 +44,14 @@ public class StompChatEventPublisher implements ChatEventPublisherInterface {
         send(message.senderId(), MESSAGES, message);
         send(recipient, CONVERSATIONS, updated(conversation, unreadFor(recipient, conversation)));
         send(message.senderId(), CONVERSATIONS, updated(conversation, 0L));
-        // FR-042: popup cho người nhận (module notification nghe sự kiện này)
-        appEvents.publishEvent(
-                new ChatMessageCreatedEvent(conversation.getId(), recipient, message));
+        // FR-042: popup cho người nhận (module notification nghe sự kiện này). Tin đã commit: lỗi
+        // phía thông báo chỉ được ghi log, không được biến request gửi tin thành 500.
+        try {
+            appEvents.publishEvent(
+                    new ChatMessageCreatedEvent(conversation.getId(), recipient, message));
+        } catch (RuntimeException e) {
+            log.warn("Chat notification for message {} failed: {}", message.id(), e.getMessage());
+        }
     }
 
     @Override

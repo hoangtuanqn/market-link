@@ -69,6 +69,17 @@ class StompChatEventPublisherTest {
         verify(appEvents).publishEvent(new ChatMessageCreatedEvent(42L, 3L, msg(7L)));
     }
 
+    /** Tin đã commit: lỗi của module thông báo không được biến request gửi tin thành 500. */
+    @Test
+    void aFailingNotificationListenerDoesNotBreakTheSend() {
+        doThrow(new IllegalStateException("db down"))
+                .when(appEvents)
+                .publishEvent(any(ChatMessageCreatedEvent.class));
+
+        assertThatCode(() -> publisher.messageCreated(thread, msg(7L))).doesNotThrowAnyException();
+        verify(template).convertAndSendToUser("3", "/topic/messages", msg(7L));
+    }
+
     @Test
     void newMessageGoesToTheRecipientQueueAndBothConversationQueues() {
         publisher.messageCreated(thread, msg(7L));
