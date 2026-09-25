@@ -3,16 +3,23 @@ package com.techx.intervue.modules.user.controllers;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.InvalidResetTokenException;
+import com.techx.intervue.modules.user.exceptions.MfaCodeInvalidException;
+import com.techx.intervue.modules.user.exceptions.MfaLockedException;
+import com.techx.intervue.modules.user.exceptions.MfaStateException;
+import com.techx.intervue.modules.user.exceptions.MfaTokenInvalidException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
+import com.techx.intervue.modules.user.exceptions.RoleMismatchException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,7 +32,7 @@ import org.springframework.web.client.RestClientException;
  * thì lỗi rơi xuống /error và bị trả 401 (giống ChatExceptionHandler).
  */
 @Slf4j
-@RestControllerAdvice(assignableTypes = AuthController.class)
+@RestControllerAdvice(assignableTypes = {AuthController.class, MfaController.class})
 public class AuthExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
@@ -85,6 +92,11 @@ public class AuthExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "ACCOUNT_DISABLED", e.getMessage(), List.of());
     }
 
+    @ExceptionHandler(RoleMismatchException.class)
+    ResponseEntity<ApiResource<Void>> roleMismatch(RoleMismatchException e) {
+        return error(HttpStatus.FORBIDDEN, "ROLE_NOT_ALLOWED", e.getMessage(), List.of());
+    }
+
     @ExceptionHandler(InvalidFieldException.class)
     ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
         return error(
@@ -131,6 +143,51 @@ public class AuthExceptionHandler {
                 "DUPLICATE_ACCOUNT",
                 message,
                 List.of(FieldErrorResource.builder().message(message).build()));
+    }
+
+    /** FR-008: token chờ nhập mã sai / hết hạn → phải đăng nhập lại. */
+    @ExceptionHandler(MfaTokenInvalidException.class)
+    ResponseEntity<ApiResource<Void>> mfaTokenInvalid(MfaTokenInvalidException e) {
+        return error(HttpStatus.BAD_REQUEST, "MFA_TOKEN_INVALID", e.getMessage(), List.of());
+    }
+
+    /** FR-008: mã sai → 400 (không 401, FE hiểu 401 là hết phiên); details kèm số lần còn lại. */
+    @ExceptionHandler(MfaCodeInvalidException.class)
+    ResponseEntity<ApiResource<Void>> mfaCodeInvalid(MfaCodeInvalidException e) {
+        String left =
+                e.getAttemptsLeft()
+                        + (e.getAttemptsLeft() == 1 ? " more try" : " more tries")
+                        + " before the account is locked for 15 minutes.";
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "MFA_CODE_INVALID",
+                e.getMessage(),
+                List.of(FieldErrorResource.builder().field("code").message(left).build()));
+    }
+
+    @ExceptionHandler(MfaLockedException.class)
+    ResponseEntity<ApiResource<Void>> mfaLocked(MfaLockedException e) {
+        ErrorResource error = ErrorResource.builder().code("MFA_LOCKED").details(List.of()).build();
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header(HttpHeaders.RETRY_AFTER, String.valueOf(e.getRetryAfterSeconds()))
+                .body(ApiResource.error(error, e.getMessage()));
+    }
+
+    @ExceptionHandler(MfaStateException.class)
+    ResponseEntity<ApiResource<Void>> mfaState(MfaStateException e) {
+        return error(HttpStatus.CONFLICT, "MFA_STATE", e.getMessage(), List.of());
+    }
+
+    /**
+     * @PreAuthorize("hasRole('ADMIN')") trên MfaController: đăng nhập nhưng sai role → 403.
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {
+        return error(
+                HttpStatus.FORBIDDEN,
+                "FORBIDDEN",
+                "You do not have permission to do this.",
+                List.of());
     }
 
     private static ResponseEntity<ApiResource<Void>> error(
