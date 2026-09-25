@@ -43,10 +43,7 @@
     "photoHint": "Mindestens ein Foto ist nötig. JPEG, PNG oder WEBP, höchstens {{max}} MB pro Foto.",
     "videoLimit": "Höchstens {{max}} MB.",
     "photoLabel": "Foto {{n}}",
-    "addPhotoLabel": "Foto {{n}} hinzufügen",
-    "videoPreview": "Dein Video",
-    "closeVideo": "Schließen",
-    "playVideo": "Hinzugefügtes Video abspielen"
+    "addPhotoLabel": "Foto {{n}} hinzufügen"
   },
   "step3": {
     "title": "Vor dem Absenden",
@@ -77,7 +74,10 @@
     "noPhotosVideo": "Keine Fotos, aber ein Video",
     "status": "Status",
     "sentOn": "Gesendet",
-    "photoAlt": "Foto der Anbaufläche"
+    "photoAlt": "Foto der Anbaufläche",
+    "applyAgain": "Erneut beantragen",
+    "historyTitle": "Deine früheren Anträge",
+    "historyText": "Alle Anträge, die du gesendet hast, mit der Antwort des Admins."
   },
   "timeline": {
     "placed": {
@@ -100,7 +100,9 @@
     "fixTitle": "Formular prüfen",
     "fix": "Wir haben markiert, was noch fehlt.",
     "sentTitle": "Antrag gesendet",
-    "sent": "Die Antwort eines Admins erhalten Sie in Ihren Benachrichtigungen."
+    "sent": "Die Antwort eines Admins erhalten Sie in Ihren Benachrichtigungen.",
+    "savedTitle": "Für später gespeichert",
+    "saved": "Deine Angaben bleiben auf diesem Gerät. Mach auf der Kontoseite weiter."
   },
   "loading": "Status deiner Bewerbung wird geladen",
   "loadError": {
@@ -148,5 +150,14 @@
     "approved": "Angenommen",
     "rejected": "Abgelehnt",
     "suspended": "Gesperrt"
+  },
+  "rejectedBanner": {
+    "title": "Warum er nicht genehmigt wurde",
+    "noReason": "Es wurde kein Grund festgehalten. Frag über das Feedback-Formular bei einem Admin nach."
+  },
+  "draft": {
+    "title": "Du hast diesen Antrag schon begonnen",
+    "text": "Was du am {{date}} geschrieben hast, ist noch da.",
+    "discard": "Neu anfangen"
   }
 }

@@ -43,10 +43,7 @@
     "photoHint": "사진은 최소 1장이 필요합니다. JPEG, PNG 또는 WEBP, 장당 최대 {{max}} MB.",
     "videoLimit": "최대 {{max}} MB.",
     "photoLabel": "사진 {{n}}",
-    "addPhotoLabel": "사진 {{n}} 추가",
-    "videoPreview": "내 동영상",
-    "closeVideo": "닫기",
-    "playVideo": "추가한 동영상 재생"
+    "addPhotoLabel": "사진 {{n}} 추가"
   },
   "step3": {
     "title": "보내기 전에",
@@ -77,7 +74,10 @@
     "noPhotosVideo": "사진 없음, 동영상 1개",
     "status": "상태",
     "sentOn": "보낸 날짜",
-    "photoAlt": "밭 사진"
+    "photoAlt": "밭 사진",
+    "applyAgain": "다시 신청하기",
+    "historyTitle": "이전 신청 내역",
+    "historyText": "보낸 모든 신청과 관리자의 답변입니다."
   },
   "timeline": {
     "placed": {
@@ -100,7 +100,9 @@
     "fixTitle": "양식을 확인하세요",
     "fix": "아직 필요한 부분을 표시했습니다.",
     "sentTitle": "신청서를 보냈어요",
-    "sent": "관리자의 답은 알림으로 받아요."
+    "sent": "관리자의 답은 알림으로 받아요.",
+    "savedTitle": "나중에 이어서 하도록 저장했습니다",
+    "saved": "입력한 내용은 이 기기에 남습니다. 계정 페이지에서 이어서 하세요."
   },
   "loading": "신청 상태를 불러오는 중",
   "loadError": {
@@ -148,5 +150,14 @@
     "approved": "승인됨",
     "rejected": "거절됨",
     "suspended": "정지됨"
+  },
+  "rejectedBanner": {
+    "title": "승인되지 않은 이유",
+    "noReason": "기록된 사유가 없습니다. 피드백 양식으로 관리자에게 문의하세요."
+  },
+  "draft": {
+    "title": "작성 중이던 신청서가 있습니다",
+    "text": "{{date}}에 입력한 내용이 그대로 있습니다.",
+    "discard": "처음부터 다시"
   }
 }

@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import FarmerApi from '@/api-requests/farmer.requests';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataState } from '@/components/ui/data-state';
-import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/input';
 import { FormStep } from '@/components/ui/form-step';
-import { PlayIcon } from '@/components/icons';
+import { ApplicationHistory } from '@/components/ApplicationHistory';
+import { VideoThumb } from '@/components/VideoThumb';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useSession from '@/hooks/useSession';
+import { clearDraft, readDraft, saveDraft } from '@/lib/farmerDraft';
 import { formatDate } from '@/lib/format';
 import type { FarmerApplicationInput, FarmerProfileType } from '@/types/farmer.types';
 import Helper from '@/utils/helper';
@@ -97,68 +98,6 @@ const grabPoster = (file: File): Promise<string | null> =>
 
 const apiBase = () => import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
 
-/**
- * Ảnh đại diện của video kèm hộp thoại xem lại. Dùng ở cả form lẫn màn "đã gửi" — ở màn đã gửi chỉ còn đường dẫn trên
- * server nên không dựng được khung hình bằng canvas (khác origin, canvas bị chặn); lúc đó để thẻ <video> tự lấy khung
- * đầu tiên.
- */
-const VideoThumb = ({ url, poster, big = false }: { url: string; poster?: string | null; big?: boolean }) => {
-  const { t } = useTranslation('CustomerBecomeFarmer');
-  const [open, setOpen] = useState(false);
-  const src = `${apiBase()}${url}`;
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label={t('step2.playVideo')}
-        className={`group border-line-strong bg-surface-sunken relative cursor-pointer overflow-hidden border-[1.5px] p-0 ${
-          big ? 'aspect-4/3 w-40 rounded-md' : 'size-20 rounded-sm'
-        }`}
-      >
-        {poster ? (
-          <img src={poster} alt="" className="size-full object-cover" />
-        ) : (
-          // #t=0.5 để trình duyệt tua tới nửa giây rồi vẽ khung đó — khung 0 giây hay bị đen.
-          <video src={`${src}#t=0.5`} preload="metadata" muted playsInline className="size-full object-cover" />
-        )}
-        <span
-          aria-hidden="true"
-          className={`bg-ink/55 text-on-brand absolute inset-0 m-auto grid place-items-center rounded-full transition group-hover:scale-110 ${
-            big ? 'size-11' : 'size-8'
-          }`}
-        >
-          <PlayIcon size={big ? 20 : 14} />
-        </span>
-      </button>
-
-      <Dialog
-        open={open}
-        title={t('step2.videoPreview')}
-        onClose={() => setOpen(false)}
-        actions={
-          <Button variant="secondary" type="button" onClick={() => setOpen(false)}>
-            {t('step2.closeVideo')}
-          </Button>
-        }
-      >
-        {/* Chỉ dựng thẻ video khi hộp thoại mở: đóng lại là gỡ khỏi DOM, tiếng không chạy tiếp phía sau. */}
-        {open && (
-          <video
-            src={src}
-            poster={poster ?? undefined}
-            controls
-            autoPlay
-            playsInline
-            className="max-h-[70vh] w-[min(78vw,640px)] rounded-sm bg-black"
-          />
-        )}
-      </Dialog>
-    </>
-  );
-};
-
 /** FR-002 (second route, applying from an existing Customer account — needs its own FR, see the caption below). */
 const CustomerBecomeFarmerPage = () => {
   const { t } = useTranslation('CustomerBecomeFarmer');
@@ -180,19 +119,83 @@ const CustomerBecomeFarmerPage = () => {
   const [tick2, setTick2] = useState(false);
   const [tick3, setTick3] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  /** Ngày của bản nháp đang mở, để nói cho người dùng biết họ đang tiếp tục việc dở dang. */
+  const [draftSavedAt, setDraftSavedAt] = useState<string>();
+  const navigate = useNavigate();
 
   // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
   const fetchStatus = useCallback(() => {
     FarmerApi.myApplication()
-      .then((response) => setStatus(response.data ? { kind: 'applied', data: response.data } : { kind: 'form' }))
+      .then((response) => {
+        if (response.data) return setStatus({ kind: 'applied', data: response.data });
+        // Chưa nộp đơn nào: mở lại đúng những gì họ đã gõ lần trước rồi bấm "để sau làm tiếp".
+        const draft = readDraft(user?.id);
+        if (draft) {
+          setStallName(draft.stallName);
+          setContactPerson(draft.contactPerson);
+          setDescription(draft.description);
+          setPhotos(SHOTS.map((key, i) => ({ key, url: draft.photoUrls[i] ?? null, uploading: false })));
+          setVideo({ url: draft.videoUrl, uploading: false, poster: null });
+          setDraftSavedAt(draft.savedAt);
+        }
+        setStatus({ kind: 'form' });
+      })
       .catch(() => setStatus({ kind: 'error' }));
-  }, []);
+  }, [user?.id]);
 
   useEffect(fetchStatus, [fetchStatus]);
 
   const load = () => {
     setStatus({ kind: 'loading' });
     fetchStatus();
+  };
+
+  /**
+   * Nộp lại sau khi bị từ chối: mở lại form với nội dung lần trước để người nộp sửa đúng chỗ Admin chê, không phải gõ
+   * lại từ đầu. Ba ô cam kết thì phải tick lại — đó là cam kết cho đơn mới.
+   */
+  const applyAgain = () => {
+    if (status.kind !== 'applied') return;
+    const previous = status.data;
+    setStallName(previous.stallName);
+    setContactPerson(previous.contactPerson);
+    setDescription(previous.description ?? '');
+    setPhotos(SHOTS.map((key, i) => ({ key, url: previous.photoUrls?.[i] ?? null, uploading: false })));
+    setVideo({ url: previous.videoUrl ?? null, uploading: false, poster: null });
+    setTick1(false);
+    setTick2(false);
+    setTick3(false);
+    setErrors({});
+    setStatus({ kind: 'form' });
+    window.scrollTo(0, 0);
+  };
+
+  /**
+   * "Lưu, để sau làm tiếp": giữ nguyên những gì đã gõ (ảnh đã nằm trên server nên chỉ lưu đường dẫn) rồi trả người dùng
+   * về trang tài khoản, nơi có nút tiếp tục.
+   */
+  const saveAndLeave = () => {
+    saveDraft(user?.id, {
+      stallName,
+      contactPerson,
+      description,
+      photoUrls: photos.map((p) => p.url).filter((url): url is string => url !== null),
+      videoUrl: video.url,
+    });
+    Notification.success({ title: t('toast.savedTitle'), text: t('toast.saved') });
+    navigate('/account');
+  };
+
+  /** Bỏ nháp: xoá cả trên máy lẫn trên màn hình, form về trắng như lần đầu. */
+  const discardDraft = () => {
+    clearDraft(user?.id);
+    setDraftSavedAt(undefined);
+    setStallName('');
+    setContactPerson(user?.fullName ?? '');
+    setDescription('');
+    setPhotos(SHOTS.map((key) => ({ key, url: null, uploading: false })));
+    setVideo({ url: null, uploading: false, poster: null });
+    setErrors({});
   };
 
   /** Sửa xong thì dòng đỏ biến mất ngay, không phải đợi bấm Gửi lần nữa. */
@@ -325,6 +328,8 @@ const CustomerBecomeFarmerPage = () => {
     setIsSubmitting(true);
     try {
       const response = await FarmerApi.apply(input);
+      clearDraft(user?.id);
+      setDraftSavedAt(undefined);
       setStatus({ kind: 'applied', data: response.data });
       window.scrollTo(0, 0);
       Notification.success({ title: t('toast.sentTitle'), text: t('toast.sent') });
@@ -399,7 +404,15 @@ const CustomerBecomeFarmerPage = () => {
 
         {data.approvalStatus === 'suspended' && (
           <Banner variant="warning" title={t('suspendedBanner.title')}>
-            {t('suspendedBanner.text')}
+            {/* Lý do đình chỉ do Admin viết; chưa có thì vẫn nói rõ chuyện gì đang xảy ra. */}
+            {data.suspendReason ?? t('suspendedBanner.text')}
+          </Banner>
+        )}
+
+        {/* Bị từ chối mà không biết vì sao thì nộp lại cũng sai y như cũ. */}
+        {data.approvalStatus === 'rejected' && (
+          <Banner variant="danger" title={t('rejectedBanner.title')}>
+            {data.rejectReason ?? t('rejectedBanner.noReason')}
           </Banner>
         )}
 
@@ -441,11 +454,21 @@ const CustomerBecomeFarmerPage = () => {
             </div>
           )}
           <div className="flex flex-wrap gap-2">
+            {/* Chỉ đơn bị từ chối mới nộp lại được — server cũng chặn đúng như vậy. */}
+            {data.approvalStatus === 'rejected' && <Button onClick={applyAgain}>{t('sent.applyAgain')}</Button>}
             <ButtonLink to="/markets" variant="secondary">
               {t('sent.keepShopping')}
             </ButtonLink>
           </div>
         </Card>
+
+        {data.history.length > 1 && (
+          <section className="flex flex-col gap-3">
+            <h2 className="text-h2">{t('sent.historyTitle')}</h2>
+            <p className="text-body">{t('sent.historyText')}</p>
+            <ApplicationHistory entries={data.history} statusLabel={(s) => t(`statusValue.${s}`)} />
+          </section>
+        )}
 
         {data.approvalStatus === 'pending' && (
           <div className="flex flex-col gap-3">
@@ -502,6 +525,16 @@ const CustomerBecomeFarmerPage = () => {
         <h1 className="text-h1">{t('title')}</h1>
         <p className="text-body-lg">{t('intro')}</p>
       </div>
+
+      {/* Mở lại từ nháp: nói rõ đây là việc dở dang, và cho đường bỏ nháp làm lại từ đầu. */}
+      {draftSavedAt && (
+        <Banner title={t('draft.title')}>
+          {t('draft.text', { date: formatDate(new Date(draftSavedAt)) })}{' '}
+          <button type="button" onClick={discardDraft} className="text-brand cursor-pointer bg-transparent underline">
+            {t('draft.discard')}
+          </button>
+        </Banner>
+      )}
 
       <Card className="flex flex-col gap-3 p-6">
         <h2 className="text-h3">{t('next.title')}</h2>
@@ -754,9 +787,9 @@ const CustomerBecomeFarmerPage = () => {
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? t('step3.sending') : t('step3.send')}
                 </Button>
-                <ButtonLink to="/account" variant="secondary">
+                <Button type="button" variant="secondary" disabled={isSubmitting} onClick={saveAndLeave}>
                   {t('step3.later')}
-                </ButtonLink>
+                </Button>
               </div>
             </Card>
           </FormStep>

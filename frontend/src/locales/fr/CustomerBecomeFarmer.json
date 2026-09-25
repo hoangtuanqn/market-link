@@ -43,10 +43,7 @@
     "photoHint": "Au moins une photo est requise. JPEG, PNG ou WEBP, {{max}} Mo maximum par photo.",
     "videoLimit": "{{max}} Mo maximum.",
     "photoLabel": "Photo {{n}}",
-    "addPhotoLabel": "Ajouter la photo {{n}}",
-    "videoPreview": "Votre vidéo",
-    "closeVideo": "Fermer",
-    "playVideo": "Lire la vidéo ajoutée"
+    "addPhotoLabel": "Ajouter la photo {{n}}"
   },
   "step3": {
     "title": "Avant d'envoyer",
@@ -77,7 +74,10 @@
     "noPhotosVideo": "Aucune photo, et une vidéo",
     "status": "État",
     "sentOn": "Envoyée le",
-    "photoAlt": "Photo de la parcelle"
+    "photoAlt": "Photo de la parcelle",
+    "applyAgain": "Refaire une demande",
+    "historyTitle": "Vos demandes précédentes",
+    "historyText": "Toutes vos demandes, avec la réponse de l'admin."
   },
   "timeline": {
     "placed": {
@@ -100,7 +100,9 @@
     "fixTitle": "Vérifiez le formulaire",
     "fix": "Nous avons signalé ce qu'il reste à compléter.",
     "sentTitle": "Demande envoyée",
-    "sent": "La réponse d'un administrateur arrivera dans vos notifications."
+    "sent": "La réponse d'un administrateur arrivera dans vos notifications.",
+    "savedTitle": "Enregistré pour plus tard",
+    "saved": "Vos réponses restent sur cet appareil. Reprenez depuis votre compte."
   },
   "loading": "Chargement de l’état de votre demande",
   "loadError": {
@@ -148,5 +150,14 @@
     "approved": "Approuvée",
     "rejected": "Refusée",
     "suspended": "Suspendu"
+  },
+  "rejectedBanner": {
+    "title": "Pourquoi elle n'a pas été validée",
+    "noReason": "Aucun motif enregistré. Écrivez à un admin depuis le formulaire de retour."
+  },
+  "draft": {
+    "title": "Vous aviez commencé cette demande",
+    "text": "Ce que vous avez écrit le {{date}} est toujours là.",
+    "discard": "Tout recommencer"
   }
 }

@@ -43,10 +43,7 @@
     "photoHint": "Se necesita al menos una foto. JPEG, PNG o WEBP, máximo {{max}} MB cada una.",
     "videoLimit": "Máximo {{max}} MB.",
     "photoLabel": "Foto {{n}}",
-    "addPhotoLabel": "Añadir foto {{n}}",
-    "videoPreview": "Tu vídeo",
-    "closeVideo": "Cerrar",
-    "playVideo": "Reproducir el vídeo añadido"
+    "addPhotoLabel": "Añadir foto {{n}}"
   },
   "step3": {
     "title": "Antes de enviar",
@@ -77,7 +74,10 @@
     "noPhotosVideo": "Sin fotos, y un video",
     "status": "Estado",
     "sentOn": "Enviada",
-    "photoAlt": "Foto de la parcela"
+    "photoAlt": "Foto de la parcela",
+    "applyAgain": "Volver a solicitar",
+    "historyTitle": "Tus solicitudes anteriores",
+    "historyText": "Todas las solicitudes que enviaste, con la respuesta del administrador."
   },
   "timeline": {
     "placed": {
@@ -100,7 +100,9 @@
     "fixTitle": "Revisa el formulario",
     "fix": "Hemos marcado lo que falta.",
     "sentTitle": "Solicitud enviada",
-    "sent": "Recibirás la respuesta de un administrador en tus notificaciones."
+    "sent": "Recibirás la respuesta de un administrador en tus notificaciones.",
+    "savedTitle": "Guardado para después",
+    "saved": "Tus respuestas quedan en este dispositivo. Continúa desde tu cuenta."
   },
   "loading": "Cargando el estado de tu solicitud",
   "loadError": {
@@ -148,5 +150,14 @@
     "approved": "Aprobada",
     "rejected": "Rechazada",
     "suspended": "Suspendido"
+  },
+  "rejectedBanner": {
+    "title": "Por qué no se aprobó",
+    "noReason": "No se registró ningún motivo. Escribe a un administrador desde el formulario de comentarios."
+  },
+  "draft": {
+    "title": "Ya habías empezado esta solicitud",
+    "text": "Lo que escribiste el {{date}} sigue aquí.",
+    "discard": "Empezar de nuevo"
   }
 }

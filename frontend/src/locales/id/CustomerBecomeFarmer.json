@@ -43,10 +43,7 @@
     "photoHint": "Perlu setidaknya satu foto. JPEG, PNG, atau WEBP, maksimal {{max}} MB per foto.",
     "videoLimit": "Maksimal {{max}} MB.",
     "photoLabel": "Foto {{n}}",
-    "addPhotoLabel": "Tambah foto {{n}}",
-    "videoPreview": "Video Anda",
-    "closeVideo": "Tutup",
-    "playVideo": "Putar video yang Anda tambahkan"
+    "addPhotoLabel": "Tambah foto {{n}}"
   },
   "step3": {
     "title": "Sebelum mengirim",
@@ -77,7 +74,10 @@
     "noPhotosVideo": "Tanpa foto, dan satu video",
     "status": "Status",
     "sentOn": "Dikirim",
-    "photoAlt": "Foto lahan"
+    "photoAlt": "Foto lahan",
+    "applyAgain": "Ajukan lagi",
+    "historyTitle": "Lamaran Anda sebelumnya",
+    "historyText": "Semua lamaran yang Anda kirim, beserta jawaban admin."
   },
   "timeline": {
     "placed": {
@@ -100,7 +100,9 @@
     "fixTitle": "Periksa formulir",
     "fix": "Kami menandai bagian yang masih kurang.",
     "sentTitle": "Pendaftaran dikirim",
-    "sent": "Jawaban admin akan masuk ke notifikasi Anda."
+    "sent": "Jawaban admin akan masuk ke notifikasi Anda.",
+    "savedTitle": "Disimpan untuk nanti",
+    "saved": "Jawaban Anda tersimpan di perangkat ini. Lanjutkan dari halaman akun."
   },
   "loading": "Memuat status pengajuan Anda",
   "loadError": {
@@ -148,5 +150,14 @@
     "approved": "Disetujui",
     "rejected": "Ditolak",
     "suspended": "Ditangguhkan"
+  },
+  "rejectedBanner": {
+    "title": "Alasan lamaran tidak disetujui",
+    "noReason": "Tidak ada alasan yang tercatat. Tanyakan ke admin lewat formulir masukan."
+  },
+  "draft": {
+    "title": "Anda sudah mulai mengisi lamaran ini",
+    "text": "Yang Anda tulis pada {{date}} masih ada.",
+    "discard": "Mulai dari awal"
   }
 }

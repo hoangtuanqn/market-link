@@ -43,10 +43,7 @@
     "photoHint": "At least one photo is required. JPEG, PNG or WEBP, up to {{max}} MB each.",
     "videoLimit": "Up to {{max}} MB.",
     "photoLabel": "Photo {{n}}",
-    "addPhotoLabel": "Add photo {{n}}",
-    "videoPreview": "Your video",
-    "closeVideo": "Close",
-    "playVideo": "Play the video you added"
+    "addPhotoLabel": "Add photo {{n}}"
   },
   "step3": {
     "title": "Before you send",
@@ -77,7 +74,10 @@
     "noPhotosVideo": "No photos, and a video",
     "status": "Status",
     "sentOn": "Sent",
-    "photoAlt": "Photo of the plot"
+    "photoAlt": "Photo of the plot",
+    "applyAgain": "Apply again",
+    "historyTitle": "Your earlier applications",
+    "historyText": "Every application you have sent, with what an admin answered."
   },
   "timeline": {
     "placed": {
@@ -100,7 +100,9 @@
     "fixTitle": "Check the form",
     "fix": "We marked what still needs your attention.",
     "sentTitle": "Application sent",
-    "sent": "You will hear from an admin in your notifications."
+    "sent": "You will hear from an admin in your notifications.",
+    "savedTitle": "Saved for later",
+    "saved": "Your answers stay on this device. Continue from your account page."
   },
   "loading": "Loading your application status",
   "loadError": {
@@ -148,5 +150,14 @@
     "approved": "Approved",
     "rejected": "Rejected",
     "suspended": "Suspended"
+  },
+  "rejectedBanner": {
+    "title": "Why it was not approved",
+    "noReason": "No reason was recorded. Use the feedback form to ask an admin."
+  },
+  "draft": {
+    "title": "You already started this",
+    "text": "We kept what you wrote on {{date}}.",
+    "discard": "Start over"
   }
 }

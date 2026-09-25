@@ -43,10 +43,7 @@
     "photoHint": "至少需要一张照片。JPEG、PNG 或 WEBP，每张不超过 {{max}} MB。",
     "videoLimit": "不超过 {{max}} MB。",
     "photoLabel": "照片 {{n}}",
-    "addPhotoLabel": "添加照片 {{n}}",
-    "videoPreview": "你的视频",
-    "closeVideo": "关闭",
-    "playVideo": "播放你添加的视频"
+    "addPhotoLabel": "添加照片 {{n}}"
   },
   "step3": {
     "title": "提交之前",
@@ -77,7 +74,10 @@
     "noPhotosVideo": "没有照片，有一个视频",
     "status": "状态",
     "sentOn": "发送日期",
-    "photoAlt": "地块照片"
+    "photoAlt": "地块照片",
+    "applyAgain": "重新申请",
+    "historyTitle": "你提交过的申请",
+    "historyText": "你提交过的每一次申请，以及管理员的答复。"
   },
   "timeline": {
     "placed": {
@@ -100,7 +100,9 @@
     "fixTitle": "请检查表单",
     "fix": "还需要处理的地方已标出。",
     "sentTitle": "申请已提交",
-    "sent": "管理员的答复会出现在您的通知中。"
+    "sent": "管理员的答复会出现在您的通知中。",
+    "savedTitle": "已保存，稍后继续",
+    "saved": "内容保存在这台设备上。可从账户页面继续。"
   },
   "loading": "正在加载申请状态",
   "loadError": {
@@ -148,5 +150,14 @@
     "approved": "已批准",
     "rejected": "已拒绝",
     "suspended": "已暂停"
+  },
+  "rejectedBanner": {
+    "title": "未通过的原因",
+    "noReason": "没有记录理由。请通过反馈表单联系管理员。"
+  },
+  "draft": {
+    "title": "你之前填过这份申请",
+    "text": "{{date}} 填写的内容都还在。",
+    "discard": "重新开始"
   }
 }

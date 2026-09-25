@@ -43,10 +43,7 @@
     "photoHint": "写真は1枚以上必要です。JPEG・PNG・WEBP、1枚あたり最大 {{max}} MB。",
     "videoLimit": "最大 {{max}} MB。",
     "photoLabel": "写真 {{n}}",
-    "addPhotoLabel": "写真 {{n}} を追加",
-    "videoPreview": "あなたの動画",
-    "closeVideo": "閉じる",
-    "playVideo": "追加した動画を再生"
+    "addPhotoLabel": "写真 {{n}} を追加"
   },
   "step3": {
     "title": "送信する前に",
@@ -77,7 +74,10 @@
     "noPhotosVideo": "写真なし、動画あり",
     "status": "状況",
     "sentOn": "送信日",
-    "photoAlt": "畑の写真"
+    "photoAlt": "畑の写真",
+    "applyAgain": "もう一度申請する",
+    "historyTitle": "これまでの申請",
+    "historyText": "送信したすべての申請と、管理者の回答です。"
   },
   "timeline": {
     "placed": {
@@ -100,7 +100,9 @@
     "fixTitle": "入力内容を確認してください",
     "fix": "不足している箇所を表示しています。",
     "sentTitle": "申し込みを送信しました",
-    "sent": "管理者からの連絡は通知に届きます。"
+    "sent": "管理者からの連絡は通知に届きます。",
+    "savedTitle": "保存しました",
+    "saved": "入力内容はこの端末に残ります。アカウントページから続きができます。"
   },
   "loading": "申請の状況を読み込んでいます",
   "loadError": {
@@ -148,5 +150,14 @@
     "approved": "承認済み",
     "rejected": "却下",
     "suspended": "停止中"
+  },
+  "rejectedBanner": {
+    "title": "承認されなかった理由",
+    "noReason": "理由は記録されていません。フィードバックフォームから管理者にお問い合わせください。"
+  },
+  "draft": {
+    "title": "この申請は入力途中です",
+    "text": "{{date}} に入力した内容が残っています。",
+    "discard": "最初からやり直す"
   }
 }
