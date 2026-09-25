@@ -192,6 +192,27 @@ export const bestSellers: BarRow[] = [
   { label: 'Lemongrass', value: 20, suffix: 'bunches' },
 ];
 
+/** Same best sellers, by quantity sold — used to compute their revenue for the Sales history page. */
+export const bestSellerQty: { productId: number; qty: number }[] = [
+  { productId: 1, qty: 64 },
+  { productId: 2, qty: 41 },
+  { productId: 7, qty: 38 },
+  { productId: 19, qty: 20 },
+];
+
+/** Revenue split by market in September (FR-069) — sums to the same 8,450,000 ₫ as the Overview/History revenue KPI. */
+export const revenueByMarket: BarRow[] = [
+  { label: 'Thảo Điền Weekend Market', value: 6120000 },
+  { label: 'Thủ Đức Farmers Market', value: 2330000 },
+];
+
+/** Revenue by market day this month, next to the same weekday last month (FR-069). */
+export const farmerDayRevenue = {
+  labels: ['Sat 05/09', 'Sun 06/09', 'Sat 12/09', 'Sun 13/09', 'Sat 19/09', 'Sun 20/09', 'Sat 26/09'],
+  now: [1180000, 720000, 1340000, 810000, 1520000, 900000, 1980000],
+  prev: [1050000, 690000, 1120000, 760000, 1260000, 840000, 1430000],
+};
+
 export const overviewSpark = {
   orders: [78, 82, 91, 88, 97, 103, 99, 108, 114, 119, 123, 128],
   revenue: [520, 610, 585, 700, 760, 690, 810, 880, 845, 910, 980, 1050],

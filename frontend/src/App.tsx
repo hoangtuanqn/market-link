@@ -43,6 +43,7 @@ import FarmerProductsPage from './pages/FarmerProducts';
 import FarmerProductFormPage from './pages/FarmerProductForm';
 import FarmerStallProfilePage from './pages/FarmerStallProfile';
 import FarmerSlotsPage from './pages/FarmerSlots';
+import FarmerHistoryPage from './pages/FarmerHistory';
 import AdminLoginPage from './pages/AdminLogin';
 import AdminHomePage from './pages/AdminHome';
 import AdminVerifyPage from './pages/AdminVerify';
@@ -162,6 +163,7 @@ const App = () => {
           />
           <Route path="stall" element={<FarmerStallProfilePage />} />
           <Route path="slots" element={<FarmerSlotsPage />} />
+          <Route path="history" element={<FarmerHistoryPage />} />
         </Route>
 
         {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
