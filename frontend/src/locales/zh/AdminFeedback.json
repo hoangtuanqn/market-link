@@ -1,0 +1,55 @@
+{
+  "overline": "设置",
+  "title": "反馈收件箱",
+  "intro": "通过反馈表单发来的缺陷报告、建议和问题。处理完就标记为已回复。",
+  "link": {
+    "categories": "分类",
+    "announcements": "公告"
+  },
+  "filterLabel": "筛选反馈",
+  "filter": {
+    "open": "未处理",
+    "answered": "已回复",
+    "bug": "缺陷",
+    "suggestion": "建议",
+    "query": "问题"
+  },
+  "type": {
+    "bug": "缺陷报告",
+    "suggestion": "建议",
+    "query": "问题"
+  },
+  "status": {
+    "open": "未处理",
+    "answered": "已回复"
+  },
+  "col": {
+    "type": "类型",
+    "message": "内容",
+    "from": "来自",
+    "status": "状态"
+  },
+  "action": {
+    "read": "阅读",
+    "readAndAnswer": "阅读并回复"
+  },
+  "dialog": {
+    "title": "来自 {{from}} 的{{type}}",
+    "sent": "发送于 {{date}} · {{state}}",
+    "notAnswered": "尚未回复",
+    "alreadyAnswered": "已经回复",
+    "yourAnswer": "你的回复",
+    "replyPlaceholder": "感谢你告诉我们…",
+    "close": "关闭",
+    "send": "发送并标记为已回复",
+    "sendAgain": "再次发送"
+  },
+  "empty": {
+    "title": "还没有反馈",
+    "text": "反馈表单里的缺陷报告、建议和问题都会送到这里。"
+  },
+  "toast": {
+    "answered": "回复已保存，消息已标记为已回复。",
+    "markedOnly": "已标记为已回复，未发送回复内容。"
+  }
+}
