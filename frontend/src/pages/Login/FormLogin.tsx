@@ -24,7 +24,6 @@ const validate = (email: string, password: string): FieldErrors => {
 const FormLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [accepted, setAccepted] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -93,27 +92,11 @@ const FormLogin = () => {
         </Link>
       </div>
 
-      <Checkbox id="consent" required checked={accepted} onChange={(e) => setAccepted(e.target.checked)}>
-        I accept the{' '}
-        <Link to="/terms" className="text-brand underline">
-          Terms of service
-        </Link>{' '}
-        and the{' '}
-        <Link to="/privacy" className="text-brand underline">
-          Privacy policy
-        </Link>
-        <span aria-hidden="true" className="text-danger ml-0.5">
-          *
-        </span>
-        <small className="text-ink-muted mt-0.5 block text-[13px]">
-          Pay the Farmer at the stall on pickup. MarketLink never takes a payment.
-        </small>
-      </Checkbox>
 
-      <Button type="submit" disabled={!accepted || isSubmitting} className="w-full">
+      <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? 'Signing in…' : 'Sign in'}
       </Button>
-      {!accepted && <p className="text-ink-muted -mt-2 text-[13px]">Accept the terms to sign in.</p>}
+
     </form>
   );
 };
