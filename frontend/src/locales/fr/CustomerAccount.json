@@ -63,10 +63,6 @@
     "intro": "Affichée dans le menu et aux stands sur vos commandes. JPEG, PNG ou une photo prise avec votre appareil.",
     "upload": "Importer une photo",
     "take": "Prendre une photo",
-    "remove": "Supprimer la photo",
-    "removing": "Suppression…",
-    "removed": "Votre photo a été supprimée.",
-    "removeFailed": "Impossible de supprimer votre photo. Veuillez réessayer.",
     "notUsed": "Photo non utilisée"
   },
   "photoErrors": {

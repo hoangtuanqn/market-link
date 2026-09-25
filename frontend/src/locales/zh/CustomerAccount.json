@@ -63,10 +63,6 @@
     "intro": "显示在菜单中，并在订单上向摊位展示。支持 JPEG、PNG 或相机拍摄的照片。",
     "upload": "上传照片",
     "take": "拍照",
-    "remove": "移除照片",
-    "removing": "正在移除…",
-    "removed": "您的照片已移除。",
-    "removeFailed": "无法移除照片，请重试。",
     "notUsed": "照片未使用"
   },
   "photoErrors": {
