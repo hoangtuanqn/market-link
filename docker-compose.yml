@@ -92,6 +92,12 @@ services:
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:${FRONTEND_PORT:-3000}}
       TZ: ${TZ:-Asia/Ho_Chi_Minh}
       STORAGE_DIR: /app/uploads
+      # FR-115: ảnh chat nằm tách khỏi /app/uploads (thư mục đó phục vụ công khai qua /uploads)
+      CHAT_UPLOAD_DIR: ${CHAT_UPLOAD_DIR:-/var/lib/marketlink/chat}
+      CHAT_MAX_UPLOAD_BYTES: ${CHAT_MAX_UPLOAD_BYTES:-5242880}
+      CHAT_MESSAGES_PER_MINUTE: ${CHAT_MESSAGES_PER_MINUTE:-30}
+      CHAT_IMAGES_PER_HOUR: ${CHAT_IMAGES_PER_HOUR:-10}
+      CHAT_CONVERSATIONS_PER_HOUR: ${CHAT_CONVERSATIONS_PER_HOUR:-20}
     ports:
       - "${BACKEND_PORT:-8080}:8080"
       - "${BACKEND_DEBUG_PORT:-5005}:5005" # remote debug (IntelliJ / VS Code attach)
@@ -100,6 +106,7 @@ services:
       - ./backend/pom.xml:/app/pom.xml
       - m2-cache:/root/.m2
       - uploads-data:/app/uploads # ảnh người dùng tải lên, còn sau khi build lại container
+      - chat-uploads:/var/lib/marketlink/chat # FR-115: ảnh chat, kho riêng không phục vụ tĩnh
     depends_on:
       mysql:
         condition: service_healthy
@@ -159,4 +166,5 @@ volumes:
   rabbitmq-data:
   m2-cache:
   uploads-data:
+  chat-uploads:
   redisinsight-data:

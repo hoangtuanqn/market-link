@@ -47,11 +47,17 @@ services:
       APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
       # Không công khai tài liệu API ở production. Cần bật (ví dụ cho giám khảo) thì đặt SWAGGER_ENABLED=true
       SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
+      CHAT_UPLOAD_DIR: ${CHAT_UPLOAD_DIR:?Thiếu CHAT_UPLOAD_DIR trong .env.production}
+      CHAT_MAX_UPLOAD_BYTES: ${CHAT_MAX_UPLOAD_BYTES:?Thiếu CHAT_MAX_UPLOAD_BYTES trong .env.production}
+      CHAT_MESSAGES_PER_MINUTE: ${CHAT_MESSAGES_PER_MINUTE:?Thiếu CHAT_MESSAGES_PER_MINUTE trong .env.production}
+      CHAT_IMAGES_PER_HOUR: ${CHAT_IMAGES_PER_HOUR:?Thiếu CHAT_IMAGES_PER_HOUR trong .env.production}
+      CHAT_CONVERSATIONS_PER_HOUR: ${CHAT_CONVERSATIONS_PER_HOUR:?Thiếu CHAT_CONVERSATIONS_PER_HOUR trong .env.production}
     ports: !override
       - "${BACKEND_PORT:-8080}:8080"
     # Không mount source; chỉ giữ ảnh người dùng tải lên (project prod → volume riêng với dev)
     volumes: !override
       - uploads-data:/app/uploads
+      - chat-uploads:/var/lib/marketlink/chat # FR-115: ảnh chat
 
   frontend:
     container_name: marketlink-prod-frontend
