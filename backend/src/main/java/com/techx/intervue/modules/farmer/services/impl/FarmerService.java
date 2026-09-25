@@ -12,6 +12,9 @@ import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
+import com.techx.intervue.modules.notification.enums.NotificationKind;
+import com.techx.intervue.modules.notification.resources.NotificationEvent;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -19,6 +22,7 @@ import com.techx.intervue.resources.PageResource;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +51,7 @@ public class FarmerService implements FarmerServiceInterface {
 
     private final FarmerProfileRepository farmerProfileRepository;
     private final UserRepository userRepository;
+    private final NotificationServiceInterface notifications;
 
     /**
      * §4: tạo hồ sơ PENDING, không nhận approval_status từ client. Một tài khoản chỉ nộp một lần.
@@ -78,6 +83,11 @@ public class FarmerService implements FarmerServiceInterface {
                                 .preferredMarketName(normalize(request.preferredMarketName()))
                                 .approvalStatus(ApprovalStatus.PENDING)
                                 .build());
+        notifications.notifyAdmins(
+                NotificationEvent.of(
+                        NotificationKind.FARMER_APPLICATION,
+                        "/admin/farmers/" + profile.getId(),
+                        Map.of("stall", profile.getStallName())));
         return toOwnResource(profile);
     }
 
@@ -137,6 +147,7 @@ public class FarmerService implements FarmerServiceInterface {
         owner.setRole(RoleType.FARMER);
         userRepository.save(owner);
 
+        tellOwner(profile, NotificationKind.FARMER_APPROVED, "/farmer");
         return toDetailResource(profile, owner);
     }
 
@@ -155,6 +166,16 @@ public class FarmerService implements FarmerServiceInterface {
         profile.setApprovalStatus(ApprovalStatus.REJECTED);
         profile.setRejectReason(request.reason().trim());
         farmerProfileRepository.save(profile);
+        notifications.dispatch(
+                List.of(profile.getUserId()),
+                NotificationEvent.of(
+                        NotificationKind.FARMER_REJECTED,
+                        "/become-farmer",
+                        Map.of(
+                                "stall",
+                                profile.getStallName(),
+                                "reason",
+                                profile.getRejectReason())));
         return toDetailResource(profile, findOwnerOrThrow(profile));
     }
 
@@ -169,6 +190,7 @@ public class FarmerService implements FarmerServiceInterface {
         }
         profile.setApprovalStatus(ApprovalStatus.SUSPENDED);
         farmerProfileRepository.save(profile);
+        tellOwner(profile, NotificationKind.FARMER_SUSPENDED, "/farmer/pending");
         return toDetailResource(profile, findOwnerOrThrow(profile));
     }
 
@@ -186,7 +208,15 @@ public class FarmerService implements FarmerServiceInterface {
         }
         profile.setApprovalStatus(ApprovalStatus.APPROVED);
         farmerProfileRepository.save(profile);
+        tellOwner(profile, NotificationKind.FARMER_REINSTATED, "/farmer");
         return toDetailResource(profile, findOwnerOrThrow(profile));
+    }
+
+    /** FR-042: báo chủ đơn; đẩy realtime sau commit (NotificationService dùng afterCommit). */
+    private void tellOwner(FarmerProfile profile, NotificationKind kind, String link) {
+        notifications.dispatch(
+                List.of(profile.getUserId()),
+                NotificationEvent.of(kind, link, Map.of("stall", profile.getStallName())));
     }
 
     private FarmerProfile findProfileOrThrow(Long farmerId) {

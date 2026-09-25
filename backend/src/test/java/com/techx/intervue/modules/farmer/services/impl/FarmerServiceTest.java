@@ -3,9 +3,12 @@ package com.techx.intervue.modules.farmer.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
@@ -18,6 +21,8 @@ import com.techx.intervue.modules.farmer.requests.FarmerApplicationRequest;
 import com.techx.intervue.modules.farmer.requests.RejectFarmerRequest;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
+import com.techx.intervue.modules.notification.enums.NotificationKind;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -35,13 +40,15 @@ class FarmerServiceTest {
 
     private FarmerProfileRepository farmerProfileRepository;
     private UserRepository userRepository;
+    private NotificationServiceInterface notifications;
     private FarmerService service;
 
     @BeforeEach
     void setUp() {
         farmerProfileRepository = mock(FarmerProfileRepository.class);
         userRepository = mock(UserRepository.class);
-        service = new FarmerService(farmerProfileRepository, userRepository);
+        notifications = mock(NotificationServiceInterface.class);
+        service = new FarmerService(farmerProfileRepository, userRepository, notifications);
     }
 
     private static FarmerProfile pendingProfile() {
@@ -260,5 +267,116 @@ class FarmerServiceTest {
 
         assertThatThrownBy(() -> service.reinstate(FARMER_ID))
                 .isInstanceOf(InvalidApprovalTransitionException.class);
+    }
+
+    // FR-042: mỗi quyết định về đơn Farmer báo cho người liên quan
+
+    private FarmerProfile withStatus(ApprovalStatus status) {
+        FarmerProfile profile = pendingProfile();
+        profile.setApprovalStatus(status);
+        when(farmerProfileRepository.findById(FARMER_ID)).thenReturn(Optional.of(profile));
+        when(userRepository.findById(USER_ID)).thenReturn(Optional.of(customer()));
+        when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(userRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        return profile;
+    }
+
+    @Test
+    void applyingTellsTheAdminsWithALinkToTheApplication() {
+        when(farmerProfileRepository.existsByUserId(USER_ID)).thenReturn(false);
+        when(farmerProfileRepository.save(any()))
+                .thenAnswer(
+                        inv -> {
+                            FarmerProfile p = inv.getArgument(0);
+                            p.setId(FARMER_ID);
+                            return p;
+                        });
+
+        service.apply(USER_ID, minimalRequest("Khang Family Greens", "Khang"));
+
+        verify(notifications)
+                .notifyAdmins(
+                        argThat(
+                                e ->
+                                        e.kind() == NotificationKind.FARMER_APPLICATION
+                                                && e.link().equals("/admin/farmers/" + FARMER_ID)
+                                                && e.params()
+                                                        .get("stall")
+                                                        .equals("Khang Family Greens")));
+    }
+
+    @Test
+    void approvingTellsTheOwner() {
+        withStatus(ApprovalStatus.PENDING);
+
+        service.approve(FARMER_ID, ADMIN_ID);
+
+        verify(notifications)
+                .dispatch(
+                        eq(List.of(USER_ID)),
+                        argThat(
+                                e ->
+                                        e.kind() == NotificationKind.FARMER_APPROVED
+                                                && e.link().equals("/farmer")
+                                                && e.params()
+                                                        .get("stall")
+                                                        .equals("Khang Family Greens")));
+    }
+
+    @Test
+    void rejectingSendsTheReasonToTheOwner() {
+        withStatus(ApprovalStatus.PENDING);
+
+        service.reject(FARMER_ID, new RejectFarmerRequest(" Market is full "));
+
+        verify(notifications)
+                .dispatch(
+                        eq(List.of(USER_ID)),
+                        argThat(
+                                e ->
+                                        e.kind() == NotificationKind.FARMER_REJECTED
+                                                && e.link().equals("/become-farmer")
+                                                && e.params()
+                                                        .get("reason")
+                                                        .equals("Market is full")));
+    }
+
+    @Test
+    void suspendingTellsTheOwner() {
+        withStatus(ApprovalStatus.APPROVED);
+
+        service.suspend(FARMER_ID);
+
+        verify(notifications)
+                .dispatch(
+                        eq(List.of(USER_ID)),
+                        argThat(
+                                e ->
+                                        e.kind() == NotificationKind.FARMER_SUSPENDED
+                                                && e.link().equals("/farmer/pending")));
+    }
+
+    @Test
+    void reinstatingTellsTheOwner() {
+        withStatus(ApprovalStatus.SUSPENDED);
+
+        service.reinstate(FARMER_ID);
+
+        verify(notifications)
+                .dispatch(
+                        eq(List.of(USER_ID)),
+                        argThat(
+                                e ->
+                                        e.kind() == NotificationKind.FARMER_REINSTATED
+                                                && e.link().equals("/farmer")));
+    }
+
+    @Test
+    void aRefusedTransitionSendsNothing() {
+        withStatus(ApprovalStatus.APPROVED);
+
+        assertThatThrownBy(() -> service.approve(FARMER_ID, ADMIN_ID))
+                .isInstanceOf(InvalidApprovalTransitionException.class);
+        verifyNoInteractions(notifications);
     }
 }
