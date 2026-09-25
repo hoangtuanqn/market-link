@@ -1,6 +1,7 @@
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import useLogout from '@/hooks/useLogout';
+import AvatarCard from './AvatarCard';
 import ChangePasswordForm from './ChangePasswordForm';
 import ProfileForm from './ProfileForm';
 
@@ -13,6 +14,8 @@ const CustomerAccountPage = () => {
         <h1 className="text-h1">Account</h1>
         <p className="text-body">Your details are shared with a stall only on the orders you place there.</p>
       </div>
+
+      <AvatarCard />
 
       <ProfileForm />
 

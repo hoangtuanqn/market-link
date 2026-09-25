@@ -12,4 +12,6 @@ export type UserType = {
   createdAt?: string;
   /** False: tài khoản tạo qua Google, chưa đặt mật khẩu. */
   hasPassword?: boolean;
+  /** Ảnh Google (URL đầy đủ) hoặc ảnh tự tải lên ("/uploads/avatars/…"); không có thì hiện chữ cái đầu. */
+  avatarUrl?: string;
 };
