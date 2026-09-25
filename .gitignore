@@ -102,6 +102,8 @@ build/
 *.jar
 !**/.mvn/wrapper/maven-wrapper.jar
 !**/gradle/wrapper/gradle-wrapper.jar
+# Ảnh/video đơn xin thành Farmer lưu cục bộ (FarmerUploadService, app.uploads.dir) — không commit.
+backend/uploads/
 
 # ---------------------------------------------------------------------
 # Frontend (Node.js / Vite)
