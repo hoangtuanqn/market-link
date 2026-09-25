@@ -4,7 +4,7 @@ import { privateApi } from '@/utils/axiosInstance';
 
 /** §6, §7, §8 — Admin xem, duyệt, đình chỉ Farmer. */
 class AdminFarmerApi {
-  static list = async (params: { status?: FarmerApproval; page?: number; pageSize?: number }) => {
+  static list = async (params: { status?: FarmerApproval; q?: string; page?: number; pageSize?: number }) => {
     const response = await privateApi.get<ApiResponse<PageType<AdminFarmerListItemType>>>('/admin/farmers', {
       params,
     });
@@ -30,9 +30,11 @@ class AdminFarmerApi {
     return response.data;
   };
 
-  /** §8: chỉ hồ sơ `approved` mới đình chỉ được. */
-  static suspend = async (id: number) => {
-    const response = await privateApi.patch<ApiResponse<AdminFarmerDetailType>>(`/admin/farmers/${id}/suspend`);
+  /** §8 D-09: chỉ hồ sơ `approved` mới đình chỉ được; lý do hiện lại cho chính Farmer. */
+  static suspend = async (id: number, reason: string) => {
+    const response = await privateApi.patch<ApiResponse<AdminFarmerDetailType>>(`/admin/farmers/${id}/suspend`, {
+      reason,
+    });
     return response.data;
   };
 

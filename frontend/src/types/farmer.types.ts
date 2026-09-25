@@ -40,12 +40,30 @@ export type FarmerApplicationInput = {
   contactPerson: string;
 } & FarmerApplicationDetails;
 
+/** Một lần nộp đơn đã qua — nội dung lúc nộp, kết quả và lý do nếu bị từ chối. */
+export type FarmerApplicationAttemptType = {
+  id: number;
+  attempt: number;
+  stallName: string;
+  contactPerson: string;
+  description?: string | null;
+  photoUrls?: string[];
+  videoUrl?: string | null;
+  status: FarmerApproval;
+  rejectReason: string | null;
+  decidedAt: string | null;
+  submittedAt: string;
+};
+
 /** Hồ sơ Farmer của chính người gọi. */
 export type FarmerProfileType = {
   id: number;
   stallName: string;
   contactPerson: string;
   approvalStatus: FarmerApproval;
+  rejectReason: string | null;
+  suspendReason: string | null;
+  history: FarmerApplicationAttemptType[];
   createdAt: string;
 } & FarmerApplicationDetails;
 
@@ -55,6 +73,7 @@ export type AdminFarmerListItemType = {
   stallName: string;
   contactPerson: string;
   email: string;
+  phone: string;
   approvalStatus: FarmerApproval;
   createdAt: string;
 };
@@ -70,8 +89,11 @@ export type AdminFarmerDetailType = {
   address: string;
   approvalStatus: FarmerApproval;
   rejectReason: string | null;
+  suspendReason: string | null;
   approvedAt: string | null;
+  suspendedAt: string | null;
   createdAt: string;
+  history: FarmerApplicationAttemptType[];
   /** Tài khoản Customer đã có từ trước — không phải ngày tạo hồ sơ Farmer này. */
   customerSince: string;
   accountStatus: 'active' | 'inactive' | 'suspended';
