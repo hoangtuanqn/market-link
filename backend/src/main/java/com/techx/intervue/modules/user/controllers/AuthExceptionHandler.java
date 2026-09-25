@@ -28,13 +28,16 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * Trả 400/401/403/409/502/503 cho AuthController. Repo chưa có handler chung nên thiếu class này
  * thì lỗi rơi xuống /error và bị trả 401 (giống ChatExceptionHandler).
  */
 @Slf4j
-@RestControllerAdvice(assignableTypes = {AuthController.class, MfaController.class})
+@RestControllerAdvice(
+        assignableTypes = {AuthController.class, MfaController.class, AvatarController.class})
 public class AuthExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
@@ -128,6 +131,20 @@ public class AuthExceptionHandler {
     }
 
     /** FR-007: token đặt lại mật khẩu sai, đã dùng hoặc hết hạn. */
+    /** Ảnh đại diện: thiếu part "file" hoặc body multipart hỏng. */
+    @ExceptionHandler({MissingServletRequestPartException.class, MultipartException.class})
+    ResponseEntity<ApiResource<Void>> badUpload(Exception e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(
+                        FieldErrorResource.builder()
+                                .field("file")
+                                .message("Choose a photo to upload.")
+                                .build()));
+    }
+
     @ExceptionHandler(InvalidResetTokenException.class)
     ResponseEntity<ApiResource<Void>> invalidResetToken(InvalidResetTokenException e) {
         return error(HttpStatus.BAD_REQUEST, "INVALID_RESET_TOKEN", e.getMessage(), List.of());
