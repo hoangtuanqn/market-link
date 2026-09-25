@@ -352,6 +352,30 @@ export function TrendDownIcon(props: IconProps) {
   );
 }
 
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M6 3l5 5-5 5" />
+    </Glyph>
+  );
+}
+
+export function PauseIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M6 3.5v9M10 3.5v9" />
+    </Glyph>
+  );
+}
+
+export function PlayIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M5.5 3.4l6.2 4.6-6.2 4.6z" />
+    </Glyph>
+  );
+}
+
 /** MarketLink mark: a hang tag on dashed twine. */
 export function LogoMark({ size = 30 }: { size?: number }) {
   return (

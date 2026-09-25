@@ -331,5 +331,15 @@
     "feedback": "Comentarios",
     "pricing": "Precios",
     "settings": "Ajustes"
+  },
+  "carousel": {
+    "roleCarousel": "carrusel",
+    "roleSlide": "diapositiva",
+    "slideOf": "{{n}} de {{total}}: {{topic}}",
+    "previous": "Diapositiva anterior",
+    "next": "Diapositiva siguiente",
+    "show": "Mostrar la diapositiva {{n}}: {{topic}}",
+    "pause": "Pausar la presentación",
+    "play": "Reproducir la presentación"
   }
 }

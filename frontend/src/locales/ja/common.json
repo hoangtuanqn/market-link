@@ -331,5 +331,15 @@
     "feedback": "フィードバック",
     "pricing": "料金",
     "settings": "設定"
+  },
+  "carousel": {
+    "roleCarousel": "カルーセル",
+    "roleSlide": "スライド",
+    "slideOf": "{{n}} / {{total}}：{{topic}}",
+    "previous": "前のスライド",
+    "next": "次のスライド",
+    "show": "スライド {{n}} を表示：{{topic}}",
+    "pause": "スライドショーを一時停止",
+    "play": "スライドショーを再生"
   }
 }

@@ -331,5 +331,15 @@
     "feedback": "反馈",
     "pricing": "定价",
     "settings": "设置"
+  },
+  "carousel": {
+    "roleCarousel": "轮播",
+    "roleSlide": "幻灯片",
+    "slideOf": "第 {{n}} 张，共 {{total}} 张：{{topic}}",
+    "previous": "上一张",
+    "next": "下一张",
+    "show": "显示第 {{n}} 张：{{topic}}",
+    "pause": "暂停轮播",
+    "play": "播放轮播"
   }
 }

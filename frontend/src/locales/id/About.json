@@ -1,0 +1,104 @@
+{
+  "title": "Tentang MarketLink",
+  "intro": "MarketLink menghubungkan Farmer di pasar tani sekitar Kota Ho Chi Minh dengan orang-orang yang berbelanja di sana. Lapak mengumumkan apa yang akan dibawa minggu ini, Anda memesan dari situ, lalu mengambilnya di lapak.",
+  "carouselLabel": "Untuk apa MarketLink",
+  "photosNote": "Empat foto di atas adalah foto sementara.",
+  "slides": {
+    "mission": {
+      "topic": "Misi kami",
+      "title": "Tidak ada lagi pulang dengan tangan kosong",
+      "text": "Lapak mengumumkan barang minggu ini di papan kapur, jadi yang terbaik pagi itu sudah habis sebelum kebanyakan orang datang. MarketLink mengumpulkan minggu setiap lapak di satu tempat dan menyimpan pesanan Anda sampai Anda mengambilnya.",
+      "alt": "Lapak-lapak di pasar beratap dengan hasil bumi ditumpuk di peti kayu",
+      "cta": "Lihat pasar akhir pekan ini"
+    },
+    "howItWorks": {
+      "topic": "Cara kerjanya",
+      "title": "Pesan hari Kamis, ambil hari Sabtu",
+      "text": "Lihat apa yang akan ada di empat pasar sekitar Kota Ho Chi Minh akhir pekan ini dan pesan dari lapak sebanyak yang Anda mau. Setiap lapak punya pesanan sendiri, waktu pengambilan sendiri, dan dibayar di lapak.",
+      "alt": "Keranjang wortel, buncis, dan cabai di atas meja pasar",
+      "cta": "Lihat produk minggu ini"
+    },
+    "technology": {
+      "topic": "Teknologinya",
+      "title": "Jumlah yang tepat saat Anda memesan",
+      "text": "Pesanan langsung mengurangi stok lapak, jadi dua orang tidak bisa memesan dua ikat terakhir yang sama. Slot pengambilan membuat antrean tetap pendek, dan peta menandai setiap lapak di dalam pasarnya.",
+      "alt": "Benih dan tanah kering dengan sendok logam",
+      "note_one": "Sisa {{n}} ikat",
+      "note_other": "Sisa {{n}} ikat",
+      "cta": "Lihat peta pasar"
+    },
+    "benefit": {
+      "topic": "Yang Anda dapatkan",
+      "title": "Lapak tahu apa yang harus dibawa",
+      "text": "Farmer membaca pesanan akhir pekan sebelum panen, jadi lebih sedikit yang dibawa pulang tidak terjual. Anda mendapat jeruk bali yang sudah direncanakan, pada waktu yang Anda pilih, dibayar langsung ke orang yang menanamnya.",
+      "alt": "Seorang petani menggarap sawah berair dengan traktor kecil",
+      "note": "{{place}} · panen {{day}}",
+      "cta": "Berjualan di MarketLink"
+    }
+  },
+  "why": {
+    "title": "Mengapa MarketLink ada",
+    "shoppers": "Pagi di pasar berjalan dari mulut ke mulut. Lapak menulis dengan kapur apa yang mereka bawa, pelanggan tetap bertanya apa yang datang minggu depan, dan yang lain baru tahu setelah menyusuri lorong. Itu berjalan baik sampai Anda butuh sesuatu yang spesifik, atau sampai perjalanan melintasi kota berakhir di meja kosong.",
+    "farmers": "Farmer punya masalah yang sama dari sisi lain. Tidak ada cara mudah untuk memberi tahu pelanggan tetap apa yang ada minggu ini, menerima pesanan sebelum hari pasar, atau tahu berapa banyak yang harus dipotong pada Jumat sore. MarketLink mencatat kedua sisinya: lapak mengumumkan barang minggu ini, Anda memesan, dan lapak membaca pesanan sebelum memetik."
+  },
+  "limits": {
+    "title": "Yang tidak dilakukan MarketLink",
+    "payment": "<b>Tidak ada pembayaran online.</b> Anda membayar Farmer di lapak saat mengambil. Tidak ada formulir kartu di mana pun dalam produk.",
+    "delivery": "<b>Tidak ada pengiriman.</b> Setiap pesanan diambil di pasar, dalam rentang waktu yang ditetapkan lapak.",
+    "certification": "<b>Tidak ada sertifikasi.</b> MarketLink tidak memeriksa izin atau klaim organik. Tanyakan kepada Farmer di lapak.",
+    "profiles": "<b>Tidak ada profil keluarga terpisah.</b> Satu akun bisa dipakai bersama di rumah. Sistem tidak membedakan orang di dalam satu akun."
+  },
+  "team": {
+    "title": "Tim",
+    "subtitle": "Enam orang, dibagi menurut bagian yang mereka pegang di repositori",
+    "namePending": "Nama menyusul",
+    "lead": {
+      "role": "Ketua tim",
+      "note": "Skema, kontrak API, dan dua belas keputusan yang menjadi pegangan anggota tim lainnya"
+    },
+    "be1": {
+      "role": "Backend",
+      "note": "Masuk, peran, dan siklus hidup pesanan, dari dibuat hingga selesai"
+    },
+    "be2": {
+      "role": "Backend",
+      "note": "Produk, pasar, stok mingguan, laporan, dan data contoh untuk demo"
+    },
+    "fe1": {
+      "role": "Frontend",
+      "note": "Sistem desain, halaman publik, peta, dan dasbor Customer"
+    },
+    "fe2": {
+      "role": "Frontend",
+      "note": "Dasbor Farmer dan Admin, serta semua formulir di produk"
+    },
+    "qa": {
+      "role": "Kualitas dan dokumen",
+      "note": "Daftar kebutuhan, data uji, dan dokumen yang menyertai pengumpulan"
+    }
+  },
+  "stack": {
+    "title": "Cara membangunnya",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "maps": "Peta",
+    "mapsValue": "Leaflet dengan ubin peta OpenStreetMap",
+    "design": "Desain",
+    "designValue": "Sistem desain Hang tag: satu set token, satu set komponen, satu gaya bahasa"
+  },
+  "credits": {
+    "title": "Kredit dan data",
+    "mapData": "Data peta",
+    "mapDataValue": "© kontributor OpenStreetMap",
+    "photos": "Foto",
+    "photosValue": "Masih foto sementara; kreditnya dicantumkan di sini setelah foto milik tim tersedia",
+    "locale": "Mata uang dan waktu",
+    "localeValue": "Dong Vietnam, tanggal {{format}}, format 24 jam, {{zone}}"
+  },
+  "contact": {
+    "title": "Ada yang ingin disampaikan?",
+    "text": "Pertanyaan tentang pesanan langsung ke lapak. Apa pun tentang platform, sampaikan ke tim.",
+    "contactUs": "Hubungi kami",
+    "feedback": "Kirim masukan"
+  }
+}

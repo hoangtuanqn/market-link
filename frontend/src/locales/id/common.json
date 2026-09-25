@@ -331,5 +331,15 @@
     "feedback": "Masukan",
     "pricing": "Harga",
     "settings": "Pengaturan"
+  },
+  "carousel": {
+    "roleCarousel": "korsel",
+    "roleSlide": "slide",
+    "slideOf": "{{n}} dari {{total}}: {{topic}}",
+    "previous": "Slide sebelumnya",
+    "next": "Slide berikutnya",
+    "show": "Tampilkan slide {{n}}: {{topic}}",
+    "pause": "Jeda tayangan slide",
+    "play": "Putar tayangan slide"
   }
 }

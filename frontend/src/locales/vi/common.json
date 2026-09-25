@@ -331,5 +331,15 @@
     "feedback": "Góp ý",
     "pricing": "Bảng giá",
     "settings": "Cài đặt"
+  },
+  "carousel": {
+    "roleCarousel": "băng trình chiếu",
+    "roleSlide": "trang chiếu",
+    "slideOf": "{{n}} / {{total}}: {{topic}}",
+    "previous": "Trang trước",
+    "next": "Trang sau",
+    "show": "Xem trang {{n}}: {{topic}}",
+    "pause": "Tạm dừng trình chiếu",
+    "play": "Phát trình chiếu"
   }
 }

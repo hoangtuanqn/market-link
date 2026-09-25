@@ -331,5 +331,15 @@
     "feedback": "ความคิดเห็น",
     "pricing": "ราคา",
     "settings": "การตั้งค่า"
+  },
+  "carousel": {
+    "roleCarousel": "ภาพสไลด์",
+    "roleSlide": "สไลด์",
+    "slideOf": "{{n}} จาก {{total}}: {{topic}}",
+    "previous": "สไลด์ก่อนหน้า",
+    "next": "สไลด์ถัดไป",
+    "show": "แสดงสไลด์ที่ {{n}}: {{topic}}",
+    "pause": "หยุดสไลด์โชว์ชั่วคราว",
+    "play": "เล่นสไลด์โชว์"
   }
 }
