@@ -1,0 +1,169 @@
+{
+  "title": "Kebijakan privasi",
+  "lead": "Apa yang disimpan MarketLink tentang Anda, mengapa disimpan, dan siapa yang bisa melihatnya. Ditulis dari tabel yang benar-benar dimiliki produk ini, bukan dari templat.",
+  "meta": "Versi 0.1 · Terakhir diperbarui {{date}} · Berlaku untuk Customer, Farmer, dan pengunjung",
+  "onThisPage": "Di halaman ini",
+  "seeAlso": "Baca juga <link>Ketentuan layanan</link>. Di sana dibahas pemesanan dan pengambilan.",
+  "sections": [
+    {
+      "id": "collect",
+      "title": "Apa yang kami simpan",
+      "blocks": [
+        {
+          "p": "Semua yang tercantum di bawah benar-benar disimpan produk ini hari ini. Tidak ada yang dikumpulkan untuk iklan, dan tidak ada yang dijual ke pihak lain."
+        },
+        {
+          "facts": {
+            "items": [
+              [
+                "Akun Anda",
+                "Nama lengkap, email, nomor telepon, dan alamat. Kata sandi Anda tidak pernah disimpan seperti yang Anda ketik, hanya sebagai hash."
+              ],
+              [
+                "Lapak seorang Farmer",
+                "Nama lapak, narahubung, deskripsi, pasar dan hari Anda berjualan, rentang pengambilan Anda, serta posisi lapak Anda di peta."
+              ],
+              [
+                "Pesanan Anda",
+                "Apa yang Anda pesan dan berapa banyak, lapak dan pasarnya, tanggal serta jam pengambilan, catatan yang Anda tinggalkan untuk lapak, dan totalnya. Nama dan harga produk disalin ke pesanan agar tetap terbaca benar jika lapak mengubahnya kemudian."
+              ],
+              ["Riwayat pesanan", "Setiap perubahan status pada pesanan, beserta waktu dan pelakunya."],
+              ["Ulasan", "Nilai Anda, teks Anda, pesanan asalnya, dan balasan apa pun yang ditulis lapak."],
+              ["Favorit", "Lapak, produk, dan pasar yang Anda simpan."],
+              ["Pesan", "Apa yang Anda dan lapak tuliskan satu sama lain di Pesan, dan kapan tiap pesan dibaca."],
+              [
+                "Notifikasi",
+                "Pemberitahuan yang dikirim kepada Anda tentang pesanan dan stok baru, serta apakah sudah Anda baca."
+              ],
+              [
+                "Obrolan dengan asisten",
+                "Pesan Anda, balasan asisten, dan maksud yang dikenali asisten. Lihat bagian 5."
+              ],
+              [
+                "Masukan",
+                "Jenis yang Anda pilih dan apa yang Anda tulis. Masukan bisa dikirim tanpa akun, dan dalam hal itu tidak membawa akun apa pun."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink tidak meminta maupun menyimpan data kartu, data bank, atau informasi pembayaran apa pun, karena pembayaran terjadi di lapak dan tidak pernah lewat produk ini."
+        }
+      ]
+    },
+    {
+      "id": "why",
+      "title": "Mengapa kami menyimpannya",
+      "blocks": [
+        {
+          "p": "Nama dan nomor telepon Anda ada agar lapak tahu siapa yang akan mengambil dan bisa menghubungi Anda pada pagi hari pasar. Alamat Anda ada untuk menunjukkan seberapa jauh sebuah pasar dan mengisi rute terlebih dahulu. Email Anda adalah cara Anda masuk dan cara Anda diberi tahu tentang pesanan."
+        },
+        {
+          "p": "Pesanan dan riwayatnya ada agar kedua pihak bisa melihat apa yang disepakati dan kapan berubah. Ulasan ada agar pembeli lain bisa menilai sebuah lapak. Favorit ada agar Anda bisa diberi tahu ketika barang yang Anda inginkan tersedia lagi."
+        }
+      ]
+    },
+    {
+      "id": "who",
+      "title": "Siapa yang bisa melihatnya",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "Lapak tempat Anda memesan",
+                "Melihat pesanan Anda dan cukup data kontak untuk menyerahkannya pada hari pasar, serta pesan yang Anda kirim kepada mereka. Mereka tidak melihat pesanan Anda di lapak lain."
+              ],
+              [
+                "Pembeli lain",
+                "Melihat ulasan Anda dan nama yang tertera di sana. Mereka tidak melihat pesanan, data kontak, atau favorit Anda."
+              ],
+              [
+                "Admin",
+                "Melihat akun dan pengajuan Farmer untuk menyetujui, menangguhkan, atau menonaktifkannya, serta melihat tayangan dan ulasan untuk memoderasinya. Laporan admin berupa jumlah dan total, bukan daftar siapa membeli apa."
+              ],
+              [
+                "Siapa pun selain itu",
+                "Tidak ada. Pesanan, data kontak, favorit, dan notifikasi tidak pernah ditampilkan di halaman publik."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Setiap layar yang menerima sebuah id memeriksa di server bahwa catatan itu milik Anda sebelum menampilkannya, jadi mengubah angka di bilah alamat tidak akan membuka pesanan orang lain."
+        }
+      ]
+    },
+    {
+      "id": "sessions",
+      "title": "Cookie dan sesi",
+      "blocks": [
+        {
+          "p": "Saat Anda masuk, MarketLink menerbitkan token berumur pendek yang dikirim browser Anda pada setiap permintaan, dan token berumur lebih panjang yang disimpan dalam cookie agar Anda tidak keluar tiap beberapa menit. Sesi Anda yang sedang masuk juga disimpan di cache server agar proses masuk tetap cepat. Keluar akan mengakhiri keduanya."
+        },
+        {
+          "p": "Keranjang Anda disimpan di browser Anda sendiri sampai Anda memesan. Tidak ada isi keranjang yang sampai ke server sebelum Anda menyelesaikan pemesanan."
+        },
+        {
+          "p": "MarketLink tidak memasang cookie iklan maupun analitik."
+        }
+      ]
+    },
+    {
+      "id": "assistant",
+      "title": "Asisten belanja",
+      "blocks": [
+        {
+          "p": "Asisten menjawab pertanyaan tentang pasar, lapak, rentang pengambilan, dan produk. Kedua sisi percakapan disimpan, bersama maksud yang dikenali asisten dari pertanyaan Anda, agar tim bisa melihat mengapa ia menjawab demikian."
+        },
+        {
+          "p": "Tamu pun bisa memakainya. Agar satu percakapan tetap menyatu, browser Anda menyimpan kunci sesi acak yang tidak terikat ke akun mana pun; jika Anda sudah masuk, percakapan itu dilekatkan pada akun Anda."
+        },
+        {
+          "p": "Kata-kata Anda tidak pernah diubah menjadi kueri basis data. Asisten mencocokkan pertanyaan Anda dengan salah satu pencarian yang sudah disiapkan, sehingga apa yang Anda ketik paling jauh hanya menjadi kata kunci pencarian. Tanyakan soal hasil tani dan waktu pengambilan, bukan hal pribadi."
+        }
+      ]
+    },
+    {
+      "id": "third",
+      "title": "Apa yang dimuat halaman ini dari luar",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "OpenStreetMap",
+                "Ubin peta berasal dari server OpenStreetMap, yang melihat alamat IP Anda dan kira-kira bagian peta mana yang sedang Anda lihat. Data peta adalah © kontributor OpenStreetMap. Tautan rute membuka OpenStreetMap di tab baru."
+              ],
+              [
+                "Google Fonts",
+                "Kedua jenis huruf dimuat dari Google Fonts, yang melihat alamat IP Anda ketika halaman terbuka."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink tidak memakai Google Maps, jadi tidak ada kunci peta dan tidak ada akun di balik peta itu."
+        }
+      ]
+    },
+    {
+      "id": "choices",
+      "title": "Pilihan Anda",
+      "blocks": [
+        {
+          "p": "Anda bisa melihat dan mengubah nama, telepon, email, dan alamat dari halaman akun kapan saja. Anda bisa menghapus apa pun yang Anda simpan ke favorit, dan menandai notifikasi sebagai sudah dibaca."
+        },
+        {
+          "p": "Beberapa hal tetap ada meski Anda mengubahnya: pesanan menyimpan nama dan harga produk seperti saat dipesan, dan riwayat statusnya tidak ditulis ulang, karena kedua pihak bersandar pada catatan itu. Ulasan yang Anda tulis tetap ada sampai Anda atau admin menurunkannya."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Ada pertanyaan tentang data Anda?",
+    "text": "Pertanyaan tentang pesanan langsung ke lapak. Apa pun tentang kebijakan ini sampai ke tim.",
+    "terms": "Ketentuan layanan",
+    "contact": "Hubungi kami"
+  }
+}

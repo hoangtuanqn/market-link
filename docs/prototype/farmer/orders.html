@@ -45,7 +45,7 @@
   </section>
 </main>
 <script>
-  document.getElementById('day-chips').innerHTML = PT.dayChips('Pickup day', [{ value: 'all', label: 'All', sub: 'days' }, { value: 'fri', label: 'Fri', sub: '25/09' }, { value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }], 'all');
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Pickup day', [{ value: 'all', label: 'All' }, { value: 'fri', label: 'Friday', date: '25/09' }, { value: 'sat', label: 'Saturday', date: '26/09' }, { value: 'sun', label: 'Sunday', date: '27/09' }], 'all');
   var S = ['placed', 'accepted', 'ready', 'completed', 'declined', 'cancelled'], L = { placed: 'Awaiting approval', accepted: 'Accepted', ready: 'Ready', completed: 'Completed', declined: 'Declined', cancelled: 'Cancelled' };
   /* The Farmer's own copy of the orders. Accepting one has to move it out of "Awaiting approval" and
      into "Accepted", counts and all, or the screen only claims to have done something (FR-065, FR-066).

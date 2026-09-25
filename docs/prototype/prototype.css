@@ -733,3 +733,14 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 .pt-umenu-list [role='menuitem']:hover, .pt-umenu-list [role='menuitem']:focus-visible { background: var(--surface-sunken); outline: none; }
 @media (max-width: 767px) { .pt-umenu { display: none; } }
 .pt-avatar-card { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-5); }
+
+/* Market card week strip: seven equal cells with room between them, instead of the design system's
+   tight run of 34px cells. Mirrors MarketCard.tsx in the app; phones drop the gap and side padding
+   so "Thứ 2" still fits at 375px. */
+.ml-market-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--space-1); max-width: 448px; }
+.ml-market-days li { min-width: 0; padding: 6px 0; white-space: nowrap; }
+@media (min-width: 640px) {
+  .ml-market-days { gap: var(--space-2); }
+  .ml-market-days li { padding-inline: 4px; }
+}
+

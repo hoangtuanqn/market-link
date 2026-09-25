@@ -1,0 +1,172 @@
+{
+  "title": "Conditions d'utilisation",
+  "lead": "Ce que vous acceptez lorsque vous réservez auprès d'un stand sur MarketLink, et ce que le stand et la plateforme acceptent en retour.",
+  "meta": "Version 0.1 · Dernière mise à jour {{date}} · S'applique aux Customers, aux Farmers et aux visiteurs",
+  "onThisPage": "Sur cette page",
+  "seeAlso": "Lisez aussi la <link>Politique de confidentialité</link>. Elle décrit ce que nous conservons à votre sujet.",
+  "sections": [
+    {
+      "id": "what",
+      "title": "Ce qu'est MarketLink",
+      "blocks": [
+        {
+          "p": "MarketLink permet à un stand de marché de publier ce qu'il apportera cette semaine, et vous permet de réserver dans cette liste avant le jour du marché. Vous récupérez votre réservation au stand, pendant le créneau de retrait fixé par le stand, et vous payez le Farmer sur place."
+        },
+        {
+          "nots": {
+            "title": "Ce que MarketLink ne fait pas",
+            "items": [
+              [
+                "Il ne prend pas votre argent.",
+                "Il n'y a nulle part dans le produit de formulaire de carte ni de passerelle de paiement. Chaque commande est payée au Farmer, au stand."
+              ],
+              ["Il ne livre pas.", "Chaque commande est récupérée en personne au marché."],
+              [
+                "Il ne certifie pas un stand.",
+                "MarketLink ne vérifie ni les licences, ni les méthodes de culture, ni les mentions bio. Posez la question au Farmer, au stand."
+              ],
+              [
+                "Il ne vous vend rien.",
+                "Le contrat de vente lie vous et le stand. MarketLink enregistre la réservation, rien de plus."
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "accounts",
+      "title": "Votre compte",
+      "blocks": [
+        {
+          "p": "Il existe trois types de comptes. Un Customer s'inscrit avec un nom, un numéro de téléphone, un e-mail et une adresse. Pour vendre, un Customer fait une demande depuis son compte pour devenir Farmer, en ajoutant un nom de stand et une personne à contacter ; le stand ne peut rien publier tant qu'un administrateur ne l'a pas approuvé. Les administrateurs passent par une connexion distincte."
+        },
+        {
+          "p": "Un compte peut être partagé à la maison. MarketLink ne distingue pas les personnes au sein d'un même compte : tout ce qui est fait avec votre connexion compte comme fait par vous. Gardez votre mot de passe pour vous et prévenez-nous si vous pensez que quelqu'un d'autre le connaît."
+        },
+        {
+          "p": "L'adresse que vous indiquez sert à afficher les distances jusqu'aux marchés et à pré-remplir l'itinéraire. Votre numéro de téléphone est transmis au stand auprès duquel vous commandez, pour qu'il puisse vous joindre le matin du marché."
+        }
+      ]
+    },
+    {
+      "id": "reserving",
+      "title": "Réserver auprès d'un stand",
+      "blocks": [
+        {
+          "p": "Vous pouvez mettre dans un même panier des produits de plusieurs stands, mais une réservation appartient toujours à un seul stand. À la validation, le panier est découpé en une commande par stand, chacune avec son marché, son créneau de retrait et sa limite. L'écran de confirmation montre ce découpage avant que vous ne validiez."
+        },
+        {
+          "facts": {
+            "title": "Ce qui se passe quand vous passez commande",
+            "items": [
+              [
+                "Stock",
+                "Ce que vous réservez sort immédiatement du compte du stand, pour que deux personnes ne puissent pas réserver les deux mêmes dernières bottes. Vous ne pouvez pas réserver plus que ce qu'il reste au stand."
+              ],
+              [
+                "Créneau",
+                "Vous choisissez une date de retrait et un créneau horaire proposé par le stand. Un créneau a une limite de commandes ; un créneau complet apparaît grisé et ne peut pas être choisi."
+              ],
+              [
+                "Limite",
+                "Chaque commande a une heure limite, calculée à partir de votre heure de retrait en remontant du nombre d'heures fixé par le stand. Jusqu'à ce moment, vous pouvez modifier ou annuler la commande vous-même."
+              ],
+              [
+                "Prix",
+                "Le prix et l'unité inscrits sur votre commande sont ceux affichés au moment où vous l'avez passée. Si le stand change son prix plus tard, votre commande ne change pas."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Une commande passe par passée, acceptée, prête pour le retrait et terminée. Un stand peut aussi refuser une commande, et vous pouvez en annuler une. Chaque changement est enregistré avec son heure, et vous pouvez consulter cet historique sur la commande."
+        },
+        {
+          "p": "Passer commande est une réservation, pas une garantie. Un stand peut refuser, et il devrait alors vous dire pourquoi. Quand une commande est refusée ou annulée, le stock revient au stand et personne ne doit rien à l'autre."
+        }
+      ]
+    },
+    {
+      "id": "changing",
+      "title": "Modifier ou annuler une commande",
+      "blocks": [
+        {
+          "p": "Avant la limite, vous pouvez baisser une quantité, retirer un article ou annuler la commande entièrement. Vous ne pouvez pas ajouter un nouveau produit à une commande existante ; passez plutôt une deuxième commande, pour que les comptes et les créneaux du stand restent justes."
+        },
+        {
+          "p": "Modifier une commande la remet à l'état passée, et le stand doit l'accepter à nouveau. C'est volontaire : le stand prépare et emballe d'après ce qu'il a accepté."
+        },
+        {
+          "p": "Après la limite, les boutons sont verrouillés et l'écran vous explique pourquoi, avec l'heure à laquelle la limite est passée. À partir de là, seul le stand peut faire avancer la commande, et le reste se règle directement avec lui. Une commande restée à prête est considérée comme terminée 24 heures après sa date de retrait."
+        }
+      ]
+    },
+    {
+      "id": "paying",
+      "title": "Payer au stand",
+      "blocks": [
+        {
+          "p": "Vous payez le Farmer directement au moment du retrait, le montant indiqué sur votre commande. MarketLink ne détient jamais votre argent, ne prélève aucune commission via le produit et ne participe pas au paiement."
+        },
+        {
+          "p": "De ce fait, un remboursement se règle entre vous et le stand."
+        }
+      ]
+    },
+    {
+      "id": "stalls",
+      "title": "Ce à quoi un stand s'engage",
+      "blocks": [
+        {
+          "p": "Un Farmer qui vend via MarketLink s'engage à tenir honnêtement la liste de la semaine : publier les quantités qu'il pense avoir, marquer un produit épuisé ou indisponible plutôt que de le laisser en liste, et respecter les créneaux de retrait annoncés pour chaque marché et chaque jour."
+        },
+        {
+          "p": "Un stand s'engage à répondre aux commandes entrantes plutôt qu'à les laisser en attente, à donner une raison lorsqu'il en refuse une, et à garder une commande acceptée pendant tout son créneau de retrait. Un stand accepte aussi que ses annonces relèvent de sa seule responsabilité, y compris la description, la photo et toute affirmation sur les produits."
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "title": "Avis et contenus",
+      "blocks": [
+        {
+          "p": "Vous pouvez noter et commenter un stand et les produits achetés une fois la commande terminée, et uniquement pour vos propres commandes. Un stand peut répondre une fois, publiquement."
+        },
+        {
+          "p": "Écrivez sur les produits et sur le retrait. Un administrateur peut masquer un avis ou une annonce qui ne respecte pas cela, et le contenu masqué cesse d'apparaître sur les pages publiques. Ce que vous écrivez reste associé au nom de votre compte, là où les autres acheteurs peuvent le voir."
+        }
+      ]
+    },
+    {
+      "id": "suspension",
+      "title": "Suspendre un compte",
+      "blocks": [
+        {
+          "p": "Un administrateur approuve un stand avant qu'il ne puisse publier quoi que ce soit, et peut rejeter une candidature en donnant une raison. Un stand suspendu disparaît des pages publiques et ne prend plus de nouvelles commandes, mais celles déjà en cours vont jusqu'au bout, pour qu'aucun acheteur ne perde sa réservation. Le Farmer peut toujours se connecter et voir ces commandes."
+        },
+        {
+          "p": "Un compte Customer peut être désactivé par un administrateur."
+        }
+      ]
+    },
+    {
+      "id": "maps",
+      "title": "Cartes et autres sources",
+      "blocks": [
+        {
+          "p": "Les emplacements des marchés et des stands sont dessinés sur OpenStreetMap. Les données cartographiques sont © les contributeurs d'OpenStreetMap, et le lien d'itinéraire ouvre OpenStreetMap dans un nouvel onglet. Un repère est placé par le marché ou le stand et il est aussi précis qu'ils l'ont fait."
+        },
+        {
+          "p": "Les photos de produits appartiennent au stand qui les a mises en ligne. Les photos utilisées sur les pages de la plateforme elle-même sont créditées dans le ReadMe du projet."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Quelque chose n'est pas clair ici ?",
+    "text": "Les questions sur une commande vont directement au stand. Tout ce qui concerne ces conditions revient à l'équipe.",
+    "privacy": "Politique de confidentialité",
+    "contact": "Nous contacter"
+  }
+}

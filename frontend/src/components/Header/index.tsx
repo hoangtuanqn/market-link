@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import useLogout from '@/hooks/useLogout';
 import { Link } from 'react-router';
 import { CUSTOMER_NAV, GUEST_NAV, type NavItem } from '@/constants/nav';
-import { BellIcon, CartIcon, MenuIcon, SearchIcon } from '@/components/icons';
+import { BellIcon, CartIcon, ChatIcon, MenuIcon, SearchIcon } from '@/components/icons';
 import Logo from '@/components/Logo';
 import { ButtonLink } from '@/components/ui/button';
 import Helper from '@/utils/helper';
@@ -24,6 +24,8 @@ type HeaderProps = {
   userEmail?: string;
   avatarUrl?: string;
   settingsTo?: string;
+  /** Hộp thư theo vai: Customer /messages, Farmer /farmer/messages. */
+  messagesTo?: string;
   cartCount?: number;
   unreadCount?: number;
 };
@@ -34,6 +36,7 @@ const Header = ({
   userEmail,
   avatarUrl,
   settingsTo = '/settings',
+  messagesTo = '/messages',
   cartCount = 0,
   unreadCount = 0,
 }: HeaderProps) => {
@@ -43,7 +46,12 @@ const Header = ({
   const signedIn = variant === 'customer';
   const navItems = signedIn ? CUSTOMER_NAV : GUEST_NAV;
   const drawerItems: NavItem[] = signedIn
-    ? [...navItems, { label: 'profile', to: '/account' }, { label: 'settings', to: settingsTo }]
+    ? [
+        ...navItems,
+        { label: 'messages', to: messagesTo },
+        { label: 'profile', to: '/account' },
+        { label: 'settings', to: settingsTo },
+      ]
     : [...navItems, { label: 'signIn', to: '/login' }, { label: 'createAccount', to: '/register/customer' }];
 
   return (
@@ -66,6 +74,12 @@ const Header = ({
             <Link to="/search" aria-label={t('header.search')} className={Helper.cn(iconButton, 'max-md:hidden')}>
               <SearchIcon />
             </Link>
+            {/* Tin nhắn và thông báo là hai biểu tượng riêng, không gộp (spec chat §9.1) */}
+            {signedIn && (
+              <Link to={messagesTo} aria-label={t('header.messages')} className={iconButton}>
+                <ChatIcon />
+              </Link>
+            )}
             {signedIn && (
               <Link
                 to="/notifications"

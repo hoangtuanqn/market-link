@@ -16,7 +16,7 @@ import Tabs from '@/components/ui/tabs';
 import { Table } from '@/components/ui/table';
 import { farmer, marketName, products, reviewTags, reviewsForFarmer } from '@/data/catalog';
 import { markets } from '@/data/home';
-import { dayList, dayName, formatClock, formatDate } from '@/lib/format';
+import { dayList, dayName, formatClock, formatDate, upcoming } from '@/lib/format';
 import Notification from '@/utils/notification';
 
 /** How the demo data spells a stall's selling days ("Sat, Sun"); used to match, never shown. */
@@ -186,7 +186,8 @@ const StallProfilePage = () => {
             onChange={(v) => setDay(Number(v))}
             options={[1, 2, 3, 4, 5, 6, 0].map((d) => ({
               value: String(d),
-              label: dayName(d),
+              label: dayName(d, 'long'),
+              date: upcoming(d),
               disabled: !availableDays.includes(d),
             }))}
           />

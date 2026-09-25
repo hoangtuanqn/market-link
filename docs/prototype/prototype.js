@@ -37,6 +37,7 @@
       ['favorites.html', 'Favorites and saved markets', 'FR-014 FR-040 FR-041'],
       ['notifications.html', 'Notifications', 'FR-041 FR-042'],
       ['account.html', 'Account', 'FR-001 FR-006'],
+      ['change-password.html', 'Change password', 'proposal'],
       ['complete-profile.html', 'Finish your account after Google', 'FR-001 · gap in merged code'],
       ['become-farmer.html', 'Apply to sell', 'FR-002 FR-071 · proposal'],
       ['assistant.html', 'Shopping assistant', 'FR-090 FR-091 FR-092'],
@@ -188,6 +189,9 @@
     var home = role === 'farmer' ? link('farmer/overview.html') : role === 'admin' ? link('admin/overview.html') : link('public/home.html');
     var tools = '';
     if (role !== 'admin') tools += '<a class="ml-hbtn pt-hbtn-search" href="' + link('public/search.html') + '" aria-label="Search">' + I.search() + '</a>';
+    // Messages and notifications are two icons, not one (chat spec §9.1). An admin has no inbox.
+    var mhref = role === 'farmer' ? link('farmer/messages.html') : link('customer/messages.html');
+    if (role === 'customer' || role === 'farmer') tools += '<a class="ml-hbtn" href="' + mhref + '" aria-label="Messages">' + I.chat() + '</a>';
     if (role !== 'guest') {
       var nhref = role === 'farmer' ? link('farmer/notifications.html') : role === 'admin' ? link('admin/overview.html') : link('customer/notifications.html');
       tools += '<a class="ml-hbtn" href="' + nhref + '" aria-label="Notifications' + (o.unread ? ', ' + o.unread + ' unread' : '') + '">' + I.bell() + (o.unread ? '<span class="ml-hbadge" aria-hidden="true">' + o.unread + '</span>' : '') + '</a>';
@@ -215,6 +219,7 @@
     var nav = items.map(function (it) { return '<li><a href="' + link(it[2]) + '"' + (o.active === it[0] ? ' aria-current="page"' : '') + '>' + it[1] + '</a></li>'; }).join('');
     var drawer = '<div class="pt-drawer" data-drawer><div class="pt-drawer-panel"><button type="button" class="ml-btn ml-btn-onboard ml-btn-sm" data-drawer-close>Close</button>' +
       items.map(function (it) { return '<a href="' + link(it[2]) + '"' + (o.active === it[0] ? ' aria-current="page"' : '') + '>' + it[1] + '</a>'; }).join('') +
+      (role === 'customer' || role === 'farmer' ? '<a href="' + mhref + '">Messages</a>' : '') +
       (role === 'guest' ? '<a href="' + link('public/login.html') + '">Sign in</a><a href="' + link('public/register-customer.html') + '">Create an account</a>' : '<a href="' + link('public/login.html') + '">Sign out</a>') + '</div></div>';
     return '<header class="ml-header"><div class="ml-header-in">' + PT.logo(30, home) + '<nav aria-label="Main"><ul class="ml-nav">' + nav + '</ul></nav><div class="ml-header-tools">' + tools + '</div></div><div class="ml-header-twine" aria-hidden="true"></div></header>' + drawer;
   };
@@ -374,12 +379,12 @@
   PT.dayChips = function (legend, days, value, name) {
     name = name || 'market-day';
     // With `date`, the chip carries both the weekday and the date it falls on, stacked in one grid
-    // cell so hover can swap them without the chip changing width. With `sub` it keeps the older
-    // two-line form. Both readings stay in the accessibility tree: "Monday 29/09".
+    // cell so hover can swap them without the chip changing width. Both readings stay in the
+    // accessibility tree: "Monday 29/09". Without `date` (an "All" choice) it is just the label.
     return '<fieldset class="ml-days">' + (legend ? '<legend>' + legend + '</legend>' : '') + days.map(function (d) {
       var body = d.date
         ? '<span class="pt-day-swap"><b>' + d.label + '</b><b>' + d.date + '</b></span>'
-        : '<span>' + d.label + (d.sub ? '<small>' + d.sub + '</small>' : '') + '</span>';
+        : '<span>' + d.label + '</span>';
       return '<label class="ml-day"><input type="radio" name="' + name + '" value="' + d.value + '"' + (d.disabled ? ' disabled' : '') + (value === d.value ? ' checked' : '') + '>' + body + '</label>';
     }).join('') + '</fieldset>';
   };
@@ -1101,6 +1106,8 @@
       var t;
       if ((t = e.target.closest('[data-toast]'))) { PT.toast(t.getAttribute('data-toast'), { action: t.getAttribute('data-toast-action'), tone: t.getAttribute('data-toast-tone') }); }
       if ((t = e.target.closest('[data-dismiss]'))) { var bn = t.closest('.ml-banner'); if (bn) bn.remove(); }
+      // Favorites belong to an account: a guest's heart goes to sign in rather than lighting up with nowhere to see it.
+      if ((t = e.target.closest('[data-fav]')) && PT.viewRole() === 'guest') { location.href = link('public/login.html'); return; }
       if ((t = e.target.closest('[data-fav]')) && PT.viewRole() === 'admin') { PT.toast('Favorites are off for admins. Use a customer account to save things.', { tone: 'error' }); return; }
       if ((t = e.target.closest('[data-fav]'))) { var on = t.getAttribute('aria-pressed') !== 'true'; t.setAttribute('aria-pressed', on); t.innerHTML = I.heart(on); var kind = t.getAttribute('data-fav-kind'); PT.toast((on ? (kind === 'market' ? 'Saved ' : 'Added ') : (kind === 'market' ? 'Removed ' : 'Removed ')) + t.getAttribute('data-name') + (on ? (kind === 'market' ? ' as a preferred market.' : ' to your favorites. You will hear when it is back in stock.') : (kind === 'market' ? ' from preferred markets.' : ' from your favorites.'))); }
       if ((t = e.target.closest('[data-chip]'))) { var grp = t.getAttribute('data-chip-group'); if (grp) document.querySelectorAll('[data-chip-group="' + grp + '"]').forEach(function (c) { if (c !== t) { c.setAttribute('aria-pressed', 'false'); var s = c.querySelector('svg'); if (s) s.remove(); } }); var pressed = t.getAttribute('aria-pressed') !== 'true'; if (grp && !pressed) return; t.setAttribute('aria-pressed', pressed); var ic = t.querySelector('svg'); if (pressed && !ic) t.insertAdjacentHTML('afterbegin', I.check()); if (!pressed && ic) ic.remove(); }

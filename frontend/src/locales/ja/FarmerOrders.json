@@ -2,7 +2,7 @@
   "title": "注文",
   "intro": "締め切り前に新しい注文を承認または辞退し、市場の日に準備完了にして、お客様の支払い後に完了にします。",
   "search": { "label": "注文を検索", "placeholder": "注文番号またはお客様の名前", "submit": "検索" },
-  "filter": { "day": "受け取り日", "all": "すべて", "allDays": "の日", "market": "市場", "bothMarkets": "両方の市場" },
+  "filter": { "day": "受け取り日", "all": "すべて", "market": "市場", "bothMarkets": "両方の市場" },
   "tabsLabel": "ステータス別の注文",
   "status": {
     "placed": "承認待ち",

@@ -19,7 +19,6 @@ import CompleteProfilePage from './pages/auth/CompleteProfile';
 import SetPasswordPage from './pages/auth/SetPassword';
 import CustomerDashboardPage from './pages/customer/Dashboard';
 import CustomerAccountPage from './pages/customer/Account';
-import ChangePasswordPage from './pages/customer/ChangePassword';
 import CustomerCartPage from './pages/customer/Cart';
 import CustomerOrdersPage from './pages/customer/Orders';
 import CustomerOrderDetailPage from './pages/customer/OrderDetail';
@@ -30,6 +29,7 @@ import CustomerOrderEditPage from './pages/customer/OrderEdit';
 import CustomerOrderPlacedPage from './pages/customer/OrderPlaced';
 import CustomerReviewPage from './pages/customer/Review';
 import CustomerBecomeFarmerPage from './pages/customer/BecomeFarmer';
+import ChangePasswordPage from './pages/customer/ChangePassword';
 import CustomerSettingsPage from './pages/customer/Settings';
 import CustomerAssistantPage from './pages/customer/Assistant';
 import MarketsPage from './pages/public/Markets';
@@ -40,6 +40,8 @@ import StallProfilePage from './pages/public/StallProfile';
 import SearchPage from './pages/public/Search';
 import MarketMapPage from './pages/public/MarketMap';
 import AboutPage from './pages/public/About';
+import PrivacyPage from './pages/public/Privacy';
+import TermsPage from './pages/public/Terms';
 import ContactPage from './pages/public/Contact';
 import FeedbackPage from './pages/public/Feedback';
 import FarmerOverviewPage from './pages/farmer/Overview';
@@ -108,6 +110,8 @@ const App = () => {
             <Route path="search" element={<SearchPage />} />
             <Route path="map" element={<MarketMapPage />} />
             <Route path="about" element={<AboutPage />} />
+            <Route path="terms" element={<TermsPage />} />
+            <Route path="privacy" element={<PrivacyPage />} />
             <Route path="contact" element={<ContactPage />} />
             <Route path="feedback" element={<FeedbackPage />} />
           </Route>

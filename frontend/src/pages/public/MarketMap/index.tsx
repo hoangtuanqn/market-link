@@ -104,8 +104,8 @@ const MarketMapPage = () => {
           name="map-day"
           options={DAYS.map((d) => ({
             value: d.value,
-            label: dayName(DOW[d.value]),
-            sub: formatDayMonth(d.date),
+            label: dayName(DOW[d.value], 'long'),
+            date: formatDayMonth(d.date),
             disabled: d.disabled,
           }))}
           value={day}

@@ -16,7 +16,7 @@
     "failed": "无法启动 Google 登录，请重试。",
     "note": "Google 会提供你的姓名和邮箱。首次下单前仍需要你的手机号和地址，所以我们会在下一个页面询问一次。"
   },
-  "newHere": "第一次来？<customer>创建顾客账户</customer>。想卖货，请先登录，再在账户中<farmer>申请成为农户</farmer>。",
+  "newHere": "还没有账户？<customer>注册</customer>",
   "toast": {
     "signedIn": "已登录。",
     "failed": "无法登录，请重试。"

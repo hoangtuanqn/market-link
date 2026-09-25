@@ -1,0 +1,172 @@
+{
+  "title": "Nutzungsbedingungen",
+  "lead": "Was du zusagst, wenn du bei einem Stand auf MarketLink reservierst, und was Stand und Plattform im Gegenzug zusagen.",
+  "meta": "Version 0.1 · Zuletzt aktualisiert {{date}} · Gilt für Customers, Farmers und Besucher",
+  "onThisPage": "Auf dieser Seite",
+  "seeAlso": "Lies auch die <link>Datenschutzerklärung</link>. Sie beschreibt, was wir über dich speichern.",
+  "sections": [
+    {
+      "id": "what",
+      "title": "Was MarketLink ist",
+      "blocks": [
+        {
+          "p": "Auf MarketLink veröffentlicht ein Stand auf dem Bauernmarkt, was er diese Woche mitbringt, und du reservierst vor dem Markttag aus dieser Liste. Du holst das Reservierte am Stand ab, innerhalb des Abholfensters, das der Stand festgelegt hat, und bezahlst den Farmer dort."
+        },
+        {
+          "nots": {
+            "title": "Was MarketLink nicht tut",
+            "items": [
+              [
+                "Es nimmt dein Geld nicht entgegen.",
+                "Im Produkt gibt es nirgends ein Kartenformular und kein Zahlungs-Gateway. Jede Bestellung wird am Stand an den Farmer bezahlt."
+              ],
+              ["Es liefert nicht.", "Jede Bestellung wird persönlich auf dem Markt abgeholt."],
+              [
+                "Es zertifiziert keinen Stand.",
+                "MarketLink prüft weder Lizenzen noch Anbaumethoden oder Bio-Angaben. Frag den Farmer am Stand."
+              ],
+              [
+                "Es verkauft dir nichts.",
+                "Der Kaufvertrag besteht zwischen dir und dem Stand. MarketLink hält die Reservierung fest, mehr nicht."
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "accounts",
+      "title": "Dein Konto",
+      "blocks": [
+        {
+          "p": "Es gibt drei Arten von Konten. Ein Customer meldet sich mit Name, Telefonnummer, E-Mail und Adresse an. Zum Verkaufen stellt ein Customer aus seinem Konto einen Antrag, Farmer zu werden, und gibt dabei Standname und Ansprechperson an; der Stand kann nichts einstellen, bevor ein Admin ihn freigibt. Admins melden sich über einen eigenen Zugang an."
+        },
+        {
+          "p": "Ein Konto darf zu Hause geteilt werden. MarketLink unterscheidet innerhalb eines Kontos keine Personen, deshalb gilt alles, was mit deiner Anmeldung geschieht, als von dir getan. Behalte dein Passwort für dich und sag uns Bescheid, wenn du glaubst, dass jemand anderes es kennt."
+        },
+        {
+          "p": "Die Adresse, die du angibst, dient dazu, Entfernungen zu Märkten zu zeigen und die Route vorauszufüllen. Deine Telefonnummer wird an den Stand weitergegeben, bei dem du bestellst, damit er dich am Marktmorgen erreichen kann."
+        }
+      ]
+    },
+    {
+      "id": "reserving",
+      "title": "Bei einem Stand reservieren",
+      "blocks": [
+        {
+          "p": "Du kannst Produkte mehrerer Stände in einen Warenkorb legen, aber eine Reservierung gehört immer zu genau einem Stand. Beim Abschicken wird der Warenkorb in eine Bestellung pro Stand geteilt, jede mit eigenem Markt, eigenem Abholfenster und eigener Frist. Der Bestätigungsbildschirm zeigt diese Aufteilung, bevor du dich festlegst."
+        },
+        {
+          "facts": {
+            "title": "Was passiert, wenn du bestellst",
+            "items": [
+              [
+                "Bestand",
+                "Was du reservierst, geht sofort vom Bestand des Standes ab, damit nicht zwei Leute dieselben letzten zwei Bund buchen. Du kannst nicht mehr reservieren, als der Stand noch hat."
+              ],
+              [
+                "Abholfenster",
+                "Du wählst ein Abholdatum und ein Zeitfenster, das der Stand anbietet. Ein Fenster hat eine Obergrenze an Bestellungen; ein volles Fenster wird ausgegraut und lässt sich nicht wählen."
+              ],
+              [
+                "Frist",
+                "Jede Bestellung bekommt eine Frist, gerechnet von deiner Abholzeit um die Stundenzahl zurück, die der Stand festlegt. Bis dahin kannst du die Bestellung selbst ändern oder stornieren."
+              ],
+              [
+                "Preis",
+                "Preis und Einheit auf deiner Bestellung sind die, die beim Bestellen angezeigt wurden. Ändert der Stand später seinen Preis, ändert sich deine Bestellung nicht."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Eine Bestellung durchläuft aufgegeben, angenommen, abholbereit und abgeschlossen. Ein Stand kann eine Bestellung auch ablehnen, und du kannst eine stornieren. Jede Änderung wird mit Zeit festgehalten, und du siehst diesen Verlauf an der Bestellung."
+        },
+        {
+          "p": "Eine Bestellung ist eine Reservierung, keine Garantie. Ein Stand kann ablehnen und sollte dir dann sagen, warum. Wird eine Bestellung abgelehnt oder storniert, geht der Bestand an den Stand zurück, und keine Seite schuldet der anderen etwas."
+        }
+      ]
+    },
+    {
+      "id": "changing",
+      "title": "Bestellung ändern oder stornieren",
+      "blocks": [
+        {
+          "p": "Vor der Frist kannst du eine Menge verringern, eine Position streichen oder die Bestellung ganz stornieren. Ein neues Produkt kannst du einer bestehenden Bestellung nicht hinzufügen; gib stattdessen eine zweite Bestellung auf, damit Bestände und Fenster des Standes stimmen."
+        },
+        {
+          "p": "Eine Bestellung zu bearbeiten setzt sie zurück auf aufgegeben, und der Stand muss sie erneut annehmen. Das ist Absicht: Der Stand packt nach dem, was er angenommen hat."
+        },
+        {
+          "p": "Nach der Frist sind die Schaltflächen gesperrt, und der Bildschirm nennt den Grund samt Zeitpunkt, zu dem die Frist ablief. Ab da kann nur noch der Stand die Bestellung bewegen, alles Weitere klärst du direkt mit ihm. Eine Bestellung, die auf abholbereit stehen bleibt, gilt 24 Stunden nach ihrem Abholdatum als abgeschlossen."
+        }
+      ]
+    },
+    {
+      "id": "paying",
+      "title": "Am Stand bezahlen",
+      "blocks": [
+        {
+          "p": "Du bezahlst den Farmer bei der Abholung direkt, den Betrag, der auf deiner Bestellung steht. MarketLink hält niemals dein Geld, nimmt über das Produkt keine Provision und ist an der Zahlung nicht beteiligt."
+        },
+        {
+          "p": "Deshalb ist eine Rückerstattung etwas, das du und der Stand untereinander klärt."
+        }
+      ]
+    },
+    {
+      "id": "stalls",
+      "title": "Wozu sich ein Stand verpflichtet",
+      "blocks": [
+        {
+          "p": "Ein Farmer, der über MarketLink verkauft, verpflichtet sich, die Wochenliste ehrlich zu halten: Mengen zu veröffentlichen, die er voraussichtlich hat, ein Produkt als ausverkauft oder nicht verfügbar zu kennzeichnen, statt es in der Liste stehen zu lassen, und die für jeden Markt und Tag angekündigten Abholfenster einzuhalten."
+        },
+        {
+          "p": "Ein Stand verpflichtet sich, eingehende Bestellungen zu beantworten statt liegen zu lassen, bei einer Ablehnung einen Grund zu nennen und eine angenommene Bestellung über ihr Abholfenster hinweg bereitzuhalten. Ein Stand erkennt außerdem an, dass seine Einträge seine eigene Verantwortung sind, einschließlich Beschreibung, Foto und jeder Aussage über die Ware."
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "title": "Bewertungen und Inhalte",
+      "blocks": [
+        {
+          "p": "Sobald die Bestellung abgeschlossen ist, kannst du einen Stand und die gekauften Produkte bewerten und kommentieren, und zwar nur zu deinen eigenen Bestellungen. Ein Stand darf einmal öffentlich antworten."
+        },
+        {
+          "p": "Schreib über die Ware und die Abholung. Ein Admin kann eine Bewertung oder einen Produkteintrag verbergen, der dagegen verstößt; verborgene Inhalte erscheinen nicht mehr auf den öffentlichen Seiten. Was du schreibst, bleibt mit deinem Kontonamen verknüpft und für andere Käufer sichtbar."
+        }
+      ]
+    },
+    {
+      "id": "suspension",
+      "title": "Ein Konto sperren",
+      "blocks": [
+        {
+          "p": "Ein Admin gibt einen Stand frei, bevor dieser etwas einstellen darf, und kann einen Antrag mit Begründung ablehnen. Ein gesperrter Stand verschwindet von den öffentlichen Seiten und nimmt keine neuen Bestellungen an, aber laufende Bestellungen werden zu Ende geführt, damit kein Käufer verliert, was er reserviert hat. Der Farmer kann sich weiterhin anmelden und diese Bestellungen sehen."
+        },
+        {
+          "p": "Ein Customer-Konto kann von einem Admin deaktiviert werden."
+        }
+      ]
+    },
+    {
+      "id": "maps",
+      "title": "Karten und andere Quellen",
+      "blocks": [
+        {
+          "p": "Markt- und Standorte werden auf OpenStreetMap gezeichnet. Die Kartendaten sind © OpenStreetMap-Mitwirkende, und der Routenlink öffnet OpenStreetMap in einem neuen Tab. Eine Markierung setzt der Markt oder der Stand selbst und ist so genau, wie sie gesetzt wurde."
+        },
+        {
+          "p": "Produktfotos gehören dem Stand, der sie hochgeladen hat. Fotos auf den eigenen Seiten der Plattform sind in der ReadMe des Projekts nachgewiesen."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Etwas hier unklar?",
+    "text": "Fragen zu einer Bestellung gehen direkt an den Stand. Alles zu diesen Bedingungen kommt zum Team.",
+    "privacy": "Datenschutzerklärung",
+    "contact": "Kontakt"
+  }
+}
