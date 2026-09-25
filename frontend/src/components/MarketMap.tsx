@@ -1,7 +1,10 @@
 import L from 'leaflet';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import '@/styles/leaflet-theme.css';
+import { CITY, MAX_ZOOM, TILE_ATTRIBUTION, TILE_URL } from '@/config/map';
+import { directionsUrl, resolveRemembered } from '@/lib/directions';
+import Geolocation from '@/utils/geolocation';
 import Helper from '@/utils/helper';
 
 export type MapMarker = {
@@ -33,9 +36,6 @@ type MarketMapProps = {
   scrollWheelZoom?: boolean;
 };
 
-/** Ho Chi Minh City, used when there is nothing to fit the view around. */
-const CITY: [number, number] = [10.79, 106.72];
-
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const pinHtml = ({ kind, label, text, selected }: MapMarker) =>
@@ -45,14 +45,21 @@ const pinHtml = ({ kind, label, text, selected }: MapMarker) =>
   (label ? `<span class="ml-pin-label">${esc(label)}</span>` : '') +
   '</span>';
 
+/**
+ * Built when the popup opens rather than when the marker is drawn, so "Directions" picks up whatever start point the
+ * visitor last chose — including a location they shared after this map was rendered. A popup is plain HTML inside
+ * Leaflet and cannot open the React dialog, so it silently uses that remembered choice.
+ */
 const popupHtml = (m: MapMarker) => {
   const p = m.popup;
   if (!p) return '';
+  const geo = Geolocation.get();
+  const from = resolveRemembered(geo.status === 'ready' ? geo.at : null);
   return (
     `<b>${esc(p.title)}</b>` +
     p.lines.map((l) => `<span>${esc(l)}</span><br>`).join('') +
     (p.href ? `<a href="${esc(p.href)}" data-route>Open</a>` : '') +
-    `<a href="${Helper.directionsUrl(m.lat, m.lng)}" target="_blank" rel="noopener">Directions</a>`
+    `<a href="${esc(directionsUrl({ lat: m.lat, lng: m.lng }, from))}" target="_blank" rel="noopener">Directions</a>`
   );
 };
 
@@ -66,6 +73,8 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
   const navigate = useNavigate();
+  /** Tiles come over the network, so losing them is a state this frame has to be able to show (FR-084). */
+  const [tilesFailed, setTilesFailed] = useState(false);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -75,10 +84,11 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     const inner = document.createElement('div');
     host.appendChild(inner);
     const map = L.map(inner, { scrollWheelZoom, zoomControl: true, attributionControl: true });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
+    const tiles = L.tileLayer(TILE_URL, { maxZoom: MAX_ZOOM, attribution: TILE_ATTRIBUTION }).addTo(map);
+    // A tile 404s at the edge of the world as well, so the note goes up on failure and comes down as soon as
+    // any tile arrives, rather than latching on the first error.
+    tiles.on('tileerror', () => setTilesFailed(true));
+    tiles.on('load', () => setTilesFailed(false));
 
     // "Open" points into the app, so it navigates instead of reloading the whole page.
     map.on('popupopen', (e: L.PopupEvent) => {
@@ -120,7 +130,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
         popupAnchor: [0, -46],
       });
       const marker = L.marker([mk.lat, mk.lng], { icon, title: mk.label ?? '' });
-      if (mk.popup) marker.bindPopup(popupHtml(mk));
+      if (mk.popup) marker.bindPopup(() => popupHtml(mk));
       marker.addTo(layer);
       bounds.push([mk.lat, mk.lng]);
     });
@@ -132,7 +142,15 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
   }, [markers, center, zoom]);
 
   // isolate: Leaflet đặt z-index 400–1000 cho các lớp bên trong; không cô lập thì chúng đè lên header sticky (z-40)
-  return <div ref={hostRef} role="region" aria-label={label} className={Helper.cn('ml-map isolate', className)} />;
+  return (
+    <div role="region" aria-label={label} className={Helper.cn('ml-map isolate', className)}>
+      {/* Leaflet owns this child outright; the note stays a sibling so React never fights it over the DOM. */}
+      <div ref={hostRef} className="absolute inset-0" />
+      {tilesFailed && (
+        <p className="ml-map-note m-0">Map tiles need a connection. The list still works without them.</p>
+      )}
+    </div>
+  );
 };
 
 export default MarketMap;

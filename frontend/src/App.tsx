@@ -29,6 +29,7 @@ import CustomerReviewPage from './pages/CustomerReview';
 import CustomerBecomeFarmerPage from './pages/CustomerBecomeFarmer';
 import CustomerSettingsPage from './pages/CustomerSettings';
 import CustomerAssistantPage from './pages/CustomerAssistant';
+import MarketMapPage from './pages/MarketMapPage';
 import MarketsPage from './pages/Markets';
 import MarketDetailPage from './pages/MarketDetail';
 import ProductsPage from './pages/Products';
@@ -70,6 +71,7 @@ const App = () => {
           <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
           <Route path="auth/set-password" element={<SetPasswordPage />} />
           <Route path="markets" element={<MarketsPage />} />
+          <Route path="map" element={<MarketMapPage />} />
           <Route
             path="markets/:id"
             element={

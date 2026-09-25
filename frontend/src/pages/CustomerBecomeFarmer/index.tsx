@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link } from 'react-router';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import LocationPicker from '@/components/LocationPicker';
+import { CITY } from '@/config/map';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -43,6 +44,8 @@ const CustomerBecomeFarmerPage = () => {
   const [photoCount, setPhotoCount] = useState(0);
   const [hasVideo, setHasVideo] = useState(false);
   const [marketId, setMarketId] = useState(4);
+  // The plot is farmland, not the stall, so it starts on the city rather than on any market.
+  const [plotPin, setPlotPin] = useState({ lat: CITY[0], lng: CITY[1] });
   const [t1, setT1] = useState(false);
   const [t2, setT2] = useState(false);
   const [t3, setT3] = useState(false);
@@ -330,7 +333,14 @@ const CustomerBecomeFarmerPage = () => {
                 <span className="text-small font-bold">
                   Pin the plot<span className="text-danger ml-0.5">*</span>
                 </span>
-                <MapPlaceholder label="Pin your plot on the map" />
+                <LocationPicker
+                  label="Pin your plot on the map"
+                  className="min-h-60"
+                  lat={plotPin.lat}
+                  lng={plotPin.lng}
+                  pinLabel="Your plot"
+                  onMove={(lat, lng) => setPlotPin({ lat, lng })}
+                />
                 <p className="text-ink-muted text-[13px]">
                   Drag the pin to your plot. It is the quickest way for the admin to see the photos match the place.
                 </p>

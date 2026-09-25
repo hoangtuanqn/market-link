@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import DayChips from '@/components/DayChips';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
 import { CheckIcon } from '@/components/icons';
-import { Button, ButtonAnchor, ButtonLink } from '@/components/ui/button';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { Pagination } from '@/components/ui/pagination';
@@ -14,8 +14,8 @@ import Tabs from '@/components/ui/tabs';
 import { Table } from '@/components/ui/table';
 import { farmer, marketName, products, reviewTags, reviewsForFarmer } from '@/data/catalog';
 import { markets } from '@/data/home';
-import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import DirectionsButton from '@/components/DirectionsButton';
 
 const DOW_ABBR: Record<number, string> = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' };
 const REVIEWS_PER_PAGE = 6;
@@ -33,6 +33,38 @@ const StallProfilePage = () => {
   const [day, setDay] = useState(availableDays[0] ?? 6);
   const [reviewFilter, setReviewFilter] = useState<'all' | 'farmer' | 'product'>('all');
   const [reviewPage, setReviewPage] = useState(1);
+
+  // The stall itself, plus each market it trades at, so "where do I collect" is answerable at a glance (FR-011).
+  const mapMarkers = useMemo<MapMarker[]>(() => {
+    if (!f) return [];
+    const pins: MapMarker[] = [];
+    if (f.lat != null && f.lng != null) {
+      pins.push({
+        lat: f.lat,
+        lng: f.lng,
+        kind: 'stall',
+        label: f.stall,
+        selected: true,
+        popup: { title: f.stall, lines: [`Stall ${f.stallCode} \u00b7 pickup ${f.pickup}`] },
+      });
+    }
+    f.markets.forEach((id) => {
+      const m = markets.find((mm) => mm.id === id);
+      if (!m) return;
+      pins.push({
+        lat: m.lat,
+        lng: m.lng,
+        kind: 'market',
+        label: m.name,
+        popup: {
+          title: m.name,
+          lines: [`${m.open}\u2013${m.close}`, m.address],
+          href: `/markets/${m.id}`,
+        },
+      });
+    });
+    return pins;
+  }, [f]);
 
   if (!f) {
     return (
@@ -262,11 +294,7 @@ const StallProfilePage = () => {
                     align: 'actions',
                     render: (row: { id: number }) => {
                       const m = markets.find((mm) => mm.id === row.id)!;
-                      return (
-                        <ButtonAnchor href={Helper.directionsUrl(m.lat, m.lng)} variant="ghost" size="sm">
-                          Directions
-                        </ButtonAnchor>
-                      );
+                      return <DirectionsButton to={{ lat: m.lat, lng: m.lng }} name={m.name} />;
                     },
                   },
                 ]}
@@ -298,7 +326,7 @@ const StallProfilePage = () => {
           </div>
 
           <div className="flex flex-col gap-4">
-            <MapPlaceholder label={`Map of ${f.stall}`} />
+            <MarketMap label={`Map of ${f.stall}`} markers={mapMarkers} className="min-h-72" />
             <Card className="flex flex-col gap-2 p-4">
               <h3 className="text-h3">Finding the stall</h3>
               <p className="text-small">

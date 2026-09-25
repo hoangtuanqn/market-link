@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import Rating from '@/components/Rating';
-import { ButtonAnchor, ButtonLink } from '@/components/ui/button';
+import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { marketName } from '@/data/customer';
-import Helper from '@/utils/helper';
+import DirectionsButton from './DirectionsButton';
 
 type StallCardFarmer = {
   id: number;
@@ -68,9 +68,7 @@ const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: R
         See stall &amp; this week&apos;s stock
       </ButtonLink>
       {farmer.lat != null && farmer.lng != null && (
-        <ButtonAnchor href={Helper.directionsUrl(farmer.lat, farmer.lng)} variant="ghost" size="sm">
-          Directions
-        </ButtonAnchor>
+        <DirectionsButton to={{ lat: farmer.lat, lng: farmer.lng }} name={farmer.stall} />
       )}
     </div>
   </Card>

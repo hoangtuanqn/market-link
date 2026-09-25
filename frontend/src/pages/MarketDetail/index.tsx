@@ -1,16 +1,16 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import DayChips from '@/components/DayChips';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
-import { ButtonAnchor, ButtonLink } from '@/components/ui/button';
+import { ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { categories as CATEGORIES, farmers, products } from '@/data/catalog';
 import { markets } from '@/data/home';
 import { dayList } from '@/lib/format';
-import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import DirectionsButton from '@/components/DirectionsButton';
 
 const DAY_OPTIONS = [
   { value: 4, label: 'Thu', sub: '24/09' },
@@ -61,6 +61,36 @@ const MarketDetailPage = () => {
     return counts;
   }, [productsToday]);
 
+  // The market itself plus every stall trading today that has pinned its spot (FR-012).
+  const mapMarkers = useMemo<MapMarker[]>(() => {
+    if (!market) return [];
+    const pins: MapMarker[] = [
+      {
+        lat: market.lat,
+        lng: market.lng,
+        kind: 'market',
+        label: market.name,
+        selected: true,
+        popup: { title: market.name, lines: [`${market.open}\u2013${market.close}`, market.address] },
+      },
+    ];
+    stallsToday.forEach((f) => {
+      if (f.lat == null || f.lng == null) return;
+      pins.push({
+        lat: f.lat,
+        lng: f.lng,
+        kind: 'stall',
+        label: f.stall,
+        popup: {
+          title: f.stall,
+          lines: [`Stall ${f.stallCode} \u00b7 pickup ${f.pickup}`],
+          href: `/stalls/${f.id}`,
+        },
+      });
+    });
+    return pins;
+  }, [market, stallsToday]);
+
   const shownProducts = productsToday.filter((p) => {
     if (category !== 'All' && p.category !== category) return false;
     if (inStockOnly && (p.status !== 'available' || p.stock === 0)) return false;
@@ -109,9 +139,7 @@ const MarketDetailPage = () => {
           >
             {saved ? 'Saved market' : 'Save market'}
           </Chip>
-          <ButtonAnchor href={Helper.directionsUrl(market.lat, market.lng)} variant="ghost">
-            Directions
-          </ButtonAnchor>
+          <DirectionsButton to={{ lat: market.lat, lng: market.lng }} name={market.name} size="md" />
         </div>
       </div>
 
@@ -189,7 +217,7 @@ const MarketDetailPage = () => {
         </div>
 
         <div className="sticky top-20 flex flex-col gap-4">
-          <MapPlaceholder label={`Map of ${market.name} and its stalls`} />
+          <MarketMap label={`Map of ${market.name} and its stalls`} markers={mapMarkers} className="min-h-72" />
           {stallsToday[0] && <StallCard farmer={stallsToday[0]} />}
         </div>
       </div>

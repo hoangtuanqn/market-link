@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { MAP_CREDIT } from '@/config/map';
 import Logo from './Logo';
 
 const COLUMNS: { title: string; links: { label: string; to: string }[] }[] = [
@@ -60,7 +61,8 @@ const Footer = () => {
 
         <div className="border-board-muted text-board-muted col-span-full flex flex-wrap justify-between gap-3 border-t pt-4 text-[13px]">
           <span>© 2026 MarketLink · TechWiz 7</span>
-          <span>Map data © OpenStreetMap contributors</span>
+          {/* Every tile provider requires this credit, so it follows whichever one is configured. */}
+          <span>Map data {MAP_CREDIT}</span>
         </div>
       </div>
     </footer>

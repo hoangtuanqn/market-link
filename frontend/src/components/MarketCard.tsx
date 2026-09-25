@@ -1,9 +1,11 @@
 import { Link } from 'react-router';
+import { formatDistance } from '@/lib/geo';
 import type { MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
 import FavoriteButton from './FavoriteButton';
-import { ButtonAnchor, ButtonLink } from './ui/button';
+import { ButtonLink } from './ui/button';
 import { Card } from './ui/card';
+import DirectionsButton from './DirectionsButton';
 
 const WEEK: [string, number][] = [
   ['Mon', 1],
@@ -15,8 +17,15 @@ const WEEK: [string, number][] = [
   ['Sun', 0],
 ];
 
-const MarketCard = ({ market }: { market: MarketType }) => {
+type MarketCardProps = {
+  market: MarketType;
+  /** Real straight-line distance, once the visitor has shared where they are. Overrides the demo figure. */
+  distanceKm?: number;
+};
+
+const MarketCard = ({ market, distanceKm }: MarketCardProps) => {
   const href = `/markets/${market.id}`;
+  const away = distanceKm != null ? formatDistance(distanceKm) : market.distance;
 
   return (
     <Card as="article" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 p-4">
@@ -64,9 +73,9 @@ const MarketCard = ({ market }: { market: MarketType }) => {
         <span>
           <b>{market.stalls}</b> stalls
         </span>
-        {market.distance && (
+        {away && (
           <span>
-            <b>{market.distance}</b> away
+            <b>{away}</b> away
           </span>
         )}
       </p>
@@ -75,9 +84,7 @@ const MarketCard = ({ market }: { market: MarketType }) => {
         <ButtonLink to={href} size="sm">
           See stalls
         </ButtonLink>
-        <ButtonAnchor href={Helper.directionsUrl(market.lat, market.lng)} variant="ghost" size="sm">
-          Directions
-        </ButtonAnchor>
+        <DirectionsButton to={{ lat: market.lat, lng: market.lng }} name={market.name} />
       </div>
     </Card>
   );

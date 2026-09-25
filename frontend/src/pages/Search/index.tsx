@@ -1,6 +1,6 @@
 import { useMemo, useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
 import { Button } from '@/components/ui/button';
@@ -67,6 +67,37 @@ const SearchPage = () => {
   }, [q, openMarketIds, sort]);
 
   const total = results.markets.length + results.farmers.length + results.products.length;
+
+  // FR-023 asks for results on a map. Products have no coordinates of their own, so a product match is
+  // represented by the stall selling it, which is the place you would actually travel to.
+  const mapMarkers = useMemo<MapMarker[]>(() => {
+    const pins: MapMarker[] = results.markets.map((m) => ({
+      lat: m.lat,
+      lng: m.lng,
+      kind: 'market' as const,
+      label: m.name,
+      popup: {
+        title: m.name,
+        lines: [`${m.open}\u2013${m.close}`, m.district],
+        href: `/markets/${m.id}`,
+      },
+    }));
+    results.farmers.forEach((f) => {
+      if (f.lat == null || f.lng == null) return;
+      pins.push({
+        lat: f.lat,
+        lng: f.lng,
+        kind: 'stall',
+        label: f.stall,
+        popup: {
+          title: f.stall,
+          lines: [`Stall ${f.stallCode} \u00b7 pickup ${f.pickup}`],
+          href: `/stalls/${f.id}`,
+        },
+      });
+    });
+    return pins;
+  }, [results]);
   const dayLabel = DAY_OPTIONS.find((d) => d.value === day)?.label ?? '';
 
   return (
@@ -235,7 +266,7 @@ const SearchPage = () => {
         </div>
 
         <div className="sticky top-20 flex flex-col gap-2">
-          <MapPlaceholder label="Map of results" />
+          <MarketMap label="Map of results" markers={mapMarkers} className="min-h-72" />
           <p className="text-small text-ink-muted">
             Results with a location are pinned. On phones a &ldquo;List / Map&rdquo; toggle switches between the two.
           </p>

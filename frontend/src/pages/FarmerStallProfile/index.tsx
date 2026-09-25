@@ -5,11 +5,11 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
 import Tabs from '@/components/ui/tabs';
+import LocationPicker from '@/components/LocationPicker';
 import { farmer } from '@/data/catalog';
 import { markets } from '@/data/home';
 import { dayList } from '@/lib/format';
 import Notification from '@/utils/notification';
-import StallLocationMap from './StallLocationMap';
 
 const DOW_LABEL = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -252,14 +252,12 @@ const FarmerStallProfilePage = () => {
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="flex flex-col gap-2">
                       <span className="text-small font-bold">Stall location</span>
-                      <StallLocationMap
+                      <LocationPicker
                         label="Pin the stall on the map"
                         className="min-h-80"
-                        marketLat={m.lat}
-                        marketLng={m.lng}
-                        marketName={m.name}
-                        stallLat={s.lat}
-                        stallLng={s.lng}
+                        market={{ lat: m.lat, lng: m.lng, name: m.name }}
+                        lat={s.lat}
+                        lng={s.lng}
                         onMove={(lat, lng) => updateSettings(id, { lat, lng })}
                       />
                       <p className="text-caption text-ink-muted">

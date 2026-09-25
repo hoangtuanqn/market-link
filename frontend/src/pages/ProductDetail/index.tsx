@@ -6,14 +6,14 @@ import ProductCard from '@/components/ProductCard';
 import QtyStepper from '@/components/QtyStepper';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
-import { Button, ButtonAnchor, ButtonLink } from '@/components/ui/button';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Table } from '@/components/ui/table';
 import { farmer, product, products, reviewTags, reviewsForProduct } from '@/data/catalog';
 import { markets } from '@/data/home';
 import { units, vnd } from '@/lib/format';
-import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import DirectionsButton from '@/components/DirectionsButton';
 
 const EXTRA_REVIEW = {
   author: 'Bích Ngọc',
@@ -224,11 +224,7 @@ const ProductDetailPage = () => {
                 align: 'actions',
                 render: (row: { id: number }) => {
                   const m = markets.find((mm) => mm.id === row.id)!;
-                  return (
-                    <ButtonAnchor href={Helper.directionsUrl(m.lat, m.lng)} variant="ghost" size="sm">
-                      Directions
-                    </ButtonAnchor>
-                  );
+                  return <DirectionsButton to={{ lat: m.lat, lng: m.lng }} name={m.name} />;
                 },
               },
             ]}

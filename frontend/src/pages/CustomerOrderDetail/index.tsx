@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router';
-import MapPlaceholder from '@/components/MapPlaceholder';
+import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import OrderTicket from '@/components/OrderTicket';
-import { Button, ButtonAnchor, ButtonLink } from '@/components/ui/button';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
@@ -12,6 +12,7 @@ import { vnd } from '@/lib/format';
 import Helper from '@/utils/helper';
 import { markets } from '@/data/home';
 import type { OrderStatus } from '@/types/order.types';
+import DirectionsButton from '@/components/DirectionsButton';
 
 const STEPS: OrderStatus[] = ['placed', 'accepted', 'ready', 'completed'];
 
@@ -34,6 +35,24 @@ const CustomerOrderDetailPage = () => {
   const locked = previewLocked || order.locked;
   const effectiveOrder = { ...order, locked };
   const f = farmer(order.farmerId);
+  /**
+   * One pin: the stall you collect from (FR-013). Built on each render rather than memoised — it is a single fixed
+   * point on a page that barely re-renders, and React Compiler rejects manual memoisation of anything derived from the
+   * module-level order list.
+   */
+  const mapMarkers: MapMarker[] =
+    f && f.lat != null && f.lng != null
+      ? [
+          {
+            lat: f.lat,
+            lng: f.lng,
+            kind: 'stall',
+            label: f.stall,
+            selected: true,
+            popup: { title: f.stall, lines: [`Stall ${f.stallCode} · pickup ${f.pickup}`] },
+          },
+        ]
+      : [];
   const stepIndex = STEPS.indexOf(order.status);
   const [firstStep, lastStep] = [order.history[0], order.history[order.history.length - 1]];
   const editable = !locked && (order.status === 'placed' || order.status === 'accepted');
@@ -103,16 +122,23 @@ const CustomerOrderDetailPage = () => {
                 </dl>
                 <div className="flex flex-wrap gap-2">
                   {f && (
-                    <ButtonAnchor href={Helper.directionsUrl(f.lat, f.lng)} variant="secondary" size="sm">
-                      Directions
-                    </ButtonAnchor>
+                    <DirectionsButton
+                      to={{ lat: f.lat as number, lng: f.lng as number }}
+                      name={f.stall}
+                      variant="secondary"
+                    />
                   )}
                   <ButtonLink to={`/stalls/${order.farmerId}`} variant="ghost" size="sm">
                     Stall page
                   </ButtonLink>
                 </div>
               </Card>
-              <MapPlaceholder label={`Pickup point at stall ${f?.stallCode ?? ''}`} />
+              <MarketMap
+                label={`Pickup point at stall ${f?.stallCode ?? ''}`}
+                markers={mapMarkers}
+                className="min-h-60"
+                scrollWheelZoom={false}
+              />
             </div>
           </section>
 
