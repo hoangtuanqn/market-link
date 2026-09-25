@@ -1,6 +1,11 @@
 {
   "title": "Petani",
   "intro": "Setujui pengajuan sebelum lapak dapat memasang produk. Tangguhkan lapak untuk menyembunyikan produknya dan menghentikan pesanan baru; pesanan yang sedang berjalan selesai seperti biasa.",
+  "search": {
+    "label": "Cari petani",
+    "placeholder": "Lapak, narahubung, telepon",
+    "submit": "Cari"
+  },
   "tabsLabel": "Petani menurut status",
   "status": {
     "pending": "Menunggu persetujuan",
@@ -29,7 +34,6 @@
   "col": {
     "stall": "Lapak",
     "registered": "Terdaftar",
-    "contact": "Narahubung",
     "email": "Email"
   },
   "action": {
@@ -49,18 +53,21 @@
     "title": "Tolak {{stall}}?",
     "text": "Pemohon tetap memiliki akun pelanggan dan semua isinya. Mereka diberi tahu alasannya.",
     "reason": "Alasan yang akan dilihat petani",
-    "confirm": "Tolak pendaftaran"
-  },
-  "reason": {
-    "mismatch": "Data tidak cocok dengan lapak",
-    "full": "Pasar sudah penuh",
-    "unreachable": "Nomor kontak tidak bisa dihubungi",
-    "other": "Lainnya"
+    "confirm": "Tolak pendaftaran",
+    "placeholder": "Tulis apa yang harus diperbaiki agar lapak ini disetujui.",
+    "hint": "{{used}} dari {{max}} karakter. Pelamar membaca kalimat ini apa adanya.",
+    "required": "Tulis alasan yang akan dibaca pelamar.",
+    "tooLong": "Alasan maksimal {{max}} karakter."
   },
   "suspend": {
     "title": "Tangguhkan {{stall}}?",
     "text": "Semua produk disembunyikan dan pesanan baru tidak diterima. Pesanan yang sudah dibuat tetap berjalan agar pelanggan tidak kehilangan yang sudah mereka pesan.",
-    "confirm": "Tangguhkan lapak"
+    "confirm": "Tangguhkan lapak",
+    "reason": "Alasan yang akan dilihat petani",
+    "placeholder": "Tulis apa yang harus diperbaiki agar lapak bisa berjualan lagi.",
+    "hint": "{{used}} dari {{max}} karakter. Petani membaca kalimat ini apa adanya.",
+    "required": "Tulis alasan yang akan dibaca petani.",
+    "tooLong": "Alasan maksimal {{max}} karakter."
   },
   "toast": {
     "approved": "{{stall}} disetujui. Lapak sekarang bisa memasang produk.",
@@ -83,5 +90,6 @@
     "retry": "Coba lagi"
   },
   "caption_one": "{{count}} petani",
-  "caption_other": "{{count}} petani"
+  "caption_other": "{{count}} petani",
+  "showing": "Menampilkan {{from}}–{{to}} dari {{total}}"
 }

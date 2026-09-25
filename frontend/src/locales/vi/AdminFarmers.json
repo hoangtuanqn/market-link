@@ -1,6 +1,11 @@
 {
   "title": "Nhà vườn",
   "intro": "Duyệt đơn đăng ký trước khi sạp được đăng sản phẩm. Tạm ngưng một sạp để ẩn sản phẩm và dừng nhận đơn mới; các đơn đang chạy vẫn hoàn tất như bình thường.",
+  "search": {
+    "label": "Tìm Farmer",
+    "placeholder": "Tên sạp, người liên hệ, điện thoại",
+    "submit": "Tìm"
+  },
   "tabsLabel": "Nhà vườn theo trạng thái",
   "status": {
     "pending": "Chờ duyệt",
@@ -29,7 +34,6 @@
   "col": {
     "stall": "Sạp",
     "registered": "Ngày đăng ký",
-    "contact": "Liên hệ",
     "email": "Email"
   },
   "action": {
@@ -49,18 +53,21 @@
     "title": "Từ chối {{stall}}?",
     "text": "Người nộp đơn vẫn giữ tài khoản khách hàng và mọi thứ trong đó. Họ sẽ được báo lý do.",
     "reason": "Lý do nhà vườn sẽ thấy",
-    "confirm": "Từ chối đơn đăng ký"
-  },
-  "reason": {
-    "mismatch": "Thông tin không khớp với sạp",
-    "full": "Chợ đã đủ sạp",
-    "unreachable": "Không liên lạc được số điện thoại",
-    "other": "Khác"
+    "confirm": "Từ chối đơn đăng ký",
+    "placeholder": "Nói rõ cần sửa gì thì sạp này mới được duyệt.",
+    "hint": "{{used}} trên {{max}} ký tự. Người nộp đơn đọc đúng từng chữ này.",
+    "required": "Viết lý do mà người nộp đơn sẽ đọc.",
+    "tooLong": "Lý do không quá {{max}} ký tự."
   },
   "suspend": {
     "title": "Tạm ngưng {{stall}}?",
     "text": "Mọi sản phẩm bị ẩn và không nhận đơn mới. Các đơn đã đặt vẫn tiếp tục để khách không mất những gì họ đã đặt.",
-    "confirm": "Tạm ngưng sạp"
+    "confirm": "Tạm ngưng sạp",
+    "reason": "Lý do nhà vườn sẽ thấy",
+    "placeholder": "Nói rõ sạp phải sửa gì thì mới bán lại được.",
+    "hint": "{{used}} trên {{max}} ký tự. Farmer đọc đúng từng chữ này.",
+    "required": "Viết lý do mà Farmer sẽ đọc.",
+    "tooLong": "Lý do không quá {{max}} ký tự."
   },
   "toast": {
     "approved": "Đã duyệt {{stall}}. Sạp có thể đăng sản phẩm ngay bây giờ.",
@@ -83,5 +90,6 @@
     "retry": "Thử lại"
   },
   "caption_one": "{{count}} Farmer",
-  "caption_other": "{{count}} Farmer"
+  "caption_other": "{{count}} Farmer",
+  "showing": "Đang xem {{from}}–{{to}} trong {{total}}"
 }

@@ -1,6 +1,11 @@
 {
   "title": "Farmers",
   "intro": "Approve an application before the stall can list products. Suspend a stall to hide its products and stop new orders; its running orders finish as normal.",
+  "search": {
+    "label": "Search farmers",
+    "placeholder": "Stall, contact person, phone",
+    "submit": "Search"
+  },
   "tabsLabel": "Farmers by status",
   "status": {
     "pending": "Waiting for approval",
@@ -29,7 +34,6 @@
   "col": {
     "stall": "Stall",
     "registered": "Registered",
-    "contact": "Contact",
     "email": "Email"
   },
   "action": {
@@ -49,18 +53,21 @@
     "title": "Reject {{stall}}?",
     "text": "The applicant keeps their customer account and everything in it. They are told the reason.",
     "reason": "Reason the Farmer will see",
-    "confirm": "Reject registration"
-  },
-  "reason": {
-    "mismatch": "Details do not match the stall",
-    "full": "Market is full",
-    "unreachable": "Could not reach the contact number",
-    "other": "Other"
+    "confirm": "Reject registration",
+    "placeholder": "Say what has to change before this stall can be approved.",
+    "hint": "{{used}} of {{max}} characters. The applicant reads this word for word.",
+    "required": "Write the reason the applicant will see.",
+    "tooLong": "Keep the reason under {{max}} characters."
   },
   "suspend": {
     "title": "Suspend {{stall}}?",
     "text": "All products are hidden and no new orders are accepted. Orders already placed continue so customers do not lose what they booked.",
-    "confirm": "Suspend stall"
+    "confirm": "Suspend stall",
+    "reason": "Reason the Farmer will see",
+    "placeholder": "Say what the stall has to fix before it can sell again.",
+    "hint": "{{used}} of {{max}} characters. The farmer reads this word for word.",
+    "required": "Write the reason the farmer will see.",
+    "tooLong": "Keep the reason under {{max}} characters."
   },
   "toast": {
     "approved": "{{stall}} approved. The stall can list products now.",
@@ -83,5 +90,6 @@
     "retry": "Try again"
   },
   "caption_one": "{{count}} farmer",
-  "caption_other": "{{count}} farmers"
+  "caption_other": "{{count}} farmers",
+  "showing": "Showing {{from}}–{{to}} of {{total}}"
 }
