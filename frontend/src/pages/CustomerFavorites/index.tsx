@@ -46,7 +46,7 @@ const WishItem = ({ item, onRemove }: { item: WishProductItem; onRemove: () => v
           </Link>
         </b>
         <p className="text-small text-ink-muted mt-0.5">
-          <Link to="/stall" className="text-inherit no-underline hover:underline">
+          <Link to={`/stalls/${p.farmerId}`} className="text-inherit no-underline hover:underline">
             {p.stall}
           </Link>{' '}
           · {p.marketName}

@@ -27,6 +27,7 @@ import MarketsPage from './pages/Markets';
 import MarketDetailPage from './pages/MarketDetail';
 import ProductsPage from './pages/Products';
 import ProductDetailPage from './pages/ProductDetail';
+import StallProfilePage from './pages/StallProfile';
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="markets/:id" element={<MarketDetailPage />} />
           <Route path="products" element={<ProductsPage />} />
           <Route path="products/:id" element={<ProductDetailPage />} />
+          <Route path="stalls/:id" element={<StallProfilePage />} />
         </Route>
 
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
