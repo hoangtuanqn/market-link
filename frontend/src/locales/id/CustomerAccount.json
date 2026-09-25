@@ -119,5 +119,69 @@
   "crop": {
     "frame": "Pengaturan foto. Geser, atau gunakan tombol panah untuk memindahkan dan plus atau minus untuk memperbesar.",
     "zoom": "Perbesar"
+  },
+  "achievements": {
+    "title": "Pencapaian Anda",
+    "intro": "Dihitung dari pesanan yang Anda ambil di lapak. Hanya Anda yang melihat angka-angka ini.",
+    "loading": "Memuat pencapaian Anda…",
+    "loadFailed": "Tidak dapat memuat pencapaian Anda.",
+    "completed": "Pesanan yang diambil",
+    "cancelled": "Dibatalkan oleh Anda",
+    "declined": "Ditolak lapak",
+    "inProgress": "Sedang berjalan",
+    "spent": "Total belanja",
+    "rate": "Tingkat penyelesaian",
+    "rateNone": "—",
+    "nextTitle": "Menuju {{tier}}",
+    "ofGoal": "{{value}} dari {{goal}}",
+    "rateNeeded": "Anda juga perlu tingkat penyelesaian minimal {{rate}}%. Pesanan yang ditolak lapak tidak pernah merugikan Anda.",
+    "top": "Anda berada di tingkat tertinggi. Terima kasih sudah berbelanja di pasar.",
+    "youAreHere": "Tingkat Anda",
+    "perks": {
+      "bronze": "Bingkai perunggu di sekeliling foto Anda",
+      "silver": "Bingkai perak yang lebih tebal",
+      "gold": "Bingkai emas dengan bintang",
+      "diamond": "Bingkai berlian berkilau dengan permata"
+    },
+    "unavailable": {
+      "title": "Belum ada angka pesanan",
+      "text": "Tingkat dan angka Anda akan terisi sendiri begitu pesanan Anda tercatat."
+    },
+    "privacy": "Lapak dan pembeli lain melihat tingkat Anda di samping nama, tidak pernah angka-angka ini.",
+    "hero": {
+      "overline": "Keanggotaan Anda",
+      "line_other": "{{name}}, Anda sudah mengambil {{count}} pesanan dan membelanjakan {{amount}} di pasar.",
+      "welcome": "Selamat datang di pasar, {{name}}. Ambil pesanan pertama Anda untuk mulai menaiki tingkat.",
+      "since": "Anggota sejak {{date}}"
+    },
+    "titles": {
+      "bronze": "Baru di pasar",
+      "silver": "Wajah yang sudah dikenal",
+      "gold": "Langganan lapak",
+      "diamond": "Penjaga nyala pasar"
+    },
+    "yourPerksTitle": "Keuntungan Anda",
+    "yourPerks": {
+      "bronze": [
+        "Bingkai perunggu di sekeliling foto Anda, di menu dan di profil",
+        "Tingkat Anda tampil di samping nama pada ulasan dan pesan"
+      ],
+      "silver": [
+        "Bingkai perak yang lebih tebal di sekeliling foto Anda",
+        "Lapak melihat tingkat Perak di samping nama Anda pada pesanan dan pesan",
+        "Ulasan Anda membawa lencana tingkat Perak"
+      ],
+      "gold": [
+        "Bingkai emas dengan bintang di sudut foto Anda",
+        "Lapak melihat tingkat Emas di samping nama Anda pada pesanan dan pesan",
+        "Ulasan Anda membawa lencana tingkat Emas"
+      ],
+      "diamond": [
+        "Bingkai berlian berkilau dengan permata di sudut foto Anda",
+        "Lapak melihat tingkat Berlian di samping nama Anda pada pesanan dan pesan",
+        "Ulasan Anda membawa lencana tingkat Berlian",
+        "Kartu keanggotaan berkilau di profil Anda"
+      ]
+    }
   }
 }

@@ -18,6 +18,7 @@ import { farmer, marketName, products, reviewTags, reviewsForFarmer } from '@/da
 import { markets } from '@/data/home';
 import { dayList, dayName, formatClock, formatDate, upcoming } from '@/lib/format';
 import Notification from '@/utils/notification';
+import { demoTierOf } from '@/data/tiers';
 
 /** How the demo data spells a stall's selling days ("Sat, Sun"); used to match, never shown. */
 const DOW_ABBR: Record<number, string> = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' };
@@ -270,6 +271,7 @@ const StallProfilePage = () => {
               <ReviewCard
                 key={r.id}
                 author={r.author}
+                authorTier={demoTierOf(r.author)}
                 date={r.date}
                 target={r.target}
                 rating={r.rating}

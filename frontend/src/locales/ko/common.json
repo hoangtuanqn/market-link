@@ -382,5 +382,12 @@
     "noneNote": "목적지만 채운 상태로 OpenStreetMap을 엽니다.",
     "privacy": "길찾기는 새 탭의 openstreetmap.org에서 열립니다. MarketLink는 위치를 추적하지 않습니다.",
     "open": "길찾기 열기"
+  },
+  "tier": {
+    "bronze": "브론즈",
+    "silver": "실버",
+    "gold": "골드",
+    "diamond": "다이아몬드",
+    "badge": "{{tier}} 등급"
   }
 }

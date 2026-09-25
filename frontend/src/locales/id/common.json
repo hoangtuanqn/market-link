@@ -382,5 +382,12 @@
     "noneNote": "Membuka OpenStreetMap dengan tujuan saja yang terisi.",
     "privacy": "Petunjuk arah dibuka di openstreetmap.org di tab baru. MarketLink tidak melacak lokasi Anda.",
     "open": "Buka petunjuk arah"
+  },
+  "tier": {
+    "bronze": "Perunggu",
+    "silver": "Perak",
+    "gold": "Emas",
+    "diamond": "Berlian",
+    "badge": "Tingkat {{tier}}"
   }
 }

@@ -382,5 +382,12 @@
     "noneNote": "Abre OpenStreetMap solo con el destino rellenado.",
     "privacy": "Las indicaciones se abren en openstreetmap.org en una pestaña nueva. MarketLink no rastrea dónde estás.",
     "open": "Abrir indicaciones"
+  },
+  "tier": {
+    "bronze": "Bronce",
+    "silver": "Plata",
+    "gold": "Oro",
+    "diamond": "Diamante",
+    "badge": "Nivel {{tier}}"
   }
 }

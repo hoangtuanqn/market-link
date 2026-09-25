@@ -382,5 +382,12 @@
     "noneNote": "เปิด OpenStreetMap โดยกรอกเฉพาะปลายทาง",
     "privacy": "เส้นทางจะเปิดใน openstreetmap.org ในแท็บใหม่ MarketLink ไม่ติดตามตำแหน่งของคุณ",
     "open": "เปิดเส้นทาง"
+  },
+  "tier": {
+    "bronze": "บรอนซ์",
+    "silver": "ซิลเวอร์",
+    "gold": "โกลด์",
+    "diamond": "ไดมอนด์",
+    "badge": "ระดับ {{tier}}"
   }
 }

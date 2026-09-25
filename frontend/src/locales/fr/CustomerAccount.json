@@ -119,5 +119,70 @@
   "crop": {
     "frame": "Cadrage de la photo. Faites glisser, ou utilisez les flèches pour la déplacer et plus ou moins pour zoomer.",
     "zoom": "Zoom"
+  },
+  "achievements": {
+    "title": "Vos résultats",
+    "intro": "Comptés à partir des commandes que vous avez retirées aux stands. Vous seul voyez ces chiffres.",
+    "loading": "Chargement de vos résultats…",
+    "loadFailed": "Impossible de charger vos résultats.",
+    "completed": "Commandes retirées",
+    "cancelled": "Annulées par vous",
+    "declined": "Refusées par le stand",
+    "inProgress": "En cours",
+    "spent": "Total dépensé",
+    "rate": "Taux de réussite",
+    "rateNone": "—",
+    "nextTitle": "En route vers {{tier}}",
+    "ofGoal": "{{value}} sur {{goal}}",
+    "rateNeeded": "Il vous faut aussi un taux de réussite d'au moins {{rate}} %. Les commandes refusées par le stand ne comptent jamais contre vous.",
+    "top": "Vous êtes au niveau le plus élevé. Merci de faire vos courses au marché.",
+    "youAreHere": "Votre niveau",
+    "perks": {
+      "bronze": "Cadre bronze autour de votre photo",
+      "silver": "Un cadre argent plus épais",
+      "gold": "Cadre or avec une étoile",
+      "diamond": "Cadre diamant scintillant avec une pierre"
+    },
+    "unavailable": {
+      "title": "Pas encore de chiffres",
+      "text": "Votre niveau et vos chiffres se remplissent tout seuls dès que vos commandes sont enregistrées."
+    },
+    "privacy": "Les stands et les autres acheteurs voient votre niveau à côté de votre nom, jamais ces chiffres.",
+    "hero": {
+      "overline": "Votre adhésion",
+      "line_one": "{{name}}, vous avez retiré {{count}} commande et dépensé {{amount}} au marché.",
+      "line_other": "{{name}}, vous avez retiré {{count}} commandes et dépensé {{amount}} au marché.",
+      "welcome": "Bienvenue au marché, {{name}}. Retirez vos premières commandes pour grimper les niveaux.",
+      "since": "Membre depuis {{date}}"
+    },
+    "titles": {
+      "bronze": "Nouveau au marché",
+      "silver": "Un visage familier",
+      "gold": "Un habitué des stands",
+      "diamond": "Gardien du feu du marché"
+    },
+    "yourPerksTitle": "Vos avantages",
+    "yourPerks": {
+      "bronze": [
+        "Un cadre bronze autour de votre photo, dans le menu et sur votre profil",
+        "Votre niveau à côté de votre nom sur les avis et dans les messages"
+      ],
+      "silver": [
+        "Un cadre argent plus épais autour de votre photo",
+        "Les stands voient le niveau Argent à côté de votre nom sur les commandes et dans les messages",
+        "Vos avis portent le badge du niveau Argent"
+      ],
+      "gold": [
+        "Un cadre or avec une étoile au coin de votre photo",
+        "Les stands voient le niveau Or à côté de votre nom sur les commandes et dans les messages",
+        "Vos avis portent le badge du niveau Or"
+      ],
+      "diamond": [
+        "Un cadre diamant scintillant avec une pierre au coin de votre photo",
+        "Les stands voient le niveau Diamant à côté de votre nom sur les commandes et dans les messages",
+        "Vos avis portent le badge du niveau Diamant",
+        "Une carte de membre étincelante sur votre profil"
+      ]
+    }
   }
 }

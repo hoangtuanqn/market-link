@@ -382,5 +382,12 @@
     "noneNote": "Öffnet OpenStreetMap, nur mit dem Ziel ausgefüllt.",
     "privacy": "Die Route öffnet sich auf openstreetmap.org in einem neuen Tab. MarketLink verfolgt Ihren Standort nicht.",
     "open": "Route öffnen"
+  },
+  "tier": {
+    "bronze": "Bronze",
+    "silver": "Silber",
+    "gold": "Gold",
+    "diamond": "Diamant",
+    "badge": "Stufe {{tier}}"
   }
 }

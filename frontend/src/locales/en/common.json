@@ -382,5 +382,12 @@
     "noneNote": "Opens OpenStreetMap with only the destination filled in.",
     "privacy": "Directions open on openstreetmap.org in a new tab. MarketLink does not track where you are.",
     "open": "Open directions"
+  },
+  "tier": {
+    "bronze": "Bronze",
+    "silver": "Silver",
+    "gold": "Gold",
+    "diamond": "Diamond",
+    "badge": "{{tier}} tier"
   }
 }

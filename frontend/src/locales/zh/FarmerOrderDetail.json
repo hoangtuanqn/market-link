@@ -57,6 +57,7 @@
   "customer": {
     "title": "顾客",
     "name": "姓名",
+    "tier": "等级",
     "phone": "电话",
     "ordersWithYou": "在你这里的订单",
     "orders_one": "{{count}} 个订单",

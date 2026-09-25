@@ -57,6 +57,7 @@
   "customer": {
     "title": "고객",
     "name": "이름",
+    "tier": "등급",
     "phone": "전화",
     "ordersWithYou": "내 매장 주문",
     "orders_one": "주문 {{count}}건",

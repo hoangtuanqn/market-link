@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { CUSTOMER_NAV, GUEST_NAV, type NavItem } from '@/constants/nav';
 import { BellIcon, CartIcon, ChatIcon, MenuIcon, SearchIcon } from '@/components/icons';
 import Logo from '@/components/Logo';
+import type { Tier } from '@/types/achievement.types';
 import { ButtonLink } from '@/components/ui/button';
 import Helper from '@/utils/helper';
 import MenuMobile from './MenuMobile';
@@ -23,6 +24,8 @@ type HeaderProps = {
   userName?: string;
   userEmail?: string;
   avatarUrl?: string;
+  /** Hạng thành tích của chính mình: viền quanh ảnh trên header và drawer. */
+  tier?: Tier;
   settingsTo?: string;
   /** Hộp thư theo vai: Customer /messages, Farmer /farmer/messages. */
   messagesTo?: string;
@@ -35,6 +38,7 @@ const Header = ({
   userName = '',
   userEmail,
   avatarUrl,
+  tier,
   settingsTo = '/settings',
   messagesTo = '/messages',
   cartCount = 0,
@@ -113,6 +117,7 @@ const Header = ({
                 name={userName}
                 email={userEmail}
                 avatarUrl={avatarUrl}
+                tier={tier}
                 settingsTo={settingsTo}
                 onSignOut={logout}
               />
@@ -137,7 +142,7 @@ const Header = ({
       {menuOpen && (
         <MenuMobile
           items={drawerItems}
-          account={signedIn ? { name: userName, email: userEmail, avatarUrl } : undefined}
+          account={signedIn ? { name: userName, email: userEmail, avatarUrl, tier } : undefined}
           onClose={() => setMenuOpen(false)}
           onSignOut={signedIn ? logout : undefined}
         />

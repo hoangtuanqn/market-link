@@ -57,6 +57,7 @@
   "customer": {
     "title": "ลูกค้า",
     "name": "ชื่อ",
+    "tier": "ระดับ",
     "phone": "โทรศัพท์",
     "ordersWithYou": "คำสั่งซื้อกับคุณ",
     "orders_one": "{{count}} คำสั่งซื้อ",

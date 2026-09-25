@@ -382,5 +382,12 @@
     "noneNote": "目的地だけを入力した状態で OpenStreetMap を開きます。",
     "privacy": "経路は新しいタブの openstreetmap.org で開きます。MarketLink はあなたの居場所を追跡しません。",
     "open": "経路を開く"
+  },
+  "tier": {
+    "bronze": "ブロンズ",
+    "silver": "シルバー",
+    "gold": "ゴールド",
+    "diamond": "ダイヤモンド",
+    "badge": "{{tier}} ランク"
   }
 }

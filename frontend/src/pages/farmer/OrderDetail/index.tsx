@@ -12,6 +12,8 @@ import { farmerOrderTotal, farmerOrders, type FarmerOrderLine } from '@/data/far
 import { perUnit, units, vnd } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Notification from '@/utils/notification';
+import TierBadge from '@/components/TierBadge';
+import { demoTierOf } from '@/data/tiers';
 
 const STEP_PIPELINE: OrderStatus[] = ['placed', 'accepted', 'ready', 'completed'];
 const DECLINE_REASONS = [
@@ -195,6 +197,14 @@ const FarmerOrderDetailPage = () => {
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
               <dt className="text-ink-muted">{t('customer.name')}</dt>
               <dd className="m-0">{order.who}</dd>
+              {demoTierOf(order.who) && (
+                <>
+                  <dt className="text-ink-muted">{t('customer.tier')}</dt>
+                  <dd className="m-0">
+                    <TierBadge tier={demoTierOf(order.who)!} />
+                  </dd>
+                </>
+              )}
               <dt className="text-ink-muted">{t('customer.phone')}</dt>
               <dd className="m-0">{order.phone}</dd>
               <dt className="text-ink-muted">{t('customer.ordersWithYou')}</dt>

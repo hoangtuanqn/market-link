@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import useLogout from '@/hooks/useLogout';
+import AchievementsCard from './AchievementsCard';
 import AvatarCard from './AvatarCard';
 import PasswordCard from './PasswordCard';
 import ProfileForm from './ProfileForm';
@@ -25,6 +26,8 @@ const CustomerAccountPage = () => {
         <div aria-hidden="true" className="border-line border-t" />
         <ProfileForm />
       </Card>
+
+      <AchievementsCard />
 
       <PasswordCard />
 

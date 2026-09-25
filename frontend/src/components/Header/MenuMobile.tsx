@@ -3,11 +3,12 @@ import { NavLink } from 'react-router';
 import Avatar from '@/components/Avatar';
 import { Button } from '@/components/ui/button';
 import type { NavItem } from '@/constants/nav';
+import type { Tier } from '@/types/achievement.types';
 
 type MenuMobileProps = {
   items: NavItem[];
   /** Người đang đăng nhập, hiện ở đầu drawer. */
-  account?: { name: string; email?: string; avatarUrl?: string };
+  account?: { name: string; email?: string; avatarUrl?: string; tier?: Tier };
   onClose: () => void;
   onSignOut?: () => void;
 };
@@ -28,7 +29,15 @@ const MenuMobile = ({ items, account, onClose, onSignOut }: MenuMobileProps) => 
         </Button>
         {account && (
           <div className="border-board-muted mb-1 flex items-center gap-3 border-b px-3 pb-4">
-            <Avatar name={account.name} email={account.email} url={account.avatarUrl} size={44} tone="accent" />
+            <Avatar
+              name={account.name}
+              email={account.email}
+              url={account.avatarUrl}
+              size={44}
+              tone="accent"
+              tier={account.tier}
+              className="[--tier-gap:var(--board)]"
+            />
             <div className="min-w-0">
               <p className="truncate text-[17px] font-bold">{account.name}</p>
               {account.email && <p className="text-small text-board-muted truncate">{account.email}</p>}

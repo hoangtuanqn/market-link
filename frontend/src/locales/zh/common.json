@@ -382,5 +382,12 @@
     "noneNote": "打开 OpenStreetMap，只填好目的地。",
     "privacy": "路线会在新标签页的 openstreetmap.org 中打开。MarketLink 不会追踪你的位置。",
     "open": "打开路线"
+  },
+  "tier": {
+    "bronze": "青铜",
+    "silver": "白银",
+    "gold": "黄金",
+    "diamond": "钻石",
+    "badge": "{{tier}} 等级"
   }
 }

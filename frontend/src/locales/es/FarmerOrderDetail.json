@@ -57,6 +57,7 @@
   "customer": {
     "title": "Cliente",
     "name": "Nombre",
+    "tier": "Nivel",
     "phone": "Teléfono",
     "ordersWithYou": "Pedidos contigo",
     "orders_one": "{{count}} pedido",
