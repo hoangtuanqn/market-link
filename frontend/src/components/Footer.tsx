@@ -1,10 +1,19 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { USER_ROLE } from '@/constants/enums';
+import useSession from '@/hooks/useSession';
+import type common from '@/locales/en/common.json';
 import LanguageSwitcher from './LanguageSwitcher';
 import Logo from './Logo';
 
-/** Keys under `footer.` in common.json; the text is looked up when rendering. */
-const COLUMNS = [
+type FooterKey = keyof (typeof common)['footer'];
+type FooterLink = { label: FooterKey; to: string; show?: 'farmer' | 'notFarmer' };
+
+/**
+ * Keys under `footer.` in common.json; the text is looked up when rendering. Only a Farmer has pre-orders to handle;
+ * everyone else is offered the way to become one.
+ */
+const COLUMNS: { title: FooterKey; links: FooterLink[] }[] = [
   {
     title: 'shop',
     links: [
@@ -17,8 +26,8 @@ const COLUMNS = [
   {
     title: 'sell',
     links: [
-      { label: 'registerFarmer', to: '/register/farmer' },
-      { label: 'handlingPreOrders', to: '/farmer/orders' },
+      { label: 'registerFarmer', to: '/register/farmer', show: 'notFarmer' },
+      { label: 'handlingPreOrders', to: '/farmer/orders', show: 'farmer' },
       { label: 'stallGuidelines', to: '/about' },
     ],
   },
@@ -30,10 +39,13 @@ const COLUMNS = [
       { label: 'feedback', to: '/feedback' },
     ],
   },
-] as const;
+];
 
 const Footer = () => {
   const { t } = useTranslation();
+  const { user } = useSession();
+  const isFarmer = user?.role === USER_ROLE.FARMER;
+  const visible = (link: FooterLink) => !link.show || (link.show === 'farmer' ? isFarmer : !isFarmer);
   return (
     <footer className="bg-board text-on-board">
       <div className="mx-auto grid max-w-300 grid-cols-2 gap-8 px-4 pt-8 pb-4 md:grid-cols-[1.4fr_repeat(3,1fr)] md:px-6 md:pt-12 md:pb-6">
@@ -46,7 +58,7 @@ const Footer = () => {
           <div key={col.title}>
             <h2 className="text-overline text-board-muted mb-3 uppercase">{t(`footer.${col.title}`)}</h2>
             <ul className="flex flex-col gap-2">
-              {col.links.map((link) => (
+              {col.links.filter(visible).map((link) => (
                 <li key={link.label}>
                   <Link
                     to={link.to}

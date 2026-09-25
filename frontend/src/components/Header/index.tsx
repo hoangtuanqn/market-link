@@ -50,7 +50,7 @@ const Header = ({
     <>
       <header className="bg-board text-on-board sticky top-0 z-40">
         <div className="mx-auto flex min-h-16 max-w-300 items-center gap-2 px-4 md:gap-6 md:px-6">
-          <Logo to={signedIn ? '/dashboard' : '/'} />
+          <Logo to="/" />
 
           <nav aria-label={t('header.main')} className="hidden md:block">
             <ul className="flex gap-1">
