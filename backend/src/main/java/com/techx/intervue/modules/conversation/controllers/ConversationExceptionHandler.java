@@ -1,13 +1,16 @@
 package com.techx.intervue.modules.conversation.controllers;
 
 import com.techx.intervue.modules.conversation.exceptions.AccountRestrictedException;
+import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
+import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -25,10 +28,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 /** Mã HTTP theo spec mục 6.3. Chỉ áp cho ConversationController (repo chưa có handler chung). */
 @Slf4j
-@RestControllerAdvice(assignableTypes = ConversationController.class)
+@RestControllerAdvice(assignableTypes = {ConversationController.class, AttachmentController.class})
 public class ConversationExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
@@ -102,6 +106,47 @@ public class ConversationExceptionHandler {
     @ExceptionHandler(RateLimitedException.class)
     ResponseEntity<ApiResource<Void>> tooManyRequests(RateLimitedException e) {
         return error(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMITED", e.getMessage(), List.of());
+    }
+
+    /** Spec §6.3 — 413. */
+    @ExceptionHandler(AttachmentTooLargeException.class)
+    ResponseEntity<ApiResource<Void>> tooLarge(AttachmentTooLargeException e) {
+        return error(
+                HttpStatus.PAYLOAD_TOO_LARGE, "ATTACHMENT_TOO_LARGE", e.getMessage(), List.of());
+    }
+
+    /** Trần multipart của Tomcat chặn trước khi vào service — vẫn phải 413, không phải 500. */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    ResponseEntity<ApiResource<Void>> multipartTooLarge(MaxUploadSizeExceededException e) {
+        return error(
+                HttpStatus.PAYLOAD_TOO_LARGE,
+                "ATTACHMENT_TOO_LARGE",
+                "The photo must be 5 MB or smaller.",
+                List.of());
+    }
+
+    /** Spec §6.3 — 415. Kết luận từ magic bytes, không từ Content-Type client gửi. */
+    @ExceptionHandler(UnsupportedImageTypeException.class)
+    ResponseEntity<ApiResource<Void>> unsupportedType(UnsupportedImageTypeException e) {
+        return error(
+                HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                "UNSUPPORTED_IMAGE_TYPE",
+                e.getMessage(),
+                List.of());
+    }
+
+    /** ImageProbe ném cái này khi ảnh quá lớn về số điểm ảnh — 400 kèm tên trường. */
+    @ExceptionHandler(InvalidFieldException.class)
+    ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(
+                        FieldErrorResource.builder()
+                                .field(e.getField())
+                                .message(e.getMessage())
+                                .build()));
     }
 
     /** Hai request mở cùng một cặp đúng lúc → UNIQUE chặn một cái; client gọi lại là có thread. */
