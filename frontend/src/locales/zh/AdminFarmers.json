@@ -1,0 +1,79 @@
+{
+  "title": "农户",
+  "intro": "摊位需先通过申请审核才能上架商品。大多数申请来自已经在这里购物的账户，所以每份申请的照片旁都附有申请人的订单记录。暂停摊位会隐藏其商品并停止接收新订单；进行中的订单照常完成。",
+  "search": {
+    "label": "搜索农户",
+    "placeholder": "摊位、联系人、电话",
+    "submit": "搜索"
+  },
+  "tabsLabel": "按状态查看农户",
+  "status": {
+    "pending": "待审核",
+    "approved": "已通过",
+    "suspended": "已暂停",
+    "rejected": "已拒绝"
+  },
+  "empty": {
+    "pending": {
+      "title": "没有待审核的申请",
+      "text": "新的农户申请会先到这里审核，通过后才能上架商品。"
+    },
+    "approved": {
+      "title": "没有已通过的摊位",
+      "text": "通过一份申请后，摊位会出现在这里，顾客也能看到。"
+    },
+    "suspended": {
+      "title": "没有已暂停的摊位",
+      "text": "已暂停的摊位对顾客隐藏，但会完成已有的订单。"
+    },
+    "rejected": {
+      "title": "没有被拒绝的申请",
+      "text": "被拒绝的农户保留账户，并可以得知原因。"
+    }
+  },
+  "col": {
+    "stall": "摊位",
+    "markets": "市集",
+    "registered": "注册日期",
+    "products": "商品",
+    "rating": "评分"
+  },
+  "reviews_one": "{{count}} 条评价",
+  "reviews_other": "{{count}} 条评价",
+  "action": {
+    "approve": "通过",
+    "reject": "拒绝",
+    "view": "查看",
+    "suspend": "暂停",
+    "reinstate": "恢复"
+  },
+  "notYet": "先不",
+  "approve": {
+    "title": "通过 {{stall}} 的申请？",
+    "text": "摊位会立即对顾客可见并可以上架商品。系统会通知该农户。",
+    "confirm": "通过摊位"
+  },
+  "reject": {
+    "title": "拒绝 {{stall}} 的申请？",
+    "text": "该农户仍可登录，但不能上架商品。",
+    "reason": "农户会看到的原因",
+    "confirm": "拒绝申请"
+  },
+  "reason": {
+    "mismatch": "资料与摊位不符",
+    "full": "市集已满",
+    "unreachable": "联系电话无法接通",
+    "other": "其他"
+  },
+  "suspend": {
+    "title": "暂停 {{stall}}？",
+    "text": "所有商品都会隐藏，也不再接收新订单。已下的订单会继续，顾客不会失去已预订的东西。",
+    "confirm": "暂停摊位"
+  },
+  "toast": {
+    "approved": "已通过 {{stall}}。摊位现在可以上架商品了。",
+    "rejected": "已拒绝 {{stall}}。对方保留账户。",
+    "suspended": "已暂停 {{stall}}。进行中的订单照常完成。",
+    "reinstated": "已恢复 {{stall}}。商品重新可见。"
+  }
+}

@@ -1,9 +1,10 @@
+import i18n from '@/i18n';
 export type BarRow = { label: string; value: number; suffix?: string };
 
 type BarListProps = { rows: BarRow[]; format?: (v: number) => string };
 
 /** Horizontal bar chart, one measure across categories (design system `.pt-bars`). */
-export function BarList({ rows, format = (v) => v.toLocaleString('en-US') }: BarListProps) {
+export function BarList({ rows, format = (v) => v.toLocaleString(i18n.language) }: BarListProps) {
   const max = Math.max(...rows.map((r) => r.value));
   return (
     <ul className="m-0 flex flex-col gap-3 p-0">

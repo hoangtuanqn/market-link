@@ -1,4 +1,5 @@
 import { useRef, useState, type ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import AuthApi from '@/api-requests/auth.requests';
 import Avatar from '@/components/Avatar';
 import { Button } from '@/components/ui/button';
@@ -16,6 +17,7 @@ import PhotoDialog, { type PhotoSource } from './photo/PhotoDialog';
  * (docs/superpowers/specs/2026-09-25-avatar-user-menu-design.md), LEAD xác nhận.
  */
 const AvatarCard = () => {
+  const { t } = useTranslation('CustomerAccount');
   const { user } = useSession();
   const inputRef = useRef<HTMLInputElement>(null);
   const [source, setSource] = useState<PhotoSource | null>(null);
@@ -39,8 +41,8 @@ const AvatarCard = () => {
       setSource({ kind: 'image', image });
     } catch (error) {
       Notification.error({
-        title: 'Photo not used',
-        text: error instanceof PhotoError ? error.message : 'This file is not a photo we can read.',
+        title: t('photo.notUsed'),
+        text: t(`photoErrors.${error instanceof PhotoError ? error.code : 'unreadable'}`, { mb: 15 }),
       });
     }
   };
@@ -56,9 +58,9 @@ const AvatarCard = () => {
     try {
       const response = await AuthApi.removeAvatar();
       Session.updateUser({ avatarUrl: response.data.avatarUrl });
-      Notification.success({ text: response.message || 'Your photo is removed.' });
+      Notification.success({ text: response.message || t('photo.removed') });
     } catch (error) {
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not remove your photo. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('photo.removeFailed')) });
     } finally {
       setRemoving(false);
     }
@@ -72,22 +74,20 @@ const AvatarCard = () => {
       <div className="flex min-w-0 flex-1 flex-col gap-3">
         <div>
           <h2 id="photo-title" className="text-h3">
-            Profile photo
+            {t('photo.title')}
           </h2>
-          <p className="text-small text-ink-muted">
-            Shown in the menu and to stalls on your orders. JPEG, PNG or a photo from your camera.
-          </p>
+          <p className="text-small text-ink-muted">{t('photo.intro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button size="sm" onClick={pickFile}>
-            Upload photo
+            {t('photo.upload')}
           </Button>
           <Button size="sm" variant="secondary" onClick={() => setSource({ kind: 'camera' })}>
-            Take photo
+            {t('photo.take')}
           </Button>
           {user.avatarUrl && (
             <Button size="sm" variant="ghost" onClick={remove} disabled={removing}>
-              {removing ? 'Removing…' : 'Remove photo'}
+              {removing ? t('photo.removing') : t('photo.remove')}
             </Button>
           )}
         </div>

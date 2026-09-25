@@ -1,0 +1,92 @@
+{
+  "tabs": {
+    "new": "Warten auf Freigabe",
+    "acc": "Angenommen",
+    "ready": "Bereit",
+    "done": "Abgeschlossen"
+  },
+  "decline": {
+    "reasons": {
+      "stock": "Nicht genug Bestand",
+      "day": "An diesem Tag kein Verkauf",
+      "time": "Diese Abholzeit ist nicht möglich",
+      "other": "Sonstiges"
+    },
+    "title": "Bestellung {{code}} ablehnen?",
+    "keep": "Bestellung behalten",
+    "confirm": "Bestellung ablehnen",
+    "text": "Der Kunde wird sofort informiert, und die Artikel gehen zurück in Ihren Bestand.",
+    "reason": "Begründung, die der Kunde sieht"
+  },
+  "col": {
+    "order": "Bestellung",
+    "customer": "Kunde",
+    "pickup": "Abholung",
+    "items": "Artikel",
+    "total": "Summe",
+    "status": "Status"
+  },
+  "toast": {
+    "acceptedTitle": "Bestellung angenommen",
+    "acceptedText": "Bestellung {{code}} angenommen. {{who}} wurde informiert.",
+    "readyTitle": "Bestellung bereit",
+    "readyText": "Bestellung {{code}} als bereit markiert.",
+    "completedTitle": "Bestellung abgeschlossen",
+    "completedText": "Bestellung {{code}} abgeschlossen.",
+    "declinedTitle": "Bestellung abgelehnt",
+    "declinedText": "Bestellung {{code}} abgelehnt. Der Bestand ist wieder verfügbar."
+  },
+  "actions": {
+    "accept": "Annehmen",
+    "decline": "Ablehnen",
+    "ready": "Als bereit markieren",
+    "complete": "Als abgeschlossen markieren",
+    "view": "Ansehen"
+  },
+  "captions": {
+    "new": "Warten auf Freigabe · {{sat}} und {{sun}}",
+    "ready": "Bereit zur Abholung"
+  },
+  "overline": "Ihr Stand bei {{market}} · nächster Markttag {{day}}",
+  "greeting": "Guten Morgen, {{name}}",
+  "applyTemplate": "Wochenvorlage anwenden",
+  "addProduct": "Produkt hinzufügen",
+  "banner": {
+    "title_one": "{{count}} Bestellung wartet auf Sie. {{closing}} davon schließen morgen um {{time}}.",
+    "title_other": "{{count}} Bestellungen warten auf Sie. {{closing}} davon schließen morgen um {{time}}.",
+    "text": "Nicht freigegebene Bestellungen halten weiterhin Bestand. Nehmen Sie sie vor dem Bestellschluss an oder lehnen Sie sie ab, damit Kunden planen können."
+  },
+  "kpi": {
+    "orders": "Bestellungen gesamt",
+    "ordersNote_one": "{{count}} diese Woche",
+    "ordersNote_other": "{{count}} diese Woche",
+    "vsAugust": "ggü. August",
+    "openHistory": "Verkaufsverlauf öffnen",
+    "awaitingNote_one": "<b>{{count}}</b> schließt um {{time}} am {{date}}",
+    "awaitingNote_other": "<b>{{count}}</b> schließen um {{time}} am {{date}}",
+    "vsThursday": "ggü. einem normalen Donnerstag",
+    "openIncoming": "Eingehende Bestellungen öffnen",
+    "revenue": "Umsatz im September",
+    "revenueNote": "₫, aus abgeschlossenen Bestellungen, am Stand bezahlt",
+    "best": "Bestseller",
+    "bestNote": "{{qty}} in diesem Monat",
+    "openProducts": "Produkte öffnen",
+    "note": "September bisher, im Vergleich zum August. Jede Kachel öffnet die Ansicht hinter ihrer Zahl."
+  },
+  "incoming": {
+    "title": "Eingehende Bestellungen",
+    "all": "Alle Bestellungen und Filter",
+    "note": "Neue Bestellungen bleiben hervorgehoben, bis Sie sie öffnen."
+  },
+  "stock": {
+    "title": "Bestand für {{day}}",
+    "link": "Bestand dieser Woche",
+    "note": "Reserviert heißt, eine Bestellung hält diese Menge. Sie wird abgezogen, sobald ein Kunde bestellt."
+  },
+  "best": {
+    "title": "Bestseller",
+    "link": "Verkaufsverlauf",
+    "note": "Im September verkauft, jeweils in der eigenen Einheit"
+  },
+  "protoNote": "Die Seitenleiste und die Kopfzeile darüber sind gegenüber dem Prototyp neu."
+}

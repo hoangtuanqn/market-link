@@ -1,0 +1,9 @@
+{
+  "overline": "Khu vực admin",
+  "hello": "Xin chào, {{name}}",
+  "fallbackName": "admin",
+  "empty": {
+    "title": "Bảng điều khiển đang được xây dựng",
+    "text": "Tổng số nhà vườn, khách hàng, chợ và đơn hàng sẽ hiện ở đây khi bảng điều khiển admin hoàn thành."
+  }
+}

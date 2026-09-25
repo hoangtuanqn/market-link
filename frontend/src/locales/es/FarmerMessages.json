@@ -1,0 +1,37 @@
+{
+  "title": "Mensajes",
+  "intro": "Preguntas de los clientes sobre el stock de esta semana y sus horas de recogida. Responde antes de la hora límite para que aún puedan cambiar el pedido ellos mismos.",
+  "srs": {
+    "title": "La mensajería no está en el SRS.",
+    "text": "Pide al LEAD un nuevo requisito antes de construirla. Esta pantalla existe para que el equipo valore si merece las horas."
+  },
+  "conversations": "Conversaciones",
+  "unanswered_one": "{{count}} sin responder",
+  "unanswered_other": "{{count}} sin responder",
+  "time": {
+    "yesterday": "Ayer",
+    "now": "ahora"
+  },
+  "note": {
+    "orders_one": "{{count}} pedido contigo",
+    "orders_other": "{{count}} pedidos contigo",
+    "withCollected": "{{orders}}, {{collected}} recogido(s)"
+  },
+  "conversationWith": "Conversación con {{name}}",
+  "openOrder": "Abrir pedido {{code}}",
+  "you": "Tú",
+  "orderRef": {
+    "title": "Pedido {{code}} · {{name}}",
+    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · cierra a las {{cutoff}} del {{cutoffDate}}"
+  },
+  "items_one": "{{count}} artículo",
+  "items_other": "{{count}} artículos",
+  "replyTo": "Responder a {{name}}",
+  "placeholder": "Responde sobre el stock o la hora de recogida",
+  "send": "Enviar",
+  "notOrder": {
+    "title": "Un mensaje no cambia el pedido",
+    "text": "Acordar un cambio aquí es solo la mitad. El cliente edita el pedido, vuelve a ti como Realizado y lo aceptas de nuevo. Así el stock y la franja de recogida siguen siendo correctos.",
+    "link": "Ir a pedidos entrantes"
+  }
+}

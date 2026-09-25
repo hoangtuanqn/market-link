@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Banner } from '@/components/ui/banner';
 
 type CameraStepProps = {
@@ -6,27 +7,20 @@ type CameraStepProps = {
   onReady: (video: HTMLVideoElement | null) => void;
 };
 
-type CameraError = { title: string; text: string };
+/** Why the camera is not showing; the step shows `CustomerAccount:camera.<code>.title / .text`. */
+type CameraError = 'blocked' | 'notFound' | 'busy' | 'failed' | 'insecure';
 
 const cameraError = (error: unknown): CameraError => {
   const name = error instanceof DOMException ? error.name : '';
-  if (name === 'NotAllowedError' || name === 'SecurityError') {
-    return {
-      title: 'Camera access is blocked.',
-      text: 'Allow the camera for this site in your browser settings, or upload a photo instead.',
-    };
-  }
-  if (name === 'NotFoundError' || name === 'OverconstrainedError') {
-    return { title: 'No camera was found.', text: 'Plug one in, or upload a photo instead.' };
-  }
-  if (name === 'NotReadableError') {
-    return { title: 'The camera is busy.', text: 'Close other apps using it and try again, or upload a photo.' };
-  }
-  return { title: 'The camera could not start.', text: 'Try again, or upload a photo instead.' };
+  if (name === 'NotAllowedError' || name === 'SecurityError') return 'blocked';
+  if (name === 'NotFoundError' || name === 'OverconstrainedError') return 'notFound';
+  if (name === 'NotReadableError') return 'busy';
+  return 'failed';
 };
 
 /** Xem trước camera trước (lật như gương cho dễ canh), tắt camera ngay khi rời bước này. */
 const CameraStep = ({ onReady }: CameraStepProps) => {
+  const { t } = useTranslation('CustomerAccount');
   const videoRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState<CameraError | null>(null);
   const [starting, setStarting] = useState(true);
@@ -38,10 +32,7 @@ const CameraStep = ({ onReady }: CameraStepProps) => {
     // getUserMedia chỉ có trên https hoặc localhost
     if (!navigator.mediaDevices?.getUserMedia) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- trình duyệt không hỗ trợ, báo ngay
-      setError({
-        title: 'This browser cannot open the camera here.',
-        text: 'The camera needs a secure (https) page. Upload a photo instead.',
-      });
+      setError('insecure');
       setStarting(false);
       return;
     }
@@ -76,8 +67,8 @@ const CameraStep = ({ onReady }: CameraStepProps) => {
 
   if (error) {
     return (
-      <Banner variant="warning" title={error.title}>
-        {error.text}
+      <Banner variant="warning" title={t(`camera.${error}.title`)}>
+        {t(`camera.${error}.text`)}
       </Banner>
     );
   }
@@ -88,12 +79,12 @@ const CameraStep = ({ onReady }: CameraStepProps) => {
         ref={videoRef}
         muted
         playsInline
-        aria-label="Camera preview"
+        aria-label={t('camera.preview')}
         className="size-full -scale-x-100 object-cover"
       />
       {starting && (
         <p className="text-on-board text-small absolute inset-0 grid place-items-center" role="status">
-          Starting the camera…
+          {t('camera.starting')}
         </p>
       )}
     </div>

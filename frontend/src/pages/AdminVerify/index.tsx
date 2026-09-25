@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Banner } from '@/components/ui/banner';
@@ -22,6 +23,7 @@ const CODE_REGEX = /^\d{6}$/;
  * phút.
  */
 const AdminVerifyPage = () => {
+  const { t } = useTranslation('AdminVerify');
   const pending = useLocation().state as PendingMfa | null;
   const navigate = useNavigate();
   const secondsLeft = useTotpCountdown();
@@ -47,11 +49,11 @@ const AdminVerifyPage = () => {
 
     const value = (onRecovery ? recoveryCode : code).trim();
     if (!value) {
-      setFieldError('Type the code first.');
+      setFieldError(t('error.empty'));
       return;
     }
     if (!onRecovery && !CODE_REGEX.test(value)) {
-      setFieldError('Enter the six digits from your authenticator.');
+      setFieldError(t('error.sixDigits'));
       return;
     }
     setFieldError(undefined);
@@ -63,25 +65,23 @@ const AdminVerifyPage = () => {
         ...(onRecovery ? { recoveryCode: value } : { code: value }),
       });
       Session.save(response.data, pending.remember);
-      Notification.success({ text: response.message || 'Signed in.' });
+      Notification.success({ text: response.message || t('toast.signedIn') });
       navigate(ADMIN_HOME_PATH, { replace: true });
     } catch (error) {
-      const message = Helper.getErrorMessage(error, 'Could not check the code. Please try again.');
+      const message = Helper.getErrorMessage(error, t('error.check'));
       switch (Helper.getErrorCode(error)) {
         case 'MFA_CODE_INVALID': {
           const left = Helper.getFieldErrors(error).code ?? '';
           setAlert({
             title: message,
-            text: onRecovery
-              ? `${left} Each recovery code works once.`
-              : `${left} Check that your phone clock is correct.`,
+            text: onRecovery ? `${left} ${t('alert.recoveryOnce')}` : `${left} ${t('alert.checkClock')}`,
           });
           setCode('');
           break;
         }
         case 'MFA_LOCKED':
           setLocked(true);
-          setAlert({ title: 'Too many wrong codes.', text: message });
+          setAlert({ title: t('alert.locked'), text: message });
           break;
         case 'MFA_TOKEN_INVALID':
           // quá 5 phút hoặc token đã dùng: phải nhập lại mật khẩu
@@ -100,12 +100,17 @@ const AdminVerifyPage = () => {
   return (
     <AdminAuthShell>
       <div className="flex flex-col gap-2">
-        <p className="text-overline text-ink-muted uppercase">Admin area · step 2 of 2</p>
-        <h1 className="font-hand text-h1">Enter the code from your authenticator</h1>
+        <p className="text-overline text-ink-muted uppercase">{t('overline')}</p>
+        <h1 className="font-hand text-h1">{t('title')}</h1>
         <p className="text-small text-ink-muted">
-          Signed in as <b className="text-ink">{pending.email}</b>.{' '}
+          <Trans
+            t={t}
+            i18nKey="signedInAs"
+            values={{ email: pending.email }}
+            components={{ b: <b className="text-ink" /> }}
+          />{' '}
           <Link to={ADMIN_LOGIN_PATH} replace className="text-brand underline">
-            Not you?
+            {t('notYou')}
           </Link>
         </p>
       </div>
@@ -121,7 +126,7 @@ const AdminVerifyPage = () => {
           <Field
             key="recovery"
             id="rcode"
-            label="Recovery code"
+            label={t('recovery.label')}
             required
             autoFocus
             autoComplete="off"
@@ -131,14 +136,14 @@ const AdminVerifyPage = () => {
             value={recoveryCode}
             onChange={(e) => setRecoveryCode(e.target.value)}
             error={fieldError}
-            hint="One of the codes you saved when you turned this on. Each one works once."
+            hint={t('recovery.hint')}
             disabled={isSubmitting || locked}
           />
         ) : (
           <Field
             key="code"
             id="code"
-            label="Six-digit code"
+            label={t('code.label')}
             required
             autoFocus
             inputMode="numeric"
@@ -150,19 +155,19 @@ const AdminVerifyPage = () => {
             value={code}
             onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
             error={fieldError}
-            hint={`The code changes every 30 seconds. This one expires in ${secondsLeft}s.`}
+            hint={t('code.hint', { seconds: secondsLeft })}
             disabled={isSubmitting || locked}
           />
         )}
 
         <Button type="submit" disabled={isSubmitting || locked} className="w-full">
-          {isSubmitting ? 'Checking…' : 'Verify and sign in'}
+          {isSubmitting ? t('submitting') : t('submit')}
         </Button>
         {locked && (
           <p className="text-small text-ink-muted">
-            Sign-in is paused for this account.{' '}
+            {t('locked')}{' '}
             <Link to={ADMIN_LOGIN_PATH} replace className="text-brand underline">
-              Back to sign-in
+              {t('backToSignIn')}
             </Link>
           </p>
         )}
@@ -173,7 +178,7 @@ const AdminVerifyPage = () => {
             onClick={swap}
             className="text-brand hover:text-brand-strong cursor-pointer border-0 bg-transparent p-0 font-bold underline"
           >
-            {onRecovery ? 'Use the six-digit code instead' : 'Use a recovery code instead'}
+            {onRecovery ? t('swap.toCode') : t('swap.toRecovery')}
           </button>
         </p>
       </form>

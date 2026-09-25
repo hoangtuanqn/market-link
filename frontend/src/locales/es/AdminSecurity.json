@@ -1,0 +1,84 @@
+{
+  "overline": "Tu cuenta",
+  "title": "Seguridad",
+  "loading": "Cargando la verificación en dos pasos",
+  "loadError": {
+    "title": "No se pudo cargar la verificación en dos pasos",
+    "text": "Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar"
+  },
+  "pill": {
+    "on": "Activada",
+    "off": "Desactivada"
+  },
+  "error": {
+    "check": "No se pudo comprobar el código. Inténtalo de nuevo.",
+    "start": "No se pudo iniciar la configuración. Inténtalo de nuevo.",
+    "sixDigits": "Un código tiene seis dígitos."
+  },
+  "toast": {
+    "accepted": "Código aceptado. Guarda los códigos de recuperación para terminar.",
+    "on": "La verificación en dos pasos está activada. Se te pedirá un código en el próximo inicio de sesión.",
+    "off": "La verificación en dos pasos está desactivada.",
+    "regenerated": "Diez códigos de recuperación nuevos. Los anteriores ya no funcionan."
+  },
+  "mfa": {
+    "title": "Verificación en dos pasos",
+    "intro": "Un segundo paso después de la contraseña, desde una app en tu teléfono. Un admin puede aprobar puestos, desactivar clientes y cambiar lo que cobra la plataforma, así que una contraseña sola se queda corta.",
+    "starting": "Iniciando…",
+    "turnOn": "Activar la verificación en dos pasos"
+  },
+  "step1": {
+    "title": "Escanea esto con tu app de autenticación",
+    "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password: cualquiera sirve. No se envía nada: el código de abajo lo dibuja tu propio navegador.",
+    "qr": "Código QR para tu app de autenticación",
+    "manual": "<b>¿No puedes escanearlo?</b> Escribe esta clave a mano:",
+    "type": "Tipo",
+    "typeValue": "Basado en tiempo (TOTP)",
+    "algorithm": "Algoritmo",
+    "digits": "Dígitos",
+    "period": "Periodo",
+    "seconds_one": "{{count}} segundo",
+    "seconds_other": "{{count}} segundos"
+  },
+  "step2": {
+    "title": "Escribe el código que muestra",
+    "text": "Así se comprueba que el teléfono y el servidor coinciden en la hora antes de activar nada.",
+    "code": "Código de seis dígitos",
+    "confirm": "Confirmar",
+    "confirmed": "Confirmado"
+  },
+  "step3": {
+    "title": "Guarda tus códigos de recuperación",
+    "text": "Diez códigos, cada uno de un solo uso. Son la única forma de volver a entrar si pierdes el teléfono, y esta plataforma tiene una sola cuenta de admin, así que perderla deja fuera a todo el mundo.",
+    "saved": "Ya los he guardado",
+    "pending": "Los códigos aparecen aquí cuando se confirme el código de arriba."
+  },
+  "codesLeft": {
+    "label": "Códigos de recuperación restantes",
+    "value": "<b>{{left}}</b> de {{total}}"
+  },
+  "regen": {
+    "open": "Crear nuevos códigos de recuperación",
+    "title": "¿Crear nuevos códigos de recuperación?",
+    "keep": "Mantener los anteriores",
+    "confirm": "Crear códigos nuevos",
+    "text": "Los diez que tienes ahora dejan de funcionar al instante. Guarda los nuevos antes de cerrar esta pantalla."
+  },
+  "disable": {
+    "open": "Desactivarla",
+    "title": "¿Desactivar la verificación en dos pasos?",
+    "keep": "Dejarla activada",
+    "confirm": "Desactivarla",
+    "text": "Tu contraseña pasa a ser lo único entre cualquiera y las aprobaciones, las cuentas de clientes y los precios de la plataforma."
+  },
+  "dialogCode": "Código de tu app de autenticación",
+  "codes": {
+    "copy": "Copiar los códigos",
+    "download": "Descargar",
+    "copied": "Copiados. Guárdalos en un sitio distinto del teléfono que tiene la app de autenticación.",
+    "copyFailed": "No se pudo copiar. Selecciona los códigos y cópialos a mano.",
+    "downloaded": "Descargado como {{file}}.",
+    "fileHeading": "Códigos de recuperación de admin de MarketLink"
+  }
+}

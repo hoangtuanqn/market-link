@@ -1,0 +1,42 @@
+{
+  "title": "Favorites",
+  "intro": "Your wishlist: products you want next time, stalls you go back to, and the markets you shop at. A sold-out favorite tells you when it is back.",
+  "findMore": "Find more to save",
+  "tabs": {
+    "label": "Saved things",
+    "products": "Products",
+    "stalls": "Stalls",
+    "markets": "Markets"
+  },
+  "banner": {
+    "title": "One of your four saved products is sold out.",
+    "text": "Restock alerts are on, so you get a notification the moment the stall lists it again."
+  },
+  "filters": {
+    "all": "All",
+    "inStock": "In stock now",
+    "soldOut": "Sold out",
+    "priceDropped": "Price dropped"
+  },
+  "soldOut": "Sold out",
+  "left": "{{qty}} left",
+  "alertOn": "Alert is on",
+  "addToCart": "Add to cart",
+  "remove": "Remove",
+  "addInStock_one": "Add the {{count}} in-stock item to cart",
+  "addInStock_other": "Add the {{count}} in-stock items to cart",
+  "toast": {
+    "alertTitle": "Restock alert",
+    "alertOff": "Alert is off for {{name}}.",
+    "addedTitle": "Added to cart",
+    "added": "Added {{name}} to your cart.",
+    "addedMany_one": "Added {{count}} product to your cart. It will be split by stall at checkout.",
+    "addedMany_other": "Added {{count}} products to your cart. They will be split by stall at checkout.",
+    "removedTitle": "Removed",
+    "removed": "Removed {{name}} from your favorites."
+  },
+  "holdNote": "Saving a product does not hold any stock. It is held only when you place the order.",
+  "stallsNote": "Your saved stalls, with what each one is bringing this weekend.",
+  "thisWeek": "This week",
+  "marketsNote": "A saved market comes first in lists and on the map, and directions to its stalls start from your saved address."
+}

@@ -1,0 +1,14 @@
+{
+  "title_one": "{{count}} Bestellung aufgegeben",
+  "title_other": "{{count}} Bestellungen aufgegeben",
+  "intro": "Jeder Stand prüft jetzt seine Bestellung. Sie erhalten eine Benachrichtigung, wenn sie angenommen wird, und eine weitere, wenn sie abholbereit ist. Die Ware ist bereits für Sie reserviert.",
+  "steps": {
+    "title": "Wie es weitergeht",
+    "review": "{{stalls}} nehmen vor ihrem Bestellschluss an oder lehnen ab.",
+    "edit": "Sie können jede Bestellung bis zu ihrem Bestellschluss bearbeiten oder stornieren: {{cutoffs}}.",
+    "cutoffAt": "{{time}} am {{date}}",
+    "pickup": "Am Markttag markiert der Stand sie als bereit. Kommen Sie in Ihrem Zeitfenster, holen Sie sie ab und bezahlen Sie den Erzeuger."
+  },
+  "seeOrders": "Meine Bestellungen ansehen",
+  "keepBrowsing": "Weiter stöbern"
+}

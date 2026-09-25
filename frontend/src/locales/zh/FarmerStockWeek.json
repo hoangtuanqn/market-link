@@ -1,0 +1,52 @@
+{
+  "overline": "{{from}} – {{to}} 这一周 · Thảo Điền {{daysA}} · Thủ Đức {{daysB}}",
+  "title": "本周库存",
+  "intro": "每周模板是每个市集日的初始数量。先套用模板，再调整收成不同的日子。已预留的库存已从顾客看到的数量中扣除。",
+  "saved": "已保存",
+  "per": "每{{unit}}",
+  "tabs": {
+    "label": "库存视图",
+    "week": "本周",
+    "template": "每周模板"
+  },
+  "status": {
+    "available": "有货",
+    "soldOut": "售罄",
+    "paused": "本周暂停"
+  },
+  "col": {
+    "product": "商品",
+    "status": "状态",
+    "price": "价格",
+    "reserved": "已预留",
+    "defaultPrice": "默认价格"
+  },
+  "aria": {
+    "status": "{{product}} 的状态",
+    "day": "{{product}} {{day}}",
+    "dayAt": "{{product}} {{day}} {{market}}",
+    "price": "{{product}} 价格",
+    "templateDay": "{{product}} 模板 {{day}}"
+  },
+  "week": {
+    "caption": "本周各商品在各市集日的库存",
+    "note": "数量是当天可售的单位数。空白表示当天不售卖该商品。周五显示为灰色，因为 {{stall}} 周五不出摊。",
+    "savedText": "本周库存已保存。顾客现在就能看到新数量。",
+    "save": "保存更改"
+  },
+  "template": {
+    "savedText": "模板已保存。除非你现在套用，否则从下周开始生效。",
+    "save": "保存模板",
+    "note": "模板日期跟随你的营业日。可在“摊位与取货”中修改。"
+  },
+  "apply": {
+    "open": "将模板套用到本周",
+    "title": "将模板套用到本周？",
+    "keep": "保留我的修改",
+    "doneTitle": "模板已套用",
+    "doneText": "模板已套用到 {{sat}} 和 {{sun}}。",
+    "confirm": "套用模板",
+    "text": "{{sat}}和{{sun}}的数量将替换为模板值。已预留的库存不计入顾客看到的数量。",
+    "warning": "你本周所做的修改将被覆盖。"
+  }
+}

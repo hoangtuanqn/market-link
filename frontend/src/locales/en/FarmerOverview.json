@@ -1,0 +1,92 @@
+{
+  "tabs": {
+    "new": "Awaiting approval",
+    "acc": "Accepted",
+    "ready": "Ready",
+    "done": "Completed"
+  },
+  "decline": {
+    "reasons": {
+      "stock": "Not enough stock",
+      "day": "Not selling on that day",
+      "time": "Cannot make that pickup time",
+      "other": "Other"
+    },
+    "title": "Decline order {{code}}?",
+    "keep": "Keep order",
+    "confirm": "Decline order",
+    "text": "The customer is told right away and the items go back to your stock.",
+    "reason": "Reason the customer will see"
+  },
+  "col": {
+    "order": "Order",
+    "customer": "Customer",
+    "pickup": "Pickup",
+    "items": "Items",
+    "total": "Total",
+    "status": "Status"
+  },
+  "toast": {
+    "acceptedTitle": "Order accepted",
+    "acceptedText": "Order {{code}} accepted. {{who}} has been told.",
+    "readyTitle": "Order ready",
+    "readyText": "Order {{code}} marked ready.",
+    "completedTitle": "Order completed",
+    "completedText": "Order {{code}} completed.",
+    "declinedTitle": "Order declined",
+    "declinedText": "Order {{code}} declined. Stock is back in your count."
+  },
+  "actions": {
+    "accept": "Accept",
+    "decline": "Decline",
+    "ready": "Mark ready",
+    "complete": "Mark completed",
+    "view": "View"
+  },
+  "captions": {
+    "new": "Awaiting approval · {{sat}} and {{sun}}",
+    "ready": "Ready for pickup"
+  },
+  "overline": "your stall at {{market}} · next market day {{day}}",
+  "greeting": "Morning, {{name}}",
+  "applyTemplate": "Apply weekly template",
+  "addProduct": "Add product",
+  "banner": {
+    "title_one": "{{count}} order is waiting for you. {{closing}} of them close at {{time}} tomorrow.",
+    "title_other": "{{count}} orders are waiting for you. {{closing}} of them close at {{time}} tomorrow.",
+    "text": "Unapproved orders still hold stock. Accept or decline before the cutoff so customers can plan."
+  },
+  "kpi": {
+    "orders": "Total orders",
+    "ordersNote_one": "{{count}} this week",
+    "ordersNote_other": "{{count}} this week",
+    "vsAugust": "vs August",
+    "openHistory": "Open sales history",
+    "awaitingNote_one": "<b>{{count}}</b> closes at {{time}} on {{date}}",
+    "awaitingNote_other": "<b>{{count}}</b> close at {{time}} on {{date}}",
+    "vsThursday": "vs a normal Thursday",
+    "openIncoming": "Open incoming orders",
+    "revenue": "September revenue",
+    "revenueNote": "₫, from completed orders, paid at the stall",
+    "best": "Best seller",
+    "bestNote": "{{qty}} this month",
+    "openProducts": "Open products",
+    "note": "September so far, next to August. Every tile opens the screen behind its number."
+  },
+  "incoming": {
+    "title": "Incoming orders",
+    "all": "All orders and filters",
+    "note": "New orders are highlighted until you open them."
+  },
+  "stock": {
+    "title": "Stock for {{day}}",
+    "link": "This week's stock",
+    "note": "Reserved means an order is holding it. Those come off your count the moment a customer orders."
+  },
+  "best": {
+    "title": "Best sellers",
+    "link": "Sales history",
+    "note": "Sold in September, each in its own unit"
+  },
+  "protoNote": "The sidebar and the header above it are new to the prototype."
+}

@@ -1,0 +1,80 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "재고 부족",
+      "day": "그날은 판매하지 않음",
+      "time": "그 픽업 시간은 어려움",
+      "other": "기타"
+    },
+    "item": "{{name}} {{qty}}",
+    "title": "주문 {{code}}을(를) 거절할까요?",
+    "keep": "주문 유지",
+    "confirm": "주문 거절",
+    "text": "{{who}}님께 바로 알림이 가고 {{items}}은(는) 재고로 돌아와요.",
+    "reason": "고객에게 보일 사유"
+  },
+  "history": {
+    "before": "{{cutoff}} 이전",
+    "cancelled": "고객이 취소함",
+    "title": "기록"
+  },
+  "missing": {
+    "title": "이 주문은 더 이상 없어요",
+    "text": "고객이 취소했거나 링크가 오래됐을 수 있어요. 주문 목록에서 다시 열어 주세요.",
+    "back": "내 주문"
+  },
+  "item": "상품",
+  "col": {
+    "product": "상품",
+    "requested": "요청 수량",
+    "left": "이 주문 후 남은 수량",
+    "amount": "금액"
+  },
+  "crumb": "주문",
+  "cutoff": "마감 {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "주문을 수락했어요",
+    "acceptedText": "주문 {{code}}을(를) 수락했어요. {{who}}님께 알렸어요.",
+    "readyTitle": "주문 준비 완료",
+    "readyText": "주문 {{code}}을(를) 준비 완료로 표시했어요.",
+    "completedTitle": "주문 완료",
+    "completedText": "주문 {{code}}이(가) 완료됐어요.",
+    "declinedTitle": "주문을 거절했어요",
+    "declinedText": "주문 {{code}}을(를) 거절했어요."
+  },
+  "actions": {
+    "accept": "주문 수락",
+    "decline": "거절",
+    "ready": "준비 완료로 표시",
+    "complete": "완료로 표시"
+  },
+  "items": {
+    "title": "상품",
+    "note": "표시된 재고는 이 주문과 다른 주문을 뺀 남은 수량이에요. 거절하면 예약된 재고가 돌아와요(D-02)."
+  },
+  "note": "고객 메모",
+  "quote": "“{{text}}”",
+  "customer": {
+    "title": "고객",
+    "name": "이름",
+    "phone": "전화",
+    "ordersWithYou": "내 매장 주문",
+    "orders_one": "주문 {{count}}건",
+    "orders_other": "주문 {{count}}건",
+    "withCollected_one": "{{orders}}, 픽업 완료 {{count}}건",
+    "withCollected_other": "{{orders}}, 픽업 완료 {{count}}건"
+  },
+  "pickup": {
+    "title": "픽업 시간대",
+    "market": "마켓",
+    "marketStall": "{{market}}, 매장 {{code}}",
+    "slot": "시간대",
+    "pay": "픽업 시 결제"
+  },
+  "complete": {
+    "title": "{{code}}을(를) 완료로 표시할까요?",
+    "notYet": "아직이요",
+    "text": "고객이 주문을 받아 가고 매장에서 결제한 뒤에 하세요. 완료된 주문은 매출에 포함되고 고객이 리뷰를 남길 수 있게 돼요.",
+    "auto": "아직 준비 완료 상태인 주문은 픽업 날짜 24시간 뒤에 자동으로 완료돼요(D-03)."
+  }
+}

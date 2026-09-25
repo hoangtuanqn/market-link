@@ -1,0 +1,43 @@
+{
+  "title": "Kundenkonto erstellen",
+  "intro": "Name, Telefonnummer, E-Mail und Adresse sind Pflichtangaben. Mit der Adresse zeigen wir die Entfernung zu den Märkten an und füllen die Wegbeschreibung vor.",
+  "fields": {
+    "fullName": "Vollständiger Name",
+    "phone": "Telefonnummer",
+    "email": "E-Mail",
+    "emailHint": "Für die Anmeldung und Bestellbenachrichtigungen.",
+    "address": "Adresse",
+    "addressPlaceholder": "Straße, Bezirk, Stadtteil",
+    "password": "Passwort",
+    "passwordHint": "{{min}} bis {{max}} Zeichen.",
+    "confirmPassword": "Passwort wiederholen"
+  },
+  "consent": {
+    "label": "Ich habe die <terms>Nutzungsbedingungen</terms> und die <privacy>Datenschutzerklärung</privacy> gelesen und akzeptiere sie",
+    "note": "Ihr Name und Ihre Telefonnummer gehen an den Stand, bei dem Sie bestellen, damit er Ihnen die Bestellung am Markttag übergeben kann. Sie bezahlen den Erzeuger direkt am Stand."
+  },
+  "submit": "Konto erstellen",
+  "submitting": "Konto wird erstellt…",
+  "haveAccount": "Ich habe schon ein Konto",
+  "acceptFirst": "Akzeptieren Sie die Bedingungen, um Ihr Konto zu erstellen.",
+  "sharedAccount": "Ein Konto kann in der Familie geteilt werden; das System unterscheidet nicht zwischen Personen innerhalb eines Kontos.",
+  "toast": {
+    "created": "Konto erstellt.",
+    "failed": "Ihr Konto konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+  },
+  "errors": {
+    "fullNameRequired": "Geben Sie Ihren vollständigen Namen ein.",
+    "fullNameMax": "Der Name darf höchstens {{max}} Zeichen lang sein.",
+    "phoneRequired": "Geben Sie Ihre Telefonnummer ein.",
+    "phoneInvalid": "Geben Sie eine gültige vietnamesische Handynummer ein (10 Ziffern).",
+    "emailRequired": "Geben Sie Ihre E-Mail-Adresse ein.",
+    "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein.",
+    "emailMax": "Die E-Mail-Adresse darf höchstens {{max}} Zeichen lang sein.",
+    "addressRequired": "Geben Sie Ihre Adresse ein.",
+    "addressMax": "Die Adresse darf höchstens {{max}} Zeichen lang sein.",
+    "passwordRequired": "Geben Sie Ihr Passwort ein.",
+    "passwordLength": "Das Passwort muss {{min}} bis {{max}} Zeichen lang sein.",
+    "confirmRequired": "Bestätigen Sie Ihr Passwort.",
+    "confirmMismatch": "Die Passwörter stimmen nicht überein."
+  }
+}

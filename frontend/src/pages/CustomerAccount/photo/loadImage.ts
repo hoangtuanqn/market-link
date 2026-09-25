@@ -1,15 +1,25 @@
 /** Giới hạn ảnh gốc trước khi cắt; ảnh gửi lên sau khi cắt chỉ vài chục KB. */
 export const MAX_SOURCE_BYTES = 15 * 1024 * 1024;
 
-export class PhotoError extends Error {}
+/** Why a photo cannot be used; the dialog shows `CustomerAccount:photoErrors.<code>`. */
+export type PhotoErrorCode = 'notPhoto' | 'tooBig' | 'unreadable' | 'noPicture' | 'captureFailed';
+
+export class PhotoError extends Error {
+  readonly code: PhotoErrorCode;
+
+  constructor(code: PhotoErrorCode) {
+    super(code);
+    this.code = code;
+  }
+}
 
 /** Giải mã ảnh bằng chính trình duyệt, nên HEIC / WebP cũng dùng được nếu trình duyệt đọc được. */
 export const loadImage = async (blob: Blob): Promise<HTMLImageElement> => {
   if (blob.type && !blob.type.startsWith('image/')) {
-    throw new PhotoError('Choose a photo (JPEG, PNG, HEIC or WebP).');
+    throw new PhotoError('notPhoto');
   }
   if (blob.size > MAX_SOURCE_BYTES) {
-    throw new PhotoError('That photo is over 15 MB. Choose a smaller one.');
+    throw new PhotoError('tooBig');
   }
   const url = URL.createObjectURL(blob);
   const img = new Image();
@@ -18,7 +28,7 @@ export const loadImage = async (blob: Blob): Promise<HTMLImageElement> => {
     await img.decode();
   } catch {
     URL.revokeObjectURL(url);
-    throw new PhotoError('This file is not a photo we can read.');
+    throw new PhotoError('unreadable');
   }
   return img;
 };
@@ -33,11 +43,11 @@ export const captureFrame = (video: HTMLVideoElement): Promise<Blob> => {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   const ctx = canvas.getContext('2d');
-  if (!ctx || !canvas.width) return Promise.reject(new PhotoError('The camera has no picture yet. Try again.'));
+  if (!ctx || !canvas.width) return Promise.reject(new PhotoError('noPicture'));
   ctx.translate(canvas.width, 0);
   ctx.scale(-1, 1);
   ctx.drawImage(video, 0, 0);
   return new Promise((resolve, reject) =>
-    canvas.toBlob((b) => (b ? resolve(b) : reject(new PhotoError('Could not take the photo.'))), 'image/jpeg', 0.92),
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new PhotoError('captureFailed'))), 'image/jpeg', 0.92),
   );
 };

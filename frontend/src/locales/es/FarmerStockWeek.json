@@ -1,0 +1,52 @@
+{
+  "overline": "Semana del {{from}} al {{to}} · Thảo Điền {{daysA}} · Thủ Đức {{daysB}}",
+  "title": "Stock de esta semana",
+  "intro": "Tu plantilla semanal es la cantidad inicial de cada día de mercado. Aplícala y luego ajusta los días en que la cosecha sea distinta. El stock reservado ya está descontado de lo que ven los clientes.",
+  "saved": "Guardado",
+  "per": "por {{unit}}",
+  "tabs": {
+    "label": "Vistas de stock",
+    "week": "Esta semana",
+    "template": "Plantilla semanal"
+  },
+  "status": {
+    "available": "Disponible",
+    "soldOut": "Agotado",
+    "paused": "En pausa esta semana"
+  },
+  "col": {
+    "product": "Producto",
+    "status": "Estado",
+    "price": "Precio",
+    "reserved": "Reservado",
+    "defaultPrice": "Precio predeterminado"
+  },
+  "aria": {
+    "status": "Estado de {{product}}",
+    "day": "{{product}} {{day}}",
+    "dayAt": "{{product}} {{day}} {{market}}",
+    "price": "Precio de {{product}}",
+    "templateDay": "{{product}} plantilla {{day}}"
+  },
+  "week": {
+    "caption": "Stock por producto y día de mercado esta semana",
+    "note": "Las cantidades son las unidades disponibles ese día. Un día en blanco significa que el producto no se ofrece. Los viernes aparecen en gris porque {{stall}} no vende los viernes.",
+    "savedText": "Stock de esta semana guardado. Los clientes ya ven las nuevas cantidades.",
+    "save": "Guardar cambios"
+  },
+  "template": {
+    "savedText": "Plantilla guardada. Se aplica a partir de la próxima semana, salvo que la apliques ahora.",
+    "save": "Guardar plantilla",
+    "note": "Los días de la plantilla siguen tus días de venta. Cámbialos en Puesto y recogida."
+  },
+  "apply": {
+    "open": "Aplicar la plantilla a esta semana",
+    "title": "¿Aplicar la plantilla a esta semana?",
+    "keep": "Mantener mis cambios",
+    "doneTitle": "Plantilla aplicada",
+    "doneText": "Plantilla aplicada al {{sat}} y al {{sun}}.",
+    "confirm": "Aplicar plantilla",
+    "text": "Las cantidades del {{sat}} y del {{sun}} se sustituyen por los valores de la plantilla. El stock reservado queda fuera de la cantidad que ven los clientes.",
+    "warning": "Se sobrescribirán los cambios que hiciste para esta semana."
+  }
+}

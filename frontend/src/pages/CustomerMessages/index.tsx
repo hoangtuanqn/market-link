@@ -1,11 +1,17 @@
 import { useState, type FormEvent, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import ChatMessage, { MessageOrderRef } from '@/components/ChatMessage';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { dayName, formatClock, formatDayMonth, vnd } from '@/lib/format';
 import Helper from '@/utils/helper';
 
-type LogEntry = { from: 'user' | 'bot'; time: string; content: ReactNode; suggestions?: string[] };
+/** A time is a 24-hour clock ("09:41"), or one of the words below. */
+type When = string;
+const WORDS = ['yesterday', 'now'] as const;
+
+type LogEntry = { from: 'user' | 'bot'; time: When; content: ReactNode; suggestions?: string[] };
 
 type Thread = {
   id: number;
@@ -13,7 +19,7 @@ type Thread = {
   farmerId: number;
   mono: string;
   last: string;
-  time: string;
+  time: When;
   unread?: boolean;
   stallLine: string;
   orderCode: string;
@@ -38,13 +44,34 @@ const THREADS: Thread[] = [
     farmerId: 4,
     mono: 'G',
     last: 'Your rye loaf is out of the oven, come any time after 07:30.',
-    time: 'Yesterday',
+    time: 'yesterday',
     unread: true,
     stallLine: 'Thảo Điền Weekend Market · stall A04',
     orderCode: '#ML-0409',
     orderHref: '/orders/ML-0409',
   },
 ];
+
+/** The order card attached to a message, written by MarketLink (not by either side), so it follows the language. */
+const OrderRef = () => {
+  const { t } = useTranslation('CustomerMessages');
+  return (
+    <MessageOrderRef
+      href="/orders/ML-0421"
+      title={t('orderRef.title', { code: '#ML-0421', stall: 'Cô Tư Garden' })}
+      detail={t('orderRef.detail', {
+        day: dayName(6),
+        date: formatDayMonth(new Date(2026, 8, 26)),
+        slot: `${formatClock('07:00')}–${formatClock('07:30')}`,
+        items: t('items', { count: 3 }),
+        total: vnd(56000),
+        cutoff: formatClock('19:00'),
+        cutoffDate: formatDayMonth(new Date(2026, 8, 25)),
+      })}
+      onDark
+    />
+  );
+};
 
 const INITIAL_LOGS: Record<number, LogEntry[]> = {
   1: [
@@ -60,12 +87,7 @@ const INITIAL_LOGS: Record<number, LogEntry[]> = {
       content: (
         <>
           Could you hold 5 bunches instead of 2 on this order?
-          <MessageOrderRef
-            href="/orders/ML-0421"
-            title="Order #ML-0421 · Cô Tư Garden"
-            detail="Sat 26/09 · 07:00–07:30 · 3 items · 56,000 ₫ · closes 19:00 on 25/09"
-            onDark
-          />
+          <OrderRef />
         </>
       ),
     },
@@ -76,16 +98,21 @@ const INITIAL_LOGS: Record<number, LogEntry[]> = {
       suggestions: ['Edit the order now', 'Can I collect at 09:00 instead?', 'Thank you'],
     },
   ],
-  2: [{ from: 'bot', time: 'Yesterday', content: 'Your rye loaf is out of the oven, come any time after 07:30.' }],
+  2: [{ from: 'bot', time: 'yesterday', content: 'Your rye loaf is out of the oven, come any time after 07:30.' }],
 };
 
 /** Not in the SRS — a proposal the team can weigh, kept behind a warning banner (see the banner text below). */
 const CustomerMessagesPage = () => {
+  const { t } = useTranslation('CustomerMessages');
   const [activeId, setActiveId] = useState(1);
   const [logs, setLogs] = useState(INITIAL_LOGS);
   const [draft, setDraft] = useState('');
 
-  const active = THREADS.find((t) => t.id === activeId)!;
+  const active = THREADS.find((th) => th.id === activeId)!;
+  const when = (time: When) => {
+    const word = WORDS.find((w) => w === time);
+    return word ? t(`time.${word}`) : formatClock(time);
+  };
   const log = logs[activeId] ?? [];
 
   const onSend = (e: FormEvent) => {
@@ -102,49 +129,47 @@ const CustomerMessagesPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-h1">Messages</h1>
-        <p className="text-body-lg">
-          Ask a stall about this week&apos;s produce, or settle the details of an order before the cutoff.
-        </p>
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body-lg">{t('intro')}</p>
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
         <Card className="overflow-hidden">
           <div className="border-line-strong flex items-center justify-between gap-3 border-b-[1.5px] p-3 px-4">
-            <b>Conversations</b>
-            <span className="text-small text-ink-muted">{THREADS.length} stalls</span>
+            <b>{t('conversations')}</b>
+            <span className="text-small text-ink-muted">{t('stallCount', { count: THREADS.length })}</span>
           </div>
           <ul className="m-0 flex max-h-160 flex-col overflow-y-auto p-0">
-            {THREADS.map((t) => (
-              <li key={t.id}>
+            {THREADS.map((th) => (
+              <li key={th.id}>
                 <button
                   type="button"
-                  aria-current={t.id === activeId}
-                  onClick={() => setActiveId(t.id)}
+                  aria-current={th.id === activeId}
+                  onClick={() => setActiveId(th.id)}
                   className={Helper.cn(
                     'border-line hover:bg-surface-quiet grid w-full grid-cols-[44px_1fr_auto] items-start gap-3 border-t p-3 px-4 text-left first:border-t-0',
-                    t.id === activeId && 'bg-brand-tint',
+                    th.id === activeId && 'bg-brand-tint',
                   )}
                 >
                   <span
                     className="bg-brand text-on-brand font-hand grid size-11 place-items-center rounded-full text-[22px]"
                     aria-hidden="true"
                   >
-                    {t.mono}
+                    {th.mono}
                   </span>
                   <span>
                     <b className="block text-[15px]">
-                      {t.who}
-                      {t.unread && (
+                      {th.who}
+                      {th.unread && (
                         <span
                           aria-hidden="true"
                           className="bg-brand ml-1.5 inline-block size-2 rounded-full align-middle"
                         />
                       )}
                     </b>
-                    <small className="text-ink-muted block max-w-60 truncate text-[13px]">{t.last}</small>
+                    <small className="text-ink-muted block max-w-60 truncate text-[13px]">{th.last}</small>
                   </span>
-                  <time className="text-ink-muted text-[12px] whitespace-nowrap">{t.time}</time>
+                  <time className="text-ink-muted text-[12px] whitespace-nowrap">{when(th.time)}</time>
                 </button>
               </li>
             ))}
@@ -152,7 +177,7 @@ const CustomerMessagesPage = () => {
         </Card>
 
         <section
-          aria-label={`Conversation with ${active.who}`}
+          aria-label={t('conversationWith', { name: active.who })}
           className="border-line-strong bg-surface-raised shadow-tag grid h-160 grid-rows-[auto_1fr_auto] rounded-md border-[1.5px]"
         >
           <div className="border-line-strong flex items-center justify-between gap-3 border-b-[1.5px] p-3 px-4">
@@ -161,12 +186,12 @@ const CustomerMessagesPage = () => {
               <p className="text-small text-ink-muted mt-0.5">
                 {active.stallLine} ·{' '}
                 <Link to={`/stalls/${active.farmerId}`} className="text-brand underline">
-                  See the stall
+                  {t('seeStall')}
                 </Link>
               </p>
             </div>
             <ButtonLink to={active.orderHref} variant="secondary" size="sm">
-              Open order {active.orderCode}
+              {t('openOrder', { code: active.orderCode })}
             </ButtonLink>
           </div>
 
@@ -175,8 +200,8 @@ const CustomerMessagesPage = () => {
               <ChatMessage
                 key={i}
                 from={m.from}
-                who={m.from === 'user' ? 'You' : active.who}
-                time={m.time}
+                who={m.from === 'user' ? t('you') : active.who}
+                time={when(m.time)}
                 suggestions={m.suggestions}
               >
                 {m.content}
@@ -186,37 +211,31 @@ const CustomerMessagesPage = () => {
 
           <form onSubmit={onSend} className="border-line-strong flex items-center gap-2 border-t-[1.5px] p-3 px-4">
             <label htmlFor="q" className="sr-only">
-              Message to {active.who}
+              {t('messageTo', { name: active.who })}
             </label>
             <input
               id="q"
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
-              placeholder="Ask about this week's stock or your pickup time"
+              placeholder={t('placeholder')}
               className="border-line-strong bg-surface-raised text-body focus-visible:border-focus focus-visible:outline-focus min-h-11 flex-1 rounded-sm border-[1.5px] px-3 focus-visible:outline-2 focus-visible:outline-offset-1"
             />
-            <Button type="submit">Send</Button>
+            <Button type="submit">{t('send')}</Button>
           </form>
         </section>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Card className="flex flex-col gap-2 p-6">
-          <h2 className="text-h3">What messages are for</h2>
-          <p className="text-[15px]">
-            Checking that something is still coming, asking the stall to hold a little more, or agreeing a different
-            pickup time. Changes to an order still go through the order itself, so both sides have the same record.
-          </p>
+          <h2 className="text-h3">{t('for.title')}</h2>
+          <p className="text-[15px]">{t('for.text')}</p>
           <Link to="/orders/ML-0421/edit" className="text-brand underline">
-            Edit order #ML-0421
+            {t('for.edit', { code: '#ML-0421' })}
           </Link>
         </Card>
         <Card className="flex flex-col gap-2 p-6">
-          <h2 className="text-h3">What they are not for</h2>
-          <p className="text-[15px]">
-            There is no price negotiation and no payment here. Prices are set by the stall and you pay at the stall when
-            you collect. A message never changes an order on its own.
-          </p>
+          <h2 className="text-h3">{t('notFor.title')}</h2>
+          <p className="text-[15px]">{t('notFor.text')}</p>
         </Card>
       </div>
     </div>

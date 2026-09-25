@@ -1,0 +1,39 @@
+{
+  "notFound": {
+    "title": "Ce marché n'est plus là",
+    "browse": "Voir les marchés"
+  },
+  "intro_one": "{{count}} stand. Chaque stand clôt ses commandes 12 à 24 heures avant le retrait. Retirez au stand et payez directement le producteur.",
+  "intro_other": "{{count}} stands. Chaque stand clôt ses commandes 12 à 24 heures avant le retrait. Retirez au stand et payez directement le producteur.",
+  "toast": {
+    "saved": "{{name}} enregistré.",
+    "removed": "{{name}} retiré des favoris."
+  },
+  "save": {
+    "on": "Marché enregistré",
+    "off": "Enregistrer le marché"
+  },
+  "directions": "Itinéraire",
+  "search": {
+    "scope": "Rechercher dans",
+    "scopes": {
+      "product": "Produits de ce marché",
+      "farmer": "Stands de ce marché"
+    },
+    "keyword": "Mot-clé",
+    "placeholder": "Liseron d'eau, pain au levain, œufs…",
+    "submit": "Rechercher"
+  },
+  "day": "Jour de marché",
+  "all": "Tout",
+  "inStock": "En stock",
+  "available": "Disponible le {{day}}",
+  "productsFrom": "{{products}} de {{stalls}}",
+  "products_one": "{{count}} produit",
+  "products_other": "{{count}} produits",
+  "stalls_one": "{{count}} stand",
+  "stalls_other": "{{count}} stands",
+  "mapLabel": "Carte de {{name}} et de ses stands",
+  "stallsTitle": "Stands de ce marché le {{day}}",
+  "stallsNote": "Les stands qui ne vendent pas le jour choisi ne sont pas affichés"
+}

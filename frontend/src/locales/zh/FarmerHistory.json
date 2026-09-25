@@ -1,0 +1,41 @@
+{
+  "title": "销售记录",
+  "intro": "你卖了什么，以及与上一期相比如何。收入只计算已完成的订单，也就是顾客在摊位付给你的钱。",
+  "export": { "button": "导出本期", "title": "已开始导出", "text": "已开始导出。CSV 包含当前显示的时段和集市。" },
+  "days_one": "{{count}} 天",
+  "days_other": "{{count}} 天",
+  "market": "集市",
+  "bothMarkets": "两个集市",
+  "kpi": {
+    "completed": "已完成订单",
+    "completedNote": "共 {{total}} 笔下单",
+    "revenue": "收入",
+    "revenueNote": "₫，在摊位支付",
+    "average": "平均订单金额",
+    "averageNote": "₫ / 每笔已完成订单",
+    "declined": "你拒绝的订单",
+    "declinedNote": "占下单总数的 {{pct}}%"
+  },
+  "byDay": {
+    "title": "按集市日统计的收入",
+    "note": "单位为百万 ₫。你只在周六和周日出摊，所以每一列就是一个集市早晨。",
+    "caption": "{{now}}与{{prev}}按集市日统计的收入对比，单位为百万越南盾"
+  },
+  "best": {
+    "title": "畅销商品",
+    "note": "{{month}}的收入。数量按各商品自己的单位计算，因此从不相加。",
+    "product": "商品",
+    "soldPer": "销售单位",
+    "price": "价格",
+    "sold": "已售",
+    "revenue": "收入"
+  },
+  "where": {
+    "title": "在哪里卖出",
+    "note_one": "本月有 {{count}} 笔订单被拒绝，{{cancelled}} 笔被取消。两者都不计入此处。",
+    "note_other": "本月有 {{count}} 笔订单被拒绝，{{cancelled}} 笔被取消。两者都不计入此处。"
+  },
+  "past": { "title": "历史订单", "note": "已完成、已拒绝和已取消" },
+  "col": { "pickup": "取货", "order": "订单", "customer": "顾客", "items": "商品", "total": "合计", "status": "状态" },
+  "itemLine": "{{qty}}× {{name}}"
+}

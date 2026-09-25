@@ -1,0 +1,104 @@
+{
+  "title": "Về MarketLink",
+  "intro": "MarketLink kết nối nhà vườn ở các chợ phiên quanh TP. Hồ Chí Minh với những người đi chợ ở đó. Sạp đăng những gì sẽ mang ra chợ tuần này, bạn đặt trước từ đó, rồi nhận hàng tại sạp.",
+  "carouselLabel": "MarketLink dùng để làm gì",
+  "photosNote": "Bốn ảnh phía trên chỉ là ảnh tạm.",
+  "slides": {
+    "mission": {
+      "topic": "Sứ mệnh",
+      "title": "Không còn những chuyến đi chợ về tay không",
+      "text": "Sạp báo hàng trong tuần trên tấm bảng phấn, nên đồ ngon nhất buổi sáng đã hết trước khi phần lớn mọi người tới. MarketLink gom hàng trong tuần của mọi sạp về một chỗ và giữ phần bạn đặt cho tới khi bạn đến nhận.",
+      "alt": "Các sạp trong một khu chợ có mái che, nông sản xếp trong thùng gỗ",
+      "cta": "Xem các chợ cuối tuần này"
+    },
+    "howItWorks": {
+      "topic": "Cách hoạt động",
+      "title": "Đặt thứ Năm, nhận thứ Bảy",
+      "text": "Xem bốn chợ quanh TP. Hồ Chí Minh sẽ có gì cuối tuần này và đặt từ bao nhiêu sạp tuỳ thích. Mỗi sạp có đơn riêng, giờ nhận riêng và được trả tiền ngay tại sạp.",
+      "alt": "Những rổ cà rốt, đậu và ớt bày trên bàn ở chợ",
+      "cta": "Xem sản phẩm tuần này"
+    },
+    "technology": {
+      "topic": "Công nghệ",
+      "title": "Số lượng luôn đúng ngay lúc bạn đặt",
+      "text": "Mỗi lượt đặt được trừ vào số lượng của sạp ngay lập tức, nên hai người không thể cùng đặt hai bó cuối cùng. Khung giờ nhận hàng giúp không phải xếp hàng lâu, và bản đồ ghim từng sạp bên trong chợ.",
+      "alt": "Hạt giống và đất khô cùng một chiếc muỗng kim loại",
+      "note_one": "Còn {{n}} bó",
+      "note_other": "Còn {{n}} bó",
+      "cta": "Xem bản đồ chợ"
+    },
+    "benefit": {
+      "topic": "Bạn nhận được gì",
+      "title": "Sạp biết cần mang gì ra chợ",
+      "text": "Nhà vườn đọc đơn cuối tuần trước khi thu hoạch, nên ít hàng phải mang về hơn. Bạn nhận đúng trái bưởi đã định mua, vào giờ bạn chọn, và trả tiền cho chính người trồng ra nó.",
+      "alt": "Một người nông dân làm ruộng lúa ngập nước bằng máy cày nhỏ",
+      "note": "{{place}} · Thu hoạch {{day}}",
+      "cta": "Bán hàng trên MarketLink"
+    }
+  },
+  "why": {
+    "title": "Vì sao có MarketLink",
+    "shoppers": "Một buổi sáng ở chợ vận hành nhờ truyền miệng. Sạp viết phấn những gì mang tới, khách quen hỏi tuần sau có gì, còn những người khác phải đi hết các dãy mới biết. Cách đó ổn cho tới khi bạn cần một món cụ thể, hoặc cho tới khi chuyến đi xuyên thành phố kết thúc trước một cái bàn trống.",
+    "farmers": "Nhà vườn gặp đúng vấn đề đó từ phía bên kia. Không có cách nào dễ để báo cho khách quen tuần này có gì, nhận đơn trước ngày họp chợ, hay biết tối thứ Sáu nên cắt bao nhiêu. MarketLink ghi lại cả hai phía: sạp đăng hàng của tuần, bạn đặt trước từ đó, và sạp đọc đơn trước khi hái."
+  },
+  "limits": {
+    "title": "Những gì MarketLink không làm",
+    "payment": "<b>Không thanh toán trực tuyến.</b> Bạn trả tiền cho nhà vườn tại sạp khi nhận hàng. Không có ô nhập thẻ ở bất kỳ đâu trong sản phẩm.",
+    "delivery": "<b>Không giao hàng.</b> Mọi đơn đều nhận tại chợ, trong khung giờ do sạp đặt ra.",
+    "certification": "<b>Không chứng nhận.</b> MarketLink không kiểm tra giấy phép hay cam kết hữu cơ. Hãy hỏi nhà vườn tại sạp.",
+    "profiles": "<b>Không có hồ sơ riêng cho từng thành viên gia đình.</b> Cả nhà có thể dùng chung một tài khoản. Hệ thống không phân biệt từng người trong cùng một tài khoản."
+  },
+  "team": {
+    "title": "Đội ngũ",
+    "subtitle": "Sáu người, chia theo phần mỗi người phụ trách trong mã nguồn",
+    "namePending": "Tên sẽ được bổ sung",
+    "lead": {
+      "role": "Trưởng nhóm",
+      "note": "Lược đồ dữ liệu, hợp đồng API và mười hai quyết định mà cả nhóm dựa vào để xây dựng"
+    },
+    "be1": {
+      "role": "Backend",
+      "note": "Đăng nhập, vai trò và vòng đời đơn hàng, từ lúc đặt đến lúc hoàn tất"
+    },
+    "be2": {
+      "role": "Backend",
+      "note": "Sản phẩm, chợ, hàng theo tuần, báo cáo và dữ liệu mẫu cho bản demo"
+    },
+    "fe1": {
+      "role": "Frontend",
+      "note": "Hệ thống thiết kế, các trang công khai, bản đồ và trang tổng quan của khách hàng"
+    },
+    "fe2": {
+      "role": "Frontend",
+      "note": "Trang tổng quan của nhà vườn và quản trị viên, cùng mọi biểu mẫu trong sản phẩm"
+    },
+    "qa": {
+      "role": "Kiểm thử và tài liệu",
+      "note": "Danh sách yêu cầu, dữ liệu kiểm thử và các tài liệu nộp kèm bài dự thi"
+    }
+  },
+  "stack": {
+    "title": "MarketLink được xây dựng thế nào",
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "maps": "Bản đồ",
+    "mapsValue": "Leaflet với nền bản đồ OpenStreetMap",
+    "design": "Thiết kế",
+    "designValue": "Hệ thống thiết kế Hang tag: một bộ token, một bộ component, một giọng văn"
+  },
+  "credits": {
+    "title": "Ghi công và dữ liệu",
+    "mapData": "Dữ liệu bản đồ",
+    "mapDataValue": "© những người đóng góp OpenStreetMap",
+    "photos": "Ảnh",
+    "photosValue": "Hiện là ảnh tạm, sẽ ghi nguồn tại đây khi có ảnh của nhóm",
+    "locale": "Tiền tệ và thời gian",
+    "localeValue": "Đồng Việt Nam, ngày dạng {{format}}, đồng hồ 24 giờ, {{zone}}"
+  },
+  "contact": {
+    "title": "Bạn có điều muốn nói với chúng tôi?",
+    "text": "Câu hỏi về đơn hàng, bạn hỏi thẳng sạp. Mọi điều về nền tảng, bạn gửi cho đội ngũ.",
+    "contactUs": "Liên hệ",
+    "feedback": "Gửi góp ý"
+  }
+}

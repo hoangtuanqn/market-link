@@ -1,0 +1,29 @@
+{
+  "myOrders": "Meine Bestellungen",
+  "breadcrumbOrder": "Bestellung {{code}}",
+  "breadcrumbReview": "Bewertung",
+  "notFound": {
+    "title": "Diese Bestellung gibt es hier nicht mehr",
+    "text": "Vielleicht haben Sie sie storniert, oder der Link ist veraltet. Öffnen Sie sie erneut über Ihre Bestellungen."
+  },
+  "completed": "Abgeschlossen am {{date}}",
+  "title": "Wie war {{stall}}?",
+  "intro": "Bewertungen sind mit dieser abgeschlossenen Bestellung verknüpft, daher sehen andere Kunden sie als verifizierten Kauf. Der Stand kann antworten.",
+  "stall": {
+    "title": "Der Stand",
+    "placeholder": "War alles pünktlich bereit? War der Stand leicht zu finden?"
+  },
+  "product": {
+    "placeholder": "Geschmack, Frische, Portionsgröße",
+    "skip": "Dieses Produkt überspringen"
+  },
+  "rate": "{{name}} bewerten",
+  "comment": "Kommentar",
+  "submit": "Bewertung veröffentlichen",
+  "notNow": "Nicht jetzt",
+  "note": "Eine Bewertung pro Bestellung für den Stand und eine pro Produkt darin.",
+  "toast": {
+    "title": "Bewertung veröffentlicht",
+    "text": "Danke. Ihre Bewertung von {{stall}} ist online."
+  }
+}

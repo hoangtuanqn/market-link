@@ -1,5 +1,6 @@
 import L from 'leaflet';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import '@/styles/leaflet-theme.css';
 import Helper from '@/utils/helper';
 
@@ -31,6 +32,8 @@ const StallLocationMap = ({
   stallLng,
   onMove,
 }: StallLocationMapProps) => {
+  const { t } = useTranslation('FarmerStallProfile');
+  const stallLabel = t('map.yourStall');
   const hostRef = useRef<HTMLDivElement>(null);
   const stallMarkerRef = useRef<L.Marker | null>(null);
   const onMoveRef = useRef(onMove);
@@ -64,12 +67,12 @@ const StallLocationMap = ({
     const stallMarker = L.marker([stallLat, stallLng], {
       draggable: true,
       icon: L.divIcon({
-        html: pinHtml('stall', 'Your stall', 'S', true),
+        html: pinHtml('stall', stallLabel, 'S', true),
         className: '',
         iconSize: [34, 48],
         iconAnchor: [17, 48],
       }),
-      title: 'Your stall',
+      title: stallLabel,
     }).addTo(map);
     stallMarker.on('dragend', () => {
       const ll = stallMarker.getLatLng();
@@ -85,9 +88,9 @@ const StallLocationMap = ({
       inner.remove();
       stallMarkerRef.current = null;
     };
-    // Only the market changes recreate the map; stall moves are applied to the existing marker below.
+    // Only the market (or the language) changes recreate the map; stall moves are applied to the existing marker below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [marketLat, marketLng, marketName]);
+  }, [marketLat, marketLng, marketName, stallLabel]);
 
   // Keeps the pin in sync when the coordinates change from outside a drag (typing lat/lng, "use the market's location").
   useEffect(() => {

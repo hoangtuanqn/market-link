@@ -1,0 +1,52 @@
+{
+  "overline": "Semaine du {{from}} au {{to}} · Thảo Điền {{daysA}} · Thủ Đức {{daysB}}",
+  "title": "Stock de la semaine",
+  "intro": "Votre modèle hebdomadaire donne les quantités de départ pour chaque jour de marché. Appliquez-le, puis ajustez les jours où la récolte diffère. Le stock réservé est déjà retiré de ce que voient les clients.",
+  "saved": "Enregistré",
+  "per": "par {{unit}}",
+  "tabs": {
+    "label": "Vues du stock",
+    "week": "Cette semaine",
+    "template": "Modèle hebdomadaire"
+  },
+  "status": {
+    "available": "Disponible",
+    "soldOut": "Épuisé",
+    "paused": "En pause cette semaine"
+  },
+  "col": {
+    "product": "Produit",
+    "status": "Statut",
+    "price": "Prix",
+    "reserved": "Réservé",
+    "defaultPrice": "Prix par défaut"
+  },
+  "aria": {
+    "status": "Statut de {{product}}",
+    "day": "{{product}} {{day}}",
+    "dayAt": "{{product}} {{day}} {{market}}",
+    "price": "Prix de {{product}}",
+    "templateDay": "{{product}} modèle {{day}}"
+  },
+  "week": {
+    "caption": "Stock par produit et par jour de marché cette semaine",
+    "note": "Les quantités sont les unités disponibles ce jour-là. Un jour vide signifie que le produit n'est pas proposé. Les vendredis sont grisés car {{stall}} ne vend pas le vendredi.",
+    "savedText": "Stock de la semaine enregistré. Les clients voient déjà les nouvelles quantités.",
+    "save": "Enregistrer les modifications"
+  },
+  "template": {
+    "savedText": "Modèle enregistré. Il s'applique à partir de la semaine prochaine, sauf si vous l'appliquez maintenant.",
+    "save": "Enregistrer le modèle",
+    "note": "Les jours du modèle suivent vos jours d'ouverture. Modifiez-les dans Stand et retrait."
+  },
+  "apply": {
+    "open": "Appliquer le modèle à cette semaine",
+    "title": "Appliquer le modèle à cette semaine ?",
+    "keep": "Garder mes modifications",
+    "doneTitle": "Modèle appliqué",
+    "doneText": "Modèle appliqué au {{sat}} et au {{sun}}.",
+    "confirm": "Appliquer le modèle",
+    "text": "Les quantités du {{sat}} et du {{sun}} sont remplacées par celles du modèle. Le stock réservé reste exclu de la quantité affichée aux clients.",
+    "warning": "Les modifications faites pour cette semaine seront écrasées."
+  }
+}

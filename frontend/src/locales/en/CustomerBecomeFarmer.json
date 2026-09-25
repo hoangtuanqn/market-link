@@ -1,0 +1,139 @@
+{
+  "breadcrumbAccount": "Account",
+  "breadcrumb": "Apply to sell",
+  "since": "{{name}} · customer since {{date}}",
+  "title": "Sell what you grow",
+  "intro": "If you grow food, your account can become a stall at one of the four markets. You keep everything you have now and carry on shopping from other stalls.",
+  "next": {
+    "title": "What happens after you send this",
+    "read": "An admin reads the application and looks at your photos, usually within a few market days.",
+    "panel": "When it is approved, a stall panel appears in your account for stock, orders and pickup times.",
+    "setup": "You set your markets, days and pickup windows there, then list your first products."
+  },
+  "step1": {
+    "title": "Your stall",
+    "stallName": "Stall name",
+    "stallNamePlaceholder": "e.g. Khang Family Greens",
+    "stallNameHint": "Customers see this on the map and on their orders.",
+    "person": "Contact person",
+    "phone": "Phone",
+    "phoneHint": "Printed on every order so customers can reach you.",
+    "email": "Email",
+    "emailHint": "Your sign-in stays the same.",
+    "about": "About the stall",
+    "aboutPlaceholder": "One or two sentences. Who grows it and where."
+  },
+  "step2": {
+    "title": "What you grow",
+    "categories": "Categories",
+    "crops": "Main crops",
+    "cropsPlaceholder": "Water spinach, choy sum, Thai basil",
+    "cropsHint": "Separate them with commas. You list real products with prices after approval.",
+    "volume": "Roughly how much a week",
+    "volumePlaceholder": "About 120 bunches",
+    "volumeHint": "A rough figure. It helps the admin match you to a market with room.",
+    "method": "How you grow it",
+    "methodPlaceholder": "e.g. No pesticides in the last two seasons.",
+    "methodHint": "Optional, and shown on your stall page as your own words. MarketLink does not check or certify any of it."
+  },
+  "step3": {
+    "title": "Where you grow it",
+    "plot": "Address of the plot",
+    "plotPlaceholder": "Hamlet, ward, district",
+    "plotHint": "Only the admin sees this. Customers see your stall at the market, not your plot.",
+    "size": "Plot size",
+    "sizePlaceholder": "5,000 m²",
+    "since": "Growing here since",
+    "pin": "Pin the plot",
+    "map": "Pin your plot on the map",
+    "pinHint": "Drag the pin to your plot. It is the quickest way for the admin to see the photos match the place."
+  },
+  "step4": {
+    "title": "Photos of the plot",
+    "intro": "Two photos are enough and five is the most. One wide shot that shows the whole plot, and one close shot of what is growing right now. Take them in the last 30 days and do not filter them.",
+    "shots": {
+      "wide": "Wide shot of the plot",
+      "growing": "What is growing now",
+      "other": "Anything else"
+    },
+    "required": "Required",
+    "optional": "Optional",
+    "addPhoto": "Add photo",
+    "video": "A short video",
+    "addVideo": "Add a video, up to 60 seconds",
+    "videoHint": "Optional. A slow walk along the beds says more than any photo, and it makes approval faster.",
+    "banner": {
+      "title": "The admin is checking one thing: that the plot exists and grows what you listed.",
+      "text": "MarketLink does not check licences, food safety or organic claims, and a photo is not a certificate."
+    }
+  },
+  "step5": {
+    "title": "Where you want to sell",
+    "market": "Market",
+    "hint": "Pick one to start with. You set your days, pickup windows and cutoff in the stall panel once you are approved, and you can add the other markets later."
+  },
+  "step6": {
+    "title": "Before you send",
+    "true": "Everything here is true, and the photos are of my own plot",
+    "trueHint": "An application with photos that are not yours is rejected and the account can be suspended.",
+    "present": "I will be at the stall in my pickup window",
+    "presentHint": "Repeated no-shows are the usual reason a stall is suspended.",
+    "pay": "I understand customers pay me at the stall",
+    "payHint": "There is no online payment and no delivery anywhere in MarketLink.",
+    "send": "Send the application",
+    "later": "Save and finish later"
+  },
+  "preview": "Preview: after sending",
+  "sent": {
+    "eyebrow": "Sent just now",
+    "title": "Your application is with an admin",
+    "intro": "Nothing changes for you in the meantime. Keep shopping, and watch your notifications for the answer.",
+    "banner": {
+      "title": "You can still buy from other stalls while this is reviewed.",
+      "text": "Your orders, favorites and cart are untouched. The stall panel appears only once an admin approves."
+    },
+    "summary": "What you sent",
+    "stall": "Stall",
+    "grows": "Grows",
+    "plot": "Plot",
+    "plotText": "{{size}} in {{place}}, growing since {{since}}",
+    "evidence": "Evidence",
+    "photos_one": "{{count}} photo",
+    "photos_other": "{{count}} photos",
+    "photosAndVideo_one": "{{count}} photo and a video",
+    "photosAndVideo_other": "{{count}} photos and a video",
+    "market": "Market",
+    "keepShopping": "Keep shopping",
+    "withdraw": "Withdraw the application",
+    "progress": "Progress"
+  },
+  "timeline": {
+    "placed": {
+      "title": "Application sent",
+      "note": "Just now",
+      "by": "You"
+    },
+    "accepted": {
+      "title": "An admin reads it",
+      "note": "Usually within a few market days",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "Stall panel opens",
+      "note": "After approval",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "missingTitle": "Missing boxes",
+    "missing": "Tick the three boxes at the end before you send.",
+    "sentTitle": "Application sent",
+    "sent": "You will hear from an admin in your notifications.",
+    "withdrawnTitle": "Application withdrawn",
+    "withdrawn": "You can apply again whenever you like.",
+    "photoTitle": "Add a photo",
+    "photo": "Choose a photo from your phone or computer.",
+    "videoTitle": "Add a video",
+    "video": "Choose a video, up to 60 seconds."
+  }
+}

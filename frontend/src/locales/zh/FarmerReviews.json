@@ -1,0 +1,35 @@
+{
+  "title": "评价",
+  "intro": "顾客取货后的评价。简短的回复很有帮助，尤其是低分评价。",
+  "summary": "摊位 {{stall}} · 商品 {{products}} · {{reviews}}",
+  "reviewCount_one": "{{count}} 条评价",
+  "reviewCount_other": "{{count}} 条评价",
+  "filter": {
+    "all": "全部",
+    "needs": "待回复",
+    "replied": "已回复",
+    "stall": "关于摊位",
+    "products": "关于商品"
+  },
+  "toast": {
+    "postedTitle": "回复已发布",
+    "postedText": "已在 {{name}} 的评价下发布回复。",
+    "editTitle": "编辑回复",
+    "editText": "已打开回复编辑。"
+  },
+  "action": {
+    "editReply": "编辑回复",
+    "reply": "回复",
+    "report": "举报评价",
+    "post": "发布回复"
+  },
+  "form": {
+    "label": "你的回复，会显示在评价下方",
+    "placeholder": "谢谢 {{name}} 光临。下次我们会更仔细地打包订单。"
+  },
+  "empty": {
+    "title": "还没有评价",
+    "text": "订单完成后，顾客可以评价你的摊位和所买的商品（D-10）。"
+  },
+  "note": "摊位无法删除评价。如果某条评价违反准则，请举报，由管理员决定（FR-074）。"
+}

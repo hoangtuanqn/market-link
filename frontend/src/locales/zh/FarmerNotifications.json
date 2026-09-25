@@ -1,0 +1,16 @@
+{
+  "title": "通知",
+  "intro": "顾客的新订单、修改和取消，以及来自 MarketLink 的公告。",
+  "filter": {
+    "all": "全部",
+    "unread": "未读"
+  },
+  "unreadCount_one": "{{count}} 条未读",
+  "unreadCount_other": "{{count}} 条未读",
+  "unread": "未读",
+  "markAllRead": "全部标为已读",
+  "empty": {
+    "title": "暂无新消息",
+    "text": "有订单下单、修改或取消，或管理员发布公告时，都会在这里通知你。"
+  }
+}

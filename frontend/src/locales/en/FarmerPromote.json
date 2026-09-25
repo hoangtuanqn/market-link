@@ -1,0 +1,109 @@
+{
+  "title": "Promote & listings",
+  "intro": "Listing and selling are free. Paying only moves a product further up a page, or lets you list more in a day than the free allowance.",
+  "credit": "Credit {{amount}}",
+  "action": {
+    "topUp": "Top up credit",
+    "extend": "Extend",
+    "buy": "Buy"
+  },
+  "toast": {
+    "topUpTitle": "Top up requested",
+    "topUpText": "Top-up is arranged with the MarketLink team, then credited here.",
+    "pinnedTitle": "Pinned",
+    "pinnedText": "Pinned. It goes live within a few minutes and you can stop it at any time.",
+    "extendedTitle": "Extended",
+    "extendedText_one": "Extended by {{count}} day for {{price}}.",
+    "extendedText_other": "Extended by {{count}} days for {{price}}.",
+    "bundleTitle": "Bundle added",
+    "bundleText": "{{name}} added. The team will confirm the payment and credit it here.",
+    "addedTitle": "Added",
+    "addedText": "Added to your credit."
+  },
+  "srs": {
+    "title": "Charging Farmers is not in the SRS.",
+    "text": "The SRS rules out a payment gateway, so credit here is arranged with the team and entered by an admin. A new requirement and a decision on how money is actually taken have to come first."
+  },
+  "listings": {
+    "title": "Listings today",
+    "text": "The allowance resets at midnight. Editing a product you already listed is always free."
+  },
+  "bumps": {
+    "title": "Bumps this month",
+    "text": "A bump moves a product back to the top of its category for the day. It does not change the price or the stock."
+  },
+  "meter": {
+    "left": {
+      "listings_one": "of {{count}} free listing left",
+      "listings_other": "of {{count}} free listings left",
+      "bumps_one": "of {{count}} free bump left",
+      "bumps_other": "of {{count}} free bumps left"
+    },
+    "used": "{{used}} used",
+    "low": "running low"
+  },
+  "pinned": {
+    "title": "Pinned right now",
+    "hint": "A pinned product sits above the rest, marked Promoted"
+  },
+  "pinSection": {
+    "title": "Pin a product",
+    "note": "Slots are limited on purpose: three on a market page, two on the home page. When they are taken you go on a waiting list rather than outbidding anyone."
+  },
+  "pin": {
+    "market": {
+      "name": "Top of one market page",
+      "note": "Seen by everyone browsing that market"
+    },
+    "home": {
+      "name": "Home page, all four markets",
+      "note": "The scarcest slot on MarketLink"
+    },
+    "slots_one": "{{count}} slot",
+    "slots_other": "{{count}} slots",
+    "product": "Which product",
+    "duration": "How long",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "cta": "Pin for {{price}}"
+  },
+  "bundles": {
+    "title": "Bundles",
+    "intro": "Cheaper than buying one at a time, and they run for {{days}} days.",
+    "choose": "Choose {{name}}"
+  },
+  "bundle": {
+    "starter": "Starter",
+    "market": "Market",
+    "season": "Season"
+  },
+  "bundleLine": {
+    "listings_one": "{{count}} listing past the daily limit",
+    "listings_other": "{{count}} listings past the daily limit",
+    "bumps_one": "{{count}} extra bump",
+    "bumps_other": "{{count}} extra bumps",
+    "pinDays_one": "{{count}} day pinned on a market page",
+    "pinDays_other": "{{count}} days pinned on a market page",
+    "runs_one": "Runs for {{count}} day",
+    "runs_other": "Runs for {{count}} days",
+    "noLimit": "No daily listing limit",
+    "bumpsTotal_one": "{{count}} bump",
+    "bumpsTotal_other": "{{count}} bumps"
+  },
+  "extrasSection": {
+    "title": "One at a time"
+  },
+  "extras": {
+    "listing": "One listing past the daily five",
+    "bump": "One bump past the monthly ten"
+  },
+  "col": {
+    "product": "Product",
+    "until": "Runs until",
+    "views": "Views while pinned",
+    "added": "Added to a cart",
+    "paid": "Paid",
+    "what": "What",
+    "price": "Price"
+  }
+}

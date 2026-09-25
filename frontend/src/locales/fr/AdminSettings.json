@@ -1,0 +1,14 @@
+{
+  "title": "Paramètres",
+  "intro": "Vos préférences personnelles et les valeurs par défaut d’un stand tant qu’il n’a pas défini les siennes.",
+  "platform": "Valeurs par défaut de la plateforme",
+  "platformNote": "Enregistrées avec votre compte pour l’instant. Reste à décider si une valeur modifiée s’appliquera aux stands qui n’ont jamais défini la leur.",
+  "cutoff": "Heure limite par défaut",
+  "max": "Commandes par créneau par défaut",
+  "timezone": "Fuseau horaire",
+  "timezoneNote": "Toutes les dates et heures de la plateforme sont lues dans ce fuseau.",
+  "hours_one": "{{count}} heure",
+  "hours_other": "{{count}} heures",
+  "orders_one": "{{count}} commande",
+  "orders_other": "{{count}} commandes"
+}

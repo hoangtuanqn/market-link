@@ -1,0 +1,39 @@
+{
+  "notFound": {
+    "title": "Ese mercado ya no está aquí",
+    "browse": "Ver mercados"
+  },
+  "intro_one": "{{count}} puesto. Cada puesto cierra sus pedidos entre 12 y 24 horas antes de la recogida. Recoge en el puesto y paga directamente al agricultor.",
+  "intro_other": "{{count}} puestos. Cada puesto cierra sus pedidos entre 12 y 24 horas antes de la recogida. Recoge en el puesto y paga directamente al agricultor.",
+  "toast": {
+    "saved": "{{name}} guardado.",
+    "removed": "{{name}} quitado de favoritos."
+  },
+  "save": {
+    "on": "Mercado guardado",
+    "off": "Guardar mercado"
+  },
+  "directions": "Cómo llegar",
+  "search": {
+    "scope": "Buscar en",
+    "scopes": {
+      "product": "Productos de este mercado",
+      "farmer": "Puestos de este mercado"
+    },
+    "keyword": "Palabra clave",
+    "placeholder": "Espinaca de agua, pan de masa madre, huevos…",
+    "submit": "Buscar"
+  },
+  "day": "Día de mercado",
+  "all": "Todo",
+  "inStock": "En stock",
+  "available": "Disponible el {{day}}",
+  "productsFrom": "{{products}} de {{stalls}}",
+  "products_one": "{{count}} producto",
+  "products_other": "{{count}} productos",
+  "stalls_one": "{{count}} puesto",
+  "stalls_other": "{{count}} puestos",
+  "mapLabel": "Mapa de {{name}} y sus puestos",
+  "stallsTitle": "Puestos de este mercado el {{day}}",
+  "stallsNote": "No se muestran los puestos que no venden el día elegido"
+}

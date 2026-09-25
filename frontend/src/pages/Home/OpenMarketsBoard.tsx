@@ -1,14 +1,16 @@
+import { useTranslation } from 'react-i18next';
 import { ButtonLink } from '@/components/ui/button';
-import { dayList } from '@/lib/format';
+import { dayList, formatClock } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 
 /** Chalkboard listing the markets open this weekend. */
 const OpenMarketsBoard = ({ markets }: { markets: MarketType[] }) => {
+  const { t } = useTranslation('Home');
   return (
     <aside aria-labelledby="open-h" className="bg-board text-on-board flex flex-col gap-3 rounded-md p-6">
-      <p className="text-overline text-board-muted uppercase">Open this weekend</p>
+      <p className="text-overline text-board-muted uppercase">{t('board.overline')}</p>
       <h2 id="open-h" className="font-hand text-[28px] leading-[1.1]">
-        Where the stalls are
+        {t('board.title')}
       </h2>
 
       <ul className="flex flex-col gap-2">
@@ -23,14 +25,14 @@ const OpenMarketsBoard = ({ markets }: { markets: MarketType[] }) => {
               <span className="text-board-muted">{dayList(m.days)}</span>
             </span>
             <span className="tabular-nums">
-              {m.open}–{m.close}
+              {formatClock(m.open)}–{formatClock(m.close)}
             </span>
           </li>
         ))}
       </ul>
 
       <ButtonLink to="/map" variant="accent" className="whitespace-normal">
-        See all {markets.length} markets on the map
+        {t('board.seeAll', { count: markets.length })}
       </ButtonLink>
     </aside>
   );

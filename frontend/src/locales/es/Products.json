@@ -1,0 +1,44 @@
+{
+  "markets_one": "{{count}} mercado",
+  "markets_other": "{{count}} mercados",
+  "stallsSelling_one": "{{count}} puesto vendiendo",
+  "stallsSelling_other": "{{count}} puestos vendiendo",
+  "title": "Productos",
+  "intro": "Todo lo que los puestos han publicado esta semana. Filtra por categoría, precio, mercado y día, y añádelo al carrito.",
+  "filters": {
+    "title": "Filtros",
+    "clearAll": "Borrar todo",
+    "day": "Día de mercado",
+    "category": "Categoría",
+    "price": "Precio por unidad",
+    "market": "Mercado",
+    "allMarkets": "Todos los mercados",
+    "inStock": "Solo en stock",
+    "inStockNote": "Oculta los productos agotados y en pausa"
+  },
+  "price": {
+    "any": "Cualquier precio",
+    "low": "Menos de {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Más de {{high}}"
+  },
+  "summary_one": "<b>{{count}} producto</b> coincide el {{day}}",
+  "summary_other": "<b>{{count}} productos</b> coinciden el {{day}}",
+  "sort": "Ordenar",
+  "sorts": {
+    "newest": "Más nuevos",
+    "priceAsc": "Precio: de menor a mayor",
+    "priceDesc": "Precio: de mayor a menor",
+    "rating": "Mejor valorados"
+  },
+  "pager": {
+    "showing": "Mostrando {{from}}–{{to}} de {{total}}",
+    "onePage_one": "{{count}} producto en una página",
+    "onePage_other": "Los {{count}} productos en una página"
+  },
+  "empty": {
+    "title": "Nada coincide con estos filtros",
+    "text": "Prueba a quitar el filtro de precio o amplíalo a otra categoría o mercado.",
+    "clear": "Borrar todos los filtros"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "notFound": {
+    "title": "Ce produit n'est plus en vente",
+    "text": "Le stand l'a peut-être retiré. Regardez ce qu'il propose d'autre cette semaine.",
+    "browse": "Voir les produits"
+  },
+  "breadcrumb": "Produits",
+  "photo": "Photo de {{name}}",
+  "favorite": {
+    "add": "Ajouter aux favoris : {{name}}",
+    "remove": "Retirer des favoris : {{name}}"
+  },
+  "soldPer": "vendu au {{unit}}",
+  "left": "Il reste <b>{{qty}}</b> cette semaine",
+  "stockUpdated": "Stock mis à jour aujourd'hui, avant les commandes de ce week-end.",
+  "notifyMe": "Me prévenir du retour",
+  "added": {
+    "title": "Ajouté au panier",
+    "text": "Vous avez ajouté {{qty}} de {{name}} au panier."
+  },
+  "addToCart": "Ajouter au panier",
+  "payNote": "Le stock vous est réservé dès la commande. Vous payez {{price}} au stand au moment du retrait.",
+  "fromStall": "Du stand",
+  "sellingSince": "vend ici depuis le {{date}}",
+  "stats": {
+    "reviews_one": "{{count}} avis",
+    "reviews_other": "{{count}} avis",
+    "markets_one": "marché",
+    "markets_other": "marchés",
+    "hours_one": "{{count}} h",
+    "hours_other": "{{count}} h",
+    "cutoff": "clôture des commandes"
+  },
+  "seeStall": "Voir le stand",
+  "messageStall": "Écrire au stand",
+  "details": {
+    "title": "Détails du produit",
+    "soldPer": "Vendu au",
+    "category": "Catégorie",
+    "stall": "Stand",
+    "market": "Marché"
+  },
+  "collect": {
+    "title": "Où et quand retirer",
+    "map": "Voir sur la carte",
+    "note": "Chaque créneau accepte 5 commandes. Un créneau complet est verrouillé, et le stand bloque les modifications avant l'heure limite ci-dessus."
+  },
+  "table": {
+    "market": "Marché",
+    "stallCode": "Stand {{code}}",
+    "days": "Jours",
+    "window": "Créneau de retrait",
+    "cutoff": "Clôture",
+    "cutoffValue_one": "{{count}} heure avant votre créneau",
+    "cutoffValue_other": "{{count}} heures avant votre créneau",
+    "product": "Produit",
+    "price": "Prix",
+    "perUnit": "le {{unit}}",
+    "left": "Restant"
+  },
+  "directions": "Itinéraire",
+  "reviews": {
+    "title": "Avis sur ce produit",
+    "write": "Écrire un avis",
+    "writeNote": "Disponible une fois une commande avec ce produit terminée.",
+    "summary_one": "{{count}} avis, issu d'une commande terminée",
+    "summary_other": "{{count}} avis, tous issus de commandes terminées"
+  },
+  "similar": {
+    "title": "{{name}} dans d'autres stands ce week-end",
+    "note": "Même légume, autre parcelle, autre prix",
+    "here": "Vous êtes ici",
+    "view": "Voir"
+  },
+  "also": {
+    "title": "Aussi chez {{stall}} cette semaine"
+  },
+  "report": {
+    "sentTitle": "Signalement envoyé",
+    "sentText": "Un administrateur va examiner cette annonce.",
+    "button": "Signaler cette annonce",
+    "note": "Prix erroné, photo erronée ou quelque chose qui n'a pas sa place sur un marché fermier."
+  }
+}

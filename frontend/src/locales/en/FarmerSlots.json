@@ -1,0 +1,88 @@
+{
+  "crumbStall": "Stall & pickup",
+  "title": "Pickup slots",
+  "intro": "Slots are 30-minute windows inside your pickup window. Each slot takes a limited number of orders so nobody queues for long. A full slot is greyed out for customers.",
+  "market": "Market",
+  "day": "Day",
+  "cancel": "Cancel",
+  "minutes_one": "{{count}} minute",
+  "minutes_other": "{{count}} minutes",
+  "table": {
+    "slot": "Slot",
+    "booked": "Booked",
+    "bookedOf": "{{booked}} of {{max}}",
+    "full": "Full",
+    "max": "Max orders",
+    "maxFor": "Max orders {{slot}}",
+    "closes": "Closes for changes",
+    "open": "Open to new orders",
+    "off": "Off",
+    "on": "On",
+    "caption_one": "{{day}} {{date}} · {{market}} · {{count}} slot",
+    "caption_other": "{{day}} {{date}} · {{market}} · {{count}} slots"
+  },
+  "empty": {
+    "title": "No slots for this day",
+    "text": "Generate the slots for a market day and customers can start booking a pickup time."
+  },
+  "defaults": {
+    "title": "Defaults",
+    "length": "Slot length",
+    "perSlot": "Orders per slot",
+    "windowAt": "Window at {{market}}",
+    "window": "{{start}} – {{end}} on {{days}}",
+    "cutoff": "Cutoff",
+    "cutoffValue_one": "{{count}} hour before the slot",
+    "cutoffValue_other": "{{count}} hours before the slot",
+    "note": "Change the window and days under Stall & pickup. Slots for a day are created from them."
+  },
+  "closing": {
+    "title": "Closing a slot",
+    "text": "Turning a slot off hides it from new orders. Orders already in it stay; contact those customers if you cannot make it."
+  },
+  "away": {
+    "title": "Days you are not selling",
+    "intro": "A market day you will miss — a short harvest, illness, a van that will not start. Your stall drops off the market page for that day and takes no new orders. Orders already placed are declined with your reason, and the stock goes back to you (D-02).",
+    "open": "Tell customers you are away",
+    "date": "Date",
+    "reasonSeen": "Reason customers see",
+    "declined": "Orders declined",
+    "backTitle": "You are selling again",
+    "backText": "You are selling that day again. Declined orders are not brought back; the customer has to order again.",
+    "back": "I can make it",
+    "emptyTitle": "You are selling on every market day",
+    "emptyText": "Tell customers in advance if that changes, so nobody turns up to an empty stall.",
+    "notNow": "Not now",
+    "confirm": "Tell them",
+    "declinedTitle": "Orders declined",
+    "toldTitle": "Customers told",
+    "declinedText_one": "{{count}} order declined and the customer told.",
+    "declinedText_other": "{{count}} orders declined and the customers told.",
+    "toldText": "Customers can no longer order from you for {{date}}.",
+    "dialogText": "Orders already placed for that day are declined with your reason and the stock returns to you. The customer is told straight away and pays nothing, because nothing is paid until pickup.",
+    "marketDay": "Market day",
+    "reasonLabel": "Reason customers will see",
+    "seedReason": "Harvest was short after the rain",
+    "notGiven": "Not given",
+    "note": {
+      "placed_one": "{{count}} order placed",
+      "placed_other": "{{count}} orders placed",
+      "none": "no orders yet",
+      "shut": "market is shut anyway"
+    }
+  },
+  "closure": {
+    "title": "The market itself is shut on {{date}}.",
+    "text": "{{reason}}. You do not need to do anything: nobody can order from any stall for that day, and MarketLink has told your customers."
+  },
+  "generate": {
+    "open": "Generate slots for next week",
+    "title": "Generate slots for {{from}} – {{to}}?",
+    "doneTitle": "Slots created",
+    "doneText_one": "{{count}} slot created for {{from}} – {{to}}.",
+    "doneText_other": "{{count}} slots created for {{from}} – {{to}}.",
+    "confirm_one": "Generate {{count}} slot",
+    "confirm_other": "Generate {{count}} slots",
+    "text": "Creates slots from {{start}} to {{end}} on {{daysA}} at Thảo Điền and on {{daysB}} at Thủ Đức. Existing slots are not changed."
+  }
+}

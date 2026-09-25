@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AuthApi from '@/api-requests/auth.requests';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
@@ -27,6 +28,7 @@ const START: CropState = { zoom: 1, offset: { x: 0, y: 0 } };
  * cắt ảnh → lưu, hoặc ảnh chọn từ máy → cắt ảnh → lưu.
  */
 const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps) => {
+  const { t } = useTranslation('CustomerAccount');
   const [image, setImage] = useState<HTMLImageElement | null>(null);
   const [fromCamera, setFromCamera] = useState(false);
   const [crop, setCrop] = useState<CropState>(START);
@@ -54,7 +56,7 @@ const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps)
       setImage(await loadImage(await captureFrame(video)));
       setCrop(START);
     } catch (e) {
-      setError(e instanceof PhotoError ? e.message : 'Could not take the photo. Try again.');
+      setError(e instanceof PhotoError ? t(`photoErrors.${e.code}`, { mb: 15 }) : t('dialog.takeFailed'));
     }
   };
 
@@ -78,10 +80,10 @@ const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps)
       const blob = await cropToJpeg(image, image.naturalWidth, image.naturalHeight, FRAME, crop.zoom, crop.offset);
       const response = await AuthApi.uploadAvatar(blob);
       if (fromCamera) releaseImage(image);
-      onSaved(response.data, response.message || 'Your photo is saved.');
+      onSaved(response.data, response.message || t('dialog.saved'));
     } catch (e) {
       const fields = Helper.getFieldErrors(e);
-      setError(fields.file ?? Helper.getErrorMessage(e, 'Could not save your photo. Please try again.'));
+      setError(fields.file ?? Helper.getErrorMessage(e, t('dialog.saveFailed')));
       setBusy(false);
     }
   };
@@ -92,31 +94,31 @@ const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps)
   return (
     <Dialog
       open={source !== null}
-      title={cameraStep ? 'Take a photo' : 'Frame your photo'}
+      title={cameraStep ? t('dialog.takeTitle') : t('dialog.frameTitle')}
       onClose={close}
       actions={
         <>
           <Button variant="secondary" onClick={close} disabled={busy}>
-            Cancel
+            {t('dialog.cancel')}
           </Button>
           {cameraStep ? (
             <>
               {cameraFailed && (
                 <Button variant="secondary" onClick={onPickFile}>
-                  Upload a photo instead
+                  {t('dialog.uploadInstead')}
                 </Button>
               )}
               <Button onClick={take} disabled={!video}>
-                Take photo
+                {t('dialog.take')}
               </Button>
             </>
           ) : (
             <>
               <Button variant="secondary" onClick={fromCamera ? retake : onPickFile} disabled={busy}>
-                {fromCamera ? 'Retake' : 'Choose another'}
+                {fromCamera ? t('dialog.retake') : t('dialog.chooseAnother')}
               </Button>
               <Button onClick={save} disabled={busy || !image}>
-                {busy ? 'Saving…' : 'Save photo'}
+                {busy ? t('dialog.saving') : t('dialog.save')}
               </Button>
             </>
           )}
@@ -129,14 +131,14 @@ const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps)
         ) : (
           image && (
             <>
-              <p>Drag to move the photo and zoom until your face fills the circle.</p>
+              <p>{t('dialog.frameHelp')}</p>
               <CropStep image={image} value={crop} onChange={setCrop} />
             </>
           )
         )}
         {error && (
           <Banner variant="danger" title={error}>
-            Your current photo is unchanged.
+            {t('dialog.unchanged')}
           </Banner>
         )}
       </div>

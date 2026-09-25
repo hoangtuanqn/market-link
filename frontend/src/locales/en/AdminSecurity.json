@@ -1,0 +1,84 @@
+{
+  "overline": "Your account",
+  "title": "Security",
+  "loading": "Loading two-step verification",
+  "loadError": {
+    "title": "Couldn't load two-step verification",
+    "text": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "pill": {
+    "on": "On",
+    "off": "Off"
+  },
+  "error": {
+    "check": "Could not check the code. Please try again.",
+    "start": "Could not start the set-up. Please try again.",
+    "sixDigits": "A code is six digits."
+  },
+  "toast": {
+    "accepted": "Code accepted. Save the recovery codes to finish.",
+    "on": "Two-step verification is on. You will be asked for a code at the next sign-in.",
+    "off": "Two-step verification is off.",
+    "regenerated": "Ten new recovery codes. The old ones no longer work."
+  },
+  "mfa": {
+    "title": "Two-step verification",
+    "intro": "A second step after your password, from an app on your phone. An admin can approve stalls, deactivate customers and change what the platform charges, so a password on its own is thin.",
+    "starting": "Starting…",
+    "turnOn": "Turn on two-step verification"
+  },
+  "step1": {
+    "title": "Scan this with your authenticator",
+    "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password — any of them. Nothing is sent anywhere: the code below is drawn by your own browser.",
+    "qr": "QR code for your authenticator app",
+    "manual": "<b>Cannot scan?</b> Type this key in by hand:",
+    "type": "Type",
+    "typeValue": "Time-based (TOTP)",
+    "algorithm": "Algorithm",
+    "digits": "Digits",
+    "period": "Period",
+    "seconds_one": "{{count}} second",
+    "seconds_other": "{{count}} seconds"
+  },
+  "step2": {
+    "title": "Type the code it shows",
+    "text": "This proves the phone and the server agree on the time before anything is switched on.",
+    "code": "Six-digit code",
+    "confirm": "Confirm",
+    "confirmed": "Confirmed"
+  },
+  "step3": {
+    "title": "Save your recovery codes",
+    "text": "Ten codes, each usable once. They are the only way back in if you lose the phone — and this platform has one admin account, so losing it locks everybody out.",
+    "saved": "I have saved them",
+    "pending": "The codes appear here once the code above is confirmed."
+  },
+  "codesLeft": {
+    "label": "Recovery codes left",
+    "value": "<b>{{left}}</b> of {{total}}"
+  },
+  "regen": {
+    "open": "Make new recovery codes",
+    "title": "Make new recovery codes?",
+    "keep": "Keep the old ones",
+    "confirm": "Make new codes",
+    "text": "The ten you have now stop working straight away. Save the new ones before you close this screen."
+  },
+  "disable": {
+    "open": "Turn it off",
+    "title": "Turn off two-step verification?",
+    "keep": "Leave it on",
+    "confirm": "Turn it off",
+    "text": "Your password becomes the only thing standing between anyone and the approvals, the customer accounts and the platform prices."
+  },
+  "dialogCode": "Code from your authenticator",
+  "codes": {
+    "copy": "Copy the codes",
+    "download": "Download",
+    "copied": "Copied. Keep them somewhere other than the phone that holds the authenticator.",
+    "copyFailed": "Could not copy. Select the codes and copy them by hand.",
+    "downloaded": "Downloaded as {{file}}.",
+    "fileHeading": "MarketLink admin recovery codes"
+  }
+}

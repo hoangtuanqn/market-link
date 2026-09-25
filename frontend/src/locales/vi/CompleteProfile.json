@@ -1,0 +1,19 @@
+{
+  "title": "Hoàn tất hồ sơ",
+  "intro": "Bạn đã đăng nhập bằng Google với <b>{{email}}</b>. Google chỉ cho chúng tôi tên và email, nên chúng tôi hỏi một lần số điện thoại và địa chỉ của bạn. Sạp bạn đặt hàng dùng chúng để giao đơn cho bạn vào ngày chợ.",
+  "fields": {
+    "fullName": "Họ và tên",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "addressPlaceholder": "Số nhà, đường, phường, quận",
+    "addressHint": "Dùng để tính khoảng cách và chỉ đường."
+  },
+  "submit": "Lưu và tiếp tục",
+  "saving": "Đang lưu…",
+  "signOut": "Đăng xuất",
+  "note": "Cần đủ cả ba thông tin để dùng MarketLink. Nếu chưa muốn nhập bây giờ, hãy đăng xuất.",
+  "toast": {
+    "saved": "Đã lưu thông tin của bạn.",
+    "failed": "Không lưu được thông tin. Vui lòng thử lại."
+  }
+}

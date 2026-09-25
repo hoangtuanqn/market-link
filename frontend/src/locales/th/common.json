@@ -1,0 +1,345 @@
+{
+  "settings": {
+    "appearance": "การแสดงผล",
+    "theme": "ธีม",
+    "themeNote": "มีผลทันที \"ตามอุปกรณ์\" จะใช้ตามโทรศัพท์หรือคอมพิวเตอร์ของคุณ",
+    "themes": {
+      "light": "สว่าง",
+      "dark": "มืด",
+      "system": "ตามอุปกรณ์"
+    },
+    "language": "ภาษา",
+    "languageNote": "ภาษาของเมนู ปุ่ม และข้อความ ชื่อแผง สินค้า และสถานที่จะคงไว้ตามที่แผงเขียน",
+    "format": "เงิน วันที่ และหน่วย",
+    "currency": "แสดงราคาเป็น",
+    "currencyNote": "คุณชำระเป็นเงินดองเวียดนามที่แผงเสมอ สกุลเงินอื่นแสดงไว้ข้างๆ เพื่ออ้างอิงเท่านั้น ตามอัตราคงที่ ณ วันที่ {{date}}",
+    "currencies": {
+      "VND": "₫ ดองเวียดนามเท่านั้น",
+      "USD": "₫ และ $ ดอลลาร์สหรัฐ",
+      "EUR": "₫ และ € ยูโร",
+      "JPY": "₫ และ ¥ เยนญี่ปุ่น"
+    },
+    "units": "น้ำหนักและปริมาตร",
+    "unitsNote": "แปลงเฉพาะหน่วยวัด แผงที่ขายเป็นกำ เป็นหัว หรือเป็นถาดจะใช้คำของแผงเอง",
+    "metric": "เมตริก · kg, g, ลิตร",
+    "imperial": "อิมพีเรียล · lb, oz, ไพนต์",
+    "date": "วันที่",
+    "clock": "เวลา",
+    "clock24": "24 ชั่วโมง · 19:00",
+    "clock12": "12 ชั่วโมง · 7:00 pm",
+    "preview": "ตัวอย่าง: {{date}} · {{time}} · {{price}}",
+    "notifications": "การแจ้งเตือน",
+    "notificationsNote": "บันทึกไว้กับบัญชีของคุณ MarketLink ยังไม่ส่งการแจ้งเตือน เมื่อเริ่มส่งจะเป็นไปตามตัวเลือกเหล่านี้",
+    "notes": {
+      "customer": {
+        "orderDecided": "คำสั่งซื้อได้รับการยอมรับหรือถูกปฏิเสธ",
+        "orderReady": "คำสั่งซื้อพร้อมให้รับ",
+        "backInStock": "สินค้าที่บันทึกไว้กลับมามีของ",
+        "announcements": "ประกาศจาก MarketLink",
+        "stallReply": "แผงตอบข้อความของคุณ"
+      },
+      "farmer": {
+        "newOrder": "มีคำสั่งซื้อใหม่",
+        "orderChanged": "ลูกค้าแก้ไขหรือยกเลิกคำสั่งซื้อ",
+        "cutoffSoon": "อีกหนึ่งชั่วโมงจะถึงเวลาปิดรับ",
+        "newReview": "มีรีวิวใหม่ของแผงคุณ",
+        "announcements": "ประกาศจาก MarketLink"
+      },
+      "admin": {
+        "farmerApplication": "มีใบสมัคร Farmer เข้ามา",
+        "reported": "มีการรายงานรีวิวหรือรายการสินค้า",
+        "newFeedback": "ความคิดเห็นใหม่",
+        "marketEdited": "มีการแก้ไขตลาด"
+      }
+    },
+    "save": "บันทึกการตั้งค่า",
+    "saving": "กำลังบันทึก…",
+    "saveHint": "ธีมมีผลทันทีที่เลือก ส่วนที่เหลือมีผลเมื่อคุณบันทึก",
+    "savedTitle": "บันทึกแล้ว",
+    "savedText": "บันทึกการตั้งค่าของคุณแล้ว",
+    "saveError": "บันทึกการตั้งค่าไม่ได้ โปรดลองอีกครั้ง"
+  },
+  "actions": {
+    "back": "ย้อนกลับ",
+    "close": "ปิด",
+    "directions": "เส้นทาง",
+    "dismiss": "ปิด",
+    "remove": "นำออก",
+    "tryAgain": "ลองอีกครั้ง"
+  },
+  "admin": {
+    "badge": "ผู้ดูแล",
+    "security": "ความปลอดภัย",
+    "signIn": "เข้าสู่ระบบผู้ดูแล"
+  },
+  "cart": {
+    "orderOf": "คำสั่งซื้อที่ {{index}} จาก {{of}}",
+    "payAtPickup": "ชำระเงินที่แผงเมื่อรับสินค้า"
+  },
+  "chat": {
+    "assistant": "ผู้ช่วย MarketLink",
+    "you": "คุณ",
+    "intent": "เจตนา: {{intent}}"
+  },
+  "errors": {
+    "network": "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง"
+  },
+  "farmerNav": {
+    "sections": "หมวด",
+    "navigation": "เมนู Farmer",
+    "home": "MarketLink — ภาพรวม Farmer",
+    "badge": "Farmer",
+    "expand": "ขยายแถบด้านข้าง",
+    "collapse": "ย่อแถบด้านข้าง",
+    "approvedMarkets_one": "อนุมัติแล้ว · {{count}} ตลาด",
+    "approvedMarkets_other": "อนุมัติแล้ว · {{count}} ตลาด",
+    "changeMarket": "เปลี่ยนตลาดที่กำลังดู",
+    "roleStall": "Farmer · {{stall}}",
+    "openNavigation": "เปิดเมนู",
+    "searchPlaceholder": "รหัสคำสั่งซื้อหรือลูกค้า",
+    "yourAccount": "บัญชีของคุณ",
+    "today": "วันนี้",
+    "overview": "ภาพรวม",
+    "incomingOrders": "คำสั่งซื้อเข้า",
+    "pickupSlots": "ช่วงเวลารับสินค้า",
+    "stock": "สต็อก",
+    "weekStock": "สต็อกสัปดาห์นี้",
+    "products": "สินค้า",
+    "stall": "แผง",
+    "stallPickup": "แผงและการรับสินค้า",
+    "reviews": "รีวิว",
+    "salesHistory": "ประวัติการขาย",
+    "inbox": "กล่องข้อความ",
+    "messages": "ข้อความ",
+    "notifications": "การแจ้งเตือน",
+    "account": "บัญชี",
+    "promote": "โปรโมตและรายการสินค้า",
+    "approval": "สถานะการอนุมัติ",
+    "settings": "การตั้งค่า",
+    "shop": "ช้อปปิ้ง",
+    "shopMarkets": "ซื้อของที่ตลาด"
+  },
+  "footer": {
+    "tagline": "สั่งจองล่วงหน้าจากตลาดเกษตรกรใกล้บ้าน แล้วไปรับที่แผง ชำระเงินกับ Farmer โดยตรงเมื่อรับสินค้า",
+    "shop": "ซื้อ",
+    "marketsNearYou": "ตลาดใกล้คุณ",
+    "inSeason": "ตามฤดูกาล",
+    "marketMap": "แผนที่ตลาด",
+    "favoriteStalls": "แผงโปรด",
+    "sell": "ขาย",
+    "registerFarmer": "สมัครเป็น Farmer",
+    "handlingPreOrders": "การจัดการคำสั่งจองล่วงหน้า",
+    "stallGuidelines": "แนวทางสำหรับแผง",
+    "marketLink": "MarketLink",
+    "aboutUs": "เกี่ยวกับเรา",
+    "contactUs": "ติดต่อเรา",
+    "feedback": "ความคิดเห็นและแจ้งปัญหา",
+    "mapData": "ข้อมูลแผนที่ © ผู้ร่วมพัฒนา OpenStreetMap"
+  },
+  "header": {
+    "cart": "ตะกร้า",
+    "cartItems_one": "ตะกร้า {{count}} รายการ",
+    "cartItems_other": "ตะกร้า {{count}} รายการ",
+    "hi": "สวัสดี <b>{{name}}</b>",
+    "main": "เมนูหลัก",
+    "menu": "เมนู",
+    "notifications": "การแจ้งเตือน",
+    "notificationsUnread_one": "การแจ้งเตือน ยังไม่อ่าน {{count}} รายการ",
+    "notificationsUnread_other": "การแจ้งเตือน ยังไม่อ่าน {{count}} รายการ",
+    "openMenu": "เปิดเมนู",
+    "search": "ค้นหา"
+  },
+  "kpi": {
+    "noChange": "ไม่เปลี่ยนแปลง",
+    "vsBefore": "เทียบกับช่วงก่อนหน้า"
+  },
+  "loadError": {
+    "title": "โหลด{{noun}}ไม่ได้",
+    "text": "รายการยังไม่มาในครั้งนี้ สิ่งที่คุณบันทึกหรือสั่งซื้อไว้ไม่ได้รับผลกระทบ",
+    "help": "ส่วนใหญ่เกิดจากการเชื่อมต่อ ไม่ใช่สิ่งที่คุณทำ หากลองอีกครั้งแล้วยังไม่ได้ <link>บอกเราว่าเกิดอะไรขึ้น</link> แล้วเราจะตรวจสอบให้",
+    "helpAlt": "ส่วนใหญ่เกิดจากการเชื่อมต่อ ไม่ใช่สิ่งที่คุณทำ หากลองอีกครั้งแล้วยังไม่ได้ <alt /> หรือ <link>บอกเราว่าเกิดอะไรขึ้น</link> แล้วเราจะตรวจสอบให้"
+  },
+  "loading": {
+    "markets": "กำลังโหลดตลาด"
+  },
+  "logo": {
+    "home": "MarketLink — หน้าแรก"
+  },
+  "map": {
+    "attribution": "© ผู้ร่วมพัฒนา {{link}}",
+    "open": "เปิด",
+    "placeholder": "แผนที่ — {{label}}"
+  },
+  "marketCard": {
+    "save": "บันทึก {{name}}",
+    "unsave": "เลิกบันทึก {{name}}",
+    "days": "วันที่ตลาดเปิด",
+    "open": "เปิด",
+    "closed": "ปิด",
+    "hours": "เวลา <b>{{open}}–{{close}}</b>",
+    "stalls_one": "<b>{{count}}</b> แผง",
+    "stalls_other": "<b>{{count}}</b> แผง",
+    "away": "ห่าง <b>{{distance}}</b>",
+    "seeStalls": "ดูแผง"
+  },
+  "nav": {
+    "markets": "ตลาด",
+    "products": "สินค้า",
+    "map": "แผนที่",
+    "aboutUs": "เกี่ยวกับเรา",
+    "myOrders": "คำสั่งซื้อของฉัน",
+    "favorites": "รายการโปรด",
+    "profile": "โปรไฟล์",
+    "settings": "การตั้งค่า",
+    "signIn": "เข้าสู่ระบบ",
+    "createAccount": "สร้างบัญชี",
+    "signOut": "ออกจากระบบ",
+    "yourAccount": "บัญชีของคุณ"
+  },
+  "order": {
+    "code": "คำสั่งซื้อ {{code}}",
+    "market": "ตลาด",
+    "pickup": "รับสินค้า",
+    "payOnPickup": "ชำระเมื่อรับสินค้า",
+    "declinedReason": "เหตุผลจากแผง: {{reason}} ไม่ต้องชำระเงิน",
+    "cancelledNote": "คุณยกเลิกคำสั่งซื้อนี้ก่อนเวลาปิดรับ สต็อกกลับไปที่แผงแล้ว",
+    "lockedNote": "ปิดรับไปแล้วเมื่อ {{cutoff}} หากต้องการเปลี่ยนแปลง โปรดติดต่อแผงโดยตรง",
+    "editableNote": "แก้ไขหรือยกเลิกได้ก่อน {{cutoff}} หลังจากนั้นคำสั่งซื้อจะถูกล็อก",
+    "edit": "แก้ไขคำสั่งซื้อ",
+    "cancel": "ยกเลิกคำสั่งซื้อ",
+    "reviewed": "คุณรีวิวคำสั่งซื้อนี้แล้ว",
+    "review": "รีวิวแผงและสินค้า",
+    "reorder": "สั่งซื้ออีกครั้ง"
+  },
+  "orderStatus": {
+    "placed": "สั่งแล้ว",
+    "accepted": "รับคำสั่งแล้ว",
+    "ready": "พร้อมให้รับ",
+    "completed": "เสร็จสิ้น",
+    "declined": "ถูกปฏิเสธ",
+    "cancelled": "ยกเลิกแล้ว"
+  },
+  "pagination": {
+    "label": "การแบ่งหน้า",
+    "previous": "หน้าก่อน",
+    "next": "หน้าถัดไป",
+    "page": "หน้า {{n}}"
+  },
+  "password": {
+    "show": "แสดงรหัสผ่าน",
+    "hide": "ซ่อนรหัสผ่าน"
+  },
+  "period": {
+    "length": "ความยาวช่วงเวลา",
+    "day": "วัน",
+    "week": "สัปดาห์",
+    "month": "เดือน",
+    "quarter": "ไตรมาส",
+    "year": "ปี",
+    "custom": "กำหนดเอง",
+    "from": "จาก",
+    "to": "ถึง",
+    "compareWith": "เปรียบเทียบกับ",
+    "cmpBefore": "ช่วงก่อนหน้า ความยาวเท่ากัน",
+    "cmpLastYear": "ช่วงเดียวกันของปีที่แล้ว",
+    "cmpNone": "ไม่เปรียบเทียบ",
+    "comparedWith": "เทียบกับ <b>{{compare}}</b> ความยาวเท่ากัน"
+  },
+  "price": {
+    "was": "ราคาเดิม"
+  },
+  "product": {
+    "notThisWeek": "สัปดาห์นี้ไม่มีขาย",
+    "backSoon": "จะกลับมาเร็วๆ นี้",
+    "onlyLeft": "เหลือเพียง {{qty}}",
+    "left": "เหลือ {{qty}}",
+    "paused": "หยุดชั่วคราว",
+    "soldOut": "หมดแล้ว",
+    "addFavorite": "เพิ่มในรายการโปรด: {{name}}",
+    "removeFavorite": "นำออกจากรายการโปรด: {{name}}",
+    "notifyMe": "แจ้งเมื่อมีของ",
+    "addToCart": "ใส่ตะกร้า"
+  },
+  "qty": {
+    "label": "จำนวน ({{unit}})",
+    "decrease": "ลด 1",
+    "increase": "เพิ่ม 1",
+    "max": "สูงสุด {{qty}}",
+    "left": "เหลือ {{qty}}"
+  },
+  "rating": {
+    "count_one": "({{count}} รีวิว)",
+    "count_other": "({{count}} รีวิว)",
+    "sr": "{{value}} จาก 5 ดาว",
+    "srWithCount_one": "{{value}} จาก 5 ดาว {{count}} รีวิว",
+    "srWithCount_other": "{{value}} จาก 5 ดาว {{count}} รีวิว",
+    "stars_one": "{{count}} ดาว — {{word}}",
+    "stars_other": "{{count}} ดาว — {{word}}",
+    "words": {
+      "none": "ยังไม่ให้คะแนน",
+      "poor": "แย่",
+      "fair": "พอใช้",
+      "good": "ดี",
+      "veryGood": "ดีมาก",
+      "excellent": "ยอดเยี่ยม"
+    }
+  },
+  "review": {
+    "verified": "ซื้อจริง",
+    "replied": "{{by}} ตอบกลับ · {{date}}"
+  },
+  "slot": {
+    "full": "เต็มแล้ว",
+    "left": "เหลือ {{left}} จาก {{max}}"
+  },
+  "stall": {
+    "markets": "ตลาด",
+    "days": "วันที่ตลาดเปิด",
+    "pickup": "รับสินค้า",
+    "distance": "ระยะทาง",
+    "see": "ดูแผงและสต็อกสัปดาห์นี้"
+  },
+  "stock": {
+    "left": "เหลือ",
+    "reserved": "จองแล้ว {{reserved}} จาก {{total}}",
+    "runningLow": "ใกล้หมด",
+    "soldOut": "หมดแล้ว"
+  },
+  "toast": {
+    "signedOut": "ออกจากระบบแล้ว"
+  },
+  "validation": {
+    "fullNameRequired": "กรอกชื่อ-นามสกุล",
+    "fullNameMax": "ชื่อ-นามสกุลยาวได้ไม่เกิน {{max}} ตัวอักษร",
+    "phoneRequired": "กรอกหมายเลขโทรศัพท์",
+    "phoneInvalid": "กรอกหมายเลขมือถือเวียดนามที่ถูกต้อง (10 หลัก)",
+    "addressRequired": "กรอกที่อยู่",
+    "addressMax": "ที่อยู่ยาวได้ไม่เกิน {{max}} ตัวอักษร"
+  },
+  "adminNav": {
+    "sections": "เมนูผู้ดูแล",
+    "overview": "ภาพรวม",
+    "farmers": "เกษตรกร",
+    "customers": "ลูกค้า",
+    "markets": "ตลาด",
+    "moderation": "การตรวจสอบ",
+    "orders": "คำสั่งซื้อ",
+    "revenue": "รายได้",
+    "reports": "รายงาน",
+    "categories": "หมวดหมู่",
+    "announcements": "ประกาศ",
+    "feedback": "ความคิดเห็น",
+    "pricing": "ราคา",
+    "settings": "การตั้งค่า"
+  },
+  "carousel": {
+    "roleCarousel": "ภาพสไลด์",
+    "roleSlide": "สไลด์",
+    "slideOf": "{{n}} จาก {{total}}: {{topic}}",
+    "previous": "สไลด์ก่อนหน้า",
+    "next": "สไลด์ถัดไป",
+    "show": "แสดงสไลด์ที่ {{n}}: {{topic}}",
+    "pause": "หยุดสไลด์โชว์ชั่วคราว",
+    "play": "เล่นสไลด์โชว์"
+  }
+}

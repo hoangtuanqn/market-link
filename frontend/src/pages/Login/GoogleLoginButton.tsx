@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
 import { GOOGLE_OAUTH_STATE_KEY } from '@/constants/oauth';
@@ -10,6 +11,7 @@ import Notification from '@/utils/notification';
  * trang sang Google. Google trả về /auth/google/callback (xem pages/GoogleCallback).
  */
 const GoogleLoginButton = () => {
+  const { t } = useTranslation('Login');
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const onClick = async () => {
@@ -21,14 +23,14 @@ const GoogleLoginButton = () => {
       window.location.assign(response.data.url);
     } catch (error) {
       sessionStorage.removeItem(GOOGLE_OAUTH_STATE_KEY);
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not start Google sign-in. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('google.failed')) });
       setIsRedirecting(false);
     }
   };
 
   return (
     <Button variant="secondary" className="w-full" onClick={onClick} disabled={isRedirecting}>
-      {isRedirecting ? 'Opening Google…' : 'Continue with Google'}
+      {isRedirecting ? t('google.opening') : t('google.continue')}
     </Button>
   );
 };

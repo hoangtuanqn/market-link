@@ -1,0 +1,119 @@
+{
+  "title": "Tài khoản",
+  "intro": "Thông tin của bạn chỉ được chia sẻ với sạp trên những đơn bạn đặt ở đó.",
+  "sell": {
+    "title": "Bán hàng trên MarketLink",
+    "text": "Nếu bạn trồng thực phẩm, tài khoản này có thể trở thành một sạp. Bạn giữ nguyên đơn hàng, mục yêu thích và giỏ hàng, và một bảng quản lý hàng tồn và giờ nhận hàng sẽ xuất hiện khi quản trị viên duyệt.",
+    "apply": "Đăng ký bán hàng"
+  },
+  "signOut": {
+    "title": "Đăng xuất",
+    "text": "Chỉ đăng xuất trên thiết bị này.",
+    "button": "Đăng xuất"
+  },
+  "profile": {
+    "title": "Thông tin của bạn",
+    "loading": "Đang tải thông tin của bạn…",
+    "loadFailed": "Không tải được thông tin của bạn. Vui lòng thử lại.",
+    "signedOut": {
+      "title": "Bạn đã đăng xuất.",
+      "text": "Đăng nhập lại để xem và sửa thông tin của bạn.",
+      "signIn": "Đăng nhập"
+    },
+    "nothingChanged": "Chưa có gì thay đổi.",
+    "retry": "Thử lại",
+    "fullName": "Họ và tên",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "emailHint": "Dùng để đăng nhập. Không đổi được ở đây.",
+    "address": "Địa chỉ",
+    "addressHint": "Dùng để tính khoảng cách và chỉ đường.",
+    "save": "Lưu thay đổi",
+    "saving": "Đang lưu…",
+    "noChanges": "Không có thay đổi nào để lưu.",
+    "saved": "Đã lưu thông tin của bạn.",
+    "saveFailed": "Không lưu được thông tin của bạn. Vui lòng thử lại."
+  },
+  "password": {
+    "title": "Đổi mật khẩu",
+    "intro": "Bạn sẽ bị đăng xuất trên mọi thiết bị và cần đăng nhập lại.",
+    "current": "Mật khẩu hiện tại",
+    "new": "Mật khẩu mới",
+    "repeat": "Nhập lại mật khẩu mới",
+    "hint": "Từ {{min}} đến {{max}} ký tự.",
+    "submit": "Đổi mật khẩu",
+    "submitting": "Đang đổi mật khẩu…",
+    "changed": "Đã đổi mật khẩu. Vui lòng đăng nhập lại.",
+    "failed": "Không đổi được mật khẩu. Vui lòng thử lại.",
+    "errors": {
+      "currentRequired": "Nhập mật khẩu hiện tại.",
+      "newRequired": "Nhập mật khẩu mới.",
+      "length": "Mật khẩu phải có từ {{min}} đến {{max}} ký tự.",
+      "same": "Hãy dùng mật khẩu khác mật khẩu hiện tại.",
+      "confirmRequired": "Xác nhận mật khẩu của bạn.",
+      "mismatch": "Mật khẩu không khớp."
+    }
+  },
+  "photo": {
+    "title": "Ảnh đại diện",
+    "intro": "Hiện trong menu và cho các sạp trên đơn hàng của bạn. JPEG, PNG hoặc ảnh chụp từ camera.",
+    "upload": "Tải ảnh lên",
+    "take": "Chụp ảnh",
+    "remove": "Gỡ ảnh",
+    "removing": "Đang gỡ…",
+    "removed": "Đã gỡ ảnh của bạn.",
+    "removeFailed": "Không gỡ được ảnh. Vui lòng thử lại.",
+    "notUsed": "Không dùng được ảnh"
+  },
+  "photoErrors": {
+    "notPhoto": "Hãy chọn một ảnh (JPEG, PNG, HEIC hoặc WebP).",
+    "tooBig": "Ảnh này lớn hơn {{mb}} MB. Hãy chọn ảnh nhỏ hơn.",
+    "unreadable": "Tệp này không phải ảnh đọc được.",
+    "noPicture": "Camera chưa có hình. Hãy thử lại.",
+    "captureFailed": "Không chụp được ảnh."
+  },
+  "dialog": {
+    "takeTitle": "Chụp ảnh",
+    "frameTitle": "Căn chỉnh ảnh",
+    "frameHelp": "Kéo để di chuyển ảnh và phóng to đến khi khuôn mặt bạn lấp đầy vòng tròn.",
+    "cancel": "Huỷ",
+    "uploadInstead": "Tải ảnh lên thay thế",
+    "take": "Chụp ảnh",
+    "retake": "Chụp lại",
+    "chooseAnother": "Chọn ảnh khác",
+    "save": "Lưu ảnh",
+    "saving": "Đang lưu…",
+    "saved": "Đã lưu ảnh của bạn.",
+    "saveFailed": "Không lưu được ảnh. Vui lòng thử lại.",
+    "takeFailed": "Không chụp được ảnh. Hãy thử lại.",
+    "unchanged": "Ảnh hiện tại của bạn không đổi."
+  },
+  "camera": {
+    "preview": "Xem trước camera",
+    "starting": "Đang mở camera…",
+    "blocked": {
+      "title": "Camera bị chặn.",
+      "text": "Hãy cho phép camera cho trang này trong cài đặt trình duyệt, hoặc tải ảnh lên thay thế."
+    },
+    "notFound": {
+      "title": "Không tìm thấy camera.",
+      "text": "Hãy cắm camera, hoặc tải ảnh lên thay thế."
+    },
+    "busy": {
+      "title": "Camera đang bận.",
+      "text": "Đóng các ứng dụng khác đang dùng camera rồi thử lại, hoặc tải ảnh lên."
+    },
+    "failed": {
+      "title": "Không khởi động được camera.",
+      "text": "Hãy thử lại, hoặc tải ảnh lên thay thế."
+    },
+    "insecure": {
+      "title": "Trình duyệt này không mở được camera ở đây.",
+      "text": "Camera cần trang bảo mật (https). Hãy tải ảnh lên thay thế."
+    }
+  },
+  "crop": {
+    "frame": "Căn chỉnh ảnh. Kéo, hoặc dùng phím mũi tên để di chuyển và phím cộng hoặc trừ để phóng to thu nhỏ.",
+    "zoom": "Thu phóng"
+  }
+}

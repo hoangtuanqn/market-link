@@ -1,0 +1,17 @@
+{
+  "title": "Paramètres",
+  "intro": "Vos préférences personnelles et les valeurs par défaut de votre stand.",
+  "selling": "Valeurs de vente par défaut",
+  "sellingNote": "Enregistrées avec votre compte. Elles serviront quand vous générerez les créneaux de retrait d’une nouvelle semaine.",
+  "cutoff": "Heure limite de commande",
+  "cutoffNote": "Combien d’heures avant un créneau de retrait la commande est verrouillée.",
+  "slot": "Durée d’un créneau",
+  "slotNote": "Utilisée quand vous générez les créneaux de retrait d’une nouvelle semaine.",
+  "max": "Commandes par créneau",
+  "hours_one": "{{count}} heure",
+  "hours_other": "{{count}} heures",
+  "minutes_one": "{{count}} minute",
+  "minutes_other": "{{count}} minutes",
+  "orders_one": "{{count}} commande",
+  "orders_other": "{{count}} commandes"
+}

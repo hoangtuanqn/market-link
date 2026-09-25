@@ -1,10 +1,13 @@
+import { useTranslation } from 'react-i18next';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 
 /** Pill with a glyph and a word, so order state never rests on colour alone (design system `.ml-status`). */
 const OrderStatusBadge = ({ status }: { status: OrderStatus }) => {
-  const { label, icon: Icon, className } = ORDER_STATUS_META[status];
+  const { t } = useTranslation();
+  const { icon: Icon, className } = ORDER_STATUS_META[status];
+  const label = t(`orderStatus.${status}`);
   return (
     <span
       className={Helper.cn(

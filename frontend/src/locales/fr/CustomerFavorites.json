@@ -1,0 +1,42 @@
+{
+  "title": "Favoris",
+  "intro": "Votre liste d'envies : les produits à prendre la prochaine fois, les stands où vous revenez et les marchés où vous faites vos courses. Un favori épuisé vous prévient quand il revient.",
+  "findMore": "Trouver d'autres favoris",
+  "tabs": {
+    "label": "Éléments enregistrés",
+    "products": "Produits",
+    "stalls": "Stands",
+    "markets": "Marchés"
+  },
+  "banner": {
+    "title": "L'un de vos quatre produits enregistrés est épuisé.",
+    "text": "Les alertes de réassort sont activées : vous recevez une notification dès que le stand le remet en vente."
+  },
+  "filters": {
+    "all": "Tous",
+    "inStock": "En stock",
+    "soldOut": "Épuisé",
+    "priceDropped": "Prix en baisse"
+  },
+  "soldOut": "Épuisé",
+  "left": "Reste : {{qty}}",
+  "alertOn": "Alerte activée",
+  "addToCart": "Ajouter au panier",
+  "remove": "Retirer",
+  "addInStock_one": "Ajouter l'article en stock au panier",
+  "addInStock_other": "Ajouter les {{count}} articles en stock au panier",
+  "toast": {
+    "alertTitle": "Alerte de réassort",
+    "alertOff": "Alerte désactivée pour {{name}}.",
+    "addedTitle": "Ajouté au panier",
+    "added": "{{name}} a été ajouté à votre panier.",
+    "addedMany_one": "{{count}} produit ajouté à votre panier. Il sera réparti par stand à la commande.",
+    "addedMany_other": "{{count}} produits ajoutés à votre panier. Ils seront répartis par stand à la commande.",
+    "removedTitle": "Retiré",
+    "removed": "{{name}} a été retiré de vos favoris."
+  },
+  "holdNote": "Enregistrer un produit ne réserve aucun stock. Il n'est réservé qu'au moment de la commande.",
+  "stallsNote": "Vos stands enregistrés, avec ce que chacun apporte ce week-end.",
+  "thisWeek": "Cette semaine",
+  "marketsNote": "Un marché enregistré apparaît en premier dans les listes et sur la carte, et l'itinéraire vers ses stands part de votre adresse enregistrée."
+}

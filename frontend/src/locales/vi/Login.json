@@ -1,0 +1,29 @@
+{
+  "title": "Đăng nhập",
+  "intro": "Khách hàng và nhà vườn đăng nhập tại đây. Quản trị viên dùng <link>trang đăng nhập quản trị riêng</link>.",
+  "fields": {
+    "email": "Email",
+    "password": "Mật khẩu"
+  },
+  "rememberMe": "Ghi nhớ đăng nhập",
+  "forgotPassword": "Quên mật khẩu?",
+  "submit": "Đăng nhập",
+  "submitting": "Đang đăng nhập…",
+  "or": "hoặc",
+  "google": {
+    "continue": "Tiếp tục với Google",
+    "opening": "Đang mở Google…",
+    "failed": "Không mở được đăng nhập Google. Vui lòng thử lại.",
+    "note": "Google cho chúng tôi biết tên và email của bạn. Số điện thoại và địa chỉ vẫn cần có trước đơn hàng đầu tiên, nên chúng tôi sẽ hỏi một lần ở màn hình tiếp theo."
+  },
+  "newHere": "Lần đầu đến đây? <customer>Tạo tài khoản khách hàng</customer> hoặc <farmer>đăng ký sạp của bạn</farmer>.",
+  "toast": {
+    "signedIn": "Đã đăng nhập.",
+    "failed": "Không đăng nhập được. Vui lòng thử lại."
+  },
+  "errors": {
+    "emailRequired": "Nhập email.",
+    "emailInvalid": "Nhập địa chỉ email hợp lệ.",
+    "passwordRequired": "Nhập mật khẩu."
+  }
+}

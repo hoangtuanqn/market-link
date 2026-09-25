@@ -1,0 +1,46 @@
+{
+  "missing": {
+    "title": "That order is not here any more",
+    "text": "You may have cancelled it, or the link is old. Open it again from your orders."
+  },
+  "myOrders": "My orders",
+  "breadcrumb": "Order {{code}}",
+  "placedAt": "Placed {{time}}",
+  "status": {
+    "placed": "Placed",
+    "accepted": "Accepted",
+    "ready": "Ready for pickup",
+    "completed": "Completed",
+    "declined": "Declined",
+    "cancelled": "Cancelled"
+  },
+  "previewLocked": "Preview: after cutoff",
+  "pickup": {
+    "title": "Pickup",
+    "where": "{{market}}, stall {{stall}}",
+    "spot": "River side of the market, next to the bread stall.",
+    "slot": "Your slot",
+    "phone": "Stall phone",
+    "bring": "Bring",
+    "bringText": "{{total}} in cash or bank transfer at the stall",
+    "directions": "Directions",
+    "stallPage": "Stall page",
+    "map": "Pickup point at stall {{stall}}"
+  },
+  "history": {
+    "title": "History",
+    "by": "{{time}} · by {{by}}",
+    "note": "Every status change is recorded with who made it."
+  },
+  "change": {
+    "title": "Change this order",
+    "until": "You can edit quantities, remove items or cancel until <b>{{cutoff}}</b>. After you edit, {{stall}} approves the order again.",
+    "edit": "Edit order",
+    "cancel": "Cancel order",
+    "locked": "Cutoff passed at {{cutoff}}. To change it, contact the stall directly on {{phone}}."
+  },
+  "notify": {
+    "title": "Notifications for this order",
+    "text": "You were told when it was accepted. You will be told when it is ready, or if the stall has to decline it."
+  }
+}

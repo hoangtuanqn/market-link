@@ -72,3 +72,8 @@
   padding: 4px 10px;
   font-size: 13px;
 }
+
+/* Dark theme: dim the OpenStreetMap tiles so the map does not glare next to dark surfaces. */
+:root[data-theme='dark'] .ml-map .leaflet-tile {
+  filter: brightness(0.72) contrast(1.06) saturate(0.82);
+}

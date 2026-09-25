@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { clampOffset, coverScale, MAX_ZOOM, MIN_ZOOM, type Offset } from './crop';
 
 /** Cạnh khung cắt trên màn hình (px); dialog rộng 460px nên vừa cả màn 375px. */
@@ -16,6 +17,7 @@ type CropStepProps = {
 
 /** Khung tròn trên ảnh: kéo (chuột / cảm ứng) để dịch, thanh trượt hoặc con lăn để zoom, mũi tên và +/- trên bàn phím. */
 const CropStep = ({ image, value, onChange }: CropStepProps) => {
+  const { t } = useTranslation('CustomerAccount');
   const w = image.naturalWidth;
   const h = image.naturalHeight;
   const drag = useRef<{ id: number; x: number; y: number; start: Offset } | null>(null);
@@ -87,7 +89,7 @@ const CropStep = ({ image, value, onChange }: CropStepProps) => {
         ref={frameRef}
         role="group"
         tabIndex={0}
-        aria-label="Photo framing. Drag, or use the arrow keys to move it and plus or minus to zoom."
+        aria-label={t('crop.frame')}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
@@ -115,7 +117,7 @@ const CropStep = ({ image, value, onChange }: CropStepProps) => {
       </div>
 
       <label className="flex w-full max-w-70 items-center gap-3">
-        <span className="text-small font-bold">Zoom</span>
+        <span className="text-small font-bold">{t('crop.zoom')}</span>
         <input
           type="range"
           min={MIN_ZOOM}

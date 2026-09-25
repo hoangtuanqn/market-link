@@ -1,0 +1,41 @@
+{
+  "overline": {
+    "suspended": "{{stall}} · bị đình chỉ ngày {{date}}",
+    "registered": "{{stall}} · đăng ký ngày {{date}}"
+  },
+  "title": {
+    "pending": "Sạp của bạn đang chờ duyệt",
+    "suspended": "Sạp của bạn đang bị đình chỉ"
+  },
+  "previewToggle": "Xem trước: sạp bị đình chỉ",
+  "reviewing": {
+    "title": "Quản trị viên đang xem xét đăng ký của bạn.",
+    "text": "Bạn sẽ nhận thông báo và email khi sạp được duyệt. Trước đó, khách chưa thấy sạp và sản phẩm của bạn."
+  },
+  "now": {
+    "title": "Việc bạn có thể làm ngay",
+    "details": "Điền <link>thông tin sạp</link>, các chợ bạn bán, ngày bán và khung giờ nhận hàng.",
+    "pin": "Ghim sạp trên bản đồ để khách tìm thấy bạn ngay từ ngày đầu.",
+    "products": "Có thể thêm sản phẩm sau khi sạp được duyệt. Trong lúc chờ, hãy chuẩn bị tên, giá và ảnh."
+  },
+  "details": {
+    "title": "Thông tin đăng ký",
+    "stall": "Sạp",
+    "contact": "Liên hệ",
+    "email": "Email",
+    "market": "Chợ đăng ký"
+  },
+  "suspended": {
+    "title": "Sạp của bạn bị đình chỉ từ ngày {{date}}.",
+    "text": "Lý do từ quản trị viên: {{reason}} Sản phẩm của bạn đang bị ẩn và bạn không thể nhận đơn mới."
+  },
+  "running": {
+    "title": "Đơn đã đặt vẫn tiếp tục",
+    "text": "Khách đặt trước khi sạp bị đình chỉ vẫn giữ đơn (D-09). Hãy đánh dấu sẵn sàng và hoàn tất như bình thường để không ai mất phần đã giữ.",
+    "link": "Mở đơn hiện tại"
+  },
+  "reinstate": {
+    "title": "Để được mở lại",
+    "text": "Liên hệ nhóm qua trang <link>Liên hệ</link>."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "title": "Favoritos",
+  "intro": "Tu lista de deseos: productos que quieres la próxima vez, puestos a los que vuelves y los mercados donde compras. Un favorito agotado te avisa cuando vuelve.",
+  "findMore": "Buscar más para guardar",
+  "tabs": {
+    "label": "Guardados",
+    "products": "Productos",
+    "stalls": "Puestos",
+    "markets": "Mercados"
+  },
+  "banner": {
+    "title": "Uno de tus cuatro productos guardados está agotado.",
+    "text": "Las alertas de reposición están activadas, así que recibirás un aviso en cuanto el puesto lo vuelva a publicar."
+  },
+  "filters": {
+    "all": "Todos",
+    "inStock": "Con stock",
+    "soldOut": "Agotado",
+    "priceDropped": "Bajó de precio"
+  },
+  "soldOut": "Agotado",
+  "left": "Quedan {{qty}}",
+  "alertOn": "Alerta activada",
+  "addToCart": "Añadir al carrito",
+  "remove": "Quitar",
+  "addInStock_one": "Añadir el {{count}} artículo con stock al carrito",
+  "addInStock_other": "Añadir los {{count}} artículos con stock al carrito",
+  "toast": {
+    "alertTitle": "Alerta de reposición",
+    "alertOff": "Alerta desactivada para {{name}}.",
+    "addedTitle": "Añadido al carrito",
+    "added": "Se añadió {{name}} a tu carrito.",
+    "addedMany_one": "Se añadió {{count}} producto a tu carrito. Se dividirá por puesto al pagar.",
+    "addedMany_other": "Se añadieron {{count}} productos a tu carrito. Se dividirán por puesto al pagar.",
+    "removedTitle": "Quitado",
+    "removed": "Se quitó {{name}} de tus favoritos."
+  },
+  "holdNote": "Guardar un producto no reserva stock. Solo se reserva cuando haces el pedido.",
+  "stallsNote": "Tus puestos guardados, con lo que trae cada uno este fin de semana.",
+  "thisWeek": "Esta semana",
+  "marketsNote": "Un mercado guardado aparece primero en las listas y en el mapa, y las indicaciones a sus puestos salen de tu dirección guardada."
+}

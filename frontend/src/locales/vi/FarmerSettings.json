@@ -1,0 +1,17 @@
+{
+  "title": "Cài đặt",
+  "intro": "Tuỳ chọn của riêng bạn, và các giá trị mặc định cho sạp của bạn.",
+  "selling": "Mặc định khi bán",
+  "sellingNote": "Lưu cùng tài khoản của bạn. Sẽ được dùng khi bạn tạo khung giờ nhận hàng cho tuần mới.",
+  "cutoff": "Giờ chốt đơn",
+  "cutoffNote": "Đơn bị khoá bao nhiêu giờ trước khung giờ nhận hàng.",
+  "slot": "Độ dài khung giờ",
+  "slotNote": "Dùng khi bạn tạo khung giờ nhận hàng cho tuần mới.",
+  "max": "Số đơn mỗi khung giờ",
+  "hours_one": "{{count}} giờ",
+  "hours_other": "{{count}} giờ",
+  "minutes_one": "{{count}} phút",
+  "minutes_other": "{{count}} phút",
+  "orders_one": "{{count}} đơn",
+  "orders_other": "{{count}} đơn"
+}

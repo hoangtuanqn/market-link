@@ -1,0 +1,29 @@
+{
+  "myOrders": "我的订单",
+  "breadcrumbOrder": "订单 {{code}}",
+  "breadcrumbReview": "评价",
+  "notFound": {
+    "title": "该订单已不在这里",
+    "text": "你可能已取消该订单，或链接已过期。请从你的订单中重新打开。"
+  },
+  "completed": "完成于 {{date}}",
+  "title": "{{stall}} 怎么样？",
+  "intro": "评价与这笔已完成的订单关联，其他顾客会看到它是经过验证的购买。摊位可以回复。",
+  "stall": {
+    "title": "摊位",
+    "placeholder": "是否按时备好？摊位好找吗？"
+  },
+  "product": {
+    "placeholder": "口味、新鲜度、分量",
+    "skip": "跳过此商品"
+  },
+  "rate": "为 {{name}} 评分",
+  "comment": "评论",
+  "submit": "发布评价",
+  "notNow": "以后再说",
+  "note": "每个订单可对摊位评价一次，并对其中每件商品各评价一次。",
+  "toast": {
+    "title": "评价已发布",
+    "text": "谢谢。你对 {{stall}} 的评价已发布。"
+  }
+}
