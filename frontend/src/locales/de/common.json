@@ -77,6 +77,9 @@
     "orderOf": "Bestellung {{index}} von {{of}}",
     "payAtPickup": "Bezahlung am Stand bei Abholung"
   },
+  "chart": {
+    "showNumbers": "Zahlen anzeigen"
+  },
   "chat": {
     "assistant": "MarketLink-Assistent",
     "you": "Sie",
@@ -336,6 +339,7 @@
     "feedback": "Feedback",
     "pricing": "Preise",
     "settings": "Einstellungen",
+    "account": "Dein Konto",
     "analytics": "Analysen",
     "people": "Personen",
     "marketplace": "Marktplatz",

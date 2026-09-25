@@ -77,6 +77,9 @@
     "orderOf": "주문 {{index}}/{{of}}",
     "payAtPickup": "픽업할 때 매대에서 결제"
   },
+  "chart": {
+    "showNumbers": "수치 보기"
+  },
   "chat": {
     "assistant": "MarketLink 도우미",
     "you": "나",
@@ -336,6 +339,7 @@
     "feedback": "의견",
     "pricing": "요금",
     "settings": "설정",
+    "account": "내 계정",
     "analytics": "분석",
     "people": "사용자",
     "marketplace": "마켓플레이스",

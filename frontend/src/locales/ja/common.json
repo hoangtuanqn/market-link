@@ -77,6 +77,9 @@
     "orderOf": "注文 {{index}} / {{of}}",
     "payAtPickup": "受け取り時に屋台で支払い"
   },
+  "chart": {
+    "showNumbers": "数値を表示"
+  },
   "chat": {
     "assistant": "MarketLink アシスタント",
     "you": "あなた",
@@ -336,6 +339,7 @@
     "feedback": "フィードバック",
     "pricing": "料金",
     "settings": "設定",
+    "account": "アカウント",
     "analytics": "分析",
     "people": "ユーザー",
     "marketplace": "マーケットプレイス",
