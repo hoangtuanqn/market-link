@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import MapPlaceholder from '@/components/MapPlaceholder';
@@ -8,7 +9,7 @@ import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { SelectField } from '@/components/ui/input';
-import { APPROVAL_STATUS_META } from '@/constants/approvalStatus';
+import { APPROVAL_STATUS_META, REJECT_REASONS } from '@/constants/approvalStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
 import type { AdminFarmerDetailType } from '@/types/farmer.types';
@@ -18,45 +19,22 @@ import Notification from '@/utils/notification';
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; data: AdminFarmerDetailType };
 type DialogKind = 'approve' | 'reject' | 'suspend' | 'reinstate';
 
-const REJECT_REASONS = [
-  'Details do not match the stall',
-  'Market is full',
-  'Could not reach the contact number',
-  'Other',
-];
-
-const DIALOG_COPY: Record<DialogKind, { title: (stall: string) => string; body: string; confirm: string }> = {
-  approve: {
-    title: (stall) => `Approve ${stall}?`,
-    body: 'Their role becomes Farmer and a stall panel opens on their account. They keep every customer feature they have now. Nothing appears to shoppers until they add products and set a pickup window.',
-    confirm: 'Approve stall',
-  },
-  reject: {
-    title: (stall) => `Reject ${stall}?`,
-    body: 'The applicant keeps the customer account and everything in it. They are told the reason.',
-    confirm: 'Reject application',
-  },
-  suspend: {
-    title: (stall) => `Suspend ${stall}?`,
-    body: 'All products are hidden and no new orders are accepted. Orders already placed continue so customers do not lose what they booked (D-09).',
-    confirm: 'Suspend stall',
-  },
-  reinstate: {
-    title: (stall) => `Reinstate ${stall}?`,
-    body: 'Products become visible to customers again right away.',
-    confirm: 'Reinstate stall',
-  },
-};
+/** Toast sau khi thao tác xong: `AdminFarmers:toast.<key>`. */
+const DONE_TOAST = { approve: 'approved', reject: 'rejected', suspend: 'suspended', reinstate: 'reinstated' } as const;
 
 const fileUrl = (path: string) => `${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${path}`;
 
 /** §6.2, §7, §8 — Admin xem chi tiết một đơn xin thành Farmer, duyệt/từ chối/đình chỉ/phục hồi. */
 const AdminFarmerDetailPage = () => {
+  const { t } = useTranslation('AdminFarmerDetail');
+  // hộp thoại, trạng thái, lý do từ chối và toast dùng chung với trang danh sách
+  const { t: tf } = useTranslation('AdminFarmers');
+  const rejectReasons = REJECT_REASONS.map((key) => tf(`reason.${key}`));
   const { id } = useParams<{ id: string }>();
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
   const [busy, setBusy] = useState(false);
   const [dialog, setDialog] = useState<DialogKind | null>(null);
-  const [rejectReason, setRejectReason] = useState(REJECT_REASONS[0]);
+  const [rejectReason, setRejectReason] = useState('');
 
   // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
   const fetchDetail = useCallback(() => {
@@ -73,7 +51,7 @@ const AdminFarmerDetailPage = () => {
   };
 
   const openDialog = (kind: DialogKind) => {
-    setRejectReason(REJECT_REASONS[0]);
+    setRejectReason(rejectReasons[0]);
     setDialog(kind);
   };
 
@@ -91,16 +69,10 @@ const AdminFarmerDetailPage = () => {
               : await AdminFarmerApi.reinstate(Number(id));
       setStatus({ kind: 'ready', data: response.data });
       setDialog(null);
-      const messages: Record<DialogKind, string> = {
-        approve: `${response.data.stallName} approved. The stall can list products now.`,
-        reject: `${response.data.stallName} rejected. They keep their account.`,
-        suspend: `${response.data.stallName} suspended. Running orders finish as normal.`,
-        reinstate: `${response.data.stallName} reinstated. Products are visible again.`,
-      };
-      Notification.success({ text: messages[dialog] });
+      Notification.success({ text: tf(`toast.${DONE_TOAST[dialog]}`, { stall: response.data.stallName }) });
     } catch (error) {
       Notification.error({
-        text: Helper.getErrorMessage(error, 'Could not complete that action. Please try again.'),
+        text: Helper.getErrorMessage(error, tf('toast.failed')),
       });
     } finally {
       setBusy(false);
@@ -111,14 +83,14 @@ const AdminFarmerDetailPage = () => {
     <div className="flex flex-col gap-6">
       <p className="text-small text-ink-muted">
         <Link to={ADMIN_FARMERS_PATH} className="text-brand underline">
-          Farmers
+          {tf('title')}
         </Link>{' '}
-        · Application
+        · {t('breadcrumb')}
       </p>
 
       {status.kind === 'loading' && (
         <Card aria-busy="true" className="flex flex-col gap-3 p-6">
-          <span className="sr-only">Loading application</span>
+          <span className="sr-only">{t('loading')}</span>
           <div className="bg-surface-sunken h-6 w-60 max-w-full rounded-sm" />
           <div className="bg-surface-sunken h-32 w-full rounded-sm" />
         </Card>
@@ -127,11 +99,11 @@ const AdminFarmerDetailPage = () => {
       {status.kind === 'error' && (
         <DataState
           variant="error"
-          title="Couldn't load this application"
-          text="Check your connection and try again."
+          title={t('loadError.title')}
+          text={t('loadError.text')}
           action={
             <Button variant="secondary" size="sm" onClick={load}>
-              Try again
+              {t('loadError.retry')}
             </Button>
           }
         />
@@ -149,7 +121,9 @@ const AdminFarmerDetailPage = () => {
             <>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex flex-col gap-2">
-                  <p className="text-overline text-ink-muted uppercase">Sent {formatDate(new Date(f.createdAt))}</p>
+                  <p className="text-overline text-ink-muted uppercase">
+                    {t('sentOn', { date: formatDate(new Date(f.createdAt)) })}
+                  </p>
                   <h1 className="text-h1">{f.stallName}</h1>
                   <span
                     className={Helper.cn(
@@ -158,47 +132,44 @@ const AdminFarmerDetailPage = () => {
                     )}
                   >
                     <Icon size={14} />
-                    {meta.label}
+                    {tf(`status.${f.approvalStatus}`)}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {f.approvalStatus === 'pending' && (
                     <>
                       <Button variant="danger" disabled={busy} onClick={() => openDialog('reject')}>
-                        Reject
+                        {tf('action.reject')}
                       </Button>
                       <Button disabled={busy} onClick={() => openDialog('approve')}>
-                        Approve stall
+                        {tf('approve.confirm')}
                       </Button>
                     </>
                   )}
                   {f.approvalStatus === 'approved' && (
                     <Button variant="danger" disabled={busy} onClick={() => openDialog('suspend')}>
-                      Suspend
+                      {tf('action.suspend')}
                     </Button>
                   )}
                   {f.approvalStatus === 'suspended' && (
                     <Button disabled={busy} onClick={() => openDialog('reinstate')}>
-                      Reinstate
+                      {tf('action.reinstate')}
                     </Button>
                   )}
                 </div>
               </div>
 
-              <Banner title="This application comes from an account that already shops on MarketLink.">
-                Approving turns the same account into a stall; no second account is created. They keep every customer
-                feature they have now.
-              </Banner>
+              <Banner title={t('fromCustomer.title')}>{t('fromCustomer.text')}</Banner>
 
               {f.approvalStatus === 'suspended' && (
-                <Banner variant="warning" title="This stall is suspended.">
-                  Its products stay hidden from customers. Orders already placed still run their course (D-09).
+                <Banner variant="warning" title={t('suspendedBanner.title')}>
+                  {t('suspendedBanner.text')}
                 </Banner>
               )}
 
               {f.approvalStatus === 'rejected' && f.rejectReason && (
-                <Banner variant="danger" title="This application was rejected.">
-                  Reason shown to the applicant: {f.rejectReason}
+                <Banner variant="danger" title={t('rejectedBanner.title')}>
+                  {t('rejectedBanner.text', { reason: f.rejectReason })}
                 </Banner>
               )}
 
@@ -206,13 +177,13 @@ const AdminFarmerDetailPage = () => {
                 <div className="flex flex-col gap-8">
                   {(!!f.photoUrls?.length || f.videoUrl) && (
                     <section className="flex flex-col gap-3">
-                      <h2 className="text-h2">Photos of the plot</h2>
+                      <h2 className="text-h2">{t('photos.title')}</h2>
                       <div className="flex flex-wrap gap-2">
                         {f.photoUrls?.map((url) => (
                           <a key={url} href={fileUrl(url)} target="_blank" rel="noreferrer">
                             <img
                               src={fileUrl(url)}
-                              alt="Plot"
+                              alt={t('photos.alt')}
                               className="border-line-strong size-28 rounded-sm border-[1.5px] object-cover"
                             />
                           </a>
@@ -224,14 +195,11 @@ const AdminFarmerDetailPage = () => {
                             rel="noreferrer"
                             className="border-line-strong bg-surface-sunken text-small flex size-28 flex-col items-center justify-center gap-1 rounded-sm border-[1.5px] text-center"
                           >
-                            Watch video
+                            {t('photos.video')}
                           </a>
                         )}
                       </div>
-                      <p className="text-small text-ink-muted">
-                        Check that the plot in the photos looks like the pin on the map and grows what the applicant
-                        listed. You are not checking licences, food safety or organic claims.
-                      </p>
+                      <p className="text-small text-ink-muted">{t('photos.hint')}</p>
                     </section>
                   )}
 
@@ -239,53 +207,53 @@ const AdminFarmerDetailPage = () => {
                     <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       {hasGrows && (
                         <Card className="flex flex-col gap-3 p-6">
-                          <h2 className="text-h3">What they grow</h2>
+                          <h2 className="text-h3">{t('grows.title')}</h2>
                           <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
                             {!!f.categories?.length && (
                               <>
-                                <dt className="text-ink-muted">Categories</dt>
+                                <dt className="text-ink-muted">{t('grows.categories')}</dt>
                                 <dd className="m-0">{f.categories.join(', ')}</dd>
                               </>
                             )}
                             {f.mainCrops && (
                               <>
-                                <dt className="text-ink-muted">Main crops</dt>
+                                <dt className="text-ink-muted">{t('grows.crops')}</dt>
                                 <dd className="m-0">{f.mainCrops}</dd>
                               </>
                             )}
                             {f.weeklyVolume && (
                               <>
-                                <dt className="text-ink-muted">Volume</dt>
+                                <dt className="text-ink-muted">{t('grows.volume')}</dt>
                                 <dd className="m-0">{f.weeklyVolume}</dd>
                               </>
                             )}
                           </dl>
                           {f.growingMethod && (
                             <p className="text-small">
-                              <b>Their own words:</b> {f.growingMethod}
+                              <b>{t('grows.ownWords')}</b> {f.growingMethod}
                             </p>
                           )}
                         </Card>
                       )}
                       {hasPlot && (
                         <Card className="flex flex-col gap-3 p-6">
-                          <h2 className="text-h3">The plot</h2>
+                          <h2 className="text-h3">{t('plot.title')}</h2>
                           <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
                             {f.plotAddress && (
                               <>
-                                <dt className="text-ink-muted">Address</dt>
+                                <dt className="text-ink-muted">{t('plot.address')}</dt>
                                 <dd className="m-0">{f.plotAddress}</dd>
                               </>
                             )}
                             {f.plotSize && (
                               <>
-                                <dt className="text-ink-muted">Size</dt>
+                                <dt className="text-ink-muted">{t('plot.size')}</dt>
                                 <dd className="m-0">{f.plotSize}</dd>
                               </>
                             )}
                             {f.growingSinceYear && (
                               <>
-                                <dt className="text-ink-muted">Growing since</dt>
+                                <dt className="text-ink-muted">{t('plot.since')}</dt>
                                 <dd className="m-0">{f.growingSinceYear}</dd>
                               </>
                             )}
@@ -296,26 +264,26 @@ const AdminFarmerDetailPage = () => {
                   )}
 
                   <section className="flex flex-col gap-3">
-                    <h2 className="text-h2">The stall they are asking for</h2>
+                    <h2 className="text-h2">{t('stall.title')}</h2>
                     <Card className="p-6">
                       <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-                        <dt className="text-ink-muted">Stall name</dt>
+                        <dt className="text-ink-muted">{t('stall.name')}</dt>
                         <dd className="m-0">{f.stallName}</dd>
-                        <dt className="text-ink-muted">Contact person</dt>
+                        <dt className="text-ink-muted">{t('stall.contact')}</dt>
                         <dd className="m-0">
                           {f.contactPerson} · {f.phone}
                         </dd>
-                        <dt className="text-ink-muted">Email</dt>
+                        <dt className="text-ink-muted">{t('stall.email')}</dt>
                         <dd className="m-0">{f.email}</dd>
                         {f.description && (
                           <>
-                            <dt className="text-ink-muted">Description</dt>
+                            <dt className="text-ink-muted">{t('stall.description')}</dt>
                             <dd className="m-0">{f.description}</dd>
                           </>
                         )}
                         {f.preferredMarketName && (
                           <>
-                            <dt className="text-ink-muted">Market wanted</dt>
+                            <dt className="text-ink-muted">{t('stall.market')}</dt>
                             <dd className="m-0">{f.preferredMarketName}</dd>
                           </>
                         )}
@@ -324,12 +292,12 @@ const AdminFarmerDetailPage = () => {
                   </section>
 
                   <section className="flex flex-col gap-3">
-                    <h2 className="text-h2">History</h2>
+                    <h2 className="text-h2">{t('history.title')}</h2>
                     <ol className="m-0 flex flex-col p-0">
                       <li className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
                         <span className="bg-surface-sunken grid size-7 flex-none place-items-center rounded-full" />
                         <div>
-                          <b className="text-[15px]">Application sent</b>
+                          <b className="text-[15px]">{t('history.sent')}</b>
                           <p className="text-ink-muted mt-0.5 text-[13px]">{formatDate(new Date(f.createdAt))}</p>
                         </div>
                       </li>
@@ -340,7 +308,7 @@ const AdminFarmerDetailPage = () => {
                         />
                         <span className="bg-surface-sunken grid size-7 flex-none place-items-center rounded-full opacity-45" />
                         <div>
-                          <b className="text-[15px]">Account created as a customer</b>
+                          <b className="text-[15px]">{t('history.customer')}</b>
                           <p className="text-ink-muted mt-0.5 text-[13px]">{formatDate(new Date(f.customerSince))}</p>
                         </div>
                       </li>
@@ -350,27 +318,22 @@ const AdminFarmerDetailPage = () => {
 
                 <aside className="flex flex-col gap-4">
                   <Card className="flex flex-col gap-3 p-6">
-                    <h2 className="text-h3">Applicant</h2>
+                    <h2 className="text-h3">{t('applicant.title')}</h2>
                     <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-                      <dt className="text-ink-muted">Name</dt>
+                      <dt className="text-ink-muted">{t('applicant.name')}</dt>
                       <dd className="m-0">{f.contactPerson}</dd>
-                      <dt className="text-ink-muted">Customer since</dt>
+                      <dt className="text-ink-muted">{t('applicant.since')}</dt>
                       <dd className="m-0">{formatDate(new Date(f.customerSince))}</dd>
-                      <dt className="text-ink-muted">Account status</dt>
-                      <dd className="m-0 capitalize">{f.accountStatus}</dd>
+                      <dt className="text-ink-muted">{t('applicant.status')}</dt>
+                      <dd className="m-0">{t(`accountStatus.${f.accountStatus}`)}</dd>
                     </dl>
                   </Card>
 
-                  {(f.plotLatitude != null || f.preferredMarketName) && (
-                    <MapPlaceholder label="The plot and the market they want to sell at" />
-                  )}
+                  {(f.plotLatitude != null || f.preferredMarketName) && <MapPlaceholder label={t('map')} />}
 
                   <Card className="flex flex-col gap-2 p-6">
-                    <h3 className="text-h3">What approval does</h3>
-                    <p className="text-small">
-                      Their role becomes Farmer and a stall panel opens. They keep buying from other stalls with the
-                      same account. Nothing is listed until they add products and set a pickup window.
-                    </p>
+                    <h3 className="text-h3">{t('approval.title')}</h3>
+                    <p className="text-small">{t('approval.text')}</p>
                   </Card>
                 </aside>
               </div>
@@ -381,32 +344,33 @@ const AdminFarmerDetailPage = () => {
       <Dialog
         open={dialog !== null}
         tone={dialog === 'reject' || dialog === 'suspend' ? 'danger' : undefined}
-        title={dialog && status.kind === 'ready' ? DIALOG_COPY[dialog].title(status.data.stallName) : ''}
+        title={dialog && status.kind === 'ready' ? tf(`${dialog}.title`, { stall: status.data.stallName }) : ''}
         onClose={() => setDialog(null)}
         actions={
           <>
             <Button variant="secondary" onClick={() => setDialog(null)} disabled={busy}>
-              {dialog === 'reject' ? 'Keep reviewing' : 'Not yet'}
+              {dialog === 'reject' ? tf('keepReviewing') : tf('notYet')}
             </Button>
             <Button
               variant={dialog === 'reject' || dialog === 'suspend' ? 'danger' : 'primary'}
               onClick={confirmDialog}
               disabled={busy}
             >
-              {dialog ? DIALOG_COPY[dialog].confirm : ''}
+              {dialog ? tf(`${dialog}.confirm`) : ''}
             </Button>
           </>
         }
       >
         <div className="flex flex-col gap-3">
-          <p>{dialog ? DIALOG_COPY[dialog].body : ''}</p>
+          {/* duyệt từ trang chi tiết nói rõ hơn: vai đổi thành Farmer, vẫn giữ mọi thứ của Customer */}
+          <p>{dialog === 'approve' ? t('approveText') : dialog ? tf(`${dialog}.text`) : ''}</p>
           {dialog === 'reject' && (
             <SelectField
               id="reject-reason"
-              label="Reason the applicant will see"
+              label={tf('reject.reason')}
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
-              options={REJECT_REASONS}
+              options={rejectReasons}
             />
           )}
         </div>

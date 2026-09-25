@@ -17,11 +17,12 @@
     "stallNameHint": "Customers see this on the map and on their orders.",
     "person": "Contact person",
     "phone": "Phone",
-    "phoneHint": "Printed on every order so customers can reach you.",
     "email": "Email",
     "emailHint": "Your sign-in stays the same.",
     "about": "About the stall",
-    "aboutPlaceholder": "One or two sentences. Who grows it and where."
+    "aboutPlaceholder": "One or two sentences. Who grows it and where.",
+    "address": "Address",
+    "fromAccount": "From your account. Change it on the Account page first if it's wrong."
   },
   "step2": {
     "title": "What you grow",
@@ -46,7 +47,9 @@
     "since": "Growing here since",
     "pin": "Pin the plot",
     "map": "Pin your plot on the map",
-    "pinHint": "Drag the pin to your plot. It is the quickest way for the admin to see the photos match the place."
+    "lat": "Latitude",
+    "lng": "Longitude",
+    "manualPin": "The real map pin lands with the map screen — for now, type the coordinates by hand if you know them."
   },
   "step4": {
     "title": "Photos of the plot",
@@ -56,8 +59,6 @@
       "growing": "What is growing now",
       "other": "Anything else"
     },
-    "required": "Required",
-    "optional": "Optional",
     "addPhoto": "Add photo",
     "video": "A short video",
     "addVideo": "Add a video, up to 60 seconds",
@@ -65,7 +66,11 @@
     "banner": {
       "title": "The admin is checking one thing: that the plot exists and grows what you listed.",
       "text": "MarketLink does not check licences, food safety or organic claims, and a photo is not a certificate."
-    }
+    },
+    "uploading": "Uploading…",
+    "removePhoto": "Remove {{label}}",
+    "videoAdded": "Video added",
+    "removeVideo": "Remove"
   },
   "step5": {
     "title": "Where you want to sell",
@@ -81,22 +86,16 @@
     "pay": "I understand customers pay me at the stall",
     "payHint": "There is no online payment and no delivery anywhere in MarketLink.",
     "send": "Send the application",
-    "later": "Save and finish later"
+    "later": "Save and finish later",
+    "sending": "Sending…"
   },
-  "preview": "Preview: after sending",
   "sent": {
-    "eyebrow": "Sent just now",
     "title": "Your application is with an admin",
     "intro": "Nothing changes for you in the meantime. Keep shopping, and watch your notifications for the answer.",
-    "banner": {
-      "title": "You can still buy from other stalls while this is reviewed.",
-      "text": "Your orders, favorites and cart are untouched. The stall panel appears only once an admin approves."
-    },
     "summary": "What you sent",
     "stall": "Stall",
     "grows": "Grows",
     "plot": "Plot",
-    "plotText": "{{size}} in {{place}}, growing since {{since}}",
     "evidence": "Evidence",
     "photos_one": "{{count}} photo",
     "photos_other": "{{count}} photos",
@@ -104,8 +103,16 @@
     "photosAndVideo_other": "{{count}} photos and a video",
     "market": "Market",
     "keepShopping": "Keep shopping",
-    "withdraw": "Withdraw the application",
-    "progress": "Progress"
+    "progress": "Progress",
+    "about": "About",
+    "volume": "Roughly a week",
+    "plotIn": "in {{place}}",
+    "plotSince": "growing since {{year}}",
+    "noPhotos": "No photos",
+    "noPhotosVideo": "No photos, and a video",
+    "status": "Status",
+    "sentOn": "Sent",
+    "photoAlt": "Photo of the plot"
   },
   "timeline": {
     "placed": {
@@ -128,12 +135,43 @@
     "missingTitle": "Missing boxes",
     "missing": "Tick the three boxes at the end before you send.",
     "sentTitle": "Application sent",
-    "sent": "You will hear from an admin in your notifications.",
-    "withdrawnTitle": "Application withdrawn",
-    "withdrawn": "You can apply again whenever you like.",
-    "photoTitle": "Add a photo",
-    "photo": "Choose a photo from your phone or computer.",
-    "videoTitle": "Add a video",
-    "video": "Choose a video, up to 60 seconds."
+    "sent": "You will hear from an admin in your notifications."
+  },
+  "loading": "Loading your application status",
+  "loadError": {
+    "title": "Couldn't load your application status",
+    "text": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "errors": {
+    "stallName": "Enter your stall name.",
+    "contactPerson": "Enter a contact person.",
+    "photo": "Could not upload that photo. Please try again.",
+    "video": "Could not upload that video. Please try again.",
+    "send": "Could not send your application. Please try again."
+  },
+  "approval": {
+    "approved": {
+      "title": "Your stall is approved",
+      "text": "Your account can now set up a stall — markets, pickup windows and products — from the farmer panel."
+    },
+    "rejected": {
+      "title": "Your application was not approved",
+      "text": "Contact an admin from the feedback form if you think this is a mistake."
+    },
+    "suspended": {
+      "title": "Your stall is suspended",
+      "text": "You can still sign in, but your products stay hidden from customers until an admin lifts the suspension."
+    }
+  },
+  "suspendedBanner": {
+    "title": "Selling is paused on this account.",
+    "text": "Existing orders already placed still run their course; you just cannot take new ones for now."
+  },
+  "statusValue": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "suspended": "Suspended"
   }
 }

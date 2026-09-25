@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import FarmerApi from '@/api-requests/farmer.requests';
 import MapPlaceholder from '@/components/MapPlaceholder';
@@ -14,7 +15,7 @@ import { categories } from '@/data/customer';
 import { markets } from '@/data/home';
 import useSession from '@/hooks/useSession';
 import { dayList, formatDate } from '@/lib/format';
-import type { FarmerApplicationInput, FarmerApproval, FarmerProfileType } from '@/types/farmer.types';
+import type { FarmerApplicationInput, FarmerProfileType } from '@/types/farmer.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
@@ -22,40 +23,16 @@ type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'form' } | { kin
 
 type FormErrors = { stallName?: string; contactPerson?: string };
 
-const APPROVAL_COPY: Record<FarmerApproval, { title: string; text: string }> = {
-  pending: {
-    title: 'Your application is with an admin',
-    text: 'Nothing changes for you in the meantime. Keep shopping, and watch your notifications for the answer.',
-  },
-  approved: {
-    title: 'Your stall is approved',
-    text: 'Your account can now set up a stall — markets, pickup windows and products — from the farmer panel.',
-  },
-  rejected: {
-    title: 'Your application was not approved',
-    text: 'Contact an admin from the feedback form if you think this is a mistake.',
-  },
-  suspended: {
-    title: 'Your stall is suspended',
-    text: 'You can still sign in, but your products stay hidden from customers until an admin lifts the suspension.',
-  },
-};
+/** Keys are order statuses only for the icon and colour; the text is `timeline.<key>`. */
+const TIMELINE = ['placed', 'accepted', 'ready'] as const;
 
-const TIMELINE: { key: 'placed' | 'accepted' | 'ready'; title: string; note: string; by: string }[] = [
-  { key: 'placed', title: 'Application sent', note: 'Just now', by: 'You' },
-  { key: 'accepted', title: 'An admin reads it', note: 'Usually within a few market days', by: 'MarketLink' },
-  { key: 'ready', title: 'Stall panel opens', note: 'After approval', by: 'MarketLink' },
-];
-
-type PhotoSlot = { label: string; hint: string; url: string | null; uploading: boolean };
-const INITIAL_SHOTS: [string, string][] = [
-  ['Wide shot of the plot', 'A view of the whole plot'],
-  ['What is growing now', 'A close shot of the current crop'],
-  ['Anything else', 'Optional'],
-];
+/** Photo slots in order; the label is `step4.shots.<key>`. */
+const SHOTS = ['wide', 'growing', 'other'] as const;
+type PhotoSlot = { key: (typeof SHOTS)[number]; url: string | null; uploading: boolean };
 
 /** FR-002 (second route, applying from an existing Customer account — needs its own FR, see the caption below). */
 const CustomerBecomeFarmerPage = () => {
+  const { t } = useTranslation('CustomerBecomeFarmer');
   const { user } = useSession();
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
 
@@ -75,9 +52,7 @@ const CustomerBecomeFarmerPage = () => {
   const [plotLatitude, setPlotLatitude] = useState('');
   const [plotLongitude, setPlotLongitude] = useState('');
 
-  const [photos, setPhotos] = useState<PhotoSlot[]>(
-    INITIAL_SHOTS.map(([label, hint]) => ({ label, hint, url: null, uploading: false })),
-  );
+  const [photos, setPhotos] = useState<PhotoSlot[]>(SHOTS.map((key) => ({ key, url: null, uploading: false })));
   const [video, setVideo] = useState<{ url: string | null; uploading: boolean }>({ url: null, uploading: false });
   const photoInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -85,9 +60,9 @@ const CustomerBecomeFarmerPage = () => {
 
   const [marketId, setMarketId] = useState(markets[0]?.id);
 
-  const [t1, setT1] = useState(false);
-  const [t2, setT2] = useState(false);
-  const [t3, setT3] = useState(false);
+  const [tick1, setTick1] = useState(false);
+  const [tick2, setTick2] = useState(false);
+  const [tick3, setTick3] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
@@ -124,7 +99,7 @@ const CustomerBecomeFarmerPage = () => {
       setPhotos((prev) => prev.map((p, i) => (i === index ? { ...p, url: response.data.url, uploading: false } : p)));
     } catch (error) {
       setPhotos((prev) => prev.map((p, i) => (i === index ? { ...p, uploading: false } : p)));
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not upload that photo. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('errors.photo')) });
     }
   };
 
@@ -138,7 +113,7 @@ const CustomerBecomeFarmerPage = () => {
       setVideo({ url: response.data.url, uploading: false });
     } catch (error) {
       setVideo({ url: null, uploading: false });
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not upload that video. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('errors.video')) });
     }
   };
 
@@ -148,13 +123,13 @@ const CustomerBecomeFarmerPage = () => {
     e.preventDefault();
 
     const nextErrors: FormErrors = {};
-    if (!stallName.trim()) nextErrors.stallName = 'Enter your stall name.';
-    if (!contactPerson.trim()) nextErrors.contactPerson = 'Enter a contact person.';
+    if (!stallName.trim()) nextErrors.stallName = t('errors.stallName');
+    if (!contactPerson.trim()) nextErrors.contactPerson = t('errors.contactPerson');
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
-    if (!t1 || !t2 || !t3) {
-      Notification.error({ title: 'Missing boxes', text: 'Tick the three boxes at the end before you send.' });
+    if (!tick1 || !tick2 || !tick3) {
+      Notification.error({ title: t('toast.missingTitle'), text: t('toast.missing') });
       return;
     }
 
@@ -182,11 +157,11 @@ const CustomerBecomeFarmerPage = () => {
       const response = await FarmerApi.apply(input);
       setStatus({ kind: 'applied', data: response.data });
       window.scrollTo(0, 0);
-      Notification.success({ title: 'Application sent', text: 'You will hear from an admin in your notifications.' });
+      Notification.success({ title: t('toast.sentTitle'), text: t('toast.sent') });
     } catch (error) {
       setErrors(Helper.getFieldErrors(error));
       Notification.error({
-        text: Helper.getErrorMessage(error, 'Could not send your application. Please try again.'),
+        text: Helper.getErrorMessage(error, t('errors.send')),
       });
     } finally {
       setIsSubmitting(false);
@@ -196,7 +171,7 @@ const CustomerBecomeFarmerPage = () => {
   if (status.kind === 'loading') {
     return (
       <Card aria-busy="true" className="mx-auto flex w-full max-w-180 flex-col gap-3 p-6">
-        <span className="sr-only">Loading your application status</span>
+        <span className="sr-only">{t('loading')}</span>
         <div className="bg-surface-sunken h-6 w-72 max-w-full rounded-sm" />
         <div className="bg-surface-sunken h-4 w-full rounded-sm" />
         <div className="bg-surface-sunken h-32 w-full rounded-sm" />
@@ -209,11 +184,11 @@ const CustomerBecomeFarmerPage = () => {
       <div className="mx-auto w-full max-w-180">
         <DataState
           variant="error"
-          title="Couldn't load your application status"
-          text="Check your connection and try again."
+          title={t('loadError.title')}
+          text={t('loadError.text')}
           action={
             <Button variant="secondary" size="sm" onClick={load}>
-              Try again
+              {t('loadError.retry')}
             </Button>
           }
         />
@@ -223,14 +198,21 @@ const CustomerBecomeFarmerPage = () => {
 
   if (status.kind === 'applied') {
     const data = status.data;
-    const copy = APPROVAL_COPY[data.approvalStatus];
+    const copy =
+      data.approvalStatus === 'pending'
+        ? { title: t('sent.title'), text: t('sent.intro') }
+        : { title: t(`approval.${data.approvalStatus}.title`), text: t(`approval.${data.approvalStatus}.text`) };
+    const photoCount = data.photoUrls?.length ?? 0;
+    const evidence = photoCount
+      ? t(data.videoUrl ? 'sent.photosAndVideo' : 'sent.photos', { count: photoCount })
+      : t(data.videoUrl ? 'sent.noPhotosVideo' : 'sent.noPhotos');
     return (
       <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
         <p className="text-small text-ink-muted">
           <Link to="/account" className="text-brand underline">
-            Account
+            {t('breadcrumbAccount')}
           </Link>{' '}
-          · Apply to sell
+          · {t('breadcrumb')}
         </p>
 
         <div className="flex flex-col gap-2">
@@ -239,27 +221,27 @@ const CustomerBecomeFarmerPage = () => {
         </div>
 
         {data.approvalStatus === 'suspended' && (
-          <Banner variant="warning" title="Selling is paused on this account.">
-            Existing orders already placed still run their course; you just cannot take new ones for now.
+          <Banner variant="warning" title={t('suspendedBanner.title')}>
+            {t('suspendedBanner.text')}
           </Banner>
         )}
 
         <Card className="flex flex-col gap-4 p-6">
-          <h2 className="text-h3">What you sent</h2>
+          <h2 className="text-h3">{t('sent.summary')}</h2>
           <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-            <dt className="text-ink-muted">Stall</dt>
+            <dt className="text-ink-muted">{t('sent.stall')}</dt>
             <dd className="m-0">{data.stallName}</dd>
-            <dt className="text-ink-muted">Contact person</dt>
+            <dt className="text-ink-muted">{t('step1.person')}</dt>
             <dd className="m-0">{data.contactPerson}</dd>
             {data.description && (
               <>
-                <dt className="text-ink-muted">About</dt>
+                <dt className="text-ink-muted">{t('sent.about')}</dt>
                 <dd className="m-0">{data.description}</dd>
               </>
             )}
             {!!data.categories?.length && (
               <>
-                <dt className="text-ink-muted">Grows</dt>
+                <dt className="text-ink-muted">{t('sent.grows')}</dt>
                 <dd className="m-0">
                   {data.categories.join(', ')}
                   {data.mainCrops && ` · ${data.mainCrops}`}
@@ -268,40 +250,35 @@ const CustomerBecomeFarmerPage = () => {
             )}
             {data.weeklyVolume && (
               <>
-                <dt className="text-ink-muted">Roughly a week</dt>
+                <dt className="text-ink-muted">{t('sent.volume')}</dt>
                 <dd className="m-0">{data.weeklyVolume}</dd>
               </>
             )}
             {(data.plotAddress || data.plotSize || data.growingSinceYear) && (
               <>
-                <dt className="text-ink-muted">Plot</dt>
+                <dt className="text-ink-muted">{t('sent.plot')}</dt>
                 <dd className="m-0">
                   {data.plotSize || '—'}
-                  {data.plotAddress && ` in ${data.plotAddress}`}
-                  {data.growingSinceYear && `, growing since ${data.growingSinceYear}`}
+                  {data.plotAddress && ` ${t('sent.plotIn', { place: data.plotAddress })}`}
+                  {data.growingSinceYear && `, ${t('sent.plotSince', { year: data.growingSinceYear })}`}
                 </dd>
               </>
             )}
             {(!!data.photoUrls?.length || data.videoUrl) && (
               <>
-                <dt className="text-ink-muted">Evidence</dt>
-                <dd className="m-0">
-                  {data.photoUrls?.length
-                    ? `${data.photoUrls.length} photo${data.photoUrls.length === 1 ? '' : 's'}`
-                    : 'No photos'}
-                  {data.videoUrl && ' and a video'}
-                </dd>
+                <dt className="text-ink-muted">{t('sent.evidence')}</dt>
+                <dd className="m-0">{evidence}</dd>
               </>
             )}
             {data.preferredMarketName && (
               <>
-                <dt className="text-ink-muted">Market</dt>
+                <dt className="text-ink-muted">{t('sent.market')}</dt>
                 <dd className="m-0">{data.preferredMarketName}</dd>
               </>
             )}
-            <dt className="text-ink-muted">Status</dt>
-            <dd className="m-0 capitalize">{data.approvalStatus}</dd>
-            <dt className="text-ink-muted">Sent</dt>
+            <dt className="text-ink-muted">{t('sent.status')}</dt>
+            <dd className="m-0">{t(`statusValue.${data.approvalStatus}`)}</dd>
+            <dt className="text-ink-muted">{t('sent.sentOn')}</dt>
             <dd className="m-0">{formatDate(new Date(data.createdAt))}</dd>
           </dl>
           {!!data.photoUrls?.length && (
@@ -310,7 +287,7 @@ const CustomerBecomeFarmerPage = () => {
                 <img
                   key={url}
                   src={`${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${url}`}
-                  alt="Plot"
+                  alt={t('sent.photoAlt')}
                   className="border-line-strong size-20 rounded-sm border-[1.5px] object-cover"
                 />
               ))}
@@ -318,17 +295,17 @@ const CustomerBecomeFarmerPage = () => {
           )}
           <div className="flex flex-wrap gap-2">
             <ButtonLink to="/markets" variant="secondary">
-              Keep shopping
+              {t('sent.keepShopping')}
             </ButtonLink>
           </div>
         </Card>
 
         {data.approvalStatus === 'pending' && (
           <div className="flex flex-col gap-3">
-            <h2 className="text-h2">Progress</h2>
+            <h2 className="text-h2">{t('sent.progress')}</h2>
             <ol className="m-0 flex flex-col p-0">
-              {TIMELINE.map((t, i) => (
-                <li key={t.key} className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
+              {TIMELINE.map((key, i) => (
+                <li key={key} className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
                   {i > 0 && (
                     <span
                       aria-hidden="true"
@@ -336,17 +313,17 @@ const CustomerBecomeFarmerPage = () => {
                     />
                   )}
                   <span
-                    className={`grid size-7 flex-none place-items-center rounded-full ${ORDER_STATUS_META[t.key].className} ${i > 0 ? 'opacity-45' : ''}`}
+                    className={`grid size-7 flex-none place-items-center rounded-full ${ORDER_STATUS_META[key].className} ${i > 0 ? 'opacity-45' : ''}`}
                   >
                     {(() => {
-                      const Icon = ORDER_STATUS_META[t.key].icon;
+                      const Icon = ORDER_STATUS_META[key].icon;
                       return <Icon size={14} />;
                     })()}
                   </span>
                   <div>
-                    <b className="text-[15px]">{t.title}</b>
+                    <b className="text-[15px]">{t(`timeline.${key}.title`)}</b>
                     <time className="text-ink-muted block text-[13px]">
-                      {t.note} · {t.by}
+                      {t(`timeline.${key}.note`)} · {t(`timeline.${key}.by`)}
                     </time>
                   </div>
                 </li>
@@ -362,54 +339,52 @@ const CustomerBecomeFarmerPage = () => {
     <div className="mx-auto flex w-full max-w-180 flex-col gap-8">
       <p className="text-small text-ink-muted">
         <Link to="/account" className="text-brand underline">
-          Account
+          {t('breadcrumbAccount')}
         </Link>{' '}
-        · Apply to sell
+        · {t('breadcrumb')}
       </p>
 
       <div className="flex flex-col gap-2">
         {user && (
           <p className="font-hand text-hand text-ink-muted">
-            {user.fullName}
-            {user.createdAt && ` · customer since ${formatDate(new Date(user.createdAt))}`}
+            {user.createdAt
+              ? t('since', { name: user.fullName, date: formatDate(new Date(user.createdAt)) })
+              : user.fullName}
           </p>
         )}
-        <h1 className="text-h1">Sell what you grow</h1>
-        <p className="text-body-lg">
-          If you grow food, your account can become a stall at one of the four markets. You keep everything you have now
-          and carry on shopping from other stalls.
-        </p>
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body-lg">{t('intro')}</p>
       </div>
 
       <Card className="flex flex-col gap-3 p-6">
-        <h2 className="text-h3">What happens after you send this</h2>
+        <h2 className="text-h3">{t('next.title')}</h2>
         <ol className="text-body m-0 flex list-decimal flex-col gap-1.5 pl-5">
-          <li>An admin reads the application and looks at your photos, usually within a few market days.</li>
-          <li>When it is approved, a stall panel appears in your account for stock, orders and pickup times.</li>
-          <li>You set your markets, days and pickup windows there, then list your first products.</li>
+          <li>{t('next.read')}</li>
+          <li>{t('next.panel')}</li>
+          <li>{t('next.setup')}</li>
         </ol>
       </Card>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-8">
         <ol className="m-0 flex flex-col gap-8 p-0">
-          <FormStep n={1} title="Your stall">
+          <FormStep n={1} title={t('step1.title')}>
             <Card className="flex flex-col gap-4 p-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Field
                   id="stall"
-                  label="Stall name"
+                  label={t('step1.stallName')}
                   required
-                  placeholder="e.g. Khang Family Greens"
+                  placeholder={t('step1.stallNamePlaceholder')}
                   value={stallName}
                   onChange={(e) => setStallName(e.target.value)}
-                  hint="Customers see this on the map and on their orders."
+                  hint={t('step1.stallNameHint')}
                   error={errors.stallName}
                   disabled={isSubmitting}
                   className="md:col-span-2"
                 />
                 <Field
                   id="person"
-                  label="Contact person"
+                  label={t('step1.person')}
                   required
                   value={contactPerson}
                   onChange={(e) => setContactPerson(e.target.value)}
@@ -418,45 +393,45 @@ const CustomerBecomeFarmerPage = () => {
                 />
                 <Field
                   id="email"
-                  label="Email"
+                  label={t('step1.email')}
                   value={user?.email ?? ''}
                   readOnly
-                  hint="Your sign-in stays the same."
+                  hint={t('step1.emailHint')}
                 />
                 <Field
                   id="phone"
-                  label="Phone"
+                  label={t('step1.phone')}
                   value={user?.phone ?? ''}
                   readOnly
-                  hint="From your account. Change it on the Account page first if it's wrong."
+                  hint={t('step1.fromAccount')}
                 />
                 <Field
                   id="address"
-                  label="Address"
+                  label={t('step1.address')}
                   value={user?.address ?? ''}
                   readOnly
-                  hint="From your account. Change it on the Account page first if it's wrong."
+                  hint={t('step1.fromAccount')}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="about" className="text-small font-bold">
-                  About the stall
+                  {t('step1.about')}
                 </label>
                 <textarea
                   id="about"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="One or two sentences. Who grows it and where."
+                  placeholder={t('step1.aboutPlaceholder')}
                   className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
                 />
               </div>
             </Card>
           </FormStep>
 
-          <FormStep n={2} title="What you grow">
+          <FormStep n={2} title={t('step2.title')}>
             <Card className="flex flex-col gap-4 p-6">
               <div className="flex flex-col gap-2">
-                <span className="text-small font-bold">Categories</span>
+                <span className="text-small font-bold">{t('step2.categories')}</span>
                 <div className="flex flex-col gap-2">
                   {categories.map((c) => (
                     <Checkbox
@@ -472,61 +447,58 @@ const CustomerBecomeFarmerPage = () => {
               </div>
               <Field
                 id="crops"
-                label="Main crops"
+                label={t('step2.crops')}
                 value={mainCrops}
                 onChange={(e) => setMainCrops(e.target.value)}
-                placeholder="Water spinach, choy sum, Thai basil"
-                hint="Separate them with commas. You list real products with prices after approval."
+                placeholder={t('step2.cropsPlaceholder')}
+                hint={t('step2.cropsHint')}
               />
               <Field
                 id="volume"
-                label="Roughly how much a week"
+                label={t('step2.volume')}
                 value={weeklyVolume}
                 onChange={(e) => setWeeklyVolume(e.target.value)}
-                placeholder="About 120 bunches"
-                hint="A rough figure. It helps the admin match you to a market with room."
+                placeholder={t('step2.volumePlaceholder')}
+                hint={t('step2.volumeHint')}
               />
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="method" className="text-small font-bold">
-                  How you grow it
+                  {t('step2.method')}
                 </label>
                 <textarea
                   id="method"
                   value={growingMethod}
                   onChange={(e) => setGrowingMethod(e.target.value)}
-                  placeholder="e.g. No pesticides in the last two seasons."
+                  placeholder={t('step2.methodPlaceholder')}
                   className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
                 />
-                <span className="text-ink-muted text-[13px]">
-                  Optional, and shown on your stall page as your own words. MarketLink does not check or certify any of
-                  it.
-                </span>
+                <span className="text-ink-muted text-[13px]">{t('step2.methodHint')}</span>
               </div>
             </Card>
           </FormStep>
 
-          <FormStep n={3} title="Where you grow it">
+          <FormStep n={3} title={t('step3.title')}>
             <Card className="flex flex-col gap-4 p-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Field
                   id="plot"
-                  label="Address of the plot"
+                  label={t('step3.plot')}
                   value={plotAddress}
                   onChange={(e) => setPlotAddress(e.target.value)}
-                  placeholder="Hamlet, ward, district"
-                  hint="Only the admin sees this. Customers see your stall at the market, not your plot."
+                  placeholder={t('step3.plotPlaceholder')}
+                  hint={t('step3.plotHint')}
                   className="md:col-span-2"
                 />
                 <Field
                   id="size"
-                  label="Plot size"
+                  label={t('step3.size')}
                   value={plotSize}
                   onChange={(e) => setPlotSize(e.target.value)}
-                  placeholder="5,000 m²"
+                  placeholder={t('step3.sizePlaceholder')}
                 />
                 <Field
                   id="since"
-                  label="Growing here since"
+                  label={t('step3.since')}
                   inputMode="numeric"
                   value={growingSinceYear}
                   onChange={(e) => setGrowingSinceYear(e.target.value.replace(/\D/g, ''))}
@@ -534,37 +506,32 @@ const CustomerBecomeFarmerPage = () => {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <span className="text-small font-bold">Pin the plot</span>
-                <MapPlaceholder label="Pin your plot on the map" />
+                <span className="text-small font-bold">{t('step3.pin')}</span>
+                <MapPlaceholder label={t('step3.map')} />
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Field
                     id="lat"
-                    label="Latitude"
+                    label={t('step3.lat')}
                     value={plotLatitude}
                     onChange={(e) => setPlotLatitude(e.target.value)}
                     placeholder="10.8721"
                   />
                   <Field
                     id="lng"
-                    label="Longitude"
+                    label={t('step3.lng')}
                     value={plotLongitude}
                     onChange={(e) => setPlotLongitude(e.target.value)}
                     placeholder="106.5931"
                   />
                 </div>
-                <p className="text-ink-muted text-[13px]">
-                  The real map pin lands with the map screen — for now, type the coordinates by hand if you know them.
-                </p>
+                <p className="text-ink-muted text-[13px]">{t('step3.manualPin')}</p>
               </div>
             </Card>
           </FormStep>
 
-          <FormStep n={4} title="Photos of the plot">
+          <FormStep n={4} title={t('step4.title')}>
             <Card className="flex flex-col gap-4 p-6">
-              <p className="text-body">
-                Two photos are enough and five is the most. One wide shot that shows the whole plot, and one close shot
-                of what is growing right now. Take them in the last 30 days and do not filter them.
-              </p>
+              <p className="text-body">{t('step4.intro')}</p>
               <input
                 ref={photoInputRef}
                 type="file"
@@ -574,19 +541,19 @@ const CustomerBecomeFarmerPage = () => {
               />
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {photos.map((p, i) => (
-                  <div key={p.label} className="flex flex-col gap-1.5">
+                  <div key={p.key} className="flex flex-col gap-1.5">
                     {p.url ? (
                       <div className="relative">
                         <img
                           src={`${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${p.url}`}
-                          alt={p.label}
+                          alt={t(`step4.shots.${p.key}`)}
                           className="aspect-4/3 w-full rounded-md object-cover"
                         />
                         <button
                           type="button"
                           onClick={() => setPhotos((prev) => prev.map((x, xi) => (xi === i ? { ...x, url: null } : x)))}
                           className="bg-surface-raised text-ink absolute top-1 right-1 grid size-6 cursor-pointer place-items-center rounded-full text-[13px] font-bold"
-                          aria-label={`Remove ${p.label}`}
+                          aria-label={t('step4.removePhoto', { label: t(`step4.shots.${p.key}`) })}
                         >
                           ×
                         </button>
@@ -598,16 +565,16 @@ const CustomerBecomeFarmerPage = () => {
                         disabled={p.uploading}
                         className="border-line-strong text-ink aspect-4/3 cursor-pointer rounded-md border-2 border-dashed bg-transparent text-[14px] font-bold disabled:opacity-50"
                       >
-                        {p.uploading ? 'Uploading…' : 'Add photo'}
+                        {p.uploading ? t('step4.uploading') : t('step4.addPhoto')}
                       </button>
                     )}
-                    <small className="text-ink-muted text-[12px]">{p.label}</small>
+                    <small className="text-ink-muted text-[12px]">{t(`step4.shots.${p.key}`)}</small>
                   </div>
                 ))}
               </div>
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="vid" className="text-small font-bold">
-                  A short video
+                  {t('step4.video')}
                 </label>
                 <input
                   ref={videoInputRef}
@@ -618,14 +585,14 @@ const CustomerBecomeFarmerPage = () => {
                 />
                 {video.url ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-small">Video added</span>
+                    <span className="text-small">{t('step4.videoAdded')}</span>
                     <Button
                       variant="secondary"
                       size="sm"
                       type="button"
                       onClick={() => setVideo({ url: null, uploading: false })}
                     >
-                      Remove
+                      {t('step4.removeVideo')}
                     </Button>
                   </div>
                 ) : (
@@ -637,23 +604,19 @@ const CustomerBecomeFarmerPage = () => {
                     onClick={() => videoInputRef.current?.click()}
                     className="w-fit"
                   >
-                    {video.uploading ? 'Uploading…' : 'Add a video, up to 60 seconds'}
+                    {video.uploading ? t('step4.uploading') : t('step4.addVideo')}
                   </Button>
                 )}
-                <span className="text-ink-muted text-[13px]">
-                  Optional. A slow walk along the beds says more than any photo, and it makes approval faster.
-                </span>
+                <span className="text-ink-muted text-[13px]">{t('step4.videoHint')}</span>
               </div>
-              <Banner title="The admin is checking one thing: that the plot exists and grows what you listed.">
-                MarketLink does not check licences, food safety or organic claims, and a photo is not a certificate.
-              </Banner>
+              <Banner title={t('step4.banner.title')}>{t('step4.banner.text')}</Banner>
             </Card>
           </FormStep>
 
-          <FormStep n={5} title="Where you want to sell">
+          <FormStep n={5} title={t('step5.title')}>
             <Card className="flex flex-col gap-4 p-6">
               <div className="flex flex-col gap-2">
-                <span className="text-small font-bold">Market</span>
+                <span className="text-small font-bold">{t('step5.market')}</span>
                 <div className="flex flex-col gap-2">
                   {markets.map((m) => (
                     <label key={m.id} className="flex items-center gap-2 text-[15px]">
@@ -669,39 +632,30 @@ const CustomerBecomeFarmerPage = () => {
                   ))}
                 </div>
               </div>
-              <p className="text-small text-ink-muted">
-                Pick one to start with. You set your days, pickup windows and cutoff in the stall panel once you are
-                approved, and you can add the other markets later.
-              </p>
+              <p className="text-small text-ink-muted">{t('step5.hint')}</p>
             </Card>
           </FormStep>
 
-          <FormStep n={6} title="Before you send">
+          <FormStep n={6} title={t('step6.title')}>
             <Card className="flex flex-col gap-4 p-6">
-              <Checkbox id="t1" checked={t1} onChange={(e) => setT1(e.target.checked)}>
-                Everything here is true, and the photos are of my own plot
-                <small className="text-ink-muted mt-0.5 block text-[13px]">
-                  An application with photos that are not yours is rejected and the account can be suspended.
-                </small>
+              <Checkbox id="t1" checked={tick1} onChange={(e) => setTick1(e.target.checked)}>
+                {t('step6.true')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.trueHint')}</small>
               </Checkbox>
-              <Checkbox id="t2" checked={t2} onChange={(e) => setT2(e.target.checked)}>
-                I will be at the stall in my pickup window
-                <small className="text-ink-muted mt-0.5 block text-[13px]">
-                  Repeated no-shows are the usual reason a stall is suspended.
-                </small>
+              <Checkbox id="t2" checked={tick2} onChange={(e) => setTick2(e.target.checked)}>
+                {t('step6.present')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.presentHint')}</small>
               </Checkbox>
-              <Checkbox id="t3" checked={t3} onChange={(e) => setT3(e.target.checked)}>
-                I understand customers pay me at the stall
-                <small className="text-ink-muted mt-0.5 block text-[13px]">
-                  There is no online payment and no delivery anywhere in MarketLink.
-                </small>
+              <Checkbox id="t3" checked={tick3} onChange={(e) => setTick3(e.target.checked)}>
+                {t('step6.pay')}
+                <small className="text-ink-muted mt-0.5 block text-[13px]">{t('step6.payHint')}</small>
               </Checkbox>
               <div className="flex flex-wrap gap-2">
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting ? 'Sending…' : 'Send the application'}
+                  {isSubmitting ? t('step6.sending') : t('step6.send')}
                 </Button>
                 <ButtonLink to="/account" variant="secondary">
-                  Save and finish later
+                  {t('step6.later')}
                 </ButtonLink>
               </div>
             </Card>

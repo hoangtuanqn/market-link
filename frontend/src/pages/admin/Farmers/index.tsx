@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { DataState } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
+import { REJECT_REASONS } from '@/constants/approvalStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
 import type { AdminFarmerListItemType, FarmerApproval } from '@/types/farmer.types';
@@ -17,70 +19,26 @@ import Notification from '@/utils/notification';
 type Status =
   { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; items: AdminFarmerListItemType[]; total: number };
 
-/** Docs/prototype/admin/farmers.html — tabs theo trạng thái duyệt, mỗi tab có nội dung empty riêng. */
-const TABS: { value: FarmerApproval; label: string }[] = [
-  { value: 'pending', label: 'Waiting for approval' },
-  { value: 'approved', label: 'Approved' },
-  { value: 'suspended', label: 'Suspended' },
-  { value: 'rejected', label: 'Rejected' },
-];
-
-const EMPTY_COPY: Record<FarmerApproval, { title: string; text: string }> = {
-  pending: {
-    title: 'No registrations waiting',
-    text: 'New Farmer applications arrive here for review before they can list products.',
-  },
-  approved: {
-    title: 'No approved stalls',
-    text: 'Approve a registration and the stall appears here, visible to customers.',
-  },
-  suspended: {
-    title: 'No suspended stalls',
-    text: 'A suspended stall is hidden from customers but finishes the orders it already has (D-09).',
-  },
-  rejected: {
-    title: 'No rejected registrations',
-    text: 'Rejected Farmers keep their account and can be told why.',
-  },
-};
-
-const REJECT_REASONS = [
-  'Details do not match the stall',
-  'Market is full',
-  'Could not reach the contact number',
-  'Other',
-];
+/** Docs/prototype/admin/farmers.html — tabs theo trạng thái duyệt, mỗi tab có nội dung empty riêng (`empty.<tab>`). */
+const TABS: FarmerApproval[] = ['pending', 'approved', 'suspended', 'rejected'];
 
 type ConfirmKind = 'approve' | 'suspend' | 'reinstate';
 type ConfirmAction = { kind: ConfirmKind; item: AdminFarmerListItemType } | null;
 
-const CONFIRM_COPY: Record<ConfirmKind, { title: (stall: string) => string; body: string; confirm: string }> = {
-  approve: {
-    title: (stall) => `Approve ${stall}?`,
-    body: 'The stall becomes visible to customers and can list products right away. The Farmer is notified.',
-    confirm: 'Approve stall',
-  },
-  suspend: {
-    title: (stall) => `Suspend ${stall}?`,
-    body: 'All products are hidden and no new orders are accepted. Orders already placed continue so customers do not lose what they booked (D-09).',
-    confirm: 'Suspend stall',
-  },
-  reinstate: {
-    title: (stall) => `Reinstate ${stall}?`,
-    body: 'Products become visible to customers again right away.',
-    confirm: 'Reinstate stall',
-  },
-};
+/** Toast sau khi thao tác xong: `toast.<key>`. */
+const DONE_TOAST = { approve: 'approved', suspend: 'suspended', reinstate: 'reinstated' } as const;
 
 /** §6, §7, §8 — Admin xem, duyệt, từ chối, đình chỉ, phục hồi Farmer (FR-071/D-09). */
 const AdminFarmersPage = () => {
+  const { t } = useTranslation('AdminFarmers');
+  const rejectReasons = REJECT_REASONS.map((key) => t(`reason.${key}`));
   const [activeTab, setActiveTab] = useState<FarmerApproval>('pending');
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
   const [counts, setCounts] = useState<Partial<Record<FarmerApproval, number>>>({});
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [rejectTarget, setRejectTarget] = useState<AdminFarmerListItemType | null>(null);
-  const [rejectReason, setRejectReason] = useState(REJECT_REASONS[0]);
+  const [rejectReason, setRejectReason] = useState('');
 
   // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
   const fetchList = useCallback(() => {
@@ -90,11 +48,11 @@ const AdminFarmersPage = () => {
   }, [activeTab]);
 
   const fetchCounts = useCallback(() => {
-    Promise.all(TABS.map((t) => AdminFarmerApi.list({ status: t.value, page: 1, pageSize: 1 })))
+    Promise.all(TABS.map((tab) => AdminFarmerApi.list({ status: tab, page: 1, pageSize: 1 })))
       .then((responses) => {
         const next: Partial<Record<FarmerApproval, number>> = {};
-        TABS.forEach((t, i) => {
-          next[t.value] = responses[i]?.data.total;
+        TABS.forEach((tab, i) => {
+          next[tab] = responses[i]?.data.total;
         });
         setCounts(next);
       })
@@ -128,10 +86,10 @@ const AdminFarmersPage = () => {
       if (kind === 'approve') await AdminFarmerApi.approve(item.id);
       if (kind === 'suspend') await AdminFarmerApi.suspend(item.id);
       if (kind === 'reinstate') await AdminFarmerApi.reinstate(item.id);
-      Notification.success({ text: `${item.stallName} ${kind === 'approve' ? 'approved' : kind + 'd'}.` });
+      Notification.success({ text: t(`toast.${DONE_TOAST[kind]}`, { stall: item.stallName }) });
       reload();
     } catch (error) {
-      Notification.error({ text: Helper.getErrorMessage(error, 'Could not complete that action. Please try again.') });
+      Notification.error({ text: Helper.getErrorMessage(error, t('toast.failed')) });
     } finally {
       setBusyId(null);
     }
@@ -142,12 +100,12 @@ const AdminFarmersPage = () => {
     setBusyId(rejectTarget.id);
     try {
       await AdminFarmerApi.reject(rejectTarget.id, rejectReason);
-      Notification.success({ text: `${rejectTarget.stallName} rejected. They keep their account.` });
+      Notification.success({ text: t('toast.rejected', { stall: rejectTarget.stallName }) });
       setRejectTarget(null);
       reload();
     } catch (error) {
       Notification.error({
-        text: Helper.getErrorMessage(error, 'Could not reject this application. Please try again.'),
+        text: Helper.getErrorMessage(error, t('toast.rejectFailed')),
       });
     } finally {
       setBusyId(null);
@@ -157,16 +115,16 @@ const AdminFarmersPage = () => {
   const columns: TableColumn<AdminFarmerListItemType>[] = [
     {
       key: 'stallName',
-      label: 'Stall',
+      label: t('col.stall'),
       render: (f) => (
         <Link to={`${ADMIN_FARMERS_PATH}/${f.id}`} className="text-brand underline">
           <b>{f.stallName}</b>
         </Link>
       ),
     },
-    { key: 'contactPerson', label: 'Contact' },
-    { key: 'email', label: 'Email' },
-    { key: 'createdAt', label: 'Registered', render: (f) => formatDate(new Date(f.createdAt)) },
+    { key: 'contactPerson', label: t('col.contact') },
+    { key: 'email', label: t('col.email') },
+    { key: 'createdAt', label: t('col.registered'), render: (f) => formatDate(new Date(f.createdAt)) },
     {
       key: 'action',
       label: '',
@@ -177,7 +135,7 @@ const AdminFarmersPage = () => {
           return (
             <div className="flex justify-end gap-2">
               <Button size="sm" disabled={busy} onClick={() => setConfirmAction({ kind: 'approve', item: f })}>
-                Approve
+                {t('action.approve')}
               </Button>
               <Button
                 variant="danger"
@@ -185,10 +143,10 @@ const AdminFarmersPage = () => {
                 disabled={busy}
                 onClick={() => {
                   setRejectTarget(f);
-                  setRejectReason(REJECT_REASONS[0]);
+                  setRejectReason(rejectReasons[0]);
                 }}
               >
-                Reject
+                {t('action.reject')}
               </Button>
             </div>
           );
@@ -197,7 +155,7 @@ const AdminFarmersPage = () => {
           return (
             <div className="flex justify-end gap-2">
               <ButtonLink to={`${ADMIN_FARMERS_PATH}/${f.id}`} variant="secondary" size="sm">
-                View
+                {t('action.view')}
               </ButtonLink>
               <Button
                 variant="danger"
@@ -205,7 +163,7 @@ const AdminFarmersPage = () => {
                 disabled={busy}
                 onClick={() => setConfirmAction({ kind: 'suspend', item: f })}
               >
-                Suspend
+                {t('action.suspend')}
               </Button>
             </div>
           );
@@ -214,17 +172,17 @@ const AdminFarmersPage = () => {
           return (
             <div className="flex justify-end gap-2">
               <ButtonLink to={`${ADMIN_FARMERS_PATH}/${f.id}`} variant="secondary" size="sm">
-                View
+                {t('action.view')}
               </ButtonLink>
               <Button size="sm" disabled={busy} onClick={() => setConfirmAction({ kind: 'reinstate', item: f })}>
-                Reinstate
+                {t('action.reinstate')}
               </Button>
             </div>
           );
         }
         return (
           <Link to={`${ADMIN_FARMERS_PATH}/${f.id}`} className="text-brand underline">
-            View
+            {t('action.view')}
           </Link>
         );
       },
@@ -234,25 +192,22 @@ const AdminFarmersPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-h1">Farmers</h1>
-        <p className="text-body max-w-160">
-          Approve an application before the stall can list products. Suspend a stall to hide its products and stop new
-          orders; its running orders finish as normal (D-09).
-        </p>
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body max-w-160">{t('intro')}</p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {TABS.map((t) => (
-          <Chip key={t.value} pressed={activeTab === t.value} onClick={() => changeTab(t.value)}>
-            {t.label}
-            {counts[t.value] != null && <span className="text-ink-muted ml-1">({counts[t.value]})</span>}
+      <div role="group" aria-label={t('tabsLabel')} className="flex flex-wrap gap-2">
+        {TABS.map((tab) => (
+          <Chip key={tab} pressed={activeTab === tab} onClick={() => changeTab(tab)}>
+            {t(`status.${tab}`)}
+            {counts[tab] != null && <span className="text-ink-muted ml-1">({counts[tab]})</span>}
           </Chip>
         ))}
       </div>
 
       {status.kind === 'loading' && (
         <Card aria-busy="true" className="flex flex-col gap-3 p-6">
-          <span className="sr-only">Loading farmers</span>
+          <span className="sr-only">{t('loading')}</span>
           <div className="bg-surface-sunken h-6 w-60 max-w-full rounded-sm" />
           <div className="bg-surface-sunken h-40 w-full rounded-sm" />
         </Card>
@@ -261,11 +216,11 @@ const AdminFarmersPage = () => {
       {status.kind === 'error' && (
         <DataState
           variant="error"
-          title="Couldn't load farmers"
-          text="Check your connection and try again."
+          title={t('loadError.title')}
+          text={t('loadError.text')}
           action={
             <Button variant="secondary" size="sm" onClick={retry}>
-              Try again
+              {t('loadError.retry')}
             </Button>
           }
         />
@@ -273,58 +228,54 @@ const AdminFarmersPage = () => {
 
       {status.kind === 'ready' &&
         (status.items.length ? (
-          <Table
-            caption={`${status.total} farmer${status.total === 1 ? '' : 's'}`}
-            columns={columns}
-            rows={status.items}
-          />
+          <Table caption={t('caption', { count: status.total })} columns={columns} rows={status.items} />
         ) : (
-          <DataState title={EMPTY_COPY[activeTab].title} text={EMPTY_COPY[activeTab].text} />
+          <DataState title={t(`empty.${activeTab}.title`)} text={t(`empty.${activeTab}.text`)} />
         ))}
 
       <Dialog
         open={confirmAction !== null}
-        title={confirmAction ? CONFIRM_COPY[confirmAction.kind].title(confirmAction.item.stallName) : ''}
+        title={confirmAction ? t(`${confirmAction.kind}.title`, { stall: confirmAction.item.stallName }) : ''}
         tone={confirmAction?.kind === 'suspend' ? 'danger' : undefined}
         onClose={() => setConfirmAction(null)}
         actions={
           <>
             <Button variant="secondary" onClick={() => setConfirmAction(null)}>
-              Not yet
+              {t('notYet')}
             </Button>
             <Button variant={confirmAction?.kind === 'suspend' ? 'danger' : 'primary'} onClick={runConfirmedAction}>
-              {confirmAction ? CONFIRM_COPY[confirmAction.kind].confirm : ''}
+              {confirmAction ? t(`${confirmAction.kind}.confirm`) : ''}
             </Button>
           </>
         }
       >
-        <p>{confirmAction ? CONFIRM_COPY[confirmAction.kind].body : ''}</p>
+        <p>{confirmAction ? t(`${confirmAction.kind}.text`) : ''}</p>
       </Dialog>
 
       <Dialog
         open={rejectTarget !== null}
         tone="danger"
-        title={rejectTarget ? `Reject ${rejectTarget.stallName}?` : ''}
+        title={rejectTarget ? t('reject.title', { stall: rejectTarget.stallName }) : ''}
         onClose={() => setRejectTarget(null)}
         actions={
           <>
             <Button variant="secondary" onClick={() => setRejectTarget(null)}>
-              Keep reviewing
+              {t('keepReviewing')}
             </Button>
             <Button variant="danger" onClick={submitReject}>
-              Reject application
+              {t('reject.confirm')}
             </Button>
           </>
         }
       >
         <div className="flex flex-col gap-3">
-          <p>The applicant keeps their customer account and everything in it. They are told the reason.</p>
+          <p>{t('reject.text')}</p>
           <SelectField
             id="reject-reason"
-            label="Reason the applicant will see"
+            label={t('reject.reason')}
             value={rejectReason}
             onChange={(e) => setRejectReason(e.target.value)}
-            options={REJECT_REASONS}
+            options={rejectReasons}
           />
         </div>
       </Dialog>
