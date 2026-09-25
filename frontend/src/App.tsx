@@ -36,6 +36,7 @@ import ProductDetailPage from './pages/ProductDetail';
 import StallProfilePage from './pages/StallProfile';
 import SearchPage from './pages/Search';
 import FarmerOverviewPage from './pages/FarmerOverview';
+import FarmerOrdersPage from './pages/FarmerOrders';
 import AdminLoginPage from './pages/AdminLogin';
 import AdminHomePage from './pages/AdminHome';
 import AdminVerifyPage from './pages/AdminVerify';
@@ -133,6 +134,7 @@ const App = () => {
         {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader. */}
         <Route path="/farmer" element={<FarmerLayout />}>
           <Route index element={<FarmerOverviewPage />} />
+          <Route path="orders" element={<FarmerOrdersPage />} />
         </Route>
 
         {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
