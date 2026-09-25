@@ -16,7 +16,7 @@
     "failed": "Impossible de lancer la connexion Google. Veuillez réessayer.",
     "note": "Google nous transmet votre nom et votre e-mail. Votre numéro de téléphone et votre adresse restent nécessaires avant votre première commande : nous vous les demandons une fois à l’écran suivant."
   },
-  "newHere": "Nouveau ici ? <customer>Créez un compte client</customer> ou <farmer>inscrivez votre stand</farmer>.",
+  "newHere": "Nouveau ici ? <customer>Créez un compte client</customer>. Pour vendre, connectez-vous puis <farmer>demandez à devenir Farmer</farmer> depuis votre compte.",
   "toast": {
     "signedIn": "Connecté.",
     "failed": "Impossible de vous connecter. Veuillez réessayer."

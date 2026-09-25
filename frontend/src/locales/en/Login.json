@@ -16,7 +16,7 @@
     "failed": "Could not start Google sign-in. Please try again.",
     "note": "Google gives us your name and email. Your phone number and address are still needed before your first order, so we ask for them once on the next screen."
   },
-  "newHere": "New here? <customer>Create a customer account</customer> or <farmer>register your stall</farmer>.",
+  "newHere": "New here? <customer>Create a customer account</customer>. To sell, sign in and <farmer>apply to become a Farmer</farmer> from your account.",
   "toast": {
     "signedIn": "Signed in.",
     "failed": "Could not sign you in. Please try again."
