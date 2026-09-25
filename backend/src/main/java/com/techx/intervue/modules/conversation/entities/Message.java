@@ -59,9 +59,12 @@ public class Message {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
+    /** Không ghi đè khi đã có giá trị: test tích hợp cần đặt mốc thời gian chính xác. */
     @PrePersist
     protected void onCreated() {
-        createdAt = Instant.now();
+        if (createdAt == null) {
+            createdAt = Instant.now();
+        }
     }
 
     public boolean isHidden() {
