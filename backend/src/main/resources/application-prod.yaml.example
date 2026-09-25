@@ -21,3 +21,10 @@ jwt:
 app:
   mfa:
     encryption-key: ${MFA_ENCRYPTION_KEY}
+  # FR-111: chat realtime qua RabbitMQ; bắt buộc ở prod
+  chat:
+    rabbitmq:
+      host: ${RABBITMQ_HOST}
+      stomp-port: ${RABBITMQ_STOMP_PORT}
+      user: ${RABBITMQ_USER}
+      password: ${RABBITMQ_PASSWORD}

@@ -24,10 +24,10 @@ up: ## Chạy toàn bộ stack dev (mysql, redis, backend, frontend)
 	@test -f .env || cp .env.example .env
 	$(COMPOSE_APP) up -d --build --renew-anon-volumes
 
-infra: ## Chỉ chạy mysql + redis (khi muốn chạy BE/FE trực tiếp trên máy)
-	$(COMPOSE) up -d mysql redis
+infra: ## Chỉ chạy mysql + redis + rabbitmq (khi muốn chạy BE/FE trực tiếp trên máy)
+	$(COMPOSE) up -d mysql redis rabbitmq
 
-tools: ## Chạy thêm Adminer (:8081) và RedisInsight (:5540)
+tools: ## Chạy thêm Adminer (:8081) và RedisInsight (:5540); RabbitMQ UI (:15672) chạy sẵn cùng stack
 	$(COMPOSE) --profile tools up -d
 
 down: ## Dừng stack (giữ data)
