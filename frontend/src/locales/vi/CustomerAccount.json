@@ -146,6 +146,7 @@
     "privacy": "Sạp và người mua khác thấy hạng cạnh tên bạn, không bao giờ thấy các con số này.",
     "hero": {
       "overline": "Thẻ thành viên của bạn",
+      "line_one": "{{name}}, bạn đã nhận {{count}} đơn và chi {{amount}} ở chợ.",
       "line_other": "{{name}}, bạn đã nhận {{count}} đơn và chi {{amount}} ở chợ.",
       "welcome": "Chào mừng {{name}} tới chợ. Nhận những đơn đầu tiên để lên hạng nhé.",
       "since": "Thành viên từ {{date}}"

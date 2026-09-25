@@ -146,6 +146,7 @@
     "privacy": "摊位和其他买家只会在你名字旁看到等级，永远看不到这些数字。",
     "hero": {
       "overline": "你的会员身份",
+      "line_one": "{{name}}，你已在集市取走 {{count}} 笔订单，消费 {{amount}}。",
       "line_other": "{{name}}，你已在集市取走 {{count}} 笔订单，消费 {{amount}}。",
       "welcome": "欢迎来到集市，{{name}}。取走头几笔订单就能开始升级。",
       "since": "自 {{date}} 起成为会员"

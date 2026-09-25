@@ -146,6 +146,7 @@
     "privacy": "Lapak dan pembeli lain melihat tingkat Anda di samping nama, tidak pernah angka-angka ini.",
     "hero": {
       "overline": "Keanggotaan Anda",
+      "line_one": "{{name}}, Anda sudah mengambil {{count}} pesanan dan membelanjakan {{amount}} di pasar.",
       "line_other": "{{name}}, Anda sudah mengambil {{count}} pesanan dan membelanjakan {{amount}} di pasar.",
       "welcome": "Selamat datang di pasar, {{name}}. Ambil pesanan pertama Anda untuk mulai menaiki tingkat.",
       "since": "Anggota sejak {{date}}"
