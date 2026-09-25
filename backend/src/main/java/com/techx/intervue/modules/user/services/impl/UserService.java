@@ -19,6 +19,8 @@ import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
+import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface.PendingLogin;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.RefreshResult;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
@@ -53,6 +55,7 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final BlacklistServiceInterface blacklistService;
     private final AuthConfig authConfig;
     private final JobQueueInterface jobQueue;
+    private final MfaServiceInterface mfaService;
 
     /**
      * FR-006: access token vào blacklist Redis tới lúc hết hạn (JwtAuthFilter chặn theo jti),
@@ -126,7 +129,26 @@ public class UserService extends BaseService implements UserServiceInterface {
         if (request.requiredRole() != null && user.getRole() != request.requiredRole()) {
             throw new RoleMismatchException();
         }
-        return issueTokens(user, !Boolean.FALSE.equals(request.rememberMe()));
+        return issueTokensOrChallenge(user, !Boolean.FALSE.equals(request.rememberMe()));
+    }
+
+    /**
+     * FR-008: bước 2 sau khi nhập mã TOTP / mã khôi phục đúng. Kiểm tra lại trạng thái tài khoản vì
+     * admin có thể bị khoá trong 5 phút chờ nhập mã.
+     */
+    @Override
+    @Transactional
+    public AuthResult completeMfaLogin(String mfaToken, String code, String recoveryCode) {
+        PendingLogin pending = mfaService.verifyChallenge(mfaToken, code, recoveryCode);
+        User user =
+                userRepository
+                        .findById(pending.userId())
+                        .orElseThrow(() -> new BadCredentialsException("Account not found."));
+        if (user.getStatus() != UserStatus.ACTIVE) {
+            throw new DisabledException(
+                    "Your account has been locked. Please contact an administrator.");
+        }
+        return issueTokens(user, pending.rememberMe());
     }
 
     /**
@@ -174,7 +196,8 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        return issueTokens(user);
+        // FR-008: đăng nhập Google không được bỏ qua bước 2
+        return issueTokensOrChallenge(user, true);
     }
 
     private User linkOrCreateUser(SocialProfile profile) {
@@ -259,6 +282,17 @@ public class UserService extends BaseService implements UserServiceInterface {
                     "Your account has been locked. Please contact an administrator.");
         }
         return user;
+    }
+
+    /** FR-008: admin đã bật 2FA → chỉ trả token chờ; còn lại cấp phiên như cũ. */
+    private AuthResult issueTokensOrChallenge(User user, boolean rememberMe) {
+        if (user.getRole() == RoleType.ADMIN && mfaService.isEnabled(user.getId())) {
+            return AuthResult.mfaPending(
+                    toResource(user),
+                    rememberMe,
+                    mfaService.startChallenge(user.getId(), rememberMe));
+        }
+        return issueTokens(user, rememberMe);
     }
 
     private AuthResult issueTokens(User user) {
