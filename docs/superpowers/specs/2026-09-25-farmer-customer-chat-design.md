@@ -96,13 +96,13 @@ FR-005 (RBAC) phải nói rõ một Farmer giữ nguyên mọi quyền của Cus
 ## 5. Mô hình dữ liệu — đề xuất gửi LEAD
 
 Thay đổi DB chỉ qua migration Flyway mới (**R-03**), đặt tên `V<yyyyMMdd><nnn>__<mo_ta>.sql`, không
-sửa file đã merge. Migration mới nhất hiện tại là `V20260925002`. Hai PR trùng số thì người merge sau
+sửa file đã merge. Migration mới nhất hiện tại là `V20260925003` (user_settings, #107), nên chat bắt đầu từ `V20260925005`. Hai PR trùng số thì người merge sau
 đổi số của mình lên (CONTRIBUTING §7).
 
 ### 5.1 Đợt 1
 
 ```sql
--- V20260925003__create_conversations_table.sql
+-- V20260925005__create_conversations_table.sql
 CREATE TABLE conversations (
   id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   user_a_id      BIGINT UNSIGNED NOT NULL,   -- luôn giữ user_a_id < user_b_id
@@ -127,7 +127,7 @@ qua lại của nhau sẽ sinh **hai thread giữa cùng hai con người**. Ai 
 lúc hiển thị, theo vai của người đối diện và theo ngữ cảnh ghim trên từng tin nhắn.
 
 ```sql
--- V20260925004__create_messages_table.sql
+-- V20260925006__create_messages_table.sql
 CREATE TABLE messages (
   id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   conversation_id BIGINT UNSIGNED NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE messages (
   INDEX idx_messages_conv (conversation_id, id)
 ) ENGINE=InnoDB;
 
--- V20260925005__create_message_attachments_and_reports.sql
+-- V20260925007__create_message_attachments_and_reports.sql
 CREATE TABLE message_attachments (
   id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   message_id  BIGINT UNSIGNED NULL,          -- NULL = vừa upload, chưa gắn vào tin nào
@@ -180,7 +180,7 @@ CREATE TABLE message_reports (
   INDEX idx_reports_status (status, created_at)
 ) ENGINE=InnoDB;
 
--- V20260925006__create_user_presence_table.sql
+-- V20260925008__create_user_presence_table.sql
 CREATE TABLE user_presence (
   user_id      BIGINT UNSIGNED PRIMARY KEY,
   last_seen_at DATETIME NOT NULL,

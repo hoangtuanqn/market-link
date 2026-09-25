@@ -173,8 +173,8 @@ Expected: hook `branch-guard` cho qua (không phải `main`/`dev`), commit thàn
 ### Task 1: Migration hai bảng `conversations` và `messages`
 
 **Files:**
-- Create: `backend/src/main/resources/db/migration/V20260925003__create_conversations_table.sql`
-- Create: `backend/src/main/resources/db/migration/V20260925004__create_messages_table.sql`
+- Create: `backend/src/main/resources/db/migration/V20260925005__create_conversations_table.sql`
+- Create: `backend/src/main/resources/db/migration/V20260925006__create_messages_table.sql`
 
 **Interfaces:**
 - Produces: bảng `conversations(id, user_a_id, user_b_id, last_message_at, last_message_text, user_a_read_at, user_b_read_at, created_at)` và `messages(id, conversation_id, sender_id, kind, body, product_id, order_id, hidden_at, hidden_by, created_at)` — Task 2 map entity đúng tên cột này.
@@ -250,7 +250,7 @@ docker compose exec mysql mysql -uintervue -pintervue_pass intervue_db -e 'DESCR
 - [ ] **Step 5: Commit**
 
 ```bash
-git add backend/src/main/resources/db/migration/V20260925003__create_conversations_table.sql backend/src/main/resources/db/migration/V20260925004__create_messages_table.sql
+git add backend/src/main/resources/db/migration/V20260925005__create_conversations_table.sql backend/src/main/resources/db/migration/V20260925006__create_messages_table.sql
 git commit -m "feat(FR-110): add conversations and messages tables
 
 One thread per pair of users (user_a_id < user_b_id, unique). Message
@@ -357,7 +357,7 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** Khớp ENUM('text','image','offer','system') trong migration V20260925004. */
+/** Khớp ENUM('text','image','offer','system') trong migration V20260925006. */
 public enum MessageKind {
     TEXT,
     IMAGE,
