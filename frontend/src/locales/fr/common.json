@@ -331,5 +331,15 @@
     "feedback": "Retours",
     "pricing": "Tarifs",
     "settings": "Paramètres"
+  },
+  "carousel": {
+    "roleCarousel": "carrousel",
+    "roleSlide": "diapositive",
+    "slideOf": "{{n}} sur {{total}} : {{topic}}",
+    "previous": "Diapositive précédente",
+    "next": "Diapositive suivante",
+    "show": "Afficher la diapositive {{n}} : {{topic}}",
+    "pause": "Mettre le diaporama en pause",
+    "play": "Lancer le diaporama"
   }
 }

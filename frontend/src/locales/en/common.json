@@ -331,5 +331,15 @@
     "feedback": "Feedback",
     "pricing": "Pricing",
     "settings": "Settings"
+  },
+  "carousel": {
+    "roleCarousel": "carousel",
+    "roleSlide": "slide",
+    "slideOf": "{{n}} of {{total}}: {{topic}}",
+    "previous": "Previous slide",
+    "next": "Next slide",
+    "show": "Show slide {{n}}: {{topic}}",
+    "pause": "Pause the slideshow",
+    "play": "Play the slideshow"
   }
 }

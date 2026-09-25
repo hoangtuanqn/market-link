@@ -331,5 +331,15 @@
     "feedback": "의견",
     "pricing": "요금",
     "settings": "설정"
+  },
+  "carousel": {
+    "roleCarousel": "캐러셀",
+    "roleSlide": "슬라이드",
+    "slideOf": "{{total}}개 중 {{n}}번째: {{topic}}",
+    "previous": "이전 슬라이드",
+    "next": "다음 슬라이드",
+    "show": "{{n}}번 슬라이드 보기: {{topic}}",
+    "pause": "슬라이드쇼 일시 정지",
+    "play": "슬라이드쇼 재생"
   }
 }
