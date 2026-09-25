@@ -14,7 +14,6 @@ import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
-import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.resources.PageResource;
@@ -38,18 +37,17 @@ import org.springframework.util.StringUtils;
  * role tại một thời điểm (D-08 — không multi-profile). Customer nộp đơn vẫn giữ role customer tới
  * khi Admin duyệt mới chuyển sang farmer (§4, §7).
  *
- * <p>Categories và preferred market lưu dạng text tự do (chưa có bảng categories/markets thật);
- * ảnh/video lưu path cục bộ do {@code FarmerUploadService} sinh ra — chỉ phục vụ test/demo, không
- * phải hạ tầng lưu trữ production.
+ * <p>Đơn chỉ gồm thông tin sạp, ảnh/video và các cam kết. Mặt hàng, cách canh tác và chợ muốn bán
+ * được khai sau khi duyệt ở panel Farmer (FR-060…FR-064), nên không nằm trong đơn.
+ *
+ * <p>Ảnh/video lưu path cục bộ do {@code FarmerUploadService} sinh ra — chỉ phục vụ test/demo,
+ * không phải hạ tầng lưu trữ production.
  */
 @Service
 @AllArgsConstructor
 public class FarmerService implements FarmerServiceInterface {
 
     private static final String LIST_SEPARATOR = ";";
-
-    /** Bằng đúng độ rộng cột farmer_profiles.categories — DB không phải là nơi báo lỗi form. */
-    private static final int CATEGORIES_MAX_LENGTH = 255;
 
     private final FarmerProfileRepository farmerProfileRepository;
     private final UserRepository userRepository;
@@ -64,10 +62,6 @@ public class FarmerService implements FarmerServiceInterface {
         if (farmerProfileRepository.existsByUserId(userId)) {
             throw new FarmerApplicationExistsException();
         }
-        String categories = joinList(request.categories());
-        if (categories != null && categories.length() > CATEGORIES_MAX_LENGTH) {
-            throw new InvalidFieldException("categories", "Choose fewer or shorter categories.");
-        }
         FarmerProfile profile =
                 farmerProfileRepository.save(
                         FarmerProfile.builder()
@@ -75,18 +69,8 @@ public class FarmerService implements FarmerServiceInterface {
                                 .stallName(request.stallName().trim())
                                 .contactPerson(request.contactPerson().trim())
                                 .description(normalize(request.description()))
-                                .categories(categories)
-                                .mainCrops(normalize(request.mainCrops()))
-                                .weeklyVolume(normalize(request.weeklyVolume()))
-                                .growingMethod(normalize(request.growingMethod()))
-                                .plotAddress(normalize(request.plotAddress()))
-                                .plotSize(normalize(request.plotSize()))
-                                .growingSinceYear(request.growingSinceYear())
-                                .plotLatitude(request.plotLatitude())
-                                .plotLongitude(request.plotLongitude())
                                 .photoPaths(joinList(request.photoUrls()))
                                 .videoPath(normalize(request.videoUrl()))
-                                .preferredMarketName(normalize(request.preferredMarketName()))
                                 .approvalStatus(ApprovalStatus.PENDING)
                                 .build());
         return toOwnResource(profile);
@@ -234,18 +218,8 @@ public class FarmerService implements FarmerServiceInterface {
                 .stallName(profile.getStallName())
                 .contactPerson(profile.getContactPerson())
                 .description(profile.getDescription())
-                .categories(splitList(profile.getCategories()))
-                .mainCrops(profile.getMainCrops())
-                .weeklyVolume(profile.getWeeklyVolume())
-                .growingMethod(profile.getGrowingMethod())
-                .plotAddress(profile.getPlotAddress())
-                .plotSize(profile.getPlotSize())
-                .growingSinceYear(profile.getGrowingSinceYear())
-                .plotLatitude(profile.getPlotLatitude())
-                .plotLongitude(profile.getPlotLongitude())
                 .photoUrls(splitList(profile.getPhotoPaths()))
                 .videoUrl(profile.getVideoPath())
-                .preferredMarketName(profile.getPreferredMarketName())
                 .email(owner.getEmail())
                 .phone(owner.getPhone())
                 .address(owner.getAddress())
@@ -264,18 +238,8 @@ public class FarmerService implements FarmerServiceInterface {
                 .stallName(profile.getStallName())
                 .contactPerson(profile.getContactPerson())
                 .description(profile.getDescription())
-                .categories(splitList(profile.getCategories()))
-                .mainCrops(profile.getMainCrops())
-                .weeklyVolume(profile.getWeeklyVolume())
-                .growingMethod(profile.getGrowingMethod())
-                .plotAddress(profile.getPlotAddress())
-                .plotSize(profile.getPlotSize())
-                .growingSinceYear(profile.getGrowingSinceYear())
-                .plotLatitude(profile.getPlotLatitude())
-                .plotLongitude(profile.getPlotLongitude())
                 .photoUrls(splitList(profile.getPhotoPaths()))
                 .videoUrl(profile.getVideoPath())
-                .preferredMarketName(profile.getPreferredMarketName())
                 .approvalStatus(profile.getApprovalStatus())
                 .createdAt(profile.getCreatedAt())
                 .build();
