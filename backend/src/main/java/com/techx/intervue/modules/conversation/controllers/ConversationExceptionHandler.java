@@ -176,6 +176,15 @@ public class ConversationExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> integrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
+        if (cause.contains("uq_attach_message")) {
+            // Hai request gửi cùng một ảnh cùng lúc; UNIQUE chặn cái thứ hai. Cùng ý nghĩa với
+            // kiểm tra trong MessageService nên trả cùng mã.
+            return error(
+                    HttpStatus.CONFLICT,
+                    "ATTACHMENT_ALREADY_USED",
+                    new AttachmentAlreadyUsedException().getMessage(),
+                    List.of());
+        }
         if (cause.contains("uq_conversation_pair")) {
             return error(
                     HttpStatus.CONFLICT,

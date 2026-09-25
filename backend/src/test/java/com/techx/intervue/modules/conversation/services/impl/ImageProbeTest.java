@@ -113,4 +113,117 @@ class ImageProbeTest {
         riff.put(payload);
         return riff.array();
     }
+
+    /**
+     * Finding #6: WebP được lưu nguyên si, nên nếu chỉ kiểm "RIFF…WEBP" thì 16 byte header hợp lệ
+     * là đủ để cất một payload bất kỳ lên server và phục vụ lại nó dưới Content-Type image/webp.
+     * Sync code của VP8 là thứ rẻ nhất chứng minh đây thật sự là một khung ảnh.
+     */
+    @Test
+    void rejectsAWebpWhoseVp8SyncCodeIsWrong() {
+        byte[] fake = lossyWebp(20, 10);
+        fake[23] = 0x00; // sync code phải là 9d 01 2a
+
+        assertThatThrownBy(() -> ImageProbe.probe(fake))
+                .isInstanceOf(UnsupportedImageTypeException.class);
+    }
+
+    @Test
+    void rejectsALosslessWebpWhoseSignatureByteIsWrong() {
+        byte[] fake = losslessWebp(20, 10);
+        fake[20] = 0x00; // chữ ký VP8L phải là 0x2f
+
+        assertThatThrownBy(() -> ImageProbe.probe(fake))
+                .isInstanceOf(UnsupportedImageTypeException.class);
+    }
+
+    @Test
+    void readsTheSizeOfALosslessWebp() {
+        ImageProbe.Probed probed = ImageProbe.probe(losslessWebp(300, 200));
+
+        assertThat(probed.mime()).isEqualTo("image/webp");
+        assertThat(probed.width()).isEqualTo(300);
+        assertThat(probed.height()).isEqualTo(200);
+    }
+
+    @Test
+    void rejectsAWebpWhoseRiffSizeDoesNotMatchTheFile() {
+        byte[] fake = lossyWebp(20, 10);
+        // RIFF khai dài hơn file thật: dấu hiệu của payload bị cắt hoặc bịa
+        fake[4] = (byte) 0xF0;
+        fake[5] = (byte) 0xFF;
+
+        assertThatThrownBy(() -> ImageProbe.probe(fake))
+                .isInstanceOf(UnsupportedImageTypeException.class);
+    }
+
+    /**
+     * Finding #8: ca "bom giải nén" ở trên dùng WebP, mà WebP không bao giờ được giải mã — nó đi
+     * nhánh probeWebp và normalize() trả nguyên bytes. Nhánh thật sự cần chốt chặn là JPEG/PNG:
+     * header khai kích thước khổng lồ phải bị từ chối TRƯỚC khi ImageIO cấp phát điểm ảnh.
+     */
+    @Test
+    void rejectsAPngThatDeclaresHugeDimensionsBeforeDecodingIt() {
+        byte[] bomb = pngHeaderOnly(60000, 60000);
+
+        assertThatThrownBy(() -> ImageProbe.probe(bomb))
+                .isInstanceOf(InvalidFieldException.class)
+                .hasMessageContaining("4096");
+    }
+
+    /** RIFF….WEBP + chunk "VP8L": chữ ký 0x2f rồi 14 bit (w-1) và 14 bit (h-1). */
+    private static byte[] losslessWebp(int w, int h) {
+        byte[] payload = new byte[30];
+        payload[0] = 0x2f;
+        int bits = ((w - 1) & 0x3FFF) | (((h - 1) & 0x3FFF) << 14);
+        payload[1] = (byte) (bits & 0xFF);
+        payload[2] = (byte) ((bits >> 8) & 0xFF);
+        payload[3] = (byte) ((bits >> 16) & 0xFF);
+        payload[4] = (byte) ((bits >> 24) & 0xFF);
+        return riff("VP8L", payload);
+    }
+
+    private static byte[] riff(String fourcc, byte[] payload) {
+        ByteBuffer riff =
+                ByteBuffer.allocate(12 + 8 + payload.length).order(ByteOrder.LITTLE_ENDIAN);
+        riff.put("RIFF".getBytes(StandardCharsets.US_ASCII));
+        riff.putInt(4 + 8 + payload.length);
+        riff.put("WEBP".getBytes(StandardCharsets.US_ASCII));
+        riff.put(fourcc.getBytes(StandardCharsets.US_ASCII));
+        riff.putInt(payload.length);
+        riff.put(payload);
+        return riff.array();
+    }
+
+    /**
+     * PNG chỉ có chữ ký + IHDR khai 60000x60000. ImageIO đọc được kích thước từ header mà không
+     * phải giải mã IDAT nào — đúng thứ chốt chặn phải bắt.
+     */
+    private static byte[] pngHeaderOnly(int w, int h) {
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        out.writeBytes(new byte[] {(byte) 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'});
+        ByteBuffer ihdr = ByteBuffer.allocate(13).order(ByteOrder.BIG_ENDIAN);
+        ihdr.putInt(w);
+        ihdr.putInt(h);
+        ihdr.put((byte) 8); // bit depth
+        ihdr.put((byte) 2); // colour type: truecolour
+        ihdr.put((byte) 0);
+        ihdr.put((byte) 0);
+        ihdr.put((byte) 0);
+        byte[] data = ihdr.array();
+        byte[] typeAndData = new byte[4 + data.length];
+        System.arraycopy("IHDR".getBytes(StandardCharsets.US_ASCII), 0, typeAndData, 0, 4);
+        System.arraycopy(data, 0, typeAndData, 4, data.length);
+        java.util.zip.CRC32 crc = new java.util.zip.CRC32();
+        crc.update(typeAndData);
+        out.writeBytes(
+                ByteBuffer.allocate(4).order(ByteOrder.BIG_ENDIAN).putInt(data.length).array());
+        out.writeBytes(typeAndData);
+        out.writeBytes(
+                ByteBuffer.allocate(4)
+                        .order(ByteOrder.BIG_ENDIAN)
+                        .putInt((int) crc.getValue())
+                        .array());
+        return out.toByteArray();
+    }
 }

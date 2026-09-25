@@ -58,9 +58,11 @@ public class AttachmentService implements AttachmentServiceInterface {
     @Override
     @Transactional
     public AttachmentResource upload(Long meId, MultipartFile file) {
-        rateLimiter.check(meId, ChatRateLimiterInterface.Action.IMAGE);
         byte[] bytes = readWithinLimit(file);
         ImageProbe.Probed probed = ImageProbe.probe(bytes);
+        // Hạn mức đếm ảnh ĐÃ NHẬN, không đếm lần thử: máy iPhone gửi HEIC bị 415 mười lần thì
+        // không được mất quyền gửi ảnh cả tiếng. Kiểm định ở trên đều rẻ và chưa chạm đĩa.
+        rateLimiter.check(meId, ChatRateLimiterInterface.Action.IMAGE);
         byte[] stored = ImageProbe.normalize(bytes, probed.mime());
         // WebP giữ nguyên; JPEG/PNG đã được mã hoá lại thành JPEG nên mime lưu xuống theo file thật
         String mime = ImageProbe.WEBP.equals(probed.mime()) ? ImageProbe.WEBP : ImageProbe.JPEG;

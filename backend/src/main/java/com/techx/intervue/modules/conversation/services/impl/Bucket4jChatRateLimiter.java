@@ -8,8 +8,8 @@ import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.distributed.proxy.ProxyManager;
 import java.time.Duration;
 import java.util.Locale;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,13 +20,39 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
 
     static final String KEY_PREFIX = "chat:rate:";
 
     private final ProxyManager<String> buckets;
     private final ChatLimitsProperties limits;
+
+    /**
+     * @Lazy ở đây mới thật sự hoãn được việc nối Redis: bean chatRateLimitBuckets khai @Lazy nhưng
+     * service này là singleton eager, nên nếu inject thẳng thì nó vẫn ép tạo lúc khởi động.
+     * Có @Lazy thì Spring tiêm một proxy của interface ProxyManager và chỉ nối khi check() gọi lần
+     * đầu.
+     *
+     * <p>Hạn mức được kiểm ngay tại đây, không để tới lúc dùng: capacity <= 0 làm
+     * Bandwidth.builder() ném IllegalArgumentException, mà chỗ gọi lại bắt RuntimeException rộng để
+     * fail-open — cấu hình sai sẽ im lặng tắt hẳn rate limit và log nhầm thành "Redis unavailable".
+     * Sai cấu hình thì phải chết lúc khởi động, thấy ngay.
+     */
+    public Bucket4jChatRateLimiter(
+            @Lazy ProxyManager<String> buckets, ChatLimitsProperties limits) {
+        requirePositive("app.chat.limits.messages-per-minute", limits.messagesPerMinute());
+        requirePositive("app.chat.limits.images-per-hour", limits.imagesPerHour());
+        requirePositive("app.chat.limits.conversations-per-hour", limits.conversationsPerHour());
+        this.buckets = buckets;
+        this.limits = limits;
+    }
+
+    private static void requirePositive(String property, int value) {
+        if (value <= 0) {
+            throw new IllegalArgumentException(
+                    property + " must be greater than 0, but was " + value);
+        }
+    }
 
     @Override
     public void check(Long userId, Action action) {

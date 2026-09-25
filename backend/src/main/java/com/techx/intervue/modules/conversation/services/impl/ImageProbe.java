@@ -23,9 +23,13 @@ import javax.imageio.stream.ImageOutputStream;
  * hoá lại thành JPEG nên EXIF (có thể chứa toạ độ GPS) rụng hết — giống AvatarService.
  *
  * <p>WebP: OpenJDK không có plugin ImageIO nào đọc được WebP (đã kiểm trên JDK 21 và 25), nên kích
- * thước đọc thẳng từ header RIFF và file được lưu nguyên vẹn. Hệ quả: khối EXIF/XMP trong một WebP
- * mở rộng không bị bóc. Ảnh chỉ ra ngoài qua endpoint có kiểm quyền và chỉ tới đúng người nhận mà
- * người gửi đã chọn, nên đây là đánh đổi có ý thức, không phải sót.
+ * thước đọc thẳng từ header RIFF và file được lưu nguyên vẹn. Vì lưu nguyên si nên header phải được
+ * soi kỹ hơn hai định dạng kia: kích thước RIFF phải khớp độ dài file thật (chặn đuôi đính kèm và
+ * file bị cắt) và sync code / chữ ký của chunk phải đúng (chặn payload bất kỳ đội lốt ảnh).
+ *
+ * <p>Hệ quả còn lại: khối EXIF/XMP trong một WebP mở rộng không bị bóc. Ảnh chỉ ra ngoài qua
+ * endpoint có kiểm quyền và chỉ tới đúng người nhận mà người gửi đã chọn, nên đây là đánh đổi có ý
+ * thức, không phải sót.
  */
 public final class ImageProbe {
 
@@ -94,7 +98,12 @@ public final class ImageProbe {
     }
 
     private static boolean isWebp(byte[] b) {
-        return b.length > 15 && ascii(b, 0, 4).equals("RIFF") && ascii(b, 8, 4).equals("WEBP");
+        if (b.length < 21 || !ascii(b, 0, 4).equals("RIFF") || !ascii(b, 8, 4).equals("WEBP")) {
+            return false;
+        }
+        // Trường size của RIFF đếm mọi byte sau nó. Khai dài hơn file thật nghĩa là file bị cắt
+        // hoặc bịa; khai ngắn hơn nghĩa là có phần đuôi không thuộc ảnh được đính kèm.
+        return le32(b, 4) == b.length - 8;
     }
 
     private static String ascii(byte[] b, int from, int length) {
@@ -111,12 +120,14 @@ public final class ImageProbe {
             return switch (chunk) {
                 case "VP8 " -> {
                     // 20: frame tag (3 byte) · 23: sync code 9d 01 2a · 26: width · 28: height
+                    requireBytes(b, 23, 0x9d, 0x01, 0x2a);
                     int width = le16(b, 26) & 0x3FFF;
                     int height = le16(b, 28) & 0x3FFF;
                     yield new Probed(WEBP, width, height);
                 }
                 case "VP8L" -> {
                     // 20: signature byte 0x2f · 21: 14 bit width-1 rồi 14 bit height-1
+                    requireBytes(b, 20, 0x2f);
                     int bits = le32(b, 21);
                     yield new Probed(WEBP, (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1);
                 }
@@ -126,6 +137,20 @@ public final class ImageProbe {
             };
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new UnsupportedImageTypeException();
+        }
+    }
+
+    /**
+     * WebP được lưu nguyên si (JDK không có bộ mã hoá nào cho nó), nên nếu chỉ tin "RIFF…WEBP" thì
+     * 16 byte header là đủ để cất một payload bất kỳ lên server rồi phục vụ lại nó dưới
+     * Content-Type image/webp. Sync code / chữ ký là bằng chứng rẻ nhất rằng đây thật sự là khung
+     * ảnh.
+     */
+    private static void requireBytes(byte[] b, int at, int... expected) {
+        for (int i = 0; i < expected.length; i++) {
+            if ((b[at + i] & 0xFF) != expected[i]) {
+                throw new UnsupportedImageTypeException();
+            }
         }
     }
 

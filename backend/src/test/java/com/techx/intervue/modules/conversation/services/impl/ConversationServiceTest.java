@@ -269,4 +269,34 @@ class ConversationServiceTest {
                 .isInstanceOf(RateLimitedException.class);
         verify(conversations, never()).save(any(Conversation.class));
     }
+
+    /**
+     * open() là idempotent (spec §6.1). Hạn mức §8.4 đếm "thread MỚI mỗi giờ", nên mở lại một
+     * thread đã có không được tiêu lượt — nếu không, FE gọi POST /conversations mỗi lần mở khung
+     * chat sẽ tự khoá người dùng khỏi chính cuộc trò chuyện của họ.
+     */
+    @Test
+    void reopeningAnExistingThreadDoesNotSpendARateLimitToken() {
+        Conversation existing = Conversation.between(7L, 3L);
+        existing.setId(42L);
+        when(conversations.findByUserAIdAndUserBId(anyLong(), anyLong()))
+                .thenReturn(Optional.of(existing));
+
+        service.open(7L, new OpenConversationRequest(3L));
+
+        verify(rateLimiter, never())
+                .check(
+                        anyLong(),
+                        org.mockito.ArgumentMatchers.any(ChatRateLimiterInterface.Action.class));
+    }
+
+    @Test
+    void openingABrandNewThreadDoesSpendARateLimitToken() {
+        when(conversations.findByUserAIdAndUserBId(anyLong(), anyLong()))
+                .thenReturn(Optional.empty());
+
+        service.open(7L, new OpenConversationRequest(3L));
+
+        verify(rateLimiter).check(7L, ChatRateLimiterInterface.Action.CONVERSATION);
+    }
 }

@@ -13,5 +13,9 @@ CREATE TABLE message_attachments (
   CONSTRAINT fk_attach_message FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE,
   -- Tài khoản không bao giờ xoá cứng (FR-072 chỉ vô hiệu hoá) nên để RESTRICT mặc định
   CONSTRAINT fk_attach_uploader FOREIGN KEY (uploader_id) REFERENCES users(id),
+  -- Một ảnh chỉ thuộc đúng một tin. MessageService kiểm bằng read-then-write không khoá, nên
+  -- hai request gửi cùng attachmentId cùng lúc sẽ cùng thấy message_id NULL; ràng buộc này là
+  -- chốt chặn thật. Cột nullable nên MySQL vẫn cho nhiều NULL = nhiều ảnh đang chờ gửi.
+  CONSTRAINT uq_attach_message UNIQUE (message_id),
   INDEX idx_attach_orphan (message_id, created_at)
 ) ENGINE=InnoDB;

@@ -50,7 +50,6 @@ public class ConversationService implements ConversationServiceInterface {
     @Override
     @Transactional
     public ConversationResource open(Long meId, OpenConversationRequest request) {
-        rateLimiter.check(meId, ChatRateLimiterInterface.Action.CONVERSATION);
         if (meId.equals(request.farmerUserId())) {
             throw new SelfConversationException();
         }
@@ -66,6 +65,11 @@ public class ConversationService implements ConversationServiceInterface {
                         .findByUserAIdAndUserBId(pair.getUserAId(), pair.getUserBId())
                         .orElseGet(
                                 () -> {
+                                    // Hạn mức §8.4 đếm thread MỚI. open() là idempotent (spec
+                                    // §6.1), nên mở lại thread đã có không tiêu lượt — nếu tính cả
+                                    // lượt gọi thì FE mở khung chat vài chục lần là tự khoá mình.
+                                    rateLimiter.check(
+                                            meId, ChatRateLimiterInterface.Action.CONVERSATION);
                                     policy.assertCanBeMessaged(target);
                                     return conversations.save(pair);
                                 });

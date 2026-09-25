@@ -96,4 +96,28 @@ class Bucket4jChatRateLimiterTest {
 
         assertThatCode(() -> limiter.check(7L, Action.MESSAGE)).doesNotThrowAnyException();
     }
+
+    /**
+     * Nếu không kiểm lúc dựng, capacity <= 0 sẽ ném IllegalArgumentException từ bên trong khối try
+     * của check(), bị nhánh fail-open nuốt, và rate limit tắt lặng lẽ với log nhầm thành "Redis
+     * unavailable".
+     */
+    @Test
+    void aNonPositiveLimitIsRefusedAtStartupInsteadOfSilentlyDisablingTheLimiter() {
+        assertThatThrownBy(
+                        () ->
+                                new Bucket4jChatRateLimiter(
+                                        buckets, new ChatLimitsProperties(30, 0, 20)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("app.chat.limits.images-per-hour");
+    }
+
+    @Test
+    void anUnsetLimitsBlockIsRefusedAtStartupToo() {
+        assertThatThrownBy(
+                        () ->
+                                new Bucket4jChatRateLimiter(
+                                        buckets, new ChatLimitsProperties(0, 0, 0)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

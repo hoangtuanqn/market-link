@@ -143,8 +143,12 @@ class AttachmentServiceTest {
                 .isInstanceOf(UnsupportedImageTypeException.class);
     }
 
+    /**
+     * Hạn mức phải chặn TRƯỚC khi ghi đĩa và trước khi ghi DB — vượt ngưỡng thì không được để lại
+     * file mồ côi nào.
+     */
     @Test
-    void checksTheHourlyPhotoLimitBeforeDoingAnyWork() {
+    void refusesToStoreAnythingOnceTheHourlyPhotoLimitIsReached() throws Exception {
         Mockito.doThrow(new RateLimitedException("slow down"))
                 .when(rateLimiter)
                 .check(7L, ChatRateLimiterInterface.Action.IMAGE);
@@ -154,10 +158,11 @@ class AttachmentServiceTest {
                                 service.upload(
                                         7L,
                                         new MockMultipartFile(
-                                                "file", "a.png", "image/png", new byte[] {1})))
+                                                "file", "a.png", "image/png", png(40, 25))))
                 .isInstanceOf(RateLimitedException.class);
 
         verify(storage, never()).store(anyString(), anyString(), any(byte[].class));
+        verify(attachments, never()).save(any(MessageAttachment.class));
     }
 
     private static byte[] png(int w, int h) throws Exception {
@@ -262,5 +267,54 @@ class AttachmentServiceTest {
                 .kind(MessageKind.IMAGE)
                 .hiddenAt(hiddenAt)
                 .build();
+    }
+
+    /**
+     * Hạn mức 10 ảnh/giờ phải đếm ảnh ĐÃ NHẬN, không đếm lần thử. Người dùng iPhone gửi HEIC (mặc
+     * định của iOS) sẽ bị 415 mười lần rồi mất quyền gửi ảnh cả tiếng, kèm thông báo "đang gửi ảnh
+     * quá nhanh" trong khi chưa gửi nổi tấm nào.
+     */
+    @Test
+    void aRejectedUploadDoesNotSpendAnHourlyToken() {
+        byte[] pdf = "%PDF-1.7 not a photo".getBytes(StandardCharsets.ISO_8859_1);
+
+        assertThatThrownBy(
+                        () ->
+                                service.upload(
+                                        7L,
+                                        new MockMultipartFile(
+                                                "file", "photo.jpg", "image/jpeg", pdf)))
+                .isInstanceOf(UnsupportedImageTypeException.class);
+
+        verify(rateLimiter, never())
+                .check(
+                        org.mockito.ArgumentMatchers.anyLong(),
+                        org.mockito.ArgumentMatchers.any(ChatRateLimiterInterface.Action.class));
+    }
+
+    @Test
+    void anOversizedUploadDoesNotSpendAnHourlyTokenEither() {
+        assertThatThrownBy(
+                        () ->
+                                service.upload(
+                                        7L,
+                                        new MockMultipartFile(
+                                                "file",
+                                                "big.jpg",
+                                                "image/jpeg",
+                                                new byte[(int) MAX_BYTES + 1])))
+                .isInstanceOf(AttachmentTooLargeException.class);
+
+        verify(rateLimiter, never())
+                .check(
+                        org.mockito.ArgumentMatchers.anyLong(),
+                        org.mockito.ArgumentMatchers.any(ChatRateLimiterInterface.Action.class));
+    }
+
+    @Test
+    void anAcceptedUploadStillSpendsAnHourlyToken() throws Exception {
+        service.upload(7L, new MockMultipartFile("file", "a.png", "image/png", png(40, 25)));
+
+        verify(rateLimiter).check(7L, ChatRateLimiterInterface.Action.IMAGE);
     }
 }
