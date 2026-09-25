@@ -31,7 +31,10 @@ const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: R
     </span>
     <div>
       <h3 className="text-[17px] leading-tight font-bold">
-        <Link to="/stall" className="text-inherit no-underline hover:underline hover:underline-offset-3">
+        <Link
+          to={`/stalls/${farmer.id}`}
+          className="text-inherit no-underline hover:underline hover:underline-offset-3"
+        >
           {farmer.stall}
         </Link>
       </h3>
@@ -61,7 +64,7 @@ const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: R
     {children}
 
     <div className="col-span-full flex flex-wrap gap-2">
-      <ButtonLink to="/stall" size="sm">
+      <ButtonLink to={`/stalls/${farmer.id}`} size="sm">
         See stall &amp; this week&apos;s stock
       </ButtonLink>
       {farmer.lat != null && farmer.lng != null && (

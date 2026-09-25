@@ -107,7 +107,7 @@ const CustomerOrderDetailPage = () => {
                       Directions
                     </ButtonAnchor>
                   )}
-                  <ButtonLink to="/stall" variant="ghost" size="sm">
+                  <ButtonLink to={`/stalls/${order.farmerId}`} variant="ghost" size="sm">
                     Stall page
                   </ButtonLink>
                 </div>

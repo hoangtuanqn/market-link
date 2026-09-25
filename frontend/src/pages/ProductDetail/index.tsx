@@ -63,7 +63,7 @@ const ProductDetailPage = () => {
           {p.category}
         </Link>{' '}
         ·{' '}
-        <Link to="/stall" className="text-brand underline">
+        <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
           {p.stall}
         </Link>
       </p>
@@ -82,7 +82,7 @@ const ProductDetailPage = () => {
           </div>
           <p className="text-body">
             {p.category} · sold per {p.unit} ·{' '}
-            <Link to="/stall" className="text-brand underline">
+            <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
               {p.stall}
             </Link>{' '}
             {f?.rating != null && <Rating value={f.rating} count={f.reviews} />}
@@ -137,7 +137,7 @@ const ProductDetailPage = () => {
                 </span>
                 <div>
                   <b className="text-h3">
-                    <Link to="/stall" className="text-inherit underline">
+                    <Link to={`/stalls/${f.id}`} className="text-inherit underline">
                       {f.stall}
                     </Link>
                   </b>
@@ -160,7 +160,7 @@ const ProductDetailPage = () => {
                   </div>
                 </div>
                 <div className="col-span-full flex flex-wrap gap-2">
-                  <ButtonLink to="/stall" variant="secondary" size="sm">
+                  <ButtonLink to={`/stalls/${f.id}`} variant="secondary" size="sm">
                     See the stall
                   </ButtonLink>
                   <ButtonLink to="/messages" variant="secondary" size="sm">
@@ -337,7 +337,7 @@ const ProductDetailPage = () => {
         <section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2 className="text-h2">Also from {p.stall} this week</h2>
-            <Link to="/stall" className="text-brand underline">
+            <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
               See the stall
             </Link>
           </div>

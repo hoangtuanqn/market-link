@@ -11,6 +11,7 @@ type LogEntry = { from: 'user' | 'bot'; time: string; content: ReactNode; sugges
 type Thread = {
   id: number;
   who: string;
+  farmerId: number;
   mono: string;
   last: string;
   time: string;
@@ -24,6 +25,7 @@ const THREADS: Thread[] = [
   {
     id: 1,
     who: 'Cô Tư Garden',
+    farmerId: 1,
     mono: 'C',
     last: 'Five is fine. Edit the order and I will accept it again.',
     time: '09:41',
@@ -34,6 +36,7 @@ const THREADS: Thread[] = [
   {
     id: 2,
     who: 'Gió Nam Bakery',
+    farmerId: 4,
     mono: 'G',
     last: 'Your rye loaf is out of the oven, come any time after 07:30.',
     time: 'Yesterday',
@@ -163,7 +166,7 @@ const CustomerMessagesPage = () => {
               <b>{active.who}</b>
               <p className="text-small text-ink-muted mt-0.5">
                 {active.stallLine} ·{' '}
-                <Link to="/stall" className="text-brand underline">
+                <Link to={`/stalls/${active.farmerId}`} className="text-brand underline">
                   See the stall
                 </Link>
               </p>

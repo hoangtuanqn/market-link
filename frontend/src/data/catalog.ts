@@ -250,6 +250,10 @@ export function farmer(id: number): FarmerType | undefined {
   return farmers.find((f) => f.id === id);
 }
 
+export function marketName(id: number): string {
+  return markets.find((m) => m.id === id)?.name ?? '';
+}
+
 export function farmerName(id: number): string {
   return farmer(id)?.stall ?? '';
 }
