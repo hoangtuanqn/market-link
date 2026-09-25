@@ -6,8 +6,7 @@ import jakarta.persistence.Converter;
 import java.util.Locale;
 
 public enum SocialProvider {
-    GOOGLE,
-    FACEBOOK;
+    GOOGLE;
 
     @JsonValue
     public String value() {
