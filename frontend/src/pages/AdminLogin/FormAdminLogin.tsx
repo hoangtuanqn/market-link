@@ -5,9 +5,10 @@ import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/input';
 import { USER_ROLE } from '@/constants/enums';
-import { ADMIN_HOME_PATH } from '@/constants/nav';
+import { ADMIN_HOME_PATH, ADMIN_VERIFY_PATH } from '@/constants/nav';
 import validateLogin, { type LoginFieldErrors } from '@/pages/Login/validateLogin';
 import Helper from '@/utils/helper';
+import { splitLoginResult } from '@/utils/mfa';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 
@@ -41,7 +42,13 @@ const FormAdminLogin = () => {
         rememberMe: false,
         requiredRole: USER_ROLE.ADMIN,
       });
-      Session.save(response.data, false);
+      const { pending, session } = splitLoginResult(response.data, false);
+      if (pending) {
+        // FR-008: đã bật xác thực hai bước → chưa có phiên, sang màn nhập mã
+        navigate(ADMIN_VERIFY_PATH, { state: pending });
+        return;
+      }
+      Session.save(session, false);
       Notification.success({ text: response.message || 'Signed in.' });
       navigate(ADMIN_HOME_PATH, { replace: true });
     } catch (error) {

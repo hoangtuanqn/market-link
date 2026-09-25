@@ -4,7 +4,9 @@ import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
+import { ADMIN_VERIFY_PATH } from '@/constants/nav';
 import Helper from '@/utils/helper';
+import { splitLoginResult } from '@/utils/mfa';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 import validateLogin, { type LoginFieldErrors as FieldErrors } from './validateLogin';
@@ -27,8 +29,14 @@ const FormLogin = () => {
     setIsSubmitting(true);
     try {
       const response = await AuthApi.login({ email: email.trim(), password, rememberMe });
+      const { pending, session } = splitLoginResult(response.data, rememberMe);
+      if (pending) {
+        // FR-008: admin đã bật xác thực hai bước đăng nhập ở đây → cũng phải qua màn nhập mã
+        navigate(ADMIN_VERIFY_PATH, { state: pending });
+        return;
+      }
       // Có "Remember me" → giữ phiên sau khi đóng trình duyệt; không → chỉ trong phiên trình duyệt này
-      Session.save(response.data, rememberMe);
+      Session.save(session, rememberMe);
 
       Notification.success({ text: response.message || 'Signed in.' });
       navigate('/');

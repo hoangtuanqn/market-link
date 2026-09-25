@@ -5,6 +5,8 @@ import type {
   AuthorizeUrlType,
   ChangePasswordInput,
   LoginInput,
+  LoginResultType,
+  MfaVerifyInput,
   RegisterInput,
   ResetPasswordInput,
   ResetTokenType,
@@ -17,7 +19,13 @@ import { privateApi, publicApi } from '@/utils/axiosInstance';
 class AuthApi {
   /** Trả nguyên response chung { success, message, data } để hiển thị đúng message của backend. */
   static login = async (input: LoginInput) => {
-    const response = await publicApi.post<ApiResponse<AuthResultType>>('/auth/login', input);
+    const response = await publicApi.post<ApiResponse<LoginResultType>>('/auth/login', input);
+    return response.data;
+  };
+
+  /** FR-008: bước 2 của đăng nhập admin; mã đúng thì backend cấp accessToken + cookie refresh như login thường. */
+  static verifyMfa = async (input: MfaVerifyInput) => {
+    const response = await publicApi.post<ApiResponse<AuthResultType>>('/auth/mfa/verify', input);
     return response.data;
   };
 
@@ -37,7 +45,7 @@ class AuthApi {
 
   /** `code` là authorization code Google trả về redirect_uri của frontend. */
   static loginWithSocial = async (provider: SocialProvider, code: string) => {
-    const response = await publicApi.post<ApiResponse<AuthResultType>>(`/auth/${provider}`, { code });
+    const response = await publicApi.post<ApiResponse<LoginResultType>>(`/auth/${provider}`, { code });
     return response.data;
   };
 
