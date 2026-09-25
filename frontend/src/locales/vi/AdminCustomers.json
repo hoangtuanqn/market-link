@@ -1,0 +1,46 @@
+{
+  "title": "Khách hàng",
+  "intro": "Khoá một tài khoản khi vi phạm chính sách; tài khoản đó không đăng nhập hay đặt đơn được nữa. Mở lại khi đã giải quyết xong. Các đơn cũ vẫn thuộc về sạp.",
+  "search": {
+    "label": "Tìm khách hàng",
+    "placeholder": "Tên, email hoặc số điện thoại",
+    "submit": "Tìm"
+  },
+  "filterLabel": "Lọc khách hàng",
+  "filter": {
+    "all": "Tất cả",
+    "active": "Đang hoạt động",
+    "inactive": "Đã khoá",
+    "joinedThisMonth": "Mới trong tháng"
+  },
+  "status": {
+    "active": "Đang hoạt động",
+    "inactive": "Đã khoá"
+  },
+  "col": {
+    "customer": "Khách hàng",
+    "joined": "Ngày tham gia",
+    "orders": "Số đơn",
+    "status": "Trạng thái"
+  },
+  "action": {
+    "deactivate": "Khoá",
+    "reactivate": "Mở lại"
+  },
+  "showing": "Đang xem {{from}}–{{to}} trong {{total}}",
+  "empty": {
+    "title": "Chưa có khách hàng nào",
+    "text": "Tài khoản khách sẽ hiện ở đây ngay khi có người đăng ký trên MarketLink."
+  },
+  "deactivate": {
+    "title": "Khoá tài khoản {{name}}?",
+    "text": "Họ bị đăng xuất khỏi mọi thiết bị, không đăng nhập hay đặt đơn được nữa. Các đơn đã đặt vẫn thuộc về sạp.",
+    "reason": "Lý do, lưu lại trên tài khoản",
+    "keep": "Giữ hoạt động",
+    "confirm": "Khoá tài khoản"
+  },
+  "toast": {
+    "deactivated": "Đã khoá {{name}}.",
+    "reactivated": "{{name}} đăng nhập lại được rồi."
+  }
+}

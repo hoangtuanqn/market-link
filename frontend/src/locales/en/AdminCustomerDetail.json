@@ -1,0 +1,77 @@
+{
+  "allCustomers": "Customers",
+  "since": "Customer since {{joined}} · last order {{last}}",
+  "missing": {
+    "title": "That customer is not here any more",
+    "text": "The account may have been deleted. Open it again from the customers list."
+  },
+  "action": {
+    "deactivate": "Deactivate account",
+    "reactivate": "Reactivate account"
+  },
+  "banner": {
+    "title": "Deactivated today.",
+    "text": "Reason kept on the account: {{reason}}. Their running orders are not touched."
+  },
+  "orders": {
+    "title": "Orders",
+    "all": "All orders on the platform",
+    "note": "An admin reads these. Only the stall moves an order through its states, so there is nothing to change here."
+  },
+  "reviews": {
+    "title": "Reviews they wrote",
+    "openInModeration": "Open in moderation",
+    "note": "Hiding a review is done from Moderation, where the report that triggered it is visible too."
+  },
+  "timeline": {
+    "title": "Account history",
+    "created": "Account created",
+    "firstCollected": "First order collected",
+    "noShow": "Did not turn up",
+    "lastOrder": "Last order"
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "joined": "Joined"
+  },
+  "habits": {
+    "title": "How they shop",
+    "orders": "Orders",
+    "collected": "Collected",
+    "noShows": "Did not turn up",
+    "market": "Market",
+    "buysMostFrom": "Buys most from"
+  },
+  "whatItDoes": {
+    "title": "What deactivating does",
+    "text": "They cannot sign in or place a new order. Orders already placed are not touched, so a stall still hands over what it has set aside and nobody loses food that was picked for them."
+  },
+  "deactivate": {
+    "title": "Deactivate {{name}}?",
+    "text": "They cannot sign in or order again until an admin reactivates them. Orders already placed run to the end, so no stall is left holding food nobody collects.",
+    "reason": "Reason kept on the account",
+    "keep": "Not yet",
+    "confirm": "Deactivate"
+  },
+  "reason": {
+    "noShows": "Repeated no-shows",
+    "abusive": "Abusive language in a review",
+    "requested": "Asked for their account to be closed",
+    "other": "Other"
+  },
+  "toast": {
+    "deactivated": "{{name}} deactivated.",
+    "reactivated": "{{name}} can sign in again."
+  },
+  "col": {
+    "order": "Order",
+    "stall": "Stall",
+    "pickup": "Pickup",
+    "items": "Items",
+    "total": "Total",
+    "status": "Status"
+  }
+}

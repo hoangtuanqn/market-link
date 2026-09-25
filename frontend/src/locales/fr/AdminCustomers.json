@@ -1,0 +1,46 @@
+{
+  "title": "Clients",
+  "intro": "Désactivez un compte en cas de manquement : il ne peut plus se connecter ni commander. Réactivez-le une fois la situation réglée. Leurs commandes passées restent chez les étals.",
+  "search": {
+    "label": "Rechercher un client",
+    "placeholder": "Nom, e-mail ou téléphone",
+    "submit": "Rechercher"
+  },
+  "filterLabel": "Filtrer les clients",
+  "filter": {
+    "all": "Tous",
+    "active": "Actifs",
+    "inactive": "Désactivés",
+    "joinedThisMonth": "Inscrits ce mois-ci"
+  },
+  "status": {
+    "active": "Actif",
+    "inactive": "Désactivé"
+  },
+  "col": {
+    "customer": "Client",
+    "joined": "Inscription",
+    "orders": "Commandes",
+    "status": "Statut"
+  },
+  "action": {
+    "deactivate": "Désactiver",
+    "reactivate": "Réactiver"
+  },
+  "showing": "{{from}}–{{to}} sur {{total}}",
+  "empty": {
+    "title": "Aucun client pour l'instant",
+    "text": "Les comptes clients apparaissent ici dès que des personnes s'inscrivent sur MarketLink."
+  },
+  "deactivate": {
+    "title": "Désactiver {{name}} ?",
+    "text": "La personne est déconnectée partout et ne peut plus se connecter ni commander. Les commandes déjà passées restent chez les étals.",
+    "reason": "Motif, conservé sur le compte",
+    "keep": "Laisser actif",
+    "confirm": "Désactiver le compte"
+  },
+  "toast": {
+    "deactivated": "{{name}} désactivé.",
+    "reactivated": "{{name}} peut se reconnecter."
+  }
+}

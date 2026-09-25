@@ -1,0 +1,46 @@
+{
+  "title": "Clientes",
+  "intro": "Desactiva una cuenta si incumple las normas: deja de poder entrar y de hacer pedidos. Vuelve a activarla cuando se resuelva. Sus pedidos anteriores siguen con los puestos.",
+  "search": {
+    "label": "Buscar clientes",
+    "placeholder": "Nombre, correo o teléfono",
+    "submit": "Buscar"
+  },
+  "filterLabel": "Filtrar clientes",
+  "filter": {
+    "all": "Todos",
+    "active": "Activos",
+    "inactive": "Desactivados",
+    "joinedThisMonth": "Nuevos este mes"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Desactivado"
+  },
+  "col": {
+    "customer": "Cliente",
+    "joined": "Alta",
+    "orders": "Pedidos",
+    "status": "Estado"
+  },
+  "action": {
+    "deactivate": "Desactivar",
+    "reactivate": "Reactivar"
+  },
+  "showing": "Mostrando {{from}}–{{to}} de {{total}}",
+  "empty": {
+    "title": "Todavía no hay clientes",
+    "text": "Las cuentas de cliente aparecen aquí en cuanto alguien se registra en MarketLink."
+  },
+  "deactivate": {
+    "title": "¿Desactivar a {{name}}?",
+    "text": "Se cierra su sesión en todas partes y no puede entrar ni hacer pedidos. Los pedidos ya realizados siguen con los puestos.",
+    "reason": "Motivo, se guarda en la cuenta",
+    "keep": "Dejar activa",
+    "confirm": "Desactivar cuenta"
+  },
+  "toast": {
+    "deactivated": "{{name}} desactivado.",
+    "reactivated": "{{name}} ya puede volver a entrar."
+  }
+}

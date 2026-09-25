@@ -1,0 +1,77 @@
+{
+  "allCustomers": "고객",
+  "since": "{{joined}}부터 고객 · 최근 주문 {{last}}",
+  "missing": {
+    "title": "이 고객은 더 이상 없습니다",
+    "text": "계정이 삭제되었을 수 있습니다. 고객 목록에서 다시 열어 주세요."
+  },
+  "action": {
+    "deactivate": "계정 정지",
+    "reactivate": "계정 해제"
+  },
+  "banner": {
+    "title": "오늘 정지했습니다.",
+    "text": "계정에 기록한 사유: {{reason}}. 진행 중인 주문은 건드리지 않았습니다."
+  },
+  "orders": {
+    "title": "주문",
+    "all": "플랫폼 전체 주문",
+    "note": "관리자는 읽기만 합니다. 주문을 옮기는 건 가게뿐이라 여기서 바꿀 것은 없습니다."
+  },
+  "reviews": {
+    "title": "이 고객이 쓴 후기",
+    "openInModeration": "콘텐츠 검수에서 열기",
+    "note": "후기를 숨기는 일은 「콘텐츠 검수」에서 하며, 그곳에서는 신고 내용도 함께 볼 수 있습니다."
+  },
+  "timeline": {
+    "title": "계정 이력",
+    "created": "계정 생성",
+    "firstCollected": "첫 수령 완료",
+    "noShow": "수령하러 오지 않음",
+    "lastOrder": "최근 주문"
+  },
+  "contact": {
+    "title": "연락처",
+    "email": "이메일",
+    "phone": "전화번호",
+    "address": "주소",
+    "joined": "가입일"
+  },
+  "habits": {
+    "title": "구매 습관",
+    "orders": "주문 수",
+    "collected": "수령 완료",
+    "noShows": "미수령",
+    "market": "자주 가는 장터",
+    "buysMostFrom": "가장 많이 사는 가게"
+  },
+  "whatItDoes": {
+    "title": "정지하면 어떻게 되나",
+    "text": "로그인도, 새 주문도 할 수 없습니다. 이미 넣은 주문은 건드리지 않으므로 가게는 따로 빼둔 물건을 그대로 건네고, 누군가를 위해 딴 먹거리가 버려지지 않습니다."
+  },
+  "deactivate": {
+    "title": "{{name}} 님을 정지할까요?",
+    "text": "관리자가 다시 풀 때까지 로그인도 주문도 할 수 없습니다. 이미 넣은 주문은 끝까지 진행되므로 아무도 찾아가지 않는 물건을 가게가 떠안지 않습니다.",
+    "reason": "계정에 기록할 사유",
+    "keep": "아직 정지하지 않음",
+    "confirm": "정지"
+  },
+  "reason": {
+    "noShows": "수령하러 오지 않는 일이 반복됨",
+    "abusive": "후기에서 모욕적인 표현 사용",
+    "requested": "본인이 계정 해지를 요청",
+    "other": "기타"
+  },
+  "toast": {
+    "deactivated": "{{name}} 님을 정지했습니다.",
+    "reactivated": "{{name}} 님이 다시 로그인할 수 있습니다."
+  },
+  "col": {
+    "order": "주문",
+    "stall": "가게",
+    "pickup": "수령",
+    "items": "품목 수",
+    "total": "합계",
+    "status": "상태"
+  }
+}
