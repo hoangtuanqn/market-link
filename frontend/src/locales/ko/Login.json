@@ -16,7 +16,7 @@
     "failed": "Google 로그인을 시작하지 못했어요. 다시 시도해 주세요.",
     "note": "Google은 이름과 이메일을 알려 줘요. 첫 주문 전에 전화번호와 주소가 필요해서 다음 화면에서 한 번만 물어볼게요."
   },
-  "newHere": "처음이신가요? <customer>고객 계정 만들기</customer> 또는 <farmer>가게 등록하기</farmer>.",
+  "newHere": "처음이신가요? <customer>고객 계정 만들기</customer>. 판매하려면 로그인한 뒤 계정에서 <farmer>Farmer 신청</farmer>을 하세요.",
   "toast": {
     "signedIn": "로그인했어요.",
     "failed": "로그인하지 못했어요. 다시 시도해 주세요."

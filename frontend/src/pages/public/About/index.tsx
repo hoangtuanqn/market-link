@@ -12,7 +12,7 @@ const SLIDES = [
   { key: 'mission', photo: `${UNSPLASH}photo-1533900298318-6b8da08a523e${SHOT}`, to: '/markets' },
   { key: 'howItWorks', photo: `${UNSPLASH}photo-1464226184884-fa280b87c399${SHOT}`, to: '/products' },
   { key: 'technology', photo: `${UNSPLASH}photo-1416879595882-3373a0480b5b${SHOT}`, to: '/map' },
-  { key: 'benefit', photo: `${UNSPLASH}photo-1574943320219-553eb213f72d${SHOT}`, to: '/register/farmer' },
+  { key: 'benefit', photo: `${UNSPLASH}photo-1574943320219-553eb213f72d${SHOT}`, to: '/become-farmer' },
 ] as const;
 
 /** Keys under `limits.` in About.json. */
