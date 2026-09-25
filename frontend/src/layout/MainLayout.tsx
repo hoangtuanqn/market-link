@@ -38,7 +38,7 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
         cartCount={cartCount}
         unreadCount={unreadCount}
       />
-      <main className="mx-auto box-border flex w-full max-w-300 flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
+      <main className="mx-auto box-border flex w-full max-w-(--size-container) flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
         <Outlet />
       </main>
       <Footer />

@@ -645,7 +645,7 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 .pt-car-pause { width: 36px; border-left: 1px solid var(--line); }
 
 /* wide screens: the 1200px container leaves a lot of paper on 1920px+ monitors, so the prototype widens
-   header, footer and content together to 1360px from 1600px up. Design-system token size-container stays 1200; LEAD to confirm. */
+   header, footer and content together to 1360px from 1600px up. Same step as the design-system token size-container (frontend marketlink-theme.css). */
 /* Platform announcement (FR-077) keeps the design system's green band. Two small additions: a pale rule under it,
    and the same left edge as the header, so it reads as its own strip rather than part of the navigation. */
 .ml-banner-announce {

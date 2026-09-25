@@ -93,6 +93,17 @@
 }
 
 /*
+ * Wide screens: a 1200px container leaves a lot of paper on a 1920px monitor, so header, footer and
+ * content widen together from 1600px up. Outside any cascade layer, like :root above, so it overrides
+ * the base value the same way. Anything that must follow it reads var(--size-container) — never 1200px.
+ */
+@media (min-width: 1600px) {
+  :root {
+    --size-container: 1360px;
+  }
+}
+
+/*
  * Dark theme (data-theme="dark" on <html>, set by src/lib/settings.ts and the pre-paint script in
  * index.html). Every step was re-derived from the same kraft and green hues rather than flipped, and
  * all 26 text-on-surface, status and border pairs were measured: the lowest is board-muted on board

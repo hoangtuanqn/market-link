@@ -37,7 +37,7 @@ This folder is the source of truth for how MarketLink looks and reads. Every pag
    Don't use in-between steps (`p-5`, `p-7`, `gap-10`) or arbitrary values like `p-[18px]`.
 
 4. **Shape.** `rounded-sm` (4px) for controls, `rounded-md` (10px) for tags and cards, `rounded-lg` (16px) for dialogs, `rounded-full` for chips and badges. `shadow-tag` for cards (the 2px paper edge), `shadow-float` for dropdowns and toasts, `shadow-modal` for dialogs. Nothing else.
-5. **Breakpoints.** Build mobile-first at 375px, then `md:` (768px) and `2xl:` (1440px). Content container: `mx-auto max-w-[1200px] px-4 md:px-6`.
+5. **Breakpoints.** Build mobile-first at 375px, then `md:` (768px) and `2xl:` (1440px). Content container: `mx-auto max-w-(--size-container) px-4 md:px-6` — read the token, never hardcode a width.
 6. **Components use the `ml-*` classes.** Each guide in `components/` names its classes and props; the gallery shows the exact markup. Build the React component in `frontend/src/components/` as TSX, put the `ml-*` classes on the markup, and keep the props the guide lists. Use Tailwind utilities only for page layout (grid, flex, gaps, widths), not to restyle a component.
 7. **Formatting and copy.** Money, units and dates go through `src/lib/format.ts`, which follows the reader's Settings (language, date format, clock, currency, units). Copy lives in `src/locales/<language>/<page>.json` and is read with `t()`; English is the source. It follows the Voice section below: sentence case, "you", no emoji, no exclamation marks, always explain why something is locked.
 8. **Every data screen** has loading, empty, error and loaded states (FR-084), using `DataState`.
@@ -117,7 +117,9 @@ Rules:
 ## Spacing, layout, responsive
 
 - Use the `space-1`…`space-8` scale (4 → 64px). Card padding is `space-4`, gap between cards `space-5`, gap between sections `space-6` or more.
-- Content is at most `size-container` (1200px) wide; the header is `size-header` (64px) tall. Minimum touch target is `size-control` (44px); `size-control-sm` (36px) is only for cards and tables.
+- Content is at most `size-container` wide: 1200px, stepping up to 1360px from 1600px, because a 1200px
+  container leaves a lot of paper on a 1920px monitor. Header, footer and content widen together, so
+  anything that has to line up with them reads `var(--size-container)`. The header is `size-header` (64px) tall. Minimum touch target is `size-control` (44px); `size-control-sm` (36px) is only for cards and tables.
 - Three test widths per FR-080: `bp-mobile` 375px (one column, `space-4` gutter, menu behind the hamburger), `bp-tablet` 768px (two tag columns, filters in a drawer), `bp-desktop` 1440px (three-column tag grid, map alongside). No page may scroll horizontally; only `DataTable` scrolls sideways inside its own frame.
 - Stacking: `z-header` 40 < `z-dropdown` 50 < `z-dialog` 100 < `z-toast` 110. Leaflet panes use their own z-index up to 400, so map popups belong inside a Leaflet pane, not layered on top from outside.
 
