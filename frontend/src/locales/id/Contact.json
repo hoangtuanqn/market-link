@@ -1,0 +1,26 @@
+{
+  "title": "Hubungi kami",
+  "intro": "Pertanyaan tentang pesanan langsung ke lapak; nomor teleponnya ada di pesanan Anda. Untuk apa pun soal platform, hubungi tim di sini.",
+  "team": {
+    "title": "Tim MarketLink",
+    "email": "Email",
+    "phone": "Telepon",
+    "address": "Alamat",
+    "hours": "Jam kerja",
+    "toAdd": "Menyusul",
+    "addressValue": "Menyusul. Penanda di peta hanya sementara di Distrik 1.",
+    "hoursValue": "Sen – Jum, 09:00 – 17:00"
+  },
+  "feedback": {
+    "title": "Ada yang rusak atau punya ide?",
+    "text": "Gunakan formulir masukan agar sampai ke antrean yang tepat, lengkap dengan halaman dan browser Anda.",
+    "cta": "Kirim masukan"
+  },
+  "map": {
+    "label": "Peta lokasi tim",
+    "markerLabel": "Tim MarketLink (sementara)",
+    "popupTitle": "Tim MarketLink",
+    "popupLine": "Penanda sementara, Distrik 1",
+    "directions": "Rute ke tim"
+  }
+}

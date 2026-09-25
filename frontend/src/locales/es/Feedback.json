@@ -1,0 +1,40 @@
+{
+  "title": "Enviar comentarios",
+  "intro": "Los informes de errores, las sugerencias y las preguntas llegan al equipo. Elige el tipo para que llegue a la persona adecuada.",
+  "typeLegend": "¿De qué se trata?",
+  "types": {
+    "bug": "Informe de error: algo no funciona",
+    "suggestion": "Sugerencia: algo podría estar mejor",
+    "query": "Pregunta: necesito una respuesta"
+  },
+  "pageLabel": "¿Qué página?",
+  "pages": {
+    "cart": "Carrito",
+    "product": "Página de producto",
+    "map": "Mapa de mercados",
+    "orders": "Mis pedidos",
+    "farmer": "Panel de Farmer",
+    "other": "Otra"
+  },
+  "messageLabel": "Mensaje",
+  "messagePlaceholder": "¿Qué esperabas y qué pasó en su lugar?",
+  "messageHint": "Si es un error, añade tu teléfono o tu navegador.",
+  "emailLabel": "Correo para la respuesta",
+  "emailHint": "Opcional. Se rellena cuando has iniciado sesión.",
+  "submit": "Enviar comentarios",
+  "sent": {
+    "title": "Enviado",
+    "bug": "Gracias. Tu informe de error está con el equipo.",
+    "suggestion": "Gracias. Tu sugerencia está con el equipo.",
+    "query": "Gracias. Tu pregunta está con el equipo."
+  },
+  "notPlatform": {
+    "title": "¿No es sobre la plataforma?",
+    "text": "Una recogida tarde, un artículo que falta o una duda sobre los productos son cosa del puesto. Su teléfono está en el resguardo del pedido, y también puedes dejar una reseña cuando el pedido esté completado.",
+    "cta": "Ir a mis pedidos"
+  },
+  "after": {
+    "title": "Después de enviar",
+    "text": "Los informes de errores se leen cada día de mercado. Las respuestas a las preguntas llegan por correo si dejas uno."
+  }
+}

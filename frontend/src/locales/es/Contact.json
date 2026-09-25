@@ -1,0 +1,26 @@
+{
+  "title": "Contáctanos",
+  "intro": "Las dudas sobre un pedido van directamente al puesto; su teléfono está en tu pedido. Para cualquier cosa sobre la plataforma, escribe al equipo aquí.",
+  "team": {
+    "title": "El equipo de MarketLink",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "hours": "Horario",
+    "toAdd": "Por añadir",
+    "addressValue": "Por añadir. El marcador del mapa es provisional, en el Distrito 1.",
+    "hoursValue": "Lun – vie, 09:00 – 17:00"
+  },
+  "feedback": {
+    "title": "¿Algo no funciona o tienes una idea?",
+    "text": "Usa el formulario de comentarios para que llegue a la cola correcta, con la página y tu navegador adjuntos.",
+    "cta": "Enviar comentarios"
+  },
+  "map": {
+    "label": "Mapa de la ubicación del equipo",
+    "markerLabel": "Equipo de MarketLink (provisional)",
+    "popupTitle": "Equipo de MarketLink",
+    "popupLine": "Marcador provisional, Distrito 1",
+    "directions": "Cómo llegar al equipo"
+  }
+}

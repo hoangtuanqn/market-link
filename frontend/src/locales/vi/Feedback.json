@@ -1,0 +1,40 @@
+{
+  "title": "Gửi góp ý",
+  "intro": "Báo lỗi, đề xuất và câu hỏi đều được gửi tới đội ngũ. Chọn đúng loại để phản hồi tới đúng người.",
+  "typeLegend": "Đây là gì?",
+  "types": {
+    "bug": "Báo lỗi: có thứ gì đó không chạy",
+    "suggestion": "Đề xuất: có thứ gì đó có thể tốt hơn",
+    "query": "Câu hỏi: tôi cần một câu trả lời"
+  },
+  "pageLabel": "Ở trang nào?",
+  "pages": {
+    "cart": "Giỏ hàng",
+    "product": "Trang sản phẩm",
+    "map": "Bản đồ chợ",
+    "orders": "Đơn của tôi",
+    "farmer": "Bảng điều khiển nhà vườn",
+    "other": "Khác"
+  },
+  "messageLabel": "Nội dung",
+  "messagePlaceholder": "Bạn mong đợi điều gì, và thực tế đã xảy ra chuyện gì?",
+  "messageHint": "Nếu là lỗi, ghi thêm điện thoại hoặc trình duyệt bạn dùng.",
+  "emailLabel": "Email để nhận trả lời",
+  "emailHint": "Không bắt buộc. Tự điền khi bạn đã đăng nhập.",
+  "submit": "Gửi góp ý",
+  "sent": {
+    "title": "Đã gửi",
+    "bug": "Cảm ơn bạn. Báo lỗi của bạn đã tới đội ngũ.",
+    "suggestion": "Cảm ơn bạn. Đề xuất của bạn đã tới đội ngũ.",
+    "query": "Cảm ơn bạn. Câu hỏi của bạn đã tới đội ngũ."
+  },
+  "notPlatform": {
+    "title": "Không phải chuyện của nền tảng?",
+    "text": "Nhận hàng trễ, thiếu món hay thắc mắc về nông sản là việc của sạp. Số điện thoại của sạp nằm trên phiếu đơn hàng, và bạn cũng có thể để lại đánh giá sau khi đơn hoàn tất.",
+    "cta": "Tới đơn của tôi"
+  },
+  "after": {
+    "title": "Sau khi gửi",
+    "text": "Báo lỗi được đọc vào mỗi ngày chợ. Câu trả lời sẽ gửi qua email nếu bạn để lại email."
+  }
+}
