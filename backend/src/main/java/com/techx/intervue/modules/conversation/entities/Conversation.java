@@ -13,6 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * FR-110: một thread cho một cặp người dùng. Luôn giữ userAId < userBId để (3,7) và (7,3) là cùng
@@ -25,6 +26,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Table(name = "conversations")
+/*
+ * DynamicUpdate: A gửi tin trong lúc B đánh dấu đã đọc. Không có nó, UPDATE của A ghi lại mọi cột
+ * từ snapshot cũ và xoá mốc đọc B vừa commit (review finding #1). Có nó, mỗi bên chỉ ghi cột mình đổi.
+ */
+@DynamicUpdate
 public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

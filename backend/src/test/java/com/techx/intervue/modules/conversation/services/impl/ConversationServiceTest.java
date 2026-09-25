@@ -138,13 +138,29 @@ class ConversationServiceTest {
     }
 
     @Test
-    void openAsksThePolicyBeforeTouchingTheRepository() {
+    void openRefusesANewThreadWithAStallThatIsNotOpen() {
+        when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
         doThrow(new StallNotOpenException()).when(policy).assertCanBeMessaged(farmer);
 
         assertThatThrownBy(() -> service.open(7L, new OpenConversationRequest(3L)))
                 .isInstanceOf(StallNotOpenException.class);
         verify(policy).assertCanStart(customer);
-        verify(conversations, never()).findByUserAIdAndUserBId(anyLong(), anyLong());
+        verify(conversations, never()).save(any());
+    }
+
+    /**
+     * Spec 8.1 / D-09: stall bị đình chỉ thì thread cũ vẫn đọc được — mở lại phải trả thread đó.
+     */
+    @Test
+    void openReturnsAnExistingThreadEvenWhenTheStallIsNoLongerOpen() {
+        Conversation existing = Conversation.between(3L, 7L);
+        existing.setId(9L);
+        when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.of(existing));
+        doThrow(new StallNotOpenException()).when(policy).assertCanBeMessaged(farmer);
+
+        ConversationResource result = service.open(7L, new OpenConversationRequest(3L));
+
+        assertThat(result.id()).isEqualTo(9L);
         verify(conversations, never()).save(any());
     }
 

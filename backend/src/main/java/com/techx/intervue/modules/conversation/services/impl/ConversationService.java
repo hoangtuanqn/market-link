@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.conversation.services.impl;
 
+import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
@@ -50,13 +51,18 @@ public class ConversationService implements ConversationServiceInterface {
         User me = requireUser(meId, "Account not found.");
         User target = requireUser(request.farmerUserId(), "Stall not found.");
         policy.assertCanStart(me);
-        policy.assertCanBeMessaged(target);
 
+        // Thread cũ trả về ngay cả khi stall đã bị đình chỉ (spec 8.1, D-09: vẫn đọc được;
+        // gửi thêm thì send() trả 409). Chính sách "stall có mở không" chỉ gác việc TẠO MỚI.
         Conversation pair = Conversation.between(meId, target.getId());
         Conversation conversation =
                 conversations
                         .findByUserAIdAndUserBId(pair.getUserAId(), pair.getUserBId())
-                        .orElseGet(() -> conversations.save(pair));
+                        .orElseGet(
+                                () -> {
+                                    policy.assertCanBeMessaged(target);
+                                    return conversations.save(pair);
+                                });
         long unread = unreadFor(meId, List.of(conversation)).getOrDefault(conversation.getId(), 0L);
         return toResource(conversation, target, unread);
     }
@@ -92,7 +98,7 @@ public class ConversationService implements ConversationServiceInterface {
         Instant now = clock.instant();
         conversation.markRead(meId, now);
         conversations.save(conversation);
-        events.conversationRead(conversation, meId, now);
+        TransactionHelper.afterCommit(() -> events.conversationRead(conversation, meId, now));
     }
 
     private User requireUser(Long id, String message) {

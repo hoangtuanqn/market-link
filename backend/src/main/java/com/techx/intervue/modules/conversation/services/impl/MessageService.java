@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.conversation.services.impl;
 
+import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
@@ -77,7 +78,9 @@ public class MessageService implements MessageServiceInterface {
         conversations.save(conversation);
 
         MessageResource resource = MessageResource.from(saved);
-        events.messageCreated(conversation, resource);
+        // Chỉ phát khi đã commit: Plan 2 cắm STOMP vào seam này mà không được phát row chưa tồn
+        // tại.
+        TransactionHelper.afterCommit(() -> events.messageCreated(conversation, resource));
         return resource;
     }
 
