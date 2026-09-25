@@ -12,10 +12,11 @@ type TableProps<T> = {
   caption?: string;
   columns: TableColumn<T>[];
   rows: T[];
+  rowClassName?: (row: T) => string | undefined;
 };
 
 /** Design system `.ml-table` — a bordered data table with numeric and action columns. */
-export function Table<T extends Record<string, unknown>>({ caption, columns, rows }: TableProps<T>) {
+export function Table<T extends Record<string, unknown>>({ caption, columns, rows, rowClassName }: TableProps<T>) {
   return (
     <div className="border-line-strong bg-surface-raised w-full overflow-x-auto rounded-md border-[1.5px]">
       <table className="w-full border-collapse text-[14px]">
@@ -41,7 +42,7 @@ export function Table<T extends Record<string, unknown>>({ caption, columns, row
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr key={i} className="hover:bg-surface-quiet">
+            <tr key={i} className={Helper.cn('hover:bg-surface-quiet', rowClassName?.(r))}>
               {columns.map((c) => (
                 <td
                   key={c.key}

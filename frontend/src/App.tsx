@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
 import AdminLayout from './layout/AdminLayout';
+import FarmerLayout from './layout/FarmerLayout';
 import MainLayout from './layout/MainLayout';
 import HomePage from './pages/Home';
 import LoginPage from './pages/Login';
@@ -31,6 +32,7 @@ import ProductsPage from './pages/Products';
 import ProductDetailPage from './pages/ProductDetail';
 import StallProfilePage from './pages/StallProfile';
 import SearchPage from './pages/Search';
+import FarmerOverviewPage from './pages/FarmerOverview';
 import AdminLoginPage from './pages/AdminLogin';
 import AdminHomePage from './pages/AdminHome';
 import AdminVerifyPage from './pages/AdminVerify';
@@ -74,6 +76,11 @@ const App = () => {
           <Route path="become-farmer" element={<CustomerBecomeFarmerPage />} />
           <Route path="settings" element={<CustomerSettingsPage />} />
           <Route path="assistant" element={<CustomerAssistantPage />} />
+        </Route>
+
+        {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader. */}
+        <Route path="/farmer" element={<FarmerLayout />}>
+          <Route index element={<FarmerOverviewPage />} />
         </Route>
 
         {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
