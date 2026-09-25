@@ -1,10 +1,25 @@
-import { Link } from 'react-router';
+import { Link, Navigate, useLocation } from 'react-router';
 import { Card } from '@/components/ui/card';
+import { USER_ROLE } from '@/constants/enums';
+import { ADMIN_HOME_PATH } from '@/constants/nav';
+import useSession from '@/hooks/useSession';
+import type { LoginRedirectState } from '@/layout/RequireAuth';
 import FormLogin from './FormLogin';
 import GoogleLoginButton from './GoogleLoginButton';
 
 /** FR-003 — shared sign-in for Customer and Farmer. Admin uses its own sign-in screen (FR-004). */
 const LoginPage = () => {
+  const { user } = useSession();
+  const location = useLocation();
+
+  // FR-003: đã đăng nhập thì không hiện lại form — về trang đang mở dở (RequireAuth gửi sang), không có thì về trang đầu
+  // theo vai (cùng đích FormLogin điều hướng sau khi đăng nhập)
+  if (user) {
+    const from = (location.state as LoginRedirectState | null)?.from;
+    const home = user.role === USER_ROLE.ADMIN ? ADMIN_HOME_PATH : '/';
+    return <Navigate to={from ?? home} replace />;
+  }
+
   return (
     <Card className="mx-auto my-4 flex w-full max-w-115 flex-col gap-4 p-4 md:my-8 md:p-8">
       <div className="flex flex-col gap-2">
