@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -24,6 +25,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public static final String USER_PREFIX = "/user";
 
     private final ChatRealtimeProperties props;
+    private final StompAuthInterceptor authInterceptor;
 
     @Value("${app.cors.allowed-origins}")
     private List<String> allowedOrigins;
@@ -32,6 +34,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint(ENDPOINT)
                 .setAllowedOriginPatterns(allowedOrigins.toArray(String[]::new));
+    }
+
+    /** Spec 7.3: JWT kiểm ở frame CONNECT, không ở handshake. */
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(authInterceptor);
     }
 
     @Override
