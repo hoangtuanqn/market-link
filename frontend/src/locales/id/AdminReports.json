@@ -1,0 +1,74 @@
+{
+  "title": "Laporan",
+  "intro": "Pesanan dan pendapatan di seluruh platform, dipecah per pasar, beserta petani yang paling banyak menjual. Pendapatan adalah total pesanan yang selesai, dibayarkan ke lapak dan bukan lewat MarketLink.",
+  "days_other": "{{count}} hari",
+  "points": " poin",
+  "market": "Pasar",
+  "allMarkets": "Semua pasar",
+  "export": {
+    "button": "Ekspor periode ini",
+    "title": "Ekspor dimulai",
+    "text": "Berkas CSV mencakup periode dan pasar yang tampil di layar."
+  },
+  "kpi": {
+    "orders": "Pesanan",
+    "ordersNote": "{{month}}, semua pasar",
+    "revenue": "Pendapatan yang selesai",
+    "revenueNote": "₫, dibayar di lapak",
+    "average": "Rata-rata per pesanan",
+    "averageNote": "₫ per pesanan yang selesai",
+    "declineRate": "Tingkat penolakan",
+    "declineNote": "{{declined}} dari {{total}} pesanan"
+  },
+  "axis": {
+    "dayOfMonth": "Tanggal"
+  },
+  "revenueChart": {
+    "title": "Pendapatan per hari",
+    "note": "Pesanan yang selesai, dalam jutaan ₫. {{now}} dibanding 30 hari yang sama pada {{prev}}.",
+    "caption": "Pendapatan per hari pada {{now}} dibanding {{prev}}, dalam jutaan dong"
+  },
+  "ordersChart": {
+    "title": "Pesanan masuk per hari",
+    "note": "Semua pesanan, apa pun status akhirnya.",
+    "caption": "Pesanan masuk per hari pada {{now}} dibanding {{prev}}"
+  },
+  "byMarket": {
+    "title": "Pendapatan per pasar",
+    "note": "Satu ukuran untuk empat pasar, jadi tiap bilah berwarna sama. Panjangnya yang bercerita."
+  },
+  "byStatus": {
+    "title": "Pesanan menurut status"
+  },
+  "topFarmers": {
+    "title": "Petani paling aktif",
+    "note": "Menurut pesanan yang selesai pada periode ini"
+  },
+  "topProducts": {
+    "title": "Produk terlaris",
+    "note": "Masing-masing dalam satuan yang dipakai lapaknya",
+    "unitsNote": "Jumlah hanya dijumlahkan dalam satuan yang sama. Satu kilo jamur dan satu tray telur adalah dua hal berbeda, jadi platform tidak pernah melaporkan satu angka jumlah total."
+  },
+  "sideBySide": {
+    "title": "Pasar berdampingan",
+    "note": "Periode yang sama, dengan perubahan pada tiap angka"
+  },
+  "col": {
+    "stall": "Lapak",
+    "markets": "Pasar",
+    "completedOrders": "Pesanan selesai",
+    "revenue": "Pendapatan",
+    "productsListed": "Produk terpasang",
+    "rating": "Penilaian",
+    "product": "Produk",
+    "soldPer": "Dijual per",
+    "price": "Harga",
+    "sold": "Terjual",
+    "market": "Pasar",
+    "stalls": "Lapak",
+    "orders": "Pesanan",
+    "change": "Perubahan",
+    "completed": "Selesai",
+    "declined": "Ditolak"
+  }
+}

@@ -77,6 +77,9 @@
     "orderOf": "Commande {{index}} sur {{of}}",
     "payAtPickup": "Paiement au stand lors du retrait"
   },
+  "chart": {
+    "showNumbers": "Afficher les chiffres"
+  },
   "chat": {
     "assistant": "Assistant MarketLink",
     "you": "Vous",
@@ -340,6 +343,7 @@
     "feedback": "Retours",
     "pricing": "Tarifs",
     "settings": "Paramètres",
+    "account": "Votre compte",
     "analytics": "Analyses",
     "people": "Personnes",
     "marketplace": "Marché",

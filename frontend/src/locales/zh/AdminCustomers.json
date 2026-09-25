@@ -1,0 +1,46 @@
+{
+  "title": "顾客",
+  "intro": "违反规定时可停用账号；停用后无法登录或下单。问题解决后再启用。他们过去的订单仍留在摊位那里。",
+  "search": {
+    "label": "搜索顾客",
+    "placeholder": "姓名、邮箱或电话",
+    "submit": "搜索"
+  },
+  "filterLabel": "筛选顾客",
+  "filter": {
+    "all": "全部",
+    "active": "正常",
+    "inactive": "已停用",
+    "joinedThisMonth": "本月加入"
+  },
+  "status": {
+    "active": "正常",
+    "inactive": "已停用"
+  },
+  "col": {
+    "customer": "顾客",
+    "joined": "加入时间",
+    "orders": "订单数",
+    "status": "状态"
+  },
+  "action": {
+    "deactivate": "停用",
+    "reactivate": "启用"
+  },
+  "showing": "显示第 {{from}}–{{to}} 条，共 {{total}} 条",
+  "empty": {
+    "title": "还没有顾客",
+    "text": "只要有人在 MarketLink 注册，账号就会出现在这里。"
+  },
+  "deactivate": {
+    "title": "停用 {{name}}？",
+    "text": "他们会在所有设备上退出登录，无法再登录或下单。已经下过的订单仍留在摊位那里。",
+    "reason": "原因，会记在账号上",
+    "keep": "保持正常",
+    "confirm": "停用账号"
+  },
+  "toast": {
+    "deactivated": "已停用 {{name}}。",
+    "reactivated": "{{name}} 可以重新登录了。"
+  }
+}

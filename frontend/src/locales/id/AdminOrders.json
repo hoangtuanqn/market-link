@@ -1,0 +1,57 @@
+{
+  "title": "Pesanan",
+  "intro": "Semua pesanan di MarketLink, mencakup empat pasar. Admin membacanya; hanya lapak yang memindahkan pesanan dari satu status ke status berikutnya.",
+  "days_other": "{{count}} hari",
+  "export": {
+    "button": "Ekspor periode ini",
+    "title": "Ekspor dimulai",
+    "text": "Berkas CSV mencakup periode dan filter yang tampil di layar."
+  },
+  "kpi": {
+    "placed": "Pesanan masuk",
+    "placedNote": "dari {{count}} pasar",
+    "completed": "Selesai",
+    "declined": "Ditolak lapak",
+    "cancelled": "Dibatalkan pelanggan",
+    "cancelledNote": "semuanya sebelum batas waktu",
+    "share": "{{pct}}% dari periode ini"
+  },
+  "perDay": {
+    "title": "Pesanan masuk per hari",
+    "note": "{{now}} dibanding {{prev}}, 30 hari yang sama.",
+    "caption": "Pesanan masuk per hari pada {{now}} dibanding {{prev}}",
+    "axis": "Tanggal"
+  },
+  "byStatus": {
+    "title": "Berakhir di mana",
+    "note": "Tiap status punya kata dan lambangnya sendiri, jadi barisnya terbaca tanpa harus melihat panjang bilah."
+  },
+  "byMarket": {
+    "title": "Per pasar"
+  },
+  "list": {
+    "title": "Daftar pesanan",
+    "inPeriod": "{{count}} pada {{month}}",
+    "filterLabel": "Saring pesanan menurut status",
+    "market": "Pasar",
+    "allMarkets": "Semua pasar",
+    "showing": "Menampilkan {{from}}–{{to}} dari {{total}}"
+  },
+  "filter": {
+    "all": "Semua",
+    "completed": "Selesai",
+    "open": "Berjalan",
+    "declined": "Ditolak",
+    "cancelled": "Dibatalkan"
+  },
+  "customerNo": "Pelanggan #{{n}}",
+  "col": {
+    "order": "Pesanan",
+    "customer": "Pelanggan",
+    "stall": "Lapak",
+    "market": "Pasar",
+    "pickup": "Pengambilan",
+    "total": "Total",
+    "status": "Status"
+  }
+}

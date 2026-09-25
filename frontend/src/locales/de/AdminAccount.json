@@ -1,0 +1,46 @@
+{
+  "details": {
+    "title": "Deine Angaben",
+    "name": "Vollständiger Name",
+    "phone": "Telefon",
+    "phoneHint": "Wird gebraucht, wenn ein Stand die Plattform erreichen muss; nie öffentlich sichtbar.",
+    "email": "E-Mail",
+    "emailHint": "Zugleich deine Anmeldung. Wenn sie sich ändern muss, wende dich an einen anderen Administrator.",
+    "submit": "Änderungen speichern",
+    "saving": "Wird gespeichert…",
+    "saved": "Deine Angaben sind gespeichert.",
+    "failed": "Deine Angaben konnten nicht gespeichert werden.",
+    "errors": {
+      "nameRequired": "Gib deinen vollständigen Namen an.",
+      "phoneRequired": "Gib eine Telefonnummer an."
+    }
+  },
+  "password": {
+    "title": "Passwort",
+    "intro": "Ein Administratorkonto kann Stände freigeben, Kundenkonten sperren und ändern, was die Plattform berechnet. Halte dieses Passwort stark.",
+    "current": "Aktuelles Passwort",
+    "new": "Neues Passwort",
+    "repeat": "Neues Passwort wiederholen",
+    "hint": "Zwischen {{min}} und {{max}} Zeichen.",
+    "submit": "Passwort ändern",
+    "submitting": "Wird geändert…",
+    "changed": "Passwort geändert. Andere Sitzungen wurden abgemeldet.",
+    "failed": "Dein Passwort konnte nicht geändert werden.",
+    "errors": {
+      "currentRequired": "Gib dein aktuelles Passwort ein.",
+      "newRequired": "Gib ein neues Passwort ein.",
+      "length": "Verwende zwischen {{min}} und {{max}} Zeichen.",
+      "same": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+      "confirmRequired": "Wiederhole das neue Passwort.",
+      "mismatch": "Die beiden Passwörter stimmen nicht überein."
+    }
+  },
+  "mfa": {
+    "title": "Zwei-Schritt-Bestätigung",
+    "intro": "Ein zweiter Schritt nach dem Passwort, aus einer App auf deinem Telefon. Ein Administrator kann Stände freigeben, Kundenkonten sperren und ändern, was die Plattform berechnet — ein Passwort allein ist da dünn.",
+    "on": "An",
+    "off": "Aus",
+    "turnOn": "Zwei-Schritt-Bestätigung einschalten",
+    "manage": "Zwei-Schritt-Bestätigung verwalten"
+  }
+}

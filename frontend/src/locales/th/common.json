@@ -77,6 +77,9 @@
     "orderOf": "คำสั่งซื้อที่ {{index}} จาก {{of}}",
     "payAtPickup": "ชำระเงินที่แผงเมื่อรับสินค้า"
   },
+  "chart": {
+    "showNumbers": "ดูตัวเลข"
+  },
   "chat": {
     "assistant": "ผู้ช่วย MarketLink",
     "you": "คุณ",
@@ -340,6 +343,7 @@
     "feedback": "ความคิดเห็น",
     "pricing": "ราคา",
     "settings": "การตั้งค่า",
+    "account": "บัญชีของคุณ",
     "analytics": "การวิเคราะห์",
     "people": "ผู้ใช้",
     "marketplace": "ตลาด",

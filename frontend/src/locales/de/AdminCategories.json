@@ -1,0 +1,100 @@
+{
+  "overline": "Einstellungen",
+  "title": "Kategorien & Einheiten",
+  "intro": "Die beiden Listen, aus denen jeder Stand wählt, wenn er ein Produkt anlegt. Die Kategorien bestimmst du. Die Einheiten pflegst du ebenfalls, aber ein Stand darf immer eine eigene benennen, wenn hier nichts passt.",
+  "link": {
+    "announcements": "Hinweise",
+    "feedback": "Rückmeldungen"
+  },
+  "tabsLabel": "Stammdaten",
+  "tab": {
+    "categories": "Kategorien",
+    "units": "Einheiten"
+  },
+  "caption": {
+    "categories_one": "{{count}} Kategorie",
+    "categories_other": "{{count}} Kategorien",
+    "units_one": "{{count}} Einheit",
+    "units_other": "{{count}} Einheiten"
+  },
+  "col": {
+    "category": "Kategorie",
+    "products": "Produkte",
+    "stalls": "Stände",
+    "nameOf": "Name von {{name}}",
+    "oneOfThem": "Einzahl",
+    "moreThanOne": "Mehrzahl",
+    "pluralOf": "Mehrzahl von {{name}}",
+    "kind": "Art",
+    "readsAs": "Liest sich als"
+  },
+  "kind": {
+    "Weight": "Gewicht",
+    "Volume": "Volumen",
+    "Count": "Stückzahl",
+    "Pack": "Gebinde"
+  },
+  "addedBy": "von {{by}} hinzugefügt",
+  "action": {
+    "save": "Speichern",
+    "remove": "Entfernen",
+    "addToPicker": "In die Auswahl aufnehmen",
+    "merge": "Zusammenführen"
+  },
+  "categoryForm": {
+    "title": "Kategorie hinzufügen",
+    "name": "Name",
+    "namePlaceholder": "z. B. Seafood",
+    "nameHint": "Auf Englisch, nur der erste Buchstabe groß. Der Text steht handgeschrieben auf einem Produktschild ohne Foto.",
+    "position": "Position im Filter",
+    "submit": "Kategorie hinzufügen"
+  },
+  "unitNote": {
+    "title": "Zwei dieser Einheiten hat ein Stand selbst eingetippt, nicht du.",
+    "text": "Ein Stand benennt seine eigene Einheit, wenn in der Auswahl nichts passt. Nimm die auf, die sich durchsetzen, führe Doppelungen zusammen und lass den Rest in Ruhe."
+  },
+  "unitsNote": "Eine Einheit steht als Text am Produkt, ein Stand wird von dieser Liste also nie blockiert. Was du hier pflegst, ist die Auswahl, die angeboten wird, und welche Schreibweisen zusammengeführt werden, damit Berichte „bag“ und „Bag“ nicht trennen.",
+  "unitForm": {
+    "title": "Einheit hinzufügen",
+    "one": "Einzahl",
+    "many": "Mehrzahl",
+    "manyHint": "Das Englische hat dafür keine Regel, deshalb wird sie eingetippt statt geraten.",
+    "kind": "Art",
+    "preview": "So wird es gelesen",
+    "previewFallback": "Einheit",
+    "onTheTag": "auf dem Schild",
+    "left": "übrig",
+    "submit": "Einheit hinzufügen"
+  },
+  "removeCategory": {
+    "title": "{{name}} entfernen?",
+    "textUsed_one": "{{count}} Produkt nutzt sie. Wähle, wohin es kommt.",
+    "textUsed_other": "{{count}} Produkte nutzen sie. Wähle, wohin sie kommen.",
+    "textUnused": "Kein Produkt nutzt sie.",
+    "moveTo": "Produkte verschieben nach",
+    "keep": "Kategorie behalten",
+    "confirm": "Kategorie entfernen"
+  },
+  "mergeUnit": {
+    "title": "{{name}} mit einer anderen Einheit zusammenführen?",
+    "text": "Produkte, die sie nutzen, werden auf die gewählte Einheit umgeschrieben; frühere Bestellungen behalten die Einheit, unter der sie verkauft wurden.",
+    "into": "Zusammenführen mit",
+    "cancel": "Abbrechen",
+    "confirm": "Zusammenführen"
+  },
+  "empty": {
+    "categories": {
+      "title": "Noch keine Kategorien",
+      "text": "Lege eine Kategorie an, dann können Erzeuger ihre Produkte darin einsortieren."
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}} gespeichert.",
+    "categoryAdded": "Kategorie hinzugefügt. Die Stände können sie ab sofort wählen.",
+    "categoryRemoved": "{{name}} entfernt.",
+    "unitSaved": "{{name}} gespeichert.",
+    "unitAdded": "Einheit in die Auswahl aufgenommen.",
+    "promoted": "{{name}} steht jetzt allen Ständen zur Auswahl.",
+    "merged": "Zusammengeführt. Ein Produkt wurde umgeschrieben."
+  }
+}

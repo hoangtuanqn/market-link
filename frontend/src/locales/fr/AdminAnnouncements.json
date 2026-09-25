@@ -1,0 +1,59 @@
+{
+  "overline": "Paramètres",
+  "title": "Annonces",
+  "intro": "Un message pour toute la plateforme, affiché dans le bandeau vert au-dessus de l'en-tête et dans les notifications de chacun. Une seule annonce active à la fois, pour qu'elle reste lisible.",
+  "link": {
+    "categories": "Catégories",
+    "feedback": "Boîte de retours"
+  },
+  "form": {
+    "title": "Nouvelle annonce",
+    "headline": "Titre",
+    "headlinePlaceholder": "par ex. Le marché de Thủ Đức ouvre à 06h00 dès octobre",
+    "headlineHint": "Une ligne, majuscule à l'initiale seulement, sans point d'exclamation. Affichée en écriture manuscrite.",
+    "detail": "Détail",
+    "detailPlaceholder": "Une phrase sur ce qui change pour les clients ou les étals.",
+    "showTo": "Afficher à",
+    "aboutMarket": "Marché concerné",
+    "wholePlatform": "Toute la plateforme",
+    "from": "Afficher à partir du",
+    "to": "Jusqu'au",
+    "preview": "Aperçu",
+    "previewTitle": "Votre titre apparaît ici",
+    "previewText": "Et la ligne de détail ici, dans le bandeau vert au-dessus de l'en-tête."
+  },
+  "audience": {
+    "Everyone": "Tout le monde",
+    "Customers": "Clients",
+    "Farmers": "Producteurs"
+  },
+  "list": {
+    "title": "Publiées et passées"
+  },
+  "col": {
+    "announcement": "Annonce",
+    "showTo": "Afficher à",
+    "window": "Période",
+    "status": "Statut"
+  },
+  "status": {
+    "live": "En ligne",
+    "ended": "Terminée"
+  },
+  "action": {
+    "publish": "Publier",
+    "saveDraft": "Enregistrer comme brouillon",
+    "edit": "Modifier",
+    "takeDown": "Retirer",
+    "reuse": "Réutiliser"
+  },
+  "empty": {
+    "title": "Aucune annonce",
+    "text": "Publiez-en une et toute personne connectée la verra dans le bandeau au-dessus de l'en-tête."
+  },
+  "toast": {
+    "published": "Annonce publiée. Elle est en ligne dans l'en-tête.",
+    "draftSaved": "Enregistrée comme brouillon.",
+    "takenDown": "Annonce retirée."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "title": "Kiểm duyệt",
+  "intro": "Ẩn sản phẩm hoặc đánh giá vi phạm nguyên tắc cộng đồng. Nội dung bị ẩn vẫn nằm trong cơ sở dữ liệu kèm lý do; chủ nội dung được báo.",
+  "tabsLabel": "Hàng chờ kiểm duyệt",
+  "tab": {
+    "reviews": "Đánh giá",
+    "products": "Sản phẩm đăng bán",
+    "hidden": "Đã ẩn"
+  },
+  "reviewFilterLabel": "Lọc đánh giá",
+  "reviewFilter": {
+    "reported": "Bị báo cáo",
+    "lowRated": "1 hoặc 2 sao",
+    "newest": "Mới nhất"
+  },
+  "report": {
+    "title": "{{by}} báo cáo ngày {{date}}: “{{quote}}”",
+    "text": "Ẩn đi thì đánh giá biến mất khỏi trang sản phẩm và trang sạp. Khách hàng được cho biết lý do."
+  },
+  "recentlyListed": "Sản phẩm mới đăng gần đây",
+  "search": {
+    "label": "Tìm sản phẩm",
+    "placeholder": "Sản phẩm hoặc sạp",
+    "submit": "Tìm"
+  },
+  "col": {
+    "product": "Sản phẩm",
+    "price": "Giá",
+    "description": "Mô tả",
+    "item": "Nội dung",
+    "owner": "Chủ nội dung",
+    "reason": "Lý do",
+    "hiddenOn": "Ẩn ngày"
+  },
+  "action": {
+    "view": "Xem",
+    "hideReview": "Ẩn đánh giá",
+    "hideListing": "Ẩn sản phẩm",
+    "keepVisible": "Giữ hiển thị",
+    "customerAccount": "Tài khoản khách",
+    "unhide": "Bỏ ẩn",
+    "unhidden": "Nội dung đã hiện lại.",
+    "dismissed": "Đã bỏ qua báo cáo. Đánh giá vẫn hiển thị."
+  },
+  "hide": {
+    "title": {
+      "review": "Ẩn đánh giá này?",
+      "listing": "Ẩn sản phẩm này?"
+    },
+    "text": {
+      "review": "Nội dung biến mất khỏi trang khách hàng ngay lập tức. Khách hàng được báo và có thể liên hệ lại với đội ngũ.",
+      "listing": "Nội dung biến mất khỏi trang khách hàng ngay lập tức. Sạp được báo và có thể liên hệ lại với đội ngũ."
+    },
+    "confirm": {
+      "review": "Ẩn đánh giá",
+      "listing": "Ẩn sản phẩm"
+    },
+    "reason": "Lý do",
+    "done": "Đã ẩn. Chủ nội dung đã được báo."
+  },
+  "reason": {
+    "advertising": "Quảng cáo hoặc rủ liên hệ ngoài sàn",
+    "abusive": "Lời lẽ xúc phạm",
+    "offTopic": "Không nói về sản phẩm hay sạp",
+    "claim": "Quảng cáo công dụng sức khoẻ hoặc chứng nhận",
+    "other": "Lý do khác"
+  },
+  "empty": {
+    "title": "Không có gì cần kiểm duyệt",
+    "text": "Sản phẩm và đánh giá bị báo cáo sẽ về đây để bạn đọc trước khi quyết định ẩn."
+  }
+}

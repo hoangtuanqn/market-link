@@ -77,6 +77,9 @@
     "orderOf": "Order {{index}} of {{of}}",
     "payAtPickup": "Pay at the stall on pickup"
   },
+  "chart": {
+    "showNumbers": "Show the numbers"
+  },
   "chat": {
     "assistant": "MarketLink assistant",
     "you": "You",
@@ -340,6 +343,7 @@
     "feedback": "Feedback",
     "pricing": "Pricing",
     "settings": "Settings",
+    "account": "Your account",
     "analytics": "Analytics",
     "people": "People",
     "marketplace": "Marketplace",

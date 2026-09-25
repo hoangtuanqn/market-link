@@ -1,9 +1,61 @@
 {
-  "overline": "Admin area",
-  "hello": "Hello, {{name}}",
-  "fallbackName": "admin",
-  "empty": {
-    "title": "The dashboard is on its way",
-    "text": "Totals for farmers, customers, markets and orders will show here once the admin dashboard is built."
+  "overline": "Platform · {{year}}",
+  "title": "MarketLink today",
+  "vs": "vs {{month}}",
+  "tilesNote": "{{now}} so far, next to {{prev}}. Every tile opens the detail behind its number.",
+  "kpi": {
+    "farmers": "Farmers",
+    "farmersNote": "{{waiting}} waiting for approval · {{suspended}} suspended",
+    "farmersLink": "Review applications",
+    "customers": "Customers",
+    "customersNote": "{{count}} joined this month",
+    "customersLink": "Open customers",
+    "markets": "Markets",
+    "marketsNote": "all active",
+    "marketsLink": "Open markets",
+    "orders": "Orders",
+    "ordersNote": "{{week}} this week · {{total}} completed",
+    "ordersLink": "Open orders"
+  },
+  "revenue": {
+    "title": "Revenue by day",
+    "note": "Completed orders, in millions of ₫. {{now}} against {{prev}}.",
+    "caption": "Revenue by day in {{now}} against {{prev}}, in millions of dong",
+    "axis": "Day of the month",
+    "reports": "Full reports"
+  },
+  "attention": {
+    "title": "Needs attention",
+    "farmers_one": "Farmer application waiting",
+    "farmers_other": "Farmer applications waiting",
+    "reported_one": "review reported by a stall",
+    "reported_other": "reviews reported by a stall",
+    "feedback_one": "open feedback item",
+    "feedback_other": "open feedback items, one a bug",
+    "announcements_one": "announcement live, Thảo Điền closed 04/10",
+    "announcements_other": "announcements live"
+  },
+  "earned": {
+    "title": "What MarketLink earned",
+    "link": "Revenue report",
+    "note": "{{month}}, from stalls buying position. Separate from the money the markets took.",
+    "of": "₫ · {{pct}}% of the {{gmv}} the markets took"
+  },
+  "byMarket": {
+    "title": "Orders this week by market",
+    "link": "All orders",
+    "suffix": "orders"
+  },
+  "latest": {
+    "title": "Latest orders across the platform",
+    "readOnly": "Read-only. Admins do not change order status."
+  },
+  "col": {
+    "order": "Order",
+    "stall": "Stall",
+    "market": "Market",
+    "pickup": "Pickup",
+    "total": "Total",
+    "status": "Status"
   }
 }

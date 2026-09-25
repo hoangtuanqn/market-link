@@ -1,0 +1,58 @@
+{
+  "title": "Pedidos",
+  "intro": "Todos los pedidos de MarketLink, en los cuatro mercados. Los administradores los leen; solo el puesto mueve un pedido de un estado a otro.",
+  "days_one": "{{count}} día",
+  "days_other": "{{count}} días",
+  "export": {
+    "button": "Exportar el periodo",
+    "title": "Exportación iniciada",
+    "text": "El CSV recoge el periodo y los filtros que se ven en pantalla."
+  },
+  "kpi": {
+    "placed": "Pedidos realizados",
+    "placedNote": "en {{count}} mercados",
+    "completed": "Completados",
+    "declined": "Rechazados por un puesto",
+    "cancelled": "Cancelados por un cliente",
+    "cancelledNote": "todos antes del cierre",
+    "share": "{{pct}} % del periodo"
+  },
+  "perDay": {
+    "title": "Pedidos realizados por día",
+    "note": "{{now}} frente a {{prev}}, los mismos 30 días.",
+    "caption": "Pedidos realizados por día en {{now}} frente a {{prev}}",
+    "axis": "Día del mes"
+  },
+  "byStatus": {
+    "title": "Dónde acabaron",
+    "note": "Cada estado lleva su propia palabra y su símbolo, así que las filas se distinguen sin mirar la barra."
+  },
+  "byMarket": {
+    "title": "Por mercado"
+  },
+  "list": {
+    "title": "Los pedidos",
+    "inPeriod": "{{count}} en {{month}}",
+    "filterLabel": "Filtrar pedidos por estado",
+    "market": "Mercado",
+    "allMarkets": "Todos los mercados",
+    "showing": "Mostrando {{from}}–{{to}} de {{total}}"
+  },
+  "filter": {
+    "all": "Todos",
+    "completed": "Completados",
+    "open": "Abiertos",
+    "declined": "Rechazados",
+    "cancelled": "Cancelados"
+  },
+  "customerNo": "Cliente n.º {{n}}",
+  "col": {
+    "order": "Pedido",
+    "customer": "Cliente",
+    "stall": "Puesto",
+    "market": "Mercado",
+    "pickup": "Recogida",
+    "total": "Total",
+    "status": "Estado"
+  }
+}

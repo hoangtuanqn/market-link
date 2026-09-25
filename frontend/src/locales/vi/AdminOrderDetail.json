@@ -1,0 +1,58 @@
+{
+  "allOrders": "Đơn hàng",
+  "kicker": "Đặt lúc {{placed}} · chốt lúc {{cutoff}}",
+  "missing": {
+    "title": "Đơn hàng này không còn ở đây",
+    "text": "Có thể đơn đã bị xoá cùng tài khoản. Hãy mở lại từ danh sách đơn hàng."
+  },
+  "readOnly": {
+    "title": "Quản trị viên chỉ đọc đơn; sạp mới là người chuyển trạng thái.",
+    "text": "Mọi nút đổi trạng thái đều nằm ở màn hình của sạp, nên không thao tác nào ở đây đẩy đơn vào trạng thái sai được."
+  },
+  "items": {
+    "title": "Sản phẩm trong đơn",
+    "note": "Giá là mức sạp niêm yết lúc đặt đơn. Không có dòng tiền nào đi qua MarketLink; khách trả tiền trực tiếp tại sạp."
+  },
+  "history": {
+    "title": "Mọi trạng thái đơn đã đi qua",
+    "by": "{{time}} · {{by}}",
+    "note": "Mỗi lần đổi trạng thái đều được ghi lại kèm người thực hiện. Đây là bằng chứng quản trị viên đọc khi khách và sạp nói khác nhau."
+  },
+  "stall": {
+    "title": "Sạp bán",
+    "stall": "Sạp",
+    "contact": "Liên hệ",
+    "approval": "Trạng thái duyệt",
+    "record": "Hồ sơ sạp"
+  },
+  "approval": {
+    "pending": "Chờ duyệt",
+    "approved": "Đã duyệt",
+    "rejected": "Đã từ chối",
+    "suspended": "Tạm ngưng"
+  },
+  "customer": {
+    "title": "Khách hàng",
+    "name": "Họ tên",
+    "phone": "Điện thoại",
+    "orders": "Số đơn trên MarketLink",
+    "record": "Hồ sơ khách hàng"
+  },
+  "pickup": {
+    "title": "Nhận hàng",
+    "market": "Chợ",
+    "slot": "Ngày và khung giờ",
+    "cutoff": "Giờ chốt",
+    "total": "Tổng tiền"
+  },
+  "noButtons": {
+    "title": "Vì sao ở đây không có nút nào",
+    "text": "Một đơn thuộc về một sạp và một khách. Sạp có quyền chuyển trạng thái, khách có quyền huỷ trước giờ chốt; quản trị viên không nằm trong danh sách đó, nên màn hình này chỉ đọc."
+  },
+  "col": {
+    "product": "Sản phẩm",
+    "quantity": "Số lượng",
+    "unitPrice": "Đơn giá",
+    "lineTotal": "Thành tiền"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "overline": "Paramètres",
+  "title": "Boîte de retours",
+  "intro": "Signalements de bugs, suggestions et questions envoyés via le formulaire de retour. Marquez-les comme traités une fois répondu.",
+  "link": {
+    "categories": "Catégories",
+    "announcements": "Annonces"
+  },
+  "filterLabel": "Filtrer les retours",
+  "filter": {
+    "open": "Ouverts",
+    "answered": "Traités",
+    "bug": "Bug",
+    "suggestion": "Suggestion",
+    "query": "Question"
+  },
+  "type": {
+    "bug": "Signalement de bug",
+    "suggestion": "Suggestion",
+    "query": "Question"
+  },
+  "status": {
+    "open": "Ouvert",
+    "answered": "Traité"
+  },
+  "col": {
+    "type": "Type",
+    "message": "Message",
+    "from": "De",
+    "status": "Statut"
+  },
+  "action": {
+    "read": "Lire",
+    "readAndAnswer": "Lire et répondre"
+  },
+  "dialog": {
+    "title": "{{type}} de {{from}}",
+    "sent": "Envoyé le {{date}} · {{state}}",
+    "notAnswered": "pas encore traité",
+    "alreadyAnswered": "déjà traité",
+    "yourAnswer": "Votre réponse",
+    "replyPlaceholder": "Merci de nous l'avoir signalé…",
+    "close": "Fermer",
+    "send": "Envoyer et marquer comme traité",
+    "sendAgain": "Renvoyer"
+  },
+  "empty": {
+    "title": "Aucun retour pour l'instant",
+    "text": "Les signalements de bugs, suggestions et questions du formulaire arrivent ici."
+  },
+  "toast": {
+    "answered": "Réponse enregistrée et message marqué comme traité.",
+    "markedOnly": "Marqué comme traité sans réponse."
+  }
+}

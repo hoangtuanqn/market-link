@@ -1,0 +1,58 @@
+{
+  "allOrders": "주문",
+  "kicker": "{{placed}}에 접수 · {{cutoff}}에 마감",
+  "missing": {
+    "title": "이 주문은 더 이상 없습니다",
+    "text": "계정과 함께 삭제되었을 수 있습니다. 주문 목록에서 다시 열어 주세요."
+  },
+  "readOnly": {
+    "title": "관리자는 주문을 읽고, 옮기는 건 가게입니다.",
+    "text": "상태를 바꾸는 버튼은 모두 가게 자신의 화면에 있어서, 여기서 주문을 잘못된 상태로 보낼 일은 없습니다."
+  },
+  "items": {
+    "title": "주문 상품",
+    "note": "가격은 주문 당시 가게가 매긴 금액입니다. MarketLink를 거치는 돈은 없고, 고객은 가게에서 직접 냅니다."
+  },
+  "history": {
+    "title": "거쳐온 모든 상태",
+    "by": "{{time}} · {{by}}",
+    "note": "상태가 바뀔 때마다 누가 했는지와 함께 기록됩니다. 고객과 가게의 말이 다를 때 관리자가 읽는 것이 이 기록입니다."
+  },
+  "stall": {
+    "title": "가게",
+    "stall": "가게 이름",
+    "contact": "연락처",
+    "approval": "승인 상태",
+    "record": "가게 기록"
+  },
+  "approval": {
+    "pending": "승인 대기",
+    "approved": "승인됨",
+    "rejected": "거절됨",
+    "suspended": "정지됨"
+  },
+  "customer": {
+    "title": "고객",
+    "name": "이름",
+    "phone": "전화번호",
+    "orders": "MarketLink 주문 수",
+    "record": "고객 기록"
+  },
+  "pickup": {
+    "title": "수령",
+    "market": "장터",
+    "slot": "날짜와 시간대",
+    "cutoff": "마감 시각",
+    "total": "합계"
+  },
+  "noButtons": {
+    "title": "여기에 버튼이 없는 이유",
+    "text": "주문 하나는 가게 하나와 고객 한 명의 것입니다. 가게가 상태를 옮기고 고객은 마감 전에 취소할 수 있습니다. 관리자는 그 명단에 없으므로 이 화면은 읽기만 합니다."
+  },
+  "col": {
+    "product": "상품",
+    "quantity": "수량",
+    "unitPrice": "단가",
+    "lineTotal": "금액"
+  }
+}

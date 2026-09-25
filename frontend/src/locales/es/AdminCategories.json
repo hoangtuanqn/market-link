@@ -1,0 +1,100 @@
+{
+  "overline": "Ajustes",
+  "title": "Categorías y unidades",
+  "intro": "Las dos listas de las que tira cada puesto al añadir un producto. Las categorías las pones tú. Las unidades también las cuidas tú, pero un puesto siempre puede nombrar la suya cuando aquí no encaja ninguna.",
+  "link": {
+    "announcements": "Avisos",
+    "feedback": "Buzón de comentarios"
+  },
+  "tabsLabel": "Datos maestros",
+  "tab": {
+    "categories": "Categorías",
+    "units": "Unidades"
+  },
+  "caption": {
+    "categories_one": "{{count}} categoría",
+    "categories_other": "{{count}} categorías",
+    "units_one": "{{count}} unidad",
+    "units_other": "{{count}} unidades"
+  },
+  "col": {
+    "category": "Categoría",
+    "products": "Productos",
+    "stalls": "Puestos",
+    "nameOf": "Nombre de {{name}}",
+    "oneOfThem": "En singular",
+    "moreThanOne": "En plural",
+    "pluralOf": "Plural de {{name}}",
+    "kind": "Tipo",
+    "readsAs": "Se lee"
+  },
+  "kind": {
+    "Weight": "Peso",
+    "Volume": "Volumen",
+    "Count": "Unidades",
+    "Pack": "Envase"
+  },
+  "addedBy": "añadida por {{by}}",
+  "action": {
+    "save": "Guardar",
+    "remove": "Eliminar",
+    "addToPicker": "Añadir al selector",
+    "merge": "Fusionar"
+  },
+  "categoryForm": {
+    "title": "Añadir una categoría",
+    "name": "Nombre",
+    "namePlaceholder": "p. ej. Seafood",
+    "nameHint": "En inglés, con mayúscula solo al principio. Va escrita a mano en la etiqueta de un producto sin foto.",
+    "position": "Posición en el filtro",
+    "submit": "Añadir categoría"
+  },
+  "unitNote": {
+    "title": "Dos de estas unidades las escribió un puesto, no tú.",
+    "text": "Un puesto nombra su propia unidad cuando ninguna del selector le encaja. Sube las que cuajan, fusiona las repetidas y deja el resto en paz."
+  },
+  "unitsNote": "La unidad se guarda como texto en el producto, así que esta lista nunca bloquea a un puesto. Lo que cuidas aquí es qué aparece en el selector y qué grafías se fusionan para que los informes no separen «bag» de «Bag».",
+  "unitForm": {
+    "title": "Añadir una unidad",
+    "one": "En singular",
+    "many": "En plural",
+    "manyHint": "El inglés no tiene una regla para esto, así que se escribe en vez de adivinarse.",
+    "kind": "Tipo",
+    "preview": "Cómo se leerá",
+    "previewFallback": "unidad",
+    "onTheTag": "en la etiqueta",
+    "left": "quedan",
+    "submit": "Añadir unidad"
+  },
+  "removeCategory": {
+    "title": "¿Eliminar {{name}}?",
+    "textUsed_one": "{{count}} producto la usa. Elige adónde va.",
+    "textUsed_other": "{{count}} productos la usan. Elige adónde van.",
+    "textUnused": "Ningún producto la usa.",
+    "moveTo": "Mover los productos a",
+    "keep": "Mantener la categoría",
+    "confirm": "Eliminar la categoría"
+  },
+  "mergeUnit": {
+    "title": "¿Fusionar {{name}} con otra unidad?",
+    "text": "Los productos que la usan se reescriben con la unidad que elijas, y los pedidos anteriores conservan la unidad con la que se vendieron.",
+    "into": "Fusionar con",
+    "cancel": "Cancelar",
+    "confirm": "Fusionar"
+  },
+  "empty": {
+    "categories": {
+      "title": "Todavía no hay categorías",
+      "text": "Añade una categoría y los productores podrán clasificar sus productos en ella."
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}} guardada.",
+    "categoryAdded": "Categoría añadida. Los puestos ya pueden elegirla.",
+    "categoryRemoved": "{{name}} eliminada.",
+    "unitSaved": "{{name}} guardada.",
+    "unitAdded": "Unidad añadida al selector.",
+    "promoted": "{{name}} ya está en el selector de todos los puestos.",
+    "merged": "Fusionadas. Se ha reescrito un producto."
+  }
+}

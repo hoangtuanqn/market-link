@@ -108,6 +108,14 @@ app:
     pending-ttl-seconds: 300
     max-attempts: 5
     lock-seconds: 900
+  # FR-102: tài khoản admin cho dev/demo. AdminSeeder chỉ chạy ở profile dev và local, và bỏ qua
+  # nếu email (hoặc số điện thoại) đã có trong DB — đổi mật khẩu rồi restart không bị ghi đè.
+  seed:
+    admin:
+      email: ${SEED_ADMIN_EMAIL:admin@marketlink.vn}
+      password: ${SEED_ADMIN_PASSWORD:Admin@123}
+      full-name: ${SEED_ADMIN_FULL_NAME:MarketLink Admin}
+      phone: ${SEED_ADMIN_PHONE:0900000001}
   # FR-111: chat realtime. Host rỗng = simple broker trong app (CI/test); docker compose và prod
   # đặt RABBITMQ_HOST để relay sang RabbitMQ (plugin rabbitmq_stomp, cổng 61613).
   chat:

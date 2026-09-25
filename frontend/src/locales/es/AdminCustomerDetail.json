@@ -1,0 +1,77 @@
+{
+  "allCustomers": "Clientes",
+  "since": "Cliente desde el {{joined}} · último pedido el {{last}}",
+  "missing": {
+    "title": "Ese cliente ya no está aquí",
+    "text": "Puede que la cuenta se haya borrado. Vuelve a abrirla desde la lista de clientes."
+  },
+  "action": {
+    "deactivate": "Desactivar cuenta",
+    "reactivate": "Reactivar cuenta"
+  },
+  "banner": {
+    "title": "Desactivada hoy.",
+    "text": "Motivo guardado en la cuenta: {{reason}}. Sus pedidos en curso no se tocan."
+  },
+  "orders": {
+    "title": "Pedidos",
+    "all": "Todos los pedidos de la plataforma",
+    "note": "Un administrador los lee. Solo el puesto mueve un pedido, así que aquí no hay nada que cambiar."
+  },
+  "reviews": {
+    "title": "Reseñas que escribió",
+    "openInModeration": "Abrir en Moderación",
+    "note": "Ocultar una reseña se hace desde Moderación, donde además se ve la denuncia que la llevó ahí."
+  },
+  "timeline": {
+    "title": "Historial de la cuenta",
+    "created": "Cuenta creada",
+    "firstCollected": "Primer pedido recogido",
+    "noShow": "No se presentó",
+    "lastOrder": "Último pedido"
+  },
+  "contact": {
+    "title": "Contacto",
+    "email": "Correo",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "joined": "Alta"
+  },
+  "habits": {
+    "title": "Cómo compra",
+    "orders": "Pedidos",
+    "collected": "Recogidos",
+    "noShows": "No recogidos",
+    "market": "Mercado",
+    "buysMostFrom": "Compra sobre todo en"
+  },
+  "whatItDoes": {
+    "title": "Qué hace desactivar",
+    "text": "No podrá entrar ni hacer un pedido nuevo. Los pedidos ya realizados no se tocan, así que el puesto entrega igualmente lo que apartó y nadie pierde comida recogida para él."
+  },
+  "deactivate": {
+    "title": "¿Desactivar a {{name}}?",
+    "text": "No podrá entrar ni pedir hasta que un administrador lo reactive. Los pedidos ya realizados llegan a su fin, así que ningún puesto se queda con comida que nadie recoge.",
+    "reason": "Motivo guardado en la cuenta",
+    "keep": "Todavía no",
+    "confirm": "Desactivar"
+  },
+  "reason": {
+    "noShows": "No se presenta a recoger, de forma repetida",
+    "abusive": "Lenguaje ofensivo en una reseña",
+    "requested": "Pidió cerrar su cuenta",
+    "other": "Otro"
+  },
+  "toast": {
+    "deactivated": "{{name}} desactivado.",
+    "reactivated": "{{name}} ya puede volver a entrar."
+  },
+  "col": {
+    "order": "Pedido",
+    "stall": "Puesto",
+    "pickup": "Recogida",
+    "items": "Artículos",
+    "total": "Total",
+    "status": "Estado"
+  }
+}

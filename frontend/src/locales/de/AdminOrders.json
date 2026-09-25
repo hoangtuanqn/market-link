@@ -1,0 +1,58 @@
+{
+  "title": "Bestellungen",
+  "intro": "Alle Bestellungen auf MarketLink, über die vier Märkte hinweg. Administratoren lesen sie; nur der Stand bringt eine Bestellung in den nächsten Status.",
+  "days_one": "{{count}} Tag",
+  "days_other": "{{count}} Tage",
+  "export": {
+    "button": "Zeitraum exportieren",
+    "title": "Export gestartet",
+    "text": "Die CSV-Datei umfasst den Zeitraum und die Filter auf dem Bildschirm."
+  },
+  "kpi": {
+    "placed": "Aufgegebene Bestellungen",
+    "placedNote": "über {{count}} Märkte",
+    "completed": "Abgeschlossen",
+    "declined": "Vom Stand abgelehnt",
+    "cancelled": "Von Kundschaft storniert",
+    "cancelledNote": "alle vor dem Annahmeschluss",
+    "share": "{{pct}} % des Zeitraums"
+  },
+  "perDay": {
+    "title": "Bestellungen pro Tag",
+    "note": "{{now}} gegen {{prev}}, dieselben 30 Tage.",
+    "caption": "Bestellungen pro Tag im {{now}} gegen {{prev}}",
+    "axis": "Tag des Monats"
+  },
+  "byStatus": {
+    "title": "Wo sie geendet sind",
+    "note": "Jeder Status hat sein eigenes Wort und Zeichen, die Zeilen sind also nicht nur am Balken zu unterscheiden."
+  },
+  "byMarket": {
+    "title": "Nach Markt"
+  },
+  "list": {
+    "title": "Die Bestellungen",
+    "inPeriod": "{{count}} im {{month}}",
+    "filterLabel": "Bestellungen nach Status filtern",
+    "market": "Markt",
+    "allMarkets": "Alle Märkte",
+    "showing": "{{from}}–{{to}} von {{total}}"
+  },
+  "filter": {
+    "all": "Alle",
+    "completed": "Abgeschlossen",
+    "open": "Offen",
+    "declined": "Abgelehnt",
+    "cancelled": "Storniert"
+  },
+  "customerNo": "Kunde Nr. {{n}}",
+  "col": {
+    "order": "Bestellung",
+    "customer": "Kundschaft",
+    "stall": "Stand",
+    "market": "Markt",
+    "pickup": "Abholung",
+    "total": "Summe",
+    "status": "Status"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "title": "Mercados",
+  "intro": "Nombre, dirección, días de apertura, horario y coordenadas en el mapa de cada mercado. Quitar un mercado lo oculta a los clientes; su historial se queda.",
+  "caption_one": "{{count}} mercado activo",
+  "caption_other": "{{count}} mercados activos",
+  "stalls_one": "{{count}} puesto",
+  "stalls_other": "{{count}} puestos",
+  "col": {
+    "market": "Mercado",
+    "days": "Días · horario",
+    "coordinates": "Coordenadas",
+    "stalls": "Puestos"
+  },
+  "action": {
+    "add": "Añadir mercado",
+    "edit": "Editar",
+    "remove": "Quitar"
+  },
+  "map": {
+    "title": "Dónde están",
+    "label": "Mapa de mercados"
+  },
+  "empty": {
+    "title": "Todavía no hay mercados",
+    "text": "Añade un mercado con su dirección, sus días de apertura y sus coordenadas para que los productores puedan elegirlo."
+  },
+  "remove": {
+    "title": "¿Quitar {{name}}?",
+    "text_one": "{{count}} puesto vende aquí. El mercado desaparece de las páginas de cliente y se avisa al puesto. Los pedidos ya hechos para él continúan.",
+    "text_other": "{{count}} puestos venden aquí. El mercado desaparece de las páginas de cliente y se avisa a los puestos. Los pedidos ya hechos para él continúan.",
+    "keep": "Mantener el mercado",
+    "confirm": "Quitar el mercado"
+  },
+  "toast": {
+    "removed": "{{name}} se ha quitado de la lista."
+  }
+}

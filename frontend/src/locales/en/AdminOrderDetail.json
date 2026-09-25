@@ -1,0 +1,58 @@
+{
+  "allOrders": "Orders",
+  "kicker": "Placed {{placed}} · closes {{cutoff}}",
+  "missing": {
+    "title": "That order is not here any more",
+    "text": "It may have been deleted with the account. Open it again from the orders list."
+  },
+  "readOnly": {
+    "title": "An admin reads an order; the stall moves it.",
+    "text": "Every button that changes a state lives on the stall's own screen, so nothing here can put an order into the wrong state."
+  },
+  "items": {
+    "title": "Items",
+    "note": "Prices are what the stall charged when the order was placed. No money moves through MarketLink; the customer pays at the stall."
+  },
+  "history": {
+    "title": "Every state it has been in",
+    "by": "{{time}} · {{by}}",
+    "note": "Every status change is recorded with who made it. This is the record an admin reads when a customer and a stall disagree about what happened."
+  },
+  "stall": {
+    "title": "The stall",
+    "stall": "Stall",
+    "contact": "Contact",
+    "approval": "Approval",
+    "record": "Stall record"
+  },
+  "approval": {
+    "pending": "Waiting for approval",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "suspended": "Suspended"
+  },
+  "customer": {
+    "title": "The customer",
+    "name": "Name",
+    "phone": "Phone",
+    "orders": "Orders on MarketLink",
+    "record": "Customer record"
+  },
+  "pickup": {
+    "title": "Pickup",
+    "market": "Market",
+    "slot": "Day and slot",
+    "cutoff": "Cutoff",
+    "total": "Total"
+  },
+  "noButtons": {
+    "title": "Why there are no buttons",
+    "text": "An order belongs to one stall and one customer. The stall has the transitions and the customer the cancel before cutoff; an admin is not in that list, so this screen reads and does not touch."
+  },
+  "col": {
+    "product": "Product",
+    "quantity": "Quantity",
+    "unitPrice": "Unit price",
+    "lineTotal": "Line total"
+  }
+}

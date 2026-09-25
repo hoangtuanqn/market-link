@@ -17,9 +17,20 @@ import {
 } from '@/components/icons';
 import { USER_ROLE } from '@/constants/enums';
 import {
+  ADMIN_ACCOUNT_PATH,
+  ADMIN_ANNOUNCEMENTS_PATH,
+  ADMIN_CATEGORIES_PATH,
+  ADMIN_CUSTOMERS_PATH,
   ADMIN_FARMERS_PATH,
+  ADMIN_FEEDBACK_PATH,
   ADMIN_HOME_PATH,
   ADMIN_LOGIN_PATH,
+  ADMIN_MARKETS_PATH,
+  ADMIN_MODERATION_PATH,
+  ADMIN_ORDERS_PATH,
+  ADMIN_PRICING_PATH,
+  ADMIN_REPORTS_PATH,
+  ADMIN_REVENUE_PATH,
   ADMIN_SECURITY_PATH,
   ADMIN_SETTINGS_PATH,
 } from '@/constants/nav';
@@ -28,39 +39,40 @@ import useSession from '@/hooks/useSession';
 import type { TFunction } from 'i18next';
 import DashboardShell, { type ShellNavGroup } from './DashboardShell';
 
-/** Sidebar groups from docs/prototype/prototype.js (SIDE.admin). Screens not built yet land on the in-panel 404. */
+/** Sidebar groups from docs/prototype/prototype.js (SIDE.admin). Every item now has a screen behind it. */
 const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
   {
     heading: t('adminNav.analytics'),
     items: [
       { to: ADMIN_HOME_PATH, label: t('adminNav.overview'), icon: DashboardIcon },
-      { to: '/admin/reports', label: t('adminNav.reports'), icon: ChartIcon },
-      { to: '/admin/revenue', label: t('adminNav.revenue'), icon: TagIcon },
-      { to: '/admin/orders', label: t('adminNav.orders'), icon: ReceiptIcon },
+      { to: ADMIN_REPORTS_PATH, label: t('adminNav.reports'), icon: ChartIcon },
+      { to: ADMIN_REVENUE_PATH, label: t('adminNav.revenue'), icon: TagIcon },
+      { to: ADMIN_ORDERS_PATH, label: t('adminNav.orders'), icon: ReceiptIcon },
     ],
   },
   {
     heading: t('adminNav.people'),
     items: [
       { to: ADMIN_FARMERS_PATH, label: t('adminNav.farmers'), icon: UsersIcon, count: pendingFarmers },
-      { to: '/admin/customers', label: t('adminNav.customers'), icon: UsersIcon },
+      { to: ADMIN_CUSTOMERS_PATH, label: t('adminNav.customers'), icon: UsersIcon },
     ],
   },
   {
     heading: t('adminNav.marketplace'),
     items: [
-      { to: '/admin/markets', label: t('adminNav.markets'), icon: StoreIcon },
-      { to: '/admin/moderation', label: t('adminNav.moderation'), icon: ShieldIcon },
+      { to: ADMIN_MARKETS_PATH, label: t('adminNav.markets'), icon: StoreIcon },
+      { to: ADMIN_MODERATION_PATH, label: t('adminNav.moderation'), icon: ShieldIcon },
     ],
   },
   {
     heading: t('adminNav.platform'),
     items: [
-      { to: '/admin/categories', label: t('adminNav.categories'), icon: TagIcon },
-      { to: '/admin/announcements', label: t('adminNav.announcements'), icon: MegaphoneIcon },
-      { to: '/admin/feedback', label: t('adminNav.feedback'), icon: ChatIcon },
-      { to: '/admin/pricing', label: t('adminNav.pricing'), icon: TagIcon },
+      { to: ADMIN_CATEGORIES_PATH, label: t('adminNav.categories'), icon: TagIcon },
+      { to: ADMIN_ANNOUNCEMENTS_PATH, label: t('adminNav.announcements'), icon: MegaphoneIcon },
+      { to: ADMIN_FEEDBACK_PATH, label: t('adminNav.feedback'), icon: ChatIcon },
+      { to: ADMIN_PRICING_PATH, label: t('adminNav.pricing'), icon: TagIcon },
       { to: ADMIN_SETTINGS_PATH, label: t('adminNav.settings'), icon: SlidersIcon },
+      { to: ADMIN_ACCOUNT_PATH, label: t('adminNav.account'), icon: UsersIcon },
       // FR-008: bật / tắt xác thực hai bước
       { to: ADMIN_SECURITY_PATH, label: t('admin.security'), icon: LockIcon },
     ],
@@ -111,7 +123,7 @@ const AdminLayout = () => {
       onSignOut={logout}
       searchId="admin-appq"
       searchPlaceholder={t('adminNav.searchPlaceholder')}
-      accountTo={ADMIN_SECURITY_PATH}
+      accountTo={ADMIN_ACCOUNT_PATH}
       className="bg-surface-quiet"
     />
   );

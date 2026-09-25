@@ -1,9 +1,61 @@
 {
-  "overline": "Khu vực admin",
-  "hello": "Xin chào, {{name}}",
-  "fallbackName": "admin",
-  "empty": {
-    "title": "Bảng điều khiển đang được xây dựng",
-    "text": "Tổng số nhà vườn, khách hàng, chợ và đơn hàng sẽ hiện ở đây khi bảng điều khiển admin hoàn thành."
+  "overline": "Nền tảng · {{year}}",
+  "title": "MarketLink hôm nay",
+  "vs": "so với {{month}}",
+  "tilesNote": "{{now}} tính đến hiện tại, đặt cạnh {{prev}}. Bấm vào ô nào cũng mở được chi tiết đằng sau con số đó.",
+  "kpi": {
+    "farmers": "Nhà vườn",
+    "farmersNote": "{{waiting}} chờ duyệt · {{suspended}} đang tạm ngưng",
+    "farmersLink": "Xét duyệt đơn đăng ký",
+    "customers": "Khách hàng",
+    "customersNote": "{{count}} người mới trong tháng này",
+    "customersLink": "Mở danh sách khách hàng",
+    "markets": "Chợ",
+    "marketsNote": "tất cả đang hoạt động",
+    "marketsLink": "Mở danh sách chợ",
+    "orders": "Đơn hàng",
+    "ordersNote": "{{week}} trong tuần này · {{total}} đã hoàn tất",
+    "ordersLink": "Mở danh sách đơn hàng"
+  },
+  "revenue": {
+    "title": "Doanh thu theo ngày",
+    "note": "Đơn đã hoàn tất, đơn vị triệu ₫. {{now}} so với {{prev}}.",
+    "caption": "Doanh thu theo ngày của {{now}} so với {{prev}}, đơn vị triệu đồng",
+    "axis": "Ngày trong tháng",
+    "reports": "Xem báo cáo đầy đủ"
+  },
+  "attention": {
+    "title": "Cần xử lý",
+    "farmers_one": "đơn đăng ký nhà vườn đang chờ",
+    "farmers_other": "đơn đăng ký nhà vườn đang chờ",
+    "reported_one": "đánh giá bị sạp báo cáo",
+    "reported_other": "đánh giá bị sạp báo cáo",
+    "feedback_one": "góp ý chưa xử lý",
+    "feedback_other": "góp ý chưa xử lý, trong đó có một lỗi",
+    "announcements_one": "thông báo đang chạy, Thảo Điền nghỉ ngày 04/10",
+    "announcements_other": "thông báo đang chạy"
+  },
+  "earned": {
+    "title": "MarketLink thu được",
+    "link": "Báo cáo doanh thu",
+    "note": "{{month}}, từ tiền sạp mua vị trí hiển thị. Tách bạch với tiền các chợ thu về.",
+    "of": "₫ · bằng {{pct}}% của {{gmv}} mà các chợ thu được"
+  },
+  "byMarket": {
+    "title": "Đơn hàng tuần này theo chợ",
+    "link": "Tất cả đơn hàng",
+    "suffix": "đơn"
+  },
+  "latest": {
+    "title": "Đơn hàng mới nhất trên toàn sàn",
+    "readOnly": "Chỉ xem. Quản trị viên không đổi trạng thái đơn."
+  },
+  "col": {
+    "order": "Đơn hàng",
+    "stall": "Sạp",
+    "market": "Chợ",
+    "pickup": "Nhận hàng",
+    "total": "Tổng tiền",
+    "status": "Trạng thái"
   }
 }

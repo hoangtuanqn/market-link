@@ -1,0 +1,46 @@
+{
+  "title": "Kundschaft",
+  "intro": "Sperre ein Konto bei einem Regelverstoß; es kann sich dann nicht mehr anmelden und nichts mehr bestellen. Gib es wieder frei, sobald die Sache geklärt ist. Frühere Bestellungen bleiben bei den Ständen.",
+  "search": {
+    "label": "Kundschaft suchen",
+    "placeholder": "Name, E-Mail oder Telefon",
+    "submit": "Suchen"
+  },
+  "filterLabel": "Kundschaft filtern",
+  "filter": {
+    "all": "Alle",
+    "active": "Aktiv",
+    "inactive": "Gesperrt",
+    "joinedThisMonth": "Diesen Monat dazugekommen"
+  },
+  "status": {
+    "active": "Aktiv",
+    "inactive": "Gesperrt"
+  },
+  "col": {
+    "customer": "Kundschaft",
+    "joined": "Angemeldet",
+    "orders": "Bestellungen",
+    "status": "Status"
+  },
+  "action": {
+    "deactivate": "Sperren",
+    "reactivate": "Freigeben"
+  },
+  "showing": "{{from}}–{{to}} von {{total}}",
+  "empty": {
+    "title": "Noch keine Kundschaft",
+    "text": "Konten erscheinen hier, sobald sich Leute bei MarketLink anmelden."
+  },
+  "deactivate": {
+    "title": "{{name}} sperren?",
+    "text": "Die Person wird überall abgemeldet und kann sich weder anmelden noch bestellen. Bereits aufgegebene Bestellungen bleiben bei den Ständen.",
+    "reason": "Grund, bleibt am Konto vermerkt",
+    "keep": "Aktiv lassen",
+    "confirm": "Konto sperren"
+  },
+  "toast": {
+    "deactivated": "{{name}} gesperrt.",
+    "reactivated": "{{name}} kann sich wieder anmelden."
+  }
+}

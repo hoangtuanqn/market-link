@@ -1,0 +1,78 @@
+{
+  "title": "Plattformumsatz",
+  "intro": "Was MarketLink selbst verdient und von welchen Ständen. Das ist eine andere Zahl als das Geld, das die Märkte einnehmen, und die beiden werden nie addiert.",
+  "days_one": "{{count}} Tag",
+  "days_other": "{{count}} Tage",
+  "points": " Punkte",
+  "action": {
+    "pricing": "Preise & Freikontingente"
+  },
+  "export": {
+    "button": "Zeitraum exportieren",
+    "title": "Export gestartet",
+    "text": "Die CSV-Datei umfasst den Zeitraum auf dem Bildschirm."
+  },
+  "scope": {
+    "title": "Erzeugern etwas zu berechnen steht nicht im SRS.",
+    "text": "Alles auf diesem Bildschirm beruht auf einem Erlösmodell, das die Anforderungen nicht beschreiben, und auf Geld, das die Plattform noch gar nicht einnehmen kann."
+  },
+  "kpi": {
+    "revenue": "Plattformumsatz",
+    "revenueNote": "₫, die MarketLink verdient hat",
+    "takeRate": "Anteilsquote",
+    "takeRateNote": "von dem, was die Märkte eingenommen haben",
+    "payingStalls": "Zahlende Stände",
+    "ofTotal": "{{count}} von {{total}}",
+    "payingStallsNote": "die übrigen verkaufen kostenlos",
+    "average": "Durchschnitt je zahlendem Stand",
+    "averageNote": "₫ im Zeitraum"
+  },
+  "gmv": {
+    "title": "Die Märkte haben im {{month}} {{gmv}} eingenommen. MarketLink rührt davon nichts an.",
+    "text": "Die Kundschaft zahlt bei der Abholung bar am Stand. Die {{total}} oben sind das, was Stände MarketLink für Platzierung gezahlt haben, also {{pct}} % der Marktsumme."
+  },
+  "axis": {
+    "dayOfMonth": "Tag des Monats",
+    "source": "Quelle"
+  },
+  "perDay": {
+    "title": "Einnahmen pro Tag",
+    "note": "In Tausend ₫. Die Einnahmen sind ungleichmäßig, weil eine Hervorhebung an einem Tag gekauft wird und mehrere Tage läuft.",
+    "caption": "Plattformumsatz pro Tag im {{now}} gegen {{prev}}, in Tausend Dong"
+  },
+  "sources": {
+    "title": "Woher es kam",
+    "note": "{{count}} Quellen, die zusammen die Summe des Zeitraums ergeben",
+    "share": "Anteil am Zeitraum",
+    "against": "Gegen {{prev}}",
+    "caption": "Jede Umsatzquelle im {{now}} gegen {{prev}}, in Tausend Dong"
+  },
+  "whoPays": {
+    "title": "Wer zahlt",
+    "note": "{{paying}} von {{total}} freigegebenen Ständen haben im {{month}} etwas gezahlt",
+    "free": "Drei Stände haben nichts gezahlt und trotzdem verkauft. Genau so ist es gedacht: Einstellen und Verkaufen sind kostenlos, bezahlt wird nur für Platzierung."
+  },
+  "credit": {
+    "title": "Guthaben",
+    "bought": "Gekauftes Guthaben",
+    "boughtNote": "₫ im Zeitraum aufgeladen",
+    "spent": "Verbrauchtes Guthaben",
+    "spentNote": "₫, also der Umsatz oben",
+    "unspent": "Noch nicht verbraucht",
+    "unspentNote": "₫ bei {{count}} Ständen",
+    "owed": "Als Platzierung geschuldet",
+    "owedNote": "₫ an Hervorhebungen und Anzeigen, die noch nicht genutzt sind",
+    "note": "Stände laden beim Team auf, ein Administrator trägt das Guthaben ein, und es wird beim Bewerben nach und nach verbraucht. Bereits eingenommenes, aber noch nicht verbrauchtes Geld ist das, was die Plattform noch an Platzierung schuldet."
+  },
+  "col": {
+    "source": "Quelle",
+    "whatWasSold": "Was verkauft wurde",
+    "stalls": "Stände",
+    "change": "Veränderung",
+    "share": "Anteil",
+    "stall": "Stand",
+    "completedOrders": "Abgeschlossene Bestellungen",
+    "paidMarketLink": "An MarketLink gezahlt",
+    "shareOfRevenue": "Umsatzanteil"
+  }
+}

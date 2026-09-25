@@ -1,0 +1,78 @@
+{
+  "title": "Ingresos de la plataforma",
+  "intro": "Lo que gana MarketLink por su cuenta, y de qué puestos. Es una cifra distinta del dinero que recaudan los mercados, y las dos nunca se suman.",
+  "days_one": "{{count}} día",
+  "days_other": "{{count}} días",
+  "points": " puntos",
+  "action": {
+    "pricing": "Precios y cupos"
+  },
+  "export": {
+    "button": "Exportar el periodo",
+    "title": "Exportación iniciada",
+    "text": "El CSV recoge el periodo que se ve en pantalla."
+  },
+  "scope": {
+    "title": "Cobrar a los productores no está en el SRS.",
+    "text": "Todo en esta pantalla depende de un modelo de ingresos que los requisitos no describen, y de dinero que la plataforma todavía no puede cobrar."
+  },
+  "kpi": {
+    "revenue": "Ingresos de la plataforma",
+    "revenueNote": "₫ ganados por MarketLink",
+    "takeRate": "Tasa de comisión",
+    "takeRateNote": "de lo que recaudaron los mercados",
+    "payingStalls": "Puestos que pagan",
+    "ofTotal": "{{count}} de {{total}}",
+    "payingStallsNote": "el resto vende gratis",
+    "average": "Media por puesto que paga",
+    "averageNote": "₫ en el periodo"
+  },
+  "gmv": {
+    "title": "Los mercados recaudaron {{gmv}} en {{month}}. MarketLink no lo toca nunca.",
+    "text": "Los clientes pagan a su puesto en efectivo al recoger. Los {{total}} de arriba son lo que los puestos pagaron a MarketLink por visibilidad, un {{pct}} % del total de los mercados."
+  },
+  "axis": {
+    "dayOfMonth": "Día del mes",
+    "source": "Origen"
+  },
+  "perDay": {
+    "title": "Ingresado por día",
+    "note": "En miles de ₫. El ingreso es irregular porque un destacado se compra un día y dura varios.",
+    "caption": "Ingresos de la plataforma por día en {{now}} frente a {{prev}}, en miles de dongs"
+  },
+  "sources": {
+    "title": "De dónde vino",
+    "note": "{{count}} orígenes, que suman el total del periodo",
+    "share": "Peso en el periodo",
+    "against": "Frente a {{prev}}",
+    "caption": "Cada origen de ingresos en {{now}} frente a {{prev}}, en miles de dongs"
+  },
+  "whoPays": {
+    "title": "Quién paga",
+    "note": "{{paying}} de {{total}} puestos aprobados pagaron algo en {{month}}",
+    "free": "Tres puestos no pagaron nada y vendieron igual. Así está pensado: publicar y vender es gratis, y pagar solo compra visibilidad."
+  },
+  "credit": {
+    "title": "Crédito",
+    "bought": "Crédito comprado",
+    "boughtNote": "₫ recargados en el periodo",
+    "spent": "Crédito gastado",
+    "spentNote": "₫, que son los ingresos de arriba",
+    "unspent": "Todavía sin gastar",
+    "unspentNote": "₫ en manos de {{count}} puestos",
+    "owed": "Debido en visibilidad",
+    "owedNote": "₫ de destacados y publicaciones aún sin usar",
+    "note": "Los puestos recargan con el equipo, un administrador introduce el crédito y se va gastando a medida que promocionan. El dinero ya cobrado pero sin gastar es lo que la plataforma aún debe en visibilidad."
+  },
+  "col": {
+    "source": "Origen",
+    "whatWasSold": "Qué se vendió",
+    "stalls": "Puestos",
+    "change": "Variación",
+    "share": "Peso",
+    "stall": "Puesto",
+    "completedOrders": "Pedidos completados",
+    "paidMarketLink": "Pagado a MarketLink",
+    "shareOfRevenue": "Peso en los ingresos"
+  }
+}

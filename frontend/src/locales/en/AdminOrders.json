@@ -1,0 +1,58 @@
+{
+  "title": "Orders",
+  "intro": "Every order on MarketLink, across the four markets. Admins read these; only the stall moves an order through its states.",
+  "days_one": "{{count}} day",
+  "days_other": "{{count}} days",
+  "export": {
+    "button": "Export the period",
+    "title": "Export started",
+    "text": "The CSV covers the period and filters on screen."
+  },
+  "kpi": {
+    "placed": "Orders placed",
+    "placedNote": "across {{count}} markets",
+    "completed": "Completed",
+    "declined": "Declined by a stall",
+    "cancelled": "Cancelled by a customer",
+    "cancelledNote": "all before the cutoff",
+    "share": "{{pct}}% of the period"
+  },
+  "perDay": {
+    "title": "Orders placed per day",
+    "note": "{{now}} against {{prev}}, the same 30 days.",
+    "caption": "Orders placed per day in {{now}} against {{prev}}",
+    "axis": "Day of the month"
+  },
+  "byStatus": {
+    "title": "Where they ended up",
+    "note": "Every state carries its own word and glyph, so the rows are told apart by more than the bar."
+  },
+  "byMarket": {
+    "title": "By market"
+  },
+  "list": {
+    "title": "The orders",
+    "inPeriod": "{{count}} in {{month}}",
+    "filterLabel": "Filter orders by state",
+    "market": "Market",
+    "allMarkets": "All markets",
+    "showing": "Showing {{from}}–{{to}} of {{total}}"
+  },
+  "filter": {
+    "all": "All",
+    "completed": "Completed",
+    "open": "Open",
+    "declined": "Declined",
+    "cancelled": "Cancelled"
+  },
+  "customerNo": "Customer #{{n}}",
+  "col": {
+    "order": "Order",
+    "customer": "Customer",
+    "stall": "Stall",
+    "market": "Market",
+    "pickup": "Pickup",
+    "total": "Total",
+    "status": "Status"
+  }
+}

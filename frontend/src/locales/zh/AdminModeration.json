@@ -1,0 +1,72 @@
+{
+  "title": "内容审核",
+  "intro": "隐藏违反规范的商品或评价。被隐藏的内容连同原因一起留在数据库里；发布者会收到通知。",
+  "tabsLabel": "审核队列",
+  "tab": {
+    "reviews": "评价",
+    "products": "商品",
+    "hidden": "已隐藏"
+  },
+  "reviewFilterLabel": "筛选评价",
+  "reviewFilter": {
+    "reported": "被举报",
+    "lowRated": "1 或 2 星",
+    "newest": "最新"
+  },
+  "report": {
+    "title": "{{by}} 于 {{date}} 举报：「{{quote}}」",
+    "text": "隐藏后它会从商品页和摊位页消失。顾客会知道原因。"
+  },
+  "recentlyListed": "最近上架的商品",
+  "search": {
+    "label": "搜索商品",
+    "placeholder": "商品或摊位",
+    "submit": "搜索"
+  },
+  "col": {
+    "product": "商品",
+    "price": "价格",
+    "description": "描述",
+    "item": "内容",
+    "owner": "发布者",
+    "reason": "原因",
+    "hiddenOn": "隐藏日期"
+  },
+  "action": {
+    "view": "查看",
+    "hideReview": "隐藏评价",
+    "hideListing": "隐藏商品",
+    "keepVisible": "保持显示",
+    "customerAccount": "顾客账号",
+    "unhide": "取消隐藏",
+    "unhidden": "内容已重新显示。",
+    "dismissed": "已忽略举报。评价继续显示。"
+  },
+  "hide": {
+    "title": {
+      "review": "隐藏这条评价？",
+      "listing": "隐藏这个商品？"
+    },
+    "text": {
+      "review": "它会立刻从顾客页面消失。顾客会收到通知，也可以联系团队。",
+      "listing": "它会立刻从顾客页面消失。摊位会收到通知，也可以联系团队。"
+    },
+    "confirm": {
+      "review": "隐藏评价",
+      "listing": "隐藏商品"
+    },
+    "reason": "原因",
+    "done": "已隐藏。发布者已收到通知。"
+  },
+  "reason": {
+    "advertising": "广告或引导站外联系",
+    "abusive": "侮辱性言语",
+    "offTopic": "与商品或摊位无关",
+    "claim": "宣称疗效或认证",
+    "other": "其他原因"
+  },
+  "empty": {
+    "title": "没有需要审核的内容",
+    "text": "被举报的商品和评价会来到这里，供你先读一遍再决定是否隐藏。"
+  }
+}

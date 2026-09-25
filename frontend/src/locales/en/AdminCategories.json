@@ -1,0 +1,100 @@
+{
+  "overline": "Settings",
+  "title": "Categories & units",
+  "intro": "The two lists every stall picks from when it adds a product. Categories are yours to set. Units are yours to curate, but a stall can always name its own when nothing here fits.",
+  "link": {
+    "announcements": "Announcements",
+    "feedback": "Feedback inbox"
+  },
+  "tabsLabel": "Master data",
+  "tab": {
+    "categories": "Categories",
+    "units": "Units"
+  },
+  "caption": {
+    "categories_one": "{{count}} category",
+    "categories_other": "{{count}} categories",
+    "units_one": "{{count}} unit",
+    "units_other": "{{count}} units"
+  },
+  "col": {
+    "category": "Category",
+    "products": "Products",
+    "stalls": "Stalls",
+    "nameOf": "Name of {{name}}",
+    "oneOfThem": "One of them",
+    "moreThanOne": "More than one",
+    "pluralOf": "Plural of {{name}}",
+    "kind": "Kind",
+    "readsAs": "Reads as"
+  },
+  "kind": {
+    "Weight": "Weight",
+    "Volume": "Volume",
+    "Count": "Count",
+    "Pack": "Pack"
+  },
+  "addedBy": "added by {{by}}",
+  "action": {
+    "save": "Save",
+    "remove": "Remove",
+    "addToPicker": "Add to picker",
+    "merge": "Merge"
+  },
+  "categoryForm": {
+    "title": "Add a category",
+    "name": "Name",
+    "namePlaceholder": "e.g. Seafood",
+    "nameHint": "In English, sentence case. Hand-lettered on a product tag that has no photo.",
+    "position": "Position in the filter",
+    "submit": "Add category"
+  },
+  "unitNote": {
+    "title": "Two of these units were typed by a stall, not by you.",
+    "text": "A stall names its own unit when nothing in the picker fits. Promote the ones that catch on, merge the duplicates, and leave the rest alone."
+  },
+  "unitsNote": "A unit is kept as text on the product, so a stall is never blocked by this list. What you curate here is what appears in the picker, and which spellings get merged so reports do not split “bag” from “Bag”.",
+  "unitForm": {
+    "title": "Add a unit",
+    "one": "One of them",
+    "many": "More than one",
+    "manyHint": "English has no rule for this, so it is typed rather than guessed.",
+    "kind": "Kind",
+    "preview": "How it will read",
+    "previewFallback": "unit",
+    "onTheTag": "on the tag",
+    "left": "left",
+    "submit": "Add unit"
+  },
+  "removeCategory": {
+    "title": "Remove {{name}}?",
+    "textUsed_one": "{{count}} product uses it. Choose where it goes.",
+    "textUsed_other": "{{count}} products use it. Choose where they go.",
+    "textUnused": "No products use it.",
+    "moveTo": "Move products to",
+    "keep": "Keep category",
+    "confirm": "Remove category"
+  },
+  "mergeUnit": {
+    "title": "Merge {{name}} into another unit?",
+    "text": "Products using it are rewritten to the unit you choose, and past orders keep the unit they were sold under.",
+    "into": "Merge into",
+    "cancel": "Cancel",
+    "confirm": "Merge"
+  },
+  "empty": {
+    "categories": {
+      "title": "No categories yet",
+      "text": "Add a category and Farmers can file their products under it."
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}} saved.",
+    "categoryAdded": "Category added. Stalls can pick it now.",
+    "categoryRemoved": "{{name}} removed.",
+    "unitSaved": "{{name}} saved.",
+    "unitAdded": "Unit added to the picker.",
+    "promoted": "{{name}} is now in the picker for every stall.",
+    "merged": "Merged. One product was rewritten."
+  }
+}

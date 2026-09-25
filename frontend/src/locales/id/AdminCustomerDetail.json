@@ -1,0 +1,77 @@
+{
+  "allCustomers": "Pelanggan",
+  "since": "Pelanggan sejak {{joined}} · pesanan terakhir {{last}}",
+  "missing": {
+    "title": "Pelanggan itu sudah tidak ada",
+    "text": "Akunnya mungkin sudah dihapus. Buka lagi dari daftar pelanggan."
+  },
+  "action": {
+    "deactivate": "Nonaktifkan akun",
+    "reactivate": "Aktifkan akun"
+  },
+  "banner": {
+    "title": "Dinonaktifkan hari ini.",
+    "text": "Alasan yang tersimpan pada akun: {{reason}}. Pesanan yang sedang berjalan tidak disentuh."
+  },
+  "orders": {
+    "title": "Pesanan",
+    "all": "Semua pesanan di platform",
+    "note": "Admin hanya membacanya. Hanya lapak yang memindahkan status pesanan, jadi di sini tidak ada yang perlu diubah."
+  },
+  "reviews": {
+    "title": "Ulasan yang ditulis",
+    "openInModeration": "Buka di Moderasi",
+    "note": "Menyembunyikan ulasan dilakukan dari Moderasi, di sana laporan yang memicunya juga terlihat."
+  },
+  "timeline": {
+    "title": "Riwayat akun",
+    "created": "Akun dibuat",
+    "firstCollected": "Pesanan pertama diambil",
+    "noShow": "Tidak datang mengambil",
+    "lastOrder": "Pesanan terakhir"
+  },
+  "contact": {
+    "title": "Kontak",
+    "email": "Email",
+    "phone": "Telepon",
+    "address": "Alamat",
+    "joined": "Bergabung"
+  },
+  "habits": {
+    "title": "Cara dia berbelanja",
+    "orders": "Pesanan",
+    "collected": "Sudah diambil",
+    "noShows": "Tidak diambil",
+    "market": "Pasar",
+    "buysMostFrom": "Paling sering beli di"
+  },
+  "whatItDoes": {
+    "title": "Apa yang terjadi saat dinonaktifkan",
+    "text": "Dia tidak bisa masuk atau membuat pesanan baru. Pesanan yang sudah dibuat tidak disentuh, jadi lapak tetap menyerahkan barang yang sudah disisihkan dan tidak ada bahan pangan yang terbuang."
+  },
+  "deactivate": {
+    "title": "Nonaktifkan {{name}}?",
+    "text": "Dia tidak bisa masuk atau memesan sampai admin mengaktifkannya kembali. Pesanan yang sudah dibuat berjalan sampai selesai, jadi tidak ada lapak yang menahan barang yang tak diambil siapa pun.",
+    "reason": "Alasan yang tersimpan pada akun",
+    "keep": "Belum sekarang",
+    "confirm": "Nonaktifkan"
+  },
+  "reason": {
+    "noShows": "Berulang kali tidak datang mengambil",
+    "abusive": "Kata-kata kasar dalam ulasan",
+    "requested": "Meminta akunnya ditutup",
+    "other": "Alasan lain"
+  },
+  "toast": {
+    "deactivated": "{{name}} dinonaktifkan.",
+    "reactivated": "{{name}} bisa masuk lagi."
+  },
+  "col": {
+    "order": "Pesanan",
+    "stall": "Lapak",
+    "pickup": "Pengambilan",
+    "items": "Jumlah barang",
+    "total": "Total",
+    "status": "Status"
+  }
+}

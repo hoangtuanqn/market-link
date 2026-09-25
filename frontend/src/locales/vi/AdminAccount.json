@@ -1,0 +1,46 @@
+{
+  "details": {
+    "title": "Thông tin của bạn",
+    "name": "Họ và tên",
+    "phone": "Điện thoại",
+    "phoneHint": "Dùng khi một sạp cần liên hệ với nền tảng, không hiển thị công khai.",
+    "email": "Email",
+    "emailHint": "Cũng là tài khoản đăng nhập. Cần đổi thì nhờ một quản trị viên khác.",
+    "submit": "Lưu thay đổi",
+    "saving": "Đang lưu…",
+    "saved": "Đã lưu thông tin của bạn.",
+    "failed": "Không lưu được thông tin của bạn.",
+    "errors": {
+      "nameRequired": "Hãy nhập họ tên đầy đủ.",
+      "phoneRequired": "Hãy nhập số điện thoại."
+    }
+  },
+  "password": {
+    "title": "Mật khẩu",
+    "intro": "Tài khoản quản trị duyệt được sạp, khoá được khách hàng và đổi được mức phí của nền tảng, nên hãy giữ mật khẩu này thật mạnh.",
+    "current": "Mật khẩu hiện tại",
+    "new": "Mật khẩu mới",
+    "repeat": "Nhập lại mật khẩu mới",
+    "hint": "Từ {{min}} đến {{max}} ký tự.",
+    "submit": "Đổi mật khẩu",
+    "submitting": "Đang đổi…",
+    "changed": "Đã đổi mật khẩu. Các phiên đăng nhập khác đã bị đăng xuất.",
+    "failed": "Không đổi được mật khẩu.",
+    "errors": {
+      "currentRequired": "Hãy nhập mật khẩu hiện tại.",
+      "newRequired": "Hãy nhập mật khẩu mới.",
+      "length": "Dùng từ {{min}} đến {{max}} ký tự.",
+      "same": "Mật khẩu mới phải khác mật khẩu hiện tại.",
+      "confirmRequired": "Hãy nhập lại mật khẩu mới.",
+      "mismatch": "Hai mật khẩu không khớp nhau."
+    }
+  },
+  "mfa": {
+    "title": "Xác thực hai bước",
+    "intro": "Một bước nữa sau mật khẩu, lấy từ ứng dụng trên điện thoại của bạn. Quản trị viên duyệt được sạp, khoá được khách hàng và đổi được mức phí của nền tảng, nên chỉ một mật khẩu là mỏng.",
+    "on": "Đang bật",
+    "off": "Đang tắt",
+    "turnOn": "Bật xác thực hai bước",
+    "manage": "Quản lý xác thực hai bước"
+  }
+}

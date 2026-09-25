@@ -39,8 +39,11 @@ public class FarmerController extends BaseController {
 
     /**
      * Trạng thái đơn của chính mình; null nếu chưa từng nộp — FE coi là "empty", không phải lỗi.
+     * Customer (chờ duyệt / bị từ chối) và Farmer (đã duyệt / bị đình chỉ) đều cần đọc; Admin xem
+     * qua /admin/farmers nên không mở ở đây.
      */
     @GetMapping("/apply")
+    @PreAuthorize("hasAnyRole('CUSTOMER','FARMER')")
     public ResponseEntity<ApiResource<FarmerProfileResource>> myApplication(
             @AuthenticationPrincipal CustomUserDetails user) {
         FarmerProfileResource profile = farmerService.getMyProfile(user.getId());

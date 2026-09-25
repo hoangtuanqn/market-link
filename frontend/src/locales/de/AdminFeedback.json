@@ -1,0 +1,55 @@
+{
+  "overline": "Einstellungen",
+  "title": "Rückmeldungen",
+  "intro": "Fehlermeldungen, Vorschläge und Fragen aus dem Rückmeldeformular. Setze sie auf beantwortet, wenn du fertig bist.",
+  "link": {
+    "categories": "Kategorien",
+    "announcements": "Hinweise"
+  },
+  "filterLabel": "Rückmeldungen filtern",
+  "filter": {
+    "open": "Offen",
+    "answered": "Beantwortet",
+    "bug": "Fehler",
+    "suggestion": "Vorschlag",
+    "query": "Frage"
+  },
+  "type": {
+    "bug": "Fehlermeldung",
+    "suggestion": "Vorschlag",
+    "query": "Frage"
+  },
+  "status": {
+    "open": "Offen",
+    "answered": "Beantwortet"
+  },
+  "col": {
+    "type": "Art",
+    "message": "Nachricht",
+    "from": "Von",
+    "status": "Status"
+  },
+  "action": {
+    "read": "Lesen",
+    "readAndAnswer": "Lesen und beantworten"
+  },
+  "dialog": {
+    "title": "{{type}} von {{from}}",
+    "sent": "Gesendet am {{date}} · {{state}}",
+    "notAnswered": "noch nicht beantwortet",
+    "alreadyAnswered": "bereits beantwortet",
+    "yourAnswer": "Deine Antwort",
+    "replyPlaceholder": "Danke für den Hinweis…",
+    "close": "Schließen",
+    "send": "Senden und auf beantwortet setzen",
+    "sendAgain": "Erneut senden"
+  },
+  "empty": {
+    "title": "Noch keine Rückmeldungen",
+    "text": "Fehlermeldungen, Vorschläge und Fragen aus dem Rückmeldeformular landen hier."
+  },
+  "toast": {
+    "answered": "Antwort gespeichert und Nachricht auf beantwortet gesetzt.",
+    "markedOnly": "Ohne Antwort auf beantwortet gesetzt."
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "overline": "Einstellungen",
+  "title": "Hinweise",
+  "intro": "Eine Nachricht an die ganze Plattform, sichtbar im grünen Band über der Kopfzeile und in den Benachrichtigungen aller. Immer nur ein aktiver Hinweis, damit er gelesen wird.",
+  "link": {
+    "categories": "Kategorien",
+    "feedback": "Rückmeldungen"
+  },
+  "form": {
+    "title": "Neuer Hinweis",
+    "headline": "Titel",
+    "headlinePlaceholder": "z. B. Der Markt Thủ Đức öffnet ab Oktober um 06:00",
+    "headlineHint": "Eine Zeile, nur der erste Buchstabe groß, keine Ausrufezeichen. Wird handschriftlich dargestellt.",
+    "detail": "Details",
+    "detailPlaceholder": "Ein Satz dazu, was sich für Kundschaft oder Stände ändert.",
+    "showTo": "Anzeigen für",
+    "aboutMarket": "Betrifft Markt",
+    "wholePlatform": "Ganze Plattform",
+    "from": "Anzeigen ab",
+    "to": "Bis",
+    "preview": "Vorschau",
+    "previewTitle": "Hier steht dein Titel",
+    "previewText": "Und hier die Detailzeile, im grünen Band über der Kopfzeile."
+  },
+  "audience": {
+    "Everyone": "Alle",
+    "Customers": "Kundschaft",
+    "Farmers": "Erzeuger"
+  },
+  "list": {
+    "title": "Veröffentlicht und vergangen"
+  },
+  "col": {
+    "announcement": "Hinweis",
+    "showTo": "Anzeigen für",
+    "window": "Zeitraum",
+    "status": "Status"
+  },
+  "status": {
+    "live": "Läuft",
+    "ended": "Beendet"
+  },
+  "action": {
+    "publish": "Veröffentlichen",
+    "saveDraft": "Als Entwurf speichern",
+    "edit": "Bearbeiten",
+    "takeDown": "Zurückziehen",
+    "reuse": "Erneut verwenden"
+  },
+  "empty": {
+    "title": "Keine Hinweise",
+    "text": "Veröffentliche einen, und alle angemeldeten Personen sehen ihn im Band über der Kopfzeile."
+  },
+  "toast": {
+    "published": "Hinweis veröffentlicht. Er läuft jetzt in der Kopfzeile.",
+    "draftSaved": "Als Entwurf gespeichert.",
+    "takenDown": "Hinweis zurückgezogen."
+  }
+}

@@ -77,6 +77,9 @@
     "orderOf": "Pesanan {{index}} dari {{of}}",
     "payAtPickup": "Bayar di lapak saat mengambil"
   },
+  "chart": {
+    "showNumbers": "Lihat angkanya"
+  },
   "chat": {
     "assistant": "Asisten MarketLink",
     "you": "Anda",
@@ -340,6 +343,7 @@
     "feedback": "Masukan",
     "pricing": "Harga",
     "settings": "Pengaturan",
+    "account": "Akun Anda",
     "analytics": "Analitik",
     "people": "Pengguna",
     "marketplace": "Pasar",

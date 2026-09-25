@@ -1,0 +1,75 @@
+{
+  "title": "Berichte",
+  "intro": "Bestellungen und Umsatz auf der ganzen Plattform, nach Markt aufgeteilt, und die Erzeuger, die am meisten verkaufen. Umsatz ist die Summe der abgeschlossenen Bestellungen, gezahlt an die Stände und nicht über MarketLink.",
+  "days_one": "{{count}} Tag",
+  "days_other": "{{count}} Tage",
+  "points": " Punkte",
+  "market": "Markt",
+  "allMarkets": "Alle Märkte",
+  "export": {
+    "button": "Zeitraum exportieren",
+    "title": "Export gestartet",
+    "text": "Die CSV-Datei umfasst den Zeitraum und den Markt auf dem Bildschirm."
+  },
+  "kpi": {
+    "orders": "Bestellungen",
+    "ordersNote": "{{month}}, alle Märkte",
+    "revenue": "Abgeschlossener Umsatz",
+    "revenueNote": "₫, an den Ständen bezahlt",
+    "average": "Durchschnittliche Bestellung",
+    "averageNote": "₫ je abgeschlossener Bestellung",
+    "declineRate": "Ablehnungsquote",
+    "declineNote": "{{declined}} von {{total}} Bestellungen"
+  },
+  "axis": {
+    "dayOfMonth": "Tag des Monats"
+  },
+  "revenueChart": {
+    "title": "Umsatz pro Tag",
+    "note": "Abgeschlossene Bestellungen, in Millionen ₫. {{now}} gegen dieselben 30 Tage im {{prev}}.",
+    "caption": "Umsatz pro Tag im {{now}} gegen {{prev}}, in Millionen Dong"
+  },
+  "ordersChart": {
+    "title": "Bestellungen pro Tag",
+    "note": "Alle Bestellungen, egal in welchem Status sie geendet sind.",
+    "caption": "Bestellungen pro Tag im {{now}} gegen {{prev}}"
+  },
+  "byMarket": {
+    "title": "Umsatz nach Markt",
+    "note": "Eine Größe über vier Märkte, deshalb hat jeder Balken dieselbe Farbe. Die Länge sagt alles."
+  },
+  "byStatus": {
+    "title": "Bestellungen nach Status"
+  },
+  "topFarmers": {
+    "title": "Aktivste Erzeuger",
+    "note": "Nach abgeschlossenen Bestellungen im Zeitraum"
+  },
+  "topProducts": {
+    "title": "Meistverkaufte Produkte",
+    "note": "Jeweils in der Einheit, in der ihr Stand verkauft",
+    "unitsNote": "Mengen werden nur innerhalb einer Einheit addiert. Ein Kilo Pilze und eine Lage Eier sind verschiedene Dinge, deshalb nennt die Plattform nie eine einzelne Gesamtmenge."
+  },
+  "sideBySide": {
+    "title": "Märkte nebeneinander",
+    "note": "Gleicher Zeitraum, mit der Veränderung bei jeder Zahl"
+  },
+  "col": {
+    "stall": "Stand",
+    "markets": "Märkte",
+    "completedOrders": "Abgeschlossene Bestellungen",
+    "revenue": "Umsatz",
+    "productsListed": "Eingestellte Produkte",
+    "rating": "Bewertung",
+    "product": "Produkt",
+    "soldPer": "Verkauft pro",
+    "price": "Preis",
+    "sold": "Verkauft",
+    "market": "Markt",
+    "stalls": "Stände",
+    "orders": "Bestellungen",
+    "change": "Veränderung",
+    "completed": "Abgeschlossen",
+    "declined": "Abgelehnt"
+  }
+}
