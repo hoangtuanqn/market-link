@@ -1,0 +1,77 @@
+{
+  "title": "Pendapatan platform",
+  "intro": "Apa yang diperoleh MarketLink sendiri, dan dari lapak mana saja. Ini angka yang berbeda dari uang yang diterima pasar, dan keduanya tidak pernah dijumlahkan.",
+  "days_other": "{{count}} hari",
+  "points": " poin",
+  "action": {
+    "pricing": "Harga & kuota"
+  },
+  "export": {
+    "button": "Ekspor periode ini",
+    "title": "Ekspor dimulai",
+    "text": "Berkas CSV mencakup periode yang tampil di layar."
+  },
+  "scope": {
+    "title": "Menagih petani tidak ada dalam SRS.",
+    "text": "Semua di layar ini bergantung pada model pendapatan yang tidak dijelaskan dalam dokumen kebutuhan, dan pada uang yang belum bisa diterima platform."
+  },
+  "kpi": {
+    "revenue": "Pendapatan platform",
+    "revenueNote": "₫ yang diperoleh MarketLink",
+    "takeRate": "Rasio ambilan",
+    "takeRateNote": "dari yang diterima pasar",
+    "payingStalls": "Lapak yang membayar",
+    "ofTotal": "{{count}} dari {{total}}",
+    "payingStallsNote": "sisanya berjualan gratis",
+    "average": "Rata-rata per lapak yang membayar",
+    "averageNote": "₫ pada periode ini"
+  },
+  "gmv": {
+    "title": "Pasar menerima {{gmv}} pada {{month}}. MarketLink tidak menyentuhnya sama sekali.",
+    "text": "Pelanggan membayar tunai ke lapak saat mengambil barang. Angka {{total}} di atas adalah yang dibayarkan lapak ke MarketLink untuk penempatan, yaitu {{pct}}% dari total pasar."
+  },
+  "axis": {
+    "dayOfMonth": "Tanggal",
+    "source": "Sumber"
+  },
+  "perDay": {
+    "title": "Diperoleh per hari",
+    "note": "Dalam ribuan ₫. Pemasukan naik turun karena sematan dibeli pada satu hari tapi berjalan beberapa hari.",
+    "caption": "Pendapatan platform per hari pada {{now}} dibanding {{prev}}, dalam ribuan dong"
+  },
+  "sources": {
+    "title": "Dari mana asalnya",
+    "note": "{{count}} sumber, yang jumlahnya menjadi total periode ini",
+    "share": "Porsi pada periode ini",
+    "against": "Dibanding {{prev}}",
+    "caption": "Tiap sumber pendapatan pada {{now}} dibanding {{prev}}, dalam ribuan dong"
+  },
+  "whoPays": {
+    "title": "Siapa yang membayar",
+    "note": "{{paying}} dari {{total}} lapak yang disetujui membayar sesuatu pada {{month}}",
+    "free": "Tiga lapak tidak membayar apa pun dan tetap berjualan. Memang begitu rancangannya: memasang iklan dan berjualan itu gratis, membayar hanya membeli penempatan."
+  },
+  "credit": {
+    "title": "Kredit",
+    "bought": "Kredit yang dibeli",
+    "boughtNote": "₫ yang diisikan pada periode ini",
+    "spent": "Kredit yang terpakai",
+    "spentNote": "₫, yaitu pendapatan di atas",
+    "unspent": "Belum terpakai",
+    "unspentNote": "₫ yang dipegang {{count}} lapak",
+    "owed": "Terutang sebagai penempatan",
+    "owedNote": "₫ sematan dan iklan yang belum dipakai",
+    "note": "Lapak mengisi kredit lewat tim, admin memasukkannya, lalu terpakai seiring mereka berpromosi. Uang yang sudah diterima tapi belum terpakai adalah yang masih terutang platform dalam bentuk penempatan."
+  },
+  "col": {
+    "source": "Sumber",
+    "whatWasSold": "Apa yang terjual",
+    "stalls": "Lapak",
+    "change": "Perubahan",
+    "share": "Porsi",
+    "stall": "Lapak",
+    "completedOrders": "Pesanan selesai",
+    "paidMarketLink": "Dibayar ke MarketLink",
+    "shareOfRevenue": "Porsi pendapatan"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "title": "Precios y cupos",
+  "intro": "Lo que un puesto tiene gratis y lo que paga por pasar de ahí. Un cambio aquí llega a todos los puestos al empezar el día siguiente, y se les avisa con una semana antes de cualquier subida.",
+  "days_one": "{{count}} día",
+  "days_other": "{{count}} días",
+  "action": {
+    "seeEarned": "Ver lo que ha dado",
+    "adjustAll": "Ajustar todos los precios",
+    "save": "Guardar precios"
+  },
+  "scope": {
+    "title": "Cobrar a los productores no está en el SRS.",
+    "text": "El SRS descarta una pasarela de pago. Hasta que esto se resuelva, el crédito se acuerda fuera de la plataforma y lo introduce aquí un administrador."
+  },
+  "kpi": {
+    "revenue": "Ingresos por promoción",
+    "revenueNote": "₫ en el periodo",
+    "revenueLink": "Abrir el informe de ingresos",
+    "paying": "Puestos que pagaron",
+    "payingNote": "de {{total}} puestos aprobados",
+    "pinnedDays": "Días destacados vendidos",
+    "pinnedDaysNote": "de {{total}} disponibles",
+    "overLimit": "Puestos por encima del cupo gratis",
+    "overLimitNote": "en un día normal"
+  },
+  "set": {
+    "title": "Moneda y redondeo",
+    "currency": {
+      "title": "Moneda en la que se cobra a los puestos",
+      "text": "Los clientes siempre pagan en efectivo en el puesto, así que esto es solo lo que la plataforma factura a un productor."
+    },
+    "rounding": {
+      "title": "Redondear los precios a",
+      "text": "Mantiene las cifras legibles en una pantalla pequeña."
+    },
+    "notice": {
+      "title": "Aviso antes de una subida",
+      "text": "Cuánto tiempo ven los puestos un precio nuevo antes de que se aplique."
+    }
+  },
+  "currency": {
+    "dong": "₫ Dong vietnamita",
+    "usd": "$ Dólar estadounidense",
+    "eur": "€ Euro"
+  },
+  "rounding": {
+    "thousand": "A los 1.000 ₫ más cercanos",
+    "fiveHundred": "A los 500 ₫ más cercanos",
+    "none": "Sin redondeo"
+  },
+  "free": {
+    "title": "Cupo gratuito",
+    "text": "Todo puesto aprobado tiene esto sin pagar. Ponlo lo bastante alto para que un productor pequeño nunca tenga que pagar.",
+    "listings": "Publicaciones nuevas al día",
+    "listingsHint": "Cô Tư Garden publica 3 en un día movido.",
+    "bumps": "Reactivaciones al mes"
+  },
+  "prices": {
+    "title": "Precios",
+    "note": "Un día destacado en la página de un mercado ronda el 7 % de lo que un puesto recauda en una mañana de mercado. Ten presente esa proporción al cambiar estas cifras."
+  },
+  "pins": {
+    "title": "Espacios destacados",
+    "note": "La escasez es el producto. Subir estos números da más hoy y hace que cada página se parezca más a un anuncio."
+  },
+  "earned": {
+    "title": "Lo que ha dado esto",
+    "note": "Los totales y el reparto por puesto están en el informe de ingresos."
+  },
+  "col": {
+    "whatStallBuys": "Qué compra un puesto",
+    "priceInDong": "Precio en ₫",
+    "priceOf": "Precio de {{name}}",
+    "soldInPeriod": "Vendido en el periodo",
+    "earned": "Ingresado",
+    "where": "Dónde",
+    "slotsAtOnce": "Espacios a la vez",
+    "slotsOf": "Espacios a la vez de {{name}}",
+    "days_one": "{{count}} día",
+    "days_other": "{{count}} días",
+    "priceForDays_one": "{{name}}, {{count}} día",
+    "priceForDays_other": "{{name}}, {{count}} días"
+  },
+  "lastChanged": "Última modificación el {{date}} por {{by}}.",
+  "adjust": {
+    "title": "¿Ajustar todos los precios a la vez?",
+    "text": "Mueve cada precio el mismo porcentaje y redondea a los 1.000 ₫ más cercanos. Úsalo para la inflación, no para cambiar de estrategia.",
+    "changeBy": "Variar un",
+    "changeByHint": "Por ciento. Un número negativo los baja.",
+    "when": "Entra en vigor",
+    "whenNotice": "Dentro de 7 días, tras avisar a los puestos",
+    "whenNextMonth": "Al empezar el mes que viene",
+    "example": "Un día destacado en la página de un mercado pasaría de {{from}} a {{to}}.",
+    "cancel": "Cancelar",
+    "confirm": "Aplicar a todos los precios"
+  },
+  "toast": {
+    "saved": "Precios guardados. Se avisará a los puestos una semana antes de que se apliquen.",
+    "adjusted": "Todos los precios han variado un {{pct}} %. Se avisa hoy a los puestos y se aplica dentro de 7 días."
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "title": "Revenus de la plateforme",
+  "intro": "Ce que MarketLink gagne pour son propre compte, et auprès de quels étals. C'est un chiffre distinct de l'argent encaissé par les marchés, et les deux ne s'additionnent jamais.",
+  "days_one": "{{count}} jour",
+  "days_many": "{{count}} jours",
+  "days_other": "{{count}} jours",
+  "points": " points",
+  "action": {
+    "pricing": "Tarifs et quotas"
+  },
+  "export": {
+    "button": "Exporter la période",
+    "title": "Export lancé",
+    "text": "Le CSV reprend la période affichée."
+  },
+  "scope": {
+    "title": "Facturer les producteurs ne figure pas dans le SRS.",
+    "text": "Tout sur cet écran repose sur un modèle de revenus que les exigences ne décrivent pas, et sur de l'argent que la plateforme ne peut pas encore encaisser."
+  },
+  "kpi": {
+    "revenue": "Revenus de la plateforme",
+    "revenueNote": "₫ gagnés par MarketLink",
+    "takeRate": "Taux de prélèvement",
+    "takeRateNote": "de ce qu'ont encaissé les marchés",
+    "payingStalls": "Étals payants",
+    "ofTotal": "{{count}} sur {{total}}",
+    "payingStallsNote": "les autres vendent gratuitement",
+    "average": "Moyenne par étal payant",
+    "averageNote": "₫ sur la période"
+  },
+  "gmv": {
+    "title": "Les marchés ont encaissé {{gmv}} en {{month}}. MarketLink n'y touche jamais.",
+    "text": "Les clients paient leur étal en espèces au retrait. Les {{total}} ci-dessus sont ce que les étals ont versé à MarketLink pour de la visibilité, soit {{pct}} % du total des marchés."
+  },
+  "axis": {
+    "dayOfMonth": "Jour du mois",
+    "source": "Source"
+  },
+  "perDay": {
+    "title": "Gagné par jour",
+    "note": "En milliers de ₫. Les recettes sont irrégulières : une mise en avant s'achète un jour et court sur plusieurs.",
+    "caption": "Revenus de la plateforme par jour en {{now}} face à {{prev}}, en milliers de dongs"
+  },
+  "sources": {
+    "title": "D'où cela vient",
+    "note": "{{count}} sources, dont la somme fait le total de la période",
+    "share": "Part de la période",
+    "against": "Face à {{prev}}",
+    "caption": "Chaque source de revenus en {{now}} face à {{prev}}, en milliers de dongs"
+  },
+  "whoPays": {
+    "title": "Qui paie",
+    "note": "{{paying}} étals approuvés sur {{total}} ont payé quelque chose en {{month}}",
+    "free": "Trois étals n'ont rien payé et ont vendu quand même. C'est voulu : publier et vendre sont gratuits, et payer n'achète que de la visibilité."
+  },
+  "credit": {
+    "title": "Crédit",
+    "bought": "Crédit acheté",
+    "boughtNote": "₫ rechargés sur la période",
+    "spent": "Crédit dépensé",
+    "spentNote": "₫, c'est-à-dire les revenus ci-dessus",
+    "unspent": "Encore non dépensé",
+    "unspentNote": "₫ détenus par {{count}} étals",
+    "owed": "Dû en visibilité",
+    "owedNote": "₫ de mises en avant et de fiches pas encore utilisées",
+    "note": "Les étals rechargent auprès de l'équipe, un administrateur saisit le crédit, et il se consomme au fil de leurs promotions. L'argent déjà encaissé mais pas encore dépensé est ce que la plateforme doit encore en visibilité."
+  },
+  "col": {
+    "source": "Source",
+    "whatWasSold": "Ce qui a été vendu",
+    "stalls": "Étals",
+    "change": "Évolution",
+    "share": "Part",
+    "stall": "Étal",
+    "completedOrders": "Commandes terminées",
+    "paidMarketLink": "Versé à MarketLink",
+    "shareOfRevenue": "Part des revenus"
+  }
+}

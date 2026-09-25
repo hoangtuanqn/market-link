@@ -1,0 +1,101 @@
+{
+  "title": "Preise & Freikontingente",
+  "intro": "Was ein Stand kostenlos bekommt und was er zahlt, wenn er darüber hinausgeht. Eine Änderung hier greift bei allen Ständen ab dem nächsten Tagesbeginn, und vor jeder Erhöhung werden die Stände eine Woche vorher informiert.",
+  "days_one": "{{count}} Tag",
+  "days_other": "{{count}} Tage",
+  "action": {
+    "seeEarned": "Einnahmen ansehen",
+    "adjustAll": "Alle Preise anpassen",
+    "save": "Preise speichern"
+  },
+  "scope": {
+    "title": "Erzeugern etwas zu berechnen steht nicht im SRS.",
+    "text": "Das SRS schließt ein Zahlungsgateway aus. Bis das geklärt ist, wird Guthaben außerhalb der Plattform vereinbart und hier von einem Administrator eingetragen."
+  },
+  "kpi": {
+    "revenue": "Einnahmen aus Platzierung",
+    "revenueNote": "₫ im Zeitraum",
+    "revenueLink": "Umsatzbericht öffnen",
+    "paying": "Stände, die gezahlt haben",
+    "payingNote": "von {{total}} freigegebenen Ständen",
+    "pinnedDays": "Verkaufte Hervorhebungstage",
+    "pinnedDaysNote": "von {{total}} verfügbaren",
+    "overLimit": "Stände über dem Freikontingent",
+    "overLimitNote": "an einem normalen Tag"
+  },
+  "set": {
+    "title": "Währung und Rundung",
+    "currency": {
+      "title": "Währung, in der Ständen berechnet wird",
+      "text": "Die Kundschaft zahlt immer bar am Stand, hier geht es also nur um das, was die Plattform einem Erzeuger in Rechnung stellt."
+    },
+    "rounding": {
+      "title": "Preise runden auf",
+      "text": "Hält die Zahlen auch auf kleinen Bildschirmen lesbar."
+    },
+    "notice": {
+      "title": "Vorlauf vor einer Erhöhung",
+      "text": "Wie lange Stände einen neuen Preis sehen, bevor er gilt."
+    }
+  },
+  "currency": {
+    "dong": "₫ Vietnamesischer Dong",
+    "usd": "$ US-Dollar",
+    "eur": "€ Euro"
+  },
+  "rounding": {
+    "thousand": "Auf volle 1.000 ₫",
+    "fiveHundred": "Auf volle 500 ₫",
+    "none": "Keine Rundung"
+  },
+  "free": {
+    "title": "Freikontingent",
+    "text": "Jeder freigegebene Stand bekommt das kostenlos. Setze es hoch genug an, damit ein kleiner Betrieb nie zahlen muss.",
+    "listings": "Neue Anzeigen pro Tag",
+    "listingsHint": "Cô Tư Garden stellt an einem vollen Tag 3 ein.",
+    "bumps": "Hervorhebungen pro Monat"
+  },
+  "prices": {
+    "title": "Preise",
+    "note": "Ein Tag Hervorhebung auf einer Marktseite entspricht etwa 7 % dessen, was ein Stand an einem Marktmorgen einnimmt. Behalte dieses Verhältnis im Blick, wenn du diese Zahlen änderst."
+  },
+  "pins": {
+    "title": "Hervorgehobene Plätze",
+    "note": "Die Knappheit ist das Produkt. Höhere Zahlen bringen heute mehr ein und lassen jede Seite stärker nach Werbung aussehen."
+  },
+  "earned": {
+    "title": "Was das eingebracht hat",
+    "note": "Summen und die Aufteilung nach Stand stehen im Umsatzbericht."
+  },
+  "col": {
+    "whatStallBuys": "Was ein Stand kauft",
+    "priceInDong": "Preis in ₫",
+    "priceOf": "Preis von {{name}}",
+    "soldInPeriod": "Im Zeitraum verkauft",
+    "earned": "Eingenommen",
+    "where": "Wo",
+    "slotsAtOnce": "Plätze gleichzeitig",
+    "slotsOf": "Gleichzeitige Plätze von {{name}}",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage",
+    "priceForDays_one": "{{name}}, {{count}} Tag",
+    "priceForDays_other": "{{name}}, {{count}} Tage"
+  },
+  "lastChanged": "Zuletzt geändert am {{date}} von {{by}}.",
+  "adjust": {
+    "title": "Alle Preise auf einmal anpassen?",
+    "text": "Verschiebt jeden Preis um denselben Prozentsatz und rundet auf volle 1.000 ₫. Nutze das für Teuerung, nicht für einen Strategiewechsel.",
+    "changeBy": "Ändern um",
+    "changeByHint": "In Prozent. Eine negative Zahl senkt sie.",
+    "when": "Gilt ab",
+    "whenNotice": "In 7 Tagen, nachdem die Stände informiert wurden",
+    "whenNextMonth": "Zum Beginn des nächsten Monats",
+    "example": "Ein Tag auf einer Marktseite würde von {{from}} auf {{to}} steigen.",
+    "cancel": "Abbrechen",
+    "confirm": "Auf alle Preise anwenden"
+  },
+  "toast": {
+    "saved": "Preise gespeichert. Die Stände werden eine Woche vor dem Inkrafttreten informiert.",
+    "adjusted": "Alle Preise wurden um {{pct}} % verschoben. Die Stände werden heute informiert, es gilt in 7 Tagen."
+  }
+}

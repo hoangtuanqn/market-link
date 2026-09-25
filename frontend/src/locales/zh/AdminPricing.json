@@ -1,0 +1,98 @@
+{
+  "title": "价格与额度",
+  "intro": "摊位免费得到什么，超出之后要付多少。这里的改动从第二天开始对所有摊位生效，任何涨价都会提前一周通知摊位。",
+  "days_other": "{{count}} 天",
+  "action": {
+    "seeEarned": "查看收入情况",
+    "adjustAll": "统一调整所有价格",
+    "save": "保存价格"
+  },
+  "scope": {
+    "title": "向农户收费不在 SRS 范围内。",
+    "text": "SRS 排除了支付网关。在这件事定下来之前，额度在平台之外谈妥，由管理员手工录入这里。"
+  },
+  "kpi": {
+    "revenue": "推广收入",
+    "revenueNote": "本期 ₫",
+    "revenueLink": "打开营收报表",
+    "paying": "付费摊位",
+    "payingNote": "共 {{total}} 个已审核摊位",
+    "pinnedDays": "已售置顶天数",
+    "pinnedDaysNote": "共 {{total}} 天可售",
+    "overLimit": "超出免费额度的摊位",
+    "overLimitNote": "普通一天的情况"
+  },
+  "set": {
+    "title": "货币与取整",
+    "currency": {
+      "title": "向摊位计费的货币",
+      "text": "顾客始终在摊位当面付现金，所以这只是平台向农户收取的部分。"
+    },
+    "rounding": {
+      "title": "价格取整到",
+      "text": "让数字在小屏幕上也好读。"
+    },
+    "notice": {
+      "title": "涨价提前通知",
+      "text": "新价格生效前，摊位能提前多久看到。"
+    }
+  },
+  "currency": {
+    "dong": "₫ 越南盾",
+    "usd": "$ 美元",
+    "eur": "€ 欧元"
+  },
+  "rounding": {
+    "thousand": "最近的 1,000 ₫",
+    "fiveHundred": "最近的 500 ₫",
+    "none": "不取整"
+  },
+  "free": {
+    "title": "免费额度",
+    "text": "每个通过审核的摊位都免费享有这些。把额度定得足够高，让小农户永远不必付费。",
+    "listings": "每天新上架数",
+    "listingsHint": "Cô Tư Garden 忙的时候一天上架 3 个。",
+    "bumps": "每月置顶刷新数"
+  },
+  "prices": {
+    "title": "价格",
+    "note": "在集市页置顶一天，大约相当于摊位一个集市早晨收入的 7%。改这些数字时记住这个比例。"
+  },
+  "pins": {
+    "title": "置顶位",
+    "note": "稀缺本身就是商品。把这些数字调高，今天赚得更多，但每个页面都会更像广告。"
+  },
+  "earned": {
+    "title": "这部分赚了多少",
+    "note": "总额和按摊位的拆分在营收报表里。"
+  },
+  "col": {
+    "whatStallBuys": "摊位买什么",
+    "priceInDong": "价格（₫）",
+    "priceOf": "{{name}} 的价格",
+    "soldInPeriod": "本期售出",
+    "earned": "收入",
+    "where": "位置",
+    "slotsAtOnce": "同时可售位数",
+    "slotsOf": "{{name}} 的同时可售位数",
+    "days_other": "{{count}} 天",
+    "priceForDays_other": "{{name}}，{{count}} 天"
+  },
+  "lastChanged": "最后修改于 {{date}}，修改人 {{by}}。",
+  "adjust": {
+    "title": "一次性调整所有价格？",
+    "text": "把每个价格按同一个百分比调整，并取整到最近的 1,000 ₫。用于通胀调整，不要拿来改变策略。",
+    "changeBy": "调整幅度",
+    "changeByHint": "百分比。负数表示降价。",
+    "when": "生效时间",
+    "whenNotice": "通知摊位后的第 7 天",
+    "whenNextMonth": "下个月初",
+    "example": "集市页置顶一天会从 {{from}} 变成 {{to}}。",
+    "cancel": "取消",
+    "confirm": "应用到所有价格"
+  },
+  "toast": {
+    "saved": "价格已保存。生效前一周会通知各摊位。",
+    "adjusted": "所有价格已调整 {{pct}}%。今天通知摊位，7 天后生效。"
+  }
+}
