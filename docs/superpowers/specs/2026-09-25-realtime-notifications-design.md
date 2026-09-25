@@ -184,7 +184,7 @@ Mọi path dưới `/api/v1`, JSON camelCase, envelope `ApiResource` như các m
 |---|---|---|---|
 | GET | `/notifications` | All | query `isRead?`, `page`, `size` (≤50) → `PagedResource<NotificationResource>` mới nhất trước |
 | GET | `/notifications/unread-count` | All | `{ count }` |
-| PATCH | `/notifications/{id}/read` | All | không phải của mình → **404** (không lộ id người khác) |
+| PATCH | `/notifications/{id}/read` | All | không tồn tại → 404; của người khác → **403** (R-06) |
 | PATCH | `/notifications/read-all` | All | `{ updated }` |
 | GET | `/notifications/preferences` | All | `{ categories: [{category, inApp, browser}], sound, quietOn, quietFrom, quietTo }` — chỉ nhóm của vai mình |
 | PUT | `/notifications/preferences` | All | cùng dạng; nhóm không thuộc vai → 400; giờ sai `HH:mm` → 400 |
@@ -283,7 +283,7 @@ Mỗi phần: một plan trong `docs/superpowers/plans/`, một nhánh `feature/
 
 - **Unit (BE):** ma trận `alertFor` (nhóm tắt/bật × kênh × giờ yên tĩnh gồm khoảng qua nửa đêm × kind `test`);
   renderer đủ 10 ngôn ngữ, thiếu key → English; `NotificationKind` → category.
-- **Integration (BE, MySQL test như các module khác):** REST §6 gồm 404 khi đọc thông báo của người khác, read-all,
+- **Integration (BE, MySQL test như các module khác):** REST §6 gồm 403 khi đánh dấu thông báo của người khác (R-06), 404 khi id không tồn tại, read-all,
   phân trang, preferences sai vai/sai giờ → 400; admin publish fan-out đúng audience và bỏ user `suspended`;
   gắn sự kiện approve → 1 dòng cho chủ đơn; tin nhắn chat → không có dòng nào.
 - **STOMP (BE):** như `ChatStompIntegrationTest` — người online nhận khung trên `/user/topic/notifications`, người
