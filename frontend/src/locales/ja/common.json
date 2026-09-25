@@ -315,5 +315,21 @@
     "phoneInvalid": "有効なベトナムの携帯電話番号（10 桁）を入力してください。",
     "addressRequired": "住所を入力してください。",
     "addressMax": "住所は {{max}} 文字以内で入力してください。"
+  },
+  "adminNav": {
+    "sections": "管理メニュー",
+    "overview": "概要",
+    "farmers": "農家",
+    "customers": "お客様",
+    "markets": "マーケット",
+    "moderation": "モデレーション",
+    "orders": "注文",
+    "revenue": "収益",
+    "reports": "レポート",
+    "categories": "カテゴリ",
+    "announcements": "お知らせ",
+    "feedback": "フィードバック",
+    "pricing": "料金",
+    "settings": "設定"
   }
 }

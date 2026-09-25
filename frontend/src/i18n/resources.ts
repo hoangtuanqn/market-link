@@ -54,6 +54,7 @@ import farmerNotifications from '@/locales/en/FarmerNotifications.json';
 import farmerPending from '@/locales/en/FarmerPending.json';
 import farmerPromote from '@/locales/en/FarmerPromote.json';
 import farmerReviews from '@/locales/en/FarmerReviews.json';
+import adminFarmers from '@/locales/en/AdminFarmers.json';
 
 export const en = {
   common: common,
@@ -107,6 +108,7 @@ export const en = {
   FarmerPending: farmerPending,
   FarmerPromote: farmerPromote,
   FarmerReviews: farmerReviews,
+  AdminFarmers: adminFarmers,
 } as const;
 
 export type Namespace = keyof typeof en;

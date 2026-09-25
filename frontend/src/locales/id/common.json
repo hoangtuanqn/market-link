@@ -315,5 +315,21 @@
     "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit).",
     "addressRequired": "Masukkan alamat Anda.",
     "addressMax": "Alamat maksimal {{max}} karakter."
+  },
+  "adminNav": {
+    "sections": "Bagian admin",
+    "overview": "Ringkasan",
+    "farmers": "Petani",
+    "customers": "Pelanggan",
+    "markets": "Pasar",
+    "moderation": "Moderasi",
+    "orders": "Pesanan",
+    "revenue": "Pendapatan",
+    "reports": "Laporan",
+    "categories": "Kategori",
+    "announcements": "Pengumuman",
+    "feedback": "Masukan",
+    "pricing": "Harga",
+    "settings": "Pengaturan"
   }
 }

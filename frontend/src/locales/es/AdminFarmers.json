@@ -1,0 +1,79 @@
+{
+  "title": "Productores",
+  "intro": "Aprueba una solicitud antes de que el puesto pueda publicar productos. La mayoría de las solicitudes llegan de cuentas que ya compran aquí, así que cada una muestra el historial de pedidos del solicitante junto a sus fotos. Suspende un puesto para ocultar sus productos y detener los pedidos nuevos; sus pedidos en curso terminan con normalidad.",
+  "search": {
+    "label": "Buscar productores",
+    "placeholder": "Puesto, persona de contacto, teléfono",
+    "submit": "Buscar"
+  },
+  "tabsLabel": "Productores por estado",
+  "status": {
+    "pending": "Pendientes de aprobación",
+    "approved": "Aprobados",
+    "suspended": "Suspendidos",
+    "rejected": "Rechazados"
+  },
+  "empty": {
+    "pending": {
+      "title": "No hay solicitudes pendientes",
+      "text": "Las nuevas solicitudes de productores llegan aquí para revisarse antes de que puedan publicar productos."
+    },
+    "approved": {
+      "title": "No hay puestos aprobados",
+      "text": "Aprueba una solicitud y el puesto aparecerá aquí, visible para los clientes."
+    },
+    "suspended": {
+      "title": "No hay puestos suspendidos",
+      "text": "Un puesto suspendido queda oculto para los clientes, pero completa los pedidos que ya tiene."
+    },
+    "rejected": {
+      "title": "No hay solicitudes rechazadas",
+      "text": "Los productores rechazados conservan su cuenta y se les puede explicar el motivo."
+    }
+  },
+  "col": {
+    "stall": "Puesto",
+    "markets": "Mercados",
+    "registered": "Registro",
+    "products": "Productos",
+    "rating": "Valoración"
+  },
+  "reviews_one": "{{count}} reseña",
+  "reviews_other": "{{count}} reseñas",
+  "action": {
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "view": "Ver",
+    "suspend": "Suspender",
+    "reinstate": "Reactivar"
+  },
+  "notYet": "Todavía no",
+  "approve": {
+    "title": "¿Aprobar {{stall}}?",
+    "text": "El puesto será visible para los clientes y podrá publicar productos de inmediato. Se avisará al productor.",
+    "confirm": "Aprobar puesto"
+  },
+  "reject": {
+    "title": "¿Rechazar {{stall}}?",
+    "text": "El productor conserva su acceso, pero no puede publicar productos.",
+    "reason": "Motivo que verá el productor",
+    "confirm": "Rechazar solicitud"
+  },
+  "reason": {
+    "mismatch": "Los datos no coinciden con el puesto",
+    "full": "El mercado está completo",
+    "unreachable": "No se pudo contactar con el número",
+    "other": "Otro"
+  },
+  "suspend": {
+    "title": "¿Suspender {{stall}}?",
+    "text": "Todos los productos se ocultan y no se aceptan pedidos nuevos. Los pedidos ya hechos continúan para que los clientes no pierdan lo que reservaron.",
+    "confirm": "Suspender puesto"
+  },
+  "toast": {
+    "approved": "{{stall}} aprobado. El puesto ya puede publicar productos.",
+    "rejected": "{{stall}} rechazado. Conserva su cuenta.",
+    "suspended": "{{stall}} suspendido. Los pedidos en curso terminan con normalidad.",
+    "reinstated": "{{stall}} reactivado. Los productos vuelven a estar visibles."
+  }
+}

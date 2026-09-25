@@ -315,5 +315,21 @@
     "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số).",
     "addressRequired": "Nhập địa chỉ của bạn.",
     "addressMax": "Địa chỉ tối đa {{max}} ký tự."
+  },
+  "adminNav": {
+    "sections": "Các mục quản trị",
+    "overview": "Tổng quan",
+    "farmers": "Nhà vườn",
+    "customers": "Khách hàng",
+    "markets": "Chợ",
+    "moderation": "Kiểm duyệt",
+    "orders": "Đơn hàng",
+    "revenue": "Doanh thu",
+    "reports": "Báo cáo",
+    "categories": "Danh mục",
+    "announcements": "Thông báo",
+    "feedback": "Góp ý",
+    "pricing": "Bảng giá",
+    "settings": "Cài đặt"
   }
 }
