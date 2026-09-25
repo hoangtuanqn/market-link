@@ -17,11 +17,12 @@ spring:
   jpa:
     open-in-view: false
 
-  # Ảnh đại diện: service chặn ở 2 MB với thông báo rõ; ngưỡng ở đây chỉ là trần an toàn
+  # Trần an toàn cho upload. Ảnh/video đơn xin thành Farmer (docs/prototype/customer/become-farmer.html) cần mức này —
+  # FarmerUploadService; ảnh đại diện vẫn bị service chặn ở 2 MB với thông báo rõ.
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 6MB
+      max-file-size: 40MB
+      max-request-size: 60MB
 
   flyway:
     # Không bao giờ cho phép xoá schema
@@ -72,6 +73,10 @@ app:
       redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/google/callback}
   mail:
     from-name: MarketLink
+  # Lưu ảnh/video đơn xin thành Farmer trên ổ đĩa cục bộ (FarmerUploadService) — chỉ phục vụ test/demo.
+  uploads:
+    dir: ${UPLOAD_DIR:uploads}
+    base-url: /uploads
   # FR-007: link trong mail là <url>?token=<token>; url là trang đặt lại mật khẩu của frontend
   password-reset:
     url: ${PASSWORD_RESET_URL:http://localhost:3000/reset-password}

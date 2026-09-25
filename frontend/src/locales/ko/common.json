@@ -330,7 +330,16 @@
     "announcements": "공지",
     "feedback": "의견",
     "pricing": "요금",
-    "settings": "설정"
+    "settings": "설정",
+    "analytics": "분석",
+    "people": "사용자",
+    "marketplace": "마켓플레이스",
+    "platform": "플랫폼",
+    "navigation": "관리자 탐색",
+    "home": "MarketLink — 관리자 개요",
+    "contextSub": "플랫폼 · 전체 마켓",
+    "userLine": "관리자 · 전체 플랫폼",
+    "searchPlaceholder": "매장, 고객 또는 시장"
   },
   "carousel": {
     "roleCarousel": "캐러셀",

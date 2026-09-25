@@ -1,11 +1,6 @@
 {
   "title": "Farmers",
-  "intro": "Approve an application before the stall can list products. Most applications come from accounts that already shop here, so each one carries the applicant's order history next to their photos. Suspend a stall to hide its products and stop new orders; its running orders finish as normal.",
-  "search": {
-    "label": "Search Farmers",
-    "placeholder": "Stall, contact person, phone",
-    "submit": "Search"
-  },
+  "intro": "Approve an application before the stall can list products. Suspend a stall to hide its products and stop new orders; its running orders finish as normal.",
   "tabsLabel": "Farmers by status",
   "status": {
     "pending": "Waiting for approval",
@@ -33,13 +28,10 @@
   },
   "col": {
     "stall": "Stall",
-    "markets": "Markets",
     "registered": "Registered",
-    "products": "Products",
-    "rating": "Rating"
+    "contact": "Contact",
+    "email": "Email"
   },
-  "reviews_one": "{{count}} review",
-  "reviews_other": "{{count}} reviews",
   "action": {
     "approve": "Approve",
     "reject": "Reject",
@@ -55,7 +47,7 @@
   },
   "reject": {
     "title": "Reject {{stall}}?",
-    "text": "The Farmer keeps their sign-in but cannot list products.",
+    "text": "The applicant keeps their customer account and everything in it. They are told the reason.",
     "reason": "Reason the Farmer will see",
     "confirm": "Reject registration"
   },
@@ -74,6 +66,22 @@
     "approved": "{{stall}} approved. The stall can list products now.",
     "rejected": "{{stall}} rejected. They keep their account.",
     "suspended": "{{stall}} suspended. Running orders finish as normal.",
-    "reinstated": "{{stall}} reinstated. Products are visible again."
-  }
+    "reinstated": "{{stall}} reinstated. Products are visible again.",
+    "failed": "Could not complete that action. Please try again.",
+    "rejectFailed": "Could not reject this application. Please try again."
+  },
+  "reinstate": {
+    "title": "Reinstate {{stall}}?",
+    "text": "Products become visible to customers again right away.",
+    "confirm": "Reinstate stall"
+  },
+  "keepReviewing": "Keep reviewing",
+  "loading": "Loading farmers",
+  "loadError": {
+    "title": "Couldn't load farmers",
+    "text": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "caption_one": "{{count}} farmer",
+  "caption_other": "{{count}} farmers"
 }

@@ -17,11 +17,12 @@
     "stallNameHint": "Los clientes lo ven en el mapa y en sus pedidos.",
     "person": "Persona de contacto",
     "phone": "Teléfono",
-    "phoneHint": "Aparece en cada pedido para que los clientes puedan contactarte.",
     "email": "Correo electrónico",
     "emailHint": "Tu inicio de sesión no cambia.",
     "about": "Sobre el puesto",
-    "aboutPlaceholder": "Una o dos frases. Quién lo cultiva y dónde."
+    "aboutPlaceholder": "Una o dos frases. Quién lo cultiva y dónde.",
+    "address": "Dirección",
+    "fromAccount": "Viene de tu cuenta. Si no es correcto, cámbialo primero en la página Cuenta."
   },
   "step2": {
     "title": "Qué cultivas",
@@ -46,7 +47,9 @@
     "since": "Cultivando aquí desde",
     "pin": "Marca la parcela",
     "map": "Marca tu parcela en el mapa",
-    "pinHint": "Arrastra el marcador hasta tu parcela. Es la forma más rápida de que el administrador vea que las fotos coinciden con el lugar."
+    "lat": "Latitud",
+    "lng": "Longitud",
+    "manualPin": "El pin en el mapa real llegará con la pantalla del mapa. Por ahora, escribe las coordenadas a mano si las sabes."
   },
   "step4": {
     "title": "Fotos de la parcela",
@@ -56,8 +59,6 @@
       "growing": "Lo que crece ahora",
       "other": "Otra cosa"
     },
-    "required": "Obligatoria",
-    "optional": "Opcional",
     "addPhoto": "Añadir foto",
     "video": "Un vídeo corto",
     "addVideo": "Añadir un vídeo, hasta 60 segundos",
@@ -65,7 +66,11 @@
     "banner": {
       "title": "El administrador comprueba una sola cosa: que la parcela existe y cultiva lo que has indicado.",
       "text": "MarketLink no comprueba licencias, seguridad alimentaria ni declaraciones ecológicas, y una foto no es un certificado."
-    }
+    },
+    "uploading": "Subiendo…",
+    "removePhoto": "Quitar: {{label}}",
+    "videoAdded": "Video añadido",
+    "removeVideo": "Quitar"
   },
   "step5": {
     "title": "Dónde quieres vender",
@@ -81,22 +86,16 @@
     "pay": "Entiendo que los clientes me pagan en el puesto",
     "payHint": "En MarketLink no hay pago en línea ni envíos.",
     "send": "Enviar la solicitud",
-    "later": "Guardar y terminar más tarde"
+    "later": "Guardar y terminar más tarde",
+    "sending": "Enviando…"
   },
-  "preview": "Vista previa: después de enviar",
   "sent": {
-    "eyebrow": "Enviada ahora mismo",
     "title": "Tu solicitud está con un administrador",
     "intro": "Mientras tanto no cambia nada para ti. Sigue comprando y atento a tus notificaciones para la respuesta.",
-    "banner": {
-      "title": "Puedes seguir comprando en otros puestos mientras se revisa.",
-      "text": "Tus pedidos, favoritos y carrito siguen intactos. El panel del puesto aparece solo cuando un administrador la aprueba."
-    },
     "summary": "Lo que enviaste",
     "stall": "Puesto",
     "grows": "Cultiva",
     "plot": "Parcela",
-    "plotText": "{{size}} en {{place}}, cultivando desde {{since}}",
     "evidence": "Pruebas",
     "photos_one": "{{count}} foto",
     "photos_other": "{{count}} fotos",
@@ -104,8 +103,16 @@
     "photosAndVideo_other": "{{count}} fotos y un vídeo",
     "market": "Mercado",
     "keepShopping": "Seguir comprando",
-    "withdraw": "Retirar la solicitud",
-    "progress": "Progreso"
+    "progress": "Progreso",
+    "about": "Descripción",
+    "volume": "Aproximadamente por semana",
+    "plotIn": "en {{place}}",
+    "plotSince": "cultivando desde {{year}}",
+    "noPhotos": "Sin fotos",
+    "noPhotosVideo": "Sin fotos, y un video",
+    "status": "Estado",
+    "sentOn": "Enviada",
+    "photoAlt": "Foto de la parcela"
   },
   "timeline": {
     "placed": {
@@ -128,12 +135,43 @@
     "missingTitle": "Faltan casillas",
     "missing": "Marca las tres casillas del final antes de enviar.",
     "sentTitle": "Solicitud enviada",
-    "sent": "Recibirás la respuesta de un administrador en tus notificaciones.",
-    "withdrawnTitle": "Solicitud retirada",
-    "withdrawn": "Puedes volver a solicitarlo cuando quieras.",
-    "photoTitle": "Añadir una foto",
-    "photo": "Elige una foto de tu móvil u ordenador.",
-    "videoTitle": "Añadir un vídeo",
-    "video": "Elige un vídeo de hasta 60 segundos."
+    "sent": "Recibirás la respuesta de un administrador en tus notificaciones."
+  },
+  "loading": "Cargando el estado de tu solicitud",
+  "loadError": {
+    "title": "No se pudo cargar el estado de tu solicitud",
+    "text": "Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar"
+  },
+  "errors": {
+    "stallName": "Escribe el nombre de tu puesto.",
+    "contactPerson": "Escribe una persona de contacto.",
+    "photo": "No se pudo subir esa foto. Inténtalo de nuevo.",
+    "video": "No se pudo subir ese video. Inténtalo de nuevo.",
+    "send": "No se pudo enviar tu solicitud. Inténtalo de nuevo."
+  },
+  "approval": {
+    "approved": {
+      "title": "Tu puesto está aprobado",
+      "text": "Ahora tu cuenta puede configurar un puesto (mercados, horarios de recogida y productos) desde el panel de agricultor."
+    },
+    "rejected": {
+      "title": "Tu solicitud no fue aprobada",
+      "text": "Si crees que es un error, contacta con un administrador desde el formulario de comentarios."
+    },
+    "suspended": {
+      "title": "Tu puesto está suspendido",
+      "text": "Puedes seguir iniciando sesión, pero tus productos quedan ocultos para los clientes hasta que un administrador levante la suspensión."
+    }
+  },
+  "suspendedBanner": {
+    "title": "La venta está en pausa en esta cuenta.",
+    "text": "Los pedidos ya realizados siguen su curso; solo que por ahora no puedes recibir nuevos."
+  },
+  "statusValue": {
+    "pending": "Pendiente",
+    "approved": "Aprobada",
+    "rejected": "Rechazada",
+    "suspended": "Suspendido"
   }
 }

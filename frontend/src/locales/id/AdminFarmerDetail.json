@@ -1,0 +1,71 @@
+{
+  "breadcrumb": "Pengajuan",
+  "loading": "Memuat pengajuan",
+  "loadError": {
+    "title": "Pengajuan ini tidak dapat dimuat",
+    "text": "Periksa koneksi Anda lalu coba lagi.",
+    "retry": "Coba lagi"
+  },
+  "sentOn": "Dikirim {{date}}",
+  "approveText": "Perannya menjadi Petani dan panel lapak terbuka di akunnya. Semua fitur pelanggan yang dimiliki tetap ada. Pembeli belum melihat apa pun sampai produk ditambahkan dan jam pengambilan diatur.",
+  "fromCustomer": {
+    "title": "Pengajuan ini berasal dari akun yang sudah berbelanja di MarketLink.",
+    "text": "Menyetujui akan mengubah akun yang sama menjadi lapak; tidak ada akun kedua yang dibuat. Semua fitur pelanggan yang dimiliki tetap ada."
+  },
+  "suspendedBanner": {
+    "title": "Lapak ini ditangguhkan.",
+    "text": "Produknya tetap tersembunyi dari pelanggan. Pesanan yang sudah masuk tetap berjalan."
+  },
+  "rejectedBanner": {
+    "title": "Pengajuan ini ditolak.",
+    "text": "Alasan yang ditampilkan kepada pemohon: {{reason}}"
+  },
+  "photos": {
+    "title": "Foto lahan",
+    "alt": "Foto lahan",
+    "video": "Tonton video",
+    "hint": "Periksa apakah lahan di foto cocok dengan pin di peta dan menanam apa yang dicantumkan pemohon. Anda tidak memeriksa izin, keamanan pangan, atau klaim organik."
+  },
+  "grows": {
+    "title": "Yang mereka tanam",
+    "categories": "Kategori",
+    "crops": "Tanaman utama",
+    "volume": "Volume",
+    "ownWords": "Kata mereka:"
+  },
+  "plot": {
+    "title": "Lahan",
+    "address": "Alamat",
+    "size": "Luas",
+    "since": "Ditanami sejak"
+  },
+  "stall": {
+    "title": "Lapak yang diajukan",
+    "name": "Nama lapak",
+    "contact": "Narahubung",
+    "email": "Email",
+    "description": "Deskripsi",
+    "market": "Pasar yang diinginkan"
+  },
+  "history": {
+    "title": "Riwayat",
+    "sent": "Pengajuan dikirim",
+    "customer": "Akun dibuat sebagai pelanggan"
+  },
+  "applicant": {
+    "title": "Pemohon",
+    "name": "Nama",
+    "since": "Pelanggan sejak",
+    "status": "Status akun"
+  },
+  "accountStatus": {
+    "active": "Aktif",
+    "inactive": "Tidak aktif",
+    "suspended": "Ditangguhkan"
+  },
+  "map": "Lahan dan pasar tempat mereka ingin berjualan",
+  "approval": {
+    "title": "Apa yang terjadi saat disetujui",
+    "text": "Perannya menjadi Petani dan panel lapak terbuka. Mereka tetap bisa membeli dari lapak lain dengan akun yang sama. Belum ada yang tampil sampai produk ditambahkan dan jam pengambilan diatur."
+  }
+}

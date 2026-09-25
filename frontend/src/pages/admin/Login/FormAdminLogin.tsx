@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/input';
 import { USER_ROLE } from '@/constants/enums';
 import { ADMIN_HOME_PATH, ADMIN_VERIFY_PATH } from '@/constants/nav';
-import validateLogin, { type LoginFieldErrors } from '@/pages/Login/validateLogin';
+import validateLogin, { type LoginFieldErrors } from '@/pages/auth/Login/validateLogin';
 import Helper from '@/utils/helper';
 import { splitLoginResult } from '@/utils/mfa';
 import Notification from '@/utils/notification';

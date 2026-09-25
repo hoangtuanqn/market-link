@@ -17,11 +17,12 @@
     "stallNameHint": "Pelanggan melihat ini di peta dan di pesanan mereka.",
     "person": "Narahubung",
     "phone": "Telepon",
-    "phoneHint": "Dicetak di setiap pesanan agar pelanggan bisa menghubungi Anda.",
     "email": "Email",
     "emailHint": "Data masuk Anda tetap sama.",
     "about": "Tentang lapak",
-    "aboutPlaceholder": "Satu atau dua kalimat. Siapa yang menanam dan di mana."
+    "aboutPlaceholder": "Satu atau dua kalimat. Siapa yang menanam dan di mana.",
+    "address": "Alamat",
+    "fromAccount": "Dari akun Anda. Jika salah, ubah dulu di halaman Akun."
   },
   "step2": {
     "title": "Yang Anda tanam",
@@ -46,7 +47,9 @@
     "since": "Menanam di sini sejak",
     "pin": "Tandai lahan",
     "map": "Tandai lahan Anda di peta",
-    "pinHint": "Seret penanda ke lahan Anda. Ini cara tercepat bagi admin untuk melihat foto cocok dengan tempatnya."
+    "lat": "Lintang",
+    "lng": "Bujur",
+    "manualPin": "Pin di peta sungguhan hadir bersama layar peta. Untuk sekarang, ketik koordinatnya secara manual jika Anda tahu."
   },
   "step4": {
     "title": "Foto lahan",
@@ -56,8 +59,6 @@
       "growing": "Yang sedang tumbuh",
       "other": "Lainnya"
     },
-    "required": "Wajib",
-    "optional": "Opsional",
     "addPhoto": "Tambah foto",
     "video": "Video singkat",
     "addVideo": "Tambah video, maksimal 60 detik",
@@ -65,7 +66,11 @@
     "banner": {
       "title": "Admin hanya memeriksa satu hal: lahannya ada dan menanam yang Anda cantumkan.",
       "text": "MarketLink tidak memeriksa izin, keamanan pangan, atau klaim organik, dan foto bukan sertifikat."
-    }
+    },
+    "uploading": "Mengunggah…",
+    "removePhoto": "Hapus {{label}}",
+    "videoAdded": "Video ditambahkan",
+    "removeVideo": "Hapus"
   },
   "step5": {
     "title": "Tempat Anda ingin berjualan",
@@ -81,22 +86,16 @@
     "pay": "Saya paham pelanggan membayar saya di lapak",
     "payHint": "Tidak ada pembayaran online dan tidak ada pengiriman di MarketLink.",
     "send": "Kirim pendaftaran",
-    "later": "Simpan dan lanjutkan nanti"
+    "later": "Simpan dan lanjutkan nanti",
+    "sending": "Mengirim…"
   },
-  "preview": "Pratinjau: setelah dikirim",
   "sent": {
-    "eyebrow": "Baru saja dikirim",
     "title": "Pendaftaran Anda sedang ditinjau admin",
     "intro": "Sementara itu tidak ada yang berubah. Terus belanja, dan pantau notifikasi untuk jawabannya.",
-    "banner": {
-      "title": "Anda tetap bisa belanja dari lapak lain selama ditinjau.",
-      "text": "Pesanan, favorit, dan keranjang Anda tidak berubah. Panel lapak baru muncul setelah admin menyetujui."
-    },
     "summary": "Yang Anda kirim",
     "stall": "Lapak",
     "grows": "Menanam",
     "plot": "Lahan",
-    "plotText": "{{size}} di {{place}}, menanam sejak {{since}}",
     "evidence": "Bukti",
     "photos_one": "{{count}} foto",
     "photos_other": "{{count}} foto",
@@ -104,8 +103,16 @@
     "photosAndVideo_other": "{{count}} foto dan satu video",
     "market": "Pasar",
     "keepShopping": "Lanjut belanja",
-    "withdraw": "Tarik pendaftaran",
-    "progress": "Progres"
+    "progress": "Progres",
+    "about": "Tentang",
+    "volume": "Kira-kira per minggu",
+    "plotIn": "di {{place}}",
+    "plotSince": "ditanami sejak {{year}}",
+    "noPhotos": "Tanpa foto",
+    "noPhotosVideo": "Tanpa foto, dan satu video",
+    "status": "Status",
+    "sentOn": "Dikirim",
+    "photoAlt": "Foto lahan"
   },
   "timeline": {
     "placed": {
@@ -128,12 +135,43 @@
     "missingTitle": "Kotak belum dicentang",
     "missing": "Centang tiga kotak di bagian akhir sebelum mengirim.",
     "sentTitle": "Pendaftaran dikirim",
-    "sent": "Jawaban admin akan masuk ke notifikasi Anda.",
-    "withdrawnTitle": "Pendaftaran ditarik",
-    "withdrawn": "Anda bisa mendaftar lagi kapan saja.",
-    "photoTitle": "Tambah foto",
-    "photo": "Pilih foto dari ponsel atau komputer Anda.",
-    "videoTitle": "Tambah video",
-    "video": "Pilih video, maksimal 60 detik."
+    "sent": "Jawaban admin akan masuk ke notifikasi Anda."
+  },
+  "loading": "Memuat status pengajuan Anda",
+  "loadError": {
+    "title": "Status pengajuan tidak dapat dimuat",
+    "text": "Periksa koneksi Anda lalu coba lagi.",
+    "retry": "Coba lagi"
+  },
+  "errors": {
+    "stallName": "Masukkan nama lapak Anda.",
+    "contactPerson": "Masukkan nama narahubung.",
+    "photo": "Foto itu tidak dapat diunggah. Silakan coba lagi.",
+    "video": "Video itu tidak dapat diunggah. Silakan coba lagi.",
+    "send": "Pengajuan Anda tidak dapat dikirim. Silakan coba lagi."
+  },
+  "approval": {
+    "approved": {
+      "title": "Lapak Anda disetujui",
+      "text": "Akun Anda kini dapat menyiapkan lapak (pasar, jam pengambilan, dan produk) dari panel petani."
+    },
+    "rejected": {
+      "title": "Pengajuan Anda tidak disetujui",
+      "text": "Jika menurut Anda ini keliru, hubungi admin melalui formulir masukan."
+    },
+    "suspended": {
+      "title": "Lapak Anda ditangguhkan",
+      "text": "Anda masih bisa masuk, tetapi produk Anda disembunyikan dari pelanggan sampai admin mencabut penangguhan."
+    }
+  },
+  "suspendedBanner": {
+    "title": "Penjualan di akun ini dijeda.",
+    "text": "Pesanan yang sudah masuk tetap berjalan; Anda hanya belum bisa menerima pesanan baru untuk saat ini."
+  },
+  "statusValue": {
+    "pending": "Menunggu",
+    "approved": "Disetujui",
+    "rejected": "Ditolak",
+    "suspended": "Ditangguhkan"
   }
 }
