@@ -1,10 +1,11 @@
-import { Link, Navigate, Outlet } from 'react-router';
+import { Link, NavLink, Navigate, Outlet } from 'react-router';
 import Logo from '@/components/Logo';
 import { Button } from '@/components/ui/button';
 import { USER_ROLE } from '@/constants/enums';
-import { ADMIN_HOME_PATH, ADMIN_LOGIN_PATH, ADMIN_SECURITY_PATH } from '@/constants/nav';
+import { ADMIN_HOME_PATH, ADMIN_LOGIN_PATH, ADMIN_NAV, ADMIN_SECURITY_PATH } from '@/constants/nav';
 import useLogout from '@/hooks/useLogout';
 import useSession from '@/hooks/useSession';
+import Helper from '@/utils/helper';
 
 /**
  * FR-004 — khung khu admin, tách khỏi layout Customer/Farmer. Chưa đăng nhập hoặc không phải admin thì về trang đăng
@@ -36,6 +37,25 @@ const AdminLayout = () => {
             </Button>
           </div>
         </div>
+        <nav aria-label="Admin sections" className="overflow-x-auto">
+          <div className="mx-auto flex max-w-300 gap-1 px-4 md:px-6">
+            {ADMIN_NAV.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.to === ADMIN_HOME_PATH}
+                className={({ isActive }) =>
+                  Helper.cn(
+                    'text-board-muted hover:text-on-board inline-flex min-h-11 items-center px-3 text-[14px] font-bold whitespace-nowrap no-underline',
+                    isActive && 'text-on-board shadow-[inset_0_-3px_0_var(--accent)]',
+                  )
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </div>
+        </nav>
         <div aria-hidden="true" className="border-twine h-0 border-t-2 border-dashed" />
       </header>
 
