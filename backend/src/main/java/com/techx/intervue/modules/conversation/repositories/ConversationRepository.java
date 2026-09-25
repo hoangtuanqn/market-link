@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.conversation.repositories;
 
 import com.techx.intervue.modules.conversation.entities.Conversation;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,4 +21,10 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
             "select c from Conversation c where c.userAId = :me or c.userBId = :me"
                     + " order by coalesce(c.lastMessageAt, c.createdAt) desc, c.id desc")
     Page<Conversation> findMine(@Param("me") Long me, Pageable pageable);
+
+    /** Những người đã từng nhắn với :me — để báo online/offline cho đúng họ, không broadcast. */
+    @Query(
+            "select case when c.userAId = :me then c.userBId else c.userAId end"
+                    + " from Conversation c where c.userAId = :me or c.userBId = :me")
+    List<Long> findOtherMemberIds(@Param("me") Long me);
 }

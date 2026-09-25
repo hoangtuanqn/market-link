@@ -3,6 +3,8 @@ package com.techx.intervue.modules.conversation.services.impl;
 import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
+import com.techx.intervue.modules.conversation.realtime.PresenceService;
+import com.techx.intervue.modules.conversation.realtime.PresenceService.PresenceInfo;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository.UnreadRow;
@@ -40,6 +42,7 @@ public class ConversationService implements ConversationServiceInterface {
     private final StallAccessPolicyInterface policy;
     private final ChatEventPublisherInterface events;
     private final ConversationLookup lookup;
+    private final PresenceService presence;
     private final Clock clock;
 
     @Override
@@ -64,7 +67,8 @@ public class ConversationService implements ConversationServiceInterface {
                                     return conversations.save(pair);
                                 });
         long unread = unreadFor(meId, List.of(conversation)).getOrDefault(conversation.getId(), 0L);
-        return toResource(conversation, target, unread);
+        PresenceInfo live = presence.snapshot(List.of(target.getId())).get(target.getId());
+        return toResource(conversation, target, unread, live);
     }
 
     @Override
@@ -73,6 +77,7 @@ public class ConversationService implements ConversationServiceInterface {
         Page<Conversation> found = conversations.findMine(meId, PageRequest.of(page - 1, size));
         Map<Long, Long> unread = unreadFor(meId, found.getContent());
         Map<Long, User> others = othersOf(meId, found.getContent());
+        Map<Long, PresenceInfo> live = presence.snapshot(others.keySet());
         List<ConversationResource> items =
                 found.getContent().stream()
                         .map(
@@ -80,7 +85,8 @@ public class ConversationService implements ConversationServiceInterface {
                                         toResource(
                                                 c,
                                                 others.get(c.otherMember(meId)),
-                                                unread.getOrDefault(c.getId(), 0L)))
+                                                unread.getOrDefault(c.getId(), 0L),
+                                                live.get(c.otherMember(meId))))
                         .toList();
         return new PagedResource<>(items, page, size, found.getTotalElements());
     }
@@ -124,10 +130,11 @@ public class ConversationService implements ConversationServiceInterface {
                 .collect(Collectors.toMap(User::getId, Function.identity()));
     }
 
-    private static ConversationResource toResource(Conversation c, User other, long unread) {
+    private static ConversationResource toResource(
+            Conversation c, User other, long unread, PresenceInfo live) {
         return ConversationResource.builder()
                 .id(c.getId())
-                .other(other == null ? null : ParticipantResource.from(other))
+                .other(other == null ? null : ParticipantResource.from(other, live))
                 .lastMessageText(c.getLastMessageText())
                 .lastMessageAt(c.getLastMessageAt())
                 .unreadCount(unread)
