@@ -14,12 +14,14 @@ import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
+import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.requests.SendMessageRequest;
 import com.techx.intervue.modules.conversation.resources.MessageResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
@@ -44,6 +46,7 @@ class MessageServiceTest {
     UserRepository users;
     StallAccessPolicyInterface policy;
     ChatEventPublisherInterface events;
+    ChatRateLimiterInterface rateLimiter;
     MessageService service;
     Conversation thread;
 
@@ -54,6 +57,7 @@ class MessageServiceTest {
         users = mock(UserRepository.class);
         policy = mock(StallAccessPolicyInterface.class);
         events = mock(ChatEventPublisherInterface.class);
+        rateLimiter = mock(ChatRateLimiterInterface.class);
         Clock clock = Clock.fixed(NOW, ZoneId.of("Asia/Ho_Chi_Minh"));
         service =
                 new MessageService(
@@ -63,7 +67,8 @@ class MessageServiceTest {
                         policy,
                         events,
                         new ConversationLookup(conversations),
-                        clock);
+                        clock,
+                        rateLimiter);
 
         thread = Conversation.between(3L, 7L);
         thread.setId(42L);
@@ -210,5 +215,17 @@ class MessageServiceTest {
         verify(messages)
                 .findByConversationIdAndHiddenAtIsNullOrderByIdDesc(eq(42L), page.capture());
         assertThat(page.getValue().getPageSize()).isEqualTo(MessageService.MAX_PAGE);
+    }
+
+    @Test
+    void refusesToSendWhenTheUserIsOverTheRateLimit() {
+        org.mockito.Mockito.doThrow(new RateLimitedException("too fast"))
+                .when(rateLimiter)
+                .check(7L, ChatRateLimiterInterface.Action.MESSAGE);
+
+        assertThatThrownBy(
+                        () -> service.send(7L, 42L, new SendMessageRequest(null, "hi", null, null)))
+                .isInstanceOf(RateLimitedException.class);
+        verify(messages, never()).save(any(Message.class));
     }
 }

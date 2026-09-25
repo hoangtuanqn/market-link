@@ -10,6 +10,9 @@ import com.techx.intervue.modules.conversation.repositories.ConversationReposito
 import com.techx.intervue.modules.conversation.requests.SendMessageRequest;
 import com.techx.intervue.modules.conversation.services.interfaces.ConversationServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.MessageServiceInterface;
+import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
+import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -35,6 +38,7 @@ class MessageServicePublishTimingTest {
     @Autowired ConversationServiceInterface conversationService;
     @Autowired ConversationRepository conversations;
     @Autowired UserRepository users;
+    @Autowired FarmerProfileRepository farmerProfiles;
     @Autowired PlatformTransactionManager txManager;
 
     // Mock đúng lớp cụ thể: TypingController / PresenceEventListener inject
@@ -44,18 +48,23 @@ class MessageServicePublishTimingTest {
 
     User customer;
     User farmer;
+    FarmerProfile farmerProfile;
     Conversation thread;
 
     @BeforeEach
     void setUp() {
         customer = newUser(RoleType.CUSTOMER);
         farmer = newUser(RoleType.FARMER);
+        // StallAccessPolicy tra farmer_profiles (spec §8.1): role farmer mà không có hàng đã duyệt
+        // thì không phải một stall đang mở, và send() trả 409.
+        farmerProfile = approvedStallFor(farmer);
         thread = conversations.save(Conversation.between(customer.getId(), farmer.getId()));
     }
 
     @AfterEach
     void tearDown() {
         conversations.deleteById(thread.getId()); // messages cascade at the DB
+        farmerProfiles.deleteById(farmerProfile.getId());
         users.deleteById(customer.getId());
         users.deleteById(farmer.getId());
     }
@@ -70,6 +79,15 @@ class MessageServicePublishTimingTest {
                         .passwordHash("x")
                         .role(role)
                         .build());
+    }
+
+    private FarmerProfile approvedStallFor(User owner) {
+        FarmerProfile profile = new FarmerProfile();
+        profile.setUserId(owner.getId());
+        profile.setStallName("Timing stall");
+        profile.setContactPerson(owner.getFullName());
+        profile.setApprovalStatus(ApprovalStatus.APPROVED);
+        return farmerProfiles.save(profile);
     }
 
     @Test

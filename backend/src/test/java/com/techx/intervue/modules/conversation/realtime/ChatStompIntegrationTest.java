@@ -46,6 +46,10 @@ class ChatStompIntegrationTest {
 
     @LocalServerPort int port;
     @Autowired UserRepository users;
+
+    @Autowired
+    com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository farmerProfiles;
+
     @Autowired ConversationRepository conversations;
     @Autowired MessageServiceInterface messageService;
     @Autowired UserSessionCache sessions;
@@ -53,6 +57,7 @@ class ChatStompIntegrationTest {
 
     User customer;
     User farmer;
+    com.techx.intervue.modules.farmer.entities.FarmerProfile farmerProfile;
     Conversation thread;
     WebSocketStompClient client;
 
@@ -60,6 +65,9 @@ class ChatStompIntegrationTest {
     void setUp() {
         customer = newUser(RoleType.CUSTOMER);
         farmer = newUser(RoleType.FARMER);
+        // StallAccessPolicy tra farmer_profiles (spec §8.1): role farmer mà không có hàng đã duyệt
+        // thì không phải một stall đang mở, và send() trả 409.
+        farmerProfile = approvedStallFor(farmer);
         thread = conversations.save(Conversation.between(customer.getId(), farmer.getId()));
         client = new WebSocketStompClient(new StandardWebSocketClient());
         // byte[] hai chiều, không kén content-type; frame /app/typing mang content-type JSON riêng
@@ -70,10 +78,20 @@ class ChatStompIntegrationTest {
     void tearDown() {
         client.stop();
         conversations.deleteById(thread.getId());
+        farmerProfiles.deleteById(farmerProfile.getId());
         sessions.evict(customer.getId());
         sessions.evict(farmer.getId());
         users.deleteById(customer.getId());
         users.deleteById(farmer.getId());
+    }
+
+    private com.techx.intervue.modules.farmer.entities.FarmerProfile approvedStallFor(User owner) {
+        var profile = new com.techx.intervue.modules.farmer.entities.FarmerProfile();
+        profile.setUserId(owner.getId());
+        profile.setStallName("Stomp stall");
+        profile.setContactPerson(owner.getFullName());
+        profile.setApprovalStatus(com.techx.intervue.modules.farmer.enums.ApprovalStatus.APPROVED);
+        return farmerProfiles.save(profile);
     }
 
     private User newUser(RoleType role) {

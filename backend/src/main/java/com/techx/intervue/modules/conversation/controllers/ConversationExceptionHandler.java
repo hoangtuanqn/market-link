@@ -4,6 +4,7 @@ import com.techx.intervue.modules.conversation.exceptions.AccountRestrictedExcep
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
+import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
@@ -95,6 +96,12 @@ public class ConversationExceptionHandler {
     @ExceptionHandler(ConversationClosedException.class)
     ResponseEntity<ApiResource<Void>> closed(ConversationClosedException e) {
         return error(HttpStatus.CONFLICT, "CONVERSATION_CLOSED", e.getMessage(), List.of());
+    }
+
+    /** Spec §8.4 — vượt hạn mức. Lý do viết thẳng bằng chữ để FE hiện nguyên câu. */
+    @ExceptionHandler(RateLimitedException.class)
+    ResponseEntity<ApiResource<Void>> tooManyRequests(RateLimitedException e) {
+        return error(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMITED", e.getMessage(), List.of());
     }
 
     /** Hai request mở cùng một cặp đúng lúc → UNIQUE chặn một cái; client gọi lại là có thread. */

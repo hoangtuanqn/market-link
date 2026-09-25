@@ -11,6 +11,7 @@ import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.requests.SendMessageRequest;
 import com.techx.intervue.modules.conversation.resources.MessageResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.MessageServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
 import com.techx.intervue.modules.user.entities.User;
@@ -42,10 +43,12 @@ public class MessageService implements MessageServiceInterface {
     private final ChatEventPublisherInterface events;
     private final ConversationLookup lookup;
     private final Clock clock;
+    private final ChatRateLimiterInterface rateLimiter;
 
     @Override
     @Transactional
     public MessageResource send(Long meId, Long conversationId, SendMessageRequest request) {
+        rateLimiter.check(meId, ChatRateLimiterInterface.Action.MESSAGE);
         MessageKind kind = request.kind() == null ? MessageKind.TEXT : request.kind();
         if (kind != MessageKind.TEXT) {
             throw new UnsupportedMessageKindException(kind);

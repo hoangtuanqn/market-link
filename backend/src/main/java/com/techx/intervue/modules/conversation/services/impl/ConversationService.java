@@ -14,6 +14,7 @@ import com.techx.intervue.modules.conversation.resources.PagedResource;
 import com.techx.intervue.modules.conversation.resources.ParticipantResource;
 import com.techx.intervue.modules.conversation.resources.UnreadCountResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ConversationServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
 import com.techx.intervue.modules.user.entities.User;
@@ -44,10 +45,12 @@ public class ConversationService implements ConversationServiceInterface {
     private final ConversationLookup lookup;
     private final PresenceService presence;
     private final Clock clock;
+    private final ChatRateLimiterInterface rateLimiter;
 
     @Override
     @Transactional
     public ConversationResource open(Long meId, OpenConversationRequest request) {
+        rateLimiter.check(meId, ChatRateLimiterInterface.Action.CONVERSATION);
         if (meId.equals(request.farmerUserId())) {
             throw new SelfConversationException();
         }

@@ -116,6 +116,11 @@ app:
       stomp-port: ${RABBITMQ_STOMP_PORT:61613}
       user: ${RABBITMQ_USER:guest}
       password: ${RABBITMQ_PASSWORD:guest}
+    # Spec §8.4: chống rải tin. Mỗi user một bucket trên Redis (bucket4j).
+    limits:
+      messages-per-minute: ${CHAT_MESSAGES_PER_MINUTE:30}
+      images-per-hour: ${CHAT_IMAGES_PER_HOUR:10}
+      conversations-per-hour: ${CHAT_CONVERSATIONS_PER_HOUR:20}
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
