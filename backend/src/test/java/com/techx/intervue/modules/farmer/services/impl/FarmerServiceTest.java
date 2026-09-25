@@ -23,6 +23,7 @@ import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import java.util.List;
@@ -40,6 +41,7 @@ class FarmerServiceTest {
 
     private FarmerProfileRepository farmerProfileRepository;
     private FarmerApplicationHistoryRepository historyRepository;
+    private FarmerUploadService uploadService;
     private UserRepository userRepository;
     private UserSessionCache userSessionCache;
     private FarmerService service;
@@ -48,6 +50,8 @@ class FarmerServiceTest {
     void setUp() {
         farmerProfileRepository = mock(FarmerProfileRepository.class);
         historyRepository = mock(FarmerApplicationHistoryRepository.class);
+        uploadService = mock(FarmerUploadService.class);
+        when(uploadService.isOwnedBy(any(), any())).thenReturn(true);
         when(historyRepository.findByUserIdOrderByAttemptDesc(any())).thenReturn(List.of());
         when(historyRepository.findFirstByUserIdOrderByAttemptDesc(any()))
                 .thenReturn(Optional.empty());
@@ -58,6 +62,7 @@ class FarmerServiceTest {
                 new FarmerService(
                         farmerProfileRepository,
                         historyRepository,
+                        uploadService,
                         userRepository,
                         userSessionCache);
     }
@@ -156,6 +161,59 @@ class FarmerServiceTest {
         assertThat(saved.getValue().getAttempt()).isEqualTo(2);
         assertThat(saved.getValue().getStallName()).isEqualTo("Second try");
         assertThat(saved.getValue().getStatus()).isEqualTo(ApprovalStatus.PENDING);
+    }
+
+    /** Ảnh của người khác không được gắn vào đơn của mình, dù có đoán ra đường dẫn. */
+    @Test
+    void apply_rejectsFilesThatBelongToSomeoneElse() {
+        when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
+        when(uploadService.isOwnedBy("/uploads/farmer-applications/999/x.jpg", USER_ID))
+                .thenReturn(false);
+        FarmerApplicationRequest request =
+                new FarmerApplicationRequest(
+                        "Khang Family Greens",
+                        "Khang",
+                        null,
+                        List.of("/uploads/farmer-applications/999/x.jpg"),
+                        null);
+
+        assertThatThrownBy(() -> service.apply(USER_ID, request))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting(e -> ((InvalidFieldException) e).getField())
+                .isEqualTo("photoUrls");
+        verify(farmerProfileRepository, never()).save(any());
+    }
+
+    @Test
+    void withdraw_removesTheApplicationAndItsAttempt_whileItIsStillWaiting() {
+        FarmerProfile profile = pendingProfile();
+        FarmerApplicationHistory attempt =
+                FarmerApplicationHistory.builder()
+                        .id(7L)
+                        .userId(USER_ID)
+                        .attempt(1)
+                        .status(ApprovalStatus.PENDING)
+                        .build();
+        when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.of(profile));
+        when(historyRepository.findFirstByUserIdOrderByAttemptDesc(USER_ID))
+                .thenReturn(Optional.of(attempt));
+
+        service.withdraw(USER_ID);
+
+        verify(historyRepository).delete(attempt);
+        verify(farmerProfileRepository).delete(profile);
+    }
+
+    /** Đã duyệt rồi thì không còn gì để rút — đó là kết quả, không phải việc đang chờ. */
+    @Test
+    void withdraw_throws_whenTheApplicationWasAlreadyDecided() {
+        FarmerProfile profile = pendingProfile();
+        profile.setApprovalStatus(ApprovalStatus.APPROVED);
+        when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.of(profile));
+
+        assertThatThrownBy(() -> service.withdraw(USER_ID))
+                .isInstanceOf(InvalidApprovalTransitionException.class);
+        verify(farmerProfileRepository, never()).delete(any());
     }
 
     @Test

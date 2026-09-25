@@ -14,6 +14,8 @@ public interface FarmerServiceInterface {
 
     FarmerProfileResource getMyProfile(Long userId);
 
+    void withdraw(Long userId);
+
     PageResource<AdminFarmerListItemResource> listForAdmin(
             ApprovalStatus status, String query, int page, int pageSize);
 

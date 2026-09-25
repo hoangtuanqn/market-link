@@ -18,11 +18,14 @@ import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.resources.PageResource;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -53,8 +56,12 @@ public class FarmerService implements FarmerServiceInterface {
 
     private static final String LIST_SEPARATOR = ";";
 
+    /** Ảnh vừa tải lên chưa kịp gửi kèm đơn thì chưa phải rác — chỉ dọn file cũ hơn mốc này. */
+    private static final Duration KEEP_FRESH_UPLOADS_FOR = Duration.ofHours(1);
+
     private final FarmerProfileRepository farmerProfileRepository;
     private final FarmerApplicationHistoryRepository historyRepository;
+    private final FarmerUploadService uploadService;
     private final UserRepository userRepository;
     private final UserSessionCache userSessionCache;
 
@@ -73,6 +80,8 @@ public class FarmerService implements FarmerServiceInterface {
         if (profile.getId() != null && profile.getApprovalStatus() != ApprovalStatus.REJECTED) {
             throw new FarmerApplicationExistsException();
         }
+
+        assertOwnsFiles(userId, request);
 
         profile.setUserId(userId);
         profile.setStallName(request.stallName().trim());
@@ -98,7 +107,68 @@ public class FarmerService implements FarmerServiceInterface {
                         .status(ApprovalStatus.PENDING)
                         .build());
 
+        // Nộp lại thì ảnh của lần trước không còn ai trỏ tới nữa: dọn ngay thay vì đợi job.
+        cleanUpFiles(userId);
         return toOwnResource(profile, historyOf(userId));
+    }
+
+    /**
+     * Rút đơn khi còn đang chờ duyệt: hồ sơ và lần nộp đó biến mất, tài khoản trở lại như chưa từng
+     * nộp. Đã duyệt, đã bị từ chối hay đang đình chỉ thì không rút — những trạng thái đó là kết quả
+     * đã có, không phải việc đang chờ.
+     */
+    @Override
+    @Transactional
+    public void withdraw(Long userId) {
+        FarmerProfile profile =
+                farmerProfileRepository
+                        .findByUserId(userId)
+                        .orElseThrow(FarmerProfileNotFoundException::new);
+        if (profile.getApprovalStatus() != ApprovalStatus.PENDING) {
+            throw new InvalidApprovalTransitionException(
+                    "Only an application that is still waiting can be withdrawn.");
+        }
+        historyRepository
+                .findFirstByUserIdOrderByAttemptDesc(userId)
+                .filter(attempt -> attempt.getStatus() == ApprovalStatus.PENDING)
+                .ifPresent(historyRepository::delete);
+        farmerProfileRepository.delete(profile);
+        cleanUpFiles(userId);
+    }
+
+    /** Ảnh/video gửi kèm phải là file chính tài khoản đó vừa tải lên. */
+    private void assertOwnsFiles(Long userId, FarmerApplicationRequest request) {
+        List<String> urls = request.photoUrls() == null ? List.of() : request.photoUrls();
+        for (String url : urls) {
+            if (!uploadService.isOwnedBy(url, userId)) {
+                throw new InvalidFieldException("photoUrls", "Upload the photos again.");
+            }
+        }
+        if (!uploadService.isOwnedBy(request.videoUrl(), userId)) {
+            throw new InvalidFieldException("videoUrl", "Upload the video again.");
+        }
+    }
+
+    /** Xoá file của tài khoản này mà không đơn nào — hiện tại hay trong lịch sử — còn trỏ tới. */
+    private void cleanUpFiles(Long userId) {
+        Set<String> keep = new HashSet<>();
+        farmerProfileRepository
+                .findByUserId(userId)
+                .ifPresent(
+                        profile -> {
+                            keep.addAll(splitList(profile.getPhotoPaths()));
+                            if (profile.getVideoPath() != null) {
+                                keep.add(profile.getVideoPath());
+                            }
+                        });
+        for (FarmerApplicationHistory attempt :
+                historyRepository.findByUserIdOrderByAttemptDesc(userId)) {
+            keep.addAll(splitList(attempt.getPhotoPaths()));
+            if (attempt.getVideoPath() != null) {
+                keep.add(attempt.getVideoPath());
+            }
+        }
+        uploadService.deleteUnreferenced(userId, keep, Instant.now().minus(KEEP_FRESH_UPLOADS_FOR));
     }
 
     /**
