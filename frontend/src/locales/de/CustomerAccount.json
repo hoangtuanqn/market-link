@@ -63,10 +63,6 @@
     "intro": "Wird im Menü und den Ständen bei Ihren Bestellungen angezeigt. JPEG, PNG oder ein Foto von Ihrer Kamera.",
     "upload": "Foto hochladen",
     "take": "Foto aufnehmen",
-    "remove": "Foto entfernen",
-    "removing": "Wird entfernt…",
-    "removed": "Ihr Foto wurde entfernt.",
-    "removeFailed": "Ihr Foto konnte nicht entfernt werden. Bitte versuchen Sie es erneut.",
     "notUsed": "Foto nicht verwendet"
   },
   "photoErrors": {

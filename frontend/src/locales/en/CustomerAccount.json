@@ -63,10 +63,6 @@
     "intro": "Shown in the menu and to stalls on your orders. JPEG, PNG or a photo from your camera.",
     "upload": "Upload photo",
     "take": "Take photo",
-    "remove": "Remove photo",
-    "removing": "Removing…",
-    "removed": "Your photo is removed.",
-    "removeFailed": "Could not remove your photo. Please try again.",
     "notUsed": "Photo not used"
   },
   "photoErrors": {

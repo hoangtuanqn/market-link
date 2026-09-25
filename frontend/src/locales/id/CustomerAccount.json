@@ -63,10 +63,6 @@
     "intro": "Ditampilkan di menu dan ke lapak pada pesanan Anda. JPEG, PNG, atau foto dari kamera.",
     "upload": "Unggah foto",
     "take": "Ambil foto",
-    "remove": "Hapus foto",
-    "removing": "Menghapus…",
-    "removed": "Foto Anda sudah dihapus.",
-    "removeFailed": "Tidak dapat menghapus foto. Silakan coba lagi.",
     "notUsed": "Foto tidak dipakai"
   },
   "photoErrors": {
