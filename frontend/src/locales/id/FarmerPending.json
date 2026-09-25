@@ -1,0 +1,41 @@
+{
+  "overline": {
+    "suspended": "{{stall}} · ditangguhkan {{date}}",
+    "registered": "{{stall}} · terdaftar {{date}}"
+  },
+  "title": {
+    "pending": "Lapak Anda menunggu persetujuan",
+    "suspended": "Lapak Anda ditangguhkan"
+  },
+  "previewToggle": "Pratinjau: lapak ditangguhkan",
+  "reviewing": {
+    "title": "Admin sedang meninjau pendaftaran Anda.",
+    "text": "Anda akan menerima notifikasi dan email saat disetujui. Sampai saat itu lapak dan produk Anda tidak terlihat oleh pelanggan."
+  },
+  "now": {
+    "title": "Yang bisa Anda lakukan sekarang",
+    "details": "Lengkapi <link>detail lapak</link>, pasar tempat Anda berjualan, hari berjualan, dan slot pengambilan.",
+    "pin": "Tandai lapak Anda di peta agar pelanggan bisa menemukan Anda sejak hari pertama.",
+    "products": "Produk bisa ditambahkan setelah lapak disetujui. Sementara itu siapkan nama, harga, dan foto."
+  },
+  "details": {
+    "title": "Detail pendaftaran",
+    "stall": "Lapak",
+    "contact": "Kontak",
+    "email": "Email",
+    "market": "Pasar yang diajukan"
+  },
+  "suspended": {
+    "title": "Lapak Anda ditangguhkan pada {{date}}.",
+    "text": "Alasan dari admin: {{reason}} Produk Anda disembunyikan dan Anda tidak dapat menerima pesanan baru."
+  },
+  "running": {
+    "title": "Pesanan yang sudah masuk tetap berjalan",
+    "text": "Pelanggan yang memesan sebelum penangguhan tetap memiliki pesanannya (D-09). Tandai siap dan selesai seperti biasa agar tidak ada yang kehilangan pesanannya.",
+    "link": "Buka pesanan saat ini"
+  },
+  "reinstate": {
+    "title": "Agar diaktifkan kembali",
+    "text": "Hubungi tim melalui <link>Hubungi kami</link>."
+  }
+}

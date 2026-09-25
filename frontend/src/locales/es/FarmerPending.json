@@ -1,0 +1,41 @@
+{
+  "overline": {
+    "suspended": "{{stall}} · suspendido el {{date}}",
+    "registered": "{{stall}} · registrado el {{date}}"
+  },
+  "title": {
+    "pending": "Tu puesto está pendiente de aprobación",
+    "suspended": "Tu puesto está suspendido"
+  },
+  "previewToggle": "Vista previa: puesto suspendido",
+  "reviewing": {
+    "title": "Un administrador está revisando tu registro.",
+    "text": "Recibirás una notificación y un correo cuando se apruebe. Hasta entonces, tu puesto y tus productos no son visibles para los clientes."
+  },
+  "now": {
+    "title": "Lo que puedes hacer ahora",
+    "details": "Completa los <link>datos del puesto</link>, los mercados donde vendes, tus días y franjas de recogida.",
+    "pin": "Marca tu puesto en el mapa para que los clientes te encuentren desde el primer día.",
+    "products": "Podrás añadir productos cuando se apruebe el puesto. Mientras tanto, prepara nombres, precios y fotos."
+  },
+  "details": {
+    "title": "Datos del registro",
+    "stall": "Puesto",
+    "contact": "Contacto",
+    "email": "Correo",
+    "market": "Mercado solicitado"
+  },
+  "suspended": {
+    "title": "Tu puesto se suspendió el {{date}}.",
+    "text": "Motivo del administrador: {{reason}} Tus productos están ocultos y no puedes recibir pedidos nuevos."
+  },
+  "running": {
+    "title": "Los pedidos ya hechos siguen adelante",
+    "text": "Los clientes que pidieron antes de la suspensión conservan sus pedidos (D-09). Márcalos como listos y completados como siempre para que nadie pierda lo que reservó.",
+    "link": "Abrir pedidos actuales"
+  },
+  "reinstate": {
+    "title": "Para reactivarlo",
+    "text": "Contacta con el equipo en <link>Contacto</link>."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Notifikasi",
+  "intro": "Pesanan baru, perubahan, dan pembatalan dari pelanggan, serta pengumuman dari MarketLink.",
+  "filter": {
+    "all": "Semua",
+    "unread": "Belum dibaca"
+  },
+  "unreadCount_one": "{{count}} belum dibaca",
+  "unreadCount_other": "{{count}} belum dibaca",
+  "unread": "belum dibaca",
+  "markAllRead": "Tandai semua sudah dibaca",
+  "empty": {
+    "title": "Belum ada yang baru",
+    "text": "Anda akan diberi tahu di sini saat pesanan dibuat, diubah, atau dibatalkan, dan saat admin memasang pengumuman."
+  }
+}

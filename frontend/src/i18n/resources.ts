@@ -49,6 +49,11 @@ import setPassword from '@/locales/en/SetPassword.json';
 import stallProfile from '@/locales/en/StallProfile.json';
 import farmerSettings from '@/locales/en/FarmerSettings.json';
 import adminSettings from '@/locales/en/AdminSettings.json';
+import farmerMessages from '@/locales/en/FarmerMessages.json';
+import farmerNotifications from '@/locales/en/FarmerNotifications.json';
+import farmerPending from '@/locales/en/FarmerPending.json';
+import farmerPromote from '@/locales/en/FarmerPromote.json';
+import farmerReviews from '@/locales/en/FarmerReviews.json';
 
 export const en = {
   common: common,
@@ -97,6 +102,11 @@ export const en = {
   StallProfile: stallProfile,
   FarmerSettings: farmerSettings,
   AdminSettings: adminSettings,
+  FarmerMessages: farmerMessages,
+  FarmerNotifications: farmerNotifications,
+  FarmerPending: farmerPending,
+  FarmerPromote: farmerPromote,
+  FarmerReviews: farmerReviews,
 } as const;
 
 export type Namespace = keyof typeof en;
