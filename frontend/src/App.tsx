@@ -47,6 +47,8 @@ import AdminLoginPage from './pages/admin/Login';
 import AdminHomePage from './pages/admin/Home';
 import AdminVerifyPage from './pages/admin/Verify';
 import AdminSecurityPage from './pages/admin/Security';
+import AdminFarmersPage from './pages/admin/Farmers';
+import AdminFarmerDetailPage from './pages/admin/FarmerDetail';
 
 const App = () => {
   return (
@@ -171,6 +173,17 @@ const App = () => {
         <Route path="admin" element={<AdminLayout />}>
           <Route index element={<AdminHomePage />} />
           <Route path="security" element={<AdminSecurityPage />} />
+          <Route path="farmers" element={<AdminFarmersPage />} />
+          <Route
+            path="farmers/:id"
+            element={
+              <RemountOnParam param="id">
+                <AdminFarmerDetailPage />
+              </RemountOnParam>
+            }
+          />
+          {/* Mục sidebar chưa làm → 404 ngay trong khung admin, không rơi ra layout Customer */}
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
       <AppToaster />
