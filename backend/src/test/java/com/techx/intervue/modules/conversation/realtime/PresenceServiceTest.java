@@ -87,4 +87,21 @@ class PresenceServiceTest {
         assertThat(info.online()).isFalse();
         assertThat(info.lastSeenAt()).isNull();
     }
+
+    /**
+     * Tab mở > 30 phút không reconnect: TTL của tập session phải được làm mới, không tự "offline".
+     */
+    @Test
+    void touchRefreshesTheOnlineTtlSoLongSessionsStayOnline() {
+        presence.connected(u.getId(), "s1");
+        redis.expire(PresenceService.onlineKey(u.getId()), java.time.Duration.ofSeconds(5));
+
+        presence.touch(List.of(u.getId()));
+
+        assertThat(
+                        redis.getExpire(
+                                PresenceService.onlineKey(u.getId()),
+                                java.util.concurrent.TimeUnit.SECONDS))
+                .isGreaterThan(60);
+    }
 }

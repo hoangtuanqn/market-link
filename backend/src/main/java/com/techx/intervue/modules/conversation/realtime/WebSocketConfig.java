@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 /** Spec 7.2 / 7.4. Endpoint /ws, WebSocket thuần (không SockJS), mọi sự kiện đi ra theo user. */
 @Slf4j
@@ -26,14 +27,24 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final ChatRealtimeProperties props;
     private final StompAuthInterceptor authInterceptor;
+    private final StompErrorHandler errorHandler;
+    private final ChatSessionRegistry sessionRegistry;
 
     @Value("${app.cors.allowed-origins}")
     private List<String> allowedOrigins;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // Lý do từ chối (token sai, sai destination) đi vào header message của frame ERROR
+        registry.setErrorHandler(errorHandler);
         registry.addEndpoint(ENDPOINT)
                 .setAllowedOriginPatterns(allowedOrigins.toArray(String[]::new));
+    }
+
+    /** Theo dõi socket đang mở để ChatSessionSweeper đóng phiên đã bị thu hồi. */
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
+        registration.addDecoratorFactory(sessionRegistry);
     }
 
     /** Spec 7.3: JWT kiểm ở frame CONNECT, không ở handshake. */

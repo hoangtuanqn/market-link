@@ -6,6 +6,8 @@ import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import io.jsonwebtoken.JwtException;
 import java.security.Principal;
+import java.time.Instant;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,16 @@ import org.springframework.stereotype.Component;
 public class StompAuthInterceptor implements ChannelInterceptor {
 
     public static final String USER_TOPIC_PREFIX = "/user/topic/";
+
+    /**
+     * Session attributes (chia sẻ với WebSocketSession) để ChatSessionSweeper biết phiên của ai.
+     */
+    public static final String ATTR_USER_ID = "chat.userId";
+
+    public static final String ATTR_ISSUED_AT = "chat.issuedAt";
     private static final String APP_PREFIX = "/app/";
+
+    private record Authenticated(Principal principal, Long userId, Instant issuedAt) {}
 
     private final JwtServiceInterface jwtService;
     private final BlacklistServiceInterface blacklistService;
@@ -49,8 +60,15 @@ public class StompAuthInterceptor implements ChannelInterceptor {
             return message;
         }
         switch (accessor.getCommand()) {
-            case CONNECT, STOMP ->
-                    accessor.setUser(authenticate(accessor.getFirstNativeHeader("Authorization")));
+            case CONNECT, STOMP -> {
+                Authenticated auth = authenticate(accessor.getFirstNativeHeader("Authorization"));
+                accessor.setUser(auth.principal());
+                Map<String, Object> attrs = accessor.getSessionAttributes();
+                if (attrs != null) {
+                    attrs.put(ATTR_USER_ID, auth.userId());
+                    attrs.put(ATTR_ISSUED_AT, auth.issuedAt());
+                }
+            }
             case SUBSCRIBE -> {
                 requireUser(accessor);
                 String dest = accessor.getDestination();
@@ -74,7 +92,7 @@ public class StompAuthInterceptor implements ChannelInterceptor {
         return message;
     }
 
-    private Principal authenticate(String header) {
+    private Authenticated authenticate(String header) {
         if (header == null || !header.startsWith("Bearer ")) {
             throw new BadCredentialsException("Sign in to use chat.");
         }
@@ -84,12 +102,13 @@ public class StompAuthInterceptor implements ChannelInterceptor {
                 throw new BadCredentialsException("Your token is not valid.");
             }
             Long userId = jwtService.extractSubject(token);
+            Instant issuedAt = jwtService.extractIssuedAt(token);
             UserSessionCache.SessionData session = userSessionCache.get(userId);
-            if (session == null
-                    || userSessionCache.isRevoked(userId, jwtService.extractIssuedAt(token))) {
+            if (session == null || userSessionCache.isRevoked(userId, issuedAt)) {
                 throw new BadCredentialsException("Your session has expired.");
             }
-            return principalFor(String.valueOf(userId), session.roles());
+            return new Authenticated(
+                    principalFor(String.valueOf(userId), session.roles()), userId, issuedAt);
         } catch (JwtException e) {
             throw new BadCredentialsException("Token authentication failed.");
         }

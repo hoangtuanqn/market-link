@@ -21,6 +21,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -164,10 +165,22 @@ class ChatStompIntegrationTest {
         assertThat(inbox.poll(5, TimeUnit.SECONDS)).isNotNull().contains("\"body\":\"hello\"");
     }
 
+    /**
+     * Frame ERROR phải mang lý do của ta, không phải chuỗi nội bộ của Spring, để FE biết có nên thử
+     * lại.
+     */
     @Test
-    void connectingWithABadTokenIsRefused() {
+    void connectingWithABadTokenIsRefusedWithAClearReason() {
         StompHeaders headers = new StompHeaders();
         headers.add("Authorization", "Bearer not-a-jwt");
+        AtomicReference<String> errorMessage = new AtomicReference<>();
+        StompSessionHandlerAdapter handler =
+                new StompSessionHandlerAdapter() {
+                    @Override
+                    public void handleFrame(StompHeaders h, Object payload) {
+                        errorMessage.set(h.getFirst("message"));
+                    }
+                };
 
         assertThatThrownBy(
                         () ->
@@ -175,9 +188,10 @@ class ChatStompIntegrationTest {
                                                 "ws://localhost:" + port + WebSocketConfig.ENDPOINT,
                                                 (WebSocketHttpHeaders) null,
                                                 headers,
-                                                new StompSessionHandlerAdapter() {})
+                                                handler)
                                         .get(5, TimeUnit.SECONDS))
                 .isInstanceOf(ExecutionException.class);
+        assertThat(errorMessage.get()).isEqualTo("Token authentication failed.");
     }
 
     @Test

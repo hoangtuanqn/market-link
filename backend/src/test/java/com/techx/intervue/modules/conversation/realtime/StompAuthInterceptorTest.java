@@ -228,4 +228,23 @@ class StompAuthInterceptorTest {
                     .isInstanceOf(AccessDeniedException.class);
         }
     }
+
+    /** Sweep phiên bị thu hồi cần biết phiên này của ai và token cấp lúc nào. */
+    @Test
+    void connectStoresUserIdAndIssuedAtInTheSessionAttributes() {
+        StompHeaderAccessor a = StompHeaderAccessor.create(StompCommand.CONNECT);
+        a.setSessionId("s1");
+        a.setLeaveMutable(true);
+        a.setNativeHeader("Authorization", "Bearer good");
+        java.util.Map<String, Object> attrs = new java.util.HashMap<>();
+        a.setSessionAttributes(attrs);
+
+        interceptor.preSend(
+                MessageBuilder.createMessage(new byte[0], a.getMessageHeaders()), channel);
+
+        assertThat(attrs).containsEntry(StompAuthInterceptor.ATTR_USER_ID, 7L);
+        assertThat(attrs)
+                .containsEntry(
+                        StompAuthInterceptor.ATTR_ISSUED_AT, Instant.parse("2026-09-25T06:00:00Z"));
+    }
 }
