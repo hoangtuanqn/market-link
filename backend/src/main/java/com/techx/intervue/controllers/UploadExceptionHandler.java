@@ -27,7 +27,7 @@ public class UploadExceptionHandler {
                                 List.of(
                                         FieldErrorResource.builder()
                                                 .field("file")
-                                                .message("The photo must be 2 MB or smaller.")
+                                                .message("The file must be 40 MB or smaller.")
                                                 .build()))
                         .build();
         return ResponseEntity.status(HttpStatus.CONTENT_TOO_LARGE)

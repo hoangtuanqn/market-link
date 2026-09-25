@@ -330,7 +330,16 @@
     "announcements": "お知らせ",
     "feedback": "フィードバック",
     "pricing": "料金",
-    "settings": "設定"
+    "settings": "設定",
+    "analytics": "分析",
+    "people": "ユーザー",
+    "marketplace": "マーケットプレイス",
+    "platform": "プラットフォーム",
+    "navigation": "管理ナビゲーション",
+    "home": "MarketLink — 管理概要",
+    "contextSub": "プラットフォーム · マーケット全体",
+    "userLine": "管理者 · プラットフォーム全体",
+    "searchPlaceholder": "店舗、顧客、市場"
   },
   "carousel": {
     "roleCarousel": "カルーセル",

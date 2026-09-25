@@ -330,7 +330,16 @@
     "announcements": "公告",
     "feedback": "反馈",
     "pricing": "定价",
-    "settings": "设置"
+    "settings": "设置",
+    "analytics": "分析",
+    "people": "用户",
+    "marketplace": "市场",
+    "platform": "平台",
+    "navigation": "管理导航",
+    "home": "MarketLink — 管理概览",
+    "contextSub": "平台 · 整个市场",
+    "userLine": "管理员 · 整个平台",
+    "searchPlaceholder": "摊位、顾客或市场"
   },
   "carousel": {
     "roleCarousel": "轮播",
