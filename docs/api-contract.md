@@ -306,16 +306,54 @@ Giá trị `status` giữ nguyên dạng lưu trong DB: `placed`, `accepted`, `r
 
 ## 9. Favorites & Notifications — FR-040…042
 
-> **Chưa triển khai.**
+> Favorites: **chưa triển khai**. Notifications: **đã có** (spec `docs/superpowers/specs/2026-09-25-realtime-notifications-design.md`).
 
-| Method | Path | Role |
-|---|---|---|
-| GET | `/api/v1/favorites` | Customer — query `targetType` |
-| POST | `/api/v1/favorites` | Customer — `{ targetType, farmerId?, productId?, marketId? }` |
-| DELETE | `/api/v1/favorites/{id}` | Customer |
-| GET | `/api/v1/notifications` | All — query `isRead, page` |
-| PATCH | `/api/v1/notifications/{id}/read` | All |
-| PATCH | `/api/v1/notifications/read-all` | All |
+| Method | Path | Role | Trạng thái | Body / query | data |
+|---|---|---|---|---|---|
+| GET | `/api/v1/favorites` | Customer | Chưa làm | query `targetType` | |
+| POST | `/api/v1/favorites` | Customer | Chưa làm | `{ targetType, farmerId?, productId?, marketId? }` | |
+| DELETE | `/api/v1/favorites/{id}` | Customer | Chưa làm | | |
+| GET | `/api/v1/notifications` | All | **Đã có** | query `isRead?`, `page` (từ 1), `size` (1–50, mặc định 20) | `{ items: NotificationResource[], page, pageSize, total }`, mới nhất trước |
+| GET | `/api/v1/notifications/unread-count` | All | **Đã có** | | `{ count }` |
+| PATCH | `/api/v1/notifications/{id}/read` | All | **Đã có** | | `null`; không có → 404, của người khác → **403** |
+| PATCH | `/api/v1/notifications/read-all` | All | **Đã có** | | `{ updated }` |
+| GET | `/api/v1/notifications/preferences` | All | **Đã có** | | `NotificationPreferences` (chỉ nhóm của vai mình) |
+| PUT | `/api/v1/notifications/preferences` | All | **Đã có** | `NotificationPreferences` | như GET; nhóm lạ/không thuộc vai hoặc giờ sai `HH:mm` → 400 |
+| POST | `/api/v1/notifications/test` | All | **Đã có** | | `null`; gửi kind `test` cho chính mình, không lưu; bấm lại trong 10 giây → **429** |
+
+`NotificationResource`: `{ id, kind, title, message, link, isRead, createdAt }`. `title`/`message` đã dịch theo
+ngôn ngữ người nhận (`user_settings.language`) lúc tạo.
+
+`kind`: `announcement` · `farmer_application` (tới admin) · `farmer_approved` · `farmer_rejected` · `farmer_suspended` ·
+`farmer_reinstated` — đều được lưu. `message` (tin nhắn chat) và `test` chỉ đẩy realtime, **không lưu**.
+Các mốc đơn hàng của D-11 sẽ thêm kind mới khi có module orders.
+
+`NotificationPreferences`:
+
+```json
+{ "categories": [ { "category": "messages", "inApp": true, "browser": false } ],
+  "sound": true, "quietOn": true, "quietFrom": "22:00", "quietTo": "07:00" }
+```
+
+- Nhóm: `messages`, `announcements`, `account` (customer, farmer); `farmerApplications` (admin).
+- Chưa lưu = bật cả hai kênh, âm thanh bật, không giờ yên tĩnh.
+- Giờ yên tĩnh theo `Asia/Ho_Chi_Minh`, khoảng `[from, to)`, qua nửa đêm được, `from == to` = tắt. Trong giờ yên
+  tĩnh không popup, không âm thanh, không Web Push; vẫn lưu và vẫn tăng số chưa đọc.
+
+### Realtime — STOMP `/user/topic/notifications`
+
+Cùng kết nối `/ws` với chat (JWT ở frame CONNECT). Mỗi thông báo tới mọi tab đang mở của người nhận:
+
+```json
+{ "id": 123, "kind": "farmer_approved", "title": "…", "message": "…", "link": "/farmer",
+  "createdAt": "2026-09-25T11:00:00Z", "persistent": true, "unreadCount": 4,
+  "alert": { "inApp": true, "browser": true, "sound": true }, "conversationId": null }
+```
+
+- `id` là `null` với kind không lưu; `conversationId` chỉ có với `message` (FE không popup khi đang mở đúng thread).
+- `alert` do server tính từ preferences + giờ yên tĩnh. FE: tab đang nhìn + `inApp` → toast; tab ẩn + `browser` +
+  quyền trình duyệt → thông báo hệ điều hành.
+- Link theo vai: customer `/notifications`, `/messages?c={id}`; farmer `/farmer/notifications`, `/farmer/messages?c={id}`.
 
 ---
 
@@ -336,7 +374,14 @@ Giá trị `status` giữ nguyên dạng lưu trong DB: `placed`, `accepted`, `r
 | GET | `/api/v1/admin/reports/orders` | query `from, to, marketId` |
 | GET | `/api/v1/admin/reports/revenue` | doanh thu theo chợ |
 | GET | `/api/v1/admin/reports/top-farmers` | |
-| GET/POST/PUT/DELETE | `/api/v1/admin/announcements` | |
+| GET | `/api/v1/admin/announcements` | **Đã có** — query `page`, `size` (≤50); mới nhất trước |
+| POST | `/api/v1/admin/announcements` | **Đã có** — `{ title (≤150), content (≤1000), audience: "all" \| "customers" \| "farmers", startsAt?, endsAt? }` → 201 `AnnouncementResource`; **gửi ngay** một thông báo cho mọi user `active` thuộc audience (admin không nhận) |
+| PUT | `/api/v1/admin/announcements/{id}` | **Đã có** — cùng body; chỉ sửa banner, **không** sửa thông báo đã gửi |
+| DELETE | `/api/v1/admin/announcements/{id}` | **Đã có** — gỡ banner (`active = false`); thông báo đã gửi vẫn giữ |
+| GET | `/api/v1/announcements/active` | **Đã có**, **Public** — banner đang hiệu lực mới nhất, `null` nếu không có |
+
+`AnnouncementResource`: `{ id, title, content, audience, active, startsAt, endsAt, createdAt }`. `endsAt` phải sau
+`startsAt` (400). Banner hiện khi `active` và `startsAt ≤ now < endsAt` (null = không giới hạn phía đó).
 
 ---
 
