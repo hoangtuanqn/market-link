@@ -1,6 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
+import DayChips from '@/components/DayChips';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
@@ -147,28 +148,17 @@ const SearchPage = () => {
         </form>
 
         <div className="flex flex-wrap items-start gap-6">
-          <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
-            <legend className="text-small mb-2 p-0 font-bold">{t('day')}</legend>
-            <div className="flex flex-wrap gap-2">
-              {DAY_OPTIONS.map((d) => (
-                <label key={d.value} className="relative">
-                  <input
-                    type="radio"
-                    name="day"
-                    checked={day === d.value}
-                    onChange={() => setDay(d.value)}
-                    className="peer absolute inset-0 m-0 cursor-pointer opacity-0"
-                  />
-                  <span className="border-line-strong bg-surface-raised peer-checked:bg-brand peer-checked:text-on-brand flex min-h-11 min-w-14 flex-col items-center justify-center rounded-full px-2.5 py-1 text-[14px] font-bold shadow-[inset_0_0_0_1.5px_var(--line-strong)] peer-checked:shadow-none">
-                    {dayName(d.value)}
-                    <small className="text-ink-muted text-[12px] font-normal peer-checked:text-inherit">
-                      {formatDayMonth(d.date)}
-                    </small>
-                  </span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+          <DayChips
+            legend={t('day')}
+            name="day"
+            value={String(day)}
+            onChange={(v) => setDay(Number(v))}
+            options={DAY_OPTIONS.map((d) => ({
+              value: String(d.value),
+              label: dayName(d.value, 'long'),
+              date: formatDayMonth(d.date),
+            }))}
+          />
           <div className="flex flex-col gap-2">
             <span className="text-small font-bold">{t('sort')}</span>
             <div className="flex flex-wrap gap-2">

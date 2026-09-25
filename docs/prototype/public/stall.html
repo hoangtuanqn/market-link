@@ -113,7 +113,7 @@
   document.getElementById('approved').innerHTML = PT.icons.check() + '<span class="ml-status-text">Approved stall</span>';
   document.getElementById('revtags').innerHTML = PT.reviewTags[1].map(function (t) { return '<span class="pt-revtag">' + PT.esc(t[0]) + ' <b>' + t[1] + '</b></span>'; }).join('');
   document.getElementById('tabs').innerHTML = PT.tabs('Stall sections', [{ id: 'stock', label: "This week's stock", count: 4 }, { id: 'reviews', label: 'Reviews', count: 32 }, { id: 'about', label: 'About the stall' }], 'stock');
-  document.getElementById('day-chips').innerHTML = PT.dayChips('Available on', [{ value: 'fri', label: 'Fri', sub: '25/09', disabled: true }, { value: 'sat', label: 'Sat', sub: '26/09' }, { value: 'sun', label: 'Sun', sub: '27/09' }], 'sat');
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Available on', [{ value: 'fri', label: 'Friday', date: '25/09', disabled: true }, { value: 'sat', label: 'Saturday', date: '26/09' }, { value: 'sun', label: 'Sunday', date: '27/09' }], 'sat');
   document.getElementById('products').innerHTML = [1, 2, 7, 19].map(function (id) { return PT.productCard(PT.product(id), { market: false }); }).join('');
   document.getElementById('rev-filter').innerHTML = PT.chip('All', { selected: true, radio: 'rf', count: 4 }) + PT.chip('About the stall', { radio: 'rf', count: 2 }) + PT.chip('About products', { radio: 'rf', count: 2 });
   document.getElementById('reviews').innerHTML = PT.reviews.filter(function (r) { return r.farmer === 1; }).map(function (r) { return PT.reviewCard(r, { fluid: true }); }).join('');

@@ -11,20 +11,27 @@ import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.entities.Message;
+import com.techx.intervue.modules.conversation.entities.MessageAttachment;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
+import com.techx.intervue.modules.conversation.exceptions.AttachmentAlreadyUsedException;
+import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
+import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
+import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.requests.SendMessageRequest;
 import com.techx.intervue.modules.conversation.resources.MessageResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -44,6 +51,8 @@ class MessageServiceTest {
     UserRepository users;
     StallAccessPolicyInterface policy;
     ChatEventPublisherInterface events;
+    ChatRateLimiterInterface rateLimiter;
+    MessageAttachmentRepository attachments;
     MessageService service;
     Conversation thread;
 
@@ -54,6 +63,8 @@ class MessageServiceTest {
         users = mock(UserRepository.class);
         policy = mock(StallAccessPolicyInterface.class);
         events = mock(ChatEventPublisherInterface.class);
+        rateLimiter = mock(ChatRateLimiterInterface.class);
+        attachments = mock(MessageAttachmentRepository.class);
         Clock clock = Clock.fixed(NOW, ZoneId.of("Asia/Ho_Chi_Minh"));
         service =
                 new MessageService(
@@ -63,7 +74,9 @@ class MessageServiceTest {
                         policy,
                         events,
                         new ConversationLookup(conversations),
-                        clock);
+                        clock,
+                        rateLimiter,
+                        attachments);
 
         thread = Conversation.between(3L, 7L);
         thread.setId(42L);
@@ -94,7 +107,7 @@ class MessageServiceTest {
     }
 
     private static SendMessageRequest text(String body) {
-        return new SendMessageRequest(null, body, null, null);
+        return new SendMessageRequest(null, body, null, null, null);
     }
 
     @Test
@@ -119,7 +132,7 @@ class MessageServiceTest {
                 service.send(
                         7L,
                         42L,
-                        new SendMessageRequest(MessageKind.TEXT, "Is this one?", 15L, 21L));
+                        new SendMessageRequest(MessageKind.TEXT, "Is this one?", 15L, 21L, null));
 
         assertThat(result.productId()).isEqualTo(15L);
         assertThat(result.orderId()).isEqualTo(21L);
@@ -153,13 +166,14 @@ class MessageServiceTest {
     }
 
     @Test
-    void nonTextKindsAreNotSupportedYet() {
+    void offerMessagesAreStillNotSupported() {
         assertThatThrownBy(
                         () ->
                                 service.send(
                                         7L,
                                         42L,
-                                        new SendMessageRequest(MessageKind.IMAGE, "x", null, null)))
+                                        new SendMessageRequest(
+                                                MessageKind.OFFER, "x", null, null, null)))
                 .isInstanceOf(UnsupportedMessageKindException.class);
         verify(messages, never()).save(any());
     }
@@ -210,5 +224,152 @@ class MessageServiceTest {
         verify(messages)
                 .findByConversationIdAndHiddenAtIsNullOrderByIdDesc(eq(42L), page.capture());
         assertThat(page.getValue().getPageSize()).isEqualTo(MessageService.MAX_PAGE);
+    }
+
+    @Test
+    void refusesToSendWhenTheUserIsOverTheRateLimit() {
+        org.mockito.Mockito.doThrow(new RateLimitedException("too fast"))
+                .when(rateLimiter)
+                .check(7L, ChatRateLimiterInterface.Action.MESSAGE);
+
+        assertThatThrownBy(
+                        () ->
+                                service.send(
+                                        7L,
+                                        42L,
+                                        new SendMessageRequest(null, "hi", null, null, null)))
+                .isInstanceOf(RateLimitedException.class);
+        verify(messages, never()).save(any(Message.class));
+    }
+
+    @Test
+    void sendsAnImageMessageWithNoBody() {
+        MessageAttachment upload = upload(55L, 7L, null);
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload));
+
+        MessageResource sent =
+                service.send(
+                        7L, 42L, new SendMessageRequest(MessageKind.IMAGE, null, null, null, 55L));
+
+        assertThat(sent.kind()).isEqualTo(MessageKind.IMAGE);
+        assertThat(sent.attachment().attachmentId()).isEqualTo(55L);
+        assertThat(sent.attachment().url()).isEqualTo("/api/v1/attachments/55");
+        assertThat(upload.getMessageId()).isEqualTo(sent.id());
+        assertThat(thread.getLastMessageText()).isEqualTo("Photo");
+    }
+
+    @Test
+    void anImageMessageNeedsAnAttachment() {
+        assertThatThrownBy(
+                        () ->
+                                service.send(
+                                        7L,
+                                        42L,
+                                        new SendMessageRequest(
+                                                MessageKind.IMAGE, null, null, null, null)))
+                .isInstanceOf(EmptyMessageException.class);
+    }
+
+    /** Review Focus #3. */
+    @Test
+    void cannotAttachSomeoneElsesUpload() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload(55L, 3L, null)));
+
+        assertThatThrownBy(
+                        () ->
+                                service.send(
+                                        7L,
+                                        42L,
+                                        new SendMessageRequest(
+                                                MessageKind.IMAGE, null, null, null, 55L)))
+                .isInstanceOf(AttachmentNotYoursException.class);
+        verify(messages, never()).save(any(Message.class));
+    }
+
+    /** Review Focus #3, nửa sau: một ảnh chỉ gắn được vào đúng một tin. */
+    @Test
+    void cannotReuseAnAttachmentThatIsAlreadyOnAMessage() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload(55L, 7L, 900L)));
+
+        assertThatThrownBy(
+                        () ->
+                                service.send(
+                                        7L,
+                                        42L,
+                                        new SendMessageRequest(
+                                                MessageKind.IMAGE, null, null, null, 55L)))
+                .isInstanceOf(AttachmentAlreadyUsedException.class);
+        verify(messages, never()).save(any(Message.class));
+    }
+
+    @Test
+    void anUnknownAttachmentIdIsNotFound() {
+        when(attachments.findById(55L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(
+                        () ->
+                                service.send(
+                                        7L,
+                                        42L,
+                                        new SendMessageRequest(
+                                                MessageKind.IMAGE, null, null, null, 55L)))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void listingAThreadCarriesThePhotoOfEachImageMessage() {
+        Message image =
+                Message.builder()
+                        .id(101L)
+                        .conversationId(42L)
+                        .senderId(3L)
+                        .kind(MessageKind.IMAGE)
+                        .createdAt(NOW)
+                        .build();
+        when(messages.findByConversationIdAndHiddenAtIsNullOrderByIdDesc(
+                        eq(42L), any(Pageable.class)))
+                .thenReturn(List.of(image));
+        when(attachments.findByMessageIdIn(List.of(101L)))
+                .thenReturn(List.of(upload(55L, 3L, 101L)));
+
+        List<MessageResource> page = service.list(7L, 42L, null, 30);
+
+        assertThat(page)
+                .singleElement()
+                .satisfies(m -> assertThat(m.attachment().attachmentId()).isEqualTo(55L));
+    }
+
+    @Test
+    void listingAThreadOfTextOnlyNeverQueriesTheAttachmentTable() {
+        Message text =
+                Message.builder()
+                        .id(101L)
+                        .conversationId(42L)
+                        .senderId(3L)
+                        .kind(MessageKind.TEXT)
+                        .body("hi")
+                        .createdAt(NOW)
+                        .build();
+        when(messages.findByConversationIdAndHiddenAtIsNullOrderByIdDesc(
+                        eq(42L), any(Pageable.class)))
+                .thenReturn(List.of(text));
+
+        assertThat(service.list(7L, 42L, null, 30)).singleElement().satisfies(m -> {});
+
+        verify(attachments, never())
+                .findByMessageIdIn(org.mockito.ArgumentMatchers.anyCollection());
+    }
+
+    private static MessageAttachment upload(Long id, Long uploaderId, Long messageId) {
+        return MessageAttachment.builder()
+                .id(id)
+                .uploaderId(uploaderId)
+                .messageId(messageId)
+                .storageKey(id + "-key.jpg")
+                .mime("image/jpeg")
+                .sizeBytes(100)
+                .width(800)
+                .height(600)
+                .build();
     }
 }

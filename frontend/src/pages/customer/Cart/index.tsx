@@ -65,7 +65,7 @@ const CustomerCartPage = () => {
   const slot2Time = found2 && slotTime(found2);
   const d1 = dayOf(day1);
   const d2 = dayOf(day2);
-  const dayOptions = DAYS.map((d) => ({ value: d.value, label: dayName(d.dow), sub: formatDayMonth(d.date) }));
+  const dayOptions = DAYS.map((d) => ({ value: d.value, label: dayName(d.dow, 'long'), date: formatDayMonth(d.date) }));
   const slots1 = SLOTS_1.map((s) => ({ ...s, time: slotTime(s) }));
   const slots2 = SLOTS_2.map((s) => ({ ...s, time: slotTime(s) }));
 

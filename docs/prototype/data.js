@@ -5,11 +5,11 @@ window.PT = window.PT || {};
 (function (PT) {
   PT.today = { label: 'Thu 24/09/2026', weekday: 4, date: '24/09/2026' };
   PT.week = [
-    { value: 'thu', label: 'Thu', sub: '24/09', dow: 4 },
-    { value: 'fri', label: 'Fri', sub: '25/09', dow: 5 },
-    { value: 'sat', label: 'Sat', sub: '26/09', dow: 6 },
-    { value: 'sun', label: 'Sun', sub: '27/09', dow: 0 },
-    { value: 'wed', label: 'Wed', sub: '30/09', dow: 3 },
+    { value: 'thu', label: 'Thu', sub: '24/09', long: 'Thursday', dow: 4 },
+    { value: 'fri', label: 'Fri', sub: '25/09', long: 'Friday', dow: 5 },
+    { value: 'sat', label: 'Sat', sub: '26/09', long: 'Saturday', dow: 6 },
+    { value: 'sun', label: 'Sun', sub: '27/09', long: 'Sunday', dow: 0 },
+    { value: 'wed', label: 'Wed', sub: '30/09', long: 'Wednesday', dow: 3 },
   ];
 
   // The seven weekdays, matching market_operating_days.day_of_week (0 = Sun … 6 = Sat)
@@ -26,8 +26,8 @@ window.PT = window.PT || {};
   ];
 
   PT.users = {
-    customer: { name: 'Khang', full: 'Nguyễn Minh Khang', email: 'khang@example.com', phone: '0903 118 218', address: '25 Xuân Thủy, Thảo Điền, Thủ Đức' },
-    farmer: { name: 'Cô Tư Garden', short: 'Cô Tư', person: 'Nguyễn Thị Tư', email: 'cotu@example.com', phone: '0912 440 540', address: 'Hamlet 3, Tân Phú Trung, Củ Chi' },
+    customer: { name: 'Khang', full: 'Nguyễn Minh Khang', email: 'khang@example.com', phone: '0903 118 218', address: '25 Xuân Thủy, Thảo Điền, Thủ Đức', tier: 'silver' },
+    farmer: { name: 'Cô Tư Garden', short: 'Cô Tư', person: 'Nguyễn Thị Tư', email: 'cotu@example.com', phone: '0912 440 540', address: 'Hamlet 3, Tân Phú Trung, Củ Chi', tier: 'gold' },
     admin: { name: 'Admin' },
   };
 

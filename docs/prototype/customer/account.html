@@ -23,38 +23,69 @@
     <h1 class="pt-title">Account</h1>
     <p class="pt-body">Your details are shared with a stall only on the orders you place there.</p>
   </div>
-  <section class="ml-card pt-panel pt-avatar-card" aria-labelledby="photo-title">
-    <span class="pt-avatar" aria-hidden="true" style="width:88px;height:88px;font-size:35px">NK</span>
+  <div class="ml-card pt-panel pt-col-6">
+    <section class="pt-avatar-card" aria-labelledby="photo-title">
+      <span class="ml-tier-ring" data-tier="silver" aria-hidden="true"><span class="pt-avatar" style="width:88px;height:88px;font-size:35px">NK</span></span>
+      <div class="pt-col-3">
+        <div>
+          <h2 class="pt-h3" id="photo-title">Profile photo</h2>
+          <p class="pt-small ml-muted">Shown in the menu and to stalls on your orders. JPEG, PNG or a photo from your camera.</p>
+        </div>
+        <div class="pt-row-2">
+          <button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="In the app: pick a photo, then drag and zoom it inside a round frame before saving.">Upload photo</button>
+          <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="In the app: the camera opens in a dialog, then the same framing step.">Take photo</button>
+        </div>
+        <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal · A profile photo is not in the SRS. API proposed in docs/proposals/avatar-api.md; LEAD to confirm.">Not in the SRS</span></p>
+      </div>
+    </section>
+    <div aria-hidden="true" style="border-top:1px solid var(--line)"></div>
+    <form class="pt-col" novalidate>
+      <h2 class="pt-h3">Your details</h2>
+      <div class="pt-form-grid">
+        <div class="ml-field"><label class="ml-field-label" for="name">Full name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Nguyễn Minh Khang"></div>
+        <div class="ml-field"><label class="ml-field-label" for="phone">Phone number<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" value="0903 118 218"></div>
+        <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" value="khang@example.com"></div>
+        <div class="ml-field"><label class="ml-field-label" for="addr">Address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="addr" class="ml-input" value="25 Xuân Thủy, Thảo Điền, Thủ Đức"><span class="ml-field-hint">Used for distances and directions.</span></div>
+      </div>
+      <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Your details are saved.">Save changes</button></div>
+    </form>
+  </div>
+  <section class="ml-card pt-panel pt-col" aria-labelledby="achieve-title">
+    <div class="pt-col-2"><h2 class="pt-h3" id="achieve-title">Your achievements</h2>
+    <p class="pt-small ml-muted">Counted from the orders you collected at the stalls. Only you see these figures.</p></div>
+    <div class="ml-tier-panel pt-avatar-card" data-tier="silver" id="tier-hero"></div>
+    <dl class="pt-achieve-figures">
+      <div><dt>Orders collected</dt><dd>12</dd></div>
+      <div><dt>Cancelled by you</dt><dd>5</dd></div>
+      <div><dt>Declined by the stall</dt><dd>1</dd></div>
+      <div><dt>In progress</dt><dd>2</dd></div>
+      <div><dt>Total spent</dt><dd>1,750,000&nbsp;₫</dd></div>
+      <div><dt>Completion rate</dt><dd>70%</dd></div>
+    </dl>
     <div class="pt-col-3">
-      <div>
-        <h2 class="pt-h3" id="photo-title">Profile photo</h2>
-        <p class="pt-small ml-muted">Shown in the menu and to stalls on your orders. JPEG, PNG or a photo from your camera.</p>
-      </div>
-      <div class="pt-row-2">
-        <button type="button" class="ml-btn ml-btn-primary ml-btn-sm" data-toast="In the app: pick a photo, then drag and zoom it inside a round frame before saving.">Upload photo</button>
-        <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="In the app: the camera opens in a dialog, then the same framing step.">Take photo</button>
-      </div>
-      <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal · A profile photo is not in the SRS. API proposed in docs/proposals/avatar-api.md; LEAD to confirm.">Not in the SRS</span></p>
+      <div class="pt-row-2"><b class="pt-body">On your way to Gold</b><span class="ml-tier-badge" data-tier="gold">Gold tier</span></div>
+      <div class="pt-meter"><div class="pt-between-c"><b class="pt-small">Orders collected</b><span class="pt-meter-say">12 of 15</span></div><span class="pt-meter-track"><span class="ml-tier-fill" data-tier="gold" style="width:80%"></span></span></div>
+      <div class="pt-meter"><div class="pt-between-c"><b class="pt-small">Total spent</b><span class="pt-meter-say">1,750,000&nbsp;₫ of 2,000,000&nbsp;₫</span></div><span class="pt-meter-track"><span class="ml-tier-fill" data-tier="gold" style="width:87.5%"></span></span></div>
+      <p class="pt-small ml-muted">You also need a completion rate of at least 75%. Orders the stall declined never count against you.</p>
     </div>
+    <div class="pt-col-2">
+      <b class="pt-body">Your perks</b>
+      <ul class="pt-perks">
+        <li><span class="ml-tier-dot" data-tier="silver" aria-hidden="true"></span>A thicker silver frame around your photo</li>
+        <li><span class="ml-tier-dot" data-tier="silver" aria-hidden="true"></span>Stalls see Silver tier next to your name on orders and in messages</li>
+        <li><span class="ml-tier-dot" data-tier="silver" aria-hidden="true"></span>Your reviews carry the Silver tier badge</li>
+      </ul>
+    </div>
+    <ol class="pt-tier-ladder" id="tier-ladder"></ol>
+    <p class="pt-caption ml-muted">Stalls and other shoppers see your tier next to your name, never these figures.</p>
+    <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Proposal · Personal achievements and tiers are not in the SRS; LEAD asked for them 25/09. Backend: GET /api/v1/auth/me/achievements (not in docs/api-contract.md yet). A tier needs all three of orders collected, total spent and completion rate (completed ÷ completed + cancelled by the customer); declined orders never count. Thresholds live in app.tiers. The orders table does not exist yet (FR-030…038), so until it does the app shows 'No order figures yet' and Bronze.">Not in the SRS · needs orders</span></p>
   </section>
-  <form class="ml-card pt-panel pt-col" novalidate>
-    <h2 class="pt-h3">Your details</h2>
-    <div class="pt-form-grid">
-      <div class="ml-field"><label class="ml-field-label" for="name">Full name<span class="ml-field-req" aria-hidden="true">*</span></label><input id="name" class="ml-input" value="Nguyễn Minh Khang"></div>
-      <div class="ml-field"><label class="ml-field-label" for="phone">Phone number<span class="ml-field-req" aria-hidden="true">*</span></label><input id="phone" class="ml-input" value="0903 118 218"></div>
-      <div class="ml-field"><label class="ml-field-label" for="email">Email<span class="ml-field-req" aria-hidden="true">*</span></label><input id="email" class="ml-input" type="email" value="khang@example.com"></div>
-      <div class="ml-field"><label class="ml-field-label" for="addr">Address<span class="ml-field-req" aria-hidden="true">*</span></label><input id="addr" class="ml-input" value="25 Xuân Thủy, Thảo Điền, Thủ Đức"><span class="ml-field-hint">Used for distances and directions.</span></div>
-    </div>
-    <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-primary" data-toast="Your details are saved.">Save changes</button></div>
-  </form>
-  <form class="ml-card pt-panel pt-col" novalidate>
-    <h2 class="pt-h3">Change password</h2>
-    <div class="pt-form-grid">
-      <div class="ml-field"><label class="ml-field-label" for="cur">Current password</label><input id="cur" class="ml-input" type="password" autocomplete="current-password"></div>
-      <div class="ml-field"><label class="ml-field-label" for="new">New password</label><input id="new" class="ml-input" type="password" autocomplete="new-password"><span class="ml-field-hint">At least 8 characters.</span></div>
-    </div>
-    <div class="pt-form-actions"><button type="button" class="ml-btn ml-btn-secondary" data-toast="Password changed.">Change password</button></div>
-  </form>
+
+  <a class="ml-card pt-panel pt-between-c pt-plain" href="../customer/change-password.html" aria-labelledby="pw-title">
+    <div class="pt-col-3"><h2 class="pt-h3" id="pw-title">Password &amp; security</h2><span><b class="pt-body" style="display:block">Password</b><span class="pt-caption ml-muted">The password you sign in with by email.</span></span></div>
+    <span aria-hidden="true" class="ml-muted" style="font-size:22px">›</span>
+  </a>
+
   <div class="ml-card pt-panel pt-between-c" data-sell-invite>
     <div class="pt-col-2" style="max-width:520px">
       <h2 class="pt-h3">Sell at MarketLink</h2>
@@ -67,7 +98,7 @@
     <div><h2 class="pt-h3">Sign out</h2><p class="pt-small ml-muted">Signs you out on this device only.</p></div>
     <a class="ml-btn ml-btn-secondary" href="../public/home.html">Sign out</a>
   </div>
-  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Feature catalog · 'View and update personal details' and 'change password' are marked (proposal), not in the SRS. Keep or cut; the API contract has GET /auth/me but no PUT.">Profile editing and change password are proposals, not SRS requirements</span></p>
+  <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="Feature catalog · 'View and update personal details' and 'change password' are marked (proposal), not in the SRS. Keep or cut; the API contract has GET /auth/me but no PUT.">Profile editing and change password (its own page) are proposals, not SRS requirements</span></p>
 </main>
 <script>
   // someone who already runs a stall is not invited to apply for one
@@ -75,6 +106,18 @@
     var inv = document.querySelector('[data-sell-invite]');
     if (inv) inv.hidden = true;
   }
+  var PERKS = { bronze: 'Bronze frame around your photo', silver: 'A thicker silver frame', gold: 'Gold frame with a star', diamond: 'Shimmering diamond frame with a gem' };
+  document.getElementById('tier-ladder').innerHTML = ['bronze', 'silver', 'gold', 'diamond'].map(function (t) {
+    var here = t === 'silver';
+    return '<li' + (here ? ' aria-current="true"' : '') + '>' + PT.avatar(PT.tierName(t), 40, false, t) + '<b class="pt-small">' + PT.tierName(t) + '</b><small>' + PERKS[t] + '</small>' + (here ? '<b class="pt-caption" style="color:var(--brand)">Your tier</b>' : '') + '</li>';
+  }).join('');
+  // Personal membership card: your own photo in your tier's frame, the tier title, and a line about you
+  document.getElementById('tier-hero').innerHTML = PT.avatar('Nguyễn Minh Khang', 72, false, 'silver') +
+    '<div class="pt-col-2" style="gap:4px"><p class="ml-overline" style="margin:0;opacity:.8">Your membership</p>' +
+    '<p style="margin:0;font-family:var(--font-hand);font-size:34px;line-height:38px">Silver tier</p>' +
+    '<b class="pt-body">A familiar face</b>' +
+    '<span class="pt-small">Nguyễn Minh Khang, you have collected 12 orders and spent 1,750,000&nbsp;₫ at the market.</span>' +
+    '<span class="pt-caption" style="opacity:.8">Member since 02/08/2026</span></div>';
   PT.boot({ role: 'customer', active: null });
 </script>
 <div id="pt-foot"></div>

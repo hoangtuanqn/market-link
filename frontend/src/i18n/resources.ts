@@ -42,7 +42,6 @@ import notFound from '@/locales/en/NotFound.json';
 import productDetail from '@/locales/en/ProductDetail.json';
 import products from '@/locales/en/Products.json';
 import registerCustomer from '@/locales/en/RegisterCustomer.json';
-import registerFarmer from '@/locales/en/RegisterFarmer.json';
 import resetPassword from '@/locales/en/ResetPassword.json';
 import search from '@/locales/en/Search.json';
 import setPassword from '@/locales/en/SetPassword.json';
@@ -58,6 +57,10 @@ import adminFarmerDetail from '@/locales/en/AdminFarmerDetail.json';
 import adminFarmers from '@/locales/en/AdminFarmers.json';
 import marketMap from '@/locales/en/MarketMap.json';
 import about from '@/locales/en/About.json';
+import contact from '@/locales/en/Contact.json';
+import feedback from '@/locales/en/Feedback.json';
+import privacy from '@/locales/en/Privacy.json';
+import terms from '@/locales/en/Terms.json';
 import adminAccount from '@/locales/en/AdminAccount.json';
 import adminAnnouncements from '@/locales/en/AdminAnnouncements.json';
 import adminCategories from '@/locales/en/AdminCategories.json';
@@ -113,7 +116,6 @@ export const en = {
   ProductDetail: productDetail,
   Products: products,
   RegisterCustomer: registerCustomer,
-  RegisterFarmer: registerFarmer,
   ResetPassword: resetPassword,
   Search: search,
   SetPassword: setPassword,
@@ -129,6 +131,10 @@ export const en = {
   AdminFarmerDetail: adminFarmerDetail,
   MarketMap: marketMap,
   About: about,
+  Contact: contact,
+  Feedback: feedback,
+  Terms: terms,
+  Privacy: privacy,
   AdminAccount: adminAccount,
   AdminAnnouncements: adminAnnouncements,
   AdminCategories: adminCategories,

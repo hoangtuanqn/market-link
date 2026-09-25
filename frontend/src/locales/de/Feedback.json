@@ -1,0 +1,40 @@
+{
+  "title": "Feedback senden",
+  "intro": "Fehlermeldungen, Vorschläge und Fragen gehen alle an das Team. Wähle die Art, damit es die richtige Person erreicht.",
+  "typeLegend": "Worum geht es?",
+  "types": {
+    "bug": "Fehlermeldung: etwas funktioniert nicht",
+    "suggestion": "Vorschlag: etwas könnte besser sein",
+    "query": "Frage: ich brauche eine Antwort"
+  },
+  "pageLabel": "Welche Seite?",
+  "pages": {
+    "cart": "Warenkorb",
+    "product": "Produktseite",
+    "map": "Marktkarte",
+    "orders": "Meine Bestellungen",
+    "farmer": "Farmer-Dashboard",
+    "other": "Andere"
+  },
+  "messageLabel": "Nachricht",
+  "messagePlaceholder": "Was hast du erwartet, und was ist stattdessen passiert?",
+  "messageHint": "Bei einem Fehler: Telefon oder Browser mit angeben.",
+  "emailLabel": "E-Mail für eine Antwort",
+  "emailHint": "Optional. Wird ausgefüllt, wenn du angemeldet bist.",
+  "submit": "Feedback senden",
+  "sent": {
+    "title": "Gesendet",
+    "bug": "Danke. Deine Fehlermeldung ist beim Team.",
+    "suggestion": "Danke. Dein Vorschlag ist beim Team.",
+    "query": "Danke. Deine Frage ist beim Team."
+  },
+  "notPlatform": {
+    "title": "Geht es nicht um die Plattform?",
+    "text": "Eine späte Abholung, ein fehlender Artikel oder eine Frage zur Ware gehört zum Stand. Die Telefonnummer steht auf dem Bestellzettel, und nach Abschluss der Bestellung kannst du auch eine Bewertung schreiben.",
+    "cta": "Zu meinen Bestellungen"
+  },
+  "after": {
+    "title": "Nach dem Senden",
+    "text": "Fehlermeldungen werden an jedem Markttag gelesen. Antworten auf Fragen kommen per E-Mail, wenn du eine hinterlässt."
+  }
+}

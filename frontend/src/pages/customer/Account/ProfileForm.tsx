@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import AuthApi from '@/api-requests/auth.requests';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { Field } from '@/components/ui/input';
 import type { UpdateProfileInput } from '@/types/auth.types';
 import Helper from '@/utils/helper';
@@ -20,7 +19,10 @@ const validate = validateProfile;
 
 const isUnauthorized = (error: unknown) => error instanceof AxiosError && error.response?.status === 401;
 
-/** "Your details": lấy hồ sơ bằng GET /auth/me, lưu bằng PUT /auth/me. Email chỉ đọc (dùng để đăng nhập). */
+/**
+ * "Your details": lấy hồ sơ bằng GET /auth/me, lưu bằng PUT /auth/me. Email chỉ đọc (dùng để đăng nhập). Nằm chung
+ * khung với ảnh đại diện nên không tự bọc Card.
+ */
 const ProfileForm = () => {
   const { t } = useTranslation('CustomerAccount');
   const [status, setStatus] = useState<Status>('loading');
@@ -96,16 +98,16 @@ const ProfileForm = () => {
 
   if (status === 'loading') {
     return (
-      <Card className="flex flex-col gap-2 p-6" aria-busy="true">
+      <div className="flex flex-col gap-2" aria-busy="true">
         <h2 className="text-h3">{t('profile.title')}</h2>
         <p className="text-small text-ink-muted">{t('profile.loading')}</p>
-      </Card>
+      </div>
     );
   }
 
   if (status === 'signed-out') {
     return (
-      <Card className="flex flex-col gap-4 p-6">
+      <div className="flex flex-col gap-4">
         <h2 className="text-h3">{t('profile.title')}</h2>
         <Banner variant="warning" title={t('profile.signedOut.title')}>
           {t('profile.signedOut.text')}
@@ -113,13 +115,13 @@ const ProfileForm = () => {
         <ButtonLink to="/login" className="self-start">
           {t('profile.signedOut.signIn')}
         </ButtonLink>
-      </Card>
+      </div>
     );
   }
 
   if (status === 'error') {
     return (
-      <Card className="flex flex-col gap-4 p-6">
+      <div className="flex flex-col gap-4">
         <h2 className="text-h3">{t('profile.title')}</h2>
         <Banner variant="danger" title={loadError}>
           {t('profile.nothingChanged')}
@@ -127,67 +129,65 @@ const ProfileForm = () => {
         <Button variant="secondary" className="self-start" onClick={load}>
           {t('profile.retry')}
         </Button>
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="p-6">
-      <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
-        <h2 className="text-h3">{t('profile.title')}</h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <Field
-            id="fullName"
-            label={t('profile.fullName')}
-            required
-            autoComplete="name"
-            value={form.fullName}
-            onChange={onChange('fullName')}
-            error={errors.fullName}
-            disabled={isSaving}
-          />
-          <Field
-            id="phone"
-            label={t('profile.phone')}
-            required
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="0903118218"
-            value={form.phone}
-            onChange={onChange('phone')}
-            error={errors.phone}
-            disabled={isSaving}
-          />
-          <Field
-            id="email"
-            label={t('profile.email')}
-            type="email"
-            value={email}
-            readOnly
-            disabled
-            hint={t('profile.emailHint')}
-          />
-          <Field
-            id="address"
-            label={t('profile.address')}
-            required
-            autoComplete="street-address"
-            value={form.address}
-            onChange={onChange('address')}
-            error={errors.address}
-            hint={errors.address ? undefined : t('profile.addressHint')}
-            disabled={isSaving}
-          />
-        </div>
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          <Button type="submit" disabled={isSaving || !isDirty}>
-            {isSaving ? t('profile.saving') : t('profile.save')}
-          </Button>
-          {!isDirty && !isSaving && <span className="text-small text-ink-muted">{t('profile.noChanges')}</span>}
-        </div>
-      </form>
-    </Card>
+    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
+      <h2 className="text-h3">{t('profile.title')}</h2>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Field
+          id="fullName"
+          label={t('profile.fullName')}
+          required
+          autoComplete="name"
+          value={form.fullName}
+          onChange={onChange('fullName')}
+          error={errors.fullName}
+          disabled={isSaving}
+        />
+        <Field
+          id="phone"
+          label={t('profile.phone')}
+          required
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          placeholder="0903118218"
+          value={form.phone}
+          onChange={onChange('phone')}
+          error={errors.phone}
+          disabled={isSaving}
+        />
+        <Field
+          id="email"
+          label={t('profile.email')}
+          type="email"
+          value={email}
+          readOnly
+          disabled
+          hint={t('profile.emailHint')}
+        />
+        <Field
+          id="address"
+          label={t('profile.address')}
+          required
+          autoComplete="street-address"
+          value={form.address}
+          onChange={onChange('address')}
+          error={errors.address}
+          hint={errors.address ? undefined : t('profile.addressHint')}
+          disabled={isSaving}
+        />
+      </div>
+      <div className="flex flex-wrap items-center gap-3 pt-2">
+        <Button type="submit" disabled={isSaving || !isDirty}>
+          {isSaving ? t('profile.saving') : t('profile.save')}
+        </Button>
+        {!isDirty && !isSaving && <span className="text-small text-ink-muted">{t('profile.noChanges')}</span>}
+      </div>
+    </form>
   );
 };
 

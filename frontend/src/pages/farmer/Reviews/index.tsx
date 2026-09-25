@@ -8,6 +8,7 @@ import { DataState } from '@/components/ui/data-state';
 import { farmer, reviewsForFarmer, type ReviewType } from '@/data/catalog';
 import { formatDate } from '@/lib/format';
 import Notification from '@/utils/notification';
+import { demoTierOf } from '@/data/tiers';
 
 const f = farmer(1)!;
 
@@ -99,6 +100,7 @@ const FarmerReviewsPage = () => {
             <ReviewCard
               key={r.id}
               author={r.author}
+              authorTier={demoTierOf(r.author)}
               date={dmy(r.date)}
               target={r.target}
               rating={r.rating}

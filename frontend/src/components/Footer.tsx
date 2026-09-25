@@ -27,7 +27,7 @@ const COLUMNS: { title: FooterKey; links: FooterLink[] }[] = [
   {
     title: 'sell',
     links: [
-      { label: 'registerFarmer', to: '/register/farmer', show: 'notFarmer' },
+      { label: 'registerFarmer', to: '/become-farmer', show: 'notFarmer' },
       { label: 'handlingPreOrders', to: '/farmer/orders', show: 'farmer' },
       { label: 'stallGuidelines', to: '/about' },
     ],
@@ -38,6 +38,8 @@ const COLUMNS: { title: FooterKey; links: FooterLink[] }[] = [
       { label: 'aboutUs', to: '/about' },
       { label: 'contactUs', to: '/contact' },
       { label: 'feedback', to: '/feedback' },
+      { label: 'terms', to: '/terms' },
+      { label: 'privacy', to: '/privacy' },
     ],
   },
 ];
@@ -49,7 +51,7 @@ const Footer = () => {
   const visible = (link: FooterLink) => !link.show || (link.show === 'farmer' ? isFarmer : !isFarmer);
   return (
     <footer className="bg-board text-on-board">
-      <div className="mx-auto grid max-w-300 grid-cols-2 gap-8 px-4 pt-8 pb-4 md:grid-cols-[1.4fr_repeat(3,1fr)] md:px-6 md:pt-12 md:pb-6">
+      <div className="mx-auto grid max-w-(--size-container) grid-cols-2 gap-8 px-4 pt-8 pb-4 md:grid-cols-[1.4fr_repeat(3,1fr)] md:px-6 md:pt-12 md:pb-6">
         <div className="col-span-full md:col-span-1">
           <Logo />
           <p className="text-small text-board-muted mt-3 max-w-75">{t('footer.tagline')}</p>

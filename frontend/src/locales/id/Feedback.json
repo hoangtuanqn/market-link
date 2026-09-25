@@ -1,0 +1,40 @@
+{
+  "title": "Kirim masukan",
+  "intro": "Laporan bug, saran, dan pertanyaan semuanya sampai ke tim. Pilih jenisnya agar sampai ke orang yang tepat.",
+  "typeLegend": "Tentang apa?",
+  "types": {
+    "bug": "Laporan bug: ada yang tidak berfungsi",
+    "suggestion": "Saran: ada yang bisa lebih baik",
+    "query": "Pertanyaan: saya butuh jawaban"
+  },
+  "pageLabel": "Halaman mana?",
+  "pages": {
+    "cart": "Keranjang",
+    "product": "Halaman produk",
+    "map": "Peta pasar",
+    "orders": "Pesanan saya",
+    "farmer": "Dasbor Farmer",
+    "other": "Lainnya"
+  },
+  "messageLabel": "Pesan",
+  "messagePlaceholder": "Apa yang Anda harapkan, dan apa yang terjadi?",
+  "messageHint": "Untuk bug, sebutkan juga ponsel atau browser Anda.",
+  "emailLabel": "Email untuk balasan",
+  "emailHint": "Opsional. Terisi saat Anda masuk.",
+  "submit": "Kirim masukan",
+  "sent": {
+    "title": "Terkirim",
+    "bug": "Terima kasih. Laporan bug Anda sudah sampai ke tim.",
+    "suggestion": "Terima kasih. Saran Anda sudah sampai ke tim.",
+    "query": "Terima kasih. Pertanyaan Anda sudah sampai ke tim."
+  },
+  "notPlatform": {
+    "title": "Bukan tentang platform?",
+    "text": "Pengambilan yang terlambat, barang yang kurang, atau pertanyaan tentang produk adalah urusan lapak. Nomor teleponnya ada di tiket pesanan, dan Anda juga bisa memberi ulasan setelah pesanan selesai.",
+    "cta": "Ke pesanan saya"
+  },
+  "after": {
+    "title": "Setelah mengirim",
+    "text": "Laporan bug dibaca setiap hari pasar. Jawaban pertanyaan dikirim lewat email jika Anda meninggalkannya."
+  }
+}

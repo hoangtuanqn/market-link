@@ -1,0 +1,40 @@
+{
+  "title": "Send feedback",
+  "intro": "Bug reports, suggestions and questions all go to the team. Pick the type so it reaches the right person.",
+  "typeLegend": "What is it?",
+  "types": {
+    "bug": "Bug report: something is not working",
+    "suggestion": "Suggestion: something could be better",
+    "query": "Question: I need an answer"
+  },
+  "pageLabel": "Which page?",
+  "pages": {
+    "cart": "Cart",
+    "product": "Product page",
+    "map": "Market map",
+    "orders": "My orders",
+    "farmer": "Farmer dashboard",
+    "other": "Other"
+  },
+  "messageLabel": "Message",
+  "messagePlaceholder": "What did you expect, and what happened instead?",
+  "messageHint": "For a bug, add your phone or browser model.",
+  "emailLabel": "Email for a reply",
+  "emailHint": "Optional. Filled in when you are signed in.",
+  "submit": "Send feedback",
+  "sent": {
+    "title": "Sent",
+    "bug": "Thanks. Your bug report is with the team.",
+    "suggestion": "Thanks. Your suggestion is with the team.",
+    "query": "Thanks. Your question is with the team."
+  },
+  "notPlatform": {
+    "title": "Not about the platform?",
+    "text": "A late pickup, a missing item or a question about produce is for the stall. Their phone number is on the order ticket, and you can also leave a review after the order is completed.",
+    "cta": "Go to my orders"
+  },
+  "after": {
+    "title": "After you send",
+    "text": "Bug reports are read every market day. Answers to questions come by email when you leave one."
+  }
+}

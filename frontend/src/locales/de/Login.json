@@ -16,7 +16,7 @@
     "failed": "Die Google-Anmeldung konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
     "note": "Google gibt uns Ihren Namen und Ihre E-Mail-Adresse. Telefonnummer und Adresse brauchen wir trotzdem vor Ihrer ersten Bestellung, deshalb fragen wir sie einmal auf der nächsten Seite ab."
   },
-  "newHere": "Neu hier? <customer>Kundenkonto erstellen</customer> oder <farmer>Ihren Stand registrieren</farmer>.",
+  "newHere": "Noch kein Konto? <customer>Registrieren</customer>",
   "toast": {
     "signedIn": "Angemeldet.",
     "failed": "Sie konnten nicht angemeldet werden. Bitte versuchen Sie es erneut."

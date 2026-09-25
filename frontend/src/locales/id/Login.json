@@ -16,7 +16,7 @@
     "failed": "Tidak dapat memulai masuk dengan Google. Silakan coba lagi.",
     "note": "Google memberi kami nama dan email Anda. Nomor telepon dan alamat tetap diperlukan sebelum pesanan pertama, jadi kami menanyakannya sekali di layar berikutnya."
   },
-  "newHere": "Baru di sini? <customer>Buat akun pelanggan</customer> atau <farmer>daftarkan lapak Anda</farmer>.",
+  "newHere": "Belum punya akun? <customer>Daftar</customer>",
   "toast": {
     "signedIn": "Berhasil masuk.",
     "failed": "Tidak dapat masuk. Silakan coba lagi."

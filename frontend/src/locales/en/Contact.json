@@ -1,0 +1,26 @@
+{
+  "title": "Contact us",
+  "intro": "Questions about an order go to the stall directly; their phone number is on your order. For anything about the platform, reach the team here.",
+  "team": {
+    "title": "The MarketLink team",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "hours": "Hours",
+    "toAdd": "To add",
+    "addressValue": "To add. The pin on the map is a placeholder in District 1.",
+    "hoursValue": "Mon – Fri, 09:00 – 17:00"
+  },
+  "feedback": {
+    "title": "Something broken or an idea?",
+    "text": "Use the feedback form so it lands in the right queue, with the page and your browser attached.",
+    "cta": "Send feedback"
+  },
+  "map": {
+    "label": "Map of the team location",
+    "markerLabel": "MarketLink team (placeholder)",
+    "popupTitle": "MarketLink team",
+    "popupLine": "Placeholder pin, District 1",
+    "directions": "Directions to the team"
+  }
+}

@@ -138,6 +138,8 @@
     "aboutUs": "Quiénes somos",
     "contactUs": "Contacto",
     "feedback": "Comentarios y errores",
+    "terms": "Términos del servicio",
+    "privacy": "Política de privacidad",
     "mapData": "Datos del mapa © colaboradores de OpenStreetMap",
     "mapDataFrom": "Datos del mapa {{credit}}"
   },
@@ -148,6 +150,7 @@
     "hi": "Hola, <b>{{name}}</b>",
     "main": "Principal",
     "menu": "Menú",
+    "messages": "Mensajes",
     "notifications": "Notificaciones",
     "notificationsUnread_one": "Notificaciones, {{count}} sin leer",
     "notificationsUnread_other": "Notificaciones, {{count}} sin leer",
@@ -197,6 +200,7 @@
     "aboutUs": "Quiénes somos",
     "myOrders": "Mis pedidos",
     "favorites": "Favoritos",
+    "messages": "Mensajes",
     "profile": "Perfil",
     "settings": "Ajustes",
     "signIn": "Iniciar sesión",
@@ -382,5 +386,12 @@
     "noneNote": "Abre OpenStreetMap solo con el destino rellenado.",
     "privacy": "Las indicaciones se abren en openstreetmap.org en una pestaña nueva. MarketLink no rastrea dónde estás.",
     "open": "Abrir indicaciones"
+  },
+  "tier": {
+    "bronze": "Bronce",
+    "silver": "Plata",
+    "gold": "Oro",
+    "diamond": "Diamante",
+    "badge": "Nivel {{tier}}"
   }
 }

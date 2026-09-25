@@ -57,6 +57,7 @@
   "customer": {
     "title": "Kunde",
     "name": "Name",
+    "tier": "Stufe",
     "phone": "Telefon",
     "ordersWithYou": "Bestellungen bei Ihnen",
     "orders_one": "{{count}} Bestellung",

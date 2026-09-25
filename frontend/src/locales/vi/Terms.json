@@ -1,0 +1,172 @@
+{
+  "title": "Điều khoản dịch vụ",
+  "lead": "Những gì bạn đồng ý khi đặt hàng từ một sạp trên MarketLink, và những gì sạp cùng nền tảng đồng ý đáp lại.",
+  "meta": "Phiên bản 0.1 · Cập nhật lần cuối {{date}} · Áp dụng cho Khách hàng, Nhà vườn và khách ghé thăm",
+  "onThisPage": "Trong trang này",
+  "seeAlso": "Đọc thêm <link>Chính sách quyền riêng tư</link>. Phần đó nói về những gì chúng tôi lưu về bạn.",
+  "sections": [
+    {
+      "id": "what",
+      "title": "MarketLink là gì",
+      "blocks": [
+        {
+          "p": "MarketLink cho phép một sạp ở chợ phiên đăng những gì sẽ mang ra chợ tuần này, và cho phép bạn đặt trước từ danh sách đó trước ngày họp chợ. Bạn nhận phần đã đặt ngay tại sạp, trong khung giờ nhận mà sạp đặt ra, và trả tiền cho nhà vườn tại đó."
+        },
+        {
+          "nots": {
+            "title": "MarketLink không làm những gì",
+            "items": [
+              [
+                "Không giữ tiền của bạn.",
+                "Trong sản phẩm không có ô nhập thẻ và không có cổng thanh toán nào. Mọi đơn hàng đều trả cho nhà vườn ngay tại sạp."
+              ],
+              ["Không giao hàng.", "Mọi đơn hàng đều được nhận trực tiếp tại chợ."],
+              [
+                "Không chứng nhận cho sạp.",
+                "MarketLink không kiểm tra giấy phép, cách canh tác hay tuyên bố hữu cơ. Hãy hỏi thẳng nhà vườn tại sạp."
+              ],
+              [
+                "Không bán hàng cho bạn.",
+                "Hợp đồng mua bán là giữa bạn và sạp. MarketLink chỉ ghi nhận việc đặt trước, không hơn."
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "accounts",
+      "title": "Tài khoản của bạn",
+      "blocks": [
+        {
+          "p": "Có ba loại tài khoản. Khách hàng đăng ký bằng tên, số điện thoại, email và địa chỉ. Muốn bán hàng, khách hàng nộp đơn từ tài khoản của mình để trở thành nhà vườn, kèm tên sạp và người liên hệ; sạp chưa được đăng gì cho tới khi quản trị viên duyệt. Quản trị viên đăng nhập bằng cổng riêng."
+        },
+        {
+          "p": "Một tài khoản có thể dùng chung trong nhà. MarketLink không phân biệt được từng người trong cùng một tài khoản, nên mọi việc làm bằng đăng nhập của bạn đều tính là bạn làm. Hãy giữ kín mật khẩu và báo cho chúng tôi nếu bạn nghĩ có người khác biết nó."
+        },
+        {
+          "p": "Địa chỉ bạn cung cấp được dùng để hiện khoảng cách tới các chợ và điền sẵn chỉ đường. Số điện thoại của bạn được đưa cho sạp bạn đặt hàng, để họ liên lạc được vào sáng ngày họp chợ."
+        }
+      ]
+    },
+    {
+      "id": "reserving",
+      "title": "Đặt hàng từ một sạp",
+      "blocks": [
+        {
+          "p": "Bạn có thể bỏ sản phẩm của nhiều sạp vào chung một giỏ, nhưng mỗi lần đặt luôn thuộc về một sạp duy nhất. Khi bạn đặt, giỏ hàng được tách thành mỗi sạp một đơn, mỗi đơn có chợ riêng, khung giờ nhận riêng và hạn chốt riêng. Màn hình xác nhận cho bạn xem cách tách đó trước khi chốt."
+        },
+        {
+          "facts": {
+            "title": "Chuyện gì xảy ra khi bạn đặt đơn",
+            "items": [
+              [
+                "Tồn kho",
+                "Phần bạn đặt được trừ ngay vào số lượng của sạp, nên hai người không thể cùng đặt hai bó cuối cùng. Bạn không đặt được nhiều hơn số sạp còn lại."
+              ],
+              [
+                "Khung giờ",
+                "Bạn chọn ngày nhận và một khung giờ mà sạp mở. Mỗi khung giờ có giới hạn số đơn; khung đã đầy hiện mờ và không chọn được."
+              ],
+              [
+                "Hạn chốt",
+                "Mỗi đơn có một hạn chốt, tính lùi từ giờ nhận của bạn theo số giờ mà sạp đặt. Trước thời điểm đó bạn tự sửa hoặc huỷ đơn được."
+              ],
+              [
+                "Giá",
+                "Giá và đơn vị trên đơn của bạn là giá lúc bạn đặt. Nếu sau đó sạp đổi giá, đơn của bạn không đổi theo."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Một đơn đi qua các trạng thái đã đặt, đã nhận, sẵn sàng để nhận và hoàn tất. Sạp cũng có thể từ chối một đơn, và bạn có thể huỷ đơn. Mọi thay đổi đều được ghi lại kèm thời điểm, và bạn xem được lịch sử đó trên đơn."
+        },
+        {
+          "p": "Đặt đơn là đặt trước, không phải bảo đảm. Sạp có thể từ chối, và khi từ chối thì nên nói rõ lý do. Khi một đơn bị từ chối hoặc bị huỷ, hàng được trả lại cho sạp và hai bên không nợ nhau gì."
+        }
+      ]
+    },
+    {
+      "id": "changing",
+      "title": "Sửa hoặc huỷ đơn",
+      "blocks": [
+        {
+          "p": "Trước hạn chốt bạn có thể giảm số lượng, bỏ bớt món, hoặc huỷ hẳn đơn. Bạn không thêm được sản phẩm mới vào đơn đã có; hãy đặt một đơn thứ hai, để số lượng và khung giờ của sạp vẫn đúng."
+        },
+        {
+          "p": "Sửa đơn sẽ đưa đơn về lại trạng thái đã đặt, và sạp phải nhận lại lần nữa. Điều đó là cố ý: sạp soạn và gói hàng theo đúng những gì họ đã nhận."
+        },
+        {
+          "p": "Sau hạn chốt, các nút bị khoá và màn hình nói rõ lý do, kèm thời điểm hạn chốt đã qua. Từ lúc đó chỉ sạp mới chuyển được đơn, mọi việc khác bạn trao đổi thẳng với sạp. Đơn để ở trạng thái sẵn sàng để nhận sẽ được xem là hoàn tất sau 24 giờ kể từ ngày nhận."
+        }
+      ]
+    },
+    {
+      "id": "paying",
+      "title": "Trả tiền tại sạp",
+      "blocks": [
+        {
+          "p": "Bạn trả tiền thẳng cho nhà vườn khi tới nhận, đúng số tiền ghi trên đơn. MarketLink không bao giờ giữ tiền của bạn, không lấy hoa hồng qua sản phẩm, và không tham gia vào việc thanh toán."
+        },
+        {
+          "p": "Vì vậy, việc hoàn tiền là chuyện bạn và sạp tự thu xếp với nhau."
+        }
+      ]
+    },
+    {
+      "id": "stalls",
+      "title": "Sạp đồng ý những gì",
+      "blocks": [
+        {
+          "p": "Nhà vườn bán qua MarketLink đồng ý giữ cho danh sách trong tuần trung thực: đăng đúng số lượng dự kiến có, đánh dấu sản phẩm đã hết hoặc tạm ngưng thay vì để nguyên trên danh sách, và giữ đúng khung giờ nhận đã công bố cho từng chợ, từng ngày."
+        },
+        {
+          "p": "Sạp đồng ý trả lời các đơn mới thay vì để đó, nói rõ lý do khi từ chối một đơn, và giữ đơn đã nhận suốt khung giờ nhận. Sạp cũng đồng ý rằng nội dung đăng bán là trách nhiệm của chính mình, gồm mô tả, ảnh và mọi tuyên bố về nông sản."
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "title": "Đánh giá và nội dung",
+      "blocks": [
+        {
+          "p": "Bạn được chấm điểm và viết đánh giá cho sạp cùng những sản phẩm đã mua sau khi đơn hoàn tất, và chỉ với những đơn của chính bạn. Sạp được trả lời công khai một lần cho mỗi đánh giá."
+        },
+        {
+          "p": "Hãy viết về nông sản và việc nhận hàng. Quản trị viên có thể ẩn một đánh giá hoặc một mục sản phẩm vi phạm điều đó, và nội dung bị ẩn sẽ không còn hiện trên các trang công khai. Những gì bạn viết vẫn gắn với tên tài khoản của bạn để người mua khác nhìn thấy."
+        }
+      ]
+    },
+    {
+      "id": "suspension",
+      "title": "Tạm khoá tài khoản",
+      "blocks": [
+        {
+          "p": "Quản trị viên duyệt một sạp trước khi sạp được đăng bất cứ thứ gì, và có thể từ chối đơn đăng ký kèm lý do. Sạp bị tạm khoá sẽ biến mất khỏi các trang công khai và không nhận đơn mới, nhưng những đơn đang chạy vẫn chạy tới hết để không người mua nào mất phần đã đặt. Nhà vườn vẫn đăng nhập và xem được những đơn đó."
+        },
+        {
+          "p": "Tài khoản khách hàng có thể bị quản trị viên vô hiệu hoá."
+        }
+      ]
+    },
+    {
+      "id": "maps",
+      "title": "Bản đồ và các nguồn khác",
+      "blocks": [
+        {
+          "p": "Vị trí chợ và sạp được vẽ trên OpenStreetMap. Dữ liệu bản đồ thuộc © những người đóng góp cho OpenStreetMap, và liên kết chỉ đường mở OpenStreetMap trong tab mới. Ghim do chợ hoặc sạp tự đặt và chính xác tới đâu là tuỳ họ."
+        },
+        {
+          "p": "Ảnh sản phẩm thuộc về sạp đã tải lên. Ảnh dùng trên các trang của chính nền tảng được ghi nguồn trong ReadMe của dự án."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Có chỗ nào chưa rõ?",
+    "text": "Thắc mắc về một đơn hàng thì hỏi thẳng sạp. Mọi chuyện về các điều khoản này thì gửi tới đội ngũ.",
+    "privacy": "Chính sách quyền riêng tư",
+    "contact": "Liên hệ"
+  }
+}

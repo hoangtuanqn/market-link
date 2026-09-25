@@ -138,6 +138,8 @@
     "aboutUs": "เกี่ยวกับเรา",
     "contactUs": "ติดต่อเรา",
     "feedback": "ความคิดเห็นและแจ้งปัญหา",
+    "terms": "ข้อกำหนดการให้บริการ",
+    "privacy": "นโยบายความเป็นส่วนตัว",
     "mapData": "ข้อมูลแผนที่ © ผู้ร่วมพัฒนา OpenStreetMap",
     "mapDataFrom": "ข้อมูลแผนที่ {{credit}}"
   },
@@ -148,6 +150,7 @@
     "hi": "สวัสดี <b>{{name}}</b>",
     "main": "เมนูหลัก",
     "menu": "เมนู",
+    "messages": "ข้อความ",
     "notifications": "การแจ้งเตือน",
     "notificationsUnread_one": "การแจ้งเตือน ยังไม่อ่าน {{count}} รายการ",
     "notificationsUnread_other": "การแจ้งเตือน ยังไม่อ่าน {{count}} รายการ",
@@ -197,6 +200,7 @@
     "aboutUs": "เกี่ยวกับเรา",
     "myOrders": "คำสั่งซื้อของฉัน",
     "favorites": "รายการโปรด",
+    "messages": "ข้อความ",
     "profile": "โปรไฟล์",
     "settings": "การตั้งค่า",
     "signIn": "เข้าสู่ระบบ",
@@ -382,5 +386,12 @@
     "noneNote": "เปิด OpenStreetMap โดยกรอกเฉพาะปลายทาง",
     "privacy": "เส้นทางจะเปิดใน openstreetmap.org ในแท็บใหม่ MarketLink ไม่ติดตามตำแหน่งของคุณ",
     "open": "เปิดเส้นทาง"
+  },
+  "tier": {
+    "bronze": "บรอนซ์",
+    "silver": "ซิลเวอร์",
+    "gold": "โกลด์",
+    "diamond": "ไดมอนด์",
+    "badge": "ระดับ {{tier}}"
   }
 }

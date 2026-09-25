@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
 import SettingsSync from './components/SettingsSync';
 import AdminLayout from './layout/AdminLayout';
@@ -12,7 +12,6 @@ import NotFoundPage from './pages/public/NotFound';
 import RemountOnParam from './components/RemountOnParam';
 import LoginPage from './pages/auth/Login';
 import RegisterCustomerPage from './pages/auth/RegisterCustomer';
-import RegisterFarmerPage from './pages/auth/RegisterFarmer';
 import ForgotPasswordPage from './pages/auth/ForgotPassword';
 import ResetPasswordPage from './pages/auth/ResetPassword';
 import GoogleCallbackPage from './pages/auth/GoogleCallback';
@@ -30,6 +29,7 @@ import CustomerOrderEditPage from './pages/customer/OrderEdit';
 import CustomerOrderPlacedPage from './pages/customer/OrderPlaced';
 import CustomerReviewPage from './pages/customer/Review';
 import CustomerBecomeFarmerPage from './pages/customer/BecomeFarmer';
+import ChangePasswordPage from './pages/customer/ChangePassword';
 import CustomerSettingsPage from './pages/customer/Settings';
 import CustomerAssistantPage from './pages/customer/Assistant';
 import MarketsPage from './pages/public/Markets';
@@ -40,6 +40,8 @@ import StallProfilePage from './pages/public/StallProfile';
 import SearchPage from './pages/public/Search';
 import MarketMapPage from './pages/public/MarketMap';
 import AboutPage from './pages/public/About';
+import PrivacyPage from './pages/public/Privacy';
+import TermsPage from './pages/public/Terms';
 import ContactPage from './pages/public/Contact';
 import FeedbackPage from './pages/public/Feedback';
 import FarmerOverviewPage from './pages/farmer/Overview';
@@ -86,7 +88,8 @@ const App = () => {
             <Route index element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register/customer" element={<RegisterCustomerPage />} />
-            <Route path="register/farmer" element={<RegisterFarmerPage />} />
+            {/* FR-002: không đăng ký sạp riêng — tạo tài khoản customer trước, rồi nộp đơn Farmer ở /become-farmer */}
+            <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="reset-password" element={<ResetPasswordPage />} />
             <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
@@ -121,6 +124,8 @@ const App = () => {
             <Route path="search" element={<SearchPage />} />
             <Route path="map" element={<MarketMapPage />} />
             <Route path="about" element={<AboutPage />} />
+            <Route path="terms" element={<TermsPage />} />
+            <Route path="privacy" element={<PrivacyPage />} />
             <Route path="contact" element={<ContactPage />} />
             <Route path="feedback" element={<FeedbackPage />} />
           </Route>
@@ -130,6 +135,7 @@ const App = () => {
             <Route element={<RequireAuth />}>
               <Route path="dashboard" element={<CustomerDashboardPage />} />
               <Route path="account" element={<CustomerAccountPage />} />
+              <Route path="account/password" element={<ChangePasswordPage />} />
               <Route path="cart" element={<CustomerCartPage />} />
               <Route path="orders" element={<CustomerOrdersPage />} />
               <Route

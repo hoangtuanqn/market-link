@@ -1,0 +1,26 @@
+{
+  "title": "Liên hệ",
+  "intro": "Thắc mắc về một đơn hàng thì liên hệ thẳng với sạp; số điện thoại của sạp nằm trên đơn của bạn. Mọi chuyện liên quan tới nền tảng thì liên hệ đội ngũ ở đây.",
+  "team": {
+    "title": "Đội ngũ MarketLink",
+    "email": "Email",
+    "phone": "Điện thoại",
+    "address": "Địa chỉ",
+    "hours": "Giờ làm việc",
+    "toAdd": "Sẽ bổ sung",
+    "addressValue": "Sẽ bổ sung. Ghim trên bản đồ chỉ là chỗ tạm ở Quận 1.",
+    "hoursValue": "Thứ Hai – Thứ Sáu, 09:00 – 17:00"
+  },
+  "feedback": {
+    "title": "Có lỗi hay có ý tưởng?",
+    "text": "Dùng biểu mẫu góp ý để phản hồi vào đúng luồng xử lý, kèm theo trang bạn đang xem và trình duyệt của bạn.",
+    "cta": "Gửi góp ý"
+  },
+  "map": {
+    "label": "Bản đồ vị trí đội ngũ",
+    "markerLabel": "Đội ngũ MarketLink (chỗ tạm)",
+    "popupTitle": "Đội ngũ MarketLink",
+    "popupLine": "Ghim tạm, Quận 1",
+    "directions": "Chỉ đường tới đội ngũ"
+  }
+}
