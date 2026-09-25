@@ -38,6 +38,7 @@ import SearchPage from './pages/Search';
 import MarketMapPage from './pages/MarketMap';
 import AboutPage from './pages/About';
 import ContactPage from './pages/Contact';
+import FeedbackPage from './pages/Feedback';
 import FarmerOverviewPage from './pages/FarmerOverview';
 import FarmerOrdersPage from './pages/FarmerOrders';
 import FarmerOrderDetailPage from './pages/FarmerOrderDetail';
@@ -103,6 +104,7 @@ const App = () => {
           <Route path="map" element={<MarketMapPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="feedback" element={<FeedbackPage />} />
         </Route>
 
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
