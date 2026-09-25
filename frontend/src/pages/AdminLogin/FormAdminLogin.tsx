@@ -5,14 +5,16 @@ import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/input';
 import { USER_ROLE } from '@/constants/enums';
+import { ADMIN_HOME_PATH } from '@/constants/nav';
 import validateLogin, { type LoginFieldErrors } from '@/pages/Login/validateLogin';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 
 /**
- * FR-004 — đăng nhập admin. Dùng chung POST /auth/login với Customer/Farmer; tài khoản không phải admin thì không lưu
- * phiên và thu hồi luôn token vừa cấp. Chặn thật vẫn là 403 ở backend (FR-005).
+ * FR-004 — đăng nhập admin. Dùng chung POST /auth/login với Customer/Farmer nhưng gửi requiredRole = admin: tài khoản
+ * không phải admin bị backend trả 403 ROLE_NOT_ALLOWED trước khi cấp token, nên phiên đang có trong trình duyệt (cookie
+ * refresh) không bị ghi đè. Chặn thật vẫn là 403 ở từng API admin (FR-005).
  */
 const FormAdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -33,20 +35,20 @@ const FormAdminLogin = () => {
     setIsSubmitting(true);
     try {
       // Không có "Remember me": phiên admin chỉ sống trong phiên trình duyệt này
-      const response = await AuthApi.login({ email: email.trim(), password, rememberMe: false });
-      const { accessToken, user } = response.data;
-
-      if (user.role !== USER_ROLE.ADMIN) {
-        // bỏ qua lỗi: token vẫn hết hạn theo thời gian, quan trọng là không lưu phiên
-        await AuthApi.revokeSession(accessToken).catch(() => undefined);
+      const response = await AuthApi.login({
+        email: email.trim(),
+        password,
+        rememberMe: false,
+        requiredRole: USER_ROLE.ADMIN,
+      });
+      Session.save(response.data, false);
+      Notification.success({ text: response.message || 'Signed in.' });
+      navigate(ADMIN_HOME_PATH, { replace: true });
+    } catch (error) {
+      if (Helper.getErrorCode(error) === 'ROLE_NOT_ALLOWED') {
         setNotAdmin(true);
         return;
       }
-
-      Session.save(response.data, false);
-      Notification.success({ text: response.message || 'Signed in.' });
-      navigate('/admin', { replace: true });
-    } catch (error) {
       setErrors(Helper.getFieldErrors(error));
       Notification.error({ text: Helper.getErrorMessage(error, 'Could not sign you in. Please try again.') });
     } finally {

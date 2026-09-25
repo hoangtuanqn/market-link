@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
+import AdminLayout from './layout/AdminLayout';
 import MainLayout from './layout/MainLayout';
 import HomePage from './pages/Home';
 import LoginPage from './pages/Login';
@@ -31,6 +32,7 @@ import ProductDetailPage from './pages/ProductDetail';
 import StallProfilePage from './pages/StallProfile';
 import SearchPage from './pages/Search';
 import AdminLoginPage from './pages/AdminLogin';
+import AdminHomePage from './pages/AdminHome';
 
 const App = () => {
   return (
@@ -74,6 +76,9 @@ const App = () => {
 
         {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
         <Route path="admin/login" element={<AdminLoginPage />} />
+        <Route path="admin" element={<AdminLayout />}>
+          <Route index element={<AdminHomePage />} />
+        </Route>
       </Routes>
       <AppToaster />
     </BrowserRouter>

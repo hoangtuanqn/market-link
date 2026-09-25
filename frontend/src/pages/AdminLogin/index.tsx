@@ -1,6 +1,9 @@
-import { Link } from 'react-router';
+import { Link, Navigate } from 'react-router';
 import Logo from '@/components/Logo';
 import { Card } from '@/components/ui/card';
+import { USER_ROLE } from '@/constants/enums';
+import { ADMIN_HOME_PATH, ADMIN_LOGIN_PATH } from '@/constants/nav';
+import useSession from '@/hooks/useSession';
 import FormAdminLogin from './FormAdminLogin';
 
 /**
@@ -8,11 +11,15 @@ import FormAdminLogin from './FormAdminLogin';
  * "Forgot password": việc admin tự đặt lại mật khẩu chưa được chốt (TODO trong prototype admin/login.html).
  */
 const AdminLoginPage = () => {
+  const { user } = useSession();
+  // Đã đăng nhập bằng tài khoản admin thì vào thẳng khu admin
+  if (user?.role === USER_ROLE.ADMIN) return <Navigate to={ADMIN_HOME_PATH} replace />;
+
   return (
     <div className="bg-surface-quiet flex min-h-screen flex-col">
       <header className="bg-board text-on-board">
         <div className="mx-auto flex min-h-16 max-w-300 items-center gap-4 px-4 md:px-6">
-          <Logo to="/admin/login" />
+          <Logo to={ADMIN_LOGIN_PATH} />
           <span className="text-small text-board-muted border-board-muted border-l pl-3">Admin sign-in</span>
         </div>
         <div aria-hidden="true" className="border-twine h-0 border-t-2 border-dashed" />

@@ -4,6 +4,7 @@ import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.InvalidResetTokenException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
+import com.techx.intervue.modules.user.exceptions.RoleMismatchException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -83,6 +84,11 @@ public class AuthExceptionHandler {
     @ExceptionHandler(DisabledException.class)
     ResponseEntity<ApiResource<Void>> disabled(DisabledException e) {
         return error(HttpStatus.FORBIDDEN, "ACCOUNT_DISABLED", e.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(RoleMismatchException.class)
+    ResponseEntity<ApiResource<Void>> roleMismatch(RoleMismatchException e) {
+        return error(HttpStatus.FORBIDDEN, "ROLE_NOT_ALLOWED", e.getMessage(), List.of());
     }
 
     @ExceptionHandler(InvalidFieldException.class)
