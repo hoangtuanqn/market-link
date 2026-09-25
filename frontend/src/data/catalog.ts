@@ -588,3 +588,127 @@ export function product(id: number): ProductType | undefined {
 export function productsByIds(ids: number[]): ProductType[] {
   return ids.map(product).filter((p): p is ProductType => p != null);
 }
+
+export type ReviewType = {
+  id: number;
+  author: string;
+  date: string;
+  target: string;
+  targetType: 'product' | 'farmer';
+  productId?: number;
+  farmerId: number;
+  rating: number;
+  text: string;
+  reply?: { by: string; date: string; text: string };
+  flagged?: boolean;
+};
+
+export const reviews: ReviewType[] = [
+  {
+    id: 1,
+    author: 'Minh Anh',
+    date: '21/09/2026',
+    target: 'Củ Chi water spinach',
+    targetType: 'product',
+    productId: 1,
+    farmerId: 1,
+    rating: 5,
+    text: 'Still crisp, and the bunches are bigger than at the market. It was packed and ready at 7 sharp, no waiting.',
+    reply: {
+      by: 'Cô Tư Garden',
+      date: '21/09/2026',
+      text: 'Thank you. We will have choy sum next week too, do stop by.',
+    },
+  },
+  {
+    id: 2,
+    author: 'Lan Hương',
+    date: '20/09/2026',
+    target: 'Cô Tư Garden',
+    targetType: 'farmer',
+    farmerId: 1,
+    rating: 4,
+    text: 'Friendly and quick. One bunch of choy sum was a little wilted by the time I got there at 9.',
+  },
+  {
+    id: 3,
+    author: 'Quốc Bảo',
+    date: '14/09/2026',
+    target: 'Choy sum',
+    targetType: 'product',
+    productId: 2,
+    farmerId: 1,
+    rating: 5,
+    text: 'Sweet stems, no bitterness. Ordered again for this weekend.',
+  },
+  {
+    id: 4,
+    author: 'Thu Thảo',
+    date: '13/09/2026',
+    target: 'Goat yogurt',
+    targetType: 'product',
+    productId: 4,
+    farmerId: 3,
+    rating: 4,
+    text: 'Tangy and thick. Jars are small for the price but the taste is worth it.',
+    reply: { by: 'Củ Chi Goat Farm', date: '13/09/2026', text: 'We are testing a 350 ml jar in October.' },
+  },
+  {
+    id: 5,
+    author: 'Hồng Nhung',
+    date: '07/09/2026',
+    target: 'Sourdough loaf',
+    targetType: 'product',
+    productId: 5,
+    farmerId: 4,
+    rating: 5,
+    text: 'Best crust in the city. Pre-ordering means I actually get one.',
+  },
+  {
+    id: 6,
+    author: 'Văn Long',
+    date: '06/09/2026',
+    target: 'Cô Tư Garden',
+    targetType: 'farmer',
+    farmerId: 1,
+    rating: 2,
+    text: 'Order was declined the evening before, so I had no greens for the weekend.',
+    reply: {
+      by: 'Cô Tư Garden',
+      date: '06/09/2026',
+      text: 'Sorry about that. Heavy rain flooded the plot on Friday. We declined early so you could order elsewhere.',
+    },
+  },
+  {
+    id: 7,
+    author: 'Anonymous account 4471',
+    date: '02/09/2026',
+    target: 'Raw forest honey',
+    targetType: 'product',
+    productId: 14,
+    farmerId: 7,
+    rating: 1,
+    text: 'Contact me on Zalo 09xx for cheaper honey, 50 percent off.',
+    flagged: true,
+  },
+];
+
+export function reviewsForProduct(productId: number): ReviewType[] {
+  return reviews.filter((r) => r.productId === productId);
+}
+
+export function reviewsForFarmer(farmerId: number): ReviewType[] {
+  return reviews.filter((r) => r.farmerId === farmerId);
+}
+
+/** Review tags (proposal, not in the SRS): counts of a repeated phrase across a stall's reviews. */
+export const reviewTags: Record<number, [string, number][]> = {
+  1: [
+    ['Ready on time', 14],
+    ['Fresh as described', 11],
+    ['Easy to find the stall', 8],
+    ['Friendly', 7],
+    ['Good value', 5],
+    ['Packed well', 3],
+  ],
+};

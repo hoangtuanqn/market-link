@@ -4,13 +4,14 @@ type QtyStepperProps = {
   value: number;
   max: number;
   unit: string;
+  plural?: string;
   min?: number;
   onChange: (value: number) => void;
 };
 
 /** Plus/minus stepper with the stock left underneath (design system `.ml-qty`). */
-const QtyStepper = ({ value, max, unit, min = 1, onChange }: QtyStepperProps) => {
-  const note = value >= max ? `Max ${units(max, unit)}` : `${units(max - value, unit)} left`;
+const QtyStepper = ({ value, max, unit, plural, min = 1, onChange }: QtyStepperProps) => {
+  const note = value >= max ? `Max ${units(max, unit, plural)}` : `${units(max - value, unit, plural)} left`;
 
   return (
     <span className="inline-flex flex-col items-center gap-0.5">

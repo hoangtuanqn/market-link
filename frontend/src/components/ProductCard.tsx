@@ -21,7 +21,7 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
     ? paused
       ? 'Not this week'
       : 'Back soon'
-    : `${low ? 'Only ' : ''}${units(product.stock, product.unit)} left`;
+    : `${low ? 'Only ' : ''}${units(product.stock, product.unit, product.plural)} left`;
   const href = `/products/${product.id}`;
 
   return (
