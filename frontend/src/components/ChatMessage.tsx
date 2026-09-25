@@ -3,7 +3,8 @@ import { Link } from 'react-router';
 import { Chip } from '@/components/ui/chip';
 import Helper from '@/utils/helper';
 
-/** A link back to the order a message refers to (design system `.pt-msg-ref`). */
+/** A link back to the order a message refers to. Laid out after `.pt-msg-ref` in
+ *  docs/prototype/prototype.css, which is prototype scaffolding rather than the design system. */
 export const MessageOrderRef = ({
   href,
   title,
