@@ -7,6 +7,7 @@ import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.requests.SendMessageRequest;
 import com.techx.intervue.modules.conversation.services.interfaces.MessageServiceInterface;
+import com.techx.intervue.modules.notification.repositories.NotificationRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -50,6 +51,7 @@ class ChatStompIntegrationTest {
     @Autowired MessageServiceInterface messageService;
     @Autowired UserSessionCache sessions;
     @Autowired JwtServiceInterface jwt;
+    @Autowired NotificationRepository notifications;
 
     User customer;
     User farmer;
@@ -146,6 +148,29 @@ class ChatStompIntegrationTest {
                 .isNotNull()
                 .contains("\"type\":\"updated\"")
                 .contains("\"unreadCount\":1");
+    }
+
+    /** FR-042: tin mới bật popup cho người nhận nhưng không thành dòng trong /notifications. */
+    @Test
+    void aMessagePopsUpForTheRecipientWithoutBeingStored() throws Exception {
+        StompSession farmerSession = connectAs(farmer);
+        BlockingQueue<String> popups = subscribe(farmerSession, "/user/topic/notifications");
+        Thread.sleep(300); // để SUBSCRIBE tới broker trước khi gửi
+
+        messageService.send(
+                customer.getId(),
+                thread.getId(),
+                new SendMessageRequest(null, "Còn xoài không?", null, null));
+
+        String frame = popups.poll(5, TimeUnit.SECONDS);
+        assertThat(frame)
+                .isNotNull()
+                .contains("\"kind\":\"message\"")
+                .contains("\"message\":\"Còn xoài không?\"")
+                .contains("\"conversationId\":" + thread.getId())
+                .contains("\"link\":\"/farmer/messages?c=" + thread.getId() + "\"")
+                .contains("\"persistent\":false");
+        assertThat(notifications.countByUserIdAndReadFalse(farmer.getId())).isZero();
     }
 
     @Test
