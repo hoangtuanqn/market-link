@@ -26,26 +26,12 @@
     "video": "Voir la vidéo",
     "hint": "Vérifiez que la parcelle des photos correspond à l’épingle sur la carte et cultive ce que le demandeur a indiqué. Vous ne vérifiez ni licences, ni sécurité alimentaire, ni mentions bio."
   },
-  "grows": {
-    "title": "Ce qu’ils cultivent",
-    "categories": "Catégories",
-    "crops": "Cultures principales",
-    "volume": "Volume",
-    "ownWords": "Selon eux :"
-  },
-  "plot": {
-    "title": "La parcelle",
-    "address": "Adresse",
-    "size": "Surface",
-    "since": "Cultivée depuis"
-  },
   "stall": {
     "title": "L’étal demandé",
     "name": "Nom de l’étal",
     "contact": "Personne à contacter",
     "email": "E-mail",
-    "description": "Description",
-    "market": "Marché souhaité"
+    "description": "Description"
   },
   "history": {
     "title": "Historique",
@@ -63,7 +49,6 @@
     "inactive": "Inactif",
     "suspended": "Suspendu"
   },
-  "map": "La parcelle et le marché où ils veulent vendre",
   "approval": {
     "title": "Ce que fait l’approbation",
     "text": "Son rôle devient Farmer et un espace étal s’ouvre. Il continue d’acheter aux autres étals avec le même compte. Rien n’est publié tant qu’il n’a pas ajouté de produits et fixé un créneau de retrait."

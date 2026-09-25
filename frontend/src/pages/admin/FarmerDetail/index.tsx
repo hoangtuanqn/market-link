@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
-import MapPlaceholder from '@/components/MapPlaceholder';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -114,9 +113,6 @@ const AdminFarmerDetailPage = () => {
           const f = status.data;
           const meta = APPROVAL_STATUS_META[f.approvalStatus];
           const Icon = meta.icon;
-          const hasPlot = f.plotAddress || f.plotSize || f.growingSinceYear || f.plotLatitude != null;
-          const hasGrows = !!f.categories?.length || f.mainCrops || f.weeklyVolume || f.growingMethod;
-
           return (
             <>
               <div className="flex flex-wrap items-start justify-between gap-3">
@@ -203,66 +199,6 @@ const AdminFarmerDetailPage = () => {
                     </section>
                   )}
 
-                  {(hasGrows || hasPlot) && (
-                    <section className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                      {hasGrows && (
-                        <Card className="flex flex-col gap-3 p-6">
-                          <h2 className="text-h3">{t('grows.title')}</h2>
-                          <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-                            {!!f.categories?.length && (
-                              <>
-                                <dt className="text-ink-muted">{t('grows.categories')}</dt>
-                                <dd className="m-0">{f.categories.join(', ')}</dd>
-                              </>
-                            )}
-                            {f.mainCrops && (
-                              <>
-                                <dt className="text-ink-muted">{t('grows.crops')}</dt>
-                                <dd className="m-0">{f.mainCrops}</dd>
-                              </>
-                            )}
-                            {f.weeklyVolume && (
-                              <>
-                                <dt className="text-ink-muted">{t('grows.volume')}</dt>
-                                <dd className="m-0">{f.weeklyVolume}</dd>
-                              </>
-                            )}
-                          </dl>
-                          {f.growingMethod && (
-                            <p className="text-small">
-                              <b>{t('grows.ownWords')}</b> {f.growingMethod}
-                            </p>
-                          )}
-                        </Card>
-                      )}
-                      {hasPlot && (
-                        <Card className="flex flex-col gap-3 p-6">
-                          <h2 className="text-h3">{t('plot.title')}</h2>
-                          <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-                            {f.plotAddress && (
-                              <>
-                                <dt className="text-ink-muted">{t('plot.address')}</dt>
-                                <dd className="m-0">{f.plotAddress}</dd>
-                              </>
-                            )}
-                            {f.plotSize && (
-                              <>
-                                <dt className="text-ink-muted">{t('plot.size')}</dt>
-                                <dd className="m-0">{f.plotSize}</dd>
-                              </>
-                            )}
-                            {f.growingSinceYear && (
-                              <>
-                                <dt className="text-ink-muted">{t('plot.since')}</dt>
-                                <dd className="m-0">{f.growingSinceYear}</dd>
-                              </>
-                            )}
-                          </dl>
-                        </Card>
-                      )}
-                    </section>
-                  )}
-
                   <section className="flex flex-col gap-3">
                     <h2 className="text-h2">{t('stall.title')}</h2>
                     <Card className="p-6">
@@ -279,12 +215,6 @@ const AdminFarmerDetailPage = () => {
                           <>
                             <dt className="text-ink-muted">{t('stall.description')}</dt>
                             <dd className="m-0">{f.description}</dd>
-                          </>
-                        )}
-                        {f.preferredMarketName && (
-                          <>
-                            <dt className="text-ink-muted">{t('stall.market')}</dt>
-                            <dd className="m-0">{f.preferredMarketName}</dd>
                           </>
                         )}
                       </dl>
@@ -328,8 +258,6 @@ const AdminFarmerDetailPage = () => {
                       <dd className="m-0">{t(`accountStatus.${f.accountStatus}`)}</dd>
                     </dl>
                   </Card>
-
-                  {(f.plotLatitude != null || f.preferredMarketName) && <MapPlaceholder label={t('map')} />}
 
                   <Card className="flex flex-col gap-2 p-6">
                     <h3 className="text-h3">{t('approval.title')}</h3>

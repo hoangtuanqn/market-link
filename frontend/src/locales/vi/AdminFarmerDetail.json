@@ -26,26 +26,12 @@
     "video": "Xem video",
     "hint": "Kiểm tra vườn trong ảnh có giống vị trí ghim trên bản đồ và có trồng đúng những gì người nộp đơn kê khai không. Bạn không kiểm tra giấy phép, an toàn thực phẩm hay cam kết hữu cơ."
   },
-  "grows": {
-    "title": "Họ trồng gì",
-    "categories": "Danh mục",
-    "crops": "Cây trồng chính",
-    "volume": "Sản lượng",
-    "ownWords": "Lời của họ:"
-  },
-  "plot": {
-    "title": "Vườn",
-    "address": "Địa chỉ",
-    "size": "Diện tích",
-    "since": "Trồng từ năm"
-  },
   "stall": {
     "title": "Sạp họ đăng ký",
     "name": "Tên sạp",
     "contact": "Người liên hệ",
     "email": "Email",
-    "description": "Mô tả",
-    "market": "Chợ mong muốn"
+    "description": "Mô tả"
   },
   "history": {
     "title": "Lịch sử",
@@ -63,7 +49,6 @@
     "inactive": "Không hoạt động",
     "suspended": "Tạm ngưng"
   },
-  "map": "Vườn và chợ họ muốn bán",
   "approval": {
     "title": "Duyệt đơn sẽ làm gì",
     "text": "Vai trò của họ chuyển thành Farmer và bảng điều khiển sạp được mở. Họ vẫn mua ở các sạp khác bằng cùng tài khoản. Chưa có gì được đăng cho đến khi họ thêm sản phẩm và đặt khung giờ nhận hàng."
