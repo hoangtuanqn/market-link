@@ -1,0 +1,27 @@
+{
+  "title": "マーケットマップ",
+  "intro": "選んだ日に開くすべてのマーケットと、予約を受け付けている屋台です。ピンをタップすると営業時間、受け取り時間帯、経路が見られます。",
+  "marketDay": "開催日",
+  "filter": {
+    "markets": "マーケット",
+    "stalls": "屋台",
+    "saved": "保存済みのみ"
+  },
+  "legend": {
+    "market": "四角：マーケット",
+    "stall": "丸：屋台",
+    "selected": "リング：選択中"
+  },
+  "mapLabel": "すべてのマーケットと屋台の地図",
+  "directions": "経路は新しいタブの OpenStreetMap で開きます。",
+  "openOn": "{{day}}に営業",
+  "empty": {
+    "title": "表示するマーケットがありません",
+    "text": "選んだ日に合うマーケットがありません。別の日を選ぶか、フィルターを解除してください。"
+  },
+  "popup": {
+    "stalls_one": "屋台 {{count}} 軒",
+    "stalls_other": "屋台 {{count}} 軒",
+    "pickup": "{{days}} · 受け取り {{pickup}}"
+  }
+}

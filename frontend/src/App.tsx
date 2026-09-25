@@ -38,6 +38,7 @@ import ProductsPage from './pages/Products';
 import ProductDetailPage from './pages/ProductDetail';
 import StallProfilePage from './pages/StallProfile';
 import SearchPage from './pages/Search';
+import MarketMapPage from './pages/MarketMap';
 import FarmerOverviewPage from './pages/FarmerOverview';
 import FarmerOrdersPage from './pages/FarmerOrders';
 import FarmerOrderDetailPage from './pages/FarmerOrderDetail';
@@ -100,6 +101,7 @@ const App = () => {
               }
             />
             <Route path="search" element={<SearchPage />} />
+            <Route path="map" element={<MarketMapPage />} />
           </Route>
 
           {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
