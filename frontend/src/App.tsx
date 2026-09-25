@@ -25,6 +25,7 @@ import CustomerSettingsPage from './pages/CustomerSettings';
 import CustomerAssistantPage from './pages/CustomerAssistant';
 import MarketsPage from './pages/Markets';
 import MarketDetailPage from './pages/MarketDetail';
+import ProductsPage from './pages/Products';
 
 const App = () => {
   return (
@@ -42,6 +43,7 @@ const App = () => {
           <Route path="auth/set-password" element={<SetPasswordPage />} />
           <Route path="markets" element={<MarketsPage />} />
           <Route path="markets/:id" element={<MarketDetailPage />} />
+          <Route path="products" element={<ProductsPage />} />
         </Route>
 
         {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
