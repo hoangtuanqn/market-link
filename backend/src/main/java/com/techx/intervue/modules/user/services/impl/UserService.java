@@ -8,6 +8,7 @@ import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
+import com.techx.intervue.modules.user.exceptions.RoleMismatchException;
 import com.techx.intervue.modules.user.repositories.SocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
@@ -120,6 +121,10 @@ public class UserService extends BaseService implements UserServiceInterface {
         if (user.getStatus() != UserStatus.ACTIVE) {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
+        }
+        // Kiểm tra trước khi cấp token: không phát cookie refresh cho tài khoản sai role
+        if (request.requiredRole() != null && user.getRole() != request.requiredRole()) {
+            throw new RoleMismatchException();
         }
         return issueTokens(user, !Boolean.FALSE.equals(request.rememberMe()));
     }
