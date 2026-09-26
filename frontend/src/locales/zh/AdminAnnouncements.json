@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "展示中",
+    "scheduled": "已排期",
     "ended": "已结束"
   },
   "action": {

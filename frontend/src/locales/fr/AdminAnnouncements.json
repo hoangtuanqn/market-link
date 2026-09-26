@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "En ligne",
+    "scheduled": "Programmée",
     "ended": "Terminée"
   },
   "action": {

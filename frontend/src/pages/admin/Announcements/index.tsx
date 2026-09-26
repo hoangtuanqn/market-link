@@ -2,7 +2,7 @@ import { useEffect, useState, type SubmitEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import AnnouncementApi from '@/api-requests/announcement.requests';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
-import { CheckIcon, CircleSlashIcon } from '@/components/icons';
+import { CheckIcon, CircleSlashIcon, ClockIcon } from '@/components/icons';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
@@ -34,10 +34,18 @@ const EMPTY: Form = { title: '', content: '', audience: 'all', from: '', to: '' 
 const toIso = (day: string, endOfDay: boolean) =>
   day ? new Date(`${day}T${endOfDay ? '23:59:59' : '00:00:00'}`).toISOString() : null;
 
-const isLive = (a: Announcement, now = Date.now()) =>
-  a.active &&
-  (!a.startsAt || new Date(a.startsAt).getTime() <= now) &&
-  (!a.endsAt || new Date(a.endsAt).getTime() > now);
+/** Đã gỡ hoặc quá "đến" → ended; còn bật nhưng chưa tới "từ" → scheduled (không phải đã kết thúc). */
+const phaseOf = (a: Announcement, now = Date.now()): 'live' | 'scheduled' | 'ended' => {
+  if (!a.active || (a.endsAt && new Date(a.endsAt).getTime() <= now)) return 'ended';
+  if (a.startsAt && new Date(a.startsAt).getTime() > now) return 'scheduled';
+  return 'live';
+};
+
+const PHASE_BADGE = {
+  live: { className: 'bg-status-ready-bg text-status-ready-ink', Icon: CheckIcon },
+  scheduled: { className: 'bg-status-placed-bg text-status-placed-ink', Icon: ClockIcon },
+  ended: { className: 'bg-status-cancelled-bg text-status-cancelled-ink', Icon: CircleSlashIcon },
+} as const;
 
 /**
  * FR-077 — thông báo toàn nền tảng: dải xanh trên header (banner) và một dòng trong thông báo của mọi người thuộc đối
@@ -128,18 +136,18 @@ const AdminAnnouncementsPage = () => {
     {
       key: 'status',
       label: t('col.status'),
-      render: (a) =>
-        isLive(a) ? (
-          <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold">
-            <CheckIcon size={14} />
-            {t('status.live')}
+      render: (a) => {
+        const phase = phaseOf(a);
+        const { className, Icon } = PHASE_BADGE[phase];
+        return (
+          <span
+            className={`${className} inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold`}
+          >
+            <Icon size={14} />
+            {t(`status.${phase}`)}
           </span>
-        ) : (
-          <span className="bg-status-cancelled-bg text-status-cancelled-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold">
-            <CircleSlashIcon size={14} />
-            {t('status.ended')}
-          </span>
-        ),
+        );
+      },
     },
     {
       key: 'action',

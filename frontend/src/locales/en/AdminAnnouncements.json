@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "Live",
+    "scheduled": "Scheduled",
     "ended": "Ended"
   },
   "action": {

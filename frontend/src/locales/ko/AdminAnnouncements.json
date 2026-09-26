@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "노출 중",
+    "scheduled": "예약됨",
     "ended": "종료됨"
   },
   "action": {

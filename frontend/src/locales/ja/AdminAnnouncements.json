@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "掲載中",
+    "scheduled": "予約済み",
     "ended": "終了"
   },
   "action": {
