@@ -1,8 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
-import AnnouncementBanner from '@/components/AnnouncementBanner';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import { announcement } from '@/data/home';
+import LiveAnnouncementBanner from '@/components/LiveAnnouncementBanner';
 import { USER_ROLE } from '@/constants/enums';
 import useMyAchievements from '@/hooks/useMyAchievements';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
@@ -34,7 +33,7 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <AnnouncementBanner announcement={announcement} />
+      <LiveAnnouncementBanner />
       <Header
         variant={variant}
         userName={userName}
