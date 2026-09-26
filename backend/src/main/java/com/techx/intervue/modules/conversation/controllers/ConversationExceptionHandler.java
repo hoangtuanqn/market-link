@@ -10,6 +10,7 @@ import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeni
 import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
+import com.techx.intervue.modules.conversation.exceptions.OrderNotInConversationException;
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
@@ -104,6 +105,12 @@ public class ConversationExceptionHandler {
     @ExceptionHandler(ConversationAccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> notAMember(ConversationAccessDeniedException e) {
         return error(HttpStatus.FORBIDDEN, "NOT_A_MEMBER", e.getMessage(), List.of());
+    }
+
+    /** R-06, FR-114: ghim đơn không thuộc hai người trong thread. */
+    @ExceptionHandler(OrderNotInConversationException.class)
+    ResponseEntity<ApiResource<Void>> orderNotInConversation(OrderNotInConversationException e) {
+        return error(HttpStatus.FORBIDDEN, "ORDER_NOT_IN_CONVERSATION", e.getMessage(), List.of());
     }
 
     @ExceptionHandler(StallNotOpenException.class)

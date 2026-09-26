@@ -8,6 +8,7 @@ import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentAlreadyUsedException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
+import com.techx.intervue.modules.conversation.exceptions.OrderNotInConversationException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
@@ -18,6 +19,10 @@ import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPubl
 import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.MessageServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
+import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.order.entities.Order;
+import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -54,6 +59,8 @@ public class MessageService implements MessageServiceInterface {
     private final Clock clock;
     private final ChatRateLimiterInterface rateLimiter;
     private final MessageAttachmentRepository attachments;
+    private final OrderRepository orders;
+    private final FarmerProfileRepository farmerProfiles;
 
     @Override
     @Transactional
@@ -75,6 +82,12 @@ public class MessageService implements MessageServiceInterface {
         User me = requireUser(meId);
         User other = requireUser(conversation.otherMember(meId));
         policy.assertCanSend(me, other);
+
+        // R-06: a pinned order must belong to exactly these two people, checked BEFORE writing the
+        // message
+        if (request.orderId() != null) {
+            requireOrderOfThisPair(conversation, request.orderId());
+        }
 
         // R-06: check the image BEFORE writing the message, so an image that is not yours does not
         // create an empty message
@@ -115,6 +128,30 @@ public class MessageService implements MessageServiceInterface {
         // /read.
         TransactionHelper.afterCommit(() -> events.conversationRead(conversation, meId, now));
         return resource;
+    }
+
+    /**
+     * FR-114: the order must belong to the customer in the thread, bought at the stall of the Farmer in
+     * the thread. orders.farmer_id is farmer_profiles.id, not users.id, so the stall owner must be
+     * looked up before comparing. Only READS the order module; there is no path that creates or edits
+     * an order from chat.
+     */
+    private void requireOrderOfThisPair(Conversation conversation, Long orderId) {
+        Order order =
+                orders.findById(orderId)
+                        .orElseThrow(() -> new EntityNotFoundException("Order not found."));
+        Long stallOwner =
+                farmerProfiles
+                        .findById(order.getFarmerId())
+                        .map(FarmerProfile::getUserId)
+                        .orElseThrow(OrderNotInConversationException::new);
+        boolean samePair =
+                conversation.hasMember(order.getCustomerId())
+                        && conversation.hasMember(stallOwner)
+                        && !order.getCustomerId().equals(stallOwner);
+        if (!samePair) {
+            throw new OrderNotInConversationException();
+        }
     }
 
     /** The image must be your own and not yet attached to any message — spec §8.2. */
