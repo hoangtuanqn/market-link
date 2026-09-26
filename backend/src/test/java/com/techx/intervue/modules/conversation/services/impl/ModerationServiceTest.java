@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,10 +15,12 @@ import com.techx.intervue.modules.conversation.entities.MessageReport;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.enums.ReportReason;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
+import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.conversation.resources.AdminReportListItemResource;
+import com.techx.intervue.modules.conversation.resources.MessageReportResource;
 import com.techx.intervue.modules.conversation.resources.ModeratedMessageResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
@@ -351,5 +354,94 @@ class ModerationServiceTest {
                 .body(body)
                 .createdAt(NOW)
                 .build();
+    }
+
+    @Test
+    void hidingAMessageRecordsWhoDidItAndActionsItsReports() {
+        Message message = textMessageWithId(101L, "Send me a deposit first");
+        MessageReport open = report(ReportStatus.NEW);
+        when(messages.findById(101L)).thenReturn(Optional.of(message));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(reports.findByMessageId(101L)).thenReturn(List.of(open));
+
+        ModeratedMessageResource hidden = service.hide(55L, 101L);
+
+        assertThat(hidden.hidden()).isTrue();
+        assertThat(message.getHiddenBy()).isEqualTo(55L);
+        assertThat(message.getHiddenAt()).isEqualTo(NOW);
+        assertThat(open.getStatus()).isEqualTo(ReportStatus.ACTIONED);
+        assertThat(open.getReviewedBy()).isEqualTo(55L);
+        assertThat(open.getReviewedAt()).isEqualTo(NOW);
+        verify(messages).save(message);
+    }
+
+    /** Review Focus #4: hai admin cùng xử lý một hàng đợi. */
+    @Test
+    void hidingAnAlreadyHiddenMessageKeepsTheFirstAdminOnRecord() {
+        Message message = textMessageWithId(101L, "Send me a deposit first");
+        message.setHiddenAt(Instant.parse("2026-09-26T05:00:00Z"));
+        message.setHiddenBy(11L);
+        when(messages.findById(101L)).thenReturn(Optional.of(message));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(reports.findByMessageId(101L)).thenReturn(List.of());
+
+        service.hide(55L, 101L);
+
+        assertThat(message.getHiddenBy()).isEqualTo(11L);
+        assertThat(message.getHiddenAt()).isEqualTo(Instant.parse("2026-09-26T05:00:00Z"));
+        verify(messages, never()).save(any(Message.class));
+    }
+
+    /** Spec §8.3: không có báo cáo thì admin không có việc gì ở đây. */
+    @Test
+    void anAdminCannotHideAMessageNobodyReported() {
+        when(messages.findById(101L)).thenReturn(Optional.of(textMessageWithId(101L, "fine")));
+        when(reports.existsByMessageId(101L)).thenReturn(false);
+
+        assertThatThrownBy(() -> service.hide(55L, 101L))
+                .isInstanceOf(ModerationOutOfScopeException.class);
+        verify(messages, never()).save(any(Message.class));
+    }
+
+    @Test
+    void hidingAnUnknownMessageIsNotFound() {
+        when(messages.findById(101L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.hide(55L, 101L))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void dismissingAReportMarksItReviewedWithoutTouchingTheMessage() {
+        MessageReport open = report(ReportStatus.NEW);
+        when(reports.findById(9L)).thenReturn(Optional.of(open));
+
+        MessageReportResource result = service.dismiss(55L, 9L);
+
+        assertThat(result.status()).isEqualTo(ReportStatus.REVIEWED);
+        assertThat(open.getReviewedBy()).isEqualTo(55L);
+        assertThat(open.getReviewedAt()).isEqualTo(NOW);
+        verify(messages, never()).save(any(Message.class));
+    }
+
+    /** Hai admin cùng bấm: người xử lý trước là người ở lại trong dấu vết. */
+    @Test
+    void dismissingAnAlreadyHandledReportChangesNothing() {
+        MessageReport done = report(ReportStatus.ACTIONED);
+        done.setReviewedBy(11L);
+        when(reports.findById(9L)).thenReturn(Optional.of(done));
+
+        service.dismiss(55L, 9L);
+
+        assertThat(done.getStatus()).isEqualTo(ReportStatus.ACTIONED);
+        assertThat(done.getReviewedBy()).isEqualTo(11L);
+    }
+
+    @Test
+    void dismissingAnUnknownReportIsNotFound() {
+        when(reports.findById(9L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.dismiss(55L, 9L))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 }

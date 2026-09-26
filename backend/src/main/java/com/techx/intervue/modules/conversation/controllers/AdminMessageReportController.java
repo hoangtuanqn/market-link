@@ -4,8 +4,10 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.conversation.resources.AdminReportListItemResource;
+import com.techx.intervue.modules.conversation.resources.MessageReportResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
+import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.validation.constraints.Max;
@@ -14,8 +16,10 @@ import java.util.Locale;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +49,17 @@ public class AdminMessageReportController extends BaseController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResource<AdminReportDetailResource>> detail(@PathVariable Long id) {
         return ok(moderation.detail(id), "Report loaded.");
+    }
+
+    /**
+     * Không có trong bảng API của spec §6.1, thêm có chủ ý: hàng đợi lọc theo status=new, nên nếu
+     * không có cách chuyển một báo cáo sang reviewed thì mọi báo cáo admin xem rồi quyết định KHÔNG
+     * ẩn sẽ nằm lại `new` mãi và hàng đợi thành vô dụng sau vài ngày.
+     */
+    @PatchMapping("/{id}/dismiss")
+    public ResponseEntity<ApiResource<MessageReportResource>> dismiss(
+            @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails admin) {
+        return ok(moderation.dismiss(admin.getId(), id), "Report dismissed.");
     }
 
     /** Giá trị lạ → 400 qua handler, không âm thầm trả về cả danh sách. */

@@ -4,10 +4,12 @@ import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.entities.MessageReport;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
+import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.conversation.resources.AdminReportListItemResource;
+import com.techx.intervue.modules.conversation.resources.MessageReportResource;
 import com.techx.intervue.modules.conversation.resources.ModeratedMessageResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
@@ -15,6 +17,7 @@ import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.resources.PageResource;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Clock;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -106,6 +109,41 @@ public class ModerationService implements ModerationServiceInterface {
                 nameOf(report.getReportedBy()),
                 report.getCreatedAt(),
                 context);
+    }
+
+    @Override
+    @Transactional
+    public ModeratedMessageResource hide(Long adminId, Long messageId) {
+        Message message =
+                messages.findById(messageId)
+                        .orElseThrow(() -> new EntityNotFoundException("Message not found."));
+        if (!reports.existsByMessageId(messageId)) {
+            throw new ModerationOutOfScopeException();
+        }
+
+        Instant now = clock.instant();
+        // Idempotent: hai admin cùng xử lý một hàng đợi thì người ẩn TRƯỚC là người chịu trách
+        // nhiệm; ghi đè sẽ xoá mất dấu vết kiểm toán đó.
+        if (!message.isHidden()) {
+            message.setHiddenAt(now);
+            message.setHiddenBy(adminId);
+            messages.save(message);
+        }
+        reports.findByMessageId(messageId)
+                .forEach(r -> r.markHandledBy(adminId, ReportStatus.ACTIONED, now));
+
+        return toModerated(message, true);
+    }
+
+    @Override
+    @Transactional
+    public MessageReportResource dismiss(Long adminId, Long reportId) {
+        MessageReport report =
+                reports.findById(reportId)
+                        .orElseThrow(() -> new EntityNotFoundException("Report not found."));
+        // markHandledBy tự bỏ qua khi status != NEW, nên gọi lại lần nữa không đổi gì
+        report.markHandledBy(adminId, ReportStatus.REVIEWED, clock.instant());
+        return MessageReportResource.from(report);
     }
 
     /**

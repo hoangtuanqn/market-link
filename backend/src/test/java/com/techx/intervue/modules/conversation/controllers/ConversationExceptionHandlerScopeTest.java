@@ -27,6 +27,7 @@ class ConversationExceptionHandlerScopeTest {
                         AttachmentController.class,
                         AttachmentDownloadController.class,
                         MessageReportController.class,
-                        AdminMessageReportController.class);
+                        AdminMessageReportController.class,
+                        AdminMessageController.class);
     }
 }

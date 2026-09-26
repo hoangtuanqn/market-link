@@ -9,6 +9,7 @@ import com.techx.intervue.modules.conversation.exceptions.CannotReportOwnMessage
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
+import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
@@ -46,7 +47,8 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
             AttachmentController.class,
             AttachmentDownloadController.class,
             MessageReportController.class,
-            AdminMessageReportController.class
+            AdminMessageReportController.class,
+            AdminMessageController.class
         })
 public class ConversationExceptionHandler {
 
@@ -174,6 +176,12 @@ public class ConversationExceptionHandler {
                                 .field(e.getField())
                                 .message(e.getMessage())
                                 .build()));
+    }
+
+    /** Spec §8.3 — 403. Ranh giới của admin bắt nguồn từ báo cáo, không từ vai. */
+    @ExceptionHandler(ModerationOutOfScopeException.class)
+    ResponseEntity<ApiResource<Void>> outOfScope(ModerationOutOfScopeException e) {
+        return error(HttpStatus.FORBIDDEN, "MODERATION_OUT_OF_SCOPE", e.getMessage(), List.of());
     }
 
     /** Spec §8.5 — 400. Báo cáo là để tố người khác, không phải để tự gỡ tin của mình. */
