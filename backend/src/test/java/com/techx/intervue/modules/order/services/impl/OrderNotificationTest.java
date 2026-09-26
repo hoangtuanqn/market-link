@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.notification.enums.NotificationKind;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
@@ -113,7 +114,8 @@ class OrderNotificationTest {
                         mock(CheckoutQueryRepository.class),
                         orderQueries,
                         clock,
-                        notifications);
+                        notifications,
+                        mock(RestockNotifier.class));
 
         when(historyRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
         when(farmerRepository.findById(FARMER_PROFILE_ID))

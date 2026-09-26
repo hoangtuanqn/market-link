@@ -6,6 +6,7 @@ import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
@@ -35,6 +36,7 @@ public class ProductService implements ProductServiceInterface {
     private final FarmerProfileRepository farmers;
     private final CategoryRepository categories;
     private final ProductQueryRepository query;
+    private final RestockNotifier restock;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -81,8 +83,32 @@ public class ProductService implements ProductServiceInterface {
         requireApproved(profile);
         Product product = owned(profile, productId);
         Category category = activeCategory(request.categoryId());
+        int stockBefore = product.getStockQuantity();
         apply(product, request, category);
-        return toResource(products.save(product), profile, category);
+        refreshStatusAfterStockEdit(product, stockBefore);
+        Product saved = products.save(product);
+        // FR-041: a refill from zero tells the customers who favourited this product
+        restock.onStockRose(saved.getId(), stockBefore, saved.getStockQuantity());
+        return toResource(saved, profile, category);
+    }
+
+    /**
+     * FR-064, same rule as the order paths: "unavailable" is the farmer's pause and is never
+     * changed here; stock reaching 0 marks an available product sold out; a sold-out product comes
+     * back on sale only if it was sold out because it ran out (stock was 0) — a manual "sold out"
+     * with stock left stays.
+     */
+    private static void refreshStatusAfterStockEdit(Product p, int stockBefore) {
+        if (p.getStatus() == ProductStatus.UNAVAILABLE) {
+            return;
+        }
+        if (p.getStockQuantity() == 0) {
+            if (p.getStatus() == ProductStatus.AVAILABLE) {
+                p.setStatus(ProductStatus.SOLD_OUT);
+            }
+        } else if (p.getStatus() == ProductStatus.SOLD_OUT && stockBefore == 0) {
+            p.setStatus(ProductStatus.AVAILABLE);
+        }
     }
 
     /** Soft delete — order_items point to product_id, old orders must stay readable (FR-036). */

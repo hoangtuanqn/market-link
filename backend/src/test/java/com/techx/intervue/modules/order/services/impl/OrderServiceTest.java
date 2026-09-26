@@ -14,6 +14,7 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
@@ -142,7 +143,8 @@ class OrderServiceTest {
                         checkoutQueries,
                         orderQueries,
                         clock,
-                        mock(NotificationServiceInterface.class));
+                        mock(NotificationServiceInterface.class),
+                        mock(RestockNotifier.class));
 
         when(userRepository.findById(CUSTOMER_ID))
                 .thenReturn(Optional.of(user(CUSTOMER_ID, RoleType.CUSTOMER)));

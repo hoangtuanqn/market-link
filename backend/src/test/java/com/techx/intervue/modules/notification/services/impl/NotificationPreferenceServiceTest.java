@@ -172,7 +172,8 @@ class NotificationPreferenceServiceTest {
                         new CategoryPreference("messages", false, true),
                         new CategoryPreference("announcements", true, true),
                         new CategoryPreference("account", true, true),
-                        new CategoryPreference("orders", true, true));
+                        new CategoryPreference("orders", true, true),
+                        new CategoryPreference("favorites", true, true));
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.techx.intervue.modules.order.services.impl;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.notification.enums.NotificationKind;
 import com.techx.intervue.modules.notification.resources.NotificationEvent;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
@@ -97,6 +98,7 @@ public class OrderService implements OrderServiceInterface {
     private final OrderQueryRepository orderQueries;
     private final Clock clock;
     private final NotificationServiceInterface notifications;
+    private final RestockNotifier restock;
 
     /**
      * Read-only, no locking, changes nothing: groups the cart by farmer_id and writes each group's
@@ -576,6 +578,8 @@ public class OrderService implements OrderServiceInterface {
                 int stockBefore = p.getStockQuantity();
                 p.setStockQuantity(stockBefore - delta);
                 adjustStatusForStockChange(p, stockBefore);
+                // FR-041: lowering a quantity gives stock back
+                restock.onStockRose(p.getId(), stockBefore, p.getStockQuantity());
             }
 
             if (after == 0) {
@@ -740,6 +744,7 @@ public class OrderService implements OrderServiceInterface {
                 int stockBefore = p.getStockQuantity();
                 p.setStockQuantity(stockBefore + qty.get(p.getId()));
                 adjustStatusForStockChange(p, stockBefore);
+                restock.onStockRose(p.getId(), stockBefore, p.getStockQuantity());
             }
         }
 

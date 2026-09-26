@@ -154,6 +154,17 @@ class FavoriteQueryRepositoryTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
+    /** FR-041: the accounts that favourited a product, and only for that product. */
+    @Test
+    void theAccountsThatFavouritedAProductAreFound() {
+        long product = product("Fav watched " + tag, 0, "sold_out");
+        long other = product("Fav other " + tag, 5, "available");
+        favorite(FavoriteTargetType.PRODUCT, product);
+        favorite(FavoriteTargetType.PRODUCT, other);
+
+        assertThat(favorites.customerIdsFavouritingProduct(product)).containsExactly(customerId);
+    }
+
     private long insert(String sql, Object... args) {
         KeyHolder keys = new GeneratedKeyHolder();
         jdbc.update(

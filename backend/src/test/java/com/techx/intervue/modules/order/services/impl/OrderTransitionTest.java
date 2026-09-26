@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
@@ -98,6 +99,7 @@ class OrderTransitionTest {
     private OrderQueryRepository orderQueries;
     private Clock clock;
     private OrderService service;
+    private RestockNotifier restock;
 
     private final List<OrderStatusHistory> history = new ArrayList<>();
 
@@ -111,6 +113,7 @@ class OrderTransitionTest {
         historyRepository = mock(OrderStatusHistoryRepository.class);
         orderQueries = mock(OrderQueryRepository.class);
         clock = Clock.fixed(ZonedDateTime.of(2026, 9, 26, 9, 0, 0, 0, HCM).toInstant(), HCM);
+        restock = mock(RestockNotifier.class);
         service =
                 new OrderService(
                         mock(UserRepository.class),
@@ -125,7 +128,8 @@ class OrderTransitionTest {
                         mock(CheckoutQueryRepository.class),
                         orderQueries,
                         clock,
-                        mock(NotificationServiceInterface.class));
+                        mock(NotificationServiceInterface.class),
+                        restock);
 
         when(historyRepository.save(any()))
                 .thenAnswer(
@@ -525,5 +529,23 @@ class OrderTransitionTest {
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETED);
         assertThat(history).isEmpty();
+    }
+
+    /** FR-041: stock given back by a decline reaches the restock alert, per product. */
+    @Test
+    void decliningAnOrderAlertsCustomersWhoFavouritedTheProduct() {
+        Order order = orderWithStatus(OrderStatus.PLACED);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        Product a = product(PRODUCT_A, 5, ProductStatus.AVAILABLE);
+        Product b = product(PRODUCT_B, 0, ProductStatus.SOLD_OUT);
+        when(orderItemRepository.findByOrderId(ORDER_ID))
+                .thenReturn(List.of(item(PRODUCT_A, 2), item(PRODUCT_B, 1)));
+        when(productRepository.lockAllById(any())).thenReturn(List.of(a, b));
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        service.decline(FARMER_USER_ID, ORDER_ID, "Out of stock");
+
+        org.mockito.Mockito.verify(restock).onStockRose(PRODUCT_A, 5, 7);
+        org.mockito.Mockito.verify(restock).onStockRose(PRODUCT_B, 0, 1);
     }
 }

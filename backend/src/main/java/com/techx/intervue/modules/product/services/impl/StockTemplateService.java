@@ -3,6 +3,7 @@ package com.techx.intervue.modules.product.services.impl;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.entities.WeeklyStockTemplate;
 import com.techx.intervue.modules.product.enums.ProductStatus;
@@ -40,6 +41,7 @@ public class StockTemplateService implements StockTemplateServiceInterface {
     private final WeeklyStockTemplateRepository templates;
     private final ProductRepository products;
     private final FarmerProfileRepository farmers;
+    private final RestockNotifier restock;
 
     @Override
     @Transactional(readOnly = true)
@@ -124,11 +126,13 @@ public class StockTemplateService implements StockTemplateServiceInterface {
                     continue;
                 }
                 WeeklyStockTemplate t = forDay.get(p.getId());
+                int stockBefore = p.getStockQuantity();
                 p.setStockQuantity(t.getDefaultQuantity());
                 if (t.getDefaultPrice() != null) {
                     p.setPrice(t.getDefaultPrice());
                 }
                 refreshStatus(p);
+                restock.onStockRose(p.getId(), stockBefore, p.getStockQuantity());
                 updated++;
             }
         }

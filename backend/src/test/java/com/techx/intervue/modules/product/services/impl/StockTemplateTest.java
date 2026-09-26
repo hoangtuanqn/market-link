@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.entities.WeeklyStockTemplate;
 import com.techx.intervue.modules.product.enums.ProductStatus;
@@ -49,6 +50,7 @@ class StockTemplateTest {
     private ProductRepository products;
     private FarmerProfileRepository farmers;
     private StockTemplateService service;
+    private RestockNotifier restock;
 
     /** Fake weekly_stock_templates table and products table. */
     private final List<WeeklyStockTemplate> table = new ArrayList<>();
@@ -60,7 +62,8 @@ class StockTemplateTest {
         templates = mock(WeeklyStockTemplateRepository.class);
         products = mock(ProductRepository.class);
         farmers = mock(FarmerProfileRepository.class);
-        service = new StockTemplateService(templates, products, farmers);
+        restock = mock(RestockNotifier.class);
+        service = new StockTemplateService(templates, products, farmers, restock);
 
         when(farmers.findByUserId(USER_ID))
                 .thenReturn(
@@ -320,5 +323,16 @@ class StockTemplateTest {
                         org.mockito.ArgumentMatchers.argThat(
                                 ids -> List.copyOf(ids).equals(List.of(100L))));
         verify(products, never()).findAllById(any());
+    }
+
+    /** FR-041: a refill from zero reaches the restock alert. */
+    @Test
+    void applyAlertsFavouritesWhenAnEmptyProductIsRefilled() {
+        product(100, FARMER_ID, "Rau muống", 0, ProductStatus.SOLD_OUT);
+        template(100, 0, 30, null);
+
+        service.applyTemplate(USER_ID, SUNDAY);
+
+        org.mockito.Mockito.verify(restock).onStockRose(100L, 0, 30);
     }
 }

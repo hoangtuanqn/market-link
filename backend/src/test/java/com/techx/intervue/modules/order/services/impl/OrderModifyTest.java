@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
@@ -88,6 +89,7 @@ class OrderModifyTest {
     private OrderQueryRepository orderQueries;
     private Clock clock;
     private OrderService service;
+    private RestockNotifier restock;
 
     private final List<OrderStatusHistory> history = new ArrayList<>();
 
@@ -100,6 +102,7 @@ class OrderModifyTest {
         historyRepository = mock(OrderStatusHistoryRepository.class);
         orderQueries = mock(OrderQueryRepository.class);
         clock = Clock.fixed(ZonedDateTime.of(2026, 9, 26, 9, 0, 0, 0, HCM).toInstant(), HCM);
+        restock = mock(RestockNotifier.class);
         service =
                 new OrderService(
                         mock(UserRepository.class),
@@ -114,7 +117,8 @@ class OrderModifyTest {
                         mock(CheckoutQueryRepository.class),
                         orderQueries,
                         clock,
-                        mock(NotificationServiceInterface.class));
+                        mock(NotificationServiceInterface.class),
+                        restock);
 
         when(historyRepository.save(any()))
                 .thenAnswer(
@@ -767,5 +771,22 @@ class OrderModifyTest {
         locks.verify(orderRepository).lockById(ORDER_ID);
         locks.verify(slotRepository).lockById(SLOT_ID);
         locks.verify(productRepository).lockAllById(any());
+    }
+
+    /** FR-041: lowering a quantity gives stock back, which reaches the restock alert. */
+    @Test
+    void loweringAQuantityReportsTheStockRiseForRestockAlerts() {
+        Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        when(orderItemRepository.findByOrderId(ORDER_ID))
+                .thenReturn(List.of(item(PRODUCT_A, 5, TEN)));
+        Product a = product(PRODUCT_A, 0, ProductStatus.SOLD_OUT);
+        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        service.modifyItems(
+                CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
+
+        org.mockito.Mockito.verify(restock).onStockRose(PRODUCT_A, 0, 3);
     }
 }

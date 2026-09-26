@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
@@ -72,7 +73,8 @@ class ReorderTest {
                         mock(CheckoutQueryRepository.class),
                         mock(OrderQueryRepository.class),
                         clock,
-                        mock(NotificationServiceInterface.class));
+                        mock(NotificationServiceInterface.class),
+                        mock(RestockNotifier.class));
         when(productRepository.findAllById(any()))
                 .thenAnswer(
                         inv -> {

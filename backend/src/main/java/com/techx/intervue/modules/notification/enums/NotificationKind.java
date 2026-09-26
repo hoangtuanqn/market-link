@@ -25,6 +25,8 @@ public enum NotificationKind {
     ORDER_DECLINED(NotificationCategory.ORDERS, true),
     ORDER_READY(NotificationCategory.ORDERS, true),
     ORDER_CANCELLED(NotificationCategory.ORDERS, true),
+    /** FR-041: a favourite product went from no stock to some stock. */
+    RESTOCK(NotificationCategory.FAVORITES, true),
     MESSAGE(NotificationCategory.MESSAGES, false),
     /** The "Send test" button in Settings — belongs to no category, always shown. */
     TEST(null, false);

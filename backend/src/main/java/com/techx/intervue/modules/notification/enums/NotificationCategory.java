@@ -19,6 +19,8 @@ public enum NotificationCategory {
     ACCOUNT("account", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     /** FR-042/D-11: the order lifecycle milestones — both roles buy as well as sell (D-13). */
     ORDERS("orders", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
+    /** FR-041: a favourite product is back in stock — both roles keep favourites (D-13). */
+    FAVORITES("favorites", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     FARMER_APPLICATIONS("farmerApplications", EnumSet.of(RoleType.ADMIN));
 
     private final String code;
