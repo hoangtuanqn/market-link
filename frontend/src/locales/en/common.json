@@ -59,7 +59,10 @@
   "chat": {
     "assistant": "MarketLink assistant",
     "you": "You",
-    "intent": "Intent: {{intent}}"
+    "intent": "Intent: {{intent}}",
+    "photoUnavailable": "This photo is not available.",
+    "photoFrom": "Photo from {{name}}",
+    "seen": "Seen"
   },
   "errors": {
     "network": "Could not reach the server. Check your connection and try again."
