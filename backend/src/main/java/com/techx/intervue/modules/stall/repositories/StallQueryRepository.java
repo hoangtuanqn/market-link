@@ -42,7 +42,7 @@ public class StallQueryRepository {
      */
     public static final String SEARCH_STALLS =
             """
-            SELECT f.id, f.stall_name, f.logo_url, f.rating_avg, f.rating_count,
+            SELECT f.id, f.stall_name, f.contact_person, f.logo_url, f.rating_avg, f.rating_count,
                    MIN(fm.stall_code) AS stall_code,
                    MIN(fm.stall_latitude) AS stall_latitude,
                    MIN(fm.stall_longitude) AS stall_longitude,
@@ -50,14 +50,24 @@ public class StallQueryRepository {
                       FROM farmer_operating_days d
                       JOIN farmer_markets fm2 ON fm2.id = d.farmer_market_id AND fm2.is_active = TRUE
                      WHERE fm2.farmer_id = f.id
-                       AND (:marketId IS NULL OR fm2.market_id = :marketId)) AS days
+                       AND (:marketId IS NULL OR fm2.market_id = :marketId)) AS days,
+                   (SELECT MIN(d.pickup_start_time)
+                      FROM farmer_operating_days d
+                      JOIN farmer_markets fm2 ON fm2.id = d.farmer_market_id AND fm2.is_active = TRUE
+                     WHERE fm2.farmer_id = f.id
+                       AND (:marketId IS NULL OR fm2.market_id = :marketId)) AS pickup_start,
+                   (SELECT MAX(d.pickup_end_time)
+                      FROM farmer_operating_days d
+                      JOIN farmer_markets fm2 ON fm2.id = d.farmer_market_id AND fm2.is_active = TRUE
+                     WHERE fm2.farmer_id = f.id
+                       AND (:marketId IS NULL OR fm2.market_id = :marketId)) AS pickup_end
             FROM farmer_profiles f
             JOIN farmer_markets fm ON fm.farmer_id = f.id AND fm.is_active = TRUE
             JOIN markets m ON m.id = fm.market_id AND m.is_active = TRUE
             """
                     + WHERE_PUBLIC
                     + """
-            GROUP BY f.id, f.stall_name, f.logo_url, f.rating_avg, f.rating_count
+            GROUP BY f.id, f.stall_name, f.contact_person, f.logo_url, f.rating_avg, f.rating_count
             ORDER BY f.rating_avg DESC, f.stall_name
             LIMIT :limit OFFSET :offset
             """;
@@ -174,13 +184,16 @@ public class StallQueryRepository {
         return new StallSummaryResource(
                 rs.getLong("id"),
                 rs.getString("stall_name"),
+                rs.getString("contact_person"),
                 rs.getString("logo_url"),
                 rs.getString("stall_code"),
                 rs.getBigDecimal("stall_latitude"),
                 rs.getBigDecimal("stall_longitude"),
                 rs.getBigDecimal("rating_avg"),
                 rs.getInt("rating_count"),
-                operatingDays);
+                operatingDays,
+                hhmm(rs.getString("pickup_start")),
+                hhmm(rs.getString("pickup_end")));
     }
 
     /** '%' và '_' người dùng gõ không được thành ký tự đại diện. */
