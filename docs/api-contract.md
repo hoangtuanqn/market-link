@@ -423,7 +423,7 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 
 | Method | Path | Role | Trạng thái | Body / query | data |
 |---|---|---|---|---|---|
-| POST | `/api/v1/conversations` | Thành viên | **Đã có** | `{ farmerUserId }` | Thread; idempotent — có rồi thì trả lại cái cũ |
+| POST | `/api/v1/conversations` | Thành viên | **Đã có** | `{ farmerId }` — id stall (`farmer_profiles.id`, như `GET /farmers/{id}`); server tự tra chủ stall. Đổi 26/09/2026 theo quyết định LEAD (trước là `farmerUserId`) | Thread; idempotent — có rồi thì trả lại cái cũ. Tự nhắn cho sạp của chính mình → 400; stall không tồn tại → 404 |
 | GET | `/api/v1/conversations` | Thành viên | **Đã có** | query `page`, `size` | `{ items[], page, size, total }`, mới nhất trước |
 | GET | `/api/v1/conversations/unread-count` | Thành viên | **Đã có** | | `{ count }` |
 | GET | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | query `before`, `size` | `[MessageResource]`, keyset, mới nhất trước |

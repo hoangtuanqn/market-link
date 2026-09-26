@@ -17,6 +17,8 @@ import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPubl
 import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ConversationServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
+import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -40,6 +42,7 @@ public class ConversationService implements ConversationServiceInterface {
     private final ConversationRepository conversations;
     private final MessageRepository messages;
     private final UserRepository users;
+    private final FarmerProfileRepository farmerProfiles;
     private final StallAccessPolicyInterface policy;
     private final ChatEventPublisherInterface events;
     private final ConversationLookup lookup;
@@ -50,11 +53,16 @@ public class ConversationService implements ConversationServiceInterface {
     @Override
     @Transactional
     public ConversationResource open(Long meId, OpenConversationRequest request) {
-        if (meId.equals(request.farmerUserId())) {
+        FarmerProfile stall =
+                farmerProfiles
+                        .findById(request.farmerId())
+                        .orElseThrow(() -> new EntityNotFoundException("Stall not found."));
+        Long targetId = stall.getUserId();
+        if (meId.equals(targetId)) {
             throw new SelfConversationException();
         }
         User me = requireUser(meId, "Account not found.");
-        User target = requireUser(request.farmerUserId(), "Stall not found.");
+        User target = requireUser(targetId, "Stall not found.");
         policy.assertCanStart(me);
 
         // Thread cũ trả về ngay cả khi stall đã bị đình chỉ (spec 8.1, D-09: vẫn đọc được;
