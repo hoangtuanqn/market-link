@@ -14,9 +14,11 @@ import com.techx.intervue.modules.conversation.entities.MessageAttachment;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
+import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
 import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
+import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AttachmentResource;
 import com.techx.intervue.modules.conversation.services.interfaces.AttachmentServiceInterface;
@@ -47,6 +49,7 @@ class AttachmentServiceTest {
     ChatRateLimiterInterface rateLimiter;
     MessageRepository messages;
     ConversationLookup lookup;
+    MessageReportRepository reports;
     AttachmentService service;
 
     @TempDir Path tmp;
@@ -59,6 +62,7 @@ class AttachmentServiceTest {
         rateLimiter = mock(ChatRateLimiterInterface.class);
         messages = mock(MessageRepository.class);
         lookup = mock(ConversationLookup.class);
+        reports = mock(MessageReportRepository.class);
         fileOnDisk = Files.write(tmp.resolve("x.jpg"), new byte[] {1, 2, 3});
         when(attachments.save(any(MessageAttachment.class)))
                 .thenAnswer(
@@ -67,10 +71,11 @@ class AttachmentServiceTest {
                             a.setId(55L);
                             return a;
                         });
-        // Thứ tự khớp constructor: attachments, storage, rateLimiter, maxBytes, messages, lookup
+        // Thứ tự khớp constructor: attachments, storage, rateLimiter, maxBytes, messages, lookup,
+        // reports
         service =
                 new AttachmentService(
-                        attachments, storage, rateLimiter, MAX_BYTES, messages, lookup);
+                        attachments, storage, rateLimiter, MAX_BYTES, messages, lookup, reports);
     }
 
     @Test
@@ -316,5 +321,79 @@ class AttachmentServiceTest {
         service.upload(7L, new MockMultipartFile("file", "a.png", "image/png", png(40, 25)));
 
         verify(rateLimiter).check(7L, ChatRateLimiterInterface.Action.IMAGE);
+    }
+
+    /** Quyết định LEAD 26/09: admin xem được ảnh của tin đã bị báo cáo. */
+    @Test
+    void anAdminCanSeeThePhotoOfAReportedMessage() {
+        MessageAttachment upload = stored(55L, 7L, 101L);
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(storage.find(AttachmentService.FOLDER, upload.getStorageKey()))
+                .thenReturn(Optional.of(fileOnDisk));
+
+        assertThat(service.readAsAdmin(55L, 55L).mime()).isEqualTo("image/jpeg");
+        // Admin không phải thành viên; họ đi con đường riêng, hẹp hơn
+        verify(lookup, never()).requireMember(any(), any());
+    }
+
+    /** Review Focus #2: ±5 tin là ngữ cảnh, không phải đối tượng bị tố. */
+    @Test
+    void adminSeesThePhotoOfTheReportedMessageButNotOfItsNeighbours() {
+        MessageAttachment neighbour = stored(56L, 7L, 102L);
+        when(attachments.findById(56L)).thenReturn(Optional.of(neighbour));
+        when(messages.findById(102L)).thenReturn(Optional.of(messageIn(102L, 42L, null)));
+        when(reports.existsByMessageId(102L)).thenReturn(false);
+
+        assertThatThrownBy(() -> service.readAsAdmin(55L, 56L))
+                .isInstanceOf(ModerationOutOfScopeException.class);
+        verify(storage, never()).find(anyString(), anyString());
+    }
+
+    /** Admin vừa ẩn tin xong vẫn phải xem lại được ảnh để kiểm chứng quyết định của mình. */
+    @Test
+    void anAdminStillSeesThePhotoAfterHidingTheMessage() {
+        MessageAttachment upload = stored(55L, 7L, 101L);
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload));
+        when(messages.findById(101L))
+                .thenReturn(
+                        Optional.of(messageIn(101L, 42L, Instant.parse("2026-09-26T06:00:00Z"))));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(storage.find(AttachmentService.FOLDER, upload.getStorageKey()))
+                .thenReturn(Optional.of(fileOnDisk));
+
+        assertThat(service.readAsAdmin(55L, 55L).mime()).isEqualTo("image/jpeg");
+    }
+
+    @Test
+    void anAdminCannotSeeAnUploadThatIsNotOnAnyMessage() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, null)));
+
+        assertThatThrownBy(() -> service.readAsAdmin(55L, 55L))
+                .isInstanceOf(ModerationOutOfScopeException.class);
+        verify(storage, never()).find(anyString(), anyString());
+    }
+
+    @Test
+    void anUnknownAttachmentIsNotFoundForAnAdminEither() {
+        when(attachments.findById(55L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.readAsAdmin(55L, 55L))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    /** Người dùng thường không được hưởng nhánh admin dù tin có bị báo cáo. */
+    @Test
+    void aReportDoesNotOpenThePhotoToEveryone() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        Mockito.doThrow(new ConversationAccessDeniedException())
+                .when(lookup)
+                .requireMember(99L, 42L);
+
+        assertThatThrownBy(() -> service.read(99L, 55L))
+                .isInstanceOf(ConversationAccessDeniedException.class);
     }
 }
