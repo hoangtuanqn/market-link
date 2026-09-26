@@ -1,7 +1,12 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
-import CatalogApi, { toClosure, type MarketClosureDto, type MarketInput } from '@/api-requests/catalog.requests';
+import CatalogApi, {
+  parseIsoDate,
+  toClosure,
+  type MarketClosureDto,
+  type MarketInput,
+} from '@/api-requests/catalog.requests';
 import { CheckIcon } from '@/components/icons';
 import LocationPicker from '@/components/LocationPicker';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
@@ -17,7 +22,7 @@ import { ADMIN_MARKETS_PATH } from '@/constants/nav';
 import { CLOSURE_HANDLINGS, marketAdmin, type ClosureHandling, type ClosureType } from '@/data/admin';
 import useRequest from '@/hooks/useRequest';
 import { isLatitude, isLongitude, parseCoordinate, parseCoordinatePair } from '@/lib/coordinates';
-import { dayName } from '@/lib/format';
+import { dayName, formatDate } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -66,6 +71,11 @@ const EMPTY: FormState = {
   notes: '',
   images: [],
 };
+
+/** Today's calendar date in Ho Chi Minh City as "yyyy-MM-dd" (en-CA formats that way), whatever the browser's zone. */
+const todayInHcmc = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
+
+const EMPTY_DRAFT = { date: '', reason: '', handling: 'move' as ClosureHandling };
 
 /** Contract §3 field names → the form's keys, so a server-side validation message lands under the right input. */
 const SERVER_FIELDS: Record<string, keyof FormErrors> = {
@@ -139,7 +149,8 @@ const AdminMarketFormPage = () => {
     setEditedClosures((current) => next(current ?? loadedClosures));
   const [addOpen, setAddOpen] = useState(false);
   const [removingClosure, setRemovingClosure] = useState<FormClosure | null>(null);
-  const [draft, setDraft] = useState({ date: '2026-10-11', reason: '', handling: 'move' as ClosureHandling });
+  const [draft, setDraft] = useState(EMPTY_DRAFT);
+  const [draftError, setDraftError] = useState<string | undefined>();
   // In-flight uploads only, never persisted: each id becomes a skeleton tile until the URL lands in form.images.
   const [uploadingImages, setUploadingImages] = useState<string[]>([]);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -338,16 +349,29 @@ const AdminMarketFormPage = () => {
   // The real market's district may not be in the short list above; keep it selectable rather than blanking the field.
   const districtOptions = [...new Set([...DISTRICTS, form.district].filter(Boolean))];
 
+  /**
+   * Adds the closed day to the list; it is only sent with the rest of the form on Save (QA E2E v2 MARKET-ADMIN-007: a
+   * missing date used to produce "undefined/undefined/", and the toast did not say the day was not saved yet).
+   */
   const addClosure = () => {
-    const [year, month, day] = draft.date.split('-');
+    const error = !draft.date
+      ? t('closures.error.dateRequired')
+      : draft.date < todayInHcmc()
+        ? t('closures.error.datePast')
+        : closures.some((c) => c.closedOn === draft.date)
+          ? t('closures.error.dateTaken')
+          : undefined;
+    setDraftError(error);
+    if (error) return;
+    const date = parseIsoDate(draft.date);
     setClosures((list) => [
       ...list,
       {
         id: Date.now(),
         marketId: existing?.id ?? 0,
         closedOn: draft.date,
-        date: `${day}/${month}/${year}`,
-        weekday: new Date(draft.date).toLocaleDateString('en-GB', { weekday: 'long' }),
+        date: formatDate(date),
+        weekday: dayName(date.getDay(), 'long'),
         reason: draft.reason.trim(),
         handling: draft.handling,
         orders: 0,
@@ -356,7 +380,7 @@ const AdminMarketFormPage = () => {
       },
     ]);
     setAddOpen(false);
-    setDraft({ date: '2026-10-11', reason: '', handling: 'move' });
+    setDraft(EMPTY_DRAFT);
     Notification.success({ text: t('closures.added') });
   };
 
@@ -642,7 +666,13 @@ const AdminMarketFormPage = () => {
             <h2 className="text-h3">{t('closures.title')}</h2>
             <p className="text-small text-ink-muted">{t('closures.intro')}</p>
           </div>
-          <Button variant="secondary" onClick={() => setAddOpen(true)}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setDraftError(undefined);
+              setAddOpen(true);
+            }}
+          >
             {t('closures.add')}
           </Button>
         </div>
@@ -681,8 +711,14 @@ const AdminMarketFormPage = () => {
             id="closure-date"
             label={t('closures.field.date')}
             type="date"
+            required
+            min={todayInHcmc()}
             value={draft.date}
-            onChange={(e) => setDraft({ ...draft, date: e.target.value })}
+            onChange={(e) => {
+              setDraft({ ...draft, date: e.target.value });
+              setDraftError(undefined);
+            }}
+            error={draftError}
           />
           <Field
             id="closure-reason"

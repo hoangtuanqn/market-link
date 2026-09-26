@@ -51,8 +51,8 @@
     "intro": "A day this market does not open, even though it falls on an operating day. Customers see it on the market page and on the home board, and no new orders can be placed for it.",
     "add": "Add a closed day",
     "addConfirm": "Add closed day",
-    "added": "Closed day added. Publish an announcement so customers see it.",
-    "removed": "Closed day removed.",
+    "added": "Closed day added. Save the market to keep it, then publish an announcement so customers see it.",
+    "removed": "Closed day removed. Save the market to apply it.",
     "remove": "Remove",
     "removeTitle": "Remove this closed day?",
     "removeText": "The market opens again on that date and customers can order for it.",
@@ -77,6 +77,11 @@
     "empty": {
       "title": "No closed days",
       "text": "This market opens on every one of its operating days. Add a closed day when it will not."
+    },
+    "error": {
+      "dateRequired": "Choose a date.",
+      "datePast": "Choose today or a later date.",
+      "dateTaken": "This date is already marked as closed."
     }
   },
   "handling": {

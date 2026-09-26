@@ -51,8 +51,8 @@
     "intro": "Hari saat pasar ini tidak buka, meski jatuh pada hari buka. Pelanggan melihatnya di halaman pasar dan di papan beranda, dan tidak ada pesanan baru yang bisa dibuat untuk hari itu.",
     "add": "Tambah hari tutup",
     "addConfirm": "Tambah hari tutup",
-    "added": "Hari tutup ditambahkan. Terbitkan pengumuman supaya pelanggan tahu.",
-    "removed": "Hari tutup dihapus.",
+    "added": "Hari tutup ditambahkan. Simpan pasar agar tersimpan, lalu terbitkan pengumuman supaya pelanggan tahu.",
+    "removed": "Hari tutup dihapus. Simpan pasar agar perubahan berlaku.",
     "remove": "Hapus",
     "removeTitle": "Hapus hari tutup ini?",
     "removeText": "Pasar buka lagi pada tanggal itu dan pelanggan bisa memesan.",
@@ -77,6 +77,11 @@
     "empty": {
       "title": "Tidak ada hari tutup",
       "text": "Pasar ini buka pada setiap hari bukanya. Tambahkan hari tutup bila nanti tidak buka."
+    },
+    "error": {
+      "dateRequired": "Pilih tanggal.",
+      "datePast": "Pilih hari ini atau tanggal sesudahnya.",
+      "dateTaken": "Tanggal ini sudah ditandai tutup."
     }
   },
   "handling": {
