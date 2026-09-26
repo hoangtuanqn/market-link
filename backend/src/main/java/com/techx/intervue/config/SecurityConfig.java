@@ -114,6 +114,10 @@ public class SecurityConfig {
                                         // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
+                                        // FR-020/FR-076: bộ lọc danh mục dùng được trước khi đăng
+                                        // nhập
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/categories")
+                                        .permitAll()
                                         // Chatbot FR-090…092: khách vãng lai cũng hỏi được
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
                                         .permitAll()
