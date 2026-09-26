@@ -2,6 +2,7 @@ package com.techx.intervue.modules.catalog.controllers;
 
 import com.techx.intervue.modules.catalog.exceptions.CategoryNotFoundException;
 import com.techx.intervue.modules.catalog.exceptions.DuplicateCategoryException;
+import com.techx.intervue.modules.catalog.exceptions.MarketClosureNotFoundException;
 import com.techx.intervue.modules.catalog.exceptions.MarketNotFoundException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
@@ -28,7 +29,8 @@ import org.springframework.web.multipart.MultipartException;
             AdminCategoryController.class,
             MarketController.class,
             AdminMarketController.class,
-            AdminMarketImageController.class
+            AdminMarketImageController.class,
+            AdminMarketClosureController.class
         })
 public class CatalogExceptionHandler {
 
@@ -89,6 +91,11 @@ public class CatalogExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "MARKET_NOT_FOUND", e.getMessage(), List.of());
     }
 
+    @ExceptionHandler(MarketClosureNotFoundException.class)
+    ResponseEntity<ApiResource<Void>> marketClosureNotFound(MarketClosureNotFoundException e) {
+        return error(HttpStatus.NOT_FOUND, "MARKET_CLOSURE_NOT_FOUND", e.getMessage(), List.of());
+    }
+
     @ExceptionHandler(DuplicateCategoryException.class)
     ResponseEntity<ApiResource<Void>> duplicateCategory(DuplicateCategoryException e) {
         return error(HttpStatus.CONFLICT, "DUPLICATE_CATEGORY", e.getMessage(), List.of());
@@ -110,6 +117,18 @@ public class CatalogExceptionHandler {
                     List.of(
                             FieldErrorResource.builder()
                                     .field("marketName")
+                                    .message(message)
+                                    .build()));
+        }
+        if (cause.contains("uq_market_closure_day")) {
+            String message = "This date is already marked as closed.";
+            return error(
+                    HttpStatus.CONFLICT,
+                    "DUPLICATE_MARKET_CLOSURE",
+                    message,
+                    List.of(
+                            FieldErrorResource.builder()
+                                    .field("closedOn")
                                     .message(message)
                                     .build()));
         }
