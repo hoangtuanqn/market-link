@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.enums.OrderStatus;
 import com.techx.intervue.modules.order.repositories.CheckoutQueryRepository;
@@ -61,7 +62,8 @@ class OrderReviewedFlagTest {
                         mock(CheckoutQueryRepository.class),
                         orderQueries,
                         clock,
-                        mock(NotificationServiceInterface.class));
+                        mock(NotificationServiceInterface.class),
+                        mock(RestockNotifier.class));
         when(orderQueries.items(ORDER_ID)).thenReturn(List.of());
         when(orderQueries.history(ORDER_ID)).thenReturn(List.of());
         when(orderQueries.findDetail(ORDER_ID)).thenReturn(Optional.of(completedOrder()));

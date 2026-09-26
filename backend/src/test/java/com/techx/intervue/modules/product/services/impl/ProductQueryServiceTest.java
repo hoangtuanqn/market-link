@@ -130,7 +130,8 @@ class ProductQueryServiceTest {
                         null,
                         "available",
                         new BigDecimal("4.50"),
-                        2);
+                        2,
+                        7);
         when(repository.findVisibleById(5L))
                 .thenReturn(Optional.of(new ProductDetailRow(item, "d")));
         when(stallService.publicDetail(10L))
