@@ -3,6 +3,7 @@ package com.techx.intervue.modules.catalog.controllers;
 import com.techx.intervue.modules.catalog.exceptions.CategoryNotFoundException;
 import com.techx.intervue.modules.catalog.exceptions.DuplicateCategoryException;
 import com.techx.intervue.modules.catalog.exceptions.MarketNotFoundException;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -47,6 +48,19 @@ public class CatalogExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
+    @ExceptionHandler(InvalidFieldException.class)
+    ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(
+                        FieldErrorResource.builder()
+                                .field(e.getField())
+                                .message(e.getMessage())
+                                .build()));
+    }
+
     /** File vượt quá spring.servlet.multipart.max-file-size/max-request-size → 400. */
     @ExceptionHandler({MaxUploadSizeExceededException.class, MultipartException.class})
     ResponseEntity<ApiResource<Void>> uploadTooLarge(Exception e) {
@@ -86,6 +100,18 @@ public class CatalogExceptionHandler {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
         if (cause.contains("categories.")) {
             return duplicateCategory(new DuplicateCategoryException(""));
+        }
+        if (cause.contains("uq_market_name")) {
+            String message = "A market with this name already exists.";
+            return error(
+                    HttpStatus.CONFLICT,
+                    "DUPLICATE_MARKET_NAME",
+                    message,
+                    List.of(
+                            FieldErrorResource.builder()
+                                    .field("marketName")
+                                    .message(message)
+                                    .build()));
         }
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }

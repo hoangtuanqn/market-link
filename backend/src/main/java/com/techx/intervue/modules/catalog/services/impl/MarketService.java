@@ -104,7 +104,8 @@ public class MarketService implements MarketServiceInterface {
         List<Integer> clean = days == null ? List.of() : days.stream().distinct().sorted().toList();
         for (Integer d : clean) {
             if (d == null || d < 0 || d > 6) {
-                throw new IllegalArgumentException(
+                throw new InvalidFieldException(
+                        "operatingDays",
                         "Operating day must be between 0 (Sunday) and 6 (Saturday).");
             }
         }
@@ -145,7 +146,8 @@ public class MarketService implements MarketServiceInterface {
         LocalTime opening = LocalTime.parse(request.openingTime(), HHMM);
         LocalTime closing = LocalTime.parse(request.closingTime(), HHMM);
         if (!closing.isAfter(opening)) {
-            throw new IllegalArgumentException("The closing time must be after the opening time.");
+            throw new InvalidFieldException(
+                    "closingTime", "The closing time must be after the opening time.");
         }
         market.setMarketName(request.marketName().trim());
         market.setAddress(request.address().trim());
