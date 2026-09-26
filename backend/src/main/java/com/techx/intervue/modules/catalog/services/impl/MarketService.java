@@ -73,12 +73,29 @@ public class MarketService implements MarketServiceInterface {
     public MarketResource create(MarketRequest request) {
         List<Integer> days = validDays(request.operatingDays());
         List<String> images = validImages(request.images());
-        Market market = new Market();
+        // A removed market with this name comes back instead of blocking the name for good: the
+        // admin cannot see removed markets, so they could never add it again (QA E2E v2
+        // MARKET-ADMIN-002). An active market with the name still hits uq_market_name → 409.
+        Market market =
+                repository
+                        .findByMarketName(request.marketName().trim())
+                        .filter(m -> !m.isActive())
+                        .orElseGet(Market::new);
+        boolean restoring = market.getId() != null;
         apply(market, request, images);
-        Market saved = repository.save(market);
+        market.setActive(true);
+        // Flushed so the stall count below, read with plain SQL, already sees the market as active
+        Market saved = restoring ? repository.saveAndFlush(market) : repository.save(market);
         dayRepository.replaceDays(saved.getId(), days);
         imageRepository.replaceImages(saved.getId(), images);
-        return toResource(saved, days, images, 0);
+        long farmerCount =
+                restoring
+                        ? queryRepository
+                                .findById(saved.getId())
+                                .map(MarketResource::farmerCount)
+                                .orElse(0L)
+                        : 0;
+        return toResource(saved, days, images, farmerCount);
     }
 
     @Override

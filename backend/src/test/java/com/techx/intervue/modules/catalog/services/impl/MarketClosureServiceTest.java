@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,7 +21,10 @@ import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +39,10 @@ class MarketClosureServiceTest {
     private UserRepository userRepository;
     private MarketClosureService service;
 
+    /** 26/09/2026 10:00 in Ho Chi Minh City: the closures below (11/10/2026) are ahead of it. */
+    private static final Clock TODAY =
+            Clock.fixed(Instant.parse("2026-09-26T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
+
     @BeforeEach
     void setUp() {
         repository = mock(MarketClosureRepository.class);
@@ -43,7 +51,7 @@ class MarketClosureServiceTest {
         userRepository = mock(UserRepository.class);
         service =
                 new MarketClosureService(
-                        repository, marketRepository, orderRepository, userRepository);
+                        repository, marketRepository, orderRepository, userRepository, TODAY);
         when(marketRepository.existsById(1L)).thenReturn(true);
     }
 
@@ -145,5 +153,26 @@ class MarketClosureServiceTest {
         service.delete(1L, 5L);
 
         verify(repository).delete(existing);
+    }
+
+    /** QA E2E v2 MARKET-ADMIN-007: a closed day cannot be back-dated. */
+    @Test
+    void createRejectsADateBeforeTodayInHoChiMinhCity() {
+        MarketClosureRequest yesterday =
+                new MarketClosureRequest(LocalDate.of(2026, 9, 25), null, "move");
+
+        assertThatThrownBy(() -> service.create(1L, yesterday, 9L))
+                .isInstanceOf(InvalidFieldException.class)
+                .hasFieldOrPropertyWithValue("field", "closedOn");
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void createAcceptsToday() {
+        when(repository.save(any(MarketClosure.class))).thenAnswer(i -> i.getArgument(0));
+
+        service.create(1L, new MarketClosureRequest(LocalDate.of(2026, 9, 26), null, "move"), 9L);
+
+        verify(repository).save(any(MarketClosure.class));
     }
 }

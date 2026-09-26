@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -117,6 +118,16 @@ public class FarmerExceptionHandler {
                 "FORBIDDEN",
                 "You do not have permission to do this.",
                 List.of());
+    }
+
+    /**
+     * No body, malformed JSON or a value of the wrong type (QA E2E v2 BUG-002). Without this the
+     * error falls through to /error and comes back as Spring's default body instead of the
+     * envelope.
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    ResponseEntity<ApiResource<Void>> unreadableBody(HttpMessageNotReadableException e) {
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
     private static ResponseEntity<ApiResource<Void>> error(

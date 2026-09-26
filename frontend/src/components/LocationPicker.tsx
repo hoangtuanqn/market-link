@@ -115,8 +115,14 @@ const LocationPicker = ({
   }, [marketLat, marketLng, marketName, pinLabel, attribution]);
 
   // Keeps the pin in sync when the coordinates change from outside a drag (typing lat/lng, "use the market's location").
+  // If that puts the pin outside the visible map, pan to it at the same zoom: otherwise typed coordinates looked like
+  // they placed nothing (QA E2E v2 MARKET-ADMIN-002). A drag always ends in view, so this never fights one.
   useEffect(() => {
-    pinRef.current?.setLatLng([lat, lng]);
+    const map = mapRef.current;
+    const pin = pinRef.current;
+    if (!map || !pin || !Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    pin.setLatLng([lat, lng]);
+    if (!map.getBounds().contains([lat, lng])) map.panTo([lat, lng]);
   }, [lat, lng]);
 
   // Jumps the view there too, but only when asked to (focusToken bump) — see the prop doc for why.
