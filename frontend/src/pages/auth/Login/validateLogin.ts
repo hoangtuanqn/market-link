@@ -5,8 +5,8 @@ export type LoginFieldErrors = Partial<Record<'email' | 'password', string>>;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
- * Kiểm tra phía client, cùng luật với LoginRequest của backend. Dùng chung cho trang đăng nhập thường và admin, nên câu
- * lỗi lấy từ namespace Login qua i18n.t (không cần truyền t từ trang gọi).
+ * Client-side validation, same rules as the backend's LoginRequest. Shared by the ordinary sign-in page and the admin
+ * one, so the error messages come from the Login namespace through i18n.t (no need to pass t from the calling page).
  */
 const validateLogin = (email: string, password: string): LoginFieldErrors => {
   const errors: LoginFieldErrors = {};

@@ -24,7 +24,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     @NullMarked
     public String getUsername() {
-        return email; // tùy hệ thống mà trả về cho đúng
+        return email; // depending on the system, return the right one
     }
 
     @Override

@@ -15,8 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * FR-115. messageId NULL = đã upload nhưng chưa gắn vào tin nào; ChatAttachmentCleanupJob dọn sau
- * 24 giờ. storageKey là tên file trên đĩa, sinh ngẫu nhiên, không bao giờ lấy từ người dùng.
+ * FR-115. messageId NULL = uploaded but not yet attached to any message; ChatAttachmentCleanupJob
+ * cleans it up after 24 hours. storageKey is the file name on disk, randomly generated, never taken
+ * from the user.
  */
 @Entity
 @Getter
@@ -55,7 +56,10 @@ public class MessageAttachment {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
-    /** Giống Message: không ghi đè khi đã có giá trị, để test đặt được mốc thời gian. */
+    /**
+     * Same as Message: do not overwrite when a value already exists, so tests can set the
+     * timestamp.
+     */
     @PrePersist
     protected void onCreated() {
         if (createdAt == null) {

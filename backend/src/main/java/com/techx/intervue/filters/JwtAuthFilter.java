@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-@Slf4j // cài sẵn logger
+@Slf4j // installs the logger
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtServiceInterface jwtService;
@@ -50,7 +50,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     SignatureException.class, "Token was not issued by this system",
                     UnsupportedJwtException.class, "Unsupported token type");
 
-    /** Refresh chỉ dùng cookie; access token hết hạn gửi kèm không được làm hỏng request này. */
+    /**
+     * Refresh uses the cookie only; an expired access token sent along must not break this request.
+     */
     private static final String REFRESH_PATH = "/api/v1/auth/refresh";
 
     @Override
@@ -63,12 +65,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. Lấy token từ header
+        // 1. Get the token from the header
         String authHeader = request.getHeader("Authorization");
 
-        // 2. Không có token hoặc không đúng format -> bỏ qua, đi tiếp
+        // 2. No token or wrong format -> skip, continue
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response); // cho qua, không làm gì cả
+            filterChain.doFilter(request, response); // let it through, do nothing
             return;
         }
 
@@ -88,18 +90,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 UserSessionCache.SessionData session = userSessionCache.get(userId);
 
                 if (session == null) {
-                    // Session hết hạn hoặc bị evict → force logout
+                    // Session expired or was evicted → force logout
                     writeErrorResponse(response, "Your session has expired.");
                     return;
                 }
 
-                // Token cấp trước lần đăng xuất mọi thiết bị (đổi / đặt lại mật khẩu)
+                // Token issued before the sign-out of all devices (password change / reset)
                 if (userSessionCache.isRevoked(userId, jwtService.extractIssuedAt(token))) {
                     writeErrorResponse(response, "Your session has expired.");
                     return;
                 }
 
-                // Load permissions từ Redis cache theo roles
+                // Load permissions from the Redis cache by roles
                 // Set<String> permissions = permissionCacheService.getPermissionsByRoles(
                 // session.roles().stream().toList());
 
@@ -130,8 +132,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
 
         } catch (DataAccessException e) {
-            // Redis / DB lỗi không phải lỗi của token: trả 503 để FE không refresh rồi đăng xuất
-            // user
+            // A Redis / DB failure is not the token's fault: return 503 so the FE does not refresh
+            // and then sign the
+            // user out
             log.error("Could not check the access token: {}", e.getMessage());
             writeErrorResponse(
                     response,

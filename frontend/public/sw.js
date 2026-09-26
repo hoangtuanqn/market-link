@@ -1,8 +1,8 @@
-// MarketLink service worker (FR-042). N2: mở thông báo khi bấm; N3: nhận Web Push khi đã đóng hết tab.
+// MarketLink service worker (FR-042). N2: open the notification on click; N3: receive Web Push once every tab is closed.
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
 
-// Nội dung do backend (WebPushSender) mã hoá: { kind, title, message, link, tag }
+// Content encrypted by the backend (WebPushSender): { kind, title, message, link, tag }
 self.addEventListener('push', (event) => {
   let data = {};
   try {

@@ -763,3 +763,19 @@ body[data-shell] .pt-bar { left: calc(284px + var(--space-4)); }
 .pt-perks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .pt-perks li { display: flex; align-items: flex-start; gap: var(--space-2); font-size: 14px; line-height: 20px; }
 .pt-perks .ml-tier-dot { margin-top: 4px; }
+
+/* ---------- header popovers (chat spec §9.1) — prototype only; the app builds its own in components/ui/popover.tsx ---------- */
+.pt-pop { position: relative; display: inline-flex; }
+.pt-pop-panel { position: absolute; top: calc(100% + var(--space-2)); right: 0; z-index: var(--z-dropdown); width: 320px; max-width: calc(100vw - 32px); padding: var(--space-2); background: var(--surface-raised); color: var(--ink); border: 1.5px solid var(--line-strong); border-radius: var(--radius-md); box-shadow: var(--shadow-pop); text-align: left; }
+.pt-pop-title { margin: 0; padding: var(--space-2); font-weight: 700; }
+.pt-pop-list { list-style: none; margin: 0; padding: 0; }
+.pt-pop-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-2); padding: var(--space-2); border-radius: var(--radius-sm); color: inherit; text-decoration: none; }
+.pt-pop-row:hover, .pt-pop-row:focus-visible { background: var(--surface-sunken); }
+.pt-pop-row small { display: block; overflow: hidden; color: var(--ink-muted); text-overflow: ellipsis; white-space: nowrap; }
+.pt-pop-row time { font-size: 13px; color: var(--ink-muted); }
+.pt-pop-row[data-unread="true"] b::after { content: ''; display: inline-block; width: 8px; height: 8px; margin-left: var(--space-2); border-radius: 50%; background: var(--accent); vertical-align: middle; }
+.pt-pop-all { display: block; padding: var(--space-2); font-weight: 700; text-align: center; color: var(--brand); }
+/* chat 4B: photo in a bubble, a text-sized button in the message meta, the report reasons */
+.pt-photo { display: block; width: 220px; max-width: 100%; aspect-ratio: 4 / 3; margin-top: 6px; background: var(--surface-sunken); border-radius: var(--radius-sm); }
+.pt-linkbtn { padding: 0; border: 0; background: transparent; color: var(--ink-muted); font: inherit; text-decoration: underline; cursor: pointer; }
+.pt-report { display: flex; flex-direction: column; gap: var(--space-2); margin: 0 0 var(--space-4); padding: 0; border: 0; }

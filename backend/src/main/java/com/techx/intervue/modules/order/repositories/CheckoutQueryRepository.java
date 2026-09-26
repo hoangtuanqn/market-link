@@ -12,14 +12,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Đọc phục vụ giỏ hàng. Module order không import module catalog — chợ chỉ được chạm tới bằng SQL ở
- * đây, như StallQueryRepository; mọi giá trị đi qua tham số (R-04).
+ * Reads that serve the cart. The order module does not import the catalog module — a market is only
+ * touched by SQL here, like StallQueryRepository; every value goes through parameters (R-04).
  */
 @Repository
 @RequiredArgsConstructor
 public class CheckoutQueryRepository {
 
-    /** C5-11: các chợ stall đang bán — liên kết còn bật và chợ còn mở. */
+    /** C5-11: the markets a stall sells at — the link is still on and the market is still open. */
     public static final String STALL_MARKETS =
             """
             SELECT fm.farmer_id, m.id AS market_id, m.market_name

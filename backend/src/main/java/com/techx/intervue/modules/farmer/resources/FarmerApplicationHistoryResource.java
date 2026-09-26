@@ -5,7 +5,7 @@ import java.time.Instant;
 import java.util.List;
 import lombok.Builder;
 
-/** Một lần nộp đơn đã qua: nội dung lúc nộp, kết quả và lý do nếu bị từ chối. */
+/** A past application: its content at submission, the outcome, and the reason if rejected. */
 @Builder
 public record FarmerApplicationHistoryResource(
         Long id,

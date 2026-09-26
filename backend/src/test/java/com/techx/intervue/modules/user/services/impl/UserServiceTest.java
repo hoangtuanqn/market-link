@@ -67,7 +67,7 @@ class UserServiceTest {
                         mock(BlacklistServiceInterface.class),
                         authConfig,
                         jobQueue,
-                        // FR-008: chưa ai bật 2FA → đăng nhập như cũ
+                        // FR-008: nobody has 2FA on → sign in as before
                         mock(MfaServiceInterface.class));
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(passwordEncoder.matches(PASSWORD, "hash")).thenReturn(true);

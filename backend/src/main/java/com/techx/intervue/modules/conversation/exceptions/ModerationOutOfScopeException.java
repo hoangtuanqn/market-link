@@ -1,8 +1,9 @@
 package com.techx.intervue.modules.conversation.exceptions;
 
 /**
- * Spec §8.3: quyền đọc và ẩn của admin bắt nguồn từ một báo cáo, không từ vai. Tin chưa ai báo cáo
- * thì nằm ngoài tầm với — 403, và thông điệp nói thẳng ranh giới đó để chính admin biết.
+ * Spec §8.3: an admin's right to read and hide comes from a report, not from the role. A message
+ * nobody reported is out of reach — 403, and the message states that boundary plainly so the admin
+ * knows.
  */
 public class ModerationOutOfScopeException extends RuntimeException {
     public ModerationOutOfScopeException() {

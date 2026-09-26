@@ -14,6 +14,7 @@ import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import MessageStallButton from '@/components/chat/MessageStallButton';
 import { LoadError } from '@/components/ui/data-state';
 import { Table } from '@/components/ui/table';
 import { reviewTags, reviewsForProduct } from '@/data/catalog';
@@ -168,7 +169,7 @@ const ProductDetailPage = () => {
               )}
             </div>
             <p className="text-small text-ink-muted">{t('stockUpdated')}</p>
-            {/* Giỏ hàng và báo có hàng chưa nối API: nút chỉ hiện toast → chỉ ở dev (config/wip.ts). */}
+            {/* The cart and the in-stock notice have no API wired up: the button only shows a toast → dev only (config/wip.ts). */}
             {SHOW_WIP &&
               (soldOut ? (
                 <Button variant="secondary" className="w-fit">
@@ -235,9 +236,7 @@ const ProductDetailPage = () => {
               <ButtonLink to={`/stalls/${p.farmerId}`} variant="secondary" size="sm">
                 {t('seeStall')}
               </ButtonLink>
-              <ButtonLink to="/messages" variant="secondary" size="sm">
-                {t('messageStall')}
-              </ButtonLink>
+              {p.farmerId && <MessageStallButton farmerId={p.farmerId} productId={p.id} />}
             </div>
           </Card>
 
@@ -313,7 +312,7 @@ const ProductDetailPage = () => {
         </section>
       )}
 
-      {/* Review còn là dữ liệu mẫu tới C8 → chỉ hiện ở dev (config/wip.ts). */}
+      {/* Reviews are still sample data pending C8 → shown in dev only (config/wip.ts). */}
       {SHOW_WIP && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -430,7 +429,7 @@ const ProductDetailPage = () => {
         </section>
       )}
 
-      {/* Báo cáo listing chưa có API, nút chỉ hiện toast → chỉ ở dev (config/wip.ts). */}
+      {/* Reporting a listing has no API yet, the button only shows a toast → dev only (config/wip.ts). */}
       {SHOW_WIP && (
         <p className="text-small">
           <Button

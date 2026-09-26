@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Tải ảnh chợ lên trước khi lưu form chính (POST/PUT /admin/markets nhận lại URL này trong
- * `images`) — cùng khuôn với FarmerUploadController. Chỉ Admin (role lấy từ token, R-06).
+ * Upload a market image before saving the main form (POST/PUT /admin/markets takes this URL back in
+ * `images`) — same shape as FarmerUploadController. Admin only (role comes from the token, R-06).
  */
 @RestController
 @RequestMapping("/api/v1/admin/markets/images")

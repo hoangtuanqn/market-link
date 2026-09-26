@@ -5,7 +5,9 @@ import java.time.Instant;
 import java.util.List;
 import lombok.Builder;
 
-/** Hồ sơ Farmer của chính người gọi (Customer đang chờ duyệt hoặc Farmer đã duyệt/bị đình chỉ). */
+/**
+ * The caller's own Farmer profile (a Customer awaiting approval, or an approved/suspended Farmer).
+ */
 @Builder
 public record FarmerProfileResource(
         Long id,
@@ -15,10 +17,15 @@ public record FarmerProfileResource(
         List<String> photoUrls,
         String videoUrl,
         ApprovalStatus approvalStatus,
-        /** Chỉ có giá trị khi bị từ chối — người nộp phải đọc được vì sao mới biết sửa gì. */
+        /**
+         * Only meaningful when rejected — the applicant must be able to read why in order to know
+         * what to fix.
+         */
         String rejectReason,
-        /** Chỉ có giá trị khi đang bị đình chỉ (D-09) — Farmer phải biết vì sao hàng bị ẩn. */
+        /**
+         * Only meaningful when suspended (D-09) — the Farmer must know why their goods are hidden.
+         */
         String suspendReason,
-        /** Các lần nộp trước, mới nhất trước. */
+        /** Earlier applications, newest first. */
         List<FarmerApplicationHistoryResource> history,
         Instant createdAt) {}

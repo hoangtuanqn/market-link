@@ -1,11 +1,11 @@
 # ---------------------------------------------------------------------
-# Mẫu cho profile "dev". Copy thành application-dev.yaml (git-ignore) rồi điền giá trị của bạn:
+# Template for the "dev" profile. Copy to application-dev.yaml (git-ignored) and fill in your own values:
 #   cp application-dev.yaml.example application-dev.yaml
-# Chỉ chứa key nhạy cảm — cấu hình khác nằm ở application.yaml.
-# Giá trị DB mặc định khớp .env.example.
+# Only holds sensitive keys — other configuration lives in application.yaml.
+# The default DB values match .env.example.
 # ---------------------------------------------------------------------
 spring:
-  # Chạy bù migration có số nhỏ hơn cái DB đã chạy (hai nhánh merge lệch thứ tự). Chỉ dev.
+  # Apply missing migrations numbered lower than the one the DB already ran (two branches merged out of order). Dev only.
   flyway:
     out-of-order: true
   datasource:
@@ -17,10 +17,10 @@ spring:
     password: ${MAIL_PASSWORD:your-gmail-app-password}
 
 jwt:
-  # Secret chỉ dùng cho dev
+  # Secret for dev only
   secret: ${JWT_SECRET:ZGV2LW9ubHktand0LXNlY3JldC1tYXJrZXRsaW5rLWRvLW5vdC11c2UtaW4tcHJvZA==}
 
-# Đăng nhập Google — thay giá trị mẫu bằng key thật (Google Cloud Console)
+# Google sign-in — replace the sample values with real keys (Google Cloud Console)
 app:
   oauth:
     google:

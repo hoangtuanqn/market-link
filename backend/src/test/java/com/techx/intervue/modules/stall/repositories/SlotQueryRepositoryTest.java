@@ -26,8 +26,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Chạy trên MySQL thật: câu slot công khai là SQL thuần, và hàng rào D-06 là CHECK của database —
- * cả hai chỉ kiểm được trên đúng engine.
+ * Runs on real MySQL: the public-slot statement is plain SQL, and the D-06 guardrail is a database
+ * CHECK — both are only checkable on the real engine.
  */
 @SpringBootTest
 @Transactional
@@ -121,7 +121,10 @@ class SlotQueryRepositoryTest {
         assertThat(query.publicSlots(f.getId(), m.getId() + 100_000, DAY, DAY)).isEmpty();
     }
 
-    /** Rời chợ (fm.is_active = FALSE) thì slot ở chợ đó biến khỏi trang của khách. */
+    /**
+     * Leaving a market (fm.is_active = FALSE) makes a slot there disappear from the customer's
+     * page.
+     */
     @Test
     void publicSlotsHideAMarketTheStallHasLeft() {
         FarmerProfile f = approvedFarmer();
@@ -133,7 +136,7 @@ class SlotQueryRepositoryTest {
         assertThat(query.publicSlots(f.getId(), null, DAY, DAY)).isEmpty();
     }
 
-    /** D-06: kể cả khi code sai, database không cho booked_count vượt max_orders. */
+    /** D-06: even with a code bug, the database does not let booked_count exceed max_orders. */
     @Test
     void databaseRefusesMoreBookingsThanCapacity() {
         FarmerMarket fm = link(approvedFarmer(), market());

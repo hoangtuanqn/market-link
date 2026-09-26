@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * §6, §7, §8 — chỉ Admin. Reject/reinstate theo docs/prototype/admin/farmers.html + farmer.html.
+ * §6, §7, §8 — Admin only. Reject/reinstate per docs/prototype/admin/farmers.html + farmer.html.
  */
 @RestController
 @RequestMapping("/api/v1/admin/farmers")
@@ -37,7 +37,7 @@ public class AdminFarmerController extends BaseController {
     private final FarmerServiceInterface farmerService;
 
     /**
-     * {@code q}: tìm theo tên sạp, người liên hệ, email hoặc điện thoại (prototype admin/farmers).
+     * {@code q}: search by stall name, contact person, email or phone (prototype admin/farmers).
      */
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminFarmerListItemResource>>> list(

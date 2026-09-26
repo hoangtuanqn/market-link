@@ -1,7 +1,7 @@
 # AGENTS.md — luật bắt buộc cho mọi AI coding agent
 
 Áp dụng cho Claude Code, Cursor, GitHub Copilot, Codex, Gemini và mọi agent khác làm việc trong repo này.
-Đọc thêm: `CLAUDE.md` (luật code và scope, R-01…R-08) và `CONTRIBUTING.md` (quy trình đầy đủ).
+Đọc thêm: `CLAUDE.md` (luật code và scope, R-01…R-10) và `CONTRIBUTING.md` (quy trình đầy đủ).
 
 ## Hai môi trường — không bao giờ trộn
 
@@ -31,6 +31,15 @@
 - Thêm giá trị mặc định `${VAR:mac-dinh}` vào `application-prod.yaml`, hay cho prod đọc cấu hình, DB hoặc secret của dev.
 - Chạy `make prod` từ nhánh khác `main`.
 
+## Ngôn ngữ: code và git luôn tiếng Anh
+
+Người dùng chat bằng tiếng Việt thì AI vẫn viết những thứ sau bằng tiếng Anh:
+
+- **Comment trong code**, mọi loại file, kể cả Javadoc, `TODO`/`FIXME` và lý do của `eslint-disable` (R-09).
+- **Commit message** (tiêu đề và phần thân), tiêu đề và mô tả PR, chú thích tag: 100% tiếng Anh (R-10).
+- Chỉ dịch comment tiếng Việt cũ ở đoạn mình đang sửa. Không dịch hàng loạt, không sửa comment trong migration đã merge
+  (Flyway kiểm tra checksum), không viết lại lịch sử commit, trừ khi người dùng yêu cầu rõ.
+
 ## Chỉ làm khi người dùng yêu cầu rõ trong tin nhắn hiện tại
 
 Merge PR, mở PR release `dev → main`, force-push nhánh làm việc, xoá nhánh, `make prod`, `make clean`.
@@ -43,6 +52,7 @@ Không tự sửa lịch sử của `main` / `dev`.
 
 ## Lớp bảo vệ đang chạy
 
-- Git hook (lefthook, `scripts/git-guard.sh`): chặn commit trên `main`/`dev`, push thẳng, xoá nhánh, commit file bí mật.
+- Git hook (lefthook, `scripts/git-guard.sh`): chặn commit trên `main`/`dev`, push thẳng, xoá nhánh, commit file bí mật,
+  commit message có tiếng Việt (R-10). Hook `commit-msg` chỉ kiểm tra commit message; comment trong code và PR thì tự giữ luật.
 - CI `Guard`: **Branch policy** (PR sai luồng) và **Env guard** (`scripts/check-env-separation.sh`).
 - `.claude/settings.json`: Claude Code bị cấm các lệnh push/merge nguy hiểm, phải hỏi trước khi merge PR.

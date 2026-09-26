@@ -3,7 +3,7 @@ package com.techx.intervue.modules.user.requests;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-/** Đổi mật khẩu trên trang Account. Cùng luật mật khẩu với đăng ký / đặt lại mật khẩu. */
+/** Change the password on the Account page. Same password rules as sign-up / reset password. */
 public record ChangePasswordRequest(
         @NotBlank(message = "Enter your current password.") String currentPassword,
         @NotBlank(message = "Enter a new password.")

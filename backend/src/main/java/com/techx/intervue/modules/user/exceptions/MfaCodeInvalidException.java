@@ -2,7 +2,10 @@ package com.techx.intervue.modules.user.exceptions;
 
 import lombok.Getter;
 
-/** FR-008: mã TOTP hoặc mã khôi phục sai → 400 (không dùng 401 vì FE hiểu 401 là hết phiên). */
+/**
+ * FR-008: a wrong TOTP code or recovery code → 400 (not 401 because the FE reads 401 as session
+ * ended).
+ */
 @Getter
 public class MfaCodeInvalidException extends RuntimeException {
     private final int attemptsLeft;

@@ -52,7 +52,7 @@ class AnnouncementControllerTest {
 
     @AfterEach
     void tearDown() {
-        // announcements.created_by không cascade: xoá trước khi xoá admin
+        // announcements.created_by does not cascade: delete before deleting the admin
         announcements.findAll().stream()
                 .filter(a -> a.getCreatedBy().equals(admin.getId()))
                 .forEach(announcements::delete);

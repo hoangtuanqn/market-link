@@ -2,20 +2,20 @@ import type { ApiResponse } from '@/types/api.types';
 import type { MfaRecoveryCodesType, MfaSetupType, MfaStatusType } from '@/types/auth.types';
 import { privateApi } from '@/utils/axiosInstance';
 
-/** FR-008: admin bật / tắt xác thực hai bước cho chính mình (backend chỉ cho role admin). */
+/** FR-008: an admin turns two-step verification on / off for themself (the backend only allows the admin role). */
 class MfaApi {
   static status = async () => {
     const response = await privateApi.get<ApiResponse<MfaStatusType>>('/auth/mfa');
     return response.data;
   };
 
-  /** Khoá mới, chưa bật tới khi xác nhận mã đầu tiên. */
+  /** A new key, not on until the first code is confirmed. */
   static setup = async () => {
     const response = await privateApi.post<ApiResponse<MfaSetupType>>('/auth/mfa/setup');
     return response.data;
   };
 
-  /** Trả 10 mã khôi phục, chỉ một lần. */
+  /** Returns 10 recovery codes, only once. */
   static enable = async (code: string) => {
     const response = await privateApi.post<ApiResponse<MfaRecoveryCodesType>>('/auth/mfa/enable', { code });
     return response.data;

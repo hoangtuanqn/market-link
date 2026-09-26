@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-110, FR-114. productId / orderId là ngữ cảnh ghim, chưa có FK (xem migration). */
+/** FR-110, FR-114. productId / orderId are pinned context, no FK yet (see the migration). */
 @Entity
 @Getter
 @Setter
@@ -49,7 +49,7 @@ public class Message {
     @Column(name = "order_id")
     private Long orderId;
 
-    /** Admin ẩn (Plan 3). Không bao giờ xoá cứng. */
+    /** Hidden by an admin (Plan 3). Never hard-deleted. */
     @Column(name = "hidden_at")
     private Instant hiddenAt;
 
@@ -59,7 +59,9 @@ public class Message {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
-    /** Không ghi đè khi đã có giá trị: test tích hợp cần đặt mốc thời gian chính xác. */
+    /**
+     * Do not overwrite when a value already exists: integration tests need to set exact timestamps.
+     */
     @PrePersist
     protected void onCreated() {
         if (createdAt == null) {

@@ -5,8 +5,9 @@ import com.techx.intervue.modules.conversation.resources.MessageResource;
 import java.time.Instant;
 
 /**
- * Spec 7.5: service nghiệp vụ chỉ nói "có tin mới" / "đã đọc"; ai nhận và qua đường nào là việc của
- * bản cài đặt. Plan 1 chỉ ghi log; Plan 2 thay bằng STOMP qua RabbitMQ mà không sửa service.
+ * Spec 7.5: the business service only says "new message" / "read"; who receives it and through
+ * which route is the job of the implementation. Plan 1 only logs; Plan 2 replaces it with STOMP
+ * over RabbitMQ without touching the service.
  */
 public interface ChatEventPublisherInterface {
 
@@ -14,6 +15,9 @@ public interface ChatEventPublisherInterface {
 
     void conversationRead(Conversation conversation, Long readerId, Instant readAt);
 
-    /** FR-116: admin ẩn một tin; cả hai người trong thread bỏ nó khỏi màn hình ngay. */
+    /**
+     * FR-116: an admin hides a message; both people in the thread drop it from the screen
+     * immediately.
+     */
     void messageHidden(Conversation conversation, Long messageId);
 }

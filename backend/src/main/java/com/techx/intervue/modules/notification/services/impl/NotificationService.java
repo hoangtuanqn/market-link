@@ -37,8 +37,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Spec §2: mọi nguồn thông báo đi qua dispatch. Lưu trong transaction của người gọi; đẩy sau commit
- * để FE không nhận khung về một dòng chưa tồn tại. Lỗi đẩy của một người không chặn người khác.
+ * Spec §2: every notification source goes through dispatch. Stored in the caller's transaction;
+ * pushed after commit so the FE does not receive a frame about a row that does not exist yet. A
+ * push failure for one person does not block others.
  */
 @Slf4j
 @Service

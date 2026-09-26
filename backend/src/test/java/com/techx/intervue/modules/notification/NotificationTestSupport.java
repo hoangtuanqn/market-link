@@ -16,7 +16,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-/** Tạo user có phiên thật và gọi HTTP thật (repo chưa có MockMvc trên classpath của Boot 4). */
+/**
+ * Creates a user with a real session and makes real HTTP calls (the repo has no MockMvc on the Boot
+ * 4 classpath yet).
+ */
 public class NotificationTestSupport {
 
     private final UserRepository users;
@@ -78,7 +81,10 @@ public class NotificationTestSupport {
         }
     }
 
-    /** Xoá user đã tạo; FK ON DELETE CASCADE xoá notifications / preferences / settings. */
+    /**
+     * Delete the users created; FK ON DELETE CASCADE deletes notifications / preferences /
+     * settings.
+     */
     public void cleanUp() {
         for (User u : created) {
             sessions.evict(u.getId());

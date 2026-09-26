@@ -106,8 +106,8 @@ window.PT = window.PT || {};
   // The units a stall can pick from, plus any it typed itself. products.unit is already VARCHAR(20) in
   // db/schema.sql ("kg, bó, quả, hộp…"), so a stall naming its own unit needs no schema change. What is
   // missing is the plural: English cannot derive "trays of 30" from "tray of 30".
-  /* Đơn vị bán là danh sách cố định đi kèm ứng dụng (SRS chỉ giao Admin quản categories), khớp
-     frontend/src/constants/units.ts. `kind` để báo cáo không cộng kg với bó vào một con số. */
+  /* The selling units are a fixed list that ships with the app (the SRS only lets Admin manage categories), matching
+     frontend/src/constants/units.ts. `kind` keeps reports from adding kg and bunches into one number. */
   PT.unitList = [
     { one: 'kg', many: 'kg', kind: 'weight' },
     { one: 'g', many: 'g', kind: 'weight' },

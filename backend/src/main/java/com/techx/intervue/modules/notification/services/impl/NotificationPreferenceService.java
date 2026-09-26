@@ -28,8 +28,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Settings → Thông báo. Chưa có dòng = mặc định (bật hết, âm thanh bật, không yên tĩnh). Giờ yên
- * tĩnh chỉ chặn popup, âm thanh và push; việc lưu và số chưa đọc không đổi.
+ * Settings → Notifications. No row = default (everything on, sound on, no quiet hours). Quiet hours
+ * only block popups, sound and push; storing and the unread count do not change.
  */
 @Service
 @RequiredArgsConstructor
@@ -117,7 +117,10 @@ public class NotificationPreferenceService implements NotificationPreferenceServ
         return new Alert(inApp, browser, s.isSound() && (inApp || browser));
     }
 
-    /** Khoảng [from, to); qua nửa đêm khi from &gt; to; from == to nghĩa là không yên tĩnh. */
+    /**
+     * The interval [from, to); it crosses midnight when from &gt; to; from == to means no quiet
+     * hours.
+     */
     public static boolean inQuietHours(String from, String to, LocalTime t) {
         LocalTime start = LocalTime.parse(from);
         LocalTime end = LocalTime.parse(to);

@@ -15,18 +15,20 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 /**
- * Spec 7.4: mọi sự kiện theo user. Được gọi SAU commit (TransactionHelper.afterCommit trong
- * service), nên đọc unread ở đây là thấy tin vừa ghi. Lỗi gửi không được lan ra request REST đã
- * thành công.
+ * Spec 7.4: every event goes per user. Called AFTER commit (TransactionHelper.afterCommit in the
+ * service), so reading unread here sees the message that was just written. A send failure must not
+ * spread to the REST request that already succeeded.
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class StompChatEventPublisher implements ChatEventPublisherInterface {
 
-    // /topic thay vì /queue: trên RabbitMQ, /queue/<x> tạo queue durable không tự xoá — mỗi phiên
-    // WebSocket để lại 4 queue mồ côi; /topic/<x> là queue exclusive auto-delete, biến mất khi
-    // ngắt.
+    // /topic instead of /queue: on RabbitMQ, /queue/<x> creates a durable queue that is never
+    // auto-deleted — every WebSocket
+    // session leaves 4 orphaned queues; /topic/<x> is an exclusive auto-delete queue that
+    // disappears on
+    // disconnect.
     public static final String MESSAGES = "/topic/messages";
     public static final String CONVERSATIONS = "/topic/conversations";
     public static final String TYPING = "/topic/typing";
@@ -40,12 +42,14 @@ public class StompChatEventPublisher implements ChatEventPublisherInterface {
     public void messageCreated(Conversation conversation, MessageResource message) {
         Long recipient = conversation.otherMember(message.senderId());
         send(recipient, MESSAGES, message);
-        // Thiết bị khác của chính người gửi cũng cần bong bóng; tab đã gửi khử trùng theo id.
+        // The sender's other devices also need the bubble; the tab that sent it dedupes by id.
         send(message.senderId(), MESSAGES, message);
         send(recipient, CONVERSATIONS, updated(conversation, unreadFor(recipient, conversation)));
         send(message.senderId(), CONVERSATIONS, updated(conversation, 0L));
-        // FR-042: popup cho người nhận (module notification nghe sự kiện này). Tin đã commit: lỗi
-        // phía thông báo chỉ được ghi log, không được biến request gửi tin thành 500.
+        // FR-042: popup for the recipient (the notification module listens to this event). The
+        // message is committed: a failure
+        // on the notification side is only logged, it must not turn the send-message request into a
+        // 500.
         try {
             appEvents.publishEvent(
                     new ChatMessageCreatedEvent(conversation.getId(), recipient, message));
@@ -68,9 +72,9 @@ public class StompChatEventPublisher implements ChatEventPublisherInterface {
     }
 
     /**
-     * FR-116. Dùng lại /topic/conversations chứ không mở destination mới: client đã đăng ký sẵn
-     * kênh đó và đã có nhánh xử lý theo `type`. Cả hai người đều nhận — người bị tố cũng phải thấy
-     * tin của mình biến mất.
+     * FR-116. Reuses /topic/conversations instead of opening a new destination: the client already
+     * subscribed to that channel and already has a branch that handles by `type`. Both people
+     * receive it — the reported person must also see their own message disappear.
      */
     @Override
     public void messageHidden(Conversation conversation, Long messageId) {
@@ -84,12 +88,13 @@ public class StompChatEventPublisher implements ChatEventPublisherInterface {
         send(conversation.getUserBId(), CONVERSATIONS, event);
     }
 
-    /** Dùng chung cho typing và presence: đẩy payload bất kỳ tới một user. */
+    /** Shared by typing and presence: push any payload to one user. */
     public void send(Long userId, String destination, Object payload) {
         try {
             template.convertAndSendToUser(String.valueOf(userId), destination, payload);
         } catch (MessagingException e) {
-            // Người nhận offline hoặc broker vừa rớt: tin đã nằm trong DB, lần mở sau sẽ thấy.
+            // The recipient is offline or the broker just dropped: the message is already in the DB
+            // and they will see it next time they open.
             log.warn("Could not push {} to user {}: {}", destination, userId, e.getMessage());
         }
     }

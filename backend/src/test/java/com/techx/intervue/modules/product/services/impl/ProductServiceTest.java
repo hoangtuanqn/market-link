@@ -96,7 +96,10 @@ class ProductServiceTest {
         when(categories.findById(1L)).thenReturn(Optional.of(leafyGreens()));
     }
 
-    /** D-09 / contract §4: chưa duyệt thì không đăng bán được — 403 kèm đúng câu. */
+    /**
+     * D-09 / contract §4: not approved means it cannot be posted for sale — 403 with the right
+     * sentence.
+     */
     @Test
     void createRejectsStallNotApproved() {
         when(farmers.findByUserId(USER_ID)).thenReturn(Optional.of(stall(ApprovalStatus.PENDING)));
@@ -108,8 +111,8 @@ class ProductServiceTest {
     }
 
     /**
-     * Review focus #3: giám khảo đổi id trên URL → 403, không phải 404 (đơn của người khác có
-     * thật).
+     * Review focus #3: the examiner changes the id in the URL → 403, not 404 (someone else's order
+     * really exists).
      */
     @Test
     void updateOnAnotherFarmersProductIs403() {
@@ -136,7 +139,7 @@ class ProductServiceTest {
         verify(products, never()).deleteById(any());
     }
 
-    /** FR-064: "sold out" là trạng thái, không phải tồn kho — hai khái niệm khác nhau. */
+    /** FR-064: "sold out" is a status, not stock — two different concepts. */
     @Test
     void setStatusSoldOutDoesNotTouchStock() {
         approvedStall();
@@ -172,7 +175,10 @@ class ProductServiceTest {
         verify(products).save(p);
     }
 
-    /** FR-074: chỉ admin gỡ được cờ ẩn; Farmer đổi trạng thái không đụng tới nó. */
+    /**
+     * FR-074: only an admin can clear the hide flag; a Farmer changing the status does not touch
+     * it.
+     */
     @Test
     void farmerCannotUnhideWhatAdminHid() {
         approvedStall();
@@ -188,7 +194,10 @@ class ProductServiceTest {
         assertThat(p.getHiddenReason()).isEqualTo("Vi phạm.");
     }
 
-    /** Farmer mở form sửa sản phẩm của mình — không cần stall đã duyệt, giống {@code mine()}. */
+    /**
+     * A Farmer opens the edit form for their own product — does not require the stall to be
+     * approved, like {@code mine()}.
+     */
     @Test
     void mineOneReturnsOwnProductEvenWhenStallSuspended() {
         when(farmers.findByUserId(USER_ID))
@@ -202,7 +211,7 @@ class ProductServiceTest {
         assertThat(resource.item().id()).isEqualTo(PRODUCT_ID);
     }
 
-    /** Review focus #3, áp dụng cho GET: giám khảo đổi id trên URL → 403, không phải 404. */
+    /** Review focus #3, applied to GET: the examiner changes the id in the URL → 403, not 404. */
     @Test
     void mineOneOnAnotherFarmersProductIs403() {
         approvedStall();
@@ -213,7 +222,10 @@ class ProductServiceTest {
                 .isInstanceOf(ProductNotYoursException.class);
     }
 
-    /** Danh sách của Farmer bỏ sản phẩm đã xoá mềm, nhưng vẫn hiện sản phẩm bị ẩn kèm lý do. */
+    /**
+     * The Farmer's list skips soft-deleted products, but still shows hidden products with the
+     * reason.
+     */
     @Test
     void mineReturnsDeletedProductsNever() {
         assertThat(ProductQueryRepository.MINE_SQL).contains("p.is_deleted = FALSE");

@@ -7,7 +7,7 @@ import type { Tier } from '@/types/achievement.types';
 
 type MenuMobileProps = {
   items: NavItem[];
-  /** Người đang đăng nhập, hiện ở đầu drawer. */
+  /** The signed-in person, shown at the top of the drawer. */
   account?: { name: string; email?: string; avatarUrl?: string; tier?: Tier };
   onClose: () => void;
   onSignOut?: () => void;

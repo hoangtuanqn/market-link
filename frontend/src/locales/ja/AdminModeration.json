@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "レビュー",
     "products": "商品",
-    "hidden": "非表示にした項目"
+    "hidden": "非表示にした項目",
+    "messages": "報告されたメッセージ"
   },
   "reviewFilterLabel": "レビューを絞り込む",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "出品一覧"
+  },
+  "messages": {
+    "boundary": "読めるのは報告されたメッセージと、前後それぞれ最大 5 件の文脈だけです。会話のそれ以外の部分は管理者に公開されていません。",
+    "noun": "報告",
+    "emptyTitle": "報告されたメッセージはありません",
+    "emptyText": "お客さんやお店がメッセージを報告すると、ここで対応を待ちます。",
+    "photo": "写真",
+    "reason": {
+      "spam": "スパムまたは宣伝",
+      "abuse": "失礼または暴言",
+      "scam": "詐欺または金銭の要求",
+      "other": "その他"
+    },
+    "reportedBy": "報告者：{{name}}",
+    "sentBy": "送信者：{{name}}",
+    "review": "確認",
+    "reviewLabel": "{{name}} さんの報告を確認",
+    "context": "報告されたメッセージの前後",
+    "hidden": "非表示",
+    "hide": "メッセージを非表示",
+    "hideTitle": "このメッセージを非表示にしますか？",
+    "hideText": "会話の二人とも見られなくなります。報告は対応済みになります。",
+    "hideConfirm": "非表示にする",
+    "dismiss": "報告を却下",
+    "hidden_toast": "メッセージを非表示にしました。",
+    "dismissed_toast": "報告を却下しました。",
+    "status": {
+      "new": "新規",
+      "reviewed": "確認済み",
+      "actioned": "対応済み"
+    },
+    "statusLabel": "状態"
   }
 }

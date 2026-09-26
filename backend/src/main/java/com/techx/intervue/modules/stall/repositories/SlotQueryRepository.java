@@ -10,8 +10,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Slot khách xem được: của stall tại chợ nó còn bán và chợ còn mở. JdbcTemplate vì cần market_id từ
- * farmer_markets trong cùng lượt đọc; mọi giá trị đi qua tham số (R-04).
+ * Slots a customer may see: of a stall still selling at a market that is still open. JdbcTemplate
+ * because market_id is needed from farmer_markets in the same read; every value goes through
+ * parameters (R-04).
  */
 @Repository
 @RequiredArgsConstructor

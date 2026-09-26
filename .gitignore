@@ -1,5 +1,5 @@
 # ---------------------------------------------------------------------
-# Hệ điều hành (khác nhau giữa Windows/macOS/Linux -> luôn phải ignore)
+# Operating system files (differ between Windows/macOS/Linux -> always ignore)
 # ---------------------------------------------------------------------
 # Windows
 Thumbs.db
@@ -23,9 +23,9 @@ $RECYCLE.BIN/
 
 # ---------------------------------------------------------------------
 # VS Code
-# Chỉ ignore phần cấu hình mang tính cá nhân/máy cục bộ.
-# Các file cấu hình dùng chung cho cả team (settings/extensions/launch/tasks)
-# nên được commit để mọi máy có setup giống nhau, tránh xung đột.
+# Only ignore personal / machine-local configuration.
+# Configuration files shared by the whole team (settings/extensions/launch/tasks)
+# should be committed so every machine has the same setup and avoids conflicts.
 # ---------------------------------------------------------------------
 .vscode/*
 !.vscode/settings.json
@@ -36,7 +36,7 @@ $RECYCLE.BIN/
 *.code-workspace
 
 # ---------------------------------------------------------------------
-# IDE khác (nếu có thành viên dùng IntelliJ / Eclipse / NetBeans)
+# Other IDEs (if a member uses IntelliJ / Eclipse / NetBeans)
 # ---------------------------------------------------------------------
 .idea/
 *.iml
@@ -55,13 +55,13 @@ $RECYCLE.BIN/
 /.nb-gradle/
 
 # ---------------------------------------------------------------------
-# Biến môi trường & secrets — không bao giờ commit
+# Environment variables & secrets — never commit
 # ---------------------------------------------------------------------
 .env
 .env.*
 !.env.example
 !.env.*.example
-# Env của Vite chỉ chứa biến VITE_* công khai (bị nhúng vào bundle) → được commit
+# Vite env files only hold public VITE_* variables (embedded in the bundle) → they are committed
 !frontend/.env.development
 !frontend/.env.production
 *.pem
@@ -69,13 +69,13 @@ $RECYCLE.BIN/
 *.p12
 *.jks
 application-local.yml
-# Chứa key nhạy cảm theo môi trường — tạo từ application-<profile>.yaml.example
+# Contains environment-specific sensitive keys — create from application-<profile>.yaml.example
 backend/src/main/resources/application-dev.yaml
 backend/src/main/resources/application-prod.yaml
 application-local.yaml
 application-local.properties
 
-# Claude Code: .claude/settings.json dùng chung (commit), settings.local.json là của riêng từng máy
+# Claude Code: .claude/settings.json is shared (committed), settings.local.json is per machine
 .claude/settings.local.json
 
 # ---------------------------------------------------------------------
@@ -90,10 +90,10 @@ yarn-error.log*
 
 # ---------------------------------------------------------------------
 # Backend (Java / Spring Boot / Maven / Gradle)
-# Phòng trường hợp build được chạy ngay tại root hoặc IDE tạo output ở root.
+# In case the build runs at the root or the IDE creates output at the root.
 # ---------------------------------------------------------------------
 target/
-# Ảnh người dùng tải lên khi chạy backend trên máy (app.storage.dir mặc định)
+# Images users upload when the backend runs on the host (default app.storage.dir)
 backend/uploads/
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -104,7 +104,7 @@ build/
 *.jar
 !**/.mvn/wrapper/maven-wrapper.jar
 !**/gradle/wrapper/gradle-wrapper.jar
-# Ảnh/video đơn xin thành Farmer lưu cục bộ (FarmerUploadService, app.uploads.dir) — không commit.
+# Images/videos from Farmer applications stored locally (FarmerUploadService, app.uploads.dir) — do not commit.
 backend/uploads/
 
 # ---------------------------------------------------------------------
@@ -117,12 +117,12 @@ coverage/
 *.tsbuildinfo
 
 # ---------------------------------------------------------------------
-# Transcript session AI (export cục bộ để tra cứu, chứa nội dung file và log)
+# AI session transcripts (exported locally for reference, containing file contents and logs)
 # ---------------------------------------------------------------------
 docs/session-*.md
 
 # ---------------------------------------------------------------------
-# Khác
+# Other
 # ---------------------------------------------------------------------
 *.tmp
 *.bak

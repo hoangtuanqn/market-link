@@ -33,7 +33,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<!-- FR-111: WebSocket + STOMP. reactor-netty-core là TCP client bắt buộc của enableStompBrokerRelay -->
+		<!-- FR-111: WebSocket + STOMP. reactor-netty-core is the TCP client that enableStompBrokerRelay requires -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
@@ -70,13 +70,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
-		<!-- Verify id_token của Google bằng JWKS (NimbusJwtDecoder) -->
+		<!-- Verify Google's id_token with JWKS (NimbusJwtDecoder) -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-jose</artifactId>
 		</dependency>
 
-		<!-- Gửi mail (quên mật khẩu) qua SMTP -->
+		<!-- Send mail (forgot password) over SMTP -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
@@ -88,7 +88,7 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 
-		<!-- API docs: Swagger UI tại /swagger-ui.html (springdoc 3.x cho Spring Boot 4) -->
+		<!-- API docs: Swagger UI at /swagger-ui.html (springdoc 3.x for Spring Boot 4) -->
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -162,7 +162,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- FR-042 N3: Web Push (RFC 8291 mã hoá + RFC 8292 VAPID). Dùng bcprov-jdk18on thay bản jdk15on cũ đi kèm. -->
+		<!-- FR-042 N3: Web Push (RFC 8291 encryption + RFC 8292 VAPID). Uses bcprov-jdk18on in place of the older bundled jdk15on. -->
 		<dependency>
 			<groupId>nl.martijndwars</groupId>
 			<artifactId>web-push</artifactId>

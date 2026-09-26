@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Ảnh đại diện của chính mình: id lấy từ access token, không đổi được ảnh của người khác (R-06).
- * Chưa có trong api-contract.md — đề xuất ở docs/proposals/avatar-api.md.
+ * Your own avatar: the id comes from the access token, another person's avatar cannot be changed
+ * (R-06). Not in api-contract.md yet — proposed in docs/proposals/avatar-api.md.
  */
 @RestController
 @RequestMapping("/api/v1/auth/me/avatar")

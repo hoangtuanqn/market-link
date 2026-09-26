@@ -18,8 +18,8 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
- * Review #5: đăng xuất mọi thiết bị / phiên bị thu hồi phải đóng cả socket đang mở, không chỉ chặn
- * request mới.
+ * Review #5: signing out of every device / a revoked session must close the open socket too, not
+ * just block new requests.
  */
 class ChatSessionSweeperTest {
 

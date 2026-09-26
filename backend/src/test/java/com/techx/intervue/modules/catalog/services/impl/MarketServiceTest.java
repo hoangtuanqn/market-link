@@ -120,7 +120,7 @@ class MarketServiceTest {
                 .hasMessageContaining("closing");
     }
 
-    /** D-12: map_provider luôn là 'osm', client không gửi lên được. */
+    /** D-12: map_provider is always 'osm', the client cannot send it. */
     @Test
     void createAlwaysStoresOsmAsMapProvider() {
         when(repository.save(any(Market.class))).thenReturn(saved());
@@ -132,7 +132,9 @@ class MarketServiceTest {
         assertThat(captor.getValue().getMapProvider()).isEqualTo("osm");
     }
 
-    /** Xoá mềm — đơn hàng cũ vẫn trỏ về chợ này (orders.market_id là FK không nullable). */
+    /**
+     * Soft delete — old orders still point to this market (orders.market_id is a non-nullable FK).
+     */
     @Test
     void deactivateFlipsIsActiveInsteadOfDeleting() {
         Market m = saved();

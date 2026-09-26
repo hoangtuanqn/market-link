@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder } from './merge';
+import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder, removeMessage } from './merge';
 import type { ChatMessageItem, ConversationSummary } from '@/types/chat.types';
 
 const msg = (id: number, senderId = 3): ChatMessageItem => ({
@@ -26,8 +26,8 @@ describe('mergeMessage', () => {
   });
 
   /**
-   * Review Focus #1. REST trả tin trong response VÀ STOMP phát chính tin đó về cho mọi thiết bị của người gửi (Plan 2
-   * cố ý làm vậy). Không khử trùng thì bong bóng hiện hai lần.
+   * Review Focus #1. REST returns the message in its response AND STOMP publishes that same message back to every
+   * device of the sender (Plan 2 does this on purpose). Without deduping, the bubble shows twice.
    */
   it('ignores an event for a message already in the list', () => {
     const before = [msg(1), msg(2)];
@@ -53,7 +53,7 @@ describe('mergeMessage', () => {
 });
 
 describe('prependOlder', () => {
-  /** Review Focus #2: đang cuộn lên đọc tin cũ thì có tin mới tới. */
+  /** Review Focus #2: scrolling up to read old messages while a new message arrives. */
   it('keeps older pages when a new message arrives', () => {
     const withHistory = prependOlder([msg(10), msg(11)], [msg(9), msg(8), msg(7)]);
 
@@ -93,6 +93,17 @@ describe('oldestId', () => {
   });
 });
 
+describe('removeMessage', () => {
+  it('drops the hidden message', () => {
+    expect(removeMessage([msg(1), msg(2), msg(3)], 2).map((m) => m.id)).toEqual([1, 3]);
+  });
+
+  it('returns the same array when the message is not loaded', () => {
+    const list = [msg(1)];
+    expect(removeMessage(list, 9)).toBe(list);
+  });
+});
+
 describe('applyConversationEvent', () => {
   it('moves the touched thread to the top and refreshes its preview', () => {
     const threads = [thread(1, 0, '2026-09-26T09:00:00Z'), thread(2, 0, '2026-09-26T08:00:00Z')];
@@ -111,8 +122,8 @@ describe('applyConversationEvent', () => {
   });
 
   /**
-   * Sự kiện "read" cố ý KHÔNG mang unreadCount (backend để Long cho nó vắng mặt). Client không được suy ra 0 từ chỗ
-   * thiếu — đó là lỗi đã tìm thấy trong smoke của Plan 2.
+   * The "read" event deliberately does NOT carry unreadCount (the backend uses a Long so it can be absent). The client
+   * must not infer 0 from its absence — that was a bug found in Plan 2's smoke test.
    */
   it('leaves the badge alone when the event carries no count', () => {
     const after = applyConversationEvent([thread(1, 5)], { type: 'read', conversationId: 1, readerId: 9 });
@@ -130,14 +141,17 @@ describe('applyConversationEvent', () => {
     expect(after[0].unreadCount).toBe(0);
   });
 
-  /** Backend gửi "read" cho người gửi khi đối phương đọc: danh sách xếp theo tin mới nhất, đọc không phải tin mới. */
+  /**
+   * The backend sends "read" to the sender when the other person reads: the list is sorted by the newest message,
+   * reading is not a new message.
+   */
   it('does not reorder the list for a read receipt', () => {
     const threads = [thread(1), thread(2)];
 
     expect(applyConversationEvent(threads, { type: 'read', conversationId: 2, readerId: 9 })).toBe(threads);
   });
 
-  /** "hidden" (FR-116) là việc của Plan 4B; ở 4A nó cũng không được đẩy thread lên đầu. */
+  /** "hidden" (FR-116) is Plan 4B's job; in 4A it also must not bump the thread to the top. */
   it('does not reorder the list for a hidden message', () => {
     const threads = [thread(1), thread(2)];
 
@@ -160,7 +174,7 @@ describe('applyConversationEvent', () => {
   });
 });
 
-/** /user/topic/presence: đối phương online / offline. Không có nó thì chấm online đứng yên từ lúc tải trang. */
+/** /user/topic/presence: the other person going online / offline. Without it the online dot stays frozen from page load. */
 describe('applyPresence', () => {
   it('updates the other person in every thread with them', () => {
     const after = applyPresence([thread(1), thread(2)], {

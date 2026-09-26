@@ -160,7 +160,8 @@ class StompAuthInterceptorTest {
     }
 
     /**
-     * STOMP là bí danh của CONNECT (STOMP 1.2): phải xác thực y hệt, không được lọt qua default.
+     * STOMP is an alias of CONNECT (STOMP 1.2): it must authenticate identically, it must not slip
+     * through the default.
      */
     @Test
     void stompFrameIsAuthenticatedLikeConnect() {
@@ -173,7 +174,8 @@ class StompAuthInterceptorTest {
     }
 
     /**
-     * MESSAGE là frame server → client; client gửi lên là tiêm sự kiện giả vào queue người khác.
+     * MESSAGE is a server → client frame; a client sending it up is injecting a fake event into
+     * someone else's queue.
      */
     @Test
     void messageFrameFromAClientIsRejectedEvenWithAPrincipal() {
@@ -229,7 +231,10 @@ class StompAuthInterceptorTest {
         }
     }
 
-    /** Sweep phiên bị thu hồi cần biết phiên này của ai và token cấp lúc nào. */
+    /**
+     * The sweep of revoked sessions needs to know whose session this is and when the token was
+     * issued.
+     */
     @Test
     void connectStoresUserIdAndIssuedAtInTheSessionAttributes() {
         StompHeaderAccessor a = StompHeaderAccessor.create(StompCommand.CONNECT);

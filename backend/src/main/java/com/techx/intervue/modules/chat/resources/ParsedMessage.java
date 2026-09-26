@@ -3,11 +3,12 @@ package com.techx.intervue.modules.chat.resources;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 
 /**
- * Kết quả phân loại một tin nhắn.
+ * The result of classifying one message.
  *
- * @param normalized câu đã bỏ dấu, dùng để so khớp tên chợ / stall
- * @param keyword phần còn lại sau khi bỏ từ kích hoạt và stopword, dùng để tìm sản phẩm
- * @param dayOfWeek 0 = Chủ nhật … 6 = Thứ 7 (khớp cột day_of_week), null nếu câu không nhắc tới
+ * @param normalized the sentence with diacritics removed, used to match market / stall names
+ * @param keyword what remains after removing trigger words and stopwords, used to search products
+ * @param dayOfWeek 0 = Sunday … 6 = Saturday (matches the day_of_week column), null if the sentence
+ *     does not mention one
  */
 public record ParsedMessage(
         ChatIntent intent, String normalized, String keyword, Integer dayOfWeek) {}

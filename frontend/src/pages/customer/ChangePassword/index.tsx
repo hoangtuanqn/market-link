@@ -12,7 +12,7 @@ import Session from '@/utils/session';
 
 type FormErrors = Partial<Record<'currentPassword' | 'newPassword' | 'confirmPassword', string>>;
 
-/** Cùng luật mật khẩu với đăng ký / đặt lại mật khẩu (RegisterRules của backend). */
+/** Same password rules as sign-up / reset password (the backend's RegisterRules). */
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
@@ -32,9 +32,9 @@ const validate = (t: TFunction<'CustomerAccount'>, current: string, next: string
 };
 
 /**
- * Trang đổi mật khẩu (/account/password), mở từ khung "Password & security" ở trang Account. Link ".." tương đối theo
- * đường dẫn nên quay về đúng trang đã mở nó. Đổi xong backend đăng xuất mọi thiết bị (kể cả thiết bị này), nên FE xoá
- * phiên và đưa về trang đăng nhập.
+ * The change-password page (/account/password), opened from the "Password & security" frame on the Account page. The
+ * ".." link is relative to the path so it returns to the exact page that opened it. After the change the backend signs
+ * out every device (including this one), so the FE clears the session and sends the user to the sign-in page.
  */
 const ChangePasswordPage = () => {
   const { t } = useTranslation('CustomerAccount');
@@ -45,7 +45,7 @@ const ChangePasswordPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Vào trang thì đưa con trỏ vào ô đầu tiên, để gõ được ngay
+  // On entering the page put the cursor in the first box, so they can type right away
   useEffect(() => {
     document.getElementById('currentPassword')?.focus();
   }, []);
@@ -67,7 +67,7 @@ const ChangePasswordPage = () => {
       Notification.success({ text: response.message || t('password.changed') });
       navigate('/login', { replace: true });
     } catch (error) {
-      // 400: mật khẩu hiện tại sai / mật khẩu mới không hợp lệ → lỗi dưới ô nhập
+      // 400: the current password is wrong / the new password is invalid → error under the input
       setErrors(Helper.getFieldErrors(error));
       Notification.error({
         text: Helper.getErrorMessage(error, t('password.failed')),
@@ -92,7 +92,7 @@ const ChangePasswordPage = () => {
 
       <Card className="p-6">
         <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
-          {/* Cho trình quản lý mật khẩu biết mật khẩu thuộc tài khoản nào */}
+          {/* Tell the password manager which account the password belongs to */}
           <input
             type="email"
             name="username"

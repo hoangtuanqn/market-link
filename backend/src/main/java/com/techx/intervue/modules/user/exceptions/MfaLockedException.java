@@ -2,7 +2,7 @@ package com.techx.intervue.modules.user.exceptions;
 
 import lombok.Getter;
 
-/** FR-008: nhập sai quá số lần cho phép → 429, khoá tạm thời. */
+/** FR-008: too many wrong attempts → 429, temporarily locked. */
 @Getter
 public class MfaLockedException extends RuntimeException {
     private final long retryAfterSeconds;

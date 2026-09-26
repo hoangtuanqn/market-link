@@ -43,7 +43,10 @@ class ProductQueryServiceTest {
         return new ProductSearchCriteria(null, null, null, null, null, min, max, sort, 1, pageSize);
     }
 
-    /** `sort` từ query string đi qua whitelist, không bao giờ nối thẳng vào ORDER BY (R-04). */
+    /**
+     * `sort` from the query string goes through the whitelist, never concatenated straight into
+     * ORDER BY (R-04).
+     */
     @Test
     void searchMapsSortPriceAscToOrderByPrice() {
         service.search(criteria("price_asc", null, null, 12));
@@ -86,7 +89,10 @@ class ProductQueryServiceTest {
         assertThatThrownBy(() -> service.detail(9L)).isInstanceOf(ProductNotFoundException.class);
     }
 
-    /** Sản phẩm xoá mềm không đi qua bộ lọc public; service không có đường nào trả dữ liệu cũ. */
+    /**
+     * A soft-deleted product does not pass the public filter; the service has no path that returns
+     * stale data.
+     */
     @Test
     void detailOnDeletedProductThrows() {
         assertThat(ProductQueryRepository.DETAIL_SQL)

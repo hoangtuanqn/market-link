@@ -24,7 +24,7 @@ describe('ChatPhoto', () => {
     expect(screen.getByRole('img')).toHaveAttribute('alt', 'Photo from Cô Tư');
   });
 
-  /** Review Focus #4: ảnh của tin đã bị ẩn trả 403, mạng rớt trả lỗi. */
+  /** Review Focus #4: a hidden message's image returns 403, a network drop returns an error. */
   it('shows a fallback when the photo cannot be loaded', async () => {
     vi.mocked(ConversationApi.photoBlob).mockRejectedValue(new Error('403'));
 
@@ -34,7 +34,7 @@ describe('ChatPhoto', () => {
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
-  /** Blob URL không tự thu hồi; không revoke là rò bộ nhớ mỗi lần cuộn qua một bức ảnh. */
+  /** A blob URL is not revoked by itself; not revoking one leaks memory every time an image scrolls by. */
   it('revokes the blob url on unmount', async () => {
     vi.mocked(ConversationApi.photoBlob).mockResolvedValue('blob:fake-2');
     const { unmount } = render(<ChatPhoto attachment={attachment} alt="Photo" />);
@@ -45,7 +45,7 @@ describe('ChatPhoto', () => {
     expect(globalThis.URL.revokeObjectURL).toHaveBeenCalledWith('blob:fake-2');
   });
 
-  /** Component rời màn trước khi blob về: vẫn phải thu hồi, không được set state. */
+  /** The component leaves the screen before the blob arrives: it must still revoke, and must not set state. */
   it('revokes a blob that arrives after the component is gone', async () => {
     let resolve: (url: string) => void = () => {};
     vi.mocked(ConversationApi.photoBlob).mockReturnValue(
@@ -61,7 +61,7 @@ describe('ChatPhoto', () => {
     await waitFor(() => expect(globalThis.URL.revokeObjectURL).toHaveBeenCalledWith('blob:late'));
   });
 
-  /** Chừa đúng chỗ trước khi ảnh về: không để khung chat giật khi ảnh tải xong. */
+  /** Reserve the right space before the image arrives: do not let the chat frame jump once the image finishes loading. */
   it('reserves the right space from the size the server gave', () => {
     vi.mocked(ConversationApi.photoBlob).mockReturnValue(new Promise(() => {}));
 

@@ -2,5 +2,5 @@ package com.techx.intervue.modules.conversation.resources;
 
 import java.util.List;
 
-/** Trang dữ liệu; page bắt đầu từ 1 để khớp query string. */
+/** A page of data; page starts at 1 to match the query string. */
 public record PagedResource<T>(List<T> items, int page, int pageSize, long total) {}

@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-077 — chỉ Admin. POST tạo và gửi ngay; DELETE chỉ gỡ banner. */
+/** FR-077 — Admin only. POST creates and sends immediately; DELETE only removes the banner. */
 @Validated
 @RestController
 @RequestMapping("/api/v1/admin/announcements")

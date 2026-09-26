@@ -2,7 +2,7 @@ import type { Settings } from '@/lib/settings';
 import type { ApiResponse } from '@/types/api.types';
 import { privateApi } from '@/utils/axiosInstance';
 
-/** Settings của chính user đang đăng nhập (đề xuất: docs/proposals/settings-api.md). */
+/** Settings of the signed-in user themself (proposal: docs/proposals/settings-api.md). */
 class SettingsApi {
   static get = async () => {
     const response = await privateApi.get<ApiResponse<Settings>>('/auth/me/settings');

@@ -1,6 +1,6 @@
-# CI cho 2 nhánh môi trường:
-#   dev  — tích hợp: mọi PR feature/* → dev phải xanh backend + frontend
-#   main — production: PR dev → main build thêm image production
+# CI for the two environment branches:
+#   dev  — integration: every feature/* → dev PR must have green backend + frontend
+#   main — production: a dev → main PR also builds the production image
 name: CI
 
 on:
@@ -21,7 +21,7 @@ jobs:
       run:
         working-directory: backend
     services:
-      # Test contextLoads cần DB + Redis thật; thông số khớp .env.example / application-dev.yaml
+      # The contextLoads test needs a real DB + Redis; settings match .env.example / application-dev.yaml
       mysql:
         image: mysql:8.4
         env:
@@ -41,10 +41,10 @@ jobs:
           --health-interval=10s --health-timeout=5s --health-retries=5
     env:
       SPRING_PROFILES_ACTIVE: dev
-      # application-dev.yaml bị git-ignore nên runner không có file của profile dev:
-      # Spring rơi về placeholder trong application.yaml (password `changename`) và
-      # Flyway đổ 1045 Access denied. Biến trong khối `services` chỉ tồn tại bên
-      # trong container mysql, không lan ra step — nên phải truyền lại ở job env.
+      # application-dev.yaml is git-ignored, so the runner has no dev profile file:
+      # Spring falls back to the placeholder in application.yaml (password `changename`) and
+      # Flyway fails with 1045 Access denied. Variables in the `services` block only exist inside
+      # the mysql container and do not reach the steps — so pass them again in the job env.
       MYSQL_DATABASE: intervue_db
       MYSQL_USER: intervue
       MYSQL_PASSWORD: intervue_pass
@@ -85,7 +85,7 @@ jobs:
 
   docker-prod:
     name: Docker · build image production
-    # Chỉ khi đụng tới main (PR release dev → main, hoặc push vào main)
+    # Only when touching main (a dev → main release PR, or a push to main)
     if: github.base_ref == 'main' || github.ref == 'refs/heads/main'
     needs: [backend, frontend]
     runs-on: ubuntu-latest

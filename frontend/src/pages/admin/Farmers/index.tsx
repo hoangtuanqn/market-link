@@ -20,22 +20,22 @@ import Notification from '@/utils/notification';
 type Status =
   { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; items: AdminFarmerListItemType[]; total: number };
 
-/** Docs/prototype/admin/farmers.html — tabs theo trạng thái duyệt, mỗi tab có nội dung empty riêng (`empty.<tab>`). */
+/** Docs/prototype/admin/farmers.html — tabs by approval status, each tab has its own empty content (`empty.<tab>`). */
 const TABS: FarmerApproval[] = ['pending', 'approved', 'suspended', 'rejected'];
 
 type ConfirmKind = 'approve' | 'suspend' | 'reinstate';
 type ConfirmAction = { kind: ConfirmKind; item: AdminFarmerListItemType } | null;
 
-/** Đủ để nhìn hết một màn mà không phải cuộn dài; phần còn lại sang trang sau. */
+/** Enough to see a whole screen without a long scroll; the rest goes to the next page. */
 const PAGE_SIZE = 10;
 
-/** Số hàng giả trong lúc chờ — bằng một trang đầy thì khung không nhảy khi dữ liệu về. */
+/** The number of fake rows while waiting — equal to a full page so the frame does not jump when data arrives. */
 const SKELETON_ROWS = 5;
 
-/** Toast sau khi thao tác xong: `toast.<key>`. */
+/** Toast after an action finishes: `toast.<key>`. */
 const DONE_TOAST = { approve: 'approved', suspend: 'suspended', reinstate: 'reinstated' } as const;
 
-/** §6, §7, §8 — Admin xem, duyệt, từ chối, đình chỉ, phục hồi Farmer (FR-071/D-09). */
+/** §6, §7, §8 — an Admin views, approves, rejects, suspends, reinstates a Farmer (FR-071/D-09). */
 const AdminFarmersPage = () => {
   const { t } = useTranslation('AdminFarmers');
   const [activeTab, setActiveTab] = useState<FarmerApproval>('pending');
@@ -44,22 +44,22 @@ const AdminFarmersPage = () => {
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [rejectTarget, setRejectTarget] = useState<AdminFarmerListItemType | null>(null);
-  /** Lý do dùng cho cả từ chối và đình chỉ — mỗi lúc chỉ mở được một hộp thoại. */
+  /** One reason used for both reject and suspend — only one dialog can be open at a time. */
   const [reason, setReason] = useState('');
   const [reasonError, setReasonError] = useState<string>();
-  /** Chữ đang gõ trong ô tìm kiếm, tách khỏi từ khoá đã áp dụng: chỉ Enter hoặc nút mới gọi API. */
+  /** The text being typed in the search box, separate from the applied keyword: only Enter or the button calls the API. */
   const [queryDraft, setQueryDraft] = useState('');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
 
-  // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
+  // only setState in a promise callback (the initial state is already loading)
   const fetchList = useCallback(() => {
     AdminFarmerApi.list({ status: activeTab, q: query || undefined, page, pageSize: PAGE_SIZE })
       .then((response) => setStatus({ kind: 'ready', items: response.data.items, total: response.data.total }))
       .catch(() => setStatus({ kind: 'error' }));
   }, [activeTab, query, page]);
 
-  // Số trên tab phải đếm trong phạm vi đang tìm, nếu không thì tab ghi 5 mà bảng chỉ có 1 dòng.
+  // The number on a tab must count within the current search scope, otherwise a tab says 5 while the table has only 1 row.
   const fetchCounts = useCallback(() => {
     Promise.all(TABS.map((tab) => AdminFarmerApi.list({ status: tab, q: query || undefined, page: 1, pageSize: 1 })))
       .then((responses) => {
@@ -75,8 +75,8 @@ const AdminFarmersPage = () => {
   useEffect(fetchList, [fetchList]);
   useEffect(fetchCounts, [fetchCounts]);
 
-  // Đổi tab, tìm kiếm hay sang trang khác đều là một lần fetch mới: dựng skeleton ngay để màn hình
-  // không đứng yên với dữ liệu cũ trong lúc chờ.
+  // Changing tab, searching or going to another page is a fresh fetch each time: build the skeleton right away so the screen
+  // does not sit still with old data while waiting.
   const changeTab = (tab: FarmerApproval) => {
     if (tab === activeTab) return;
     setStatus({ kind: 'loading' });
@@ -117,7 +117,7 @@ const AdminFarmersPage = () => {
     if (!confirmAction) return;
     const { kind, item } = confirmAction;
     const written = reason.trim();
-    // Đình chỉ cũng phải có lý do: chính Farmer đọc lại câu này trên trang hồ sơ của họ.
+    // Suspension needs a reason too: the Farmer reads this sentence back on their own profile page.
     if (kind === 'suspend') {
       if (!written) return setReasonError(t('suspend.required'));
       if (written.length > REASON_MAX) return setReasonError(t('suspend.tooLong', { max: REASON_MAX }));
@@ -140,7 +140,7 @@ const AdminFarmersPage = () => {
 
   const submitReject = async () => {
     if (!rejectTarget) return;
-    // Server bắt buộc reason (@NotBlank, tối đa 255) — chặn ở đây để admin không mất hộp thoại.
+    // The server requires a reason (@NotBlank, at most 255) — block it here so the admin does not lose the dialog.
     const written = reason.trim();
     if (!written) return setReasonError(t('reject.required'));
     if (written.length > REASON_MAX) return setReasonError(t('reject.tooLong', { max: REASON_MAX }));
@@ -162,7 +162,7 @@ const AdminFarmersPage = () => {
 
   const columns: TableColumn<AdminFarmerListItemType>[] = [
     {
-      // docs/prototype/admin/farmers.html: tên sạp là liên kết, dưới nó là "người liên hệ · điện thoại".
+      // docs/prototype/admin/farmers.html: the stall name is a link, below it is "contact person · phone".
       key: 'stallName',
       label: t('col.stall'),
       render: (f) => (
@@ -239,18 +239,18 @@ const AdminFarmersPage = () => {
   ];
 
   return (
-    // <main> của shell là flex-col nên flex-1 ở đây lấy hết chiều cao còn lại — nhờ vậy khối
-    // "chưa có dữ liệu" nở ra đúng phần trống thay vì là một hộp nhỏ trên cùng.
+    // The shell's <main> is flex-col so flex-1 here takes all the remaining height — that way the
+    // "no data" block grows to fill the free space instead of being a small box at the top.
     <div className="flex flex-1 flex-col gap-6">
-      {/* docs/prototype/admin/farmers.html: tiêu đề bên trái, ô tìm kiếm bên phải cùng một hàng. */}
+      {/* docs/prototype/admin/farmers.html: the title on the left, the search box on the right in the same row. */}
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-h1">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
-        {/* Ô tìm kiếm ăn hết chỗ trống còn lại cho tới lề phải; hẹp quá thì xuống hàng riêng. */}
+        {/* The search box takes all the remaining space up to the right margin; too narrow and it drops to its own row. */}
         <form role="search" onSubmit={submitSearch} className="flex min-w-70 flex-1 items-end gap-2">
-          {/* Field đưa className xuống thẻ <input>, nên chỗ co giãn phải là lớp bọc này. */}
+          {/* Field passes className down to the <input> tag, so the flexible part must be this wrapper. */}
           <div className="flex-1">
             <Field
               id="farmer-q"
@@ -273,7 +273,7 @@ const AdminFarmersPage = () => {
         tabs={TABS.map((tab) => ({ id: tab, label: t(`status.${tab}`), count: counts[tab] }))}
       />
 
-      {/* Skeleton dựng theo đúng hình bảng sắp hiện: cùng chiều cao hàng nên không bị giật khi có dữ liệu. */}
+      {/* The skeleton is built to the exact shape of the table about to appear: same row height so it does not jerk when data arrives. */}
       {status.kind === 'loading' && (
         <div
           aria-busy="true"
@@ -333,7 +333,7 @@ const AdminFarmersPage = () => {
             )}
           </div>
         ) : (
-          // Danh sách rỗng là thứ duy nhất trên màn: cho nó chiếm hết chỗ và căn giữa.
+          // The empty list is the only thing on the screen: let it take all the space and centre.
           <DataState fill title={t(`empty.${activeTab}.title`)} text={t(`empty.${activeTab}.text`)} />
         ))}
 

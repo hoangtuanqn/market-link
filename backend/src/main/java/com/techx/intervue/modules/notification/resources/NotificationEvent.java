@@ -4,9 +4,11 @@ import com.techx.intervue.modules.notification.enums.NotificationKind;
 import java.util.Map;
 
 /**
- * Một sự kiện cần báo. title / message có sẵn thì giữ nguyên (tin nhắn chat, thông báo admin); null
- * thì dịch từ key notification.&lt;kind&gt;.title|message theo ngôn ngữ người nhận, thay {name}
- * bằng params. conversationId chỉ có với tin nhắn, để FE không popup khi đang mở đúng thread.
+ * An event that needs to be announced. If title / message are provided they are kept as is (chat
+ * message, admin announcement); if null they are translated from the key
+ * notification.&lt;kind&gt;.title|message in the recipient's language, replacing {name} with
+ * params. conversationId is only present for messages, so the FE does not pop up while the right
+ * thread is open.
  */
 public record NotificationEvent(
         NotificationKind kind,

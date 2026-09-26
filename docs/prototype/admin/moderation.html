@@ -34,11 +34,17 @@
       <div id="ptable"></div>
     </div>
     <div data-panel="hidden" hidden class="pt-col" id="hidden"></div>
+    <div data-panel="messages" hidden class="pt-col">
+      <div id="mboundary"></div>
+      <div class="ml-field" style="max-width:240px"><label class="ml-field-label" for="mstatus">Status</label><select id="mstatus" class="ml-input"><option>New</option><option>Reviewed</option><option>Actioned</option></select></div>
+      <div id="mqueue"></div>
+      <section class="ml-card pt-panel pt-col" id="mdetail" aria-label="Report from Nguyễn Minh Khang"></section>
+    </div>
   </div>
   <p class="pt-caption ml-muted"><span class="pt-todo" data-todo="FR-074 · The platform guidelines that define 'inappropriate' (advertising, off-platform contact, abuse…) are not written yet. Moderation reasons in the prototype are examples.">Content guidelines are not written yet</span></p>
 </main>
 <script>
-  document.getElementById('tabs').innerHTML = PT.tabs('Moderation queues', [{ id: 'reviews', label: 'Reviews', count: 1 }, { id: 'products', label: 'Product listings' }, { id: 'hidden', label: 'Hidden items', count: 2 }], 'reviews');
+  document.getElementById('tabs').innerHTML = PT.tabs('Moderation queues', [{ id: 'reviews', label: 'Reviews', count: 1 }, { id: 'products', label: 'Product listings' }, { id: 'hidden', label: 'Hidden items', count: 2 }, { id: 'messages', label: 'Reported messages', count: 1 }], 'reviews');
   document.getElementById('rchips').innerHTML = PT.chip('Reported', { selected: true, radio: 'r', count: 1 }) + PT.chip('Rated 1 or 2', { radio: 'r', count: 4 }) + PT.chip('Newest', { radio: 'r' });
   var flagged = PT.reviews.filter(function (r) { return r.flagged; });
   document.getElementById('reviews').innerHTML = PT.banner('warning', 'Reported by U Minh Forest Honey on 02/09: “Advertising, not a review.”', 'Hiding it removes it from the product and stall pages. The customer is told why.') + flagged.map(function (r) { return PT.reviewCard(r, { fluid: true, actions: '<button type="button" class="ml-btn ml-btn-danger ml-btn-sm" data-hide="review">Hide review</button><button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Report dismissed. The review stays visible.">Keep visible</button><a class="ml-btn ml-btn-ghost ml-btn-sm" href="../admin/customer.html">Customer account</a>' }); }).join('');
@@ -50,6 +56,30 @@
   ], [PT.product(14), PT.product(9), PT.product(5), PT.product(20)]);
   document.getElementById('hidden').innerHTML = PT.table('Hidden items', [{ key: 'w', label: 'Item' }, { key: 'o', label: 'Owner' }, { key: 'r', label: 'Reason' }, { key: 'd', label: 'Hidden on' }, { key: 'a', label: '', align: 'actions', render: function () { return '<button type="button" class="ml-btn ml-btn-secondary ml-btn-sm" data-toast="Item is visible again.">Unhide</button>'; } }], [{ w: 'Review on “Straw mushrooms”', o: 'Account 4471', r: 'Advertising', d: '02/09/2026' }, { w: 'Listing “Weight-loss tea”', o: 'Long Khánh Fruit Garden', r: 'Health claim, not produce', d: '19/09/2026' }]);
   document.body.addEventListener('click', function (e) { var b = e.target.closest('[data-hide]'); if (!b) return; var k = b.getAttribute('data-hide'); PT.dialog({ tone: 'danger', title: 'Hide this ' + k + '?', body: '<p>It is removed from customer pages right away. The ' + (k === 'review' ? 'customer' : 'stall') + ' is told and can contact the team.</p><div class="ml-field" style="min-width:0"><label class="ml-field-label" for="why">Reason</label><select id="why" class="ml-input"><option>Advertising or off-platform contact</option><option>Abusive language</option><option>Not about the product or stall</option><option>Health or certification claim</option><option>Other</option></select></div>', keep: 'Keep visible', confirm: 'Hide ' + k, toast: 'Hidden. The owner has been told.' }); });
+  // FR-116 · Reported messages. Chat spec §8.3: an admin reads only a reported message plus five on each side.
+  document.getElementById('mboundary').innerHTML = PT.banner('info', '', 'You can read only messages someone reported, plus up to five on each side for context. Nothing else in a conversation is open to admins.');
+  document.getElementById('mqueue').innerHTML = PT.table('Reported messages', [
+    { key: 'p', label: 'Message', render: function (r) { return '<b>' + PT.esc(r.p) + '</b><span class="sub">Sent by ' + PT.esc(r.s) + '</span>'; } },
+    { key: 'r', label: 'Reason' },
+    { key: 'b', label: 'Reported by' },
+    { key: 'd', label: 'Reported' },
+    { key: 'a', label: '', align: 'actions', render: function (r) { return '<a class="ml-btn ml-btn-secondary ml-btn-sm" href="#mdetail" aria-label="Review report from ' + PT.esc(r.b) + '">Review</a>'; } },
+  ], [{ p: 'Transfer 500,000 ₫ first and I will hold it for you', s: 'Chợ Sớm Stall', r: 'Scam or asks for money', b: 'Nguyễn Minh Khang', d: '09:05' }]);
+  var ctx = [
+    ['Nguyễn Minh Khang', '08:52', 'Is the durian still available this week?', false],
+    ['Chợ Sớm Stall', '08:55', 'Yes, three left.', false],
+    ['Nguyễn Minh Khang', '08:58', 'Can you hold one for Saturday?', false],
+    ['Chợ Sớm Stall', '09:01', 'Transfer 500,000 ₫ first and I will hold it for you', true],
+    ['Nguyễn Minh Khang', '09:03', 'The site says I pay at the stall.', false],
+  ];
+  document.getElementById('mdetail').innerHTML = '<h2 class="pt-h3">Messages around the reported one</h2><ol class="pt-col" aria-label="Messages around the reported one" style="list-style:none;padding:0;margin:0">' +
+    ctx.map(function (m) { return '<li' + (m[3] ? ' aria-current="true" class="ml-card pt-panel" style="border-color:var(--danger)"' : '') + '><p class="pt-small ml-muted">' + PT.esc(m[0]) + ' · ' + m[1] + (m[3] ? ' · <b>Reported</b>' : '') + '</p><p>' + PT.esc(m[2]) + '</p></li>'; }).join('') + '</ol>' +
+    '<div class="pt-row-2"><button type="button" class="ml-btn ml-btn-danger" data-hidemsg>Hide message</button><button type="button" class="ml-btn ml-btn-secondary" data-toast="Report dismissed.">Dismiss report</button></div>';
+  document.body.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-hidemsg]')) return;
+    PT.dialog({ tone: 'danger', title: 'Hide this message?', body: '<p>Both people in the conversation stop seeing it. The report is marked as actioned.</p>', keep: 'Cancel', confirm: 'Hide', toast: 'Message hidden.' });
+  });
+
   PT.states(['#reviews', '#ptable'], {
     label: 'this queue',
     empty: ['Nothing to moderate', 'Reported products and reviews arrive here for you to read before hiding anything.'],

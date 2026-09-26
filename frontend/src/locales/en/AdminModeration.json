@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "Reviews",
     "products": "Product listings",
-    "hidden": "Hidden items"
+    "hidden": "Hidden items",
+    "messages": "Reported messages"
   },
   "reviewFilterLabel": "Filter reviews",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "listings"
+  },
+  "messages": {
+    "boundary": "You can read only messages someone reported, plus up to five on each side for context. Nothing else in a conversation is open to admins.",
+    "noun": "reports",
+    "emptyTitle": "No reported messages",
+    "emptyText": "When a customer or a stall reports a message, it waits here for you.",
+    "photo": "Photo",
+    "reason": {
+      "spam": "Spam or advertising",
+      "abuse": "Rude or abusive",
+      "scam": "Scam or asks for money",
+      "other": "Something else"
+    },
+    "reportedBy": "Reported by {{name}}",
+    "sentBy": "Sent by {{name}}",
+    "review": "Review",
+    "reviewLabel": "Review report from {{name}}",
+    "context": "Messages around the reported one",
+    "hidden": "Hidden",
+    "hide": "Hide message",
+    "hideTitle": "Hide this message?",
+    "hideText": "Both people in the conversation stop seeing it. The report is marked as actioned.",
+    "hideConfirm": "Hide",
+    "dismiss": "Dismiss report",
+    "hidden_toast": "Message hidden.",
+    "dismissed_toast": "Report dismissed.",
+    "status": {
+      "new": "New",
+      "reviewed": "Reviewed",
+      "actioned": "Actioned"
+    },
+    "statusLabel": "Status"
   }
 }

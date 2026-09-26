@@ -1,6 +1,6 @@
 # Frontend — React 19 / Vite / TypeScript / Tailwind 4
 
-Đọc `../CLAUDE.md` trước (luật R-01…R-07, Definition of Done).
+Đọc `../CLAUDE.md` trước (luật R-01…R-10, Definition of Done).
 
 - SPA React + Vite, entry `src/main.tsx`, alias `@` → `src/`. Dev server cổng 3000 (`vite.config.ts`).
 - Biến môi trường cho client phải có tiền tố `VITE_`, đọc qua `import.meta.env.VITE_*`.

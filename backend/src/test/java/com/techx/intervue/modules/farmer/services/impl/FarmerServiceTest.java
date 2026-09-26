@@ -93,7 +93,7 @@ class FarmerServiceTest {
                 .build();
     }
 
-    /** Điền hai trường bắt buộc, để mô tả và ảnh/video trống. */
+    /** Fill in the two required fields, leave the description and images/videos empty. */
     private static FarmerApplicationRequest minimalRequest(String stallName, String contactPerson) {
         return new FarmerApplicationRequest(stallName, contactPerson, null, null, null);
     }
@@ -146,7 +146,10 @@ class FarmerServiceTest {
         verify(farmerProfileRepository, never()).save(any());
     }
 
-    /** Bị từ chối không còn là ngõ cụt: đơn cũ bị ghi đè, lần nộp mới được ghi vào lịch sử. */
+    /**
+     * Being rejected is no longer a dead end: the old application is overwritten, and the new
+     * submission is written to the history.
+     */
     @Test
     void apply_reopensTheRejectedApplication_andRecordsANewAttempt() {
         FarmerProfile rejected = pendingProfile();
@@ -171,7 +174,9 @@ class FarmerServiceTest {
         assertThat(saved.getValue().getStatus()).isEqualTo(ApprovalStatus.PENDING);
     }
 
-    /** Ảnh của người khác không được gắn vào đơn của mình, dù có đoán ra đường dẫn. */
+    /**
+     * Someone else's image must not be attached to your application, even if the path is guessed.
+     */
     @Test
     void apply_rejectsFilesThatBelongToSomeoneElse() {
         when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
@@ -212,7 +217,7 @@ class FarmerServiceTest {
         verify(farmerProfileRepository).delete(profile);
     }
 
-    /** Đã duyệt rồi thì không còn gì để rút — đó là kết quả, không phải việc đang chờ. */
+    /** Once approved there is nothing left to withdraw — that is an outcome, not pending work. */
     @Test
     void withdraw_throws_whenTheApplicationWasAlreadyDecided() {
         FarmerProfile profile = pendingProfile();
@@ -249,8 +254,9 @@ class FarmerServiceTest {
     }
 
     /**
-     * JwtAuthFilter dựng authority từ UserSessionCache chứ không từ claim của token: chỉ ghi
-     * users.role thì Farmer vừa được duyệt vẫn mang ROLE_CUSTOMER tới hết TTL access token.
+     * JwtAuthFilter builds authorities from UserSessionCache and not from the token's claim:
+     * writing only users.role would leave a just-approved Farmer with ROLE_CUSTOMER until the
+     * access token TTL ends.
      */
     @Test
     void approve_refreshesCachedSessionRole_soTheNewRoleAppliesOnTheNextRequest() {
@@ -266,7 +272,10 @@ class FarmerServiceTest {
         verify(userSessionCache).updateRoles(USER_ID, Set.of(RoleType.FARMER));
     }
 
-    /** Suspend không đổi role (D-09: vẫn là farmer, vẫn đăng nhập được) nên không đụng phiên. */
+    /**
+     * Suspend does not change the role (D-09: still farmer, can still sign in) so it does not touch
+     * the session.
+     */
     @Test
     void suspend_leavesTheCachedSessionAlone() {
         FarmerProfile profile = pendingProfile();
@@ -386,7 +395,7 @@ class FarmerServiceTest {
                 .isInstanceOf(InvalidApprovalTransitionException.class);
     }
 
-    // FR-042: mỗi quyết định về đơn Farmer báo cho người liên quan
+    // FR-042: every decision on a Farmer application notifies the people involved
 
     private FarmerProfile withStatus(ApprovalStatus status) {
         FarmerProfile profile = pendingProfile();

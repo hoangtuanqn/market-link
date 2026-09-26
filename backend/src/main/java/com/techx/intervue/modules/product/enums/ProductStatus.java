@@ -5,7 +5,7 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** FR-064. Giá trị JSON và cột ENUM giữ snake_case (`sold_out`) — contract §5. */
+/** FR-064. The JSON value and the ENUM column keep snake_case (`sold_out`) — contract §5. */
 public enum ProductStatus {
     AVAILABLE,
     SOLD_OUT,

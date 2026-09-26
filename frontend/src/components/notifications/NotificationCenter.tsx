@@ -20,18 +20,19 @@ import Session from '@/utils/session';
 const DESTINATION = '/user/topic/notifications';
 
 /**
- * User lưu trong trình duyệt chỉ cập nhật lúc đăng nhập / refresh token. Admin duyệt đơn thì role đổi ngay ở server
- * (menu Farmer, khu /farmer) — đọc lại hồ sơ để giao diện theo kịp, không phải đợi token hết hạn.
+ * The user stored in the browser is only updated at sign-in / token refresh. When an Admin approves an application the
+ * role changes on the server right away (Farmer menu, the /farmer area) — re-read the profile so the UI catches up,
+ * without waiting for the token to expire.
  */
 const refreshUser = () =>
   AuthApi.getMe()
     .then((res) => Session.updateUser(res.data))
     .catch(() => {
-      /* mất mạng: lần mở app sau sẽ đọc lại */
+      /* no network: the next time the app opens it will read again */
     });
 const CHAT_PATHS = ['/messages', '/farmer/messages'];
 
-/** Đang mở đúng đoạn chat của tin này (?c=<id>) thì không bật popup. */
+/** When the exact chat thread of this message is open (?c=<id>) do not pop up. */
 const isOpenThread = (frame: NotificationFrame, pathname: string, search: string) =>
   frame.kind === 'message' &&
   frame.conversationId !== null &&
@@ -39,8 +40,9 @@ const isOpenThread = (frame: NotificationFrame, pathname: string, search: string
   new URLSearchParams(search).get('c') === String(frame.conversationId);
 
 /**
- * FR-042 — nối STOMP khi có phiên, đóng khi đăng xuất. Mỗi khung: cập nhật chuông, báo cho trang danh sách, rồi theo
- * `alert` server tính: tab đang nhìn → toast; tab ẩn → thông báo hệ điều hành (nếu đã cho quyền).
+ * FR-042 — connect STOMP when there is a session, close on sign-out. Each frame: update the bell, tell the list page,
+ * then follow the `alert` the server computed: tab in view → toast; tab hidden → OS notification (if permission was
+ * given).
  */
 const NotificationCenter = () => {
   const { t } = useTranslation();
@@ -48,7 +50,7 @@ const NotificationCenter = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const userId = user?.id;
-  // đọc trang đang mở trong handler mà không subscribe lại STOMP mỗi lần chuyển trang
+  // read the open page inside the handler without re-subscribing STOMP on every page change
   const here = useRef(location);
   useEffect(() => {
     here.current = location;
@@ -63,11 +65,11 @@ const NotificationCenter = () => {
     NotificationApi.unreadCount()
       .then((res) => !cancelled && NotificationStore.setUnread(res.data.count))
       .catch(() => {
-        /* chưa có mạng: số sẽ tới cùng khung STOMP đầu tiên */
+        /* no network yet: the count will arrive with the first STOMP frame */
       });
-    // quyết định có thể tới lúc tab đang đóng: mở app là đọc lại role
+    // a decision may arrive while the tab was closed: on opening the app read the role again
     void refreshUser();
-    // đã cho quyền từ trước: đảm bảo máy này đang nhận Web Push cho đúng tài khoản vừa đăng nhập
+    // permission was already granted: make sure this machine is receiving Web Push for the account that just signed in
     if (permission() === 'granted') void registerWorker().then(() => syncPushSubscription());
     realtime.start();
     return () => {
@@ -103,7 +105,7 @@ const NotificationCenter = () => {
     });
   }, [userId, navigate, t]);
 
-  // Bấm thông báo của hệ điều hành khi tab đang mở: service worker nhờ tab này điều hướng
+  // Clicking an OS notification while the tab is open: the service worker asks this tab to navigate
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
     const onMessage = (e: MessageEvent) => {

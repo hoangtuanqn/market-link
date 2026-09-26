@@ -1,8 +1,8 @@
 package com.techx.intervue.modules.stall.exceptions;
 
 /**
- * D-09: chưa được duyệt (hoặc đang bị đình chỉ) thì không được ghi hồ sơ bán hàng → 403 (contract
- * §4).
+ * D-09: not yet approved (or currently suspended) so writing the selling profile is not allowed →
+ * 403 (contract §4).
  */
 public class StallNotApprovedException extends RuntimeException {
     public StallNotApprovedException() {

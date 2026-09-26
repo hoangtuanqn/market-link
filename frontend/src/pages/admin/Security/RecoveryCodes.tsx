@@ -4,7 +4,7 @@ import Notification from '@/utils/notification';
 
 const FILE_NAME = 'marketlink-recovery-codes.txt';
 
-/** FR-008 — danh sách mã khôi phục vừa sinh: chỉ hiện một lần, có nút chép / tải về. */
+/** FR-008 — the list of just-generated recovery codes: shown only once, with copy / download buttons. */
 const RecoveryCodes = ({ codes }: { codes: string[] }) => {
   const { t } = useTranslation('AdminSecurity');
   const text = codes.join('\n');

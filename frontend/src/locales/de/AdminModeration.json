@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "Bewertungen",
     "products": "Produktanzeigen",
-    "hidden": "Ausgeblendetes"
+    "hidden": "Ausgeblendetes",
+    "messages": "Gemeldete Nachrichten"
   },
   "reviewFilterLabel": "Bewertungen filtern",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "Angebote"
+  },
+  "messages": {
+    "boundary": "Du kannst nur gemeldete Nachrichten lesen, dazu höchstens fünf auf jeder Seite als Kontext. Der Rest der Unterhaltung ist für Admins nicht offen.",
+    "noun": "Meldungen",
+    "emptyTitle": "Keine gemeldeten Nachrichten",
+    "emptyText": "Wenn ein Kunde oder ein Stand eine Nachricht meldet, wartet sie hier auf dich.",
+    "photo": "Foto",
+    "reason": {
+      "spam": "Spam oder Werbung",
+      "abuse": "Unhöflich oder beleidigend",
+      "scam": "Betrug oder Geldforderung",
+      "other": "Etwas anderes"
+    },
+    "reportedBy": "Gemeldet von {{name}}",
+    "sentBy": "Gesendet von {{name}}",
+    "review": "Prüfen",
+    "reviewLabel": "Meldung von {{name}} prüfen",
+    "context": "Nachrichten rund um die gemeldete",
+    "hidden": "Ausgeblendet",
+    "hide": "Nachricht ausblenden",
+    "hideTitle": "Diese Nachricht ausblenden?",
+    "hideText": "Beide Personen in der Unterhaltung sehen sie nicht mehr. Die Meldung wird als erledigt markiert.",
+    "hideConfirm": "Ausblenden",
+    "dismiss": "Meldung verwerfen",
+    "hidden_toast": "Nachricht ausgeblendet.",
+    "dismissed_toast": "Meldung verworfen.",
+    "status": {
+      "new": "Neu",
+      "reviewed": "Geprüft",
+      "actioned": "Erledigt"
+    },
+    "statusLabel": "Status"
   }
 }

@@ -9,8 +9,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
 /**
- * Text thông báo theo ngôn ngữ người nhận (user_settings.language). Dịch ở server vì Web Push do
- * service worker hiện, không có bộ dịch của app. Cắt theo cỡ cột: title 150, message 500.
+ * Notification text in the recipient's language (user_settings.language). Translated on the server
+ * because Web Push is shown by the service worker, which has no app translator. Cut to the column
+ * size: title 150, message 500.
  */
 @Component
 public class NotificationTextRenderer {

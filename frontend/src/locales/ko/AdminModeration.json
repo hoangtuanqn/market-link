@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "후기",
     "products": "상품",
-    "hidden": "숨긴 항목"
+    "hidden": "숨긴 항목",
+    "messages": "신고된 메시지"
   },
   "reviewFilterLabel": "후기 거르기",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "등록 상품"
+  },
+  "messages": {
+    "boundary": "신고된 메시지와, 맥락을 위해 앞뒤로 최대 다섯 개씩만 볼 수 있습니다. 대화의 나머지는 관리자에게 공개되지 않습니다.",
+    "noun": "신고",
+    "emptyTitle": "신고된 메시지가 없습니다",
+    "emptyText": "손님이나 가게가 메시지를 신고하면 여기에서 기다립니다.",
+    "photo": "사진",
+    "reason": {
+      "spam": "스팸 또는 광고",
+      "abuse": "무례하거나 욕설",
+      "scam": "사기 또는 돈 요구",
+      "other": "기타"
+    },
+    "reportedBy": "신고자: {{name}}",
+    "sentBy": "보낸 사람: {{name}}",
+    "review": "검토",
+    "reviewLabel": "{{name}} 님의 신고 검토",
+    "context": "신고된 메시지 앞뒤의 메시지",
+    "hidden": "숨김",
+    "hide": "메시지 숨기기",
+    "hideTitle": "이 메시지를 숨길까요?",
+    "hideText": "대화의 두 사람 모두 더 이상 볼 수 없습니다. 신고는 처리됨으로 표시됩니다.",
+    "hideConfirm": "숨기기",
+    "dismiss": "신고 기각",
+    "hidden_toast": "메시지를 숨겼습니다.",
+    "dismissed_toast": "신고를 기각했습니다.",
+    "status": {
+      "new": "새 신고",
+      "reviewed": "검토됨",
+      "actioned": "처리됨"
+    },
+    "statusLabel": "상태"
   }
 }

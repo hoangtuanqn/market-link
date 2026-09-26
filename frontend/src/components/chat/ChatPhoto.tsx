@@ -6,11 +6,12 @@ import type { ChatAttachment } from '@/types/chat.types';
 type Props = { attachment: ChatAttachment; alt: string };
 
 /**
- * JWT đi ở header `Authorization`, không ở cookie, nên `<img src="/api/v1/attachments/5">` trả 401. Tải bằng axios rồi
- * bọc thành blob URL, và thu hồi lúc rời màn — blob không tự dọn, để lâu là rò bộ nhớ mỗi lần cuộn qua một bức ảnh.
+ * The JWT travels in the `Authorization` header, not a cookie, so `<img src="/api/v1/attachments/5">` returns 401. Load
+ * it with axios and wrap it as a blob URL, and revoke it on leaving the screen — a blob is not cleaned up by itself,
+ * and leaving it leaks memory every time an image scrolls by.
  *
- * Người gọi phải truyền `key={attachment.attachmentId}`: đổi ảnh thì React dựng lại component, nên state tự sạch mà
- * không cần setState trong effect (react-hooks/set-state-in-effect).
+ * The caller must pass `key={attachment.attachmentId}`: changing the image makes React remount the component, so state
+ * clears itself without needing setState inside an effect (react-hooks/set-state-in-effect).
  */
 export default function ChatPhoto({ attachment, alt }: Props) {
   const { t } = useTranslation('common');
@@ -27,7 +28,7 @@ export default function ChatPhoto({ attachment, alt }: Props) {
           url = blobUrl;
           setSrc(blobUrl);
         } else {
-          // Rời màn trước khi blob về: thu hồi ngay, đừng chạm state
+          // Leaving the screen before the blob arrives: revoke right away, do not touch state
           URL.revokeObjectURL(blobUrl);
         }
       })
@@ -49,7 +50,7 @@ export default function ChatPhoto({ attachment, alt }: Props) {
     );
   }
 
-  // Chừa đúng chỗ theo kích thước server trả về, để khung chat không giật khi ảnh tải xong
+  // Reserve the exact space the server's size says, so the chat frame does not jump once the image finishes loading
   const ratio = attachment.width && attachment.height ? `${attachment.width} / ${attachment.height}` : '4 / 3';
 
   return (

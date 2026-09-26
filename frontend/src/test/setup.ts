@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom/vitest';
 
 /**
- * Jsdom không có matchMedia, mà SettingsStore dùng nó để đọc prefers-color-scheme. Stub trước khi nạp i18n, vì i18n kéo
- * theo SettingsStore lúc import.
+ * Jsdom has no matchMedia, and SettingsStore uses it to read prefers-color-scheme. Stub it before loading i18n, because
+ * i18n pulls in SettingsStore at import time.
  */
 if (!window.matchMedia) {
   window.matchMedia = (query: string) =>
@@ -18,5 +18,5 @@ if (!window.matchMedia) {
     }) as unknown as MediaQueryList;
 }
 
-// Nạp i18n thật để test khẳng định trên câu chữ tiếng Anh, không phải tên key
+// Loads the real i18n so tests assert on the English text, not on key names
 await import('@/i18n');

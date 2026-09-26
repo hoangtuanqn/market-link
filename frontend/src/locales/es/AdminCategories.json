@@ -14,18 +14,11 @@
     "category": "Categoría",
     "products": "Productos",
     "stalls": "Puestos",
-    "nameOf": "Nombre de {{name}}",
-    "oneOfThem": "En singular",
-    "moreThanOne": "En plural",
-    "pluralOf": "Plural de {{name}}",
-    "kind": "Tipo",
-    "readsAs": "Se lee"
+    "nameOf": "Nombre de {{name}}"
   },
   "action": {
     "save": "Guardar",
-    "remove": "Eliminar",
-    "addToPicker": "Añadir al selector",
-    "merge": "Fusionar"
+    "remove": "Eliminar"
   },
   "categoryForm": {
     "title": "Añadir una categoría",
@@ -53,8 +46,7 @@
   "toast": {
     "categorySaved": "{{name}} guardada.",
     "categoryAdded": "Categoría añadida. Los puestos ya pueden elegirla.",
-    "categoryRemoved": "{{name}} eliminada.",
-    "promoted": "{{name}} ya está en el selector de todos los puestos."
+    "categoryRemoved": "{{name}} eliminada."
   },
   "error": {
     "noun": "categorías",

@@ -20,8 +20,9 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
 /**
- * Trả 400/403/404/409 cho các controller của module catalog — cùng lý do FarmerExceptionHandler:
- * repo chưa có handler chung, thiếu class này thì lỗi rơi xuống /error và bị trả 401.
+ * Returns 400/403/404/409 for the catalog module's controllers — same reason as
+ * FarmerExceptionHandler: the repo has no shared handler yet, and without this class errors fall
+ * through to /error and come back as 401.
  */
 @RestControllerAdvice(
         assignableTypes = {
@@ -63,7 +64,7 @@ public class CatalogExceptionHandler {
                                 .build()));
     }
 
-    /** File vượt quá spring.servlet.multipart.max-file-size/max-request-size → 400. */
+    /** A file over spring.servlet.multipart.max-file-size/max-request-size → 400. */
     @ExceptionHandler({MaxUploadSizeExceededException.class, MultipartException.class})
     ResponseEntity<ApiResource<Void>> uploadTooLarge(Exception e) {
         String message = "File is too large.";
@@ -74,13 +75,16 @@ public class CatalogExceptionHandler {
                 List.of(FieldErrorResource.builder().field("file").message(message).build()));
     }
 
-    /** Luật nghiệp vụ trong service (ngày họp ngoài 0…6, giờ đóng trước giờ mở…) → 400. */
+    /**
+     * Business rules in the service (market day outside 0…6, closing time before opening time…) →
+     * 400.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiResource<Void>> invalidArgument(IllegalArgumentException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
     }
 
-    /** R-06: {id} không tồn tại → 404. */
+    /** R-06: {id} does not exist → 404. */
     @ExceptionHandler(CategoryNotFoundException.class)
     ResponseEntity<ApiResource<Void>> categoryNotFound(CategoryNotFoundException e) {
         return error(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", e.getMessage(), List.of());
@@ -101,7 +105,10 @@ public class CatalogExceptionHandler {
         return error(HttpStatus.CONFLICT, "DUPLICATE_CATEGORY", e.getMessage(), List.of());
     }
 
-    /** Lưới an toàn cuối: UNIQUE bị chặn khi hai request cùng lọt qua existsBySlug. */
+    /**
+     * Last safety net: the UNIQUE constraint blocks it when two requests both get past
+     * existsBySlug.
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());

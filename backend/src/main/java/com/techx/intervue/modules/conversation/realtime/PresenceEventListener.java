@@ -11,7 +11,8 @@ import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 /**
- * FR-112. Online/offline suy ra từ CONNECT/DISCONNECT (spec 7.4); báo cho những người đã từng nhắn.
+ * FR-112. Online/offline is derived from CONNECT/DISCONNECT (spec 7.4); notifies the people they
+ * have messaged.
  */
 @Component
 @RequiredArgsConstructor

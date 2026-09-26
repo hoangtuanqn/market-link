@@ -14,18 +14,11 @@
     "category": "Danh mục",
     "products": "Sản phẩm",
     "stalls": "Sạp",
-    "nameOf": "Tên của {{name}}",
-    "oneOfThem": "Một đơn vị",
-    "moreThanOne": "Nhiều đơn vị",
-    "pluralOf": "Dạng số nhiều của {{name}}",
-    "kind": "Loại",
-    "readsAs": "Đọc thành"
+    "nameOf": "Tên của {{name}}"
   },
   "action": {
     "save": "Lưu",
-    "remove": "Xoá",
-    "addToPicker": "Đưa vào danh sách chọn",
-    "merge": "Gộp"
+    "remove": "Xoá"
   },
   "categoryForm": {
     "title": "Thêm danh mục",
@@ -56,8 +49,7 @@
   "toast": {
     "categorySaved": "Đã lưu {{name}}.",
     "categoryAdded": "Đã thêm danh mục. Các sạp chọn được ngay.",
-    "categoryRemoved": "Đã xoá {{name}}.",
-    "promoted": "Từ giờ {{name}} nằm trong danh sách chọn của mọi sạp."
+    "categoryRemoved": "Đã xoá {{name}}."
   },
   "error": {
     "noun": "danh mục",

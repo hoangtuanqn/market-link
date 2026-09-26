@@ -7,7 +7,6 @@
   "approved": "Geprüfter Stand",
   "savedToast": "{{name}} gespeichert.",
   "save": "Stand speichern",
-  "message": "Stand anschreiben",
   "stats": {
     "reviews_one": "{{count}} Bewertung",
     "reviews_other": "{{count}} Bewertungen",

@@ -3,8 +3,9 @@ import { Link } from 'react-router';
 import { ChevronRightIcon } from '@/components/icons';
 
 /**
- * Khung "Password & security" trên trang Account: cả khung là một nút, bấm vào mở trang đổi mật khẩu riêng
- * (/account/password). Link tương đối theo đường dẫn, nên đặt khung này ở trang khác thì nó mở `<trang đó>/password`.
+ * The "Password & security" frame on the Account page: the whole frame is one button, clicking opens the separate
+ * change-password page (/account/password). The link is relative to the path, so placing this frame on another page
+ * makes it open `<that page>/password`.
  */
 const PasswordCard = () => {
   const { t } = useTranslation('CustomerAccount');

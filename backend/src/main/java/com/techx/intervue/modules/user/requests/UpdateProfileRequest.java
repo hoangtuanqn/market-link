@@ -5,8 +5,9 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * Cập nhật thông tin cá nhân (trang Account). Email không đổi được ở đây vì dùng để đăng nhập và
- * nhận link quên mật khẩu. Cùng luật với CustomerRegisterRequest (FR-001).
+ * Update personal information (Account page). The email cannot be changed here because it is used
+ * to sign in and to receive the forgot-password link. Same rules as CustomerRegisterRequest
+ * (FR-001).
  */
 public record UpdateProfileRequest(
         @NotBlank(message = "Enter your full name.")

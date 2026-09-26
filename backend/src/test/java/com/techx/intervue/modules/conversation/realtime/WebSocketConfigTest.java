@@ -21,8 +21,9 @@ class WebSocketConfigTest {
 
         @Test
         void usesTheSimpleBrokerSoCiAndTestsNeedNoRabbit() {
-            // getBeansOfType bỏ qua NullBean: @Bean trả null cho broker không dùng vẫn có tên đăng
-            // ký
+            // getBeansOfType skips a NullBean: a @Bean that returns null for an unused broker still
+            // has a registered
+            // name
             assertThat(ctx.getBeansOfType(SimpleBrokerMessageHandler.class)).isNotEmpty();
             assertThat(ctx.getBeansOfType(StompBrokerRelayMessageHandler.class)).isEmpty();
         }
@@ -38,7 +39,10 @@ class WebSocketConfigTest {
     class WithRabbitConfigured {
         @Autowired ApplicationContext ctx;
 
-        /** Relay nối TCP bất đồng bộ và tự thử lại: host sai không được làm context không boot. */
+        /**
+         * The relay connects TCP asynchronously and retries by itself: a wrong host must not stop
+         * the context from booting.
+         */
         @Test
         void usesTheRelayAndStillBootsWhenTheBrokerIsUnreachable() {
             assertThat(ctx.getBeansOfType(StompBrokerRelayMessageHandler.class)).isNotEmpty();

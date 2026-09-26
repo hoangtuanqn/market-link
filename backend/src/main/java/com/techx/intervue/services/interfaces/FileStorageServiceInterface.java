@@ -4,17 +4,18 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 /**
- * File người dùng tải lên (ảnh đại diện, sau này ảnh sản phẩm FR-062). Tên thư mục và tên file chỉ
- * gồm chữ thường, số, gạch ngang và một đuôi file, nên không đi ra ngoài thư mục lưu trữ được.
+ * Files uploaded by users (avatars, later product images FR-062). Directory names and file names
+ * only consist of lowercase letters, digits, hyphens and one file extension, so they cannot escape
+ * the storage directory.
  */
 public interface FileStorageServiceInterface {
 
-    /** Ghi đè nếu đã có file cùng tên. */
+    /** Overwrites if a file with the same name exists. */
     void store(String folder, String fileName, byte[] content);
 
-    /** File đang có trên đĩa; tên sai quy tắc hoặc không tồn tại thì rỗng. */
+    /** Files currently on disk; a name that breaks the rules or does not exist gives empty. */
     Optional<Path> find(String folder, String fileName);
 
-    /** Không có file thì bỏ qua. */
+    /** If there is no file, skip. */
     void delete(String folder, String fileName);
 }

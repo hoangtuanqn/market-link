@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-116 — chỉ Admin. Ẩn mềm, không bao giờ xoá cứng (spec §8.5): xoá được nghĩa là xoá được bằng
- * chứng lừa đảo. Không có endpoint bỏ ẩn — chưa ai cần, và thêm nó là thêm một trạng thái phải kiểm
- * ở mọi chỗ.
+ * FR-116 — Admin only. Soft hide, never a hard delete (spec §8.5): being able to delete means being
+ * able to delete evidence of fraud. There is no un-hide endpoint — nobody needs it yet, and adding
+ * it adds a state that has to be checked everywhere.
  */
 @RestController
 @RequestMapping("/api/v1/admin/messages")

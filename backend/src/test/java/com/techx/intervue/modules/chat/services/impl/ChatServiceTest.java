@@ -51,7 +51,7 @@ class ChatServiceTest {
     void setUp() {
         knowledge = mock(ChatKnowledgeRepository.class);
         messages = mock(ChatMessageRepository.class);
-        // Thứ 5, 24/09/2026 giờ Việt Nam
+        // Thursday, 24/09/2026 Vietnam time
         Clock clock =
                 Clock.fixed(Instant.parse("2026-09-24T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
         service = new ChatService(new IntentClassifier(), knowledge, messages, clock);

@@ -18,8 +18,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Hai truy vấn ngữ cảnh của admin (spec §8.3) KHÔNG lọc hidden_at, khác hẳn hai truy vấn mà
- * MessageService.list dùng — admin phải thấy được tin mình vừa ẩn.
+ * The admin's two context queries (spec §8.3) do NOT filter hidden_at, quite unlike the two queries
+ * that MessageService.list uses — an admin must be able to see the message they just hid.
  */
 @SpringBootTest
 @Transactional
@@ -64,7 +64,7 @@ class MessageRepositoryContextTest {
                                 thread.getId(), middle, PageRequest.of(0, 5)))
                 .extracting(Message::getId)
                 .containsExactly(before);
-        // Trong khi truy vấn của người dùng thường thì bỏ nó đi
+        // Whereas the ordinary user's query drops it
         assertThat(
                         messages.findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
                                 thread.getId(), middle, PageRequest.of(0, 5)))

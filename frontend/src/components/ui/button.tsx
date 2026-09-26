@@ -16,7 +16,7 @@ const variants: Record<Variant, string> = {
   ghost: 'bg-transparent text-brand underline-offset-4 hover:underline',
   onboard: 'bg-transparent text-on-board shadow-[inset_0_0_0_1.5px_var(--board-muted)]',
   danger: 'bg-surface-raised text-danger shadow-[inset_0_0_0_1.5px_var(--danger)] hover:bg-danger-bg',
-  // `.ml-btn-danger-fill`: nút xác nhận của hộp thoại nguy hiểm. Design system không đặt hover cho nó.
+  // `.ml-btn-danger-fill`: the confirm button of a dangerous dialog. The design system sets no hover for it.
   dangerFill: 'bg-danger text-on-danger',
 };
 

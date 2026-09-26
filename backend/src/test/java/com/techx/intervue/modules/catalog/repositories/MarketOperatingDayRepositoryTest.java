@@ -14,9 +14,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Chạy trên MySQL thật. Ghi đè ngày họp bằng một tập trùng ngày cũ: Hibernate xếp INSERT trước
- * DELETE khi flush, nên không ép flush sau khi xoá thì UNIQUE (market_id, day_of_week) nổ — chính
- * là lỗi 400 mà PUT /farmer/markets/{id}/days gặp lúc lưu lại cùng những ngày đang có.
+ * Runs on real MySQL. Overwriting the market days with a set that repeats the old days: Hibernate
+ * orders INSERT before DELETE on flush, so without forcing a flush after the delete UNIQUE
+ * (market_id, day_of_week) blows up — exactly the 400 that PUT /farmer/markets/{id}/days hits when
+ * saving the same days that already exist.
  */
 @SpringBootTest
 @Transactional

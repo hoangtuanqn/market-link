@@ -27,9 +27,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * Review finding #2 — hợp đồng của seam (spec 7.5): sự kiện chỉ được phát SAU khi transaction
- * commit. Plan 2 cắm STOMP vào ChatEventPublisherInterface mà không sửa service, nên service phải
- * bảo đảm điều này chứ không phải từng bản cài đặt.
+ * Review finding #2 — the seam's contract (spec 7.5): an event may only be published AFTER the
+ * transaction commits. Plan 2 plugs STOMP into ChatEventPublisherInterface without touching the
+ * service, so the service must guarantee this, not each implementation.
  */
 @SpringBootTest
 class MessageServicePublishTimingTest {
@@ -41,9 +41,9 @@ class MessageServicePublishTimingTest {
     @Autowired FarmerProfileRepository farmerProfiles;
     @Autowired PlatformTransactionManager txManager;
 
-    // Mock đúng lớp cụ thể: TypingController / PresenceEventListener inject
+    // Mock the exact concrete class: TypingController / PresenceEventListener inject
     // StompChatEventPublisher,
-    // mock của riêng interface sẽ làm context không có bean kiểu đó.
+    // a mock of the interface alone would leave the context without a bean of that type.
     @MockitoBean StompChatEventPublisher events;
 
     User customer;
@@ -55,8 +55,9 @@ class MessageServicePublishTimingTest {
     void setUp() {
         customer = newUser(RoleType.CUSTOMER);
         farmer = newUser(RoleType.FARMER);
-        // StallAccessPolicy tra farmer_profiles (spec §8.1): role farmer mà không có hàng đã duyệt
-        // thì không phải một stall đang mở, và send() trả 409.
+        // StallAccessPolicy looks up farmer_profiles (spec §8.1): a farmer role with no approved
+        // row
+        // is not an open stall, and send() returns 409.
         farmerProfile = approvedStallFor(farmer);
         thread = conversations.save(Conversation.between(customer.getId(), farmer.getId()));
     }

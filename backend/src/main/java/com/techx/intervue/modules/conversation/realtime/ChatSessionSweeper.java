@@ -12,9 +12,10 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
- * JWT chỉ được kiểm lúc CONNECT. Người dùng "đăng xuất mọi thiết bị" (UserSessionCache.revokeAll)
- * hay bị vô hiệu hoá phải ngừng nhận tin trên socket đang mở — mỗi phút quét lại và đóng phiên
- * không còn hợp lệ, đúng các điều kiện StompAuthInterceptor đã dùng.
+ * The JWT is only checked at CONNECT. A user who "signs out of all devices"
+ * (UserSessionCache.revokeAll) or is deactivated must stop receiving messages on an open socket —
+ * every minute it sweeps again and closes sessions that are no longer valid, using exactly the
+ * conditions StompAuthInterceptor used.
  */
 @Slf4j
 @Component
@@ -31,7 +32,7 @@ public class ChatSessionSweeper {
             Object userId = attrs.get(StompAuthInterceptor.ATTR_USER_ID);
             Object issuedAt = attrs.get(StompAuthInterceptor.ATTR_ISSUED_AT);
             if (!(userId instanceof Long id) || !(issuedAt instanceof Instant iat)) {
-                continue; // chưa CONNECT xong: interceptor sẽ từ chối frame kế tiếp
+                continue; // CONNECT has not finished: the interceptor will reject the next frame
             }
             boolean stillValid =
                     userSessionCache.get(id) != null && !userSessionCache.isRevoked(id, iat);

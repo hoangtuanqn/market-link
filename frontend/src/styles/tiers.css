@@ -1,12 +1,12 @@
 /*
- * Hạng thành tích (Đồng / Bạc / Vàng / Kim cương): viền quanh ảnh đại diện và huy hiệu hạng.
+ * Achievement tiers (Bronze / Silver / Gold / Diamond): the ring around the avatar and the tier badge.
  *
- * KHÔNG thuộc design system — tính năng đề xuất ngoài SRS (LEAD yêu cầu 26/09/2026). Design system chưa
- * có màu kim loại nên chúng nằm riêng ở đây thay vì sửa tay marketlink-*.css. FE1: khi gộp vào design
- * system thì chuyển các biến --tier-* sang tokens.json, sinh lại, rồi xoá file này.
+ * NOT part of the design system — a feature proposed outside the SRS (requested by the LEAD on 26/09/2026). The design system does not yet
+ * have metallic colours so they live here separately instead of hand-editing marketlink-*.css. FE1: when merging into the design
+ * system, move the --tier-* variables into tokens.json, regenerate, then delete this file.
  *
- * Viết bằng CSS thuần (không @apply) để prototype nạp chung được: docs/prototype/prototype.css @import
- * file này, còn app dùng các lớp ml-tier-* và utility bg-tier-* / text-tier-*.
+ * Written in plain CSS (no @apply) so the prototype can load it too: docs/prototype/prototype.css @imports
+ * this file, while the app uses the ml-tier-* classes and the bg-tier-* / text-tier-* utilities.
  */
 
 :root {
@@ -54,8 +54,8 @@
 }
 
 /*
- * Viền: vòng gradient bao ngoài ảnh, cách ảnh một khe màu nền (--tier-gap). Trên header / drawer (nền
- * board) đặt --tier-gap: var(--board). Hạng càng cao viền càng dày; Vàng và Kim cương có thêm dấu ở góc.
+ * Ring: a gradient ring around the image, separated from the image by a gap of the background colour (--tier-gap). On the header / drawer (board
+ * background) set --tier-gap: var(--board). The higher the tier the thicker the ring; Gold and Diamond get an extra mark at the corner.
  */
 .ml-tier-ring {
   --tier-gap: var(--surface-raised);
@@ -87,7 +87,7 @@
   box-shadow: var(--tier-diamond-glow);
 }
 
-/* Dấu ở góc dưới phải cho Vàng (sao) và Kim cương (viên kim cương), chỉ ở ảnh từ 40px trở lên. */
+/* The mark at the bottom-right corner for Gold (star) and Diamond (a diamond gem), only on images of 40px or more. */
 .ml-tier-mark {
   position: absolute;
   right: -2px;
@@ -114,7 +114,7 @@
   height: 62%;
 }
 
-/* Huy hiệu hạng: viên thuốc nhỏ cạnh tên, chấm màu hạng đi trước chữ. */
+/* Tier badge: a small pill next to the name, the tier-coloured dot before the text. */
 .ml-tier-badge {
   display: inline-flex;
   align-items: center;
@@ -155,8 +155,8 @@
 }
 
 /*
- * Bảng hạng cá nhân (trang Account): tô theo màu hạng, dải kim loại chạy ở mép trên, Kim cương thêm hoa văn
- * lấp lánh. Chữ dùng --tier-*-ink nên đủ tương phản ở cả hai theme.
+ * The personal tier panel (Account page): tinted in the tier colour, a metallic strip along the top edge, Diamond adds a sparkling
+ * pattern. Text uses --tier-*-ink so it has enough contrast in both themes.
  */
 .ml-tier-panel {
   position: relative;
@@ -204,7 +204,7 @@
   --tier-gap: var(--tier-panel-bg);
 }
 
-/* Thanh tiến độ mang màu của hạng đang hướng tới. */
+/* The progress bar carries the colour of the tier being worked toward. */
 .ml-tier-fill {
   display: block;
   height: 100%;
@@ -221,7 +221,7 @@
   background: var(--tier-diamond-ring);
 }
 
-/* Chấm màu hạng đầu dòng (danh sách đặc quyền). */
+/* The tier-coloured bullet dot (the privileges list). */
 .ml-tier-dot {
   flex: none;
   width: 12px;

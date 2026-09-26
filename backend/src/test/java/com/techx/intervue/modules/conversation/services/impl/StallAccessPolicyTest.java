@@ -28,7 +28,7 @@ class StallAccessPolicyTest {
     @BeforeEach
     void setUp() {
         farmerProfiles = mock(FarmerProfileRepository.class);
-        // Mặc định: mọi stall trong các ca cũ là stall đã được duyệt
+        // Default: every stall in the old cases is an approved stall
         when(farmerProfiles.findByUserId(anyLong()))
                 .thenReturn(Optional.of(profileWith(ApprovalStatus.APPROVED)));
         policy = new StallAccessPolicy(farmerProfiles);

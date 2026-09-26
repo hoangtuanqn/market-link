@@ -7,13 +7,14 @@ import AdminAuthShell from '@/layout/AdminAuthShell';
 import FormAdminLogin from './FormAdminLogin';
 
 /**
- * FR-004 — màn đăng nhập admin, tách khỏi layout Customer/Farmer (không header điều hướng, không footer). Chưa có
- * "Forgot password": việc admin tự đặt lại mật khẩu chưa được chốt (TODO trong prototype admin/login.html).
+ * FR-004 — the admin sign-in screen, separate from the Customer/Farmer layout (no navigation header, no footer). There
+ * is no "Forgot password" yet: whether an admin resets their own password has not been decided (TODO in the prototype
+ * admin/login.html).
  */
 const AdminLoginPage = () => {
   const { t } = useTranslation('AdminLogin');
   const { user } = useSession();
-  // Đã đăng nhập bằng tài khoản admin thì vào thẳng khu admin
+  // Already signed in with an admin account → go straight into the admin area
   if (user?.role === USER_ROLE.ADMIN) return <Navigate to={ADMIN_HOME_PATH} replace />;
 
   return (

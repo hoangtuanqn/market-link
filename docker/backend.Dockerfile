@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.7
 # ---------------------------------------------------------------------
 # Backend (Spring Boot 4 / Java 25 / Maven wrapper)
-#   target "dev"  : chạy spring-boot:run, source được mount từ host
-#   target "prod" : fat jar trên JRE gọn nhẹ
+#   target "dev"  : runs spring-boot:run, the source is mounted from the host
+#   target "prod" : a fat jar on a slim JRE
 # ---------------------------------------------------------------------
 
 FROM eclipse-temurin:25-jdk AS base
@@ -10,8 +10,8 @@ WORKDIR /app
 COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 RUN chmod +x mvnw
-# Tải trước dependency + Maven plugin (spring-boot, spotless, compiler...) vào layer image;
-# volume m2 của compose sẽ được khởi tạo từ nội dung này nên dev không phải tải lại
+# Download the dependencies + Maven plugins (spring-boot, spotless, compiler...) into an image layer up front;
+# the compose m2 volume is initialized from this content so dev does not have to download again
 RUN ./mvnw -B -q dependency:go-offline dependency:resolve-plugins
 
 # ---------- dev ----------
@@ -29,7 +29,7 @@ RUN ./mvnw -B -q package -DskipTests \
 # ---------- prod ----------
 FROM eclipse-temurin:25-jre AS prod
 WORKDIR /app
-# volume uploads-data được khởi tạo từ /app/uploads, nên user spring ghi được ảnh tải lên
+# the uploads-data volume is initialized from /app/uploads, so the spring user can write uploaded images
 RUN groupadd -r spring && useradd -r -g spring spring \
     && mkdir -p /app/uploads && chown spring:spring /app/uploads
 COPY --from=build /app/app.jar app.jar

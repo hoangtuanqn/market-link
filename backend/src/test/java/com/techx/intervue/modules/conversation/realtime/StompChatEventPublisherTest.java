@@ -61,7 +61,9 @@ class StompChatEventPublisherTest {
                 .build();
     }
 
-    /** FR-042: module thông báo nghe sự kiện này để bật popup cho người nhận. */
+    /**
+     * FR-042: the notification module listens to this event to trigger the popup for the recipient.
+     */
     @Test
     void aNewMessageIsAnnouncedToTheRestOfTheAppForTheRecipient() {
         publisher.messageCreated(thread, msg(7L));
@@ -69,7 +71,10 @@ class StompChatEventPublisherTest {
         verify(appEvents).publishEvent(new ChatMessageCreatedEvent(42L, 3L, msg(7L)));
     }
 
-    /** Tin đã commit: lỗi của module thông báo không được biến request gửi tin thành 500. */
+    /**
+     * The message is committed: a failure in the notification module must not turn the send-message
+     * request into a 500.
+     */
     @Test
     void aFailingNotificationListenerDoesNotBreakTheSend() {
         doThrow(new IllegalStateException("db down"))
@@ -96,8 +101,8 @@ class StompChatEventPublisherTest {
     }
 
     /**
-     * Người gửi mở thread trên máy khác (điện thoại): máy đó cũng phải thấy bong bóng, FE khử trùng
-     * theo id.
+     * The sender opens the thread on another machine (phone): that machine must see the bubble too,
+     * the FE dedupes by id.
      */
     @Test
     void theSenderAlsoGetsTheMessageForTheirOtherDevices() {
@@ -115,7 +120,7 @@ class StompChatEventPublisherTest {
         assertThat(ev.getValue().type()).isEqualTo("read");
         assertThat(ev.getValue().readerId()).isEqualTo(3L);
         assertThat(ev.getValue().readAt()).isEqualTo(NOW);
-        // "read" không phải cập nhật badge: unreadCount phải vắng mặt, không phải 0
+        // "read" is not a badge update: unreadCount must be absent, not 0
         assertThat(ev.getValue().unreadCount()).isNull();
         verify(template, never()).convertAndSendToUser(eq("3"), any(), any());
     }
@@ -146,11 +151,14 @@ class StompChatEventPublisherTest {
         assertThat(event.getValue().type()).isEqualTo(ConversationEvent.HIDDEN);
         assertThat(event.getValue().conversationId()).isEqualTo(42L);
         assertThat(event.getValue().messageId()).isEqualTo(101L);
-        // Sự kiện "ẩn" không mang unreadCount: client không được lấy nó làm cớ đổi badge
+        // The "hidden" event carries no unreadCount: the client must not take it as a reason to
+        // change the badge
         assertThat(event.getValue().unreadCount()).isNull();
     }
 
-    /** Broker chết thì ẩn tin vẫn phải thành công; chỉ mất phần realtime. */
+    /**
+     * If the broker is down hiding a message must still succeed; only the realtime part is lost.
+     */
     @Test
     void aBrokerOutageDoesNotBreakHiding() {
         doThrow(new MessagingException("broker down"))

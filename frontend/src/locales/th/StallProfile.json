@@ -7,7 +7,6 @@
   "approved": "ร้านที่อนุมัติแล้ว",
   "savedToast": "บันทึก {{name}} แล้ว",
   "save": "บันทึกร้าน",
-  "message": "ส่งข้อความถึงร้าน",
   "stats": {
     "reviews_one": "{{count}} รีวิว",
     "reviews_other": "{{count}} รีวิว",

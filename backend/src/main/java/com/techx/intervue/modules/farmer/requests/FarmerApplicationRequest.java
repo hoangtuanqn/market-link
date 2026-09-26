@@ -6,12 +6,14 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 /**
- * Customer đang đăng nhập nộp đơn xin thành Farmer. Email/phone/address dùng lại từ users (đã có ở
- * bước đăng ký Customer) — không lặp trong request này (§9 nguyên tắc bố trí thông tin liên hệ).
+ * A signed-in Customer applies to become a Farmer. Email/phone/address are reused from users
+ * (already there from the Customer sign-up step) — not repeated in this request (§9 principle for
+ * laying out contact information).
  *
- * <p>Đơn chỉ hỏi ba thứ Admin cần để duyệt: sạp là ai, ảnh/video làm bằng chứng, và các cam kết ở
- * bước cuối. Những gì Farmer bán, chợ nào và tồn kho ra sao được khai <b>sau khi được duyệt</b> ở
- * panel Farmer (FR-060…FR-064) — hỏi trước lúc này chỉ làm form dài mà dữ liệu thì chưa chắc dùng.
+ * <p>The application only asks three things an Admin needs to approve: who the stall is,
+ * images/videos as evidence, and the commitments in the last step. What the Farmer sells, at which
+ * market, and the stock are declared <b>after approval</b> in the Farmer panel (FR-060…FR-064) —
+ * asking earlier only makes the form long for data that may not be used.
  */
 public record FarmerApplicationRequest(
         @NotBlank(message = "Enter your stall name.")
@@ -22,9 +24,11 @@ public record FarmerApplicationRequest(
                 String contactPerson,
         @Size(max = 2000, message = "Keep the description under 2000 characters.")
                 String description,
-        // Ảnh là bằng chứng admin xem để duyệt: bắt buộc ít nhất một, khớp form become-farmer.
-        // Độ dài từng URL phải khớp cột lưu: dài hơn thì DB ném lỗi và FE đọc thành 401, không
-        // phải 400.
+        // Images are the evidence an admin looks at to approve: at least one is required, matching
+        // the become-farmer form.
+        // Each URL's length must match the storing column: longer and the DB throws and the FE
+        // reads it as 401, not
+        // 400.
         @NotEmpty(message = "Add at least one photo of the plot.")
                 @Size(max = 5, message = "At most 5 photos.")
                 List<

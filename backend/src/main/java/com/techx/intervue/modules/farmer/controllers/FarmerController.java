@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-002 (second route — customer đang đăng nhập xin thành Farmer; xem caption ở
- * CustomerBecomeFarmer/index.tsx). Không phải luồng đăng ký Guest ở /auth/register/farmer.
+ * FR-002 (second route — a signed-in customer applies to become a Farmer; see the caption in
+ * CustomerBecomeFarmer/index.tsx). This is not the Guest sign-up flow at /auth/register/farmer.
  */
 @RestController
 @RequestMapping("/api/v1/farmer")
@@ -29,7 +29,10 @@ public class FarmerController extends BaseController {
 
     private final FarmerServiceInterface farmerService;
 
-    /** Chỉ Customer nộp đơn được; đã là Farmer/Admin thì 403 (role lấy từ token, R-06). */
+    /**
+     * Only a Customer can apply; someone who is already Farmer/Admin gets 403 (role comes from the
+     * token, R-06).
+     */
     @PostMapping("/apply")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ApiResource<FarmerProfileResource>> apply(
@@ -39,9 +42,9 @@ public class FarmerController extends BaseController {
     }
 
     /**
-     * Trạng thái đơn của chính mình; null nếu chưa từng nộp — FE coi là "empty", không phải lỗi.
-     * Customer (chờ duyệt / bị từ chối) và Farmer (đã duyệt / bị đình chỉ) đều cần đọc; Admin xem
-     * qua /admin/farmers nên không mở ở đây.
+     * The status of your own application; null if you never applied — the FE treats it as "empty",
+     * not an error. Both a Customer (pending / rejected) and a Farmer (approved / suspended) need
+     * to read it; Admin views through /admin/farmers so it is not opened here.
      */
     @GetMapping("/apply")
     @PreAuthorize("hasAnyRole('CUSTOMER','FARMER')")
@@ -52,7 +55,10 @@ public class FarmerController extends BaseController {
         return ok(profile, message);
     }
 
-    /** Rút đơn khi còn đang chờ duyệt — sau đó tài khoản nộp lại từ đầu được. */
+    /**
+     * Withdraw the application while it is still pending — after that the account can apply again
+     * from scratch.
+     */
     @DeleteMapping("/apply")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<ApiResource<Void>> withdraw(

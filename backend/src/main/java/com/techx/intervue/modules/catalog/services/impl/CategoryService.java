@@ -21,7 +21,10 @@ public class CategoryService implements CategoryServiceInterface {
 
     private final CategoryRepository repository;
 
-    /** "Rau củ" -> "rau-cu". Bỏ dấu tiếng Việt rồi mới hạ chữ và nối bằng gạch ngang. */
+    /**
+     * "Rau củ" -> "rau-cu". Strip Vietnamese diacritics first, then lowercase and join with
+     * hyphens.
+     */
     static String slugify(String name) {
         String plain =
                 Normalizer.normalize(name, Normalizer.Form.NFD)
@@ -72,7 +75,10 @@ public class CategoryService implements CategoryServiceInterface {
         return toResource(repository.save(category));
     }
 
-    /** Xoá mềm: sản phẩm cũ vẫn trỏ về được, chỉ biến mất khỏi bộ lọc của khách. */
+    /**
+     * Soft delete: old products can still point to it, it only disappears from the customer's
+     * filter.
+     */
     @Override
     @Transactional
     public void deactivate(long id) {

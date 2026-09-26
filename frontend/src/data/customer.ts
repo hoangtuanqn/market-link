@@ -1,4 +1,4 @@
-// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
+// The sample-data lookup functions are all pure: NO_SIDE_EFFECTS lets the production build drop them (config/wip.ts).
 /**
  * Demo data for the signed-in Customer screens, copied from docs/prototype/data.js. Replace with API calls when the
  * endpoints exist.

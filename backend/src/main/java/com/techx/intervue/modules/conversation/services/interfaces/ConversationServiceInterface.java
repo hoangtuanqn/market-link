@@ -7,15 +7,15 @@ import com.techx.intervue.modules.conversation.resources.UnreadCountResource;
 
 public interface ConversationServiceInterface {
 
-    /** FR-110: idempotent — cặp đã có thread thì trả lại thread đó. */
+    /** FR-110: idempotent — if the pair already has a thread, return that thread. */
     ConversationResource open(Long meId, OpenConversationRequest request);
 
-    /** Thread của chính mình, mới nhất trước. page bắt đầu từ 1. */
+    /** Own threads, newest first. page starts at 1. */
     PagedResource<ConversationResource> listMine(Long meId, int page, int size);
 
-    /** FR-113: tổng chưa đọc cho badge header. */
+    /** FR-113: total unread for the header badge. */
     UnreadCountResource unreadCount(Long meId);
 
-    /** Đánh dấu đã đọc tới hiện tại; chỉ thành viên. */
+    /** Mark as read up to now; members only. */
     void markRead(Long meId, Long conversationId);
 }

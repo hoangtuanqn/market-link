@@ -78,7 +78,7 @@ public class AuthController extends BaseController {
                 .body(ApiResource.success(body, "Account created."));
     }
 
-    /** FR-003: dùng chung cho customer, farmer và admin — FE điều hướng theo user.role. */
+    /** FR-003: shared by customer, farmer and admin — the FE routes by user.role. */
     @PostMapping("/login")
     public ResponseEntity<ApiResource<LoginResource>> login(
             @Valid @RequestBody LoginRequest request) {
@@ -86,12 +86,14 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * Đăng nhập Google: FE gửi authorization code (Google redirect về redirect_uri kèm ?code=...).
-     * Backend tự đổi code lấy id_token bằng client_secret và verify id_token.
+     * Google sign-in: the FE sends the authorization code (Google redirects to redirect_uri with
+     * ?code=...). The backend exchanges the code for an id_token itself with client_secret and
+     * verifies the id_token.
      */
     /**
-     * Bước 1 của đăng nhập Google: trả URL trang đăng nhập Google. state (chuỗi ngẫu nhiên FE sinh
-     * và giữ lại) được gắn vào URL, Google trả nguyên về trang callback để FE so khớp.
+     * Step 1 of Google sign-in: returns the URL of the Google sign-in page. state (a random string
+     * the FE generates and keeps) is attached to the URL, and Google returns it unchanged to the
+     * callback page so the FE can compare it.
      */
     @GetMapping("/google/authorize-url")
     public ResponseEntity<ApiResource<AuthorizeUrlResource>> googleAuthorizeUrl(
@@ -111,8 +113,9 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * FR-008: bước 2 của đăng nhập admin đã bật xác thực hai bước. Mã đúng → cấp phiên + cookie như
-     * đăng nhập thường; sai → 400 MFA_CODE_INVALID, sai quá 5 lần → 429 MFA_LOCKED.
+     * FR-008: step 2 of admin sign-in with two-step verification on. A correct code → issue the
+     * session + cookie like a normal sign-in; wrong → 400 MFA_CODE_INVALID, more than 5 wrong → 429
+     * MFA_LOCKED.
      */
     @PostMapping("/mfa/verify")
     public ResponseEntity<ApiResource<LoginResource>> verifyMfa(
@@ -124,7 +127,7 @@ public class AuthController extends BaseController {
 
     private ResponseEntity<ApiResource<LoginResource>> loggedIn(AuthResult auth) {
         if (auth.mfaRequired()) {
-            // chưa có phiên: không set cookie, FE chuyển sang màn nhập mã
+            // no session yet: do not set the cookie, the FE moves to the code entry screen
             LoginResource pending = new LoginResource(null, auth.user(), true, auth.mfaToken());
             return ok(pending, "Enter the code from your authenticator.");
         }
@@ -141,8 +144,9 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * FR-006: access token lấy từ header Bearer (JwtAuthFilter đã xác thực), refresh token lấy từ
-     * cookie. Trả kèm cookie hết hạn ngay để trình duyệt xoá refresh_token.
+     * FR-006: the access token comes from the Bearer header (already authenticated by
+     * JwtAuthFilter), the refresh token comes from the cookie. Returns an immediately-expired
+     * cookie so the browser deletes refresh_token.
      */
     @PostMapping("/logout")
     public ResponseEntity<ApiResource<Void>> logout(
@@ -158,8 +162,8 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * Đặt mật khẩu lần đầu sau khi đăng nhập Google (user.hasPassword = false). Cần access token;
-     * tài khoản đã có mật khẩu → 409 PASSWORD_ALREADY_SET.
+     * Set a password for the first time after Google sign-in (user.hasPassword = false). Needs an
+     * access token; an account that already has a password → 409 PASSWORD_ALREADY_SET.
      */
     @PostMapping("/set-password")
     public ResponseEntity<ApiResource<Void>> setPassword(
@@ -170,8 +174,9 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * Đổi mật khẩu trên trang Account. Xong thì mọi phiên (kể cả phiên hiện tại) bị huỷ, cookie
-     * refresh_token bị xoá — người dùng đăng nhập lại bằng mật khẩu mới.
+     * Change the password on the Account page. Afterwards every session (including the current one)
+     * is revoked, the refresh_token cookie is deleted — the user signs in again with the new
+     * password.
      */
     @PostMapping("/change-password")
     public ResponseEntity<ApiResource<Void>> changePassword(
@@ -187,8 +192,9 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * FR-003: gọi khi access token hết hạn. Refresh token chỉ đọc từ cookie HttpOnly (không nhận
-     * qua body), trả access token mới và ghi đè cookie bằng refresh token mới.
+     * FR-003: called when the access token expires. The refresh token is only read from the
+     * HttpOnly cookie (not accepted in the body), returns a new access token and overwrites the
+     * cookie with a new refresh token.
      */
     @PostMapping("/refresh")
     public ResponseEntity<ApiResource<RefreshResource>> refresh(
@@ -211,8 +217,9 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * FR-007 bước A: luôn trả cùng một câu dù email có tồn tại hay không, kể cả khi đã vượt giới
-     * hạn 5 lần/giờ. Tạo token và gửi mail chạy ngầm qua hàng đợi Redis.
+     * FR-007 step A: always returns the same sentence whether or not the email exists, even after
+     * passing the limit of 5 per hour. Creating the token and sending the mail run in the
+     * background through the Redis queue.
      */
     @PostMapping("/forgot-password")
     public ResponseEntity<ApiResource<Void>> forgotPassword(
@@ -222,8 +229,9 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * FR-007 bước C (trước khi hiện form): kiểm tra link còn dùng được và trả email của tài khoản.
-     * Chỉ đọc token, không xoá — token vẫn dùng được cho /reset-password.
+     * FR-007 step C (before showing the form): check the link is still usable and return the
+     * account's email. Only reads the token, does not delete it — the token can still be used for
+     * /reset-password.
      */
     @PostMapping("/reset-password/verify")
     public ResponseEntity<ApiResource<ResetTokenResource>> verifyResetToken(
@@ -235,8 +243,8 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * FR-007 bước C + D: token dùng một lần. Đổi xong thì mọi phiên đăng nhập cũ bị huỷ, FE chuyển
-     * về trang đăng nhập.
+     * FR-007 steps C + D: the token is single-use. Once changed, every old session is revoked and
+     * the FE goes back to the sign-in page.
      */
     @PostMapping("/reset-password")
     public ResponseEntity<ApiResource<Void>> resetPassword(
@@ -249,7 +257,7 @@ public class AuthController extends BaseController {
                                 null, "Your password has been reset. Please sign in again."));
     }
 
-    /** Hồ sơ của chính user đang đăng nhập (trang Account). */
+    /** The profile of the signed-in user themself (Account page). */
     @GetMapping("/me")
     public ResponseEntity<ApiResource<UserResource>> me(
             @AuthenticationPrincipal CustomUserDetails user) {
@@ -257,8 +265,8 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * Sửa họ tên, số điện thoại, địa chỉ của chính mình — id lấy từ access token nên không sửa được
-     * tài khoản khác (R-06). Email không đổi được ở đây.
+     * Edit your own full name, phone number, address — the id comes from the access token so
+     * another account cannot be edited (R-06). The email cannot be changed here.
      */
     @PutMapping("/me")
     public ResponseEntity<ApiResource<UserResource>> updateMe(

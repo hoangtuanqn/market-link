@@ -90,7 +90,42 @@
     "emptyThreadTitle": "还没有消息",
     "emptyThreadText": "打个招呼开始对话吧。",
     "typing": "{{name}} 正在输入…",
-    "conversationWith": "与 {{name}} 的对话"
+    "conversationWith": "与 {{name}} 的对话",
+    "closed": "这个摊位暂时不接收消息。",
+    "messageStall": "给摊位发消息",
+    "ownStall": "这是你自己的摊位。",
+    "stallClosed": "这个摊位暂时不接受新的对话。",
+    "openFailed": "无法打开对话，请重试。",
+    "pinned": "咨询商品",
+    "unpin": "移除",
+    "productGone": "该商品已下架。",
+    "tooFast": "发送太快了，请稍等再试。",
+    "photoTooBig": "照片超过 5 MB，请选择更小的照片。",
+    "photoType": "请选择 JPEG、PNG 或 WebP 照片。",
+    "moreThreads": "加载更多对话",
+    "reportTitle": "举报这条消息",
+    "reportWhy": "你为什么举报？",
+    "reason": {
+      "spam": "垃圾信息或广告",
+      "abuse": "粗鲁或辱骂",
+      "scam": "诈骗或索要钱财",
+      "other": "其他原因"
+    },
+    "reportNote": "补充说明（可选）",
+    "noteLeft_other": "还可输入 {{count}} 个字符",
+    "chooseReason": "请选择一个原因后再提交举报。",
+    "report": "举报",
+    "reportThis": "举报这条消息",
+    "reported": "已举报",
+    "reportFailed": "举报未能提交，请重试。",
+    "reportThanks": "谢谢。管理员会查看这条消息。",
+    "cancel": "取消",
+    "previewEmpty": "还没有对话。",
+    "previewError": "无法加载你的对话。",
+    "unreadCount": "{{count}} 条未读",
+    "orderGone": "你无法查看这个订单。",
+    "orderLabel": "订单 {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "无法连接服务器。请检查网络后重试。"
@@ -162,7 +197,9 @@
     "notificationsUnread_one": "通知，{{count}} 条未读",
     "notificationsUnread_other": "通知，{{count}} 条未读",
     "openMenu": "打开菜单",
-    "search": "搜索"
+    "search": "搜索",
+    "seeAll": "查看全部",
+    "messagesUnread_other": "消息，{{count}} 条未读"
   },
   "kpi": {
     "noChange": "无变化",
@@ -492,7 +529,9 @@
     "admin": {
       "title": "通知",
       "intro": "等待你审核的新农户申请。"
-    }
+    },
+    "notificationsEmpty": "还没有通知。",
+    "notificationsError": "无法加载通知。"
   },
   "comingSoon": {
     "title": "此页面尚未开放",

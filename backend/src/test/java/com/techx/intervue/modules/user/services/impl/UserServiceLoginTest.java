@@ -27,7 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/** FR-004: đăng nhập kèm requiredRole (trang admin). */
+/** FR-004: sign-in with requiredRole (admin page). */
 class UserServiceLoginTest {
 
     private static final String EMAIL = "an@example.com";
@@ -64,7 +64,7 @@ class UserServiceLoginTest {
                         mock(BlacklistServiceInterface.class),
                         authConfig,
                         jobQueue,
-                        // FR-008: chưa ai bật 2FA → đăng nhập như cũ
+                        // FR-008: nobody has 2FA on → sign in as before
                         mock(MfaServiceInterface.class));
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(passwordEncoder.matches(PASSWORD, "hash")).thenReturn(true);

@@ -18,7 +18,7 @@ public class BlacklistRedisService implements BlacklistServiceInterface {
     public void revoke(String jti, Instant expiresAt) {
         long ttlSeconds = Duration.between(Instant.now(), expiresAt).getSeconds();
         if (ttlSeconds <= 0) return;
-        // Phải truyền Duration: set(key, value, long) là lệnh SETRANGE (offset), không phải TTL
+        // Must pass a Duration: set(key, value, long) is the SETRANGE command (offset), not a TTL
         redis.opsForValue().set(PREFIX + jti, "revoked", Duration.ofSeconds(ttlSeconds));
     }
 

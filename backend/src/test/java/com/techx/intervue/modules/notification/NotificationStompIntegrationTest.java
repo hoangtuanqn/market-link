@@ -39,7 +39,10 @@ import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-/** Đầu–cuối: sự kiện thật → /user/topic/notifications của đúng người, qua simple broker. */
+/**
+ * End to end: a real event → /user/topic/notifications of exactly the right person, through the
+ * simple broker.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "app.chat.rabbitmq.host=")
 class NotificationStompIntegrationTest {
@@ -124,7 +127,7 @@ class NotificationStompIntegrationTest {
     void theOwnerSeesTheApprovalLiveAndNobodyElseDoes() throws Exception {
         BlockingQueue<String> ownerQ = subscribe(connectAs(owner));
         BlockingQueue<String> otherQ = subscribe(connectAs(other));
-        Thread.sleep(300); // để SUBSCRIBE tới broker trước khi gửi
+        Thread.sleep(300); // let SUBSCRIBE reach the broker before sending
 
         farmerService.approve(profile.getId(), admin.getId());
 

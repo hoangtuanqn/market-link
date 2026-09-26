@@ -12,7 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Một ngày chợ không mở dù rơi vào lịch họp thường lệ (V20260926014). Chưa có FR chính thức. */
+/**
+ * One day a market does not open despite falling on its usual schedule (V20260926014). No official
+ * FR yet.
+ */
 @Entity
 @Getter
 @Setter
@@ -34,8 +37,8 @@ public class MarketClosure {
     private String reason;
 
     /**
-     * 'move' | 'contact' | 'cancel' — kiểm ở service, không dùng enum để khớp cách FarmerProfile
-     * đang xác thực status bằng String (AdminFarmerController).
+     * 'move' | 'contact' | 'cancel' — checked in the service, not an enum, to match how
+     * FarmerProfile already validates status by String (AdminFarmerController).
      */
     @Column(name = "handling", nullable = false, length = 20)
     private String handling;

@@ -3,7 +3,9 @@ package com.techx.intervue.modules.achievement.enums;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Locale;
 
-/** Hạng thành tích của người mua, thấp → cao. Thứ tự khai báo là thứ tự xét hạng. */
+/**
+ * Buyer achievement tier, low → high. Declaration order is the order in which tiers are evaluated.
+ */
 public enum Tier {
     BRONZE,
     SILVER,

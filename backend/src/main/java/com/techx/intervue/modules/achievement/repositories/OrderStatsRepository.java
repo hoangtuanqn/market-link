@@ -10,9 +10,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Đếm đơn theo kết cục cho một hoặc nhiều người mua, đọc bảng orders đúng theo db/schema.sql. Bảng
- * này chưa có migration (FR-030…038): tới lúc đó câu SQL ném DataAccessException và
- * AchievementService trả available = false. Người không có đơn nào không có mặt trong kết quả.
+ * Counts orders by outcome for one or more buyers, reading the orders table exactly as in
+ * db/schema.sql. That table has no migration yet (FR-030…038): until then the SQL throws
+ * DataAccessException and AchievementService returns available = false. A buyer with no orders is
+ * absent from the result.
  */
 @Repository
 @RequiredArgsConstructor

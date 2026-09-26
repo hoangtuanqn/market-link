@@ -24,8 +24,9 @@ const item =
   'text-ink hover:bg-surface-sunken focus-visible:bg-surface-sunken flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-sm bg-transparent px-3 text-left text-[15px] font-bold no-underline outline-none [&_svg]:size-4.5';
 
 /**
- * Nút tài khoản bên phải SiteHeader: ảnh + tên, bấm mở menu Profile / Settings / Sign out (menu button pattern của
- * WAI-ARIA: Esc hoặc bấm ra ngoài thì đóng, mũi tên lên/xuống đi giữa các mục, Home/End về đầu/cuối).
+ * The account button on the right of SiteHeader: image + name, click to open a Profile / Settings / Sign out menu (the
+ * menu button pattern of WAI-ARIA: Esc or clicking outside closes it, up/down arrows move between items, Home/End go to
+ * the first/last).
  */
 const UserMenu = ({
   name,
@@ -54,7 +55,7 @@ const UserMenu = ({
     if (returnFocus) buttonRef.current?.focus();
   };
 
-  // Mở bằng bàn phím hay chuột đều đưa focus vào mục đầu, để mũi tên dùng được ngay
+  // Opening by keyboard or mouse both put focus on the first item, so the arrow keys work right away
   useEffect(() => {
     if (open) items()[0]?.focus();
   }, [open]);

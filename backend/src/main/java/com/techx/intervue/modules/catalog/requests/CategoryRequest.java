@@ -7,9 +7,9 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 /**
- * Body của POST/PUT /api/v1/admin/categories (contract §5). Slug do server sinh từ name.
- * `minShelfLifeDays`/`maxShelfLifeDays` là khoảng ngày tươi chuẩn Admin chốt cho category này —
- * chưa có FR chính thức, xem migration V20260926015.
+ * Body of POST/PUT /api/v1/admin/categories (contract §5). The server generates the slug from name.
+ * `minShelfLifeDays`/`maxShelfLifeDays` are the standard shelf-life range the Admin sets for this
+ * category — no official FR yet, see migration V20260926015.
  */
 public record CategoryRequest(
         @NotBlank(message = "Category name is required.") @Size(max = 80) String name,
