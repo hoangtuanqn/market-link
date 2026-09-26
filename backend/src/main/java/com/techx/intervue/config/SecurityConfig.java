@@ -114,6 +114,13 @@ public class SecurityConfig {
                                         // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
+                                        // FR-020…023, FR-011: sản phẩm và tồn kho của stall xem
+                                        // được trước khi đăng nhập
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/products/*",
+                                                "/api/v1/farmers/*/products")
+                                        .permitAll()
                                         // FR-020/FR-076: bộ lọc danh mục dùng được trước khi đăng
                                         // nhập
                                         .requestMatchers(HttpMethod.GET, "/api/v1/categories")
