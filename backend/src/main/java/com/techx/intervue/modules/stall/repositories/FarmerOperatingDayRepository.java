@@ -15,6 +15,10 @@ public interface FarmerOperatingDayRepository extends JpaRepository<FarmerOperat
     @Transactional
     default void replaceDays(Long farmerMarketId, List<OperatingDaysRequest.Day> days) {
         deleteByFarmerMarketId(farmerMarketId);
+        // Hibernate xếp INSERT trước DELETE khi flush; không ép flush ở đây thì ghi lại đúng những
+        // ngày đang có
+        // sẽ vi phạm UNIQUE (…, day_of_week) — lỗi 400 của PUT …/days khi lưu lại tập ngày cũ.
+        flush();
         for (OperatingDaysRequest.Day day : days) {
             FarmerOperatingDay row = new FarmerOperatingDay();
             row.setFarmerMarketId(farmerMarketId);
