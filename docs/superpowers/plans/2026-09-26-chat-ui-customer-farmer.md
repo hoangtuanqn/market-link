@@ -2324,6 +2324,30 @@ Ghi số PR và các phát hiện vào ledger. Cập nhật memory `chat-feature
 
 ---
 
+## Bổ sung khi làm Task 5–7 (26/09/2026)
+
+Những chỗ plan viết sai hoặc bỏ sót, phát hiện lúc làm và lúc chạy thử thật. Tất cả đã vá bằng test đỏ → xanh; code trong repo là chuẩn.
+
+| Task | Lỗ hổng | Cách vá | Test |
+|---|---|---|---|
+| 5 | `text-danger-ink` không có trong theme | dùng `text-danger` như `DataState` | — |
+| 5 | `.ml-chat` cứng `width: 420px`, panel hẹp ở 1440 | cột tin dựng bằng `flex flex-col gap-3` | — |
+| 5 | Cuộn theo `messages.length` → tải tin cũ kéo người đọc về đáy | cuộn theo id tin mới nhất | `stays put when older messages are added above` |
+| 5 | Không có phím gửi; Enter của bộ gõ IME (vi/ja/zh/ko) | Enter gửi, Shift+Enter xuống dòng, bỏ qua khi `isComposing` | `sends on Enter and keeps a new line on Shift+Enter`, `does not send while an input method is still composing` |
+| 5 | Ô soạn khoá khi đang gửi → mất focus, phải bấm lại mới gõ tiếp | chỉ khoá khi cả cuộc chat bị khoá; chặn gửi trùng bằng `busy` | `keeps the box open while a message is on its way…`, `does not send the same text twice…` |
+| 5 | Gửi xong xoá mất chữ gõ thêm trong lúc chờ | xoá ngay lúc gửi, hỏng thì trả lại nếu ô còn trống | `does not wipe what I typed while the previous message was on its way` |
+| 5 | "Last seen 11:47" khi là ba ngày trước | `lib/chat/time.ts` `chatWhen` dùng chung với danh sách | `says which day the other person was last seen when it was not today` |
+| 6 | Ruột trang chép y hệt hai lần | `components/chat/MessagesLayout.tsx` dùng chung (spec §9.3) | trang Farmer có test riêng |
+| 6 | `h1` dùng `font-hand` (design system cấm cho tiêu đề), vỏ `max-w-5xl p-4` chồng lên shell | giữ vỏ như trang cũ | — |
+| 6 | `min-h-[60vh]` → nhiều tin thì Composer trôi khỏi màn | khung cao cố định `h-[70vh] min-h-96`, cuộn bên trong | kiểm tay |
+| 6 | Copy "Choose a stall on the left" / "Message a stall…" sai với Farmer | câu trung tính + `FarmerMessages.noThreadsText` qua prop `emptyText` | `explains where conversations come from when there are none` |
+| 7 | Back hiện cả trên desktop | `md:hidden` | `offers Back only on narrow screens` |
+| 7 | "Pick a conversation" nép góc | `DataState fill` | `centres the pick-a-conversation hint in the empty panel` |
+
+**Chạy thử thật (Task 7, 26/09):** backend chung chỉ có chat tới Plan 2 (thiếu ảnh 3A) nên chưa thử gửi ảnh. Đã đạt: danh sách, badge, tải tin cũ, gửi một lần, presence, Seen, typing tắt khi tin tới, thread mới hiện không cần tải lại, bấm nhanh qua lại không lẫn tin, **đóng socket thật giữa chừng rồi nối lại thì đủ tin**, 375px không tràn. **768px tràn ngang do header chung `MainLayout`**, không phải khung chat — ngoài phạm vi 4A. Dark theme, tiếng Việt và blob URL: người dùng tự kiểm E2E.
+
+**Để lại (minor):** đánh dấu đã đọc cả khi tab ở nền; badge dùng `aria-label` trên `<span>`; `MessageOrderRef` của chatbot không còn ai dùng.
+
 ## Việc cố tình để lại cho sau
 
 | Việc | Ở đâu |
