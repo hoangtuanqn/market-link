@@ -227,7 +227,6 @@ const FarmerProductFormPage = () => {
             <span className="text-ink-muted text-[13px]">{t('unit.hint')}</span>
           </div>
 
-
           <div className="md:col-span-2">
             <span className="text-small text-ink font-bold">{t('preview.label')}</span>
             <p className="border-line-strong bg-surface-raised mt-1.5 rounded-md border-[1.5px] p-4 text-[16px]">

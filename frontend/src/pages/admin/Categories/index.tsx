@@ -20,8 +20,8 @@ const bySortThenName = (a: CategoryRow, b: CategoryRow) => a.sortOrder - b.sortO
 
 /**
  * FR-076 — the one list every stall picks from when it adds a product. Sale units are not here: the SRS gives the admin
- * "product categories" and nothing else as master data, so units ship as a fixed list in `constants/units.ts`.
- * Reads and writes go through `/api/v1/categories` and `/api/v1/admin/categories` (contract §5).
+ * "product categories" and nothing else as master data, so units ship as a fixed list in `constants/units.ts`. Reads
+ * and writes go through `/api/v1/categories` and `/api/v1/admin/categories` (contract §5).
  */
 const AdminCategoriesPage = () => {
   const { t } = useTranslation('AdminCategories');
