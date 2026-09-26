@@ -13,18 +13,11 @@
     "category": "カテゴリー",
     "products": "商品数",
     "stalls": "店舗数",
-    "nameOf": "{{name}} の名称",
-    "oneOfThem": "単数形",
-    "moreThanOne": "複数形",
-    "pluralOf": "{{name}} の複数形",
-    "kind": "種類",
-    "readsAs": "表示例"
+    "nameOf": "{{name}} の名称"
   },
   "action": {
     "save": "保存",
-    "remove": "削除",
-    "addToPicker": "選択肢に追加",
-    "merge": "統合"
+    "remove": "削除"
   },
   "categoryForm": {
     "title": "カテゴリーを追加",
@@ -51,8 +44,7 @@
   "toast": {
     "categorySaved": "{{name}} を保存しました。",
     "categoryAdded": "カテゴリーを追加しました。店舗はすぐ選べます。",
-    "categoryRemoved": "{{name}} を削除しました。",
-    "promoted": "{{name}} はすべての店舗の選択肢に入りました。"
+    "categoryRemoved": "{{name}} を削除しました。"
   },
   "error": {
     "noun": "カテゴリー",

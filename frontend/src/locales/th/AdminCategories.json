@@ -13,18 +13,11 @@
     "category": "หมวดหมู่",
     "products": "สินค้า",
     "stalls": "ร้านค้า",
-    "nameOf": "ชื่อของ {{name}}",
-    "oneOfThem": "รูปเอกพจน์",
-    "moreThanOne": "รูปพหูพจน์",
-    "pluralOf": "พหูพจน์ของ {{name}}",
-    "kind": "ประเภท",
-    "readsAs": "อ่านได้ว่า"
+    "nameOf": "ชื่อของ {{name}}"
   },
   "action": {
     "save": "บันทึก",
-    "remove": "ลบ",
-    "addToPicker": "เพิ่มเข้ารายการตัวเลือก",
-    "merge": "รวม"
+    "remove": "ลบ"
   },
   "categoryForm": {
     "title": "เพิ่มหมวดหมู่",
@@ -51,8 +44,7 @@
   "toast": {
     "categorySaved": "บันทึก {{name}} แล้ว",
     "categoryAdded": "เพิ่มหมวดหมู่แล้ว ร้านค้าเลือกใช้ได้ทันที",
-    "categoryRemoved": "ลบ {{name}} แล้ว",
-    "promoted": "ตอนนี้ {{name}} อยู่ในตัวเลือกของทุกร้านค้าแล้ว"
+    "categoryRemoved": "ลบ {{name}} แล้ว"
   },
   "error": {
     "noun": "หมวดหมู่",

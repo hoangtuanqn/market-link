@@ -14,18 +14,11 @@
     "category": "Category",
     "products": "Products",
     "stalls": "Stalls",
-    "nameOf": "Name of {{name}}",
-    "oneOfThem": "One of them",
-    "moreThanOne": "More than one",
-    "pluralOf": "Plural of {{name}}",
-    "kind": "Kind",
-    "readsAs": "Reads as"
+    "nameOf": "Name of {{name}}"
   },
   "action": {
     "save": "Save",
-    "remove": "Remove",
-    "addToPicker": "Add to picker",
-    "merge": "Merge"
+    "remove": "Remove"
   },
   "categoryForm": {
     "title": "Add a category",
@@ -56,8 +49,7 @@
   "toast": {
     "categorySaved": "{{name}} saved.",
     "categoryAdded": "Category added. Stalls can pick it now.",
-    "categoryRemoved": "{{name}} removed.",
-    "promoted": "{{name}} is now in the picker for every stall."
+    "categoryRemoved": "{{name}} removed."
   },
   "error": {
     "noun": "categories",
