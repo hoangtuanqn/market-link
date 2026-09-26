@@ -37,6 +37,27 @@ class NotificationApi {
     return response.data;
   };
 
+  /** N3 — khoá VAPID public của server; null khi server chưa bật Web Push. */
+  static pushPublicKey = async () => {
+    const response = await privateApi.get<ApiResponse<{ publicKey: string | null }>>('/notifications/push/public-key');
+    return response.data;
+  };
+
+  static subscribePush = async (subscription: PushSubscriptionJSON) => {
+    const response = await privateApi.post<ApiResponse<null>>('/notifications/push-subscriptions', {
+      endpoint: subscription.endpoint,
+      keys: subscription.keys,
+    });
+    return response.data;
+  };
+
+  static unsubscribePush = async (endpoint: string) => {
+    const response = await privateApi.delete<ApiResponse<null>>('/notifications/push-subscriptions', {
+      data: { endpoint },
+    });
+    return response.data;
+  };
+
   static sendTest = async () => {
     const response = await privateApi.post<ApiResponse<null>>('/notifications/test');
     return response.data;

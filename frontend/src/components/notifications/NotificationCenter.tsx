@@ -4,7 +4,13 @@ import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import NotificationApi from '@/api-requests/notification.requests';
 import useSession from '@/hooks/useSession';
-import { beep, permission, registerWorker, showOsNotification } from '@/lib/notifications/browser';
+import {
+  beep,
+  permission,
+  registerWorker,
+  showOsNotification,
+  syncPushSubscription,
+} from '@/lib/notifications/browser';
 import { NotificationStore } from '@/lib/notifications/store';
 import { realtime } from '@/lib/realtime/stompClient';
 import type { NotificationFrame } from '@/types/notification.types';
@@ -46,7 +52,8 @@ const NotificationCenter = () => {
       .catch(() => {
         /* chưa có mạng: số sẽ tới cùng khung STOMP đầu tiên */
       });
-    if (permission() === 'granted') void registerWorker();
+    // đã cho quyền từ trước: đảm bảo máy này đang nhận Web Push cho đúng tài khoản vừa đăng nhập
+    if (permission() === 'granted') void registerWorker().then(() => syncPushSubscription());
     realtime.start();
     return () => {
       cancelled = true;

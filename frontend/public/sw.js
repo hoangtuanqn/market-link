@@ -1,6 +1,24 @@
-// MarketLink service worker (FR-042). N2: hiện và mở thông báo khi tab ẩn; N3 thêm sự kiện 'push' (Web Push).
+// MarketLink service worker (FR-042). N2: mở thông báo khi bấm; N3: nhận Web Push khi đã đóng hết tab.
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
+
+// Nội dung do backend (WebPushSender) mã hoá: { kind, title, message, link, tag }
+self.addEventListener('push', (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { title: 'MarketLink', message: event.data ? event.data.text() : '' };
+  }
+  event.waitUntil(
+    self.registration.showNotification(data.title || 'MarketLink', {
+      body: data.message || '',
+      tag: data.tag,
+      data: { link: data.link || '/' },
+      icon: '/favicon.ico',
+    }),
+  );
+});
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
