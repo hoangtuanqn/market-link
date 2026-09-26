@@ -1,0 +1,55 @@
+{
+  "overline": "Settings",
+  "title": "Feedback inbox",
+  "intro": "Bug reports, suggestions and questions sent through the feedback form. Mark them answered when done.",
+  "link": {
+    "categories": "Categories",
+    "announcements": "Announcements"
+  },
+  "filterLabel": "Filter feedback",
+  "filter": {
+    "open": "Open",
+    "answered": "Answered",
+    "bug": "Bug",
+    "suggestion": "Suggestion",
+    "query": "Question"
+  },
+  "type": {
+    "bug": "Bug report",
+    "suggestion": "Suggestion",
+    "query": "Question"
+  },
+  "status": {
+    "open": "Open",
+    "answered": "Answered"
+  },
+  "col": {
+    "type": "Type",
+    "message": "Message",
+    "from": "From",
+    "status": "Status"
+  },
+  "action": {
+    "read": "Read",
+    "readAndAnswer": "Read and answer"
+  },
+  "dialog": {
+    "title": "{{type}} from {{from}}",
+    "sent": "Sent {{date}} · {{state}}",
+    "notAnswered": "not answered yet",
+    "alreadyAnswered": "already answered",
+    "yourAnswer": "Your answer",
+    "replyPlaceholder": "Thank you for telling us…",
+    "close": "Close",
+    "send": "Send and mark answered",
+    "sendAgain": "Send again"
+  },
+  "empty": {
+    "title": "No feedback yet",
+    "text": "Bug reports, suggestions and questions from the feedback form arrive here."
+  },
+  "toast": {
+    "answered": "Answer saved and the message marked answered.",
+    "markedOnly": "Marked answered without a reply."
+  }
+}

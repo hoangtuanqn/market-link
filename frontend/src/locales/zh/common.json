@@ -77,6 +77,9 @@
     "orderOf": "第 {{index}} 单，共 {{of}} 单",
     "payAtPickup": "取货时在摊位付款"
   },
+  "chart": {
+    "showNumbers": "查看数据"
+  },
   "chat": {
     "assistant": "MarketLink 助手",
     "you": "你",
@@ -340,6 +343,7 @@
     "feedback": "反馈",
     "pricing": "定价",
     "settings": "设置",
+    "account": "你的账户",
     "analytics": "分析",
     "people": "用户",
     "marketplace": "市场",
@@ -389,5 +393,17 @@
     "gold": "黄金",
     "diamond": "钻石",
     "badge": "{{tier}} 等级"
+  },
+  "video": {
+    "play": "播放视频",
+    "preview": "视频",
+    "close": "关闭"
+  },
+  "application": {
+    "attempt": "第 {{n}} 次申请",
+    "sentOn": "提交于 {{date}}",
+    "answeredOn": "答复于 {{date}}",
+    "reason": "理由：",
+    "photoAlt": "第 {{n}} 次申请的照片"
   }
 }

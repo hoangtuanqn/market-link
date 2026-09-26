@@ -77,6 +77,9 @@
     "orderOf": "注文 {{index}} / {{of}}",
     "payAtPickup": "受け取り時に屋台で支払い"
   },
+  "chart": {
+    "showNumbers": "数値を表示"
+  },
   "chat": {
     "assistant": "MarketLink アシスタント",
     "you": "あなた",
@@ -340,6 +343,7 @@
     "feedback": "フィードバック",
     "pricing": "料金",
     "settings": "設定",
+    "account": "アカウント",
     "analytics": "分析",
     "people": "ユーザー",
     "marketplace": "マーケットプレイス",
@@ -389,5 +393,17 @@
     "gold": "ゴールド",
     "diamond": "ダイヤモンド",
     "badge": "{{tier}} ランク"
+  },
+  "video": {
+    "play": "動画を再生",
+    "preview": "動画",
+    "close": "閉じる"
+  },
+  "application": {
+    "attempt": "{{n}} 回目の申請",
+    "sentOn": "{{date}} に送信",
+    "answeredOn": "{{date}} に回答",
+    "reason": "理由:",
+    "photoAlt": "{{n}} 回目の申請の写真"
   }
 }

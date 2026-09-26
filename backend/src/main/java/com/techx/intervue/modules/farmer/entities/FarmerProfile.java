@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import java.math.BigDecimal;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,45 +42,12 @@ public class FarmerProfile {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    /** Tên category, cách nhau bởi dấu phẩy — chưa có bảng categories thật (module Product). */
-    @Column(name = "categories", length = 255)
-    private String categories;
-
-    @Column(name = "main_crops", length = 255)
-    private String mainCrops;
-
-    @Column(name = "weekly_volume", length = 100)
-    private String weeklyVolume;
-
-    @Column(name = "growing_method", columnDefinition = "TEXT")
-    private String growingMethod;
-
-    /** Chỉ Admin thấy — không hiển thị công khai (khác với địa chỉ gian hàng tại chợ). */
-    @Column(name = "plot_address", length = 255)
-    private String plotAddress;
-
-    @Column(name = "plot_size", length = 50)
-    private String plotSize;
-
-    @Column(name = "growing_since_year")
-    private Integer growingSinceYear;
-
-    @Column(name = "plot_latitude", precision = 10, scale = 8)
-    private BigDecimal plotLatitude;
-
-    @Column(name = "plot_longitude", precision = 11, scale = 8)
-    private BigDecimal plotLongitude;
-
-    /** Nhiều path cách nhau bởi ';' — xem FarmerService#joinPaths/#splitPaths. */
+    /** Nhiều path cách nhau bởi ';' — xem FarmerService#joinList/#splitList. */
     @Column(name = "photo_paths", columnDefinition = "TEXT")
     private String photoPaths;
 
     @Column(name = "video_path", length = 255)
     private String videoPath;
-
-    /** Tên chợ tự do — chưa có bảng markets thật (module Market). */
-    @Column(name = "preferred_market_name", length = 120)
-    private String preferredMarketName;
 
     @Convert(converter = ApprovalStatus.DbConverter.class)
     @Column(name = "approval_status", nullable = false)
@@ -92,11 +58,21 @@ public class FarmerProfile {
     @Column(name = "reject_reason", length = 255)
     private String rejectReason;
 
+    /** Lý do Admin đình chỉ — chỉ có giá trị khi approvalStatus = SUSPENDED. */
+    @Column(name = "suspend_reason", length = 255)
+    private String suspendReason;
+
     @Column(name = "approved_by")
     private Long approvedBy;
 
     @Column(name = "approved_at")
     private Instant approvedAt;
+
+    @Column(name = "suspended_by")
+    private Long suspendedBy;
+
+    @Column(name = "suspended_at")
+    private Instant suspendedAt;
 
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;

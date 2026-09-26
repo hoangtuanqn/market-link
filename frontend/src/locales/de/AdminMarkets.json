@@ -1,0 +1,37 @@
+{
+  "title": "Märkte",
+  "intro": "Name, Adresse, Markttage, Zeiten und Kartenkoordinaten jedes Marktes. Wird ein Markt entfernt, verschwindet er für die Kundschaft; seine Historie bleibt.",
+  "caption_one": "{{count}} aktiver Markt",
+  "caption_other": "{{count}} aktive Märkte",
+  "stalls_one": "{{count}} Stand",
+  "stalls_other": "{{count}} Stände",
+  "col": {
+    "market": "Markt",
+    "days": "Tage · Zeiten",
+    "coordinates": "Koordinaten",
+    "stalls": "Stände"
+  },
+  "action": {
+    "add": "Markt hinzufügen",
+    "edit": "Bearbeiten",
+    "remove": "Entfernen"
+  },
+  "map": {
+    "title": "Wo sie liegen",
+    "label": "Karte der Märkte"
+  },
+  "empty": {
+    "title": "Noch keine Märkte",
+    "text": "Lege einen Markt mit Adresse, Markttagen und Kartenkoordinaten an, damit Erzeuger ihn auswählen können."
+  },
+  "remove": {
+    "title": "{{name}} entfernen?",
+    "text_one": "{{count}} Stand verkauft hier. Der Markt verschwindet von den Kundenseiten und der Stand wird benachrichtigt. Bereits aufgegebene Bestellungen laufen weiter.",
+    "text_other": "{{count}} Stände verkaufen hier. Der Markt verschwindet von den Kundenseiten und die Stände werden benachrichtigt. Bereits aufgegebene Bestellungen laufen weiter.",
+    "keep": "Markt behalten",
+    "confirm": "Markt entfernen"
+  },
+  "toast": {
+    "removed": "{{name}} aus der Liste entfernt."
+  }
+}

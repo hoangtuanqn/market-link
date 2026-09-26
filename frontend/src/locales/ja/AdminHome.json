@@ -1,9 +1,57 @@
 {
-  "overline": "管理エリア",
-  "hello": "こんにちは、{{name}} さん",
-  "fallbackName": "管理者",
-  "empty": {
-    "title": "ダッシュボードは準備中です",
-    "text": "管理者ダッシュボードが完成すると、農家、お客様、市場、注文の合計がここに表示されます。"
+  "overline": "プラットフォーム · {{year}}",
+  "title": "今日の MarketLink",
+  "vs": "{{month}}比",
+  "tilesNote": "{{now}}の現時点まで、{{prev}}と並べています。どのタイルからもその数字の内訳を開けます。",
+  "kpi": {
+    "farmers": "農家",
+    "farmersNote": "{{waiting}}件が承認待ち · {{suspended}}件が停止中",
+    "farmersLink": "申請を審査する",
+    "customers": "お客様",
+    "customersNote": "今月{{count}}人が登録",
+    "customersLink": "お客様一覧を開く",
+    "markets": "マーケット",
+    "marketsNote": "すべて営業中",
+    "marketsLink": "マーケット一覧を開く",
+    "orders": "注文",
+    "ordersNote": "今週{{week}}件 · 完了{{total}}",
+    "ordersLink": "注文一覧を開く"
+  },
+  "revenue": {
+    "title": "日別の売上",
+    "note": "完了した注文、単位は百万₫。{{now}}と{{prev}}の比較。",
+    "caption": "{{now}}と{{prev}}の日別売上、単位は百万ドン",
+    "axis": "日付",
+    "reports": "レポート全体を見る"
+  },
+  "attention": {
+    "title": "対応が必要なもの",
+    "farmers_other": "件の農家申請が承認待ちです",
+    "reported_other": "件の店舗から通報されたレビュー",
+    "feedback_other": "件の未対応フィードバック、うち1件は不具合",
+    "announcements_other": "件のお知らせを掲載中、Thảo Điền は10月4日休み"
+  },
+  "earned": {
+    "title": "MarketLink の収入",
+    "link": "売上レポート",
+    "note": "{{month}}、店舗が掲載枠を購入した分です。マーケットが受け取った金額とは別に扱います。",
+    "of": "₫ · マーケットが受け取った{{gmv}}の{{pct}}%"
+  },
+  "byMarket": {
+    "title": "今週のマーケット別注文数",
+    "link": "すべての注文",
+    "suffix": "件"
+  },
+  "latest": {
+    "title": "プラットフォーム全体の最新注文",
+    "readOnly": "閲覧のみ。管理者は注文のステータスを変更しません。"
+  },
+  "col": {
+    "order": "注文",
+    "stall": "店舗",
+    "market": "マーケット",
+    "pickup": "受け取り",
+    "total": "合計",
+    "status": "ステータス"
   }
 }

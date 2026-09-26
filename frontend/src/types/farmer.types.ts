@@ -24,24 +24,14 @@ export type FarmerType = {
 };
 
 /**
- * Các trường theo docs/prototype/customer/become-farmer.html, tất cả optional. Chưa có bảng categories/markets thật nên
- * `categories`/`preferredMarketName` là text tự do, không phải id. Ảnh/video lưu path cục bộ (chỉ phục vụ test/demo,
- * không phải hạ tầng production).
+ * Phần optional của đơn: giới thiệu sạp và bằng chứng. Mặt hàng, cách canh tác và chợ muốn bán được khai sau khi Admin
+ * duyệt, ở panel Farmer (FR-060…FR-064), nên không có ở đây. Ảnh/video lưu path cục bộ (chỉ phục vụ test/demo, không
+ * phải hạ tầng production).
  */
 export type FarmerApplicationDetails = {
   description?: string | null;
-  categories?: string[];
-  mainCrops?: string | null;
-  weeklyVolume?: string | null;
-  growingMethod?: string | null;
-  plotAddress?: string | null;
-  plotSize?: string | null;
-  growingSinceYear?: number | null;
-  plotLatitude?: number | null;
-  plotLongitude?: number | null;
   photoUrls?: string[];
   videoUrl?: string | null;
-  preferredMarketName?: string | null;
 };
 
 /** FR-002 (second route — customer đang đăng nhập xin thành Farmer; xem caption CustomerBecomeFarmer/index.tsx). */
@@ -50,12 +40,30 @@ export type FarmerApplicationInput = {
   contactPerson: string;
 } & FarmerApplicationDetails;
 
+/** Một lần nộp đơn đã qua — nội dung lúc nộp, kết quả và lý do nếu bị từ chối. */
+export type FarmerApplicationAttemptType = {
+  id: number;
+  attempt: number;
+  stallName: string;
+  contactPerson: string;
+  description?: string | null;
+  photoUrls?: string[];
+  videoUrl?: string | null;
+  status: FarmerApproval;
+  rejectReason: string | null;
+  decidedAt: string | null;
+  submittedAt: string;
+};
+
 /** Hồ sơ Farmer của chính người gọi. */
 export type FarmerProfileType = {
   id: number;
   stallName: string;
   contactPerson: string;
   approvalStatus: FarmerApproval;
+  rejectReason: string | null;
+  suspendReason: string | null;
+  history: FarmerApplicationAttemptType[];
   createdAt: string;
 } & FarmerApplicationDetails;
 
@@ -65,6 +73,7 @@ export type AdminFarmerListItemType = {
   stallName: string;
   contactPerson: string;
   email: string;
+  phone: string;
   approvalStatus: FarmerApproval;
   createdAt: string;
 };
@@ -80,8 +89,11 @@ export type AdminFarmerDetailType = {
   address: string;
   approvalStatus: FarmerApproval;
   rejectReason: string | null;
+  suspendReason: string | null;
   approvedAt: string | null;
+  suspendedAt: string | null;
   createdAt: string;
+  history: FarmerApplicationAttemptType[];
   /** Tài khoản Customer đã có từ trước — không phải ngày tạo hồ sơ Farmer này. */
   customerSince: string;
   accountStatus: 'active' | 'inactive' | 'suspended';

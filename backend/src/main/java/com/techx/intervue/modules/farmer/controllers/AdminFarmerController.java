@@ -3,6 +3,7 @@ package com.techx.intervue.modules.farmer.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.requests.RejectFarmerRequest;
+import com.techx.intervue.modules.farmer.requests.SuspendFarmerRequest;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
@@ -35,13 +36,17 @@ public class AdminFarmerController extends BaseController {
 
     private final FarmerServiceInterface farmerService;
 
+    /**
+     * {@code q}: tìm theo tên sạp, người liên hệ, email hoặc điện thoại (prototype admin/farmers).
+     */
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminFarmerListItemResource>>> list(
             @RequestParam(required = false) String status,
+            @RequestParam(required = false) String q,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int pageSize) {
         ApprovalStatus parsed = parseStatus(status);
-        return ok(farmerService.listForAdmin(parsed, page, pageSize), "Farmers loaded.");
+        return ok(farmerService.listForAdmin(parsed, q, page, pageSize), "Farmers loaded.");
     }
 
     @GetMapping("/{id}")
@@ -57,13 +62,18 @@ public class AdminFarmerController extends BaseController {
 
     @PatchMapping("/{id}/reject")
     public ResponseEntity<ApiResource<AdminFarmerDetailResource>> reject(
-            @PathVariable Long id, @Valid @RequestBody RejectFarmerRequest request) {
-        return ok(farmerService.reject(id, request), "Farmer rejected.");
+            @PathVariable Long id,
+            @Valid @RequestBody RejectFarmerRequest request,
+            @AuthenticationPrincipal CustomUserDetails admin) {
+        return ok(farmerService.reject(id, request, admin.getId()), "Farmer rejected.");
     }
 
     @PatchMapping("/{id}/suspend")
-    public ResponseEntity<ApiResource<AdminFarmerDetailResource>> suspend(@PathVariable Long id) {
-        return ok(farmerService.suspend(id), "Farmer suspended.");
+    public ResponseEntity<ApiResource<AdminFarmerDetailResource>> suspend(
+            @PathVariable Long id,
+            @Valid @RequestBody SuspendFarmerRequest request,
+            @AuthenticationPrincipal CustomUserDetails admin) {
+        return ok(farmerService.suspend(id, request, admin.getId()), "Farmer suspended.");
     }
 
     @PatchMapping("/{id}/reinstate")

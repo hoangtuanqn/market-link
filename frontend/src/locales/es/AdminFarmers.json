@@ -1,6 +1,11 @@
 {
   "title": "Productores",
   "intro": "Aprueba una solicitud antes de que el puesto pueda publicar productos. Suspende un puesto para ocultar sus productos y detener los pedidos nuevos; los pedidos en curso terminan con normalidad.",
+  "search": {
+    "label": "Buscar productores",
+    "placeholder": "Puesto, contacto, teléfono",
+    "submit": "Buscar"
+  },
   "tabsLabel": "Productores por estado",
   "status": {
     "pending": "Pendientes de aprobación",
@@ -29,7 +34,6 @@
   "col": {
     "stall": "Puesto",
     "registered": "Registro",
-    "contact": "Contacto",
     "email": "Correo"
   },
   "action": {
@@ -49,18 +53,21 @@
     "title": "¿Rechazar {{stall}}?",
     "text": "La persona solicitante conserva su cuenta de cliente y todo lo que contiene. Se le indica el motivo.",
     "reason": "Motivo que verá el productor",
-    "confirm": "Rechazar solicitud"
-  },
-  "reason": {
-    "mismatch": "Los datos no coinciden con el puesto",
-    "full": "El mercado está completo",
-    "unreachable": "No se pudo contactar con el número",
-    "other": "Otro"
+    "confirm": "Rechazar solicitud",
+    "placeholder": "Di qué hay que cambiar para aprobar este puesto.",
+    "hint": "{{used}} de {{max}} caracteres. El solicitante lo lee palabra por palabra.",
+    "required": "Escribe el motivo que verá el solicitante.",
+    "tooLong": "El motivo no puede superar {{max}} caracteres."
   },
   "suspend": {
     "title": "¿Suspender {{stall}}?",
     "text": "Todos los productos se ocultan y no se aceptan pedidos nuevos. Los pedidos ya hechos continúan para que los clientes no pierdan lo que reservaron.",
-    "confirm": "Suspender puesto"
+    "confirm": "Suspender puesto",
+    "reason": "Motivo que verá el productor",
+    "placeholder": "Di qué debe corregir el puesto para volver a vender.",
+    "hint": "{{used}} de {{max}} caracteres. El productor lo lee palabra por palabra.",
+    "required": "Escribe el motivo que verá el productor.",
+    "tooLong": "El motivo no puede superar {{max}} caracteres."
   },
   "toast": {
     "approved": "{{stall}} aprobado. El puesto ya puede publicar productos.",
@@ -83,5 +90,6 @@
     "retry": "Reintentar"
   },
   "caption_one": "{{count}} agricultor",
-  "caption_other": "{{count}} agricultores"
+  "caption_other": "{{count}} agricultores",
+  "showing": "Mostrando {{from}}–{{to}} de {{total}}"
 }

@@ -8,10 +8,6 @@
   },
   "sentOn": "Gửi ngày {{date}}",
   "approveText": "Vai trò của họ chuyển thành Farmer và bảng điều khiển sạp được mở trong tài khoản. Họ vẫn giữ mọi tính năng khách hàng hiện có. Người mua chưa thấy gì cho đến khi họ thêm sản phẩm và đặt khung giờ nhận hàng.",
-  "fromCustomer": {
-    "title": "Đơn này đến từ một tài khoản đã mua hàng trên MarketLink.",
-    "text": "Duyệt sẽ biến chính tài khoản này thành một sạp; không tạo tài khoản thứ hai. Họ vẫn giữ mọi tính năng khách hàng hiện có."
-  },
   "suspendedBanner": {
     "title": "Sạp này đang bị tạm ngưng.",
     "text": "Sản phẩm của sạp bị ẩn khỏi khách. Các đơn đã đặt vẫn tiếp tục như bình thường."
@@ -23,34 +19,22 @@
   "photos": {
     "title": "Ảnh vườn",
     "alt": "Ảnh vườn",
-    "video": "Xem video",
     "hint": "Kiểm tra vườn trong ảnh có giống vị trí ghim trên bản đồ và có trồng đúng những gì người nộp đơn kê khai không. Bạn không kiểm tra giấy phép, an toàn thực phẩm hay cam kết hữu cơ."
-  },
-  "grows": {
-    "title": "Họ trồng gì",
-    "categories": "Danh mục",
-    "crops": "Cây trồng chính",
-    "volume": "Sản lượng",
-    "ownWords": "Lời của họ:"
-  },
-  "plot": {
-    "title": "Vườn",
-    "address": "Địa chỉ",
-    "size": "Diện tích",
-    "since": "Trồng từ năm"
   },
   "stall": {
     "title": "Sạp họ đăng ký",
     "name": "Tên sạp",
     "contact": "Người liên hệ",
     "email": "Email",
-    "description": "Mô tả",
-    "market": "Chợ mong muốn"
+    "description": "Mô tả"
   },
   "history": {
     "title": "Lịch sử",
+    "suspended": "Bị đình chỉ",
+    "approved": "Đã duyệt",
     "sent": "Đã gửi đơn",
-    "customer": "Tạo tài khoản khách hàng"
+    "customer": "Tạo tài khoản khách hàng",
+    "byAdmin": "Quản trị viên"
   },
   "applicant": {
     "title": "Người nộp đơn",
@@ -63,9 +47,12 @@
     "inactive": "Không hoạt động",
     "suspended": "Tạm ngưng"
   },
-  "map": "Vườn và chợ họ muốn bán",
   "approval": {
     "title": "Duyệt đơn sẽ làm gì",
     "text": "Vai trò của họ chuyển thành Farmer và bảng điều khiển sạp được mở. Họ vẫn mua ở các sạp khác bằng cùng tài khoản. Chưa có gì được đăng cho đến khi họ thêm sản phẩm và đặt khung giờ nhận hàng."
+  },
+  "attempts": {
+    "title": "Lịch sử nộp đơn",
+    "text": "Mọi lần tài khoản này nộp đơn, kèm nội dung đã gửi và kết quả đã trả lời."
   }
 }

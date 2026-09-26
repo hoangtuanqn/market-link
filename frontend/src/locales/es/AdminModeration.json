@@ -1,0 +1,72 @@
+{
+  "title": "Moderación",
+  "intro": "Oculta fichas de producto o reseñas que incumplen las normas. Lo oculto se queda en la base de datos con su motivo; se avisa a quien lo publicó.",
+  "tabsLabel": "Colas de moderación",
+  "tab": {
+    "reviews": "Reseñas",
+    "products": "Fichas de producto",
+    "hidden": "Elementos ocultos"
+  },
+  "reviewFilterLabel": "Filtrar reseñas",
+  "reviewFilter": {
+    "reported": "Denunciadas",
+    "lowRated": "Con 1 o 2 estrellas",
+    "newest": "Más recientes"
+  },
+  "report": {
+    "title": "Denunciada por {{by}} el {{date}}: «{{quote}}»",
+    "text": "Al ocultarla desaparece de las páginas de producto y de puesto. El cliente sabrá por qué."
+  },
+  "recentlyListed": "Productos publicados hace poco",
+  "search": {
+    "label": "Buscar productos",
+    "placeholder": "Producto o puesto",
+    "submit": "Buscar"
+  },
+  "col": {
+    "product": "Producto",
+    "price": "Precio",
+    "description": "Descripción",
+    "item": "Elemento",
+    "owner": "Autor",
+    "reason": "Motivo",
+    "hiddenOn": "Oculto el"
+  },
+  "action": {
+    "view": "Ver",
+    "hideReview": "Ocultar reseña",
+    "hideListing": "Ocultar ficha",
+    "keepVisible": "Dejar visible",
+    "customerAccount": "Cuenta del cliente",
+    "unhide": "Mostrar de nuevo",
+    "unhidden": "El elemento vuelve a estar visible.",
+    "dismissed": "Denuncia descartada. La reseña sigue visible."
+  },
+  "hide": {
+    "title": {
+      "review": "¿Ocultar esta reseña?",
+      "listing": "¿Ocultar esta ficha?"
+    },
+    "text": {
+      "review": "Desaparece de las páginas de cliente de inmediato. Se avisa al cliente, que puede escribir al equipo.",
+      "listing": "Desaparece de las páginas de cliente de inmediato. Se avisa al puesto, que puede escribir al equipo."
+    },
+    "confirm": {
+      "review": "Ocultar reseña",
+      "listing": "Ocultar ficha"
+    },
+    "reason": "Motivo",
+    "done": "Ocultado. Se ha avisado a su autor."
+  },
+  "reason": {
+    "advertising": "Publicidad o contacto fuera de la plataforma",
+    "abusive": "Lenguaje ofensivo",
+    "offTopic": "No habla del producto ni del puesto",
+    "claim": "Afirmación sobre salud o certificación",
+    "other": "Otro"
+  },
+  "empty": {
+    "title": "Nada que moderar",
+    "text": "Los productos y reseñas denunciados llegan aquí para que los leas antes de ocultar nada."
+  }
+}

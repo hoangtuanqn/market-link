@@ -53,6 +53,23 @@ public class UserSessionCache {
     }
 
     /**
+     * Đổi role của một phiên đang sống (Admin duyệt Farmer). JwtAuthFilter dựng authority từ cache
+     * này chứ không từ claim của token, nên chỉ ghi users.role thôi thì role mới phải chờ tới lần
+     * refresh kế tiếp. Giữ nguyên TTL còn lại: đây là đổi quyền, không phải gia hạn phiên.
+     */
+    public void updateRoles(Long userId, Set<RoleType> roles) {
+        SessionData current = get(userId);
+        if (current == null) {
+            return; // chưa đăng nhập ở đâu — lần đăng nhập sau đã đọc role mới từ DB
+        }
+        Long ttlSeconds = redis.getExpire(KEY_PREFIX + userId);
+        if (ttlSeconds == null || ttlSeconds <= 0) {
+            return; // phiên vừa hết hạn giữa hai lệnh, không dựng lại
+        }
+        set(userId, current.email(), roles, Duration.ofSeconds(ttlSeconds));
+    }
+
+    /**
      * Đăng xuất mọi thiết bị (đổi / đặt lại mật khẩu...). Chỉ xoá session là chưa đủ: user đăng
      * nhập lại thì session được ghi lại và access token cũ (bị lộ) hợp lệ trở lại. Nên ghi thêm mốc
      * thời gian, giữ đúng bằng thời gian sống của access token (sau đó mọi token cũ đã hết hạn).

@@ -1,0 +1,78 @@
+{
+  "title": "Doanh thu nền tảng",
+  "intro": "Khoản MarketLink tự thu được, và thu từ những sạp nào. Đây là con số khác với tiền các chợ thu, và hai con số không bao giờ được cộng vào nhau.",
+  "days_one": "{{count}} ngày",
+  "days_other": "{{count}} ngày",
+  "points": " điểm",
+  "action": {
+    "pricing": "Bảng giá & hạn mức"
+  },
+  "export": {
+    "button": "Xuất dữ liệu kỳ này",
+    "title": "Đã bắt đầu xuất",
+    "text": "File CSV lấy đúng kỳ đang hiển thị."
+  },
+  "scope": {
+    "title": "Việc thu tiền nhà vườn không nằm trong SRS.",
+    "text": "Mọi thứ trên màn hình này dựa vào một mô hình doanh thu mà tài liệu yêu cầu không mô tả, và vào khoản tiền nền tảng chưa thu được."
+  },
+  "kpi": {
+    "revenue": "Doanh thu nền tảng",
+    "revenueNote": "₫ MarketLink thu được",
+    "takeRate": "Tỷ lệ ăn chia",
+    "takeRateNote": "trên số tiền các chợ thu",
+    "payingStalls": "Sạp có trả tiền",
+    "ofTotal": "{{count}} trên {{total}}",
+    "payingStallsNote": "số còn lại bán miễn phí",
+    "average": "Trung bình mỗi sạp trả tiền",
+    "averageNote": "₫ trong kỳ"
+  },
+  "gmv": {
+    "title": "Các chợ thu {{gmv}} trong {{month}}. MarketLink không đụng tới khoản đó.",
+    "text": "Khách trả tiền mặt cho sạp lúc nhận hàng. Con số {{total}} ở trên là tiền các sạp trả MarketLink để mua vị trí hiển thị, bằng {{pct}}% tổng tiền chợ."
+  },
+  "axis": {
+    "dayOfMonth": "Ngày trong tháng",
+    "source": "Nguồn thu"
+  },
+  "perDay": {
+    "title": "Thu được mỗi ngày",
+    "note": "Đơn vị nghìn ₫. Thu nhập nhấp nhô vì một suất ghim mua một ngày nhưng chạy vài ngày.",
+    "caption": "Doanh thu nền tảng mỗi ngày của {{now}} so với {{prev}}, đơn vị nghìn đồng"
+  },
+  "sources": {
+    "title": "Tiền đến từ đâu",
+    "note": "{{count}} nguồn, cộng lại thành tổng của kỳ",
+    "share": "Tỷ trọng trong kỳ",
+    "against": "So với {{prev}}",
+    "caption": "Từng nguồn doanh thu của {{now}} so với {{prev}}, đơn vị nghìn đồng"
+  },
+  "whoPays": {
+    "title": "Ai trả tiền",
+    "note": "{{paying}} trên {{total}} sạp đã duyệt có trả tiền trong {{month}}",
+    "free": "Ba sạp không trả đồng nào mà vẫn bán được. Đó chính là thiết kế: đăng bán và bán hàng đều miễn phí, trả tiền chỉ để mua vị trí hiển thị."
+  },
+  "credit": {
+    "title": "Tín dụng",
+    "bought": "Tín dụng đã mua",
+    "boughtNote": "₫ nạp vào trong kỳ",
+    "spent": "Tín dụng đã tiêu",
+    "spentNote": "₫, chính là doanh thu ở trên",
+    "unspent": "Còn chưa tiêu",
+    "unspentNote": "₫ do {{count}} sạp đang giữ",
+    "owed": "Còn nợ vị trí hiển thị",
+    "owedNote": "₫ tiền ghim và lượt đăng chưa dùng tới",
+    "note": "Sạp nạp tiền với đội ngũ, quản trị viên nhập tín dụng vào, và số đó tiêu dần khi họ quảng bá. Tiền đã thu mà chưa tiêu là khoản nền tảng còn nợ lại bằng vị trí hiển thị."
+  },
+  "col": {
+    "source": "Nguồn thu",
+    "whatWasSold": "Đã bán gì",
+    "stalls": "Số sạp",
+    "change": "Thay đổi",
+    "share": "Tỷ trọng",
+    "stall": "Sạp",
+    "completedOrders": "Đơn đã hoàn tất",
+    "paidMarketLink": "Trả cho MarketLink",
+    "shareOfRevenue": "Tỷ trọng doanh thu"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "title": "리포트",
+  "intro": "플랫폼 전체의 주문과 매출을 장터별로, 그리고 가장 많이 파는 농가를 보여줍니다. 매출은 완료된 주문의 합계이며, 돈은 MarketLink를 거치지 않고 가게에 갑니다.",
+  "days_other": "{{count}}일",
+  "points": "퍼센트포인트",
+  "market": "장터",
+  "allMarkets": "모든 장터",
+  "export": {
+    "button": "이 기간 내보내기",
+    "title": "내보내기를 시작했습니다",
+    "text": "CSV에는 화면의 기간과 장터가 그대로 담깁니다."
+  },
+  "kpi": {
+    "orders": "주문",
+    "ordersNote": "{{month}}, 모든 장터",
+    "revenue": "완료된 매출",
+    "revenueNote": "₫, 가게에서 받은 돈",
+    "average": "주문당 평균",
+    "averageNote": "완료된 주문 한 건당 ₫",
+    "declineRate": "거절률",
+    "declineNote": "{{total}}건 중 {{declined}}건"
+  },
+  "axis": {
+    "dayOfMonth": "날짜"
+  },
+  "revenueChart": {
+    "title": "일별 매출",
+    "note": "완료된 주문, 단위는 백만 ₫. {{now}}과 {{prev}}의 같은 30일 비교.",
+    "caption": "{{now}}과 {{prev}}의 일별 매출, 단위는 백만 동"
+  },
+  "ordersChart": {
+    "title": "일별 주문 건수",
+    "note": "어떤 상태로 끝났든 모든 주문입니다.",
+    "caption": "{{now}}과 {{prev}}의 일별 주문 건수"
+  },
+  "byMarket": {
+    "title": "장터별 매출",
+    "note": "네 장터를 같은 잣대로 보므로 막대 색이 모두 같습니다. 길이가 전부를 말합니다."
+  },
+  "byStatus": {
+    "title": "상태별 주문"
+  },
+  "topFarmers": {
+    "title": "가장 활발한 농가",
+    "note": "이 기간의 완료 주문 수 기준"
+  },
+  "topProducts": {
+    "title": "많이 팔린 상품",
+    "note": "각자 가게가 쓰는 단위로 표시",
+    "unitsNote": "수량은 같은 단위 안에서만 더합니다. 버섯 1kg과 달걀 한 판은 다른 것이라, 플랫폼은 전체 수량 합계를 하나로 내지 않습니다."
+  },
+  "sideBySide": {
+    "title": "장터 나란히 보기",
+    "note": "같은 기간, 숫자마다 변화 폭을 함께"
+  },
+  "col": {
+    "stall": "가게",
+    "markets": "장터",
+    "completedOrders": "완료된 주문",
+    "revenue": "매출",
+    "productsListed": "올려둔 상품 수",
+    "rating": "평점",
+    "product": "상품",
+    "soldPer": "판매 단위",
+    "price": "가격",
+    "sold": "판매량",
+    "market": "장터",
+    "stalls": "가게 수",
+    "orders": "주문",
+    "change": "변화",
+    "completed": "완료",
+    "declined": "거절"
+  }
+}

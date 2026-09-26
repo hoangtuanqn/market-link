@@ -105,7 +105,9 @@ services:
       - ./backend/src:/app/src
       - ./backend/pom.xml:/app/pom.xml
       - m2-cache:/root/.m2
-      - uploads-data:/app/uploads # ảnh người dùng tải lên, còn sau khi build lại container
+      # Ảnh/video người dùng tải lên nằm ngay trong project (backend/uploads/) để mở ra xem được và
+      # còn nguyên sau khi build lại container. .gitignore không commit chúng.
+      - ./backend/uploads:/app/uploads
       - chat-uploads:/var/lib/marketlink/chat # FR-115: ảnh chat, kho riêng không phục vụ tĩnh
     depends_on:
       mysql:
@@ -165,6 +167,5 @@ volumes:
   redis-data:
   rabbitmq-data:
   m2-cache:
-  uploads-data:
   chat-uploads:
   redisinsight-data:

@@ -1,0 +1,77 @@
+{
+  "allCustomers": "Kundschaft",
+  "since": "Kundschaft seit {{joined}} · letzte Bestellung {{last}}",
+  "missing": {
+    "title": "Diese Person gibt es nicht mehr",
+    "text": "Das Konto wurde vielleicht gelöscht. Öffne es erneut über die Kundenliste."
+  },
+  "action": {
+    "deactivate": "Konto sperren",
+    "reactivate": "Konto freigeben"
+  },
+  "banner": {
+    "title": "Heute gesperrt.",
+    "text": "Am Konto vermerkter Grund: {{reason}}. Laufende Bestellungen bleiben unangetastet."
+  },
+  "orders": {
+    "title": "Bestellungen",
+    "all": "Alle Bestellungen der Plattform",
+    "note": "Ein Administrator liest sie. Nur der Stand bewegt eine Bestellung, hier gibt es also nichts zu ändern."
+  },
+  "reviews": {
+    "title": "Geschriebene Bewertungen",
+    "openInModeration": "In der Moderation öffnen",
+    "note": "Eine Bewertung wird in der Moderation ausgeblendet, dort ist auch die Meldung dazu sichtbar."
+  },
+  "timeline": {
+    "title": "Kontoverlauf",
+    "created": "Konto angelegt",
+    "firstCollected": "Erste Bestellung abgeholt",
+    "noShow": "Nicht erschienen",
+    "lastOrder": "Letzte Bestellung"
+  },
+  "contact": {
+    "title": "Kontakt",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "joined": "Angemeldet"
+  },
+  "habits": {
+    "title": "Kaufverhalten",
+    "orders": "Bestellungen",
+    "collected": "Abgeholt",
+    "noShows": "Nicht abgeholt",
+    "market": "Markt",
+    "buysMostFrom": "Kauft am meisten bei"
+  },
+  "whatItDoes": {
+    "title": "Was das Sperren bewirkt",
+    "text": "Die Person kann sich nicht anmelden und nichts Neues bestellen. Bereits aufgegebene Bestellungen bleiben unangetastet, der Stand gibt also weiterhin heraus, was er zurückgelegt hat, und niemand verliert Lebensmittel, die für ihn geerntet wurden."
+  },
+  "deactivate": {
+    "title": "{{name}} sperren?",
+    "text": "Anmelden und bestellen ist erst wieder möglich, wenn ein Administrator das Konto freigibt. Bereits aufgegebene Bestellungen laufen zu Ende, damit kein Stand auf Ware sitzen bleibt, die niemand abholt.",
+    "reason": "Grund, der am Konto vermerkt wird",
+    "keep": "Noch nicht",
+    "confirm": "Sperren"
+  },
+  "reason": {
+    "noShows": "Wiederholt nicht zur Abholung erschienen",
+    "abusive": "Beleidigende Sprache in einer Bewertung",
+    "requested": "Hat um Schließung des Kontos gebeten",
+    "other": "Anderer Grund"
+  },
+  "toast": {
+    "deactivated": "{{name}} gesperrt.",
+    "reactivated": "{{name}} kann sich wieder anmelden."
+  },
+  "col": {
+    "order": "Bestellung",
+    "stall": "Stand",
+    "pickup": "Abholung",
+    "items": "Artikel",
+    "total": "Summe",
+    "status": "Status"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "details": {
+    "title": "Data Anda",
+    "name": "Nama lengkap",
+    "phone": "Telepon",
+    "phoneHint": "Dipakai bila sebuah lapak perlu menghubungi platform; tidak ditampilkan ke publik.",
+    "email": "Email",
+    "emailHint": "Sekaligus akun masuk Anda. Bila harus diubah, minta bantuan admin lain.",
+    "submit": "Simpan perubahan",
+    "saving": "Menyimpan…",
+    "saved": "Data Anda tersimpan.",
+    "failed": "Data Anda tidak bisa disimpan.",
+    "errors": {
+      "nameRequired": "Isi nama lengkap Anda.",
+      "phoneRequired": "Isi nomor telepon."
+    }
+  },
+  "password": {
+    "title": "Kata sandi",
+    "intro": "Akun admin bisa menyetujui lapak, menonaktifkan pelanggan, dan mengubah tarif platform, jadi jagalah kata sandi ini tetap kuat.",
+    "current": "Kata sandi saat ini",
+    "new": "Kata sandi baru",
+    "repeat": "Ulangi kata sandi baru",
+    "hint": "Antara {{min}} dan {{max}} karakter.",
+    "submit": "Ubah kata sandi",
+    "submitting": "Mengubah…",
+    "changed": "Kata sandi diubah. Sesi lain telah dikeluarkan.",
+    "failed": "Kata sandi Anda tidak bisa diubah.",
+    "errors": {
+      "currentRequired": "Isi kata sandi Anda saat ini.",
+      "newRequired": "Isi kata sandi baru.",
+      "length": "Gunakan antara {{min}} dan {{max}} karakter.",
+      "same": "Kata sandi baru harus berbeda dari yang sekarang.",
+      "confirmRequired": "Ulangi kata sandi baru.",
+      "mismatch": "Kedua kata sandi tidak sama."
+    }
+  },
+  "mfa": {
+    "title": "Verifikasi dua langkah",
+    "intro": "Satu langkah tambahan setelah kata sandi, dari aplikasi di ponsel Anda. Admin bisa menyetujui lapak, menonaktifkan pelanggan, dan mengubah tarif platform, jadi kata sandi saja terasa tipis.",
+    "on": "Aktif",
+    "off": "Nonaktif",
+    "turnOn": "Aktifkan verifikasi dua langkah",
+    "manage": "Kelola verifikasi dua langkah"
+  }
+}

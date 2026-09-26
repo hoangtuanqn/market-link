@@ -64,6 +64,20 @@ import AdminVerifyPage from './pages/admin/Verify';
 import AdminSecurityPage from './pages/admin/Security';
 import AdminFarmersPage from './pages/admin/Farmers';
 import AdminFarmerDetailPage from './pages/admin/FarmerDetail';
+import AdminAccountPage from './pages/admin/Account';
+import AdminAnnouncementsPage from './pages/admin/Announcements';
+import AdminCategoriesPage from './pages/admin/Categories';
+import AdminCustomerDetailPage from './pages/admin/CustomerDetail';
+import AdminCustomersPage from './pages/admin/Customers';
+import AdminFeedbackPage from './pages/admin/Feedback';
+import AdminMarketFormPage from './pages/admin/MarketForm';
+import AdminMarketsPage from './pages/admin/Markets';
+import AdminModerationPage from './pages/admin/Moderation';
+import AdminOrderDetailPage from './pages/admin/OrderDetail';
+import AdminOrdersPage from './pages/admin/Orders';
+import AdminPricingPage from './pages/admin/Pricing';
+import AdminReportsPage from './pages/admin/Reports';
+import AdminRevenuePage from './pages/admin/Revenue';
 
 const App = () => {
   return (
@@ -214,7 +228,52 @@ const App = () => {
               }
             />
             <Route path="settings" element={<AdminSettingsPage />} />
-            {/* Mục sidebar chưa làm → 404 ngay trong khung admin, không rơi ra layout Customer */}
+            <Route path="account" element={<AdminAccountPage />} />
+
+            {/* FR-075 + FR-070: báo cáo, doanh thu sàn và đơn hàng toàn sàn (admin chỉ đọc, D-04) */}
+            <Route path="reports" element={<AdminReportsPage />} />
+            <Route path="revenue" element={<AdminRevenuePage />} />
+            <Route path="pricing" element={<AdminPricingPage />} />
+            <Route path="orders" element={<AdminOrdersPage />} />
+            <Route
+              path="orders/:code"
+              element={
+                <RemountOnParam param="code">
+                  <AdminOrderDetailPage />
+                </RemountOnParam>
+              }
+            />
+
+            {/* FR-072 */}
+            <Route path="customers" element={<AdminCustomersPage />} />
+            <Route
+              path="customers/:id"
+              element={
+                <RemountOnParam param="id">
+                  <AdminCustomerDetailPage />
+                </RemountOnParam>
+              }
+            />
+
+            {/* FR-073: `new` đi trước `:id` để không bị bắt nhầm thành id */}
+            <Route path="markets" element={<AdminMarketsPage />} />
+            <Route path="markets/new" element={<AdminMarketFormPage />} />
+            <Route
+              path="markets/:id"
+              element={
+                <RemountOnParam param="id">
+                  <AdminMarketFormPage />
+                </RemountOnParam>
+              }
+            />
+
+            {/* FR-074, FR-077, FR-081 và danh mục / đơn vị */}
+            <Route path="moderation" element={<AdminModerationPage />} />
+            <Route path="categories" element={<AdminCategoriesPage />} />
+            <Route path="announcements" element={<AdminAnnouncementsPage />} />
+            <Route path="feedback" element={<AdminFeedbackPage />} />
+
+            {/* Đường dẫn admin không khớp gì → 404 ngay trong khung admin, không rơi ra layout Customer */}
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

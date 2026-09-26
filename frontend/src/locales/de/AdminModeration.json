@@ -1,0 +1,72 @@
+{
+  "title": "Moderation",
+  "intro": "Blende Produktanzeigen oder Bewertungen aus, die gegen die Richtlinien verstoßen. Ausgeblendetes bleibt mit dem Grund in der Datenbank; die verfassende Person wird informiert.",
+  "tabsLabel": "Moderationslisten",
+  "tab": {
+    "reviews": "Bewertungen",
+    "products": "Produktanzeigen",
+    "hidden": "Ausgeblendetes"
+  },
+  "reviewFilterLabel": "Bewertungen filtern",
+  "reviewFilter": {
+    "reported": "Gemeldet",
+    "lowRated": "Mit 1 oder 2 bewertet",
+    "newest": "Neueste"
+  },
+  "report": {
+    "title": "Am {{date}} von {{by}} gemeldet: „{{quote}}“",
+    "text": "Ausblenden entfernt sie von der Produkt- und der Standseite. Die Kundschaft erfährt den Grund."
+  },
+  "recentlyListed": "Kürzlich eingestellte Produkte",
+  "search": {
+    "label": "Produkte suchen",
+    "placeholder": "Produkt oder Stand",
+    "submit": "Suchen"
+  },
+  "col": {
+    "product": "Produkt",
+    "price": "Preis",
+    "description": "Beschreibung",
+    "item": "Eintrag",
+    "owner": "Von",
+    "reason": "Grund",
+    "hiddenOn": "Ausgeblendet am"
+  },
+  "action": {
+    "view": "Ansehen",
+    "hideReview": "Bewertung ausblenden",
+    "hideListing": "Anzeige ausblenden",
+    "keepVisible": "Sichtbar lassen",
+    "customerAccount": "Kundenkonto",
+    "unhide": "Wieder einblenden",
+    "unhidden": "Der Eintrag ist wieder sichtbar.",
+    "dismissed": "Meldung verworfen. Die Bewertung bleibt sichtbar."
+  },
+  "hide": {
+    "title": {
+      "review": "Diese Bewertung ausblenden?",
+      "listing": "Diese Anzeige ausblenden?"
+    },
+    "text": {
+      "review": "Sie verschwindet sofort von den Kundenseiten. Die Kundschaft wird informiert und kann sich beim Team melden.",
+      "listing": "Sie verschwindet sofort von den Kundenseiten. Der Stand wird informiert und kann sich beim Team melden."
+    },
+    "confirm": {
+      "review": "Bewertung ausblenden",
+      "listing": "Anzeige ausblenden"
+    },
+    "reason": "Grund",
+    "done": "Ausgeblendet. Die verfassende Person wurde informiert."
+  },
+  "reason": {
+    "advertising": "Werbung oder Kontaktaufnahme außerhalb der Plattform",
+    "abusive": "Beleidigende Sprache",
+    "offTopic": "Geht nicht um das Produkt oder den Stand",
+    "claim": "Gesundheits- oder Zertifizierungsversprechen",
+    "other": "Anderer Grund"
+  },
+  "empty": {
+    "title": "Nichts zu moderieren",
+    "text": "Gemeldete Produkte und Bewertungen landen hier, damit du sie liest, bevor du etwas ausblendest."
+  }
+}

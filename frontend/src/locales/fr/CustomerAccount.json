@@ -4,7 +4,19 @@
   "sell": {
     "title": "Vendre sur MarketLink",
     "text": "Si vous cultivez des aliments, ce compte peut devenir un stand. Vous gardez vos commandes, favoris et panier, et un panneau pour le stock et les créneaux de retrait apparaît dès qu'un administrateur vous approuve.",
-    "apply": "Demander à vendre"
+    "apply": "Demander à vendre",
+    "view": "Voir votre demande",
+    "panel": "Ouvrir le panneau producteur",
+    "loading": "Vérification de votre demande",
+    "status": {
+      "pending": "Votre demande est chez un admin. Rien ne change pour vous d'ici sa réponse.",
+      "approved": "Votre stand est validé. Réglez marchés, créneaux de retrait et produits dans le panneau producteur.",
+      "rejected": "Votre demande a été refusée. Ouvrez-la pour revoir ce qui a été envoyé.",
+      "suspended": "Votre stand est suspendu. Vous pouvez continuer à acheter comme client."
+    },
+    "draft": "Vous avez une demande inachevée. Reprenez où vous en étiez.",
+    "continue": "Terminer votre demande",
+    "history": "Voir vos demandes précédentes"
   },
   "signOut": {
     "title": "Se déconnecter",

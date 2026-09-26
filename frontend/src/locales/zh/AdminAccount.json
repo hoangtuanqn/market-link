@@ -1,0 +1,46 @@
+{
+  "details": {
+    "title": "你的信息",
+    "name": "姓名",
+    "phone": "电话",
+    "phoneHint": "摊位需要联系平台时使用，不会公开显示。",
+    "email": "邮箱",
+    "emailHint": "同时也是登录账号。需要修改请找另一位管理员。",
+    "submit": "保存修改",
+    "saving": "保存中…",
+    "saved": "你的信息已保存。",
+    "failed": "无法保存你的信息。",
+    "errors": {
+      "nameRequired": "请填写姓名。",
+      "phoneRequired": "请填写电话号码。"
+    }
+  },
+  "password": {
+    "title": "密码",
+    "intro": "管理员账号可以审核摊位、停用顾客、修改平台收费，所以这个密码要够强。",
+    "current": "当前密码",
+    "new": "新密码",
+    "repeat": "再次输入新密码",
+    "hint": "{{min}} 到 {{max}} 个字符。",
+    "submit": "修改密码",
+    "submitting": "修改中…",
+    "changed": "密码已修改。其他会话已退出登录。",
+    "failed": "无法修改密码。",
+    "errors": {
+      "currentRequired": "请输入当前密码。",
+      "newRequired": "请输入新密码。",
+      "length": "请使用 {{min}} 到 {{max}} 个字符。",
+      "same": "新密码必须与当前密码不同。",
+      "confirmRequired": "请再次输入新密码。",
+      "mismatch": "两次输入的密码不一致。"
+    }
+  },
+  "mfa": {
+    "title": "两步验证",
+    "intro": "在密码之后再加一步，来自你手机上的应用。管理员可以审核摊位、停用顾客、修改平台收费，只靠一个密码太单薄。",
+    "on": "已开启",
+    "off": "未开启",
+    "turnOn": "开启两步验证",
+    "manage": "管理两步验证"
+  }
+}

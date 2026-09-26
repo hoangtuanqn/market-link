@@ -1,0 +1,46 @@
+{
+  "title": "お客様",
+  "intro": "規約違反があればアカウントを停止できます。停止するとログインも注文もできません。解決したら再開してください。過去の注文は店舗側に残ります。",
+  "search": {
+    "label": "お客様を検索",
+    "placeholder": "名前、メール、電話番号",
+    "submit": "検索"
+  },
+  "filterLabel": "お客様を絞り込む",
+  "filter": {
+    "all": "すべて",
+    "active": "有効",
+    "inactive": "停止中",
+    "joinedThisMonth": "今月登録"
+  },
+  "status": {
+    "active": "有効",
+    "inactive": "停止中"
+  },
+  "col": {
+    "customer": "お客様",
+    "joined": "登録日",
+    "orders": "注文数",
+    "status": "ステータス"
+  },
+  "action": {
+    "deactivate": "停止",
+    "reactivate": "再開"
+  },
+  "showing": "{{total}}件中 {{from}}–{{to}}件を表示",
+  "empty": {
+    "title": "まだお客様がいません",
+    "text": "MarketLink に登録があり次第、アカウントがここに表示されます。"
+  },
+  "deactivate": {
+    "title": "{{name}} を停止しますか？",
+    "text": "すべての端末からログアウトされ、ログインも注文もできなくなります。すでに入っている注文は店舗側にそのまま残ります。",
+    "reason": "理由（アカウントに記録されます）",
+    "keep": "有効のままにする",
+    "confirm": "アカウントを停止"
+  },
+  "toast": {
+    "deactivated": "{{name}} を停止しました。",
+    "reactivated": "{{name}} は再びログインできます。"
+  }
+}

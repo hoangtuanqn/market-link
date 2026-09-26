@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,12 +40,24 @@ public class FarmerController extends BaseController {
 
     /**
      * Trạng thái đơn của chính mình; null nếu chưa từng nộp — FE coi là "empty", không phải lỗi.
+     * Customer (chờ duyệt / bị từ chối) và Farmer (đã duyệt / bị đình chỉ) đều cần đọc; Admin xem
+     * qua /admin/farmers nên không mở ở đây.
      */
     @GetMapping("/apply")
+    @PreAuthorize("hasAnyRole('CUSTOMER','FARMER')")
     public ResponseEntity<ApiResource<FarmerProfileResource>> myApplication(
             @AuthenticationPrincipal CustomUserDetails user) {
         FarmerProfileResource profile = farmerService.getMyProfile(user.getId());
         String message = profile == null ? "No application yet." : "Application loaded.";
         return ok(profile, message);
+    }
+
+    /** Rút đơn khi còn đang chờ duyệt — sau đó tài khoản nộp lại từ đầu được. */
+    @DeleteMapping("/apply")
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<ApiResource<Void>> withdraw(
+            @AuthenticationPrincipal CustomUserDetails user) {
+        farmerService.withdraw(user.getId());
+        return ok(null, "Application withdrawn.");
     }
 }

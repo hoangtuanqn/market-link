@@ -8,6 +8,7 @@ import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -74,6 +75,20 @@ public class FarmerExceptionHandler {
     @ExceptionHandler(InvalidApprovalTransitionException.class)
     ResponseEntity<ApiResource<Void>> invalidTransition(InvalidApprovalTransitionException e) {
         return error(HttpStatus.CONFLICT, "INVALID_APPROVAL_TRANSITION", e.getMessage(), List.of());
+    }
+
+    /**
+     * Lưới an toàn cuối: dữ liệu dài hơn cột, hoặc hai request nộp đơn cùng lúc cùng lọt qua
+     * existsByUserId rồi bị UNIQUE(user_id) chặn. Không bắt ở đây thì lỗi rơi xuống /error, bị trả
+     * 401 và FE tưởng người dùng hết phiên.
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
+        String cause = String.valueOf(e.getMostSpecificCause().getMessage());
+        if (cause.contains("farmer_profiles.user_id")) {
+            return alreadyApplied(new FarmerApplicationExistsException());
+        }
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
     /** File vượt quá spring.servlet.multipart.max-file-size/max-request-size → 400. */

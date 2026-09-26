@@ -1,0 +1,46 @@
+{
+  "title": "Pelanggan",
+  "intro": "Nonaktifkan akun bila melanggar aturan; akun itu tidak bisa masuk atau memesan lagi. Aktifkan kembali setelah beres. Pesanan lamanya tetap ada pada lapak.",
+  "search": {
+    "label": "Cari pelanggan",
+    "placeholder": "Nama, email, atau telepon",
+    "submit": "Cari"
+  },
+  "filterLabel": "Saring pelanggan",
+  "filter": {
+    "all": "Semua",
+    "active": "Aktif",
+    "inactive": "Dinonaktifkan",
+    "joinedThisMonth": "Bergabung bulan ini"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Dinonaktifkan"
+  },
+  "col": {
+    "customer": "Pelanggan",
+    "joined": "Bergabung",
+    "orders": "Pesanan",
+    "status": "Status"
+  },
+  "action": {
+    "deactivate": "Nonaktifkan",
+    "reactivate": "Aktifkan"
+  },
+  "showing": "Menampilkan {{from}}–{{to}} dari {{total}}",
+  "empty": {
+    "title": "Belum ada pelanggan",
+    "text": "Akun pelanggan muncul di sini begitu ada yang mendaftar di MarketLink."
+  },
+  "deactivate": {
+    "title": "Nonaktifkan {{name}}?",
+    "text": "Dia keluar dari semua perangkat dan tidak bisa masuk atau memesan. Pesanan yang sudah dibuat tetap ada pada lapak.",
+    "reason": "Alasan, tersimpan pada akun",
+    "keep": "Biarkan aktif",
+    "confirm": "Nonaktifkan akun"
+  },
+  "toast": {
+    "deactivated": "{{name}} dinonaktifkan.",
+    "reactivated": "{{name}} bisa masuk lagi."
+  }
+}

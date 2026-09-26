@@ -1,0 +1,86 @@
+{
+  "allMarkets": "Chợ",
+  "crumbNew": "Thêm mới",
+  "crumbEdit": "Sửa",
+  "titleNew": "Chợ mới",
+  "city": "Thành phố Hồ Chí Minh",
+  "meta": "{{stalls}} sạp · thêm ngày {{added}}",
+  "missing": {
+    "title": "Chợ này không còn ở đây",
+    "text": "Có thể chợ đã bị gỡ. Hãy mở lại từ danh sách chợ."
+  },
+  "field": {
+    "name": "Tên chợ",
+    "address": "Địa chỉ",
+    "district": "Quận / huyện",
+    "city": "Thành phố",
+    "days": "Ngày họp chợ",
+    "open": "Mở cửa",
+    "close": "Đóng cửa",
+    "lat": "Vĩ độ",
+    "lng": "Kinh độ",
+    "lngHint": "Hoặc kéo ghim trên bản đồ. Dữ liệu bản đồ lấy từ OpenStreetMap.",
+    "notes": "Ghi chú cho các sạp"
+  },
+  "pin": {
+    "label": "Ghim vị trí chợ",
+    "note": "Kéo ghim tới cổng vào chợ. Các sạp sẽ tự ghim vị trí của mình bên trong chợ sau."
+  },
+  "action": {
+    "save": "Lưu chợ",
+    "cancel": "Huỷ"
+  },
+  "toast": {
+    "saved": "Đã lưu {{name}}."
+  },
+  "closures": {
+    "title": "Ngày nghỉ",
+    "intro": "Ngày chợ không mở dù rơi đúng ngày họp. Khách hàng thấy trên trang chợ và trên bảng tin trang chủ, và không đặt đơn mới cho ngày đó được.",
+    "add": "Thêm ngày nghỉ",
+    "addConfirm": "Thêm ngày nghỉ",
+    "added": "Đã thêm ngày nghỉ. Hãy đăng một thông báo để khách hàng biết.",
+    "removed": "Đã xoá ngày nghỉ.",
+    "remove": "Xoá",
+    "removeTitle": "Xoá ngày nghỉ này?",
+    "removeText": "Chợ mở lại vào ngày đó và khách hàng đặt đơn được.",
+    "keep": "Giữ lại",
+    "announced": "Đã thông báo",
+    "notYet": "Chưa",
+    "noneYet": "Chưa có",
+    "noReason": "Không ghi lý do",
+    "byAdminToday": "Quản trị viên · hôm nay",
+    "col": {
+      "date": "Ngày",
+      "reason": "Lý do",
+      "orders": "Đơn đã đặt",
+      "told": "Đã báo khách"
+    },
+    "field": {
+      "date": "Ngày",
+      "reason": "Lý do khách hàng sẽ thấy",
+      "reasonPlaceholder": "Phường thi công đường Quốc Hương",
+      "handling": "Xử lý các đơn đã đặt cho ngày đó"
+    },
+    "empty": {
+      "title": "Không có ngày nghỉ nào",
+      "text": "Chợ này mở đủ mọi ngày họp. Thêm ngày nghỉ khi nào chợ không mở."
+    }
+  },
+  "handling": {
+    "move": {
+      "title": "Dời đơn sang buổi chợ kế tiếp",
+      "short": "dời sang buổi chợ kế tiếp",
+      "text": "Khách giữ nguyên đơn và nhận ngày lấy hàng mới. Sạp cũng phải bán vào ngày đó."
+    },
+    "contact": {
+      "title": "Để từng sạp tự liên hệ khách của mình",
+      "short": "sạp tự liên hệ khách",
+      "text": "Không có gì tự động thay đổi. Sạp hẹn lại giờ khác và không phải hoàn tiền, vì chưa có đồng nào đổi tay."
+    },
+    "cancel": {
+      "title": "Huỷ các đơn và báo cho khách",
+      "short": "huỷ và đã báo khách",
+      "text": "Hàng trả lại kho của sạp và đơn kết thúc ở trạng thái đã huỷ, không phải bị từ chối, vì sạp không làm gì sai."
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "title": "Reports",
+  "intro": "Orders and revenue across the platform, split by market, and the Farmers who sell the most. Revenue is the total of completed orders, paid to the stalls rather than through MarketLink.",
+  "days_one": "{{count}} day",
+  "days_other": "{{count}} days",
+  "points": " points",
+  "market": "Market",
+  "allMarkets": "All markets",
+  "export": {
+    "button": "Export the period",
+    "title": "Export started",
+    "text": "The CSV covers the period and the market on screen."
+  },
+  "kpi": {
+    "orders": "Orders",
+    "ordersNote": "{{month}}, all markets",
+    "revenue": "Completed revenue",
+    "revenueNote": "₫, paid at the stalls",
+    "average": "Average order",
+    "averageNote": "₫ per completed order",
+    "declineRate": "Decline rate",
+    "declineNote": "{{declined}} of {{total}} orders"
+  },
+  "axis": {
+    "dayOfMonth": "Day of the month"
+  },
+  "revenueChart": {
+    "title": "Revenue by day",
+    "note": "Completed orders, in millions of ₫. {{now}} against the same 30 days in {{prev}}.",
+    "caption": "Revenue by day in {{now}} against {{prev}}, in millions of dong"
+  },
+  "ordersChart": {
+    "title": "Orders placed per day",
+    "note": "Every order, whatever state it ended in.",
+    "caption": "Orders placed per day in {{now}} against {{prev}}"
+  },
+  "byMarket": {
+    "title": "Revenue by market",
+    "note": "One measure across four markets, so every bar is the same colour. Length is the whole story."
+  },
+  "byStatus": {
+    "title": "Orders by state"
+  },
+  "topFarmers": {
+    "title": "Most active Farmers",
+    "note": "By completed orders in the period"
+  },
+  "topProducts": {
+    "title": "Top products",
+    "note": "Each in the unit its stall sells it by",
+    "unitsNote": "Quantities are only added up within one unit. A kilo of mushrooms and a tray of eggs are different things, so the platform never reports a single total quantity."
+  },
+  "sideBySide": {
+    "title": "Markets side by side",
+    "note": "Same period, with the change on each number"
+  },
+  "col": {
+    "stall": "Stall",
+    "markets": "Markets",
+    "completedOrders": "Completed orders",
+    "revenue": "Revenue",
+    "productsListed": "Products listed",
+    "rating": "Rating",
+    "product": "Product",
+    "soldPer": "Sold per",
+    "price": "Price",
+    "sold": "Sold",
+    "market": "Market",
+    "stalls": "Stalls",
+    "orders": "Orders",
+    "change": "Change",
+    "completed": "Completed",
+    "declined": "Declined"
+  }
+}

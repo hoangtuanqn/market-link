@@ -1,0 +1,58 @@
+{
+  "allOrders": "订单",
+  "kicker": "下单于 {{placed}} · 截单于 {{cutoff}}",
+  "missing": {
+    "title": "这份订单已经不在了",
+    "text": "它可能随账号一起被删除。请从订单列表重新打开。"
+  },
+  "readOnly": {
+    "title": "管理员只读订单；推进状态的是摊位。",
+    "text": "所有改变状态的按钮都在摊位自己的界面上，所以这里的任何操作都不会把订单推进错误的状态。"
+  },
+  "items": {
+    "title": "订单商品",
+    "note": "价格是下单时摊位的标价。没有任何款项经过 MarketLink；顾客在摊位当面付款。"
+  },
+  "history": {
+    "title": "经历过的全部状态",
+    "by": "{{time}} · {{by}}",
+    "note": "每次状态变化都连同操作人一起记录。顾客和摊位说法不一致时，管理员读的就是这份记录。"
+  },
+  "stall": {
+    "title": "摊位",
+    "stall": "摊位",
+    "contact": "联系人",
+    "approval": "审核状态",
+    "record": "摊位档案"
+  },
+  "approval": {
+    "pending": "待审核",
+    "approved": "已通过",
+    "rejected": "已拒绝",
+    "suspended": "已停用"
+  },
+  "customer": {
+    "title": "顾客",
+    "name": "姓名",
+    "phone": "电话",
+    "orders": "在 MarketLink 的订单数",
+    "record": "顾客档案"
+  },
+  "pickup": {
+    "title": "取货",
+    "market": "集市",
+    "slot": "日期与时段",
+    "cutoff": "截单时间",
+    "total": "合计"
+  },
+  "noButtons": {
+    "title": "这里为什么没有按钮",
+    "text": "一份订单属于一个摊位和一位顾客。摊位负责状态流转，顾客可以在截单前取消；管理员不在这个名单里，所以这个界面只读不改。"
+  },
+  "col": {
+    "product": "商品",
+    "quantity": "数量",
+    "unitPrice": "单价",
+    "lineTotal": "小计"
+  }
+}

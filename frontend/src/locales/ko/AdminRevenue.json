@@ -1,0 +1,77 @@
+{
+  "title": "플랫폼 매출",
+  "intro": "MarketLink 자신이 버는 돈과, 어느 가게에서 오는지입니다. 장터가 가져가는 돈과는 다른 숫자이며, 둘을 더하는 일은 없습니다.",
+  "days_other": "{{count}}일",
+  "points": "퍼센트포인트",
+  "action": {
+    "pricing": "요금과 무료 한도"
+  },
+  "export": {
+    "button": "이 기간 내보내기",
+    "title": "내보내기를 시작했습니다",
+    "text": "CSV에는 화면의 기간이 그대로 담깁니다."
+  },
+  "scope": {
+    "title": "농가에 요금을 받는 일은 SRS에 없습니다.",
+    "text": "이 화면의 모든 것은 요구사항 문서에 없는 수익 모델과, 플랫폼이 아직 받을 수 없는 돈에 기대고 있습니다."
+  },
+  "kpi": {
+    "revenue": "플랫폼 매출",
+    "revenueNote": "MarketLink가 번 ₫",
+    "takeRate": "수수료율",
+    "takeRateNote": "장터가 가져간 금액 대비",
+    "payingStalls": "돈을 내는 가게",
+    "ofTotal": "{{total}}곳 중 {{count}}곳",
+    "payingStallsNote": "나머지는 공짜로 팝니다",
+    "average": "돈 내는 가게당 평균",
+    "averageNote": "이 기간의 ₫"
+  },
+  "gmv": {
+    "title": "{{month}}에 장터들은 {{gmv}}을(를) 가져갔습니다. MarketLink는 손대지 않습니다.",
+    "text": "고객은 물건을 받을 때 가게에 현금으로 냅니다. 위의 {{total}}은 가게가 노출 자리를 사려고 MarketLink에 낸 돈이며, 장터 총액의 {{pct}}%입니다."
+  },
+  "axis": {
+    "dayOfMonth": "날짜",
+    "source": "수입원"
+  },
+  "perDay": {
+    "title": "일별 수입",
+    "note": "단위는 천 ₫. 상단 노출은 하루에 사서 며칠씩 이어지므로 수입이 들쭉날쭉합니다.",
+    "caption": "{{now}}과 {{prev}}의 일별 플랫폼 매출, 단위는 천 동"
+  },
+  "sources": {
+    "title": "어디서 왔나",
+    "note": "{{count}}개 수입원, 합치면 이 기간 총액",
+    "share": "기간 내 비중",
+    "against": "{{prev}} 대비",
+    "caption": "{{now}}과 {{prev}}의 수입원별 매출, 단위는 천 동"
+  },
+  "whoPays": {
+    "title": "누가 내나",
+    "note": "{{month}}에 승인된 {{total}}곳 중 {{paying}}곳이 돈을 냈습니다",
+    "free": "세 곳은 한 푼도 내지 않고도 팔았습니다. 그게 설계입니다. 올리고 파는 건 공짜이고, 돈은 자리를 살 때만 냅니다."
+  },
+  "credit": {
+    "title": "크레딧",
+    "bought": "충전한 크레딧",
+    "boughtNote": "이 기간에 넣은 ₫",
+    "spent": "쓴 크레딧",
+    "spentNote": "₫, 곧 위의 매출입니다",
+    "unspent": "아직 안 쓴 금액",
+    "unspentNote": "{{count}}곳이 들고 있는 ₫",
+    "owed": "자리로 갚을 몫",
+    "owedNote": "아직 쓰지 않은 노출과 등록 ₫",
+    "note": "가게가 운영팀에 충전하면 관리자가 크레딧으로 넣고, 홍보하면서 차차 쓰입니다. 이미 받았지만 아직 쓰이지 않은 돈은 플랫폼이 노출 자리로 갚아야 할 몫입니다."
+  },
+  "col": {
+    "source": "수입원",
+    "whatWasSold": "판매 내역",
+    "stalls": "가게 수",
+    "change": "변화",
+    "share": "비중",
+    "stall": "가게",
+    "completedOrders": "완료된 주문",
+    "paidMarketLink": "MarketLink에 낸 돈",
+    "shareOfRevenue": "매출 비중"
+  }
+}

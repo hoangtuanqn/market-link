@@ -7,13 +7,15 @@ type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   error?: string;
   hint?: string;
+  /** Nhãn chỉ dành cho trình đọc màn hình — ô tìm kiếm có placeholder đã đủ rõ với người nhìn. */
+  hideLabel?: boolean;
 };
 
 /**
  * Labelled input: required mark, hint or error line, focus ring (design system `.ml-field` + `.ml-input`).
  * type="password" có thêm nút con mắt để hiện / ẩn mật khẩu.
  */
-export function Field({ id, label, required, error, hint, className, type, disabled, ...rest }: FieldProps) {
+export function Field({ id, label, required, error, hint, hideLabel, className, type, disabled, ...rest }: FieldProps) {
   const describedBy = error ? `${id}-err` : hint ? `${id}-hint` : undefined;
   const isPassword = type === 'password';
   const { t } = useTranslation();
@@ -41,7 +43,7 @@ export function Field({ id, label, required, error, hint, className, type, disab
 
   return (
     <div className="flex min-w-55 flex-col gap-1.5">
-      <label htmlFor={id} className="text-small text-ink font-bold">
+      <label htmlFor={id} className={Helper.cn('text-small text-ink font-bold', hideLabel && 'sr-only')}>
         {label}
         {required && (
           <span aria-hidden="true" className="text-danger ml-0.5">

@@ -8,10 +8,6 @@
   },
   "sentOn": "Sent {{date}}",
   "approveText": "Their role becomes Farmer and a stall panel opens on their account. They keep every customer feature they have now. Nothing appears to shoppers until they add products and set a pickup window.",
-  "fromCustomer": {
-    "title": "This application comes from an account that already shops on MarketLink.",
-    "text": "Approving turns the same account into a stall; no second account is created. They keep every customer feature they have now."
-  },
   "suspendedBanner": {
     "title": "This stall is suspended.",
     "text": "Its products stay hidden from customers. Orders already placed still run their course."
@@ -23,34 +19,22 @@
   "photos": {
     "title": "Photos of the plot",
     "alt": "Photo of the plot",
-    "video": "Watch video",
     "hint": "Check that the plot in the photos looks like the pin on the map and grows what the applicant listed. You are not checking licences, food safety or organic claims."
-  },
-  "grows": {
-    "title": "What they grow",
-    "categories": "Categories",
-    "crops": "Main crops",
-    "volume": "Volume",
-    "ownWords": "Their own words:"
-  },
-  "plot": {
-    "title": "The plot",
-    "address": "Address",
-    "size": "Size",
-    "since": "Growing since"
   },
   "stall": {
     "title": "The stall they are asking for",
     "name": "Stall name",
     "contact": "Contact person",
     "email": "Email",
-    "description": "Description",
-    "market": "Market wanted"
+    "description": "Description"
   },
   "history": {
     "title": "History",
+    "suspended": "Suspended",
+    "approved": "Approved",
     "sent": "Application sent",
-    "customer": "Account created as a customer"
+    "customer": "Account created as a customer",
+    "byAdmin": "An admin"
   },
   "applicant": {
     "title": "Applicant",
@@ -63,9 +47,12 @@
     "inactive": "Inactive",
     "suspended": "Suspended"
   },
-  "map": "The plot and the market they want to sell at",
   "approval": {
     "title": "What approval does",
     "text": "Their role becomes Farmer and a stall panel opens. They keep buying from other stalls with the same account. Nothing is listed until they add products and set a pickup window."
+  },
+  "attempts": {
+    "title": "Application history",
+    "text": "Every time this account applied, with what was sent and what was answered."
   }
 }

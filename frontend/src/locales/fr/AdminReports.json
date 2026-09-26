@@ -1,0 +1,76 @@
+{
+  "title": "Rapports",
+  "intro": "Commandes et chiffre d'affaires sur toute la plateforme, par marché, et les producteurs qui vendent le plus. Le chiffre d'affaires est le total des commandes terminées, payé aux étals et non via MarketLink.",
+  "days_one": "{{count}} jour",
+  "days_many": "{{count}} jours",
+  "days_other": "{{count}} jours",
+  "points": " points",
+  "market": "Marché",
+  "allMarkets": "Tous les marchés",
+  "export": {
+    "button": "Exporter la période",
+    "title": "Export lancé",
+    "text": "Le CSV reprend la période et le marché affichés."
+  },
+  "kpi": {
+    "orders": "Commandes",
+    "ordersNote": "{{month}}, tous marchés",
+    "revenue": "Chiffre d'affaires terminé",
+    "revenueNote": "₫, payés aux étals",
+    "average": "Panier moyen",
+    "averageNote": "₫ par commande terminée",
+    "declineRate": "Taux de refus",
+    "declineNote": "{{declined}} commandes sur {{total}}"
+  },
+  "axis": {
+    "dayOfMonth": "Jour du mois"
+  },
+  "revenueChart": {
+    "title": "Chiffre d'affaires par jour",
+    "note": "Commandes terminées, en millions de ₫. {{now}} face aux mêmes 30 jours de {{prev}}.",
+    "caption": "Chiffre d'affaires par jour en {{now}} face à {{prev}}, en millions de dongs"
+  },
+  "ordersChart": {
+    "title": "Commandes passées par jour",
+    "note": "Toutes les commandes, quel que soit leur statut final.",
+    "caption": "Commandes passées par jour en {{now}} face à {{prev}}"
+  },
+  "byMarket": {
+    "title": "Chiffre d'affaires par marché",
+    "note": "Une seule mesure sur quatre marchés : toutes les barres ont la même couleur. La longueur dit tout."
+  },
+  "byStatus": {
+    "title": "Commandes par statut"
+  },
+  "topFarmers": {
+    "title": "Producteurs les plus actifs",
+    "note": "Par commandes terminées sur la période"
+  },
+  "topProducts": {
+    "title": "Meilleurs produits",
+    "note": "Chacun dans l'unité utilisée par son étal",
+    "unitsNote": "Les quantités ne s'additionnent qu'au sein d'une même unité. Un kilo de champignons et un plateau d'œufs sont deux choses différentes : la plateforme ne publie donc jamais une quantité totale unique."
+  },
+  "sideBySide": {
+    "title": "Marchés côte à côte",
+    "note": "Même période, avec l'évolution sur chaque chiffre"
+  },
+  "col": {
+    "stall": "Étal",
+    "markets": "Marchés",
+    "completedOrders": "Commandes terminées",
+    "revenue": "Chiffre d'affaires",
+    "productsListed": "Produits en ligne",
+    "rating": "Note",
+    "product": "Produit",
+    "soldPer": "Vendu par",
+    "price": "Prix",
+    "sold": "Vendu",
+    "market": "Marché",
+    "stalls": "Étals",
+    "orders": "Commandes",
+    "change": "Évolution",
+    "completed": "Terminées",
+    "declined": "Refusées"
+  }
+}

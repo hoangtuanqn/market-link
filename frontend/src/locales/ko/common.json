@@ -77,6 +77,9 @@
     "orderOf": "주문 {{index}}/{{of}}",
     "payAtPickup": "픽업할 때 매대에서 결제"
   },
+  "chart": {
+    "showNumbers": "수치 보기"
+  },
   "chat": {
     "assistant": "MarketLink 도우미",
     "you": "나",
@@ -340,6 +343,7 @@
     "feedback": "의견",
     "pricing": "요금",
     "settings": "설정",
+    "account": "내 계정",
     "analytics": "분석",
     "people": "사용자",
     "marketplace": "마켓플레이스",
@@ -389,5 +393,17 @@
     "gold": "골드",
     "diamond": "다이아몬드",
     "badge": "{{tier}} 등급"
+  },
+  "video": {
+    "play": "동영상 재생",
+    "preview": "동영상",
+    "close": "닫기"
+  },
+  "application": {
+    "attempt": "{{n}}번째 신청",
+    "sentOn": "{{date}} 제출",
+    "answeredOn": "{{date}} 답변",
+    "reason": "사유:",
+    "photoAlt": "{{n}}번째 신청의 사진"
   }
 }

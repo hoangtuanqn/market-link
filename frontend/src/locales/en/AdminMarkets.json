@@ -1,0 +1,37 @@
+{
+  "title": "Markets",
+  "intro": "Name, address, operating days, hours and map coordinates for each market. Removing a market hides it from customers; its history stays.",
+  "caption_one": "{{count}} active market",
+  "caption_other": "{{count}} active markets",
+  "stalls_one": "{{count}} stall",
+  "stalls_other": "{{count}} stalls",
+  "col": {
+    "market": "Market",
+    "days": "Days · hours",
+    "coordinates": "Coordinates",
+    "stalls": "Stalls"
+  },
+  "action": {
+    "add": "Add market",
+    "edit": "Edit",
+    "remove": "Remove"
+  },
+  "map": {
+    "title": "Where they are",
+    "label": "Map of markets"
+  },
+  "empty": {
+    "title": "No markets yet",
+    "text": "Add a market with its address, operating days and map coordinates before Farmers can pick it."
+  },
+  "remove": {
+    "title": "Remove {{name}}?",
+    "text_one": "{{count}} stall sells here. The market disappears from customer pages and the stall is told. Orders already placed for it continue.",
+    "text_other": "{{count}} stalls sell here. The market disappears from customer pages and the stalls are told. Orders already placed for it continue.",
+    "keep": "Keep market",
+    "confirm": "Remove market"
+  },
+  "toast": {
+    "removed": "{{name}} removed from the list."
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "title": "Pasar",
+  "intro": "Nama, alamat, hari buka, jam, dan koordinat peta tiap pasar. Menghapus sebuah pasar menyembunyikannya dari pelanggan; riwayatnya tetap ada.",
+  "caption_other": "{{count}} pasar aktif",
+  "stalls_other": "{{count}} lapak",
+  "col": {
+    "market": "Pasar",
+    "days": "Hari · jam",
+    "coordinates": "Koordinat",
+    "stalls": "Lapak"
+  },
+  "action": {
+    "add": "Tambah pasar",
+    "edit": "Ubah",
+    "remove": "Hapus"
+  },
+  "map": {
+    "title": "Letaknya di mana",
+    "label": "Peta pasar"
+  },
+  "empty": {
+    "title": "Belum ada pasar",
+    "text": "Tambahkan pasar beserta alamat, hari buka, dan koordinat peta supaya petani bisa memilihnya."
+  },
+  "remove": {
+    "title": "Hapus {{name}}?",
+    "text_other": "{{count}} lapak berjualan di sini. Pasar ini hilang dari halaman pelanggan dan lapak-lapaknya diberi tahu. Pesanan yang sudah masuk untuk pasar ini tetap berjalan.",
+    "keep": "Pertahankan pasar",
+    "confirm": "Hapus pasar"
+  },
+  "toast": {
+    "removed": "{{name}} dihapus dari daftar."
+  }
+}

@@ -77,6 +77,9 @@
     "orderOf": "Đơn {{index}} / {{of}}",
     "payAtPickup": "Trả tiền tại sạp khi nhận hàng"
   },
+  "chart": {
+    "showNumbers": "Xem số liệu"
+  },
   "chat": {
     "assistant": "Trợ lý MarketLink",
     "you": "Bạn",
@@ -340,6 +343,7 @@
     "feedback": "Góp ý",
     "pricing": "Bảng giá",
     "settings": "Cài đặt",
+    "account": "Tài khoản của bạn",
     "analytics": "Phân tích",
     "people": "Người dùng",
     "marketplace": "Chợ",
@@ -389,5 +393,17 @@
     "gold": "Vàng",
     "diamond": "Kim cương",
     "badge": "Hạng {{tier}}"
+  },
+  "video": {
+    "play": "Xem video",
+    "preview": "Video",
+    "close": "Đóng"
+  },
+  "application": {
+    "attempt": "Lần nộp {{n}}",
+    "sentOn": "Gửi {{date}}",
+    "answeredOn": "trả lời {{date}}",
+    "reason": "Lý do:",
+    "photoAlt": "Ảnh của lần nộp {{n}}"
   }
 }

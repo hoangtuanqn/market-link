@@ -1,0 +1,104 @@
+{
+  "title": "Tarifs et quotas",
+  "intro": "Ce qu'un étal obtient gratuitement, et ce qu'il paie pour aller au-delà. Une modification ici touche tous les étals dès le lendemain matin, et les étals sont prévenus une semaine avant toute hausse.",
+  "days_one": "{{count}} jour",
+  "days_many": "{{count}} jours",
+  "days_other": "{{count}} jours",
+  "action": {
+    "seeEarned": "Voir ce que ça a rapporté",
+    "adjustAll": "Ajuster tous les tarifs",
+    "save": "Enregistrer les tarifs"
+  },
+  "scope": {
+    "title": "Facturer les producteurs ne figure pas dans le SRS.",
+    "text": "Le SRS exclut toute passerelle de paiement. En attendant que ce soit tranché, le crédit se négocie hors plateforme et un administrateur le saisit ici."
+  },
+  "kpi": {
+    "revenue": "Revenus de promotion",
+    "revenueNote": "₫ sur la période",
+    "revenueLink": "Ouvrir le rapport de revenus",
+    "paying": "Étals ayant payé",
+    "payingNote": "sur {{total}} étals approuvés",
+    "pinnedDays": "Jours en avant vendus",
+    "pinnedDaysNote": "sur {{total}} disponibles",
+    "overLimit": "Étals au-delà du quota gratuit",
+    "overLimitNote": "sur une journée ordinaire"
+  },
+  "set": {
+    "title": "Devise et arrondi",
+    "currency": {
+      "title": "Devise facturée aux étals",
+      "text": "Les clients paient toujours en espèces à l'étal : il s'agit uniquement de ce que la plateforme facture à un producteur."
+    },
+    "rounding": {
+      "title": "Arrondir les tarifs à",
+      "text": "Les chiffres restent lisibles sur un petit écran."
+    },
+    "notice": {
+      "title": "Préavis avant une hausse",
+      "text": "Combien de temps les étals voient un nouveau tarif avant qu'il ne s'applique."
+    }
+  },
+  "currency": {
+    "dong": "₫ Dong vietnamien",
+    "usd": "$ Dollar américain",
+    "eur": "€ Euro"
+  },
+  "rounding": {
+    "thousand": "Au millier de ₫ le plus proche",
+    "fiveHundred": "Aux 500 ₫ les plus proches",
+    "none": "Sans arrondi"
+  },
+  "free": {
+    "title": "Quota gratuit",
+    "text": "Chaque étal approuvé y a droit sans payer. Fixez-le assez haut pour qu'un petit producteur n'ait jamais à payer.",
+    "listings": "Nouvelles fiches par jour",
+    "listingsHint": "Cô Tư Garden en publie 3 un jour chargé.",
+    "bumps": "Remontées par mois"
+  },
+  "prices": {
+    "title": "Tarifs",
+    "note": "Une journée en avant sur une page de marché représente environ 7 % de ce qu'un étal encaisse en une matinée. Gardez ce rapport en tête quand vous modifiez ces chiffres."
+  },
+  "pins": {
+    "title": "Emplacements en avant",
+    "note": "La rareté est le produit. Augmenter ces nombres rapporte plus aujourd'hui et fait ressembler chaque page davantage à de la publicité."
+  },
+  "earned": {
+    "title": "Ce que cela a rapporté",
+    "note": "Les totaux et la répartition par étal sont dans le rapport de revenus."
+  },
+  "col": {
+    "whatStallBuys": "Ce qu'achète un étal",
+    "priceInDong": "Tarif en ₫",
+    "priceOf": "Tarif de {{name}}",
+    "soldInPeriod": "Vendu sur la période",
+    "earned": "Rapporté",
+    "where": "Où",
+    "slotsAtOnce": "Emplacements simultanés",
+    "slotsOf": "Emplacements simultanés de {{name}}",
+    "days_one": "{{count}} jour",
+    "days_many": "{{count}} jours",
+    "days_other": "{{count}} jours",
+    "priceForDays_one": "{{name}}, {{count}} jour",
+    "priceForDays_many": "{{name}}, {{count}} jours",
+    "priceForDays_other": "{{name}}, {{count}} jours"
+  },
+  "lastChanged": "Dernière modification le {{date}} par {{by}}.",
+  "adjust": {
+    "title": "Ajuster tous les tarifs d'un coup ?",
+    "text": "Déplace chaque tarif du même pourcentage et arrondit au millier de ₫ le plus proche. À utiliser pour l'inflation, pas pour un changement de stratégie.",
+    "changeBy": "Faire varier de",
+    "changeByHint": "En pourcentage. Un nombre négatif les fait baisser.",
+    "when": "Prend effet",
+    "whenNotice": "Dans 7 jours, après information des étals",
+    "whenNextMonth": "Au début du mois prochain",
+    "example": "Une journée en avant sur une page de marché passerait de {{from}} à {{to}}.",
+    "cancel": "Annuler",
+    "confirm": "Appliquer à tous les tarifs"
+  },
+  "toast": {
+    "saved": "Tarifs enregistrés. Les étals seront prévenus une semaine avant leur entrée en vigueur.",
+    "adjusted": "Tous les tarifs ont varié de {{pct}} %. Les étals sont prévenus aujourd'hui et cela s'applique dans 7 jours."
+  }
+}

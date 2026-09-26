@@ -1,0 +1,55 @@
+{
+  "overline": "Pengaturan",
+  "title": "Kotak masukan",
+  "intro": "Laporan bug, saran, dan pertanyaan yang dikirim lewat formulir masukan. Tandai sudah dijawab setelah selesai.",
+  "link": {
+    "categories": "Kategori",
+    "announcements": "Pengumuman"
+  },
+  "filterLabel": "Saring masukan",
+  "filter": {
+    "open": "Belum dijawab",
+    "answered": "Sudah dijawab",
+    "bug": "Bug",
+    "suggestion": "Saran",
+    "query": "Pertanyaan"
+  },
+  "type": {
+    "bug": "Laporan bug",
+    "suggestion": "Saran",
+    "query": "Pertanyaan"
+  },
+  "status": {
+    "open": "Belum dijawab",
+    "answered": "Sudah dijawab"
+  },
+  "col": {
+    "type": "Jenis",
+    "message": "Pesan",
+    "from": "Dari",
+    "status": "Status"
+  },
+  "action": {
+    "read": "Baca",
+    "readAndAnswer": "Baca dan jawab"
+  },
+  "dialog": {
+    "title": "{{type}} dari {{from}}",
+    "sent": "Dikirim {{date}} · {{state}}",
+    "notAnswered": "belum dijawab",
+    "alreadyAnswered": "sudah dijawab",
+    "yourAnswer": "Jawaban Anda",
+    "replyPlaceholder": "Terima kasih sudah memberi tahu kami…",
+    "close": "Tutup",
+    "send": "Kirim dan tandai sudah dijawab",
+    "sendAgain": "Kirim lagi"
+  },
+  "empty": {
+    "title": "Belum ada masukan",
+    "text": "Laporan bug, saran, dan pertanyaan dari formulir masukan akan sampai di sini."
+  },
+  "toast": {
+    "answered": "Jawaban tersimpan dan pesan ditandai sudah dijawab.",
+    "markedOnly": "Ditandai sudah dijawab tanpa mengirim balasan."
+  }
+}

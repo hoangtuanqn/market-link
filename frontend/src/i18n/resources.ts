@@ -61,6 +61,20 @@ import contact from '@/locales/en/Contact.json';
 import feedback from '@/locales/en/Feedback.json';
 import privacy from '@/locales/en/Privacy.json';
 import terms from '@/locales/en/Terms.json';
+import adminAccount from '@/locales/en/AdminAccount.json';
+import adminAnnouncements from '@/locales/en/AdminAnnouncements.json';
+import adminCategories from '@/locales/en/AdminCategories.json';
+import adminCustomerDetail from '@/locales/en/AdminCustomerDetail.json';
+import adminCustomers from '@/locales/en/AdminCustomers.json';
+import adminFeedback from '@/locales/en/AdminFeedback.json';
+import adminMarketForm from '@/locales/en/AdminMarketForm.json';
+import adminMarkets from '@/locales/en/AdminMarkets.json';
+import adminModeration from '@/locales/en/AdminModeration.json';
+import adminOrderDetail from '@/locales/en/AdminOrderDetail.json';
+import adminOrders from '@/locales/en/AdminOrders.json';
+import adminPricing from '@/locales/en/AdminPricing.json';
+import adminReports from '@/locales/en/AdminReports.json';
+import adminRevenue from '@/locales/en/AdminRevenue.json';
 
 export const en = {
   common: common,
@@ -121,6 +135,20 @@ export const en = {
   Feedback: feedback,
   Terms: terms,
   Privacy: privacy,
+  AdminAccount: adminAccount,
+  AdminAnnouncements: adminAnnouncements,
+  AdminCategories: adminCategories,
+  AdminCustomerDetail: adminCustomerDetail,
+  AdminCustomers: adminCustomers,
+  AdminFeedback: adminFeedback,
+  AdminMarketForm: adminMarketForm,
+  AdminMarkets: adminMarkets,
+  AdminModeration: adminModeration,
+  AdminOrderDetail: adminOrderDetail,
+  AdminOrders: adminOrders,
+  AdminPricing: adminPricing,
+  AdminReports: adminReports,
+  AdminRevenue: adminRevenue,
 } as const;
 
 export type Namespace = keyof typeof en;

@@ -1,0 +1,59 @@
+{
+  "overline": "设置",
+  "title": "公告",
+  "intro": "面向全平台的一条消息，显示在页眉上方的绿色横幅里，也出现在每个人的通知中。同一时间只保留一条，大家才读得进去。",
+  "link": {
+    "categories": "分类",
+    "feedback": "反馈收件箱"
+  },
+  "form": {
+    "title": "新建公告",
+    "headline": "标题",
+    "headlinePlaceholder": "例如 Thủ Đức 集市自十月起 06:00 开市",
+    "headlineHint": "一行，句首大写，不用感叹号。以手写字体显示。",
+    "detail": "详情",
+    "detailPlaceholder": "用一句话说明顾客或摊位有什么变化。",
+    "showTo": "展示给",
+    "aboutMarket": "关于集市",
+    "wholePlatform": "整个平台",
+    "from": "展示开始",
+    "to": "展示至",
+    "preview": "预览",
+    "previewTitle": "你的标题会显示在这里",
+    "previewText": "详情这一行显示在这里，在页眉上方的绿色横幅里。"
+  },
+  "audience": {
+    "Everyone": "所有人",
+    "Customers": "顾客",
+    "Farmers": "农户"
+  },
+  "list": {
+    "title": "已发布与已结束"
+  },
+  "col": {
+    "announcement": "公告",
+    "showTo": "展示给",
+    "window": "展示区间",
+    "status": "状态"
+  },
+  "status": {
+    "live": "展示中",
+    "ended": "已结束"
+  },
+  "action": {
+    "publish": "发布",
+    "saveDraft": "存为草稿",
+    "edit": "编辑",
+    "takeDown": "下架",
+    "reuse": "再次使用"
+  },
+  "empty": {
+    "title": "没有公告",
+    "text": "发布一条，每位登录的用户都会在页眉上方看到它。"
+  },
+  "toast": {
+    "published": "公告已发布，现在就显示在页眉上。",
+    "draftSaved": "已存为草稿。",
+    "takenDown": "公告已下架。"
+  }
+}

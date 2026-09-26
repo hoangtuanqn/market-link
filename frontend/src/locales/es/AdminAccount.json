@@ -1,0 +1,46 @@
+{
+  "details": {
+    "title": "Tus datos",
+    "name": "Nombre completo",
+    "phone": "Teléfono",
+    "phoneHint": "Se usa cuando un puesto necesita contactar con la plataforma; nunca se muestra en público.",
+    "email": "Correo",
+    "emailHint": "También es tu acceso. Si hay que cambiarlo, pídeselo a otro administrador.",
+    "submit": "Guardar cambios",
+    "saving": "Guardando…",
+    "saved": "Tus datos se han guardado.",
+    "failed": "No se han podido guardar tus datos.",
+    "errors": {
+      "nameRequired": "Escribe tu nombre completo.",
+      "phoneRequired": "Escribe un número de teléfono."
+    }
+  },
+  "password": {
+    "title": "Contraseña",
+    "intro": "Una cuenta de administrador puede aprobar puestos, desactivar clientes y cambiar lo que cobra la plataforma: mantén esta contraseña fuerte.",
+    "current": "Contraseña actual",
+    "new": "Contraseña nueva",
+    "repeat": "Repite la contraseña nueva",
+    "hint": "Entre {{min}} y {{max}} caracteres.",
+    "submit": "Cambiar contraseña",
+    "submitting": "Cambiando…",
+    "changed": "Contraseña cambiada. Las demás sesiones se han cerrado.",
+    "failed": "No se ha podido cambiar tu contraseña.",
+    "errors": {
+      "currentRequired": "Escribe tu contraseña actual.",
+      "newRequired": "Escribe una contraseña nueva.",
+      "length": "Usa entre {{min}} y {{max}} caracteres.",
+      "same": "La contraseña nueva tiene que ser distinta de la actual.",
+      "confirmRequired": "Repite la contraseña nueva.",
+      "mismatch": "Las dos contraseñas no coinciden."
+    }
+  },
+  "mfa": {
+    "title": "Verificación en dos pasos",
+    "intro": "Un segundo paso después de la contraseña, desde una aplicación en tu teléfono. Un administrador puede aprobar puestos, desactivar clientes y cambiar lo que cobra la plataforma, así que una contraseña sola se queda corta.",
+    "on": "Activada",
+    "off": "Desactivada",
+    "turnOn": "Activar la verificación en dos pasos",
+    "manage": "Gestionar la verificación en dos pasos"
+  }
+}

@@ -77,6 +77,9 @@
     "orderOf": "Bestellung {{index}} von {{of}}",
     "payAtPickup": "Bezahlung am Stand bei Abholung"
   },
+  "chart": {
+    "showNumbers": "Zahlen anzeigen"
+  },
   "chat": {
     "assistant": "MarketLink-Assistent",
     "you": "Sie",
@@ -340,6 +343,7 @@
     "feedback": "Feedback",
     "pricing": "Preise",
     "settings": "Einstellungen",
+    "account": "Dein Konto",
     "analytics": "Analysen",
     "people": "Personen",
     "marketplace": "Marktplatz",
@@ -389,5 +393,17 @@
     "gold": "Gold",
     "diamond": "Diamant",
     "badge": "Stufe {{tier}}"
+  },
+  "video": {
+    "play": "Video abspielen",
+    "preview": "Video",
+    "close": "Schließen"
+  },
+  "application": {
+    "attempt": "Antrag {{n}}",
+    "sentOn": "Gesendet am {{date}}",
+    "answeredOn": "beantwortet am {{date}}",
+    "reason": "Grund:",
+    "photoAlt": "Foto aus Antrag {{n}}"
   }
 }
