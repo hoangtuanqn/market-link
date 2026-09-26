@@ -38,5 +38,13 @@
     "confirm": "Hapus produk",
     "text": "Produk hilang dari katalog dan dari template Anda. Pesanan yang sudah memuatnya tidak berubah.",
     "pauseHint": "Untuk berhenti menjualnya sementara, pilih Dijeda saja."
+  },
+  "error": {
+    "noun": "produk Anda"
+  },
+  "hiddenByAdmin": "Disembunyikan admin: {{reason}}",
+  "empty": {
+    "title": "Belum ada produk",
+    "text": "Tambahkan produk pertama Anda dan langsung muncul di halaman kios Anda."
   }
 }

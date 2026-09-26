@@ -13,7 +13,8 @@
     "reviews_other": "{{count}} Bewertungen",
     "markets_one": "Markt",
     "markets_other": "Märkte",
-    "since": "verkauft hier seit"
+    "since": "verkauft hier seit",
+    "cutoff": "Stunden vor Abholung ist Bestellschluss"
   },
   "tabs": {
     "label": "Bereiche des Stands",
@@ -60,5 +61,8 @@
     "sentText": "Ein Admin sieht sich das an.",
     "button": "Diesen Stand melden",
     "note": "Wiederholtes Nichterscheinen, falscher Standort oder alles, was gegen die Plattformregeln verstößt."
+  },
+  "error": {
+    "noun": "Stand"
   }
 }

@@ -82,5 +82,11 @@
       "short": "storniert und Kundschaft informiert",
       "text": "Der Bestand geht an den Stand zurück und die Bestellung endet als storniert, nicht als abgelehnt, denn der Stand hat nichts falsch gemacht."
     }
+  },
+  "error": {
+    "noun": "Markt",
+    "required": "Dieses Feld ist erforderlich.",
+    "days": "Wähle mindestens einen Markttag.",
+    "close": "Die Schließzeit muss nach der Öffnungszeit liegen."
   }
 }

@@ -65,6 +65,18 @@
   "toast": {
     "saved": "저장했어요",
     "savedText": "{{name}}을(를) 저장했어요.",
-    "product": "상품"
+    "product": "상품",
+    "deletedText": "{{name}}을(를) 삭제했습니다."
+  },
+  "error": {
+    "noun": "상품"
+  },
+  "image": {
+    "label": "사진 링크",
+    "hint": "선택. 상품 사진의 공개 링크. 없으면 태그에 카테고리가 손글씨로 표시됩니다."
+  },
+  "errors": {
+    "required": "필수 항목입니다.",
+    "price": "가격은 0 이상이어야 합니다."
   }
 }

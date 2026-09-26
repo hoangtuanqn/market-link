@@ -55,5 +55,9 @@
     "categoryAdded": "Đã thêm danh mục. Các sạp chọn được ngay.",
     "categoryRemoved": "Đã xoá {{name}}.",
     "promoted": "Từ giờ {{name}} nằm trong danh sách chọn của mọi sạp."
+  },
+  "error": {
+    "noun": "danh mục",
+    "nameRequired": "Đặt tên cho danh mục."
   }
 }

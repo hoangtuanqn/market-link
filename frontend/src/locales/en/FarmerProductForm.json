@@ -65,6 +65,18 @@
   "toast": {
     "saved": "Saved",
     "savedText": "{{name}} saved.",
-    "product": "Product"
+    "product": "Product",
+    "deletedText": "{{name}} deleted."
+  },
+  "error": {
+    "noun": "the product"
+  },
+  "image": {
+    "label": "Photo link",
+    "hint": "Optional. A public link to a photo of the product; until then the tag shows the category in handwriting."
+  },
+  "errors": {
+    "required": "This field is required.",
+    "price": "Price must be 0 or more."
   }
 }

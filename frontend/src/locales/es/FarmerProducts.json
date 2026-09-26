@@ -38,5 +38,13 @@
     "confirm": "Eliminar producto",
     "text": "Desaparece del catálogo y de tu plantilla. Los pedidos que ya lo incluyen no cambian.",
     "pauseHint": "Para dejar de venderlo por un tiempo, elige En pausa."
+  },
+  "error": {
+    "noun": "tus productos"
+  },
+  "hiddenByAdmin": "Ocultado por un administrador: {{reason}}",
+  "empty": {
+    "title": "Todavía no hay productos",
+    "text": "Añade tu primer producto y aparecerá de inmediato en la página de tu puesto."
   }
 }

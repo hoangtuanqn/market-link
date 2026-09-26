@@ -80,5 +80,8 @@
     "sentText": "Admin akan memeriksa produk ini.",
     "button": "Laporkan produk ini",
     "note": "Harga salah, foto salah, atau sesuatu yang tidak pantas ada di pasar petani."
+  },
+  "error": {
+    "noun": "produk"
   }
 }

@@ -45,5 +45,8 @@
   "map": {
     "label": "Peta hasil",
     "note": "Hasil yang punya lokasi ditandai di peta. Di ponsel, tombol “Daftar / Peta” beralih di antara keduanya."
+  },
+  "error": {
+    "noun": "hasil"
   }
 }

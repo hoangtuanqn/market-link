@@ -55,5 +55,9 @@
     "categoryAdded": "Category added. Stalls can pick it now.",
     "categoryRemoved": "{{name}} removed.",
     "promoted": "{{name}} is now in the picker for every stall."
+  },
+  "error": {
+    "noun": "categories",
+    "nameRequired": "Give the category a name."
   }
 }

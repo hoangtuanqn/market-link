@@ -166,6 +166,35 @@ class AnnouncementControllerTest {
     }
 
     @Test
+    void aFarmersOnlyBannerShowsToFarmersOnly() {
+        publish(admin, "{\"title\":\"Farmers only\",\"content\":\"c\",\"audience\":\"farmers\"}");
+
+        assertThat(api.send("GET", "/api/v1/announcements/active", null, null).body())
+                .doesNotContain("Farmers only");
+        assertThat(api.send("GET", "/api/v1/announcements/active", customer, null).body())
+                .doesNotContain("Farmers only");
+        assertThat(api.send("GET", "/api/v1/announcements/active", admin, null).body())
+                .doesNotContain("Farmers only");
+        assertThat(api.send("GET", "/api/v1/announcements/active", farmer, null).body())
+                .contains("Farmers only");
+    }
+
+    @Test
+    void aNewerBannerForOthersDoesNotHideTheOneForEveryone() {
+        publish(admin, "{\"title\":\"For everyone\",\"content\":\"c\",\"audience\":\"all\"}");
+        publish(
+                admin,
+                "{\"title\":\"Customers only\",\"content\":\"c\",\"audience\":\"customers\"}");
+
+        assertThat(api.send("GET", "/api/v1/announcements/active", null, null).body())
+                .contains("For everyone");
+        assertThat(api.send("GET", "/api/v1/announcements/active", farmer, null).body())
+                .contains("For everyone");
+        assertThat(api.send("GET", "/api/v1/announcements/active", customer, null).body())
+                .contains("Customers only");
+    }
+
+    @Test
     void editingChangesTheBannerButNotWhatWasSent() {
         long id =
                 idOf(

@@ -35,5 +35,12 @@
   "stalls_other": "{{count}} 店",
   "mapLabel": "{{name}} と店の地図",
   "stallsTitle": "{{day}}にこのマーケットに出る店",
-  "stallsNote": "選んだ日に販売しない店は表示されません"
+  "stallsNote": "選んだ日に販売しない店は表示されません",
+  "error": {
+    "noun": "マーケット"
+  },
+  "stallsNoun": "出店",
+  "stallsEmpty": {
+    "title": "{{day}}は出店がありません"
+  }
 }

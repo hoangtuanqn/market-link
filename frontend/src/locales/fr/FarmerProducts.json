@@ -38,5 +38,13 @@
     "confirm": "Supprimer le produit",
     "text": "Il disparaît du catalogue et de votre modèle. Les commandes qui le contiennent déjà ne changent pas.",
     "pauseHint": "Pour arrêter de le vendre un moment, choisissez plutôt En pause."
+  },
+  "error": {
+    "noun": "vos produits"
+  },
+  "hiddenByAdmin": "Masqué par un administrateur : {{reason}}",
+  "empty": {
+    "title": "Aucun produit pour l’instant",
+    "text": "Ajoutez votre premier produit et il apparaît aussitôt sur votre page de stand."
   }
 }

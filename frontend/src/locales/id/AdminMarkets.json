@@ -30,5 +30,8 @@
   },
   "toast": {
     "removed": "{{name}} dihapus dari daftar."
+  },
+  "error": {
+    "noun": "pasar"
   }
 }

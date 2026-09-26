@@ -20,6 +20,17 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
             Long conversationId, Long before, Pageable pageable);
 
+    /**
+     * Ngữ cảnh cho admin (spec §8.3) — KHÔNG lọc hiddenAt: admin phải thấy được tin mình vừa ẩn.
+     * Đừng dùng hai method này cho người dùng thường; hai method có `HiddenAtIsNull` ở trên mới là
+     * của họ.
+     */
+    List<Message> findByConversationIdAndIdLessThanOrderByIdDesc(
+            Long conversationId, Long before, Pageable pageable);
+
+    List<Message> findByConversationIdAndIdGreaterThanOrderByIdAsc(
+            Long conversationId, Long after, Pageable pageable);
+
     interface UnreadRow {
         Long getConversationId();
 

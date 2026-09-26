@@ -40,5 +40,8 @@
     "title": "Tidak ada yang cocok dengan filter ini",
     "text": "Coba hapus filter harga, atau perluas ke kategori atau pasar lain.",
     "clear": "Hapus semua filter"
+  },
+  "error": {
+    "noun": "produk"
   }
 }

@@ -13,7 +13,8 @@
     "reviews_other": "{{count}} avis",
     "markets_one": "marché",
     "markets_other": "marchés",
-    "since": "vend ici depuis"
+    "since": "vend ici depuis",
+    "cutoff": "heures avant le retrait, commandes closes"
   },
   "tabs": {
     "label": "Sections du stand",
@@ -60,5 +61,8 @@
     "sentText": "Un administrateur va s'en occuper.",
     "button": "Signaler ce stand",
     "note": "Absences répétées, mauvais emplacement du stand ou tout ce qui enfreint les règles de la plateforme."
+  },
+  "error": {
+    "noun": "stand"
   }
 }

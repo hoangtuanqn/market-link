@@ -25,6 +25,9 @@ class ConversationExceptionHandlerScopeTest {
                 .containsExactlyInAnyOrder(
                         ConversationController.class,
                         AttachmentController.class,
-                        AttachmentDownloadController.class);
+                        AttachmentDownloadController.class,
+                        MessageReportController.class,
+                        AdminMessageReportController.class,
+                        AdminMessageController.class);
     }
 }

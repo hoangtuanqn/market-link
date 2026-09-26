@@ -40,5 +40,8 @@
     "title": "Nada coincide con estos filtros",
     "text": "Prueba a quitar el filtro de precio o amplíalo a otra categoría o mercado.",
     "clear": "Borrar todos los filtros"
+  },
+  "error": {
+    "noun": "productos"
   }
 }

@@ -128,4 +128,35 @@ class StompChatEventPublisherTest {
 
         assertThatCode(() -> publisher.messageCreated(thread, msg(7L))).doesNotThrowAnyException();
     }
+
+    @Test
+    void bothMembersAreToldWhenAMessageIsHidden() {
+        publisher.messageHidden(thread, 101L);
+
+        ArgumentCaptor<ConversationEvent> event = ArgumentCaptor.forClass(ConversationEvent.class);
+        verify(template)
+                .convertAndSendToUser(
+                        eq("3"), eq(StompChatEventPublisher.CONVERSATIONS), event.capture());
+        verify(template)
+                .convertAndSendToUser(
+                        eq("7"),
+                        eq(StompChatEventPublisher.CONVERSATIONS),
+                        any(ConversationEvent.class));
+
+        assertThat(event.getValue().type()).isEqualTo(ConversationEvent.HIDDEN);
+        assertThat(event.getValue().conversationId()).isEqualTo(42L);
+        assertThat(event.getValue().messageId()).isEqualTo(101L);
+        // Sự kiện "ẩn" không mang unreadCount: client không được lấy nó làm cớ đổi badge
+        assertThat(event.getValue().unreadCount()).isNull();
+    }
+
+    /** Broker chết thì ẩn tin vẫn phải thành công; chỉ mất phần realtime. */
+    @Test
+    void aBrokerOutageDoesNotBreakHiding() {
+        doThrow(new MessagingException("broker down"))
+                .when(template)
+                .convertAndSendToUser(any(), any(), any(Object.class));
+
+        assertThatCode(() -> publisher.messageHidden(thread, 101L)).doesNotThrowAnyException();
+    }
 }

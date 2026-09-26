@@ -30,5 +30,8 @@
   },
   "toast": {
     "removed": "已把 {{name}} 从列表中移除。"
+  },
+  "error": {
+    "noun": "市场"
   }
 }

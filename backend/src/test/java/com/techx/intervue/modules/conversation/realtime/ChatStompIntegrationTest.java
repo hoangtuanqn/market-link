@@ -4,9 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.techx.intervue.modules.conversation.entities.Conversation;
+import com.techx.intervue.modules.conversation.entities.MessageReport;
+import com.techx.intervue.modules.conversation.enums.ReportReason;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
+import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.requests.SendMessageRequest;
 import com.techx.intervue.modules.conversation.services.interfaces.MessageServiceInterface;
+import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.notification.repositories.NotificationRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
@@ -53,6 +57,8 @@ class ChatStompIntegrationTest {
 
     @Autowired ConversationRepository conversations;
     @Autowired MessageServiceInterface messageService;
+    @Autowired ModerationServiceInterface moderation;
+    @Autowired MessageReportRepository reports;
     @Autowired UserSessionCache sessions;
     @Autowired JwtServiceInterface jwt;
     @Autowired NotificationRepository notifications;
@@ -124,6 +130,18 @@ class ChatStompIntegrationTest {
                         headers,
                         new StompSessionHandlerAdapter() {})
                 .get(5, TimeUnit.SECONDS);
+    }
+
+    /** Một kênh mang nhiều loại sự kiện; đợi đúng loại cần thay vì giả định thứ tự. */
+    private static String awaitEvent(BlockingQueue<String> q, String marker) throws Exception {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
+        while (System.nanoTime() < deadline) {
+            String frame = q.poll(500, TimeUnit.MILLISECONDS);
+            if (frame != null && frame.contains(marker)) {
+                return frame;
+            }
+        }
+        return null;
     }
 
     private static BlockingQueue<String> subscribe(StompSession s, String destination) {
@@ -256,5 +274,49 @@ class ChatStompIntegrationTest {
                 .isNotNull()
                 .contains("\"typing\":true")
                 .contains("\"userId\":" + customer.getId());
+    }
+
+    /**
+     * FR-116 đi qua broker thật: admin ẩn một tin thì CẢ HAI người trong thread nhận sự kiện
+     * "hidden" trên /user/topic/conversations — kể cả người gửi tin bị ẩn.
+     */
+    @Test
+    void hidingAMessageReachesBothMembersOverStomp() throws Exception {
+        StompSession customerSession = connectAs(customer);
+        StompSession farmerSession = connectAs(farmer);
+        BlockingQueue<String> customerThreads =
+                subscribe(customerSession, "/user/topic/conversations");
+        BlockingQueue<String> farmerThreads = subscribe(farmerSession, "/user/topic/conversations");
+        Thread.sleep(300); // để SUBSCRIBE tới broker trước khi ẩn
+
+        Long messageId =
+                messageService
+                        .send(
+                                farmer.getId(),
+                                thread.getId(),
+                                new SendMessageRequest(
+                                        null, "Chuyen khoan truoc di", null, null, null))
+                        .id();
+
+        MessageReport report =
+                reports.saveAndFlush(
+                        MessageReport.builder()
+                                .messageId(messageId)
+                                .reportedBy(customer.getId())
+                                .reason(ReportReason.SCAM)
+                                .build());
+        try {
+            moderation.hide(farmer.getId(), messageId);
+
+            // Gửi một tin đã phát sẵn "updated" và "read" lên cùng kênh này, nên phải đợi đúng
+            // sự kiện cần chứ không đếm số frame.
+            String toCustomer = awaitEvent(customerThreads, "\"type\":\"hidden\"");
+            String toFarmer = awaitEvent(farmerThreads, "\"type\":\"hidden\"");
+            assertThat(toCustomer).isNotNull().contains("\"messageId\":" + messageId);
+            // Người gửi tin bị ẩn cũng phải thấy nó biến mất
+            assertThat(toFarmer).isNotNull().contains("\"messageId\":" + messageId);
+        } finally {
+            reports.deleteById(report.getId());
+        }
     }
 }

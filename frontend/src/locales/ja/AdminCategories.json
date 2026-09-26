@@ -53,5 +53,9 @@
     "categoryAdded": "カテゴリーを追加しました。店舗はすぐ選べます。",
     "categoryRemoved": "{{name}} を削除しました。",
     "promoted": "{{name}} はすべての店舗の選択肢に入りました。"
+  },
+  "error": {
+    "noun": "カテゴリー",
+    "nameRequired": "カテゴリー名を入力してください。"
   }
 }

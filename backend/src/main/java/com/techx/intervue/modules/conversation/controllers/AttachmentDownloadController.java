@@ -31,7 +31,11 @@ public class AttachmentDownloadController {
     @GetMapping("/{id}")
     public ResponseEntity<Resource> download(
             @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails me) {
-        AttachmentServiceInterface.StoredFile file = attachmentService.read(me.getId(), id);
+        // Admin đi con đường riêng (spec §8.3): hẹp hơn, chỉ mở với tin đã bị báo cáo, và có log.
+        AttachmentServiceInterface.StoredFile file =
+                isAdmin(me)
+                        ? attachmentService.readAsAdmin(me.getId(), id)
+                        : attachmentService.read(me.getId(), id);
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(file.mime()))
                 .contentLength(file.sizeBytes())
@@ -39,5 +43,14 @@ public class AttachmentDownloadController {
                 .header("Content-Disposition", "inline")
                 .header("X-Content-Type-Options", "nosniff")
                 .body(file.body());
+    }
+
+    /**
+     * Hệ quả có chủ ý: một admin ĐỒNG THỜI là khách hàng trong thread nào đó sẽ đi nhánh admin và
+     * không xem được ảnh riêng của chính mình ở đó nếu tin chưa bị báo cáo. Đánh đổi đi đúng hướng
+     * — ranh giới của admin hẹp hơn, không rộng hơn.
+     */
+    private static boolean isAdmin(CustomUserDetails me) {
+        return me.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
     }
 }

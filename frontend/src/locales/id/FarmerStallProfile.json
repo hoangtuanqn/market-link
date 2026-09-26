@@ -19,7 +19,8 @@
     "about": "Tentang lapak",
     "aboutHint": "Ditampilkan dengan tulisan tangan di halaman lapak Anda. Satu atau dua kalimat.",
     "savedText": "Detail lapak tersimpan.",
-    "save": "Simpan detail lapak"
+    "save": "Simpan detail lapak",
+    "accountHint": "Telepon, email, dan alamat berasal dari akun Anda."
   },
   "cutoff": {
     "title": "Batas pesanan",
@@ -46,9 +47,26 @@
     "useMarket": "Gunakan lokasi pasar",
     "savedText": "Pasar, hari, dan jendela pengambilan tersimpan. Slot minggu depan mengikuti jendela baru.",
     "save": "Simpan pasar dan pengambilan",
-    "slotsLink": "Kelola slot pengambilan"
+    "slotsLink": "Kelola slot pengambilan",
+    "notApproved": "Pasar, hari, dan jendela pengambilan terbuka setelah admin menyetujui kios Anda.",
+    "windowError": "{{market}}: pilih minimal satu hari dan waktu selesai setelah waktu mulai.",
+    "joined": "{{name}} ditambahkan ke kios Anda.",
+    "left": "{{name}} dihapus dari kios Anda."
   },
   "map": {
     "yourStall": "Lapak Anda"
+  },
+  "error": {
+    "noun": "kios Anda"
+  },
+  "status": {
+    "approved": "Kios disetujui",
+    "pending": "Menunggu persetujuan",
+    "rejected": "Pengajuan ditolak",
+    "suspended": "Kios ditangguhkan"
+  },
+  "errors": {
+    "required": "Kolom ini wajib diisi.",
+    "cutoff": "Gunakan bilangan bulat antara {{min}} dan {{max}} jam."
   }
 }

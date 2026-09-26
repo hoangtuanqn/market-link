@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "Läuft",
+    "scheduled": "Geplant",
     "ended": "Beendet"
   },
   "action": {

@@ -68,5 +68,8 @@
   "empty": {
     "title": "Nichts zu moderieren",
     "text": "Gemeldete Produkte und Bewertungen landen hier, damit du sie liest, bevor du etwas ausblendest."
+  },
+  "error": {
+    "noun": "Angebote"
   }
 }

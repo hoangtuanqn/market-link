@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import AnnouncementApi from '@/api-requests/announcement.requests';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
+import useSession from '@/hooks/useSession';
 import type { Announcement } from '@/types/notification.types';
 
 const DISMISSED_KEY = 'ml-announcement-dismissed';
@@ -13,9 +14,14 @@ const dismissedId = () => {
   }
 };
 
-/** FR-077 — dải xanh trên header, đọc thông báo đang hiệu lực. Đóng thì nhớ theo id: thông báo mới sẽ hiện lại. */
+/**
+ * FR-077 — dải xanh trên header, đọc thông báo đang hiệu lực cho người đang xem. Đóng thì nhớ theo id: thông báo mới sẽ
+ * hiện lại. Đăng nhập / đăng xuất / đổi role thì đọc lại, vì banner lọc theo role.
+ */
 const LiveAnnouncementBanner = () => {
   const [live, setLive] = useState<Announcement | null>(null);
+  const { user } = useSession();
+  const viewer = user ? `${user.id}:${user.role}` : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -27,7 +33,7 @@ const LiveAnnouncementBanner = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [viewer]);
 
   if (!live) return null;
 

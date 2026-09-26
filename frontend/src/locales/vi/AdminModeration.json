@@ -68,5 +68,8 @@
   "empty": {
     "title": "Không có gì cần kiểm duyệt",
     "text": "Sản phẩm và đánh giá bị báo cáo sẽ về đây để bạn đọc trước khi quyết định ẩn."
+  },
+  "error": {
+    "noun": "các listing"
   }
 }

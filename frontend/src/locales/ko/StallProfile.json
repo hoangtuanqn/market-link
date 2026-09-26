@@ -13,7 +13,8 @@
     "reviews_other": "리뷰 {{count}}개",
     "markets_one": "장터",
     "markets_other": "장터",
-    "since": "판매 시작일"
+    "since": "판매 시작일",
+    "cutoff": "픽업 전 주문 마감(시간)"
   },
   "tabs": {
     "label": "가게 메뉴",
@@ -60,5 +61,8 @@
     "sentText": "관리자가 확인할 거예요.",
     "button": "이 가게 신고",
     "note": "반복된 노쇼, 잘못된 가게 위치, 또는 플랫폼 가이드라인 위반."
+  },
+  "error": {
+    "noun": "매장"
   }
 }

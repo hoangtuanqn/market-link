@@ -35,5 +35,12 @@
   "stalls_other": "{{count}} 个摊位",
   "mapLabel": "{{name}} 及其摊位地图",
   "stallsTitle": "{{day}}在本市集的摊位",
-  "stallsNote": "所选日期不营业的摊位不会列出"
+  "stallsNote": "所选日期不营业的摊位不会列出",
+  "error": {
+    "noun": "市场"
+  },
+  "stallsNoun": "摊位",
+  "stallsEmpty": {
+    "title": "{{day}}没有摊位"
+  }
 }

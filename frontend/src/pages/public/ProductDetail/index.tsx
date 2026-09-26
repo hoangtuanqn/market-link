@@ -1,22 +1,31 @@
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
+import ProductApi from '@/api-requests/product.requests';
+import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DirectionsButton from '@/components/DirectionsButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import MapPlaceholder from '@/components/MapPlaceholder';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import ProductCard from '@/components/ProductCard';
 import QtyStepper from '@/components/QtyStepper';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { LoadError } from '@/components/ui/data-state';
 import { Table } from '@/components/ui/table';
-import { farmer, product, products, reviewTags, reviewsForProduct } from '@/data/catalog';
-import { markets } from '@/data/home';
-import { dayList, formatClock, formatDate, perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
-import Notification from '@/utils/notification';
+import { reviewTags, reviewsForProduct } from '@/data/catalog';
 import { demoTierOf } from '@/data/tiers';
+import useRequest from '@/hooks/useRequest';
+import { perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
+import type { MarketType } from '@/types/market.types';
+import type { ProductType } from '@/types/product.types';
+import Helper from '@/utils/helper';
+import Notification from '@/utils/notification';
 
+/** Still the demo set until reviews arrive with C8. */
 const EXTRA_REVIEW = {
   author: 'Bích Ngọc',
   date: '19/09/2026',
@@ -24,30 +33,60 @@ const EXTRA_REVIEW = {
   text: 'Bought 3 bunches for a family lunch. Nothing wilted and the stems snapped clean.',
 };
 
-/**
- * The demo data spells a stall's days "Sat, Sun", its window "06:00 – 10:30" and dates "02/08/2026"; shown through
- * format.ts so they follow the reader's language, clock and date settings.
- */
-const DOW_ABBR = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const stallDays = (days: string) => dayList(days.split(', ').map((d) => DOW_ABBR.indexOf(d)));
-const pickupWindow = (pickup: string) =>
-  pickup
-    .split('–')
-    .map((s) => formatClock(s.trim()))
-    .join(' – ');
-const dmy = (s: string) => {
-  const [d, m, y] = s.split('/').map(Number);
-  return y ? formatDate(new Date(y, m - 1, d)) : s;
+const NO_MARKETS: MarketType[] = [];
+const NO_PRODUCTS: ProductType[] = [];
+
+/** Earliest start to latest end across the days a stall keeps at one market. */
+const windowOf = (m: StallMarketDto) => {
+  const starts = m.operatingDays.map((d) => d.pickupStartTime).sort();
+  const ends = m.operatingDays.map((d) => d.pickupEndTime).sort();
+  return pickupWindow(starts[0], ends[ends.length - 1]);
 };
 
 /** FR-022 — one product: price, stock, the seller, pickup, reviews, and what else is nearby. */
 const ProductDetailPage = () => {
   const { t } = useTranslation('ProductDetail');
   const { id } = useParams<{ id: string }>();
-  const p = product(Number(id));
-  const [qty, setQty] = useState(Math.min(2, p?.stock ?? 1));
+  const productId = Number(id);
+  const validId = Number.isInteger(productId) && productId > 0;
 
-  if (!p) {
+  const { state: load, retry } = useRequest(`product:${id}`, () =>
+    validId ? ProductApi.get(productId) : Promise.reject(new Error('missing')),
+  );
+  const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'PRODUCT_NOT_FOUND');
+  const detail = load.kind === 'ready' ? load.data : undefined;
+  const farmerId = detail?.product.farmerId;
+
+  // The stall with its markets, days and cutoff — one request keyed by the stall, so it is not repeated per product.
+  const { state: stallLoad } = useRequest(`stall:${farmerId ?? 'none'}`, () =>
+    farmerId ? StallApi.get(farmerId) : Promise.resolve(null),
+  );
+  const { state: marketsLoad } = useRequest('markets', () =>
+    CatalogApi.listMarkets({ pageSize: 50 }).then((result) => result.items),
+  );
+  const { state: alsoLoad } = useRequest(`also:${farmerId ?? 'none'}`, () =>
+    farmerId ? ProductApi.byFarmer(farmerId) : Promise.resolve(NO_PRODUCTS),
+  );
+  const categoryId = detail?.product.categoryId;
+  const { state: similarLoad } = useRequest(`similar:${categoryId ?? 'none'}`, () =>
+    categoryId ? ProductApi.list({ categoryId, pageSize: 8 }).then((r) => r.items) : Promise.resolve(NO_PRODUCTS),
+  );
+
+  const [pickedQty, setPickedQty] = useState<number | null>(null);
+
+  if (load.kind === 'loading') {
+    return (
+      <div className="flex flex-col gap-8">
+        <MarketCardSkeleton count={1} />
+      </div>
+    );
+  }
+
+  if (load.kind === 'error' && !missing) {
+    return <LoadError noun={t('error.noun')} onRetry={retry} />;
+  }
+
+  if (!detail) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
         <h1 className="text-h2">{t('notFound.title')}</h1>
@@ -57,27 +96,29 @@ const ProductDetailPage = () => {
     );
   }
 
-  const f = p.farmerId != null ? farmer(p.farmerId) : undefined;
-  // Chỉ gian hàng đã duyệt mới có trang công khai; thiếu farmerId thì không dựng link /stalls/undefined
-  const stallLink =
-    f?.approval === 'approved' ? (
-      <Link to={`/stalls/${f.id}`} className="text-brand underline">
-        {p.stall}
-      </Link>
-    ) : (
-      p.stall
-    );
-  const soldOut = p.status !== 'available' || p.stock === 0;
-
-  const genericName = p.name.split(' ').slice(-2).join(' ').toLowerCase();
-  const similar = products.filter(
-    (o) => o.id !== p.id && o.category === p.category && o.name.toLowerCase().includes(genericName),
+  const p = detail.product;
+  const desc = detail.description ?? '';
+  const stall = stallLoad.kind === 'ready' ? stallLoad.data : null;
+  const allMarkets = marketsLoad.kind === 'ready' ? marketsLoad.data : NO_MARKETS;
+  const marketById = (marketId: number) => allMarkets.find((m) => m.id === marketId);
+  const stallRating = detail.farmer.ratingCount === 0 ? null : Number(detail.farmer.ratingAvg);
+  const soldOut = p.status !== 'available' || p.stockQuantity === 0;
+  const qty = pickedQty ?? Math.min(2, Math.max(1, p.stockQuantity));
+  const stallLink = (
+    <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
+      {p.stallName}
+    </Link>
   );
-  const alsoFromStall =
-    p.farmerId != null ? products.filter((o) => o.farmerId === p.farmerId && o.id !== p.id).slice(0, 3) : [];
 
-  const productReviews = reviewsForProduct(p.id);
-  const allReviews = [...productReviews, EXTRA_REVIEW];
+  const alsoFromStall = (alsoLoad.kind === 'ready' ? alsoLoad.data : NO_PRODUCTS)
+    .filter((o) => o.id !== p.id)
+    .slice(0, 3);
+  const similar = (similarLoad.kind === 'ready' ? similarLoad.data : NO_PRODUCTS).filter(
+    (o) => o.id !== p.id && o.farmerId !== p.farmerId,
+  );
+
+  // Reviews stay the demo set until C8; they follow the real product id.
+  const allReviews = [...reviewsForProduct(p.id), EXTRA_REVIEW];
   const avgRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
 
   return (
@@ -88,7 +129,7 @@ const ProductDetailPage = () => {
         </Link>{' '}
         ·{' '}
         <Link to="/products" className="text-brand underline">
-          {p.category}
+          {p.categoryName}
         </Link>{' '}
         · {stallLink}
       </p>
@@ -100,27 +141,26 @@ const ProductDetailPage = () => {
           <div className="flex items-start justify-between gap-3">
             <h1 className="font-hand text-h1">{p.name}</h1>
             <FavoriteButton
-              initial={p.favorite}
               labelOff={t('favorite.add', { name: p.name })}
               labelOn={t('favorite.remove', { name: p.name })}
             />
           </div>
           <p className="text-body">
-            {p.category} · {t('soldPer', { unit: unitName(p.unit) })} · {stallLink}{' '}
-            {f?.rating != null && <Rating value={f.rating} count={f.reviews} />}
+            {p.categoryName} · {t('soldPer', { unit: unitName(p.unit) })} · {stallLink}{' '}
+            {stallRating != null && <Rating value={stallRating} count={detail.farmer.ratingCount} />}
           </p>
 
           <Card className="flex flex-col gap-3 p-6">
             <div className="flex flex-wrap items-center gap-6">
               <span className="font-hand text-price text-[36px] tabular-nums">
-                {vnd(unitPrice(p.price, p.unit).amount)}
+                {vnd(unitPrice(Number(p.price), p.unit).amount)}
               </span>
               {!soldOut && (
                 <span className="text-body">
                   <Trans
                     t={t}
                     i18nKey="left"
-                    values={{ qty: units(p.stock, p.unit, p.plural) }}
+                    values={{ qty: units(p.stockQuantity, p.unit) }}
                     components={{ b: <b /> }}
                   />
                 </span>
@@ -133,12 +173,12 @@ const ProductDetailPage = () => {
               </Button>
             ) : (
               <div className="flex flex-wrap items-center gap-6">
-                <QtyStepper value={qty} max={p.stock} unit={p.unit} plural={p.plural} onChange={setQty} />
+                <QtyStepper value={qty} max={p.stockQuantity} unit={p.unit} onChange={setPickedQty} />
                 <Button
                   onClick={() =>
                     Notification.success({
                       title: t('added.title'),
-                      text: t('added.text', { qty: units(qty, p.unit, p.plural), name: p.name.toLowerCase() }),
+                      text: t('added.text', { qty: units(qty, p.unit), name: p.name.toLowerCase() }),
                     })
                   }
                 >
@@ -146,77 +186,77 @@ const ProductDetailPage = () => {
                 </Button>
               </div>
             )}
-            <p className="text-small text-ink-muted">{t('payNote', { price: perUnit(p.price, p.unit) })}</p>
+            <p className="text-small text-ink-muted">{t('payNote', { price: perUnit(Number(p.price), p.unit) })}</p>
           </Card>
         </div>
       </div>
 
-      {p.desc && (
-        <section className="flex flex-col gap-4">
-          <h2 className="text-h2">{t('fromStall')}</h2>
-          <p className="text-body max-w-155">{p.desc}</p>
+      <section className="flex flex-col gap-4">
+        <h2 className="text-h2">{t('fromStall')}</h2>
+        {desc && <p className="text-body max-w-155">{desc}</p>}
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-            {f && (
-              <Card className="grid grid-cols-[52px_1fr] items-center gap-x-3 gap-y-2 p-4">
-                <span className="bg-brand text-on-brand font-hand row-span-2 grid size-13 place-items-center rounded-full text-[26px] uppercase">
-                  {f.stall.charAt(0)}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <Card className="grid grid-cols-[52px_1fr] items-center gap-x-3 gap-y-2 p-4">
+            <span className="bg-brand text-on-brand font-hand row-span-2 grid size-13 place-items-center rounded-full text-[26px] uppercase">
+              {p.stallName.charAt(0)}
+            </span>
+            <div>
+              <b className="text-h3">
+                <Link to={`/stalls/${p.farmerId}`} className="text-inherit underline">
+                  {p.stallName}
+                </Link>
+              </b>
+              <p className="text-small text-ink-muted">{detail.farmer.contactPerson}</p>
+            </div>
+            <div className="col-span-full mt-1 grid grid-cols-3 gap-2">
+              <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
+                <b className="block text-[17px] tabular-nums">{stallRating ?? '—'}</b>
+                <span className="text-ink-muted text-[12px]">
+                  {t('stats.reviews', { count: detail.farmer.ratingCount })}
                 </span>
-                <div>
-                  <b className="text-h3">
-                    <Link to={`/stalls/${f.id}`} className="text-inherit underline">
-                      {f.stall}
-                    </Link>
-                  </b>
-                  <p className="text-small text-ink-muted">
-                    {f.person} · {t('sellingSince', { date: dmy(f.registered) })}
-                  </p>
-                </div>
-                <div className="col-span-full mt-1 grid grid-cols-3 gap-2">
-                  <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
-                    <b className="block text-[17px] tabular-nums">{f.rating ?? '—'}</b>
-                    <span className="text-ink-muted text-[12px]">{t('stats.reviews', { count: f.reviews })}</span>
-                  </div>
-                  <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
-                    <b className="block text-[17px] tabular-nums">{f.markets.length}</b>
-                    <span className="text-ink-muted text-[12px]">
-                      {t('stats.markets', { count: f.markets.length })}
-                    </span>
-                  </div>
-                  <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
-                    <b className="block text-[17px] tabular-nums">{t('stats.hours', { count: f.cutoffHours })}</b>
-                    <span className="text-ink-muted text-[12px]">{t('stats.cutoff')}</span>
-                  </div>
-                </div>
-                <div className="col-span-full flex flex-wrap gap-2">
-                  <ButtonLink to={`/stalls/${f.id}`} variant="secondary" size="sm">
-                    {t('seeStall')}
-                  </ButtonLink>
-                  <ButtonLink to="/messages" variant="secondary" size="sm">
-                    {t('messageStall')}
-                  </ButtonLink>
-                </div>
-              </Card>
-            )}
+              </div>
+              <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
+                <b className="block text-[17px] tabular-nums">{stall?.markets.length ?? '—'}</b>
+                <span className="text-ink-muted text-[12px]">
+                  {t('stats.markets', { count: stall?.markets.length ?? 0 })}
+                </span>
+              </div>
+              <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
+                <b className="block text-[17px] tabular-nums">
+                  {stall ? t('stats.hours', { count: stall.orderCutoffHours }) : '—'}
+                </b>
+                <span className="text-ink-muted text-[12px]">{t('stats.cutoff')}</span>
+              </div>
+            </div>
+            <div className="col-span-full flex flex-wrap gap-2">
+              <ButtonLink to={`/stalls/${p.farmerId}`} variant="secondary" size="sm">
+                {t('seeStall')}
+              </ButtonLink>
+              <ButtonLink to="/messages" variant="secondary" size="sm">
+                {t('messageStall')}
+              </ButtonLink>
+            </div>
+          </Card>
 
-            <Card className="flex flex-col gap-3 p-6">
-              <h3 className="text-h3">{t('details.title')}</h3>
-              <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-                <dt className="text-ink-muted">{t('details.soldPer')}</dt>
-                <dd className="m-0">{units(1, unitName(p.unit))}</dd>
-                <dt className="text-ink-muted">{t('details.category')}</dt>
-                <dd className="m-0">{p.category}</dd>
-                <dt className="text-ink-muted">{t('details.stall')}</dt>
-                <dd className="m-0">{p.stall}</dd>
-                <dt className="text-ink-muted">{t('details.market')}</dt>
-                <dd className="m-0">{p.marketName}</dd>
-              </dl>
-            </Card>
-          </div>
-        </section>
-      )}
+          <Card className="flex flex-col gap-3 p-6">
+            <h3 className="text-h3">{t('details.title')}</h3>
+            <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
+              <dt className="text-ink-muted">{t('details.soldPer')}</dt>
+              <dd className="m-0">{units(1, unitName(p.unit))}</dd>
+              <dt className="text-ink-muted">{t('details.category')}</dt>
+              <dd className="m-0">{p.categoryName}</dd>
+              <dt className="text-ink-muted">{t('details.stall')}</dt>
+              <dd className="m-0">{p.stallName}</dd>
+              <dt className="text-ink-muted">{t('details.market')}</dt>
+              <dd className="m-0">
+                {stall ? stall.markets.map((m) => m.marketName).join(', ') : (p.marketName ?? '')}
+              </dd>
+            </dl>
+          </Card>
+        </div>
+      </section>
 
-      {f && (
+      {stall && stall.markets.length > 0 && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2 className="text-h2">{t('collect.title')}</h2>
@@ -229,36 +269,40 @@ const ProductDetailPage = () => {
               {
                 key: 'market',
                 label: t('table.market'),
-                render: (row: { id: number }) => {
-                  const m = markets.find((mm) => mm.id === row.id)!;
-                  return (
-                    <>
-                      <b>{m.name}</b>
-                      <span className="text-ink-muted mt-0.5 block text-[12px]">
-                        {t('table.stallCode', { code: f.stallCode })} · {m.address}
-                      </span>
-                    </>
-                  );
-                },
+                render: (row: StallMarketDto) => (
+                  <>
+                    <b>{row.marketName}</b>
+                    <span className="text-ink-muted mt-0.5 block text-[12px]">
+                      {row.stallCode ? `${t('table.stallCode', { code: row.stallCode })} · ` : ''}
+                      {marketById(row.marketId)?.address}
+                    </span>
+                  </>
+                ),
               },
-              { key: 'days', label: t('table.days'), render: () => stallDays(f.days) },
-              { key: 'window', label: t('table.window'), render: () => pickupWindow(f.pickup) },
+              {
+                key: 'days',
+                label: t('table.days'),
+                render: (row: StallMarketDto) => dayNames(row.operatingDays.map((d) => d.dayOfWeek)),
+              },
+              { key: 'window', label: t('table.window'), render: (row: StallMarketDto) => windowOf(row) },
               {
                 key: 'cutoff',
                 label: t('table.cutoff'),
-                render: () => t('table.cutoffValue', { count: f.cutoffHours }),
+                render: () => t('table.cutoffValue', { count: stall.orderCutoffHours }),
               },
               {
                 key: 'dir',
                 label: '',
                 align: 'actions',
-                render: (row: { id: number }) => {
-                  const m = markets.find((mm) => mm.id === row.id)!;
-                  return <DirectionsButton to={{ lat: m.lat, lng: m.lng }} name={m.name} />;
+                render: (row: StallMarketDto) => {
+                  const m = marketById(row.marketId);
+                  const lat = row.stallLatitude != null ? Number(row.stallLatitude) : m?.lat;
+                  const lng = row.stallLongitude != null ? Number(row.stallLongitude) : m?.lng;
+                  return lat != null && lng != null ? <DirectionsButton to={{ lat, lng }} name={p.stallName} /> : null;
                 },
               },
             ]}
-            rows={f.markets.map((id) => ({ id }))}
+            rows={stall.markets}
           />
           <p className="text-small text-ink-muted">{t('collect.note')}</p>
         </section>
@@ -280,9 +324,9 @@ const ProductDetailPage = () => {
             <Rating value={avgRating} />
             <span className="text-small text-ink-muted">{t('reviews.summary', { count: allReviews.length })}</span>
           </div>
-          {f && reviewTags[f.id] && (
+          {reviewTags[p.farmerId] && (
             <div className="flex flex-wrap gap-2">
-              {reviewTags[f.id].map(([tag, count]) => (
+              {reviewTags[p.farmerId].map(([tag, count]) => (
                 <span
                   key={tag}
                   className="bg-brand-tint text-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[14px]"
@@ -311,7 +355,7 @@ const ProductDetailPage = () => {
       {similar.length > 0 && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="text-h2">{t('similar.title', { name: p.name })}</h2>
+            <h2 className="text-h2">{t('similar.title', { name: p.categoryName })}</h2>
             <span className="text-small text-ink-muted">{t('similar.note')}</span>
           </div>
           <Table
@@ -319,27 +363,19 @@ const ProductDetailPage = () => {
               {
                 key: 'product',
                 label: t('table.product'),
-                render: (row: typeof p) => (
+                render: (row: ProductType) => (
                   <>
                     <b>{row.name}</b>
                     <span className="text-ink-muted mt-0.5 block text-[12px]">{row.stall}</span>
                   </>
                 ),
               },
-              { key: 'market', label: t('table.market'), render: (row: typeof p) => row.marketName },
-              {
-                key: 'days',
-                label: t('table.days'),
-                render: (row: typeof p) => {
-                  const days = row.farmerId != null ? farmer(row.farmerId)?.days : undefined;
-                  return days ? stallDays(days) : '';
-                },
-              },
+              { key: 'market', label: t('table.market'), render: (row: ProductType) => row.marketName },
               {
                 key: 'price',
                 label: t('table.price'),
                 align: 'num',
-                render: (row: typeof p) => (
+                render: (row: ProductType) => (
                   <>
                     {vnd(unitPrice(row.price, row.unit).amount)}{' '}
                     <span className="text-ink-muted block text-[12px] font-normal">
@@ -352,23 +388,20 @@ const ProductDetailPage = () => {
                 key: 'left',
                 label: t('table.left'),
                 align: 'num',
-                render: (row: typeof p) => units(row.stock, row.unit, row.plural),
+                render: (row: ProductType) => units(row.stock, row.unit, row.plural),
               },
               {
                 key: 'action',
                 label: '',
                 align: 'actions',
-                render: (row: typeof p) =>
-                  row.id === p.id ? (
-                    <span className="text-small text-ink-muted">{t('similar.here')}</span>
-                  ) : (
-                    <ButtonLink to={`/products/${row.id}`} variant="secondary" size="sm">
-                      {t('similar.view')}
-                    </ButtonLink>
-                  ),
+                render: (row: ProductType) => (
+                  <ButtonLink to={`/products/${row.id}`} variant="secondary" size="sm">
+                    {t('similar.view')}
+                  </ButtonLink>
+                ),
               },
             ]}
-            rows={[p, ...similar]}
+            rows={similar}
           />
         </section>
       )}
@@ -376,7 +409,7 @@ const ProductDetailPage = () => {
       {alsoFromStall.length > 0 && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="text-h2">{t('also.title', { stall: p.stall })}</h2>
+            <h2 className="text-h2">{t('also.title', { stall: p.stallName })}</h2>
             <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
               {t('seeStall')}
             </Link>

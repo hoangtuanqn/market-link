@@ -1,11 +1,12 @@
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { Announcement, AnnouncementInput } from '@/types/notification.types';
-import { privateApi, publicApi } from '@/utils/axiosInstance';
+import { privateApi } from '@/utils/axiosInstance';
 
 /** FR-077 — docs/api-contract.md §10. live() là public (banner cho cả khách vãng lai). */
 class AnnouncementApi {
+  /** Đã đăng nhập thì gửi kèm token: backend lọc banner theo role (bài "chỉ Farmer" không hiện cho Customer). */
   static live = async () => {
-    const response = await publicApi.get<ApiResponse<Announcement | null>>('/announcements/active');
+    const response = await privateApi.get<ApiResponse<Announcement | null>>('/announcements/active');
     return response.data;
   };
 

@@ -1,19 +1,23 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ProductApi from '@/api-requests/product.requests';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import ReviewCard from '@/components/ReviewCard';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import { ADMIN_CUSTOMERS_PATH } from '@/constants/nav';
-import { hiddenItems, recentlyListedIds, reviewReport, type HiddenItemType } from '@/data/admin';
-import { product, reviews } from '@/data/catalog';
+import { hiddenItems, reviewReport, type HiddenItemType } from '@/data/admin';
+import { reviews } from '@/data/catalog';
+import useRequest from '@/hooks/useRequest';
 import { vnd } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 const REVIEW_FILTERS = ['reported', 'lowRated', 'newest'] as const;
@@ -21,7 +25,8 @@ const REVIEW_FILTERS = ['reported', 'lowRated', 'newest'] as const;
 /** Reasons an admin picks when hiding something. Keys resolve under `reason.` in the locale file. */
 const REASONS = ['advertising', 'abusive', 'offTopic', 'claim', 'other'] as const;
 
-type HideTarget = { kind: 'review' | 'listing'; name: string } | null;
+type HideTarget = { kind: 'review' | 'listing'; name: string; id?: number } | null;
+const NO_PRODUCTS: ProductType[] = [];
 
 /**
  * FR-074 — hide product listings or reviews that break the guidelines. Hidden items stay in the database with the
@@ -29,7 +34,17 @@ type HideTarget = { kind: 'review' | 'listing'; name: string } | null;
  */
 const AdminModerationPage = () => {
   const { t } = useTranslation('AdminModeration');
+  const { t: tc } = useTranslation();
   const [tab, setTab] = useState('reviews');
+  const [hidingBusy, setHidingBusy] = useState(false);
+  // What customers currently see (contract §5, newest first); hiding removes a row from this list.
+  const {
+    state: listedLoad,
+    retry: retryListed,
+    mutate: mutateListed,
+  } = useRequest('moderation-products', () =>
+    ProductApi.list({ pageSize: 50, sort: 'newest' }).then((result) => result.items),
+  );
   const [reviewFilter, setReviewFilter] = useState<string>('reported');
   const [query, setQuery] = useState('');
   const [hiding, setHiding] = useState<HideTarget>(null);
@@ -41,13 +56,26 @@ const AdminModerationPage = () => {
     reviewFilter === 'reported' ? flagged : reviewFilter === 'lowRated' ? lowRated : [...reviews].slice(0, 4);
 
   const needle = query.trim().toLowerCase();
-  const listed = recentlyListedIds
-    .map((id) => product(id))
-    .filter((p): p is ProductType => Boolean(p))
-    .filter((p) => !needle || `${p.name} ${p.stall}`.toLowerCase().includes(needle));
+  const listed = (listedLoad.kind === 'ready' ? listedLoad.data : NO_PRODUCTS).filter(
+    (p) => !needle || `${p.name} ${p.stall}`.toLowerCase().includes(needle),
+  );
 
-  const confirmHide = () => {
+  const confirmHide = async () => {
     if (!hiding) return;
+    // Reviews are still demo data (C8); only listings go to the server here.
+    if (hiding.kind === 'listing' && hiding.id != null) {
+      const id = hiding.id;
+      setHidingBusy(true);
+      try {
+        await ProductApi.adminHide(id, reason || t(`reason.${REASONS[0]}`));
+        mutateListed((list) => list.filter((p) => p.id !== id));
+      } catch (error) {
+        Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+        setHidingBusy(false);
+        return;
+      }
+      setHidingBusy(false);
+    }
     Notification.success({ text: t('hide.done') });
     setHiding(null);
     setReason('');
@@ -86,7 +114,7 @@ const AdminModerationPage = () => {
           <ButtonLink to={`/products/${p.id}`} variant="ghost" size="sm">
             {t('action.view')}
           </ButtonLink>
-          <Button variant="danger" size="sm" onClick={() => setHiding({ kind: 'listing', name: p.name })}>
+          <Button variant="danger" size="sm" onClick={() => setHiding({ kind: 'listing', name: p.name, id: p.id })}>
             {t('action.hideListing')}
           </Button>
         </div>
@@ -207,7 +235,11 @@ const AdminModerationPage = () => {
             />
             <Button type="submit">{t('search.submit')}</Button>
           </form>
-          {listed.length ? (
+          {listedLoad.kind === 'loading' ? (
+            <MarketCardSkeleton count={3} />
+          ) : listedLoad.kind === 'error' ? (
+            <LoadError noun={t('error.noun')} onRetry={retryListed} />
+          ) : listed.length ? (
             <Table caption={t('recentlyListed')} columns={productColumns} rows={listed} />
           ) : (
             <DataState title={t('empty.title')} text={t('empty.text')} />
@@ -227,7 +259,7 @@ const AdminModerationPage = () => {
             <Button variant="secondary" onClick={() => setHiding(null)}>
               {t('action.keepVisible')}
             </Button>
-            <Button variant="danger" onClick={confirmHide}>
+            <Button variant="danger" onClick={() => void confirmHide()} disabled={hidingBusy}>
               {hiding ? t(`hide.confirm.${hiding.kind}`) : ''}
             </Button>
           </>

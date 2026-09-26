@@ -35,5 +35,12 @@
   "stalls_other": "{{count}} Ständen",
   "mapLabel": "Karte von {{name}} und seinen Ständen",
   "stallsTitle": "Stände auf diesem Markt am {{day}}",
-  "stallsNote": "Stände, die am gewählten Tag nicht verkaufen, werden nicht angezeigt"
+  "stallsNote": "Stände, die am gewählten Tag nicht verkaufen, werden nicht angezeigt",
+  "error": {
+    "noun": "Markt"
+  },
+  "stallsNoun": "Stände",
+  "stallsEmpty": {
+    "title": "Keine Stände am {{day}}"
+  }
 }

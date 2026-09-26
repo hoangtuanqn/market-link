@@ -68,5 +68,8 @@
   "empty": {
     "title": "Rien à modérer",
     "text": "Les produits et avis signalés arrivent ici pour que vous les lisiez avant de masquer quoi que ce soit."
+  },
+  "error": {
+    "noun": "annonces"
   }
 }

@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.farmer.requests;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import java.util.List;
 
@@ -21,8 +22,13 @@ public record FarmerApplicationRequest(
                 String contactPerson,
         @Size(max = 2000, message = "Keep the description under 2000 characters.")
                 String description,
+        // Ảnh là bằng chứng admin xem để duyệt: bắt buộc ít nhất một, khớp form become-farmer.
         // Độ dài từng URL phải khớp cột lưu: dài hơn thì DB ném lỗi và FE đọc thành 401, không
         // phải 400.
-        @Size(max = 5, message = "At most 5 photos.")
-                List<@Size(max = 255, message = "Photo link is too long.") String> photoUrls,
+        @NotEmpty(message = "Add at least one photo of the plot.")
+                @Size(max = 5, message = "At most 5 photos.")
+                List<
+                                @NotBlank(message = "Upload the photos again.")
+                                @Size(max = 255, message = "Photo link is too long.") String>
+                        photoUrls,
         @Size(max = 255, message = "Video link is too long.") String videoUrl) {}

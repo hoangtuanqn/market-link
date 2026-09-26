@@ -65,6 +65,18 @@
   "toast": {
     "saved": "Enregistré",
     "savedText": "{{name}} enregistré.",
-    "product": "Produit"
+    "product": "Produit",
+    "deletedText": "{{name}} supprimé."
+  },
+  "error": {
+    "noun": "le produit"
+  },
+  "image": {
+    "label": "Lien de la photo",
+    "hint": "Facultatif. Un lien public vers une photo du produit ; sinon l’étiquette affiche la catégorie en écriture manuscrite."
+  },
+  "errors": {
+    "required": "Ce champ est obligatoire.",
+    "price": "Le prix doit être supérieur ou égal à 0."
   }
 }

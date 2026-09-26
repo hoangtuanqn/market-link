@@ -33,5 +33,8 @@
   },
   "toast": {
     "removed": "Đã gỡ {{name}} khỏi danh sách."
+  },
+  "error": {
+    "noun": "các chợ"
   }
 }

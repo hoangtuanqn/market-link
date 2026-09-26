@@ -28,5 +28,9 @@
     "title": "Nichts auf der Karte anzuzeigen",
     "text": "Beide Ebenen sind ausgeschaltet. Schalten Sie Märkte oder Stände wieder ein, um die Markierungen zu sehen.",
     "action": "Beide anzeigen"
-  }
+  },
+  "error": {
+    "noun": "Märkte"
+  },
+  "stallsNoun": "Stände"
 }

@@ -19,7 +19,8 @@
     "about": "摊位简介",
     "aboutHint": "以手写体显示在你的摊位页面上。一两句话即可。",
     "savedText": "摊位信息已保存。",
-    "save": "保存摊位信息"
+    "save": "保存摊位信息",
+    "accountHint": "电话、邮箱和地址来自您的账户。"
   },
   "cutoff": {
     "title": "订单截止",
@@ -46,9 +47,26 @@
     "useMarket": "使用市集位置",
     "savedText": "市集、日期和取货时段已保存。下周的时段将按新的时间生成。",
     "save": "保存市集与取货设置",
-    "slotsLink": "管理取货时段"
+    "slotsLink": "管理取货时段",
+    "notApproved": "摊位获批后即可设置市场、日期和取货时段。",
+    "windowError": "{{market}}：请至少选择一天，且结束时间须晚于开始时间。",
+    "joined": "已将{{name}}加入您的摊位。",
+    "left": "已将{{name}}从您的摊位移除。"
   },
   "map": {
     "yourStall": "你的摊位"
+  },
+  "error": {
+    "noun": "您的摊位"
+  },
+  "status": {
+    "approved": "已批准的摊位",
+    "pending": "等待审批",
+    "rejected": "申请被拒绝",
+    "suspended": "摊位已暂停"
+  },
+  "errors": {
+    "required": "此项为必填。",
+    "cutoff": "请输入 {{min}} 到 {{max}} 小时之间的整数。"
   }
 }

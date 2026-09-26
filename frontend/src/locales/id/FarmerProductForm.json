@@ -65,6 +65,18 @@
   "toast": {
     "saved": "Disimpan",
     "savedText": "{{name}} disimpan.",
-    "product": "Produk"
+    "product": "Produk",
+    "deletedText": "{{name}} dihapus."
+  },
+  "error": {
+    "noun": "produk"
+  },
+  "image": {
+    "label": "Tautan foto",
+    "hint": "Opsional. Tautan publik ke foto produk; sebelum ada, label menampilkan kategori dengan tulisan tangan."
+  },
+  "errors": {
+    "required": "Kolom ini wajib diisi.",
+    "price": "Harga harus 0 atau lebih."
   }
 }

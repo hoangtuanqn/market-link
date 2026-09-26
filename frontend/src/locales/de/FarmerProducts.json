@@ -38,5 +38,13 @@
     "confirm": "Produkt löschen",
     "text": "Es verschwindet aus dem Katalog und aus Ihrer Vorlage. Bestellungen, die es bereits enthalten, bleiben unverändert.",
     "pauseHint": "Um es eine Weile nicht zu verkaufen, wählen Sie stattdessen Pausiert."
+  },
+  "error": {
+    "noun": "deine Produkte"
+  },
+  "hiddenByAdmin": "Von einem Admin ausgeblendet: {{reason}}",
+  "empty": {
+    "title": "Noch keine Produkte",
+    "text": "Füge dein erstes Produkt hinzu — es erscheint sofort auf deiner Standseite."
   }
 }

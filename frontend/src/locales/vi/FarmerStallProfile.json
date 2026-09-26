@@ -19,7 +19,8 @@
     "about": "Giới thiệu sạp",
     "aboutHint": "Hiện bằng chữ viết tay trên trang sạp. Một hoặc hai câu.",
     "savedText": "Đã lưu thông tin sạp.",
-    "save": "Lưu thông tin sạp"
+    "save": "Lưu thông tin sạp",
+    "accountHint": "Số điện thoại, email và địa chỉ lấy từ tài khoản của bạn."
   },
   "cutoff": {
     "title": "Hạn chốt đơn",
@@ -46,9 +47,26 @@
     "useMarket": "Dùng vị trí của chợ",
     "savedText": "Đã lưu chợ, ngày và khung giờ nhận hàng. Các khung giờ tuần sau sẽ theo khung giờ mới.",
     "save": "Lưu chợ và nhận hàng",
-    "slotsLink": "Quản lý khung giờ nhận hàng"
+    "slotsLink": "Quản lý khung giờ nhận hàng",
+    "notApproved": "Chợ, ngày và khung giờ nhận mở sau khi admin duyệt gian hàng của bạn.",
+    "windowError": "{{market}}: chọn ít nhất một ngày và giờ kết thúc phải sau giờ bắt đầu.",
+    "joined": "Đã thêm {{name}} vào gian hàng của bạn.",
+    "left": "Đã bỏ {{name}} khỏi gian hàng của bạn."
   },
   "map": {
     "yourStall": "Sạp của bạn"
+  },
+  "error": {
+    "noun": "gian hàng của bạn"
+  },
+  "status": {
+    "approved": "Gian hàng đã duyệt",
+    "pending": "Đang chờ duyệt",
+    "rejected": "Đơn bị từ chối",
+    "suspended": "Gian hàng bị đình chỉ"
+  },
+  "errors": {
+    "required": "Trường này là bắt buộc.",
+    "cutoff": "Nhập số nguyên từ {{min}} đến {{max}} giờ."
   }
 }

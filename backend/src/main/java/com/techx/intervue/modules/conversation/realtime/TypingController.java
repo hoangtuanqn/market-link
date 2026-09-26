@@ -2,7 +2,9 @@ package com.techx.intervue.modules.conversation.realtime;
 
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
+import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.services.impl.ConversationLookup;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import jakarta.persistence.EntityNotFoundException;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +26,22 @@ public class TypingController {
 
     private final ConversationLookup lookup;
     private final StompChatEventPublisher publisher;
+    private final ChatRateLimiterInterface rateLimiter;
 
     @MessageMapping("/typing")
     public void typing(@Payload TypingRequest request, Principal principal) {
+        // Frame bịa hoặc client bug: không có gì để làm, và cũng không có mã lỗi nào để trả —
+        // STOMP không phải HTTP (spec §7.1). Im lặng bỏ qua thay vì đổ stack trace vào log.
+        if (request == null || request.conversationId() == null) {
+            return;
+        }
         Long me = Long.parseLong(principal.getName());
+        try {
+            rateLimiter.check(me, ChatRateLimiterInterface.Action.TYPING);
+        } catch (RateLimitedException e) {
+            // Rải frame liên tục: bỏ im lặng, và bỏ TRƯỚC khi chạm DB
+            return;
+        }
         Conversation conversation;
         try {
             conversation = lookup.requireMember(me, request.conversationId());

@@ -1,42 +1,37 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
 import DayChips from '@/components/DayChips';
 import MarketCard from '@/components/MarketCard';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import useClock from '@/hooks/useClock';
 import useGeolocation from '@/hooks/useGeolocation';
-import { distanceKm } from '@/lib/geo';
+import useRequest from '@/hooks/useRequest';
 import useSettings from '@/hooks/useSettings';
-import { markets } from '@/data/home';
 import { dayList, dayName, formatClock, nowLabel, upcoming } from '@/lib/format';
+import { distanceKm } from '@/lib/geo';
+import type { MarketType } from '@/types/market.types';
 import Notification from '@/utils/notification';
 
 const PAGE_SIZE = 3;
 /** All seven weekdays, Monday first, matching `market_operating_days.day_of_week` (0 = Sunday). */
 const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 0];
 const SORTS = ['near', 'stalls', 'opens'] as const;
-/** FR-084: the four states of this list. Empty is reachable for real, so it needs no demo switch. */
-const VIEWS = ['loaded', 'loading', 'error'] as const;
-
-type View = (typeof VIEWS)[number];
-
 /**
- * How long the skeleton is held on the first visit and on every page change. The markets are still demo data in
- * `src/data/home.ts`, so there is nothing to wait for; this stands in for the request until `GET /api/markets` exists,
- * and the wait comes off when the page starts asking the server.
+ * Contract §3 caps one page at 50. A city's markets fit in a single call, so the day chips (which need to know every
+ * market's days), the area counts and the map all work from one list, and filtering and paging stay in the browser.
  */
-const LOADING_MS = 1200;
+const FETCH_SIZE = 50;
+const NO_MARKETS: MarketType[] = [];
 
 const dayLabel = (dow: number) => dayName(dow, 'long');
-const openOn = (dow: number) => markets.filter((m) => m.days.includes(dow));
 
 /** FR-010 — browse markets by location and day. */
 const MarketsPage = () => {
@@ -51,28 +46,25 @@ const MarketsPage = () => {
   const { state: geo, request: askLocation, clear: forgetLocation } = useGeolocation();
   /** Null until the visitor shares where they are; nothing here asks on its own. */
   const here = geo.status === 'ready' ? geo.at : null;
-  /** The demo switcher at the foot of the page; null means "show whatever is really happening". */
-  const [override, setOverride] = useState<View | null>(null);
-  /** The page whose markets have arrived. Anything else means the list is still on its way. */
-  const [readyPage, setReadyPage] = useState<number | null>(null);
 
-  // Arriving on the page, and every move to another page, shows the skeleton first (FR-084).
-  useEffect(() => {
-    const id = window.setTimeout(() => setReadyPage(page), LOADING_MS);
-    return () => window.clearTimeout(id);
-  }, [page]);
+  const { state: load, retry } = useRequest('markets', () =>
+    CatalogApi.listMarkets({ pageSize: FETCH_SIZE }).then((result) => result.items),
+  );
+  const all = load.kind === 'ready' ? load.data : NO_MARKETS;
+  const openOn = useCallback((dow: number) => all.filter((m) => m.days.includes(dow)), [all]);
 
-  const view: View = override ?? (readyPage === page ? 'loaded' : 'loading');
-
-  const onDay = useMemo(() => openOn(day), [day]);
+  const onDay = useMemo(() => openOn(day), [openOn, day]);
   // Areas come from the markets themselves, so a new market in a new district needs no edit here (FR-010).
-  const areas = useMemo(() => [...new Set(markets.map((m) => m.district))].sort((a, b) => a.localeCompare(b)), []);
+  const areas = useMemo(
+    () => [...new Set(all.map((m) => m.district).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
+    [all],
+  );
 
-  // Straight-line distance from the visitor to every market, recomputed only when the position changes.
+  // Straight-line distance from the visitor to every market, recomputed only when the position or the list changes.
   const distances = useMemo(() => {
     if (!here) return new Map<number, number>();
-    return new Map(markets.map((m) => [m.id, distanceKm(here, { lat: m.lat, lng: m.lng })]));
-  }, [here]);
+    return new Map(all.map((m) => [m.id, distanceKm(here, { lat: m.lat, lng: m.lng })]));
+  }, [here, all]);
 
   const { preferredMarket } = useSettings();
   const matches = useMemo(() => {
@@ -96,7 +88,7 @@ const MarketsPage = () => {
 
   // The map follows the filters; with nothing to show it falls back to every market rather than an empty city view.
   const mapMarkers = useMemo<MapMarker[]>(() => {
-    const shown = matches.length ? matches : markets;
+    const shown = matches.length ? matches : all;
     const onPage = new Set(matches.slice(from, from + PAGE_SIZE).map((m) => m.id));
     return shown.map((m) => ({
       lat: m.lat,
@@ -114,7 +106,7 @@ const MarketsPage = () => {
         href: `/markets/${m.id}`,
       },
     }));
-  }, [matches, from, t]);
+  }, [matches, all, from, t]);
 
   const setDayAndReset = (d: number) => {
     setDay(d);
@@ -167,7 +159,7 @@ const MarketsPage = () => {
               value: String(d),
               label: dayLabel(d),
               date: upcoming(d, now),
-              disabled: openOn(d).length === 0,
+              disabled: load.kind === 'ready' && openOn(d).length === 0,
             }))}
           />
           <Button variant="ghost" size="sm" onClick={clearAll} className="self-start">
@@ -255,23 +247,22 @@ const MarketsPage = () => {
       {/* Two columns on desktop: markets list on the left, sticky map on the right. Stacks on smaller screens. */}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div ref={listRef} className="flex flex-col gap-4">
-          {view === 'error' ? (
+          {load.kind === 'error' ? (
             <LoadError
               noun={t('error.noun')}
               alt={<Trans t={t} i18nKey="error.alt" components={{ link: <Link to="/map" /> }} />}
-              onRetry={() => setOverride(null)}
+              onRetry={retry}
             />
-          ) : view === 'loading' || matches.length ? (
+          ) : load.kind === 'loading' || matches.length ? (
             <>
               <div className="flex flex-col gap-4">
-                {view === 'loading' ? (
+                {load.kind === 'loading' ? (
                   // As many placeholders as the page is about to hold, so nothing shifts when the markets land.
-                  <MarketCardSkeleton count={slice.length || PAGE_SIZE} />
+                  <MarketCardSkeleton count={PAGE_SIZE} />
                 ) : (
                   slice.map((m) => <MarketCard key={m.id} market={m} distanceKm={distances.get(m.id)} />)
                 )}
               </div>
-              {/* The pager stays put while the next page loads, so the button you just pressed does not vanish. */}
               {matches.length > 0 && (
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   {pages > 1 ? (
@@ -317,26 +308,6 @@ const MarketsPage = () => {
           <p className="text-caption text-ink-muted">{t('map.note')}</p>
         </div>
       </div>
-
-      <section className="mt-2 flex flex-col gap-4">
-        <h2 className="text-h3">{t('demo.title')}</h2>
-        {/* "With data" hands the list back to the real loading cycle rather than pinning it open. */}
-        <div className="flex flex-wrap items-center gap-2">
-          {VIEWS.map((v) => (
-            <Chip key={v} pressed={view === v} onClick={() => setOverride(v === 'loaded' ? null : v)}>
-              {t(`demo.views.${v}`)}
-            </Chip>
-          ))}
-        </div>
-        <p className="text-small text-ink-muted">
-          <Trans
-            t={t}
-            i18nKey="demo.note"
-            values={{ day: dayLabel(5), area: 'Bình Thạnh' }}
-            components={{ b: <b /> }}
-          />
-        </p>
-      </section>
     </div>
   );
 };

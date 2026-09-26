@@ -27,11 +27,13 @@
   },
   "nearby": {
     "title": "Pasar di dekat Anda",
-    "note": "Jarak dari alamat tersimpan Anda di Thảo Điền"
+    "note": "Jarak dari alamat tersimpan Anda di Thảo Điền",
+    "noun": "pasar"
   },
   "fresh": {
     "title": "Segar minggu ini",
-    "all": "Semua produk dan filter"
+    "all": "Semua produk dan filter",
+    "noun": "produk"
   },
   "how": {
     "title": "Cara kerja pesan dulu",

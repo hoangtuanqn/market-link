@@ -57,5 +57,9 @@
     "categoryAdded": "Catégorie ajoutée. Les étals peuvent la choisir dès maintenant.",
     "categoryRemoved": "{{name}} supprimée.",
     "promoted": "{{name}} figure désormais dans le sélecteur de tous les étals."
+  },
+  "error": {
+    "noun": "catégories",
+    "nameRequired": "Donnez un nom à la catégorie."
   }
 }
