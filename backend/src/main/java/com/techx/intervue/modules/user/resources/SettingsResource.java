@@ -12,5 +12,5 @@ public record SettingsResource(
         String dateFormat,
         String clock,
         String preferredMarket,
-        /* thông báo và khối riêng của từng vai: đã lưu, chưa có tính năng dùng tới */
+        /* notifications and each role's own block: saved, no feature uses them yet */
         Map<String, String> extras) {}

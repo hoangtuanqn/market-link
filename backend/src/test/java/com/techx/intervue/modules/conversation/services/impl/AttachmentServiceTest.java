@@ -72,7 +72,8 @@ class AttachmentServiceTest {
                             a.setId(55L);
                             return a;
                         });
-        // Thứ tự khớp constructor: attachments, storage, rateLimiter, maxBytes, messages, lookup,
+        // The order matches the constructor: attachments, storage, rateLimiter, maxBytes, messages,
+        // lookup,
         // reports
         service =
                 new AttachmentService(
@@ -92,7 +93,7 @@ class AttachmentServiceTest {
 
         ArgumentCaptor<String> fileName = ArgumentCaptor.forClass(String.class);
         verify(storage).store(anyString(), fileName.capture(), any(byte[].class));
-        // Tên file không được lấy từ người dùng (spec §8.2)
+        // The file name must not come from the user (spec §8.2)
         assertThat(fileName.getValue()).doesNotContain("holiday").endsWith(".jpg");
     }
 
@@ -122,7 +123,7 @@ class AttachmentServiceTest {
         verify(attachments, never()).save(any(MessageAttachment.class));
     }
 
-    /** Review Focus #1 ở tầng service: không ghi byte nào xuống đĩa. */
+    /** Review Focus #1 at the service layer: no byte is written to disk. */
     @Test
     void refusesAFileThatIsNotAnImageWhateverItsName() {
         byte[] pdf = "%PDF-1.7 not a photo".getBytes(StandardCharsets.ISO_8859_1);
@@ -150,8 +151,8 @@ class AttachmentServiceTest {
     }
 
     /**
-     * Hạn mức phải chặn TRƯỚC khi ghi đĩa và trước khi ghi DB — vượt ngưỡng thì không được để lại
-     * file mồ côi nào.
+     * The limit must block BEFORE writing to disk and before writing to the DB — over the threshold
+     * must not leave any orphan file behind.
      */
     @Test
     void refusesToStoreAnythingOnceTheHourlyPhotoLimitIsReached() throws Exception {
@@ -192,9 +193,9 @@ class AttachmentServiceTest {
     }
 
     /**
-     * Cùng mã với lúc gắn ảnh của người khác vào tin của mình: cả hai đều là "ảnh này không phải
-     * của bạn". NOT_A_MEMBER dành riêng cho ảnh ĐÃ gắn tin mà người xin không thuộc thread — đó là
-     * một ý khác.
+     * Same code as attaching someone else's image to your own message: both are "this image is not
+     * yours". NOT_A_MEMBER is reserved for an image ALREADY attached to a message where the
+     * requester is not in the thread — that is a different idea.
      */
     @Test
     void nobodyElseCanSeeAnUploadThatIsNotOnAMessageYet() {
@@ -281,9 +282,10 @@ class AttachmentServiceTest {
     }
 
     /**
-     * Hạn mức 10 ảnh/giờ phải đếm ảnh ĐÃ NHẬN, không đếm lần thử. Người dùng iPhone gửi HEIC (mặc
-     * định của iOS) sẽ bị 415 mười lần rồi mất quyền gửi ảnh cả tiếng, kèm thông báo "đang gửi ảnh
-     * quá nhanh" trong khi chưa gửi nổi tấm nào.
+     * The limit of 10 images/hour must count images ACCEPTED, not attempts. An iPhone user sending
+     * HEIC (the iOS default) would get 415 ten times and then lose the right to send images for a
+     * whole hour, with the message "sending images too fast" while not a single one has gone
+     * through.
      */
     @Test
     void aRejectedUploadDoesNotSpendAnHourlyToken() {
@@ -329,7 +331,7 @@ class AttachmentServiceTest {
         verify(rateLimiter).check(7L, ChatRateLimiterInterface.Action.IMAGE);
     }
 
-    /** Quyết định LEAD 26/09: admin xem được ảnh của tin đã bị báo cáo. */
+    /** LEAD decision 26/09: an admin can view the image of a message that has been reported. */
     @Test
     void anAdminCanSeeThePhotoOfAReportedMessage() {
         MessageAttachment upload = stored(55L, 7L, 101L);
@@ -340,11 +342,11 @@ class AttachmentServiceTest {
                 .thenReturn(Optional.of(fileOnDisk));
 
         assertThat(service.readAsAdmin(55L, 55L).mime()).isEqualTo("image/jpeg");
-        // Admin không phải thành viên; họ đi con đường riêng, hẹp hơn
+        // An admin is not a member; they take a separate, narrower path
         verify(lookup, never()).requireMember(any(), any());
     }
 
-    /** Review Focus #2: ±5 tin là ngữ cảnh, không phải đối tượng bị tố. */
+    /** Review Focus #2: ±5 messages are context, not the reported subject. */
     @Test
     void adminSeesThePhotoOfTheReportedMessageButNotOfItsNeighbours() {
         MessageAttachment neighbour = stored(56L, 7L, 102L);
@@ -357,7 +359,10 @@ class AttachmentServiceTest {
         verify(storage, never()).find(anyString(), anyString());
     }
 
-    /** Admin vừa ẩn tin xong vẫn phải xem lại được ảnh để kiểm chứng quyết định của mình. */
+    /**
+     * An admin who has just hidden a message must still be able to view the image again to verify
+     * their own decision.
+     */
     @Test
     void anAdminStillSeesThePhotoAfterHidingTheMessage() {
         MessageAttachment upload = stored(55L, 7L, 101L);
@@ -389,7 +394,7 @@ class AttachmentServiceTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    /** Người dùng thường không được hưởng nhánh admin dù tin có bị báo cáo. */
+    /** An ordinary user does not get the admin branch even if the message has been reported. */
     @Test
     void aReportDoesNotOpenThePhotoToEveryone() {
         when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));

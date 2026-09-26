@@ -6,9 +6,14 @@ import java.util.List;
 
 public interface MessageServiceInterface {
 
-    /** FR-110: chỉ thành viên; kiểm chính sách gửi; cập nhật preview thread; phát sự kiện. */
+    /**
+     * FR-110: members only; check the send policy; update the thread preview; publish the event.
+     */
     MessageResource send(Long meId, Long conversationId, SendMessageRequest request);
 
-    /** Mới nhất trước; before = id của tin cũ nhất đang có để cuộn lên; size kẹp về 1..50. */
+    /**
+     * Newest first; before = the id of the oldest message currently held, for scrolling up; size
+     * clamped to 1..50.
+     */
     List<MessageResource> list(Long meId, Long conversationId, Long before, int size);
 }

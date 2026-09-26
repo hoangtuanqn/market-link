@@ -65,17 +65,21 @@ public class ConversationService implements ConversationServiceInterface {
         User target = requireUser(targetId, "Stall not found.");
         policy.assertCanStart(me);
 
-        // Thread cũ trả về ngay cả khi stall đã bị đình chỉ (spec 8.1, D-09: vẫn đọc được;
-        // gửi thêm thì send() trả 409). Chính sách "stall có mở không" chỉ gác việc TẠO MỚI.
+        // An old thread is returned even when the stall has been suspended (spec 8.1, D-09: still
+        // readable;
+        // sending more makes send() return 409). The "is the stall open" policy only guards
+        // CREATING new ones.
         Conversation pair = Conversation.between(meId, target.getId());
         Conversation conversation =
                 conversations
                         .findByUserAIdAndUserBId(pair.getUserAId(), pair.getUserBId())
                         .orElseGet(
                                 () -> {
-                                    // Hạn mức §8.4 đếm thread MỚI. open() là idempotent (spec
-                                    // §6.1), nên mở lại thread đã có không tiêu lượt — nếu tính cả
-                                    // lượt gọi thì FE mở khung chat vài chục lần là tự khoá mình.
+                                    // The §8.4 limit counts NEW threads. open() is idempotent (spec
+                                    // §6.1), so reopening an existing thread does not use up a slot
+                                    // — if calls were counted
+                                    // the FE opening the chat frame a few dozen times would lock
+                                    // itself out.
                                     rateLimiter.check(
                                             meId, ChatRateLimiterInterface.Action.CONVERSATION);
                                     policy.assertCanBeMessaged(target);
@@ -128,7 +132,9 @@ public class ConversationService implements ConversationServiceInterface {
         return users.findById(id).orElseThrow(() -> new EntityNotFoundException(message));
     }
 
-    /** Một truy vấn cho cả trang; danh sách rỗng thì không hỏi DB (JPQL "in ()" là lỗi). */
+    /**
+     * One query for the whole page; an empty list does not hit the DB (JPQL "in ()" is an error).
+     */
     private Map<Long, Long> unreadFor(Long meId, Collection<Conversation> page) {
         if (page.isEmpty()) {
             return Map.of();

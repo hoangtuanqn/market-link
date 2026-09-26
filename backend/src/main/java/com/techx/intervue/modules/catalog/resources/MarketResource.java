@@ -3,7 +3,10 @@ package com.techx.intervue.modules.catalog.resources;
 import java.math.BigDecimal;
 import java.util.List;
 
-/** Một chợ như contract §3 trả về: giờ "HH:mm", operatingDays 0…6, farmerCount = stall đã duyệt. */
+/**
+ * A market as returned by contract §3: times "HH:mm", operatingDays 0…6, farmerCount = approved
+ * stalls.
+ */
 public record MarketResource(
         Long id,
         String marketName,

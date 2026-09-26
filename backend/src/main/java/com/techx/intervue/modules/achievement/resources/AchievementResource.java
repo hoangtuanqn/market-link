@@ -4,9 +4,9 @@ import com.techx.intervue.modules.achievement.enums.Tier;
 import lombok.Builder;
 
 /**
- * Thành tích cá nhân trên trang Account. available = false khi chưa đọc được đơn hàng (bảng orders
- * chưa có hoặc DB lỗi): số liệu là 0 và hạng là Đồng, UI nói rõ là chưa có số liệu. next = null ở
- * hạng cao nhất.
+ * Personal achievements on the Account page. available = false when orders cannot be read yet (the
+ * orders table does not exist or the DB failed): the figures are 0 and the tier is Bronze, and the
+ * UI says clearly that there is no data. next = null at the highest tier.
  */
 @Builder
 public record AchievementResource(

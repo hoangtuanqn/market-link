@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 /**
- * File vượt spring.servlet.multipart.max-file-size bị chặn khi đọc body, trước khi biết controller
- * nào nhận, nên handler theo controller (AuthExceptionHandler) không bắt được — class này dùng
- * chung.
+ * A file over spring.servlet.multipart.max-file-size is rejected while reading the body, before it
+ * is known which controller receives it, so a per-controller handler (AuthExceptionHandler) cannot
+ * catch it — this class is a shared handler.
  */
 @RestControllerAdvice
 public class UploadExceptionHandler {

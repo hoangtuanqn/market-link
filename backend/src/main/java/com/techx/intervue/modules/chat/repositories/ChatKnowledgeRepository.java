@@ -17,8 +17,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Các câu SQL cố định mà chatbot được phép chạy (R-04). Chỉ đọc, mọi giá trị từ người dùng đi qua
- * tham số — không có chỗ nào nối chuỗi input vào SQL.
+ * The fixed SQL statements the chatbot is allowed to run (R-04). Read-only, every user value goes
+ * through parameters — there is no place that concatenates input into SQL.
  */
 @Repository
 @RequiredArgsConstructor
@@ -92,7 +92,7 @@ public class ChatKnowledgeRepository {
                         .addValue("keyword", "%" + escapeLike(keyword) + "%")
                         .addValue("marketId", marketId, Types.BIGINT);
 
-        // Một sản phẩm bán ở nhiều chợ → nhiều dòng; gộp lại theo product_id
+        // One product sold at several markets → several rows; merge them by product_id
         Map<Long, ProductRow> products = new LinkedHashMap<>();
         jdbc.query(
                 SEARCH_PRODUCTS,
@@ -164,7 +164,7 @@ public class ChatKnowledgeRepository {
                                 rs.getObject("pickup_end_time", LocalTime.class)));
     }
 
-    /** Escape ký tự đặc biệt của LIKE để keyword luôn được hiểu là chữ thường. */
+    /** Escape LIKE special characters so the keyword is always read as plain text. */
     static String escapeLike(String keyword) {
         return keyword.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }

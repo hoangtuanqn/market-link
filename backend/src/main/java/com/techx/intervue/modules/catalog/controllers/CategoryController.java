@@ -19,7 +19,7 @@ public class CategoryController extends BaseController {
 
     private final CategoryServiceInterface categoryService;
 
-    /** Public — bộ lọc sản phẩm của khách cần nó trước cả khi đăng nhập (FR-020). */
+    /** Public — customers' product filter needs it even before signing in (FR-020). */
     @GetMapping
     public ResponseEntity<ApiResource<List<CategoryResource>>> list() {
         return ok(categoryService.listActive(), "");

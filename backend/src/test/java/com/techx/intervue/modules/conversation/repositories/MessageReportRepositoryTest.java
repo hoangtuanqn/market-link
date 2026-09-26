@@ -19,7 +19,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Chạy trên MySQL thật như MessageAttachmentRepositoryTest — UNIQUE và FK phải thi hành thật. */
+/**
+ * Runs on real MySQL like MessageAttachmentRepositoryTest — UNIQUE and FK must really be enforced.
+ */
 @SpringBootTest
 @Transactional
 class MessageReportRepositoryTest {
@@ -65,7 +67,7 @@ class MessageReportRepositoryTest {
         assertThat(reports.existsByMessageIdAndReportedBy(messageId, 999_999L)).isFalse();
     }
 
-    /** Spec §8.3: quyền đọc của admin bắt nguồn từ câu hỏi này. */
+    /** Spec §8.3: the admin's right to read comes from this question. */
     @Test
     void knowsWhetherAMessageHasAnyReportAtAll() {
         User customer = user(RoleType.CUSTOMER);

@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-/** Ai nhận thông báo admin đăng (FR-077). Admin không nằm trong audience nào. */
+/** Who receives an admin-posted announcement (FR-077). Admin is not in any audience. */
 public enum Audience {
     ALL(RoleType.CUSTOMER, RoleType.FARMER),
     CUSTOMERS(RoleType.CUSTOMER),
@@ -22,8 +22,8 @@ public enum Audience {
     }
 
     /**
-     * Những audience một người thấy trên banner. Khách vãng lai (role null) và admin chỉ thấy ALL:
-     * họ không thuộc audience nào nên cũng không nhận bản thông báo.
+     * The audiences a person sees on the banner. A guest (null role) and an admin only see ALL:
+     * they belong to no audience so they do not receive the announcement either.
      */
     public static List<Audience> visibleTo(RoleType role) {
         return Arrays.stream(values())
@@ -31,7 +31,7 @@ public enum Audience {
                 .toList();
     }
 
-    /** Giá trị cột users.role (chữ thường) cho câu fan-out. */
+    /** Value of the users.role column (lowercase) for the fan-out statement. */
     public List<String> roleCodes() {
         return roles.stream().map(r -> r.name().toLowerCase(Locale.ROOT)).toList();
     }

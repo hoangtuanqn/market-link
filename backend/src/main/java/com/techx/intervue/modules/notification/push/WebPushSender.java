@@ -15,15 +15,15 @@ import nl.martijndwars.webpush.PushService;
 import org.springframework.stereotype.Component;
 
 /**
- * FR-042 N3 — gửi Web Push (RFC 8291 aes128gcm + VAPID) tới mọi trình duyệt đã đăng ký của một
- * người. Chạy trên luồng riêng để request gây ra thông báo không phải chờ dịch vụ push. 404/410 =
- * trình duyệt đã huỷ đăng ký → xoá.
+ * FR-042 N3 — sends Web Push (RFC 8291 aes128gcm + VAPID) to every registered browser of one
+ * person. Runs on its own thread so the request that caused the notification does not wait for the
+ * push service. 404/410 = the browser unsubscribed → delete.
  */
 @Slf4j
 @Component
 public class WebPushSender {
 
-    /** Nội dung service worker đọc (public/sw.js); không thêm dữ liệu cá nhân nào khác. */
+    /** The content the service worker reads (public/sw.js); no other personal data is added. */
     record PushMessage(String kind, String title, String message, String link, String tag) {}
 
     private static final ObjectMapper JSON = new ObjectMapper();
@@ -51,13 +51,13 @@ public class WebPushSender {
         return gateway.service().isPresent();
     }
 
-    /** Bất đồng bộ; lỗi chỉ ghi log. */
+    /** Asynchronous; errors are only logged. */
     public void send(Long userId, NotificationPayload payload) {
         if (!enabled()) return;
         executor.execute(() -> sendNow(userId, payload));
     }
 
-    /** Đồng bộ (test và luồng web-push dùng). */
+    /** Synchronous (used by tests and the web-push flow). */
     public void sendNow(Long userId, NotificationPayload payload) {
         PushService push = gateway.service().orElse(null);
         if (push == null) return;

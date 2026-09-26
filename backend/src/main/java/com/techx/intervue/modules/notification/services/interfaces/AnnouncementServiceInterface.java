@@ -8,21 +8,21 @@ import java.util.Optional;
 
 public interface AnnouncementServiceInterface {
 
-    /** Tạo và gửi ngay cho mọi user active thuộc audience. */
+    /** Create and send immediately to every active user in the audience. */
     AnnouncementResource create(Long adminId, AnnouncementRequest request);
 
     PageResource<AnnouncementResource> list(int page, int size);
 
-    /** Sửa banner; không sửa các thông báo đã gửi. */
+    /** Edit the banner; does not edit notifications already sent. */
     AnnouncementResource update(Long id, AnnouncementRequest request);
 
-    /** Gỡ banner; thông báo đã gửi vẫn giữ. */
+    /** Remove the banner; notifications already sent are kept. */
     void deactivate(Long id);
 
     /**
-     * Banner đang hiệu lực mới nhất mà người xem thuộc audience của nó.
+     * The latest banner currently in effect whose audience the viewer belongs to.
      *
-     * @param viewer role của người đang xem; null = khách vãng lai
+     * @param viewer role of the person viewing; null = guest
      */
     Optional<AnnouncementResource> live(RoleType viewer);
 }

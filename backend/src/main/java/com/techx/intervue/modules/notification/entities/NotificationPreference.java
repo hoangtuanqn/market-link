@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Một nhóm × hai kênh của một người. Chưa có dòng = cả hai kênh bật. category giữ code chuỗi
- * (NotificationCategory.code()) vì JPA không áp converter lên thuộc tính @Id.
+ * One category × two channels for one person. No row = both channels on. category keeps the string
+ * code (NotificationCategory.code()) because JPA does not apply a converter to an @Id attribute.
  */
 @Entity
 @Getter

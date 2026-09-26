@@ -5,8 +5,8 @@ import java.time.Instant;
 import lombok.Builder;
 
 /**
- * §6.1 — một dòng trong danh sách Farmer của Admin. Thứ tự tham số là thứ tự trong câu JPQL {@code
- * FarmerProfileRepository#search}: đổi chỗ ở đây thì phải đổi cả ở đó.
+ * §6.1 — one row in the Admin's Farmer list. The parameter order is the order in the JPQL of {@code
+ * FarmerProfileRepository#search}: change it here and it must be changed there too.
  */
 @Builder
 public record AdminFarmerListItemResource(
@@ -15,7 +15,8 @@ public record AdminFarmerListItemResource(
         String contactPerson,
         String email,
         /**
-         * docs/prototype/admin/farmers.html: dòng phụ dưới tên sạp là "người liên hệ · điện thoại".
+         * docs/prototype/admin/farmers.html: the secondary line under the stall name is "contact
+         * person · phone".
          */
         String phone,
         ApprovalStatus approvalStatus,

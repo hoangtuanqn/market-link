@@ -21,8 +21,9 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class RefreshTokenService implements RefreshTokenServiceInterface {
     /**
-     * Hai tab cùng refresh bằng một cookie: request đến sau thấy token vừa bị xoay vòng. Trong
-     * khoảng này chỉ từ chối, không coi là bị đánh cắp (không thu hồi toàn bộ token của user).
+     * Two tabs refresh with one cookie: the request that arrives later sees the token was just
+     * rotated. Within this window only reject, do not treat it as theft (do not revoke all of the
+     * user's tokens).
      */
     static final Duration ROTATION_GRACE = Duration.ofSeconds(30);
 
@@ -42,7 +43,7 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         String tokenHash = utils.hash(token);
         RefreshToken entity =
                 RefreshToken.builder()
-                        .tokenHash(tokenHash) // token đã hash
+                        .tokenHash(tokenHash) // hashed token
                         .userId(userId)
                         .expiryDate(
                                 Instant.now()
@@ -56,9 +57,9 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     }
 
     /**
-     * FR-003: đổi refresh token cũ lấy token mới (rotation). Token cũ bị dùng lại → coi như bị đánh
-     * cắp, thu hồi toàn bộ token của user. dontRollbackOn để việc thu hồi đó không bị rollback theo
-     * exception.
+     * FR-003: exchange the old refresh token for a new one (rotation). Reusing an old token →
+     * treated as stolen, revoke all of the user's tokens. dontRollbackOn so that revocation is not
+     * rolled back with the exception.
      */
     @Override
     @Transactional(dontRollbackOn = BadCredentialsException.class)
@@ -80,8 +81,9 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
     }
 
     /**
-     * FR-006: thu hồi refresh token khi logout. Chỉ thu hồi token của chính user đó (R-06). Token
-     * không tồn tại hoặc đã thu hồi thì bỏ qua để gọi logout nhiều lần vẫn thành công.
+     * FR-006: revoke the refresh token on logout. Only revoke the token of that user themself
+     * (R-06). A token that does not exist or is already revoked is skipped so calling logout
+     * several times still succeeds.
      */
     @Override
     @Transactional
@@ -107,14 +109,14 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
                 log.warn("Refresh token was just rotated, rejected without revoking the user.");
                 throw new BadCredentialsException("Refresh token is not valid.");
             }
-            // revoked hết tất cả những refresh token của người dùng
+            // revoke every refresh token of the user
             repository.revokeAllRefreshTokenByUser(entity.getUserId());
             log.error("Refresh token reuse detected, revoked all tokens of the user.");
             throw new BadCredentialsException("Refresh token is not valid.");
         }
     }
 
-    /** Token bị thu hồi do xoay vòng (không phải do logout) và vừa mới xoay. */
+    /** A token revoked by rotation (not by logout) and just rotated. */
     private static boolean isJustRotated(RefreshToken entity) {
         return entity.getReplacedByTokenId() != null
                 && entity.getUpdatedAt() != null

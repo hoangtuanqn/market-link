@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Một lần nộp đơn xin thành Farmer, chụp lại nội dung lúc nộp. {@code farmer_profiles} bị ghi đè
- * khi nộp lại nên không giữ được lịch sử; bảng này giữ, để người nộp và Admin đều đối chiếu được
- * lần trước bị từ chối vì lý do gì.
+ * One Farmer application, a snapshot of its content at submission. {@code farmer_profiles} is
+ * overwritten when the user re-applies so it cannot keep history; this table keeps it, so both the
+ * applicant and the Admin can check why the previous one was rejected.
  */
 @Entity
 @Getter
@@ -36,7 +36,7 @@ public class FarmerApplicationHistory {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    /** Lần nộp thứ mấy của tài khoản này, bắt đầu từ 1. */
+    /** Which submission this is for the account, starting at 1. */
     @Column(name = "attempt", nullable = false)
     private Integer attempt;
 
@@ -49,7 +49,7 @@ public class FarmerApplicationHistory {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    /** Nhiều path cách nhau bởi ';' — cùng quy ước với farmer_profiles. */
+    /** Several paths separated by ';' — same convention as farmer_profiles. */
     @Column(name = "photo_paths", columnDefinition = "TEXT")
     private String photoPaths;
 

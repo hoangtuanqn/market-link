@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-/** FR-001: khách hàng đăng ký phải có họ tên, số điện thoại, email và địa chỉ. */
+/** FR-001: a customer signing up must provide full name, phone number, email and address. */
 public record CustomerRegisterRequest(
         @NotBlank(message = "Enter your full name.")
                 @Size(max = 100, message = "Full name can be at most 100 characters.")

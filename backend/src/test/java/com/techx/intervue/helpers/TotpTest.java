@@ -10,11 +10,11 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class TotpTest {
 
-    // Khoá mẫu SHA1 trong RFC 6238, phụ lục B
+    // The SHA1 sample key from RFC 6238, appendix B
     private static final byte[] RFC_SECRET =
             "12345678901234567890".getBytes(StandardCharsets.US_ASCII);
 
-    /** RFC 6238 phụ lục B cho mã 8 số; mã 6 số là 6 số cuối. */
+    /** RFC 6238 appendix B gives 8-digit codes; the 6-digit code is the last 6 digits. */
     @ParameterizedTest
     @CsvSource({
         "59, 287082",

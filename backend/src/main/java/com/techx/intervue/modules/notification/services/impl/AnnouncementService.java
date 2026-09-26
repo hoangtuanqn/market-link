@@ -19,7 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-077 — admin đăng thông báo toàn nền tảng; cũng là nguồn của banner public. */
+/** FR-077 — an admin posts a platform-wide announcement; also the source of the public banner. */
 @Service
 @RequiredArgsConstructor
 public class AnnouncementService implements AnnouncementServiceInterface {

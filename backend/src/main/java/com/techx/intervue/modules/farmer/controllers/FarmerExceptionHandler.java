@@ -19,9 +19,9 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
 /**
- * Trả 400/403/404/409 cho FarmerController, AdminFarmerController và FarmerUploadController — repo
- * chưa có handler chung (giống AuthExceptionHandler/ChatExceptionHandler), thiếu class này thì lỗi
- * rơi xuống /error và bị trả 401.
+ * Returns 400/403/404/409 for FarmerController, AdminFarmerController and FarmerUploadController —
+ * the repo has no shared handler yet (like AuthExceptionHandler/ChatExceptionHandler), and without
+ * this class errors fall through to /error and come back as 401.
  */
 @RestControllerAdvice(
         assignableTypes = {
@@ -60,7 +60,10 @@ public class FarmerExceptionHandler {
                                 .build()));
     }
 
-    /** R-06: {id} không tồn tại → 404, không lộ có/không có id khác qua mã lỗi khác. */
+    /**
+     * R-06: {id} does not exist → 404, without revealing whether another id exists through a
+     * different error code.
+     */
     @ExceptionHandler(FarmerProfileNotFoundException.class)
     ResponseEntity<ApiResource<Void>> notFound(FarmerProfileNotFoundException e) {
         return error(HttpStatus.NOT_FOUND, "FARMER_NOT_FOUND", e.getMessage(), List.of());
@@ -71,16 +74,17 @@ public class FarmerExceptionHandler {
         return error(HttpStatus.CONFLICT, "FARMER_APPLICATION_EXISTS", e.getMessage(), List.of());
     }
 
-    /** R-06: chuyển trạng thái sai thứ tự (duyệt/đình chỉ) → 409 (D-04-style). */
+    /** R-06: a state change out of order (approve/suspend) → 409 (D-04-style). */
     @ExceptionHandler(InvalidApprovalTransitionException.class)
     ResponseEntity<ApiResource<Void>> invalidTransition(InvalidApprovalTransitionException e) {
         return error(HttpStatus.CONFLICT, "INVALID_APPROVAL_TRANSITION", e.getMessage(), List.of());
     }
 
     /**
-     * Lưới an toàn cuối: dữ liệu dài hơn cột, hoặc hai request nộp đơn cùng lúc cùng lọt qua
-     * existsByUserId rồi bị UNIQUE(user_id) chặn. Không bắt ở đây thì lỗi rơi xuống /error, bị trả
-     * 401 và FE tưởng người dùng hết phiên.
+     * Last safety net: data longer than the column, or two requests submitting at the same time
+     * both get past existsByUserId and then are blocked by UNIQUE(user_id). If it is not caught
+     * here the error falls through to /error, comes back as 401 and the FE thinks the user's
+     * session ended.
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
@@ -91,7 +95,7 @@ public class FarmerExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /** File vượt quá spring.servlet.multipart.max-file-size/max-request-size → 400. */
+    /** A file over spring.servlet.multipart.max-file-size/max-request-size → 400. */
     @ExceptionHandler({MaxUploadSizeExceededException.class, MultipartException.class})
     ResponseEntity<ApiResource<Void>> uploadTooLarge(Exception e) {
         String message = "File is too large.";
@@ -103,7 +107,8 @@ public class FarmerExceptionHandler {
     }
 
     /**
-     * @PreAuthorize sai role (customer gọi API admin, admin/farmer tự nộp đơn...) → 403.
+     * @PreAuthorize with the wrong role (a customer calls an admin API, an admin/farmer applies
+     * themself...) → 403.
      */
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {

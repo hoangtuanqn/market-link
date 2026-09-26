@@ -58,7 +58,7 @@ class MfaServiceTest {
         service = newService();
     }
 
-    // ---------- bật / tắt ----------
+    // ---------- turn on / off ----------
 
     @Test
     void setupStoresEncryptedSecretThatIsNotYetEnabled() {
@@ -152,12 +152,12 @@ class MfaServiceTest {
         advance(Duration.ofSeconds(30));
         service.disable(ADMIN_ID, currentCode());
 
-        // cùng bước 30 giây, khoá mới → mã khác, không được coi là dùng lại
+        // same 30-second step, new key → a different code, must not be treated as reuse
         service.setup(ADMIN_ID, "admin@marketlink.local");
         assertThat(service.enable(ADMIN_ID, currentCode())).hasSize(10);
     }
 
-    // ---------- đăng nhập bước 2 ----------
+    // ---------- step 2 sign-in ----------
 
     @Test
     void rightCodeCompletesPendingLoginOnce() {
@@ -168,7 +168,7 @@ class MfaServiceTest {
         PendingLogin login = service.verifyChallenge(token, currentCode(), null);
 
         assertThat(login).isEqualTo(new PendingLogin(ADMIN_ID, false));
-        // token chờ chỉ dùng được một lần
+        // the pending token can only be used once
         assertThatThrownBy(() -> service.verifyChallenge(token, currentCode(), null))
                 .isInstanceOf(MfaTokenInvalidException.class);
     }
@@ -191,7 +191,7 @@ class MfaServiceTest {
 
     @Test
     void codeAlreadyUsedCannotBeReplayed() {
-        turnOn(); // mã hiện tại đã dùng để bật
+        turnOn(); // the current code was already used to turn it on
         String token = service.startChallenge(ADMIN_ID, true);
 
         assertThatThrownBy(() -> service.verifyChallenge(token, currentCode(), null))
@@ -226,7 +226,7 @@ class MfaServiceTest {
                 .isInstanceOfSatisfying(
                         MfaLockedException.class,
                         e -> assertThat(e.getRetryAfterSeconds()).isEqualTo(900));
-        // bị khoá thì mã đúng cũng không qua
+        // once locked, even a correct code does not get through
         assertThatThrownBy(() -> service.verifyChallenge(token, currentCode(), null))
                 .isInstanceOf(MfaLockedException.class);
     }

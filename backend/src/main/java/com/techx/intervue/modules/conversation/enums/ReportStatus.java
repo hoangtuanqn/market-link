@@ -6,8 +6,8 @@ import jakarta.persistence.Converter;
 import java.util.Locale;
 
 /**
- * new = chưa ai xem · reviewed = admin đã xem và quyết định không ẩn · actioned = đã ẩn tin. Khớp
- * ENUM trong migration V20260926005.
+ * new = nobody has looked · reviewed = an admin looked and decided not to hide · actioned = the
+ * message was hidden. Matches the ENUM in migration V20260926005.
  */
 public enum ReportStatus {
     NEW,

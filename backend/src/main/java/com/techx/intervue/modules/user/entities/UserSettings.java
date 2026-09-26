@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Tuỳ chọn hiển thị của một tài khoản; giá trị hợp lệ nằm ở UpdateSettingsRequest. */
+/** An account's display preferences; valid values are in UpdateSettingsRequest. */
 @Entity
 @Getter
 @Setter

@@ -3,7 +3,7 @@ package com.techx.intervue.modules.product.requests;
 import java.math.BigDecimal;
 
 /**
- * Query của GET /api/v1/products (contract §5). `sort`: price_asc | price_desc | newest | rating.
+ * Query of GET /api/v1/products (contract §5). `sort`: price_asc | price_desc | newest | rating.
  */
 public record ProductSearchCriteria(
         String q,

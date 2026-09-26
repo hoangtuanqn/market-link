@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 
 /**
- * Mặc định Spring đặt thông điệp của MessageDeliveryException ("Failed to send message to
- * ExecutorSubscribableChannel…") vào frame ERROR; client không phân biệt được "token hết hạn, làm
- * mới rồi nối lại" với "đừng thử nữa". Ở đây lấy lý do gốc của ta khi nó là lỗi xác thực / phân
- * quyền.
+ * By default Spring puts the message of MessageDeliveryException ("Failed to send message to
+ * ExecutorSubscribableChannel…") into the ERROR frame; the client cannot tell "token expired,
+ * refresh and reconnect" from "do not try again". Here we take our own root cause when it is an
+ * authentication / authorization error.
  */
 @Component
 public class StompErrorHandler extends StompSubProtocolErrorHandler {

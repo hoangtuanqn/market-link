@@ -15,7 +15,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Một thông báo đã lưu của một người (FR-042). Text đã dịch theo ngôn ngữ người nhận lúc tạo. */
+/**
+ * A stored notification of one person (FR-042). The text is translated into the recipient's
+ * language at creation time.
+ */
 @Entity
 @Getter
 @Setter

@@ -9,7 +9,7 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** FR-007 bước D: báo cho user biết mật khẩu vừa được đổi. */
+/** FR-007 step D: tell the user their password was just changed. */
 @Component
 @AllArgsConstructor
 public class PasswordChangedNoticeJob implements JobHandler {

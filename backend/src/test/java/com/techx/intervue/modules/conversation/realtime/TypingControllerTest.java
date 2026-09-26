@@ -48,7 +48,7 @@ class TypingControllerTest {
         controller.typing(new TypingRequest(42L, true), me);
 
         verify(publisher).send(3L, StompChatEventPublisher.TYPING, new TypingEvent(42L, 7L, true));
-        verify(publisher, times(1)).send(anyLong(), anyString(), any()); // đúng một người nhận
+        verify(publisher, times(1)).send(anyLong(), anyString(), any()); // exactly one recipient
     }
 
     @Test
@@ -69,7 +69,7 @@ class TypingControllerTest {
         verify(publisher, never()).send(anyLong(), anyString(), any());
     }
 
-    /** Review Focus #5: client bug hoặc frame bịa. */
+    /** Review Focus #5: a client bug or a forged frame. */
     @Test
     void ignoresAFrameWithNoConversationId() {
         assertThatCode(() -> controller.typing(new TypingRequest(null, true), me))
@@ -87,7 +87,7 @@ class TypingControllerTest {
         verifyNoInteractions(lookup);
     }
 
-    /** Review Focus #5, nửa sau: rải frame liên tục. */
+    /** Review Focus #5, second half: a continuous flood of frames. */
     @Test
     void dropsTypingFramesOnceTheLimitIsReached() {
         org.mockito.Mockito.doThrow(new RateLimitedException("too fast"))
@@ -100,7 +100,9 @@ class TypingControllerTest {
         verify(publisher, never()).send(anyLong(), anyString(), any());
     }
 
-    /** Vượt hạn mức thì không được chạm DB: chặn spam phải rẻ hơn việc nó gây ra. */
+    /**
+     * Over the limit it must not touch the DB: blocking spam must be cheaper than what it causes.
+     */
     @Test
     void checksTheLimitBeforeTouchingTheDatabase() {
         org.mockito.Mockito.doThrow(new RateLimitedException("too fast"))

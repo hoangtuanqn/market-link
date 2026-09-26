@@ -19,21 +19,26 @@ import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
 /**
- * Spec §8.2: kiểu ảnh kết luận từ magic bytes, không từ Content-Type. JPEG/PNG được giải mã rồi mã
- * hoá lại thành JPEG nên EXIF (có thể chứa toạ độ GPS) rụng hết — giống AvatarService.
+ * Spec §8.2: the image type is concluded from magic bytes, not from Content-Type. JPEG/PNG are
+ * decoded and re-encoded as JPEG so EXIF (which may contain GPS coordinates) is dropped — same as
+ * AvatarService.
  *
- * <p>WebP: OpenJDK không có plugin ImageIO nào đọc được WebP (đã kiểm trên JDK 21 và 25), nên kích
- * thước đọc thẳng từ header RIFF và file được lưu nguyên vẹn. Vì lưu nguyên si nên header phải được
- * soi kỹ hơn hai định dạng kia: kích thước RIFF phải khớp độ dài file thật (chặn đuôi đính kèm và
- * file bị cắt) và sync code / chữ ký của chunk phải đúng (chặn payload bất kỳ đội lốt ảnh).
+ * <p>WebP: OpenJDK has no ImageIO plugin that can read WebP (checked on JDK 21 and 25), so the size
+ * is read straight from the RIFF header and the file is stored intact. Because it is stored as is,
+ * the header must be inspected more closely than the other two formats: the RIFF size must match
+ * the real file length (blocking attached tails and truncated files) and the chunk sync code /
+ * signature must be right (blocking any payload disguised as an image).
  *
- * <p>Hệ quả còn lại: khối EXIF/XMP trong một WebP mở rộng không bị bóc. Ảnh chỉ ra ngoài qua
- * endpoint có kiểm quyền và chỉ tới đúng người nhận mà người gửi đã chọn, nên đây là đánh đổi có ý
- * thức, không phải sót.
+ * <p>The remaining consequence: an EXIF/XMP block inside an extended WebP is not stripped. Images
+ * only leave through a permission-checked endpoint and only reach the recipient the sender chose,
+ * so this is a conscious trade-off, not an oversight.
  */
 public final class ImageProbe {
 
-    /** Chặn ảnh "bom giải nén": kết luận từ header, trước khi cấp phát bộ nhớ cho điểm ảnh. */
+    /**
+     * Block "decompression bomb" images: conclude from the header, before allocating memory for the
+     * pixels.
+     */
     static final int MAX_SIDE = 4096;
 
     static final String JPEG = "image/jpeg";
@@ -56,7 +61,7 @@ public final class ImageProbe {
         return probed;
     }
 
-    /** JPEG/PNG → JPEG mã hoá lại. WebP → nguyên si (JDK không có bộ mã hoá nào cho nó). */
+    /** JPEG/PNG → re-encoded JPEG. WebP → as is (the JDK has no encoder for it). */
     public static byte[] normalize(byte[] bytes, String mime) {
         if (WEBP.equals(mime)) {
             return bytes;
@@ -101,8 +106,10 @@ public final class ImageProbe {
         if (b.length < 21 || !ascii(b, 0, 4).equals("RIFF") || !ascii(b, 8, 4).equals("WEBP")) {
             return false;
         }
-        // Trường size của RIFF đếm mọi byte sau nó. Khai dài hơn file thật nghĩa là file bị cắt
-        // hoặc bịa; khai ngắn hơn nghĩa là có phần đuôi không thuộc ảnh được đính kèm.
+        // The RIFF size field counts every byte after it. Declaring more than the real file means
+        // the file is truncated
+        // or forged; declaring less means there is a tail that does not belong to the attached
+        // image.
         return le32(b, 4) == b.length - 8;
     }
 
@@ -111,8 +118,8 @@ public final class ImageProbe {
     }
 
     /**
-     * Ba biến thể chunk của WebP (RFC 9649 §2). Header RIFF 12 byte + chunk header 8 byte, nên
-     * payload của chunk bắt đầu ở byte 20.
+     * The three WebP chunk variants (RFC 9649 §2). A 12-byte RIFF header + an 8-byte chunk header,
+     * so the chunk payload starts at byte 20.
      */
     private static Probed probeWebp(byte[] b) {
         String chunk = ascii(b, 12, 4);
@@ -126,12 +133,12 @@ public final class ImageProbe {
                     yield new Probed(WEBP, width, height);
                 }
                 case "VP8L" -> {
-                    // 20: signature byte 0x2f · 21: 14 bit width-1 rồi 14 bit height-1
+                    // 20: signature byte 0x2f · 21: 14 bits width-1 then 14 bits height-1
                     requireBytes(b, 20, 0x2f);
                     int bits = le32(b, 21);
                     yield new Probed(WEBP, (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1);
                 }
-                // 20: 4 byte cờ · 24: canvas width-1 (3 byte) · 27: canvas height-1 (3 byte)
+                // 20: 4 flag bytes · 24: canvas width-1 (3 bytes) · 27: canvas height-1 (3 bytes)
                 case "VP8X" -> new Probed(WEBP, le24(b, 24) + 1, le24(b, 27) + 1);
                 default -> throw new UnsupportedImageTypeException();
             };
@@ -141,10 +148,10 @@ public final class ImageProbe {
     }
 
     /**
-     * WebP được lưu nguyên si (JDK không có bộ mã hoá nào cho nó), nên nếu chỉ tin "RIFF…WEBP" thì
-     * 16 byte header là đủ để cất một payload bất kỳ lên server rồi phục vụ lại nó dưới
-     * Content-Type image/webp. Sync code / chữ ký là bằng chứng rẻ nhất rằng đây thật sự là khung
-     * ảnh.
+     * WebP is stored as is (the JDK has no encoder for it), so if we only trusted "RIFF…WEBP" then
+     * 16 header bytes would be enough to stash any payload on the server and serve it back under
+     * Content-Type image/webp. The sync code / signature is the cheapest evidence that this really
+     * is an image frame.
      */
     private static void requireBytes(byte[] b, int at, int... expected) {
         for (int i = 0; i < expected.length; i++) {
@@ -197,7 +204,7 @@ public final class ImageProbe {
         }
     }
 
-    /** JPEG không có kênh alpha: phần trong suốt của PNG thành nền trắng. */
+    /** JPEG has no alpha channel: the transparent part of a PNG becomes a white background. */
     private static byte[] encodeJpeg(BufferedImage source) {
         BufferedImage flat =
                 new BufferedImage(

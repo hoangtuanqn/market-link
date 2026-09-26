@@ -59,7 +59,7 @@ class ImageProbeTest {
                 .isInstanceOf(UnsupportedImageTypeException.class);
     }
 
-    /** Review Focus #2: header khai kích thước khổng lồ, không được giải mã điểm ảnh. */
+    /** Review Focus #2: the header claims a huge size, the pixels must not be decoded. */
     @Test
     void rejectsAnImageThatIsTooLargeInPixels() {
         byte[] bomb = lossyWebp(16000, 16000);
@@ -93,7 +93,7 @@ class ImageProbeTest {
     }
 
     /**
-     * RIFF….WEBP + chunk "VP8 " lossy: sync code 9d 01 2a rồi width/height 14 bit little-endian.
+     * RIFF….WEBP + a lossy "VP8 " chunk: sync code 9d 01 2a then 14-bit little-endian width/height.
      */
     private static byte[] lossyWebp(int w, int h) {
         byte[] payload = new byte[30];
@@ -115,14 +115,14 @@ class ImageProbeTest {
     }
 
     /**
-     * Finding #6: WebP được lưu nguyên si, nên nếu chỉ kiểm "RIFF…WEBP" thì 16 byte header hợp lệ
-     * là đủ để cất một payload bất kỳ lên server và phục vụ lại nó dưới Content-Type image/webp.
-     * Sync code của VP8 là thứ rẻ nhất chứng minh đây thật sự là một khung ảnh.
+     * Finding #6: WebP is stored as is, so if only "RIFF…WEBP" were checked then 16 valid header
+     * bytes would be enough to stash any payload on the server and serve it back under Content-Type
+     * image/webp. The VP8 sync code is the cheapest proof that this really is an image frame.
      */
     @Test
     void rejectsAWebpWhoseVp8SyncCodeIsWrong() {
         byte[] fake = lossyWebp(20, 10);
-        fake[23] = 0x00; // sync code phải là 9d 01 2a
+        fake[23] = 0x00; // the sync code must be 9d 01 2a
 
         assertThatThrownBy(() -> ImageProbe.probe(fake))
                 .isInstanceOf(UnsupportedImageTypeException.class);
@@ -131,7 +131,7 @@ class ImageProbeTest {
     @Test
     void rejectsALosslessWebpWhoseSignatureByteIsWrong() {
         byte[] fake = losslessWebp(20, 10);
-        fake[20] = 0x00; // chữ ký VP8L phải là 0x2f
+        fake[20] = 0x00; // the VP8L signature must be 0x2f
 
         assertThatThrownBy(() -> ImageProbe.probe(fake))
                 .isInstanceOf(UnsupportedImageTypeException.class);
@@ -149,7 +149,7 @@ class ImageProbeTest {
     @Test
     void rejectsAWebpWhoseRiffSizeDoesNotMatchTheFile() {
         byte[] fake = lossyWebp(20, 10);
-        // RIFF khai dài hơn file thật: dấu hiệu của payload bị cắt hoặc bịa
+        // RIFF declares more than the real file: a sign of a truncated or forged payload
         fake[4] = (byte) 0xF0;
         fake[5] = (byte) 0xFF;
 
@@ -158,9 +158,10 @@ class ImageProbeTest {
     }
 
     /**
-     * Finding #8: ca "bom giải nén" ở trên dùng WebP, mà WebP không bao giờ được giải mã — nó đi
-     * nhánh probeWebp và normalize() trả nguyên bytes. Nhánh thật sự cần chốt chặn là JPEG/PNG:
-     * header khai kích thước khổng lồ phải bị từ chối TRƯỚC khi ImageIO cấp phát điểm ảnh.
+     * Finding #8: the "decompression bomb" case above uses WebP, but WebP is never decoded — it
+     * goes down the probeWebp branch and normalize() returns the bytes as is. The branch that
+     * really needs the backstop is JPEG/PNG: a header claiming a huge size must be rejected BEFORE
+     * ImageIO allocates the pixels.
      */
     @Test
     void rejectsAPngThatDeclaresHugeDimensionsBeforeDecodingIt() {
@@ -171,7 +172,7 @@ class ImageProbeTest {
                 .hasMessageContaining("4096");
     }
 
-    /** RIFF….WEBP + chunk "VP8L": chữ ký 0x2f rồi 14 bit (w-1) và 14 bit (h-1). */
+    /** RIFF….WEBP + a "VP8L" chunk: signature 0x2f then 14 bits (w-1) and 14 bits (h-1). */
     private static byte[] losslessWebp(int w, int h) {
         byte[] payload = new byte[30];
         payload[0] = 0x2f;
@@ -196,8 +197,8 @@ class ImageProbeTest {
     }
 
     /**
-     * PNG chỉ có chữ ký + IHDR khai 60000x60000. ImageIO đọc được kích thước từ header mà không
-     * phải giải mã IDAT nào — đúng thứ chốt chặn phải bắt.
+     * A PNG with only the signature + an IHDR declaring 60000x60000. ImageIO can read the size from
+     * the header without decoding any IDAT — exactly what the backstop must catch.
      */
     private static byte[] pngHeaderOnly(int w, int h) {
         java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();

@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-008: admin bật / tắt xác thực hai bước cho chính mình. Bước 2 lúc đăng nhập nằm ở
- * AuthController (POST /auth/mfa/verify) vì cần set cookie như đăng nhập thường.
+ * FR-008: an admin turns two-step verification on / off for themself. Step 2 at sign-in lives in
+ * AuthController (POST /auth/mfa/verify) because it needs to set the cookie like a normal sign-in.
  */
 @RestController
 @RequestMapping("/api/v1/auth/mfa")
@@ -54,7 +54,7 @@ public class MfaController extends BaseController {
                 "Two-step verification is on.");
     }
 
-    /** Mã cũ hết hiệu lực ngay; mã mới chỉ trả về một lần. */
+    /** The old codes become invalid immediately; the new codes are returned only once. */
     @PostMapping("/recovery-codes")
     public ResponseEntity<ApiResource<MfaRecoveryCodesResource>> regenerateRecoveryCodes(
             @AuthenticationPrincipal CustomUserDetails user,

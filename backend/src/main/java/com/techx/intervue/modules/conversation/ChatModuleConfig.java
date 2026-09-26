@@ -8,17 +8,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Cấu hình của module chat người-với-người. Không nhầm với
- * com.techx.intervue.modules.chat.ChatConfig — đó là chatbot FR-090.
+ * Configuration of the person-to-person chat module. Not to be confused with
+ * com.techx.intervue.modules.chat.ChatConfig — that one is the FR-090 chatbot.
  */
 @Configuration
 @EnableConfigurationProperties(ChatLimitsProperties.class)
 public class ChatModuleConfig {
 
     /**
-     * Spec §8.2: ảnh chat KHÔNG được nằm trong app.storage.dir — thư mục đó được AppConfig map ra
-     * /uploads/** và SecurityConfig cho permitAll, nên ai có link cũng tải được. Bean này dùng lại
-     * đúng logic đường dẫn an toàn của LocalFileStorageService nhưng cắm vào một gốc khác.
+     * Spec §8.2: chat images must NOT live in app.storage.dir — AppConfig maps that directory to
+     * /uploads/** and SecurityConfig sets it to permitAll, so anyone with the link can download.
+     * This bean reuses the safe-path logic of LocalFileStorageService but plugged into a different
+     * root.
      */
     @Bean
     public FileStorageServiceInterface chatFileStorage(

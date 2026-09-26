@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * @EnableScheduling: chạy các job @Scheduled (vd. RefreshTokenCleanupJob).
+ * @EnableScheduling: runs the @Scheduled jobs (e.g. RefreshTokenCleanupJob).
  */
 @Configuration
 @EnableScheduling
@@ -32,8 +32,8 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     /**
-     * Ảnh/video đơn xin thành Farmer lưu cục bộ (FarmerUploadService) — phục vụ test/demo, đã
-     * whitelist public trong SecurityConfig ("/uploads/**").
+     * Images/videos from Farmer applications are stored locally (FarmerUploadService) — for
+     * test/demo use, already whitelisted as public in SecurityConfig ("/uploads/**").
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

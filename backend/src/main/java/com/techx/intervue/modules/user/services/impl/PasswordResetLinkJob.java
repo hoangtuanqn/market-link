@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.HtmlUtils;
 
 /**
- * FR-007 bước B: tạo token và gửi link đặt lại mật khẩu. Email không tồn tại thì im lặng bỏ qua.
+ * FR-007 step B: create the token and send the password-reset link. If the email does not exist,
+ * silently skip.
  */
 @Component
 @AllArgsConstructor
@@ -31,7 +32,7 @@ public class PasswordResetLinkJob implements JobHandler {
                 .issueToken(payload.get("email"))
                 .ifPresent(
                         issued -> {
-                            // token gốc (base64url) — không phải hash
+                            // raw token (base64url) — not a hash
                             String link = config.getUrl() + "?token=" + issued.rawToken();
                             mailService.sendHtml(
                                     issued.email(),

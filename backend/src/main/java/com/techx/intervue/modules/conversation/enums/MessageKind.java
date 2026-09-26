@@ -5,7 +5,7 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** Khớp ENUM('text','image','offer','system') trong migration V20260925006. */
+/** Matches ENUM('text','image','offer','system') in migration V20260925006. */
 public enum MessageKind {
     TEXT,
     IMAGE,

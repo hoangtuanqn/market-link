@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
-/** GET/PUT /api/v1/notifications/preferences — chỉ các nhóm của vai người đọc. */
+/** GET/PUT /api/v1/notifications/preferences — only the categories of the reader's role. */
 public record NotificationPreferencesResource(
         List<CategoryPreference> categories,
         boolean sound,

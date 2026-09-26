@@ -3,8 +3,8 @@ package com.techx.intervue.modules.notification.resources;
 import java.time.Instant;
 
 /**
- * Khung STOMP trên /user/topic/notifications (spec §6). id null với kind không lưu (message, test);
- * conversationId chỉ có với tin nhắn chat.
+ * The STOMP frame on /user/topic/notifications (spec §6). id is null for kinds that are not stored
+ * (message, test); conversationId is only present for chat messages.
  */
 public record NotificationPayload(
         Long id,

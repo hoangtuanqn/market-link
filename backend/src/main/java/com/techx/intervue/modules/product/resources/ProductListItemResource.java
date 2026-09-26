@@ -3,8 +3,9 @@ package com.techx.intervue.modules.product.resources;
 import java.math.BigDecimal;
 
 /**
- * Một sản phẩm trong danh sách (contract §5). `marketId`/`marketName` là chợ đang lọc, hoặc một chợ
- * của stall khi không lọc — chi tiết đầy đủ các chợ nằm ở `GET /farmers/{id}`.
+ * One product in the list (contract §5). `marketId`/`marketName` is the market being filtered, or
+ * one market of the stall when not filtering — the full details of all markets are at `GET
+ * /farmers/{id}`.
  */
 public record ProductListItemResource(
         Long id,

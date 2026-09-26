@@ -25,7 +25,7 @@ public class JwtService implements JwtServiceInterface {
         this.key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(authConfig.getSecretKey()));
     }
 
-    // tạo ra jwt
+    // creates the jwt
     @Override
     public String generateToken(Long userId) {
         Date now = new Date();
@@ -36,12 +36,15 @@ public class JwtService implements JwtServiceInterface {
                 .claim("jti", UUID.randomUUID().toString())
                 .issuer(issuer)
                 .issuedAt(now)
-                // iat chỉ chính xác tới giây; UserSessionCache.isRevoked cần so tới mili giây
+                // iat is only accurate to the second; UserSessionCache.isRevoked needs to compare
+                // to the millisecond
                 .claim(ISSUED_AT_MS, now.getTime())
                 .expiration(expiredAt)
-                .signWith(key) // tự động chọn thuật toán HS256, HS384, ... theo độ dài key của mình
-                // cho phù
-                // hợp với đầu vào của từng thuật toán
+                .signWith(
+                        key) // automatically chooses the HS256, HS384, ... algorithm by the length
+                // of our key,
+                // so that it is compatible
+                // with the input of each algorithm
                 .compact();
     }
 
@@ -51,7 +54,7 @@ public class JwtService implements JwtServiceInterface {
         return userId.equals(userDetails.getId()) && !isTokenExpired(token);
     }
 
-    // check token còn hsd k
+    // check whether the token is still within its expiry
     @Override
     public boolean isTokenExpired(String token) {
         Date expiration = extractClaim(token, Claims::getExpiration);
@@ -69,7 +72,10 @@ public class JwtService implements JwtServiceInterface {
         return claims.get("jti", String.class);
     }
 
-    /** Thời điểm cấp token, chính xác tới mili giây (token cũ chưa có claim thì dùng iat). */
+    /**
+     * The time the token was issued, accurate to the millisecond (an old token with no such claim
+     * falls back to iat).
+     */
     @Override
     public Instant extractIssuedAt(String token) {
         Claims claims = extractAllClaims(token);
@@ -91,7 +97,7 @@ public class JwtService implements JwtServiceInterface {
     public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) this.key)
-                // Token ký cùng secret nhưng do hệ khác phát hành thì không nhận
+                // A token signed with the same secret but issued by another system is not accepted
                 .requireIssuer(issuer)
                 .build()
                 .parseSignedClaims(token)

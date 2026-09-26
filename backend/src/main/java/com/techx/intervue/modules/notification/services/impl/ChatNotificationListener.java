@@ -19,8 +19,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Tin nhắn chat → popup cho người nhận, không lưu (spec §3). Farmer hiện bằng tên sạp như trong
- * chat. Ảnh không có chữ: để renderer dịch "… sent a photo" theo ngôn ngữ người nhận.
+ * A chat message → popup for the recipient, not stored (spec §3). A Farmer shows by stall name as
+ * in chat. An image has no text: let the renderer translate "… sent a photo" into the recipient's
+ * language.
  */
 @Component
 @RequiredArgsConstructor
@@ -33,9 +34,9 @@ public class ChatNotificationListener {
     private final FarmerProfileRepository farmers;
 
     /**
-     * Chạy trong afterCommit của transaction chat: đồng bộ hoá của transaction cũ vẫn đang chạy,
-     * nên afterCommit đăng ký thêm lúc này sẽ không bao giờ được gọi. REQUIRES_NEW cho dispatch một
-     * transaction riêng để lượt đẩy sau commit của nó chạy thật.
+     * Runs in the afterCommit of the chat transaction: the old transaction's synchronization is
+     * still running, so an afterCommit registered now would never be called. REQUIRES_NEW gives
+     * dispatch its own transaction so its after-commit push actually runs.
      */
     @EventListener
     @Transactional(propagation = Propagation.REQUIRES_NEW)

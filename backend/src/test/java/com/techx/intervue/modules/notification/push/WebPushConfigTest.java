@@ -17,10 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-/** Khoá VAPID: có thì trả public key cho FE, không có thì push tắt và app vẫn chạy. */
+/**
+ * VAPID keys: if present, return the public key to the FE; if absent, push is off and the app still
+ * runs.
+ */
 class WebPushConfigTest {
 
-    /** Khoá chỉ dùng trong test (sinh bằng node:crypto, không dùng ở môi trường nào). */
+    /** Keys used only in tests (generated with node:crypto, not used in any environment). */
     static final String TEST_PUBLIC =
             "BAJRU6LAEB4OYdOQmHWcmZNCew5snsHaZkQLKvLX3P0LbjWvYmM9SIeyv0jUnZd2LDcJxZvEJC-RkhZjCLaOwFQ";
 

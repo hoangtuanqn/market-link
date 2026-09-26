@@ -1,8 +1,8 @@
 package com.techx.intervue.modules.user.resources;
 
 /**
- * FR-008: {@code mfaRequired = true} → chưa có phiên (accessToken null), FE chuyển sang màn nhập mã
- * và gửi {@code mfaToken} tới POST /auth/mfa/verify.
+ * FR-008: {@code mfaRequired = true} → no session yet (accessToken null), the FE moves to the code
+ * entry screen and sends {@code mfaToken} to POST /auth/mfa/verify.
  */
 public record LoginResource(
         String accessToken, UserResource user, boolean mfaRequired, String mfaToken) {

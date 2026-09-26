@@ -24,12 +24,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 /**
- * Spec 7.3 / 7.4. CONNECT: JWT ở header Authorization, kiểm đúng như JwtAuthFilter (blacklist jti,
- * session trong Redis, mốc revoke). Principal.getName() = userId để service phát tin theo id.
- * CONNECT và bí danh STOMP (1.2) xác thực như nhau. SUBSCRIBE: chỉ /user/topic/**. SEND: chỉ
- * /app/**. MESSAGE và các frame server→client (CONNECTED, RECEIPT, ERROR) mà client gửi lên là tiêm
- * sự kiện giả → từ chối. Ném exception → Spring trả frame ERROR và đóng kết nối; client chưa xác
- * thực không bao giờ được giữ phiên.
+ * Spec 7.3 / 7.4. CONNECT: the JWT is in the Authorization header, checked exactly as in
+ * JwtAuthFilter (jti blacklist, session in Redis, revoke marker). Principal.getName() = userId so
+ * the service sends messages by id. CONNECT and the STOMP alias (1.2) authenticate the same way.
+ * SUBSCRIBE: only /user/topic/**. SEND: only /app/**. MESSAGE and the server→client frames
+ * (CONNECTED, RECEIPT, ERROR) sent up by the client are forged event injection → rejected. Throwing
+ * an exception → Spring returns an ERROR frame and closes the connection; an unauthenticated client
+ * never keeps a session.
  */
 @Slf4j
 @Component
@@ -39,7 +40,8 @@ public class StompAuthInterceptor implements ChannelInterceptor {
     public static final String USER_TOPIC_PREFIX = "/user/topic/";
 
     /**
-     * Session attributes (chia sẻ với WebSocketSession) để ChatSessionSweeper biết phiên của ai.
+     * Session attributes (shared with the WebSocketSession) so ChatSessionSweeper knows whose
+     * session it is.
      */
     public static final String ATTR_USER_ID = "chat.userId";
 
@@ -83,10 +85,11 @@ public class StompAuthInterceptor implements ChannelInterceptor {
                     throw new AccessDeniedException("Messages are sent over the REST API.");
                 }
             }
-            // Frame quản lý phiên: cần danh tính, không có destination để kiểm
+            // Session-management frames: they need an identity, no destination to check
             case UNSUBSCRIBE, DISCONNECT, ACK, NACK, BEGIN, COMMIT, ABORT -> requireUser(accessor);
-            // MESSAGE / CONNECTED / RECEIPT / ERROR là frame server→client: client gửi lên là giả
-            // mạo
+            // MESSAGE / CONNECTED / RECEIPT / ERROR are server→client frames: sent up by a client
+            // they are
+            // forged
             default -> throw new AccessDeniedException("Unexpected frame.");
         }
         return message;
@@ -120,7 +123,7 @@ public class StompAuthInterceptor implements ChannelInterceptor {
         }
     }
 
-    /** Name = userId. Task 4–6 dùng convertAndSendToUser(userId, ...) và Long.parseLong(name). */
+    /** Name = userId. Tasks 4–6 use convertAndSendToUser(userId, ...) and Long.parseLong(name). */
     static Principal principalFor(String userId, Set<RoleType> roles) {
         return new UsernamePasswordAuthenticationToken(
                 userId,

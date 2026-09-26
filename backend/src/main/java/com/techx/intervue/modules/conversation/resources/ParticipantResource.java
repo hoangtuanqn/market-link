@@ -8,7 +8,9 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import java.time.Instant;
 import lombok.Builder;
 
-/** Người đối diện trong một thread. Không lộ email, phone, address. FR-112: online / lần cuối. */
+/**
+ * The other person in a thread. Does not expose email, phone, address. FR-112: online / last seen.
+ */
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ParticipantResource(

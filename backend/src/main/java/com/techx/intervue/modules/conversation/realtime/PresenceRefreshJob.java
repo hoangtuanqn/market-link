@@ -8,9 +8,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * Tập session online có TTL 30 phút chỉ được đặt lúc CONNECT (PresenceService). Ai mở tab lâu hơn
- * thế mà không reconnect sẽ bị coi là offline dù socket còn sống — job này làm mới TTL cho mọi user
- * còn trong SimpUserRegistry, mỗi 5 phút, để không xảy ra.
+ * The set of online sessions has a 30-minute TTL that is only set at CONNECT (PresenceService).
+ * Someone who keeps a tab open longer than that without reconnecting would be seen as offline even
+ * though the socket is alive — this job refreshes the TTL for every user still in SimpUserRegistry,
+ * every 5 minutes, so that does not happen.
  */
 @Component
 @RequiredArgsConstructor
