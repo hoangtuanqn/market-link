@@ -7,7 +7,7 @@ COMPOSE_PROD := docker compose -p market-link-prod --env-file .env.production -f
 
 .DEFAULT_GOAL := help
 .PHONY: help check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
-        format lint be-format be-test fe-install mysql redis clean
+        format lint be-format be-test fe-install seed mysql redis clean
 
 help: ## Hiện danh sách lệnh
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n",$$1,$$2}'
@@ -85,6 +85,10 @@ be-test: ## Chạy test backend trong container
 
 fe-install: ## Cài lại package frontend trong container (sau khi đổi package.json)
 	$(COMPOSE) exec frontend npm install
+
+seed: ## Nạp dữ liệu demo db/seed.sql (FR-100…102) — chạy lại được nhiều lần
+	$(COMPOSE) exec -T mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"' < db/seed.sql
+	@echo "Seed xong."
 
 mysql: ## Mở MySQL shell
 	$(COMPOSE) exec mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"'
