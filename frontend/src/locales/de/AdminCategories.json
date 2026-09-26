@@ -14,18 +14,11 @@
     "category": "Kategorie",
     "products": "Produkte",
     "stalls": "Stände",
-    "nameOf": "Name von {{name}}",
-    "oneOfThem": "Einzahl",
-    "moreThanOne": "Mehrzahl",
-    "pluralOf": "Mehrzahl von {{name}}",
-    "kind": "Art",
-    "readsAs": "Liest sich als"
+    "nameOf": "Name von {{name}}"
   },
   "action": {
     "save": "Speichern",
-    "remove": "Entfernen",
-    "addToPicker": "In die Auswahl aufnehmen",
-    "merge": "Zusammenführen"
+    "remove": "Entfernen"
   },
   "categoryForm": {
     "title": "Kategorie hinzufügen",
@@ -53,8 +46,7 @@
   "toast": {
     "categorySaved": "{{name}} gespeichert.",
     "categoryAdded": "Kategorie hinzugefügt. Die Stände können sie ab sofort wählen.",
-    "categoryRemoved": "{{name}} entfernt.",
-    "promoted": "{{name}} steht jetzt allen Ständen zur Auswahl."
+    "categoryRemoved": "{{name}} entfernt."
   },
   "error": {
     "noun": "Kategorien",

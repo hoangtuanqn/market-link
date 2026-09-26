@@ -13,18 +13,11 @@
     "category": "Kategori",
     "products": "Produk",
     "stalls": "Lapak",
-    "nameOf": "Nama {{name}}",
-    "oneOfThem": "Bentuk tunggal",
-    "moreThanOne": "Bentuk jamak",
-    "pluralOf": "Bentuk jamak dari {{name}}",
-    "kind": "Jenis",
-    "readsAs": "Terbaca sebagai"
+    "nameOf": "Nama {{name}}"
   },
   "action": {
     "save": "Simpan",
-    "remove": "Hapus",
-    "addToPicker": "Masukkan ke daftar pilihan",
-    "merge": "Gabungkan"
+    "remove": "Hapus"
   },
   "categoryForm": {
     "title": "Tambah kategori",
@@ -51,8 +44,7 @@
   "toast": {
     "categorySaved": "{{name}} tersimpan.",
     "categoryAdded": "Kategori ditambahkan. Lapak sudah bisa memilihnya.",
-    "categoryRemoved": "{{name}} dihapus.",
-    "promoted": "{{name}} kini ada di daftar pilihan semua lapak."
+    "categoryRemoved": "{{name}} dihapus."
   },
   "error": {
     "noun": "kategori",
