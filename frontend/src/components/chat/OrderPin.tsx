@@ -7,7 +7,10 @@ import { fetchOrderSummary } from '@/lib/chat/orderSummary';
 import { formatClock, formatDate, money } from '@/lib/format';
 import Helper from '@/utils/helper';
 
-/** `yyyy-MM-dd` → Date theo giờ máy. `new Date('2026-09-27')` là nửa đêm UTC, ở UTC−x sẽ lùi một ngày. */
+/**
+ * `yyyy-MM-dd` → a Date in local time. `new Date('2026-09-27')` is midnight UTC, which falls on the previous day at
+ * UTC−x.
+ */
 const localDay = (ymd: string) => {
   const [y, m, d] = ymd.split('-').map(Number);
   return new Date(y, m - 1, d);
@@ -16,8 +19,8 @@ const localDay = (ymd: string) => {
 type Props = { orderId: number; compact?: boolean };
 
 /**
- * FR-114: đơn được ghim vào tin nhắn. Người mua và chủ stall đọc được (server kiểm); người khác thấy câu thay thế.
- * Trang chi tiết đơn định tuyến theo mã đơn, và mỗi vai có trang của mình.
+ * FR-114: an order pinned to a message. The buyer and the stall owner can read it (the server checks); anyone else sees
+ * a fallback line. Order detail pages route by order code, and each role has its own page.
  */
 export default function OrderPin({ orderId, compact }: Props) {
   const { t } = useTranslation('common');

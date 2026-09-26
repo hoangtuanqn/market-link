@@ -2,12 +2,12 @@ import type { ApiResponse } from '@/types/api.types';
 import { privateApi } from '@/utils/axiosInstance';
 
 /**
- * Phần `summary` của `GET /api/v1/orders/{id}` (contract §6) mà thẻ ghim đơn cần. Hình dạng do phiên core-commerce (C5,
- * task 5.4) xác nhận 26/09.
+ * The `summary` part of `GET /api/v1/orders/{id}` (contract §6) that the order pin needs. The shape was confirmed by
+ * the core-commerce session (C5, task 5.4) on 26/09.
  *
- * CHỖ NỐI TẠM: client chính thức là `OrderApi.get` trong `api-requests/order.requests.ts` (C5 task 5.8), chưa vào dev.
- * Chat cố ý không tạo file đó để hai phiên không đè nhau; khi nó vào dev, đổi thân hàm này thành `(await
- * OrderApi.get(orderId)).summary` và xoá type ở dưới.
+ * TEMPORARY SEAM: the real client is `OrderApi.get` in `api-requests/order.requests.ts` (C5 task 5.8), not on dev yet.
+ * Chat deliberately does not create that file so the two sessions do not overwrite each other; when it lands, change
+ * this function's body to `(await OrderApi.get(orderId)).summary` and delete the type below.
  */
 export type OrderPinSummary = {
   orderId: number;
@@ -16,7 +16,7 @@ export type OrderPinSummary = {
   farmerId: number;
   stallName: string;
   marketName: string;
-  /** `yyyy-MM-dd`, ngày không giờ. */
+  /** `yyyy-MM-dd`, a date without a time. */
   pickupDate: string;
   /** `HH:mm`. */
   pickupStart: string;

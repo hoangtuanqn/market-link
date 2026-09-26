@@ -22,7 +22,7 @@ describe('fetchOrderSummary', () => {
     vi.mocked(privateApi.get).mockResolvedValue({ data: { success: true, data: { summary, items: [] } } });
   });
 
-  /** Contract §6: GET /orders/{id} (người mua hoặc chủ stall; khác 403). Chat chỉ cần phần summary. */
+  /** Contract §6: GET /orders/{id} (the buyer or the stall owner; anyone else 403). Chat only needs the summary. */
   it('reads the summary of the order', async () => {
     const result = await fetchOrderSummary(21);
 
