@@ -15,6 +15,6 @@ public record MarketResource(
         String mapProvider,
         String openingTime,
         String closingTime,
-        String imageUrl,
+        List<String> images,
         List<Integer> operatingDays,
         long farmerCount) {}

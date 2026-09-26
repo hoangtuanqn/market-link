@@ -14,6 +14,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 /**
  * Trả 400/403/404/409 cho các controller của module catalog — cùng lý do FarmerExceptionHandler:
@@ -24,7 +26,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
             CategoryController.class,
             AdminCategoryController.class,
             MarketController.class,
-            AdminMarketController.class
+            AdminMarketController.class,
+            AdminMarketImageController.class
         })
 public class CatalogExceptionHandler {
 
@@ -42,6 +45,17 @@ public class CatalogExceptionHandler {
                                                 .build())
                         .toList();
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
+    }
+
+    /** File vượt quá spring.servlet.multipart.max-file-size/max-request-size → 400. */
+    @ExceptionHandler({MaxUploadSizeExceededException.class, MultipartException.class})
+    ResponseEntity<ApiResource<Void>> uploadTooLarge(Exception e) {
+        String message = "File is too large.";
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                message,
+                List.of(FieldErrorResource.builder().field("file").message(message).build()));
     }
 
     /** Luật nghiệp vụ trong service (ngày họp ngoài 0…6, giờ đóng trước giờ mở…) → 400. */
