@@ -1,7 +1,10 @@
 package com.techx.intervue.modules.notification.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.notification.push.PushSubscriptionService;
 import com.techx.intervue.modules.notification.push.WebPushGateway;
+import com.techx.intervue.modules.notification.requests.PushSubscriptionRequest;
+import com.techx.intervue.modules.notification.requests.PushUnsubscribeRequest;
 import com.techx.intervue.modules.notification.requests.UpdateNotificationPreferencesRequest;
 import com.techx.intervue.modules.notification.resources.NotificationPreferencesResource;
 import com.techx.intervue.modules.notification.resources.NotificationResource;
@@ -19,12 +22,14 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +44,7 @@ public class NotificationController extends BaseController {
     private final NotificationServiceInterface notifications;
     private final NotificationPreferenceServiceInterface preferences;
     private final WebPushGateway webPush;
+    private final PushSubscriptionService pushSubscriptions;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<NotificationResource>>> list(
@@ -93,5 +99,24 @@ public class NotificationController extends BaseController {
         Map<String, String> body = new HashMap<>();
         body.put("publicKey", webPush.publicKey());
         return ok(body, "OK");
+    }
+
+    /** N3: trình duyệt này nhận Web Push cho tài khoản đang đăng nhập. */
+    @PostMapping("/push-subscriptions")
+    public ResponseEntity<ApiResource<Void>> subscribePush(
+            @Valid @RequestBody PushSubscriptionRequest request,
+            @RequestHeader(value = "User-Agent", required = false) String userAgent,
+            @AuthenticationPrincipal CustomUserDetails me) {
+        pushSubscriptions.subscribe(me.getId(), request, userAgent);
+        return ok(null, "Push notifications are on for this browser.");
+    }
+
+    /** N3: gọi khi đăng xuất hoặc tắt thông báo trình duyệt. */
+    @DeleteMapping("/push-subscriptions")
+    public ResponseEntity<ApiResource<Void>> unsubscribePush(
+            @Valid @RequestBody PushUnsubscribeRequest request,
+            @AuthenticationPrincipal CustomUserDetails me) {
+        pushSubscriptions.unsubscribe(me.getId(), request.endpoint());
+        return ok(null, "Push notifications are off for this browser.");
     }
 }
