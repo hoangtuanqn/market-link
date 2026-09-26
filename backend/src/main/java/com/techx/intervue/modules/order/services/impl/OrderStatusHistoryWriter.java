@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
- * FR-038 (C5-1): chỗ duy nhất ghi order_status_history. Chạy trong transaction của người gọi, nên
- * dòng lịch sử và lần đổi trạng thái cùng được ghi hoặc cùng bị bỏ.
+ * FR-038 (C5-1): the only place that writes order_status_history. Runs in the caller's transaction,
+ * so the history row and the status change are written together or dropped together.
  */
 @Component
 @RequiredArgsConstructor
@@ -17,8 +17,8 @@ public class OrderStatusHistoryWriter {
     private final OrderStatusHistoryRepository repository;
 
     /**
-     * @param from null ở dòng đầu tiên (lúc đặt đơn)
-     * @param changedBy users.id của người đổi; null khi hệ thống tự đổi
+     * @param from null on the first row (at order time)
+     * @param changedBy users.id of who changed it; null when the system changes it itself
      */
     public void record(
             long orderId, OrderStatus from, OrderStatus to, Long changedBy, String note) {

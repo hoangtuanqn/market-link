@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
 /**
- * Content-Type do trình duyệt tự khai, nên loại file thật phải kết luận từ vài byte đầu — cùng cách
- * FarmerUploadService và AvatarService đã làm.
+ * Content-Type is claimed by the browser, so the real file type must be concluded from the first
+ * few bytes — the same way FarmerUploadService and AvatarService already do it.
  */
 class MarketImageUploadServiceTest {
 
@@ -67,7 +67,10 @@ class MarketImageUploadServiceTest {
         verify(storage, never()).store(any(), any(), any());
     }
 
-    /** Ảnh JPEG đổi đuôi/khai báo .png vẫn là ảnh thật: lưu theo loại thật, không theo lời khai. */
+    /**
+     * A JPEG renamed/declared as .png is still a real image: stored by its real type, not by its
+     * claim.
+     */
     @Test
     void theExtensionFollowsTheContentNotTheLabel() {
         assertThat(service.store(file("image/png", JPEG))).endsWith(".jpg");

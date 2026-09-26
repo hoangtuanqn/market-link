@@ -17,8 +17,8 @@ export type UnitOption = {
 };
 
 /**
- * Chọn lại 2026-09-26: bộ đơn vị phổ biến, chuẩn cho một chợ nông sản — bỏ các đơn vị quá hẹp (bulb, jar, bottle, loaf,
- * "tray of 30") để form gọn và dễ đoán hơn.
+ * Re-picked 2026-09-26: a common set of units, right for a produce market — dropping units that were too narrow (bulb,
+ * jar, bottle, loaf, "tray of 30") to keep the form compact and easier to guess.
  */
 export const UNITS: UnitOption[] = [
   { one: 'kg', many: 'kg', kind: 'weight' },

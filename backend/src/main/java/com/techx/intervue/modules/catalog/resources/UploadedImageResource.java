@@ -1,4 +1,4 @@
 package com.techx.intervue.modules.catalog.resources;
 
-/** URL công khai của một ảnh vừa tải lên (POST /admin/markets/images). */
+/** The public URL of an image that was just uploaded (POST /admin/markets/images). */
 public record UploadedImageResource(String url) {}

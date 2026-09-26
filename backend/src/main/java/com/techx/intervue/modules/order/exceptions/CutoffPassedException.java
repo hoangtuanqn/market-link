@@ -6,7 +6,10 @@ public class CutoffPassedException extends RuntimeException {
         super(String.format("The cutoff for this order has passed."));
     }
 
-    /** Lúc đặt: chưa có đơn nào, slot đã chọn đã quá giờ chốt của stall (D-05). */
+    /**
+     * At order time: no order exists yet, the chosen slot is already past the stall's cutoff time
+     * (D-05).
+     */
     public CutoffPassedException() {
         super("It is too late to order for this pickup time. Choose a later one.");
     }

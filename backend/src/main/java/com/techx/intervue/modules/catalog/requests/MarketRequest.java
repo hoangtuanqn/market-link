@@ -11,11 +11,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Body của POST/PUT /api/v1/admin/markets (contract §3). Giờ là chuỗi "HH:mm"; ngày họp là mảng 0…6
- * (0 = Chủ nhật). Không có mapProvider: D-12 chốt cứng 'osm' ở server.
+ * Body of POST/PUT /api/v1/admin/markets (contract §3). Times are "HH:mm" strings; operating days
+ * are an array 0…6 (0 = Sunday). No mapProvider: D-12 hard-fixes 'osm' on the server.
  *
- * <p>{@code images} là URL trả về từ POST /admin/markets/images (đã tải file lên trước); tối đa 8
- * cái, độ dài từng cái được kiểm ở service vì @Size trên record không phủ được phần tử của List.
+ * <p>{@code images} are URLs returned by POST /admin/markets/images (the file was already
+ * uploaded); at most 8 of them, each one's length is checked in the service because @Size on a
+ * record cannot cover a List's elements.
  */
 public record MarketRequest(
         @NotBlank(message = "Market name is required.") @Size(max = 150) String marketName,

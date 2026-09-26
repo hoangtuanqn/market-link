@@ -20,8 +20,9 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 /**
- * Một đơn = một Farmer = một chợ = một slot (D-01). Bảng `orders` (V20260926012). Giờ nhận hàng
- * được chép từ slot lúc đặt, nên Farmer sửa hay tắt slot sau đó không làm đổi đơn cũ.
+ * One order = one Farmer = one market = one slot (D-01). Table `orders` (V20260926012). The pickup
+ * time is copied from the slot at order time, so the Farmer editing or disabling the slot afterward
+ * does not change old orders.
  */
 @Entity
 @Getter
@@ -40,14 +41,17 @@ public class Order {
     @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
-    /** farmer_profiles.id, không phải users.id. */
+    /** farmer_profiles.id, not users.id. */
     @Column(name = "farmer_id", nullable = false)
     private Long farmerId;
 
     @Column(name = "market_id", nullable = false)
     private Long marketId;
 
-    /** NULL được: slot bị xoá thì FK đặt về NULL, đơn vẫn còn giờ nhận đã chép. */
+    /**
+     * May be NULL: when the slot is deleted the FK is set to NULL, the order still keeps the pickup
+     * time it copied.
+     */
     @Column(name = "slot_id")
     private Long slotId;
 
@@ -61,11 +65,12 @@ public class Order {
     private LocalTime pickupEnd;
 
     /**
-     * D-05: giờ local Asia/Ho_Chi_Minh, tính một lần lúc đặt từ cutoff của chính Farmer.
+     * D-05: local Asia/Ho_Chi_Minh time, computed once at order time from that Farmer's own cutoff.
      *
-     * <p>LOCAL_DATE_TIME: gửi LocalDateTime nguyên trạng qua setObject. Mặc định Hibernate gửi
-     * Timestamp, và với serverTimezone=UTC driver đổi nó sang giờ UTC — cột DATETIME sẽ lệch 7 giờ
-     * so với giờ Việt Nam mà mọi câu SQL khác (chatbot, seed) giả định.
+     * <p>LOCAL_DATE_TIME: sends the LocalDateTime as is through setObject. Hibernate sends a
+     * Timestamp by default, and with serverTimezone=UTC the driver converts it to UTC time — the
+     * DATETIME column would be off by 7 hours from Vietnam time, which every other SQL statement
+     * (chatbot, seed) assumes.
      */
     @JdbcTypeCode(SqlTypes.LOCAL_DATE_TIME)
     @Column(name = "cutoff_at", nullable = false)
@@ -81,11 +86,11 @@ public class Order {
     @Column(name = "customer_note", length = 255)
     private String customerNote;
 
-    /** Lý do Farmer từ chối (C5 Task 5.5). */
+    /** The Farmer's rejection reason (C5 Task 5.5). */
     @Column(name = "farmer_note", length = 255)
     private String farmerNote;
 
-    /** Database điền (DEFAULT CURRENT_TIMESTAMP); chỉ đọc. */
+    /** Filled in by the database (DEFAULT CURRENT_TIMESTAMP); read-only. */
     @Column(name = "created_at", insertable = false, updatable = false)
     private Instant createdAt;
 }

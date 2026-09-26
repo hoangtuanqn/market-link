@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Chạy trên MySQL thật, cùng khuôn với MarketOperatingDayRepositoryTest. */
+/** Runs on real MySQL, the same shape as MarketOperatingDayRepositoryTest. */
 @SpringBootTest
 @Transactional
 class MarketImageRepositoryTest {

@@ -31,7 +31,7 @@ vi.mock('@stomp/stompjs', () => ({
 vi.mock('@/api-requests/notification.requests', () => ({ default: { unreadCount: vi.fn() } }));
 vi.mock('@/utils/session', () => ({ default: { getAccessToken: () => 'token' } }));
 
-/** Giả lập một lần nối (hoặc nối lại) thành công. */
+/** Simulates one successful connect (or reconnect). */
 const connect = () => {
   stomp.connected = true;
   stomp.config?.onConnect();
@@ -44,7 +44,10 @@ describe('realtime', () => {
     stomp.publish.mockClear();
   });
 
-  /** Review Focus #3: STOMP tự nối lại nhưng không phát lại tin tới lúc rớt, kể cả khi mạng máy không hề mất. */
+  /**
+   * Review Focus #3: STOMP reconnects on its own but does not replay what was missed during a drop, even when the
+   * machine's network never actually went down.
+   */
   it('tells listeners every time the socket connects, so they can catch up', () => {
     const listener = vi.fn();
     realtime.onConnect(listener);

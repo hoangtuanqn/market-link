@@ -27,7 +27,8 @@ public class MarketService implements MarketServiceInterface {
     private static final int MAX_PAGE_SIZE = 50;
 
     /**
-     * Cũng là ngưỡng của @Size trên MarketRequest.images; nhắc lại ở đây cho thông báo lỗi độ dài.
+     * Also the threshold of @Size on MarketRequest.images; repeated here for the length error
+     * message.
      */
     private static final int MAX_IMAGES = 8;
 
@@ -40,7 +41,10 @@ public class MarketService implements MarketServiceInterface {
     private final MarketImageRepository imageRepository;
     private final MarketQueryRepository queryRepository;
 
-    /** Chỗ duy nhất module catalog chạm sang module stall; chiều ngược lại không có. */
+    /**
+     * The only place where the catalog module reaches into the stall module; there is no reverse
+     * direction.
+     */
     private final StallServiceInterface stallService;
 
     @Override
@@ -91,7 +95,7 @@ public class MarketService implements MarketServiceInterface {
         return toResource(saved, days, images, farmerCount);
     }
 
-    /** Xoá mềm — đơn hàng cũ vẫn trỏ về chợ này. */
+    /** Soft delete — old orders still point to this market. */
     @Override
     @Transactional
     public void deactivate(long id) {
@@ -113,9 +117,10 @@ public class MarketService implements MarketServiceInterface {
     }
 
     /**
-     * @Size(max=8) trên MarketRequest chặn số lượng; không chặn được độ dài từng phần tử, nên kiểm
-     * tay ở đây — cùng bài học với lỗi tràn cột "categories" của đơn xin thành Farmer (401 giả vì
-     * DataIntegrityViolationException không được bắt sớm).
+     * @Size(max=8) on MarketRequest blocks the count; it cannot block each element's length, so it
+     * is checked by hand here — the same lesson as the column-overflow bug in the Farmer
+     * application ("categories", a fake 401 because DataIntegrityViolationException was not caught
+     * early).
      */
     private static List<String> validImages(List<String> images) {
         List<String> clean =
@@ -125,7 +130,8 @@ public class MarketService implements MarketServiceInterface {
                                 .filter(s -> s != null && !s.isBlank())
                                 .map(String::trim)
                                 .toList();
-        // @NotEmpty trên MarketRequest chặn null/mảng rỗng; không chặn được mảng toàn chuỗi trắng.
+        // @NotEmpty on MarketRequest blocks null/an empty array; it cannot block an array of
+        // all-blank strings.
         if (clean.isEmpty()) {
             throw new InvalidFieldException("images", "Add at least one photo.");
         }
@@ -157,10 +163,10 @@ public class MarketService implements MarketServiceInterface {
         market.setLongitude(request.longitude());
         market.setOpeningTime(opening);
         market.setClosingTime(closing);
-        // markets.image_url (db/schema.sql) là ảnh đại diện: luôn là ảnh đầu tiên của
+        // markets.image_url (db/schema.sql) is the cover image: always the first image of
         // market_images.
         market.setImageUrl(images.isEmpty() ? null : images.get(0));
-        // D-12: không đọc từ request — client không chọn được nhà cung cấp bản đồ.
+        // D-12: not read from the request — the client cannot choose the map provider.
         market.setMapProvider("osm");
     }
 

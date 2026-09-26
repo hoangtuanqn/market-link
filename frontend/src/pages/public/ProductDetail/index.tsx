@@ -169,7 +169,7 @@ const ProductDetailPage = () => {
               )}
             </div>
             <p className="text-small text-ink-muted">{t('stockUpdated')}</p>
-            {/* Giỏ hàng và báo có hàng chưa nối API: nút chỉ hiện toast → chỉ ở dev (config/wip.ts). */}
+            {/* The cart and the in-stock notice have no API wired up: the button only shows a toast → dev only (config/wip.ts). */}
             {SHOW_WIP &&
               (soldOut ? (
                 <Button variant="secondary" className="w-fit">
@@ -312,7 +312,7 @@ const ProductDetailPage = () => {
         </section>
       )}
 
-      {/* Review còn là dữ liệu mẫu tới C8 → chỉ hiện ở dev (config/wip.ts). */}
+      {/* Reviews are still sample data pending C8 → shown in dev only (config/wip.ts). */}
       {SHOW_WIP && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -429,7 +429,7 @@ const ProductDetailPage = () => {
         </section>
       )}
 
-      {/* Báo cáo listing chưa có API, nút chỉ hiện toast → chỉ ở dev (config/wip.ts). */}
+      {/* Reporting a listing has no API yet, the button only shows a toast → dev only (config/wip.ts). */}
       {SHOW_WIP && (
         <p className="text-small">
           <Button

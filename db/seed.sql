@@ -250,11 +250,11 @@ JOIN users u ON u.id = f.user_id
 SET p.is_hidden = TRUE, p.hidden_reason = 'Ảnh và mô tả không đúng sản phẩm thật (báo cáo của khách).'
 WHERE u.email = 'farmer10@marketlink.vn' AND p.name = 'Sáp ong nguyên chất';
 
--- ---- Slot nhận hàng (FR-032, FR-067): 4 tuần tới, khung 60 phút, 5 đơn mỗi slot ----
--- SQL thuần, không cần backend: ngày = hôm nay theo giờ Việt Nam + 0…27 (MySQL chạy UTC), chỉ những ngày
--- trùng thứ đã khai ở farmer_operating_days; khung = giờ bắt đầu + 0…11 giờ, chỉ giữ khung nằm trọn trong
--- giờ nhận hàng (khung lẻ cuối bị bỏ, như SlotService.windows). Khoá uq_slot (farmer_market_id, slot_date,
--- start_time) nên INSERT IGNORE là đủ để chạy lại; slot đã có — kể cả đã có đơn — giữ nguyên.
+-- ---- Pickup slots (FR-032, FR-067): next 4 weeks, 60-minute windows, 5 orders per slot ----
+-- Plain SQL, no backend needed: date = today in Vietnam time + 0…27 (MySQL runs UTC), only days
+-- matching a weekday already declared in farmer_operating_days; window = start time + 0…11 hours, keeping only windows fully within
+-- the pickup hours (a leftover partial window is dropped, like SlotService.windows). The uq_slot key (farmer_market_id, slot_date,
+-- start_time) makes INSERT IGNORE enough to re-run; an existing slot — even one with orders already — is left unchanged.
 INSERT IGNORE INTO pickup_slots (farmer_market_id, slot_date, start_time, end_time, max_orders)
 SELECT fm.id, x.slot_date,
        ADDTIME(od.pickup_start_time, SEC_TO_TIME(h.n * 3600)),

@@ -4,8 +4,8 @@ import com.techx.intervue.modules.stall.entities.PickupSlot;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Một slot nhận hàng (contract §6): ngày "yyyy-MM-dd", giờ "HH:mm". `isActive` luôn true ở danh
- * sách công khai; Farmer cần nó sau khi PATCH.
+ * One pickup slot (contract §6): date "yyyy-MM-dd", time "HH:mm". `isActive` is always true on the
+ * public list; the Farmer needs it after a PATCH.
  */
 public record SlotResource(
         Long slotId,
@@ -21,7 +21,7 @@ public record SlotResource(
 
     private static final DateTimeFormatter HH_MM = DateTimeFormatter.ofPattern("HH:mm");
 
-    /** Luật "đầy" nằm ở một chỗ: bookedCount ≥ maxOrders (D-06). */
+    /** The "full" rule lives in one place: bookedCount ≥ maxOrders (D-06). */
     public static SlotResource of(PickupSlot slot, long marketId) {
         return new SlotResource(
                 slot.getId(),

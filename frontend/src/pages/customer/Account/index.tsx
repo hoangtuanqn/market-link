@@ -22,12 +22,12 @@ const CustomerAccountPage = () => {
         <p className="text-body">{t('intro')}</p>
       </div>
 
-      {/* Mục "Sell at MarketLink" được đưa lên trên đầu để tăng mức độ chú ý */}
+      {/* The "Sell at MarketLink" item is moved to the top to draw more attention */}
       <SellCard />
 
-      {/* Bố cục 2 cột: Cột trái sticky chứa Profile Photo & Details; Cột phải chứa Achievements, Password, Sign out */}
+      {/* Two-column layout: the left, sticky column holds Profile Photo & Details; the right column holds Achievements, Password, Sign out */}
       <div className="grid items-start gap-6 lg:grid-cols-[400px_minmax(0,1fr)]">
-        {/* Cột trái: Sticky Profile Card */}
+        {/* Left column: sticky profile card */}
         <aside className="lg:sticky lg:top-20">
           <Card className="flex flex-col gap-6 p-6">
             <AvatarCard />
@@ -36,7 +36,7 @@ const CustomerAccountPage = () => {
           </Card>
         </aside>
 
-        {/* Cột phải: Các mục cuộn độc lập */}
+        {/* Right column: sections that scroll independently */}
         <div className="flex flex-col gap-6">
           <AchievementsCard />
 

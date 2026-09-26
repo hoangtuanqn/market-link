@@ -34,7 +34,7 @@ type FarmerNavKey = keyof (typeof common)['farmerNav'];
 type NavItem = { to: string; label: FarmerNavKey; icon: ComponentType<IconProps>; count?: number };
 type NavGroup = { heading: FarmerNavKey; items: NavItem[] };
 
-// Hai badge đếm còn lấy từ dữ liệu mẫu (đơn: C5, tin nhắn chưa đọc chưa nối vào sidebar) → chỉ hiện ở dev.
+// The two count badges still come from sample data (orders: C5, unread messages not yet wired into the sidebar) → shown in dev only.
 const AWAITING_COUNT = SHOW_WIP ? farmerOrders.filter((o) => o.status === 'placed').length : undefined;
 
 const NAV: NavGroup[] = [

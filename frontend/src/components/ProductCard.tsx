@@ -84,7 +84,7 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
             {stock}
           </span>
         </div>
-        {/* Giỏ hàng và báo có hàng chưa nối API → chỉ hiện ở dev (config/wip.ts). */}
+        {/* The cart and the in-stock notice have no API wired up yet → shown in dev only (config/wip.ts). */}
         {SHOW_WIP &&
           (soldOut ? (
             <Button variant="secondary" size="sm">

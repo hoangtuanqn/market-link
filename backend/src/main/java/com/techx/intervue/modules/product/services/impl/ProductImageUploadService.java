@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Ảnh sản phẩm (Farmer > Products), cùng khuôn với MarketImageUploadService: loại file thật kết
- * luận từ magic bytes, tên file luôn tự sinh (UUID). Một sản phẩm chỉ có một ảnh (contract §5:
- * {@code imageUrl}), khác chợ có nhiều ảnh.
+ * Product images (Farmer > Products), the same shape as MarketImageUploadService: the real file
+ * type is concluded from the magic bytes, file names are always generated (UUID). One product has
+ * only one image (contract §5: {@code imageUrl}), unlike a market which has several.
  */
 @Service
 public class ProductImageUploadService {
@@ -61,8 +61,9 @@ public class ProductImageUploadService {
     }
 
     /**
-     * Content-Type chỉ là lời khai của client: dùng để chặn sớm loại không nhận, còn loại thật (và
-     * đuôi file) kết luận từ magic bytes — giống MarketImageUploadService.
+     * Content-Type is only the client's claim: used to reject unaccepted types early, while the
+     * real type (and the file extension) is concluded from the magic bytes — same as
+     * MarketImageUploadService.
      */
     private static String photoExtension(String contentType, byte[] bytes) {
         if (!IMAGE_TYPES.contains(contentType)) {

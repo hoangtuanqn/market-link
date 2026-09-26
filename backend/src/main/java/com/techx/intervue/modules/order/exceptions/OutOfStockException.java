@@ -1,8 +1,9 @@
 package com.techx.intervue.modules.order.exceptions;
 
 /**
- * D-02: sản phẩm không đủ tồn, đã hết, bị ẩn, bị xoá hoặc không còn tồn tại lúc đặt → 409
- * OUT_OF_STOCK, giỏ phải tải lại. {@code productName} null khi dòng sản phẩm không còn.
+ * D-02: the product does not have enough stock, is sold out, hidden, deleted, or no longer exists
+ * at order time → 409 OUT_OF_STOCK, the cart must reload. {@code productName} is null when the
+ * product row is gone.
  */
 public class OutOfStockException extends RuntimeException {
 

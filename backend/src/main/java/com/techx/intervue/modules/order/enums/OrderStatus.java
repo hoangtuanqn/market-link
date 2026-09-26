@@ -5,7 +5,7 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** FR-033. Giá trị JSON và cột ENUM giữ lowercase (`placed`) — contract §5. */
+/** FR-033. The JSON value and the ENUM column keep lowercase (`placed`) — contract §5. */
 public enum OrderStatus {
     PLACED,
     ACCEPTED,

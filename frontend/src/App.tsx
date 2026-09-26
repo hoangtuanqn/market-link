@@ -85,8 +85,8 @@ import AdminPricingWip from './pages/admin/Pricing';
 import AdminReportsWip from './pages/admin/Reports';
 import AdminRevenueWip from './pages/admin/Revenue';
 
-// Màn còn chạy trên dữ liệu mẫu (src/data): bản build production hiện "Coming soon" thay vào (config/wip.ts).
-// Nối xong API cho màn nào thì bỏ màn đó khỏi danh sách này.
+// A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
+// Once a screen's API is wired up, remove it from this list.
 const CustomerDashboardPage = SHOW_WIP ? CustomerDashboardWip : ComingSoon;
 const CustomerOrdersPage = SHOW_WIP ? CustomerOrdersWip : ComingSoon;
 const CustomerOrderDetailPage = SHOW_WIP ? CustomerOrderDetailWip : ComingSoon;

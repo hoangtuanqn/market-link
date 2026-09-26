@@ -146,7 +146,8 @@ public class SecurityConfig {
                                                 "/api/v1/farmers",
                                                 "/api/v1/farmers/*",
                                                 "/api/v1/markets/*/farmers",
-                                                // FR-032: giỏ hàng chọn slot trước khi đăng nhập
+                                                // FR-032: the cart can pick a slot before signing
+                                                // in
                                                 "/api/v1/farmers/*/slots")
                                         .permitAll()
                                         // Chatbot FR-090…092: guests can ask questions too

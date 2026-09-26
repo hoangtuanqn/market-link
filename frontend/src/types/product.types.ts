@@ -26,6 +26,6 @@ export type ProductType = {
   /** FR-074: an admin hid this listing; only the owning Farmer sees the flag and the reason. */
   hidden?: boolean;
   hiddenReason?: string;
-  /** Số ngày còn tươi — chưa có FR chính thức, xem migration V20260926016. Rỗng ở màn còn demo data. */
+  /** Days still fresh — no official FR yet, see migration V20260926016. Empty on screens still on demo data. */
   shelfLifeDays?: number;
 };

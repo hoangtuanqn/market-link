@@ -5,7 +5,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-/** POST /farmer/slots/generate — cắt khung giờ của các thứ đã khai thành slot (contract §6). */
+/**
+ * POST /farmer/slots/generate — cuts the declared weekday time windows into slots (contract §6).
+ */
 public record GenerateSlotsRequest(
         @NotNull Long farmerMarketId,
         @NotNull LocalDate fromDate,

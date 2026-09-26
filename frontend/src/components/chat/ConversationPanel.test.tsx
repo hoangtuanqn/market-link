@@ -45,11 +45,14 @@ describe('ConversationPanel', () => {
   beforeEach(() => {
     useConversation.mockReset();
     scrollIntoView.mockReset();
-    // jsdom không có scrollIntoView
+    // jsdom has no scrollIntoView
     Element.prototype.scrollIntoView = scrollIntoView;
   });
 
-  /** Review Focus #10: "Seen" một lần, dưới tin cuối cùng của mình mà họ đã đọc. So bằng Date, không so chuỗi ISO. */
+  /**
+   * Review Focus #10: "Seen" once, under the last message of mine that they have read. Compared as a Date, not as an
+   * ISO string.
+   */
   it('shows Seen once, under my latest message they have read', () => {
     useConversation.mockReturnValue(state({ otherReadAt: '2026-09-26T10:03:00Z' }));
     render(<ConversationPanel conversationId={42} thread={thread} />);
@@ -77,7 +80,7 @@ describe('ConversationPanel', () => {
     expect(scrollIntoView).toHaveBeenCalled();
   });
 
-  /** Review Focus #2 ở tầng giao diện: đang cuộn lên đọc tin cũ thì không được bị kéo về đáy. */
+  /** Review Focus #2 at the UI layer: scrolling up to read old messages must not get pulled back to the bottom. */
   it('stays put when older messages are added above', () => {
     useConversation.mockReturnValue(state({}));
     const { rerender } = render(<ConversationPanel conversationId={42} thread={thread} />);
@@ -99,7 +102,10 @@ describe('ConversationPanel', () => {
     expect(typing).toHaveBeenCalledWith(true);
   });
 
-  /** Spec §9.2: Back chỉ có nghĩa ở màn hẹp, nơi danh sách và hội thoại là hai màn riêng. Từ md là hai cột. */
+  /**
+   * Spec §9.2: Back only makes sense on a narrow screen, where the list and the conversation are two separate screens.
+   * From md up they are two columns.
+   */
   it('offers Back only on narrow screens', () => {
     useConversation.mockReturnValue(state({}));
     render(<ConversationPanel conversationId={42} thread={thread} onBack={vi.fn()} />);
@@ -107,7 +113,7 @@ describe('ConversationPanel', () => {
     expect(screen.getByRole('button', { name: 'Back' })).toHaveClass('md:hidden');
   });
 
-  /** Chưa chọn thread: câu dẫn nằm giữa khung trống, không nép góc trên trái. */
+  /** No thread selected: the hint sits in the middle of the empty frame, not tucked in the top-left corner. */
   it('centres the pick-a-conversation hint in the empty panel', () => {
     useConversation.mockReturnValue(state({ messages: [] }));
     render(<ConversationPanel conversationId={null} thread={null} />);
@@ -115,7 +121,7 @@ describe('ConversationPanel', () => {
     expect(screen.getByText('Pick a conversation').parentElement).toHaveClass('justify-center');
   });
 
-  /** "Last seen 11:47" mà là ba ngày trước thì đọc như vừa hôm nay: ngày khác phải hiện ngày. */
+  /** "Last seen 11:47" that was actually three days ago reads as if it were today: a different day must show the date. */
   it('says which day the other person was last seen when it was not today', () => {
     useConversation.mockReturnValue(state({}));
     const awayThread = { ...thread, other: { ...other, online: false, lastSeenAt: '2026-09-20T03:00:00Z' } };

@@ -20,7 +20,7 @@ export type ProductDto = {
   status: ProductStatus;
   ratingAvg: number;
   ratingCount: number;
-  /** Số ngày còn tươi — chưa có FR chính thức, xem migration V20260926016. */
+  /** Days still fresh — no official FR yet, see migration V20260926016. */
   shelfLifeDays: number;
 };
 
@@ -121,18 +121,18 @@ class ProductApi {
     return response.data.data.items.map(toFarmerProduct);
   };
 
-  /** Farmer — một sản phẩm của chính mình, để mở form sửa. 404 nếu không có hoặc thuộc stall khác. */
+  /** Farmer — one of their own products, to open the edit form. 404 if missing or belonging to another stall. */
   static getMine = async (id: number) => {
     const response = await privateApi.get<ApiResponse<FarmerProductDto>>(`/farmer/products/${id}`);
     return toFarmerProduct(response.data.data);
   };
 
-  /** Tải một ảnh sản phẩm lên trước khi gửi form chính; trả URL để đưa vào `ProductInput.imageUrl`. */
+  /** Upload a product image before sending the main form; returns a URL to put into `ProductInput.imageUrl`. */
   static uploadProductImage = async (file: File) => {
     const form = new FormData();
     form.append('file', file);
     const response = await privateApi.post<ApiResponse<{ url: string }>>('/farmer/products/images', form, {
-      // Bỏ header mặc định application/json để trình duyệt tự set multipart/form-data kèm boundary.
+      // Drop the default application/json header so the browser sets multipart/form-data with the boundary itself.
       headers: { 'Content-Type': undefined },
     });
     return response.data.data.url;

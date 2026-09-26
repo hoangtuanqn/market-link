@@ -46,7 +46,10 @@ public class PublicFarmerController extends BaseController {
         return ok(stallService.publicDetail(id), "");
     }
 
-    /** Slot còn nhận đơn của stall; không có `date` thì từ hôm nay tới hết 14 ngày. */
+    /**
+     * Slots of a stall still accepting orders; with no `date` given, from today through the next 14
+     * days.
+     */
     @GetMapping("/{id}/slots")
     public ResponseEntity<ApiResource<List<SlotResource>>> slots(
             @PathVariable long id,

@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * Trả 400/403/404/409 cho module stall — cùng lý do FarmerExceptionHandler (chưa có handler chung).
+ * Returns 400/403/404/409 for the stall module — same reason as FarmerExceptionHandler (no shared
+ * handler yet).
  */
 @RestControllerAdvice(
         assignableTypes = {
@@ -48,15 +49,15 @@ public class StallExceptionHandler {
     }
 
     /**
-     * Luật nghiệp vụ trong service (cutoff ngoài 1…72, giờ kết thúc trước giờ bắt đầu, chợ lạ) →
-     * 400.
+     * Business rules in the service (cutoff outside 1…72, end time before start time, unknown
+     * market) → 400.
      */
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiResource<Void>> invalidArgument(IllegalArgumentException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
     }
 
-    /** R-06 / D-09: stall không có, chưa duyệt (với khách) hoặc không phải của mình → 404. */
+    /** R-06 / D-09: the stall is missing, not approved (for customers) or not yours → 404. */
     @ExceptionHandler({
         FarmerProfileNotFoundException.class,
         FarmerMarketNotFoundException.class,
@@ -81,15 +82,18 @@ public class StallExceptionHandler {
         return error(HttpStatus.CONFLICT, "MARKET_ALREADY_JOINED", e.getMessage(), List.of());
     }
 
-    /** D-06: hạ sức chứa xuống dưới số đơn đã đặt → 409, đơn cũ giữ nguyên. */
+    /**
+     * D-06: lowering capacity below the number of orders already placed → 409, old orders
+     * unchanged.
+     */
     @ExceptionHandler(SlotBelowBookedException.class)
     ResponseEntity<ApiResource<Void>> belowBooked(SlotBelowBookedException e) {
         return error(HttpStatus.CONFLICT, "SLOT_BELOW_BOOKED", e.getMessage(), List.of());
     }
 
     /**
-     * Lưới an toàn cuối khi hai request cùng lọt qua kiểm tra: UNIQUE (farmer_id, market_id), hoặc
-     * uq_slot khi hai lần "Generate" chạy cùng lúc.
+     * Last safety net when two requests both get past the check: UNIQUE (farmer_id, market_id), or
+     * uq_slot when two "Generate" calls run at the same time.
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {

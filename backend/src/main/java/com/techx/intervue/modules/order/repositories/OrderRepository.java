@@ -7,10 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    /** C5-6: OrderCodeGenerator hỏi trước khi insert; UNIQUE(order_code) là lưới cuối. */
+    /** C5-6: OrderCodeGenerator asks before inserting; UNIQUE(order_code) is the last backstop. */
     boolean existsByOrderCode(String orderCode);
 
-    /** Admin closed-days panel: đơn đã hủy không tính là "bị ảnh hưởng". */
+    /** Admin closed-days panel: a cancelled order does not count as "affected". */
     long countByMarketIdAndPickupDateAndStatusNot(
             Long marketId, LocalDate pickupDate, OrderStatus excludedStatus);
 }

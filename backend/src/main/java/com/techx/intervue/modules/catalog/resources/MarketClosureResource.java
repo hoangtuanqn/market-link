@@ -4,8 +4,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 
 /**
- * Một ngày đóng cửa như trả về cho FE: {@code ordersAffected} đếm thật từ bảng orders (module
- * order), {@code announced} luôn false cho tới khi có tính năng thông báo khách hàng.
+ * One closed day as returned to the FE: {@code ordersAffected} is a real count from the orders
+ * table (order module), {@code announced} is always false until a customer-notification feature
+ * exists.
  */
 public record MarketClosureResource(
         Long id,

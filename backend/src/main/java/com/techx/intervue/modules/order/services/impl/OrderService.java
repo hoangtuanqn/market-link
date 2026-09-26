@@ -53,8 +53,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * FR-030…032 — giỏ hàng tách theo stall (D-01), trừ tồn ngay khi đặt (D-02), slot có sức chứa
- * (D-06), cutoff theo từng Farmer (D-05), admin không mua (D-13).
+ * FR-030…032 — the cart splits by stall (D-01), stock is deducted right at order time (D-02), a
+ * slot has a capacity (D-06), the cutoff is per Farmer (D-05), an admin cannot buy (D-13).
  */
 @Service
 @AllArgsConstructor
@@ -78,8 +78,9 @@ public class OrderService implements OrderServiceInterface {
     private final Clock clock;
 
     /**
-     * Chỉ đọc, không khoá, không đổi gì: gom giỏ theo farmer_id và ghi vấn đề của từng group vào
-     * {@code problems} thay vì ném lỗi. Id sản phẩm không tồn tại là request sai → 400 (C5-12).
+     * Read-only, no locking, changes nothing: groups the cart by farmer_id and writes each group's
+     * issues into {@code problems} instead of throwing. A product id that does not exist is a
+     * malformed request → 400 (C5-12).
      */
     @Override
     @Transactional(readOnly = true)
@@ -97,7 +98,7 @@ public class OrderService implements OrderServiceInterface {
             }
         }
 
-        // Thứ tự group theo thứ tự stall xuất hiện trong giỏ
+        // Group order follows the order stalls appear in the cart
         Map<Long, List<Product>> byFarmer = new LinkedHashMap<>();
         for (Long productId : wanted.keySet()) {
             Product p = products.get(productId);
@@ -152,7 +153,8 @@ public class OrderService implements OrderServiceInterface {
                             p.getStockQuantity(),
                             listed(p) ? p.getStatus().value() : UNAVAILABLE));
         }
-        // C5-11: chợ nhận hàng chỉ điền sẵn khi stall bán đúng một chợ; còn lại giỏ cho khách chọn
+        // C5-11: the pickup market is only pre-filled when the stall sells at exactly one market;
+        // otherwise the cart lets the customer choose
         MarketOption only = markets.size() == 1 ? markets.getFirst() : null;
         return new OrderGroupPreviewResource(
                 farmerId,
@@ -166,7 +168,7 @@ public class OrderService implements OrderServiceInterface {
                 markets);
     }
 
-    /** Vấn đề của một dòng giỏ, hoặc null. Cùng luật với {@link #sellable} lúc đặt. */
+    /** The issue with one cart line, or null. Same rule as {@link #sellable} at order time. */
     private static String problemOf(Product p, int quantity) {
         if (!listed(p) || p.getStatus() == ProductStatus.UNAVAILABLE) {
             return UNAVAILABLE;
@@ -177,7 +179,9 @@ public class OrderService implements OrderServiceInterface {
         return p.getStockQuantity() < quantity ? OUT_OF_STOCK : null;
     }
 
-    /** Còn trên kệ: chưa bị Farmer xoá mềm, chưa bị admin ẩn (FR-074). */
+    /**
+     * Still on the shelf: not yet soft-deleted by the Farmer, not yet hidden by an admin (FR-074).
+     */
     private static boolean listed(Product p) {
         return !p.isDeleted() && !p.isHidden();
     }
@@ -187,12 +191,13 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * D-01 + D-02 + D-06. Cả lệnh đặt nằm trong một transaction: hoặc mọi đơn trong giỏ được tạo và
-     * tồn kho / slot trừ xong, hoặc không gì cả.
+     * D-01 + D-02 + D-06. The whole place-order call runs in one transaction: either every order in
+     * the cart is created and stock / slots are deducted, or nothing happens at all.
      *
-     * <p>C5-2 — thứ tự khoá chung của mọi đường ghi: mọi slot của cả lệnh trước (id tăng dần), rồi
-     * mọi sản phẩm của cả lệnh trong đúng một lần {@code lockAllById} (id tăng dần). Không dòng
-     * slot / sản phẩm nào được đọc trước khi bị khoá — bản đọc không khoá có thể là snapshot cũ.
+     * <p>C5-2 — the shared locking order for every write path: every slot of the whole call first
+     * (ascending id), then every product of the whole call in exactly one {@code lockAllById}
+     * (ascending id). No slot / product row is read before it is locked — an unlocked read could be
+     * a stale snapshot.
      */
     @Override
     @Transactional
@@ -232,9 +237,10 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * Kiểm hết rồi mới trừ: slot và tồn kho chỉ đổi khi group này chắc chắn thành đơn. Slot và sản
-     * phẩm là bản đã khoá, dùng chung giữa các group, nên hai group cùng slot / cùng sản phẩm thấy
-     * phần group trước đã lấy.
+     * Everything is checked before anything is deducted: the slot and stock only change once this
+     * group is certain to become an order. The slot and product rows are already-locked copies,
+     * shared across groups, so two groups sharing a slot / a product see what the earlier group
+     * already took.
      */
     private PlacedOrderResource placeGroup(
             long customerUserId,
@@ -273,7 +279,8 @@ public class OrderService implements OrderServiceInterface {
             }
         }
 
-        // Mọi kiểm tra đã qua: giữ chỗ và trừ tồn (ghi xuống khi transaction commit)
+        // Every check has passed: reserve the spot and deduct stock (written when the transaction
+        // commits)
         slot.setBookedCount(slot.getBookedCount() + 1);
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItem> items = new ArrayList<>();
@@ -317,8 +324,9 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * C5-5: slot phải có, đang bật, đúng ngày nhận, và thuộc đúng stall tại đúng chợ trong group —
-     * liên kết stall–chợ còn bật. Sai bất kỳ điều nào → 409 SLOT_UNAVAILABLE.
+     * C5-5: the slot must exist, be enabled, be on the right pickup day, and belong to the right
+     * stall at the right market in the group — the stall–market link must still be on. Any mismatch
+     * → 409 SLOT_UNAVAILABLE.
      */
     private PickupSlot bookableSlot(
             OrderGroupInput group, FarmerProfile farmer, Map<Long, PickupSlot> slots) {
@@ -339,7 +347,10 @@ public class OrderService implements OrderServiceInterface {
         return slot;
     }
 
-    /** D-13: chỉ customer và farmer mua được; admin dùng tài khoản riêng. Ẩn nút ở FE không đủ. */
+    /**
+     * D-13: only customer and farmer can buy; an admin uses their own account. Hiding the button in
+     * the FE is not enough.
+     */
     private void requireBuyer(long userId) {
         User user =
                 userRepository
@@ -350,7 +361,7 @@ public class OrderService implements OrderServiceInterface {
         }
     }
 
-    /** Cùng một sản phẩm xuất hiện nhiều dòng thì cộng dồn; giữ thứ tự của giỏ. */
+    /** The same product appearing on several lines is summed; the cart's order is kept. */
     private static Map<Long, Integer> quantities(List<CartLine> lines) {
         return lines.stream()
                 .collect(

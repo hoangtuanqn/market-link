@@ -53,7 +53,10 @@ public class Product {
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
-    /** Số ngày sản phẩm còn tươi — hiện cho Customer để minh bạch. Chưa có FR chính thức. */
+    /**
+     * Number of days the product stays fresh — shown to the Customer for transparency. No official
+     * FR yet.
+     */
     @Column(name = "shelf_life_days", nullable = false)
     private int shelfLifeDays;
 

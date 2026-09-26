@@ -20,7 +20,7 @@ describe('ThreadList', () => {
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
-  /** Review Focus #5: người dùng mới, chưa nhắn ai. */
+  /** Review Focus #5: a new user who has messaged nobody yet. */
   it('shows an empty state with something to do', () => {
     render(
       <ThreadList threads={[]} activeId={null} onPick={vi.fn()} loading={false} error={false} onRetry={vi.fn()} />,
