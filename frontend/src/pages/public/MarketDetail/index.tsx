@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
+import StallApi, { toStallCard, type StallCardData } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
@@ -10,8 +11,8 @@ import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
 import { ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
-import { LoadError } from '@/components/ui/data-state';
-import { categories as CATEGORIES, farmers, products } from '@/data/catalog';
+import { DataState, LoadError } from '@/components/ui/data-state';
+import { categories as CATEGORIES, products } from '@/data/catalog';
 import useRequest from '@/hooks/useRequest';
 import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
 import Helper from '@/utils/helper';
@@ -24,8 +25,6 @@ const DAY_OPTIONS = [
   { value: 6, date: new Date(2026, 8, 26) },
   { value: 0, date: new Date(2026, 8, 27) },
 ];
-/** How the demo data spells a stall's selling days ("Sat, Sun"); used to match, never shown. */
-const DOW_ABBR: Record<number, string> = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' };
 
 /** FR-010 FR-011 — one market: who sells there on a given day, and what they have. */
 const MarketDetailPage = () => {
@@ -51,13 +50,16 @@ const MarketDetailPage = () => {
   const [scope, setScope] = useState<'product' | 'farmer'>('product');
   const [query, setQuery] = useState('');
 
-  const stallsToday = useMemo(() => {
-    if (!market) return [];
-    const abbr = DOW_ABBR[day];
-    return farmers.filter(
-      (f) => f.approval === 'approved' && f.markets.includes(market.id) && f.days.split(', ').includes(abbr),
-    );
-  }, [market, day]);
+  // FR-010: who is selling here on the chosen day, straight from the API. Keyed by market and day, so a new
+  // chip or a new id starts a new request; the market itself may still be loading, in which case this waits.
+  const { state: stallsLoad, retry: retryStalls } = useRequest(`market-stalls:${id}:${day}`, () =>
+    validId ? StallApi.atMarket(marketId, day) : Promise.resolve([]),
+  );
+  const stallsToday = useMemo<StallCardData[]>(
+    () =>
+      market && stallsLoad.kind === 'ready' ? stallsLoad.data.map((s) => toStallCard(s, market.id, market.name)) : [],
+    [market, stallsLoad],
+  );
 
   const productsToday = useMemo(() => {
     const stallIds = new Set(stallsToday.map((f) => f.id));
@@ -258,11 +260,19 @@ const MarketDetailPage = () => {
           <h2 className="text-h2">{t('stallsTitle', { day: dayLong })}</h2>
           <span className="text-small text-ink-muted">{t('stallsNote')}</span>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {stallsToday.map((f) => (
-            <StallCard key={f.id} farmer={f} />
-          ))}
-        </div>
+        {stallsLoad.kind === 'loading' ? (
+          <MarketCardSkeleton count={2} />
+        ) : stallsLoad.kind === 'error' ? (
+          <LoadError noun={t('stallsNoun')} onRetry={retryStalls} />
+        ) : stallsToday.length ? (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {stallsToday.map((f) => (
+              <StallCard key={f.id} farmer={f} />
+            ))}
+          </div>
+        ) : (
+          <DataState title={t('stallsEmpty.title', { day: dayLong })} text={t('stallsNote')} />
+        )}
       </section>
     </div>
   );

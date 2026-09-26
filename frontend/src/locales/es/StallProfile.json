@@ -13,7 +13,8 @@
     "reviews_other": "{{count}} reseñas",
     "markets_one": "mercado",
     "markets_other": "mercados",
-    "since": "vende aquí desde"
+    "since": "vende aquí desde",
+    "cutoff": "horas antes de la recogida se cierran los pedidos"
   },
   "tabs": {
     "label": "Secciones del puesto",
@@ -60,5 +61,8 @@
     "sentText": "Un administrador lo revisará.",
     "button": "Denunciar este puesto",
     "note": "Ausencias repetidas, ubicación del puesto incorrecta o cualquier cosa que incumpla las normas de la plataforma."
+  },
+  "error": {
+    "noun": "puesto"
   }
 }

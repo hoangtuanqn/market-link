@@ -38,5 +38,9 @@
   "stallsNote": "所选日期不营业的摊位不会列出",
   "error": {
     "noun": "市场"
+  },
+  "stallsNoun": "摊位",
+  "stallsEmpty": {
+    "title": "{{day}}没有摊位"
   }
 }

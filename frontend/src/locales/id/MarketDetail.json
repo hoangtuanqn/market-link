@@ -38,5 +38,9 @@
   "stallsNote": "Lapak yang tidak berjualan pada hari yang dipilih tidak ditampilkan",
   "error": {
     "noun": "pasar"
+  },
+  "stallsNoun": "kios",
+  "stallsEmpty": {
+    "title": "Tidak ada kios pada {{day}}"
   }
 }

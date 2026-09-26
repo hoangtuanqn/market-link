@@ -38,5 +38,9 @@
   "stallsNote": "No se muestran los puestos que no venden el día elegido",
   "error": {
     "noun": "mercado"
+  },
+  "stallsNoun": "puestos",
+  "stallsEmpty": {
+    "title": "Ningún puesto el {{day}}"
   }
 }

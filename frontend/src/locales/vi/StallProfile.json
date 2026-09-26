@@ -13,7 +13,8 @@
     "reviews_other": "{{count}} đánh giá",
     "markets_one": "chợ",
     "markets_other": "chợ",
-    "since": "bán ở đây từ"
+    "since": "bán ở đây từ",
+    "cutoff": "giờ trước lúc nhận là đóng đơn"
   },
   "tabs": {
     "label": "Các mục của sạp",
@@ -60,5 +61,8 @@
     "sentText": "Quản trị viên sẽ xem xét.",
     "button": "Báo cáo sạp này",
     "note": "Nhiều lần không có mặt, sai vị trí sạp, hoặc bất cứ điều gì vi phạm quy định của nền tảng."
+  },
+  "error": {
+    "noun": "gian hàng"
   }
 }

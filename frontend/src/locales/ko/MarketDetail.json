@@ -38,5 +38,9 @@
   "stallsNote": "선택한 날에 판매하지 않는 가게는 표시되지 않아요",
   "error": {
     "noun": "마켓"
+  },
+  "stallsNoun": "매장",
+  "stallsEmpty": {
+    "title": "{{day}}에는 매장이 없습니다"
   }
 }

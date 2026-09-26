@@ -38,5 +38,9 @@
   "stallsNote": "Stände, die am gewählten Tag nicht verkaufen, werden nicht angezeigt",
   "error": {
     "noun": "Markt"
+  },
+  "stallsNoun": "Stände",
+  "stallsEmpty": {
+    "title": "Keine Stände am {{day}}"
   }
 }

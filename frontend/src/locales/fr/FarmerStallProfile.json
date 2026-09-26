@@ -19,7 +19,8 @@
     "about": "À propos du stand",
     "aboutHint": "Affiché en écriture manuscrite sur la page de votre stand. Une ou deux phrases.",
     "savedText": "Infos du stand enregistrées.",
-    "save": "Enregistrer les infos du stand"
+    "save": "Enregistrer les infos du stand",
+    "accountHint": "Téléphone, e-mail et adresse viennent de votre compte."
   },
   "cutoff": {
     "title": "Clôture des commandes",
@@ -46,9 +47,26 @@
     "useMarket": "Utiliser l'emplacement du marché",
     "savedText": "Marchés, jours et plages de retrait enregistrés. Les créneaux de la semaine prochaine suivent les nouvelles plages.",
     "save": "Enregistrer marchés et retrait",
-    "slotsLink": "Gérer les créneaux de retrait"
+    "slotsLink": "Gérer les créneaux de retrait",
+    "notApproved": "Marchés, jours et créneaux de retrait s’ouvrent une fois votre stand approuvé.",
+    "windowError": "{{market}} : choisissez au moins un jour et une fin après le début.",
+    "joined": "{{name}} ajouté à votre stand.",
+    "left": "{{name}} retiré de votre stand."
   },
   "map": {
     "yourStall": "Votre stand"
+  },
+  "error": {
+    "noun": "votre stand"
+  },
+  "status": {
+    "approved": "Stand approuvé",
+    "pending": "En attente d’approbation",
+    "rejected": "Demande refusée",
+    "suspended": "Stand suspendu"
+  },
+  "errors": {
+    "required": "Ce champ est obligatoire.",
+    "cutoff": "Indiquez un nombre entier entre {{min}} et {{max}} heures."
   }
 }
