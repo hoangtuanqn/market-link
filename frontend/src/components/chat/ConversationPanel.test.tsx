@@ -89,4 +89,20 @@ describe('ConversationPanel', () => {
 
     expect(typing).toHaveBeenCalledWith(true);
   });
+
+  /** Spec §9.2: Back chỉ có nghĩa ở màn hẹp, nơi danh sách và hội thoại là hai màn riêng. Từ md là hai cột. */
+  it('offers Back only on narrow screens', () => {
+    useConversation.mockReturnValue(state({}));
+    render(<ConversationPanel conversationId={42} other={other} onBack={vi.fn()} />);
+
+    expect(screen.getByRole('button', { name: 'Back' })).toHaveClass('md:hidden');
+  });
+
+  /** Chưa chọn thread: câu dẫn nằm giữa khung trống, không nép góc trên trái. */
+  it('centres the pick-a-conversation hint in the empty panel', () => {
+    useConversation.mockReturnValue(state({ messages: [] }));
+    render(<ConversationPanel conversationId={null} other={null} />);
+
+    expect(screen.getByText('Pick a conversation').parentElement).toHaveClass('justify-center');
+  });
 });

@@ -11,7 +11,7 @@ import type { ChatMessageItem, ChatParticipant } from '@/types/chat.types';
 type Props = {
   conversationId: number | null;
   other: ChatParticipant | null;
-  /** Chỉ có ở 375px: quay lại danh sách. Desktop truyền undefined. */
+  /** Quay lại danh sách ở màn hẹp (spec §9.2). Nút tự ẩn từ `md`, nơi danh sách và hội thoại nằm cạnh nhau. */
   onBack?: () => void;
   /** Chỗ cho nút riêng của từng vai (Farmer: "Make an offer" ở đợt 2). */
   headerAction?: ReactNode;
@@ -57,14 +57,14 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
   }, [newestId]);
 
   if (conversationId === null || !other) {
-    return <DataState title={t('chat.pickThreadTitle')} text={t('chat.pickThreadText')} />;
+    return <DataState fill className="h-full" title={t('chat.pickThreadTitle')} text={t('chat.pickThreadText')} />;
   }
 
   return (
     <section className="flex h-full min-h-0 flex-col" aria-label={t('chat.conversationWith', { name: other.fullName })}>
       <header className="border-line-strong flex items-center gap-3 border-b p-3">
         {onBack ? (
-          <Button variant="secondary" size="sm" onClick={onBack}>
+          <Button variant="secondary" size="sm" onClick={onBack} className="md:hidden">
             {t('chat.back')}
           </Button>
         ) : null}
