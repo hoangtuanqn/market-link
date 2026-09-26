@@ -152,6 +152,15 @@ public class SecurityConfig {
                                                 // in
                                                 "/api/v1/farmers/*/slots")
                                         .permitAll()
+                                        // FR-052: reviews are readable before signing in
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/products/*/reviews",
+                                                "/api/v1/farmers/*/reviews")
+                                        .permitAll()
+                                        // FR-081: the feedback form is open to visitors
+                                        .requestMatchers(HttpMethod.POST, "/api/v1/feedbacks")
+                                        .permitAll()
                                         // Chatbot FR-090…092: guests can ask questions too
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
                                         .permitAll()

@@ -453,7 +453,8 @@ public class OrderService implements OrderServiceInterface {
                 canModify,
                 row.customerNote(),
                 row.farmerNote(),
-                customer);
+                customer,
+                orderQueries.reviewed(orderId));
     }
 
     /** {@code GET /farmer/orders}: orders placed at the Farmer's own stall, by pickup time. */

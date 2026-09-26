@@ -13,7 +13,11 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.requests.ProductSearchCriteria;
+import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
+import com.techx.intervue.modules.review.services.interfaces.ReviewServiceInterface;
+import com.techx.intervue.modules.stall.resources.StallDetailResource;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
@@ -27,13 +31,15 @@ class ProductQueryServiceTest {
 
     private ProductQueryRepository repository;
     private StallServiceInterface stallService;
+    private ReviewServiceInterface reviewService;
     private ProductQueryService service;
 
     @BeforeEach
     void setUp() {
         repository = mock(ProductQueryRepository.class);
         stallService = mock(StallServiceInterface.class);
-        service = new ProductQueryService(repository, stallService);
+        reviewService = mock(ReviewServiceInterface.class);
+        service = new ProductQueryService(repository, stallService, reviewService);
         when(repository.search(any(), anyString(), anyInt(), anyInt()))
                 .thenReturn(new PageResource<ProductListItemResource>(List.of(), 1, 12, 0));
     }
@@ -100,5 +106,51 @@ class ProductQueryServiceTest {
         when(repository.findVisibleById(5L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.detail(5L)).isInstanceOf(ProductNotFoundException.class);
+    }
+
+    /**
+     * C8 (FR-052): `reviewsSummary` is the real average and histogram, no longer the C3
+     * placeholder.
+     */
+    @Test
+    void detailCarriesTheReviewSummaryOfTheProduct() {
+        ProductListItemResource item =
+                new ProductListItemResource(
+                        5L,
+                        "Rau muống",
+                        10L,
+                        "Vườn Út Hiền",
+                        2L,
+                        "Chợ Bà Chiểu",
+                        1L,
+                        "Vegetables",
+                        new BigDecimal("15000"),
+                        "kg",
+                        9,
+                        null,
+                        "available",
+                        new BigDecimal("4.50"),
+                        2,
+                        7);
+        when(repository.findVisibleById(5L))
+                .thenReturn(Optional.of(new ProductDetailRow(item, "d")));
+        when(stallService.publicDetail(10L))
+                .thenReturn(
+                        new StallDetailResource(
+                                10L,
+                                "Vườn Út Hiền",
+                                "Út Hiền",
+                                null,
+                                null,
+                                12,
+                                new BigDecimal("4.50"),
+                                2,
+                                "approved",
+                                List.of()));
+        ReviewSummaryResource summary =
+                new ReviewSummaryResource(new BigDecimal("4.50"), 2, List.of(0, 0, 0, 1, 1));
+        when(reviewService.productSummary(5L)).thenReturn(summary);
+
+        assertThat(service.detail(5L).reviewsSummary()).isSameAs(summary);
     }
 }
