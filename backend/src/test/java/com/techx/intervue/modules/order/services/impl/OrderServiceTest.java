@@ -25,6 +25,7 @@ import com.techx.intervue.modules.order.exceptions.SlotNotAvailableException;
 import com.techx.intervue.modules.order.exceptions.StallUnavailableException;
 import com.techx.intervue.modules.order.repositories.CheckoutQueryRepository;
 import com.techx.intervue.modules.order.repositories.OrderItemRepository;
+import com.techx.intervue.modules.order.repositories.OrderQueryRepository;
 import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.order.repositories.OrderStatusHistoryRepository;
 import com.techx.intervue.modules.order.requests.CartLine;
@@ -99,6 +100,7 @@ class OrderServiceTest {
     private OrderItemRepository orderItemRepository;
     private OrderStatusHistoryRepository historyRepository;
     private CheckoutQueryRepository checkoutQueries;
+    private OrderQueryRepository orderQueries;
     private Clock clock;
     private OrderService service;
 
@@ -123,6 +125,7 @@ class OrderServiceTest {
         orderItemRepository = mock(OrderItemRepository.class);
         historyRepository = mock(OrderStatusHistoryRepository.class);
         checkoutQueries = mock(CheckoutQueryRepository.class);
+        orderQueries = mock(OrderQueryRepository.class);
         clock = Clock.fixed(ZonedDateTime.of(TODAY, LocalTime.of(9, 0), HCM).toInstant(), HCM);
         service =
                 new OrderService(
@@ -136,6 +139,7 @@ class OrderServiceTest {
                         new OrderStatusHistoryWriter(historyRepository),
                         new OrderCodeGenerator(orderRepository, clock),
                         checkoutQueries,
+                        orderQueries,
                         clock);
 
         when(userRepository.findById(CUSTOMER_ID))

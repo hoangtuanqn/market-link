@@ -7,19 +7,26 @@ import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
 import com.techx.intervue.modules.order.enums.OrderStatus;
 import com.techx.intervue.modules.order.exceptions.CutoffPassedException;
+import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
+import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.order.exceptions.OutOfStockException;
 import com.techx.intervue.modules.order.exceptions.SlotFullException;
 import com.techx.intervue.modules.order.exceptions.SlotNotAvailableException;
 import com.techx.intervue.modules.order.exceptions.StallUnavailableException;
 import com.techx.intervue.modules.order.repositories.CheckoutQueryRepository;
 import com.techx.intervue.modules.order.repositories.OrderItemRepository;
+import com.techx.intervue.modules.order.repositories.OrderQueryRepository;
+import com.techx.intervue.modules.order.repositories.OrderQueryRepository.OrderDetailRow;
 import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.order.requests.CartLine;
 import com.techx.intervue.modules.order.requests.OrderGroupInput;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
+import com.techx.intervue.modules.order.resources.CustomerSummaryResource;
+import com.techx.intervue.modules.order.resources.OrderDetailResource;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource.MarketOption;
+import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.order.resources.PlacedOrderResource;
 import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
@@ -33,14 +40,17 @@ import com.techx.intervue.modules.stall.repositories.PickupSlotRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -64,6 +74,7 @@ public class OrderService implements OrderServiceInterface {
     static final String SOLD_OUT = "sold_out";
     static final String UNAVAILABLE = "unavailable";
     static final String STALL_SUSPENDED = "stall_suspended";
+    private static final int MAX_PAGE_SIZE = 50;
 
     private final UserRepository userRepository;
     private final FarmerProfileRepository farmerRepository;
@@ -75,6 +86,7 @@ public class OrderService implements OrderServiceInterface {
     private final OrderStatusHistoryWriter history;
     private final OrderCodeGenerator codeGenerator;
     private final CheckoutQueryRepository checkoutQueries;
+    private final OrderQueryRepository orderQueries;
     private final Clock clock;
 
     /**
@@ -359,5 +371,93 @@ public class OrderService implements OrderServiceInterface {
                                 CartLine::quantity,
                                 Integer::sum,
                                 LinkedHashMap::new));
+    }
+
+    // ---------- FR-033, 036, 065: đọc đơn cho cả hai phía ----------
+
+    /** {@code GET /orders}: mua của chính người gọi (buyer), mới nhất trước. */
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<OrderListItemResource> myOrders(
+            long userId, String status, int page, int pageSize) {
+        String dbStatus = parseStatusOrNull(status);
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return orderQueries.myOrders(userId, dbStatus, (safePage - 1) * safeSize, safeSize);
+    }
+
+    /**
+     * {@code GET /orders/{id}}: người gọi phải là khách của đơn (customer_id) hoặc user của
+     * farmer_profiles sở hữu đơn (D-13: Farmer cũng mua hàng) — sai cả hai thì {@link
+     * OrderNotYoursException} (403), kể cả khi đơn có thật (Review focus #3, R-06). {@code
+     * canCancel}/{@code canModify} chỉ đúng cho buyer; Farmer xem đơn của mình luôn thấy false.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public OrderDetailResource detail(long userId, long orderId) {
+        OrderDetailRow row =
+                orderQueries
+                        .findDetail(orderId)
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
+        boolean isBuyer = row.customerId() == userId;
+        boolean isOwningFarmer = row.farmerUserId() == userId;
+        if (!isBuyer && !isOwningFarmer) {
+            throw new OrderNotYoursException();
+        }
+
+        LocalDateTime now = LocalDateTime.now(clock);
+        boolean canCancel =
+                isBuyer && OrderLifecycle.canCustomerCancel(row.status(), row.cutoffAt(), now);
+        boolean canModify =
+                isBuyer && OrderLifecycle.canCustomerModify(row.status(), row.cutoffAt(), now);
+        CustomerSummaryResource customer =
+                isOwningFarmer
+                        ? new CustomerSummaryResource(
+                                row.customerId(),
+                                row.customerFullName(),
+                                row.customerPhone(),
+                                row.customerEmail())
+                        : null;
+
+        return new OrderDetailResource(
+                row.summary(),
+                orderQueries.items(orderId),
+                orderQueries.history(orderId),
+                canCancel,
+                canModify,
+                row.customerNote(),
+                row.farmerNote(),
+                customer);
+    }
+
+    /** {@code GET /farmer/orders}: đơn đặt tại sạp của chính Farmer, theo giờ nhận hàng. */
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<OrderListItemResource> farmerOrders(
+            long userId, String status, LocalDate date, int page, int pageSize) {
+        FarmerProfile profile =
+                farmerRepository
+                        .findByUserId(userId)
+                        .orElseThrow(() -> new AccessDeniedException("No stall for this account."));
+        String dbStatus = parseStatusOrNull(status);
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return orderQueries.farmerOrders(
+                profile.getId(), dbStatus, date, (safePage - 1) * safeSize, safeSize);
+    }
+
+    /**
+     * Whitelist qua {@link OrderStatus#valueOf} — giá trị lạ là request sai hình dạng → 400, không
+     * bao giờ nối chuỗi vào SQL (R-04).
+     */
+    private static String parseStatusOrNull(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        try {
+            return OrderStatus.valueOf(raw.trim().toUpperCase(Locale.ROOT)).value();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Unknown order status: " + raw);
+        }
     }
 }

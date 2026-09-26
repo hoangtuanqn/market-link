@@ -2,11 +2,15 @@ package com.techx.intervue.modules.order.services.interfaces;
 
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
+import com.techx.intervue.modules.order.resources.OrderDetailResource;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
+import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.order.resources.PlacedOrderResource;
+import com.techx.intervue.resources.PageResource;
+import java.time.LocalDate;
 import java.util.List;
 
-/** FR-030…032 — xem trước giỏ tách theo stall và đặt đơn (contract §7). */
+/** FR-030…032, 033, 036, 065 — giỏ, đặt đơn, và đọc đơn cho cả hai phía (contract §7). */
 public interface OrderServiceInterface {
 
     /** Chỉ đọc: không khoá, không đổi gì. Vấn đề của từng group nằm trong {@code problems}. */
@@ -14,4 +18,19 @@ public interface OrderServiceInterface {
 
     /** Một transaction: mọi đơn của lệnh được tạo, tồn kho và slot trừ xong — hoặc không gì cả. */
     List<PlacedOrderResource> place(long customerUserId, PlaceOrderRequest request);
+
+    /** {@code GET /orders} — đơn của chính người gọi với vai buyer, mới nhất trước. */
+    PageResource<OrderListItemResource> myOrders(
+            long userId, String status, int page, int pageSize);
+
+    /**
+     * {@code GET /orders/{id}} — buyer hoặc Farmer của đơn mới đọc được (R-06, Review focus #3);
+     * còn lại {@code OrderNotYoursException} (403), đơn không tồn tại thì {@code
+     * OrderNotFoundException} (404).
+     */
+    OrderDetailResource detail(long userId, long orderId);
+
+    /** {@code GET /farmer/orders} — đơn đặt tại sạp của chính Farmer, theo giờ nhận hàng. */
+    PageResource<OrderListItemResource> farmerOrders(
+            long userId, String status, LocalDate date, int page, int pageSize);
 }

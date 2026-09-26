@@ -2,6 +2,7 @@ package com.techx.intervue.modules.order.controllers;
 
 import com.techx.intervue.modules.order.exceptions.CutoffPassedException;
 import com.techx.intervue.modules.order.exceptions.InvalidOrderTransitionException;
+import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
 import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.order.exceptions.OutOfStockException;
 import com.techx.intervue.modules.order.exceptions.SlotFullException;
@@ -25,7 +26,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * chuyển trạng thái sai đều là xung đột với trạng thái hiện tại → 409, không bao giờ 400 (R-06,
  * contract "409 xung đột trạng thái"). Sai chủ / sai vai → 403.
  */
-@RestControllerAdvice(assignableTypes = {OrderController.class})
+@RestControllerAdvice(assignableTypes = {OrderController.class, FarmerOrderController.class})
 public class OrderExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
@@ -91,6 +92,12 @@ public class OrderExceptionHandler {
     @ExceptionHandler(OrderNotYoursException.class)
     ResponseEntity<ApiResource<Void>> notYours(OrderNotYoursException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
+    }
+
+    /** Id đơn không tồn tại → 404. Khác với sai chủ (403): đây là hàng thật sự không có. */
+    @ExceptionHandler(OrderNotFoundException.class)
+    ResponseEntity<ApiResource<Void>> notFound(OrderNotFoundException e) {
+        return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
     }
 
     /**
