@@ -387,7 +387,7 @@ trả 404/410 → subscription bị xoá. Web Push chỉ chạy trên HTTPS (loc
 | POST | `/api/v1/admin/announcements` | **Đã có** — `{ title (≤150), content (≤1000), audience: "all" \| "customers" \| "farmers", startsAt?, endsAt? }` → 201 `AnnouncementResource`; **gửi ngay** một thông báo cho mọi user `active` thuộc audience (admin không nhận) |
 | PUT | `/api/v1/admin/announcements/{id}` | **Đã có** — cùng body; chỉ sửa banner, **không** sửa thông báo đã gửi |
 | DELETE | `/api/v1/admin/announcements/{id}` | **Đã có** — gỡ banner (`active = false`); thông báo đã gửi vẫn giữ |
-| GET | `/api/v1/announcements/active` | **Đã có**, **Public** — banner đang hiệu lực mới nhất, `null` nếu không có |
+| GET | `/api/v1/announcements/active` | **Đã có**, **Public** — banner đang hiệu lực mới nhất **mà người xem thuộc audience**, `null` nếu không có. Gửi kèm access token thì lọc theo role của phiên (customer: `all` + `customers`, farmer: `all` + `farmers`); khách vãng lai và admin chỉ thấy `all` |
 
 `AnnouncementResource`: `{ id, title, content, audience, active, startsAt, endsAt, createdAt }`. `endsAt` phải sau
 `startsAt` (400). Banner hiện khi `active` và `startsAt ≤ now < endsAt` (null = không giới hạn phía đó).
