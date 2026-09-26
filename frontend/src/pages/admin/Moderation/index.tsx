@@ -20,6 +20,7 @@ import { vnd } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import ReportedMessages from './ReportedMessages';
 
 const REVIEW_FILTERS = ['reported', 'lowRated', 'newest'] as const;
 
@@ -154,13 +155,18 @@ const AdminModerationPage = () => {
         value={tab}
         onChange={setTab}
         tabs={
+          // Reviews và hidden items còn chạy dữ liệu mẫu (SHOW_WIP); reported messages dùng API thật nên luôn có
           SHOW_WIP
             ? [
                 { id: 'reviews', label: t('tab.reviews'), count: flagged.length },
                 { id: 'products', label: t('tab.products') },
                 { id: 'hidden', label: t('tab.hidden'), count: hiddenItems.length },
+                { id: 'messages', label: t('tab.messages') },
               ]
-            : [{ id: 'products', label: t('tab.products') }]
+            : [
+                { id: 'products', label: t('tab.products') },
+                { id: 'messages', label: t('tab.messages') },
+              ]
         }
       />
 
@@ -255,6 +261,8 @@ const AdminModerationPage = () => {
       )}
 
       {SHOW_WIP && tab === 'hidden' && <Table caption={t('tab.hidden')} columns={hiddenColumns} rows={hiddenItems} />}
+
+      {tab === 'messages' && <ReportedMessages />}
 
       <Dialog
         open={hiding !== null}
