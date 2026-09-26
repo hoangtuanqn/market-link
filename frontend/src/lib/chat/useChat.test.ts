@@ -15,6 +15,7 @@ vi.mock('@/api-requests/conversation.requests', () => ({
 }));
 
 const handlers = new Map<string, (body: string) => void>();
+const connectListeners = new Set<() => void>();
 vi.mock('@/lib/realtime/stompClient', () => ({
   realtime: {
     start: vi.fn(),
@@ -23,6 +24,10 @@ vi.mock('@/lib/realtime/stompClient', () => ({
       handlers.set(destination, handler);
       return () => handlers.delete(destination);
     }),
+    onConnect: vi.fn((listener: () => void) => {
+      connectListeners.add(listener);
+      return () => connectListeners.delete(listener);
+    }),
   },
 }));
 
@@ -30,33 +35,41 @@ vi.mock('@/utils/session', () => ({
   default: { getUser: () => ({ id: 7 }) },
 }));
 
-const msg = (id: number, senderId = 3) => ({
+const msg = (id: number, senderId = 3, conversationId = 42) => ({
   id,
-  conversationId: 42,
+  conversationId,
   senderId,
   kind: 'text' as const,
   body: `m${id}`,
   createdAt: '2026-09-26T10:00:00Z',
 });
 
+const ok = <T>(data: T) => ({ success: true, message: 'OK', data, timestamp: '' }) as never;
+
+/** Một promise mà test tự quyết lúc nào trả về, để dựng phản hồi đến muộn. */
+const deferred = <T>() => {
+  let resolve!: (value: T) => void;
+  const promise = new Promise<T>((r) => {
+    resolve = r;
+  });
+  return { promise, resolve };
+};
+
 const emit = (destination: string, payload: unknown) => act(() => handlers.get(destination)?.(JSON.stringify(payload)));
+
+/** Socket vừa nối lại xong. */
+const reconnect = () =>
+  act(() => {
+    connectListeners.forEach((listener) => listener());
+  });
 
 describe('useConversation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     handlers.clear();
-    vi.mocked(ConversationApi.messages).mockResolvedValue({
-      success: true,
-      message: 'OK',
-      data: [msg(3), msg(2), msg(1)],
-      timestamp: '',
-    } as never);
-    vi.mocked(ConversationApi.markRead).mockResolvedValue({
-      success: true,
-      message: 'OK',
-      data: null,
-      timestamp: '',
-    } as never);
+    connectListeners.clear();
+    vi.mocked(ConversationApi.messages).mockResolvedValue(ok([msg(3), msg(2), msg(1)]));
+    vi.mocked(ConversationApi.markRead).mockResolvedValue(ok(null));
   });
 
   it('loads the newest page oldest-first', async () => {
@@ -69,6 +82,16 @@ describe('useConversation', () => {
     renderHook(() => useConversation(42));
 
     await waitFor(() => expect(ConversationApi.markRead).toHaveBeenCalledWith(42));
+  });
+
+  /** Tin đã tải xong mà chỉ bước đánh dấu đã đọc hỏng thì vẫn phải hiện thread, không phải màn lỗi. */
+  it('still shows the thread when marking it read fails', async () => {
+    vi.mocked(ConversationApi.markRead).mockRejectedValue(new Error('429'));
+    const { result } = renderHook(() => useConversation(42));
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.error).toBe(false);
+    expect(result.current.messages).toHaveLength(3);
   });
 
   it('adds a message that arrives over the socket', async () => {
@@ -84,19 +107,14 @@ describe('useConversation', () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
 
-    emit('/user/topic/messages', { ...msg(9), conversationId: 99 });
+    emit('/user/topic/messages', msg(9, 3, 99));
 
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
   });
 
   /** Review Focus #1 ở tầng hook: gửi xong thì sự kiện về cũng không nhân đôi bong bóng. */
   it('does not show a message twice when the socket echoes what REST already returned', async () => {
-    vi.mocked(ConversationApi.send).mockResolvedValue({
-      success: true,
-      message: 'Sent.',
-      data: msg(4, 7),
-      timestamp: '',
-    } as never);
+    vi.mocked(ConversationApi.send).mockResolvedValue(ok(msg(4, 7)));
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
 
@@ -109,16 +127,41 @@ describe('useConversation', () => {
   it('asks for the next page back with the oldest id it has', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
-    vi.mocked(ConversationApi.messages).mockResolvedValue({
-      success: true,
-      message: 'OK',
-      data: [msg(0)],
-      timestamp: '',
-    } as never);
+    vi.mocked(ConversationApi.messages).mockResolvedValue(ok([msg(0)]));
 
     await act(() => result.current.loadOlder());
 
     expect(ConversationApi.messages).toHaveBeenLastCalledWith(42, { before: 1, size: 30 });
+  });
+
+  /** Bấm "tải thêm" hai lần liền: một request là đủ. */
+  it('does not ask for the same older page twice at once', async () => {
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+    vi.mocked(ConversationApi.messages).mockClear();
+    const page = deferred<unknown>();
+    vi.mocked(ConversationApi.messages).mockReturnValue(page.promise as never);
+
+    act(() => {
+      void result.current.loadOlder();
+      void result.current.loadOlder();
+    });
+    await act(async () => page.resolve(ok([msg(0)])));
+
+    expect(ConversationApi.messages).toHaveBeenCalledTimes(1);
+  });
+
+  /** Trang cũ hỏng thì báo riêng, không xoá những tin đang đọc và không ném lỗi ra ngoài. */
+  it('reports a failed older page without losing the thread', async () => {
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+    vi.mocked(ConversationApi.messages).mockRejectedValue(new Error('network'));
+
+    await act(() => result.current.loadOlder());
+
+    expect(result.current.olderError).toBe(true);
+    expect(result.current.error).toBe(false);
+    expect(result.current.messages).toHaveLength(3);
   });
 
   /** Trang cuối trả ít hơn size → không còn gì để tải, nút "tải thêm" phải tắt. */
@@ -137,6 +180,17 @@ describe('useConversation', () => {
 
     emit('/user/topic/typing', { conversationId: 99, userId: 3, typing: false });
     await waitFor(() => expect(result.current.otherTyping).toBe(true));
+  });
+
+  /** Người kia gõ xong và gửi: tin tới là đủ biết họ ngừng gõ, không đợi 6 giây hay một frame typing:false. */
+  it('hides the typing dots as soon as their message arrives', async () => {
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+    emit('/user/topic/typing', { conversationId: 42, userId: 3, typing: true });
+
+    emit('/user/topic/messages', msg(4));
+
+    expect(result.current.otherTyping).toBe(false);
   });
 
   /** Spec §7.4: chiều vào duy nhất là /app/typing với { conversationId, typing }. */
@@ -167,6 +221,39 @@ describe('useConversation', () => {
     expect(realtime.publish).toHaveBeenCalledTimes(2);
   });
 
+  /** Đang gõ dở mà rời thread thì ba chấm bên kia phải tắt ngay, không đợi 6 giây. */
+  it('says I stopped typing when I leave the thread mid-sentence', async () => {
+    const { result, rerender } = renderHook(({ id }) => useConversation(id), { initialProps: { id: 42 } });
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+    act(() => result.current.typing(true));
+
+    rerender({ id: 43 });
+
+    expect(realtime.publish).toHaveBeenLastCalledWith('/app/typing', { conversationId: 42, typing: false });
+  });
+
+  /** FR-112 "đã xem": backend gửi "read" cho người gửi khi đối phương đọc. */
+  it('remembers when the other person read the thread', async () => {
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+
+    emit('/user/topic/conversations', {
+      type: 'read',
+      conversationId: 99,
+      readerId: 5,
+      readAt: '2026-09-26T10:01:00Z',
+    });
+    expect(result.current.otherReadAt).toBeNull();
+
+    emit('/user/topic/conversations', {
+      type: 'read',
+      conversationId: 42,
+      readerId: 3,
+      readAt: '2026-09-26T10:02:00Z',
+    });
+    expect(result.current.otherReadAt).toBe('2026-09-26T10:02:00Z');
+  });
+
   /** Màn 1440px đổi thread tại chỗ, không dựng lại panel: tin của thread cũ không được nán lại. */
   it('drops the previous thread as soon as another one is picked', async () => {
     const { result, rerender } = renderHook(({ id }) => useConversation(id), { initialProps: { id: 42 } });
@@ -176,6 +263,20 @@ describe('useConversation', () => {
     rerender({ id: 43 });
 
     expect(result.current.messages).toEqual([]);
+  });
+
+  /** Bấm thread A rồi B thật nhanh, mà A trả lời sau B: tin của A không được đè lên màn B. */
+  it('ignores a late answer for a thread that is no longer open', async () => {
+    const late = deferred<unknown>();
+    vi.mocked(ConversationApi.messages).mockReturnValueOnce(late.promise as never);
+    vi.mocked(ConversationApi.messages).mockResolvedValueOnce(ok([msg(10, 3, 43)]));
+    const { result, rerender } = renderHook(({ id }) => useConversation(id), { initialProps: { id: 42 } });
+
+    rerender({ id: 43 });
+    await waitFor(() => expect(result.current.messages.map((m) => m.id)).toEqual([10]));
+    await act(async () => late.resolve(ok([msg(3), msg(2), msg(1)])));
+
+    expect(result.current.messages.map((m) => m.id)).toEqual([10]);
   });
 
   it('does nothing at all when no thread is open', async () => {
@@ -194,38 +295,41 @@ describe('useConversation', () => {
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
     vi.mocked(ConversationApi.messages).mockClear();
 
-    act(() => {
-      globalThis.dispatchEvent(new Event('online'));
-    });
+    reconnect();
 
     await waitFor(() => expect(ConversationApi.messages).toHaveBeenCalledWith(42, { size: 30 }));
+  });
+
+  /** Tải bù chỉ GỘP trang mới nhất vào, không thay cả danh sách: trang cũ đã cuộn lên đọc vẫn còn. */
+  it('catches up without dropping the older pages already loaded', async () => {
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+    vi.mocked(ConversationApi.messages).mockResolvedValue(ok([msg(0)]));
+    await act(() => result.current.loadOlder());
+    vi.mocked(ConversationApi.messages).mockResolvedValue(ok([msg(5), msg(4), msg(3)]));
+
+    reconnect();
+
+    await waitFor(() => expect(result.current.messages.map((m) => m.id)).toEqual([0, 1, 2, 3, 4, 5]));
   });
 });
 
 describe('useThreadList', () => {
+  const summary = (id: number, unreadCount = 0) => ({
+    id,
+    other: { userId: 3, fullName: 'Cô Tư', role: 'farmer', image: null, online: false, lastSeenAt: null },
+    lastMessageText: 'hi',
+    lastMessageAt: '2026-09-26T09:00:00Z',
+    unreadCount,
+    createdAt: '2026-09-20T08:00:00Z',
+  });
+  const page = (...items: ReturnType<typeof summary>[]) => ok({ items, page: 1, pageSize: 20, total: items.length });
+
   beforeEach(() => {
     vi.clearAllMocks();
     handlers.clear();
-    vi.mocked(ConversationApi.list).mockResolvedValue({
-      success: true,
-      message: 'OK',
-      data: {
-        items: [
-          {
-            id: 42,
-            other: { userId: 3, fullName: 'Cô Tư', role: 'farmer', image: null, online: true, lastSeenAt: null },
-            lastMessageText: 'hi',
-            lastMessageAt: '2026-09-26T09:00:00Z',
-            unreadCount: 0,
-            createdAt: '2026-09-20T08:00:00Z',
-          },
-        ],
-        page: 1,
-        pageSize: 20,
-        total: 1,
-      },
-      timestamp: '',
-    } as never);
+    connectListeners.clear();
+    vi.mocked(ConversationApi.list).mockResolvedValue(page(summary(42)));
   });
 
   it('moves a thread to the top when an event touches it', async () => {
@@ -249,5 +353,63 @@ describe('useThreadList', () => {
 
     await waitFor(() => expect(result.current.error).toBe(true));
     expect(result.current.loading).toBe(false);
+  });
+
+  /** Khách nhắn lần đầu: farmer chưa có thread đó trong danh sách, và sự kiện không mang tên người gửi. */
+  it('reloads the list when a message lands in a thread it does not have yet', async () => {
+    const { result } = renderHook(() => useThreadList());
+    await waitFor(() => expect(result.current.threads).toHaveLength(1));
+    vi.mocked(ConversationApi.list).mockResolvedValue(page(summary(77, 1), summary(42)));
+
+    emit('/user/topic/conversations', {
+      type: 'updated',
+      conversationId: 77,
+      lastMessageText: 'hello',
+      unreadCount: 1,
+    });
+
+    await waitFor(() => expect(result.current.threads.map((t) => t.id)).toEqual([77, 42]));
+  });
+
+  /**
+   * Backend gửi "read" cho người KIA, không gửi cho người vừa đọc; và tin tới thread đang mở vẫn mang unreadCount 1 vì
+   * nó được đếm trước khi hook kịp đánh dấu đã đọc. Thread đang mở thì badge phải là 0.
+   */
+  it('clears the badge of the thread that is open, and keeps it clear', async () => {
+    vi.mocked(ConversationApi.list).mockResolvedValue(page(summary(42, 3)));
+    const { result, rerender } = renderHook(({ active }) => useThreadList(active), {
+      initialProps: { active: null as number | null },
+    });
+    await waitFor(() => expect(result.current.threads[0].unreadCount).toBe(3));
+
+    rerender({ active: 42 });
+    expect(result.current.threads[0].unreadCount).toBe(0);
+
+    emit('/user/topic/conversations', { type: 'updated', conversationId: 42, unreadCount: 1 });
+    expect(result.current.threads[0].unreadCount).toBe(0);
+
+    rerender({ active: null });
+    expect(result.current.threads[0].unreadCount).toBe(0);
+  });
+
+  it('follows the other person going online', async () => {
+    const { result } = renderHook(() => useThreadList());
+    await waitFor(() => expect(result.current.threads).toHaveLength(1));
+
+    emit('/user/topic/presence', { userId: 3, online: true, lastSeenAt: null });
+
+    expect(result.current.threads[0].other.online).toBe(true);
+  });
+
+  /** Review Focus #3 cho danh sách: preview và badge tới lúc rớt mạng phải được bù, mà không nháy màn "đang tải". */
+  it('catches up quietly when the socket comes back', async () => {
+    const { result } = renderHook(() => useThreadList());
+    await waitFor(() => expect(result.current.threads).toHaveLength(1));
+    vi.mocked(ConversationApi.list).mockResolvedValue(page(summary(42, 4)));
+
+    reconnect();
+
+    expect(result.current.loading).toBe(false);
+    await waitFor(() => expect(result.current.threads[0].unreadCount).toBe(4));
   });
 });
