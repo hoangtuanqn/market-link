@@ -18,7 +18,7 @@ const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
   const href = `/orders/${order.code.replace('#', '')}`;
 
   return (
-    <Card as="article" className={Helper.cn('flex flex-col gap-3 p-4', fluid ? 'w-full' : 'w-95 max-w-full')}>
+    <Card as="article" className={Helper.cn('flex h-full flex-col gap-3 p-4', fluid ? 'w-full' : 'w-95 max-w-full')}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-ink-muted text-small">{t('order.code', { code: order.code })}</div>
@@ -42,7 +42,7 @@ const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
 
       <div className="ml-ticket-perf" aria-hidden="true" />
 
-      <ul className="m-0 flex flex-col p-0 text-[15px]">
+      <ul className="m-0 flex flex-1 flex-col p-0 text-[15px]">
         {order.items.map((line) => {
           const p = lineProduct(line.productId);
           if (!p) return null;
@@ -66,55 +66,57 @@ const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
         <span className="font-hand text-price text-[28px] tabular-nums">{vnd(orderTotal(order))}</span>
       </div>
 
-      {order.status === 'declined' && order.reason ? (
-        <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
-          <CloseIcon size={16} className="mt-px flex-none" />
-          <span>{t('order.declinedReason', { reason: order.reason })}</span>
-        </p>
-      ) : order.status === 'cancelled' ? (
-        <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
-          <CircleSlashIcon size={16} className="mt-px flex-none" />
-          <span>{t('order.cancelledNote')}</span>
-        </p>
-      ) : (
-        <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
-          {order.locked ? (
-            <LockIcon size={16} className="mt-px flex-none" />
-          ) : (
-            <ClockIcon size={16} className="mt-px flex-none" />
-          )}
-          <span>
-            {order.locked
-              ? t('order.lockedNote', { cutoff: order.cutoff })
-              : t('order.editableNote', { cutoff: order.cutoff })}
-          </span>
-        </p>
-      )}
-
-      {!hideActions && editable && (
-        <div className="flex flex-wrap gap-2">
-          <ButtonLink to={`${href}/edit`} variant="secondary" size="sm">
-            {t('order.edit')}
-          </ButtonLink>
-          <Button variant="danger" size="sm">
-            {t('order.cancel')}
-          </Button>
-        </div>
-      )}
-      {!hideActions &&
-        order.status === 'completed' &&
-        (order.reviewed ? (
-          <span className="text-ink-muted text-small">{t('order.reviewed')}</span>
+      <div className="mt-auto flex flex-col gap-3">
+        {order.status === 'declined' && order.reason ? (
+          <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
+            <CloseIcon size={16} className="mt-px flex-none" />
+            <span>{t('order.declinedReason', { reason: order.reason })}</span>
+          </p>
+        ) : order.status === 'cancelled' ? (
+          <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
+            <CircleSlashIcon size={16} className="mt-px flex-none" />
+            <span>{t('order.cancelledNote')}</span>
+          </p>
         ) : (
+          <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
+            {order.locked ? (
+              <LockIcon size={16} className="mt-px flex-none" />
+            ) : (
+              <ClockIcon size={16} className="mt-px flex-none" />
+            )}
+            <span>
+              {order.locked
+                ? t('order.lockedNote', { cutoff: order.cutoff })
+                : t('order.editableNote', { cutoff: order.cutoff })}
+            </span>
+          </p>
+        )}
+
+        {!hideActions && editable && (
           <div className="flex flex-wrap gap-2">
-            <ButtonLink to={`${href}/review`} size="sm">
-              {t('order.review')}
+            <ButtonLink to={`${href}/edit`} variant="secondary" size="sm">
+              {t('order.edit')}
             </ButtonLink>
-            <Button variant="ghost" size="sm">
-              {t('order.reorder')}
+            <Button variant="danger" size="sm">
+              {t('order.cancel')}
             </Button>
           </div>
-        ))}
+        )}
+        {!hideActions &&
+          order.status === 'completed' &&
+          (order.reviewed ? (
+            <span className="text-ink-muted text-small">{t('order.reviewed')}</span>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              <ButtonLink to={`${href}/review`} size="sm">
+                {t('order.review')}
+              </ButtonLink>
+              <Button variant="ghost" size="sm">
+                {t('order.reorder')}
+              </Button>
+            </div>
+          ))}
+      </div>
     </Card>
   );
 };
