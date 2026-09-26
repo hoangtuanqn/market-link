@@ -35,6 +35,15 @@
 - Không sửa tay `src/styles/marketlink-*.css` và `docs/design-system/tokens.json`: muốn đổi style thì đổi design system
   rồi sinh lại cả ba file cùng lúc.
 
+## Màn chưa nối API chỉ hiện ở dev
+
+- `SHOW_WIP` (`src/config/wip.ts`) bật khi `npm run dev`, tắt trong `vite build`, trừ khi build với `VITE_SHOW_WIP=true`.
+- Màn còn chạy trên dữ liệu mẫu (`src/data/*` hoặc mảng viết cứng trong file) phải nằm trong danh sách `SHOW_WIP ? XWip :
+  ComingSoon` ở `App.tsx`. Nối xong API thì bỏ màn đó khỏi danh sách.
+- Màn thật mà có một khối mock (review, favorites, nút chỉ hiện toast) thì bọc khối đó trong `SHOW_WIP && (...)`.
+- Không gọi hàm hay `.find/.filter` trên dữ liệu mẫu ở top-level module: build production sẽ giữ cả mảng mẫu trong
+  bundle. Tính trong component, hoặc thêm `/* @__NO_SIDE_EFFECTS__ */` cho hàm tra cứu mới trong `src/data/*`.
+
 ## Prototype là bản hướng dẫn, không phải sản phẩm
 
 `docs/prototype/` dựng để **hướng dẫn code** và để LEAD/FE1 duyệt. Sản phẩm trong `frontend/` là thứ

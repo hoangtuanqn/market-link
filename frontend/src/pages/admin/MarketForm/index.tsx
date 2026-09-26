@@ -11,6 +11,7 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
+import { SHOW_WIP } from '@/config/wip';
 import { ADMIN_MARKETS_PATH } from '@/constants/nav';
 import {
   CLOSURE_HANDLINGS,
@@ -106,7 +107,7 @@ const AdminMarketFormPage = () => {
   const existing = load.kind === 'ready' ? load.data : null;
 
   // The form mirrors the loaded market until something is typed, then it is its own state (no effect needed).
-  const loadedForm = existing ? fromMarket(existing, marketAdmin[existing.id]?.notes ?? '') : EMPTY;
+  const loadedForm = existing ? fromMarket(existing, SHOW_WIP ? (marketAdmin[existing.id]?.notes ?? '') : '') : EMPTY;
   const [edited, setEdited] = useState<FormState | null>(null);
   const form = edited ?? loadedForm;
   const setForm = (next: FormState | ((current: FormState) => FormState)) =>
@@ -114,7 +115,7 @@ const AdminMarketFormPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
   // Closed days are still the demo set (@/data/admin); same mirror-until-edited pattern.
-  const loadedClosures = existing ? seedClosures.filter((c) => c.marketId === existing.id) : [];
+  const loadedClosures = existing && SHOW_WIP ? seedClosures.filter((c) => c.marketId === existing.id) : [];
   const [editedClosures, setEditedClosures] = useState<ClosureType[] | null>(null);
   const closures = editedClosures ?? loadedClosures;
   const setClosures = (next: (current: ClosureType[]) => ClosureType[]) =>
@@ -288,7 +289,9 @@ const AdminMarketFormPage = () => {
         <h1 className="text-h2">{isNew ? t('titleNew') : existing?.name}</h1>
         {existing && (
           <span className="text-small text-ink-muted">
-            {t('meta', { stalls: existing.stalls, added: marketAdmin[existing.id]?.added })}
+            {SHOW_WIP
+              ? t('meta', { stalls: existing.stalls, added: marketAdmin[existing.id]?.added })
+              : t('metaStalls', { stalls: existing.stalls })}
           </span>
         )}
       </div>
@@ -428,23 +431,26 @@ const AdminMarketFormPage = () => {
         </div>
       </form>
 
-      <Card as="section" className="flex flex-col gap-4 p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex max-w-160 flex-col gap-1">
-            <h2 className="text-h3">{t('closures.title')}</h2>
-            <p className="text-small text-ink-muted">{t('closures.intro')}</p>
+      {/* Ngày nghỉ của chợ còn là dữ liệu mẫu, chưa có API → chỉ hiện ở dev (config/wip.ts). */}
+      {SHOW_WIP && (
+        <Card as="section" className="flex flex-col gap-4 p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex max-w-160 flex-col gap-1">
+              <h2 className="text-h3">{t('closures.title')}</h2>
+              <p className="text-small text-ink-muted">{t('closures.intro')}</p>
+            </div>
+            <Button variant="secondary" onClick={() => setAddOpen(true)}>
+              {t('closures.add')}
+            </Button>
           </div>
-          <Button variant="secondary" onClick={() => setAddOpen(true)}>
-            {t('closures.add')}
-          </Button>
-        </div>
 
-        {closures.length ? (
-          <Table columns={closureColumns} rows={closures} />
-        ) : (
-          <DataState title={t('closures.empty.title')} text={t('closures.empty.text')} />
-        )}
-      </Card>
+          {closures.length ? (
+            <Table columns={closureColumns} rows={closures} />
+          ) : (
+            <DataState title={t('closures.empty.title')} text={t('closures.empty.text')} />
+          )}
+        </Card>
+      )}
 
       <Dialog
         open={addOpen}

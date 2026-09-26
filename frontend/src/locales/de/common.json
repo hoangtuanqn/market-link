@@ -494,5 +494,9 @@
       "title": "Benachrichtigungen",
       "intro": "Neue Farmer-Anträge, die auf Ihre Prüfung warten."
     }
+  },
+  "comingSoon": {
+    "title": "Diese Seite ist noch nicht verfügbar",
+    "text": "Wir bauen sie noch. Alles andere im Menü funktioniert wie gewohnt."
   }
 }

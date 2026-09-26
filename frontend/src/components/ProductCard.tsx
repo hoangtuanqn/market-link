@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { SHOW_WIP } from '@/config/wip';
 import { PRODUCT_STATUS } from '@/constants/enums';
 import { units } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
@@ -83,13 +84,15 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
             {stock}
           </span>
         </div>
-        {soldOut ? (
-          <Button variant="secondary" size="sm">
-            {t('product.notifyMe')}
-          </Button>
-        ) : (
-          <Button size="sm">{t('product.addToCart')}</Button>
-        )}
+        {/* Giỏ hàng và báo có hàng chưa nối API → chỉ hiện ở dev (config/wip.ts). */}
+        {SHOW_WIP &&
+          (soldOut ? (
+            <Button variant="secondary" size="sm">
+              {t('product.notifyMe')}
+            </Button>
+          ) : (
+            <Button size="sm">{t('product.addToCart')}</Button>
+          ))}
       </div>
     </Card>
   );

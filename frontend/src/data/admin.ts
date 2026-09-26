@@ -1,3 +1,4 @@
+// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
 /**
  * Demo data for the Admin screens, copied from docs/prototype/data.js. Replace with API calls when the endpoints exist.
  *
@@ -84,6 +85,7 @@ export const customers: AdminCustomerType[] = [
   },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function adminCustomer(id: number): AdminCustomerType | undefined {
   return customers.find((c) => c.id === id);
 }
@@ -637,6 +639,7 @@ export const platformRevenue = {
 };
 
 /** Percentage change between two figures, to one decimal place. */
+/* @__NO_SIDE_EFFECTS__ */
 export function changePct(now: number, before: number): number {
   if (!before) return 0;
   return Math.round(((now - before) / before) * 1000) / 10;
