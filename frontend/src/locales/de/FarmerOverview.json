@@ -1,6 +1,6 @@
 {
   "tabs": {
-    "new": "Warten auf Freigabe",
+    "new": "Aufgegeben",
     "acc": "Angenommen",
     "ready": "Bereit",
     "done": "Abgeschlossen"
@@ -44,7 +44,7 @@
     "view": "Ansehen"
   },
   "captions": {
-    "new": "Warten auf Freigabe · {{sat}} und {{sun}}",
+    "new": "Aufgegeben · {{sat}} und {{sun}}",
     "ready": "Bereit zur Abholung"
   },
   "overline": "Ihr Stand bei {{market}} · nächster Markttag {{day}}",

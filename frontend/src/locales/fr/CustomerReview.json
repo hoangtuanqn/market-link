@@ -6,6 +6,10 @@
     "title": "Cette commande n’est plus disponible",
     "text": "Vous l’avez peut-être annulée, ou le lien est ancien. Rouvrez-la depuis vos commandes."
   },
+  "notCompleted": {
+    "title": "Cette commande n’est pas encore terminée",
+    "text": "Vous pourrez évaluer l’étal et vos achats une fois la commande récupérée."
+  },
   "completed": "Terminée le {{date}}",
   "title": "Comment était {{stall}} ?",
   "intro": "Les avis sont liés à cette commande terminée : les autres clients les voient comme un achat vérifié. Le stand peut répondre.",

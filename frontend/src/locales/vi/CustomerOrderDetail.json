@@ -37,7 +37,8 @@
     "until": "Bạn có thể sửa số lượng, bỏ món hoặc huỷ đơn đến <b>{{cutoff}}</b>. Sau khi bạn sửa, {{stall}} sẽ duyệt lại đơn.",
     "edit": "Sửa đơn",
     "cancel": "Huỷ đơn",
-    "locked": "Đã qua giờ chốt lúc {{cutoff}}. Muốn thay đổi, hãy liên hệ trực tiếp với sạp qua số {{phone}}."
+    "locked": "Đã qua giờ chốt lúc {{cutoff}}. Muốn thay đổi, hãy liên hệ trực tiếp với sạp qua số {{phone}}.",
+    "settled": "Đơn này không đổi được nữa. Cần hỏi gì, hãy liên hệ trực tiếp với sạp qua số {{phone}}."
   },
   "notify": {
     "title": "Thông báo cho đơn này",

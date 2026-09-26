@@ -37,7 +37,8 @@
     "until": "Bis <b>{{cutoff}}</b> können Sie Mengen ändern, Artikel entfernen oder stornieren. Nach einer Änderung bestätigt {{stall}} die Bestellung erneut.",
     "edit": "Bestellung bearbeiten",
     "cancel": "Bestellung stornieren",
-    "locked": "Der Bestellschluss war um {{cutoff}}. Für Änderungen wenden Sie sich direkt unter {{phone}} an den Stand."
+    "locked": "Der Bestellschluss war um {{cutoff}}. Für Änderungen wenden Sie sich direkt unter {{phone}} an den Stand.",
+    "settled": "Diese Bestellung lässt sich nicht mehr ändern. Bei Fragen wenden Sie sich direkt unter {{phone}} an den Stand."
   },
   "notify": {
     "title": "Benachrichtigungen zu dieser Bestellung",

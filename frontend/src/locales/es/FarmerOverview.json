@@ -1,6 +1,6 @@
 {
   "tabs": {
-    "new": "Pendientes de aprobar",
+    "new": "Realizado",
     "acc": "Aceptados",
     "ready": "Listos",
     "done": "Completados"
@@ -44,7 +44,7 @@
     "view": "Ver"
   },
   "captions": {
-    "new": "Pendientes de aprobar · {{sat}} y {{sun}}",
+    "new": "Realizado · {{sat}} y {{sun}}",
     "ready": "Listos para recoger"
   },
   "overline": "tu puesto en {{market}} · próximo día de mercado {{day}}",

@@ -37,7 +37,8 @@
     "until": "Puedes cambiar cantidades, quitar productos o cancelar hasta las <b>{{cutoff}}</b>. Después de editarlo, {{stall}} vuelve a aprobar el pedido.",
     "edit": "Editar pedido",
     "cancel": "Cancelar pedido",
-    "locked": "La hora límite pasó a las {{cutoff}}. Para cambiarlo, contacta directamente con el puesto al {{phone}}."
+    "locked": "La hora límite pasó a las {{cutoff}}. Para cambiarlo, contacta directamente con el puesto al {{phone}}.",
+    "settled": "Este pedido ya no se puede cambiar. Si tienes dudas, contacta directamente con el puesto al {{phone}}."
   },
   "notify": {
     "title": "Notificaciones de este pedido",

@@ -6,7 +6,7 @@
   "cards": {
     "upcoming_one": "예정된 주문 {{count}}건",
     "upcoming_other": "예정된 주문 {{count}}건",
-    "upcomingBreakdown": "승인 대기 {{placed}} · 수락됨 {{accepted}} · 준비 완료 {{ready}}",
+    "upcomingBreakdown": "주문됨 {{placed}} · 수락됨 {{accepted}} · 준비 완료 {{ready}}",
     "favorites_one": "즐겨찾기 {{count}}개",
     "favorites_other": "즐겨찾기 {{count}}개",
     "stalls_one": "가게 {{count}}곳",

@@ -14,7 +14,7 @@
   },
   "tabsLabel": "Commandes par statut",
   "status": {
-    "placed": "En attente de validation",
+    "placed": "Passée",
     "accepted": "Acceptée",
     "ready": "Prête",
     "completed": "Terminée",

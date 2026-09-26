@@ -6,7 +6,7 @@
   "cards": {
     "upcoming_one": "今後の注文 {{count}}件",
     "upcoming_other": "今後の注文 {{count}}件",
-    "upcomingBreakdown": "承認待ち {{placed}} · 承認済み {{accepted}} · 準備完了 {{ready}}",
+    "upcomingBreakdown": "注文済み {{placed}} · 承認済み {{accepted}} · 準備完了 {{ready}}",
     "favorites_one": "お気に入り {{count}}件",
     "favorites_other": "お気に入り {{count}}件",
     "stalls_one": "店舗 {{count}}",

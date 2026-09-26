@@ -37,7 +37,8 @@
     "until": "Vous pouvez modifier les quantités, retirer des articles ou annuler jusqu'à <b>{{cutoff}}</b>. Après modification, {{stall}} valide à nouveau la commande.",
     "edit": "Modifier la commande",
     "cancel": "Annuler la commande",
-    "locked": "L'heure limite est passée à {{cutoff}}. Pour la modifier, contactez directement le stand au {{phone}}."
+    "locked": "L'heure limite est passée à {{cutoff}}. Pour la modifier, contactez directement le stand au {{phone}}.",
+    "settled": "Cette commande ne peut plus être modifiée. Pour toute question, contactez directement le stand au {{phone}}."
   },
   "notify": {
     "title": "Notifications pour cette commande",

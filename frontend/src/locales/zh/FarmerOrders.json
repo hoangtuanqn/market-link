@@ -5,7 +5,7 @@
   "filter": { "day": "取货日", "all": "全部", "market": "集市", "bothMarkets": "两个集市" },
   "tabsLabel": "按状态查看订单",
   "status": {
-    "placed": "待确认",
+    "placed": "已下单",
     "accepted": "已接受",
     "ready": "已备好",
     "completed": "已完成",
