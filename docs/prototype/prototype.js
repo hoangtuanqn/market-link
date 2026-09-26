@@ -204,12 +204,14 @@
       if (role === 'admin') {
         tools += '<a class="ml-huser pt-plain" href="' + link('admin/overview.html') + '">Admin <b>' + esc(shown) + '</b></a>';
       } else {
-        // Proposal (not in the SRS): photo + menu with Profile, Settings, Sign out. Built in the app as UserMenu.
+        // Proposal (not in the SRS): photo + menu with Dashboard, Profile, Settings, Sign out. Built in the app as UserMenu.
         var settings = role === 'farmer' ? link('farmer/settings.html') : link('customer/settings.html');
+        var dash = role === 'farmer' ? link('farmer/overview.html') : link('customer/dashboard.html');
         tools += '<div class="pt-umenu"><button type="button" class="ml-huser pt-umenu-btn" aria-haspopup="menu" aria-expanded="false" data-umenu>' +
           PT.avatar(o.userName, 32, true, u.tier) + '<span>Hi, <b>' + esc(shown) + '</b></span><span class="pt-umenu-chev" aria-hidden="true">▾</span></button>' +
           '<div class="pt-umenu-list" role="menu" aria-label="Your account" hidden>' +
           '<div class="pt-umenu-head">' + PT.avatar(o.userName, 40, false, u.tier) + '<div><b>' + esc(o.userName) + '</b>' + (u.email ? '<span>' + esc(u.email) + '</span>' : '') + PT.tierBadge(u.tier) + '</div></div>' +
+          '<a role="menuitem" href="' + dash + '">Dashboard</a>' +
           '<a role="menuitem" href="' + link('customer/account.html') + '">Profile</a>' +
           '<a role="menuitem" href="' + settings + '">Settings</a>' +
           '<a role="menuitem" href="' + link('public/login.html') + '">Sign out</a></div></div>';
@@ -219,7 +221,7 @@
     var nav = items.map(function (it) { return '<li><a href="' + link(it[2]) + '"' + (o.active === it[0] ? ' aria-current="page"' : '') + '>' + it[1] + '</a></li>'; }).join('');
     var drawer = '<div class="pt-drawer" data-drawer><div class="pt-drawer-panel"><button type="button" class="ml-btn ml-btn-onboard ml-btn-sm" data-drawer-close>Close</button>' +
       items.map(function (it) { return '<a href="' + link(it[2]) + '"' + (o.active === it[0] ? ' aria-current="page"' : '') + '>' + it[1] + '</a>'; }).join('') +
-      (role === 'customer' || role === 'farmer' ? '<a href="' + mhref + '">Messages</a>' : '') +
+      (role === 'customer' || role === 'farmer' ? '<a href="' + mhref + '">Messages</a><a href="' + (role === 'farmer' ? link('farmer/overview.html') : link('customer/dashboard.html')) + '">Dashboard</a>' : '') +
       (role === 'guest' ? '<a href="' + link('public/login.html') + '">Sign in</a><a href="' + link('public/register-customer.html') + '">Create an account</a>' : '<a href="' + link('public/login.html') + '">Sign out</a>') + '</div></div>';
     return '<header class="ml-header"><div class="ml-header-in">' + PT.logo(30, home) + '<nav aria-label="Main"><ul class="ml-nav">' + nav + '</ul></nav><div class="ml-header-tools">' + tools + '</div></div><div class="ml-header-twine" aria-hidden="true"></div></header>' + drawer;
   };

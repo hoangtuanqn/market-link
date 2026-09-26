@@ -40,6 +40,7 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
         userEmail={user?.email}
         avatarUrl={user?.avatarUrl}
         tier={tier}
+        role={user?.role}
         settingsTo={user?.role === USER_ROLE.FARMER ? '/farmer/settings' : '/settings'}
         messagesTo={user?.role === USER_ROLE.FARMER ? '/farmer/messages' : '/messages'}
         notificationsTo={user?.role === USER_ROLE.FARMER ? '/farmer/notifications' : '/notifications'}

@@ -2,15 +2,19 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import Avatar from '@/components/Avatar';
-import { LogOutIcon, SlidersIcon, UsersIcon } from '@/components/icons';
+import { DashboardIcon, LogOutIcon, ShieldIcon, SlidersIcon, StoreIcon, UsersIcon } from '@/components/icons';
 import TierBadge from '@/components/TierBadge';
+import { USER_ROLE } from '@/constants/enums';
+import useSession from '@/hooks/useSession';
 import type { Tier } from '@/types/achievement.types';
+import type { RoleType } from '@/types/user.types';
 
 type UserMenuProps = {
   name: string;
   email?: string;
   avatarUrl?: string;
   tier?: Tier;
+  role?: RoleType;
   /** Trang Settings theo vai: Customer /settings, Farmer /farmer/settings. */
   settingsTo?: string;
   onSignOut: () => void;
@@ -23,8 +27,20 @@ const item =
  * Nút tài khoản bên phải SiteHeader: ảnh + tên, bấm mở menu Profile / Settings / Sign out (menu button pattern của
  * WAI-ARIA: Esc hoặc bấm ra ngoài thì đóng, mũi tên lên/xuống đi giữa các mục, Home/End về đầu/cuối).
  */
-const UserMenu = ({ name, email, avatarUrl, tier, settingsTo = '/settings', onSignOut }: UserMenuProps) => {
+const UserMenu = ({
+  name,
+  email,
+  avatarUrl,
+  tier,
+  role: propRole,
+  settingsTo = '/settings',
+  onSignOut,
+}: UserMenuProps) => {
   const { t } = useTranslation();
+  const { user } = useSession();
+  const userRole = propRole ?? user?.role;
+  const isFarmer = userRole === USER_ROLE.FARMER;
+  const isAdmin = userRole === USER_ROLE.ADMIN;
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -131,6 +147,19 @@ const UserMenu = ({ name, email, avatarUrl, tier, settingsTo = '/settings', onSi
               {tier && <TierBadge tier={tier} className="mt-1" />}
             </div>
           </div>
+          {isFarmer && (
+            <Link role="menuitem" tabIndex={-1} to="/farmer" onClick={() => close(false)} className={item}>
+              <StoreIcon /> {t('nav.farmerPanel')}
+            </Link>
+          )}
+          {isAdmin && (
+            <Link role="menuitem" tabIndex={-1} to="/admin" onClick={() => close(false)} className={item}>
+              <ShieldIcon /> {t('nav.adminPanel')}
+            </Link>
+          )}
+          <Link role="menuitem" tabIndex={-1} to="/dashboard" onClick={() => close(false)} className={item}>
+            <DashboardIcon /> {t('nav.dashboard')}
+          </Link>
           <Link role="menuitem" tabIndex={-1} to="/account" onClick={() => close(false)} className={item}>
             <UsersIcon /> {t('nav.profile')}
           </Link>

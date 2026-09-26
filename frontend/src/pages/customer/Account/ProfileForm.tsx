@@ -136,7 +136,7 @@ const ProfileForm = () => {
   return (
     <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
       <h2 className="text-h3">{t('profile.title')}</h2>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="flex flex-col gap-4">
         <Field
           id="fullName"
           label={t('profile.fullName')}

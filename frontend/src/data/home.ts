@@ -21,6 +21,13 @@ export const markets: MarketType[] = [
     stalls: 14,
     distance: '2.4 km',
     saved: true,
+    images: [
+      '/images/markets/market-1.jpg',
+      '/images/markets/market-2.jpg',
+      '/images/markets/market-3.jpg',
+      '/images/markets/market-4.jpg',
+      '/images/markets/market-5.jpg',
+    ],
   },
   {
     id: 2,
@@ -34,6 +41,13 @@ export const markets: MarketType[] = [
     lng: 106.7715,
     stalls: 9,
     distance: '4.1 km',
+    images: [
+      '/images/markets/market-3.jpg',
+      '/images/markets/market-4.jpg',
+      '/images/markets/market-1.jpg',
+      '/images/markets/market-5.jpg',
+      '/images/markets/market-2.jpg',
+    ],
   },
   {
     id: 3,
@@ -47,6 +61,13 @@ export const markets: MarketType[] = [
     lng: 106.7189,
     stalls: 11,
     distance: '9.8 km',
+    images: [
+      '/images/markets/market-2.jpg',
+      '/images/markets/market-5.jpg',
+      '/images/markets/market-1.jpg',
+      '/images/markets/market-3.jpg',
+      '/images/markets/market-4.jpg',
+    ],
   },
   {
     id: 4,
@@ -60,6 +81,13 @@ export const markets: MarketType[] = [
     lng: 106.696,
     stalls: 7,
     distance: '5.6 km',
+    images: [
+      '/images/markets/market-5.jpg',
+      '/images/markets/market-1.jpg',
+      '/images/markets/market-4.jpg',
+      '/images/markets/market-2.jpg',
+      '/images/markets/market-3.jpg',
+    ],
   },
 ];
 

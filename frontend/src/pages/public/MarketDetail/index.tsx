@@ -7,10 +7,12 @@ import StallApi, { toStallCard, type StallCardData } from '@/api-requests/stall.
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
+import MarketCarousel from '@/components/MarketCarousel';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
 import { ButtonLink } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
@@ -115,6 +117,19 @@ const MarketDetailPage = () => {
     return true;
   });
 
+  // Hook, so it has to run before either early return below — it stays unconditional even though
+  // the fallback photos only matter once `market` is loaded.
+  const marketImages = useMemo(() => {
+    if (market?.images && market.images.length > 0) return market.images;
+    return [
+      '/images/markets/market-1.jpg',
+      '/images/markets/market-2.jpg',
+      '/images/markets/market-3.jpg',
+      '/images/markets/market-4.jpg',
+      '/images/markets/market-5.jpg',
+    ];
+  }, [market]);
+
   if (load.kind === 'loading') {
     return (
       <div className="flex flex-col gap-8">
@@ -146,6 +161,9 @@ const MarketDetailPage = () => {
 
   return (
     <div className="flex flex-col gap-8">
+      {/* Top Market Photos Carousel */}
+      <MarketCarousel images={marketImages} marketName={market.name} />
+
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <p className="font-hand text-hand text-ink-muted">
@@ -173,11 +191,12 @@ const MarketDetailPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
+      {/* Filter and Search Section */}
+      <Card as="section" aria-label="Filters" className="flex flex-col gap-4 p-5">
         <form
           onSubmit={onSearch}
           role="search"
-          className="border-line-strong bg-surface-raised focus-within:outline-focus flex w-full max-w-160 items-stretch overflow-hidden rounded-sm border-[1.5px] focus-within:outline-2 focus-within:outline-offset-1"
+          className="border-line-strong bg-surface-raised focus-within:outline-focus flex w-full max-w-xl items-stretch overflow-hidden rounded-sm border-[1.5px] focus-within:outline-2 focus-within:outline-offset-1"
         >
           <label className="sr-only" htmlFor="m-scope">
             {t('search.scope')}
@@ -202,12 +221,17 @@ const MarketDetailPage = () => {
             placeholder={t('search.placeholder')}
             className="text-body text-ink placeholder:text-ink-muted min-h-11 min-w-0 flex-1 bg-transparent px-3 focus:outline-none"
           />
-          <button type="submit" className="bg-brand text-on-brand min-h-11 cursor-pointer px-4 font-bold">
+          <button
+            type="submit"
+            className="bg-brand text-on-brand min-h-11 cursor-pointer px-5 font-bold transition-opacity hover:opacity-90"
+          >
             {t('search.submit')}
           </button>
         </form>
 
-        <div className="flex flex-wrap items-start gap-6">
+        <div className="border-line border-t" />
+
+        <div className="flex flex-col gap-2">
           <DayChips
             legend={t('day')}
             name="market-day"
@@ -219,7 +243,11 @@ const MarketDetailPage = () => {
               date: formatDayMonth(d.date),
             }))}
           />
-          <div className="flex flex-wrap gap-2">
+        </div>
+
+        <div className="border-line flex flex-col gap-2 border-t pt-3">
+          <span className="text-small text-ink font-bold">{tc('category', { defaultValue: 'Category' })}</span>
+          <div className="flex flex-wrap items-center gap-2">
             <Chip pressed={category === 'All'} onClick={() => setCategory('All')}>
               {t('all')}
             </Chip>
@@ -228,12 +256,13 @@ const MarketDetailPage = () => {
                 {name} <span className="text-[12px] tabular-nums opacity-80">{categoryCounts.get(name)}</span>
               </Chip>
             ))}
+            <div className="bg-line-strong mx-1 h-5 w-px self-center" aria-hidden="true" />
             <Chip pressed={inStockOnly} onClick={() => setInStockOnly((v) => !v)}>
               {t('inStock')}
             </Chip>
           </div>
         </div>
-      </div>
+      </Card>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-4">
@@ -254,8 +283,12 @@ const MarketDetailPage = () => {
         </div>
 
         <div className="sticky top-20 flex flex-col gap-4">
-          <MarketMap label={t('mapLabel', { name: market.name })} markers={mapMarkers} className="min-h-72" />
-          {stallsToday[0] && <StallCard farmer={stallsToday[0]} />}
+          <MarketMap
+            label={t('mapLabel', { name: market.name })}
+            markers={mapMarkers}
+            className="min-h-80 md:min-h-120"
+          />
+          <p className="text-caption text-ink-muted">{t('stallsNote')}</p>
         </div>
       </div>
 
