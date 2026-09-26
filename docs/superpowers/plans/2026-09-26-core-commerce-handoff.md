@@ -7,10 +7,10 @@ Tài liệu này để một phiên Claude Code khác **thay thế hoàn toàn**
 
 ## 0. Trạng thái mới nhất (26/09/2026, phiên 3) — đọc mục này trước, nó đè lên §2, §3, §10
 
-**Chia việc (người dùng chốt):** phiên `market-link-core` (worktree này, stack `mlcore`) làm **C5 → C7**. Một phiên khác
+**Chia việc (người dùng chốt):** phiên `market-link-core` (worktree này, stack `mlcore`) làm **C5 → C7 — đã xong**. Một phiên khác
 làm **C8 → C11** trong worktree + stack Docker riêng (đề xuất `market-link-c8`, stack `mlc8`, BE :8092, FE :3022).
-- **Số migration:** C6/C7 dùng `V20260926013`–`V20260926019`; C8 trở đi dùng từ `V20260926020`. Vẫn kiểm `origin/dev`
-  trước khi tạo file.
+- **Số migration:** dev đã tự dùng `013`–`016`; C6/C7 lấy `017`, `018`. Mỗi phiên lấy số kế tiếp trên `origin/dev`
+  lúc tạo file (phiên C8 đang dùng `020`+).
 - **File hai phiên cùng sửa** (fetch + `git merge-tree --write-tree --name-only origin/dev HEAD` trước khi sửa, nhắn
   nhau qua SendMessage): `db/seed.sql`, `NotificationKind` / `NotificationCategory`, `i18n/notifications*.properties`,
   `SecurityConfig`, `OrderService`, `OrderDetailResource`.
@@ -25,7 +25,15 @@ làm **C8 → C11** trong worktree + stack Docker riêng (đề xuất `market-l
   - thông báo 5 mốc (nhóm `orders`, link `/orders/{orderId}`, `/farmer/orders/{orderId}`);
   - seed 12 đơn đủ 6 trạng thái (`ML-20260920-0001…0012`, 4 completed cho review); `api-requests/order.requests.ts`.
   - Test backend 661/661.
-- Nhánh `feature/FR-062-products` đã fast-forward lên `origin/dev` sau khi PR #147 merge (không viết lại lịch sử).
+- **C6 complete:** template tồn kho tuần (migration `V20260926017`), đặt lại nhanh `POST /orders/{id}/reorder`,
+  job tự hoàn tất đơn `ready` sau 24 giờ kể từ giờ nhận. **C7 complete:** yêu thích (migration `V20260926018`, cột
+  `target_id`), báo có hàng lại (`RestockNotifier`, nhóm thông báo `favorites`). Review toàn phần C6+C7 + một lượt sửa.
+  Test backend 784/784. PR **#161** (`feature/FR-062-products` → `dev`) đã mở, chưa merge.
+- **Cảnh báo FR-063:** nhánh `feature/FR-062-farmer-products` của một bạn trong nhóm làm FR-063 theo thiết kế khác (tồn kho
+  theo ngày), trùng migration `017`/`018` và trùng tên lớp. LEAD phải chọn một thiết kế trước khi merge nhánh nào.
+- **Frontend cần bổ sung (ngoài phạm vi):** `types/notification.types.ts` thêm nhóm `orders`, `favorites` và kind
+  `order_*`, `restock`; nút bật/tắt nhóm trong Settings; các trang StockWeek, "Order again", Favorites chưa nối.
+- Nhánh `feature/FR-062-products` đã merge `origin/dev` tới #158 (không viết lại lịch sử).
 
 **Quy ước đã chốt, code mới phải theo:**
 - JSON: mốc thời gian dạng ISO-8601 UTC có Z; ngày `yyyy-MM-dd`; giờ `HH:mm`. "Bây giờ" lấy từ bean `Clock`.
