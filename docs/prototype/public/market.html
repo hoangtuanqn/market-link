@@ -64,7 +64,7 @@
 </main>
 <script>
   document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', [{ value: 'thu', label: 'Thursday', date: '24/09', disabled: true }, { value: 'fri', label: 'Friday', date: '25/09' }, { value: 'sat', label: 'Saturday', date: '26/09' }, { value: 'sun', label: 'Sunday', date: '27/09' }], 'sat');
-  document.getElementById('cat-chips').innerHTML = PT.chip('All', { selected: true, radio: 'cat' }) + PT.chip('Leafy greens', { count: 3, radio: 'cat' }) + PT.chip('Baked goods', { count: 3, radio: 'cat' }) + PT.chip('Eggs', { count: 1, radio: 'cat' }) + PT.chip('Fruit', { count: 1, radio: 'cat' }) + PT.chip('Mushrooms', { count: 2, radio: 'cat' }) + PT.chip('In stock');
+  document.getElementById('cat-chips').innerHTML = PT.chip('All', { selected: true, radio: 'cat' }) + PT.chip('Vegetables', { count: 3, radio: 'cat' }) + PT.chip('Baked goods', { count: 3, radio: 'cat' }) + PT.chip('Eggs & dairy', { count: 2, radio: 'cat' }) + PT.chip('Fruits', { count: 1, radio: 'cat' }) + PT.chip('Mushrooms', { count: 2, radio: 'cat' }) + PT.chip('In stock');
   var ids = [1, 2, 5, 10, 6, 18, 7, 16, 19, 11, 17];
   document.getElementById('products').innerHTML = ids.map(function (id) { return PT.productCard(PT.product(id), { market: false }); }).join('');
   var stalls = [1, 4, 5, 8].map(PT.farmer);

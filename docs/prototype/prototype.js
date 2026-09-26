@@ -76,7 +76,7 @@
       ['order.html', 'Order detail (Admin)', 'FR-070 FR-038'],
       ['revenue.html', 'Platform revenue', 'proposal'],
       ['reports.html', 'Reports', 'FR-075'],
-      ['categories.html', 'Categories & units', 'FR-076'],
+      ['categories.html', 'Categories', 'FR-076'],
       ['announcements.html', 'Announcements', 'FR-077'],
       ['feedback.html', 'Feedback inbox', 'FR-081'],
       ['pricing.html', 'Pricing & allowances', 'proposal'],
@@ -915,7 +915,7 @@
           ['moderation.html', 'Moderation', 'shield', 1],
         ]],
         ['Platform', [
-          ['categories.html', 'Categories & units', 'tag'],
+          ['categories.html', 'Categories', 'tag'],
           ['announcements.html', 'Announcements', 'megaphone'],
           ['feedback.html', 'Feedback inbox', 'chat', 2],
           ['pricing.html', 'Pricing & allowances', 'tag'],
