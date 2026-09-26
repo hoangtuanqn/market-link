@@ -33,6 +33,9 @@ class FarmerApplicationRequestTest {
         factory.close();
     }
 
+    private static final List<String> ONE_PHOTO =
+            List.of("/uploads/farmer-applications/1/plot.jpg");
+
     private static FarmerApplicationRequest with(List<String> photoUrls, String videoUrl) {
         return new FarmerApplicationRequest(
                 "Khang Family Greens", "Khang", null, photoUrls, videoUrl);
@@ -53,7 +56,21 @@ class FarmerApplicationRequestTest {
 
     @Test
     void videoUrlThatFitsTheColumnIsAccepted() {
-        assertThat(invalidFields(with(null, "/uploads/farmer-applications/abc.mp4"))).isEmpty();
+        assertThat(invalidFields(with(ONE_PHOTO, "/uploads/farmer-applications/abc.mp4")))
+                .isEmpty();
+    }
+
+    /** Ảnh là bằng chứng duy nhất admin xem để duyệt: form bắt ít nhất một ảnh, server cũng vậy. */
+    @Test
+    void anApplicationWithoutPhotosIsRejected() {
+        assertThat(invalidFields(with(null, null))).contains("photoUrls");
+        assertThat(invalidFields(with(List.of(), null))).contains("photoUrls");
+    }
+
+    @Test
+    void aBlankPhotoUrlDoesNotCountAsAPhoto() {
+        assertThat(invalidFields(with(List.of("  "), null)))
+                .anyMatch(field -> field.startsWith("photoUrls"));
     }
 
     /** photo_paths là TEXT, nhưng từng URL vẫn phải có trần — không nhận chuỗi tuỳ ý. */
