@@ -2,16 +2,14 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ProductApi from '@/api-requests/product.requests';
 import StockTemplateApi, {
-  type StockTemplateApplyResultDto,
   type StockTemplateDto,
   type StockTemplateItemInput,
 } from '@/api-requests/stock-template.requests';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
-import { Dialog } from '@/components/ui/dialog';
 import useRequest from '@/hooks/useRequest';
-import { dayName, formatDate, unitName, vnd } from '@/lib/format';
+import { dayName, unitName, vnd } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -38,7 +36,7 @@ function seedCells(templates: StockTemplateDto[]): Record<string, Cell> {
   return cells;
 }
 
-/** Bảng tải chưa xong — cùng số cột với bảng thật để không giật layout khi dữ liệu về (FR-084). */
+/** The table hasn't loaded yet — same column count as the real table so nothing jumps once data lands (FR-084). */
 const TemplateGridSkeleton = () => {
   const { t } = useTranslation('FarmerStockWeek');
   return (
@@ -65,9 +63,9 @@ const TemplateGridSkeleton = () => {
 };
 
 /**
- * Lưới chỉnh sửa cục bộ, khởi tạo một lần từ dữ liệu đã tải (lazy initializer) thay vì effect + setState — tránh đúng
- * lỗi `react-hooks/set-state-in-effect` đã gặp ở trang Markets. Cha chỉ render component này sau khi cả `products` và
- * `initialTemplates` đã sẵn sàng, nên state khởi tạo luôn đúng dữ liệu mới nhất.
+ * A locally-edited grid, seeded once from the loaded data via a lazy initializer instead of effect + setState — the
+ * same `react-hooks/set-state-in-effect` trap hit on the Markets page. The parent only renders this component once both
+ * `products` and `initialTemplates` are ready, so the initial state is always the latest data.
  */
 const TemplateGrid = ({
   products,
@@ -179,60 +177,23 @@ const TemplateGrid = ({
   );
 };
 
-const todayIso = () => new Date().toISOString().slice(0, 10);
-
-/** "yyyy-MM-dd" (input[type=date] value) → local Date. Avoids the UTC-midnight shift of `new Date(iso)`. */
-const parseLocalDate = (iso: string) => {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y, m - 1, d);
-};
-
-/** FR-063 — the weekly stock template a Farmer's products refill from, and applying it to a market day. */
+/**
+ * FR-063 — the weekly stock template a Farmer's products refill from. Availability for a pickup date is now computed
+ * automatically from this template (see the backend design doc); there is no "Apply" action here anymore.
+ */
 const FarmerStockWeekPage = () => {
   const { t } = useTranslation('FarmerStockWeek');
-  const { t: tc } = useTranslation();
   const products = useRequest('farmer-products-for-templates', () => ProductApi.mine());
   const templates = useRequest('stock-templates', () => StockTemplateApi.list());
-
-  const [applyOpen, setApplyOpen] = useState(false);
-  const [targetDate, setTargetDate] = useState(todayIso);
-  const [applying, setApplying] = useState(false);
 
   const loading = products.state.kind === 'loading' || templates.state.kind === 'loading';
   const productList = products.state.kind === 'ready' ? products.state.data : NO_PRODUCTS;
 
-  const apply = async () => {
-    setApplying(true);
-    try {
-      const applied: StockTemplateApplyResultDto[] = await StockTemplateApi.apply(targetDate);
-      setApplyOpen(false);
-      if (applied.length === 0) {
-        Notification.info({ title: t('apply.noneTitle'), text: t('apply.noneText') });
-      } else {
-        Notification.success({
-          title: t('apply.doneTitle'),
-          text: t('apply.doneText', { count: applied.length, date: formatDate(parseLocalDate(targetDate)) }),
-        });
-      }
-    } catch (error) {
-      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
-    } finally {
-      setApplying(false);
-    }
-  };
-
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
-          <p className="text-body max-w-160">{t('intro')}</p>
-        </div>
-        {!loading && productList.length > 0 && (
-          <Button variant="secondary" onClick={() => setApplyOpen(true)}>
-            {t('apply.open')}
-          </Button>
-        )}
+      <div className="flex flex-col gap-2">
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body max-w-160">{t('intro')}</p>
       </div>
 
       {loading && <TemplateGridSkeleton />}
@@ -266,33 +227,6 @@ const FarmerStockWeekPage = () => {
           onSaved={(rows) => templates.mutate(() => rows)}
         />
       )}
-
-      <Dialog
-        open={applyOpen}
-        title={t('apply.title')}
-        onClose={() => setApplyOpen(false)}
-        actions={
-          <>
-            <Button variant="secondary" onClick={() => setApplyOpen(false)} disabled={applying}>
-              {t('apply.keep')}
-            </Button>
-            <Button onClick={() => void apply()} disabled={applying}>
-              {t('apply.confirm')}
-            </Button>
-          </>
-        }
-      >
-        <label className="flex flex-col gap-1.5">
-          <span className="text-[14px] font-bold">{t('apply.dateLabel')}</span>
-          <input
-            type="date"
-            value={targetDate}
-            onChange={(e) => setTargetDate(e.target.value)}
-            className="border-line-strong bg-surface-raised min-h-9 rounded-sm border-[1.5px] px-2 text-[14px]"
-          />
-        </label>
-        <p className="text-ink-muted text-[14px]">{t('apply.text')}</p>
-      </Dialog>
     </div>
   );
 };

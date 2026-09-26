@@ -1,6 +1,6 @@
 {
   "title": "Weekly stock template",
-  "intro": "Set how much of each product you usually bring on a weekday, and at what price. Apply the template on a market morning to refill today's stock in one tap.",
+  "intro": "Set how much of each product you usually bring on a weekday, and at what price. This refills automatically for customers browsing that weekday — no extra step needed.",
   "saved": "Saved",
   "per": "per {{unit}}",
   "currentPrice": "now {{price}}",
@@ -22,24 +22,11 @@
   "template": {
     "save": "Save template",
     "savedText": "Template saved.",
-    "note": "Leave a day's quantity blank to skip it. A blank price keeps the product's current price when applied."
+    "note": "Leave a day's quantity blank to skip it. A blank price keeps the product's current price."
   },
   "empty": {
     "title": "Add a product first",
-    "text": "A weekly template needs at least one product to apply it to.",
+    "text": "A weekly template needs at least one product.",
     "action": "Add a product"
-  },
-  "apply": {
-    "open": "Apply template",
-    "title": "Apply the template to a day",
-    "dateLabel": "Date",
-    "text": "Every product with a template for that weekday gets its stock and price refilled, and turns available again even if it was sold out.",
-    "keep": "Cancel",
-    "confirm": "Apply",
-    "doneTitle": "Template applied",
-    "doneText_one": "{{count}} product refilled for {{date}}.",
-    "doneText_other": "{{count}} products refilled for {{date}}.",
-    "noneTitle": "Nothing to apply",
-    "noneText": "No template is set for that weekday yet."
   }
 }
