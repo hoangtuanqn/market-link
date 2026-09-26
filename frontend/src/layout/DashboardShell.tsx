@@ -123,7 +123,18 @@ const DashboardShell = ({
         )}
       >
         <div className="flex items-center gap-2 px-2">
-          <Link to={home} aria-label={homeLabel} className="text-on-board inline-flex items-center gap-2 no-underline">
+          <Link
+            to={home}
+            aria-label={homeLabel}
+            // Already on the panel home: a link to the same URL does nothing visible, so close the drawer and go back to
+            // the top instead (QA BUG-008).
+            onClick={() => {
+              if (pathname !== home) return;
+              setMobileOpen(false);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className="text-on-board inline-flex items-center gap-2 no-underline"
+          >
             <LogoMark size={26} />
             {!folded && <span className="font-hand text-xl leading-none">MarketLink</span>}
           </Link>
