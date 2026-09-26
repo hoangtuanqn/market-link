@@ -58,12 +58,6 @@ describe('toOrder', () => {
     expect(order.reviewed).toBeUndefined();
   });
 
-  it('falls back marketId to 0 when the group is not tied to a single market', () => {
-    const order = toOrder(baseDto({ summary: { ...baseDto().summary, marketId: null, marketName: null } }));
-
-    expect(order.marketId).toBe(0);
-  });
-
   it('is locked while placed/accepted and cancellation is no longer allowed', () => {
     const placedLocked = toOrder(baseDto({ canCancel: false }));
     expect(placedLocked.locked).toBe(true);

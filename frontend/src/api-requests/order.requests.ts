@@ -68,8 +68,8 @@ export type OrderListItemDto = {
   status: OrderStatus;
   farmerId: number;
   stallName: string;
-  marketId: number | null;
-  marketName: string | null;
+  marketId: number;
+  marketName: string;
   pickupDate: string;
   pickupStart: string;
   pickupEnd: string;
@@ -124,7 +124,7 @@ export type OrderDetailDto = {
 export const toOrder = (dto: OrderDetailDto): OrderType => ({
   code: dto.summary.orderCode,
   farmerId: dto.summary.farmerId,
-  marketId: dto.summary.marketId ?? 0,
+  marketId: dto.summary.marketId,
   date: dto.summary.pickupDate,
   slot: `${dto.summary.pickupStart}–${dto.summary.pickupEnd}`,
   status: dto.summary.status,
