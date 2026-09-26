@@ -158,6 +158,9 @@ public class SecurityConfig {
                                                 "/api/v1/products/*/reviews",
                                                 "/api/v1/farmers/*/reviews")
                                         .permitAll()
+                                        // FR-081: the feedback form is open to visitors
+                                        .requestMatchers(HttpMethod.POST, "/api/v1/feedbacks")
+                                        .permitAll()
                                         // Chatbot FR-090…092: guests can ask questions too
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
                                         .permitAll()

@@ -619,3 +619,15 @@ SET f.rating_avg = COALESCE((SELECT ROUND(AVG(r.rating), 2) FROM reviews r
                              WHERE r.target_type = 'farmer' AND r.farmer_id = f.id AND r.status = 'visible'), 0),
     f.rating_count = (SELECT COUNT(*) FROM reviews r
                       WHERE r.target_type = 'farmer' AND r.farmer_id = f.id AND r.status = 'visible');
+
+-- ---- Góp ý (FR-081): 3 mẫu, mỗi loại một, đủ 3 trạng thái để màn admin có gì để lọc ----
+-- feedbacks không có khoá tự nhiên → chống nhân đôi bằng NOT EXISTS theo nội dung.
+INSERT INTO feedbacks (user_id, type, message, status, created_at)
+SELECT u.id, x.type, x.message, x.status, UTC_TIMESTAMP() - INTERVAL x.days_ago DAY
+FROM (
+      SELECT 'customer@marketlink.vn' AS email, 'bug' AS type, 'Bản đồ ở trang Chợ không hiện marker trên Firefox, phải tải lại trang mới thấy.' AS message, 'new' AS status, 1 AS days_ago
+      UNION ALL SELECT 'customer@marketlink.vn', 'suggestion', 'Cho lọc sản phẩm theo khoảng giá ngay trên trang chủ, đỡ phải vào trang Sản phẩm.', 'reviewed', 3
+      UNION ALL SELECT NULL, 'query', 'Đặt trước rồi có đổi được giờ nhận hàng không, hay phải huỷ đặt lại?', 'resolved', 5
+     ) x
+LEFT JOIN users u ON u.email = x.email
+WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = x.message);
