@@ -105,4 +105,13 @@ describe('ConversationPanel', () => {
 
     expect(screen.getByText('Pick a conversation').parentElement).toHaveClass('justify-center');
   });
+
+  /** "Last seen 11:47" mà là ba ngày trước thì đọc như vừa hôm nay: ngày khác phải hiện ngày. */
+  it('says which day the other person was last seen when it was not today', () => {
+    useConversation.mockReturnValue(state({}));
+    const away = { ...other, online: false, lastSeenAt: '2026-09-20T03:00:00Z' };
+    render(<ConversationPanel conversationId={42} other={away} />);
+
+    expect(screen.getByText(/last seen/i)).toHaveTextContent('20/09');
+  });
 });

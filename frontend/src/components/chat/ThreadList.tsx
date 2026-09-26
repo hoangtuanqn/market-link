@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { DataState } from '@/components/ui/data-state';
 import { Button } from '@/components/ui/button';
-import { formatDayMonth, formatTime } from '@/lib/format';
+import { chatWhen } from '@/lib/chat/time';
 import type { ConversationSummary } from '@/types/chat.types';
 
 type Props = {
@@ -13,14 +13,6 @@ type Props = {
   onRetry: () => void;
   /** Câu dưới "No conversations yet" theo vai: Farmer không tự mở được cuộc trò chuyện. */
   emptyText?: string;
-};
-
-/** Hôm nay thì hiện giờ, cũ hơn thì hiện ngày — cùng quy ước với danh sách đơn. */
-const when = (iso: string | null) => {
-  if (!iso) return '';
-  const at = new Date(iso);
-  const sameDay = new Date().toDateString() === at.toDateString();
-  return sameDay ? formatTime(at) : formatDayMonth(at);
 };
 
 export default function ThreadList({ threads, activeId, onPick, loading, error, onRetry, emptyText }: Props) {
@@ -68,7 +60,7 @@ export default function ThreadList({ threads, activeId, onPick, loading, error, 
             <span className="min-w-0 flex-1">
               <span className="flex items-center justify-between gap-2">
                 <span className="text-ink truncate font-sans font-semibold">{thread.other.fullName}</span>
-                <span className="text-small text-ink-muted shrink-0">{when(thread.lastMessageAt)}</span>
+                <span className="text-small text-ink-muted shrink-0">{chatWhen(thread.lastMessageAt)}</span>
               </span>
               <span className="text-small text-ink-muted mt-1 block truncate">{thread.lastMessageText}</span>
             </span>

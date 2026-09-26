@@ -5,7 +5,7 @@ import MessageBubble from './MessageBubble';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 import { useConversation } from '@/lib/chat/useChat';
-import { formatTime } from '@/lib/format';
+import { chatWhen } from '@/lib/chat/time';
 import type { ChatMessageItem, ChatParticipant } from '@/types/chat.types';
 
 type Props = {
@@ -74,7 +74,7 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
             {other.online
               ? t('chat.online')
               : other.lastSeenAt
-                ? t('chat.lastSeen', { time: formatTime(new Date(other.lastSeenAt)) })
+                ? t('chat.lastSeen', { time: chatWhen(other.lastSeenAt) })
                 : t('chat.offline')}
           </p>
         </div>

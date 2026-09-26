@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import Composer from './Composer';
@@ -58,5 +58,45 @@ describe('Composer', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Your message was not sent');
     expect(box).toHaveValue('hello');
+  });
+
+  /**
+   * Gửi xong là gõ tiếp: trình duyệt bỏ focus khỏi phần tử bị disabled, nên ô soạn không được khoá trong lúc gửi. jsdom
+   * không mô phỏng việc mất focus, nên test kiểm đúng nguyên nhân: ô còn mở khi tin đang bay.
+   */
+  it('keeps the box open while a message is on its way, so the cursor stays', async () => {
+    const onTyping = vi.fn();
+    const onSend = vi.fn(() => new Promise<void>(() => {}));
+    render(<Composer onSend={onSend} onSendPhoto={vi.fn()} onTyping={onTyping} disabled={false} />);
+    const box = screen.getByLabelText('Write a message');
+
+    await userEvent.type(box, 'one{Enter}');
+
+    expect(onSend).toHaveBeenCalledTimes(1);
+    expect(box).toBeEnabled();
+    expect(box).toHaveFocus();
+  });
+
+  it('does not send the same text twice while the first send is on its way', async () => {
+    const onSend = vi.fn(() => new Promise<void>(() => {}));
+    render(<Composer onSend={onSend} onSendPhoto={vi.fn()} disabled={false} />);
+
+    await userEvent.type(screen.getByLabelText('Write a message'), 'one{Enter}{Enter}');
+
+    expect(onSend).toHaveBeenCalledTimes(1);
+  });
+
+  /** Gõ tiếp trong lúc tin trước đang bay: tin trước về tới nơi không được xoá mất chữ mới. */
+  it('does not wipe what I typed while the previous message was on its way', async () => {
+    let arrive!: () => void;
+    const onSend = vi.fn(() => new Promise<void>((r) => (arrive = r)));
+    render(<Composer onSend={onSend} onSendPhoto={vi.fn()} disabled={false} />);
+    const box = screen.getByLabelText('Write a message');
+
+    await userEvent.type(box, 'one{Enter}');
+    await userEvent.type(box, 'two');
+    await act(async () => arrive());
+
+    expect(box).toHaveValue('two');
   });
 });

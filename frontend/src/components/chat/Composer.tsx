@@ -25,11 +25,13 @@ export default function Composer({ onSend, onSendPhoto, onTyping, disabled, disa
     if (!text || busy || disabled) return;
     setBusy(true);
     setFailed(null);
+    // Xoá ngay lúc gửi chứ không đợi server: người dùng gõ tiếp trong lúc tin đang bay thì chữ mới không bị xoá mất
+    setDraft('');
     try {
       await onSend(text);
-      setDraft('');
     } catch {
-      // Giữ nguyên chữ đang gõ để bấm gửi lại, không bắt gõ lại từ đầu
+      // Trả lại chữ để bấm gửi lại, trừ khi người dùng đã gõ sang câu khác
+      setDraft((current) => (current === '' ? text : current));
       setFailed(t('chat.sendFailed'));
     } finally {
       setBusy(false);
@@ -90,7 +92,8 @@ export default function Composer({ onSend, onSendPhoto, onTyping, disabled, disa
           id="chat-draft"
           rows={1}
           value={draft}
-          disabled={disabled || busy}
+          // Không khoá khi đang gửi: phần tử bị disabled mất focus, người dùng phải bấm lại mới gõ tiếp được
+          disabled={disabled}
           onChange={(event) => {
             setDraft(event.target.value);
             onTyping?.(event.target.value.trim().length > 0);
