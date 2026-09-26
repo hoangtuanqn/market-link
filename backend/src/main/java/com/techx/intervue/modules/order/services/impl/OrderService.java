@@ -76,6 +76,8 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class OrderService implements OrderServiceInterface {
 
+    static final String AUTO_COMPLETE_NOTE = "Auto-completed after pickup.";
+
     static final String OUT_OF_STOCK = "out_of_stock";
     static final String SOLD_OUT = "sold_out";
     static final String UNAVAILABLE = "unavailable";
@@ -715,7 +717,7 @@ public class OrderService implements OrderServiceInterface {
      * it (accept/decline/markReady/complete, cancel/modifyItems) — it never opens a transaction
      * itself.
      */
-    private Order transition(Order order, OrderStatus to, long actorUserId, String note) {
+    private Order transition(Order order, OrderStatus to, Long actorUserId, String note) {
         OrderStatus from = order.getStatus();
         OrderLifecycle.assertTransition(from, to);
 
@@ -845,5 +847,21 @@ public class OrderService implements OrderServiceInterface {
             cart.add(new CartLine(p.getId(), Math.min(line.getQuantity(), p.getStockQuantity())));
         }
         return cart;
+    }
+
+    /**
+     * FR-039 / D-03 — the system completes a ready order once the pickup window is 24 hours behind
+     * it. The order row is locked and re-read (C5-8), so an order a farmer moved meanwhile is left
+     * alone. No actor on the history row and no notification (completing notifies nobody).
+     */
+    @Override
+    @Transactional
+    public boolean autoComplete(long orderId) {
+        Order order = orderRepository.lockById(orderId).orElse(null);
+        if (order == null || order.getStatus() != OrderStatus.READY) {
+            return false;
+        }
+        transition(order, OrderStatus.COMPLETED, null, AUTO_COMPLETE_NOTE);
+        return true;
     }
 }

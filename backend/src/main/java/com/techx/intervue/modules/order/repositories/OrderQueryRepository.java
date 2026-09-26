@@ -52,6 +52,19 @@ public class OrderQueryRepository {
             """;
 
     /** {@code GET /orders} — the customer's own purchases (buyer), newest first. */
+    public static final String READY_PAST_PICKUP_SQL =
+            """
+            SELECT o.id
+            FROM orders o
+            WHERE o.status = 'ready'
+              AND TIMESTAMP(o.pickup_date, o.pickup_end) < :threshold
+            ORDER BY o.id
+            LIMIT :limit
+            """;
+
+    private static final DateTimeFormatter LOCAL_DATE_TIME =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     public static final String MY_ORDERS_SQL =
             LIST_COLUMNS
                     + MY_ORDERS_FROM
@@ -238,6 +251,20 @@ public class OrderQueryRepository {
      * {@code summary}) and to let the service decide who may see it — no SQL here filters by the
      * caller.
      */
+    /**
+     * FR-039 / D-03: ready orders whose pickup ended before {@code threshold} (now − 24 h, Vietnam
+     * local time — pickup_date and pickup_end are local, like cutoff_at). Oldest id first, one
+     * batch at a time.
+     */
+    public List<Long> readyPastPickup(LocalDateTime threshold, int limit) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        // bound as text so the driver's time zone setting cannot shift it
+                        .addValue("threshold", threshold.format(LOCAL_DATE_TIME))
+                        .addValue("limit", limit);
+        return jdbc.queryForList(READY_PAST_PICKUP_SQL, params, Long.class);
+    }
+
     public record OrderDetailRow(
             OrderListItemResource summary,
             OrderStatus status,

@@ -89,4 +89,10 @@ public interface OrderServiceInterface {
      * drop out and quantities are capped at current stock. Creates nothing.
      */
     List<CartLine> reorder(long userId, long orderId);
+
+    /**
+     * FR-039 — completes one order that is still {@code ready} (system actor, no notification).
+     * Returns false when the order is gone or no longer ready.
+     */
+    boolean autoComplete(long orderId);
 }

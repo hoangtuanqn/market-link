@@ -496,4 +496,34 @@ class OrderTransitionTest {
         assertThat(deleted.isDeleted()).isTrue();
         assertThat(slot.getBookedCount()).isEqualTo(2);
     }
+
+    // ---------- FR-039 auto-complete (the job calls this once per due order) ----------
+
+    /** D-03: the system completes a ready order — history row with no actor and the fixed note. */
+    @Test
+    void autoCompleteMovesAReadyOrderToCompletedWithoutAnActor() {
+        Order order = orderWithStatus(OrderStatus.READY);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+
+        assertThat(service.autoComplete(ORDER_ID)).isTrue();
+
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETED);
+        assertThat(history).hasSize(1);
+        assertThat(history.get(0).getChangedBy()).isNull();
+        assertThat(history.get(0).getNote()).isEqualTo("Auto-completed after pickup.");
+    }
+
+    /**
+     * The row is re-read under the lock: an order that stopped being ready meanwhile is left alone.
+     */
+    @Test
+    void autoCompleteSkipsAnOrderThatIsNoLongerReady() {
+        Order order = orderWithStatus(OrderStatus.COMPLETED);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+
+        assertThat(service.autoComplete(ORDER_ID)).isFalse();
+
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETED);
+        assertThat(history).isEmpty();
+    }
 }
