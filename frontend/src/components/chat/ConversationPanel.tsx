@@ -5,6 +5,7 @@ import MessageBubble from './MessageBubble';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 import { useConversation } from '@/lib/chat/useChat';
+import { displayName } from '@/lib/chat/names';
 import { chatWhen } from '@/lib/chat/time';
 import type { ChatMessageItem, ChatParticipant } from '@/types/chat.types';
 
@@ -61,7 +62,10 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
   }
 
   return (
-    <section className="flex h-full min-h-0 flex-col" aria-label={t('chat.conversationWith', { name: other.fullName })}>
+    <section
+      className="flex h-full min-h-0 flex-col"
+      aria-label={t('chat.conversationWith', { name: displayName(other) })}
+    >
       <header className="border-line-strong flex items-center gap-3 border-b p-3">
         {onBack ? (
           <Button variant="secondary" size="sm" onClick={onBack} className="md:hidden">
@@ -69,7 +73,7 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
           </Button>
         ) : null}
         <div className="min-w-0 flex-1">
-          <p className="text-ink truncate font-sans font-semibold">{other.fullName}</p>
+          <p className="text-ink truncate font-sans font-semibold">{displayName(other)}</p>
           <p className="text-small text-ink-muted">
             {other.online
               ? t('chat.online')
@@ -112,14 +116,14 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
             key={message.id}
             message={message}
             mine={message.senderId === meId}
-            senderName={message.senderId === meId ? t('chat.you') : other.fullName}
+            senderName={message.senderId === meId ? t('chat.you') : displayName(other)}
             seen={message.id === seenId}
           />
         ))}
 
         {otherTyping ? (
           <p className="text-small text-ink-muted" aria-live="polite">
-            {t('chat.typing', { name: other.fullName })}
+            {t('chat.typing', { name: displayName(other) })}
           </p>
         ) : null}
         <div ref={bottom} />

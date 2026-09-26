@@ -357,9 +357,9 @@ git commit -m "feat(FR-112): name the stall, keep the read marker, and let an ad
   - `ModerationApi.reports({ status?: ReportStatus; page: number; pageSize: number })` → `PageType<ReportListItem>`; `ModerationApi.report(id)` → `ReportDetail`; `ModerationApi.hide(messageId)`; `ModerationApi.dismiss(reportId)`.
   - `displayName(p: ChatParticipant): string` — `stallName` nếu có, không thì `fullName`.
 
-- [ ] **Bước 1: Đọc hình dạng thật** (luật 4A): `sed -n '/record/,/)/p'` trên `AdminReportListItemResource.java`, `AdminReportDetailResource.java`, `ModeratedMessageResource.java`, `MessageReportResource.java`; và đọc `AdminMessageReportController` (param `status`, `page`, `pageSize`) + `AdminMessageController` (`PATCH /admin/messages/{id}/hide`), `MessageReportController` (`POST /messages/{id}/report`).
+- [x] **Bước 1: Đọc hình dạng thật** (luật 4A): `sed -n '/record/,/)/p'` trên `AdminReportListItemResource.java`, `AdminReportDetailResource.java`, `ModeratedMessageResource.java`, `MessageReportResource.java`; và đọc `AdminMessageReportController` (param `status`, `page`, `pageSize`) + `AdminMessageController` (`PATCH /admin/messages/{id}/hide`), `MessageReportController` (`POST /messages/{id}/report`).
 
-- [ ] **Bước 2: Test đỏ**
+- [x] **Bước 2: Test đỏ**
 
 `frontend/src/lib/chat/names.test.ts`:
 
@@ -438,9 +438,9 @@ describe('ModerationApi', () => {
 });
 ```
 
-- [ ] **Bước 3: Chạy thấy đỏ** — `cd frontend && npm test -- names conversation.requests moderation.requests`. Expected: FAIL (module/hàm chưa có).
+- [x] **Bước 3: Chạy thấy đỏ** — `cd frontend && npm test -- names conversation.requests moderation.requests`. Expected: FAIL (module/hàm chưa có).
 
-- [ ] **Bước 4: Code**
+- [x] **Bước 4: Code**
 
 `chat.types.ts` — thêm:
 
@@ -538,9 +538,9 @@ export const displayName = (p: ChatParticipant) => p.stallName ?? p.fullName;
 
 Thay `thread.other.fullName` (ThreadList) và `other.fullName` (ConversationPanel: tiêu đề, `aria-label`, `senderName`, dòng "đang gõ") bằng `displayName(...)`.
 
-- [ ] **Bước 5: Chạy thấy xanh** — `npm test` (cả suite: test cũ của ThreadList/Panel vẫn xanh vì fixture không có `stallName`). Rồi `npx prettier --write src && npm run lint`.
+- [x] **Bước 5: Chạy thấy xanh** — `npm test` (cả suite: test cũ của ThreadList/Panel vẫn xanh vì fixture không có `stallName`). Rồi `npx prettier --write src && npm run lint`.
 
-- [ ] **Bước 6: Commit** — `feat(FR-116): chat data layer for reports, moderation and stall names`.
+- [x] **Bước 6: Commit** — `feat(FR-116): chat data layer for reports, moderation and stall names`.
 
 ---
 

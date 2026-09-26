@@ -12,6 +12,8 @@ export type ChatParticipant = {
   image: string | null;
   online: boolean;
   lastSeenAt: string | null;
+  farmerId?: number;
+  stallName?: string;
 };
 
 export type ConversationSummary = {
@@ -21,6 +23,7 @@ export type ConversationSummary = {
   lastMessageAt: string | null;
   unreadCount: number;
   createdAt: string;
+  otherReadAt?: string;
 };
 
 export type ChatAttachment = {
@@ -60,3 +63,36 @@ export type ConversationEventFrame = {
 /** /user/topic/typing và /user/topic/presence. */
 export type TypingFrame = { conversationId: number; userId: number; typing: boolean };
 export type PresenceFrame = { userId: number; online: boolean; lastSeenAt: string | null };
+
+export type ReportReason = 'spam' | 'abuse' | 'scam' | 'other';
+export type ReportStatus = 'new' | 'reviewed' | 'actioned';
+
+/** Hàng đợi của admin (AdminReportListItemResource). */
+export type ReportListItem = {
+  reportId: number;
+  messageId: number;
+  conversationId: number;
+  reason: ReportReason;
+  note?: string;
+  status: ReportStatus;
+  reporterName: string;
+  senderName: string;
+  preview?: string;
+  reportedAt: string;
+};
+
+/** Một tin trong cửa sổ ngữ cảnh (spec §8.3: tin bị báo + tối đa 5 tin mỗi bên). */
+export type ModeratedMessage = {
+  id: number;
+  senderId: number;
+  senderName: string;
+  kind: 'text' | 'image';
+  body?: string;
+  hasPhoto: boolean;
+  attachmentId?: number;
+  reported: boolean;
+  hidden: boolean;
+  createdAt: string;
+};
+
+export type ReportDetail = Omit<ReportListItem, 'senderName' | 'preview'> & { context: ModeratedMessage[] };
