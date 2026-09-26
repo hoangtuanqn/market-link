@@ -96,7 +96,7 @@ class MarketServiceTest {
     @Test
     void createRejectsDayOutsideZeroToSix() {
         assertThatThrownBy(() -> service.create(request(List.of(0, 7), null)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidFieldException.class)
                 .hasMessageContaining("day");
     }
 
@@ -116,7 +116,7 @@ class MarketServiceTest {
                         List.of(1));
 
         assertThatThrownBy(() -> service.create(bad))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(InvalidFieldException.class)
                 .hasMessageContaining("closing");
     }
 
