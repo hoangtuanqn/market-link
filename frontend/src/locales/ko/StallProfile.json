@@ -7,7 +7,6 @@
   "approved": "승인된 가게",
   "savedToast": "{{name}}을(를) 저장했어요.",
   "save": "가게 저장",
-  "message": "가게에 메시지",
   "stats": {
     "reviews_one": "리뷰 {{count}}개",
     "reviews_other": "리뷰 {{count}}개",

@@ -7,7 +7,6 @@
   "approved": "已审核摊位",
   "savedToast": "已收藏 {{name}}。",
   "save": "收藏摊位",
-  "message": "联系摊位",
   "stats": {
     "reviews_one": "{{count}} 条评价",
     "reviews_other": "{{count}} 条评价",

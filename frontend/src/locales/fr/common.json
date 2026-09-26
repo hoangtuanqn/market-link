@@ -91,7 +91,40 @@
     "emptyThreadTitle": "Aucun message pour l’instant",
     "emptyThreadText": "Dites bonjour pour lancer la conversation.",
     "typing": "{{name}} est en train d’écrire…",
-    "conversationWith": "Conversation avec {{name}}"
+    "conversationWith": "Conversation avec {{name}}",
+    "closed": "Ce stand ne reçoit pas de messages pour le moment.",
+    "messageStall": "Écrire à ce stand",
+    "ownStall": "C’est votre propre stand.",
+    "stallClosed": "Ce stand n’accepte pas de nouvelles conversations pour le moment.",
+    "openFailed": "Impossible d’ouvrir la conversation. Réessayez.",
+    "pinned": "À propos de",
+    "unpin": "Retirer",
+    "productGone": "Ce produit n’est plus en vente.",
+    "tooFast": "Vous envoyez trop vite. Attendez un instant et réessayez.",
+    "photoTooBig": "Cette photo dépasse 5 Mo. Choisissez-en une plus petite.",
+    "photoType": "Choisissez une photo JPEG, PNG ou WebP.",
+    "moreThreads": "Charger plus de conversations",
+    "reportTitle": "Signaler ce message",
+    "reportWhy": "Pourquoi le signalez-vous ?",
+    "reason": {
+      "spam": "Spam ou publicité",
+      "abuse": "Grossier ou injurieux",
+      "scam": "Arnaque ou demande d’argent",
+      "other": "Autre chose"
+    },
+    "reportNote": "Dites-nous en plus (facultatif)",
+    "noteLeft_one": "{{count}} caractère restant",
+    "noteLeft_other": "{{count}} caractères restants",
+    "chooseReason": "Choisissez un motif pour envoyer le signalement.",
+    "report": "Signaler",
+    "reportThis": "Signaler ce message",
+    "reported": "Signalé",
+    "reportFailed": "Le signalement n’a pas pu être envoyé. Réessayez.",
+    "reportThanks": "Merci. Un administrateur va examiner ce message.",
+    "cancel": "Annuler",
+    "previewEmpty": "Aucune conversation pour l’instant.",
+    "previewError": "Impossible de charger vos conversations.",
+    "unreadCount": "{{count}} non lus"
   },
   "errors": {
     "network": "Impossible de joindre le serveur. Vérifiez votre connexion et réessayez."
@@ -163,7 +196,10 @@
     "notificationsUnread_one": "Notifications, {{count}} non lue",
     "notificationsUnread_other": "Notifications, {{count}} non lues",
     "openMenu": "Ouvrir le menu",
-    "search": "Rechercher"
+    "search": "Rechercher",
+    "seeAll": "Tout voir",
+    "messagesUnread_one": "Messages, {{count}} non lu",
+    "messagesUnread_other": "Messages, {{count}} non lus"
   },
   "kpi": {
     "noChange": "aucun changement",
@@ -493,7 +529,9 @@
     "admin": {
       "title": "Notifications",
       "intro": "Les nouvelles demandes Farmer en attente de votre examen."
-    }
+    },
+    "notificationsEmpty": "Aucune notification pour l’instant.",
+    "notificationsError": "Impossible de charger les notifications."
   },
   "comingSoon": {
     "title": "Cette page n'est pas encore ouverte",

@@ -3,6 +3,8 @@ package com.techx.intervue.modules.farmer.repositories;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FarmerProfileRepository extends JpaRepository<FarmerProfile, Long> {
     Optional<FarmerProfile> findByUserId(Long userId);
+
+    /**
+     * Hồ sơ stall của nhiều người một lần (danh sách thread chat); ai không phải Farmer thì không
+     * có.
+     */
+    List<FarmerProfile> findAllByUserIdIn(Collection<Long> userIds);
 
     boolean existsByUserId(Long userId);
 

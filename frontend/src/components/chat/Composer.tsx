@@ -1,18 +1,30 @@
 import { type FormEvent, type KeyboardEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { sendErrorKey } from '@/lib/chat/errors';
+import ProductPin from './ProductPin';
 
 type Props = {
-  onSend: (text: string) => Promise<void>;
+  onSend: (text: string, extra?: { productId?: number }) => Promise<void>;
   onSendPhoto: (file: File) => Promise<void>;
   /** Báo "đang gõ" mỗi lần chữ đổi; hook tự lọc bớt frame (Review Focus #9). */
   onTyping?: (on: boolean) => void;
   disabled: boolean;
   /** Nút bị khoá luôn kèm lý do bằng chữ (frontend/CLAUDE.md). */
   disabledReason?: string;
+  pinnedProductId?: number;
+  onUnpin?: () => void;
 };
 
-export default function Composer({ onSend, onSendPhoto, onTyping, disabled, disabledReason }: Props) {
+export default function Composer({
+  onSend,
+  onSendPhoto,
+  onTyping,
+  disabled,
+  disabledReason,
+  pinnedProductId,
+  onUnpin,
+}: Props) {
   const { t } = useTranslation('common');
   const [draft, setDraft] = useState('');
   const [busy, setBusy] = useState(false);
@@ -28,11 +40,12 @@ export default function Composer({ onSend, onSendPhoto, onTyping, disabled, disa
     // Xoá ngay lúc gửi chứ không đợi server: người dùng gõ tiếp trong lúc tin đang bay thì chữ mới không bị xoá mất
     setDraft('');
     try {
-      await onSend(text);
-    } catch {
+      await onSend(text, pinnedProductId ? { productId: pinnedProductId } : {});
+      onUnpin?.();
+    } catch (error) {
       // Trả lại chữ để bấm gửi lại, trừ khi người dùng đã gõ sang câu khác
       setDraft((current) => (current === '' ? text : current));
-      setFailed(t('chat.sendFailed'));
+      setFailed(t(sendErrorKey(error, 'text')));
     } finally {
       setBusy(false);
     }
@@ -51,8 +64,8 @@ export default function Composer({ onSend, onSendPhoto, onTyping, disabled, disa
     setFailed(null);
     try {
       await onSendPhoto(file);
-    } catch {
-      setFailed(t('chat.photoFailed'));
+    } catch (error) {
+      setFailed(t(sendErrorKey(error, 'photo')));
     } finally {
       setBusy(false);
       if (fileInput.current) fileInput.current.value = '';
@@ -66,6 +79,17 @@ export default function Composer({ onSend, onSendPhoto, onTyping, disabled, disa
         <p role="alert" className="text-small text-danger mb-2">
           {failed}
         </p>
+      ) : null}
+      {pinnedProductId ? (
+        <div className="bg-surface border-line-strong mb-3 flex items-center gap-2 rounded-md border p-2 shadow-sm">
+          <div className="flex-1">
+            <span className="text-small text-ink-muted mb-1 block">{t('chat.pinned')}</span>
+            <ProductPin productId={pinnedProductId} compact />
+          </div>
+          <Button variant="ghost" size="sm" onClick={onUnpin}>
+            {t('chat.unpin')}
+          </Button>
+        </div>
       ) : null}
       <div className="flex items-end gap-2">
         <input

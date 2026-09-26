@@ -1,20 +1,25 @@
-import { type ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Composer from './Composer';
 import MessageBubble from './MessageBubble';
+import ReportDialog from './ReportDialog';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 import { useConversation } from '@/lib/chat/useChat';
+import { displayName } from '@/lib/chat/names';
 import { chatWhen } from '@/lib/chat/time';
-import type { ChatMessageItem, ChatParticipant } from '@/types/chat.types';
+import type { ChatMessageItem, ConversationSummary } from '@/types/chat.types';
+import Notification from '@/utils/notification';
 
 type Props = {
   conversationId: number | null;
-  other: ChatParticipant | null;
+  thread: ConversationSummary | null;
   /** Quay lại danh sách ở màn hẹp (spec §9.2). Nút tự ẩn từ `md`, nơi danh sách và hội thoại nằm cạnh nhau. */
   onBack?: () => void;
   /** Chỗ cho nút riêng của từng vai (Farmer: "Make an offer" ở đợt 2). */
   headerAction?: ReactNode;
+  pinnedProductId?: number;
+  onUnpin?: () => void;
 };
 
 /**
@@ -31,7 +36,15 @@ const lastSeenId = (messages: ChatMessageItem[], meId: number | null, otherReadA
   return null;
 };
 
-export default function ConversationPanel({ conversationId, other, onBack, headerAction }: Props) {
+export default function ConversationPanel({
+  conversationId,
+  thread,
+  onBack,
+  headerAction,
+  pinnedProductId,
+  onUnpin,
+}: Props) {
+  const other = thread?.other;
   const { t } = useTranslation('common');
   const {
     messages,
@@ -46,8 +59,10 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
     otherTyping,
     otherReadAt,
     meId,
-  } = useConversation(conversationId);
+  } = useConversation(conversationId, { otherReadAt: thread?.otherReadAt });
   const bottom = useRef<HTMLDivElement>(null);
+  const [reportingId, setReportingId] = useState<number | null>(null);
+  const [reportedIds, setReportedIds] = useState<Set<number>>(new Set());
   const newestId = messages.length > 0 ? messages[messages.length - 1].id : null;
   const seenId = lastSeenId(messages, meId, otherReadAt);
 
@@ -61,7 +76,10 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
   }
 
   return (
-    <section className="flex h-full min-h-0 flex-col" aria-label={t('chat.conversationWith', { name: other.fullName })}>
+    <section
+      className="flex h-full min-h-0 flex-col"
+      aria-label={t('chat.conversationWith', { name: displayName(other) })}
+    >
       <header className="border-line-strong flex items-center gap-3 border-b p-3">
         {onBack ? (
           <Button variant="secondary" size="sm" onClick={onBack} className="md:hidden">
@@ -69,7 +87,7 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
           </Button>
         ) : null}
         <div className="min-w-0 flex-1">
-          <p className="text-ink truncate font-sans font-semibold">{other.fullName}</p>
+          <p className="text-ink truncate font-sans font-semibold">{displayName(other)}</p>
           <p className="text-small text-ink-muted">
             {other.online
               ? t('chat.online')
@@ -112,20 +130,39 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
             key={message.id}
             message={message}
             mine={message.senderId === meId}
-            senderName={message.senderId === meId ? t('chat.you') : other.fullName}
+            senderName={message.senderId === meId ? t('chat.you') : displayName(other)}
             seen={message.id === seenId}
+            onReport={message.senderId !== meId ? () => setReportingId(message.id) : undefined}
+            reported={reportedIds.has(message.id)}
           />
         ))}
 
         {otherTyping ? (
           <p className="text-small text-ink-muted" aria-live="polite">
-            {t('chat.typing', { name: other.fullName })}
+            {t('chat.typing', { name: displayName(other) })}
           </p>
         ) : null}
         <div ref={bottom} />
       </div>
 
-      <Composer onSend={send} onSendPhoto={sendPhoto} onTyping={typing} disabled={false} />
+      <Composer
+        onSend={send}
+        onSendPhoto={sendPhoto}
+        onTyping={typing}
+        disabled={false}
+        pinnedProductId={pinnedProductId}
+        onUnpin={onUnpin}
+      />
+      <ReportDialog
+        key={reportingId ?? 'none'}
+        messageId={reportingId}
+        onClose={() => setReportingId(null)}
+        onReported={(id) => {
+          setReportedIds((s) => new Set(s).add(id));
+          setReportingId(null);
+          Notification.success({ text: t('chat.reportThanks') });
+        }}
+      />
     </section>
   );
 }

@@ -86,4 +86,40 @@ describe('ThreadList', () => {
 
     expect(onPick).toHaveBeenCalledWith(7);
   });
+
+  /** Hơn 20 thread: phải có đường tới những thread cũ hơn trang đầu. */
+  it('shows a way to load more conversations', async () => {
+    const onLoadMore = vi.fn();
+    render(
+      <ThreadList
+        threads={[thread(1)]}
+        activeId={null}
+        onPick={vi.fn()}
+        loading={false}
+        error={false}
+        onRetry={vi.fn()}
+        hasMore
+        onLoadMore={onLoadMore}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /load more conversations/i }));
+
+    expect(onLoadMore).toHaveBeenCalled();
+  });
+
+  it('offers no more button once every conversation is shown', () => {
+    render(
+      <ThreadList
+        threads={[thread(1)]}
+        activeId={null}
+        onPick={vi.fn()}
+        loading={false}
+        error={false}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: /load more conversations/i })).not.toBeInTheDocument();
+  });
 });

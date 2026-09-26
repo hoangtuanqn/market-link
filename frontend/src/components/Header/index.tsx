@@ -13,6 +13,10 @@ import type { RoleType } from '@/types/user.types';
 import MenuMobile from './MenuMobile';
 import NavLink from './NavLink';
 import UserMenu from './UserMenu';
+import { Popover } from '@/components/ui/popover';
+import MessagesPreview from '@/components/chat/MessagesPreview';
+import NotificationsPreview from '@/components/notifications/NotificationsPreview';
+import useChatUnread from '@/hooks/useChatUnread';
 
 const iconButton =
   'relative grid size-11 cursor-pointer place-items-center rounded-sm bg-transparent text-on-board hover:shadow-[inset_0_0_0_1.5px_var(--board-muted)] [&_svg]:size-5.5';
@@ -51,9 +55,10 @@ const Header = ({
   cartCount = 0,
   unreadCount = 0,
 }: HeaderProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const [menuOpen, setMenuOpen] = useState(false);
   const logout = useLogout();
+  const chatUnread = useChatUnread();
   const signedIn = variant === 'customer';
   const navItems = signedIn ? CUSTOMER_NAV : GUEST_NAV;
   const isFarmer = role === USER_ROLE.FARMER;
@@ -76,7 +81,7 @@ const Header = ({
         <div className="mx-auto flex min-h-16 max-w-(--size-container) items-center gap-2 px-4 md:gap-6 md:px-6">
           <Logo to="/" />
 
-          <nav aria-label={t('header.main')} className="hidden md:block">
+          <nav aria-label={t('header.main')} className="hidden lg:block">
             <ul className="flex gap-1">
               {navItems.map((item) => (
                 <li key={item.to}>
@@ -87,30 +92,49 @@ const Header = ({
           </nav>
 
           <div className="ml-auto flex items-center gap-1">
-            <Link to="/search" aria-label={t('header.search')} className={Helper.cn(iconButton, 'max-md:hidden')}>
+            <Link to="/search" aria-label={t('header.search')} className={Helper.cn(iconButton, 'max-lg:hidden')}>
               <SearchIcon />
             </Link>
             {/* Tin nhắn và thông báo là hai biểu tượng riêng, không gộp (spec chat §9.1) */}
             {signedIn && (
-              <Link to={messagesTo} aria-label={t('header.messages')} className={iconButton}>
-                <ChatIcon />
-              </Link>
+              <Popover
+                label={chatUnread ? t('header.messagesUnread', { count: chatUnread }) : t('header.messages')}
+                to={messagesTo}
+                buttonClassName={iconButton}
+                trigger={
+                  <>
+                    <ChatIcon />
+                    {chatUnread > 0 && (
+                      <span aria-hidden="true" className={badge}>
+                        {chatUnread > 99 ? '99+' : chatUnread}
+                      </span>
+                    )}
+                  </>
+                }
+              >
+                <MessagesPreview to={messagesTo} />
+              </Popover>
             )}
             {signedIn && (
-              <Link
-                to={notificationsTo}
-                aria-label={
+              <Popover
+                label={
                   unreadCount ? t('header.notificationsUnread', { count: unreadCount }) : t('header.notifications')
                 }
-                className={iconButton}
+                to={notificationsTo}
+                buttonClassName={iconButton}
+                trigger={
+                  <>
+                    <BellIcon />
+                    {unreadCount > 0 && (
+                      <span aria-hidden="true" className={badge}>
+                        {unreadCount > 99 ? '99+' : unreadCount}
+                      </span>
+                    )}
+                  </>
+                }
               >
-                <BellIcon />
-                {unreadCount > 0 && (
-                  <span aria-hidden="true" className={badge}>
-                    {unreadCount}
-                  </span>
-                )}
-              </Link>
+                <NotificationsPreview />
+              </Popover>
             )}
             <Link
               to="/cart"
@@ -143,7 +167,7 @@ const Header = ({
               type="button"
               aria-label={t('header.openMenu')}
               onClick={() => setMenuOpen(true)}
-              className={Helper.cn(iconButton, 'md:hidden')}
+              className={Helper.cn(iconButton, 'lg:hidden')}
             >
               <MenuIcon />
             </button>

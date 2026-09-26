@@ -112,6 +112,41 @@ describe('useConversation', () => {
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
   });
 
+  /** Review Focus #3: admin ẩn một tin → cả hai bên thấy nó biến mất ngay. */
+  it('removes a message an admin hid', async () => {
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+
+    emit('/user/topic/conversations', { type: 'hidden', conversationId: 42, messageId: 2 });
+
+    expect(result.current.messages.map((m) => m.id)).toEqual([1, 3]);
+  });
+
+  /** Review Focus #7: tab ở nền thì chưa "xem"; hiện tab lên mới đánh dấu. */
+  it('waits until the tab is visible before marking read', async () => {
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+    vi.mocked(ConversationApi.markRead).mockClear();
+    const visibility = vi.spyOn(document, 'visibilityState', 'get').mockReturnValue('hidden');
+
+    emit('/user/topic/messages', msg(4));
+    expect(ConversationApi.markRead).not.toHaveBeenCalled();
+
+    visibility.mockReturnValue('visible');
+    act(() => {
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    expect(ConversationApi.markRead).toHaveBeenCalledWith(42);
+    visibility.mockRestore();
+  });
+
+  /** "Seen" còn sau khi tải lại: bắt đầu từ mốc đọc mà danh sách thread đã có. */
+  it('starts from the read marker the thread list already has', () => {
+    const { result } = renderHook(() => useConversation(42, { otherReadAt: '2026-09-26T10:05:00Z' }));
+
+    expect(result.current.otherReadAt).toBe('2026-09-26T10:05:00Z');
+  });
+
   /** Review Focus #1 ở tầng hook: gửi xong thì sự kiện về cũng không nhân đôi bong bóng. */
   it('does not show a message twice when the socket echoes what REST already returned', async () => {
     vi.mocked(ConversationApi.send).mockResolvedValue(ok(msg(4, 7)));
@@ -345,6 +380,34 @@ describe('useThreadList', () => {
 
     await waitFor(() => expect(result.current.threads[0].unreadCount).toBe(2));
     expect(result.current.threads[0].lastMessageText).toBe('still fresh?');
+  });
+
+  /** Review Focus #3: dòng xem trước có thể chính là tin vừa bị ẩn. */
+  it('refreshes the preview when a message is hidden', async () => {
+    const { result } = renderHook(() => useThreadList());
+    await waitFor(() => expect(result.current.threads).toHaveLength(1));
+    vi.mocked(ConversationApi.list).mockClear();
+
+    emit('/user/topic/conversations', { type: 'hidden', conversationId: 42, messageId: 5 });
+
+    await waitFor(() => expect(ConversationApi.list).toHaveBeenCalled());
+  });
+
+  it('loads the next page of threads and knows when there is no more', async () => {
+    vi.mocked(ConversationApi.list).mockResolvedValueOnce(
+      ok({ items: [summary(42)], page: 1, pageSize: 20, total: 2 }),
+    );
+    const { result } = renderHook(() => useThreadList());
+    await waitFor(() => expect(result.current.hasMore).toBe(true));
+    vi.mocked(ConversationApi.list).mockResolvedValueOnce(
+      ok({ items: [summary(43)], page: 2, pageSize: 20, total: 2 }),
+    );
+
+    await act(() => result.current.loadMore());
+
+    expect(ConversationApi.list).toHaveBeenLastCalledWith({ page: 2, size: 20 });
+    expect(result.current.threads.map((t) => t.id)).toEqual([42, 43]);
+    expect(result.current.hasMore).toBe(false);
   });
 
   it('surfaces a load error instead of an empty list', async () => {

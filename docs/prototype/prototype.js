@@ -42,7 +42,7 @@
       ['become-farmer.html', 'Apply to sell', 'FR-002 FR-071 · proposal'],
       ['assistant.html', 'Shopping assistant', 'FR-090 FR-091 FR-092'],
       ['settings.html', 'Settings', 'proposal'],
-      ['messages.html', 'Messages with a stall', 'Proposal · no FR yet'],
+      ['messages.html', 'Messages with a stall', 'FR-110 FR-111 FR-112 FR-114 FR-115 FR-116 · proposal'],
     ],
     farmer: [
       ['overview.html', 'Overview', 'FR-065 FR-068 FR-069'],
@@ -55,7 +55,7 @@
       ['slots.html', 'Pickup slots', 'FR-032 FR-067'],
       ['history.html', 'Sales history and best sellers', 'FR-069'],
       ['reviews.html', 'Reviews and replies', 'FR-053'],
-      ['messages.html', 'Messages with customers', 'Proposal · no FR yet'],
+      ['messages.html', 'Messages with customers', 'FR-110 FR-111 FR-112 FR-115 FR-116 · proposal'],
       ['notifications.html', 'Notifications (Farmer)', 'FR-042'],
       ['pending.html', 'Waiting for approval / suspended', 'FR-071'],
       ['promote.html', 'Promote & listing allowance', 'proposal'],
@@ -71,7 +71,7 @@
       ['customer.html', 'Customer detail', 'FR-072'],
       ['markets.html', 'Markets', 'FR-073'],
       ['market-form.html', 'Add or edit market', 'FR-073'],
-      ['moderation.html', 'Moderation', 'FR-074'],
+      ['moderation.html', 'Moderation', 'FR-074 FR-116'],
       ['orders.html', 'Orders across the platform', 'FR-070 FR-075'],
       ['order.html', 'Order detail (Admin)', 'FR-070 FR-038'],
       ['revenue.html', 'Platform revenue', 'proposal'],
@@ -191,10 +191,10 @@
     if (role !== 'admin') tools += '<a class="ml-hbtn pt-hbtn-search" href="' + link('public/search.html') + '" aria-label="Search">' + I.search() + '</a>';
     // Messages and notifications are two icons, not one (chat spec §9.1). An admin has no inbox.
     var mhref = role === 'farmer' ? link('farmer/messages.html') : link('customer/messages.html');
-    if (role === 'customer' || role === 'farmer') tools += '<a class="ml-hbtn" href="' + mhref + '" aria-label="Messages">' + I.chat() + '</a>';
+    if (role === 'customer' || role === 'farmer') tools += popHTML('messages', mhref, 'Messages, 1 unread', I.chat(), 1, 'ml-hbtn');
     if (role !== 'guest') {
       var nhref = role === 'farmer' ? link('farmer/notifications.html') : role === 'admin' ? link('admin/overview.html') : link('customer/notifications.html');
-      tools += '<a class="ml-hbtn" href="' + nhref + '" aria-label="Notifications' + (o.unread ? ', ' + o.unread + ' unread' : '') + '">' + I.bell() + (o.unread ? '<span class="ml-hbadge" aria-hidden="true">' + o.unread + '</span>' : '') + '</a>';
+      tools += popHTML('notifications', nhref, 'Notifications' + (o.unread ? ', ' + o.unread + ' unread' : ''), I.bell(), o.unread, 'ml-hbtn');
     }
     if (role !== 'admin') tools += '<a class="ml-hbtn" href="' + link('customer/cart.html') + '" aria-label="Cart' + (o.cartCount ? ', ' + o.cartCount + ' items' : '') + '">' + I.cart() + (o.cartCount ? '<span class="ml-hbadge" aria-hidden="true">' + o.cartCount + '</span>' : '') + '</a>';
     if (role === 'farmer') tools += '<a class="ml-btn ml-btn-accent ml-btn-sm" href="' + link('farmer/overview.html') + '">Stall panel</a>';
@@ -375,6 +375,59 @@
     for (var i = 1; i <= pages; i++) { if (i === 1 || i === pages || Math.abs(i - page) <= 1) list.push(i); else if (list[list.length - 1] !== '…') list.push('…'); }
     return '<nav aria-label="Pagination"><ul class="ml-pages"><li><button type="button"' + (page <= 1 ? ' disabled' : '') + ' aria-label="Previous page">‹</button></li>' + list.map(function (n) { return n === '…' ? '<li class="gap" aria-hidden="true">…</li>' : '<li><button type="button"' + (n === page ? ' aria-current="page"' : '') + ' aria-label="Page ' + n + '">' + n + '</button></li>'; }).join('') + '<li><button type="button"' + (page >= pages ? ' disabled' : '') + ' aria-label="Next page">›</button></li></ul></nav>';
   };
+  /* ---------- header popovers (chat spec §9.1) ----------
+     Hover AND click/Enter open; Esc or a click outside closes; the button carries aria-expanded. A mouse
+     user who hovers and then clicks keeps it open (the app's Popover does the same). "See all" is always
+     there, because a phone cannot hover. Rows are demo data. */
+  var POP = {
+    messages: { title: 'Messages', rows: [
+      ['Cô Tư Garden', 'Five is fine. Edit the order and I will accept it again.', '09:41', true],
+      ['Gió Nam Bakery', 'Your rye loaf is out of the oven, come any time after 07:30.', 'Yesterday', false],
+      ['Bếp Nhà Lan', 'See you on Saturday.', '22/09', false] ] },
+    notifications: { title: 'Notifications', rows: [
+      ['Order #ML-0421 is ready', 'Cô Tư Garden · pickup 07:00–07:30', '09:05', true],
+      ['Your order was accepted', 'Gió Nam Bakery · Sat 26/09', 'Yesterday', true],
+      ['Market day moved', 'Thảo Điền Weekend Market opens at 06:30 this Saturday', '22/09', false] ] },
+  };
+  function popHTML(kind, href, label, icon, badge, btnClass) {
+    var d = POP[kind];
+    var rows = d.rows.map(function (r) {
+      return '<li><a class="pt-pop-row" href="' + href + '"' + (r[3] ? ' data-unread="true"' : '') + '><span><b>' + esc(r[0]) + '</b><small>' + esc(r[1]) + '</small></span><time>' + r[2] + '</time>' + (r[3] ? '<span class="ml-sr">Unread</span>' : '') + '</a></li>';
+    }).join('');
+    return '<div class="pt-pop" data-pop><button type="button" class="' + btnClass + '" aria-label="' + label + '" aria-expanded="false" data-pop-btn>' + icon + (badge ? '<span class="ml-hbadge" aria-hidden="true">' + badge + '</span>' : '') + '</button>' +
+      '<div class="pt-pop-panel" hidden><p class="pt-pop-title">' + d.title + '</p><ul class="pt-pop-list">' + rows + '</ul><a class="pt-pop-all" href="' + href + '">See all</a></div></div>';
+  }
+  function setPop(pop, open) {
+    pop.querySelector('.pt-pop-panel').hidden = !open;
+    pop.querySelector('[data-pop-btn]').setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-pop-btn]');
+    document.querySelectorAll('[data-pop]').forEach(function (pop) {
+      if (btn && pop.contains(btn)) setPop(pop, pop.dataset.hover === '1' ? true : pop.querySelector('.pt-pop-panel').hidden);
+      else if (!pop.contains(e.target)) setPop(pop, false);
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('[data-pop]').forEach(function (pop) {
+      if (pop.querySelector('.pt-pop-panel').hidden) return;
+      setPop(pop, false);
+      pop.querySelector('[data-pop-btn]').focus();
+    });
+  });
+  document.addEventListener('pointerover', function (e) {
+    var pop = e.pointerType === 'mouse' && e.target.closest && e.target.closest('[data-pop]');
+    if (!pop) return;
+    clearTimeout(pop._t); pop.dataset.hover = '1'; setPop(pop, true);
+  });
+  document.addEventListener('pointerout', function (e) {
+    var pop = e.pointerType === 'mouse' && e.target.closest && e.target.closest('[data-pop]');
+    if (!pop || pop.contains(e.relatedTarget)) return;
+    pop.dataset.hover = '';
+    pop._t = setTimeout(function () { setPop(pop, false); }, 150);
+  });
+
   PT.tabs = function (label, tabs, value) {
     return '<div class="ml-tabs" role="tablist" aria-label="' + label + '" data-tabs>' + tabs.map(function (t) { var sel = t.id === value; return '<button type="button" role="tab" class="ml-tab" aria-selected="' + sel + '" tabindex="' + (sel ? 0 : -1) + '" data-tab="' + t.id + '">' + t.label + (t.count != null ? '<span class="ml-tab-count">' + t.count + '</span>' : '') + '</button>'; }).join('') + '</div>';
   };
@@ -497,8 +550,28 @@
   PT.chat = function (m) {
     var bot = m.from !== 'user';
     var who = m.who || (bot ? 'MarketLink assistant' : 'You');
-    return '<div class="ml-msg ' + (bot ? 'ml-msg-bot' : 'ml-msg-user') + '"><div class="ml-msg-bubble">' + m.text + '</div><div class="ml-msg-meta">' + esc(who) + (m.time ? '<span>· ' + m.time + '</span>' : '') + (m.intent ? '<span class="ml-msg-intent">Intent: ' + m.intent + '</span>' : '') + '</div>' + (m.suggestions ? '<div class="ml-msg-suggest">' + m.suggestions.map(function (s) { return '<button type="button" class="ml-chip" aria-pressed="false" data-suggest>' + s + '</button>'; }).join('') + '</div>' : '') + '</div>';
+    return '<div class="ml-msg ' + (bot ? 'ml-msg-bot' : 'ml-msg-user') + '"><div class="ml-msg-bubble">' + m.text + '</div><div class="ml-msg-meta">' + esc(who) + (m.time ? '<span>· ' + m.time + '</span>' : '') + (m.intent ? '<span class="ml-msg-intent">Intent: ' + m.intent + '</span>' : '') + (m.extra || '') + '</div>' + (m.suggestions ? '<div class="ml-msg-suggest">' + m.suggestions.map(function (s) { return '<button type="button" class="ml-chip" aria-pressed="false" data-suggest>' + s + '</button>'; }).join('') + '</div>' : '') + '</div>';
   };
+  /* FR-116: "Report" sits on the other person's messages only. Same reasons and note as the app's ReportDialog. */
+  PT.reportButton = function () { return '<button type="button" class="pt-linkbtn" data-report aria-label="Report this message">Report</button>'; };
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-report]');
+    if (!btn) return;
+    var reasons = [['spam', 'Spam or advertising'], ['abuse', 'Rude or abusive'], ['scam', 'Scam or asks for money'], ['other', 'Something else']];
+    PT.dialog({
+      title: 'Report this message',
+      keep: 'Cancel',
+      confirm: 'Report',
+      tone: 'danger',
+      body: '<fieldset class="pt-report"><legend class="pt-small ml-muted">Why are you reporting it?</legend>' +
+        reasons.map(function (r) { return '<label><input type="radio" name="pt-reason" value="' + r[0] + '"> ' + r[1] + '</label>'; }).join('') +
+        '</fieldset><label class="ml-field"><span class="ml-label">Tell us more (optional)</span><textarea class="ml-input" rows="3" maxlength="255"></textarea></label>',
+      onConfirm: function () {
+        btn.outerHTML = '<span>Reported</span>';
+        PT.toast('Thanks. An admin will look at this message.');
+      },
+    });
+  });
   PT.todo = function (text) { return '<span class="pt-todo" data-todo>' + text + '</span>'; };
 
   /* ---------- map: Leaflet + OSM (D-12), pins via ml-pin markup ---------- */
@@ -952,8 +1025,10 @@
   }
 
   function appHeadHTML(role, o) {
+    // Chat spec §9.1: the bell opens a preview in every role's shell; an admin has no message inbox
     var bell = role === 'farmer'
-      ? '<a class="pt-appbtn" href="../farmer/notifications.html" aria-label="Notifications, 2 unread">' + I.bell() + '<span class="ml-hbadge" aria-hidden="true">2</span></a>' : '';
+      ? popHTML('notifications', '../farmer/notifications.html', 'Notifications, 2 unread', I.bell(), 2, 'pt-appbtn')
+      : popHTML('notifications', '../admin/overview.html', 'Notifications', I.bell(), 0, 'pt-appbtn');
     var acct = role === 'farmer' ? '../customer/account.html?as=farmer' : '../admin/account.html';
     var mono = role === 'farmer' ? 'CT' : 'AD';
     // A back arrow on a page you reached from the sidebar has nothing to go back to, so it only

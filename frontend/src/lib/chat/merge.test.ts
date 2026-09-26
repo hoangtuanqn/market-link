@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder } from './merge';
+import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder, removeMessage } from './merge';
 import type { ChatMessageItem, ConversationSummary } from '@/types/chat.types';
 
 const msg = (id: number, senderId = 3): ChatMessageItem => ({
@@ -90,6 +90,17 @@ describe('oldestId', () => {
 
   it('is undefined for an empty list, so the first request sends no cursor', () => {
     expect(oldestId([])).toBeUndefined();
+  });
+});
+
+describe('removeMessage', () => {
+  it('drops the hidden message', () => {
+    expect(removeMessage([msg(1), msg(2), msg(3)], 2).map((m) => m.id)).toEqual([1, 3]);
+  });
+
+  it('returns the same array when the message is not loaded', () => {
+    const list = [msg(1)];
+    expect(removeMessage(list, 9)).toBe(list);
   });
 });
 

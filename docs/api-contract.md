@@ -423,7 +423,7 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 
 | Method | Path | Role | Trạng thái | Body / query | data |
 |---|---|---|---|---|---|
-| POST | `/api/v1/conversations` | Thành viên | **Đã có** | `{ farmerUserId }` | Thread; idempotent — có rồi thì trả lại cái cũ |
+| POST | `/api/v1/conversations` | Thành viên | **Đã có** | `{ farmerId }` — id stall (`farmer_profiles.id`, như `GET /farmers/{id}`); server tự tra chủ stall. Đổi 26/09/2026 theo quyết định LEAD (trước là `farmerUserId`) | Thread; idempotent — có rồi thì trả lại cái cũ. Tự nhắn cho sạp của chính mình → 400; stall không tồn tại → 404 |
 | GET | `/api/v1/conversations` | Thành viên | **Đã có** | query `page`, `size` | `{ items[], page, size, total }`, mới nhất trước |
 | GET | `/api/v1/conversations/unread-count` | Thành viên | **Đã có** | | `{ count }` |
 | GET | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | query `before`, `size` | `[MessageResource]`, keyset, mới nhất trước |
@@ -436,6 +436,11 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 | GET | `/api/v1/admin/message-reports/{id}` | Admin | **Đã có** | | Chi tiết + `context[]` (tin bị báo + tối đa 5 tin mỗi bên) |
 | PATCH | `/api/v1/admin/message-reports/{id}/dismiss` | Admin | **Đã có** | | Báo cáo chuyển `reviewed`, tin không đổi |
 | PATCH | `/api/v1/admin/messages/{id}/hide` | Admin | **Đã có** | | Ẩn mềm, ghi `hiddenBy` + `hiddenAt`; idempotent |
+
+**`ConversationResource` (trong `items[]`)**
+
+- `otherReadAt`: lúc người kia đọc tới gần nhất (vắng mặt nếu chưa đọc).
+- Đối tượng `other` (người kia): thêm `farmerId`, `stallName` (chỉ có khi người kia là Farmer có hồ sơ stall).
 
 **`MessageResource`**
 
@@ -464,7 +469,8 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 - `GET /api/v1/admin/message-reports/{id}` trả `context[]`: tin bị báo cáo cùng **tối đa 5 tin liền
   trước và 5 tin liền sau**, trong đúng thread đó, xếp theo `id` tăng dần. Đó là **toàn bộ** những
   gì admin đọc được trong thread.
-- Mỗi phần tử `context[]`: `{ id, senderId, senderName, kind, body, hasPhoto, reported, hidden, createdAt }`.
+- Mỗi phần tử `context[]`: `{ id, senderId, senderName, kind, body, hasPhoto, attachmentId, reported, hidden, createdAt }`.
+  `attachmentId` chỉ có mặt khi `hasPhoto` và tin đó đã bị báo cáo; admin mở ảnh qua `GET /attachments/{id}`.
   Tin bị admin ẩn **vẫn hiện với admin** kèm `hidden: true` (khác người dùng thường, vốn không thấy nó nữa).
 - Hàng đợi chỉ trả `preview` cắt **80 ký tự**, không trả toàn văn — nó là nơi quyết định có mở ra
   xem không, không phải nơi đọc hàng loạt. Tin ảnh hiện `Photo`.

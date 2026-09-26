@@ -1,5 +1,5 @@
 import type { ApiResponse, PageType } from '@/types/api.types';
-import type { ChatAttachment, ChatMessageItem, ConversationSummary } from '@/types/chat.types';
+import type { ChatAttachment, ChatMessageItem, ConversationSummary, ReportReason } from '@/types/chat.types';
 import { privateApi } from '@/utils/axiosInstance';
 
 type SendBody = {
@@ -20,9 +20,9 @@ class ConversationApi {
   };
 
   /** Idempotent: đã có thread với người này thì trả lại cái cũ. */
-  static open = async (farmerUserId: number) => {
+  static open = async (farmerId: number) => {
     const response = await privateApi.post<ApiResponse<ConversationSummary>>('/conversations', {
-      farmerUserId,
+      farmerId,
     });
     return response.data;
   };
@@ -65,6 +65,12 @@ class ConversationApi {
   static photoBlob = async (attachmentId: number) => {
     const response = await privateApi.get<Blob>(`/attachments/${attachmentId}`, { responseType: 'blob' });
     return URL.createObjectURL(response.data);
+  };
+
+  /** FR-116. Báo lần hai cùng một tin → 409 (uq_report_once). */
+  static report = async (messageId: number, body: { reason: ReportReason; note?: string }) => {
+    const response = await privateApi.post<ApiResponse<unknown>>(`/messages/${messageId}/report`, body);
+    return response.data;
   };
 }
 

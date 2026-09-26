@@ -51,12 +51,12 @@ describe('ConversationApi', () => {
     });
   });
 
-  it('opens a thread with a stall by the owner user id', async () => {
+  it('opens a thread with the stall id', async () => {
     vi.mocked(privateApi.post).mockResolvedValue(ok({}));
 
-    await ConversationApi.open(3);
+    await ConversationApi.open(30);
 
-    expect(privateApi.post).toHaveBeenCalledWith('/conversations', { farmerUserId: 3 });
+    expect(privateApi.post).toHaveBeenCalledWith('/conversations', { farmerId: 30 });
   });
 
   it('uploads a photo as multipart under the field name the backend reads', async () => {
@@ -85,5 +85,11 @@ describe('ConversationApi', () => {
     expect(privateApi.get).toHaveBeenCalledWith('/attachments/55', { responseType: 'blob' });
     expect(globalThis.URL.createObjectURL).toHaveBeenCalledWith(blob);
     expect(url).toBe('blob:fake');
+  });
+
+  it('reports a message with a reason and an optional note', async () => {
+    vi.mocked(privateApi.post).mockResolvedValue(ok({}));
+    await ConversationApi.report(55, { reason: 'scam', note: 'asks for a deposit' });
+    expect(privateApi.post).toHaveBeenCalledWith('/messages/55/report', { reason: 'scam', note: 'asks for a deposit' });
   });
 });

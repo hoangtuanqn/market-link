@@ -12,4 +12,6 @@ public record ConversationResource(
         String lastMessageText,
         Instant lastMessageAt,
         long unreadCount,
-        Instant createdAt) {}
+        Instant createdAt,
+        // Lúc người kia đọc tới gần nhất: "Seen" còn sau khi tải lại trang. Vắng nếu chưa đọc.
+        Instant otherReadAt) {}

@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { DataState } from '@/components/ui/data-state';
 import { Button } from '@/components/ui/button';
+import { displayName } from '@/lib/chat/names';
 import { chatWhen } from '@/lib/chat/time';
 import type { ConversationSummary } from '@/types/chat.types';
 
@@ -13,9 +14,23 @@ type Props = {
   onRetry: () => void;
   /** Câu dưới "No conversations yet" theo vai: Farmer không tự mở được cuộc trò chuyện. */
   emptyText?: string;
+  hasMore?: boolean;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
 };
 
-export default function ThreadList({ threads, activeId, onPick, loading, error, onRetry, emptyText }: Props) {
+export default function ThreadList({
+  threads,
+  activeId,
+  onPick,
+  loading,
+  error,
+  onRetry,
+  emptyText,
+  hasMore,
+  loadingMore,
+  onLoadMore,
+}: Props) {
   const { t } = useTranslation('common');
 
   if (loading) {
@@ -59,7 +74,7 @@ export default function ThreadList({ threads, activeId, onPick, loading, error, 
           >
             <span className="min-w-0 flex-1">
               <span className="flex items-center justify-between gap-2">
-                <span className="text-ink truncate font-sans font-semibold">{thread.other.fullName}</span>
+                <span className="text-ink truncate font-sans font-semibold">{displayName(thread.other)}</span>
                 <span className="text-small text-ink-muted shrink-0">{chatWhen(thread.lastMessageAt)}</span>
               </span>
               <span className="text-small text-ink-muted mt-1 block truncate">{thread.lastMessageText}</span>
@@ -75,6 +90,13 @@ export default function ThreadList({ threads, activeId, onPick, loading, error, 
           </button>
         </li>
       ))}
+      {hasMore ? (
+        <li className="p-3">
+          <Button variant="secondary" size="sm" disabled={loadingMore} onClick={onLoadMore}>
+            {t('chat.moreThreads')}
+          </Button>
+        </li>
+      ) : null}
     </ul>
   );
 }

@@ -265,9 +265,9 @@ window.PT_TODOS = [
  },
  {
   "role": "customer",
-  "file": "messages.html",
-  "screen": "Messages with a stall",
-  "text": "Out of scope · Customer-to-Farmer messaging is not in the SRS or in .ai/REQUIREMENTS.md. R-07 says do not build what is not listed. Needs a new FR, a messages table, an unread badge, and a rule on whether a message can change an order. Note the SRS does list an AI chatbot (FR-090/091), which is a different thing."
+  "file": "order.html",
+  "screen": "Order detail",
+  "text": "FR-114 (order part) · Messaging from an order and pinning the order to a message wait for the order module (GET /orders/{id}), which dev does not have yet. Product and stall pages already have the button."
  },
  {
   "role": "customer",
@@ -280,12 +280,6 @@ window.PT_TODOS = [
   "file": "settings.html",
   "screen": "Settings",
   "text": "Proposal · A settings screen is not in the SRS. Three of its choices also cut across decisions already made: the locale decision fixes VND, dd/MM/yyyy and 24-hour, the design system says no dark mode until every MUST is done, and the UI is English only. Each needs LEAD or FE1 before it is built."
- },
- {
-  "role": "farmer",
-  "file": "messages.html",
-  "screen": "Messages with customers",
-  "text": "Out of scope · Farmer-to-Customer messaging is not in the SRS or in .ai/REQUIREMENTS.md. R-07 says do not build what is not listed. It also raises questions the SRS does not answer: who may start a thread, whether a stall can be messaged without an order, and how abuse is reported and moderated."
  },
  {
   "role": "farmer",

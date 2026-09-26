@@ -14,6 +14,7 @@ import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import MessageStallButton from '@/components/chat/MessageStallButton';
 import { LoadError } from '@/components/ui/data-state';
 import { Table } from '@/components/ui/table';
 import { reviewTags, reviewsForProduct } from '@/data/catalog';
@@ -235,9 +236,7 @@ const ProductDetailPage = () => {
               <ButtonLink to={`/stalls/${p.farmerId}`} variant="secondary" size="sm">
                 {t('seeStall')}
               </ButtonLink>
-              <ButtonLink to="/messages" variant="secondary" size="sm">
-                {t('messageStall')}
-              </ButtonLink>
+              {p.farmerId && <MessageStallButton farmerId={p.farmerId} productId={p.id} />}
             </div>
           </Card>
 

@@ -16,6 +16,8 @@ public record ModeratedMessageResource(
         MessageKind kind,
         String body,
         boolean hasPhoto,
+        // Chỉ có với tin ĐÃ bị báo cáo — đúng những tin readAsAdmin cho mở (spec §8.3)
+        Long attachmentId,
         boolean reported,
         boolean hidden,
         Instant createdAt) {}

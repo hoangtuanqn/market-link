@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "Reseñas",
     "products": "Fichas de producto",
-    "hidden": "Elementos ocultos"
+    "hidden": "Elementos ocultos",
+    "messages": "Mensajes denunciados"
   },
   "reviewFilterLabel": "Filtrar reseñas",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "publicaciones"
+  },
+  "messages": {
+    "boundary": "Solo puedes leer los mensajes denunciados, con hasta cinco a cada lado para dar contexto. El resto de la conversación no está abierto a los administradores.",
+    "noun": "denuncias",
+    "emptyTitle": "No hay mensajes denunciados",
+    "emptyText": "Cuando un cliente o un puesto denuncia un mensaje, te espera aquí.",
+    "photo": "Foto",
+    "reason": {
+      "spam": "Spam o publicidad",
+      "abuse": "Grosero u ofensivo",
+      "scam": "Estafa o pide dinero",
+      "other": "Otro motivo"
+    },
+    "reportedBy": "Denunciado por {{name}}",
+    "sentBy": "Enviado por {{name}}",
+    "review": "Revisar",
+    "reviewLabel": "Revisar la denuncia de {{name}}",
+    "context": "Mensajes alrededor del denunciado",
+    "hidden": "Oculto",
+    "hide": "Ocultar mensaje",
+    "hideTitle": "¿Ocultar este mensaje?",
+    "hideText": "Las dos personas de la conversación dejarán de verlo. La denuncia se marca como atendida.",
+    "hideConfirm": "Ocultar",
+    "dismiss": "Descartar denuncia",
+    "hidden_toast": "Mensaje oculto.",
+    "dismissed_toast": "Denuncia descartada.",
+    "status": {
+      "new": "Nueva",
+      "reviewed": "Revisada",
+      "actioned": "Atendida"
+    },
+    "statusLabel": "Estado"
   }
 }

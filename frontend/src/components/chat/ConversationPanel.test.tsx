@@ -5,7 +5,16 @@ import ConversationPanel from './ConversationPanel';
 const useConversation = vi.fn();
 vi.mock('@/lib/chat/useChat', () => ({ useConversation: () => useConversation() }));
 
-const other = { userId: 3, fullName: 'Cô Tư', role: 'farmer', image: null, online: true, lastSeenAt: null };
+const other = { userId: 3, fullName: 'Cô Tư', role: 'farmer', image: null, online: true, lastSeenAt: null } as const;
+const thread = {
+  id: 42,
+  other,
+  lastMessageText: '',
+  lastMessageAt: '',
+  unreadCount: 0,
+  otherReadAt: undefined,
+  createdAt: '',
+};
 const mine = (id: number, minute: number) => ({
   id,
   conversationId: 42,
@@ -43,7 +52,7 @@ describe('ConversationPanel', () => {
   /** Review Focus #10: "Seen" một lần, dưới tin cuối cùng của mình mà họ đã đọc. So bằng Date, không so chuỗi ISO. */
   it('shows Seen once, under my latest message they have read', () => {
     useConversation.mockReturnValue(state({ otherReadAt: '2026-09-26T10:03:00Z' }));
-    render(<ConversationPanel conversationId={42} other={other} />);
+    render(<ConversationPanel conversationId={42} thread={thread} />);
 
     expect(screen.getAllByText('Seen')).toHaveLength(1);
     expect(screen.getByTestId('message-2')).toHaveTextContent('Seen');
@@ -51,7 +60,7 @@ describe('ConversationPanel', () => {
 
   it('says so when older messages fail, and keeps the thread', () => {
     useConversation.mockReturnValue(state({ olderError: true }));
-    render(<ConversationPanel conversationId={42} other={other} />);
+    render(<ConversationPanel conversationId={42} thread={thread} />);
 
     expect(screen.getByRole('alert')).toHaveTextContent('Could not load older messages');
     expect(screen.getByText('m3')).toBeInTheDocument();
@@ -59,11 +68,11 @@ describe('ConversationPanel', () => {
 
   it('scrolls to a new message at the bottom', () => {
     useConversation.mockReturnValue(state({}));
-    const { rerender } = render(<ConversationPanel conversationId={42} other={other} />);
+    const { rerender } = render(<ConversationPanel conversationId={42} thread={thread} />);
     scrollIntoView.mockClear();
 
     useConversation.mockReturnValue(state({ messages: [mine(1, 1), mine(2, 2), mine(3, 5), mine(4, 6)] }));
-    rerender(<ConversationPanel conversationId={42} other={other} />);
+    rerender(<ConversationPanel conversationId={42} thread={thread} />);
 
     expect(scrollIntoView).toHaveBeenCalled();
   });
@@ -71,11 +80,11 @@ describe('ConversationPanel', () => {
   /** Review Focus #2 ở tầng giao diện: đang cuộn lên đọc tin cũ thì không được bị kéo về đáy. */
   it('stays put when older messages are added above', () => {
     useConversation.mockReturnValue(state({}));
-    const { rerender } = render(<ConversationPanel conversationId={42} other={other} />);
+    const { rerender } = render(<ConversationPanel conversationId={42} thread={thread} />);
     scrollIntoView.mockClear();
 
     useConversation.mockReturnValue(state({ messages: [mine(0, 0), mine(1, 1), mine(2, 2), mine(3, 5)] }));
-    rerender(<ConversationPanel conversationId={42} other={other} />);
+    rerender(<ConversationPanel conversationId={42} thread={thread} />);
 
     expect(scrollIntoView).not.toHaveBeenCalled();
   });
@@ -83,7 +92,7 @@ describe('ConversationPanel', () => {
   it('sends typing to the hook from the composer', async () => {
     const typing = vi.fn();
     useConversation.mockReturnValue(state({ typing }));
-    render(<ConversationPanel conversationId={42} other={other} />);
+    render(<ConversationPanel conversationId={42} thread={thread} />);
 
     fireEvent.change(screen.getByLabelText('Write a message'), { target: { value: 'h' } });
 
@@ -93,7 +102,7 @@ describe('ConversationPanel', () => {
   /** Spec §9.2: Back chỉ có nghĩa ở màn hẹp, nơi danh sách và hội thoại là hai màn riêng. Từ md là hai cột. */
   it('offers Back only on narrow screens', () => {
     useConversation.mockReturnValue(state({}));
-    render(<ConversationPanel conversationId={42} other={other} onBack={vi.fn()} />);
+    render(<ConversationPanel conversationId={42} thread={thread} onBack={vi.fn()} />);
 
     expect(screen.getByRole('button', { name: 'Back' })).toHaveClass('md:hidden');
   });
@@ -101,7 +110,7 @@ describe('ConversationPanel', () => {
   /** Chưa chọn thread: câu dẫn nằm giữa khung trống, không nép góc trên trái. */
   it('centres the pick-a-conversation hint in the empty panel', () => {
     useConversation.mockReturnValue(state({ messages: [] }));
-    render(<ConversationPanel conversationId={null} other={null} />);
+    render(<ConversationPanel conversationId={null} thread={null} />);
 
     expect(screen.getByText('Pick a conversation').parentElement).toHaveClass('justify-center');
   });
@@ -109,9 +118,17 @@ describe('ConversationPanel', () => {
   /** "Last seen 11:47" mà là ba ngày trước thì đọc như vừa hôm nay: ngày khác phải hiện ngày. */
   it('says which day the other person was last seen when it was not today', () => {
     useConversation.mockReturnValue(state({}));
-    const away = { ...other, online: false, lastSeenAt: '2026-09-20T03:00:00Z' };
-    render(<ConversationPanel conversationId={42} other={away} />);
+    const awayThread = { ...thread, other: { ...other, online: false, lastSeenAt: '2026-09-20T03:00:00Z' } };
+    render(<ConversationPanel conversationId={42} thread={awayThread as never} />);
 
     expect(screen.getByText(/last seen/i)).toHaveTextContent('20/09');
+  });
+
+  /** Chỉ báo cáo được tin của người kia; tin của mình không có nút. */
+  it('offers Report only on the other person’s messages', () => {
+    useConversation.mockReturnValue(state({ messages: [mine(1, 1), { ...mine(2, 2), senderId: 3 }] }));
+    render(<ConversationPanel conversationId={42} thread={thread as never} />);
+
+    expect(screen.getAllByRole('button', { name: /report this message/i })).toHaveLength(1);
   });
 });
