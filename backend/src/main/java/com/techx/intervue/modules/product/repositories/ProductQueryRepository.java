@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.product.repositories;
 
 import com.techx.intervue.modules.product.requests.ProductSearchCriteria;
+import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
 import com.techx.intervue.resources.PageResource;
@@ -82,7 +83,58 @@ public class ProductQueryRepository {
     public static final String DETAIL_SQL =
             SELECT_ITEM + FROM + VISIBILITY_FILTER + "  AND p.id = :id\n" + GROUP_BY;
 
+    /**
+     * Danh sách của chính Farmer: bỏ sản phẩm đã xoá mềm, nhưng GIỮ sản phẩm bị admin ẩn (kèm lý
+     * do) và mọi trạng thái duyệt của stall — Farmer phải thấy hàng của mình dù stall đang bị đình
+     * chỉ (D-09).
+     */
+    public static final String MINE_SQL =
+            """
+            SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
+                   p.rating_avg, p.rating_count, p.description, p.is_hidden, p.hidden_reason,
+                   f.id AS farmer_id, f.stall_name,
+                   c.id AS category_id, c.name AS category_name,
+                   NULL AS market_id, NULL AS market_name
+            FROM products p
+            JOIN farmer_profiles f ON f.id = p.farmer_id
+            JOIN categories c ON c.id = p.category_id
+            WHERE p.farmer_id = :farmerId
+              AND p.is_deleted = FALSE
+              AND (:status IS NULL OR p.status = :status)
+            ORDER BY p.created_at DESC, p.id
+            LIMIT :limit OFFSET :offset
+            """;
+
+    private static final String MINE_COUNT_SQL =
+            """
+            SELECT COUNT(*) FROM products p
+            WHERE p.farmer_id = :farmerId
+              AND p.is_deleted = FALSE
+              AND (:status IS NULL OR p.status = :status)
+            """;
+
     private final NamedParameterJdbcTemplate jdbc;
+
+    public PageResource<FarmerProductResource> mine(
+            long farmerId, String status, int offset, int limit) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("farmerId", farmerId)
+                        .addValue("status", status);
+        Long total = jdbc.queryForObject(MINE_COUNT_SQL, params, Long.class);
+        params.addValue("limit", limit).addValue("offset", offset);
+        List<FarmerProductResource> items =
+                jdbc.query(
+                        MINE_SQL,
+                        params,
+                        (rs, i) ->
+                                new FarmerProductResource(
+                                        item(rs),
+                                        rs.getString("description"),
+                                        rs.getBoolean("is_hidden"),
+                                        rs.getString("hidden_reason")));
+        return new PageResource<>(items, offset / limit + 1, limit, total == null ? 0 : total);
+    }
 
     /** Whitelist sort — giá trị từ query string KHÔNG bao giờ đi thẳng vào ORDER BY (R-04). */
     public static String orderBy(String sort) {
