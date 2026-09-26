@@ -57,6 +57,18 @@ Năm lớp đầu vào spec ngầm định nhưng dễ rơi. Mỗi dòng đã đ
 4. **Ảnh hỏng hoặc 403** — link ảnh của tin đã bị admin ẩn, hoặc mạng rớt giữa chừng. Kỳ vọng: ô ảnh hiện trạng thái hỏng bằng chữ, **không** vỡ cả khung chat, và **không** rò URL blob. → Task 3, `showsAFallbackWhenThePhotoCannotBeLoaded` + `revokesTheBlobUrlOnUnmount`.
 5. **Thread rỗng và danh sách rỗng** — người dùng mới, chưa nhắn ai. Kỳ vọng: đủ 4 trạng thái FR-084, empty có câu dẫn việc cần làm, không phải một khung trắng. → Task 5, `showsAnEmptyStateWithSomethingToDo`.
 
+**Bổ sung 26/09/2026, sau Task 4** — những lớp đầu vào bản plan đầu tiên bỏ sót. Đã kiểm với backend thật (`StompChatEventPublisher`, `TypingController`, `ConversationResource`) và đã vá ở tầng hook (xem "Task 4 · Bổ sung sau review"). Task 5–7 phải dùng đúng những gì đã vá.
+
+6. **Phản hồi đến muộn khi đổi thread** — bấm A rồi B thật nhanh, A trả lời sau B. Kỳ vọng: tin của A không đè lên màn B. → Task 4, `ignores a late answer for a thread that is no longer open`.
+7. **Socket nối lại mà mạng máy không mất** — backend khởi động lại; trình duyệt không bắn `online`. Kỳ vọng: vẫn tải bù, và **gộp** chứ không thay cả danh sách (trang cũ đã cuộn lên đọc vẫn còn). → `stompClient.test.ts` + Task 4, `catches up without dropping the older pages already loaded`, `catches up quietly when the socket comes back`.
+8. **Bước phụ hỏng làm hỏng bước chính** — đánh dấu đã đọc trả 429 thì thread đã tải không được thành màn lỗi; trang cũ hỏng thì không xoá tin đang đọc. → Task 4, `still shows the thread when marking it read fails`, `reports a failed older page without losing the thread`.
+9. **"Đang gõ" hai chiều** — spec §7.4 chỉ có một chiều vào là `/app/typing`; bản đầu không có đường gửi nào. Kỳ vọng: gửi khi đổi trạng thái, nhắc lại mỗi 3 giây (server giới hạn 120 frame/phút), tắt khi rời thread; tin của họ tới thì ba chấm tắt. → Task 4 (4 test), Task 5 `Composer` gọi `onTyping`.
+10. **"Đã xem" (FR-112)** — backend gửi `read` cho người gửi. Kỳ vọng: chữ "Seen" dưới tin **cuối cùng** của mình mà đối phương đã đọc. → Task 4 `remembers when the other person read the thread`, Task 5 `ConversationPanel`.
+11. **Online / offline** — `/user/topic/presence` chưa ai nghe, chấm online đứng yên từ lúc tải trang. → Task 2 `applyPresence`, Task 4 `follows the other person going online`.
+12. **Sự kiện `read` / `hidden` đẩy nhầm thread lên đầu** — chúng không phải tin mới. → Task 2 `does not reorder the list for a read receipt`.
+13. **Thread mới chưa có trong danh sách** — khách nhắn farmer lần đầu; sự kiện không mang tên người gửi nên bị bỏ qua. Kỳ vọng: tải lại danh sách. → Task 4 `reloads the list when a message lands in a thread it does not have yet`.
+14. **Badge của thread đang mở** — backend chỉ báo `read` cho người kia, và tin tới thread đang mở mang `unreadCount: 1` vì được đếm trước khi kịp đánh dấu đọc. Kỳ vọng: thread đang mở luôn là 0. → Task 4 `clears the badge of the thread that is open, and keeps it clear`, Task 6 truyền `activeId`.
+
 ---
 
 ## Setup — worktree, dev server, baseline
@@ -923,10 +935,11 @@ Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 - Test: `frontend/src/lib/chat/useChat.test.ts`
 
 **Interfaces:**
-- Consumes: `ConversationApi` (Task 1), `mergeMessage` / `prependOlder` / `oldestId` / `applyConversationEvent` (Task 2), `realtime.subscribe` từ `@/lib/realtime/stompClient`, `Session.getUser()` từ `@/utils/session`.
-- Produces:
-  - `useThreadList(): { threads, loading, error, reload }`
-  - `useConversation(conversationId: number | null): { messages, loading, error, hasMore, loadOlder, send, sendPhoto, typing, otherTyping }`
+- Consumes: `ConversationApi` (Task 1), `mergeMessage` / `prependOlder` / `oldestId` / `applyConversationEvent` / `applyPresence` (Task 2), `realtime.subscribe` / `realtime.onConnect` / `realtime.publish` từ `@/lib/realtime/stompClient`, `Session.getUser()` từ `@/utils/session`.
+- Produces (**bản đã vá**, code trong repo là chuẩn — khối code ở Bước 3 là bản nháp đầu):
+  - `useThreadList(activeId?: number | null): { threads, loading, error, reload }`
+  - `useConversation(conversationId: number | null): { messages, loading, error, hasMore, loadOlder, olderError, send, sendPhoto, typing, otherTyping, otherReadAt, meId }`
+  - `typing(on: boolean)` gửi `/app/typing`; `otherReadAt: string | null` là ISO từ sự kiện `read`; `olderError` bật khi trang cũ hỏng; `send`/`sendPhoto` **ném lỗi** cho Composer bắt.
 
 **Destination STOMP** (spec §7.4, đã chạy thật ở Plan 2/3B):
 
@@ -1312,6 +1325,30 @@ git commit -m "feat(FR-111): a chat hook that survives reconnects and duplicate 
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
 ```
 
+#### Task 4 · Bổ sung sau review (26/09/2026)
+
+Bản nháp ở Bước 3 có 13 lỗ hổng; đã vá bằng TDD (test đỏ → xanh) trong 4 commit `572c900`, `f89b3cd`, `d53e0a8`, `bf9bee6`. **Code trong repo là chuẩn**; đừng chép lại khối code Bước 3.
+
+| # | Lỗ hổng | Cách vá | Test |
+|---|---|---|---|
+| 1 | Không ai gửi `/app/typing` | `realtime.publish` + `typing(on)`; chỉ gửi khi đổi trạng thái, nhắc lại mỗi 3s | `tells the other person when I start and stop typing`, `does not send a frame for every keystroke` |
+| 2 | Rời thread khi đang gõ, ba chấm bên kia treo 6s | cleanup gửi `typing:false` | `says I stopped typing when I leave the thread mid-sentence` |
+| 3 | Tin của họ tới mà ba chấm vẫn còn | nhận tin của người kia → `otherTyping = false` | `hides the typing dots as soon as their message arrives` |
+| 4 | Reset state trong effect (ESLint React 19 đỏ) | reset trong render theo mẫu "adjusting state when a prop changes" | `drops the previous thread as soon as another one is picked` |
+| 5 | Phản hồi đến muộn của thread cũ đè thread mới | cờ `live` cho lần tải đầu, `openRef` cho `loadOlder`/`send`/tải bù | `ignores a late answer for a thread that is no longer open` |
+| 6 | `markRead` hỏng → cả thread thành màn lỗi | `markRead` tách riêng, nuốt lỗi | `still shows the thread when marking it read fails` |
+| 7 | Chỉ nghe `online` của trình duyệt | `realtime.onConnect` chạy mỗi lần nối lại | `stompClient.test.ts`, `refetches the open thread when the socket comes back` |
+| 8 | Tải bù thay cả danh sách, mất trang cũ | gộp bằng `prependOlder` | `catches up without dropping the older pages already loaded` |
+| 9 | `loadOlder` bấm đôi gửi hai request; lỗi ném ra ngoài (`void loadOlder()` → unhandled rejection) | chặn request trùng, lỗi thành `olderError` | `does not ask for the same older page twice at once`, `reports a failed older page without losing the thread` |
+| 10 | "Đã xem" không có dữ liệu | nghe `read` trên `/user/topic/conversations` → `otherReadAt` | `remembers when the other person read the thread` |
+| 11 | Danh sách: thread mới bị bỏ qua | `updated` cho id lạ → tải lại danh sách | `reloads the list when a message lands in a thread it does not have yet` |
+| 12 | Danh sách: badge thread đang mở không về 0 | `useThreadList(activeId)` giữ badge đó ở 0 | `clears the badge of the thread that is open, and keeps it clear` |
+| 13 | Danh sách: presence và tải bù khi nối lại | nghe `/user/topic/presence`; `onConnect` → tải lại **không** bật `loading` | `follows the other person going online`, `catches up quietly when the socket comes back` |
+
+Cộng Task 2: `applyConversationEvent` chỉ đổi thứ tự cho `updated` (không cho `read`/`hidden`), thêm `applyPresence`.
+
+Kết quả: suite frontend 66/66, prettier, eslint, build đều xanh.
+
 ---
 
 ### Task 5: Component hội thoại dùng chung cho cả hai vai
@@ -1329,7 +1366,8 @@ Spec §9.3: Farmer "dùng lại **đúng** component hội thoại của Custome
 - Produces:
   - `<ThreadList threads={ConversationSummary[]} activeId={number | null} onPick={(id: number) => void} loading={boolean} error={boolean} onRetry={() => void} />`
   - `<ConversationPanel conversationId={number | null} other={ChatParticipant | null} onBack={(() => void) | undefined} headerAction={ReactNode} />`
-  - `<Composer onSend={(text: string) => Promise<void>} onSendPhoto={(file: File) => Promise<void>} disabled={boolean} disabledReason={string | undefined} />`
+  - `<Composer onSend={(text: string) => Promise<void>} onSendPhoto={(file: File) => Promise<void>} onTyping={((on: boolean) => void) | undefined} disabled={boolean} disabledReason={string | undefined} />`
+- **Bổ sung 26/09:** làm thêm Bước 6b bên dưới — Composer gửi "đang gõ", ConversationPanel hiện "Seen" và lỗi tải trang cũ. Thêm test `Composer.test.tsx` và `ConversationPanel.test.tsx`.
 
 - [ ] **Bước 1: Viết test đỏ**
 
@@ -1753,7 +1791,7 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
 }
 ```
 
-Thêm key: `pickThreadTitle`, `pickThreadText`, `back`, `online`, `offline`, `lastSeen`, `loadOlder`, `loadingMessages`, `messagesErrorTitle`, `messagesErrorText`, `emptyThreadTitle`, `emptyThreadText`, `you`, `typing`, `conversationWith`:
+Thêm key: `pickThreadTitle`, `pickThreadText`, `back`, `online`, `offline`, `lastSeen`, `loadOlder`, `loadingMessages`, `messagesErrorTitle`, `messagesErrorText`, `emptyThreadTitle`, `emptyThreadText`, `you`, `typing`, `conversationWith` (cộng `olderFailed` ở Bước 6b):
 
 ```json
     "pickThreadTitle": "Pick a conversation",
@@ -1772,6 +1810,122 @@ Thêm key: `pickThreadTitle`, `pickThreadText`, `back`, `online`, `offline`, `la
     "typing": "{{name}} is typing…",
     "conversationWith": "Conversation with {{name}}"
 ```
+
+- [ ] **Bước 6b (bổ sung 26/09): nối "đang gõ", "đã xem" và lỗi trang cũ**
+
+Test đỏ trước. `frontend/src/components/chat/Composer.test.tsx`:
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import Composer from './Composer';
+
+const setup = () => {
+  const onTyping = vi.fn();
+  render(<Composer onSend={vi.fn().mockResolvedValue(undefined)} onSendPhoto={vi.fn()} onTyping={onTyping} disabled={false} />);
+  return { onTyping, box: screen.getByLabelText('Write a message') };
+};
+
+describe('Composer', () => {
+  /** Review Focus #9: hook tự lọc bớt frame, Composer chỉ việc báo mỗi lần chữ đổi. */
+  it('says I am typing while there is text, and stopped once it is cleared', async () => {
+    const { onTyping, box } = setup();
+
+    await userEvent.type(box, 'hi');
+    await userEvent.clear(box);
+
+    expect(onTyping).toHaveBeenCalledWith(true);
+    expect(onTyping).toHaveBeenLastCalledWith(false);
+  });
+
+  it('says I stopped typing when I leave the box', async () => {
+    const { onTyping, box } = setup();
+
+    await userEvent.type(box, 'hi');
+    await userEvent.tab();
+
+    expect(onTyping).toHaveBeenLastCalledWith(false);
+  });
+});
+```
+
+`frontend/src/components/chat/ConversationPanel.test.tsx` (mock `useConversation` giống cách Task 6 mock `useThreadList`):
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import ConversationPanel from './ConversationPanel';
+
+const useConversation = vi.fn();
+vi.mock('@/lib/chat/useChat', () => ({ useConversation: () => useConversation() }));
+
+const other = { userId: 3, fullName: 'Cô Tư', role: 'farmer', image: null, online: true, lastSeenAt: null };
+const mine = (id: number, minute: number) => ({
+  id,
+  conversationId: 42,
+  senderId: 7,
+  kind: 'text' as const,
+  body: `m${id}`,
+  createdAt: `2026-09-26T10:0${minute}:00.123Z`,
+});
+const state = (patch: object) => ({
+  messages: [mine(1, 1), mine(2, 2), mine(3, 5)],
+  loading: false,
+  error: false,
+  hasMore: true,
+  loadOlder: vi.fn(),
+  olderError: false,
+  send: vi.fn(),
+  sendPhoto: vi.fn(),
+  typing: vi.fn(),
+  otherTyping: false,
+  otherReadAt: null,
+  meId: 7,
+  ...patch,
+});
+
+describe('ConversationPanel', () => {
+  beforeEach(() => useConversation.mockReset());
+
+  /** Review Focus #10: "Seen" một lần, dưới tin cuối cùng của mình mà họ đã đọc. So bằng Date, không so chuỗi ISO. */
+  it('shows Seen once, under my latest message they have read', () => {
+    useConversation.mockReturnValue(state({ otherReadAt: '2026-09-26T10:03:00Z' }));
+    render(<ConversationPanel conversationId={42} other={other} />);
+
+    expect(screen.getAllByText('Seen')).toHaveLength(1);
+    expect(screen.getByTestId('message-2')).toHaveTextContent('Seen');
+  });
+
+  it('says so when older messages fail, and keeps the thread', () => {
+    useConversation.mockReturnValue(state({ olderError: true }));
+    render(<ConversationPanel conversationId={42} other={other} />);
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Could not load older messages');
+    expect(screen.getByText('m3')).toBeInTheDocument();
+  });
+});
+```
+
+Rồi sửa code:
+
+- `Composer`: thêm prop `onTyping?: (on: boolean) => void`. Trong `onChange` của textarea gọi `onTyping?.(event.target.value.trim().length > 0)`; thêm `onBlur={() => onTyping?.(false)}`. Sau khi gửi thành công không cần gọi gì: hook đã tự reset.
+- `ConversationPanel`: lấy thêm `olderError`, `typing`, `otherReadAt` từ `useConversation`; truyền `onTyping={typing}` cho `Composer`. Tính tin được "Seen" bằng `Date`, **không** so chuỗi ISO (backend có lúc trả `.123Z`, có lúc không):
+
+  ```tsx
+  const readAt = otherReadAt ? new Date(otherReadAt).getTime() : null;
+  const seenId =
+    readAt === null
+      ? null
+      : ([...messages].reverse().find((m) => m.senderId === meId && new Date(m.createdAt).getTime() <= readAt)?.id ?? null);
+  // …
+  <MessageBubble … seen={message.id === seenId} />
+  ```
+
+- Ngay dưới nút "Load older messages": `{olderError ? <p role="alert" className="text-small text-ink-muted self-center">{t('chat.olderFailed')}</p> : null}`. Nút vẫn hiện để bấm lại.
+- Key mới: `"olderFailed": "Could not load older messages. Try again."`
+
+**Giới hạn đã biết:** API chưa trả mốc đọc của đối phương (`ConversationResource` không có `otherReadAt`), nên "Seen" chỉ hiện khi sự kiện `read` tới **trong lúc** đang mở trang; tải lại trang thì mất. Muốn có ngay khi mở cần backend thêm trường — đổi contract, thuộc LEAD, để sang Plan 4B.
 
 - [ ] **Bước 7: Chạy test và build**
 
@@ -1901,8 +2055,9 @@ import { useThreadList } from '@/lib/chat/useChat';
  */
 export default function CustomerMessagesPage() {
   const { t } = useTranslation('CustomerMessages');
-  const { threads, loading, error, reload } = useThreadList();
   const [activeId, setActiveId] = useState<number | null>(null);
+  // activeId để hook giữ badge của thread đang mở ở 0 (Review Focus #14)
+  const { threads, loading, error, reload } = useThreadList(activeId);
   const active = threads.find((thread) => thread.id === activeId) ?? null;
 
   return (
@@ -1953,8 +2108,9 @@ import { useThreadList } from '@/lib/chat/useChat';
 /** FR-110…115, spec §9.3: dùng lại ĐÚNG component hội thoại của Customer, chỉ khác vỏ ngoài. */
 export default function FarmerMessagesPage() {
   const { t } = useTranslation('FarmerMessages');
-  const { threads, loading, error, reload } = useThreadList();
   const [activeId, setActiveId] = useState<number | null>(null);
+  // activeId để hook giữ badge của thread đang mở ở 0 (Review Focus #14)
+  const { threads, loading, error, reload } = useThreadList(activeId);
   const active = threads.find((thread) => thread.id === activeId) ?? null;
 
   return (
@@ -2125,6 +2281,15 @@ Mở cửa sổ thứ hai (ẩn danh), đăng nhập `ui.bob@t.test`, vào `/mes
 | Alice ở trang khác, Bob gửi | Badge trong danh sách thread của Alice tăng, thread nhảy lên đầu |
 | Bob gửi ảnh | Alice thấy ảnh (blob, không phải `<img src>` thẳng) |
 | Ngắt mạng Alice 10 giây, Bob gửi 2 tin, nối lại | Alice thấy đủ cả 2 tin sau khi nối lại (Review Focus #3) |
+| Bob gõ rồi gửi | Ba chấm bên Alice tắt **ngay** khi tin tới, không đợi 6 giây (Review Focus #9) |
+| Bob gõ dở rồi bấm sang thread khác | Ba chấm bên Alice tắt ngay (Review Focus #9) |
+| Alice đang mở thread, Bob đọc tin của Alice | Alice thấy "Seen" dưới tin cuối cùng của mình (Review Focus #10) |
+| Bob đóng cửa sổ | Đầu hội thoại của Alice đổi từ "Online" sang "Last seen …" (Review Focus #11) |
+| Một tài khoản customer mới nhắn Alice (farmer) lần đầu | Thread mới hiện trong danh sách của Alice mà không cần tải lại trang (Review Focus #13) |
+| Alice mở thread có badge 3 | Badge về 0 ngay, và **vẫn** 0 khi Bob gửi thêm trong lúc Alice đang mở (Review Focus #14) |
+| Bấm nhanh qua lại hai thread | Không bao giờ thấy tin của thread này trong thread kia (Review Focus #6) |
+
+> **Không** thử "backend khởi động lại" bằng cách restart stack chung `market-link` — các agent khác đang dùng nó. Trường hợp đó đã được `stompClient.test.ts` phủ.
 
 - [ ] **Bước 4: Kiểm không rò blob URL**
 
@@ -2170,3 +2335,7 @@ Ghi số PR và các phát hiện vào ledger. Cập nhật memory `chat-feature
 | Ô ghim sản phẩm / đơn trên bong bóng (`productId` / `orderId` đã có trong API) | **Plan 4B**, cùng với nút "Message this stall" |
 | Đưa `MessageBubble` vào design system đúng cách (sinh lại 3 file) | **FE1**, khi nào họ chạy lại quy trình của design system |
 | `price_offers` (FR-118, FR-119) | Đợt 2, chờ `products` và `orders` |
+| "Seen" ngay khi mở trang: backend thêm `otherReadAt` vào `ConversationResource` (đổi contract → LEAD) | **Plan 4B** |
+| Danh sách thread chỉ tải trang đầu 20 thread, chưa có "tải thêm" | **Plan 4B**, cùng popover header |
+| Rớt mạng mà lỡ quá 30 tin thì tải bù vẫn thủng một khoảng ở giữa | Chấp nhận ở 4A; muốn kín thì cần API "tin sau id X" |
+| Spec §7.4 ghi `/user/queue/*`, backend thật dùng `/user/topic/*` (tránh queue mồ côi trên RabbitMQ) | Spec đã sửa 26/09; plan dùng `/user/topic/*` từ đầu |
