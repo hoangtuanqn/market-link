@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation } from 'react-router';
+import NotificationBell from '@/components/notifications/NotificationBell';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import {
   ChartIcon,
@@ -18,6 +19,7 @@ import {
 import { USER_ROLE } from '@/constants/enums';
 import {
   ADMIN_ACCOUNT_PATH,
+  ADMIN_NOTIFICATIONS_PATH,
   ADMIN_ANNOUNCEMENTS_PATH,
   ADMIN_CATEGORIES_PATH,
   ADMIN_CUSTOMERS_PATH,
@@ -124,6 +126,7 @@ const AdminLayout = () => {
       searchId="admin-appq"
       searchPlaceholder={t('adminNav.searchPlaceholder')}
       accountTo={ADMIN_ACCOUNT_PATH}
+      headerActions={<NotificationBell to={ADMIN_NOTIFICATIONS_PATH} />}
       className="bg-surface-quiet"
     />
   );
