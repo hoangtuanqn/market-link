@@ -18,7 +18,11 @@
   },
   "map": {
     "title": "Dónde están",
-    "label": "Mapa de mercados"
+    "label": "Mapa de mercados",
+    "empty": {
+      "title": "Todavía no hay nada en el mapa",
+      "text": "Añade un mercado con coordenadas para verlo aquí."
+    }
   },
   "empty": {
     "title": "Todavía no hay mercados",

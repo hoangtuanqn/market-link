@@ -18,7 +18,11 @@
   },
   "map": {
     "title": "Wo sie liegen",
-    "label": "Karte der Märkte"
+    "label": "Karte der Märkte",
+    "empty": {
+      "title": "Noch nichts auf der Karte",
+      "text": "Lege einen Markt mit Kartenkoordinaten an, um ihn hier zu sehen."
+    }
   },
   "empty": {
     "title": "Noch keine Märkte",

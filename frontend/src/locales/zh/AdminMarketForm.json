@@ -21,7 +21,17 @@
     "lat": "纬度",
     "lng": "经度",
     "lngHint": "也可以直接拖动图钉。地图数据来自 OpenStreetMap。",
-    "notes": "给摊位的说明"
+    "notes": "给摊位的说明",
+    "images": "照片"
+  },
+  "images": {
+    "add": "添加照片",
+    "hint": "JPEG、PNG 或 WEBP 格式，每张最多 8 MB。最多添加 {{max}} 张照片；第一张会成为封面照片。",
+    "tooMany": "最多添加 {{max}} 张照片。",
+    "uploadInProgress": "请等照片上传完成后再保存。",
+    "uploading": "正在上传",
+    "photoLabel": "集市照片 {{n}}",
+    "remove": "删除照片 {{n}}"
   },
   "pin": {
     "label": "标注集市位置",
@@ -32,7 +42,9 @@
     "cancel": "取消"
   },
   "toast": {
-    "saved": "已保存 {{name}}。"
+    "saved": "已保存 {{name}}。",
+    "fixTitle": "请检查表单",
+    "fix": "还需要处理的地方已标出。"
   },
   "closures": {
     "title": "休市日",
@@ -88,6 +100,7 @@
     "noun": "市场",
     "required": "此项为必填。",
     "days": "请至少选择一个营业日。",
-    "close": "关闭时间必须晚于开放时间。"
+    "close": "关闭时间必须晚于开放时间。",
+    "images": "请至少添加一张集市的照片。"
   }
 }

@@ -18,7 +18,11 @@
   },
   "map": {
     "title": "Where they are",
-    "label": "Map of markets"
+    "label": "Map of markets",
+    "empty": {
+      "title": "No markets on the map yet",
+      "text": "Add a market with map coordinates to see it plotted here."
+    }
   },
   "empty": {
     "title": "No markets yet",

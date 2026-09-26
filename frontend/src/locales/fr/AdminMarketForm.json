@@ -21,7 +21,17 @@
     "lat": "Latitude",
     "lng": "Longitude",
     "lngHint": "Ou déplacez le repère. Les données cartographiques viennent d'OpenStreetMap.",
-    "notes": "Notes pour les étals"
+    "notes": "Notes pour les étals",
+    "images": "Photos"
+  },
+  "images": {
+    "add": "Ajouter une photo",
+    "hint": "JPEG, PNG ou WEBP, 8 Mo maximum chacune. Ajoutez jusqu'à {{max}} photos ; la première devient la photo de couverture.",
+    "tooMany": "Ajoutez au maximum {{max}} photos.",
+    "uploadInProgress": "Attendez la fin du téléversement des photos avant d'enregistrer.",
+    "uploading": "Téléversement en cours",
+    "photoLabel": "Photo du marché {{n}}",
+    "remove": "Supprimer la photo {{n}}"
   },
   "pin": {
     "label": "Placer le marché",
@@ -32,7 +42,9 @@
     "cancel": "Annuler"
   },
   "toast": {
-    "saved": "{{name}} enregistré."
+    "saved": "{{name}} enregistré.",
+    "fixTitle": "Vérifiez le formulaire",
+    "fix": "Nous avons signalé ce qu'il reste à compléter."
   },
   "closures": {
     "title": "Jours de fermeture",
@@ -88,6 +100,7 @@
     "noun": "marché",
     "required": "Ce champ est obligatoire.",
     "days": "Choisissez au moins un jour d’ouverture.",
-    "close": "L’heure de fermeture doit suivre l’heure d’ouverture."
+    "close": "L’heure de fermeture doit suivre l’heure d’ouverture.",
+    "images": "Ajoutez au moins une photo du marché."
   }
 }

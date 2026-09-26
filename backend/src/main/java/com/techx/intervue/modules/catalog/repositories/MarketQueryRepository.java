@@ -24,9 +24,11 @@ public class MarketQueryRepository {
             """
             SELECT m.id, m.market_name, m.address, m.district, m.city,
                    m.latitude, m.longitude, m.map_provider,
-                   m.opening_time, m.closing_time, m.image_url,
+                   m.opening_time, m.closing_time,
                    (SELECT GROUP_CONCAT(d.day_of_week ORDER BY d.day_of_week)
                       FROM market_operating_days d WHERE d.market_id = m.id) AS days,
+                   (SELECT GROUP_CONCAT(mi.image_url ORDER BY mi.sort_order)
+                      FROM market_images mi WHERE mi.market_id = m.id) AS images,
                    (SELECT COUNT(*)
                       FROM farmer_markets fm
                       JOIN farmer_profiles f ON f.id = fm.farmer_id
@@ -95,6 +97,9 @@ public class MarketQueryRepository {
                 days == null || days.isBlank()
                         ? List.of()
                         : Arrays.stream(days.split(",")).map(Integer::valueOf).toList();
+        String images = rs.getString("images");
+        List<String> imageUrls =
+                images == null || images.isBlank() ? List.of() : Arrays.asList(images.split(","));
         return new MarketResource(
                 rs.getLong("id"),
                 rs.getString("market_name"),
@@ -106,7 +111,7 @@ public class MarketQueryRepository {
                 rs.getString("map_provider"),
                 hhmm(rs.getString("opening_time")),
                 hhmm(rs.getString("closing_time")),
-                rs.getString("image_url"),
+                imageUrls,
                 operatingDays,
                 rs.getLong("farmer_count"));
     }

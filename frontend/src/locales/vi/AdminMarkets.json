@@ -18,7 +18,11 @@
   },
   "map": {
     "title": "Vị trí các chợ",
-    "label": "Bản đồ các chợ"
+    "label": "Bản đồ các chợ",
+    "empty": {
+      "title": "Bản đồ chưa có chợ nào",
+      "text": "Thêm một chợ kèm toạ độ bản đồ để thấy chợ đó ở đây."
+    }
   },
   "empty": {
     "title": "Chưa có chợ nào",

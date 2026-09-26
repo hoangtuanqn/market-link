@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CatalogApi, { type CategoryType } from '@/api-requests/catalog.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
-import { Button, ButtonLink } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { ADMIN_ANNOUNCEMENTS_PATH, ADMIN_FEEDBACK_PATH } from '@/constants/nav';
 import useRequest from '@/hooks/useRequest';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -136,17 +135,8 @@ const AdminCategoriesPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-overline text-ink-muted uppercase">{t('overline')}</p>
           <h1 className="text-h1">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <ButtonLink to={ADMIN_ANNOUNCEMENTS_PATH} variant="secondary">
-            {t('link.announcements')}
-          </ButtonLink>
-          <ButtonLink to={ADMIN_FEEDBACK_PATH} variant="secondary">
-            {t('link.feedback')}
-          </ButtonLink>
         </div>
       </div>
 

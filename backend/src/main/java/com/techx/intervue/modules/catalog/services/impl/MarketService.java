@@ -2,6 +2,7 @@ package com.techx.intervue.modules.catalog.services.impl;
 
 import com.techx.intervue.modules.catalog.entities.Market;
 import com.techx.intervue.modules.catalog.exceptions.MarketNotFoundException;
+import com.techx.intervue.modules.catalog.repositories.MarketImageRepository;
 import com.techx.intervue.modules.catalog.repositories.MarketOperatingDayRepository;
 import com.techx.intervue.modules.catalog.repositories.MarketQueryRepository;
 import com.techx.intervue.modules.catalog.repositories.MarketRepository;
@@ -10,6 +11,7 @@ import com.techx.intervue.modules.catalog.resources.MarketDetailResource;
 import com.techx.intervue.modules.catalog.resources.MarketResource;
 import com.techx.intervue.modules.catalog.services.interfaces.MarketServiceInterface;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -23,11 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class MarketService implements MarketServiceInterface {
 
     private static final int MAX_PAGE_SIZE = 50;
+
+    /**
+     * Cũng là ngưỡng của @Size trên MarketRequest.images; nhắc lại ở đây cho thông báo lỗi độ dài.
+     */
+    private static final int MAX_IMAGES = 8;
+
+    private static final int MAX_IMAGE_URL_LENGTH = 255;
     private static final String DEFAULT_CITY = "TP. Hồ Chí Minh";
     private static final DateTimeFormatter HHMM = DateTimeFormatter.ofPattern("HH:mm");
 
     private final MarketRepository repository;
     private final MarketOperatingDayRepository dayRepository;
+    private final MarketImageRepository imageRepository;
     private final MarketQueryRepository queryRepository;
 
     /** Chỗ duy nhất module catalog chạm sang module stall; chiều ngược lại không có. */
@@ -58,23 +68,27 @@ public class MarketService implements MarketServiceInterface {
     @Transactional
     public MarketResource create(MarketRequest request) {
         List<Integer> days = validDays(request.operatingDays());
+        List<String> images = validImages(request.images());
         Market market = new Market();
-        apply(market, request);
+        apply(market, request, images);
         Market saved = repository.save(market);
         dayRepository.replaceDays(saved.getId(), days);
-        return toResource(saved, days, 0);
+        imageRepository.replaceImages(saved.getId(), images);
+        return toResource(saved, days, images, 0);
     }
 
     @Override
     @Transactional
     public MarketResource update(long id, MarketRequest request) {
         List<Integer> days = validDays(request.operatingDays());
+        List<String> images = validImages(request.images());
         Market market = repository.findById(id).orElseThrow(() -> new MarketNotFoundException(id));
-        apply(market, request);
+        apply(market, request, images);
         Market saved = repository.save(market);
         dayRepository.replaceDays(saved.getId(), days);
+        imageRepository.replaceImages(saved.getId(), images);
         long farmerCount = queryRepository.findById(id).map(MarketResource::farmerCount).orElse(0L);
-        return toResource(saved, days, farmerCount);
+        return toResource(saved, days, images, farmerCount);
     }
 
     /** Xoá mềm — đơn hàng cũ vẫn trỏ về chợ này. */
@@ -90,18 +104,50 @@ public class MarketService implements MarketServiceInterface {
         List<Integer> clean = days == null ? List.of() : days.stream().distinct().sorted().toList();
         for (Integer d : clean) {
             if (d == null || d < 0 || d > 6) {
-                throw new IllegalArgumentException(
+                throw new InvalidFieldException(
+                        "operatingDays",
                         "Operating day must be between 0 (Sunday) and 6 (Saturday).");
             }
         }
         return clean;
     }
 
-    private static void apply(Market market, MarketRequest request) {
+    /**
+     * @Size(max=8) trên MarketRequest chặn số lượng; không chặn được độ dài từng phần tử, nên kiểm
+     * tay ở đây — cùng bài học với lỗi tràn cột "categories" của đơn xin thành Farmer (401 giả vì
+     * DataIntegrityViolationException không được bắt sớm).
+     */
+    private static List<String> validImages(List<String> images) {
+        List<String> clean =
+                images == null
+                        ? List.of()
+                        : images.stream()
+                                .filter(s -> s != null && !s.isBlank())
+                                .map(String::trim)
+                                .toList();
+        // @NotEmpty trên MarketRequest chặn null/mảng rỗng; không chặn được mảng toàn chuỗi trắng.
+        if (clean.isEmpty()) {
+            throw new InvalidFieldException("images", "Add at least one photo.");
+        }
+        if (clean.size() > MAX_IMAGES) {
+            throw new InvalidFieldException("images", "Add at most " + MAX_IMAGES + " images.");
+        }
+        for (String url : clean) {
+            if (url.length() > MAX_IMAGE_URL_LENGTH) {
+                throw new InvalidFieldException(
+                        "images",
+                        "Each image URL must be " + MAX_IMAGE_URL_LENGTH + " characters or fewer.");
+            }
+        }
+        return clean;
+    }
+
+    private static void apply(Market market, MarketRequest request, List<String> images) {
         LocalTime opening = LocalTime.parse(request.openingTime(), HHMM);
         LocalTime closing = LocalTime.parse(request.closingTime(), HHMM);
         if (!closing.isAfter(opening)) {
-            throw new IllegalArgumentException("The closing time must be after the opening time.");
+            throw new InvalidFieldException(
+                    "closingTime", "The closing time must be after the opening time.");
         }
         market.setMarketName(request.marketName().trim());
         market.setAddress(request.address().trim());
@@ -111,12 +157,15 @@ public class MarketService implements MarketServiceInterface {
         market.setLongitude(request.longitude());
         market.setOpeningTime(opening);
         market.setClosingTime(closing);
-        market.setImageUrl(blankToNull(request.imageUrl()));
+        // markets.image_url (db/schema.sql) là ảnh đại diện: luôn là ảnh đầu tiên của
+        // market_images.
+        market.setImageUrl(images.isEmpty() ? null : images.get(0));
         // D-12: không đọc từ request — client không chọn được nhà cung cấp bản đồ.
         market.setMapProvider("osm");
     }
 
-    private static MarketResource toResource(Market m, List<Integer> days, long farmerCount) {
+    private static MarketResource toResource(
+            Market m, List<Integer> days, List<String> images, long farmerCount) {
         return new MarketResource(
                 m.getId(),
                 m.getMarketName(),
@@ -128,7 +177,7 @@ public class MarketService implements MarketServiceInterface {
                 m.getMapProvider(),
                 m.getOpeningTime().format(HHMM),
                 m.getClosingTime().format(HHMM),
-                m.getImageUrl(),
+                images,
                 days,
                 farmerCount);
     }
