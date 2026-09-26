@@ -6,7 +6,7 @@ COMPOSE_APP  := docker compose --profile app
 COMPOSE_PROD := docker compose -p market-link-prod --env-file .env.production -f docker-compose.yml -f docker-compose.prod.yml --profile app
 
 .DEFAULT_GOAL := help
-.PHONY: help check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
+.PHONY: help vapid-keys check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
         format lint be-format be-test fe-install mysql redis clean
 
 help: ## Hiện danh sách lệnh
@@ -79,6 +79,9 @@ be-format: ## Format Java bằng spotless trong container
 lint: ## ESLint frontend + spotless:check backend
 	$(COMPOSE) exec frontend npm run lint
 	$(COMPOSE) exec backend ./mvnw -q spotless:check
+
+vapid-keys: ## Sinh cặp khoá VAPID cho Web Push (dán vào .env)
+	@$(COMPOSE_APP) run --rm --no-deps --entrypoint node frontend -e "const {generateKeyPairSync}=require('crypto');const k=generateKeyPairSync('ec',{namedCurve:'prime256v1'});const j=k.privateKey.export({format:'jwk'});console.log('VAPID_PUBLIC_KEY='+Buffer.concat([Buffer.from([4]),Buffer.from(j.x,'base64url'),Buffer.from(j.y,'base64url')]).toString('base64url'));console.log('VAPID_PRIVATE_KEY='+j.d)"
 
 be-test: ## Chạy test backend trong container
 	$(COMPOSE) exec backend ./mvnw -B test

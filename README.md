@@ -266,6 +266,16 @@ docker exec -it intervue-redis redis-cli
 ./mvnw spotless:apply               # format Java code
 ```
 
+### Web Push (thông báo khi đã đóng tab)
+
+1. `make vapid-keys`, dán hai dòng `VAPID_PUBLIC_KEY=…` / `VAPID_PRIVATE_KEY=…` vào `.env` (prod: `.env.production`), rồi
+   `make up` lại. Log backend in `Web Push: enabled`; để trống thì `disabled (no VAPID keys)` và mọi thứ khác vẫn chạy.
+2. Đăng nhập, bấm **Bật** ở thẻ "Bật thông báo" (hoặc Settings → Thông báo). Trình duyệt hỏi quyền → cho phép.
+3. Đóng hết tab MarketLink, cho người khác gửi thông báo (vd. admin đăng một thông báo) → thông báo của hệ điều hành hiện ra.
+
+Lưu ý: Web Push chỉ chạy trên **HTTPS** (localhost được miễn). iOS/iPadOS chỉ nhận khi web đã được "Thêm vào màn hình
+chính" (iOS 16.4+). Đăng xuất thì trình duyệt đó thôi nhận thông báo của tài khoản vừa rời.
+
 ## 5. Troubleshooting
 
 | Error | Cause | Fix |

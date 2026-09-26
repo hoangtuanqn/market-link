@@ -70,6 +70,11 @@ app:
       min-completed: 40
       min-spent: 6000000
       min-completion-rate: 85
+  # FR-042 N3: Web Push (RFC 8291/8292). Sinh khoá: make vapid-keys. Để trống → push tắt, app vẫn chạy.
+  push:
+    vapid-public-key: ${VAPID_PUBLIC_KEY:}
+    vapid-private-key: ${VAPID_PRIVATE_KEY:}
+    subject: ${VAPID_SUBJECT:mailto:admin@marketlink.local}
   # File người dùng tải lên (ảnh đại diện). Docker: volume uploads-data ở /app/uploads
   storage:
     dir: ${STORAGE_DIR:./uploads}

@@ -320,6 +320,9 @@ Giá trị `status` giữ nguyên dạng lưu trong DB: `placed`, `accepted`, `r
 | GET | `/api/v1/notifications/preferences` | All | **Đã có** | | `NotificationPreferences` (chỉ nhóm của vai mình) |
 | PUT | `/api/v1/notifications/preferences` | All | **Đã có** | `NotificationPreferences` | như GET; nhóm lạ/không thuộc vai hoặc giờ sai `HH:mm` → 400 |
 | POST | `/api/v1/notifications/test` | All | **Đã có** | | `null`; gửi kind `test` cho chính mình, không lưu; bấm lại trong 10 giây → **429** |
+| GET | `/api/v1/notifications/push/public-key` | All | **Đã có** | | `{ publicKey }` (VAPID, base64url) hoặc `{ publicKey: null }` khi server chưa bật Web Push |
+| POST | `/api/v1/notifications/push-subscriptions` | All | **Đã có** | `{ endpoint (http/https, ≤500), keys: { p256dh, auth } }` = `PushSubscription.toJSON()` | `null`; cùng endpoint → cập nhật, đổi chủ nếu tài khoản khác đăng nhập |
+| DELETE | `/api/v1/notifications/push-subscriptions` | All | **Đã có** | `{ endpoint }` | `null`; chỉ xoá của mình (của người khác thì bỏ qua) |
 
 `NotificationResource`: `{ id, kind, title, message, link, isRead, createdAt }`. `title`/`message` đã dịch theo
 ngôn ngữ người nhận (`user_settings.language`) lúc tạo.
@@ -354,6 +357,12 @@ Cùng kết nối `/ws` với chat (JWT ở frame CONNECT). Mỗi thông báo t�
 - `alert` do server tính từ preferences + giờ yên tĩnh. FE: tab đang nhìn + `inApp` → toast; tab ẩn + `browser` +
   quyền trình duyệt → thông báo hệ điều hành.
 - Link theo vai: customer `/notifications`, `/messages?c={id}`; farmer `/farmer/notifications`, `/farmer/messages?c={id}`.
+
+### Web Push (khi đã đóng hết tab)
+
+Người nhận **không có phiên STOMP nào** và `alert.browser` bật → server gửi Web Push (RFC 8291 `aes128gcm`, VAPID
+RFC 8292) tới mọi subscription của họ. Nội dung service worker nhận: `{ kind, title, message, link, tag }`. Dịch vụ push
+trả 404/410 → subscription bị xoá. Web Push chỉ chạy trên HTTPS (localhost được miễn).
 
 ---
 
