@@ -21,6 +21,7 @@ import Tabs from '@/components/ui/tabs';
 import { Table } from '@/components/ui/table';
 import { reviewTags, reviewsForFarmer } from '@/data/catalog';
 import { demoTierOf } from '@/data/tiers';
+import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
 import { dayName, formatClock, upcoming } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
@@ -140,7 +141,7 @@ const StallProfilePage = () => {
   const days = dayNames(availableDays);
   const stallProducts = productsLoad.kind === 'ready' ? productsLoad.data : NO_PRODUCTS;
   // Reviews are still the demo set until C8; they follow the real stall id.
-  const allReviews = reviewsForFarmer(stall.farmerId);
+  const allReviews = SHOW_WIP ? reviewsForFarmer(stall.farmerId) : [];
   const filteredReviews = reviewFilter === 'all' ? allReviews : allReviews.filter((r) => r.targetType === reviewFilter);
   const reviewPages = Math.max(1, Math.ceil(filteredReviews.length / REVIEWS_PER_PAGE));
   const reviewFrom = (Math.min(reviewPage, reviewPages) - 1) * REVIEWS_PER_PAGE;
@@ -186,9 +187,12 @@ const StallProfilePage = () => {
               {t('approved')}
             </span>
             <div className="flex flex-wrap justify-end gap-2">
-              <Chip onClick={() => Notification.success({ text: t('savedToast', { name: stall.stallName }) })}>
-                {t('save')}
-              </Chip>
+              {/* Favorites (FR-040) chưa có API: nút này chỉ hiện toast, nên production không hiện nó. */}
+              {SHOW_WIP && (
+                <Chip onClick={() => Notification.success({ text: t('savedToast', { name: stall.stallName }) })}>
+                  {t('save')}
+                </Chip>
+              )}
               <ButtonLink to="/messages">{t('message')}</ButtonLink>
             </div>
           </div>
@@ -215,7 +219,8 @@ const StallProfilePage = () => {
         onChange={(id) => setTab(id as typeof tab)}
         tabs={[
           { id: 'stock', label: t('tabs.stock'), count: stallProducts.length },
-          { id: 'reviews', label: t('tabs.reviews'), count: allReviews.length },
+          // Review còn là dữ liệu mẫu tới C8 → chỉ hiện ở dev (config/wip.ts).
+          ...(SHOW_WIP ? [{ id: 'reviews', label: t('tabs.reviews'), count: allReviews.length }] : []),
           { id: 'about', label: t('tabs.about') },
         ]}
       />
@@ -255,7 +260,7 @@ const StallProfilePage = () => {
         </div>
       )}
 
-      {tab === 'reviews' && (
+      {SHOW_WIP && tab === 'reviews' && (
         <div className="flex flex-col gap-4">
           <Card className="flex flex-col gap-4 p-6">
             <div className="flex flex-wrap items-baseline gap-3">

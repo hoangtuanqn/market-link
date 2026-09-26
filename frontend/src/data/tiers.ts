@@ -1,3 +1,4 @@
+// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
 import type { Tier } from '@/types/achievement.types';
 
 /**
@@ -21,4 +22,5 @@ const DEMO_TIERS: Record<string, Tier> = {
   'Đức Anh': 'bronze',
 };
 
+/* @__NO_SIDE_EFFECTS__ */
 export const demoTierOf = (name: string): Tier | undefined => DEMO_TIERS[name];

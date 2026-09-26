@@ -16,6 +16,17 @@ ok() { printf '\033[32m✓\033[0m %s\n' "$*"; }
 PROD_APP=backend/src/main/resources/application-prod.yaml
 DEV_APP=backend/src/main/resources/application-dev.yaml
 PROD_COMPOSE=docker-compose.prod.yml
+
+# application-{prod,dev}.yaml bị git-ignore nên CI không có chúng: kiểm file mẫu .example (luôn có trong
+# git), cộng file thật nếu máy này đã tạo. grep trên file không tồn tại trả mã lỗi, nên nếu không liệt kê
+# như vậy thì các bước dưới sẽ báo ✓ mà không kiểm gì.
+PROD_APPS=()
+DEV_APPS=()
+for base in "$PROD_APP" "$DEV_APP"; do
+    [[ -f "$base.example" ]] || fail "Thiếu file mẫu $base.example"
+done
+for f in "$PROD_APP.example" "$PROD_APP"; do [[ -f "$f" ]] && PROD_APPS+=("$f"); done
+for f in "$DEV_APP.example" "$DEV_APP"; do [[ -f "$f" ]] && DEV_APPS+=("$f"); done
 DEV_ENV=.env.example
 PROD_ENV=.env.production.example
 
@@ -28,25 +39,32 @@ else
     ok "Không có .env, .env.production, application-local.* hay key trong git"
 fi
 
-# 2. Profile prod không có giá trị mặc định → không bao giờ chạy prod bằng giá trị dev
-if grep -nE '\$\{[A-Za-z0-9_.]+:' "$PROD_APP" >/dev/null; then
-    fail "$PROD_APP có placeholder kèm giá trị mặc định (\${VAR:mac-dinh}). Prod phải lấy mọi giá trị từ env:"
-    grep -nE '\$\{[A-Za-z0-9_.]+:' "$PROD_APP" | sed 's/^/    /' >&2
-else
-    ok "$PROD_APP không có giá trị mặc định"
-fi
+# 2. Profile prod không có giá trị mặc định → không bao giờ chạy prod bằng giá trị dev.
+#    Mặc định rỗng (${MAIL_PASSWORD:}) được phép: nó chỉ đánh dấu biến tuỳ chọn, không mang giá trị dev nào.
+for f in "${PROD_APPS[@]}"; do
+    if grep -nE '\$\{[A-Za-z0-9_.]+:[^}]' "$f" >/dev/null; then
+        fail "$f có placeholder kèm giá trị mặc định (\${VAR:mac-dinh}). Prod phải lấy mọi giá trị từ env:"
+        grep -nE '\$\{[A-Za-z0-9_.]+:[^}]' "$f" | sed 's/^/    /' >&2
+    else
+        ok "$f không có giá trị mặc định"
+    fi
+done
 
 # 3. Profile prod không kéo cấu hình dev vào, và ngược lại
-if grep -nEi '^\s*(include|active|group)\s*:.*\bdev\b|on-profile\s*:\s*dev' "$PROD_APP" >/dev/null; then
-    fail "$PROD_APP đang include/active profile dev"
-else
-    ok "$PROD_APP không kéo profile dev"
-fi
-if grep -nEi '^\s*(include|active|group)\s*:.*\bprod\b|on-profile\s*:\s*prod' "$DEV_APP" >/dev/null; then
-    fail "$DEV_APP đang include/active profile prod"
-else
-    ok "$DEV_APP không kéo profile prod"
-fi
+for f in "${PROD_APPS[@]}"; do
+    if grep -nEi '^\s*(include|active|group)\s*:.*\bdev\b|on-profile\s*:\s*dev' "$f" >/dev/null; then
+        fail "$f đang include/active profile dev"
+    else
+        ok "$f không kéo profile dev"
+    fi
+done
+for f in "${DEV_APPS[@]}"; do
+    if grep -nEi '^\s*(include|active|group)\s*:.*\bprod\b|on-profile\s*:\s*prod' "$f" >/dev/null; then
+        fail "$f đang include/active profile prod"
+    else
+        ok "$f không kéo profile prod"
+    fi
+done
 
 # 4. Compose prod: profile prod, bí mật bắt buộc (:?), không mở cổng DB/Redis
 if ! grep -qE 'SPRING_PROFILES_ACTIVE:\s*prod\s*$' "$PROD_COMPOSE"; then
@@ -94,7 +112,7 @@ if [[ -n "$dev_db" && "$dev_db" == "$prod_db" ]]; then
 else
     ok "Database dev ($dev_db) và prod ($prod_db) tách riêng"
 fi
-if grep -q "$prod_db" "$DEV_ENV" "$DEV_APP" docker-compose.yml 2>/dev/null; then
+if grep -q "$prod_db" "$DEV_ENV" "${DEV_APPS[@]}" docker-compose.yml; then
     fail "Cấu hình dev đang trỏ tới database prod '$prod_db'"
 fi
 

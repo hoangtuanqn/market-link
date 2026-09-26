@@ -4,6 +4,7 @@ import SettingsRow from '@/components/SettingsRow';
 import SettingsPanel from '@/components/settings/SettingsPanel';
 import { Card } from '@/components/ui/card';
 import { SelectField } from '@/components/ui/input';
+import { SHOW_WIP } from '@/config/wip';
 import { markets } from '@/data/home';
 
 const SLOTS = ['earliest', '06-07', '07-08', '08-09'] as const;
@@ -32,19 +33,22 @@ const CustomerSettingsPage = () => {
               {t('shopping')}
             </h2>
             <ul className="m-0 flex flex-col p-0">
-              <SettingsRow title={t('market')} note={t('marketNote')}>
-                <SelectField
-                  id="set-market"
-                  label={t('market')}
-                  hideLabel
-                  value={draft.preferredMarket}
-                  onChange={(e) => set({ preferredMarket: e.target.value })}
-                  options={[
-                    { value: '', label: t('marketNone') },
-                    ...markets.map((m) => ({ value: String(m.id), label: m.name })),
-                  ]}
-                />
-              </SettingsRow>
+              {/* Danh sách chợ ở đây còn là dữ liệu mẫu (id không khớp chợ thật) → chỉ hiện ở dev (config/wip.ts). */}
+              {SHOW_WIP && (
+                <SettingsRow title={t('market')} note={t('marketNote')}>
+                  <SelectField
+                    id="set-market"
+                    label={t('market')}
+                    hideLabel
+                    value={draft.preferredMarket}
+                    onChange={(e) => set({ preferredMarket: e.target.value })}
+                    options={[
+                      { value: '', label: t('marketNone') },
+                      ...markets.map((m) => ({ value: String(m.id), label: m.name })),
+                    ]}
+                  />
+                </SettingsRow>
+              )}
               <SettingsRow title={t('slot')} note={t('slotNote')}>
                 <SelectField
                   id="set-slot"

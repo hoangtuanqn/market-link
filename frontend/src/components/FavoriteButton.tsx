@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
+import { SHOW_WIP } from '@/config/wip';
 import useSession from '@/hooks/useSession';
 import type { LoginRedirectState } from '@/layout/RequireAuth';
 import Helper from '@/utils/helper';
@@ -29,6 +30,9 @@ const FavoriteButton = ({ initial = false, labelOff, labelOn, className }: Favor
     }
     setOn((v) => !v);
   };
+
+  // Favorites (FR-040) chưa có API, trái tim chỉ đổi màu tại chỗ → production không hiện (config/wip.ts).
+  if (!SHOW_WIP) return null;
 
   return (
     <button

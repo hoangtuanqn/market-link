@@ -5,6 +5,7 @@
   "titleNew": "Nouveau marché",
   "city": "Hô Chi Minh-Ville",
   "meta": "{{stalls}} étals · ajouté le {{added}}",
+  "metaStalls": "{{stalls}} étals",
   "missing": {
     "title": "Ce marché n'existe plus",
     "text": "Il a peut-être été retiré. Rouvrez-le depuis la liste des marchés."

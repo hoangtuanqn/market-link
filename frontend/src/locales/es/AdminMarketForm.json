@@ -5,6 +5,7 @@
   "titleNew": "Mercado nuevo",
   "city": "Ciudad Ho Chi Minh",
   "meta": "{{stalls}} puestos · añadido el {{added}}",
+  "metaStalls": "{{stalls}} puestos",
   "missing": {
     "title": "Ese mercado ya no está aquí",
     "text": "Puede que se haya quitado. Vuelve a abrirlo desde la lista de mercados."

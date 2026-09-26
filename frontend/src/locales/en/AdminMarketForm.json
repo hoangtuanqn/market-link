@@ -5,6 +5,7 @@
   "titleNew": "New market",
   "city": "Ho Chi Minh City",
   "meta": "{{stalls}} stalls · added {{added}}",
+  "metaStalls": "{{stalls}} stalls",
   "missing": {
     "title": "That market is not here any more",
     "text": "It may have been removed. Open it again from the markets list."

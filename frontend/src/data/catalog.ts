@@ -1,3 +1,4 @@
+// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
 /**
  * Full demo catalogue, copied from docs/prototype/data.js. Shared across every public and Farmer/Admin screen so the
  * same stall, product and price shows up consistently everywhere it's referenced. Replace with API calls when the
@@ -18,6 +19,7 @@ export const categories = [
   { id: 8, slug: 'baked_goods', name: 'Baked goods', count: 3 },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function categoryName(id: number): string {
   return categories.find((c) => c.id === id)?.name ?? '';
 }
@@ -286,14 +288,17 @@ export const farmers: FarmerType[] = [
   },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function farmer(id: number): FarmerType | undefined {
   return farmers.find((f) => f.id === id);
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function marketName(id: number): string {
   return markets.find((m) => m.id === id)?.name ?? '';
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function farmerName(id: number): string {
   return farmer(id)?.stall ?? '';
 }
@@ -685,7 +690,8 @@ function primaryMarketName(farmerId: number): string {
   return markets.find((m) => m.id === f.markets[0])?.name ?? '';
 }
 
-export const products: ProductType[] = RAW_PRODUCTS.map((p) => ({
+// PURE: bản build production bỏ được cả module dữ liệu mẫu khi không màn nào dùng tới (config/wip.ts).
+export const products: ProductType[] = /* @__PURE__ */ RAW_PRODUCTS.map((p) => ({
   id: p.id,
   name: p.name,
   stall: farmerName(p.farmerId),
@@ -703,10 +709,12 @@ export const products: ProductType[] = RAW_PRODUCTS.map((p) => ({
   farmerId: p.farmerId,
 }));
 
+/* @__NO_SIDE_EFFECTS__ */
 export function product(id: number): ProductType | undefined {
   return products.find((p) => p.id === id);
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function productsByIds(ids: number[]): ProductType[] {
   return ids.map(product).filter((p): p is ProductType => p != null);
 }
@@ -815,10 +823,12 @@ export const reviews: ReviewType[] = [
   },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function reviewsForProduct(productId: number): ReviewType[] {
   return reviews.filter((r) => r.productId === productId);
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function reviewsForFarmer(farmerId: number): ReviewType[] {
   return reviews.filter((r) => r.farmerId === farmerId);
 }

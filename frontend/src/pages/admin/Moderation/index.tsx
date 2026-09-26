@@ -11,6 +11,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
+import { SHOW_WIP } from '@/config/wip';
 import { ADMIN_CUSTOMERS_PATH } from '@/constants/nav';
 import { hiddenItems, reviewReport, type HiddenItemType } from '@/data/admin';
 import { reviews } from '@/data/catalog';
@@ -35,7 +36,8 @@ const NO_PRODUCTS: ProductType[] = [];
 const AdminModerationPage = () => {
   const { t } = useTranslation('AdminModeration');
   const { t: tc } = useTranslation();
-  const [tab, setTab] = useState('reviews');
+  // Tab reviews và hidden còn là dữ liệu mẫu (review: C8) → production chỉ có tab products (config/wip.ts).
+  const [tab, setTab] = useState(SHOW_WIP ? 'reviews' : 'products');
   const [hidingBusy, setHidingBusy] = useState(false);
   // What customers currently see (contract §5, newest first); hiding removes a row from this list.
   const {
@@ -50,10 +52,11 @@ const AdminModerationPage = () => {
   const [hiding, setHiding] = useState<HideTarget>(null);
   const [reason, setReason] = useState('');
 
-  const flagged = reviews.filter((r) => r.flagged);
-  const lowRated = reviews.filter((r) => r.rating <= 2);
+  const demoReviews = SHOW_WIP ? reviews : [];
+  const flagged = demoReviews.filter((r) => r.flagged);
+  const lowRated = demoReviews.filter((r) => r.rating <= 2);
   const shownReviews =
-    reviewFilter === 'reported' ? flagged : reviewFilter === 'lowRated' ? lowRated : [...reviews].slice(0, 4);
+    reviewFilter === 'reported' ? flagged : reviewFilter === 'lowRated' ? lowRated : [...demoReviews].slice(0, 4);
 
   const needle = query.trim().toLowerCase();
   const listed = (listedLoad.kind === 'ready' ? listedLoad.data : NO_PRODUCTS).filter(
@@ -150,14 +153,18 @@ const AdminModerationPage = () => {
         label={t('tabsLabel')}
         value={tab}
         onChange={setTab}
-        tabs={[
-          { id: 'reviews', label: t('tab.reviews'), count: flagged.length },
-          { id: 'products', label: t('tab.products') },
-          { id: 'hidden', label: t('tab.hidden'), count: hiddenItems.length },
-        ]}
+        tabs={
+          SHOW_WIP
+            ? [
+                { id: 'reviews', label: t('tab.reviews'), count: flagged.length },
+                { id: 'products', label: t('tab.products') },
+                { id: 'hidden', label: t('tab.hidden'), count: hiddenItems.length },
+              ]
+            : [{ id: 'products', label: t('tab.products') }]
+        }
       />
 
-      {tab === 'reviews' && (
+      {SHOW_WIP && tab === 'reviews' && (
         <div className="flex flex-col gap-4">
           <div role="group" aria-label={t('reviewFilterLabel')} className="flex flex-wrap gap-2">
             {REVIEW_FILTERS.map((f) => (
@@ -247,7 +254,7 @@ const AdminModerationPage = () => {
         </div>
       )}
 
-      {tab === 'hidden' && <Table caption={t('tab.hidden')} columns={hiddenColumns} rows={hiddenItems} />}
+      {SHOW_WIP && tab === 'hidden' && <Table caption={t('tab.hidden')} columns={hiddenColumns} rows={hiddenItems} />}
 
       <Dialog
         open={hiding !== null}

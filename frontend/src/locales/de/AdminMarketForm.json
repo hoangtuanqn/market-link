@@ -5,6 +5,7 @@
   "titleNew": "Neuer Markt",
   "city": "Ho-Chi-Minh-Stadt",
   "meta": "{{stalls}} Stände · hinzugefügt am {{added}}",
+  "metaStalls": "{{stalls}} Stände",
   "missing": {
     "title": "Diesen Markt gibt es nicht mehr",
     "text": "Er wurde vielleicht entfernt. Öffne ihn erneut über die Marktliste."

@@ -5,6 +5,7 @@
   "titleNew": "新集市",
   "city": "胡志明市",
   "meta": "{{stalls}} 个摊位 · 添加于 {{added}}",
+  "metaStalls": "{{stalls}} 个摊位",
   "missing": {
     "title": "这个集市已经不在了",
     "text": "它可能已被移除。请从集市列表重新打开。"
