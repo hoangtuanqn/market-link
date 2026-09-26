@@ -620,8 +620,8 @@ SET f.rating_avg = COALESCE((SELECT ROUND(AVG(r.rating), 2) FROM reviews r
     f.rating_count = (SELECT COUNT(*) FROM reviews r
                       WHERE r.target_type = 'farmer' AND r.farmer_id = f.id AND r.status = 'visible');
 
--- ---- Góp ý (FR-081): 3 mẫu, mỗi loại một, đủ 3 trạng thái để màn admin có gì để lọc ----
--- feedbacks không có khoá tự nhiên → chống nhân đôi bằng NOT EXISTS theo nội dung.
+-- ---- Feedback (FR-081): 3 samples, one per type and per status, so the admin screen has something to filter ----
+-- feedbacks has no natural key → NOT EXISTS on the message text keeps the seed re-runnable.
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
 SELECT u.id, x.type, x.message, x.status, UTC_TIMESTAMP() - INTERVAL x.days_ago DAY
 FROM (
