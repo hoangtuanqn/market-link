@@ -20,13 +20,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Đọc đơn cho cả hai phía (FR-033, 036, 065): danh sách của khách, danh sách của Farmer, chi tiết
- * một đơn, dòng hàng và lịch sử trạng thái của nó. Join {@code farmer_profiles} (tên sạp) và {@code
- * markets} (tên chợ) — module order không lặp lại logic hiển thị của hai module đó.
+ * Reads orders for both sides (FR-033, 036, 065): the customer's list, the Farmer's list, one
+ * order's detail, its item lines and its status history. Joins {@code farmer_profiles} (stall name)
+ * and {@code markets} (market name) — the order module does not repeat those two modules' display
+ * logic.
  *
- * <p>{@code status} luôn là giá trị đã qua {@link OrderStatus#valueOf} ở service (whitelist), và
- * {@code sort} không tồn tại ở đây — thứ tự cố định theo nghiệp vụ của từng danh sách. Không chỗ
- * nào nối chuỗi input người dùng vào SQL (R-04).
+ * <p>{@code status} is always a value that went through {@link OrderStatus#valueOf} in the service
+ * (whitelist), and there is no {@code sort} here — each list has a fixed, business-defined order.
+ * Nowhere is user input concatenated into SQL (R-04).
  */
 @Repository
 @RequiredArgsConstructor
@@ -50,7 +51,7 @@ public class OrderQueryRepository {
               AND (:status IS NULL OR o.status = :status)
             """;
 
-    /** {@code GET /orders} — mua của chính khách (buyer), mới nhất trước. */
+    /** {@code GET /orders} — the customer's own purchases (buyer), newest first. */
     public static final String MY_ORDERS_SQL =
             LIST_COLUMNS
                     + MY_ORDERS_FROM
@@ -68,7 +69,7 @@ public class OrderQueryRepository {
               AND (:date IS NULL OR o.pickup_date = :date)
             """;
 
-    /** {@code GET /farmer/orders} — đơn đặt tại sạp, theo giờ nhận hàng. */
+    /** {@code GET /farmer/orders} — orders placed at the stall, by pickup time. */
     public static final String FARMER_ORDERS_SQL =
             LIST_COLUMNS
                     + FARMER_ORDERS_FROM
@@ -77,8 +78,9 @@ public class OrderQueryRepository {
     private static final String FARMER_ORDERS_COUNT_SQL = "SELECT COUNT(*) " + FARMER_ORDERS_FROM;
 
     /**
-     * Một đơn, kèm liên hệ khách (chỉ dùng khi người gọi là Farmer, C5) và {@code farmer_user_id}
-     * để service tự quyết ai được xem (R-06, Review focus #3) — câu này không lọc theo người gọi.
+     * One order, with the customer's contact (only used when the caller is the Farmer, C5) and
+     * {@code farmer_user_id} so the service decides who may see it (R-06, Review focus #3) — this
+     * query does not filter by the caller.
      */
     public static final String DETAIL_SQL =
             """
@@ -214,25 +216,27 @@ public class OrderQueryRepository {
     }
 
     /**
-     * {@code cutoff_at} là DATETIME (giờ local Việt Nam, không có múi giờ) — đọc bằng {@code
-     * getObject(..., LocalDateTime.class)} để tránh driver quy đổi theo {@code serverTimezone}, y
-     * hệt lý do {@code Order.cutoffAt} cần {@code @JdbcTypeCode(SqlTypes.LOCAL_DATE_TIME)} (C5-15).
+     * {@code cutoff_at} is a DATETIME (Vietnam local time, no time zone) — read with {@code
+     * getObject(..., LocalDateTime.class)} so the driver does not convert it by {@code
+     * serverTimezone}, for exactly the reason {@code Order.cutoffAt} needs
+     * {@code @JdbcTypeCode(SqlTypes.LOCAL_DATE_TIME)} (C5-15).
      */
     private String formatCutoff(LocalDateTime cutoffAt) {
         return cutoffAt.atZone(clock.getZone()).toInstant().toString();
     }
 
     /**
-     * Cột TIMESTAMP ({@code created_at}, {@code changed_at}) đã là một khoảnh khắc UTC thật —
-     * {@code toInstant()} là đủ, không cộng/trừ múi giờ thêm lần nào nữa (C5-15).
+     * TIMESTAMP columns ({@code created_at}, {@code changed_at}) are already a real UTC instant —
+     * {@code toInstant()} is enough, never add/subtract a time zone again (C5-15).
      */
     private static String readInstant(ResultSet rs, String column) throws SQLException {
         return rs.getTimestamp(column).toInstant().toString();
     }
 
     /**
-     * Dòng chi tiết đầy đủ của một đơn, dùng để vừa dựng {@link OrderListItemResource} (qua {@code
-     * summary}) vừa cho service tự quyết quyền xem — không câu SQL nào ở đây lọc theo người gọi.
+     * The full detail row of one order, used both to build the {@link OrderListItemResource} (via
+     * {@code summary}) and to let the service decide who may see it — no SQL here filters by the
+     * caller.
      */
     public record OrderDetailRow(
             OrderListItemResource summary,

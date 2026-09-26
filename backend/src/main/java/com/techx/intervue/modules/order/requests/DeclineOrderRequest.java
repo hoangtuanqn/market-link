@@ -4,9 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 /**
- * FR-065: Farmer từ chối đơn phải nêu lý do — được chép vào {@code orders.farmer_note} để khách đọc
- * lại (contract §7). Rỗng hoặc chỉ khoảng trắng → 400 VALIDATION_ERROR field {@code reason}, chặn ở
- * đây bằng {@code @Valid} tại controller, không phải trong service.
+ * FR-065: a Farmer declining an order must give a reason — it is copied into {@code
+ * orders.farmer_note} for the customer to read (contract §7). Empty or whitespace only → 400
+ * VALIDATION_ERROR on field {@code reason}, blocked here by {@code @Valid} in the controller, not
+ * in the service.
  */
 public record DeclineOrderRequest(
         @NotBlank(message = "Enter a reason.")

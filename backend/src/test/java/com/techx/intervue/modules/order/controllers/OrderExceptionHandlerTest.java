@@ -55,7 +55,7 @@ class OrderExceptionHandlerTest {
         assertError(handler.forbidden(new AccessDeniedException("admin")), 403, "FORBIDDEN");
     }
 
-    /** Khác với sai chủ (403): id không tồn tại chút nào là 404, không phải 403. */
+    /** Unlike a wrong owner (403): an id that does not exist at all is 404, not 403. */
     @Test
     void aMissingOrderIs404() {
         assertError(handler.notFound(new OrderNotFoundException(999L)), 404, "NOT_FOUND");

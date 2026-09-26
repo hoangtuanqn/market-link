@@ -394,9 +394,9 @@ public class OrderService implements OrderServiceInterface {
                                 LinkedHashMap::new));
     }
 
-    // ---------- FR-033, 036, 065: đọc đơn cho cả hai phía ----------
+    // ---------- FR-033, 036, 065: reading orders for both sides ----------
 
-    /** {@code GET /orders}: mua của chính người gọi (buyer), mới nhất trước. */
+    /** {@code GET /orders}: the caller's own purchases (buyer), newest first. */
     @Override
     @Transactional(readOnly = true)
     public PageResource<OrderListItemResource> myOrders(
@@ -408,10 +408,11 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * {@code GET /orders/{id}}: người gọi phải là khách của đơn (customer_id) hoặc user của
-     * farmer_profiles sở hữu đơn (D-13: Farmer cũng mua hàng) — sai cả hai thì {@link
-     * OrderNotYoursException} (403), kể cả khi đơn có thật (Review focus #3, R-06). {@code
-     * canCancel}/{@code canModify} chỉ đúng cho buyer; Farmer xem đơn của mình luôn thấy false.
+     * {@code GET /orders/{id}}: the caller must be the order's customer (customer_id) or the user
+     * of the farmer_profiles row that owns it (D-13: a Farmer also buys) — neither → {@link
+     * OrderNotYoursException} (403), even when the order exists (Review focus #3, R-06). {@code
+     * canCancel}/{@code canModify} are only true for the buyer; a Farmer viewing their own order
+     * always sees false.
      */
     @Override
     @Transactional(readOnly = true)
@@ -451,7 +452,7 @@ public class OrderService implements OrderServiceInterface {
                 customer);
     }
 
-    /** {@code GET /farmer/orders}: đơn đặt tại sạp của chính Farmer, theo giờ nhận hàng. */
+    /** {@code GET /farmer/orders}: orders placed at the Farmer's own stall, by pickup time. */
     @Override
     @Transactional(readOnly = true)
     public PageResource<OrderListItemResource> farmerOrders(
@@ -467,7 +468,7 @@ public class OrderService implements OrderServiceInterface {
                 profile.getId(), dbStatus, date, (safePage - 1) * safeSize, safeSize);
     }
 
-    // ---------- FR-065, 066, 038: Farmer đổi trạng thái ----------
+    // ---------- FR-065, 066, 038: the Farmer changes the status ----------
 
     @Override
     @Transactional
@@ -505,13 +506,13 @@ public class OrderService implements OrderServiceInterface {
         return detail(userId, orderId);
     }
 
-    // ---------- FR-034, 035: khách huỷ và sửa đơn của chính mình trước cutoff ----------
+    // ---------- FR-034, 035: the customer cancels / edits their own order before cutoff ----------
 
     /**
-     * C5-18: sai trạng thái (khác {@code placed}/{@code accepted}) → {@link
-     * InvalidOrderTransitionException} (409 INVALID_TRANSITION); trạng thái đúng nhưng quá {@code
-     * cutoffAt} → {@link CutoffPassedException} (409 CUTOFF_PASSED) — hai lý do tách riêng, không
-     * gộp chung một exception như {@link OrderLifecycle#canCustomerCancel} trả về boolean.
+     * C5-18: wrong status (not {@code placed}/{@code accepted}) → {@link
+     * InvalidOrderTransitionException} (409 INVALID_TRANSITION); right status but past {@code
+     * cutoffAt} → {@link CutoffPassedException} (409 CUTOFF_PASSED) — two separate reasons, not
+     * merged into one exception the way {@link OrderLifecycle#canCustomerCancel} returns a boolean.
      */
     @Override
     @Transactional
@@ -524,13 +525,14 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * D-07 — chỉ giảm số lượng hoặc bỏ item, không bao giờ thêm sản phẩm mới: tính chênh lệch từng
-     * sản phẩm rồi cộng/trừ tồn đúng phần chênh lệch. Huỷ rồi đặt lại sẽ nhả tồn ra cho người khác
-     * cướp mất giữa chừng, và đổi cả {@code order_code} — không phải thứ khách vừa sửa muốn thấy.
+     * D-07 — only lower quantities or drop items, never add a new product: compute each product's
+     * difference, then add/subtract exactly that difference from stock. Cancelling and re-placing
+     * would release the stock for someone else to grab in between, and would also change the {@code
+     * order_code} — not what a customer who just edited wants to see.
      *
-     * <p>C5-2/C5-18 — thứ tự khoá: đơn ({@link #loadOwnedByCustomer}) → slot (nếu có, dù nhánh này
-     * không đổi {@code booked_count}) → sản phẩm hiện có trong đơn, một lần {@code lockAllById}, id
-     * tăng dần ({@link ProductRepository#lockAllById} tự sắp theo id).
+     * <p>C5-2/C5-18 — lock order: order ({@link #loadOwnedByCustomer}) → slot (if any, even though
+     * this path does not change {@code booked_count}) → the products currently in the order, one
+     * {@code lockAllById}, ascending id ({@link ProductRepository#lockAllById} sorts by id itself).
      */
     @Override
     @Transactional
@@ -584,15 +586,15 @@ public class OrderService implements OrderServiceInterface {
                 total = total.add(item.getSubtotal());
             }
         }
-        // C5: mọi "xoá rồi đọc lại trong cùng transaction" phải flush() sau xoá — order_items vừa
-        // xoá/sửa phải chắc chắn ra khỏi persistence context trước khi transition() bên dưới (nhánh
-        // huỷ đơn) tự đọc lại order_items để hoàn tồn kho, kẻo hoàn tồn hai lần cho sản phẩm vừa bị
-        // bỏ khỏi đơn ở vòng lặp trên.
+        // C5: every "delete then read again in the same transaction" must flush() after the
+        // delete — the order_items just deleted/changed must be out of the persistence context
+        // before transition() below (the cancel branch) reads order_items again to restore stock,
+        // or stock would be restored twice for a product just dropped from the order above.
         orderItemRepository.flush();
 
         if (remainingItems == 0) {
-            // M-1: bỏ hết item mới là huỷ đơn — KHÔNG phải "total == 0", giá 0₫ hợp lệ (một món
-            // miễn phí vẫn còn hàng trong đơn). Đừng để lại một đơn rỗng không món nào.
+            // M-1: dropping every item is what cancels the order — NOT "total == 0", a 0₫ price is
+            // valid (a free item still leaves something in the order). Never leave an empty order.
             transition(order, OrderStatus.CANCELLED, userId, "All items removed.");
             notifyFarmer(order, NotificationKind.ORDER_CANCELLED, Map.of());
             return detail(userId, orderId);
@@ -602,8 +604,8 @@ public class OrderService implements OrderServiceInterface {
         if (order.getStatus() == OrderStatus.ACCEPTED) {
             transition(order, OrderStatus.PLACED, userId, "Customer changed the order.");
         } else {
-            // Trạng thái không đổi (vẫn placed): không đi qua transition() — không ghi lịch sử vì
-            // không có gì chuyển. flush() thủ công vì detail() đọc lại bằng JDBC thô (C5-15/17).
+            // Status unchanged (still placed): do not go through transition() — no history,
+            // nothing moved. Manual flush() because detail() reads back with raw JDBC (C5-15/17).
             orderRepository.save(order);
             orderRepository.flush();
         }
@@ -611,20 +613,22 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * I-3/FR-064: tăng số lượng dùng đúng luật "bán được" như {@link #place} ({@link #sellable} —
-     * loại cả {@code sold_out} do Farmer tự đặt dù còn tồn, không chỉ {@code unavailable}) và đủ
-     * tồn. Giảm/bỏ không đi qua hàm này — luôn được phép bất kể trạng thái.
+     * I-3/FR-064: raising a quantity uses exactly the same "sellable" rule as {@link #place}
+     * ({@link #sellable} — also excludes a {@code sold_out} the Farmer set while stock remains, not
+     * only {@code unavailable}) plus enough stock. Lowering/dropping does not go through here — it
+     * is always allowed whatever the status.
      */
     private static boolean canRaiseBy(Product p, int delta) {
         return sellable(p) && p.getStockQuantity() >= delta;
     }
 
     /**
-     * I-3/FR-064 — luật tự động chuyển trạng thái do tồn kho đổi, dùng chung cho {@link
-     * #placeGroup}, {@link #modifyItems} và nhánh hoàn tồn kho của {@link #transition}: AVAILABLE →
-     * SOLD_OUT khi tồn về 0; SOLD_OUT → AVAILABLE CHỈ khi tồn TRƯỚC lúc đổi ({@code stockBefore})
-     * đúng bằng 0 (sold_out do hết hàng thật, không phải Farmer tự đặt trong lúc còn tồn — Review
-     * focus I-3); UNAVAILABLE (Farmer tạm ngưng bán) không bao giờ tự đổi, bất kể tồn kho.
+     * I-3/FR-064 — the rule for automatic status changes caused by a stock change, shared by {@link
+     * #placeGroup}, {@link #modifyItems} and the stock-restoring branch of {@link #transition}:
+     * AVAILABLE → SOLD_OUT when stock reaches 0; SOLD_OUT → AVAILABLE ONLY when the stock BEFORE
+     * the change ({@code stockBefore}) was exactly 0 (sold out because it really ran out, not set
+     * by the Farmer while stock remained — Review focus I-3); UNAVAILABLE (the Farmer paused
+     * selling) never changes on its own, whatever the stock.
      */
     private static void adjustStatusForStockChange(Product p, int stockBefore) {
         if (p.getStatus() == ProductStatus.UNAVAILABLE) {
@@ -638,9 +642,9 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * C5-8: khoá dòng đơn (PESSIMISTIC_WRITE) trước khi đọc bất kỳ field nào. Chỉ người mua ({@code
-     * customer_id}) mới được huỷ / sửa đơn của chính mình — kể cả Farmer đang phục vụ đơn đó cũng
-     * không được đi qua cửa này (403). Đơn không tồn tại → 404.
+     * C5-8: locks the order row (PESSIMISTIC_WRITE) before reading any field. Only the buyer
+     * ({@code customer_id}) may cancel / edit their own order — not even the Farmer serving that
+     * order may come through this door (403). Missing order → 404.
      */
     private Order loadOwnedByCustomer(long userId, long orderId) {
         Order order =
@@ -654,9 +658,9 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * Tách rõ hai lý do 409 của C5-18: sai trạng thái trước ({@code intendedTo} chỉ để lời nhắn dễ
-     * hiểu hơn — huỷ hay sửa đều chỉ cho phép từ {@code placed}/{@code accepted}), rồi mới tới quá
-     * giờ chốt.
+     * Keeps the two 409 reasons of C5-18 apart: wrong status first ({@code intendedTo} only makes
+     * the message clearer — cancelling and editing are both only allowed from {@code placed}/{@code
+     * accepted}), then past the cutoff.
      */
     private void assertCustomerCanStillAct(Order order, OrderStatus intendedTo) {
         if (order.getStatus() != OrderStatus.PLACED && order.getStatus() != OrderStatus.ACCEPTED) {
@@ -668,11 +672,11 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * C5-8: khoá dòng đơn trước tiên — mọi đường đổi trạng thái đi qua đây trước khi làm gì khác.
-     * Sai chủ (kể cả tài khoản không có {@code farmer_profiles}) → {@link OrderNotYoursException}
-     * (403, R-06); đơn không tồn tại → {@link OrderNotFoundException} (404). D-09: KHÔNG kiểm
-     * {@code approval_status} ở đây — Farmer bị đình chỉ vẫn phải xong được đơn đã nhận trước đó
-     * (Review focus #5).
+     * C5-8: locks the order row first — every status change path goes through here before doing
+     * anything else. Wrong owner (including an account without {@code farmer_profiles}) → {@link
+     * OrderNotYoursException} (403, R-06); missing order → {@link OrderNotFoundException} (404).
+     * D-09: do NOT check {@code approval_status} here — a suspended Farmer must still be able to
+     * finish orders accepted before (Review focus #5).
      */
     private Order lockOwnedOrder(long farmerUserId, long orderId) {
         Order order =
@@ -690,25 +694,26 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * Một cửa duy nhất cho mọi lần đổi trạng thái. Nhờ vậy FR-038 (ghi lịch sử) và D-02 (hoàn tồn
-     * kho) không thể bị quên ở một nhánh nào đó: quên gọi hàm này thì trạng thái cũng không đổi.
+     * The single door for every status change. That way FR-038 (writing history) and D-02
+     * (restoring stock) cannot be forgotten on some branch: forget to call this and the status does
+     * not change either.
      *
-     * <p>C5-2 — thứ tự khoá của đường này: đơn đã khoá trước (bởi {@link #lockOwnedOrder}) → khoá
-     * slot (nếu có) → khoá sản phẩm, đảo ngược so với bản nháp ban đầu của task (khoá sản phẩm rồi
-     * mới khoá slot) theo phán quyết C5-2.
+     * <p>C5-2 — this path's lock order: the order is already locked (by {@link #lockOwnedOrder}) →
+     * lock the slot (if any) → lock the products, the reverse of the task's original draft
+     * (products first, then the slot) per ruling C5-2.
      *
-     * <p>{@code flush()} cuối cùng: {@link #detail} đọc qua {@code OrderQueryRepository} bằng JDBC
-     * thô, tách khỏi persistence context của JPA — không flush thì thay đổi vừa làm ở đây (status,
-     * farmer_note, tồn kho, booked_count) chưa chắc chắn hiện ra khi bốn method public bên trên gọi
-     * lại {@link #detail} để dựng response ngay trong cùng transaction.
+     * <p>The final {@code flush()}: {@link #detail} reads through {@code OrderQueryRepository} with
+     * raw JDBC, separate from the JPA persistence context — without a flush the changes made here
+     * (status, farmer_note, stock, booked_count) are not guaranteed to show up when the public
+     * methods above call {@link #detail} again to build the response in the same transaction.
      *
-     * <p>C5-17: KHÔNG {@code @Transactional} ở đây. Method này chỉ được gọi self-invoked
-     * (this.transition(...)) từ bên trong chính lớp — lời gọi không đi qua Spring proxy, nên
-     * {@code @Transactional} trên một method private/self-invoked không tạo ra ranh giới
-     * transaction nào cả (Spring bỏ qua nó trong im lặng); annotation đó chỉ hứa hẹn atomicity giả.
-     * Method này BẮT BUỘC chỉ được gọi từ bên trong transaction của chính method
-     * public @Transactional đang gọi nó (accept/decline/ markReady/complete hôm nay; cancel/modify
-     * của Task 5.6 sau này cũng vậy) — bản thân nó không tự mở transaction.
+     * <p>C5-17: NO {@code @Transactional} here. This method is only ever self-invoked
+     * (this.transition(...)) from inside the class — the call does not go through the Spring proxy,
+     * so {@code @Transactional} on a private/self-invoked method creates no transaction boundary at
+     * all (Spring silently ignores it); the annotation would only promise a fake atomicity. This
+     * method MUST only be called inside the transaction of the public @Transactional method calling
+     * it (accept/decline/markReady/complete, cancel/modifyItems) — it never opens a transaction
+     * itself.
      */
     private Order transition(Order order, OrderStatus to, long actorUserId, String note) {
         OrderStatus from = order.getStatus();
@@ -743,14 +748,14 @@ public class OrderService implements OrderServiceInterface {
         return order;
     }
 
-    // ---------- FR-042/D-11: thông báo mốc đơn hàng ----------
+    // ---------- FR-042/D-11: order milestone notifications ----------
 
     /**
-     * Farmer nhận việc khi khách đặt xong — {@code farmer} đã có sẵn trong scope của {@link
-     * #placeGroup} (đã lọc APPROVED ở trên), không cần truy vấn lại. Người nhận là {@code
-     * farmer_profiles.user_id}, không phải {@code farmer_profiles.id} (C5-19). Link mang id số của
-     * đơn (I-1) — route FE {@code farmer/orders/:code} vẫn giữ tên tham số cũ, người nối trang sẽ
-     * đọc nó như id.
+     * The Farmer gets the work once the customer has placed the order — {@code farmer} is already
+     * in scope in {@link #placeGroup} (filtered to APPROVED above), no need to query again. The
+     * recipient is {@code farmer_profiles.user_id}, not {@code farmer_profiles.id} (C5-19). The
+     * link carries the order's numeric id (I-1) — the FE route {@code farmer/orders/:code} keeps
+     * its old parameter name; whoever wires the page will read it as the id.
      */
     private void notifyOrderPlaced(Order order, FarmerProfile farmer, User customer) {
         notifications.dispatch(
@@ -762,8 +767,9 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * Khách nhận tin khi Farmer đổi trạng thái đơn của chính mình (accept/decline/ready) — link
-     * mang id số của đơn (I-1), route FE {@code orders/:code} vẫn giữ tên tham số cũ.
+     * The customer is told when the Farmer changes the status of their order (accept/decline/ready)
+     * — the link carries the order's numeric id (I-1), the FE route {@code orders/:code} keeps its
+     * old parameter name.
      */
     private void notifyBuyer(Order order, NotificationKind kind, Map<String, String> extra) {
         Map<String, String> params = new HashMap<>(extra);
@@ -777,8 +783,8 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * Farmer nhận tin khi khách huỷ đơn của chính mình — link mang id số của đơn (I-1), route FE
-     * {@code farmer/orders/:code} vẫn giữ tên tham số cũ.
+     * The Farmer is told when the customer cancels their own order — the link carries the order's
+     * numeric id (I-1), the FE route {@code farmer/orders/:code} keeps its old parameter name.
      */
     private void notifyFarmer(Order order, NotificationKind kind, Map<String, String> extra) {
         farmerRepository
@@ -795,8 +801,8 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
-     * Whitelist qua {@link OrderStatus#valueOf} — giá trị lạ là request sai hình dạng → 400, không
-     * bao giờ nối chuỗi vào SQL (R-04).
+     * Whitelisted through {@link OrderStatus#valueOf} — an unknown value is a malformed request →
+     * 400, never concatenated into SQL (R-04).
      */
     private static String parseStatusOrNull(String raw) {
         if (raw == null || raw.isBlank()) {

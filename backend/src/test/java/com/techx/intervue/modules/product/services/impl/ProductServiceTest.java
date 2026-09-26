@@ -239,9 +239,10 @@ class ProductServiceTest {
         verify(query).mine(FARMER_ID, null, 0, 12);
     }
 
-    // ---------- Task 5.3b (D-02, Review Focus #1 bằng đường khác): mọi đường ghi phải khoá
-    // dòng sản phẩm trước khi đọc, không được nạp qua findById / findByIdAndDeletedFalse không
-    // khoá — nếu không, transaction ghi đè lên bản tồn kho vừa bị OrderService.place trừ.
+    // ---------- Task 5.3b (D-02, Review Focus #1 by another path): every write path must lock
+    // the product row before reading it, never load it through an unlocked findById /
+    // findByIdAndDeletedFalse — otherwise the transaction overwrites the stock that
+    // OrderService.place just deducted.
     // ----------
 
     @Test

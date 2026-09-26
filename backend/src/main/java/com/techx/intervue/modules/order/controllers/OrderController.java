@@ -58,7 +58,7 @@ public class OrderController extends BaseController {
                 "Your order has been placed.");
     }
 
-    /** Đơn của chính người gọi với vai buyer (D-13: Farmer cũng mua hàng), mới nhất trước. */
+    /** The caller's own orders as the buyer (D-13: a Farmer also buys), newest first. */
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<OrderListItemResource>>> mine(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -69,8 +69,8 @@ public class OrderController extends BaseController {
     }
 
     /**
-     * Buyer của đơn hoặc Farmer sở hữu đơn mới đọc được (R-06); còn lại 403, kể cả khi id có thật
-     * (Review focus #3).
+     * Only the order's buyer or the Farmer who owns it can read it (R-06); anyone else gets 403,
+     * even when the id exists (Review focus #3).
      */
     @GetMapping("/{id}")
     public ResponseEntity<ApiResource<OrderDetailResource>> detail(
@@ -79,8 +79,8 @@ public class OrderController extends BaseController {
     }
 
     /**
-     * FR-034 — chỉ khách mua huỷ được đơn của chính mình, trước cutoff. Sai chủ → 403; sai trạng
-     * thái → 409 INVALID_TRANSITION; quá cutoff → 409 CUTOFF_PASSED (C5-18).
+     * FR-034 — only the buyer can cancel their own order, before the cutoff. Wrong owner → 403;
+     * wrong status → 409 INVALID_TRANSITION; past the cutoff → 409 CUTOFF_PASSED (C5-18).
      */
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<ApiResource<OrderDetailResource>> cancel(
@@ -89,8 +89,9 @@ public class OrderController extends BaseController {
     }
 
     /**
-     * FR-035 — sửa số lượng hoặc bỏ item trước cutoff, không bao giờ thêm sản phẩm mới (D-07). Tồn
-     * kho đổi đúng phần chênh lệch; đơn {@code accepted} quay lại {@code placed}.
+     * FR-035 — change quantities or drop items before the cutoff, never add a new product (D-07).
+     * Stock changes by exactly the difference; an {@code accepted} order goes back to {@code
+     * placed}.
      */
     @PutMapping("/{id}/items")
     public ResponseEntity<ApiResource<OrderDetailResource>> modifyItems(

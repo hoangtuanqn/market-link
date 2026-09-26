@@ -3,9 +3,9 @@ package com.techx.intervue.modules.order.resources;
 import java.math.BigDecimal;
 
 /**
- * Một dòng trong danh sách đơn — của khách ({@code GET /orders}) hoặc của Farmer ({@code GET
- * /farmer/orders}), contract §7. Ngày "yyyy-MM-dd", giờ "HH:mm"; {@code cutoffAt}/{@code createdAt}
- * là ISO 8601 UTC ("2026-09-28T12:00:00Z", C5-15).
+ * One row of an order list — the customer's ({@code GET /orders}) or the Farmer's ({@code GET
+ * /farmer/orders}), contract §7. Dates "yyyy-MM-dd", times "HH:mm"; {@code cutoffAt}/{@code
+ * createdAt} are ISO 8601 UTC ("2026-09-28T12:00:00Z", C5-15).
  */
 public record OrderListItemResource(
         Long orderId,

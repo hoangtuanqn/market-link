@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
-    /** Task 5.5: dòng hàng của một đơn, để hoàn tồn kho theo đúng số lượng đã đặt (D-02). */
+    /**
+     * Task 5.5: the item lines of an order, to restore stock by exactly the ordered quantity
+     * (D-02).
+     */
     List<OrderItem> findByOrderId(Long orderId);
 }

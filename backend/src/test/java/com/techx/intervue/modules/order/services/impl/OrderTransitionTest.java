@@ -57,11 +57,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
 /**
- * Task 5.5 (FR-065, 066, 038) — {@code transition(...)} là cửa duy nhất để đổi trạng thái đơn của
- * Farmer: mọi lần đổi ghi lịch sử (FR-038), sai thứ tự luôn 409 chứ không phải 400 (D-04), và đơn
- * chết (declined/cancelled) thì hoàn tồn kho + trả chỗ slot đúng một lần (D-02). Repository là mock
- * thuần; khoá thật (PESSIMISTIC_WRITE) được chứng minh bằng manual check (curl + mysql) sau khi
- * seed, không phải ở đây.
+ * Task 5.5 (FR-065, 066, 038) — {@code transition(...)} is the single door for the Farmer's order
+ * status changes: every change writes history (FR-038), a wrong order of steps is always 409, not
+ * 400 (D-04), and a dead order (declined/cancelled) restores stock + frees the slot spot exactly
+ * once (D-02). The repository is a plain mock; the real lock (PESSIMISTIC_WRITE) is proven by a
+ * manual check (curl + mysql) after seeding, not here.
  */
 class OrderTransitionTest {
 
@@ -135,13 +135,14 @@ class OrderTransitionTest {
                         });
         when(farmerRepository.findByUserId(FARMER_USER_ID))
                 .thenReturn(Optional.of(approvedFarmer()));
-        // Bốn method public dựng response bằng cách gọi lại detail(); mock đủ để không tự ném.
+        // The four public methods build the response by calling detail() again; mock enough not to
+        // throw.
         when(orderQueries.findDetail(ORDER_ID)).thenReturn(Optional.of(aDetailRow()));
         when(orderQueries.items(ORDER_ID)).thenReturn(List.of());
         when(orderQueries.history(ORDER_ID)).thenReturn(List.of());
     }
 
-    // ---------- dữ liệu ----------
+    // ---------- data ----------
 
     private static FarmerProfile approvedFarmer() {
         return FarmerProfile.builder()
@@ -229,7 +230,7 @@ class OrderTransitionTest {
                 .collect(Collectors.toSet());
     }
 
-    // ---------- 9 test của brief ----------
+    // ---------- the brief's 9 tests ----------
 
     @Test
     void acceptMovesPlacedToAccepted() {
@@ -279,9 +280,9 @@ class OrderTransitionTest {
     }
 
     /**
-     * Rule sống trên {@link DeclineOrderRequest} ({@code @NotBlank}), ép ở controller qua
-     * {@code @Valid} — OrderService#decline tự nó không kiểm reason rỗng. Test đúng tầng luật sống,
-     * không qua service (ghi rõ theo yêu cầu report).
+     * The rule lives on {@link DeclineOrderRequest} ({@code @NotBlank}), enforced in the controller
+     * through {@code @Valid} — OrderService#decline itself does not check for an empty reason.
+     * Tests the layer where the rule lives, not through the service (stated as the report asked).
      */
     @Test
     void declineRequiresAReason() {
@@ -373,8 +374,9 @@ class OrderTransitionTest {
     }
 
     /**
-     * Review focus #5 / D-09 — "Đơn đang chạy vẫn cho chạy hết để khách không mất hàng đã đặt."
-     * Đình chỉ ẩn sản phẩm và chặn đơn mới; nó KHÔNG được khoá các đơn đang dở.
+     * Review focus #5 / D-09 — "Running orders still run to the end so the customer does not lose
+     * what they ordered." Suspension hides products and blocks new orders; it must NOT lock orders
+     * in progress.
      */
     @Test
     void aSuspendedFarmerCanStillFinishOrdersPlacedBeforeTheSuspension() {
@@ -388,9 +390,9 @@ class OrderTransitionTest {
                 .doesNotThrowAnyException();
     }
 
-    // ---------- luật thêm ngoài bảng của brief ----------
+    // ---------- extra rules beyond the brief's table ----------
 
-    /** Id đơn không tồn tại → 404, không phải 403 (khác với sai chủ). */
+    /** An order id that does not exist → 404, not 403 (unlike a wrong owner). */
     @Test
     void unknownOrderIs404() {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.empty());
@@ -399,7 +401,7 @@ class OrderTransitionTest {
                 .isInstanceOf(OrderNotFoundException.class);
     }
 
-    /** Tài khoản role FARMER nhưng không có farmer_profiles → fail-closed 403, không NPE. */
+    /** A FARMER-role account without farmer_profiles → fail-closed 403, no NPE. */
     @Test
     void aUserWithNoFarmerProfileCannotAccept() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -410,7 +412,10 @@ class OrderTransitionTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /** C5-2: đơn khoá trước, rồi slot, rồi sản phẩm — không đảo ngược lại bản nháp ban đầu. */
+    /**
+     * C5-2: the order is locked first, then the slot, then the products — not the original draft's
+     * reverse order.
+     */
     @Test
     void locksTheOrderThenTheSlotThenTheProducts() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -428,7 +433,9 @@ class OrderTransitionTest {
         locks.verify(productRepository).lockAllById(any());
     }
 
-    /** Sản phẩm unavailable không tự bật lại thành available khi hoàn tồn kho. */
+    /**
+     * An unavailable product does not switch back to available on its own when stock is restored.
+     */
     @Test
     void declineLeavesAnUnavailableProductUnavailable() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -445,9 +452,10 @@ class OrderTransitionTest {
     }
 
     /**
-     * I-3/FR-064 — sản phẩm Farmer tự đặt {@code sold_out} dù tồn còn (không phải hết hàng thật):
-     * hoàn tồn kho lúc huỷ/từ chối không được tự bật lại {@code available}. Chỉ tồn trước lúc hoàn
-     * đúng bằng 0 (sold_out do hết hàng) mới được tự bật lại — xem {@link #declineRestoresStock()}.
+     * I-3/FR-064 — a product the Farmer set to {@code sold_out} while stock remained (not really
+     * sold out): restoring stock on cancel/decline must not switch it back to {@code available} on
+     * its own. Only a stock of exactly 0 before restoring (sold out because it ran out) switches
+     * back — see {@link #declineRestoresStock()}.
      */
     @Test
     void declineDoesNotReactivateASoldOutProductThatStillHadStock() {
@@ -467,9 +475,9 @@ class OrderTransitionTest {
     }
 
     /**
-     * Controller ruling — sản phẩm đã xoá mềm ({@code is_deleted}) vẫn có dòng thật trong bảng
-     * products, nên vẫn nhận lại tồn kho khi đơn chết: order_items cũ trỏ về nó vẫn còn giá trị dù
-     * Farmer đã gỡ nó khỏi kệ.
+     * Controller ruling — a soft-deleted product ({@code is_deleted}) still has a real row in the
+     * products table, so it still gets its stock back when an order dies: the old order_items
+     * pointing to it stay valid even though the Farmer took it off the shelf.
      */
     @Test
     void declineRestoresStockOfASoftDeletedProduct() {

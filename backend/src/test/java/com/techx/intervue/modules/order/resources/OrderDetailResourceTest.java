@@ -10,11 +10,11 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 /**
- * Controller ruling C5-16: {@code customer} phải VẮNG khỏi JSON khi người gọi không phải Farmer sở
- * hữu đơn — không phải {@code "customer": null}. {@code customerNote}/{@code farmerNote} không bị
- * ảnh hưởng: {@code @JsonInclude} chỉ đặt trên riêng component {@code customer}, không trên cả
- * record. Serialize qua đúng cấu hình {@code ObjectMapper} bean của {@code AppConfig} — JSON test
- * này chứng minh cái người dùng thật sự nhận, không phải chỉ gọi accessor.
+ * Controller ruling C5-16: {@code customer} must be ABSENT from the JSON when the caller is not the
+ * Farmer who owns the order — not {@code "customer": null}. {@code customerNote}/{@code farmerNote}
+ * are unaffected: {@code @JsonInclude} sits only on the {@code customer} component, not on the
+ * whole record. Serialized through the exact {@code ObjectMapper} bean configuration of {@code
+ * AppConfig} — this JSON test proves what the user really receives, not just an accessor call.
  */
 class OrderDetailResourceTest {
 

@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * /api/v1/farmer/orders (contract §7) — FR-036, 065, 066: đơn đặt tại sạp của chính Farmer, và bốn
- * lần đổi trạng thái Farmer chủ động (accept/decline/ready/complete). Lọc danh sách theo trạng thái
- * và ngày nhận hàng (pickup_date); mọi giá trị đi qua tham số (R-04).
+ * /api/v1/farmer/orders (contract §7) — FR-036, 065, 066: orders placed at the Farmer's own stall,
+ * and the four status changes the Farmer makes (accept/decline/ready/complete). The list filters by
+ * status and pickup date (pickup_date); every value goes through a parameter (R-04).
  */
 @RestController
 @RequestMapping("/api/v1/farmer/orders")

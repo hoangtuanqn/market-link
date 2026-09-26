@@ -35,11 +35,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.access.AccessDeniedException;
 
 /**
- * Review focus #3 — giám khảo sẽ đổi {id} trên URL. Mọi đường vào một đơn phải trả 403 khi đơn
- * không thuộc về người gọi, kể cả khi đơn có thật. 404 cũng không được: nó cho biết đơn tồn tại.
+ * Review focus #3 — the examiner will change the {id} in the URL. Every path into an order must
+ * return 403 when the order does not belong to the caller, even when the order exists. 404 is not
+ * acceptable either: it reveals that the order exists.
  *
- * <p>Hôm nay (theo Clock) là 26/09/2026, 09:00 giờ Việt Nam. Repository là mock thuần: câu SQL thật
- * được chứng minh bằng manual check (curl) sau khi seed, không phải ở đây.
+ * <p>Today (per the Clock) is 26/09/2026, 09:00 Vietnam time. The repository is a plain mock: the
+ * real SQL is proven by a manual check (curl) after seeding, not here.
  */
 class OrderAccessTest {
 
@@ -129,7 +130,7 @@ class OrderAccessTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /** farmer_id khác -> OrderNotYoursException. */
+    /** A different farmer_id -> OrderNotYoursException. */
     @Test
     void farmerCannotReadAnOrderPlacedAtAnotherStall() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -139,7 +140,7 @@ class OrderAccessTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /** không ném, summary.orderCode đúng. */
+    /** Does not throw, summary.orderCode is right. */
     @Test
     void theOwningCustomerCanRead() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -150,7 +151,7 @@ class OrderAccessTest {
         assertThat(detail.summary().orderCode()).isEqualTo("ML-20260926-ABCD");
     }
 
-    /** không ném. */
+    /** Does not throw. */
     @Test
     void theOwningFarmerCanRead() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -159,7 +160,10 @@ class OrderAccessTest {
         assertThat(service.detail(FARMER_USER_ID, ORDER_ID)).isNotNull();
     }
 
-    /** Farmer cần biết gọi ai khi khách không tới lấy; khách không cần biết gì về khách khác. */
+    /**
+     * The Farmer needs to know whom to call when the customer does not show up; a customer needs
+     * nothing about other customers.
+     */
     @Test
     void onlyTheFarmerSeesTheCustomerBlock() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -169,7 +173,7 @@ class OrderAccessTest {
         assertThat(service.detail(CUSTOMER_ID, ORDER_ID).customer()).isNull();
     }
 
-    /** đơn placed, cutoffAt = hôm qua -> canCancel false, canModify false. */
+    /** A placed order, cutoffAt = yesterday -> canCancel false, canModify false. */
     @Test
     void canCancelIsFalseOnceCutoffHasPassed() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -187,11 +191,12 @@ class OrderAccessTest {
         assertThat(detail.canModify()).isFalse();
     }
 
-    // ---------- thêm ngoài 6 test của brief ----------
+    // ---------- beyond the brief's 6 tests ----------
 
     /**
-     * D-13: Farmer cũng mua hàng — đọc đơn mình đặt ở MỘT STALL KHÁC (farmerUserId của đơn ≠ người
-     * gọi) như một buyer bình thường: không phải Farmer của đơn này, nên không thấy customer block.
+     * D-13: a Farmer also buys — reads an order they placed at ANOTHER STALL (the order's
+     * farmerUserId ≠ the caller) like a normal buyer: not this order's Farmer, so no customer
+     * block.
      */
     @Test
     void aFarmerCanReadTheirOwnPurchaseAsABuyer() {
@@ -205,9 +210,9 @@ class OrderAccessTest {
     }
 
     /**
-     * Tự mua ở chính sạp mình (customer_id và farmer_profiles.user_id của đơn là CÙNG một userId):
-     * người gọi vừa là buyer vừa là Farmer sở hữu đơn cùng lúc — cả hai vai đều đúng trên một
-     * response. Đơn còn ở placed, cutoff còn ở tương lai.
+     * Buying at one's own stall (the order's customer_id and farmer_profiles.user_id are the SAME
+     * userId): the caller is both the buyer and the owning Farmer at once — both roles hold on one
+     * response. The order is still placed, the cutoff still in the future.
      */
     @Test
     void aFarmerBuyingAtTheirOwnStallSeesBothTheCustomerBlockAndCanCancel() {
@@ -221,7 +226,7 @@ class OrderAccessTest {
         assertThat(detail.canModify()).isTrue();
     }
 
-    /** Order id không tồn tại → 404 (OrderNotFoundException), không phải 403: không lộ gì cả. */
+    /** An order id that does not exist → 404 (OrderNotFoundException), not 403: nothing leaks. */
     @Test
     void detailThrowsNotFoundForAnOrderThatDoesNotExist() {
         when(orderQueries.findDetail(ORDER_ID)).thenReturn(Optional.empty());
@@ -230,14 +235,14 @@ class OrderAccessTest {
                 .isInstanceOf(OrderNotFoundException.class);
     }
 
-    /** status lạ trên GET /orders → 400 (whitelist qua OrderStatus.valueOf, R-04). */
+    /** An unknown status on GET /orders → 400 (whitelisted through OrderStatus.valueOf, R-04). */
     @Test
     void myOrdersRejectsAnUnknownStatus() {
         assertThatThrownBy(() -> service.myOrders(CUSTOMER_ID, "bogus", 1, 10))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    /** status lạ trên GET /farmer/orders → 400, cùng luật whitelist. */
+    /** An unknown status on GET /farmer/orders → 400, same whitelist rule. */
     @Test
     void farmerOrdersRejectsAnUnknownStatus() {
         when(farmerRepository.findByUserId(FARMER_USER_ID))
@@ -247,9 +252,7 @@ class OrderAccessTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    /**
-     * Tài khoản role FARMER nhưng không có farmer_profiles (dữ liệu mâu thuẫn) → fail-closed 403.
-     */
+    /** A FARMER-role account without farmer_profiles (inconsistent data) → fail-closed 403. */
     @Test
     void farmerOrdersRefusesAnAccountWithoutAStallProfile() {
         when(farmerRepository.findByUserId(FARMER_USER_ID)).thenReturn(Optional.empty());

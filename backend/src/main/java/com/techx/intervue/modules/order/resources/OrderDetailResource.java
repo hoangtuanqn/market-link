@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 /**
- * {@code GET /orders/{id}} (contract §7, FR-033/036/065). {@code customer} chỉ có mặt khi người gọi
- * là Farmer của chính đơn này — controller ruling C5-16: khi không phải, key {@code customer} VẮNG
- * khỏi JSON hoàn toàn (không phải {@code "customer": null}). {@code @JsonInclude} chỉ đặt trên
- * component này (precedent: {@code MessageResource}), không đặt trên cả record — {@code
- * customerNote}/{@code farmerNote} vẫn phải xuất hiện là {@code null} như bình thường.
+ * {@code GET /orders/{id}} (contract §7, FR-033/036/065). {@code customer} is only present when the
+ * caller is this order's own Farmer — controller ruling C5-16: otherwise the {@code customer} key
+ * is ABSENT from the JSON entirely (not {@code "customer": null}). {@code @JsonInclude} sits only
+ * on this component (precedent: {@code MessageResource}), not on the whole record — {@code
+ * customerNote}/{@code farmerNote} must still appear as {@code null} as usual.
  */
 public record OrderDetailResource(
         OrderListItemResource summary,

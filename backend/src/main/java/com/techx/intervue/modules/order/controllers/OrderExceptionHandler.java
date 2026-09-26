@@ -66,7 +66,7 @@ public class OrderExceptionHandler {
         return error(HttpStatus.CONFLICT, "OUT_OF_STOCK", e.getMessage(), List.of());
     }
 
-    /** D-07: sửa đơn không được thêm sản phẩm mới → request sai hình dạng, không phải xung đột. */
+    /** D-07: editing an order cannot add a new product → a malformed request, not a conflict. */
     @ExceptionHandler(ProductNotInOrderException.class)
     ResponseEntity<ApiResource<Void>> productNotInOrder(ProductNotInOrderException e) {
         return error(HttpStatus.BAD_REQUEST, "PRODUCT_NOT_IN_ORDER", e.getMessage(), List.of());
@@ -104,7 +104,10 @@ public class OrderExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
     }
 
-    /** Id đơn không tồn tại → 404. Khác với sai chủ (403): đây là hàng thật sự không có. */
+    /**
+     * An order id that does not exist → 404. Unlike a wrong owner (403): the row really is not
+     * there.
+     */
     @ExceptionHandler(OrderNotFoundException.class)
     ResponseEntity<ApiResource<Void>> notFound(OrderNotFoundException e) {
         return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());

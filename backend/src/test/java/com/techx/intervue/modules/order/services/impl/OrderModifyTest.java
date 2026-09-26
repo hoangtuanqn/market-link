@@ -57,14 +57,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
 /**
- * Task 5.6 (FR-034, 035) — khách huỷ và sửa đơn của chính mình trước cutoff. {@code cancel} và
- * {@code modifyItems} chỉ là hai lối vào mới của {@code transition(...)} / thay đổi trực tiếp trên
- * đơn đã khoá; repository là mock thuần như {@link OrderTransitionTest}, khoá thật
- * (PESSIMISTIC_WRITE) được chứng minh bằng manual check (curl + mysql) sau khi seed, không phải ở
- * đây.
+ * Task 5.6 (FR-034, 035) — the customer cancels and edits their own order before the cutoff. {@code
+ * cancel} and {@code modifyItems} are just two new entrances to {@code transition(...)} / direct
+ * changes on the locked order; the repository is a plain mock like {@link OrderTransitionTest}, the
+ * real lock (PESSIMISTIC_WRITE) is proven by a manual check (curl + mysql) after seeding, not here.
  *
- * <p>Hôm nay (theo Clock) là 26/09/2026, 09:00 giờ Việt Nam — cùng mốc với {@link
- * OrderTransitionTest} và {@link OrderAccessTest}.
+ * <p>Today (per the Clock) is 26/09/2026, 09:00 Vietnam time — the same moment as {@link
+ * OrderTransitionTest} and {@link OrderAccessTest}.
  */
 class OrderModifyTest {
 
@@ -123,13 +122,14 @@ class OrderModifyTest {
                             history.add(inv.getArgument(0));
                             return inv.getArgument(0);
                         });
-        // Bốn method public dựng response bằng cách gọi lại detail(); mock đủ để không tự ném.
+        // The four public methods build the response by calling detail() again; mock enough not to
+        // throw.
         when(orderQueries.findDetail(ORDER_ID)).thenReturn(Optional.of(aDetailRow()));
         when(orderQueries.items(ORDER_ID)).thenReturn(List.of());
         when(orderQueries.history(ORDER_ID)).thenReturn(List.of());
     }
 
-    // ---------- dữ liệu ----------
+    // ---------- data ----------
 
     private static Order anOrder(OrderStatus status, LocalDateTime cutoffAt) {
         return anOrder(CUSTOMER_ID, status, cutoffAt);
@@ -215,7 +215,7 @@ class OrderModifyTest {
                 null);
     }
 
-    // ---------- cancel: 4 test của brief ----------
+    // ---------- cancel: the brief's 4 tests ----------
 
     @Test
     void cancelBeforeCutoffRestoresStockAndSlot() {
@@ -254,7 +254,10 @@ class OrderModifyTest {
         verify(historyRepository, never()).save(any());
     }
 
-    /** Đơn đã ready, dù còn trước cutoff (D-04) — sai trạng thái luôn 409, không phải cutoff. */
+    /**
+     * An order already ready, even before the cutoff (D-04) — a wrong status is always 409, not the
+     * cutoff.
+     */
     @Test
     void cancelOnAReadyOrderIs409() {
         Order order = anOrder(OrderStatus.READY, CUTOFF_TOMORROW);
@@ -277,9 +280,9 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    // ---------- cancel: luật thêm ----------
+    // ---------- cancel: extra rules ----------
 
-    /** Id đơn không tồn tại → 404, không phải 403 (khác với sai chủ). */
+    /** An order id that does not exist → 404, not 403 (unlike a wrong owner). */
     @Test
     void cancelOnAnUnknownOrderIs404() {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.empty());
@@ -289,9 +292,9 @@ class OrderModifyTest {
     }
 
     /**
-     * Farmer đang phục vụ đơn (order.farmer_id trỏ tới sạp của chính họ) gọi API huỷ dành cho khách
-     * trên chính đơn đó → vẫn 403: quyền huỷ chỉ xét {@code customer_id}, không xét {@code
-     * farmer_id}.
+     * The Farmer serving the order (order.farmer_id points to their own stall) calls the customer's
+     * cancel API on that very order → still 403: the right to cancel only looks at {@code
+     * customer_id}, not {@code farmer_id}.
      */
     @Test
     void theOwningFarmerCannotCancelTheCustomersOrder() {
@@ -303,7 +306,9 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /** C5-2/C5-18: đơn khoá trước, rồi slot, rồi sản phẩm (bên trong transition). */
+    /**
+     * C5-2/C5-18: the order is locked first, then the slot, then the products (inside transition).
+     */
     @Test
     void cancelLocksTheOrderThenTheSlotThenTheProducts() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -322,9 +327,9 @@ class OrderModifyTest {
         locks.verify(productRepository).lockAllById(any());
     }
 
-    // ---------- modify: 5 test của brief ----------
+    // ---------- modify: the brief's 5 tests ----------
 
-    /** 5 → 2: tồn tăng lại đúng phần chênh lệch (3), không phải toàn bộ số lượng cũ (5). */
+    /** 5 → 2: stock goes back up by exactly the difference (3), not the whole old quantity (5). */
     @Test
     void modifyLoweringQuantityGivesTheDifferenceBack() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -344,7 +349,7 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /** 2 → 5, tồn đủ: tồn giảm đúng phần chênh lệch (3). */
+    /** 2 → 5, enough stock: stock goes down by exactly the difference (3). */
     @Test
     void modifyRaisingQuantityTakesTheDifference() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -363,7 +368,7 @@ class OrderModifyTest {
         assertThat(order.getTotalAmount()).isEqualByComparingTo(new BigDecimal("50"));
     }
 
-    /** order_items mất dòng bị bỏ, tồn của nó được trả lại toàn bộ. */
+    /** order_items loses the dropped line, and its stock is returned in full. */
     @Test
     void modifyDroppingAnItemRemovesTheRow() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -386,9 +391,7 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /**
-     * D-07: thêm một productId chưa từng có trong đơn → 400 PRODUCT_NOT_IN_ORDER, không phải 409.
-     */
+    /** D-07: adding a productId that was never in the order → 400 PRODUCT_NOT_IN_ORDER, not 409. */
     @Test
     void modifyRefusesAProductNotAlreadyInTheOrder() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -412,7 +415,8 @@ class OrderModifyTest {
     }
 
     /**
-     * D-07: sửa đơn accepted đưa nó về placed để Farmer duyệt lại, lịch sử ghi accepted → placed.
+     * D-07: editing an accepted order sends it back to placed for the Farmer to review again;
+     * history records accepted → placed.
      */
     @Test
     void modifyPutsAnAcceptedOrderBackToPlaced() {
@@ -434,9 +438,9 @@ class OrderModifyTest {
         assertThat(history.getFirst().getNote()).isEqualTo("Customer changed the order.");
     }
 
-    // ---------- modify: luật thêm ----------
+    // ---------- modify: extra rules ----------
 
-    /** Tồn không đủ để tăng → 409 OUT_OF_STOCK, đơn và tồn kho giữ nguyên. */
+    /** Not enough stock to raise → 409 OUT_OF_STOCK, the order and stock stay as they were. */
     @Test
     void modifyRaisingQuantityWithInsufficientStockIs409AndLeavesOrderUnchanged() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -464,8 +468,8 @@ class OrderModifyTest {
     }
 
     /**
-     * Sản phẩm bị Farmer tạm ngưng bán (unavailable) không được tăng số lượng dù tồn kho ghi nhận
-     * còn nhiều — chỉ giảm/bỏ mới luôn được phép.
+     * A product the Farmer paused (unavailable) cannot have its quantity raised even though stock
+     * shows plenty — only lowering/dropping is always allowed.
      */
     @Test
     void modifyRaisingAnUnavailableProductIs409() {
@@ -491,9 +495,9 @@ class OrderModifyTest {
     }
 
     /**
-     * I-3/FR-064 — sản phẩm Farmer tự đặt {@code sold_out} dù tồn còn (không phải hết hàng thật)
-     * cũng không được tăng số lượng: cùng luật "bán được" như {@code place} ({@code sellable(p) &&
-     * stock >= delta}), không chỉ loại {@code unavailable}.
+     * I-3/FR-064 — a product the Farmer set to {@code sold_out} while stock remained (not really
+     * sold out) cannot have its quantity raised either: the same "sellable" rule as {@code place}
+     * ({@code sellable(p) && stock >= delta}), not only excluding {@code unavailable}.
      */
     @Test
     void modifyRaisingASoldOutProductWithRemainingStockIs409() {
@@ -520,10 +524,10 @@ class OrderModifyTest {
     }
 
     /**
-     * I-3/FR-064 — gửi lại đúng số lượng cũ (delta = 0) không được đổi trạng thái sản phẩm: đây là
-     * lỗi thao tác của khách lật trạng thái Farmer tự đặt — một sản phẩm {@code unavailable} tồn 0
-     * gửi kèm cùng số lượng phải giữ nguyên {@code unavailable}, không bị bật thành {@code
-     * sold_out}.
+     * I-3/FR-064 — resending the same old quantity (delta = 0) must not change the product status:
+     * that would be a customer action flipping a status the Farmer set — an {@code unavailable}
+     * product with stock 0 sent with the same quantity must stay {@code unavailable}, not be
+     * switched to {@code sold_out}.
      */
     @Test
     void modifyWithUnchangedQuantityDoesNotFlipAnUnavailableProductsStatus() {
@@ -544,15 +548,16 @@ class OrderModifyTest {
     }
 
     /**
-     * @NotEmpty + @Min(1) chặn "gửi request rỗng" hay "số lượng 0" ở tầng HTTP; nhánh phòng thủ "bỏ
-     * hết item = huỷ đơn" chỉ tới được bằng cách gọi thẳng service (test này) với một dòng có
-     * quantity 0 mà validation không có cơ hội chặn.
+     * @NotEmpty + @Min(1) block "an empty request" or "quantity 0" at the HTTP layer; the defensive
+     * "dropping every item = cancelling the order" branch is only reachable by calling the service
+     * directly (this test) with a line of quantity 0 that validation never gets to block.
      *
-     * <p>{@code orderItemRepository} và {@code productRepository.lockAllById} được giả lập có trạng
-     * thái (không phải {@code thenReturn} tĩnh): nhánh này gọi {@code transition(CANCELLED, ...)}
-     * ngay sau khi đã xoá sạch order_items, và {@code transition} tự đọc lại order_items để hoàn
-     * tồn kho — nếu mock trả về danh sách cũ (chưa phản ánh xoá), sản phẩm sẽ được hoàn tồn kho HAI
-     * LẦN. Mock tĩnh như các test khác trong lớp này sẽ không bắt được lỗi đó.
+     * <p>{@code orderItemRepository} and {@code productRepository.lockAllById} are faked with state
+     * (not a static {@code thenReturn}): this branch calls {@code transition(CANCELLED, ...)} right
+     * after deleting every order_items row, and {@code transition} reads order_items again to
+     * restore stock — if the mock returned the old list (not reflecting the delete), the products
+     * would get their stock back TWICE. A static mock like the other tests in this class would not
+     * catch that bug.
      */
     @Test
     void modifyDroppingEveryItemCancelsTheOrder() {
@@ -593,8 +598,8 @@ class OrderModifyTest {
     }
 
     /**
-     * M-1 — giá 0₫ hợp lệ: tổng đơn về 0 vì còn một món miễn phí không phải là "bỏ hết item", đơn
-     * phải giữ nguyên {@code placed}, không bị huỷ nhầm.
+     * M-1 — a 0₫ price is valid: an order total of 0 because a free item remains is not "dropping
+     * every item", the order must stay {@code placed}, not be cancelled by mistake.
      */
     @Test
     void modifyingToAFreeItemKeepsTheOrderPlacedInsteadOfCancellingIt() {
@@ -616,7 +621,7 @@ class OrderModifyTest {
         verify(orderItemRepository, never()).delete(any());
     }
 
-    /** M-1 — cùng luật cho nhánh {@code accepted} → {@code placed}: 0₫ không phải là huỷ. */
+    /** M-1 — the same rule for the {@code accepted} → {@code placed} branch: 0₫ is not a cancel. */
     @Test
     void modifyingAnAcceptedOrderToAFreeItemGoesBackToPlacedInsteadOfCancelling() {
         Order order = anOrder(OrderStatus.ACCEPTED, CUTOFF_TOMORROW);
@@ -637,7 +642,9 @@ class OrderModifyTest {
         assertThat(history.getFirst().getToStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /** Đơn placed sửa xong vẫn placed — KHÔNG ghi lịch sử vì trạng thái không đổi. */
+    /**
+     * A placed order is still placed after the edit — NO history, since the status did not change.
+     */
     @Test
     void modifyOnAPlacedOrderWritesNoHistory() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -657,7 +664,7 @@ class OrderModifyTest {
         verify(orderRepository).flush();
     }
 
-    /** Quá cutoff → 409 CUTOFF_PASSED, dừng trước khi đọc order_items. */
+    /** Past the cutoff → 409 CUTOFF_PASSED, stops before reading order_items. */
     @Test
     void modifyAfterCutoffIs409() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_YESTERDAY);
@@ -675,7 +682,7 @@ class OrderModifyTest {
         verify(orderItemRepository, never()).findByOrderId(any());
     }
 
-    /** Sai trạng thái (ready), dù còn trước cutoff → 409 INVALID_TRANSITION, không phải cutoff. */
+    /** Wrong status (ready), even before the cutoff → 409 INVALID_TRANSITION, not the cutoff. */
     @Test
     void modifyOnAReadyOrderIs409() {
         Order order = anOrder(OrderStatus.READY, CUTOFF_TOMORROW);
@@ -720,7 +727,10 @@ class OrderModifyTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /** Farmer đang phục vụ đơn không được sửa hộ đơn của khách — cùng luật sở hữu như cancel. */
+    /**
+     * The Farmer serving the order cannot edit the customer's order for them — same ownership rule
+     * as cancel.
+     */
     @Test
     void theOwningFarmerCannotModifyTheCustomersOrder() {
         Order order = anOrder(CUSTOMER_ID, OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -736,7 +746,10 @@ class OrderModifyTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /** C5-2/C5-18: đơn khoá trước, rồi slot (dù không đổi booked_count), rồi sản phẩm. */
+    /**
+     * C5-2/C5-18: the order is locked first, then the slot (even though booked_count does not
+     * change), then the products.
+     */
     @Test
     void modifyLocksTheOrderThenTheSlotThenTheProducts() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);

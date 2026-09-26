@@ -16,9 +16,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     boolean existsByOrderCode(String orderCode);
 
     /**
-     * C5-8 (Task 5.5): mọi đường đổi trạng thái / huỷ / sửa đơn nạp đơn qua đây trước tiên
-     * (PESSIMISTIC_WRITE), trước cả khoá slot / sản phẩm (C5-2) — hai yêu cầu đổi cùng một đơn
-     * không chồng nhau, và không đọc dòng đơn trước khi khoá.
+     * C5-8 (Task 5.5): every status change / cancel / edit path loads the order through here first
+     * (PESSIMISTIC_WRITE), before even the slot / product locks (C5-2) — two requests changing the
+     * same order do not overlap, and the order row is never read before it is locked.
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select o from Order o where o.id = :id")

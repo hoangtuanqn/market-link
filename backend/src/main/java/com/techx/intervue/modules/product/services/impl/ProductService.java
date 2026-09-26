@@ -145,11 +145,12 @@ public class ProductService implements ProductServiceInterface {
     }
 
     /**
-     * D-02 / Review Focus #1 bằng đường khác (Task 5.3b, Ruling C5-14): Farmer/Admin sửa sản phẩm
-     * phải khoá cùng dòng mà {@code OrderService.place} khoá, không được đọc snapshot không khoá
-     * rồi {@code save()} — Hibernate không {@code @DynamicUpdate} nên UPDATE ghi lại mọi cột, kể cả
-     * {@code stock_quantity} vừa bị một đơn trừ trong lúc đang đọc. Lọc {@code deleted} ở đây (sau
-     * khi khoá) để giữ nguyên 404 mà {@code findByIdAndDeletedFalse} từng cho, không lọc ở SQL.
+     * D-02 / Review Focus #1 by another path (Task 5.3b, Ruling C5-14): a Farmer/Admin editing a
+     * product must lock the same row that {@code OrderService.place} locks, never read an unlocked
+     * snapshot and then {@code save()} — Hibernate has no {@code @DynamicUpdate}, so the UPDATE
+     * rewrites every column, including a {@code stock_quantity} an order deducted while it was
+     * being read. {@code deleted} is filtered here (after locking) to keep the 404 that {@code
+     * findByIdAndDeletedFalse} used to give, not in the SQL.
      */
     private Product owned(FarmerProfile profile, long productId) {
         return requireOwner(profile, notDeleted(productId));
@@ -171,7 +172,8 @@ public class ProductService implements ProductServiceInterface {
     }
 
     /**
-     * C5-2: khoá một sản phẩm qua {@code lockAllById} — cùng đường khoá {@code OrderService} dùng.
+     * C5-2: locks one product through {@code lockAllById} — the same locking path {@code
+     * OrderService} uses.
      */
     private Product locked(long productId) {
         return products.lockAllById(List.of(productId)).stream()

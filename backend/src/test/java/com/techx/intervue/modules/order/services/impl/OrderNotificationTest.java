@@ -52,10 +52,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Task 5.7 (FR-042, D-11) — 6 test của brief: đặt báo Farmer (không báo khách), nhận/từ
- * chối/sẵn-sàng-lấy báo khách, huỷ báo Farmer, hoàn tất không báo ai (khách đang đứng tại quầy).
- * Repository là mock thuần, giống {@link OrderTransitionTest}; STOMP đẩy realtime kiểm bằng tay
- * (report, mục Manual check), không phải ở đây.
+ * Task 5.7 (FR-042, D-11) — the brief's 6 tests: placing notifies the Farmer (not the customer),
+ * accept/decline/ready notify the customer, cancelling notifies the Farmer, completing notifies
+ * nobody (the customer is standing at the counter). The repository is a plain mock, like {@link
+ * OrderTransitionTest}; the realtime STOMP push is checked by hand (report, Manual check section),
+ * not here.
  */
 class OrderNotificationTest {
 
@@ -124,7 +125,7 @@ class OrderNotificationTest {
         when(orderQueries.history(ORDER_ID)).thenReturn(List.of());
     }
 
-    // ---------- dữ liệu ----------
+    // ---------- data ----------
 
     private static FarmerProfile approvedFarmer() {
         return FarmerProfile.builder()
@@ -192,7 +193,7 @@ class OrderNotificationTest {
                 .build();
     }
 
-    // ---------- 6 test của brief (Step 1) ----------
+    // ---------- the brief's 6 tests (Step 1) ----------
 
     @Test
     void placingNotifiesTheFarmerNotTheCustomer() {
@@ -340,8 +341,9 @@ class OrderNotificationTest {
     }
 
     /**
-     * M-1 — sửa đơn xuống còn 0 item cũng là huỷ đơn (D-07): Farmer phải nhận {@code
-     * order_cancelled} y hệt như khi khách bấm nút huỷ thẳng ({@link #cancelNotifiesTheFarmer}).
+     * M-1 — editing an order down to 0 items also cancels it (D-07): the Farmer must get {@code
+     * order_cancelled} exactly as when the customer presses the cancel button directly ({@link
+     * #cancelNotifiesTheFarmer}).
      */
     @Test
     void modifyingDownToNoItemsNotifiesTheFarmerLikeCancel() {

@@ -17,7 +17,9 @@ public enum NotificationKind {
     FARMER_REJECTED(NotificationCategory.ACCOUNT, true),
     FARMER_SUSPENDED(NotificationCategory.ACCOUNT, true),
     FARMER_REINSTATED(NotificationCategory.ACCOUNT, true),
-    /** FR-042/D-11: bốn mốc vòng đời đơn hàng — đặt, nhận, từ chối, sẵn sàng lấy, huỷ. */
+    /**
+     * FR-042/D-11: the order lifecycle milestones — placed, accepted, declined, ready, cancelled.
+     */
     ORDER_PLACED(NotificationCategory.ORDERS, true),
     ORDER_ACCEPTED(NotificationCategory.ORDERS, true),
     ORDER_DECLINED(NotificationCategory.ORDERS, true),

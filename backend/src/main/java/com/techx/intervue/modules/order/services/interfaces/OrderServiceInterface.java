@@ -26,32 +26,33 @@ public interface OrderServiceInterface {
      */
     List<PlacedOrderResource> place(long customerUserId, PlaceOrderRequest request);
 
-    /** {@code GET /orders} — đơn của chính người gọi với vai buyer, mới nhất trước. */
+    /** {@code GET /orders} — the caller's own orders as the buyer, newest first. */
     PageResource<OrderListItemResource> myOrders(
             long userId, String status, int page, int pageSize);
 
     /**
-     * {@code GET /orders/{id}} — buyer hoặc Farmer của đơn mới đọc được (R-06, Review focus #3);
-     * còn lại {@code OrderNotYoursException} (403), đơn không tồn tại thì {@code
+     * {@code GET /orders/{id}} — only the order's buyer or Farmer can read it (R-06, Review focus
+     * #3); anyone else gets {@code OrderNotYoursException} (403), a missing order {@code
      * OrderNotFoundException} (404).
      */
     OrderDetailResource detail(long userId, long orderId);
 
-    /** {@code GET /farmer/orders} — đơn đặt tại sạp của chính Farmer, theo giờ nhận hàng. */
+    /** {@code GET /farmer/orders} — orders placed at the Farmer's own stall, by pickup time. */
     PageResource<OrderListItemResource> farmerOrders(
             long userId, String status, LocalDate date, int page, int pageSize);
 
     /**
-     * {@code PATCH /farmer/orders/{id}/accept} (FR-065) — {@code placed → accepted}. Sai chủ (kể cả
-     * tài khoản không có {@code farmer_profiles}) → {@code OrderNotYoursException} (403); đơn không
-     * tồn tại → {@code OrderNotFoundException} (404); sai thứ tự → {@code
+     * {@code PATCH /farmer/orders/{id}/accept} (FR-065) — {@code placed → accepted}. Wrong owner
+     * (including an account without {@code farmer_profiles}) → {@code OrderNotYoursException}
+     * (403); missing order → {@code OrderNotFoundException} (404); wrong order of steps → {@code
      * InvalidOrderTransitionException} (409, D-04).
      */
     OrderDetailResource accept(long userId, long orderId);
 
     /**
      * {@code PATCH /farmer/orders/{id}/decline} (FR-065, FR-066) — {@code placed/accepted →
-     * declined}: hoàn tồn kho và trả chỗ slot (D-02), ghi {@code reason} vào {@code farmer_note}.
+     * declined}: restores stock and frees the slot spot (D-02), writes {@code reason} into {@code
+     * farmer_note}.
      */
     OrderDetailResource decline(long userId, long orderId, String reason);
 
@@ -59,24 +60,26 @@ public interface OrderServiceInterface {
     OrderDetailResource markReady(long userId, long orderId);
 
     /**
-     * {@code PATCH /farmer/orders/{id}/complete} — {@code ready → completed}; không hoàn tồn kho.
+     * {@code PATCH /farmer/orders/{id}/complete} — {@code ready → completed}; stock is not
+     * restored.
      */
     OrderDetailResource complete(long userId, long orderId);
 
     /**
-     * {@code PATCH /orders/{id}/cancel} (FR-034) — chỉ khách mua ({@code customer_id}) mới huỷ được
-     * (403 nếu không, {@code OrderNotYoursException}); đơn không tồn tại → 404 ({@code
-     * OrderNotFoundException}); sai trạng thái ({@code placed}/{@code accepted}) → 409 {@code
-     * InvalidOrderTransitionException}; quá {@code cutoffAt} → 409 {@code CutoffPassedException}.
-     * Hoàn tồn kho + trả chỗ slot qua {@code transition}.
+     * {@code PATCH /orders/{id}/cancel} (FR-034) — only the buyer ({@code customer_id}) can cancel
+     * (otherwise 403, {@code OrderNotYoursException}); missing order → 404 ({@code
+     * OrderNotFoundException}); wrong status (not {@code placed}/{@code accepted}) → 409 {@code
+     * InvalidOrderTransitionException}; past {@code cutoffAt} → 409 {@code CutoffPassedException}.
+     * Restores stock + frees the slot spot through {@code transition}.
      */
     OrderDetailResource cancel(long userId, long orderId);
 
     /**
-     * {@code PUT /orders/{id}/items} (FR-035) — sửa số lượng hoặc bỏ item, không bao giờ thêm sản
-     * phẩm mới (D-07, {@code ProductNotInOrderException} 400 nếu có); tồn kho đổi đúng phần chênh
-     * lệch. Đơn {@code accepted} quay về {@code placed} để Farmer duyệt lại; đơn {@code placed} giữ
-     * nguyên trạng thái, không ghi lịch sử. Bỏ hết item = huỷ đơn.
+     * {@code PUT /orders/{id}/items} (FR-035) — change quantities or drop items, never add a new
+     * product (D-07, {@code ProductNotInOrderException} 400 if it tries); stock changes by exactly
+     * the difference. An {@code accepted} order goes back to {@code placed} for the Farmer to
+     * review again; a {@code placed} order keeps its status and writes no history. Dropping every
+     * item = cancelling the order.
      */
     OrderDetailResource modifyItems(long userId, long orderId, ModifyOrderRequest request);
 }
