@@ -40,6 +40,8 @@ const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
         </dd>
       </dl>
 
+      <div className="ml-ticket-perf" aria-hidden="true" />
+
       <ul className="m-0 flex flex-col p-0 text-[15px]">
         {order.items.map((line) => {
           const p = lineProduct(line.productId);
@@ -63,8 +65,6 @@ const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
         <span>{t('order.payOnPickup')}</span>
         <span className="font-hand text-price text-[28px] tabular-nums">{vnd(orderTotal(order))}</span>
       </div>
-
-      <div aria-hidden="true" className="border-line-strong -mx-4 border-t-[1.5px] border-dashed" />
 
       {order.status === 'declined' && order.reason ? (
         <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
