@@ -28,9 +28,12 @@ làm **C8 → C11** trong worktree + stack Docker riêng (đề xuất `market-l
 - **C6 complete:** template tồn kho tuần (migration `V20260926017`), đặt lại nhanh `POST /orders/{id}/reorder`,
   job tự hoàn tất đơn `ready` sau 24 giờ kể từ giờ nhận. **C7 complete:** yêu thích (migration `V20260926018`, cột
   `target_id`), báo có hàng lại (`RestockNotifier`, nhóm thông báo `favorites`). Review toàn phần C6+C7 + một lượt sửa.
-  Test backend 784/784. PR **#161** (`feature/FR-062-products` → `dev`) đã mở, chưa merge.
+  PR **#161** (C5–C7) đã squash-merge vào dev ở commit `852f829`; lượt sửa sau review C6+C7 (`83f52d3`) được push
+  sau lúc merge nên đi vào dev bằng PR bổ sung từ nhánh `fix/FR-041-restock-review-fixes`. C8–C11 của phiên kia đã
+  vào dev qua PR **#163**.
 - **Cảnh báo FR-063:** nhánh `feature/FR-062-farmer-products` của một bạn trong nhóm làm FR-063 theo thiết kế khác (tồn kho
-  theo ngày), trùng migration `017`/`018` và trùng tên lớp. LEAD phải chọn một thiết kế trước khi merge nhánh nào.
+  theo ngày), trùng migration `017`/`018` và trùng tên lớp. Dev giờ đã có `017` (weekly_stock_templates), `018`
+  (favorites), `020`, `021` — nhánh đó phải đổi số migration và hoà giải FR-063 trước khi merge (LEAD chọn thiết kế).
 - **Frontend cần bổ sung (ngoài phạm vi):** `types/notification.types.ts` thêm nhóm `orders`, `favorites` và kind
   `order_*`, `restock`; nút bật/tắt nhóm trong Settings; các trang StockWeek, "Order again", Favorites chưa nối.
 - Nhánh `feature/FR-062-products` đã merge `origin/dev` tới #158 (không viết lại lịch sử).
