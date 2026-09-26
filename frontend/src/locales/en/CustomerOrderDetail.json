@@ -37,7 +37,8 @@
     "until": "You can edit quantities, remove items or cancel until <b>{{cutoff}}</b>. After you edit, {{stall}} approves the order again.",
     "edit": "Edit order",
     "cancel": "Cancel order",
-    "locked": "Cutoff passed at {{cutoff}}. To change it, contact the stall directly on {{phone}}."
+    "locked": "Cutoff passed at {{cutoff}}. To change it, contact the stall directly on {{phone}}.",
+    "settled": "This order can no longer be changed. To ask about it, contact the stall directly on {{phone}}."
   },
   "notify": {
     "title": "Notifications for this order",

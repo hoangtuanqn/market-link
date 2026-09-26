@@ -6,7 +6,7 @@
   "cards": {
     "upcoming_one": "คำสั่งซื้อที่กำลังจะถึง {{count}} รายการ",
     "upcoming_other": "คำสั่งซื้อที่กำลังจะถึง {{count}} รายการ",
-    "upcomingBreakdown": "รออนุมัติ {{placed}} · รับแล้ว {{accepted}} · พร้อมรับ {{ready}}",
+    "upcomingBreakdown": "สั่งแล้ว {{placed}} · รับแล้ว {{accepted}} · พร้อมรับ {{ready}}",
     "favorites_one": "รายการโปรด {{count}} รายการ",
     "favorites_other": "รายการโปรด {{count}} รายการ",
     "stalls_one": "{{count}} ร้าน",

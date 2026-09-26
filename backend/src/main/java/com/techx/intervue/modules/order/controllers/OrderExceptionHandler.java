@@ -2,8 +2,10 @@ package com.techx.intervue.modules.order.controllers;
 
 import com.techx.intervue.modules.order.exceptions.CutoffPassedException;
 import com.techx.intervue.modules.order.exceptions.InvalidOrderTransitionException;
+import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
 import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.order.exceptions.OutOfStockException;
+import com.techx.intervue.modules.order.exceptions.ProductNotInOrderException;
 import com.techx.intervue.modules.order.exceptions.SlotFullException;
 import com.techx.intervue.modules.order.exceptions.SlotNotAvailableException;
 import com.techx.intervue.modules.order.exceptions.StallUnavailableException;
@@ -25,7 +27,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * longer accepting orders, a wrong-order state change — all of these conflict with the current
  * state → 409, never 400 (R-06, contract "409 state conflict"). Wrong owner / wrong role → 403.
  */
-@RestControllerAdvice(assignableTypes = {OrderController.class})
+@RestControllerAdvice(assignableTypes = {OrderController.class, FarmerOrderController.class})
 public class OrderExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
@@ -64,6 +66,12 @@ public class OrderExceptionHandler {
         return error(HttpStatus.CONFLICT, "OUT_OF_STOCK", e.getMessage(), List.of());
     }
 
+    /** D-07: editing an order cannot add a new product → a malformed request, not a conflict. */
+    @ExceptionHandler(ProductNotInOrderException.class)
+    ResponseEntity<ApiResource<Void>> productNotInOrder(ProductNotInOrderException e) {
+        return error(HttpStatus.BAD_REQUEST, "PRODUCT_NOT_IN_ORDER", e.getMessage(), List.of());
+    }
+
     @ExceptionHandler(SlotFullException.class)
     ResponseEntity<ApiResource<Void>> slotFull(SlotFullException e) {
         return error(HttpStatus.CONFLICT, "SLOT_FULL", e.getMessage(), List.of());
@@ -94,6 +102,15 @@ public class OrderExceptionHandler {
     @ExceptionHandler(OrderNotYoursException.class)
     ResponseEntity<ApiResource<Void>> notYours(OrderNotYoursException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
+    }
+
+    /**
+     * An order id that does not exist → 404. Unlike a wrong owner (403): the row really is not
+     * there.
+     */
+    @ExceptionHandler(OrderNotFoundException.class)
+    ResponseEntity<ApiResource<Void>> notFound(OrderNotFoundException e) {
+        return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
     }
 
     /**

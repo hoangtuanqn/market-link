@@ -51,8 +51,8 @@
     "intro": "Ein Tag, an dem dieser Markt nicht öffnet, obwohl er auf einen Markttag fällt. Die Kundschaft sieht es auf der Marktseite und auf der Startseite, und für diesen Tag sind keine neuen Bestellungen möglich.",
     "add": "Geschlossenen Tag hinzufügen",
     "addConfirm": "Tag hinzufügen",
-    "added": "Geschlossener Tag hinzugefügt. Veröffentliche einen Hinweis, damit die Kundschaft davon erfährt.",
-    "removed": "Geschlossener Tag entfernt.",
+    "added": "Geschlossener Tag hinzugefügt. Speichere den Markt, damit er erhalten bleibt, und veröffentliche dann einen Hinweis für die Kundschaft.",
+    "removed": "Geschlossener Tag entfernt. Speichere den Markt, damit die Änderung gilt.",
     "remove": "Entfernen",
     "removeTitle": "Diesen geschlossenen Tag entfernen?",
     "removeText": "Der Markt öffnet an diesem Tag wieder und die Kundschaft kann bestellen.",
@@ -77,6 +77,11 @@
     "empty": {
       "title": "Keine geschlossenen Tage",
       "text": "Dieser Markt öffnet an jedem seiner Markttage. Füge einen geschlossenen Tag hinzu, wenn das einmal nicht der Fall ist."
+    },
+    "error": {
+      "dateRequired": "Wähle ein Datum.",
+      "datePast": "Wähle heute oder ein späteres Datum.",
+      "dateTaken": "Dieses Datum ist bereits als geschlossen markiert."
     }
   },
   "handling": {
@@ -101,6 +106,8 @@
     "required": "Dieses Feld ist erforderlich.",
     "days": "Wähle mindestens einen Markttag.",
     "close": "Die Schließzeit muss nach der Öffnungszeit liegen.",
-    "images": "Füge mindestens ein Foto des Marktes hinzu."
+    "images": "Füge mindestens ein Foto des Marktes hinzu.",
+    "lat": "Gib einen Breitengrad zwischen -90 und 90 ein, z. B. 10.772500.",
+    "lng": "Gib einen Längengrad zwischen -180 und 180 ein, z. B. 106.698000."
   }
 }

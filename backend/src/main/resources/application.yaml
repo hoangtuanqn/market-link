@@ -41,12 +41,19 @@ spring:
       mail.smtp.timeout: 10000
       mail.smtp.writetimeout: 10000
 
+  # Spring Boot 4 moved these from server.error.* to spring.web.error.*; the old keys are ignored, and DevTools
+  # then turns stack traces on in dev (QA E2E v2 BUG-002). Errors that reach /error must never show internals.
+  web:
+    error:
+      include-message: never
+      include-stacktrace: never
+      include-binding-errors: never
+
 server:
   shutdown: graceful
-  error:
-    include-message: never
-    include-stacktrace: never
-    include-binding-errors: never
+  # FR-081 rate limit keys on the client address: behind a trusted proxy Tomcat takes it from
+  # X-Forwarded-For (RemoteIpValve, private ranges only); a spoofed header from the internet is ignored.
+  forward-headers-strategy: native
 
 logging:
   level:

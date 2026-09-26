@@ -51,8 +51,8 @@
     "intro": "Ngày chợ không mở dù rơi đúng ngày họp. Khách hàng thấy trên trang chợ và trên bảng tin trang chủ, và không đặt đơn mới cho ngày đó được.",
     "add": "Thêm ngày nghỉ",
     "addConfirm": "Thêm ngày nghỉ",
-    "added": "Đã thêm ngày nghỉ. Hãy đăng một thông báo để khách hàng biết.",
-    "removed": "Đã xoá ngày nghỉ.",
+    "added": "Đã thêm ngày nghỉ. Bấm lưu chợ để giữ lại, rồi đăng một thông báo để khách hàng biết.",
+    "removed": "Đã xoá ngày nghỉ. Bấm lưu chợ để áp dụng.",
     "remove": "Xoá",
     "removeTitle": "Xoá ngày nghỉ này?",
     "removeText": "Chợ mở lại vào ngày đó và khách hàng đặt đơn được.",
@@ -77,6 +77,11 @@
     "empty": {
       "title": "Không có ngày nghỉ nào",
       "text": "Chợ này mở đủ mọi ngày họp. Thêm ngày nghỉ khi nào chợ không mở."
+    },
+    "error": {
+      "dateRequired": "Chọn một ngày.",
+      "datePast": "Chọn hôm nay hoặc một ngày sau đó.",
+      "dateTaken": "Ngày này đã được đánh dấu nghỉ."
     }
   },
   "handling": {
@@ -101,6 +106,8 @@
     "required": "Trường này là bắt buộc.",
     "days": "Chọn ít nhất một ngày họp chợ.",
     "close": "Giờ đóng phải sau giờ mở.",
-    "images": "Thêm ít nhất một ảnh của chợ."
+    "images": "Thêm ít nhất một ảnh của chợ.",
+    "lat": "Nhập vĩ độ từ -90 đến 90, ví dụ 10.772500.",
+    "lng": "Nhập kinh độ từ -180 đến 180, ví dụ 106.698000."
   }
 }

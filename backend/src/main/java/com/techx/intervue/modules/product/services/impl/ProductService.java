@@ -6,6 +6,7 @@ import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
@@ -19,6 +20,7 @@ import com.techx.intervue.modules.product.services.interfaces.ProductServiceInte
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
+import java.util.List;
 import java.util.Locale;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ public class ProductService implements ProductServiceInterface {
     private final FarmerProfileRepository farmers;
     private final CategoryRepository categories;
     private final ProductQueryRepository query;
+    private final RestockNotifier restock;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -45,10 +48,18 @@ public class ProductService implements ProductServiceInterface {
         return query.mine(profile.getId(), dbStatus, (safePage - 1) * safeSize, safeSize);
     }
 
+    /**
+     * Read-only, outside a transaction: reads without the row lock that {@link #owned} takes (a
+     * PESSIMISTIC_WRITE query needs a transaction), with the same 404 / 403.
+     */
     @Override
     public FarmerProductResource mineOne(long userId, long productId) {
         FarmerProfile profile = mine(userId);
-        Product product = owned(profile, productId);
+        Product product =
+                requireOwner(
+                        profile,
+                        products.findByIdAndDeletedFalse(productId)
+                                .orElseThrow(() -> new ProductNotFoundException(productId)));
         return toResource(
                 product, profile, categories.findById(product.getCategoryId()).orElse(null));
     }
@@ -65,6 +76,12 @@ public class ProductService implements ProductServiceInterface {
         return toResource(products.save(product), profile, category);
     }
 
+    /**
+     * {@code stockQuantity} here is a reference number only — actual availability is per pickup
+     * date ({@code product_daily_stock}, D-02 redesign) and comes from the weekly template, not
+     * from this field. Editing it (or anything else {@link ProductRequest} carries) never changes
+     * {@link ProductStatus} and is never a restock event.
+     */
     @Override
     @Transactional
     public FarmerProductResource update(long userId, long productId, ProductRequest request) {
@@ -97,17 +114,18 @@ public class ProductService implements ProductServiceInterface {
         FarmerProfile profile = mine(userId);
         requireApproved(profile);
         Product product = owned(profile, productId);
+        boolean wasOrderable = restock.isOrderable(product);
         product.setStatus(status);
         Product saved = products.save(product);
+        // FR-041: lifting a pause or a manual "sold out" can make it orderable again
+        restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
         return toResource(saved, profile, categories.findById(saved.getCategoryId()).orElse(null));
     }
 
     @Override
     @Transactional
     public void adminHide(long productId, String reason) {
-        Product product =
-                products.findById(productId)
-                        .orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = locked(productId);
         product.setHidden(true);
         product.setHiddenReason(reason.trim());
         products.save(product);
@@ -116,12 +134,12 @@ public class ProductService implements ProductServiceInterface {
     @Override
     @Transactional
     public void adminUnhide(long productId) {
-        Product product =
-                products.findById(productId)
-                        .orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = locked(productId);
+        boolean wasOrderable = restock.isOrderable(product);
         product.setHidden(false);
         product.setHiddenReason(null);
-        products.save(product);
+        Product saved = products.save(product);
+        restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
     }
 
     /**
@@ -139,14 +157,41 @@ public class ProductService implements ProductServiceInterface {
         }
     }
 
+    /**
+     * D-02 / Review Focus #1 by another path (Task 5.3b, Ruling C5-14): a Farmer/Admin editing a
+     * product must lock the same row that {@code OrderService.place} locks, never read an unlocked
+     * snapshot and then {@code save()} — Hibernate has no {@code @DynamicUpdate}, so the UPDATE
+     * rewrites every column, including a {@code stock_quantity} an order deducted while it was
+     * being read. {@code deleted} is filtered here (after locking) to keep the 404 that {@code
+     * findByIdAndDeletedFalse} used to give, not in the SQL.
+     */
     private Product owned(FarmerProfile profile, long productId) {
-        Product product =
-                products.findByIdAndDeletedFalse(productId)
-                        .orElseThrow(() -> new ProductNotFoundException(productId));
+        return requireOwner(profile, notDeleted(productId));
+    }
+
+    private static Product requireOwner(FarmerProfile profile, Product product) {
         if (!product.getFarmerId().equals(profile.getId())) {
             throw new ProductNotYoursException();
         }
         return product;
+    }
+
+    private Product notDeleted(long productId) {
+        Product product = locked(productId);
+        if (product.isDeleted()) {
+            throw new ProductNotFoundException(productId);
+        }
+        return product;
+    }
+
+    /**
+     * C5-2: locks one product through {@code lockAllById} — the same locking path {@code
+     * OrderService} uses.
+     */
+    private Product locked(long productId) {
+        return products.lockAllById(List.of(productId)).stream()
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
     /**

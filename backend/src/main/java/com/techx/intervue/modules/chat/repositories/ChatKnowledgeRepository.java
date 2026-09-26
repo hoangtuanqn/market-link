@@ -17,8 +17,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * The fixed SQL statements the chatbot is allowed to run (R-04). Read-only, every user value goes
- * through parameters — there is no place that concatenates input into SQL.
+ * The fixed SQL the chatbot may run (R-04): read-only, every user value goes in as a parameter,
+ * nothing is concatenated. Primary keys are {@code id} on every table (plan S.4.1); the {@code
+ * *_id} names only survive as column aliases so the row mappers keep reading the same labels.
+ * Hidden listings (FR-074) and unapproved stalls (D-09) never appear in an answer.
  */
 @Repository
 @RequiredArgsConstructor
@@ -28,36 +30,37 @@ public class ChatKnowledgeRepository {
 
     private static final String SEARCH_PRODUCTS =
             """
-            SELECT p.product_id, p.name, p.price, p.unit, p.stock_quantity, p.status,
-                   f.farmer_id, f.stall_name, m.market_name
+            SELECT p.id AS product_id, p.name, p.price, p.unit, p.stock_quantity, p.status,
+                   f.id AS farmer_id, f.stall_name, m.market_name
             FROM products p
-            JOIN farmer_profiles f ON f.farmer_id = p.farmer_id
-            JOIN categories c ON c.category_id = p.category_id
-            LEFT JOIN farmer_markets fm ON fm.farmer_id = f.farmer_id AND fm.is_active = TRUE
-            LEFT JOIN markets m ON m.market_id = fm.market_id AND m.is_active = TRUE
+            JOIN farmer_profiles f ON f.id = p.farmer_id
+            JOIN categories c ON c.id = p.category_id
+            LEFT JOIN farmer_markets fm ON fm.farmer_id = f.id AND fm.is_active = TRUE
+            LEFT JOIN markets m ON m.id = fm.market_id AND m.is_active = TRUE
             WHERE p.is_deleted = FALSE
               AND f.approval_status = 'approved'
               AND p.status IN (:statuses)
               AND (p.name LIKE :keyword ESCAPE '!' OR c.name LIKE :keyword ESCAPE '!')
-              AND (:marketId IS NULL OR m.market_id = :marketId)
+              AND p.is_hidden = FALSE
+              AND (:marketId IS NULL OR m.id = :marketId)
             ORDER BY p.stock_quantity DESC, p.name
             LIMIT 30
             """;
 
     private static final String ACTIVE_MARKETS =
             """
-            SELECT m.market_id, m.market_name, m.address, m.opening_time, m.closing_time,
+            SELECT m.id AS market_id, m.market_name, m.address, m.opening_time, m.closing_time,
                    GROUP_CONCAT(d.day_of_week ORDER BY d.day_of_week) AS days
             FROM markets m
-            LEFT JOIN market_operating_days d ON d.market_id = m.market_id
+            LEFT JOIN market_operating_days d ON d.market_id = m.id
             WHERE m.is_active = TRUE
-            GROUP BY m.market_id, m.market_name, m.address, m.opening_time, m.closing_time
+            GROUP BY m.id, m.market_name, m.address, m.opening_time, m.closing_time
             ORDER BY m.market_name
             """;
 
     private static final String APPROVED_FARMERS =
             """
-            SELECT farmer_id, stall_name
+            SELECT id AS farmer_id, stall_name
             FROM farmer_profiles
             WHERE approval_status = 'approved'
             ORDER BY stall_name
@@ -65,17 +68,17 @@ public class ChatKnowledgeRepository {
 
     private static final String FARMER_SCHEDULES =
             """
-            SELECT f.farmer_id, f.stall_name, m.market_id, m.market_name,
+            SELECT f.id AS farmer_id, f.stall_name, m.id AS market_id, m.market_name,
                    fod.day_of_week, fod.pickup_start_time, fod.pickup_end_time
             FROM farmer_operating_days fod
-            JOIN farmer_markets fm ON fm.farmer_market_id = fod.farmer_market_id
-            JOIN farmer_profiles f ON f.farmer_id = fm.farmer_id
-            JOIN markets m ON m.market_id = fm.market_id
+            JOIN farmer_markets fm ON fm.id = fod.farmer_market_id
+            JOIN farmer_profiles f ON f.id = fm.farmer_id
+            JOIN markets m ON m.id = fm.market_id
             WHERE f.approval_status = 'approved'
               AND fm.is_active = TRUE
               AND m.is_active = TRUE
-              AND (:farmerId IS NULL OR f.farmer_id = :farmerId)
-              AND (:marketId IS NULL OR m.market_id = :marketId)
+              AND (:farmerId IS NULL OR f.id = :farmerId)
+              AND (:marketId IS NULL OR m.id = :marketId)
               AND (:dayOfWeek IS NULL OR fod.day_of_week = :dayOfWeek)
             ORDER BY fod.day_of_week, m.market_name, fod.pickup_start_time
             LIMIT 30

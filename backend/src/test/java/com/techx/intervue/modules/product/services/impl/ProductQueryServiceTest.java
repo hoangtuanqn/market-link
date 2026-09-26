@@ -16,6 +16,8 @@ import com.techx.intervue.modules.product.requests.ProductSearchCriteria;
 import com.techx.intervue.modules.product.resources.ProductDetailResource;
 import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
+import com.techx.intervue.modules.review.services.interfaces.ReviewServiceInterface;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.resources.PageResource;
@@ -33,6 +35,7 @@ class ProductQueryServiceTest {
     private ProductQueryRepository repository;
     private StallServiceInterface stallService;
     private ProductAvailabilityResolver availability;
+    private ReviewServiceInterface reviewService;
     private ProductQueryService service;
 
     @BeforeEach
@@ -40,7 +43,8 @@ class ProductQueryServiceTest {
         repository = mock(ProductQueryRepository.class);
         stallService = mock(StallServiceInterface.class);
         availability = mock(ProductAvailabilityResolver.class);
-        service = new ProductQueryService(repository, stallService, availability);
+        reviewService = mock(ReviewServiceInterface.class);
+        service = new ProductQueryService(repository, stallService, availability, reviewService);
         when(repository.search(any(), anyString(), anyInt(), anyInt()))
                 .thenReturn(new PageResource<ProductListItemResource>(List.of(), 1, 12, 0));
         when(availability.resolve(any())).thenReturn(Map.of());
@@ -206,5 +210,40 @@ class ProductQueryServiceTest {
         when(availability.resolve(any())).thenReturn(Map.of());
 
         assertThatThrownBy(() -> service.detail(1L)).isInstanceOf(ProductNotFoundException.class);
+    }
+
+    /**
+     * C8 (FR-052): `reviewsSummary` is the real average and histogram, no longer the C3
+     * placeholder.
+     */
+    @Test
+    void detailCarriesTheReviewSummaryOfTheProduct() {
+        ProductListItemResource item = item(5L);
+        when(repository.findVisibleById(5L))
+                .thenReturn(Optional.of(new ProductDetailRow(item, "d")));
+        when(availability.resolve(Map.of(5L, new BigDecimal("12000"))))
+                .thenReturn(
+                        Map.of(
+                                5L,
+                                new ProductAvailabilityResolver.Availability(
+                                        LocalDate.of(2026, 9, 28), 9, new BigDecimal("15000"))));
+        when(stallService.publicDetail(10L))
+                .thenReturn(
+                        new StallDetailResource(
+                                10L,
+                                "Vườn Út Hiền",
+                                "Út Hiền",
+                                null,
+                                null,
+                                12,
+                                new BigDecimal("4.50"),
+                                2,
+                                "approved",
+                                List.of()));
+        ReviewSummaryResource summary =
+                new ReviewSummaryResource(new BigDecimal("4.50"), 2, List.of(0, 0, 0, 1, 1));
+        when(reviewService.productSummary(5L)).thenReturn(summary);
+
+        assertThat(service.detail(5L).reviewsSummary()).isSameAs(summary);
     }
 }

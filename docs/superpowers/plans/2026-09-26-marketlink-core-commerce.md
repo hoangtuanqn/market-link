@@ -3809,3 +3809,29 @@ Ngoài ra, hai chỗ trong `.ai/REQUIREMENTS.md` nên LEAD/QA xem lại:
 - Không đụng vào chat người–người, achievements, MFA, Google OAuth, i18n, avatar — ngoài đề.
 - Không thêm cổng thanh toán, giao hàng, xác thực Farmer, multi-profile — đề miễn trừ.
 
+## R.7 · Đề xuất LEAD từ phiên C8–C11 (26/09/2026) — R-02, không ai tự sửa
+
+**Contract (`docs/api-contract.md`)**
+1. Thêm mục Farmer dashboard: `GET /farmer/dashboard`, `GET /farmer/reports/best-sellers?from&to&limit`,
+   `GET /farmer/reports/sales?from&to&page&pageSize` (plan 9.1 định nghĩa, contract chưa có).
+2. §10: `AdminDashboardResource` có thêm `hiddenListings`; thêm `GET /admin/customers/{id}` cho trang admin
+   CustomerDetail đang tồn tại (chưa làm).
+3. §8: nếu trang stall cần histogram thì thêm `reviewsSummary` vào `GET /farmers/{id}` (hiện chỉ có `ratingAvg`,
+   `ratingCount`).
+4. §11: `GET /admin/feedbacks?status&page&pageSize`, `PATCH /admin/feedbacks/{id}/status` (đã làm theo plan 10.1).
+
+**Schema (`db/schema.sql` so với `db/marketlink-schema-dump.sql`, Task 11.3)**
+- Khoá chính mọi bảng tên `id` `BIGINT UNSIGNED` (schema ghi `<bảng>_id INT`) — R.5 #1, đã áp dụng toàn bộ.
+- Bảng chỉ có trong code: `admin_mfa`, `admin_mfa_recovery_codes`, `conversations`, `messages`, `message_attachments`,
+  `message_reports`, `user_presence`, `user_settings`, `user_social_accounts`, `refresh_tokens`,
+  `farmer_application_history`, `market_images`, `market_closures` (tính năng ngoài plan này).
+- Bảng chỉ có trong schema: `password_reset_tokens` (reset qua token Redis, không có bảng).
+- Cột thêm trong code: `products.is_hidden/hidden_reason/shelf_life_days`; `categories.min/max_shelf_life_days`
+  (bỏ `description`, `icon`); `farmer_profiles.photo_paths/video_path/suspend_reason/suspended_by/suspended_at`;
+  `favorites.target_id`; `users.image`; `created_at`/`updated_at` ở `farmer_markets`, `pickup_slots`, `markets`.
+- Cột schema có mà code không: `notifications.order_id/product_id` (dùng `link` + `params`).
+- `reviews`: `created_at` TIMESTAMP (UTC) thay DATETIME; `uq_review` giữ nguyên nhưng NULL không chặn trùng — đề xuất cột
+  sinh `target_id = COALESCE(product_id, farmer_id)` + `UNIQUE (order_id, target_type, target_id)`.
+
+**Cấu hình prod**: `server.tomcat.remoteip.internal-proxies` = IP container nginx, để `forward-headers-strategy: native`
+chỉ tin proxy thật (FR-081 rate limit theo địa chỉ khách).

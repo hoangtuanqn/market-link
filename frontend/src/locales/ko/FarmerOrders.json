@@ -5,7 +5,7 @@
   "filter": { "day": "픽업일", "all": "전체", "market": "장터", "bothMarkets": "두 장터 모두" },
   "tabsLabel": "상태별 주문",
   "status": {
-    "placed": "승인 대기",
+    "placed": "주문됨",
     "accepted": "수락됨",
     "ready": "준비 완료",
     "completed": "완료",

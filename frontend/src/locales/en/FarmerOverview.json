@@ -1,6 +1,6 @@
 {
   "tabs": {
-    "new": "Awaiting approval",
+    "new": "Placed",
     "acc": "Accepted",
     "ready": "Ready",
     "done": "Completed"
@@ -44,7 +44,7 @@
     "view": "View"
   },
   "captions": {
-    "new": "Awaiting approval · {{sat}} and {{sun}}",
+    "new": "Placed · {{sat}} and {{sun}}",
     "ready": "Ready for pickup"
   },
   "overline": "your stall at {{market}} · next market day {{day}}",

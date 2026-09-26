@@ -30,9 +30,7 @@ import {
   ADMIN_MARKETS_PATH,
   ADMIN_MODERATION_PATH,
   ADMIN_ORDERS_PATH,
-  ADMIN_PRICING_PATH,
   ADMIN_REPORTS_PATH,
-  ADMIN_REVENUE_PATH,
   ADMIN_SECURITY_PATH,
   ADMIN_SETTINGS_PATH,
 } from '@/constants/nav';
@@ -48,7 +46,6 @@ const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
     items: [
       { to: ADMIN_HOME_PATH, label: t('adminNav.overview'), icon: DashboardIcon },
       { to: ADMIN_REPORTS_PATH, label: t('adminNav.reports'), icon: ChartIcon },
-      { to: ADMIN_REVENUE_PATH, label: t('adminNav.revenue'), icon: TagIcon },
       { to: ADMIN_ORDERS_PATH, label: t('adminNav.orders'), icon: ReceiptIcon },
     ],
   },
@@ -72,7 +69,6 @@ const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
       { to: ADMIN_CATEGORIES_PATH, label: t('adminNav.categories'), icon: TagIcon },
       { to: ADMIN_ANNOUNCEMENTS_PATH, label: t('adminNav.announcements'), icon: MegaphoneIcon },
       { to: ADMIN_FEEDBACK_PATH, label: t('adminNav.feedback'), icon: ChatIcon },
-      { to: ADMIN_PRICING_PATH, label: t('adminNav.pricing'), icon: TagIcon },
       { to: ADMIN_SETTINGS_PATH, label: t('adminNav.settings'), icon: SlidersIcon },
       { to: ADMIN_ACCOUNT_PATH, label: t('adminNav.account'), icon: UsersIcon },
       // FR-008: turn two-step verification on / off

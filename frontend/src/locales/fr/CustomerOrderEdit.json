@@ -6,6 +6,10 @@
     "title": "Cette commande n’est plus disponible",
     "text": "Vous l’avez peut-être annulée, ou le lien est ancien. Rouvrez-la depuis vos commandes."
   },
+  "notChangeable": {
+    "title": "Cette commande ne peut plus être modifiée",
+    "text": "L’heure limite est passée, ou l’étal a déjà fait avancer la commande. Pour toute question, contactez l’étal."
+  },
   "title": "Modifier la commande {{code}}",
   "cutoff": "Les modifications sont possibles jusqu’au <b>{{cutoff}}</b>.",
   "banner": {

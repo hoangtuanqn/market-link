@@ -58,7 +58,11 @@ const CustomerOrderDetailPage = () => {
       : [];
   const stepIndex = STEPS.indexOf(order.status);
   const [firstStep, lastStep] = [order.history[0], order.history[order.history.length - 1]];
-  const editable = !locked && (order.status === 'placed' || order.status === 'accepted');
+  /**
+   * FR-035 — an order may be edited or cancelled only before the cutoff, and only while the stall has not moved it on.
+   * `ready`, `completed`, `declined` and `cancelled` are all past that point, cutoff or no cutoff.
+   */
+  const changeable = !locked && (order.status === 'placed' || order.status === 'accepted');
 
   return (
     <div className="flex flex-col gap-6">
@@ -176,7 +180,7 @@ const CustomerOrderDetailPage = () => {
         <aside className="sticky top-20 flex flex-col gap-4">
           <Card className="flex flex-col gap-3 p-6">
             <h2 className="text-h3">{t('change.title')}</h2>
-            {!locked && (
+            {changeable && (
               <p className="text-[15px]">
                 <Trans
                   t={t}
@@ -186,15 +190,24 @@ const CustomerOrderDetailPage = () => {
                 />
               </p>
             )}
-            <ButtonLink to={`/orders/${code}/edit`} variant="secondary" className="w-full" aria-disabled={!editable}>
-              {t('change.edit')}
-            </ButtonLink>
-            <Button variant="danger" className="w-full" disabled={locked}>
+            {/* A real disabled button, not a link with aria-disabled: that only stops the mouse, not the keyboard. */}
+            {changeable ? (
+              <ButtonLink to={`/orders/${code}/edit`} variant="secondary" className="w-full">
+                {t('change.edit')}
+              </ButtonLink>
+            ) : (
+              <Button variant="secondary" className="w-full" disabled>
+                {t('change.edit')}
+              </Button>
+            )}
+            <Button variant="danger" className="w-full" disabled={!changeable}>
               {t('change.cancel')}
             </Button>
-            {locked && (
+            {!changeable && (
               <p className="text-ink-muted text-[13px]">
-                {t('change.locked', { cutoff: order.cutoff, phone: f?.phone })}
+                {locked
+                  ? t('change.locked', { cutoff: order.cutoff, phone: f?.phone })
+                  : t('change.settled', { phone: f?.phone })}
               </p>
             )}
           </Card>

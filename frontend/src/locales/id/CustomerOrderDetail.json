@@ -37,7 +37,8 @@
     "until": "Anda dapat mengubah jumlah, menghapus barang, atau membatalkan sampai <b>{{cutoff}}</b>. Setelah Anda mengubah, {{stall}} menyetujui pesanan lagi.",
     "edit": "Ubah pesanan",
     "cancel": "Batalkan pesanan",
-    "locked": "Batas pesan sudah lewat pada {{cutoff}}. Untuk mengubahnya, hubungi lapak langsung di {{phone}}."
+    "locked": "Batas pesan sudah lewat pada {{cutoff}}. Untuk mengubahnya, hubungi lapak langsung di {{phone}}.",
+    "settled": "Pesanan ini tidak bisa diubah lagi. Kalau ada pertanyaan, hubungi lapak langsung di {{phone}}."
   },
   "notify": {
     "title": "Notifikasi untuk pesanan ini",

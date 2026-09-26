@@ -6,6 +6,10 @@
     "title": "Diese Bestellung gibt es hier nicht mehr",
     "text": "Vielleicht haben Sie sie storniert, oder der Link ist veraltet. Öffnen Sie sie erneut über Ihre Bestellungen."
   },
+  "notChangeable": {
+    "title": "Diese Bestellung lässt sich nicht mehr ändern",
+    "text": "Der Bestellschluss ist vorbei, oder der Stand hat die Bestellung bereits weitergeführt. Bei Fragen wenden Sie sich an den Stand."
+  },
   "title": "Bestellung {{code}} bearbeiten",
   "cutoff": "Änderungen sind bis <b>{{cutoff}}</b> möglich.",
   "banner": {

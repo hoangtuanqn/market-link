@@ -6,6 +6,10 @@
     "title": "Diese Bestellung gibt es hier nicht mehr",
     "text": "Vielleicht haben Sie sie storniert, oder der Link ist veraltet. Öffnen Sie sie erneut über Ihre Bestellungen."
   },
+  "notCompleted": {
+    "title": "Diese Bestellung ist noch nicht abgeschlossen",
+    "text": "Den Stand und die gekaufte Ware können Sie bewerten, sobald Sie die Bestellung abgeholt haben."
+  },
   "completed": "Abgeschlossen am {{date}}",
   "title": "Wie war {{stall}}?",
   "intro": "Bewertungen sind mit dieser abgeschlossenen Bestellung verknüpft, daher sehen andere Kunden sie als verifizierten Kauf. Der Stand kann antworten.",

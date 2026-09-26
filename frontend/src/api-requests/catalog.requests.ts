@@ -119,7 +119,7 @@ export const toMarket = (dto: MarketDto): MarketType => ({
 });
 
 /** "yyyy-MM-dd" (no timezone) → a local midnight Date, so weekday/format read the calendar date as typed. */
-const parseIsoDate = (isoDate: string): Date => {
+export const parseIsoDate = (isoDate: string): Date => {
   const [y, m, d] = isoDate.split('-').map(Number);
   return new Date(y, m - 1, d);
 };

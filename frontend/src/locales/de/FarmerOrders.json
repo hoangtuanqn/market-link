@@ -5,7 +5,7 @@
   "filter": { "day": "Abholtag", "all": "Alle", "market": "Markt", "bothMarkets": "Beide Märkte" },
   "tabsLabel": "Bestellungen nach Status",
   "status": {
-    "placed": "Wartet auf Annahme",
+    "placed": "Aufgegeben",
     "accepted": "Angenommen",
     "ready": "Bereit",
     "completed": "Abgeschlossen",

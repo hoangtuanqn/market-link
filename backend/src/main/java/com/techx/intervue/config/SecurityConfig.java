@@ -5,7 +5,6 @@ import com.techx.intervue.filters.JwtAuthFilter;
 import com.techx.intervue.filters.TraceIdFilter;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
-import com.techx.intervue.resources.FieldErrorResource;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -20,6 +19,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -30,6 +30,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableMethodSecurity // method-based authorization (the default is URL-based authorization)
 public class SecurityConfig {
+
+    static final String SIGN_IN_MESSAGE = "Please sign in to continue.";
 
     private final ObjectMapper objectMapper;
     private final JwtAuthFilter jwtAuthFilter;
@@ -150,6 +152,15 @@ public class SecurityConfig {
                                                 // in
                                                 "/api/v1/farmers/*/slots")
                                         .permitAll()
+                                        // FR-052: reviews are readable before signing in
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/products/*/reviews",
+                                                "/api/v1/farmers/*/reviews")
+                                        .permitAll()
+                                        // FR-081: the feedback form is open to visitors
+                                        .requestMatchers(HttpMethod.POST, "/api/v1/feedbacks")
+                                        .permitAll()
                                         // Chatbot FR-090…092: guests can ask questions too
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
                                         .permitAll()
@@ -161,34 +172,7 @@ public class SecurityConfig {
                                         .authenticated())
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(
-                        ex ->
-                                ex.authenticationEntryPoint(
-                                        ((request, response, authException) -> {
-                                            ErrorResource error =
-                                                    ErrorResource.builder()
-                                                            .code("UNAUTHORIZED")
-                                                            .details(
-                                                                    List.of(
-                                                                            FieldErrorResource
-                                                                                    .builder()
-                                                                                    .message(
-                                                                                            authException
-                                                                                                    .getMessage())
-                                                                                    .build()))
-                                                            .build();
-
-                                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                                            response.setContentType(
-                                                    MediaType.APPLICATION_JSON_VALUE);
-                                            response.setCharacterEncoding("UTF-8");
-                                            response.getWriter()
-                                                    .write(
-                                                            objectMapper.writeValueAsString(
-                                                                    ApiResource.error(
-                                                                            error,
-                                                                            "Something went wrong on our side. Please try again later.")));
-                                        })))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(signInRequired()))
                 // UsernamePasswordAuthenticationFilter.class is just a reference point:
                 // after the request passes through jwtAuthFilter it goes on through
                 // UsernamePasswordAuthenticationFilter.class (which runs but does nothing)
@@ -197,5 +181,23 @@ public class SecurityConfig {
                 .addFilterBefore(traceIdFilter, JwtAuthFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * No access token on a route that needs one → 401 with a message the user can act on (QA E2E v2
+     * BUG-003), the same shape JwtAuthFilter returns for a bad token.
+     */
+    AuthenticationEntryPoint signInRequired() {
+        return (request, response, authException) -> {
+            ErrorResource error =
+                    ErrorResource.builder().code("UNAUTHORIZED").details(List.of()).build();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter()
+                    .write(
+                            objectMapper.writeValueAsString(
+                                    ApiResource.error(error, SIGN_IN_MESSAGE)));
+        };
     }
 }

@@ -6,6 +6,10 @@
     "title": "Ese pedido ya no está aquí",
     "text": "Puede que lo hayas cancelado o que el enlace sea antiguo. Ábrelo de nuevo desde tus pedidos."
   },
+  "notCompleted": {
+    "title": "Este pedido aún no ha terminado",
+    "text": "Podrás valorar el puesto y lo que compraste cuando hayas recogido el pedido."
+  },
   "completed": "Completado el {{date}}",
   "title": "¿Qué tal {{stall}}?",
   "intro": "Las reseñas están vinculadas a este pedido completado, así que otros clientes las ven como compra verificada. El puesto puede responder.",

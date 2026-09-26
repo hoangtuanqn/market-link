@@ -1,6 +1,6 @@
 {
   "tabs": {
-    "new": "승인 대기",
+    "new": "주문됨",
     "acc": "수락됨",
     "ready": "준비 완료",
     "done": "완료"
@@ -44,7 +44,7 @@
     "view": "보기"
   },
   "captions": {
-    "new": "승인 대기 · {{sat}}, {{sun}}",
+    "new": "주문됨 · {{sat}}, {{sun}}",
     "ready": "픽업 준비 완료"
   },
   "overline": "{{market}}의 내 매장 · 다음 마켓 날 {{day}}",

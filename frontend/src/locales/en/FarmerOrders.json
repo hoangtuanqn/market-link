@@ -14,7 +14,7 @@
   },
   "tabsLabel": "Orders by status",
   "status": {
-    "placed": "Awaiting approval",
+    "placed": "Placed",
     "accepted": "Accepted",
     "ready": "Ready",
     "completed": "Completed",

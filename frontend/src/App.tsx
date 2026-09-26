@@ -3,6 +3,7 @@ import AppToaster from './components/AppToaster';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import ComingSoon from './components/ComingSoon';
 import { SHOW_WIP } from './config/wip';
+import { USER_ROLE } from './constants/enums';
 import NotificationCenter from './components/notifications/NotificationCenter';
 import NotificationPermissionBanner from './components/notifications/NotificationPermissionBanner';
 import SettingsSync from './components/SettingsSync';
@@ -36,7 +37,7 @@ import CustomerReviewWip from './pages/customer/Review';
 import CustomerBecomeFarmerPage from './pages/customer/BecomeFarmer';
 import ChangePasswordPage from './pages/customer/ChangePassword';
 import CustomerSettingsPage from './pages/customer/Settings';
-import CustomerAssistantPage from './pages/customer/Assistant';
+import CustomerAssistantWip from './pages/customer/Assistant';
 import MarketsPage from './pages/public/Markets';
 import MarketDetailPage from './pages/public/MarketDetail';
 import ProductsPage from './pages/public/Products';
@@ -62,7 +63,6 @@ import FarmerReviewsWip from './pages/farmer/Reviews';
 import FarmerMessagesPage from './pages/farmer/Messages';
 import FarmerNotificationsPage from './pages/farmer/Notifications';
 import FarmerPendingWip from './pages/farmer/Pending';
-import FarmerPromoteWip from './pages/farmer/Promote';
 import AdminLoginPage from './pages/admin/Login';
 import AdminHomeWip from './pages/admin/Home';
 import AdminVerifyPage from './pages/admin/Verify';
@@ -81,9 +81,7 @@ import AdminMarketsPage from './pages/admin/Markets';
 import AdminModerationPage from './pages/admin/Moderation';
 import AdminOrderDetailWip from './pages/admin/OrderDetail';
 import AdminOrdersWip from './pages/admin/Orders';
-import AdminPricingWip from './pages/admin/Pricing';
 import AdminReportsWip from './pages/admin/Reports';
-import AdminRevenueWip from './pages/admin/Revenue';
 
 // A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
 // Once a screen's API is wired up, remove it from this list.
@@ -101,11 +99,8 @@ const FarmerSlotsPage = SHOW_WIP ? FarmerSlotsWip : ComingSoon;
 const FarmerHistoryPage = SHOW_WIP ? FarmerHistoryWip : ComingSoon;
 const FarmerReviewsPage = SHOW_WIP ? FarmerReviewsWip : ComingSoon;
 const FarmerPendingPage = SHOW_WIP ? FarmerPendingWip : ComingSoon;
-const FarmerPromotePage = SHOW_WIP ? FarmerPromoteWip : ComingSoon;
 const AdminHomePage = SHOW_WIP ? AdminHomeWip : ComingSoon;
 const AdminReportsPage = SHOW_WIP ? AdminReportsWip : ComingSoon;
-const AdminRevenuePage = SHOW_WIP ? AdminRevenueWip : ComingSoon;
-const AdminPricingPage = SHOW_WIP ? AdminPricingWip : ComingSoon;
 const AdminOrdersPage = SHOW_WIP ? AdminOrdersWip : ComingSoon;
 const AdminOrderDetailPage = SHOW_WIP ? AdminOrderDetailWip : ComingSoon;
 const AdminCustomersPage = SHOW_WIP ? AdminCustomersWip : ComingSoon;
@@ -113,6 +108,8 @@ const AdminCustomerDetailPage = SHOW_WIP ? AdminCustomerDetailWip : ComingSoon;
 const AdminFeedbackPage = SHOW_WIP ? AdminFeedbackWip : ComingSoon;
 const FeedbackPage = SHOW_WIP ? FeedbackWip : ComingSoon;
 const CustomerCartPage = SHOW_WIP ? CustomerCartWip : ComingSoon;
+// FR-090: still a scripted conversation, not the real /chat API → dev only (QA E2E v2 CHATBOT-010)
+const CustomerAssistantPage = SHOW_WIP ? CustomerAssistantWip : ComingSoon;
 
 const App = () => {
   return (
@@ -212,38 +209,40 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
 
-          {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader. */}
-          <Route path="/farmer" element={<FarmerLayout />}>
-            <Route index element={<FarmerOverviewPage />} />
-            <Route path="orders" element={<FarmerOrdersPage />} />
-            <Route
-              path="orders/:code"
-              element={
-                <RemountOnParam param="code">
-                  <FarmerOrderDetailPage />
-                </RemountOnParam>
-              }
-            />
-            <Route path="stock" element={<FarmerStockWeekPage />} />
-            <Route path="products" element={<FarmerProductsPage />} />
-            <Route path="products/new" element={<FarmerProductFormPage />} />
-            <Route
-              path="products/:id/edit"
-              element={
-                <RemountOnParam param="id">
-                  <FarmerProductFormPage />
-                </RemountOnParam>
-              }
-            />
-            <Route path="stall" element={<FarmerStallProfilePage />} />
-            <Route path="slots" element={<FarmerSlotsPage />} />
-            <Route path="history" element={<FarmerHistoryPage />} />
-            <Route path="settings" element={<FarmerSettingsPage />} />
-            <Route path="reviews" element={<FarmerReviewsPage />} />
-            <Route path="messages" element={<FarmerMessagesPage />} />
-            <Route path="notifications" element={<FarmerNotificationsPage />} />
-            <Route path="pending" element={<FarmerPendingPage />} />
-            <Route path="promote" element={<FarmerPromotePage />} />
+          {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader.
+              FR-005: signed-in Farmers only — guests go to /login, other roles to their own home. */}
+          <Route element={<RequireAuth role={USER_ROLE.FARMER} />}>
+            <Route path="/farmer" element={<FarmerLayout />}>
+              <Route index element={<FarmerOverviewPage />} />
+              <Route path="orders" element={<FarmerOrdersPage />} />
+              <Route
+                path="orders/:code"
+                element={
+                  <RemountOnParam param="code">
+                    <FarmerOrderDetailPage />
+                  </RemountOnParam>
+                }
+              />
+              <Route path="stock" element={<FarmerStockWeekPage />} />
+              <Route path="products" element={<FarmerProductsPage />} />
+              <Route path="products/new" element={<FarmerProductFormPage />} />
+              <Route
+                path="products/:id/edit"
+                element={
+                  <RemountOnParam param="id">
+                    <FarmerProductFormPage />
+                  </RemountOnParam>
+                }
+              />
+              <Route path="stall" element={<FarmerStallProfilePage />} />
+              <Route path="slots" element={<FarmerSlotsPage />} />
+              <Route path="history" element={<FarmerHistoryPage />} />
+              <Route path="settings" element={<FarmerSettingsPage />} />
+              <Route path="reviews" element={<FarmerReviewsPage />} />
+              <Route path="messages" element={<FarmerMessagesPage />} />
+              <Route path="notifications" element={<FarmerNotificationsPage />} />
+              <Route path="pending" element={<FarmerPendingPage />} />
+            </Route>
           </Route>
 
           {/* FR-004: the admin area is separate from the Customer/Farmer layout. */}
@@ -265,10 +264,8 @@ const App = () => {
             <Route path="settings" element={<AdminSettingsPage />} />
             <Route path="account" element={<AdminAccountPage />} />
 
-            {/* FR-075 + FR-070: reports, platform revenue and platform-wide orders (admin is read-only, D-04) */}
+            {/* FR-075 + FR-070: reports and platform-wide orders (admin is read-only, D-04) */}
             <Route path="reports" element={<AdminReportsPage />} />
-            <Route path="revenue" element={<AdminRevenuePage />} />
-            <Route path="pricing" element={<AdminPricingPage />} />
             <Route path="orders" element={<AdminOrdersPage />} />
             <Route
               path="orders/:code"

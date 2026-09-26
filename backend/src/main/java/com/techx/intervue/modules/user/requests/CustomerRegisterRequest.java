@@ -14,7 +14,7 @@ public record CustomerRegisterRequest(
                 @Pattern(regexp = RegisterRules.PHONE_REGEX, message = RegisterRules.PHONE_MESSAGE)
                 String phone,
         @NotBlank(message = "Enter your email.")
-                @Email(message = "Enter a valid email address.")
+                @Email(regexp = RegisterRules.EMAIL_REGEX, message = RegisterRules.EMAIL_MESSAGE)
                 @Size(max = 100, message = "Email can be at most 100 characters.")
                 String email,
         @NotBlank(message = "Enter your address.")

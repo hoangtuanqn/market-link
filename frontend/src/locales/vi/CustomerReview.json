@@ -6,6 +6,10 @@
     "title": "Đơn này không còn ở đây",
     "text": "Có thể bạn đã huỷ đơn, hoặc liên kết đã cũ. Hãy mở lại từ danh sách đơn của bạn."
   },
+  "notCompleted": {
+    "title": "Đơn này chưa xong",
+    "text": "Bạn đánh giá sạp và hàng đã mua sau khi nhận đơn."
+  },
   "completed": "Hoàn tất {{date}}",
   "title": "{{stall}} thế nào?",
   "intro": "Đánh giá gắn với đơn đã hoàn tất này, nên khách khác thấy đây là giao dịch đã xác thực. Sạp có thể trả lời.",

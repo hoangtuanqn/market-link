@@ -31,12 +31,6 @@
     "feedback_other": "件の未対応フィードバック、うち1件は不具合",
     "announcements_other": "件のお知らせを掲載中、Thảo Điền は10月4日休み"
   },
-  "earned": {
-    "title": "MarketLink の収入",
-    "link": "売上レポート",
-    "note": "{{month}}、店舗が掲載枠を購入した分です。マーケットが受け取った金額とは別に扱います。",
-    "of": "₫ · マーケットが受け取った{{gmv}}の{{pct}}%"
-  },
   "byMarket": {
     "title": "今週のマーケット別注文数",
     "link": "すべての注文",

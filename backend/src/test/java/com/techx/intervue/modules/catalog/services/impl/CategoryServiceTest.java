@@ -43,7 +43,7 @@ class CategoryServiceTest {
 
     @Test
     void createDerivesSlugFromName() {
-        when(repository.existsBySlug("leafy-greens")).thenReturn(false);
+        when(repository.findBySlug("leafy-greens")).thenReturn(Optional.empty());
         when(repository.save(any(Category.class))).thenAnswer(i -> i.getArgument(0));
 
         CategoryResource created = service.create(new CategoryRequest("Leafy greens", 1, 1, 7));
@@ -54,7 +54,7 @@ class CategoryServiceTest {
 
     @Test
     void createStripsVietnameseMarksFromSlug() {
-        when(repository.existsBySlug("rau-cu")).thenReturn(false);
+        when(repository.findBySlug("rau-cu")).thenReturn(Optional.empty());
         when(repository.save(any(Category.class))).thenAnswer(i -> i.getArgument(0));
 
         CategoryResource created = service.create(new CategoryRequest("Rau củ", 0, 1, 7));
@@ -64,11 +64,28 @@ class CategoryServiceTest {
 
     @Test
     void createRejectsDuplicateSlug() {
-        when(repository.existsBySlug("leafy-greens")).thenReturn(true);
+        when(repository.findBySlug("leafy-greens")).thenReturn(Optional.of(leafyGreens()));
 
         assertThatThrownBy(() -> service.create(new CategoryRequest("Leafy greens", 1, 1, 7)))
                 .isInstanceOf(DuplicateCategoryException.class);
         verify(repository, never()).save(any());
+    }
+
+    /** QA E2E v2 CATEGORY-004: adding back a removed name restores that row, not a 409. */
+    @Test
+    void createRestoresARemovedCategoryWithTheSameName() {
+        Category removed = leafyGreens();
+        removed.setActive(false);
+        when(repository.findBySlug("leafy-greens")).thenReturn(Optional.of(removed));
+        when(repository.save(any(Category.class))).thenAnswer(i -> i.getArgument(0));
+
+        CategoryResource restored = service.create(new CategoryRequest("leafy Greens", 4, 2, 9));
+
+        assertThat(restored.id()).isEqualTo(1L);
+        assertThat(restored.isActive()).isTrue();
+        assertThat(restored.name()).isEqualTo("leafy Greens");
+        assertThat(restored.sortOrder()).isEqualTo(4);
+        verify(repository).save(removed);
     }
 
     @Test

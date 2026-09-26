@@ -6,7 +6,7 @@
   "cards": {
     "upcoming_one": "{{count}} pesanan mendatang",
     "upcoming_other": "{{count}} pesanan mendatang",
-    "upcomingBreakdown": "{{placed}} menunggu persetujuan · {{accepted}} diterima · {{ready}} siap",
+    "upcomingBreakdown": "{{placed}} dipesan · {{accepted}} diterima · {{ready}} siap",
     "favorites_one": "{{count}} favorit",
     "favorites_other": "{{count}} favorit",
     "stalls_one": "{{count}} lapak",

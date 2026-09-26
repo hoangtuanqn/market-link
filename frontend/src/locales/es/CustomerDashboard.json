@@ -6,7 +6,7 @@
   "cards": {
     "upcoming_one": "{{count}} pedido próximo",
     "upcoming_other": "{{count}} pedidos próximos",
-    "upcomingBreakdown": "Pendientes de aprobación: {{placed}} · Aceptados: {{accepted}} · Listos: {{ready}}",
+    "upcomingBreakdown": "Realizados: {{placed}} · Aceptados: {{accepted}} · Listos: {{ready}}",
     "favorites_one": "{{count}} favorito",
     "favorites_other": "{{count}} favoritos",
     "stalls_one": "{{count}} puesto",

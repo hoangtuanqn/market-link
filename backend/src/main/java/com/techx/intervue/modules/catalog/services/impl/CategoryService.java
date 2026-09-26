@@ -11,6 +11,7 @@ import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,11 +55,16 @@ public class CategoryService implements CategoryServiceInterface {
     @Transactional
     public CategoryResource create(CategoryRequest request) {
         String slug = slugify(request.name());
-        if (repository.existsBySlug(slug)) {
+        Optional<Category> existing = repository.findBySlug(slug);
+        if (existing.isPresent() && existing.get().isActive()) {
             throw new DuplicateCategoryException(slug);
         }
-        Category category = new Category();
+        // A removed category with this name comes back instead of blocking the name for good: the
+        // admin cannot see removed ones, so they could never add it again (QA E2E v2
+        // CATEGORY-004). Old products that still point to it resolve again.
+        Category category = existing.orElseGet(Category::new);
         apply(category, request, slug);
+        category.setActive(true);
         return toResource(repository.save(category));
     }
 

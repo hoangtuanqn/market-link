@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -15,6 +16,7 @@ import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
@@ -43,6 +45,7 @@ class ProductServiceTest {
     private CategoryRepository categories;
     private ProductQueryRepository query;
     private ProductService service;
+    private RestockNotifier restock;
 
     @BeforeEach
     void setUp() {
@@ -50,7 +53,8 @@ class ProductServiceTest {
         farmers = mock(FarmerProfileRepository.class);
         categories = mock(CategoryRepository.class);
         query = mock(ProductQueryRepository.class);
-        service = new ProductService(products, farmers, categories, query);
+        restock = mock(RestockNotifier.class);
+        service = new ProductService(products, farmers, categories, query, restock);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -117,8 +121,8 @@ class ProductServiceTest {
     @Test
     void updateOnAnotherFarmersProductIs403() {
         approvedStall();
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID))
-                .thenReturn(Optional.of(product(OTHER_FARMER_ID)));
+        when(products.lockAllById(List.of(PRODUCT_ID)))
+                .thenReturn(List.of(product(OTHER_FARMER_ID)));
 
         assertThatThrownBy(() -> service.update(USER_ID, PRODUCT_ID, request()))
                 .isInstanceOf(ProductNotYoursException.class);
@@ -129,7 +133,7 @@ class ProductServiceTest {
     void softDeleteKeepsTheRow() {
         approvedStall();
         Product p = product(FARMER_ID);
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.softDelete(USER_ID, PRODUCT_ID);
 
@@ -144,7 +148,7 @@ class ProductServiceTest {
     void setStatusSoldOutDoesNotTouchStock() {
         approvedStall();
         Product p = product(FARMER_ID);
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.SOLD_OUT);
 
@@ -166,7 +170,7 @@ class ProductServiceTest {
     @Test
     void adminHideSetsReasonAndFlag() {
         Product p = product(FARMER_ID);
-        when(products.findById(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.adminHide(PRODUCT_ID, "Ảnh không đúng sản phẩm.");
 
@@ -185,7 +189,7 @@ class ProductServiceTest {
         Product p = product(FARMER_ID);
         p.setHidden(true);
         p.setHiddenReason("Vi phạm.");
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         assertThatCode(() -> service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.AVAILABLE))
                 .doesNotThrowAnyException();
@@ -237,5 +241,124 @@ class ProductServiceTest {
         service.mine(USER_ID, null, 1, 12);
 
         verify(query).mine(FARMER_ID, null, 0, 12);
+    }
+
+    // ---------- Task 5.3b (D-02, Review Focus #1 by another path): every write path must lock
+    // the product row before reading it, never load it through an unlocked findById /
+    // findByIdAndDeletedFalse — otherwise the transaction overwrites the stock that
+    // OrderService.place just deducted.
+    // ----------
+
+    @Test
+    void updateLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.update(USER_ID, PRODUCT_ID, request());
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void softDeleteLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.softDelete(USER_ID, PRODUCT_ID);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void setStatusLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.SOLD_OUT);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void adminHideLoadsThroughTheLock() {
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.adminHide(PRODUCT_ID, "Ảnh không đúng sản phẩm.");
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void adminUnhideLoadsThroughTheLock() {
+        Product p = product(FARMER_ID);
+        p.setHidden(true);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.adminUnhide(PRODUCT_ID);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    // ---------- FR-041 restock ----------
+
+    /**
+     * {@code stockQuantity} is a reference number only since the per-date redesign (D-02): {@link
+     * ProductStatus} does not react to it, and an edit is never a restock event — availability
+     * lives in {@code product_daily_stock}, not on the product row.
+     */
+    @Test
+    void updateDoesNotTouchStatusOrTellTheRestockNotifier() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setStockQuantity(0);
+        p.setStatus(ProductStatus.SOLD_OUT);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.update(USER_ID, PRODUCT_ID, request());
+
+        assertThat(p.getStockQuantity()).isEqualTo(40);
+        assertThat(p.getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
+        verify(restock, never()).afterChange(any(), anyBoolean(), anyBoolean());
+    }
+
+    /** FR-041: lifting the farmer's pause makes an orderable product orderable again → alert. */
+    @Test
+    void unpausingAnOrderableProductTellsTheRestockNotifier() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setStatus(ProductStatus.UNAVAILABLE);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+        when(restock.isOrderable(p)).thenReturn(false, true);
+
+        service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.AVAILABLE);
+
+        verify(restock).afterChange(p, false, true);
+    }
+
+    /** FR-041: an admin un-hiding an orderable product makes it orderable again → alert. */
+    @Test
+    void adminUnhideTellsTheRestockNotifier() {
+        Product p = product(FARMER_ID);
+        p.setHidden(true);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+        when(restock.isOrderable(p)).thenReturn(false, true);
+
+        service.adminUnhide(PRODUCT_ID);
+
+        verify(restock).afterChange(p, false, true);
     }
 }

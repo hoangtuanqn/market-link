@@ -3,23 +3,37 @@ package com.techx.intervue.modules.order.services.impl;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
+import com.techx.intervue.modules.notification.enums.NotificationKind;
+import com.techx.intervue.modules.notification.resources.NotificationEvent;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
 import com.techx.intervue.modules.order.enums.OrderStatus;
 import com.techx.intervue.modules.order.exceptions.CutoffPassedException;
+import com.techx.intervue.modules.order.exceptions.InvalidOrderTransitionException;
+import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
+import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.order.exceptions.OutOfStockException;
+import com.techx.intervue.modules.order.exceptions.ProductNotInOrderException;
 import com.techx.intervue.modules.order.exceptions.SlotFullException;
 import com.techx.intervue.modules.order.exceptions.SlotNotAvailableException;
 import com.techx.intervue.modules.order.exceptions.StallUnavailableException;
 import com.techx.intervue.modules.order.repositories.CheckoutQueryRepository;
 import com.techx.intervue.modules.order.repositories.OrderItemRepository;
+import com.techx.intervue.modules.order.repositories.OrderQueryRepository;
+import com.techx.intervue.modules.order.repositories.OrderQueryRepository.OrderDetailRow;
 import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.order.requests.CartLine;
+import com.techx.intervue.modules.order.requests.ModifyOrderRequest;
 import com.techx.intervue.modules.order.requests.OrderGroupInput;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
+import com.techx.intervue.modules.order.resources.CustomerSummaryResource;
+import com.techx.intervue.modules.order.resources.OrderDetailResource;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource.MarketOption;
+import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.order.resources.PlacedOrderResource;
 import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
@@ -36,6 +50,7 @@ import com.techx.intervue.modules.stall.repositories.PickupSlotRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
@@ -46,6 +61,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -58,17 +74,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * FR-030…032 — the cart splits by stall (D-01), stock is deducted right at order time (D-02), a
- * slot has a capacity (D-06), the cutoff is per Farmer (D-05), an admin cannot buy (D-13).
+ * FR-030…032, 033, 036, 065 — the cart splits by stall (D-01), stock is deducted right at order
+ * time per pickup date (D-02, product_daily_stock), a slot has a capacity (D-06), the cutoff is per
+ * Farmer (D-05), an admin cannot buy (D-13), and reading/changing orders for both sides.
  */
 @Service
 @AllArgsConstructor
 public class OrderService implements OrderServiceInterface {
 
+    static final String AUTO_COMPLETE_NOTE = "Auto-completed after pickup.";
+
     static final String OUT_OF_STOCK = "out_of_stock";
     static final String SOLD_OUT = "sold_out";
     static final String UNAVAILABLE = "unavailable";
     static final String STALL_SUSPENDED = "stall_suspended";
+    private static final int MAX_PAGE_SIZE = 50;
 
     private final UserRepository userRepository;
     private final FarmerProfileRepository farmerRepository;
@@ -83,6 +103,9 @@ public class OrderService implements OrderServiceInterface {
     private final Clock clock;
     private final ProductDailyStockRepository dailyStockRepository;
     private final ProductAvailabilityResolver availability;
+    private final OrderQueryRepository orderQueries;
+    private final NotificationServiceInterface notifications;
+    private final RestockNotifier restock;
 
     /**
      * Read-only, no locking, changes nothing: groups the cart by farmer_id and writes each group's
@@ -215,14 +238,14 @@ public class OrderService implements OrderServiceInterface {
      * the cart is created and stock / slots are deducted, or nothing happens at all.
      *
      * <p>C5-2 — the shared locking order for every write path: every slot of the whole call first
-     * (ascending id), then every product of the whole call in exactly one {@code lockAllById}
-     * (ascending id). No slot / product row is read before it is locked — an unlocked read could be
-     * a stale snapshot.
+     * (ascending id), then every daily-stock row of the whole call in ascending (productId, date)
+     * order (see {@link #lockDailyStock}). No slot / daily-stock row is read before it is locked —
+     * an unlocked read could be a stale snapshot.
      */
     @Override
     @Transactional
     public List<PlacedOrderResource> place(long customerUserId, PlaceOrderRequest request) {
-        requireBuyer(customerUserId);
+        User customer = requireBuyer(customerUserId);
 
         Map<Long, PickupSlot> slots = lockSlots(request.groups());
         Map<String, ProductDailyStock> dailyStock = lockDailyStock(request.groups());
@@ -231,7 +254,8 @@ public class OrderService implements OrderServiceInterface {
         LocalDateTime now = LocalDateTime.now(clock);
         List<PlacedOrderResource> placed = new ArrayList<>();
         for (OrderGroupInput group : request.groups()) {
-            placed.add(placeGroup(customerUserId, group, slots, dailyStock, products, now));
+            placed.add(
+                    placeGroup(customerUserId, customer, group, slots, dailyStock, products, now));
         }
         return placed;
     }
@@ -309,6 +333,7 @@ public class OrderService implements OrderServiceInterface {
      */
     private PlacedOrderResource placeGroup(
             long customerUserId,
+            User customer,
             OrderGroupInput group,
             Map<Long, PickupSlot> slots,
             Map<String, ProductDailyStock> dailyStock,
@@ -379,6 +404,7 @@ public class OrderService implements OrderServiceInterface {
         items.forEach(i -> i.setOrderId(saved.getId()));
         orderItemRepository.saveAll(items);
         history.record(saved.getId(), null, OrderStatus.PLACED, customerUserId, null);
+        notifyOrderPlaced(saved, farmer, customer);
 
         return new PlacedOrderResource(
                 saved.getId(),
@@ -414,9 +440,10 @@ public class OrderService implements OrderServiceInterface {
 
     /**
      * D-13: only customer and farmer can buy; an admin uses their own account. Hiding the button in
-     * the FE is not enough.
+     * the FE is not enough. Returns the {@link User} because {@link #place} needs the customer's
+     * name for the ORDER_PLACED notification (FR-042).
      */
-    private void requireBuyer(long userId) {
+    private User requireBuyer(long userId) {
         User user =
                 userRepository
                         .findById(userId)
@@ -424,6 +451,7 @@ public class OrderService implements OrderServiceInterface {
         if (user.getRole() == RoleType.ADMIN) {
             throw new AccessDeniedException("Admin accounts cannot place orders.");
         }
+        return user;
     }
 
     /** The same product appearing on several lines is summed; the cart's order is kept. */
@@ -435,5 +463,509 @@ public class OrderService implements OrderServiceInterface {
                                 CartLine::quantity,
                                 Integer::sum,
                                 LinkedHashMap::new));
+    }
+
+    // ---------- FR-033, 036, 065: reading orders for both sides ----------
+
+    /** {@code GET /orders}: the caller's own purchases (buyer), newest first. */
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<OrderListItemResource> myOrders(
+            long userId, String status, int page, int pageSize) {
+        String dbStatus = parseStatusOrNull(status);
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return orderQueries.myOrders(userId, dbStatus, (safePage - 1) * safeSize, safeSize);
+    }
+
+    /**
+     * {@code GET /orders/{id}}: the caller must be the order's customer (customer_id) or the user
+     * of the farmer_profiles row that owns it (D-13: a Farmer also buys) — neither → {@link
+     * OrderNotYoursException} (403), even when the order exists (Review focus #3, R-06). {@code
+     * canCancel}/{@code canModify} are only true for the buyer; a Farmer viewing their own order
+     * always sees false.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public OrderDetailResource detail(long userId, long orderId) {
+        OrderDetailRow row =
+                orderQueries
+                        .findDetail(orderId)
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
+        boolean isBuyer = row.customerId() == userId;
+        boolean isOwningFarmer = row.farmerUserId() == userId;
+        if (!isBuyer && !isOwningFarmer) {
+            throw new OrderNotYoursException();
+        }
+
+        LocalDateTime now = LocalDateTime.now(clock);
+        boolean canCancel =
+                isBuyer && OrderLifecycle.canCustomerCancel(row.status(), row.cutoffAt(), now);
+        boolean canModify =
+                isBuyer && OrderLifecycle.canCustomerModify(row.status(), row.cutoffAt(), now);
+        CustomerSummaryResource customer =
+                isOwningFarmer
+                        ? new CustomerSummaryResource(
+                                row.customerId(),
+                                row.customerFullName(),
+                                row.customerPhone(),
+                                row.customerEmail())
+                        : null;
+
+        return new OrderDetailResource(
+                row.summary(),
+                orderQueries.items(orderId),
+                orderQueries.history(orderId),
+                canCancel,
+                canModify,
+                row.customerNote(),
+                row.farmerNote(),
+                customer,
+                orderQueries.reviewed(orderId));
+    }
+
+    /** {@code GET /farmer/orders}: orders placed at the Farmer's own stall, by pickup time. */
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<OrderListItemResource> farmerOrders(
+            long userId, String status, LocalDate date, int page, int pageSize) {
+        FarmerProfile profile =
+                farmerRepository
+                        .findByUserId(userId)
+                        .orElseThrow(() -> new AccessDeniedException("No stall for this account."));
+        String dbStatus = parseStatusOrNull(status);
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return orderQueries.farmerOrders(
+                profile.getId(), dbStatus, date, (safePage - 1) * safeSize, safeSize);
+    }
+
+    // ---------- FR-065, 066, 038: the Farmer changes the status ----------
+
+    @Override
+    @Transactional
+    public OrderDetailResource accept(long userId, long orderId) {
+        Order order = lockOwnedOrder(userId, orderId);
+        transition(order, OrderStatus.ACCEPTED, userId, null);
+        notifyBuyer(order, NotificationKind.ORDER_ACCEPTED, Map.of());
+        return detail(userId, orderId);
+    }
+
+    @Override
+    @Transactional
+    public OrderDetailResource decline(long userId, long orderId, String reason) {
+        Order order = lockOwnedOrder(userId, orderId);
+        order.setFarmerNote(reason);
+        transition(order, OrderStatus.DECLINED, userId, reason);
+        notifyBuyer(order, NotificationKind.ORDER_DECLINED, Map.of("reason", reason));
+        return detail(userId, orderId);
+    }
+
+    @Override
+    @Transactional
+    public OrderDetailResource markReady(long userId, long orderId) {
+        Order order = lockOwnedOrder(userId, orderId);
+        transition(order, OrderStatus.READY, userId, null);
+        notifyBuyer(order, NotificationKind.ORDER_READY, Map.of());
+        return detail(userId, orderId);
+    }
+
+    @Override
+    @Transactional
+    public OrderDetailResource complete(long userId, long orderId) {
+        Order order = lockOwnedOrder(userId, orderId);
+        transition(order, OrderStatus.COMPLETED, userId, null);
+        return detail(userId, orderId);
+    }
+
+    // ---------- FR-034, 035: the customer cancels / edits their own order before cutoff ----------
+
+    /**
+     * C5-18: wrong status (not {@code placed}/{@code accepted}) → {@link
+     * InvalidOrderTransitionException} (409 INVALID_TRANSITION); right status but past {@code
+     * cutoffAt} → {@link CutoffPassedException} (409 CUTOFF_PASSED) — two separate reasons, not
+     * merged into one exception the way {@link OrderLifecycle#canCustomerCancel} returns a boolean.
+     */
+    @Override
+    @Transactional
+    public OrderDetailResource cancel(long userId, long orderId) {
+        Order order = loadOwnedByCustomer(userId, orderId);
+        assertCustomerCanStillAct(order, OrderStatus.CANCELLED);
+        transition(order, OrderStatus.CANCELLED, userId, null);
+        notifyFarmer(order, NotificationKind.ORDER_CANCELLED, Map.of());
+        return detail(userId, orderId);
+    }
+
+    /**
+     * D-07 — only lower quantities or drop items, never add a new product: compute each product's
+     * difference, then add/subtract exactly that difference from the daily-stock row for this
+     * order's own pickup date (D-02 redesign — never {@code Product.stockQuantity}). Cancelling and
+     * re-placing would release the stock for someone else to grab in between, and would also change
+     * the {@code order_code} — not what a customer who just edited wants to see.
+     *
+     * <p>C5-2/C5-18 — lock order: order ({@link #loadOwnedByCustomer}) → slot (if any, even though
+     * this path does not change {@code booked_count}) → the daily-stock rows of the products
+     * currently in the order, one per product, ascending productId (every row shares this order's
+     * one pickup date, so productId alone is the deterministic order).
+     */
+    @Override
+    @Transactional
+    public OrderDetailResource modifyItems(long userId, long orderId, ModifyOrderRequest request) {
+        Order order = loadOwnedByCustomer(userId, orderId);
+        assertCustomerCanStillAct(order, OrderStatus.PLACED);
+
+        if (order.getSlotId() != null) {
+            slotRepository.lockById(order.getSlotId());
+        }
+
+        Map<Long, OrderItem> existing =
+                orderItemRepository.findByOrderId(orderId).stream()
+                        .collect(Collectors.toMap(OrderItem::getProductId, Function.identity()));
+        Map<Long, Integer> wanted =
+                request.items().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        CartLine::productId, CartLine::quantity, Integer::sum));
+        for (Long productId : wanted.keySet()) {
+            if (!existing.containsKey(productId)) {
+                throw new ProductNotInOrderException(productId);
+            }
+        }
+
+        Map<Long, Product> products =
+                productRepository.findAllById(existing.keySet()).stream()
+                        .collect(Collectors.toMap(Product::getId, Function.identity()));
+        BigDecimal total = BigDecimal.ZERO;
+        int remainingItems = 0;
+        for (Long productId : new TreeSet<>(existing.keySet())) {
+            OrderItem item = existing.get(productId);
+            Product p = products.get(productId);
+            ProductDailyStock row =
+                    dailyStockRepository
+                            .lockByProductIdAndStockDate(productId, order.getPickupDate())
+                            .orElseThrow();
+            int before = item.getQuantity();
+            int after = wanted.getOrDefault(productId, 0);
+            int delta = after - before;
+
+            if (delta > 0 && !canRaiseBy(p, row, delta)) {
+                throw new OutOfStockException(productId, p == null ? null : p.getName());
+            }
+            if (delta != 0) {
+                boolean wasOrderable = orderableOn(p, row);
+                row.setQuantityAvailable(row.getQuantityAvailable() - delta);
+                // FR-041: lowering a quantity gives stock back
+                if (p != null) {
+                    restock.afterChange(p, wasOrderable, orderableOn(p, row));
+                }
+            }
+
+            if (after == 0) {
+                orderItemRepository.delete(item);
+            } else {
+                remainingItems++;
+                item.setQuantity(after);
+                item.setSubtotal(item.getUnitPrice().multiply(BigDecimal.valueOf(after)));
+                orderItemRepository.save(item);
+                total = total.add(item.getSubtotal());
+            }
+        }
+        // C5: every "delete then read again in the same transaction" must flush() after the
+        // delete — the order_items just deleted/changed must be out of the persistence context
+        // before transition() below (the cancel branch) reads order_items again to restore stock,
+        // or stock would be restored twice for a product just dropped from the order above.
+        orderItemRepository.flush();
+
+        if (remainingItems == 0) {
+            // M-1: dropping every item is what cancels the order — NOT "total == 0", a 0₫ price is
+            // valid (a free item still leaves something in the order). Never leave an empty order.
+            transition(order, OrderStatus.CANCELLED, userId, "All items removed.");
+            notifyFarmer(order, NotificationKind.ORDER_CANCELLED, Map.of());
+            return detail(userId, orderId);
+        }
+
+        order.setTotalAmount(total);
+        if (order.getStatus() == OrderStatus.ACCEPTED) {
+            transition(order, OrderStatus.PLACED, userId, "Customer changed the order.");
+        } else {
+            // Status unchanged (still placed): do not go through transition() — no history,
+            // nothing moved. Manual flush() because detail() reads back with raw JDBC (C5-15/17).
+            orderRepository.save(order);
+            orderRepository.flush();
+        }
+        return detail(userId, orderId);
+    }
+
+    /**
+     * I-3/FR-064: raising a quantity uses exactly the same "sellable" rule as {@link #place}
+     * ({@link #sellable} — also excludes a {@code sold_out} the Farmer set while stock remains, not
+     * only {@code unavailable}) plus enough stock left in this order's own pickup-date row.
+     * Lowering/dropping does not go through here — it is always allowed whatever the status.
+     */
+    private static boolean canRaiseBy(Product p, ProductDailyStock row, int delta) {
+        return p != null && sellable(p) && row.getQuantityAvailable() >= delta;
+    }
+
+    /** Can be put in a cart today, on the one pickup date this daily-stock row is for. */
+    private static boolean orderableOn(Product p, ProductDailyStock row) {
+        return p != null && sellable(p) && row.getQuantityAvailable() > 0;
+    }
+
+    /**
+     * C5-8: locks the order row (PESSIMISTIC_WRITE) before reading any field. Only the buyer
+     * ({@code customer_id}) may cancel / edit their own order — not even the Farmer serving that
+     * order may come through this door (403). Missing order → 404.
+     */
+    private Order loadOwnedByCustomer(long userId, long orderId) {
+        Order order =
+                orderRepository
+                        .lockById(orderId)
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
+        if (order.getCustomerId() != userId) {
+            throw new OrderNotYoursException();
+        }
+        return order;
+    }
+
+    /**
+     * Keeps the two 409 reasons of C5-18 apart: wrong status first ({@code intendedTo} only makes
+     * the message clearer — cancelling and editing are both only allowed from {@code placed}/{@code
+     * accepted}), then past the cutoff.
+     */
+    private void assertCustomerCanStillAct(Order order, OrderStatus intendedTo) {
+        if (order.getStatus() != OrderStatus.PLACED && order.getStatus() != OrderStatus.ACCEPTED) {
+            throw new InvalidOrderTransitionException(order.getStatus(), intendedTo);
+        }
+        if (!LocalDateTime.now(clock).isBefore(order.getCutoffAt())) {
+            throw new CutoffPassedException(order.getId());
+        }
+    }
+
+    /**
+     * C5-8: locks the order row first — every status change path goes through here before doing
+     * anything else. Wrong owner (including an account without {@code farmer_profiles}) → {@link
+     * OrderNotYoursException} (403, R-06); missing order → {@link OrderNotFoundException} (404).
+     * D-09: do NOT check {@code approval_status} here — a suspended Farmer must still be able to
+     * finish orders accepted before (Review focus #5).
+     */
+    private Order lockOwnedOrder(long farmerUserId, long orderId) {
+        Order order =
+                orderRepository
+                        .lockById(orderId)
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
+        FarmerProfile farmer =
+                farmerRepository
+                        .findByUserId(farmerUserId)
+                        .orElseThrow(OrderNotYoursException::new);
+        if (!farmer.getId().equals(order.getFarmerId())) {
+            throw new OrderNotYoursException();
+        }
+        return order;
+    }
+
+    /**
+     * The single door for every status change. That way FR-038 (writing history) and D-02
+     * (restoring stock) cannot be forgotten on some branch: forget to call this and the status does
+     * not change either.
+     *
+     * <p>C5-2 — this path's lock order: the order is already locked (by {@link #lockOwnedOrder} /
+     * {@link #loadOwnedByCustomer}) → lock the slot (if any) → lock the daily-stock rows of the
+     * order's own pickup date, ascending productId.
+     *
+     * <p>The final {@code flush()}: {@link #detail} reads through {@code OrderQueryRepository} with
+     * raw JDBC, separate from the JPA persistence context — without a flush the changes made here
+     * (status, farmer_note, daily stock, booked_count) are not guaranteed to show up when the
+     * public methods above call {@link #detail} again to build the response in the same
+     * transaction.
+     *
+     * <p>C5-17: NO {@code @Transactional} here. This method is only ever self-invoked
+     * (this.transition(...)) from inside the class — the call does not go through the Spring proxy,
+     * so {@code @Transactional} on a private/self-invoked method creates no transaction boundary at
+     * all (Spring silently ignores it); the annotation would only promise a fake atomicity. This
+     * method MUST only be called inside the transaction of the public @Transactional method calling
+     * it (accept/decline/markReady/complete, cancel/modifyItems) — it never opens a transaction
+     * itself.
+     */
+    private Order transition(Order order, OrderStatus to, Long actorUserId, String note) {
+        OrderStatus from = order.getStatus();
+        OrderLifecycle.assertTransition(from, to);
+
+        if (OrderLifecycle.restoresStock(to)) {
+            if (order.getSlotId() != null) {
+                slotRepository
+                        .lockById(order.getSlotId())
+                        .ifPresent(s -> s.setBookedCount(Math.max(0, s.getBookedCount() - 1)));
+            }
+            restoreDailyStock(
+                    order.getPickupDate(), orderItemRepository.findByOrderId(order.getId()));
+        }
+
+        order.setStatus(to);
+        orderRepository.save(order);
+        history.record(order.getId(), from, to, actorUserId, note);
+        orderRepository.flush();
+        return order;
+    }
+
+    /**
+     * D-02 restored per pickup date: locks each item's {@code product_daily_stock} row by natural
+     * key, ascending productId (every row here shares the order's one pickup date, so productId
+     * alone gives C5-2's deterministic order), adds the ordered quantity back, and tells FR-041
+     * when that date's row crossed "cannot be ordered" → "can be ordered", for a product still
+     * listed and available. An unlocked {@code Product} read is enough here: this path never
+     * mutates the product row, only the daily-stock row.
+     */
+    private void restoreDailyStock(LocalDate pickupDate, List<OrderItem> items) {
+        Map<Long, Integer> qty =
+                items.stream()
+                        .collect(Collectors.toMap(OrderItem::getProductId, OrderItem::getQuantity));
+        Map<Long, Product> products =
+                productRepository.findAllById(qty.keySet()).stream()
+                        .collect(Collectors.toMap(Product::getId, Function.identity()));
+        for (Long productId : new TreeSet<>(qty.keySet())) {
+            ProductDailyStock row =
+                    dailyStockRepository
+                            .lockByProductIdAndStockDate(productId, pickupDate)
+                            .orElseThrow();
+            Product p = products.get(productId);
+            boolean wasOrderable = orderableOn(p, row);
+            row.setQuantityAvailable(row.getQuantityAvailable() + qty.get(productId));
+            if (p != null) {
+                restock.afterChange(p, wasOrderable, orderableOn(p, row));
+            }
+        }
+    }
+
+    // ---------- FR-042/D-11: order milestone notifications ----------
+
+    /**
+     * The Farmer gets the work once the customer has placed the order — {@code farmer} is already
+     * in scope in {@link #placeGroup} (filtered to APPROVED above), no need to query again. The
+     * recipient is {@code farmer_profiles.user_id}, not {@code farmer_profiles.id} (C5-19). The
+     * link carries the order's numeric id (I-1) — the FE route {@code farmer/orders/:code} keeps
+     * its old parameter name; whoever wires the page will read it as the id.
+     */
+    private void notifyOrderPlaced(Order order, FarmerProfile farmer, User customer) {
+        notifications.dispatch(
+                List.of(farmer.getUserId()),
+                NotificationEvent.of(
+                        NotificationKind.ORDER_PLACED,
+                        "/farmer/orders/" + order.getId(),
+                        Map.of("order", order.getOrderCode(), "customer", customer.getFullName())));
+    }
+
+    /**
+     * The customer is told when the Farmer changes the status of their order (accept/decline/ready)
+     * — the link carries the order's numeric id (I-1), the FE route {@code orders/:code} keeps its
+     * old parameter name.
+     */
+    private void notifyBuyer(Order order, NotificationKind kind, Map<String, String> extra) {
+        Map<String, String> params = new HashMap<>(extra);
+        params.put("order", order.getOrderCode());
+        farmerRepository
+                .findById(order.getFarmerId())
+                .ifPresent(f -> params.put("stall", f.getStallName()));
+        notifications.dispatch(
+                List.of(order.getCustomerId()),
+                NotificationEvent.of(kind, "/orders/" + order.getId(), params));
+    }
+
+    /**
+     * The Farmer is told when the customer cancels their own order — the link carries the order's
+     * numeric id (I-1), the FE route {@code farmer/orders/:code} keeps its old parameter name.
+     */
+    private void notifyFarmer(Order order, NotificationKind kind, Map<String, String> extra) {
+        farmerRepository
+                .findById(order.getFarmerId())
+                .ifPresent(
+                        f -> {
+                            Map<String, String> params = new HashMap<>(extra);
+                            params.put("order", order.getOrderCode());
+                            notifications.dispatch(
+                                    List.of(f.getUserId()),
+                                    NotificationEvent.of(
+                                            kind, "/farmer/orders/" + order.getId(), params));
+                        });
+    }
+
+    /**
+     * Whitelisted through {@link OrderStatus#valueOf} — an unknown value is a malformed request →
+     * 400, never concatenated into SQL (R-04).
+     */
+    private static String parseStatusOrNull(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        try {
+            return OrderStatus.valueOf(raw.trim().toUpperCase(Locale.ROOT)).value();
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Unknown order status: " + raw);
+        }
+    }
+
+    /**
+     * FR-037 — read-only: nothing is locked or reserved; the suggested cart goes through preview
+     * and place like any other cart. Only the buyer may reorder (403), a missing order is 404. The
+     * old order carries no pickup date guarantee any more (D-02 redesign is per-date) — quantities
+     * are capped at the nearest orderable date's availability, the same rule browse/search uses.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<CartLine> reorder(long userId, long orderId) {
+        Order order =
+                orderRepository
+                        .findById(orderId)
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
+        if (order.getCustomerId() != userId) {
+            throw new OrderNotYoursException();
+        }
+        // D-09: a stall that is not approved takes no orders, so nothing is suggested again
+        boolean stallOpen =
+                farmerRepository
+                        .findById(order.getFarmerId())
+                        .filter(f -> f.getApprovalStatus() == ApprovalStatus.APPROVED)
+                        .isPresent();
+        if (!stallOpen) {
+            return List.of();
+        }
+        List<OrderItem> lines = orderItemRepository.findByOrderId(orderId);
+        Map<Long, Product> byId =
+                productRepository
+                        .findAllById(lines.stream().map(OrderItem::getProductId).toList())
+                        .stream()
+                        .collect(Collectors.toMap(Product::getId, Function.identity()));
+        Map<Long, BigDecimal> basePrices =
+                byId.values().stream().collect(Collectors.toMap(Product::getId, Product::getPrice));
+        Map<Long, ProductAvailabilityResolver.Availability> resolved =
+                availability.resolve(basePrices);
+        List<CartLine> cart = new ArrayList<>();
+        for (OrderItem line : lines) {
+            Product p = byId.get(line.getProductId());
+            ProductAvailabilityResolver.Availability a = p == null ? null : resolved.get(p.getId());
+            // Same "can be bought" rule as place: deleted, hidden, paused, sold out or no
+            // orderable date drop out
+            if (p == null || !sellable(p) || a == null || a.quantity() <= 0) {
+                continue;
+            }
+            cart.add(new CartLine(p.getId(), Math.min(line.getQuantity(), a.quantity())));
+        }
+        return cart;
+    }
+
+    /**
+     * FR-039 / D-03 — the system completes a ready order once the pickup window is 24 hours behind
+     * it. The order row is locked and re-read (C5-8), so an order a farmer moved meanwhile is left
+     * alone. No actor on the history row and no notification (completing notifies nobody). Never
+     * restores stock (COMPLETED is not in {@link OrderLifecycle#restoresStock}).
+     */
+    @Override
+    @Transactional
+    public boolean autoComplete(long orderId) {
+        Order order = orderRepository.lockById(orderId).orElse(null);
+        if (order == null || order.getStatus() != OrderStatus.READY) {
+            return false;
+        }
+        transition(order, OrderStatus.COMPLETED, null, AUTO_COMPLETE_NOTE);
+        return true;
     }
 }

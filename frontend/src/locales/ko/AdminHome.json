@@ -31,12 +31,6 @@
     "feedback_other": "건의 미처리 의견, 그중 하나는 버그",
     "announcements_other": "건의 공지가 노출 중, Thảo Điền 10월 4일 휴장"
   },
-  "earned": {
-    "title": "MarketLink의 수입",
-    "link": "매출 리포트",
-    "note": "{{month}}, 노출 자리를 산 가게에서 들어온 돈입니다. 장터가 가져간 돈과는 따로 셉니다.",
-    "of": "₫ · 장터가 가져간 {{gmv}}의 {{pct}}%"
-  },
   "byMarket": {
     "title": "이번 주 장터별 주문",
     "link": "모든 주문",

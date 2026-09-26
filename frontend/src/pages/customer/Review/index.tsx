@@ -32,6 +32,20 @@ const CustomerReviewPage = () => {
     );
   }
 
+  /**
+   * FR-050 — a review belongs to a finished purchase, so the form only exists once the order is completed. Hiding the
+   * link on the ticket is not enough: this page is reachable by typing the URL.
+   */
+  if (order.status !== 'completed') {
+    return (
+      <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
+        <h1 className="text-h2">{t('notCompleted.title')}</h1>
+        <p className="text-ink-muted">{t('notCompleted.text')}</p>
+        <ButtonLink to={`/orders/${code}`}>{t('breadcrumbOrder', { code: order.code })}</ButtonLink>
+      </div>
+    );
+  }
+
   const stallName = farmerName(order.farmerId);
   const completedAt = order.history[order.history.length - 1][1];
 

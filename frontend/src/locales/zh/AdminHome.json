@@ -31,12 +31,6 @@
     "feedback_other": "条未处理的反馈，其中一条是缺陷",
     "announcements_other": "条公告正在展示，Thảo Điền 10月4日休市"
   },
-  "earned": {
-    "title": "MarketLink 的收入",
-    "link": "营收报表",
-    "note": "{{month}}，来自摊位购买展示位。与集市收到的钱分开计算。",
-    "of": "₫ · 相当于集市收入 {{gmv}} 的 {{pct}}%"
-  },
   "byMarket": {
     "title": "本周各集市订单量",
     "link": "全部订单",

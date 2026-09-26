@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.techx.intervue.modules.order.enums.OrderStatus;
 import com.techx.intervue.modules.order.exceptions.CutoffPassedException;
 import com.techx.intervue.modules.order.exceptions.InvalidOrderTransitionException;
+import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
 import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.order.exceptions.OutOfStockException;
 import com.techx.intervue.modules.order.exceptions.SlotFullException;
@@ -52,6 +53,12 @@ class OrderExceptionHandlerTest {
     void someoneElsesOrderAndTheWrongRoleAre403() {
         assertError(handler.notYours(new OrderNotYoursException()), 403, "FORBIDDEN");
         assertError(handler.forbidden(new AccessDeniedException("admin")), 403, "FORBIDDEN");
+    }
+
+    /** Unlike a wrong owner (403): an id that does not exist at all is 404, not 403. */
+    @Test
+    void aMissingOrderIs404() {
+        assertError(handler.notFound(new OrderNotFoundException(999L)), 404, "NOT_FOUND");
     }
 
     /** Last backstop: a UNIQUE order_code violation or a stock / capacity CHECK is still 409. */

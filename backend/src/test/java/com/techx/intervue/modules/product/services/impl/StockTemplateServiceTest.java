@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
@@ -35,6 +36,7 @@ class StockTemplateServiceTest {
     private WeeklyStockTemplateRepository templates;
     private ProductRepository products;
     private FarmerProfileRepository farmers;
+    private RestockNotifier restock;
     private StockTemplateService service;
 
     @BeforeEach
@@ -42,7 +44,8 @@ class StockTemplateServiceTest {
         templates = mock(WeeklyStockTemplateRepository.class);
         products = mock(ProductRepository.class);
         farmers = mock(FarmerProfileRepository.class);
-        service = new StockTemplateService(templates, products, farmers);
+        restock = mock(RestockNotifier.class);
+        service = new StockTemplateService(templates, products, farmers, restock);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -138,6 +141,42 @@ class StockTemplateServiceTest {
         service.replace(USER_ID, request);
 
         verify(templates).replaceAll(FARMER_ID, request.items());
+    }
+
+    /**
+     * FR-041: a product with zero templates is never orderable (decision D-02 redesign). Adding its
+     * first template can take it from "never orderable" to orderable — a restock event, told to
+     * whoever favourited the product.
+     */
+    @Test
+    void replaceTellsTheRestockNotifierWhenAProductGainsItsFirstOrderableDate() {
+        approvedStall();
+        Product product = product(FARMER_ID);
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(product));
+        when(templates.findResourcesByFarmerId(FARMER_ID)).thenReturn(List.of());
+        when(restock.isOrderable(product)).thenReturn(false, true);
+
+        service.replace(USER_ID, oneItemRequest(1, 40, new BigDecimal("2.00")));
+
+        verify(restock).afterChange(product, false, true);
+    }
+
+    /**
+     * {@code afterChange} is always called with both booleans, the same convention as {@code
+     * ProductService} and {@code OrderService} — {@link RestockNotifier} itself decides whether
+     * "already orderable before" means staying quiet.
+     */
+    @Test
+    void replaceCallsAfterChangeEvenWhenNothingReallyChanged() {
+        approvedStall();
+        Product product = product(FARMER_ID);
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(product));
+        when(templates.findResourcesByFarmerId(FARMER_ID)).thenReturn(List.of());
+        when(restock.isOrderable(product)).thenReturn(true, true);
+
+        service.replace(USER_ID, oneItemRequest(1, 40, new BigDecimal("2.00")));
+
+        verify(restock).afterChange(product, true, true);
     }
 
     private static StockTemplateRequest oneItemRequest(
