@@ -6,14 +6,12 @@ import { Chip } from '@/components/ui/chip';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
 import { categories, product } from '@/data/catalog';
-import { UNIT_LIST } from '@/data/units';
-import { guessPlural, perUnit, units } from '@/lib/format';
+import { UNITS, pluralOf } from '@/constants/units';
+import { perUnit, units } from '@/lib/format';
 import type { ProductStatus } from '@/types/product.types';
 import Notification from '@/utils/notification';
 
 const STATUS_OPTIONS: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
-
-const OWN_UNIT = '__own';
 
 /** FR-062 — add or edit one product: name, category, unit (built-in or the stall's own), price, quantity, description. */
 const FarmerProductFormPage = () => {
@@ -24,13 +22,9 @@ const FarmerProductFormPage = () => {
   const existing = editing ? product(Number(id)) : undefined;
   const notFound = editing && !existing;
 
-  const knownUnit = existing && UNIT_LIST.some((u) => u.one === existing.unit);
-
   const [name, setName] = useState(existing?.name ?? '');
   const [category, setCategory] = useState(existing?.category ?? categories[0].name);
-  const [unitChoice, setUnitChoice] = useState(existing && !knownUnit ? OWN_UNIT : (existing?.unit ?? 'bunch'));
-  const [ownOne, setOwnOne] = useState(existing && !knownUnit ? existing.unit : '');
-  const [ownMany, setOwnMany] = useState(existing && !knownUnit ? (existing.plural ?? '') : '');
+  const [unitChoice, setUnitChoice] = useState(existing?.unit ?? 'bunch');
   const [price, setPrice] = useState(existing?.price ?? 0);
   const [qty, setQty] = useState(existing?.stock ?? 0);
   const [desc, setDesc] = useState(existing?.desc ?? '');
@@ -38,10 +32,7 @@ const FarmerProductFormPage = () => {
   const [status, setStatus] = useState<ProductStatus>(existing?.status ?? 'available');
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const [unitOne, unitMany] =
-    unitChoice === OWN_UNIT
-      ? [ownOne.trim() || 'unit', ownMany.trim() || guessPlural(ownOne.trim() || 'unit')]
-      : [unitChoice, UNIT_LIST.find((u) => u.one === unitChoice)?.many ?? guessPlural(unitChoice)];
+  const [unitOne, unitMany] = [unitChoice, pluralOf(unitChoice)];
 
   const qtyError = qty < 0 ? t('qty.error') : undefined;
 
@@ -106,42 +97,10 @@ const FarmerProductFormPage = () => {
               required
               value={unitChoice}
               onChange={(e) => setUnitChoice(e.target.value)}
-              options={[
-                ...UNIT_LIST.map((u) => ({
-                  value: u.one,
-                  label: u.builtin ? u.one : t('unit.addedByStall', { unit: u.one }),
-                })),
-                { value: OWN_UNIT, label: t('unit.own') },
-              ]}
+              options={UNITS.map((u) => u.one)}
             />
             <span className="text-ink-muted text-[13px]">{t('unit.hint')}</span>
           </div>
-
-          {unitChoice === OWN_UNIT && (
-            <div className="flex flex-col gap-1.5">
-              <span className="text-small text-ink font-bold">
-                {t('own.label')}
-                <span className="text-danger ml-0.5">*</span>
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <input
-                  value={ownOne}
-                  onChange={(e) => setOwnOne(e.target.value)}
-                  placeholder={t('own.onePlaceholder')}
-                  aria-label={t('own.one')}
-                  className="border-line-strong bg-surface-raised min-h-11 min-w-40 flex-1 rounded-sm border-[1.5px] px-3"
-                />
-                <input
-                  value={ownMany}
-                  onChange={(e) => setOwnMany(e.target.value)}
-                  placeholder={guessPlural(ownOne.trim() || 'unit')}
-                  aria-label={t('own.many')}
-                  className="border-line-strong bg-surface-raised min-h-11 min-w-40 flex-1 rounded-sm border-[1.5px] px-3"
-                />
-              </div>
-              <span className="text-ink-muted text-[13px]">{t('own.hint')}</span>
-            </div>
-          )}
 
           <div className="md:col-span-2">
             <span className="text-small text-ink font-bold">{t('preview.label')}</span>

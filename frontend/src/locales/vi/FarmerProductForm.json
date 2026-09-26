@@ -19,16 +19,7 @@
   },
   "unit": {
     "label": "Bán theo",
-    "addedByStall": "{{unit}} · do một sạp thêm",
-    "own": "Tự đặt đơn vị…",
     "hint": "Cách khách mua: theo ký, theo bó, theo củ, theo túi. Chọn một hoặc tự đặt."
-  },
-  "own": {
-    "label": "Đơn vị của bạn",
-    "onePlaceholder": "tray of 30",
-    "one": "Đơn vị, số ít",
-    "many": "Đơn vị, số nhiều",
-    "hint": "Số ít trước, rồi số nhiều. Chúng tôi điền sẵn ô thứ hai; hãy sửa nếu đoán sai."
   },
   "preview": {
     "label": "Sẽ hiển thị thế nào",

@@ -1,19 +1,13 @@
 {
   "overline": "设置",
-  "title": "分类与单位",
-  "intro": "摊位上架商品时会从这两个列表里挑。分类由你来定。单位也由你筛选，但列表里没有合适的时候，摊位随时可以自己起名。",
+  "title": "分类",
+  "intro": "每个摊位添加商品时唯一可选的列表。销售单位是应用内置的固定列表。",
   "link": {
     "announcements": "公告",
     "feedback": "反馈收件箱"
   },
-  "tabsLabel": "基础数据",
-  "tab": {
-    "categories": "分类",
-    "units": "单位"
-  },
   "caption": {
-    "categories_other": "{{count}} 个分类",
-    "units_other": "{{count}} 个单位"
+    "categories_other": "{{count}} 个分类"
   },
   "col": {
     "category": "分类",
@@ -26,13 +20,6 @@
     "kind": "类型",
     "readsAs": "读作"
   },
-  "kind": {
-    "Weight": "重量",
-    "Volume": "体积",
-    "Count": "计数",
-    "Pack": "包装"
-  },
-  "addedBy": "由 {{by}} 添加",
   "action": {
     "save": "保存",
     "remove": "删除",
@@ -47,23 +34,6 @@
     "position": "在筛选器中的位置",
     "submit": "添加分类"
   },
-  "unitNote": {
-    "title": "这里有两个单位是摊位自己输入的，不是你添加的。",
-    "text": "选项里没有合适的时候，摊位会自己给单位起名。把用得开的提上来，把重复的合并掉，其余的放着别动。"
-  },
-  "unitsNote": "单位以文字形式存在商品上，所以摊位永远不会被这个列表卡住。你在这里筛选的是选项框里出现什么，以及哪些写法要合并，免得报表把「bag」和「Bag」拆成两样。",
-  "unitForm": {
-    "title": "添加单位",
-    "one": "单数形式",
-    "many": "复数形式",
-    "manyHint": "英文没有统一规则，所以要手动填写，不能靠猜。",
-    "kind": "类型",
-    "preview": "读起来会是",
-    "previewFallback": "单位",
-    "onTheTag": "标签上",
-    "left": "剩余",
-    "submit": "添加单位"
-  },
   "removeCategory": {
     "title": "删除 {{name}}？",
     "textUsed_other": "有 {{count}} 件商品在用它。请选择把它们移到哪里。",
@@ -71,13 +41,6 @@
     "moveTo": "把商品移到",
     "keep": "保留分类",
     "confirm": "删除分类"
-  },
-  "mergeUnit": {
-    "title": "把 {{name}} 合并进另一个单位？",
-    "text": "使用它的商品会改写成你选的单位，过去的订单则保留成交时的单位。",
-    "into": "合并到",
-    "cancel": "取消",
-    "confirm": "合并"
   },
   "empty": {
     "categories": {
@@ -89,9 +52,6 @@
     "categorySaved": "已保存 {{name}}。",
     "categoryAdded": "分类已添加。摊位现在就能选。",
     "categoryRemoved": "已删除 {{name}}。",
-    "unitSaved": "已保存 {{name}}。",
-    "unitAdded": "单位已加入选项列表。",
-    "promoted": "{{name}} 现在出现在所有摊位的选项列表里。",
-    "merged": "已合并。一件商品被改写。"
+    "promoted": "{{name}} 现在出现在所有摊位的选项列表里。"
   }
 }

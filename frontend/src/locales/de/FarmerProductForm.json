@@ -19,16 +19,7 @@
   },
   "unit": {
     "label": "Verkauft pro",
-    "addedByStall": "{{unit}} · von einem Stand hinzugefügt",
-    "own": "Eigene Einheit benennen…",
     "hint": "Wie ein Kunde es kauft: nach Kilo, Bund, Knolle, Beutel. Wählen Sie eine aus oder benennen Sie Ihre eigene."
-  },
-  "own": {
-    "label": "Ihre Einheit",
-    "onePlaceholder": "tray of 30",
-    "one": "Einheit, Einzahl",
-    "many": "Einheit, Mehrzahl",
-    "hint": "Erst die Einzahl, dann die Mehrzahl. Das zweite Feld füllen wir für Sie aus; ändern Sie es, wenn die Vermutung falsch ist."
   },
   "preview": {
     "label": "So wird es angezeigt",

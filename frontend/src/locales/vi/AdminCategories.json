@@ -1,21 +1,14 @@
 {
   "overline": "Cài đặt",
-  "title": "Danh mục & đơn vị",
-  "intro": "Hai danh sách mà sạp nào cũng chọn từ đó khi đăng sản phẩm. Danh mục do bạn đặt. Đơn vị cũng do bạn chọn lọc, nhưng sạp luôn được tự đặt tên đơn vị khi không có cái nào vừa.",
+  "title": "Danh mục",
+  "intro": "Danh sách duy nhất mà mọi sạp chọn khi thêm sản phẩm. Đơn vị bán là danh sách cố định, đi kèm sẵn trong ứng dụng.",
   "link": {
     "announcements": "Thông báo",
     "feedback": "Hộp thư góp ý"
   },
-  "tabsLabel": "Dữ liệu nền",
-  "tab": {
-    "categories": "Danh mục",
-    "units": "Đơn vị"
-  },
   "caption": {
     "categories_one": "{{count}} danh mục",
-    "categories_other": "{{count}} danh mục",
-    "units_one": "{{count}} đơn vị",
-    "units_other": "{{count}} đơn vị"
+    "categories_other": "{{count}} danh mục"
   },
   "col": {
     "category": "Danh mục",
@@ -28,13 +21,6 @@
     "kind": "Loại",
     "readsAs": "Đọc thành"
   },
-  "kind": {
-    "Weight": "Khối lượng",
-    "Volume": "Thể tích",
-    "Count": "Đếm được",
-    "Pack": "Đóng gói"
-  },
-  "addedBy": "do {{by}} thêm",
   "action": {
     "save": "Lưu",
     "remove": "Xoá",
@@ -49,23 +35,6 @@
     "position": "Vị trí trong bộ lọc",
     "submit": "Thêm danh mục"
   },
-  "unitNote": {
-    "title": "Hai đơn vị trong danh sách này do sạp tự gõ, không phải bạn thêm.",
-    "text": "Sạp tự đặt tên đơn vị khi không có cái nào trong danh sách vừa ý. Đưa những cái dùng nhiều vào danh sách chọn, gộp cái trùng, còn lại cứ để yên."
-  },
-  "unitsNote": "Đơn vị được lưu dạng chữ trên sản phẩm, nên sạp không bao giờ bị danh sách này chặn. Cái bạn chọn lọc ở đây là những gì hiện trong ô chọn, và những cách viết nào được gộp lại để báo cáo không tách “bag” khỏi “Bag”.",
-  "unitForm": {
-    "title": "Thêm đơn vị",
-    "one": "Một đơn vị",
-    "many": "Nhiều đơn vị",
-    "manyHint": "Tiếng Anh không có quy tắc chung cho việc này, nên phải gõ tay chứ không đoán được.",
-    "kind": "Loại",
-    "preview": "Sẽ đọc thành",
-    "previewFallback": "đơn vị",
-    "onTheTag": "trên thẻ giá",
-    "left": "còn lại",
-    "submit": "Thêm đơn vị"
-  },
   "removeCategory": {
     "title": "Xoá {{name}}?",
     "textUsed_one": "{{count}} sản phẩm đang dùng danh mục này. Hãy chọn nơi chuyển chúng đến.",
@@ -74,13 +43,6 @@
     "moveTo": "Chuyển sản phẩm sang",
     "keep": "Giữ danh mục",
     "confirm": "Xoá danh mục"
-  },
-  "mergeUnit": {
-    "title": "Gộp {{name}} vào một đơn vị khác?",
-    "text": "Sản phẩm đang dùng nó sẽ được viết lại theo đơn vị bạn chọn, còn đơn hàng cũ giữ nguyên đơn vị lúc bán.",
-    "into": "Gộp vào",
-    "cancel": "Huỷ",
-    "confirm": "Gộp"
   },
   "empty": {
     "categories": {
@@ -92,9 +54,6 @@
     "categorySaved": "Đã lưu {{name}}.",
     "categoryAdded": "Đã thêm danh mục. Các sạp chọn được ngay.",
     "categoryRemoved": "Đã xoá {{name}}.",
-    "unitSaved": "Đã lưu {{name}}.",
-    "unitAdded": "Đã thêm đơn vị vào danh sách chọn.",
-    "promoted": "Từ giờ {{name}} nằm trong danh sách chọn của mọi sạp.",
-    "merged": "Đã gộp. Một sản phẩm được viết lại."
+    "promoted": "Từ giờ {{name}} nằm trong danh sách chọn của mọi sạp."
   }
 }
