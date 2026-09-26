@@ -1,5 +1,5 @@
 -- FR-062, FR-020…023, FR-074. Cột theo db/schema.sql §4; khoá theo quy ước thật (BIGINT UNSIGNED, PK `id`)
--- — cùng lý do đã ghi ở V20260925007 và V20260926004.
+-- — cùng lý do đã ghi ở V20260925007 và V20260926008.
 CREATE TABLE products (
     id             BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     farmer_id      BIGINT UNSIGNED NOT NULL,

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * FR-073 chợ phiên; FR-010/FR-012 khách duyệt và xem trên bản đồ. Bảng `markets` (V20260926004).
+ * FR-073 chợ phiên; FR-010/FR-012 khách duyệt và xem trên bản đồ. Bảng `markets` (V20260926008).
  */
 @Entity
 @Getter

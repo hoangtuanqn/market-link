@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-062 sản phẩm của một stall. Bảng `products` (V20260926007). */
+/** FR-062 sản phẩm của một stall. Bảng `products` (V20260926010). */
 @Entity
 @Getter
 @Setter

@@ -12,7 +12,7 @@ import lombok.Setter;
 
 /**
  * FR-076 master data do admin quản; FR-020 khách lọc sản phẩm theo đây. Bảng `categories`
- * (V20260926004).
+ * (V20260926008).
  */
 @Entity
 @Getter

@@ -1,6 +1,6 @@
 -- FR-060, FR-061. Các cột này có trong db/schema.sql §2 nhưng V20260925007 chỉ lấy phần cần cho
 -- bước duyệt Farmer; giờ mới tới lượt hồ sơ gian hàng. Khoá BIGINT UNSIGNED, PK `id` — cùng lý do
--- đã ghi ở V20260925007 và V20260926004.
+-- đã ghi ở V20260925007 và V20260926008.
 ALTER TABLE farmer_profiles
     ADD COLUMN logo_url           VARCHAR(255) NULL AFTER description,
     ADD COLUMN order_cutoff_hours INT NOT NULL DEFAULT 12 AFTER logo_url,

@@ -50,7 +50,7 @@ public class FarmerProfile {
     @Column(name = "video_path", length = 255)
     private String videoPath;
 
-    /** Ảnh đại diện gian hàng (FR-060, V20260926006). */
+    /** Ảnh đại diện gian hàng (FR-060, V20260926009). */
     @Column(name = "logo_url", length = 255)
     private String logoUrl;
 

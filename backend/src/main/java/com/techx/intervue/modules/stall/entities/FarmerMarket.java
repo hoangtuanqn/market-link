@@ -13,7 +13,7 @@ import lombok.Setter;
 
 /**
  * Một Farmer bán tại một chợ, với vị trí quầy (FR-060, FR-061). Bảng `farmer_markets`
- * (V20260926004).
+ * (V20260926008).
  */
 @Entity
 @Getter
