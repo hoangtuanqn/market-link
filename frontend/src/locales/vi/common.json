@@ -28,30 +28,6 @@
     "clock24": "24 giờ · 19:00",
     "clock12": "12 giờ · 7:00 pm",
     "preview": "Xem trước: {{date}} · {{time}} · {{price}}",
-    "notifications": "Thông báo",
-    "notificationsNote": "Lưu cùng tài khoản của bạn. MarketLink chưa gửi thông báo; khi có, thông báo sẽ theo các lựa chọn này.",
-    "notes": {
-      "customer": {
-        "orderDecided": "Đơn được nhận hoặc bị từ chối",
-        "orderReady": "Đơn đã sẵn sàng để nhận",
-        "backInStock": "Sản phẩm đã lưu có hàng trở lại",
-        "announcements": "Thông báo từ MarketLink",
-        "stallReply": "Sạp trả lời tin nhắn của bạn"
-      },
-      "farmer": {
-        "newOrder": "Có đơn mới",
-        "orderChanged": "Khách sửa hoặc huỷ đơn",
-        "cutoffSoon": "Còn một giờ nữa là tới giờ chốt",
-        "newReview": "Có đánh giá mới về sạp của bạn",
-        "announcements": "Thông báo từ MarketLink"
-      },
-      "admin": {
-        "farmerApplication": "Có đơn đăng ký nhà vườn mới",
-        "reported": "Một đánh giá hoặc tin đăng bị báo cáo",
-        "newFeedback": "Góp ý mới",
-        "marketEdited": "Một chợ được chỉnh sửa"
-      }
-    },
     "save": "Lưu cài đặt",
     "saving": "Đang lưu…",
     "saveHint": "Chủ đề áp dụng ngay khi chọn; các mục khác áp dụng khi bạn lưu.",
@@ -415,6 +391,52 @@
       "later": "Để sau",
       "onTitle": "Đã bật thông báo",
       "onText": "Bạn chọn loại thông báo muốn nhận trong Cài đặt → Thông báo."
+    },
+    "settings": {
+      "title": "Thông báo",
+      "intro": "Chọn loại thông báo nào tới bạn và tới bằng cách nào. Mọi thông báo vẫn nằm trong danh sách thông báo.",
+      "browser": "Thông báo của trình duyệt",
+      "permission": {
+        "granted": "Đang bật. Thông báo vẫn hiện khi MarketLink ở nền.",
+        "default": "Đang tắt. Bật lên để thấy thông báo khi tab này ở nền.",
+        "denied": "Trình duyệt đang chặn. Cho phép thông báo cho trang này trong phần cài đặt trang web của trình duyệt, rồi tải lại trang.",
+        "unsupported": "Trình duyệt này không hiện được thông báo. Bạn vẫn thấy thông báo ngay trên trang."
+      },
+      "loading": "Đang tải cài đặt thông báo…",
+      "loadErrorTitle": "Không tải được cài đặt thông báo",
+      "loadErrorText": "Kiểm tra kết nối rồi thử lại.",
+      "retry": "Thử lại",
+      "group": "Loại",
+      "inApp": "Trên trang",
+      "inBrowser": "Trình duyệt",
+      "groups": {
+        "messages": {
+          "title": "Tin nhắn",
+          "note": "Khi khách hoặc sạp nhắn cho bạn"
+        },
+        "announcements": {
+          "title": "Thông báo chung",
+          "note": "Tin từ MarketLink, chẳng hạn một chợ nghỉ phiên"
+        },
+        "account": {
+          "title": "Đơn đăng ký sạp",
+          "note": "Khi đơn được duyệt, bị từ chối, bị tạm khoá hoặc mở lại"
+        },
+        "farmerApplications": {
+          "title": "Đơn đăng ký nhà vườn",
+          "note": "Khi có người đăng ký bán hàng trên MarketLink"
+        }
+      },
+      "sound": "Phát âm thanh",
+      "quiet": "Giờ yên tĩnh",
+      "quietNote": "Trong khoảng giờ này không hiện popup, không âm thanh, không thông báo trình duyệt (giờ Việt Nam). Thông báo vẫn vào danh sách.",
+      "from": "Từ",
+      "to": "Đến",
+      "testNote": "Gửi thử một thông báo cho chính bạn để xem nó hiện ra thế nào.",
+      "test": "Gửi thử",
+      "testing": "Đang gửi…",
+      "testError": "Không gửi thử được. Vài giây nữa hãy thử lại.",
+      "saveError": "Không lưu được cài đặt thông báo."
     }
   }
 }

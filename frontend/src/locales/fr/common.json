@@ -28,30 +28,6 @@
     "clock24": "24 heures · 19:00",
     "clock12": "12 heures · 7:00 pm",
     "preview": "Aperçu : {{date}} · {{time}} · {{price}}",
-    "notifications": "Notifications",
-    "notificationsNote": "Enregistré avec votre compte. MarketLink n’envoie pas encore de notifications ; elles suivront ces choix le moment venu.",
-    "notes": {
-      "customer": {
-        "orderDecided": "Une commande est acceptée ou refusée",
-        "orderReady": "Une commande est prête à être retirée",
-        "backInStock": "Un produit enregistré est de nouveau disponible",
-        "announcements": "Annonces de MarketLink",
-        "stallReply": "Un stand répond à votre message"
-      },
-      "farmer": {
-        "newOrder": "Une nouvelle commande arrive",
-        "orderChanged": "Un client modifie ou annule une commande",
-        "cutoffSoon": "L’heure limite est dans une heure",
-        "newReview": "Un nouvel avis sur votre stand",
-        "announcements": "Annonces de MarketLink"
-      },
-      "admin": {
-        "farmerApplication": "Une candidature Farmer arrive",
-        "reported": "Un avis ou une annonce est signalé",
-        "newFeedback": "Nouveau retour",
-        "marketEdited": "Un marché est modifié"
-      }
-    },
     "save": "Enregistrer les paramètres",
     "saving": "Enregistrement…",
     "saveHint": "Le thème s’applique dès que vous le choisissez ; le reste, à l’enregistrement.",
@@ -415,6 +391,52 @@
       "later": "Plus tard",
       "onTitle": "Notifications activées",
       "onText": "Choisissez ce que vous recevez dans Paramètres → Notifications."
+    },
+    "settings": {
+      "title": "Notifications",
+      "intro": "Choisissez ce qui vous parvient et comment. Tout reste dans votre liste de notifications.",
+      "browser": "Notifications du navigateur",
+      "permission": {
+        "granted": "Activées. Les notifications s’affichent même quand MarketLink est en arrière-plan.",
+        "default": "Désactivées. Activez-les pour voir les notifications quand cet onglet est en arrière-plan.",
+        "denied": "Bloquées par votre navigateur. Autorisez les notifications pour ce site dans les paramètres du site, puis rechargez la page.",
+        "unsupported": "Ce navigateur ne peut pas afficher de notifications. Vous les voyez quand même sur la page."
+      },
+      "loading": "Chargement de vos paramètres de notification…",
+      "loadErrorTitle": "Impossible de charger vos paramètres de notification",
+      "loadErrorText": "Vérifiez votre connexion et réessayez.",
+      "retry": "Réessayer",
+      "group": "Quoi",
+      "inApp": "Sur la page",
+      "inBrowser": "Navigateur",
+      "groups": {
+        "messages": {
+          "title": "Messages",
+          "note": "Quand un client ou un stand vous écrit"
+        },
+        "announcements": {
+          "title": "Annonces",
+          "note": "Les nouvelles de MarketLink, comme la fermeture d’un marché"
+        },
+        "account": {
+          "title": "Votre demande de stand",
+          "note": "Quand elle est approuvée, refusée, suspendue ou rouverte"
+        },
+        "farmerApplications": {
+          "title": "Demandes Farmer",
+          "note": "Quand quelqu’un demande à vendre sur MarketLink"
+        }
+      },
+      "sound": "Jouer un son",
+      "quiet": "Heures calmes",
+      "quietNote": "Pas de fenêtres, de sons ni de notifications du navigateur pendant ces heures (heure du Vietnam). Tout arrive quand même dans votre liste.",
+      "from": "De",
+      "to": "À",
+      "testNote": "Envoyez-vous une notification pour voir son rendu.",
+      "test": "Envoyer un test",
+      "testing": "Envoi…",
+      "testError": "Impossible d’envoyer le test. Réessayez dans quelques secondes.",
+      "saveError": "Impossible d’enregistrer vos paramètres de notification."
     }
   }
 }

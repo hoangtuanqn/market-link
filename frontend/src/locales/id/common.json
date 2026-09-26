@@ -28,30 +28,6 @@
     "clock24": "24 jam · 19:00",
     "clock12": "12 jam · 7:00 pm",
     "preview": "Pratinjau: {{date}} · {{time}} · {{price}}",
-    "notifications": "Notifikasi",
-    "notificationsNote": "Disimpan bersama akun Anda. MarketLink belum mengirim notifikasi; nanti notifikasi akan mengikuti pilihan ini.",
-    "notes": {
-      "customer": {
-        "orderDecided": "Pesanan diterima atau ditolak",
-        "orderReady": "Pesanan siap diambil",
-        "backInStock": "Produk yang disimpan tersedia lagi",
-        "announcements": "Pengumuman dari MarketLink",
-        "stallReply": "Lapak membalas pesan Anda"
-      },
-      "farmer": {
-        "newOrder": "Ada pesanan baru",
-        "orderChanged": "Pelanggan mengubah atau membatalkan pesanan",
-        "cutoffSoon": "Batas waktu tinggal satu jam lagi",
-        "newReview": "Ada ulasan baru untuk lapak Anda",
-        "announcements": "Pengumuman dari MarketLink"
-      },
-      "admin": {
-        "farmerApplication": "Ada pendaftaran Farmer masuk",
-        "reported": "Ulasan atau listing dilaporkan",
-        "newFeedback": "Masukan baru",
-        "marketEdited": "Pasar diedit"
-      }
-    },
     "save": "Simpan pengaturan",
     "saving": "Menyimpan…",
     "saveHint": "Tema langsung berlaku saat dipilih; sisanya saat Anda menyimpan.",
@@ -415,6 +391,52 @@
       "later": "Nanti saja",
       "onTitle": "Notifikasi aktif",
       "onText": "Ubah apa yang Anda terima di Pengaturan → Notifikasi."
+    },
+    "settings": {
+      "title": "Notifikasi",
+      "intro": "Pilih apa yang Anda terima dan bagaimana caranya. Semuanya tetap masuk ke daftar notifikasi.",
+      "browser": "Notifikasi browser",
+      "permission": {
+        "granted": "Aktif. Notifikasi tetap muncul saat MarketLink di latar belakang.",
+        "default": "Nonaktif. Aktifkan untuk melihat notifikasi saat tab ini di latar belakang.",
+        "denied": "Diblokir browser. Izinkan notifikasi untuk situs ini di pengaturan situs browser, lalu muat ulang halaman.",
+        "unsupported": "Browser ini tidak bisa menampilkan notifikasi. Anda tetap melihatnya di halaman."
+      },
+      "loading": "Memuat pengaturan notifikasi…",
+      "loadErrorTitle": "Pengaturan notifikasi tidak dapat dimuat",
+      "loadErrorText": "Periksa koneksi Anda lalu coba lagi.",
+      "retry": "Coba lagi",
+      "group": "Jenis",
+      "inApp": "Di halaman",
+      "inBrowser": "Browser",
+      "groups": {
+        "messages": {
+          "title": "Pesan",
+          "note": "Saat pelanggan atau lapak mengirim pesan"
+        },
+        "announcements": {
+          "title": "Pengumuman",
+          "note": "Kabar dari MarketLink, misalnya pasar tutup"
+        },
+        "account": {
+          "title": "Pendaftaran lapak Anda",
+          "note": "Saat disetujui, ditolak, ditangguhkan, atau dibuka kembali"
+        },
+        "farmerApplications": {
+          "title": "Pendaftaran Farmer",
+          "note": "Saat seseorang mendaftar berjualan di MarketLink"
+        }
+      },
+      "sound": "Putar suara",
+      "quiet": "Jam tenang",
+      "quietNote": "Tanpa pop-up, suara, atau notifikasi browser di jam ini (waktu Vietnam). Tetap masuk ke daftar Anda.",
+      "from": "Dari",
+      "to": "Sampai",
+      "testNote": "Kirim notifikasi ke diri sendiri untuk melihat tampilannya.",
+      "test": "Kirim tes",
+      "testing": "Mengirim…",
+      "testError": "Tes tidak terkirim. Coba lagi beberapa detik lagi.",
+      "saveError": "Pengaturan notifikasi tidak dapat disimpan."
     }
   }
 }

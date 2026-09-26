@@ -28,30 +28,6 @@
     "clock24": "24-hour · 19:00",
     "clock12": "12-hour · 7:00 pm",
     "preview": "Preview: {{date}} · {{time}} · {{price}}",
-    "notifications": "Notifications",
-    "notificationsNote": "Saved with your account. MarketLink does not send notifications yet; they will follow these choices when it does.",
-    "notes": {
-      "customer": {
-        "orderDecided": "An order is accepted or declined",
-        "orderReady": "An order is ready to collect",
-        "backInStock": "A saved product is back in stock",
-        "announcements": "Announcements from MarketLink",
-        "stallReply": "A stall replies to your message"
-      },
-      "farmer": {
-        "newOrder": "A new order arrives",
-        "orderChanged": "A customer edits or cancels an order",
-        "cutoffSoon": "A cutoff is an hour away",
-        "newReview": "A new review of your stall",
-        "announcements": "Announcements from MarketLink"
-      },
-      "admin": {
-        "farmerApplication": "A Farmer application arrives",
-        "reported": "A review or listing is reported",
-        "newFeedback": "New feedback",
-        "marketEdited": "A market is edited"
-      }
-    },
     "save": "Save settings",
     "saving": "Saving…",
     "saveHint": "The theme applies as soon as you pick it; the rest when you save.",
@@ -415,6 +391,52 @@
       "later": "Not now",
       "onTitle": "Notifications are on",
       "onText": "You can change what you get in Settings → Notifications."
+    },
+    "settings": {
+      "title": "Notifications",
+      "intro": "Choose what reaches you and how. Everything still lands in your notification list.",
+      "browser": "Browser notifications",
+      "permission": {
+        "granted": "On. Notifications show even when MarketLink is in the background.",
+        "default": "Off. Turn them on to see notifications when this tab is in the background.",
+        "denied": "Blocked by your browser. Allow notifications for this site in the browser’s site settings, then reload the page.",
+        "unsupported": "This browser cannot show notifications. You still see them on the page."
+      },
+      "loading": "Loading your notification settings…",
+      "loadErrorTitle": "Could not load your notification settings",
+      "loadErrorText": "Check your connection and try again.",
+      "retry": "Try again",
+      "group": "What",
+      "inApp": "On the page",
+      "inBrowser": "Browser",
+      "groups": {
+        "messages": {
+          "title": "Messages",
+          "note": "When a customer or a stall writes to you"
+        },
+        "announcements": {
+          "title": "Announcements",
+          "note": "News from MarketLink, such as a market closing"
+        },
+        "account": {
+          "title": "Your stall application",
+          "note": "When it is approved, declined, suspended or reopened"
+        },
+        "farmerApplications": {
+          "title": "Farmer applications",
+          "note": "When someone applies to sell on MarketLink"
+        }
+      },
+      "sound": "Play a sound",
+      "quiet": "Quiet hours",
+      "quietNote": "No pop-ups, sounds or browser notifications in these hours (Vietnam time). They still arrive in your list.",
+      "from": "From",
+      "to": "To",
+      "testNote": "Send yourself a notification to check how it looks.",
+      "test": "Send a test",
+      "testing": "Sending…",
+      "testError": "Could not send the test. Try again in a few seconds.",
+      "saveError": "Could not save your notification settings."
     }
   }
 }

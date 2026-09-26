@@ -28,30 +28,6 @@
     "clock24": "24 horas · 19:00",
     "clock12": "12 horas · 7:00 pm",
     "preview": "Vista previa: {{date}} · {{time}} · {{price}}",
-    "notifications": "Notificaciones",
-    "notificationsNote": "Se guarda con tu cuenta. MarketLink aún no envía notificaciones; cuando lo haga, seguirán estas preferencias.",
-    "notes": {
-      "customer": {
-        "orderDecided": "Un pedido se acepta o se rechaza",
-        "orderReady": "Un pedido está listo para recoger",
-        "backInStock": "Un producto guardado vuelve a estar disponible",
-        "announcements": "Anuncios de MarketLink",
-        "stallReply": "Un puesto responde a tu mensaje"
-      },
-      "farmer": {
-        "newOrder": "Llega un pedido nuevo",
-        "orderChanged": "Un cliente modifica o cancela un pedido",
-        "cutoffSoon": "Falta una hora para la hora límite",
-        "newReview": "Una reseña nueva de tu puesto",
-        "announcements": "Anuncios de MarketLink"
-      },
-      "admin": {
-        "farmerApplication": "Llega una solicitud de Farmer",
-        "reported": "Se denuncia una reseña o un anuncio",
-        "newFeedback": "Comentarios nuevos",
-        "marketEdited": "Se edita un mercado"
-      }
-    },
     "save": "Guardar ajustes",
     "saving": "Guardando…",
     "saveHint": "El tema se aplica en cuanto lo eliges; lo demás, al guardar.",
@@ -415,6 +391,52 @@
       "later": "Ahora no",
       "onTitle": "Notificaciones activadas",
       "onText": "Elige qué recibes en Ajustes → Notificaciones."
+    },
+    "settings": {
+      "title": "Notificaciones",
+      "intro": "Elige qué te llega y cómo. Todo sigue apareciendo en tu lista de notificaciones.",
+      "browser": "Notificaciones del navegador",
+      "permission": {
+        "granted": "Activadas. Las notificaciones se muestran aunque MarketLink esté en segundo plano.",
+        "default": "Desactivadas. Actívalas para ver notificaciones con esta pestaña en segundo plano.",
+        "denied": "Bloqueadas por el navegador. Permite las notificaciones de este sitio en la configuración del sitio y vuelve a cargar la página.",
+        "unsupported": "Este navegador no puede mostrar notificaciones. Seguirás viéndolas en la página."
+      },
+      "loading": "Cargando tus ajustes de notificaciones…",
+      "loadErrorTitle": "No se pudieron cargar tus ajustes de notificaciones",
+      "loadErrorText": "Revisa tu conexión e inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "group": "Qué",
+      "inApp": "En la página",
+      "inBrowser": "Navegador",
+      "groups": {
+        "messages": {
+          "title": "Mensajes",
+          "note": "Cuando un cliente o un puesto te escribe"
+        },
+        "announcements": {
+          "title": "Avisos",
+          "note": "Novedades de MarketLink, como el cierre de un mercado"
+        },
+        "account": {
+          "title": "Tu solicitud de puesto",
+          "note": "Cuando se aprueba, rechaza, suspende o reabre"
+        },
+        "farmerApplications": {
+          "title": "Solicitudes de Farmer",
+          "note": "Cuando alguien solicita vender en MarketLink"
+        }
+      },
+      "sound": "Reproducir un sonido",
+      "quiet": "Horas de silencio",
+      "quietNote": "Sin avisos emergentes, sonidos ni notificaciones del navegador en estas horas (hora de Vietnam). Siguen llegando a tu lista.",
+      "from": "Desde",
+      "to": "Hasta",
+      "testNote": "Envíate una notificación para ver cómo se ve.",
+      "test": "Enviar una prueba",
+      "testing": "Enviando…",
+      "testError": "No se pudo enviar la prueba. Inténtalo en unos segundos.",
+      "saveError": "No se pudieron guardar tus ajustes de notificaciones."
     }
   }
 }
