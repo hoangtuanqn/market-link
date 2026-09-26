@@ -1494,3 +1494,24 @@ Prototype là bản hướng dẫn (frontend/CLAUDE.md): class `pt-*` và công 
 - **Spec coverage:** FR-113 → T7; FR-114 → T1, T3, T8 (phần đơn: chặn, ghi rõ); FR-116 → T2, T3, T4 (hidden), T5, T6; FR-117 → T7; §8.3 ranh giới → T6; §9.1 popover → T7; §9.2 tên stall/link → T3 (`displayName`), T2; §9.4 → T6; §9.5 → T8; §11 → T10. Minor 4A: đọc khi tab ẩn → T4; `aria-label` trên span → T7 (`MessagesPreview`) — **ThreadList badge vẫn còn**: sửa luôn trong T4 khi chạm ThreadList (sr-only thay aria-label).
 - **Type consistency:** `ConversationPanel` đổi prop `other` → `thread` ở T4, T5/T8 dùng `thread`. `send(body, extra)` T8. `useThreadList(activeId)` giữ nguyên, thêm `hasMore/loadMore/loadingMore` (T4).
 - **Placeholder scan:** các chỗ "grep trước" là lệnh kiểm có thật, không phải TBD.
+
+---
+
+## Bổ sung khi làm (26/09/2026)
+
+Người dùng giao một AI khác làm tiếp sau Task 1. AI đó commit Task 2–3 và để dở Task 4–8 chưa commit. Phiên nhận lại đã kiểm từng task so với plan, và sửa những gì sau (mỗi lỗi có test đỏ → xanh, trừ khi ghi khác):
+
+| Task | Lỗ hổng | Cách vá | Test |
+|---|---|---|---|
+| 4 | `sendErrorKey` trả `string`: `t()` có kiểu chặt từ chối, build đỏ TS2345 | trả union `SendErrorKey` | tsc |
+| 7 | Header và chuông gọi cứng key `*Unread_one`: ở fr/es/de hiện câu số ít cho mọi số | gọi key gốc kèm `count` | `lets the language pick the plural form of the unread labels` |
+| 7 | Popover: rê chuột thì mở, bấm vào biểu tượng lại đóng | giữ mở khi đang hover | `stays open when a mouse user clicks after hovering` |
+| 7 | Bản xem trước viết cứng `Loading...`, không `role="status"`; chấm chưa đọc không đọc được | key i18n có sẵn, `role="status"`, chữ `sr-only` | `says it is loading, in the reader’s language` |
+| 7 | Chưa có test Header, chưa có test reset badge khi đăng xuất | thêm | `shows how many messages are unread`, `resets to zero when nobody is signed in` |
+| 8 | Khách chưa đăng nhập bị đưa tới `/login?redirect=`, nhưng Login đọc `location.state.from` → đăng nhập xong về trang chủ | `LoginRedirectState` như `RequireAuth`, `FavoriteButton` | `sends a signed-out visitor to sign in first, then back here` (test cũ khẳng định sai) |
+| 8 | `ProductPin` đặt `p-2` rồi đè `p-1` (Helper.cn không gộp), dùng token không có `border-line-stronger` | chọn một padding; `hover:border-ink` | — |
+| 4 | Thiếu test "load more conversations" | thêm | `shows a way to load more conversations` |
+
+**Hạ tầng:** host không có JDK 25, nên test backend chạy trong container dùng-một-lần từ image `market-link-backend:dev` (`--rm`, giới hạn RAM). `@SpringBootTest` cần MySQL nên để CI chạy.
+
+**Prototype (Task 10)** kiểm bằng jsdom, không E2E: 7 trang không lỗi JS; popover mở bằng click, đóng bằng Esc và bấm ra ngoài; Report mở hộp thoại.
