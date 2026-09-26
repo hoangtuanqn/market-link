@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "Tayang",
+    "scheduled": "Terjadwal",
     "ended": "Selesai"
   },
   "action": {

@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "Đang chạy",
+    "scheduled": "Đã lên lịch",
     "ended": "Đã kết thúc"
   },
   "action": {

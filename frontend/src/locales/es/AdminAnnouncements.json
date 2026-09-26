@@ -41,6 +41,7 @@
   },
   "status": {
     "live": "Activo",
+    "scheduled": "Programado",
     "ended": "Terminado"
   },
   "action": {
