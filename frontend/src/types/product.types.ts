@@ -20,10 +20,10 @@ export type ProductType = {
   /** English plural for the unit when it doesn't just take an "s", e.g. "tray of 30" → "trays of 30". */
   plural?: string;
   farmerId?: number;
-  /** Id danh mục (contract §5); form của Farmer chọn theo id, trang public chỉ cần tên. */
+  /** Category id (contract §5); the Farmer's form picks by id, the public page only needs the name. */
   categoryId?: number;
   imageUrl?: string;
-  /** FR-074: admin đã ẩn listing này; chỉ Farmer sở hữu nhìn thấy cờ và lý do. */
+  /** FR-074: an admin hid this listing; only the owning Farmer sees the flag and the reason. */
   hidden?: boolean;
   hiddenReason?: string;
   /** Số ngày còn tươi — chưa có FR chính thức, xem migration V20260926016. Rỗng ở màn còn demo data. */

@@ -11,15 +11,15 @@ import { loadImage, PhotoError, releaseImage } from './photo/loadImage';
 import PhotoDialog, { type PhotoSource } from './photo/PhotoDialog';
 
 /**
- * Ảnh đại diện, phần đầu của khung hồ sơ trên trang Account: tải ảnh lên hoặc chụp bằng camera. Không có nút gỡ ảnh
- * (LEAD bỏ) — muốn đổi thì tải ảnh khác lên. Không có trong SRS — đề xuất
- * (docs/superpowers/specs/2026-09-25-avatar-user-menu-design.md), LEAD xác nhận.
+ * The avatar, the top part of the profile frame on the Account page: upload an image or take one with the camera. There
+ * is no remove button (the LEAD dropped it) — to change it, upload another image. Not in the SRS — a proposal
+ * (docs/superpowers/specs/2026-09-25-avatar-user-menu-design.md), confirmed by the LEAD.
  */
 const AvatarCard = () => {
   const { t } = useTranslation('CustomerAccount');
   const { user } = useSession();
   const { state: achievements } = useMyAchievements();
-  // Ai đăng nhập cũng có ít nhất viền Đồng, kể cả khi số liệu chưa tải xong hoặc tải lỗi
+  // Everyone who signs in has at least a Bronze ring, even when the figures have not finished loading or failed to load
   const tier = achievements.status === 'ready' ? achievements.data.tier : 'bronze';
   const inputRef = useRef<HTMLInputElement>(null);
   const [source, setSource] = useState<PhotoSource | null>(null);
@@ -33,7 +33,7 @@ const AvatarCard = () => {
 
   const onFile = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    // Cho phép chọn lại đúng file vừa chọn
+    // Allow picking exactly the file just picked again
     e.target.value = '';
     if (!file) return;
     try {

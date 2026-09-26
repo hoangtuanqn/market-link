@@ -1,16 +1,22 @@
-/** Toán của khung cắt ảnh: ảnh luôn phủ kín khung vuông, kéo và zoom không bao giờ để lộ nền. */
+/**
+ * The maths of the image crop frame: the image always fully covers the square frame, dragging and zooming never reveal
+ * the background.
+ */
 
 export type Offset = { x: number; y: number };
 
 export const MIN_ZOOM = 1;
 export const MAX_ZOOM = 4;
-/** Cạnh ảnh gửi lên server (backend cũng thu về tối đa 512px). */
+/** The side of the image sent to the server (the backend also scales down to at most 512px). */
 export const OUTPUT_SIZE = 512;
 
-/** Số px trên màn hình cho mỗi px của ảnh, khi ảnh vừa phủ kín khung (zoom 1). */
+/** Screen px per image px, when the image just covers the frame (zoom 1). */
 export const coverScale = (imgW: number, imgH: number, frame: number) => frame / Math.min(imgW, imgH);
 
-/** Giữ ảnh phủ kín khung: độ lệch tối đa theo mỗi trục là nửa phần ảnh thừa ra ngoài khung. */
+/**
+ * Keep the image covering the frame: the maximum offset per axis is half of the part of the image sticking out of the
+ * frame.
+ */
 export const clampOffset = (offset: Offset, imgW: number, imgH: number, frame: number, zoom: number): Offset => {
   const scale = coverScale(imgW, imgH, frame) * zoom;
   const maxX = Math.max(0, (imgW * scale - frame) / 2);
@@ -21,7 +27,7 @@ export const clampOffset = (offset: Offset, imgW: number, imgH: number, frame: n
   };
 };
 
-/** Vùng ảnh gốc (px ảnh) đang nằm trong khung. */
+/** The region of the source image (image px) currently inside the frame. */
 export const sourceRect = (imgW: number, imgH: number, frame: number, zoom: number, offset: Offset) => {
   const scale = coverScale(imgW, imgH, frame) * zoom;
   const side = frame / scale;
@@ -32,7 +38,7 @@ export const sourceRect = (imgW: number, imgH: number, frame: number, zoom: numb
   };
 };
 
-/** Cắt vùng trong khung thành JPEG vuông OUTPUT_SIZE (hoặc nhỏ hơn nếu ảnh gốc nhỏ hơn). */
+/** Crop the region inside the frame into a square JPEG OUTPUT_SIZE (or smaller if the source image is smaller). */
 export const cropToJpeg = (
   image: CanvasImageSource & { naturalWidth?: number; videoWidth?: number },
   imgW: number,
@@ -48,7 +54,7 @@ export const cropToJpeg = (
   canvas.height = size;
   const ctx = canvas.getContext('2d');
   if (!ctx) return Promise.reject(new Error('Canvas is not available.'));
-  // JPEG không có nền trong suốt: PNG trong suốt thành nền trắng, giống backend
+  // JPEG has no transparent background: a transparent PNG becomes a white background, like the backend
   ctx.fillStyle = '#fff';
   ctx.fillRect(0, 0, size, size);
   ctx.imageSmoothingQuality = 'high';

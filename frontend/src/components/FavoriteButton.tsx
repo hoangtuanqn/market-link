@@ -20,8 +20,8 @@ const FavoriteButton = ({ initial = false, labelOff, labelOn, className }: Favor
   const { pathname, search } = useLocation();
   const navigate = useNavigate();
 
-  // Yêu thích gắn với tài khoản: khách chưa đăng nhập bấm tim thì sang đăng nhập rồi quay lại đúng trang này,
-  // thay vì tô đỏ một trái tim không được lưu ở đâu và không có chỗ nào xem lại.
+  // A favourite belongs to an account: a signed-out visitor who clicks the heart goes to sign in and then comes back to this exact page,
+  // instead of turning red a heart that is saved nowhere and cannot be viewed again anywhere.
   const toggle = () => {
     if (!isLoggedIn) {
       const state: LoginRedirectState = { from: pathname + search };

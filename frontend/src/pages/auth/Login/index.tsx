@@ -14,8 +14,8 @@ const LoginPage = () => {
   const { user } = useSession();
   const location = useLocation();
 
-  // FR-003: đã đăng nhập thì không hiện lại form — về trang đang mở dở (RequireAuth gửi sang), không có thì về trang đầu
-  // theo vai (cùng đích FormLogin điều hướng sau khi đăng nhập)
+  // FR-003: if already signed in do not show the form again — go to the page they had open (sent by RequireAuth), otherwise to the home page
+  // for the role (the same destination FormLogin routes to after sign-in)
   if (user) {
     const from = (location.state as LoginRedirectState | null)?.from;
     const home = user.role === USER_ROLE.ADMIN ? ADMIN_HOME_PATH : '/';

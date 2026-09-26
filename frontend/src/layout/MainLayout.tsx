@@ -11,7 +11,7 @@ type MainLayoutProps = {
   cartCount?: number;
   unreadCount?: number;
 };
-/** Trang bổ sung hồ sơ bắt buộc (tài khoản Google chưa có số điện thoại / địa chỉ). */
+/** The page for completing a required profile (a Google account with no phone number / address yet). */
 const COMPLETE_PROFILE_PATH = '/auth/complete-profile';
 
 const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
@@ -21,11 +21,11 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
   const userName = user?.fullName || user?.email || '';
   const { state: achievements } = useMyAchievements();
   const unread = useUnreadNotifications();
-  // Ai đăng nhập cũng có ít nhất viền Đồng, kể cả khi số liệu chưa tải xong hoặc tải lỗi
+  // Everyone who signs in has at least a Bronze ring, even when the figures have not finished loading or failed to load
   const tier = achievements.status === 'ready' ? achievements.data.tier : 'bronze';
 
-  // Customer (tài khoản Google) thiếu số điện thoại / địa chỉ → không vào được trang nào khác tới khi nhập đủ (chỉ có
-  // thể đăng xuất). Admin không cần hai trường này.
+  // A Customer (Google account) missing a phone number / address → cannot enter any other page until complete (can only
+  // sign out). An Admin does not need these two fields.
   const mustCompleteProfile = user?.role === USER_ROLE.CUSTOMER && (!user.phone || !user.address);
   if (mustCompleteProfile && pathname !== COMPLETE_PROFILE_PATH) {
     return <Navigate to={COMPLETE_PROFILE_PATH} replace />;

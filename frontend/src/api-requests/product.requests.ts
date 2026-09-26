@@ -3,7 +3,7 @@ import type { ApiResponse, PageType } from '@/types/api.types';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
 
-/** Một sản phẩm trong danh sách (contract §5). Giá trị `status` giữ snake_case như cột ENUM. */
+/** One product in the list (contract §5). The `status` value keeps snake_case like the ENUM column. */
 export type ProductDto = {
   id: number;
   name: string;
@@ -26,7 +26,7 @@ export type ProductDto = {
 
 export type ReviewSummaryDto = { ratingAvg: number; ratingCount: number; histogram: number[] };
 
-/** GET /products/{id}: sản phẩm kèm stall và tóm tắt đánh giá (số thật từ C8). */
+/** GET /products/{id}: a product with its stall and review summary (real numbers from C8). */
 export type ProductDetailDto = {
   product: ProductDto;
   description?: string | null;
@@ -34,7 +34,7 @@ export type ProductDetailDto = {
   reviewsSummary: ReviewSummaryDto;
 };
 
-/** Sản phẩm nhìn từ Farmer sở hữu: thêm mô tả và cờ ẩn của admin kèm lý do (FR-074). */
+/** A product as seen by the owning Farmer: adds the description and the admin's hide flag with its reason (FR-074). */
 export type FarmerProductDto = {
   item: ProductDto;
   description?: string | null;
@@ -66,7 +66,7 @@ export type ProductListParams = {
   pageSize?: number;
 };
 
-/** Contract (camelCase) → hình dạng `ProductType` mà mọi trang đang dùng. Chỗ duy nhất biết cả hai. */
+/** Contract (camelCase) → the `ProductType` shape every page uses. The only place that knows both. */
 export const toProduct = (dto: ProductDto, description?: string | null): ProductType => ({
   id: dto.id,
   name: dto.name,
@@ -90,22 +90,22 @@ export const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
   hiddenReason: dto.hiddenReason ?? undefined,
 });
 
-/** FR-020…023, FR-062, FR-064, FR-074 — sản phẩm (docs/api-contract.md §5, §10). */
+/** FR-020…023, FR-062, FR-064, FR-074 — products (docs/api-contract.md §5, §10). */
 class ProductApi {
-  /** Public. `page` từ 1, tối đa 50 một trang; `sort` qua whitelist ở server. */
+  /** Public. `page` from 1, at most 50 per page; `sort` goes through a whitelist on the server. */
   static list = async (params: ProductListParams = {}) => {
     const response = await publicApi.get<ApiResponse<PageType<ProductDto>>>('/products', { params });
     const page = response.data.data;
     return { ...page, items: page.items.map((p) => toProduct(p)) };
   };
 
-  /** Public. 404 `PRODUCT_NOT_FOUND` khi không có, đã gỡ, bị ẩn hoặc stall chưa duyệt. */
+  /** Public. 404 `PRODUCT_NOT_FOUND` when missing, removed, hidden or the stall is not approved. */
   static get = async (id: number) => {
     const response = await publicApi.get<ApiResponse<ProductDetailDto>>(`/products/${id}`);
     return response.data.data;
   };
 
-  /** Public. Tồn kho tuần hiện tại của một stall (FR-011). */
+  /** Public. This week's stock of a stall (FR-011). */
   static byFarmer = async (farmerId: number, day?: number) => {
     const response = await publicApi.get<ApiResponse<PageType<ProductDto>>>(`/farmers/${farmerId}/products`, {
       params: { pageSize: 50, ...(day == null ? {} : { day }) },
@@ -113,7 +113,7 @@ class ProductApi {
     return response.data.data.items.map((p) => toProduct(p));
   };
 
-  /** Farmer — sản phẩm của chính mình, kể cả sản phẩm bị admin ẩn (kèm lý do). */
+  /** Farmer — your own products, including products hidden by an admin (with the reason). */
   static mine = async (status?: ProductStatus) => {
     const response = await privateApi.get<ApiResponse<PageType<FarmerProductDto>>>('/farmer/products', {
       params: { pageSize: 50, ...(status ? { status } : {}) },
@@ -148,12 +148,12 @@ class ProductApi {
     return toFarmerProduct(response.data.data);
   };
 
-  /** Xoá mềm: biến mất khỏi danh mục, đơn cũ vẫn giữ dòng của nó. */
+  /** Soft delete: disappears from the catalog, old orders keep their own row. */
   static remove = async (id: number) => {
     await privateApi.delete<ApiResponse<null>>(`/farmer/products/${id}`);
   };
 
-  /** FR-064: sold_out / unavailable không đụng tồn kho. */
+  /** FR-064: sold_out / unavailable does not touch stock. */
   static setStatus = async (id: number, status: ProductStatus) => {
     const response = await privateApi.patch<ApiResponse<FarmerProductDto>>(`/farmer/products/${id}/status`, {
       status,
@@ -161,7 +161,7 @@ class ProductApi {
     return toFarmerProduct(response.data.data);
   };
 
-  /** Admin — FR-074. Lý do hiện cho Farmer trong danh sách của họ. */
+  /** Admin — FR-074. The reason is shown to the Farmer in their list. */
   static adminHide = async (id: number, reason: string) => {
     await privateApi.patch<ApiResponse<null>>(`/admin/products/${id}/hide`, { reason });
   };

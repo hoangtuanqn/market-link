@@ -1,6 +1,6 @@
 import type { NotificationFrame, NotificationKindCode } from '@/types/notification.types';
 
-/** Quyết định của admin về đơn Farmer: role hoặc trạng thái sạp vừa đổi ở server. */
+/** An admin's decision on a Farmer application: the role or stall status just changed on the server. */
 export const FARMER_DECISION_KINDS: NotificationKindCode[] = [
   'farmer_approved',
   'farmer_rejected',
@@ -8,7 +8,7 @@ export const FARMER_DECISION_KINDS: NotificationKindCode[] = [
   'farmer_reinstated',
 ];
 
-/** Số chưa đọc (chuông ở cả ba khu) và các khung mới cho trang danh sách. Dùng với useSyncExternalStore. */
+/** The unread count (the bell in all three areas) and new frames for the list page. Used with useSyncExternalStore. */
 const CHANGE = 'notifications-unread';
 
 let unread = 0;

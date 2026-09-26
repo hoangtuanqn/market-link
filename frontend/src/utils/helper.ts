@@ -5,8 +5,8 @@ import type { UserType } from '@/types/user.types';
 
 class Helper {
   /**
-   * Trang tiếp theo sau khi đăng nhập Google: thiếu số điện thoại / địa chỉ → bổ sung hồ sơ; chưa có mật khẩu → đặt mật
-   * khẩu; đủ rồi → trang chủ.
+   * The next page after Google sign-in: missing phone number / address → complete the profile; no password yet → set a
+   * password; all done → the home page.
    */
   static nextStepAfterSocialLogin(user: Pick<UserType, 'phone' | 'address' | 'hasPassword'>) {
     if (!user.phone || !user.address) return '/auth/complete-profile';
@@ -20,8 +20,8 @@ class Helper {
   }
 
   /**
-   * Message để hiện cho người dùng: ưu tiên message backend trả về, không có (mất mạng, timeout, response lạ) thì dùng
-   * fallback.
+   * The message to show the user: prefer the message the backend returned, when there is none (lost network, timeout,
+   * an odd response) use fallback.
    */
   static getErrorMessage(error: unknown, fallback: string) {
     if (error instanceof AxiosError) {
@@ -32,13 +32,13 @@ class Helper {
     return fallback;
   }
 
-  /** Mã lỗi backend (error.code), vd INVALID_RESET_TOKEN; không có response thì undefined. */
+  /** The backend's error code (error.code), e.g. INVALID_RESET_TOKEN; undefined when there is no response. */
   static getErrorCode(error: unknown): string | undefined {
     if (!(error instanceof AxiosError)) return undefined;
     return (error.response?.data as Partial<ApiResponse<unknown>> | undefined)?.error?.code;
   }
 
-  /** Lỗi theo từng field (error.details của backend) → { email: '...', password: '...' }. */
+  /** Per-field errors (the backend's error.details) → { email: '...', password: '...' }. */
   static getFieldErrors(error: unknown): Record<string, string> {
     if (!(error instanceof AxiosError)) return {};
     const details = (error.response?.data as Partial<ApiResponse<unknown>> | undefined)?.error?.details ?? [];

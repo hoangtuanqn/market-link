@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { REASON_MAX } from '@/constants/approvalStatus';
 
 type ReasonFieldProps = {
-  /** `reject` hoặc `suspend` — quyết định chữ trên nhãn, gợi ý và id của ô. */
+  /** `reject` or `suspend` — decides the label text, the hint and the id of the field. */
   kind: 'reject' | 'suspend';
   value: string;
   error?: string;
@@ -10,8 +10,8 @@ type ReasonFieldProps = {
 };
 
 /**
- * Lý do Admin phải viết trước khi từ chối đơn hoặc đình chỉ sạp. Không dùng danh sách chọn sẵn vì người nhận đọc lại
- * đúng câu này. Một component cho cả hai để hai hộp thoại hỏi giống hệt nhau.
+ * The reason an Admin must write before rejecting an application or suspending a stall. No preset list because the
+ * recipient reads back exactly this sentence. One component for both so the two dialogs ask the same way.
  */
 export function ReasonField({ kind, value, error, onChange }: ReasonFieldProps) {
   const { t } = useTranslation('AdminFarmers');

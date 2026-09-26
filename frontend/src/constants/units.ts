@@ -1,17 +1,17 @@
 /**
- * Đơn vị bán mà Farmer chọn khi tạo sản phẩm (FR-062, FR-022). Danh sách cố định nằm trong code, không phải master data
- * của Admin: SRS chỉ giao cho Admin quản "product categories", và `db/schema.sql` cũng chỉ có `products.unit
- * VARCHAR(20)` chứ không có bảng units.
+ * Selling units a Farmer picks when creating a product (FR-062, FR-022). The fixed list lives in code, not Admin master
+ * data: the SRS only lets the Admin manage "product categories", and `db/schema.sql` also only has `products.unit
+ * VARCHAR(20)` rather than a units table.
  *
- * `kind` để báo cáo không cộng nhầm: một ký và một bó không bao giờ cộng vào cùng một con số, nên số lượng chỉ được
- * tổng hợp trong cùng một loại.
+ * `kind` keeps reports from adding wrongly: a kilo and a bunch never add into the same number, so quantities are only
+ * totalled within the same kind.
  */
 export type UnitKind = 'weight' | 'volume' | 'count' | 'pack';
 
 export type UnitOption = {
-  /** Giá trị lưu vào `products.unit`, cũng là số ít khi hiển thị. */
+  /** The value stored in `products.unit`, also the singular when displayed. */
   one: string;
-  /** Dạng số nhiều — tiếng Anh không suy ra được bằng quy tắc nên viết sẵn. */
+  /** Plural form — English cannot derive it by a rule so it is written out. */
   many: string;
   kind: UnitKind;
 };
@@ -33,5 +33,5 @@ export const UNITS: UnitOption[] = [
 
 export const UNIT_KINDS: UnitKind[] = ['weight', 'volume', 'count', 'pack'];
 
-/** Dạng số nhiều của một đơn vị đã biết; đơn vị lạ thì trả lại chính nó. */
+/** The plural form of a known unit; an unknown unit returns itself. */
 export const pluralOf = (one: string) => UNITS.find((u) => u.one === one)?.many ?? one;

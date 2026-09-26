@@ -75,7 +75,7 @@ const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
       { to: ADMIN_PRICING_PATH, label: t('adminNav.pricing'), icon: TagIcon },
       { to: ADMIN_SETTINGS_PATH, label: t('adminNav.settings'), icon: SlidersIcon },
       { to: ADMIN_ACCOUNT_PATH, label: t('adminNav.account'), icon: UsersIcon },
-      // FR-008: bật / tắt xác thực hai bước
+      // FR-008: turn two-step verification on / off
       { to: ADMIN_SECURITY_PATH, label: t('admin.security'), icon: LockIcon },
     ],
   },
@@ -90,8 +90,8 @@ const initials = (name: string) =>
     .join('') || 'AD';
 
 /**
- * FR-004 — khung khu admin, tách khỏi layout Customer/Farmer. Chưa đăng nhập hoặc không phải admin thì về trang đăng
- * nhập admin. Đây chỉ là UX: quyền thật do backend kiểm tra ở từng API admin (FR-005).
+ * FR-004 — the admin area frame, separate from the Customer/Farmer layout. If not signed in or not an admin, go back to
+ * the admin sign-in page. This is only UX: the real permission is checked by the backend at each admin API (FR-005).
  */
 const AdminLayout = () => {
   const { t } = useTranslation();
@@ -101,7 +101,7 @@ const AdminLayout = () => {
   const isAdmin = user?.role === USER_ROLE.ADMIN;
   const [pendingFarmers, setPendingFarmers] = useState(0);
 
-  // Badge "đang chờ duyệt" trên mục Farmers; tải lại khi đổi trang để khớp sau khi duyệt / từ chối.
+  // The "awaiting approval" badge on the Farmers item; reloaded on page change to match after an approve / reject.
   useEffect(() => {
     if (!isAdmin) return;
     AdminFarmerApi.list({ status: 'pending', page: 1, pageSize: 1 })

@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ButtonLink } from '@/components/ui/button';
 
-/** Đường dẫn không khớp route nào (kể cả link tới trang chưa làm) — thay cho màn hình trắng. */
+/** A path that matches no route (including a link to an unbuilt page) — instead of a blank screen. */
 const NotFoundPage = () => {
   const { t } = useTranslation('NotFound');
   return (

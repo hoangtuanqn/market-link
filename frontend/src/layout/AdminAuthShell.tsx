@@ -5,8 +5,8 @@ import { Card } from '@/components/ui/card';
 import { ADMIN_LOGIN_PATH } from '@/constants/nav';
 
 /**
- * FR-004 / FR-008 — khung các màn đăng nhập admin (mật khẩu, nhập mã): header gọn không điều hướng, một thẻ ở giữa.
- * Tách khỏi layout Customer/Farmer và khỏi AdminLayout (chưa có phiên).
+ * FR-004 / FR-008 — the frame of the admin sign-in screens (password, code entry): a compact header with no navigation,
+ * one card in the middle. Separate from the Customer/Farmer layout and from AdminLayout (no session yet).
  */
 const AdminAuthShell = ({ children }: { children: ReactNode }) => {
   const { t } = useTranslation();
