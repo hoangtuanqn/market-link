@@ -56,6 +56,11 @@ export const realtime = {
     void current?.deactivate();
   },
 
+  /** Gửi một frame lên server (chat: /app/typing). Chưa nối thì bỏ: tín hiệu thoáng qua, không đáng xếp hàng chờ. */
+  publish(destination: string, body: unknown) {
+    if (client?.connected) client.publish({ destination, body: JSON.stringify(body) });
+  },
+
   /** Nghe một đích; trả hàm huỷ. Gọi trước hay sau khi nối đều được. */
   subscribe(destination: string, handler: Handler) {
     if (!handlers.has(destination)) handlers.set(destination, new Set());
