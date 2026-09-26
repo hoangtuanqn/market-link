@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
 import ProductPin from './ProductPin';
+import { perUnit } from '@/lib/format';
 import ProductApi from '@/api-requests/product.requests';
 
 vi.mock('@/api-requests/product.requests', () => ({
@@ -34,7 +35,8 @@ describe('ProductPin', () => {
     );
 
     expect(await screen.findByText('Carrot')).toBeInTheDocument();
-    expect(screen.getByText(/15,000.*₫/i)).toBeInTheDocument();
+    // Giá đi qua lib/format (đơn vị tiền do dev quyết — hiện khoá USD): so với chính perUnit, không viết cứng ký hiệu
+    expect(screen.getByText(perUnit(15000, 'kg'))).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/products/8');
   });
 
