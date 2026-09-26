@@ -9,6 +9,7 @@ import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class StompChatEventPublisher implements ChatEventPublisherInterface {
 
     private final SimpMessagingTemplate template;
     private final MessageRepository messages;
+    private final ApplicationEventPublisher appEvents;
 
     @Override
     public void messageCreated(Conversation conversation, MessageResource message) {
@@ -42,6 +44,14 @@ public class StompChatEventPublisher implements ChatEventPublisherInterface {
         send(message.senderId(), MESSAGES, message);
         send(recipient, CONVERSATIONS, updated(conversation, unreadFor(recipient, conversation)));
         send(message.senderId(), CONVERSATIONS, updated(conversation, 0L));
+        // FR-042: popup cho người nhận (module notification nghe sự kiện này). Tin đã commit: lỗi
+        // phía thông báo chỉ được ghi log, không được biến request gửi tin thành 500.
+        try {
+            appEvents.publishEvent(
+                    new ChatMessageCreatedEvent(conversation.getId(), recipient, message));
+        } catch (RuntimeException e) {
+            log.warn("Chat notification for message {} failed: {}", message.id(), e.getMessage());
+        }
     }
 
     @Override

@@ -16,6 +16,9 @@ import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
 import com.techx.intervue.modules.farmer.resources.FarmerApplicationHistoryResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
+import com.techx.intervue.modules.notification.enums.NotificationKind;
+import com.techx.intervue.modules.notification.resources.NotificationEvent;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -25,9 +28,11 @@ import com.techx.intervue.resources.PageResource;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -64,6 +69,7 @@ public class FarmerService implements FarmerServiceInterface {
     private final FarmerUploadService uploadService;
     private final UserRepository userRepository;
     private final UserSessionCache userSessionCache;
+    private final NotificationServiceInterface notifications;
 
     /**
      * §4: tạo hồ sơ PENDING, không nhận approval_status từ client.
@@ -109,6 +115,11 @@ public class FarmerService implements FarmerServiceInterface {
 
         // Nộp lại thì ảnh của lần trước không còn ai trỏ tới nữa: dọn ngay thay vì đợi job.
         cleanUpFiles(userId);
+        notifications.notifyAdmins(
+                NotificationEvent.of(
+                        NotificationKind.FARMER_APPLICATION,
+                        "/admin/farmers/" + profile.getId(),
+                        Map.of("stall", profile.getStallName())));
         return toOwnResource(profile, historyOf(userId));
     }
 
@@ -235,6 +246,7 @@ public class FarmerService implements FarmerServiceInterface {
         // vừa duyệt vẫn mang ROLE_CUSTOMER tới hết TTL access token.
         userSessionCache.updateRoles(owner.getId(), Set.of(RoleType.FARMER));
 
+        tellOwner(profile, NotificationKind.FARMER_APPROVED, "/farmer", Map.of());
         return toDetailResource(profile, owner);
     }
 
@@ -257,6 +269,11 @@ public class FarmerService implements FarmerServiceInterface {
         farmerProfileRepository.save(profile);
         decideLatestAttempt(
                 profile.getUserId(), ApprovalStatus.REJECTED, reason, adminUserId, Instant.now());
+        tellOwner(
+                profile,
+                NotificationKind.FARMER_REJECTED,
+                "/become-farmer",
+                Map.of("reason", reason));
         return toDetailResource(profile, findOwnerOrThrow(profile));
     }
 
@@ -296,6 +313,7 @@ public class FarmerService implements FarmerServiceInterface {
         profile.setSuspendedBy(adminUserId);
         profile.setSuspendedAt(Instant.now());
         farmerProfileRepository.save(profile);
+        tellOwner(profile, NotificationKind.FARMER_SUSPENDED, "/farmer/pending", Map.of());
         return toDetailResource(profile, findOwnerOrThrow(profile));
     }
 
@@ -318,7 +336,17 @@ public class FarmerService implements FarmerServiceInterface {
         profile.setSuspendedBy(null);
         profile.setSuspendedAt(null);
         farmerProfileRepository.save(profile);
+        tellOwner(profile, NotificationKind.FARMER_REINSTATED, "/farmer", Map.of());
         return toDetailResource(profile, findOwnerOrThrow(profile));
+    }
+
+    /** FR-042: báo chủ đơn; đẩy realtime sau commit (NotificationService dùng afterCommit). */
+    private void tellOwner(
+            FarmerProfile profile, NotificationKind kind, String link, Map<String, String> extra) {
+        Map<String, String> params = new HashMap<>(extra);
+        params.put("stall", profile.getStallName());
+        notifications.dispatch(
+                List.of(profile.getUserId()), NotificationEvent.of(kind, link, params));
     }
 
     private FarmerProfile findProfileOrThrow(Long farmerId) {

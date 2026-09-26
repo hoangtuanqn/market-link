@@ -21,6 +21,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
@@ -29,6 +30,7 @@ class StompChatEventPublisherTest {
     static final Instant NOW = Instant.parse("2026-09-25T06:00:00Z");
     SimpMessagingTemplate template;
     MessageRepository messages;
+    ApplicationEventPublisher appEvents;
     StompChatEventPublisher publisher;
     Conversation thread;
 
@@ -36,7 +38,8 @@ class StompChatEventPublisherTest {
     void setUp() {
         template = mock(SimpMessagingTemplate.class);
         messages = mock(MessageRepository.class);
-        publisher = new StompChatEventPublisher(template, messages);
+        appEvents = mock(ApplicationEventPublisher.class);
+        publisher = new StompChatEventPublisher(template, messages, appEvents);
         thread = Conversation.between(3L, 7L);
         thread.setId(42L);
         thread.noteNewMessage("Five bunches left", NOW);
@@ -56,6 +59,25 @@ class StompChatEventPublisherTest {
                 .body("hi")
                 .createdAt(NOW)
                 .build();
+    }
+
+    /** FR-042: module thông báo nghe sự kiện này để bật popup cho người nhận. */
+    @Test
+    void aNewMessageIsAnnouncedToTheRestOfTheAppForTheRecipient() {
+        publisher.messageCreated(thread, msg(7L));
+
+        verify(appEvents).publishEvent(new ChatMessageCreatedEvent(42L, 3L, msg(7L)));
+    }
+
+    /** Tin đã commit: lỗi của module thông báo không được biến request gửi tin thành 500. */
+    @Test
+    void aFailingNotificationListenerDoesNotBreakTheSend() {
+        doThrow(new IllegalStateException("db down"))
+                .when(appEvents)
+                .publishEvent(any(ChatMessageCreatedEvent.class));
+
+        assertThatCode(() -> publisher.messageCreated(thread, msg(7L))).doesNotThrowAnyException();
+        verify(template).convertAndSendToUser("3", "/topic/messages", msg(7L));
     }
 
     @Test
