@@ -213,7 +213,7 @@ git commit -m "feat(FR-114): open a conversation from the stall id every page al
 - Produces: `ConversationResource.otherReadAt?: Instant` — lúc người kia đọc tới gần nhất (vắng nếu chưa đọc).
 - Produces: `ModeratedMessageResource.attachmentId?: Long` — có khi `hasPhoto`.
 
-- [ ] **Bước 1: Test đỏ** (`ConversationServiceTest`)
+- [x] **Bước 1: Test đỏ** (`ConversationServiceTest`)
 
 ```java
 @Test
@@ -262,7 +262,7 @@ void theThreadCarriesWhenTheOtherPersonLastRead() {
 
 Trong `ModerationServiceTest`, tìm test đang kiểm cửa sổ ngữ cảnh có ảnh (`grep -n "hasPhoto" ModerationServiceTest.java`) và thêm khẳng định `assertThat(photoRow.attachmentId()).isEqualTo(<id ảnh trong fixture>)`; nếu chưa có test nào có ảnh, viết một test theo đúng fixture của file đó: một tin `kind=image` có `MessageAttachment` id 5 → dòng tương ứng có `hasPhoto=true`, `attachmentId=5`.
 
-- [ ] **Bước 2: Chạy thấy đỏ**
+- [x] **Bước 2: Chạy thấy đỏ**
 
 ```bash
 cd backend && ./mvnw -q test -Dtest='ConversationServiceTest,ModerationServiceTest'
@@ -270,7 +270,7 @@ cd backend && ./mvnw -q test -Dtest='ConversationServiceTest,ModerationServiceTe
 
 Expected: FAIL biên dịch (`findAllByUserIdIn`, `stallName()`, `otherReadAt()`, `attachmentId()` chưa có).
 
-- [ ] **Bước 3: Code**
+- [x] **Bước 3: Code**
 
 `FarmerProfileRepository`: `List<FarmerProfile> findAllByUserIdIn(Collection<Long> userIds);`
 
@@ -322,7 +322,7 @@ private Map<Long, FarmerProfile> stallsOf(Collection<Long> userIds) {
 
 `ModeratedMessageResource`: thêm `Long attachmentId` ngay sau `hasPhoto`. Trong `ModerationService` (chỗ `new ModeratedMessageResource(` ~dòng 167): truyền id ảnh của tin nếu có, `null` nếu không — lấy từ chính nguồn đang dùng để tính `hasPhoto`.
 
-- [ ] **Bước 4: Chạy thấy xanh**
+- [x] **Bước 4: Chạy thấy xanh**
 
 ```bash
 cd backend && ./mvnw -q spotless:apply && ./mvnw -q test -Dtest='ConversationServiceTest,ModerationServiceTest,StompChatEventPublisherTest'
@@ -330,9 +330,9 @@ cd backend && ./mvnw -q spotless:apply && ./mvnw -q test -Dtest='ConversationSer
 
 Expected: PASS.
 
-- [ ] **Bước 5: Contract** — §12 của `docs/api-contract.md`: mô tả `ConversationResource` thêm `otherReadAt`, `other.farmerId`, `other.stallName` (chỉ khi người kia là Farmer); `ModeratedMessageResource` thêm `attachmentId` (có khi `hasPhoto`; admin mở qua `GET /attachments/{id}`, server chỉ cho với tin đã bị báo cáo).
+- [x] **Bước 5: Contract** — §12 của `docs/api-contract.md`: mô tả `ConversationResource` thêm `otherReadAt`, `other.farmerId`, `other.stallName` (chỉ khi người kia là Farmer); `ModeratedMessageResource` thêm `attachmentId` (có khi `hasPhoto`; admin mở qua `GET /attachments/{id}`, server chỉ cho với tin đã bị báo cáo).
 
-- [ ] **Bước 6: Commit**
+- [x] **Bước 6: Commit**
 
 ```bash
 git add backend docs/api-contract.md

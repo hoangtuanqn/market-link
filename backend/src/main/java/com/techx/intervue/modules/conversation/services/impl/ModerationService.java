@@ -3,11 +3,13 @@ package com.techx.intervue.modules.conversation.services.impl;
 import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.entities.Message;
+import com.techx.intervue.modules.conversation.entities.MessageAttachment;
 import com.techx.intervue.modules.conversation.entities.MessageReport;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
+import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
@@ -54,6 +56,7 @@ public class ModerationService implements ModerationServiceInterface {
     private final Clock clock;
     private final ConversationRepository conversations;
     private final ChatEventPublisherInterface events;
+    private final MessageAttachmentRepository attachments;
 
     @Override
     @Transactional(readOnly = true)
@@ -164,16 +167,29 @@ public class ModerationService implements ModerationServiceInterface {
      * Task 7 dùng cờ này để quyết cho admin xem ảnh hay không.
      */
     private ModeratedMessageResource toModerated(Message m, boolean isCentre) {
+        boolean photo = m.getKind() == MessageKind.IMAGE;
+        boolean reported = isCentre || reports.existsByMessageId(m.getId());
         return new ModeratedMessageResource(
                 m.getId(),
                 m.getSenderId(),
                 nameOf(m.getSenderId()),
                 m.getKind(),
                 m.getBody(),
-                m.getKind() == MessageKind.IMAGE,
-                isCentre || reports.existsByMessageId(m.getId()),
+                photo,
+                photo && reported ? attachmentIdOf(m.getId()) : null,
+                reported,
                 m.isHidden(),
                 m.getCreatedAt());
+    }
+
+    /**
+     * Ảnh của một tin bị báo cáo, để admin mở qua GET /attachments/{id}. Hiếm, nên hỏi từng tin.
+     */
+    private Long attachmentIdOf(Long messageId) {
+        return attachments.findByMessageIdIn(List.of(messageId)).stream()
+                .findFirst()
+                .map(MessageAttachment::getId)
+                .orElse(null);
     }
 
     private AdminReportListItemResource toItem(MessageReport report) {

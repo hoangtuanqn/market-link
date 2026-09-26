@@ -204,6 +204,67 @@ class ConversationServiceTest {
     }
 
     @Test
+    void aFarmerParticipantCarriesTheirStall() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
+        when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
+        when(farmerProfiles.findAllByUserIdIn(anyCollection()))
+                .thenReturn(
+                        List.of(
+                                FarmerProfile.builder()
+                                        .id(30L)
+                                        .userId(3L)
+                                        .stallName("Cô Tư Garden")
+                                        .build()));
+
+        var other = service.listMine(7L, 1, 20).items().get(0).other();
+
+        assertThat(other.stallName()).isEqualTo("Cô Tư Garden");
+        assertThat(other.farmerId()).isEqualTo(30L);
+    }
+
+    @Test
+    void aCustomerParticipantHasNoStall() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        when(conversations.findMine(eq(3L), any())).thenReturn(new PageImpl<>(List.of(c)));
+        when(users.findAllById(List.of(7L))).thenReturn(List.of(customer));
+        when(farmerProfiles.findAllByUserIdIn(anyCollection())).thenReturn(List.of());
+
+        var other = service.listMine(3L, 1, 20).items().get(0).other();
+
+        assertThat(other.stallName()).isNull();
+        assertThat(other.farmerId()).isNull();
+    }
+
+    /** "Seen" phải còn sau khi tải lại trang: mốc đọc của NGƯỜI KIA, không phải của mình. */
+    @Test
+    void theThreadCarriesWhenTheOtherPersonLastRead() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        c.markRead(3L, NOW.minusSeconds(60));
+        c.markRead(7L, NOW);
+        when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
+        when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
+        when(farmerProfiles.findAllByUserIdIn(anyCollection())).thenReturn(List.of());
+
+        assertThat(service.listMine(7L, 1, 20).items().get(0).otherReadAt())
+                .isEqualTo(NOW.minusSeconds(60));
+    }
+
+    /** open() đã có hồ sơ stall trong tay: thread vừa mở cũng mang tên stall. */
+    @Test
+    void anOpenedThreadNamesTheStall() {
+        when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
+
+        var other = service.open(7L, new OpenConversationRequest(30L)).other();
+
+        assertThat(other.stallName()).isEqualTo("Cô Tư Garden");
+        assertThat(other.farmerId()).isEqualTo(30L);
+    }
+
+    @Test
     void listMineMapsTheOtherParticipantAndUnreadCount() {
         Conversation c = Conversation.between(3L, 7L);
         c.setId(42L);

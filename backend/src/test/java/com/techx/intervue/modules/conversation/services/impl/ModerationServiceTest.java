@@ -12,12 +12,14 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.conversation.controllers.AdminMessageReportController;
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.entities.Message;
+import com.techx.intervue.modules.conversation.entities.MessageAttachment;
 import com.techx.intervue.modules.conversation.entities.MessageReport;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.enums.ReportReason;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
+import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
@@ -58,6 +60,7 @@ class ModerationServiceTest {
     ChatEventPublisherInterface events;
     ModerationService service;
     Conversation thread;
+    MessageAttachmentRepository attachments;
 
     @BeforeEach
     void setUp() {
@@ -66,6 +69,7 @@ class ModerationServiceTest {
         users = mock(UserRepository.class);
         conversations = mock(ConversationRepository.class);
         events = mock(ChatEventPublisherInterface.class);
+        attachments = mock(MessageAttachmentRepository.class);
         service =
                 new ModerationService(
                         reports,
@@ -73,7 +77,8 @@ class ModerationServiceTest {
                         users,
                         Clock.fixed(NOW, ZoneId.of("UTC")),
                         conversations,
-                        events);
+                        events,
+                        attachments);
 
         thread = Conversation.between(3L, 7L);
         thread.setId(42L);
@@ -289,7 +294,36 @@ class ModerationServiceTest {
                         m -> {
                             assertThat(m.hasPhoto()).isTrue();
                             assertThat(m.body()).isNull();
+                            // chưa bị báo cáo → readAsAdmin sẽ từ chối, nên không đưa id ra
+                            assertThat(m.attachmentId()).isNull();
                         });
+    }
+
+    /** Ảnh của CHÍNH tin bị báo cáo: admin cần id để mở qua GET /attachments/{id} (readAsAdmin). */
+    @Test
+    void detailGivesTheAdminTheReportedPhoto() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+        when(messages.findById(101L))
+                .thenReturn(
+                        Optional.of(
+                                Message.builder()
+                                        .id(101L)
+                                        .conversationId(42L)
+                                        .senderId(3L)
+                                        .kind(MessageKind.IMAGE)
+                                        .createdAt(NOW)
+                                        .build()));
+        when(messages.findByConversationIdAndIdLessThanOrderByIdDesc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+        when(messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+        when(attachments.findByMessageIdIn(List.of(101L)))
+                .thenReturn(List.of(MessageAttachment.builder().id(5L).messageId(101L).build()));
+
+        assertThat(service.detail(9L).context())
+                .filteredOn(m -> m.id().equals(101L))
+                .singleElement()
+                .satisfies(m -> assertThat(m.attachmentId()).isEqualTo(5L));
     }
 
     /** Admin thấy tin đã bị ẩn (khác người dùng thường), kèm cờ để UI hiện khác đi. */
