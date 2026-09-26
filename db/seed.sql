@@ -9,17 +9,17 @@ SET NAMES utf8mb4;
 
 -- ---- Categories (FR-076) ----
 -- The eight agreed categories (PR #137, frontend/src/data/catalog.ts): names and slugs stay exactly as they are.
-INSERT INTO categories (name, slug, icon, sort_order, is_active) VALUES
-  ('Vegetables',            'vegetables',            'leaf',    1, TRUE),
-  ('Fruits',                'fruits',                'apple',   2, TRUE),
-  ('Eggs & dairy',          'eggs_and_dairy',        'egg',     3, TRUE),
-  ('Grains, beans & nuts',  'grains_beans_and_nuts', 'wheat',   4, TRUE),
-  ('Meat & poultry',        'meat_and_poultry',      'drumstick', 5, TRUE),
-  ('Seafood',               'seafood',               'fish',    6, TRUE),
-  ('Mushrooms',             'mushrooms',             'mushroom', 7, TRUE),
-  ('Baked goods',           'baked_goods',           'bread',   8, TRUE)
+INSERT INTO categories (name, slug, sort_order, is_active) VALUES
+  ('Vegetables',            'vegetables',            1, TRUE),
+  ('Fruits',                'fruits',                2, TRUE),
+  ('Eggs & dairy',          'eggs_and_dairy',        3, TRUE),
+  ('Grains, beans & nuts',  'grains_beans_and_nuts', 4, TRUE),
+  ('Meat & poultry',        'meat_and_poultry',      5, TRUE),
+  ('Seafood',               'seafood',               6, TRUE),
+  ('Mushrooms',             'mushrooms',             7, TRUE),
+  ('Baked goods',           'baked_goods',           8, TRUE)
 AS new
-ON DUPLICATE KEY UPDATE sort_order = new.sort_order, is_active = new.is_active, icon = new.icon;
+ON DUPLICATE KEY UPDATE sort_order = new.sort_order, is_active = new.is_active;
 
 -- ---- Markets (FR-073, FR-012) ----
 INSERT INTO markets (market_name, address, district, city, latitude, longitude,
