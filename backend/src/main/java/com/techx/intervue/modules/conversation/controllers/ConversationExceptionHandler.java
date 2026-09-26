@@ -1,12 +1,15 @@
 package com.techx.intervue.modules.conversation.controllers;
 
 import com.techx.intervue.modules.conversation.exceptions.AccountRestrictedException;
+import com.techx.intervue.modules.conversation.exceptions.AlreadyReportedException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentAlreadyUsedException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
+import com.techx.intervue.modules.conversation.exceptions.CannotReportOwnMessageException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
+import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
@@ -30,19 +33,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 /**
- * Mã HTTP theo spec mục 6.3 (repo chưa có handler chung nên advice này chỉ áp cho controller của
- * module chat). Thêm controller mới vào module thì phải thêm vào assignableTypes dưới đây, nếu
- * không mọi exception của nó thành 500 — ConversationExceptionHandlerScopeTest ghim điều đó.
+ * Mã HTTP theo spec mục 6.3, cho các controller của module chat. Lỗi multipart quá cỡ do
+ * UploadExceptionHandler TOÀN CỤC xử lý (Tomcat chặn khi đọc body, trước khi biết controller nào
+ * nhận), nên đừng thêm lại ở đây: hai advice cùng bắt một exception mà không cái nào khai @Order
+ * thì error.code trả về là không xác định.
+ *
+ * <p>Thêm controller mới vào module thì phải thêm vào assignableTypes dưới đây, nếu không mọi
+ * exception của nó thành 500 — ConversationExceptionHandlerScopeTest ghim điều đó.
  */
 @Slf4j
 @RestControllerAdvice(
         assignableTypes = {
             ConversationController.class,
             AttachmentController.class,
-            AttachmentDownloadController.class
+            AttachmentDownloadController.class,
+            MessageReportController.class,
+            AdminMessageReportController.class,
+            AdminMessageController.class
         })
 public class ConversationExceptionHandler {
 
@@ -138,16 +147,6 @@ public class ConversationExceptionHandler {
                 HttpStatus.PAYLOAD_TOO_LARGE, "ATTACHMENT_TOO_LARGE", e.getMessage(), List.of());
     }
 
-    /** Trần multipart của Tomcat chặn trước khi vào service — vẫn phải 413, không phải 500. */
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    ResponseEntity<ApiResource<Void>> multipartTooLarge(MaxUploadSizeExceededException e) {
-        return error(
-                HttpStatus.PAYLOAD_TOO_LARGE,
-                "ATTACHMENT_TOO_LARGE",
-                "The photo must be 5 MB or smaller.",
-                List.of());
-    }
-
     /** Spec §6.3 — 415. Kết luận từ magic bytes, không từ Content-Type client gửi. */
     @ExceptionHandler(UnsupportedImageTypeException.class)
     ResponseEntity<ApiResource<Void>> unsupportedType(UnsupportedImageTypeException e) {
@@ -172,10 +171,36 @@ public class ConversationExceptionHandler {
                                 .build()));
     }
 
+    /** Spec §8.3 — 403. Ranh giới của admin bắt nguồn từ báo cáo, không từ vai. */
+    @ExceptionHandler(ModerationOutOfScopeException.class)
+    ResponseEntity<ApiResource<Void>> outOfScope(ModerationOutOfScopeException e) {
+        return error(HttpStatus.FORBIDDEN, "MODERATION_OUT_OF_SCOPE", e.getMessage(), List.of());
+    }
+
+    /** Spec §8.5 — 400. Báo cáo là để tố người khác, không phải để tự gỡ tin của mình. */
+    @ExceptionHandler(CannotReportOwnMessageException.class)
+    ResponseEntity<ApiResource<Void>> ownMessage(CannotReportOwnMessageException e) {
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
+    }
+
+    /** uq_report_once — 409. */
+    @ExceptionHandler(AlreadyReportedException.class)
+    ResponseEntity<ApiResource<Void>> alreadyReported(AlreadyReportedException e) {
+        return error(HttpStatus.CONFLICT, "ALREADY_REPORTED", e.getMessage(), List.of());
+    }
+
     /** Hai request mở cùng một cặp đúng lúc → UNIQUE chặn một cái; client gọi lại là có thread. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> integrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
+        if (cause.contains("uq_report_once")) {
+            // Hai request báo cáo cùng lúc lọt qua existsBy...; UNIQUE chặn cái thứ hai
+            return error(
+                    HttpStatus.CONFLICT,
+                    "ALREADY_REPORTED",
+                    new AlreadyReportedException().getMessage(),
+                    List.of());
+        }
         if (cause.contains("uq_attach_message")) {
             // Hai request gửi cùng một ảnh cùng lúc; UNIQUE chặn cái thứ hai. Cùng ý nghĩa với
             // kiểm tra trong MessageService nên trả cùng mã.

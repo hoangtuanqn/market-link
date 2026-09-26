@@ -67,6 +67,23 @@ public class StompChatEventPublisher implements ChatEventPublisherInterface {
                         .build());
     }
 
+    /**
+     * FR-116. Dùng lại /topic/conversations chứ không mở destination mới: client đã đăng ký sẵn
+     * kênh đó và đã có nhánh xử lý theo `type`. Cả hai người đều nhận — người bị tố cũng phải thấy
+     * tin của mình biến mất.
+     */
+    @Override
+    public void messageHidden(Conversation conversation, Long messageId) {
+        ConversationEvent event =
+                ConversationEvent.builder()
+                        .type(ConversationEvent.HIDDEN)
+                        .conversationId(conversation.getId())
+                        .messageId(messageId)
+                        .build();
+        send(conversation.getUserAId(), CONVERSATIONS, event);
+        send(conversation.getUserBId(), CONVERSATIONS, event);
+    }
+
     /** Dùng chung cho typing và presence: đẩy payload bất kỳ tới một user. */
     public void send(Long userId, String destination, Object payload) {
         try {

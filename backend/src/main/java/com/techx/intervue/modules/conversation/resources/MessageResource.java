@@ -20,10 +20,6 @@ public record MessageResource(
         AttachmentResource attachment,
         Instant createdAt) {
 
-    public static MessageResource from(Message m) {
-        return from(m, null);
-    }
-
     public static MessageResource from(Message m, MessageAttachment attachment) {
         return MessageResource.builder()
                 .id(m.getId())
