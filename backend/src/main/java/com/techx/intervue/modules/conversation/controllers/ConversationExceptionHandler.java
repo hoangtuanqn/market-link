@@ -45,7 +45,8 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
             ConversationController.class,
             AttachmentController.class,
             AttachmentDownloadController.class,
-            MessageReportController.class
+            MessageReportController.class,
+            AdminMessageReportController.class
         })
 public class ConversationExceptionHandler {
 
