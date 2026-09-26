@@ -8,7 +8,8 @@ public interface ChatRateLimiterInterface {
     enum Action {
         MESSAGE,
         IMAGE,
-        CONVERSATION
+        CONVERSATION,
+        TYPING
     }
 
     /** Hết lượt thì ném RateLimitedException (→ 429). */

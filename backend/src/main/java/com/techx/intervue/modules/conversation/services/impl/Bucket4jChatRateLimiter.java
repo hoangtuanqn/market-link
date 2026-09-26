@@ -43,6 +43,7 @@ public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
         requirePositive("app.chat.limits.messages-per-minute", limits.messagesPerMinute());
         requirePositive("app.chat.limits.images-per-hour", limits.imagesPerHour());
         requirePositive("app.chat.limits.conversations-per-hour", limits.conversationsPerHour());
+        requirePositive("app.chat.limits.typing-frames-per-minute", limits.typingFramesPerMinute());
         this.buckets = buckets;
         this.limits = limits;
     }
@@ -77,6 +78,7 @@ public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
             case MESSAGE -> bucket(limits.messagesPerMinute(), Duration.ofMinutes(1));
             case IMAGE -> bucket(limits.imagesPerHour(), Duration.ofHours(1));
             case CONVERSATION -> bucket(limits.conversationsPerHour(), Duration.ofHours(1));
+            case TYPING -> bucket(limits.typingFramesPerMinute(), Duration.ofMinutes(1));
         };
     }
 
@@ -96,6 +98,9 @@ public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
             case IMAGE -> "You are sending photos too quickly. Wait a moment and try again.";
             case CONVERSATION ->
                     "You have started too many conversations in the last hour. Try again later.";
+            // Không bao giờ tới người dùng: frame typing bị bỏ im lặng vì STOMP không có mã HTTP
+            // để trả (spec §7.1). Vẫn viết tử tế phòng khi sau này có ai trả nó ra.
+            case TYPING -> "You are typing too fast for us to keep up.";
         };
     }
 }

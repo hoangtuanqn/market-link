@@ -37,7 +37,7 @@ class Bucket4jChatRateLimiterTest {
         bucket = mock(BucketProxy.class);
         when(buckets.builder()).thenReturn(builder);
         when(builder.build(any(String.class), any(Supplier.class))).thenReturn(bucket);
-        limiter = new Bucket4jChatRateLimiter(buckets, new ChatLimitsProperties(30, 10, 20));
+        limiter = new Bucket4jChatRateLimiter(buckets, new ChatLimitsProperties(30, 10, 20, 120));
     }
 
     @Test
@@ -107,7 +107,7 @@ class Bucket4jChatRateLimiterTest {
         assertThatThrownBy(
                         () ->
                                 new Bucket4jChatRateLimiter(
-                                        buckets, new ChatLimitsProperties(30, 0, 20)))
+                                        buckets, new ChatLimitsProperties(30, 0, 20, 120)))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("app.chat.limits.images-per-hour");
     }
@@ -117,7 +117,32 @@ class Bucket4jChatRateLimiterTest {
         assertThatThrownBy(
                         () ->
                                 new Bucket4jChatRateLimiter(
-                                        buckets, new ChatLimitsProperties(0, 0, 0)))
+                                        buckets, new ChatLimitsProperties(0, 0, 0, 0)))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void typingHasItsOwnBucketAndCapacity() {
+        when(bucket.tryConsume(1)).thenReturn(true);
+
+        limiter.check(7L, Action.TYPING);
+
+        ArgumentCaptor<String> key = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Supplier<BucketConfiguration>> config =
+                ArgumentCaptor.forClass(Supplier.class);
+        verify(builder).build(key.capture(), config.capture());
+        assertThat(key.getValue()).isEqualTo("chat:rate:typing:7");
+        assertThat(config.getValue().get().getBandwidths()[0].getCapacity()).isEqualTo(120);
+    }
+
+    @Test
+    void aNonPositiveTypingLimitIsRefusedAtStartupToo() {
+        assertThatThrownBy(
+                        () ->
+                                new Bucket4jChatRateLimiter(
+                                        buckets, new ChatLimitsProperties(30, 10, 20, 0)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("app.chat.limits.typing-frames-per-minute");
     }
 }
