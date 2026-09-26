@@ -35,12 +35,6 @@
     "announcements_one": "announcement live, Thảo Điền closed 04/10",
     "announcements_other": "announcements live"
   },
-  "earned": {
-    "title": "What MarketLink earned",
-    "link": "Revenue report",
-    "note": "{{month}}, from stalls buying position. Separate from the money the markets took.",
-    "of": "₫ · {{pct}}% of the {{gmv}} the markets took"
-  },
   "byMarket": {
     "title": "Orders this week by market",
     "link": "All orders",

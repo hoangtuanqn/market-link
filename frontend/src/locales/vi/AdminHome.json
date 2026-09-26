@@ -35,12 +35,6 @@
     "announcements_one": "thông báo đang chạy, Thảo Điền nghỉ ngày 04/10",
     "announcements_other": "thông báo đang chạy"
   },
-  "earned": {
-    "title": "MarketLink thu được",
-    "link": "Báo cáo doanh thu",
-    "note": "{{month}}, từ tiền sạp mua vị trí hiển thị. Tách bạch với tiền các chợ thu về.",
-    "of": "₫ · bằng {{pct}}% của {{gmv}} mà các chợ thu được"
-  },
   "byMarket": {
     "title": "Đơn hàng tuần này theo chợ",
     "link": "Tất cả đơn hàng",

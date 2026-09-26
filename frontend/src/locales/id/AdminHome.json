@@ -31,12 +31,6 @@
     "feedback_other": "masukan belum ditangani, satu di antaranya bug",
     "announcements_other": "pengumuman sedang tayang, Thảo Điền tutup 04/10"
   },
-  "earned": {
-    "title": "Yang diperoleh MarketLink",
-    "link": "Laporan pendapatan",
-    "note": "{{month}}, dari lapak yang membeli penempatan. Terpisah dari uang yang diterima pasar.",
-    "of": "₫ · yaitu {{pct}}% dari {{gmv}} yang diterima pasar"
-  },
   "byMarket": {
     "title": "Pesanan minggu ini per pasar",
     "link": "Semua pesanan",
