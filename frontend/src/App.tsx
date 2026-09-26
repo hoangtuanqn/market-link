@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
+import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import ComingSoon from './components/ComingSoon';
 import { SHOW_WIP } from './config/wip';
 import NotificationCenter from './components/notifications/NotificationCenter';
@@ -316,6 +317,7 @@ const App = () => {
       </SettingsSync>
       <AppToaster />
       <NotificationCenter />
+      <ChatUnreadCenter />
       <NotificationPermissionBanner />
     </BrowserRouter>
   );
