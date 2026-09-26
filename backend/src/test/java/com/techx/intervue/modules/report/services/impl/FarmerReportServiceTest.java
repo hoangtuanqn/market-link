@@ -101,4 +101,21 @@ class FarmerReportServiceTest {
         assertThat(b.revenueTotal()).isEqualByComparingTo("70000");
         assertThat(reports.salesHistory(farmerBUserId, null, null, 1, 10).total()).isEqualTo(1);
     }
+
+    /**
+     * A stall approved today has no order at all: every SUM is NULL and MySQL types the COALESCE
+     * fallback as an integer, not a DECIMAL — the dashboard must still be all zeros, not a 500.
+     */
+    @Test
+    void dashboardOfAStallWithoutOrdersIsAllZeros() {
+        long newFarmerUserId = fx.user("farmer", "Farmer new", "x");
+        fx.farmer(newFarmerUserId, "Stall new", "approved");
+
+        FarmerDashboardResource d = reports.dashboard(newFarmerUserId);
+
+        assertThat(d.totalOrders()).isZero();
+        assertThat(d.revenueTotal()).isEqualByComparingTo("0");
+        assertThat(d.revenueThisMonth()).isEqualByComparingTo("0");
+        assertThat(reports.bestSellers(newFarmerUserId, null, null, 5)).isEmpty();
+    }
 }
