@@ -19,16 +19,7 @@
   },
   "unit": {
     "label": "Sold per",
-    "addedByStall": "{{unit}} · added by a stall",
-    "own": "Name your own unit…",
     "hint": "How a customer buys it: by the kilo, the bunch, the bulb, the bag. Pick one or name your own."
-  },
-  "own": {
-    "label": "Your unit",
-    "onePlaceholder": "tray of 30",
-    "one": "Unit, one of them",
-    "many": "Unit, more than one",
-    "hint": "One of them, then more than one. We fill the second in for you; change it if the guess is wrong."
   },
   "preview": {
     "label": "How it will read",

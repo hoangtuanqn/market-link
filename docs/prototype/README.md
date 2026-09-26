@@ -114,12 +114,12 @@ A stall decides how its product is bought: by the kilo, the bunch, the bulb, the
 schema already allows it, because `products.unit` is `VARCHAR(20)` with the comment "kg, bó, quả, hộp…", so
 nothing here needs a migration.
 
-What English does not give for free is the plural. "tray of 30" guesses to "tray of 30s", which is wrong, so the
-product form offers the guess and lets the stall correct it, and shows a live preview of the three places the
-unit appears: the price on the tag, the stock line, and what someone ordering one sees. `admin/categories.html`
-became **Categories & units**, where an admin curates the picker, sees which units a stall typed itself, fixes a
-plural, and merges duplicate spellings so reports do not split "bag" from "Bag". The one missing piece is a
-`products.unit_plural` column, proposed to LEAD and flagged on the form.
+What English does not give for free is the plural of a phrase like "tray of 30". The unit list is therefore a fixed
+list that ships with the app (`frontend/src/constants/units.ts`), with the plural written next to each one, and
+the product form shows a live preview of the three places the unit appears: the price on the tag, the stock line,
+and what someone ordering one sees. `admin/categories.html` manages **categories only** — the SRS gives the admin
+"product categories" as master data and says nothing about units, and `db/schema.sql` has `products.unit
+VARCHAR(20)` with no units table.
 
 Every report now carries the unit with the price: `45,000 ₫ / loaf`, `95,000 ₫ / tray of 30`. Quantities are
 printed in each product's own unit and are never summed across units, because a kilo of mushrooms and a tray of

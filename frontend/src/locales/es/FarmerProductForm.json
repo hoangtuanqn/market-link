@@ -19,16 +19,7 @@
   },
   "unit": {
     "label": "Se vende por",
-    "addedByStall": "{{unit}} · añadida por un puesto",
-    "own": "Pon nombre a tu propia unidad…",
     "hint": "Cómo lo compra un cliente: por kilo, por manojo, por cabeza, por bolsa. Elige una o pon la tuya."
-  },
-  "own": {
-    "label": "Tu unidad",
-    "onePlaceholder": "tray of 30",
-    "one": "Unidad, en singular",
-    "many": "Unidad, en plural",
-    "hint": "Primero el singular y luego el plural. Rellenamos el segundo por ti; cámbialo si no acertamos."
   },
   "preview": {
     "label": "Cómo se verá",

@@ -19,16 +19,7 @@
   },
   "unit": {
     "label": "Vendu à",
-    "addedByStall": "{{unit}} · ajouté par un stand",
-    "own": "Nommer votre propre unité…",
     "hint": "Comment un client l’achète : au kilo, à la botte, à la pièce, au sac. Choisissez-en une ou nommez la vôtre."
-  },
-  "own": {
-    "label": "Votre unité",
-    "onePlaceholder": "tray of 30",
-    "one": "Unité, au singulier",
-    "many": "Unité, au pluriel",
-    "hint": "Le singulier, puis le pluriel. Nous remplissons le second pour vous ; corrigez-le si la supposition est fausse."
   },
   "preview": {
     "label": "Ce que verront les clients",
