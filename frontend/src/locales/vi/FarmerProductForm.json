@@ -26,12 +26,19 @@
     "text": "<b>{{price}}</b> trên nhãn · còn <b>{{left}}</b> · người đặt một phần sẽ thấy <b>{{one}}</b>"
   },
   "price": {
-    "label": "Giá (₫)",
+    "label": "Giá ($)",
     "hint": "Hiển thị là {{price}}."
   },
   "qty": {
     "label": "Số lượng có trong tuần này",
     "error": "Số lượng phải từ 0 trở lên. Dùng Hết hàng khi không còn gì."
+  },
+  "shelfLife": {
+    "label": "Hạn tươi (ngày)",
+    "hint": "Danh mục này thường tươi trong khoảng {{min}}–{{max}} ngày.",
+    "error": "Nhập một số nguyên từ 1 trở lên.",
+    "warningTitle": "Nằm ngoài khoảng tươi thông thường",
+    "warningText": "Danh mục này thường tươi trong {{min}}–{{max}} ngày. Bạn vẫn có thể lưu số này, nhưng sẽ phải tự chịu trách nhiệm nếu hàng không giữ được độ tươi như đã nêu."
   },
   "desc": {
     "label": "Mô tả",
@@ -49,9 +56,13 @@
   },
   "photo": {
     "label": "Ảnh",
-    "none": "Chưa có ảnh. Khi chưa thêm, nhãn sẽ hiện tên danh mục bằng chữ viết tay.",
-    "choose": "Chọn ảnh",
-    "hint": "JPG hoặc PNG, 4:3, tối đa 5 MB. Chụp cận, ánh sáng tự nhiên, trên nền gỗ hoặc giấy."
+    "add": "Thêm ảnh",
+    "replace": "Đổi ảnh",
+    "remove": "Xoá ảnh",
+    "uploading": "Đang tải lên",
+    "uploadInProgress": "Đợi ảnh tải xong rồi hãy lưu.",
+    "alt": "Ảnh sản phẩm",
+    "hint": "JPEG, PNG hoặc WEBP, tối đa 8 MB. Chụp cận, ánh sáng tự nhiên, trên nền gỗ hoặc giấy."
   },
   "save": "Lưu sản phẩm",
   "add": "Thêm sản phẩm",

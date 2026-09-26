@@ -8,7 +8,7 @@ import NotificationSettingsCard from '@/components/notifications/NotificationSet
 import { Card } from '@/components/ui/card';
 import { SelectField } from '@/components/ui/input';
 import useSettings from '@/hooks/useSettings';
-import { formatDate, formatTime, RATES_DATE, vnd } from '@/lib/format';
+import { formatDate, formatTime, vnd } from '@/lib/format';
 import SettingsStore, { LANGUAGES, type Settings, type Theme } from '@/lib/settings';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -88,19 +88,6 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
           {t('settings.format')}
         </h2>
         <ul className="m-0 flex flex-col p-0">
-          <SettingsRow title={t('settings.currency')} note={t('settings.currencyNote', { date: RATES_DATE })}>
-            <SelectField
-              id="set-currency"
-              label={t('settings.currency')}
-              hideLabel
-              value={draft.currency}
-              onChange={(e) => set({ currency: e.target.value as Settings['currency'] })}
-              options={(['VND', 'USD', 'EUR', 'JPY'] as const).map((c) => ({
-                value: c,
-                label: t(`settings.currencies.${c}`),
-              }))}
-            />
-          </SettingsRow>
           <SettingsRow title={t('settings.units')} note={t('settings.unitsNote')}>
             <SelectField
               id="set-units"

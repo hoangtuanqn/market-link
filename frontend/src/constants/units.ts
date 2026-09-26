@@ -16,19 +16,19 @@ export type UnitOption = {
   kind: UnitKind;
 };
 
+/**
+ * Chọn lại 2026-09-26: bộ đơn vị phổ biến, chuẩn cho một chợ nông sản — bỏ các đơn vị quá hẹp (bulb, jar, bottle, loaf,
+ * "tray of 30") để form gọn và dễ đoán hơn.
+ */
 export const UNITS: UnitOption[] = [
   { one: 'kg', many: 'kg', kind: 'weight' },
   { one: 'g', many: 'g', kind: 'weight' },
   { one: 'litre', many: 'litres', kind: 'volume' },
   { one: 'bunch', many: 'bunches', kind: 'count' },
   { one: 'piece', many: 'pieces', kind: 'count' },
-  { one: 'bulb', many: 'bulbs', kind: 'count' },
   { one: 'dozen', many: 'dozen', kind: 'count' },
   { one: 'bag', many: 'bags', kind: 'pack' },
-  { one: 'jar', many: 'jars', kind: 'pack' },
-  { one: 'bottle', many: 'bottles', kind: 'pack' },
-  { one: 'loaf', many: 'loaves', kind: 'pack' },
-  { one: 'tray of 30', many: 'trays of 30', kind: 'pack' },
+  { one: 'box', many: 'boxes', kind: 'pack' },
 ];
 
 export const UNIT_KINDS: UnitKind[] = ['weight', 'volume', 'count', 'pack'];

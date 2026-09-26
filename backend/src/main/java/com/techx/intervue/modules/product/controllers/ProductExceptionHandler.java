@@ -16,6 +16,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 /**
  * Trả 400/403/404/409 cho module product — cùng lý do FarmerExceptionHandler (chưa có handler
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
             ProductController.class,
             FarmerProductsPublicController.class,
             FarmerProductController.class,
+            FarmerProductImageController.class,
             AdminProductController.class
         })
 public class ProductExceptionHandler {
@@ -63,6 +66,17 @@ public class ProductExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiResource<Void>> invalidArgument(IllegalArgumentException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
+    }
+
+    /** File vượt quá spring.servlet.multipart.max-file-size/max-request-size → 400. */
+    @ExceptionHandler({MaxUploadSizeExceededException.class, MultipartException.class})
+    ResponseEntity<ApiResource<Void>> uploadTooLarge(Exception e) {
+        String message = "File is too large.";
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                message,
+                List.of(FieldErrorResource.builder().field("file").message(message).build()));
     }
 
     /** R-06 / D-09: không có, xoá mềm, bị ẩn hoặc stall chưa duyệt → 404, không lộ lý do. */

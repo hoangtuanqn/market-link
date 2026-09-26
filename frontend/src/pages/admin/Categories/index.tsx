@@ -19,6 +19,8 @@ const PAGE_SIZE = 8;
 
 const bySortThenName = (a: CategoryRow, b: CategoryRow) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name);
 
+type NewCategoryErrors = Partial<Record<'name' | 'min' | 'max', string>>;
+
 /**
  * FR-076 — the one list every stall picks from when it adds a product. Sale units are not here: the SRS gives the admin
  * "product categories" and nothing else as master data, so units ship as a fixed list in `constants/units.ts`. Reads
@@ -33,8 +35,8 @@ const AdminCategoriesPage = () => {
   const replaceCategories = (next: (current: CategoryRow[]) => CategoryRow[]) =>
     mutate((current) => next(current).sort(bySortThenName));
 
-  const [newCategory, setNewCategory] = useState({ name: '', position: '' });
-  const [newCategoryError, setNewCategoryError] = useState<string>();
+  const [newCategory, setNewCategory] = useState({ name: '', position: '', minShelfLife: '', maxShelfLife: '' });
+  const [newCategoryErrors, setNewCategoryErrors] = useState<NewCategoryErrors>({});
   /** Names typed into the table but not saved yet, by category id. */
   const [drafts, setDrafts] = useState<Record<number, string>>({});
   const [removing, setRemoving] = useState<CategoryRow | null>(null);
@@ -51,7 +53,12 @@ const AdminCategoriesPage = () => {
     if (!name) return;
     setBusyId(c.id);
     try {
-      const saved = await CatalogApi.updateCategory(c.id, { name, sortOrder: c.sortOrder });
+      const saved = await CatalogApi.updateCategory(c.id, {
+        name,
+        sortOrder: c.sortOrder,
+        minShelfLifeDays: c.minShelfLifeDays,
+        maxShelfLifeDays: c.maxShelfLifeDays,
+      });
       replaceCategories((list) => list.map((row) => (row.id === c.id ? { ...saved, count: row.count } : row)));
       setDrafts((current) => {
         const next = { ...current };
@@ -68,23 +75,37 @@ const AdminCategoriesPage = () => {
 
   const addCategory = async () => {
     const name = newCategory.name.trim();
-    if (!name) {
-      setNewCategoryError(t('error.nameRequired'));
-      return;
-    }
-    setNewCategoryError(undefined);
+    const min = Number(newCategory.minShelfLife);
+    const max = Number(newCategory.maxShelfLife);
+    const errors: NewCategoryErrors = {};
+    if (!name) errors.name = t('error.nameRequired');
+    if (!Number.isInteger(min) || min < 1) errors.min = t('error.shelfLifeRequired');
+    if (!Number.isInteger(max) || max < 1) errors.max = t('error.shelfLifeRequired');
+    else if (!errors.min && max < min) errors.max = t('error.shelfLifeRange');
+    setNewCategoryErrors(errors);
+    if (Object.keys(errors).length) return;
+
     const position = Number(newCategory.position);
     setBusyId(0);
     try {
       const created = await CatalogApi.createCategory({
         name,
         sortOrder: Number.isFinite(position) && position > 0 ? position : categories.length + 1,
+        minShelfLifeDays: min,
+        maxShelfLifeDays: max,
       });
       replaceCategories((list) => [...list, created]);
       Notification.success({ text: t('toast.categoryAdded') });
-      setNewCategory({ name: '', position: '' });
+      setNewCategory({ name: '', position: '', minShelfLife: '', maxShelfLife: '' });
     } catch (error) {
-      setNewCategoryError(Helper.getFieldErrors(error).name ?? Helper.getErrorMessage(error, tc('errors.network')));
+      const fromServer = Helper.getFieldErrors(error);
+      const mapped: NewCategoryErrors = {
+        name: fromServer.name,
+        min: fromServer.minShelfLifeDays,
+        max: fromServer.maxShelfLifeDays,
+      };
+      if (mapped.name || mapped.min || mapped.max) setNewCategoryErrors(mapped);
+      else Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
       setBusyId(null);
     }
@@ -195,7 +216,7 @@ const AdminCategoriesPage = () => {
             hint={t('categoryForm.nameHint')}
             value={newCategory.name}
             onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-            error={newCategoryError}
+            error={newCategoryErrors.name}
           />
           <Field
             id="new-category-position"
@@ -205,6 +226,27 @@ const AdminCategoriesPage = () => {
             value={newCategory.position}
             onChange={(e) => setNewCategory({ ...newCategory, position: e.target.value })}
           />
+          <div className="grid grid-cols-2 gap-3">
+            <Field
+              id="new-category-min-shelf-life"
+              label={t('categoryForm.minShelfLife')}
+              required
+              type="number"
+              value={newCategory.minShelfLife}
+              onChange={(e) => setNewCategory({ ...newCategory, minShelfLife: e.target.value })}
+              error={newCategoryErrors.min}
+            />
+            <Field
+              id="new-category-max-shelf-life"
+              label={t('categoryForm.maxShelfLife')}
+              required
+              type="number"
+              value={newCategory.maxShelfLife}
+              onChange={(e) => setNewCategory({ ...newCategory, maxShelfLife: e.target.value })}
+              error={newCategoryErrors.max}
+            />
+          </div>
+          <p className="text-ink-muted text-[13px]">{t('categoryForm.shelfLifeHint')}</p>
           <Button type="submit" disabled={busyId === 0}>
             {t('categoryForm.submit')}
           </Button>
