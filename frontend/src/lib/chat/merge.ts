@@ -1,4 +1,4 @@
-import type { ChatMessageItem, ConversationEventFrame, ConversationSummary } from '@/types/chat.types';
+import type { ChatMessageItem, ConversationEventFrame, ConversationSummary, PresenceFrame } from '@/types/chat.types';
 
 /**
  * Trong state, danh sách tin xếp **cũ → mới** (đọc từ trên xuống như trên màn hình). API trả mới → cũ, nên prependOlder
@@ -41,7 +41,8 @@ export function oldestId(list: ChatMessageItem[]): number | undefined {
 }
 
 /**
- * Thread được chạm thì nhảy lên đầu danh sách.
+ * Thread có tin mới ("updated") thì nhảy lên đầu danh sách. "read" và "hidden" không phải tin mới nên không được đổi
+ * thứ tự: danh sách xếp theo tin cuối cùng.
  *
  * Sự kiện "read" cố ý không mang unreadCount (backend để kiểu Long cho nó vắng mặt). Dùng `??` chứ không phải `||`:
  * đừng suy ra 0 từ chỗ thiếu, nhưng một số 0 gửi thật thì phải nhận. Lỗi đó đã bị bắt trong smoke của Plan 2.
@@ -50,6 +51,7 @@ export function applyConversationEvent(
   threads: ConversationSummary[],
   frame: ConversationEventFrame,
 ): ConversationSummary[] {
+  if (frame.type !== 'updated') return threads;
   const at = threads.findIndex((t) => t.id === frame.conversationId);
   if (at === -1) return threads;
 
@@ -60,4 +62,15 @@ export function applyConversationEvent(
     unreadCount: frame.unreadCount ?? threads[at].unreadCount,
   };
   return [touched, ...threads.slice(0, at), ...threads.slice(at + 1)];
+}
+
+/** Đối phương online / offline: cập nhật mọi thread có người đó, giữ nguyên thứ tự. */
+export function applyPresence(threads: ConversationSummary[], frame: PresenceFrame): ConversationSummary[] {
+  if (!threads.some((t) => t.other.userId === frame.userId)) return threads;
+
+  return threads.map((t) =>
+    t.other.userId === frame.userId
+      ? { ...t, other: { ...t.other, online: frame.online, lastSeenAt: frame.lastSeenAt } }
+      : t,
+  );
 }

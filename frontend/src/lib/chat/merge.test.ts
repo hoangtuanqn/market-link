@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyConversationEvent, mergeMessage, oldestId, prependOlder } from './merge';
+import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder } from './merge';
 import type { ChatMessageItem, ConversationSummary } from '@/types/chat.types';
 
 const msg = (id: number, senderId = 3): ChatMessageItem => ({
@@ -130,6 +130,20 @@ describe('applyConversationEvent', () => {
     expect(after[0].unreadCount).toBe(0);
   });
 
+  /** Backend gửi "read" cho người gửi khi đối phương đọc: danh sách xếp theo tin mới nhất, đọc không phải tin mới. */
+  it('does not reorder the list for a read receipt', () => {
+    const threads = [thread(1), thread(2)];
+
+    expect(applyConversationEvent(threads, { type: 'read', conversationId: 2, readerId: 9 })).toBe(threads);
+  });
+
+  /** "hidden" (FR-116) là việc của Plan 4B; ở 4A nó cũng không được đẩy thread lên đầu. */
+  it('does not reorder the list for a hidden message', () => {
+    const threads = [thread(1), thread(2)];
+
+    expect(applyConversationEvent(threads, { type: 'hidden', conversationId: 2, messageId: 5 })).toBe(threads);
+  });
+
   it('ignores an event for a thread it has not loaded', () => {
     const threads = [thread(1)];
 
@@ -143,5 +157,33 @@ describe('applyConversationEvent', () => {
 
     expect(threads.map((t) => t.id)).toEqual([1, 2]);
     expect(threads[1].unreadCount).toBe(0);
+  });
+});
+
+/** /user/topic/presence: đối phương online / offline. Không có nó thì chấm online đứng yên từ lúc tải trang. */
+describe('applyPresence', () => {
+  it('updates the other person in every thread with them', () => {
+    const after = applyPresence([thread(1), thread(2)], {
+      userId: 3,
+      online: true,
+      lastSeenAt: '2026-09-26T10:05:00Z',
+    });
+
+    expect(after.map((t) => t.other.online)).toEqual([true, true]);
+    expect(after[0].other.lastSeenAt).toBe('2026-09-26T10:05:00Z');
+  });
+
+  it('returns the same array when nobody in the list changed', () => {
+    const threads = [thread(1)];
+
+    expect(applyPresence(threads, { userId: 99, online: true, lastSeenAt: null })).toBe(threads);
+  });
+
+  it('does not mutate the list it was given', () => {
+    const threads = [thread(1)];
+
+    applyPresence(threads, { userId: 3, online: true, lastSeenAt: null });
+
+    expect(threads[0].other.online).toBe(false);
   });
 });
