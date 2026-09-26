@@ -24,6 +24,7 @@ import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateReposi
 import com.techx.intervue.modules.product.requests.StockTemplateRequest;
 import com.techx.intervue.modules.product.requests.StockTemplateRequest.TemplateItem;
 import com.techx.intervue.modules.product.resources.ApplyTemplateResultResource;
+import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -328,11 +329,49 @@ class StockTemplateTest {
     /** FR-041: a refill from zero reaches the restock alert. */
     @Test
     void applyAlertsFavouritesWhenAnEmptyProductIsRefilled() {
-        product(100, FARMER_ID, "Rau muống", 0, ProductStatus.SOLD_OUT);
+        Product p = product(100, FARMER_ID, "Rau muống", 0, ProductStatus.SOLD_OUT);
         template(100, 0, 30, null);
 
         service.applyTemplate(USER_ID, SUNDAY);
 
-        org.mockito.Mockito.verify(restock).onStockRose(100L, 0, 30);
+        org.mockito.Mockito.verify(restock).afterChange(p, false);
+    }
+
+    private void suspended() {
+        when(farmers.findByUserId(USER_ID))
+                .thenReturn(
+                        Optional.of(
+                                FarmerProfile.builder()
+                                        .id(FARMER_ID)
+                                        .userId(USER_ID)
+                                        .stallName("Vườn Út Hiền")
+                                        .contactPerson("Hiền")
+                                        .approvalStatus(ApprovalStatus.SUSPENDED)
+                                        .build()));
+    }
+
+    /** Contract §4 / D-09: a stall that is not approved cannot edit stock or prices → 403. */
+    @Test
+    void saveRejectsAStallThatIsNotApproved() {
+        suspended();
+        product(100, FARMER_ID, "Rau muống", 5, ProductStatus.AVAILABLE);
+
+        assertThatThrownBy(
+                        () ->
+                                service.saveTemplates(
+                                        USER_ID, items(new TemplateItem(100L, 0, 10, null))))
+                .isInstanceOf(StallNotApprovedException.class);
+        verify(templates, never()).saveAll(any());
+    }
+
+    @Test
+    void applyRejectsAStallThatIsNotApproved() {
+        suspended();
+        Product p = product(100, FARMER_ID, "Rau muống", 3, ProductStatus.AVAILABLE);
+        template(100, 0, 30, null);
+
+        assertThatThrownBy(() -> service.applyTemplate(USER_ID, SUNDAY))
+                .isInstanceOf(StallNotApprovedException.class);
+        assertThat(p.getStockQuantity()).isEqualTo(3);
     }
 }

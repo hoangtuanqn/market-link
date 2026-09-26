@@ -52,8 +52,14 @@ public class OrderAutoCompleteJob {
                 return completed;
             }
             for (Long id : fresh) {
-                if (orders.autoComplete(id)) {
-                    completed++;
+                try {
+                    if (orders.autoComplete(id)) {
+                        completed++;
+                    }
+                } catch (RuntimeException e) {
+                    // One order failing (e.g. a lock wait timeout) must not stop the others; it is
+                    // retried on the next run
+                    log.warn("Could not auto-complete order {}: {}", id, e.getMessage());
                 }
             }
             if (batch.size() < BATCH_SIZE) {

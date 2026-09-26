@@ -73,4 +73,16 @@ class OrderAutoCompleteJobBatchTest {
 
         verify(orders, times(200)).autoComplete(anyLong());
     }
+
+    /** A lock timeout on one order must not cost every other due order its completion. */
+    @Test
+    void oneFailingOrderDoesNotStopTheOthers() {
+        when(queries.readyPastPickup(eq(NOW.minusHours(24)), anyInt())).thenReturn(ids(1, 3));
+        when(orders.autoComplete(1L)).thenThrow(new IllegalStateException("lock wait timeout"));
+
+        assertThat(job.sweep()).isEqualTo(2);
+
+        verify(orders).autoComplete(2L);
+        verify(orders).autoComplete(3L);
+    }
 }

@@ -16,7 +16,6 @@ import com.techx.intervue.modules.notification.resources.NotificationEvent;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
-import com.techx.intervue.modules.product.repositories.ProductRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +31,6 @@ class RestockNotifierTest {
     private static final long FARMER_USER_ID = 40L;
 
     private FavoriteRepository favorites;
-    private ProductRepository products;
     private FarmerProfileRepository farmers;
     private NotificationServiceInterface notifications;
     private RestockNotifier notifier;
@@ -42,10 +40,9 @@ class RestockNotifierTest {
     @BeforeEach
     void setUp() {
         favorites = mock(FavoriteRepository.class);
-        products = mock(ProductRepository.class);
         farmers = mock(FarmerProfileRepository.class);
         notifications = mock(NotificationServiceInterface.class);
-        notifier = new RestockNotifier(favorites, products, farmers, notifications);
+        notifier = new RestockNotifier(favorites, farmers, notifications);
 
         product = new Product();
         product.setId(PRODUCT_ID);
@@ -61,7 +58,6 @@ class RestockNotifierTest {
                         .contactPerson("Hiền")
                         .approvalStatus(ApprovalStatus.APPROVED)
                         .build();
-        when(products.findById(PRODUCT_ID)).thenReturn(Optional.of(product));
         when(farmers.findById(FARMER_PROFILE_ID)).thenReturn(Optional.of(farmer));
         when(favorites.customerIdsFavouritingProduct(PRODUCT_ID)).thenReturn(List.of(7L, 8L, 9L));
     }
@@ -75,7 +71,7 @@ class RestockNotifierTest {
 
     @Test
     void notifiesEveryCustomerWhoFavouritedTheProduct() {
-        notifier.onStockRose(PRODUCT_ID, 0, 20);
+        notifier.afterChange(product, false);
 
         ArgumentCaptor<NotificationEvent> event = ArgumentCaptor.forClass(NotificationEvent.class);
         verify(notifications).dispatch(any(), event.capture());
@@ -83,19 +79,35 @@ class RestockNotifierTest {
         assertThat(event.getValue().kind()).isEqualTo(NotificationKind.RESTOCK);
     }
 
-    /** 5 → 8 is more stock, not "back in stock": only zero → positive counts. */
+    /** 5 → 8 is more stock, not "back in stock": it could already be ordered. */
     @Test
-    void staysQuietWhenStockWasAlreadyPositive() {
-        notifier.onStockRose(PRODUCT_ID, 5, 8);
+    void staysQuietWhenItCouldAlreadyBeOrdered() {
+        notifier.afterChange(product, true);
 
         verify(notifications, never()).dispatch(any(), any());
     }
 
     @Test
     void staysQuietWhenStockFellToZero() {
-        notifier.onStockRose(PRODUCT_ID, 5, 0);
+        product.setStockQuantity(0);
+
+        notifier.afterChange(product, true);
 
         verify(notifications, never()).dispatch(any(), any());
+    }
+
+    /** "Back in stock" means "can be ordered again": listed, available and with stock left. */
+    @Test
+    void orderableMeansListedAvailableAndInStock() {
+        assertThat(RestockNotifier.orderable(product)).isTrue();
+        product.setStatus(ProductStatus.SOLD_OUT);
+        assertThat(RestockNotifier.orderable(product)).isFalse();
+        product.setStatus(ProductStatus.AVAILABLE);
+        product.setStockQuantity(0);
+        assertThat(RestockNotifier.orderable(product)).isFalse();
+        product.setStockQuantity(3);
+        product.setHidden(true);
+        assertThat(RestockNotifier.orderable(product)).isFalse();
     }
 
     /** A farmer who favourited their own product does not get their own bell. */
@@ -104,7 +116,7 @@ class RestockNotifierTest {
         when(favorites.customerIdsFavouritingProduct(PRODUCT_ID))
                 .thenReturn(List.of(7L, FARMER_USER_ID));
 
-        notifier.onStockRose(PRODUCT_ID, 0, 20);
+        notifier.afterChange(product, false);
 
         assertThat(recipients()).containsExactly(7L);
     }
@@ -112,10 +124,10 @@ class RestockNotifierTest {
     @Test
     void staysQuietForHiddenOrDeletedProducts() {
         product.setHidden(true);
-        notifier.onStockRose(PRODUCT_ID, 0, 20);
+        notifier.afterChange(product, false);
         product.setHidden(false);
         product.setDeleted(true);
-        notifier.onStockRose(PRODUCT_ID, 0, 20);
+        notifier.afterChange(product, false);
 
         verify(notifications, never()).dispatch(any(), any());
     }
@@ -125,7 +137,7 @@ class RestockNotifierTest {
     void staysQuietWhileTheFarmerHasPausedTheProduct() {
         product.setStatus(ProductStatus.UNAVAILABLE);
 
-        notifier.onStockRose(PRODUCT_ID, 0, 20);
+        notifier.afterChange(product, false);
 
         verify(notifications, never()).dispatch(any(), any());
     }
@@ -135,14 +147,14 @@ class RestockNotifierTest {
     void staysQuietForASuspendedStall() {
         farmer.setApprovalStatus(ApprovalStatus.SUSPENDED);
 
-        notifier.onStockRose(PRODUCT_ID, 0, 20);
+        notifier.afterChange(product, false);
 
         verify(notifications, never()).dispatch(any(), any());
     }
 
     @Test
     void theAlertLinksToTheProductAndNamesItAndTheStall() {
-        notifier.onStockRose(PRODUCT_ID, 0, 20);
+        notifier.afterChange(product, false);
 
         ArgumentCaptor<NotificationEvent> event = ArgumentCaptor.forClass(NotificationEvent.class);
         verify(notifications).dispatch(any(), event.capture());
