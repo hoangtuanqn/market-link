@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import Avatar from '@/components/Avatar';
-import { LogOutIcon, SlidersIcon, UsersIcon } from '@/components/icons';
+import { DashboardIcon, LogOutIcon, SlidersIcon, UsersIcon } from '@/components/icons';
 import TierBadge from '@/components/TierBadge';
 import type { Tier } from '@/types/achievement.types';
 
@@ -131,6 +131,9 @@ const UserMenu = ({ name, email, avatarUrl, tier, settingsTo = '/settings', onSi
               {tier && <TierBadge tier={tier} className="mt-1" />}
             </div>
           </div>
+          <Link role="menuitem" tabIndex={-1} to="/dashboard" onClick={() => close(false)} className={item}>
+            <DashboardIcon /> {t('nav.dashboard')}
+          </Link>
           <Link role="menuitem" tabIndex={-1} to="/account" onClick={() => close(false)} className={item}>
             <UsersIcon /> {t('nav.profile')}
           </Link>

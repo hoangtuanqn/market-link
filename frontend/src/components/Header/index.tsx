@@ -56,6 +56,7 @@ const Header = ({
     ? [
         ...navItems,
         { label: 'messages', to: messagesTo },
+        { label: 'dashboard', to: '/dashboard' },
         { label: 'profile', to: '/account' },
         { label: 'settings', to: settingsTo },
       ]
