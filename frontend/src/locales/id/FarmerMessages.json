@@ -1,37 +1,5 @@
 {
   "title": "Pesan",
   "intro": "Pertanyaan pelanggan tentang stok minggu ini dan jam pengambilan mereka. Jawab sebelum batas waktu agar mereka masih bisa mengubah pesanan sendiri.",
-  "srs": {
-    "title": "Fitur pesan tidak ada di SRS.",
-    "text": "Minta LEAD membuat kebutuhan baru sebelum ini dibangun. Layar ini ada agar tim bisa menilai apakah sepadan dengan waktunya."
-  },
-  "conversations": "Percakapan",
-  "unanswered_one": "{{count}} belum dijawab",
-  "unanswered_other": "{{count}} belum dijawab",
-  "time": {
-    "yesterday": "Kemarin",
-    "now": "baru saja"
-  },
-  "note": {
-    "orders_one": "{{count}} pesanan di lapak Anda",
-    "orders_other": "{{count}} pesanan di lapak Anda",
-    "withCollected": "{{orders}}, {{collected}} sudah diambil"
-  },
-  "conversationWith": "Percakapan dengan {{name}}",
-  "openOrder": "Buka pesanan {{code}}",
-  "you": "Anda",
-  "orderRef": {
-    "title": "Pesanan {{code}} · {{name}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · tutup {{cutoff}} pada {{cutoffDate}}"
-  },
-  "items_one": "{{count}} barang",
-  "items_other": "{{count}} barang",
-  "replyTo": "Balas {{name}}",
-  "placeholder": "Jawab soal stok atau jam pengambilan",
-  "send": "Kirim",
-  "notOrder": {
-    "title": "Pesan tidak mengubah pesanan",
-    "text": "Menyetujui perubahan di sini baru separuhnya. Pelanggan mengedit pesanan, pesanan kembali kepada Anda sebagai Dipesan, lalu Anda menerimanya lagi. Dengan begitu jumlah stok dan slot pengambilan tetap benar.",
-    "link": "Ke pesanan masuk"
-  }
+  "noThreadsText": "Saat pelanggan mengirim pesan ke lapak Anda, percakapannya muncul di sini."
 }

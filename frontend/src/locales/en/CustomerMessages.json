@@ -1,33 +1,4 @@
 {
   "title": "Messages",
-  "intro": "Ask a stall about this week's produce, or settle the details of an order before the cutoff.",
-  "conversations": "Conversations",
-  "stallCount_one": "{{count}} stall",
-  "stallCount_other": "{{count}} stalls",
-  "time": {
-    "yesterday": "Yesterday",
-    "now": "now"
-  },
-  "conversationWith": "Conversation with {{name}}",
-  "seeStall": "See the stall",
-  "openOrder": "Open order {{code}}",
-  "you": "You",
-  "orderRef": {
-    "title": "Order {{code}} · {{stall}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · closes {{cutoff}} on {{cutoffDate}}"
-  },
-  "items_one": "{{count}} item",
-  "items_other": "{{count}} items",
-  "messageTo": "Message to {{name}}",
-  "placeholder": "Ask about this week's stock or your pickup time",
-  "send": "Send",
-  "for": {
-    "title": "What messages are for",
-    "text": "Checking that something is still coming, asking the stall to hold a little more, or agreeing a different pickup time. Changes to an order still go through the order itself, so both sides have the same record.",
-    "edit": "Edit order {{code}}"
-  },
-  "notFor": {
-    "title": "What they are not for",
-    "text": "There is no price negotiation and no payment here. Prices are set by the stall and you pay at the stall when you collect. A message never changes an order on its own."
-  }
+  "intro": "Ask a stall about this week's produce, or settle the details of an order before the cutoff."
 }

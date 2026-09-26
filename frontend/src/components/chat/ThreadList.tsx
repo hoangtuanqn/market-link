@@ -11,6 +11,8 @@ type Props = {
   loading: boolean;
   error: boolean;
   onRetry: () => void;
+  /** Câu dưới "No conversations yet" theo vai: Farmer không tự mở được cuộc trò chuyện. */
+  emptyText?: string;
 };
 
 /** Hôm nay thì hiện giờ, cũ hơn thì hiện ngày — cùng quy ước với danh sách đơn. */
@@ -21,7 +23,7 @@ const when = (iso: string | null) => {
   return sameDay ? formatTime(at) : formatDayMonth(at);
 };
 
-export default function ThreadList({ threads, activeId, onPick, loading, error, onRetry }: Props) {
+export default function ThreadList({ threads, activeId, onPick, loading, error, onRetry, emptyText }: Props) {
   const { t } = useTranslation('common');
 
   if (loading) {
@@ -48,7 +50,7 @@ export default function ThreadList({ threads, activeId, onPick, loading, error, 
   }
 
   if (threads.length === 0) {
-    return <DataState title={t('chat.noThreadsTitle')} text={t('chat.noThreadsText')} />;
+    return <DataState title={t('chat.noThreadsTitle')} text={emptyText ?? t('chat.noThreadsText')} />;
   }
 
   return (

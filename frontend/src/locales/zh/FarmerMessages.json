@@ -1,37 +1,5 @@
 {
   "title": "消息",
   "intro": "顾客关于本周库存和取货时间的提问。请在截单前回复，这样顾客还能自己修改订单。",
-  "srs": {
-    "title": "消息功能不在 SRS 中。",
-    "text": "开发前请先向 LEAD 申请新需求。此页面用于让团队判断是否值得投入工时。"
-  },
-  "conversations": "对话",
-  "unanswered_one": "{{count}} 条未回复",
-  "unanswered_other": "{{count}} 条未回复",
-  "time": {
-    "yesterday": "昨天",
-    "now": "刚刚"
-  },
-  "note": {
-    "orders_one": "在你这里下过 {{count}} 单",
-    "orders_other": "在你这里下过 {{count}} 单",
-    "withCollected": "{{orders}}，已取货 {{collected}} 单"
-  },
-  "conversationWith": "与 {{name}} 的对话",
-  "openOrder": "打开订单 {{code}}",
-  "you": "你",
-  "orderRef": {
-    "title": "订单 {{code}} · {{name}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · {{cutoffDate}} {{cutoff}} 截单"
-  },
-  "items_one": "{{count}} 件商品",
-  "items_other": "{{count}} 件商品",
-  "replyTo": "回复 {{name}}",
-  "placeholder": "回复库存或取货时间的问题",
-  "send": "发送",
-  "notOrder": {
-    "title": "消息不会改变订单",
-    "text": "在这里谈妥修改只是一半。顾客修改订单后，订单会以“已下单”状态回到你这里，你再重新接受。这样库存数量和取货时段才会准确。",
-    "link": "前往新订单"
-  }
+  "noThreadsText": "顾客给你的摊位发消息后，对话会显示在这里。"
 }

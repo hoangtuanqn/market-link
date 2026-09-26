@@ -78,7 +78,7 @@
     "draftPlaceholder": "Write a message",
     "send": "Send",
     "pickThreadTitle": "Pick a conversation",
-    "pickThreadText": "Choose a stall on the left to read the messages.",
+    "pickThreadText": "Choose a conversation from the list to read it.",
     "back": "Back",
     "online": "Online",
     "offline": "Offline",
@@ -89,7 +89,7 @@
     "messagesErrorTitle": "We could not load this conversation",
     "messagesErrorText": "Check your connection and open it again.",
     "emptyThreadTitle": "No messages yet",
-    "emptyThreadText": "Say hello and ask about this week's produce.",
+    "emptyThreadText": "Say hello to start the conversation.",
     "typing": "{{name}} is typing…",
     "conversationWith": "Conversation with {{name}}"
   },

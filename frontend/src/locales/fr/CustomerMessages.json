@@ -1,33 +1,4 @@
 {
   "title": "Messages",
-  "intro": "Posez une question à un stand sur les produits de la semaine, ou réglez les détails d'une commande avant l'heure limite.",
-  "conversations": "Conversations",
-  "stallCount_one": "{{count}} stand",
-  "stallCount_other": "{{count}} stands",
-  "time": {
-    "yesterday": "Hier",
-    "now": "à l'instant"
-  },
-  "conversationWith": "Conversation avec {{name}}",
-  "seeStall": "Voir le stand",
-  "openOrder": "Ouvrir la commande {{code}}",
-  "you": "Vous",
-  "orderRef": {
-    "title": "Commande {{code}} · {{stall}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · clôture à {{cutoff}} le {{cutoffDate}}"
-  },
-  "items_one": "{{count}} article",
-  "items_other": "{{count}} articles",
-  "messageTo": "Message à {{name}}",
-  "placeholder": "Posez une question sur le stock de la semaine ou votre heure de retrait",
-  "send": "Envoyer",
-  "for": {
-    "title": "À quoi servent les messages",
-    "text": "Vérifier qu'un produit arrive bien, demander au stand d'en garder un peu plus, ou convenir d'un autre créneau. Les modifications d'une commande passent toujours par la commande elle-même, pour que les deux parties aient le même historique.",
-    "edit": "Modifier la commande {{code}}"
-  },
-  "notFor": {
-    "title": "Ce à quoi ils ne servent pas",
-    "text": "Pas de négociation de prix ni de paiement ici. Les prix sont fixés par le stand et vous payez au stand lors du retrait. Un message ne modifie jamais une commande à lui seul."
-  }
+  "intro": "Posez une question à un stand sur les produits de la semaine, ou réglez les détails d'une commande avant l'heure limite."
 }

@@ -1,33 +1,4 @@
 {
   "title": "Pesan",
-  "intro": "Tanyakan hasil panen minggu ini ke lapak, atau sepakati detail pesanan sebelum batas pesan.",
-  "conversations": "Percakapan",
-  "stallCount_one": "{{count}} lapak",
-  "stallCount_other": "{{count}} lapak",
-  "time": {
-    "yesterday": "Kemarin",
-    "now": "baru saja"
-  },
-  "conversationWith": "Percakapan dengan {{name}}",
-  "seeStall": "Lihat lapak",
-  "openOrder": "Buka pesanan {{code}}",
-  "you": "Anda",
-  "orderRef": {
-    "title": "Pesanan {{code}} · {{stall}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · tutup {{cutoff}} pada {{cutoffDate}}"
-  },
-  "items_one": "{{count}} barang",
-  "items_other": "{{count}} barang",
-  "messageTo": "Pesan untuk {{name}}",
-  "placeholder": "Tanyakan stok minggu ini atau waktu ambil Anda",
-  "send": "Kirim",
-  "for": {
-    "title": "Kegunaan pesan",
-    "text": "Memastikan sesuatu masih akan datang, meminta lapak menyisihkan sedikit lebih banyak, atau menyepakati waktu ambil lain. Perubahan pesanan tetap dilakukan di pesanan itu sendiri, agar kedua pihak punya catatan yang sama.",
-    "edit": "Ubah pesanan {{code}}"
-  },
-  "notFor": {
-    "title": "Yang bukan kegunaannya",
-    "text": "Tidak ada tawar-menawar harga dan tidak ada pembayaran di sini. Harga ditetapkan lapak dan Anda membayar di lapak saat mengambil. Pesan tidak pernah mengubah pesanan dengan sendirinya."
-  }
+  "intro": "Tanyakan hasil panen minggu ini ke lapak, atau sepakati detail pesanan sebelum batas pesan."
 }
