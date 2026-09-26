@@ -10,17 +10,16 @@
     "title": "New announcement",
     "headline": "Title",
     "headlinePlaceholder": "e.g. Thủ Đức Farmers Market opens at 06:00 from October",
-    "headlineHint": "One line, sentence case, no exclamation marks. Shown in handwriting.",
+    "headlineHint": "Sentence case, no exclamation marks. Shown in handwriting in the green band.",
     "detail": "Detail",
     "detailPlaceholder": "One sentence on what changes for customers or stalls.",
     "showTo": "Show to",
-    "aboutMarket": "About market",
-    "wholePlatform": "Whole platform",
     "from": "Show from",
     "to": "Until",
     "preview": "Preview",
     "previewTitle": "Your title appears here",
-    "previewText": "And the detail line here, in the green band above the header."
+    "previewText": "And the detail line here, in the green band above the header.",
+    "windowHint": "Leave both dates empty to show it from now on, until you take it down."
   },
   "audience": {
     "Everyone": "Everyone",
@@ -28,7 +27,11 @@
     "Farmers": "Farmers"
   },
   "list": {
-    "title": "Published and past"
+    "title": "Published and past",
+    "loading": "Loading announcements…",
+    "errorTitle": "Could not load announcements",
+    "errorText": "Check your connection and try again.",
+    "retry": "Try again"
   },
   "col": {
     "announcement": "Announcement",
@@ -42,18 +45,29 @@
   },
   "action": {
     "publish": "Publish",
-    "saveDraft": "Save as draft",
-    "edit": "Edit",
     "takeDown": "Take down",
-    "reuse": "Reuse"
+    "reuse": "Reuse",
+    "publishing": "Publishing…"
   },
   "empty": {
     "title": "No announcements",
     "text": "Publish one and every signed-in person sees it as a band above the header."
   },
   "toast": {
-    "published": "Announcement published. It is live in the header now.",
-    "draftSaved": "Saved as a draft.",
-    "takenDown": "Announcement taken down."
+    "published": "Announcement published. Everyone it is for has it in their notifications.",
+    "takenDown": "Announcement taken down from the banner. Notifications already sent stay.",
+    "publishError": "Could not publish the announcement.",
+    "takeDownError": "Could not take the announcement down."
+  },
+  "errors": {
+    "titleRequired": "Add a title.",
+    "titleLong": "Keep the title under {{max}} characters.",
+    "contentRequired": "Add a line of detail.",
+    "contentLong": "Keep the detail under {{max}} characters.",
+    "window": "The end date must be on or after the start date."
+  },
+  "window": {
+    "now": "Now",
+    "open": "no end date"
   }
 }

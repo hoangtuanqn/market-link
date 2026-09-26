@@ -28,30 +28,6 @@
     "clock24": "24시간제 · 19:00",
     "clock12": "12시간제 · 7:00 pm",
     "preview": "미리 보기: {{date}} · {{time}} · {{price}}",
-    "notifications": "알림",
-    "notificationsNote": "계정에 저장돼요. MarketLink는 아직 알림을 보내지 않아요. 알림을 보내게 되면 이 설정을 따를 거예요.",
-    "notes": {
-      "customer": {
-        "orderDecided": "주문이 접수되거나 거절될 때",
-        "orderReady": "주문을 픽업할 수 있을 때",
-        "backInStock": "저장한 상품이 다시 들어올 때",
-        "announcements": "MarketLink 공지",
-        "stallReply": "매대가 메시지에 답할 때"
-      },
-      "farmer": {
-        "newOrder": "새 주문이 들어올 때",
-        "orderChanged": "고객이 주문을 수정하거나 취소할 때",
-        "cutoffSoon": "마감 1시간 전",
-        "newReview": "매대에 새 리뷰가 달릴 때",
-        "announcements": "MarketLink 공지"
-      },
-      "admin": {
-        "farmerApplication": "Farmer 신청이 들어올 때",
-        "reported": "리뷰나 게시물이 신고될 때",
-        "newFeedback": "새 의견",
-        "marketEdited": "시장 정보가 수정될 때"
-      }
-    },
     "save": "설정 저장",
     "saving": "저장 중…",
     "saveHint": "테마는 고르는 즉시 적용되고, 나머지는 저장할 때 적용돼요.",
@@ -405,5 +381,83 @@
     "answeredOn": "{{date}} 답변",
     "reason": "사유:",
     "photoAlt": "{{n}}번째 신청의 사진"
+  },
+  "notify": {
+    "open": "열기",
+    "prompt": {
+      "title": "알림 켜기",
+      "text": "이 탭이 백그라운드에 있어도 새 메시지, 가게 심사 결과, MarketLink 공지를 화면에서 받아 보세요.",
+      "enable": "켜기",
+      "later": "나중에",
+      "onTitle": "알림이 켜졌습니다",
+      "onText": "받을 알림은 설정 → 알림에서 바꿀 수 있습니다."
+    },
+    "settings": {
+      "title": "알림",
+      "intro": "어떤 알림을 어떻게 받을지 고르세요. 모든 알림은 알림 목록에 그대로 남습니다.",
+      "browser": "브라우저 알림",
+      "permission": {
+        "granted": "켜짐. MarketLink가 백그라운드에 있어도 알림이 표시됩니다.",
+        "default": "꺼짐. 켜면 이 탭이 백그라운드에 있을 때도 알림을 볼 수 있습니다.",
+        "denied": "브라우저가 차단했습니다. 브라우저의 사이트 설정에서 이 사이트의 알림을 허용한 뒤 페이지를 새로 고치세요.",
+        "unsupported": "이 브라우저는 알림을 표시할 수 없습니다. 페이지에서는 계속 볼 수 있습니다."
+      },
+      "loading": "알림 설정을 불러오는 중…",
+      "loadErrorTitle": "알림 설정을 불러오지 못했습니다",
+      "loadErrorText": "연결을 확인하고 다시 시도하세요.",
+      "retry": "다시 시도",
+      "group": "종류",
+      "inApp": "페이지 안",
+      "inBrowser": "브라우저",
+      "groups": {
+        "messages": {
+          "title": "메시지",
+          "note": "고객이나 가게가 메시지를 보냈을 때"
+        },
+        "announcements": {
+          "title": "공지",
+          "note": "시장 휴장 같은 MarketLink 소식"
+        },
+        "account": {
+          "title": "가게 신청",
+          "note": "승인, 거절, 일시 정지, 재개되었을 때"
+        },
+        "farmerApplications": {
+          "title": "Farmer 신청",
+          "note": "누군가 MarketLink 판매를 신청했을 때"
+        }
+      },
+      "sound": "소리 재생",
+      "quiet": "방해 금지 시간",
+      "quietNote": "이 시간에는 팝업, 소리, 브라우저 알림이 없습니다(베트남 시간). 알림은 목록에 계속 들어옵니다.",
+      "from": "시작",
+      "to": "종료",
+      "testNote": "나에게 알림을 보내 어떻게 보이는지 확인하세요.",
+      "test": "테스트 보내기",
+      "testing": "보내는 중…",
+      "testError": "테스트를 보내지 못했습니다. 몇 초 후 다시 시도하세요.",
+      "saveError": "알림 설정을 저장하지 못했습니다."
+    },
+    "list": {
+      "all": "전체",
+      "unread": "읽지 않음",
+      "unreadCount_one": "읽지 않음 {{count}}개",
+      "unreadCount_other": "읽지 않음 {{count}}개",
+      "unreadMark": "읽지 않음",
+      "markAllRead": "모두 읽음으로 표시",
+      "loading": "불러오는 중…",
+      "more": "이전 알림 보기",
+      "emptyTitle": "아직 알림이 없습니다",
+      "emptyUnreadTitle": "모두 확인했습니다",
+      "emptyText": "새 알림은 도착하는 즉시 여기에 표시됩니다.",
+      "errorTitle": "알림을 불러오지 못했습니다",
+      "errorText": "연결을 확인하고 다시 시도하세요.",
+      "loadError": "알림을 더 불러오지 못했습니다.",
+      "readAllError": "읽음으로 표시하지 못했습니다."
+    },
+    "admin": {
+      "title": "알림",
+      "intro": "검토를 기다리는 새 Farmer 신청입니다."
+    }
   }
 }

@@ -28,30 +28,6 @@
     "clock24": "24 Stunden · 19:00",
     "clock12": "12 Stunden · 7:00 pm",
     "preview": "Vorschau: {{date}} · {{time}} · {{price}}",
-    "notifications": "Benachrichtigungen",
-    "notificationsNote": "Wird mit Ihrem Konto gespeichert. MarketLink versendet noch keine Benachrichtigungen; sobald es so weit ist, gelten diese Einstellungen.",
-    "notes": {
-      "customer": {
-        "orderDecided": "Eine Bestellung wird angenommen oder abgelehnt",
-        "orderReady": "Eine Bestellung ist abholbereit",
-        "backInStock": "Ein gespeichertes Produkt ist wieder verfügbar",
-        "announcements": "Mitteilungen von MarketLink",
-        "stallReply": "Ein Stand antwortet auf Ihre Nachricht"
-      },
-      "farmer": {
-        "newOrder": "Eine neue Bestellung geht ein",
-        "orderChanged": "Ein Kunde ändert oder storniert eine Bestellung",
-        "cutoffSoon": "Der Bestellschluss ist in einer Stunde",
-        "newReview": "Eine neue Bewertung Ihres Stands",
-        "announcements": "Mitteilungen von MarketLink"
-      },
-      "admin": {
-        "farmerApplication": "Ein Farmer-Antrag geht ein",
-        "reported": "Eine Bewertung oder ein Eintrag wird gemeldet",
-        "newFeedback": "Neues Feedback",
-        "marketEdited": "Ein Markt wird bearbeitet"
-      }
-    },
     "save": "Einstellungen speichern",
     "saving": "Wird gespeichert…",
     "saveHint": "Das Design gilt sofort nach der Auswahl, alles andere nach dem Speichern.",
@@ -405,5 +381,83 @@
     "answeredOn": "beantwortet am {{date}}",
     "reason": "Grund:",
     "photoAlt": "Foto aus Antrag {{n}}"
+  },
+  "notify": {
+    "open": "Öffnen",
+    "prompt": {
+      "title": "Benachrichtigungen einschalten",
+      "text": "Erhalten Sie neue Nachrichten, Entscheidungen zu Ihrem Stand und Mitteilungen von MarketLink auf dem Bildschirm, auch wenn dieser Tab im Hintergrund ist.",
+      "enable": "Einschalten",
+      "later": "Später",
+      "onTitle": "Benachrichtigungen sind an",
+      "onText": "Was Sie erhalten, ändern Sie unter Einstellungen → Benachrichtigungen."
+    },
+    "settings": {
+      "title": "Benachrichtigungen",
+      "intro": "Wählen Sie, was Sie erreicht und wie. Alles bleibt in Ihrer Benachrichtigungsliste.",
+      "browser": "Browser-Benachrichtigungen",
+      "permission": {
+        "granted": "An. Benachrichtigungen erscheinen auch, wenn MarketLink im Hintergrund ist.",
+        "default": "Aus. Schalten Sie sie ein, um Benachrichtigungen zu sehen, wenn dieser Tab im Hintergrund ist.",
+        "denied": "Vom Browser blockiert. Erlauben Sie Benachrichtigungen für diese Website in den Website-Einstellungen und laden Sie die Seite neu.",
+        "unsupported": "Dieser Browser kann keine Benachrichtigungen anzeigen. Auf der Seite sehen Sie sie trotzdem."
+      },
+      "loading": "Benachrichtigungseinstellungen werden geladen…",
+      "loadErrorTitle": "Benachrichtigungseinstellungen konnten nicht geladen werden",
+      "loadErrorText": "Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+      "retry": "Erneut versuchen",
+      "group": "Was",
+      "inApp": "Auf der Seite",
+      "inBrowser": "Browser",
+      "groups": {
+        "messages": {
+          "title": "Nachrichten",
+          "note": "Wenn Ihnen ein Kunde oder ein Stand schreibt"
+        },
+        "announcements": {
+          "title": "Mitteilungen",
+          "note": "Neuigkeiten von MarketLink, etwa wenn ein Markt geschlossen ist"
+        },
+        "account": {
+          "title": "Ihr Standantrag",
+          "note": "Wenn er freigegeben, abgelehnt, gesperrt oder wieder geöffnet wird"
+        },
+        "farmerApplications": {
+          "title": "Farmer-Anträge",
+          "note": "Wenn jemand auf MarketLink verkaufen möchte"
+        }
+      },
+      "sound": "Ton abspielen",
+      "quiet": "Ruhezeiten",
+      "quietNote": "Keine Pop-ups, Töne oder Browser-Benachrichtigungen in dieser Zeit (vietnamesische Zeit). In Ihrer Liste kommen sie trotzdem an.",
+      "from": "Von",
+      "to": "Bis",
+      "testNote": "Senden Sie sich eine Benachrichtigung, um zu sehen, wie sie aussieht.",
+      "test": "Test senden",
+      "testing": "Wird gesendet…",
+      "testError": "Test konnte nicht gesendet werden. Versuchen Sie es in ein paar Sekunden erneut.",
+      "saveError": "Benachrichtigungseinstellungen konnten nicht gespeichert werden."
+    },
+    "list": {
+      "all": "Alle",
+      "unread": "Ungelesen",
+      "unreadCount_one": "{{count}} ungelesen",
+      "unreadCount_other": "{{count}} ungelesen",
+      "unreadMark": "ungelesen",
+      "markAllRead": "Alle als gelesen markieren",
+      "loading": "Wird geladen…",
+      "more": "Ältere anzeigen",
+      "emptyTitle": "Noch nichts",
+      "emptyUnreadTitle": "Alles gelesen",
+      "emptyText": "Neue Benachrichtigungen erscheinen hier, sobald sie eintreffen.",
+      "errorTitle": "Benachrichtigungen konnten nicht geladen werden",
+      "errorText": "Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+      "loadError": "Weitere Benachrichtigungen konnten nicht geladen werden.",
+      "readAllError": "Benachrichtigungen konnten nicht als gelesen markiert werden."
+    },
+    "admin": {
+      "title": "Benachrichtigungen",
+      "intro": "Neue Farmer-Anträge, die auf Ihre Prüfung warten."
+    }
   }
 }

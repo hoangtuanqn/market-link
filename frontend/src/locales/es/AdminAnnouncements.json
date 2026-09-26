@@ -10,17 +10,16 @@
     "title": "Aviso nuevo",
     "headline": "Título",
     "headlinePlaceholder": "p. ej. El mercado de Thủ Đức abre a las 06:00 desde octubre",
-    "headlineHint": "Una línea, con mayúscula solo al principio, sin signos de exclamación. Se muestra a mano.",
+    "headlineHint": "Mayúscula solo al inicio, sin signos de exclamación. Se muestra con letra manuscrita en la franja verde.",
     "detail": "Detalle",
     "detailPlaceholder": "Una frase sobre qué cambia para los clientes o los puestos.",
     "showTo": "Mostrar a",
-    "aboutMarket": "Sobre el mercado",
-    "wholePlatform": "Toda la plataforma",
     "from": "Mostrar desde",
     "to": "Hasta",
     "preview": "Vista previa",
     "previewTitle": "Aquí aparece tu título",
-    "previewText": "Y aquí la línea de detalle, en la banda verde sobre la cabecera."
+    "previewText": "Y aquí la línea de detalle, en la banda verde sobre la cabecera.",
+    "windowHint": "Deja ambas fechas vacías para mostrarlo desde ahora hasta que lo retires."
   },
   "audience": {
     "Everyone": "Todo el mundo",
@@ -28,7 +27,11 @@
     "Farmers": "Productores"
   },
   "list": {
-    "title": "Publicados y pasados"
+    "title": "Publicados y pasados",
+    "loading": "Cargando avisos…",
+    "errorTitle": "No se pudieron cargar los avisos",
+    "errorText": "Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar"
   },
   "col": {
     "announcement": "Aviso",
@@ -42,18 +45,29 @@
   },
   "action": {
     "publish": "Publicar",
-    "saveDraft": "Guardar como borrador",
-    "edit": "Editar",
     "takeDown": "Retirar",
-    "reuse": "Reutilizar"
+    "reuse": "Reutilizar",
+    "publishing": "Publicando…"
   },
   "empty": {
     "title": "No hay avisos",
     "text": "Publica uno y todas las personas con sesión iniciada lo verán en la banda sobre la cabecera."
   },
   "toast": {
-    "published": "Aviso publicado. Ya está activo en la cabecera.",
-    "draftSaved": "Guardado como borrador.",
-    "takenDown": "Aviso retirado."
+    "published": "Aviso publicado. Todas las personas destinatarias lo tienen en sus notificaciones.",
+    "takenDown": "Aviso retirado de la franja. Las notificaciones enviadas se mantienen.",
+    "publishError": "No se pudo publicar el aviso.",
+    "takeDownError": "No se pudo retirar el aviso."
+  },
+  "errors": {
+    "titleRequired": "Añade un título.",
+    "titleLong": "El título debe tener menos de {{max}} caracteres.",
+    "contentRequired": "Añade una línea de detalle.",
+    "contentLong": "El detalle debe tener menos de {{max}} caracteres.",
+    "window": "La fecha de fin debe ser igual o posterior a la de inicio."
+  },
+  "window": {
+    "now": "Ahora",
+    "open": "sin fecha de fin"
   }
 }

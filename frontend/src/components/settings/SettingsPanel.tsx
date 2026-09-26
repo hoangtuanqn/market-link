@@ -4,8 +4,8 @@ import SettingsApi from '@/api-requests/settings.requests';
 import SettingsRow from '@/components/SettingsRow';
 import ThemePicker from '@/components/ThemePicker';
 import { Button } from '@/components/ui/button';
+import NotificationSettingsCard from '@/components/notifications/NotificationSettingsCard';
 import { Card } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { SelectField } from '@/components/ui/input';
 import useSettings from '@/hooks/useSettings';
 import { formatDate, formatTime, RATES_DATE, vnd } from '@/lib/format';
@@ -15,34 +15,11 @@ import Notification from '@/utils/notification';
 
 export type SettingsRole = 'customer' | 'farmer' | 'admin';
 
-/** Loại thông báo mỗi vai bật / tắt được (lưu trong extras "note.<key>", chưa có hệ thống gửi). */
-const NOTES: Record<SettingsRole, { key: string; on: boolean }[]> = {
-  customer: [
-    { key: 'orderDecided', on: true },
-    { key: 'orderReady', on: true },
-    { key: 'backInStock', on: true },
-    { key: 'announcements', on: true },
-    { key: 'stallReply', on: false },
-  ],
-  farmer: [
-    { key: 'newOrder', on: true },
-    { key: 'orderChanged', on: true },
-    { key: 'cutoffSoon', on: true },
-    { key: 'newReview', on: false },
-    { key: 'announcements', on: true },
-  ],
-  admin: [
-    { key: 'farmerApplication', on: true },
-    { key: 'reported', on: true },
-    { key: 'newFeedback', on: false },
-    { key: 'marketEdited', on: false },
-  ],
-};
-
 const SAMPLE_DATE = new Date(2026, 11, 31, 19, 0);
 const SAMPLE_PRICE = 45000;
 
 type SettingsPanelProps = {
+  /** Vai của trang (các trang vẫn truyền; nhóm thông báo giờ lấy từ API theo vai trên server). */
   role: SettingsRole;
   /** Khối riêng của vai (Shopping / Selling defaults / Platform defaults), đọc và sửa extras của bản nháp. */
   children?: (draft: Settings, set: (patch: Partial<Settings>) => void) => ReactNode;
@@ -52,20 +29,13 @@ type SettingsPanelProps = {
  * Trang Settings của cả ba vai (prototype `settings.html`). Theme đổi và lưu ngay khi bấm; các mục khác nằm trong bản
  * nháp tới khi bấm Save, rồi áp dụng cho toàn app (format.ts, bản dịch). Đăng nhập rồi nên lưu cả lên server.
  */
-const SettingsPanel = ({ role, children }: SettingsPanelProps) => {
+const SettingsPanel = ({ children }: SettingsPanelProps) => {
   const { t } = useTranslation();
   const saved = useSettings();
   const [draft, setDraft] = useState<Settings>(saved);
   const [saving, setSaving] = useState(false);
 
   const set = (patch: Partial<Settings>) => setDraft((d) => ({ ...d, ...patch }));
-  const setExtra = (key: string, value: string) => set({ extras: { ...draft.extras, [key]: value } });
-
-  const noteOn = (key: string, fallback: boolean) => {
-    const v = draft.extras[`note.${key}`];
-    return v === undefined ? fallback : v === 'true';
-  };
-
   const pickTheme = (theme: Theme) => {
     set({ theme });
     SettingsStore.set({ theme });
@@ -85,8 +55,6 @@ const SettingsPanel = ({ role, children }: SettingsPanelProps) => {
       setSaving(false);
     }
   };
-
-  const notes = NOTES[role];
 
   return (
     <div className="flex flex-col gap-6">
@@ -184,24 +152,7 @@ const SettingsPanel = ({ role, children }: SettingsPanelProps) => {
         </p>
       </Card>
 
-      <Card as="section" aria-labelledby="set-notes" className="flex flex-col gap-3 p-6">
-        <h2 id="set-notes" className="text-h3">
-          {t('settings.notifications')}
-        </h2>
-        <p className="text-small text-ink-muted">{t('settings.notificationsNote')}</p>
-        <div className="flex flex-col gap-2">
-          {notes.map((n) => (
-            <Checkbox
-              key={n.key}
-              id={`note-${n.key}`}
-              checked={noteOn(n.key, n.on)}
-              onChange={() => setExtra(`note.${n.key}`, String(!noteOn(n.key, n.on)))}
-            >
-              {t(`settings.notes.${role}.${n.key}` as 'settings.notes.customer.orderReady')}
-            </Checkbox>
-          ))}
-        </div>
-      </Card>
+      <NotificationSettingsCard />
 
       {children?.(draft, set)}
 

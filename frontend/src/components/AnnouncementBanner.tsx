@@ -3,7 +3,14 @@ import { useTranslation } from 'react-i18next';
 import type { AnnouncementType } from '@/types/market.types';
 import { CloseIcon, MegaphoneIcon } from './icons';
 
-const AnnouncementBanner = ({ announcement }: { announcement: AnnouncementType }) => {
+const AnnouncementBanner = ({
+  announcement,
+  onDismiss,
+}: {
+  announcement: AnnouncementType;
+  /** Gọi thêm khi bấm đóng (vd. nhớ lại để lần sau không hiện). */
+  onDismiss?: () => void;
+}) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(true);
   if (!open) return null;
@@ -20,7 +27,10 @@ const AnnouncementBanner = ({ announcement }: { announcement: AnnouncementType }
         <button
           type="button"
           aria-label={t('actions.dismiss')}
-          onClick={() => setOpen(false)}
+          onClick={() => {
+            setOpen(false);
+            onDismiss?.();
+          }}
           className="-mr-2 grid size-9 flex-none cursor-pointer place-items-center rounded-sm bg-transparent text-inherit"
         >
           <CloseIcon />

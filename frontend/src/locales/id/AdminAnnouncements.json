@@ -10,17 +10,16 @@
     "title": "Pengumuman baru",
     "headline": "Judul",
     "headlinePlaceholder": "mis. Pasar Thủ Đức buka pukul 06.00 mulai Oktober",
-    "headlineHint": "Satu baris, huruf besar hanya di awal, tanpa tanda seru. Ditampilkan dengan tulisan tangan.",
+    "headlineHint": "Huruf besar di awal kalimat, tanpa tanda seru. Tampil dengan tulisan tangan di pita hijau.",
     "detail": "Rincian",
     "detailPlaceholder": "Satu kalimat tentang apa yang berubah bagi pelanggan atau lapak.",
     "showTo": "Tampilkan untuk",
-    "aboutMarket": "Tentang pasar",
-    "wholePlatform": "Seluruh platform",
     "from": "Tampilkan sejak",
     "to": "Sampai",
     "preview": "Pratinjau",
     "previewTitle": "Judul Anda muncul di sini",
-    "previewText": "Dan baris rinciannya di sini, di pita hijau di atas kepala halaman."
+    "previewText": "Dan baris rinciannya di sini, di pita hijau di atas kepala halaman.",
+    "windowHint": "Kosongkan kedua tanggal untuk menampilkannya mulai sekarang sampai Anda menurunkannya."
   },
   "audience": {
     "Everyone": "Semua orang",
@@ -28,7 +27,11 @@
     "Farmers": "Petani"
   },
   "list": {
-    "title": "Sudah terbit dan yang lalu"
+    "title": "Sudah terbit dan yang lalu",
+    "loading": "Memuat pengumuman…",
+    "errorTitle": "Pengumuman tidak dapat dimuat",
+    "errorText": "Periksa koneksi Anda lalu coba lagi.",
+    "retry": "Coba lagi"
   },
   "col": {
     "announcement": "Pengumuman",
@@ -42,18 +45,29 @@
   },
   "action": {
     "publish": "Terbitkan",
-    "saveDraft": "Simpan sebagai draf",
-    "edit": "Ubah",
     "takeDown": "Turunkan",
-    "reuse": "Pakai lagi"
+    "reuse": "Pakai lagi",
+    "publishing": "Menerbitkan…"
   },
   "empty": {
     "title": "Belum ada pengumuman",
     "text": "Terbitkan satu dan semua orang yang masuk akan melihatnya di pita di atas kepala halaman."
   },
   "toast": {
-    "published": "Pengumuman terbit. Sekarang sudah tayang di kepala halaman.",
-    "draftSaved": "Tersimpan sebagai draf.",
-    "takenDown": "Pengumuman diturunkan."
+    "published": "Pengumuman diterbitkan. Semua yang dituju sudah menerimanya di notifikasi.",
+    "takenDown": "Diturunkan dari pita. Notifikasi yang sudah terkirim tetap ada.",
+    "publishError": "Pengumuman tidak dapat diterbitkan.",
+    "takeDownError": "Pengumuman tidak dapat diturunkan."
+  },
+  "errors": {
+    "titleRequired": "Isi judul.",
+    "titleLong": "Judul maksimal {{max}} karakter.",
+    "contentRequired": "Isi detail.",
+    "contentLong": "Detail maksimal {{max}} karakter.",
+    "window": "Tanggal selesai harus sama atau setelah tanggal mulai."
+  },
+  "window": {
+    "now": "Sekarang",
+    "open": "tanpa tanggal selesai"
   }
 }
