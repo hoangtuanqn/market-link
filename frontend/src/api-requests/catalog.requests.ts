@@ -14,7 +14,7 @@ export type MarketDto = {
   mapProvider: string;
   openingTime: string;
   closingTime: string;
-  imageUrl?: string | null;
+  images: string[];
   operatingDays: number[];
   farmerCount: number;
 };
@@ -52,7 +52,8 @@ export type MarketInput = {
   longitude: number;
   openingTime: string;
   closingTime: string;
-  imageUrl?: string;
+  /** URL trả về từ uploadMarketImage; ảnh đầu tiên trở thành ảnh đại diện ở server. */
+  images: string[];
   operatingDays: number[];
 };
 
@@ -83,6 +84,7 @@ export const toMarket = (dto: MarketDto): MarketType => ({
   lat: Number(dto.latitude),
   lng: Number(dto.longitude),
   stalls: dto.farmerCount,
+  images: dto.images,
 });
 
 export const toCategory = (dto: CategoryDto): CategoryType => ({
@@ -118,6 +120,17 @@ class CatalogApi {
       `/markets/${id}`,
     );
     return { market: toMarket(response.data.data.market), farmers: response.data.data.farmers };
+  };
+
+  /** Tải một ảnh chợ lên trước khi gửi form chính; trả URL để đưa vào `MarketInput.images`. */
+  static uploadMarketImage = async (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    const response = await privateApi.post<ApiResponse<{ url: string }>>('/admin/markets/images', form, {
+      // Bỏ header mặc định application/json để trình duyệt tự set multipart/form-data kèm boundary.
+      headers: { 'Content-Type': undefined },
+    });
+    return response.data.data.url;
   };
 
   static createMarket = async (input: MarketInput) => {
