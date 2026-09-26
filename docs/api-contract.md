@@ -431,9 +431,11 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 | POST | `/api/v1/conversations/{id}/read` | Thành viên | **Đã có** | | `null` |
 | POST | `/api/v1/attachments` | Thành viên | **Đã có** | `multipart/form-data`, field `file` | 201 · `{ attachmentId, url, width, height }` |
 | GET | `/api/v1/attachments/{id}` | Thành viên | **Đã có** | | **File nhị phân** — xem ghi chú |
-| POST | `/api/v1/messages/{id}/report` | Thành viên | Chưa làm | `{ reason, note? }` | 201 |
-| GET | `/api/v1/admin/message-reports` | Admin | Chưa làm | query `status`, `page` | Danh sách tin bị báo cáo |
-| PATCH | `/api/v1/admin/messages/{id}/hide` | Admin | Chưa làm | | Ẩn mềm, ghi `hiddenBy` + `hiddenAt` |
+| POST | `/api/v1/messages/{id}/report` | Thành viên | **Đã có** | `{ reason: "spam"｜"abuse"｜"scam"｜"other", note? }` | 201 · `{ id, messageId, reason, note, status, createdAt }` |
+| GET | `/api/v1/admin/message-reports` | Admin | **Đã có** | query `status`, `page`, `pageSize` | `{ items[], page, pageSize, total }` |
+| GET | `/api/v1/admin/message-reports/{id}` | Admin | **Đã có** | | Chi tiết + `context[]` (tin bị báo + tối đa 5 tin mỗi bên) |
+| PATCH | `/api/v1/admin/message-reports/{id}/dismiss` | Admin | **Đã có** | | Báo cáo chuyển `reviewed`, tin không đổi |
+| PATCH | `/api/v1/admin/messages/{id}/hide` | Admin | **Đã có** | | Ẩn mềm, ghi `hiddenBy` + `hiddenAt`; idempotent |
 
 **`MessageResource`**
 
@@ -453,6 +455,27 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 - `attachment` chỉ có mặt khi tin là ảnh: `{ attachmentId, url, width, height }`.
   Trường nào `null` thì **vắng mặt hẳn** khỏi JSON (`@JsonInclude(NON_NULL)`).
 - Tin bị admin ẩn **không xuất hiện** trong danh sách, và ảnh của nó trả 404.
+
+**Kiểm duyệt — ranh giới của admin (spec §8.3)**
+
+> **Không có endpoint nào nhận `conversationId`.** Mọi thứ admin đọc được đều bắt đầu từ một báo
+> cáo. Không có màn "duyệt toàn bộ hộp thư".
+
+- `GET /api/v1/admin/message-reports/{id}` trả `context[]`: tin bị báo cáo cùng **tối đa 5 tin liền
+  trước và 5 tin liền sau**, trong đúng thread đó, xếp theo `id` tăng dần. Đó là **toàn bộ** những
+  gì admin đọc được trong thread.
+- Mỗi phần tử `context[]`: `{ id, senderId, senderName, kind, body, hasPhoto, reported, hidden, createdAt }`.
+  Tin bị admin ẩn **vẫn hiện với admin** kèm `hidden: true` (khác người dùng thường, vốn không thấy nó nữa).
+- Hàng đợi chỉ trả `preview` cắt **80 ký tự**, không trả toàn văn — nó là nơi quyết định có mở ra
+  xem không, không phải nơi đọc hàng loạt. Tin ảnh hiện `Photo`.
+- `PATCH .../hide` **idempotent**: ẩn một tin đã bị ẩn trả 200 và **không ghi đè** `hiddenBy` /
+  `hiddenAt` của admin trước — người xử lý trước là người chịu trách nhiệm.
+- Ẩn một tin **chưa ai báo cáo** → **403 `MODERATION_OUT_OF_SCOPE`**.
+- `PATCH .../dismiss` là bổ sung ngoài bảng gốc của thiết kế: không có nó thì báo cáo admin xem rồi
+  quyết định không ẩn sẽ nằm lại `new` mãi và hàng đợi không bao giờ vơi.
+- **Ảnh:** admin xem được ảnh của tin **đã bị báo cáo**, **không** xem được ảnh của ±5 tin ngữ cảnh.
+  Mỗi lần mở ghi một dòng log. Hệ quả có chủ ý: admin đồng thời là khách hàng trong một thread sẽ
+  đi nhánh admin và không xem được ảnh riêng của chính mình ở đó nếu tin chưa bị báo cáo.
 
 **Ảnh — `GET /api/v1/attachments/{id}`**
 
@@ -477,7 +500,9 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 - WebSocket thuần (không SockJS), client dùng `@stomp/stompjs`. JWT gửi ở header `Authorization`
   của frame `CONNECT`, không phải ở handshake HTTP.
 - Nhận sự kiện tại `/user/topic/messages` (tin mới), `/user/topic/conversations`
-  (`{ type: "updated" | "read", … }`), `/user/topic/presence`, `/user/topic/typing`.
+  (`{ type: "updated" | "read" | "hidden", … }`), `/user/topic/presence`, `/user/topic/typing`.
+- `{ type: "hidden", conversationId, messageId }` (FR-116): admin vừa ẩn một tin — **cả hai** người
+  trong thread nhận, kể cả người gửi tin đó, và client bỏ nó khỏi khung chat mà không cần tải lại.
 - Gửi "đang gõ" tại `/app/typing`. Đây là thứ duy nhất đi *vào* bằng STOMP; tin nhắn luôn gửi
   bằng REST rồi server mới phát đi.
 
@@ -489,12 +514,16 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 | 403 | `NOT_A_MEMBER` | Không thuộc thread |
 | 403 | `STALL_NOT_OPEN` | Stall chưa được duyệt hoặc đang bị đình chỉ — không mở thread mới được |
 | 403 | `ACCOUNT_RESTRICTED` | Tài khoản không còn `active` |
-| 403 | `ATTACHMENT_NOT_YOURS` | Gắn ảnh của người khác vào tin của mình |
+| 400 | `VALIDATION_ERROR` | Tự báo cáo tin của chính mình (spec §8.5: người gửi không gỡ được tin của mình) |
+| 403 | `ATTACHMENT_NOT_YOURS` | Gắn ảnh của người khác vào tin của mình · xin ảnh chưa gắn tin của người khác |
+| 403 | `MODERATION_OUT_OF_SCOPE` | Admin thao tác trên tin chưa ai báo cáo, hoặc xin ảnh của tin ngữ cảnh |
+| 409 | `ALREADY_REPORTED` | Báo cáo một tin mình đã báo rồi |
 | 409 | `CONVERSATION_CLOSED` | Stall bị đình chỉ — thread cũ vẫn **đọc** được, chỉ không gửi thêm (D-09) |
 | 409 | `ATTACHMENT_ALREADY_USED` | Một ảnh chỉ gắn được vào đúng một tin |
-| 413 | `ATTACHMENT_TOO_LARGE` | Ảnh quá 5 MB |
+| 413 | `ATTACHMENT_TOO_LARGE` | Ảnh quá 5 MB (trần của endpoint) |
+| 413 | `PAYLOAD_TOO_LARGE` | File quá 40 MB — Tomcat chặn khi đọc body, trước khi biết controller nào nhận (`UploadExceptionHandler` toàn cục) |
 | 415 | `UNSUPPORTED_IMAGE_TYPE` | Không phải jpg/png/webp (kết luận từ magic bytes) |
-| 429 | `RATE_LIMITED` | 30 tin/phút · 10 ảnh/giờ · 20 thread mới/giờ, mỗi mức tính theo từng user |
+| 429 | `RATE_LIMITED` | 30 tin/phút · 10 ảnh/giờ · 20 thread mới/giờ, mỗi mức tính theo từng user. Thêm **120 frame `/app/typing`/phút**, nhưng frame vượt ngưỡng **bị bỏ im lặng** — STOMP không có mã HTTP để trả |
 
 ---
 
