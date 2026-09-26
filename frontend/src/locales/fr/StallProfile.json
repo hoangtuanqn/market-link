@@ -7,7 +7,6 @@
   "approved": "Stand approuvé",
   "savedToast": "{{name}} enregistré.",
   "save": "Enregistrer le stand",
-  "message": "Écrire au stand",
   "stats": {
     "reviews_one": "{{count}} avis",
     "reviews_other": "{{count}} avis",

@@ -1,21 +1,25 @@
-import { type ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Composer from './Composer';
 import MessageBubble from './MessageBubble';
+import ReportDialog from './ReportDialog';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 import { useConversation } from '@/lib/chat/useChat';
 import { displayName } from '@/lib/chat/names';
 import { chatWhen } from '@/lib/chat/time';
-import type { ChatMessageItem, ChatParticipant } from '@/types/chat.types';
+import type { ChatMessageItem, ConversationSummary } from '@/types/chat.types';
+import Notification from '@/utils/notification';
 
 type Props = {
   conversationId: number | null;
-  other: ChatParticipant | null;
+  thread: ConversationSummary | null;
   /** Quay lại danh sách ở màn hẹp (spec §9.2). Nút tự ẩn từ `md`, nơi danh sách và hội thoại nằm cạnh nhau. */
   onBack?: () => void;
   /** Chỗ cho nút riêng của từng vai (Farmer: "Make an offer" ở đợt 2). */
   headerAction?: ReactNode;
+  pinnedProductId?: number;
+  onUnpin?: () => void;
 };
 
 /**
@@ -32,7 +36,15 @@ const lastSeenId = (messages: ChatMessageItem[], meId: number | null, otherReadA
   return null;
 };
 
-export default function ConversationPanel({ conversationId, other, onBack, headerAction }: Props) {
+export default function ConversationPanel({
+  conversationId,
+  thread,
+  onBack,
+  headerAction,
+  pinnedProductId,
+  onUnpin,
+}: Props) {
+  const other = thread?.other;
   const { t } = useTranslation('common');
   const {
     messages,
@@ -47,8 +59,10 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
     otherTyping,
     otherReadAt,
     meId,
-  } = useConversation(conversationId);
+  } = useConversation(conversationId, { otherReadAt: thread?.otherReadAt });
   const bottom = useRef<HTMLDivElement>(null);
+  const [reportingId, setReportingId] = useState<number | null>(null);
+  const [reportedIds, setReportedIds] = useState<Set<number>>(new Set());
   const newestId = messages.length > 0 ? messages[messages.length - 1].id : null;
   const seenId = lastSeenId(messages, meId, otherReadAt);
 
@@ -118,6 +132,8 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
             mine={message.senderId === meId}
             senderName={message.senderId === meId ? t('chat.you') : displayName(other)}
             seen={message.id === seenId}
+            onReport={message.senderId !== meId ? () => setReportingId(message.id) : undefined}
+            reported={reportedIds.has(message.id)}
           />
         ))}
 
@@ -129,7 +145,24 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
         <div ref={bottom} />
       </div>
 
-      <Composer onSend={send} onSendPhoto={sendPhoto} onTyping={typing} disabled={false} />
+      <Composer
+        onSend={send}
+        onSendPhoto={sendPhoto}
+        onTyping={typing}
+        disabled={false}
+        pinnedProductId={pinnedProductId}
+        onUnpin={onUnpin}
+      />
+      <ReportDialog
+        key={reportingId ?? 'none'}
+        messageId={reportingId}
+        onClose={() => setReportingId(null)}
+        onReported={(id) => {
+          setReportedIds((s) => new Set(s).add(id));
+          setReportingId(null);
+          Notification.success({ text: t('chat.reportThanks') });
+        }}
+      />
     </section>
   );
 }

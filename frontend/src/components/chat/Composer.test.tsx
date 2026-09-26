@@ -37,7 +37,7 @@ describe('Composer', () => {
     await userEvent.type(box, 'five bunches{Shift>}{Enter}{/Shift}please{Enter}');
 
     expect(onSend).toHaveBeenCalledTimes(1);
-    expect(onSend).toHaveBeenCalledWith('five bunches\nplease');
+    expect(onSend).toHaveBeenCalledWith('five bunches\nplease', {});
   });
 
   /** Bộ gõ tiếng Việt / Nhật / Trung dùng Enter để chốt chữ đang ghép: lúc đó không được gửi. */
@@ -98,5 +98,16 @@ describe('Composer', () => {
     await act(async () => arrive());
 
     expect(box).toHaveValue('two');
+  });
+
+  it('says why a message could not be sent', async () => {
+    const onSend = vi
+      .fn()
+      .mockRejectedValue(Object.assign(new Error('x'), { isAxiosError: true, response: { status: 409 } }));
+    render(<Composer onSend={onSend} onSendPhoto={vi.fn()} disabled={false} />);
+
+    await userEvent.type(screen.getByLabelText('Write a message'), 'hi{Enter}');
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('This stall is not taking messages right now');
   });
 });

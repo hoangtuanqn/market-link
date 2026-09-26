@@ -15,6 +15,7 @@ import { CheckIcon } from '@/components/icons';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
+import MessageStallButton from '@/components/chat/MessageStallButton';
 import { LoadError } from '@/components/ui/data-state';
 import { Pagination } from '@/components/ui/pagination';
 import Tabs from '@/components/ui/tabs';
@@ -193,7 +194,7 @@ const StallProfilePage = () => {
                   {t('save')}
                 </Chip>
               )}
-              <ButtonLink to="/messages">{t('message')}</ButtonLink>
+              <MessageStallButton farmerId={stall.farmerId} />
             </div>
           </div>
         </div>

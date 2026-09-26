@@ -14,9 +14,23 @@ type Props = {
   onRetry: () => void;
   /** Câu dưới "No conversations yet" theo vai: Farmer không tự mở được cuộc trò chuyện. */
   emptyText?: string;
+  hasMore?: boolean;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
 };
 
-export default function ThreadList({ threads, activeId, onPick, loading, error, onRetry, emptyText }: Props) {
+export default function ThreadList({
+  threads,
+  activeId,
+  onPick,
+  loading,
+  error,
+  onRetry,
+  emptyText,
+  hasMore,
+  loadingMore,
+  onLoadMore,
+}: Props) {
   const { t } = useTranslation('common');
 
   if (loading) {
@@ -76,6 +90,13 @@ export default function ThreadList({ threads, activeId, onPick, loading, error, 
           </button>
         </li>
       ))}
+      {hasMore ? (
+        <li className="p-3">
+          <Button variant="secondary" size="sm" disabled={loadingMore} onClick={onLoadMore}>
+            {t('chat.moreThreads')}
+          </Button>
+        </li>
+      ) : null}
     </ul>
   );
 }

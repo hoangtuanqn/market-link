@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder } from './merge';
+import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder, removeMessage } from './merge';
 import ConversationApi from '@/api-requests/conversation.requests';
 import { realtime } from '@/lib/realtime/stompClient';
 import type {
@@ -64,9 +64,14 @@ export function useThreadList(activeId: number | null = null) {
     setThreads((current) => clearUnread(current, activeId));
   }
 
+  const [total, setTotal] = useState(0);
+  const pageRef = useRef(1);
+
   const fetchList = useCallback(async () => {
     const response = await ConversationApi.list({ page: 1, size: THREAD_PAGE });
+    pageRef.current = 1;
     setThreads(clearUnread(response.data.items, activeRef.current));
+    setTotal(response.data.total);
   }, []);
 
   const reload = useCallback(async () => {
@@ -86,6 +91,28 @@ export function useThreadList(activeId: number | null = null) {
     fetchList().catch(() => {});
   }, [fetchList]);
 
+  const [loadingMore, setLoadingMore] = useState(false);
+  const loadMore = useCallback(async () => {
+    if (loadingMore) return;
+    setLoadingMore(true);
+    try {
+      const next = pageRef.current + 1;
+      const response = await ConversationApi.list({ page: next, size: THREAD_PAGE });
+      pageRef.current = next;
+      // Thread nhảy lên đầu giữa hai trang có thể xuất hiện hai lần: khử trùng theo id
+      setThreads((current) => {
+        const have = new Set(current.map((t) => t.id));
+        return clearUnread([...current, ...response.data.items.filter((t) => !have.has(t.id))], activeRef.current);
+      });
+      setTotal(response.data.total);
+    } catch {
+      /* giữ nguyên; bấm lại là thử lại */
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [loadingMore]);
+  const hasMore = threads.length < total;
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- tải danh sách khi mở trang
     void reload();
@@ -98,6 +125,10 @@ export function useThreadList(activeId: number | null = null) {
       if (!frame) return;
       // Thread chưa có trong danh sách (khách nhắn lần đầu): sự kiện không mang tên người gửi, phải tải lại
       if (frame.type === 'updated' && !threadsRef.current.some((t) => t.id === frame.conversationId)) {
+        refresh();
+        return;
+      }
+      if (frame.type === 'hidden') {
         refresh();
         return;
       }
@@ -115,21 +146,22 @@ export function useThreadList(activeId: number | null = null) {
     };
   }, [refresh]);
 
-  return { threads, loading, error, reload };
+  return { threads, loading, error, reload, hasMore, loadMore, loadingMore };
 }
 
 /** Một cuộc hội thoại đang mở. conversationId null = chưa chọn thread nào (màn 375px). */
-export function useConversation(conversationId: number | null) {
+export function useConversation(conversationId: number | null, opts: { otherReadAt?: string } = {}) {
   const [messages, setMessages] = useState<ChatMessageItem[]>([]);
   const [loading, setLoading] = useState(conversationId !== null);
   const [error, setError] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [olderError, setOlderError] = useState(false);
   const [otherTyping, setOtherTyping] = useState(false);
-  const [otherReadAt, setOtherReadAt] = useState<string | null>(null);
+  const [otherReadAt, setOtherReadAt] = useState<string | null>(opts.otherReadAt ?? null);
   const meId = Session.getUser()?.id ?? null;
   const openRef = useRef(conversationId);
   const olderFor = useRef<number | null>(null);
+  const pendingRead = useRef<number | null>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTyping = useRef<{ conversationId: number | null; on: boolean; at: number }>({
     conversationId: null,
@@ -148,7 +180,7 @@ export function useConversation(conversationId: number | null) {
     setHasMore(false);
     setOlderError(false);
     setOtherTyping(false);
-    setOtherReadAt(null);
+    setOtherReadAt(opts.otherReadAt ?? null);
   }
 
   // Phản hồi REST về muộn cho một thread đã rời thì bỏ. Effect chạy theo thứ tự khai báo: cái này trước mọi request.
@@ -166,7 +198,8 @@ export function useConversation(conversationId: number | null) {
         // API trả mới → cũ; state giữ cũ → mới
         setMessages([...response.data].reverse());
         setHasMore(response.data.length === PAGE);
-        markRead(id);
+        if (document.visibilityState === 'visible') markRead(id);
+        else pendingRead.current = id;
       })
       .catch(() => {
         if (live) setError(true);
@@ -194,7 +227,8 @@ export function useConversation(conversationId: number | null) {
           if (openRef.current !== id) return;
           setMessages((current) => prependOlder(current, response.data));
           setError(false);
-          markRead(id);
+          if (document.visibilityState === 'visible') markRead(id);
+          else pendingRead.current = id;
         })
         .catch(() => {});
     };
@@ -206,7 +240,8 @@ export function useConversation(conversationId: number | null) {
       if (incoming.senderId !== meId) {
         // Tin của họ đã tới thì họ đã ngừng gõ
         setOtherTyping(false);
-        markRead(id);
+        if (document.visibilityState === 'visible') markRead(id);
+        else pendingRead.current = id;
       }
     });
     const offTyping = realtime.subscribe(TYPING, (body) => {
@@ -221,8 +256,19 @@ export function useConversation(conversationId: number | null) {
     const offRead = realtime.subscribe(CONVERSATIONS, (body) => {
       const frame = parse<ConversationEventFrame>(body);
       if (frame?.type === 'read' && frame.conversationId === id && frame.readAt) setOtherReadAt(frame.readAt);
+      if (frame?.type === 'hidden' && frame.conversationId === id && frame.messageId) {
+        setMessages((c) => removeMessage(c, frame.messageId!));
+      }
     });
     const offConnect = realtime.onConnect(catchUp);
+
+    const onVisible = () => {
+      if (document.visibilityState === 'visible' && pendingRead.current === id) {
+        pendingRead.current = null;
+        markRead(id);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisible);
 
     return () => {
       offMessages();
@@ -236,6 +282,7 @@ export function useConversation(conversationId: number | null) {
         realtime.publish(TYPING_OUT, { conversationId: id, typing: false });
         lastTyping.current = { conversationId: null, on: false, at: 0 };
       }
+      document.removeEventListener('visibilitychange', onVisible);
     };
   }, [conversationId, meId]);
 
@@ -259,10 +306,10 @@ export function useConversation(conversationId: number | null) {
 
   /** Lỗi gửi được ném ra cho Composer: nó giữ lại chữ đang gõ và báo lỗi, không nuốt mất tin. */
   const send = useCallback(
-    async (body: string) => {
+    async (body: string, extra: { productId?: number } = {}) => {
       if (conversationId === null) return;
       const id = conversationId;
-      const response = await ConversationApi.send(id, { body });
+      const response = await ConversationApi.send(id, { body, ...extra });
       // Tin tới là bên kia tự tắt ba chấm; gõ tiếp thì typing(true) sẽ gửi lại ngay
       lastTyping.current = { conversationId: id, on: false, at: 0 };
       if (openRef.current === id) setMessages((current) => mergeMessage(current, response.data));

@@ -74,3 +74,8 @@ export function applyPresence(threads: ConversationSummary[], frame: PresenceFra
       : t,
   );
 }
+
+/** Admin ẩn một tin (FR-116): bỏ nó khỏi thread đang mở. Không có thì trả đúng mảng cũ. */
+export function removeMessage(list: ChatMessageItem[], messageId: number): ChatMessageItem[] {
+  return list.some((m) => m.id === messageId) ? list.filter((m) => m.id !== messageId) : list;
+}
