@@ -1,6 +1,11 @@
 package com.techx.intervue.modules.order.repositories;
 
 import com.techx.intervue.modules.order.entities.OrderItem;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {}
+public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
+
+    /** Task 5.5: dòng hàng của một đơn, để hoàn tồn kho theo đúng số lượng đã đặt (D-02). */
+    List<OrderItem> findByOrderId(Long orderId);
+}

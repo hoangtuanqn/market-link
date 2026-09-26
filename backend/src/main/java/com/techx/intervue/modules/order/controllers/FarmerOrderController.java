@@ -1,11 +1,14 @@
 package com.techx.intervue.modules.order.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.order.requests.DeclineOrderRequest;
+import com.techx.intervue.modules.order.resources.OrderDetailResource;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,13 +16,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * GET /api/v1/farmer/orders (contract §7) — FR-036, 065: đơn đặt tại sạp của chính Farmer. Lọc theo
- * trạng thái và ngày nhận hàng (pickup_date); mọi giá trị đi qua tham số (R-04).
+ * /api/v1/farmer/orders (contract §7) — FR-036, 065, 066: đơn đặt tại sạp của chính Farmer, và bốn
+ * lần đổi trạng thái Farmer chủ động (accept/decline/ready/complete). Lọc danh sách theo trạng thái
+ * và ngày nhận hàng (pickup_date); mọi giá trị đi qua tham số (R-04).
  */
 @RestController
 @RequestMapping("/api/v1/farmer/orders")
@@ -38,5 +45,31 @@ public class FarmerOrderController extends BaseController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int pageSize) {
         return ok(orderService.farmerOrders(user.getId(), status, date, page, pageSize), "");
+    }
+
+    @PatchMapping("/{id}/accept")
+    public ResponseEntity<ApiResource<OrderDetailResource>> accept(
+            @PathVariable long id, @AuthenticationPrincipal CustomUserDetails user) {
+        return ok(orderService.accept(user.getId(), id), "Order accepted.");
+    }
+
+    @PatchMapping("/{id}/decline")
+    public ResponseEntity<ApiResource<OrderDetailResource>> decline(
+            @PathVariable long id,
+            @Valid @RequestBody DeclineOrderRequest request,
+            @AuthenticationPrincipal CustomUserDetails user) {
+        return ok(orderService.decline(user.getId(), id, request.reason()), "Order declined.");
+    }
+
+    @PatchMapping("/{id}/ready")
+    public ResponseEntity<ApiResource<OrderDetailResource>> ready(
+            @PathVariable long id, @AuthenticationPrincipal CustomUserDetails user) {
+        return ok(orderService.markReady(user.getId(), id), "Order marked ready.");
+    }
+
+    @PatchMapping("/{id}/complete")
+    public ResponseEntity<ApiResource<OrderDetailResource>> complete(
+            @PathVariable long id, @AuthenticationPrincipal CustomUserDetails user) {
+        return ok(orderService.complete(user.getId(), id), "Order completed.");
     }
 }

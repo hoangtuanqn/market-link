@@ -446,6 +446,111 @@ public class OrderService implements OrderServiceInterface {
                 profile.getId(), dbStatus, date, (safePage - 1) * safeSize, safeSize);
     }
 
+    // ---------- FR-065, 066, 038: Farmer đổi trạng thái ----------
+
+    @Override
+    @Transactional
+    public OrderDetailResource accept(long userId, long orderId) {
+        Order order = lockOwnedOrder(userId, orderId);
+        transition(order, OrderStatus.ACCEPTED, userId, null);
+        return detail(userId, orderId);
+    }
+
+    @Override
+    @Transactional
+    public OrderDetailResource decline(long userId, long orderId, String reason) {
+        Order order = lockOwnedOrder(userId, orderId);
+        order.setFarmerNote(reason);
+        transition(order, OrderStatus.DECLINED, userId, reason);
+        return detail(userId, orderId);
+    }
+
+    @Override
+    @Transactional
+    public OrderDetailResource markReady(long userId, long orderId) {
+        Order order = lockOwnedOrder(userId, orderId);
+        transition(order, OrderStatus.READY, userId, null);
+        return detail(userId, orderId);
+    }
+
+    @Override
+    @Transactional
+    public OrderDetailResource complete(long userId, long orderId) {
+        Order order = lockOwnedOrder(userId, orderId);
+        transition(order, OrderStatus.COMPLETED, userId, null);
+        return detail(userId, orderId);
+    }
+
+    /**
+     * C5-8: khoá dòng đơn trước tiên — mọi đường đổi trạng thái đi qua đây trước khi làm gì khác.
+     * Sai chủ (kể cả tài khoản không có {@code farmer_profiles}) → {@link OrderNotYoursException}
+     * (403, R-06); đơn không tồn tại → {@link OrderNotFoundException} (404). D-09: KHÔNG kiểm
+     * {@code approval_status} ở đây — Farmer bị đình chỉ vẫn phải xong được đơn đã nhận trước đó
+     * (Review focus #5).
+     */
+    private Order lockOwnedOrder(long farmerUserId, long orderId) {
+        Order order =
+                orderRepository
+                        .lockById(orderId)
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
+        FarmerProfile farmer =
+                farmerRepository
+                        .findByUserId(farmerUserId)
+                        .orElseThrow(OrderNotYoursException::new);
+        if (!farmer.getId().equals(order.getFarmerId())) {
+            throw new OrderNotYoursException();
+        }
+        return order;
+    }
+
+    /**
+     * Một cửa duy nhất cho mọi lần đổi trạng thái. Nhờ vậy FR-038 (ghi lịch sử) và D-02 (hoàn tồn
+     * kho) không thể bị quên ở một nhánh nào đó: quên gọi hàm này thì trạng thái cũng không đổi.
+     *
+     * <p>C5-2 — thứ tự khoá của đường này: đơn đã khoá trước (bởi {@link #lockOwnedOrder}) → khoá
+     * slot (nếu có) → khoá sản phẩm, đảo ngược so với bản nháp ban đầu của task (khoá sản phẩm rồi
+     * mới khoá slot) theo phán quyết C5-2.
+     *
+     * <p>{@code flush()} cuối cùng: {@link #detail} đọc qua {@code OrderQueryRepository} bằng JDBC
+     * thô, tách khỏi persistence context của JPA — không flush thì thay đổi vừa làm ở đây (status,
+     * farmer_note, tồn kho, booked_count) chưa chắc chắn hiện ra khi bốn method public bên trên gọi
+     * lại {@link #detail} để dựng response ngay trong cùng transaction.
+     */
+    @Transactional
+    protected Order transition(Order order, OrderStatus to, long actorUserId, String note) {
+        OrderStatus from = order.getStatus();
+        OrderLifecycle.assertTransition(from, to);
+
+        if (OrderLifecycle.restoresStock(to)) {
+            if (order.getSlotId() != null) {
+                slotRepository
+                        .lockById(order.getSlotId())
+                        .ifPresent(s -> s.setBookedCount(Math.max(0, s.getBookedCount() - 1)));
+            }
+            List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+            List<Product> products =
+                    productRepository.lockAllById(
+                            items.stream().map(OrderItem::getProductId).toList());
+            Map<Long, Integer> qty =
+                    items.stream()
+                            .collect(
+                                    Collectors.toMap(
+                                            OrderItem::getProductId, OrderItem::getQuantity));
+            for (Product p : products) {
+                p.setStockQuantity(p.getStockQuantity() + qty.get(p.getId()));
+                if (p.getStatus() == ProductStatus.SOLD_OUT && p.getStockQuantity() > 0) {
+                    p.setStatus(ProductStatus.AVAILABLE);
+                }
+            }
+        }
+
+        order.setStatus(to);
+        orderRepository.save(order);
+        history.record(order.getId(), from, to, actorUserId, note);
+        orderRepository.flush();
+        return order;
+    }
+
     /**
      * Whitelist qua {@link OrderStatus#valueOf} — giá trị lạ là request sai hình dạng → 400, không
      * bao giờ nối chuỗi vào SQL (R-04).

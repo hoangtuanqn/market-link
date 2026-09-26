@@ -33,4 +33,26 @@ public interface OrderServiceInterface {
     /** {@code GET /farmer/orders} — đơn đặt tại sạp của chính Farmer, theo giờ nhận hàng. */
     PageResource<OrderListItemResource> farmerOrders(
             long userId, String status, LocalDate date, int page, int pageSize);
+
+    /**
+     * {@code PATCH /farmer/orders/{id}/accept} (FR-065) — {@code placed → accepted}. Sai chủ (kể cả
+     * tài khoản không có {@code farmer_profiles}) → {@code OrderNotYoursException} (403); đơn không
+     * tồn tại → {@code OrderNotFoundException} (404); sai thứ tự → {@code
+     * InvalidOrderTransitionException} (409, D-04).
+     */
+    OrderDetailResource accept(long userId, long orderId);
+
+    /**
+     * {@code PATCH /farmer/orders/{id}/decline} (FR-065, FR-066) — {@code placed/accepted →
+     * declined}: hoàn tồn kho và trả chỗ slot (D-02), ghi {@code reason} vào {@code farmer_note}.
+     */
+    OrderDetailResource decline(long userId, long orderId, String reason);
+
+    /** {@code PATCH /farmer/orders/{id}/ready} — {@code accepted → ready}. */
+    OrderDetailResource markReady(long userId, long orderId);
+
+    /**
+     * {@code PATCH /farmer/orders/{id}/complete} — {@code ready → completed}; không hoàn tồn kho.
+     */
+    OrderDetailResource complete(long userId, long orderId);
 }
