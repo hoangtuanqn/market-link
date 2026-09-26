@@ -80,5 +80,8 @@
     "sentText": "Quản trị viên sẽ xem xét tin đăng này.",
     "button": "Báo cáo tin đăng này",
     "note": "Sai giá, sai ảnh hoặc thứ không nên có ở chợ nông sản."
+  },
+  "error": {
+    "noun": "sản phẩm"
   }
 }

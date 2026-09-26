@@ -68,5 +68,8 @@
   "empty": {
     "title": "Nothing to moderate",
     "text": "Reported products and reviews arrive here for you to read before hiding anything."
+  },
+  "error": {
+    "noun": "listings"
   }
 }

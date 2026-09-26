@@ -53,5 +53,9 @@
     "categoryAdded": "分类已添加。摊位现在就能选。",
     "categoryRemoved": "已删除 {{name}}。",
     "promoted": "{{name}} 现在出现在所有摊位的选项列表里。"
+  },
+  "error": {
+    "noun": "分类",
+    "nameRequired": "请为分类命名。"
   }
 }

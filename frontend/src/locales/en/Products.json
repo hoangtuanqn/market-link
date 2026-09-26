@@ -40,5 +40,8 @@
     "title": "Nothing matches these filters",
     "text": "Try removing the price filter, or widen it to another category or market.",
     "clear": "Clear all filters"
+  },
+  "error": {
+    "noun": "products"
   }
 }

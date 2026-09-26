@@ -53,5 +53,9 @@
     "categoryAdded": "분류를 추가했습니다. 가게가 바로 고를 수 있습니다.",
     "categoryRemoved": "{{name}}을(를) 삭제했습니다.",
     "promoted": "이제 {{name}}이(가) 모든 가게의 선택 목록에 있습니다."
+  },
+  "error": {
+    "noun": "카테고리",
+    "nameRequired": "카테고리 이름을 입력하세요."
   }
 }

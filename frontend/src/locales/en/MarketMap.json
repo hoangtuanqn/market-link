@@ -28,5 +28,9 @@
     "title": "Nothing to show on the map",
     "text": "Both layers are switched off. Turn markets or stalls back on to see the pins.",
     "action": "Show both"
-  }
+  },
+  "error": {
+    "noun": "markets"
+  },
+  "stallsNoun": "stalls"
 }

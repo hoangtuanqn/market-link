@@ -82,5 +82,11 @@
       "short": "dibatalkan dan pelanggan diberi tahu",
       "text": "Stok kembali ke lapak dan pesanan berakhir sebagai dibatalkan, bukan ditolak, karena lapak tidak melakukan kesalahan."
     }
+  },
+  "error": {
+    "noun": "pasar",
+    "required": "Kolom ini wajib diisi.",
+    "days": "Pilih setidaknya satu hari operasional.",
+    "close": "Waktu tutup harus setelah waktu buka."
   }
 }

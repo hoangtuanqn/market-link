@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
+import CatalogApi, { type MarketInput } from '@/api-requests/catalog.requests';
 import { CheckIcon } from '@/components/icons';
 import LocationPicker from '@/components/LocationPicker';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
@@ -17,8 +19,9 @@ import {
   type ClosureHandling,
   type ClosureType,
 } from '@/data/admin';
-import { markets } from '@/data/home';
+import useRequest from '@/hooks/useRequest';
 import { dayName } from '@/lib/format';
+import type { MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
@@ -27,12 +30,27 @@ const WEEK = [1, 2, 3, 4, 5, 6, 0];
 
 const DISTRICTS = ['Thủ Đức', 'District 7', 'Bình Thạnh', 'District 1'];
 
+type FormState = {
+  name: string;
+  address: string;
+  district: string;
+  days: number[];
+  open: string;
+  close: string;
+  lat: number;
+  lng: number;
+  notes: string;
+};
+
+/** Keys are the form's own; the server's camelCase field names are translated onto them in `fieldErrors`. */
+type FormErrors = Partial<Record<'name' | 'address' | 'days' | 'open' | 'close' | 'lat' | 'lng', string>>;
+
 /** A blank market, for the add form. */
-const EMPTY = {
+const EMPTY: FormState = {
   name: '',
   address: '',
   district: DISTRICTS[0],
-  days: [6] as number[],
+  days: [6],
   open: '06:00',
   close: '10:00',
   lat: 10.7769,
@@ -40,39 +58,80 @@ const EMPTY = {
   notes: '',
 };
 
+/** Contract §3 field names → the form's keys, so a server-side validation message lands under the right input. */
+const SERVER_FIELDS: Record<string, keyof FormErrors> = {
+  marketName: 'name',
+  address: 'address',
+  operatingDays: 'days',
+  openingTime: 'open',
+  closingTime: 'close',
+  latitude: 'lat',
+  longitude: 'lng',
+};
+
+const fromMarket = (m: MarketType, notes: string): FormState => ({
+  name: m.name,
+  address: m.address,
+  district: m.district,
+  days: m.days,
+  open: m.open,
+  close: m.close,
+  lat: m.lat,
+  lng: m.lng,
+  notes,
+});
+
 /**
  * FR-073 — add or edit one market: name, address, operating days, hours and the pin customers navigate to. The closed
  * days panel underneath is where a one-off closure lives, so it has somewhere to sit instead of only being announced.
  */
 const AdminMarketFormPage = () => {
   const { t } = useTranslation('AdminMarketForm');
+  const { t: tc } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const existing = markets.find((m) => String(m.id) === id);
+  const navigate = useNavigate();
   const isNew = id === 'new' || id === undefined;
 
-  const seed = existing
-    ? {
-        name: existing.name,
-        address: existing.address,
-        district: existing.district,
-        days: existing.days,
-        open: existing.open,
-        close: existing.close,
-        lat: existing.lat,
-        lng: existing.lng,
-        notes: marketAdmin[existing.id]?.notes ?? '',
-      }
-    : EMPTY;
-
-  const [form, setForm] = useState(seed);
-  const [closures, setClosures] = useState<ClosureType[]>(
-    existing ? seedClosures.filter((c) => c.marketId === existing.id) : [],
+  const marketId = Number(id);
+  const validId = isNew || (Number.isInteger(marketId) && marketId > 0);
+  const { state: load, retry } = useRequest(`admin-market:${id ?? 'new'}`, () =>
+    isNew
+      ? Promise.resolve<MarketType | null>(null)
+      : validId
+        ? CatalogApi.getMarket(marketId).then((result) => result.market)
+        : Promise.reject(new Error('missing')),
   );
+  /** The server's 404, or an id that could never be one — the "not here any more" page, not the error block. */
+  const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'MARKET_NOT_FOUND');
+  const existing = load.kind === 'ready' ? load.data : null;
+
+  // The form mirrors the loaded market until something is typed, then it is its own state (no effect needed).
+  const loadedForm = existing ? fromMarket(existing, marketAdmin[existing.id]?.notes ?? '') : EMPTY;
+  const [edited, setEdited] = useState<FormState | null>(null);
+  const form = edited ?? loadedForm;
+  const setForm = (next: FormState | ((current: FormState) => FormState)) =>
+    setEdited((current) => (typeof next === 'function' ? next(current ?? loadedForm) : next));
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [saving, setSaving] = useState(false);
+  // Closed days are still the demo set (@/data/admin); same mirror-until-edited pattern.
+  const loadedClosures = existing ? seedClosures.filter((c) => c.marketId === existing.id) : [];
+  const [editedClosures, setEditedClosures] = useState<ClosureType[] | null>(null);
+  const closures = editedClosures ?? loadedClosures;
+  const setClosures = (next: (current: ClosureType[]) => ClosureType[]) =>
+    setEditedClosures((current) => next(current ?? loadedClosures));
   const [addOpen, setAddOpen] = useState(false);
   const [removingClosure, setRemovingClosure] = useState<ClosureType | null>(null);
   const [draft, setDraft] = useState({ date: '2026-10-11', reason: '', handling: 'move' as ClosureHandling });
 
-  if (!existing && !isNew) {
+  if (load.kind === 'loading') {
+    return <MarketCardSkeleton count={1} />;
+  }
+
+  if (load.kind === 'error' && !missing) {
+    return <LoadError noun={t('error.noun')} onRetry={retry} />;
+  }
+
+  if (missing) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
         <h1 className="text-h2">{t('missing.title')}</h1>
@@ -84,6 +143,60 @@ const AdminMarketFormPage = () => {
 
   const toggleDay = (dow: number) =>
     setForm((f) => ({ ...f, days: f.days.includes(dow) ? f.days.filter((d) => d !== dow) : [...f.days, dow].sort() }));
+
+  /** The same rules the server applies (MarketRequest + MarketService), so nobody waits on a round trip to learn them. */
+  const validate = (f: FormState): FormErrors => {
+    const next: FormErrors = {};
+    if (!f.name.trim()) next.name = t('error.required');
+    if (!f.address.trim()) next.address = t('error.required');
+    if (f.days.length === 0) next.days = t('error.days');
+    if (!f.open) next.open = t('error.required');
+    if (!f.close) next.close = t('error.required');
+    if (f.open && f.close && f.close <= f.open) next.close = t('error.close');
+    if (!Number.isFinite(f.lat) || Math.abs(f.lat) > 90) next.lat = t('error.required');
+    if (!Number.isFinite(f.lng) || Math.abs(f.lng) > 180) next.lng = t('error.required');
+    return next;
+  };
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const found = validate(form);
+    setErrors(found);
+    if (Object.keys(found).length) return;
+
+    const input: MarketInput = {
+      marketName: form.name.trim(),
+      address: form.address.trim(),
+      district: form.district || undefined,
+      latitude: form.lat,
+      longitude: form.lng,
+      openingTime: form.open,
+      closingTime: form.close,
+      operatingDays: form.days,
+    };
+    setSaving(true);
+    try {
+      const saved = existing ? await CatalogApi.updateMarket(existing.id, input) : await CatalogApi.createMarket(input);
+      Notification.success({ text: t('toast.saved', { name: saved.name }) });
+      navigate(ADMIN_MARKETS_PATH);
+    } catch (error) {
+      const fromServer = Helper.getFieldErrors(error);
+      const mapped: FormErrors = {};
+      Object.entries(fromServer).forEach(([field, message]) => {
+        const key = SERVER_FIELDS[field];
+        if (key) mapped[key] = message;
+      });
+      setErrors(mapped);
+      if (!Object.keys(mapped).length) {
+        Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      }
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // The real market's district may not be in the short list above; keep it selectable rather than blanking the field.
+  const districtOptions = [...new Set([...DISTRICTS, form.district].filter(Boolean))];
 
   const addClosure = () => {
     const [year, month, day] = draft.date.split('-');
@@ -180,14 +293,7 @@ const AdminMarketFormPage = () => {
         )}
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          Notification.success({ text: t('toast.saved', { name: form.name || t('titleNew') }) });
-        }}
-        className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]"
-        noValidate
-      >
+      <form onSubmit={onSubmit} className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]" noValidate>
         <Card className="flex flex-col gap-4 p-6">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field
@@ -197,6 +303,7 @@ const AdminMarketFormPage = () => {
               className="sm:col-span-2"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
+              error={errors.name}
             />
             <Field
               id="market-address"
@@ -205,13 +312,14 @@ const AdminMarketFormPage = () => {
               className="sm:col-span-2"
               value={form.address}
               onChange={(e) => setForm({ ...form, address: e.target.value })}
+              error={errors.address}
             />
             <SelectField
               id="market-district"
               label={t('field.district')}
               value={form.district}
               onChange={(e) => setForm({ ...form, district: e.target.value })}
-              options={DISTRICTS}
+              options={districtOptions}
             />
             <Field id="market-city" label={t('field.city')} value={t('city')} readOnly />
 
@@ -241,6 +349,11 @@ const AdminMarketFormPage = () => {
                   </label>
                 ))}
               </div>
+              {errors.days && (
+                <p role="alert" className="text-danger m-0 text-[13px]">
+                  {errors.days}
+                </p>
+              )}
             </fieldset>
 
             <Field
@@ -250,6 +363,7 @@ const AdminMarketFormPage = () => {
               type="time"
               value={form.open}
               onChange={(e) => setForm({ ...form, open: e.target.value })}
+              error={errors.open}
             />
             <Field
               id="market-close"
@@ -258,6 +372,7 @@ const AdminMarketFormPage = () => {
               type="time"
               value={form.close}
               onChange={(e) => setForm({ ...form, close: e.target.value })}
+              error={errors.close}
             />
             <Field
               id="market-lat"
@@ -265,6 +380,7 @@ const AdminMarketFormPage = () => {
               required
               value={form.lat.toFixed(6)}
               onChange={(e) => setForm({ ...form, lat: Number(e.target.value) || form.lat })}
+              error={errors.lat}
             />
             <Field
               id="market-lng"
@@ -273,6 +389,7 @@ const AdminMarketFormPage = () => {
               hint={t('field.lngHint')}
               value={form.lng.toFixed(6)}
               onChange={(e) => setForm({ ...form, lng: Number(e.target.value) || form.lng })}
+              error={errors.lng}
             />
 
             <div className="flex flex-col gap-1.5 sm:col-span-2">
@@ -289,7 +406,9 @@ const AdminMarketFormPage = () => {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Button type="submit">{t('action.save')}</Button>
+            <Button type="submit" disabled={saving}>
+              {t('action.save')}
+            </Button>
             <ButtonLink to={ADMIN_MARKETS_PATH} variant="secondary">
               {t('action.cancel')}
             </ButtonLink>

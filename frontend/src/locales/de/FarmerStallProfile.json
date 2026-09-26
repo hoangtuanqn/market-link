@@ -19,7 +19,8 @@
     "about": "Über den Stand",
     "aboutHint": "Erscheint in Handschrift auf Ihrer Standseite. Ein oder zwei Sätze.",
     "savedText": "Standdaten gespeichert.",
-    "save": "Standdaten speichern"
+    "save": "Standdaten speichern",
+    "accountHint": "Telefon, E-Mail und Adresse stammen aus deinem Konto."
   },
   "cutoff": {
     "title": "Bestellschluss",
@@ -46,9 +47,26 @@
     "useMarket": "Standort des Markts verwenden",
     "savedText": "Märkte, Tage und Abholzeiten gespeichert. Die Abholfenster für nächste Woche folgen den neuen Zeiten.",
     "save": "Märkte und Abholung speichern",
-    "slotsLink": "Abholfenster verwalten"
+    "slotsLink": "Abholfenster verwalten",
+    "notApproved": "Märkte, Tage und Abholzeiten werden freigeschaltet, sobald ein Admin deinen Stand genehmigt hat.",
+    "windowError": "{{market}}: wähle mindestens einen Tag und ein Ende nach dem Beginn.",
+    "joined": "{{name}} zu deinem Stand hinzugefügt.",
+    "left": "{{name}} von deinem Stand entfernt."
   },
   "map": {
     "yourStall": "Ihr Stand"
+  },
+  "error": {
+    "noun": "deinen Stand"
+  },
+  "status": {
+    "approved": "Genehmigter Stand",
+    "pending": "Wartet auf Genehmigung",
+    "rejected": "Antrag abgelehnt",
+    "suspended": "Stand gesperrt"
+  },
+  "errors": {
+    "required": "Dieses Feld ist erforderlich.",
+    "cutoff": "Gib eine ganze Zahl zwischen {{min}} und {{max}} Stunden ein."
   }
 }

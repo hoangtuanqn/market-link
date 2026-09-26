@@ -55,5 +55,9 @@
     "categoryAdded": "Kategorie hinzugefügt. Die Stände können sie ab sofort wählen.",
     "categoryRemoved": "{{name}} entfernt.",
     "promoted": "{{name}} steht jetzt allen Ständen zur Auswahl."
+  },
+  "error": {
+    "noun": "Kategorien",
+    "nameRequired": "Gib der Kategorie einen Namen."
   }
 }

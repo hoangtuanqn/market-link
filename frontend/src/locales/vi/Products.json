@@ -40,5 +40,8 @@
     "title": "Không có gì khớp với bộ lọc này",
     "text": "Thử bỏ bộ lọc giá, hoặc mở rộng sang loại hay chợ khác.",
     "clear": "Xoá mọi bộ lọc"
+  },
+  "error": {
+    "noun": "các sản phẩm"
   }
 }

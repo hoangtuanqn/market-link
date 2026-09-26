@@ -53,5 +53,9 @@
     "categoryAdded": "Kategori ditambahkan. Lapak sudah bisa memilihnya.",
     "categoryRemoved": "{{name}} dihapus.",
     "promoted": "{{name}} kini ada di daftar pilihan semua lapak."
+  },
+  "error": {
+    "noun": "kategori",
+    "nameRequired": "Beri nama kategori."
   }
 }

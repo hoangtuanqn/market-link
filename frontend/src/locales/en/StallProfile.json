@@ -13,7 +13,8 @@
     "reviews_other": "{{count}} reviews",
     "markets_one": "market",
     "markets_other": "markets",
-    "since": "selling here since"
+    "since": "selling here since",
+    "cutoff": "hours before pickup orders close"
   },
   "tabs": {
     "label": "Stall sections",
@@ -60,5 +61,8 @@
     "sentText": "An admin will look into it.",
     "button": "Report this stall",
     "note": "Repeated no-shows, wrong stall location, or anything that breaks the platform guidelines."
+  },
+  "error": {
+    "noun": "stall"
   }
 }

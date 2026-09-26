@@ -1,31 +1,103 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import CatalogApi, { type CategoryType } from '@/api-requests/catalog.requests';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_ANNOUNCEMENTS_PATH, ADMIN_FEEDBACK_PATH } from '@/constants/nav';
-import { categories, farmers, products } from '@/data/catalog';
+import useRequest from '@/hooks/useRequest';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-type CategoryRow = (typeof categories)[number];
+type CategoryRow = CategoryType;
+const NO_CATEGORIES: CategoryRow[] = [];
+
+const bySortThenName = (a: CategoryRow, b: CategoryRow) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name);
 
 /**
  * FR-076 — the one list every stall picks from when it adds a product. Sale units are not here: the SRS gives the admin
- * "product categories" and nothing else as master data, so units ship as a fixed list in `constants/units.ts`.
+ * "product categories" and nothing else as master data, so units ship as a fixed list in `constants/units.ts`. Reads
+ * and writes go through `/api/v1/categories` and `/api/v1/admin/categories` (contract §5).
  */
 const AdminCategoriesPage = () => {
   const { t } = useTranslation('AdminCategories');
+  const { t: tc } = useTranslation();
 
-  const [newCategory, setNewCategory] = useState({ name: '', position: String(categories.length + 1) });
+  const { state: load, retry, mutate } = useRequest('categories', () => CatalogApi.listCategories());
+  const categories = load.kind === 'ready' ? load.data : NO_CATEGORIES;
+  const replaceCategories = (next: (current: CategoryRow[]) => CategoryRow[]) =>
+    mutate((current) => next(current).sort(bySortThenName));
+
+  const [newCategory, setNewCategory] = useState({ name: '', position: '' });
+  const [newCategoryError, setNewCategoryError] = useState<string>();
+  /** Names typed into the table but not saved yet, by category id. */
+  const [drafts, setDrafts] = useState<Record<number, string>>({});
   const [removing, setRemoving] = useState<CategoryRow | null>(null);
   const [moveTo, setMoveTo] = useState('');
+  const [busyId, setBusyId] = useState<number | null>(null);
 
-  /** How many stalls have at least one product in this category. */
-  const stallsIn = (categoryName: string) =>
-    farmers.filter((f) => products.some((p) => p.farmerId === f.id && p.category === categoryName)).length;
+  const saveCategory = async (c: CategoryRow) => {
+    const name = (drafts[c.id] ?? c.name).trim();
+    if (!name) return;
+    setBusyId(c.id);
+    try {
+      const saved = await CatalogApi.updateCategory(c.id, { name, sortOrder: c.sortOrder });
+      replaceCategories((list) => list.map((row) => (row.id === c.id ? { ...saved, count: row.count } : row)));
+      setDrafts((current) => {
+        const next = { ...current };
+        delete next[c.id];
+        return next;
+      });
+      Notification.success({ text: t('toast.categorySaved', { name: saved.name }) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const addCategory = async () => {
+    const name = newCategory.name.trim();
+    if (!name) {
+      setNewCategoryError(t('error.nameRequired'));
+      return;
+    }
+    setNewCategoryError(undefined);
+    const position = Number(newCategory.position);
+    setBusyId(0);
+    try {
+      const created = await CatalogApi.createCategory({
+        name,
+        sortOrder: Number.isFinite(position) && position > 0 ? position : categories.length + 1,
+      });
+      replaceCategories((list) => [...list, created]);
+      Notification.success({ text: t('toast.categoryAdded') });
+      setNewCategory({ name: '', position: '' });
+    } catch (error) {
+      setNewCategoryError(Helper.getFieldErrors(error).name ?? Helper.getErrorMessage(error, tc('errors.network')));
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const removeCategory = async () => {
+    if (!removing) return;
+    setBusyId(removing.id);
+    try {
+      await CatalogApi.deactivateCategory(removing.id);
+      replaceCategories((list) => list.filter((row) => row.id !== removing.id));
+      Notification.success({ text: t('toast.categoryRemoved', { name: removing.name }) });
+      setRemoving(null);
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   const categoryColumns: TableColumn<CategoryRow>[] = [
     {
@@ -33,28 +105,26 @@ const AdminCategoriesPage = () => {
       label: t('col.category'),
       render: (c) => (
         <input
-          defaultValue={c.name}
+          value={drafts[c.id] ?? c.name}
+          onChange={(e) => setDrafts((d) => ({ ...d, [c.id]: e.target.value }))}
           aria-label={t('col.nameOf', { name: c.name })}
           className="border-line-strong bg-surface-raised focus:outline-focus min-h-9 w-full max-w-50 rounded-sm border-[1.5px] px-2 focus:outline-2"
         />
       ),
     },
     { key: 'count', label: t('col.products'), align: 'num' },
-    { key: 'stalls', label: t('col.stalls'), align: 'num', render: (c) => stallsIn(c.name) },
+    // Products and stalls per category arrive with reports (C9); until then the column shows a dash.
+    { key: 'stalls', label: t('col.stalls'), align: 'num', render: () => '—' },
     {
       key: 'action',
       label: '',
       align: 'actions',
       render: (c) => (
         <div className="flex justify-end gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => Notification.success({ text: t('toast.categorySaved', { name: c.name }) })}
-          >
+          <Button variant="secondary" size="sm" onClick={() => void saveCategory(c)} disabled={busyId === c.id}>
             {t('action.save')}
           </Button>
-          <Button variant="danger" size="sm" onClick={() => setRemoving(c)}>
+          <Button variant="danger" size="sm" onClick={() => setRemoving(c)} disabled={busyId === c.id}>
             {t('action.remove')}
           </Button>
         </div>
@@ -81,7 +151,11 @@ const AdminCategoriesPage = () => {
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        {categories.length ? (
+        {load.kind === 'loading' ? (
+          <MarketCardSkeleton count={3} />
+        ) : load.kind === 'error' ? (
+          <LoadError noun={t('error.noun')} onRetry={retry} />
+        ) : categories.length ? (
           <Table
             caption={t('caption.categories', { count: categories.length })}
             columns={categoryColumns}
@@ -97,8 +171,7 @@ const AdminCategoriesPage = () => {
           noValidate
           onSubmit={(e) => {
             e.preventDefault();
-            Notification.success({ text: t('toast.categoryAdded') });
-            setNewCategory({ name: '', position: String(categories.length + 1) });
+            void addCategory();
           }}
         >
           <h2 className="text-h3">{t('categoryForm.title')}</h2>
@@ -110,15 +183,19 @@ const AdminCategoriesPage = () => {
             hint={t('categoryForm.nameHint')}
             value={newCategory.name}
             onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+            error={newCategoryError}
           />
           <Field
             id="new-category-position"
             label={t('categoryForm.position')}
             type="number"
+            placeholder={String(categories.length + 1)}
             value={newCategory.position}
             onChange={(e) => setNewCategory({ ...newCategory, position: e.target.value })}
           />
-          <Button type="submit">{t('categoryForm.submit')}</Button>
+          <Button type="submit" disabled={busyId === 0}>
+            {t('categoryForm.submit')}
+          </Button>
         </Card>
       </div>
 
@@ -132,13 +209,7 @@ const AdminCategoriesPage = () => {
             <Button variant="secondary" onClick={() => setRemoving(null)}>
               {t('removeCategory.keep')}
             </Button>
-            <Button
-              variant="danger"
-              onClick={() => {
-                if (removing) Notification.success({ text: t('toast.categoryRemoved', { name: removing.name }) });
-                setRemoving(null);
-              }}
-            >
+            <Button variant="danger" onClick={() => void removeCategory()} disabled={busyId !== null}>
               {t('removeCategory.confirm')}
             </Button>
           </>

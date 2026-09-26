@@ -1,16 +1,22 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
+import ProductApi from '@/api-requests/product.requests';
+import StallApi, { toStallCard, type StallCardData } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
 import { ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
-import { categories as CATEGORIES, farmers, products } from '@/data/catalog';
-import { markets } from '@/data/home';
+import { DataState, LoadError } from '@/components/ui/data-state';
+import useRequest from '@/hooks/useRequest';
 import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
+import type { ProductType } from '@/types/product.types';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 /** The demo market week, Thursday 24 to Sunday 27 September 2026. */
@@ -20,8 +26,8 @@ const DAY_OPTIONS = [
   { value: 6, date: new Date(2026, 8, 26) },
   { value: 0, date: new Date(2026, 8, 27) },
 ];
-/** How the demo data spells a stall's selling days ("Sat, Sun"); used to match, never shown. */
-const DOW_ABBR: Record<number, string> = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' };
+
+const NO_PRODUCTS: ProductType[] = [];
 
 /** FR-010 FR-011 — one market: who sells there on a given day, and what they have. */
 const MarketDetailPage = () => {
@@ -29,27 +35,40 @@ const MarketDetailPage = () => {
   const { t } = useTranslation('MarketDetail');
   const { t: tc } = useTranslation();
   const navigate = useNavigate();
-  const market = markets.find((m) => m.id === Number(id));
+
+  const marketId = Number(id);
+  const validId = Number.isInteger(marketId) && marketId > 0;
+  const { state: load, retry } = useRequest(`market:${id}`, () =>
+    validId ? CatalogApi.getMarket(marketId).then((result) => result.market) : Promise.reject(new Error('missing')),
+  );
+  /** The server's 404, or an id that could never be one — the "not here any more" page, not the error block. */
+  const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'MARKET_NOT_FOUND');
+  const market = load.kind === 'ready' ? load.data : undefined;
 
   const [day, setDay] = useState(6);
   const [category, setCategory] = useState('All');
   const [inStockOnly, setInStockOnly] = useState(false);
-  const [saved, setSaved] = useState(market?.saved ?? false);
+  // Saved markets arrive with favorites (C7); until then the chip only remembers the click.
+  const [saved, setSaved] = useState(false);
   const [scope, setScope] = useState<'product' | 'farmer'>('product');
   const [query, setQuery] = useState('');
 
-  const stallsToday = useMemo(() => {
-    if (!market) return [];
-    const abbr = DOW_ABBR[day];
-    return farmers.filter(
-      (f) => f.approval === 'approved' && f.markets.includes(market.id) && f.days.split(', ').includes(abbr),
-    );
-  }, [market, day]);
+  // FR-010: who is selling here on the chosen day, straight from the API. Keyed by market and day, so a new
+  // chip or a new id starts a new request; the market itself may still be loading, in which case this waits.
+  const { state: stallsLoad, retry: retryStalls } = useRequest(`market-stalls:${id}:${day}`, () =>
+    validId ? StallApi.atMarket(marketId, day) : Promise.resolve([]),
+  );
+  const stallsToday = useMemo<StallCardData[]>(
+    () =>
+      market && stallsLoad.kind === 'ready' ? stallsLoad.data.map((s) => toStallCard(s, market.id, market.name)) : [],
+    [market, stallsLoad],
+  );
 
-  const productsToday = useMemo(() => {
-    const stallIds = new Set(stallsToday.map((f) => f.id));
-    return products.filter((p) => p.farmerId != null && stallIds.has(p.farmerId));
-  }, [stallsToday]);
+  // What is on sale here on the chosen day (FR-020), from the same filters the products page uses.
+  const { state: productsLoad } = useRequest(`market-products:${id}:${day}`, () =>
+    validId ? ProductApi.list({ marketId, day, pageSize: 50 }).then((r) => r.items) : Promise.resolve(NO_PRODUCTS),
+  );
+  const productsToday: ProductType[] = productsLoad.kind === 'ready' ? productsLoad.data : NO_PRODUCTS;
 
   const categoryCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -95,6 +114,18 @@ const MarketDetailPage = () => {
     if (inStockOnly && (p.status !== 'available' || p.stock === 0)) return false;
     return true;
   });
+
+  if (load.kind === 'loading') {
+    return (
+      <div className="flex flex-col gap-8">
+        <MarketCardSkeleton count={1} />
+      </div>
+    );
+  }
+
+  if (load.kind === 'error' && !missing) {
+    return <LoadError noun={t('error.noun')} onRetry={retry} />;
+  }
 
   if (!market) {
     return (
@@ -192,9 +223,9 @@ const MarketDetailPage = () => {
             <Chip pressed={category === 'All'} onClick={() => setCategory('All')}>
               {t('all')}
             </Chip>
-            {CATEGORIES.filter((c) => categoryCounts.has(c.name)).map((c) => (
-              <Chip key={c.id} pressed={category === c.name} onClick={() => setCategory(c.name)}>
-                {c.name} <span className="text-[12px] tabular-nums opacity-80">{categoryCounts.get(c.name)}</span>
+            {[...categoryCounts.keys()].sort().map((name) => (
+              <Chip key={name} pressed={category === name} onClick={() => setCategory(name)}>
+                {name} <span className="text-[12px] tabular-nums opacity-80">{categoryCounts.get(name)}</span>
               </Chip>
             ))}
             <Chip pressed={inStockOnly} onClick={() => setInStockOnly((v) => !v)}>
@@ -233,11 +264,19 @@ const MarketDetailPage = () => {
           <h2 className="text-h2">{t('stallsTitle', { day: dayLong })}</h2>
           <span className="text-small text-ink-muted">{t('stallsNote')}</span>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {stallsToday.map((f) => (
-            <StallCard key={f.id} farmer={f} />
-          ))}
-        </div>
+        {stallsLoad.kind === 'loading' ? (
+          <MarketCardSkeleton count={2} />
+        ) : stallsLoad.kind === 'error' ? (
+          <LoadError noun={t('stallsNoun')} onRetry={retryStalls} />
+        ) : stallsToday.length ? (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {stallsToday.map((f) => (
+              <StallCard key={f.id} farmer={f} />
+            ))}
+          </div>
+        ) : (
+          <DataState title={t('stallsEmpty.title', { day: dayLong })} text={t('stallsNote')} />
+        )}
       </section>
     </div>
   );

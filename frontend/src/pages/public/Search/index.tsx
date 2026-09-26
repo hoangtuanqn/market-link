@@ -1,17 +1,22 @@
 import { useMemo, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
+import ProductApi from '@/api-requests/product.requests';
+import StallApi, { toStallCard, type StallCardData } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import Tabs from '@/components/ui/tabs';
-import { farmer, farmers, products } from '@/data/catalog';
-import { markets } from '@/data/home';
+import useRequest from '@/hooks/useRequest';
 import { dayName, formatClock, formatDayMonth } from '@/lib/format';
+import type { MarketType } from '@/types/market.types';
+import type { ProductType } from '@/types/product.types';
 
 /** The demo market week, Thursday 24 to Sunday 27 September 2026. */
 const DAY_OPTIONS = [
@@ -22,6 +27,10 @@ const DAY_OPTIONS = [
 ];
 const SORTS = ['best', 'nearest', 'price', 'rating'] as const;
 const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
+const FETCH_SIZE = 50;
+
+type Results = { markets: MarketType[]; farmers: StallCardData[]; products: ProductType[] };
+const NO_RESULTS: Results = { markets: [], farmers: [], products: [] };
 
 /** FR-023 — search across markets, stalls and products at once, with results on a map. */
 const SearchPage = () => {
@@ -42,37 +51,28 @@ const SearchPage = () => {
     setSearchParams({ scope: draftScope, q: draftQ.trim() });
   };
 
-  const openMarketIds = useMemo(() => new Set(markets.filter((m) => m.days.includes(day)).map((m) => m.id)), [day]);
-
-  const results = useMemo(() => {
-    const qLower = q.trim().toLowerCase();
-    const matches = (text: string) => qLower !== '' && text.toLowerCase().includes(qLower);
-
-    let matchedProducts = products.filter((p) => matches(p.name) && farmer(p.farmerId!)?.approval === 'approved');
-    let matchedFarmers = farmers.filter(
-      (f) => f.approval === 'approved' && (matches(f.stall) || matchedProducts.some((p) => p.farmerId === f.id)),
-    );
-    let matchedMarkets = markets.filter((m) => matches(m.name));
-
-    // Only what's open/selling on the chosen day.
-    matchedMarkets = matchedMarkets.filter((m) => openMarketIds.has(m.id));
-    matchedFarmers = matchedFarmers.filter((f) => f.markets.some((id) => openMarketIds.has(id)));
-    matchedProducts = matchedProducts.filter((p) => farmer(p.farmerId!)?.markets.some((id) => openMarketIds.has(id)));
-
-    if (sort === 'price') matchedProducts = [...matchedProducts].sort((a, b) => a.price - b.price);
-    if (sort === 'rating') matchedFarmers = [...matchedFarmers].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-    if (sort === 'nearest') {
-      matchedFarmers = [...matchedFarmers].sort(
-        (a, b) => parseFloat(a.distance ?? '0') - parseFloat(b.distance ?? '0'),
-      );
-      matchedMarkets = [...matchedMarkets].sort(
-        (a, b) => parseFloat(a.distance ?? '0') - parseFloat(b.distance ?? '0'),
-      );
-    }
-
-    return { markets: matchedMarkets, farmers: matchedFarmers, products: matchedProducts };
-  }, [q, openMarketIds, sort]);
-
+  // One round to the three public lists (contract §3, §4, §5), all filtered by the same keyword and day.
+  // "Nearest" needs a location the page does not ask for, so it sorts like "best match" until it does.
+  const keyword = q.trim();
+  const { state: load, retry } = useRequest(`search:${keyword}:${day}:${sort}`, () =>
+    keyword === ''
+      ? Promise.resolve(NO_RESULTS)
+      : Promise.all([
+          CatalogApi.listMarkets({ q: keyword, day, pageSize: FETCH_SIZE }),
+          StallApi.list({ q: keyword, day, pageSize: FETCH_SIZE }),
+          ProductApi.list({
+            q: keyword,
+            day,
+            pageSize: FETCH_SIZE,
+            sort: sort === 'price' ? 'price_asc' : sort === 'rating' ? 'rating' : 'newest',
+          }),
+        ]).then(([markets, stalls, products]) => ({
+          markets: markets.items,
+          farmers: stalls.items.map((s) => toStallCard(s, 0, '')),
+          products: products.items,
+        })),
+  );
+  const results = load.kind === 'ready' ? load.data : NO_RESULTS;
   const total = results.markets.length + results.farmers.length + results.products.length;
 
   // FR-023 asks for results on a map. Products have no coordinates of their own, so a product match is
@@ -85,7 +85,7 @@ const SearchPage = () => {
       label: m.name,
       popup: {
         title: m.name,
-        lines: [`${formatClock(m.open)}\u2013${formatClock(m.close)}`, m.district],
+        lines: [`${formatClock(m.open)}–${formatClock(m.close)}`, m.district],
         href: `/markets/${m.id}`,
       },
     }));
@@ -186,8 +186,12 @@ const SearchPage = () => {
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-6">
-          {q.trim() === '' ? (
+          {keyword === '' ? (
             <DataState title={t('empty.startTitle')} text={t('empty.startText')} />
+          ) : load.kind === 'loading' ? (
+            <MarketCardSkeleton count={3} />
+          ) : load.kind === 'error' ? (
+            <LoadError noun={t('error.noun')} onRetry={retry} />
           ) : total === 0 ? (
             <DataState title={t('empty.noneTitle')} text={t('empty.noneText')} />
           ) : (

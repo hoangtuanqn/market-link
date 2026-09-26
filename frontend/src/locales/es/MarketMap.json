@@ -28,5 +28,9 @@
     "title": "No hay nada que mostrar en el mapa",
     "text": "Las dos capas están desactivadas. Vuelve a activar mercados o puestos para ver los marcadores.",
     "action": "Mostrar ambos"
-  }
+  },
+  "error": {
+    "noun": "mercados"
+  },
+  "stallsNoun": "puestos"
 }

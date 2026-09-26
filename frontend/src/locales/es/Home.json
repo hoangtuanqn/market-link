@@ -27,11 +27,13 @@
   },
   "nearby": {
     "title": "Mercados cerca de ti",
-    "note": "Distancias desde tu dirección guardada en Thảo Điền"
+    "note": "Distancias desde tu dirección guardada en Thảo Điền",
+    "noun": "mercados"
   },
   "fresh": {
     "title": "Fresco esta semana",
-    "all": "Todos los productos y filtros"
+    "all": "Todos los productos y filtros",
+    "noun": "productos"
   },
   "how": {
     "title": "Cómo funcionan las reservas",

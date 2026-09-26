@@ -1,31 +1,56 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import { Button, ButtonLink } from '@/components/ui/button';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_MARKETS_PATH } from '@/constants/nav';
-import { markets } from '@/data/home';
+import useRequest from '@/hooks/useRequest';
 import { dayList, formatClock } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+
+/** Contract §3 caps a page at 50; every market of the city fits in one call. */
+const FETCH_SIZE = 50;
+const NO_MARKETS: MarketType[] = [];
 
 /**
  * FR-073 — name, address, operating days, hours and map coordinates for each market. Removing a market hides it from
- * customers; its history stays.
- *
- * The list is the frozen demo data in `@/data/home` until markets have a table of their own.
+ * customers (`DELETE /admin/markets/{id}` is a soft delete); its history stays.
  */
 const AdminMarketsPage = () => {
   const { t } = useTranslation('AdminMarkets');
+  const { t: tc } = useTranslation();
   const [removing, setRemoving] = useState<MarketType | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const confirmRemove = () => {
+  const {
+    state: load,
+    retry,
+    mutate,
+  } = useRequest('admin-markets', () =>
+    CatalogApi.listMarkets({ pageSize: FETCH_SIZE }).then((result) => result.items),
+  );
+  const markets = load.kind === 'ready' ? load.data : NO_MARKETS;
+
+  const confirmRemove = async () => {
     if (!removing) return;
-    Notification.success({ text: t('toast.removed', { name: removing.name }) });
-    setRemoving(null);
+    setBusy(true);
+    try {
+      await CatalogApi.deactivateMarket(removing.id);
+      mutate((list) => list.filter((m) => m.id !== removing.id));
+      Notification.success({ text: t('toast.removed', { name: removing.name }) });
+      setRemoving(null);
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusy(false);
+    }
   };
 
   const markers: MapMarker[] = markets.map((m) => ({
@@ -102,7 +127,11 @@ const AdminMarketsPage = () => {
         <ButtonLink to={`${ADMIN_MARKETS_PATH}/new`}>{t('action.add')}</ButtonLink>
       </div>
 
-      {markets.length ? (
+      {load.kind === 'loading' ? (
+        <MarketCardSkeleton count={3} />
+      ) : load.kind === 'error' ? (
+        <LoadError noun={t('error.noun')} onRetry={retry} />
+      ) : markets.length ? (
         <Table caption={t('caption', { count: markets.length })} columns={columns} rows={markets} />
       ) : (
         <DataState title={t('empty.title')} text={t('empty.text')} />
@@ -120,10 +149,10 @@ const AdminMarketsPage = () => {
         onClose={() => setRemoving(null)}
         actions={
           <>
-            <Button variant="secondary" onClick={() => setRemoving(null)}>
+            <Button variant="secondary" onClick={() => setRemoving(null)} disabled={busy}>
               {t('remove.keep')}
             </Button>
-            <Button variant="danger" onClick={confirmRemove}>
+            <Button variant="danger" onClick={confirmRemove} disabled={busy}>
               {t('remove.confirm')}
             </Button>
           </>

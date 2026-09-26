@@ -80,5 +80,8 @@
     "sentText": "Un administrador revisará este anuncio.",
     "button": "Denunciar este anuncio",
     "note": "Precio erróneo, foto errónea o algo que no corresponde a un mercado de agricultores."
+  },
+  "error": {
+    "noun": "producto"
   }
 }

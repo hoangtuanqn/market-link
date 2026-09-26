@@ -13,7 +13,8 @@
     "reviews_other": "{{count}} 条评价",
     "markets_one": "个市集",
     "markets_other": "个市集",
-    "since": "在此销售起始于"
+    "since": "在此销售起始于",
+    "cutoff": "取货前几小时截单"
   },
   "tabs": {
     "label": "摊位栏目",
@@ -60,5 +61,8 @@
     "sentText": "管理员会进行核查。",
     "button": "举报此摊位",
     "note": "多次未出摊、摊位位置错误，或任何违反平台规则的情况。"
+  },
+  "error": {
+    "noun": "摊位"
   }
 }

@@ -45,5 +45,8 @@
   "map": {
     "label": "Bản đồ kết quả",
     "note": "Kết quả có vị trí sẽ được ghim. Trên điện thoại, nút “Danh sách / Bản đồ” chuyển qua lại giữa hai chế độ."
+  },
+  "error": {
+    "noun": "kết quả"
   }
 }

@@ -82,5 +82,11 @@
       "short": "cancelados y clientes avisados",
       "text": "El stock vuelve al puesto y el pedido acaba como cancelado, no como rechazado, porque el puesto no hizo nada mal."
     }
+  },
+  "error": {
+    "noun": "mercado",
+    "required": "Este campo es obligatorio.",
+    "days": "Elige al menos un día de apertura.",
+    "close": "La hora de cierre debe ser posterior a la de apertura."
   }
 }

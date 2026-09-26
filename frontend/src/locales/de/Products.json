@@ -40,5 +40,8 @@
     "title": "Nichts passt zu diesen Filtern",
     "text": "Entfernen Sie den Preisfilter oder erweitern Sie auf eine andere Kategorie oder einen anderen Markt.",
     "clear": "Alle Filter zurücksetzen"
+  },
+  "error": {
+    "noun": "Produkte"
   }
 }

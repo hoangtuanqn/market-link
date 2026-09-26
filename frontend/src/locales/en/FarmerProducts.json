@@ -38,5 +38,13 @@
     "confirm": "Delete product",
     "text": "It disappears from the catalogue and from your template. Orders that already include it are not changed.",
     "pauseHint": "To stop selling it for a while, choose Paused instead."
+  },
+  "error": {
+    "noun": "your products"
+  },
+  "hiddenByAdmin": "Hidden by an admin: {{reason}}",
+  "empty": {
+    "title": "No products yet",
+    "text": "Add your first product and it appears on your stall page right away."
   }
 }

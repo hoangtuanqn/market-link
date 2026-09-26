@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
+import ProductApi from '@/api-requests/product.requests';
+import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import Rating from '@/components/Rating';
@@ -11,78 +15,116 @@ import { CheckIcon } from '@/components/icons';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
+import { LoadError } from '@/components/ui/data-state';
 import { Pagination } from '@/components/ui/pagination';
 import Tabs from '@/components/ui/tabs';
 import { Table } from '@/components/ui/table';
-import { farmer, marketName, products, reviewTags, reviewsForFarmer } from '@/data/catalog';
-import { markets } from '@/data/home';
-import { dayList, dayName, formatClock, formatDate, upcoming } from '@/lib/format';
-import Notification from '@/utils/notification';
+import { reviewTags, reviewsForFarmer } from '@/data/catalog';
 import { demoTierOf } from '@/data/tiers';
+import useRequest from '@/hooks/useRequest';
+import { dayName, formatClock, upcoming } from '@/lib/format';
+import type { MarketType } from '@/types/market.types';
+import type { ProductType } from '@/types/product.types';
+import Helper from '@/utils/helper';
+import Notification from '@/utils/notification';
 
-/** How the demo data spells a stall's selling days ("Sat, Sun"); used to match, never shown. */
-const DOW_ABBR: Record<number, string> = { 0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat' };
-/** The demo window "06:00 – 10:30" and date "02/08/2026", shown through format.ts (clock and date settings). */
-const pickupWindow = (pickup: string) =>
-  pickup
-    .split('–')
-    .map((s) => formatClock(s.trim()))
-    .join(' – ');
-const dmy = (s: string) => {
-  const [d, m, y] = s.split('/').map(Number);
-  return y ? formatDate(new Date(y, m - 1, d)) : s;
-};
 const REVIEWS_PER_PAGE = 6;
+/** Contract §3 caps a page at 50; every market of the city fits in one call. */
+const FETCH_SIZE = 50;
+const NO_MARKETS: MarketType[] = [];
+const NO_PRODUCTS: ProductType[] = [];
+
+/** The window a stall keeps at one market: earliest start to latest end across its days there. */
+const windowOf = (m: StallMarketDto) => {
+  const starts = m.operatingDays.map((d) => d.pickupStartTime).sort();
+  const ends = m.operatingDays.map((d) => d.pickupEndTime).sort();
+  return pickupWindow(starts[0], ends[ends.length - 1]);
+};
 
 /** FR-011 — a stall's profile: this week's stock, reviews, and where to collect. */
 const StallProfilePage = () => {
   const { t } = useTranslation('StallProfile');
   const { t: tc } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  // Gian hàng chờ duyệt / bị đình chỉ không có trang công khai (trang Products cũng chỉ hiện gian đã duyệt)
-  const found = farmer(Number(id));
-  const f = found?.approval === 'approved' ? found : undefined;
-  const availableDays = f ? [1, 2, 3, 4, 5, 6, 0].filter((d) => f.days.split(', ').includes(DOW_ABBR[d])) : [];
+
+  const farmerId = Number(id);
+  const validId = Number.isInteger(farmerId) && farmerId > 0;
+  // Stalls waiting for approval or suspended have no public page: the server answers 404 (D-09).
+  const { state: load, retry } = useRequest(`stall:${id}`, () =>
+    validId ? StallApi.get(farmerId) : Promise.reject(new Error('missing')),
+  );
+  const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'NOT_FOUND');
+  const stall = load.kind === 'ready' ? load.data : undefined;
+
+  // Market coordinates and addresses, for the pins and the "where and when" table.
+  const { state: marketsLoad } = useRequest('markets', () =>
+    CatalogApi.listMarkets({ pageSize: FETCH_SIZE }).then((result) => result.items),
+  );
+  const allMarkets = marketsLoad.kind === 'ready' ? marketsLoad.data : NO_MARKETS;
+  const marketById = (marketId: number) => allMarkets.find((m) => m.id === marketId);
+  // This week's stock (FR-011); products are visible only while the stall is approved (D-09).
+  const { state: productsLoad } = useRequest(`stall-products:${id}`, () =>
+    validId ? ProductApi.byFarmer(farmerId) : Promise.resolve(NO_PRODUCTS),
+  );
+
+  const availableDays = stall
+    ? [1, 2, 3, 4, 5, 6, 0].filter((d) => stall.markets.some((m) => m.operatingDays.some((od) => od.dayOfWeek === d)))
+    : [];
 
   const [tab, setTab] = useState<'stock' | 'reviews' | 'about'>('stock');
-  // Mặc định chọn ngày bán đầu tiên của gian hàng, không cố định Thứ 7
-  const [day, setDay] = useState(availableDays[0] ?? 6);
+  // Defaults to the stall's first selling day, not a fixed Saturday; null until the stall has arrived.
+  const [pickedDay, setPickedDay] = useState<number | null>(null);
+  const day = pickedDay ?? availableDays[0] ?? 6;
   const [reviewFilter, setReviewFilter] = useState<'all' | 'farmer' | 'product'>('all');
   const [reviewPage, setReviewPage] = useState(1);
 
-  // The stall itself, plus each market it trades at, so "where do I collect" is answerable at a glance (FR-011).
-  // Plain per-render work: a handful of pins, and React Compiler cannot keep a manual memo over the module-level data.
+  // The stall at each market it trades at, plus the markets themselves (FR-011, FR-012). Plain per-render work.
   const mapMarkers: MapMarker[] = [];
-  if (f) {
-    const pins = mapMarkers;
-    if (f.lat != null && f.lng != null) {
-      pins.push({
-        lat: f.lat,
-        lng: f.lng,
-        kind: 'stall',
-        label: f.stall,
-        selected: true,
-        popup: { title: f.stall, lines: [tc('map.stallPickup', { code: f.stallCode, pickup: f.pickup })] },
-      });
-    }
-    f.markets.forEach((id) => {
-      const m = markets.find((mm) => mm.id === id);
-      if (!m) return;
-      pins.push({
-        lat: m.lat,
-        lng: m.lng,
-        kind: 'market',
-        label: m.name,
-        popup: {
-          title: m.name,
-          lines: [`${formatClock(m.open)}\u2013${formatClock(m.close)}`, m.address],
-          href: `/markets/${m.id}`,
-        },
-      });
+  if (stall) {
+    stall.markets.forEach((sm) => {
+      const m = marketById(sm.marketId);
+      if (sm.stallLatitude != null && sm.stallLongitude != null) {
+        mapMarkers.push({
+          lat: Number(sm.stallLatitude),
+          lng: Number(sm.stallLongitude),
+          kind: 'stall',
+          label: stall.stallName,
+          selected: true,
+          popup: {
+            title: stall.stallName,
+            lines: [tc('map.stallPickup', { code: sm.stallCode ?? '', pickup: windowOf(sm) })],
+          },
+        });
+      }
+      if (m) {
+        mapMarkers.push({
+          lat: m.lat,
+          lng: m.lng,
+          kind: 'market',
+          label: m.name,
+          popup: {
+            title: m.name,
+            lines: [`${formatClock(m.open)}–${formatClock(m.close)}`, m.address],
+            href: `/markets/${m.id}`,
+          },
+        });
+      }
     });
   }
 
-  if (!f) {
+  if (load.kind === 'loading') {
+    return (
+      <div className="flex flex-col gap-6">
+        <MarketCardSkeleton count={1} />
+      </div>
+    );
+  }
+
+  if (load.kind === 'error' && !missing) {
+    return <LoadError noun={t('error.noun')} onRetry={retry} />;
+  }
+
+  if (!stall) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
         <h1 className="text-h2">{t('notFound.title')}</h1>
@@ -91,12 +133,14 @@ const StallProfilePage = () => {
     );
   }
 
-  const stallProducts = products.filter((p) => p.farmerId === f.id);
-  const days = dayList(availableDays);
-  const pickup = pickupWindow(f.pickup);
-  const since = dmy(f.registered);
-
-  const allReviews = reviewsForFarmer(f.id);
+  const rating = stall.ratingCount === 0 ? null : Number(stall.ratingAvg);
+  const about = stall.description ?? '';
+  const firstMarket = stall.markets[0];
+  const firstWindow = firstMarket ? windowOf(firstMarket) : '';
+  const days = dayNames(availableDays);
+  const stallProducts = productsLoad.kind === 'ready' ? productsLoad.data : NO_PRODUCTS;
+  // Reviews are still the demo set until C8; they follow the real stall id.
+  const allReviews = reviewsForFarmer(stall.farmerId);
   const filteredReviews = reviewFilter === 'all' ? allReviews : allReviews.filter((r) => r.targetType === reviewFilter);
   const reviewPages = Math.max(1, Math.ceil(filteredReviews.length / REVIEWS_PER_PAGE));
   const reviewFrom = (Math.min(reviewPage, reviewPages) - 1) * REVIEWS_PER_PAGE;
@@ -108,11 +152,15 @@ const StallProfilePage = () => {
         <Link to="/markets" className="text-brand underline">
           {t('breadcrumb')}
         </Link>{' '}
-        ·{' '}
-        <Link to={`/markets/${f.markets[0]}`} className="text-brand underline">
-          {marketName(f.markets[0])}
-        </Link>{' '}
-        · {f.stall}
+        {firstMarket && (
+          <>
+            ·{' '}
+            <Link to={`/markets/${firstMarket.marketId}`} className="text-brand underline">
+              {firstMarket.marketName}
+            </Link>{' '}
+          </>
+        )}
+        · {stall.stallName}
       </p>
 
       <Card className="flex flex-col gap-4 p-6">
@@ -122,25 +170,23 @@ const StallProfilePage = () => {
               aria-hidden="true"
               className="bg-brand text-on-brand font-hand grid size-16 flex-none place-items-center rounded-full text-[32px] uppercase"
             >
-              {f.stall.charAt(0)}
+              {stall.stallName.charAt(0)}
             </span>
             <div className="flex flex-col gap-2">
-              <h1 className="text-h1">{f.stall}</h1>
+              <h1 className="text-h1">{stall.stallName}</h1>
               <p className="text-body">
-                {f.person} {f.rating != null && <Rating value={f.rating} count={f.reviews} />}
+                {stall.contactPerson} {rating != null && <Rating value={rating} count={stall.ratingCount} />}
               </p>
-              <p className="font-hand text-hand max-w-155">&ldquo;{f.about}&rdquo;</p>
+              {about && <p className="font-hand text-hand max-w-155">&ldquo;{about}&rdquo;</p>}
             </div>
           </div>
           <div className="flex flex-col items-end gap-2">
-            {f.approval === 'approved' && (
-              <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] font-bold">
-                <CheckIcon size={14} />
-                {t('approved')}
-              </span>
-            )}
+            <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] font-bold">
+              <CheckIcon size={14} />
+              {t('approved')}
+            </span>
             <div className="flex flex-wrap justify-end gap-2">
-              <Chip onClick={() => Notification.success({ text: t('savedToast', { name: f.stall }) })}>
+              <Chip onClick={() => Notification.success({ text: t('savedToast', { name: stall.stallName }) })}>
                 {t('save')}
               </Chip>
               <ButtonLink to="/messages">{t('message')}</ButtonLink>
@@ -149,16 +195,16 @@ const StallProfilePage = () => {
         </div>
         <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
           <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
-            <b className="block text-[17px] tabular-nums">{f.rating ?? '—'}</b>
-            <span className="text-ink-muted text-[12px]">{t('stats.reviews', { count: f.reviews })}</span>
+            <b className="block text-[17px] tabular-nums">{rating ?? '—'}</b>
+            <span className="text-ink-muted text-[12px]">{t('stats.reviews', { count: stall.ratingCount })}</span>
           </div>
           <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
-            <b className="block text-[17px] tabular-nums">{f.markets.length}</b>
-            <span className="text-ink-muted text-[12px]">{t('stats.markets', { count: f.markets.length })}</span>
+            <b className="block text-[17px] tabular-nums">{stall.markets.length}</b>
+            <span className="text-ink-muted text-[12px]">{t('stats.markets', { count: stall.markets.length })}</span>
           </div>
           <div className="bg-surface-sunken rounded-sm px-1 py-2 text-center">
-            <b className="block text-[17px] tabular-nums">{since}</b>
-            <span className="text-ink-muted text-[12px]">{t('stats.since')}</span>
+            <b className="block text-[17px] tabular-nums">{stall.orderCutoffHours}</b>
+            <span className="text-ink-muted text-[12px]">{t('stats.cutoff')}</span>
           </div>
         </div>
       </Card>
@@ -184,7 +230,7 @@ const StallProfilePage = () => {
             legend={t('stock.availableOn')}
             name="stall-day"
             value={String(day)}
-            onChange={(v) => setDay(Number(v))}
+            onChange={(v) => setPickedDay(Number(v))}
             options={[1, 2, 3, 4, 5, 6, 0].map((d) => ({
               value: String(d),
               label: dayName(d, 'long'),
@@ -192,14 +238,18 @@ const StallProfilePage = () => {
               disabled: !availableDays.includes(d),
             }))}
           />
-          <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-            {stallProducts.map((p) => (
-              <ProductCard key={p.id} product={p} showMarket={false} />
-            ))}
-          </div>
+          {productsLoad.kind === 'loading' ? (
+            <MarketCardSkeleton count={3} />
+          ) : (
+            <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+              {stallProducts.map((p) => (
+                <ProductCard key={p.id} product={p} showMarket={false} />
+              ))}
+            </div>
+          )}
           {!availableDays.includes(day) && (
             <p className="text-small text-ink-muted">
-              {t('stock.notSelling', { stall: f.stall, day: dayName(day, 'long'), days })}
+              {t('stock.notSelling', { stall: stall.stallName, day: dayName(day, 'long'), days })}
             </p>
           )}
         </div>
@@ -209,13 +259,13 @@ const StallProfilePage = () => {
         <div className="flex flex-col gap-4">
           <Card className="flex flex-col gap-4 p-6">
             <div className="flex flex-wrap items-baseline gap-3">
-              <b className="font-hand text-[48px] leading-none tabular-nums">{f.rating ?? '—'}</b>
-              {f.rating != null && <Rating value={f.rating} />}
-              <span className="text-small text-ink-muted">{t('reviews.summary', { count: f.reviews })}</span>
+              <b className="font-hand text-[48px] leading-none tabular-nums">{rating ?? '—'}</b>
+              {rating != null && <Rating value={rating} />}
+              <span className="text-small text-ink-muted">{t('reviews.summary', { count: stall.ratingCount })}</span>
             </div>
-            {reviewTags[f.id] && (
+            {reviewTags[stall.farmerId] && (
               <div className="flex flex-wrap gap-2">
-                {reviewTags[f.id].map(([tag, count]) => (
+                {reviewTags[stall.farmerId].map(([tag, count]) => (
                   <span
                     key={tag}
                     className="bg-brand-tint text-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[14px]"
@@ -297,60 +347,69 @@ const StallProfilePage = () => {
                   {
                     key: 'market',
                     label: t('about.table.market'),
-                    render: (row: { id: number }) => {
-                      const m = markets.find((mm) => mm.id === row.id)!;
-                      return (
-                        <>
-                          <b>{m.name}</b>
-                          <span className="text-ink-muted mt-0.5 block text-[12px]">{m.address}</span>
-                        </>
-                      );
-                    },
+                    render: (row: StallMarketDto) => (
+                      <>
+                        <b>{row.marketName}</b>
+                        <span className="text-ink-muted mt-0.5 block text-[12px]">
+                          {marketById(row.marketId)?.address}
+                        </span>
+                      </>
+                    ),
                   },
-                  { key: 'days', label: t('about.table.days'), render: () => days },
-                  { key: 'window', label: t('about.table.window'), render: () => pickup },
-                  { key: 'stall', label: t('about.table.stall'), render: () => f.stallCode },
+                  {
+                    key: 'days',
+                    label: t('about.table.days'),
+                    render: (row: StallMarketDto) => dayNames(row.operatingDays.map((d) => d.dayOfWeek)),
+                  },
+                  { key: 'window', label: t('about.table.window'), render: (row: StallMarketDto) => windowOf(row) },
+                  { key: 'stall', label: t('about.table.stall'), render: (row: StallMarketDto) => row.stallCode ?? '' },
                   {
                     key: 'dir',
                     label: '',
                     align: 'actions',
-                    render: (row: { id: number }) => {
-                      const m = markets.find((mm) => mm.id === row.id)!;
-                      return <DirectionsButton to={{ lat: m.lat, lng: m.lng }} name={m.name} />;
+                    render: (row: StallMarketDto) => {
+                      const m = marketById(row.marketId);
+                      const lat = row.stallLatitude != null ? Number(row.stallLatitude) : m?.lat;
+                      const lng = row.stallLongitude != null ? Number(row.stallLongitude) : m?.lng;
+                      return lat != null && lng != null ? (
+                        <DirectionsButton to={{ lat, lng }} name={stall.stallName} />
+                      ) : null;
                     },
                   },
                 ]}
-                rows={f.markets.map((id) => ({ id }))}
+                rows={stall.markets}
               />
-              <p className="text-small text-ink-muted">{t('about.cutoffNote', { count: f.cutoffHours })}</p>
+              <p className="text-small text-ink-muted">{t('about.cutoffNote', { count: stall.orderCutoffHours })}</p>
             </section>
 
             <section className="flex flex-col gap-3">
               <h2 className="text-h2">{t('tabs.about')}</h2>
-              <p className="text-body max-w-155">{f.about}</p>
+              {about && <p className="text-body max-w-155">{about}</p>}
               <p className="text-body max-w-155">{t('about.disclaimer')}</p>
               <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
                 <dt className="text-ink-muted">{t('about.contact')}</dt>
-                <dd className="m-0">
-                  {f.person} · {f.phone}
-                </dd>
-                <dt className="text-ink-muted">{t('about.email')}</dt>
-                <dd className="m-0">{f.email}</dd>
-                <dt className="text-ink-muted">{t('about.since')}</dt>
-                <dd className="m-0">{since}</dd>
+                <dd className="m-0">{stall.contactPerson}</dd>
               </dl>
             </section>
           </div>
 
           <div className="flex flex-col gap-4">
-            <MarketMap label={t('about.mapLabel', { name: f.stall })} markers={mapMarkers} className="min-h-72" />
-            <Card className="flex flex-col gap-2 p-4">
-              <h3 className="text-h3">{t('about.findingTitle')}</h3>
-              <p className="text-small">{t('about.findingText', { code: f.stallCode, window: pickup })}</p>
-              <ButtonLink to={`/markets/${f.markets[0]}`} variant="secondary" size="sm">
-                {t('about.preorder')}
-              </ButtonLink>
-            </Card>
+            <MarketMap
+              label={t('about.mapLabel', { name: stall.stallName })}
+              markers={mapMarkers}
+              className="min-h-72"
+            />
+            {firstMarket && (
+              <Card className="flex flex-col gap-2 p-4">
+                <h3 className="text-h3">{t('about.findingTitle')}</h3>
+                <p className="text-small">
+                  {t('about.findingText', { code: firstMarket.stallCode ?? '', window: firstWindow })}
+                </p>
+                <ButtonLink to={`/markets/${firstMarket.marketId}`} variant="secondary" size="sm">
+                  {t('about.preorder')}
+                </ButtonLink>
+              </Card>
+            )}
           </div>
         </div>
       )}

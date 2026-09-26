@@ -45,5 +45,8 @@
   "map": {
     "label": "Karte der Ergebnisse",
     "note": "Ergebnisse mit Standort werden markiert. Auf dem Handy wechselt ein Schalter „Liste / Karte“ zwischen beiden Ansichten."
+  },
+  "error": {
+    "noun": "Ergebnisse"
   }
 }

@@ -80,5 +80,8 @@
     "sentText": "Un administrateur va examiner cette annonce.",
     "button": "Signaler cette annonce",
     "note": "Prix erroné, photo erronée ou quelque chose qui n'a pas sa place sur un marché fermier."
+  },
+  "error": {
+    "noun": "produit"
   }
 }

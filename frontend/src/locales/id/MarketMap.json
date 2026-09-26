@@ -28,5 +28,9 @@
     "title": "Tidak ada yang ditampilkan di peta",
     "text": "Kedua lapisan dimatikan. Nyalakan kembali pasar atau lapak untuk melihat penanda.",
     "action": "Tampilkan keduanya"
-  }
+  },
+  "error": {
+    "noun": "pasar"
+  },
+  "stallsNoun": "kios"
 }

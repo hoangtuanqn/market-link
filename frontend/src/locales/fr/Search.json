@@ -45,5 +45,8 @@
   "map": {
     "label": "Carte des résultats",
     "note": "Les résultats avec une adresse sont épinglés. Sur mobile, un bouton « Liste / Carte » permet de passer de l'un à l'autre."
+  },
+  "error": {
+    "noun": "résultats"
   }
 }

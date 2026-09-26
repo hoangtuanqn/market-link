@@ -82,5 +82,11 @@
       "short": "huỷ và đã báo khách",
       "text": "Hàng trả lại kho của sạp và đơn kết thúc ở trạng thái đã huỷ, không phải bị từ chối, vì sạp không làm gì sai."
     }
+  },
+  "error": {
+    "noun": "chợ",
+    "required": "Trường này là bắt buộc.",
+    "days": "Chọn ít nhất một ngày họp chợ.",
+    "close": "Giờ đóng phải sau giờ mở."
   }
 }

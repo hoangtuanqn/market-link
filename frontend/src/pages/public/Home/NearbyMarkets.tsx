@@ -1,8 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import MarketCard from '@/components/MarketCard';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import type { MarketType } from '@/types/market.types';
 
-const NearbyMarkets = ({ markets }: { markets: MarketType[] }) => {
+type NearbyMarketsProps = {
+  markets: MarketType[];
+  /** True while the request is out: as many placeholders as the grid is about to hold (FR-084). */
+  loading?: boolean;
+};
+
+const NearbyMarkets = ({ markets, loading = false }: NearbyMarketsProps) => {
   const { t } = useTranslation('Home');
   return (
     <section className="flex flex-col gap-4">
@@ -11,9 +18,7 @@ const NearbyMarkets = ({ markets }: { markets: MarketType[] }) => {
         <span className="text-small text-ink-muted">{t('nearby.note')}</span>
       </div>
       <div className="grid gap-6 md:grid-cols-2">
-        {markets.map((m) => (
-          <MarketCard key={m.id} market={m} />
-        ))}
+        {loading ? <MarketCardSkeleton count={4} /> : markets.map((m) => <MarketCard key={m.id} market={m} />)}
       </div>
     </section>
   );

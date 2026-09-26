@@ -19,7 +19,8 @@
     "about": "About the stall",
     "aboutHint": "Shown in handwriting on your stall page. One or two sentences.",
     "savedText": "Stall details saved.",
-    "save": "Save stall details"
+    "save": "Save stall details",
+    "accountHint": "Phone, email and address come from your account."
   },
   "cutoff": {
     "title": "Order cutoff",
@@ -46,9 +47,26 @@
     "useMarket": "Use the market's location",
     "savedText": "Markets, days and pickup windows saved. Slots for next week follow the new windows.",
     "save": "Save markets and pickup",
-    "slotsLink": "Manage pickup slots"
+    "slotsLink": "Manage pickup slots",
+    "notApproved": "Markets, days and pickup windows open once an admin has approved your stall.",
+    "windowError": "{{market}}: pick at least one day and end the window after it starts.",
+    "joined": "{{name}} added to your stall.",
+    "left": "{{name}} removed from your stall."
   },
   "map": {
     "yourStall": "Your stall"
+  },
+  "error": {
+    "noun": "your stall"
+  },
+  "status": {
+    "approved": "Approved stall",
+    "pending": "Waiting for approval",
+    "rejected": "Application declined",
+    "suspended": "Stall suspended"
+  },
+  "errors": {
+    "required": "This field is required.",
+    "cutoff": "Use a whole number between {{min}} and {{max}} hours."
   }
 }

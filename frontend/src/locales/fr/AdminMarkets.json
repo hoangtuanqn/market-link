@@ -36,5 +36,8 @@
   },
   "toast": {
     "removed": "{{name}} retiré de la liste."
+  },
+  "error": {
+    "noun": "marchés"
   }
 }

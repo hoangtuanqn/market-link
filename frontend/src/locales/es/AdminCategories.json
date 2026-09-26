@@ -55,5 +55,9 @@
     "categoryAdded": "Categoría añadida. Los puestos ya pueden elegirla.",
     "categoryRemoved": "{{name}} eliminada.",
     "promoted": "{{name}} ya está en el selector de todos los puestos."
+  },
+  "error": {
+    "noun": "categorías",
+    "nameRequired": "Ponle un nombre a la categoría."
   }
 }
