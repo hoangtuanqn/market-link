@@ -1,6 +1,8 @@
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { MarketType } from '@/types/market.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
+import type { ClosureHandling, ClosureType } from '@/data/admin';
+import { dayName, formatDate } from '@/lib/format';
 
 /** Một chợ đúng như contract §3 trả về: camelCase, giờ "HH:mm", ngày họp 0…6 (0 = Chủ nhật). */
 export type MarketDto = {
@@ -57,6 +59,24 @@ export type MarketInput = {
   operatingDays: number[];
 };
 
+/**
+ * Một ngày đóng cửa như contract trả về (chưa có FR chính thức — xem migration
+ * V20260926014__create_market_closures_table.sql). `closedOn` là "yyyy-MM-dd", `createdAt` ISO.
+ */
+export type MarketClosureDto = {
+  id: number;
+  marketId: number;
+  closedOn: string;
+  reason: string | null;
+  handling: ClosureHandling;
+  ordersAffected: number;
+  announced: boolean;
+  createdByName: string;
+  createdAt: string;
+};
+
+export type MarketClosureInput = { closedOn: string; reason?: string; handling: ClosureHandling };
+
 export type CategoryInput = { name: string; description?: string; icon?: string; sortOrder: number };
 
 /** Hình dạng mà màn Admin → Categories đang dùng. `count` là số sản phẩm — có thật từ cụm C3, trước đó là 0. */
@@ -86,6 +106,27 @@ export const toMarket = (dto: MarketDto): MarketType => ({
   stalls: dto.farmerCount,
   images: dto.images,
 });
+
+/** "yyyy-MM-dd" (no timezone) → a local midnight Date, so weekday/format read the calendar date as typed. */
+const parseIsoDate = (isoDate: string): Date => {
+  const [y, m, d] = isoDate.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+
+export const toClosure = (dto: MarketClosureDto): ClosureType => {
+  const date = parseIsoDate(dto.closedOn);
+  return {
+    id: dto.id,
+    marketId: dto.marketId,
+    date: formatDate(date),
+    weekday: dayName(date.getDay(), 'long'),
+    reason: dto.reason ?? '',
+    handling: dto.handling,
+    orders: dto.ordersAffected,
+    announced: dto.announced,
+    by: `${dto.createdByName} · ${formatDate(new Date(dto.createdAt))}`,
+  };
+};
 
 export const toCategory = (dto: CategoryDto): CategoryType => ({
   id: dto.id,
@@ -146,6 +187,21 @@ class CatalogApi {
   /** Xoá mềm: chợ biến mất khỏi trang khách, đơn cũ vẫn trỏ về được. */
   static deactivateMarket = async (id: number) => {
     await privateApi.delete<ApiResponse<null>>(`/admin/markets/${id}`);
+  };
+
+  /** Raw DTOs, not `toClosure`-mapped: the admin form keeps `closedOn` around to sync edits back on submit. */
+  static listClosures = async (marketId: number) => {
+    const response = await privateApi.get<ApiResponse<MarketClosureDto[]>>(`/admin/markets/${marketId}/closures`);
+    return response.data.data;
+  };
+
+  static createClosure = async (marketId: number, input: MarketClosureInput) => {
+    const response = await privateApi.post<ApiResponse<MarketClosureDto>>(`/admin/markets/${marketId}/closures`, input);
+    return toClosure(response.data.data);
+  };
+
+  static deleteClosure = async (marketId: number, closureId: number) => {
+    await privateApi.delete<ApiResponse<null>>(`/admin/markets/${marketId}/closures/${closureId}`);
   };
 
   /** Public — chỉ danh mục đang bật, đúng thứ tự hiện trong bộ lọc. */

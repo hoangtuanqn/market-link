@@ -1,7 +1,7 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
-import CatalogApi, { type MarketInput } from '@/api-requests/catalog.requests';
+import CatalogApi, { toClosure, type MarketClosureDto, type MarketInput } from '@/api-requests/catalog.requests';
 import { CheckIcon } from '@/components/icons';
 import LocationPicker from '@/components/LocationPicker';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
@@ -13,13 +13,7 @@ import { Field, SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { HCMC_DISTRICTS } from '@/config/districts';
 import { ADMIN_MARKETS_PATH } from '@/constants/nav';
-import {
-  CLOSURE_HANDLINGS,
-  closures as seedClosures,
-  marketAdmin,
-  type ClosureHandling,
-  type ClosureType,
-} from '@/data/admin';
+import { CLOSURE_HANDLINGS, marketAdmin, type ClosureHandling, type ClosureType } from '@/data/admin';
 import useRequest from '@/hooks/useRequest';
 import { dayName } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
@@ -53,6 +47,9 @@ type FormState = {
 
 /** Keys are the form's own; the server's camelCase field names are translated onto them in `fieldErrors`. */
 type FormErrors = Partial<Record<'name' | 'address' | 'days' | 'open' | 'close' | 'lat' | 'lng' | 'images', string>>;
+
+/** A closed day plus the raw ISO date `toClosure` drops, so a newly added one can be synced on submit. */
+type FormClosure = ClosureType & { closedOn: string };
 
 /** A blank market, for the add form. */
 const EMPTY: FormState = {
@@ -125,14 +122,21 @@ const AdminMarketFormPage = () => {
     setEdited((current) => (typeof next === 'function' ? next(current ?? loadedForm) : next));
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
-  // Closed days are still the demo set (@/data/admin); same mirror-until-edited pattern.
-  const loadedClosures = existing ? seedClosures.filter((c) => c.marketId === existing.id) : [];
-  const [editedClosures, setEditedClosures] = useState<ClosureType[] | null>(null);
+  // Closed days: fetched independently of the market load, same isNew/validId guard as it. Never persisted until
+  // the whole form is submitted (see the diff-and-sync in onSubmit), same mirror-until-edited pattern as the rest.
+  const { state: closuresLoad } = useRequest(`admin-market-closures:${id ?? 'new'}`, () =>
+    isNew || !validId ? Promise.resolve<MarketClosureDto[]>([]) : CatalogApi.listClosures(marketId),
+  );
+  const loadedClosures: FormClosure[] =
+    closuresLoad.kind === 'ready'
+      ? closuresLoad.data.map((dto) => ({ ...toClosure(dto), closedOn: dto.closedOn }))
+      : [];
+  const [editedClosures, setEditedClosures] = useState<FormClosure[] | null>(null);
   const closures = editedClosures ?? loadedClosures;
-  const setClosures = (next: (current: ClosureType[]) => ClosureType[]) =>
+  const setClosures = (next: (current: FormClosure[]) => FormClosure[]) =>
     setEditedClosures((current) => next(current ?? loadedClosures));
   const [addOpen, setAddOpen] = useState(false);
-  const [removingClosure, setRemovingClosure] = useState<ClosureType | null>(null);
+  const [removingClosure, setRemovingClosure] = useState<FormClosure | null>(null);
   const [draft, setDraft] = useState({ date: '2026-10-11', reason: '', handling: 'move' as ClosureHandling });
   // In-flight uploads only, never persisted: each id becomes a skeleton tile until the URL lands in form.images.
   const [uploadingImages, setUploadingImages] = useState<string[]>([]);
@@ -246,6 +250,30 @@ const AdminMarketFormPage = () => {
     setSaving(true);
     try {
       const saved = existing ? await CatalogApi.updateMarket(existing.id, input) : await CatalogApi.createMarket(input);
+
+      // Closed days only exist locally until now (mirror-until-edited, same as the rest of the form); sync the
+      // difference against what the server had. Skipped entirely if the panel was never touched.
+      if (editedClosures) {
+        const loadedIds = new Set(loadedClosures.map((c) => c.id));
+        const currentIds = new Set(editedClosures.map((c) => c.id));
+        const toCreate = editedClosures.filter((c) => !loadedIds.has(c.id));
+        const toRemove = loadedClosures.filter((c) => !currentIds.has(c.id));
+        try {
+          await Promise.all([
+            ...toCreate.map((c) =>
+              CatalogApi.createClosure(saved.id, {
+                closedOn: c.closedOn,
+                reason: c.reason || undefined,
+                handling: c.handling,
+              }),
+            ),
+            ...toRemove.map((c) => CatalogApi.deleteClosure(saved.id, c.id)),
+          ]);
+        } catch (closureError) {
+          Notification.error({ text: Helper.getErrorMessage(closureError, tc('errors.network')) });
+        }
+      }
+
       Notification.success({ text: t('toast.saved', { name: saved.name }) });
       navigate(ADMIN_MARKETS_PATH);
     } catch (error) {
@@ -276,9 +304,10 @@ const AdminMarketFormPage = () => {
       {
         id: Date.now(),
         marketId: existing?.id ?? 0,
+        closedOn: draft.date,
         date: `${day}/${month}/${year}`,
         weekday: new Date(draft.date).toLocaleDateString('en-GB', { weekday: 'long' }),
-        reason: draft.reason.trim() || t('closures.noReason'),
+        reason: draft.reason.trim(),
         handling: draft.handling,
         orders: 0,
         announced: false,
@@ -297,7 +326,7 @@ const AdminMarketFormPage = () => {
     Notification.success({ text: t('closures.removed') });
   };
 
-  const closureColumns: TableColumn<ClosureType>[] = [
+  const closureColumns: TableColumn<FormClosure>[] = [
     {
       key: 'date',
       label: t('closures.col.date'),
