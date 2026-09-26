@@ -1,3 +1,4 @@
+-- FR-030…038, D-01 (một đơn = một Farmer = một chợ = một slot), D-04 (6 trạng thái), D-05 (cutoff).
 -- All keys are BIGINT UNSIGNED like V20260926011
 CREATE TABLE orders (
     id            BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
