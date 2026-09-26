@@ -162,17 +162,19 @@ public class AuthExceptionHandler {
         return error(HttpStatus.CONFLICT, "PASSWORD_ALREADY_SET", e.getMessage(), List.of());
     }
 
+    /** One detail per taken field, so email and phone are both marked at once (QA BUG-005). */
     @ExceptionHandler(DuplicateAccountException.class)
     ResponseEntity<ApiResource<Void>> duplicate(DuplicateAccountException e) {
-        return error(
-                HttpStatus.CONFLICT,
-                "DUPLICATE_ACCOUNT",
-                e.getMessage(),
-                List.of(
-                        FieldErrorResource.builder()
-                                .field(e.getField())
-                                .message(e.getMessage())
-                                .build()));
+        List<FieldErrorResource> details =
+                e.getFields().entrySet().stream()
+                        .map(
+                                f ->
+                                        FieldErrorResource.builder()
+                                                .field(f.getKey())
+                                                .message(f.getValue())
+                                                .build())
+                        .toList();
+        return error(HttpStatus.CONFLICT, "DUPLICATE_ACCOUNT", e.getMessage(), details);
     }
 
     /**

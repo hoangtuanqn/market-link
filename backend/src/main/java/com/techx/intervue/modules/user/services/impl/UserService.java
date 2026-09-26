@@ -30,6 +30,7 @@ import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import com.techx.intervue.services.interfaces.JobQueueInterface;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -82,12 +83,16 @@ public class UserService extends BaseService implements UserServiceInterface {
         }
         String email = request.email().trim().toLowerCase(Locale.ROOT);
         String phone = request.phone().trim();
+        // Check both before failing, so the form marks every taken field in one go (QA BUG-005)
+        Map<String, String> taken = new LinkedHashMap<>();
         if (userRepository.existsByEmail(email)) {
-            throw new DuplicateAccountException("email", "This email is already registered.");
+            taken.put("email", "This email is already registered.");
         }
         if (userRepository.existsByPhone(phone)) {
-            throw new DuplicateAccountException(
-                    "phone", "This phone number is already registered.");
+            taken.put("phone", "This phone number is already registered.");
+        }
+        if (!taken.isEmpty()) {
+            throw new DuplicateAccountException(taken);
         }
         User user =
                 userRepository.save(
