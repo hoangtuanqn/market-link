@@ -17,6 +17,12 @@ pre-commit:
       run: ./mvnw -q spotless:apply
       stage_fixed: true
 
+commit-msg:
+  commands:
+    # R-10: commit messages are 100% English
+    english-only:
+      run: bash scripts/git-guard.sh commit-msg {1}
+
 pre-push:
   commands:
     # H-4: no direct push / deleting main, dev

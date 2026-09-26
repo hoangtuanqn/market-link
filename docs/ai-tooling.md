@@ -1,7 +1,7 @@
 # AI tooling — plugin dùng chung cho cả team
 
 Chủ sở hữu: **AI lead**. Cấu hình nằm ở `.claude/settings.json` (commit sẵn), áp dụng cho mọi người
-dùng Claude Code trong repo này. Luật code và scope vẫn theo `CLAUDE.md` (R-01…R-08).
+dùng Claude Code trong repo này. Luật code và scope vẫn theo `CLAUDE.md` (R-01…R-10).
 
 ## Cài đặt (một lần)
 

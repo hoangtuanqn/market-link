@@ -33,6 +33,18 @@ Customer đặt trước → Farmer duyệt → nhận hàng tại stall. Ba vai
 - **R-08** · Không trộn `dev` và `main`: tuân thủ luật cứng H-1…H-10 trong `CONTRIBUTING.md` §0 và `AGENTS.md`.
   Trước khi sửa file, chạy `git branch --show-current`; đang ở `main`/`dev` thì tạo nhánh từ `origin/dev` trước.
   Không commit, push, merge hay force-push vào `main`/`dev`; nhánh làm việc chỉ cập nhật từ `dev`.
+- **R-09** · Comment trong code viết **100% tiếng Anh**, ở mọi loại file: Java (cả Javadoc), TS/TSX, CSS, SQL, YAML,
+  shell, Makefile, Dockerfile, HTML prototype. Gồm cả `TODO`/`FIXME` và lý do đi kèm `eslint-disable`,
+  `@SuppressWarnings`, `@ts-expect-error`. Luật này **không** áp dụng cho: chữ hiển thị cho người dùng (`locales/*`,
+  bản `vi` vẫn là tiếng Việt), dữ liệu seed/demo và dữ liệu mẫu trong test, tài liệu `.md`.
+  Comment tiếng Việt có sẵn: sửa tới đoạn nào thì dịch comment của đoạn đó; dịch phần còn lại bằng PR `chore` riêng,
+  không trộn vào PR tính năng. **Migration đã merge giữ nguyên** (R-03): Flyway kiểm tra checksum cả phần comment, sửa
+  là `migrate` báo lỗi trên DB đã áp dụng file đó. Chỉ migration mới phải viết tiếng Anh.
+- **R-10** · Mọi chữ đi vào lịch sử git viết **100% tiếng Anh**: commit message (dòng tiêu đề **và** phần thân), merge
+  commit, chú thích tag (`git tag -a -m`), tiêu đề và mô tả PR (*Squash and merge* lấy tiêu đề PR làm commit message).
+  Dạng `<type>(FR-xxx): <English description>` theo `CONTRIBUTING.md` §4. Tên riêng như tên chợ giữ nguyên, đặt trong
+  dấu nháy. AI cũng vậy: người dùng chat tiếng Việt thì commit và comment vẫn viết tiếng Anh. Commit cũ đã có tiếng
+  Việt **không được viết lại** (H-4 cấm force-push `dev`/`main`); luật chỉ áp dụng cho commit mới.
 
 > R-01, R-03, R-04, R-06 là bản đề xuất do AI soạn khi tạo file này — LEAD xác nhận hoặc sửa.
 
@@ -85,3 +97,6 @@ Code khởi tạo từ dự án cũ InterVue nên còn lệch so với tài li�
   **LEAD đã chốt 25/09/2026:** toàn dự án dùng `/api/v1` và JSON `camelCase`; cột database giữ
   `snake_case`. `docs/api-contract.md` đã viết lại theo quyết định này và bổ sung đủ các endpoint
   auth đang chạy thật. Không còn chỗ nào phải "tạm theo code hiện có" nữa.
+- ~2.150 dòng comment tiếng Việt trong `backend/src`, `frontend/src` và hạ tầng (docker, scripts, prototype) đã
+  dịch sang tiếng Anh (PR #153, đếm ngày 26/09/2026). 30/638 commit vẫn có tiếng Việt (26 nằm trên `dev`); R-09 và
+  R-10 áp dụng từ nay, lịch sử commit không viết lại.
