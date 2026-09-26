@@ -67,7 +67,7 @@ export type PresenceFrame = { userId: number; online: boolean; lastSeenAt: strin
 export type ReportReason = 'spam' | 'abuse' | 'scam' | 'other';
 export type ReportStatus = 'new' | 'reviewed' | 'actioned';
 
-/** Hàng đợi của admin (AdminReportListItemResource). */
+/** The admin's queue (AdminReportListItemResource). */
 export type ReportListItem = {
   reportId: number;
   messageId: number;
@@ -81,7 +81,7 @@ export type ReportListItem = {
   reportedAt: string;
 };
 
-/** Một tin trong cửa sổ ngữ cảnh (spec §8.3: tin bị báo + tối đa 5 tin mỗi bên). */
+/** One message in the context window (spec §8.3: the reported message + up to 5 messages on each side). */
 export type ModeratedMessage = {
   id: number;
   senderId: number;

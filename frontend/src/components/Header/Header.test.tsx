@@ -21,14 +21,14 @@ describe('Header', () => {
     await i18n.changeLanguage('en');
   });
 
-  /** FR-113: số tin chưa đọc nằm ngay trên biểu tượng, và trình đọc màn hình nghe được nó. */
+  /** FR-113: the unread count sits right on the icon, and a screen reader can hear it. */
   it('shows how many messages are unread', () => {
     renderHeader();
 
     expect(screen.getByRole('button', { name: 'Messages, 3 unread' })).toBeInTheDocument();
   });
 
-  /** Ngôn ngữ có số ít ≠ số nhiều: phải để i18next chọn dạng theo `count`, không gọi cứng key `_one`. */
+  /** A language's singular ≠ plural: let i18next choose the form by `count`, do not hardcode the `_one` key. */
   it('lets the language pick the plural form of the unread labels', async () => {
     i18n.addResources('fr', 'common', {
       'header.messagesUnread_one': 'Messages, {{count}} non lu',

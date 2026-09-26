@@ -6,7 +6,7 @@ import ConversationApi from '@/api-requests/conversation.requests';
 
 vi.mock('@/api-requests/conversation.requests', () => ({ default: { report: vi.fn() } }));
 
-// jsdom chưa có showModal / close của <dialog>
+// jsdom does not have <dialog>'s showModal / close yet
 beforeEach(() => {
   HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
     this.open = true;
@@ -47,7 +47,7 @@ describe('ReportDialog', () => {
     expect(screen.getAllByText(/choose a reason/i)[0]).toBeInTheDocument();
   });
 
-  /** Review Focus #4: báo lần hai → 409 → coi như đã báo. */
+  /** Review Focus #4: reporting twice → 409 → treated as already reported. */
   it('treats a second report as already reported', async () => {
     vi.mocked(ConversationApi.report).mockRejectedValue(
       Object.assign(new Error('x'), { isAxiosError: true, response: { status: 409 } }),

@@ -153,7 +153,9 @@ public class ConversationService implements ConversationServiceInterface {
                 .collect(Collectors.toMap(User::getId, Function.identity()));
     }
 
-    /** Hồ sơ stall của những người trong trang, một truy vấn; ai không phải Farmer thì không có. */
+    /**
+     * The stall profiles of the people on the page, one query; whoever is not a Farmer has none.
+     */
     private Map<Long, FarmerProfile> stallsOf(Collection<Long> userIds) {
         if (userIds.isEmpty()) {
             return Map.of();

@@ -6,13 +6,14 @@ import { useSearchParams, useLocation } from 'react-router';
 import type { ConversationSummary } from '@/types/chat.types';
 
 /**
- * Ruột chung của hai trang /messages (spec §9.3: Farmer dùng lại ĐÚNG component của Customer, chỉ khác vỏ ngoài).
+ * The shared body of both /messages pages (spec §9.3: Farmer reuses the EXACT SAME component as Customer, only the
+ * shell differs).
  *
- * Dưới `md` là HAI MÀN riêng (spec §9.2): danh sách, bấm vào mới mở hội thoại, có nút quay lại. Nhồi hai cột vào 375px
- * là không đọc được.
+ * Below `md` it is TWO SEPARATE screens (spec §9.2): the list, tapping one opens the conversation, with a back button.
+ * Squeezing two columns into 375px is unreadable.
  */
 type Props = {
-  /** Câu của trạng thái rỗng theo vai (xem ThreadList). */
+  /** The empty-state sentence, by role (see ThreadList). */
   emptyText?: string;
 };
 
@@ -23,7 +24,7 @@ export default function MessagesLayout({ emptyText }: Props) {
   const activeId = Number(params.get('c')) || null;
   const pinnedProductId = Number(params.get('product')) || undefined;
 
-  // activeId để hook giữ badge của thread đang mở ở 0 (Review Focus #14)
+  // activeId so the hook keeps the open thread's badge at 0 (Review Focus #14)
   const { threads, loading, error, reload, hasMore, loadMore, loadingMore } = useThreadList(activeId);
 
   const fallback = (location.state as { thread?: ConversationSummary } | null)?.thread;

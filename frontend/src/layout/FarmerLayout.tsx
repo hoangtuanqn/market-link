@@ -91,7 +91,7 @@ const FarmerLayout = () => {
   const { state: profileLoad } = useRequest('farmer-layout-profile', () => StallApi.myProfile());
   const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
   const stallName = profile?.stallName ?? user?.fullName ?? '';
-  // FR-113: số tin chưa đọc thật, thay cho số 1 viết cứng
+  // FR-113: the real unread count, replacing the hardcoded 1
   const chatUnread = useChatUnread();
 
   const nav: ShellNavGroup[] = NAV.map((g) => ({

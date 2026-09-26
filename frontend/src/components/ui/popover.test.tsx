@@ -48,7 +48,7 @@ describe('Popover', () => {
     expect(screen.getByRole('link', { name: /see all/i })).toHaveAttribute('href', '/messages');
   });
 
-  /** Rê chuột tới là mở; bấm vào biểu tượng lúc đó không được làm nó biến mất. */
+  /** Hovering opens it; clicking the icon at that point must not make it disappear. */
   it('stays open when a mouse user clicks after hovering', async () => {
     setup();
     const button = screen.getByRole('button', { name: 'Messages' });

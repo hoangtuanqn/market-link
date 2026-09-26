@@ -187,7 +187,8 @@ public class ModerationService implements ModerationServiceInterface {
     }
 
     /**
-     * Ảnh của một tin bị báo cáo, để admin mở qua GET /attachments/{id}. Hiếm, nên hỏi từng tin.
+     * The image of one reported message, for the admin to open through GET /attachments/{id}. Rare,
+     * so it is asked for per message.
      */
     private Long attachmentIdOf(Long messageId) {
         return attachments.findByMessageIdIn(List.of(messageId)).stream()

@@ -12,7 +12,7 @@ const http = (status: number) =>
   });
 
 describe('sendErrorKey', () => {
-  /** Review Focus #6: stall bị đình chỉ (D-09) — thread đọc được nhưng không gửi được. */
+  /** Review Focus #6: a suspended stall (D-09) — the thread can be read but not sent to. */
   it('says the stall is not taking messages on 409', () => {
     expect(sendErrorKey(http(409), 'text')).toBe('chat.closed');
   });

@@ -76,7 +76,7 @@ export function applyPresence(threads: ConversationSummary[], frame: PresenceFra
   );
 }
 
-/** Admin ẩn một tin (FR-116): bỏ nó khỏi thread đang mở. Không có thì trả đúng mảng cũ. */
+/** An admin hides a message (FR-116): remove it from the open thread. Returns the exact same array if there is none. */
 export function removeMessage(list: ChatMessageItem[], messageId: number): ChatMessageItem[] {
   return list.some((m) => m.id === messageId) ? list.filter((m) => m.id !== messageId) : list;
 }

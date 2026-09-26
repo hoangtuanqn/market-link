@@ -11,7 +11,10 @@ const NOTE_MAX = 255;
 
 type Props = { messageId: number | null; onClose: () => void; onReported: (messageId: number) => void };
 
-/** FR-116. Mở khi `messageId` khác null. Người dùng dựng lại bằng `key={messageId}` nên state tự sạch mỗi lần mở. */
+/**
+ * FR-116. Opens when `messageId` is not null. Remounted by the caller with `key={messageId}` so state clears itself on
+ * every open.
+ */
 export default function ReportDialog({ messageId, onClose, onReported }: Props) {
   const { t } = useTranslation('common');
   const [reason, setReason] = useState<ReportReason | null>(null);
@@ -27,7 +30,7 @@ export default function ReportDialog({ messageId, onClose, onReported }: Props) 
       await ConversationApi.report(messageId, { reason, note: note.trim() || undefined });
       onReported(messageId);
     } catch (error) {
-      // uq_report_once: đã báo rồi thì kết quả với người dùng là như nhau
+      // uq_report_once: once already reported, the result looks the same to the user
       if (isAxiosError(error) && error.response?.status === 409) onReported(messageId);
       else setFailed(true);
     } finally {

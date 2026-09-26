@@ -13,5 +13,6 @@ public record ConversationResource(
         Instant lastMessageAt,
         long unreadCount,
         Instant createdAt,
-        // Lúc người kia đọc tới gần nhất: "Seen" còn sau khi tải lại trang. Vắng nếu chưa đọc.
+        // The last moment the other person read up to: "Seen" survives a page reload. Absent if not
+        // read yet.
         Instant otherReadAt) {}

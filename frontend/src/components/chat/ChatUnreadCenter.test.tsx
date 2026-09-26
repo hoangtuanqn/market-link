@@ -32,7 +32,7 @@ describe('ChatUnreadCenter', () => {
     // Simulate realtime event
     const subscribeMock = vi.mocked(realtime.subscribe);
     const callback = subscribeMock.mock.calls[0][1];
-    // Handler STOMP nhận thân khung là chuỗi JSON, không phải object
+    // The STOMP handler receives the frame body as a JSON string, not an object
     act(() => callback(JSON.stringify({ type: 'updated', conversationId: 42, unreadCount: 3 })));
 
     await waitFor(() => expect(ChatUnreadStore.getUnread()).toBe(5));
@@ -51,7 +51,7 @@ describe('ChatUnreadCenter', () => {
     await waitFor(() => expect(ChatUnreadStore.getUnread()).toBe(8));
   });
 
-  /** Đăng xuất: badge của người trước không được nán lại, và không gọi API khi không có phiên. */
+  /** Sign-out: the previous person's badge must not linger, and no API call is made with no session. */
   it('resets to zero when nobody is signed in', () => {
     ChatUnreadStore.setUnread(6);
     vi.mocked(ConversationApi.unreadCount).mockClear();

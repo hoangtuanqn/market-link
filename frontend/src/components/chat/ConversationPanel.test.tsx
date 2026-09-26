@@ -130,7 +130,7 @@ describe('ConversationPanel', () => {
     expect(screen.getByText(/last seen/i)).toHaveTextContent('20/09');
   });
 
-  /** Chỉ báo cáo được tin của người kia; tin của mình không có nút. */
+  /** Only the other person's message can be reported; my own message has no button. */
   it('offers Report only on the other person’s messages', () => {
     useConversation.mockReturnValue(state({ messages: [mine(1, 1), { ...mine(2, 2), senderId: 3 }] }));
     render(<ConversationPanel conversationId={42} thread={thread as never} />);

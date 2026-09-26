@@ -155,7 +155,7 @@ const AdminModerationPage = () => {
         value={tab}
         onChange={setTab}
         tabs={
-          // Reviews và hidden items còn chạy dữ liệu mẫu (SHOW_WIP); reported messages dùng API thật nên luôn có
+          // Reviews and hidden items still run on sample data (SHOW_WIP); reported messages use the real API so it is always
           SHOW_WIP
             ? [
                 { id: 'reviews', label: t('tab.reviews'), count: flagged.length },

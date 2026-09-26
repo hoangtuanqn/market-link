@@ -87,7 +87,7 @@ describe('ThreadList', () => {
     expect(onPick).toHaveBeenCalledWith(7);
   });
 
-  /** Hơn 20 thread: phải có đường tới những thread cũ hơn trang đầu. */
+  /** More than 20 threads: there must be a way to reach threads older than the first page. */
   it('shows a way to load more conversations', async () => {
     const onLoadMore = vi.fn();
     render(

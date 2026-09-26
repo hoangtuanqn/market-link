@@ -18,8 +18,8 @@ public interface FarmerProfileRepository extends JpaRepository<FarmerProfile, Lo
     Optional<FarmerProfile> findByUserId(Long userId);
 
     /**
-     * Hồ sơ stall của nhiều người một lần (danh sách thread chat); ai không phải Farmer thì không
-     * có.
+     * The stall profiles of several people at once (the chat thread list); whoever is not a Farmer
+     * has none.
      */
     List<FarmerProfile> findAllByUserIdIn(Collection<Long> userIds);
 

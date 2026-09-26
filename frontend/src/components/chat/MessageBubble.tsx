@@ -11,7 +11,7 @@ type Props = {
   senderName: string;
   /** Only meaningful for my own message: has the other person read up to here yet. */
   seen?: boolean;
-  /** Báo cáo tin nhắn của người kia (FR-116). */
+  /** Report the other person's message (FR-116). */
   onReport?: () => void;
   reported?: boolean;
 };

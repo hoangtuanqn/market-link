@@ -35,7 +35,7 @@ describe('ProductPin', () => {
     );
 
     expect(await screen.findByText('Carrot')).toBeInTheDocument();
-    // Giá đi qua lib/format (đơn vị tiền do dev quyết — hiện khoá USD): so với chính perUnit, không viết cứng ký hiệu
+    // The price goes through lib/format (the currency is a dev decision — USD is locked for now): compare against perUnit itself, do not hardcode the symbol
     expect(screen.getByText(perUnit(15000, 'kg'))).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/products/8');
   });
