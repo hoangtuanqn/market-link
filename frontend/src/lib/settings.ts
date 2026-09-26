@@ -40,7 +40,7 @@ export type Settings = {
 export const DEFAULT_SETTINGS: Settings = {
   theme: 'light',
   language: 'en',
-  currency: 'VND',
+  currency: 'USD',
   units: 'metric',
   dateFormat: 'dmy',
   clock: 'h24',
