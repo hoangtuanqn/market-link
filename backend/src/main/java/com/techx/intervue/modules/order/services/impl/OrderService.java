@@ -577,10 +577,11 @@ public class OrderService implements OrderServiceInterface {
             }
             if (delta != 0) {
                 int stockBefore = p.getStockQuantity();
+                boolean wasOrderable = RestockNotifier.orderable(p);
                 p.setStockQuantity(stockBefore - delta);
                 adjustStatusForStockChange(p, stockBefore);
                 // FR-041: lowering a quantity gives stock back
-                restock.onStockRose(p.getId(), stockBefore, p.getStockQuantity());
+                restock.afterChange(p, wasOrderable);
             }
 
             if (after == 0) {
@@ -743,9 +744,10 @@ public class OrderService implements OrderServiceInterface {
                                             OrderItem::getProductId, OrderItem::getQuantity));
             for (Product p : products) {
                 int stockBefore = p.getStockQuantity();
+                boolean wasOrderable = RestockNotifier.orderable(p);
                 p.setStockQuantity(stockBefore + qty.get(p.getId()));
                 adjustStatusForStockChange(p, stockBefore);
-                restock.onStockRose(p.getId(), stockBefore, p.getStockQuantity());
+                restock.afterChange(p, wasOrderable);
             }
         }
 
@@ -836,6 +838,15 @@ public class OrderService implements OrderServiceInterface {
                         .orElseThrow(() -> new OrderNotFoundException(orderId));
         if (order.getCustomerId() != userId) {
             throw new OrderNotYoursException();
+        }
+        // D-09: a stall that is not approved takes no orders, so nothing is suggested again
+        boolean stallOpen =
+                farmerRepository
+                        .findById(order.getFarmerId())
+                        .filter(f -> f.getApprovalStatus() == ApprovalStatus.APPROVED)
+                        .isPresent();
+        if (!stallOpen) {
+            return List.of();
         }
         List<OrderItem> lines = orderItemRepository.findByOrderId(orderId);
         Map<Long, Product> byId =

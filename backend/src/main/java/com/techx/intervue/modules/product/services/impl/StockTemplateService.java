@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.product.services.impl;
 
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
@@ -15,6 +16,7 @@ import com.techx.intervue.modules.product.requests.StockTemplateRequest;
 import com.techx.intervue.modules.product.resources.ApplyTemplateResultResource;
 import com.techx.intervue.modules.product.resources.StockTemplateItemResource;
 import com.techx.intervue.modules.product.services.interfaces.StockTemplateServiceInterface;
+import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -58,6 +60,7 @@ public class StockTemplateService implements StockTemplateServiceInterface {
     public List<StockTemplateItemResource> saveTemplates(
             long userId, StockTemplateRequest request) {
         FarmerProfile profile = mine(userId);
+        requireApproved(profile);
         List<StockTemplateRequest.TemplateItem> items = request.items();
 
         Set<String> seen = new HashSet<>();
@@ -111,6 +114,7 @@ public class StockTemplateService implements StockTemplateServiceInterface {
     @Transactional
     public ApplyTemplateResultResource applyTemplate(long userId, LocalDate targetDate) {
         FarmerProfile profile = mine(userId);
+        requireApproved(profile);
         // 0 = Sunday … 6 = Saturday; Java's DayOfWeek is Monday = 1 … Sunday = 7
         int day = targetDate.getDayOfWeek().getValue() % 7;
         Map<Long, WeeklyStockTemplate> forDay =
@@ -126,13 +130,13 @@ public class StockTemplateService implements StockTemplateServiceInterface {
                     continue;
                 }
                 WeeklyStockTemplate t = forDay.get(p.getId());
-                int stockBefore = p.getStockQuantity();
+                boolean wasOrderable = RestockNotifier.orderable(p);
                 p.setStockQuantity(t.getDefaultQuantity());
                 if (t.getDefaultPrice() != null) {
                     p.setPrice(t.getDefaultPrice());
                 }
                 refreshStatus(p);
-                restock.onStockRose(p.getId(), stockBefore, p.getStockQuantity());
+                restock.afterChange(p, wasOrderable);
                 updated++;
             }
         }
@@ -177,6 +181,16 @@ public class StockTemplateService implements StockTemplateServiceInterface {
                                     t.getDefaultPrice());
                         })
                 .toList();
+    }
+
+    /**
+     * Contract §4 / D-09: a stall that is not approved cannot edit stock or prices (403). Reading
+     * the saved templates stays allowed.
+     */
+    private static void requireApproved(FarmerProfile profile) {
+        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
+            throw new StallNotApprovedException();
+        }
     }
 
     /** R-06: the profile always comes from the token's user id. */

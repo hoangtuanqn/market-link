@@ -327,7 +327,7 @@ class ProductServiceTest {
 
         assertThat(p.getStockQuantity()).isEqualTo(40);
         assertThat(p.getStatus()).isEqualTo(ProductStatus.AVAILABLE);
-        verify(restock).onStockRose(PRODUCT_ID, 0, 40);
+        verify(restock).afterChange(p, false);
     }
 
     /**
@@ -359,5 +359,31 @@ class ProductServiceTest {
         service.update(USER_ID, PRODUCT_ID, request());
 
         assertThat(p.getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
+    }
+
+    /** FR-041: lifting the farmer's pause makes a stocked product orderable again → alert. */
+    @Test
+    void unpausingAStockedProductTellsTheRestockNotifier() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setStockQuantity(7);
+        p.setStatus(ProductStatus.UNAVAILABLE);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.AVAILABLE);
+
+        verify(restock).afterChange(p, false);
+    }
+
+    /** FR-041: an admin un-hiding a stocked product makes it orderable again → alert. */
+    @Test
+    void adminUnhideTellsTheRestockNotifier() {
+        Product p = product(FARMER_ID);
+        p.setHidden(true);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.adminUnhide(PRODUCT_ID);
+
+        verify(restock).afterChange(p, false);
     }
 }

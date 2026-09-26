@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
@@ -50,19 +52,23 @@ class ReorderTest {
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
     private OrderService service;
+    private FarmerProfileRepository farmerRepository;
 
     private final Map<Long, Product> productRows = new HashMap<>();
 
     @BeforeEach
     void setUp() {
         productRepository = mock(ProductRepository.class);
+        farmerRepository = mock(FarmerProfileRepository.class);
+        when(farmerRepository.findById(10L))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
         orderRepository = mock(OrderRepository.class);
         orderItemRepository = mock(OrderItemRepository.class);
         Clock clock = Clock.fixed(ZonedDateTime.of(2026, 9, 26, 9, 0, 0, 0, HCM).toInstant(), HCM);
         service =
                 new OrderService(
                         mock(UserRepository.class),
-                        mock(FarmerProfileRepository.class),
+                        farmerRepository,
                         mock(FarmerMarketRepository.class),
                         mock(PickupSlotRepository.class),
                         productRepository,
@@ -177,5 +183,26 @@ class ReorderTest {
 
         assertThatThrownBy(() -> service.reorder(CUSTOMER_ID, ORDER_ID))
                 .isInstanceOf(OrderNotFoundException.class);
+    }
+
+    private static FarmerProfile stall(ApprovalStatus status) {
+        return FarmerProfile.builder()
+                .id(10L)
+                .userId(40L)
+                .stallName("Vườn Út Hiền")
+                .contactPerson("Hiền")
+                .approvalStatus(status)
+                .build();
+    }
+
+    /** D-09: a suspended stall takes no orders, so nothing of its old order is suggested again. */
+    @Test
+    void reorderFromASuspendedStallSuggestsNothing() {
+        when(farmerRepository.findById(10L))
+                .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
+        product(1, 50, ProductStatus.AVAILABLE);
+        anOrderOf(CUSTOMER_ID, line(1, 3));
+
+        assertThat(service.reorder(CUSTOMER_ID, ORDER_ID)).isEmpty();
     }
 }

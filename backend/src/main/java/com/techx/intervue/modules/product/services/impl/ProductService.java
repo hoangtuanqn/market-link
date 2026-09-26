@@ -84,11 +84,12 @@ public class ProductService implements ProductServiceInterface {
         Product product = owned(profile, productId);
         Category category = activeCategory(request.categoryId());
         int stockBefore = product.getStockQuantity();
+        boolean wasOrderable = RestockNotifier.orderable(product);
         apply(product, request, category);
         refreshStatusAfterStockEdit(product, stockBefore);
         Product saved = products.save(product);
-        // FR-041: a refill from zero tells the customers who favourited this product
-        restock.onStockRose(saved.getId(), stockBefore, saved.getStockQuantity());
+        // FR-041: orderable again (e.g. a refill from zero) tells the customers who favourited it
+        restock.afterChange(saved, wasOrderable);
         return toResource(saved, profile, category);
     }
 
@@ -132,8 +133,11 @@ public class ProductService implements ProductServiceInterface {
         FarmerProfile profile = mine(userId);
         requireApproved(profile);
         Product product = owned(profile, productId);
+        boolean wasOrderable = RestockNotifier.orderable(product);
         product.setStatus(status);
         Product saved = products.save(product);
+        // FR-041: lifting a pause or a manual "sold out" can make it orderable again
+        restock.afterChange(saved, wasOrderable);
         return toResource(saved, profile, categories.findById(saved.getCategoryId()).orElse(null));
     }
 
@@ -150,9 +154,10 @@ public class ProductService implements ProductServiceInterface {
     @Transactional
     public void adminUnhide(long productId) {
         Product product = locked(productId);
+        boolean wasOrderable = RestockNotifier.orderable(product);
         product.setHidden(false);
         product.setHiddenReason(null);
-        products.save(product);
+        restock.afterChange(products.save(product), wasOrderable);
     }
 
     /**

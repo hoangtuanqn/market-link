@@ -787,6 +787,6 @@ class OrderModifyTest {
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
 
-        org.mockito.Mockito.verify(restock).onStockRose(PRODUCT_A, 0, 3);
+        org.mockito.Mockito.verify(restock).afterChange(a, false);
     }
 }

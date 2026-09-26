@@ -545,7 +545,7 @@ class OrderTransitionTest {
 
         service.decline(FARMER_USER_ID, ORDER_ID, "Out of stock");
 
-        org.mockito.Mockito.verify(restock).onStockRose(PRODUCT_A, 5, 7);
-        org.mockito.Mockito.verify(restock).onStockRose(PRODUCT_B, 0, 1);
+        org.mockito.Mockito.verify(restock).afterChange(a, true);
+        org.mockito.Mockito.verify(restock).afterChange(b, false);
     }
 }
