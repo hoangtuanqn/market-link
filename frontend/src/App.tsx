@@ -63,7 +63,6 @@ import FarmerReviewsWip from './pages/farmer/Reviews';
 import FarmerMessagesPage from './pages/farmer/Messages';
 import FarmerNotificationsPage from './pages/farmer/Notifications';
 import FarmerPendingWip from './pages/farmer/Pending';
-import FarmerPromoteWip from './pages/farmer/Promote';
 import AdminLoginPage from './pages/admin/Login';
 import AdminHomeWip from './pages/admin/Home';
 import AdminVerifyPage from './pages/admin/Verify';
@@ -82,9 +81,7 @@ import AdminMarketsPage from './pages/admin/Markets';
 import AdminModerationPage from './pages/admin/Moderation';
 import AdminOrderDetailWip from './pages/admin/OrderDetail';
 import AdminOrdersWip from './pages/admin/Orders';
-import AdminPricingWip from './pages/admin/Pricing';
 import AdminReportsWip from './pages/admin/Reports';
-import AdminRevenueWip from './pages/admin/Revenue';
 
 // A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
 // Once a screen's API is wired up, remove it from this list.
@@ -103,11 +100,8 @@ const FarmerSlotsPage = SHOW_WIP ? FarmerSlotsWip : ComingSoon;
 const FarmerHistoryPage = SHOW_WIP ? FarmerHistoryWip : ComingSoon;
 const FarmerReviewsPage = SHOW_WIP ? FarmerReviewsWip : ComingSoon;
 const FarmerPendingPage = SHOW_WIP ? FarmerPendingWip : ComingSoon;
-const FarmerPromotePage = SHOW_WIP ? FarmerPromoteWip : ComingSoon;
 const AdminHomePage = SHOW_WIP ? AdminHomeWip : ComingSoon;
 const AdminReportsPage = SHOW_WIP ? AdminReportsWip : ComingSoon;
-const AdminRevenuePage = SHOW_WIP ? AdminRevenueWip : ComingSoon;
-const AdminPricingPage = SHOW_WIP ? AdminPricingWip : ComingSoon;
 const AdminOrdersPage = SHOW_WIP ? AdminOrdersWip : ComingSoon;
 const AdminOrderDetailPage = SHOW_WIP ? AdminOrderDetailWip : ComingSoon;
 const AdminCustomersPage = SHOW_WIP ? AdminCustomersWip : ComingSoon;
@@ -249,7 +243,6 @@ const App = () => {
               <Route path="messages" element={<FarmerMessagesPage />} />
               <Route path="notifications" element={<FarmerNotificationsPage />} />
               <Route path="pending" element={<FarmerPendingPage />} />
-              <Route path="promote" element={<FarmerPromotePage />} />
             </Route>
           </Route>
 
@@ -272,10 +265,8 @@ const App = () => {
             <Route path="settings" element={<AdminSettingsPage />} />
             <Route path="account" element={<AdminAccountPage />} />
 
-            {/* FR-075 + FR-070: reports, platform revenue and platform-wide orders (admin is read-only, D-04) */}
+            {/* FR-075 + FR-070: reports and platform-wide orders (admin is read-only, D-04) */}
             <Route path="reports" element={<AdminReportsPage />} />
-            <Route path="revenue" element={<AdminRevenuePage />} />
-            <Route path="pricing" element={<AdminPricingPage />} />
             <Route path="orders" element={<AdminOrdersPage />} />
             <Route
               path="orders/:code"

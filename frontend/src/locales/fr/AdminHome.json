@@ -39,12 +39,6 @@
     "announcements_many": "annonces en ligne",
     "announcements_other": "annonces en ligne"
   },
-  "earned": {
-    "title": "Ce que MarketLink a gagné",
-    "link": "Rapport de revenus",
-    "note": "{{month}}, versé par les étals qui achètent de la visibilité. Distinct de l'argent encaissé par les marchés.",
-    "of": "₫ · soit {{pct}} % des {{gmv}} encaissés par les marchés"
-  },
   "byMarket": {
     "title": "Commandes de la semaine par marché",
     "link": "Toutes les commandes",

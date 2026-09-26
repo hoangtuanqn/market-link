@@ -30,9 +30,6 @@ export const ADMIN_SETTINGS_PATH = '/admin/settings';
 export const ADMIN_FARMERS_PATH = '/admin/farmers';
 /** FR-075: platform-wide order and revenue reports. */
 export const ADMIN_REPORTS_PATH = '/admin/reports';
-/** Outside the SRS scope — MarketLink's own revenue, see the warning banner on the page. */
-export const ADMIN_REVENUE_PATH = '/admin/revenue';
-export const ADMIN_PRICING_PATH = '/admin/pricing';
 /** FR-070: an admin only reads orders, does not change the status (D-04). */
 export const ADMIN_ORDERS_PATH = '/admin/orders';
 /** FR-072: an admin locks / unlocks customer accounts. */

@@ -51,7 +51,6 @@ import adminSettings from '@/locales/en/AdminSettings.json';
 import farmerMessages from '@/locales/en/FarmerMessages.json';
 import farmerNotifications from '@/locales/en/FarmerNotifications.json';
 import farmerPending from '@/locales/en/FarmerPending.json';
-import farmerPromote from '@/locales/en/FarmerPromote.json';
 import farmerReviews from '@/locales/en/FarmerReviews.json';
 import adminFarmerDetail from '@/locales/en/AdminFarmerDetail.json';
 import adminFarmers from '@/locales/en/AdminFarmers.json';
@@ -72,9 +71,7 @@ import adminMarkets from '@/locales/en/AdminMarkets.json';
 import adminModeration from '@/locales/en/AdminModeration.json';
 import adminOrderDetail from '@/locales/en/AdminOrderDetail.json';
 import adminOrders from '@/locales/en/AdminOrders.json';
-import adminPricing from '@/locales/en/AdminPricing.json';
 import adminReports from '@/locales/en/AdminReports.json';
-import adminRevenue from '@/locales/en/AdminRevenue.json';
 
 export const en = {
   common: common,
@@ -125,7 +122,6 @@ export const en = {
   FarmerMessages: farmerMessages,
   FarmerNotifications: farmerNotifications,
   FarmerPending: farmerPending,
-  FarmerPromote: farmerPromote,
   FarmerReviews: farmerReviews,
   AdminFarmers: adminFarmers,
   AdminFarmerDetail: adminFarmerDetail,
@@ -146,9 +142,7 @@ export const en = {
   AdminModeration: adminModeration,
   AdminOrderDetail: adminOrderDetail,
   AdminOrders: adminOrders,
-  AdminPricing: adminPricing,
   AdminReports: adminReports,
-  AdminRevenue: adminRevenue,
 } as const;
 
 export type Namespace = keyof typeof en;

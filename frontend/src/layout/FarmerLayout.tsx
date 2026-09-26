@@ -72,7 +72,6 @@ const NAV: NavGroup[] = [
     heading: 'account',
     items: [
       { to: '/account', label: 'yourAccount', icon: UsersIcon },
-      { to: '/farmer/promote', label: 'promote', icon: TagIcon },
       { to: '/farmer/pending', label: 'approval', icon: ShieldIcon },
       { to: '/farmer/settings', label: 'settings', icon: SlidersIcon },
     ],
