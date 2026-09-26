@@ -441,4 +441,27 @@ class OrderTransitionTest {
         assertThat(unavailable.getStockQuantity()).isEqualTo(3);
         assertThat(unavailable.getStatus()).isEqualTo(ProductStatus.UNAVAILABLE);
     }
+
+    /**
+     * Controller ruling — sản phẩm đã xoá mềm ({@code is_deleted}) vẫn có dòng thật trong bảng
+     * products, nên vẫn nhận lại tồn kho khi đơn chết: order_items cũ trỏ về nó vẫn còn giá trị dù
+     * Farmer đã gỡ nó khỏi kệ.
+     */
+    @Test
+    void declineRestoresStockOfASoftDeletedProduct() {
+        Order order = orderWithStatus(OrderStatus.PLACED);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        Product deleted = product(PRODUCT_A, 5, ProductStatus.AVAILABLE);
+        deleted.setDeleted(true);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item(PRODUCT_A, 4)));
+        when(productRepository.lockAllById(any())).thenReturn(List.of(deleted));
+        PickupSlot slot = slotWith(3);
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
+
+        service.decline(FARMER_USER_ID, ORDER_ID, "reason");
+
+        assertThat(deleted.getStockQuantity()).isEqualTo(9);
+        assertThat(deleted.isDeleted()).isTrue();
+        assertThat(slot.getBookedCount()).isEqualTo(2);
+    }
 }

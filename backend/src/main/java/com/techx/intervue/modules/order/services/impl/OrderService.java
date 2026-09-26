@@ -515,9 +515,16 @@ public class OrderService implements OrderServiceInterface {
      * thô, tách khỏi persistence context của JPA — không flush thì thay đổi vừa làm ở đây (status,
      * farmer_note, tồn kho, booked_count) chưa chắc chắn hiện ra khi bốn method public bên trên gọi
      * lại {@link #detail} để dựng response ngay trong cùng transaction.
+     *
+     * <p>C5-17: KHÔNG {@code @Transactional} ở đây. Method này chỉ được gọi self-invoked
+     * (this.transition(...)) từ bên trong chính lớp — lời gọi không đi qua Spring proxy, nên
+     * {@code @Transactional} trên một method private/self-invoked không tạo ra ranh giới
+     * transaction nào cả (Spring bỏ qua nó trong im lặng); annotation đó chỉ hứa hẹn atomicity giả.
+     * Method này BẮT BUỘC chỉ được gọi từ bên trong transaction của chính method
+     * public @Transactional đang gọi nó (accept/decline/ markReady/complete hôm nay; cancel/modify
+     * của Task 5.6 sau này cũng vậy) — bản thân nó không tự mở transaction.
      */
-    @Transactional
-    protected Order transition(Order order, OrderStatus to, long actorUserId, String note) {
+    private Order transition(Order order, OrderStatus to, long actorUserId, String note) {
         OrderStatus from = order.getStatus();
         OrderLifecycle.assertTransition(from, to);
 
