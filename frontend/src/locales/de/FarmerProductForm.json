@@ -74,6 +74,18 @@
   "toast": {
     "saved": "Gespeichert",
     "savedText": "{{name}} gespeichert.",
-    "product": "Produkt"
+    "product": "Produkt",
+    "deletedText": "{{name}} gelöscht."
+  },
+  "error": {
+    "noun": "das Produkt"
+  },
+  "image": {
+    "label": "Foto-Link",
+    "hint": "Optional. Ein öffentlicher Link zu einem Foto; bis dahin zeigt das Etikett die Kategorie in Handschrift."
+  },
+  "errors": {
+    "required": "Dieses Feld ist erforderlich.",
+    "price": "Der Preis muss 0 oder höher sein."
   }
 }

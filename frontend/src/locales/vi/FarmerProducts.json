@@ -38,5 +38,13 @@
     "confirm": "Xoá sản phẩm",
     "text": "Sản phẩm sẽ biến mất khỏi danh mục và khỏi mẫu của bạn. Các đơn đã có sản phẩm này không bị thay đổi.",
     "pauseHint": "Muốn ngừng bán một thời gian, hãy chọn Tạm dừng."
+  },
+  "error": {
+    "noun": "sản phẩm của bạn"
+  },
+  "hiddenByAdmin": "Admin đã ẩn: {{reason}}",
+  "empty": {
+    "title": "Chưa có sản phẩm nào",
+    "text": "Thêm sản phẩm đầu tiên là nó hiện ngay trên trang gian hàng của bạn."
   }
 }

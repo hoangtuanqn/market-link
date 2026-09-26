@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
+import ProductApi from '@/api-requests/product.requests';
 import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
@@ -18,11 +19,12 @@ import { LoadError } from '@/components/ui/data-state';
 import { Pagination } from '@/components/ui/pagination';
 import Tabs from '@/components/ui/tabs';
 import { Table } from '@/components/ui/table';
-import { products, reviewTags, reviewsForFarmer } from '@/data/catalog';
+import { reviewTags, reviewsForFarmer } from '@/data/catalog';
 import { demoTierOf } from '@/data/tiers';
 import useRequest from '@/hooks/useRequest';
 import { dayName, formatClock, upcoming } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
+import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
@@ -30,6 +32,7 @@ const REVIEWS_PER_PAGE = 6;
 /** Contract §3 caps a page at 50; every market of the city fits in one call. */
 const FETCH_SIZE = 50;
 const NO_MARKETS: MarketType[] = [];
+const NO_PRODUCTS: ProductType[] = [];
 
 /** The window a stall keeps at one market: earliest start to latest end across its days there. */
 const windowOf = (m: StallMarketDto) => {
@@ -59,6 +62,10 @@ const StallProfilePage = () => {
   );
   const allMarkets = marketsLoad.kind === 'ready' ? marketsLoad.data : NO_MARKETS;
   const marketById = (marketId: number) => allMarkets.find((m) => m.id === marketId);
+  // This week's stock (FR-011); products are visible only while the stall is approved (D-09).
+  const { state: productsLoad } = useRequest(`stall-products:${id}`, () =>
+    validId ? ProductApi.byFarmer(farmerId) : Promise.resolve(NO_PRODUCTS),
+  );
 
   const availableDays = stall
     ? [1, 2, 3, 4, 5, 6, 0].filter((d) => stall.markets.some((m) => m.operatingDays.some((od) => od.dayOfWeek === d)))
@@ -131,8 +138,8 @@ const StallProfilePage = () => {
   const firstMarket = stall.markets[0];
   const firstWindow = firstMarket ? windowOf(firstMarket) : '';
   const days = dayNames(availableDays);
-  // Products and reviews are still the demo set until C3 and C8; they follow the real stall id.
-  const stallProducts = products.filter((p) => p.farmerId === stall.farmerId);
+  const stallProducts = productsLoad.kind === 'ready' ? productsLoad.data : NO_PRODUCTS;
+  // Reviews are still the demo set until C8; they follow the real stall id.
   const allReviews = reviewsForFarmer(stall.farmerId);
   const filteredReviews = reviewFilter === 'all' ? allReviews : allReviews.filter((r) => r.targetType === reviewFilter);
   const reviewPages = Math.max(1, Math.ceil(filteredReviews.length / REVIEWS_PER_PAGE));
@@ -231,11 +238,15 @@ const StallProfilePage = () => {
               disabled: !availableDays.includes(d),
             }))}
           />
-          <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
-            {stallProducts.map((p) => (
-              <ProductCard key={p.id} product={p} showMarket={false} />
-            ))}
-          </div>
+          {productsLoad.kind === 'loading' ? (
+            <MarketCardSkeleton count={3} />
+          ) : (
+            <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+              {stallProducts.map((p) => (
+                <ProductCard key={p.id} product={p} showMarket={false} />
+              ))}
+            </div>
+          )}
           {!availableDays.includes(day) && (
             <p className="text-small text-ink-muted">
               {t('stock.notSelling', { stall: stall.stallName, day: dayName(day, 'long'), days })}

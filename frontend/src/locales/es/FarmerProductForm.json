@@ -74,6 +74,18 @@
   "toast": {
     "saved": "Guardado",
     "savedText": "{{name}} guardado.",
-    "product": "Producto"
+    "product": "Producto",
+    "deletedText": "{{name}} eliminado."
+  },
+  "error": {
+    "noun": "el producto"
+  },
+  "image": {
+    "label": "Enlace de la foto",
+    "hint": "Opcional. Un enlace público a una foto del producto; mientras, la etiqueta muestra la categoría a mano."
+  },
+  "errors": {
+    "required": "Este campo es obligatorio.",
+    "price": "El precio debe ser 0 o más."
   }
 }

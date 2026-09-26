@@ -11,7 +11,6 @@ import { Field, SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import { ADMIN_ANNOUNCEMENTS_PATH, ADMIN_FEEDBACK_PATH } from '@/constants/nav';
-import { farmers, products } from '@/data/catalog';
 import { UNIT_KINDS, UNIT_LIST, type UnitOption } from '@/data/units';
 import useRequest from '@/hooks/useRequest';
 import { guessPlural, perUnit, units } from '@/lib/format';
@@ -108,10 +107,6 @@ const AdminCategoriesPage = () => {
   const [merging, setMerging] = useState<UnitOption | null>(null);
   const [mergeInto, setMergeInto] = useState('');
 
-  /** How many stalls have at least one product in this category. */
-  const stallsIn = (categoryName: string) =>
-    farmers.filter((f) => products.some((p) => p.farmerId === f.id && p.category === categoryName)).length;
-
   const previewOne = newUnit.one.trim() || t('unitForm.previewFallback');
   const previewMany = newUnit.many.trim() || guessPlural(previewOne);
 
@@ -129,7 +124,8 @@ const AdminCategoriesPage = () => {
       ),
     },
     { key: 'count', label: t('col.products'), align: 'num' },
-    { key: 'stalls', label: t('col.stalls'), align: 'num', render: (c) => stallsIn(c.name) },
+    // Products and stalls per category arrive with reports (C9); until then the column shows a dash.
+    { key: 'stalls', label: t('col.stalls'), align: 'num', render: () => '—' },
     {
       key: 'action',
       label: '',

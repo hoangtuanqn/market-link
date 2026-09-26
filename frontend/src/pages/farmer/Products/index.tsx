@@ -1,38 +1,68 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import { Chip } from '@/components/ui/chip';
+import ProductApi from '@/api-requests/product.requests';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import { Button, ButtonLink } from '@/components/ui/button';
+import { Chip } from '@/components/ui/chip';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { product } from '@/data/catalog';
+import useRequest from '@/hooks/useRequest';
 import { unitPrice, units, vnd } from '@/lib/format';
 import type { ProductStatus, ProductType } from '@/types/product.types';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
-
-const FARMER_PRODUCT_IDS = [1, 2, 7, 19, 26];
-const RESERVED: Record<number, number> = { 1: 8, 2: 7, 7: 10, 19: 3 };
 
 const STATUSES: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
 const FILTERS: ('all' | ProductStatus)[] = ['all', ...STATUSES];
+const NO_PRODUCTS: ProductType[] = [];
 
 /** FR-062 FR-064 — everything this stall can list: price, this week's count, reserved units and status. */
 const FarmerProductsPage = () => {
   const { t } = useTranslation('FarmerProducts');
-  const seeded = FARMER_PRODUCT_IDS.map((id) => product(id)!);
-  const [statuses, setStatuses] = useState<Record<number, ProductStatus>>(
-    Object.fromEntries(seeded.map((p) => [p.id, p.status])),
-  );
+  const { t: tc } = useTranslation();
+  const { state: load, retry, mutate } = useRequest('my-products', () => ProductApi.mine());
+  const all = load.kind === 'ready' ? load.data : NO_PRODUCTS;
   const [filter, setFilter] = useState<'all' | ProductStatus>('all');
   const [deleteTarget, setDeleteTarget] = useState<ProductType | null>(null);
+  const [busyId, setBusyId] = useState<number | null>(null);
 
   const counts: Record<'all' | ProductStatus, number> = {
-    all: seeded.length,
-    available: seeded.filter((p) => statuses[p.id] === 'available').length,
-    sold_out: seeded.filter((p) => statuses[p.id] === 'sold_out').length,
-    unavailable: seeded.filter((p) => statuses[p.id] === 'unavailable').length,
+    all: all.length,
+    available: all.filter((p) => p.status === 'available').length,
+    sold_out: all.filter((p) => p.status === 'sold_out').length,
+    unavailable: all.filter((p) => p.status === 'unavailable').length,
   };
-  const rows = filter === 'all' ? seeded : seeded.filter((p) => statuses[p.id] === filter);
+  const rows = filter === 'all' ? all : all.filter((p) => p.status === filter);
+
+  const changeStatus = async (p: ProductType, value: ProductStatus) => {
+    setBusyId(p.id);
+    try {
+      const saved = await ProductApi.setStatus(p.id, value);
+      mutate((list) => list.map((row) => (row.id === p.id ? saved : row)));
+      Notification.success({ title: t('toast.statusSaved'), text: t(`toast.status.${value}`) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setBusyId(deleteTarget.id);
+    try {
+      await ProductApi.remove(deleteTarget.id);
+      mutate((list) => list.filter((row) => row.id !== deleteTarget.id));
+      Notification.success({ title: t('toast.deleted'), text: t('toast.deletedText', { name: deleteTarget.name }) });
+      setDeleteTarget(null);
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
 
   const columns: TableColumn<ProductType>[] = [
     {
@@ -47,6 +77,11 @@ const FarmerProductsPage = () => {
             {p.name}
           </Link>
           <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">{p.category}</span>
+          {p.hidden && (
+            <span className="text-danger mt-0.5 block text-[13px] font-normal">
+              {t('hiddenByAdmin', { reason: p.hiddenReason ?? '' })}
+            </span>
+          )}
         </>
       ),
     },
@@ -68,21 +103,19 @@ const FarmerProductsPage = () => {
       key: 's',
       label: t('col.left'),
       align: 'num',
-      render: (p) => (statuses[p.id] === 'available' ? units(p.stock, p.unit, p.plural) : '—'),
+      render: (p) => (p.status === 'available' ? units(p.stock, p.unit, p.plural) : '—'),
     },
-    { key: 'r', label: t('col.reserved'), align: 'num', render: (p) => RESERVED[p.id] ?? 0 },
+    // Reserved units come with orders (C5); until then there is nothing honest to show here.
+    { key: 'r', label: t('col.reserved'), align: 'num', render: () => '—' },
     {
       key: 'st',
       label: t('col.status'),
       render: (p) => (
         <select
-          value={statuses[p.id]}
+          value={p.status}
           aria-label={t('statusOf', { name: p.name })}
-          onChange={(e) => {
-            const value = e.target.value as ProductStatus;
-            setStatuses((prev) => ({ ...prev, [p.id]: value }));
-            Notification.success({ title: t('toast.statusSaved'), text: t(`toast.status.${value}`) });
-          }}
+          disabled={busyId === p.id}
+          onChange={(e) => void changeStatus(p, e.target.value as ProductStatus)}
           className="border-line-strong bg-surface-raised min-h-9 rounded-sm border-[1.5px] px-2 text-[14px]"
         >
           {STATUSES.map((s) => (
@@ -102,7 +135,7 @@ const FarmerProductsPage = () => {
           <ButtonLink variant="secondary" size="sm" to={`/farmer/products/${p.id}/edit`}>
             {t('edit')}
           </ButtonLink>
-          <Button variant="danger" size="sm" onClick={() => setDeleteTarget(p)}>
+          <Button variant="danger" size="sm" onClick={() => setDeleteTarget(p)} disabled={busyId === p.id}>
             {t('delete')}
           </Button>
         </div>
@@ -129,7 +162,15 @@ const FarmerProductsPage = () => {
         ))}
       </div>
 
-      <Table caption={t('caption', { count: seeded.length })} columns={columns} rows={rows} />
+      {load.kind === 'loading' ? (
+        <MarketCardSkeleton count={3} />
+      ) : load.kind === 'error' ? (
+        <LoadError noun={t('error.noun')} onRetry={retry} />
+      ) : rows.length ? (
+        <Table caption={t('caption', { count: all.length })} columns={columns} rows={rows} />
+      ) : (
+        <DataState title={t('empty.title')} text={t('empty.text')} />
+      )}
 
       <p className="text-small text-ink-muted">{t('footNote')}</p>
 
@@ -143,16 +184,7 @@ const FarmerProductsPage = () => {
             <Button variant="secondary" onClick={() => setDeleteTarget(null)}>
               {t('dialog.keep')}
             </Button>
-            <Button
-              variant="danger"
-              onClick={() => {
-                Notification.success({
-                  title: t('toast.deleted'),
-                  text: t('toast.deletedText', { name: deleteTarget?.name }),
-                });
-                setDeleteTarget(null);
-              }}
-            >
+            <Button variant="danger" onClick={() => void confirmDelete()} disabled={busyId !== null}>
               {t('dialog.confirm')}
             </Button>
           </>

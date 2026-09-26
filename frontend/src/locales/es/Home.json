@@ -32,7 +32,8 @@
   },
   "fresh": {
     "title": "Fresco esta semana",
-    "all": "Todos los productos y filtros"
+    "all": "Todos los productos y filtros",
+    "noun": "productos"
   },
   "how": {
     "title": "Cómo funcionan las reservas",

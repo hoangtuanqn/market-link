@@ -45,5 +45,8 @@
   "map": {
     "label": "Map of results",
     "note": "Results with a location are pinned. On phones a “List / Map” toggle switches between the two."
+  },
+  "error": {
+    "noun": "results"
   }
 }

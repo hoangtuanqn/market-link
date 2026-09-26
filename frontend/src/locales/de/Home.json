@@ -32,7 +32,8 @@
   },
   "fresh": {
     "title": "Frisch diese Woche",
-    "all": "Alle Produkte und Filter"
+    "all": "Alle Produkte und Filter",
+    "noun": "Produkte"
   },
   "how": {
     "title": "So funktioniert die Vorbestellung",

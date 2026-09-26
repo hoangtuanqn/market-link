@@ -32,7 +32,8 @@
   },
   "fresh": {
     "title": "Tươi trong tuần này",
-    "all": "Tất cả sản phẩm và bộ lọc"
+    "all": "Tất cả sản phẩm và bộ lọc",
+    "noun": "các sản phẩm"
   },
   "how": {
     "title": "Đặt trước hoạt động thế nào",

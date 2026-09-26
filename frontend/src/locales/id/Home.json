@@ -32,7 +32,8 @@
   },
   "fresh": {
     "title": "Segar minggu ini",
-    "all": "Semua produk dan filter"
+    "all": "Semua produk dan filter",
+    "noun": "produk"
   },
   "how": {
     "title": "Cara kerja pesan dulu",

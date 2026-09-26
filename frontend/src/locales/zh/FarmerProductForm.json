@@ -74,6 +74,18 @@
   "toast": {
     "saved": "已保存",
     "savedText": "{{name}} 已保存。",
-    "product": "商品"
+    "product": "商品",
+    "deletedText": "已删除{{name}}。"
+  },
+  "error": {
+    "noun": "商品"
+  },
+  "image": {
+    "label": "图片链接",
+    "hint": "可选。商品照片的公开链接；未填时标签以手写体显示分类。"
+  },
+  "errors": {
+    "required": "此项为必填。",
+    "price": "价格必须大于或等于 0。"
   }
 }

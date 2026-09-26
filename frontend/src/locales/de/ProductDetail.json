@@ -80,5 +80,8 @@
     "sentText": "Ein Admin sieht sich dieses Angebot an.",
     "button": "Dieses Angebot melden",
     "note": "Falscher Preis, falsches Foto oder etwas, das nicht auf einen Bauernmarkt gehört."
+  },
+  "error": {
+    "noun": "Produkt"
   }
 }

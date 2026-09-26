@@ -68,5 +68,8 @@
   "empty": {
     "title": "Tidak ada yang perlu dimoderasi",
     "text": "Produk dan ulasan yang dilaporkan sampai ke sini supaya Anda baca dulu sebelum menyembunyikan apa pun."
+  },
+  "error": {
+    "noun": "daftar produk"
   }
 }

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
+import ProductApi from '@/api-requests/product.requests';
 import StallApi, { toStallCard, type StallCardData } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
@@ -12,9 +13,9 @@ import StallCard from '@/components/StallCard';
 import { ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
-import { categories as CATEGORIES, products } from '@/data/catalog';
 import useRequest from '@/hooks/useRequest';
 import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
+import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
@@ -25,6 +26,8 @@ const DAY_OPTIONS = [
   { value: 6, date: new Date(2026, 8, 26) },
   { value: 0, date: new Date(2026, 8, 27) },
 ];
+
+const NO_PRODUCTS: ProductType[] = [];
 
 /** FR-010 FR-011 — one market: who sells there on a given day, and what they have. */
 const MarketDetailPage = () => {
@@ -61,10 +64,11 @@ const MarketDetailPage = () => {
     [market, stallsLoad],
   );
 
-  const productsToday = useMemo(() => {
-    const stallIds = new Set(stallsToday.map((f) => f.id));
-    return products.filter((p) => p.farmerId != null && stallIds.has(p.farmerId));
-  }, [stallsToday]);
+  // What is on sale here on the chosen day (FR-020), from the same filters the products page uses.
+  const { state: productsLoad } = useRequest(`market-products:${id}:${day}`, () =>
+    validId ? ProductApi.list({ marketId, day, pageSize: 50 }).then((r) => r.items) : Promise.resolve(NO_PRODUCTS),
+  );
+  const productsToday: ProductType[] = productsLoad.kind === 'ready' ? productsLoad.data : NO_PRODUCTS;
 
   const categoryCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -219,9 +223,9 @@ const MarketDetailPage = () => {
             <Chip pressed={category === 'All'} onClick={() => setCategory('All')}>
               {t('all')}
             </Chip>
-            {CATEGORIES.filter((c) => categoryCounts.has(c.name)).map((c) => (
-              <Chip key={c.id} pressed={category === c.name} onClick={() => setCategory(c.name)}>
-                {c.name} <span className="text-[12px] tabular-nums opacity-80">{categoryCounts.get(c.name)}</span>
+            {[...categoryCounts.keys()].sort().map((name) => (
+              <Chip key={name} pressed={category === name} onClick={() => setCategory(name)}>
+                {name} <span className="text-[12px] tabular-nums opacity-80">{categoryCounts.get(name)}</span>
               </Chip>
             ))}
             <Chip pressed={inStockOnly} onClick={() => setInStockOnly((v) => !v)}>

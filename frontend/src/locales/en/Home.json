@@ -32,7 +32,8 @@
   },
   "fresh": {
     "title": "Fresh this week",
-    "all": "All products and filters"
+    "all": "All products and filters",
+    "noun": "products"
   },
   "how": {
     "title": "How pre-ordering works",

@@ -45,5 +45,8 @@
   "map": {
     "label": "Mapa de resultados",
     "note": "Los resultados con ubicación aparecen en el mapa. En el móvil, el botón “Lista / Mapa” cambia entre las dos vistas."
+  },
+  "error": {
+    "noun": "resultados"
   }
 }

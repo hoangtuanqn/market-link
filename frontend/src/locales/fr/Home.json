@@ -32,7 +32,8 @@
   },
   "fresh": {
     "title": "Frais cette semaine",
-    "all": "Tous les produits et filtres"
+    "all": "Tous les produits et filtres",
+    "noun": "produits"
   },
   "how": {
     "title": "Comment fonctionne la précommande",

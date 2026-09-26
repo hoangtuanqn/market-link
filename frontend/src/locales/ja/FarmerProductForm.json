@@ -74,6 +74,18 @@
   "toast": {
     "saved": "保存しました",
     "savedText": "{{name}} を保存しました。",
-    "product": "商品"
+    "product": "商品",
+    "deletedText": "{{name}}を削除しました。"
+  },
+  "error": {
+    "noun": "商品"
+  },
+  "image": {
+    "label": "写真のリンク",
+    "hint": "任意。商品写真の公開リンク。未設定の間はタグにカテゴリーが手書き風で表示されます。"
+  },
+  "errors": {
+    "required": "この項目は必須です。",
+    "price": "価格は0以上にしてください。"
   }
 }

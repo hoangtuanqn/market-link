@@ -68,5 +68,8 @@
   "empty": {
     "title": "Nada que moderar",
     "text": "Los productos y reseñas denunciados llegan aquí para que los leas antes de ocultar nada."
+  },
+  "error": {
+    "noun": "publicaciones"
   }
 }
