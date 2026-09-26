@@ -405,5 +405,8 @@
     "answeredOn": "answered {{date}}",
     "reason": "Reason:",
     "photoAlt": "Photo from attempt {{n}}"
+  },
+  "notify": {
+    "open": "Open"
   }
 }

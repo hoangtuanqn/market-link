@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
+import NotificationCenter from './components/notifications/NotificationCenter';
 import SettingsSync from './components/SettingsSync';
 import AdminLayout from './layout/AdminLayout';
 import AdminSettingsPage from './pages/admin/Settings';
@@ -279,6 +280,7 @@ const App = () => {
         </Routes>
       </SettingsSync>
       <AppToaster />
+      <NotificationCenter />
     </BrowserRouter>
   );
 };

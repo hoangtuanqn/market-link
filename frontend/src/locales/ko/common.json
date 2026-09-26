@@ -405,5 +405,8 @@
     "answeredOn": "{{date}} 답변",
     "reason": "사유:",
     "photoAlt": "{{n}}번째 신청의 사진"
+  },
+  "notify": {
+    "open": "열기"
   }
 }

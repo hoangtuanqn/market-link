@@ -405,5 +405,8 @@
     "answeredOn": "{{date}} に回答",
     "reason": "理由:",
     "photoAlt": "{{n}} 回目の申請の写真"
+  },
+  "notify": {
+    "open": "開く"
   }
 }

@@ -405,5 +405,8 @@
     "answeredOn": "beantwortet am {{date}}",
     "reason": "Grund:",
     "photoAlt": "Foto aus Antrag {{n}}"
+  },
+  "notify": {
+    "open": "Öffnen"
   }
 }

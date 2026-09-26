@@ -405,5 +405,8 @@
     "answeredOn": "trả lời {{date}}",
     "reason": "Lý do:",
     "photoAlt": "Ảnh của lần nộp {{n}}"
+  },
+  "notify": {
+    "open": "Mở"
   }
 }

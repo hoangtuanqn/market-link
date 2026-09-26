@@ -405,5 +405,8 @@
     "answeredOn": "答复于 {{date}}",
     "reason": "理由：",
     "photoAlt": "第 {{n}} 次申请的照片"
+  },
+  "notify": {
+    "open": "打开"
   }
 }

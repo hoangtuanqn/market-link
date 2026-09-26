@@ -405,5 +405,8 @@
     "answeredOn": "dijawab {{date}}",
     "reason": "Alasan:",
     "photoAlt": "Foto dari lamaran ke-{{n}}"
+  },
+  "notify": {
+    "open": "Buka"
   }
 }

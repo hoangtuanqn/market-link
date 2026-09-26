@@ -405,5 +405,8 @@
     "answeredOn": "réponse le {{date}}",
     "reason": "Motif :",
     "photoAlt": "Photo de la demande {{n}}"
+  },
+  "notify": {
+    "open": "Ouvrir"
   }
 }
