@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,6 +49,24 @@ public class FarmerProfile {
 
     @Column(name = "video_path", length = 255)
     private String videoPath;
+
+    /** Ảnh đại diện gian hàng (FR-060, V20260926006). */
+    @Column(name = "logo_url", length = 255)
+    private String logoUrl;
+
+    /** D-05: đơn khoá sửa/huỷ trước giờ nhận ngần này giờ. Farmer chỉnh trong hồ sơ, 1…72. */
+    @Column(name = "order_cutoff_hours", nullable = false)
+    @Builder.Default
+    private int orderCutoffHours = 12;
+
+    /** Cache điểm đánh giá — tính lại mỗi khi có review (cụm C8). */
+    @Column(name = "rating_avg", nullable = false, precision = 3, scale = 2)
+    @Builder.Default
+    private BigDecimal ratingAvg = BigDecimal.ZERO;
+
+    @Column(name = "rating_count", nullable = false)
+    @Builder.Default
+    private int ratingCount = 0;
 
     @Convert(converter = ApprovalStatus.DbConverter.class)
     @Column(name = "approval_status", nullable = false)

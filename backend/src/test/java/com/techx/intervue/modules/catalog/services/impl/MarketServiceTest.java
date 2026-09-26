@@ -16,6 +16,7 @@ import com.techx.intervue.modules.catalog.repositories.MarketQueryRepository;
 import com.techx.intervue.modules.catalog.repositories.MarketRepository;
 import com.techx.intervue.modules.catalog.requests.MarketRequest;
 import com.techx.intervue.modules.catalog.resources.MarketResource;
+import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -30,6 +31,7 @@ class MarketServiceTest {
     private MarketRepository repository;
     private MarketOperatingDayRepository dayRepository;
     private MarketQueryRepository queryRepository;
+    private StallServiceInterface stallService;
     private MarketService service;
 
     @BeforeEach
@@ -37,7 +39,8 @@ class MarketServiceTest {
         repository = mock(MarketRepository.class);
         dayRepository = mock(MarketOperatingDayRepository.class);
         queryRepository = mock(MarketQueryRepository.class);
-        service = new MarketService(repository, dayRepository, queryRepository);
+        stallService = mock(StallServiceInterface.class);
+        service = new MarketService(repository, dayRepository, queryRepository, stallService);
     }
 
     private static MarketRequest request(List<Integer> days) {

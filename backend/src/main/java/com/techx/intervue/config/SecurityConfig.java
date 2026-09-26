@@ -124,6 +124,14 @@ public class SecurityConfig {
                                                 "/api/v1/markets",
                                                 "/api/v1/markets/*")
                                         .permitAll()
+                                        // FR-011: stall và danh sách Farmer của chợ xem được trước
+                                        // khi đăng nhập
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/farmers",
+                                                "/api/v1/farmers/*",
+                                                "/api/v1/markets/*/farmers")
+                                        .permitAll()
                                         // Chatbot FR-090…092: khách vãng lai cũng hỏi được
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
                                         .permitAll()

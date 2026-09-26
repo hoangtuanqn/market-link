@@ -9,6 +9,7 @@ import com.techx.intervue.modules.catalog.requests.MarketRequest;
 import com.techx.intervue.modules.catalog.resources.MarketDetailResource;
 import com.techx.intervue.modules.catalog.resources.MarketResource;
 import com.techx.intervue.modules.catalog.services.interfaces.MarketServiceInterface;
+import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.resources.PageResource;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,9 @@ public class MarketService implements MarketServiceInterface {
     private final MarketOperatingDayRepository dayRepository;
     private final MarketQueryRepository queryRepository;
 
+    /** Chỗ duy nhất module catalog chạm sang module stall; chiều ngược lại không có. */
+    private final StallServiceInterface stallService;
+
     @Override
     public PageResource<MarketResource> search(
             String q, Integer day, String city, String district, int page, int pageSize) {
@@ -47,8 +51,7 @@ public class MarketService implements MarketServiceInterface {
     public MarketDetailResource detail(long id) {
         MarketResource market =
                 queryRepository.findById(id).orElseThrow(() -> new MarketNotFoundException(id));
-        // farmers[] được module stall đổ vào ở cụm C2 (Task 2.2).
-        return new MarketDetailResource(market, List.of());
+        return new MarketDetailResource(market, stallService.atMarket(id, null));
     }
 
     @Override

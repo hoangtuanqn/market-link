@@ -4,8 +4,11 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.catalog.resources.MarketDetailResource;
 import com.techx.intervue.modules.catalog.resources.MarketResource;
 import com.techx.intervue.modules.catalog.services.interfaces.MarketServiceInterface;
+import com.techx.intervue.modules.stall.resources.StallSummaryResource;
+import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MarketController extends BaseController {
 
     private final MarketServiceInterface marketService;
+    private final StallServiceInterface stallService;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<MarketResource>>> search(
@@ -38,5 +42,14 @@ public class MarketController extends BaseController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResource<MarketDetailResource>> detail(@PathVariable long id) {
         return ok(marketService.detail(id), "");
+    }
+
+    /** FR-010: Farmer đang bán tại chợ, lọc theo thứ (0 = Chủ nhật) nếu có. */
+    @GetMapping("/{id}/farmers")
+    public ResponseEntity<ApiResource<List<StallSummaryResource>>> farmers(
+            @PathVariable long id, @RequestParam(required = false) Integer day) {
+        marketService.detail(
+                id); // 404 nếu chợ không có — trước khi trả một danh sách rỗng gây hiểu lầm
+        return ok(stallService.atMarket(id, day), "");
     }
 }
