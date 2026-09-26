@@ -90,7 +90,39 @@
     "emptyThreadTitle": "Chưa có tin nhắn nào",
     "emptyThreadText": "Gửi một lời chào để bắt đầu trò chuyện.",
     "typing": "{{name}} đang nhập…",
-    "conversationWith": "Trò chuyện với {{name}}"
+    "conversationWith": "Trò chuyện với {{name}}",
+    "closed": "Sạp này đang tạm ngừng nhận tin nhắn.",
+    "messageStall": "Nhắn tin cho sạp",
+    "ownStall": "Đây là sạp của chính bạn.",
+    "stallClosed": "Sạp này đang tạm ngừng nhận cuộc trò chuyện mới.",
+    "openFailed": "Không mở được cuộc trò chuyện. Thử lại nhé.",
+    "pinned": "Đang hỏi về",
+    "unpin": "Bỏ ghim",
+    "productGone": "Sản phẩm này không còn được bán.",
+    "tooFast": "Bạn gửi nhanh quá. Đợi một chút rồi thử lại.",
+    "photoTooBig": "Ảnh lớn hơn 5 MB. Chọn ảnh nhỏ hơn.",
+    "photoType": "Chọn ảnh JPEG, PNG hoặc WebP.",
+    "moreThreads": "Xem thêm cuộc trò chuyện",
+    "reportTitle": "Báo cáo tin nhắn này",
+    "reportWhy": "Vì sao bạn báo cáo?",
+    "reason": {
+      "spam": "Spam hoặc quảng cáo",
+      "abuse": "Thô lỗ hoặc xúc phạm",
+      "scam": "Lừa đảo hoặc đòi tiền",
+      "other": "Lý do khác"
+    },
+    "reportNote": "Kể thêm (không bắt buộc)",
+    "noteLeft_other": "Còn {{count}} ký tự",
+    "chooseReason": "Chọn một lý do để gửi báo cáo.",
+    "report": "Báo cáo",
+    "reportThis": "Báo cáo tin nhắn này",
+    "reported": "Đã báo cáo",
+    "reportFailed": "Chưa gửi được báo cáo. Thử lại nhé.",
+    "reportThanks": "Cảm ơn bạn. Quản trị viên sẽ xem tin nhắn này.",
+    "cancel": "Huỷ",
+    "previewEmpty": "Chưa có cuộc trò chuyện nào.",
+    "previewError": "Không tải được cuộc trò chuyện.",
+    "unreadCount": "{{count}} chưa đọc"
   },
   "errors": {
     "network": "Không kết nối được máy chủ. Kiểm tra kết nối mạng rồi thử lại."
@@ -162,7 +194,9 @@
     "notificationsUnread_one": "Thông báo, {{count}} chưa đọc",
     "notificationsUnread_other": "Thông báo, {{count}} chưa đọc",
     "openMenu": "Mở menu",
-    "search": "Tìm kiếm"
+    "search": "Tìm kiếm",
+    "seeAll": "Xem tất cả",
+    "messagesUnread_other": "Tin nhắn, {{count}} chưa đọc"
   },
   "kpi": {
     "noChange": "không đổi",
@@ -492,7 +526,9 @@
     "admin": {
       "title": "Thông báo",
       "intro": "Các đơn đăng ký nhà vườn mới đang chờ bạn duyệt."
-    }
+    },
+    "notificationsEmpty": "Chưa có thông báo nào.",
+    "notificationsError": "Không tải được thông báo."
   },
   "comingSoon": {
     "title": "Trang này chưa mở",

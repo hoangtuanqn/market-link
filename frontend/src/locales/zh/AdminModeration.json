@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "评价",
     "products": "商品",
-    "hidden": "已隐藏"
+    "hidden": "已隐藏",
+    "messages": "被举报的消息"
   },
   "reviewFilterLabel": "筛选评价",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "商品列表"
+  },
+  "messages": {
+    "boundary": "你只能查看被举报的消息，以及前后各最多五条用于了解上下文。对话的其他内容不对管理员开放。",
+    "noun": "举报",
+    "emptyTitle": "没有被举报的消息",
+    "emptyText": "顾客或摊位举报消息后，它会在这里等你处理。",
+    "photo": "照片",
+    "reason": {
+      "spam": "垃圾信息或广告",
+      "abuse": "粗鲁或辱骂",
+      "scam": "诈骗或索要钱财",
+      "other": "其他原因"
+    },
+    "reportedBy": "举报人：{{name}}",
+    "sentBy": "发送人：{{name}}",
+    "review": "查看",
+    "reviewLabel": "查看 {{name}} 的举报",
+    "context": "被举报消息前后的消息",
+    "hidden": "已隐藏",
+    "hide": "隐藏消息",
+    "hideTitle": "隐藏这条消息？",
+    "hideText": "对话双方都将看不到它。该举报会被标记为已处理。",
+    "hideConfirm": "隐藏",
+    "dismiss": "驳回举报",
+    "hidden_toast": "消息已隐藏。",
+    "dismissed_toast": "举报已驳回。",
+    "status": {
+      "new": "新",
+      "reviewed": "已查看",
+      "actioned": "已处理"
+    },
+    "statusLabel": "状态"
   }
 }

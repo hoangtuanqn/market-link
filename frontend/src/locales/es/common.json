@@ -91,7 +91,40 @@
     "emptyThreadTitle": "Todavía no hay mensajes",
     "emptyThreadText": "Saluda para empezar la conversación.",
     "typing": "{{name}} está escribiendo…",
-    "conversationWith": "Conversación con {{name}}"
+    "conversationWith": "Conversación con {{name}}",
+    "closed": "Este puesto no recibe mensajes en este momento.",
+    "messageStall": "Escribir a este puesto",
+    "ownStall": "Este es tu propio puesto.",
+    "stallClosed": "Este puesto no acepta conversaciones nuevas en este momento.",
+    "openFailed": "No pudimos abrir la conversación. Inténtalo de nuevo.",
+    "pinned": "Preguntando por",
+    "unpin": "Quitar",
+    "productGone": "Este producto ya no está a la venta.",
+    "tooFast": "Estás enviando demasiado rápido. Espera un momento e inténtalo de nuevo.",
+    "photoTooBig": "La foto supera los 5 MB. Elige una más pequeña.",
+    "photoType": "Elige una foto JPEG, PNG o WebP.",
+    "moreThreads": "Cargar más conversaciones",
+    "reportTitle": "Denunciar este mensaje",
+    "reportWhy": "¿Por qué lo denuncias?",
+    "reason": {
+      "spam": "Spam o publicidad",
+      "abuse": "Grosero u ofensivo",
+      "scam": "Estafa o pide dinero",
+      "other": "Otro motivo"
+    },
+    "reportNote": "Cuéntanos más (opcional)",
+    "noteLeft_one": "Queda {{count}} carácter",
+    "noteLeft_other": "Quedan {{count}} caracteres",
+    "chooseReason": "Elige un motivo para enviar la denuncia.",
+    "report": "Denunciar",
+    "reportThis": "Denunciar este mensaje",
+    "reported": "Denunciado",
+    "reportFailed": "No pudimos enviar la denuncia. Inténtalo de nuevo.",
+    "reportThanks": "Gracias. Un administrador revisará este mensaje.",
+    "cancel": "Cancelar",
+    "previewEmpty": "Todavía no hay conversaciones.",
+    "previewError": "No se pudieron cargar tus conversaciones.",
+    "unreadCount": "{{count}} sin leer"
   },
   "errors": {
     "network": "No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo."
@@ -163,7 +196,10 @@
     "notificationsUnread_one": "Notificaciones, {{count}} sin leer",
     "notificationsUnread_other": "Notificaciones, {{count}} sin leer",
     "openMenu": "Abrir menú",
-    "search": "Buscar"
+    "search": "Buscar",
+    "seeAll": "Ver todo",
+    "messagesUnread_one": "Mensajes, {{count}} sin leer",
+    "messagesUnread_other": "Mensajes, {{count}} sin leer"
   },
   "kpi": {
     "noChange": "sin cambios",
@@ -493,7 +529,9 @@
     "admin": {
       "title": "Notificaciones",
       "intro": "Nuevas solicitudes de Farmer esperando tu revisión."
-    }
+    },
+    "notificationsEmpty": "Todavía no hay notificaciones.",
+    "notificationsError": "No se pudieron cargar las notificaciones."
   },
   "comingSoon": {
     "title": "Esta página aún no está disponible",
