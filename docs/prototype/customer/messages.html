@@ -37,12 +37,13 @@
       <div class="pt-chat-head">
         <div>
           <b>Cô Tư Garden</b>
-          <p class="pt-small ml-muted">Thảo Điền Weekend Market · stall A12 · <a href="../public/stall.html">See the stall</a></p>
+          <p class="pt-small ml-muted">Online · Thảo Điền Weekend Market · stall A12 · <a href="../public/stall.html">See the stall</a></p>
         </div>
         <a class="ml-btn ml-btn-secondary ml-btn-sm" href="../customer/order.html">Open order #ML-0421</a>
       </div>
       <div class="pt-chat-log"><div class="ml-chat" id="log"></div></div>
       <form class="pt-chat-input">
+        <button type="button" class="ml-btn ml-btn-secondary ml-btn-sm">Add a photo</button>
         <label class="ml-sr" for="q">Message to Cô Tư Garden</label>
         <input id="q" class="ml-input" placeholder="Ask about this week's stock or your pickup time">
         <button type="submit" class="ml-btn ml-btn-primary">Send</button>
@@ -63,7 +64,8 @@
   </div>
 </main>
 <script>
-  document.getElementById('scope').innerHTML = PT.banner('warning', 'Messaging is not in the SRS.', 'Ask the LEAD for a new requirement before this is built. The screen exists so the team can judge whether it is worth the hours.', { todo: '<span class="pt-todo" data-todo="Out of scope · Customer-to-Farmer messaging is not in the SRS or in .ai/REQUIREMENTS.md. R-07 says do not build what is not listed. Needs a new FR, a messages table, an unread badge, and a rule on whether a message can change an order. Note the SRS does list an AI chatbot (FR-090/091), which is a different thing.">Needs a new FR before it is built</span>' });
+  // The app has chat now (plans 4A/4B); what is left is paperwork: FR-110…117 are not in REQUIREMENTS yet.
+  document.getElementById('scope').innerHTML = PT.todo('FR-110…117 are proposals in the chat spec §4. The app has them; QA/DOC have not added them to .ai/REQUIREMENTS.md yet.');
 
   document.getElementById('threads').innerHTML = [
     { who: 'Cô Tư Garden', mono: 'C', last: 'Five is fine. Edit the order and I will accept it again.', time: '09:41', current: true },
@@ -71,12 +73,20 @@
   ].map(function (t) { return '<li><button type="button" class="pt-thread" aria-current="' + (t.current ? 'true' : 'false') + '" data-unread="' + (t.unread ? 'true' : 'false') + '"><span class="pt-thread-mono" aria-hidden="true">' + t.mono + '</span><span><b>' + PT.esc(t.who) + '</b><small>' + PT.esc(t.last) + '</small></span><time>' + t.time + '</time></button></li>'; }).join('');
 
   var ORDER_REF = '<a class="pt-msg-ref" href="../customer/order.html"><b>Order #ML-0421 · Cô Tư Garden</b>Sat 26/09 · 07:00–07:30 · 3 items · 56,000 ₫ · closes 19:00 on 25/09</a>';
+  // The product rides along with the first message when "Message this stall" is pressed on a product page (FR-114)
+  var PIN = '<a class="pt-msg-ref" href="../public/product.html"><b>Asking about · Water spinach</b>12,000 ₫ / bunch · Cô Tư Garden</a>';
+  var PHOTO = '<span class="pt-photo" role="img" aria-label="Photo from Cô Tư Garden"></span>';
   document.getElementById('log').innerHTML = [
-    { from: 'user', time: '09:12', text: 'Morning. Is the water spinach still cut on Friday this week?' },
-    { from: 'bot', time: '09:20', text: 'Yes, Friday evening as always. I should bring about 20 bunches on Saturday.' },
+    { from: 'user', time: '09:12', text: 'Morning. Is the water spinach still cut on Friday this week?' + PIN },
+    { from: 'bot', time: '09:20', text: 'Yes, Friday evening as always. This is this week\'s batch.' + PHOTO },
     { from: 'user', time: '09:33', text: 'Could you hold 5 bunches instead of 2 on this order?' + ORDER_REF },
-    { from: 'bot', time: '09:41', text: 'Five is fine. Edit the order and I will accept it again, then the count is right on my side too.', suggestions: ['Edit the order now', 'Can I collect at 09:00 instead?', 'Thank you'] },
-  ].map(function (m) { return PT.chat({ from: m.from, who: m.from === 'user' ? 'You' : 'Cô Tư Garden', time: m.time, text: m.text, suggestions: m.suggestions }); }).join('');
+    { from: 'bot', time: '09:41', text: 'Five is fine. Edit the order and I will accept it again, then the count is right on my side too.' },
+    { from: 'user', time: '09:43', text: 'Done, I edited it.', seen: true },
+  ].map(function (m) {
+    // "Seen" sits under your latest message the stall has read; "Report" only on the other person's messages
+    var extra = m.from === 'user' ? (m.seen ? '<span>· Seen</span>' : '') : '<span>· ' + PT.reportButton() + '</span>';
+    return PT.chat({ from: m.from, who: m.from === 'user' ? 'You' : 'Cô Tư Garden', time: m.time, text: m.text, extra: extra });
+  }).join('');
 
   document.querySelector('.pt-chat-input').addEventListener('submit', function (e) {
     e.preventDefault(); var v = document.getElementById('q').value.trim(); if (!v) return;
