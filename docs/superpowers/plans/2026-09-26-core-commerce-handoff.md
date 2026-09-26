@@ -5,6 +5,31 @@ Tài liệu này để một phiên Claude Code khác **thay thế hoàn toàn**
 
 ---
 
+## 0. Cập nhật cuối phiên 2 (26/09/2026) — đọc mục này trước, nó đè lên §2, §3, §10
+
+- **C1–C3 đã vào `dev`** qua PR #143 (merge `a50a654`). Nhánh `feature/FR-062-products` vẫn dùng tiếp cho C4, C5.
+- **C4 complete** (`e3fabb1` migration `V20260926011` pickup_slots, `47d1aeb` backend + seed 4 tuần slot +
+  `api-requests/stall.requests.ts`). Test 542/542.
+- **C5 đang làm, subagent-driven:** 5.1 (`V20260926012` orders/order_items/order_status_history) và 5.2
+  (`OrderLifecycle`) complete, đã review sạch. 5.3 (preview + đặt đơn) đã commit `425d8a6`, suite 591/591 xanh,
+  **CHƯA task-review**. **Tiếp theo:** review 5.3 (`review-package … 36d3ac2 425d8a6`) → 5.4 → 5.5 → 5.6 → 5.7 →
+  5.8 → `order.requests.ts`.
+- **Lỗ hổng cần xử lý trước khi chốt C5** (implementer 5.3 phát hiện, ngoài task): `ProductService`
+  setStatus/softDelete/adminHide/update lưu `Product` không khoá → ghi đè `stock_quantity` cũ, có thể làm mất phần trừ
+  của một đơn đặt xen giữa. Hướng sửa: `@DynamicUpdate` trên `Product` hoặc khoá dòng ở các đường đó (TDD).
+- `Order.cutoffAt` cần `@JdbcTypeCode(SqlTypes.LOCAL_DATE_TIME)` để lưu giờ local — mọi `LocalDateTime` ↔ `DATETIME`
+  sau này làm giống vậy.
+- Ngữ cảnh chung cho subagent C5 + phán quyết C5-0…C5-12:
+  `.superpowers/sdd/2026-09-26-marketlink-core-commerce/c5-context.md` (thư mục git-ignore — nếu mất, các phán
+  quyết cũng nằm trong ledger `progress.md`). Brief từng task: `task-5.N-brief.md` cùng thư mục.
+- **Ba câu hỏi §3:** người dùng để trống → theo diễn giải mặc định: chỉ tầng dưới (migration, backend, test, seed,
+  `frontend/src/api-requests/*.ts`); không nối trang (task x.5 / 5.9 / 5.10), không e2e trình duyệt; seed tiếng Anh.
+- **Câu hỏi mở cho người dùng:** thêm `GET /api/v1/farmer/slots` (Farmer thấy cả slot đã tắt để bật lại)? Contract §6
+  chưa có — đổi contract nên chưa làm.
+- Migration kế tiếp: **`V20260926013`** (kiểm lại `origin/dev` trước khi tạo).
+
+---
+
 ## 1. Ba file phải đọc trước khi gõ bất kỳ lệnh nào
 
 | File | Vai trò |
