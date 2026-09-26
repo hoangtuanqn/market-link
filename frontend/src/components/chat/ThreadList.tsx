@@ -12,7 +12,7 @@ type Props = {
   loading: boolean;
   error: boolean;
   onRetry: () => void;
-  /** Câu dưới "No conversations yet" theo vai: Farmer không tự mở được cuộc trò chuyện. */
+  /** The sentence under "No conversations yet", by role: a Farmer cannot open a conversation themself. */
   emptyText?: string;
   hasMore?: boolean;
   loadingMore?: boolean;

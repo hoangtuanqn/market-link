@@ -5,7 +5,7 @@ import Session from './session';
 const options = {
   baseURL: `${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}/api/v1`,
   timeout: 10000,
-  // gửi/nhận cookie refresh_token (HttpOnly) — backend bật allowCredentials
+  // send/receive the refresh_token cookie (HttpOnly) — the backend turns on allowCredentials
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -28,19 +28,20 @@ privateApi.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-/** Tên khoá Web Locks dùng chung giữa các tab cùng origin. */
+/** The Web Locks key name shared between tabs of the same origin. */
 const REFRESH_LOCK = 'marketlink-refresh-token';
 
-/** Chạy lần lượt giữa các tab (Web Locks); trình duyệt không hỗ trợ thì chạy luôn. */
+/** Run in turn across tabs (Web Locks); if the browser does not support it, run right away. */
 const withRefreshLock = <T>(task: () => Promise<T>): Promise<T> =>
   navigator.locks ? navigator.locks.request(REFRESH_LOCK, task) : task();
 
-let refreshPromise: Promise<string> | null = null; // refresh đang chạy trong tab này, các request 401 dùng chung
+let refreshPromise: Promise<string> | null = null; // a refresh already running in this tab, the 401 requests share it
 
 /**
- * Lấy access token mới. Backend xoay vòng refresh token mỗi lần gọi, nên hai tab cùng refresh bằng một cookie thì tab
- * đến sau bị từ chối: khoá giữa các tab để chúng refresh lần lượt, và nếu tab khác vừa có token mới (khác token của
- * request bị 401) thì dùng luôn, không gọi refresh nữa.
+ * Get a new access token. The backend rotates the refresh token on every call, so two tabs refreshing with one cookie
+ * makes the tab that arrives later get rejected: lock across tabs so they refresh in turn, and if another tab just
+ * obtained a new token (different from the token of the request that got 401) use it right away and do not call refresh
+ * again.
  */
 const refreshAccessToken = (staleToken: string | null) => {
   refreshPromise ??= withRefreshLock(async () => {
@@ -65,13 +66,13 @@ privateApi.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // đánh dấu trước khi chờ: request gọi lại mà vẫn 401 thì không refresh thêm lần nữa
+    // mark before waiting: a retried request that still gets 401 does not refresh once more
     origin._retry = true;
     const staleToken = String(origin.headers.Authorization ?? '').replace(/^Bearer /, '') || null;
 
     try {
       await refreshAccessToken(staleToken);
-      return privateApi(origin); // interceptor request gắn token mới từ Session
+      return privateApi(origin); // the request interceptor attaches the new token from Session
     } catch (err) {
       Session.clear();
       return Promise.reject(err);

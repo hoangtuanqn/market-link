@@ -16,9 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Chạy trên MySQL thật. Đúng cả trước lẫn sau khi có migration orders: hôm nay bảng chưa có nên
- * available = false, sau này người mới chưa có đơn nào — hai trường hợp đều là Đồng, 0 đơn, không
- * ném lỗi ra ngoài.
+ * Runs on real MySQL. Correct both before and after the orders migration exists: today the table
+ * does not exist so available = false, later a new user has no orders yet — both cases are Bronze,
+ * 0 orders, and no error is thrown outward.
  */
 @SpringBootTest
 @Transactional

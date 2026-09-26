@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Đăng ký / huỷ Web Push của trình duyệt đang dùng. Endpoint là duy nhất: đăng ký lại thì cập nhật.
+ * Register / cancel Web Push for the browser in use. The endpoint is unique: registering again
+ * updates it.
  */
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,8 @@ public class PushSubscriptionService {
                                         PushSubscription.builder()
                                                 .endpoint(request.endpoint())
                                                 .build());
-        // Cùng trình duyệt, tài khoản khác đăng nhập: thông báo từ giờ thuộc người này
+        // Same browser, a different account signs in: notifications from now on belong to this
+        // person
         s.setUserId(userId);
         s.setP256dh(request.keys().p256dh());
         s.setAuth(request.keys().auth());
@@ -40,8 +42,8 @@ public class PushSubscriptionService {
     }
 
     /**
-     * Chỉ xoá khi là của mình; của người khác thì bỏ qua, không báo lỗi để không lộ endpoint của
-     * ai.
+     * Only delete when it is yours; someone else's is skipped without an error so that whose
+     * endpoint it is is not revealed.
      */
     @Transactional
     public void unsubscribe(Long userId, String endpoint) {

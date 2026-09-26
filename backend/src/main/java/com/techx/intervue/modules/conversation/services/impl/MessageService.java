@@ -36,13 +36,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MessageService implements MessageServiceInterface {
 
-    /** Khớp VARCHAR(160) của conversations.last_message_text. */
+    /** Matches VARCHAR(160) of conversations.last_message_text. */
     static final int PREVIEW_LENGTH = 160;
 
-    /** Không cho client kéo cả lịch sử một lần. */
+    /** Do not let the client pull the whole history at once. */
     static final int MAX_PAGE = 50;
 
-    /** Xem trước của tin ảnh trong danh sách thread — không có chữ nào để hiện. */
+    /** Preview of an image message in the thread list — there is no text to show. */
     static final String IMAGE_PREVIEW = "Photo";
 
     private final MessageRepository messages;
@@ -76,7 +76,8 @@ public class MessageService implements MessageServiceInterface {
         User other = requireUser(conversation.otherMember(meId));
         policy.assertCanSend(me, other);
 
-        // R-06: kiểm ảnh TRƯỚC khi ghi tin, để một ảnh không phải của mình không tạo ra tin rỗng
+        // R-06: check the image BEFORE writing the message, so an image that is not yours does not
+        // create an empty message
         MessageAttachment attachment =
                 kind == MessageKind.IMAGE
                         ? requireOwnUnusedAttachment(meId, request.attachmentId())
@@ -100,20 +101,23 @@ public class MessageService implements MessageServiceInterface {
         }
 
         conversation.noteNewMessage(kind == MessageKind.IMAGE ? IMAGE_PREVIEW : preview(body), now);
-        // Người gửi đương nhiên đã đọc tới đây; unread của người kia tính theo mốc của họ.
+        // The sender has of course read up to here; the other person's unread is counted from their
+        // own marker.
         conversation.markRead(meId, now);
         conversations.save(conversation);
 
         MessageResource resource = MessageResource.from(saved, attachment);
-        // Chỉ phát khi đã commit: Plan 2 cắm STOMP vào seam này mà không được phát row chưa tồn
-        // tại.
+        // Only publish once committed: Plan 2 plugs STOMP into this seam and must not publish a row
+        // that does not yet
+        // exist.
         TransactionHelper.afterCommit(() -> events.messageCreated(conversation, resource));
-        // Trả lời nghĩa là đã đọc tới đây: bên kia thấy "đã xem" mà không cần ta gọi /read.
+        // Replying means having read up to here: the other side sees "seen" without us calling
+        // /read.
         TransactionHelper.afterCommit(() -> events.conversationRead(conversation, meId, now));
         return resource;
     }
 
-    /** Ảnh phải là của chính mình và chưa gắn vào tin nào — spec §8.2. */
+    /** The image must be your own and not yet attached to any message — spec §8.2. */
     private MessageAttachment requireOwnUnusedAttachment(Long meId, Long attachmentId) {
         MessageAttachment attachment =
                 attachments
@@ -139,7 +143,7 @@ public class MessageService implements MessageServiceInterface {
                                 conversationId, page)
                         : messages.findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
                                 conversationId, before, page);
-        // Một truy vấn cho cả trang, không N+1
+        // One query for the whole page, no N+1
         List<Long> imageIds =
                 found.stream()
                         .filter(m -> m.getKind() == MessageKind.IMAGE)

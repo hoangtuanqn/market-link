@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/** FR-008: admin đã bật 2FA thì bước mật khẩu không cấp phiên. */
+/** FR-008: an admin with 2FA on gets no session from the password step. */
 class UserServiceMfaTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);

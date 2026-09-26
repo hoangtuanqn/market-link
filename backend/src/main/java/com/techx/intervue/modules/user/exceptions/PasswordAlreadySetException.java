@@ -1,8 +1,8 @@
 package com.techx.intervue.modules.user.exceptions;
 
 /**
- * Tài khoản đã có mật khẩu thì không đặt lại qua set-password được (phải dùng đổi / quên mật khẩu)
- * → 409.
+ * An account that already has a password cannot use set-password (it must use change / forgot
+ * password) → 409.
  */
 public class PasswordAlreadySetException extends RuntimeException {
     public PasswordAlreadySetException() {

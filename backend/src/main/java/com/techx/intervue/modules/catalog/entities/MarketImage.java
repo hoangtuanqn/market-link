@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Một dòng = một ảnh của một chợ (V20260926013). Thứ tự hiển thị theo {@code sortOrder}. */
+/** One row = one image of one market (V20260926013). Display order follows {@code sortOrder}. */
 @Entity
 @Getter
 @Setter

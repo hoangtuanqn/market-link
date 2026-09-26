@@ -11,7 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-@Order(2) // cho nó chạy sớm nhất, vì lỗi nào cũng cần Trace Id
+@Order(2) // so it runs first, because every error needs a Trace Id
 @Component
 public class TraceIdFilter extends OncePerRequestFilter {
     @Override
@@ -24,7 +24,7 @@ public class TraceIdFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } finally {
-            // vẫn chạy nếu trong try bị throw
+            // still runs if the try block throws
             MDC.clear();
         }
     }

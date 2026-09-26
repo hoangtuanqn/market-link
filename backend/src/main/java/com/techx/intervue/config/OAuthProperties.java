@@ -2,7 +2,7 @@ package com.techx.intervue.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/** app.oauth.* — client id/secret của Google. Secret chỉ tồn tại ở backend. */
+/** app.oauth.* — Google's client id/secret. The secret exists only in the backend. */
 @ConfigurationProperties(prefix = "app.oauth")
 public record OAuthProperties(Google google) {
 

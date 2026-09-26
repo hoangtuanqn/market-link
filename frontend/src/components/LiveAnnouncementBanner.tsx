@@ -15,8 +15,9 @@ const dismissedId = () => {
 };
 
 /**
- * FR-077 — dải xanh trên header, đọc thông báo đang hiệu lực cho người đang xem. Đóng thì nhớ theo id: thông báo mới sẽ
- * hiện lại. Đăng nhập / đăng xuất / đổi role thì đọc lại, vì banner lọc theo role.
+ * FR-077 — the banner strip on the header, reads the announcement currently in effect for the person viewing. Closing
+ * it is remembered by id: a new announcement will show again. Signing in / out / changing role reads it again, because
+ * the banner is filtered by role.
  */
 const LiveAnnouncementBanner = () => {
   const [live, setLive] = useState<Announcement | null>(null);
@@ -28,7 +29,7 @@ const LiveAnnouncementBanner = () => {
     AnnouncementApi.live()
       .then((res) => !cancelled && setLive(res.data && res.data.id !== dismissedId() ? res.data : null))
       .catch(() => {
-        /* không có banner cũng không sao */
+        /* no banner is fine too */
       });
     return () => {
       cancelled = true;
@@ -41,7 +42,7 @@ const LiveAnnouncementBanner = () => {
     try {
       localStorage.setItem(DISMISSED_KEY, String(live.id));
     } catch {
-      /* private window: chỉ ẩn trong lần này */
+      /* private window: only hidden for this time */
     }
     setLive(null);
   };

@@ -1,9 +1,9 @@
-// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
+// The sample-data lookup functions are all pure: NO_SIDE_EFFECTS lets the production build drop them (config/wip.ts).
 import type { Tier } from '@/types/achievement.types';
 
 /**
- * Hạng mẫu của người mua trong dữ liệu demo, tra theo tên hiển thị. Khi API đánh giá, đơn hàng và tin nhắn trả `tier`
- * (backend: AchievementService.tiersFor) thì bỏ file này và đọc hạng từ response.
+ * Sample buyer tiers in the demo data, looked up by display name. Once the reviews, orders and messages API returns
+ * `tier` (backend: AchievementService.tiersFor) delete this file and read the tier from the response.
  */
 const DEMO_TIERS: Record<string, Tier> = {
   'Minh Anh': 'gold',

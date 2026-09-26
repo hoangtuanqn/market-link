@@ -10,16 +10,16 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * TOTP theo RFC 6238: HMAC-SHA1, 6 chữ số, bước 30 giây — đúng mặc định của Google/Microsoft
- * Authenticator. Tự viết thay vì thêm thư viện vì chỉ cần vài chục dòng và test được bằng bộ số mẫu
- * của RFC.
+ * TOTP per RFC 6238: HMAC-SHA1, 6 digits, 30-second step — exactly the defaults of Google/Microsoft
+ * Authenticator. Written by hand instead of adding a library because it only takes a few dozen
+ * lines and can be tested with the RFC's sample vectors.
  */
 public final class Totp {
 
     public static final int DIGITS = 6;
     public static final int PERIOD_SECONDS = 30;
 
-    /** Chấp nhận bước liền trước và liền sau để bù lệch đồng hồ điện thoại. */
+    /** Accept the previous and next step to compensate for phone clock drift. */
     private static final int ALLOWED_DRIFT_STEPS = 1;
 
     private static final int MODULO = 1_000_000;
@@ -31,7 +31,7 @@ public final class Totp {
         return Math.floorDiv(instant.getEpochSecond(), PERIOD_SECONDS);
     }
 
-    /** Mã 6 số của một bước thời gian (RFC 4226 §5.3, dynamic truncation). */
+    /** The 6-digit code for one time step (RFC 4226 §5.3, dynamic truncation). */
     public static String code(byte[] secret, long step) {
         byte[] hash = hmacSha1(secret, ByteBuffer.allocate(Long.BYTES).putLong(step).array());
         int offset = hash[hash.length - 1] & 0x0f;
@@ -44,8 +44,9 @@ public final class Totp {
     }
 
     /**
-     * Bước thời gian khớp với mã (trong khoảng ±1 bước quanh {@code now}), rỗng nếu không khớp. Gọi
-     * phía trên tự chặn dùng lại bằng cách chỉ nhận bước lớn hơn bước đã dùng.
+     * The time step that matches the code (within ±1 step around {@code now}), empty if it does not
+     * match. The caller guards against reuse by accepting only a step greater than the one already
+     * used.
      */
     public static OptionalLong match(byte[] secret, String code, Instant now) {
         if (code == null || !code.matches("\\d{" + DIGITS + "}")) {
@@ -57,7 +58,8 @@ public final class Totp {
                 step <= current + ALLOWED_DRIFT_STEPS;
                 step++) {
             byte[] expected = code(secret, step).getBytes(StandardCharsets.US_ASCII);
-            // so sánh thời gian hằng, không lộ số chữ số đúng qua thời gian phản hồi
+            // constant-time comparison, does not leak the number of correct digits through response
+            // time
             if (MessageDigest.isEqual(expected, given)) {
                 return OptionalLong.of(step);
             }
@@ -65,7 +67,7 @@ public final class Totp {
         return OptionalLong.empty();
     }
 
-    /** Base32 không padding (RFC 4648) — định dạng khoá mà app authenticator nhận. */
+    /** Base32 without padding (RFC 4648) — the key format that authenticator apps accept. */
     public static String base32(byte[] data) {
         StringBuilder out = new StringBuilder((data.length * 8 + 4) / 5);
         int buffer = 0;
@@ -90,7 +92,7 @@ public final class Totp {
             mac.init(new SecretKeySpec(key, "HmacSHA1"));
             return mac.doFinal(message);
         } catch (GeneralSecurityException e) {
-            // HmacSHA1 luôn có trong mọi JDK
+            // HmacSHA1 is available in every JDK
             throw new IllegalStateException("HmacSHA1 is not available", e);
         }
     }

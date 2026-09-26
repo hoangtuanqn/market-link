@@ -16,8 +16,8 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 /**
- * FR-110: một thread cho một cặp người dùng. Luôn giữ userAId < userBId để (3,7) và (7,3) là cùng
- * một dòng; ai là "stall" trong thread được quyết lúc hiển thị, theo vai của người đối diện.
+ * FR-110: one thread per pair of users. Always keep userAId < userBId so (3,7) and (7,3) are the
+ * same row; who is the "stall" in a thread is decided at display time, by the other party's role.
  */
 @Entity
 @Getter
@@ -27,8 +27,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @Builder
 @Table(name = "conversations")
 /*
- * DynamicUpdate: A gửi tin trong lúc B đánh dấu đã đọc. Không có nó, UPDATE của A ghi lại mọi cột
- * từ snapshot cũ và xoá mốc đọc B vừa commit (review finding #1). Có nó, mỗi bên chỉ ghi cột mình đổi.
+ * DynamicUpdate: A sends a message while B marks it read. Without it, A's UPDATE rewrites every column
+ * from the old snapshot and erases the read marker B just committed (review finding #1). With it, each side only writes the columns it changed.
  */
 @DynamicUpdate
 public class Conversation {
@@ -57,7 +57,9 @@ public class Conversation {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
-    /** Không ghi đè khi đã có giá trị: test tích hợp cần đặt mốc thời gian chính xác. */
+    /**
+     * Do not overwrite when a value already exists: integration tests need to set exact timestamps.
+     */
     @PrePersist
     protected void onCreated() {
         if (createdAt == null) {
@@ -65,7 +67,10 @@ public class Conversation {
         }
     }
 
-    /** Cặp đã chuẩn hoá thứ tự; hai id giống nhau là lỗi lập trình, không phải lỗi người dùng. */
+    /**
+     * The pair is already normalized in order; two identical ids is a programming error, not a user
+     * error.
+     */
     public static Conversation between(Long x, Long y) {
         if (x.equals(y)) {
             throw new IllegalArgumentException("A conversation needs two different users.");

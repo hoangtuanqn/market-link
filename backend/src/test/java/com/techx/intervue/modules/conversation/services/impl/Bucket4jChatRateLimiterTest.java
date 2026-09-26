@@ -89,7 +89,7 @@ class Bucket4jChatRateLimiterTest {
                 .isEqualTo(10);
     }
 
-    /** Review Focus #4: Redis chết thì chat vẫn chạy, chỉ mất lớp chống spam. */
+    /** Review Focus #4: if Redis is down chat still works, only the anti-spam layer is lost. */
     @Test
     void letsTheRequestThroughWhenRedisIsDown() {
         when(bucket.tryConsume(1)).thenThrow(new QueryTimeoutException("redis is gone"));
@@ -98,9 +98,9 @@ class Bucket4jChatRateLimiterTest {
     }
 
     /**
-     * Nếu không kiểm lúc dựng, capacity <= 0 sẽ ném IllegalArgumentException từ bên trong khối try
-     * của check(), bị nhánh fail-open nuốt, và rate limit tắt lặng lẽ với log nhầm thành "Redis
-     * unavailable".
+     * If it is not checked at build time, capacity <= 0 would throw IllegalArgumentException from
+     * inside the try block of check(), be swallowed by the fail-open branch, and the rate limit
+     * would be turned off silently with a log wrongly reading "Redis unavailable".
      */
     @Test
     void aNonPositiveLimitIsRefusedAtStartupInsteadOfSilentlyDisablingTheLimiter() {

@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-116. Đường dẫn theo tin nhắn chứ không theo thread (spec §6.1): client đang cầm sẵn messageId
- * từ danh sách tin, không cần bắt nó nhắc lại conversationId.
+ * FR-116. The path is by message, not by thread (spec §6.1): the client already holds the messageId
+ * from the message list, no need to make it repeat the conversationId.
  */
 @RestController
 @RequestMapping("/api/v1/messages")

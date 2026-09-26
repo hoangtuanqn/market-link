@@ -72,7 +72,7 @@ const DashboardShell = ({
       return false; // private window
     }
   });
-  // Drawer (mobile) chỉ mở trên trang đã bấm mở nó — chuyển trang là tự đóng, không cần effect.
+  // The drawer (mobile) is only open on the page where it was opened — changing page closes it, no effect needed.
   const [openedOn, setOpenedOn] = useState<string | null>(null);
   const mobileOpen = openedOn === pathname;
   const setMobileOpen = (open: boolean) => setOpenedOn(open ? pathname : null);

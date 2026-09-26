@@ -14,17 +14,20 @@ import Notification from '@/utils/notification';
 type Props = {
   conversationId: number | null;
   thread: ConversationSummary | null;
-  /** Quay lại danh sách ở màn hẹp (spec §9.2). Nút tự ẩn từ `md`, nơi danh sách và hội thoại nằm cạnh nhau. */
+  /**
+   * Back to the list on a narrow screen (spec §9.2). The button hides itself from `md` up, where the list and the
+   * conversation sit side by side.
+   */
   onBack?: () => void;
-  /** Chỗ cho nút riêng của từng vai (Farmer: "Make an offer" ở đợt 2). */
+  /** A slot for each role's own button (Farmer: "Make an offer" in phase 2). */
   headerAction?: ReactNode;
   pinnedProductId?: number;
   onUnpin?: () => void;
 };
 
 /**
- * Tin cuối cùng của mình mà đối phương đã đọc tới. So bằng Date, không so chuỗi ISO: backend có lúc trả `.123Z`, có lúc
- * không.
+ * The last message of mine that the other person has read up to. Compared as a Date, not as an ISO string: the backend
+ * sometimes returns `.123Z`, sometimes not.
  */
 const lastSeenId = (messages: ChatMessageItem[], meId: number | null, otherReadAt: string | null) => {
   if (!otherReadAt || meId === null) return null;
@@ -66,7 +69,7 @@ export default function ConversationPanel({
   const newestId = messages.length > 0 ? messages[messages.length - 1].id : null;
   const seenId = lastSeenId(messages, meId, otherReadAt);
 
-  // Chỉ cuộn khi tin MỚI NHẤT đổi: tải trang cũ thêm vào phía trên thì giữ nguyên chỗ đang đọc (Review Focus #2)
+  // Only scrolls when the NEWEST message changes: loading an older page adds it above and keeps the current reading spot (Review Focus #2)
   useEffect(() => {
     if (newestId !== null) bottom.current?.scrollIntoView({ block: 'end' });
   }, [newestId]);

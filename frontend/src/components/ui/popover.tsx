@@ -6,15 +6,15 @@ import Helper from '@/utils/helper';
 type Props = {
   label: string;
   trigger: ReactNode;
-  /** Trang đầy đủ; panel luôn có link "See all" tới đây (điện thoại không hover được). */
+  /** The full page; the panel always has a "See all" link to it (a phone cannot hover). */
   to: string;
   children: ReactNode;
   buttonClassName?: string;
 };
 
 /**
- * Popover của header (spec §9.1): hover **và** click/phím, Esc hoặc bấm ra ngoài để đóng, `aria-expanded` trên nút.
- * Panel `shadow-pop`, `z-50` — trên header (`z-40`).
+ * The header's popover (spec §9.1): hover **and** click/keyboard, Esc or clicking outside closes it, `aria-expanded` on
+ * the button. Panel `shadow-pop`, `z-50` — above the header (`z-40`).
  */
 export function Popover({ label, trigger, to, children, buttonClassName }: Props) {
   const { t } = useTranslation('common');
@@ -23,7 +23,7 @@ export function Popover({ label, trigger, to, children, buttonClassName }: Props
   const button = useRef<HTMLButtonElement>(null);
   const panelId = useId();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Đang mở vì chuột rê vào: bấm vào biểu tượng lúc đó giữ nguyên, không đóng
+  // Open because the mouse hovered in: clicking the icon at that point leaves it open, does not close it
   const hovering = useRef(false);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export function Popover({ label, trigger, to, children, buttonClassName }: Props
     };
   }, [open]);
 
-  // Rê chuột từ nút sang panel đi qua một khe nhỏ: đợi một nhịp trước khi đóng
+  // Moving the mouse from the button to the panel crosses a small gap: wait one beat before closing
   const enter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     hovering.current = true;

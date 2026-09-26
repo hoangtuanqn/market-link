@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-077 — banner thông báo ở trang public (khách vãng lai cũng đọc được). */
+/** FR-077 — notice banner on the public pages (guests can read it too). */
 @RestController
 @RequestMapping("/api/v1/announcements")
 @AllArgsConstructor
@@ -25,9 +25,9 @@ public class PublicAnnouncementController extends BaseController {
     private final AnnouncementServiceInterface announcements;
 
     /**
-     * data null khi không có thông báo nào đang hiệu lực cho người xem. Gửi kèm access token thì
-     * banner lọc theo role của phiên (bài "chỉ Farmer" không hiện cho Customer); không gửi thì chỉ
-     * thấy bài cho mọi người.
+     * data is null when no announcement is currently in effect for the viewer. When an access token
+     * is sent the banner is filtered by the session's role (a "Farmers only" post does not show for
+     * a Customer); when it is not sent only posts for everyone are seen.
      */
     @GetMapping("/active")
     public ResponseEntity<ApiResource<AnnouncementResource>> active(
@@ -35,7 +35,10 @@ public class PublicAnnouncementController extends BaseController {
         return ok(announcements.live(roleOf(me)).orElse(null), "OK");
     }
 
-    /** Role lấy từ authority của phiên (JwtAuthFilter dựng từ Redis), không từ request. */
+    /**
+     * The role comes from the session's authority (built by JwtAuthFilter from Redis), not from the
+     * request.
+     */
     private static RoleType roleOf(CustomUserDetails me) {
         if (me == null) {
             return null;

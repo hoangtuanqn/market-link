@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 
-/** Các dòng dữ liệu mà ChatKnowledgeRepository đọc ra. */
+/** The data rows that ChatKnowledgeRepository reads out. */
 public final class KnowledgeRows {
 
     private KnowledgeRows() {}

@@ -6,8 +6,9 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
- * Body của POST /api/v1/admin/markets/{marketId}/closures. {@code handling} là chuỗi
- * move|contact|cancel, kiểm tay ở service — cùng cách AdminFarmerController xác thực status.
+ * Body of POST /api/v1/admin/markets/{marketId}/closures. {@code handling} is the string
+ * move|contact|cancel, checked by hand in the service — the same way AdminFarmerController
+ * validates status.
  */
 public record MarketClosureRequest(
         @NotNull(message = "Date is required.") LocalDate closedOn,

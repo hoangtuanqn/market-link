@@ -8,7 +8,9 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import java.time.Instant;
 import lombok.Builder;
 
-/** Người đối diện trong một thread. Không lộ email, phone, address. FR-112: online / lần cuối. */
+/**
+ * The other person in a thread. Does not expose email, phone, address. FR-112: online / last seen.
+ */
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ParticipantResource(
@@ -22,8 +24,9 @@ public record ParticipantResource(
         String stallName) {
 
     /**
-     * `stall` null khi người kia không có hồ sơ stall (Customer): farmerId và stallName vắng mặt.
-     * Khách nhắn cho một sạp, nên FE hiện stallName trước, fullName sau (spec §9.2).
+     * `stall` is null when the other person has no stall profile (a Customer): farmerId and
+     * stallName are absent. A customer messages a stall, so the FE shows stallName first, fullName
+     * second (spec §9.2).
      */
     public static ParticipantResource from(
             User user, PresenceService.PresenceInfo presence, FarmerProfile stall) {

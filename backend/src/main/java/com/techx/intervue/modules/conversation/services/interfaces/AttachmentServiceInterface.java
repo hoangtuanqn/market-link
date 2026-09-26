@@ -6,16 +6,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface AttachmentServiceInterface {
 
-    /** Tải ảnh lên, chưa gắn vào tin nào. Gắn xảy ra lúc gửi tin (MessageService). */
+    /**
+     * Upload an image, not yet attached to any message. Attaching happens when the message is sent
+     * (MessageService).
+     */
     AttachmentResource upload(Long meId, MultipartFile file);
 
-    /** Spec §8.2: file chỉ ra ngoài qua đây, sau khi kiểm tư cách thành viên. */
+    /** Spec §8.2: files only leave through here, after checking membership. */
     StoredFile read(Long meId, Long attachmentId);
 
     /**
-     * Spec §8.3 + quyết định LEAD 26/09: admin xem được ảnh của tin ĐÃ bị báo cáo, và chỉ tin đó —
-     * không phải ảnh của ±5 tin ngữ cảnh. Không đi qua kiểm tư cách thành viên vì admin không phải
-     * thành viên; đây là một con đường riêng, hẹp hơn, và có ghi log.
+     * Spec §8.3 + LEAD decision 26/09: an admin can view the image of a message that HAS been
+     * reported, and only that message — not the images of the ±5 context messages. It does not go
+     * through the membership check because an admin is not a member; this is a separate, narrower
+     * path, and it is logged.
      */
     StoredFile readAsAdmin(Long adminId, Long attachmentId);
 

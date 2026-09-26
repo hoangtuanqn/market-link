@@ -3,8 +3,8 @@ package com.techx.intervue.modules.conversation.realtime;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * app.chat.rabbitmq.host rỗng → simple broker trong app (CI, test, máy dev không có Rabbit). Có
- * host → relay sang RabbitMQ (docker compose, production).
+ * app.chat.rabbitmq.host empty → the in-app simple broker (CI, tests, dev machines without Rabbit).
+ * With a host → relay to RabbitMQ (docker compose, production).
  */
 @ConfigurationProperties(prefix = "app.chat")
 public record ChatRealtimeProperties(Rabbitmq rabbitmq) {

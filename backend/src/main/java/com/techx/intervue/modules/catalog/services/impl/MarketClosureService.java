@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Panel "Closed days" trên form Market (FE) — chưa có FR chính thức, xem migration V…014. */
+/** The "Closed days" panel on the Market form (FE) — no official FR yet, see migration V…014. */
 @Service
 @AllArgsConstructor
 public class MarketClosureService implements MarketClosureServiceInterface {

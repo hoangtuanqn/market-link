@@ -24,7 +24,10 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     @Query("update Notification n set n.read = true where n.userId = :userId and n.read = false")
     int markAllRead(@Param("userId") Long userId);
 
-    /** FR-077: một câu cho cả audience — user active, đúng role; link theo khu của từng vai. */
+    /**
+     * FR-077: one statement for the whole audience — active users, the right role; link by each
+     * role's area.
+     */
     @Modifying(flushAutomatically = true)
     @Query(
             nativeQuery = true,

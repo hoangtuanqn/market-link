@@ -46,7 +46,7 @@ const msg = (id: number, senderId = 3, conversationId = 42) => ({
 
 const ok = <T>(data: T) => ({ success: true, message: 'OK', data, timestamp: '' }) as never;
 
-/** Một promise mà test tự quyết lúc nào trả về, để dựng phản hồi đến muộn. */
+/** A promise the test decides itself when to resolve, to simulate a late response. */
 const deferred = <T>() => {
   let resolve!: (value: T) => void;
   const promise = new Promise<T>((r) => {
@@ -57,7 +57,7 @@ const deferred = <T>() => {
 
 const emit = (destination: string, payload: unknown) => act(() => handlers.get(destination)?.(JSON.stringify(payload)));
 
-/** Socket vừa nối lại xong. */
+/** The socket has just reconnected. */
 const reconnect = () =>
   act(() => {
     connectListeners.forEach((listener) => listener());
@@ -84,7 +84,7 @@ describe('useConversation', () => {
     await waitFor(() => expect(ConversationApi.markRead).toHaveBeenCalledWith(42));
   });
 
-  /** Tin đã tải xong mà chỉ bước đánh dấu đã đọc hỏng thì vẫn phải hiện thread, không phải màn lỗi. */
+  /** Messages loaded fine but only the mark-as-read step failed: the thread must still show, not an error screen. */
   it('still shows the thread when marking it read fails', async () => {
     vi.mocked(ConversationApi.markRead).mockRejectedValue(new Error('429'));
     const { result } = renderHook(() => useConversation(42));
@@ -112,7 +112,7 @@ describe('useConversation', () => {
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
   });
 
-  /** Review Focus #3: admin ẩn một tin → cả hai bên thấy nó biến mất ngay. */
+  /** Review Focus #3: an admin hides a message → both sides see it disappear right away. */
   it('removes a message an admin hid', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -122,7 +122,7 @@ describe('useConversation', () => {
     expect(result.current.messages.map((m) => m.id)).toEqual([1, 3]);
   });
 
-  /** Review Focus #7: tab ở nền thì chưa "xem"; hiện tab lên mới đánh dấu. */
+  /** Review Focus #7: a backgrounded tab has not "seen" it yet; only bringing the tab forward marks it read. */
   it('waits until the tab is visible before marking read', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -140,14 +140,14 @@ describe('useConversation', () => {
     visibility.mockRestore();
   });
 
-  /** "Seen" còn sau khi tải lại: bắt đầu từ mốc đọc mà danh sách thread đã có. */
+  /** "Seen" survives a reload: it starts from the read marker the thread list already had. */
   it('starts from the read marker the thread list already has', () => {
     const { result } = renderHook(() => useConversation(42, { otherReadAt: '2026-09-26T10:05:00Z' }));
 
     expect(result.current.otherReadAt).toBe('2026-09-26T10:05:00Z');
   });
 
-  /** Review Focus #1 ở tầng hook: gửi xong thì sự kiện về cũng không nhân đôi bong bóng. */
+  /** Review Focus #1 at the hook layer: after sending, the event coming back must not double the bubble either. */
   it('does not show a message twice when the socket echoes what REST already returned', async () => {
     vi.mocked(ConversationApi.send).mockResolvedValue(ok(msg(4, 7)));
     const { result } = renderHook(() => useConversation(42));
@@ -169,7 +169,7 @@ describe('useConversation', () => {
     expect(ConversationApi.messages).toHaveBeenLastCalledWith(42, { before: 1, size: 30 });
   });
 
-  /** Bấm "tải thêm" hai lần liền: một request là đủ. */
+  /** Clicking "load more" twice in a row: one request is enough. */
   it('does not ask for the same older page twice at once', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -186,7 +186,7 @@ describe('useConversation', () => {
     expect(ConversationApi.messages).toHaveBeenCalledTimes(1);
   });
 
-  /** Trang cũ hỏng thì báo riêng, không xoá những tin đang đọc và không ném lỗi ra ngoài. */
+  /** A failed old page reports on its own, without clearing messages already read and without throwing outward. */
   it('reports a failed older page without losing the thread', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -199,7 +199,7 @@ describe('useConversation', () => {
     expect(result.current.messages).toHaveLength(3);
   });
 
-  /** Trang cuối trả ít hơn size → không còn gì để tải, nút "tải thêm" phải tắt. */
+  /** The last page returns fewer than size → nothing left to load, the "load more" button must turn off. */
   it('knows when there is nothing older left', async () => {
     const { result } = renderHook(() => useConversation(42));
 
@@ -217,7 +217,10 @@ describe('useConversation', () => {
     await waitFor(() => expect(result.current.otherTyping).toBe(true));
   });
 
-  /** Người kia gõ xong và gửi: tin tới là đủ biết họ ngừng gõ, không đợi 6 giây hay một frame typing:false. */
+  /**
+   * The other person finished typing and sent: the arriving message is enough to know they stopped, no need to wait 6
+   * seconds or a typing:false frame.
+   */
   it('hides the typing dots as soon as their message arrives', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -228,7 +231,7 @@ describe('useConversation', () => {
     expect(result.current.otherTyping).toBe(false);
   });
 
-  /** Spec §7.4: chiều vào duy nhất là /app/typing với { conversationId, typing }. */
+  /** Spec §7.4: the only inbound path is /app/typing with { conversationId, typing }. */
   it('tells the other person when I start and stop typing', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -240,7 +243,10 @@ describe('useConversation', () => {
     expect(realtime.publish).toHaveBeenNthCalledWith(2, '/app/typing', { conversationId: 42, typing: false });
   });
 
-  /** Composer gọi typing(true) ở mỗi phím; server giới hạn 120 frame/phút và bỏ im lặng phần vượt. */
+  /**
+   * Composer calls typing(true) on every keystroke; the server caps it at 120 frames/minute and silently drops the
+   * rest.
+   */
   it('does not send a frame for every keystroke', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -256,7 +262,7 @@ describe('useConversation', () => {
     expect(realtime.publish).toHaveBeenCalledTimes(2);
   });
 
-  /** Đang gõ dở mà rời thread thì ba chấm bên kia phải tắt ngay, không đợi 6 giây. */
+  /** Leaving mid-typing must turn off the other side's three dots right away, without waiting 6 seconds. */
   it('says I stopped typing when I leave the thread mid-sentence', async () => {
     const { result, rerender } = renderHook(({ id }) => useConversation(id), { initialProps: { id: 42 } });
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -267,7 +273,7 @@ describe('useConversation', () => {
     expect(realtime.publish).toHaveBeenLastCalledWith('/app/typing', { conversationId: 42, typing: false });
   });
 
-  /** FR-112 "đã xem": backend gửi "read" cho người gửi khi đối phương đọc. */
+  /** FR-112 "seen": the backend sends "read" to the sender when the other person reads. */
   it('remembers when the other person read the thread', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -289,7 +295,10 @@ describe('useConversation', () => {
     expect(result.current.otherReadAt).toBe('2026-09-26T10:02:00Z');
   });
 
-  /** Màn 1440px đổi thread tại chỗ, không dựng lại panel: tin của thread cũ không được nán lại. */
+  /**
+   * The 1440px screen switches thread in place, without remounting the panel: the old thread's messages must not
+   * linger.
+   */
   it('drops the previous thread as soon as another one is picked', async () => {
     const { result, rerender } = renderHook(({ id }) => useConversation(id), { initialProps: { id: 42 } });
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -300,7 +309,7 @@ describe('useConversation', () => {
     expect(result.current.messages).toEqual([]);
   });
 
-  /** Bấm thread A rồi B thật nhanh, mà A trả lời sau B: tin của A không được đè lên màn B. */
+  /** Clicking thread A then B quickly, with A's reply arriving after B's: A's message must not land on B's screen. */
   it('ignores a late answer for a thread that is no longer open', async () => {
     const late = deferred<unknown>();
     vi.mocked(ConversationApi.messages).mockReturnValueOnce(late.promise as never);
@@ -324,7 +333,7 @@ describe('useConversation', () => {
     expect(realtime.publish).not.toHaveBeenCalled();
   });
 
-  /** Review Focus #3: STOMP tự nối lại nhưng không phát lại tin đã lỡ. */
+  /** Review Focus #3: STOMP reconnects on its own but does not replay missed messages. */
   it('refetches the open thread when the socket comes back', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -335,7 +344,10 @@ describe('useConversation', () => {
     await waitFor(() => expect(ConversationApi.messages).toHaveBeenCalledWith(42, { size: 30 }));
   });
 
-  /** Tải bù chỉ GỘP trang mới nhất vào, không thay cả danh sách: trang cũ đã cuộn lên đọc vẫn còn. */
+  /**
+   * Catch-up only MERGES the newest page in, it does not replace the whole list: an old page already scrolled up to is
+   * kept.
+   */
   it('catches up without dropping the older pages already loaded', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -382,7 +394,7 @@ describe('useThreadList', () => {
     expect(result.current.threads[0].lastMessageText).toBe('still fresh?');
   });
 
-  /** Review Focus #3: dòng xem trước có thể chính là tin vừa bị ẩn. */
+  /** Review Focus #3: a preview line can be the exact message that was just hidden. */
   it('refreshes the preview when a message is hidden', async () => {
     const { result } = renderHook(() => useThreadList());
     await waitFor(() => expect(result.current.threads).toHaveLength(1));
@@ -418,7 +430,10 @@ describe('useThreadList', () => {
     expect(result.current.loading).toBe(false);
   });
 
-  /** Khách nhắn lần đầu: farmer chưa có thread đó trong danh sách, và sự kiện không mang tên người gửi. */
+  /**
+   * A customer's first message: the farmer does not have that thread in their list yet, and the event carries no sender
+   * name.
+   */
   it('reloads the list when a message lands in a thread it does not have yet', async () => {
     const { result } = renderHook(() => useThreadList());
     await waitFor(() => expect(result.current.threads).toHaveLength(1));
@@ -435,8 +450,9 @@ describe('useThreadList', () => {
   });
 
   /**
-   * Backend gửi "read" cho người KIA, không gửi cho người vừa đọc; và tin tới thread đang mở vẫn mang unreadCount 1 vì
-   * nó được đếm trước khi hook kịp đánh dấu đã đọc. Thread đang mở thì badge phải là 0.
+   * The backend sends "read" to the OTHER person, not to the one who just read; and a message arriving to an open
+   * thread still carries unreadCount 1 because it is counted before the hook can mark it read. An open thread's badge
+   * must be 0.
    */
   it('clears the badge of the thread that is open, and keeps it clear', async () => {
     vi.mocked(ConversationApi.list).mockResolvedValue(page(summary(42, 3)));
@@ -464,7 +480,10 @@ describe('useThreadList', () => {
     expect(result.current.threads[0].other.online).toBe(true);
   });
 
-  /** Review Focus #3 cho danh sách: preview và badge tới lúc rớt mạng phải được bù, mà không nháy màn "đang tải". */
+  /**
+   * Review Focus #3 for the list: the preview and badge must catch up after a network drop, without flashing a
+   * "loading" screen.
+   */
   it('catches up quietly when the socket comes back', async () => {
     const { result } = renderHook(() => useThreadList());
     await waitFor(() => expect(result.current.threads).toHaveLength(1));

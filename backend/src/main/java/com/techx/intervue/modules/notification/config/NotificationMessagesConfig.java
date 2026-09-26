@@ -5,7 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
-/** Bundle riêng cho text thông báo (i18n/notifications*.properties), 10 ngôn ngữ như frontend. */
+/**
+ * A separate bundle for notification text (i18n/notifications*.properties), 10 languages like the
+ * frontend.
+ */
 @Configuration
 public class NotificationMessagesConfig {
 
@@ -14,7 +17,7 @@ public class NotificationMessagesConfig {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
         source.setBasename("i18n/notifications");
         source.setDefaultEncoding("UTF-8");
-        // Ngôn ngữ thiếu → notifications.properties (English), không theo locale của máy chủ
+        // A missing language → notifications.properties (English), not the server's locale
         source.setFallbackToSystemLocale(false);
         source.setUseCodeAsDefaultMessage(true);
         return source;

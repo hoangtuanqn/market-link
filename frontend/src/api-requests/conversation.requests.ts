@@ -10,7 +10,7 @@ type SendBody = {
   attachmentId?: number;
 };
 
-/** FR-110…115 — chat người–người (docs/api-contract.md §12). */
+/** FR-110…115 — person-to-person chat (docs/api-contract.md §12). */
 class ConversationApi {
   static list = async (params: { page: number; size: number }) => {
     const response = await privateApi.get<ApiResponse<PageType<ConversationSummary>>>('/conversations', {
@@ -19,7 +19,7 @@ class ConversationApi {
     return response.data;
   };
 
-  /** Idempotent: đã có thread với người này thì trả lại cái cũ. */
+  /** Idempotent: if a thread with this person already exists, it is returned as is. */
   static open = async (farmerId: number) => {
     const response = await privateApi.post<ApiResponse<ConversationSummary>>('/conversations', {
       farmerId,
@@ -27,7 +27,7 @@ class ConversationApi {
     return response.data;
   };
 
-  /** Phân trang keyset: `before` là id tin cũ nhất đang có; API trả mới → cũ. */
+  /** Keyset pagination: `before` is the id of the oldest message currently held; the API returns newest → oldest. */
   static messages = async (id: number, params: { before?: number; size: number }) => {
     const response = await privateApi.get<ApiResponse<ChatMessageItem[]>>(`/conversations/${id}/messages`, {
       params,
@@ -50,7 +50,7 @@ class ConversationApi {
     return response.data;
   };
 
-  /** Field name phải là `file` — backend đọc @RequestParam MultipartFile file. */
+  /** The field name must be `file` — the backend reads @RequestParam MultipartFile file. */
   static uploadPhoto = async (file: File) => {
     const form = new FormData();
     form.append('file', file);
@@ -59,15 +59,15 @@ class ConversationApi {
   };
 
   /**
-   * JWT đi ở header `Authorization`, không ở cookie, nên `<img src="/api/v1/attachments/5">` trả 401. Phải tải bằng
-   * axios rồi bọc thành blob URL — và người gọi phải revoke lúc rời màn.
+   * The JWT travels in the `Authorization` header, not a cookie, so `<img src="/api/v1/attachments/5">` returns 401. It
+   * must be loaded with axios and wrapped as a blob URL — and the caller must revoke it on leaving the screen.
    */
   static photoBlob = async (attachmentId: number) => {
     const response = await privateApi.get<Blob>(`/attachments/${attachmentId}`, { responseType: 'blob' });
     return URL.createObjectURL(response.data);
   };
 
-  /** FR-116. Báo lần hai cùng một tin → 409 (uq_report_once). */
+  /** FR-116. Reporting the same message twice → 409 (uq_report_once). */
   static report = async (messageId: number, body: { reason: ReportReason; note?: string }) => {
     const response = await privateApi.post<ApiResponse<unknown>>(`/messages/${messageId}/report`, body);
     return response.data;

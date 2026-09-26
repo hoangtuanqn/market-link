@@ -21,9 +21,10 @@ const attach = (destination: string) => {
 };
 
 /**
- * Một kết nối STOMP cho cả app (thông báo FR-042 và về sau chat Plan 4). JWT gửi ở frame CONNECT
- * (StompAuthInterceptor). Trước mỗi lần nối gọi một API riêng tư: token hết hạn thì interceptor axios refresh xong mới
- * đọc token, nên nối lại sau khi mở tab lâu không kẹt ở token cũ.
+ * One STOMP connection for the whole app (FR-042 notifications and later Plan 4 chat). The JWT is sent in the CONNECT
+ * frame (StompAuthInterceptor). Before each connect call a private API: if the token expired the axios interceptor
+ * refreshes and only then reads the token, so reconnecting after a tab was open a long time does not get stuck on the
+ * old token.
  */
 export const realtime = {
   start() {
@@ -37,7 +38,7 @@ export const realtime = {
         try {
           await NotificationApi.unreadCount();
         } catch {
-          /* mất mạng hoặc hết phiên: vẫn thử nối, lần sau thử lại */
+          /* no network or session ended: still try to connect, retry next time */
         }
         c.connectHeaders = { Authorization: `Bearer ${Session.getAccessToken() ?? ''}` };
       },
@@ -59,8 +60,9 @@ export const realtime = {
   },
 
   /**
-   * Chạy mỗi lần nối (hoặc nối lại) xong. Broker không phát lại những gì tới lúc rớt — kể cả khi backend khởi động lại
-   * mà mạng máy vẫn còn, lúc đó trình duyệt không bắn sự kiện `online` — nên ai giữ dữ liệu realtime thì tải bù ở đây.
+   * Runs after every connect (or reconnect). The broker does not replay what was missed during a drop — even when the
+   * backend restarts while the machine's network stays up, in which case the browser never fires an `online` event — so
+   * whoever holds realtime data must catch up here.
    */
   onConnect(listener: () => void) {
     connectListeners.add(listener);
@@ -69,12 +71,12 @@ export const realtime = {
     };
   },
 
-  /** Gửi một frame lên server (chat: /app/typing). Chưa nối thì bỏ: tín hiệu thoáng qua, không đáng xếp hàng chờ. */
+  /** Sends one frame to the server (chat: /app/typing). Skipped if not connected: a transient signal, not worth queuing. */
   publish(destination: string, body: unknown) {
     if (client?.connected) client.publish({ destination, body: JSON.stringify(body) });
   },
 
-  /** Nghe một đích; trả hàm huỷ. Gọi trước hay sau khi nối đều được. */
+  /** Listen to a destination; returns an unsubscribe function. Can be called before or after connecting. */
   subscribe(destination: string, handler: Handler) {
     if (!handlers.has(destination)) handlers.set(destination, new Set());
     handlers.get(destination)!.add(handler);

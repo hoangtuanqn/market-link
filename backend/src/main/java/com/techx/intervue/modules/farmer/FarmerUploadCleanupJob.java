@@ -17,9 +17,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Người dùng tải ảnh lên rồi bỏ ngang, không bấm gửi: file nằm lại trên ổ đĩa mãi. Mỗi giờ quét một
- * lần, xoá ảnh/video cũ hơn 24 giờ mà không đơn nào — hiện tại hay trong lịch sử — còn trỏ tới.
- * Cùng cách làm với {@code ChatAttachmentCleanupJob}. @EnableScheduling đã bật ở AppConfig.
+ * A user uploads an image and abandons it without submitting: the file stays on disk forever. Once
+ * an hour it sweeps, deleting images/videos older than 24 hours that no application — current or
+ * historical — still points to. Same approach as {@code
+ * ChatAttachmentCleanupJob}. @EnableScheduling is already on in AppConfig.
  */
 @Slf4j
 @Component
@@ -49,7 +50,7 @@ public class FarmerUploadCleanupJob {
         }
     }
 
-    /** Mọi đường dẫn tài khoản này còn dùng: đơn hiện tại cộng mọi lần đã nộp. */
+    /** Every path this account still uses: the current application plus every past submission. */
     private Set<String> referencedBy(Long userId) {
         Set<String> urls = new HashSet<>();
         profiles.findByUserId(userId)

@@ -1,12 +1,12 @@
 import i18n from '@/i18n';
 import type { UpdateProfileInput } from '@/types/auth.types';
 
-/** Di động Việt Nam: 10 số, đầu 03/05/07/08/09 (RegisterRules.PHONE_REGEX của backend). */
+/** Vietnamese mobile: 10 digits, starting with 03/05/07/08/09 (the backend's RegisterRules.PHONE_REGEX). */
 export const PHONE_REGEX = /^0[35789][0-9]{8}$/;
 
 export type ProfileErrors = Partial<Record<keyof UpdateProfileInput, string>>;
 
-/** Họ tên, số điện thoại, địa chỉ — cùng luật với UpdateProfileRequest của backend. */
+/** Full name, phone number, address — same rules as the backend's UpdateProfileRequest. */
 export const validateProfile = (form: UpdateProfileInput): ProfileErrors => {
   const errors: ProfileErrors = {};
   const fullName = form.fullName.trim();

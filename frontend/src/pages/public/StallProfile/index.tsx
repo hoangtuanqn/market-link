@@ -188,7 +188,7 @@ const StallProfilePage = () => {
               {t('approved')}
             </span>
             <div className="flex flex-wrap justify-end gap-2">
-              {/* Favorites (FR-040) chưa có API: nút này chỉ hiện toast, nên production không hiện nó. */}
+              {/* Favorites (FR-040) has no API yet: this button only shows a toast, so production does not show it. */}
               {SHOW_WIP && (
                 <Chip onClick={() => Notification.success({ text: t('savedToast', { name: stall.stallName }) })}>
                   {t('save')}
@@ -220,7 +220,7 @@ const StallProfilePage = () => {
         onChange={(id) => setTab(id as typeof tab)}
         tabs={[
           { id: 'stock', label: t('tabs.stock'), count: stallProducts.length },
-          // Review còn là dữ liệu mẫu tới C8 → chỉ hiện ở dev (config/wip.ts).
+          // Reviews are still sample data pending C8 → shown in dev only (config/wip.ts).
           ...(SHOW_WIP ? [{ id: 'reviews', label: t('tabs.reviews'), count: allReviews.length }] : []),
           { id: 'about', label: t('tabs.about') },
         ]}

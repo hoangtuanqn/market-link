@@ -132,7 +132,9 @@ class ModerationServiceTest {
                 .satisfies(item -> assertThat(item.preview()).isEqualTo("Photo"));
     }
 
-    /** Hàng đợi là nơi quyết định có mở ra xem không, không phải nơi đọc hàng loạt (spec §8.3). */
+    /**
+     * The queue is where the decision to open is made, not a place for bulk reading (spec §8.3).
+     */
     @Test
     void aVeryLongMessageIsCutInTheQueue() {
         when(messages.findById(101L)).thenReturn(Optional.of(textMessage("a".repeat(500))));
@@ -170,7 +172,7 @@ class ModerationServiceTest {
         assertThat(page.page()).isEqualTo(3);
     }
 
-    /** FR-072 chỉ vô hiệu hoá tài khoản chứ không xoá, nên đây là nhánh phòng thân. */
+    /** FR-072 only deactivates an account and does not delete it, so this is a defensive branch. */
     @Test
     void aMissingUserRowDoesNotBlowUpTheQueue() {
         when(users.findById(7L)).thenReturn(Optional.empty());
@@ -253,7 +255,9 @@ class ModerationServiceTest {
         assertThat(ModerationService.CONTEXT_RADIUS).isEqualTo(5);
     }
 
-    /** Ngữ cảnh trả về theo thứ tự cũ → mới, dù truy vấn "trước" trả mới → cũ. */
+    /**
+     * The context is returned in old → new order, even though the "before" query returns new → old.
+     */
     @Test
     void theContextReadsOldestFirst() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
@@ -294,12 +298,15 @@ class ModerationServiceTest {
                         m -> {
                             assertThat(m.hasPhoto()).isTrue();
                             assertThat(m.body()).isNull();
-                            // chưa bị báo cáo → readAsAdmin sẽ từ chối, nên không đưa id ra
+                            // not yet reported → readAsAdmin will refuse, so its id is not exposed
                             assertThat(m.attachmentId()).isNull();
                         });
     }
 
-    /** Ảnh của CHÍNH tin bị báo cáo: admin cần id để mở qua GET /attachments/{id} (readAsAdmin). */
+    /**
+     * The image of the EXACT reported message: the admin needs the id to open it through GET
+     * /attachments/{id} (readAsAdmin).
+     */
     @Test
     void detailGivesTheAdminTheReportedPhoto() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
@@ -326,7 +333,10 @@ class ModerationServiceTest {
                 .satisfies(m -> assertThat(m.attachmentId()).isEqualTo(5L));
     }
 
-    /** Admin thấy tin đã bị ẩn (khác người dùng thường), kèm cờ để UI hiện khác đi. */
+    /**
+     * An admin sees a hidden message (unlike an ordinary user), with a flag so the UI shows it
+     * differently.
+     */
     @Test
     void detailMarksAHiddenNeighbourAsHidden() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
@@ -343,7 +353,7 @@ class ModerationServiceTest {
                 .satisfies(m -> assertThat(m.hidden()).isTrue());
     }
 
-    /** Tin ngữ cảnh nào cũng đang có báo cáo riêng thì cũng mang cờ reported. */
+    /** Any context message that has its own report also carries the reported flag. */
     @Test
     void aNeighbourThatIsAlsoReportedCarriesTheFlagToo() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
@@ -367,9 +377,9 @@ class ModerationServiceTest {
     }
 
     /**
-     * Review Focus #1. Thứ cần ghim là **sự vắng mặt** của một khả năng, nên test soi chính bề mặt
-     * API: không method nào của service nhận một conversationId, và không đường dẫn nào của
-     * controller admin nhắc tới conversation. Thêm một endpoint như vậy là phá spec §8.3.
+     * Review Focus #1. What needs pinning is the **absence** of a capability, so the test inspects
+     * the API surface itself: no method of the service takes a conversationId, and no path of the
+     * admin controller mentions conversation. Adding such an endpoint would break spec §8.3.
      */
     @Test
     void adminCannotReachAThreadThatHasNoReport() {
@@ -426,7 +436,7 @@ class ModerationServiceTest {
         verify(messages).save(message);
     }
 
-    /** Review Focus #4: hai admin cùng xử lý một hàng đợi. */
+    /** Review Focus #4: two admins work the same queue. */
     @Test
     void hidingAnAlreadyHiddenMessageKeepsTheFirstAdminOnRecord() {
         Message message = textMessageWithId(101L, "Send me a deposit first");
@@ -443,7 +453,7 @@ class ModerationServiceTest {
         verify(messages, never()).save(any(Message.class));
     }
 
-    /** Spec §8.3: không có báo cáo thì admin không có việc gì ở đây. */
+    /** Spec §8.3: with no report the admin has nothing to do here. */
     @Test
     void anAdminCannotHideAMessageNobodyReported() {
         when(messages.findById(101L)).thenReturn(Optional.of(textMessageWithId(101L, "fine")));
@@ -475,7 +485,10 @@ class ModerationServiceTest {
         verify(messages, never()).save(any(Message.class));
     }
 
-    /** Hai admin cùng bấm: người xử lý trước là người ở lại trong dấu vết. */
+    /**
+     * Two admins press at the same time: the one who handled it first is the one who stays in the
+     * trace.
+     */
     @Test
     void dismissingAnAlreadyHandledReportChangesNothing() {
         MessageReport done = report(ReportStatus.ACTIONED);
@@ -522,7 +535,10 @@ class ModerationServiceTest {
         verify(events, never()).messageHidden(any(), any());
     }
 
-    /** dismiss chỉ đổi trạng thái báo cáo; tin không đổi nên không có gì để phát. */
+    /**
+     * dismiss only changes the report's status; the message is unchanged so there is nothing to
+     * publish.
+     */
     @Test
     void dismissingAReportPublishesNothing() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));

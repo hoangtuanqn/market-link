@@ -1,10 +1,10 @@
 # ---------------------------------------------------------------------
-# Override PRODUCTION (nhánh main): image build sẵn, không mount source,
-# DB/Redis không mở cổng ra ngoài, mọi bí mật lấy từ .env.production.
+# PRODUCTION override (main branch): prebuilt images, no source mount,
+# DB/Redis expose no ports, every secret comes from .env.production.
 #   make prod
 #   = docker compose -p market-link-prod --env-file .env.production \
 #       -f docker-compose.yml -f docker-compose.prod.yml --profile app up -d --build
-# Project riêng (-p market-link-prod) → container, network, volume tách hẳn khỏi dev.
+# Separate project (-p market-link-prod) → containers, network, volumes completely separate from dev.
 # ---------------------------------------------------------------------
 services:
   mysql:
@@ -41,7 +41,7 @@ services:
       RABBITMQ_STOMP_PORT: 61613
       RABBITMQ_USER: ${RABBITMQ_USER:?Thiếu RABBITMQ_USER trong .env.production}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?Thiếu RABBITMQ_PASSWORD trong .env.production}
-      # FR-042 N3: Web Push — tuỳ chọn, trống thì tắt
+      # FR-042 N3: Web Push — optional, off when empty
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
       VAPID_SUBJECT: ${VAPID_SUBJECT:-}
@@ -49,7 +49,7 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-}
       APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
-      # Không công khai tài liệu API ở production. Cần bật (ví dụ cho giám khảo) thì đặt SWAGGER_ENABLED=true
+      # Do not publish the API docs in production. If they need to be on (e.g. for the examiner) set SWAGGER_ENABLED=true
       SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
       CHAT_UPLOAD_DIR: ${CHAT_UPLOAD_DIR:?Thiếu CHAT_UPLOAD_DIR trong .env.production}
       CHAT_MAX_UPLOAD_BYTES: ${CHAT_MAX_UPLOAD_BYTES:?Thiếu CHAT_MAX_UPLOAD_BYTES trong .env.production}
@@ -59,10 +59,10 @@ services:
       CHAT_TYPING_FRAMES_PER_MINUTE: ${CHAT_TYPING_FRAMES_PER_MINUTE:?Thiếu CHAT_TYPING_FRAMES_PER_MINUTE trong .env.production}
     ports: !override
       - "${BACKEND_PORT:-8080}:8080"
-    # Không mount source; chỉ giữ ảnh người dùng tải lên (project prod → volume riêng với dev)
+    # No source mount; only keep user-uploaded images (project prod → its own volume separate from dev)
     volumes: !override
       - uploads-data:/app/uploads
-      - chat-uploads:/var/lib/marketlink/chat # FR-115: ảnh chat
+      - chat-uploads:/var/lib/marketlink/chat # FR-115: chat images
 
   frontend:
     container_name: marketlink-prod-frontend
@@ -70,11 +70,11 @@ services:
       target: prod
       args:
         VITE_API_URL: ${VITE_API_URL:?Thiếu VITE_API_URL trong .env.production}
-        # Không bắt buộc: bỏ trống thì bản đồ chạy bằng tile OpenStreetMap
+        # Not required: left empty the map runs on OpenStreetMap tiles
         VITE_MAP_TILE_URL: ${VITE_MAP_TILE_URL:-}
         VITE_MAP_ATTRIBUTION: ${VITE_MAP_ATTRIBUTION:-}
     image: market-link-frontend:prod
-    environment: !reset [] # nginx phục vụ file tĩnh, API URL đã nhúng lúc build
+    environment: !reset [] # nginx serves the static files, the API URL is embedded at build time
     ports: !override
       - "${FRONTEND_PORT:-80}:3000"
     volumes: !reset []

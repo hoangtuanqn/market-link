@@ -5,7 +5,7 @@ import { SelectField } from '@/components/ui/input';
 import Tabs from '@/components/ui/tabs';
 import { farmerName, orders } from '@/data/customer';
 
-/** Tên sạp là dữ liệu (không dịch); '' = tất cả sạp, nhãn dịch lúc render. */
+/** The stall name is data (not translated); '' = all stalls, the label is translated at render. */
 const STALLS = ['Cô Tư Garden', 'Út Hiền Orchard', 'Gió Nam Bakery', 'Củ Chi Goat Farm', 'Ba Lành Farm'];
 
 const UPCOMING_STATUSES = new Set(['placed', 'accepted', 'ready']);

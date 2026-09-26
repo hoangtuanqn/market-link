@@ -63,7 +63,7 @@ beforeEach(() => {
 });
 
 describe('ReportedMessages', () => {
-  /** Spec §8.3/§9.4: ranh giới của admin phải ghi thẳng trên màn. */
+  /** Spec §8.3/§9.4: the admin's boundary must be stated plainly on screen. */
   it('tells the admin what they can and cannot read', async () => {
     render(<ReportedMessages />);
     expect(await screen.findByText(/only messages someone reported/i)).toBeInTheDocument();

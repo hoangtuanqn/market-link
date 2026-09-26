@@ -38,17 +38,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * FR-032, FR-067 — Farmer sinh slot từ khung giờ theo thứ (farmer_operating_days), sửa sức chứa
- * hoặc tắt từng slot; khách xem slot còn mở của một stall.
+ * FR-032, FR-067 — a Farmer generates slots from their weekday time windows
+ * (farmer_operating_days), edits a slot's capacity or turns it off; a customer views a stall's
+ * still-open slots.
  */
 @Service
 @AllArgsConstructor
 public class SlotService implements SlotServiceInterface {
 
-    /** Một lần bấm "Generate" không được đẻ ra hàng nghìn dòng. */
+    /** One click of "Generate" must not spawn thousands of rows. */
     private static final int MAX_RANGE_DAYS = 60;
 
-    /** Không truyền ngày: từ hôm nay tới hết 14 ngày — đủ cho giỏ hàng dựng danh sách ngày nhận. */
+    /**
+     * No date given: from today through the next 14 days — enough for the cart to build its
+     * pickup-day list.
+     */
     private static final int DEFAULT_PUBLIC_DAYS = 14;
 
     private final FarmerProfileRepository farmerProfileRepository;
@@ -59,9 +63,9 @@ public class SlotService implements SlotServiceInterface {
     private final Clock clock;
 
     /**
-     * Cắt [start, end) của một ngày thành các khung slotMinutes phút; khung lẻ cuối bị bỏ. Tính
-     * bằng phút trong ngày: LocalTime.plusMinutes vòng qua 00:00 nên vòng lặp theo LocalTime có thể
-     * chạy mãi với khung sát nửa đêm.
+     * Cuts [start, end) of one day into slotMinutes-minute windows; a leftover partial window at
+     * the end is dropped. Computed in minutes of the day: LocalTime.plusMinutes wraps past 00:00,
+     * so a loop written in LocalTime could run forever for a window right up against midnight.
      */
     static List<LocalTime[]> windows(LocalTime start, LocalTime end, int slotMinutes) {
         List<LocalTime[]> out = new ArrayList<>();
@@ -100,7 +104,7 @@ public class SlotService implements SlotServiceInterface {
                     "Generate at most " + MAX_RANGE_DAYS + " days at a time.");
         }
 
-        // 0 = Chủ nhật … 6 = Thứ bảy, như farmer_operating_days; DayOfWeek của Java: T2 = 1 … CN =
+        // 0 = Sunday … 6 = Saturday, like farmer_operating_days; Java's DayOfWeek: Mon = 1 … Sun =
         // 7
         Map<Integer, FarmerOperatingDay> byWeekday =
                 operatingDayRepository.findByFarmerMarketId(link.getId()).stream()
@@ -109,8 +113,9 @@ public class SlotService implements SlotServiceInterface {
                                         FarmerOperatingDay::getDayOfWeek, Function.identity()));
         List<PickupSlot> existing =
                 slotRepository.findByFarmerMarketIdAndSlotDateBetween(link.getId(), from, to);
-        // Idempotent: slot đã có (kể cả đã tắt hay đã sửa sức chứa) giữ nguyên; uq_slot chặn nốt
-        // hai request cùng lúc
+        // Idempotent: an existing slot (even a disabled one, or one whose capacity was already
+        // edited) is left unchanged; uq_slot also blocks
+        // two simultaneous requests
         Set<String> taken = new HashSet<>();
         for (PickupSlot s : existing) {
             taken.add(s.getSlotDate() + "@" + s.getStartTime());
@@ -156,7 +161,8 @@ public class SlotService implements SlotServiceInterface {
     @Transactional
     public SlotResource updateSlot(long userId, long slotId, UpdateSlotRequest request) {
         FarmerProfile profile = mine(userId);
-        // Khoá như lúc đặt đơn (C5): số đơn đọc ở đây không đổi được cho tới khi ghi xong
+        // Locked the same way as placing an order (C5): the order count read here cannot change
+        // until this write finishes
         PickupSlot slot = slotRepository.lockById(slotId).orElseThrow(SlotNotFoundException::new);
         FarmerMarket link =
                 farmerMarketRepository
@@ -177,7 +183,10 @@ public class SlotService implements SlotServiceInterface {
         return SlotResource.of(slotRepository.save(slot), link.getMarketId());
     }
 
-    /** D-09: stall chưa duyệt / bị đình chỉ không có slot với khách — 404, không lộ lý do. */
+    /**
+     * D-09: a stall not approved / suspended has no slots for customers → 404, without revealing
+     * the reason.
+     */
     @Override
     public List<SlotResource> publicSlots(long farmerId, Long marketId, LocalDate date) {
         farmerProfileRepository
@@ -193,7 +202,10 @@ public class SlotService implements SlotServiceInterface {
         return LocalDate.now(clock);
     }
 
-    /** R-06: hồ sơ luôn tra theo userId của token; không có đường nào nhận farmerId từ request. */
+    /**
+     * R-06: the profile is always looked up by the token's userId; there is no path that takes a
+     * farmerId from the request.
+     */
     private FarmerProfile mine(long userId) {
         return farmerProfileRepository
                 .findByUserId(userId)

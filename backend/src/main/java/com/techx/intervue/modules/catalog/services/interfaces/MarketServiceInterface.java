@@ -6,7 +6,10 @@ import com.techx.intervue.modules.catalog.resources.MarketResource;
 import com.techx.intervue.resources.PageResource;
 
 public interface MarketServiceInterface {
-    /** FR-010: browse theo location (q/city/district) và day. page đếm từ 1, pageSize kẹp 1…50. */
+    /**
+     * FR-010: browse by location (q/city/district) and day. page counts from 1, pageSize is clamped
+     * to 1…50.
+     */
     PageResource<MarketResource> search(
             String q, Integer day, String city, String district, int page, int pageSize);
 
@@ -16,6 +19,6 @@ public interface MarketServiceInterface {
 
     MarketResource update(long id, MarketRequest request);
 
-    /** Xoá mềm: is_active = false (contract §3). */
+    /** Soft delete: is_active = false (contract §3). */
     void deactivate(long id);
 }

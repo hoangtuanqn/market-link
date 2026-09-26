@@ -19,15 +19,16 @@ const SAMPLE_DATE = new Date(2026, 11, 31, 19, 0);
 const SAMPLE_PRICE = 45000;
 
 type SettingsPanelProps = {
-  /** Vai của trang (các trang vẫn truyền; nhóm thông báo giờ lấy từ API theo vai trên server). */
+  /** The page's role (pages still pass it; the notification categories now come from the API by role on the server). */
   role: SettingsRole;
-  /** Khối riêng của vai (Shopping / Selling defaults / Platform defaults), đọc và sửa extras của bản nháp. */
+  /** A role's own block (Shopping / Selling defaults / Platform defaults), reads and edits the draft's extras. */
   children?: (draft: Settings, set: (patch: Partial<Settings>) => void) => ReactNode;
 };
 
 /**
- * Trang Settings của cả ba vai (prototype `settings.html`). Theme đổi và lưu ngay khi bấm; các mục khác nằm trong bản
- * nháp tới khi bấm Save, rồi áp dụng cho toàn app (format.ts, bản dịch). Đăng nhập rồi nên lưu cả lên server.
+ * The Settings page for all three roles (prototype `settings.html`). Theme changes and saves right when clicked; the
+ * other items stay in the draft until Save is clicked, then apply to the whole app (format.ts, translations). Once
+ * signed in it also saves to the server.
  */
 const SettingsPanel = ({ children }: SettingsPanelProps) => {
   const { t } = useTranslation();
@@ -39,7 +40,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
   const pickTheme = (theme: Theme) => {
     set({ theme });
     SettingsStore.set({ theme });
-    // Lưu luôn phần đã lưu + theme mới; bản nháp các mục khác vẫn chờ nút Save
+    // Also saves what was already saved + the new theme; the drafts of the other items still wait for the Save button
     SettingsApi.save({ ...SettingsStore.get(), theme }).catch(() => undefined);
   };
 
@@ -48,7 +49,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
     try {
       const response = await SettingsApi.save(draft);
       Notification.success({ title: t('settings.savedTitle'), text: t('settings.savedText') });
-      // Áp dụng sau cùng: trang được dựng lại theo ngôn ngữ / định dạng mới
+      // Applied last: the page is rebuilt in the new language / format
       SettingsStore.set(response.data ?? draft);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('settings.saveError')) });
@@ -129,7 +130,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
             />
           </SettingsRow>
         </ul>
-        {/* Xem trước theo bản nháp, dùng định dạng đang áp dụng cho phần còn lại của app */}
+        {/* Preview based on the draft, using the format currently applied to the rest of the app */}
         <p className="text-small text-ink-muted" aria-live="polite">
           {t('settings.preview', {
             date: withDraft(draft, () => formatDate(SAMPLE_DATE)),
@@ -153,7 +154,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
   );
 };
 
-/** Chạy một hàm format với bản nháp thay cho settings đang áp dụng (chỉ để xem trước, không đổi gì). */
+/** Run a format function with the draft in place of the applied settings (preview only, changes nothing). */
 const withDraft = (draft: Settings, fn: () => string) => {
   const live = SettingsStore.get();
   SettingsStore.peek(draft);

@@ -122,7 +122,8 @@ class MessageServiceTest {
         assertThat(thread.readAtOf(7L)).isEqualTo(NOW);
         verify(conversations).save(thread);
         verify(events).messageCreated(thread, result);
-        // Trả lời nghĩa là đã đọc tới đây: bên kia phải nhận "đã xem" (review Plan 1, minor #4)
+        // Replying means having read up to here: the other side must receive "seen" (Plan 1 review,
+        // minor #4)
         verify(events).conversationRead(thread, 7L, NOW);
     }
 
@@ -286,7 +287,7 @@ class MessageServiceTest {
         verify(messages, never()).save(any(Message.class));
     }
 
-    /** Review Focus #3, nửa sau: một ảnh chỉ gắn được vào đúng một tin. */
+    /** Review Focus #3, second half: an image can be attached to exactly one message. */
     @Test
     void cannotReuseAnAttachmentThatIsAlreadyOnAMessage() {
         when(attachments.findById(55L)).thenReturn(Optional.of(upload(55L, 7L, 900L)));

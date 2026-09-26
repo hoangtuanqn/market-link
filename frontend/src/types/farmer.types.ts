@@ -24,9 +24,9 @@ export type FarmerType = {
 };
 
 /**
- * Phần optional của đơn: giới thiệu sạp và bằng chứng. Mặt hàng, cách canh tác và chợ muốn bán được khai sau khi Admin
- * duyệt, ở panel Farmer (FR-060…FR-064), nên không có ở đây. Ảnh/video lưu path cục bộ (chỉ phục vụ test/demo, không
- * phải hạ tầng production).
+ * The optional part of the application: stall introduction and evidence. The products, farming method and markets they
+ * want to sell at are declared after the Admin approves, in the Farmer panel (FR-060…FR-064), so they are not here.
+ * Images/videos store a local path (for test/demo only, not production infrastructure).
  */
 export type FarmerApplicationDetails = {
   description?: string | null;
@@ -34,13 +34,16 @@ export type FarmerApplicationDetails = {
   videoUrl?: string | null;
 };
 
-/** FR-002 (second route — customer đang đăng nhập xin thành Farmer; xem caption CustomerBecomeFarmer/index.tsx). */
+/**
+ * FR-002 (second route — a signed-in customer applies to become a Farmer; see the caption in
+ * CustomerBecomeFarmer/index.tsx).
+ */
 export type FarmerApplicationInput = {
   stallName: string;
   contactPerson: string;
 } & FarmerApplicationDetails;
 
-/** Một lần nộp đơn đã qua — nội dung lúc nộp, kết quả và lý do nếu bị từ chối. */
+/** A past application — its content at submission, the outcome and the reason if rejected. */
 export type FarmerApplicationAttemptType = {
   id: number;
   attempt: number;
@@ -55,7 +58,7 @@ export type FarmerApplicationAttemptType = {
   submittedAt: string;
 };
 
-/** Hồ sơ Farmer của chính người gọi. */
+/** The caller's own Farmer profile. */
 export type FarmerProfileType = {
   id: number;
   stallName: string;
@@ -67,7 +70,7 @@ export type FarmerProfileType = {
   createdAt: string;
 } & FarmerApplicationDetails;
 
-/** §6.1 — một dòng trong danh sách Farmer của Admin. */
+/** §6.1 — one row in the Admin's Farmer list. */
 export type AdminFarmerListItemType = {
   id: number;
   stallName: string;
@@ -78,7 +81,7 @@ export type AdminFarmerListItemType = {
   createdAt: string;
 };
 
-/** §6.2 — chi tiết đầy đủ để Admin duyệt hoặc đình chỉ. */
+/** §6.2 — full detail so the Admin can approve or suspend. */
 export type AdminFarmerDetailType = {
   id: number;
   userId: number;
@@ -94,12 +97,12 @@ export type AdminFarmerDetailType = {
   suspendedAt: string | null;
   createdAt: string;
   history: FarmerApplicationAttemptType[];
-  /** Tài khoản Customer đã có từ trước — không phải ngày tạo hồ sơ Farmer này. */
+  /** The Customer account already existed — this is not the creation date of this Farmer profile. */
   customerSince: string;
   accountStatus: 'active' | 'inactive' | 'suspended';
 } & FarmerApplicationDetails;
 
-/** Ảnh/video tải lên trước khi gửi form chính. */
+/** Images/videos uploaded before submitting the main form. */
 export type UploadedFileType = {
   url: string;
 };

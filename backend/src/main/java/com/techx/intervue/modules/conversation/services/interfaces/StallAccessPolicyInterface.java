@@ -3,18 +3,21 @@ package com.techx.intervue.modules.conversation.services.interfaces;
 import com.techx.intervue.modules.user.entities.User;
 
 /**
- * Ai được mở thread với ai, ai còn được gửi. Đây là chỗ DUY NHẤT sẽ đọc
- * farmer_profiles.approval_status khi bảng đó xuất hiện (roadmap backend bước 3): PENDING →
- * StallNotOpenException, SUSPENDED → ConversationClosedException khi gửi.
+ * Who may open a thread with whom, who may still send. This is the ONLY place that will read
+ * farmer_profiles.approval_status once that table exists (backend roadmap step 3): PENDING →
+ * StallNotOpenException, SUSPENDED → ConversationClosedException when sending.
  */
 public interface StallAccessPolicyInterface {
 
-    /** Người mở thread phải là tài khoản đang hoạt động. */
+    /** The person opening the thread must be an active account. */
     void assertCanStart(User me);
 
-    /** Đối tượng của thread mới phải là một stall đang mở nhận tin. */
+    /** The target of a new thread must be an open stall that accepts messages. */
     void assertCanBeMessaged(User target);
 
-    /** Trước mỗi lần gửi: người gửi còn hoạt động, người nhận chưa bị khoá hay đình chỉ. */
+    /**
+     * Before every send: the sender is still active, the recipient has not been locked or
+     * suspended.
+     */
     void assertCanSend(User sender, User recipient);
 }

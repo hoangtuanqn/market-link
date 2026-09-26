@@ -18,19 +18,21 @@ public interface FarmerProfileRepository extends JpaRepository<FarmerProfile, Lo
     Optional<FarmerProfile> findByUserId(Long userId);
 
     /**
-     * Hồ sơ stall của nhiều người một lần (danh sách thread chat); ai không phải Farmer thì không
-     * có.
+     * The stall profiles of several people at once (the chat thread list); whoever is not a Farmer
+     * has none.
      */
     List<FarmerProfile> findAllByUserIdIn(Collection<Long> userIds);
 
     boolean existsByUserId(Long userId);
 
     /**
-     * §6.1 + docs/prototype/admin/farmers.html (ô "Stall, contact person, phone"). Một câu join
-     * thay cho "lấy trang hồ sơ rồi tìm user cho từng dòng" — cách cũ là N+1 query cho mỗi trang.
+     * §6.1 + docs/prototype/admin/farmers.html (the "Stall, contact person, phone" box). One join
+     * statement instead of "fetch a page of profiles then look up the user for each row" — the old
+     * way is N+1 queries per page.
      *
-     * <p>{@code status} hoặc {@code q} null nghĩa là không lọc theo tiêu chí đó. {@code q} phải là
-     * mẫu LIKE đã viết thường sẵn (xem FarmerService), vì SQL so sánh chuỗi đã hạ chữ.
+     * <p>A null {@code status} or {@code q} means no filtering by that criterion. {@code q} must be
+     * an already-lowercased LIKE pattern (see FarmerService), because the SQL compares lowercased
+     * strings.
      */
     @Query(
             value =
@@ -53,10 +55,10 @@ public interface FarmerProfileRepository extends JpaRepository<FarmerProfile, Lo
             @Param("status") ApprovalStatus status, @Param("q") String q, Pageable pageable);
 
     /**
-     * FR-115: tài khoản role farmer mà không có hàng nào ở đây là dữ liệu mâu thuẫn — FarmerService
-     * chỉ đặt role = FARMER lúc approve, nên chỉ seed sai hoặc sửa DB tay mới tạo ra được.
-     * StallAccessPolicy fail-closed với những tài khoản đó (spec §8.1), và hỏng theo kiểu im lặng,
-     * nên ChatStallConsistencyCheck đếm chúng lúc khởi động.
+     * FR-115: an account with the farmer role and no row here is inconsistent data — FarmerService
+     * only sets role = FARMER on approve, so only a wrong seed or a manual DB edit can produce it.
+     * StallAccessPolicy fails closed for such accounts (spec §8.1), and it breaks silently, so
+     * ChatStallConsistencyCheck counts them at startup.
      */
     @Query(
             "select count(u) from User u"

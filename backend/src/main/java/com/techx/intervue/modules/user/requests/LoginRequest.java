@@ -9,10 +9,10 @@ public record LoginRequest(
         @NotBlank(message = "Enter your email.") @Email(message = "Enter a valid email address.")
                 String email,
         @NotBlank(message = "Enter your password.") String password,
-        /* "Remember me": false → phiên kết thúc khi đóng trình duyệt; không gửi thì coi như true */
+        /* "Remember me": false → the session ends when the browser closes; if not sent it counts as true */
         Boolean rememberMe,
         /*
-         * FR-004: trang đăng nhập admin gửi "admin". Sai role thì 403 và không cấp token / cookie,
-         * để không ghi đè phiên đang có trong trình duyệt. Không gửi thì role nào cũng được.
+         * FR-004: the admin sign-in page sends "admin". A wrong role gives 403 and issues no token / cookie,
+         * so it does not overwrite the session already in the browser. If not sent any role is accepted.
          */
         RoleType requiredRole) {}

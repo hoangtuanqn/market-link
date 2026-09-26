@@ -10,8 +10,8 @@ type DialogProps = {
 };
 
 /**
- * Confirmation dialog (design system `.ml-dialog`, Dialog.md). Native `<dialog>` + showModal(): trình duyệt tự giữ
- * focus bên trong, Esc đóng, nền phía sau không bấm được.
+ * Confirmation dialog (design system `.ml-dialog`, Dialog.md). Native `<dialog>` + showModal(): the browser keeps focus
+ * inside by itself, Esc closes, the background behind cannot be clicked.
  */
 export function Dialog({ open, title, children, actions, tone, onClose }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);

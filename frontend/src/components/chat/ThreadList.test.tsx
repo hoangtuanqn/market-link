@@ -20,7 +20,7 @@ describe('ThreadList', () => {
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
-  /** Review Focus #5: người dùng mới, chưa nhắn ai. */
+  /** Review Focus #5: a new user who has messaged nobody yet. */
   it('shows an empty state with something to do', () => {
     render(
       <ThreadList threads={[]} activeId={null} onPick={vi.fn()} loading={false} error={false} onRetry={vi.fn()} />,
@@ -87,7 +87,7 @@ describe('ThreadList', () => {
     expect(onPick).toHaveBeenCalledWith(7);
   });
 
-  /** Hơn 20 thread: phải có đường tới những thread cũ hơn trang đầu. */
+  /** More than 20 threads: there must be a way to reach threads older than the first page. */
   it('shows a way to load more conversations', async () => {
     const onLoadMore = vi.fn();
     render(

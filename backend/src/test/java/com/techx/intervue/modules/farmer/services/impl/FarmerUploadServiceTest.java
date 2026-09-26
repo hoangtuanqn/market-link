@@ -13,8 +13,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.springframework.mock.web.MockMultipartFile;
 
 /**
- * Content-Type do trình duyệt (hay kẻ gọi thẳng API) tự khai, nên loại file phải kết luận từ vài
- * byte đầu — giống avatar và ảnh chat.
+ * Content-Type is claimed by the browser (or by whoever calls the API directly), so the file type
+ * must be concluded from the first few bytes — same as avatars and chat images.
  */
 class FarmerUploadServiceTest {
 
@@ -57,7 +57,9 @@ class FarmerUploadServiceTest {
                         dir -> assertThat(dir).isEmptyDirectory());
     }
 
-    /** Ảnh PNG đổi đuôi .jpg vẫn là ảnh thật: lưu theo loại thật, không theo lời khai. */
+    /**
+     * A PNG image renamed to .jpg is still a real image: stored by its real type, not by its claim.
+     */
     @Test
     void theExtensionFollowsTheContentNotTheLabel() {
         assertThat(service.store(7L, "photo", file("image/jpeg", PNG))).endsWith(".png");

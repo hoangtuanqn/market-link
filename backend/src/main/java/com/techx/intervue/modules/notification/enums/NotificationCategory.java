@@ -9,8 +9,9 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Nhóm người dùng bật / tắt trong Settings → Thông báo (spec §3). Mỗi vai chỉ thấy nhóm của mình;
- * code camelCase là giá trị của cột notification_preferences.category và của JSON.
+ * Categories users turn on / off in Settings → Notifications (spec §3). Each role only sees its own
+ * categories; the camelCase code is the value of the notification_preferences.category column and
+ * of the JSON.
  */
 public enum NotificationCategory {
     MESSAGES("messages", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),

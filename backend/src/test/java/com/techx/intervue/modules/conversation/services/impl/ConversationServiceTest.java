@@ -100,7 +100,7 @@ class ConversationServiceTest {
                         rateLimiter);
         when(users.findById(7L)).thenReturn(Optional.of(customer));
         when(users.findById(3L)).thenReturn(Optional.of(farmer));
-        // id stall (30) và id người dùng (3) cố ý khác nhau — Review Focus #1
+        // the stall id (30) and the user id (3) are deliberately different — Review Focus #1
         when(farmerProfiles.findById(30L))
                 .thenReturn(
                         Optional.of(
@@ -147,7 +147,7 @@ class ConversationServiceTest {
         verify(conversations, never()).save(any());
     }
 
-    /** Review Focus #1: id stall và id người dùng là hai dãy số khác nhau. */
+    /** Review Focus #1: the stall id and the user id are two different number ranges. */
     @Test
     void openUsesTheStallOwnerNotTheProfileId() {
         when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
@@ -168,7 +168,7 @@ class ConversationServiceTest {
         verify(conversations, never()).save(any());
     }
 
-    /** Review Focus #2: Farmer bấm "Message this stall" trên chính sạp mình. */
+    /** Review Focus #2: a Farmer clicking "Message this stall" on their own stall. */
     @Test
     void openRefusesMessagingYourOwnStall() {
         assertThatThrownBy(() -> service.open(3L, new OpenConversationRequest(30L)))
@@ -188,7 +188,8 @@ class ConversationServiceTest {
     }
 
     /**
-     * Spec 8.1 / D-09: stall bị đình chỉ thì thread cũ vẫn đọc được — mở lại phải trả thread đó.
+     * Spec 8.1 / D-09: when a stall is suspended the old thread can still be read — opening again
+     * must return that thread.
      */
     @Test
     void openReturnsAnExistingThreadEvenWhenTheStallIsNoLongerOpen() {
@@ -238,7 +239,7 @@ class ConversationServiceTest {
         assertThat(other.farmerId()).isNull();
     }
 
-    /** "Seen" phải còn sau khi tải lại trang: mốc đọc của NGƯỜI KIA, không phải của mình. */
+    /** "Seen" must survive a page reload: it is the OTHER person's read marker, not my own. */
     @Test
     void theThreadCarriesWhenTheOtherPersonLastRead() {
         Conversation c = Conversation.between(3L, 7L);
@@ -253,7 +254,10 @@ class ConversationServiceTest {
                 .isEqualTo(NOW.minusSeconds(60));
     }
 
-    /** open() đã có hồ sơ stall trong tay: thread vừa mở cũng mang tên stall. */
+    /**
+     * open() already has the stall profile in hand: a freshly opened thread also carries the stall
+     * name.
+     */
     @Test
     void anOpenedThreadNamesTheStall() {
         when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
@@ -336,7 +340,8 @@ class ConversationServiceTest {
         when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
         when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
         Instant seen = Instant.parse("2026-09-25T05:48:00Z");
-        // service truyền Set (others.keySet()); Mockito so khớp bằng equals nên không stub bằng
+        // the service passes a Set (others.keySet()); Mockito matches by equals so do not stub with
+        // a
         // List
         when(presence.snapshot(argThat(ids -> ids.contains(3L))))
                 .thenReturn(Map.of(3L, new PresenceService.PresenceInfo(false, seen)));
@@ -359,9 +364,9 @@ class ConversationServiceTest {
     }
 
     /**
-     * open() là idempotent (spec §6.1). Hạn mức §8.4 đếm "thread MỚI mỗi giờ", nên mở lại một
-     * thread đã có không được tiêu lượt — nếu không, FE gọi POST /conversations mỗi lần mở khung
-     * chat sẽ tự khoá người dùng khỏi chính cuộc trò chuyện của họ.
+     * open() is idempotent (spec §6.1). The §8.4 limit counts "NEW threads per hour", so reopening
+     * an existing thread must not use up a slot — otherwise the FE calling POST /conversations
+     * every time it opens the chat frame would lock users out of their own conversation.
      */
     @Test
     void reopeningAnExistingThreadDoesNotSpendARateLimitToken() {

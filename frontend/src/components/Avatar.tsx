@@ -7,16 +7,16 @@ type AvatarProps = {
   name?: string;
   email?: string;
   url?: string;
-  /** Đường kính (px). */
+  /** Diameter (px). */
   size?: number;
-  /** 'accent' trên nền board (header, drawer), nơi brand gần như trùng màu nền. */
+  /** 'accent' on a board background (header, drawer), where brand almost matches the background colour. */
   tone?: 'brand' | 'accent';
-  /** Hạng thành tích: bọc ảnh trong viền theo hạng (src/styles/tiers.css). Không truyền thì không có viền. */
+  /** Achievement tier: wraps the image in a ring by tier (src/styles/tiers.css). Without it there is no ring. */
   tier?: Tier;
   className?: string;
 };
 
-/** Hạng cao hơn thì viền dày hơn (px cộng thêm vào độ dày theo cỡ ảnh). */
+/** A higher tier gets a thicker ring (px added on top of the thickness by image size). */
 const TIER_EXTRA_WIDTH: Record<Tier, number> = { bronze: 0, silver: 1, gold: 1, diamond: 2 };
 
 const StarMark = () => (
@@ -32,12 +32,13 @@ const GemMark = () => (
 );
 
 /**
- * Ảnh đại diện tròn; chưa có ảnh (hoặc ảnh lỗi) thì hiện chữ cái đầu trên nền brand. Chỉ để trang trí: tên đi kèm. Có
- * `tier` thì bọc thêm viền hạng; Vàng và Kim cương có dấu ở góc khi ảnh từ 40px trở lên.
+ * A round avatar; with no image (or a broken image) it shows the initial letter on a brand background. Decoration only:
+ * the name goes with it. With a `tier` it also wraps a tier ring; Gold and Diamond get a mark at the corner when the
+ * image is 40px or more.
  */
 const Avatar = ({ name, email, url, size = 32, tone = 'brand', tier, className }: AvatarProps) => {
   const src = avatarSrc(url);
-  // Nhớ URL bị lỗi thay vì một cờ boolean: đổi sang ảnh mới thì tự thử tải lại
+  // Remember the URL that failed instead of a boolean flag: switching to a new image tries loading again by itself
   const [brokenSrc, setBrokenSrc] = useState<string>();
   const showImage = src && src !== brokenSrc;
 
@@ -67,7 +68,7 @@ const Avatar = ({ name, email, url, size = 32, tone = 'brand', tier, className }
 
   if (!tier) return face;
   const mark = size >= 40 && (tier === 'gold' ? <StarMark /> : tier === 'diamond' ? <GemMark /> : null);
-  // Viền dày theo cỡ ảnh (32px → 3px, 88px → 5px) và dày thêm theo hạng, để ảnh nhỏ trên header vẫn thấy rõ viền
+  // The ring is thick by image size (32px → 3px, 88px → 5px) and thicker by tier, so a small image in the header still shows the ring clearly
   const ringWidth = Math.max(3, Math.round(size / 22)) + TIER_EXTRA_WIDTH[tier];
   return (
     <span

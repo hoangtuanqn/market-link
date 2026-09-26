@@ -15,10 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * StallAccessPolicy fail-closed: role FARMER mà không có hàng farmer_profiles thì không nhắn được,
- * cả hai chiều. Đó là hành vi đúng theo spec §8.1 — nhưng nó im lặng, và một seed demo hay một lần
- * sửa DB tay là đủ tạo ra dữ liệu đó. Truy vấn này là thứ biến "chat tự nhiên hỏng" thành một dòng
- * cảnh báo lúc khởi động.
+ * StallAccessPolicy fails closed: a FARMER role with no farmer_profiles row cannot be messaged, in
+ * either direction. That is the right behavior per spec §8.1 — but it is silent, and a demo seed or
+ * one manual DB edit is enough to produce that data. This query is what turns "chat just breaks"
+ * into a warning line at startup.
  */
 @SpringBootTest
 @Transactional
@@ -31,7 +31,8 @@ class ChatStallConsistencyCheckTest {
     void countsFarmerAccountsThatHaveNoStallProfile() {
         long before = farmerProfiles.countFarmersWithoutAProfile();
 
-        newUser(RoleType.FARMER); // không tạo profile: đúng kiểu dữ liệu mâu thuẫn cần phát hiện
+        newUser(RoleType.FARMER); // does not create a profile: exactly the kind of inconsistent
+        // data that needs detecting
 
         assertThat(farmerProfiles.countFarmersWithoutAProfile()).isEqualTo(before + 1);
     }

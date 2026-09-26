@@ -17,8 +17,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * Một thread nền BRPOP hàng đợi Redis và gọi JobHandler tương ứng. Lỗi thì đẩy lại job, quá
- * MAX_ATTEMPTS lần thì bỏ và ghi log. Tắt bằng app.jobs.worker-enabled=false.
+ * A background thread BRPOPs the Redis queue and calls the matching JobHandler. On an error the job
+ * is pushed back, after MAX_ATTEMPTS it is dropped and logged. Turn off with
+ * app.jobs.worker-enabled=false.
  */
 @Slf4j
 @Component

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-074 — kiểm duyệt listing (contract §10). Ẩn/gỡ ẩn không đụng tồn kho hay trạng thái của
- * Farmer.
+ * FR-074 — listing moderation (contract §10). Hiding/unhiding does not touch the Farmer's stock or
+ * status.
  */
 @RestController
 @RequestMapping("/api/v1/admin/products")

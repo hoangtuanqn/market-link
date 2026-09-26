@@ -144,7 +144,7 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     else map.setView(CITY, 11);
   }, [markers, center, zoom, t]);
 
-  // isolate: Leaflet đặt z-index 400–1000 cho các lớp bên trong; không cô lập thì chúng đè lên header sticky (z-40)
+  // isolate: Leaflet sets z-index 400–1000 for the layers inside; without isolation they overlap the sticky header (z-40)
   return (
     <div role="region" aria-label={label} className={Helper.cn('ml-map isolate', className)}>
       {/* Leaflet owns this child outright; the note stays a sibling so React never fights it over the DOM. */}

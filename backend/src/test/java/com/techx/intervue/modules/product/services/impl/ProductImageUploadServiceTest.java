@@ -15,7 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-/** Cùng lý do MarketImageUploadServiceTest: loại file thật kết luận từ magic bytes. */
+/**
+ * Same reason as MarketImageUploadServiceTest: the real file type is concluded from the magic
+ * bytes.
+ */
 class ProductImageUploadServiceTest {
 
     private static final byte[] PNG = {

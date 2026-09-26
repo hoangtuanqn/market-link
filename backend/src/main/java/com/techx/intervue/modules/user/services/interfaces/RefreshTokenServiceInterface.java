@@ -9,7 +9,7 @@ public interface RefreshTokenServiceInterface {
 
     public void revokeToken(String rawToken, Long userId);
 
-    /** Thu hồi mọi refresh token của user (đổi mật khẩu → đăng xuất mọi thiết bị). */
+    /** Revoke every refresh token of the user (change password → sign out of every device). */
     public void revokeAllTokens(Long userId);
 
     public record RefreshResult(Long userId, String newRefreshToken, boolean rememberMe) {}

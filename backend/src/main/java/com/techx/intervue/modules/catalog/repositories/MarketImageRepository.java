@@ -12,15 +12,15 @@ public interface MarketImageRepository extends JpaRepository<MarketImage, Long> 
     List<MarketImage> findByMarketIdOrderBySortOrderAsc(Long marketId);
 
     /**
-     * Ghi đè trọn bộ ảnh của một chợ: xoá hết rồi ghi lại theo đúng thứ tự truyền vào, tránh phải
-     * so sánh ảnh cũ với ảnh mới từng cái một.
+     * Overwrites a market's whole set of images: delete everything and write it back in exactly the
+     * given order, avoiding a one-by-one comparison of old images against new ones.
      */
     @Transactional
     default void replaceImages(Long marketId, List<String> imageUrls) {
         deleteByMarketId(marketId);
-        // Cùng lý do với MarketOperatingDayRepository#replaceDays: Hibernate xếp INSERT trước
+        // Same reason as MarketOperatingDayRepository#replaceDays: Hibernate orders INSERT before
         // DELETE
-        // khi flush, nên phải ép flush ở đây trước khi ghi lại.
+        // on flush, so a flush must be forced here before writing it back.
         flush();
         int order = 0;
         for (String url : imageUrls) {

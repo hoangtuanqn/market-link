@@ -67,7 +67,7 @@ describe('MessagesPreview', () => {
     expect(await screen.findByText(/could not load/i)).toBeInTheDocument();
   });
 
-  /** FR-084: đang tải là một trạng thái có chữ, đọc được bằng trình đọc màn hình và đã dịch. */
+  /** FR-084: loading is a state with words, readable by a screen reader and translated. */
   it('says it is loading, in the reader’s language', () => {
     vi.mocked(ConversationApi.list).mockReturnValue(new Promise(() => {}) as never);
     render(

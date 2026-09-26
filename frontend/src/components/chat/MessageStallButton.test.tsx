@@ -62,7 +62,7 @@ describe('MessageStallButton', () => {
     await userEvent.click(screen.getByRole('button', { name: /message this stall/i }));
 
     expect(ConversationApi.open).not.toHaveBeenCalled();
-    // Trang Login đọc đích quay về ở location.state.from (như RequireAuth, FavoriteButton), không đọc query
+    // The Login page reads the return destination from location.state.from (like RequireAuth, FavoriteButton), not from a query
     expect(screen.getByTestId('location')).toHaveTextContent('/login');
     expect(screen.getByTestId('from')).toHaveTextContent('/stalls/30');
   });

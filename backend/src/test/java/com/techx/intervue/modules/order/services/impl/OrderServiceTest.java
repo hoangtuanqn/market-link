@@ -66,9 +66,9 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * FR-030…032 — xem trước và đặt đơn. Hôm nay (theo Clock) là thứ Bảy 26/09/2026, 09:00 giờ Việt
- * Nam; ngày nhận hàng mặc định là thứ Ba 29/09. Repository là bảng giả trong bộ nhớ: khoá và
- * rollback thật được chứng minh ở PlaceOrderConcurrencyTest.
+ * FR-030…032 — preview and place an order. Today (by Clock) is Saturday 26/09/2026, 09:00 Vietnam
+ * time; the default pickup day is Tuesday 29/09. The repository is a fake in-memory table: real
+ * locking and rollback are proven in PlaceOrderConcurrencyTest.
  */
 class OrderServiceTest {
 
@@ -102,7 +102,7 @@ class OrderServiceTest {
     private Clock clock;
     private OrderService service;
 
-    /** Các bảng giả. */
+    /** Fake tables. */
     private final Map<Long, FarmerProfile> farmers = new HashMap<>();
 
     private final Map<Long, FarmerMarket> links = new HashMap<>();
@@ -197,9 +197,9 @@ class OrderServiceTest {
                                         new MarketOption(OTHER_MARKET_ID, "Chợ Bến Thành"))));
     }
 
-    // ---------- dữ liệu ----------
+    // ---------- data ----------
 
-    /** Như database: chỉ trả dòng có thật, theo id tăng dần. */
+    /** Like the database: only returns real rows, ascending by id. */
     private static <T> List<T> rows(Map<Long, T> table, Iterable<Long> ids) {
         return StreamSupport.stream(ids.spliterator(), false)
                 .distinct()
@@ -297,7 +297,7 @@ class OrderServiceTest {
 
     // ---------- preview ----------
 
-    /** D-01: một giỏ, hai Farmer → hai đơn sẽ được tách, mỗi đơn tổng tiền riêng. */
+    /** D-01: one cart, two Farmers → two orders are split out, each with its own total. */
     @Test
     void previewSplitsCartByFarmer() {
         List<OrderGroupPreviewResource> groups =
@@ -314,13 +314,13 @@ class OrderServiceTest {
         assertThat(a.subtotal()).isEqualByComparingTo("39000");
         assertThat(a.problems()).isEmpty();
         assertThat(groupOf(groups, FARMER_B).subtotal()).isEqualByComparingTo("35000");
-        // chỉ đọc: không khoá, không ghi
+        // read-only: no locking, no writing
         verify(productRepository, never()).lockAllById(any());
         verify(slotRepository, never()).lockById(any());
         verify(orderRepository, never()).save(any());
     }
 
-    /** Xem trước phải xem được: thiếu hàng là một vấn đề của group, không phải exception. */
+    /** A preview must be able to show it: missing stock is a group's problem, not an exception. */
     @Test
     void previewFlagsItemsOverStock() {
         List<OrderGroupPreviewResource> groups =
@@ -344,7 +344,8 @@ class OrderServiceTest {
     }
 
     /**
-     * C5-12: xoá mềm / bị ẩn / unavailable vẫn nằm trong group của stall, problem `unavailable`.
+     * C5-12: soft-deleted / hidden / unavailable still stays in the stall's group, as problem
+     * `unavailable`.
      */
     @Test
     void previewFlagsHiddenDeletedOrUnavailableProductsAsUnavailable() {
@@ -364,7 +365,7 @@ class OrderServiceTest {
         assertThat(groupOf(groups, FARMER_B).problems()).containsExactly("unavailable");
     }
 
-    /** C5-12: id sản phẩm không có trong database → 400 VALIDATION_ERROR. */
+    /** C5-12: a product id not in the database → 400 VALIDATION_ERROR. */
     @Test
     void previewRejectsAProductThatDoesNotExist() {
         assertThatThrownBy(
@@ -372,7 +373,9 @@ class OrderServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    /** D-09: stall bị đình chỉ vẫn hiện trong giỏ để khách thấy vì sao không đặt được. */
+    /**
+     * D-09: a suspended stall still shows in the cart so the customer sees why they cannot order.
+     */
     @Test
     void previewFlagsASuspendedStall() {
         farmers.get(FARMER_B).setApprovalStatus(ApprovalStatus.SUSPENDED);
@@ -383,7 +386,10 @@ class OrderServiceTest {
         assertThat(groups.getFirst().problems()).containsExactly("stall_suspended");
     }
 
-    /** C5-11: marketId/marketName chỉ điền khi stall bán đúng một chợ; markets luôn liệt kê đủ. */
+    /**
+     * C5-11: marketId/marketName are only filled in when the stall sells at exactly one market;
+     * markets always lists every one.
+     */
     @Test
     void previewListsTheMarketsOfEachStall() {
         List<OrderGroupPreviewResource> groups =
@@ -401,7 +407,7 @@ class OrderServiceTest {
                 .containsExactly(MARKET_ID, OTHER_MARKET_ID);
     }
 
-    /** C5-4 / D-13: admin không mua, kể cả xem trước. */
+    /** C5-4 / D-13: an admin cannot buy, not even preview. */
     @Test
     void previewRefusesAnAdminAccount() {
         when(userRepository.findById(ADMIN_ID)).thenReturn(Optional.of(adminUser()));
@@ -436,7 +442,10 @@ class OrderServiceTest {
                         orders.get(0).getId(), orders.get(0).getId(), orders.get(1).getId());
     }
 
-    /** D-02: trừ tồn ngay khi đơn ở `placed`, trong chính transaction của lệnh đặt. */
+    /**
+     * D-02: stock is deducted right when the order is `placed`, in the same transaction as the
+     * place-order call.
+     */
     @Test
     void placeDeductsStockInTheSameTransaction() throws Exception {
         service.place(CUSTOMER_ID, request(group(FARMER_A, SLOT_A, line(RAU_MUONG, 3))));
@@ -450,7 +459,7 @@ class OrderServiceTest {
                 .isTrue();
     }
 
-    /** Bán hết lô cuối thì sản phẩm chuyển `sold_out`. */
+    /** Selling out the last batch turns the product `sold_out`. */
     @Test
     void placeMarksAProductSoldOutWhenItsLastUnitGoes() {
         products.get(BANH_CHUOI).setStockQuantity(2);
@@ -462,8 +471,8 @@ class OrderServiceTest {
     }
 
     /**
-     * Đặt 10, tồn 3 → 409; không có gì bị trừ (transaction rollback, và service kiểm trước khi
-     * trừ).
+     * Order 10, stock 3 → 409; nothing is deducted (the transaction rolls back, and the service
+     * checks before deducting).
      */
     @Test
     void placeRefusesWhenStockIsShort() {
@@ -490,7 +499,7 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /** booked_count đếm đơn, không đếm item. */
+    /** booked_count counts orders, not items. */
     @Test
     void placeIncrementsBookedCount() {
         service.place(
@@ -504,7 +513,9 @@ class OrderServiceTest {
         assertThat(orders).extracting(Order::getSlotId).containsExactly(SLOT_A, SLOT_B);
     }
 
-    /** D-05: cùng giỏ, cùng giờ nhận, nhưng mỗi Farmer chốt đơn theo số giờ của riêng mình. */
+    /**
+     * D-05: same cart, same pickup time, but each Farmer's cutoff is computed by their own hours.
+     */
     @Test
     void placeComputesCutoffFromTheFarmersOwnHours() {
         farmers.get(FARMER_A).setOrderCutoffHours(6);
@@ -519,13 +530,13 @@ class OrderServiceTest {
 
         assertThat(orders.get(0).getCutoffAt()).isEqualTo(LocalDateTime.of(2026, 9, 29, 1, 0));
         assertThat(orders.get(1).getCutoffAt()).isEqualTo(LocalDateTime.of(2026, 9, 28, 7, 0));
-        // contract: ISO 8601 UTC — 01:00 và 07:00 giờ Việt Nam
+        // contract: ISO 8601 UTC — 01:00 and 07:00 Vietnam time
         assertThat(placed)
                 .extracting(PlacedOrderResource::cutoffAt)
                 .containsExactly("2026-09-28T18:00:00Z", "2026-09-28T00:00:00Z");
     }
 
-    /** FR-038: dòng lịch sử đầu tiên — từ NULL sang placed, do chính khách. */
+    /** FR-038: the first history row — from NULL to placed, by the customer themself. */
     @Test
     void placeWritesTheFirstHistoryRow() {
         service.place(CUSTOMER_ID, aValidRequest());
@@ -538,7 +549,10 @@ class OrderServiceTest {
         assertThat(row.getChangedBy()).isEqualTo(CUSTOMER_ID);
     }
 
-    /** Farmer đổi giá, đổi tên sau khi đặt → dòng đơn cũ giữ nguyên. */
+    /**
+     * A Farmer changing the price, changing the name after the order → the old order row is
+     * unchanged.
+     */
     @Test
     void placeSnapshotsNameAndPrice() {
         service.place(CUSTOMER_ID, aValidRequest());
@@ -554,7 +568,7 @@ class OrderServiceTest {
         assertThat(item.getSubtotal()).isEqualByComparingTo("24000");
     }
 
-    /** D-13 — ẩn nút không phải là biện pháp kiểm soát. Vai admin phải bị chặn ở server. */
+    /** D-13 — hiding the button is not a control. The admin role must be blocked on the server. */
     @Test
     void placeRefusesAnAdminAccount() {
         when(userRepository.findById(ADMIN_ID)).thenReturn(Optional.of(adminUser()));
@@ -565,9 +579,9 @@ class OrderServiceTest {
     }
 
     /**
-     * C5-2: mọi slot của cả lệnh bị khoá trước (id tăng dần), rồi mọi sản phẩm của cả lệnh trong
-     * đúng một lần lockAllById — thứ tự khoá chung của mọi đường ghi, để không đường nào deadlock
-     * với đường nào.
+     * C5-2: every slot of the whole call is locked first (ascending id), then every product of the
+     * whole call in exactly one lockAllById — the shared locking order for every write path, so no
+     * path deadlocks against another.
      */
     @Test
     void placeLocksEverySlotBeforeAnyProductInAscendingOrder() {
@@ -590,7 +604,7 @@ class OrderServiceTest {
         verify(productRepository, never()).findAllById(any());
     }
 
-    /** C5-5: slot phải thuộc chính stall trong group. */
+    /** C5-5: the slot must belong to the exact stall in the group. */
     @Test
     void placeRefusesASlotThatBelongsToAnotherStall() {
         assertThatThrownBy(
@@ -603,7 +617,7 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /** C5-5: slot của stall nhưng ở chợ khác với chợ trong group. */
+    /** C5-5: a slot of the stall but at a different market than the one in the group. */
     @Test
     void placeRefusesASlotAtAnotherMarket() {
         OrderGroupInput atAnotherMarket =
@@ -619,7 +633,10 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /** C5-5: stall đã rời chợ (farmer_markets.is_active = FALSE) thì slot ở đó không nhận đơn. */
+    /**
+     * C5-5: the stall has left the market (farmer_markets.is_active = FALSE) so a slot there does
+     * not accept orders.
+     */
     @Test
     void placeRefusesASlotAtAMarketTheStallHasLeft() {
         links.get(FM_A).setActive(false);
@@ -628,7 +645,7 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /** C5-5: Farmer đã tắt slot. */
+    /** C5-5: the Farmer has turned the slot off. */
     @Test
     void placeRefusesATurnedOffSlot() {
         slots.get(SLOT_A).setActive(false);
@@ -637,7 +654,7 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /** C5-5: pickupDate phải đúng ngày của slot. */
+    /** C5-5: pickupDate must match the slot's own day. */
     @Test
     void placeRefusesASlotOnAnotherDay() {
         OrderGroupInput wrongDay =
@@ -653,7 +670,7 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /** D-01: đơn luôn có slot; thiếu slotId → 409 SLOT_UNAVAILABLE. */
+    /** D-01: an order always has a slot; a missing slotId → 409 SLOT_UNAVAILABLE. */
     @Test
     void placeRefusesAGroupWithoutASlot() {
         OrderGroupInput noSlot =
@@ -665,8 +682,8 @@ class OrderServiceTest {
     }
 
     /**
-     * C5-5 / D-05: bây giờ ≥ cutoffAt → 409. Slot 15:00 hôm nay, cutoff 6 giờ → chốt đúng 09:00 =
-     * bây giờ: đúng thời điểm cutoff đã là muộn.
+     * C5-5 / D-05: now ≥ cutoffAt → 409. A 15:00 slot today, a 6-hour cutoff → the deadline is
+     * exactly 09:00 = now: the exact cutoff moment already counts as late.
      */
     @Test
     void placeRefusesAfterTheCutoff() {
@@ -683,7 +700,8 @@ class OrderServiceTest {
     }
 
     /**
-     * C5-5 / D-09: stall chưa duyệt hoặc bị đình chỉ không nhận đơn mới → 409 STALL_UNAVAILABLE.
+     * C5-5 / D-09: a stall not approved or suspended does not accept new orders → 409
+     * STALL_UNAVAILABLE.
      */
     @Test
     void placeRefusesAStallThatIsNotApproved() {
@@ -694,7 +712,7 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /** C5-12: sản phẩm bị ẩn, đã xoá, unavailable hoặc không còn → 409 OUT_OF_STOCK. */
+    /** C5-12: a product that is hidden, deleted, unavailable, or gone → 409 OUT_OF_STOCK. */
     @Test
     void placeRefusesAProductThatCannotBeSold() {
         products.get(RAU_MUONG).setHidden(true);
@@ -721,7 +739,7 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /** Sản phẩm của stall khác trong group → 400: request sai hình dạng, không phải xung đột. */
+    /** A product from another stall in the group → 400: a malformed request, not a conflict. */
     @Test
     void placeRefusesAProductOfAnotherStallInTheGroup() {
         assertThatThrownBy(
@@ -733,7 +751,7 @@ class OrderServiceTest {
         assertThat(products.get(BANH_CHUOI).getStockQuantity()).isEqualTo(15);
     }
 
-    // ---------- mã đơn (C5-6) ----------
+    // ---------- order code (C5-6) ----------
 
     @Test
     void placeGivesEachOrderACodeOfTheAgreedShape() {
@@ -744,7 +762,7 @@ class OrderServiceTest {
         assertThat(orders.getFirst().getOrderCode()).isEqualTo(placed.getFirst().orderCode());
     }
 
-    /** Mã trùng thì bốc lại, tối đa 5 lần, trước khi insert. */
+    /** A collision redraws, up to 5 times, before inserting. */
     @Test
     void orderCodeIsDrawnAgainWhenTaken() {
         OrderCodeGenerator codes = new OrderCodeGenerator(orderRepository, clock);

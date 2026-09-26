@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-090…092 — public, khách vãng lai dùng được; có token thì gắn user_id vào lịch sử. */
+/** FR-090…092 — public, guests can use it; with a token the user_id is attached to the history. */
 @Validated
 @RestController
 @RequestMapping("/api/v1/chat")

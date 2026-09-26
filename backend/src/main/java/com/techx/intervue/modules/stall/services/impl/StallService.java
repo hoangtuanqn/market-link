@@ -38,7 +38,8 @@ public class StallService implements StallServiceInterface {
     private static final int MAX_CUTOFF_HOURS = 72;
 
     /**
-     * Đủ cho mọi stall của một chợ trong một lượt — trang chợ không phân trang danh sách Farmer.
+     * Enough for every stall of a market in one pass — the market page does not paginate the Farmer
+     * list.
      */
     private static final int AT_MARKET_LIMIT = 200;
 
@@ -61,8 +62,8 @@ public class StallService implements StallServiceInterface {
     }
 
     /**
-     * D-09: với khách, stall chưa duyệt / bị đình chỉ đơn giản là không tồn tại — 404, không lộ lý
-     * do.
+     * D-09: for customers, a stall that is not approved / is suspended simply does not exist — 404,
+     * without revealing the reason.
      */
     @Override
     public StallDetailResource publicDetail(long farmerId) {
@@ -111,12 +112,13 @@ public class StallService implements StallServiceInterface {
             throw new MarketAlreadyJoinedException();
         }
         if (link == null) {
-            // Chưa từng bán ở đây
+            // Never sold here before
             link = new FarmerMarket();
             link.setFarmerId(profile.getId());
             link.setMarketId(request.marketId());
         }
-        // Đã rời rồi quay lại: bật lại dòng cũ để slot/đơn lịch sử vẫn trỏ về đúng chỗ
+        // Left and came back: turn the old row back on so historical slots/orders still point to
+        // the right place
         link.setActive(true);
         link.setStallCode(blankToNull(request.stallCode()));
         link.setStallLatitude(request.stallLatitude());
@@ -162,7 +164,10 @@ public class StallService implements StallServiceInterface {
         return queryRepository.search(null, marketId, day, 0, AT_MARKET_LIMIT).items();
     }
 
-    /** R-06: hồ sơ luôn tra theo userId của token; không có đường nào nhận farmerId từ request. */
+    /**
+     * R-06: the profile is always looked up by the token's userId; there is no path that takes a
+     * farmerId from the request.
+     */
     private FarmerProfile mine(long userId) {
         return farmerProfileRepository
                 .findByUserId(userId)

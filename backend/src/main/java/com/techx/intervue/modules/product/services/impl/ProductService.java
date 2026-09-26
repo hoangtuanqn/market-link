@@ -76,7 +76,7 @@ public class ProductService implements ProductServiceInterface {
         return toResource(products.save(product), profile, category);
     }
 
-    /** Xoá mềm — order_items trỏ tới product_id, đơn cũ phải đọc lại được (FR-036). */
+    /** Soft delete — order_items point to product_id, old orders must stay readable (FR-036). */
     @Override
     @Transactional
     public void softDelete(long userId, long productId) {
@@ -88,8 +88,8 @@ public class ProductService implements ProductServiceInterface {
     }
 
     /**
-     * FR-064: sold out / tạm ngưng là trạng thái Farmer tự đặt; tồn kho và cờ ẩn của admin không
-     * đổi.
+     * FR-064: sold out / paused is a state the Farmer sets themself; stock and the admin's hide
+     * flag do not change.
      */
     @Override
     @Transactional
@@ -124,12 +124,15 @@ public class ProductService implements ProductServiceInterface {
         products.save(product);
     }
 
-    /** R-06: hồ sơ luôn tra theo userId của token; không có đường nào nhận farmerId từ request. */
+    /**
+     * R-06: the profile is always looked up by the token's userId; there is no path that takes a
+     * farmerId from the request.
+     */
     private FarmerProfile mine(long userId) {
         return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
     }
 
-    /** D-09 / contract §4: chưa duyệt hoặc bị đình chỉ thì mọi thao tác ghi sản phẩm bị chặn. */
+    /** D-09 / contract §4: when not approved or suspended, every product write is blocked. */
     private static void requireApproved(FarmerProfile profile) {
         if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
             throw new StallNotApprovedException();
@@ -146,7 +149,10 @@ public class ProductService implements ProductServiceInterface {
         return product;
     }
 
-    /** Danh mục lạ hoặc đã tắt → 400 gắn vào field categoryId, để form đánh dấu đúng ô. */
+    /**
+     * An unknown or disabled category → 400 attached to the categoryId field, so the form marks the
+     * right box.
+     */
     private Category activeCategory(Long categoryId) {
         return categories
                 .findById(categoryId)

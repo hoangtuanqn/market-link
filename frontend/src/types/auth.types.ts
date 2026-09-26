@@ -3,9 +3,12 @@ import type { RoleType, UserType } from './user.types';
 export type LoginInput = {
   email: string;
   password: string;
-  /** False: phiên kết thúc khi đóng trình duyệt (cookie refresh dạng phiên). */
+  /** False: the session ends when the browser closes (a session refresh cookie). */
   rememberMe?: boolean;
-  /** FR-004: trang admin gửi 'admin'; sai role thì backend trả 403 ROLE_NOT_ALLOWED và không cấp token / cookie. */
+  /**
+   * FR-004: the admin page sends 'admin'; a wrong role makes the backend return 403 ROLE_NOT_ALLOWED and issue no token
+   * / cookie.
+   */
   requiredRole?: RoleType;
 };
 
@@ -58,8 +61,8 @@ export type AuthResultType = {
 };
 
 /**
- * FR-008: admin đã bật xác thực hai bước → login (và đăng nhập Google) chưa cấp phiên: `mfaRequired = true`,
- * `accessToken = null`, gửi `mfaToken` kèm mã tới POST /auth/mfa/verify.
+ * FR-008: an admin with two-step verification on → login (and Google sign-in) does not issue a session yet:
+ * `mfaRequired = true`, `accessToken = null`, send `mfaToken` with the code to POST /auth/mfa/verify.
  */
 export type LoginResultType = Omit<AuthResultType, 'accessToken'> & {
   accessToken: string | null;
@@ -67,7 +70,7 @@ export type LoginResultType = Omit<AuthResultType, 'accessToken'> & {
   mfaToken?: string | null;
 };
 
-/** Gửi `code` (6 số) hoặc `recoveryCode` (xxxx-xxxx-xxxx). */
+/** Send `code` (6 digits) or `recoveryCode` (xxxx-xxxx-xxxx). */
 export type MfaVerifyInput = {
   mfaToken: string;
   code?: string;
@@ -79,7 +82,7 @@ export type MfaStatusType = {
   recoveryCodesLeft: number;
 };
 
-/** `otpauthUri` chứa khoá bí mật: QR vẽ ngay trong trình duyệt, không gửi cho dịch vụ bên ngoài. */
+/** `otpauthUri` contains the secret key: the QR is drawn in the browser, not sent to an outside service. */
 export type MfaSetupType = {
   secret: string;
   otpauthUri: string;

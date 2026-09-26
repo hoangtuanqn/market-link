@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Tải ảnh sản phẩm lên trước khi lưu form chính (POST/PUT /farmer/products nhận lại URL này trong
- * {@code imageUrl}) — cùng khuôn với AdminMarketImageController. Chỉ Farmer (role lấy từ token,
- * R-06); không kiểm sản phẩm nào vì lúc tạo mới còn chưa có id.
+ * Upload a product image before saving the main form (POST/PUT /farmer/products takes this URL back
+ * in {@code imageUrl}) — same shape as AdminMarketImageController. Farmer only (role comes from the
+ * token, R-06); no product check because a new product has no id yet.
  */
 @RestController
 @RequestMapping("/api/v1/farmer/products/images")

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 
-/** Chỗ của một màn còn chạy trên dữ liệu mẫu, trong bản build production (xem `SHOW_WIP`). */
+/** The placeholder for a screen still running on sample data, in the production build (see `SHOW_WIP`). */
 const ComingSoon = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();

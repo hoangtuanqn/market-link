@@ -9,9 +9,9 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 /**
- * Body của POST/PUT /api/v1/farmer/products (contract §5, FR-062). {@code shelfLifeDays} chưa có FR
- * chính thức — xem migration V20260926016; FE gợi ý theo category nhưng server không chặn cứng theo
- * khoảng của category, chỉ đòi số dương.
+ * Body of POST/PUT /api/v1/farmer/products (contract §5, FR-062). {@code shelfLifeDays} has no
+ * official FR yet — see migration V20260926016; the FE suggests one by category but the server does
+ * not hard-enforce the category's range, it only requires a positive number.
  */
 public record ProductRequest(
         @NotNull(message = "Category is required.") Long categoryId,

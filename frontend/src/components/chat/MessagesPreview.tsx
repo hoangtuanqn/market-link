@@ -49,7 +49,7 @@ export default function MessagesPreview({ to }: Props) {
                 <time className="text-small text-ink-muted whitespace-nowrap">{chatWhen(thread.lastMessageAt)}</time>
               )}
             </div>
-            {/* Thread vừa mở chưa có tin nào: để trống, không bịa dấu "..." */}
+            {/* A freshly opened thread with no message yet: leave it empty, do not fake an "..." mark */}
             <p className="text-small text-ink-muted mt-1 truncate">{thread.lastMessageText ?? ''}</p>
           </div>
           {thread.unreadCount > 0 && (

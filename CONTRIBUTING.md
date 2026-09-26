@@ -1,7 +1,7 @@
 # Luật làm việc chung — MarketLink
 
 Áp dụng cho **mọi thành viên và mọi AI assistant**. Không chắc thì hỏi trong nhóm trước khi làm.
-Luật về code và scope (R-01…R-08, Definition of Done) nằm trong `CLAUDE.md`; file này là luật về
+Luật về code và scope (R-01…R-10, Definition of Done) nằm trong `CLAUDE.md`; file này là luật về
 **nhánh, môi trường, commit, PR và release**. AI agent đọc thêm `AGENTS.md`.
 
 ---
@@ -29,7 +29,7 @@ Vi phạm luật H- nào cũng phải báo LEAD ngay.
 
 | Lớp | Chặn | Luật |
 |---|---|---|
-| Git hook trên máy (`scripts/git-guard.sh`, cài bằng `npm install`) | Commit trên `main`/`dev`; push thẳng hay xoá `main`/`dev`; commit file bí mật | H-3, H-4, H-7 |
+| Git hook trên máy (`scripts/git-guard.sh`, cài bằng `npm install`) | Commit trên `main`/`dev`; push thẳng hay xoá `main`/`dev`; commit file bí mật; commit message có tiếng Việt | H-3, H-4, H-7, R-10 |
 | CI `Guard` → **Branch policy** | PR sai luồng, kể cả khi đổi base của PR sau khi mở | H-1, H-2 |
 | CI `Guard` → **Env guard** (`scripts/check-env-separation.sh`, chạy tay: `make check-env`) | Prod có giá trị mặc định, prod kéo profile dev, secret không bắt buộc, DB dev = DB prod, file bí mật trong git | H-7 |
 | `make prod` | Chạy production từ nhánh khác `main` hoặc khi có thay đổi chưa commit | H-8 |
@@ -130,7 +130,7 @@ Một PR chỉ làm **một việc**, nên dưới khoảng 400 dòng thay đổ
 Theo [Conventional Commits](https://www.conventionalcommits.org), có mã FR nếu có:
 
 ```
-<type>(<FR-xxx hoặc phạm vi>): <mô tả ngắn, thì hiện tại>
+<type>(<FR-xxx hoặc phạm vi>): <short description in English, present tense>
 
 feat(FR-030): split cart into one order per farmer
 fix(FR-034): restore stock when order is cancelled
@@ -148,6 +148,10 @@ chore(ci): cache maven dependencies
 | `chore` | Cấu hình, CI, Docker, dependency |
 | `release` | Commit hoặc PR release lên `main` |
 
+**Ngôn ngữ (R-10):** commit message viết **100% tiếng Anh**, cả dòng tiêu đề lẫn phần thân. Cùng luật cho tiêu đề và
+mô tả PR (vì *Squash and merge* lấy tiêu đề PR làm commit message trên `dev`) và cho chú thích tag (`git tag -a -m`).
+Tên riêng như tên chợ giữ nguyên, đặt trong dấu nháy. Không viết lại commit cũ đã có trên `dev`/`main` (H-4).
+
 Commit có dùng AI thì giữ dòng `Co-Authored-By` mà công cụ tự thêm (đề yêu cầu khai báo công cụ AI đã dùng).
 
 ---
@@ -160,6 +164,7 @@ Checklist bắt buộc trước khi xin review (có sẵn trong template PR):
 - [ ] Ghi mã FR-xxx và mô tả đã làm gì, test thế nào.
 - [ ] CI xanh: Spotless, test backend, Prettier, ESLint, build frontend.
 - [ ] Không có file bí mật, không có `console.log` hay code debug thừa.
+- [ ] Comment trong code, commit, tiêu đề và mô tả PR đều viết tiếng Anh (R-09, R-10).
 - [ ] Đổi DB thì có migration mới (mục 7).
 - [ ] Đổi API thì khớp `docs/api-contract.md` (R-05).
 - [ ] Thêm biến môi trường thì đã cập nhật đủ các file ở mục 6.
@@ -187,7 +192,6 @@ Lỡ commit bí mật thì báo ngay cho LEAD và đổi bí mật đó. Xoá co
 ## 7. Database migration
 
 - Chỉ đổi DB qua migration Flyway mới: `backend/src/main/resources/db/migration/V<yyyyMMdd><nnn>__<mo_ta>.sql`.
-  Không đổi tên migration đã vào `dev`. Nếu nhánh khác merge trước với số lớn hơn thì cứ để nguyên: dev bật `spring.flyway.out-of-order` nên Flyway tự chạy bù, prod thì không.
 - **Không sửa migration đã merge vào `dev`.** Muốn đổi thì viết migration mới.
 - Hai PR trùng số version: người merge sau đổi tên file của mình sang số lớn hơn trước khi merge.
 - `db/schema.sql` là thiết kế đích do LEAD giữ (R-02), không phải migration.
@@ -210,6 +214,8 @@ Lỡ commit bí mật thì báo ngay cho LEAD và đổi bí mật đó. Xoá co
 
 - Git hook (lefthook) tự format khi commit: Spotless cho Java, Prettier cho TS. Chạy `npm install` ở root để cài.
   Không dùng `--no-verify` để né hook.
+- Comment trong code viết tiếng Anh (R-09). Comment tiếng Việt có sẵn thì dịch khi sửa tới đoạn đó; riêng migration
+  đã merge **không được sửa**, kể cả comment (Flyway kiểm tra checksum).
 - Logic nghiệp vụ mới phải có test (Definition of Done, `CLAUDE.md`).
 - Chạy trước khi push: `make lint` và `make be-test`, hoặc `./mvnw verify` + `npm run lint && npm run build`.
 

@@ -15,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
-/** Redis + MySQL thật (như CI). Online = tập session; offline cuối cùng ghi last_seen_at. */
+/**
+ * Real Redis + MySQL (as in CI). Online = the set of sessions; the last offline writes
+ * last_seen_at.
+ */
 @SpringBootTest
 class PresenceServiceTest {
 
@@ -89,7 +92,8 @@ class PresenceServiceTest {
     }
 
     /**
-     * Tab mở > 30 phút không reconnect: TTL của tập session phải được làm mới, không tự "offline".
+     * A tab open > 30 minutes without reconnecting: the session set's TTL must be refreshed, it
+     * must not go "offline" by itself.
      */
     @Test
     void touchRefreshesTheOnlineTtlSoLongSessionsStayOnline() {

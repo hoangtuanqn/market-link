@@ -23,7 +23,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Đường thật: FarmerService → NotificationService → bảng notifications, text theo ngôn ngữ chủ đơn.
+ * The real path: FarmerService → NotificationService → the notifications table, text in the
+ * applicant's language.
  */
 @SpringBootTest
 @Transactional

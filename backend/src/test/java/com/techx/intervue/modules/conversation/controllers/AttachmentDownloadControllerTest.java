@@ -36,17 +36,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 /**
- * R-06 trên bề mặt rủi ro nhất của Plan 3A. Test đơn vị của AttachmentService mock
- * ConversationLookup, nên nó chứng minh service GỌI kiểm quyền — không chứng minh một request HTTP
- * từ người ngoài thread nhận đúng 403.
+ * R-06 on the riskiest surface of Plan 3A. AttachmentService's unit test mocks ConversationLookup,
+ * so it proves the service CALLS the permission check — it does not prove that an HTTP request from
+ * someone outside the thread receives exactly 403.
  *
- * <p>Khoảng trống đó đã cắn thật: AttachmentDownloadController từng thiếu trong assignableTypes của
- * ConversationExceptionHandler, mọi người ngoài thread nhận 500 thay vì 403, và không test tự động
- * nào thấy — chỉ curl tay mới thấy. Test này đi qua server thật, filter chain thật và JWT thật,
- * đúng cách giám khảo sẽ thử.
+ * <p>That gap actually bit us: AttachmentDownloadController was once missing from assignableTypes
+ * of ConversationExceptionHandler, everyone outside the thread received 500 instead of 403, and no
+ * automated test saw it — only a manual curl did. This test goes through the real server, the real
+ * filter chain and a real JWT, exactly the way the examiner will try.
  *
- * <p>Không dùng @Transactional: request chạy trên luồng khác của server, phải thấy dữ liệu đã
- * commit. Dọn tay ở tearDown.
+ * <p>No @Transactional: the request runs on another server thread, which must see committed data.
+ * Cleaned up by hand in tearDown.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AttachmentDownloadControllerTest {
@@ -131,7 +131,7 @@ class AttachmentDownloadControllerTest {
         assertThat(downloadBytes(url(), recipient).statusCode()).isEqualTo(200);
     }
 
-    /** R-06 — đúng thứ giám khảo sẽ thử bằng cách đổi id trên URL. */
+    /** R-06 — exactly what the examiner will try by changing the id in the URL. */
     @Test
     void someoneOutsideTheThreadGetsForbiddenWithAReason() throws Exception {
         HttpResponse<String> response = download(url(), outsider);
@@ -159,7 +159,10 @@ class AttachmentDownloadControllerTest {
         assertThat(response.body()).contains("NOT_FOUND");
     }
 
-    /** Tin bị admin ẩn thì ảnh biến mất theo, y như tin biến mất khỏi danh sách. */
+    /**
+     * When an admin hides a message the image disappears with it, just as the message disappears
+     * from the list.
+     */
     @Test
     void aPhotoOnAHiddenMessageIsNotFound() throws Exception {
         imageMessage.setHiddenAt(Instant.now());
@@ -199,9 +202,9 @@ class AttachmentDownloadControllerTest {
     }
 
     /**
-     * JwtAuthFilter không chỉ kiểm chữ ký: nó còn đòi một phiên còn sống trong UserSessionCache,
-     * đúng như khi đăng nhập thật. Không nạp phiên thì mọi request trả 401 và test sẽ "xanh vì lý
-     * do sai".
+     * JwtAuthFilter does not only check the signature: it also demands a live session in
+     * UserSessionCache, exactly as in a real sign-in. Without loading the session every request
+     * returns 401 and the test would be "green for the wrong reason".
      */
     private User newUser(RoleType role) {
         String tag = UUID.randomUUID().toString().substring(0, 8);
@@ -223,9 +226,9 @@ class AttachmentDownloadControllerTest {
     }
 
     /**
-     * Quyết định LEAD 26/09 đi qua HTTP thật: admin bị 403 cho tới khi có ai đó báo cáo tin, rồi
-     * mới xem được ảnh. Không thế thì báo cáo một bức ảnh khiêu dâm hay ảnh lừa đảo là vô dụng —
-     * admin nhìn thấy ô trống rồi phải quyết định mù.
+     * The LEAD's 26/09 decision over real HTTP: an admin gets 403 until someone reports the
+     * message, and then can view the image. Otherwise reporting a pornographic or scam image is
+     * useless — the admin sees an empty box and has to decide blind.
      */
     @Test
     void anAdminGetsThePhotoOnlyOnceTheMessageIsReported() throws Exception {
@@ -251,7 +254,7 @@ class AttachmentDownloadControllerTest {
         }
     }
 
-    /** Review Focus #2 qua HTTP: ảnh của tin ngữ cảnh vẫn đóng với admin. */
+    /** Review Focus #2 over HTTP: the image of a context message stays closed to the admin. */
     @Test
     void anAdminStillCannotOpenThePhotoOfANeighbouringMessage() throws Exception {
         User admin = newUser(RoleType.ADMIN);
@@ -284,9 +287,9 @@ class AttachmentDownloadControllerTest {
                                 .reason(ReportReason.ABUSE)
                                 .build());
         try {
-            // Tin bị báo cáo: mở được
+            // The reported message: can be opened
             assertThat(downloadBytes(url(), admin).statusCode()).isEqualTo(200);
-            // Tin hàng xóm trong cùng thread, chưa ai báo cáo: đóng
+            // A neighbouring message in the same thread, not reported by anyone: closed
             assertThat(
                             download("/api/v1/attachments/" + neighbourPhoto.getId(), admin)
                                     .statusCode())

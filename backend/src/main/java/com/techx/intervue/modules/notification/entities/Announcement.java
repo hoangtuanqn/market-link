@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Thông báo admin đăng (FR-077). active / startsAt / endsAt chỉ điều khiển banner ở trang public;
- * các dòng notifications đã gửi không đổi khi sửa hay gỡ.
+ * An announcement posted by an admin (FR-077). active / startsAt / endsAt only control the banner
+ * on the public page; notifications rows already sent do not change when it is edited or removed.
  */
 @Entity
 @Getter

@@ -33,7 +33,7 @@ const CustomerSettingsPage = () => {
               {t('shopping')}
             </h2>
             <ul className="m-0 flex flex-col p-0">
-              {/* Danh sách chợ ở đây còn là dữ liệu mẫu (id không khớp chợ thật) → chỉ hiện ở dev (config/wip.ts). */}
+              {/* The market list here is still sample data (ids do not match real markets) → shown in dev only (config/wip.ts). */}
               {SHOW_WIP && (
                 <SettingsRow title={t('market')} note={t('marketNote')}>
                   <SelectField

@@ -31,19 +31,22 @@ type FormErrors = {
   terms?: string;
 };
 
-/** Bằng đúng @Size của FarmerApplicationRequest — client báo trước, server vẫn là nơi chốt. */
+/** Exactly the @Size of FarmerApplicationRequest — the client warns first, the server is still where it is decided. */
 const MAX = { stallName: 120, contactPerson: 100, description: 2000 };
 
-/** Bằng PHOTO_MAX_BYTES / VIDEO_MAX_BYTES của FarmerUploadService. */
+/** Equal to PHOTO_MAX_BYTES / VIDEO_MAX_BYTES of FarmerUploadService. */
 const PHOTO_MAX_MB = 8;
 const VIDEO_MAX_MB = 40;
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 
-/** Thứ tự trên màn hình: lỗi đầu tiên theo thứ tự này là chỗ được cuộn tới và focus. */
+/** The order on screen: the first error in this order is where we scroll and focus. */
 const ERROR_ORDER: (keyof FormErrors)[] = ['stallName', 'contactPerson', 'description', 'photos', 'terms'];
 
-/** Phần tử nhận focus cho mỗi lỗi; khối ảnh không có input nên focus chính nút thêm ảnh đầu tiên. */
+/**
+ * The element that receives focus for each error; the image block has no input so focus goes to its first add-image
+ * button.
+ */
 const ERROR_ANCHOR: Record<keyof FormErrors, string> = {
   stallName: 'stall',
   contactPerson: 'person',
@@ -55,15 +58,16 @@ const ERROR_ANCHOR: Record<keyof FormErrors, string> = {
 /** Keys are order statuses only for the icon and colour; the text is `timeline.<key>`. */
 const TIMELINE = ['placed', 'accepted', 'ready'] as const;
 
-/** Ba ô ảnh; ô đầu bắt buộc. Nhãn hiển thị đã bỏ, chỉ còn số thứ tự cho trình đọc màn hình. */
+/** Three image slots; the first is required. The visible label was dropped, only the ordinal remains for screen readers. */
 const SHOTS = ['wide', 'growing', 'other'] as const;
 type PhotoSlot = { key: (typeof SHOTS)[number]; url: string | null; uploading: boolean };
 
 type VideoSlot = { url: string | null; uploading: boolean; poster: string | null };
 
 /**
- * Cắt một khung hình từ chính file trên máy để làm ảnh đại diện — không phải tải video về lần nữa, và không phụ thuộc
- * vào việc server có hỗ trợ range request hay không. Hỏng thì trả null, lúc đó thẻ <video> tự lấy khung đầu tiên.
+ * Cut a frame from the very file on the machine to serve as the thumbnail — no need to download the video again, and it
+ * does not depend on whether the server supports range requests. On failure returns null, and then the <video> tag
+ * takes the first frame itself.
  */
 const grabPoster = (file: File): Promise<string | null> =>
   new Promise((resolve) => {
@@ -78,7 +82,7 @@ const grabPoster = (file: File): Promise<string | null> =>
     probe.muted = true;
     probe.playsInline = true;
     probe.src = objectUrl;
-    // Khung 0 giây thường đen; lấy quanh giây đầu tiên, hoặc giữa video nếu quá ngắn.
+    // The 0-second frame is often black; take one around the first second, or the middle of the video if it is too short.
     probe.onloadeddata = () => {
       probe.currentTime = Math.min(1, (probe.duration || 2) / 2);
     };
@@ -123,16 +127,16 @@ const CustomerBecomeFarmerPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [confirmWithdraw, setConfirmWithdraw] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
-  /** Ngày của bản nháp đang mở, để nói cho người dùng biết họ đang tiếp tục việc dở dang. */
+  /** The date of the draft that is open, to tell the user they are continuing unfinished work. */
   const [draftSavedAt, setDraftSavedAt] = useState<string>();
   const navigate = useNavigate();
 
-  // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
+  // only setState in a promise callback (the initial state is already loading)
   const fetchStatus = useCallback(() => {
     FarmerApi.myApplication()
       .then((response) => {
         if (response.data) return setStatus({ kind: 'applied', data: response.data });
-        // Chưa nộp đơn nào: mở lại đúng những gì họ đã gõ lần trước rồi bấm "để sau làm tiếp".
+        // No application submitted yet: reopen exactly what they typed last time after clicking "Save and finish later".
         const draft = readDraft(user?.id);
         if (draft) {
           setStallName(draft.stallName);
@@ -149,7 +153,7 @@ const CustomerBecomeFarmerPage = () => {
 
   useEffect(fetchStatus, [fetchStatus]);
 
-  // Admin quyết định trong lúc trang đang mở: đọc lại để không còn hiện "đang chờ" với nút rút đơn cũ
+  // An admin decided while the page was open: read again so it no longer shows "pending" with the old withdraw button
   useEffect(
     () =>
       NotificationStore.onFrame((frame) => {
@@ -164,8 +168,9 @@ const CustomerBecomeFarmerPage = () => {
   };
 
   /**
-   * Nộp lại sau khi bị từ chối: mở lại form với nội dung lần trước để người nộp sửa đúng chỗ Admin chê, không phải gõ
-   * lại từ đầu. Ba ô cam kết thì phải tick lại — đó là cam kết cho đơn mới.
+   * Re-applying after a rejection: reopen the form with last time's content so the applicant fixes exactly what the
+   * Admin criticised, instead of typing everything again from scratch. The three commitment boxes must be ticked again
+   * — they are commitments for the new application.
    */
   const applyAgain = () => {
     if (status.kind !== 'applied') return;
@@ -184,8 +189,8 @@ const CustomerBecomeFarmerPage = () => {
   };
 
   /**
-   * "Lưu, để sau làm tiếp": giữ nguyên những gì đã gõ (ảnh đã nằm trên server nên chỉ lưu đường dẫn) rồi trả người dùng
-   * về trang tài khoản, nơi có nút tiếp tục.
+   * "Save and finish later": keep what was typed (the images are already on the server so only paths are saved) and
+   * send the user back to the account page, where the continue button is.
    */
   const saveAndLeave = () => {
     saveDraft(user?.id, {
@@ -205,12 +210,12 @@ const CustomerBecomeFarmerPage = () => {
       await FarmerApi.withdraw();
       setConfirmWithdraw(false);
       Notification.success({ title: t('toast.withdrawnTitle'), text: t('toast.withdrawn') });
-      // Rút xong là chưa từng nộp: quay về form trắng, không phải màn trạng thái.
+      // After withdrawing it is as if never applied: back to a blank form, not the status screen.
       setStatus({ kind: 'form' });
       window.scrollTo(0, 0);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('errors.withdraw')) });
-      // Thường là đơn vừa được quyết định (không còn "đang chờ"): hiện đúng trạng thái mới
+      // Usually the application was just decided (no longer "pending"): show the new status exactly
       setConfirmWithdraw(false);
       fetchStatus();
     } finally {
@@ -218,7 +223,7 @@ const CustomerBecomeFarmerPage = () => {
     }
   };
 
-  /** Bỏ nháp: xoá cả trên máy lẫn trên màn hình, form về trắng như lần đầu. */
+  /** Discard the draft: clear it both on the machine and on screen, the form goes blank like the first time. */
   const discardDraft = () => {
     clearDraft(user?.id);
     setDraftSavedAt(undefined);
@@ -230,7 +235,7 @@ const CustomerBecomeFarmerPage = () => {
     setErrors({});
   };
 
-  /** Sửa xong thì dòng đỏ biến mất ngay, không phải đợi bấm Gửi lần nữa. */
+  /** After fixing, the red line disappears at once, without waiting for Submit to be pressed again. */
   const clearError = (key: keyof FormErrors) =>
     setErrors((prev) => {
       if (!prev[key]) return prev;
@@ -244,7 +249,10 @@ const CustomerBecomeFarmerPage = () => {
     photoInputRef.current?.click();
   };
 
-  /** Chặn tại chỗ những gì server sẽ chặn, để người dùng không phải tải xong 40MB mới biết sai. */
+  /**
+   * Block on the spot what the server would block, so the user does not have to finish uploading 40MB before learning
+   * it is wrong.
+   */
   const fileError = (file: File, kind: 'photo' | 'video') => {
     const isPhoto = kind === 'photo';
     const types = isPhoto ? PHOTO_TYPES : VIDEO_TYPES;
@@ -290,7 +298,7 @@ const CustomerBecomeFarmerPage = () => {
     }
     setVideo({ url: null, uploading: true, poster: null });
     try {
-      // Dựng ảnh đại diện song song với lúc tải lên, không bắt người dùng chờ thêm một nhịp.
+      // Build the thumbnail in parallel with the upload, so the user does not wait an extra beat.
       const [response, poster] = await Promise.all([FarmerApi.uploadFile(file, 'video'), grabPoster(file)]);
       setVideo({ url: response.data.url, uploading: false, poster });
     } catch (error) {
@@ -315,7 +323,7 @@ const CustomerBecomeFarmerPage = () => {
 
     if (about.length > MAX.description) next.description = t('errors.descriptionLong', { max: MAX.description });
 
-    // Gửi khi ảnh chưa tải xong thì đơn đi thiếu ảnh mà không ai biết — chặn hẳn.
+    // Submitting before the images finish uploading would send the application without images and nobody would know — block it outright.
     if (photos.some((p) => p.uploading) || video.uploading) next.photos = t('errors.uploadInProgress');
     else if (!photos.some((p) => p.url)) next.photos = t('errors.photoRequired');
 
@@ -324,14 +332,17 @@ const CustomerBecomeFarmerPage = () => {
     return next;
   };
 
-  /** Lỗi ở đầu form mà nút Gửi ở cuối: không cuộn tới thì người dùng tưởng bấm không ăn. */
+  /**
+   * The error is at the top of the form while the Submit button is at the bottom: without scrolling to it the user
+   * thinks the click did nothing.
+   */
   const focusFirstError = (found: FormErrors) => {
     const key = ERROR_ORDER.find((k) => found[k]);
     if (!key) return;
     const node = document.getElementById(ERROR_ANCHOR[key]);
     if (!node) return;
     node.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // Khối ảnh là một <div>, không tự nhận focus được: lấy nút thêm ảnh đầu tiên bên trong.
+    // The image block is a <div>, it cannot take focus by itself: take the first add-image button inside.
     const target = node.matches('input, textarea, button') ? node : node.querySelector<HTMLElement>('button, input');
     target?.focus({ preventScroll: true });
   };
@@ -366,7 +377,7 @@ const CustomerBecomeFarmerPage = () => {
       window.scrollTo(0, 0);
       Notification.success({ title: t('toast.sentTitle'), text: t('toast.sent') });
     } catch (error) {
-      // Lỗi theo field của server: photoUrls/videoUrl gộp về dòng đỏ của khối ảnh.
+      // Server per-field errors: photoUrls/videoUrl merge into the image block's red line.
       const fromServer = Helper.getFieldErrors(error);
       setErrors({
         stallName: fromServer.stallName,
@@ -436,12 +447,12 @@ const CustomerBecomeFarmerPage = () => {
 
         {data.approvalStatus === 'suspended' && (
           <Banner variant="warning" title={t('suspendedBanner.title')}>
-            {/* Lý do đình chỉ do Admin viết; chưa có thì vẫn nói rõ chuyện gì đang xảy ra. */}
+            {/* The suspension reason is written by the Admin; if there is none it still says clearly what is happening. */}
             {data.suspendReason ?? t('suspendedBanner.text')}
           </Banner>
         )}
 
-        {/* Bị từ chối mà không biết vì sao thì nộp lại cũng sai y như cũ. */}
+        {/* Being rejected without knowing why means the re-application will be wrong just the same. */}
         {data.approvalStatus === 'rejected' && (
           <Banner variant="danger" title={t('rejectedBanner.title')}>
             {data.rejectReason ?? t('rejectedBanner.noReason')}
@@ -486,9 +497,9 @@ const CustomerBecomeFarmerPage = () => {
             </div>
           )}
           <div className="flex flex-wrap gap-2">
-            {/* Chỉ đơn bị từ chối mới nộp lại được — server cũng chặn đúng như vậy. */}
+            {/* Only a rejected application can be re-submitted — the server blocks it exactly the same way. */}
             {data.approvalStatus === 'rejected' && <Button onClick={applyAgain}>{t('sent.applyAgain')}</Button>}
-            {/* Đang chờ duyệt thì còn đổi ý được; đã có kết quả rồi thì không còn gì để rút. */}
+            {/* While pending they can still change their mind; once there is a result there is nothing left to withdraw. */}
             {data.approvalStatus === 'pending' && (
               <Button variant="danger" disabled={isWithdrawing} onClick={() => setConfirmWithdraw(true)}>
                 {t('sent.withdraw')}
@@ -583,7 +594,7 @@ const CustomerBecomeFarmerPage = () => {
         <p className="text-body-lg">{t('intro')}</p>
       </div>
 
-      {/* Mở lại từ nháp: nói rõ đây là việc dở dang, và cho đường bỏ nháp làm lại từ đầu. */}
+      {/* Reopened from a draft: say clearly this is unfinished work, and offer a way to discard the draft and start over. */}
       {draftSavedAt && (
         <Banner title={t('draft.title')}>
           {t('draft.text', { date: formatDate(new Date(draftSavedAt)) })}{' '}
@@ -602,8 +613,8 @@ const CustomerBecomeFarmerPage = () => {
         </ol>
       </Card>
 
-      {/* noValidate: tắt bong bóng mặc định của trình duyệt (chữ không dịch được, che mất dòng lỗi của
-          chính form). `required` vẫn giữ cho trình đọc màn hình và dấu sao trên nhãn. */}
+      {/* noValidate: turn off the browser's default bubble (text that cannot be translated and hides the form's own
+          error line). `required` is still kept for screen readers and the asterisk on the label. */}
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-8">
         <ol className="m-0 flex flex-col gap-8 p-0">
           <FormStep n={1} title={t('step1.title')}>
@@ -702,7 +713,7 @@ const CustomerBecomeFarmerPage = () => {
               <div id="photos" className="flex flex-col gap-2">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   {photos.map((p, i) => (
-                    // Nhãn dưới mỗi ô đã bỏ; ảnh vẫn cần tên cho trình đọc màn hình nên đánh số.
+                    // The label under each slot was dropped; images still need a name for screen readers so they are numbered.
                     <div key={p.key}>
                       {p.url ? (
                         <div className="relative">

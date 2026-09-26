@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
- * Body của PUT /api/v1/farmer/profile (contract §4). orderCutoffHours 1…72 kiểm trong service
+ * Body of PUT /api/v1/farmer/profile (contract §4). orderCutoffHours 1…72 is checked in the service
  * (D-05).
  */
 public record StallProfileRequest(

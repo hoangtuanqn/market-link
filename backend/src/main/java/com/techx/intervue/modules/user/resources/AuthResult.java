@@ -1,10 +1,10 @@
 package com.techx.intervue.modules.user.resources;
 
 /**
- * rememberMe quyết định cookie refresh_token là cookie phiên hay cookie lâu dài.
+ * rememberMe decides whether the refresh_token cookie is a session cookie or a long-lived cookie.
  *
- * <p>FR-008: admin đã bật 2FA thì bước mật khẩu chỉ trả {@code mfaToken} (token chờ), không có
- * access/refresh token.
+ * <p>FR-008: an admin with 2FA on only gets {@code mfaToken} (the pending token) from the password
+ * step, without any access/refresh token.
  */
 public record AuthResult(
         String accessToken,

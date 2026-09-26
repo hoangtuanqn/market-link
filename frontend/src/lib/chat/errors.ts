@@ -1,10 +1,10 @@
 import { isAxiosError } from 'axios';
 
-/** Key có thật trong `common.json`: `t()` của i18next chỉ nhận key đã khai, không nhận `string` tuỳ ý. */
+/** A real key in `common.json`: i18next's `t()` only accepts a declared key, not an arbitrary `string`. */
 export type SendErrorKey =
   'chat.closed' | 'chat.tooFast' | 'chat.photoTooBig' | 'chat.photoType' | 'chat.photoFailed' | 'chat.sendFailed';
 
-/** Lỗi gửi → key i18n dưới `chat.` nói đúng lý do (spec §6.3). */
+/** A send failure → an i18n key under `chat.` that says the exact reason (spec §6.3). */
 export function sendErrorKey(error: unknown, what: 'text' | 'photo'): SendErrorKey {
   const status = isAxiosError(error) ? error.response?.status : undefined;
   if (status === 409) return 'chat.closed';

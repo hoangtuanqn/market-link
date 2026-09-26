@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Panel "Closed days" trên form Market (FE) — chưa có FR chính thức trong REQUIREMENTS.md, xem
- * migration V20260926014. Chỉ Admin (role lấy từ token, R-06).
+ * The "Closed days" panel on the Market form (FE) — no official FR in REQUIREMENTS.md yet, see
+ * migration V20260926014. Admin only (role comes from the token, R-06).
  */
 @RestController
 @RequestMapping("/api/v1/admin/markets/{marketId}/closures")

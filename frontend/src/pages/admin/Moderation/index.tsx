@@ -37,7 +37,7 @@ const NO_PRODUCTS: ProductType[] = [];
 const AdminModerationPage = () => {
   const { t } = useTranslation('AdminModeration');
   const { t: tc } = useTranslation();
-  // Tab reviews và hidden còn là dữ liệu mẫu (review: C8) → production chỉ có tab products (config/wip.ts).
+  // The reviews and hidden tabs are still sample data (review: C8) → production only has the products tab (config/wip.ts).
   const [tab, setTab] = useState(SHOW_WIP ? 'reviews' : 'products');
   const [hidingBusy, setHidingBusy] = useState(false);
   // What customers currently see (contract §5, newest first); hiding removes a row from this list.
@@ -155,7 +155,7 @@ const AdminModerationPage = () => {
         value={tab}
         onChange={setTab}
         tabs={
-          // Reviews và hidden items còn chạy dữ liệu mẫu (SHOW_WIP); reported messages dùng API thật nên luôn có
+          // Reviews and hidden items still run on sample data (SHOW_WIP); reported messages use the real API so it is always
           SHOW_WIP
             ? [
                 { id: 'reviews', label: t('tab.reviews'), count: flagged.length },

@@ -8,7 +8,10 @@ import ConversationApi from '@/api-requests/conversation.requests';
 import { Button } from '@/components/ui/button';
 import { isAxiosError } from 'axios';
 
-/** FR-114, spec §9.5. Chỉ Customer mở được thread (Farmer vẫn giữ quyền Customer — FR-005); server kiểm lại. */
+/**
+ * FR-114, spec §9.5. Only a Customer can open a thread (a Farmer keeps Customer permissions too — FR-005); the server
+ * checks again.
+ */
 export default function MessageStallButton({ farmerId, productId }: { farmerId: number; productId?: number }) {
   const { t } = useTranslation('common');
   const { user } = useSession();
@@ -19,7 +22,7 @@ export default function MessageStallButton({ farmerId, productId }: { farmerId: 
 
   const open = async () => {
     if (!user) {
-      // Login đọc đích quay về ở state.from, giống RequireAuth và FavoriteButton
+      // Login reads the return destination from state.from, same as RequireAuth and FavoriteButton
       const state: LoginRedirectState = { from: location.pathname + location.search };
       navigate('/login', { state });
       return;

@@ -3,8 +3,8 @@ package com.techx.intervue.modules.order.resources;
 import java.math.BigDecimal;
 
 /**
- * Một dòng của group xem trước. {@code status} là trạng thái bán được thật: sản phẩm bị ẩn hoặc đã
- * xoá hiện {@code unavailable} dù cột status còn {@code available}.
+ * One line of a preview group. {@code status} is the real sellable state: a product that is hidden
+ * or deleted shows {@code unavailable} even though its status column is still {@code available}.
  */
 public record PreviewItemResource(
         Long productId,

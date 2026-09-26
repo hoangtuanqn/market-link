@@ -7,8 +7,8 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * Spec §8.3. `context` là tin bị báo cáo cùng tối đa 5 tin mỗi bên, xếp theo id tăng dần. Đây là
- * TOÀN BỘ những gì admin đọc được trong thread đó.
+ * Spec §8.3. `context` is the reported message plus up to 5 messages on each side, in ascending id
+ * order. This is EVERYTHING an admin can read in that thread.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record AdminReportDetailResource(

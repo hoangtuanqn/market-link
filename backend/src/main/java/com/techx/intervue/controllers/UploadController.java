@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * File public đã tải lên (SecurityConfig: /uploads/** permitAll). Tên file là UUID và mỗi lần đổi
- * ảnh là một tên mới, nên trình duyệt được cache lâu mà không bao giờ thấy ảnh cũ.
+ * Public uploaded files (SecurityConfig: /uploads/** permitAll). File names are UUIDs and every
+ * image change gets a new name, so browsers can cache for a long time without ever seeing the old
+ * image.
  */
 @RestController
 @AllArgsConstructor

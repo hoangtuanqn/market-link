@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import MessagesLayout from '@/components/chat/MessagesLayout';
 
-/** FR-110…115: tin nhắn của Customer với các sạp, dữ liệu thật và realtime. */
+/** FR-110…115: a Customer's messages with stalls, real data and realtime. */
 export default function CustomerMessagesPage() {
   const { t } = useTranslation('CustomerMessages');
 

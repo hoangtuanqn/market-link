@@ -6,22 +6,23 @@ import type { ChatMessageItem } from '@/types/chat.types';
 
 type Props = {
   message: ChatMessageItem;
-  /** Tin của người đang đăng nhập: căn phải, nền brand. */
+  /** A message from the signed-in user: right-aligned, brand background. */
   mine: boolean;
   senderName: string;
-  /** Chỉ có nghĩa với tin của mình: người kia đã đọc tới đây chưa. */
+  /** Only meaningful for my own message: has the other person read up to here yet. */
   seen?: boolean;
-  /** Báo cáo tin nhắn của người kia (FR-116). */
+  /** Report the other person's message (FR-116). */
   onReport?: () => void;
   reported?: boolean;
 };
 
 /**
- * Bong bóng chat giữa hai con người (FR-110, FR-115). **Không phải** `ChatMessage` — cái đó là của trợ lý AI và bắt mỗi
- * câu bot kèm nhãn "Intent: …" (FR-092, spec §10).
+ * A chat bubble between two people (FR-110, FR-115). **Not** `ChatMessage` — that one is the AI assistant's and tags
+ * every bot reply with an "Intent: …" label (FR-092, spec §10).
  *
- * Ghép từ class `ml-*` đã có của design system: `ml-msg`, `ml-msg-bot` (trái = người kia), `ml-msg-user` (phải = mình),
- * `ml-msg-bubble`, `ml-msg-meta`. Không thêm class mới, không sửa `marketlink-components.css` (frontend/CLAUDE.md).
+ * Composed from the design system's existing `ml-*` classes: `ml-msg`, `ml-msg-bot` (left = the other person),
+ * `ml-msg-user` (right = me), `ml-msg-bubble`, `ml-msg-meta`. No new class added, `marketlink-components.css` not
+ * touched (frontend/CLAUDE.md).
  */
 export default function MessageBubble({ message, mine, senderName, seen, onReport, reported }: Props) {
   const { t } = useTranslation('common');
@@ -46,7 +47,7 @@ export default function MessageBubble({ message, mine, senderName, seen, onRepor
         )}
       </div>
       <div className="ml-msg-meta">
-        {/* createdAt là ISO; formatClock chỉ nhận "07:30" nên ở đây phải là formatTime(Date) */}
+        {/* createdAt is ISO; formatClock only accepts "07:30" so here it must be formatTime(Date) */}
         <time dateTime={message.createdAt}>{formatTime(new Date(message.createdAt))}</time>
         {!mine && onReport ? (
           reported ? (

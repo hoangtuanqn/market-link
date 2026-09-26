@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { NotificationStore } from '@/lib/notifications/store';
 
-/** Số thông báo chưa đọc, cập nhật theo khung STOMP và các thao tác đánh dấu đã đọc. */
+/** The unread notification count, updated by STOMP frames and mark-as-read actions. */
 const useUnreadNotifications = () =>
   useSyncExternalStore(NotificationStore.subscribe, NotificationStore.getUnread, () => 0);
 

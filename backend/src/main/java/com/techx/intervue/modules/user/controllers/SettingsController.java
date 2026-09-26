@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Settings của cả ba vai (theme, ngôn ngữ, tiền, ngày giờ, đơn vị…). Chưa có trong api-contract.md
- * — đề xuất ở docs/proposals/settings-api.md.
+ * Settings for all three roles (theme, language, currency, date/time, units…). Not in
+ * api-contract.md yet — proposed in docs/proposals/settings-api.md.
  */
 @RestController
 @RequestMapping("/api/v1/auth/me/settings")

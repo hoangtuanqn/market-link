@@ -1,16 +1,19 @@
 import type { AuthResultType, LoginResultType } from '@/types/auth.types';
 
-/** FR-008: thông tin màn nhập mã cần, truyền qua router state (không lưu storage: F5 thì đăng nhập lại). */
+/** FR-008: what the code entry screen needs, passed through router state (not stored in storage: on F5 sign in again). */
 export type PendingMfa = {
   mfaToken: string;
   email: string;
-  /** Lựa chọn "Remember me" ở bước mật khẩu: lưu phiên vào localStorage hay sessionStorage sau khi nhập mã. */
+  /**
+   * The "Remember me" choice at the password step: whether to keep the session in localStorage or sessionStorage after
+   * the code is entered.
+   */
   remember: boolean;
 };
 
 /**
- * Kết quả đăng nhập: `pending` khi admin đã bật xác thực hai bước (chưa có phiên), `session` khi đã có accessToken.
- * Dùng chung cho trang đăng nhập admin, trang đăng nhập thường và đăng nhập Google.
+ * The sign-in result: `pending` when an admin has two-step verification on (no session yet), `session` when there is
+ * already an accessToken. Shared by the admin sign-in page, the ordinary sign-in page and Google sign-in.
  */
 export function splitLoginResult(
   data: LoginResultType,

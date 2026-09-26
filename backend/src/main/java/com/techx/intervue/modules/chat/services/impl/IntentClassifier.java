@@ -12,8 +12,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 /**
- * Phân loại intent bằng luật từ khoá trên câu đã bỏ dấu. Không gọi LLM, không sinh SQL. Thứ tự các
- * intent trong DOMAIN_TRIGGERS là thứ tự ưu tiên (xem docs/chatbot-design.md).
+ * Classifies intent with keyword rules on the diacritic-free sentence. No LLM call, no SQL
+ * generation. The order of the intents in DOMAIN_TRIGGERS is the priority order (see
+ * docs/chatbot-design.md).
  */
 @Component
 public class IntentClassifier {
@@ -44,7 +45,7 @@ public class IntentClassifier {
                         "close"));
         DOMAIN_TRIGGERS.put(
                 ChatIntent.FARMER_AVAILABILITY,
-                // không dùng "sap": bỏ dấu thì sạp / sáp (bơ sáp) / sắp trùng nhau
+                // do not use "sap": without diacritics "sạp" / "sáp" ("bơ sáp") / "sắp" collide
                 List.of("farmer", "farmers", "nong dan", "stall", "gian hang", "co mat"));
         DOMAIN_TRIGGERS.put(
                 ChatIntent.PRODUCT_DETAIL,
@@ -66,7 +67,7 @@ public class IntentClassifier {
     private static final List<String> HELP_TRIGGERS =
             List.of("giup", "help", "lam duoc gi", "huong dan");
 
-    /** Cụm chỉ ngày, kiểm tra theo thứ tự khai báo. */
+    /** Day-phrases, checked in declaration order. */
     private static final Map<String, Integer> DAY_PHRASES = new LinkedHashMap<>();
 
     static {
@@ -190,7 +191,7 @@ public class IntentClassifier {
         return null;
     }
 
-    /** java.time: Thứ 2 = 1 … CN = 7 → schema: CN = 0 … Thứ 7 = 6. */
+    /** java.time: Mon = 1 … Sun = 7 → schema: Sun = 0 … Sat = 6. */
     private static int toSchemaDay(LocalDate date) {
         return date.getDayOfWeek().getValue() % 7;
     }
@@ -212,7 +213,7 @@ public class IntentClassifier {
     private static String removePhrases(String padded, List<String> phrases) {
         String text = padded;
         for (String phrase : phrases) {
-            // lặp vì phrase liền nhau dùng chung khoảng trắng ở giữa
+            // repeated because adjacent phrases share the space between them
             while (text.contains(" " + phrase + " ")) {
                 text = text.replace(" " + phrase + " ", " ");
             }

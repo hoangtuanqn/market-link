@@ -13,6 +13,6 @@ public interface NotificationPreferenceServiceInterface {
     NotificationPreferencesResource update(
             Long userId, UpdateNotificationPreferencesRequest request);
 
-    /** Cách báo kind này cho userId vào lúc now (spec §5). */
+    /** How to alert this kind to userId at time now (spec §5). */
     Alert alertFor(Long userId, NotificationKind kind, Instant now);
 }

@@ -5,9 +5,9 @@ import java.time.Instant;
 import lombok.Builder;
 
 /**
- * Đẩy tới /user/topic/conversations. type: "updated" (tin mới / preview / unread), "read", hoặc
- * "hidden" (FR-116). messageId chỉ có mặt ở sự kiện "hidden". unreadCount là Long để sự kiện "read"
- * không mang số 0 giả — FE chỉ cập nhật badge khi trường có mặt.
+ * Pushed to /user/topic/conversations. type: "updated" (new message / preview / unread), "read", or
+ * "hidden" (FR-116). messageId is only present on the "hidden" event. unreadCount is a Long so the
+ * "read" event does not carry a fake 0 — the FE only updates the badge when the field is present.
  */
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -23,6 +23,6 @@ public record ConversationEvent(
     public static final String UPDATED = "updated";
     public static final String READ = "read";
 
-    /** FR-116: admin đã ẩn một tin; client bỏ nó khỏi thread mà không cần tải lại. */
+    /** FR-116: an admin hid a message; the client removes it from the thread without reloading. */
     public static final String HIDDEN = "hidden";
 }

@@ -30,13 +30,13 @@ type HeaderProps = {
   userName?: string;
   userEmail?: string;
   avatarUrl?: string;
-  /** Hạng thành tích của chính mình: viền quanh ảnh trên header và drawer. */
+  /** Your own achievement tier: a ring around the image on the header and the drawer. */
   tier?: Tier;
   role?: RoleType;
   settingsTo?: string;
-  /** Hộp thư theo vai: Customer /messages, Farmer /farmer/messages. */
+  /** Inbox by role: Customer /messages, Farmer /farmer/messages. */
   messagesTo?: string;
-  /** Trang thông báo của vai đang đăng nhập (Farmer: /farmer/notifications). */
+  /** The notifications page of the signed-in role (Farmer: /farmer/notifications). */
   notificationsTo?: string;
   cartCount?: number;
   unreadCount?: number;
@@ -95,7 +95,7 @@ const Header = ({
             <Link to="/search" aria-label={t('header.search')} className={Helper.cn(iconButton, 'max-lg:hidden')}>
               <SearchIcon />
             </Link>
-            {/* Tin nhắn và thông báo là hai biểu tượng riêng, không gộp (spec chat §9.1) */}
+            {/* Messages and notifications are two separate icons, not merged (chat spec §9.1) */}
             {signedIn && (
               <Popover
                 label={chatUnread ? t('header.messagesUnread', { count: chatUnread }) : t('header.messages')}

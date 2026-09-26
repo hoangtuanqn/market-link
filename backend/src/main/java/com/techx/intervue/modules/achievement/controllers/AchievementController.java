@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Thành tích cá nhân của người đang đăng nhập. Chưa có trong api-contract.md — đề xuất; id lấy từ
- * access token nên chỉ xem được của chính mình (R-06).
+ * Personal achievements of the signed-in user. Not in api-contract.md yet — a proposal; the id
+ * comes from the access token, so users can only view their own (R-06).
  */
 @RestController
 @RequestMapping("/api/v1/auth/me/achievements")

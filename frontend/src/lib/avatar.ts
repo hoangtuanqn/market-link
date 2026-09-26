@@ -1,12 +1,15 @@
 const API_ORIGIN = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
 
-/** Ảnh tự tải lên được backend trả dạng "/uploads/…" (cùng origin với API); ảnh Google đã là URL đầy đủ. */
+/**
+ * A self-uploaded image is returned by the backend as "/uploads/…" (same origin as the API); a Google image is already
+ * a full URL.
+ */
 export const avatarSrc = (url?: string | null) => {
   if (!url) return undefined;
   return url.startsWith('/') ? `${API_ORIGIN}${url}` : url;
 };
 
-/** "Nguyễn Văn An" → "NA"; một từ → một chữ; không có tên thì lấy chữ đầu email. */
+/** "Nguyễn Văn An" → "NA"; one word → one letter; with no name, use the first letter of the email. */
 export const initials = (name?: string | null, email?: string | null) => {
   const words = (name ?? '').trim().split(/\s+/).filter(Boolean);
   if (words.length === 0) return (email ?? '?').charAt(0).toUpperCase();

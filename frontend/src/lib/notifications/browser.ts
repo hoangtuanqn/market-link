@@ -2,8 +2,9 @@ import NotificationApi from '@/api-requests/notification.requests';
 import type { NotificationFrame } from '@/types/notification.types';
 
 /**
- * Thông báo của hệ điều hành qua service worker (/sw.js). registration.showNotification chạy được cả khi tab ẩn và trên
- * Android Chrome (new Notification() thì không). tag giống nhau → nhiều tab cùng gọi cũng chỉ còn một thông báo.
+ * An operating system notification through the service worker (/sw.js). registration.showNotification works even when
+ * the tab is hidden and on Android Chrome (new Notification() does not). The same tag → several tabs calling it still
+ * leave just one notification.
  */
 export type BrowserPermission = NotificationPermission | 'unsupported';
 
@@ -47,7 +48,7 @@ export const showOsNotification = async (f: NotificationFrame) => {
 
 let audio: AudioContext | null = null;
 
-/** Tiếng "ting" ngắn, không cần file âm thanh. Trình duyệt chặn âm khi chưa có thao tác nào thì bỏ qua. */
+/** A short "ting" sound, no audio file needed. If the browser blocks sound before any user gesture, skip it. */
 export const beep = () => {
   try {
     audio ??= new AudioContext();
@@ -60,7 +61,7 @@ export const beep = () => {
     osc.start();
     osc.stop(audio.currentTime + 0.18);
   } catch {
-    /* không có âm thanh cũng không sao */
+    /* no sound is fine too */
   }
 };
 
@@ -72,8 +73,9 @@ const fromBase64Url = (value: string) => {
 };
 
 /**
- * N3 — đăng ký Web Push cho trình duyệt này và gửi lên server (nhận thông báo cả khi đã đóng tab). Chỉ chạy khi đã có
- * quyền và server có khoá VAPID; gọi lại nhiều lần cũng chỉ là một dòng (server upsert theo endpoint).
+ * N3 — register Web Push for this browser and send it to the server (receive notifications even after the tab is
+ * closed). Only runs once permission is granted and the server has a VAPID key; calling it many times is still just one
+ * row (the server upserts by endpoint).
  */
 export const syncPushSubscription = async () => {
   if (!pushSupported() || permission() !== 'granted') return;
@@ -88,11 +90,14 @@ export const syncPushSubscription = async () => {
       (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: fromBase64Url(key) }));
     await NotificationApi.subscribePush(subscription.toJSON());
   } catch {
-    /* trình duyệt từ chối hoặc mất mạng: thông báo khi còn tab vẫn chạy */
+    /* the browser refuses or the network is lost: notifications while a tab is open still work */
   }
 };
 
-/** Đăng xuất: máy này thôi nhận Web Push của tài khoản vừa rời (máy dùng chung). Gọi khi phiên còn hiệu lực. */
+/**
+ * Sign out: this machine stops receiving Web Push of the account that just left (shared machine). Call it while the
+ * session is still valid.
+ */
 export const dropPushSubscription = async () => {
   if (!pushSupported()) return;
   try {
@@ -102,6 +107,6 @@ export const dropPushSubscription = async () => {
     await NotificationApi.unsubscribePush(subscription.endpoint).catch(() => undefined);
     await subscription.unsubscribe();
   } catch {
-    /* không có gì để huỷ */
+    /* nothing to cancel */
   }
 };

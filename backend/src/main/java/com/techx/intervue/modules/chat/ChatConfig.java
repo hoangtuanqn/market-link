@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ChatConfig {
 
-    /** Chatbot hiểu "hôm nay / ngày mai" theo giờ Việt Nam (decisions.md · Đơn vị và locale). */
+    /** The chatbot reads "today / tomorrow" in Vietnam time (decisions.md · "Đơn vị và locale"). */
     @Bean
     Clock chatClock() {
         return Clock.system(ZoneId.of("Asia/Ho_Chi_Minh"));

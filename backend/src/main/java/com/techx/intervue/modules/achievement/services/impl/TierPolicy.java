@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
- * Luật xếp hạng: hạng là mức cao nhất mà người mua đạt đủ cả ba ngưỡng. Không "giữ hạng" — huỷ
- * nhiều làm tỉ lệ tụt thì hạng tụt theo.
+ * Ranking rule: the tier is the highest level at which the buyer meets all three thresholds. No
+ * "keeping a tier" — cancelling a lot drops the rate, and the tier drops with it.
  */
 @Component
 @RequiredArgsConstructor
@@ -29,7 +29,10 @@ public class TierPolicy {
         return result;
     }
 
-    /** Hạng ngay trên hạng hiện tại và phần còn thiếu; null khi đã ở hạng cao nhất. */
+    /**
+     * The tier right above the current one and what is still missing; null when already at the
+     * highest tier.
+     */
     public NextTierResource next(OrderStats stats) {
         int current = tierOf(stats).ordinal();
         if (current == Tier.values().length - 1) {
