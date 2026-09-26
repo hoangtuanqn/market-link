@@ -493,5 +493,9 @@
       "title": "Notifikasi",
       "intro": "Pendaftaran Farmer baru yang menunggu Anda tinjau."
     }
+  },
+  "comingSoon": {
+    "title": "Halaman ini belum dibuka",
+    "text": "Kami masih membangunnya. Semua menu lainnya tetap berfungsi seperti biasa."
   }
 }

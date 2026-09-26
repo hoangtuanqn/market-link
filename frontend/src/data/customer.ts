@@ -1,3 +1,4 @@
+// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
 /**
  * Demo data for the signed-in Customer screens, copied from docs/prototype/data.js. Replace with API calls when the
  * endpoints exist.
@@ -146,14 +147,17 @@ export const farmers = [
   },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function farmerName(id: number): string {
   return farmers.find((f) => f.id === id)?.stall ?? '';
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function farmer(id: number) {
   return farmers.find((f) => f.id === id);
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function marketName(id: number): string {
   return markets.find((m) => m.id === id)?.name ?? '';
 }
@@ -174,10 +178,12 @@ const lineProducts: OrderLineProduct[] = [
   { id: 19, name: 'Lemongrass', price: 6000, unit: 'bunch' },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function lineProduct(id: number): OrderLineProduct | undefined {
   return lineProducts.find((p) => p.id === id);
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function orderTotal(order: OrderType): number {
   return order.items.reduce((sum, i) => sum + i.qty * (lineProduct(i.productId)?.price ?? 0), 0);
 }

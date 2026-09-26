@@ -9,16 +9,15 @@ import { dashboardFavoriteProducts, orders } from '@/data/customer';
 import useClock from '@/hooks/useClock';
 import { nowLabel } from '@/lib/format';
 
-const nextPickups = orders
-  .filter((o) => o.status === 'ready' || o.status === 'accepted' || o.status === 'placed')
-  .slice(0, 3);
-
 /**
  * FR-010 FR-036 FR-060 — customer dashboard; content is not specified in the SRS beyond "securely access their
  * dashboard".
  */
 const CustomerDashboardPage = () => {
   const { t } = useTranslation('CustomerDashboard');
+  const nextPickups = orders
+    .filter((o) => o.status === 'ready' || o.status === 'accepted' || o.status === 'placed')
+    .slice(0, 3);
   const now = useClock();
   const [showSellCard, setShowSellCard] = useState(true);
 

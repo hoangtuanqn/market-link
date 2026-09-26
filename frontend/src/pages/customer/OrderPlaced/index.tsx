@@ -6,13 +6,6 @@ import { farmerName, orders } from '@/data/customer';
 import { dayName, formatClock, formatDayMonth, formatTime } from '@/lib/format';
 import type { OrderType } from '@/types/order.types';
 
-const order1: OrderType = {
-  ...orders.find((o) => o.code === '#ML-0421')!,
-  items: [
-    { productId: 1, qty: 2 },
-    { productId: 2, qty: 1 },
-  ],
-};
 const order2: OrderType = {
   code: '#ML-0422',
   farmerId: 2,
@@ -24,7 +17,6 @@ const order2: OrderType = {
   items: [{ productId: 3, qty: 2 }],
   history: [['placed', '24/09/2026 09:12', 'You']],
 };
-const placedOrders = [order1, order2];
 /** Lúc đặt đơn (demo) và hạn sửa/huỷ của từng đơn. */
 const PLACED_AT = new Date(2026, 8, 24, 9, 12);
 const CUTOFFS = [
@@ -35,6 +27,15 @@ const CUTOFFS = [
 /** FR-031 FR-032 — confirmation after placing pre-orders; stock is already held (D-02). */
 const CustomerOrderPlacedPage = () => {
   const { t, i18n } = useTranslation('CustomerOrderPlaced');
+  // Tạo trong component chứ không ở top-level: lệnh find ở top-level làm bản build production giữ cả mảng đơn mẫu.
+  const order1: OrderType = {
+    ...orders.find((o) => o.code === '#ML-0421')!,
+    items: [
+      { productId: 1, qty: 2 },
+      { productId: 2, qty: 1 },
+    ],
+  };
+  const placedOrders = [order1, order2];
   const list = (items: string[]) => new Intl.ListFormat(i18n.language, { type: 'conjunction' }).format(items);
   const stalls = list(placedOrders.map((o) => farmerName(o.farmerId)));
   const cutoffs = list(

@@ -19,8 +19,12 @@ import {
   UsersIcon,
   type IconProps,
 } from '@/components/icons';
-import { farmer } from '@/data/catalog';
+import StallApi from '@/api-requests/stall.requests';
+import { SHOW_WIP } from '@/config/wip';
 import { farmerOrders } from '@/data/farmer';
+import useRequest from '@/hooks/useRequest';
+import useSession from '@/hooks/useSession';
+import { initials } from '@/lib/avatar';
 import type common from '@/locales/en/common.json';
 import DashboardShell, { type ShellNavGroup } from './DashboardShell';
 
@@ -29,7 +33,9 @@ type FarmerNavKey = keyof (typeof common)['farmerNav'];
 type NavItem = { to: string; label: FarmerNavKey; icon: ComponentType<IconProps>; count?: number };
 type NavGroup = { heading: FarmerNavKey; items: NavItem[] };
 
-const AWAITING_COUNT = farmerOrders.filter((o) => o.status === 'placed').length;
+// Hai badge đếm còn lấy từ dữ liệu mẫu (đơn: C5, tin nhắn chưa đọc chưa nối vào sidebar) → chỉ hiện ở dev.
+const AWAITING_COUNT = SHOW_WIP ? farmerOrders.filter((o) => o.status === 'placed').length : undefined;
+const MESSAGES_COUNT = SHOW_WIP ? 1 : undefined;
 
 const NAV: NavGroup[] = [
   {
@@ -58,7 +64,7 @@ const NAV: NavGroup[] = [
   {
     heading: 'inbox',
     items: [
-      { to: '/farmer/messages', label: 'messages', icon: ChatIcon, count: 1 },
+      { to: '/farmer/messages', label: 'messages', icon: ChatIcon, count: MESSAGES_COUNT },
       { to: '/farmer/notifications', label: 'notifications', icon: BellIcon },
     ],
   },
@@ -81,7 +87,10 @@ const NAV: NavGroup[] = [
 const FarmerLayout = () => {
   const { t } = useTranslation();
   const unread = useUnreadNotifications();
-  const f = farmer(1)!;
+  const { user } = useSession();
+  const { state: profileLoad } = useRequest('farmer-layout-profile', () => StallApi.myProfile());
+  const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
+  const stallName = profile?.stallName ?? user?.fullName ?? '';
 
   const nav: ShellNavGroup[] = NAV.map((g) => ({
     heading: t(`farmerNav.${g.heading}`),
@@ -100,11 +109,18 @@ const FarmerLayout = () => {
       home="/farmer"
       nav={nav}
       context={{
-        mono: f.stall.charAt(0),
-        name: f.stall,
-        sub: t('farmerNav.approvedMarkets', { count: f.markets.length }),
+        mono: stallName.trim().charAt(0).toUpperCase(),
+        name: stallName,
+        sub:
+          profile?.approvalStatus === 'approved'
+            ? t('farmerNav.approvedMarkets', { count: profile.markets.length })
+            : t('farmerNav.badge'),
       }}
-      user={{ mono: 'CT', email: 'cotu@example.com', line: t('farmerNav.roleStall', { stall: 'Cô Tư Garden' }) }}
+      user={{
+        mono: initials(user?.fullName, user?.email),
+        email: user?.email ?? '',
+        line: t('farmerNav.roleStall', { stall: stallName }),
+      }}
       searchId="farmer-appq"
       searchPlaceholder={t('farmerNav.searchPlaceholder')}
       accountTo="/account"

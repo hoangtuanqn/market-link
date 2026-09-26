@@ -494,5 +494,9 @@
       "title": "Notifications",
       "intro": "Les nouvelles demandes Farmer en attente de votre examen."
     }
+  },
+  "comingSoon": {
+    "title": "Cette page n'est pas encore ouverte",
+    "text": "Nous sommes encore en train de la construire. Le reste du menu fonctionne normalement."
   }
 }

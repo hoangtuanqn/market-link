@@ -494,5 +494,9 @@
       "title": "Notifications",
       "intro": "New Farmer applications waiting for you to review."
     }
+  },
+  "comingSoon": {
+    "title": "This page is not open yet",
+    "text": "We are still building it. Everything else in the menu works as usual."
   }
 }

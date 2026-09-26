@@ -18,6 +18,7 @@ import { LoadError } from '@/components/ui/data-state';
 import { Table } from '@/components/ui/table';
 import { reviewTags, reviewsForProduct } from '@/data/catalog';
 import { demoTierOf } from '@/data/tiers';
+import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
 import { perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
@@ -118,7 +119,7 @@ const ProductDetailPage = () => {
   );
 
   // Reviews stay the demo set until C8; they follow the real product id.
-  const allReviews = [...reviewsForProduct(p.id), EXTRA_REVIEW];
+  const allReviews = SHOW_WIP ? [...reviewsForProduct(p.id), EXTRA_REVIEW] : [];
   const avgRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
 
   return (
@@ -167,25 +168,27 @@ const ProductDetailPage = () => {
               )}
             </div>
             <p className="text-small text-ink-muted">{t('stockUpdated')}</p>
-            {soldOut ? (
-              <Button variant="secondary" className="w-fit">
-                {t('notifyMe')}
-              </Button>
-            ) : (
-              <div className="flex flex-wrap items-center gap-6">
-                <QtyStepper value={qty} max={p.stockQuantity} unit={p.unit} onChange={setPickedQty} />
-                <Button
-                  onClick={() =>
-                    Notification.success({
-                      title: t('added.title'),
-                      text: t('added.text', { qty: units(qty, p.unit), name: p.name.toLowerCase() }),
-                    })
-                  }
-                >
-                  {t('addToCart')}
+            {/* Giỏ hàng và báo có hàng chưa nối API: nút chỉ hiện toast → chỉ ở dev (config/wip.ts). */}
+            {SHOW_WIP &&
+              (soldOut ? (
+                <Button variant="secondary" className="w-fit">
+                  {t('notifyMe')}
                 </Button>
-              </div>
-            )}
+              ) : (
+                <div className="flex flex-wrap items-center gap-6">
+                  <QtyStepper value={qty} max={p.stockQuantity} unit={p.unit} onChange={setPickedQty} />
+                  <Button
+                    onClick={() =>
+                      Notification.success({
+                        title: t('added.title'),
+                        text: t('added.text', { qty: units(qty, p.unit), name: p.name.toLowerCase() }),
+                      })
+                    }
+                  >
+                    {t('addToCart')}
+                  </Button>
+                </div>
+              ))}
             <p className="text-small text-ink-muted">{t('payNote', { price: perUnit(Number(p.price), p.unit) })}</p>
           </Card>
         </div>
@@ -308,49 +311,52 @@ const ProductDetailPage = () => {
         </section>
       )}
 
-      <section className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="text-h2">{t('reviews.title')}</h2>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button variant="secondary" size="sm" disabled>
-              {t('reviews.write')}
-            </Button>
-            <span className="text-small text-ink-muted">{t('reviews.writeNote')}</span>
-          </div>
-        </div>
-        <Card className="flex flex-col gap-4 p-6">
-          <div className="flex flex-wrap items-baseline gap-3">
-            <b className="font-hand text-[48px] leading-none tabular-nums">{avgRating.toFixed(1)}</b>
-            <Rating value={avgRating} />
-            <span className="text-small text-ink-muted">{t('reviews.summary', { count: allReviews.length })}</span>
-          </div>
-          {reviewTags[p.farmerId] && (
-            <div className="flex flex-wrap gap-2">
-              {reviewTags[p.farmerId].map(([tag, count]) => (
-                <span
-                  key={tag}
-                  className="bg-brand-tint text-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[14px]"
-                >
-                  {tag} <b className="tabular-nums">{count}</b>
-                </span>
-              ))}
+      {/* Review còn là dữ liệu mẫu tới C8 → chỉ hiện ở dev (config/wip.ts). */}
+      {SHOW_WIP && (
+        <section className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h2 className="text-h2">{t('reviews.title')}</h2>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button variant="secondary" size="sm" disabled>
+                {t('reviews.write')}
+              </Button>
+              <span className="text-small text-ink-muted">{t('reviews.writeNote')}</span>
             </div>
-          )}
-        </Card>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {allReviews.map((r, i) => (
-            <ReviewCard
-              key={i}
-              author={r.author}
-              authorTier={demoTierOf(r.author)}
-              date={r.date}
-              rating={r.rating}
-              text={r.text}
-              fluid
-            />
-          ))}
-        </div>
-      </section>
+          </div>
+          <Card className="flex flex-col gap-4 p-6">
+            <div className="flex flex-wrap items-baseline gap-3">
+              <b className="font-hand text-[48px] leading-none tabular-nums">{avgRating.toFixed(1)}</b>
+              <Rating value={avgRating} />
+              <span className="text-small text-ink-muted">{t('reviews.summary', { count: allReviews.length })}</span>
+            </div>
+            {reviewTags[p.farmerId] && (
+              <div className="flex flex-wrap gap-2">
+                {reviewTags[p.farmerId].map(([tag, count]) => (
+                  <span
+                    key={tag}
+                    className="bg-brand-tint text-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[14px]"
+                  >
+                    {tag} <b className="tabular-nums">{count}</b>
+                  </span>
+                ))}
+              </div>
+            )}
+          </Card>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {allReviews.map((r, i) => (
+              <ReviewCard
+                key={i}
+                author={r.author}
+                authorTier={demoTierOf(r.author)}
+                date={r.date}
+                rating={r.rating}
+                text={r.text}
+                fluid
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {similar.length > 0 && (
         <section className="flex flex-col gap-4">
@@ -422,16 +428,19 @@ const ProductDetailPage = () => {
         </section>
       )}
 
-      <p className="text-small">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => Notification.success({ title: t('report.sentTitle'), text: t('report.sentText') })}
-        >
-          {t('report.button')}
-        </Button>{' '}
-        <span className="text-ink-muted">{t('report.note')}</span>
-      </p>
+      {/* Báo cáo listing chưa có API, nút chỉ hiện toast → chỉ ở dev (config/wip.ts). */}
+      {SHOW_WIP && (
+        <p className="text-small">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => Notification.success({ title: t('report.sentTitle'), text: t('report.sentText') })}
+          >
+            {t('report.button')}
+          </Button>{' '}
+          <span className="text-ink-muted">{t('report.note')}</span>
+        </p>
+      )}
     </div>
   );
 };

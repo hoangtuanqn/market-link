@@ -5,6 +5,7 @@
   "titleNew": "Chợ mới",
   "city": "Thành phố Hồ Chí Minh",
   "meta": "{{stalls}} sạp · thêm ngày {{added}}",
+  "metaStalls": "{{stalls}} sạp",
   "missing": {
     "title": "Chợ này không còn ở đây",
     "text": "Có thể chợ đã bị gỡ. Hãy mở lại từ danh sách chợ."

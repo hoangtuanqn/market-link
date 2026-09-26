@@ -5,6 +5,7 @@
   "titleNew": "新しいマーケット",
   "city": "ホーチミン市",
   "meta": "{{stalls}}店舗 · {{added}}に追加",
+  "metaStalls": "{{stalls}}店舗",
   "missing": {
     "title": "このマーケットはもうありません",
     "text": "削除された可能性があります。マーケット一覧から開き直してください。"

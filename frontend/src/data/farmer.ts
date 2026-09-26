@@ -1,3 +1,4 @@
+// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
 /**
  * Demo data for the signed-in Farmer screens, copied from docs/prototype/data.js. Replace with API calls when the
  * endpoints exist.
@@ -211,6 +212,7 @@ export const farmerOrders: FarmerOrderType[] = [
   },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function farmerOrderTotal(order: FarmerOrderType): number {
   return order.items.reduce((sum, i) => sum + i.qty * (product(i.productId)?.price ?? 0), 0);
 }
