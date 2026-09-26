@@ -3,8 +3,6 @@ package com.techx.intervue.modules.product.repositories;
 import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import jakarta.persistence.LockModeType;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -43,10 +41,16 @@ public interface ProductDailyStockRepository extends JpaRepository<ProductDailyS
             @Param("dayOfWeek") int dayOfWeek);
 
     /**
-     * Locks the rows already guaranteed to exist (via {@code materialize} then a lookup) until
-     * commit.
+     * Locks the row by its natural key, in the same call that reads it. Deliberately not "find,
+     * then lock by id" — an earlier unlocked find in the same transaction would let Hibernate's
+     * first-level cache hand back the entity it already loaded instead of the value this lock just
+     * read, so a transaction that had to wait for the lock could still act on stale data once it
+     * unblocks.
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select d from ProductDailyStock d where d.id in :ids order by d.id")
-    List<ProductDailyStock> lockAllById(@Param("ids") Collection<Long> ids);
+    @Query(
+            "select d from ProductDailyStock d where d.productId = :productId and d.stockDate ="
+                    + " :stockDate")
+    Optional<ProductDailyStock> lockByProductIdAndStockDate(
+            @Param("productId") Long productId, @Param("stockDate") LocalDate stockDate);
 }

@@ -24,7 +24,9 @@ import com.techx.intervue.modules.order.resources.PlacedOrderResource;
 import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
@@ -35,8 +37,10 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -76,6 +80,7 @@ public class OrderService implements OrderServiceInterface {
     private final OrderCodeGenerator codeGenerator;
     private final CheckoutQueryRepository checkoutQueries;
     private final Clock clock;
+    private final ProductDailyStockRepository dailyStockRepository;
 
     /**
      * Read-only, no locking, changes nothing: groups the cart by farmer_id and writes each group's
@@ -205,12 +210,13 @@ public class OrderService implements OrderServiceInterface {
         requireBuyer(customerUserId);
 
         Map<Long, PickupSlot> slots = lockSlots(request.groups());
-        Map<Long, Product> products = lockProducts(request.groups());
+        Map<String, ProductDailyStock> dailyStock = lockDailyStock(request.groups());
+        Map<Long, Product> products = findProducts(request.groups());
 
         LocalDateTime now = LocalDateTime.now(clock);
         List<PlacedOrderResource> placed = new ArrayList<>();
         for (OrderGroupInput group : request.groups()) {
-            placed.add(placeGroup(customerUserId, group, slots, products, now));
+            placed.add(placeGroup(customerUserId, group, slots, dailyStock, products, now));
         }
         return placed;
     }
@@ -226,14 +232,58 @@ public class OrderService implements OrderServiceInterface {
         return locked;
     }
 
-    private Map<Long, Product> lockProducts(List<OrderGroupInput> groups) {
+    private Map<Long, Product> findProducts(List<OrderGroupInput> groups) {
         Set<Long> ids = new TreeSet<>();
         groups.forEach(g -> g.items().forEach(line -> ids.add(line.productId())));
         if (ids.isEmpty()) {
             return Map.of();
         }
-        return productRepository.lockAllById(ids).stream()
+        return productRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
+    }
+
+    /**
+     * D-02 applied per pickup date: creates whatever daily-stock row is still missing (never
+     * overwriting one that already exists), then locks it by its natural key in the same call that
+     * reads it — the C5-2 anti-deadlock rule for products/slots was "ascending id order"; a fresh
+     * row has no id yet before it is created, so the equivalent here is a fixed, deterministic
+     * order over (productId, date) pairs, applied by every transaction the same way. Deliberately
+     * does not do an unlocked find first to collect ids and lock in one batched call afterward:
+     * Hibernate's first-level cache would then hand back the entity already loaded by that earlier
+     * unlocked read instead of the value the lock just read, defeating the lock (reproduced live:
+     * two concurrent orders for the last unit both succeeded before this fix).
+     */
+    private Map<String, ProductDailyStock> lockDailyStock(List<OrderGroupInput> groups) {
+        record Need(Long productId, LocalDate date) {}
+        Set<Need> needed =
+                new TreeSet<>(Comparator.comparing(Need::productId).thenComparing(Need::date));
+        groups.forEach(
+                g ->
+                        g.items()
+                                .forEach(
+                                        line ->
+                                                needed.add(
+                                                        new Need(
+                                                                line.productId(),
+                                                                g.pickupDate()))));
+
+        Map<String, ProductDailyStock> locked = new HashMap<>();
+        for (Need n : needed) {
+            int dayOfWeek = n.date().getDayOfWeek().getValue() % 7;
+            dailyStockRepository.materialize(n.productId(), n.date(), dayOfWeek);
+            dailyStockRepository
+                    .lockByProductIdAndStockDate(n.productId(), n.date())
+                    .ifPresent(
+                            row ->
+                                    locked.put(
+                                            dailyStockKey(row.getProductId(), row.getStockDate()),
+                                            row));
+        }
+        return locked;
+    }
+
+    private static String dailyStockKey(Long productId, LocalDate date) {
+        return productId + "@" + date;
     }
 
     /**
@@ -246,6 +296,7 @@ public class OrderService implements OrderServiceInterface {
             long customerUserId,
             OrderGroupInput group,
             Map<Long, PickupSlot> slots,
+            Map<String, ProductDailyStock> dailyStock,
             Map<Long, Product> products,
             LocalDateTime now) {
         FarmerProfile farmer =
@@ -274,7 +325,8 @@ public class OrderService implements OrderServiceInterface {
                 throw new IllegalArgumentException(
                         "Product " + p.getId() + " is not sold by this stall.");
             }
-            if (!sellable(p) || p.getStockQuantity() < line.getValue()) {
+            ProductDailyStock row = dailyStock.get(dailyStockKey(p.getId(), group.pickupDate()));
+            if (!sellable(p) || row == null || row.getQuantityAvailable() < line.getValue()) {
                 throw new OutOfStockException(p.getId(), p.getName());
             }
         }
@@ -286,14 +338,12 @@ public class OrderService implements OrderServiceInterface {
         List<OrderItem> items = new ArrayList<>();
         for (Map.Entry<Long, Integer> line : wanted.entrySet()) {
             Product p = products.get(line.getKey());
+            ProductDailyStock row = dailyStock.get(dailyStockKey(p.getId(), group.pickupDate()));
             int qty = line.getValue();
-            p.setStockQuantity(p.getStockQuantity() - qty);
-            if (p.getStockQuantity() == 0) {
-                p.setStatus(ProductStatus.SOLD_OUT);
-            }
-            BigDecimal subtotal = p.getPrice().multiply(BigDecimal.valueOf(qty));
+            row.setQuantityAvailable(row.getQuantityAvailable() - qty);
+            BigDecimal subtotal = row.getUnitPrice().multiply(BigDecimal.valueOf(qty));
             total = total.add(subtotal);
-            items.add(OrderItem.snapshot(p, qty, subtotal));
+            items.add(OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal));
         }
 
         Order order = new Order();
