@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import Composer from './Composer';
 
-// Thẻ ghim tự tải dữ liệu; ở đây chỉ cần biết nó được đặt vào ô soạn
+// The pin cards load their own data; here we only need to know they are placed in the composer
 vi.mock('./OrderPin', () => ({ default: () => <span>order pin</span> }));
 vi.mock('./ProductPin', () => ({ default: () => <span>product pin</span> }));
 
@@ -119,7 +119,7 @@ describe('Composer', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('This stall is not taking messages right now');
   });
 
-  /** FR-114: mở chat từ một đơn thì đơn đó đi theo tin đầu tiên. */
+  /** FR-114: opening the chat from an order sends that order with the first message. */
   it('sends the pinned order with the message', async () => {
     const onSend = vi.fn().mockResolvedValue(undefined);
     const onUnpin = vi.fn();

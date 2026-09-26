@@ -14,7 +14,7 @@ type Props = {
   /** A locked button always carries a reason in words (frontend/CLAUDE.md). */
   disabledReason?: string;
   pinnedProductId?: number;
-  /** FR-114: mở chat từ một đơn — đơn đi theo tin đầu tiên, như ghim sản phẩm. */
+  /** FR-114: the chat was opened from an order — it rides with the first message, like a product pin. */
   pinnedOrderId?: number;
   onUnpin?: () => void;
 };

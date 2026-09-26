@@ -48,7 +48,7 @@ describe('MessageStallButton', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&product=8');
   });
 
-  /** FR-114 phần đơn: nhắn từ một đơn thì đơn đó được ghim vào ô soạn. */
+  /** FR-114, order part: messaging from an order pins that order in the composer. */
   it('lands on the thread with the order pinned', async () => {
     mockSessionUser = mockUser;
     vi.mocked(ConversationApi.open).mockResolvedValue(ok({ id: 42, other: {}, unreadCount: 0 }));

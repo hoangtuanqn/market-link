@@ -39,7 +39,7 @@ describe('OrderPin', () => {
     renderPin();
 
     expect(await screen.findByText(/ML-0421/)).toBeInTheDocument();
-    // pickupDate là ngày không giờ: dựng Date theo giờ máy, không new Date('yyyy-MM-dd') (bị lệch UTC)
+    // pickupDate is a date without a time: build the Date in local time, not new Date('yyyy-MM-dd') (UTC shift)
     expect(screen.getByText(new RegExp(formatDate(new Date(2026, 8, 27))))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(`${formatClock('07:00')}.*${formatClock('07:30')}`))).toBeInTheDocument();
     expect(screen.getByText(money(56000))).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe('OrderPin', () => {
     expect(await screen.findByRole('link')).toHaveAttribute('href', '/farmer/orders/ML-0421');
   });
 
-  /** Review Focus #4: đơn không còn đọc được (403/404/mạng) — một câu thay thế, bong bóng không vỡ. */
+  /** Review Focus #4: the order can no longer be read (403/404/network) — a fallback line, the bubble stays intact. */
   it('says so when the order cannot be read', async () => {
     vi.mocked(fetchOrderSummary).mockRejectedValue(new Error('403'));
     renderPin();

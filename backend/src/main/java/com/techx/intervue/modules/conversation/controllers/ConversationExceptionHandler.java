@@ -107,7 +107,7 @@ public class ConversationExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "NOT_A_MEMBER", e.getMessage(), List.of());
     }
 
-    /** R-06, FR-114: ghim đơn không thuộc hai người trong thread. */
+    /** R-06, FR-114: pinning an order that does not belong to the two people in the thread. */
     @ExceptionHandler(OrderNotInConversationException.class)
     ResponseEntity<ApiResource<Void>> orderNotInConversation(OrderNotInConversationException e) {
         return error(HttpStatus.FORBIDDEN, "ORDER_NOT_IN_CONVERSATION", e.getMessage(), List.of());
