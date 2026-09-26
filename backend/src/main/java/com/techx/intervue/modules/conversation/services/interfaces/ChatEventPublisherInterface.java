@@ -13,4 +13,7 @@ public interface ChatEventPublisherInterface {
     void messageCreated(Conversation conversation, MessageResource message);
 
     void conversationRead(Conversation conversation, Long readerId, Instant readAt);
+
+    /** FR-116: admin ẩn một tin; cả hai người trong thread bỏ nó khỏi màn hình ngay. */
+    void messageHidden(Conversation conversation, Long messageId);
 }

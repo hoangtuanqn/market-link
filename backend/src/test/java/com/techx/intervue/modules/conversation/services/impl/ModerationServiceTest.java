@@ -10,18 +10,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.conversation.controllers.AdminMessageReportController;
+import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.entities.MessageReport;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.enums.ReportReason;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
+import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.conversation.resources.AdminReportListItemResource;
 import com.techx.intervue.modules.conversation.resources.MessageReportResource;
 import com.techx.intervue.modules.conversation.resources.ModeratedMessageResource;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -51,16 +54,30 @@ class ModerationServiceTest {
     MessageReportRepository reports;
     MessageRepository messages;
     UserRepository users;
+    ConversationRepository conversations;
+    ChatEventPublisherInterface events;
     ModerationService service;
+    Conversation thread;
 
     @BeforeEach
     void setUp() {
         reports = mock(MessageReportRepository.class);
         messages = mock(MessageRepository.class);
         users = mock(UserRepository.class);
+        conversations = mock(ConversationRepository.class);
+        events = mock(ChatEventPublisherInterface.class);
         service =
-                new ModerationService(reports, messages, users, Clock.fixed(NOW, ZoneId.of("UTC")));
+                new ModerationService(
+                        reports,
+                        messages,
+                        users,
+                        Clock.fixed(NOW, ZoneId.of("UTC")),
+                        conversations,
+                        events);
 
+        thread = Conversation.between(3L, 7L);
+        thread.setId(42L);
+        when(conversations.findById(42L)).thenReturn(Optional.of(thread));
         when(messages.findById(101L))
                 .thenReturn(Optional.of(textMessage("Send me a deposit first")));
         when(users.findById(3L)).thenReturn(Optional.of(named(3L, "Seller Sam")));
@@ -443,5 +460,41 @@ class ModerationServiceTest {
 
         assertThatThrownBy(() -> service.dismiss(55L, 9L))
                 .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void hidingAMessagePublishesItToBothMembers() {
+        Message message = textMessageWithId(101L, "Send me a deposit first");
+        when(messages.findById(101L)).thenReturn(Optional.of(message));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(reports.findByMessageId(101L)).thenReturn(List.of());
+
+        service.hide(55L, 101L);
+
+        verify(events).messageHidden(thread, 101L);
+    }
+
+    @Test
+    void hidingAnAlreadyHiddenMessageDoesNotPublishAgain() {
+        Message message = textMessageWithId(101L, "Send me a deposit first");
+        message.setHiddenAt(Instant.parse("2026-09-26T05:00:00Z"));
+        message.setHiddenBy(11L);
+        when(messages.findById(101L)).thenReturn(Optional.of(message));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(reports.findByMessageId(101L)).thenReturn(List.of());
+
+        service.hide(55L, 101L);
+
+        verify(events, never()).messageHidden(any(), any());
+    }
+
+    /** dismiss chỉ đổi trạng thái báo cáo; tin không đổi nên không có gì để phát. */
+    @Test
+    void dismissingAReportPublishesNothing() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+
+        service.dismiss(55L, 9L);
+
+        verify(events, never()).messageHidden(any(), any());
     }
 }

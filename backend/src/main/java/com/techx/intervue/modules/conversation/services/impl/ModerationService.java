@@ -1,16 +1,20 @@
 package com.techx.intervue.modules.conversation.services.impl;
 
+import com.techx.intervue.helpers.TransactionHelper;
+import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.entities.MessageReport;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
+import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.conversation.resources.AdminReportListItemResource;
 import com.techx.intervue.modules.conversation.resources.MessageReportResource;
 import com.techx.intervue.modules.conversation.resources.ModeratedMessageResource;
+import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -47,8 +51,9 @@ public class ModerationService implements ModerationServiceInterface {
     private final MessageRepository messages;
     private final UserRepository users;
 
-    /** Chưa dùng ở danh sách; hide() và dismiss() ở task sau cần nó để ghi reviewedAt. */
     private final Clock clock;
+    private final ConversationRepository conversations;
+    private final ChatEventPublisherInterface events;
 
     @Override
     @Transactional(readOnly = true)
@@ -128,6 +133,14 @@ public class ModerationService implements ModerationServiceInterface {
             message.setHiddenAt(now);
             message.setHiddenBy(adminId);
             messages.save(message);
+
+            Conversation thread =
+                    conversations
+                            .findById(message.getConversationId())
+                            .orElseThrow(
+                                    () -> new EntityNotFoundException("Conversation not found."));
+            // Chỉ phát khi đã commit, giống MessageService: không phát một thay đổi có thể rollback
+            TransactionHelper.afterCommit(() -> events.messageHidden(thread, messageId));
         }
         reports.findByMessageId(messageId)
                 .forEach(r -> r.markHandledBy(adminId, ReportStatus.ACTIONED, now));
