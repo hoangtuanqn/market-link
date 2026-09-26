@@ -7,9 +7,11 @@ import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
 import com.techx.intervue.modules.order.enums.OrderStatus;
 import com.techx.intervue.modules.order.exceptions.CutoffPassedException;
+import com.techx.intervue.modules.order.exceptions.InvalidOrderTransitionException;
 import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
 import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.order.exceptions.OutOfStockException;
+import com.techx.intervue.modules.order.exceptions.ProductNotInOrderException;
 import com.techx.intervue.modules.order.exceptions.SlotFullException;
 import com.techx.intervue.modules.order.exceptions.SlotNotAvailableException;
 import com.techx.intervue.modules.order.exceptions.StallUnavailableException;
@@ -19,6 +21,7 @@ import com.techx.intervue.modules.order.repositories.OrderQueryRepository;
 import com.techx.intervue.modules.order.repositories.OrderQueryRepository.OrderDetailRow;
 import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.order.requests.CartLine;
+import com.techx.intervue.modules.order.requests.ModifyOrderRequest;
 import com.techx.intervue.modules.order.requests.OrderGroupInput;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
@@ -479,6 +482,145 @@ public class OrderService implements OrderServiceInterface {
         Order order = lockOwnedOrder(userId, orderId);
         transition(order, OrderStatus.COMPLETED, userId, null);
         return detail(userId, orderId);
+    }
+
+    // ---------- FR-034, 035: khách huỷ và sửa đơn của chính mình trước cutoff ----------
+
+    /**
+     * C5-18: sai trạng thái (khác {@code placed}/{@code accepted}) → {@link
+     * InvalidOrderTransitionException} (409 INVALID_TRANSITION); trạng thái đúng nhưng quá {@code
+     * cutoffAt} → {@link CutoffPassedException} (409 CUTOFF_PASSED) — hai lý do tách riêng, không
+     * gộp chung một exception như {@link OrderLifecycle#canCustomerCancel} trả về boolean.
+     */
+    @Override
+    @Transactional
+    public OrderDetailResource cancel(long userId, long orderId) {
+        Order order = loadOwnedByCustomer(userId, orderId);
+        assertCustomerCanStillAct(order, OrderStatus.CANCELLED);
+        transition(order, OrderStatus.CANCELLED, userId, null);
+        return detail(userId, orderId);
+    }
+
+    /**
+     * D-07 — chỉ giảm số lượng hoặc bỏ item, không bao giờ thêm sản phẩm mới: tính chênh lệch từng
+     * sản phẩm rồi cộng/trừ tồn đúng phần chênh lệch. Huỷ rồi đặt lại sẽ nhả tồn ra cho người khác
+     * cướp mất giữa chừng, và đổi cả {@code order_code} — không phải thứ khách vừa sửa muốn thấy.
+     *
+     * <p>C5-2/C5-18 — thứ tự khoá: đơn ({@link #loadOwnedByCustomer}) → slot (nếu có, dù nhánh này
+     * không đổi {@code booked_count}) → sản phẩm hiện có trong đơn, một lần {@code lockAllById}, id
+     * tăng dần ({@link ProductRepository#lockAllById} tự sắp theo id).
+     */
+    @Override
+    @Transactional
+    public OrderDetailResource modifyItems(long userId, long orderId, ModifyOrderRequest request) {
+        Order order = loadOwnedByCustomer(userId, orderId);
+        assertCustomerCanStillAct(order, OrderStatus.PLACED);
+
+        if (order.getSlotId() != null) {
+            slotRepository.lockById(order.getSlotId());
+        }
+
+        Map<Long, OrderItem> existing =
+                orderItemRepository.findByOrderId(orderId).stream()
+                        .collect(Collectors.toMap(OrderItem::getProductId, Function.identity()));
+        Map<Long, Integer> wanted =
+                request.items().stream()
+                        .collect(
+                                Collectors.toMap(
+                                        CartLine::productId, CartLine::quantity, Integer::sum));
+        for (Long productId : wanted.keySet()) {
+            if (!existing.containsKey(productId)) {
+                throw new ProductNotInOrderException(productId);
+            }
+        }
+
+        List<Product> products = productRepository.lockAllById(new TreeSet<>(existing.keySet()));
+        BigDecimal total = BigDecimal.ZERO;
+        for (Product p : products) {
+            OrderItem item = existing.get(p.getId());
+            int before = item.getQuantity();
+            int after = wanted.getOrDefault(p.getId(), 0);
+            int delta = after - before;
+
+            if (delta > 0 && !canRaiseBy(p, delta)) {
+                throw new OutOfStockException(p.getId(), p.getName());
+            }
+            p.setStockQuantity(p.getStockQuantity() - delta);
+            if (p.getStockQuantity() == 0) {
+                p.setStatus(ProductStatus.SOLD_OUT);
+            } else if (p.getStatus() == ProductStatus.SOLD_OUT) {
+                p.setStatus(ProductStatus.AVAILABLE);
+            }
+
+            if (after == 0) {
+                orderItemRepository.delete(item);
+            } else {
+                item.setQuantity(after);
+                item.setSubtotal(item.getUnitPrice().multiply(BigDecimal.valueOf(after)));
+                orderItemRepository.save(item);
+                total = total.add(item.getSubtotal());
+            }
+        }
+        // C5: mọi "xoá rồi đọc lại trong cùng transaction" phải flush() sau xoá — order_items vừa
+        // xoá/sửa phải chắc chắn ra khỏi persistence context trước khi transition() bên dưới (nhánh
+        // huỷ đơn) tự đọc lại order_items để hoàn tồn kho, kẻo hoàn tồn hai lần cho sản phẩm vừa bị
+        // bỏ khỏi đơn ở vòng lặp trên.
+        orderItemRepository.flush();
+
+        if (total.signum() == 0) {
+            // Bỏ hết item = huỷ đơn. Đừng để lại một đơn rỗng trị giá 0 đồng.
+            transition(order, OrderStatus.CANCELLED, userId, "All items removed.");
+            return detail(userId, orderId);
+        }
+
+        order.setTotalAmount(total);
+        if (order.getStatus() == OrderStatus.ACCEPTED) {
+            transition(order, OrderStatus.PLACED, userId, "Customer changed the order.");
+        } else {
+            // Trạng thái không đổi (vẫn placed): không đi qua transition() — không ghi lịch sử vì
+            // không có gì chuyển. flush() thủ công vì detail() đọc lại bằng JDBC thô (C5-15/17).
+            orderRepository.save(order);
+            orderRepository.flush();
+        }
+        return detail(userId, orderId);
+    }
+
+    /** Raise chỉ được khi sản phẩm còn bán được (chưa xoá mềm/ẩn/unavailable) và đủ tồn. */
+    private static boolean canRaiseBy(Product p, int delta) {
+        return !p.isDeleted()
+                && !p.isHidden()
+                && p.getStatus() != ProductStatus.UNAVAILABLE
+                && p.getStockQuantity() >= delta;
+    }
+
+    /**
+     * C5-8: khoá dòng đơn (PESSIMISTIC_WRITE) trước khi đọc bất kỳ field nào. Chỉ người mua ({@code
+     * customer_id}) mới được huỷ / sửa đơn của chính mình — kể cả Farmer đang phục vụ đơn đó cũng
+     * không được đi qua cửa này (403). Đơn không tồn tại → 404.
+     */
+    private Order loadOwnedByCustomer(long userId, long orderId) {
+        Order order =
+                orderRepository
+                        .lockById(orderId)
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
+        if (order.getCustomerId() != userId) {
+            throw new OrderNotYoursException();
+        }
+        return order;
+    }
+
+    /**
+     * Tách rõ hai lý do 409 của C5-18: sai trạng thái trước ({@code intendedTo} chỉ để lời nhắn dễ
+     * hiểu hơn — huỷ hay sửa đều chỉ cho phép từ {@code placed}/{@code accepted}), rồi mới tới quá
+     * giờ chốt.
+     */
+    private void assertCustomerCanStillAct(Order order, OrderStatus intendedTo) {
+        if (order.getStatus() != OrderStatus.PLACED && order.getStatus() != OrderStatus.ACCEPTED) {
+            throw new InvalidOrderTransitionException(order.getStatus(), intendedTo);
+        }
+        if (!LocalDateTime.now(clock).isBefore(order.getCutoffAt())) {
+            throw new CutoffPassedException(order.getId());
+        }
     }
 
     /**

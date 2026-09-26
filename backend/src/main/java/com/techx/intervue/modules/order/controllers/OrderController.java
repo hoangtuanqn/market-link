@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.order.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.order.requests.ModifyOrderRequest;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
 import com.techx.intervue.modules.order.resources.OrderDetailResource;
@@ -17,8 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -73,5 +76,27 @@ public class OrderController extends BaseController {
     public ResponseEntity<ApiResource<OrderDetailResource>> detail(
             @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
         return ok(orderService.detail(user.getId(), id), "");
+    }
+
+    /**
+     * FR-034 — chỉ khách mua huỷ được đơn của chính mình, trước cutoff. Sai chủ → 403; sai trạng
+     * thái → 409 INVALID_TRANSITION; quá cutoff → 409 CUTOFF_PASSED (C5-18).
+     */
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<ApiResource<OrderDetailResource>> cancel(
+            @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
+        return ok(orderService.cancel(user.getId(), id), "Order cancelled.");
+    }
+
+    /**
+     * FR-035 — sửa số lượng hoặc bỏ item trước cutoff, không bao giờ thêm sản phẩm mới (D-07). Tồn
+     * kho đổi đúng phần chênh lệch; đơn {@code accepted} quay lại {@code placed}.
+     */
+    @PutMapping("/{id}/items")
+    public ResponseEntity<ApiResource<OrderDetailResource>> modifyItems(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @PathVariable long id,
+            @Valid @RequestBody ModifyOrderRequest request) {
+        return ok(orderService.modifyItems(user.getId(), id, request), "Order updated.");
     }
 }

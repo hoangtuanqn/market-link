@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.order.services.interfaces;
 
+import com.techx.intervue.modules.order.requests.ModifyOrderRequest;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
 import com.techx.intervue.modules.order.resources.OrderDetailResource;
@@ -55,4 +56,21 @@ public interface OrderServiceInterface {
      * {@code PATCH /farmer/orders/{id}/complete} — {@code ready → completed}; không hoàn tồn kho.
      */
     OrderDetailResource complete(long userId, long orderId);
+
+    /**
+     * {@code PATCH /orders/{id}/cancel} (FR-034) — chỉ khách mua ({@code customer_id}) mới huỷ được
+     * (403 nếu không, {@code OrderNotYoursException}); đơn không tồn tại → 404 ({@code
+     * OrderNotFoundException}); sai trạng thái ({@code placed}/{@code accepted}) → 409 {@code
+     * InvalidOrderTransitionException}; quá {@code cutoffAt} → 409 {@code CutoffPassedException}.
+     * Hoàn tồn kho + trả chỗ slot qua {@code transition}.
+     */
+    OrderDetailResource cancel(long userId, long orderId);
+
+    /**
+     * {@code PUT /orders/{id}/items} (FR-035) — sửa số lượng hoặc bỏ item, không bao giờ thêm sản
+     * phẩm mới (D-07, {@code ProductNotInOrderException} 400 nếu có); tồn kho đổi đúng phần chênh
+     * lệch. Đơn {@code accepted} quay về {@code placed} để Farmer duyệt lại; đơn {@code placed} giữ
+     * nguyên trạng thái, không ghi lịch sử. Bỏ hết item = huỷ đơn.
+     */
+    OrderDetailResource modifyItems(long userId, long orderId, ModifyOrderRequest request);
 }

@@ -5,6 +5,7 @@ import com.techx.intervue.modules.order.exceptions.InvalidOrderTransitionExcepti
 import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
 import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.order.exceptions.OutOfStockException;
+import com.techx.intervue.modules.order.exceptions.ProductNotInOrderException;
 import com.techx.intervue.modules.order.exceptions.SlotFullException;
 import com.techx.intervue.modules.order.exceptions.SlotNotAvailableException;
 import com.techx.intervue.modules.order.exceptions.StallUnavailableException;
@@ -60,6 +61,12 @@ public class OrderExceptionHandler {
     @ExceptionHandler(OutOfStockException.class)
     ResponseEntity<ApiResource<Void>> outOfStock(OutOfStockException e) {
         return error(HttpStatus.CONFLICT, "OUT_OF_STOCK", e.getMessage(), List.of());
+    }
+
+    /** D-07: sửa đơn không được thêm sản phẩm mới → request sai hình dạng, không phải xung đột. */
+    @ExceptionHandler(ProductNotInOrderException.class)
+    ResponseEntity<ApiResource<Void>> productNotInOrder(ProductNotInOrderException e) {
+        return error(HttpStatus.BAD_REQUEST, "PRODUCT_NOT_IN_ORDER", e.getMessage(), List.of());
     }
 
     @ExceptionHandler(SlotFullException.class)
