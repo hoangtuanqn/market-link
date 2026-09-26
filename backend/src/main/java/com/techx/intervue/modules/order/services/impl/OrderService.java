@@ -152,18 +152,19 @@ public class OrderService implements OrderServiceInterface {
             int qty = wanted.get(p.getId());
             ProductAvailabilityResolver.Availability a = resolved.get(p.getId());
             int available = a == null ? 0 : a.quantity();
+            BigDecimal unitPrice = a == null ? p.getPrice() : a.price();
             String problem = problemOf(p, qty, available);
             if (problem != null) {
                 problems.add(problem);
             }
-            BigDecimal lineTotal = p.getPrice().multiply(BigDecimal.valueOf(qty));
+            BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(qty));
             subtotal = subtotal.add(lineTotal);
             items.add(
                     new PreviewItemResource(
                             p.getId(),
                             p.getName(),
                             p.getUnit(),
-                            p.getPrice(),
+                            unitPrice,
                             qty,
                             lineTotal,
                             available,

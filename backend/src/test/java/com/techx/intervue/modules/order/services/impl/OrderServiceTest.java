@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -35,6 +36,7 @@ import com.techx.intervue.modules.order.requests.PreviewRequest;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource.MarketOption;
 import com.techx.intervue.modules.order.resources.PlacedOrderResource;
+import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
@@ -412,6 +414,33 @@ class OrderServiceTest {
         assertThat(groupOf(groups, FARMER_B).problems()).containsExactly("out_of_stock");
         assertThat(groupOf(groups, FARMER_A).problems()).isEmpty();
         assertThat(groupOf(groups, FARMER_B).items().getFirst().stockQuantity()).isEqualTo(15);
+    }
+
+    /**
+     * The price a customer previews must be the same price they'll actually be charged at order
+     * time — the resolved availability price for the nearest date, not the product's base price. A
+     * weekly stock template can charge more or less than the base price on a given weekday.
+     */
+    @Test
+    void previewShowsThePriceForTheResolvedDateNotTheProductsBasePrice() {
+        // doReturn, not when(...).thenReturn(...): the setUp() stub is an answer that runs on
+        // invocation, including the recording call inside when(...) itself, which would NPE on a
+        // null argument there.
+        doReturn(
+                        Map.of(
+                                RAU_MUONG,
+                                new ProductAvailabilityResolver.Availability(
+                                        PICKUP, 40, new BigDecimal("13000"))))
+                .when(availability)
+                .resolve(any());
+
+        List<OrderGroupPreviewResource> groups =
+                service.preview(CUSTOMER_ID, cart(line(RAU_MUONG, 2)));
+
+        PreviewItemResource item = groupOf(groups, FARMER_A).items().getFirst();
+        assertThat(item.unitPrice()).isEqualByComparingTo("13000");
+        assertThat(item.subtotal()).isEqualByComparingTo("26000");
+        assertThat(groupOf(groups, FARMER_A).subtotal()).isEqualByComparingTo("26000");
     }
 
     @Test
