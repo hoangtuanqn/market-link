@@ -249,3 +249,27 @@ JOIN farmer_profiles f ON f.id = p.farmer_id
 JOIN users u ON u.id = f.user_id
 SET p.is_hidden = TRUE, p.hidden_reason = 'Ảnh và mô tả không đúng sản phẩm thật (báo cáo của khách).'
 WHERE u.email = 'farmer10@marketlink.vn' AND p.name = 'Sáp ong nguyên chất';
+
+-- ---- Slot nhận hàng (FR-032, FR-067): 4 tuần tới, khung 60 phút, 5 đơn mỗi slot ----
+-- SQL thuần, không cần backend: ngày = hôm nay theo giờ Việt Nam + 0…27 (MySQL chạy UTC), chỉ những ngày
+-- trùng thứ đã khai ở farmer_operating_days; khung = giờ bắt đầu + 0…11 giờ, chỉ giữ khung nằm trọn trong
+-- giờ nhận hàng (khung lẻ cuối bị bỏ, như SlotService.windows). Khoá uq_slot (farmer_market_id, slot_date,
+-- start_time) nên INSERT IGNORE là đủ để chạy lại; slot đã có — kể cả đã có đơn — giữ nguyên.
+INSERT IGNORE INTO pickup_slots (farmer_market_id, slot_date, start_time, end_time, max_orders)
+SELECT fm.id, x.slot_date,
+       ADDTIME(od.pickup_start_time, SEC_TO_TIME(h.n * 3600)),
+       ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)),
+       5
+FROM farmer_markets fm
+JOIN farmer_operating_days od ON od.farmer_market_id = fm.id
+JOIN (
+      SELECT DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) + INTERVAL (w.n * 7 + d.n) DAY AS slot_date
+      FROM (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) w
+      CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+                  UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6) d
+     ) x ON DAYOFWEEK(x.slot_date) - 1 = od.day_of_week
+CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+            UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+            UNION ALL SELECT 10 UNION ALL SELECT 11) h
+WHERE fm.is_active = TRUE
+  AND ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)) <= od.pickup_end_time;
