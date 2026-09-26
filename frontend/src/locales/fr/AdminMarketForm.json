@@ -51,8 +51,8 @@
     "intro": "Un jour où ce marché n'ouvre pas, même s'il tombe un jour d'ouverture. Les clients le voient sur la page du marché et sur le tableau d'accueil, et aucune nouvelle commande ne peut être passée pour ce jour-là.",
     "add": "Ajouter un jour de fermeture",
     "addConfirm": "Ajouter le jour",
-    "added": "Jour de fermeture ajouté. Publiez une annonce pour que les clients le voient.",
-    "removed": "Jour de fermeture supprimé.",
+    "added": "Jour de fermeture ajouté. Enregistrez le marché pour le conserver, puis publiez une annonce pour que les clients le voient.",
+    "removed": "Jour de fermeture supprimé. Enregistrez le marché pour appliquer le changement.",
     "remove": "Supprimer",
     "removeTitle": "Supprimer ce jour de fermeture ?",
     "removeText": "Le marché rouvre ce jour-là et les clients peuvent commander.",
@@ -77,6 +77,11 @@
     "empty": {
       "title": "Aucun jour de fermeture",
       "text": "Ce marché ouvre tous ses jours d'ouverture. Ajoutez un jour de fermeture quand ce ne sera pas le cas."
+    },
+    "error": {
+      "dateRequired": "Choisissez une date.",
+      "datePast": "Choisissez aujourd'hui ou une date ultérieure.",
+      "dateTaken": "Cette date est déjà marquée comme fermée."
     }
   },
   "handling": {
@@ -101,6 +106,8 @@
     "required": "Ce champ est obligatoire.",
     "days": "Choisissez au moins un jour d’ouverture.",
     "close": "L’heure de fermeture doit suivre l’heure d’ouverture.",
-    "images": "Ajoutez au moins une photo du marché."
+    "images": "Ajoutez au moins une photo du marché.",
+    "lat": "Saisissez une latitude entre -90 et 90, par ex. 10.772500.",
+    "lng": "Saisissez une longitude entre -180 et 180, par ex. 106.698000."
   }
 }

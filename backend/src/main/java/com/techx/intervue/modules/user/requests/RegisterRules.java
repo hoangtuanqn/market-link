@@ -7,6 +7,14 @@ final class RegisterRules {
 
     static final String PHONE_MESSAGE = "Enter a valid Vietnamese mobile number (10 digits).";
 
+    /**
+     * On top of @Email: the domain must have a dot ("qa@localdomain" is refused), the same rule the
+     * sign-up form checks (frontend RegisterCustomer EMAIL_REGEX), so client and server agree.
+     */
+    static final String EMAIL_REGEX = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+
+    static final String EMAIL_MESSAGE = "Enter a valid email address.";
+
     static final int PASSWORD_MIN = 6;
 
     /** BCrypt only accepts at most 72 bytes. */
