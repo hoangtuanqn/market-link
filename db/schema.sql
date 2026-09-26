@@ -373,6 +373,20 @@ CREATE TABLE notification_settings (
   FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
+-- Web Push (FR-042 N3, V20260926004): mỗi trình duyệt đã cho phép một dòng; 404/410 từ dịch vụ push → xoá.
+CREATE TABLE push_subscriptions (
+  push_subscription_id  INT AUTO_INCREMENT PRIMARY KEY,
+  user_id               INT NOT NULL,
+  endpoint              VARCHAR(500) NOT NULL,
+  p256dh                VARCHAR(200) NOT NULL,
+  auth                  VARCHAR(100) NOT NULL,
+  user_agent            VARCHAR(255) NULL,
+  created_at            DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_used_at          DATETIME NULL,
+  UNIQUE KEY uq_push_endpoint (endpoint),
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 -- ---------------------------------------------------------------------------
 -- 8. GÓP Ý & CHATBOT (chatbot là optional theo đề)
 -- ---------------------------------------------------------------------------

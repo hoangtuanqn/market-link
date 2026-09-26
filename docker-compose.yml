@@ -89,6 +89,10 @@ services:
       RABBITMQ_STOMP_PORT: 61613
       RABBITMQ_USER: ${RABBITMQ_USER:-marketlink}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-marketlink_pass}
+      # FR-042 N3: Web Push; trống → tắt
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+      VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@marketlink.local}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:${FRONTEND_PORT:-3000}}
       TZ: ${TZ:-Asia/Ho_Chi_Minh}
       STORAGE_DIR: /app/uploads
