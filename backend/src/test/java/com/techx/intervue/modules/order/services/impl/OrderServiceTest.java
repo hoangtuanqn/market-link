@@ -40,6 +40,7 @@ import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
@@ -103,6 +104,7 @@ class OrderServiceTest {
     private CheckoutQueryRepository checkoutQueries;
     private Clock clock;
     private ProductDailyStockRepository dailyStockRepository;
+    private ProductAvailabilityResolver availability;
     private OrderService service;
 
     /** Fake tables. */
@@ -128,6 +130,7 @@ class OrderServiceTest {
         historyRepository = mock(OrderStatusHistoryRepository.class);
         checkoutQueries = mock(CheckoutQueryRepository.class);
         dailyStockRepository = mock(ProductDailyStockRepository.class);
+        availability = mock(ProductAvailabilityResolver.class);
         clock = Clock.fixed(ZonedDateTime.of(TODAY, LocalTime.of(9, 0), HCM).toInstant(), HCM);
         service =
                 new OrderService(
@@ -142,7 +145,8 @@ class OrderServiceTest {
                         new OrderCodeGenerator(orderRepository, clock),
                         checkoutQueries,
                         clock,
-                        dailyStockRepository);
+                        dailyStockRepository,
+                        availability);
 
         when(userRepository.findById(CUSTOMER_ID))
                 .thenReturn(Optional.of(user(CUSTOMER_ID, RoleType.CUSTOMER)));
@@ -208,6 +212,30 @@ class OrderServiceTest {
                                                 inv.<Long>getArgument(0)
                                                         + "@"
                                                         + inv.<LocalDate>getArgument(1))));
+        // Passes each product's live stock/price straight through, so tests that don't care about
+        // availability keep their existing PICKUP-dated expectations unchanged.
+        when(availability.resolve(any()))
+                .thenAnswer(
+                        inv -> {
+                            Map<Long, BigDecimal> in = inv.getArgument(0);
+                            Map<Long, ProductAvailabilityResolver.Availability> out =
+                                    new HashMap<>();
+                            in.keySet()
+                                    .forEach(
+                                            id -> {
+                                                Product p = products.get(id);
+                                                if (p != null) {
+                                                    out.put(
+                                                            id,
+                                                            new ProductAvailabilityResolver
+                                                                    .Availability(
+                                                                    PICKUP,
+                                                                    p.getStockQuantity(),
+                                                                    p.getPrice()));
+                                                }
+                                            });
+                            return out;
+                        });
         when(orderRepository.save(any()))
                 .thenAnswer(
                         inv -> {

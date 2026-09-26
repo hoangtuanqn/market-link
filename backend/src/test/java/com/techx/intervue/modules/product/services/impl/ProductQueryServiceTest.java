@@ -13,11 +13,16 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.requests.ProductSearchCriteria;
+import com.techx.intervue.modules.product.resources.ProductDetailResource;
+import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.stall.resources.StallDetailResource;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,15 +32,38 @@ class ProductQueryServiceTest {
 
     private ProductQueryRepository repository;
     private StallServiceInterface stallService;
+    private ProductAvailabilityResolver availability;
     private ProductQueryService service;
 
     @BeforeEach
     void setUp() {
         repository = mock(ProductQueryRepository.class);
         stallService = mock(StallServiceInterface.class);
-        service = new ProductQueryService(repository, stallService);
+        availability = mock(ProductAvailabilityResolver.class);
+        service = new ProductQueryService(repository, stallService, availability);
         when(repository.search(any(), anyString(), anyInt(), anyInt()))
                 .thenReturn(new PageResource<ProductListItemResource>(List.of(), 1, 12, 0));
+        when(availability.resolve(any())).thenReturn(Map.of());
+    }
+
+    private static ProductListItemResource item(long id) {
+        return new ProductListItemResource(
+                id,
+                "Rau muống",
+                10L,
+                "Vườn Út Hiền",
+                null,
+                null,
+                5L,
+                "Vegetables",
+                new BigDecimal("12000"),
+                "bó",
+                40,
+                null,
+                "available",
+                BigDecimal.ZERO,
+                0,
+                3);
     }
 
     private static ProductSearchCriteria criteria(
@@ -100,5 +128,83 @@ class ProductQueryServiceTest {
         when(repository.findVisibleById(5L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.detail(5L)).isInstanceOf(ProductNotFoundException.class);
+    }
+
+    /** search() overwrites stockQuantity/price with the nearest orderable date's numbers. */
+    @Test
+    void searchOverlaysTheNearestAvailableDateOntoEachItem() {
+        ProductListItemResource raw = item(1L);
+        when(repository.search(any(), anyString(), anyInt(), anyInt()))
+                .thenReturn(new PageResource<>(List.of(raw), 1, 20, 1));
+        when(availability.resolve(Map.of(1L, new BigDecimal("12000"))))
+                .thenReturn(
+                        Map.of(
+                                1L,
+                                new ProductAvailabilityResolver.Availability(
+                                        LocalDate.of(2026, 9, 28), 40, new BigDecimal("13000"))));
+
+        PageResource<ProductListItemResource> result =
+                service.search(criteria("newest", null, null, 20));
+
+        assertThat(result.items().getFirst().stockQuantity()).isEqualTo(40);
+        assertThat(result.items().getFirst().price()).isEqualByComparingTo("13000");
+    }
+
+    /** No orderable date within the lookahead → the product is dropped from the results. */
+    @Test
+    void searchDropsAProductWithNoOrderableDate() {
+        ProductListItemResource raw = item(1L);
+        when(repository.search(any(), anyString(), anyInt(), anyInt()))
+                .thenReturn(new PageResource<>(List.of(raw), 1, 20, 1));
+        when(availability.resolve(any())).thenReturn(Map.of());
+
+        PageResource<ProductListItemResource> result =
+                service.search(criteria("newest", null, null, 20));
+
+        assertThat(result.items()).isEmpty();
+        assertThat(result.total()).isZero();
+    }
+
+    /**
+     * detail() overlays the same way; no orderable date means the product does not exist for a
+     * buyer.
+     */
+    @Test
+    void detailOverlaysTheNearestAvailableDate() {
+        when(repository.findVisibleById(1L))
+                .thenReturn(Optional.of(new ProductDetailRow(item(1L), "Cắt sáng")));
+        when(availability.resolve(Map.of(1L, new BigDecimal("12000"))))
+                .thenReturn(
+                        Map.of(
+                                1L,
+                                new ProductAvailabilityResolver.Availability(
+                                        LocalDate.of(2026, 9, 28), 40, new BigDecimal("13000"))));
+        when(stallService.publicDetail(10L))
+                .thenReturn(
+                        new StallDetailResource(
+                                10L,
+                                "Vườn Út Hiền",
+                                "Hiền",
+                                null,
+                                null,
+                                12,
+                                BigDecimal.ZERO,
+                                0,
+                                "approved",
+                                List.of()));
+
+        ProductDetailResource result = service.detail(1L);
+
+        assertThat(result.product().stockQuantity()).isEqualTo(40);
+        assertThat(result.product().price()).isEqualByComparingTo("13000");
+    }
+
+    @Test
+    void detailThrowsWhenTheProductHasNoOrderableDate() {
+        when(repository.findVisibleById(1L))
+                .thenReturn(Optional.of(new ProductDetailRow(item(1L), "Cắt sáng")));
+        when(availability.resolve(any())).thenReturn(Map.of());
+
+        assertThatThrownBy(() -> service.detail(1L)).isInstanceOf(ProductNotFoundException.class);
     }
 }

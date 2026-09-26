@@ -28,6 +28,7 @@ import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
@@ -81,6 +82,7 @@ public class OrderService implements OrderServiceInterface {
     private final CheckoutQueryRepository checkoutQueries;
     private final Clock clock;
     private final ProductDailyStockRepository dailyStockRepository;
+    private final ProductAvailabilityResolver availability;
 
     /**
      * Read-only, no locking, changes nothing: groups the cart by farmer_id and writes each group's
@@ -113,6 +115,11 @@ public class OrderService implements OrderServiceInterface {
                 farmerRepository.findAllById(byFarmer.keySet()).stream()
                         .collect(Collectors.toMap(FarmerProfile::getId, Function.identity()));
         Map<Long, List<MarketOption>> markets = checkoutQueries.marketsOf(byFarmer.keySet());
+        Map<Long, BigDecimal> basePrices =
+                products.values().stream()
+                        .collect(Collectors.toMap(Product::getId, Product::getPrice));
+        Map<Long, ProductAvailabilityResolver.Availability> resolved =
+                availability.resolve(basePrices);
 
         List<OrderGroupPreviewResource> groups = new ArrayList<>();
         byFarmer.forEach(
@@ -123,7 +130,8 @@ public class OrderService implements OrderServiceInterface {
                                         farmers.get(farmerId),
                                         lines,
                                         wanted,
-                                        markets.getOrDefault(farmerId, List.of()))));
+                                        markets.getOrDefault(farmerId, List.of()),
+                                        resolved)));
         return groups;
     }
 
@@ -132,7 +140,8 @@ public class OrderService implements OrderServiceInterface {
             FarmerProfile farmer,
             List<Product> lines,
             Map<Long, Integer> wanted,
-            List<MarketOption> markets) {
+            List<MarketOption> markets,
+            Map<Long, ProductAvailabilityResolver.Availability> resolved) {
         Set<String> problems = new LinkedHashSet<>();
         if (farmer == null || farmer.getApprovalStatus() != ApprovalStatus.APPROVED) {
             problems.add(STALL_SUSPENDED);
@@ -141,7 +150,9 @@ public class OrderService implements OrderServiceInterface {
         BigDecimal subtotal = BigDecimal.ZERO;
         for (Product p : lines) {
             int qty = wanted.get(p.getId());
-            String problem = problemOf(p, qty);
+            ProductAvailabilityResolver.Availability a = resolved.get(p.getId());
+            int available = a == null ? 0 : a.quantity();
+            String problem = problemOf(p, qty, available);
             if (problem != null) {
                 problems.add(problem);
             }
@@ -155,7 +166,7 @@ public class OrderService implements OrderServiceInterface {
                             p.getPrice(),
                             qty,
                             lineTotal,
-                            p.getStockQuantity(),
+                            available,
                             listed(p) ? p.getStatus().value() : UNAVAILABLE));
         }
         // C5-11: the pickup market is only pre-filled when the stall sells at exactly one market;
@@ -173,15 +184,18 @@ public class OrderService implements OrderServiceInterface {
                 markets);
     }
 
-    /** The issue with one cart line, or null. Same rule as {@link #sellable} at order time. */
-    private static String problemOf(Product p, int quantity) {
+    /**
+     * The issue with one cart line, or null. {@code available} is the nearest orderable date's
+     * quantity — advisory only, the real gate is {@link #placeGroup} at order time.
+     */
+    private static String problemOf(Product p, int quantity, int available) {
         if (!listed(p) || p.getStatus() == ProductStatus.UNAVAILABLE) {
             return UNAVAILABLE;
         }
         if (p.getStatus() == ProductStatus.SOLD_OUT) {
             return SOLD_OUT;
         }
-        return p.getStockQuantity() < quantity ? OUT_OF_STOCK : null;
+        return available < quantity ? OUT_OF_STOCK : null;
     }
 
     /**

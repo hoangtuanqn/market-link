@@ -16,6 +16,8 @@ import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterfac
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,7 @@ public class ProductQueryService implements ProductQueryServiceInterface {
 
     private final ProductQueryRepository repository;
     private final StallServiceInterface stallService;
+    private final ProductAvailabilityResolver availability;
 
     @Override
     public PageResource<ProductListItemResource> search(ProductSearchCriteria criteria) {
@@ -42,21 +45,53 @@ public class ProductQueryService implements ProductQueryServiceInterface {
             min = max;
             max = swap;
         }
-        return repository.search(
-                criteria.withPrices(min, max),
-                ProductQueryRepository.orderBy(criteria.sort()),
-                (page - 1) * size,
-                size);
+        PageResource<ProductListItemResource> page1 =
+                repository.search(
+                        criteria.withPrices(min, max),
+                        ProductQueryRepository.orderBy(criteria.sort()),
+                        (page - 1) * size,
+                        size);
+        List<ProductListItemResource> overlaid = overlayAvailability(page1.items());
+        return new PageResource<>(overlaid, page1.page(), page1.pageSize(), overlaid.size());
     }
 
     @Override
     public ProductDetailResource detail(long id) {
         ProductDetailRow row =
                 repository.findVisibleById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        List<ProductListItemResource> overlaid = overlayAvailability(List.of(row.item()));
+        if (overlaid.isEmpty()) {
+            throw new ProductNotFoundException(id);
+        }
         StallSummaryResource farmer = summarize(stallService.publicDetail(row.item().farmerId()));
         // reviewsSummary has real numbers from cluster C8; today it is the shape with 0 values.
         return new ProductDetailResource(
-                row.item(), row.description(), farmer, ReviewSummaryResource.empty());
+                overlaid.getFirst(), row.description(), farmer, ReviewSummaryResource.empty());
+    }
+
+    /**
+     * Replaces stockQuantity/price read straight from products with the numbers for the nearest
+     * orderable pickup date. A product with no orderable date (no active weekly template covers any
+     * of the next 14 days) is dropped from the results — matches the decision that a product with
+     * no template is never orderable, on any date.
+     */
+    private List<ProductListItemResource> overlayAvailability(List<ProductListItemResource> items) {
+        Map<Long, BigDecimal> basePrices =
+                items.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        ProductListItemResource::id,
+                                        ProductListItemResource::price));
+        Map<Long, ProductAvailabilityResolver.Availability> resolved =
+                availability.resolve(basePrices);
+        return items.stream()
+                .filter(i -> resolved.containsKey(i.id()))
+                .map(
+                        i -> {
+                            ProductAvailabilityResolver.Availability a = resolved.get(i.id());
+                            return i.withAvailability(a.quantity(), a.price());
+                        })
+                .toList();
     }
 
     @Override
