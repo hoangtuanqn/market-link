@@ -48,6 +48,25 @@ describe('MessageStallButton', () => {
     expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&product=8');
   });
 
+  /** FR-114 phần đơn: nhắn từ một đơn thì đơn đó được ghim vào ô soạn. */
+  it('lands on the thread with the order pinned', async () => {
+    mockSessionUser = mockUser;
+    vi.mocked(ConversationApi.open).mockResolvedValue(ok({ id: 42, other: {}, unreadCount: 0 }));
+
+    render(
+      <MemoryRouter initialEntries={['/orders/ML-0421']}>
+        <MessageStallButton farmerId={30} orderId={21} />
+        <Routes>
+          <Route path="*" element={<LocationDisplay />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /message this stall/i }));
+
+    expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&order=21');
+  });
+
   it('sends a signed-out visitor to sign in first, then back here', async () => {
     mockSessionUser = null;
     render(

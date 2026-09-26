@@ -122,7 +122,10 @@
     "cancel": "キャンセル",
     "previewEmpty": "まだ会話はありません。",
     "previewError": "会話を読み込めませんでした。",
-    "unreadCount": "未読 {{count}} 件"
+    "unreadCount": "未読 {{count}} 件",
+    "orderGone": "この注文は表示できません。",
+    "orderLabel": "注文 {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "サーバーに接続できませんでした。接続を確認してもう一度お試しください。"

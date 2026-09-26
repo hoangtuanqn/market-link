@@ -2,10 +2,11 @@ import { type FormEvent, type KeyboardEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { sendErrorKey } from '@/lib/chat/errors';
+import OrderPin from './OrderPin';
 import ProductPin from './ProductPin';
 
 type Props = {
-  onSend: (text: string, extra?: { productId?: number }) => Promise<void>;
+  onSend: (text: string, extra?: { productId?: number; orderId?: number }) => Promise<void>;
   onSendPhoto: (file: File) => Promise<void>;
   /** Reports "typing" on every keystroke; the hook filters out extra frames itself (Review Focus #9). */
   onTyping?: (on: boolean) => void;
@@ -13,6 +14,8 @@ type Props = {
   /** A locked button always carries a reason in words (frontend/CLAUDE.md). */
   disabledReason?: string;
   pinnedProductId?: number;
+  /** FR-114: mở chat từ một đơn — đơn đi theo tin đầu tiên, như ghim sản phẩm. */
+  pinnedOrderId?: number;
   onUnpin?: () => void;
 };
 
@@ -23,6 +26,7 @@ export default function Composer({
   disabled,
   disabledReason,
   pinnedProductId,
+  pinnedOrderId,
   onUnpin,
 }: Props) {
   const { t } = useTranslation('common');
@@ -40,7 +44,10 @@ export default function Composer({
     // Cleared right when sending, not waiting for the server: if the user keeps typing while the message is in flight, the new text is not wiped
     setDraft('');
     try {
-      await onSend(text, pinnedProductId ? { productId: pinnedProductId } : {});
+      await onSend(text, {
+        ...(pinnedProductId ? { productId: pinnedProductId } : {}),
+        ...(pinnedOrderId ? { orderId: pinnedOrderId } : {}),
+      });
       onUnpin?.();
     } catch (error) {
       // Gives the text back so Send can be pressed again, unless the user has already typed something else
@@ -83,11 +90,12 @@ export default function Composer({
           {failed}
         </p>
       ) : null}
-      {pinnedProductId ? (
+      {pinnedProductId || pinnedOrderId ? (
         <div className="bg-surface border-line-strong mb-3 flex items-center gap-2 rounded-md border p-2 shadow-sm">
-          <div className="flex-1">
-            <span className="text-small text-ink-muted mb-1 block">{t('chat.pinned')}</span>
-            <ProductPin productId={pinnedProductId} compact />
+          <div className="flex flex-1 flex-col gap-1">
+            <span className="text-small text-ink-muted block">{t('chat.pinned')}</span>
+            {pinnedProductId ? <ProductPin productId={pinnedProductId} compact /> : null}
+            {pinnedOrderId ? <OrderPin orderId={pinnedOrderId} compact /> : null}
           </div>
           <Button variant="ghost" size="sm" onClick={onUnpin}>
             {t('chat.unpin')}

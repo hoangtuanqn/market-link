@@ -122,7 +122,10 @@
     "cancel": "ยกเลิก",
     "previewEmpty": "ยังไม่มีการสนทนา",
     "previewError": "โหลดการสนทนาของคุณไม่ได้",
-    "unreadCount": "ยังไม่อ่าน {{count}}"
+    "unreadCount": "ยังไม่อ่าน {{count}}",
+    "orderGone": "คุณดูคำสั่งซื้อนี้ไม่ได้",
+    "orderLabel": "คำสั่งซื้อ {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง"

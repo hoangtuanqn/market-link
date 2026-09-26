@@ -122,7 +122,10 @@
     "cancel": "취소",
     "previewEmpty": "아직 대화가 없습니다.",
     "previewError": "대화를 불러오지 못했습니다.",
-    "unreadCount": "읽지 않음 {{count}}"
+    "unreadCount": "읽지 않음 {{count}}",
+    "orderGone": "이 주문을 볼 수 없습니다.",
+    "orderLabel": "주문 {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "서버에 연결할 수 없어요. 연결 상태를 확인하고 다시 시도해 주세요."

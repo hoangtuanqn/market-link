@@ -124,7 +124,10 @@
     "cancel": "Cancel",
     "previewEmpty": "No conversations yet.",
     "previewError": "Could not load your conversations.",
-    "unreadCount": "{{count}} unread"
+    "unreadCount": "{{count}} unread",
+    "orderGone": "This order is not available to you.",
+    "orderLabel": "Order {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "Could not reach the server. Check your connection and try again."
