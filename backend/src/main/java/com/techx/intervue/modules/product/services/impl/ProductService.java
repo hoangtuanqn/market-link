@@ -19,6 +19,7 @@ import com.techx.intervue.modules.product.services.interfaces.ProductServiceInte
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
+import java.util.List;
 import java.util.Locale;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -97,9 +98,7 @@ public class ProductService implements ProductServiceInterface {
     @Override
     @Transactional
     public void adminHide(long productId, String reason) {
-        Product product =
-                products.findById(productId)
-                        .orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = locked(productId);
         product.setHidden(true);
         product.setHiddenReason(reason.trim());
         products.save(product);
@@ -108,9 +107,7 @@ public class ProductService implements ProductServiceInterface {
     @Override
     @Transactional
     public void adminUnhide(long productId) {
-        Product product =
-                products.findById(productId)
-                        .orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = locked(productId);
         product.setHidden(false);
         product.setHiddenReason(null);
         products.save(product);
@@ -128,14 +125,36 @@ public class ProductService implements ProductServiceInterface {
         }
     }
 
+    /**
+     * D-02 / Review Focus #1 bằng đường khác (Task 5.3b, Ruling C5-14): Farmer/Admin sửa sản phẩm
+     * phải khoá cùng dòng mà {@code OrderService.place} khoá, không được đọc snapshot không khoá
+     * rồi {@code save()} — Hibernate không {@code @DynamicUpdate} nên UPDATE ghi lại mọi cột, kể cả
+     * {@code stock_quantity} vừa bị một đơn trừ trong lúc đang đọc. Lọc {@code deleted} ở đây (sau
+     * khi khoá) để giữ nguyên 404 mà {@code findByIdAndDeletedFalse} từng cho, không lọc ở SQL.
+     */
     private Product owned(FarmerProfile profile, long productId) {
-        Product product =
-                products.findByIdAndDeletedFalse(productId)
-                        .orElseThrow(() -> new ProductNotFoundException(productId));
+        Product product = notDeleted(productId);
         if (!product.getFarmerId().equals(profile.getId())) {
             throw new ProductNotYoursException();
         }
         return product;
+    }
+
+    private Product notDeleted(long productId) {
+        Product product = locked(productId);
+        if (product.isDeleted()) {
+            throw new ProductNotFoundException(productId);
+        }
+        return product;
+    }
+
+    /**
+     * C5-2: khoá một sản phẩm qua {@code lockAllById} — cùng đường khoá {@code OrderService} dùng.
+     */
+    private Product locked(long productId) {
+        return products.lockAllById(List.of(productId)).stream()
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
     /** Danh mục lạ hoặc đã tắt → 400 gắn vào field categoryId, để form đánh dấu đúng ô. */

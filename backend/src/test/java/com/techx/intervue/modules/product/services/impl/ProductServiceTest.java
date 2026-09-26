@@ -113,8 +113,8 @@ class ProductServiceTest {
     @Test
     void updateOnAnotherFarmersProductIs403() {
         approvedStall();
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID))
-                .thenReturn(Optional.of(product(OTHER_FARMER_ID)));
+        when(products.lockAllById(List.of(PRODUCT_ID)))
+                .thenReturn(List.of(product(OTHER_FARMER_ID)));
 
         assertThatThrownBy(() -> service.update(USER_ID, PRODUCT_ID, request()))
                 .isInstanceOf(ProductNotYoursException.class);
@@ -125,7 +125,7 @@ class ProductServiceTest {
     void softDeleteKeepsTheRow() {
         approvedStall();
         Product p = product(FARMER_ID);
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.softDelete(USER_ID, PRODUCT_ID);
 
@@ -140,7 +140,7 @@ class ProductServiceTest {
     void setStatusSoldOutDoesNotTouchStock() {
         approvedStall();
         Product p = product(FARMER_ID);
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.SOLD_OUT);
 
@@ -162,7 +162,7 @@ class ProductServiceTest {
     @Test
     void adminHideSetsReasonAndFlag() {
         Product p = product(FARMER_ID);
-        when(products.findById(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.adminHide(PRODUCT_ID, "Ảnh không đúng sản phẩm.");
 
@@ -178,7 +178,7 @@ class ProductServiceTest {
         Product p = product(FARMER_ID);
         p.setHidden(true);
         p.setHiddenReason("Vi phạm.");
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         assertThatCode(() -> service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.AVAILABLE))
                 .doesNotThrowAnyException();
@@ -199,5 +199,74 @@ class ProductServiceTest {
         service.mine(USER_ID, null, 1, 12);
 
         verify(query).mine(FARMER_ID, null, 0, 12);
+    }
+
+    // ---------- Task 5.3b (D-02, Review Focus #1 bằng đường khác): mọi đường ghi phải khoá
+    // dòng sản phẩm trước khi đọc, không được nạp qua findById / findByIdAndDeletedFalse không
+    // khoá — nếu không, transaction ghi đè lên bản tồn kho vừa bị OrderService.place trừ.
+    // ----------
+
+    @Test
+    void updateLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.update(USER_ID, PRODUCT_ID, request());
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void softDeleteLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.softDelete(USER_ID, PRODUCT_ID);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void setStatusLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.SOLD_OUT);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void adminHideLoadsThroughTheLock() {
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.adminHide(PRODUCT_ID, "Ảnh không đúng sản phẩm.");
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void adminUnhideLoadsThroughTheLock() {
+        Product p = product(FARMER_ID);
+        p.setHidden(true);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.adminUnhide(PRODUCT_ID);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
     }
 }
