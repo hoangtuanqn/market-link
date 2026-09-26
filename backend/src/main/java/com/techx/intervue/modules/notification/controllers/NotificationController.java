@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.notification.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.notification.push.WebPushGateway;
 import com.techx.intervue.modules.notification.requests.UpdateNotificationPreferencesRequest;
 import com.techx.intervue.modules.notification.resources.NotificationPreferencesResource;
 import com.techx.intervue.modules.notification.resources.NotificationResource;
@@ -12,6 +13,7 @@ import com.techx.intervue.resources.PageResource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,7 @@ public class NotificationController extends BaseController {
 
     private final NotificationServiceInterface notifications;
     private final NotificationPreferenceServiceInterface preferences;
+    private final WebPushGateway webPush;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<NotificationResource>>> list(
@@ -82,5 +85,13 @@ public class NotificationController extends BaseController {
     public ResponseEntity<ApiResource<Void>> test(@AuthenticationPrincipal CustomUserDetails me) {
         notifications.sendTest(me.getId());
         return ok(null, "Test notification sent.");
+    }
+
+    /** N3: khoá VAPID public cho pushManager.subscribe; null khi server chưa bật Web Push. */
+    @GetMapping("/push/public-key")
+    public ResponseEntity<ApiResource<Map<String, String>>> pushPublicKey() {
+        Map<String, String> body = new HashMap<>();
+        body.put("publicKey", webPush.publicKey());
+        return ok(body, "OK");
     }
 }
