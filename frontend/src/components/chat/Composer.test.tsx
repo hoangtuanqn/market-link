@@ -3,6 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import Composer from './Composer';
 
+// Thẻ ghim tự tải dữ liệu; ở đây chỉ cần biết nó được đặt vào ô soạn
+vi.mock('./OrderPin', () => ({ default: () => <span>order pin</span> }));
+vi.mock('./ProductPin', () => ({ default: () => <span>product pin</span> }));
+
 const setup = () => {
   const onTyping = vi.fn();
   const onSend = vi.fn().mockResolvedValue(undefined);
@@ -113,5 +117,17 @@ describe('Composer', () => {
     await userEvent.type(screen.getByLabelText('Write a message'), 'hi{Enter}');
 
     expect(await screen.findByRole('alert')).toHaveTextContent('This stall is not taking messages right now');
+  });
+
+  /** FR-114: mở chat từ một đơn thì đơn đó đi theo tin đầu tiên. */
+  it('sends the pinned order with the message', async () => {
+    const onSend = vi.fn().mockResolvedValue(undefined);
+    const onUnpin = vi.fn();
+    render(<Composer onSend={onSend} onSendPhoto={vi.fn()} disabled={false} pinnedOrderId={21} onUnpin={onUnpin} />);
+
+    await userEvent.type(screen.getByLabelText('Write a message'), 'is it ready?{Enter}');
+
+    expect(onSend).toHaveBeenCalledWith('is it ready?', { orderId: 21 });
+    expect(onUnpin).toHaveBeenCalled();
   });
 });

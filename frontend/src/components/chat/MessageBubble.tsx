@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import ChatPhoto from './ChatPhoto';
+import OrderPin from './OrderPin';
 import ProductPin from './ProductPin';
 import { formatTime } from '@/lib/format';
 import type { ChatMessageItem } from '@/types/chat.types';
@@ -34,6 +35,11 @@ export default function MessageBubble({ message, mine, senderName, seen, onRepor
         {message.productId ? (
           <div className="mb-2">
             <ProductPin productId={message.productId} compact />
+          </div>
+        ) : null}
+        {message.orderId ? (
+          <div className="mb-2">
+            <OrderPin orderId={message.orderId} compact />
           </div>
         ) : null}
         {message.kind === 'image' && message.attachment ? (

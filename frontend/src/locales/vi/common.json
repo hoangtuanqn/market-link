@@ -122,7 +122,10 @@
     "cancel": "Huỷ",
     "previewEmpty": "Chưa có cuộc trò chuyện nào.",
     "previewError": "Không tải được cuộc trò chuyện.",
-    "unreadCount": "{{count}} chưa đọc"
+    "unreadCount": "{{count}} chưa đọc",
+    "orderGone": "Bạn không xem được đơn này.",
+    "orderLabel": "Đơn {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "Không kết nối được máy chủ. Kiểm tra kết nối mạng rồi thử lại."

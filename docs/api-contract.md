@@ -427,7 +427,7 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 | GET | `/api/v1/conversations` | Thành viên | **Đã có** | query `page`, `size` | `{ items[], page, size, total }`, mới nhất trước |
 | GET | `/api/v1/conversations/unread-count` | Thành viên | **Đã có** | | `{ count }` |
 | GET | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | query `before`, `size` | `[MessageResource]`, keyset, mới nhất trước |
-| POST | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | `{ kind?, body?, productId?, orderId?, attachmentId? }` | 201 · `MessageResource` |
+| POST | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | `{ kind?, body?, productId?, orderId?, attachmentId? }` | 201 · `MessageResource`. `orderId` phải là đơn của người khách trong thread, mua ở stall của người Farmer trong thread (R-06): không có → **404**, không thuộc cặp → **403 `ORDER_NOT_IN_CONVERSATION`** (thêm 26/09/2026) |
 | POST | `/api/v1/conversations/{id}/read` | Thành viên | **Đã có** | | `null` |
 | POST | `/api/v1/attachments` | Thành viên | **Đã có** | `multipart/form-data`, field `file` | 201 · `{ attachmentId, url, width, height }` |
 | GET | `/api/v1/attachments/{id}` | Thành viên | **Đã có** | | **File nhị phân** — xem ghi chú |

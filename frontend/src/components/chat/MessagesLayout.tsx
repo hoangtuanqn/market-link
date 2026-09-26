@@ -23,6 +23,7 @@ export default function MessagesLayout({ emptyText }: Props) {
 
   const activeId = Number(params.get('c')) || null;
   const pinnedProductId = Number(params.get('product')) || undefined;
+  const pinnedOrderId = Number(params.get('order')) || undefined;
 
   // activeId so the hook keeps the open thread's badge at 0 (Review Focus #14)
   const { threads, loading, error, reload, hasMore, loadMore, loadingMore } = useThreadList(activeId);
@@ -56,6 +57,7 @@ export default function MessagesLayout({ emptyText }: Props) {
           conversationId={activeId}
           thread={active}
           pinnedProductId={pinnedProductId}
+          pinnedOrderId={pinnedOrderId}
           onBack={onBack}
           onUnpin={() => setParams({ c: String(activeId) })}
         />

@@ -316,7 +316,7 @@ export function useConversation(conversationId: number | null, opts: { otherRead
    * message.
    */
   const send = useCallback(
-    async (body: string, extra: { productId?: number } = {}) => {
+    async (body: string, extra: { productId?: number; orderId?: number } = {}) => {
       if (conversationId === null) return;
       const id = conversationId;
       const response = await ConversationApi.send(id, { body, ...extra });

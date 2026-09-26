@@ -12,7 +12,15 @@ import { isAxiosError } from 'axios';
  * FR-114, spec §9.5. Only a Customer can open a thread (a Farmer keeps Customer permissions too — FR-005); the server
  * checks again.
  */
-export default function MessageStallButton({ farmerId, productId }: { farmerId: number; productId?: number }) {
+type Props = {
+  farmerId: number;
+  /** Pre-pins a product (product page). */
+  productId?: number;
+  /** Pre-pins an order (order detail page, FR-114). The server only accepts an order of this exact customer and stall. */
+  orderId?: number;
+};
+
+export default function MessageStallButton({ farmerId, productId, orderId }: Props) {
   const { t } = useTranslation('common');
   const { user } = useSession();
   const navigate = useNavigate();
@@ -33,7 +41,11 @@ export default function MessageStallButton({ farmerId, productId }: { farmerId: 
       const response = await ConversationApi.open(farmerId);
       const thread = response.data;
       const to = user.role === USER_ROLE.FARMER ? '/farmer/messages' : '/messages';
-      const query = new URLSearchParams({ c: String(thread.id), ...(productId ? { product: String(productId) } : {}) });
+      const query = new URLSearchParams({
+        c: String(thread.id),
+        ...(productId ? { product: String(productId) } : {}),
+        ...(orderId ? { order: String(orderId) } : {}),
+      });
       navigate(`${to}?${query}`, { state: { thread } });
     } catch (error) {
       const status = isAxiosError(error) ? error.response?.status : undefined;

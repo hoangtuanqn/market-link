@@ -122,7 +122,10 @@
     "cancel": "Batal",
     "previewEmpty": "Belum ada percakapan.",
     "previewError": "Percakapan Anda tidak dapat dimuat.",
-    "unreadCount": "{{count}} belum dibaca"
+    "unreadCount": "{{count}} belum dibaca",
+    "orderGone": "Pesanan ini tidak tersedia untuk Anda.",
+    "orderLabel": "Pesanan {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "Tidak dapat terhubung ke server. Periksa koneksi Anda lalu coba lagi."

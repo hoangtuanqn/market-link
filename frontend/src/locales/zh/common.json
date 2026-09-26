@@ -122,7 +122,10 @@
     "cancel": "取消",
     "previewEmpty": "还没有对话。",
     "previewError": "无法加载你的对话。",
-    "unreadCount": "{{count}} 条未读"
+    "unreadCount": "{{count}} 条未读",
+    "orderGone": "你无法查看这个订单。",
+    "orderLabel": "订单 {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "无法连接服务器。请检查网络后重试。"

@@ -124,7 +124,10 @@
     "cancel": "Annuler",
     "previewEmpty": "Aucune conversation pour l’instant.",
     "previewError": "Impossible de charger vos conversations.",
-    "unreadCount": "{{count}} non lus"
+    "unreadCount": "{{count}} non lus",
+    "orderGone": "Cette commande ne vous est pas accessible.",
+    "orderLabel": "Commande {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "Impossible de joindre le serveur. Vérifiez votre connexion et réessayez."

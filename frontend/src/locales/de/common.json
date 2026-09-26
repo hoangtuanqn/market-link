@@ -124,7 +124,10 @@
     "cancel": "Abbrechen",
     "previewEmpty": "Noch keine Unterhaltungen.",
     "previewError": "Deine Unterhaltungen konnten nicht geladen werden.",
-    "unreadCount": "{{count}} ungelesen"
+    "unreadCount": "{{count}} ungelesen",
+    "orderGone": "Diese Bestellung ist für dich nicht verfügbar.",
+    "orderLabel": "Bestellung {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "Der Server ist nicht erreichbar. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut."

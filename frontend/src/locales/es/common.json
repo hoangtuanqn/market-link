@@ -124,7 +124,10 @@
     "cancel": "Cancelar",
     "previewEmpty": "Todavía no hay conversaciones.",
     "previewError": "No se pudieron cargar tus conversaciones.",
-    "unreadCount": "{{count}} sin leer"
+    "unreadCount": "{{count}} sin leer",
+    "orderGone": "Este pedido no está disponible para ti.",
+    "orderLabel": "Pedido {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo."

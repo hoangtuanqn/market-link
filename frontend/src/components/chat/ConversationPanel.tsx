@@ -22,6 +22,7 @@ type Props = {
   /** A slot for each role's own button (Farmer: "Make an offer" in phase 2). */
   headerAction?: ReactNode;
   pinnedProductId?: number;
+  pinnedOrderId?: number;
   onUnpin?: () => void;
 };
 
@@ -45,6 +46,7 @@ export default function ConversationPanel({
   onBack,
   headerAction,
   pinnedProductId,
+  pinnedOrderId,
   onUnpin,
 }: Props) {
   const other = thread?.other;
@@ -154,6 +156,7 @@ export default function ConversationPanel({
         onTyping={typing}
         disabled={false}
         pinnedProductId={pinnedProductId}
+        pinnedOrderId={pinnedOrderId}
         onUnpin={onUnpin}
       />
       <ReportDialog
