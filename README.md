@@ -225,8 +225,12 @@ Use this if you do not want to install JDK 25 or Node.js. Only Docker Desktop an
 ```bash
 make init   # first time only: create .env, install git hooks
 make up     # mysql + redis + backend (:8080) + frontend (:3000)
+make seed   # demo data (db/seed.sql), once the backend has started; safe to re-run
 make help   # list every command
 ```
+
+Demo accounts for every role (shared password `Demo@1234`) are listed in
+[`docs/DEMO_CREDENTIALS.md`](docs/DEMO_CREDENTIALS.md).
 
 - Backend and frontend are in the Compose profile `app`, so plain `docker compose up -d` (Step 4)
   still starts **only** MySQL and Redis and does not clash with a backend/frontend run on your machine.
