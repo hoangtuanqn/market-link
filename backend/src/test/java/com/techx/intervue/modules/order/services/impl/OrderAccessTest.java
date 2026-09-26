@@ -187,7 +187,10 @@ class OrderAccessTest {
 
     // ---------- thêm ngoài 6 test của brief ----------
 
-    /** D-13: Farmer cũng mua hàng — đọc đơn của chính mình như một buyer bình thường. */
+    /**
+     * D-13: Farmer cũng mua hàng — đọc đơn mình đặt ở MỘT STALL KHÁC (farmerUserId của đơn ≠ người
+     * gọi) như một buyer bình thường: không phải Farmer của đơn này, nên không thấy customer block.
+     */
     @Test
     void aFarmerCanReadTheirOwnPurchaseAsABuyer() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -197,6 +200,23 @@ class OrderAccessTest {
 
         assertThat(detail.customer()).isNull();
         assertThat(detail.canCancel()).isTrue();
+    }
+
+    /**
+     * Tự mua ở chính sạp mình (customer_id và farmer_profiles.user_id của đơn là CÙNG một userId):
+     * người gọi vừa là buyer vừa là Farmer sở hữu đơn cùng lúc — cả hai vai đều đúng trên một
+     * response. Đơn còn ở placed, cutoff còn ở tương lai.
+     */
+    @Test
+    void aFarmerBuyingAtTheirOwnStallSeesBothTheCustomerBlockAndCanCancel() {
+        when(orderQueries.findDetail(ORDER_ID))
+                .thenReturn(Optional.of(aPlacedOrder(FARMER_USER_ID, FARMER_USER_ID)));
+
+        OrderDetailResource detail = service.detail(FARMER_USER_ID, ORDER_ID);
+
+        assertThat(detail.customer()).isNotNull();
+        assertThat(detail.canCancel()).isTrue();
+        assertThat(detail.canModify()).isTrue();
     }
 
     /** Order id không tồn tại → 404 (OrderNotFoundException), không phải 403: không lộ gì cả. */

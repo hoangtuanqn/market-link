@@ -1,12 +1,14 @@
 package com.techx.intervue.modules.order.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 /**
- * {@code GET /orders/{id}} (contract §7, FR-033/036/065). {@code customer} chỉ có mặt (khác {@code
- * null}) khi người gọi là Farmer của chính đơn này; khách xem đơn của mình thấy {@code null} (quyết
- * định: field luôn có mặt trong JSON, giá trị {@code null} khi không áp dụng — không lược bỏ
- * field).
+ * {@code GET /orders/{id}} (contract §7, FR-033/036/065). {@code customer} chỉ có mặt khi người gọi
+ * là Farmer của chính đơn này — controller ruling C5-16: khi không phải, key {@code customer} VẮNG
+ * khỏi JSON hoàn toàn (không phải {@code "customer": null}). {@code @JsonInclude} chỉ đặt trên
+ * component này (precedent: {@code MessageResource}), không đặt trên cả record — {@code
+ * customerNote}/{@code farmerNote} vẫn phải xuất hiện là {@code null} như bình thường.
  */
 public record OrderDetailResource(
         OrderListItemResource summary,
@@ -16,4 +18,4 @@ public record OrderDetailResource(
         boolean canModify,
         String customerNote,
         String farmerNote,
-        CustomerSummaryResource customer) {}
+        @JsonInclude(JsonInclude.Include.NON_NULL) CustomerSummaryResource customer) {}
