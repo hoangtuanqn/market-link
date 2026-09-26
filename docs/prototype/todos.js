@@ -267,7 +267,7 @@ window.PT_TODOS = [
   "role": "customer",
   "file": "order.html",
   "screen": "Order detail",
-  "text": "FR-114 (order part) · Messaging from an order and pinning the order to a message wait for the order module (GET /orders/{id}), which dev does not have yet. Product and stall pages already have the button."
+  "text": "FR-114 (order part) · The chat side is built: the button takes the order, the server only accepts an order of this customer at this stall (403 otherwise), and the message shows the order as a card. What is left is this page itself: it still runs on sample data, so the button goes live when the order detail page reads GET /orders/{id}."
  },
  {
   "role": "customer",
