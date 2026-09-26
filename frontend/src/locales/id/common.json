@@ -407,6 +407,14 @@
     "photoAlt": "Foto dari lamaran ke-{{n}}"
   },
   "notify": {
-    "open": "Buka"
+    "open": "Buka",
+    "prompt": {
+      "title": "Aktifkan notifikasi",
+      "text": "Terima pesan baru, keputusan lapak, dan pengumuman MarketLink di layar, bahkan saat tab ini di latar belakang.",
+      "enable": "Aktifkan",
+      "later": "Nanti saja",
+      "onTitle": "Notifikasi aktif",
+      "onText": "Ubah apa yang Anda terima di Pengaturan → Notifikasi."
+    }
   }
 }

@@ -407,6 +407,14 @@
     "photoAlt": "Ảnh của lần nộp {{n}}"
   },
   "notify": {
-    "open": "Mở"
+    "open": "Mở",
+    "prompt": {
+      "title": "Bật thông báo",
+      "text": "Nhận tin nhắn mới, kết quả duyệt sạp và thông báo của MarketLink ngay trên màn hình, kể cả khi tab này đang ở nền.",
+      "enable": "Bật",
+      "later": "Để sau",
+      "onTitle": "Đã bật thông báo",
+      "onText": "Bạn chọn loại thông báo muốn nhận trong Cài đặt → Thông báo."
+    }
   }
 }

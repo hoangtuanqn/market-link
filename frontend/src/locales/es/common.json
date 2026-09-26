@@ -407,6 +407,14 @@
     "photoAlt": "Foto de la solicitud {{n}}"
   },
   "notify": {
-    "open": "Abrir"
+    "open": "Abrir",
+    "prompt": {
+      "title": "Activar las notificaciones",
+      "text": "Recibe en pantalla los mensajes nuevos, las decisiones sobre tu puesto y los avisos de MarketLink, incluso con esta pestaña en segundo plano.",
+      "enable": "Activar",
+      "later": "Ahora no",
+      "onTitle": "Notificaciones activadas",
+      "onText": "Elige qué recibes en Ajustes → Notificaciones."
+    }
   }
 }

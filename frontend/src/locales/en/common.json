@@ -407,6 +407,14 @@
     "photoAlt": "Photo from attempt {{n}}"
   },
   "notify": {
-    "open": "Open"
+    "open": "Open",
+    "prompt": {
+      "title": "Turn on notifications",
+      "text": "Get new messages, stall decisions and MarketLink announcements on your screen, even when this tab is in the background.",
+      "enable": "Turn on",
+      "later": "Not now",
+      "onTitle": "Notifications are on",
+      "onText": "You can change what you get in Settings → Notifications."
+    }
   }
 }

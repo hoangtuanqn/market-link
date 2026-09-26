@@ -407,6 +407,14 @@
     "photoAlt": "Foto aus Antrag {{n}}"
   },
   "notify": {
-    "open": "Öffnen"
+    "open": "Öffnen",
+    "prompt": {
+      "title": "Benachrichtigungen einschalten",
+      "text": "Erhalten Sie neue Nachrichten, Entscheidungen zu Ihrem Stand und Mitteilungen von MarketLink auf dem Bildschirm, auch wenn dieser Tab im Hintergrund ist.",
+      "enable": "Einschalten",
+      "later": "Später",
+      "onTitle": "Benachrichtigungen sind an",
+      "onText": "Was Sie erhalten, ändern Sie unter Einstellungen → Benachrichtigungen."
+    }
   }
 }

@@ -407,6 +407,14 @@
     "photoAlt": "Photo de la demande {{n}}"
   },
   "notify": {
-    "open": "Ouvrir"
+    "open": "Ouvrir",
+    "prompt": {
+      "title": "Activer les notifications",
+      "text": "Recevez les nouveaux messages, les décisions sur votre stand et les annonces de MarketLink à l’écran, même quand cet onglet est en arrière-plan.",
+      "enable": "Activer",
+      "later": "Plus tard",
+      "onTitle": "Notifications activées",
+      "onText": "Choisissez ce que vous recevez dans Paramètres → Notifications."
+    }
   }
 }
