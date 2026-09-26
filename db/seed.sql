@@ -273,3 +273,227 @@ CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT
             UNION ALL SELECT 10 UNION ALL SELECT 11) h
 WHERE fm.is_active = TRUE
   AND ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)) <= od.pickup_end_time;
+
+-- ---- Đơn hàng demo (FR-101, FR-038): đủ 6 trạng thái của customer@marketlink.vn ----
+-- 3 stall (Vườn Út Hiền tại Chợ Bà Chiểu, Trái cây Ba Tơ tại Chợ Bến Thành, Củ quả Đức Củ Chi tại Chợ Bà
+-- Chiểu) × 4 đơn mỗi stall = 12 đơn, order_code cố định ML-20260920-0001…0012 để ON DUPLICATE KEY UPDATE
+-- bám vào (giá trị 20260920 chỉ là nhãn cố định, không phải ngày chạy seed thật).
+-- Đơn đang chạy (placed/accepted/ready) đặt ở hôm nay+2 trở đi: chọn đúng slot đã sinh ở khối trên bằng
+-- LATERAL — "ngày tới gần nhất mà stall đó có mặt tại chợ đó, từ hôm nay+2" — nên luôn hợp lệ dù seed chạy
+-- ngày nào. Đơn đã xong/từ chối/huỷ đặt lùi về quá khứ (hôm nay−10…−2), slot_id NULL vì chỉ có slot từ hôm
+-- nay trở đi. cutoff_at = pickup_date + pickup_start − order_cutoff_hours của farmer, là DATETIME giờ địa
+-- phương (không quy đổi UTC, giống cutoffAt trên entity Order).
+
+-- Nhóm 1: đơn future dùng slot sớm nhất (OFFSET 0) — 0001 placed (farmer@, có đơn placed để demo Farmer
+-- duyệt), 0002 placed (farmer2@), 0004 accepted (farmer4@).
+INSERT INTO orders (order_code, customer_id, farmer_id, market_id, slot_id, pickup_date, pickup_start,
+                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note)
+SELECT x.order_code, cust.id, f.id, m.id, slot.id, slot.slot_date, slot.start_time, slot.end_time,
+       TIMESTAMP(slot.slot_date, slot.start_time) - INTERVAL f.order_cutoff_hours HOUR,
+       0, x.status, NULL, NULL
+FROM (
+      SELECT 'ML-20260920-0001' AS order_code, 'farmer@marketlink.vn' AS email, 'Chợ Bà Chiểu' AS market_name, 'placed' AS status
+      UNION ALL SELECT 'ML-20260920-0002', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 'placed'
+      UNION ALL SELECT 'ML-20260920-0004', 'farmer4@marketlink.vn', 'Chợ Bà Chiểu', 'accepted'
+     ) x
+JOIN users cust ON cust.email = 'customer@marketlink.vn'
+JOIN users u ON u.email = x.email
+JOIN farmer_profiles f ON f.user_id = u.id
+JOIN farmer_markets fm ON fm.farmer_id = f.id
+JOIN markets m ON m.id = fm.market_id AND m.market_name = x.market_name
+JOIN LATERAL (
+      SELECT ps.id, ps.slot_date, ps.start_time, ps.end_time
+      FROM pickup_slots ps
+      WHERE ps.farmer_market_id = fm.id
+        AND ps.slot_date >= DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) + INTERVAL 2 DAY
+      ORDER BY ps.slot_date, ps.start_time
+      LIMIT 1 OFFSET 0
+     ) slot ON TRUE
+ON DUPLICATE KEY UPDATE customer_id = cust.id, farmer_id = f.id, market_id = m.id, slot_id = slot.id,
+                        pickup_date = slot.slot_date, pickup_start = slot.start_time, pickup_end = slot.end_time,
+                        cutoff_at = TIMESTAMP(slot.slot_date, slot.start_time) - INTERVAL f.order_cutoff_hours HOUR,
+                        status = x.status, customer_note = NULL, farmer_note = NULL, total_amount = 0;
+
+-- Nhóm 2: đơn future dùng slot kế tiếp (OFFSET 1, khác giờ hoặc khác ngày với nhóm 1) — 0003 accepted
+-- (farmer@), 0005 ready (farmer2@), 0006 ready (farmer4@).
+INSERT INTO orders (order_code, customer_id, farmer_id, market_id, slot_id, pickup_date, pickup_start,
+                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note)
+SELECT x.order_code, cust.id, f.id, m.id, slot.id, slot.slot_date, slot.start_time, slot.end_time,
+       TIMESTAMP(slot.slot_date, slot.start_time) - INTERVAL f.order_cutoff_hours HOUR,
+       0, x.status, NULL, NULL
+FROM (
+      SELECT 'ML-20260920-0003' AS order_code, 'farmer@marketlink.vn' AS email, 'Chợ Bà Chiểu' AS market_name, 'accepted' AS status
+      UNION ALL SELECT 'ML-20260920-0005', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 'ready'
+      UNION ALL SELECT 'ML-20260920-0006', 'farmer4@marketlink.vn', 'Chợ Bà Chiểu', 'ready'
+     ) x
+JOIN users cust ON cust.email = 'customer@marketlink.vn'
+JOIN users u ON u.email = x.email
+JOIN farmer_profiles f ON f.user_id = u.id
+JOIN farmer_markets fm ON fm.farmer_id = f.id
+JOIN markets m ON m.id = fm.market_id AND m.market_name = x.market_name
+JOIN LATERAL (
+      SELECT ps.id, ps.slot_date, ps.start_time, ps.end_time
+      FROM pickup_slots ps
+      WHERE ps.farmer_market_id = fm.id
+        AND ps.slot_date >= DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) + INTERVAL 2 DAY
+      ORDER BY ps.slot_date, ps.start_time
+      LIMIT 1 OFFSET 1
+     ) slot ON TRUE
+ON DUPLICATE KEY UPDATE customer_id = cust.id, farmer_id = f.id, market_id = m.id, slot_id = slot.id,
+                        pickup_date = slot.slot_date, pickup_start = slot.start_time, pickup_end = slot.end_time,
+                        cutoff_at = TIMESTAMP(slot.slot_date, slot.start_time) - INTERVAL f.order_cutoff_hours HOUR,
+                        status = x.status, customer_note = NULL, farmer_note = NULL, total_amount = 0;
+
+-- Nhóm 3: đơn quá khứ (completed ×4, declined ×1, cancelled ×1) — slot_id NULL, giờ nhận hàng cố định
+-- 08:00–09:00 (nằm trong khung 07:00–11:00 của cả 3 stall).
+INSERT INTO orders (order_code, customer_id, farmer_id, market_id, slot_id, pickup_date, pickup_start,
+                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note)
+SELECT x.order_code, cust.id, f.id, m.id, NULL,
+       DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL x.days_ago DAY, '08:00:00', '09:00:00',
+       TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL x.days_ago DAY, '08:00:00')
+         - INTERVAL f.order_cutoff_hours HOUR,
+       0, x.status, NULL, x.farmer_note
+FROM (
+      SELECT 'ML-20260920-0007' AS order_code, 'farmer@marketlink.vn' AS email, 'Chợ Bà Chiểu' AS market_name, 10 AS days_ago, 'completed' AS status, NULL AS farmer_note
+      UNION ALL SELECT 'ML-20260920-0008', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 8, 'completed', NULL
+      UNION ALL SELECT 'ML-20260920-0009', 'farmer4@marketlink.vn', 'Chợ Bà Chiểu', 6, 'completed', NULL
+      UNION ALL SELECT 'ML-20260920-0010', 'farmer@marketlink.vn', 'Chợ Bà Chiểu', 4, 'completed', NULL
+      UNION ALL SELECT 'ML-20260920-0011', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 3, 'declined', 'Vườn hết hàng đợt này, không đủ giao đúng hẹn.'
+      UNION ALL SELECT 'ML-20260920-0012', 'farmer4@marketlink.vn', 'Chợ Bà Chiểu', 2, 'cancelled', NULL
+     ) x
+JOIN users cust ON cust.email = 'customer@marketlink.vn'
+JOIN users u ON u.email = x.email
+JOIN farmer_profiles f ON f.user_id = u.id
+JOIN farmer_markets fm ON fm.farmer_id = f.id
+JOIN markets m ON m.id = fm.market_id AND m.market_name = x.market_name
+ON DUPLICATE KEY UPDATE customer_id = cust.id, farmer_id = f.id, market_id = m.id, slot_id = NULL,
+                        pickup_date = DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL x.days_ago DAY,
+                        pickup_start = '08:00:00', pickup_end = '09:00:00',
+                        cutoff_at = TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL x.days_ago DAY, '08:00:00')
+                                     - INTERVAL f.order_cutoff_hours HOUR,
+                        status = x.status, customer_note = NULL, farmer_note = x.farmer_note, total_amount = 0;
+
+-- order_items (FR-034): 2–3 sản phẩm mỗi đơn, snapshot tên/đơn vị/giá hiện tại của products. Khoá tự nhiên
+-- là uq_order_product (order_id, product_id) nên upsert bám vào đó.
+INSERT INTO order_items (order_id, product_id, product_name, unit_price, unit, quantity, subtotal)
+SELECT o.id, p.id, p.name, p.price, p.unit, oi.quantity, p.price * oi.quantity
+FROM (
+      SELECT 'ML-20260920-0001' AS order_code, 'Rau muống' AS product_name, 3 AS quantity
+      UNION ALL SELECT 'ML-20260920-0001', 'Cải ngọt', 2
+      UNION ALL SELECT 'ML-20260920-0002', 'Cam sành', 2
+      UNION ALL SELECT 'ML-20260920-0002', 'Xoài cát Hoà Lộc', 1
+      UNION ALL SELECT 'ML-20260920-0002', 'Đu đủ', 3
+      UNION ALL SELECT 'ML-20260920-0003', 'Rau dền', 2
+      UNION ALL SELECT 'ML-20260920-0003', 'Mồng tơi', 3
+      UNION ALL SELECT 'ML-20260920-0004', 'Khoai lang mật', 2
+      UNION ALL SELECT 'ML-20260920-0004', 'Cà rốt', 3
+      UNION ALL SELECT 'ML-20260920-0004', 'Gừng tươi', 1
+      UNION ALL SELECT 'ML-20260920-0005', 'Bưởi da xanh', 2
+      UNION ALL SELECT 'ML-20260920-0005', 'Chuối sứ', 2
+      UNION ALL SELECT 'ML-20260920-0006', 'Củ dền', 2
+      UNION ALL SELECT 'ML-20260920-0006', 'Khoai môn', 1
+      UNION ALL SELECT 'ML-20260920-0006', 'Củ cải trắng', 3
+      UNION ALL SELECT 'ML-20260920-0007', 'Rau muống', 2
+      UNION ALL SELECT 'ML-20260920-0007', 'Rau lang', 2
+      UNION ALL SELECT 'ML-20260920-0008', 'Xoài cát Hoà Lộc', 1
+      UNION ALL SELECT 'ML-20260920-0008', 'Cam sành', 3
+      UNION ALL SELECT 'ML-20260920-0009', 'Cà rốt', 2
+      UNION ALL SELECT 'ML-20260920-0009', 'Khoai lang mật', 2
+      UNION ALL SELECT 'ML-20260920-0009', 'Củ dền', 1
+      UNION ALL SELECT 'ML-20260920-0010', 'Cải ngọt', 3
+      UNION ALL SELECT 'ML-20260920-0010', 'Mồng tơi', 2
+      UNION ALL SELECT 'ML-20260920-0011', 'Đu đủ', 2
+      UNION ALL SELECT 'ML-20260920-0011', 'Bưởi da xanh', 1
+      UNION ALL SELECT 'ML-20260920-0012', 'Gừng tươi', 1
+      UNION ALL SELECT 'ML-20260920-0012', 'Củ cải trắng', 2
+     ) oi
+JOIN orders o ON o.order_code = oi.order_code
+JOIN products p ON p.farmer_id = o.farmer_id AND p.name = oi.product_name
+ON DUPLICATE KEY UPDATE product_name = p.name, unit_price = p.price, unit = p.unit,
+                        quantity = oi.quantity, subtotal = p.price * oi.quantity;
+
+-- total_amount = tổng subtotal của các order_items — tính lại bằng SQL, không gõ tay.
+UPDATE orders o
+JOIN (SELECT order_id, SUM(subtotal) AS total FROM order_items GROUP BY order_id) t ON t.order_id = o.id
+SET o.total_amount = t.total
+WHERE o.order_code LIKE 'ML-20260920-%';
+
+-- order_status_history (FR-038): bảng không có khoá tự nhiên nên xoá của đúng 12 đơn seed rồi ghi lại đủ
+-- chuỗi — chạy lại `make seed` không bị nhân đôi, và cũng dọn sạch dòng "accepted" mà API demo (Bước 2/3
+-- của task) có thể ghi thêm vào đơn placed khi giám khảo/QA bấm duyệt thử.
+DELETE h FROM order_status_history h
+JOIN orders o ON o.id = h.order_id
+WHERE o.order_code LIKE 'ML-20260920-%';
+
+-- Chuỗi cho 6 đơn đang chạy (placed/accepted/ready): mốc thời gian lùi dần từ hiện tại (UTC_TIMESTAMP,
+-- giống cách cột TIMESTAMP khác trong file này được đọc/ghi — xem C5-15). changed_by: customer cho
+-- bước "đặt", farmer (chủ stall của đơn) cho các bước duyệt/sẵn sàng.
+INSERT INTO order_status_history (order_id, from_status, to_status, changed_by, note, changed_at)
+SELECT o.id, spec.from_status, spec.to_status,
+       CASE spec.actor WHEN 'customer' THEN cust.id ELSE fu.id END,
+       spec.note, UTC_TIMESTAMP() - INTERVAL spec.days_before_now DAY
+FROM (
+      SELECT 'ML-20260920-0001' AS order_code, NULL AS from_status, 'placed' AS to_status, 'customer' AS actor, 1 AS days_before_now, NULL AS note
+      UNION ALL SELECT 'ML-20260920-0002', NULL, 'placed', 'customer', 1, NULL
+      UNION ALL SELECT 'ML-20260920-0003', NULL, 'placed', 'customer', 2, NULL
+      UNION ALL SELECT 'ML-20260920-0003', 'placed', 'accepted', 'farmer', 1, NULL
+      UNION ALL SELECT 'ML-20260920-0004', NULL, 'placed', 'customer', 2, NULL
+      UNION ALL SELECT 'ML-20260920-0004', 'placed', 'accepted', 'farmer', 1, NULL
+      UNION ALL SELECT 'ML-20260920-0005', NULL, 'placed', 'customer', 3, NULL
+      UNION ALL SELECT 'ML-20260920-0005', 'placed', 'accepted', 'farmer', 2, NULL
+      UNION ALL SELECT 'ML-20260920-0005', 'accepted', 'ready', 'farmer', 1, NULL
+      UNION ALL SELECT 'ML-20260920-0006', NULL, 'placed', 'customer', 3, NULL
+      UNION ALL SELECT 'ML-20260920-0006', 'placed', 'accepted', 'farmer', 2, NULL
+      UNION ALL SELECT 'ML-20260920-0006', 'accepted', 'ready', 'farmer', 1, NULL
+     ) spec
+JOIN orders o ON o.order_code = spec.order_code
+JOIN users cust ON cust.email = 'customer@marketlink.vn'
+JOIN farmer_profiles f ON f.id = o.farmer_id
+JOIN users fu ON fu.id = f.user_id;
+
+-- Chuỗi cho 6 đơn quá khứ (completed/declined/cancelled): mốc thời gian tính theo pickup_date thật của
+-- từng đơn (đã ghi ở bước insert orders) để chuỗi luôn đứng trước ngày nhận hàng, kể cả khi seed chạy vào
+-- ngày khác.
+INSERT INTO order_status_history (order_id, from_status, to_status, changed_by, note, changed_at)
+SELECT o.id, spec.from_status, spec.to_status,
+       CASE spec.actor WHEN 'customer' THEN cust.id ELSE fu.id END,
+       spec.note, TIMESTAMP(o.pickup_date + INTERVAL spec.day_delta DAY, spec.time_of_day)
+FROM (
+      SELECT 'ML-20260920-0007' AS order_code, NULL AS from_status, 'placed' AS to_status, 'customer' AS actor, -2 AS day_delta, '08:00:00' AS time_of_day, NULL AS note
+      UNION ALL SELECT 'ML-20260920-0007', 'placed', 'accepted', 'farmer', -1, '09:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0007', 'accepted', 'ready', 'farmer', 0, '07:30:00', NULL
+      UNION ALL SELECT 'ML-20260920-0007', 'ready', 'completed', 'farmer', 0, '08:30:00', NULL
+      UNION ALL SELECT 'ML-20260920-0008', NULL, 'placed', 'customer', -2, '08:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0008', 'placed', 'accepted', 'farmer', -1, '09:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0008', 'accepted', 'ready', 'farmer', 0, '07:30:00', NULL
+      UNION ALL SELECT 'ML-20260920-0008', 'ready', 'completed', 'farmer', 0, '08:30:00', NULL
+      UNION ALL SELECT 'ML-20260920-0009', NULL, 'placed', 'customer', -2, '08:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0009', 'placed', 'accepted', 'farmer', -1, '09:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0009', 'accepted', 'ready', 'farmer', 0, '07:30:00', NULL
+      UNION ALL SELECT 'ML-20260920-0009', 'ready', 'completed', 'farmer', 0, '08:30:00', NULL
+      UNION ALL SELECT 'ML-20260920-0010', NULL, 'placed', 'customer', -2, '08:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0010', 'placed', 'accepted', 'farmer', -1, '09:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0010', 'accepted', 'ready', 'farmer', 0, '07:30:00', NULL
+      UNION ALL SELECT 'ML-20260920-0010', 'ready', 'completed', 'farmer', 0, '08:30:00', NULL
+      UNION ALL SELECT 'ML-20260920-0011', NULL, 'placed', 'customer', -2, '08:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0011', 'placed', 'declined', 'farmer', -1, '10:00:00', 'Vườn hết hàng đợt này, không đủ giao đúng hẹn.'
+      UNION ALL SELECT 'ML-20260920-0012', NULL, 'placed', 'customer', -2, '08:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0012', 'placed', 'accepted', 'farmer', -1, '09:00:00', NULL
+      UNION ALL SELECT 'ML-20260920-0012', 'accepted', 'cancelled', 'customer', -1, '15:00:00', 'Khách huỷ đơn.'
+     ) spec
+JOIN orders o ON o.order_code = spec.order_code
+JOIN users cust ON cust.email = 'customer@marketlink.vn'
+JOIN farmer_profiles f ON f.id = o.farmer_id
+JOIN users fu ON fu.id = f.user_id;
+
+-- pickup_slots.booked_count (D-06): tính lại từ orders đang ở trạng thái còn giữ chỗ (placed/accepted/
+-- ready/completed) cho MỌI slot — rẻ (768 dòng) và tự sửa nếu lần chạy trước để lệch (vd. đơn dời sang
+-- slot khác vì "hôm nay" đã đổi ngày giữa hai lần seed).
+UPDATE pickup_slots ps
+LEFT JOIN (
+      SELECT slot_id, COUNT(*) AS cnt
+      FROM orders
+      WHERE slot_id IS NOT NULL AND status IN ('placed', 'accepted', 'ready', 'completed')
+      GROUP BY slot_id
+     ) c ON c.slot_id = ps.id
+SET ps.booked_count = COALESCE(c.cnt, 0);
