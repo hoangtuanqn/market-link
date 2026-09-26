@@ -225,4 +225,34 @@ class MarketServiceTest {
         verify(imageRepository).replaceImages(1L, urls);
         assertThat(existing.getImageUrl()).isEqualTo("/uploads/market-images/c.jpg");
     }
+
+    /** QA E2E v2 MARKET-ADMIN-002: adding back a removed market's name restores that market. */
+    @Test
+    void createRestoresARemovedMarketWithTheSameName() {
+        Market removed = saved();
+        removed.setActive(false);
+        when(repository.findByMarketName("Chợ Bà Chiểu")).thenReturn(Optional.of(removed));
+        when(repository.saveAndFlush(any(Market.class))).thenAnswer(i -> i.getArgument(0));
+
+        MarketResource restored = service.create(request(List.of(6), ONE_IMAGE));
+
+        assertThat(restored.id()).isEqualTo(1L);
+        assertThat(removed.isActive()).isTrue();
+        verify(repository).saveAndFlush(removed);
+        verify(dayRepository).replaceDays(1L, List.of(6));
+        verify(imageRepository).replaceImages(1L, ONE_IMAGE);
+    }
+
+    /** An active market keeps its name: the new row is left to uq_market_name (→ 409). */
+    @Test
+    void createDoesNotTakeOverAnActiveMarketWithTheSameName() {
+        when(repository.findByMarketName("Chợ Bà Chiểu")).thenReturn(Optional.of(saved()));
+        when(repository.save(any(Market.class))).thenReturn(saved());
+
+        service.create(request(List.of(6), ONE_IMAGE));
+
+        ArgumentCaptor<Market> captor = ArgumentCaptor.forClass(Market.class);
+        verify(repository).save(captor.capture());
+        assertThat(captor.getValue().getId()).isNull();
+    }
 }
