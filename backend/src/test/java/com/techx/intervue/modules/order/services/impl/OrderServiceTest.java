@@ -3,7 +3,9 @@ package com.techx.intervue.modules.order.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -37,9 +39,13 @@ import com.techx.intervue.modules.order.requests.PreviewRequest;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource.MarketOption;
 import com.techx.intervue.modules.order.resources.PlacedOrderResource;
+import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
@@ -55,7 +61,6 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +109,8 @@ class OrderServiceTest {
     private CheckoutQueryRepository checkoutQueries;
     private OrderQueryRepository orderQueries;
     private Clock clock;
+    private ProductDailyStockRepository dailyStockRepository;
+    private ProductAvailabilityResolver availability;
     private OrderService service;
 
     /** Fake tables. */
@@ -112,6 +119,7 @@ class OrderServiceTest {
     private final Map<Long, FarmerMarket> links = new HashMap<>();
     private final Map<Long, PickupSlot> slots = new HashMap<>();
     private final Map<Long, Product> products = new HashMap<>();
+    private final Map<String, ProductDailyStock> dailyStock = new HashMap<>();
     private final List<Order> orders = new ArrayList<>();
     private final List<OrderItem> items = new ArrayList<>();
     private final List<OrderStatusHistory> history = new ArrayList<>();
@@ -127,6 +135,8 @@ class OrderServiceTest {
         orderItemRepository = mock(OrderItemRepository.class);
         historyRepository = mock(OrderStatusHistoryRepository.class);
         checkoutQueries = mock(CheckoutQueryRepository.class);
+        dailyStockRepository = mock(ProductDailyStockRepository.class);
+        availability = mock(ProductAvailabilityResolver.class);
         orderQueries = mock(OrderQueryRepository.class);
         clock = Clock.fixed(ZonedDateTime.of(TODAY, LocalTime.of(9, 0), HCM).toInstant(), HCM);
         service =
@@ -141,8 +151,10 @@ class OrderServiceTest {
                         new OrderStatusHistoryWriter(historyRepository),
                         new OrderCodeGenerator(orderRepository, clock),
                         checkoutQueries,
-                        orderQueries,
                         clock,
+                        dailyStockRepository,
+                        availability,
+                        orderQueries,
                         mock(NotificationServiceInterface.class),
                         mock(RestockNotifier.class));
 
@@ -158,6 +170,9 @@ class OrderServiceTest {
         product(RAU_MUONG, FARMER_A, "Rau muống", "12000", 40);
         product(CAI_NGOT, FARMER_A, "Cải ngọt", "15000", 30);
         product(BANH_CHUOI, FARMER_B, "Bánh chuối nướng", "35000", 15);
+        dailyStock(RAU_MUONG, PICKUP, 40, "12000");
+        dailyStock(CAI_NGOT, PICKUP, 30, "15000");
+        dailyStock(BANH_CHUOI, PICKUP, 15, "35000");
 
         when(farmerRepository.findById(any()))
                 .thenAnswer(inv -> Optional.ofNullable(farmers.get(inv.<Long>getArgument(0))));
@@ -167,10 +182,70 @@ class OrderServiceTest {
                 .thenAnswer(inv -> Optional.ofNullable(links.get(inv.<Long>getArgument(0))));
         when(slotRepository.lockById(any()))
                 .thenAnswer(inv -> Optional.ofNullable(slots.get(inv.<Long>getArgument(0))));
-        when(productRepository.lockAllById(any()))
-                .thenAnswer(inv -> rows(products, inv.getArgument(0)));
         when(productRepository.findAllById(any()))
                 .thenAnswer(inv -> rows(products, inv.getArgument(0)));
+        when(dailyStockRepository.materialize(any(), any(), anyInt()))
+                .thenAnswer(
+                        inv -> {
+                            Long productId = inv.getArgument(0);
+                            LocalDate date = inv.getArgument(1);
+                            String key = productId + "@" + date;
+                            if (dailyStock.containsKey(key)) {
+                                return 0;
+                            }
+                            Product p = products.get(productId);
+                            if (p == null) {
+                                return 0;
+                            }
+                            ProductDailyStock row = new ProductDailyStock();
+                            row.setId(5000L + dailyStock.size());
+                            row.setProductId(productId);
+                            row.setStockDate(date);
+                            row.setQuantityAvailable(p.getStockQuantity());
+                            row.setUnitPrice(p.getPrice());
+                            dailyStock.put(key, row);
+                            return 1;
+                        });
+        when(dailyStockRepository.findByProductIdAndStockDate(any(), any()))
+                .thenAnswer(
+                        inv ->
+                                Optional.ofNullable(
+                                        dailyStock.get(
+                                                inv.<Long>getArgument(0)
+                                                        + "@"
+                                                        + inv.<LocalDate>getArgument(1))));
+        when(dailyStockRepository.lockByProductIdAndStockDate(any(), any()))
+                .thenAnswer(
+                        inv ->
+                                Optional.ofNullable(
+                                        dailyStock.get(
+                                                inv.<Long>getArgument(0)
+                                                        + "@"
+                                                        + inv.<LocalDate>getArgument(1))));
+        // Passes each product's live stock/price straight through, so tests that don't care about
+        // availability keep their existing PICKUP-dated expectations unchanged.
+        when(availability.resolve(any()))
+                .thenAnswer(
+                        inv -> {
+                            Map<Long, BigDecimal> in = inv.getArgument(0);
+                            Map<Long, ProductAvailabilityResolver.Availability> out =
+                                    new HashMap<>();
+                            in.keySet()
+                                    .forEach(
+                                            id -> {
+                                                Product p = products.get(id);
+                                                if (p != null) {
+                                                    out.put(
+                                                            id,
+                                                            new ProductAvailabilityResolver
+                                                                    .Availability(
+                                                                    PICKUP,
+                                                                    p.getStockQuantity(),
+                                                                    p.getPrice()));
+                                                }
+                                            });
+                            return out;
+                        });
         when(orderRepository.save(any()))
                 .thenAnswer(
                         inv -> {
@@ -278,6 +353,16 @@ class OrderServiceTest {
         return p;
     }
 
+    private void dailyStock(long productId, LocalDate date, int quantity, String price) {
+        ProductDailyStock row = new ProductDailyStock();
+        row.setId(4000L + dailyStock.size());
+        row.setProductId(productId);
+        row.setStockDate(date);
+        row.setQuantityAvailable(quantity);
+        row.setUnitPrice(new BigDecimal(price));
+        dailyStock.put(productId + "@" + date, row);
+    }
+
     private static CartLine line(long productId, int quantity) {
         return new CartLine(productId, quantity);
     }
@@ -337,6 +422,33 @@ class OrderServiceTest {
         assertThat(groupOf(groups, FARMER_B).problems()).containsExactly("out_of_stock");
         assertThat(groupOf(groups, FARMER_A).problems()).isEmpty();
         assertThat(groupOf(groups, FARMER_B).items().getFirst().stockQuantity()).isEqualTo(15);
+    }
+
+    /**
+     * The price a customer previews must be the same price they'll actually be charged at order
+     * time — the resolved availability price for the nearest date, not the product's base price. A
+     * weekly stock template can charge more or less than the base price on a given weekday.
+     */
+    @Test
+    void previewShowsThePriceForTheResolvedDateNotTheProductsBasePrice() {
+        // doReturn, not when(...).thenReturn(...): the setUp() stub is an answer that runs on
+        // invocation, including the recording call inside when(...) itself, which would NPE on a
+        // null argument there.
+        doReturn(
+                        Map.of(
+                                RAU_MUONG,
+                                new ProductAvailabilityResolver.Availability(
+                                        PICKUP, 40, new BigDecimal("13000"))))
+                .when(availability)
+                .resolve(any());
+
+        List<OrderGroupPreviewResource> groups =
+                service.preview(CUSTOMER_ID, cart(line(RAU_MUONG, 2)));
+
+        PreviewItemResource item = groupOf(groups, FARMER_A).items().getFirst();
+        assertThat(item.unitPrice()).isEqualByComparingTo("13000");
+        assertThat(item.subtotal()).isEqualByComparingTo("26000");
+        assertThat(groupOf(groups, FARMER_A).subtotal()).isEqualByComparingTo("26000");
     }
 
     @Test
@@ -451,15 +563,15 @@ class OrderServiceTest {
     }
 
     /**
-     * D-02: stock is deducted right when the order is `placed`, in the same transaction as the
-     * place-order call.
+     * D-02: stock for that pickup date is deducted right when the order is `placed`, in the same
+     * transaction as the place-order call.
      */
     @Test
     void placeDeductsStockInTheSameTransaction() throws Exception {
         service.place(CUSTOMER_ID, request(group(FARMER_A, SLOT_A, line(RAU_MUONG, 3))));
 
         assertThat(orders.getFirst().getStatus()).isEqualTo(OrderStatus.PLACED);
-        assertThat(products.get(RAU_MUONG).getStockQuantity()).isEqualTo(37);
+        assertThat(dailyStock.get(RAU_MUONG + "@" + PICKUP).getQuantityAvailable()).isEqualTo(37);
         assertThat(
                         OrderService.class
                                 .getMethod("place", long.class, PlaceOrderRequest.class)
@@ -467,24 +579,24 @@ class OrderServiceTest {
                 .isTrue();
     }
 
-    /** Selling out the last batch turns the product `sold_out`. */
+    /** Selling out a date's last batch does not touch Product.status — sold out is per date now. */
     @Test
-    void placeMarksAProductSoldOutWhenItsLastUnitGoes() {
-        products.get(BANH_CHUOI).setStockQuantity(2);
+    void placeDoesNotTouchProductStatusWhenADateSellsOut() {
+        dailyStock(BANH_CHUOI, PICKUP, 2, "35000");
 
         service.place(CUSTOMER_ID, request(group(FARMER_B, SLOT_B, line(BANH_CHUOI, 2))));
 
-        assertThat(products.get(BANH_CHUOI).getStockQuantity()).isZero();
-        assertThat(products.get(BANH_CHUOI).getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
+        assertThat(dailyStock.get(BANH_CHUOI + "@" + PICKUP).getQuantityAvailable()).isZero();
+        assertThat(products.get(BANH_CHUOI).getStatus()).isEqualTo(ProductStatus.AVAILABLE);
     }
 
     /**
-     * Order 10, stock 3 → 409; nothing is deducted (the transaction rolls back, and the service
-     * checks before deducting).
+     * Order 10, that date only has 3 left → 409; nothing is deducted (the transaction rolls back,
+     * and the service checks before deducting).
      */
     @Test
     void placeRefusesWhenStockIsShort() {
-        products.get(RAU_MUONG).setStockQuantity(3);
+        dailyStock(RAU_MUONG, PICKUP, 3, "12000");
 
         assertThatThrownBy(
                         () ->
@@ -492,8 +604,21 @@ class OrderServiceTest {
                                         CUSTOMER_ID,
                                         request(group(FARMER_A, SLOT_A, line(RAU_MUONG, 10)))))
                 .isInstanceOf(OutOfStockException.class);
-        assertThat(products.get(RAU_MUONG).getStockQuantity()).isEqualTo(3);
+        assertThat(dailyStock.get(RAU_MUONG + "@" + PICKUP).getQuantityAvailable()).isEqualTo(3);
         assertThat(slots.get(SLOT_A).getBookedCount()).isZero();
+        verify(orderRepository, never()).save(any());
+    }
+
+    /**
+     * No template covers that weekday → no daily-stock row is ever created → 409 (decision D-…).
+     */
+    @Test
+    void placeRefusesADateWithNoTemplate() {
+        dailyStock.remove(RAU_MUONG + "@" + PICKUP);
+        when(dailyStockRepository.materialize(eq(RAU_MUONG), eq(PICKUP), anyInt())).thenReturn(0);
+
+        assertThatThrownBy(() -> service.place(CUSTOMER_ID, aValidRequest()))
+                .isInstanceOf(OutOfStockException.class);
         verify(orderRepository, never()).save(any());
     }
 
@@ -503,7 +628,7 @@ class OrderServiceTest {
 
         assertThatThrownBy(() -> service.place(CUSTOMER_ID, aValidRequest()))
                 .isInstanceOf(SlotFullException.class);
-        assertThat(products.get(RAU_MUONG).getStockQuantity()).isEqualTo(40);
+        assertThat(dailyStock.get(RAU_MUONG + "@" + PICKUP).getQuantityAvailable()).isEqualTo(40);
         verify(orderRepository, never()).save(any());
     }
 
@@ -558,14 +683,15 @@ class OrderServiceTest {
     }
 
     /**
-     * A Farmer changing the price, changing the name after the order → the old order row is
-     * unchanged.
+     * A Farmer changing the price, changing the name after the order → the old order row keeps the
+     * price actually charged for that pickup date.
      */
     @Test
     void placeSnapshotsNameAndPrice() {
         service.place(CUSTOMER_ID, aValidRequest());
         products.get(RAU_MUONG).setPrice(new BigDecimal("99000"));
         products.get(RAU_MUONG).setName("Rau muống hữu cơ");
+        dailyStock.get(RAU_MUONG + "@" + PICKUP).setUnitPrice(new BigDecimal("77000"));
 
         OrderItem item = items.getFirst();
         assertThat(item.getProductId()).isEqualTo(RAU_MUONG);
@@ -587,29 +713,27 @@ class OrderServiceTest {
     }
 
     /**
-     * C5-2: every slot of the whole call is locked first (ascending id), then every product of the
-     * whole call in exactly one lockAllById — the shared locking order for every write path, so no
-     * path deadlocks against another.
+     * C5-2: every slot of the whole call is locked first (ascending id), then every daily-stock row
+     * of the whole call, in ascending (productId, date) order — the shared locking order for every
+     * write path, so no path deadlocks against another. Product is read unlocked now: nothing in
+     * the place-order path mutates a Product row anymore.
      */
     @Test
-    void placeLocksEverySlotBeforeAnyProductInAscendingOrder() {
+    void placeLocksEverySlotBeforeAnyDailyStockRowInAscendingOrder() {
         service.place(
                 CUSTOMER_ID,
                 request(
                         group(FARMER_B, SLOT_B, line(BANH_CHUOI, 1)),
                         group(FARMER_A, SLOT_A, line(CAI_NGOT, 1), line(RAU_MUONG, 1))));
 
-        InOrder locks = inOrder(slotRepository, productRepository);
+        InOrder locks = inOrder(slotRepository, dailyStockRepository);
         locks.verify(slotRepository).lockById(SLOT_A);
         locks.verify(slotRepository).lockById(SLOT_B);
-        locks.verify(productRepository)
-                .lockAllById(
-                        argThat(
-                                (Collection<Long> ids) ->
-                                        List.copyOf(ids)
-                                                .equals(List.of(RAU_MUONG, CAI_NGOT, BANH_CHUOI))));
-        verify(productRepository, times(1)).lockAllById(any());
-        verify(productRepository, never()).findAllById(any());
+        locks.verify(dailyStockRepository).lockByProductIdAndStockDate(RAU_MUONG, PICKUP);
+        locks.verify(dailyStockRepository).lockByProductIdAndStockDate(CAI_NGOT, PICKUP);
+        locks.verify(dailyStockRepository).lockByProductIdAndStockDate(BANH_CHUOI, PICKUP);
+        verify(productRepository, never()).lockAllById(any());
+        verify(productRepository).findAllById(any());
     }
 
     /** C5-5: the slot must belong to the exact stall in the group. */
@@ -703,7 +827,7 @@ class OrderServiceTest {
 
         assertThatThrownBy(() -> service.place(CUSTOMER_ID, request(today)))
                 .isInstanceOf(CutoffPassedException.class);
-        assertThat(products.get(RAU_MUONG).getStockQuantity()).isEqualTo(40);
+        assertThat(dailyStock.get(RAU_MUONG + "@" + TODAY).getQuantityAvailable()).isEqualTo(40);
         assertThat(slots.get(SLOT_A).getBookedCount()).isZero();
     }
 
@@ -756,7 +880,7 @@ class OrderServiceTest {
                                         CUSTOMER_ID,
                                         request(group(FARMER_A, SLOT_A, line(BANH_CHUOI, 1)))))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThat(products.get(BANH_CHUOI).getStockQuantity()).isEqualTo(15);
+        assertThat(dailyStock.get(BANH_CHUOI + "@" + PICKUP).getQuantityAvailable()).isEqualTo(15);
     }
 
     // ---------- order code (C5-6) ----------

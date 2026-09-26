@@ -49,14 +49,17 @@ public class OrderItem {
     private BigDecimal subtotal;
 
     /**
-     * Copies the product's name, price, unit at this moment; orderId is assigned once the order has
-     * an id.
+     * Copies the product's name and unit, and the price actually charged, at this moment; orderId
+     * is assigned once the order has an id. {@code unitPrice} comes from the locked {@code
+     * product_daily_stock} row for the pickup date, not {@code product.getPrice()} — price can
+     * differ by day (weekly stock template).
      */
-    public static OrderItem snapshot(Product product, int quantity, BigDecimal subtotal) {
+    public static OrderItem snapshot(
+            Product product, BigDecimal unitPrice, int quantity, BigDecimal subtotal) {
         OrderItem item = new OrderItem();
         item.setProductId(product.getId());
         item.setProductName(product.getName());
-        item.setUnitPrice(product.getPrice());
+        item.setUnitPrice(unitPrice);
         item.setUnit(product.getUnit());
         item.setQuantity(quantity);
         item.setSubtotal(subtotal);

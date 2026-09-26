@@ -3,6 +3,7 @@ package com.techx.intervue.modules.order.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -33,8 +34,11 @@ import com.techx.intervue.modules.order.requests.CartLine;
 import com.techx.intervue.modules.order.requests.ModifyOrderRequest;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
 import com.techx.intervue.modules.stall.repositories.PickupSlotRepository;
@@ -47,12 +51,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
@@ -60,8 +60,10 @@ import org.mockito.InOrder;
 /**
  * Task 5.6 (FR-034, 035) — the customer cancels and edits their own order before the cutoff. {@code
  * cancel} and {@code modifyItems} are just two new entrances to {@code transition(...)} / direct
- * changes on the locked order; the repository is a plain mock like {@link OrderTransitionTest}, the
- * real lock (PESSIMISTIC_WRITE) is proven by a manual check (curl + mysql) after seeding, not here.
+ * changes on the locked order; stock lives per pickup date ({@code product_daily_stock}, D-02
+ * redesign — never {@code Product.stockQuantity}), always this order's own {@code pickupDate}. The
+ * repository is a plain mock like {@link OrderTransitionTest}, the real lock (PESSIMISTIC_WRITE) is
+ * proven by a manual check (curl + mysql) after seeding, not here.
  *
  * <p>Today (per the Clock) is 26/09/2026, 09:00 Vietnam time — the same moment as {@link
  * OrderTransitionTest} and {@link OrderAccessTest}.
@@ -78,11 +80,13 @@ class OrderModifyTest {
     private static final long PRODUCT_A = 1L;
     private static final long PRODUCT_B = 2L;
     private static final BigDecimal TEN = BigDecimal.TEN;
+    private static final LocalDate PICKUP = LocalDate.of(2026, 9, 29);
     private static final LocalDateTime CUTOFF_TOMORROW = LocalDateTime.of(2026, 9, 29, 1, 0);
     private static final LocalDateTime CUTOFF_YESTERDAY = LocalDateTime.of(2026, 9, 25, 9, 0);
 
     private PickupSlotRepository slotRepository;
     private ProductRepository productRepository;
+    private ProductDailyStockRepository dailyStockRepository;
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
     private OrderStatusHistoryRepository historyRepository;
@@ -97,6 +101,7 @@ class OrderModifyTest {
     void setUp() {
         slotRepository = mock(PickupSlotRepository.class);
         productRepository = mock(ProductRepository.class);
+        dailyStockRepository = mock(ProductDailyStockRepository.class);
         orderRepository = mock(OrderRepository.class);
         orderItemRepository = mock(OrderItemRepository.class);
         historyRepository = mock(OrderStatusHistoryRepository.class);
@@ -115,8 +120,10 @@ class OrderModifyTest {
                         new OrderStatusHistoryWriter(historyRepository),
                         new OrderCodeGenerator(orderRepository, clock),
                         mock(CheckoutQueryRepository.class),
-                        orderQueries,
                         clock,
+                        dailyStockRepository,
+                        mock(ProductAvailabilityResolver.class),
+                        orderQueries,
                         mock(NotificationServiceInterface.class),
                         restock);
 
@@ -147,7 +154,7 @@ class OrderModifyTest {
         order.setFarmerId(FARMER_PROFILE_ID);
         order.setMarketId(2L);
         order.setSlotId(SLOT_ID);
-        order.setPickupDate(LocalDate.of(2026, 9, 29));
+        order.setPickupDate(PICKUP);
         order.setPickupStart(LocalTime.of(7, 0));
         order.setPickupEnd(LocalTime.of(8, 0));
         order.setCutoffAt(cutoffAt);
@@ -168,16 +175,29 @@ class OrderModifyTest {
         return i;
     }
 
-    private static Product product(long id, int stock, ProductStatus status) {
+    private static Product product(long id, ProductStatus status) {
         Product p = new Product();
         p.setId(id);
         p.setFarmerId(FARMER_PROFILE_ID);
         p.setName("Sản phẩm " + id);
         p.setPrice(TEN);
         p.setUnit("bó");
-        p.setStockQuantity(stock);
         p.setStatus(status);
         return p;
+    }
+
+    private static ProductDailyStock dailyStock(long productId, int quantity) {
+        ProductDailyStock row = new ProductDailyStock();
+        row.setProductId(productId);
+        row.setStockDate(PICKUP);
+        row.setQuantityAvailable(quantity);
+        row.setUnitPrice(TEN);
+        return row;
+    }
+
+    private void stubDailyStockLock(ProductDailyStock row) {
+        when(dailyStockRepository.lockByProductIdAndStockDate(row.getProductId(), PICKUP))
+                .thenReturn(Optional.of(row));
     }
 
     private static PickupSlot slotWith(int bookedCount) {
@@ -227,18 +247,21 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderItemRepository.findByOrderId(ORDER_ID))
                 .thenReturn(List.of(item(PRODUCT_A, 2, TEN), item(PRODUCT_B, 1, TEN)));
-        Product a = product(PRODUCT_A, 5, ProductStatus.AVAILABLE);
-        Product b = product(PRODUCT_B, 0, ProductStatus.SOLD_OUT);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a, b));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        Product b = product(PRODUCT_B, ProductStatus.SOLD_OUT);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a, b));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 5);
+        ProductDailyStock rowB = dailyStock(PRODUCT_B, 0);
+        stubDailyStockLock(rowA);
+        stubDailyStockLock(rowB);
         PickupSlot slot = slotWith(3);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
 
         service.cancel(CUSTOMER_ID, ORDER_ID);
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCELLED);
-        assertThat(a.getStockQuantity()).isEqualTo(7);
-        assertThat(b.getStockQuantity()).isEqualTo(1);
-        assertThat(b.getStatus()).isEqualTo(ProductStatus.AVAILABLE);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(7);
+        assertThat(rowB.getQuantityAvailable()).isEqualTo(1);
         assertThat(slot.getBookedCount()).isEqualTo(2);
         assertThat(history).hasSize(1);
         assertThat(history.getFirst().getFromStatus()).isEqualTo(OrderStatus.PLACED);
@@ -254,7 +277,7 @@ class OrderModifyTest {
                 .isInstanceOf(CutoffPassedException.class);
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
-        verify(productRepository, never()).lockAllById(any());
+        verify(dailyStockRepository, never()).lockByProductIdAndStockDate(any(), any());
         verify(historyRepository, never()).save(any());
     }
 
@@ -311,24 +334,26 @@ class OrderModifyTest {
     }
 
     /**
-     * C5-2/C5-18: the order is locked first, then the slot, then the products (inside transition).
+     * C5-2/C5-18: the order is locked first, then the slot, then the daily-stock rows (inside
+     * transition).
      */
     @Test
-    void cancelLocksTheOrderThenTheSlotThenTheProducts() {
+    void cancelLocksTheOrderThenTheSlotThenTheDailyStockRows() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderItemRepository.findByOrderId(ORDER_ID))
                 .thenReturn(List.of(item(PRODUCT_A, 2, TEN)));
-        when(productRepository.lockAllById(any()))
-                .thenReturn(List.of(product(PRODUCT_A, 5, ProductStatus.AVAILABLE)));
+        when(productRepository.findAllById(any()))
+                .thenReturn(List.of(product(PRODUCT_A, ProductStatus.AVAILABLE)));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 5));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.cancel(CUSTOMER_ID, ORDER_ID);
 
-        InOrder locks = inOrder(orderRepository, slotRepository, productRepository);
+        InOrder locks = inOrder(orderRepository, slotRepository, dailyStockRepository);
         locks.verify(orderRepository).lockById(ORDER_ID);
         locks.verify(slotRepository).lockById(SLOT_ID);
-        locks.verify(productRepository).lockAllById(any());
+        locks.verify(dailyStockRepository).lockByProductIdAndStockDate(eq(PRODUCT_A), eq(PICKUP));
     }
 
     // ---------- modify: the brief's 5 tests ----------
@@ -340,14 +365,16 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 5, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 10);
+        stubDailyStockLock(rowA);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
 
-        assertThat(a.getStockQuantity()).isEqualTo(13);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(13);
         assertThat(itemA.getQuantity()).isEqualTo(2);
         assertThat(order.getTotalAmount()).isEqualByComparingTo(new BigDecimal("20"));
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
@@ -360,14 +387,16 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 2, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 10);
+        stubDailyStockLock(rowA);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 5))));
 
-        assertThat(a.getStockQuantity()).isEqualTo(7);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(7);
         assertThat(itemA.getQuantity()).isEqualTo(5);
         assertThat(order.getTotalAmount()).isEqualByComparingTo(new BigDecimal("50"));
     }
@@ -380,17 +409,19 @@ class OrderModifyTest {
         OrderItem itemA = item(PRODUCT_A, 2, TEN);
         OrderItem itemB = item(PRODUCT_B, 3, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA, itemB));
-        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
-        Product b = product(PRODUCT_B, 0, ProductStatus.SOLD_OUT);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a, b));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        Product b = product(PRODUCT_B, ProductStatus.SOLD_OUT);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a, b));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 10));
+        ProductDailyStock rowB = dailyStock(PRODUCT_B, 0);
+        stubDailyStockLock(rowB);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
 
         verify(orderItemRepository).delete(itemB);
-        assertThat(b.getStockQuantity()).isEqualTo(3);
-        assertThat(b.getStatus()).isEqualTo(ProductStatus.AVAILABLE);
+        assertThat(rowB.getQuantityAvailable()).isEqualTo(3);
         assertThat(order.getTotalAmount()).isEqualByComparingTo(new BigDecimal("20"));
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
@@ -414,7 +445,7 @@ class OrderModifyTest {
                                                 List.of(new CartLine(strangerProductId, 1)))))
                 .isInstanceOf(ProductNotInOrderException.class);
 
-        verify(productRepository, never()).lockAllById(any());
+        verify(dailyStockRepository, never()).lockByProductIdAndStockDate(any(), any());
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
@@ -428,8 +459,9 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 5, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 10));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
@@ -451,8 +483,10 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 2, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 2, ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 2);
+        stubDailyStockLock(rowA);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         assertThatThrownBy(
@@ -464,7 +498,7 @@ class OrderModifyTest {
                                                 List.of(new CartLine(PRODUCT_A, 5)))))
                 .isInstanceOf(OutOfStockException.class);
 
-        assertThat(a.getStockQuantity()).isEqualTo(2);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(2);
         assertThat(itemA.getQuantity()).isEqualTo(2);
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
         verify(orderItemRepository, never()).delete(any());
@@ -481,8 +515,10 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 2, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 50, ProductStatus.UNAVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.UNAVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 50);
+        stubDailyStockLock(rowA);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         assertThatThrownBy(
@@ -494,14 +530,15 @@ class OrderModifyTest {
                                                 List.of(new CartLine(PRODUCT_A, 3)))))
                 .isInstanceOf(OutOfStockException.class);
 
-        assertThat(a.getStockQuantity()).isEqualTo(50);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(50);
         assertThat(itemA.getQuantity()).isEqualTo(2);
     }
 
     /**
      * I-3/FR-064 — a product the Farmer set to {@code sold_out} while stock remained (not really
      * sold out) cannot have its quantity raised either: the same "sellable" rule as {@code place}
-     * ({@code sellable(p) && stock >= delta}), not only excluding {@code unavailable}.
+     * ({@code sellable(p) && row.quantityAvailable >= delta}), not only excluding {@code
+     * unavailable}.
      */
     @Test
     void modifyRaisingASoldOutProductWithRemainingStockIs409() {
@@ -509,8 +546,10 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 2, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 50, ProductStatus.SOLD_OUT);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.SOLD_OUT);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 50);
+        stubDailyStockLock(rowA);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         assertThatThrownBy(
@@ -522,32 +561,28 @@ class OrderModifyTest {
                                                 List.of(new CartLine(PRODUCT_A, 5)))))
                 .isInstanceOf(OutOfStockException.class);
 
-        assertThat(a.getStockQuantity()).isEqualTo(50);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(50);
         assertThat(a.getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
         assertThat(itemA.getQuantity()).isEqualTo(2);
     }
 
-    /**
-     * I-3/FR-064 — resending the same old quantity (delta = 0) must not change the product status:
-     * that would be a customer action flipping a status the Farmer set — an {@code unavailable}
-     * product with stock 0 sent with the same quantity must stay {@code unavailable}, not be
-     * switched to {@code sold_out}.
-     */
+    /** Resending the same old quantity (delta = 0) never touches the daily-stock row at all. */
     @Test
-    void modifyWithUnchangedQuantityDoesNotFlipAnUnavailableProductsStatus() {
+    void modifyWithUnchangedQuantityDoesNotTouchTheDailyStockRow() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 2, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 0, ProductStatus.UNAVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.UNAVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 0);
+        stubDailyStockLock(rowA);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
 
-        assertThat(a.getStockQuantity()).isEqualTo(0);
-        assertThat(a.getStatus()).isEqualTo(ProductStatus.UNAVAILABLE);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(0);
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
@@ -556,12 +591,11 @@ class OrderModifyTest {
      * "dropping every item = cancelling the order" branch is only reachable by calling the service
      * directly (this test) with a line of quantity 0 that validation never gets to block.
      *
-     * <p>{@code orderItemRepository} and {@code productRepository.lockAllById} are faked with state
-     * (not a static {@code thenReturn}): this branch calls {@code transition(CANCELLED, ...)} right
-     * after deleting every order_items row, and {@code transition} reads order_items again to
-     * restore stock — if the mock returned the old list (not reflecting the delete), the products
-     * would get their stock back TWICE. A static mock like the other tests in this class would not
-     * catch that bug.
+     * <p>{@code orderItemRepository} is faked with state (not a static {@code thenReturn}): this
+     * branch calls {@code transition(CANCELLED, ...)} right after deleting every order_items row,
+     * and {@code transition} reads order_items again to restore stock — if the mock returned the
+     * old list (not reflecting the delete), the daily-stock row would get its quantity back TWICE.
+     * A static mock like the other tests in this class would not catch that bug.
      */
     @Test
     void modifyDroppingEveryItemCancelsTheOrder() {
@@ -578,24 +612,17 @@ class OrderModifyTest {
                         })
                 .when(orderItemRepository)
                 .delete(any());
-        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
-        Map<Long, Product> productsById = Map.of(PRODUCT_A, a);
-        when(productRepository.lockAllById(any()))
-                .thenAnswer(
-                        inv -> {
-                            Collection<Long> ids = inv.getArgument(0);
-                            return ids.stream()
-                                    .map(productsById::get)
-                                    .filter(Objects::nonNull)
-                                    .collect(Collectors.toList());
-                        });
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 10);
+        stubDailyStockLock(rowA);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 0))));
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCELLED);
-        assertThat(a.getStockQuantity()).isEqualTo(15);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(15);
         assertThat(history).hasSize(1);
         assertThat(history.getFirst().getToStatus()).isEqualTo(OrderStatus.CANCELLED);
         assertThat(history.getFirst().getNote()).isEqualTo("All items removed.");
@@ -611,8 +638,9 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 2, BigDecimal.ZERO);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 10));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
@@ -632,8 +660,9 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 5, BigDecimal.ZERO);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 10));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
@@ -655,8 +684,9 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         OrderItem itemA = item(PRODUCT_A, 5, TEN);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
-        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 10));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
@@ -752,25 +782,26 @@ class OrderModifyTest {
 
     /**
      * C5-2/C5-18: the order is locked first, then the slot (even though booked_count does not
-     * change), then the products.
+     * change), then the daily-stock rows.
      */
     @Test
-    void modifyLocksTheOrderThenTheSlotThenTheProducts() {
+    void modifyLocksTheOrderThenTheSlotThenTheDailyStockRows() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderItemRepository.findByOrderId(ORDER_ID))
                 .thenReturn(List.of(item(PRODUCT_A, 5, TEN)));
-        when(productRepository.lockAllById(any()))
-                .thenReturn(List.of(product(PRODUCT_A, 10, ProductStatus.AVAILABLE)));
+        when(productRepository.findAllById(any()))
+                .thenReturn(List.of(product(PRODUCT_A, ProductStatus.AVAILABLE)));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 10));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
 
-        InOrder locks = inOrder(orderRepository, slotRepository, productRepository);
+        InOrder locks = inOrder(orderRepository, slotRepository, dailyStockRepository);
         locks.verify(orderRepository).lockById(ORDER_ID);
         locks.verify(slotRepository).lockById(SLOT_ID);
-        locks.verify(productRepository).lockAllById(any());
+        locks.verify(dailyStockRepository).lockByProductIdAndStockDate(eq(PRODUCT_A), eq(PICKUP));
     }
 
     /** FR-041: lowering a quantity gives stock back, which reaches the restock alert. */
@@ -780,13 +811,14 @@ class OrderModifyTest {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderItemRepository.findByOrderId(ORDER_ID))
                 .thenReturn(List.of(item(PRODUCT_A, 5, TEN)));
-        Product a = product(PRODUCT_A, 0, ProductStatus.SOLD_OUT);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 0));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
 
-        org.mockito.Mockito.verify(restock).afterChange(a, false);
+        verify(restock).afterChange(a, false, true);
     }
 }

@@ -76,6 +76,12 @@ public class ProductService implements ProductServiceInterface {
         return toResource(products.save(product), profile, category);
     }
 
+    /**
+     * {@code stockQuantity} here is a reference number only — actual availability is per pickup
+     * date ({@code product_daily_stock}, D-02 redesign) and comes from the weekly template, not
+     * from this field. Editing it (or anything else {@link ProductRequest} carries) never changes
+     * {@link ProductStatus} and is never a restock event.
+     */
     @Override
     @Transactional
     public FarmerProductResource update(long userId, long productId, ProductRequest request) {
@@ -83,33 +89,8 @@ public class ProductService implements ProductServiceInterface {
         requireApproved(profile);
         Product product = owned(profile, productId);
         Category category = activeCategory(request.categoryId());
-        int stockBefore = product.getStockQuantity();
-        boolean wasOrderable = RestockNotifier.orderable(product);
         apply(product, request, category);
-        refreshStatusAfterStockEdit(product, stockBefore);
-        Product saved = products.save(product);
-        // FR-041: orderable again (e.g. a refill from zero) tells the customers who favourited it
-        restock.afterChange(saved, wasOrderable);
-        return toResource(saved, profile, category);
-    }
-
-    /**
-     * FR-064, same rule as the order paths: "unavailable" is the farmer's pause and is never
-     * changed here; stock reaching 0 marks an available product sold out; a sold-out product comes
-     * back on sale only if it was sold out because it ran out (stock was 0) — a manual "sold out"
-     * with stock left stays.
-     */
-    private static void refreshStatusAfterStockEdit(Product p, int stockBefore) {
-        if (p.getStatus() == ProductStatus.UNAVAILABLE) {
-            return;
-        }
-        if (p.getStockQuantity() == 0) {
-            if (p.getStatus() == ProductStatus.AVAILABLE) {
-                p.setStatus(ProductStatus.SOLD_OUT);
-            }
-        } else if (p.getStatus() == ProductStatus.SOLD_OUT && stockBefore == 0) {
-            p.setStatus(ProductStatus.AVAILABLE);
-        }
+        return toResource(products.save(product), profile, category);
     }
 
     /** Soft delete — order_items point to product_id, old orders must stay readable (FR-036). */
@@ -133,11 +114,11 @@ public class ProductService implements ProductServiceInterface {
         FarmerProfile profile = mine(userId);
         requireApproved(profile);
         Product product = owned(profile, productId);
-        boolean wasOrderable = RestockNotifier.orderable(product);
+        boolean wasOrderable = restock.isOrderable(product);
         product.setStatus(status);
         Product saved = products.save(product);
         // FR-041: lifting a pause or a manual "sold out" can make it orderable again
-        restock.afterChange(saved, wasOrderable);
+        restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
         return toResource(saved, profile, categories.findById(saved.getCategoryId()).orElse(null));
     }
 
@@ -154,10 +135,11 @@ public class ProductService implements ProductServiceInterface {
     @Transactional
     public void adminUnhide(long productId) {
         Product product = locked(productId);
-        boolean wasOrderable = RestockNotifier.orderable(product);
+        boolean wasOrderable = restock.isOrderable(product);
         product.setHidden(false);
         product.setHiddenReason(null);
-        restock.afterChange(products.save(product), wasOrderable);
+        Product saved = products.save(product);
+        restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
     }
 
     /**

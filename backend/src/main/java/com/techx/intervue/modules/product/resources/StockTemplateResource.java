@@ -2,11 +2,12 @@ package com.techx.intervue.modules.product.resources;
 
 import java.math.BigDecimal;
 
-/** One saved template row, with the product name and unit the stock grid shows. */
-public record StockTemplateItemResource(
+/**
+ * Một dòng lịch tồn kho tuần, trả về từ GET /api/v1/farmer/stock-templates (contract §5, FR-063).
+ */
+public record StockTemplateResource(
         Long productId,
         String productName,
-        String unit,
         int dayOfWeek,
         int defaultQuantity,
         BigDecimal defaultPrice) {}

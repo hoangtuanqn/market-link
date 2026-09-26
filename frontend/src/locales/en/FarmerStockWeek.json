@@ -1,52 +1,32 @@
 {
-  "overline": "Week of {{from}} – {{to}} · Thảo Điền {{daysA}} · Thủ Đức {{daysB}}",
-  "title": "This week's stock",
-  "intro": "Your weekly template is the starting count for each market day. Apply it, then adjust the days where the harvest is different. Reserved stock is already taken out of what customers see.",
+  "title": "Weekly stock template",
+  "intro": "Set how much of each product you usually bring on a weekday, and at what price. This refills automatically for customers browsing that weekday — no extra step needed.",
   "saved": "Saved",
   "per": "per {{unit}}",
-  "tabs": {
-    "label": "Stock views",
-    "week": "This week",
-    "template": "Weekly template"
-  },
-  "status": {
-    "available": "Available",
-    "soldOut": "Sold out",
-    "paused": "Paused this week"
-  },
+  "currentPrice": "now {{price}}",
+  "defaultPricePlaceholder": "Same price",
   "col": {
-    "product": "Product",
-    "status": "Status",
-    "price": "Price",
-    "reserved": "Reserved",
-    "defaultPrice": "Default price"
+    "product": "Product"
+  },
+  "error": {
+    "productsNoun": "your products",
+    "templateNoun": "your weekly template"
   },
   "aria": {
-    "status": "Status of {{product}}",
-    "day": "{{product}} {{day}}",
-    "dayAt": "{{product}} {{day}} {{market}}",
-    "price": "{{product}} price",
-    "templateDay": "{{product}} template {{day}}"
+    "quantity": "{{product}} quantity on {{day}}",
+    "price": "{{product}} price on {{day}}"
   },
-  "week": {
-    "caption": "Stock per product and market day this week",
-    "note": "Counts are units available for that day. A blank day means the product is not offered. Fridays are greyed because {{stall}} does not sell on Friday.",
-    "savedText": "This week's stock saved. Customers see the new counts now.",
-    "save": "Save changes"
+  "table": {
+    "caption": "Weekly stock template, one row per product and one column per weekday"
   },
   "template": {
-    "savedText": "Template saved. It applies from next week unless you apply it now.",
     "save": "Save template",
-    "note": "Template days follow your operating days. Change those under Stall & pickup."
+    "savedText": "Template saved.",
+    "note": "Leave a day's quantity blank to skip it. A blank price keeps the product's current price."
   },
-  "apply": {
-    "open": "Apply template to this week",
-    "title": "Apply the template to this week?",
-    "keep": "Keep my edits",
-    "doneTitle": "Template applied",
-    "doneText": "Template applied to {{sat}} and {{sun}}.",
-    "confirm": "Apply template",
-    "text": "{{sat}} and {{sun}} counts are replaced with the template values. Reserved stock is kept out of the customer-facing count.",
-    "warning": "Edits you made for this week are overwritten."
+  "empty": {
+    "title": "Add a product first",
+    "text": "A weekly template needs at least one product.",
+    "action": "Add a product"
   }
 }

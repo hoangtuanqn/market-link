@@ -8,16 +8,13 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * PUT /farmer/stock-templates — the stall's whole set of templates; an empty list clears it
- * (contract §5).
- */
-public record StockTemplateRequest(@NotNull @Valid List<TemplateItem> items) {
+/** Body của PUT /api/v1/farmer/stock-templates (contract §5, FR-063) — ghi đè trọn bộ lịch tuần. */
+public record StockTemplateRequest(@NotNull @Valid List<Item> items) {
 
-    /** dayOfWeek: 0 = Sunday … 6 = Saturday. defaultPrice null = keep the product's price. */
-    public record TemplateItem(
+    /** 0 = Chủ nhật … 6 = Thứ bảy. {@code defaultPrice} null = apply giữ nguyên giá hiện tại. */
+    public record Item(
             @NotNull Long productId,
-            @NotNull @Min(0) @Max(6) Integer dayOfWeek,
-            @NotNull @Min(0) @Max(100000) Integer defaultQuantity,
+            @Min(0) @Max(6) int dayOfWeek,
+            @NotNull @Min(0) Integer defaultQuantity,
             @DecimalMin("0") BigDecimal defaultPrice) {}
 }

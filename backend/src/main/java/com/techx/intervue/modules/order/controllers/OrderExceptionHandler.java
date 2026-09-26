@@ -133,6 +133,13 @@ public class OrderExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
+        if (cause.contains("ck_pds_quantity")) {
+            return error(
+                    HttpStatus.CONFLICT,
+                    "OUT_OF_STOCK",
+                    "A product in your cart just sold out. Refresh your cart.",
+                    List.of());
+        }
         if (cause.contains("ck_products_stock")) {
             return error(
                     HttpStatus.CONFLICT,

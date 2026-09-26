@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -312,11 +313,15 @@ class ProductServiceTest {
         verify(products, never()).findByIdAndDeletedFalse(any());
     }
 
-    // ---------- FR-041 restock + FR-064 automatic status on edit ----------
+    // ---------- FR-041 restock ----------
 
-    /** Stock 0 → 40 on a sold-out product: back on sale, and favourites hear about it. */
+    /**
+     * {@code stockQuantity} is a reference number only since the per-date redesign (D-02): {@link
+     * ProductStatus} does not react to it, and an edit is never a restock event — availability
+     * lives in {@code product_daily_stock}, not on the product row.
+     */
     @Test
-    void updateThatRefillsAnEmptyProductPutsItBackOnSaleAndAlertsFavourites() {
+    void updateDoesNotTouchStatusOrTellTheRestockNotifier() {
         approvedStall();
         Product p = product(FARMER_ID);
         p.setStockQuantity(0);
@@ -326,64 +331,34 @@ class ProductServiceTest {
         service.update(USER_ID, PRODUCT_ID, request());
 
         assertThat(p.getStockQuantity()).isEqualTo(40);
-        assertThat(p.getStatus()).isEqualTo(ProductStatus.AVAILABLE);
-        verify(restock).afterChange(p, false);
-    }
-
-    /**
-     * FR-064: the farmer's pause survives an edit; FR-041 is told, and stays quiet for paused
-     * goods.
-     */
-    @Test
-    void updateKeepsAPausedProductPaused() {
-        approvedStall();
-        Product p = product(FARMER_ID);
-        p.setStockQuantity(0);
-        p.setStatus(ProductStatus.UNAVAILABLE);
-        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
-
-        service.update(USER_ID, PRODUCT_ID, request());
-
-        assertThat(p.getStatus()).isEqualTo(ProductStatus.UNAVAILABLE);
-    }
-
-    /** A farmer's manual "sold out" with stock left is not undone by an unrelated edit. */
-    @Test
-    void updateKeepsAManualSoldOutWhenStockWasNotEmpty() {
-        approvedStall();
-        Product p = product(FARMER_ID);
-        p.setStockQuantity(7);
-        p.setStatus(ProductStatus.SOLD_OUT);
-        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
-
-        service.update(USER_ID, PRODUCT_ID, request());
-
         assertThat(p.getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
+        verify(restock, never()).afterChange(any(), anyBoolean(), anyBoolean());
     }
 
-    /** FR-041: lifting the farmer's pause makes a stocked product orderable again → alert. */
+    /** FR-041: lifting the farmer's pause makes an orderable product orderable again → alert. */
     @Test
-    void unpausingAStockedProductTellsTheRestockNotifier() {
+    void unpausingAnOrderableProductTellsTheRestockNotifier() {
         approvedStall();
         Product p = product(FARMER_ID);
-        p.setStockQuantity(7);
         p.setStatus(ProductStatus.UNAVAILABLE);
         when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+        when(restock.isOrderable(p)).thenReturn(false, true);
 
         service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.AVAILABLE);
 
-        verify(restock).afterChange(p, false);
+        verify(restock).afterChange(p, false, true);
     }
 
-    /** FR-041: an admin un-hiding a stocked product makes it orderable again → alert. */
+    /** FR-041: an admin un-hiding an orderable product makes it orderable again → alert. */
     @Test
     void adminUnhideTellsTheRestockNotifier() {
         Product p = product(FARMER_ID);
         p.setHidden(true);
         when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+        when(restock.isOrderable(p)).thenReturn(false, true);
 
         service.adminUnhide(PRODUCT_ID);
 
-        verify(restock).afterChange(p, false);
+        verify(restock).afterChange(p, false, true);
     }
 }

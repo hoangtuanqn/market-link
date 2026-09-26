@@ -15,7 +15,9 @@ import com.techx.intervue.modules.order.repositories.OrderQueryRepository.OrderD
 import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.order.repositories.OrderStatusHistoryRepository;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
+import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
 import com.techx.intervue.modules.stall.repositories.PickupSlotRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
@@ -60,8 +62,10 @@ class OrderReviewedFlagTest {
                         new OrderStatusHistoryWriter(mock(OrderStatusHistoryRepository.class)),
                         new OrderCodeGenerator(mock(OrderRepository.class), clock),
                         mock(CheckoutQueryRepository.class),
-                        orderQueries,
                         clock,
+                        mock(ProductDailyStockRepository.class),
+                        mock(ProductAvailabilityResolver.class),
+                        orderQueries,
                         mock(NotificationServiceInterface.class),
                         mock(RestockNotifier.class));
         when(orderQueries.items(ORDER_ID)).thenReturn(List.of());

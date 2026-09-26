@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -31,8 +32,11 @@ import com.techx.intervue.modules.order.repositories.OrderStatusHistoryRepositor
 import com.techx.intervue.modules.order.requests.DeclineOrderRequest;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
 import com.techx.intervue.modules.stall.repositories.PickupSlotRepository;
@@ -43,6 +47,7 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -60,9 +65,10 @@ import org.mockito.InOrder;
 /**
  * Task 5.5 (FR-065, 066, 038) — {@code transition(...)} is the single door for the Farmer's order
  * status changes: every change writes history (FR-038), a wrong order of steps is always 409, not
- * 400 (D-04), and a dead order (declined/cancelled) restores stock + frees the slot spot exactly
- * once (D-02). The repository is a plain mock; the real lock (PESSIMISTIC_WRITE) is proven by a
- * manual check (curl + mysql) after seeding, not here.
+ * 400 (D-04), and a dead order (declined/cancelled) restores the daily-stock row for the order's
+ * own pickup date + frees the slot spot exactly once (D-02, per-date redesign — never {@code
+ * Product.stockQuantity}). The repository is a plain mock; the real lock (PESSIMISTIC_WRITE) is
+ * proven by a manual check (curl + mysql) after seeding, not here.
  */
 class OrderTransitionTest {
 
@@ -75,6 +81,7 @@ class OrderTransitionTest {
     private static final long SLOT_ID = 900L;
     private static final long PRODUCT_A = 1L;
     private static final long PRODUCT_B = 2L;
+    private static final LocalDate PICKUP = LocalDate.of(2026, 9, 29);
 
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
@@ -93,6 +100,7 @@ class OrderTransitionTest {
     private FarmerProfileRepository farmerRepository;
     private PickupSlotRepository slotRepository;
     private ProductRepository productRepository;
+    private ProductDailyStockRepository dailyStockRepository;
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
     private OrderStatusHistoryRepository historyRepository;
@@ -108,6 +116,7 @@ class OrderTransitionTest {
         farmerRepository = mock(FarmerProfileRepository.class);
         slotRepository = mock(PickupSlotRepository.class);
         productRepository = mock(ProductRepository.class);
+        dailyStockRepository = mock(ProductDailyStockRepository.class);
         orderRepository = mock(OrderRepository.class);
         orderItemRepository = mock(OrderItemRepository.class);
         historyRepository = mock(OrderStatusHistoryRepository.class);
@@ -126,8 +135,10 @@ class OrderTransitionTest {
                         new OrderStatusHistoryWriter(historyRepository),
                         new OrderCodeGenerator(orderRepository, clock),
                         mock(CheckoutQueryRepository.class),
-                        orderQueries,
                         clock,
+                        dailyStockRepository,
+                        mock(ProductAvailabilityResolver.class),
+                        orderQueries,
                         mock(NotificationServiceInterface.class),
                         restock);
 
@@ -164,6 +175,7 @@ class OrderTransitionTest {
         order.setCustomerId(7L);
         order.setFarmerId(FARMER_PROFILE_ID);
         order.setSlotId(SLOT_ID);
+        order.setPickupDate(PICKUP);
         order.setStatus(status);
         return order;
     }
@@ -176,16 +188,29 @@ class OrderTransitionTest {
         return i;
     }
 
-    private static Product product(long id, int stock, ProductStatus status) {
+    private static Product product(long id, ProductStatus status) {
         Product p = new Product();
         p.setId(id);
         p.setFarmerId(FARMER_PROFILE_ID);
         p.setName("Sản phẩm " + id);
         p.setPrice(BigDecimal.TEN);
         p.setUnit("bó");
-        p.setStockQuantity(stock);
         p.setStatus(status);
         return p;
+    }
+
+    private static ProductDailyStock dailyStock(long productId, int quantity) {
+        ProductDailyStock row = new ProductDailyStock();
+        row.setProductId(productId);
+        row.setStockDate(PICKUP);
+        row.setQuantityAvailable(quantity);
+        row.setUnitPrice(BigDecimal.TEN);
+        return row;
+    }
+
+    private void stubDailyStockLock(ProductDailyStock row) {
+        when(dailyStockRepository.lockByProductIdAndStockDate(row.getProductId(), PICKUP))
+                .thenReturn(Optional.of(row));
     }
 
     private static PickupSlot slotWith(int bookedCount) {
@@ -264,23 +289,28 @@ class OrderTransitionTest {
     }
 
     @Test
-    void declineRestoresStock() {
+    void declineRestoresStockOnTheOrdersOwnPickupDate() {
         Order order = orderWithStatus(OrderStatus.PLACED);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
-        Product a = product(PRODUCT_A, 5, ProductStatus.AVAILABLE);
-        Product b = product(PRODUCT_B, 0, ProductStatus.SOLD_OUT);
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        Product b = product(PRODUCT_B, ProductStatus.SOLD_OUT);
         when(orderItemRepository.findByOrderId(ORDER_ID))
                 .thenReturn(List.of(item(PRODUCT_A, 2), item(PRODUCT_B, 1)));
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a, b));
+        when(productRepository.findAllById(any())).thenReturn(List.of(a, b));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 5);
+        ProductDailyStock rowB = dailyStock(PRODUCT_B, 0);
+        stubDailyStockLock(rowA);
+        stubDailyStockLock(rowB);
         PickupSlot slot = slotWith(3);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
 
         service.decline(FARMER_USER_ID, ORDER_ID, "Hết hàng rồi");
 
-        assertThat(a.getStockQuantity()).isEqualTo(7);
-        assertThat(b.getStockQuantity()).isEqualTo(1);
-        assertThat(b.getStatus()).isEqualTo(ProductStatus.AVAILABLE);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(7);
+        assertThat(rowB.getQuantityAvailable()).isEqualTo(1);
         assertThat(slot.getBookedCount()).isEqualTo(2);
+        verify(dailyStockRepository).lockByProductIdAndStockDate(PRODUCT_A, PICKUP);
+        verify(dailyStockRepository).lockByProductIdAndStockDate(PRODUCT_B, PICKUP);
     }
 
     /**
@@ -301,7 +331,6 @@ class OrderTransitionTest {
         Order order = orderWithStatus(OrderStatus.PLACED);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of());
-        when(productRepository.lockAllById(any())).thenReturn(List.of());
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.empty());
 
         service.decline(FARMER_USER_ID, ORDER_ID, "Vườn mất mùa");
@@ -335,7 +364,7 @@ class OrderTransitionTest {
         service.complete(FARMER_USER_ID, ORDER_ID);
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETED);
-        verify(productRepository, never()).lockAllById(any());
+        verify(dailyStockRepository, never()).lockByProductIdAndStockDate(any(), any());
         verify(slotRepository, never()).lockById(any());
     }
 
@@ -363,8 +392,10 @@ class OrderTransitionTest {
         Order order = orderWithStatus(OrderStatus.PLACED);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item(PRODUCT_A, 2)));
-        Product a = product(PRODUCT_A, 5, ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 5);
+        stubDailyStockLock(rowA);
         PickupSlot slot = slotWith(3);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
 
@@ -374,7 +405,7 @@ class OrderTransitionTest {
         assertThatThrownBy(() -> service.decline(FARMER_USER_ID, ORDER_ID, "Lại nữa"))
                 .isInstanceOf(InvalidOrderTransitionException.class);
         assertThat(slot.getBookedCount()).isEqualTo(2);
-        assertThat(a.getStockQuantity()).isEqualTo(7);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(7);
     }
 
     /**
@@ -417,86 +448,48 @@ class OrderTransitionTest {
     }
 
     /**
-     * C5-2: the order is locked first, then the slot, then the products — not the original draft's
-     * reverse order.
+     * C5-2: the order is locked first, then the slot, then the daily-stock rows — not the original
+     * draft's reverse order.
      */
     @Test
-    void locksTheOrderThenTheSlotThenTheProducts() {
+    void locksTheOrderThenTheSlotThenTheDailyStockRows() {
         Order order = orderWithStatus(OrderStatus.PLACED);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item(PRODUCT_A, 1)));
-        when(productRepository.lockAllById(any()))
-                .thenReturn(List.of(product(PRODUCT_A, 5, ProductStatus.AVAILABLE)));
+        when(productRepository.findAllById(any()))
+                .thenReturn(List.of(product(PRODUCT_A, ProductStatus.AVAILABLE)));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 5));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.decline(FARMER_USER_ID, ORDER_ID, "reason");
 
-        InOrder locks = inOrder(orderRepository, slotRepository, productRepository);
+        InOrder locks = inOrder(orderRepository, slotRepository, dailyStockRepository);
         locks.verify(orderRepository).lockById(ORDER_ID);
         locks.verify(slotRepository).lockById(SLOT_ID);
-        locks.verify(productRepository).lockAllById(any());
+        locks.verify(dailyStockRepository).lockByProductIdAndStockDate(eq(PRODUCT_A), eq(PICKUP));
     }
 
     /**
-     * An unavailable product does not switch back to available on its own when stock is restored.
-     */
-    @Test
-    void declineLeavesAnUnavailableProductUnavailable() {
-        Order order = orderWithStatus(OrderStatus.PLACED);
-        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
-        Product unavailable = product(PRODUCT_A, 0, ProductStatus.UNAVAILABLE);
-        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item(PRODUCT_A, 3)));
-        when(productRepository.lockAllById(any())).thenReturn(List.of(unavailable));
-        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.empty());
-
-        service.decline(FARMER_USER_ID, ORDER_ID, "reason");
-
-        assertThat(unavailable.getStockQuantity()).isEqualTo(3);
-        assertThat(unavailable.getStatus()).isEqualTo(ProductStatus.UNAVAILABLE);
-    }
-
-    /**
-     * I-3/FR-064 — a product the Farmer set to {@code sold_out} while stock remained (not really
-     * sold out): restoring stock on cancel/decline must not switch it back to {@code available} on
-     * its own. Only a stock of exactly 0 before restoring (sold out because it ran out) switches
-     * back — see {@link #declineRestoresStock()}.
-     */
-    @Test
-    void declineDoesNotReactivateASoldOutProductThatStillHadStock() {
-        Order order = orderWithStatus(OrderStatus.PLACED);
-        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
-        Product a = product(PRODUCT_A, 5, ProductStatus.SOLD_OUT);
-        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item(PRODUCT_A, 2)));
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
-        PickupSlot slot = slotWith(3);
-        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
-
-        service.decline(FARMER_USER_ID, ORDER_ID, "reason");
-
-        assertThat(a.getStockQuantity()).isEqualTo(7);
-        assertThat(a.getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
-        assertThat(slot.getBookedCount()).isEqualTo(2);
-    }
-
-    /**
-     * Controller ruling — a soft-deleted product ({@code is_deleted}) still has a real row in the
-     * products table, so it still gets its stock back when an order dies: the old order_items
-     * pointing to it stay valid even though the Farmer took it off the shelf.
+     * Controller ruling — a soft-deleted product ({@code is_deleted}) still has a real
+     * product_daily_stock row, so it still gets its stock back when an order dies: the old
+     * order_items pointing to it stay valid even though the Farmer took it off the shelf.
      */
     @Test
     void declineRestoresStockOfASoftDeletedProduct() {
         Order order = orderWithStatus(OrderStatus.PLACED);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
-        Product deleted = product(PRODUCT_A, 5, ProductStatus.AVAILABLE);
+        Product deleted = product(PRODUCT_A, ProductStatus.AVAILABLE);
         deleted.setDeleted(true);
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item(PRODUCT_A, 4)));
-        when(productRepository.lockAllById(any())).thenReturn(List.of(deleted));
+        when(productRepository.findAllById(any())).thenReturn(List.of(deleted));
+        ProductDailyStock row = dailyStock(PRODUCT_A, 5);
+        stubDailyStockLock(row);
         PickupSlot slot = slotWith(3);
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
 
         service.decline(FARMER_USER_ID, ORDER_ID, "reason");
 
-        assertThat(deleted.getStockQuantity()).isEqualTo(9);
+        assertThat(row.getQuantityAvailable()).isEqualTo(9);
         assertThat(deleted.isDeleted()).isTrue();
         assertThat(slot.getBookedCount()).isEqualTo(2);
     }
@@ -536,16 +529,20 @@ class OrderTransitionTest {
     void decliningAnOrderAlertsCustomersWhoFavouritedTheProduct() {
         Order order = orderWithStatus(OrderStatus.PLACED);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
-        Product a = product(PRODUCT_A, 5, ProductStatus.AVAILABLE);
-        Product b = product(PRODUCT_B, 0, ProductStatus.SOLD_OUT);
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        Product b = product(PRODUCT_B, ProductStatus.AVAILABLE);
         when(orderItemRepository.findByOrderId(ORDER_ID))
                 .thenReturn(List.of(item(PRODUCT_A, 2), item(PRODUCT_B, 1)));
-        when(productRepository.lockAllById(any())).thenReturn(List.of(a, b));
+        when(productRepository.findAllById(any())).thenReturn(List.of(a, b));
+        // a already had stock left on this date (still orderable before) — no alert
+        stubDailyStockLock(dailyStock(PRODUCT_A, 5));
+        // b's date had run out to zero — this decline crosses 0 → 1, an alert
+        stubDailyStockLock(dailyStock(PRODUCT_B, 0));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
 
         service.decline(FARMER_USER_ID, ORDER_ID, "Out of stock");
 
-        org.mockito.Mockito.verify(restock).afterChange(a, true);
-        org.mockito.Mockito.verify(restock).afterChange(b, false);
+        verify(restock).afterChange(a, true, true);
+        verify(restock).afterChange(b, false, true);
     }
 }
