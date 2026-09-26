@@ -16,6 +16,8 @@ public enum NotificationCategory {
     MESSAGES("messages", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     ANNOUNCEMENTS("announcements", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     ACCOUNT("account", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
+    /** FR-042/D-11: bốn mốc vòng đời đơn hàng — cả hai vai đều mua lẫn bán (D-13). */
+    ORDERS("orders", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     FARMER_APPLICATIONS("farmerApplications", EnumSet.of(RoleType.ADMIN));
 
     private final String code;

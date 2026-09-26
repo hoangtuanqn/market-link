@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
 import com.techx.intervue.modules.order.entities.OrderStatusHistory;
@@ -113,7 +114,8 @@ class OrderModifyTest {
                         new OrderCodeGenerator(orderRepository, clock),
                         mock(CheckoutQueryRepository.class),
                         orderQueries,
-                        clock);
+                        clock,
+                        mock(NotificationServiceInterface.class));
 
         when(historyRepository.save(any()))
                 .thenAnswer(

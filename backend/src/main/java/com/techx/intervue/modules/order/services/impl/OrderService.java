@@ -3,6 +3,9 @@ package com.techx.intervue.modules.order.services.impl;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.notification.enums.NotificationKind;
+import com.techx.intervue.modules.notification.resources.NotificationEvent;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.entities.OrderItem;
 import com.techx.intervue.modules.order.enums.OrderStatus;
@@ -91,6 +94,7 @@ public class OrderService implements OrderServiceInterface {
     private final CheckoutQueryRepository checkoutQueries;
     private final OrderQueryRepository orderQueries;
     private final Clock clock;
+    private final NotificationServiceInterface notifications;
 
     /**
      * Chỉ đọc, không khoá, không đổi gì: gom giỏ theo farmer_id và ghi vấn đề của từng group vào
@@ -212,7 +216,7 @@ public class OrderService implements OrderServiceInterface {
     @Override
     @Transactional
     public List<PlacedOrderResource> place(long customerUserId, PlaceOrderRequest request) {
-        requireBuyer(customerUserId);
+        User customer = requireBuyer(customerUserId);
 
         Map<Long, PickupSlot> slots = lockSlots(request.groups());
         Map<Long, Product> products = lockProducts(request.groups());
@@ -220,7 +224,7 @@ public class OrderService implements OrderServiceInterface {
         LocalDateTime now = LocalDateTime.now(clock);
         List<PlacedOrderResource> placed = new ArrayList<>();
         for (OrderGroupInput group : request.groups()) {
-            placed.add(placeGroup(customerUserId, group, slots, products, now));
+            placed.add(placeGroup(customerUserId, customer, group, slots, products, now));
         }
         return placed;
     }
@@ -253,6 +257,7 @@ public class OrderService implements OrderServiceInterface {
      */
     private PlacedOrderResource placeGroup(
             long customerUserId,
+            User customer,
             OrderGroupInput group,
             Map<Long, PickupSlot> slots,
             Map<Long, Product> products,
@@ -322,6 +327,7 @@ public class OrderService implements OrderServiceInterface {
         items.forEach(i -> i.setOrderId(saved.getId()));
         orderItemRepository.saveAll(items);
         history.record(saved.getId(), null, OrderStatus.PLACED, customerUserId, null);
+        notifyOrderPlaced(saved, farmer, customer);
 
         return new PlacedOrderResource(
                 saved.getId(),
@@ -354,8 +360,11 @@ public class OrderService implements OrderServiceInterface {
         return slot;
     }
 
-    /** D-13: chỉ customer và farmer mua được; admin dùng tài khoản riêng. Ẩn nút ở FE không đủ. */
-    private void requireBuyer(long userId) {
+    /**
+     * D-13: chỉ customer và farmer mua được; admin dùng tài khoản riêng. Ẩn nút ở FE không đủ. Trả
+     * về {@link User} vì {@link #place} cần tên khách cho thông báo ORDER_PLACED (FR-042).
+     */
+    private User requireBuyer(long userId) {
         User user =
                 userRepository
                         .findById(userId)
@@ -363,6 +372,7 @@ public class OrderService implements OrderServiceInterface {
         if (user.getRole() == RoleType.ADMIN) {
             throw new AccessDeniedException("Admin accounts cannot place orders.");
         }
+        return user;
     }
 
     /** Cùng một sản phẩm xuất hiện nhiều dòng thì cộng dồn; giữ thứ tự của giỏ. */
@@ -456,6 +466,7 @@ public class OrderService implements OrderServiceInterface {
     public OrderDetailResource accept(long userId, long orderId) {
         Order order = lockOwnedOrder(userId, orderId);
         transition(order, OrderStatus.ACCEPTED, userId, null);
+        notifyBuyer(order, NotificationKind.ORDER_ACCEPTED, Map.of());
         return detail(userId, orderId);
     }
 
@@ -465,6 +476,7 @@ public class OrderService implements OrderServiceInterface {
         Order order = lockOwnedOrder(userId, orderId);
         order.setFarmerNote(reason);
         transition(order, OrderStatus.DECLINED, userId, reason);
+        notifyBuyer(order, NotificationKind.ORDER_DECLINED, Map.of("reason", reason));
         return detail(userId, orderId);
     }
 
@@ -473,6 +485,7 @@ public class OrderService implements OrderServiceInterface {
     public OrderDetailResource markReady(long userId, long orderId) {
         Order order = lockOwnedOrder(userId, orderId);
         transition(order, OrderStatus.READY, userId, null);
+        notifyBuyer(order, NotificationKind.ORDER_READY, Map.of());
         return detail(userId, orderId);
     }
 
@@ -498,6 +511,7 @@ public class OrderService implements OrderServiceInterface {
         Order order = loadOwnedByCustomer(userId, orderId);
         assertCustomerCanStillAct(order, OrderStatus.CANCELLED);
         transition(order, OrderStatus.CANCELLED, userId, null);
+        notifyFarmer(order, NotificationKind.ORDER_CANCELLED, Map.of());
         return detail(userId, orderId);
     }
 
@@ -698,6 +712,57 @@ public class OrderService implements OrderServiceInterface {
         history.record(order.getId(), from, to, actorUserId, note);
         orderRepository.flush();
         return order;
+    }
+
+    // ---------- FR-042/D-11: thông báo mốc đơn hàng ----------
+
+    /**
+     * Farmer nhận việc khi khách đặt xong — {@code farmer} đã có sẵn trong scope của {@link
+     * #placeGroup} (đã lọc APPROVED ở trên), không cần truy vấn lại. Người nhận là {@code
+     * farmer_profiles.user_id}, không phải {@code farmer_profiles.id} (C5-19).
+     */
+    private void notifyOrderPlaced(Order order, FarmerProfile farmer, User customer) {
+        notifications.dispatch(
+                List.of(farmer.getUserId()),
+                NotificationEvent.of(
+                        NotificationKind.ORDER_PLACED,
+                        "/farmer/orders/" + order.getOrderCode(),
+                        Map.of("order", order.getOrderCode(), "customer", customer.getFullName())));
+    }
+
+    /**
+     * Khách nhận tin khi Farmer đổi trạng thái đơn của chính mình (accept/decline/ready) — link
+     * theo route Customer thật ({@code orders/:code} trong {@code App.tsx}), không phải id số.
+     */
+    private void notifyBuyer(Order order, NotificationKind kind, Map<String, String> extra) {
+        Map<String, String> params = new HashMap<>(extra);
+        params.put("order", order.getOrderCode());
+        farmerRepository
+                .findById(order.getFarmerId())
+                .ifPresent(f -> params.put("stall", f.getStallName()));
+        notifications.dispatch(
+                List.of(order.getCustomerId()),
+                NotificationEvent.of(kind, "/orders/" + order.getOrderCode(), params));
+    }
+
+    /**
+     * Farmer nhận tin khi khách huỷ đơn của chính mình — link theo route Farmer thật ({@code
+     * farmer/orders/:code}).
+     */
+    private void notifyFarmer(Order order, NotificationKind kind, Map<String, String> extra) {
+        farmerRepository
+                .findById(order.getFarmerId())
+                .ifPresent(
+                        f -> {
+                            Map<String, String> params = new HashMap<>(extra);
+                            params.put("order", order.getOrderCode());
+                            notifications.dispatch(
+                                    List.of(f.getUserId()),
+                                    NotificationEvent.of(
+                                            kind,
+                                            "/farmer/orders/" + order.getOrderCode(),
+                                            params));
+                        });
     }
 
     /**
