@@ -15,6 +15,8 @@ public interface WeeklyStockTemplateRepository extends JpaRepository<WeeklyStock
 
     List<WeeklyStockTemplate> findByFarmerIdAndDayOfWeekAndActiveTrue(Long farmerId, int dayOfWeek);
 
+    List<WeeklyStockTemplate> findByProductIdAndActiveTrue(Long productId);
+
     @Query(
             "select new com.techx.intervue.modules.product.resources.StockTemplateResource("
                     + "t.productId, p.name, t.dayOfWeek, t.defaultQuantity, t.defaultPrice) "
