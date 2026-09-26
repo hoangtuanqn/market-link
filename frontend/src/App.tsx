@@ -37,7 +37,7 @@ import CustomerReviewWip from './pages/customer/Review';
 import CustomerBecomeFarmerPage from './pages/customer/BecomeFarmer';
 import ChangePasswordPage from './pages/customer/ChangePassword';
 import CustomerSettingsPage from './pages/customer/Settings';
-import CustomerAssistantPage from './pages/customer/Assistant';
+import CustomerAssistantWip from './pages/customer/Assistant';
 import MarketsPage from './pages/public/Markets';
 import MarketDetailPage from './pages/public/MarketDetail';
 import ProductsPage from './pages/public/Products';
@@ -115,6 +115,8 @@ const AdminCustomerDetailPage = SHOW_WIP ? AdminCustomerDetailWip : ComingSoon;
 const AdminFeedbackPage = SHOW_WIP ? AdminFeedbackWip : ComingSoon;
 const FeedbackPage = SHOW_WIP ? FeedbackWip : ComingSoon;
 const CustomerCartPage = SHOW_WIP ? CustomerCartWip : ComingSoon;
+// FR-090: still a scripted conversation, not the real /chat API → dev only (QA E2E v2 CHATBOT-010)
+const CustomerAssistantPage = SHOW_WIP ? CustomerAssistantWip : ComingSoon;
 
 const App = () => {
   return (
