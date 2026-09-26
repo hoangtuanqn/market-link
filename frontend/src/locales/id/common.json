@@ -437,6 +437,27 @@
       "testing": "Mengirim…",
       "testError": "Tes tidak terkirim. Coba lagi beberapa detik lagi.",
       "saveError": "Pengaturan notifikasi tidak dapat disimpan."
+    },
+    "list": {
+      "all": "Semua",
+      "unread": "Belum dibaca",
+      "unreadCount_one": "{{count}} belum dibaca",
+      "unreadCount_other": "{{count}} belum dibaca",
+      "unreadMark": "belum dibaca",
+      "markAllRead": "Tandai semua sudah dibaca",
+      "loading": "Memuat…",
+      "more": "Tampilkan yang lebih lama",
+      "emptyTitle": "Belum ada apa-apa",
+      "emptyUnreadTitle": "Semua sudah dibaca",
+      "emptyText": "Notifikasi baru muncul di sini begitu ada.",
+      "errorTitle": "Notifikasi tidak dapat dimuat",
+      "errorText": "Periksa koneksi Anda lalu coba lagi.",
+      "loadError": "Tidak dapat memuat lebih banyak notifikasi.",
+      "readAllError": "Tidak dapat menandai sudah dibaca."
+    },
+    "admin": {
+      "title": "Notifikasi",
+      "intro": "Pendaftaran Farmer baru yang menunggu Anda tinjau."
     }
   }
 }

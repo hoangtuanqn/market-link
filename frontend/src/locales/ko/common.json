@@ -437,6 +437,27 @@
       "testing": "보내는 중…",
       "testError": "테스트를 보내지 못했습니다. 몇 초 후 다시 시도하세요.",
       "saveError": "알림 설정을 저장하지 못했습니다."
+    },
+    "list": {
+      "all": "전체",
+      "unread": "읽지 않음",
+      "unreadCount_one": "읽지 않음 {{count}}개",
+      "unreadCount_other": "읽지 않음 {{count}}개",
+      "unreadMark": "읽지 않음",
+      "markAllRead": "모두 읽음으로 표시",
+      "loading": "불러오는 중…",
+      "more": "이전 알림 보기",
+      "emptyTitle": "아직 알림이 없습니다",
+      "emptyUnreadTitle": "모두 확인했습니다",
+      "emptyText": "새 알림은 도착하는 즉시 여기에 표시됩니다.",
+      "errorTitle": "알림을 불러오지 못했습니다",
+      "errorText": "연결을 확인하고 다시 시도하세요.",
+      "loadError": "알림을 더 불러오지 못했습니다.",
+      "readAllError": "읽음으로 표시하지 못했습니다."
+    },
+    "admin": {
+      "title": "알림",
+      "intro": "검토를 기다리는 새 Farmer 신청입니다."
     }
   }
 }

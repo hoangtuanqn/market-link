@@ -437,6 +437,27 @@
       "testing": "送信中…",
       "testError": "テストを送信できませんでした。数秒後にもう一度お試しください。",
       "saveError": "通知設定を保存できませんでした。"
+    },
+    "list": {
+      "all": "すべて",
+      "unread": "未読",
+      "unreadCount_one": "未読 {{count}} 件",
+      "unreadCount_other": "未読 {{count}} 件",
+      "unreadMark": "未読",
+      "markAllRead": "すべて既読にする",
+      "loading": "読み込み中…",
+      "more": "古いお知らせを表示",
+      "emptyTitle": "まだお知らせはありません",
+      "emptyUnreadTitle": "すべて確認済みです",
+      "emptyText": "新しいお知らせは届いた時点でここに表示されます。",
+      "errorTitle": "お知らせを読み込めませんでした",
+      "errorText": "接続を確認して、もう一度お試しください。",
+      "loadError": "これ以上読み込めませんでした。",
+      "readAllError": "既読にできませんでした。"
+    },
+    "admin": {
+      "title": "通知",
+      "intro": "審査待ちの新しい Farmer の申請です。"
     }
   }
 }

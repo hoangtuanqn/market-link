@@ -437,6 +437,27 @@
       "testing": "Wird gesendet…",
       "testError": "Test konnte nicht gesendet werden. Versuchen Sie es in ein paar Sekunden erneut.",
       "saveError": "Benachrichtigungseinstellungen konnten nicht gespeichert werden."
+    },
+    "list": {
+      "all": "Alle",
+      "unread": "Ungelesen",
+      "unreadCount_one": "{{count}} ungelesen",
+      "unreadCount_other": "{{count}} ungelesen",
+      "unreadMark": "ungelesen",
+      "markAllRead": "Alle als gelesen markieren",
+      "loading": "Wird geladen…",
+      "more": "Ältere anzeigen",
+      "emptyTitle": "Noch nichts",
+      "emptyUnreadTitle": "Alles gelesen",
+      "emptyText": "Neue Benachrichtigungen erscheinen hier, sobald sie eintreffen.",
+      "errorTitle": "Benachrichtigungen konnten nicht geladen werden",
+      "errorText": "Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+      "loadError": "Weitere Benachrichtigungen konnten nicht geladen werden.",
+      "readAllError": "Benachrichtigungen konnten nicht als gelesen markiert werden."
+    },
+    "admin": {
+      "title": "Benachrichtigungen",
+      "intro": "Neue Farmer-Anträge, die auf Ihre Prüfung warten."
     }
   }
 }

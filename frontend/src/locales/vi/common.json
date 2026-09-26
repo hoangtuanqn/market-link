@@ -437,6 +437,27 @@
       "testing": "Đang gửi…",
       "testError": "Không gửi thử được. Vài giây nữa hãy thử lại.",
       "saveError": "Không lưu được cài đặt thông báo."
+    },
+    "list": {
+      "all": "Tất cả",
+      "unread": "Chưa đọc",
+      "unreadCount_one": "{{count}} chưa đọc",
+      "unreadCount_other": "{{count}} chưa đọc",
+      "unreadMark": "chưa đọc",
+      "markAllRead": "Đánh dấu tất cả đã đọc",
+      "loading": "Đang tải…",
+      "more": "Xem thông báo cũ hơn",
+      "emptyTitle": "Chưa có thông báo nào",
+      "emptyUnreadTitle": "Bạn đã đọc hết",
+      "emptyText": "Thông báo mới sẽ hiện ở đây ngay khi có.",
+      "errorTitle": "Không tải được thông báo",
+      "errorText": "Kiểm tra kết nối rồi thử lại.",
+      "loadError": "Không tải thêm được thông báo.",
+      "readAllError": "Không đánh dấu đã đọc được."
+    },
+    "admin": {
+      "title": "Thông báo",
+      "intro": "Các đơn đăng ký nhà vườn mới đang chờ bạn duyệt."
     }
   }
 }

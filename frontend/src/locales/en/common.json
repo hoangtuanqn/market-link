@@ -437,6 +437,27 @@
       "testing": "Sending…",
       "testError": "Could not send the test. Try again in a few seconds.",
       "saveError": "Could not save your notification settings."
+    },
+    "list": {
+      "all": "All",
+      "unread": "Unread",
+      "unreadCount_one": "{{count}} unread",
+      "unreadCount_other": "{{count}} unread",
+      "unreadMark": "unread",
+      "markAllRead": "Mark all as read",
+      "loading": "Loading…",
+      "more": "Show older",
+      "emptyTitle": "Nothing yet",
+      "emptyUnreadTitle": "All caught up",
+      "emptyText": "New notifications appear here the moment they happen.",
+      "errorTitle": "Could not load your notifications",
+      "errorText": "Check your connection and try again.",
+      "loadError": "Could not load more notifications.",
+      "readAllError": "Could not mark your notifications as read."
+    },
+    "admin": {
+      "title": "Notifications",
+      "intro": "New Farmer applications waiting for you to review."
     }
   }
 }

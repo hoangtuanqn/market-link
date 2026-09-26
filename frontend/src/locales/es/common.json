@@ -437,6 +437,27 @@
       "testing": "Enviando…",
       "testError": "No se pudo enviar la prueba. Inténtalo en unos segundos.",
       "saveError": "No se pudieron guardar tus ajustes de notificaciones."
+    },
+    "list": {
+      "all": "Todo",
+      "unread": "Sin leer",
+      "unreadCount_one": "{{count}} sin leer",
+      "unreadCount_other": "{{count}} sin leer",
+      "unreadMark": "sin leer",
+      "markAllRead": "Marcar todo como leído",
+      "loading": "Cargando…",
+      "more": "Ver anteriores",
+      "emptyTitle": "Nada por ahora",
+      "emptyUnreadTitle": "Estás al día",
+      "emptyText": "Las nuevas notificaciones aparecen aquí en cuanto llegan.",
+      "errorTitle": "No se pudieron cargar tus notificaciones",
+      "errorText": "Revisa tu conexión e inténtalo de nuevo.",
+      "loadError": "No se pudieron cargar más notificaciones.",
+      "readAllError": "No se pudieron marcar como leídas."
+    },
+    "admin": {
+      "title": "Notificaciones",
+      "intro": "Nuevas solicitudes de Farmer esperando tu revisión."
     }
   }
 }

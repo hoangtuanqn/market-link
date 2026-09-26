@@ -68,6 +68,7 @@ import AdminFarmersPage from './pages/admin/Farmers';
 import AdminFarmerDetailPage from './pages/admin/FarmerDetail';
 import AdminAccountPage from './pages/admin/Account';
 import AdminAnnouncementsPage from './pages/admin/Announcements';
+import AdminNotificationsPage from './pages/admin/Notifications';
 import AdminCategoriesPage from './pages/admin/Categories';
 import AdminCustomerDetailPage from './pages/admin/CustomerDetail';
 import AdminCustomersPage from './pages/admin/Customers';
@@ -273,6 +274,7 @@ const App = () => {
             <Route path="moderation" element={<AdminModerationPage />} />
             <Route path="categories" element={<AdminCategoriesPage />} />
             <Route path="announcements" element={<AdminAnnouncementsPage />} />
+            <Route path="notifications" element={<AdminNotificationsPage />} />
             <Route path="feedback" element={<AdminFeedbackPage />} />
 
             {/* Đường dẫn admin không khớp gì → 404 ngay trong khung admin, không rơi ra layout Customer */}

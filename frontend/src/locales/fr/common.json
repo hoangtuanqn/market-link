@@ -437,6 +437,27 @@
       "testing": "Envoi…",
       "testError": "Impossible d’envoyer le test. Réessayez dans quelques secondes.",
       "saveError": "Impossible d’enregistrer vos paramètres de notification."
+    },
+    "list": {
+      "all": "Tout",
+      "unread": "Non lues",
+      "unreadCount_one": "{{count}} non lue",
+      "unreadCount_other": "{{count}} non lues",
+      "unreadMark": "non lue",
+      "markAllRead": "Tout marquer comme lu",
+      "loading": "Chargement…",
+      "more": "Voir les plus anciennes",
+      "emptyTitle": "Rien pour le moment",
+      "emptyUnreadTitle": "Vous êtes à jour",
+      "emptyText": "Les nouvelles notifications apparaissent ici dès qu’elles arrivent.",
+      "errorTitle": "Impossible de charger vos notifications",
+      "errorText": "Vérifiez votre connexion et réessayez.",
+      "loadError": "Impossible d’en charger davantage.",
+      "readAllError": "Impossible de marquer les notifications comme lues."
+    },
+    "admin": {
+      "title": "Notifications",
+      "intro": "Les nouvelles demandes Farmer en attente de votre examen."
     }
   }
 }

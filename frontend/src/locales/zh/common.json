@@ -437,6 +437,27 @@
       "testing": "正在发送…",
       "testError": "无法发送测试，请几秒后再试。",
       "saveError": "无法保存通知设置。"
+    },
+    "list": {
+      "all": "全部",
+      "unread": "未读",
+      "unreadCount_one": "{{count}} 条未读",
+      "unreadCount_other": "{{count}} 条未读",
+      "unreadMark": "未读",
+      "markAllRead": "全部标为已读",
+      "loading": "加载中…",
+      "more": "查看更早的通知",
+      "emptyTitle": "还没有通知",
+      "emptyUnreadTitle": "全部已读",
+      "emptyText": "新通知一到就会显示在这里。",
+      "errorTitle": "无法加载通知",
+      "errorText": "请检查网络连接后重试。",
+      "loadError": "无法加载更多通知。",
+      "readAllError": "无法标为已读。"
+    },
+    "admin": {
+      "title": "通知",
+      "intro": "等待你审核的新农户申请。"
     }
   }
 }
