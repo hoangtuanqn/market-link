@@ -2,7 +2,9 @@ package com.techx.intervue.modules.farmer.services.impl;
 
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
@@ -33,6 +35,9 @@ public class FarmerUploadService {
     private static final Set<String> PHOTO_TYPES = Set.of("image/jpeg", "image/png", "image/webp");
     private static final Set<String> VIDEO_TYPES =
             Set.of("video/mp4", "video/webm", "video/quicktime");
+    private static final Set<String> ISO_BMFF_BOXES =
+            Set.of("ftyp", "moov", "mdat", "wide", "free", "skip");
+    private static final int HEAD_BYTES = 12;
     private static final long PHOTO_MAX_BYTES = 8L * 1024 * 1024;
     private static final long VIDEO_MAX_BYTES = 40L * 1024 * 1024;
 
@@ -65,7 +70,9 @@ public class FarmerUploadService {
         }
 
         String contentType = file.getContentType();
-        String extension = isPhoto ? photoExtension(contentType) : videoExtension(contentType);
+        byte[] head = head(file);
+        String extension =
+                isPhoto ? photoExtension(contentType, head) : videoExtension(contentType, head);
         long maxBytes = isPhoto ? PHOTO_MAX_BYTES : VIDEO_MAX_BYTES;
         if (file.getSize() > maxBytes) {
             throw new InvalidFieldException("file", "File is too large.");
@@ -162,25 +169,64 @@ public class FarmerUploadService {
         return baseUrl + "/" + FOLDER + "/" + userId + "/";
     }
 
-    private static String photoExtension(String contentType) {
+    /** Vài byte đầu của file — đủ để nhận ra JPEG, PNG, WEBP, MP4/MOV, WEBM. */
+    private static byte[] head(MultipartFile file) {
+        try (InputStream in = file.getInputStream()) {
+            return in.readNBytes(HEAD_BYTES);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not read the uploaded file.", e);
+        }
+    }
+
+    /**
+     * Content-Type chỉ là lời khai của client: vẫn dùng để chặn sớm loại không nhận, còn loại thật
+     * (và đuôi file) kết luận từ magic bytes — giống avatar và ảnh chat. Không kiểm thì file HTML
+     * khai "image/png" vẫn được lưu và trả ra ở /uploads.
+     */
+    private static String photoExtension(String contentType, byte[] head) {
         if (!PHOTO_TYPES.contains(contentType)) {
             throw new InvalidFieldException("file", "Photos must be JPEG, PNG or WEBP.");
         }
-        return switch (contentType) {
-            case "image/png" -> ".png";
-            case "image/webp" -> ".webp";
-            default -> ".jpg";
-        };
+        if (startsWith(head, 0, 0xFF, 0xD8, 0xFF)) {
+            return ".jpg";
+        }
+        if (startsWith(head, 0, 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n')) {
+            return ".png";
+        }
+        if (startsWith(head, 0, 'R', 'I', 'F', 'F') && startsWith(head, 8, 'W', 'E', 'B', 'P')) {
+            return ".webp";
+        }
+        throw new InvalidFieldException("file", "Photos must be JPEG, PNG or WEBP.");
     }
 
-    private static String videoExtension(String contentType) {
+    private static String videoExtension(String contentType, byte[] head) {
         if (!VIDEO_TYPES.contains(contentType)) {
             throw new InvalidFieldException("file", "Video must be MP4, WEBM or MOV.");
         }
-        return switch (contentType) {
-            case "video/webm" -> ".webm";
-            case "video/quicktime" -> ".mov";
-            default -> ".mp4";
-        };
+        // WEBM là EBML; MP4 và MOV cùng họ ISO BMFF (box đầu thường là ftyp, MOV cũ có thể là
+        // moov/mdat/wide/free/skip) — hai loại này phân biệt theo lời khai.
+        if (startsWith(head, 0, 0x1A, 0x45, 0xDF, 0xA3)) {
+            return ".webm";
+        }
+        if (head.length >= 8 && ISO_BMFF_BOXES.contains(ascii(head, 4, 4))) {
+            return "video/quicktime".equals(contentType) ? ".mov" : ".mp4";
+        }
+        throw new InvalidFieldException("file", "Video must be MP4, WEBM or MOV.");
+    }
+
+    private static boolean startsWith(byte[] b, int at, int... expected) {
+        if (b.length < at + expected.length) {
+            return false;
+        }
+        for (int i = 0; i < expected.length; i++) {
+            if ((b[at + i] & 0xFF) != expected[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static String ascii(byte[] b, int from, int length) {
+        return new String(b, from, length, StandardCharsets.US_ASCII);
     }
 }
