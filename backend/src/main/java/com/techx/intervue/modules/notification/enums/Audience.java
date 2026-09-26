@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.techx.intervue.converters.LowercaseEnumConverter;
 import com.techx.intervue.modules.user.enums.RoleType;
 import jakarta.persistence.Converter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,6 +19,16 @@ public enum Audience {
 
     Audience(RoleType... roles) {
         this.roles = List.of(roles);
+    }
+
+    /**
+     * Những audience một người thấy trên banner. Khách vãng lai (role null) và admin chỉ thấy ALL:
+     * họ không thuộc audience nào nên cũng không nhận bản thông báo.
+     */
+    public static List<Audience> visibleTo(RoleType role) {
+        return Arrays.stream(values())
+                .filter(a -> a == ALL || (role != null && a.roles.contains(role)))
+                .toList();
     }
 
     /** Giá trị cột users.role (chữ thường) cho câu fan-out. */

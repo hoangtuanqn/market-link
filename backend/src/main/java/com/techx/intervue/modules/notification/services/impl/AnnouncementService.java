@@ -1,12 +1,14 @@
 package com.techx.intervue.modules.notification.services.impl;
 
 import com.techx.intervue.modules.notification.entities.Announcement;
+import com.techx.intervue.modules.notification.enums.Audience;
 import com.techx.intervue.modules.notification.exceptions.InvalidAnnouncementException;
 import com.techx.intervue.modules.notification.repositories.AnnouncementRepository;
 import com.techx.intervue.modules.notification.requests.AnnouncementRequest;
 import com.techx.intervue.modules.notification.resources.AnnouncementResource;
 import com.techx.intervue.modules.notification.services.interfaces.AnnouncementServiceInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.resources.PageResource;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Clock;
@@ -78,8 +80,10 @@ public class AnnouncementService implements AnnouncementServiceInterface {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<AnnouncementResource> live() {
-        return announcements.findLive(clock.instant(), PageRequest.of(0, 1)).stream()
+    public Optional<AnnouncementResource> live(RoleType viewer) {
+        return announcements
+                .findLive(clock.instant(), Audience.visibleTo(viewer), PageRequest.of(0, 1))
+                .stream()
                 .findFirst()
                 .map(AnnouncementResource::from);
     }
