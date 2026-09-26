@@ -1,9 +1,11 @@
 package com.techx.intervue.modules.conversation.controllers;
 
 import com.techx.intervue.modules.conversation.exceptions.AccountRestrictedException;
+import com.techx.intervue.modules.conversation.exceptions.AlreadyReportedException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentAlreadyUsedException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
+import com.techx.intervue.modules.conversation.exceptions.CannotReportOwnMessageException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
@@ -42,7 +44,8 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
         assignableTypes = {
             ConversationController.class,
             AttachmentController.class,
-            AttachmentDownloadController.class
+            AttachmentDownloadController.class,
+            MessageReportController.class
         })
 public class ConversationExceptionHandler {
 
@@ -172,10 +175,30 @@ public class ConversationExceptionHandler {
                                 .build()));
     }
 
+    /** Spec §8.5 — 400. Báo cáo là để tố người khác, không phải để tự gỡ tin của mình. */
+    @ExceptionHandler(CannotReportOwnMessageException.class)
+    ResponseEntity<ApiResource<Void>> ownMessage(CannotReportOwnMessageException e) {
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
+    }
+
+    /** uq_report_once — 409. */
+    @ExceptionHandler(AlreadyReportedException.class)
+    ResponseEntity<ApiResource<Void>> alreadyReported(AlreadyReportedException e) {
+        return error(HttpStatus.CONFLICT, "ALREADY_REPORTED", e.getMessage(), List.of());
+    }
+
     /** Hai request mở cùng một cặp đúng lúc → UNIQUE chặn một cái; client gọi lại là có thread. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> integrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
+        if (cause.contains("uq_report_once")) {
+            // Hai request báo cáo cùng lúc lọt qua existsBy...; UNIQUE chặn cái thứ hai
+            return error(
+                    HttpStatus.CONFLICT,
+                    "ALREADY_REPORTED",
+                    new AlreadyReportedException().getMessage(),
+                    List.of());
+        }
         if (cause.contains("uq_attach_message")) {
             // Hai request gửi cùng một ảnh cùng lúc; UNIQUE chặn cái thứ hai. Cùng ý nghĩa với
             // kiểm tra trong MessageService nên trả cùng mã.
