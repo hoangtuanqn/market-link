@@ -6,7 +6,7 @@
   "cards": {
     "upcoming_one": "{{count}} đơn sắp tới",
     "upcoming_other": "{{count}} đơn sắp tới",
-    "upcomingBreakdown": "{{placed}} chờ duyệt · {{accepted}} đã nhận · {{ready}} sẵn sàng",
+    "upcomingBreakdown": "{{placed}} đã đặt · {{accepted}} đã nhận · {{ready}} sẵn sàng",
     "favorites_one": "{{count}} mục yêu thích",
     "favorites_other": "{{count}} mục yêu thích",
     "stalls_one": "{{count}} sạp",

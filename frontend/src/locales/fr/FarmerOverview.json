@@ -1,6 +1,6 @@
 {
   "tabs": {
-    "new": "En attente",
+    "new": "Passée",
     "acc": "Acceptées",
     "ready": "Prêtes",
     "done": "Terminées"
@@ -44,7 +44,7 @@
     "view": "Voir"
   },
   "captions": {
-    "new": "En attente · {{sat}} et {{sun}}",
+    "new": "Passée · {{sat}} et {{sun}}",
     "ready": "Prêtes à retirer"
   },
   "overline": "votre stand à {{market}} · prochain jour de marché {{day}}",

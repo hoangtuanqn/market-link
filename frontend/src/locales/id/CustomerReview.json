@@ -6,6 +6,10 @@
     "title": "Pesanan itu sudah tidak ada",
     "text": "Mungkin Anda sudah membatalkannya, atau tautannya sudah lama. Buka lagi dari pesanan Anda."
   },
+  "notCompleted": {
+    "title": "Pesanan ini belum selesai",
+    "text": "Anda bisa menilai lapak dan barang yang dibeli setelah pesanan diambil."
+  },
   "completed": "Selesai {{date}}",
   "title": "Bagaimana {{stall}}?",
   "intro": "Ulasan terkait dengan pesanan yang selesai ini, jadi pelanggan lain melihatnya sebagai pembelian terverifikasi. Lapak bisa membalas.",

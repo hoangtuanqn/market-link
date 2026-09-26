@@ -6,6 +6,10 @@
     "title": "Đơn này không còn ở đây",
     "text": "Có thể bạn đã huỷ đơn, hoặc liên kết đã cũ. Hãy mở lại từ danh sách đơn của bạn."
   },
+  "notChangeable": {
+    "title": "Đơn này không sửa được nữa",
+    "text": "Đã qua giờ chốt, hoặc sạp đã chuyển đơn sang bước tiếp theo. Cần hỏi gì thì liên hệ sạp."
+  },
   "title": "Sửa đơn {{code}}",
   "cutoff": "Được sửa đến <b>{{cutoff}}</b>.",
   "banner": {

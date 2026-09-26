@@ -6,6 +6,10 @@
     "title": "Ese pedido ya no está aquí",
     "text": "Puede que lo hayas cancelado o que el enlace sea antiguo. Ábrelo de nuevo desde tus pedidos."
   },
+  "notChangeable": {
+    "title": "Este pedido ya no se puede cambiar",
+    "text": "Ha pasado la hora límite, o el puesto ya ha avanzado el pedido. Si tienes dudas, contacta con el puesto."
+  },
   "title": "Editar pedido {{code}}",
   "cutoff": "Puedes hacer cambios hasta <b>{{cutoff}}</b>.",
   "banner": {

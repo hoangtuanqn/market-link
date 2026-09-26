@@ -6,6 +6,10 @@
     "title": "Pesanan itu sudah tidak ada",
     "text": "Mungkin Anda sudah membatalkannya, atau tautannya sudah lama. Buka lagi dari pesanan Anda."
   },
+  "notChangeable": {
+    "title": "Pesanan ini tidak bisa diubah lagi",
+    "text": "Batas pesan sudah lewat, atau lapak sudah melanjutkan pesanan. Kalau ada pertanyaan, hubungi lapak."
+  },
   "title": "Ubah pesanan {{code}}",
   "cutoff": "Perubahan bisa dilakukan sampai <b>{{cutoff}}</b>.",
   "banner": {

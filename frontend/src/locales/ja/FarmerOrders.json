@@ -5,7 +5,7 @@
   "filter": { "day": "受け取り日", "all": "すべて", "market": "市場", "bothMarkets": "両方の市場" },
   "tabsLabel": "ステータス別の注文",
   "status": {
-    "placed": "承認待ち",
+    "placed": "注文済み",
     "accepted": "承認済み",
     "ready": "準備完了",
     "completed": "完了",

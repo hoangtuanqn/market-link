@@ -10,7 +10,7 @@
   },
   "tabsLabel": "Pedidos por estado",
   "status": {
-    "placed": "Pendiente de aprobación",
+    "placed": "Realizado",
     "accepted": "Aceptado",
     "ready": "Listo",
     "completed": "Completado",

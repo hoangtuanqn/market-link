@@ -6,6 +6,10 @@
     "title": "That order is not here any more",
     "text": "You may have cancelled it, or the link is old. Open it again from your orders."
   },
+  "notCompleted": {
+    "title": "This order is not finished yet",
+    "text": "You can review the stall and what you bought once you have collected the order."
+  },
   "completed": "Completed {{date}}",
   "title": "How was {{stall}}?",
   "intro": "Reviews are tied to this completed order, so other customers see them as a verified purchase. The stall can reply.",
