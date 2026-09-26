@@ -93,5 +93,9 @@
     "unitAdded": "Satuan dimasukkan ke daftar pilihan.",
     "promoted": "{{name}} kini ada di daftar pilihan semua lapak.",
     "merged": "Digabungkan. Satu produk ditulis ulang."
+  },
+  "error": {
+    "noun": "kategori",
+    "nameRequired": "Beri nama kategori."
   }
 }

@@ -93,5 +93,9 @@
     "unitAdded": "单位已加入选项列表。",
     "promoted": "{{name}} 现在出现在所有摊位的选项列表里。",
     "merged": "已合并。一件商品被改写。"
+  },
+  "error": {
+    "noun": "分类",
+    "nameRequired": "请为分类命名。"
   }
 }

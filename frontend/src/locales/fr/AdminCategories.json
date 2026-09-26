@@ -99,5 +99,9 @@
     "unitAdded": "Unité ajoutée au sélecteur.",
     "promoted": "{{name}} figure désormais dans le sélecteur de tous les étals.",
     "merged": "Fusionnées. Un produit a été réécrit."
+  },
+  "error": {
+    "noun": "catégories",
+    "nameRequired": "Donnez un nom à la catégorie."
   }
 }

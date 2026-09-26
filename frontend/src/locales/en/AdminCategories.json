@@ -96,5 +96,9 @@
     "unitAdded": "Unit added to the picker.",
     "promoted": "{{name}} is now in the picker for every stall.",
     "merged": "Merged. One product was rewritten."
+  },
+  "error": {
+    "noun": "categories",
+    "nameRequired": "Give the category a name."
   }
 }

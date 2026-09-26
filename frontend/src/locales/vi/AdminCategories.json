@@ -96,5 +96,9 @@
     "unitAdded": "Đã thêm đơn vị vào danh sách chọn.",
     "promoted": "Từ giờ {{name}} nằm trong danh sách chọn của mọi sạp.",
     "merged": "Đã gộp. Một sản phẩm được viết lại."
+  },
+  "error": {
+    "noun": "danh mục",
+    "nameRequired": "Đặt tên cho danh mục."
   }
 }

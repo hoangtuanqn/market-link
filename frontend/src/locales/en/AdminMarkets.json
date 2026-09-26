@@ -33,5 +33,8 @@
   },
   "toast": {
     "removed": "{{name}} removed from the list."
+  },
+  "error": {
+    "noun": "markets"
   }
 }

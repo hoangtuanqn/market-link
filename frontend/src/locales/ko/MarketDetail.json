@@ -35,5 +35,8 @@
   "stalls_other": "가게 {{count}}곳",
   "mapLabel": "{{name}}와 가게 지도",
   "stallsTitle": "{{day}} 이 장터의 가게",
-  "stallsNote": "선택한 날에 판매하지 않는 가게는 표시되지 않아요"
+  "stallsNote": "선택한 날에 판매하지 않는 가게는 표시되지 않아요",
+  "error": {
+    "noun": "마켓"
+  }
 }

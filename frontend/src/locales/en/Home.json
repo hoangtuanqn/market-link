@@ -27,7 +27,8 @@
   },
   "nearby": {
     "title": "Markets near you",
-    "note": "Distances from your saved address in Thảo Điền"
+    "note": "Distances from your saved address in Thảo Điền",
+    "noun": "markets"
   },
   "fresh": {
     "title": "Fresh this week",

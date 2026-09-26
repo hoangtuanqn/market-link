@@ -82,5 +82,11 @@
       "short": "cancelled and customers told",
       "text": "Stock goes back to the stall and the order ends as cancelled, not declined, because the stall did nothing wrong."
     }
+  },
+  "error": {
+    "noun": "market",
+    "required": "This field is required.",
+    "days": "Pick at least one operating day.",
+    "close": "The closing time must be after the opening time."
   }
 }

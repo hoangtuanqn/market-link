@@ -96,5 +96,9 @@
     "unitAdded": "Einheit in die Auswahl aufgenommen.",
     "promoted": "{{name}} steht jetzt allen Ständen zur Auswahl.",
     "merged": "Zusammengeführt. Ein Produkt wurde umgeschrieben."
+  },
+  "error": {
+    "noun": "Kategorien",
+    "nameRequired": "Gib der Kategorie einen Namen."
   }
 }

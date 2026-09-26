@@ -1,16 +1,20 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
 import { ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
+import { LoadError } from '@/components/ui/data-state';
 import { categories as CATEGORIES, farmers, products } from '@/data/catalog';
-import { markets } from '@/data/home';
+import useRequest from '@/hooks/useRequest';
 import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 /** The demo market week, Thursday 24 to Sunday 27 September 2026. */
@@ -29,12 +33,21 @@ const MarketDetailPage = () => {
   const { t } = useTranslation('MarketDetail');
   const { t: tc } = useTranslation();
   const navigate = useNavigate();
-  const market = markets.find((m) => m.id === Number(id));
+
+  const marketId = Number(id);
+  const validId = Number.isInteger(marketId) && marketId > 0;
+  const { state: load, retry } = useRequest(`market:${id}`, () =>
+    validId ? CatalogApi.getMarket(marketId).then((result) => result.market) : Promise.reject(new Error('missing')),
+  );
+  /** The server's 404, or an id that could never be one — the "not here any more" page, not the error block. */
+  const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'MARKET_NOT_FOUND');
+  const market = load.kind === 'ready' ? load.data : undefined;
 
   const [day, setDay] = useState(6);
   const [category, setCategory] = useState('All');
   const [inStockOnly, setInStockOnly] = useState(false);
-  const [saved, setSaved] = useState(market?.saved ?? false);
+  // Saved markets arrive with favorites (C7); until then the chip only remembers the click.
+  const [saved, setSaved] = useState(false);
   const [scope, setScope] = useState<'product' | 'farmer'>('product');
   const [query, setQuery] = useState('');
 
@@ -95,6 +108,18 @@ const MarketDetailPage = () => {
     if (inStockOnly && (p.status !== 'available' || p.stock === 0)) return false;
     return true;
   });
+
+  if (load.kind === 'loading') {
+    return (
+      <div className="flex flex-col gap-8">
+        <MarketCardSkeleton count={1} />
+      </div>
+    );
+  }
+
+  if (load.kind === 'error' && !missing) {
+    return <LoadError noun={t('error.noun')} onRetry={retry} />;
+  }
 
   if (!market) {
     return (

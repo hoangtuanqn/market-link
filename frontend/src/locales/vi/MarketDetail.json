@@ -35,5 +35,8 @@
   "stalls_other": "{{count}} sạp",
   "mapLabel": "Bản đồ {{name}} và các sạp",
   "stallsTitle": "Các sạp ở chợ này vào {{day}}",
-  "stallsNote": "Sạp không bán vào ngày đã chọn sẽ không hiện ở đây"
+  "stallsNote": "Sạp không bán vào ngày đã chọn sẽ không hiện ở đây",
+  "error": {
+    "noun": "chợ"
+  }
 }

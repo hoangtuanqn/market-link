@@ -35,5 +35,8 @@
   "stalls_other": "{{count}} lapak",
   "mapLabel": "Peta {{name}} dan lapaknya",
   "stallsTitle": "Lapak di pasar ini hari {{day}}",
-  "stallsNote": "Lapak yang tidak berjualan pada hari yang dipilih tidak ditampilkan"
+  "stallsNote": "Lapak yang tidak berjualan pada hari yang dipilih tidak ditampilkan",
+  "error": {
+    "noun": "pasar"
+  }
 }

@@ -82,5 +82,11 @@
       "short": "annulées et clients prévenus",
       "text": "Le stock retourne à l'étal et la commande se termine en « annulée », pas en « refusée », car l'étal n'a rien fait de mal."
     }
+  },
+  "error": {
+    "noun": "marché",
+    "required": "Ce champ est obligatoire.",
+    "days": "Choisissez au moins un jour d’ouverture.",
+    "close": "L’heure de fermeture doit suivre l’heure d’ouverture."
   }
 }

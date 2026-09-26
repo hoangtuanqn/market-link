@@ -35,5 +35,8 @@
   "stalls_other": "{{count}} stands",
   "mapLabel": "Carte de {{name}} et de ses stands",
   "stallsTitle": "Stands de ce marché le {{day}}",
-  "stallsNote": "Les stands qui ne vendent pas le jour choisi ne sont pas affichés"
+  "stallsNote": "Les stands qui ne vendent pas le jour choisi ne sont pas affichés",
+  "error": {
+    "noun": "marché"
+  }
 }

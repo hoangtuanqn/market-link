@@ -35,5 +35,8 @@
   "stalls_other": "{{count}} stalls",
   "mapLabel": "Map of {{name}} and its stalls",
   "stallsTitle": "Stalls at this market on {{day}}",
-  "stallsNote": "Stalls that are not selling on the chosen day are not listed"
+  "stallsNote": "Stalls that are not selling on the chosen day are not listed",
+  "error": {
+    "noun": "market"
+  }
 }

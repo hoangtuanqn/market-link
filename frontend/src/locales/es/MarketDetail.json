@@ -35,5 +35,8 @@
   "stalls_other": "{{count}} puestos",
   "mapLabel": "Mapa de {{name}} y sus puestos",
   "stallsTitle": "Puestos de este mercado el {{day}}",
-  "stallsNote": "No se muestran los puestos que no venden el día elegido"
+  "stallsNote": "No se muestran los puestos que no venden el día elegido",
+  "error": {
+    "noun": "mercado"
+  }
 }

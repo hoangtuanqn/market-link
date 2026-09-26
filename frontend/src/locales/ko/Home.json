@@ -27,7 +27,8 @@
   },
   "nearby": {
     "title": "가까운 장터",
-    "note": "Thảo Điền에 저장된 주소 기준 거리"
+    "note": "Thảo Điền에 저장된 주소 기준 거리",
+    "noun": "마켓"
   },
   "fresh": {
     "title": "이번 주 신선한 상품",

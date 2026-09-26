@@ -96,5 +96,9 @@
     "unitAdded": "Unidad añadida al selector.",
     "promoted": "{{name}} ya está en el selector de todos los puestos.",
     "merged": "Fusionadas. Se ha reescrito un producto."
+  },
+  "error": {
+    "noun": "categorías",
+    "nameRequired": "Ponle un nombre a la categoría."
   }
 }

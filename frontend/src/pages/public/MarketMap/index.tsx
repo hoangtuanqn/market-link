@@ -1,14 +1,17 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import CatalogApi from '@/api-requests/catalog.requests';
 import DayChips from '@/components/DayChips';
 import MarketCard from '@/components/MarketCard';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { farmers } from '@/data/catalog';
-import { markets } from '@/data/home';
+import useRequest from '@/hooks/useRequest';
 import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
+import type { MarketType } from '@/types/market.types';
 
 type DayValue = 'thu' | 'fri' | 'sat' | 'sun';
 
@@ -22,6 +25,9 @@ const DAYS: { value: DayValue; date: Date; disabled?: boolean }[] = [
 const DOW: Record<DayValue, number> = { thu: 4, fri: 5, sat: 6, sun: 0 };
 /** How a stall's trading days are written in the data (`farmer.days`, e.g. "Sat, Sun"). */
 const DAY_ABBR: Record<DayValue, string> = { thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' };
+/** Contract §3 caps a page at 50; every market of the city fits in one call. */
+const FETCH_SIZE = 50;
+const NO_MARKETS: MarketType[] = [];
 
 /** FR-012 FR-013 — every market and its approved stalls on the map, for the day you choose. */
 const MarketMapPage = () => {
@@ -31,10 +37,15 @@ const MarketMapPage = () => {
   const [showStalls, setShowStalls] = useState(true);
   const [savedOnly, setSavedOnly] = useState(false);
 
+  const { state: load, retry } = useRequest('markets', () =>
+    CatalogApi.listMarkets({ pageSize: FETCH_SIZE }).then((result) => result.items),
+  );
+  const all = load.kind === 'ready' ? load.data : NO_MARKETS;
+
   const dow = DOW[day];
   const openMarkets = useMemo(
-    () => markets.filter((m) => m.days.includes(dow) && (!savedOnly || m.saved)),
-    [dow, savedOnly],
+    () => all.filter((m) => m.days.includes(dow) && (!savedOnly || m.saved)),
+    [all, dow, savedOnly],
   );
   const openMarketIds = useMemo(() => new Set(openMarkets.map((m) => m.id)), [openMarkets]);
 
@@ -132,7 +143,9 @@ const MarketMapPage = () => {
         </div>
       </div>
 
-      {!showMarkets && !showStalls ? (
+      {load.kind === 'error' ? (
+        <LoadError noun={t('error.noun')} onRetry={retry} />
+      ) : !showMarkets && !showStalls ? (
         <DataState
           title={t('bothOff.title')}
           text={t('bothOff.text')}
@@ -156,7 +169,9 @@ const MarketMapPage = () => {
 
       <section className="flex flex-col gap-4">
         <h2 className="text-h2">{t('openOn', { day: pickedName })}</h2>
-        {openMarkets.length ? (
+        {load.kind === 'loading' ? (
+          <MarketCardSkeleton count={2} />
+        ) : load.kind === 'error' ? null : openMarkets.length ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             {openMarkets.map((m) => (
               <MarketCard key={m.id} market={m} />

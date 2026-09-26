@@ -27,7 +27,8 @@
   },
   "nearby": {
     "title": "Chợ gần bạn",
-    "note": "Khoảng cách tính từ địa chỉ đã lưu của bạn ở Thảo Điền"
+    "note": "Khoảng cách tính từ địa chỉ đã lưu của bạn ở Thảo Điền",
+    "noun": "các chợ"
   },
   "fresh": {
     "title": "Tươi trong tuần này",
