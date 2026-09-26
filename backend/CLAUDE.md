@@ -1,6 +1,6 @@
 # Backend — Spring Boot 4 / Java 25
 
-Đọc `../CLAUDE.md` trước (luật R-01…R-07, Definition of Done).
+Đọc `../CLAUDE.md` trước (luật R-01…R-10, Definition of Done).
 
 ## Cấu trúc
 

@@ -1,30 +1,30 @@
 import type { ChatMessageItem, ConversationEventFrame, ConversationSummary, PresenceFrame } from '@/types/chat.types';
 
 /**
- * Trong state, danh sách tin xếp **cũ → mới** (đọc từ trên xuống như trên màn hình). API trả mới → cũ, nên prependOlder
- * đảo lại.
+ * In state, the message list is sorted **oldest → newest** (read top to bottom like the screen). The API returns newest
+ * → oldest, so prependOlder reverses it.
  *
- * Mọi hàm ở đây thuần: trả mảng mới, không sửa mảng đầu vào, và trả **đúng mảng cũ** khi không có gì đổi — React so
- * sánh bằng tham chiếu nên điều đó cắt hẳn một lần render vô ích.
+ * Every function here is pure: returns a new array, never edits the input array, and returns the **exact same array**
+ * when nothing changed — React compares by reference so that skips a wasted render entirely.
  */
 
 const byId = (a: ChatMessageItem, b: ChatMessageItem) => a.id - b.id;
 
 /**
- * Tin của chính mình về hai đường: response của REST, rồi sự kiện STOMP (Plan 2 cố ý phát cho mọi thiết bị của người
- * gửi). Khử trùng theo id là thứ giữ cho bong bóng chỉ hiện một lần.
+ * My own message arrives by two paths: the REST response, then a STOMP event (Plan 2 deliberately publishes it to every
+ * device of the sender). Deduping by id is what keeps the bubble showing only once.
  */
 export function mergeMessage(list: ChatMessageItem[], incoming: ChatMessageItem): ChatMessageItem[] {
   if (list.some((m) => m.id === incoming.id)) return list;
 
   const last = list[list.length - 1];
-  // Đường thường: tin mới nhất, chỉ cần nối vào đuôi
+  // The common path: the newest message, just append it to the end
   if (!last || incoming.id > last.id) return [...list, incoming];
-  // Sự kiện tới lệch thứ tự khi mạng chập chờn
+  // An event arriving out of order when the network is flaky
   return [...list, incoming].sort(byId);
 }
 
-/** Trang lịch sử từ API (mới → cũ) ghép vào đầu danh sách, bỏ những tin đã có. */
+/** A history page from the API (newest → oldest) is merged into the front of the list, dropping ones already held. */
 export function prependOlder(list: ChatMessageItem[], older: ChatMessageItem[]): ChatMessageItem[] {
   if (older.length === 0) return list;
 
@@ -35,17 +35,18 @@ export function prependOlder(list: ChatMessageItem[], older: ChatMessageItem[]):
   return [...fresh, ...list].sort(byId);
 }
 
-/** Con trỏ keyset cho trang lịch sử kế tiếp. */
+/** The keyset cursor for the next history page. */
 export function oldestId(list: ChatMessageItem[]): number | undefined {
   return list.length === 0 ? undefined : list[0].id;
 }
 
 /**
- * Thread có tin mới ("updated") thì nhảy lên đầu danh sách. "read" và "hidden" không phải tin mới nên không được đổi
- * thứ tự: danh sách xếp theo tin cuối cùng.
+ * A thread with a new message ("updated") jumps to the top of the list. "read" and "hidden" are not new messages so
+ * they must not change the order: the list is sorted by the last message.
  *
- * Sự kiện "read" cố ý không mang unreadCount (backend để kiểu Long cho nó vắng mặt). Dùng `??` chứ không phải `||`:
- * đừng suy ra 0 từ chỗ thiếu, nhưng một số 0 gửi thật thì phải nhận. Lỗi đó đã bị bắt trong smoke của Plan 2.
+ * The "read" event deliberately carries no unreadCount (the backend uses a Long type so it can be absent). Use `??`,
+ * not `||`: do not infer 0 from its absence, but a real 0 sent must be accepted. That bug was caught in Plan 2's smoke
+ * test.
  */
 export function applyConversationEvent(
   threads: ConversationSummary[],
@@ -64,7 +65,7 @@ export function applyConversationEvent(
   return [touched, ...threads.slice(0, at), ...threads.slice(at + 1)];
 }
 
-/** Đối phương online / offline: cập nhật mọi thread có người đó, giữ nguyên thứ tự. */
+/** The other person going online / offline: updates every thread with them, keeping the order unchanged. */
 export function applyPresence(threads: ConversationSummary[], frame: PresenceFrame): ConversationSummary[] {
   if (!threads.some((t) => t.other.userId === frame.userId)) return threads;
 
@@ -73,4 +74,9 @@ export function applyPresence(threads: ConversationSummary[], frame: PresenceFra
       ? { ...t, other: { ...t.other, online: frame.online, lastSeenAt: frame.lastSeenAt } }
       : t,
   );
+}
+
+/** An admin hides a message (FR-116): remove it from the open thread. Returns the exact same array if there is none. */
+export function removeMessage(list: ChatMessageItem[], messageId: number): ChatMessageItem[] {
+  return list.some((m) => m.id === messageId) ? list.filter((m) => m.id !== messageId) : list;
 }

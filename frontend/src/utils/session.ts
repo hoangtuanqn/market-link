@@ -1,11 +1,11 @@
 import type { UserType } from '@/types/user.types';
 
 /**
- * Phiên đăng nhập phía trình duyệt: access token + user.
+ * The browser-side sign-in session: access token + user.
  *
- * - "Remember me" → localStorage (còn sau khi đóng trình duyệt).
- * - Không chọn → sessionStorage (mất khi đóng trình duyệt), khớp với cookie refresh_token dạng phiên của backend. Mọi
- *   thay đổi phát sự kiện để header (useSession) cập nhật ngay.
+ * - "Remember me" → localStorage (survives closing the browser).
+ * - Not chosen → sessionStorage (lost when the browser closes), matching the backend's session-type refresh_token cookie.
+ *   Every change emits an event so the header (useSession) updates right away.
  */
 const TOKEN_KEY = 'access_token';
 const USER_KEY = 'user';
@@ -14,10 +14,10 @@ const CHANGE_EVENT = 'session-change';
 
 const stores = (): Storage[] => [localStorage, sessionStorage];
 
-/** Nơi đang giữ phiên hiện tại; null nếu tab này chưa có phiên. */
+/** Where the current session is kept; null if this tab has no session. */
 const sessionStore = (): Storage | null => stores().find((s) => s.getItem(TOKEN_KEY)) ?? null;
 
-/** Nơi đọc / ghi phiên (mặc định localStorage). */
+/** Where the session is read / written (localStorage by default). */
 const activeStore = (): Storage => sessionStore() ?? localStorage;
 
 const emit = () => window.dispatchEvent(new Event(CHANGE_EVENT));
@@ -37,9 +37,10 @@ class Session {
   }
 
   /**
-   * Phiên mới sau khi refresh: ghi vào đúng nơi phiên đang ở. Tab chưa có phiên (vd. mở tab mới khi đăng nhập không
-   * "Remember me" — sessionStorage riêng từng tab, cookie refresh vẫn còn) thì lưu như phiên không nhớ, không ghi vào
-   * localStorage để phiên không sống tiếp sau khi đóng trình duyệt.
+   * A new session after refresh: written to the place the session is already in. A tab with no session (e.g. a new tab
+   * opened when signing in without "Remember me" — sessionStorage is per tab, the refresh cookie is still there) stores
+   * it like a non-remembered session, and does not write to localStorage so the session does not live on after the
+   * browser closes.
    */
   static refreshed(result: { accessToken: string; user: UserType }) {
     const store = sessionStore();
@@ -69,7 +70,7 @@ class Session {
     emit();
   }
 
-  /** Nghe thay đổi trong tab này (CHANGE_EVENT) và ở tab khác (storage). */
+  /** Listen to changes in this tab (CHANGE_EVENT) and in other tabs (storage). */
   static subscribe(callback: () => void) {
     window.addEventListener(CHANGE_EVENT, callback);
     window.addEventListener('storage', callback);
@@ -79,7 +80,7 @@ class Session {
     };
   }
 
-  /** Chuỗi user thô — dùng làm snapshot ổn định cho useSyncExternalStore. */
+  /** The raw user string — used as a stable snapshot for useSyncExternalStore. */
   static getRawUser(): string | null {
     return activeStore().getItem(USER_KEY);
   }

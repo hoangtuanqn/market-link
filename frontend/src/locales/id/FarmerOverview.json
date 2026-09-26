@@ -1,6 +1,6 @@
 {
   "tabs": {
-    "new": "Menunggu persetujuan",
+    "new": "Dipesan",
     "acc": "Diterima",
     "ready": "Siap",
     "done": "Selesai"
@@ -44,7 +44,7 @@
     "view": "Lihat"
   },
   "captions": {
-    "new": "Menunggu persetujuan · {{sat}} dan {{sun}}",
+    "new": "Dipesan · {{sat}} dan {{sun}}",
     "ready": "Siap diambil"
   },
   "overline": "lapak Anda di {{market}} · hari pasar berikutnya {{day}}",

@@ -6,8 +6,8 @@ import jakarta.validation.constraints.Size;
 import java.util.Map;
 
 /**
- * Toàn bộ tuỳ chọn (PUT thay cả bộ). Danh sách giá trị khớp frontend src/lib/settings.ts; thêm ngôn
- * ngữ hay tiền tệ thì sửa cả hai nơi.
+ * All preferences (PUT replaces the whole set). The list of values matches the frontend's
+ * src/lib/settings.ts; adding a language or currency means editing both places.
  */
 public record UpdateSettingsRequest(
         @NotNull(message = "Choose a theme.")

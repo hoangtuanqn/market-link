@@ -36,6 +36,9 @@
   "details": {
     "title": "Product details",
     "soldPer": "Sold per",
+    "shelfLife": "Stays fresh for",
+    "shelfLifeValue_one": "{{count}} day",
+    "shelfLifeValue_other": "{{count}} days",
     "category": "Category",
     "stall": "Stall",
     "market": "Market"

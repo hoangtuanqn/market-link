@@ -1,9 +1,9 @@
 # ---------------------------------------------------------------------
-# docker compose up -d   -> CHỈ mysql + redis (chạy BE/FE trên máy, xem README)
+# docker compose up -d   -> ONLY mysql + redis (run BE/FE on the host, see README)
 # make up                -> full stack: + backend (Spring Boot) + frontend (Vite)
 #                           = docker compose --profile app up -d --build
-# make tools             -> thêm Adminer (DB UI) + RedisInsight
-# make prod              -> build & chạy image production (docker-compose.prod.yml)
+# make tools             -> adds Adminer (DB UI) + RedisInsight
+# make prod              -> build & run the production image (docker-compose.prod.yml)
 # ---------------------------------------------------------------------
 services:
   mysql:
@@ -19,7 +19,7 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-      # Giữ time_zone của session MySQL là UTC cho khớp serverTimezone=UTC trong JDBC URL
+      # Keep the MySQL session time_zone at UTC to match serverTimezone=UTC in the JDBC URL
       - --default-time-zone=+00:00
     ports:
       - "${MYSQL_PORT:-3306}:3306"
@@ -46,8 +46,8 @@ services:
       timeout: 5s
       retries: 5
 
-  # FR-111: broker STOMP cho chat realtime. Plugin rabbitmq_stomp không bật sẵn trong image
-  # nên bật offline trước khi start. UI quản trị: http://localhost:${RABBITMQ_UI_PORT:-15672}
+  # FR-111: STOMP broker for realtime chat. The rabbitmq_stomp plugin is not enabled in the image
+  # so enable it offline before start. Admin UI: http://localhost:${RABBITMQ_UI_PORT:-15672}
   rabbitmq:
     image: rabbitmq:4-management-alpine
     container_name: intervue-rabbitmq
@@ -79,8 +79,8 @@ services:
     restart: unless-stopped
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
-      # Hai nhánh song song dễ đẻ migration có số nhỏ hơn cái DB đã chạy (vd #130 sau #132).
-      # Dev cho Flyway chạy bù thay vì chặn khởi động; prod giữ mặc định (false).
+      # Two parallel branches easily produce a migration numbered lower than the one the DB already ran (e.g. #130 after #132).
+      # Dev lets Flyway apply it out of order instead of blocking startup; prod keeps the default (false).
       SPRING_FLYWAY_OUT_OF_ORDER: ${SPRING_FLYWAY_OUT_OF_ORDER:-true}
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-intervue_db}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       MYSQL_DATABASE: ${MYSQL_DATABASE:-intervue_db}
@@ -92,14 +92,14 @@ services:
       RABBITMQ_STOMP_PORT: 61613
       RABBITMQ_USER: ${RABBITMQ_USER:-marketlink}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-marketlink_pass}
-      # FR-042 N3: Web Push; trống → tắt
+      # FR-042 N3: Web Push; empty → off
       VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
       VAPID_SUBJECT: ${VAPID_SUBJECT:-mailto:admin@marketlink.local}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:${FRONTEND_PORT:-3000}}
       TZ: ${TZ:-Asia/Ho_Chi_Minh}
       STORAGE_DIR: /app/uploads
-      # FR-115: ảnh chat nằm tách khỏi /app/uploads (thư mục đó phục vụ công khai qua /uploads)
+      # FR-115: chat images live separate from /app/uploads (that directory is served publicly through /uploads)
       CHAT_UPLOAD_DIR: ${CHAT_UPLOAD_DIR:-/var/lib/marketlink/chat}
       CHAT_MAX_UPLOAD_BYTES: ${CHAT_MAX_UPLOAD_BYTES:-5242880}
       CHAT_MESSAGES_PER_MINUTE: ${CHAT_MESSAGES_PER_MINUTE:-30}
@@ -113,10 +113,10 @@ services:
       - ./backend/src:/app/src
       - ./backend/pom.xml:/app/pom.xml
       - m2-cache:/root/.m2
-      # Ảnh/video người dùng tải lên nằm ngay trong project (backend/uploads/) để mở ra xem được và
-      # còn nguyên sau khi build lại container. .gitignore không commit chúng.
+      # User-uploaded images/videos live right inside the project (backend/uploads/) so they can be opened and
+      # survive a container rebuild. .gitignore does not commit them.
       - ./backend/uploads:/app/uploads
-      - chat-uploads:/var/lib/marketlink/chat # FR-115: ảnh chat, kho riêng không phục vụ tĩnh
+      - chat-uploads:/var/lib/marketlink/chat # FR-115: chat images, a separate store that is not served statically
     depends_on:
       mysql:
         condition: service_healthy
@@ -136,18 +136,18 @@ services:
     restart: unless-stopped
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
-      # Bỏ trống → bản đồ dùng tile OpenStreetMap (xem .env.example)
+      # Empty → the map uses OpenStreetMap tiles (see .env.example)
       VITE_MAP_TILE_URL: ${VITE_MAP_TILE_URL:-}
       VITE_MAP_ATTRIBUTION: ${VITE_MAP_ATTRIBUTION:-}
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     volumes:
       - ./frontend:/app
-      - /app/node_modules # giữ node_modules (có prettier/eslint plugin) của image, không bị host đè
+      - /app/node_modules # keep the image's node_modules (with the prettier/eslint plugins), so the host does not overwrite them
     depends_on:
       - backend
 
-  # ----- công cụ quản trị (chỉ chạy với --profile tools) -----
+  # ----- admin tools (only run with --profile tools) -----
   adminer:
     image: adminer:latest
     container_name: intervue-adminer

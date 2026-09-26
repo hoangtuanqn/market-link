@@ -6,8 +6,9 @@ import jakarta.persistence.Converter;
 import java.util.Locale;
 
 /**
- * Loại thông báo (spec §3). persistent = có lưu vào bảng notifications (hiện ở /notifications và số
- * trên chuông); tin nhắn chat và "Gửi thử" chỉ đẩy ra màn hình.
+ * Notification kind (spec §3). persistent = stored in the notifications table (shown at
+ * /notifications and in the bell count); chat messages and "Send test" are only pushed to the
+ * screen.
  */
 public enum NotificationKind {
     ANNOUNCEMENT(NotificationCategory.ANNOUNCEMENTS, true),
@@ -16,8 +17,18 @@ public enum NotificationKind {
     FARMER_REJECTED(NotificationCategory.ACCOUNT, true),
     FARMER_SUSPENDED(NotificationCategory.ACCOUNT, true),
     FARMER_REINSTATED(NotificationCategory.ACCOUNT, true),
+    /**
+     * FR-042/D-11: the order lifecycle milestones — placed, accepted, declined, ready, cancelled.
+     */
+    ORDER_PLACED(NotificationCategory.ORDERS, true),
+    ORDER_ACCEPTED(NotificationCategory.ORDERS, true),
+    ORDER_DECLINED(NotificationCategory.ORDERS, true),
+    ORDER_READY(NotificationCategory.ORDERS, true),
+    ORDER_CANCELLED(NotificationCategory.ORDERS, true),
+    /** FR-041: a favourite product went from no stock to some stock. */
+    RESTOCK(NotificationCategory.FAVORITES, true),
     MESSAGE(NotificationCategory.MESSAGES, false),
-    /** Nút "Gửi thử" trong Settings — không thuộc nhóm nào, luôn hiện. */
+    /** The "Send test" button in Settings — belongs to no category, always shown. */
     TEST(null, false);
 
     private final NotificationCategory category;

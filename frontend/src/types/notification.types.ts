@@ -1,4 +1,4 @@
-/** FR-042 — khớp docs/api-contract.md §9 (NotificationResource, khung STOMP, preferences). */
+/** FR-042 — matches docs/api-contract.md §9 (NotificationResource, the STOMP frame, preferences). */
 export type NotificationKindCode =
   | 'announcement'
   | 'farmer_application'
@@ -21,7 +21,7 @@ export type NotificationItem = {
 
 export type NotificationAlert = { inApp: boolean; browser: boolean; sound: boolean };
 
-/** Khung trên /user/topic/notifications. id null với kind không lưu (message, test). */
+/** The frame on /user/topic/notifications. id is null for kinds that are not stored (message, test). */
 export type NotificationFrame = {
   id: number | null;
   kind: NotificationKindCode;

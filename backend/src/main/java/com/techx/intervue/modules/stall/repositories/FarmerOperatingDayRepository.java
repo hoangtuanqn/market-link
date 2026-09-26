@@ -13,13 +13,18 @@ public interface FarmerOperatingDayRepository extends JpaRepository<FarmerOperat
 
     List<FarmerOperatingDay> findByFarmerMarketId(Long farmerMarketId);
 
-    /** Ghi đè trọn bộ khung giờ của một stall tại một chợ: xoá hết rồi ghi lại (contract §4). */
+    /**
+     * Overwrites a stall's whole set of time windows at one market: delete everything and write it
+     * again (contract §4).
+     */
     @Transactional
     default void replaceDays(Long farmerMarketId, List<OperatingDaysRequest.Day> days) {
         deleteByFarmerMarketId(farmerMarketId);
-        // Hibernate xếp INSERT trước DELETE khi flush; không ép flush ở đây thì ghi lại đúng những
-        // ngày đang có
-        // sẽ vi phạm UNIQUE (…, day_of_week) — lỗi 400 của PUT …/days khi lưu lại tập ngày cũ.
+        // Hibernate orders INSERT before DELETE on flush; without forcing a flush here, writing
+        // back exactly the
+        // days that already exist
+        // would violate UNIQUE (…, day_of_week) — the 400 on PUT …/days when the old set of days is
+        // saved again.
         flush();
         for (OperatingDaysRequest.Day day : days) {
             FarmerOperatingDay row = new FarmerOperatingDay();

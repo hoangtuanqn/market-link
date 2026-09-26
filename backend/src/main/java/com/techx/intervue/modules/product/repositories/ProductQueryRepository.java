@@ -15,16 +15,17 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Đọc sản phẩm cho trang public. JdbcTemplate vì join 5 bảng và lọc theo chợ/thứ; mọi giá trị người
- * dùng đi qua tham số, `sort` qua whitelist — không có chỗ nào nối chuỗi vào SQL (R-04).
+ * Reads products for the public pages. JdbcTemplate because it joins 5 tables and filters by
+ * market/weekday; every user value goes through parameters, `sort` through a whitelist — nowhere
+ * concatenates a string into SQL (R-04).
  */
 @Repository
 @RequiredArgsConstructor
 public class ProductQueryRepository {
 
     /**
-     * Một chỗ duy nhất định nghĩa "sản phẩm nào khách được thấy" (D-09, FR-074). Mọi câu public dán
-     * mảnh này vào.
+     * The single place that defines "which products a customer may see" (D-09, FR-074). Every
+     * public statement pastes this fragment in.
      */
     public static final String VISIBILITY_FILTER =
             """
@@ -56,13 +57,13 @@ public class ProductQueryRepository {
             """;
 
     /**
-     * Một Farmer bán ở hai chợ nhân đôi dòng qua farmer_markets — GROUP BY gộp lại, MIN() chọn một
-     * chợ.
+     * A Farmer selling at two markets doubles rows through farmer_markets — GROUP BY merges them,
+     * MIN() picks one market.
      */
     private static final String SELECT_ITEM =
             """
             SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
-                   p.rating_avg, p.rating_count, p.description,
+                   p.rating_avg, p.rating_count, p.description, p.shelf_life_days,
                    f.id AS farmer_id, f.stall_name,
                    c.id AS category_id, c.name AS category_name,
                    MIN(m.id) AS market_id, MIN(m.market_name) AS market_name
@@ -71,7 +72,8 @@ public class ProductQueryRepository {
     private static final String GROUP_BY =
             """
             GROUP BY p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
-                     p.rating_avg, p.rating_count, p.description, f.id, f.stall_name, c.id, c.name
+                     p.rating_avg, p.rating_count, p.description, p.shelf_life_days, f.id,
+                     f.stall_name, c.id, c.name
             """;
 
     public static final String SEARCH_SQL =
@@ -84,14 +86,15 @@ public class ProductQueryRepository {
             SELECT_ITEM + FROM + VISIBILITY_FILTER + "  AND p.id = :id\n" + GROUP_BY;
 
     /**
-     * Danh sách của chính Farmer: bỏ sản phẩm đã xoá mềm, nhưng GIỮ sản phẩm bị admin ẩn (kèm lý
-     * do) và mọi trạng thái duyệt của stall — Farmer phải thấy hàng của mình dù stall đang bị đình
-     * chỉ (D-09).
+     * The Farmer's own list: skip soft-deleted products, but KEEP products hidden by an admin (with
+     * the reason) and every approval state of the stall — the Farmer must see their goods even when
+     * the stall is suspended (D-09).
      */
     public static final String MINE_SQL =
             """
             SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
-                   p.rating_avg, p.rating_count, p.description, p.is_hidden, p.hidden_reason,
+                   p.rating_avg, p.rating_count, p.description, p.shelf_life_days, p.is_hidden,
+                   p.hidden_reason,
                    f.id AS farmer_id, f.stall_name,
                    c.id AS category_id, c.name AS category_name,
                    NULL AS market_id, NULL AS market_name
@@ -136,7 +139,7 @@ public class ProductQueryRepository {
         return new PageResource<>(items, offset / limit + 1, limit, total == null ? 0 : total);
     }
 
-    /** Whitelist sort — giá trị từ query string KHÔNG bao giờ đi thẳng vào ORDER BY (R-04). */
+    /** Whitelist sort — a value from the query string NEVER goes straight into ORDER BY (R-04). */
     public static String orderBy(String sort) {
         return switch (sort == null ? "" : sort) {
             case "price_asc" -> "p.price ASC";
@@ -163,7 +166,8 @@ public class ProductQueryRepository {
                         .addValue("day", c.day());
         Long total = jdbc.queryForObject(COUNT_SQL, params, Long.class);
         params.addValue("limit", limit).addValue("offset", offset);
-        // orderBy đã qua whitelist ở trên; p.id nối sau để thứ tự ổn định giữa hai trang.
+        // orderBy has already gone through the whitelist above; p.id is appended so the order is
+        // stable between two pages.
         List<ProductListItemResource> items =
                 jdbc.query(
                         SEARCH_SQL + " ORDER BY " + orderBy + ", p.id LIMIT :limit OFFSET :offset",
@@ -208,10 +212,11 @@ public class ProductQueryRepository {
                 rs.getString("image_url"),
                 rs.getString("status"),
                 rs.getBigDecimal("rating_avg"),
-                rs.getInt("rating_count"));
+                rs.getInt("rating_count"),
+                rs.getInt("shelf_life_days"));
     }
 
-    /** '%' và '_' người dùng gõ không được thành ký tự đại diện. */
+    /** '%' and '_' typed by the user must not act as wildcards. */
     private static String escapeLike(String raw) {
         return raw.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }

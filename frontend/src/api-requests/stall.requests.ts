@@ -2,10 +2,10 @@ import type { ApiResponse, PageType } from '@/types/api.types';
 import { dayName } from '@/lib/format';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
 
-/** Một ngày nhận hàng của stall tại một chợ; giờ "HH:mm" (contract §4). */
+/** One pickup day of a stall at a market; times "HH:mm" (contract §4). */
 export type OperatingDayDto = { dayOfWeek: number; pickupStartTime: string; pickupEndTime: string };
 
-/** Một chợ mà stall đang bán, kèm quầy và khung giờ theo thứ (contract §4 `markets[]`). */
+/** One market a stall sells at, with the booth and time windows by weekday (contract §4 `markets[]`). */
 export type StallMarketDto = {
   farmerMarketId: number;
   marketId: number;
@@ -16,7 +16,7 @@ export type StallMarketDto = {
   operatingDays: OperatingDayDto[];
 };
 
-/** GET /farmers/{id} và GET /farmer/profile. `approvalStatus` chỉ có ý nghĩa cho chính Farmer. */
+/** GET /farmers/{id} and GET /farmer/profile. `approvalStatus` only matters to the Farmer themself. */
 export type StallDetailDto = {
   farmerId: number;
   stallName: string;
@@ -30,7 +30,7 @@ export type StallDetailDto = {
   markets: StallMarketDto[];
 };
 
-/** Một stall trong danh sách của chợ hoặc kết quả tìm (GET /farmers, GET /markets/{id}/farmers). */
+/** One stall in a market's list or a search result (GET /farmers, GET /markets/{id}/farmers). */
 export type StallSummaryDto = {
   farmerId: number;
   stallName: string;
@@ -63,7 +63,7 @@ export type JoinMarketInput = {
 
 export type OperatingDayInput = { dayOfWeek: number; pickupStartTime: string; pickupEndTime: string };
 
-/** Một slot nhận hàng (contract §6): ngày "yyyy-MM-dd", giờ "HH:mm"; `isActive` luôn true ở danh sách công khai. */
+/** One pickup slot (contract §6): date "yyyy-MM-dd", time "HH:mm"; `isActive` is always true on the public list. */
 export type SlotDto = {
   slotId: number;
   farmerMarketId: number;
@@ -77,7 +77,7 @@ export type SlotDto = {
   isActive: boolean;
 };
 
-/** Sinh slot từ khung giờ theo thứ; tối đa 60 ngày một lần, không bắt đầu từ quá khứ. */
+/** Generate slots from weekday time windows; at most 60 days at once, cannot start in the past. */
 export type GenerateSlotsInput = {
   farmerMarketId: number;
   fromDate: string;
@@ -86,10 +86,10 @@ export type GenerateSlotsInput = {
   maxOrders: number;
 };
 
-/** Trường nào bỏ trống thì giữ nguyên. */
+/** A field left empty keeps its old value. */
 export type UpdateSlotInput = { maxOrders?: number; isActive?: boolean };
 
-/** Hình dạng mà SlotPicker (giỏ hàng) và bảng slot của Farmer đang nhận; `off` = Farmer đã tắt slot. */
+/** The shape SlotPicker (the cart) and the Farmer's slot table both take; `off` = the Farmer turned the slot off. */
 export type SlotOptionData = { value: string; time: string; booked: number; max: number; off: boolean };
 
 export const toSlotOption = (dto: SlotDto): SlotOptionData => ({
@@ -100,7 +100,7 @@ export const toSlotOption = (dto: SlotDto): SlotOptionData => ({
   off: !dto.isActive,
 });
 
-/** Hình dạng mà StallCard đang nhận (thẻ stall trên trang chợ). */
+/** The shape StallCard takes (the stall card on the market page). */
 export type StallCardData = {
   id: number;
   stall: string;
@@ -116,10 +116,10 @@ export type StallCardData = {
   reviews: number;
 };
 
-/** "07:00" + "11:00" → "07:00 – 11:00"; thiếu một đầu thì để trống, trang tự ẩn. */
+/** "07:00" + "11:00" → "07:00 – 11:00"; if one end is missing leave it empty, the page hides it itself. */
 export const pickupWindow = (start?: string | null, end?: string | null) => (start && end ? `${start} – ${end}` : '');
 
-/** [0, 6] → "Sun, Sat" theo ngôn ngữ người đọc. */
+/** [0, 6] → "Sun, Sat" in the reader's language. */
 export const dayNames = (days: number[]) =>
   [...new Set(days)]
     .sort((a, b) => a - b)
@@ -142,11 +142,11 @@ export const toStallCard = (dto: StallSummaryDto, marketId: number, marketName: 
 });
 
 /**
- * FR-011, FR-060, FR-061 — stall công khai và hồ sơ gian hàng của Farmer (docs/api-contract.md §4); FR-032, FR-067 —
- * slot nhận hàng (§6).
+ * FR-011, FR-060, FR-061 — public stalls and the Farmer's stall profile (docs/api-contract.md §4); FR-032, FR-067 —
+ * pickup slots (§6).
  */
 class StallApi {
-  /** Public. `page` từ 1, tối đa 50 một trang. */
+  /** Public. `page` from 1, at most 50 per page. */
   static list = async (
     params: { q?: string; marketId?: number; day?: number; page?: number; pageSize?: number } = {},
   ) => {
@@ -154,13 +154,13 @@ class StallApi {
     return response.data.data;
   };
 
-  /** Public. 404 `NOT_FOUND` khi stall không có, chưa duyệt hoặc bị đình chỉ (D-09). */
+  /** Public. 404 `NOT_FOUND` when the stall does not exist, is not approved or is suspended (D-09). */
   static get = async (id: number) => {
     const response = await publicApi.get<ApiResponse<StallDetailDto>>(`/farmers/${id}`);
     return response.data.data;
   };
 
-  /** Public. Stall đang bán tại một chợ, lọc theo thứ (0 = Chủ nhật) nếu có (FR-010). */
+  /** Public. Stalls selling at a market, filtered by weekday (0 = Sunday) if given (FR-010). */
   static atMarket = async (marketId: number, day?: number) => {
     const response = await publicApi.get<ApiResponse<StallSummaryDto[]>>(`/markets/${marketId}/farmers`, {
       params: day == null ? {} : { day },
@@ -168,7 +168,7 @@ class StallApi {
     return response.data.data;
   };
 
-  /** Farmer — hồ sơ của chính mình, mọi trạng thái duyệt. */
+  /** Farmer — your own profile, in every approval state. */
   static myProfile = async () => {
     const response = await privateApi.get<ApiResponse<StallDetailDto>>('/farmer/profile');
     return response.data.data;
@@ -179,7 +179,7 @@ class StallApi {
     return response.data.data;
   };
 
-  /** 403 `STALL_NOT_APPROVED` khi chưa được duyệt; 409 `MARKET_ALREADY_JOINED` khi đã bán ở chợ đó. */
+  /** 403 `STALL_NOT_APPROVED` when not yet approved; 409 `MARKET_ALREADY_JOINED` when already selling at that market. */
   static joinMarket = async (input: JoinMarketInput) => {
     const response = await privateApi.post<ApiResponse<StallMarketDto>>('/farmer/markets', input);
     return response.data.data;
@@ -189,7 +189,7 @@ class StallApi {
     await privateApi.delete<ApiResponse<null>>(`/farmer/markets/${farmerMarketId}`);
   };
 
-  /** Ghi đè trọn bộ khung giờ tại một chợ. */
+  /** Overwrites the whole set of time windows at one market. */
   static setDays = async (farmerMarketId: number, days: OperatingDayInput[]) => {
     const response = await privateApi.put<ApiResponse<StallMarketDto>>(`/farmer/markets/${farmerMarketId}/days`, {
       days,
@@ -198,8 +198,9 @@ class StallApi {
   };
 
   /**
-   * Public. Slot còn nhận đơn của một stall, theo ngày rồi giờ; không truyền `date` thì từ hôm nay tới hết 14 ngày.
-   * Slot đã tắt không có ở đây. 404 `NOT_FOUND` khi stall không có, chưa duyệt hoặc bị đình chỉ.
+   * Public. Slots of a stall still accepting orders, by date then time; with no `date` given, from today through the
+   * next 14 days. A disabled slot is not here. 404 `NOT_FOUND` when the stall does not exist, is not approved or is
+   * suspended.
    */
   static slots = async (farmerId: number, params: { marketId?: number; date?: string } = {}) => {
     const response = await publicApi.get<ApiResponse<SlotDto[]>>(`/farmers/${farmerId}/slots`, { params });
@@ -207,15 +208,15 @@ class StallApi {
   };
 
   /**
-   * Farmer. Trả mọi slot của chợ đó trong khoảng ngày (cả slot đã có); bấm lại không sinh trùng. 400 `VALIDATION_ERROR`
-   * khi khoảng ngày sai; 403 `FORBIDDEN` khi `farmerMarketId` không phải của mình.
+   * Farmer. Returns every slot of that market in the date range (including existing ones); calling it again does not
+   * duplicate. 400 `VALIDATION_ERROR` for a bad date range; 403 `FORBIDDEN` when `farmerMarketId` is not yours.
    */
   static generateSlots = async (input: GenerateSlotsInput) => {
     const response = await privateApi.post<ApiResponse<SlotDto[]>>('/farmer/slots/generate', input);
     return response.data.data;
   };
 
-  /** Farmer. 409 `SLOT_BELOW_BOOKED` khi hạ `maxOrders` xuống dưới số đơn đã đặt vào slot. */
+  /** Farmer. 409 `SLOT_BELOW_BOOKED` when lowering `maxOrders` below the number of orders already placed into the slot. */
   static updateSlot = async (slotId: number, input: UpdateSlotInput) => {
     const response = await privateApi.patch<ApiResponse<SlotDto>>(`/farmer/slots/${slotId}`, input);
     return response.data.data;

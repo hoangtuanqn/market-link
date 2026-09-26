@@ -1,4 +1,4 @@
-// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
+// The sample-data lookup functions are all pure: NO_SIDE_EFFECTS lets the production build drop them (config/wip.ts).
 /**
  * Full demo catalogue, copied from docs/prototype/data.js. Shared across every public and Farmer/Admin screen so the
  * same stall, product and price shows up consistently everywhere it's referenced. Replace with API calls when the
@@ -690,7 +690,7 @@ function primaryMarketName(farmerId: number): string {
   return markets.find((m) => m.id === f.markets[0])?.name ?? '';
 }
 
-// PURE: bản build production bỏ được cả module dữ liệu mẫu khi không màn nào dùng tới (config/wip.ts).
+// PURE: the production build can drop the whole sample-data module too once no screen uses it (config/wip.ts).
 export const products: ProductType[] = /* @__PURE__ */ RAW_PRODUCTS.map((p) => ({
   id: p.id,
   name: p.name,

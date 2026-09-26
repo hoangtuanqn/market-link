@@ -1,4 +1,7 @@
 package com.techx.intervue.modules.product.resources;
 
-/** Dòng chi tiết đọc từ SQL: item + mô tả. Service ghép thêm stall và tóm tắt đánh giá. */
+/**
+ * The detail row read from SQL: item + description. The service adds the stall and the review
+ * summary.
+ */
 public record ProductDetailRow(ProductListItemResource item, String description) {}

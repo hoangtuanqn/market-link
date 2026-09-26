@@ -14,8 +14,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Spec §8.2: người dùng chọn ảnh rồi đổi ý thì file nằm lại trên volume mãi. Mỗi giờ quét một lần,
- * xoá ảnh chưa gắn vào tin nào và cũ hơn 24 giờ. @EnableScheduling đã bật ở AppConfig.
+ * Spec §8.2: if a user picks an image and then changes their mind, the file stays on the volume
+ * forever. Once an hour it sweeps, deleting images not attached to any message and older than 24
+ * hours. @EnableScheduling is already on in AppConfig.
  */
 @Slf4j
 @Component
@@ -49,7 +50,8 @@ public class ChatAttachmentCleanupJob {
             try {
                 storage.delete(AttachmentService.FOLDER, orphan.getStorageKey());
             } catch (RuntimeException e) {
-                // Một file hỏng không được giữ lại cả mẻ; hàng DB vẫn xoá, file thừa chỉ tốn chỗ
+                // One bad file must not hold back the whole batch; the DB row is still deleted, a
+                // leftover file only costs space
                 log.warn(
                         "Could not delete orphan chat photo {}: {}",
                         orphan.getStorageKey(),

@@ -23,6 +23,12 @@ type LocationPickerProps = {
   pinLabel?: string;
   /** The market this pin sits in, drawn as a fixed square pin for context. Omit for a plain picker. */
   market?: { lat: number; lng: number; name: string };
+  /**
+   * Bump this (e.g. a counter) to fly the view to `lat`/`lng` at a wider zoom — for "jump to this district", not for
+   * every coordinate change. Typing lat/lng or dragging the pin only move the pin, on purpose: re-centring on every
+   * keystroke or right after a drag would fight the very thing the admin is doing.
+   */
+  focusToken?: number;
 };
 
 /**
@@ -37,11 +43,13 @@ const LocationPicker = ({
   onMove,
   pinLabel: pinLabelProp,
   market,
+  focusToken,
 }: LocationPickerProps) => {
   const { t } = useTranslation();
   const pinLabel = pinLabelProp ?? t('map.yourStall');
   const attribution = tileAttribution(t);
   const hostRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
   const pinRef = useRef<L.Marker | null>(null);
   const onMoveRef = useRef(onMove);
   useEffect(() => {
@@ -91,6 +99,7 @@ const LocationPicker = ({
       onMoveRef.current(ll.lat, ll.lng);
     });
     pinRef.current = pin;
+    mapRef.current = map;
 
     const resize = window.setTimeout(() => map.invalidateSize(), 50);
 
@@ -99,15 +108,29 @@ const LocationPicker = ({
       map.remove();
       inner.remove();
       pinRef.current = null;
+      mapRef.current = null;
     };
     // Only a change of market (or of language) rebuilds the map; pin moves are applied to the existing marker below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketLat, marketLng, marketName, pinLabel, attribution]);
 
   // Keeps the pin in sync when the coordinates change from outside a drag (typing lat/lng, "use the market's location").
+  // If that puts the pin outside the visible map, pan to it at the same zoom: otherwise typed coordinates looked like
+  // they placed nothing (QA E2E v2 MARKET-ADMIN-002). A drag always ends in view, so this never fights one.
   useEffect(() => {
-    pinRef.current?.setLatLng([lat, lng]);
+    const map = mapRef.current;
+    const pin = pinRef.current;
+    if (!map || !pin || !Number.isFinite(lat) || !Number.isFinite(lng)) return;
+    pin.setLatLng([lat, lng]);
+    if (!map.getBounds().contains([lat, lng])) map.panTo([lat, lng]);
   }, [lat, lng]);
+
+  // Jumps the view there too, but only when asked to (focusToken bump) — see the prop doc for why.
+  useEffect(() => {
+    if (focusToken === undefined) return;
+    mapRef.current?.setView([lat, lng], 13);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focusToken]);
 
   return <div ref={hostRef} role="region" aria-label={label} className={Helper.cn('ml-map isolate', className)} />;
 };

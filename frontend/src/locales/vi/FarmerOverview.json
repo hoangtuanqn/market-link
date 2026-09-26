@@ -1,6 +1,6 @@
 {
   "tabs": {
-    "new": "Chờ duyệt",
+    "new": "Đã đặt",
     "acc": "Đã nhận",
     "ready": "Sẵn sàng",
     "done": "Hoàn tất"
@@ -44,7 +44,7 @@
     "view": "Xem"
   },
   "captions": {
-    "new": "Chờ duyệt · {{sat}} và {{sun}}",
+    "new": "Đã đặt · {{sat}} và {{sun}}",
     "ready": "Sẵn sàng để nhận"
   },
   "overline": "Sạp của bạn tại {{market}} · ngày chợ tới {{day}}",

@@ -5,9 +5,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 /**
- * Review focus #5 / D-09 — sản phẩm của stall bị đình chỉ phải biến mất khỏi mọi trang public,
- * nhưng bản ghi vẫn còn để đơn đang chạy đọc được. Test đọc thẳng câu SQL hằng số, không cần
- * database.
+ * Review focus #5 / D-09 — a suspended stall's products must disappear from every public page, but
+ * the records remain so running orders can read them. The test reads the constant SQL statement
+ * directly, needing no database.
  */
 class ProductVisibilityFilterTest {
 

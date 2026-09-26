@@ -35,12 +35,6 @@
     "announcements_one": "Hinweis läuft, Thảo Điền am 04.10. geschlossen",
     "announcements_other": "Hinweise laufen"
   },
-  "earned": {
-    "title": "Was MarketLink verdient hat",
-    "link": "Umsatzbericht",
-    "note": "{{month}}, von Ständen, die Platzierung kaufen. Getrennt von dem Geld, das die Märkte eingenommen haben.",
-    "of": "₫ · das sind {{pct}} % der {{gmv}}, die die Märkte eingenommen haben"
-  },
   "byMarket": {
     "title": "Bestellungen dieser Woche nach Markt",
     "link": "Alle Bestellungen",

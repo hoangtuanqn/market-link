@@ -6,7 +6,7 @@
   "cards": {
     "upcoming_one": "{{count}} 个待取订单",
     "upcoming_other": "{{count}} 个待取订单",
-    "upcomingBreakdown": "{{placed}} 个待审核 · {{accepted}} 个已接受 · {{ready}} 个已备好",
+    "upcomingBreakdown": "{{placed}} 个已下单 · {{accepted}} 个已接受 · {{ready}} 个已备好",
     "favorites_one": "{{count}} 个收藏",
     "favorites_other": "{{count}} 个收藏",
     "stalls_one": "{{count}} 个摊位",

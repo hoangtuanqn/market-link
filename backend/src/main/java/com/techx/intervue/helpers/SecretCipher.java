@@ -9,9 +9,9 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * Mã hoá AES-256-GCM cho bí mật phải đọc lại được (khoá TOTP): khác mật khẩu, không băm một chiều
- * được. Kết quả là Base64 của iv (12 byte) + ciphertext + tag, nên lộ DB mà không có khoá thì không
- * sinh được mã.
+ * AES-256-GCM encryption for secrets that must be readable again (the TOTP key): unlike a password,
+ * it cannot be hashed one-way. The result is the Base64 of iv (12 bytes) + ciphertext + tag, so a
+ * leaked DB without the key cannot produce codes.
  */
 public final class SecretCipher {
 
@@ -23,7 +23,7 @@ public final class SecretCipher {
     private final SecretKeySpec key;
 
     /**
-     * @param base64Key 32 byte Base64 — sinh bằng {@code openssl rand -base64 32}
+     * @param base64Key 32 bytes in Base64 — generate with {@code openssl rand -base64 32}
      */
     public SecretCipher(String base64Key) {
         byte[] raw;
@@ -53,7 +53,7 @@ public final class SecretCipher {
         }
     }
 
-    /** Sai khoá hoặc dữ liệu bị sửa → IllegalArgumentException (GCM kiểm tra tag). */
+    /** A wrong key or tampered data → IllegalArgumentException (GCM checks the tag). */
     public byte[] decrypt(String encoded) {
         try {
             ByteBuffer data = ByteBuffer.wrap(Base64.getDecoder().decode(encoded));

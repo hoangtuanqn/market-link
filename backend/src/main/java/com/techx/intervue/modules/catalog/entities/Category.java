@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * FR-076 master data do admin quản; FR-020 khách lọc sản phẩm theo đây. Bảng `categories`
- * (V20260926008).
+ * FR-076 master data managed by the admin; FR-020 customers filter products by it. Table
+ * `categories` (V20260926008).
  */
 @Entity
 @Getter
@@ -31,16 +31,23 @@ public class Category {
     @Column(nullable = false, unique = true, length = 80)
     private String slug;
 
-    @Column(length = 255)
-    private String description;
-
-    @Column(length = 50)
-    private String icon;
-
     @Column(name = "sort_order", nullable = false)
     private int sortOrder;
 
-    /** Xoá mềm: tắt thì biến mất khỏi bộ lọc của khách, sản phẩm cũ vẫn trỏ về được. */
+    /**
+     * The category's standard shelf-life range — a suggestion and a soft constraint for
+     * Product.shelfLifeDays.
+     */
+    @Column(name = "min_shelf_life_days", nullable = false)
+    private int minShelfLifeDays;
+
+    @Column(name = "max_shelf_life_days", nullable = false)
+    private int maxShelfLifeDays;
+
+    /**
+     * Soft delete: once disabled it disappears from the customer's filter, old products can still
+     * point to it.
+     */
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 }

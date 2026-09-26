@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Banner } from '@/components/ui/banner';
 
 type CameraStepProps = {
-  /** Nhận element video đang phát để dialog chụp khung hình. */
+  /** Takes the playing video element so the dialog can capture a frame. */
   onReady: (video: HTMLVideoElement | null) => void;
 };
 
@@ -18,7 +18,7 @@ const cameraError = (error: unknown): CameraError => {
   return 'failed';
 };
 
-/** Xem trước camera trước (lật như gương cho dễ canh), tắt camera ngay khi rời bước này. */
+/** Preview the front camera (mirrored so it is easier to frame), turn the camera off as soon as this step is left. */
 const CameraStep = ({ onReady }: CameraStepProps) => {
   const { t } = useTranslation('CustomerAccount');
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,9 +29,9 @@ const CameraStep = ({ onReady }: CameraStepProps) => {
     let stream: MediaStream | null = null;
     let cancelled = false;
 
-    // getUserMedia chỉ có trên https hoặc localhost
+    // getUserMedia only exists on https or localhost
     if (!navigator.mediaDevices?.getUserMedia) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- trình duyệt không hỗ trợ, báo ngay
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- the browser does not support it, report right away
       setError('insecure');
       setStarting(false);
       return;

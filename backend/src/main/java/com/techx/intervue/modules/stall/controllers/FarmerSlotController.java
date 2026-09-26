@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-032, FR-067 — Farmer sinh và quản slot nhận hàng của mình (contract §6, R-06). */
+/** FR-032, FR-067 — a Farmer generates and manages their own pickup slots (contract §6, R-06). */
 @RestController
 @RequestMapping("/api/v1/farmer/slots")
 @PreAuthorize("hasRole('FARMER')")

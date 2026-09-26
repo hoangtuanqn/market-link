@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-038: một lần đổi trạng thái đơn. Dòng đầu tiên có fromStatus = NULL (lúc đặt). */
+/** FR-038: one order status change. The first row has fromStatus = NULL (at order time). */
 @Entity
 @Getter
 @Setter
@@ -42,7 +42,7 @@ public class OrderStatusHistory {
     @Column(length = 255)
     private String note;
 
-    /** Database điền (DEFAULT CURRENT_TIMESTAMP); chỉ đọc. */
+    /** Filled in by the database (DEFAULT CURRENT_TIMESTAMP); read-only. */
     @Column(name = "changed_at", insertable = false, updatable = false)
     private Instant changedAt;
 }

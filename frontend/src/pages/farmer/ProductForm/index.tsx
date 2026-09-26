@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState, type ChangeEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
 import ProductApi, { type ProductInput } from '@/api-requests/product.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
+import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { LoadError } from '@/components/ui/data-state';
@@ -27,8 +28,10 @@ type FormState = {
   desc: string;
   imageUrl: string;
   status: ProductStatus;
+  /** Days the product stays fresh — no FR yet, see migration V20260926016. */
+  shelfLife: number | '';
 };
-type FormErrors = Partial<Record<'name' | 'cat' | 'price' | 'qty' | 'image', string>>;
+type FormErrors = Partial<Record<'name' | 'cat' | 'price' | 'qty' | 'image' | 'shelfLife', string>>;
 
 /** Contract §5 field names → this form's field ids. */
 const SERVER_FIELDS: Record<string, keyof FormErrors> = {
@@ -37,6 +40,7 @@ const SERVER_FIELDS: Record<string, keyof FormErrors> = {
   price: 'price',
   stockQuantity: 'qty',
   imageUrl: 'image',
+  shelfLifeDays: 'shelfLife',
 };
 
 const EMPTY: FormState = {
@@ -48,6 +52,7 @@ const EMPTY: FormState = {
   desc: '',
   imageUrl: '',
   status: 'available',
+  shelfLife: '',
 };
 
 const fromProduct = (p: ProductType): FormState => {
@@ -60,6 +65,7 @@ const fromProduct = (p: ProductType): FormState => {
     desc: p.desc ?? '',
     imageUrl: p.imageUrl ?? '',
     status: p.status,
+    shelfLife: p.shelfLifeDays ?? '',
   };
 };
 
@@ -71,11 +77,13 @@ const FarmerProductFormPage = () => {
   const navigate = useNavigate();
   const editing = id != null;
   const productId = Number(id);
+  const validId = !editing || (Number.isInteger(productId) && productId > 0);
 
-  // The contract has no GET /farmer/products/{id}; the stall's own list is at most 50 rows, so we read it there.
   const { state: load, retry } = useRequest(`my-product:${id ?? 'new'}`, () =>
-    editing ? ProductApi.mine().then((list) => list.find((p) => p.id === productId) ?? null) : Promise.resolve(null),
+    editing ? (validId ? ProductApi.getMine(productId) : Promise.reject(new Error('missing'))) : Promise.resolve(null),
   );
+  /** The server's 404, or an id that could never be one — the "not here any more" page, not the error block. */
+  const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'PRODUCT_NOT_FOUND');
   const { state: categoriesLoad } = useRequest('categories', () => CatalogApi.listCategories());
   const categories = categoriesLoad.kind === 'ready' ? categoriesLoad.data : [];
   const existing = load.kind === 'ready' ? load.data : null;
@@ -88,14 +96,17 @@ const FarmerProductFormPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  // In-flight upload only, never persisted: a skeleton tile until the URL lands in form.imageUrl.
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   if (load.kind === 'loading') {
     return <MarketCardSkeleton count={1} />;
   }
-  if (load.kind === 'error') {
+  if (load.kind === 'error' && !missing) {
     return <LoadError noun={t('error.noun')} onRetry={retry} />;
   }
-  if (editing && !existing) {
+  if (missing) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
         <h1 className="text-h2">{t('notFound.title')}</h1>
@@ -106,7 +117,13 @@ const FarmerProductFormPage = () => {
   }
 
   const categoryId = form.categoryId ?? categories[0]?.id ?? null;
-  const categoryName = categories.find((c) => c.id === categoryId)?.name ?? '';
+  const selectedCategory = categories.find((c) => c.id === categoryId);
+  const categoryName = selectedCategory?.name ?? '';
+  // Soft guidance only (user decision 2026-09-26): outside the range still saves, Farmer is on the hook for it.
+  const shelfLifeOutOfRange =
+    selectedCategory != null &&
+    form.shelfLife !== '' &&
+    (form.shelfLife < selectedCategory.minShelfLifeDays || form.shelfLife > selectedCategory.maxShelfLifeDays);
   const [unitOne, unitMany] = [form.unitChoice, pluralOf(form.unitChoice)];
   // A product saved with a unit outside the fixed list keeps it selectable, so editing never changes it silently.
   const unitOptions = UNITS.some((u) => u.one === form.unitChoice)
@@ -119,13 +136,36 @@ const FarmerProductFormPage = () => {
     if (categoryId == null) next.cat = t('errors.required');
     if (!Number.isFinite(form.price) || form.price < 0) next.price = t('errors.price');
     if (!Number.isInteger(form.qty) || form.qty < 0) next.qty = t('qty.error');
+    if (form.shelfLife === '' || !Number.isInteger(form.shelfLife) || form.shelfLife < 1) {
+      next.shelfLife = t('shelfLife.error');
+    }
     return next;
   };
 
+  /** Uploads right away on choosing a file (docs/prototype pattern), replacing whatever photo was there before. */
+  const onImageChosen = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setUploadingImage(true);
+    try {
+      const url = await ProductApi.uploadProductImage(file);
+      setForm({ imageUrl: url });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const save = async () => {
+    if (uploadingImage) {
+      Notification.error({ text: t('photo.uploadInProgress') });
+      return;
+    }
     const found = validate();
     setErrors(found);
-    if (Object.keys(found).length || categoryId == null) return;
+    if (Object.keys(found).length || categoryId == null || form.shelfLife === '') return;
     const input: ProductInput = {
       categoryId,
       name: form.name.trim(),
@@ -134,6 +174,7 @@ const FarmerProductFormPage = () => {
       unit: unitOne.slice(0, 20),
       stockQuantity: form.qty,
       imageUrl: form.imageUrl.trim() || undefined,
+      shelfLifeDays: form.shelfLife,
     };
     setSaving(true);
     try {
@@ -228,8 +269,7 @@ const FarmerProductFormPage = () => {
           </div>
 
           <div className="md:col-span-2">
-            <span className="text-small text-ink font-bold">{t('preview.label')}</span>
-            <p className="border-line-strong bg-surface-raised mt-1.5 rounded-md border-[1.5px] p-4 text-[16px]">
+            <Banner variant="info" title={t('preview.label')}>
               <Trans
                 t={t}
                 i18nKey="preview.text"
@@ -240,7 +280,7 @@ const FarmerProductFormPage = () => {
                 }}
                 components={{ b: <b /> }}
               />
-            </p>
+            </Banner>
           </div>
 
           <Field
@@ -262,6 +302,37 @@ const FarmerProductFormPage = () => {
             onChange={(e) => setForm({ qty: Number(e.target.value) || 0 })}
             error={errors.qty}
           />
+
+          <div className="flex flex-col gap-1.5">
+            <Field
+              id="shelf-life"
+              label={t('shelfLife.label')}
+              required
+              inputMode="numeric"
+              value={form.shelfLife}
+              onChange={(e) => {
+                const raw = e.target.value;
+                setForm({ shelfLife: raw === '' ? '' : Math.max(0, Number(raw) || 0) });
+              }}
+              hint={
+                selectedCategory
+                  ? t('shelfLife.hint', {
+                      min: selectedCategory.minShelfLifeDays,
+                      max: selectedCategory.maxShelfLifeDays,
+                    })
+                  : undefined
+              }
+              error={errors.shelfLife}
+            />
+            {shelfLifeOutOfRange && selectedCategory && (
+              <Banner variant="warning" title={t('shelfLife.warningTitle')}>
+                {t('shelfLife.warningText', {
+                  min: selectedCategory.minShelfLifeDays,
+                  max: selectedCategory.maxShelfLifeDays,
+                })}
+              </Banner>
+            )}
+          </div>
 
           <div className="flex flex-col gap-1.5 md:col-span-2">
             <label htmlFor="desc" className="text-small font-bold">
@@ -290,29 +361,58 @@ const FarmerProductFormPage = () => {
 
         <div className="flex flex-col gap-2">
           <span className="text-small font-bold">{t('photo.label')}</span>
+          <input
+            ref={imageInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="hidden"
+            onChange={(e) => void onImageChosen(e)}
+          />
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-[160px_minmax(0,1fr)]">
-            {form.imageUrl.trim() ? (
-              <img
-                src={form.imageUrl.trim()}
-                alt=""
-                className="border-line aspect-4/3 w-full rounded-md border object-cover"
+            {uploadingImage ? (
+              <span
+                aria-hidden="true"
+                role="status"
+                aria-label={t('photo.uploading')}
+                className="ml-skel aspect-4/3 w-full rounded-md"
               />
+            ) : form.imageUrl.trim() ? (
+              <div className="relative">
+                <img
+                  src={`${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${form.imageUrl}`}
+                  alt={t('photo.alt')}
+                  className="border-line aspect-4/3 w-full rounded-md border object-cover"
+                />
+                <button
+                  type="button"
+                  onClick={() => setForm({ imageUrl: '' })}
+                  className="bg-surface-raised text-ink absolute top-1 right-1 grid size-6 cursor-pointer place-items-center rounded-full text-[13px] font-bold"
+                  aria-label={t('photo.remove')}
+                >
+                  ×
+                </button>
+              </div>
             ) : (
               <span className="border-line bg-surface-sunken text-ink-muted font-hand flex aspect-4/3 w-full items-center justify-center rounded-md border p-2 text-center">
                 {categoryName}
               </span>
             )}
             <div className="flex flex-col gap-2">
-              <Field
-                id="image"
-                label={t('image.label')}
-                type="url"
-                value={form.imageUrl}
-                onChange={(e) => setForm({ imageUrl: e.target.value })}
-                hint={t('image.hint')}
-                error={errors.image}
-              />
+              <Button
+                type="button"
+                variant="secondary"
+                className="self-start"
+                onClick={() => imageInputRef.current?.click()}
+                disabled={uploadingImage}
+              >
+                {form.imageUrl.trim() ? t('photo.replace') : t('photo.add')}
+              </Button>
               <p className="text-caption text-ink-muted">{t('photo.hint')}</p>
+              {errors.image && (
+                <p role="alert" className="text-danger m-0 text-[13px]">
+                  {errors.image}
+                </p>
+              )}
             </div>
           </div>
         </div>

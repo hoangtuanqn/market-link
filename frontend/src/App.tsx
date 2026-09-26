@@ -1,7 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
+import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import ComingSoon from './components/ComingSoon';
 import { SHOW_WIP } from './config/wip';
+import { USER_ROLE } from './constants/enums';
 import NotificationCenter from './components/notifications/NotificationCenter';
 import NotificationPermissionBanner from './components/notifications/NotificationPermissionBanner';
 import SettingsSync from './components/SettingsSync';
@@ -35,7 +37,7 @@ import CustomerReviewWip from './pages/customer/Review';
 import CustomerBecomeFarmerPage from './pages/customer/BecomeFarmer';
 import ChangePasswordPage from './pages/customer/ChangePassword';
 import CustomerSettingsPage from './pages/customer/Settings';
-import CustomerAssistantPage from './pages/customer/Assistant';
+import CustomerAssistantWip from './pages/customer/Assistant';
 import MarketsPage from './pages/public/Markets';
 import MarketDetailPage from './pages/public/MarketDetail';
 import ProductsPage from './pages/public/Products';
@@ -61,7 +63,6 @@ import FarmerReviewsWip from './pages/farmer/Reviews';
 import FarmerMessagesPage from './pages/farmer/Messages';
 import FarmerNotificationsPage from './pages/farmer/Notifications';
 import FarmerPendingWip from './pages/farmer/Pending';
-import FarmerPromoteWip from './pages/farmer/Promote';
 import AdminLoginPage from './pages/admin/Login';
 import AdminHomeWip from './pages/admin/Home';
 import AdminVerifyPage from './pages/admin/Verify';
@@ -80,12 +81,10 @@ import AdminMarketsPage from './pages/admin/Markets';
 import AdminModerationPage from './pages/admin/Moderation';
 import AdminOrderDetailWip from './pages/admin/OrderDetail';
 import AdminOrdersWip from './pages/admin/Orders';
-import AdminPricingWip from './pages/admin/Pricing';
 import AdminReportsWip from './pages/admin/Reports';
-import AdminRevenueWip from './pages/admin/Revenue';
 
-// Màn còn chạy trên dữ liệu mẫu (src/data): bản build production hiện "Coming soon" thay vào (config/wip.ts).
-// Nối xong API cho màn nào thì bỏ màn đó khỏi danh sách này.
+// A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
+// Once a screen's API is wired up, remove it from this list.
 const CustomerDashboardPage = SHOW_WIP ? CustomerDashboardWip : ComingSoon;
 const CustomerOrdersPage = SHOW_WIP ? CustomerOrdersWip : ComingSoon;
 const CustomerOrderDetailPage = SHOW_WIP ? CustomerOrderDetailWip : ComingSoon;
@@ -101,11 +100,8 @@ const FarmerSlotsPage = SHOW_WIP ? FarmerSlotsWip : ComingSoon;
 const FarmerHistoryPage = SHOW_WIP ? FarmerHistoryWip : ComingSoon;
 const FarmerReviewsPage = SHOW_WIP ? FarmerReviewsWip : ComingSoon;
 const FarmerPendingPage = SHOW_WIP ? FarmerPendingWip : ComingSoon;
-const FarmerPromotePage = SHOW_WIP ? FarmerPromoteWip : ComingSoon;
 const AdminHomePage = SHOW_WIP ? AdminHomeWip : ComingSoon;
 const AdminReportsPage = SHOW_WIP ? AdminReportsWip : ComingSoon;
-const AdminRevenuePage = SHOW_WIP ? AdminRevenueWip : ComingSoon;
-const AdminPricingPage = SHOW_WIP ? AdminPricingWip : ComingSoon;
 const AdminOrdersPage = SHOW_WIP ? AdminOrdersWip : ComingSoon;
 const AdminOrderDetailPage = SHOW_WIP ? AdminOrderDetailWip : ComingSoon;
 const AdminCustomersPage = SHOW_WIP ? AdminCustomersWip : ComingSoon;
@@ -113,6 +109,8 @@ const AdminCustomerDetailPage = SHOW_WIP ? AdminCustomerDetailWip : ComingSoon;
 const AdminFeedbackPage = SHOW_WIP ? AdminFeedbackWip : ComingSoon;
 const FeedbackPage = SHOW_WIP ? FeedbackWip : ComingSoon;
 const CustomerCartPage = SHOW_WIP ? CustomerCartWip : ComingSoon;
+// FR-090: still a scripted conversation, not the real /chat API → dev only (QA E2E v2 CHATBOT-010)
+const CustomerAssistantPage = SHOW_WIP ? CustomerAssistantWip : ComingSoon;
 
 const App = () => {
   return (
@@ -123,7 +121,7 @@ const App = () => {
             <Route index element={<HomePage />} />
             <Route path="login" element={<LoginPage />} />
             <Route path="register/customer" element={<RegisterCustomerPage />} />
-            {/* FR-002: không đăng ký sạp riêng — tạo tài khoản customer trước, rồi nộp đơn Farmer ở /become-farmer */}
+            {/* FR-002: no separate stall sign-up — create a customer account first, then submit the Farmer application at /become-farmer */}
             <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="reset-password" element={<ResetPasswordPage />} />
@@ -207,48 +205,50 @@ const App = () => {
             </Route>
           </Route>
 
-          {/* Đường dẫn lạ / trang chưa làm (search, map, about…) → 404 thay vì màn hình trắng */}
+          {/* An unknown path / an unbuilt page (search, map, about…) → 404 instead of a blank screen */}
           <Route element={<MainLayout />}>
             <Route path="*" element={<NotFoundPage />} />
           </Route>
 
-          {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader. */}
-          <Route path="/farmer" element={<FarmerLayout />}>
-            <Route index element={<FarmerOverviewPage />} />
-            <Route path="orders" element={<FarmerOrdersPage />} />
-            <Route
-              path="orders/:code"
-              element={
-                <RemountOnParam param="code">
-                  <FarmerOrderDetailPage />
-                </RemountOnParam>
-              }
-            />
-            <Route path="stock" element={<FarmerStockWeekPage />} />
-            <Route path="products" element={<FarmerProductsPage />} />
-            <Route path="products/new" element={<FarmerProductFormPage />} />
-            <Route
-              path="products/:id/edit"
-              element={
-                <RemountOnParam param="id">
-                  <FarmerProductFormPage />
-                </RemountOnParam>
-              }
-            />
-            <Route path="stall" element={<FarmerStallProfilePage />} />
-            <Route path="slots" element={<FarmerSlotsPage />} />
-            <Route path="history" element={<FarmerHistoryPage />} />
-            <Route path="settings" element={<FarmerSettingsPage />} />
-            <Route path="reviews" element={<FarmerReviewsPage />} />
-            <Route path="messages" element={<FarmerMessagesPage />} />
-            <Route path="notifications" element={<FarmerNotificationsPage />} />
-            <Route path="pending" element={<FarmerPendingPage />} />
-            <Route path="promote" element={<FarmerPromotePage />} />
+          {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader.
+              FR-005: signed-in Farmers only — guests go to /login, other roles to their own home. */}
+          <Route element={<RequireAuth role={USER_ROLE.FARMER} />}>
+            <Route path="/farmer" element={<FarmerLayout />}>
+              <Route index element={<FarmerOverviewPage />} />
+              <Route path="orders" element={<FarmerOrdersPage />} />
+              <Route
+                path="orders/:code"
+                element={
+                  <RemountOnParam param="code">
+                    <FarmerOrderDetailPage />
+                  </RemountOnParam>
+                }
+              />
+              <Route path="stock" element={<FarmerStockWeekPage />} />
+              <Route path="products" element={<FarmerProductsPage />} />
+              <Route path="products/new" element={<FarmerProductFormPage />} />
+              <Route
+                path="products/:id/edit"
+                element={
+                  <RemountOnParam param="id">
+                    <FarmerProductFormPage />
+                  </RemountOnParam>
+                }
+              />
+              <Route path="stall" element={<FarmerStallProfilePage />} />
+              <Route path="slots" element={<FarmerSlotsPage />} />
+              <Route path="history" element={<FarmerHistoryPage />} />
+              <Route path="settings" element={<FarmerSettingsPage />} />
+              <Route path="reviews" element={<FarmerReviewsPage />} />
+              <Route path="messages" element={<FarmerMessagesPage />} />
+              <Route path="notifications" element={<FarmerNotificationsPage />} />
+              <Route path="pending" element={<FarmerPendingPage />} />
+            </Route>
           </Route>
 
-          {/* FR-004: khu admin tách khỏi layout Customer/Farmer. */}
+          {/* FR-004: the admin area is separate from the Customer/Farmer layout. */}
           <Route path="admin/login" element={<AdminLoginPage />} />
-          {/* FR-008: bước 2 đăng nhập admin, chưa có phiên nên nằm ngoài AdminLayout. */}
+          {/* FR-008: step 2 of admin sign-in, no session yet so it sits outside AdminLayout. */}
           <Route path="admin/verify" element={<AdminVerifyPage />} />
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<AdminHomePage />} />
@@ -265,10 +265,8 @@ const App = () => {
             <Route path="settings" element={<AdminSettingsPage />} />
             <Route path="account" element={<AdminAccountPage />} />
 
-            {/* FR-075 + FR-070: báo cáo, doanh thu sàn và đơn hàng toàn sàn (admin chỉ đọc, D-04) */}
+            {/* FR-075 + FR-070: reports and platform-wide orders (admin is read-only, D-04) */}
             <Route path="reports" element={<AdminReportsPage />} />
-            <Route path="revenue" element={<AdminRevenuePage />} />
-            <Route path="pricing" element={<AdminPricingPage />} />
             <Route path="orders" element={<AdminOrdersPage />} />
             <Route
               path="orders/:code"
@@ -290,7 +288,7 @@ const App = () => {
               }
             />
 
-            {/* FR-073: `new` đi trước `:id` để không bị bắt nhầm thành id */}
+            {/* FR-073: `new` goes before `:id` so it is not caught by mistake as an id */}
             <Route path="markets" element={<AdminMarketsPage />} />
             <Route path="markets/new" element={<AdminMarketFormPage />} />
             <Route
@@ -302,20 +300,21 @@ const App = () => {
               }
             />
 
-            {/* FR-074, FR-077, FR-081 và danh mục / đơn vị */}
+            {/* FR-074, FR-077, FR-081 and categories / units */}
             <Route path="moderation" element={<AdminModerationPage />} />
             <Route path="categories" element={<AdminCategoriesPage />} />
             <Route path="announcements" element={<AdminAnnouncementsPage />} />
             <Route path="notifications" element={<AdminNotificationsPage />} />
             <Route path="feedback" element={<AdminFeedbackPage />} />
 
-            {/* Đường dẫn admin không khớp gì → 404 ngay trong khung admin, không rơi ra layout Customer */}
+            {/* An admin path that matches nothing → 404 right inside the admin frame, not falling out to the Customer layout */}
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </SettingsSync>
       <AppToaster />
       <NotificationCenter />
+      <ChatUnreadCenter />
       <NotificationPermissionBanner />
     </BrowserRouter>
   );

@@ -8,8 +8,8 @@ import useSettings from '@/hooks/useSettings';
 import SettingsStore, { LANGUAGES, type Settings, type Theme } from '@/lib/settings';
 
 /**
- * Khung cài đặt Giao diện & Ngôn ngữ (Theme & Language) trực tiếp trên trang Account, đồng bộ trải nghiệm với cài đặt ở
- * Farmer và Admin.
+ * The Appearance & Language settings frame right on the Account page, matching the experience in Farmer and Admin
+ * settings.
  */
 const AppearanceCard = () => {
   const { t } = useTranslation();

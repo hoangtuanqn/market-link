@@ -30,6 +30,7 @@ import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import com.techx.intervue.services.interfaces.JobQueueInterface;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -59,8 +60,9 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final MfaServiceInterface mfaService;
 
     /**
-     * FR-006: access token vào blacklist Redis tới lúc hết hạn (JwtAuthFilter chặn theo jti),
-     * refresh token trong cookie bị thu hồi ở DB nên không đổi được access token mới nữa.
+     * FR-006: the access token goes into the Redis blacklist until it expires (JwtAuthFilter blocks
+     * by jti), the refresh token in the cookie is revoked in the DB so a new access token can no
+     * longer be obtained.
      */
     @Override
     @Transactional
@@ -81,12 +83,16 @@ public class UserService extends BaseService implements UserServiceInterface {
         }
         String email = request.email().trim().toLowerCase(Locale.ROOT);
         String phone = request.phone().trim();
+        // Check both before failing, so the form marks every taken field in one go (QA BUG-005)
+        Map<String, String> taken = new LinkedHashMap<>();
         if (userRepository.existsByEmail(email)) {
-            throw new DuplicateAccountException("email", "This email is already registered.");
+            taken.put("email", "This email is already registered.");
         }
         if (userRepository.existsByPhone(phone)) {
-            throw new DuplicateAccountException(
-                    "phone", "This phone number is already registered.");
+            taken.put("phone", "This phone number is already registered.");
+        }
+        if (!taken.isEmpty()) {
+            throw new DuplicateAccountException(taken);
         }
         User user =
                 userRepository.save(
@@ -102,8 +108,8 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * FR-003: sai email hay sai mật khẩu đều trả chung một thông báo, không lộ email nào đã đăng
-     * ký.
+     * FR-003: a wrong email or a wrong password returns the same message, so it does not reveal
+     * which emails are registered.
      */
     @Override
     @Transactional
@@ -112,7 +118,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         User user =
                 userRepository
                         .findByEmail(email)
-                        // Tài khoản tạo từ Google chưa có mật khẩu
+                        // An account created from Google has no password
                         .filter(
                                 u ->
                                         u.getPasswordHash() != null
@@ -126,7 +132,8 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        // Kiểm tra trước khi cấp token: không phát cookie refresh cho tài khoản sai role
+        // Check before issuing a token: do not hand out a refresh cookie to an account with the
+        // wrong role
         if (request.requiredRole() != null && user.getRole() != request.requiredRole()) {
             throw new RoleMismatchException();
         }
@@ -134,8 +141,8 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * FR-008: bước 2 sau khi nhập mã TOTP / mã khôi phục đúng. Kiểm tra lại trạng thái tài khoản vì
-     * admin có thể bị khoá trong 5 phút chờ nhập mã.
+     * FR-008: step 2 after entering a correct TOTP code / recovery code. Re-check the account state
+     * because the admin may have been locked during the 5 minutes waiting for the code.
      */
     @Override
     @Transactional
@@ -153,9 +160,10 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * FR-003: đổi refresh token (cookie) lấy access token mới, refresh token được xoay vòng. Không
-     * bọc @Transactional ở đây: rotateToken tự có transaction, nếu bọc thêm thì exception sẽ
-     * rollback luôn việc thu hồi token khi phát hiện token bị dùng lại.
+     * FR-003: exchange the refresh token (cookie) for a new access token, the refresh token is
+     * rotated. Do not wrap in @Transactional here: rotateToken has its own transaction, wrapping it
+     * again would make the exception roll back the token revocation done when reuse of a token is
+     * detected.
      */
     @Override
     public AuthResult refresh(String rawRefreshToken) {
@@ -173,9 +181,9 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * Đăng nhập Google sau khi backend đã tự xác minh với provider. Tìm theo (provider,
-     * provider_user_id); lần đầu thì gắn vào user cùng email (chỉ khi email đã xác minh) hoặc tạo
-     * customer mới chưa có mật khẩu / số điện thoại.
+     * Google sign-in after the backend has verified with the provider itself. Look up by (provider,
+     * provider_user_id); the first time attach to the user with the same email (only when the email
+     * is verified) or create a new customer with no password / phone number.
      */
     @Override
     @Transactional
@@ -197,7 +205,7 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");
         }
-        // FR-008: đăng nhập Google không được bỏ qua bước 2
+        // FR-008: Google sign-in must not skip step 2
         return issueTokensOrChallenge(user, true);
     }
 
@@ -231,13 +239,14 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * Gắn Google vào tài khoản có sẵn cùng email. Đăng ký bằng email không xác minh email, nên mật
-     * khẩu hiện có có thể do người khác đặt trước (chiếm trước tài khoản). Provider đã xác minh chủ
-     * email → xoá mật khẩu đó, thu hồi mọi refresh token và session; chủ thật đặt lại mật khẩu ở
-     * bước set-password (hasPassword = false).
+     * Attach Google to an existing account with the same email. Signing up by email does not verify
+     * the email, so the existing password may have been set beforehand by someone else (account
+     * pre-hijacking). The provider verified the owner of the email → delete that password, revoke
+     * every refresh token and session; the real owner sets a password again at the set-password
+     * step (hasPassword = false).
      */
     private User claimByVerifiedEmail(User user, SocialProfile profile) {
-        // Email này đã gắn với một tài khoản khác cùng provider
+        // This email is already attached to another account with the same provider
         if (socialAccountRepository.existsByUserIdAndProvider(user.getId(), profile.provider())) {
             throw new DuplicateAccountException(
                     "email",
@@ -247,7 +256,8 @@ public class UserService extends BaseService implements UserServiceInterface {
             user.setPasswordHash(null);
             userRepository.save(user);
             refreshTokenService.revokeAllTokens(user.getId());
-            // Chạy ngay (không đợi commit): session mới của chủ thật được ghi ở issueTokens sau đó
+            // Run immediately (do not wait for commit): the real owner's new session is written in
+            // issueTokens afterwards
             userSessionCache.revokeAll(user.getId());
         }
         return user;
@@ -261,7 +271,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         return name.length() > 100 ? name.substring(0, 100) : name;
     }
 
-    /** users.image là VARCHAR(255); URL ảnh dài hơn thì bỏ qua. */
+    /** users.image is VARCHAR(255); a longer image URL is skipped. */
     private static String fitsColumn(String url) {
         return url != null && url.length() <= 255 ? url : null;
     }
@@ -272,9 +282,10 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * Chỉ sửa được tài khoản của chính mình (userId lấy từ access token, không nhận từ request).
-     * Email giữ nguyên. Số điện thoại trùng với tài khoản khác → 409; hai request đua nhau lọt qua
-     * bước kiểm tra thì UNIQUE của DB chặn (AuthExceptionHandler trả 409).
+     * Only your own account can be edited (userId comes from the access token, not accepted from
+     * the request). The email is unchanged. A phone number that duplicates another account → 409;
+     * if two requests race past the check, the DB's UNIQUE blocks (AuthExceptionHandler returns
+     * 409).
      */
     @Override
     @Transactional
@@ -303,7 +314,10 @@ public class UserService extends BaseService implements UserServiceInterface {
         return user;
     }
 
-    /** FR-008: admin đã bật 2FA → chỉ trả token chờ; còn lại cấp phiên như cũ. */
+    /**
+     * FR-008: an admin with 2FA on → only return the pending token; otherwise issue the session as
+     * before.
+     */
     private AuthResult issueTokensOrChallenge(User user, boolean rememberMe) {
         if (user.getRole() == RoleType.ADMIN && mfaService.isEnabled(user.getId())) {
             return AuthResult.mfaPending(
@@ -332,7 +346,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         return new AuthResult(accessToken, rawRefreshToken, toResource(user), rememberMe);
     }
 
-    /** Dùng chung với AvatarService. */
+    /** Shared with AvatarService. */
     static UserResource toResource(User user) {
         return UserResource.builder()
                 .id(user.getId())
@@ -348,10 +362,11 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * Đổi mật khẩu: cần đúng mật khẩu hiện tại. Sai thì 400 ở field currentPassword (không dùng 401
-     * vì FE coi 401 là hết phiên và tự refresh). Đổi xong đăng xuất mọi thiết bị: thu hồi mọi
-     * refresh token, sau khi commit thì revokeAll session Redis (JwtAuthFilter từ chối mọi access
-     * token cấp trước đó) và gửi mail thông báo.
+     * Change password: the current password must be right. If wrong, 400 on the currentPassword
+     * field (not 401 because the FE treats 401 as session ended and refreshes by itself). After the
+     * change sign out of every device: revoke every refresh token, after commit revokeAll the Redis
+     * sessions (JwtAuthFilter rejects every access token issued earlier) and send a notification
+     * email.
      */
     @Override
     @Transactional
@@ -376,7 +391,8 @@ public class UserService extends BaseService implements UserServiceInterface {
 
         refreshTokenService.revokeAllTokens(userId);
         String email = user.getEmail();
-        // Commit lỗi thì mật khẩu chưa đổi: không đá văng phiên, không gửi mail
+        // If the commit fails the password did not change: do not kick out the session, do not send
+        // the email
         TransactionHelper.afterCommit(
                 () -> {
                     userSessionCache.revokeAll(userId);
@@ -386,8 +402,9 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * Đặt mật khẩu lần đầu cho tài khoản tạo qua Google. Chỉ khi chưa có mật khẩu — đã có thì phải
-     * dùng đổi / quên mật khẩu (409). userId lấy từ access token (R-06). Phiên hiện tại giữ nguyên.
+     * Set a password for the first time for an account created through Google. Only when there is
+     * no password yet — if there is one, use change / forgot password (409). userId comes from the
+     * access token (R-06). The current session is kept.
      */
     @Override
     @Transactional

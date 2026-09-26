@@ -24,8 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-060, FR-061 — hồ sơ gian hàng của chính Farmer (contract §4). Mọi thứ tra theo user của token
- * (R-06); FarmerController của module farmer giữ /apply, controller này giữ /profile và /markets.
+ * FR-060, FR-061 — the Farmer's own stall profile (contract §4). Everything is looked up by the
+ * token's user (R-06); the farmer module's FarmerController keeps /apply, this controller keeps
+ * /profile and /markets.
  */
 @RestController
 @RequestMapping("/api/v1/farmer")

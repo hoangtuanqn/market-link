@@ -7,8 +7,8 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 /**
- * Bước 1 đăng nhập Google: sinh `state` ngẫu nhiên, giữ trong sessionStorage, lấy URL đăng nhập từ backend rồi chuyển
- * trang sang Google. Google trả về /auth/google/callback (xem pages/GoogleCallback).
+ * Step 1 of Google sign-in: generate a random `state`, keep it in sessionStorage, get the sign-in URL from the backend
+ * and send the page to Google. Google returns to /auth/google/callback (see pages/GoogleCallback).
  */
 const GoogleLoginButton = () => {
   const { t } = useTranslation('Login');

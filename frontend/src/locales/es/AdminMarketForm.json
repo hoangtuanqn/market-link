@@ -21,7 +21,17 @@
     "lat": "Latitud",
     "lng": "Longitud",
     "lngHint": "O arrastra la chincheta. Los datos del mapa vienen de OpenStreetMap.",
-    "notes": "Notas para los puestos"
+    "notes": "Notas para los puestos",
+    "images": "Fotos"
+  },
+  "images": {
+    "add": "Añadir foto",
+    "hint": "JPEG, PNG o WEBP, hasta 8 MB cada una. Añade hasta {{max}} fotos; la primera se convierte en la foto de portada.",
+    "tooMany": "Añade como máximo {{max}} fotos.",
+    "uploadInProgress": "Espera a que las fotos terminen de subirse antes de guardar.",
+    "uploading": "Subiendo",
+    "photoLabel": "Foto del mercado {{n}}",
+    "remove": "Quitar la foto {{n}}"
   },
   "pin": {
     "label": "Marcar el mercado",
@@ -32,15 +42,17 @@
     "cancel": "Cancelar"
   },
   "toast": {
-    "saved": "{{name}} guardado."
+    "saved": "{{name}} guardado.",
+    "fixTitle": "Revisa el formulario",
+    "fix": "Hemos marcado lo que falta."
   },
   "closures": {
     "title": "Días de cierre",
     "intro": "Un día en que este mercado no abre, aunque caiga en día de apertura. Los clientes lo ven en la página del mercado y en el tablón de inicio, y no pueden hacer pedidos nuevos para ese día.",
     "add": "Añadir día de cierre",
     "addConfirm": "Añadir el día",
-    "added": "Día de cierre añadido. Publica un aviso para que los clientes lo vean.",
-    "removed": "Día de cierre eliminado.",
+    "added": "Día de cierre añadido. Guarda el mercado para conservarlo y luego publica un aviso para que los clientes lo vean.",
+    "removed": "Día de cierre eliminado. Guarda el mercado para aplicar el cambio.",
     "remove": "Eliminar",
     "removeTitle": "¿Eliminar este día de cierre?",
     "removeText": "El mercado vuelve a abrir ese día y los clientes pueden pedir.",
@@ -65,6 +77,11 @@
     "empty": {
       "title": "Sin días de cierre",
       "text": "Este mercado abre todos sus días de apertura. Añade un día de cierre cuando no vaya a hacerlo."
+    },
+    "error": {
+      "dateRequired": "Elige una fecha.",
+      "datePast": "Elige hoy o una fecha posterior.",
+      "dateTaken": "Esta fecha ya está marcada como cerrada."
     }
   },
   "handling": {
@@ -88,6 +105,9 @@
     "noun": "mercado",
     "required": "Este campo es obligatorio.",
     "days": "Elige al menos un día de apertura.",
-    "close": "La hora de cierre debe ser posterior a la de apertura."
+    "close": "La hora de cierre debe ser posterior a la de apertura.",
+    "images": "Añade al menos una foto del mercado.",
+    "lat": "Introduce una latitud entre -90 y 90, p. ej. 10.772500.",
+    "lng": "Introduce una longitud entre -180 y 180, p. ej. 106.698000."
   }
 }

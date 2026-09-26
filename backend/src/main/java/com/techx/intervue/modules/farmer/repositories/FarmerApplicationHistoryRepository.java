@@ -10,10 +10,13 @@ import org.springframework.stereotype.Repository;
 public interface FarmerApplicationHistoryRepository
         extends JpaRepository<FarmerApplicationHistory, Long> {
 
-    /** Lần nộp mới nhất trước, để cả Customer lẫn Admin đọc từ trên xuống. */
+    /** Newest submission first, so both the Customer and the Admin read from the top down. */
     List<FarmerApplicationHistory> findByUserIdOrderByAttemptDesc(Long userId);
 
-    /** Hàng đang chờ Admin quyết — chỉ có tối đa một, vì nộp lại khi đang chờ bị chặn ở service. */
+    /**
+     * The row waiting for an Admin decision — there is at most one, because re-applying while
+     * pending is blocked in the service.
+     */
     Optional<FarmerApplicationHistory> findFirstByUserIdOrderByAttemptDesc(Long userId);
 
     long countByUserId(Long userId);

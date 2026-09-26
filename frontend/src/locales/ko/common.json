@@ -90,7 +90,42 @@
     "emptyThreadTitle": "아직 메시지가 없습니다",
     "emptyThreadText": "인사를 보내 대화를 시작하세요.",
     "typing": "{{name}} 님이 입력 중…",
-    "conversationWith": "{{name}} 님과의 대화"
+    "conversationWith": "{{name}} 님과의 대화",
+    "closed": "이 가게는 지금 메시지를 받지 않습니다.",
+    "messageStall": "가게에 메시지 보내기",
+    "ownStall": "내 가게입니다.",
+    "stallClosed": "이 가게는 지금 새 대화를 받지 않습니다.",
+    "openFailed": "대화를 열지 못했습니다. 다시 시도하세요.",
+    "pinned": "문의 중인 상품",
+    "unpin": "빼기",
+    "productGone": "더 이상 판매하지 않는 상품입니다.",
+    "tooFast": "너무 빨리 보내고 있습니다. 잠시 후 다시 시도하세요.",
+    "photoTooBig": "사진이 5 MB를 넘습니다. 더 작은 사진을 선택하세요.",
+    "photoType": "JPEG, PNG, WebP 사진을 선택하세요.",
+    "moreThreads": "대화 더 불러오기",
+    "reportTitle": "이 메시지 신고",
+    "reportWhy": "신고하는 이유가 무엇인가요?",
+    "reason": {
+      "spam": "스팸 또는 광고",
+      "abuse": "무례하거나 욕설",
+      "scam": "사기 또는 돈 요구",
+      "other": "기타"
+    },
+    "reportNote": "자세히 알려 주세요 (선택)",
+    "noteLeft_other": "{{count}}자 남음",
+    "chooseReason": "신고하려면 이유를 선택하세요.",
+    "report": "신고",
+    "reportThis": "이 메시지 신고",
+    "reported": "신고됨",
+    "reportFailed": "신고를 보내지 못했습니다. 다시 시도하세요.",
+    "reportThanks": "감사합니다. 관리자가 이 메시지를 확인합니다.",
+    "cancel": "취소",
+    "previewEmpty": "아직 대화가 없습니다.",
+    "previewError": "대화를 불러오지 못했습니다.",
+    "unreadCount": "읽지 않음 {{count}}",
+    "orderGone": "이 주문을 볼 수 없습니다.",
+    "orderLabel": "주문 {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "서버에 연결할 수 없어요. 연결 상태를 확인하고 다시 시도해 주세요."
@@ -124,7 +159,6 @@
     "messages": "메시지",
     "notifications": "알림",
     "account": "계정",
-    "promote": "홍보 및 게시",
     "approval": "승인 상태",
     "settings": "설정",
     "shop": "쇼핑",
@@ -162,7 +196,9 @@
     "notificationsUnread_one": "알림, 읽지 않음 {{count}}개",
     "notificationsUnread_other": "알림, 읽지 않음 {{count}}개",
     "openMenu": "메뉴 열기",
-    "search": "검색"
+    "search": "검색",
+    "seeAll": "모두 보기",
+    "messagesUnread_other": "메시지, 읽지 않음 {{count}}"
   },
   "kpi": {
     "noChange": "변화 없음",
@@ -346,12 +382,10 @@
     "markets": "시장",
     "moderation": "검토",
     "orders": "주문",
-    "revenue": "수익",
     "reports": "보고서",
     "categories": "카테고리",
     "announcements": "공지",
     "feedback": "의견",
-    "pricing": "요금",
     "settings": "설정",
     "account": "내 계정",
     "analytics": "분석",
@@ -492,7 +526,9 @@
     "admin": {
       "title": "알림",
       "intro": "검토를 기다리는 새 Farmer 신청입니다."
-    }
+    },
+    "notificationsEmpty": "아직 알림이 없습니다.",
+    "notificationsError": "알림을 불러오지 못했습니다."
   },
   "comingSoon": {
     "title": "이 페이지는 아직 열리지 않았습니다",

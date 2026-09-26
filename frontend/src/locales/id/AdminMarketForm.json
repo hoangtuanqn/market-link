@@ -21,7 +21,17 @@
     "lat": "Lintang",
     "lng": "Bujur",
     "lngHint": "Atau geser penanda. Data peta berasal dari OpenStreetMap.",
-    "notes": "Catatan untuk lapak"
+    "notes": "Catatan untuk lapak",
+    "images": "Foto"
+  },
+  "images": {
+    "add": "Tambah foto",
+    "hint": "JPEG, PNG, atau WEBP, maksimal 8 MB per foto. Tambahkan hingga {{max}} foto; foto pertama menjadi foto sampul.",
+    "tooMany": "Tambahkan maksimal {{max}} foto.",
+    "uploadInProgress": "Tunggu sampai foto selesai diunggah sebelum menyimpan.",
+    "uploading": "Sedang mengunggah",
+    "photoLabel": "Foto pasar {{n}}",
+    "remove": "Hapus foto {{n}}"
   },
   "pin": {
     "label": "Tandai lokasi pasar",
@@ -32,15 +42,17 @@
     "cancel": "Batal"
   },
   "toast": {
-    "saved": "{{name}} tersimpan."
+    "saved": "{{name}} tersimpan.",
+    "fixTitle": "Periksa formulir",
+    "fix": "Kami menandai bagian yang masih kurang."
   },
   "closures": {
     "title": "Hari tutup",
     "intro": "Hari saat pasar ini tidak buka, meski jatuh pada hari buka. Pelanggan melihatnya di halaman pasar dan di papan beranda, dan tidak ada pesanan baru yang bisa dibuat untuk hari itu.",
     "add": "Tambah hari tutup",
     "addConfirm": "Tambah hari tutup",
-    "added": "Hari tutup ditambahkan. Terbitkan pengumuman supaya pelanggan tahu.",
-    "removed": "Hari tutup dihapus.",
+    "added": "Hari tutup ditambahkan. Simpan pasar agar tersimpan, lalu terbitkan pengumuman supaya pelanggan tahu.",
+    "removed": "Hari tutup dihapus. Simpan pasar agar perubahan berlaku.",
     "remove": "Hapus",
     "removeTitle": "Hapus hari tutup ini?",
     "removeText": "Pasar buka lagi pada tanggal itu dan pelanggan bisa memesan.",
@@ -65,6 +77,11 @@
     "empty": {
       "title": "Tidak ada hari tutup",
       "text": "Pasar ini buka pada setiap hari bukanya. Tambahkan hari tutup bila nanti tidak buka."
+    },
+    "error": {
+      "dateRequired": "Pilih tanggal.",
+      "datePast": "Pilih hari ini atau tanggal sesudahnya.",
+      "dateTaken": "Tanggal ini sudah ditandai tutup."
     }
   },
   "handling": {
@@ -88,6 +105,9 @@
     "noun": "pasar",
     "required": "Kolom ini wajib diisi.",
     "days": "Pilih setidaknya satu hari operasional.",
-    "close": "Waktu tutup harus setelah waktu buka."
+    "close": "Waktu tutup harus setelah waktu buka.",
+    "images": "Tambahkan setidaknya satu foto pasar.",
+    "lat": "Masukkan lintang antara -90 dan 90, mis. 10.772500.",
+    "lng": "Masukkan bujur antara -180 dan 180, mis. 106.698000."
   }
 }

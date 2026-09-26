@@ -15,18 +15,11 @@
     "category": "Catégorie",
     "products": "Produits",
     "stalls": "Étals",
-    "nameOf": "Nom de {{name}}",
-    "oneOfThem": "Au singulier",
-    "moreThanOne": "Au pluriel",
-    "pluralOf": "Pluriel de {{name}}",
-    "kind": "Type",
-    "readsAs": "Se lit"
+    "nameOf": "Nom de {{name}}"
   },
   "action": {
     "save": "Enregistrer",
-    "remove": "Supprimer",
-    "addToPicker": "Ajouter à la liste",
-    "merge": "Fusionner"
+    "remove": "Supprimer"
   },
   "categoryForm": {
     "title": "Ajouter une catégorie",
@@ -55,8 +48,7 @@
   "toast": {
     "categorySaved": "{{name}} enregistrée.",
     "categoryAdded": "Catégorie ajoutée. Les étals peuvent la choisir dès maintenant.",
-    "categoryRemoved": "{{name}} supprimée.",
-    "promoted": "{{name}} figure désormais dans le sélecteur de tous les étals."
+    "categoryRemoved": "{{name}} supprimée."
   },
   "error": {
     "noun": "catégories",

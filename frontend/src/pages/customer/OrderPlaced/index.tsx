@@ -17,7 +17,7 @@ const order2: OrderType = {
   items: [{ productId: 3, qty: 2 }],
   history: [['placed', '24/09/2026 09:12', 'You']],
 };
-/** Lúc đặt đơn (demo) và hạn sửa/huỷ của từng đơn. */
+/** The time the order was placed (demo) and each order's edit/cancel deadline. */
 const PLACED_AT = new Date(2026, 8, 24, 9, 12);
 const CUTOFFS = [
   { time: '19:00', date: new Date(2026, 8, 25) },
@@ -27,7 +27,7 @@ const CUTOFFS = [
 /** FR-031 FR-032 — confirmation after placing pre-orders; stock is already held (D-02). */
 const CustomerOrderPlacedPage = () => {
   const { t, i18n } = useTranslation('CustomerOrderPlaced');
-  // Tạo trong component chứ không ở top-level: lệnh find ở top-level làm bản build production giữ cả mảng đơn mẫu.
+  // Created inside the component, not at the top level: a top-level find call would make the production build keep the whole sample-order array.
   const order1: OrderType = {
     ...orders.find((o) => o.code === '#ML-0421')!,
     items: [

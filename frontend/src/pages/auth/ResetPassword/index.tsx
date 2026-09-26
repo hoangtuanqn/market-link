@@ -17,7 +17,7 @@ type FormErrors = Partial<Record<'newPassword' | 'confirmPassword', string>>;
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
-/** Kiểm tra phía client, cùng luật với ResetPasswordRequest của backend. */
+/** Client-side validation, same rules as the backend's ResetPasswordRequest. */
 const validate = (password: string, confirm: string, t: TFunction<'ResetPassword'>): FormErrors => {
   const errors: FormErrors = {};
   if (!password) errors.newPassword = t('errors.passwordRequired');
@@ -35,7 +35,7 @@ const ResetPasswordPage = () => {
   const token = searchParams.get('token') ?? '';
 
   const [status, setStatus] = useState<Status>(token ? 'checking' : 'invalid');
-  // undefined → câu mặc định (dịch lúc render); có giá trị → message của server
+  // undefined → the default sentence (translated at render); a value → the server's message
   const [invalidMessage, setInvalidMessage] = useState<string>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,7 +43,10 @@ const ResetPasswordPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  /** Hỏi backend link còn dùng được không (chỉ đọc token, không làm mất nó) và lấy email của tài khoản. */
+  /**
+   * Ask the backend whether the link is still usable (only reads the token, does not consume it) and get the account's
+   * email.
+   */
   const verify = useCallback(async () => {
     if (!token) return;
     setStatus('checking');
@@ -53,7 +56,7 @@ const ResetPasswordPage = () => {
       setStatus('ready');
     } catch (error) {
       if (Helper.getErrorCode(error) === undefined && Helper.getFieldErrors(error).token === undefined) {
-        // Không có response từ backend (mất mạng, server tắt): chưa kết luận link sai
+        // No response from the backend (lost network, server down): do not conclude the link is wrong
         setStatus('unreachable');
         return;
       }
@@ -63,7 +66,7 @@ const ResetPasswordPage = () => {
   }, [token]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- gọi API khi mở trang, setState nằm sau await
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- calls the API when the page opens, setState comes after an await
     verify();
   }, [verify]);
 
@@ -76,7 +79,7 @@ const ResetPasswordPage = () => {
     setIsSubmitting(true);
     try {
       const response = await AuthApi.resetPassword({ token, newPassword: password, confirmPassword: confirm });
-      // Backend đã huỷ mọi phiên đăng nhập của tài khoản, xoá luôn phiên đang lưu ở trình duyệt này
+      // The backend has revoked every sign-in session of the account, also clear the session stored in this browser
       Session.clear();
       Notification.success({ text: response.message || t('toast.reset') });
       setStatus('done');
@@ -97,7 +100,7 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="mx-auto my-4 flex w-full max-w-115 flex-col gap-2 md:my-8">
-      {/* Không gửi URL chứa token cho trang khác qua header Referer */}
+      {/* Do not send the URL containing the token to another page through the Referer header */}
       <meta name="referrer" content="no-referrer" />
       <span className="text-small text-ink-muted">{t('step', { step: 2, total: 2 })}</span>
 
@@ -165,7 +168,7 @@ const ResetPasswordPage = () => {
               </p>
             </div>
 
-            {/* Cho trình quản lý mật khẩu biết mật khẩu mới thuộc tài khoản nào */}
+            {/* Tell the password manager which account the new password belongs to */}
             <input type="email" name="username" autoComplete="username" value={email} readOnly hidden />
 
             <Field

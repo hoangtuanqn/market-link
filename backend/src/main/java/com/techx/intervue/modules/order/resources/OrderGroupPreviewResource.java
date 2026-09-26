@@ -4,10 +4,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Một đơn sẽ được tách ra khi đặt (D-01). {@code problems} gom các vấn đề của group ({@code
- * out_of_stock}, {@code sold_out}, {@code unavailable}, {@code stall_suspended}) thay vì ném lỗi —
- * xem trước phải xem được. {@code markets} là các chợ stall đang bán; {@code marketId} / {@code
- * marketName} chỉ có khi stall bán đúng một chợ (C5-11).
+ * One order that will be split out when placed (D-01). {@code problems} collects the group's issues
+ * ({@code out_of_stock}, {@code sold_out}, {@code unavailable}, {@code stall_suspended}) instead of
+ * throwing — a preview must be able to show them. {@code markets} are the markets the stall sells
+ * at; {@code marketId} / {@code marketName} are only present when the stall sells at exactly one
+ * market (C5-11).
  */
 public record OrderGroupPreviewResource(
         Long farmerId,

@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import CustomerMessagesPage from './index';
@@ -41,23 +42,35 @@ describe('CustomerMessagesPage', () => {
   });
 
   it('lists the threads', async () => {
-    render(<CustomerMessagesPage />);
+    render(
+      <MemoryRouter>
+        <CustomerMessagesPage />
+      </MemoryRouter>,
+    );
 
     expect(await screen.findByRole('button', { name: /cô tư/i })).toBeInTheDocument();
   });
 
-  /** Spec §9.2: 375px là hai màn riêng, nên phải có đường quay lại sau khi mở một thread. */
+  /** Spec §9.2: at 375px these are two separate screens, so there must be a way back after opening a thread. */
   it('offers a way back once a thread is open', async () => {
-    render(<CustomerMessagesPage />);
+    render(
+      <MemoryRouter>
+        <CustomerMessagesPage />
+      </MemoryRouter>,
+    );
 
     await userEvent.click(await screen.findByRole('button', { name: /cô tư/i }));
 
     await waitFor(() => expect(screen.getByRole('button', { name: /^back$/i })).toBeInTheDocument());
   });
 
-  /** Review Focus #14: hook phải biết thread nào đang mở để giữ badge của nó ở 0. */
+  /** Review Focus #14: the hook must know which thread is open to keep its badge at 0. */
   it('tells the thread list which thread is open', async () => {
-    render(<CustomerMessagesPage />);
+    render(
+      <MemoryRouter>
+        <CustomerMessagesPage />
+      </MemoryRouter>,
+    );
 
     await userEvent.click(await screen.findByRole('button', { name: /cô tư/i }));
 
@@ -67,7 +80,11 @@ describe('CustomerMessagesPage', () => {
   it('shows the load error with a retry instead of an empty page', async () => {
     const reload = vi.fn();
     useThreadList.mockReturnValue({ threads: [], loading: false, error: true, reload });
-    render(<CustomerMessagesPage />);
+    render(
+      <MemoryRouter>
+        <CustomerMessagesPage />
+      </MemoryRouter>,
+    );
 
     await userEvent.click(await screen.findByRole('button', { name: /try again/i }));
 
@@ -75,7 +92,7 @@ describe('CustomerMessagesPage', () => {
   });
 });
 
-/** Spec §9.3: Farmer dùng lại đúng component hội thoại của Customer, chỉ khác vỏ ngoài. */
+/** Spec §9.3: Farmer reuses the exact same conversation component as Customer, only the shell differs. */
 describe('FarmerMessagesPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -83,7 +100,11 @@ describe('FarmerMessagesPage', () => {
   });
 
   it('opens a real thread from the list', async () => {
-    render(<FarmerMessagesPage />);
+    render(
+      <MemoryRouter>
+        <FarmerMessagesPage />
+      </MemoryRouter>,
+    );
 
     await userEvent.click(await screen.findByRole('button', { name: /cô tư/i }));
 
@@ -91,10 +112,14 @@ describe('FarmerMessagesPage', () => {
     expect(useThreadList).toHaveBeenLastCalledWith(42);
   });
 
-  /** Farmer không tự mở được cuộc trò chuyện: câu "nhắn một sạp" của Customer là sai với họ. */
+  /** A Farmer cannot open a conversation themself: the Customer's "message a stall" sentence is wrong for them. */
   it('explains where conversations come from when there are none', async () => {
     useThreadList.mockReturnValue({ threads: [], loading: false, error: false, reload: vi.fn() });
-    render(<FarmerMessagesPage />);
+    render(
+      <MemoryRouter>
+        <FarmerMessagesPage />
+      </MemoryRouter>,
+    );
 
     expect(await screen.findByText(/when a customer messages your stall/i)).toBeInTheDocument();
     expect(screen.queryByText(/message a stall/i)).not.toBeInTheDocument();

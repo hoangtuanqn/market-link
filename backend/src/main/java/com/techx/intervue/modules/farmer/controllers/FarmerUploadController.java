@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Ảnh/video đính kèm đơn xin thành Farmer (docs/prototype/customer/become-farmer.html), tải lên
- * trước khi gửi form chính (POST /farmer/apply nhận lại các URL này). Chỉ Customer sắp nộp đơn mới
- * gọi được — khớp quyền với FarmerController#apply.
+ * Images/videos attached to the Farmer application (docs/prototype/customer/become-farmer.html),
+ * uploaded before the main form is sent (POST /farmer/apply takes these URLs back). Only a Customer
+ * about to apply can call it — the permission matches FarmerController#apply.
  */
 @RestController
 @RequestMapping("/api/v1/farmer/apply/uploads")

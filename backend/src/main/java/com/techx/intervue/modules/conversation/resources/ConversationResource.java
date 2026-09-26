@@ -12,4 +12,7 @@ public record ConversationResource(
         String lastMessageText,
         Instant lastMessageAt,
         long unreadCount,
-        Instant createdAt) {}
+        Instant createdAt,
+        // The last moment the other person read up to: "Seen" survives a page reload. Absent if not
+        // read yet.
+        Instant otherReadAt) {}

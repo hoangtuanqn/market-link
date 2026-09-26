@@ -8,9 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
- * Ghim một lỗi đã xảy ra thật: `assignableTypes` bị bỏ sót một controller thì mọi exception của
- * module bay thẳng ra Tomcat và người dùng nhận 500 thay vì 403/404/413/415/429 mà spec §6.3 hứa.
- * Unit test của service không thấy được điều đó vì nó không đi qua MVC.
+ * Pins a bug that really happened: if `assignableTypes` misses one controller then every exception
+ * of the module flies straight out to Tomcat and the user gets 500 instead of the
+ * 403/404/413/415/429 that spec §6.3 promises. The service's unit test cannot see that because it
+ * does not go through MVC.
  */
 class ConversationExceptionHandlerScopeTest {
 

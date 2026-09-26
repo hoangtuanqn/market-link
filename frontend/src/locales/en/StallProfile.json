@@ -7,7 +7,6 @@
   "approved": "Approved stall",
   "savedToast": "Saved {{name}}.",
   "save": "Save stall",
-  "message": "Message the stall",
   "stats": {
     "reviews_one": "{{count}} review",
     "reviews_other": "{{count}} reviews",

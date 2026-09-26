@@ -32,8 +32,9 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
- * Trả 400/401/403/409/502/503 cho AuthController. Repo chưa có handler chung nên thiếu class này
- * thì lỗi rơi xuống /error và bị trả 401 (giống ChatExceptionHandler).
+ * Returns 400/401/403/409/502/503 for AuthController. The repo has no shared handler yet, so
+ * without this class errors fall through to /error and come back as 401 (like
+ * ChatExceptionHandler).
  */
 @Slf4j
 @RestControllerAdvice(
@@ -61,7 +62,7 @@ public class AuthExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
-    /** Google không phản hồi, timeout hoặc lỗi 5xx. */
+    /** Google does not respond, times out or returns a 5xx error. */
     @ExceptionHandler(RestClientException.class)
     ResponseEntity<ApiResource<Void>> providerUnavailable(RestClientException e) {
         log.warn("OAuth provider call failed: {}", e.getMessage());
@@ -72,7 +73,7 @@ public class AuthExceptionHandler {
                 List.of());
     }
 
-    /** Chưa điền client id / secret trong app.oauth.* */
+    /** The client id / secret in app.oauth.* has not been filled in */
     @ExceptionHandler(OAuthNotConfiguredException.class)
     ResponseEntity<ApiResource<Void>> notConfigured(OAuthNotConfiguredException e) {
         log.error(e.getMessage());
@@ -84,9 +85,10 @@ public class AuthExceptionHandler {
     }
 
     /**
-     * Redis / hàng đợi / DB không phản hồi (UserSessionCache, RedisJobQueue ném
-     * IllegalStateException; Redis rớt ném DataAccessException). DataIntegrityViolationException có
-     * handler riêng cụ thể hơn nên không rơi vào đây.
+     * Redis / the queue / the DB does not respond (UserSessionCache, RedisJobQueue throw
+     * IllegalStateException; a Redis drop throws DataAccessException).
+     * DataIntegrityViolationException has a more specific handler of its own so it does not fall in
+     * here.
      */
     @ExceptionHandler({IllegalStateException.class, DataAccessException.class})
     ResponseEntity<ApiResource<Void>> unavailable(RuntimeException e) {
@@ -135,8 +137,8 @@ public class AuthExceptionHandler {
                                 .build()));
     }
 
-    /** FR-007: token đặt lại mật khẩu sai, đã dùng hoặc hết hạn. */
-    /** Ảnh đại diện: thiếu part "file" hoặc body multipart hỏng. */
+    /** FR-007: the password-reset token is wrong, already used or expired. */
+    /** Avatar: the "file" part is missing or the multipart body is broken. */
     @ExceptionHandler({MissingServletRequestPartException.class, MultipartException.class})
     ResponseEntity<ApiResource<Void>> badUpload(Exception e) {
         return error(
@@ -160,23 +162,25 @@ public class AuthExceptionHandler {
         return error(HttpStatus.CONFLICT, "PASSWORD_ALREADY_SET", e.getMessage(), List.of());
     }
 
+    /** One detail per taken field, so email and phone are both marked at once (QA BUG-005). */
     @ExceptionHandler(DuplicateAccountException.class)
     ResponseEntity<ApiResource<Void>> duplicate(DuplicateAccountException e) {
-        return error(
-                HttpStatus.CONFLICT,
-                "DUPLICATE_ACCOUNT",
-                e.getMessage(),
-                List.of(
-                        FieldErrorResource.builder()
-                                .field(e.getField())
-                                .message(e.getMessage())
-                                .build()));
+        List<FieldErrorResource> details =
+                e.getFields().entrySet().stream()
+                        .map(
+                                f ->
+                                        FieldErrorResource.builder()
+                                                .field(f.getKey())
+                                                .message(f.getValue())
+                                                .build())
+                        .toList();
+        return error(HttpStatus.CONFLICT, "DUPLICATE_ACCOUNT", e.getMessage(), details);
     }
 
     /**
-     * Hai request cùng email/phone lọt qua bước kiểm tra cùng lúc → UNIQUE của DB chặn. Phân biệt
-     * theo tên key trong message của MySQL ("Duplicate entry '...' for key 'users.email'"); lỗi
-     * khác (dữ liệu quá dài...) không phải trùng tài khoản → 400.
+     * Two requests with the same email/phone get past the check at the same time → the DB's UNIQUE
+     * blocks. Tell them apart by the key name in MySQL's message ("Duplicate entry '...' for key
+     * 'users.email'"); other errors (data too long...) are not a duplicate account → 400.
      */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> uniqueViolation(DataIntegrityViolationException e) {
@@ -202,13 +206,16 @@ public class AuthExceptionHandler {
                 List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
     }
 
-    /** FR-008: token chờ nhập mã sai / hết hạn → phải đăng nhập lại. */
+    /** FR-008: the pending-code token is wrong / expired → the user must sign in again. */
     @ExceptionHandler(MfaTokenInvalidException.class)
     ResponseEntity<ApiResource<Void>> mfaTokenInvalid(MfaTokenInvalidException e) {
         return error(HttpStatus.BAD_REQUEST, "MFA_TOKEN_INVALID", e.getMessage(), List.of());
     }
 
-    /** FR-008: mã sai → 400 (không 401, FE hiểu 401 là hết phiên); details kèm số lần còn lại. */
+    /**
+     * FR-008: a wrong code → 400 (not 401, the FE reads 401 as session ended); details carries the
+     * remaining attempts.
+     */
     @ExceptionHandler(MfaCodeInvalidException.class)
     ResponseEntity<ApiResource<Void>> mfaCodeInvalid(MfaCodeInvalidException e) {
         String left =
@@ -236,7 +243,7 @@ public class AuthExceptionHandler {
     }
 
     /**
-     * @PreAuthorize("hasRole('ADMIN')") trên MfaController: đăng nhập nhưng sai role → 403.
+     * @PreAuthorize("hasRole('ADMIN')") on MfaController: signed in but the wrong role → 403.
      */
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {

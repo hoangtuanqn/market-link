@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-/** Một đơn trong lệnh đặt: một stall, một chợ, một slot (D-01). */
+/** One order in the place-order call: one stall, one market, one slot (D-01). */
 public record OrderGroupInput(
         @NotNull Long farmerId,
         @NotNull Long marketId,

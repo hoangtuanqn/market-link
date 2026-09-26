@@ -8,7 +8,7 @@ const AnnouncementBanner = ({
   onDismiss,
 }: {
   announcement: AnnouncementType;
-  /** Gọi thêm khi bấm đóng (vd. nhớ lại để lần sau không hiện). */
+  /** Called additionally on close (e.g. remember it so it does not show next time). */
   onDismiss?: () => void;
 }) => {
   const { t } = useTranslation();

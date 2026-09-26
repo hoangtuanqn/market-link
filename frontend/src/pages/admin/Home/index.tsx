@@ -18,9 +18,8 @@ import {
   ADMIN_MODERATION_PATH,
   ADMIN_ORDERS_PATH,
   ADMIN_REPORTS_PATH,
-  ADMIN_REVENUE_PATH,
 } from '@/constants/nav';
-import { ordersThisWeekByMarket, platformRevenue, platformTotals, series } from '@/data/admin';
+import { ordersThisWeekByMarket, platformTotals, series } from '@/data/admin';
 import { farmerName, marketName, orderTotal, orders } from '@/data/customer';
 import { vnd } from '@/lib/format';
 import type { OrderType } from '@/types/order.types';
@@ -55,8 +54,6 @@ const AdminHomePage = () => {
       .then((response) => setWaiting(response.data.total))
       .catch(() => {});
   }, []);
-
-  const takeRate = (platformRevenue.total / platformRevenue.gmv) * 100;
 
   const attention = [
     { to: ADMIN_FARMERS_PATH, count: waiting, text: t('attention.farmers', { count: waiting }) },
@@ -172,30 +169,6 @@ const AdminHomePage = () => {
               </li>
             ))}
           </ul>
-        </Card>
-
-        <Card className="flex flex-col gap-3 p-6">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-h3">{t('earned.title')}</h2>
-            <Link to={ADMIN_REVENUE_PATH} className="text-brand text-small underline">
-              {t('earned.link')}
-            </Link>
-          </div>
-          <p className="text-small text-ink-muted">{t('earned.note', { month: month(PERIOD) })}</p>
-          <p className="flex flex-wrap items-baseline gap-2">
-            <b className="font-hand text-h1">{num(platformRevenue.total)}</b>
-            <span className="text-small text-ink-muted">
-              {t('earned.of', { pct: num(takeRate, 1), gmv: vnd(platformRevenue.gmv) })}
-            </span>
-          </p>
-          <dl className="m-0 grid grid-cols-[1fr_auto] gap-x-4 gap-y-1.5 text-[15px]">
-            {platformRevenue.sources.map((s) => (
-              <div key={s.name} className="contents">
-                <dt className="text-ink-muted">{s.name}</dt>
-                <dd className="m-0 text-right font-bold">{vnd(s.amount)}</dd>
-              </div>
-            ))}
-          </dl>
         </Card>
 
         <Card className="flex flex-col gap-3 p-6">

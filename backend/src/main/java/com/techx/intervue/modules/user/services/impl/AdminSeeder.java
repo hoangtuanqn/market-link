@@ -12,11 +12,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * FR-102: không có API đăng ký admin công khai (roadmap bước 2), nên tài khoản admin đầu tiên phải
- * do seed tạo. Chỉ chạy ở profile dev và local — prod không bao giờ có tài khoản mật khẩu mặc định.
+ * FR-102: there is no public admin sign-up API (roadmap step 2), so the first admin account must be
+ * created by the seed. Only runs in the dev and local profiles — prod never has a default-password
+ * account.
  *
- * <p>Bỏ qua nếu email đã tồn tại, nên đổi mật khẩu admin trong DB rồi khởi động lại không bị ghi
- * đè. Thông tin lấy từ {@code app.seed.admin.*}, đổi được qua biến môi trường SEED_ADMIN_*.
+ * <p>Skipped if the email already exists, so changing the admin password in the DB and restarting
+ * does not get overwritten. The values come from {@code app.seed.admin.*}, changeable through the
+ * SEED_ADMIN_* environment variables.
  */
 @Slf4j
 @Component
@@ -51,8 +53,9 @@ public class AdminSeeder implements CommandLineRunner {
             log.info("Admin seed skipped: {} already exists.", email);
             return;
         }
-        // users.phone là UNIQUE — đâm vào số của tài khoản khác thì backend chết lúc khởi động,
-        // đắt hơn nhiều so với việc bỏ qua một tiện ích của dev.
+        // users.phone is UNIQUE — colliding with another account's number makes the backend die at
+        // startup,
+        // far more costly than skipping a dev convenience.
         if (userRepository.existsByPhone(phone)) {
             log.warn("Admin seed skipped: phone {} belongs to another account.", phone);
             return;

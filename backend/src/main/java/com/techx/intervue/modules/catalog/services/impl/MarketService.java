@@ -2,6 +2,7 @@ package com.techx.intervue.modules.catalog.services.impl;
 
 import com.techx.intervue.modules.catalog.entities.Market;
 import com.techx.intervue.modules.catalog.exceptions.MarketNotFoundException;
+import com.techx.intervue.modules.catalog.repositories.MarketImageRepository;
 import com.techx.intervue.modules.catalog.repositories.MarketOperatingDayRepository;
 import com.techx.intervue.modules.catalog.repositories.MarketQueryRepository;
 import com.techx.intervue.modules.catalog.repositories.MarketRepository;
@@ -10,6 +11,7 @@ import com.techx.intervue.modules.catalog.resources.MarketDetailResource;
 import com.techx.intervue.modules.catalog.resources.MarketResource;
 import com.techx.intervue.modules.catalog.services.interfaces.MarketServiceInterface;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -23,14 +25,26 @@ import org.springframework.transaction.annotation.Transactional;
 public class MarketService implements MarketServiceInterface {
 
     private static final int MAX_PAGE_SIZE = 50;
+
+    /**
+     * Also the threshold of @Size on MarketRequest.images; repeated here for the length error
+     * message.
+     */
+    private static final int MAX_IMAGES = 8;
+
+    private static final int MAX_IMAGE_URL_LENGTH = 255;
     private static final String DEFAULT_CITY = "TP. Hồ Chí Minh";
     private static final DateTimeFormatter HHMM = DateTimeFormatter.ofPattern("HH:mm");
 
     private final MarketRepository repository;
     private final MarketOperatingDayRepository dayRepository;
+    private final MarketImageRepository imageRepository;
     private final MarketQueryRepository queryRepository;
 
-    /** Chỗ duy nhất module catalog chạm sang module stall; chiều ngược lại không có. */
+    /**
+     * The only place where the catalog module reaches into the stall module; there is no reverse
+     * direction.
+     */
     private final StallServiceInterface stallService;
 
     @Override
@@ -58,26 +72,47 @@ public class MarketService implements MarketServiceInterface {
     @Transactional
     public MarketResource create(MarketRequest request) {
         List<Integer> days = validDays(request.operatingDays());
-        Market market = new Market();
-        apply(market, request);
-        Market saved = repository.save(market);
+        List<String> images = validImages(request.images());
+        // A removed market with this name comes back instead of blocking the name for good: the
+        // admin cannot see removed markets, so they could never add it again (QA E2E v2
+        // MARKET-ADMIN-002). An active market with the name still hits uq_market_name → 409.
+        Market market =
+                repository
+                        .findByMarketName(request.marketName().trim())
+                        .filter(m -> !m.isActive())
+                        .orElseGet(Market::new);
+        boolean restoring = market.getId() != null;
+        apply(market, request, images);
+        market.setActive(true);
+        // Flushed so the stall count below, read with plain SQL, already sees the market as active
+        Market saved = restoring ? repository.saveAndFlush(market) : repository.save(market);
         dayRepository.replaceDays(saved.getId(), days);
-        return toResource(saved, days, 0);
+        imageRepository.replaceImages(saved.getId(), images);
+        long farmerCount =
+                restoring
+                        ? queryRepository
+                                .findById(saved.getId())
+                                .map(MarketResource::farmerCount)
+                                .orElse(0L)
+                        : 0;
+        return toResource(saved, days, images, farmerCount);
     }
 
     @Override
     @Transactional
     public MarketResource update(long id, MarketRequest request) {
         List<Integer> days = validDays(request.operatingDays());
+        List<String> images = validImages(request.images());
         Market market = repository.findById(id).orElseThrow(() -> new MarketNotFoundException(id));
-        apply(market, request);
+        apply(market, request, images);
         Market saved = repository.save(market);
         dayRepository.replaceDays(saved.getId(), days);
+        imageRepository.replaceImages(saved.getId(), images);
         long farmerCount = queryRepository.findById(id).map(MarketResource::farmerCount).orElse(0L);
-        return toResource(saved, days, farmerCount);
+        return toResource(saved, days, images, farmerCount);
     }
 
-    /** Xoá mềm — đơn hàng cũ vẫn trỏ về chợ này. */
+    /** Soft delete — old orders still point to this market. */
     @Override
     @Transactional
     public void deactivate(long id) {
@@ -90,18 +125,52 @@ public class MarketService implements MarketServiceInterface {
         List<Integer> clean = days == null ? List.of() : days.stream().distinct().sorted().toList();
         for (Integer d : clean) {
             if (d == null || d < 0 || d > 6) {
-                throw new IllegalArgumentException(
+                throw new InvalidFieldException(
+                        "operatingDays",
                         "Operating day must be between 0 (Sunday) and 6 (Saturday).");
             }
         }
         return clean;
     }
 
-    private static void apply(Market market, MarketRequest request) {
+    /**
+     * @Size(max=8) on MarketRequest blocks the count; it cannot block each element's length, so it
+     * is checked by hand here — the same lesson as the column-overflow bug in the Farmer
+     * application ("categories", a fake 401 because DataIntegrityViolationException was not caught
+     * early).
+     */
+    private static List<String> validImages(List<String> images) {
+        List<String> clean =
+                images == null
+                        ? List.of()
+                        : images.stream()
+                                .filter(s -> s != null && !s.isBlank())
+                                .map(String::trim)
+                                .toList();
+        // @NotEmpty on MarketRequest blocks null/an empty array; it cannot block an array of
+        // all-blank strings.
+        if (clean.isEmpty()) {
+            throw new InvalidFieldException("images", "Add at least one photo.");
+        }
+        if (clean.size() > MAX_IMAGES) {
+            throw new InvalidFieldException("images", "Add at most " + MAX_IMAGES + " images.");
+        }
+        for (String url : clean) {
+            if (url.length() > MAX_IMAGE_URL_LENGTH) {
+                throw new InvalidFieldException(
+                        "images",
+                        "Each image URL must be " + MAX_IMAGE_URL_LENGTH + " characters or fewer.");
+            }
+        }
+        return clean;
+    }
+
+    private static void apply(Market market, MarketRequest request, List<String> images) {
         LocalTime opening = LocalTime.parse(request.openingTime(), HHMM);
         LocalTime closing = LocalTime.parse(request.closingTime(), HHMM);
         if (!closing.isAfter(opening)) {
-            throw new IllegalArgumentException("The closing time must be after the opening time.");
+            throw new InvalidFieldException(
+                    "closingTime", "The closing time must be after the opening time.");
         }
         market.setMarketName(request.marketName().trim());
         market.setAddress(request.address().trim());
@@ -111,12 +180,15 @@ public class MarketService implements MarketServiceInterface {
         market.setLongitude(request.longitude());
         market.setOpeningTime(opening);
         market.setClosingTime(closing);
-        market.setImageUrl(blankToNull(request.imageUrl()));
-        // D-12: không đọc từ request — client không chọn được nhà cung cấp bản đồ.
+        // markets.image_url (db/schema.sql) is the cover image: always the first image of
+        // market_images.
+        market.setImageUrl(images.isEmpty() ? null : images.get(0));
+        // D-12: not read from the request — the client cannot choose the map provider.
         market.setMapProvider("osm");
     }
 
-    private static MarketResource toResource(Market m, List<Integer> days, long farmerCount) {
+    private static MarketResource toResource(
+            Market m, List<Integer> days, List<String> images, long farmerCount) {
         return new MarketResource(
                 m.getId(),
                 m.getMarketName(),
@@ -128,7 +200,7 @@ public class MarketService implements MarketServiceInterface {
                 m.getMapProvider(),
                 m.getOpeningTime().format(HHMM),
                 m.getClosingTime().format(HHMM),
-                m.getImageUrl(),
+                images,
                 days,
                 farmerCount);
     }

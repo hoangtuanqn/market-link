@@ -15,7 +15,7 @@ public record UserResource(
         String address,
         RoleType role,
         Instant createdAt,
-        /* false: tài khoản tạo qua Google chưa đặt mật khẩu → FE mời đặt mật khẩu */
+        /* false: an account created through Google has not set a password → the FE invites them to set one */
         boolean hasPassword,
-        /* ảnh Google (URL đầy đủ) hoặc ảnh tự tải lên ("/uploads/avatars/..."); null thì FE hiện chữ cái đầu */
+        /* a Google photo (full URL) or a self-uploaded photo ("/uploads/avatars/..."); when null the FE shows the initial letter */
         String avatarUrl) {}

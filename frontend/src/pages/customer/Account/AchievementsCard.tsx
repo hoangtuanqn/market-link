@@ -10,7 +10,10 @@ import { formatDate, vnd } from '@/lib/format';
 import { TIERS, type AchievementType, type Tier } from '@/types/achievement.types';
 import Helper from '@/utils/helper';
 
-/** Một thanh tiến độ tô màu hạng đang hướng tới; chữ nói rõ con số nên không chỉ dựa vào màu. */
+/**
+ * One progress bar coloured for the tier being worked toward; the text spells out the numbers so it does not rely on
+ * colour alone.
+ */
 const Progress = ({
   label,
   value,
@@ -43,8 +46,9 @@ const Progress = ({
 );
 
 /**
- * Bảng hạng cá nhân: ảnh của chính mình trong viền hạng, tên hạng, danh hiệu, một câu gọi tên với số đơn và số tiền,
- * ngày tham gia. Nền, dải kim loại và hoa văn đổi theo hạng (src/styles/tiers.css, .ml-tier-panel).
+ * The personal tier panel: your own image inside the tier ring, the tier name, the title, a sentence that names them
+ * with the number of orders and amount, join date. The background, metal strip and pattern change by tier
+ * (src/styles/tiers.css, .ml-tier-panel).
  */
 const TierHero = ({ data }: { data: AchievementType | null }) => {
   const { t } = useTranslation('CustomerAccount');
@@ -53,7 +57,7 @@ const TierHero = ({ data }: { data: AchievementType | null }) => {
   if (!user) return null;
 
   const tier = data?.tier ?? 'bronze';
-  // Gọi đủ họ tên: tên người Việt có thể được gõ theo cả hai thứ tự, đoán tên gọi sẽ sai
+  // Use the full name: a Vietnamese name can be typed in either order, guessing the given name would be wrong
   const firstName = user.fullName?.trim() || user.email;
   const line =
     data?.available && data.completed > 0
@@ -135,7 +139,7 @@ const NextTier = ({ data }: { data: AchievementType }) => {
   );
 };
 
-/** Đặc quyền của hạng hiện tại, viết cho chính người đang xem. */
+/** The privileges of the current tier, written for the person viewing. */
 const Perks = ({ tier }: { tier: Tier }) => {
   const { t } = useTranslation('CustomerAccount');
   const perks = t(`achievements.yourPerks.${tier}`, { returnObjects: true }) as string[];
@@ -180,8 +184,9 @@ const Ladder = ({ current }: { current: Tier }) => {
 };
 
 /**
- * Thành tích cá nhân (không có trong SRS, LEAD yêu cầu): bảng hạng cá nhân, số đơn theo kết cục, tổng đã chi, tỉ lệ
- * hoàn tất, phần còn thiếu để lên hạng kế và đặc quyền. Chỉ chủ tài khoản thấy các con số; người khác chỉ thấy hạng.
+ * Personal achievements (not in the SRS, requested by the LEAD): the personal tier panel, orders by outcome, total
+ * spent, completion rate, what is missing for the next tier and the privileges. Only the account owner sees the
+ * numbers; others only see the tier.
  */
 const AchievementsCard = () => {
   const { t } = useTranslation('CustomerAccount');

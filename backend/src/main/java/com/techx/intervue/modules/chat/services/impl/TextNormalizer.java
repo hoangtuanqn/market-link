@@ -7,7 +7,10 @@ public final class TextNormalizer {
 
     private TextNormalizer() {}
 
-    /** Chữ thường, bỏ dấu tiếng Việt, đ → d, chỉ giữ chữ/số, gộp khoảng trắng. */
+    /**
+     * Lowercase, strip Vietnamese diacritics, "đ" → "d", keep only letters/digits, collapse
+     * whitespace.
+     */
     public static String normalize(String text) {
         if (text == null) {
             return "";

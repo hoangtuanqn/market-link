@@ -32,8 +32,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class AttachmentService implements AttachmentServiceInterface {
 
     /**
-     * Một thư mục phẳng dưới CHAT_UPLOAD_DIR; tên file là UUID nên không đụng nhau. Public vì
-     * ChatAttachmentCleanupJob (package khác) xoá file trong đúng thư mục này.
+     * A flat directory under CHAT_UPLOAD_DIR; file names are UUIDs so they never collide. Public
+     * because ChatAttachmentCleanupJob (a different package) deletes files in this same directory.
      */
     public static final String FOLDER = "images";
 
@@ -67,11 +67,14 @@ public class AttachmentService implements AttachmentServiceInterface {
     public AttachmentResource upload(Long meId, MultipartFile file) {
         byte[] bytes = readWithinLimit(file);
         ImageProbe.Probed probed = ImageProbe.probe(bytes);
-        // Hạn mức đếm ảnh ĐÃ NHẬN, không đếm lần thử: máy iPhone gửi HEIC bị 415 mười lần thì
-        // không được mất quyền gửi ảnh cả tiếng. Kiểm định ở trên đều rẻ và chưa chạm đĩa.
+        // The limit counts images ACCEPTED, not attempts: an iPhone sending HEIC that gets 415 ten
+        // times
+        // must not lose the right to send images for a whole hour. The checks above are all cheap
+        // and have not touched the disk yet.
         rateLimiter.check(meId, ChatRateLimiterInterface.Action.IMAGE);
         byte[] stored = ImageProbe.normalize(bytes, probed.mime());
-        // WebP giữ nguyên; JPEG/PNG đã được mã hoá lại thành JPEG nên mime lưu xuống theo file thật
+        // WebP is kept as is; JPEG/PNG were re-encoded to JPEG so the stored mime follows the real
+        // file
         String mime = ImageProbe.WEBP.equals(probed.mime()) ? ImageProbe.WEBP : ImageProbe.JPEG;
         String storageKey = UUID.randomUUID().toString().toLowerCase(Locale.ROOT) + extension(mime);
 
@@ -98,8 +101,10 @@ public class AttachmentService implements AttachmentServiceInterface {
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
 
         if (attachment.getMessageId() == null) {
-            // Chưa gắn vào tin nào: chỉ người vừa upload được xem, để hiện preview trước khi gửi.
-            // Cùng mã với lúc gắn ảnh của người khác vào tin của mình — cùng một ý, một mã.
+            // Not yet attached to any message: only the person who just uploaded may view it, to
+            // show a preview before sending.
+            // Same code as attaching someone else's image to your own message — same idea, one
+            // code.
             if (!attachment.getUploaderId().equals(meId)) {
                 throw new AttachmentNotYoursException();
             }
@@ -107,7 +112,8 @@ public class AttachmentService implements AttachmentServiceInterface {
             Message message =
                     messages.findById(attachment.getMessageId())
                             .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
-            // Tin bị admin ẩn thì ảnh biến mất theo, y như tin biến mất khỏi danh sách
+            // When an admin hides a message the image disappears with it, just as the message
+            // disappears from the list
             if (message.isHidden()) {
                 throw new EntityNotFoundException("Photo not found.");
             }
@@ -129,24 +135,27 @@ public class AttachmentService implements AttachmentServiceInterface {
                         .findById(attachmentId)
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
         if (attachment.getMessageId() == null) {
-            // Ảnh chưa gắn tin nào thì chưa ai báo cáo được; không có việc gì cho admin ở đây
+            // An image not attached to any message cannot be reported yet; there is nothing for an
+            // admin to do here
             throw new ModerationOutOfScopeException();
         }
         Message message =
                 messages.findById(attachment.getMessageId())
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
-        // Spec §8.3: quyền của admin bắt nguồn từ báo cáo. Ảnh của ±5 tin ngữ cảnh KHÔNG mở ra —
-        // ngữ cảnh là để hiểu bối cảnh, không phải đối tượng bị tố.
+        // Spec §8.3: an admin's rights come from a report. The images of the ±5 context messages do
+        // NOT open up —
+        // context is for understanding the situation, it is not the reported subject.
         if (!reports.existsByMessageId(message.getId())) {
             throw new ModerationOutOfScopeException();
         }
-        // Khác người dùng thường: tin bị ẩn KHÔNG chặn admin — họ phải xem lại được quyết định của
-        // chính mình.
+        // Unlike ordinary users: a hidden message does NOT block an admin — they must be able to
+        // re-check
+        // their own decision.
 
         Path file =
                 storage.find(FOLDER, attachment.getStorageKey())
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
-        // Mọi lần admin mở một bức ảnh riêng tư đều để lại dấu vết
+        // Every time an admin opens a private photo it leaves a trace
         log.info(
                 "Admin {} opened photo {} on reported message {}",
                 adminId,

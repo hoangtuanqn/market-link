@@ -35,8 +35,23 @@ const CustomerOrderEditPage = () => {
     );
   }
 
-  const stallName = farmerName(order.farmerId);
   const href = `/orders/${code}`;
+
+  /**
+   * FR-035 — the form itself is the guard, not just the button that leads here: after the cutoff, or once the stall has
+   * moved the order past `accepted`, typing this URL must not produce a "Send changes" button.
+   */
+  if (order.locked || (order.status !== 'placed' && order.status !== 'accepted')) {
+    return (
+      <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
+        <h1 className="text-h2">{t('notChangeable.title')}</h1>
+        <p className="text-ink-muted">{t('notChangeable.text')}</p>
+        <ButtonLink to={href}>{t('breadcrumbOrder', { code: order.code })}</ButtonLink>
+      </div>
+    );
+  }
+
+  const stallName = farmerName(order.farmerId);
 
   const onSave = () => {
     Notification.success({ title: t('toast.title'), text: t('toast.text', { stall: stallName }) });

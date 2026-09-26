@@ -35,18 +35,18 @@ const FormLogin = () => {
       const response = await AuthApi.login({ email: email.trim(), password, rememberMe });
       const { pending, session } = splitLoginResult(response.data, rememberMe);
       if (pending) {
-        // FR-008: admin đã bật xác thực hai bước đăng nhập ở đây → cũng phải qua màn nhập mã
+        // FR-008: an admin with two-step verification on signing in here → must also go through the code entry screen
         navigate(ADMIN_VERIFY_PATH, { state: pending });
         return;
       }
-      // Có "Remember me" → giữ phiên sau khi đóng trình duyệt; không → chỉ trong phiên trình duyệt này
+      // With "Remember me" → keep the session after the browser closes; without → only for this browser session
       Session.save(session, rememberMe);
 
       Notification.success({ text: response.message || t('toast.signedIn') });
-      // Bị RequireAuth chuyển tới đây thì quay lại trang đang mở dở
+      // If RequireAuth sent them here, go back to the page they had open
       navigate((location.state as LoginRedirectState | null)?.from ?? '/', { replace: true });
     } catch (error) {
-      // 400: lỗi theo field (VALIDATION_ERROR) → hiện dưới ô nhập; 401/403: message chung của backend
+      // 400: per-field errors (VALIDATION_ERROR) → shown under the input; 401/403: the backend's general message
       setErrors(Helper.getFieldErrors(error));
       Notification.error({ text: Helper.getErrorMessage(error, t('toast.failed')) });
     } finally {

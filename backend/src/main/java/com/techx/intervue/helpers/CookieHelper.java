@@ -17,8 +17,8 @@ public class CookieHelper {
     }
 
     /**
-     * rememberMe = false: cookie phiên (không có Max-Age), trình duyệt xoá khi đóng. rememberMe =
-     * true: sống maxAge.
+     * rememberMe = false: session cookie (no Max-Age), the browser removes it on close. rememberMe
+     * = true: lives for maxAge.
      */
     public static ResponseCookie buildRefreshTokenCookie(
             String token, Duration maxAge, boolean rememberMe) {

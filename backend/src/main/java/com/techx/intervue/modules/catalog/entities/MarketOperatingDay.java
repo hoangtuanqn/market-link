@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Chợ họp thứ mấy trong tuần: 0 = Chủ nhật … 6 = Thứ bảy (contract §3). */
+/** Which day of the week the market is held: 0 = Sunday … 6 = Saturday (contract §3). */
 @Entity
 @Getter
 @Setter

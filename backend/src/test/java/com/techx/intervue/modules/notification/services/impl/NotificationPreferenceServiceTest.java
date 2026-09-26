@@ -171,7 +171,9 @@ class NotificationPreferenceServiceTest {
                 .containsExactly(
                         new CategoryPreference("messages", false, true),
                         new CategoryPreference("announcements", true, true),
-                        new CategoryPreference("account", true, true));
+                        new CategoryPreference("account", true, true),
+                        new CategoryPreference("orders", true, true),
+                        new CategoryPreference("favorites", true, true));
     }
 
     @Test
@@ -195,7 +197,7 @@ class NotificationPreferenceServiceTest {
         role(RoleType.CUSTOMER);
         var request =
                 new UpdateNotificationPreferencesRequest(
-                        List.of(new CategoryPreference("orders", true, true)),
+                        List.of(new CategoryPreference("shipping", true, true)),
                         true,
                         false,
                         "22:00",

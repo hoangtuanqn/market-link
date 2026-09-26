@@ -49,9 +49,13 @@
   },
   "photo": {
     "label": "Photo",
-    "none": "Pas encore de photo. Tant que vous n’en ajoutez pas, l’étiquette affiche la catégorie à la main.",
-    "choose": "Choisir une photo",
-    "hint": "JPG ou PNG, 4:3, 5 Mo maximum. En gros plan, à la lumière naturelle, sur du bois ou du papier."
+    "add": "Ajouter une photo",
+    "replace": "Changer la photo",
+    "remove": "Supprimer la photo",
+    "uploading": "Envoi en cours",
+    "uploadInProgress": "Attendez la fin de l'envoi de la photo avant d'enregistrer.",
+    "alt": "Photo du produit",
+    "hint": "JPEG, PNG ou WEBP, 8 Mo maximum. En gros plan, à la lumière naturelle, sur du bois ou du papier."
   },
   "save": "Enregistrer le produit",
   "add": "Ajouter le produit",

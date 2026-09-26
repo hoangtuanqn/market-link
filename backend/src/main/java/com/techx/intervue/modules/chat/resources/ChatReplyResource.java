@@ -6,7 +6,7 @@ import java.util.List;
 public record ChatReplyResource(String reply, ChatIntent intent, List<ChatResultItem> results) {
 
     /**
-     * Một thẻ kết quả để FE render link.
+     * One result card so the FE can render a link.
      *
      * @param type "product" | "market" | "farmer"
      */

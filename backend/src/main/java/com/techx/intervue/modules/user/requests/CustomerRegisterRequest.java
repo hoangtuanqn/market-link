@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-/** FR-001: khách hàng đăng ký phải có họ tên, số điện thoại, email và địa chỉ. */
+/** FR-001: a customer signing up must provide full name, phone number, email and address. */
 public record CustomerRegisterRequest(
         @NotBlank(message = "Enter your full name.")
                 @Size(max = 100, message = "Full name can be at most 100 characters.")
@@ -14,7 +14,7 @@ public record CustomerRegisterRequest(
                 @Pattern(regexp = RegisterRules.PHONE_REGEX, message = RegisterRules.PHONE_MESSAGE)
                 String phone,
         @NotBlank(message = "Enter your email.")
-                @Email(message = "Enter a valid email address.")
+                @Email(regexp = RegisterRules.EMAIL_REGEX, message = RegisterRules.EMAIL_MESSAGE)
                 @Size(max = 100, message = "Email can be at most 100 characters.")
                 String email,
         @NotBlank(message = "Enter your address.")

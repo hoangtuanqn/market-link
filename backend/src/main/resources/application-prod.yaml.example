@@ -1,15 +1,15 @@
 # ---------------------------------------------------------------------
-# Mẫu cho profile "prod". Trên server, copy thành application-prod.yaml (git-ignore) trước khi build:
+# Template for the "prod" profile. On the server, copy to application-prod.yaml (git-ignored) before building:
 #   cp application-prod.yaml.example application-prod.yaml
-# Chỉ chứa key nhạy cảm, lấy từ biến môi trường (.env.production) và KHÔNG có mặc định:
-# thiếu biến nào là ứng dụng dừng ngay lúc khởi động thay vì chạy với secret mẫu.
+# Only holds sensitive keys, taken from environment variables (.env.production) with NO defaults:
+# if any variable is missing the app stops right at startup instead of running with a sample secret.
 # ---------------------------------------------------------------------
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
-  # Mail chưa bắt buộc ở prod: bỏ trống thì app vẫn chạy, chỉ gửi mail quên mật khẩu thất bại
+  # Mail is not required in prod: if left empty the app still runs, only the forgot-password email fails to send
   mail:
     username: ${MAIL_USERNAME:}
     password: ${MAIL_PASSWORD:}
@@ -17,11 +17,11 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
 
-# FR-008: khoá mã hoá TOTP của admin, không có giá trị mặc định ở prod
+# FR-008: the admin's TOTP encryption key, no default value in prod
 app:
   mfa:
     encryption-key: ${MFA_ENCRYPTION_KEY}
-  # FR-111: chat realtime qua RabbitMQ; bắt buộc ở prod
+  # FR-111: realtime chat through RabbitMQ; required in prod
   chat:
     rabbitmq:
       host: ${RABBITMQ_HOST}

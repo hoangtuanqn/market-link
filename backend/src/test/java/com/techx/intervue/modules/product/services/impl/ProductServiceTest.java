@@ -15,12 +15,14 @@ import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
+import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
@@ -42,6 +44,7 @@ class ProductServiceTest {
     private CategoryRepository categories;
     private ProductQueryRepository query;
     private ProductService service;
+    private RestockNotifier restock;
 
     @BeforeEach
     void setUp() {
@@ -49,7 +52,8 @@ class ProductServiceTest {
         farmers = mock(FarmerProfileRepository.class);
         categories = mock(CategoryRepository.class);
         query = mock(ProductQueryRepository.class);
-        service = new ProductService(products, farmers, categories, query);
+        restock = mock(RestockNotifier.class);
+        service = new ProductService(products, farmers, categories, query, restock);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -87,7 +91,7 @@ class ProductServiceTest {
 
     private static ProductRequest request() {
         return new ProductRequest(
-                1L, "Rau muống", "Cắt sáng", new BigDecimal("12000"), "bó", 40, null);
+                1L, "Rau muống", "Cắt sáng", new BigDecimal("12000"), "bó", 40, null, 4);
     }
 
     private void approvedStall() {
@@ -95,7 +99,10 @@ class ProductServiceTest {
         when(categories.findById(1L)).thenReturn(Optional.of(leafyGreens()));
     }
 
-    /** D-09 / contract §4: chưa duyệt thì không đăng bán được — 403 kèm đúng câu. */
+    /**
+     * D-09 / contract §4: not approved means it cannot be posted for sale — 403 with the right
+     * sentence.
+     */
     @Test
     void createRejectsStallNotApproved() {
         when(farmers.findByUserId(USER_ID)).thenReturn(Optional.of(stall(ApprovalStatus.PENDING)));
@@ -107,14 +114,14 @@ class ProductServiceTest {
     }
 
     /**
-     * Review focus #3: giám khảo đổi id trên URL → 403, không phải 404 (đơn của người khác có
-     * thật).
+     * Review focus #3: the examiner changes the id in the URL → 403, not 404 (someone else's order
+     * really exists).
      */
     @Test
     void updateOnAnotherFarmersProductIs403() {
         approvedStall();
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID))
-                .thenReturn(Optional.of(product(OTHER_FARMER_ID)));
+        when(products.lockAllById(List.of(PRODUCT_ID)))
+                .thenReturn(List.of(product(OTHER_FARMER_ID)));
 
         assertThatThrownBy(() -> service.update(USER_ID, PRODUCT_ID, request()))
                 .isInstanceOf(ProductNotYoursException.class);
@@ -125,7 +132,7 @@ class ProductServiceTest {
     void softDeleteKeepsTheRow() {
         approvedStall();
         Product p = product(FARMER_ID);
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.softDelete(USER_ID, PRODUCT_ID);
 
@@ -135,12 +142,12 @@ class ProductServiceTest {
         verify(products, never()).deleteById(any());
     }
 
-    /** FR-064: "sold out" là trạng thái, không phải tồn kho — hai khái niệm khác nhau. */
+    /** FR-064: "sold out" is a status, not stock — two different concepts. */
     @Test
     void setStatusSoldOutDoesNotTouchStock() {
         approvedStall();
         Product p = product(FARMER_ID);
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.SOLD_OUT);
 
@@ -162,7 +169,7 @@ class ProductServiceTest {
     @Test
     void adminHideSetsReasonAndFlag() {
         Product p = product(FARMER_ID);
-        when(products.findById(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         service.adminHide(PRODUCT_ID, "Ảnh không đúng sản phẩm.");
 
@@ -171,14 +178,17 @@ class ProductServiceTest {
         verify(products).save(p);
     }
 
-    /** FR-074: chỉ admin gỡ được cờ ẩn; Farmer đổi trạng thái không đụng tới nó. */
+    /**
+     * FR-074: only an admin can clear the hide flag; a Farmer changing the status does not touch
+     * it.
+     */
     @Test
     void farmerCannotUnhideWhatAdminHid() {
         approvedStall();
         Product p = product(FARMER_ID);
         p.setHidden(true);
         p.setHiddenReason("Vi phạm.");
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
 
         assertThatCode(() -> service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.AVAILABLE))
                 .doesNotThrowAnyException();
@@ -187,7 +197,38 @@ class ProductServiceTest {
         assertThat(p.getHiddenReason()).isEqualTo("Vi phạm.");
     }
 
-    /** Danh sách của Farmer bỏ sản phẩm đã xoá mềm, nhưng vẫn hiện sản phẩm bị ẩn kèm lý do. */
+    /**
+     * A Farmer opens the edit form for their own product — does not require the stall to be
+     * approved, like {@code mine()}.
+     */
+    @Test
+    void mineOneReturnsOwnProductEvenWhenStallSuspended() {
+        when(farmers.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
+        when(categories.findById(1L)).thenReturn(Optional.of(leafyGreens()));
+        Product p = product(FARMER_ID);
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+
+        FarmerProductResource resource = service.mineOne(USER_ID, PRODUCT_ID);
+
+        assertThat(resource.item().id()).isEqualTo(PRODUCT_ID);
+    }
+
+    /** Review focus #3, applied to GET: the examiner changes the id in the URL → 403, not 404. */
+    @Test
+    void mineOneOnAnotherFarmersProductIs403() {
+        approvedStall();
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID))
+                .thenReturn(Optional.of(product(OTHER_FARMER_ID)));
+
+        assertThatThrownBy(() -> service.mineOne(USER_ID, PRODUCT_ID))
+                .isInstanceOf(ProductNotYoursException.class);
+    }
+
+    /**
+     * The Farmer's list skips soft-deleted products, but still shows hidden products with the
+     * reason.
+     */
     @Test
     void mineReturnsDeletedProductsNever() {
         assertThat(ProductQueryRepository.MINE_SQL).contains("p.is_deleted = FALSE");
@@ -199,5 +240,150 @@ class ProductServiceTest {
         service.mine(USER_ID, null, 1, 12);
 
         verify(query).mine(FARMER_ID, null, 0, 12);
+    }
+
+    // ---------- Task 5.3b (D-02, Review Focus #1 by another path): every write path must lock
+    // the product row before reading it, never load it through an unlocked findById /
+    // findByIdAndDeletedFalse — otherwise the transaction overwrites the stock that
+    // OrderService.place just deducted.
+    // ----------
+
+    @Test
+    void updateLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.update(USER_ID, PRODUCT_ID, request());
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void softDeleteLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.softDelete(USER_ID, PRODUCT_ID);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void setStatusLoadsThroughTheLock() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.SOLD_OUT);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void adminHideLoadsThroughTheLock() {
+        Product p = product(FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.adminHide(PRODUCT_ID, "Ảnh không đúng sản phẩm.");
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    @Test
+    void adminUnhideLoadsThroughTheLock() {
+        Product p = product(FARMER_ID);
+        p.setHidden(true);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.adminUnhide(PRODUCT_ID);
+
+        verify(products).lockAllById(List.of(PRODUCT_ID));
+        verify(products, never()).findById(any());
+        verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    // ---------- FR-041 restock + FR-064 automatic status on edit ----------
+
+    /** Stock 0 → 40 on a sold-out product: back on sale, and favourites hear about it. */
+    @Test
+    void updateThatRefillsAnEmptyProductPutsItBackOnSaleAndAlertsFavourites() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setStockQuantity(0);
+        p.setStatus(ProductStatus.SOLD_OUT);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.update(USER_ID, PRODUCT_ID, request());
+
+        assertThat(p.getStockQuantity()).isEqualTo(40);
+        assertThat(p.getStatus()).isEqualTo(ProductStatus.AVAILABLE);
+        verify(restock).afterChange(p, false);
+    }
+
+    /**
+     * FR-064: the farmer's pause survives an edit; FR-041 is told, and stays quiet for paused
+     * goods.
+     */
+    @Test
+    void updateKeepsAPausedProductPaused() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setStockQuantity(0);
+        p.setStatus(ProductStatus.UNAVAILABLE);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.update(USER_ID, PRODUCT_ID, request());
+
+        assertThat(p.getStatus()).isEqualTo(ProductStatus.UNAVAILABLE);
+    }
+
+    /** A farmer's manual "sold out" with stock left is not undone by an unrelated edit. */
+    @Test
+    void updateKeepsAManualSoldOutWhenStockWasNotEmpty() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setStockQuantity(7);
+        p.setStatus(ProductStatus.SOLD_OUT);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.update(USER_ID, PRODUCT_ID, request());
+
+        assertThat(p.getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
+    }
+
+    /** FR-041: lifting the farmer's pause makes a stocked product orderable again → alert. */
+    @Test
+    void unpausingAStockedProductTellsTheRestockNotifier() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setStockQuantity(7);
+        p.setStatus(ProductStatus.UNAVAILABLE);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.setStatus(USER_ID, PRODUCT_ID, ProductStatus.AVAILABLE);
+
+        verify(restock).afterChange(p, false);
+    }
+
+    /** FR-041: an admin un-hiding a stocked product makes it orderable again → alert. */
+    @Test
+    void adminUnhideTellsTheRestockNotifier() {
+        Product p = product(FARMER_ID);
+        p.setHidden(true);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.adminUnhide(PRODUCT_ID);
+
+        verify(restock).afterChange(p, false);
     }
 }

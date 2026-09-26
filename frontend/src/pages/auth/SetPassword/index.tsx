@@ -15,7 +15,7 @@ type FormErrors = Partial<Record<'password' | 'confirmPassword', string>>;
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
-/** Kiểm tra phía client, cùng luật với SetPasswordRequest của backend. */
+/** Client-side validation, same rules as the backend's SetPasswordRequest. */
 const validate = (password: string, confirm: string, t: TFunction<'SetPassword'>): FormErrors => {
   const errors: FormErrors = {};
   if (!password) errors.password = t('errors.passwordRequired');
@@ -26,7 +26,7 @@ const validate = (password: string, confirm: string, t: TFunction<'SetPassword'>
   return errors;
 };
 
-/** Sau lần đăng nhập Google đầu tiên: mời đặt mật khẩu để đăng nhập được bằng email + mật khẩu. */
+/** After the first Google sign-in: invite setting a password so they can sign in with email + password. */
 const SetPasswordPage = () => {
   const { t } = useTranslation('SetPassword');
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ const SetPasswordPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Chưa đăng nhập thì không đặt mật khẩu được
+  // Not signed in means a password cannot be set
   if (!Session.getAccessToken()) return <Navigate to="/login" replace />;
 
   const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -84,7 +84,7 @@ const SetPasswordPage = () => {
           </p>
         </div>
 
-        {/* Cho trình quản lý mật khẩu biết mật khẩu mới thuộc tài khoản nào */}
+        {/* Tell the password manager which account the new password belongs to */}
         <input type="email" name="username" autoComplete="username" value={user?.email ?? ''} readOnly hidden />
 
         <Field

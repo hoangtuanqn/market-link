@@ -3,7 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import SettingsStore, { type Language } from '@/lib/settings';
 import { en, NAMESPACES } from './resources';
 
-/** Ngôn ngữ khác English tải khi cần (mỗi ngôn ngữ một chunk), key thiếu thì hiện English. */
+/** Languages other than English load on demand (one chunk each), a missing key shows English. */
 const bundles = import.meta.glob<Record<string, unknown>>(['../locales/*/*.json', '!../locales/en/*.json'], {
   import: 'default',
 });
@@ -28,28 +28,31 @@ i18n.use(initReactI18next).init({
   fallbackLng: 'en',
   ns: NAMESPACES,
   defaultNS: 'common',
-  interpolation: { escapeValue: false }, // React tự escape
+  interpolation: { escapeValue: false }, // React escapes by itself
   returnNull: false,
 });
 
-/** Đổi ngôn ngữ giao diện: tải bản dịch rồi mới đổi, để không nháy chữ nửa nọ nửa kia. */
+/**
+ * Change the UI language: load the translations first and only then switch, to avoid a flash of half one language half
+ * the other.
+ */
 export const setLanguage = async (lng: Language) => {
   try {
     await load(lng);
   } catch {
-    // mất mạng lúc tải chunk → vẫn đổi, key thiếu hiện English
+    // lost network while loading the chunk → still switch, a missing key shows English
   }
   await i18n.changeLanguage(lng);
   document.documentElement.lang = lng;
 };
 
-// Settings đổi ngôn ngữ (trang Settings, tab khác, bản từ server) → giao diện đổi theo
+// Settings changes the language (Settings page, another tab, the copy from the server) → the UI follows
 SettingsStore.subscribe(() => {
   const lng = SettingsStore.get().language;
   if (lng !== i18n.language) void setLanguage(lng);
 });
 
-/** Chạy trước khi render: người đã chọn tiếng khác không thấy English trước. */
+/** Runs before render: someone who chose another language does not see English first. */
 export const i18nReady = setLanguage(SettingsStore.get().language);
 
 export default i18n;

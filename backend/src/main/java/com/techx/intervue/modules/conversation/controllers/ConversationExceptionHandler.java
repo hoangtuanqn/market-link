@@ -10,6 +10,7 @@ import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeni
 import com.techx.intervue.modules.conversation.exceptions.ConversationClosedException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
+import com.techx.intervue.modules.conversation.exceptions.OrderNotInConversationException;
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
@@ -35,13 +36,13 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
- * Mã HTTP theo spec mục 6.3, cho các controller của module chat. Lỗi multipart quá cỡ do
- * UploadExceptionHandler TOÀN CỤC xử lý (Tomcat chặn khi đọc body, trước khi biết controller nào
- * nhận), nên đừng thêm lại ở đây: hai advice cùng bắt một exception mà không cái nào khai @Order
- * thì error.code trả về là không xác định.
+ * HTTP codes per spec section 6.3, for the chat module's controllers. An oversized multipart error
+ * is handled by the GLOBAL UploadExceptionHandler (Tomcat rejects it while reading the body, before
+ * it knows which controller receives it), so do not add it again here: if two advices catch the
+ * same exception and neither declares @Order, the returned error.code is undefined.
  *
- * <p>Thêm controller mới vào module thì phải thêm vào assignableTypes dưới đây, nếu không mọi
- * exception của nó thành 500 — ConversationExceptionHandlerScopeTest ghim điều đó.
+ * <p>Adding a new controller to the module means adding it to assignableTypes below, otherwise all
+ * of its exceptions become 500 — ConversationExceptionHandlerScopeTest pins that down.
  */
 @Slf4j
 @RestControllerAdvice(
@@ -100,10 +101,16 @@ public class ConversationExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
     }
 
-    /** R-06: sai chủ sở hữu → 403, không phải 404, để FE hiện đúng lý do. */
+    /** R-06: wrong owner → 403, not 404, so the FE shows the right reason. */
     @ExceptionHandler(ConversationAccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> notAMember(ConversationAccessDeniedException e) {
         return error(HttpStatus.FORBIDDEN, "NOT_A_MEMBER", e.getMessage(), List.of());
+    }
+
+    /** R-06, FR-114: pinning an order that does not belong to the two people in the thread. */
+    @ExceptionHandler(OrderNotInConversationException.class)
+    ResponseEntity<ApiResource<Void>> orderNotInConversation(OrderNotInConversationException e) {
+        return error(HttpStatus.FORBIDDEN, "ORDER_NOT_IN_CONVERSATION", e.getMessage(), List.of());
     }
 
     @ExceptionHandler(StallNotOpenException.class)
@@ -116,25 +123,28 @@ public class ConversationExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "ACCOUNT_RESTRICTED", e.getMessage(), List.of());
     }
 
-    /** D-09: thread cũ đọc được, gửi thêm thì 409 kèm lý do bằng chữ. */
+    /** D-09: an old thread can be read, sending more gives 409 with the reason in plain text. */
     @ExceptionHandler(ConversationClosedException.class)
     ResponseEntity<ApiResource<Void>> closed(ConversationClosedException e) {
         return error(HttpStatus.CONFLICT, "CONVERSATION_CLOSED", e.getMessage(), List.of());
     }
 
-    /** Spec §8.4 — vượt hạn mức. Lý do viết thẳng bằng chữ để FE hiện nguyên câu. */
+    /**
+     * Spec §8.4 — limit exceeded. The reason is written out in words so the FE shows the whole
+     * sentence.
+     */
     @ExceptionHandler(RateLimitedException.class)
     ResponseEntity<ApiResource<Void>> tooManyRequests(RateLimitedException e) {
         return error(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMITED", e.getMessage(), List.of());
     }
 
-    /** R-06: ảnh của người khác → 403, không phải 404. */
+    /** R-06: someone else's image → 403, not 404. */
     @ExceptionHandler(AttachmentNotYoursException.class)
     ResponseEntity<ApiResource<Void>> notYourAttachment(AttachmentNotYoursException e) {
         return error(HttpStatus.FORBIDDEN, "ATTACHMENT_NOT_YOURS", e.getMessage(), List.of());
     }
 
-    /** Một ảnh chỉ gắn vào đúng một tin → 409. */
+    /** An image attaches to exactly one message → 409. */
     @ExceptionHandler(AttachmentAlreadyUsedException.class)
     ResponseEntity<ApiResource<Void>> attachmentUsed(AttachmentAlreadyUsedException e) {
         return error(HttpStatus.CONFLICT, "ATTACHMENT_ALREADY_USED", e.getMessage(), List.of());
@@ -147,7 +157,10 @@ public class ConversationExceptionHandler {
                 HttpStatus.PAYLOAD_TOO_LARGE, "ATTACHMENT_TOO_LARGE", e.getMessage(), List.of());
     }
 
-    /** Spec §6.3 — 415. Kết luận từ magic bytes, không từ Content-Type client gửi. */
+    /**
+     * Spec §6.3 — 415. The conclusion comes from the magic bytes, not from the Content-Type the
+     * client sent.
+     */
     @ExceptionHandler(UnsupportedImageTypeException.class)
     ResponseEntity<ApiResource<Void>> unsupportedType(UnsupportedImageTypeException e) {
         return error(
@@ -157,7 +170,7 @@ public class ConversationExceptionHandler {
                 List.of());
     }
 
-    /** ImageProbe ném cái này khi ảnh quá lớn về số điểm ảnh — 400 kèm tên trường. */
+    /** ImageProbe throws this when the image is too large in pixels — 400 with the field name. */
     @ExceptionHandler(InvalidFieldException.class)
     ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
         return error(
@@ -171,13 +184,13 @@ public class ConversationExceptionHandler {
                                 .build()));
     }
 
-    /** Spec §8.3 — 403. Ranh giới của admin bắt nguồn từ báo cáo, không từ vai. */
+    /** Spec §8.3 — 403. The admin's boundary comes from a report, not from the role. */
     @ExceptionHandler(ModerationOutOfScopeException.class)
     ResponseEntity<ApiResource<Void>> outOfScope(ModerationOutOfScopeException e) {
         return error(HttpStatus.FORBIDDEN, "MODERATION_OUT_OF_SCOPE", e.getMessage(), List.of());
     }
 
-    /** Spec §8.5 — 400. Báo cáo là để tố người khác, không phải để tự gỡ tin của mình. */
+    /** Spec §8.5 — 400. Reporting is for accusing others, not for removing your own message. */
     @ExceptionHandler(CannotReportOwnMessageException.class)
     ResponseEntity<ApiResource<Void>> ownMessage(CannotReportOwnMessageException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
@@ -189,12 +202,15 @@ public class ConversationExceptionHandler {
         return error(HttpStatus.CONFLICT, "ALREADY_REPORTED", e.getMessage(), List.of());
     }
 
-    /** Hai request mở cùng một cặp đúng lúc → UNIQUE chặn một cái; client gọi lại là có thread. */
+    /**
+     * Two requests open the same pair at the same moment → UNIQUE blocks one; the client calls
+     * again and gets the thread.
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> integrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
         if (cause.contains("uq_report_once")) {
-            // Hai request báo cáo cùng lúc lọt qua existsBy...; UNIQUE chặn cái thứ hai
+            // Two report requests both get past existsBy...; UNIQUE blocks the second one
             return error(
                     HttpStatus.CONFLICT,
                     "ALREADY_REPORTED",
@@ -202,8 +218,9 @@ public class ConversationExceptionHandler {
                     List.of());
         }
         if (cause.contains("uq_attach_message")) {
-            // Hai request gửi cùng một ảnh cùng lúc; UNIQUE chặn cái thứ hai. Cùng ý nghĩa với
-            // kiểm tra trong MessageService nên trả cùng mã.
+            // Two requests send the same image at the same moment; UNIQUE blocks the second one.
+            // Same meaning as
+            // the check in MessageService, so it returns the same code.
             return error(
                     HttpStatus.CONFLICT,
                     "ATTACHMENT_ALREADY_USED",

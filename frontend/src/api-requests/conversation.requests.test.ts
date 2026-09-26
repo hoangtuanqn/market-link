@@ -19,7 +19,7 @@ describe('ConversationApi', () => {
     expect(privateApi.get).toHaveBeenCalledWith('/conversations', { params: { page: 1, size: 20 } });
   });
 
-  /** Phân trang keyset: `before` là id tin cũ nhất đang có, không phải số trang. */
+  /** Keyset pagination: `before` is the id of the oldest message currently held, not a page number. */
   it('walks history backwards with a keyset cursor, not a page number', async () => {
     vi.mocked(privateApi.get).mockResolvedValue(ok([]));
 
@@ -51,12 +51,12 @@ describe('ConversationApi', () => {
     });
   });
 
-  it('opens a thread with a stall by the owner user id', async () => {
+  it('opens a thread with the stall id', async () => {
     vi.mocked(privateApi.post).mockResolvedValue(ok({}));
 
-    await ConversationApi.open(3);
+    await ConversationApi.open(30);
 
-    expect(privateApi.post).toHaveBeenCalledWith('/conversations', { farmerUserId: 3 });
+    expect(privateApi.post).toHaveBeenCalledWith('/conversations', { farmerId: 30 });
   });
 
   it('uploads a photo as multipart under the field name the backend reads', async () => {
@@ -72,8 +72,8 @@ describe('ConversationApi', () => {
   });
 
   /**
-   * JWT đi ở header Authorization chứ không ở cookie, nên `<img src>` thẳng sẽ trả 401. Ảnh phải tải bằng axios với
-   * responseType blob rồi bọc thành blob URL.
+   * The JWT travels in the Authorization header, not a cookie, so a plain `<img src>` returns 401. Images must be
+   * loaded with axios with responseType blob and wrapped as a blob URL.
    */
   it('fetches a photo as a blob and hands back an object url', async () => {
     const blob = new Blob(['bytes']);
@@ -85,5 +85,11 @@ describe('ConversationApi', () => {
     expect(privateApi.get).toHaveBeenCalledWith('/attachments/55', { responseType: 'blob' });
     expect(globalThis.URL.createObjectURL).toHaveBeenCalledWith(blob);
     expect(url).toBe('blob:fake');
+  });
+
+  it('reports a message with a reason and an optional note', async () => {
+    vi.mocked(privateApi.post).mockResolvedValue(ok({}));
+    await ConversationApi.report(55, { reason: 'scam', note: 'asks for a deposit' });
+    expect(privateApi.post).toHaveBeenCalledWith('/messages/55/report', { reason: 'scam', note: 'asks for a deposit' });
   });
 });

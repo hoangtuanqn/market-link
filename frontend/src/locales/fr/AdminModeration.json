@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "Avis",
     "products": "Fiches produits",
-    "hidden": "Éléments masqués"
+    "hidden": "Éléments masqués",
+    "messages": "Messages signalés"
   },
   "reviewFilterLabel": "Filtrer les avis",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "annonces"
+  },
+  "messages": {
+    "boundary": "Vous ne pouvez lire que les messages signalés, avec jusqu’à cinq messages de chaque côté pour le contexte. Le reste de la conversation n’est pas ouvert aux administrateurs.",
+    "noun": "signalements",
+    "emptyTitle": "Aucun message signalé",
+    "emptyText": "Quand un client ou un stand signale un message, il vous attend ici.",
+    "photo": "Photo",
+    "reason": {
+      "spam": "Spam ou publicité",
+      "abuse": "Grossier ou injurieux",
+      "scam": "Arnaque ou demande d’argent",
+      "other": "Autre chose"
+    },
+    "reportedBy": "Signalé par {{name}}",
+    "sentBy": "Envoyé par {{name}}",
+    "review": "Examiner",
+    "reviewLabel": "Examiner le signalement de {{name}}",
+    "context": "Messages autour du message signalé",
+    "hidden": "Masqué",
+    "hide": "Masquer le message",
+    "hideTitle": "Masquer ce message ?",
+    "hideText": "Les deux personnes de la conversation ne le verront plus. Le signalement est marqué comme traité.",
+    "hideConfirm": "Masquer",
+    "dismiss": "Classer le signalement",
+    "hidden_toast": "Message masqué.",
+    "dismissed_toast": "Signalement classé.",
+    "status": {
+      "new": "Nouveau",
+      "reviewed": "Examiné",
+      "actioned": "Traité"
+    },
+    "statusLabel": "Statut"
   }
 }

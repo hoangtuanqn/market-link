@@ -5,16 +5,19 @@ import com.techx.intervue.modules.catalog.resources.CategoryResource;
 import java.util.List;
 
 public interface CategoryServiceInterface {
-    /** Public — chỉ danh mục đang bật, theo sort_order rồi tên (FR-020). */
+    /** Public — only active categories, by sort_order then name (FR-020). */
     List<CategoryResource> listActive();
 
-    /** Admin — cả danh mục đã tắt, để bật lại được (FR-076). */
+    /** Admin — including disabled categories, so they can be turned back on (FR-076). */
     List<CategoryResource> listAll();
 
     CategoryResource create(CategoryRequest request);
 
     CategoryResource update(long id, CategoryRequest request);
 
-    /** Xoá mềm: is_active = false. Không xoá dòng vì products.category_id trỏ vào đây. */
+    /**
+     * Soft delete: is_active = false. The row is not deleted because products.category_id points to
+     * it.
+     */
     void deactivate(long id);
 }

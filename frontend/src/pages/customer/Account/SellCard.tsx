@@ -11,20 +11,21 @@ import type { FarmerApproval } from '@/types/farmer.types';
 
 type State =
   | { kind: 'loading' }
-  /** Chưa nộp đơn, hoặc không đọc được trạng thái — cả hai đều mời nộp đơn, không chặn trang. */
+  /** Not applied yet, or the status could not be read — both invite applying, and do not block the page. */
   | { kind: 'none'; hasDraft: boolean }
   | { kind: 'applied'; status: FarmerApproval };
 
 /**
- * FR-002 (nhánh Customer đang đăng nhập). Nộp đơn rồi mà nút vẫn ghi "Apply to sell" thì người dùng bấm vào lại tưởng
- * phải khai lại từ đầu, nên thẻ này đọc trạng thái đơn và đổi cả lời lẫn nút.
+ * FR-002 (the signed-in Customer branch). If someone has applied yet the button still says "Apply to sell" they click
+ * again and think they must fill everything in again, so this card reads the application status and changes both the
+ * wording and the button.
  */
 const SellCard = () => {
   const { t } = useTranslation('CustomerAccount');
   const { user } = useSession();
   const [state, setState] = useState<State>({ kind: 'loading' });
 
-  // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
+  // only setState in a promise callback (the initial state is already loading)
   const fetchApplication = useCallback(() => {
     const draft = readDraft(user?.id);
     const hasDraft = draft !== null && !isEmptyDraft(draft);
@@ -46,7 +47,7 @@ const SellCard = () => {
         ? t('sell.draft')
         : t('sell.text');
 
-  // Đã duyệt thì chỗ cần đến là panel Farmer, không phải trang đơn.
+  // Once approved the place to go is the Farmer panel, not the application page.
   const to = state.kind === 'applied' && state.status === 'approved' ? '/farmer' : '/become-farmer';
   const label =
     state.kind === 'applied'
@@ -72,7 +73,7 @@ const SellCard = () => {
           </span>
         </div>
         <p className="text-ink-muted text-[15px] leading-relaxed">{text}</p>
-        {/* Đã duyệt thì nút chính dẫn sang panel Farmer, nên đơn cũ cần một lối đi riêng. */}
+        {/* Once approved the main button leads to the Farmer panel, so the old application needs a separate way in. */}
         {state.kind === 'applied' && state.status === 'approved' && (
           <Link to="/become-farmer" className="text-brand text-small w-fit font-medium underline">
             {t('sell.history')}

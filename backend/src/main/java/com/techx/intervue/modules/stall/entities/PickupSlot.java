@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Một khung giờ nhận hàng của một stall tại một chợ trong một ngày (FR-032, FR-067). Bảng
- * `pickup_slots` (V20260926011); CHECK `ck_slot_capacity` giữ booked_count ≤ max_orders (D-06).
+ * One pickup time window of a stall at a market on one day (FR-032, FR-067). Table `pickup_slots`
+ * (V20260926011); CHECK `ck_slot_capacity` keeps booked_count ≤ max_orders (D-06).
  */
 @Entity
 @Getter
@@ -42,11 +42,13 @@ public class PickupSlot {
     @Column(name = "max_orders", nullable = false)
     private int maxOrders = 5;
 
-    /** Chỉ đơn hàng (C5) tăng/giảm, dưới khoá PESSIMISTIC_WRITE của lockById. */
+    /** Only orders (C5) increase/decrease it, under lockById's PESSIMISTIC_WRITE lock. */
     @Column(name = "booked_count", nullable = false)
     private int bookedCount;
 
-    /** Farmer tắt slot = không nhận thêm đơn; đơn đã đặt vào slot vẫn giữ nguyên. */
+    /**
+     * A Farmer disabling a slot = no more new orders; orders already placed into it are unaffected.
+     */
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 }

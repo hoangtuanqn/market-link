@@ -5,7 +5,6 @@ import com.techx.intervue.filters.JwtAuthFilter;
 import com.techx.intervue.filters.TraceIdFilter;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
-import com.techx.intervue.resources.FieldErrorResource;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -20,6 +19,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -28,8 +28,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @AllArgsConstructor
 @Configuration
-@EnableMethodSecurity // phần quyền dựa trên method (còn default là phân quyền theo url)
+@EnableMethodSecurity // method-based authorization (the default is URL-based authorization)
 public class SecurityConfig {
+
+    static final String SIGN_IN_MESSAGE = "Please sign in to continue.";
 
     private final ObjectMapper objectMapper;
     private final JwtAuthFilter jwtAuthFilter;
@@ -41,9 +43,9 @@ public class SecurityConfig {
     }
 
     /**
-     * Cho phép frontend React (khác origin với backend) gọi API. Danh sách origin lấy từ
-     * app.cors.allowed-origins (biến CORS_ALLOWED_ORIGINS, nhiều origin cách nhau dấu phẩy).
-     * allowCredentials để trình duyệt gửi/nhận cookie refresh_token.
+     * Lets the React frontend (a different origin from the backend) call the API. The origin list
+     * comes from app.cors.allowed-origins (variable CORS_ALLOWED_ORIGINS, several origins separated
+     * by commas). allowCredentials lets the browser send/receive the refresh_token cookie.
      */
     @Bean
     CorsConfigurationSource corsConfigurationSource(
@@ -68,9 +70,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth ->
                                 auth
-                                        // Logout, hồ sơ cá nhân, đặt mật khẩu cần access token hợp
-                                        // lệ
-                                        // — đặt trước auth/**
+                                        // Logout, own profile and setting a password need a valid
+                                        // access
+                                        // token
+                                        // — placed before auth/**
                                         .requestMatchers(
                                                 "/api/v1/auth/logout",
                                                 "/api/v1/auth/set-password",
@@ -79,7 +82,8 @@ public class SecurityConfig {
                                                 "/api/v1/auth/me/avatar",
                                                 "/api/v1/auth/me/settings",
                                                 "/api/v1/auth/me/achievements",
-                                                // FR-008: bật / tắt 2FA (verify lúc đăng nhập vẫn
+                                                // FR-008: enable / disable 2FA (verification at
+                                                // sign-in is still
                                                 // public)
                                                 "/api/v1/auth/mfa",
                                                 "/api/v1/auth/mfa/setup",
@@ -90,22 +94,24 @@ public class SecurityConfig {
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
                                         .permitAll()
-                                        // FR-111: WebSocket handshake không mang header
-                                        // Authorization;
-                                        // JWT được kiểm ở frame STOMP CONNECT
+                                        // FR-111: the WebSocket handshake carries no
+                                        // Authorization header;
+                                        // the JWT is checked in the STOMP CONNECT frame
                                         // (StompAuthInterceptor)
                                         .requestMatchers("/ws", "/ws/**")
                                         .permitAll()
                                         // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()
-                                        // Lỗi chưa được handler nào bắt được forward tới /error:
-                                        // không public thì bị trả 401 và FE tưởng hết phiên
+                                        // Errors that no handler caught are forwarded to /error:
+                                        // if it is not public it returns 401 and the FE thinks the
+                                        // session is over
                                         .requestMatchers("/error")
                                         .permitAll()
                                         .requestMatchers("/uploads/**")
                                         .permitAll()
-                                        // Swagger UI + OpenAPI JSON (tắt ở prod qua springdoc.*)
+                                        // Swagger UI + OpenAPI JSON (off in prod through
+                                        // springdoc.*)
                                         .requestMatchers(
                                                 "/swagger-ui.html",
                                                 "/swagger-ui/**",
@@ -114,37 +120,51 @@ public class SecurityConfig {
                                         // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
-                                        // FR-020…023, FR-011: sản phẩm và tồn kho của stall xem
-                                        // được trước khi đăng nhập
+                                        // FR-020…023, FR-011: a stall's products and stock can be
+                                        // viewed
+                                        // before signing in
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/api/v1/products/*",
                                                 "/api/v1/farmers/*/products")
                                         .permitAll()
-                                        // FR-020/FR-076: bộ lọc danh mục dùng được trước khi đăng
-                                        // nhập
+                                        // FR-020/FR-076: the category filter can be used before
+                                        // signing
+                                        // in
                                         .requestMatchers(HttpMethod.GET, "/api/v1/categories")
                                         .permitAll()
-                                        // FR-010/FR-012: chợ và bản đồ xem được trước khi đăng nhập
+                                        // FR-010/FR-012: markets and the map can be viewed before
+                                        // signing in
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/api/v1/markets",
                                                 "/api/v1/markets/*")
                                         .permitAll()
-                                        // FR-011: stall và danh sách Farmer của chợ xem được trước
-                                        // khi đăng nhập
+                                        // FR-011: a market's stalls and Farmer list can be viewed
+                                        // before
+                                        // signing in
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/api/v1/farmers",
                                                 "/api/v1/farmers/*",
                                                 "/api/v1/markets/*/farmers",
-                                                // FR-032: giỏ hàng chọn slot trước khi đăng nhập
+                                                // FR-032: the cart can pick a slot before signing
+                                                // in
                                                 "/api/v1/farmers/*/slots")
                                         .permitAll()
-                                        // Chatbot FR-090…092: khách vãng lai cũng hỏi được
+                                        // FR-052: reviews are readable before signing in
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/products/*/reviews",
+                                                "/api/v1/farmers/*/reviews")
+                                        .permitAll()
+                                        // FR-081: the feedback form is open to visitors
+                                        .requestMatchers(HttpMethod.POST, "/api/v1/feedbacks")
+                                        .permitAll()
+                                        // Chatbot FR-090…092: guests can ask questions too
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
                                         .permitAll()
-                                        // FR-077: banner thông báo ở trang public
+                                        // FR-077: notice banner on the public pages
                                         .requestMatchers(
                                                 HttpMethod.GET, "/api/v1/announcements/active")
                                         .permitAll()
@@ -152,41 +172,32 @@ public class SecurityConfig {
                                         .authenticated())
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(
-                        ex ->
-                                ex.authenticationEntryPoint(
-                                        ((request, response, authException) -> {
-                                            ErrorResource error =
-                                                    ErrorResource.builder()
-                                                            .code("UNAUTHORIZED")
-                                                            .details(
-                                                                    List.of(
-                                                                            FieldErrorResource
-                                                                                    .builder()
-                                                                                    .message(
-                                                                                            authException
-                                                                                                    .getMessage())
-                                                                                    .build()))
-                                                            .build();
-
-                                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                                            response.setContentType(
-                                                    MediaType.APPLICATION_JSON_VALUE);
-                                            response.setCharacterEncoding("UTF-8");
-                                            response.getWriter()
-                                                    .write(
-                                                            objectMapper.writeValueAsString(
-                                                                    ApiResource.error(
-                                                                            error,
-                                                                            "Something went wrong on our side. Please try again later.")));
-                                        })))
-                // UsernamePasswordAuthenticationFilter.class chỉ làm mốc để tham chiếu
-                // sau khi chạy qua jwtAuthFiler thì nó sẽ chạy qua bên
-                // UsernamePasswordAuthenticationFilter.class (chạy nma ko làm gì)
-                // cần phải có 2 tham số
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(signInRequired()))
+                // UsernamePasswordAuthenticationFilter.class is just a reference point:
+                // after the request passes through jwtAuthFilter it goes on through
+                // UsernamePasswordAuthenticationFilter.class (which runs but does nothing)
+                // two parameters are required
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(traceIdFilter, JwtAuthFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * No access token on a route that needs one → 401 with a message the user can act on (QA E2E v2
+     * BUG-003), the same shape JwtAuthFilter returns for a bad token.
+     */
+    AuthenticationEntryPoint signInRequired() {
+        return (request, response, authException) -> {
+            ErrorResource error =
+                    ErrorResource.builder().code("UNAUTHORIZED").details(List.of()).build();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
+            response.getWriter()
+                    .write(
+                            objectMapper.writeValueAsString(
+                                    ApiResource.error(error, SIGN_IN_MESSAGE)));
+        };
     }
 }

@@ -1,10 +1,10 @@
 import LocalStorage from '@/utils/localstorage';
 
 /**
- * Bản nháp đơn xin thành Farmer, lưu ngay trên máy khi người dùng bấm "Lưu, để sau làm tiếp". Ảnh và video đã nằm trên
- * server từ lúc tải lên nên nháp chỉ giữ đường dẫn — mở lại là thấy đủ ảnh. Nháp gắn với từng tài khoản để hai người
- * dùng chung một máy không thấy nháp của nhau, và nằm trong trình duyệt chứ không phải server: đổi máy hoặc xoá dữ liệu
- * duyệt web là mất.
+ * A draft of the Farmer application, saved right on the machine when the user clicks "Save and finish later". The
+ * images and videos are already on the server from the moment they were uploaded so the draft only keeps the paths —
+ * reopening shows every image. The draft is tied to each account so two people sharing one machine do not see each
+ * other's drafts, and it lives in the browser, not the server: switching machines or clearing browsing data loses it.
  */
 export type FarmerDraft = {
   stallName: string;
@@ -12,7 +12,7 @@ export type FarmerDraft = {
   description: string;
   photoUrls: string[];
   videoUrl: string | null;
-  /** ISO — dùng để nói "đã lưu ngày …" khi mở lại. */
+  /** ISO — used to say "saved on …" when reopened. */
   savedAt: string;
 };
 
@@ -33,7 +33,7 @@ export function readDraft(userId: number | undefined): FarmerDraft | null {
       videoUrl: parsed.videoUrl ?? null,
       savedAt: parsed.savedAt ?? new Date().toISOString(),
     };
-    // Nháp hỏng (người dùng sửa tay, đổi phiên bản) thì coi như không có, đừng làm vỡ trang.
+    // A corrupt draft (edited by hand, version change) counts as none, do not break the page.
   } catch {
     return null;
   }
@@ -49,7 +49,7 @@ export function clearDraft(userId: number | undefined) {
   LocalStorage.removeItem(key(userId));
 }
 
-/** Nháp trống (chưa gõ gì) thì không tính là có việc dở dang. */
+/** An empty draft (nothing typed) does not count as unfinished work. */
 export function isEmptyDraft(draft: FarmerDraft) {
   return (
     !draft.stallName.trim() &&

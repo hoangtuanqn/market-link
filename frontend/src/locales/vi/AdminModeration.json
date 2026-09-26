@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "Đánh giá",
     "products": "Sản phẩm đăng bán",
-    "hidden": "Đã ẩn"
+    "hidden": "Đã ẩn",
+    "messages": "Tin nhắn bị báo cáo"
   },
   "reviewFilterLabel": "Lọc đánh giá",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "các listing"
+  },
+  "messages": {
+    "boundary": "Bạn chỉ đọc được tin nhắn đã bị báo cáo, kèm tối đa năm tin mỗi bên để hiểu ngữ cảnh. Phần còn lại của cuộc trò chuyện không mở cho quản trị viên.",
+    "noun": "báo cáo",
+    "emptyTitle": "Không có tin nhắn bị báo cáo",
+    "emptyText": "Khi khách hoặc sạp báo cáo một tin nhắn, nó sẽ chờ bạn ở đây.",
+    "photo": "Ảnh",
+    "reason": {
+      "spam": "Spam hoặc quảng cáo",
+      "abuse": "Thô lỗ hoặc xúc phạm",
+      "scam": "Lừa đảo hoặc đòi tiền",
+      "other": "Lý do khác"
+    },
+    "reportedBy": "{{name}} báo cáo",
+    "sentBy": "{{name}} gửi",
+    "review": "Xem xét",
+    "reviewLabel": "Xem báo cáo của {{name}}",
+    "context": "Các tin quanh tin bị báo cáo",
+    "hidden": "Đã ẩn",
+    "hide": "Ẩn tin nhắn",
+    "hideTitle": "Ẩn tin nhắn này?",
+    "hideText": "Cả hai người trong cuộc trò chuyện sẽ không còn thấy nó. Báo cáo được đánh dấu là đã xử lý.",
+    "hideConfirm": "Ẩn",
+    "dismiss": "Bỏ qua báo cáo",
+    "hidden_toast": "Đã ẩn tin nhắn.",
+    "dismissed_toast": "Đã bỏ qua báo cáo.",
+    "status": {
+      "new": "Mới",
+      "reviewed": "Đã xem",
+      "actioned": "Đã xử lý"
+    },
+    "statusLabel": "Trạng thái"
   }
 }

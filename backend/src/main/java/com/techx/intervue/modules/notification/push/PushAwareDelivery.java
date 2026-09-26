@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
- * Spec §2: luôn đẩy STOMP (chuông, danh sách, toast / OS notification khi còn tab). Người nhận
- * không còn tab nào (PresenceService: không có phiên STOMP) và bật kênh trình duyệt thì gửi thêm
- * Web Push, nên không bị báo trùng.
+ * Spec §2: always push STOMP (bell, list, toast / OS notification while a tab is open). A recipient
+ * with no tab left (PresenceService: no STOMP session) and the browser channel on also gets a Web
+ * Push, so they are not notified twice.
  */
 @Primary
 @Component

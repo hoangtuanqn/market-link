@@ -9,30 +9,31 @@ import java.util.Collection;
 public interface NotificationServiceInterface {
 
     /**
-     * Lưu (nếu kind cần lưu, text dịch theo ngôn ngữ từng người) rồi đẩy sau commit. Gọi trong
-     * transaction của người gọi để dòng notifications cùng commit với thay đổi gây ra nó.
+     * Store (if the kind needs storing, text translated into each person's language) then push
+     * after commit. Call it inside the caller's transaction so the notifications row commits
+     * together with the change that caused it.
      */
     void dispatch(Collection<Long> recipients, NotificationEvent event);
 
     /**
-     * FR-077: một dòng cho mỗi user active thuộc audience (một câu INSERT … SELECT), rồi đẩy sau
-     * commit cho từng người.
+     * FR-077: one row per active user in the audience (a single INSERT … SELECT statement), then
+     * push after commit to each person.
      */
     void broadcastAnnouncement(Announcement announcement);
 
-    /** dispatch tới mọi admin đang active. */
+    /** dispatch to every active admin. */
     void notifyAdmins(NotificationEvent event);
 
-    /** Mới nhất trước; isRead null = tất cả. page bắt đầu từ 1. */
+    /** Newest first; isRead null = all. page starts at 1. */
     PageResource<NotificationResource> list(Long userId, Boolean isRead, int page, int size);
 
     long unreadCount(Long userId);
 
-    /** 404 nếu không có, 403 nếu của người khác (R-06). */
+    /** 404 if missing, 403 if someone else's (R-06). */
     void markRead(Long userId, Long notificationId);
 
     int markAllRead(Long userId);
 
-    /** Nút "Gửi thử": không lưu, tối đa một lần mỗi 10 giây. */
+    /** The "Send test" button: not stored, at most once every 10 seconds. */
     void sendTest(Long userId);
 }

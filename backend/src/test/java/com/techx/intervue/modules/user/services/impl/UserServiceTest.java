@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.user.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -15,9 +16,11 @@ import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.SocialProvider;
+import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.repositories.SocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
+import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
@@ -67,7 +70,7 @@ class UserServiceTest {
                         mock(BlacklistServiceInterface.class),
                         authConfig,
                         jobQueue,
-                        // FR-008: chưa ai bật 2FA → đăng nhập như cũ
+                        // FR-008: nobody has 2FA on → sign in as before
                         mock(MfaServiceInterface.class));
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(passwordEncoder.matches(PASSWORD, "hash")).thenReturn(true);
@@ -136,5 +139,40 @@ class UserServiceTest {
         verify(refreshTokenService).revokeAllTokens(1L);
         verify(sessionCache).revokeAll(1L);
         verify(jobQueue).enqueue(PasswordResetService.JOB_NOTIFY_CHANGED, Map.of("email", EMAIL));
+    }
+
+    private static CustomerRegisterRequest signUp(String email, String phone) {
+        return new CustomerRegisterRequest(
+                "Nguyen Van An", phone, email, "12 Le Loi, Quan 1", PASSWORD, PASSWORD);
+    }
+
+    /** QA E2E v2 BUG-005 (RETEST-002): both taken fields are reported in one answer. */
+    @Test
+    void signUpReportsEmailAndPhoneTogetherWhenBothAreTaken() {
+        when(userRepository.existsByEmail(EMAIL)).thenReturn(true);
+        when(userRepository.existsByPhone("0900000002")).thenReturn(true);
+
+        DuplicateAccountException e =
+                catchThrowableOfType(
+                        DuplicateAccountException.class,
+                        () -> service.registerCustomer(signUp(EMAIL, "0900000002")));
+
+        assertThat(e.getFields())
+                .containsExactly(
+                        Map.entry("email", "This email is already registered."),
+                        Map.entry("phone", "This phone number is already registered."));
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void signUpReportsOnlyThePhoneWhenOnlyThePhoneIsTaken() {
+        when(userRepository.existsByPhone("0900000002")).thenReturn(true);
+
+        DuplicateAccountException e =
+                catchThrowableOfType(
+                        DuplicateAccountException.class,
+                        () -> service.registerCustomer(signUp(EMAIL, "0900000002")));
+
+        assertThat(e.getFields()).containsOnlyKeys("phone");
     }
 }

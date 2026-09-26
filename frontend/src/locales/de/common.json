@@ -91,7 +91,43 @@
     "emptyThreadTitle": "Noch keine Nachrichten",
     "emptyThreadText": "Sag Hallo, um die Unterhaltung zu beginnen.",
     "typing": "{{name}} schreibt…",
-    "conversationWith": "Unterhaltung mit {{name}}"
+    "conversationWith": "Unterhaltung mit {{name}}",
+    "closed": "Dieser Stand nimmt gerade keine Nachrichten an.",
+    "messageStall": "Diesem Stand schreiben",
+    "ownStall": "Das ist dein eigener Stand.",
+    "stallClosed": "Dieser Stand nimmt gerade keine neuen Unterhaltungen an.",
+    "openFailed": "Die Unterhaltung konnte nicht geöffnet werden. Versuche es erneut.",
+    "pinned": "Frage zu",
+    "unpin": "Entfernen",
+    "productGone": "Dieses Produkt ist nicht mehr im Angebot.",
+    "tooFast": "Du sendest zu schnell. Warte kurz und versuche es erneut.",
+    "photoTooBig": "Das Foto ist größer als 5 MB. Wähle ein kleineres.",
+    "photoType": "Wähle ein JPEG-, PNG- oder WebP-Foto.",
+    "moreThreads": "Weitere Unterhaltungen laden",
+    "reportTitle": "Diese Nachricht melden",
+    "reportWhy": "Warum meldest du sie?",
+    "reason": {
+      "spam": "Spam oder Werbung",
+      "abuse": "Unhöflich oder beleidigend",
+      "scam": "Betrug oder Geldforderung",
+      "other": "Etwas anderes"
+    },
+    "reportNote": "Erzähl uns mehr (optional)",
+    "noteLeft_one": "Noch {{count}} Zeichen",
+    "noteLeft_other": "Noch {{count}} Zeichen",
+    "chooseReason": "Wähle einen Grund, um die Meldung zu senden.",
+    "report": "Melden",
+    "reportThis": "Diese Nachricht melden",
+    "reported": "Gemeldet",
+    "reportFailed": "Die Meldung konnte nicht gesendet werden. Versuche es erneut.",
+    "reportThanks": "Danke. Ein Admin sieht sich diese Nachricht an.",
+    "cancel": "Abbrechen",
+    "previewEmpty": "Noch keine Unterhaltungen.",
+    "previewError": "Deine Unterhaltungen konnten nicht geladen werden.",
+    "unreadCount": "{{count}} ungelesen",
+    "orderGone": "Diese Bestellung ist für dich nicht verfügbar.",
+    "orderLabel": "Bestellung {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "Der Server ist nicht erreichbar. Prüfen Sie Ihre Verbindung und versuchen Sie es erneut."
@@ -125,7 +161,6 @@
     "messages": "Nachrichten",
     "notifications": "Benachrichtigungen",
     "account": "Konto",
-    "promote": "Werbung & Einträge",
     "approval": "Freigabestatus",
     "settings": "Einstellungen",
     "shop": "Einkaufen",
@@ -163,7 +198,10 @@
     "notificationsUnread_one": "Benachrichtigungen, {{count}} ungelesen",
     "notificationsUnread_other": "Benachrichtigungen, {{count}} ungelesen",
     "openMenu": "Menü öffnen",
-    "search": "Suchen"
+    "search": "Suchen",
+    "seeAll": "Alle ansehen",
+    "messagesUnread_one": "Nachrichten, {{count}} ungelesen",
+    "messagesUnread_other": "Nachrichten, {{count}} ungelesen"
   },
   "kpi": {
     "noChange": "keine Veränderung",
@@ -347,12 +385,10 @@
     "markets": "Märkte",
     "moderation": "Moderation",
     "orders": "Bestellungen",
-    "revenue": "Umsatz",
     "reports": "Berichte",
     "categories": "Kategorien",
     "announcements": "Ankündigungen",
     "feedback": "Feedback",
-    "pricing": "Preise",
     "settings": "Einstellungen",
     "account": "Dein Konto",
     "analytics": "Analysen",
@@ -493,7 +529,9 @@
     "admin": {
       "title": "Benachrichtigungen",
       "intro": "Neue Farmer-Anträge, die auf Ihre Prüfung warten."
-    }
+    },
+    "notificationsEmpty": "Noch keine Benachrichtigungen.",
+    "notificationsError": "Benachrichtigungen konnten nicht geladen werden."
   },
   "comingSoon": {
     "title": "Diese Seite ist noch nicht verfügbar",

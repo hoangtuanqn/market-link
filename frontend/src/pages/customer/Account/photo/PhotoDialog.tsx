@@ -16,7 +16,7 @@ export type PhotoSource = { kind: 'camera' } | { kind: 'image'; image: HTMLImage
 type PhotoDialogProps = {
   source: PhotoSource | null;
   onClose: () => void;
-  /** Camera không dùng được: mở hộp chọn file thay thế. */
+  /** The camera cannot be used: open a file picker instead. */
   onPickFile: () => void;
   onSaved: (user: UserType, message: string) => void;
 };
@@ -24,8 +24,8 @@ type PhotoDialogProps = {
 const START: CropState = { zoom: 1, offset: { x: 0, y: 0 } };
 
 /**
- * Một dialog cho cả hai bước (Dialog của design system dùng id cố định nên chỉ được có một cái trên trang): camera →
- * cắt ảnh → lưu, hoặc ảnh chọn từ máy → cắt ảnh → lưu.
+ * One dialog for both steps (the design system's Dialog uses a fixed id so only one can be on the page): camera → crop
+ * → save, or an image picked from the machine → crop → save.
  */
 const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps) => {
   const { t } = useTranslation('CustomerAccount');
@@ -36,9 +36,9 @@ const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps)
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
-  // Mỗi lần mở dialog bắt đầu lại từ nguồn mới
+  // Each time the dialog opens it starts over from the new source
   useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect -- đồng bộ state với nguồn ảnh vừa được chọn */
+    /* eslint-disable react-hooks/set-state-in-effect -- sync state with the image source just picked */
     setImage(source?.kind === 'image' ? source.image : null);
     setFromCamera(source?.kind === 'camera');
     setCrop(START);
@@ -60,7 +60,7 @@ const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps)
     }
   };
 
-  // Ảnh chụp từ camera do dialog tạo nên dialog trả bộ nhớ; ảnh chọn từ máy thì AvatarCard lo
+  // A photo taken from the camera is created by the dialog so the dialog frees the memory; an image picked from the machine is handled by AvatarCard
   const retake = () => {
     releaseImage(image);
     setImage(null);

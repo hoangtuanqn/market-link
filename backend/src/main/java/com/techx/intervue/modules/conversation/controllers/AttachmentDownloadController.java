@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-115, spec §8.2. Trả file nhị phân nên KHÔNG bọc ApiResource — đây là ngoại lệ có chủ ý của quy
- * ước envelope, giống mọi endpoint tải file. Lỗi thì ConversationExceptionHandler vẫn trả envelope
- * bình thường.
+ * FR-115, spec §8.2. Returns a binary file so it is NOT wrapped in ApiResource — a deliberate
+ * exception to the envelope convention, like every file-download endpoint. On errors
+ * ConversationExceptionHandler still returns the normal envelope.
  *
- * <p>Cache-Control private: ảnh riêng tư, proxy dùng chung không được giữ lại.
+ * <p>Cache-Control private: private images, a shared proxy must not keep them.
  */
 @RestController
 @RequestMapping("/api/v1/attachments")
@@ -31,7 +31,8 @@ public class AttachmentDownloadController {
     @GetMapping("/{id}")
     public ResponseEntity<Resource> download(
             @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails me) {
-        // Admin đi con đường riêng (spec §8.3): hẹp hơn, chỉ mở với tin đã bị báo cáo, và có log.
+        // Admins take a separate path (spec §8.3): narrower, only open for messages that were
+        // reported, and logged.
         AttachmentServiceInterface.StoredFile file =
                 isAdmin(me)
                         ? attachmentService.readAsAdmin(me.getId(), id)
@@ -46,9 +47,9 @@ public class AttachmentDownloadController {
     }
 
     /**
-     * Hệ quả có chủ ý: một admin ĐỒNG THỜI là khách hàng trong thread nào đó sẽ đi nhánh admin và
-     * không xem được ảnh riêng của chính mình ở đó nếu tin chưa bị báo cáo. Đánh đổi đi đúng hướng
-     * — ranh giới của admin hẹp hơn, không rộng hơn.
+     * A deliberate consequence: an admin who is ALSO a customer in some thread takes the admin
+     * branch and cannot view their own private image there if the message has not been reported. A
+     * trade-off in the right direction — the admin's boundary is narrower, never wider.
      */
     private static boolean isAdmin(CustomUserDetails me) {
         return me.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));

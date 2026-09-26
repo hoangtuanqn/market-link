@@ -16,8 +16,9 @@ public interface PickupSlotRepository extends JpaRepository<PickupSlot, Long> {
             Long farmerMarketId, LocalDate from, LocalDate to);
 
     /**
-     * Khoá dòng slot tới hết transaction (D-06). Đặt đơn (C5) và sửa sức chứa cùng đi qua đây, nên
-     * không thể hạ max_orders xuống dưới booked_count trong lúc một đơn đang giữ chỗ.
+     * Locks the slot row until the transaction ends (D-06). Placing an order (C5) and editing
+     * capacity both go through here, so max_orders cannot be lowered below booked_count while an
+     * order is holding a spot.
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select s from PickupSlot s where s.id = :id")

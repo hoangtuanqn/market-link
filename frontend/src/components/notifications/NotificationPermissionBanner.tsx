@@ -19,8 +19,9 @@ const snoozed = () => {
 };
 
 /**
- * FR-042 — sau khi đăng nhập, mời bật thông báo của trình duyệt. Hộp xin quyền của trình duyệt chỉ hiện khi bấm Bật
- * (Safari bắt buộc có thao tác; Chrome ẩn hộp nếu bị từ chối nhiều lần). "Để sau" thì 7 ngày sau mới hỏi lại.
+ * FR-042 — after sign-in, invite turning on browser notifications. The browser's permission box only shows on clicking
+ * Turn on (Safari requires a gesture; Chrome hides the box after repeated denials). "Later" asks again only after 7
+ * days.
  */
 const NotificationPermissionBanner = () => {
   const { t } = useTranslation();
@@ -40,7 +41,7 @@ const NotificationPermissionBanner = () => {
     try {
       localStorage.setItem(SNOOZE_KEY, String(Date.now()));
     } catch {
-      /* private window: chỉ ẩn trong lần này */
+      /* private window: only hidden for this time */
     }
     setHidden(true);
   };

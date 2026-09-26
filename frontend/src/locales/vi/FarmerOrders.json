@@ -14,7 +14,7 @@
   },
   "tabsLabel": "Đơn hàng theo trạng thái",
   "status": {
-    "placed": "Chờ duyệt",
+    "placed": "Đã đặt",
     "accepted": "Đã nhận",
     "ready": "Sẵn sàng",
     "completed": "Hoàn tất",

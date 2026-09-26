@@ -1,6 +1,6 @@
 {
   "tabs": {
-    "new": "待确认",
+    "new": "已下单",
     "acc": "已接受",
     "ready": "已备好",
     "done": "已完成"
@@ -44,7 +44,7 @@
     "view": "查看"
   },
   "captions": {
-    "new": "待确认 · {{sat}} 和 {{sun}}",
+    "new": "已下单 · {{sat}} 和 {{sun}}",
     "ready": "待取货"
   },
   "overline": "你在 {{market}} 的摊位 · 下个市集日 {{day}}",

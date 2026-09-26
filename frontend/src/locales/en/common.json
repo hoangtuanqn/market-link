@@ -91,7 +91,43 @@
     "emptyThreadTitle": "No messages yet",
     "emptyThreadText": "Say hello to start the conversation.",
     "typing": "{{name}} is typing…",
-    "conversationWith": "Conversation with {{name}}"
+    "conversationWith": "Conversation with {{name}}",
+    "closed": "This stall is not taking messages right now.",
+    "messageStall": "Message this stall",
+    "ownStall": "This is your own stall.",
+    "stallClosed": "This stall is not taking new conversations right now.",
+    "openFailed": "We could not open the conversation. Try again.",
+    "pinned": "Asking about",
+    "unpin": "Remove",
+    "productGone": "This product is no longer listed.",
+    "tooFast": "You are sending too fast. Wait a moment and try again.",
+    "photoTooBig": "That photo is over 5 MB. Choose a smaller one.",
+    "photoType": "Choose a JPEG, PNG or WebP photo.",
+    "moreThreads": "Load more conversations",
+    "reportTitle": "Report this message",
+    "reportWhy": "Why are you reporting it?",
+    "reason": {
+      "spam": "Spam or advertising",
+      "abuse": "Rude or abusive",
+      "scam": "Scam or asks for money",
+      "other": "Something else"
+    },
+    "reportNote": "Tell us more (optional)",
+    "noteLeft_one": "{{count}} character left",
+    "noteLeft_other": "{{count}} characters left",
+    "chooseReason": "Choose a reason to send the report.",
+    "report": "Report",
+    "reportThis": "Report this message",
+    "reported": "Reported",
+    "reportFailed": "We could not send the report. Try again.",
+    "reportThanks": "Thanks. An admin will look at this message.",
+    "cancel": "Cancel",
+    "previewEmpty": "No conversations yet.",
+    "previewError": "Could not load your conversations.",
+    "unreadCount": "{{count}} unread",
+    "orderGone": "This order is not available to you.",
+    "orderLabel": "Order {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "Could not reach the server. Check your connection and try again."
@@ -125,7 +161,6 @@
     "messages": "Messages",
     "notifications": "Notifications",
     "account": "Account",
-    "promote": "Promote & listings",
     "approval": "Approval status",
     "settings": "Settings",
     "shop": "Shop",
@@ -163,7 +198,10 @@
     "notificationsUnread_one": "Notifications, {{count}} unread",
     "notificationsUnread_other": "Notifications, {{count}} unread",
     "openMenu": "Open menu",
-    "search": "Search"
+    "search": "Search",
+    "seeAll": "See all",
+    "messagesUnread_one": "Messages, {{count}} unread",
+    "messagesUnread_other": "Messages, {{count}} unread"
   },
   "kpi": {
     "noChange": "no change",
@@ -347,12 +385,10 @@
     "markets": "Markets",
     "moderation": "Moderation",
     "orders": "Orders",
-    "revenue": "Revenue",
     "reports": "Reports",
     "categories": "Categories",
     "announcements": "Announcements",
     "feedback": "Feedback",
-    "pricing": "Pricing",
     "settings": "Settings",
     "account": "Your account",
     "analytics": "Analytics",
@@ -418,6 +454,8 @@
     "photoAlt": "Photo from attempt {{n}}"
   },
   "notify": {
+    "notificationsEmpty": "No notifications yet.",
+    "notificationsError": "Could not load notifications.",
     "open": "Open",
     "prompt": {
       "title": "Turn on notifications",

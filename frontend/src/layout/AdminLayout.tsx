@@ -30,9 +30,7 @@ import {
   ADMIN_MARKETS_PATH,
   ADMIN_MODERATION_PATH,
   ADMIN_ORDERS_PATH,
-  ADMIN_PRICING_PATH,
   ADMIN_REPORTS_PATH,
-  ADMIN_REVENUE_PATH,
   ADMIN_SECURITY_PATH,
   ADMIN_SETTINGS_PATH,
 } from '@/constants/nav';
@@ -48,7 +46,6 @@ const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
     items: [
       { to: ADMIN_HOME_PATH, label: t('adminNav.overview'), icon: DashboardIcon },
       { to: ADMIN_REPORTS_PATH, label: t('adminNav.reports'), icon: ChartIcon },
-      { to: ADMIN_REVENUE_PATH, label: t('adminNav.revenue'), icon: TagIcon },
       { to: ADMIN_ORDERS_PATH, label: t('adminNav.orders'), icon: ReceiptIcon },
     ],
   },
@@ -72,10 +69,9 @@ const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
       { to: ADMIN_CATEGORIES_PATH, label: t('adminNav.categories'), icon: TagIcon },
       { to: ADMIN_ANNOUNCEMENTS_PATH, label: t('adminNav.announcements'), icon: MegaphoneIcon },
       { to: ADMIN_FEEDBACK_PATH, label: t('adminNav.feedback'), icon: ChatIcon },
-      { to: ADMIN_PRICING_PATH, label: t('adminNav.pricing'), icon: TagIcon },
       { to: ADMIN_SETTINGS_PATH, label: t('adminNav.settings'), icon: SlidersIcon },
       { to: ADMIN_ACCOUNT_PATH, label: t('adminNav.account'), icon: UsersIcon },
-      // FR-008: bật / tắt xác thực hai bước
+      // FR-008: turn two-step verification on / off
       { to: ADMIN_SECURITY_PATH, label: t('admin.security'), icon: LockIcon },
     ],
   },
@@ -90,8 +86,8 @@ const initials = (name: string) =>
     .join('') || 'AD';
 
 /**
- * FR-004 — khung khu admin, tách khỏi layout Customer/Farmer. Chưa đăng nhập hoặc không phải admin thì về trang đăng
- * nhập admin. Đây chỉ là UX: quyền thật do backend kiểm tra ở từng API admin (FR-005).
+ * FR-004 — the admin area frame, separate from the Customer/Farmer layout. If not signed in or not an admin, go back to
+ * the admin sign-in page. This is only UX: the real permission is checked by the backend at each admin API (FR-005).
  */
 const AdminLayout = () => {
   const { t } = useTranslation();
@@ -101,7 +97,7 @@ const AdminLayout = () => {
   const isAdmin = user?.role === USER_ROLE.ADMIN;
   const [pendingFarmers, setPendingFarmers] = useState(0);
 
-  // Badge "đang chờ duyệt" trên mục Farmers; tải lại khi đổi trang để khớp sau khi duyệt / từ chối.
+  // The "awaiting approval" badge on the Farmers item; reloaded on page change to match after an approve / reject.
   useEffect(() => {
     if (!isAdmin) return;
     AdminFarmerApi.list({ status: 'pending', page: 1, pageSize: 1 })

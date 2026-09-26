@@ -12,7 +12,7 @@ import com.techx.intervue.modules.user.resources.UserResource;
 public interface UserServiceInterface {
     AuthResult authenticate(LoginRequest request);
 
-    /** FR-008: bước 2 của đăng nhập admin đã bật xác thực hai bước. */
+    /** FR-008: step 2 of admin sign-in with two-step verification on. */
     AuthResult completeMfaLogin(String mfaToken, String code, String recoveryCode);
 
     AuthResult registerCustomer(CustomerRegisterRequest request);
@@ -23,16 +23,20 @@ public interface UserServiceInterface {
 
     AuthResult loginWithSocial(SocialProfile profile);
 
-    /** Đặt mật khẩu lần đầu cho tài khoản chưa có mật khẩu (tạo qua Google). */
+    /**
+     * Set a password for the first time for an account with no password (created through Google).
+     */
     void setPassword(Long userId, SetPasswordRequest request);
 
-    /** Đổi mật khẩu (cần mật khẩu hiện tại), rồi đăng xuất mọi thiết bị. */
+    /** Change the password (needs the current password), then sign out of every device. */
     void changePassword(Long userId, ChangePasswordRequest request);
 
-    /** Thông tin của chính user đang đăng nhập (GET /auth/me). */
+    /** Information about the signed-in user themself (GET /auth/me). */
     UserResource getProfile(Long userId);
 
-    /** Cập nhật họ tên, số điện thoại, địa chỉ của chính user đang đăng nhập (PUT /auth/me). */
+    /**
+     * Update the full name, phone number, address of the signed-in user themself (PUT /auth/me).
+     */
     UserResource updateProfile(Long userId, UpdateProfileRequest request);
 
     // Optional<User> findById(Long userId);

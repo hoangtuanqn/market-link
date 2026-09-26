@@ -134,12 +134,21 @@ const AdminMarketsPage = () => {
       ) : markets.length ? (
         <Table caption={t('caption', { count: markets.length })} columns={columns} rows={markets} />
       ) : (
-        <DataState title={t('empty.title')} text={t('empty.text')} />
+        <DataState fill title={t('empty.title')} text={t('empty.text')} />
       )}
 
       <section className="flex flex-col gap-3">
         <h2 className="text-h3">{t('map.title')}</h2>
-        <MarketMap label={t('map.label')} markers={markers} className="min-h-100" scrollWheelZoom={false} />
+        {markets.length ? (
+          <MarketMap label={t('map.label')} markers={markers} className="min-h-100" scrollWheelZoom={false} />
+        ) : (
+          <DataState
+            fill
+            title={t('map.empty.title')}
+            text={t('map.empty.text')}
+            action={<ButtonLink to={`${ADMIN_MARKETS_PATH}/new`}>{t('action.add')}</ButtonLink>}
+          />
+        )}
       </section>
 
       <Dialog

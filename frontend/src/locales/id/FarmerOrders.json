@@ -10,7 +10,7 @@
   },
   "tabsLabel": "Pesanan menurut status",
   "status": {
-    "placed": "Menunggu persetujuan",
+    "placed": "Dipesan",
     "accepted": "Diterima",
     "ready": "Siap",
     "completed": "Selesai",

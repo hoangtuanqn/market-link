@@ -38,7 +38,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** FR-032, FR-067 — sinh và quản slot. Hôm nay (theo Clock) là thứ Bảy 26/09/2026. */
+/** FR-032, FR-067 — generating and managing slots. Today (by Clock) is Saturday 26/09/2026. */
 class SlotServiceTest {
 
     private static final long USER_ID = 1L;
@@ -55,7 +55,7 @@ class SlotServiceTest {
     private SlotQueryRepository queryRepository;
     private SlotService service;
 
-    /** Bảng pickup_slots giả: saveAll ghi vào đây, tìm theo khoảng ngày đọc từ đây. */
+    /** A fake pickup_slots table: saveAll writes into it, lookups by date range read from it. */
     private final List<PickupSlot> table = new ArrayList<>();
 
     @BeforeEach
@@ -120,7 +120,7 @@ class SlotServiceTest {
         return fm;
     }
 
-    /** 0 = Chủ nhật … 6 = Thứ bảy, như farmer_operating_days. */
+    /** 0 = Sunday … 6 = Saturday, like farmer_operating_days. */
     private void operatingDays(int dayOfWeek, String start, String end) {
         FarmerOperatingDay d = new FarmerOperatingDay();
         d.setFarmerMarketId(FARMER_MARKET_ID);
@@ -147,7 +147,10 @@ class SlotServiceTest {
         return s;
     }
 
-    /** CN 07:00–11:00, khung 60 phút, khoảng T2 28/09 → CN 04/10: đúng 4 slot, tất cả vào CN. */
+    /**
+     * Sunday 07:00–11:00, 60-minute windows, the range Mon 28/09 → Sun 04/10: exactly 4 slots, all
+     * on Sunday.
+     */
     @Test
     void generateCreatesOneSlotPerWindowPerMatchingWeekday() {
         operatingDays(0, "07:00", "11:00");
@@ -173,7 +176,7 @@ class SlotServiceTest {
                         });
     }
 
-    /** Chỉ khai giờ thứ Bảy → khoảng T3 29/09 … T7 03/10 không có slot nào ngoài thứ Bảy. */
+    /** Only Saturday declared → the range Tue 29/09 … Sat 03/10 has no slot outside Saturday. */
     @Test
     void generateSkipsWeekdaysWithNoOperatingDay() {
         operatingDays(6, "07:00", "09:00");
@@ -188,7 +191,10 @@ class SlotServiceTest {
                 .noneMatch(d -> d.equals(LocalDate.of(2026, 9, 29)));
     }
 
-    /** Bấm "Generate" hai lần cùng tham số: không có slot trùng, trả về đúng ngần ấy slot. */
+    /**
+     * Clicking "Generate" twice with the same parameters: no duplicate slot, returns the same
+     * number of slots.
+     */
     @Test
     void generateIsIdempotent() {
         operatingDays(0, "07:00", "11:00");
@@ -225,7 +231,7 @@ class SlotServiceTest {
         verify(slotRepository, never()).saveAll(any());
     }
 
-    /** R-06: farmerMarketId có thật nhưng của stall khác → 403, không sinh gì. */
+    /** R-06: farmerMarketId is real but belongs to another stall → 403, nothing generated. */
     @Test
     void generateOnAnotherFarmersMarketIs403() {
         when(farmerMarketRepository.findById(FARMER_MARKET_ID))
@@ -239,7 +245,10 @@ class SlotServiceTest {
         verify(slotRepository, never()).saveAll(any());
     }
 
-    /** Đã rời chợ (fm.is_active = FALSE) thì slot sinh ra không ai thấy — từ chối ngay. */
+    /**
+     * Having left the market (fm.is_active = FALSE) means the generated slots are seen by nobody —
+     * reject right away.
+     */
     @Test
     void generateRejectsAMarketTheStallHasLeft() {
         when(farmerMarketRepository.findById(FARMER_MARKET_ID))
@@ -253,14 +262,20 @@ class SlotServiceTest {
         verify(slotRepository, never()).saveAll(any());
     }
 
-    /** Khung giờ sát nửa đêm: cộng phút không được vòng về 00:00 rồi chạy mãi. Khung lẻ bị bỏ. */
+    /**
+     * A time window right up against midnight: adding minutes must not wrap to 00:00 and run
+     * forever. A leftover partial window is dropped.
+     */
     @Test
     void windowsNeverWrapPastMidnightAndDropTheOddTail() {
         assertThat(SlotService.windows(LocalTime.of(23, 0), LocalTime.of(23, 59), 60)).isEmpty();
         assertThat(SlotService.windows(LocalTime.of(7, 0), LocalTime.of(11, 30), 60)).hasSize(4);
     }
 
-    /** D-06: đã có 3 đơn thì không hạ sức chứa xuống 2 — 409, không phá đơn đã có. */
+    /**
+     * D-06: with 3 orders already placed, capacity cannot be lowered to 2 — 409, existing orders
+     * unbroken.
+     */
     @Test
     void updateSlotRejectsMaxOrdersBelowBookedCount() {
         PickupSlot booked = slot(5, 3, true);
@@ -272,7 +287,7 @@ class SlotServiceTest {
         verify(slotRepository, never()).save(any());
     }
 
-    /** R-06: slot của stall khác → 403, dù id có thật. */
+    /** R-06: a slot of another stall → 403, even when the id is real. */
     @Test
     void updateSlotOfAnotherFarmerIs403() {
         when(slotRepository.lockById(900L)).thenReturn(Optional.of(slot(5, 0, true)));
@@ -298,8 +313,9 @@ class SlotServiceTest {
     }
 
     /**
-     * Slot đầy → isFull; slot đã tắt không lọt ra ngoài. Câu SQL là hằng số nên đọc thẳng, không
-     * cần database (test tích hợp SlotQueryRepositoryTest chạy nó trên MySQL thật).
+     * A full slot → isFull; a disabled slot never gets out. The SQL statement is a constant so read
+     * it directly, no database needed (the integration test SlotQueryRepositoryTest runs it on real
+     * MySQL).
      */
     @Test
     void publicSlotsMarksFullSlots() {
@@ -316,7 +332,8 @@ class SlotServiceTest {
     }
 
     /**
-     * Không truyền ngày → từ hôm nay tới hết 14 ngày, để giỏ hàng dựng được danh sách ngày nhận.
+     * No date given → from today through the next 14 days, so the cart can build its pickup-day
+     * list.
      */
     @Test
     void publicSlotsWithoutDateCoverTheNextTwoWeeks() {
@@ -328,7 +345,9 @@ class SlotServiceTest {
         verify(queryRepository).publicSlots(FARMER_ID, null, TODAY, TODAY.plusDays(13));
     }
 
-    /** D-09: stall chưa duyệt / bị đình chỉ không có slot với khách — 404 như trang stall. */
+    /**
+     * D-09: a stall not approved / suspended has no slots for customers — 404 like the stall page.
+     */
     @Test
     void publicSlotsOfASuspendedStallIs404() {
         when(farmerProfileRepository.findById(FARMER_ID))

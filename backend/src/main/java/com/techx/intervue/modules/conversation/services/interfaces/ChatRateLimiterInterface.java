@@ -1,7 +1,8 @@
 package com.techx.intervue.modules.conversation.services.interfaces;
 
 /**
- * Spec §8.4. Tách interface để service nghiệp vụ và test của nó không phải biết Redis hay bucket4j.
+ * Spec §8.4. The interface is split out so the business service and its tests do not have to know
+ * about Redis or bucket4j.
  */
 public interface ChatRateLimiterInterface {
 
@@ -12,6 +13,6 @@ public interface ChatRateLimiterInterface {
         TYPING
     }
 
-    /** Hết lượt thì ném RateLimitedException (→ 429). */
+    /** When the allowance runs out, throw RateLimitedException (→ 429). */
     void check(Long userId, Action action);
 }

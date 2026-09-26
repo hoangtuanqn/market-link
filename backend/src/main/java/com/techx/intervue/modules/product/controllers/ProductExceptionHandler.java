@@ -12,20 +12,25 @@ import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 /**
- * Trả 400/403/404/409 cho module product — cùng lý do FarmerExceptionHandler (chưa có handler
- * chung).
+ * Returns 400/403/404/409 for the product module — same reason as FarmerExceptionHandler (no shared
+ * handler yet).
  */
 @RestControllerAdvice(
         assignableTypes = {
             ProductController.class,
             FarmerProductsPublicController.class,
             FarmerProductController.class,
+            FarmerProductImageController.class,
+            FarmerStockTemplateController.class,
             AdminProductController.class
         })
 public class ProductExceptionHandler {
@@ -46,7 +51,10 @@ public class ProductExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
-    /** Danh mục lạ / đã tắt → 400 gắn đúng field, form đánh dấu được ô categoryId. */
+    /**
+     * An unknown / disabled category → 400 attached to the right field, so the form can mark the
+     * categoryId box.
+     */
     @ExceptionHandler(InvalidFieldException.class)
     ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
         return error(
@@ -65,13 +73,27 @@ public class ProductExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
     }
 
-    /** R-06 / D-09: không có, xoá mềm, bị ẩn hoặc stall chưa duyệt → 404, không lộ lý do. */
+    /** A file over spring.servlet.multipart.max-file-size/max-request-size → 400. */
+    @ExceptionHandler({MaxUploadSizeExceededException.class, MultipartException.class})
+    ResponseEntity<ApiResource<Void>> uploadTooLarge(Exception e) {
+        String message = "File is too large.";
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                message,
+                List.of(FieldErrorResource.builder().field("file").message(message).build()));
+    }
+
+    /**
+     * R-06 / D-09: missing, soft-deleted, hidden or the stall is not approved → 404, without
+     * revealing the reason.
+     */
     @ExceptionHandler({ProductNotFoundException.class, FarmerProfileNotFoundException.class})
     ResponseEntity<ApiResource<Void>> notFound(RuntimeException e) {
         return error(HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", "Product not found.", List.of());
     }
 
-    /** R-06: sản phẩm của stall khác → 403, kể cả khi id có thật. */
+    /** R-06: a product of another stall → 403, even when the id is real. */
     @ExceptionHandler(ProductNotYoursException.class)
     ResponseEntity<ApiResource<Void>> notYours(ProductNotYoursException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
@@ -82,7 +104,7 @@ public class ProductExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "STALL_NOT_APPROVED", e.getMessage(), List.of());
     }
 
-    /** Lưới an toàn cuối: UNIQUE (farmer_id, name) khi một stall đăng trùng tên. */
+    /** Last safety net: UNIQUE (farmer_id, name) when a stall posts a duplicate name. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
@@ -110,6 +132,16 @@ public class ProductExceptionHandler {
                 "FORBIDDEN",
                 "You do not have permission to do this.",
                 List.of());
+    }
+
+    /**
+     * No body, malformed JSON or a value of the wrong type (QA E2E v2 BUG-002). Without this the
+     * error falls through to /error and comes back as Spring's default body instead of the
+     * envelope.
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    ResponseEntity<ApiResource<Void>> unreadableBody(HttpMessageNotReadableException e) {
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
     private static ResponseEntity<ApiResource<Void>> error(

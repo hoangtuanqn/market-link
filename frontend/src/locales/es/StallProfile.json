@@ -7,7 +7,6 @@
   "approved": "Puesto aprobado",
   "savedToast": "{{name}} guardado.",
   "save": "Guardar puesto",
-  "message": "Escribir al puesto",
   "stats": {
     "reviews_one": "{{count}} reseña",
     "reviews_other": "{{count}} reseñas",

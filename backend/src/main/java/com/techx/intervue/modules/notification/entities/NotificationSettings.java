@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Âm thanh và giờ yên tĩnh (HH:mm, giờ Asia/Ho_Chi_Minh) của một người. */
+/** Sound and quiet hours (HH:mm, Asia/Ho_Chi_Minh time) of one person. */
 @Entity
 @Getter
 @Setter

@@ -90,7 +90,42 @@
     "emptyThreadTitle": "Belum ada pesan",
     "emptyThreadText": "Sapa untuk memulai percakapan.",
     "typing": "{{name}} sedang mengetik…",
-    "conversationWith": "Percakapan dengan {{name}}"
+    "conversationWith": "Percakapan dengan {{name}}",
+    "closed": "Lapak ini sedang tidak menerima pesan.",
+    "messageStall": "Kirim pesan ke lapak",
+    "ownStall": "Ini lapak Anda sendiri.",
+    "stallClosed": "Lapak ini sedang tidak menerima percakapan baru.",
+    "openFailed": "Percakapan tidak dapat dibuka. Coba lagi.",
+    "pinned": "Menanyakan",
+    "unpin": "Hapus",
+    "productGone": "Produk ini sudah tidak dijual.",
+    "tooFast": "Anda mengirim terlalu cepat. Tunggu sebentar lalu coba lagi.",
+    "photoTooBig": "Foto lebih dari 5 MB. Pilih foto yang lebih kecil.",
+    "photoType": "Pilih foto JPEG, PNG, atau WebP.",
+    "moreThreads": "Muat percakapan lainnya",
+    "reportTitle": "Laporkan pesan ini",
+    "reportWhy": "Mengapa Anda melaporkannya?",
+    "reason": {
+      "spam": "Spam atau iklan",
+      "abuse": "Kasar atau menghina",
+      "scam": "Penipuan atau meminta uang",
+      "other": "Alasan lain"
+    },
+    "reportNote": "Ceritakan lebih lanjut (opsional)",
+    "noteLeft_other": "Sisa {{count}} karakter",
+    "chooseReason": "Pilih alasan untuk mengirim laporan.",
+    "report": "Laporkan",
+    "reportThis": "Laporkan pesan ini",
+    "reported": "Dilaporkan",
+    "reportFailed": "Laporan tidak terkirim. Coba lagi.",
+    "reportThanks": "Terima kasih. Admin akan memeriksa pesan ini.",
+    "cancel": "Batal",
+    "previewEmpty": "Belum ada percakapan.",
+    "previewError": "Percakapan Anda tidak dapat dimuat.",
+    "unreadCount": "{{count}} belum dibaca",
+    "orderGone": "Pesanan ini tidak tersedia untuk Anda.",
+    "orderLabel": "Pesanan {{code}}",
+    "orderPickup": "{{date}} · {{start}}–{{end}}"
   },
   "errors": {
     "network": "Tidak dapat terhubung ke server. Periksa koneksi Anda lalu coba lagi."
@@ -124,7 +159,6 @@
     "messages": "Pesan",
     "notifications": "Notifikasi",
     "account": "Akun",
-    "promote": "Promosi & listing",
     "approval": "Status persetujuan",
     "settings": "Pengaturan",
     "shop": "Belanja",
@@ -162,7 +196,9 @@
     "notificationsUnread_one": "Notifikasi, {{count}} belum dibaca",
     "notificationsUnread_other": "Notifikasi, {{count}} belum dibaca",
     "openMenu": "Buka menu",
-    "search": "Cari"
+    "search": "Cari",
+    "seeAll": "Lihat semua",
+    "messagesUnread_other": "Pesan, {{count}} belum dibaca"
   },
   "kpi": {
     "noChange": "tidak berubah",
@@ -346,12 +382,10 @@
     "markets": "Pasar",
     "moderation": "Moderasi",
     "orders": "Pesanan",
-    "revenue": "Pendapatan",
     "reports": "Laporan",
     "categories": "Kategori",
     "announcements": "Pengumuman",
     "feedback": "Masukan",
-    "pricing": "Harga",
     "settings": "Pengaturan",
     "account": "Akun Anda",
     "analytics": "Analitik",
@@ -492,7 +526,9 @@
     "admin": {
       "title": "Notifikasi",
       "intro": "Pendaftaran Farmer baru yang menunggu Anda tinjau."
-    }
+    },
+    "notificationsEmpty": "Belum ada notifikasi.",
+    "notificationsError": "Notifikasi tidak dapat dimuat."
   },
   "comingSoon": {
     "title": "Halaman ini belum dibuka",

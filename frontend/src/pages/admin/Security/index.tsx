@@ -19,7 +19,7 @@ type DialogKind = 'disable' | 'regen' | null;
 const CODE_REGEX = /^\d{6}$/;
 const codeInputClass = 'text-center font-mono text-[28px] tracking-[0.32em]';
 
-/** Lỗi khi gửi mã 6 số: sai (kèm số lần còn lại), bị khoá, hay trạng thái đã đổi ở tab khác. */
+/** Errors when sending the 6-digit code: wrong (with the attempts left), locked, or the state changed in another tab. */
 const codeError = (error: unknown, fallback: string) => {
   const message = Helper.getErrorMessage(error, fallback);
   if (Helper.getErrorCode(error) === 'MFA_CODE_INVALID') {
@@ -60,8 +60,9 @@ const Step = ({ n, title, text, children }: { n: number; title: string; text: st
 );
 
 /**
- * FR-008 — admin bật / tắt xác thực hai bước (prototype admin/account.html, mục "Two-step verification"). Khoá bí mật
- * chỉ hiện lúc cài, mã khôi phục chỉ hiện một lần; backend chỉ lưu bản mã hoá / bản băm.
+ * FR-008 — an admin turns two-step verification on / off (prototype admin/account.html, the "Two-step verification"
+ * item). The secret key only shows during setup, the recovery codes only show once; the backend only stores the
+ * encrypted / hashed copy.
  */
 const AdminSecurityPage = () => {
   const { t } = useTranslation('AdminSecurity');
@@ -75,7 +76,7 @@ const AdminSecurityPage = () => {
   const [dialogError, setDialogError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
-  // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
+  // only setState in a promise callback (the initial state is already loading)
   const fetchStatus = useCallback(() => {
     MfaApi.status()
       .then((response) => setStatus({ kind: 'ready', data: response.data }))

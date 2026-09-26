@@ -41,8 +41,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 /**
- * Đường gửi thật qua thư viện web-push tới một dịch vụ push giả trên máy, rồi giải mã theo RFC 8291
- * bằng khoá của "trình duyệt" — nếu mã hoá sai thì trình duyệt thật cũng không đọc được.
+ * The real send path through the web-push library to a fake push service on the machine, then
+ * decrypt per RFC 8291 with the "browser's" key — if the encryption is wrong then a real browser
+ * could not read it either.
  */
 @SpringBootTest
 @TestPropertySource(
@@ -177,7 +178,7 @@ class WebPushSenderTest {
         assertThat(subscriptions.findById(s.getId())).isPresent();
     }
 
-    // --- RFC 8291 phía trình duyệt ---
+    // --- RFC 8291 on the browser side ---
 
     private byte[] decrypt(byte[] body) throws Exception {
         ByteBuffer in = ByteBuffer.wrap(body);

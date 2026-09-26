@@ -13,9 +13,10 @@ import Session from '@/utils/session';
 import { validateProfile, type ProfileErrors } from '@/utils/validation';
 
 /**
- * Sau lần đăng nhập Google đầu tiên: Google chỉ cho tên và email, còn số điện thoại + địa chỉ (FR-001) bắt buộc nhập ở
- * đây — không bỏ qua được (MainLayout chặn mọi trang khác tới khi đủ). Lưu bằng PUT /auth/me; xong chuyển sang đặt mật
- * khẩu nếu tài khoản chưa có. Không muốn nhập thì chỉ có thể đăng xuất.
+ * After the first Google sign-in: Google only gives the name and email, so the phone number + address (FR-001) are
+ * required here — cannot be skipped (MainLayout blocks every other page until complete). Saved with PUT /auth/me; then
+ * moves on to setting a password if the account has none. If they do not want to fill in, the only option is to sign
+ * out.
  */
 const CompleteProfilePage = () => {
   const { t } = useTranslation('CompleteProfile');
@@ -30,7 +31,7 @@ const CompleteProfilePage = () => {
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [isSaving, setIsSaving] = useState(false);
 
-  // Chưa đăng nhập thì không có hồ sơ để bổ sung
+  // Not signed in means there is no profile to complete
   if (!Session.getAccessToken() || !user) return <Navigate to="/login" replace />;
 
   const onChange = (key: keyof UpdateProfileInput) => (e: ChangeEvent<HTMLInputElement>) =>
@@ -53,7 +54,7 @@ const CompleteProfilePage = () => {
       Notification.success({ text: response.message || t('toast.saved') });
       navigate(Helper.nextStepAfterSocialLogin({ ...user, ...response.data }), { replace: true });
     } catch (error) {
-      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (số điện thoại đã thuộc tài khoản khác) → lỗi dưới ô nhập
+      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (the phone number already belongs to another account) → error under the input
       setErrors(Helper.getFieldErrors(error));
       Notification.error({ text: Helper.getErrorMessage(error, t('toast.failed')) });
       setIsSaving(false);

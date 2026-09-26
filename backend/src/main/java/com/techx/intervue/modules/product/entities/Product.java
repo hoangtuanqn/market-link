@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-062 sản phẩm của một stall. Bảng `products` (V20260926010). */
+/** FR-062 a stall's product. Table `products` (V20260926010). */
 @Entity
 @Getter
 @Setter
@@ -43,22 +43,32 @@ public class Product {
     @Column(nullable = false, length = 20)
     private String unit;
 
-    /** D-02: trừ ngay khi khách đặt, hoàn khi đơn declined/cancelled. Không bao giờ âm (CHECK). */
+    /**
+     * D-02: deducted immediately when the customer orders, restored when the order is
+     * declined/cancelled. Never negative (CHECK).
+     */
     @Column(name = "stock_quantity", nullable = false)
     private int stockQuantity;
 
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
+    /**
+     * Number of days the product stays fresh — shown to the Customer for transparency. No official
+     * FR yet.
+     */
+    @Column(name = "shelf_life_days", nullable = false)
+    private int shelfLifeDays;
+
     @Convert(converter = ProductStatus.DbConverter.class)
     @Column(nullable = false)
     private ProductStatus status = ProductStatus.AVAILABLE;
 
-    /** Xoá mềm của Farmer: order_items cũ vẫn trỏ về được. */
+    /** The Farmer's soft delete: old order_items can still point back to it. */
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted;
 
-    /** Admin ẩn listing vi phạm (FR-074); Farmer không tự gỡ được. */
+    /** An admin hides a violating listing (FR-074); the Farmer cannot remove it themself. */
     @Column(name = "is_hidden", nullable = false)
     private boolean hidden;
 

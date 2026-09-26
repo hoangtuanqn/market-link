@@ -15,7 +15,7 @@ import Session from '@/utils/session';
 type FormErrors = Partial<Record<keyof RegisterInput, string>>;
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-/** Di động Việt Nam: 10 số, đầu 03/05/07/08/09 (RegisterRules.PHONE_REGEX của backend). */
+/** Vietnamese mobile: 10 digits, starting with 03/05/07/08/09 (the backend's RegisterRules.PHONE_REGEX). */
 const PHONE_REGEX = /^0[35789][0-9]{8}$/;
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
@@ -29,7 +29,7 @@ const EMPTY_FORM: RegisterInput = {
   confirmPassword: '',
 };
 
-/** Kiểm tra phía client, cùng luật với CustomerRegisterRequest của backend. */
+/** Client-side validation, same rules as the backend's CustomerRegisterRequest. */
 const validate = (form: RegisterInput, t: TFunction<'RegisterCustomer'>): FormErrors => {
   const errors: FormErrors = {};
   const fullName = form.fullName.trim();
@@ -88,13 +88,13 @@ const RegisterCustomerPage = () => {
         address: form.address.trim(),
       });
 
-      // Backend đăng nhập luôn sau khi đăng ký (refresh token nằm trong cookie HttpOnly)
+      // The backend signs in right after sign-up (the refresh token lives in an HttpOnly cookie)
       Session.save(response.data);
 
       Notification.success({ text: response.message || t('toast.created') });
       navigate('/');
     } catch (error) {
-      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT: lỗi theo field (email, phone, confirmPassword…) hiện dưới ô nhập
+      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT: per-field errors (email, phone, confirmPassword…) shown under the input
       setErrors(Helper.getFieldErrors(error));
       Notification.error({
         text: Helper.getErrorMessage(error, t('toast.failed')),

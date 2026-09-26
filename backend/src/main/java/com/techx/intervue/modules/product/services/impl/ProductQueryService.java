@@ -7,7 +7,7 @@ import com.techx.intervue.modules.product.resources.ProductDetailResource;
 import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
 import com.techx.intervue.modules.product.services.interfaces.ProductQueryServiceInterface;
-import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
+import com.techx.intervue.modules.review.services.interfaces.ReviewServiceInterface;
 import com.techx.intervue.modules.stall.resources.OperatingDayResource;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
 import com.techx.intervue.modules.stall.resources.StallMarketResource;
@@ -27,6 +27,7 @@ public class ProductQueryService implements ProductQueryServiceInterface {
 
     private final ProductQueryRepository repository;
     private final StallServiceInterface stallService;
+    private final ReviewServiceInterface reviewService;
 
     @Override
     public PageResource<ProductListItemResource> search(ProductSearchCriteria criteria) {
@@ -34,8 +35,9 @@ public class ProductQueryService implements ProductQueryServiceInterface {
         int size = Math.min(MAX_PAGE_SIZE, Math.max(1, criteria.pageSize()));
         BigDecimal min = criteria.minPrice();
         BigDecimal max = criteria.maxPrice();
-        // Khách kéo hai đầu thanh giá ngược nhau thì vẫn ra kết quả, không phải danh sách rỗng khó
-        // hiểu
+        // If the customer drags the two ends of the price bar the wrong way round they still get
+        // results, not a hard-to-understand
+        // empty list
         if (min != null && max != null && min.compareTo(max) > 0) {
             BigDecimal swap = min;
             min = max;
@@ -53,9 +55,12 @@ public class ProductQueryService implements ProductQueryServiceInterface {
         ProductDetailRow row =
                 repository.findVisibleById(id).orElseThrow(() -> new ProductNotFoundException(id));
         StallSummaryResource farmer = summarize(stallService.publicDetail(row.item().farmerId()));
-        // reviewsSummary có số thật từ cụm C8; hôm nay là hình dạng với số 0.
+        // FR-052: average + 1★…5★ histogram of the visible reviews (C8).
         return new ProductDetailResource(
-                row.item(), row.description(), farmer, ReviewSummaryResource.empty());
+                row.item(),
+                row.description(),
+                farmer,
+                reviewService.productSummary(row.item().id()));
     }
 
     @Override
@@ -66,7 +71,10 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                         null, null, null, farmerId, day, null, null, "newest", page, pageSize));
     }
 
-    /** Stall gọn cho trang sản phẩm: quầy và khung giờ lấy ở chợ đầu tiên, ngày gộp mọi chợ. */
+    /**
+     * A compact stall for the product page: the booth and time window come from the first market,
+     * the days merge every market.
+     */
     private static StallSummaryResource summarize(StallDetailResource s) {
         StallMarketResource first = s.markets().isEmpty() ? null : s.markets().get(0);
         List<Integer> days =

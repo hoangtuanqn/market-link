@@ -6,6 +6,10 @@
     "title": "That order is not here any more",
     "text": "You may have cancelled it, or the link is old. Open it again from your orders."
   },
+  "notChangeable": {
+    "title": "This order can no longer be changed",
+    "text": "The cutoff has passed, or the stall has already moved the order on. To ask about it, contact the stall."
+  },
   "title": "Edit order {{code}}",
   "cutoff": "Changes are allowed until <b>{{cutoff}}</b>.",
   "banner": {

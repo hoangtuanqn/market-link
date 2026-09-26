@@ -28,17 +28,17 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 /**
- * Review focus #1 và #2. Hai khách cùng giành lô hàng cuối và slot cuối. Đúng một người thắng;
- * người kia nhận 409. Không có tồn âm, không có booked_count vượt max_orders.
+ * Review focus #1 and #2. Two customers race for the last batch and the last slot. Exactly one
+ * wins; the other gets 409. No negative stock, no booked_count over max_orders.
  *
- * <p>Chạy trên MySQL thật (không @Transactional: mỗi luồng phải commit thật thì khoá mới có nghĩa).
- * DB dev dùng chung với seed demo, nên mọi dòng test tạo ra đều mang tên riêng và bị xoá ở
- * {@code @AfterEach} (C5-7).
+ * <p>Runs on real MySQL (no @Transactional: each thread must really commit for the lock to mean
+ * anything). The dev DB is shared with the demo seed, so every test row is given a distinctive name
+ * and deleted in {@code @AfterEach} (C5-7).
  */
 @SpringBootTest
 class PlaceOrderConcurrencyTest {
 
-    /** Ngày nhận cách hôm nay 3 ngày: xa hơn mọi cutoff mặc định (12 giờ). */
+    /** A pickup day 3 days from today: further out than any default cutoff (12 hours). */
     private static final LocalDate PICKUP =
             LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).plusDays(3);
 
@@ -124,10 +124,10 @@ class PlaceOrderConcurrencyTest {
     }
 
     /**
-     * Không phải tranh chấp, nhưng cũng chỉ kiểm được trên MySQL thật: DATETIME lưu giờ Việt Nam.
-     * MySQL chạy UTC và URL JDBC có serverTimezone=UTC, nên LocalDateTime gửi dưới dạng Timestamp
-     * bị lùi 7 giờ (phát hiện lúc kiểm tra tay). Đọc cột thô bằng DATE_FORMAT để JDBC không đổi
-     * múi.
+     * Not a race, but also only checkable on real MySQL: DATETIME stores Vietnam time. MySQL runs
+     * on UTC and the JDBC URL has serverTimezone=UTC, so a LocalDateTime sent as a Timestamp is
+     * shifted back 7 hours (found by manual testing). Read the raw column with DATE_FORMAT so JDBC
+     * does not shift the time zone.
      */
     @Test
     void cutoffIsStoredInVietnamLocalTime() {
@@ -136,7 +136,8 @@ class PlaceOrderConcurrencyTest {
 
         service.place(someCustomer(), requestFor(productId, 1, slotId));
 
-        // slot 07:00, cutoff mặc định 12 giờ → 19:00 hôm trước, đúng giờ Farmer và khách nhìn thấy
+        // a 07:00 slot, the default 12-hour cutoff → 19:00 the day before, exactly what the Farmer
+        // and customer see
         assertThat(
                         jdbc.queryForObject(
                                 "SELECT DATE_FORMAT(cutoff_at, '%Y-%m-%d %H:%i') FROM orders"
@@ -145,7 +146,7 @@ class PlaceOrderConcurrencyTest {
                 .isEqualTo(PICKUP.minusDays(1) + " 19:00");
     }
 
-    // ---------- dữ liệu tối thiểu, chèn bằng JdbcTemplate ----------
+    // ---------- minimal data, inserted with JdbcTemplate ----------
 
     @BeforeEach
     void setUp() {
@@ -177,7 +178,9 @@ class PlaceOrderConcurrencyTest {
         customers.add(insertUser("customer"));
     }
 
-    /** C5-7: xoá theo thứ tự con → cha; order_items và order_status_history đi theo orders. */
+    /**
+     * C5-7: deleted in child → parent order — order_items and order_status_history follow orders.
+     */
     @AfterEach
     void tearDown() {
         if (farmerId != null) {
@@ -233,7 +236,7 @@ class PlaceOrderConcurrencyTest {
         return id;
     }
 
-    /** Hai khách khác nhau lần lượt giành cùng một thứ. */
+    /** Two different customers race for the same thing in turn. */
     private long someCustomer() {
         return customers.get(turn.getAndIncrement() % customers.size());
     }

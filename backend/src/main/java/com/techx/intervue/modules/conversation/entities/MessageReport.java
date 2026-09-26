@@ -17,7 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-116. Không bao giờ xoá báo cáo: nó là dấu vết kiểm toán của một quyết định kiểm duyệt. */
+/** FR-116. Reports are never deleted: they are the audit trail of a moderation decision. */
 @Entity
 @Getter
 @Setter
@@ -58,7 +58,10 @@ public class MessageReport {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
-    /** Giống Message: không ghi đè khi đã có giá trị, để test đặt được mốc thời gian. */
+    /**
+     * Same as Message: do not overwrite when a value already exists, so tests can set the
+     * timestamp.
+     */
     @PrePersist
     protected void onCreated() {
         if (createdAt == null) {
@@ -67,8 +70,9 @@ public class MessageReport {
     }
 
     /**
-     * Ghi lại ai đã xử lý và lúc nào. Gọi lại lần nữa không đổi gì: hai admin cùng làm một hàng đợi
-     * thì người xử lý TRƯỚC là người chịu trách nhiệm, ghi đè sẽ xoá mất dấu vết đó.
+     * Records who handled it and when. Calling it again changes nothing: when two admins work the
+     * same queue, the one who handled it FIRST is accountable, and overwriting would erase that
+     * trace.
      */
     public void markHandledBy(Long adminId, ReportStatus outcome, Instant at) {
         if (this.status != ReportStatus.NEW) {

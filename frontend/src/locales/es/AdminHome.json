@@ -35,12 +35,6 @@
     "announcements_one": "aviso publicado, Thảo Điền cierra el 04/10",
     "announcements_other": "avisos publicados"
   },
-  "earned": {
-    "title": "Lo que ganó MarketLink",
-    "link": "Informe de ingresos",
-    "note": "{{month}}, de puestos que compran visibilidad. Aparte del dinero que recaudaron los mercados.",
-    "of": "₫ · el {{pct}} % de los {{gmv}} que recaudaron los mercados"
-  },
   "byMarket": {
     "title": "Pedidos de esta semana por mercado",
     "link": "Todos los pedidos",

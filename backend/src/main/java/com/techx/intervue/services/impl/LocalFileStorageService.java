@@ -14,11 +14,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-/** Lưu file trên đĩa dưới app.storage.dir (Docker: volume uploads-data ở /app/uploads). */
+/** Stores files on disk under app.storage.dir (Docker: the uploads-data volume at /app/uploads). */
 @Slf4j
 @Service
-// Bean mặc định cho ảnh đại diện và file đơn xin thành Farmer. ChatModuleConfig dựng một bean thứ
-// hai cùng kiểu, gốc khác, cho ảnh chat (spec §8.2) — @Primary để các chỗ inject cũ không mơ hồ.
+// The default bean for avatars and Farmer application files. ChatModuleConfig builds a second
+// bean of the same type with a different root, for chat images (spec §8.2) — @Primary so the old
+// injection points are not ambiguous.
 @Primary
 public class LocalFileStorageService implements FileStorageServiceInterface {
 
@@ -36,7 +37,8 @@ public class LocalFileStorageService implements FileStorageServiceInterface {
         Path target = resolve(folder, fileName);
         try {
             Files.createDirectories(target.getParent());
-            // Ghi ra file tạm rồi đổi tên: người đang tải ảnh không bao giờ nhận nửa file
+            // Write to a temp file then rename: someone downloading an image never receives half a
+            // file
             Path temp = Files.createTempFile(target.getParent(), ".upload-", ".tmp");
             try {
                 Files.write(temp, content);
@@ -67,7 +69,7 @@ public class LocalFileStorageService implements FileStorageServiceInterface {
         try {
             Files.deleteIfExists(resolve(folder, fileName));
         } catch (IOException e) {
-            // File mồ côi chỉ tốn chỗ, không làm hỏng request của người dùng
+            // An orphan file only costs space, it does not break the user's request
             log.warn("Could not delete {}/{}: {}", folder, fileName, e.getMessage());
         }
     }
