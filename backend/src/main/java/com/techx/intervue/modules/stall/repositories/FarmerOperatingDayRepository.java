@@ -11,6 +11,8 @@ public interface FarmerOperatingDayRepository extends JpaRepository<FarmerOperat
 
     void deleteByFarmerMarketId(Long farmerMarketId);
 
+    List<FarmerOperatingDay> findByFarmerMarketId(Long farmerMarketId);
+
     /** Ghi đè trọn bộ khung giờ của một stall tại một chợ: xoá hết rồi ghi lại (contract §4). */
     @Transactional
     default void replaceDays(Long farmerMarketId, List<OperatingDaysRequest.Day> days) {

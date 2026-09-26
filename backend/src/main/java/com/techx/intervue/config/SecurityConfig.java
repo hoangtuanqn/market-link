@@ -137,7 +137,9 @@ public class SecurityConfig {
                                                 HttpMethod.GET,
                                                 "/api/v1/farmers",
                                                 "/api/v1/farmers/*",
-                                                "/api/v1/markets/*/farmers")
+                                                "/api/v1/markets/*/farmers",
+                                                // FR-032: giỏ hàng chọn slot trước khi đăng nhập
+                                                "/api/v1/farmers/*/slots")
                                         .permitAll()
                                         // Chatbot FR-090…092: khách vãng lai cũng hỏi được
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
