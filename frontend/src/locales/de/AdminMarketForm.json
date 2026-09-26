@@ -101,6 +101,8 @@
     "required": "Dieses Feld ist erforderlich.",
     "days": "Wähle mindestens einen Markttag.",
     "close": "Die Schließzeit muss nach der Öffnungszeit liegen.",
-    "images": "Füge mindestens ein Foto des Marktes hinzu."
+    "images": "Füge mindestens ein Foto des Marktes hinzu.",
+    "lat": "Gib einen Breitengrad zwischen -90 und 90 ein, z. B. 10.772500.",
+    "lng": "Gib einen Längengrad zwischen -180 und 180 ein, z. B. 106.698000."
   }
 }

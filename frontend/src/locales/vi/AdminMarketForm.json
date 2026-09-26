@@ -101,6 +101,8 @@
     "required": "Trường này là bắt buộc.",
     "days": "Chọn ít nhất một ngày họp chợ.",
     "close": "Giờ đóng phải sau giờ mở.",
-    "images": "Thêm ít nhất một ảnh của chợ."
+    "images": "Thêm ít nhất một ảnh của chợ.",
+    "lat": "Nhập vĩ độ từ -90 đến 90, ví dụ 10.772500.",
+    "lng": "Nhập kinh độ từ -180 đến 180, ví dụ 106.698000."
   }
 }

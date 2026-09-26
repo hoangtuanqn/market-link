@@ -16,6 +16,7 @@ import { SHOW_WIP } from '@/config/wip';
 import { ADMIN_MARKETS_PATH } from '@/constants/nav';
 import { CLOSURE_HANDLINGS, marketAdmin, type ClosureHandling, type ClosureType } from '@/data/admin';
 import useRequest from '@/hooks/useRequest';
+import { isLatitude, isLongitude, parseCoordinate, parseCoordinatePair } from '@/lib/coordinates';
 import { dayName } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
@@ -145,6 +146,9 @@ const AdminMarketFormPage = () => {
   // Bumped to fly the pin map to a district's centre — see LocationPicker's `focusToken` prop for why it is not
   // just "whenever lat/lng changes".
   const [mapFocusToken, setMapFocusToken] = useState(0);
+  // Latitude / longitude exactly as typed, until the field is left: re-formatting to 6 decimals on every keystroke made
+  // the fields impossible to type in or clear (QA E2E v2 MARKET-ADMIN-002). Absent = show the form's number.
+  const [coordText, setCoordText] = useState<Partial<Record<'lat' | 'lng', string>>>({});
 
   if (load.kind === 'loading') {
     return <MarketCardSkeleton count={1} />;
@@ -174,8 +178,43 @@ const AdminMarketFormPage = () => {
   const onDistrictChange = (name: string) => {
     const center = HCMC_DISTRICTS.find((d) => d.name === name);
     setForm((f) => (center ? { ...f, district: name, lat: center.lat, lng: center.lng } : { ...f, district: name }));
-    if (center) setMapFocusToken((n) => n + 1);
+    if (center) {
+      setCoordText({});
+      setMapFocusToken((n) => n + 1);
+    }
   };
+
+  /** A whole "lat, lng" pasted into either field fills both; otherwise keep the text until the field is left. */
+  const onCoordChange = (axis: 'lat' | 'lng', text: string) => {
+    const pair = parseCoordinatePair(text);
+    if (pair) {
+      setForm((f) => ({ ...f, lat: pair.lat, lng: pair.lng }));
+      setCoordText({});
+      return;
+    }
+    setCoordText((c) => ({ ...c, [axis]: text }));
+  };
+
+  /** Leaving the field moves the pin there; text that is not a number stays as typed and is flagged on save. */
+  const onCoordBlur = (axis: 'lat' | 'lng') => {
+    const text = coordText[axis];
+    if (text === undefined) return;
+    const value = parseCoordinate(text);
+    if (value === null) return;
+    setForm((f) => ({ ...f, [axis]: value }));
+    setCoordText((c) => {
+      const next = { ...c };
+      delete next[axis];
+      return next;
+    });
+  };
+
+  /** The form with any coordinate still being typed read in, so Save never uses a stale pin position. */
+  const withTypedCoords = (f: FormState): FormState => ({
+    ...f,
+    lat: coordText.lat === undefined ? f.lat : (parseCoordinate(coordText.lat) ?? Number.NaN),
+    lng: coordText.lng === undefined ? f.lng : (parseCoordinate(coordText.lng) ?? Number.NaN),
+  });
 
   /** Uploads each chosen file right away (docs/prototype pattern for Become a Farmer's photos), one request per file. */
   const onImagesChosen = (e: ChangeEvent<HTMLInputElement>) => {
@@ -218,8 +257,8 @@ const AdminMarketFormPage = () => {
     if (!f.open) next.open = t('error.required');
     if (!f.close) next.close = t('error.required');
     if (f.open && f.close && f.close <= f.open) next.close = t('error.close');
-    if (!Number.isFinite(f.lat) || Math.abs(f.lat) > 90) next.lat = t('error.required');
-    if (!Number.isFinite(f.lng) || Math.abs(f.lng) > 180) next.lng = t('error.required');
+    if (!isLatitude(f.lat)) next.lat = coordText.lat?.trim() === '' ? t('error.required') : t('error.lat');
+    if (!isLongitude(f.lng)) next.lng = coordText.lng?.trim() === '' ? t('error.required') : t('error.lng');
     if (f.images.length === 0) next.images = t('error.images');
     return next;
   };
@@ -230,7 +269,8 @@ const AdminMarketFormPage = () => {
       Notification.error({ text: t('images.uploadInProgress') });
       return;
     }
-    const found = validate(form);
+    const current = withTypedCoords(form);
+    const found = validate(current);
     setErrors(found);
     if (Object.keys(found).length) {
       Notification.error({ title: t('toast.fixTitle'), text: t('toast.fix') });
@@ -241,8 +281,8 @@ const AdminMarketFormPage = () => {
       marketName: form.name.trim(),
       address: form.address.trim(),
       district: form.district || undefined,
-      latitude: form.lat,
-      longitude: form.lng,
+      latitude: current.lat,
+      longitude: current.lng,
       openingTime: form.open,
       closingTime: form.close,
       images: form.images,
@@ -486,8 +526,10 @@ const AdminMarketFormPage = () => {
               id="market-lat"
               label={t('field.lat')}
               required
-              value={form.lat.toFixed(6)}
-              onChange={(e) => setForm({ ...form, lat: Number(e.target.value) || form.lat })}
+              inputMode="decimal"
+              value={coordText.lat ?? form.lat.toFixed(6)}
+              onChange={(e) => onCoordChange('lat', e.target.value)}
+              onBlur={() => onCoordBlur('lat')}
               error={errors.lat}
             />
             <Field
@@ -495,8 +537,10 @@ const AdminMarketFormPage = () => {
               label={t('field.lng')}
               required
               hint={t('field.lngHint')}
-              value={form.lng.toFixed(6)}
-              onChange={(e) => setForm({ ...form, lng: Number(e.target.value) || form.lng })}
+              inputMode="decimal"
+              value={coordText.lng ?? form.lng.toFixed(6)}
+              onChange={(e) => onCoordChange('lng', e.target.value)}
+              onBlur={() => onCoordBlur('lng')}
               error={errors.lng}
             />
 
@@ -581,7 +625,10 @@ const AdminMarketFormPage = () => {
             lat={form.lat}
             lng={form.lng}
             pinLabel={form.name || t('titleNew')}
-            onMove={(lat, lng) => setForm((f) => ({ ...f, lat, lng }))}
+            onMove={(lat, lng) => {
+              setForm((f) => ({ ...f, lat, lng }));
+              setCoordText({});
+            }}
             focusToken={mapFocusToken}
             className="min-h-75"
           />

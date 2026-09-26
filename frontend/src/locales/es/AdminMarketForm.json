@@ -101,6 +101,8 @@
     "required": "Este campo es obligatorio.",
     "days": "Elige al menos un día de apertura.",
     "close": "La hora de cierre debe ser posterior a la de apertura.",
-    "images": "Añade al menos una foto del mercado."
+    "images": "Añade al menos una foto del mercado.",
+    "lat": "Introduce una latitud entre -90 y 90, p. ej. 10.772500.",
+    "lng": "Introduce una longitud entre -180 y 180, p. ej. 106.698000."
   }
 }

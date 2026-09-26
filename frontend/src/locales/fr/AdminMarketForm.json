@@ -101,6 +101,8 @@
     "required": "Ce champ est obligatoire.",
     "days": "Choisissez au moins un jour d’ouverture.",
     "close": "L’heure de fermeture doit suivre l’heure d’ouverture.",
-    "images": "Ajoutez au moins une photo du marché."
+    "images": "Ajoutez au moins une photo du marché.",
+    "lat": "Saisissez une latitude entre -90 et 90, par ex. 10.772500.",
+    "lng": "Saisissez une longitude entre -180 et 180, par ex. 106.698000."
   }
 }

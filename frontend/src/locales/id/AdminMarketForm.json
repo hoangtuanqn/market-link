@@ -101,6 +101,8 @@
     "required": "Kolom ini wajib diisi.",
     "days": "Pilih setidaknya satu hari operasional.",
     "close": "Waktu tutup harus setelah waktu buka.",
-    "images": "Tambahkan setidaknya satu foto pasar."
+    "images": "Tambahkan setidaknya satu foto pasar.",
+    "lat": "Masukkan lintang antara -90 dan 90, mis. 10.772500.",
+    "lng": "Masukkan bujur antara -180 dan 180, mis. 106.698000."
   }
 }
