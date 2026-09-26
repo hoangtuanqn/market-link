@@ -7,7 +7,7 @@ import com.techx.intervue.modules.product.resources.ProductDetailResource;
 import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
 import com.techx.intervue.modules.product.services.interfaces.ProductQueryServiceInterface;
-import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
+import com.techx.intervue.modules.review.services.interfaces.ReviewServiceInterface;
 import com.techx.intervue.modules.stall.resources.OperatingDayResource;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
 import com.techx.intervue.modules.stall.resources.StallMarketResource;
@@ -27,6 +27,7 @@ public class ProductQueryService implements ProductQueryServiceInterface {
 
     private final ProductQueryRepository repository;
     private final StallServiceInterface stallService;
+    private final ReviewServiceInterface reviewService;
 
     @Override
     public PageResource<ProductListItemResource> search(ProductSearchCriteria criteria) {
@@ -54,9 +55,12 @@ public class ProductQueryService implements ProductQueryServiceInterface {
         ProductDetailRow row =
                 repository.findVisibleById(id).orElseThrow(() -> new ProductNotFoundException(id));
         StallSummaryResource farmer = summarize(stallService.publicDetail(row.item().farmerId()));
-        // reviewsSummary has real numbers from cluster C8; today it is the shape with 0 values.
+        // FR-052: average + 1★…5★ histogram of the visible reviews (C8).
         return new ProductDetailResource(
-                row.item(), row.description(), farmer, ReviewSummaryResource.empty());
+                row.item(),
+                row.description(),
+                farmer,
+                reviewService.productSummary(row.item().id()));
     }
 
     @Override

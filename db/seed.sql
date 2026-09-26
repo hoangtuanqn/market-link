@@ -560,3 +560,62 @@ SELECT c.id, 'market', NULL, NULL, m.id, m.id
 FROM users c
 JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
 WHERE c.email = 'customer@marketlink.vn';
+
+-- ---- Reviews (FR-050…053, FR-074): 8 reviews on the 4 completed orders — 4 products, 4 stalls ----
+-- reviews has no natural key usable with ON DUPLICATE KEY (uq_review contains NULL columns and MySQL
+-- treats NULLs as distinct), so do as order_status_history: delete the reviews of the 12 seed orders
+-- and write them again. review_responses follow (ON DELETE CASCADE). created_at is a TIMESTAMP
+-- (UTC session): "one day after pickup, 10:00 Vietnam time" shifted by -7 hours, like orders (M-4).
+DELETE r FROM reviews r
+JOIN orders o ON o.id = r.order_id
+WHERE o.order_code LIKE 'ML-20260920-%';
+
+-- 4 product reviews: one bought product per completed order (the service refuses products not in
+-- the order). The 'Cải ngọt' review (order 0010) is hidden by the admin to demo FR-074 — it leaves
+-- both the public list and the average.
+INSERT INTO reviews (customer_id, order_id, target_type, product_id, farmer_id, rating, comment, status, created_at)
+SELECT o.customer_id, o.id, 'product', p.id, NULL, x.rating, x.comment, x.status,
+       TIMESTAMP(o.pickup_date + INTERVAL 1 DAY, '10:00:00') - INTERVAL 7 HOUR
+FROM (
+      SELECT 'ML-20260920-0007' AS order_code, 'Rau muống' AS product_name, 5 AS rating, 'Rau tươi, cọng giòn, đúng như hình. Sẽ đặt lại.' AS comment, 'visible' AS status
+      UNION ALL SELECT 'ML-20260920-0008', 'Xoài cát Hoà Lộc', 4, 'Xoài ngọt, hơi nhỏ trái so với mong đợi.', 'visible'
+      UNION ALL SELECT 'ML-20260920-0009', 'Cà rốt', 5, 'Cà rốt ngọt, còn nguyên lá, để tủ lạnh cả tuần vẫn tươi.', 'visible'
+      UNION ALL SELECT 'ML-20260920-0010', 'Cải ngọt', 2, 'Cải này dở tệ, bán hàng kiểu này thì dẹp tiệm đi.', 'hidden'
+     ) x
+JOIN orders o ON o.order_code = x.order_code
+JOIN products p ON p.farmer_id = o.farmer_id AND p.name = x.product_name;
+
+-- 4 stall reviews: the stall that fulfilled the order (the service refuses any other stall).
+INSERT INTO reviews (customer_id, order_id, target_type, product_id, farmer_id, rating, comment, status, created_at)
+SELECT o.customer_id, o.id, 'farmer', NULL, o.farmer_id, x.rating, x.comment, 'visible',
+       TIMESTAMP(o.pickup_date + INTERVAL 1 DAY, '10:05:00') - INTERVAL 7 HOUR
+FROM (
+      SELECT 'ML-20260920-0007' AS order_code, 5 AS rating, 'Cô chủ sạp thân thiện, gói hàng sẵn đúng giờ hẹn.' AS comment
+      UNION ALL SELECT 'ML-20260920-0008', 4, 'Nhận hàng nhanh, trái cây được lựa kỹ.'
+      UNION ALL SELECT 'ML-20260920-0009', 5, 'Củ quả sạch, giá hợp lý, chỉ đường tới sạp rất dễ.'
+      UNION ALL SELECT 'ML-20260920-0010', 4, 'Hàng tốt nhưng hôm đó phải đợi hơi lâu vì đông khách.'
+     ) x
+JOIN orders o ON o.order_code = x.order_code;
+
+-- 1 stall response (FR-053) on the stall review of order 0007.
+INSERT INTO review_responses (review_id, farmer_id, response_text, created_at)
+SELECT r.id, r.farmer_id,
+       'Cảm ơn chị đã ủng hộ. Tuần sau sạp có thêm rau lang và mồng tơi, chị ghé nhé.',
+       r.created_at + INTERVAL 3 HOUR
+FROM reviews r
+JOIN orders o ON o.id = r.order_id
+WHERE o.order_code = 'ML-20260920-0007' AND r.target_type = 'farmer';
+
+-- rating_avg / rating_count (FR-050/051): recomputed from the visible reviews for EVERY product and
+-- stall — the same statement the service runs after each write, so re-running the seed stays exact.
+UPDATE products p
+SET p.rating_avg = COALESCE((SELECT ROUND(AVG(r.rating), 2) FROM reviews r
+                             WHERE r.target_type = 'product' AND r.product_id = p.id AND r.status = 'visible'), 0),
+    p.rating_count = (SELECT COUNT(*) FROM reviews r
+                      WHERE r.target_type = 'product' AND r.product_id = p.id AND r.status = 'visible');
+
+UPDATE farmer_profiles f
+SET f.rating_avg = COALESCE((SELECT ROUND(AVG(r.rating), 2) FROM reviews r
+                             WHERE r.target_type = 'farmer' AND r.farmer_id = f.id AND r.status = 'visible'), 0),
+    f.rating_count = (SELECT COUNT(*) FROM reviews r
+                      WHERE r.target_type = 'farmer' AND r.farmer_id = f.id AND r.status = 'visible');

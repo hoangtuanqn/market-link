@@ -9,6 +9,10 @@ import java.util.List;
  * is ABSENT from the JSON entirely (not {@code "customer": null}). {@code @JsonInclude} sits only
  * on this component (precedent: {@code MessageResource}), not on the whole record — {@code
  * customerNote}/{@code farmerNote} must still appear as {@code null} as usual.
+ *
+ * <p>{@code reviewed} (Task 8.3, FR-050): the customer already left at least one review on this
+ * order — the "Write a review" button shows only on a completed order where it is false. Appended
+ * last on purpose: the chat order pin (PR #155) reads the earlier fields by position.
  */
 public record OrderDetailResource(
         OrderListItemResource summary,
@@ -18,4 +22,5 @@ public record OrderDetailResource(
         boolean canModify,
         String customerNote,
         String farmerNote,
-        @JsonInclude(JsonInclude.Include.NON_NULL) CustomerSummaryResource customer) {}
+        @JsonInclude(JsonInclude.Include.NON_NULL) CustomerSummaryResource customer,
+        boolean reviewed) {}

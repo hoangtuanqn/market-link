@@ -45,7 +45,7 @@ class OrderDetailResourceTest {
     void customerIsAbsentFromJsonWhenTheCallerIsNotTheOwningFarmer() throws Exception {
         OrderDetailResource detail =
                 new OrderDetailResource(
-                        summary(), List.of(), List.of(), true, true, null, null, null);
+                        summary(), List.of(), List.of(), true, true, null, null, null, false);
 
         String json = mapper.writeValueAsString(detail);
 
@@ -61,12 +61,26 @@ class OrderDetailResourceTest {
                         7L, "Nguyễn Văn An", "0900000002", "customer@marketlink.vn");
         OrderDetailResource detail =
                 new OrderDetailResource(
-                        summary(), List.of(), List.of(), false, false, null, null, customer);
+                        summary(), List.of(), List.of(), false, false, null, null, customer, false);
 
         String json = mapper.writeValueAsString(detail);
 
         assertThat(json).contains("\"customer\":{");
         assertThat(json).contains("\"userId\":7");
         assertThat(json).contains("\"customerNote\":null");
+    }
+
+    /**
+     * Task 8.3: the "Write a review" button reads {@code reviewed}; it must always be in the JSON.
+     */
+    @Test
+    void reviewedIsAlwaysSerialised() throws Exception {
+        OrderDetailResource detail =
+                new OrderDetailResource(
+                        summary(), List.of(), List.of(), false, false, null, null, null, true);
+
+        String json = mapper.writeValueAsString(detail);
+
+        assertThat(json).contains("\"reviewed\":true");
     }
 }

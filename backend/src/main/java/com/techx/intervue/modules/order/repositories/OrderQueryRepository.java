@@ -111,6 +111,10 @@ public class OrderQueryRepository {
             WHERE o.id = :id
             """;
 
+    /** Task 8.3 (FR-050): does the order already carry a review — any target, any status. */
+    public static final String REVIEWED_SQL =
+            "SELECT EXISTS(SELECT 1 FROM reviews r WHERE r.order_id = :orderId)";
+
     public static final String ITEMS_SQL =
             """
             SELECT product_id, product_name, unit, unit_price, quantity, subtotal
@@ -166,6 +170,13 @@ public class OrderQueryRepository {
                         new MapSqlParameterSource("id", orderId),
                         (rs, i) -> detailRow(rs));
         return rows.stream().findFirst();
+    }
+
+    public boolean reviewed(long orderId) {
+        Boolean found =
+                jdbc.queryForObject(
+                        REVIEWED_SQL, new MapSqlParameterSource("orderId", orderId), Boolean.class);
+        return Boolean.TRUE.equals(found);
     }
 
     public List<OrderItemResource> items(long orderId) {
