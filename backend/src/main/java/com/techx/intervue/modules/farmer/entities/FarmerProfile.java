@@ -43,23 +43,26 @@ public class FarmerProfile {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    /** Nhiều path cách nhau bởi ';' — xem FarmerService#joinList/#splitList. */
+    /** Several paths separated by ';' — see FarmerService#joinList/#splitList. */
     @Column(name = "photo_paths", columnDefinition = "TEXT")
     private String photoPaths;
 
     @Column(name = "video_path", length = 255)
     private String videoPath;
 
-    /** Ảnh đại diện gian hàng (FR-060, V20260926009). */
+    /** Stall avatar image (FR-060, V20260926009). */
     @Column(name = "logo_url", length = 255)
     private String logoUrl;
 
-    /** D-05: đơn khoá sửa/huỷ trước giờ nhận ngần này giờ. Farmer chỉnh trong hồ sơ, 1…72. */
+    /**
+     * D-05: an order is locked for edit/cancel this many hours before pickup time. The Farmer sets
+     * it in the profile, 1…72.
+     */
     @Column(name = "order_cutoff_hours", nullable = false)
     @Builder.Default
     private int orderCutoffHours = 12;
 
-    /** Cache điểm đánh giá — tính lại mỗi khi có review (cụm C8). */
+    /** Cached rating score — recomputed whenever there is a review (cluster C8). */
     @Column(name = "rating_avg", nullable = false, precision = 3, scale = 2)
     @Builder.Default
     private BigDecimal ratingAvg = BigDecimal.ZERO;
@@ -73,11 +76,11 @@ public class FarmerProfile {
     @Builder.Default
     private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
 
-    /** Lý do Admin từ chối — chỉ có giá trị khi approvalStatus = REJECTED. */
+    /** Reason the Admin rejected — only meaningful when approvalStatus = REJECTED. */
     @Column(name = "reject_reason", length = 255)
     private String rejectReason;
 
-    /** Lý do Admin đình chỉ — chỉ có giá trị khi approvalStatus = SUSPENDED. */
+    /** Reason the Admin suspended — only meaningful when approvalStatus = SUSPENDED. */
     @Column(name = "suspend_reason", length = 255)
     private String suspendReason;
 

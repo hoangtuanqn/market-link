@@ -4,10 +4,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Một stall trong danh sách của chợ hoặc kết quả tìm Farmer (contract §4). Khi lọc theo chợ, quầy
- * và khung giờ là của chợ đó; không lọc thì lấy theo chợ đầu tiên của stall. Thẻ stall trên trang
- * chợ cần người liên hệ và khung giờ nhận, nên hai thứ đó đi kèm luôn thay vì bắt FE gọi thêm một
- * request mỗi thẻ.
+ * One stall in a market's list or a Farmer search result (contract §4). When filtering by market,
+ * the booth and time window are those of that market; without filtering the stall's first market is
+ * used. The stall card on the market page needs the contact person and the pickup time window, so
+ * those two come along instead of making the FE call one more request per card.
  */
 public record StallSummaryResource(
         Long farmerId,

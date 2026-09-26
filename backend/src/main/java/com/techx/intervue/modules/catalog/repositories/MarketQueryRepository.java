@@ -13,8 +13,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Đọc chợ kèm ngày họp và số stall đang bán. Dùng JdbcTemplate vì phải gộp ba bảng trong một lượt;
- * mọi giá trị người dùng đi qua tham số, không nối chuỗi (R-04).
+ * Reads markets together with their operating days and the number of stalls selling. Uses
+ * JdbcTemplate because three tables must be joined in one pass; every user value goes through
+ * parameters, no string concatenation (R-04).
  */
 @Repository
 @RequiredArgsConstructor
@@ -24,9 +25,11 @@ public class MarketQueryRepository {
             """
             SELECT m.id, m.market_name, m.address, m.district, m.city,
                    m.latitude, m.longitude, m.map_provider,
-                   m.opening_time, m.closing_time, m.image_url,
+                   m.opening_time, m.closing_time,
                    (SELECT GROUP_CONCAT(d.day_of_week ORDER BY d.day_of_week)
                       FROM market_operating_days d WHERE d.market_id = m.id) AS days,
+                   (SELECT GROUP_CONCAT(mi.image_url ORDER BY mi.sort_order)
+                      FROM market_images mi WHERE mi.market_id = m.id) AS images,
                    (SELECT COUNT(*)
                       FROM farmer_markets fm
                       JOIN farmer_profiles f ON f.id = fm.farmer_id
@@ -84,7 +87,7 @@ public class MarketQueryRepository {
         return rows.stream().findFirst();
     }
 
-    /** '%' và '_' người dùng gõ vào ô tìm kiếm không được thành ký tự đại diện. */
+    /** '%' and '_' typed by the user in the search box must not act as wildcards. */
     private static String escapeLike(String raw) {
         return raw.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }
@@ -95,6 +98,9 @@ public class MarketQueryRepository {
                 days == null || days.isBlank()
                         ? List.of()
                         : Arrays.stream(days.split(",")).map(Integer::valueOf).toList();
+        String images = rs.getString("images");
+        List<String> imageUrls =
+                images == null || images.isBlank() ? List.of() : Arrays.asList(images.split(","));
         return new MarketResource(
                 rs.getLong("id"),
                 rs.getString("market_name"),
@@ -106,12 +112,12 @@ public class MarketQueryRepository {
                 rs.getString("map_provider"),
                 hhmm(rs.getString("opening_time")),
                 hhmm(rs.getString("closing_time")),
-                rs.getString("image_url"),
+                imageUrls,
                 operatingDays,
                 rs.getLong("farmer_count"));
     }
 
-    /** TIME đọc ra là "05:00:00"; contract trả "05:00". */
+    /** A TIME column reads as "05:00:00"; the contract returns "05:00". */
     static String hhmm(String time) {
         return time == null ? null : time.substring(0, Math.min(5, time.length()));
     }

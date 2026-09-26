@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------
-# Kiểm tra môi trường dev và production không bị trộn (CONTRIBUTING.md §0, luật H-7)
-# CI chạy trên mọi PR; chạy tay:  scripts/check-env-separation.sh
+# Checks that the dev and production environments are not mixed (CONTRIBUTING.md §0, rule H-7)
+# CI runs it on every PR; run by hand:  scripts/check-env-separation.sh
 # ---------------------------------------------------------------------
 set -uo pipefail
 cd "$(git rev-parse --show-toplevel)"
@@ -17,9 +17,9 @@ PROD_APP=backend/src/main/resources/application-prod.yaml
 DEV_APP=backend/src/main/resources/application-dev.yaml
 PROD_COMPOSE=docker-compose.prod.yml
 
-# application-{prod,dev}.yaml bị git-ignore nên CI không có chúng: kiểm file mẫu .example (luôn có trong
-# git), cộng file thật nếu máy này đã tạo. grep trên file không tồn tại trả mã lỗi, nên nếu không liệt kê
-# như vậy thì các bước dưới sẽ báo ✓ mà không kiểm gì.
+# application-{prod,dev}.yaml are git-ignored so CI does not have them: check the .example templates (always in
+# git), plus the real files if this machine already created them. grep on a missing file returns an error code, so without
+# listing it this way the steps below would report ✓ without checking anything.
 PROD_APPS=()
 DEV_APPS=()
 for base in "$PROD_APP" "$DEV_APP"; do
@@ -30,7 +30,7 @@ for f in "$DEV_APP.example" "$DEV_APP"; do [[ -f "$f" ]] && DEV_APPS+=("$f"); do
 DEV_ENV=.env.example
 PROD_ENV=.env.production.example
 
-# 1. Không có file bí mật / env của máy trong git
+# 1. No secret / machine env files in git
 tracked_secrets=$(git ls-files | grep -E '(^|/)\.env$|^\.env\.production$|\.env(\.[a-z]+)?\.local$|(^|/)application-local\.(yml|yaml|properties)$|\.(pem|key|p12|jks)$' || true)
 if [[ -n "$tracked_secrets" ]]; then
     fail "File bí mật / env của máy đang nằm trong git:"
@@ -39,8 +39,8 @@ else
     ok "Không có .env, .env.production, application-local.* hay key trong git"
 fi
 
-# 2. Profile prod không có giá trị mặc định → không bao giờ chạy prod bằng giá trị dev.
-#    Mặc định rỗng (${MAIL_PASSWORD:}) được phép: nó chỉ đánh dấu biến tuỳ chọn, không mang giá trị dev nào.
+# 2. The prod profile has no default values → prod is never run with dev values.
+#    An empty default (${MAIL_PASSWORD:}) is allowed: it only marks an optional variable, it carries no dev value.
 for f in "${PROD_APPS[@]}"; do
     if grep -nE '\$\{[A-Za-z0-9_.]+:[^}]' "$f" >/dev/null; then
         fail "$f có placeholder kèm giá trị mặc định (\${VAR:mac-dinh}). Prod phải lấy mọi giá trị từ env:"
@@ -50,7 +50,7 @@ for f in "${PROD_APPS[@]}"; do
     fi
 done
 
-# 3. Profile prod không kéo cấu hình dev vào, và ngược lại
+# 3. The prod profile does not pull dev configuration in, and vice versa
 for f in "${PROD_APPS[@]}"; do
     if grep -nEi '^\s*(include|active|group)\s*:.*\bdev\b|on-profile\s*:\s*dev' "$f" >/dev/null; then
         fail "$f đang include/active profile dev"
@@ -66,7 +66,7 @@ for f in "${DEV_APPS[@]}"; do
     fi
 done
 
-# 4. Compose prod: profile prod, bí mật bắt buộc (:?), không mở cổng DB/Redis
+# 4. Prod compose: the prod profile, secrets required (:?), no DB/Redis ports open
 if ! grep -qE 'SPRING_PROFILES_ACTIVE:\s*prod\s*$' "$PROD_COMPOSE"; then
     fail "$PROD_COMPOSE phải đặt cứng SPRING_PROFILES_ACTIVE: prod"
 else
@@ -89,7 +89,7 @@ for svc in mysql redis; do
 done
 (( exposed == 0 )) && ok "$PROD_COMPOSE không mở cổng MySQL / Redis"
 
-# 5. File env mẫu không lẫn giá trị của nhau
+# 5. The sample env files do not contain each other's values
 if grep -qE '^SPRING_PROFILES_ACTIVE=dev\s*$' "$DEV_ENV"; then
     ok "$DEV_ENV dùng profile dev"
 else

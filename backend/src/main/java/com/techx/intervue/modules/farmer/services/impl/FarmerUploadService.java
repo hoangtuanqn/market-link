@@ -18,13 +18,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Lưu ảnh/video của đơn xin thành Farmer vào ổ đĩa cục bộ (app.uploads.dir) — chỉ phục vụ test/demo
- * (docs/prototype/customer/become-farmer.html), không phải hạ tầng object storage cho production.
- * Tên file luôn tự sinh (UUID); không bao giờ dùng tên file client gửi lên, tránh path traversal.
+ * Stores images/videos of the Farmer application on the local disk (app.uploads.dir) — for
+ * test/demo only (docs/prototype/customer/become-farmer.html), not production object storage
+ * infrastructure. File names are always generated (UUID); the file name the client sends is never
+ * used, to avoid path traversal.
  *
- * <p>Mỗi tài khoản có thư mục riêng {@code farmer-applications/<userId>/}. Nhờ vậy kiểm được "đường
- * dẫn này có phải của chính người đang nộp đơn không" mà không cần bảng phụ, và dọn file thừa của
- * một người cũng chỉ là quét đúng thư mục của họ.
+ * <p>Each account has its own directory {@code farmer-applications/<userId>/}. That makes it
+ * possible to check "is this path the applicant's own" without an extra table, and cleaning up one
+ * person's leftover files is just sweeping exactly their directory.
  */
 @Slf4j
 @Service
@@ -57,7 +58,7 @@ public class FarmerUploadService {
     }
 
     /**
-     * @param kind "photo" hoặc "video" — quyết định content-type/kích thước cho phép.
+     * @param kind "photo" or "video" — decides the allowed content-type/size.
      */
     public String store(Long userId, String kind, MultipartFile file) {
         boolean isPhoto = "photo".equals(kind);
@@ -95,24 +96,28 @@ public class FarmerUploadService {
     }
 
     /**
-     * Đường dẫn client gửi kèm đơn có đúng là file người đó vừa tải lên không. Không kiểm thì ai
-     * cũng gắn được ảnh của người khác vào đơn của mình, chỉ cần đoán ra tên file.
+     * Is the path the client sent with the application really a file this person just uploaded.
+     * Without the check anyone could attach someone else's image to their own application just by
+     * guessing the file name.
      */
     public boolean isOwnedBy(String url, Long userId) {
         if (url == null) {
             return true;
         }
         String prefix = urlPrefix(userId);
-        // Chặn "…/<userId>/../<userId khác>/x.jpg": sau tiền tố chỉ được là một tên file phẳng.
+        // Block "…/<userId>/../<another userId>/x.jpg": after the prefix only a flat file name is
+        // allowed.
         return url.startsWith(prefix) && !url.substring(prefix.length()).contains("/");
     }
 
     /**
-     * Xoá những file trong thư mục của một tài khoản mà không còn đơn nào trỏ tới. Gọi sau khi nộp
-     * lại hoặc rút đơn: ảnh của bản nháp cũ không còn ai đọc, giữ lại chỉ tốn ổ đĩa.
+     * Delete the files in an account's directory that no application points to any more. Call it
+     * after re-applying or withdrawing: the images of an old draft are read by nobody, keeping them
+     * only costs disk space.
      *
-     * @param keepUrls các URL vẫn còn được tham chiếu
-     * @param olderThan chỉ xoá file cũ hơn mốc này, để không xoá nhầm ảnh vừa tải lên mà chưa gửi
+     * @param keepUrls the URLs that are still referenced
+     * @param olderThan only delete files older than this mark, so an image just uploaded but not
+     *     yet submitted is not deleted by mistake
      */
     public int deleteUnreferenced(Long userId, Set<String> keepUrls, Instant olderThan) {
         Path userDir = dirOf(userId);
@@ -133,8 +138,9 @@ public class FarmerUploadService {
                     Files.deleteIfExists(file);
                     removed++;
                 } catch (IOException e) {
-                    // Một file hỏng không được chặn cả mẻ; file thừa chỉ tốn chỗ, không sai dữ
-                    // liệu.
+                    // One bad file must not block the whole batch; a leftover file only costs
+                    // space, it does not corrupt
+                    // data.
                     log.warn("Could not delete farmer upload {}: {}", file, e.getMessage());
                 }
             }
@@ -144,7 +150,9 @@ public class FarmerUploadService {
         return removed;
     }
 
-    /** Các thư mục đang có file, để job dọn dẹp biết phải quét những tài khoản nào. */
+    /**
+     * The directories that currently hold files, so the cleanup job knows which accounts to sweep.
+     */
     public Set<Long> usersWithFiles() {
         if (!Files.isDirectory(storageDir)) {
             return Set.of();
@@ -169,7 +177,7 @@ public class FarmerUploadService {
         return baseUrl + "/" + FOLDER + "/" + userId + "/";
     }
 
-    /** Vài byte đầu của file — đủ để nhận ra JPEG, PNG, WEBP, MP4/MOV, WEBM. */
+    /** The first few bytes of the file — enough to recognize JPEG, PNG, WEBP, MP4/MOV, WEBM. */
     private static byte[] head(MultipartFile file) {
         try (InputStream in = file.getInputStream()) {
             return in.readNBytes(HEAD_BYTES);
@@ -179,9 +187,10 @@ public class FarmerUploadService {
     }
 
     /**
-     * Content-Type chỉ là lời khai của client: vẫn dùng để chặn sớm loại không nhận, còn loại thật
-     * (và đuôi file) kết luận từ magic bytes — giống avatar và ảnh chat. Không kiểm thì file HTML
-     * khai "image/png" vẫn được lưu và trả ra ở /uploads.
+     * Content-Type is only the client's claim: still used to reject unaccepted types early, while
+     * the real type (and the file extension) is concluded from the magic bytes — same as avatars
+     * and chat images. Without the check an HTML file claiming "image/png" would still be stored
+     * and served at /uploads.
      */
     private static String photoExtension(String contentType, byte[] head) {
         if (!PHOTO_TYPES.contains(contentType)) {
@@ -203,8 +212,9 @@ public class FarmerUploadService {
         if (!VIDEO_TYPES.contains(contentType)) {
             throw new InvalidFieldException("file", "Video must be MP4, WEBM or MOV.");
         }
-        // WEBM là EBML; MP4 và MOV cùng họ ISO BMFF (box đầu thường là ftyp, MOV cũ có thể là
-        // moov/mdat/wide/free/skip) — hai loại này phân biệt theo lời khai.
+        // WEBM is EBML; MP4 and MOV belong to the same ISO BMFF family (the first box is usually
+        // ftyp, an old MOV may be
+        // moov/mdat/wide/free/skip) — these two are told apart by the claim.
         if (startsWith(head, 0, 0x1A, 0x45, 0xDF, 0xA3)) {
             return ".webm";
         }

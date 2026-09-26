@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-/** id lấy từ access token nên chỉ đọc / sửa được tuỳ chọn của chính mình (R-06). */
+/**
+ * the id comes from the access token so users can only read / edit their own preferences (R-06).
+ */
 @Service
 @RequiredArgsConstructor
 public class SettingsService implements SettingsServiceInterface {
@@ -54,7 +56,8 @@ public class SettingsService implements SettingsServiceInterface {
     }
 
     /**
-     * extras là tự do theo vai, nên chỉ chặn hình dạng: khoá kiểu "note.orderReady", giá trị ngắn.
+     * extras is free-form per role, so only the shape is checked: keys like "note.orderReady",
+     * short values.
      */
     private static Map<String, String> checkedExtras(Map<String, String> extras) {
         Map<String, String> out = new LinkedHashMap<>();

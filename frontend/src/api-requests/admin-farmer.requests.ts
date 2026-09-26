@@ -2,7 +2,7 @@ import type { ApiResponse, PageType } from '@/types/api.types';
 import type { AdminFarmerDetailType, AdminFarmerListItemType, FarmerApproval } from '@/types/farmer.types';
 import { privateApi } from '@/utils/axiosInstance';
 
-/** §6, §7, §8 — Admin xem, duyệt, đình chỉ Farmer. */
+/** §6, §7, §8 — Admin views, approves, suspends a Farmer. */
 class AdminFarmerApi {
   static list = async (params: { status?: FarmerApproval; q?: string; page?: number; pageSize?: number }) => {
     const response = await privateApi.get<ApiResponse<PageType<AdminFarmerListItemType>>>('/admin/farmers', {
@@ -16,13 +16,13 @@ class AdminFarmerApi {
     return response.data;
   };
 
-  /** §7: chỉ hồ sơ `pending` mới duyệt được. */
+  /** §7: only a `pending` profile can be approved. */
   static approve = async (id: number) => {
     const response = await privateApi.patch<ApiResponse<AdminFarmerDetailType>>(`/admin/farmers/${id}/approve`);
     return response.data;
   };
 
-  /** Docs/prototype/admin/farmers.html — chỉ hồ sơ `pending` mới từ chối được. */
+  /** Docs/prototype/admin/farmers.html — only a `pending` profile can be rejected. */
   static reject = async (id: number, reason: string) => {
     const response = await privateApi.patch<ApiResponse<AdminFarmerDetailType>>(`/admin/farmers/${id}/reject`, {
       reason,
@@ -30,7 +30,7 @@ class AdminFarmerApi {
     return response.data;
   };
 
-  /** §8 D-09: chỉ hồ sơ `approved` mới đình chỉ được; lý do hiện lại cho chính Farmer. */
+  /** §8 D-09: only an `approved` profile can be suspended; the reason is shown back to the Farmer themself. */
   static suspend = async (id: number, reason: string) => {
     const response = await privateApi.patch<ApiResponse<AdminFarmerDetailType>>(`/admin/farmers/${id}/suspend`, {
       reason,
@@ -38,7 +38,7 @@ class AdminFarmerApi {
     return response.data;
   };
 
-  /** Docs/prototype/admin/farmers.html "Reinstate" — chỉ hồ sơ `suspended` mới quay lại `approved`. */
+  /** Docs/prototype/admin/farmers.html "Reinstate" — only a `suspended` profile goes back to `approved`. */
   static reinstate = async (id: number) => {
     const response = await privateApi.patch<ApiResponse<AdminFarmerDetailType>>(`/admin/farmers/${id}/reinstate`);
     return response.data;

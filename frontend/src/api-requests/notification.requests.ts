@@ -2,7 +2,7 @@ import type { ApiResponse, PageType } from '@/types/api.types';
 import type { NotificationItem, NotificationPreferences } from '@/types/notification.types';
 import { privateApi } from '@/utils/axiosInstance';
 
-/** FR-042 — thông báo của người đang đăng nhập (docs/api-contract.md §9). */
+/** FR-042 — notifications of the signed-in user (docs/api-contract.md §9). */
 class NotificationApi {
   static list = async (params: { isRead?: boolean; page: number; size: number }) => {
     const response = await privateApi.get<ApiResponse<PageType<NotificationItem>>>('/notifications', { params });
@@ -37,7 +37,7 @@ class NotificationApi {
     return response.data;
   };
 
-  /** N3 — khoá VAPID public của server; null khi server chưa bật Web Push. */
+  /** N3 — the server's public VAPID key; null when the server has not enabled Web Push. */
   static pushPublicKey = async () => {
     const response = await privateApi.get<ApiResponse<{ publicKey: string | null }>>('/notifications/push/public-key');
     return response.data;

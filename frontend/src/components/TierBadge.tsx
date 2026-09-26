@@ -2,7 +2,10 @@ import { useTranslation } from 'react-i18next';
 import type { Tier } from '@/types/achievement.types';
 import Helper from '@/utils/helper';
 
-/** "Hạng Bạc" cạnh tên người mua. Chỉ lộ hạng, không bao giờ lộ số đơn hay số tiền (src/styles/tiers.css). */
+/**
+ * "Silver tier" next to the buyer's name. Only exposes the tier, never the number of orders or amount
+ * (src/styles/tiers.css).
+ */
 const TierBadge = ({ tier, className }: { tier: Tier; className?: string }) => {
   const { t } = useTranslation();
   return (

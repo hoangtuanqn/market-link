@@ -8,6 +8,7 @@ import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentAlreadyUsedException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.EmptyMessageException;
+import com.techx.intervue.modules.conversation.exceptions.OrderNotInConversationException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
@@ -18,6 +19,10 @@ import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPubl
 import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.MessageServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
+import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.order.entities.Order;
+import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,13 +41,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MessageService implements MessageServiceInterface {
 
-    /** Khớp VARCHAR(160) của conversations.last_message_text. */
+    /** Matches VARCHAR(160) of conversations.last_message_text. */
     static final int PREVIEW_LENGTH = 160;
 
-    /** Không cho client kéo cả lịch sử một lần. */
+    /** Do not let the client pull the whole history at once. */
     static final int MAX_PAGE = 50;
 
-    /** Xem trước của tin ảnh trong danh sách thread — không có chữ nào để hiện. */
+    /** Preview of an image message in the thread list — there is no text to show. */
     static final String IMAGE_PREVIEW = "Photo";
 
     private final MessageRepository messages;
@@ -54,6 +59,8 @@ public class MessageService implements MessageServiceInterface {
     private final Clock clock;
     private final ChatRateLimiterInterface rateLimiter;
     private final MessageAttachmentRepository attachments;
+    private final OrderRepository orders;
+    private final FarmerProfileRepository farmerProfiles;
 
     @Override
     @Transactional
@@ -76,7 +83,14 @@ public class MessageService implements MessageServiceInterface {
         User other = requireUser(conversation.otherMember(meId));
         policy.assertCanSend(me, other);
 
-        // R-06: kiểm ảnh TRƯỚC khi ghi tin, để một ảnh không phải của mình không tạo ra tin rỗng
+        // R-06: a pinned order must belong to exactly these two people, checked BEFORE writing the
+        // message
+        if (request.orderId() != null) {
+            requireOrderOfThisPair(conversation, request.orderId());
+        }
+
+        // R-06: check the image BEFORE writing the message, so an image that is not yours does not
+        // create an empty message
         MessageAttachment attachment =
                 kind == MessageKind.IMAGE
                         ? requireOwnUnusedAttachment(meId, request.attachmentId())
@@ -100,20 +114,47 @@ public class MessageService implements MessageServiceInterface {
         }
 
         conversation.noteNewMessage(kind == MessageKind.IMAGE ? IMAGE_PREVIEW : preview(body), now);
-        // Người gửi đương nhiên đã đọc tới đây; unread của người kia tính theo mốc của họ.
+        // The sender has of course read up to here; the other person's unread is counted from their
+        // own marker.
         conversation.markRead(meId, now);
         conversations.save(conversation);
 
         MessageResource resource = MessageResource.from(saved, attachment);
-        // Chỉ phát khi đã commit: Plan 2 cắm STOMP vào seam này mà không được phát row chưa tồn
-        // tại.
+        // Only publish once committed: Plan 2 plugs STOMP into this seam and must not publish a row
+        // that does not yet
+        // exist.
         TransactionHelper.afterCommit(() -> events.messageCreated(conversation, resource));
-        // Trả lời nghĩa là đã đọc tới đây: bên kia thấy "đã xem" mà không cần ta gọi /read.
+        // Replying means having read up to here: the other side sees "seen" without us calling
+        // /read.
         TransactionHelper.afterCommit(() -> events.conversationRead(conversation, meId, now));
         return resource;
     }
 
-    /** Ảnh phải là của chính mình và chưa gắn vào tin nào — spec §8.2. */
+    /**
+     * FR-114: the order must belong to the customer in the thread, bought at the stall of the
+     * Farmer in the thread. orders.farmer_id is farmer_profiles.id, not users.id, so the stall
+     * owner must be looked up before comparing. Only READS the order module; there is no path that
+     * creates or edits an order from chat.
+     */
+    private void requireOrderOfThisPair(Conversation conversation, Long orderId) {
+        Order order =
+                orders.findById(orderId)
+                        .orElseThrow(() -> new EntityNotFoundException("Order not found."));
+        Long stallOwner =
+                farmerProfiles
+                        .findById(order.getFarmerId())
+                        .map(FarmerProfile::getUserId)
+                        .orElseThrow(OrderNotInConversationException::new);
+        boolean samePair =
+                conversation.hasMember(order.getCustomerId())
+                        && conversation.hasMember(stallOwner)
+                        && !order.getCustomerId().equals(stallOwner);
+        if (!samePair) {
+            throw new OrderNotInConversationException();
+        }
+    }
+
+    /** The image must be your own and not yet attached to any message — spec §8.2. */
     private MessageAttachment requireOwnUnusedAttachment(Long meId, Long attachmentId) {
         MessageAttachment attachment =
                 attachments
@@ -139,7 +180,7 @@ public class MessageService implements MessageServiceInterface {
                                 conversationId, page)
                         : messages.findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
                                 conversationId, before, page);
-        // Một truy vấn cho cả trang, không N+1
+        // One query for the whole page, no N+1
         List<Long> imageIds =
                 found.stream()
                         .filter(m -> m.getKind() == MessageKind.IMAGE)

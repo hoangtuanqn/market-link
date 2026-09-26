@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Một trình duyệt đã đăng ký Web Push cho một tài khoản (N3). */
+/** A browser that registered for Web Push for an account (N3). */
 @Entity
 @Getter
 @Setter

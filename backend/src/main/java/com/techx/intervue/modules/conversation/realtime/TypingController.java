@@ -13,8 +13,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Controller;
 
 /**
- * FR-112. Sự kiện tạm, không chạm DB (spec 7.1). Không phải thành viên hoặc thread không tồn tại →
- * im lặng: không có gì để "lộ" cho người đoán id.
+ * FR-112. A transient event, does not touch the DB (spec 7.1). Not a member or the thread does not
+ * exist → silent: there is nothing to "leak" to someone guessing ids.
  */
 @Controller
 @RequiredArgsConstructor
@@ -30,8 +30,9 @@ public class TypingController {
 
     @MessageMapping("/typing")
     public void typing(@Payload TypingRequest request, Principal principal) {
-        // Frame bịa hoặc client bug: không có gì để làm, và cũng không có mã lỗi nào để trả —
-        // STOMP không phải HTTP (spec §7.1). Im lặng bỏ qua thay vì đổ stack trace vào log.
+        // A forged frame or a client bug: nothing to do, and no error code to return —
+        // STOMP is not HTTP (spec §7.1). Silently ignore instead of dumping a stack trace into the
+        // log.
         if (request == null || request.conversationId() == null) {
             return;
         }
@@ -39,7 +40,7 @@ public class TypingController {
         try {
             rateLimiter.check(me, ChatRateLimiterInterface.Action.TYPING);
         } catch (RateLimitedException e) {
-            // Rải frame liên tục: bỏ im lặng, và bỏ TRƯỚC khi chạm DB
+            // A flood of frames: drop silently, and drop BEFORE touching the DB
             return;
         }
         Conversation conversation;

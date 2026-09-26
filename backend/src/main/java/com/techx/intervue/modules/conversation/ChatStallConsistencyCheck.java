@@ -8,13 +8,15 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Spec §8.1 bắt StallAccessPolicy fail-closed: một tài khoản role farmer mà không có hàng
- * farmer_profiles thì không phải stall đang mở, nên không nhắn được — cả gửi lẫn nhận.
+ * Spec §8.1 makes StallAccessPolicy fail-closed: an account with the farmer role but no
+ * farmer_profiles row is not an open stall, so it cannot be messaged — neither sending nor
+ * receiving.
  *
- * <p>Đó là hành vi đúng, nhưng nó hỏng theo kiểu im lặng: khách chỉ thấy "stall chưa mở" và không
- * ai biết nguyên nhân là một hàng DB thiếu. Cách duy nhất sinh ra dữ liệu đó là seed sai hoặc sửa
- * DB tay (FarmerService chỉ đặt role = FARMER lúc approve). Một dòng WARN lúc khởi động là đủ để
- * người dựng seed thấy ngay thay vì đi tìm trong lúc demo.
+ * <p>That is the right behavior, but it breaks silently: the customer only sees "stall not open"
+ * and nobody knows the cause is a missing DB row. The only ways that data arises are a wrong seed
+ * or a manual edit of the DB (FarmerService only sets role = FARMER on approve). One WARN line at
+ * startup is enough for the person building the seed to see it right away instead of hunting for it
+ * during a demo.
  */
 @Slf4j
 @Component

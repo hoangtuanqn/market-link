@@ -1,6 +1,9 @@
 package com.techx.intervue.services.interfaces;
 
 public interface MailServiceInterface {
-    /** Gửi mail HTML ngay (đồng bộ). Muốn không chặn request thì đẩy qua JobQueueInterface. */
+    /**
+     * Send an HTML mail right away (synchronously). To avoid blocking the request, push it through
+     * JobQueueInterface.
+     */
     void sendHtml(String to, String subject, String html);
 }

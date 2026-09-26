@@ -7,6 +7,7 @@ import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.catalog.requests.CategoryRequest;
 import com.techx.intervue.modules.catalog.resources.CategoryResource;
 import com.techx.intervue.modules.catalog.services.interfaces.CategoryServiceInterface;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
@@ -20,7 +21,10 @@ public class CategoryService implements CategoryServiceInterface {
 
     private final CategoryRepository repository;
 
-    /** "Rau củ" -> "rau-cu". Bỏ dấu tiếng Việt rồi mới hạ chữ và nối bằng gạch ngang. */
+    /**
+     * "Rau củ" -> "rau-cu". Strip Vietnamese diacritics first, then lowercase and join with
+     * hyphens.
+     */
     static String slugify(String name) {
         String plain =
                 Normalizer.normalize(name, Normalizer.Form.NFD)
@@ -71,7 +75,10 @@ public class CategoryService implements CategoryServiceInterface {
         return toResource(repository.save(category));
     }
 
-    /** Xoá mềm: sản phẩm cũ vẫn trỏ về được, chỉ biến mất khỏi bộ lọc của khách. */
+    /**
+     * Soft delete: old products can still point to it, it only disappears from the customer's
+     * filter.
+     */
     @Override
     @Transactional
     public void deactivate(long id) {
@@ -82,11 +89,15 @@ public class CategoryService implements CategoryServiceInterface {
     }
 
     private static void apply(Category category, CategoryRequest request, String slug) {
+        if (request.maxShelfLifeDays() < request.minShelfLifeDays()) {
+            throw new InvalidFieldException(
+                    "maxShelfLifeDays", "Maximum shelf life must be at least the minimum.");
+        }
         category.setName(request.name());
         category.setSlug(slug);
-        category.setDescription(request.description());
-        category.setIcon(request.icon());
         category.setSortOrder(request.sortOrder());
+        category.setMinShelfLifeDays(request.minShelfLifeDays());
+        category.setMaxShelfLifeDays(request.maxShelfLifeDays());
     }
 
     private static CategoryResource toResource(Category c) {
@@ -94,9 +105,9 @@ public class CategoryService implements CategoryServiceInterface {
                 c.getId(),
                 c.getName(),
                 c.getSlug(),
-                c.getDescription(),
-                c.getIcon(),
                 c.getSortOrder(),
-                c.isActive());
+                c.isActive(),
+                c.getMinShelfLifeDays(),
+                c.getMaxShelfLifeDays());
     }
 }

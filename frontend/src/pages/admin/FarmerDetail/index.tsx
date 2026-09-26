@@ -22,28 +22,28 @@ import Notification from '@/utils/notification';
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; data: AdminFarmerDetailType };
 type DialogKind = 'approve' | 'reject' | 'suspend' | 'reinstate';
 
-/** Mốc trong khối History; nhãn là `history.<key>`. */
+/** Milestones in the History block; the label is `history.<key>`. */
 type HistoryKey = 'suspended' | 'approved' | 'sent' | 'customer';
 
-/** Toast sau khi thao tác xong: `AdminFarmers:toast.<key>`. */
+/** Toast after an action finishes: `AdminFarmers:toast.<key>`. */
 const DONE_TOAST = { approve: 'approved', reject: 'rejected', suspend: 'suspended', reinstate: 'reinstated' } as const;
 
 const fileUrl = (path: string) => `${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${path}`;
 
-/** §6.2, §7, §8 — Admin xem chi tiết một đơn xin thành Farmer, duyệt/từ chối/đình chỉ/phục hồi. */
+/** §6.2, §7, §8 — an Admin views the detail of a Farmer application, approves/rejects/suspends/reinstates. */
 const AdminFarmerDetailPage = () => {
   const { t } = useTranslation('AdminFarmerDetail');
-  // hộp thoại, trạng thái, lý do từ chối và toast dùng chung với trang danh sách
+  // the dialogs, status, rejection reason and toast are shared with the list page
   const { t: tf } = useTranslation('AdminFarmers');
   const { id } = useParams<{ id: string }>();
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
   const [busy, setBusy] = useState(false);
   const [dialog, setDialog] = useState<DialogKind | null>(null);
-  /** Lý do dùng cho cả từ chối và đình chỉ — mỗi lúc chỉ mở được một hộp thoại. */
+  /** One reason used for both reject and suspend — only one dialog can be open at a time. */
   const [reason, setReason] = useState('');
   const [reasonError, setReasonError] = useState<string>();
 
-  // chỉ setState trong callback của promise (trạng thái ban đầu đã là loading)
+  // only setState in a promise callback (the initial state is already loading)
   const fetchDetail = useCallback(() => {
     AdminFarmerApi.detail(Number(id))
       .then((response) => setStatus({ kind: 'ready', data: response.data }))
@@ -64,8 +64,8 @@ const AdminFarmerDetailPage = () => {
   };
 
   /**
-   * Mốc lịch sử dựng từ dữ liệu thật, mới nhất ở trên. Từ chối không có mốc riêng ở đây vì nó thuộc về một lần nộp đơn
-   * cụ thể — xem khối "Lịch sử nộp đơn" ngay dưới.
+   * History milestones built from real data, newest on top. Rejection has no milestone of its own here because it
+   * belongs to one specific submission — see the "Application history" block right below.
    */
   const historyOf = (f: AdminFarmerDetailType) => {
     const entries: { key: HistoryKey; status: OrderStatus; at: string; by: string }[] = [];
@@ -82,7 +82,7 @@ const AdminFarmerDetailPage = () => {
 
   const confirmDialog = async () => {
     if (!dialog) return;
-    // Server bắt buộc reason cho cả hai (@NotBlank, tối đa 255) — chặn ở đây để admin không mất hộp thoại.
+    // The server requires a reason for both (@NotBlank, at most 255) — block it here so the admin does not lose the dialog.
     const written = reason.trim();
     if (dialog === 'reject' || dialog === 'suspend') {
       if (!written) return setReasonError(tf(`${dialog}.required`));
@@ -217,7 +217,7 @@ const AdminFarmerDetailPage = () => {
                             />
                           </a>
                         ))}
-                        {/* Video xem ngay tại chỗ, không phải mở tab mới rồi mất ngữ cảnh đang duyệt. */}
+                        {/* Video plays in place, not by opening a new tab and losing the context of the review. */}
                         {f.videoUrl && <VideoThumb url={f.videoUrl} className="size-28" />}
                       </div>
                       <p className="text-small text-ink-muted">{t('photos.hint')}</p>
@@ -246,8 +246,8 @@ const AdminFarmerDetailPage = () => {
                     </Card>
                   </section>
 
-                  {/* docs/prototype/admin/farmer.html: mỗi mốc là một chấm màu theo trạng thái + icon,
-                      rồi tiêu đề và dòng "ngày · ai làm". Mới nhất ở trên. */}
+                  {/* docs/prototype/admin/farmer.html: each milestone is a dot coloured by status + an icon,
+                      then the title and a "date · who did it" line. Newest on top. */}
                   {f.history.length > 0 && (
                     <section className="flex flex-col gap-3">
                       <h2 className="text-h2">{t('attempts.title')}</h2>
@@ -330,7 +330,7 @@ const AdminFarmerDetailPage = () => {
         }
       >
         <div className="flex flex-col gap-3">
-          {/* duyệt từ trang chi tiết nói rõ hơn: vai đổi thành Farmer, vẫn giữ mọi thứ của Customer */}
+          {/* approving from the detail page says it more clearly: the role becomes Farmer, everything of the Customer is kept */}
           <p>{dialog === 'approve' ? t('approveText') : dialog ? tf(`${dialog}.text`) : ''}</p>
           {(dialog === 'reject' || dialog === 'suspend') && (
             <ReasonField

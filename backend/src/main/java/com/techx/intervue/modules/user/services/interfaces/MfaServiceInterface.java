@@ -4,30 +4,36 @@ import com.techx.intervue.modules.user.resources.MfaSetupResource;
 import com.techx.intervue.modules.user.resources.MfaStatusResource;
 import java.util.List;
 
-/** FR-008: xác thực hai bước TOTP cho admin. */
+/** FR-008: TOTP two-step verification for admins. */
 public interface MfaServiceInterface {
 
-    /** Người vừa qua bước mật khẩu, chờ nhập mã. */
+    /** The person who just passed the password step, waiting to enter the code. */
     record PendingLogin(Long userId, boolean rememberMe) {}
 
     boolean isEnabled(Long userId);
 
-    /** Sau bước mật khẩu: lưu token chờ trong Redis, trả token gốc cho FE. */
+    /** After the password step: store a pending token in Redis, return the raw token to the FE. */
     String startChallenge(Long userId, boolean rememberMe);
 
-    /** Kiểm tra mã TOTP hoặc mã khôi phục; đúng thì huỷ token chờ và trả người đăng nhập. */
+    /**
+     * Check the TOTP code or recovery code; if correct, cancel the pending token and return the
+     * signed-in person.
+     */
     PendingLogin verifyChallenge(String mfaToken, String code, String recoveryCode);
 
     MfaStatusResource status(Long userId);
 
-    /** Tạo khoá mới (chưa bật) để quét QR. */
+    /** Create a new key (not yet on) to scan as a QR. */
     MfaSetupResource setup(Long userId, String email);
 
-    /** Xác nhận mã đầu tiên rồi bật; trả mã khôi phục một lần. */
+    /** Confirm the first code then turn on; returns the recovery codes once. */
     List<String> enable(Long userId, String code);
 
     void disable(Long userId, String code);
 
-    /** Tạo 10 mã khôi phục mới (cần mã TOTP hiện tại), mã cũ hết hiệu lực ngay. */
+    /**
+     * Create 10 new recovery codes (needs the current TOTP code), the old codes become invalid
+     * immediately.
+     */
     List<String> regenerateRecoveryCodes(Long userId, String code);
 }

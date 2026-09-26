@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-008: mã khôi phục dùng một lần, chỉ lưu SHA-256. */
+/** FR-008: single-use recovery codes, only the SHA-256 is stored. */
 @Entity
 @Getter
 @Setter

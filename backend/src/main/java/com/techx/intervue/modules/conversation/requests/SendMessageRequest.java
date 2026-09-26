@@ -4,11 +4,12 @@ import com.techx.intervue.modules.conversation.enums.MessageKind;
 import jakarta.validation.constraints.Size;
 
 /**
- * FR-110, FR-114, FR-115. kind bỏ trống = text.
+ * FR-110, FR-114, FR-115. kind left empty = text.
  *
- * <p>body không còn @NotBlank vì tin ảnh không có chữ: "phải có gì đó để gửi" là luật nghiệp vụ phụ
- * thuộc kind, nên MessageService quyết (text cần body, image cần attachmentId) và vẫn trả 400 qua
- * EmptyMessageException — mã HTTP không đổi so với trước.
+ * <p>body is no longer @NotBlank because an image message has no text: "there must be something to
+ * send" is a business rule that depends on kind, so MessageService decides (text needs body, image
+ * needs attachmentId) and still returns 400 through EmptyMessageException — the HTTP code is
+ * unchanged from before.
  */
 public record SendMessageRequest(
         MessageKind kind,

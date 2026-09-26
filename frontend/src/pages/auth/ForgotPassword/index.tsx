@@ -10,9 +10,9 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-/** Khớp app.password-reset.token-ttl-seconds (900s) của backend. */
+/** Matches the backend's app.password-reset.token-ttl-seconds (900s). */
 const LINK_TTL_MINUTES = 15;
-/** "Send it again" chỉ bấm được sau mỗi 60 giây. */
+/** "Send it again" can only be clicked after every 60 seconds. */
 const RESEND_COOLDOWN_SECONDS = 60;
 
 /** FR-007 — request a password reset link. */
@@ -25,14 +25,14 @@ const ForgotPasswordPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [cooldown, setCooldown] = useState(0);
 
-  // Đếm ngược từng giây cho tới khi được gửi lại
+  // Count down second by second until it can be sent again
   useEffect(() => {
     if (cooldown <= 0) return;
     const id = setTimeout(() => setCooldown((s) => s - 1), 1000);
     return () => clearTimeout(id);
   }, [cooldown]);
 
-  /** Gọi API; backend trả cùng một câu dù email có tài khoản hay không. */
+  /** Call the API; the backend returns the same sentence whether or not the email has an account. */
   const requestLink = async (address: string) => {
     setIsSubmitting(true);
     try {

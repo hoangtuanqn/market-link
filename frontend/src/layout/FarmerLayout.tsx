@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
+import useChatUnread from '@/hooks/useChatUnread';
 import {
   BellIcon,
   BoxIcon,
@@ -33,9 +34,8 @@ type FarmerNavKey = keyof (typeof common)['farmerNav'];
 type NavItem = { to: string; label: FarmerNavKey; icon: ComponentType<IconProps>; count?: number };
 type NavGroup = { heading: FarmerNavKey; items: NavItem[] };
 
-// Hai badge đếm còn lấy từ dữ liệu mẫu (đơn: C5, tin nhắn chưa đọc chưa nối vào sidebar) → chỉ hiện ở dev.
+// The two count badges still come from sample data (orders: C5, unread messages not yet wired into the sidebar) → shown in dev only.
 const AWAITING_COUNT = SHOW_WIP ? farmerOrders.filter((o) => o.status === 'placed').length : undefined;
-const MESSAGES_COUNT = SHOW_WIP ? 1 : undefined;
 
 const NAV: NavGroup[] = [
   {
@@ -64,7 +64,7 @@ const NAV: NavGroup[] = [
   {
     heading: 'inbox',
     items: [
-      { to: '/farmer/messages', label: 'messages', icon: ChatIcon, count: MESSAGES_COUNT },
+      { to: '/farmer/messages', label: 'messages', icon: ChatIcon },
       { to: '/farmer/notifications', label: 'notifications', icon: BellIcon },
     ],
   },
@@ -91,13 +91,20 @@ const FarmerLayout = () => {
   const { state: profileLoad } = useRequest('farmer-layout-profile', () => StallApi.myProfile());
   const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
   const stallName = profile?.stallName ?? user?.fullName ?? '';
+  // FR-113: the real unread count, replacing the hardcoded 1
+  const chatUnread = useChatUnread();
 
   const nav: ShellNavGroup[] = NAV.map((g) => ({
     heading: t(`farmerNav.${g.heading}`),
     items: g.items.map((it) => ({
       ...it,
       label: t(`farmerNav.${it.label}`),
-      count: it.to === '/farmer/notifications' ? unread : it.count,
+      count:
+        it.to === '/farmer/notifications'
+          ? unread || undefined
+          : it.to === '/farmer/messages'
+            ? chatUnread || undefined
+            : it.count,
     })),
   }));
 

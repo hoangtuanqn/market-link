@@ -1,7 +1,8 @@
 /**
- * Tuỳ chọn hiển thị (trang Settings của cả ba vai). Bản sao nằm trong localStorage để khách chưa đăng nhập cũng giữ
- * được và theme được đặt trước khi trang vẽ (script trong index.html đọc cùng khoá). Đăng nhập rồi thì bản trên server
- * (GET/PUT /auth/me/settings) thắng. Danh sách giá trị khớp backend UpdateSettingsRequest.
+ * Display preferences (the Settings page of all three roles). A copy lives in localStorage so a guest who has not
+ * signed in keeps them too and the theme is set before the page paints (the script in index.html reads the same key).
+ * Once signed in the server copy (GET/PUT /auth/me/settings) wins. The list of values matches the backend's
+ * UpdateSettingsRequest.
  */
 
 export const LANGUAGES = [
@@ -31,9 +32,9 @@ export type Settings = {
   units: Units;
   dateFormat: DateFormat;
   clock: Clock;
-  /** Id chợ trong danh sách chợ, '' = chưa chọn */
+  /** Market id in the markets list, '' = not chosen */
   preferredMarket: string;
-  /** Thông báo và khối riêng của từng vai: lưu lại, chưa có tính năng dùng tới. */
+  /** Notifications and each role's own block: saved, no feature uses them yet. */
   extras: Record<string, string>;
 };
 
@@ -48,7 +49,7 @@ export const DEFAULT_SETTINGS: Settings = {
   extras: {},
 };
 
-/** Cùng khoá với script chặn nháy sáng trong index.html. */
+/** Same key as the anti-flash script in index.html. */
 export const STORAGE_KEY = 'ml-settings';
 
 const THEMES: readonly Theme[] = ['light', 'dark', 'system'];
@@ -56,7 +57,10 @@ const CURRENCIES: readonly Currency[] = ['VND', 'USD', 'EUR', 'JPY'];
 const pick = <T extends string>(value: unknown, allowed: readonly T[], fallback: T): T =>
   allowed.includes(value as T) ? (value as T) : fallback;
 
-/** Giá trị lạ (bản cũ, sửa tay localStorage, server trả thiếu) thì về mặc định từng trường. */
+/**
+ * An unknown value (an old copy, hand-edited localStorage, the server returned it incomplete) falls back to the default
+ * per field.
+ */
 export const normalize = (raw: Partial<Settings> | null | undefined): Settings => ({
   theme: pick(raw?.theme, THEMES, DEFAULT_SETTINGS.theme),
   language: pick(
@@ -72,7 +76,7 @@ export const normalize = (raw: Partial<Settings> | null | undefined): Settings =
   extras: raw?.extras && typeof raw.extras === 'object' ? { ...raw.extras } : {},
 });
 
-/** Lần đầu vào (chưa lưu gì): lấy ngôn ngữ trình duyệt nếu có trong danh sách, không thì English. */
+/** First visit (nothing saved): take the browser language if it is in the list, otherwise English. */
 const browserLanguage = (): Language => {
   const codes = LANGUAGES.map((l) => l.code) as string[];
   for (const tag of navigator.languages ?? [navigator.language]) {
@@ -87,7 +91,7 @@ const read = (): Settings => {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return normalize(JSON.parse(raw));
   } catch {
-    // private window / JSON hỏng → mặc định
+    // private window / corrupt JSON → default
   }
   return { ...DEFAULT_SETTINGS, language: browserLanguage() };
 };
@@ -99,25 +103,25 @@ const persist = () => {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
   } catch {
-    // không lưu được thì vẫn dùng trong phiên này
+    // if it cannot be saved it is still used for this session
   }
 };
 
 const darkQuery = () => window.matchMedia('(prefers-color-scheme: dark)');
 
-/** Đặt data-theme trên <html>; "system" đi theo hệ điều hành. */
+/** Set data-theme on <html>; "system" follows the operating system. */
 export const applyTheme = (theme: Theme = current.theme) => {
   const dark = theme === 'dark' || (theme === 'system' && darkQuery().matches);
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
 };
 
-// Máy đổi sáng/tối lúc đang mở trang: chỉ ảnh hưởng người chọn "Match device"
+// The machine switches light/dark while the page is open: only affects those who chose "Match device"
 darkQuery().addEventListener('change', () => {
   if (current.theme === 'system') applyTheme();
 });
 
-// Tab khác đổi settings → đồng bộ tab này
+// Another tab changes settings → sync this tab
 window.addEventListener('storage', (e) => {
   if (e.key !== STORAGE_KEY) return;
   current = read();
@@ -135,7 +139,10 @@ const SettingsStore = {
     listeners.forEach((l) => l());
   },
 
-  /** Tạm đặt settings mà không lưu, không báo ai: chỉ để xem trước định dạng của bản nháp (SettingsPanel). */
+  /**
+   * Temporarily set settings without saving, without telling anyone: only to preview the draft's formats
+   * (SettingsPanel).
+   */
   peek(next: Settings) {
     current = next;
   },

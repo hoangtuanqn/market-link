@@ -16,7 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Liên kết một user với tài khoản Google qua provider_user_id (không qua email). */
+/** Links a user to a Google account through provider_user_id (not through email). */
 @Entity
 @Getter
 @Setter

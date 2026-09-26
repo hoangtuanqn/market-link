@@ -5,8 +5,8 @@ import useSettings from '@/hooks/useSettings';
 import SettingsStore, { LANGUAGES, type Language } from '@/lib/settings';
 
 /**
- * Chọn ngôn ngữ ở footer: ai cũng đổi được, kể cả khách chưa đăng nhập. Đã đăng nhập thì lưu luôn vào tài khoản, giống
- * mục Language trong Settings.
+ * Language picker in the footer: anyone can change it, including guests who have not signed in. When signed in it is
+ * also saved to the account, like the Language item in Settings.
  */
 const LanguageSwitcher = () => {
   const { t } = useTranslation();

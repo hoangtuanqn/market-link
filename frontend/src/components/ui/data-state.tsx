@@ -11,8 +11,8 @@ type DataStateProps = {
   text: string;
   action?: ReactNode;
   /**
-   * Chiếm hết chỗ trống còn lại và căn giữa, thay vì là một khối nhỏ nép trái. Dùng khi khối này là thứ duy nhất trong
-   * vùng nội dung — một danh sách rỗng chiếm cả trang đọc rõ hơn là một hộp bé.
+   * Takes all the remaining space and centres, instead of a small block tucked to the left. Use it when this block is
+   * the only thing in the content area — an empty list filling the whole page reads better than a small box.
    */
   fill?: boolean;
   className?: string;

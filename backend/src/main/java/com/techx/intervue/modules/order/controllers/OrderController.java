@@ -29,8 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * POST /api/v1/orders/preview, POST /api/v1/orders, GET /api/v1/orders, GET /api/v1/orders/{id}
- * (contract §7) — FR-030…033, 036, 065. D-13 / C5-4: customer và farmer đều mua và xem được; admin
- * bị chặn ở đây và cả ở service.
+ * (contract §7) — FR-030…033, 036, 065. D-13 / C5-4: customer and farmer can both buy and view;
+ * admin is blocked here and also in the service.
  */
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -40,7 +40,7 @@ public class OrderController extends BaseController {
 
     private final OrderServiceInterface orderService;
 
-    /** Giỏ sẽ được tách thành những đơn nào; vấn đề từng đơn nằm trong {@code problems}. */
+    /** Which orders the cart will be split into; each order's problems live in {@code problems}. */
     @PostMapping("/preview")
     public ResponseEntity<ApiResource<OrderPreviewResource>> preview(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -48,7 +48,7 @@ public class OrderController extends BaseController {
         return ok(new OrderPreviewResource(orderService.preview(user.getId(), request)), "");
     }
 
-    /** Đặt cả giỏ: mỗi group một đơn. Hết hàng, slot đầy, quá cutoff → 409. */
+    /** Place the whole cart: one order per group. Out of stock, slot full, past cutoff → 409. */
     @PostMapping
     public ResponseEntity<ApiResource<PlacedOrdersResource>> place(
             @AuthenticationPrincipal CustomUserDetails user,

@@ -18,9 +18,9 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * Review finding #1: hai người cùng thao tác một thread. A đang gửi tin (đã load thread) trong lúc
- * B đánh dấu đã đọc và commit. Khi A commit, UPDATE của A không được ghi đè mốc đọc B vừa lưu — nếu
- * không, badge của B hiện lại số chưa đọc của những tin B vừa đọc.
+ * Review finding #1: two people act on one thread. A is sending a message (thread already loaded)
+ * while B marks it read and commits. When A commits, A's UPDATE must not overwrite the read marker
+ * B just saved — otherwise B's badge shows the unread count again for messages B just read.
  */
 @SpringBootTest
 class ConversationReadMarkerConcurrencyTest {
@@ -68,10 +68,10 @@ class ConversationReadMarkerConcurrencyTest {
 
         outer.executeWithoutResult(
                 status -> {
-                    // A: thread được load (managed) TRƯỚC khi B đọc — như MessageService.send
+                    // A: the thread is loaded (managed) BEFORE B reads — like MessageService.send
                     Conversation mine = conversations.findById(thread.getId()).orElseThrow();
 
-                    // B: đánh dấu đã đọc và commit trong một transaction khác
+                    // B: marks read and commits in a different transaction
                     inner.executeWithoutResult(
                             s2 -> {
                                 Conversation theirs =
@@ -80,7 +80,7 @@ class ConversationReadMarkerConcurrencyTest {
                                 conversations.save(theirs);
                             });
 
-                    // A: chỉ đổi preview rồi commit
+                    // A: only changes the preview then commits
                     mine.noteNewMessage("preview", Instant.parse("2026-09-25T06:00:01Z"));
                     conversations.save(mine);
                 });

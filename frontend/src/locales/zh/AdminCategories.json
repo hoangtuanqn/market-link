@@ -13,18 +13,11 @@
     "category": "分类",
     "products": "商品数",
     "stalls": "摊位数",
-    "nameOf": "{{name}} 的名称",
-    "oneOfThem": "单数形式",
-    "moreThanOne": "复数形式",
-    "pluralOf": "{{name}} 的复数形式",
-    "kind": "类型",
-    "readsAs": "读作"
+    "nameOf": "{{name}} 的名称"
   },
   "action": {
     "save": "保存",
-    "remove": "删除",
-    "addToPicker": "加入选项列表",
-    "merge": "合并"
+    "remove": "删除"
   },
   "categoryForm": {
     "title": "添加分类",
@@ -51,8 +44,7 @@
   "toast": {
     "categorySaved": "已保存 {{name}}。",
     "categoryAdded": "分类已添加。摊位现在就能选。",
-    "categoryRemoved": "已删除 {{name}}。",
-    "promoted": "{{name}} 现在出现在所有摊位的选项列表里。"
+    "categoryRemoved": "已删除 {{name}}。"
   },
   "error": {
     "noun": "分类",

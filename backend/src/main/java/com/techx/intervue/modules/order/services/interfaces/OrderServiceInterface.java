@@ -11,13 +11,19 @@ import com.techx.intervue.resources.PageResource;
 import java.time.LocalDate;
 import java.util.List;
 
-/** FR-030…032, 033, 036, 065 — giỏ, đặt đơn, và đọc đơn cho cả hai phía (contract §7). */
+/**
+ * FR-030…032, 033, 036, 065 — cart, placing orders, and reading orders for both sides (contract
+ * §7).
+ */
 public interface OrderServiceInterface {
 
-    /** Chỉ đọc: không khoá, không đổi gì. Vấn đề của từng group nằm trong {@code problems}. */
+    /** Read-only: no locking, changes nothing. Each group's issues live in {@code problems}. */
     List<OrderGroupPreviewResource> preview(Long userIdOrNull, PreviewRequest request);
 
-    /** Một transaction: mọi đơn của lệnh được tạo, tồn kho và slot trừ xong — hoặc không gì cả. */
+    /**
+     * One transaction: every order of the call is created, stock and slots are deducted — or
+     * nothing happens at all.
+     */
     List<PlacedOrderResource> place(long customerUserId, PlaceOrderRequest request);
 
     /** {@code GET /orders} — đơn của chính người gọi với vai buyer, mới nhất trước. */

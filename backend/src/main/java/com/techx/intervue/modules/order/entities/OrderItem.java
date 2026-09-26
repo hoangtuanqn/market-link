@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Một dòng của đơn. Tên, giá và đơn vị được chép lúc đặt: Farmer đổi giá sau đó thì đơn cũ không
- * đổi theo. Bảng `order_items` (V20260926012).
+ * One line of an order. Name, price and unit are copied at order time: if the Farmer changes the
+ * price afterward, old orders do not change with it. Table `order_items` (V20260926012).
  */
 @Entity
 @Getter
@@ -48,7 +48,10 @@ public class OrderItem {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
 
-    /** Chép tên, giá, đơn vị của sản phẩm lúc này; orderId gán sau khi đơn có id. */
+    /**
+     * Copies the product's name, price, unit at this moment; orderId is assigned once the order has
+     * an id.
+     */
     public static OrderItem snapshot(Product product, int quantity, BigDecimal subtotal) {
         OrderItem item = new OrderItem();
         item.setProductId(product.getId());

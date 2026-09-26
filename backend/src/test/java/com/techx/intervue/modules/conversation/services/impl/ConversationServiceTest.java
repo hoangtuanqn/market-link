@@ -26,6 +26,8 @@ import com.techx.intervue.modules.conversation.resources.ConversationResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatEventPublisherInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.StallAccessPolicyInterface;
+import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
@@ -50,6 +52,7 @@ class ConversationServiceTest {
     ConversationRepository conversations;
     MessageRepository messages;
     UserRepository users;
+    FarmerProfileRepository farmerProfiles;
     StallAccessPolicyInterface policy;
     ChatEventPublisherInterface events;
     ChatRateLimiterInterface rateLimiter;
@@ -76,6 +79,7 @@ class ConversationServiceTest {
         conversations = mock(ConversationRepository.class);
         messages = mock(MessageRepository.class);
         users = mock(UserRepository.class);
+        farmerProfiles = mock(FarmerProfileRepository.class);
         policy = mock(StallAccessPolicyInterface.class);
         events = mock(ChatEventPublisherInterface.class);
         rateLimiter = mock(ChatRateLimiterInterface.class);
@@ -87,6 +91,7 @@ class ConversationServiceTest {
                         conversations,
                         messages,
                         users,
+                        farmerProfiles,
                         policy,
                         events,
                         new ConversationLookup(conversations),
@@ -95,6 +100,15 @@ class ConversationServiceTest {
                         rateLimiter);
         when(users.findById(7L)).thenReturn(Optional.of(customer));
         when(users.findById(3L)).thenReturn(Optional.of(farmer));
+        // the stall id (30) and the user id (3) are deliberately different — Review Focus #1
+        when(farmerProfiles.findById(30L))
+                .thenReturn(
+                        Optional.of(
+                                FarmerProfile.builder()
+                                        .id(30L)
+                                        .userId(3L)
+                                        .stallName("Cô Tư Garden")
+                                        .build()));
         when(messages.countUnreadByConversation(anyLong(), anyCollection())).thenReturn(List.of());
         when(conversations.save(any(Conversation.class)))
                 .thenAnswer(
@@ -109,7 +123,7 @@ class ConversationServiceTest {
     void openCreatesTheNormalisedPairWhenNoneExists() {
         when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
 
-        ConversationResource result = service.open(7L, new OpenConversationRequest(3L));
+        ConversationResource result = service.open(7L, new OpenConversationRequest(30L));
 
         ArgumentCaptor<Conversation> saved = ArgumentCaptor.forClass(Conversation.class);
         verify(conversations).save(saved.capture());
@@ -127,25 +141,38 @@ class ConversationServiceTest {
         existing.setId(9L);
         when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.of(existing));
 
-        ConversationResource result = service.open(7L, new OpenConversationRequest(3L));
+        ConversationResource result = service.open(7L, new OpenConversationRequest(30L));
 
         assertThat(result.id()).isEqualTo(9L);
         verify(conversations, never()).save(any());
     }
 
+    /** Review Focus #1: the stall id and the user id are two different number ranges. */
     @Test
-    void openRefusesMessagingYourself() {
-        assertThatThrownBy(() -> service.open(7L, new OpenConversationRequest(7L)))
-                .isInstanceOf(SelfConversationException.class);
-        verify(conversations, never()).save(any());
+    void openUsesTheStallOwnerNotTheProfileId() {
+        when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
+
+        ConversationResource result = service.open(7L, new OpenConversationRequest(30L));
+
+        assertThat(result.other().userId()).isEqualTo(3L);
+        verify(users, never()).findById(30L);
     }
 
     @Test
-    void openWithUnknownTargetIsNotFound() {
-        when(users.findById(99L)).thenReturn(Optional.empty());
+    void openWithUnknownStallIsNotFound() {
+        when(farmerProfiles.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.open(7L, new OpenConversationRequest(99L)))
-                .isInstanceOf(EntityNotFoundException.class);
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage("Stall not found.");
+        verify(conversations, never()).save(any());
+    }
+
+    /** Review Focus #2: a Farmer clicking "Message this stall" on their own stall. */
+    @Test
+    void openRefusesMessagingYourOwnStall() {
+        assertThatThrownBy(() -> service.open(3L, new OpenConversationRequest(30L)))
+                .isInstanceOf(SelfConversationException.class);
         verify(conversations, never()).save(any());
     }
 
@@ -154,14 +181,15 @@ class ConversationServiceTest {
         when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
         doThrow(new StallNotOpenException()).when(policy).assertCanBeMessaged(farmer);
 
-        assertThatThrownBy(() -> service.open(7L, new OpenConversationRequest(3L)))
+        assertThatThrownBy(() -> service.open(7L, new OpenConversationRequest(30L)))
                 .isInstanceOf(StallNotOpenException.class);
         verify(policy).assertCanStart(customer);
         verify(conversations, never()).save(any());
     }
 
     /**
-     * Spec 8.1 / D-09: stall bị đình chỉ thì thread cũ vẫn đọc được — mở lại phải trả thread đó.
+     * Spec 8.1 / D-09: when a stall is suspended the old thread can still be read — opening again
+     * must return that thread.
      */
     @Test
     void openReturnsAnExistingThreadEvenWhenTheStallIsNoLongerOpen() {
@@ -170,10 +198,74 @@ class ConversationServiceTest {
         when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.of(existing));
         doThrow(new StallNotOpenException()).when(policy).assertCanBeMessaged(farmer);
 
-        ConversationResource result = service.open(7L, new OpenConversationRequest(3L));
+        ConversationResource result = service.open(7L, new OpenConversationRequest(30L));
 
         assertThat(result.id()).isEqualTo(9L);
         verify(conversations, never()).save(any());
+    }
+
+    @Test
+    void aFarmerParticipantCarriesTheirStall() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
+        when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
+        when(farmerProfiles.findAllByUserIdIn(anyCollection()))
+                .thenReturn(
+                        List.of(
+                                FarmerProfile.builder()
+                                        .id(30L)
+                                        .userId(3L)
+                                        .stallName("Cô Tư Garden")
+                                        .build()));
+
+        var other = service.listMine(7L, 1, 20).items().get(0).other();
+
+        assertThat(other.stallName()).isEqualTo("Cô Tư Garden");
+        assertThat(other.farmerId()).isEqualTo(30L);
+    }
+
+    @Test
+    void aCustomerParticipantHasNoStall() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        when(conversations.findMine(eq(3L), any())).thenReturn(new PageImpl<>(List.of(c)));
+        when(users.findAllById(List.of(7L))).thenReturn(List.of(customer));
+        when(farmerProfiles.findAllByUserIdIn(anyCollection())).thenReturn(List.of());
+
+        var other = service.listMine(3L, 1, 20).items().get(0).other();
+
+        assertThat(other.stallName()).isNull();
+        assertThat(other.farmerId()).isNull();
+    }
+
+    /** "Seen" must survive a page reload: it is the OTHER person's read marker, not my own. */
+    @Test
+    void theThreadCarriesWhenTheOtherPersonLastRead() {
+        Conversation c = Conversation.between(3L, 7L);
+        c.setId(42L);
+        c.markRead(3L, NOW.minusSeconds(60));
+        c.markRead(7L, NOW);
+        when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
+        when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
+        when(farmerProfiles.findAllByUserIdIn(anyCollection())).thenReturn(List.of());
+
+        assertThat(service.listMine(7L, 1, 20).items().get(0).otherReadAt())
+                .isEqualTo(NOW.minusSeconds(60));
+    }
+
+    /**
+     * open() already has the stall profile in hand: a freshly opened thread also carries the stall
+     * name.
+     */
+    @Test
+    void anOpenedThreadNamesTheStall() {
+        when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
+
+        var other = service.open(7L, new OpenConversationRequest(30L)).other();
+
+        assertThat(other.stallName()).isEqualTo("Cô Tư Garden");
+        assertThat(other.farmerId()).isEqualTo(30L);
     }
 
     @Test
@@ -248,7 +340,8 @@ class ConversationServiceTest {
         when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
         when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
         Instant seen = Instant.parse("2026-09-25T05:48:00Z");
-        // service truyền Set (others.keySet()); Mockito so khớp bằng equals nên không stub bằng
+        // the service passes a Set (others.keySet()); Mockito matches by equals so do not stub with
+        // a
         // List
         when(presence.snapshot(argThat(ids -> ids.contains(3L))))
                 .thenReturn(Map.of(3L, new PresenceService.PresenceInfo(false, seen)));
@@ -265,15 +358,15 @@ class ConversationServiceTest {
                 .when(rateLimiter)
                 .check(7L, ChatRateLimiterInterface.Action.CONVERSATION);
 
-        assertThatThrownBy(() -> service.open(7L, new OpenConversationRequest(3L)))
+        assertThatThrownBy(() -> service.open(7L, new OpenConversationRequest(30L)))
                 .isInstanceOf(RateLimitedException.class);
         verify(conversations, never()).save(any(Conversation.class));
     }
 
     /**
-     * open() là idempotent (spec §6.1). Hạn mức §8.4 đếm "thread MỚI mỗi giờ", nên mở lại một
-     * thread đã có không được tiêu lượt — nếu không, FE gọi POST /conversations mỗi lần mở khung
-     * chat sẽ tự khoá người dùng khỏi chính cuộc trò chuyện của họ.
+     * open() is idempotent (spec §6.1). The §8.4 limit counts "NEW threads per hour", so reopening
+     * an existing thread must not use up a slot — otherwise the FE calling POST /conversations
+     * every time it opens the chat frame would lock users out of their own conversation.
      */
     @Test
     void reopeningAnExistingThreadDoesNotSpendARateLimitToken() {
@@ -282,7 +375,7 @@ class ConversationServiceTest {
         when(conversations.findByUserAIdAndUserBId(anyLong(), anyLong()))
                 .thenReturn(Optional.of(existing));
 
-        service.open(7L, new OpenConversationRequest(3L));
+        service.open(7L, new OpenConversationRequest(30L));
 
         verify(rateLimiter, never())
                 .check(
@@ -295,7 +388,7 @@ class ConversationServiceTest {
         when(conversations.findByUserAIdAndUserBId(anyLong(), anyLong()))
                 .thenReturn(Optional.empty());
 
-        service.open(7L, new OpenConversationRequest(3L));
+        service.open(7L, new OpenConversationRequest(30L));
 
         verify(rateLimiter).check(7L, ChatRateLimiterInterface.Action.CONVERSATION);
     }

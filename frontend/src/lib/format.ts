@@ -1,7 +1,8 @@
 /**
  * Formatting helpers that follow the MarketLink design system (docs/design-system/README.md → Voice), and the reader's
- * Settings (src/lib/settings.ts): language, date format, clock, currency shown next to ₫, metric or imperial. Every
- * page goes through these, so a setting changes the whole app in one place.
+ * Settings (src/lib/settings.ts): language, date format, clock, metric or imperial. Every page goes through these, so a
+ * setting changes the whole app in one place. Currency is locked to USD (user decision 2026-09-26) — no per-reader
+ * choice any more, see `money()`.
  */
 import SettingsStore from './settings';
 
@@ -12,30 +13,21 @@ const settings = () => SettingsStore.get();
 const locale = () => settings().language;
 
 /**
- * Reading-only conversion rates (VND per unit). Stalls are always paid in đồng; these are approximate and fixed on
- * RATES_DATE — check them before a release (there is no live rate source).
+ * Locked to USD (user decision 2026-09-26) — no per-reader currency choice any more. `amount` is a plain number of
+ * dollars, not cents. Kept a new name (not the old `vnd`) so nobody misreads what a call site formats.
  */
-export const RATES_DATE = '25/09/2026';
-const RATES: Record<'USD' | 'EUR' | 'JPY', { vnd: number; digits: number }> = {
-  USD: { vnd: 26_300, digits: 2 },
-  EUR: { vnd: 30_800, digits: 2 },
-  JPY: { vnd: 178, digits: 0 },
-};
-
-/** 25000 → "25,000 ₫" (grouping follows the language); with another currency chosen: "25,000 ₫ ≈ $0.95". */
-export function vnd(amount: number): string {
-  const base = `${new Intl.NumberFormat(locale(), { maximumFractionDigits: 0 }).format(Math.round(amount))}\u00a0₫`;
-  const { currency } = settings();
-  if (currency === 'VND') return base;
-  const rate = RATES[currency];
-  const converted = new Intl.NumberFormat(locale(), {
+export function money(amount: number): string {
+  return new Intl.NumberFormat(locale(), {
     style: 'currency',
-    currency,
-    maximumFractionDigits: rate.digits,
-    minimumFractionDigits: rate.digits,
-  }).format(amount / rate.vnd);
-  return `${base} ≈\u00a0${converted}`;
+    currency: 'USD',
+    maximumFractionDigits: 2,
+  }).format(amount);
 }
+
+/** Alias to money() locked to USD across the entire application. */
+export const vnd = money;
+export const usd = money;
+export const RATES_DATE = '26/09/2026';
 
 /* ---------- units ---------- */
 
@@ -63,10 +55,10 @@ export function unitName(unit: string): string {
   return imperialFor(unit)?.unit ?? unit;
 }
 
-/** Price per sale unit in the reader's units: (45000, 'kg') → "45,000 ₫ / kg", or "20,412 ₫ / lb". */
+/** Price per sale unit in the reader's units: (4.5, 'kg') → "$4.50 / kg", or "$2.04 / lb". */
 export function perUnit(price: number, unit: string): string {
   const to = imperialFor(unit);
-  return to ? `${vnd(price / to.factor)} / ${to.unit}` : `${vnd(price)} / ${unit}`;
+  return to ? `${money(price / to.factor)} / ${to.unit}` : `${money(price)} / ${unit}`;
 }
 
 /** The price of one sale unit converted like `perUnit`, for components that lay the number and the unit out apart. */

@@ -26,14 +26,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * FR-007: quên mật khẩu bằng token lưu trong Redis (TTL 15 phút). Redis chỉ giữ sha256(token),
- * token gốc chỉ nằm trong mail.
+ * FR-007: forgot password with a token stored in Redis (TTL 15 minutes). Redis only keeps
+ * sha256(token), the raw token only lives in the email.
  *
  * <pre>
- * ratelimit:pwreset:{email}   số lần yêu cầu trong cửa sổ 1 giờ
- * ratelimit:pwreset-ip:{ip}   số lần yêu cầu từ một IP trong cửa sổ 1 giờ
+ * ratelimit:pwreset:{email}   number of requests in a 1-hour window
+ * ratelimit:pwreset-ip:{ip}   number of requests from one IP in a 1-hour window
  * pwreset:token:{hash}        → user_id
- * pwreset:user:{user_id}      → hash (để xoá token cũ khi yêu cầu lại)
+ * pwreset:user:{user_id}      → hash (to delete the old token on a new request)
  * </pre>
  */
 @Slf4j
@@ -62,14 +62,15 @@ public class PasswordResetService implements PasswordResetServiceInterface {
     private final SecureRandom secureRandom = new SecureRandom();
 
     /**
-     * Bước A. Không tra DB ở đây: mọi email (có hay không tồn tại) đều đi cùng một đường, việc tra
-     * user + tạo token + gửi mail do worker làm nên thời gian phản hồi không lộ gì.
+     * Step A. No DB lookup here: every email (existing or not) takes the same path, the user lookup
+     * + token creation + email sending is done by the worker so the response time reveals nothing.
      */
     @Override
     public void requestReset(String email, String clientIp) {
         String normalized = normalize(email);
-        // Theo IP trước: một IP gửi hàng loạt email khác nhau thì mỗi email chỉ 1 lần nên lọt
-        // giới hạn theo email, nhưng vẫn làm đầy Redis / hàng đợi mail
+        // By IP first: an IP sending many different emails uses each email only once so it slips
+        // under the
+        // per-email limit, yet still fills up Redis / the mail queue
         if (isRateLimited(RATE_LIMIT_IP_PREFIX + clientIp, config.getMaxRequestsPerIp())
                 || isRateLimited(RATE_LIMIT_PREFIX + normalized, config.getMaxRequests())) {
             log.info("Password reset rate limit exceeded, request dropped");
@@ -78,7 +79,10 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         jobQueue.enqueue(JOB_SEND_LINK, Map.of("email", normalized));
     }
 
-    /** INCR, lần đầu thì đặt EXPIRE. Nếu key bị mất TTL (crash giữa hai lệnh) thì đặt lại. */
+    /**
+     * INCR, set EXPIRE the first time. If the key lost its TTL (a crash between the two commands)
+     * set it again.
+     */
     private boolean isRateLimited(String key, long maxRequests) {
         Long count = redis.opsForValue().increment(key);
         Duration window = Duration.ofSeconds(config.getWindowSeconds());
@@ -90,7 +94,7 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         return count != null && count > maxRequests;
     }
 
-    /** Bước B. Chỉ tài khoản đang hoạt động mới được cấp token. */
+    /** Step B. Only an active account gets a token. */
     @Override
     public Optional<IssuedResetToken> issueToken(String email) {
         Optional<User> found =
@@ -111,7 +115,7 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         return Optional.of(new IssuedResetToken(user.getEmail(), user.getFullName(), rawToken));
     }
 
-    /** Chỉ GET (không GETDEL): link vẫn dùng được cho resetPassword sau khi form hiện ra. */
+    /** GET only (not GETDEL): the link still works for resetPassword after the form appears. */
     @Override
     public String verifyToken(String rawToken) {
         String userId = redis.opsForValue().get(TOKEN_PREFIX + tokenHashUtil.hash(rawToken));
@@ -124,12 +128,13 @@ public class PasswordResetService implements PasswordResetServiceInterface {
     }
 
     /**
-     * Bước C + D. GETDEL nên token chỉ dùng được đúng một lần, kể cả khi gửi hai request cùng lúc.
+     * Steps C + D. GETDEL so the token can only be used exactly once, even when two requests are
+     * sent at the same time.
      */
     @Override
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
-        // Kiểm tra trước GETDEL để nhập sai "nhập lại mật khẩu" không làm mất token
+        // Check before GETDEL so mistyping "confirm password" does not lose the token
         if (!request.newPassword().equals(request.confirmPassword())) {
             throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
         }
@@ -148,19 +153,22 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
 
-        // Bước D: huỷ mọi phiên. Refresh token bị thu hồi ở DB (cùng transaction); phần Redis và
+        // Step D: revoke every session. Refresh tokens are revoked in the DB (same transaction);
+        // the Redis part and the
         // mail
-        // chỉ chạy sau khi commit. Commit lỗi thì trả lại token để user thử lại bằng chính link
-        // này.
+        // only run after commit. If the commit fails, give the token back so the user can retry
+        // with this same
+        // link.
         refreshTokenRepository.revokeAllRefreshTokenByUser(user.getId());
         Long id = user.getId();
         String email = user.getEmail();
         TransactionHelper.afterCompletion(
                 () -> {
-                    // Xoá luôn token khác còn treo (nếu user bấm "gửi lại" sau khi đã nhận link
-                    // này)
+                    // Also delete any other pending token (if the user pressed "resend" after
+                    // already receiving this
+                    // link)
                     deletePendingToken(id);
-                    // JwtAuthFilter từ chối mọi access token cấp trước thời điểm này
+                    // JwtAuthFilter rejects every access token issued before this moment
                     userSessionCache.revokeAll(id);
                     jobQueue.enqueue(JOB_NOTIFY_CHANGED, Map.of("email", email));
                 },

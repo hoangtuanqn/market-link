@@ -49,9 +49,13 @@
   },
   "photo": {
     "label": "Foto",
-    "none": "Aún no hay foto. Hasta que añadas una, la etiqueta muestra la categoría escrita a mano.",
-    "choose": "Elegir foto",
-    "hint": "JPG o PNG, 4:3, hasta 5 MB. De cerca, con luz natural, sobre madera o papel."
+    "add": "Añadir foto",
+    "replace": "Cambiar foto",
+    "remove": "Quitar foto",
+    "uploading": "Subiendo",
+    "uploadInProgress": "Espera a que termine de subirse la foto antes de guardar.",
+    "alt": "Foto del producto",
+    "hint": "JPEG, PNG o WEBP, hasta 8 MB. De cerca, con luz natural, sobre madera o papel."
   },
   "save": "Guardar producto",
   "add": "Añadir producto",

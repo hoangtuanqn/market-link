@@ -20,7 +20,7 @@ describe('ThreadList', () => {
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
-  /** Review Focus #5: người dùng mới, chưa nhắn ai. */
+  /** Review Focus #5: a new user who has messaged nobody yet. */
   it('shows an empty state with something to do', () => {
     render(
       <ThreadList threads={[]} activeId={null} onPick={vi.fn()} loading={false} error={false} onRetry={vi.fn()} />,
@@ -85,5 +85,41 @@ describe('ThreadList', () => {
     await userEvent.click(screen.getByRole('button', { name: /cô tư/i }));
 
     expect(onPick).toHaveBeenCalledWith(7);
+  });
+
+  /** More than 20 threads: there must be a way to reach threads older than the first page. */
+  it('shows a way to load more conversations', async () => {
+    const onLoadMore = vi.fn();
+    render(
+      <ThreadList
+        threads={[thread(1)]}
+        activeId={null}
+        onPick={vi.fn()}
+        loading={false}
+        error={false}
+        onRetry={vi.fn()}
+        hasMore
+        onLoadMore={onLoadMore}
+      />,
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /load more conversations/i }));
+
+    expect(onLoadMore).toHaveBeenCalled();
+  });
+
+  it('offers no more button once every conversation is shown', () => {
+    render(
+      <ThreadList
+        threads={[thread(1)]}
+        activeId={null}
+        onPick={vi.fn()}
+        loading={false}
+        error={false}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    expect(screen.queryByRole('button', { name: /load more conversations/i })).not.toBeInTheDocument();
   });
 });

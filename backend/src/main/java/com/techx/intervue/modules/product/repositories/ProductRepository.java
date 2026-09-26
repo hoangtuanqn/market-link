@@ -14,12 +14,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByIdAndDeletedFalse(Long id);
 
     /**
-     * Khoá dòng sản phẩm cho tới hết transaction. Không có nó thì hai đơn cùng đọc stock = 1, cùng
-     * thấy đủ, cùng trừ, và tồn kho xuống âm (Review focus #1).
+     * Locks the product row until the transaction ends. Without it, two orders both read stock = 1,
+     * both see enough, both deduct, and stock goes negative (Review focus #1).
      *
-     * <p>{@code order by p.id} không phải để sắp xếp kết quả: nó ép mọi transaction khoá các dòng
-     * theo cùng thứ tự, nên hai đơn có chung hai sản phẩm không khoá chéo nhau thành deadlock
-     * (C5-2).
+     * <p>{@code order by p.id} is not there to sort the result: it forces every transaction to lock
+     * rows in the same order, so two orders sharing two products do not lock each other into a
+     * deadlock (C5-2).
      */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from Product p where p.id in :ids order by p.id")

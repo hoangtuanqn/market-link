@@ -5,9 +5,10 @@ import useSettings from '@/hooks/useSettings';
 import SettingsStore, { normalize } from '@/lib/settings';
 
 /**
- * - Đăng nhập (hoặc mở lại trang khi còn phiên) → lấy settings của tài khoản, bản server thắng bản trên máy.
- * - Ngôn ngữ, tiền tệ, đơn vị, ngày giờ đổi → dựng lại trang đang mở, vì format.ts đọc settings lúc render. Theme không
- *   cần: nó chỉ là data-theme trên <html>.
+ * - Sign in (or reopen the page while a session exists) → fetch the account's settings, the server copy wins over the one
+ *   on the machine.
+ * - Language, currency, units, date/time change → rebuild the open page, because format.ts reads settings at render.
+ *   Theme does not need it: it is only data-theme on <html>.
  */
 const SettingsSync = ({ children }: { children: ReactNode }) => {
   const { user } = useSession();
@@ -22,7 +23,7 @@ const SettingsSync = ({ children }: { children: ReactNode }) => {
         if (!cancelled && res.data) SettingsStore.set(normalize(res.data));
       })
       .catch(() => {
-        // chưa có mạng / backend cũ chưa có API → dùng bản trên máy
+        // no network / an old backend without the API → use the copy on the machine
       });
     return () => {
       cancelled = true;

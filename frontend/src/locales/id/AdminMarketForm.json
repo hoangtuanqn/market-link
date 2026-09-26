@@ -21,7 +21,17 @@
     "lat": "Lintang",
     "lng": "Bujur",
     "lngHint": "Atau geser penanda. Data peta berasal dari OpenStreetMap.",
-    "notes": "Catatan untuk lapak"
+    "notes": "Catatan untuk lapak",
+    "images": "Foto"
+  },
+  "images": {
+    "add": "Tambah foto",
+    "hint": "JPEG, PNG, atau WEBP, maksimal 8 MB per foto. Tambahkan hingga {{max}} foto; foto pertama menjadi foto sampul.",
+    "tooMany": "Tambahkan maksimal {{max}} foto.",
+    "uploadInProgress": "Tunggu sampai foto selesai diunggah sebelum menyimpan.",
+    "uploading": "Sedang mengunggah",
+    "photoLabel": "Foto pasar {{n}}",
+    "remove": "Hapus foto {{n}}"
   },
   "pin": {
     "label": "Tandai lokasi pasar",
@@ -32,7 +42,9 @@
     "cancel": "Batal"
   },
   "toast": {
-    "saved": "{{name}} tersimpan."
+    "saved": "{{name}} tersimpan.",
+    "fixTitle": "Periksa formulir",
+    "fix": "Kami menandai bagian yang masih kurang."
   },
   "closures": {
     "title": "Hari tutup",
@@ -88,6 +100,7 @@
     "noun": "pasar",
     "required": "Kolom ini wajib diisi.",
     "days": "Pilih setidaknya satu hari operasional.",
-    "close": "Waktu tutup harus setelah waktu buka."
+    "close": "Waktu tutup harus setelah waktu buka.",
+    "images": "Tambahkan setidaknya satu foto pasar."
   }
 }

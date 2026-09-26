@@ -21,6 +21,7 @@ import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
+import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
@@ -87,7 +88,7 @@ class ProductServiceTest {
 
     private static ProductRequest request() {
         return new ProductRequest(
-                1L, "Rau muống", "Cắt sáng", new BigDecimal("12000"), "bó", 40, null);
+                1L, "Rau muống", "Cắt sáng", new BigDecimal("12000"), "bó", 40, null, 4);
     }
 
     private void approvedStall() {
@@ -95,7 +96,10 @@ class ProductServiceTest {
         when(categories.findById(1L)).thenReturn(Optional.of(leafyGreens()));
     }
 
-    /** D-09 / contract §4: chưa duyệt thì không đăng bán được — 403 kèm đúng câu. */
+    /**
+     * D-09 / contract §4: not approved means it cannot be posted for sale — 403 with the right
+     * sentence.
+     */
     @Test
     void createRejectsStallNotApproved() {
         when(farmers.findByUserId(USER_ID)).thenReturn(Optional.of(stall(ApprovalStatus.PENDING)));
@@ -107,8 +111,8 @@ class ProductServiceTest {
     }
 
     /**
-     * Review focus #3: giám khảo đổi id trên URL → 403, không phải 404 (đơn của người khác có
-     * thật).
+     * Review focus #3: the examiner changes the id in the URL → 403, not 404 (someone else's order
+     * really exists).
      */
     @Test
     void updateOnAnotherFarmersProductIs403() {
@@ -135,7 +139,7 @@ class ProductServiceTest {
         verify(products, never()).deleteById(any());
     }
 
-    /** FR-064: "sold out" là trạng thái, không phải tồn kho — hai khái niệm khác nhau. */
+    /** FR-064: "sold out" is a status, not stock — two different concepts. */
     @Test
     void setStatusSoldOutDoesNotTouchStock() {
         approvedStall();
@@ -171,7 +175,10 @@ class ProductServiceTest {
         verify(products).save(p);
     }
 
-    /** FR-074: chỉ admin gỡ được cờ ẩn; Farmer đổi trạng thái không đụng tới nó. */
+    /**
+     * FR-074: only an admin can clear the hide flag; a Farmer changing the status does not touch
+     * it.
+     */
     @Test
     void farmerCannotUnhideWhatAdminHid() {
         approvedStall();
@@ -187,7 +194,38 @@ class ProductServiceTest {
         assertThat(p.getHiddenReason()).isEqualTo("Vi phạm.");
     }
 
-    /** Danh sách của Farmer bỏ sản phẩm đã xoá mềm, nhưng vẫn hiện sản phẩm bị ẩn kèm lý do. */
+    /**
+     * A Farmer opens the edit form for their own product — does not require the stall to be
+     * approved, like {@code mine()}.
+     */
+    @Test
+    void mineOneReturnsOwnProductEvenWhenStallSuspended() {
+        when(farmers.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
+        when(categories.findById(1L)).thenReturn(Optional.of(leafyGreens()));
+        Product p = product(FARMER_ID);
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+
+        FarmerProductResource resource = service.mineOne(USER_ID, PRODUCT_ID);
+
+        assertThat(resource.item().id()).isEqualTo(PRODUCT_ID);
+    }
+
+    /** Review focus #3, applied to GET: the examiner changes the id in the URL → 403, not 404. */
+    @Test
+    void mineOneOnAnotherFarmersProductIs403() {
+        approvedStall();
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID))
+                .thenReturn(Optional.of(product(OTHER_FARMER_ID)));
+
+        assertThatThrownBy(() -> service.mineOne(USER_ID, PRODUCT_ID))
+                .isInstanceOf(ProductNotYoursException.class);
+    }
+
+    /**
+     * The Farmer's list skips soft-deleted products, but still shows hidden products with the
+     * reason.
+     */
     @Test
     void mineReturnsDeletedProductsNever() {
         assertThat(ProductQueryRepository.MINE_SQL).contains("p.is_deleted = FALSE");

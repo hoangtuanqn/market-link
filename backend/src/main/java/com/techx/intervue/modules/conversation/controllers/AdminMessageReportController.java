@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-116 — chỉ Admin. **Không có endpoint nào đọc một conversationId tuỳ ý** (spec §8.3): mọi thứ
- * admin thấy đều bắt đầu từ một báo cáo.
+ * FR-116 — Admin only. **No endpoint reads an arbitrary conversationId** (spec §8.3): everything an
+ * admin sees starts from a report.
  */
 @Validated
 @RestController
@@ -52,9 +52,9 @@ public class AdminMessageReportController extends BaseController {
     }
 
     /**
-     * Không có trong bảng API của spec §6.1, thêm có chủ ý: hàng đợi lọc theo status=new, nên nếu
-     * không có cách chuyển một báo cáo sang reviewed thì mọi báo cáo admin xem rồi quyết định KHÔNG
-     * ẩn sẽ nằm lại `new` mãi và hàng đợi thành vô dụng sau vài ngày.
+     * Not in the API table of spec §6.1, added on purpose: the queue is filtered by status=new, so
+     * if there is no way to move a report to reviewed, every report an admin looked at and decided
+     * NOT to hide would stay `new` forever and the queue becomes useless after a few days.
      */
     @PatchMapping("/{id}/dismiss")
     public ResponseEntity<ApiResource<MessageReportResource>> dismiss(
@@ -62,7 +62,7 @@ public class AdminMessageReportController extends BaseController {
         return ok(moderation.dismiss(admin.getId(), id), "Report dismissed.");
     }
 
-    /** Giá trị lạ → 400 qua handler, không âm thầm trả về cả danh sách. */
+    /** An unknown value → 400 through the handler, instead of silently returning the whole list. */
     private static ReportStatus parseStatus(String status) {
         if (status == null || status.isBlank()) {
             return null;

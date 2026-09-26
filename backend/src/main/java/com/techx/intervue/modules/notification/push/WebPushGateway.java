@@ -9,8 +9,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.stereotype.Component;
 
 /**
- * Giữ PushService của thư viện web-push khi đã cấu hình khoá VAPID. Không có khoá thì push tắt, app
- * vẫn chạy như trước (giống app.chat.rabbitmq.host rỗng → simple broker).
+ * Holds the web-push library's PushService once VAPID keys are configured. Without keys push is off
+ * and the app keeps running as before (like an empty app.chat.rabbitmq.host → simple broker).
  */
 @Slf4j
 @Component
@@ -45,7 +45,10 @@ public class WebPushGateway {
         return Optional.ofNullable(pushService);
     }
 
-    /** Khoá public cho FE (pushManager.subscribe applicationServerKey); null khi push tắt. */
+    /**
+     * The public key for the FE (pushManager.subscribe applicationServerKey); null when push is
+     * off.
+     */
     public String publicKey() {
         return pushService == null ? null : properties.vapidPublicKey();
     }

@@ -35,7 +35,7 @@ public class RedisConfig {
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
-        // cấu hình thêm
+        // additional configuration
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());
 
@@ -58,9 +58,11 @@ public class RedisConfig {
         RedisURI uri = RedisURI.create(url);
         uri.setTimeout(Duration.ofSeconds(2));
         RedisClient client = RedisClient.create(uri);
-        // Redis chết thì rate limit fail-open (Bucket4jChatRateLimiter). Timeout mặc định của
-        // Lettuce là 10s, đủ để mỗi lần gửi tin treo 10 giây trong lúc Redis còn sập — cắt xuống
-        // 2s để "mất lớp chống spam" không biến thành "chat đứng hình".
+        // If Redis is down, the rate limit fails open (Bucket4jChatRateLimiter). Lettuce's default
+        // timeout is
+        // 10s, enough to make every message send hang for 10 seconds while Redis is still down —
+        // cut it down to
+        // 2s so that "lost the anti-spam layer" does not turn into "chat freezes".
         client.setOptions(
                 ClientOptions.builder()
                         .socketOptions(
@@ -72,14 +74,16 @@ public class RedisConfig {
     }
 
     /**
-     * FR-115 / spec §8.4: bucket4j lưu bucket trên Redis qua RedisClient đã có. Khoá là chuỗi nên
-     * bọc ProxyManager&lt;byte[]&gt; lại bằng withMapper để service không phải tự đổi kiểu.
+     * FR-115 / spec §8.4: bucket4j keeps its buckets in Redis through the existing RedisClient. The
+     * key is a string, so wrap ProxyManager&lt;byte[]&gt; with withMapper so the service does not
+     * have to convert the type itself.
      *
-     * <p><b>@Lazy là bắt buộc, không phải tối ưu.</b> builderFor(RedisClient) gọi thẳng
-     * redisClient.connect(...) — nối ngay lúc tạo bean. Không lười thì Redis chưa lên lúc khởi động
-     * sẽ làm hỏng cả context: sản phẩm, đăng nhập, đơn hàng đều chết theo, chứ không riêng chat.
-     * Lười thì lần dùng đầu mới nối, và lỗi lúc đó rơi vào nhánh fail-open của
-     * Bucket4jChatRateLimiter. RedisDownStartupTest ghim điều này.
+     * <p><b>@Lazy is required, not an optimization.</b> builderFor(RedisClient) calls
+     * redisClient.connect(...) directly — it connects the moment the bean is created. Without
+     * laziness, a Redis that is not up at startup would break the whole context: products, login,
+     * orders all die with it, not just chat. With laziness the first use connects, and the failure
+     * at that point falls into the fail-open branch of Bucket4jChatRateLimiter.
+     * RedisDownStartupTest pins this down.
      */
     @Lazy
     @Bean

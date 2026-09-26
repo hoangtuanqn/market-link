@@ -6,8 +6,9 @@ import jakarta.persistence.Converter;
 import java.util.Locale;
 
 /**
- * Loại thông báo (spec §3). persistent = có lưu vào bảng notifications (hiện ở /notifications và số
- * trên chuông); tin nhắn chat và "Gửi thử" chỉ đẩy ra màn hình.
+ * Notification kind (spec §3). persistent = stored in the notifications table (shown at
+ * /notifications and in the bell count); chat messages and "Send test" are only pushed to the
+ * screen.
  */
 public enum NotificationKind {
     ANNOUNCEMENT(NotificationCategory.ANNOUNCEMENTS, true),
@@ -23,7 +24,7 @@ public enum NotificationKind {
     ORDER_READY(NotificationCategory.ORDERS, true),
     ORDER_CANCELLED(NotificationCategory.ORDERS, true),
     MESSAGE(NotificationCategory.MESSAGES, false),
-    /** Nút "Gửi thử" trong Settings — không thuộc nhóm nào, luôn hiện. */
+    /** The "Send test" button in Settings — belongs to no category, always shown. */
     TEST(null, false);
 
     private final NotificationCategory category;

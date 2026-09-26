@@ -13,7 +13,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * FR-073 chợ phiên; FR-010/FR-012 khách duyệt và xem trên bản đồ. Bảng `markets` (V20260926008).
+ * FR-073 periodic markets; FR-010/FR-012 customers browse them and view them on the map. Table
+ * `markets` (V20260926008).
  */
 @Entity
 @Getter
@@ -44,7 +45,7 @@ public class Market {
     @Column(nullable = false, precision = 11, scale = 8)
     private BigDecimal longitude;
 
-    /** D-12: luôn 'osm'. Giữ cột theo schema gợi ý của đề. */
+    /** D-12: always 'osm'. Keep the column per the schema suggested by the brief. */
     @Column(name = "map_provider", nullable = false, length = 30)
     private String mapProvider = "osm";
 
@@ -57,7 +58,7 @@ public class Market {
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
-    /** Xoá mềm: orders.market_id là FK không nullable, không xoá dòng được. */
+    /** Soft delete: orders.market_id is a non-nullable FK, so the row cannot be deleted. */
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 }

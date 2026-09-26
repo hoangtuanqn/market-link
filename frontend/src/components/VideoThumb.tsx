@@ -6,21 +6,22 @@ import { Dialog } from '@/components/ui/dialog';
 import Helper from '@/utils/helper';
 
 type VideoThumbProps = {
-  /** Đường dẫn do server trả về, ví dụ `/uploads/farmer-applications/abc.mp4`. */
+  /** A path returned by the server, e.g. `/uploads/farmer-applications/abc.mp4`. */
   url: string;
   /**
-   * Khung hình dựng sẵn từ file trên máy. Chỉ có lúc người dùng vừa chọn video; đọc lại từ server thì không dựng được
-   * bằng canvas (khác origin) nên để trống và thẻ video tự lấy khung đầu.
+   * A frame built ahead from the file on the machine. Only available right when the user has just picked the video;
+   * when read back from the server it cannot be built with a canvas (different origin) so leave it empty and the video
+   * tag takes the first frame itself.
    */
   poster?: string | null;
-  /** Kích thước ô: mặc định vuông để xếp cùng hàng với ảnh, `size` cho một ô to hơn trong form. */
+  /** Tile size: square by default to line up with images in a row, `size` for a larger tile in a form. */
   className?: string;
   big?: boolean;
 };
 
 const apiBase = () => import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
 
-/** Ảnh đại diện của một video kèm hộp thoại xem lại, dùng chung cho người nộp đơn và Admin duyệt. */
+/** A video's thumbnail with a review dialog, shared by the applicant and the reviewing Admin. */
 export function VideoThumb({ url, poster, className, big = false }: VideoThumbProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -41,7 +42,7 @@ export function VideoThumb({ url, poster, className, big = false }: VideoThumbPr
         {poster ? (
           <img src={poster} alt="" className="size-full object-cover" />
         ) : (
-          // #t=0.5 để trình duyệt tua tới nửa giây rồi vẽ khung đó — khung 0 giây hay bị đen.
+          // #t=0.5 makes the browser seek to half a second and draw that frame — the 0-second frame is often black.
           <video src={`${src}#t=0.5`} preload="metadata" muted playsInline className="size-full object-cover" />
         )}
         <span
@@ -65,7 +66,7 @@ export function VideoThumb({ url, poster, className, big = false }: VideoThumbPr
           </Button>
         }
       >
-        {/* Chỉ dựng thẻ video khi hộp thoại mở: đóng lại là gỡ khỏi DOM, tiếng không chạy tiếp phía sau. */}
+        {/* Only build the video tag when the dialog is open: closing removes it from the DOM, so sound does not keep playing behind it. */}
         {open && (
           <video
             src={src}

@@ -28,8 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-110, FR-113, FR-114 — chat người-với-người. Khác hẳn chatbot ở /api/v1/chat (FR-090). Mọi
- * route đều cần đăng nhập (SecurityConfig: anyRequest().authenticated()).
+ * FR-110, FR-113, FR-114 — person-to-person chat. Quite different from the chatbot at /api/v1/chat
+ * (FR-090). Every route requires sign-in (SecurityConfig: anyRequest().authenticated()).
  */
 @Validated
 @RestController

@@ -109,7 +109,9 @@ class MessageReportServiceTest {
         verify(reports, never()).save(any(MessageReport.class));
     }
 
-    /** Spec §8.5: người gửi không xoá được tin, nên cũng không tự báo cáo tin của mình. */
+    /**
+     * Spec §8.5: a sender cannot delete a message, so they cannot report their own message either.
+     */
     @Test
     void youCannotReportYourOwnMessage() {
         assertThatThrownBy(
@@ -135,9 +137,9 @@ class MessageReportServiceTest {
     }
 
     /**
-     * Kiểm quyền phải chạy TRƯỚC kiểm "đã bị ẩn". Nếu ngược lại, người ngoài thread nhận 404 cho
-     * tin đã ẩn và 403 cho tin đang hiện — tức là đoán được trạng thái kiểm duyệt của một tin họ
-     * không có quyền biết là có tồn tại.
+     * The permission check must run BEFORE the "already hidden" check. Otherwise an outsider gets
+     * 404 for a hidden message and 403 for a visible one — i.e. they could guess the moderation
+     * state of a message they have no right to know exists.
      */
     @Test
     void anOutsiderGetsForbiddenEvenWhenTheMessageIsAlreadyHidden() {
@@ -165,7 +167,7 @@ class MessageReportServiceTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    /** Tin đã bị ẩn đã biến mất khỏi danh sách rồi; không có gì để báo cáo nữa. */
+    /** A hidden message has already disappeared from the list; there is nothing left to report. */
     @Test
     void anAlreadyHiddenMessageIsNotFoundForAMember() {
         when(messages.findById(101L)).thenReturn(Optional.of(messageFrom(3L, NOW)));

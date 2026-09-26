@@ -1,9 +1,9 @@
-# Git hook dùng chung cho cả team — cài bằng `npm install` ở root (hoặc `make init`)
-# Luật: CONTRIBUTING.md §0. Không dùng --no-verify để né hook.
+# Git hooks shared by the whole team — install with `npm install` at the root (or `make init`)
+# Rules: CONTRIBUTING.md §0. Do not use --no-verify to dodge the hooks.
 pre-commit:
   parallel: true
   commands:
-    # H-3, H-7: không commit trên main/dev, không commit file bí mật
+    # H-3, H-7: no commits on main/dev, no committing secret files
     branch-guard:
       run: bash scripts/git-guard.sh pre-commit
     frontend-format:
@@ -17,9 +17,15 @@ pre-commit:
       run: ./mvnw -q spotless:apply
       stage_fixed: true
 
+commit-msg:
+  commands:
+    # R-10: commit messages are 100% English
+    english-only:
+      run: bash scripts/git-guard.sh commit-msg {1}
+
 pre-push:
   commands:
-    # H-4: không push thẳng / xoá main, dev
+    # H-4: no direct push / deleting main, dev
     branch-guard:
       run: bash scripts/git-guard.sh pre-push
       use_stdin: true

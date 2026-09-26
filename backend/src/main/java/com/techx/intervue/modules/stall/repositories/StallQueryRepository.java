@@ -18,15 +18,15 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Đọc stall kèm chợ và khung giờ. JdbcTemplate vì gộp 3–4 bảng trong một lượt; mọi giá trị người
- * dùng đi qua tham số (R-04). Module stall không import module catalog — chợ chỉ được chạm tới bằng
- * SQL ở đây.
+ * Reads stalls with their market and time windows. JdbcTemplate because it joins 3–4 tables in one
+ * pass; every user value goes through parameters (R-04). The stall module does not import the
+ * catalog module — a market is only touched by SQL here.
  */
 @Repository
 @RequiredArgsConstructor
 public class StallQueryRepository {
 
-    /** Bộ lọc dùng chung: chỉ stall đã duyệt (D-09) và đang bán ở chợ đang mở. */
+    /** The shared filter: only approved stalls (D-09) and selling at an open market. */
     private static final String WHERE_PUBLIC =
             """
             WHERE f.approval_status = 'approved'
@@ -37,8 +37,8 @@ public class StallQueryRepository {
             """;
 
     /**
-     * Một dòng mỗi Farmer, kể cả khi bán ở nhiều chợ; khi lọc theo chợ thì quầy và giờ là của chợ
-     * đó.
+     * One row per Farmer, even when they sell at several markets; when filtering by market the
+     * booth and hours are those of that market.
      */
     public static final String SEARCH_STALLS =
             """
@@ -82,8 +82,8 @@ public class StallQueryRepository {
                     + WHERE_PUBLIC;
 
     /**
-     * Các chợ của một stall kèm khung giờ từng ngày (cho trang stall công khai và hồ sơ của chính
-     * Farmer).
+     * A stall's markets with the time windows for each day (for the public stall page and the
+     * Farmer's own profile).
      */
     private static final String STALL_MARKETS =
             """
@@ -124,7 +124,8 @@ public class StallQueryRepository {
     }
 
     /**
-     * Chợ có tồn tại và đang mở? Kiểm bằng SQL để module stall không phải import module catalog.
+     * Does the market exist and is it open? Checked with SQL so the stall module does not have to
+     * import the catalog module.
      */
     public boolean marketExists(long marketId) {
         Integer n =
@@ -196,12 +197,12 @@ public class StallQueryRepository {
                 hhmm(rs.getString("pickup_end")));
     }
 
-    /** '%' và '_' người dùng gõ không được thành ký tự đại diện. */
+    /** '%' and '_' typed by the user must not act as wildcards. */
     private static String escapeLike(String raw) {
         return raw.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }
 
-    /** TIME đọc ra là "07:00:00"; contract trả "07:00". */
+    /** A TIME column reads as "07:00:00"; the contract returns "07:00". */
     static String hhmm(String time) {
         return time == null ? null : time.substring(0, Math.min(5, time.length()));
     }

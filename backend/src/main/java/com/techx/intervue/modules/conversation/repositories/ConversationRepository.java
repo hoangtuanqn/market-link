@@ -13,16 +13,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
 
-    /** Gọi với cặp đã chuẩn hoá (userAId < userBId), xem Conversation.between. */
+    /** Call with the normalized pair (userAId < userBId), see Conversation.between. */
     Optional<Conversation> findByUserAIdAndUserBId(Long userAId, Long userBId);
 
-    /** Thread của chính mình, mới nhất trước; thread chưa có tin nào xếp theo lúc tạo. */
+    /** Own threads, newest first; a thread with no messages is ordered by creation time. */
     @Query(
             "select c from Conversation c where c.userAId = :me or c.userBId = :me"
                     + " order by coalesce(c.lastMessageAt, c.createdAt) desc, c.id desc")
     Page<Conversation> findMine(@Param("me") Long me, Pageable pageable);
 
-    /** Những người đã từng nhắn với :me — để báo online/offline cho đúng họ, không broadcast. */
+    /**
+     * The people who have messaged :me — to report online/offline to exactly them, not broadcast.
+     */
     @Query(
             "select case when c.userAId = :me then c.userBId else c.userAId end"
                     + " from Conversation c where c.userAId = :me or c.userBId = :me")

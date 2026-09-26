@@ -25,7 +25,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-062, FR-064 — sản phẩm của chính Farmer (contract §5). Mọi thứ tra theo user của token (R-06).
+ * FR-062, FR-064 — the Farmer's own products (contract §5). Everything is looked up by the token's
+ * user (R-06).
  */
 @RestController
 @RequestMapping("/api/v1/farmer/products")
@@ -42,6 +43,12 @@ public class FarmerProductController extends BaseController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "50") int pageSize) {
         return ok(products.mine(user.getId(), status, page, pageSize), "");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResource<FarmerProductResource>> mineOne(
+            @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
+        return ok(products.mineOne(user.getId(), id), "");
     }
 
     @PostMapping

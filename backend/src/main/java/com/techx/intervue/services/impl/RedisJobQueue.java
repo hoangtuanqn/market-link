@@ -9,7 +9,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-/** LPUSH vào list, RedisJobWorker BRPOP ở đầu kia nên job được xử lý theo thứ tự FIFO. */
+/**
+ * LPUSH onto the list, RedisJobWorker BRPOPs at the other end so jobs are processed in FIFO order.
+ */
 @Service
 @AllArgsConstructor
 public class RedisJobQueue implements JobQueueInterface {

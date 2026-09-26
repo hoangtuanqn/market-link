@@ -49,8 +49,8 @@ class UserSessionCacheTest {
     }
 
     /**
-     * Admin duyệt Farmer đổi users.role, nhưng JwtAuthFilter dựng authority từ cache này — không
-     * ghi lại thì role mới chỉ có hiệu lực sau lần refresh kế tiếp.
+     * An admin approving a Farmer changes users.role, but JwtAuthFilter builds authorities from
+     * this cache — without writing it back the new role only takes effect after the next refresh.
      */
     @Test
     void updateRolesRewritesTheSessionAndKeepsTheRemainingTtl() throws Exception {
@@ -74,7 +74,10 @@ class UserSessionCacheTest {
         assertThat(ttl.getValue()).isEqualTo(Duration.ofSeconds(600));
     }
 
-    /** Chưa đăng nhập ở đâu: không tạo phiên mới, lần đăng nhập sau đã đọc role mới từ DB. */
+    /**
+     * Not signed in anywhere: no new session is created, the next sign-in already reads the new
+     * role from the DB.
+     */
     @Test
     void updateRolesDoesNothingWhenThereIsNoLiveSession() {
         when(values.get("user:session:5")).thenReturn(null);

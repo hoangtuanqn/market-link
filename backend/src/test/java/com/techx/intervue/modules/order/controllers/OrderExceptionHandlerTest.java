@@ -18,7 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
-/** R-06 / contract: xung đột trạng thái là 409, không bao giờ 400; sai chủ / sai vai là 403. */
+/** R-06 / contract: a state conflict is 409, never 400; wrong owner / wrong role is 403. */
 class OrderExceptionHandlerTest {
 
     private final OrderExceptionHandler handler = new OrderExceptionHandler();
@@ -61,7 +61,7 @@ class OrderExceptionHandlerTest {
         assertError(handler.notFound(new OrderNotFoundException(999L)), 404, "NOT_FOUND");
     }
 
-    /** Lưới cuối: vi phạm UNIQUE order_code hay CHECK tồn kho / sức chứa vẫn là 409. */
+    /** Last backstop: a UNIQUE order_code violation or a stock / capacity CHECK is still 409. */
     @Test
     void databaseConstraintViolationsAre409() {
         assertError(

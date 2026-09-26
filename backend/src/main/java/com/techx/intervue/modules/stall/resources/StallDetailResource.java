@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * GET /farmers/{id} và GET /farmer/profile (contract §4). `approvalStatus` chỉ có ý nghĩa cho chính
- * Farmer — trang public chỉ thấy stall đã duyệt (D-09).
+ * GET /farmers/{id} and GET /farmer/profile (contract §4). `approvalStatus` only matters to the
+ * Farmer themself — the public page only sees approved stalls (D-09).
  */
 public record StallDetailResource(
         Long farmerId,

@@ -14,7 +14,7 @@ import type { Announcement, AnnouncementAudience } from '@/types/notification.ty
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** Giá trị API → key dịch cũ của trang (audience.Everyone / Customers / Farmers). */
+/** API value → the page's old translation key (audience.Everyone / Customers / Farmers). */
 const AUDIENCES: { value: AnnouncementAudience; label: 'Everyone' | 'Customers' | 'Farmers' }[] = [
   { value: 'all', label: 'Everyone' },
   { value: 'customers', label: 'Customers' },
@@ -30,11 +30,11 @@ type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; ite
 
 const EMPTY: Form = { title: '', content: '', audience: 'all', from: '', to: '' };
 
-/** Yyyy-mm-dd của ô ngày → ISO; "đến" tính hết ngày đó. Trống → null (không giới hạn). */
+/** The date box's Yyyy-mm-dd → ISO; "to" counts through the end of that day. Empty → null (no limit). */
 const toIso = (day: string, endOfDay: boolean) =>
   day ? new Date(`${day}T${endOfDay ? '23:59:59' : '00:00:00'}`).toISOString() : null;
 
-/** Đã gỡ hoặc quá "đến" → ended; còn bật nhưng chưa tới "từ" → scheduled (không phải đã kết thúc). */
+/** Removed or past "to" → ended; still on but not yet at "from" → scheduled (not ended). */
 const phaseOf = (a: Announcement, now = Date.now()): 'live' | 'scheduled' | 'ended' => {
   if (!a.active || (a.endsAt && new Date(a.endsAt).getTime() <= now)) return 'ended';
   if (a.startsAt && new Date(a.startsAt).getTime() > now) return 'scheduled';
@@ -48,8 +48,9 @@ const PHASE_BADGE = {
 } as const;
 
 /**
- * FR-077 — thông báo toàn nền tảng: dải xanh trên header (banner) và một dòng trong thông báo của mọi người thuộc đối
- * tượng. Đăng là gửi ngay; gỡ chỉ gỡ banner, thông báo đã gửi vẫn giữ.
+ * FR-077 — platform-wide announcements: the banner strip on the header (banner) and a row in the notifications of
+ * everyone in the audience. Posting sends immediately; removing only removes the banner, notifications already sent are
+ * kept.
  */
 const AdminAnnouncementsPage = () => {
   const { t } = useTranslation('AdminAnnouncements');
@@ -174,7 +175,6 @@ const AdminAnnouncementsPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-overline text-ink-muted uppercase">{t('overline')}</p>
           <h1 className="text-h1">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>

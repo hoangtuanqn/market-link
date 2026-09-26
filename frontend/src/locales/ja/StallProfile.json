@@ -7,7 +7,6 @@
   "approved": "審査済みの店",
   "savedToast": "{{name}} を保存しました。",
   "save": "店を保存",
-  "message": "店にメッセージ",
   "stats": {
     "reviews_one": "{{count}} 件のレビュー",
     "reviews_other": "{{count}} 件のレビュー",

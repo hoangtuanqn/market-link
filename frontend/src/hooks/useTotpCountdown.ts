@@ -4,7 +4,7 @@ const PERIOD_SECONDS = 30;
 
 const secondsLeft = () => PERIOD_SECONDS - (Math.floor(Date.now() / 1000) % PERIOD_SECONDS);
 
-/** FR-008: số giây còn lại của bước 30 giây TOTP hiện tại — đúng con số app authenticator đang đếm. */
+/** FR-008: the seconds left of the current 30-second TOTP step — exactly the number the authenticator app is counting. */
 const useTotpCountdown = () => {
   const [left, setLeft] = useState(secondsLeft);
   useEffect(() => {

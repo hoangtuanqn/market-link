@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } fr
 import { useTranslation } from 'react-i18next';
 import { clampOffset, coverScale, MAX_ZOOM, MIN_ZOOM, type Offset } from './crop';
 
-/** Cạnh khung cắt trên màn hình (px); dialog rộng 460px nên vừa cả màn 375px. */
+/** The side of the crop frame on screen (px); the dialog is 460px wide so it fits even a 375px screen. */
 export const FRAME = 280;
 const KEY_STEP = 10;
 const ZOOM_STEP = 0.1;
@@ -15,7 +15,10 @@ type CropStepProps = {
   onChange: (next: CropState) => void;
 };
 
-/** Khung tròn trên ảnh: kéo (chuột / cảm ứng) để dịch, thanh trượt hoặc con lăn để zoom, mũi tên và +/- trên bàn phím. */
+/**
+ * A round frame over the image: drag (mouse / touch) to move, the slider or the wheel to zoom, arrow keys and +/- on
+ * the keyboard.
+ */
 const CropStep = ({ image, value, onChange }: CropStepProps) => {
   const { t } = useTranslation('CustomerAccount');
   const w = image.naturalWidth;
@@ -29,7 +32,7 @@ const CropStep = ({ image, value, onChange }: CropStepProps) => {
     onChange({ zoom: z, offset: clampOffset(offset, w, h, FRAME, z) });
   };
 
-  // Con lăn: React gắn onWheel dạng passive nên không chặn được cuộn trang, phải tự gắn listener
+  // Wheel: React attaches onWheel as passive so it cannot stop page scrolling, the listener must be attached by hand
   const latest = useRef({ value, set });
   useEffect(() => {
     latest.current = { value, set };
@@ -109,7 +112,7 @@ const CropStep = ({ image, value, onChange }: CropStepProps) => {
           }}
           className="pointer-events-none absolute top-1/2 left-1/2 max-w-none"
         />
-        {/* Phần ngoài vòng tròn tối đi: đó là phần bị cắt bỏ khi ảnh hiện thành hình tròn */}
+        {/* The part outside the circle is darkened: that is the part cut off when the image is shown as a circle */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 rounded-full shadow-[0_0_0_200px_rgba(20,14,8,0.55)] ring-2 ring-white/80"

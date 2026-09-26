@@ -6,8 +6,8 @@ import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import java.time.Instant;
 
 /**
- * Một dòng trong hàng đợi kiểm duyệt. Chỉ có `preview` chứ không có toàn văn: hàng đợi là nơi admin
- * quyết định có mở ra xem không, không phải nơi đọc hàng loạt (spec §8.3).
+ * One row in the moderation queue. It only has a `preview`, not the full text: the queue is where
+ * the admin decides whether to open it, not a place for bulk reading (spec §8.3).
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record AdminReportListItemResource(

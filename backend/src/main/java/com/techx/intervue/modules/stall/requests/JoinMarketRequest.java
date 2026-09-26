@@ -7,8 +7,8 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 /**
- * Body của POST /api/v1/farmer/markets (contract §4). Toạ độ quầy có thể lệch tâm chợ, hoặc để
- * trống.
+ * Body of POST /api/v1/farmer/markets (contract §4). The booth coordinates may be offset from the
+ * market centre, or left empty.
  */
 public record JoinMarketRequest(
         @NotNull(message = "Market is required.") Long marketId,

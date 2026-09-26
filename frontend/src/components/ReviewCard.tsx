@@ -9,7 +9,7 @@ import Helper from '@/utils/helper';
 
 type ReviewCardProps = {
   author: string;
-  /** Hạng thành tích của người viết — chỉ hạng, không có số liệu. */
+  /** The writer's achievement tier — tier only, no figures. */
   authorTier?: Tier;
   date: string;
   target?: string;

@@ -7,13 +7,13 @@ type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   error?: string;
   hint?: string;
-  /** Nhãn chỉ dành cho trình đọc màn hình — ô tìm kiếm có placeholder đã đủ rõ với người nhìn. */
+  /** A label for screen readers only — a search box with a placeholder is already clear enough to sighted people. */
   hideLabel?: boolean;
 };
 
 /**
  * Labelled input: required mark, hint or error line, focus ring (design system `.ml-field` + `.ml-input`).
- * type="password" có thêm nút con mắt để hiện / ẩn mật khẩu.
+ * type="password" gets an extra eye button to show / hide the password.
  */
 export function Field({ id, label, required, error, hint, hideLabel, className, type, disabled, ...rest }: FieldProps) {
   const describedBy = error ? `${id}-err` : hint ? `${id}-hint` : undefined;

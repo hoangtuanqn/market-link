@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.util.List;
 import lombok.Builder;
 
-/** §6.2 — chi tiết đầy đủ để Admin duyệt hoặc đình chỉ. */
+/** §6.2 — full detail so the Admin can approve or suspend. */
 @Builder
 public record AdminFarmerDetailResource(
         Long id,
@@ -25,8 +25,11 @@ public record AdminFarmerDetailResource(
         Instant approvedAt,
         Instant suspendedAt,
         Instant createdAt,
-        /** Mọi lần tài khoản này nộp đơn, mới nhất trước. */
+        /** Every time this account applied, newest first. */
         List<FarmerApplicationHistoryResource> history,
-        /** Tài khoản Customer đã có từ trước — không phải ngày tạo hồ sơ Farmer này. */
+        /**
+         * The Customer account already existed — this is not the creation date of this Farmer
+         * profile.
+         */
         Instant customerSince,
         UserStatus accountStatus) {}

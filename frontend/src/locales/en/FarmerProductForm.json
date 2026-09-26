@@ -26,12 +26,19 @@
     "text": "<b>{{price}}</b> on the tag · <b>{{left}}</b> left · someone ordering one sees <b>{{one}}</b>"
   },
   "price": {
-    "label": "Price in ₫",
+    "label": "Price ($)",
     "hint": "Shown as {{price}}."
   },
   "qty": {
     "label": "Quantity available this week",
     "error": "Quantity must be 0 or more. Use Sold out for none left."
+  },
+  "shelfLife": {
+    "label": "Shelf life (days)",
+    "hint": "This category is usually {{min}}–{{max}} days.",
+    "error": "Enter a whole number of 1 or more.",
+    "warningTitle": "Outside the usual range",
+    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
   },
   "desc": {
     "label": "Description",
@@ -49,9 +56,13 @@
   },
   "photo": {
     "label": "Photo",
-    "none": "No photo yet. Until you add one, the tag shows the category in handwriting.",
-    "choose": "Choose photo",
-    "hint": "JPG or PNG, 4:3, up to 5 MB. Close up, natural light, on wood or paper."
+    "add": "Add photo",
+    "replace": "Replace photo",
+    "remove": "Remove photo",
+    "uploading": "Uploading",
+    "uploadInProgress": "Wait for the photo to finish uploading, then save.",
+    "alt": "Product photo",
+    "hint": "JPEG, PNG or WEBP, up to 8 MB. Close up, natural light, on wood or paper."
   },
   "save": "Save product",
   "add": "Add product",

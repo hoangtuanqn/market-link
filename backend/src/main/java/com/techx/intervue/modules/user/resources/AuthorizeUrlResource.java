@@ -1,4 +1,4 @@
 package com.techx.intervue.modules.user.resources;
 
-/** URL trang đăng nhập của provider (Google) mà frontend chuyển người dùng sang. */
+/** The URL of the provider's (Google) sign-in page that the frontend sends the user to. */
 public record AuthorizeUrlResource(String url) {}

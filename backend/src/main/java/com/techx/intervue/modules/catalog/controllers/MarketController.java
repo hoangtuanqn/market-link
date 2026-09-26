@@ -44,12 +44,13 @@ public class MarketController extends BaseController {
         return ok(marketService.detail(id), "");
     }
 
-    /** FR-010: Farmer đang bán tại chợ, lọc theo thứ (0 = Chủ nhật) nếu có. */
+    /** FR-010: Farmers selling at the market, filtered by weekday (0 = Sunday) if given. */
     @GetMapping("/{id}/farmers")
     public ResponseEntity<ApiResource<List<StallSummaryResource>>> farmers(
             @PathVariable long id, @RequestParam(required = false) Integer day) {
         marketService.detail(
-                id); // 404 nếu chợ không có — trước khi trả một danh sách rỗng gây hiểu lầm
+                id); // 404 if the market does not exist — before returning an empty list that would
+        // mislead
         return ok(stallService.atMarket(id, day), "");
     }
 }

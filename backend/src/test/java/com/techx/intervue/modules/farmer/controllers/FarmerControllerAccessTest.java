@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
- * Repo chưa có MockMvc/spring-security-test nên chưa gọi được endpoint thật để nhận 403 (việc đó
- * nằm ở hạng mục test controller/integration). Test này giữ đúng một điều: quy tắc quyền của
- * /farmer/apply không bị bỏ quên khi ai đó sửa controller.
+ * The repo has no MockMvc/spring-security-test yet so it cannot call the real endpoint to get a 403
+ * (that belongs to the controller/integration test item). This test pins exactly one thing: the
+ * permission rule of /farmer/apply is not forgotten when someone edits the controller.
  */
 class FarmerControllerAccessTest {
 
@@ -21,8 +21,8 @@ class FarmerControllerAccessTest {
     }
 
     /**
-     * Đọc đơn của chính mình: Customer đang chờ duyệt / bị từ chối và Farmer đã duyệt / bị đình chỉ
-     * đều cần. Admin thì không — Admin xem qua /admin/farmers.
+     * Reading your own application: a Customer who is pending / rejected and a Farmer who is
+     * approved / suspended all need it. Admin does not — Admin views through /admin/farmers.
      */
     @Test
     void readingYourOwnApplicationIsLimitedToCustomerAndFarmer() throws NoSuchMethodException {

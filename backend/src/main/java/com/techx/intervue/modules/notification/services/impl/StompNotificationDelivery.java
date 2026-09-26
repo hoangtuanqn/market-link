@@ -9,7 +9,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 /**
- * Đẩy tới mọi tab đang mở của người nhận; offline thì broker bỏ qua (thông báo đã nằm trong DB).
+ * Push to every open tab of the recipient; when offline the broker skips it (the notification is
+ * already in the DB).
  */
 @Slf4j
 @Service
@@ -17,7 +18,8 @@ import org.springframework.stereotype.Service;
 public class StompNotificationDelivery implements NotificationDeliveryInterface {
 
     /**
-     * /topic thay /queue: cùng lý do như StompChatEventPublisher (queue auto-delete trên RabbitMQ).
+     * /topic instead of /queue: same reason as StompChatEventPublisher (auto-delete queues on
+     * RabbitMQ).
      */
     public static final String DESTINATION = "/topic/notifications";
 

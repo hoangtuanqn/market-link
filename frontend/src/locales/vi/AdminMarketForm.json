@@ -21,7 +21,17 @@
     "lat": "Vĩ độ",
     "lng": "Kinh độ",
     "lngHint": "Hoặc kéo ghim trên bản đồ. Dữ liệu bản đồ lấy từ OpenStreetMap.",
-    "notes": "Ghi chú cho các sạp"
+    "notes": "Ghi chú cho các sạp",
+    "images": "Ảnh"
+  },
+  "images": {
+    "add": "Thêm ảnh",
+    "hint": "JPEG, PNG hoặc WEBP, tối đa 8 MB mỗi ảnh. Thêm tối đa {{max}} ảnh; ảnh đầu tiên trở thành ảnh đại diện.",
+    "tooMany": "Chỉ thêm tối đa {{max}} ảnh.",
+    "uploadInProgress": "Đợi ảnh tải lên xong rồi hãy lưu.",
+    "uploading": "Đang tải lên",
+    "photoLabel": "Ảnh chợ {{n}}",
+    "remove": "Xoá ảnh {{n}}"
   },
   "pin": {
     "label": "Ghim vị trí chợ",
@@ -32,7 +42,9 @@
     "cancel": "Huỷ"
   },
   "toast": {
-    "saved": "Đã lưu {{name}}."
+    "saved": "Đã lưu {{name}}.",
+    "fixTitle": "Xem lại biểu mẫu",
+    "fix": "Những chỗ còn thiếu đã được đánh dấu."
   },
   "closures": {
     "title": "Ngày nghỉ",
@@ -88,6 +100,7 @@
     "noun": "chợ",
     "required": "Trường này là bắt buộc.",
     "days": "Chọn ít nhất một ngày họp chợ.",
-    "close": "Giờ đóng phải sau giờ mở."
+    "close": "Giờ đóng phải sau giờ mở.",
+    "images": "Thêm ít nhất một ảnh của chợ."
   }
 }

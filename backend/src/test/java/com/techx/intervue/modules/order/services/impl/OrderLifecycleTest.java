@@ -16,7 +16,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import org.junit.jupiter.api.Test;
 
-/** D-04 và D-05 viết thành code. Mọi luật về "được đổi sang trạng thái nào" sống ở đúng một chỗ. */
+/**
+ * D-04 and D-05 written as code. Every rule about "which state it may move to" lives in exactly one
+ * place.
+ */
 class OrderLifecycleTest {
 
     @Test
@@ -38,7 +41,7 @@ class OrderLifecycleTest {
                 .isInstanceOf(InvalidOrderTransitionException.class);
     }
 
-    /** D-04: "accepted cũng có thể bị khách cancel trước cutoff". */
+    /** D-04: "accepted can still be cancelled by the customer before cutoff". */
     @Test
     void allowsCancelFromPlacedAndAccepted() {
         assertThatCode(() -> OrderLifecycle.assertTransition(PLACED, CANCELLED))
@@ -72,7 +75,7 @@ class OrderLifecycleTest {
                 .isInstanceOf(InvalidOrderTransitionException.class);
     }
 
-    /** D-07: sửa đơn đưa đơn về placed, kể cả khi Farmer đã accept. */
+    /** D-07: editing an order sends it back to placed, even when the Farmer already accepted it. */
     @Test
     void allowsGoingBackFromAcceptedToPlaced() {
         assertThatCode(() -> OrderLifecycle.assertTransition(ACCEPTED, PLACED))

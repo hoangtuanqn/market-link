@@ -3,12 +3,15 @@ package com.techx.intervue.modules.user.services.interfaces;
 import com.techx.intervue.modules.user.resources.UserResource;
 import org.springframework.web.multipart.MultipartFile;
 
-/** Ảnh đại diện của chính user đang đăng nhập (trang Account). */
+/** The avatar of the signed-in user themself (Account page). */
 public interface AvatarServiceInterface {
 
-    /** Đặt hoặc thay ảnh (JPEG/PNG, tối đa 2 MB); server lưu lại thành JPEG vuông tối đa 512px. */
+    /**
+     * Set or replace the image (JPEG/PNG, up to 2 MB); the server stores it as a square JPEG of at
+     * most 512px.
+     */
     UserResource setAvatar(Long userId, MultipartFile file);
 
-    /** Gỡ ảnh: FE quay về chữ cái đầu của tên. */
+    /** Remove the image: the FE goes back to the initial letter of the name. */
     UserResource removeAvatar(Long userId);
 }

@@ -16,8 +16,9 @@ type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; dat
 const SAVE_DELAY_MS = 400;
 
 /**
- * FR-042 — Settings → Thông báo cho cả ba vai: từng nhóm × hai kênh, âm thanh, giờ yên tĩnh, gửi thử. Lưu ngay (sau 400
- * ms) qua /notifications/preferences, không chờ nút Save chung vì server dùng các lựa chọn này khi gửi.
+ * FR-042 — Settings → Notifications for all three roles: each category × two channels, sound, quiet hours, send test.
+ * Saved right away (after 400 ms) through /notifications/preferences, not waiting for a shared Save button because the
+ * server uses these choices when sending.
  */
 const NotificationSettingsCard = () => {
   const { t } = useTranslation();

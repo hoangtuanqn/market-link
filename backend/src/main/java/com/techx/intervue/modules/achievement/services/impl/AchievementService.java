@@ -15,8 +15,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 /**
- * Thành tích cá nhân — không có trong SRS, LEAD yêu cầu (26/09/2026). Tính mỗi lần gọi từ bảng
- * orders, không lưu hạng ở đâu cả, nên đổi ngưỡng trong app.tiers là có hiệu lực ngay.
+ * Personal achievements — not in the SRS, requested by the LEAD (26/09/2026). Computed on every
+ * call from the orders table, the tier is stored nowhere, so changing thresholds in app.tiers takes
+ * effect immediately.
  */
 @Slf4j
 @Service
@@ -32,7 +33,8 @@ public class AchievementService implements AchievementServiceInterface {
         try {
             stats = repository.statsFor(List.of(userId)).getOrDefault(userId, OrderStats.EMPTY);
         } catch (DataAccessException e) {
-            // Bảng orders chưa có hoặc DB lỗi: vẫn trả trang Account, không để lộ 500
+            // The orders table does not exist or the DB failed: still return the Account page, do
+            // not expose a 500
             log.warn("Order stats unavailable for user {}", userId, e);
             return unavailable();
         }

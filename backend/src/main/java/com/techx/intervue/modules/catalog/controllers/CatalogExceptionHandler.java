@@ -2,7 +2,9 @@ package com.techx.intervue.modules.catalog.controllers;
 
 import com.techx.intervue.modules.catalog.exceptions.CategoryNotFoundException;
 import com.techx.intervue.modules.catalog.exceptions.DuplicateCategoryException;
+import com.techx.intervue.modules.catalog.exceptions.MarketClosureNotFoundException;
 import com.techx.intervue.modules.catalog.exceptions.MarketNotFoundException;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -14,17 +16,22 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 
 /**
- * Trả 400/403/404/409 cho các controller của module catalog — cùng lý do FarmerExceptionHandler:
- * repo chưa có handler chung, thiếu class này thì lỗi rơi xuống /error và bị trả 401.
+ * Returns 400/403/404/409 for the catalog module's controllers — same reason as
+ * FarmerExceptionHandler: the repo has no shared handler yet, and without this class errors fall
+ * through to /error and come back as 401.
  */
 @RestControllerAdvice(
         assignableTypes = {
             CategoryController.class,
             AdminCategoryController.class,
             MarketController.class,
-            AdminMarketController.class
+            AdminMarketController.class,
+            AdminMarketImageController.class,
+            AdminMarketClosureController.class
         })
 public class CatalogExceptionHandler {
 
@@ -44,13 +51,40 @@ public class CatalogExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
-    /** Luật nghiệp vụ trong service (ngày họp ngoài 0…6, giờ đóng trước giờ mở…) → 400. */
+    @ExceptionHandler(InvalidFieldException.class)
+    ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(
+                        FieldErrorResource.builder()
+                                .field(e.getField())
+                                .message(e.getMessage())
+                                .build()));
+    }
+
+    /** A file over spring.servlet.multipart.max-file-size/max-request-size → 400. */
+    @ExceptionHandler({MaxUploadSizeExceededException.class, MultipartException.class})
+    ResponseEntity<ApiResource<Void>> uploadTooLarge(Exception e) {
+        String message = "File is too large.";
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                message,
+                List.of(FieldErrorResource.builder().field("file").message(message).build()));
+    }
+
+    /**
+     * Business rules in the service (market day outside 0…6, closing time before opening time…) →
+     * 400.
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiResource<Void>> invalidArgument(IllegalArgumentException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
     }
 
-    /** R-06: {id} không tồn tại → 404. */
+    /** R-06: {id} does not exist → 404. */
     @ExceptionHandler(CategoryNotFoundException.class)
     ResponseEntity<ApiResource<Void>> categoryNotFound(CategoryNotFoundException e) {
         return error(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", e.getMessage(), List.of());
@@ -61,17 +95,49 @@ public class CatalogExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "MARKET_NOT_FOUND", e.getMessage(), List.of());
     }
 
+    @ExceptionHandler(MarketClosureNotFoundException.class)
+    ResponseEntity<ApiResource<Void>> marketClosureNotFound(MarketClosureNotFoundException e) {
+        return error(HttpStatus.NOT_FOUND, "MARKET_CLOSURE_NOT_FOUND", e.getMessage(), List.of());
+    }
+
     @ExceptionHandler(DuplicateCategoryException.class)
     ResponseEntity<ApiResource<Void>> duplicateCategory(DuplicateCategoryException e) {
         return error(HttpStatus.CONFLICT, "DUPLICATE_CATEGORY", e.getMessage(), List.of());
     }
 
-    /** Lưới an toàn cuối: UNIQUE bị chặn khi hai request cùng lọt qua existsBySlug. */
+    /**
+     * Last safety net: the UNIQUE constraint blocks it when two requests both get past
+     * existsBySlug.
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
         if (cause.contains("categories.")) {
             return duplicateCategory(new DuplicateCategoryException(""));
+        }
+        if (cause.contains("uq_market_name")) {
+            String message = "A market with this name already exists.";
+            return error(
+                    HttpStatus.CONFLICT,
+                    "DUPLICATE_MARKET_NAME",
+                    message,
+                    List.of(
+                            FieldErrorResource.builder()
+                                    .field("marketName")
+                                    .message(message)
+                                    .build()));
+        }
+        if (cause.contains("uq_market_closure_day")) {
+            String message = "This date is already marked as closed.";
+            return error(
+                    HttpStatus.CONFLICT,
+                    "DUPLICATE_MARKET_CLOSURE",
+                    message,
+                    List.of(
+                            FieldErrorResource.builder()
+                                    .field("closedOn")
+                                    .message(message)
+                                    .build()));
         }
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }

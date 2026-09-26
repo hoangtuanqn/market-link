@@ -144,7 +144,7 @@ const FarmerProductsPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-h1">{t('title')}</h1>
@@ -162,15 +162,22 @@ const FarmerProductsPage = () => {
         ))}
       </div>
 
-      {load.kind === 'loading' ? (
-        <MarketCardSkeleton count={3} />
-      ) : load.kind === 'error' ? (
-        <LoadError noun={t('error.noun')} onRetry={retry} />
-      ) : rows.length ? (
-        <Table caption={t('caption', { count: all.length })} columns={columns} rows={rows} />
-      ) : (
-        <DataState title={t('empty.title')} text={t('empty.text')} />
-      )}
+      <div className="flex min-h-[440px] flex-1 flex-col">
+        {load.kind === 'loading' ? (
+          <MarketCardSkeleton count={3} />
+        ) : load.kind === 'error' ? (
+          <LoadError noun={t('error.noun')} onRetry={retry} />
+        ) : rows.length ? (
+          <Table
+            className="h-full flex-1"
+            caption={t('caption', { count: all.length })}
+            columns={columns}
+            rows={rows}
+          />
+        ) : (
+          <DataState fill title={t('empty.title')} text={t('empty.text')} className="h-full min-h-[440px] w-full" />
+        )}
+      </div>
 
       <p className="text-small text-ink-muted">{t('footNote')}</p>
 

@@ -1,25 +1,34 @@
-import { type ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Composer from './Composer';
 import MessageBubble from './MessageBubble';
+import ReportDialog from './ReportDialog';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 import { useConversation } from '@/lib/chat/useChat';
+import { displayName } from '@/lib/chat/names';
 import { chatWhen } from '@/lib/chat/time';
-import type { ChatMessageItem, ChatParticipant } from '@/types/chat.types';
+import type { ChatMessageItem, ConversationSummary } from '@/types/chat.types';
+import Notification from '@/utils/notification';
 
 type Props = {
   conversationId: number | null;
-  other: ChatParticipant | null;
-  /** Quay lại danh sách ở màn hẹp (spec §9.2). Nút tự ẩn từ `md`, nơi danh sách và hội thoại nằm cạnh nhau. */
+  thread: ConversationSummary | null;
+  /**
+   * Back to the list on a narrow screen (spec §9.2). The button hides itself from `md` up, where the list and the
+   * conversation sit side by side.
+   */
   onBack?: () => void;
-  /** Chỗ cho nút riêng của từng vai (Farmer: "Make an offer" ở đợt 2). */
+  /** A slot for each role's own button (Farmer: "Make an offer" in phase 2). */
   headerAction?: ReactNode;
+  pinnedProductId?: number;
+  pinnedOrderId?: number;
+  onUnpin?: () => void;
 };
 
 /**
- * Tin cuối cùng của mình mà đối phương đã đọc tới. So bằng Date, không so chuỗi ISO: backend có lúc trả `.123Z`, có lúc
- * không.
+ * The last message of mine that the other person has read up to. Compared as a Date, not as an ISO string: the backend
+ * sometimes returns `.123Z`, sometimes not.
  */
 const lastSeenId = (messages: ChatMessageItem[], meId: number | null, otherReadAt: string | null) => {
   if (!otherReadAt || meId === null) return null;
@@ -31,7 +40,16 @@ const lastSeenId = (messages: ChatMessageItem[], meId: number | null, otherReadA
   return null;
 };
 
-export default function ConversationPanel({ conversationId, other, onBack, headerAction }: Props) {
+export default function ConversationPanel({
+  conversationId,
+  thread,
+  onBack,
+  headerAction,
+  pinnedProductId,
+  pinnedOrderId,
+  onUnpin,
+}: Props) {
+  const other = thread?.other;
   const { t } = useTranslation('common');
   const {
     messages,
@@ -46,12 +64,14 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
     otherTyping,
     otherReadAt,
     meId,
-  } = useConversation(conversationId);
+  } = useConversation(conversationId, { otherReadAt: thread?.otherReadAt });
   const bottom = useRef<HTMLDivElement>(null);
+  const [reportingId, setReportingId] = useState<number | null>(null);
+  const [reportedIds, setReportedIds] = useState<Set<number>>(new Set());
   const newestId = messages.length > 0 ? messages[messages.length - 1].id : null;
   const seenId = lastSeenId(messages, meId, otherReadAt);
 
-  // Chỉ cuộn khi tin MỚI NHẤT đổi: tải trang cũ thêm vào phía trên thì giữ nguyên chỗ đang đọc (Review Focus #2)
+  // Only scrolls when the NEWEST message changes: loading an older page adds it above and keeps the current reading spot (Review Focus #2)
   useEffect(() => {
     if (newestId !== null) bottom.current?.scrollIntoView({ block: 'end' });
   }, [newestId]);
@@ -61,7 +81,10 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
   }
 
   return (
-    <section className="flex h-full min-h-0 flex-col" aria-label={t('chat.conversationWith', { name: other.fullName })}>
+    <section
+      className="flex h-full min-h-0 flex-col"
+      aria-label={t('chat.conversationWith', { name: displayName(other) })}
+    >
       <header className="border-line-strong flex items-center gap-3 border-b p-3">
         {onBack ? (
           <Button variant="secondary" size="sm" onClick={onBack} className="md:hidden">
@@ -69,7 +92,7 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
           </Button>
         ) : null}
         <div className="min-w-0 flex-1">
-          <p className="text-ink truncate font-sans font-semibold">{other.fullName}</p>
+          <p className="text-ink truncate font-sans font-semibold">{displayName(other)}</p>
           <p className="text-small text-ink-muted">
             {other.online
               ? t('chat.online')
@@ -112,20 +135,40 @@ export default function ConversationPanel({ conversationId, other, onBack, heade
             key={message.id}
             message={message}
             mine={message.senderId === meId}
-            senderName={message.senderId === meId ? t('chat.you') : other.fullName}
+            senderName={message.senderId === meId ? t('chat.you') : displayName(other)}
             seen={message.id === seenId}
+            onReport={message.senderId !== meId ? () => setReportingId(message.id) : undefined}
+            reported={reportedIds.has(message.id)}
           />
         ))}
 
         {otherTyping ? (
           <p className="text-small text-ink-muted" aria-live="polite">
-            {t('chat.typing', { name: other.fullName })}
+            {t('chat.typing', { name: displayName(other) })}
           </p>
         ) : null}
         <div ref={bottom} />
       </div>
 
-      <Composer onSend={send} onSendPhoto={sendPhoto} onTyping={typing} disabled={false} />
+      <Composer
+        onSend={send}
+        onSendPhoto={sendPhoto}
+        onTyping={typing}
+        disabled={false}
+        pinnedProductId={pinnedProductId}
+        pinnedOrderId={pinnedOrderId}
+        onUnpin={onUnpin}
+      />
+      <ReportDialog
+        key={reportingId ?? 'none'}
+        messageId={reportingId}
+        onClose={() => setReportingId(null)}
+        onReported={(id) => {
+          setReportedIds((s) => new Set(s).add(id));
+          setReportingId(null);
+          Notification.success({ text: t('chat.reportThanks') });
+        }}
+      />
     </section>
   );
 }

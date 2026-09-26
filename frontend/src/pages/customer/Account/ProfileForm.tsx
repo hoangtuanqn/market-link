@@ -20,8 +20,8 @@ const validate = validateProfile;
 const isUnauthorized = (error: unknown) => error instanceof AxiosError && error.response?.status === 401;
 
 /**
- * "Your details": lấy hồ sơ bằng GET /auth/me, lưu bằng PUT /auth/me. Email chỉ đọc (dùng để đăng nhập). Nằm chung
- * khung với ảnh đại diện nên không tự bọc Card.
+ * "Your details": get the profile with GET /auth/me, save with PUT /auth/me. The email is read-only (used to sign in).
+ * It shares a frame with the avatar so it does not wrap itself in a Card.
  */
 const ProfileForm = () => {
   const { t } = useTranslation('CustomerAccount');
@@ -39,7 +39,7 @@ const ProfileForm = () => {
       const { data: user } = await AuthApi.getMe();
       const values = { fullName: user.fullName ?? '', phone: user.phone ?? '', address: user.address ?? '' };
       setEmail(user.email);
-      // Phiên đăng nhập từ trước khi có avatarUrl (hoặc đổi ảnh ở tab khác) → lấy bản mới nhất từ server
+      // A session from before avatarUrl existed (or the image changed in another tab) → take the latest from the server
       Session.updateUser({ avatarUrl: user.avatarUrl });
       setForm(values);
       setSaved(values);
@@ -55,7 +55,7 @@ const ProfileForm = () => {
   }, [t]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- tải hồ sơ khi mở trang
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- load the profile when the page opens
     load();
   }, [load]);
 
@@ -84,11 +84,11 @@ const ProfileForm = () => {
       const values = { fullName: user.fullName, phone: user.phone ?? '', address: user.address ?? '' };
       setForm(values);
       setSaved(values);
-      // Header ("Hi, …") đọc từ phiên nên cập nhật luôn
+      // The header ("Hi, …") reads from the session so it updates right away
       Session.updateUser(user);
       Notification.success({ text: response.message || t('profile.saved') });
     } catch (error) {
-      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (số điện thoại đã có người dùng) → lỗi dưới ô nhập
+      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (the phone number is already used by someone) → error under the input
       setErrors(Helper.getFieldErrors(error));
       Notification.error({ text: Helper.getErrorMessage(error, t('profile.saveFailed')) });
     } finally {

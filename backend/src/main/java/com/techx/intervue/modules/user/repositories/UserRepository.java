@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByPhone(String phone);
 
-    /** Số điện thoại đã thuộc tài khoản khác (bỏ qua chính user đang sửa). */
+    /** The phone number already belongs to another account (ignoring the user being edited). */
     boolean existsByPhoneAndIdNot(String phone, Long id);
 }

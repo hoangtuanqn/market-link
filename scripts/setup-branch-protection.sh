@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------
-# Bật bảo vệ nhánh main + dev trên GitHub (CONTRIBUTING.md §11)
-# CHỈ chủ repo / admin chạy được. Cần: gh auth login (tài khoản admin), jq.
-#   scripts/setup-branch-protection.sh            # áp dụng
-#   scripts/setup-branch-protection.sh --dry-run  # chỉ in JSON sẽ gửi
-# Chạy lại nhiều lần không sao: ruleset cùng tên sẽ được cập nhật.
+# Turn on protection for the main + dev branches on GitHub (CONTRIBUTING.md §11)
+# ONLY the repo owner / an admin can run it. Needs: gh auth login (an admin account), jq.
+#   scripts/setup-branch-protection.sh            # apply
+#   scripts/setup-branch-protection.sh --dry-run  # only print the JSON that would be sent
+# Safe to run many times: a ruleset of the same name gets updated.
 # ---------------------------------------------------------------------
 set -euo pipefail
 
 REPO="${REPO:-$(gh repo view --json nameWithOwner -q .nameWithOwner)}"
 DRY_RUN="${1:-}"
 
-# Tên check = tên job trong .github/workflows/*.yml
+# Check name = the job name in .github/workflows/*.yml
 COMMON_CHECKS='["Branch policy","Env guard","Backend · format + test","Frontend · lint + build"]'
 MAIN_CHECKS='["Branch policy","Env guard","Backend · format + test","Frontend · lint + build","Docker · build image production"]'
 

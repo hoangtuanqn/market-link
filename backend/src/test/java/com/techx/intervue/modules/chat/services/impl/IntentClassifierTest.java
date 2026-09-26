@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class IntentClassifierTest {
 
-    // 24/09/2026 là Thứ 5 → day_of_week = 4
+    // 24/09/2026 is a Thursday → day_of_week = 4
     private static final LocalDate THURSDAY = LocalDate.of(2026, 9, 24);
 
     private final IntentClassifier classifier = new IntentClassifier();
@@ -23,7 +23,8 @@ class IntentClassifierTest {
     @ParameterizedTest
     @CsvSource(
             delimiter = '|',
-            quoteCharacter = '"', // mặc định là ' — sẽ nuốt ca chèn SQL bên dưới
+            quoteCharacter =
+                    '"', // the default is ' — it would swallow the SQL injection case below
             value = {
                 "Xin chào | GREETING",
                 "hello | GREETING",

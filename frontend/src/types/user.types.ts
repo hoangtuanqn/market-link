@@ -10,8 +10,8 @@ export type UserType = {
   address?: string;
   role: RoleType;
   createdAt?: string;
-  /** False: tài khoản tạo qua Google, chưa đặt mật khẩu. */
+  /** False: an account created through Google that has not set a password. */
   hasPassword?: boolean;
-  /** Ảnh Google (URL đầy đủ) hoặc ảnh tự tải lên ("/uploads/avatars/…"); không có thì hiện chữ cái đầu. */
+  /** A Google image (full URL) or a self-uploaded image ("/uploads/avatars/…"); when absent show the initial letter. */
   avatarUrl?: string;
 };

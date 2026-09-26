@@ -31,11 +31,14 @@ public class MessageReportService implements MessageReportServiceInterface {
         Message message =
                 messages.findById(messageId)
                         .orElseThrow(() -> new EntityNotFoundException("Message not found."));
-        // R-06 TRƯỚC mọi kiểm tra khác. Nếu kiểm "đã bị ẩn" trước, người ngoài thread sẽ nhận 404
-        // cho tin đã ẩn và 403 cho tin đang hiện — tức là đoán được trạng thái kiểm duyệt của một
-        // tin họ không có quyền biết là có tồn tại.
+        // R-06 BEFORE any other check. If "already hidden" were checked first, an outsider would
+        // get 404
+        // for a hidden message and 403 for a visible one — i.e. they could guess the moderation
+        // state of a
+        // message they have no right to know exists.
         lookup.requireMember(meId, message.getConversationId());
-        // Tin đã bị ẩn đã biến mất khỏi danh sách của người dùng; đừng để họ báo cáo một bóng ma
+        // A hidden message has already disappeared from the user's list; do not let them report a
+        // ghost
         if (message.isHidden()) {
             throw new EntityNotFoundException("Message not found.");
         }

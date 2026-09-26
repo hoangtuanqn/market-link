@@ -16,8 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Chạy trên MySQL thật (như IntervueApplicationTests / CI). Ghim lỗi tìm thấy ở smoke test: đọc và
- * gửi trong cùng một giây thì tin mới không được đếm là chưa đọc nếu cột chỉ chính xác tới giây.
+ * Runs on real MySQL (like IntervueApplicationTests / CI). Pins the bug found in the smoke test:
+ * reading and sending in the same second, a new message must not be counted as unread if the column
+ * is only accurate to the second.
  */
 @SpringBootTest
 @Transactional
@@ -44,7 +45,8 @@ class MessageRepositoryTest {
         User customer = user(RoleType.CUSTOMER);
         User farmer = user(RoleType.FARMER);
         Conversation c = Conversation.between(customer.getId(), farmer.getId());
-        // Hai mốc cùng làm tròn về :00 nếu cột chỉ chính xác tới giây (MySQL làm tròn, không cắt).
+        // Both markers round to :00 if the column is only accurate to the second (MySQL rounds, it
+        // does not truncate).
         c.markRead(customer.getId(), Instant.parse("2026-09-25T06:00:00.100Z"));
         c = conversations.saveAndFlush(c);
 

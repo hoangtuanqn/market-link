@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Tóm tắt đánh giá của một sản phẩm hoặc stall (contract §5 `reviewsSummary`, §8). `histogram` có 5
- * phần tử: số review từ 1 tới 5 sao. Cụm C3 chỉ khai hình dạng với số 0; module review (C8) mới đổ
- * dữ liệu.
+ * Review summary of a product or stall (contract §5 `reviewsSummary`, §8). `histogram` has 5
+ * elements: the number of reviews from 1 to 5 stars. Cluster C3 only declares the shape with 0
+ * values; the review module (C8) will fill in the data.
  */
 public record ReviewSummaryResource(
         BigDecimal ratingAvg, int ratingCount, List<Integer> histogram) {

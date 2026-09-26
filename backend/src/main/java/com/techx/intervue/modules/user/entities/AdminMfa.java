@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-008: khoá TOTP của một admin. {@code enabledAt == null} là đang cài, chưa bật. */
+/** FR-008: an admin's TOTP key. {@code enabledAt == null} means being set up, not yet on. */
 @Entity
 @Getter
 @Setter

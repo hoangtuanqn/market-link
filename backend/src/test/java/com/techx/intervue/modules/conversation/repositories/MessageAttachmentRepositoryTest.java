@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Chạy trên MySQL thật như MessageRepositoryTest — khoá ngoại được thi hành thật sự. */
+/** Runs on real MySQL like MessageRepositoryTest — foreign keys are really enforced. */
 @SpringBootTest
 @Transactional
 class MessageAttachmentRepositoryTest {
@@ -115,16 +115,17 @@ class MessageAttachmentRepositoryTest {
     }
 
     /**
-     * MessageService kiểm "ảnh chưa gắn tin nào" bằng read-then-write không khoá. Hai request gửi
-     * cùng attachmentId cùng lúc đều thấy messageId == null, cả hai tạo tin, và cái sau ghi đè — để
-     * lại một bong bóng ảnh vĩnh viễn không có ảnh. Ràng buộc UNIQUE là chốt chặn thật sự.
+     * MessageService checks "image not yet attached to any message" with an unlocked
+     * read-then-write. Two requests sending the same attachmentId at the same time both see
+     * messageId == null, both create a message, and the later one overwrites — leaving an image
+     * bubble with no image forever. The UNIQUE constraint is the real backstop.
      */
     @Test
     void oneAttachmentCannotBeClaimedByTwoMessages() {
         User customer = user(RoleType.CUSTOMER);
         User farmer = user(RoleType.FARMER);
-        // Hai tin trong CÙNG một thread: một cặp user chỉ có đúng một conversation
-        // (uq_conversation_pair), nên không dựng hai thread được.
+        // Two messages in the SAME thread: a pair of users has exactly one conversation
+        // (uq_conversation_pair), so two threads cannot be built.
         Conversation thread =
                 conversations.saveAndFlush(Conversation.between(customer.getId(), farmer.getId()));
         Long first = messageIn(thread, customer);
@@ -137,8 +138,9 @@ class MessageAttachmentRepositoryTest {
         MessageAttachment b = upload("f-second", customer.getId(), Instant.now());
         b.setMessageId(first);
 
-        // Sau lỗi ràng buộc, session Hibernate không dùng tiếp được — ca "gắn vào tin khác thì
-        // vẫn được" nằm ở test riêng bên dưới.
+        // After a constraint error the Hibernate session cannot be used further — the "attach to
+        // another message is
+        // still fine" case is in a separate test below.
         assertThatThrownBy(() -> attachments.saveAndFlush(b))
                 .isInstanceOf(DataIntegrityViolationException.class);
         assertThat(second).isNotNull();
@@ -170,7 +172,8 @@ class MessageAttachmentRepositoryTest {
         attachments.saveAndFlush(upload("g-one", uploaderId, Instant.now()));
         attachments.saveAndFlush(upload("h-two", uploaderId, Instant.now()));
 
-        // UNIQUE trên cột nullable: MySQL cho nhiều NULL, nên ảnh chờ gửi không đụng nhau
+        // UNIQUE on a nullable column: MySQL allows many NULLs, so images waiting to be sent do not
+        // collide
         assertThat(
                         attachments.findByMessageIdIsNullAndCreatedAtBefore(
                                 Instant.now().plusSeconds(60)))

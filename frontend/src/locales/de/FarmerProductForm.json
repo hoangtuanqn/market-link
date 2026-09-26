@@ -49,9 +49,13 @@
   },
   "photo": {
     "label": "Foto",
-    "none": "Noch kein Foto. Bis Sie eines hinzufügen, zeigt das Etikett die Kategorie in Handschrift.",
-    "choose": "Foto auswählen",
-    "hint": "JPG oder PNG, 4:3, bis 5 MB. Nah, bei Tageslicht, auf Holz oder Papier."
+    "add": "Foto hinzufügen",
+    "replace": "Foto ändern",
+    "remove": "Foto entfernen",
+    "uploading": "Wird hochgeladen",
+    "uploadInProgress": "Warten Sie, bis das Foto hochgeladen ist, bevor Sie speichern.",
+    "alt": "Produktfoto",
+    "hint": "JPEG, PNG oder WEBP, bis 8 MB. Nah, bei Tageslicht, auf Holz oder Papier."
   },
   "save": "Produkt speichern",
   "add": "Produkt hinzufügen",

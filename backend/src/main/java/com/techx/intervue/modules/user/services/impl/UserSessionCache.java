@@ -21,7 +21,8 @@ public class UserSessionCache {
     private static final String KEY_PREFIX = "user:session:";
 
     /**
-     * Mốc (epoch giây): access token có iat trước mốc này bị từ chối dù session đã được ghi lại.
+     * Marker (epoch seconds): an access token whose iat is before this marker is rejected even
+     * though the session was recorded again.
      */
     private static final String REVOKED_BEFORE_PREFIX = "user:revoked-before:";
 
@@ -53,26 +54,29 @@ public class UserSessionCache {
     }
 
     /**
-     * Đổi role của một phiên đang sống (Admin duyệt Farmer). JwtAuthFilter dựng authority từ cache
-     * này chứ không từ claim của token, nên chỉ ghi users.role thôi thì role mới phải chờ tới lần
-     * refresh kế tiếp. Giữ nguyên TTL còn lại: đây là đổi quyền, không phải gia hạn phiên.
+     * Change the role of a live session (Admin approves a Farmer). JwtAuthFilter builds authorities
+     * from this cache and not from the token's claim, so writing only users.role would make the new
+     * role wait until the next refresh. The remaining TTL is kept: this is a permission change, not
+     * a session extension.
      */
     public void updateRoles(Long userId, Set<RoleType> roles) {
         SessionData current = get(userId);
         if (current == null) {
-            return; // chưa đăng nhập ở đâu — lần đăng nhập sau đã đọc role mới từ DB
+            return; // not signed in anywhere — the next sign-in already reads the new role from the
+            // DB
         }
         Long ttlSeconds = redis.getExpire(KEY_PREFIX + userId);
         if (ttlSeconds == null || ttlSeconds <= 0) {
-            return; // phiên vừa hết hạn giữa hai lệnh, không dựng lại
+            return; // the session just expired between two commands, do not rebuild it
         }
         set(userId, current.email(), roles, Duration.ofSeconds(ttlSeconds));
     }
 
     /**
-     * Đăng xuất mọi thiết bị (đổi / đặt lại mật khẩu...). Chỉ xoá session là chưa đủ: user đăng
-     * nhập lại thì session được ghi lại và access token cũ (bị lộ) hợp lệ trở lại. Nên ghi thêm mốc
-     * thời gian, giữ đúng bằng thời gian sống của access token (sau đó mọi token cũ đã hết hạn).
+     * Sign out of every device (password change / reset...). Deleting the session alone is not
+     * enough: when the user signs in again the session is written again and the old (leaked) access
+     * token becomes valid again. So also write a time marker, kept for exactly the access token
+     * lifetime (after that every old token has expired).
      */
     public void revokeAll(Long userId) {
         evict(userId);
@@ -83,7 +87,9 @@ public class UserSessionCache {
                         Duration.ofMillis(authConfig.getExpirationTime()));
     }
 
-    /** Token cấp trước lần revokeAll gần nhất (issuedAt lấy từ JwtService.extractIssuedAt). */
+    /**
+     * Tokens issued before the latest revokeAll (issuedAt comes from JwtService.extractIssuedAt).
+     */
     public boolean isRevoked(Long userId, Instant issuedAt) {
         String raw = redis.opsForValue().get(REVOKED_BEFORE_PREFIX + userId);
         return raw != null && issuedAt.toEpochMilli() < Long.parseLong(raw);

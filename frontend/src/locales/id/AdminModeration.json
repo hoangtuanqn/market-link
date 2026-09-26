@@ -5,7 +5,8 @@
   "tab": {
     "reviews": "Ulasan",
     "products": "Iklan produk",
-    "hidden": "Yang disembunyikan"
+    "hidden": "Yang disembunyikan",
+    "messages": "Pesan yang dilaporkan"
   },
   "reviewFilterLabel": "Saring ulasan",
   "reviewFilter": {
@@ -71,5 +72,37 @@
   },
   "error": {
     "noun": "daftar produk"
+  },
+  "messages": {
+    "boundary": "Anda hanya dapat membaca pesan yang dilaporkan, ditambah paling banyak lima pesan di tiap sisi sebagai konteks. Bagian lain percakapan tidak terbuka bagi admin.",
+    "noun": "laporan",
+    "emptyTitle": "Tidak ada pesan yang dilaporkan",
+    "emptyText": "Saat pelanggan atau lapak melaporkan pesan, pesan itu menunggu Anda di sini.",
+    "photo": "Foto",
+    "reason": {
+      "spam": "Spam atau iklan",
+      "abuse": "Kasar atau menghina",
+      "scam": "Penipuan atau meminta uang",
+      "other": "Alasan lain"
+    },
+    "reportedBy": "Dilaporkan oleh {{name}}",
+    "sentBy": "Dikirim oleh {{name}}",
+    "review": "Tinjau",
+    "reviewLabel": "Tinjau laporan dari {{name}}",
+    "context": "Pesan di sekitar pesan yang dilaporkan",
+    "hidden": "Disembunyikan",
+    "hide": "Sembunyikan pesan",
+    "hideTitle": "Sembunyikan pesan ini?",
+    "hideText": "Kedua orang dalam percakapan tidak akan melihatnya lagi. Laporan ditandai sudah ditindaklanjuti.",
+    "hideConfirm": "Sembunyikan",
+    "dismiss": "Abaikan laporan",
+    "hidden_toast": "Pesan disembunyikan.",
+    "dismissed_toast": "Laporan diabaikan.",
+    "status": {
+      "new": "Baru",
+      "reviewed": "Ditinjau",
+      "actioned": "Ditindaklanjuti"
+    },
+    "statusLabel": "Status"
   }
 }

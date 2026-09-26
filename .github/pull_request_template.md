@@ -1,18 +1,19 @@
-## Làm gì
+## What changed
 
-<!-- Mã requirement + 1–3 dòng mô tả. Ví dụ: FR-030 — tách giỏ hàng thành nhiều đơn theo Farmer -->
+<!-- Requirement ID + 1–3 lines. Example: FR-030 — split the cart into one order per farmer -->
 - FR-
 
-## Test thế nào
+## How to test
 
-<!-- Các bước để reviewer kiểm tra lại; ảnh chụp màn hình nếu có UI -->
+<!-- Steps for the reviewer to verify it; screenshots if there is UI -->
 
 ## Checklist (CONTRIBUTING.md §5)
 
-- [ ] PR vào đúng nhánh: `dev`, hoặc `main` nếu là release/hotfix
-- [ ] CI xanh
-- [ ] Không có file bí mật (`.env`, `.env.production`, `application-local.yml`)
-- [ ] Đổi DB → có migration **mới**, không sửa migration cũ
-- [ ] Đổi API → khớp `docs/api-contract.md`
-- [ ] Thêm biến môi trường → cập nhật `.env.example`, `.env.production.example`, `application-*.yaml`
-- [ ] UI: đủ 4 trạng thái loading / empty / error / có data, responsive 375 / 768 / 1440
+- [ ] PR targets the right branch: `dev`, or `main` if it is a release/hotfix
+- [ ] CI is green
+- [ ] No secret files (`.env`, `.env.production`, `application-local.yml`)
+- [ ] DB change → a **new** migration, no edits to old migrations
+- [ ] API change → matches `docs/api-contract.md`
+- [ ] New environment variable → updated `.env.example`, `.env.production.example`, `application-*.yaml`
+- [ ] UI: all four states loading / empty / error / data, responsive 375 / 768 / 1440
+- [ ] Code comments, commits, and this PR's title and description are in English (R-09, R-10)

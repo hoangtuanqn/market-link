@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Khung giờ nhận hàng của một stall tại một chợ, theo thứ trong tuần (FR-061). */
+/** The pickup time window of a stall at a market, by weekday (FR-061). */
 @Entity
 @Getter
 @Setter

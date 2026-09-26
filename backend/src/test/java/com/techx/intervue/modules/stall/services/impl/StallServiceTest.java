@@ -86,8 +86,8 @@ class StallServiceTest {
     }
 
     /**
-     * D-09: chỉ stall đã duyệt mới hiện với khách. Câu SQL là hằng số nên đọc thẳng, không cần
-     * database.
+     * D-09: only approved stalls show to customers. The SQL statement is a constant so read it
+     * directly, needing no database.
      */
     @Test
     void searchReturnsOnlyApprovedStalls() {
@@ -100,7 +100,7 @@ class StallServiceTest {
         verify(queryRepository).search(null, null, null, 0, 12);
     }
 
-    /** D-09: khách không thấy stall bị đình chỉ nữa — 404, không phải 403 (không lộ lý do). */
+    /** D-09: customers no longer see a suspended stall — 404, not 403 (no reason revealed). */
     @Test
     void publicDetailHidesSuspendedStall() {
         when(farmerProfileRepository.findById(FARMER_ID))
@@ -135,8 +135,8 @@ class StallServiceTest {
     }
 
     /**
-     * R-06: hồ sơ được tra theo userId lấy từ token; không có đường nào truyền farmerId của người
-     * khác vào.
+     * R-06: the profile is looked up by the userId taken from the token; there is no path to pass
+     * another person's farmerId in.
      */
     @Test
     void updateProfileOnAnotherUsersStallIsImpossible() {
@@ -197,7 +197,7 @@ class StallServiceTest {
         verify(operatingDayRepository, never()).replaceDays(anyLong(), any());
     }
 
-    /** Ghi đè trọn bộ: gửi [T7] khi đang có [CN, T7] thì Chủ nhật biến mất. */
+    /** Overwrite the whole set: sending [Sat] when [Sun, Sat] exists makes Sunday disappear. */
     @Test
     void setDaysReplacesTheWholeSet() {
         when(farmerProfileRepository.findByUserId(USER_ID))
