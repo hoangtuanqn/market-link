@@ -13,12 +13,24 @@ type TableProps<T> = {
   columns: TableColumn<T>[];
   rows: T[];
   rowClassName?: (row: T) => string | undefined;
+  className?: string;
 };
 
 /** Design system `.ml-table` — a bordered data table with numeric and action columns. */
-export function Table<T extends Record<string, unknown>>({ caption, columns, rows, rowClassName }: TableProps<T>) {
+export function Table<T extends Record<string, unknown>>({
+  caption,
+  columns,
+  rows,
+  rowClassName,
+  className,
+}: TableProps<T>) {
   return (
-    <div className="border-line-strong bg-surface-raised w-full overflow-x-auto rounded-md border-[1.5px]">
+    <div
+      className={Helper.cn(
+        'border-line-strong bg-surface-raised w-full overflow-x-auto rounded-md border-[1.5px]',
+        className,
+      )}
+    >
       <table className="w-full border-collapse text-[14px]">
         {caption && (
           <caption className="border-line-strong border-b-[1.5px] p-3 px-4 text-left text-[15px] font-bold">

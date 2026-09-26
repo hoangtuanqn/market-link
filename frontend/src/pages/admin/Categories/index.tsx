@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
+import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
 import Helper from '@/utils/helper';
@@ -14,6 +15,7 @@ import Notification from '@/utils/notification';
 
 type CategoryRow = CategoryType;
 const NO_CATEGORIES: CategoryRow[] = [];
+const PAGE_SIZE = 8;
 
 const bySortThenName = (a: CategoryRow, b: CategoryRow) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name);
 
@@ -38,6 +40,11 @@ const AdminCategoriesPage = () => {
   const [removing, setRemoving] = useState<CategoryRow | null>(null);
   const [moveTo, setMoveTo] = useState('');
   const [busyId, setBusyId] = useState<number | null>(null);
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(categories.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginatedCategories = categories.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
   const saveCategory = async (c: CategoryRow) => {
     const name = (drafts[c.id] ?? c.name).trim();
@@ -132,7 +139,7 @@ const AdminCategoriesPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-h1">{t('title')}</h1>
@@ -140,24 +147,39 @@ const AdminCategoriesPage = () => {
         </div>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        {load.kind === 'loading' ? (
-          <MarketCardSkeleton count={3} />
-        ) : load.kind === 'error' ? (
-          <LoadError noun={t('error.noun')} onRetry={retry} />
-        ) : categories.length ? (
-          <Table
-            caption={t('caption.categories', { count: categories.length })}
-            columns={categoryColumns}
-            rows={categories}
-          />
-        ) : (
-          <DataState title={t('empty.categories.title')} text={t('empty.categories.text')} />
-        )}
+      <div className="grid flex-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="flex h-full min-h-[440px] flex-1 flex-col">
+          {load.kind === 'loading' ? (
+            <MarketCardSkeleton count={3} />
+          ) : load.kind === 'error' ? (
+            <LoadError noun={t('error.noun')} onRetry={retry} />
+          ) : categories.length ? (
+            <div className="flex h-full flex-1 flex-col gap-4">
+              <Table
+                className="h-full flex-1"
+                caption={t('caption.categories', { count: categories.length })}
+                columns={categoryColumns}
+                rows={paginatedCategories}
+              />
+              {totalPages > 1 && (
+                <div className="flex justify-center pt-2">
+                  <Pagination page={currentPage} pages={totalPages} onChange={setPage} />
+                </div>
+              )}
+            </div>
+          ) : (
+            <DataState
+              fill
+              title={t('empty.categories.title')}
+              text={t('empty.categories.text')}
+              className="h-full min-h-[440px] w-full"
+            />
+          )}
+        </div>
 
         <Card
           as="form"
-          className="flex flex-col gap-4 p-6"
+          className="flex flex-col gap-4 self-start p-6"
           noValidate
           onSubmit={(e) => {
             e.preventDefault();
