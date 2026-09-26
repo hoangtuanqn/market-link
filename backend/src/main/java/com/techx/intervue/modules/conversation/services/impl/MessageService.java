@@ -131,10 +131,10 @@ public class MessageService implements MessageServiceInterface {
     }
 
     /**
-     * FR-114: the order must belong to the customer in the thread, bought at the stall of the Farmer in
-     * the thread. orders.farmer_id is farmer_profiles.id, not users.id, so the stall owner must be
-     * looked up before comparing. Only READS the order module; there is no path that creates or edits
-     * an order from chat.
+     * FR-114: the order must belong to the customer in the thread, bought at the stall of the
+     * Farmer in the thread. orders.farmer_id is farmer_profiles.id, not users.id, so the stall
+     * owner must be looked up before comparing. Only READS the order module; there is no path that
+     * creates or edits an order from chat.
      */
     private void requireOrderOfThisPair(Conversation conversation, Long orderId) {
         Order order =
