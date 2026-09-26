@@ -2,6 +2,7 @@ package com.techx.intervue.modules.catalog.controllers;
 
 import com.techx.intervue.modules.catalog.exceptions.CategoryNotFoundException;
 import com.techx.intervue.modules.catalog.exceptions.DuplicateCategoryException;
+import com.techx.intervue.modules.catalog.exceptions.MarketNotFoundException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -18,7 +19,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * Trả 400/403/404/409 cho các controller của module catalog — cùng lý do FarmerExceptionHandler:
  * repo chưa có handler chung, thiếu class này thì lỗi rơi xuống /error và bị trả 401.
  */
-@RestControllerAdvice(assignableTypes = {CategoryController.class, AdminCategoryController.class})
+@RestControllerAdvice(
+        assignableTypes = {
+            CategoryController.class,
+            AdminCategoryController.class,
+            MarketController.class,
+            AdminMarketController.class
+        })
 public class CatalogExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
@@ -47,6 +54,11 @@ public class CatalogExceptionHandler {
     @ExceptionHandler(CategoryNotFoundException.class)
     ResponseEntity<ApiResource<Void>> categoryNotFound(CategoryNotFoundException e) {
         return error(HttpStatus.NOT_FOUND, "CATEGORY_NOT_FOUND", e.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(MarketNotFoundException.class)
+    ResponseEntity<ApiResource<Void>> marketNotFound(MarketNotFoundException e) {
+        return error(HttpStatus.NOT_FOUND, "MARKET_NOT_FOUND", e.getMessage(), List.of());
     }
 
     @ExceptionHandler(DuplicateCategoryException.class)

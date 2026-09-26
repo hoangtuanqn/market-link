@@ -118,6 +118,12 @@ public class SecurityConfig {
                                         // nhập
                                         .requestMatchers(HttpMethod.GET, "/api/v1/categories")
                                         .permitAll()
+                                        // FR-010/FR-012: chợ và bản đồ xem được trước khi đăng nhập
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/markets",
+                                                "/api/v1/markets/*")
+                                        .permitAll()
                                         // Chatbot FR-090…092: khách vãng lai cũng hỏi được
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
                                         .permitAll()
