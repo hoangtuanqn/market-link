@@ -286,15 +286,18 @@ WHERE fm.is_active = TRUE
 
 -- Nhóm 1: đơn future dùng slot sớm nhất (OFFSET 0) — 0001 placed (farmer@, có đơn placed để demo Farmer
 -- duyệt), 0002 placed (farmer2@), 0004 accepted (farmer4@).
+-- M-4: created_at (TIMESTAMP, session UTC — khác cutoff_at/pickup_* là DATETIME/DATE/TIME lưu giờ
+-- local, không bị quy đổi) đặt bằng đúng mốc "đặt hàng" của chuỗi order_status_history bên dưới
+-- (UTC_TIMESTAMP() - days_before_now), không phải lúc script này chạy.
 INSERT INTO orders (order_code, customer_id, farmer_id, market_id, slot_id, pickup_date, pickup_start,
-                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note)
+                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note, created_at)
 SELECT x.order_code, cust.id, f.id, m.id, slot.id, slot.slot_date, slot.start_time, slot.end_time,
        TIMESTAMP(slot.slot_date, slot.start_time) - INTERVAL f.order_cutoff_hours HOUR,
-       0, x.status, NULL, NULL
+       0, x.status, NULL, NULL, UTC_TIMESTAMP() - INTERVAL x.days_before_now DAY
 FROM (
-      SELECT 'ML-20260920-0001' AS order_code, 'farmer@marketlink.vn' AS email, 'Chợ Bà Chiểu' AS market_name, 'placed' AS status
-      UNION ALL SELECT 'ML-20260920-0002', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 'placed'
-      UNION ALL SELECT 'ML-20260920-0004', 'farmer4@marketlink.vn', 'Chợ Bà Chiểu', 'accepted'
+      SELECT 'ML-20260920-0001' AS order_code, 'farmer@marketlink.vn' AS email, 'Chợ Bà Chiểu' AS market_name, 'placed' AS status, 1 AS days_before_now
+      UNION ALL SELECT 'ML-20260920-0002', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 'placed', 1
+      UNION ALL SELECT 'ML-20260920-0004', 'farmer4@marketlink.vn', 'Chợ Bà Chiểu', 'accepted', 2
      ) x
 JOIN users cust ON cust.email = 'customer@marketlink.vn'
 JOIN users u ON u.email = x.email
@@ -312,19 +315,20 @@ JOIN LATERAL (
 ON DUPLICATE KEY UPDATE customer_id = cust.id, farmer_id = f.id, market_id = m.id, slot_id = slot.id,
                         pickup_date = slot.slot_date, pickup_start = slot.start_time, pickup_end = slot.end_time,
                         cutoff_at = TIMESTAMP(slot.slot_date, slot.start_time) - INTERVAL f.order_cutoff_hours HOUR,
-                        status = x.status, customer_note = NULL, farmer_note = NULL, total_amount = 0;
+                        status = x.status, customer_note = NULL, farmer_note = NULL, total_amount = 0,
+                        created_at = UTC_TIMESTAMP() - INTERVAL x.days_before_now DAY;
 
 -- Nhóm 2: đơn future dùng slot kế tiếp (OFFSET 1, khác giờ hoặc khác ngày với nhóm 1) — 0003 accepted
 -- (farmer@), 0005 ready (farmer2@), 0006 ready (farmer4@).
 INSERT INTO orders (order_code, customer_id, farmer_id, market_id, slot_id, pickup_date, pickup_start,
-                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note)
+                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note, created_at)
 SELECT x.order_code, cust.id, f.id, m.id, slot.id, slot.slot_date, slot.start_time, slot.end_time,
        TIMESTAMP(slot.slot_date, slot.start_time) - INTERVAL f.order_cutoff_hours HOUR,
-       0, x.status, NULL, NULL
+       0, x.status, NULL, NULL, UTC_TIMESTAMP() - INTERVAL x.days_before_now DAY
 FROM (
-      SELECT 'ML-20260920-0003' AS order_code, 'farmer@marketlink.vn' AS email, 'Chợ Bà Chiểu' AS market_name, 'accepted' AS status
-      UNION ALL SELECT 'ML-20260920-0005', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 'ready'
-      UNION ALL SELECT 'ML-20260920-0006', 'farmer4@marketlink.vn', 'Chợ Bà Chiểu', 'ready'
+      SELECT 'ML-20260920-0003' AS order_code, 'farmer@marketlink.vn' AS email, 'Chợ Bà Chiểu' AS market_name, 'accepted' AS status, 2 AS days_before_now
+      UNION ALL SELECT 'ML-20260920-0005', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 'ready', 3
+      UNION ALL SELECT 'ML-20260920-0006', 'farmer4@marketlink.vn', 'Chợ Bà Chiểu', 'ready', 3
      ) x
 JOIN users cust ON cust.email = 'customer@marketlink.vn'
 JOIN users u ON u.email = x.email
@@ -342,17 +346,24 @@ JOIN LATERAL (
 ON DUPLICATE KEY UPDATE customer_id = cust.id, farmer_id = f.id, market_id = m.id, slot_id = slot.id,
                         pickup_date = slot.slot_date, pickup_start = slot.start_time, pickup_end = slot.end_time,
                         cutoff_at = TIMESTAMP(slot.slot_date, slot.start_time) - INTERVAL f.order_cutoff_hours HOUR,
-                        status = x.status, customer_note = NULL, farmer_note = NULL, total_amount = 0;
+                        status = x.status, customer_note = NULL, farmer_note = NULL, total_amount = 0,
+                        created_at = UTC_TIMESTAMP() - INTERVAL x.days_before_now DAY;
 
 -- Nhóm 3: đơn quá khứ (completed ×4, declined ×1, cancelled ×1) — slot_id NULL, giờ nhận hàng cố định
 -- 08:00–09:00 (nằm trong khung 07:00–11:00 của cả 3 stall).
+-- M-4: created_at = mốc "đặt hàng" thật của chuỗi lịch sử bên dưới — 2 ngày trước pickup_date, 08:00
+-- giờ VN — quy đổi UTC (-7 giờ) vì cột này là TIMESTAMP (session UTC), khác cutoff_at/pickup_date là
+-- DATETIME/DATE lưu giờ local không bị quy đổi. Luôn trước ngày nhận hàng, kể cả completed/declined/
+-- cancelled đã lùi về quá khứ.
 INSERT INTO orders (order_code, customer_id, farmer_id, market_id, slot_id, pickup_date, pickup_start,
-                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note)
+                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note, created_at)
 SELECT x.order_code, cust.id, f.id, m.id, NULL,
        DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL x.days_ago DAY, '08:00:00', '09:00:00',
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL x.days_ago DAY, '08:00:00')
          - INTERVAL f.order_cutoff_hours HOUR,
-       0, x.status, NULL, x.farmer_note
+       0, x.status, NULL, x.farmer_note,
+       TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00')
+         - INTERVAL 7 HOUR
 FROM (
       SELECT 'ML-20260920-0007' AS order_code, 'farmer@marketlink.vn' AS email, 'Chợ Bà Chiểu' AS market_name, 10 AS days_ago, 'completed' AS status, NULL AS farmer_note
       UNION ALL SELECT 'ML-20260920-0008', 'farmer2@marketlink.vn', 'Chợ Bến Thành', 8, 'completed', NULL
@@ -371,7 +382,9 @@ ON DUPLICATE KEY UPDATE customer_id = cust.id, farmer_id = f.id, market_id = m.i
                         pickup_start = '08:00:00', pickup_end = '09:00:00',
                         cutoff_at = TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL x.days_ago DAY, '08:00:00')
                                      - INTERVAL f.order_cutoff_hours HOUR,
-                        status = x.status, customer_note = NULL, farmer_note = x.farmer_note, total_amount = 0;
+                        status = x.status, customer_note = NULL, farmer_note = x.farmer_note, total_amount = 0,
+                        created_at = TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00')
+                                     - INTERVAL 7 HOUR;
 
 -- order_items (FR-034): 2–3 sản phẩm mỗi đơn, snapshot tên/đơn vị/giá hiện tại của products. Khoá tự nhiên
 -- là uq_order_product (order_id, product_id) nên upsert bám vào đó.
@@ -454,10 +467,13 @@ JOIN users fu ON fu.id = f.user_id;
 -- Chuỗi cho 6 đơn quá khứ (completed/declined/cancelled): mốc thời gian tính theo pickup_date thật của
 -- từng đơn (đã ghi ở bước insert orders) để chuỗi luôn đứng trước ngày nhận hàng, kể cả khi seed chạy vào
 -- ngày khác.
+-- M-4: time_of_day là giờ VN (khớp pickup_start/pickup_end, TIME không bị quy đổi) nhưng changed_at là
+-- cột TIMESTAMP (session UTC) — trừ 7 giờ trước khi ghi, nếu không API đọc lại sẽ muộn 7 tiếng.
 INSERT INTO order_status_history (order_id, from_status, to_status, changed_by, note, changed_at)
 SELECT o.id, spec.from_status, spec.to_status,
        CASE spec.actor WHEN 'customer' THEN cust.id ELSE fu.id END,
-       spec.note, TIMESTAMP(o.pickup_date + INTERVAL spec.day_delta DAY, spec.time_of_day)
+       spec.note,
+       TIMESTAMP(o.pickup_date + INTERVAL spec.day_delta DAY, spec.time_of_day) - INTERVAL 7 HOUR
 FROM (
       SELECT 'ML-20260920-0007' AS order_code, NULL AS from_status, 'placed' AS to_status, 'customer' AS actor, -2 AS day_delta, '08:00:00' AS time_of_day, NULL AS note
       UNION ALL SELECT 'ML-20260920-0007', 'placed', 'accepted', 'farmer', -1, '09:00:00', NULL
