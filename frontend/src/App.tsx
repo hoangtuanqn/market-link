@@ -3,6 +3,7 @@ import AppToaster from './components/AppToaster';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import ComingSoon from './components/ComingSoon';
 import { SHOW_WIP } from './config/wip';
+import { USER_ROLE } from './constants/enums';
 import NotificationCenter from './components/notifications/NotificationCenter';
 import NotificationPermissionBanner from './components/notifications/NotificationPermissionBanner';
 import SettingsSync from './components/SettingsSync';
@@ -213,38 +214,41 @@ const App = () => {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
 
-          {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader. */}
-          <Route path="/farmer" element={<FarmerLayout />}>
-            <Route index element={<FarmerOverviewPage />} />
-            <Route path="orders" element={<FarmerOrdersPage />} />
-            <Route
-              path="orders/:code"
-              element={
-                <RemountOnParam param="code">
-                  <FarmerOrderDetailPage />
-                </RemountOnParam>
-              }
-            />
-            <Route path="stock" element={<FarmerStockWeekPage />} />
-            <Route path="products" element={<FarmerProductsPage />} />
-            <Route path="products/new" element={<FarmerProductFormPage />} />
-            <Route
-              path="products/:id/edit"
-              element={
-                <RemountOnParam param="id">
-                  <FarmerProductFormPage />
-                </RemountOnParam>
-              }
-            />
-            <Route path="stall" element={<FarmerStallProfilePage />} />
-            <Route path="slots" element={<FarmerSlotsPage />} />
-            <Route path="history" element={<FarmerHistoryPage />} />
-            <Route path="settings" element={<FarmerSettingsPage />} />
-            <Route path="reviews" element={<FarmerReviewsPage />} />
-            <Route path="messages" element={<FarmerMessagesPage />} />
-            <Route path="notifications" element={<FarmerNotificationsPage />} />
-            <Route path="pending" element={<FarmerPendingPage />} />
-            <Route path="promote" element={<FarmerPromotePage />} />
+          {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader.
+              FR-005: signed-in Farmers only — guests go to /login, other roles to their own home. */}
+          <Route element={<RequireAuth role={USER_ROLE.FARMER} />}>
+            <Route path="/farmer" element={<FarmerLayout />}>
+              <Route index element={<FarmerOverviewPage />} />
+              <Route path="orders" element={<FarmerOrdersPage />} />
+              <Route
+                path="orders/:code"
+                element={
+                  <RemountOnParam param="code">
+                    <FarmerOrderDetailPage />
+                  </RemountOnParam>
+                }
+              />
+              <Route path="stock" element={<FarmerStockWeekPage />} />
+              <Route path="products" element={<FarmerProductsPage />} />
+              <Route path="products/new" element={<FarmerProductFormPage />} />
+              <Route
+                path="products/:id/edit"
+                element={
+                  <RemountOnParam param="id">
+                    <FarmerProductFormPage />
+                  </RemountOnParam>
+                }
+              />
+              <Route path="stall" element={<FarmerStallProfilePage />} />
+              <Route path="slots" element={<FarmerSlotsPage />} />
+              <Route path="history" element={<FarmerHistoryPage />} />
+              <Route path="settings" element={<FarmerSettingsPage />} />
+              <Route path="reviews" element={<FarmerReviewsPage />} />
+              <Route path="messages" element={<FarmerMessagesPage />} />
+              <Route path="notifications" element={<FarmerNotificationsPage />} />
+              <Route path="pending" element={<FarmerPendingPage />} />
+              <Route path="promote" element={<FarmerPromotePage />} />
+            </Route>
           </Route>
 
           {/* FR-004: the admin area is separate from the Customer/Farmer layout. */}
