@@ -532,3 +532,31 @@ JOIN (SELECT DISTINCT fm.farmer_id, od.day_of_week
 WHERE u.email IN ('farmer@marketlink.vn', 'farmer2@marketlink.vn')
 ON DUPLICATE KEY UPDATE default_quantity = IF(d.day_of_week IN (0, 6), 30, 20), default_price = NULL,
                         is_active = TRUE;
+
+-- ---- Favourites (FR-040, FR-014) of customer@marketlink.vn ----
+-- Two stalls, three products (one sold out, to demo the FR-041 restock alert) and one market.
+-- target_id repeats the one id that is set; uq_fav (customer_id, target_type, target_id) makes this
+-- re-runnable with INSERT IGNORE.
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id
+FROM users c
+JOIN users fu ON fu.email IN ('farmer@marketlink.vn', 'farmer2@marketlink.vn')
+JOIN farmer_profiles f ON f.user_id = fu.id
+WHERE c.email = 'customer@marketlink.vn';
+
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'product', NULL, p.id, NULL, p.id
+FROM users c
+JOIN (SELECT 'farmer@marketlink.vn' AS email, 'Rau muống' AS name
+      UNION ALL SELECT 'farmer@marketlink.vn', 'Xà lách xoong'
+      UNION ALL SELECT 'farmer2@marketlink.vn', 'Bưởi da xanh') x
+JOIN users fu ON fu.email = x.email
+JOIN farmer_profiles f ON f.user_id = fu.id
+JOIN products p ON p.farmer_id = f.id AND p.name = x.name
+WHERE c.email = 'customer@marketlink.vn';
+
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id
+FROM users c
+JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
+WHERE c.email = 'customer@marketlink.vn';
