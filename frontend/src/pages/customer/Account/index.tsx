@@ -4,10 +4,10 @@ import { Card } from '@/components/ui/card';
 import useLogout from '@/hooks/useLogout';
 import AchievementsCard from './AchievementsCard';
 import AvatarCard from './AvatarCard';
+import AppearanceCard from './AppearanceCard';
 import PasswordCard from './PasswordCard';
 import ProfileForm from './ProfileForm';
 import SellCard from './SellCard';
-import ThemeCard from './ThemeCard';
 
 /**
  * Profile editing and change password are proposals, not SRS requirements (feature catalog). Photo and details share
@@ -43,7 +43,7 @@ const CustomerAccountPage = () => {
 
           <PasswordCard />
 
-          <ThemeCard />
+          <AppearanceCard />
 
           <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
             <div>
