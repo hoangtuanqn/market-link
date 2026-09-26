@@ -20,7 +20,17 @@
     "lat": "Breitengrad",
     "lng": "Längengrad",
     "lngHint": "Oder zieh die Markierung. Die Kartendaten stammen von OpenStreetMap.",
-    "notes": "Hinweise für die Stände"
+    "notes": "Hinweise für die Stände",
+    "images": "Fotos"
+  },
+  "images": {
+    "add": "Foto hinzufügen",
+    "hint": "JPEG, PNG oder WEBP, je bis zu 8 MB. Füge bis zu {{max}} Fotos hinzu; das erste wird zum Titelfoto.",
+    "tooMany": "Füge höchstens {{max}} Fotos hinzu.",
+    "uploadInProgress": "Warte, bis die Fotos hochgeladen sind, bevor du speicherst.",
+    "uploading": "Wird hochgeladen",
+    "photoLabel": "Marktfoto {{n}}",
+    "remove": "Foto {{n}} entfernen"
   },
   "pin": {
     "label": "Markt auf der Karte setzen",
@@ -31,7 +41,9 @@
     "cancel": "Abbrechen"
   },
   "toast": {
-    "saved": "{{name}} gespeichert."
+    "saved": "{{name}} gespeichert.",
+    "fixTitle": "Formular prüfen",
+    "fix": "Wir haben markiert, was noch fehlt."
   },
   "closures": {
     "title": "Geschlossene Tage",
@@ -87,6 +99,7 @@
     "noun": "Markt",
     "required": "Dieses Feld ist erforderlich.",
     "days": "Wähle mindestens einen Markttag.",
-    "close": "Die Schließzeit muss nach der Öffnungszeit liegen."
+    "close": "Die Schließzeit muss nach der Öffnungszeit liegen.",
+    "images": "Füge mindestens ein Foto des Marktes hinzu."
   }
 }

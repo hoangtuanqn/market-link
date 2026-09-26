@@ -20,7 +20,17 @@
     "lat": "Latitud",
     "lng": "Longitud",
     "lngHint": "O arrastra la chincheta. Los datos del mapa vienen de OpenStreetMap.",
-    "notes": "Notas para los puestos"
+    "notes": "Notas para los puestos",
+    "images": "Fotos"
+  },
+  "images": {
+    "add": "Añadir foto",
+    "hint": "JPEG, PNG o WEBP, hasta 8 MB cada una. Añade hasta {{max}} fotos; la primera se convierte en la foto de portada.",
+    "tooMany": "Añade como máximo {{max}} fotos.",
+    "uploadInProgress": "Espera a que las fotos terminen de subirse antes de guardar.",
+    "uploading": "Subiendo",
+    "photoLabel": "Foto del mercado {{n}}",
+    "remove": "Quitar la foto {{n}}"
   },
   "pin": {
     "label": "Marcar el mercado",
@@ -31,7 +41,9 @@
     "cancel": "Cancelar"
   },
   "toast": {
-    "saved": "{{name}} guardado."
+    "saved": "{{name}} guardado.",
+    "fixTitle": "Revisa el formulario",
+    "fix": "Hemos marcado lo que falta."
   },
   "closures": {
     "title": "Días de cierre",
@@ -87,6 +99,7 @@
     "noun": "mercado",
     "required": "Este campo es obligatorio.",
     "days": "Elige al menos un día de apertura.",
-    "close": "La hora de cierre debe ser posterior a la de apertura."
+    "close": "La hora de cierre debe ser posterior a la de apertura.",
+    "images": "Añade al menos una foto del mercado."
   }
 }

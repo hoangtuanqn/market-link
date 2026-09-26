@@ -20,7 +20,11 @@
   },
   "map": {
     "title": "Où ils se trouvent",
-    "label": "Carte des marchés"
+    "label": "Carte des marchés",
+    "empty": {
+      "title": "Aucun marché sur la carte pour l'instant",
+      "text": "Ajoutez un marché avec des coordonnées pour le voir apparaître ici."
+    }
   },
   "empty": {
     "title": "Aucun marché pour l'instant",

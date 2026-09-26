@@ -20,7 +20,17 @@
     "lat": "Latitude",
     "lng": "Longitude",
     "lngHint": "Or drag the pin. Map data comes from OpenStreetMap.",
-    "notes": "Notes for stalls"
+    "notes": "Notes for stalls",
+    "images": "Photos"
+  },
+  "images": {
+    "add": "Add photo",
+    "hint": "JPEG, PNG or WEBP, up to 8 MB each. Add up to {{max}} photos; the first one becomes the cover photo.",
+    "tooMany": "Add at most {{max}} photos.",
+    "uploadInProgress": "Wait for the photos to finish uploading, then save.",
+    "uploading": "Uploading",
+    "photoLabel": "Market photo {{n}}",
+    "remove": "Remove photo {{n}}"
   },
   "pin": {
     "label": "Pin the market",
@@ -31,7 +41,9 @@
     "cancel": "Cancel"
   },
   "toast": {
-    "saved": "{{name}} saved."
+    "saved": "{{name}} saved.",
+    "fixTitle": "Check the form",
+    "fix": "We marked what still needs your attention."
   },
   "closures": {
     "title": "Closed days",
@@ -87,6 +99,7 @@
     "noun": "market",
     "required": "This field is required.",
     "days": "Pick at least one operating day.",
-    "close": "The closing time must be after the opening time."
+    "close": "The closing time must be after the opening time.",
+    "images": "Add at least one photo of the market."
   }
 }

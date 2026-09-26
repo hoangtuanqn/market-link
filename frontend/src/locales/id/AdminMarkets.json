@@ -16,7 +16,11 @@
   },
   "map": {
     "title": "Letaknya di mana",
-    "label": "Peta pasar"
+    "label": "Peta pasar",
+    "empty": {
+      "title": "Belum ada apa pun di peta",
+      "text": "Tambahkan pasar dengan koordinat peta agar muncul di sini."
+    }
   },
   "empty": {
     "title": "Belum ada pasar",
