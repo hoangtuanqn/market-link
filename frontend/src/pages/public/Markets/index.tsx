@@ -252,8 +252,8 @@ const MarketsPage = () => {
         )}
       </p>
 
-      {/* The list runs the full width like the filter card above it; the map sits below it, wide enough to read. */}
-      <div className="flex flex-col gap-6">
+      {/* Two columns on desktop: markets list on the left, sticky map on the right. Stacks on smaller screens. */}
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div ref={listRef} className="flex flex-col gap-4">
           {view === 'error' ? (
             <LoadError
@@ -312,8 +312,8 @@ const MarketsPage = () => {
           )}
         </div>
 
-        <div className="flex flex-col gap-4">
-          <MarketMap label={t('map.label')} markers={mapMarkers} className="min-h-100 md:min-h-155" />
+        <div className="flex flex-col gap-4 lg:sticky lg:top-20">
+          <MarketMap label={t('map.label')} markers={mapMarkers} className="min-h-80 md:min-h-120" />
           <p className="text-caption text-ink-muted">{t('map.note')}</p>
         </div>
       </div>
