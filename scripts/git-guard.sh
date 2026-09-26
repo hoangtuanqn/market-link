@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------
-# Git guard — chặn trộn môi trường dev / main ngay trên máy (CONTRIBUTING.md §0)
-# Được lefthook gọi tự động; cũng chạy tay được:
+# Git guard — block mixing the dev / main environments right on the machine (CONTRIBUTING.md §0)
+# Called automatically by lefthook; can also be run by hand:
 #   scripts/git-guard.sh pre-commit
-#   scripts/git-guard.sh pre-push <remote> <url>   (đọc danh sách ref từ stdin)
+#   scripts/git-guard.sh pre-push <remote> <url>   (reads the list of refs from stdin)
 # ---------------------------------------------------------------------
 set -euo pipefail
 
@@ -29,7 +29,7 @@ pre_commit() {
         exit 1
     fi
 
-    # Không commit file bí mật / file env riêng của từng máy (luật H-7)
+    # Do not commit secret files / files of one specific machine's env (rule H-7)
     local staged forbidden=()
     staged="$(git diff --cached --name-only --diff-filter=ACMR)"
     while IFS= read -r file; do
@@ -68,7 +68,7 @@ pre_push() {
             exit 1
         fi
 
-        # Force-push lên nhánh chung khác cũng không được, trừ nhánh của chính mình
+        # A force-push to another shared branch is also not allowed, except your own branch
         if [[ "$remote_sha" != "$zero" && "$local_sha" != "$zero" ]] \
             && git cat-file -e "$remote_sha" 2>/dev/null \
             && ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then

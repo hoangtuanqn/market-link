@@ -1,14 +1,14 @@
--- MarketLink — dữ liệu demo (FR-100, FR-101, FR-102).
--- KHÔNG phải migration: Flyway chạy ở mọi môi trường, seed demo thì không.
--- Chạy: make seed. Chạy lại được nhiều lần — mọi INSERT đều idempotent theo khoá tự nhiên
--- (categories.slug, markets.market_name, …). Mỗi cụm của plan core-commerce nối thêm khối
--- của mình vào cuối file này, không tạo file riêng.
--- Toạ độ là toạ độ thật của 4 chợ ở TP. Hồ Chí Minh.
+-- MarketLink — demo data (FR-100, FR-101, FR-102).
+-- NOT a migration: Flyway runs in every environment, demo seed data should not.
+-- Run: make seed. Safe to run repeatedly — every INSERT is idempotent by its natural key
+-- (categories.slug, markets.market_name, …). Each cluster of the core-commerce plan appends its own block
+-- at the end of this file, not a separate file.
+-- Coordinates are the real coordinates of the 4 markets in Ho Chi Minh City.
 
 SET NAMES utf8mb4;
 
--- ---- Danh mục (FR-076) ----
--- Tám danh mục đã thống nhất (PR #137, frontend/src/data/catalog.ts): tên và slug giữ đúng như đó.
+-- ---- Categories (FR-076) ----
+-- The eight agreed categories (PR #137, frontend/src/data/catalog.ts): names and slugs stay exactly as they are.
 INSERT INTO categories (name, slug, icon, sort_order, is_active) VALUES
   ('Vegetables',            'vegetables',            'leaf',    1, TRUE),
   ('Fruits',                'fruits',                'apple',   2, TRUE),
@@ -21,7 +21,7 @@ INSERT INTO categories (name, slug, icon, sort_order, is_active) VALUES
 AS new
 ON DUPLICATE KEY UPDATE sort_order = new.sort_order, is_active = new.is_active, icon = new.icon;
 
--- ---- Chợ (FR-073, FR-012) ----
+-- ---- Markets (FR-073, FR-012) ----
 INSERT INTO markets (market_name, address, district, city, latitude, longitude,
                      opening_time, closing_time, map_provider, is_active) VALUES
   ('Chợ Bà Chiểu',  'Bạch Đằng, Phường 1, Bình Thạnh',       'Bình Thạnh',  'TP. Hồ Chí Minh',
@@ -38,8 +38,8 @@ ON DUPLICATE KEY UPDATE address = new.address, district = new.district,
                         opening_time = new.opening_time, closing_time = new.closing_time,
                         is_active = new.is_active;
 
--- Ngày họp: Bà Chiểu và Tân Định họp cả tuần; Thảo Điền cuối tuần; Bến Thành T2–T7.
--- Bảng chỉ có khoá (market_id, day_of_week) nên INSERT IGNORE là đủ để chạy lại.
+-- Operating days: "Bà Chiểu" and "Tân Định" run all week; "Thảo Điền" on weekends; "Bến Thành" Mon–Sat.
+-- The table only has the key (market_id, day_of_week), so INSERT IGNORE is enough to make it re-runnable.
 INSERT IGNORE INTO market_operating_days (market_id, day_of_week)
 SELECT m.id, d.day
 FROM markets m
@@ -49,10 +49,10 @@ WHERE (m.market_name IN ('Chợ Bà Chiểu', 'Chợ Tân Định'))
    OR (m.market_name = 'Chợ Thảo Điền' AND d.day IN (0, 6))
    OR (m.market_name = 'Chợ Bến Thành' AND d.day BETWEEN 1 AND 6);
 
--- ---- Tài khoản demo (FR-102) ----
--- Mật khẩu của MỌI tài khoản demo: Demo@1234 (xem docs/DEMO_CREDENTIALS.md). @pw là hash BCrypt của nó,
--- sinh bằng `htpasswd -bnBC 10 "" 'Demo@1234'`. admin@marketlink.vn do AdminSeeder tạo lúc backend khởi
--- động; seed ghi đè mật khẩu để khớp tài liệu nộp bài.
+-- ---- Demo accounts (FR-102) ----
+-- The password of EVERY demo account: Demo@1234 (see docs/DEMO_CREDENTIALS.md). @pw is its BCrypt hash,
+-- generated with `htpasswd -bnBC 10 "" 'Demo@1234'`. admin@marketlink.vn is created by AdminSeeder when the backend
+-- starts; the seed overwrites the password to match the submission documents.
 SET @pw := '$2y$10$QECyiDw14FWH42GLLZE9l.wmNFH4v8ZHLz.UORUBYw3xGS4iDsTtW';
 
 INSERT INTO users (email, password_hash, role, full_name, phone, address, status) VALUES
@@ -73,7 +73,7 @@ ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_
                         phone = new.phone, role = new.role, status = new.status;
 
 
--- ---- Hồ sơ gian hàng (FR-060): 10 Farmer, tất cả đã duyệt để bán được ngay (D-09) ----
+-- ---- Stall profiles (FR-060): 10 Farmers, all approved so they can sell right away (D-09) ----
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours,
                              approval_status, approved_at)
 SELECT u.id, s.stall_name, u.full_name, s.description, s.cutoff, 'approved', NOW()
@@ -94,7 +94,7 @@ ON DUPLICATE KEY UPDATE stall_name = s.stall_name, description = s.description,
                         order_cutoff_hours = s.cutoff, approval_status = 'approved',
                         approved_at = COALESCE(farmer_profiles.approved_at, NOW());
 
--- ---- Farmer × chợ (FR-060) + khung giờ nhận hàng (FR-061) ----
+-- ---- Farmer × market (FR-060) + pickup time windows (FR-061) ----
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
 SELECT f.id, m.id, x.stall_code, m.latitude + x.dlat, m.longitude + x.dlng, TRUE
 FROM farmer_profiles f
@@ -121,8 +121,8 @@ JOIN markets m ON m.market_name = x.market_name
 ON DUPLICATE KEY UPDATE stall_code = x.stall_code, is_active = TRUE,
                         stall_latitude = m.latitude + x.dlat, stall_longitude = m.longitude + x.dlng;
 
--- Khung giờ 07:00–11:00 vào các thứ stall có mặt (chỉ những thứ chợ có họp). Bảng chỉ có khoá tự nhiên
--- (farmer_market_id, day_of_week) nên INSERT IGNORE là đủ để chạy lại.
+-- Time window 07:00–11:00 on the weekdays the stall is present (only weekdays the market runs). The table only has the natural key
+-- (farmer_market_id, day_of_week) so INSERT IGNORE is enough to make it re-runnable.
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, d.day, '07:00:00', '11:00:00'
 FROM farmer_markets fm
@@ -181,7 +181,7 @@ JOIN (
      ) d ON d.email = u.email AND d.market_name = m.market_name
 JOIN market_operating_days mod_ ON mod_.market_id = m.id AND mod_.day_of_week = d.day;
 
--- ---- Sản phẩm (FR-062, FR-064): 51 sản phẩm của 10 stall, đủ 6 danh mục, có sold_out / unavailable ----
+-- ---- Products (FR-062, FR-064): 51 products from 10 stalls, all 6 categories, including sold_out / unavailable ----
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, hidden_reason)
 SELECT f.id, c.id, x.name, x.description, x.price, x.unit, x.stock, x.status, FALSE, NULL
 FROM (
@@ -243,7 +243,7 @@ JOIN categories c ON c.slug = x.slug
 ON DUPLICATE KEY UPDATE category_id = c.id, description = x.description, price = x.price, unit = x.unit,
                         stock_quantity = x.stock, status = x.status;
 
--- FR-074: một listing bị admin ẩn để demo màn kiểm duyệt.
+-- FR-074: one listing hidden by an admin to demo the moderation screen.
 UPDATE products p
 JOIN farmer_profiles f ON f.id = p.farmer_id
 JOIN users u ON u.id = f.user_id

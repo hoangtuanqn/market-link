@@ -1,13 +1,13 @@
-# Guard: không trộn môi trường dev và main (CONTRIBUTING.md §0)
-#   Branch policy — PR chỉ được đi đúng luồng:  feature/* → dev → main,  hotfix/* → main → dev
-#   Env guard     — cấu hình dev / production không lẫn vào nhau, không có bí mật trong git
-# Chủ repo đặt 2 check này là "required" cho cả main và dev (CONTRIBUTING.md §11).
+# Guard: do not mix the dev and main environments (CONTRIBUTING.md §0)
+#   Branch policy — PRs may only follow the right flow:  feature/* → dev → main,  hotfix/* → main → dev
+#   Env guard     — dev / production config never mix, and no secrets are in git
+# The repo owner sets both checks as "required" for main and dev (CONTRIBUTING.md §11).
 name: Guard
 
 on:
   pull_request:
     branches: [dev, main]
-    # edited: chạy lại khi ai đó đổi base của PR (vd. từ dev sang main)
+    # edited: runs again when someone changes the PR base (e.g. from dev to main)
     types: [opened, synchronize, reopened, edited]
   push:
     branches: [dev, main]
@@ -26,7 +26,7 @@ jobs:
           echo "PR: $HEAD → $BASE"
           case "$BASE" in
             main)
-              # Production chỉ nhận release từ dev hoặc hotfix
+              # Production only accepts a release from dev or a hotfix
               if [[ "$HEAD" == "dev" || "$HEAD" == hotfix/* ]]; then
                 echo "✓ Hợp lệ"; exit 0
               fi
@@ -34,7 +34,7 @@ jobs:
               exit 1
               ;;
             dev)
-              # dev nhận nhánh làm việc, hoặc main khi đồng bộ ngược sau hotfix
+              # dev accepts working branches, or main when syncing back after a hotfix
               if [[ "$HEAD" == "main" || "$HEAD" =~ ^(feature|fix|docs|chore|refactor|test|hotfix)/ ]]; then
                 echo "✓ Hợp lệ"; exit 0
               fi
