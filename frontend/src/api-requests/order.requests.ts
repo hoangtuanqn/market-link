@@ -202,6 +202,16 @@ class OrderApi {
     return response.data.data;
   };
 
+  /**
+   * FR-037 — "Order again": the old order's lines as a suggested cart (creates nothing). Lines that can no longer be
+   * bought are left out and quantities are capped at current stock, so compare with the old order to explain what
+   * changed. Pass the result to `preview`. 403 when the order is not the caller's.
+   */
+  static reorder = async (id: number) => {
+    const response = await privateApi.post<ApiResponse<CartLineInput[]>>(`/orders/${id}/reorder`);
+    return response.data.data;
+  };
+
   /** Farmer — orders placed at their own stall, filtered by status and pickup date (`pickup_date`). */
   static farmerList = async (
     params: { status?: OrderStatus; date?: string; page?: number; pageSize?: number } = {},

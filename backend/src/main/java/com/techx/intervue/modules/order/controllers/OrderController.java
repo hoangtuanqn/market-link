@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.order.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.order.requests.CartLine;
 import com.techx.intervue.modules.order.requests.ModifyOrderRequest;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
@@ -13,6 +14,7 @@ import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -99,5 +101,15 @@ public class OrderController extends BaseController {
             @PathVariable long id,
             @Valid @RequestBody ModifyOrderRequest request) {
         return ok(orderService.modifyItems(user.getId(), id, request), "Order updated.");
+    }
+
+    /**
+     * FR-037 — the old order's lines as a suggested cart (contract §7); creates nothing. Lines that
+     * can no longer be bought are left out and quantities are capped at current stock.
+     */
+    @PostMapping("/{id}/reorder")
+    public ResponseEntity<ApiResource<List<CartLine>>> reorder(
+            @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
+        return ok(orderService.reorder(user.getId(), id), "");
     }
 }

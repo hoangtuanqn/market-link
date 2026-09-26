@@ -814,4 +814,36 @@ public class OrderService implements OrderServiceInterface {
             throw new IllegalArgumentException("Unknown order status: " + raw);
         }
     }
+
+    /**
+     * FR-037 — read-only: nothing is locked or reserved; the suggested cart goes through preview
+     * and place like any other cart. Only the buyer may reorder (403), a missing order is 404.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<CartLine> reorder(long userId, long orderId) {
+        Order order =
+                orderRepository
+                        .findById(orderId)
+                        .orElseThrow(() -> new OrderNotFoundException(orderId));
+        if (order.getCustomerId() != userId) {
+            throw new OrderNotYoursException();
+        }
+        List<OrderItem> lines = orderItemRepository.findByOrderId(orderId);
+        Map<Long, Product> byId =
+                productRepository
+                        .findAllById(lines.stream().map(OrderItem::getProductId).toList())
+                        .stream()
+                        .collect(Collectors.toMap(Product::getId, Function.identity()));
+        List<CartLine> cart = new ArrayList<>();
+        for (OrderItem line : lines) {
+            Product p = byId.get(line.getProductId());
+            // Same "can be bought" rule as place: deleted, hidden, paused or empty lines drop out
+            if (p == null || !sellable(p) || p.getStockQuantity() <= 0) {
+                continue;
+            }
+            cart.add(new CartLine(p.getId(), Math.min(line.getQuantity(), p.getStockQuantity())));
+        }
+        return cart;
+    }
 }

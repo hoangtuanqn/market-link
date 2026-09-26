@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.order.services.interfaces;
 
+import com.techx.intervue.modules.order.requests.CartLine;
 import com.techx.intervue.modules.order.requests.ModifyOrderRequest;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
@@ -82,4 +83,10 @@ public interface OrderServiceInterface {
      * item = cancelling the order.
      */
     OrderDetailResource modifyItems(long userId, long orderId, ModifyOrderRequest request);
+
+    /**
+     * FR-037 — the lines of an old order as a suggested cart: products that can no longer be bought
+     * drop out and quantities are capped at current stock. Creates nothing.
+     */
+    List<CartLine> reorder(long userId, long orderId);
 }
