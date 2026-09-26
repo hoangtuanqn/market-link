@@ -6,8 +6,10 @@ import { CUSTOMER_NAV, GUEST_NAV, type NavItem } from '@/constants/nav';
 import { BellIcon, CartIcon, ChatIcon, MenuIcon, SearchIcon } from '@/components/icons';
 import Logo from '@/components/Logo';
 import type { Tier } from '@/types/achievement.types';
+import { USER_ROLE } from '@/constants/enums';
 import { ButtonLink } from '@/components/ui/button';
 import Helper from '@/utils/helper';
+import type { RoleType } from '@/types/user.types';
 import MenuMobile from './MenuMobile';
 import NavLink from './NavLink';
 import UserMenu from './UserMenu';
@@ -26,6 +28,7 @@ type HeaderProps = {
   avatarUrl?: string;
   /** Hạng thành tích của chính mình: viền quanh ảnh trên header và drawer. */
   tier?: Tier;
+  role?: RoleType;
   settingsTo?: string;
   /** Hộp thư theo vai: Customer /messages, Farmer /farmer/messages. */
   messagesTo?: string;
@@ -41,6 +44,7 @@ const Header = ({
   userEmail,
   avatarUrl,
   tier,
+  role,
   settingsTo = '/settings',
   messagesTo = '/messages',
   notificationsTo = '/notifications',
@@ -52,9 +56,13 @@ const Header = ({
   const logout = useLogout();
   const signedIn = variant === 'customer';
   const navItems = signedIn ? CUSTOMER_NAV : GUEST_NAV;
+  const isFarmer = role === USER_ROLE.FARMER;
+  const isAdmin = role === USER_ROLE.ADMIN;
   const drawerItems: NavItem[] = signedIn
     ? [
         ...navItems,
+        ...(isFarmer ? [{ label: 'farmerPanel' as const, to: '/farmer' }] : []),
+        ...(isAdmin ? [{ label: 'adminPanel' as const, to: '/admin' }] : []),
         { label: 'messages', to: messagesTo },
         { label: 'dashboard', to: '/dashboard' },
         { label: 'profile', to: '/account' },
@@ -122,6 +130,7 @@ const Header = ({
                 email={userEmail}
                 avatarUrl={avatarUrl}
                 tier={tier}
+                role={role}
                 settingsTo={settingsTo}
                 onSignOut={logout}
               />

@@ -4,7 +4,6 @@ import { Card } from '@/components/ui/card';
 import useLogout from '@/hooks/useLogout';
 import AchievementsCard from './AchievementsCard';
 import AvatarCard from './AvatarCard';
-import AppearanceCard from './AppearanceCard';
 import PasswordCard from './PasswordCard';
 import ProfileForm from './ProfileForm';
 import SellCard from './SellCard';
@@ -42,8 +41,6 @@ const CustomerAccountPage = () => {
           <AchievementsCard />
 
           <PasswordCard />
-
-          <AppearanceCard />
 
           <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
             <div>
