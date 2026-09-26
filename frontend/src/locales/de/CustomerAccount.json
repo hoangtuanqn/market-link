@@ -1,0 +1,196 @@
+{
+  "title": "Konto",
+  "intro": "Ihre Daten werden nur mit einem Stand geteilt, und nur bei Bestellungen, die Sie dort aufgeben.",
+  "sell": {
+    "title": "Auf MarketLink verkaufen",
+    "text": "Wenn Sie Lebensmittel anbauen, kann dieses Konto zu einem Stand werden. Sie behalten Ihre Bestellungen, Favoriten und Ihren Warenkorb, und sobald ein Admin Sie freigibt, erscheint ein Bereich für Bestand und Abholzeiten.",
+    "apply": "Verkauf beantragen",
+    "view": "Antrag ansehen",
+    "panel": "Erzeugerbereich öffnen",
+    "loading": "Antrag wird geprüft",
+    "status": {
+      "pending": "Dein Antrag liegt bei einem Admin. Bis zur Antwort ändert sich für dich nichts.",
+      "approved": "Dein Stand ist freigegeben. Märkte, Abholzeiten und Produkte legst du im Erzeugerbereich fest.",
+      "rejected": "Dein Antrag wurde nicht genehmigt. Öffne ihn, um das Gesendete zu sehen.",
+      "suspended": "Dein Stand ist gesperrt. Als Kundin oder Kunde kaufst du weiter ein."
+    },
+    "draft": "Du hast einen unfertigen Antrag. Mach dort weiter, wo du aufgehört hast.",
+    "continue": "Antrag fertig ausfüllen",
+    "history": "Frühere Anträge ansehen"
+  },
+  "signOut": {
+    "title": "Abmelden",
+    "text": "Meldet Sie nur auf diesem Gerät ab.",
+    "button": "Abmelden"
+  },
+  "profile": {
+    "title": "Ihre Daten",
+    "loading": "Ihre Daten werden geladen…",
+    "loadFailed": "Ihre Daten konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+    "signedOut": {
+      "title": "Sie sind abgemeldet.",
+      "text": "Melden Sie sich erneut an, um Ihre Daten zu sehen und zu bearbeiten.",
+      "signIn": "Anmelden"
+    },
+    "nothingChanged": "Es wurde nichts geändert.",
+    "retry": "Erneut versuchen",
+    "fullName": "Vollständiger Name",
+    "phone": "Telefonnummer",
+    "email": "E-Mail",
+    "emailHint": "Wird zur Anmeldung verwendet. Kann hier nicht geändert werden.",
+    "address": "Adresse",
+    "addressHint": "Wird für Entfernungen und Routen verwendet.",
+    "save": "Änderungen speichern",
+    "saving": "Wird gespeichert…",
+    "noChanges": "Keine Änderungen zu speichern.",
+    "saved": "Ihre Daten sind gespeichert.",
+    "saveFailed": "Ihre Daten konnten nicht gespeichert werden. Bitte versuchen Sie es erneut."
+  },
+  "password": {
+    "section": "Passwort & Sicherheit",
+    "row": "Passwort",
+    "rowNote": "Das Passwort, mit dem Sie sich per E-Mail anmelden.",
+    "title": "Passwort ändern",
+    "intro": "Sie werden auf allen Geräten abgemeldet und müssen sich erneut anmelden.",
+    "current": "Aktuelles Passwort",
+    "new": "Neues Passwort",
+    "repeat": "Neues Passwort wiederholen",
+    "hint": "{{min}} bis {{max}} Zeichen.",
+    "submit": "Passwort ändern",
+    "submitting": "Passwort wird geändert…",
+    "cancel": "Abbrechen",
+    "changed": "Ihr Passwort wurde geändert. Bitte melden Sie sich erneut an.",
+    "failed": "Ihr Passwort konnte nicht geändert werden. Bitte versuchen Sie es erneut.",
+    "errors": {
+      "currentRequired": "Geben Sie Ihr aktuelles Passwort ein.",
+      "newRequired": "Geben Sie ein neues Passwort ein.",
+      "length": "Das Passwort muss {{min}} bis {{max}} Zeichen lang sein.",
+      "same": "Verwenden Sie ein anderes Passwort als das aktuelle.",
+      "confirmRequired": "Bestätigen Sie Ihr Passwort.",
+      "mismatch": "Die Passwörter stimmen nicht überein."
+    }
+  },
+  "photo": {
+    "title": "Profilfoto",
+    "intro": "Wird im Menü und den Ständen bei Ihren Bestellungen angezeigt. JPEG, PNG oder ein Foto von Ihrer Kamera.",
+    "upload": "Foto hochladen",
+    "take": "Foto aufnehmen",
+    "notUsed": "Foto nicht verwendet"
+  },
+  "photoErrors": {
+    "notPhoto": "Wählen Sie ein Foto (JPEG, PNG, HEIC oder WebP).",
+    "tooBig": "Dieses Foto ist größer als {{mb}} MB. Wählen Sie ein kleineres.",
+    "unreadable": "Diese Datei ist kein lesbares Foto.",
+    "noPicture": "Die Kamera hat noch kein Bild. Versuchen Sie es erneut.",
+    "captureFailed": "Das Foto konnte nicht aufgenommen werden."
+  },
+  "dialog": {
+    "takeTitle": "Foto aufnehmen",
+    "frameTitle": "Foto zuschneiden",
+    "frameHelp": "Ziehen Sie das Foto und zoomen Sie, bis Ihr Gesicht den Kreis ausfüllt.",
+    "cancel": "Abbrechen",
+    "uploadInstead": "Stattdessen ein Foto hochladen",
+    "take": "Foto aufnehmen",
+    "retake": "Neu aufnehmen",
+    "chooseAnother": "Anderes wählen",
+    "save": "Foto speichern",
+    "saving": "Wird gespeichert…",
+    "saved": "Ihr Foto ist gespeichert.",
+    "saveFailed": "Ihr Foto konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+    "takeFailed": "Das Foto konnte nicht aufgenommen werden. Versuchen Sie es erneut.",
+    "unchanged": "Ihr aktuelles Foto bleibt unverändert."
+  },
+  "camera": {
+    "preview": "Kameravorschau",
+    "starting": "Kamera wird gestartet…",
+    "blocked": {
+      "title": "Der Kamerazugriff ist blockiert.",
+      "text": "Erlauben Sie die Kamera für diese Seite in den Browsereinstellungen, oder laden Sie stattdessen ein Foto hoch."
+    },
+    "notFound": {
+      "title": "Keine Kamera gefunden.",
+      "text": "Schließen Sie eine an, oder laden Sie stattdessen ein Foto hoch."
+    },
+    "busy": {
+      "title": "Die Kamera ist belegt.",
+      "text": "Schließen Sie andere Apps, die sie nutzen, und versuchen Sie es erneut, oder laden Sie ein Foto hoch."
+    },
+    "failed": {
+      "title": "Die Kamera konnte nicht starten.",
+      "text": "Versuchen Sie es erneut, oder laden Sie stattdessen ein Foto hoch."
+    },
+    "insecure": {
+      "title": "Dieser Browser kann die Kamera hier nicht öffnen.",
+      "text": "Die Kamera braucht eine sichere (https-)Seite. Laden Sie stattdessen ein Foto hoch."
+    }
+  },
+  "crop": {
+    "frame": "Fotoausschnitt. Ziehen Sie, oder verschieben Sie mit den Pfeiltasten und zoomen Sie mit Plus oder Minus.",
+    "zoom": "Zoom"
+  },
+  "achievements": {
+    "title": "Deine Erfolge",
+    "intro": "Gezählt aus den Bestellungen, die du an den Ständen abgeholt hast. Diese Zahlen siehst nur du.",
+    "loading": "Deine Erfolge werden geladen…",
+    "loadFailed": "Deine Erfolge konnten nicht geladen werden.",
+    "completed": "Abgeholte Bestellungen",
+    "cancelled": "Von dir storniert",
+    "declined": "Vom Stand abgelehnt",
+    "inProgress": "Laufend",
+    "spent": "Insgesamt ausgegeben",
+    "rate": "Abschlussquote",
+    "rateNone": "—",
+    "nextTitle": "Auf dem Weg zu {{tier}}",
+    "ofGoal": "{{value}} von {{goal}}",
+    "rateNeeded": "Du brauchst außerdem eine Abschlussquote von mindestens {{rate}} %. Vom Stand abgelehnte Bestellungen zählen nie gegen dich.",
+    "top": "Du bist auf der höchsten Stufe. Danke, dass du auf dem Markt einkaufst.",
+    "youAreHere": "Deine Stufe",
+    "perks": {
+      "bronze": "Bronzerahmen um dein Foto",
+      "silver": "Ein dickerer Silberrahmen",
+      "gold": "Goldrahmen mit Stern",
+      "diamond": "Funkelnder Diamantrahmen mit Edelstein"
+    },
+    "unavailable": {
+      "title": "Noch keine Bestellzahlen",
+      "text": "Stufe und Zahlen füllen sich von selbst, sobald deine Bestellungen erfasst sind."
+    },
+    "privacy": "Stände und andere Käufer sehen deine Stufe neben deinem Namen, nie diese Zahlen.",
+    "hero": {
+      "overline": "Deine Mitgliedschaft",
+      "line_one": "{{name}}, du hast {{count}} Bestellung abgeholt und {{amount}} auf dem Markt ausgegeben.",
+      "line_other": "{{name}}, du hast {{count}} Bestellungen abgeholt und {{amount}} auf dem Markt ausgegeben.",
+      "welcome": "Willkommen auf dem Markt, {{name}}. Hol deine ersten Bestellungen ab und steig die Stufen hinauf.",
+      "since": "Mitglied seit {{date}}"
+    },
+    "titles": {
+      "bronze": "Neu auf dem Markt",
+      "silver": "Ein bekanntes Gesicht",
+      "gold": "Stammgast an den Ständen",
+      "diamond": "Hüter des Marktfeuers"
+    },
+    "yourPerksTitle": "Deine Vorteile",
+    "yourPerks": {
+      "bronze": [
+        "Ein Bronzerahmen um dein Foto, im Menü und auf deinem Profil",
+        "Deine Stufe neben deinem Namen bei Bewertungen und in Nachrichten"
+      ],
+      "silver": [
+        "Ein dickerer Silberrahmen um dein Foto",
+        "Stände sehen die Stufe Silber neben deinem Namen bei Bestellungen und in Nachrichten",
+        "Deine Bewertungen tragen das Abzeichen der Stufe Silber"
+      ],
+      "gold": [
+        "Ein Goldrahmen mit einem Stern an der Ecke deines Fotos",
+        "Stände sehen die Stufe Gold neben deinem Namen bei Bestellungen und in Nachrichten",
+        "Deine Bewertungen tragen das Abzeichen der Stufe Gold"
+      ],
+      "diamond": [
+        "Ein funkelnder Diamantrahmen mit einem Edelstein an der Ecke deines Fotos",
+        "Stände sehen die Stufe Diamant neben deinem Namen bei Bestellungen und in Nachrichten",
+        "Deine Bewertungen tragen das Abzeichen der Stufe Diamant",
+        "Eine glitzernde Mitgliedskarte auf deinem Profil"
+      ]
+    }
+  }
+}

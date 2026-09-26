@@ -1,13 +1,18 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import useLogout from '@/hooks/useLogout';
 import { Link } from 'react-router';
-import { CUSTOMER_NAV, GUEST_NAV } from '@/constants/nav';
-import { BellIcon, CartIcon, MenuIcon, SearchIcon } from '@/components/icons';
+import { CUSTOMER_NAV, GUEST_NAV, type NavItem } from '@/constants/nav';
+import { BellIcon, CartIcon, ChatIcon, MenuIcon, SearchIcon } from '@/components/icons';
 import Logo from '@/components/Logo';
+import type { Tier } from '@/types/achievement.types';
+import { USER_ROLE } from '@/constants/enums';
 import { ButtonLink } from '@/components/ui/button';
 import Helper from '@/utils/helper';
+import type { RoleType } from '@/types/user.types';
 import MenuMobile from './MenuMobile';
 import NavLink from './NavLink';
+import UserMenu from './UserMenu';
 
 const iconButton =
   'relative grid size-11 cursor-pointer place-items-center rounded-sm bg-transparent text-on-board hover:shadow-[inset_0_0_0_1.5px_var(--board-muted)] [&_svg]:size-5.5';
@@ -19,26 +24,59 @@ type HeaderProps = {
   /** 'customer' also covers a Farmer away from their stall panel (README, "Two shells"). */
   variant?: 'guest' | 'customer';
   userName?: string;
+  userEmail?: string;
+  avatarUrl?: string;
+  /** Hạng thành tích của chính mình: viền quanh ảnh trên header và drawer. */
+  tier?: Tier;
+  role?: RoleType;
+  settingsTo?: string;
+  /** Hộp thư theo vai: Customer /messages, Farmer /farmer/messages. */
+  messagesTo?: string;
+  /** Trang thông báo của vai đang đăng nhập (Farmer: /farmer/notifications). */
+  notificationsTo?: string;
   cartCount?: number;
   unreadCount?: number;
 };
 
-const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount = 0 }: HeaderProps) => {
+const Header = ({
+  variant = 'guest',
+  userName = '',
+  userEmail,
+  avatarUrl,
+  tier,
+  role,
+  settingsTo = '/settings',
+  messagesTo = '/messages',
+  notificationsTo = '/notifications',
+  cartCount = 0,
+  unreadCount = 0,
+}: HeaderProps) => {
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const logout = useLogout();
   const signedIn = variant === 'customer';
   const navItems = signedIn ? CUSTOMER_NAV : GUEST_NAV;
-  const drawerItems = signedIn
-    ? [...navItems, { label: 'Account', to: '/account' }]
-    : [...navItems, { label: 'Sign in', to: '/login' }, { label: 'Create an account', to: '/register/customer' }];
+  const isFarmer = role === USER_ROLE.FARMER;
+  const isAdmin = role === USER_ROLE.ADMIN;
+  const drawerItems: NavItem[] = signedIn
+    ? [
+        ...navItems,
+        ...(isFarmer ? [{ label: 'farmerPanel' as const, to: '/farmer' }] : []),
+        ...(isAdmin ? [{ label: 'adminPanel' as const, to: '/admin' }] : []),
+        { label: 'messages', to: messagesTo },
+        { label: 'dashboard', to: '/dashboard' },
+        { label: 'profile', to: '/account' },
+        { label: 'settings', to: settingsTo },
+      ]
+    : [...navItems, { label: 'signIn', to: '/login' }, { label: 'createAccount', to: '/register/customer' }];
 
   return (
     <>
       <header className="bg-board text-on-board sticky top-0 z-40">
-        <div className="mx-auto flex min-h-16 max-w-300 items-center gap-2 px-4 md:gap-6 md:px-6">
-          <Logo to={signedIn ? '/dashboard' : '/'} />
+        <div className="mx-auto flex min-h-16 max-w-(--size-container) items-center gap-2 px-4 md:gap-6 md:px-6">
+          <Logo to="/" />
 
-          <nav aria-label="Main" className="hidden md:block">
+          <nav aria-label={t('header.main')} className="hidden md:block">
             <ul className="flex gap-1">
               {navItems.map((item) => (
                 <li key={item.to}>
@@ -49,13 +87,21 @@ const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount =
           </nav>
 
           <div className="ml-auto flex items-center gap-1">
-            <Link to="/search" aria-label="Search" className={Helper.cn(iconButton, 'max-md:hidden')}>
+            <Link to="/search" aria-label={t('header.search')} className={Helper.cn(iconButton, 'max-md:hidden')}>
               <SearchIcon />
             </Link>
+            {/* Tin nhắn và thông báo là hai biểu tượng riêng, không gộp (spec chat §9.1) */}
+            {signedIn && (
+              <Link to={messagesTo} aria-label={t('header.messages')} className={iconButton}>
+                <ChatIcon />
+              </Link>
+            )}
             {signedIn && (
               <Link
-                to="/notifications"
-                aria-label={unreadCount ? `Notifications, ${unreadCount} unread` : 'Notifications'}
+                to={notificationsTo}
+                aria-label={
+                  unreadCount ? t('header.notificationsUnread', { count: unreadCount }) : t('header.notifications')
+                }
                 className={iconButton}
               >
                 <BellIcon />
@@ -66,7 +112,11 @@ const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount =
                 )}
               </Link>
             )}
-            <Link to="/cart" aria-label={cartCount ? `Cart, ${cartCount} items` : 'Cart'} className={iconButton}>
+            <Link
+              to="/cart"
+              aria-label={cartCount ? t('header.cartItems', { count: cartCount }) : t('header.cart')}
+              className={iconButton}
+            >
               <CartIcon />
               {cartCount > 0 && (
                 <span aria-hidden="true" className={badge}>
@@ -75,20 +125,23 @@ const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount =
               )}
             </Link>
             {signedIn ? (
-              <Link
-                to="/account"
-                className="text-small text-board-muted border-board-muted ml-1 hidden items-center gap-2 border-l pl-3 no-underline md:inline-flex"
-              >
-                Hi, <b className="text-on-board">{userName}</b>
-              </Link>
+              <UserMenu
+                name={userName}
+                email={userEmail}
+                avatarUrl={avatarUrl}
+                tier={tier}
+                role={role}
+                settingsTo={settingsTo}
+                onSignOut={logout}
+              />
             ) : (
               <ButtonLink to="/login" variant="accent" size="sm">
-                Sign in
+                {t('nav.signIn')}
               </ButtonLink>
             )}
             <button
               type="button"
-              aria-label="Open menu"
+              aria-label={t('header.openMenu')}
               onClick={() => setMenuOpen(true)}
               className={Helper.cn(iconButton, 'md:hidden')}
             >
@@ -100,7 +153,12 @@ const Header = ({ variant = 'guest', userName = '', cartCount = 0, unreadCount =
       </header>
 
       {menuOpen && (
-        <MenuMobile items={drawerItems} onClose={() => setMenuOpen(false)} onSignOut={signedIn ? logout : undefined} />
+        <MenuMobile
+          items={drawerItems}
+          account={signedIn ? { name: userName, email: userEmail, avatarUrl, tier } : undefined}
+          onClose={() => setMenuOpen(false)}
+          onSignOut={signedIn ? logout : undefined}
+        />
       )}
     </>
   );

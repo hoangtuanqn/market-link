@@ -16,4 +16,6 @@ public record UserResource(
         RoleType role,
         Instant createdAt,
         /* false: tài khoản tạo qua Google chưa đặt mật khẩu → FE mời đặt mật khẩu */
-        boolean hasPassword) {}
+        boolean hasPassword,
+        /* ảnh Google (URL đầy đủ) hoặc ảnh tự tải lên ("/uploads/avatars/..."); null thì FE hiện chữ cái đầu */
+        String avatarUrl) {}

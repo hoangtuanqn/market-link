@@ -1,0 +1,61 @@
+{
+  "overline": "Pengaturan",
+  "title": "Kategori",
+  "intro": "Satu-satunya daftar yang dipilih setiap lapak saat menambah produk. Satuan jual bersifat tetap dan sudah ada di aplikasi.",
+  "link": {
+    "announcements": "Pengumuman",
+    "feedback": "Kotak masukan"
+  },
+  "caption": {
+    "categories_other": "{{count}} kategori"
+  },
+  "col": {
+    "category": "Kategori",
+    "products": "Produk",
+    "stalls": "Lapak",
+    "nameOf": "Nama {{name}}",
+    "oneOfThem": "Bentuk tunggal",
+    "moreThanOne": "Bentuk jamak",
+    "pluralOf": "Bentuk jamak dari {{name}}",
+    "kind": "Jenis",
+    "readsAs": "Terbaca sebagai"
+  },
+  "action": {
+    "save": "Simpan",
+    "remove": "Hapus",
+    "addToPicker": "Masukkan ke daftar pilihan",
+    "merge": "Gabungkan"
+  },
+  "categoryForm": {
+    "title": "Tambah kategori",
+    "name": "Nama",
+    "namePlaceholder": "mis. Seafood",
+    "nameHint": "Dalam bahasa Inggris, huruf besar hanya di awal. Kata ini ditulis tangan pada label produk yang tidak berfoto.",
+    "position": "Urutan pada filter",
+    "submit": "Tambah kategori"
+  },
+  "removeCategory": {
+    "title": "Hapus {{name}}?",
+    "textUsed_other": "{{count}} produk memakainya. Pilih akan dipindah ke mana.",
+    "textUnused": "Tidak ada produk yang memakainya.",
+    "moveTo": "Pindahkan produk ke",
+    "keep": "Pertahankan kategori",
+    "confirm": "Hapus kategori"
+  },
+  "empty": {
+    "categories": {
+      "title": "Belum ada kategori",
+      "text": "Tambahkan satu kategori supaya petani bisa menempatkan produknya di sana."
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}} tersimpan.",
+    "categoryAdded": "Kategori ditambahkan. Lapak sudah bisa memilihnya.",
+    "categoryRemoved": "{{name}} dihapus.",
+    "promoted": "{{name}} kini ada di daftar pilihan semua lapak."
+  },
+  "error": {
+    "noun": "kategori",
+    "nameRequired": "Beri nama kategori."
+  }
+}

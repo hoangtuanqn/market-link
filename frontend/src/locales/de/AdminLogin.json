@@ -1,0 +1,17 @@
+{
+  "overline": "Admin-Bereich",
+  "title": "Melden Sie sich an, um MarketLink zu verwalten",
+  "intro": "Diese Anmeldung ist nur für Plattform-Admins und führt zu einem eigenen Dashboard. Kunden und Landwirte <link>melden sich hier an</link>.",
+  "notAdmin": {
+    "title": "Dieses Konto ist kein Admin-Konto",
+    "text": "Diese Anmeldung ist nur für Plattform-Admins. <link>Kunden und Landwirte melden sich hier an</link>."
+  },
+  "form": {
+    "email": "Admin-E-Mail",
+    "password": "Passwort",
+    "submit": "Anmelden",
+    "submitting": "Anmeldung läuft…",
+    "signedIn": "Angemeldet.",
+    "error": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+  }
+}

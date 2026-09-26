@@ -1,0 +1,93 @@
+{
+  "allMarkets": "Märkte",
+  "crumbNew": "Hinzufügen",
+  "crumbEdit": "Bearbeiten",
+  "titleNew": "Neuer Markt",
+  "city": "Ho-Chi-Minh-Stadt",
+  "meta": "{{stalls}} Stände · hinzugefügt am {{added}}",
+  "metaStalls": "{{stalls}} Stände",
+  "missing": {
+    "title": "Diesen Markt gibt es nicht mehr",
+    "text": "Er wurde vielleicht entfernt. Öffne ihn erneut über die Marktliste."
+  },
+  "field": {
+    "name": "Name des Marktes",
+    "address": "Adresse",
+    "district": "Bezirk",
+    "city": "Stadt",
+    "days": "Markttage",
+    "open": "Öffnet",
+    "close": "Schließt",
+    "lat": "Breitengrad",
+    "lng": "Längengrad",
+    "lngHint": "Oder zieh die Markierung. Die Kartendaten stammen von OpenStreetMap.",
+    "notes": "Hinweise für die Stände"
+  },
+  "pin": {
+    "label": "Markt auf der Karte setzen",
+    "note": "Zieh die Markierung an den Eingang des Marktes. Die Stände setzen ihre eigene Markierung später innerhalb des Marktes."
+  },
+  "action": {
+    "save": "Markt speichern",
+    "cancel": "Abbrechen"
+  },
+  "toast": {
+    "saved": "{{name}} gespeichert."
+  },
+  "closures": {
+    "title": "Geschlossene Tage",
+    "intro": "Ein Tag, an dem dieser Markt nicht öffnet, obwohl er auf einen Markttag fällt. Die Kundschaft sieht es auf der Marktseite und auf der Startseite, und für diesen Tag sind keine neuen Bestellungen möglich.",
+    "add": "Geschlossenen Tag hinzufügen",
+    "addConfirm": "Tag hinzufügen",
+    "added": "Geschlossener Tag hinzugefügt. Veröffentliche einen Hinweis, damit die Kundschaft davon erfährt.",
+    "removed": "Geschlossener Tag entfernt.",
+    "remove": "Entfernen",
+    "removeTitle": "Diesen geschlossenen Tag entfernen?",
+    "removeText": "Der Markt öffnet an diesem Tag wieder und die Kundschaft kann bestellen.",
+    "keep": "Behalten",
+    "announced": "Angekündigt",
+    "notYet": "Noch nicht",
+    "noneYet": "Noch keine",
+    "noReason": "Nicht angegeben",
+    "byAdminToday": "Administrator · heute",
+    "col": {
+      "date": "Datum",
+      "reason": "Grund",
+      "orders": "Bereits aufgegebene Bestellungen",
+      "told": "Kundschaft informiert"
+    },
+    "field": {
+      "date": "Datum",
+      "reason": "Grund, den die Kundschaft sieht",
+      "reasonPlaceholder": "Straßenarbeiten des Bezirks in der Quốc Hương",
+      "handling": "Bereits aufgegebene Bestellungen für diesen Tag"
+    },
+    "empty": {
+      "title": "Keine geschlossenen Tage",
+      "text": "Dieser Markt öffnet an jedem seiner Markttage. Füge einen geschlossenen Tag hinzu, wenn das einmal nicht der Fall ist."
+    }
+  },
+  "handling": {
+    "move": {
+      "title": "Bestellungen auf den nächsten Markttag verschieben",
+      "short": "auf den nächsten Markttag verschoben",
+      "text": "Alle behalten ihre Bestellung und bekommen das neue Abholdatum. Der Stand muss an diesem Tag ebenfalls verkaufen."
+    },
+    "contact": {
+      "title": "Jeden Stand bitten, seine Kundschaft zu kontaktieren",
+      "short": "Stände kontaktieren ihre Kundschaft",
+      "text": "Automatisch ändert sich nichts. Der Stand vereinbart einen anderen Zeitpunkt und erstattet nichts, denn es ist kein Geld geflossen."
+    },
+    "cancel": {
+      "title": "Bestellungen stornieren und die Kundschaft informieren",
+      "short": "storniert und Kundschaft informiert",
+      "text": "Der Bestand geht an den Stand zurück und die Bestellung endet als storniert, nicht als abgelehnt, denn der Stand hat nichts falsch gemacht."
+    }
+  },
+  "error": {
+    "noun": "Markt",
+    "required": "Dieses Feld ist erforderlich.",
+    "days": "Wähle mindestens einen Markttag.",
+    "close": "Die Schließzeit muss nach der Öffnungszeit liegen."
+  }
+}

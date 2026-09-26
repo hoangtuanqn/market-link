@@ -1,0 +1,173 @@
+{
+  "breadcrumbAccount": "Compte",
+  "breadcrumb": "Demander à vendre",
+  "since": "{{name}} · client depuis le {{date}}",
+  "title": "Vendez ce que vous cultivez",
+  "intro": "Si vous cultivez des aliments, votre compte peut devenir un stand sur l'un des quatre marchés. Vous gardez tout ce que vous avez et continuez à acheter auprès des autres stands.",
+  "next": {
+    "title": "Ce qui se passe après l'envoi",
+    "read": "Un admin examine votre demande et vos photos.",
+    "panel": "Une fois validé, un panneau de stand s'ouvre dans votre compte.",
+    "setup": "Vous y réglez marchés, horaires de retrait et produits."
+  },
+  "step1": {
+    "title": "Votre stand",
+    "stallName": "Nom du stand",
+    "stallNamePlaceholder": "ex. Les légumes de la famille Khang",
+    "stallNameHint": "Les clients le voient sur la carte et sur leurs commandes.",
+    "person": "Personne à contacter",
+    "phone": "Téléphone",
+    "email": "E-mail",
+    "emailHint": "Votre identifiant de connexion ne change pas.",
+    "about": "À propos du stand",
+    "aboutPlaceholder": "Une ou deux phrases. Qui cultive et où.",
+    "address": "Adresse",
+    "fromAccount": "Depuis votre compte. Modifiable sur la page Compte.",
+    "aboutCount": "{{used}} sur {{max}} caractères"
+  },
+  "step2": {
+    "title": "Photos de la parcelle",
+    "intro": "Une vue d'ensemble et une vue rapprochée, prises dans les 30 derniers jours. Sans filtre.",
+    "addPhoto": "Ajouter une photo",
+    "video": "Une courte vidéo",
+    "addVideo": "Ajouter une vidéo, 60 secondes maximum",
+    "videoHint": "Facultatif. Une marche lente le long des planches accélère la validation.",
+    "banner": {
+      "title": "L'admin vérifie seulement que la parcelle existe.",
+      "text": "MarketLink ne vérifie ni licences, ni sécurité alimentaire, ni label bio."
+    },
+    "uploading": "Envoi en cours…",
+    "removePhoto": "Retirer : {{label}}",
+    "videoAdded": "Vidéo ajoutée",
+    "removeVideo": "Retirer",
+    "photoHint": "Au moins une photo est requise. JPEG, PNG ou WEBP, {{max}} Mo maximum par photo.",
+    "videoLimit": "{{max}} Mo maximum.",
+    "photoLabel": "Photo {{n}}",
+    "addPhotoLabel": "Ajouter la photo {{n}}"
+  },
+  "step3": {
+    "title": "Avant d'envoyer",
+    "true": "Les informations et les photos sont les miennes et exactes",
+    "trueHint": "De fausses photos entraînent un refus ou une suspension.",
+    "present": "Je serai au stand pendant mon créneau de retrait",
+    "presentHint": "Les absences répétées entraînent une suspension.",
+    "pay": "Les clients me paient au stand",
+    "payHint": "MarketLink n'a ni paiement en ligne ni livraison.",
+    "send": "Envoyer la demande",
+    "later": "Enregistrer et terminer plus tard",
+    "sending": "Envoi…"
+  },
+  "sent": {
+    "title": "Votre demande est entre les mains d'un administrateur",
+    "intro": "Rien ne change pour vous en attendant. Continuez vos achats et surveillez vos notifications pour la réponse.",
+    "summary": "Ce que vous avez envoyé",
+    "stall": "Stand",
+    "evidence": "Justificatifs",
+    "photos_one": "{{count}} photo",
+    "photos_other": "{{count}} photos",
+    "photosAndVideo_one": "{{count}} photo et une vidéo",
+    "photosAndVideo_other": "{{count}} photos et une vidéo",
+    "keepShopping": "Continuer mes achats",
+    "progress": "Avancement",
+    "about": "Présentation",
+    "noPhotos": "Aucune photo",
+    "noPhotosVideo": "Aucune photo, et une vidéo",
+    "status": "État",
+    "sentOn": "Envoyée le",
+    "photoAlt": "Photo de la parcelle",
+    "applyAgain": "Refaire une demande",
+    "historyTitle": "Vos demandes précédentes",
+    "historyText": "Toutes vos demandes, avec la réponse de l'admin.",
+    "withdraw": "Retirer la demande"
+  },
+  "timeline": {
+    "placed": {
+      "title": "Demande envoyée",
+      "note": "À l'instant",
+      "by": "Vous"
+    },
+    "accepted": {
+      "title": "Un administrateur la lit",
+      "note": "Généralement en quelques jours de marché",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "Ouverture du panneau du stand",
+      "note": "Après approbation",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "fixTitle": "Vérifiez le formulaire",
+    "fix": "Nous avons signalé ce qu'il reste à compléter.",
+    "sentTitle": "Demande envoyée",
+    "sent": "La réponse d'un administrateur arrivera dans vos notifications.",
+    "savedTitle": "Enregistré pour plus tard",
+    "saved": "Vos réponses restent sur cet appareil. Reprenez depuis votre compte.",
+    "withdrawnTitle": "Demande retirée",
+    "withdrawn": "Refaites-en une quand vous voulez."
+  },
+  "loading": "Chargement de l’état de votre demande",
+  "loadError": {
+    "title": "Impossible de charger l’état de votre demande",
+    "text": "Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer"
+  },
+  "errors": {
+    "stallName": "Indiquez le nom de votre étal.",
+    "contactPerson": "Indiquez une personne à contacter.",
+    "photo": "Impossible d’envoyer cette photo. Réessayez.",
+    "video": "Impossible d’envoyer cette vidéo. Réessayez.",
+    "send": "Impossible d’envoyer votre demande. Réessayez.",
+    "stallNameLong": "Le nom du stand ne doit pas dépasser {{max}} caractères.",
+    "contactPersonLong": "Le nom du contact ne doit pas dépasser {{max}} caractères.",
+    "descriptionLong": "La description ne doit pas dépasser {{max}} caractères.",
+    "photoRequired": "Ajoutez au moins une photo de la parcelle.",
+    "uploadInProgress": "Attendez la fin de l'envoi avant de valider.",
+    "photoType": "Les photos doivent être en JPEG, PNG ou WEBP.",
+    "photoTooLarge": "Cette photo dépasse {{max}} Mo.",
+    "videoType": "La vidéo doit être en MP4, WEBM ou MOV.",
+    "videoTooLarge": "Cette vidéo dépasse {{max}} Mo.",
+    "terms": "Cochez les trois cases avant d'envoyer.",
+    "withdraw": "Impossible de retirer la demande. Réessayez."
+  },
+  "approval": {
+    "approved": {
+      "title": "Votre étal est approuvé",
+      "text": "Votre compte peut maintenant configurer un étal — marchés, créneaux de retrait et produits — depuis l’espace Farmer."
+    },
+    "rejected": {
+      "title": "Votre demande n’a pas été approuvée",
+      "text": "Si vous pensez qu’il s’agit d’une erreur, contactez un admin via le formulaire de retour."
+    },
+    "suspended": {
+      "title": "Votre étal est suspendu",
+      "text": "Vous pouvez toujours vous connecter, mais vos produits restent masqués aux clients jusqu’à ce qu’un admin lève la suspension."
+    }
+  },
+  "suspendedBanner": {
+    "title": "La vente est en pause sur ce compte.",
+    "text": "Les commandes déjà passées suivent leur cours ; vous ne pouvez simplement plus en recevoir de nouvelles pour l’instant."
+  },
+  "statusValue": {
+    "pending": "En attente",
+    "approved": "Approuvée",
+    "rejected": "Refusée",
+    "suspended": "Suspendu"
+  },
+  "rejectedBanner": {
+    "title": "Pourquoi elle n'a pas été validée",
+    "noReason": "Aucun motif enregistré. Écrivez à un admin depuis le formulaire de retour."
+  },
+  "draft": {
+    "title": "Vous aviez commencé cette demande",
+    "text": "Ce que vous avez écrit le {{date}} est toujours là.",
+    "discard": "Tout recommencer"
+  },
+  "withdrawDialog": {
+    "title": "Retirer votre demande ?",
+    "text": "L'admin ne la voit plus et rien n'est conservé. Vous pouvez refaire une demande quand vous voulez.",
+    "keep": "La garder",
+    "confirm": "Retirer"
+  }
+}

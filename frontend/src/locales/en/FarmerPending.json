@@ -1,0 +1,41 @@
+{
+  "overline": {
+    "suspended": "{{stall}} · suspended {{date}}",
+    "registered": "{{stall}} · registered {{date}}"
+  },
+  "title": {
+    "pending": "Your stall is waiting for approval",
+    "suspended": "Your stall is suspended"
+  },
+  "previewToggle": "Preview: suspended stall",
+  "reviewing": {
+    "title": "An admin is reviewing your registration.",
+    "text": "You will get a notification and an email when it is approved. Until then your stall and products are not visible to customers."
+  },
+  "now": {
+    "title": "What you can do now",
+    "details": "Fill in your <link>stall details</link>, the markets you sell at, your days and pickup windows.",
+    "pin": "Pin your stall on the map so customers can find you on day one.",
+    "products": "Products can be added once the stall is approved. Prepare names, prices and photos in the meantime."
+  },
+  "details": {
+    "title": "Registration details",
+    "stall": "Stall",
+    "contact": "Contact",
+    "email": "Email",
+    "market": "Market requested"
+  },
+  "suspended": {
+    "title": "Your stall was suspended on {{date}}.",
+    "text": "Reason from the admin: {{reason}} Your products are hidden and you cannot take new orders."
+  },
+  "running": {
+    "title": "Orders already placed still run",
+    "text": "Customers who ordered before the suspension keep their orders (D-09). Mark them ready and completed as usual so nobody loses what they reserved.",
+    "link": "Open current orders"
+  },
+  "reinstate": {
+    "title": "To be reinstated",
+    "text": "Contact the team through <link>Contact us</link>."
+  }
+}

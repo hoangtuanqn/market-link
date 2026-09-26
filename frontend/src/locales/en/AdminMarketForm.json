@@ -1,0 +1,93 @@
+{
+  "allMarkets": "Markets",
+  "crumbNew": "Add",
+  "crumbEdit": "Edit",
+  "titleNew": "New market",
+  "city": "Ho Chi Minh City",
+  "meta": "{{stalls}} stalls · added {{added}}",
+  "metaStalls": "{{stalls}} stalls",
+  "missing": {
+    "title": "That market is not here any more",
+    "text": "It may have been removed. Open it again from the markets list."
+  },
+  "field": {
+    "name": "Market name",
+    "address": "Address",
+    "district": "District",
+    "city": "City",
+    "days": "Operating days",
+    "open": "Opens",
+    "close": "Closes",
+    "lat": "Latitude",
+    "lng": "Longitude",
+    "lngHint": "Or drag the pin. Map data comes from OpenStreetMap.",
+    "notes": "Notes for stalls"
+  },
+  "pin": {
+    "label": "Pin the market",
+    "note": "Drag the pin to the market entrance. Stalls pin themselves inside the market later."
+  },
+  "action": {
+    "save": "Save market",
+    "cancel": "Cancel"
+  },
+  "toast": {
+    "saved": "{{name}} saved."
+  },
+  "closures": {
+    "title": "Closed days",
+    "intro": "A day this market does not open, even though it falls on an operating day. Customers see it on the market page and on the home board, and no new orders can be placed for it.",
+    "add": "Add a closed day",
+    "addConfirm": "Add closed day",
+    "added": "Closed day added. Publish an announcement so customers see it.",
+    "removed": "Closed day removed.",
+    "remove": "Remove",
+    "removeTitle": "Remove this closed day?",
+    "removeText": "The market opens again on that date and customers can order for it.",
+    "keep": "Keep it",
+    "announced": "Announced",
+    "notYet": "Not yet",
+    "noneYet": "None yet",
+    "noReason": "Not given",
+    "byAdminToday": "Admin · today",
+    "col": {
+      "date": "Date",
+      "reason": "Reason",
+      "orders": "Orders already placed",
+      "told": "Customers told"
+    },
+    "field": {
+      "date": "Date",
+      "reason": "Reason customers will see",
+      "reasonPlaceholder": "Ward street works on Quốc Hương",
+      "handling": "Orders already placed for that day"
+    },
+    "empty": {
+      "title": "No closed days",
+      "text": "This market opens on every one of its operating days. Add a closed day when it will not."
+    }
+  },
+  "handling": {
+    "move": {
+      "title": "Move the orders to the next market day",
+      "short": "moved to the next market day",
+      "text": "Each customer keeps their order and gets the new pickup date. The stall has to be selling that day too."
+    },
+    "contact": {
+      "title": "Ask each stall to contact its customers",
+      "short": "stalls contact their customers",
+      "text": "Nothing changes automatically. The stall arranges another time and refunds nothing, because no money has changed hands."
+    },
+    "cancel": {
+      "title": "Cancel the orders and tell the customers",
+      "short": "cancelled and customers told",
+      "text": "Stock goes back to the stall and the order ends as cancelled, not declined, because the stall did nothing wrong."
+    }
+  },
+  "error": {
+    "noun": "market",
+    "required": "This field is required.",
+    "days": "Pick at least one operating day.",
+    "close": "The closing time must be after the opening time."
+  }
+}

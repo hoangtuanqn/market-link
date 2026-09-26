@@ -318,14 +318,18 @@ CREATE TABLE favorites (
   UNIQUE KEY uq_fav (customer_id, target_type, farmer_id, product_id, market_id)
 ) ENGINE=InnoDB;
 
--- D-11: in-app trước, email là NICE
+-- D-11: in-app trước, email là NICE. kind là VARCHAR (enum Java) để thêm loại mới không cần migration:
+-- announcement, farmer_application, farmer_approved, farmer_rejected, farmer_suspended, farmer_reinstated;
+-- sau này order_accepted, order_declined, order_ready, order_cancelled, restock. Tin nhắn chat không lưu ở đây.
+-- title/message đã dịch theo ngôn ngữ người nhận lúc tạo (migration V20260925012).
 CREATE TABLE notifications (
   notification_id  INT AUTO_INCREMENT PRIMARY KEY,
   user_id          INT NOT NULL,
-  type             ENUM('order_accepted','order_declined','order_ready',
-                        'order_cancelled','restock','announcement') NOT NULL,
+  kind             VARCHAR(40) NOT NULL,
   title            VARCHAR(150) NOT NULL,
   message          VARCHAR(500) NOT NULL,
+  link             VARCHAR(255) NULL,
+  announcement_id  INT NULL,
   order_id         INT NULL,
   product_id       INT NULL,
   is_read          BOOLEAN NOT NULL DEFAULT FALSE,
@@ -336,16 +340,51 @@ CREATE TABLE notifications (
   INDEX idx_notif_user (user_id, is_read, created_at)
 ) ENGINE=InnoDB;
 
+-- FR-077: đăng = một dòng notifications cho mỗi user active thuộc audience (V20260925013).
 CREATE TABLE announcements (
   announcement_id  INT AUTO_INCREMENT PRIMARY KEY,
   title            VARCHAR(150) NOT NULL,
-  content          TEXT NOT NULL,
+  content          VARCHAR(1000) NOT NULL,
+  audience         VARCHAR(20) NOT NULL DEFAULT 'all',   -- all | customers | farmers
   created_by       INT NOT NULL,
   is_active        BOOLEAN NOT NULL DEFAULT TRUE,
   starts_at        DATETIME NULL,
   ends_at          DATETIME NULL,
   created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (created_by) REFERENCES users(user_id)
+) ENGINE=InnoDB;
+
+-- Settings → Thông báo (V20260925014). Chưa có dòng = mặc định: bật cả hai kênh, âm thanh bật, không yên tĩnh.
+CREATE TABLE notification_preferences (
+  user_id   INT NOT NULL,
+  category  VARCHAR(30) NOT NULL,          -- messages | announcements | account | farmerApplications
+  in_app    BOOLEAN NOT NULL DEFAULT TRUE,
+  browser   BOOLEAN NOT NULL DEFAULT TRUE,
+  PRIMARY KEY (user_id, category),
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+CREATE TABLE notification_settings (
+  user_id     INT PRIMARY KEY,
+  sound       BOOLEAN NOT NULL DEFAULT TRUE,
+  quiet_on    BOOLEAN NOT NULL DEFAULT FALSE,
+  quiet_from  CHAR(5) NOT NULL DEFAULT '22:00',   -- HH:mm, Asia/Ho_Chi_Minh
+  quiet_to    CHAR(5) NOT NULL DEFAULT '07:00',
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Web Push (FR-042 N3, V20260926004): mỗi trình duyệt đã cho phép một dòng; 404/410 từ dịch vụ push → xoá.
+CREATE TABLE push_subscriptions (
+  push_subscription_id  INT AUTO_INCREMENT PRIMARY KEY,
+  user_id               INT NOT NULL,
+  endpoint              VARCHAR(500) NOT NULL,
+  p256dh                VARCHAR(200) NOT NULL,
+  auth                  VARCHAR(100) NOT NULL,
+  user_agent            VARCHAR(255) NULL,
+  created_at            DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  last_used_at          DATETIME NULL,
+  UNIQUE KEY uq_push_endpoint (endpoint),
+  FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------------

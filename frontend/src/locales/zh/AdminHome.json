@@ -1,0 +1,57 @@
+{
+  "overline": "平台 · {{year}}",
+  "title": "MarketLink 今日概览",
+  "vs": "对比 {{month}}",
+  "tilesNote": "{{now}} 截至目前，与 {{prev}} 并列。点击任一方块即可查看数字背后的明细。",
+  "kpi": {
+    "farmers": "农户",
+    "farmersNote": "{{waiting}} 个待审核 · {{suspended}} 个已停用",
+    "farmersLink": "审核申请",
+    "customers": "顾客",
+    "customersNote": "本月新增 {{count}} 人",
+    "customersLink": "打开顾客列表",
+    "markets": "集市",
+    "marketsNote": "全部正常营业",
+    "marketsLink": "打开集市列表",
+    "orders": "订单",
+    "ordersNote": "本周 {{week}} 单 · 已完成 {{total}}",
+    "ordersLink": "打开订单列表"
+  },
+  "revenue": {
+    "title": "每日营收",
+    "note": "已完成订单，单位百万₫。{{now}} 对比 {{prev}}。",
+    "caption": "{{now}} 与 {{prev}} 的每日营收，单位百万越南盾",
+    "axis": "日期",
+    "reports": "查看完整报表"
+  },
+  "attention": {
+    "title": "待处理",
+    "farmers_other": "份农户申请等待审核",
+    "reported_other": "条被摊位举报的评价",
+    "feedback_other": "条未处理的反馈，其中一条是缺陷",
+    "announcements_other": "条公告正在展示，Thảo Điền 10月4日休市"
+  },
+  "earned": {
+    "title": "MarketLink 的收入",
+    "link": "营收报表",
+    "note": "{{month}}，来自摊位购买展示位。与集市收到的钱分开计算。",
+    "of": "₫ · 相当于集市收入 {{gmv}} 的 {{pct}}%"
+  },
+  "byMarket": {
+    "title": "本周各集市订单量",
+    "link": "全部订单",
+    "suffix": "单"
+  },
+  "latest": {
+    "title": "平台最新订单",
+    "readOnly": "只读。管理员不改变订单状态。"
+  },
+  "col": {
+    "order": "订单",
+    "stall": "摊位",
+    "market": "集市",
+    "pickup": "取货",
+    "total": "合计",
+    "status": "状态"
+  }
+}

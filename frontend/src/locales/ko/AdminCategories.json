@@ -1,0 +1,61 @@
+{
+  "overline": "설정",
+  "title": "카테고리",
+  "intro": "모든 가게가 상품을 추가할 때 고르는 단 하나의 목록입니다. 판매 단위는 앱에 내장된 고정 목록입니다.",
+  "link": {
+    "announcements": "공지",
+    "feedback": "의견함"
+  },
+  "caption": {
+    "categories_other": "분류 {{count}}개"
+  },
+  "col": {
+    "category": "분류",
+    "products": "상품 수",
+    "stalls": "가게 수",
+    "nameOf": "{{name}}의 이름",
+    "oneOfThem": "단수형",
+    "moreThanOne": "복수형",
+    "pluralOf": "{{name}}의 복수형",
+    "kind": "종류",
+    "readsAs": "이렇게 보임"
+  },
+  "action": {
+    "save": "저장",
+    "remove": "삭제",
+    "addToPicker": "선택 목록에 넣기",
+    "merge": "합치기"
+  },
+  "categoryForm": {
+    "title": "분류 추가",
+    "name": "이름",
+    "namePlaceholder": "예: Seafood",
+    "nameHint": "영어로, 문장 첫 글자만 대문자. 사진 없는 상품 태그에 손글씨로 적힙니다.",
+    "position": "필터에서의 순서",
+    "submit": "분류 추가"
+  },
+  "removeCategory": {
+    "title": "{{name}}을(를) 삭제할까요?",
+    "textUsed_other": "{{count}}개 상품이 쓰고 있습니다. 어디로 옮길지 고르세요.",
+    "textUnused": "쓰고 있는 상품이 없습니다.",
+    "moveTo": "상품을 옮길 곳",
+    "keep": "분류 유지",
+    "confirm": "분류 삭제"
+  },
+  "empty": {
+    "categories": {
+      "title": "아직 분류가 없습니다",
+      "text": "분류를 추가하면 농가가 상품을 그 아래에 넣을 수 있습니다."
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}}을(를) 저장했습니다.",
+    "categoryAdded": "분류를 추가했습니다. 가게가 바로 고를 수 있습니다.",
+    "categoryRemoved": "{{name}}을(를) 삭제했습니다.",
+    "promoted": "이제 {{name}}이(가) 모든 가게의 선택 목록에 있습니다."
+  },
+  "error": {
+    "noun": "카테고리",
+    "nameRequired": "카테고리 이름을 입력하세요."
+  }
+}

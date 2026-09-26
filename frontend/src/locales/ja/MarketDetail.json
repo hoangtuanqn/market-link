@@ -1,0 +1,46 @@
+{
+  "notFound": {
+    "title": "このマーケットは見つかりませんでした",
+    "browse": "マーケットを見る"
+  },
+  "intro_one": "{{count}} 店が出店。各店は受け取りの 12〜24 時間前に注文を締め切ります。店で受け取り、農家に直接お支払いください。",
+  "intro_other": "{{count}} 店が出店。各店は受け取りの 12〜24 時間前に注文を締め切ります。店で受け取り、農家に直接お支払いください。",
+  "toast": {
+    "saved": "{{name}} を保存しました。",
+    "removed": "{{name}} をお気に入りから外しました。"
+  },
+  "save": {
+    "on": "保存済みのマーケット",
+    "off": "マーケットを保存"
+  },
+  "directions": "経路",
+  "search": {
+    "scope": "検索対象",
+    "scopes": {
+      "product": "このマーケットの商品",
+      "farmer": "このマーケットの店"
+    },
+    "keyword": "キーワード",
+    "placeholder": "空芯菜、サワードウ、卵…",
+    "submit": "検索"
+  },
+  "day": "開催日",
+  "all": "すべて",
+  "inStock": "在庫あり",
+  "available": "{{day}}に購入できる商品",
+  "productsFrom": "{{stalls}}の{{products}}",
+  "products_one": "{{count}} 件の商品",
+  "products_other": "{{count}} 件の商品",
+  "stalls_one": "{{count}} 店",
+  "stalls_other": "{{count}} 店",
+  "mapLabel": "{{name}} と店の地図",
+  "stallsTitle": "{{day}}にこのマーケットに出る店",
+  "stallsNote": "選んだ日に販売しない店は表示されません",
+  "error": {
+    "noun": "マーケット"
+  },
+  "stallsNoun": "出店",
+  "stallsEmpty": {
+    "title": "{{day}}は出店がありません"
+  }
+}

@@ -1,5 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
+import { dropPushSubscription } from '@/lib/notifications/browser';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 
@@ -9,9 +11,12 @@ import Session from '@/utils/session';
  */
 const useLogout = (redirectTo = '/login') => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return async () => {
-    let message = 'Signed out.';
+    let message = t('toast.signedOut');
+    // trước khi thu hồi token: DELETE subscription cần phiên còn hiệu lực
+    await dropPushSubscription();
     try {
       const response = await AuthApi.logout();
       message = response.message || message;

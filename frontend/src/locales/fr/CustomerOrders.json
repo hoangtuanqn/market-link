@@ -1,0 +1,12 @@
+{
+  "title": "Mes commandes",
+  "intro": "Les retraits à venir d’abord. Les commandes passées gardent leur reçu, et vous pouvez recommander tout ce que vous avez déjà acheté au prix et au stock du jour.",
+  "stall": "Stand",
+  "allStalls": "Tous les stands",
+  "tabs": {
+    "label": "Commandes",
+    "upcoming": "À venir",
+    "past": "Passées",
+    "all": "Toutes"
+  }
+}

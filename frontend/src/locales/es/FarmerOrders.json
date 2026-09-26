@@ -1,0 +1,88 @@
+{
+  "title": "Pedidos",
+  "intro": "Acepta o rechaza los pedidos nuevos antes de su hora límite, márcalos como listos el día de mercado y complétalos cuando el cliente haya pagado.",
+  "search": { "label": "Buscar pedidos", "placeholder": "Código de pedido o nombre del cliente", "submit": "Buscar" },
+  "filter": {
+    "day": "Día de recogida",
+    "all": "Todos",
+    "market": "Mercado",
+    "bothMarkets": "Ambos mercados"
+  },
+  "tabsLabel": "Pedidos por estado",
+  "status": {
+    "placed": "Pendiente de aprobación",
+    "accepted": "Aceptado",
+    "ready": "Listo",
+    "completed": "Completado",
+    "declined": "Rechazado",
+    "cancelled": "Cancelado"
+  },
+  "empty": {
+    "placed": {
+      "title": "No tienes nada pendiente",
+      "text": "Los pedidos anticipados nuevos llegan aquí hasta 12 horas antes de su franja."
+    },
+    "accepted": {
+      "title": "No hay pedidos aceptados",
+      "text": "Los pedidos que aceptas esperan aquí hasta que los marques como listos."
+    },
+    "ready": {
+      "title": "Aún no hay nada listo",
+      "text": "Marca un pedido aceptado como listo cuando esté empaquetado para el puesto."
+    },
+    "completed": {
+      "title": "No hay pedidos completados",
+      "text": "Un pedido se completa cuando el cliente lo recoge y paga en el puesto."
+    },
+    "declined": {
+      "title": "No hay pedidos rechazados",
+      "text": "Los pedidos que rechazas aparecen aquí con el motivo."
+    },
+    "cancelled": {
+      "title": "No hay pedidos cancelados",
+      "text": "Los clientes pueden cancelar hasta la hora límite (D-05)."
+    }
+  },
+  "col": {
+    "order": "Pedido",
+    "customer": "Cliente",
+    "pickup": "Recogida",
+    "cutoff": "Hora límite",
+    "items": "Artículos",
+    "total": "Total",
+    "status": "Estado"
+  },
+  "action": {
+    "accept": "Aceptar",
+    "decline": "Rechazar",
+    "markReady": "Marcar como listo",
+    "markCompleted": "Marcar como completado",
+    "view": "Ver"
+  },
+  "toast": {
+    "accepted": "Pedido {{code}} aceptado.",
+    "ready": "Pedido {{code}} marcado como listo.",
+    "declined": "Pedido {{code}} rechazado.",
+    "completed": "Pedido {{code}} completado."
+  },
+  "auditNote": "Cada cambio de estado se registra con la hora y quién lo hizo (FR-038). Un cambio en el orden incorrecto se rechaza (D-04).",
+  "decline": {
+    "title": "¿Rechazar el pedido {{code}}?",
+    "keep": "Mantener pedido",
+    "confirm": "Rechazar pedido",
+    "text": "Se avisa al cliente al momento y los artículos vuelven a tu stock.",
+    "reason": "Motivo que verá el cliente",
+    "reasons": {
+      "stock": "No hay suficiente stock",
+      "day": "No vendo ese día",
+      "time": "No puedo a esa hora de recogida",
+      "other": "Otro"
+    }
+  },
+  "complete": {
+    "title": "¿Marcar {{code}} como completado?",
+    "notYet": "Todavía no",
+    "text": "Hazlo cuando el cliente haya recogido el pedido y pagado en el puesto. Los pedidos completados cuentan para tus ingresos y permiten al cliente dejar una reseña.",
+    "auto": "Los pedidos que sigan como Listo se completan automáticamente 24 horas después de la fecha de recogida (D-03)."
+  }
+}

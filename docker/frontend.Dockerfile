@@ -24,6 +24,11 @@ FROM deps AS build
 # Vite nhúng biến VITE_* vào bundle lúc build, nên phải truyền qua build arg
 ARG VITE_API_URL=http://localhost:8080
 ENV VITE_API_URL=${VITE_API_URL}
+# Bản đồ: bỏ trống thì src/config/map.ts tự dùng tile OpenStreetMap
+ARG VITE_MAP_TILE_URL=""
+ENV VITE_MAP_TILE_URL=${VITE_MAP_TILE_URL}
+ARG VITE_MAP_ATTRIBUTION=""
+ENV VITE_MAP_ATTRIBUTION=${VITE_MAP_ATTRIBUTION}
 COPY . .
 RUN npm run build
 

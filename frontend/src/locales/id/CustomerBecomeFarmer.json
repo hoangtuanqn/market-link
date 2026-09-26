@@ -1,0 +1,173 @@
+{
+  "breadcrumbAccount": "Akun",
+  "breadcrumb": "Daftar untuk berjualan",
+  "since": "{{name}} · pelanggan sejak {{date}}",
+  "title": "Jual hasil tanam Anda",
+  "intro": "Jika Anda menanam bahan pangan, akun Anda bisa menjadi lapak di salah satu dari empat pasar. Semua yang Anda punya tetap ada, dan Anda tetap bisa belanja dari lapak lain.",
+  "next": {
+    "title": "Yang terjadi setelah Anda mengirim",
+    "read": "Admin meninjau lamaran dan foto Anda.",
+    "panel": "Setelah disetujui, panel lapak muncul di akun Anda.",
+    "setup": "Di sana Anda mengatur pasar, jam pengambilan, dan produk."
+  },
+  "step1": {
+    "title": "Lapak Anda",
+    "stallName": "Nama lapak",
+    "stallNamePlaceholder": "mis. Sayur Keluarga Khang",
+    "stallNameHint": "Pelanggan melihat ini di peta dan di pesanan mereka.",
+    "person": "Narahubung",
+    "phone": "Telepon",
+    "email": "Email",
+    "emailHint": "Data masuk Anda tetap sama.",
+    "about": "Tentang lapak",
+    "aboutPlaceholder": "Satu atau dua kalimat. Siapa yang menanam dan di mana.",
+    "address": "Alamat",
+    "fromAccount": "Dari akun Anda. Ubah di halaman Akun.",
+    "aboutCount": "{{used}} dari {{max}} karakter"
+  },
+  "step2": {
+    "title": "Foto lahan",
+    "intro": "Satu foto lebar dan satu foto dekat, diambil dalam 30 hari terakhir. Tanpa filter.",
+    "addPhoto": "Tambah foto",
+    "video": "Video singkat",
+    "addVideo": "Tambah video, maksimal 60 detik",
+    "videoHint": "Opsional. Video berjalan pelan menyusuri bedengan mempercepat persetujuan.",
+    "banner": {
+      "title": "Admin hanya memastikan lahan itu benar ada.",
+      "text": "MarketLink tidak memverifikasi izin, keamanan pangan, atau klaim organik."
+    },
+    "uploading": "Mengunggah…",
+    "removePhoto": "Hapus {{label}}",
+    "videoAdded": "Video ditambahkan",
+    "removeVideo": "Hapus",
+    "photoHint": "Perlu setidaknya satu foto. JPEG, PNG, atau WEBP, maksimal {{max}} MB per foto.",
+    "videoLimit": "Maksimal {{max}} MB.",
+    "photoLabel": "Foto {{n}}",
+    "addPhotoLabel": "Tambah foto {{n}}"
+  },
+  "step3": {
+    "title": "Sebelum mengirim",
+    "true": "Data dan foto ini milik saya dan benar",
+    "trueHint": "Foto milik orang lain berakibat penolakan atau penangguhan.",
+    "present": "Saya akan ada di lapak pada jam pengambilan",
+    "presentHint": "Berulang kali tidak hadir berakibat penangguhan.",
+    "pay": "Pembeli membayar saya di lapak",
+    "payHint": "MarketLink tidak punya pembayaran online maupun pengiriman.",
+    "send": "Kirim pendaftaran",
+    "later": "Simpan dan lanjutkan nanti",
+    "sending": "Mengirim…"
+  },
+  "sent": {
+    "title": "Pendaftaran Anda sedang ditinjau admin",
+    "intro": "Sementara itu tidak ada yang berubah. Terus belanja, dan pantau notifikasi untuk jawabannya.",
+    "summary": "Yang Anda kirim",
+    "stall": "Lapak",
+    "evidence": "Bukti",
+    "photos_one": "{{count}} foto",
+    "photos_other": "{{count}} foto",
+    "photosAndVideo_one": "{{count}} foto dan satu video",
+    "photosAndVideo_other": "{{count}} foto dan satu video",
+    "keepShopping": "Lanjut belanja",
+    "progress": "Progres",
+    "about": "Tentang",
+    "noPhotos": "Tanpa foto",
+    "noPhotosVideo": "Tanpa foto, dan satu video",
+    "status": "Status",
+    "sentOn": "Dikirim",
+    "photoAlt": "Foto lahan",
+    "applyAgain": "Ajukan lagi",
+    "historyTitle": "Lamaran Anda sebelumnya",
+    "historyText": "Semua lamaran yang Anda kirim, beserta jawaban admin.",
+    "withdraw": "Tarik lamaran"
+  },
+  "timeline": {
+    "placed": {
+      "title": "Pendaftaran dikirim",
+      "note": "Baru saja",
+      "by": "Anda"
+    },
+    "accepted": {
+      "title": "Admin membacanya",
+      "note": "Biasanya dalam beberapa hari pasar",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "Panel lapak dibuka",
+      "note": "Setelah disetujui",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "fixTitle": "Periksa formulir",
+    "fix": "Kami menandai bagian yang masih kurang.",
+    "sentTitle": "Pendaftaran dikirim",
+    "sent": "Jawaban admin akan masuk ke notifikasi Anda.",
+    "savedTitle": "Disimpan untuk nanti",
+    "saved": "Jawaban Anda tersimpan di perangkat ini. Lanjutkan dari halaman akun.",
+    "withdrawnTitle": "Lamaran ditarik",
+    "withdrawn": "Anda bisa melamar lagi kapan saja."
+  },
+  "loading": "Memuat status pengajuan Anda",
+  "loadError": {
+    "title": "Status pengajuan tidak dapat dimuat",
+    "text": "Periksa koneksi Anda lalu coba lagi.",
+    "retry": "Coba lagi"
+  },
+  "errors": {
+    "stallName": "Masukkan nama lapak Anda.",
+    "contactPerson": "Masukkan nama narahubung.",
+    "photo": "Foto itu tidak dapat diunggah. Silakan coba lagi.",
+    "video": "Video itu tidak dapat diunggah. Silakan coba lagi.",
+    "send": "Pengajuan Anda tidak dapat dikirim. Silakan coba lagi.",
+    "stallNameLong": "Nama lapak maksimal {{max}} karakter.",
+    "contactPersonLong": "Nama narahubung maksimal {{max}} karakter.",
+    "descriptionLong": "Deskripsi maksimal {{max}} karakter.",
+    "photoRequired": "Tambahkan setidaknya satu foto lahan.",
+    "uploadInProgress": "Tunggu unggahan selesai, lalu kirim.",
+    "photoType": "Foto harus JPEG, PNG, atau WEBP.",
+    "photoTooLarge": "Foto itu lebih besar dari {{max}} MB.",
+    "videoType": "Video harus MP4, WEBM, atau MOV.",
+    "videoTooLarge": "Video itu lebih besar dari {{max}} MB.",
+    "terms": "Centang ketiga kotak sebelum mengirim.",
+    "withdraw": "Lamaran tidak bisa ditarik. Coba lagi."
+  },
+  "approval": {
+    "approved": {
+      "title": "Lapak Anda disetujui",
+      "text": "Akun Anda kini dapat menyiapkan lapak (pasar, jam pengambilan, dan produk) dari panel petani."
+    },
+    "rejected": {
+      "title": "Pengajuan Anda tidak disetujui",
+      "text": "Jika menurut Anda ini keliru, hubungi admin melalui formulir masukan."
+    },
+    "suspended": {
+      "title": "Lapak Anda ditangguhkan",
+      "text": "Anda masih bisa masuk, tetapi produk Anda disembunyikan dari pelanggan sampai admin mencabut penangguhan."
+    }
+  },
+  "suspendedBanner": {
+    "title": "Penjualan di akun ini dijeda.",
+    "text": "Pesanan yang sudah masuk tetap berjalan; Anda hanya belum bisa menerima pesanan baru untuk saat ini."
+  },
+  "statusValue": {
+    "pending": "Menunggu",
+    "approved": "Disetujui",
+    "rejected": "Ditolak",
+    "suspended": "Ditangguhkan"
+  },
+  "rejectedBanner": {
+    "title": "Alasan lamaran tidak disetujui",
+    "noReason": "Tidak ada alasan yang tercatat. Tanyakan ke admin lewat formulir masukan."
+  },
+  "draft": {
+    "title": "Anda sudah mulai mengisi lamaran ini",
+    "text": "Yang Anda tulis pada {{date}} masih ada.",
+    "discard": "Mulai dari awal"
+  },
+  "withdrawDialog": {
+    "title": "Tarik lamaran Anda?",
+    "text": "Admin tidak akan melihatnya lagi dan tidak ada yang disimpan. Anda bisa melamar lagi kapan saja.",
+    "keep": "Biarkan",
+    "confirm": "Tarik"
+  }
+}

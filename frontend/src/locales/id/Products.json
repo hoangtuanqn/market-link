@@ -1,0 +1,47 @@
+{
+  "markets_one": "{{count}} pasar",
+  "markets_other": "{{count}} pasar",
+  "stallsSelling_one": "{{count}} lapak berjualan",
+  "stallsSelling_other": "{{count}} lapak berjualan",
+  "title": "Produk",
+  "intro": "Semua yang dipasang lapak untuk minggu ini. Filter menurut kategori, harga, pasar, dan hari, lalu tambahkan ke keranjang.",
+  "filters": {
+    "title": "Filter",
+    "clearAll": "Hapus semua",
+    "day": "Hari pasar",
+    "category": "Kategori",
+    "price": "Harga per satuan",
+    "market": "Pasar",
+    "allMarkets": "Semua pasar",
+    "inStock": "Hanya yang tersedia",
+    "inStockNote": "Menyembunyikan produk yang habis dan dijeda"
+  },
+  "price": {
+    "any": "Semua harga",
+    "low": "Di bawah {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Di atas {{high}}"
+  },
+  "summary_one": "<b>{{count}} produk</b> cocok hari {{day}}",
+  "summary_other": "<b>{{count}} produk</b> cocok hari {{day}}",
+  "sort": "Urutkan",
+  "sorts": {
+    "newest": "Terbaru",
+    "priceAsc": "Harga terendah",
+    "priceDesc": "Harga tertinggi",
+    "rating": "Rating tertinggi"
+  },
+  "pager": {
+    "showing": "Menampilkan {{from}}–{{to}} dari {{total}}",
+    "onePage_one": "{{count}} produk dalam satu halaman",
+    "onePage_other": "Semua {{count}} produk dalam satu halaman"
+  },
+  "empty": {
+    "title": "Tidak ada yang cocok dengan filter ini",
+    "text": "Coba hapus filter harga, atau perluas ke kategori atau pasar lain.",
+    "clear": "Hapus semua filter"
+  },
+  "error": {
+    "noun": "produk"
+  }
+}

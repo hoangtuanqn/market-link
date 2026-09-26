@@ -1,0 +1,17 @@
+{
+  "overline": "Área de admin",
+  "title": "Inicia sesión para gestionar MarketLink",
+  "intro": "Este inicio de sesión es solo para los admins de la plataforma y lleva a un panel aparte. Clientes y agricultores, <link>iniciad sesión aquí</link>.",
+  "notAdmin": {
+    "title": "Esta cuenta no es de admin",
+    "text": "Este inicio de sesión es solo para los admins de la plataforma. <link>Clientes y agricultores inician sesión aquí</link>."
+  },
+  "form": {
+    "email": "Email de admin",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "submitting": "Iniciando sesión…",
+    "signedIn": "Sesión iniciada.",
+    "error": "No se pudo iniciar sesión. Inténtalo de nuevo."
+  }
+}

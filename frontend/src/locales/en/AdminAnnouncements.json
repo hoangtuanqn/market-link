@@ -1,0 +1,74 @@
+{
+  "overline": "Settings",
+  "title": "Announcements",
+  "intro": "A platform-wide message shown in the green band above the header and in everyone's notifications. One active announcement at a time keeps it readable.",
+  "link": {
+    "categories": "Categories",
+    "feedback": "Feedback inbox"
+  },
+  "form": {
+    "title": "New announcement",
+    "headline": "Title",
+    "headlinePlaceholder": "e.g. Thủ Đức Farmers Market opens at 06:00 from October",
+    "headlineHint": "Sentence case, no exclamation marks. Shown in handwriting in the green band.",
+    "detail": "Detail",
+    "detailPlaceholder": "One sentence on what changes for customers or stalls.",
+    "showTo": "Show to",
+    "from": "Show from",
+    "to": "Until",
+    "preview": "Preview",
+    "previewTitle": "Your title appears here",
+    "previewText": "And the detail line here, in the green band above the header.",
+    "windowHint": "Leave both dates empty to show it from now on, until you take it down."
+  },
+  "audience": {
+    "Everyone": "Everyone",
+    "Customers": "Customers",
+    "Farmers": "Farmers"
+  },
+  "list": {
+    "title": "Published and past",
+    "loading": "Loading announcements…",
+    "errorTitle": "Could not load announcements",
+    "errorText": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "col": {
+    "announcement": "Announcement",
+    "showTo": "Show to",
+    "window": "Window",
+    "status": "Status"
+  },
+  "status": {
+    "live": "Live",
+    "scheduled": "Scheduled",
+    "ended": "Ended"
+  },
+  "action": {
+    "publish": "Publish",
+    "takeDown": "Take down",
+    "reuse": "Reuse",
+    "publishing": "Publishing…"
+  },
+  "empty": {
+    "title": "No announcements",
+    "text": "Publish one and every signed-in person sees it as a band above the header."
+  },
+  "toast": {
+    "published": "Announcement published. Everyone it is for has it in their notifications.",
+    "takenDown": "Announcement taken down from the banner. Notifications already sent stay.",
+    "publishError": "Could not publish the announcement.",
+    "takeDownError": "Could not take the announcement down."
+  },
+  "errors": {
+    "titleRequired": "Add a title.",
+    "titleLong": "Keep the title under {{max}} characters.",
+    "contentRequired": "Add a line of detail.",
+    "contentLong": "Keep the detail under {{max}} characters.",
+    "window": "The end date must be on or after the start date."
+  },
+  "window": {
+    "now": "Now",
+    "open": "no end date"
+  }
+}

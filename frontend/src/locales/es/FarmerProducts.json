@@ -1,0 +1,50 @@
+{
+  "title": "Productos",
+  "intro": "Todo lo que puedes ofrecer. Marca un producto como agotado cuando se acabe el día de mercado, o páusalo cuando no sea temporada.",
+  "add": "Añadir producto",
+  "filterAll": "Todos",
+  "status": {
+    "available": "Disponible",
+    "sold_out": "Agotado",
+    "unavailable": "En pausa"
+  },
+  "caption_one": "{{count}} producto",
+  "caption_other": "{{count}} productos",
+  "col": {
+    "product": "Producto",
+    "price": "Precio",
+    "left": "Quedan esta semana",
+    "reserved": "Reservado",
+    "status": "Estado"
+  },
+  "perUnit": "por {{unit}}",
+  "statusOf": "Estado de {{name}}",
+  "edit": "Editar",
+  "delete": "Eliminar",
+  "footNote": "Eliminar un producto lo quita del catálogo; los pedidos anteriores conservan sus líneas. Fotos: 4:3, luz natural, sobre madera o papel.",
+  "toast": {
+    "statusSaved": "Estado guardado",
+    "status": {
+      "available": "El producto vuelve a estar a la venta.",
+      "sold_out": "Los clientes ahora ven “Agotado” y pueden pedir que se les avise cuando vuelva.",
+      "unavailable": "El producto queda oculto para los clientes hasta que lo vuelvas a activar."
+    },
+    "deleted": "Eliminado",
+    "deletedText": "{{name}} eliminado."
+  },
+  "dialog": {
+    "title": "¿Eliminar {{name}}?",
+    "keep": "Conservar producto",
+    "confirm": "Eliminar producto",
+    "text": "Desaparece del catálogo y de tu plantilla. Los pedidos que ya lo incluyen no cambian.",
+    "pauseHint": "Para dejar de venderlo por un tiempo, elige En pausa."
+  },
+  "error": {
+    "noun": "tus productos"
+  },
+  "hiddenByAdmin": "Ocultado por un administrador: {{reason}}",
+  "empty": {
+    "title": "Todavía no hay productos",
+    "text": "Añade tu primer producto y aparecerá de inmediato en la página de tu puesto."
+  }
+}

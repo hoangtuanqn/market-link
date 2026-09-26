@@ -1,0 +1,173 @@
+{
+  "breadcrumbAccount": "账户",
+  "breadcrumb": "申请开店",
+  "since": "{{name}} · 自 {{date}} 起成为顾客",
+  "title": "出售您种植的作物",
+  "intro": "如果您种植食物，您的账户可以成为四个市场之一的摊位。您现有的一切都会保留，并且可以继续在其他摊位购物。",
+  "next": {
+    "title": "提交后会发生什么",
+    "read": "管理员会查看你的申请和照片。",
+    "panel": "通过后，账户中会出现摊位面板。",
+    "setup": "在那里设置市集、取货时间和商品。"
+  },
+  "step1": {
+    "title": "您的摊位",
+    "stallName": "摊位名称",
+    "stallNamePlaceholder": "例如：Khang 家的蔬菜",
+    "stallNameHint": "顾客会在地图和订单上看到这个名称。",
+    "person": "联系人",
+    "phone": "电话",
+    "email": "邮箱",
+    "emailHint": "您的登录信息保持不变。",
+    "about": "摊位简介",
+    "aboutPlaceholder": "一两句话。谁种的，在哪里种。",
+    "address": "地址",
+    "fromAccount": "来自你的账户。可在账户页面修改。",
+    "aboutCount": "{{used}} / {{max}} 字"
+  },
+  "step2": {
+    "title": "地块照片",
+    "intro": "一张全景照和一张近景照，30 天内拍摄，不要加滤镜。",
+    "addPhoto": "添加照片",
+    "video": "一段短视频",
+    "addVideo": "添加视频，最长 60 秒",
+    "videoHint": "可选。沿着田垄慢走的视频能加快审核。",
+    "banner": {
+      "title": "管理员只确认这块地真实存在。",
+      "text": "MarketLink 不核实许可证、食品安全或有机认证。"
+    },
+    "uploading": "正在上传…",
+    "removePhoto": "移除{{label}}",
+    "videoAdded": "已添加视频",
+    "removeVideo": "移除",
+    "photoHint": "至少需要一张照片。JPEG、PNG 或 WEBP，每张不超过 {{max}} MB。",
+    "videoLimit": "不超过 {{max}} MB。",
+    "photoLabel": "照片 {{n}}",
+    "addPhotoLabel": "添加照片 {{n}}"
+  },
+  "step3": {
+    "title": "提交之前",
+    "true": "资料和照片均为本人所有且属实",
+    "trueHint": "使用他人照片会被拒绝或停用。",
+    "present": "我会在取货时段到摊位",
+    "presentHint": "多次缺席会被停用。",
+    "pay": "顾客在摊位付款给我",
+    "payHint": "MarketLink 没有在线支付，也没有配送。",
+    "send": "提交申请",
+    "later": "保存，稍后完成",
+    "sending": "正在发送…"
+  },
+  "sent": {
+    "title": "您的申请正在由管理员审核",
+    "intro": "在此期间您的一切照旧。继续购物，并留意通知中的结果。",
+    "summary": "您提交的内容",
+    "stall": "摊位",
+    "evidence": "证明材料",
+    "photos_one": "{{count}} 张照片",
+    "photos_other": "{{count}} 张照片",
+    "photosAndVideo_one": "{{count}} 张照片和一段视频",
+    "photosAndVideo_other": "{{count}} 张照片和一段视频",
+    "keepShopping": "继续购物",
+    "progress": "进度",
+    "about": "简介",
+    "noPhotos": "没有照片",
+    "noPhotosVideo": "没有照片，有一个视频",
+    "status": "状态",
+    "sentOn": "发送日期",
+    "photoAlt": "地块照片",
+    "applyAgain": "重新申请",
+    "historyTitle": "你提交过的申请",
+    "historyText": "你提交过的每一次申请，以及管理员的答复。",
+    "withdraw": "撤回申请"
+  },
+  "timeline": {
+    "placed": {
+      "title": "申请已提交",
+      "note": "刚刚",
+      "by": "你"
+    },
+    "accepted": {
+      "title": "管理员审阅",
+      "note": "通常在几个市集日内",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "摊位面板开放",
+      "note": "获批后",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "fixTitle": "请检查表单",
+    "fix": "还需要处理的地方已标出。",
+    "sentTitle": "申请已提交",
+    "sent": "管理员的答复会出现在您的通知中。",
+    "savedTitle": "已保存，稍后继续",
+    "saved": "内容保存在这台设备上。可从账户页面继续。",
+    "withdrawnTitle": "申请已撤回",
+    "withdrawn": "你随时可以重新提交。"
+  },
+  "loading": "正在加载申请状态",
+  "loadError": {
+    "title": "无法加载申请状态",
+    "text": "请检查网络连接后重试。",
+    "retry": "重试"
+  },
+  "errors": {
+    "stallName": "请输入摊位名称。",
+    "contactPerson": "请输入联系人。",
+    "photo": "无法上传这张照片，请重试。",
+    "video": "无法上传这个视频，请重试。",
+    "send": "无法发送你的申请，请重试。",
+    "stallNameLong": "摊位名称不能超过 {{max}} 个字符。",
+    "contactPersonLong": "联系人姓名不能超过 {{max}} 个字符。",
+    "descriptionLong": "介绍不能超过 {{max}} 个字符。",
+    "photoRequired": "请至少添加一张田地照片。",
+    "uploadInProgress": "请等待上传完成后再提交。",
+    "photoType": "照片必须是 JPEG、PNG 或 WEBP。",
+    "photoTooLarge": "这张照片超过 {{max}} MB。",
+    "videoType": "视频必须是 MP4、WEBM 或 MOV。",
+    "videoTooLarge": "这段视频超过 {{max}} MB。",
+    "terms": "请勾选全部三项后再提交。",
+    "withdraw": "无法撤回申请，请重试。"
+  },
+  "approval": {
+    "approved": {
+      "title": "你的摊位已获批准",
+      "text": "你的账户现在可以在农户面板中设置摊位——市场、取货时段和商品。"
+    },
+    "rejected": {
+      "title": "你的申请未获批准",
+      "text": "如果你认为这是误判，请通过反馈表联系管理员。"
+    },
+    "suspended": {
+      "title": "你的摊位已被暂停",
+      "text": "你仍可登录，但在管理员解除暂停前，你的商品不会向顾客显示。"
+    }
+  },
+  "suspendedBanner": {
+    "title": "此账户的销售已暂停。",
+    "text": "已下的订单仍会照常完成，只是暂时不能接新订单。"
+  },
+  "statusValue": {
+    "pending": "待审核",
+    "approved": "已批准",
+    "rejected": "已拒绝",
+    "suspended": "已暂停"
+  },
+  "rejectedBanner": {
+    "title": "未通过的原因",
+    "noReason": "没有记录理由。请通过反馈表单联系管理员。"
+  },
+  "draft": {
+    "title": "你之前填过这份申请",
+    "text": "{{date}} 填写的内容都还在。",
+    "discard": "重新开始"
+  },
+  "withdrawDialog": {
+    "title": "要撤回你的申请吗？",
+    "text": "管理员将不再看到这份申请，内容也不会保留。你随时可以重新提交。",
+    "keep": "保留",
+    "confirm": "撤回"
+  }
+}

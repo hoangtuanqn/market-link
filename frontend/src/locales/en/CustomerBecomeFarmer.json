@@ -1,0 +1,173 @@
+{
+  "breadcrumbAccount": "Account",
+  "breadcrumb": "Apply to sell",
+  "since": "{{name}} · customer since {{date}}",
+  "title": "Apply to sell on MarketLink",
+  "intro": "Tell us about your stall and contact details. An admin will review your application before you can list products.",
+  "next": {
+    "title": "What happens after you send this",
+    "read": "An admin reviews your application and photos.",
+    "panel": "Once approved, a stall panel opens in your account.",
+    "setup": "There you set markets, pickup times and products."
+  },
+  "step1": {
+    "title": "Your stall",
+    "stallName": "Stall name",
+    "stallNamePlaceholder": "e.g. Khang Family Greens",
+    "stallNameHint": "Customers see this on the map and on their orders.",
+    "person": "Contact person",
+    "phone": "Phone",
+    "email": "Email",
+    "emailHint": "Your sign-in stays the same.",
+    "about": "About the stall",
+    "aboutPlaceholder": "One or two sentences. Who grows it and where.",
+    "address": "Address",
+    "fromAccount": "From your account. Change it on the Account page.",
+    "aboutCount": "{{used}} of {{max}} characters"
+  },
+  "step2": {
+    "title": "Photos of the plot",
+    "intro": "One wide shot and one close shot, taken in the last 30 days. No filters.",
+    "addPhoto": "Add photo",
+    "video": "A short video",
+    "addVideo": "Add a video, up to 60 seconds",
+    "videoHint": "Optional. A slow walk along the beds speeds up approval.",
+    "banner": {
+      "title": "The admin only checks that the plot exists.",
+      "text": "MarketLink does not verify licences, food safety or organic claims."
+    },
+    "uploading": "Uploading…",
+    "removePhoto": "Remove {{label}}",
+    "videoAdded": "Video added",
+    "removeVideo": "Remove",
+    "photoHint": "At least one photo is required. JPEG, PNG or WEBP, up to {{max}} MB each.",
+    "videoLimit": "Up to {{max}} MB.",
+    "photoLabel": "Photo {{n}}",
+    "addPhotoLabel": "Add photo {{n}}"
+  },
+  "step3": {
+    "title": "Before you send",
+    "true": "The details and photos are mine and accurate",
+    "trueHint": "False photos lead to rejection or suspension.",
+    "present": "I will be at the stall during my pickup window",
+    "presentHint": "Repeated no-shows lead to suspension.",
+    "pay": "Customers pay me at the stall",
+    "payHint": "MarketLink has no online payment or delivery.",
+    "send": "Send the application",
+    "later": "Save and finish later",
+    "sending": "Sending…"
+  },
+  "sent": {
+    "title": "Your application is with an admin",
+    "intro": "Nothing changes for you in the meantime. Keep shopping, and watch your notifications for the answer.",
+    "summary": "What you sent",
+    "stall": "Stall",
+    "evidence": "Evidence",
+    "photos_one": "{{count}} photo",
+    "photos_other": "{{count}} photos",
+    "photosAndVideo_one": "{{count}} photo and a video",
+    "photosAndVideo_other": "{{count}} photos and a video",
+    "keepShopping": "Keep shopping",
+    "progress": "Progress",
+    "about": "About",
+    "noPhotos": "No photos",
+    "noPhotosVideo": "No photos, and a video",
+    "status": "Status",
+    "sentOn": "Sent",
+    "photoAlt": "Photo of the plot",
+    "applyAgain": "Apply again",
+    "historyTitle": "Your earlier applications",
+    "historyText": "Every application you have sent, with what an admin answered.",
+    "withdraw": "Withdraw the application"
+  },
+  "timeline": {
+    "placed": {
+      "title": "Application sent",
+      "note": "Just now",
+      "by": "You"
+    },
+    "accepted": {
+      "title": "An admin reads it",
+      "note": "Usually within a few market days",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "Stall panel opens",
+      "note": "After approval",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "fixTitle": "Check the form",
+    "fix": "We marked what still needs your attention.",
+    "sentTitle": "Application sent",
+    "sent": "You will hear from an admin in your notifications.",
+    "savedTitle": "Saved for later",
+    "saved": "Your answers stay on this device. Continue from your account page.",
+    "withdrawnTitle": "Application withdrawn",
+    "withdrawn": "Apply again whenever you are ready."
+  },
+  "loading": "Loading your application status",
+  "loadError": {
+    "title": "Couldn't load your application status",
+    "text": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "errors": {
+    "stallName": "Enter your stall name.",
+    "contactPerson": "Enter a contact person.",
+    "photo": "Could not upload that photo. Please try again.",
+    "video": "Could not upload that video. Please try again.",
+    "send": "Could not send your application. Please try again.",
+    "stallNameLong": "Keep the stall name under {{max}} characters.",
+    "contactPersonLong": "Keep the contact person under {{max}} characters.",
+    "descriptionLong": "Keep the description under {{max}} characters.",
+    "photoRequired": "Add at least one photo of the plot.",
+    "uploadInProgress": "Wait until the upload finishes, then send.",
+    "photoType": "Photos must be JPEG, PNG or WEBP.",
+    "photoTooLarge": "That photo is larger than {{max}} MB.",
+    "videoType": "The video must be MP4, WEBM or MOV.",
+    "videoTooLarge": "That video is larger than {{max}} MB.",
+    "terms": "Tick all three boxes before you send.",
+    "withdraw": "Could not withdraw the application. Please try again."
+  },
+  "approval": {
+    "approved": {
+      "title": "Your stall is approved",
+      "text": "Your account can now set up a stall — markets, pickup windows and products — from the farmer panel."
+    },
+    "rejected": {
+      "title": "Your application was not approved",
+      "text": "Contact an admin from the feedback form if you think this is a mistake."
+    },
+    "suspended": {
+      "title": "Your stall is suspended",
+      "text": "You can still sign in, but your products stay hidden from customers until an admin lifts the suspension."
+    }
+  },
+  "suspendedBanner": {
+    "title": "Selling is paused on this account.",
+    "text": "Existing orders already placed still run their course; you just cannot take new ones for now."
+  },
+  "statusValue": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "suspended": "Suspended"
+  },
+  "rejectedBanner": {
+    "title": "Why it was not approved",
+    "noReason": "No reason was recorded. Use the feedback form to ask an admin."
+  },
+  "draft": {
+    "title": "You already started this",
+    "text": "We kept what you wrote on {{date}}.",
+    "discard": "Start over"
+  },
+  "withdrawDialog": {
+    "title": "Withdraw your application?",
+    "text": "The admin stops seeing it and nothing is kept. You can apply again whenever you are ready.",
+    "keep": "Keep it",
+    "confirm": "Withdraw"
+  }
+}

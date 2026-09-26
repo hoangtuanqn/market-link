@@ -1,0 +1,88 @@
+{
+  "crumbStall": "Stand et retrait",
+  "title": "Créneaux de retrait",
+  "intro": "Les créneaux sont des tranches de 30 minutes dans votre plage de retrait. Chaque créneau accepte un nombre limité de commandes pour que personne n'attende longtemps. Un créneau complet apparaît grisé pour les clients.",
+  "market": "Marché",
+  "day": "Jour",
+  "cancel": "Annuler",
+  "minutes_one": "{{count}} minute",
+  "minutes_other": "{{count}} minutes",
+  "table": {
+    "slot": "Créneau",
+    "booked": "Réservé",
+    "bookedOf": "{{booked}} sur {{max}}",
+    "full": "Complet",
+    "max": "Commandes max.",
+    "maxFor": "Commandes max. {{slot}}",
+    "closes": "Fin des modifications",
+    "open": "Ouvert aux nouvelles commandes",
+    "off": "Fermé",
+    "on": "Ouvert",
+    "caption_one": "{{day}} {{date}} · {{market}} · {{count}} créneau",
+    "caption_other": "{{day}} {{date}} · {{market}} · {{count}} créneaux"
+  },
+  "empty": {
+    "title": "Aucun créneau ce jour-là",
+    "text": "Générez les créneaux d'un jour de marché pour que les clients puissent réserver une heure de retrait."
+  },
+  "defaults": {
+    "title": "Valeurs par défaut",
+    "length": "Durée du créneau",
+    "perSlot": "Commandes par créneau",
+    "windowAt": "Plage à {{market}}",
+    "window": "{{start}} – {{end}}, {{days}}",
+    "cutoff": "Clôture",
+    "cutoffValue_one": "{{count}} heure avant le créneau",
+    "cutoffValue_other": "{{count}} heures avant le créneau",
+    "note": "Modifiez la plage et les jours dans Stand et retrait. Les créneaux d'une journée en découlent."
+  },
+  "closing": {
+    "title": "Fermer un créneau",
+    "text": "Fermer un créneau le masque pour les nouvelles commandes. Les commandes déjà prises restent ; contactez ces clients si vous ne pouvez pas venir."
+  },
+  "away": {
+    "title": "Jours où vous ne vendez pas",
+    "intro": "Un jour de marché que vous allez manquer : petite récolte, maladie, camionnette en panne. Votre stand disparaît de la page du marché ce jour-là et ne prend plus de commandes. Les commandes déjà passées sont refusées avec votre motif, et le stock vous revient (D-02).",
+    "open": "Prévenir les clients de votre absence",
+    "date": "Date",
+    "reasonSeen": "Motif affiché aux clients",
+    "declined": "Commandes refusées",
+    "backTitle": "Vous vendez à nouveau",
+    "backText": "Vous vendez de nouveau ce jour-là. Les commandes refusées ne sont pas rétablies ; le client doit commander à nouveau.",
+    "back": "Je serai là",
+    "emptyTitle": "Vous vendez tous les jours de marché",
+    "emptyText": "Prévenez les clients à l'avance si cela change, pour que personne ne trouve un stand vide.",
+    "notNow": "Pas maintenant",
+    "confirm": "Les prévenir",
+    "declinedTitle": "Commandes refusées",
+    "toldTitle": "Clients prévenus",
+    "declinedText_one": "{{count}} commande refusée et le client prévenu.",
+    "declinedText_other": "{{count}} commandes refusées et les clients prévenus.",
+    "toldText": "Les clients ne peuvent plus vous commander pour le {{date}}.",
+    "dialogText": "Les commandes déjà passées pour ce jour sont refusées avec votre motif et le stock vous revient. Le client est prévenu tout de suite et ne paie rien, car rien n'est payé avant le retrait.",
+    "marketDay": "Jour de marché",
+    "reasonLabel": "Motif que les clients verront",
+    "seedReason": "Récolte maigre après la pluie",
+    "notGiven": "Non précisé",
+    "note": {
+      "placed_one": "{{count}} commande passée",
+      "placed_other": "{{count}} commandes passées",
+      "none": "aucune commande pour l'instant",
+      "shut": "marché fermé de toute façon"
+    }
+  },
+  "closure": {
+    "title": "Le marché lui-même est fermé le {{date}}.",
+    "text": "{{reason}}. Vous n'avez rien à faire : personne ne peut commander auprès d'aucun stand ce jour-là, et MarketLink a prévenu vos clients."
+  },
+  "generate": {
+    "open": "Générer les créneaux de la semaine prochaine",
+    "title": "Générer les créneaux du {{from}} au {{to}} ?",
+    "doneTitle": "Créneaux créés",
+    "doneText_one": "{{count}} créneau créé du {{from}} au {{to}}.",
+    "doneText_other": "{{count}} créneaux créés du {{from}} au {{to}}.",
+    "confirm_one": "Générer {{count}} créneau",
+    "confirm_other": "Générer {{count}} créneaux",
+    "text": "Crée des créneaux de {{start}} à {{end}} le {{daysA}} à Thảo Điền et le {{daysB}} à Thủ Đức. Les créneaux existants ne sont pas modifiés."
+  }
+}

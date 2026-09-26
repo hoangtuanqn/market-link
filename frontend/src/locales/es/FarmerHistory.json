@@ -1,0 +1,52 @@
+{
+  "title": "Historial de ventas",
+  "intro": "Lo que vendiste y cómo se compara con el periodo anterior. Los ingresos solo cuentan los pedidos completados, el dinero que los clientes te dieron en el puesto.",
+  "export": {
+    "button": "Exportar el periodo",
+    "title": "Exportación iniciada",
+    "text": "Exportación iniciada. El CSV incluye el periodo y el mercado en pantalla."
+  },
+  "days_one": "{{count}} día",
+  "days_other": "{{count}} días",
+  "market": "Mercado",
+  "bothMarkets": "Ambos mercados",
+  "kpi": {
+    "completed": "Pedidos completados",
+    "completedNote": "de {{total}} hechos contigo",
+    "revenue": "Ingresos",
+    "revenueNote": "₫, pagados en el puesto",
+    "average": "Pedido medio",
+    "averageNote": "₫ por pedido completado",
+    "declined": "Rechazaste",
+    "declinedNote": "{{pct}} % de los pedidos hechos contigo"
+  },
+  "byDay": {
+    "title": "Ingresos por día de mercado",
+    "note": "En millones de ₫. Solo vendes sábado y domingo, así que cada columna es una mañana de mercado.",
+    "caption": "Ingresos por día de mercado en {{now}} frente a {{prev}}, en millones de dongs"
+  },
+  "best": {
+    "title": "Más vendidos",
+    "note": "Ingresos en {{month}}. Las cantidades están en la unidad de cada producto, así que nunca se suman.",
+    "product": "Producto",
+    "soldPer": "Se vende por",
+    "price": "Precio",
+    "sold": "Vendido",
+    "revenue": "Ingresos"
+  },
+  "where": {
+    "title": "Dónde se vendió",
+    "note_one": "Este mes se rechazó {{count}} pedido y se cancelaron {{cancelled}}. Ninguno cuenta aquí.",
+    "note_other": "Este mes se rechazaron {{count}} pedidos y se cancelaron {{cancelled}}. Ninguno cuenta aquí."
+  },
+  "past": { "title": "Pedidos anteriores", "note": "Completados, rechazados y cancelados" },
+  "col": {
+    "pickup": "Recogida",
+    "order": "Pedido",
+    "customer": "Cliente",
+    "items": "Artículos",
+    "total": "Total",
+    "status": "Estado"
+  },
+  "itemLine": "{{qty}}× {{name}}"
+}

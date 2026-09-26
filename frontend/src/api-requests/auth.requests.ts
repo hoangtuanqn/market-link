@@ -89,6 +89,22 @@ class AuthApi {
     return response.data;
   };
 
+  /** Ảnh đại diện đã cắt sẵn (JPEG vuông); backend kiểm tra lại và lưu thành JPEG tối đa 512px. */
+  static uploadAvatar = async (photo: Blob) => {
+    const form = new FormData();
+    form.append('file', photo, 'avatar.jpg');
+    const response = await privateApi.put<ApiResponse<UserType>>('/auth/me/avatar', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 30000,
+    });
+    return response.data;
+  };
+
+  static removeAvatar = async () => {
+    const response = await privateApi.delete<ApiResponse<UserType>>('/auth/me/avatar');
+    return response.data;
+  };
+
   /** Đổi mật khẩu; thành công thì backend đăng xuất mọi thiết bị (kể cả phiên này). */
   static changePassword = async (input: ChangePasswordInput) => {
     const response = await privateApi.post<ApiResponse<null>>('/auth/change-password', input);

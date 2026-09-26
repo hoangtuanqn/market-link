@@ -1,0 +1,93 @@
+{
+  "allMarkets": "Marchés",
+  "crumbNew": "Ajouter",
+  "crumbEdit": "Modifier",
+  "titleNew": "Nouveau marché",
+  "city": "Hô Chi Minh-Ville",
+  "meta": "{{stalls}} étals · ajouté le {{added}}",
+  "metaStalls": "{{stalls}} étals",
+  "missing": {
+    "title": "Ce marché n'existe plus",
+    "text": "Il a peut-être été retiré. Rouvrez-le depuis la liste des marchés."
+  },
+  "field": {
+    "name": "Nom du marché",
+    "address": "Adresse",
+    "district": "District",
+    "city": "Ville",
+    "days": "Jours d'ouverture",
+    "open": "Ouverture",
+    "close": "Fermeture",
+    "lat": "Latitude",
+    "lng": "Longitude",
+    "lngHint": "Ou déplacez le repère. Les données cartographiques viennent d'OpenStreetMap.",
+    "notes": "Notes pour les étals"
+  },
+  "pin": {
+    "label": "Placer le marché",
+    "note": "Déplacez le repère jusqu'à l'entrée du marché. Les étals placeront ensuite leur propre repère à l'intérieur."
+  },
+  "action": {
+    "save": "Enregistrer le marché",
+    "cancel": "Annuler"
+  },
+  "toast": {
+    "saved": "{{name}} enregistré."
+  },
+  "closures": {
+    "title": "Jours de fermeture",
+    "intro": "Un jour où ce marché n'ouvre pas, même s'il tombe un jour d'ouverture. Les clients le voient sur la page du marché et sur le tableau d'accueil, et aucune nouvelle commande ne peut être passée pour ce jour-là.",
+    "add": "Ajouter un jour de fermeture",
+    "addConfirm": "Ajouter le jour",
+    "added": "Jour de fermeture ajouté. Publiez une annonce pour que les clients le voient.",
+    "removed": "Jour de fermeture supprimé.",
+    "remove": "Supprimer",
+    "removeTitle": "Supprimer ce jour de fermeture ?",
+    "removeText": "Le marché rouvre ce jour-là et les clients peuvent commander.",
+    "keep": "Le garder",
+    "announced": "Annoncé",
+    "notYet": "Pas encore",
+    "noneYet": "Aucune",
+    "noReason": "Non précisé",
+    "byAdminToday": "Administrateur · aujourd'hui",
+    "col": {
+      "date": "Date",
+      "reason": "Motif",
+      "orders": "Commandes déjà passées",
+      "told": "Clients prévenus"
+    },
+    "field": {
+      "date": "Date",
+      "reason": "Motif visible par les clients",
+      "reasonPlaceholder": "Travaux de voirie sur Quốc Hương",
+      "handling": "Commandes déjà passées pour ce jour-là"
+    },
+    "empty": {
+      "title": "Aucun jour de fermeture",
+      "text": "Ce marché ouvre tous ses jours d'ouverture. Ajoutez un jour de fermeture quand ce ne sera pas le cas."
+    }
+  },
+  "handling": {
+    "move": {
+      "title": "Reporter les commandes au prochain jour de marché",
+      "short": "reportées au prochain jour de marché",
+      "text": "Chaque client garde sa commande et reçoit la nouvelle date de retrait. Encore faut-il que l'étal vende ce jour-là."
+    },
+    "contact": {
+      "title": "Demander à chaque étal de contacter ses clients",
+      "short": "les étals contactent leurs clients",
+      "text": "Rien ne change automatiquement. L'étal convient d'un autre moment et ne rembourse rien, puisque aucun argent n'a changé de mains."
+    },
+    "cancel": {
+      "title": "Annuler les commandes et prévenir les clients",
+      "short": "annulées et clients prévenus",
+      "text": "Le stock retourne à l'étal et la commande se termine en « annulée », pas en « refusée », car l'étal n'a rien fait de mal."
+    }
+  },
+  "error": {
+    "noun": "marché",
+    "required": "Ce champ est obligatoire.",
+    "days": "Choisissez au moins un jour d’ouverture.",
+    "close": "L’heure de fermeture doit suivre l’heure d’ouverture."
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "notFound": {
+    "title": "该摊位已不在这里",
+    "browse": "浏览市集"
+  },
+  "breadcrumb": "市集",
+  "approved": "已审核摊位",
+  "savedToast": "已收藏 {{name}}。",
+  "save": "收藏摊位",
+  "message": "联系摊位",
+  "stats": {
+    "reviews_one": "{{count}} 条评价",
+    "reviews_other": "{{count}} 条评价",
+    "markets_one": "个市集",
+    "markets_other": "个市集",
+    "since": "在此销售起始于",
+    "cutoff": "取货前几小时截单"
+  },
+  "tabs": {
+    "label": "摊位栏目",
+    "stock": "本周库存",
+    "reviews": "评价",
+    "about": "关于摊位"
+  },
+  "stock": {
+    "count_one": "{{count}} 件商品",
+    "count_other": "{{count}} 件商品",
+    "availableOn": "可买日期",
+    "notSelling": "{{stall}} {{day}}不营业。上面的商品是他们在营业日（{{days}}）出售的。"
+  },
+  "reviews": {
+    "summary_one": "{{count}} 条评价，每条都来自已完成的订单",
+    "summary_other": "{{count}} 条评价，每条都来自已完成的订单",
+    "all": "全部",
+    "farmer": "关于摊位",
+    "product": "关于商品",
+    "newest": "最新优先"
+  },
+  "about": {
+    "whereWhen": "地点和时间",
+    "table": {
+      "market": "市集",
+      "days": "日期",
+      "window": "取货时段",
+      "stall": "摊位",
+      "directions": "路线"
+    },
+    "cutoffNote_one": "订单在你所选时段前 {{count}} 小时截止。之后只有摊位可以修改订单。",
+    "cutoffNote_other": "订单在你所选时段前 {{count}} 小时截止。之后只有摊位可以修改订单。",
+    "disclaimer": "MarketLink 不核查许可证或有机声明。如果你在意，请在摊位询问。",
+    "contact": "联系人",
+    "email": "电子邮件",
+    "since": "在此销售起始于",
+    "mapLabel": "{{name}} 地图",
+    "findingTitle": "如何找到摊位",
+    "findingText": "摊位 {{code}} · 取货时段 {{window}}。每个时段 30 分钟，最多 5 单。",
+    "preorder": "在此市集预订"
+  },
+  "report": {
+    "sentTitle": "举报已发送",
+    "sentText": "管理员会进行核查。",
+    "button": "举报此摊位",
+    "note": "多次未出摊、摊位位置错误，或任何违反平台规则的情况。"
+  },
+  "error": {
+    "noun": "摊位"
+  }
+}

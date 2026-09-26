@@ -1,0 +1,502 @@
+{
+  "settings": {
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themeNote": "Applies at once. Match device follows your phone or computer.",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "Match device"
+    },
+    "language": "Language",
+    "languageNote": "The language of menus, buttons and messages. Stall, product and place names stay as the stall wrote them.",
+    "format": "Money, dates and units",
+    "currency": "Show prices in",
+    "currencyNote": "You always pay in Vietnamese đồng at the stall. Another currency is shown next to it for reading only, at fixed rates from {{date}}.",
+    "currencies": {
+      "VND": "₫ Vietnamese đồng only",
+      "USD": "₫ and $ US dollar",
+      "EUR": "₫ and € euro",
+      "JPY": "₫ and ¥ Japanese yen"
+    },
+    "units": "Weights and volumes",
+    "unitsNote": "Only converts units that measure something. A stall that sells by the bunch, the bulb or the tray keeps its own word.",
+    "metric": "Metric · kg, g, litre",
+    "imperial": "Imperial · lb, oz, pint",
+    "date": "Date",
+    "clock": "Clock",
+    "clock24": "24-hour · 19:00",
+    "clock12": "12-hour · 7:00 pm",
+    "preview": "Preview: {{date}} · {{time}} · {{price}}",
+    "save": "Save settings",
+    "saving": "Saving…",
+    "saveHint": "The theme applies as soon as you pick it; the rest when you save.",
+    "savedTitle": "Saved",
+    "savedText": "Your settings are saved.",
+    "saveError": "Could not save your settings. Please try again."
+  },
+  "actions": {
+    "back": "Go back",
+    "close": "Close",
+    "directions": "Directions",
+    "dismiss": "Dismiss",
+    "remove": "Remove",
+    "tryAgain": "Try again",
+    "cancel": "Cancel"
+  },
+  "admin": {
+    "badge": "Admin",
+    "security": "Security",
+    "signIn": "Admin sign-in"
+  },
+  "cart": {
+    "orderOf": "Order {{index}} of {{of}}",
+    "payAtPickup": "Pay at the stall on pickup"
+  },
+  "chart": {
+    "showNumbers": "Show the numbers"
+  },
+  "chat": {
+    "assistant": "MarketLink assistant",
+    "you": "You",
+    "intent": "Intent: {{intent}}",
+    "photoUnavailable": "This photo is not available.",
+    "photoFrom": "Photo from {{name}}",
+    "seen": "Seen",
+    "loadingThreads": "Loading conversations…",
+    "threadsErrorTitle": "We could not load your conversations",
+    "threadsErrorText": "Check your connection and try again.",
+    "tryAgain": "Try again",
+    "noThreadsTitle": "No conversations yet",
+    "noThreadsText": "Message a stall from its page to ask about this week's produce.",
+    "unreadCount_one": "{{count}} unread message",
+    "unreadCount_other": "{{count}} unread messages",
+    "sendFailed": "Your message was not sent. Try again.",
+    "photoFailed": "The photo was not sent. Choose a JPEG, PNG or WebP under 5 MB.",
+    "attachPhoto": "Add a photo",
+    "draftLabel": "Write a message",
+    "draftPlaceholder": "Write a message",
+    "send": "Send",
+    "pickThreadTitle": "Pick a conversation",
+    "pickThreadText": "Choose a conversation from the list to read it.",
+    "back": "Back",
+    "online": "Online",
+    "offline": "Offline",
+    "lastSeen": "Last seen {{time}}",
+    "loadOlder": "Load older messages",
+    "olderFailed": "Could not load older messages. Try again.",
+    "loadingMessages": "Loading messages…",
+    "messagesErrorTitle": "We could not load this conversation",
+    "messagesErrorText": "Check your connection and open it again.",
+    "emptyThreadTitle": "No messages yet",
+    "emptyThreadText": "Say hello to start the conversation.",
+    "typing": "{{name}} is typing…",
+    "conversationWith": "Conversation with {{name}}"
+  },
+  "errors": {
+    "network": "Could not reach the server. Check your connection and try again."
+  },
+  "farmerNav": {
+    "sections": "Sections",
+    "navigation": "Farmer navigation",
+    "home": "MarketLink — Farmer overview",
+    "badge": "Farmer",
+    "expand": "Expand the sidebar",
+    "collapse": "Collapse the sidebar",
+    "approvedMarkets_one": "Approved · {{count}} market",
+    "approvedMarkets_other": "Approved · {{count}} markets",
+    "changeMarket": "Change which market you are looking at",
+    "roleStall": "Farmer · {{stall}}",
+    "openNavigation": "Open navigation",
+    "searchPlaceholder": "Order code or customer",
+    "yourAccount": "Your account",
+    "today": "Today",
+    "overview": "Overview",
+    "incomingOrders": "Incoming orders",
+    "pickupSlots": "Pickup slots",
+    "stock": "Stock",
+    "weekStock": "This week's stock",
+    "products": "Products",
+    "stall": "Stall",
+    "stallPickup": "Stall & pickup",
+    "reviews": "Reviews",
+    "salesHistory": "Sales history",
+    "inbox": "Inbox",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "account": "Account",
+    "promote": "Promote & listings",
+    "approval": "Approval status",
+    "settings": "Settings",
+    "shop": "Shop",
+    "shopMarkets": "Shop at the markets"
+  },
+  "footer": {
+    "tagline": "Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.",
+    "shop": "Shop",
+    "marketsNearYou": "Markets near you",
+    "inSeason": "In season",
+    "marketMap": "Market map",
+    "favoriteStalls": "Favorite stalls",
+    "sell": "Sell",
+    "registerFarmer": "Register as a Farmer",
+    "handlingPreOrders": "Handling pre-orders",
+    "stallGuidelines": "Stall guidelines",
+    "marketLink": "MarketLink",
+    "aboutUs": "About us",
+    "contactUs": "Contact us",
+    "feedback": "Feedback & bug reports",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy",
+    "mapData": "Map data © OpenStreetMap contributors",
+    "mapDataFrom": "Map data {{credit}}"
+  },
+  "header": {
+    "cart": "Cart",
+    "cartItems_one": "Cart, {{count}} item",
+    "cartItems_other": "Cart, {{count}} items",
+    "hi": "Hi, <b>{{name}}</b>",
+    "main": "Main",
+    "menu": "Menu",
+    "messages": "Messages",
+    "notifications": "Notifications",
+    "notificationsUnread_one": "Notifications, {{count}} unread",
+    "notificationsUnread_other": "Notifications, {{count}} unread",
+    "openMenu": "Open menu",
+    "search": "Search"
+  },
+  "kpi": {
+    "noChange": "no change",
+    "vsBefore": "vs the period before"
+  },
+  "loadError": {
+    "title": "We could not load the {{noun}}",
+    "text": "The list did not come back this time. Nothing you saved or ordered is affected.",
+    "help": "This is usually the connection rather than anything you did. If trying again does not help, <link>tell us what happened</link> and we will look into it.",
+    "helpAlt": "This is usually the connection rather than anything you did. If trying again does not help, <alt />, or <link>tell us what happened</link> and we will look into it."
+  },
+  "loading": {
+    "markets": "Loading markets"
+  },
+  "logo": {
+    "home": "MarketLink — home"
+  },
+  "map": {
+    "attribution": "© {{link}} contributors",
+    "open": "Open",
+    "placeholder": "Map — {{label}}",
+    "stallPickup": "Stall {{code}} · pickup {{pickup}}",
+    "tilesFailed": "Map tiles need a connection. The list still works without them.",
+    "yourStall": "Your stall"
+  },
+  "marketCard": {
+    "save": "Save {{name}}",
+    "unsave": "Unsave {{name}}",
+    "days": "Market days",
+    "open": "open",
+    "closed": "closed",
+    "hours": "Hours <b>{{open}}–{{close}}</b>",
+    "stalls_one": "<b>{{count}}</b> stall",
+    "stalls_other": "<b>{{count}}</b> stalls",
+    "away": "<b>{{distance}}</b> away",
+    "seeStalls": "See stalls"
+  },
+  "nav": {
+    "markets": "Markets",
+    "products": "Products",
+    "map": "Map",
+    "aboutUs": "About us",
+    "myOrders": "My orders",
+    "favorites": "Favorites",
+    "messages": "Messages",
+    "dashboard": "Dashboard",
+    "farmerPanel": "Farmer panel",
+    "adminPanel": "Admin panel",
+    "profile": "Profile",
+    "settings": "Settings",
+    "signIn": "Sign in",
+    "createAccount": "Create an account",
+    "signOut": "Sign out",
+    "yourAccount": "Your account"
+  },
+  "order": {
+    "code": "Order {{code}}",
+    "market": "Market",
+    "pickup": "Pickup",
+    "payOnPickup": "Pay on pickup",
+    "declinedReason": "Reason from the stall: {{reason}} Nothing to pay.",
+    "cancelledNote": "You cancelled this order before the cutoff. Stock went back to the stall.",
+    "lockedNote": "Cutoff passed at {{cutoff}}. To change it, contact the stall directly.",
+    "editableNote": "Edit or cancel before {{cutoff}}. After that the order is locked.",
+    "edit": "Edit order",
+    "cancel": "Cancel order",
+    "reviewed": "You reviewed this order",
+    "review": "Review stall & products",
+    "reorder": "Reorder"
+  },
+  "orderStatus": {
+    "placed": "Placed",
+    "accepted": "Accepted",
+    "ready": "Ready for pickup",
+    "completed": "Completed",
+    "declined": "Declined",
+    "cancelled": "Cancelled"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page {{n}}"
+  },
+  "password": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "period": {
+    "length": "Period length",
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "quarter": "Quarter",
+    "year": "Year",
+    "custom": "Custom",
+    "from": "From",
+    "to": "To",
+    "compareWith": "Compare with",
+    "cmpBefore": "The period before, same length",
+    "cmpLastYear": "The same period last year",
+    "cmpNone": "No comparison",
+    "comparedWith": "compared with <b>{{compare}}</b>, the same length"
+  },
+  "price": {
+    "was": "Was"
+  },
+  "product": {
+    "notThisWeek": "Not this week",
+    "backSoon": "Back soon",
+    "onlyLeft": "Only {{qty}} left",
+    "left": "{{qty}} left",
+    "paused": "Paused",
+    "soldOut": "Sold out",
+    "addFavorite": "Add to favorites: {{name}}",
+    "removeFavorite": "Remove from favorites: {{name}}",
+    "notifyMe": "Notify me when back",
+    "addToCart": "Add to cart"
+  },
+  "qty": {
+    "label": "Quantity {{unit}}",
+    "decrease": "Decrease by 1",
+    "increase": "Increase by 1",
+    "max": "Max {{qty}}",
+    "left": "{{qty}} left"
+  },
+  "rating": {
+    "count_one": "({{count}} review)",
+    "count_other": "({{count}} reviews)",
+    "sr": "{{value}} out of 5 stars",
+    "srWithCount_one": "{{value}} out of 5 stars, {{count}} review",
+    "srWithCount_other": "{{value}} out of 5 stars, {{count}} reviews",
+    "stars_one": "{{count}} star — {{word}}",
+    "stars_other": "{{count}} stars — {{word}}",
+    "words": {
+      "none": "not rated",
+      "poor": "Poor",
+      "fair": "Fair",
+      "good": "Good",
+      "veryGood": "Very good",
+      "excellent": "Excellent"
+    }
+  },
+  "review": {
+    "verified": "Verified purchase",
+    "replied": "{{by}} replied · {{date}}"
+  },
+  "slot": {
+    "full": "Fully booked",
+    "left": "{{left}} of {{max}} left"
+  },
+  "stall": {
+    "markets": "Markets",
+    "days": "Market days",
+    "pickup": "Pickup",
+    "distance": "Distance",
+    "see": "See stall & this week's stock"
+  },
+  "stock": {
+    "left": "left",
+    "reserved": "{{reserved}} of {{total}} reserved",
+    "runningLow": "running low",
+    "soldOut": "sold out"
+  },
+  "toast": {
+    "signedOut": "Signed out."
+  },
+  "validation": {
+    "fullNameRequired": "Enter your full name.",
+    "fullNameMax": "Full name can be at most {{max}} characters.",
+    "phoneRequired": "Enter your phone number.",
+    "phoneInvalid": "Enter a valid Vietnamese mobile number (10 digits).",
+    "addressRequired": "Enter your address.",
+    "addressMax": "Address can be at most {{max}} characters."
+  },
+  "adminNav": {
+    "sections": "Admin sections",
+    "overview": "Overview",
+    "farmers": "Farmers",
+    "customers": "Customers",
+    "markets": "Markets",
+    "moderation": "Moderation",
+    "orders": "Orders",
+    "revenue": "Revenue",
+    "reports": "Reports",
+    "categories": "Categories",
+    "announcements": "Announcements",
+    "feedback": "Feedback",
+    "pricing": "Pricing",
+    "settings": "Settings",
+    "account": "Your account",
+    "analytics": "Analytics",
+    "people": "People",
+    "marketplace": "Marketplace",
+    "platform": "Platform",
+    "navigation": "Admin navigation",
+    "home": "MarketLink — Admin overview",
+    "contextSub": "Platform · whole marketplace",
+    "userLine": "Admin · whole platform",
+    "searchPlaceholder": "Stall, customer or market"
+  },
+  "carousel": {
+    "roleCarousel": "carousel",
+    "roleSlide": "slide",
+    "slideOf": "{{n}} of {{total}}: {{topic}}",
+    "previous": "Previous slide",
+    "next": "Next slide",
+    "show": "Show slide {{n}}: {{topic}}",
+    "pause": "Pause the slideshow",
+    "play": "Play the slideshow"
+  },
+  "geo": {
+    "denied": "You turned location off for this site. Change it in your browser’s site settings, or use an address instead.",
+    "insecure": "Your browser only shares your location over a secure (https) connection.",
+    "failed": "Your device could not work out where you are. Try again, or type an address instead.",
+    "finding": "Finding you…"
+  },
+  "directions": {
+    "title": "Directions to {{name}}",
+    "question": "Where are you setting off from?",
+    "current": "My current location",
+    "currentShared": "Already shared",
+    "currentAsk": "Your browser will ask first",
+    "address": "An address",
+    "addressNote": "A street or a landmark in Ho Chi Minh City.",
+    "addressLabel": "Starting address",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "Street and district work best. House numbers are often missing from the map, and OpenStreetMap will ask you to pick a place when it cannot find one.",
+    "useSaved": "Use my saved address",
+    "none": "I will type it on the map",
+    "noneNote": "Opens OpenStreetMap with only the destination filled in.",
+    "privacy": "Directions open on openstreetmap.org in a new tab. MarketLink does not track where you are.",
+    "open": "Open directions"
+  },
+  "tier": {
+    "bronze": "Bronze",
+    "silver": "Silver",
+    "gold": "Gold",
+    "diamond": "Diamond",
+    "badge": "{{tier}} tier"
+  },
+  "video": {
+    "play": "Play the video",
+    "preview": "Video",
+    "close": "Close"
+  },
+  "application": {
+    "attempt": "Attempt {{n}}",
+    "sentOn": "Sent {{date}}",
+    "answeredOn": "answered {{date}}",
+    "reason": "Reason:",
+    "photoAlt": "Photo from attempt {{n}}"
+  },
+  "notify": {
+    "open": "Open",
+    "prompt": {
+      "title": "Turn on notifications",
+      "text": "Get new messages, stall decisions and MarketLink announcements on your screen, even when this tab is in the background.",
+      "enable": "Turn on",
+      "later": "Not now",
+      "onTitle": "Notifications are on",
+      "onText": "You can change what you get in Settings → Notifications."
+    },
+    "settings": {
+      "title": "Notifications",
+      "intro": "Choose what reaches you and how. Everything still lands in your notification list.",
+      "browser": "Browser notifications",
+      "permission": {
+        "granted": "On. Notifications show even when MarketLink is in the background.",
+        "default": "Off. Turn them on to see notifications when this tab is in the background.",
+        "denied": "Blocked by your browser. Allow notifications for this site in the browser’s site settings, then reload the page.",
+        "unsupported": "This browser cannot show notifications. You still see them on the page."
+      },
+      "loading": "Loading your notification settings…",
+      "loadErrorTitle": "Could not load your notification settings",
+      "loadErrorText": "Check your connection and try again.",
+      "retry": "Try again",
+      "group": "What",
+      "inApp": "On the page",
+      "inBrowser": "Browser",
+      "groups": {
+        "messages": {
+          "title": "Messages",
+          "note": "When a customer or a stall writes to you"
+        },
+        "announcements": {
+          "title": "Announcements",
+          "note": "News from MarketLink, such as a market closing"
+        },
+        "account": {
+          "title": "Your stall application",
+          "note": "When it is approved, declined, suspended or reopened"
+        },
+        "farmerApplications": {
+          "title": "Farmer applications",
+          "note": "When someone applies to sell on MarketLink"
+        }
+      },
+      "sound": "Play a sound",
+      "quiet": "Quiet hours",
+      "quietNote": "No pop-ups, sounds or browser notifications in these hours (Vietnam time). They still arrive in your list.",
+      "from": "From",
+      "to": "To",
+      "testNote": "Send yourself a notification to check how it looks.",
+      "test": "Send a test",
+      "testing": "Sending…",
+      "testError": "Could not send the test. Try again in a few seconds.",
+      "saveError": "Could not save your notification settings."
+    },
+    "list": {
+      "all": "All",
+      "unread": "Unread",
+      "unreadCount_one": "{{count}} unread",
+      "unreadCount_other": "{{count}} unread",
+      "unreadMark": "unread",
+      "markAllRead": "Mark all as read",
+      "loading": "Loading…",
+      "more": "Show older",
+      "emptyTitle": "Nothing yet",
+      "emptyUnreadTitle": "All caught up",
+      "emptyText": "New notifications appear here the moment they happen.",
+      "errorTitle": "Could not load your notifications",
+      "errorText": "Check your connection and try again.",
+      "loadError": "Could not load more notifications.",
+      "readAllError": "Could not mark your notifications as read."
+    },
+    "admin": {
+      "title": "Notifications",
+      "intro": "New Farmer applications waiting for you to review."
+    }
+  },
+  "comingSoon": {
+    "title": "This page is not open yet",
+    "text": "We are still building it. Everything else in the menu works as usual."
+  }
+}

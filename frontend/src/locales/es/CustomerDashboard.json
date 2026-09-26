@@ -1,0 +1,34 @@
+{
+  "greeting_one": "Hola, {{name}}: {{count}} recogida este fin de semana",
+  "greeting_other": "Hola, {{name}}: {{count}} recogidas este fin de semana",
+  "intro": "Un pedido sigue esperando la confirmación del puesto. Todo lo demás va bien.",
+  "browseMarkets": "Ver los mercados de este fin de semana",
+  "cards": {
+    "upcoming_one": "{{count}} pedido próximo",
+    "upcoming_other": "{{count}} pedidos próximos",
+    "upcomingBreakdown": "Pendientes de aprobación: {{placed}} · Aceptados: {{accepted}} · Listos: {{ready}}",
+    "favorites_one": "{{count}} favorito",
+    "favorites_other": "{{count}} favoritos",
+    "stalls_one": "{{count}} puesto",
+    "stalls_other": "{{count}} puestos",
+    "products_one": "{{count}} producto",
+    "products_other": "{{count}} productos",
+    "markets_one": "{{count}} mercado",
+    "markets_other": "{{count}} mercados",
+    "unread_one": "{{count}} notificación sin leer",
+    "unread_other": "{{count}} notificaciones sin leer",
+    "unreadText": "Un pedido está listo y ha vuelto el yogur de cabra",
+    "account": "Cuenta"
+  },
+  "sell": {
+    "overline": "Novedad",
+    "title": "¿Cultivas algo? Véndelo en el mercado",
+    "text": "Tu cuenta puede convertirse en un puesto en uno de los cuatro mercados. Solicítalo con unas fotos de tu parcela y un administrador lo revisa. En cualquier caso, sigues comprando como siempre.",
+    "apply": "Solicitar vender",
+    "dismiss": "Ahora no"
+  },
+  "nextPickups": "Próximas recogidas",
+  "allOrders": "Todos mis pedidos",
+  "newFromFavorites": "Novedades de la semana de tus puestos favoritos",
+  "favorites": "Favoritos"
+}

@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "weekend": "week-end de marché {{from}} – {{to}}",
+    "title": "Commandez à l'avance au marché fermier",
+    "intro_one": "Réservez les produits de la semaine auprès des stands de {{count}} marché à Hô Chi Minh-Ville. Retirez au stand et payez directement le producteur.",
+    "intro_other": "Réservez les produits de la semaine auprès des stands de {{count}} marchés à Hô Chi Minh-Ville. Retirez au stand et payez directement le producteur.",
+    "browse": "Voir les marchés",
+    "sell": "Vendre sur MarketLink"
+  },
+  "search": {
+    "scope": "Rechercher dans",
+    "scopes": {
+      "all": "Tout",
+      "market": "Marchés",
+      "farmer": "Stands",
+      "product": "Produits"
+    },
+    "keyword": "Mot-clé",
+    "placeholder": "Liseron d'eau, Cô Tư Garden, marché de Thảo Điền…",
+    "submit": "Rechercher"
+  },
+  "board": {
+    "overline": "Ouverts ce week-end",
+    "title": "Où sont les stands",
+    "seeAll_one": "Voir le marché sur la carte",
+    "seeAll_other": "Voir les {{count}} marchés sur la carte"
+  },
+  "nearby": {
+    "title": "Marchés près de chez vous",
+    "note": "Distances depuis votre adresse enregistrée à Thảo Điền",
+    "noun": "marchés"
+  },
+  "fresh": {
+    "title": "Frais cette semaine",
+    "all": "Tous les produits et filtres",
+    "noun": "produits"
+  },
+  "how": {
+    "title": "Comment fonctionne la précommande",
+    "steps": {
+      "reserve": {
+        "title": "Réservez avant l'heure limite",
+        "text": "Ajoutez des produits d'un ou plusieurs stands, choisissez une heure de retrait dans le créneau de chaque stand, puis passez commande. Le stock vous est réservé dès la commande."
+      },
+      "confirm": {
+        "title": "Le producteur confirme",
+        "text": "Chaque stand accepte ou refuse sa propre commande. Vous êtes prévenu dans les deux cas, et vous pouvez modifier ou annuler jusqu'à l'heure limite du stand."
+      },
+      "pickup": {
+        "title": "Retirez et payez au stand",
+        "text": "Quand la commande est prête, rendez-vous au stand pendant votre créneau, récupérez-la et payez directement le producteur. Il n'y a pas de paiement en ligne."
+      }
+    }
+  }
+}

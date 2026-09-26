@@ -1,0 +1,50 @@
+{
+  "title": "Sản phẩm",
+  "intro": "Mọi thứ bạn có thể bày bán. Đánh dấu hết hàng khi sản phẩm bán hết trong ngày chợ, hoặc tạm dừng khi đang trái mùa.",
+  "add": "Thêm sản phẩm",
+  "filterAll": "Tất cả",
+  "status": {
+    "available": "Đang bán",
+    "sold_out": "Hết hàng",
+    "unavailable": "Tạm dừng"
+  },
+  "caption_one": "{{count}} sản phẩm",
+  "caption_other": "{{count}} sản phẩm",
+  "col": {
+    "product": "Sản phẩm",
+    "price": "Giá",
+    "left": "Còn trong tuần",
+    "reserved": "Đã giữ",
+    "status": "Trạng thái"
+  },
+  "perUnit": "mỗi {{unit}}",
+  "statusOf": "Trạng thái của {{name}}",
+  "edit": "Sửa",
+  "delete": "Xoá",
+  "footNote": "Xoá một sản phẩm sẽ gỡ nó khỏi danh mục; các đơn cũ vẫn giữ dòng hàng của mình. Ảnh: tỉ lệ 4:3, ánh sáng tự nhiên, trên nền gỗ hoặc giấy.",
+  "toast": {
+    "statusSaved": "Đã lưu trạng thái",
+    "status": {
+      "available": "Sản phẩm đã được bày bán lại.",
+      "sold_out": "Khách giờ thấy “Hết hàng” và có thể đăng ký nhận báo khi có hàng lại.",
+      "unavailable": "Sản phẩm bị ẩn với khách cho đến khi bạn bật lại."
+    },
+    "deleted": "Đã xoá",
+    "deletedText": "Đã xoá {{name}}."
+  },
+  "dialog": {
+    "title": "Xoá {{name}}?",
+    "keep": "Giữ sản phẩm",
+    "confirm": "Xoá sản phẩm",
+    "text": "Sản phẩm sẽ biến mất khỏi danh mục và khỏi mẫu của bạn. Các đơn đã có sản phẩm này không bị thay đổi.",
+    "pauseHint": "Muốn ngừng bán một thời gian, hãy chọn Tạm dừng."
+  },
+  "error": {
+    "noun": "sản phẩm của bạn"
+  },
+  "hiddenByAdmin": "Admin đã ẩn: {{reason}}",
+  "empty": {
+    "title": "Chưa có sản phẩm nào",
+    "text": "Thêm sản phẩm đầu tiên là nó hiện ngay trên trang gian hàng của bạn."
+  }
+}

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { AlertIcon } from '@/components/icons';
 import Helper from '@/utils/helper';
@@ -9,17 +10,25 @@ type DataStateProps = {
   title: ReactNode;
   text: string;
   action?: ReactNode;
+  /**
+   * Chiếm hết chỗ trống còn lại và căn giữa, thay vì là một khối nhỏ nép trái. Dùng khi khối này là thứ duy nhất trong
+   * vùng nội dung — một danh sách rỗng chiếm cả trang đọc rõ hơn là một hộp bé.
+   */
+  fill?: boolean;
   className?: string;
 };
 
 /** A block's empty or error state (design system `.ml-state`, FR-084). */
-export function DataState({ variant = 'empty', title, text, action, className }: DataStateProps) {
+export function DataState({ variant = 'empty', title, text, action, fill, className }: DataStateProps) {
   const error = variant === 'error';
   return (
     <div
       role={error ? 'alert' : undefined}
       className={Helper.cn(
-        'flex max-w-105 min-w-65 flex-1 flex-col items-start gap-2 rounded-md p-6',
+        'flex flex-col gap-2 rounded-md p-6',
+        fill
+          ? 'min-h-80 w-full flex-1 items-center justify-center text-center'
+          : 'max-w-105 min-w-65 flex-1 items-start',
         error ? 'bg-danger-bg border-danger border-[1.5px]' : 'border-line-strong border-[1.5px] border-dashed',
         className,
       )}
@@ -52,7 +61,11 @@ type LoadErrorProps = {
  * longer guidance sits under it in normal ink, because an error block paints everything inside it danger-red and a
  * paragraph of that is tiring.
  */
+/** Puts a ReactNode where a `<alt />` tag sits in a translated sentence (Trans passes it no children). */
+const Slot = ({ node }: { node: ReactNode }) => <>{node}</>;
+
 export function LoadError({ noun, alt, onRetry, className }: LoadErrorProps) {
+  const { t } = useTranslation();
   return (
     <div className={Helper.cn('flex flex-col gap-4', className)}>
       <DataState
@@ -61,20 +74,22 @@ export function LoadError({ noun, alt, onRetry, className }: LoadErrorProps) {
         title={
           <span className="inline-flex items-center gap-2">
             <AlertIcon />
-            We could not load the {noun}
+            {t('loadError.title', { noun })}
           </span>
         }
-        text="The list did not come back this time. Nothing you saved or ordered is affected."
+        text={t('loadError.text')}
         action={
           <Button variant="danger" size="sm" onClick={onRetry}>
-            Try again
+            {t('actions.tryAgain')}
           </Button>
         }
       />
       <p className="text-small text-ink-muted max-w-155">
-        This is usually the connection rather than anything you did. If trying again does not help,{' '}
-        {alt ? <>{alt}, or </> : null}
-        <Link to="/feedback">tell us what happened</Link> and we will look into it.
+        <Trans
+          t={t}
+          i18nKey={alt ? 'loadError.helpAlt' : 'loadError.help'}
+          components={{ alt: <Slot node={alt} />, link: <Link to="/feedback" /> }}
+        />
       </p>
     </div>
   );

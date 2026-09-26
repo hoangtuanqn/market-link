@@ -1,0 +1,12 @@
+{
+  "title": "My orders",
+  "intro": "Upcoming pickups first. Past orders keep their receipts, and you can reorder anything you bought before at today's price and stock.",
+  "stall": "Stall",
+  "allStalls": "All stalls",
+  "tabs": {
+    "label": "Orders",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "all": "All"
+  }
+}

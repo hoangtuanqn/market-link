@@ -39,7 +39,7 @@
   </section>
 </main>
 <script>
-  document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.week.slice(0, 4).map(function (d) { return { value: d.value, label: d.label, sub: d.sub, disabled: d.value === 'thu' }; }), 'sat');
+  document.getElementById('day-chips').innerHTML = PT.dayChips('Market day', PT.week.slice(0, 4).map(function (d) { return { value: d.value, label: d.long, date: d.sub, disabled: d.value === 'thu' }; }), 'sat');
   document.getElementById('show-chips').innerHTML = PT.chip('Markets', { selected: true }) + PT.chip('Stalls', { selected: true }) + PT.chip('Saved only');
   var open = PT.markets.filter(function (m) { return m.days.indexOf(6) >= 0; });
   document.getElementById('markets').innerHTML = open.map(function (m) { return PT.marketCard(m); }).join('');

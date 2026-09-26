@@ -1,0 +1,63 @@
+{
+  "overline": "Einstellungen",
+  "title": "Kategorien",
+  "intro": "Die einzige Liste, aus der jeder Stand beim Anlegen eines Produkts wählt. Verkaufseinheiten sind fest und kommen mit der App.",
+  "link": {
+    "announcements": "Hinweise",
+    "feedback": "Rückmeldungen"
+  },
+  "caption": {
+    "categories_one": "{{count}} Kategorie",
+    "categories_other": "{{count}} Kategorien"
+  },
+  "col": {
+    "category": "Kategorie",
+    "products": "Produkte",
+    "stalls": "Stände",
+    "nameOf": "Name von {{name}}",
+    "oneOfThem": "Einzahl",
+    "moreThanOne": "Mehrzahl",
+    "pluralOf": "Mehrzahl von {{name}}",
+    "kind": "Art",
+    "readsAs": "Liest sich als"
+  },
+  "action": {
+    "save": "Speichern",
+    "remove": "Entfernen",
+    "addToPicker": "In die Auswahl aufnehmen",
+    "merge": "Zusammenführen"
+  },
+  "categoryForm": {
+    "title": "Kategorie hinzufügen",
+    "name": "Name",
+    "namePlaceholder": "z. B. Seafood",
+    "nameHint": "Auf Englisch, nur der erste Buchstabe groß. Der Text steht handgeschrieben auf einem Produktschild ohne Foto.",
+    "position": "Position im Filter",
+    "submit": "Kategorie hinzufügen"
+  },
+  "removeCategory": {
+    "title": "{{name}} entfernen?",
+    "textUsed_one": "{{count}} Produkt nutzt sie. Wähle, wohin es kommt.",
+    "textUsed_other": "{{count}} Produkte nutzen sie. Wähle, wohin sie kommen.",
+    "textUnused": "Kein Produkt nutzt sie.",
+    "moveTo": "Produkte verschieben nach",
+    "keep": "Kategorie behalten",
+    "confirm": "Kategorie entfernen"
+  },
+  "empty": {
+    "categories": {
+      "title": "Noch keine Kategorien",
+      "text": "Lege eine Kategorie an, dann können Erzeuger ihre Produkte darin einsortieren."
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}} gespeichert.",
+    "categoryAdded": "Kategorie hinzugefügt. Die Stände können sie ab sofort wählen.",
+    "categoryRemoved": "{{name}} entfernt.",
+    "promoted": "{{name}} steht jetzt allen Ständen zur Auswahl."
+  },
+  "error": {
+    "noun": "Kategorien",
+    "nameRequired": "Gib der Kategorie einen Namen."
+  }
+}

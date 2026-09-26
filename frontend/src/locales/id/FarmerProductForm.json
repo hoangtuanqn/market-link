@@ -1,0 +1,82 @@
+{
+  "products": "Produk",
+  "crumb": {
+    "edit": "Ubah",
+    "add": "Tambah"
+  },
+  "addTitle": "Tambah produk",
+  "notFound": {
+    "title": "Produk itu sudah tidak ada di sini",
+    "text": "Mungkin sudah dihapus. Buka lagi dari daftar produk Anda."
+  },
+  "name": {
+    "label": "Nama produk",
+    "hint": "Dalam bahasa Inggris, dengan tempat atau varietasnya jika penting: “Củ Chi water spinach”, “Green-skin pomelo”."
+  },
+  "category": {
+    "label": "Kategori",
+    "hint": "Kategori dikelola oleh admin."
+  },
+  "unit": {
+    "label": "Dijual per",
+    "hint": "Cara pelanggan membelinya: per kilo, per ikat, per umbi, per kantong. Pilih satu atau beri nama sendiri."
+  },
+  "preview": {
+    "label": "Tampilannya nanti",
+    "text": "<b>{{price}}</b> di label · sisa <b>{{left}}</b> · pemesan satu akan melihat <b>{{one}}</b>"
+  },
+  "price": {
+    "label": "Harga dalam ₫",
+    "hint": "Ditampilkan sebagai {{price}}."
+  },
+  "qty": {
+    "label": "Jumlah tersedia minggu ini",
+    "error": "Jumlah harus 0 atau lebih. Gunakan Habis jika tidak tersisa."
+  },
+  "desc": {
+    "label": "Deskripsi",
+    "hint": "Ditampilkan di halaman produk. Ceritakan cara menanam dan cara menyimpannya."
+  },
+  "flag": {
+    "label": "Tag pendek di kartu",
+    "hint": "Opsional, ditulis tangan di label: “Segar hari ini”, “Dipanggang jam 5 pagi”."
+  },
+  "status": {
+    "label": "Status",
+    "available": "Tersedia",
+    "sold_out": "Habis",
+    "unavailable": "Dijeda"
+  },
+  "photo": {
+    "label": "Foto",
+    "none": "Belum ada foto. Sampai Anda menambahkannya, label menampilkan kategori dengan tulisan tangan.",
+    "choose": "Pilih foto",
+    "hint": "JPG atau PNG, 4:3, maks. 5 MB. Dari dekat, cahaya alami, di atas kayu atau kertas."
+  },
+  "save": "Simpan produk",
+  "add": "Tambah produk",
+  "cancel": "Batal",
+  "delete": {
+    "button": "Hapus produk",
+    "title": "Hapus {{name}}?",
+    "keep": "Simpan produk",
+    "text": "Produk hilang dari katalog dan dari template Anda. Pesanan yang sudah memuatnya tidak berubah."
+  },
+  "toast": {
+    "saved": "Disimpan",
+    "savedText": "{{name}} disimpan.",
+    "product": "Produk",
+    "deletedText": "{{name}} dihapus."
+  },
+  "error": {
+    "noun": "produk"
+  },
+  "image": {
+    "label": "Tautan foto",
+    "hint": "Opsional. Tautan publik ke foto produk; sebelum ada, label menampilkan kategori dengan tulisan tangan."
+  },
+  "errors": {
+    "required": "Kolom ini wajib diisi.",
+    "price": "Harga harus 0 atau lebih."
+  }
+}

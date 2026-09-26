@@ -1,0 +1,52 @@
+{
+  "title": "Suche",
+  "search": {
+    "scope": "Suchen in",
+    "scopes": {
+      "all": "Alles",
+      "market": "Märkte",
+      "farmer": "Stände",
+      "product": "Produkte"
+    },
+    "keyword": "Suchbegriff",
+    "submit": "Suchen"
+  },
+  "day": "Markttag",
+  "sort": "Sortieren",
+  "sorts": {
+    "best": "Beste Treffer",
+    "nearest": "Nächste",
+    "price": "Preis",
+    "rating": "Bewertung"
+  },
+  "tabs": {
+    "label": "Ergebnistyp",
+    "all": "Alle",
+    "market": "Märkte",
+    "farmer": "Stände",
+    "product": "Produkte"
+  },
+  "empty": {
+    "startTitle": "Geben Sie einen Suchbegriff ein",
+    "startText": "Versuchen Sie einen Produktnamen, einen Markt oder einen Stand.",
+    "noneTitle": "Keine Treffer",
+    "noneText": "Versuchen Sie ein kürzeres Wort oder entfernen Sie einen Filter. Die Suche durchsucht Märkte, Stände und Produkte gleichzeitig."
+  },
+  "results_one": "{{count}} Ergebnis für „{{q}}“ am {{day}}",
+  "results_other": "{{count}} Ergebnisse für „{{q}}“ am {{day}}",
+  "noStalls": "Keine passenden Stände.",
+  "noProducts": "Keine passenden Produkte.",
+  "noMarket": {
+    "title": "Kein Markt heißt „{{q}}“",
+    "text_one": "Märkte werden nach Name und Gegend gefunden. {{count}} Stand oben verkauft etwas, das zu „{{q}}“ passt.",
+    "text_other": "Märkte werden nach Name und Gegend gefunden. {{count}} Stände oben verkaufen etwas, das zu „{{q}}“ passt.",
+    "showStalls": "Stände zeigen"
+  },
+  "map": {
+    "label": "Karte der Ergebnisse",
+    "note": "Ergebnisse mit Standort werden markiert. Auf dem Handy wechselt ein Schalter „Liste / Karte“ zwischen beiden Ansichten."
+  },
+  "error": {
+    "noun": "Ergebnisse"
+  }
+}

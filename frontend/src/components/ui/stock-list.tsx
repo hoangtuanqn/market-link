@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import Helper from '@/utils/helper';
 
 export type StockRow = { name: string; left: number; total: number };
 
 /** Stock meter list: what's still sellable leads, the meter fills with what's reserved (design system `.pt-stock`). */
 export function StockList({ rows }: { rows: StockRow[] }) {
+  const { t } = useTranslation();
   return (
     <ul className="m-0 flex flex-col p-0">
       {rows.map((r) => {
@@ -25,7 +27,7 @@ export function StockList({ rows }: { rows: StockRow[] }) {
                 )}
               >
                 {r.left}
-                <span className="text-ink-muted ml-1 font-sans text-[13px]">left</span>
+                <span className="text-ink-muted ml-1 font-sans text-[13px]">{t('stock.left')}</span>
               </span>
             </div>
             <div className="bg-surface-sunken relative h-2.5 overflow-hidden rounded-full shadow-[inset_0_0_0_1px_var(--line)]">
@@ -40,8 +42,8 @@ export function StockList({ rows }: { rows: StockRow[] }) {
               />
             </div>
             <span className="text-ink-muted text-[13px] tabular-nums">
-              {reserved} of {r.total} reserved
-              {level === 'warn' ? ' · running low' : level === 'full' ? ' · sold out' : ''}
+              {t('stock.reserved', { reserved, total: r.total })}
+              {level === 'warn' ? ` · ${t('stock.runningLow')}` : level === 'full' ? ` · ${t('stock.soldOut')}` : ''}
             </span>
           </li>
         );

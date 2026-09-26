@@ -1,0 +1,61 @@
+{
+  "overline": "設定",
+  "title": "カテゴリ",
+  "intro": "屋台が商品を追加するときに選ぶ唯一のリストです。販売単位はアプリに組み込まれた固定の一覧です。",
+  "link": {
+    "announcements": "お知らせ",
+    "feedback": "フィードバック受信箱"
+  },
+  "caption": {
+    "categories_other": "{{count}}件のカテゴリー"
+  },
+  "col": {
+    "category": "カテゴリー",
+    "products": "商品数",
+    "stalls": "店舗数",
+    "nameOf": "{{name}} の名称",
+    "oneOfThem": "単数形",
+    "moreThanOne": "複数形",
+    "pluralOf": "{{name}} の複数形",
+    "kind": "種類",
+    "readsAs": "表示例"
+  },
+  "action": {
+    "save": "保存",
+    "remove": "削除",
+    "addToPicker": "選択肢に追加",
+    "merge": "統合"
+  },
+  "categoryForm": {
+    "title": "カテゴリーを追加",
+    "name": "名称",
+    "namePlaceholder": "例：Seafood",
+    "nameHint": "英語で、文頭のみ大文字。写真のない商品タグに手書き風で表示されます。",
+    "position": "絞り込みでの並び順",
+    "submit": "カテゴリーを追加"
+  },
+  "removeCategory": {
+    "title": "{{name}} を削除しますか？",
+    "textUsed_other": "{{count}}件の商品が使っています。移動先を選んでください。",
+    "textUnused": "使っている商品はありません。",
+    "moveTo": "商品の移動先",
+    "keep": "カテゴリーを残す",
+    "confirm": "カテゴリーを削除"
+  },
+  "empty": {
+    "categories": {
+      "title": "まだカテゴリーがありません",
+      "text": "カテゴリーを追加すると、農家が商品をそこに分類できるようになります。"
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}} を保存しました。",
+    "categoryAdded": "カテゴリーを追加しました。店舗はすぐ選べます。",
+    "categoryRemoved": "{{name}} を削除しました。",
+    "promoted": "{{name}} はすべての店舗の選択肢に入りました。"
+  },
+  "error": {
+    "noun": "カテゴリー",
+    "nameRequired": "カテゴリー名を入力してください。"
+  }
+}

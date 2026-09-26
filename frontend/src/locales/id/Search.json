@@ -1,0 +1,52 @@
+{
+  "title": "Cari",
+  "search": {
+    "scope": "Cari di",
+    "scopes": {
+      "all": "Semua",
+      "market": "Pasar",
+      "farmer": "Lapak",
+      "product": "Produk"
+    },
+    "keyword": "Kata kunci",
+    "submit": "Cari"
+  },
+  "day": "Hari pasar",
+  "sort": "Urutkan",
+  "sorts": {
+    "best": "Paling cocok",
+    "nearest": "Terdekat",
+    "price": "Harga",
+    "rating": "Rating"
+  },
+  "tabs": {
+    "label": "Jenis hasil",
+    "all": "Semua",
+    "market": "Pasar",
+    "farmer": "Lapak",
+    "product": "Produk"
+  },
+  "empty": {
+    "startTitle": "Ketik sesuatu untuk mencari",
+    "startText": "Coba nama produk, pasar, atau lapak.",
+    "noneTitle": "Tidak ada yang cocok",
+    "noneText": "Coba kata yang lebih pendek, atau hapus filter. Pencarian melihat pasar, lapak, dan produk sekaligus."
+  },
+  "results_one": "{{count}} hasil untuk “{{q}}” hari {{day}}",
+  "results_other": "{{count}} hasil untuk “{{q}}” hari {{day}}",
+  "noStalls": "Tidak ada lapak yang cocok.",
+  "noProducts": "Tidak ada produk yang cocok.",
+  "noMarket": {
+    "title": "Tidak ada pasar bernama “{{q}}”",
+    "text_one": "Pasar dicari berdasarkan nama dan area. {{count}} lapak di atas menjual sesuatu yang cocok dengan “{{q}}”.",
+    "text_other": "Pasar dicari berdasarkan nama dan area. {{count}} lapak di atas menjual sesuatu yang cocok dengan “{{q}}”.",
+    "showStalls": "Tampilkan lapak"
+  },
+  "map": {
+    "label": "Peta hasil",
+    "note": "Hasil yang punya lokasi ditandai di peta. Di ponsel, tombol “Daftar / Peta” beralih di antara keduanya."
+  },
+  "error": {
+    "noun": "hasil"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "title": "Pesanan saya",
+  "intro": "Pengambilan mendatang ditampilkan lebih dulu. Pesanan lama menyimpan struknya, dan Anda bisa memesan ulang apa pun yang pernah dibeli dengan harga dan stok hari ini.",
+  "stall": "Lapak",
+  "allStalls": "Semua lapak",
+  "tabs": {
+    "label": "Pesanan",
+    "upcoming": "Mendatang",
+    "past": "Lampau",
+    "all": "Semua"
+  }
+}

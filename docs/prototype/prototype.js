@@ -37,6 +37,7 @@
       ['favorites.html', 'Favorites and saved markets', 'FR-014 FR-040 FR-041'],
       ['notifications.html', 'Notifications', 'FR-041 FR-042'],
       ['account.html', 'Account', 'FR-001 FR-006'],
+      ['change-password.html', 'Change password', 'proposal'],
       ['complete-profile.html', 'Finish your account after Google', 'FR-001 · gap in merged code'],
       ['become-farmer.html', 'Apply to sell', 'FR-002 FR-071 · proposal'],
       ['assistant.html', 'Shopping assistant', 'FR-090 FR-091 FR-092'],
@@ -75,7 +76,7 @@
       ['order.html', 'Order detail (Admin)', 'FR-070 FR-038'],
       ['revenue.html', 'Platform revenue', 'proposal'],
       ['reports.html', 'Reports', 'FR-075'],
-      ['categories.html', 'Categories & units', 'FR-076'],
+      ['categories.html', 'Categories', 'FR-076'],
       ['announcements.html', 'Announcements', 'FR-077'],
       ['feedback.html', 'Feedback inbox', 'FR-081'],
       ['pricing.html', 'Pricing & allowances', 'proposal'],
@@ -188,6 +189,9 @@
     var home = role === 'farmer' ? link('farmer/overview.html') : role === 'admin' ? link('admin/overview.html') : link('public/home.html');
     var tools = '';
     if (role !== 'admin') tools += '<a class="ml-hbtn pt-hbtn-search" href="' + link('public/search.html') + '" aria-label="Search">' + I.search() + '</a>';
+    // Messages and notifications are two icons, not one (chat spec §9.1). An admin has no inbox.
+    var mhref = role === 'farmer' ? link('farmer/messages.html') : link('customer/messages.html');
+    if (role === 'customer' || role === 'farmer') tools += '<a class="ml-hbtn" href="' + mhref + '" aria-label="Messages">' + I.chat() + '</a>';
     if (role !== 'guest') {
       var nhref = role === 'farmer' ? link('farmer/notifications.html') : role === 'admin' ? link('admin/overview.html') : link('customer/notifications.html');
       tools += '<a class="ml-hbtn" href="' + nhref + '" aria-label="Notifications' + (o.unread ? ', ' + o.unread + ' unread' : '') + '">' + I.bell() + (o.unread ? '<span class="ml-hbadge" aria-hidden="true">' + o.unread + '</span>' : '') + '</a>';
@@ -196,21 +200,60 @@
     if (role === 'farmer') tools += '<a class="ml-btn ml-btn-accent ml-btn-sm" href="' + link('farmer/overview.html') + '">Stall panel</a>';
     if (role === 'guest') tools += '<a class="ml-btn ml-btn-accent ml-btn-sm" href="' + link('public/login.html') + '">Sign in</a>';
     else {
-      var who = role === 'admin' ? 'Admin' : 'Hi,';
-      var acct = role === 'admin' ? link('admin/overview.html') : link('customer/account.html');
-      tools += '<a class="ml-huser pt-plain" href="' + acct + '">' + who + ' <b>' + esc(role === 'farmer' ? (u.short || o.userName) : o.userName) + '</b></a>';
+      var shown = role === 'farmer' ? (u.short || o.userName) : o.userName;
+      if (role === 'admin') {
+        tools += '<a class="ml-huser pt-plain" href="' + link('admin/overview.html') + '">Admin <b>' + esc(shown) + '</b></a>';
+      } else {
+        // Proposal (not in the SRS): photo + menu with Dashboard, Profile, Settings, Sign out. Built in the app as UserMenu.
+        var settings = role === 'farmer' ? link('farmer/settings.html') : link('customer/settings.html');
+        var dash = role === 'farmer' ? link('farmer/overview.html') : link('customer/dashboard.html');
+        tools += '<div class="pt-umenu"><button type="button" class="ml-huser pt-umenu-btn" aria-haspopup="menu" aria-expanded="false" data-umenu>' +
+          PT.avatar(o.userName, 32, true, u.tier) + '<span>Hi, <b>' + esc(shown) + '</b></span><span class="pt-umenu-chev" aria-hidden="true">▾</span></button>' +
+          '<div class="pt-umenu-list" role="menu" aria-label="Your account" hidden>' +
+          '<div class="pt-umenu-head">' + PT.avatar(o.userName, 40, false, u.tier) + '<div><b>' + esc(o.userName) + '</b>' + (u.email ? '<span>' + esc(u.email) + '</span>' : '') + PT.tierBadge(u.tier) + '</div></div>' +
+          '<a role="menuitem" href="' + dash + '">Dashboard</a>' +
+          '<a role="menuitem" href="' + link('customer/account.html') + '">Profile</a>' +
+          '<a role="menuitem" href="' + settings + '">Settings</a>' +
+          '<a role="menuitem" href="' + link('public/login.html') + '">Sign out</a></div></div>';
+      }
     }
     tools += '<button type="button" class="ml-hbtn ml-hmenu" aria-label="Open menu" data-drawer-open>' + I.menu() + '</button>';
     var nav = items.map(function (it) { return '<li><a href="' + link(it[2]) + '"' + (o.active === it[0] ? ' aria-current="page"' : '') + '>' + it[1] + '</a></li>'; }).join('');
     var drawer = '<div class="pt-drawer" data-drawer><div class="pt-drawer-panel"><button type="button" class="ml-btn ml-btn-onboard ml-btn-sm" data-drawer-close>Close</button>' +
       items.map(function (it) { return '<a href="' + link(it[2]) + '"' + (o.active === it[0] ? ' aria-current="page"' : '') + '>' + it[1] + '</a>'; }).join('') +
+      (role === 'customer' || role === 'farmer' ? '<a href="' + mhref + '">Messages</a><a href="' + (role === 'farmer' ? link('farmer/overview.html') : link('customer/dashboard.html')) + '">Dashboard</a>' : '') +
       (role === 'guest' ? '<a href="' + link('public/login.html') + '">Sign in</a><a href="' + link('public/register-customer.html') + '">Create an account</a>' : '<a href="' + link('public/login.html') + '">Sign out</a>') + '</div></div>';
     return '<header class="ml-header"><div class="ml-header-in">' + PT.logo(30, home) + '<nav aria-label="Main"><ul class="ml-nav">' + nav + '</ul></nav><div class="ml-header-tools">' + tools + '</div></div><div class="ml-header-twine" aria-hidden="true"></div></header>' + drawer;
   };
-  PT.footer = function () {
+  /* Initials in a circle; `onBoard` uses accent because brand is nearly the board colour. */
+  PT.avatar = function (name, size, onBoard, tier) {
+    var words = String(name || '?').trim().split(/\s+/);
+    var ini = (words[0].charAt(0) + (words.length > 1 ? words[words.length - 1].charAt(0) : '')).toUpperCase();
+    var face = '<span class="pt-avatar' + (onBoard ? ' pt-avatar-accent' : '') + '" aria-hidden="true" style="width:' + size + 'px;height:' + size + 'px;font-size:' + Math.round(size * 0.4) + 'px">' + esc(ini) + '</span>';
+    return tier ? PT.tierRing(face, tier, size, onBoard) : face;
+  };
+
+  /* ---------- Your achievements (proposal, not in the SRS): tier frames and badges, src/styles/tiers.css ---------- */
+  var TIER_NAMES = { bronze: 'Bronze', silver: 'Silver', gold: 'Gold', diamond: 'Diamond' };
+  // Demo tiers by display name. The app reads them from the API (AchievementService.tiersFor) once reviews,
+  // orders and messages return them; until then frontend/src/data/tiers.ts holds the same list.
+  var DEMO_TIERS = { 'Minh Anh': 'gold', 'Phạm Minh Anh': 'gold', 'Lan Hương': 'silver', 'Lê Lan Hương': 'silver', 'Quốc Bảo': 'diamond', 'Thu Thảo': 'bronze', 'Hồng Nhung': 'silver', 'Văn Long': 'bronze', 'Bích Ngọc': 'gold', 'Minh Khang': 'silver', 'Nguyễn Minh Khang': 'silver', 'Kim Chi': 'bronze', 'Trần Phúc': 'diamond', 'Đức Anh': 'bronze' };
+  PT.tierOf = function (name) { return DEMO_TIERS[name]; };
+  PT.tierName = function (tier) { return TIER_NAMES[tier]; };
+  PT.tierBadge = function (tier) { return tier ? '<span class="ml-tier-badge" data-tier="' + tier + '">' + TIER_NAMES[tier] + ' tier</span>' : ''; };
+  var STAR = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1.5l1.9 4 4.3.5-3.2 2.9.9 4.3L8 11.1l-3.9 2.1.9-4.3L1.8 6l4.3-.5z"/></svg>';
+  var GEM = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4.2 2.5h7.6L15 6.4 8 14 1 6.4zM3.6 6.4l4.4 5 4.4-5z"/></svg>';
+  /* Wraps any round face in its tier frame; gold and diamond add a corner mark from 40px up. */
+  PT.tierRing = function (face, tier, size, onBoard) {
+    var mark = size >= 40 && (tier === 'gold' ? STAR : tier === 'diamond' ? GEM : '');
+    return '<span class="ml-tier-ring" data-tier="' + tier + '" aria-hidden="true"' + (onBoard ? ' style="--tier-gap:var(--board)"' : '') + '>' + face + (mark ? '<span class="ml-tier-mark">' + mark + '</span>' : '') + '</span>';
+  };
+  PT.footer = function (role) {
+    // Only a Farmer has pre-orders to handle; everyone else is offered the way to become one.
+    var sell = role === 'farmer' ? ['Handling pre-orders', 'farmer/orders.html'] : ['Register as a Farmer', 'public/register-farmer.html'];
     var cols = [
       ['Shop', [['Markets near you', 'public/markets.html'], ['In season', 'public/products.html'], ['Market map', 'public/map.html'], ['Favorite stalls', 'customer/favorites.html']]],
-      ['Sell', [['Register as a Farmer', 'public/register-farmer.html'], ['Handling pre-orders', 'farmer/orders.html'], ['Stall guidelines', 'public/about.html']]],
+      ['Sell', [sell, ['Stall guidelines', 'public/about.html']]],
       ['MarketLink', [['About us', 'public/about.html'], ['Contact us', 'public/contact.html'], ['Feedback & bug reports', 'public/feedback.html'], ['Terms of service', 'public/terms.html'], ['Privacy policy', 'public/privacy.html'], ['Sitemap', '../index.html']]],
     ];
     return '<footer class="ml-footer"><div class="ml-footer-in"><div>' + PT.logo(30) + '<p>Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.</p></div>' +
@@ -289,7 +332,7 @@
   };
   PT.reviewCard = function (r, o) {
     o = o || {};
-    return '<article class="ml-card ml-review' + (o.fluid ? ' pt-fluid' : '') + '"' + (o.fluid ? ' style="width:auto"' : '') + '><div class="ml-review-head"><div class="ml-review-who"><span class="ml-review-author">' + esc(r.author) + '</span>' + (r.verified !== false ? '<span class="ml-review-verified">' + I.check() + 'Verified purchase</span>' : '') + '</div><span class="ml-review-meta">' + r.date + (r.target ? ' · ' + esc(r.target) : '') + '</span></div>' +
+    return '<article class="ml-card ml-review' + (o.fluid ? ' pt-fluid' : '') + '"' + (o.fluid ? ' style="width:auto"' : '') + '><div class="ml-review-head"><div class="ml-review-who"><span class="ml-review-author">' + esc(r.author) + '</span>' + PT.tierBadge(PT.tierOf(r.author)) + (r.verified !== false ? '<span class="ml-review-verified">' + I.check() + 'Verified purchase</span>' : '') + '</div><span class="ml-review-meta">' + r.date + (r.target ? ' · ' + esc(r.target) : '') + '</span></div>' +
       PT.rating(r.rating) + '<p class="ml-review-text">' + esc(r.text) + '</p>' +
       (r.reply ? '<div class="ml-review-reply"><b>' + esc(r.reply.by) + ' replied · ' + r.reply.date + '</b>' + esc(r.reply.text) + '</div>' : '') +
       (o.actions ? '<div class="ml-ticket-actions">' + o.actions + '</div>' : '') + '</article>';
@@ -355,12 +398,12 @@
   PT.dayChips = function (legend, days, value, name) {
     name = name || 'market-day';
     // With `date`, the chip carries both the weekday and the date it falls on, stacked in one grid
-    // cell so hover can swap them without the chip changing width. With `sub` it keeps the older
-    // two-line form. Both readings stay in the accessibility tree: "Monday 29/09".
+    // cell so hover can swap them without the chip changing width. Both readings stay in the
+    // accessibility tree: "Monday 29/09". Without `date` (an "All" choice) it is just the label.
     return '<fieldset class="ml-days">' + (legend ? '<legend>' + legend + '</legend>' : '') + days.map(function (d) {
       var body = d.date
         ? '<span class="pt-day-swap"><b>' + d.label + '</b><b>' + d.date + '</b></span>'
-        : '<span>' + d.label + (d.sub ? '<small>' + d.sub + '</small>' : '') + '</span>';
+        : '<span>' + d.label + '</span>';
       return '<label class="ml-day"><input type="radio" name="' + name + '" value="' + d.value + '"' + (d.disabled ? ' disabled' : '') + (value === d.value ? ' checked' : '') + '>' + body + '</label>';
     }).join('') + '</fieldset>';
   };
@@ -874,7 +917,7 @@
           ['moderation.html', 'Moderation', 'shield', 1],
         ]],
         ['Platform', [
-          ['categories.html', 'Categories & units', 'tag'],
+          ['categories.html', 'Categories', 'tag'],
           ['announcements.html', 'Announcements', 'megaphone'],
           ['feedback.html', 'Feedback inbox', 'chat', 2],
           ['pricing.html', 'Pricing & allowances', 'tag'],
@@ -1082,12 +1125,17 @@
       var t;
       if ((t = e.target.closest('[data-toast]'))) { PT.toast(t.getAttribute('data-toast'), { action: t.getAttribute('data-toast-action'), tone: t.getAttribute('data-toast-tone') }); }
       if ((t = e.target.closest('[data-dismiss]'))) { var bn = t.closest('.ml-banner'); if (bn) bn.remove(); }
+      // Favorites belong to an account: a guest's heart goes to sign in rather than lighting up with nowhere to see it.
+      if ((t = e.target.closest('[data-fav]')) && PT.viewRole() === 'guest') { location.href = link('public/login.html'); return; }
       if ((t = e.target.closest('[data-fav]')) && PT.viewRole() === 'admin') { PT.toast('Favorites are off for admins. Use a customer account to save things.', { tone: 'error' }); return; }
       if ((t = e.target.closest('[data-fav]'))) { var on = t.getAttribute('aria-pressed') !== 'true'; t.setAttribute('aria-pressed', on); t.innerHTML = I.heart(on); var kind = t.getAttribute('data-fav-kind'); PT.toast((on ? (kind === 'market' ? 'Saved ' : 'Added ') : (kind === 'market' ? 'Removed ' : 'Removed ')) + t.getAttribute('data-name') + (on ? (kind === 'market' ? ' as a preferred market.' : ' to your favorites. You will hear when it is back in stock.') : (kind === 'market' ? ' from preferred markets.' : ' from your favorites.'))); }
       if ((t = e.target.closest('[data-chip]'))) { var grp = t.getAttribute('data-chip-group'); if (grp) document.querySelectorAll('[data-chip-group="' + grp + '"]').forEach(function (c) { if (c !== t) { c.setAttribute('aria-pressed', 'false'); var s = c.querySelector('svg'); if (s) s.remove(); } }); var pressed = t.getAttribute('aria-pressed') !== 'true'; if (grp && !pressed) return; t.setAttribute('aria-pressed', pressed); var ic = t.querySelector('svg'); if (pressed && !ic) t.insertAdjacentHTML('afterbegin', I.check()); if (!pressed && ic) ic.remove(); }
       if ((t = e.target.closest('[data-tab]'))) { var tabs = t.closest('[data-tabs]'); tabs.querySelectorAll('[data-tab]').forEach(function (b) { b.setAttribute('aria-selected', b === t); b.tabIndex = b === t ? 0 : -1; }); var id = t.getAttribute('data-tab'); document.querySelectorAll('[data-panel]').forEach(function (p) { if (p.closest('[data-tabs-scope]') && p.closest('[data-tabs-scope]') !== tabs.closest('[data-tabs-scope]')) return; p.hidden = p.getAttribute('data-panel') !== id; }); }
       if ((t = e.target.closest('[data-inc],[data-dec]'))) { var w = t.closest('[data-qty]'), out = w.querySelector('output'), max = +w.getAttribute('data-max'), min = +w.getAttribute('data-min'), v = +out.textContent + (t.hasAttribute('data-inc') ? 1 : -1); v = Math.max(min, Math.min(max, v)); out.textContent = v; w.querySelector('[data-dec]').disabled = v <= min; w.querySelector('[data-inc]').disabled = v >= max; w.querySelector('.ml-qty-note').textContent = v >= max ? 'Max ' + PT.units(max, w.getAttribute('data-unit')) : PT.units(max, w.getAttribute('data-unit')) + ' left'; var li = t.closest('.ml-cart-item'); if (li) { li.querySelector('.ml-cart-item-sum').textContent = PT.vnd(v * +li.getAttribute('data-price')); recalc(li.closest('[data-cart-group]')); } }
       if ((t = e.target.closest('[data-remove-item]'))) { var li2 = t.closest('.ml-cart-item'), g = li2.closest('[data-cart-group]'); li2.remove(); recalc(g); PT.toast('Removed from your cart.', { action: 'Undo' }); }
+      var um = e.target.closest('[data-umenu]'), openList = document.querySelector('.pt-umenu-list:not([hidden])');
+      if (openList && !e.target.closest('.pt-umenu')) { openList.hidden = true; openList.previousElementSibling.setAttribute('aria-expanded', 'false'); }
+      if (um) { var list = um.nextElementSibling, show = list.hidden; list.hidden = !show; um.setAttribute('aria-expanded', show); if (show) list.querySelector('[role="menuitem"]').focus(); }
       var drawer = document.querySelector('[data-drawer]');
       if (drawer && e.target.closest('[data-drawer-open]')) drawer.setAttribute('data-open', 'true');
       if (drawer && (e.target.closest('[data-drawer-close]') || e.target.matches('[data-drawer]'))) drawer.setAttribute('data-open', 'false');
@@ -1095,6 +1143,13 @@
       if ((t = e.target.closest('[data-state-demo]'))) { var kind2 = t.getAttribute('data-state-demo'); document.querySelectorAll('[data-state-target]').forEach(function (p) { p.hidden = p.getAttribute('data-state-target') !== kind2; }); document.querySelectorAll('[data-state-demo]').forEach(function (b) { b.setAttribute('aria-pressed', b === t); }); }
       if ((t = e.target.closest('[data-theme-pick]'))) PT.theme.set(t.getAttribute('data-theme-pick'));
       if ((t = e.target.closest('[data-confirm-dialog]'))) { var d2 = JSON.parse(t.getAttribute('data-confirm-dialog')); PT.dialog(d2); }
+    });
+    document.body.addEventListener('keydown', function (e) {
+      var list = e.target.closest && e.target.closest('.pt-umenu-list');
+      if (!list) return;
+      var items = Array.prototype.slice.call(list.querySelectorAll('[role="menuitem"]')), i = items.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); items[(i + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length].focus(); }
+      if (e.key === 'Escape') { list.hidden = true; var b = list.previousElementSibling; b.setAttribute('aria-expanded', 'false'); b.focus(); }
     });
     document.body.addEventListener('change', function (e) {
       var r = e.target.closest('[data-rate]'); if (r && e.target.type === 'radio') r.querySelector('.ml-rate-hint').textContent = RATE_WORDS[+e.target.value];
@@ -1148,7 +1203,7 @@
         : '';
       if (top) top.innerHTML = adminBar + (o.announce !== false && (role === 'guest' || role === 'customer') ? PT.banner('announce', esc(PT.announcements[0].title), esc(PT.announcements[0].text), { close: true }) : '') + hdr;
       PT.lockForAdmin();
-      var renderFoot = function () { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(); };
+      var renderFoot = function () { var foot = document.getElementById('pt-foot'); if (foot) foot.innerHTML = PT.footer(role); };
       // pages call boot() from a script placed before #pt-foot, so render the footer once the document is parsed
       if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderFoot); else renderFoot();
     }

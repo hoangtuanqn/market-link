@@ -1,0 +1,29 @@
+{
+  "myOrders": "Mis pedidos",
+  "breadcrumbOrder": "Pedido {{code}}",
+  "breadcrumbReview": "Reseña",
+  "notFound": {
+    "title": "Ese pedido ya no está aquí",
+    "text": "Puede que lo hayas cancelado o que el enlace sea antiguo. Ábrelo de nuevo desde tus pedidos."
+  },
+  "completed": "Completado el {{date}}",
+  "title": "¿Qué tal {{stall}}?",
+  "intro": "Las reseñas están vinculadas a este pedido completado, así que otros clientes las ven como compra verificada. El puesto puede responder.",
+  "stall": {
+    "title": "El puesto",
+    "placeholder": "¿Estuvo listo a tiempo? ¿Fue fácil encontrar el puesto?"
+  },
+  "product": {
+    "placeholder": "Sabor, frescura, tamaño de la porción",
+    "skip": "Omitir este producto"
+  },
+  "rate": "Valora {{name}}",
+  "comment": "Comentario",
+  "submit": "Publicar reseña",
+  "notNow": "Ahora no",
+  "note": "Una reseña por pedido para el puesto, y una por cada producto del pedido.",
+  "toast": {
+    "title": "Reseña publicada",
+    "text": "Gracias. Tu reseña de {{stall}} ya está publicada."
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Buscar",
+  "search": {
+    "scope": "Buscar en",
+    "scopes": {
+      "all": "Todo",
+      "market": "Mercados",
+      "farmer": "Puestos",
+      "product": "Productos"
+    },
+    "keyword": "Palabra clave",
+    "submit": "Buscar"
+  },
+  "day": "Día de mercado",
+  "sort": "Ordenar",
+  "sorts": {
+    "best": "Más relevante",
+    "nearest": "Más cercano",
+    "price": "Precio",
+    "rating": "Valoración"
+  },
+  "tabs": {
+    "label": "Tipo de resultado",
+    "all": "Todo",
+    "market": "Mercados",
+    "farmer": "Puestos",
+    "product": "Productos"
+  },
+  "empty": {
+    "startTitle": "Escribe algo para buscar",
+    "startText": "Prueba con un producto, un mercado o un puesto.",
+    "noneTitle": "No hay coincidencias",
+    "noneText": "Prueba con una palabra más corta o quita un filtro. La búsqueda mira mercados, puestos y productos a la vez."
+  },
+  "results_one": "{{count}} resultado para “{{q}}” el {{day}}",
+  "results_other": "{{count}} resultados para “{{q}}” el {{day}}",
+  "noStalls": "Ningún puesto coincide.",
+  "noProducts": "Ningún producto coincide.",
+  "noMarket": {
+    "title": "Ningún mercado se llama “{{q}}”",
+    "text_one": "Los mercados se buscan por nombre y zona. {{count}} puesto de arriba vende algo que coincide con “{{q}}”.",
+    "text_other": "Los mercados se buscan por nombre y zona. {{count}} puestos de arriba venden algo que coincide con “{{q}}”.",
+    "showStalls": "Ver los puestos"
+  },
+  "map": {
+    "label": "Mapa de resultados",
+    "note": "Los resultados con ubicación aparecen en el mapa. En el móvil, el botón “Lista / Mapa” cambia entre las dos vistas."
+  },
+  "error": {
+    "noun": "resultados"
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "title": "Productores",
+  "intro": "Aprueba una solicitud antes de que el puesto pueda publicar productos. Suspende un puesto para ocultar sus productos y detener los pedidos nuevos; los pedidos en curso terminan con normalidad.",
+  "search": {
+    "label": "Buscar productores",
+    "placeholder": "Puesto, contacto, teléfono",
+    "submit": "Buscar"
+  },
+  "tabsLabel": "Productores por estado",
+  "status": {
+    "pending": "Pendientes de aprobación",
+    "approved": "Aprobados",
+    "suspended": "Suspendidos",
+    "rejected": "Rechazados"
+  },
+  "empty": {
+    "pending": {
+      "title": "No hay solicitudes pendientes",
+      "text": "Las nuevas solicitudes de productores llegan aquí para revisarse antes de que puedan publicar productos."
+    },
+    "approved": {
+      "title": "No hay puestos aprobados",
+      "text": "Aprueba una solicitud y el puesto aparecerá aquí, visible para los clientes."
+    },
+    "suspended": {
+      "title": "No hay puestos suspendidos",
+      "text": "Un puesto suspendido queda oculto para los clientes, pero completa los pedidos que ya tiene."
+    },
+    "rejected": {
+      "title": "No hay solicitudes rechazadas",
+      "text": "Los productores rechazados conservan su cuenta y se les puede explicar el motivo."
+    }
+  },
+  "col": {
+    "stall": "Puesto",
+    "registered": "Registro",
+    "email": "Correo"
+  },
+  "action": {
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "view": "Ver",
+    "suspend": "Suspender",
+    "reinstate": "Reactivar"
+  },
+  "notYet": "Todavía no",
+  "approve": {
+    "title": "¿Aprobar {{stall}}?",
+    "text": "El puesto será visible para los clientes y podrá publicar productos de inmediato. Se avisará al productor.",
+    "confirm": "Aprobar puesto"
+  },
+  "reject": {
+    "title": "¿Rechazar {{stall}}?",
+    "text": "La persona solicitante conserva su cuenta de cliente y todo lo que contiene. Se le indica el motivo.",
+    "reason": "Motivo que verá el productor",
+    "confirm": "Rechazar solicitud",
+    "placeholder": "Di qué hay que cambiar para aprobar este puesto.",
+    "hint": "{{used}} de {{max}} caracteres. El solicitante lo lee palabra por palabra.",
+    "required": "Escribe el motivo que verá el solicitante.",
+    "tooLong": "El motivo no puede superar {{max}} caracteres."
+  },
+  "suspend": {
+    "title": "¿Suspender {{stall}}?",
+    "text": "Todos los productos se ocultan y no se aceptan pedidos nuevos. Los pedidos ya hechos continúan para que los clientes no pierdan lo que reservaron.",
+    "confirm": "Suspender puesto",
+    "reason": "Motivo que verá el productor",
+    "placeholder": "Di qué debe corregir el puesto para volver a vender.",
+    "hint": "{{used}} de {{max}} caracteres. El productor lo lee palabra por palabra.",
+    "required": "Escribe el motivo que verá el productor.",
+    "tooLong": "El motivo no puede superar {{max}} caracteres."
+  },
+  "toast": {
+    "approved": "{{stall}} aprobado. El puesto ya puede publicar productos.",
+    "rejected": "{{stall}} rechazado. Conserva su cuenta.",
+    "suspended": "{{stall}} suspendido. Los pedidos en curso terminan con normalidad.",
+    "reinstated": "{{stall}} reactivado. Los productos vuelven a estar visibles.",
+    "failed": "No se pudo completar esa acción. Inténtalo de nuevo.",
+    "rejectFailed": "No se pudo rechazar esta solicitud. Inténtalo de nuevo."
+  },
+  "reinstate": {
+    "title": "¿Reactivar {{stall}}?",
+    "text": "Los productos vuelven a ser visibles para los clientes de inmediato.",
+    "confirm": "Reactivar puesto"
+  },
+  "keepReviewing": "Seguir revisando",
+  "loading": "Cargando agricultores",
+  "loadError": {
+    "title": "No se pudieron cargar los agricultores",
+    "text": "Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar"
+  },
+  "caption_one": "{{count}} agricultor",
+  "caption_other": "{{count}} agricultores",
+  "showing": "Mostrando {{from}}–{{to}} de {{total}}"
+}

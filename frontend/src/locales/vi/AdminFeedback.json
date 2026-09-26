@@ -1,0 +1,55 @@
+{
+  "overline": "Cài đặt",
+  "title": "Hộp thư góp ý",
+  "intro": "Báo lỗi, góp ý và câu hỏi gửi qua biểu mẫu góp ý. Xử lý xong thì đánh dấu đã trả lời.",
+  "link": {
+    "categories": "Danh mục",
+    "announcements": "Thông báo"
+  },
+  "filterLabel": "Lọc góp ý",
+  "filter": {
+    "open": "Chưa xử lý",
+    "answered": "Đã trả lời",
+    "bug": "Lỗi",
+    "suggestion": "Góp ý",
+    "query": "Câu hỏi"
+  },
+  "type": {
+    "bug": "Báo lỗi",
+    "suggestion": "Góp ý",
+    "query": "Câu hỏi"
+  },
+  "status": {
+    "open": "Chưa xử lý",
+    "answered": "Đã trả lời"
+  },
+  "col": {
+    "type": "Loại",
+    "message": "Nội dung",
+    "from": "Người gửi",
+    "status": "Trạng thái"
+  },
+  "action": {
+    "read": "Đọc",
+    "readAndAnswer": "Đọc và trả lời"
+  },
+  "dialog": {
+    "title": "{{type}} từ {{from}}",
+    "sent": "Gửi ngày {{date}} · {{state}}",
+    "notAnswered": "chưa trả lời",
+    "alreadyAnswered": "đã trả lời",
+    "yourAnswer": "Câu trả lời của bạn",
+    "replyPlaceholder": "Cảm ơn bạn đã báo cho chúng tôi…",
+    "close": "Đóng",
+    "send": "Gửi và đánh dấu đã trả lời",
+    "sendAgain": "Gửi lại"
+  },
+  "empty": {
+    "title": "Chưa có góp ý nào",
+    "text": "Báo lỗi, góp ý và câu hỏi từ biểu mẫu góp ý sẽ về đây."
+  },
+  "toast": {
+    "answered": "Đã lưu câu trả lời và đánh dấu tin nhắn đã trả lời.",
+    "markedOnly": "Đã đánh dấu đã trả lời mà không gửi phản hồi."
+  }
+}

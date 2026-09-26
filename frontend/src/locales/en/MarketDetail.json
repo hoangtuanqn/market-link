@@ -1,0 +1,46 @@
+{
+  "notFound": {
+    "title": "That market is not here any more",
+    "browse": "Browse markets"
+  },
+  "intro_one": "{{count}} stall. Each stall closes its own orders 12 to 24 hours before pickup. Pick up at the stall and pay the Farmer directly.",
+  "intro_other": "{{count}} stalls. Each stall closes its own orders 12 to 24 hours before pickup. Pick up at the stall and pay the Farmer directly.",
+  "toast": {
+    "saved": "Saved {{name}}.",
+    "removed": "Removed {{name}} from favorites."
+  },
+  "save": {
+    "on": "Saved market",
+    "off": "Save market"
+  },
+  "directions": "Directions",
+  "search": {
+    "scope": "Search in",
+    "scopes": {
+      "product": "Products at this market",
+      "farmer": "Stalls at this market"
+    },
+    "keyword": "Keyword",
+    "placeholder": "Water spinach, sourdough, eggs…",
+    "submit": "Search"
+  },
+  "day": "Market day",
+  "all": "All",
+  "inStock": "In stock",
+  "available": "Available on {{day}}",
+  "productsFrom": "{{products}} from {{stalls}}",
+  "products_one": "{{count}} product",
+  "products_other": "{{count}} products",
+  "stalls_one": "{{count}} stall",
+  "stalls_other": "{{count}} stalls",
+  "mapLabel": "Map of {{name}} and its stalls",
+  "stallsTitle": "Stalls at this market on {{day}}",
+  "stallsNote": "Stalls that are not selling on the chosen day are not listed",
+  "error": {
+    "noun": "market"
+  },
+  "stallsNoun": "stalls",
+  "stallsEmpty": {
+    "title": "No stalls on {{day}}"
+  }
+}

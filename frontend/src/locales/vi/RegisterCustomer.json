@@ -1,0 +1,43 @@
+{
+  "title": "Tạo tài khoản khách hàng",
+  "intro": "Nền tảng yêu cầu họ tên, số điện thoại, email và địa chỉ. Địa chỉ dùng để hiện khoảng cách tới các chợ và điền sẵn chỉ đường.",
+  "fields": {
+    "fullName": "Họ và tên",
+    "phone": "Số điện thoại",
+    "email": "Email",
+    "emailHint": "Dùng để đăng nhập và nhận thông báo đơn hàng.",
+    "address": "Địa chỉ",
+    "addressPlaceholder": "Số nhà, đường, phường, quận",
+    "password": "Mật khẩu",
+    "passwordHint": "Từ {{min}} đến {{max}} ký tự.",
+    "confirmPassword": "Nhập lại mật khẩu"
+  },
+  "consent": {
+    "label": "Tôi đã đọc và đồng ý với <terms>Điều khoản dịch vụ</terms> và <privacy>Chính sách quyền riêng tư</privacy>",
+    "note": "Tên và số điện thoại của bạn được gửi cho sạp bạn đặt hàng, để họ giao đơn cho bạn vào ngày chợ. Bạn trả tiền cho nhà vườn tại sạp."
+  },
+  "submit": "Tạo tài khoản",
+  "submitting": "Đang tạo tài khoản…",
+  "haveAccount": "Tôi đã có tài khoản",
+  "acceptFirst": "Hãy đồng ý với điều khoản để tạo tài khoản.",
+  "sharedAccount": "Một tài khoản có thể dùng chung trong gia đình; hệ thống không phân biệt từng người trong một tài khoản.",
+  "toast": {
+    "created": "Đã tạo tài khoản.",
+    "failed": "Không tạo được tài khoản. Vui lòng thử lại."
+  },
+  "errors": {
+    "fullNameRequired": "Nhập họ và tên.",
+    "fullNameMax": "Họ và tên tối đa {{max}} ký tự.",
+    "phoneRequired": "Nhập số điện thoại.",
+    "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số).",
+    "emailRequired": "Nhập email.",
+    "emailInvalid": "Nhập địa chỉ email hợp lệ.",
+    "emailMax": "Email tối đa {{max}} ký tự.",
+    "addressRequired": "Nhập địa chỉ.",
+    "addressMax": "Địa chỉ tối đa {{max}} ký tự.",
+    "passwordRequired": "Nhập mật khẩu.",
+    "passwordLength": "Mật khẩu phải có từ {{min}} đến {{max}} ký tự.",
+    "confirmRequired": "Nhập lại mật khẩu.",
+    "confirmMismatch": "Mật khẩu không khớp."
+  }
+}

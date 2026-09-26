@@ -1,0 +1,82 @@
+{
+  "products": "Sản phẩm",
+  "crumb": {
+    "edit": "Sửa",
+    "add": "Thêm"
+  },
+  "addTitle": "Thêm sản phẩm",
+  "notFound": {
+    "title": "Sản phẩm này không còn ở đây",
+    "text": "Có thể nó đã bị xoá. Hãy mở lại từ danh sách sản phẩm của bạn."
+  },
+  "name": {
+    "label": "Tên sản phẩm",
+    "hint": "Viết bằng tiếng Anh, kèm nơi trồng hoặc giống nếu cần: “Củ Chi water spinach”, “Green-skin pomelo”."
+  },
+  "category": {
+    "label": "Danh mục",
+    "hint": "Danh mục do admin quản lý."
+  },
+  "unit": {
+    "label": "Bán theo",
+    "hint": "Cách khách mua: theo ký, theo bó, theo củ, theo túi. Chọn một hoặc tự đặt."
+  },
+  "preview": {
+    "label": "Sẽ hiển thị thế nào",
+    "text": "<b>{{price}}</b> trên nhãn · còn <b>{{left}}</b> · người đặt một phần sẽ thấy <b>{{one}}</b>"
+  },
+  "price": {
+    "label": "Giá (₫)",
+    "hint": "Hiển thị là {{price}}."
+  },
+  "qty": {
+    "label": "Số lượng có trong tuần này",
+    "error": "Số lượng phải từ 0 trở lên. Dùng Hết hàng khi không còn gì."
+  },
+  "desc": {
+    "label": "Mô tả",
+    "hint": "Hiển thị trên trang sản phẩm. Hãy nói cách trồng và cách bảo quản."
+  },
+  "flag": {
+    "label": "Nhãn ngắn trên thẻ",
+    "hint": "Không bắt buộc, viết tay trên nhãn: “Tươi hôm nay”, “Nướng lúc 5 giờ sáng”."
+  },
+  "status": {
+    "label": "Trạng thái",
+    "available": "Đang bán",
+    "sold_out": "Hết hàng",
+    "unavailable": "Tạm dừng"
+  },
+  "photo": {
+    "label": "Ảnh",
+    "none": "Chưa có ảnh. Khi chưa thêm, nhãn sẽ hiện tên danh mục bằng chữ viết tay.",
+    "choose": "Chọn ảnh",
+    "hint": "JPG hoặc PNG, 4:3, tối đa 5 MB. Chụp cận, ánh sáng tự nhiên, trên nền gỗ hoặc giấy."
+  },
+  "save": "Lưu sản phẩm",
+  "add": "Thêm sản phẩm",
+  "cancel": "Huỷ",
+  "delete": {
+    "button": "Xoá sản phẩm",
+    "title": "Xoá {{name}}?",
+    "keep": "Giữ sản phẩm",
+    "text": "Sản phẩm sẽ biến mất khỏi danh mục và khỏi mẫu của bạn. Các đơn đã có sản phẩm này không bị thay đổi."
+  },
+  "toast": {
+    "saved": "Đã lưu",
+    "savedText": "Đã lưu {{name}}.",
+    "product": "Sản phẩm",
+    "deletedText": "Đã xoá {{name}}."
+  },
+  "error": {
+    "noun": "sản phẩm"
+  },
+  "image": {
+    "label": "Liên kết ảnh",
+    "hint": "Không bắt buộc. Một liên kết công khai tới ảnh sản phẩm; chưa có thì nhãn hiện tên danh mục viết tay."
+  },
+  "errors": {
+    "required": "Trường này là bắt buộc.",
+    "price": "Giá phải từ 0 trở lên."
+  }
+}

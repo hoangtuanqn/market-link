@@ -1,0 +1,82 @@
+{
+  "products": "Productos",
+  "crumb": {
+    "edit": "Editar",
+    "add": "Añadir"
+  },
+  "addTitle": "Añadir un producto",
+  "notFound": {
+    "title": "Ese producto ya no está aquí",
+    "text": "Puede que se haya eliminado. Ábrelo de nuevo desde tu lista de productos."
+  },
+  "name": {
+    "label": "Nombre del producto",
+    "hint": "En inglés, con el lugar o la variedad si importa: “Củ Chi water spinach”, “Green-skin pomelo”."
+  },
+  "category": {
+    "label": "Categoría",
+    "hint": "Las categorías las gestiona el admin."
+  },
+  "unit": {
+    "label": "Se vende por",
+    "hint": "Cómo lo compra un cliente: por kilo, por manojo, por cabeza, por bolsa. Elige una o pon la tuya."
+  },
+  "preview": {
+    "label": "Cómo se verá",
+    "text": "<b>{{price}}</b> en la etiqueta · quedan <b>{{left}}</b> · quien pida uno verá <b>{{one}}</b>"
+  },
+  "price": {
+    "label": "Precio en ₫",
+    "hint": "Se muestra como {{price}}."
+  },
+  "qty": {
+    "label": "Cantidad disponible esta semana",
+    "error": "La cantidad debe ser 0 o más. Usa Agotado si no queda nada."
+  },
+  "desc": {
+    "label": "Descripción",
+    "hint": "Se muestra en la página del producto. Cuenta cómo se cultiva y cómo conservarlo."
+  },
+  "flag": {
+    "label": "Etiqueta corta en la tarjeta",
+    "hint": "Opcional, escrita a mano en la etiqueta: “Fresco de hoy”, “Horneado a las 5”."
+  },
+  "status": {
+    "label": "Estado",
+    "available": "Disponible",
+    "sold_out": "Agotado",
+    "unavailable": "En pausa"
+  },
+  "photo": {
+    "label": "Foto",
+    "none": "Aún no hay foto. Hasta que añadas una, la etiqueta muestra la categoría escrita a mano.",
+    "choose": "Elegir foto",
+    "hint": "JPG o PNG, 4:3, hasta 5 MB. De cerca, con luz natural, sobre madera o papel."
+  },
+  "save": "Guardar producto",
+  "add": "Añadir producto",
+  "cancel": "Cancelar",
+  "delete": {
+    "button": "Eliminar producto",
+    "title": "¿Eliminar {{name}}?",
+    "keep": "Conservar producto",
+    "text": "Desaparece del catálogo y de tu plantilla. Los pedidos que ya lo incluyen no cambian."
+  },
+  "toast": {
+    "saved": "Guardado",
+    "savedText": "{{name}} guardado.",
+    "product": "Producto",
+    "deletedText": "{{name}} eliminado."
+  },
+  "error": {
+    "noun": "el producto"
+  },
+  "image": {
+    "label": "Enlace de la foto",
+    "hint": "Opcional. Un enlace público a una foto del producto; mientras, la etiqueta muestra la categoría a mano."
+  },
+  "errors": {
+    "required": "Este campo es obligatorio.",
+    "price": "El precio debe ser 0 o más."
+  }
+}

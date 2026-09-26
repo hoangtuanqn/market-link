@@ -1,0 +1,30 @@
+{
+  "title": "Keranjang",
+  "products_one": "{{count}} produk",
+  "products_other": "{{count}} produk",
+  "stalls_one": "{{count}} lapak",
+  "stalls_other": "{{count}} lapak",
+  "intro": "{{products}} dari {{stalls}}. Pilih waktu ambil untuk setiap lapak, lalu buat pesanan.",
+  "split": {
+    "title": "Keranjang Anda akan dibagi menjadi 2 pesanan di 2 lapak berbeda.",
+    "text": "Setiap lapak punya waktu ambil dan batas pesan sendiri, dan menerima pesanannya secara terpisah. Anda membayar setiap lapak saat mengambil."
+  },
+  "changeTime": "Ubah waktu ambil di {{stall}}",
+  "pickupDay": "Hari ambil",
+  "pickupDayAt": "Hari ambil di {{stall}}",
+  "pickupTime": "Waktu ambil · {{day}} {{date}} · jendela {{from}} – {{to}}",
+  "cutoffNote": "{{stall}} menutup pesanan {{hours}} jam sebelum slot. Untuk pukul {{slot}} hari {{slotDay}}, batasnya pukul {{cutoff}} hari {{cutoffDay}}.",
+  "summary": {
+    "title": "Bayar di lapak saat mengambil",
+    "order": "Pesanan {{n}} · {{stall}}",
+    "total": "Total, kedua lapak"
+  },
+  "note": {
+    "label": "Catatan untuk lapak",
+    "placeholder": "mis. ikatannya lebih kecil"
+  },
+  "place": "Buat 2 pesanan",
+  "ready": "Kedua lapak sudah punya waktu ambil. Setiap lapak mengonfirmasi pesanannya sendiri.",
+  "notReady": "Pilih waktu ambil di {{stall}} untuk membuat pesanan.",
+  "stockNote": "Stok langsung dikurangi dari jumlah lapak saat Anda memesan. Tidak ada pembayaran online."
+}

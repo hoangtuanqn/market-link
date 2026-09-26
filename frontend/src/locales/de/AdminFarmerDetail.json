@@ -1,0 +1,58 @@
+{
+  "breadcrumb": "Bewerbung",
+  "loading": "Bewerbung wird geladen",
+  "loadError": {
+    "title": "Diese Bewerbung konnte nicht geladen werden",
+    "text": "Prüfe deine Verbindung und versuche es erneut.",
+    "retry": "Erneut versuchen"
+  },
+  "sentOn": "Gesendet am {{date}}",
+  "approveText": "Die Rolle wird zu Farmer, und im Konto öffnet sich ein Stand-Bereich. Alle Kundenfunktionen bleiben erhalten. Käufer sehen nichts, bis Produkte eingestellt und ein Abholfenster festgelegt sind.",
+  "suspendedBanner": {
+    "title": "Dieser Stand ist gesperrt.",
+    "text": "Seine Produkte bleiben für Kunden verborgen. Bereits aufgegebene Bestellungen laufen normal weiter."
+  },
+  "rejectedBanner": {
+    "title": "Diese Bewerbung wurde abgelehnt.",
+    "text": "Grund, den die Person sieht: {{reason}}"
+  },
+  "photos": {
+    "title": "Fotos der Anbaufläche",
+    "alt": "Foto der Anbaufläche",
+    "hint": "Prüfe, ob die Fläche auf den Fotos zur Nadel auf der Karte passt und das anbaut, was angegeben wurde. Lizenzen, Lebensmittelsicherheit oder Bio-Angaben prüfst du nicht."
+  },
+  "stall": {
+    "title": "Der beantragte Stand",
+    "name": "Name des Stands",
+    "contact": "Kontaktperson",
+    "email": "E-Mail",
+    "description": "Beschreibung"
+  },
+  "history": {
+    "title": "Verlauf",
+    "suspended": "Gesperrt",
+    "approved": "Freigegeben",
+    "sent": "Bewerbung gesendet",
+    "customer": "Konto als Kunde erstellt",
+    "byAdmin": "Ein Admin"
+  },
+  "applicant": {
+    "title": "Antragsteller",
+    "name": "Name",
+    "since": "Kunde seit",
+    "status": "Kontostatus"
+  },
+  "accountStatus": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "suspended": "Gesperrt"
+  },
+  "approval": {
+    "title": "Was die Freigabe bewirkt",
+    "text": "Die Rolle wird zu Farmer, und ein Stand-Bereich öffnet sich. Mit demselben Konto kann weiter bei anderen Ständen eingekauft werden. Nichts wird angezeigt, bis Produkte eingestellt und ein Abholfenster festgelegt sind."
+  },
+  "attempts": {
+    "title": "Antragsverlauf",
+    "text": "Jeder Antrag dieses Kontos, mit Inhalt und Antwort."
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "weekend": "Marktwochenende {{from}} – {{to}}",
+    "title": "Vorbestellen auf dem Bauernmarkt",
+    "intro_one": "Reservieren Sie die Erzeugnisse dieser Woche an Ständen auf {{count}} Markt in Ho-Chi-Minh-Stadt. Abholung am Stand, Bezahlung direkt beim Erzeuger.",
+    "intro_other": "Reservieren Sie die Erzeugnisse dieser Woche an Ständen auf {{count}} Märkten in Ho-Chi-Minh-Stadt. Abholung am Stand, Bezahlung direkt beim Erzeuger.",
+    "browse": "Märkte ansehen",
+    "sell": "Auf MarketLink verkaufen"
+  },
+  "search": {
+    "scope": "Suchen in",
+    "scopes": {
+      "all": "Alles",
+      "market": "Märkte",
+      "farmer": "Stände",
+      "product": "Produkte"
+    },
+    "keyword": "Suchbegriff",
+    "placeholder": "Wasserspinat, Cô Tư Garden, Markt Thảo Điền…",
+    "submit": "Suchen"
+  },
+  "board": {
+    "overline": "Dieses Wochenende geöffnet",
+    "title": "Wo die Stände sind",
+    "seeAll_one": "Markt auf der Karte ansehen",
+    "seeAll_other": "Alle {{count}} Märkte auf der Karte ansehen"
+  },
+  "nearby": {
+    "title": "Märkte in Ihrer Nähe",
+    "note": "Entfernungen ab Ihrer gespeicherten Adresse in Thảo Điền",
+    "noun": "Märkte"
+  },
+  "fresh": {
+    "title": "Frisch diese Woche",
+    "all": "Alle Produkte und Filter",
+    "noun": "Produkte"
+  },
+  "how": {
+    "title": "So funktioniert die Vorbestellung",
+    "steps": {
+      "reserve": {
+        "title": "Vor dem Bestellschluss reservieren",
+        "text": "Legen Sie Produkte von einem oder mehreren Ständen in den Warenkorb, wählen Sie im Zeitfenster jedes Stands eine Abholzeit und bestellen Sie. Die Ware wird ab der Bestellung für Sie zurückgelegt."
+      },
+      "confirm": {
+        "title": "Der Erzeuger bestätigt",
+        "text": "Jeder Stand nimmt seine eigene Bestellung an oder lehnt sie ab. Sie werden in beiden Fällen benachrichtigt und können bis zum Bestellschluss des Stands ändern oder stornieren."
+      },
+      "pickup": {
+        "title": "Am Stand abholen und bezahlen",
+        "text": "Sobald die Bestellung bereit ist, gehen Sie in Ihrem Zeitfenster zum Stand, holen sie ab und bezahlen direkt beim Erzeuger. Eine Online-Zahlung gibt es nicht."
+      }
+    }
+  }
+}

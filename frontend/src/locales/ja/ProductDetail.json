@@ -1,0 +1,87 @@
+{
+  "notFound": {
+    "title": "この商品は販売を終了しました",
+    "text": "店が取り下げた可能性があります。今週のほかの商品をご覧ください。",
+    "browse": "商品を見る"
+  },
+  "breadcrumb": "商品",
+  "photo": "{{name}} の写真",
+  "favorite": {
+    "add": "お気に入りに追加：{{name}}",
+    "remove": "お気に入りから外す：{{name}}"
+  },
+  "soldPer": "{{unit}}単位で販売",
+  "left": "今週の残り <b>{{qty}}</b>",
+  "stockUpdated": "在庫は今週末の注文に向けて本日更新されました。",
+  "notifyMe": "再入荷を通知",
+  "added": {
+    "title": "カートに追加しました",
+    "text": "{{name}} を {{qty}} カートに追加しました。"
+  },
+  "addToCart": "カートに追加",
+  "payNote": "注文した時点で在庫が確保されます。受け取り時に店で {{price}} をお支払いください。",
+  "fromStall": "店から",
+  "sellingSince": "{{date}} から出店",
+  "stats": {
+    "reviews_one": "{{count}} 件のレビュー",
+    "reviews_other": "{{count}} 件のレビュー",
+    "markets_one": "マーケット",
+    "markets_other": "マーケット",
+    "hours_one": "{{count}} 時間",
+    "hours_other": "{{count}} 時間",
+    "cutoff": "注文締め切り"
+  },
+  "seeStall": "店を見る",
+  "messageStall": "店にメッセージ",
+  "details": {
+    "title": "商品の詳細",
+    "soldPer": "販売単位",
+    "category": "カテゴリ",
+    "stall": "店",
+    "market": "マーケット"
+  },
+  "collect": {
+    "title": "受け取りの場所と時間",
+    "map": "地図で見る",
+    "note": "各時間帯の上限は 5 件です。満員の時間帯は選べなくなり、上記の締め切り以降は店が変更を受け付けません。"
+  },
+  "table": {
+    "market": "マーケット",
+    "stallCode": "区画 {{code}}",
+    "days": "曜日",
+    "window": "受け取り時間帯",
+    "cutoff": "注文締め切り",
+    "cutoffValue_one": "受け取り時間の {{count}} 時間前",
+    "cutoffValue_other": "受け取り時間の {{count}} 時間前",
+    "product": "商品",
+    "price": "価格",
+    "perUnit": "{{unit}}あたり",
+    "left": "残り"
+  },
+  "directions": "経路",
+  "reviews": {
+    "title": "この商品のレビュー",
+    "write": "レビューを書く",
+    "writeNote": "この商品を含む注文が完了すると書けます。",
+    "summary_one": "{{count}} 件のレビュー（すべて完了した注文から）",
+    "summary_other": "{{count}} 件のレビュー（すべて完了した注文から）"
+  },
+  "similar": {
+    "title": "今週末ほかの店の{{name}}",
+    "note": "同じ野菜、畑と価格が違います",
+    "here": "この商品",
+    "view": "見る"
+  },
+  "also": {
+    "title": "{{stall}} の今週のほかの商品"
+  },
+  "report": {
+    "sentTitle": "報告を送信しました",
+    "sentText": "管理者がこの出品を確認します。",
+    "button": "この出品を報告",
+    "note": "価格や写真の誤り、またはファーマーズマーケットにふさわしくないもの。"
+  },
+  "error": {
+    "noun": "商品"
+  }
+}

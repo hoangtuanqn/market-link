@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "weekend": "market weekend {{from}} – {{to}}",
+    "title": "Pre-order from the farmers market",
+    "intro_one": "Reserve this week's produce from stalls at {{count}} market around Ho Chi Minh City. Pick up at the stall and pay the Farmer directly.",
+    "intro_other": "Reserve this week's produce from stalls at {{count}} markets around Ho Chi Minh City. Pick up at the stall and pay the Farmer directly.",
+    "browse": "Browse markets",
+    "sell": "Sell at MarketLink"
+  },
+  "search": {
+    "scope": "Search in",
+    "scopes": {
+      "all": "Everything",
+      "market": "Markets",
+      "farmer": "Stalls",
+      "product": "Products"
+    },
+    "keyword": "Keyword",
+    "placeholder": "Water spinach, Cô Tư Garden, Thảo Điền market…",
+    "submit": "Search"
+  },
+  "board": {
+    "overline": "Open this weekend",
+    "title": "Where the stalls are",
+    "seeAll_one": "See the market on the map",
+    "seeAll_other": "See all {{count}} markets on the map"
+  },
+  "nearby": {
+    "title": "Markets near you",
+    "note": "Distances from your saved address in Thảo Điền",
+    "noun": "markets"
+  },
+  "fresh": {
+    "title": "Fresh this week",
+    "all": "All products and filters",
+    "noun": "products"
+  },
+  "how": {
+    "title": "How pre-ordering works",
+    "steps": {
+      "reserve": {
+        "title": "Reserve before the cutoff",
+        "text": "Add products from one or more stalls, pick a pickup time in each stall's window, and place the order. Stock is held for you the moment you order."
+      },
+      "confirm": {
+        "title": "The Farmer confirms",
+        "text": "Each stall accepts or declines its own order. You get a notification either way, and you can edit or cancel until the stall's cutoff."
+      },
+      "pickup": {
+        "title": "Pick up and pay at the stall",
+        "text": "When the order is marked ready, go to the stall in your time slot, collect it and pay the Farmer directly. There is no online payment."
+      }
+    }
+  }
+}

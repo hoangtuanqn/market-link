@@ -1,0 +1,63 @@
+{
+  "overline": "Cài đặt",
+  "title": "Danh mục",
+  "intro": "Danh sách duy nhất mà mọi sạp chọn khi thêm sản phẩm. Đơn vị bán là danh sách cố định, đi kèm sẵn trong ứng dụng.",
+  "link": {
+    "announcements": "Thông báo",
+    "feedback": "Hộp thư góp ý"
+  },
+  "caption": {
+    "categories_one": "{{count}} danh mục",
+    "categories_other": "{{count}} danh mục"
+  },
+  "col": {
+    "category": "Danh mục",
+    "products": "Sản phẩm",
+    "stalls": "Sạp",
+    "nameOf": "Tên của {{name}}",
+    "oneOfThem": "Một đơn vị",
+    "moreThanOne": "Nhiều đơn vị",
+    "pluralOf": "Dạng số nhiều của {{name}}",
+    "kind": "Loại",
+    "readsAs": "Đọc thành"
+  },
+  "action": {
+    "save": "Lưu",
+    "remove": "Xoá",
+    "addToPicker": "Đưa vào danh sách chọn",
+    "merge": "Gộp"
+  },
+  "categoryForm": {
+    "title": "Thêm danh mục",
+    "name": "Tên",
+    "namePlaceholder": "ví dụ Hải sản",
+    "nameHint": "Viết tiếng Anh, viết hoa như câu thường. Chữ này viết tay lên thẻ sản phẩm không có ảnh.",
+    "position": "Vị trí trong bộ lọc",
+    "submit": "Thêm danh mục"
+  },
+  "removeCategory": {
+    "title": "Xoá {{name}}?",
+    "textUsed_one": "{{count}} sản phẩm đang dùng danh mục này. Hãy chọn nơi chuyển chúng đến.",
+    "textUsed_other": "{{count}} sản phẩm đang dùng danh mục này. Hãy chọn nơi chuyển chúng đến.",
+    "textUnused": "Không sản phẩm nào đang dùng danh mục này.",
+    "moveTo": "Chuyển sản phẩm sang",
+    "keep": "Giữ danh mục",
+    "confirm": "Xoá danh mục"
+  },
+  "empty": {
+    "categories": {
+      "title": "Chưa có danh mục nào",
+      "text": "Thêm một danh mục thì nhà vườn mới xếp sản phẩm vào đó được."
+    }
+  },
+  "toast": {
+    "categorySaved": "Đã lưu {{name}}.",
+    "categoryAdded": "Đã thêm danh mục. Các sạp chọn được ngay.",
+    "categoryRemoved": "Đã xoá {{name}}.",
+    "promoted": "Từ giờ {{name}} nằm trong danh sách chọn của mọi sạp."
+  },
+  "error": {
+    "noun": "danh mục",
+    "nameRequired": "Đặt tên cho danh mục."
+  }
+}

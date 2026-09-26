@@ -1,0 +1,26 @@
+{
+  "title": "Kontakt",
+  "intro": "Fragen zu einer Bestellung gehen direkt an den Stand; die Telefonnummer steht auf deiner Bestellung. Für alles rund um die Plattform erreichst du das Team hier.",
+  "team": {
+    "title": "Das MarketLink-Team",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "hours": "Zeiten",
+    "toAdd": "Folgt",
+    "addressValue": "Folgt. Die Markierung auf der Karte ist ein Platzhalter im District 1.",
+    "hoursValue": "Mo – Fr, 09:00 – 17:00"
+  },
+  "feedback": {
+    "title": "Etwas kaputt oder eine Idee?",
+    "text": "Nutze das Feedback-Formular, damit es in der richtigen Warteschlange landet, mit Seite und Browser im Anhang.",
+    "cta": "Feedback senden"
+  },
+  "map": {
+    "label": "Karte mit dem Standort des Teams",
+    "markerLabel": "MarketLink-Team (Platzhalter)",
+    "popupTitle": "MarketLink-Team",
+    "popupLine": "Platzhalter-Markierung, District 1",
+    "directions": "Route zum Team"
+  }
+}

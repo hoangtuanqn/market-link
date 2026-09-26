@@ -1,0 +1,77 @@
+{
+  "allCustomers": "顾客",
+  "since": "自 {{joined}} 起的顾客 · 最近一单 {{last}}",
+  "missing": {
+    "title": "这位顾客已经不在了",
+    "text": "账号可能已被删除。请从顾客列表重新打开。"
+  },
+  "action": {
+    "deactivate": "停用账号",
+    "reactivate": "启用账号"
+  },
+  "banner": {
+    "title": "今日已停用。",
+    "text": "记在账号上的原因：{{reason}}。进行中的订单不受影响。"
+  },
+  "orders": {
+    "title": "订单",
+    "all": "平台全部订单",
+    "note": "管理员只读。只有摊位能推进订单状态，所以这里没有可改的东西。"
+  },
+  "reviews": {
+    "title": "他们写过的评价",
+    "openInModeration": "在内容审核中打开",
+    "note": "隐藏评价在「内容审核」里操作，那里同时能看到引发它的举报。"
+  },
+  "timeline": {
+    "title": "账号历史",
+    "created": "创建账号",
+    "firstCollected": "第一次取货成功",
+    "noShow": "没有来取货",
+    "lastOrder": "最近一单"
+  },
+  "contact": {
+    "title": "联系方式",
+    "email": "邮箱",
+    "phone": "电话",
+    "address": "地址",
+    "joined": "加入时间"
+  },
+  "habits": {
+    "title": "购买习惯",
+    "orders": "订单数",
+    "collected": "已取货",
+    "noShows": "未取货",
+    "market": "常去集市",
+    "buysMostFrom": "买得最多的摊位"
+  },
+  "whatItDoes": {
+    "title": "停用之后会怎样",
+    "text": "他们无法登录，也无法下新订单。已经下过的订单不受影响，所以摊位照样把留好的货交出去，没人白白浪费已经摘好的菜。"
+  },
+  "deactivate": {
+    "title": "停用 {{name}}？",
+    "text": "在管理员重新启用之前，他们无法登录或下单。已经下过的订单会走完流程，所以不会有摊位守着没人来取的货。",
+    "reason": "记在账号上的原因",
+    "keep": "先不停用",
+    "confirm": "停用"
+  },
+  "reason": {
+    "noShows": "多次未来取货",
+    "abusive": "评价中使用侮辱性言语",
+    "requested": "本人要求注销账号",
+    "other": "其他原因"
+  },
+  "toast": {
+    "deactivated": "已停用 {{name}}。",
+    "reactivated": "{{name}} 可以重新登录了。"
+  },
+  "col": {
+    "order": "订单",
+    "stall": "摊位",
+    "pickup": "取货",
+    "items": "商品数",
+    "total": "合计",
+    "status": "状态"
+  }
+}

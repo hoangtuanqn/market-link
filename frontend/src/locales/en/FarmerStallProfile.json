@@ -1,0 +1,72 @@
+{
+  "title": "Stall & pickup",
+  "intro": "What customers see about your stall, the markets you sell at, your operating days and pickup windows, and where the stall is on the map.",
+  "approved": "Approved on {{date}}",
+  "saved": "Saved",
+  "tabs": {
+    "label": "Stall settings",
+    "stall": "Stall details",
+    "markets": "Markets, days and pickup"
+  },
+  "details": {
+    "title": "Stall details",
+    "stallName": "Stall name",
+    "person": "Contact person",
+    "phone": "Phone number",
+    "phoneHint": "Shown to customers on their order ticket.",
+    "email": "Email",
+    "address": "Farm or business address",
+    "about": "About the stall",
+    "aboutHint": "Shown in handwriting on your stall page. One or two sentences.",
+    "savedText": "Stall details saved.",
+    "save": "Save stall details",
+    "accountHint": "Phone, email and address come from your account."
+  },
+  "cutoff": {
+    "title": "Order cutoff",
+    "label": "Stop taking changes this many hours before the pickup slot",
+    "hint_one": "For a {{slot}} slot on {{saturday}}, {{count}} hour means {{time}} on {{day}}. Customers cannot edit or cancel after that, and new orders for that slot close too (D-05).",
+    "hint_other": "For a {{slot}} slot on {{saturday}}, {{count}} hours means {{time}} on {{day}}. Customers cannot edit or cancel after that, and new orders for that slot close too (D-05)."
+  },
+  "markets": {
+    "title": "Markets you sell at",
+    "intro": "Tick a market to open its settings. Days and pickup windows are set per market.",
+    "runs": "Market runs {{days}} · {{open}}–{{close}}",
+    "code": "Stall code or spot",
+    "codeHint": "Shown on the order ticket so customers find you.",
+    "days": "Operating days at this market",
+    "start": "Pickup window starts",
+    "end": "Pickup window ends",
+    "location": "Stall location",
+    "mapLabel": "Pin the stall on the map",
+    "mapHint": "Drag the round pin to your spot inside the market. The square pin is the market itself.",
+    "lat": "Latitude",
+    "lng": "Longitude",
+    "pinMoved": "Pin moved",
+    "pinMovedText": "Pin moved to the market entrance. Drag it to your spot.",
+    "useMarket": "Use the market's location",
+    "savedText": "Markets, days and pickup windows saved. Slots for next week follow the new windows.",
+    "save": "Save markets and pickup",
+    "slotsLink": "Manage pickup slots",
+    "notApproved": "Markets, days and pickup windows open once an admin has approved your stall.",
+    "windowError": "{{market}}: pick at least one day and end the window after it starts.",
+    "joined": "{{name}} added to your stall.",
+    "left": "{{name}} removed from your stall."
+  },
+  "map": {
+    "yourStall": "Your stall"
+  },
+  "error": {
+    "noun": "your stall"
+  },
+  "status": {
+    "approved": "Approved stall",
+    "pending": "Waiting for approval",
+    "rejected": "Application declined",
+    "suspended": "Stall suspended"
+  },
+  "errors": {
+    "required": "This field is required.",
+    "cutoff": "Use a whole number between {{min}} and {{max}} hours."
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "notFound": {
+    "title": "이 상품은 더 이상 판매하지 않아요",
+    "text": "가게에서 내렸을 수 있어요. 이번 주에 가게의 다른 상품을 살펴보세요.",
+    "browse": "상품 둘러보기"
+  },
+  "breadcrumb": "상품",
+  "photo": "{{name}} 사진",
+  "favorite": {
+    "add": "즐겨찾기에 추가: {{name}}",
+    "remove": "즐겨찾기에서 빼기: {{name}}"
+  },
+  "soldPer": "{{unit}} 단위 판매",
+  "left": "이번 주 <b>{{qty}}</b> 남음",
+  "stockUpdated": "이번 주말 주문 전에 오늘 재고를 업데이트했어요.",
+  "notifyMe": "다시 들어오면 알림 받기",
+  "added": {
+    "title": "장바구니에 담았어요",
+    "text": "{{name}} {{qty}}을(를) 장바구니에 담았어요."
+  },
+  "addToCart": "장바구니에 담기",
+  "payNote": "주문하면 재고가 확보돼요. 픽업할 때 가게에서 {{price}}을(를) 결제해요.",
+  "fromStall": "가게 소개",
+  "sellingSince": "{{date}}부터 판매 중",
+  "stats": {
+    "reviews_one": "리뷰 {{count}}개",
+    "reviews_other": "리뷰 {{count}}개",
+    "markets_one": "장터",
+    "markets_other": "장터",
+    "hours_one": "{{count}}시간",
+    "hours_other": "{{count}}시간",
+    "cutoff": "주문 마감"
+  },
+  "seeStall": "가게 보기",
+  "messageStall": "가게에 메시지",
+  "details": {
+    "title": "상품 정보",
+    "soldPer": "판매 단위",
+    "category": "카테고리",
+    "stall": "가게",
+    "market": "장터"
+  },
+  "collect": {
+    "title": "받는 곳과 시간",
+    "map": "지도에서 보기",
+    "note": "시간대마다 주문 5건까지 받아요. 꽉 찬 시간대는 잠기고, 위의 마감 전에 가게가 변경을 막아요."
+  },
+  "table": {
+    "market": "장터",
+    "stallCode": "자리 {{code}}",
+    "days": "요일",
+    "window": "픽업 시간대",
+    "cutoff": "주문 마감",
+    "cutoffValue_one": "내 시간대 {{count}}시간 전",
+    "cutoffValue_other": "내 시간대 {{count}}시간 전",
+    "product": "상품",
+    "price": "가격",
+    "perUnit": "{{unit}}당",
+    "left": "남은 수량"
+  },
+  "directions": "길찾기",
+  "reviews": {
+    "title": "이 상품의 리뷰",
+    "write": "리뷰 쓰기",
+    "writeNote": "이 상품이 포함된 주문이 완료되면 쓸 수 있어요.",
+    "summary_one": "리뷰 {{count}}개, 모두 완료된 주문에서",
+    "summary_other": "리뷰 {{count}}개, 모두 완료된 주문에서"
+  },
+  "similar": {
+    "title": "이번 주말 다른 가게의 {{name}}",
+    "note": "같은 채소, 다른 밭과 가격",
+    "here": "지금 보는 상품",
+    "view": "보기"
+  },
+  "also": {
+    "title": "이번 주 {{stall}}의 다른 상품"
+  },
+  "report": {
+    "sentTitle": "신고를 보냈어요",
+    "sentText": "관리자가 이 상품을 확인할 거예요.",
+    "button": "이 상품 신고",
+    "note": "가격이나 사진이 틀렸거나, 파머스 마켓에 어울리지 않는 상품이에요."
+  },
+  "error": {
+    "noun": "상품"
+  }
+}

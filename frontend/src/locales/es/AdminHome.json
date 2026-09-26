@@ -1,0 +1,61 @@
+{
+  "overline": "Plataforma · {{year}}",
+  "title": "MarketLink hoy",
+  "vs": "frente a {{month}}",
+  "tilesNote": "{{now}} hasta ahora, junto a {{prev}}. Cada bloque abre el detalle que hay detrás de su cifra.",
+  "kpi": {
+    "farmers": "Productores",
+    "farmersNote": "{{waiting}} pendientes de aprobación · {{suspended}} suspendidos",
+    "farmersLink": "Revisar solicitudes",
+    "customers": "Clientes",
+    "customersNote": "{{count}} se registraron este mes",
+    "customersLink": "Abrir clientes",
+    "markets": "Mercados",
+    "marketsNote": "todos activos",
+    "marketsLink": "Abrir mercados",
+    "orders": "Pedidos",
+    "ordersNote": "{{week}} esta semana · {{total}} completados",
+    "ordersLink": "Abrir pedidos"
+  },
+  "revenue": {
+    "title": "Ingresos por día",
+    "note": "Pedidos completados, en millones de ₫. {{now}} frente a {{prev}}.",
+    "caption": "Ingresos por día en {{now}} frente a {{prev}}, en millones de dongs",
+    "axis": "Día del mes",
+    "reports": "Informes completos"
+  },
+  "attention": {
+    "title": "Requiere atención",
+    "farmers_one": "solicitud de productor esperando",
+    "farmers_other": "solicitudes de productores esperando",
+    "reported_one": "reseña denunciada por un puesto",
+    "reported_other": "reseñas denunciadas por un puesto",
+    "feedback_one": "comentario sin atender",
+    "feedback_other": "comentarios sin atender, uno de ellos un fallo",
+    "announcements_one": "aviso publicado, Thảo Điền cierra el 04/10",
+    "announcements_other": "avisos publicados"
+  },
+  "earned": {
+    "title": "Lo que ganó MarketLink",
+    "link": "Informe de ingresos",
+    "note": "{{month}}, de puestos que compran visibilidad. Aparte del dinero que recaudaron los mercados.",
+    "of": "₫ · el {{pct}} % de los {{gmv}} que recaudaron los mercados"
+  },
+  "byMarket": {
+    "title": "Pedidos de esta semana por mercado",
+    "link": "Todos los pedidos",
+    "suffix": "pedidos"
+  },
+  "latest": {
+    "title": "Últimos pedidos de toda la plataforma",
+    "readOnly": "Solo lectura. Los administradores no cambian el estado de un pedido."
+  },
+  "col": {
+    "order": "Pedido",
+    "stall": "Puesto",
+    "market": "Mercado",
+    "pickup": "Recogida",
+    "total": "Total",
+    "status": "Estado"
+  }
+}

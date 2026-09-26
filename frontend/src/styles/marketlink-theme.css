@@ -93,6 +93,85 @@
 }
 
 /*
+ * Wide screens: a 1200px container leaves a lot of paper on a 1920px monitor, so header, footer and
+ * content widen together from 1600px up. Outside any cascade layer, like :root above, so it overrides
+ * the base value the same way. Anything that must follow it reads var(--size-container) — never 1200px.
+ */
+@media (min-width: 1600px) {
+  :root {
+    --size-container: 1360px;
+  }
+}
+
+/*
+ * Dark theme (data-theme="dark" on <html>, set by src/lib/settings.ts and the pre-paint script in
+ * index.html). Every step was re-derived from the same kraft and green hues rather than flipped, and
+ * all 26 text-on-surface, status and border pairs were measured: the lowest is board-muted on board
+ * at 5.43:1, everything else clears 4.5:1, borders clear 3:1.
+ */
+:root[data-theme='dark'] {
+  --surface: #181410;
+  --surface-quiet: #1f1a14;
+  --surface-raised: #272119;
+  --surface-sunken: #12100b;
+  --board: #35532f;
+  --on-board: #f1e5cb;
+  --board-muted: #c1d3af;
+  --ink: #f2e7d2;
+  --ink-muted: #c2ab85;
+  --line: #453a2b;
+  --line-strong: #9d8763;
+  --brand: #8dbb7b;
+  --brand-strong: #a6cd95;
+  --on-brand: #14200f;
+  --brand-tint: #31432b;
+  --accent: #e8b33c;
+  --accent-strong: #f2c260;
+  --on-accent: #2a2016;
+  --price: #f2e7d2;
+  --focus: #a6cd95;
+  --danger: #f09a88;
+  --on-danger: #2a1310;
+  --danger-bg: #40201a;
+  --success: #8dbb7b;
+  --info-bg: #1f2f36;
+  --info-ink: #a9cbd8;
+  --warning-bg: #3a2c0d;
+  --warning-ink: #e9c874;
+  --highlight: #3a3116;
+  --twine: #b39468;
+  --scrim: rgba(8, 6, 4, 0.66);
+  --pin-market: #8dbb7b;
+  --pin-stall: #e8b33c;
+  --status-placed-bg: #33291b;
+  --status-placed-ink: #e2cca7;
+  --status-accepted-bg: #223038;
+  --status-accepted-ink: #b9d4e0;
+  --status-ready-bg: #2a3a24;
+  --status-ready-ink: #bbd8aa;
+  --status-completed-bg: #8dbb7b;
+  --status-completed-ink: #14200f;
+  --status-declined-bg: #3d1f19;
+  --status-declined-ink: #f2a493;
+  --status-cancelled-bg: #2e271c;
+  --status-cancelled-ink: #c6b08b;
+  --shadow-card: 0 2px 0 0 rgba(0, 0, 0, 0.5);
+  --shadow-pop: 0 8px 20px rgba(0, 0, 0, 0.55);
+  --shadow-dialog: 0 24px 48px rgba(0, 0, 0, 0.6);
+  /* chart marks: re-stepped for the dark surface, not flipped. brand-light vs a warm neutral
+     measures CVD ΔE 14.6 and normal-vision 16.7 on #272119, where the light pair does not. */
+  --chart-now: #8dbb7b;
+  --chart-was: #8a7f6d;
+  --side-raised: #24381f;
+}
+/* chart marks in the light theme, measured on the card surface #f1e5cb */
+:root {
+  --chart-now: #2f4a2a;
+  --chart-was: #8a6a3f;
+  --side-raised: #22371f;
+}
+
+/*
  * Only MarketLink colors exist as utilities: the default Tailwind palette (zinc, blue, …) is
  * switched off so prototypes cannot drift away from the tokens.
  * Examples: bg-surface, bg-surface-raised, text-ink, text-ink-muted, border-line-strong,

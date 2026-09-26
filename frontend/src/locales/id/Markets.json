@@ -1,0 +1,74 @@
+{
+  "city": "Kota Ho Chi Minh",
+  "count_one": "{{count}} pasar",
+  "count_other": "{{count}} pasar",
+  "title": "Pasar",
+  "intro": "Pilih hari Anda ingin berbelanja, lalu persempit ke area Anda.",
+  "filters": {
+    "label": "Filter pasar",
+    "day": "Hari pasar",
+    "clearAll": "Hapus semua",
+    "area": "Area",
+    "allAreas": "Semua area ({{count}})",
+    "sort": "Urutkan"
+  },
+  "sorts": {
+    "near": "Terdekat dulu",
+    "stalls": "Lapak terbanyak",
+    "opens": "Buka paling awal"
+  },
+  "cleared": {
+    "title": "Filter dihapus",
+    "text": "Menampilkan semua pasar yang buka hari {{day}}."
+  },
+  "popupStalls_one": "{{count}} lapak",
+  "popupStalls_other": "{{count}} lapak",
+  "summary": {
+    "open_one": "<b>{{count}} pasar</b> buka hari {{day}}",
+    "open_other": "<b>{{count}} pasar</b> buka hari {{day}}",
+    "openIn_one": "<b>{{count}} pasar</b> buka hari {{day}} di {{area}}",
+    "openIn_other": "<b>{{count}} pasar</b> buka hari {{day}} di {{area}}",
+    "none": "Tidak ada yang buka hari {{day}}",
+    "noneIn": "Tidak ada yang buka hari {{day}} di {{area}}"
+  },
+  "error": {
+    "noun": "pasar",
+    "alt": "<link>peta pasar</link> terbuka di halamannya sendiri"
+  },
+  "pager": {
+    "showing": "Menampilkan {{from}}–{{to}} dari {{total}}",
+    "onePage_one": "{{count}} pasar dalam satu halaman",
+    "onePage_other": "Semua {{count}} pasar dalam satu halaman"
+  },
+  "empty": {
+    "areaTitle": "Tidak ada pasar di {{area}} hari {{day}}",
+    "areaText_one": "Di seluruh kota ada {{count}} pasar yang buka hari itu. Perluas area, atau pilih hari lain.",
+    "areaText_other": "Di seluruh kota ada {{count}} pasar yang buka hari itu. Perluas area, atau pilih hari lain.",
+    "allAreas": "Tampilkan semua area",
+    "dayTitle": "Tidak ada pasar yang buka hari {{day}}",
+    "dayText_one": "{{day}} adalah hari paling ramai, dengan {{count}} pasar buka.",
+    "dayText_other": "{{day}} adalah hari paling ramai, dengan {{count}} pasar buka.",
+    "showDay": "Lihat {{day}}"
+  },
+  "map": {
+    "label": "Peta pasar yang cocok",
+    "note": "Peta mengikuti filter dan hanya menampilkan pasar dalam daftar."
+  },
+  "demo": {
+    "title": "Status lain dari daftar ini (FR-084)",
+    "views": {
+      "loaded": "Ada data",
+      "loading": "Memuat",
+      "error": "Galat"
+    },
+    "note": "Status kosong bisa muncul sungguhan: pilih <b>{{day}}</b> dan area <b>{{area}}</b>. Status ini menyebut pilihan Anda dan menawarkan jalan keluar."
+  },
+  "location": {
+    "measured": "Jarak diukur dari lokasi Anda.",
+    "forget": "Lupakan lokasi saya",
+    "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda untuk mengurutkan berdasarkan jarak.",
+    "needed": "Mengurutkan berdasarkan jarak memerlukan lokasi Anda. Sebelum Anda membagikannya, urutan di bawah tidak berubah.",
+    "share": "Bagikan lokasi Anda untuk melihat seberapa jauh setiap pasar.",
+    "use": "Gunakan lokasi saya"
+  }
+}

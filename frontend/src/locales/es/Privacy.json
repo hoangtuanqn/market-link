@@ -1,0 +1,169 @@
+{
+  "title": "Política de privacidad",
+  "lead": "Qué guarda MarketLink sobre ti, por qué lo guarda y quién puede verlo. Escrito a partir de las tablas que el producto tiene de verdad, no de una plantilla.",
+  "meta": "Versión 0.1 · Última actualización {{date}} · Se aplica a Customers, Farmers y visitantes",
+  "onThisPage": "En esta página",
+  "seeAlso": "Lee también los <link>Términos del servicio</link>. Tratan de la reserva y la recogida.",
+  "sections": [
+    {
+      "id": "collect",
+      "title": "Qué guardamos",
+      "blocks": [
+        {
+          "p": "Todo lo de abajo es algo que el producto almacena hoy. No se recoge nada con fines publicitarios y no se vende nada a terceros."
+        },
+        {
+          "facts": {
+            "items": [
+              [
+                "Tu cuenta",
+                "Nombre completo, correo, teléfono y dirección. Tu contraseña nunca se guarda tal como la escribiste, solo como un hash."
+              ],
+              [
+                "El puesto de un Farmer",
+                "Nombre del puesto, persona de contacto, descripción, los mercados y días en que vendes, tus franjas de recogida y la posición de tu puesto en el mapa."
+              ],
+              [
+                "Tus pedidos",
+                "Qué reservaste y cuánto, el puesto y el mercado, tu fecha y hora de recogida, la nota que dejaste al puesto y los totales. Los nombres y precios de los productos se copian en el pedido para que siga leyéndose bien si el puesto los cambia después."
+              ],
+              ["Historial del pedido", "Cada cambio de estado de un pedido, con la hora y quién lo hizo."],
+              ["Reseñas", "Tu puntuación, tu texto, de qué pedido salió y la respuesta que escribió el puesto."],
+              ["Favoritos", "Los puestos, productos y mercados que guardaste."],
+              ["Mensajes", "Lo que tú y un puesto os escribís en Mensajes, y cuándo se leyó cada mensaje."],
+              [
+                "Notificaciones",
+                "Los avisos que se te envían sobre tus pedidos y las reposiciones, y si los has leído."
+              ],
+              [
+                "Conversaciones con el asistente",
+                "Tus mensajes, las respuestas del asistente y la intención que reconoció. Véase la sección 5."
+              ],
+              [
+                "Comentarios",
+                "El tipo que elegiste y lo que escribiste. Los comentarios se pueden enviar sin cuenta, y entonces no llevan ninguna cuenta asociada."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink no pide ni almacena datos de tarjeta, datos bancarios ni información de pago, porque el pago ocurre en el puesto y nunca a través del producto."
+        }
+      ]
+    },
+    {
+      "id": "why",
+      "title": "Por qué lo guardamos",
+      "blocks": [
+        {
+          "p": "Tu nombre y tu teléfono existen para que el puesto sepa quién va a recoger y pueda localizarte la mañana del mercado. Tu dirección existe para mostrar a qué distancia está un mercado y rellenar la ruta. Tu correo es cómo inicias sesión y cómo se te avisa de un pedido."
+        },
+        {
+          "p": "Los pedidos y su historial existen para que ambas partes vean qué se acordó y cuándo cambió. Las reseñas existen para que otros compradores puedan juzgar un puesto. Los favoritos existen para poder avisarte cuando algo que querías vuelve a estar disponible."
+        }
+      ]
+    },
+    {
+      "id": "who",
+      "title": "Quién puede verlo",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "El puesto en el que pides",
+                "Ve tu pedido y los datos de contacto necesarios para entregártelo el día de mercado, y los mensajes que le envías. No ve tus pedidos con otros puestos."
+              ],
+              [
+                "Otros compradores",
+                "Ven tus reseñas y el nombre que aparece en ellas. No ven tus pedidos, tus datos de contacto ni tus favoritos."
+              ],
+              [
+                "Un administrador",
+                "Ve cuentas y solicitudes de Farmer para aprobarlas, suspenderlas o desactivarlas, y ve publicaciones y reseñas para moderarlas. Los informes de administración son recuentos y totales, no listas de quién compró qué."
+              ],
+              [
+                "Cualquier otra persona",
+                "Nada. Los pedidos, los datos de contacto, los favoritos y las notificaciones no se muestran nunca en una página pública."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Cada pantalla que recibe un identificador comprueba en el servidor que el registro es tuyo antes de mostrarlo, así que cambiar un número en la barra de direcciones no abre el pedido de otra persona."
+        }
+      ]
+    },
+    {
+      "id": "sessions",
+      "title": "Cookies y sesiones",
+      "blocks": [
+        {
+          "p": "Cuando inicias sesión, MarketLink emite un token de vida corta que tu navegador envía con cada petición, y otro de vida más larga guardado en una cookie para que no se te cierre la sesión cada pocos minutos. Tu sesión iniciada también se guarda en caché en el servidor para que el acceso sea rápido. Cerrar sesión termina con ambas cosas."
+        },
+        {
+          "p": "Tu carrito se guarda en tu propio navegador hasta que haces el pedido. Nada de lo que hay en el carrito llega al servidor antes de confirmar."
+        },
+        {
+          "p": "MarketLink no pone cookies de publicidad ni de analítica."
+        }
+      ]
+    },
+    {
+      "id": "assistant",
+      "title": "El asistente de compra",
+      "blocks": [
+        {
+          "p": "El asistente responde preguntas sobre mercados, puestos, franjas de recogida y productos. Se guardan las dos partes de la conversación, junto con la intención que el asistente asoció a tu pregunta, para que el equipo pueda ver por qué respondió así."
+        },
+        {
+          "p": "Un visitante sin cuenta también puede usarlo. Para mantener una conversación unida, tu navegador guarda una clave de sesión aleatoria que no está ligada a ninguna cuenta; si has iniciado sesión, la conversación se asocia a tu cuenta."
+        },
+        {
+          "p": "Tus palabras nunca se convierten en una consulta a la base de datos. El asistente hace corresponder tu pregunta con una de un conjunto fijo de búsquedas preparadas, así que lo que escribes solo llega a ser un término de búsqueda. Pregúntale sobre producto y horas de recogida, no sobre nada privado."
+        }
+      ]
+    },
+    {
+      "id": "third",
+      "title": "Qué cargan estas páginas desde fuera",
+      "blocks": [
+        {
+          "facts": {
+            "items": [
+              [
+                "OpenStreetMap",
+                "Las teselas del mapa vienen de servidores de OpenStreetMap, que ven tu dirección IP y aproximadamente qué parte del mapa estás mirando. Los datos del mapa son © colaboradores de OpenStreetMap. El enlace de indicaciones abre OpenStreetMap en una pestaña nueva."
+              ],
+              [
+                "Google Fonts",
+                "Las dos tipografías se cargan desde Google Fonts, que ve tu dirección IP al abrirse la página."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "MarketLink no usa Google Maps, así que no hay clave de mapas ni ninguna cuenta detrás del mapa."
+        }
+      ]
+    },
+    {
+      "id": "choices",
+      "title": "Tus opciones",
+      "blocks": [
+        {
+          "p": "Puedes ver y cambiar tu nombre, teléfono, correo y dirección desde la página de tu cuenta en cualquier momento. Puedes quitar lo que hayas guardado en favoritos y marcar las notificaciones como leídas."
+        },
+        {
+          "p": "Algunas cosas permanecen aunque las cambies: un pedido conserva los nombres y precios con los que se hizo, y su historial de estados no se reescribe, porque ambas partes se apoyan en ese registro. Una reseña que escribiste permanece hasta que tú o un administrador la retiréis."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "¿Una duda sobre tus datos?",
+    "text": "Las dudas sobre un pedido van directamente al puesto. Cualquier cosa sobre esta política llega al equipo.",
+    "terms": "Términos del servicio",
+    "contact": "Contáctanos"
+  }
+}

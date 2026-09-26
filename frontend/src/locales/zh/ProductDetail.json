@@ -1,0 +1,87 @@
+{
+  "notFound": {
+    "title": "该商品已下架",
+    "text": "摊位可能已将其撤下。看看他们本周还有什么。",
+    "browse": "浏览商品"
+  },
+  "breadcrumb": "商品",
+  "photo": "{{name}} 的照片",
+  "favorite": {
+    "add": "加入收藏：{{name}}",
+    "remove": "移出收藏：{{name}}"
+  },
+  "soldPer": "按{{unit}}出售",
+  "left": "本周剩余 <b>{{qty}}</b>",
+  "stockUpdated": "库存已于今天更新，在本周末订单之前。",
+  "notifyMe": "到货时通知我",
+  "added": {
+    "title": "已加入购物车",
+    "text": "已将 {{qty}} {{name}} 加入购物车。"
+  },
+  "addToCart": "加入购物车",
+  "payNote": "下单后即为你保留库存。取货时在摊位支付 {{price}}。",
+  "fromStall": "来自摊位",
+  "sellingSince": "自 {{date}} 起在此销售",
+  "stats": {
+    "reviews_one": "{{count}} 条评价",
+    "reviews_other": "{{count}} 条评价",
+    "markets_one": "个市集",
+    "markets_other": "个市集",
+    "hours_one": "{{count}} 小时",
+    "hours_other": "{{count}} 小时",
+    "cutoff": "截单提前"
+  },
+  "seeStall": "查看摊位",
+  "messageStall": "联系摊位",
+  "details": {
+    "title": "商品详情",
+    "soldPer": "销售单位",
+    "category": "类别",
+    "stall": "摊位",
+    "market": "市集"
+  },
+  "collect": {
+    "title": "取货地点和时间",
+    "map": "在地图上查看",
+    "note": "每个时段最多 5 单。时段满后会锁定，摊位在上述截单时间前停止接受修改。"
+  },
+  "table": {
+    "market": "市集",
+    "stallCode": "摊位 {{code}}",
+    "days": "日期",
+    "window": "取货时段",
+    "cutoff": "截单",
+    "cutoffValue_one": "在你的时段前 {{count}} 小时",
+    "cutoffValue_other": "在你的时段前 {{count}} 小时",
+    "product": "商品",
+    "price": "价格",
+    "perUnit": "每{{unit}}",
+    "left": "剩余"
+  },
+  "directions": "路线",
+  "reviews": {
+    "title": "该商品的评价",
+    "write": "写评价",
+    "writeNote": "包含此商品的订单完成后即可评价。",
+    "summary_one": "{{count}} 条评价，均来自已完成的订单",
+    "summary_other": "{{count}} 条评价，均来自已完成的订单"
+  },
+  "similar": {
+    "title": "本周末其他摊位的{{name}}",
+    "note": "同样的蔬菜，不同的田地和价格",
+    "here": "当前商品",
+    "view": "查看"
+  },
+  "also": {
+    "title": "{{stall}} 本周的其他商品"
+  },
+  "report": {
+    "sentTitle": "举报已发送",
+    "sentText": "管理员会查看这条商品信息。",
+    "button": "举报此商品",
+    "note": "价格不对、照片不对，或不该出现在农夫市集的东西。"
+  },
+  "error": {
+    "noun": "商品"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "title": "Peta pasar",
+  "intro": "Semua pasar dan lapak yang menerima pesanan di muka pada hari yang Anda pilih. Ketuk pin untuk melihat jam buka, jadwal ambil, dan petunjuk arah.",
+  "marketDay": "Hari pasar",
+  "filter": {
+    "markets": "Pasar",
+    "stalls": "Lapak",
+    "saved": "Hanya yang disimpan"
+  },
+  "legend": {
+    "market": "Kotak: pasar",
+    "stall": "Bulat: lapak",
+    "selected": "Cincin: dipilih"
+  },
+  "mapLabel": "Peta semua pasar dan lapak",
+  "directions": "Petunjuk arah dibuka di OpenStreetMap pada tab baru.",
+  "openOn": "Buka pada {{day}}",
+  "empty": {
+    "title": "Tidak ada pasar untuk ditampilkan",
+    "text": "Tidak ada yang cocok dengan hari yang Anda pilih. Coba hari lain atau hapus filter."
+  },
+  "popup": {
+    "stalls_one": "{{count}} lapak",
+    "stalls_other": "{{count}} lapak",
+    "pickup": "{{days}} · ambil {{pickup}}"
+  },
+  "bothOff": {
+    "title": "Tidak ada yang ditampilkan di peta",
+    "text": "Kedua lapisan dimatikan. Nyalakan kembali pasar atau lapak untuk melihat penanda.",
+    "action": "Tampilkan keduanya"
+  },
+  "error": {
+    "noun": "pasar"
+  },
+  "stallsNoun": "kios"
+}

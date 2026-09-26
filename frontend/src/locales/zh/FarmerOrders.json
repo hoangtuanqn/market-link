@@ -1,0 +1,60 @@
+{
+  "title": "订单",
+  "intro": "在截止时间前接受或拒绝新订单，在集市当天标记为已备好，顾客付款后完成订单。",
+  "search": { "label": "搜索订单", "placeholder": "订单号或顾客姓名", "submit": "搜索" },
+  "filter": { "day": "取货日", "all": "全部", "market": "集市", "bothMarkets": "两个集市" },
+  "tabsLabel": "按状态查看订单",
+  "status": {
+    "placed": "待确认",
+    "accepted": "已接受",
+    "ready": "已备好",
+    "completed": "已完成",
+    "declined": "已拒绝",
+    "cancelled": "已取消"
+  },
+  "empty": {
+    "placed": { "title": "没有等待处理的订单", "text": "新的预订会显示在这里，直到取货时段前 12 小时。" },
+    "accepted": { "title": "没有已接受的订单", "text": "你接受的订单会留在这里，直到你标记为已备好。" },
+    "ready": { "title": "还没有已备好的订单", "text": "已接受的订单打包好后，就可以标记为已备好。" },
+    "completed": { "title": "没有已完成的订单", "text": "顾客在摊位取货并付款后，订单即完成。" },
+    "declined": { "title": "没有已拒绝的订单", "text": "你拒绝的订单会连同原因列在这里。" },
+    "cancelled": { "title": "没有已取消的订单", "text": "顾客可以在截止时间前取消订单（D-05）。" }
+  },
+  "col": {
+    "order": "订单",
+    "customer": "顾客",
+    "pickup": "取货",
+    "cutoff": "截止",
+    "items": "商品数",
+    "total": "合计",
+    "status": "状态"
+  },
+  "action": {
+    "accept": "接受",
+    "decline": "拒绝",
+    "markReady": "标记为已备好",
+    "markCompleted": "标记为已完成",
+    "view": "查看"
+  },
+  "toast": {
+    "accepted": "已接受订单 {{code}}。",
+    "ready": "订单 {{code}} 已标记为已备好。",
+    "declined": "已拒绝订单 {{code}}。",
+    "completed": "订单 {{code}} 已完成。"
+  },
+  "auditNote": "每次状态变更都会记录时间和操作人（FR-038）。顺序错误的变更会被拒绝（D-04）。",
+  "decline": {
+    "title": "拒绝订单 {{code}}？",
+    "keep": "保留订单",
+    "confirm": "拒绝订单",
+    "text": "顾客会立即收到通知，商品会退回你的库存。",
+    "reason": "顾客将看到的原因",
+    "reasons": { "stock": "库存不足", "day": "当天不出摊", "time": "无法按该时间交货", "other": "其他" }
+  },
+  "complete": {
+    "title": "将 {{code}} 标记为已完成？",
+    "notYet": "暂不",
+    "text": "请在顾客取货并在摊位付款后再操作。已完成的订单会计入你的收入，并开放顾客评价。",
+    "auto": "仍处于“已备好”状态的订单会在取货日 24 小时后自动完成（D-03）。"
+  }
+}

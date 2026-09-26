@@ -1,0 +1,65 @@
+{
+  "overline": "Paramètres",
+  "title": "Catégories",
+  "intro": "La seule liste dans laquelle chaque stand choisit quand il ajoute un produit. Les unités de vente sont fixes et livrées avec l'application.",
+  "link": {
+    "announcements": "Annonces",
+    "feedback": "Boîte de retours"
+  },
+  "caption": {
+    "categories_one": "{{count}} catégorie",
+    "categories_many": "{{count}} catégories",
+    "categories_other": "{{count}} catégories"
+  },
+  "col": {
+    "category": "Catégorie",
+    "products": "Produits",
+    "stalls": "Étals",
+    "nameOf": "Nom de {{name}}",
+    "oneOfThem": "Au singulier",
+    "moreThanOne": "Au pluriel",
+    "pluralOf": "Pluriel de {{name}}",
+    "kind": "Type",
+    "readsAs": "Se lit"
+  },
+  "action": {
+    "save": "Enregistrer",
+    "remove": "Supprimer",
+    "addToPicker": "Ajouter à la liste",
+    "merge": "Fusionner"
+  },
+  "categoryForm": {
+    "title": "Ajouter une catégorie",
+    "name": "Nom",
+    "namePlaceholder": "par ex. Seafood",
+    "nameHint": "En anglais, majuscule à l'initiale seulement. Ce mot est calligraphié sur l'étiquette d'un produit sans photo.",
+    "position": "Position dans le filtre",
+    "submit": "Ajouter la catégorie"
+  },
+  "removeCategory": {
+    "title": "Supprimer {{name}} ?",
+    "textUsed_one": "{{count}} produit l'utilise. Choisissez où il part.",
+    "textUsed_many": "{{count}} produits l'utilisent. Choisissez où ils partent.",
+    "textUsed_other": "{{count}} produits l'utilisent. Choisissez où ils partent.",
+    "textUnused": "Aucun produit ne l'utilise.",
+    "moveTo": "Déplacer les produits vers",
+    "keep": "Garder la catégorie",
+    "confirm": "Supprimer la catégorie"
+  },
+  "empty": {
+    "categories": {
+      "title": "Aucune catégorie pour l'instant",
+      "text": "Ajoutez une catégorie et les producteurs pourront y ranger leurs produits."
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}} enregistrée.",
+    "categoryAdded": "Catégorie ajoutée. Les étals peuvent la choisir dès maintenant.",
+    "categoryRemoved": "{{name}} supprimée.",
+    "promoted": "{{name}} figure désormais dans le sélecteur de tous les étals."
+  },
+  "error": {
+    "noun": "catégories",
+    "nameRequired": "Donnez un nom à la catégorie."
+  }
+}

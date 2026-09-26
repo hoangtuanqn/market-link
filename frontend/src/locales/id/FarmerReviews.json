@@ -1,0 +1,35 @@
+{
+  "title": "Ulasan",
+  "intro": "Apa kata pelanggan setelah mengambil pesanan mereka. Balasan singkat sangat berarti, terutama untuk rating rendah.",
+  "summary": "Lapak {{stall}} · produk {{products}} · {{reviews}}",
+  "reviewCount_one": "{{count}} ulasan",
+  "reviewCount_other": "{{count}} ulasan",
+  "filter": {
+    "all": "Semua",
+    "needs": "Perlu dibalas",
+    "replied": "Sudah dibalas",
+    "stall": "Tentang lapak",
+    "products": "Tentang produk"
+  },
+  "toast": {
+    "postedTitle": "Balasan diposting",
+    "postedText": "Balasan diposting di bawah ulasan {{name}}.",
+    "editTitle": "Edit balasan",
+    "editText": "Edit balasan dibuka."
+  },
+  "action": {
+    "editReply": "Edit balasan",
+    "reply": "Balas",
+    "report": "Laporkan ulasan",
+    "post": "Posting balasan"
+  },
+  "form": {
+    "label": "Balasan Anda, tampil di bawah ulasan",
+    "placeholder": "Terima kasih sudah mampir, {{name}}. Lain kali kami akan mengemas pesanan dengan lebih hati-hati."
+  },
+  "empty": {
+    "title": "Belum ada ulasan",
+    "text": "Pelanggan bisa mengulas lapak Anda dan barang yang dibeli setelah pesanan selesai (D-10)."
+  },
+  "note": "Ulasan tidak bisa dihapus oleh lapak. Jika ada yang melanggar pedoman, laporkan dan admin yang memutuskan (FR-074)."
+}

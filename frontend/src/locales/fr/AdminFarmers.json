@@ -1,0 +1,95 @@
+{
+  "title": "Producteurs",
+  "intro": "Approuvez une demande avant que l’étal puisse publier des produits. Suspendez un étal pour masquer ses produits et bloquer les nouvelles commandes ; les commandes en cours se terminent normalement.",
+  "search": {
+    "label": "Rechercher un producteur",
+    "placeholder": "Stand, contact, téléphone",
+    "submit": "Rechercher"
+  },
+  "tabsLabel": "Producteurs par statut",
+  "status": {
+    "pending": "En attente de validation",
+    "approved": "Validés",
+    "suspended": "Suspendus",
+    "rejected": "Refusés"
+  },
+  "empty": {
+    "pending": {
+      "title": "Aucune candidature en attente",
+      "text": "Les nouvelles candidatures de producteurs arrivent ici pour examen avant de pouvoir proposer des produits."
+    },
+    "approved": {
+      "title": "Aucun stand validé",
+      "text": "Validez une candidature et le stand apparaît ici, visible par les clients."
+    },
+    "suspended": {
+      "title": "Aucun stand suspendu",
+      "text": "Un stand suspendu est masqué pour les clients mais termine les commandes qu’il a déjà."
+    },
+    "rejected": {
+      "title": "Aucune candidature refusée",
+      "text": "Les producteurs refusés gardent leur compte et peuvent être informés du motif."
+    }
+  },
+  "col": {
+    "stall": "Stand",
+    "registered": "Inscription",
+    "email": "E-mail"
+  },
+  "action": {
+    "approve": "Valider",
+    "reject": "Refuser",
+    "view": "Voir",
+    "suspend": "Suspendre",
+    "reinstate": "Rétablir"
+  },
+  "notYet": "Pas maintenant",
+  "approve": {
+    "title": "Valider {{stall}} ?",
+    "text": "Le stand devient visible par les clients et peut proposer des produits tout de suite. Le producteur est prévenu.",
+    "confirm": "Valider le stand"
+  },
+  "reject": {
+    "title": "Refuser {{stall}} ?",
+    "text": "Le demandeur garde son compte client et tout ce qu’il contient. La raison lui est communiquée.",
+    "reason": "Motif que verra le producteur",
+    "confirm": "Refuser la candidature",
+    "placeholder": "Dites ce qui doit changer pour que ce stand soit validé.",
+    "hint": "{{used}} sur {{max}} caractères. Le demandeur lit ce texte mot pour mot.",
+    "required": "Écrivez le motif que le demandeur verra.",
+    "tooLong": "Le motif ne doit pas dépasser {{max}} caractères."
+  },
+  "suspend": {
+    "title": "Suspendre {{stall}} ?",
+    "text": "Tous les produits sont masqués et aucune nouvelle commande n’est acceptée. Les commandes déjà passées continuent, pour que les clients ne perdent pas ce qu’ils ont réservé.",
+    "confirm": "Suspendre le stand",
+    "reason": "Motif que verra le producteur",
+    "placeholder": "Dites ce que le stand doit corriger pour vendre à nouveau.",
+    "hint": "{{used}} sur {{max}} caractères. Le producteur lit ce texte mot pour mot.",
+    "required": "Écrivez le motif que le producteur verra.",
+    "tooLong": "Le motif ne doit pas dépasser {{max}} caractères."
+  },
+  "toast": {
+    "approved": "{{stall}} validé. Le stand peut proposer des produits dès maintenant.",
+    "rejected": "{{stall}} refusé. Il garde son compte.",
+    "suspended": "{{stall}} suspendu. Les commandes en cours se terminent normalement.",
+    "reinstated": "{{stall}} rétabli. Les produits sont de nouveau visibles.",
+    "failed": "Impossible de terminer cette action. Réessayez.",
+    "rejectFailed": "Impossible de refuser cette demande. Réessayez."
+  },
+  "reinstate": {
+    "title": "Rétablir {{stall}} ?",
+    "text": "Les produits redeviennent visibles pour les clients immédiatement.",
+    "confirm": "Rétablir l’étal"
+  },
+  "keepReviewing": "Continuer l’examen",
+  "loading": "Chargement des producteurs",
+  "loadError": {
+    "title": "Impossible de charger les producteurs",
+    "text": "Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer"
+  },
+  "caption_one": "{{count}} producteur",
+  "caption_other": "{{count}} producteurs",
+  "showing": "Affichage de {{from}} à {{to}} sur {{total}}"
+}

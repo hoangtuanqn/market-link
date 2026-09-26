@@ -1,0 +1,45 @@
+{
+  "title": "판매 내역",
+  "intro": "무엇을 팔았는지, 이전 기간과 비교해 어떤지 보여 줘요. 매출은 완료된 주문, 즉 고객이 매대에서 건넨 금액만 계산해요.",
+  "export": {
+    "button": "이 기간 내보내기",
+    "title": "내보내기를 시작했어요",
+    "text": "내보내기를 시작했어요. CSV에는 화면에 보이는 기간과 장터가 담겨요."
+  },
+  "days_one": "{{count}}일",
+  "days_other": "{{count}}일",
+  "market": "장터",
+  "bothMarkets": "두 장터 모두",
+  "kpi": {
+    "completed": "완료된 주문",
+    "completedNote": "받은 주문 {{total}}건 중",
+    "revenue": "매출",
+    "revenueNote": "₫, 매대에서 결제",
+    "average": "평균 주문 금액",
+    "averageNote": "완료된 주문당 ₫",
+    "declined": "거절한 주문",
+    "declinedNote": "받은 주문의 {{pct}}%"
+  },
+  "byDay": {
+    "title": "장날별 매출",
+    "note": "단위는 백만 ₫. 토요일과 일요일에만 판매하므로 막대 하나가 장날 아침 한 번이에요.",
+    "caption": "{{now}}과 {{prev}}의 장날별 매출 비교, 단위 백만 동"
+  },
+  "best": {
+    "title": "인기 상품",
+    "note": "{{month}} 매출이에요. 수량은 상품마다 단위가 달라서 합산하지 않아요.",
+    "product": "상품",
+    "soldPer": "판매 단위",
+    "price": "가격",
+    "sold": "판매량",
+    "revenue": "매출"
+  },
+  "where": {
+    "title": "판매한 곳",
+    "note_one": "이번 달에 주문 {{count}}건을 거절했고 {{cancelled}}건이 취소됐어요. 둘 다 여기에 포함되지 않아요.",
+    "note_other": "이번 달에 주문 {{count}}건을 거절했고 {{cancelled}}건이 취소됐어요. 둘 다 여기에 포함되지 않아요."
+  },
+  "past": { "title": "지난 주문", "note": "완료, 거절, 취소된 주문" },
+  "col": { "pickup": "픽업", "order": "주문", "customer": "고객", "items": "품목", "total": "합계", "status": "상태" },
+  "itemLine": "{{qty}}× {{name}}"
+}

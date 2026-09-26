@@ -1,0 +1,75 @@
+{
+  "title": "Modération",
+  "intro": "Masquez les fiches produits ou les avis qui enfreignent les règles. Les éléments masqués restent en base avec leur motif ; leur auteur est prévenu.",
+  "tabsLabel": "Files de modération",
+  "tab": {
+    "reviews": "Avis",
+    "products": "Fiches produits",
+    "hidden": "Éléments masqués"
+  },
+  "reviewFilterLabel": "Filtrer les avis",
+  "reviewFilter": {
+    "reported": "Signalés",
+    "lowRated": "Notés 1 ou 2",
+    "newest": "Plus récents"
+  },
+  "report": {
+    "title": "Signalé par {{by}} le {{date}} : « {{quote}} »",
+    "text": "Le masquer le retire des pages produit et étal. Le client en connaît la raison."
+  },
+  "recentlyListed": "Produits récemment mis en ligne",
+  "search": {
+    "label": "Rechercher un produit",
+    "placeholder": "Produit ou étal",
+    "submit": "Rechercher"
+  },
+  "col": {
+    "product": "Produit",
+    "price": "Prix",
+    "description": "Description",
+    "item": "Élément",
+    "owner": "Auteur",
+    "reason": "Motif",
+    "hiddenOn": "Masqué le"
+  },
+  "action": {
+    "view": "Voir",
+    "hideReview": "Masquer l'avis",
+    "hideListing": "Masquer la fiche",
+    "keepVisible": "Laisser visible",
+    "customerAccount": "Compte client",
+    "unhide": "Réafficher",
+    "unhidden": "L'élément est de nouveau visible.",
+    "dismissed": "Signalement écarté. L'avis reste visible."
+  },
+  "hide": {
+    "title": {
+      "review": "Masquer cet avis ?",
+      "listing": "Masquer cette fiche ?"
+    },
+    "text": {
+      "review": "Il disparaît immédiatement des pages clients. Le client est prévenu et peut contacter l'équipe.",
+      "listing": "Elle disparaît immédiatement des pages clients. L'étal est prévenu et peut contacter l'équipe."
+    },
+    "confirm": {
+      "review": "Masquer l'avis",
+      "listing": "Masquer la fiche"
+    },
+    "reason": "Motif",
+    "done": "Masqué. L'auteur a été prévenu."
+  },
+  "reason": {
+    "advertising": "Publicité ou invitation à un contact hors plateforme",
+    "abusive": "Propos injurieux",
+    "offTopic": "Sans rapport avec le produit ou l'étal",
+    "claim": "Allégation de santé ou de certification",
+    "other": "Autre"
+  },
+  "empty": {
+    "title": "Rien à modérer",
+    "text": "Les produits et avis signalés arrivent ici pour que vous les lisiez avant de masquer quoi que ce soit."
+  },
+  "error": {
+    "noun": "annonces"
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "weekend": "集市周末 {{from}} – {{to}}",
+    "title": "从农夫市集预订",
+    "intro_one": "预订胡志明市周边 {{count}} 个市集摊位本周的农产品。到摊位取货，直接付款给农户。",
+    "intro_other": "预订胡志明市周边 {{count}} 个市集摊位本周的农产品。到摊位取货，直接付款给农户。",
+    "browse": "浏览市集",
+    "sell": "在 MarketLink 上销售"
+  },
+  "search": {
+    "scope": "搜索范围",
+    "scopes": {
+      "all": "全部",
+      "market": "市集",
+      "farmer": "摊位",
+      "product": "商品"
+    },
+    "keyword": "关键词",
+    "placeholder": "空心菜、Cô Tư Garden、Thảo Điền 市集…",
+    "submit": "搜索"
+  },
+  "board": {
+    "overline": "本周末开放",
+    "title": "摊位在哪里",
+    "seeAll_one": "在地图上查看该市集",
+    "seeAll_other": "在地图上查看全部 {{count}} 个市集"
+  },
+  "nearby": {
+    "title": "附近的市集",
+    "note": "距离按你在 Thảo Điền 保存的地址计算",
+    "noun": "市场"
+  },
+  "fresh": {
+    "title": "本周新鲜上市",
+    "all": "全部商品和筛选",
+    "noun": "商品"
+  },
+  "how": {
+    "title": "预订如何进行",
+    "steps": {
+      "reserve": {
+        "title": "在截单前预订",
+        "text": "从一个或多个摊位添加商品，在每个摊位的时段内选择取货时间，然后下单。下单即为你保留库存。"
+      },
+      "confirm": {
+        "title": "农户确认",
+        "text": "每个摊位各自接受或拒绝自己的订单。无论结果如何你都会收到通知，并且在摊位截单前可以修改或取消。"
+      },
+      "pickup": {
+        "title": "到摊位取货付款",
+        "text": "订单标记为已备好后，在你的时段前往摊位取货，并直接付款给农户。不支持在线支付。"
+      }
+    }
+  }
+}

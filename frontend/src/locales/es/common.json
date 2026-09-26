@@ -1,0 +1,502 @@
+{
+  "settings": {
+    "appearance": "Apariencia",
+    "theme": "Tema",
+    "themeNote": "Se aplica al instante. «Igual que el dispositivo» sigue a tu móvil u ordenador.",
+    "themes": {
+      "light": "Claro",
+      "dark": "Oscuro",
+      "system": "Igual que el dispositivo"
+    },
+    "language": "Idioma",
+    "languageNote": "El idioma de los menús, botones y mensajes. Los nombres de puestos, productos y lugares se quedan como los escribió el puesto.",
+    "format": "Dinero, fechas y unidades",
+    "currency": "Mostrar precios en",
+    "currencyNote": "En el puesto siempre pagas en dong vietnamita. Otra moneda se muestra al lado solo como referencia, con tipos fijos del {{date}}.",
+    "currencies": {
+      "VND": "Solo ₫ dong vietnamita",
+      "USD": "₫ y $ dólar estadounidense",
+      "EUR": "₫ y € euro",
+      "JPY": "₫ y ¥ yen japonés"
+    },
+    "units": "Pesos y volúmenes",
+    "unitsNote": "Solo convierte unidades que miden algo. Un puesto que vende por manojo, por cabeza o por bandeja conserva su propia palabra.",
+    "metric": "Métrico · kg, g, litro",
+    "imperial": "Imperial · lb, oz, pinta",
+    "date": "Fecha",
+    "clock": "Reloj",
+    "clock24": "24 horas · 19:00",
+    "clock12": "12 horas · 7:00 pm",
+    "preview": "Vista previa: {{date}} · {{time}} · {{price}}",
+    "save": "Guardar ajustes",
+    "saving": "Guardando…",
+    "saveHint": "El tema se aplica en cuanto lo eliges; lo demás, al guardar.",
+    "savedTitle": "Guardado",
+    "savedText": "Tus ajustes se han guardado.",
+    "saveError": "No se pudieron guardar tus ajustes. Inténtalo de nuevo."
+  },
+  "actions": {
+    "back": "Volver",
+    "close": "Cerrar",
+    "directions": "Cómo llegar",
+    "dismiss": "Descartar",
+    "remove": "Quitar",
+    "tryAgain": "Reintentar",
+    "cancel": "Cancelar"
+  },
+  "admin": {
+    "badge": "Admin",
+    "security": "Seguridad",
+    "signIn": "Acceso de administrador"
+  },
+  "cart": {
+    "orderOf": "Pedido {{index}} de {{of}}",
+    "payAtPickup": "Paga en el puesto al recoger"
+  },
+  "chart": {
+    "showNumbers": "Ver los números"
+  },
+  "chat": {
+    "assistant": "Asistente de MarketLink",
+    "you": "Tú",
+    "intent": "Intención: {{intent}}",
+    "photoUnavailable": "Esta foto no está disponible.",
+    "photoFrom": "Foto de {{name}}",
+    "seen": "Visto",
+    "loadingThreads": "Cargando conversaciones…",
+    "threadsErrorTitle": "No pudimos cargar tus conversaciones",
+    "threadsErrorText": "Revisa tu conexión e inténtalo de nuevo.",
+    "tryAgain": "Intentar de nuevo",
+    "noThreadsTitle": "Todavía no hay conversaciones",
+    "noThreadsText": "Escribe a un puesto desde su página para preguntar por los productos de esta semana.",
+    "unreadCount_one": "{{count}} mensaje sin leer",
+    "unreadCount_other": "{{count}} mensajes sin leer",
+    "sendFailed": "Tu mensaje no se envió. Inténtalo de nuevo.",
+    "photoFailed": "La foto no se envió. Elige un JPEG, PNG o WebP de menos de 5 MB.",
+    "attachPhoto": "Añadir una foto",
+    "draftLabel": "Escribe un mensaje",
+    "draftPlaceholder": "Escribe un mensaje",
+    "send": "Enviar",
+    "pickThreadTitle": "Elige una conversación",
+    "pickThreadText": "Elige una conversación de la lista para leerla.",
+    "back": "Volver",
+    "online": "En línea",
+    "offline": "Desconectado",
+    "lastSeen": "Última vez a las {{time}}",
+    "loadOlder": "Cargar mensajes anteriores",
+    "olderFailed": "No se pudieron cargar los mensajes anteriores. Inténtalo de nuevo.",
+    "loadingMessages": "Cargando mensajes…",
+    "messagesErrorTitle": "No pudimos cargar esta conversación",
+    "messagesErrorText": "Revisa tu conexión y vuelve a abrirla.",
+    "emptyThreadTitle": "Todavía no hay mensajes",
+    "emptyThreadText": "Saluda para empezar la conversación.",
+    "typing": "{{name}} está escribiendo…",
+    "conversationWith": "Conversación con {{name}}"
+  },
+  "errors": {
+    "network": "No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo."
+  },
+  "farmerNav": {
+    "sections": "Secciones",
+    "navigation": "Navegación de Farmer",
+    "home": "MarketLink — Resumen de Farmer",
+    "badge": "Farmer",
+    "expand": "Expandir la barra lateral",
+    "collapse": "Contraer la barra lateral",
+    "approvedMarkets_one": "Aprobado · {{count}} mercado",
+    "approvedMarkets_other": "Aprobado · {{count}} mercados",
+    "changeMarket": "Cambiar el mercado que estás viendo",
+    "roleStall": "Farmer · {{stall}}",
+    "openNavigation": "Abrir navegación",
+    "searchPlaceholder": "Código de pedido o cliente",
+    "yourAccount": "Tu cuenta",
+    "today": "Hoy",
+    "overview": "Resumen",
+    "incomingOrders": "Pedidos entrantes",
+    "pickupSlots": "Horarios de recogida",
+    "stock": "Existencias",
+    "weekStock": "Existencias de esta semana",
+    "products": "Productos",
+    "stall": "Puesto",
+    "stallPickup": "Puesto y recogida",
+    "reviews": "Reseñas",
+    "salesHistory": "Historial de ventas",
+    "inbox": "Bandeja de entrada",
+    "messages": "Mensajes",
+    "notifications": "Notificaciones",
+    "account": "Cuenta",
+    "promote": "Promoción y anuncios",
+    "approval": "Estado de aprobación",
+    "settings": "Ajustes",
+    "shop": "Comprar",
+    "shopMarkets": "Comprar en los mercados"
+  },
+  "footer": {
+    "tagline": "Reserva en tu mercado de agricultores local y recoge en el puesto. Paga al Farmer directamente al recoger.",
+    "shop": "Comprar",
+    "marketsNearYou": "Mercados cerca de ti",
+    "inSeason": "De temporada",
+    "marketMap": "Mapa de mercados",
+    "favoriteStalls": "Puestos favoritos",
+    "sell": "Vender",
+    "registerFarmer": "Regístrate como Farmer",
+    "handlingPreOrders": "Gestionar reservas",
+    "stallGuidelines": "Normas para puestos",
+    "marketLink": "MarketLink",
+    "aboutUs": "Quiénes somos",
+    "contactUs": "Contacto",
+    "feedback": "Comentarios y errores",
+    "terms": "Términos del servicio",
+    "privacy": "Política de privacidad",
+    "mapData": "Datos del mapa © colaboradores de OpenStreetMap",
+    "mapDataFrom": "Datos del mapa {{credit}}"
+  },
+  "header": {
+    "cart": "Carrito",
+    "cartItems_one": "Carrito, {{count}} artículo",
+    "cartItems_other": "Carrito, {{count}} artículos",
+    "hi": "Hola, <b>{{name}}</b>",
+    "main": "Principal",
+    "menu": "Menú",
+    "messages": "Mensajes",
+    "notifications": "Notificaciones",
+    "notificationsUnread_one": "Notificaciones, {{count}} sin leer",
+    "notificationsUnread_other": "Notificaciones, {{count}} sin leer",
+    "openMenu": "Abrir menú",
+    "search": "Buscar"
+  },
+  "kpi": {
+    "noChange": "sin cambios",
+    "vsBefore": "frente al periodo anterior"
+  },
+  "loadError": {
+    "title": "No pudimos cargar los {{noun}}",
+    "text": "Esta vez la lista no llegó. Lo que guardaste o pediste no se ve afectado.",
+    "help": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <link>cuéntanos qué pasó</link> y lo revisaremos.",
+    "helpAlt": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <alt />, o <link>cuéntanos qué pasó</link> y lo revisaremos."
+  },
+  "loading": {
+    "markets": "Cargando mercados"
+  },
+  "logo": {
+    "home": "MarketLink — inicio"
+  },
+  "map": {
+    "attribution": "© colaboradores de {{link}}",
+    "open": "Abrir",
+    "placeholder": "Mapa — {{label}}",
+    "stallPickup": "Puesto {{code}} · recogida {{pickup}}",
+    "tilesFailed": "Las teselas del mapa necesitan conexión. La lista funciona sin ellas.",
+    "yourStall": "Tu puesto"
+  },
+  "marketCard": {
+    "save": "Guardar {{name}}",
+    "unsave": "Dejar de guardar {{name}}",
+    "days": "Días de mercado",
+    "open": "abierto",
+    "closed": "cerrado",
+    "hours": "Horario <b>{{open}}–{{close}}</b>",
+    "stalls_one": "<b>{{count}}</b> puesto",
+    "stalls_other": "<b>{{count}}</b> puestos",
+    "away": "a <b>{{distance}}</b>",
+    "seeStalls": "Ver puestos"
+  },
+  "nav": {
+    "markets": "Mercados",
+    "products": "Productos",
+    "map": "Mapa",
+    "aboutUs": "Quiénes somos",
+    "myOrders": "Mis pedidos",
+    "favorites": "Favoritos",
+    "messages": "Mensajes",
+    "dashboard": "Panel",
+    "farmerPanel": "Panel de productor",
+    "adminPanel": "Panel de administración",
+    "profile": "Perfil",
+    "settings": "Ajustes",
+    "signIn": "Iniciar sesión",
+    "createAccount": "Crear una cuenta",
+    "signOut": "Cerrar sesión",
+    "yourAccount": "Tu cuenta"
+  },
+  "order": {
+    "code": "Pedido {{code}}",
+    "market": "Mercado",
+    "pickup": "Recogida",
+    "payOnPickup": "Pago al recoger",
+    "declinedReason": "Motivo del puesto: {{reason}} No tienes que pagar nada.",
+    "cancelledNote": "Cancelaste este pedido antes de la hora límite. Las existencias volvieron al puesto.",
+    "lockedNote": "La hora límite pasó a las {{cutoff}}. Para cambiarlo, contacta directamente con el puesto.",
+    "editableNote": "Modifica o cancela antes de las {{cutoff}}. Después, el pedido queda bloqueado.",
+    "edit": "Modificar pedido",
+    "cancel": "Cancelar pedido",
+    "reviewed": "Ya reseñaste este pedido",
+    "review": "Reseñar puesto y productos",
+    "reorder": "Volver a pedir"
+  },
+  "orderStatus": {
+    "placed": "Realizado",
+    "accepted": "Aceptado",
+    "ready": "Listo para recoger",
+    "completed": "Completado",
+    "declined": "Rechazado",
+    "cancelled": "Cancelado"
+  },
+  "pagination": {
+    "label": "Paginación",
+    "previous": "Página anterior",
+    "next": "Página siguiente",
+    "page": "Página {{n}}"
+  },
+  "password": {
+    "show": "Mostrar contraseña",
+    "hide": "Ocultar contraseña"
+  },
+  "period": {
+    "length": "Duración del periodo",
+    "day": "Día",
+    "week": "Semana",
+    "month": "Mes",
+    "quarter": "Trimestre",
+    "year": "Año",
+    "custom": "Personalizado",
+    "from": "Desde",
+    "to": "Hasta",
+    "compareWith": "Comparar con",
+    "cmpBefore": "El periodo anterior, misma duración",
+    "cmpLastYear": "El mismo periodo del año pasado",
+    "cmpNone": "Sin comparación",
+    "comparedWith": "comparado con <b>{{compare}}</b>, misma duración"
+  },
+  "price": {
+    "was": "Antes"
+  },
+  "product": {
+    "notThisWeek": "No esta semana",
+    "backSoon": "Vuelve pronto",
+    "onlyLeft": "Solo quedan {{qty}}",
+    "left": "Quedan {{qty}}",
+    "paused": "En pausa",
+    "soldOut": "Agotado",
+    "addFavorite": "Añadir a favoritos: {{name}}",
+    "removeFavorite": "Quitar de favoritos: {{name}}",
+    "notifyMe": "Avisarme cuando vuelva",
+    "addToCart": "Añadir al carrito"
+  },
+  "qty": {
+    "label": "Cantidad ({{unit}})",
+    "decrease": "Restar 1",
+    "increase": "Sumar 1",
+    "max": "Máx. {{qty}}",
+    "left": "Quedan {{qty}}"
+  },
+  "rating": {
+    "count_one": "({{count}} reseña)",
+    "count_other": "({{count}} reseñas)",
+    "sr": "{{value}} de 5 estrellas",
+    "srWithCount_one": "{{value}} de 5 estrellas, {{count}} reseña",
+    "srWithCount_other": "{{value}} de 5 estrellas, {{count}} reseñas",
+    "stars_one": "{{count}} estrella — {{word}}",
+    "stars_other": "{{count}} estrellas — {{word}}",
+    "words": {
+      "none": "sin valorar",
+      "poor": "Malo",
+      "fair": "Regular",
+      "good": "Bueno",
+      "veryGood": "Muy bueno",
+      "excellent": "Excelente"
+    }
+  },
+  "review": {
+    "verified": "Compra verificada",
+    "replied": "{{by}} respondió · {{date}}"
+  },
+  "slot": {
+    "full": "Completo",
+    "left": "Quedan {{left}} de {{max}}"
+  },
+  "stall": {
+    "markets": "Mercados",
+    "days": "Días de mercado",
+    "pickup": "Recogida",
+    "distance": "Distancia",
+    "see": "Ver el puesto y las existencias de esta semana"
+  },
+  "stock": {
+    "left": "quedan",
+    "reserved": "{{reserved}} de {{total}} reservados",
+    "runningLow": "quedan pocos",
+    "soldOut": "agotado"
+  },
+  "toast": {
+    "signedOut": "Sesión cerrada."
+  },
+  "validation": {
+    "fullNameRequired": "Escribe tu nombre completo.",
+    "fullNameMax": "El nombre completo puede tener como máximo {{max}} caracteres.",
+    "phoneRequired": "Escribe tu número de teléfono.",
+    "phoneInvalid": "Escribe un número de móvil vietnamita válido (10 dígitos).",
+    "addressRequired": "Escribe tu dirección.",
+    "addressMax": "La dirección puede tener como máximo {{max}} caracteres."
+  },
+  "adminNav": {
+    "sections": "Secciones de administración",
+    "overview": "Resumen",
+    "farmers": "Productores",
+    "customers": "Clientes",
+    "markets": "Mercados",
+    "moderation": "Moderación",
+    "orders": "Pedidos",
+    "revenue": "Ingresos",
+    "reports": "Informes",
+    "categories": "Categorías",
+    "announcements": "Anuncios",
+    "feedback": "Comentarios",
+    "pricing": "Precios",
+    "settings": "Ajustes",
+    "account": "Tu cuenta",
+    "analytics": "Analítica",
+    "people": "Personas",
+    "marketplace": "Mercado",
+    "platform": "Plataforma",
+    "navigation": "Navegación de administración",
+    "home": "MarketLink — Resumen de administración",
+    "contextSub": "Plataforma · todo el mercado",
+    "userLine": "Admin · toda la plataforma",
+    "searchPlaceholder": "Puesto, cliente o mercado"
+  },
+  "carousel": {
+    "roleCarousel": "carrusel",
+    "roleSlide": "diapositiva",
+    "slideOf": "{{n}} de {{total}}: {{topic}}",
+    "previous": "Diapositiva anterior",
+    "next": "Diapositiva siguiente",
+    "show": "Mostrar la diapositiva {{n}}: {{topic}}",
+    "pause": "Pausar la presentación",
+    "play": "Reproducir la presentación"
+  },
+  "geo": {
+    "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador o usa una dirección.",
+    "insecure": "Tu navegador solo comparte tu ubicación mediante una conexión segura (https).",
+    "failed": "Tu dispositivo no pudo determinar dónde estás. Inténtalo de nuevo o escribe una dirección.",
+    "finding": "Buscando tu ubicación…"
+  },
+  "directions": {
+    "title": "Cómo llegar a {{name}}",
+    "question": "¿Desde dónde sales?",
+    "current": "Mi ubicación actual",
+    "currentShared": "Ya compartida",
+    "currentAsk": "Tu navegador te lo preguntará primero",
+    "address": "Una dirección",
+    "addressNote": "Una calle o un punto de referencia en Ciudad Ho Chi Minh.",
+    "addressLabel": "Dirección de salida",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "La calle y el distrito funcionan mejor. A menudo faltan los números de casa en el mapa, y OpenStreetMap te pedirá elegir un lugar si no encuentra uno.",
+    "useSaved": "Usar mi dirección guardada",
+    "none": "Lo escribiré en el mapa",
+    "noneNote": "Abre OpenStreetMap solo con el destino rellenado.",
+    "privacy": "Las indicaciones se abren en openstreetmap.org en una pestaña nueva. MarketLink no rastrea dónde estás.",
+    "open": "Abrir indicaciones"
+  },
+  "tier": {
+    "bronze": "Bronce",
+    "silver": "Plata",
+    "gold": "Oro",
+    "diamond": "Diamante",
+    "badge": "Nivel {{tier}}"
+  },
+  "video": {
+    "play": "Reproducir el vídeo",
+    "preview": "Vídeo",
+    "close": "Cerrar"
+  },
+  "application": {
+    "attempt": "Solicitud {{n}}",
+    "sentOn": "Enviada el {{date}}",
+    "answeredOn": "respondida el {{date}}",
+    "reason": "Motivo:",
+    "photoAlt": "Foto de la solicitud {{n}}"
+  },
+  "notify": {
+    "open": "Abrir",
+    "prompt": {
+      "title": "Activar las notificaciones",
+      "text": "Recibe en pantalla los mensajes nuevos, las decisiones sobre tu puesto y los avisos de MarketLink, incluso con esta pestaña en segundo plano.",
+      "enable": "Activar",
+      "later": "Ahora no",
+      "onTitle": "Notificaciones activadas",
+      "onText": "Elige qué recibes en Ajustes → Notificaciones."
+    },
+    "settings": {
+      "title": "Notificaciones",
+      "intro": "Elige qué te llega y cómo. Todo sigue apareciendo en tu lista de notificaciones.",
+      "browser": "Notificaciones del navegador",
+      "permission": {
+        "granted": "Activadas. Las notificaciones se muestran aunque MarketLink esté en segundo plano.",
+        "default": "Desactivadas. Actívalas para ver notificaciones con esta pestaña en segundo plano.",
+        "denied": "Bloqueadas por el navegador. Permite las notificaciones de este sitio en la configuración del sitio y vuelve a cargar la página.",
+        "unsupported": "Este navegador no puede mostrar notificaciones. Seguirás viéndolas en la página."
+      },
+      "loading": "Cargando tus ajustes de notificaciones…",
+      "loadErrorTitle": "No se pudieron cargar tus ajustes de notificaciones",
+      "loadErrorText": "Revisa tu conexión e inténtalo de nuevo.",
+      "retry": "Reintentar",
+      "group": "Qué",
+      "inApp": "En la página",
+      "inBrowser": "Navegador",
+      "groups": {
+        "messages": {
+          "title": "Mensajes",
+          "note": "Cuando un cliente o un puesto te escribe"
+        },
+        "announcements": {
+          "title": "Avisos",
+          "note": "Novedades de MarketLink, como el cierre de un mercado"
+        },
+        "account": {
+          "title": "Tu solicitud de puesto",
+          "note": "Cuando se aprueba, rechaza, suspende o reabre"
+        },
+        "farmerApplications": {
+          "title": "Solicitudes de Farmer",
+          "note": "Cuando alguien solicita vender en MarketLink"
+        }
+      },
+      "sound": "Reproducir un sonido",
+      "quiet": "Horas de silencio",
+      "quietNote": "Sin avisos emergentes, sonidos ni notificaciones del navegador en estas horas (hora de Vietnam). Siguen llegando a tu lista.",
+      "from": "Desde",
+      "to": "Hasta",
+      "testNote": "Envíate una notificación para ver cómo se ve.",
+      "test": "Enviar una prueba",
+      "testing": "Enviando…",
+      "testError": "No se pudo enviar la prueba. Inténtalo en unos segundos.",
+      "saveError": "No se pudieron guardar tus ajustes de notificaciones."
+    },
+    "list": {
+      "all": "Todo",
+      "unread": "Sin leer",
+      "unreadCount_one": "{{count}} sin leer",
+      "unreadCount_other": "{{count}} sin leer",
+      "unreadMark": "sin leer",
+      "markAllRead": "Marcar todo como leído",
+      "loading": "Cargando…",
+      "more": "Ver anteriores",
+      "emptyTitle": "Nada por ahora",
+      "emptyUnreadTitle": "Estás al día",
+      "emptyText": "Las nuevas notificaciones aparecen aquí en cuanto llegan.",
+      "errorTitle": "No se pudieron cargar tus notificaciones",
+      "errorText": "Revisa tu conexión e inténtalo de nuevo.",
+      "loadError": "No se pudieron cargar más notificaciones.",
+      "readAllError": "No se pudieron marcar como leídas."
+    },
+    "admin": {
+      "title": "Notificaciones",
+      "intro": "Nuevas solicitudes de Farmer esperando tu revisión."
+    }
+  },
+  "comingSoon": {
+    "title": "Esta página aún no está disponible",
+    "text": "Todavía la estamos construyendo. El resto del menú funciona con normalidad."
+  }
+}

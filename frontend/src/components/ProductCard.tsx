@@ -1,4 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { SHOW_WIP } from '@/config/wip';
 import { PRODUCT_STATUS } from '@/constants/enums';
 import { units } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
@@ -14,14 +16,18 @@ type ProductCardProps = { product: ProductType; showMarket?: boolean };
 
 /** Hang tag with a punched hole: photo area, name, stall, price and stock. */
 const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
+  const { t } = useTranslation();
   const paused = product.status === PRODUCT_STATUS.UNAVAILABLE;
   const soldOut = product.status !== PRODUCT_STATUS.AVAILABLE || product.stock === 0;
   const low = !soldOut && product.stock <= LOW_STOCK;
+  const qty = units(product.stock, product.unit, product.plural);
   const stock = soldOut
     ? paused
-      ? 'Not this week'
-      : 'Back soon'
-    : `${low ? 'Only ' : ''}${units(product.stock, product.unit, product.plural)} left`;
+      ? t('product.notThisWeek')
+      : t('product.backSoon')
+    : low
+      ? t('product.onlyLeft', { qty })
+      : t('product.left', { qty });
   const href = `/products/${product.id}`;
 
   return (
@@ -46,13 +52,13 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
               soldOut ? 'bg-ink text-surface-raised' : 'bg-accent text-on-accent',
             )}
           >
-            {soldOut ? (paused ? 'Paused' : 'Sold out') : product.flag}
+            {soldOut ? (paused ? t('product.paused') : t('product.soldOut')) : product.flag}
           </span>
         )}
         <FavoriteButton
           initial={product.favorite}
-          labelOff={`Add to favorites: ${product.name}`}
-          labelOn={`Remove from favorites: ${product.name}`}
+          labelOff={t('product.addFavorite', { name: product.name })}
+          labelOn={t('product.removeFavorite', { name: product.name })}
           className="absolute top-2 right-2"
         />
       </div>
@@ -78,13 +84,15 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
             {stock}
           </span>
         </div>
-        {soldOut ? (
-          <Button variant="secondary" size="sm">
-            Notify me when back
-          </Button>
-        ) : (
-          <Button size="sm">Add to cart</Button>
-        )}
+        {/* Giỏ hàng và báo có hàng chưa nối API → chỉ hiện ở dev (config/wip.ts). */}
+        {SHOW_WIP &&
+          (soldOut ? (
+            <Button variant="secondary" size="sm">
+              {t('product.notifyMe')}
+            </Button>
+          ) : (
+            <Button size="sm">{t('product.addToCart')}</Button>
+          ))}
       </div>
     </Card>
   );

@@ -1,0 +1,68 @@
+{
+  "notFound": {
+    "title": "Sạp này không còn ở đây nữa",
+    "browse": "Xem các chợ"
+  },
+  "breadcrumb": "Các chợ",
+  "approved": "Sạp đã duyệt",
+  "savedToast": "Đã lưu {{name}}.",
+  "save": "Lưu sạp",
+  "message": "Nhắn tin cho sạp",
+  "stats": {
+    "reviews_one": "{{count}} đánh giá",
+    "reviews_other": "{{count}} đánh giá",
+    "markets_one": "chợ",
+    "markets_other": "chợ",
+    "since": "bán ở đây từ",
+    "cutoff": "giờ trước lúc nhận là đóng đơn"
+  },
+  "tabs": {
+    "label": "Các mục của sạp",
+    "stock": "Hàng tuần này",
+    "reviews": "Đánh giá",
+    "about": "Về sạp"
+  },
+  "stock": {
+    "count_one": "{{count}} sản phẩm",
+    "count_other": "{{count}} sản phẩm",
+    "availableOn": "Có bán vào",
+    "notSelling": "{{stall}} không bán vào {{day}}. Sản phẩm ở trên là những gì sạp có vào các ngày bán ({{days}})."
+  },
+  "reviews": {
+    "summary_one": "{{count}} đánh giá, mỗi đánh giá đều từ một đơn đã hoàn tất",
+    "summary_other": "{{count}} đánh giá, mỗi đánh giá đều từ một đơn đã hoàn tất",
+    "all": "Tất cả",
+    "farmer": "Về sạp",
+    "product": "Về sản phẩm",
+    "newest": "Mới nhất trước"
+  },
+  "about": {
+    "whereWhen": "Ở đâu và khi nào",
+    "table": {
+      "market": "Chợ",
+      "days": "Ngày",
+      "window": "Khung giờ nhận",
+      "stall": "Sạp",
+      "directions": "Chỉ đường"
+    },
+    "cutoffNote_one": "Đơn chốt {{count}} giờ trước khung giờ bạn chọn. Sau đó chỉ sạp mới đổi được đơn.",
+    "cutoffNote_other": "Đơn chốt {{count}} giờ trước khung giờ bạn chọn. Sau đó chỉ sạp mới đổi được đơn.",
+    "disclaimer": "MarketLink không kiểm tra giấy phép hay cam kết hữu cơ. Nếu điều đó quan trọng với bạn, hãy hỏi tại sạp.",
+    "contact": "Liên hệ",
+    "email": "Email",
+    "since": "Bán ở đây từ",
+    "mapLabel": "Bản đồ {{name}}",
+    "findingTitle": "Tìm sạp",
+    "findingText": "Sạp {{code}} · khung giờ nhận {{window}}. Mỗi khung dài 30 phút và nhận tối đa 5 đơn.",
+    "preorder": "Đặt trước ở chợ này"
+  },
+  "report": {
+    "sentTitle": "Đã gửi báo cáo",
+    "sentText": "Quản trị viên sẽ xem xét.",
+    "button": "Báo cáo sạp này",
+    "note": "Nhiều lần không có mặt, sai vị trí sạp, hoặc bất cứ điều gì vi phạm quy định của nền tảng."
+  },
+  "error": {
+    "noun": "gian hàng"
+  }
+}

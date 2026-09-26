@@ -1,0 +1,55 @@
+{
+  "overline": "설정",
+  "title": "의견함",
+  "intro": "의견 보내기 양식으로 들어온 버그 신고, 제안, 문의입니다. 처리가 끝나면 답변함으로 표시하세요.",
+  "link": {
+    "categories": "분류",
+    "announcements": "공지"
+  },
+  "filterLabel": "의견 거르기",
+  "filter": {
+    "open": "미처리",
+    "answered": "답변함",
+    "bug": "버그",
+    "suggestion": "제안",
+    "query": "문의"
+  },
+  "type": {
+    "bug": "버그 신고",
+    "suggestion": "제안",
+    "query": "문의"
+  },
+  "status": {
+    "open": "미처리",
+    "answered": "답변함"
+  },
+  "col": {
+    "type": "종류",
+    "message": "내용",
+    "from": "보낸 사람",
+    "status": "상태"
+  },
+  "action": {
+    "read": "읽기",
+    "readAndAnswer": "읽고 답하기"
+  },
+  "dialog": {
+    "title": "{{from}}이(가) 보낸 {{type}}",
+    "sent": "{{date}} 보냄 · {{state}}",
+    "notAnswered": "아직 답하지 않음",
+    "alreadyAnswered": "이미 답함",
+    "yourAnswer": "답변",
+    "replyPlaceholder": "알려 주셔서 고맙습니다…",
+    "close": "닫기",
+    "send": "보내고 답변함으로 표시",
+    "sendAgain": "다시 보내기"
+  },
+  "empty": {
+    "title": "아직 의견이 없습니다",
+    "text": "의견 보내기 양식의 버그 신고, 제안, 문의가 여기로 옵니다."
+  },
+  "toast": {
+    "answered": "답변을 저장하고 메시지를 답변함으로 표시했습니다.",
+    "markedOnly": "답변 없이 답변함으로 표시했습니다."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "overline": "Admin area",
+  "title": "Sign in to manage MarketLink",
+  "intro": "This sign-in is only for platform admins and leads to a separate dashboard. Customers and Farmers <link>sign in here</link>.",
+  "notAdmin": {
+    "title": "This account is not an admin",
+    "text": "This sign-in is only for platform admins. <link>Customers and Farmers sign in here</link>."
+  },
+  "form": {
+    "email": "Admin email",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "signedIn": "Signed in.",
+    "error": "Could not sign you in. Please try again."
+  }
+}

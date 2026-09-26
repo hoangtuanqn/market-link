@@ -1,0 +1,95 @@
+{
+  "title": "Petani",
+  "intro": "Setujui pengajuan sebelum lapak dapat memasang produk. Tangguhkan lapak untuk menyembunyikan produknya dan menghentikan pesanan baru; pesanan yang sedang berjalan selesai seperti biasa.",
+  "search": {
+    "label": "Cari petani",
+    "placeholder": "Lapak, narahubung, telepon",
+    "submit": "Cari"
+  },
+  "tabsLabel": "Petani menurut status",
+  "status": {
+    "pending": "Menunggu persetujuan",
+    "approved": "Disetujui",
+    "suspended": "Ditangguhkan",
+    "rejected": "Ditolak"
+  },
+  "empty": {
+    "pending": {
+      "title": "Tidak ada pendaftaran yang menunggu",
+      "text": "Pendaftaran petani baru masuk ke sini untuk ditinjau sebelum mereka bisa memasang produk."
+    },
+    "approved": {
+      "title": "Belum ada lapak yang disetujui",
+      "text": "Setujui pendaftaran dan lapak akan muncul di sini, terlihat oleh pelanggan."
+    },
+    "suspended": {
+      "title": "Tidak ada lapak yang ditangguhkan",
+      "text": "Lapak yang ditangguhkan disembunyikan dari pelanggan, tetapi tetap menyelesaikan pesanan yang sudah ada."
+    },
+    "rejected": {
+      "title": "Tidak ada pendaftaran yang ditolak",
+      "text": "Petani yang ditolak tetap memiliki akun dan bisa diberi tahu alasannya."
+    }
+  },
+  "col": {
+    "stall": "Lapak",
+    "registered": "Terdaftar",
+    "email": "Email"
+  },
+  "action": {
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "view": "Lihat",
+    "suspend": "Tangguhkan",
+    "reinstate": "Pulihkan"
+  },
+  "notYet": "Nanti dulu",
+  "approve": {
+    "title": "Setujui {{stall}}?",
+    "text": "Lapak langsung terlihat oleh pelanggan dan bisa memasang produk. Petani akan diberi tahu.",
+    "confirm": "Setujui lapak"
+  },
+  "reject": {
+    "title": "Tolak {{stall}}?",
+    "text": "Pemohon tetap memiliki akun pelanggan dan semua isinya. Mereka diberi tahu alasannya.",
+    "reason": "Alasan yang akan dilihat petani",
+    "confirm": "Tolak pendaftaran",
+    "placeholder": "Tulis apa yang harus diperbaiki agar lapak ini disetujui.",
+    "hint": "{{used}} dari {{max}} karakter. Pelamar membaca kalimat ini apa adanya.",
+    "required": "Tulis alasan yang akan dibaca pelamar.",
+    "tooLong": "Alasan maksimal {{max}} karakter."
+  },
+  "suspend": {
+    "title": "Tangguhkan {{stall}}?",
+    "text": "Semua produk disembunyikan dan pesanan baru tidak diterima. Pesanan yang sudah dibuat tetap berjalan agar pelanggan tidak kehilangan yang sudah mereka pesan.",
+    "confirm": "Tangguhkan lapak",
+    "reason": "Alasan yang akan dilihat petani",
+    "placeholder": "Tulis apa yang harus diperbaiki agar lapak bisa berjualan lagi.",
+    "hint": "{{used}} dari {{max}} karakter. Petani membaca kalimat ini apa adanya.",
+    "required": "Tulis alasan yang akan dibaca petani.",
+    "tooLong": "Alasan maksimal {{max}} karakter."
+  },
+  "toast": {
+    "approved": "{{stall}} disetujui. Lapak sekarang bisa memasang produk.",
+    "rejected": "{{stall}} ditolak. Akunnya tetap ada.",
+    "suspended": "{{stall}} ditangguhkan. Pesanan yang sedang berjalan selesai seperti biasa.",
+    "reinstated": "{{stall}} dipulihkan. Produk terlihat lagi.",
+    "failed": "Tindakan itu tidak dapat diselesaikan. Silakan coba lagi.",
+    "rejectFailed": "Pengajuan ini tidak dapat ditolak. Silakan coba lagi."
+  },
+  "reinstate": {
+    "title": "Pulihkan {{stall}}?",
+    "text": "Produk langsung terlihat lagi oleh pelanggan.",
+    "confirm": "Pulihkan lapak"
+  },
+  "keepReviewing": "Lanjut meninjau",
+  "loading": "Memuat petani",
+  "loadError": {
+    "title": "Petani tidak dapat dimuat",
+    "text": "Periksa koneksi Anda lalu coba lagi.",
+    "retry": "Coba lagi"
+  },
+  "caption_one": "{{count}} petani",
+  "caption_other": "{{count}} petani",
+  "showing": "Menampilkan {{from}}–{{to}} dari {{total}}"
+}

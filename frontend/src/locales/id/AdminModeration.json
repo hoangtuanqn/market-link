@@ -1,0 +1,75 @@
+{
+  "title": "Moderasi",
+  "intro": "Sembunyikan iklan produk atau ulasan yang melanggar pedoman. Yang disembunyikan tetap tersimpan di basis data beserta alasannya; pemiliknya diberi tahu.",
+  "tabsLabel": "Antrean moderasi",
+  "tab": {
+    "reviews": "Ulasan",
+    "products": "Iklan produk",
+    "hidden": "Yang disembunyikan"
+  },
+  "reviewFilterLabel": "Saring ulasan",
+  "reviewFilter": {
+    "reported": "Dilaporkan",
+    "lowRated": "Bernilai 1 atau 2",
+    "newest": "Terbaru"
+  },
+  "report": {
+    "title": "Dilaporkan {{by}} pada {{date}}: “{{quote}}”",
+    "text": "Menyembunyikannya membuat ulasan hilang dari halaman produk dan halaman lapak. Pelanggan diberi tahu alasannya."
+  },
+  "recentlyListed": "Produk yang baru dipasang",
+  "search": {
+    "label": "Cari produk",
+    "placeholder": "Produk atau lapak",
+    "submit": "Cari"
+  },
+  "col": {
+    "product": "Produk",
+    "price": "Harga",
+    "description": "Deskripsi",
+    "item": "Butir",
+    "owner": "Pemilik",
+    "reason": "Alasan",
+    "hiddenOn": "Disembunyikan pada"
+  },
+  "action": {
+    "view": "Lihat",
+    "hideReview": "Sembunyikan ulasan",
+    "hideListing": "Sembunyikan iklan",
+    "keepVisible": "Biarkan tampil",
+    "customerAccount": "Akun pelanggan",
+    "unhide": "Tampilkan lagi",
+    "unhidden": "Butir ini tampil kembali.",
+    "dismissed": "Laporan diabaikan. Ulasan tetap tampil."
+  },
+  "hide": {
+    "title": {
+      "review": "Sembunyikan ulasan ini?",
+      "listing": "Sembunyikan iklan ini?"
+    },
+    "text": {
+      "review": "Ulasan langsung hilang dari halaman pelanggan. Pelanggan diberi tahu dan bisa menghubungi tim.",
+      "listing": "Iklan langsung hilang dari halaman pelanggan. Lapak diberi tahu dan bisa menghubungi tim."
+    },
+    "confirm": {
+      "review": "Sembunyikan ulasan",
+      "listing": "Sembunyikan iklan"
+    },
+    "reason": "Alasan",
+    "done": "Disembunyikan. Pemiliknya sudah diberi tahu."
+  },
+  "reason": {
+    "advertising": "Iklan atau ajakan kontak di luar platform",
+    "abusive": "Kata-kata kasar",
+    "offTopic": "Tidak membahas produk atau lapaknya",
+    "claim": "Klaim kesehatan atau sertifikasi",
+    "other": "Alasan lain"
+  },
+  "empty": {
+    "title": "Tidak ada yang perlu dimoderasi",
+    "text": "Produk dan ulasan yang dilaporkan sampai ke sini supaya Anda baca dulu sebelum menyembunyikan apa pun."
+  },
+  "error": {
+    "noun": "daftar produk"
+  }
+}

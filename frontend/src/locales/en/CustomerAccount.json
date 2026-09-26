@@ -1,0 +1,196 @@
+{
+  "title": "Account",
+  "intro": "Your details are shared with a stall only on the orders you place there.",
+  "sell": {
+    "title": "Sell at MarketLink",
+    "text": "Apply to sell with your current account. Once approved, you can manage your stall while keeping your orders and favorites.",
+    "apply": "Apply to sell",
+    "view": "View your application",
+    "panel": "Open the farmer panel",
+    "loading": "Checking your application",
+    "status": {
+      "pending": "Your application is with an admin. Nothing changes for you until they answer.",
+      "approved": "Your stall is approved. Set markets, pickup windows and products in the farmer panel.",
+      "rejected": "Your application was not approved. Open it to see what was sent.",
+      "suspended": "Your stall is suspended. You can still shop as a customer."
+    },
+    "draft": "You have an unfinished application. Continue where you left off.",
+    "continue": "Finish your application",
+    "history": "See your earlier applications"
+  },
+  "signOut": {
+    "title": "Sign out",
+    "text": "Signs you out on this device only.",
+    "button": "Sign out"
+  },
+  "profile": {
+    "title": "Your details",
+    "loading": "Loading your details…",
+    "loadFailed": "Could not load your details. Please try again.",
+    "signedOut": {
+      "title": "You are signed out.",
+      "text": "Sign in again to see and edit your details.",
+      "signIn": "Sign in"
+    },
+    "nothingChanged": "Nothing was changed.",
+    "retry": "Try again",
+    "fullName": "Full name",
+    "phone": "Phone number",
+    "email": "Email",
+    "emailHint": "Used to sign in. It cannot be changed here.",
+    "address": "Address",
+    "addressHint": "Used for distances and directions.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "noChanges": "No changes to save.",
+    "saved": "Your details are saved.",
+    "saveFailed": "Could not save your details. Please try again."
+  },
+  "password": {
+    "section": "Password & security",
+    "row": "Password",
+    "rowNote": "The password you sign in with by email.",
+    "title": "Change password",
+    "intro": "You will be signed out on every device and asked to sign in again.",
+    "current": "Current password",
+    "new": "New password",
+    "repeat": "Repeat new password",
+    "hint": "{{min}} to {{max}} characters.",
+    "submit": "Change password",
+    "submitting": "Changing password…",
+    "cancel": "Cancel",
+    "changed": "Your password has been changed. Please sign in again.",
+    "failed": "Could not change your password. Please try again.",
+    "errors": {
+      "currentRequired": "Enter your current password.",
+      "newRequired": "Enter a new password.",
+      "length": "Password must be {{min}} to {{max}} characters.",
+      "same": "Use a password different from the current one.",
+      "confirmRequired": "Confirm your password.",
+      "mismatch": "Passwords do not match."
+    }
+  },
+  "photo": {
+    "title": "Profile photo",
+    "intro": "Shown in the menu and to stalls on your orders. JPEG, PNG or a photo from your camera.",
+    "upload": "Upload photo",
+    "take": "Take photo",
+    "notUsed": "Photo not used"
+  },
+  "photoErrors": {
+    "notPhoto": "Choose a photo (JPEG, PNG, HEIC or WebP).",
+    "tooBig": "That photo is over {{mb}} MB. Choose a smaller one.",
+    "unreadable": "This file is not a photo we can read.",
+    "noPicture": "The camera has no picture yet. Try again.",
+    "captureFailed": "Could not take the photo."
+  },
+  "dialog": {
+    "takeTitle": "Take a photo",
+    "frameTitle": "Frame your photo",
+    "frameHelp": "Drag to move the photo and zoom until your face fills the circle.",
+    "cancel": "Cancel",
+    "uploadInstead": "Upload a photo instead",
+    "take": "Take photo",
+    "retake": "Retake",
+    "chooseAnother": "Choose another",
+    "save": "Save photo",
+    "saving": "Saving…",
+    "saved": "Your photo is saved.",
+    "saveFailed": "Could not save your photo. Please try again.",
+    "takeFailed": "Could not take the photo. Try again.",
+    "unchanged": "Your current photo is unchanged."
+  },
+  "camera": {
+    "preview": "Camera preview",
+    "starting": "Starting the camera…",
+    "blocked": {
+      "title": "Camera access is blocked.",
+      "text": "Allow the camera for this site in your browser settings, or upload a photo instead."
+    },
+    "notFound": {
+      "title": "No camera was found.",
+      "text": "Plug one in, or upload a photo instead."
+    },
+    "busy": {
+      "title": "The camera is busy.",
+      "text": "Close other apps using it and try again, or upload a photo."
+    },
+    "failed": {
+      "title": "The camera could not start.",
+      "text": "Try again, or upload a photo instead."
+    },
+    "insecure": {
+      "title": "This browser cannot open the camera here.",
+      "text": "The camera needs a secure (https) page. Upload a photo instead."
+    }
+  },
+  "crop": {
+    "frame": "Photo framing. Drag, or use the arrow keys to move it and plus or minus to zoom.",
+    "zoom": "Zoom"
+  },
+  "achievements": {
+    "title": "Your achievements",
+    "intro": "Counted from the orders you collected at the stalls. Only you see these figures.",
+    "loading": "Loading your achievements…",
+    "loadFailed": "Could not load your achievements.",
+    "completed": "Orders collected",
+    "cancelled": "Cancelled by you",
+    "declined": "Declined by the stall",
+    "inProgress": "In progress",
+    "spent": "Total spent",
+    "rate": "Completion rate",
+    "rateNone": "—",
+    "nextTitle": "On your way to {{tier}}",
+    "ofGoal": "{{value}} of {{goal}}",
+    "rateNeeded": "You also need a completion rate of at least {{rate}}%. Orders the stall declined never count against you.",
+    "top": "You are at the top tier. Thank you for shopping at the market.",
+    "youAreHere": "Your tier",
+    "perks": {
+      "bronze": "Bronze frame around your photo",
+      "silver": "A thicker silver frame",
+      "gold": "Gold frame with a star",
+      "diamond": "Shimmering diamond frame with a gem"
+    },
+    "unavailable": {
+      "title": "No order figures yet",
+      "text": "Your tier and figures fill in by themselves once your orders are recorded."
+    },
+    "privacy": "Stalls and other shoppers see your tier next to your name, never these figures.",
+    "hero": {
+      "overline": "Your membership",
+      "line_one": "{{name}}, you have collected {{count}} order and spent {{amount}} at the market.",
+      "line_other": "{{name}}, you have collected {{count}} orders and spent {{amount}} at the market.",
+      "welcome": "Welcome to the market, {{name}}. Collect your first orders to climb the tiers.",
+      "since": "Member since {{date}}"
+    },
+    "titles": {
+      "bronze": "New to the market",
+      "silver": "A familiar face",
+      "gold": "A regular at the stalls",
+      "diamond": "Keeper of the market fire"
+    },
+    "yourPerksTitle": "Your perks",
+    "yourPerks": {
+      "bronze": [
+        "A bronze frame around your photo, in the menu and on your profile",
+        "Your tier next to your name on reviews and in messages"
+      ],
+      "silver": [
+        "A thicker silver frame around your photo",
+        "Stalls see Silver tier next to your name on orders and in messages",
+        "Your reviews carry the Silver tier badge"
+      ],
+      "gold": [
+        "A gold frame with a star at the corner of your photo",
+        "Stalls see Gold tier next to your name on orders and in messages",
+        "Your reviews carry the Gold tier badge"
+      ],
+      "diamond": [
+        "A shimmering diamond frame with a gem at the corner of your photo",
+        "Stalls see Diamond tier next to your name on orders and in messages",
+        "Your reviews carry the Diamond tier badge",
+        "A sparkling membership card on your profile"
+      ]
+    }
+  }
+}

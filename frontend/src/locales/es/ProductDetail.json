@@ -1,0 +1,87 @@
+{
+  "notFound": {
+    "title": "Ese producto ya no está a la venta",
+    "text": "Puede que el puesto lo haya retirado. Mira qué más tiene esta semana.",
+    "browse": "Ver productos"
+  },
+  "breadcrumb": "Productos",
+  "photo": "Foto de {{name}}",
+  "favorite": {
+    "add": "Añadir a favoritos: {{name}}",
+    "remove": "Quitar de favoritos: {{name}}"
+  },
+  "soldPer": "se vende por {{unit}}",
+  "left": "Quedan <b>{{qty}}</b> esta semana",
+  "stockUpdated": "Stock actualizado hoy, antes de los pedidos de este fin de semana.",
+  "notifyMe": "Avísame cuando vuelva",
+  "added": {
+    "title": "Añadido al carrito",
+    "text": "Se añadió {{qty}} de {{name}} a tu carrito."
+  },
+  "addToCart": "Añadir al carrito",
+  "payNote": "El stock queda reservado cuando haces el pedido. Pagas {{price}} en el puesto al recoger.",
+  "fromStall": "Del puesto",
+  "sellingSince": "vende aquí desde el {{date}}",
+  "stats": {
+    "reviews_one": "{{count}} reseña",
+    "reviews_other": "{{count}} reseñas",
+    "markets_one": "mercado",
+    "markets_other": "mercados",
+    "hours_one": "{{count}} h",
+    "hours_other": "{{count}} h",
+    "cutoff": "cierre de pedidos"
+  },
+  "seeStall": "Ver el puesto",
+  "messageStall": "Escribir al puesto",
+  "details": {
+    "title": "Detalles del producto",
+    "soldPer": "Se vende por",
+    "category": "Categoría",
+    "stall": "Puesto",
+    "market": "Mercado"
+  },
+  "collect": {
+    "title": "Dónde y cuándo recoger",
+    "map": "Ver en el mapa",
+    "note": "Cada franja admite 5 pedidos. Una franja llena se bloquea, y el puesto no admite cambios después del cierre indicado arriba."
+  },
+  "table": {
+    "market": "Mercado",
+    "stallCode": "Puesto {{code}}",
+    "days": "Días",
+    "window": "Horario de recogida",
+    "cutoff": "Cierre de pedidos",
+    "cutoffValue_one": "{{count}} hora antes de tu franja",
+    "cutoffValue_other": "{{count}} horas antes de tu franja",
+    "product": "Producto",
+    "price": "Precio",
+    "perUnit": "por {{unit}}",
+    "left": "Quedan"
+  },
+  "directions": "Cómo llegar",
+  "reviews": {
+    "title": "Reseñas de este producto",
+    "write": "Escribir una reseña",
+    "writeNote": "Disponible cuando se complete un pedido con este producto.",
+    "summary_one": "{{count}} reseña, de un pedido completado",
+    "summary_other": "{{count}} reseñas, todas de pedidos completados"
+  },
+  "similar": {
+    "title": "{{name}} en otros puestos este fin de semana",
+    "note": "La misma verdura, otra parcela y otro precio",
+    "here": "Estás aquí",
+    "view": "Ver"
+  },
+  "also": {
+    "title": "Más de {{stall}} esta semana"
+  },
+  "report": {
+    "sentTitle": "Denuncia enviada",
+    "sentText": "Un administrador revisará este anuncio.",
+    "button": "Denunciar este anuncio",
+    "note": "Precio erróneo, foto errónea o algo que no corresponde a un mercado de agricultores."
+  },
+  "error": {
+    "noun": "producto"
+  }
+}

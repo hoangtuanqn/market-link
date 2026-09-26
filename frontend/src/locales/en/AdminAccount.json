@@ -1,0 +1,46 @@
+{
+  "details": {
+    "title": "Your details",
+    "name": "Full name",
+    "phone": "Phone",
+    "phoneHint": "Used when a stall needs to reach the platform, not shown publicly.",
+    "email": "Email",
+    "emailHint": "Also your sign-in. Ask another admin if it has to change.",
+    "submit": "Save changes",
+    "saving": "Saving…",
+    "saved": "Your details are saved.",
+    "failed": "Couldn't save your details.",
+    "errors": {
+      "nameRequired": "Enter your full name.",
+      "phoneRequired": "Enter a phone number."
+    }
+  },
+  "password": {
+    "title": "Password",
+    "intro": "An admin account can approve stalls, deactivate customers and change what the platform charges, so keep this one strong.",
+    "current": "Current password",
+    "new": "New password",
+    "repeat": "Repeat the new password",
+    "hint": "Between {{min}} and {{max}} characters.",
+    "submit": "Change password",
+    "submitting": "Changing…",
+    "changed": "Password changed. Other sessions were signed out.",
+    "failed": "Couldn't change your password.",
+    "errors": {
+      "currentRequired": "Enter your current password.",
+      "newRequired": "Enter a new password.",
+      "length": "Use between {{min}} and {{max}} characters.",
+      "same": "The new password has to differ from the current one.",
+      "confirmRequired": "Repeat the new password.",
+      "mismatch": "The two passwords do not match."
+    }
+  },
+  "mfa": {
+    "title": "Two-step verification",
+    "intro": "A second step after your password, from an app on your phone. An admin can approve stalls, deactivate customers and change what the platform charges, so a password on its own is thin.",
+    "on": "On",
+    "off": "Off",
+    "turnOn": "Turn on two-step verification",
+    "manage": "Manage two-step verification"
+  }
+}

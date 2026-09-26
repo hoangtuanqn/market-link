@@ -1,0 +1,501 @@
+{
+  "settings": {
+    "appearance": "Tampilan",
+    "theme": "Tema",
+    "themeNote": "Langsung berlaku. \"Ikuti perangkat\" mengikuti ponsel atau komputer Anda.",
+    "themes": {
+      "light": "Terang",
+      "dark": "Gelap",
+      "system": "Ikuti perangkat"
+    },
+    "language": "Bahasa",
+    "languageNote": "Bahasa untuk menu, tombol, dan pesan. Nama lapak, produk, dan tempat tetap seperti yang ditulis lapak.",
+    "format": "Uang, tanggal, dan satuan",
+    "currency": "Tampilkan harga dalam",
+    "currencyNote": "Anda selalu membayar dengan dong Vietnam di lapak. Mata uang lain ditampilkan di sebelahnya hanya sebagai acuan, dengan kurs tetap per {{date}}.",
+    "currencies": {
+      "VND": "Hanya ₫ dong Vietnam",
+      "USD": "₫ dan $ dolar AS",
+      "EUR": "₫ dan € euro",
+      "JPY": "₫ dan ¥ yen Jepang"
+    },
+    "units": "Berat dan volume",
+    "unitsNote": "Hanya satuan ukur yang dikonversi. Lapak yang menjual per ikat, per umbi, atau per nampan tetap memakai istilahnya sendiri.",
+    "metric": "Metrik · kg, g, liter",
+    "imperial": "Imperial · lb, oz, pint",
+    "date": "Tanggal",
+    "clock": "Jam",
+    "clock24": "24 jam · 19:00",
+    "clock12": "12 jam · 7:00 pm",
+    "preview": "Pratinjau: {{date}} · {{time}} · {{price}}",
+    "save": "Simpan pengaturan",
+    "saving": "Menyimpan…",
+    "saveHint": "Tema langsung berlaku saat dipilih; sisanya saat Anda menyimpan.",
+    "savedTitle": "Tersimpan",
+    "savedText": "Pengaturan Anda sudah disimpan.",
+    "saveError": "Tidak dapat menyimpan pengaturan. Silakan coba lagi."
+  },
+  "actions": {
+    "back": "Kembali",
+    "close": "Tutup",
+    "directions": "Petunjuk arah",
+    "dismiss": "Tutup",
+    "remove": "Hapus",
+    "tryAgain": "Coba lagi",
+    "cancel": "Batal"
+  },
+  "admin": {
+    "badge": "Admin",
+    "security": "Keamanan",
+    "signIn": "Masuk admin"
+  },
+  "cart": {
+    "orderOf": "Pesanan {{index}} dari {{of}}",
+    "payAtPickup": "Bayar di lapak saat mengambil"
+  },
+  "chart": {
+    "showNumbers": "Lihat angkanya"
+  },
+  "chat": {
+    "assistant": "Asisten MarketLink",
+    "you": "Anda",
+    "intent": "Maksud: {{intent}}",
+    "photoUnavailable": "Foto ini tidak tersedia.",
+    "photoFrom": "Foto dari {{name}}",
+    "seen": "Dilihat",
+    "loadingThreads": "Memuat percakapan…",
+    "threadsErrorTitle": "Percakapan Anda tidak dapat dimuat",
+    "threadsErrorText": "Periksa koneksi Anda lalu coba lagi.",
+    "tryAgain": "Coba lagi",
+    "noThreadsTitle": "Belum ada percakapan",
+    "noThreadsText": "Kirim pesan ke lapak dari halamannya untuk menanyakan hasil panen minggu ini.",
+    "unreadCount_other": "{{count}} pesan belum dibaca",
+    "sendFailed": "Pesan Anda tidak terkirim. Coba lagi.",
+    "photoFailed": "Foto tidak terkirim. Pilih JPEG, PNG, atau WebP di bawah 5 MB.",
+    "attachPhoto": "Tambah foto",
+    "draftLabel": "Tulis pesan",
+    "draftPlaceholder": "Tulis pesan",
+    "send": "Kirim",
+    "pickThreadTitle": "Pilih percakapan",
+    "pickThreadText": "Pilih percakapan dari daftar untuk membacanya.",
+    "back": "Kembali",
+    "online": "Online",
+    "offline": "Offline",
+    "lastSeen": "Terakhir aktif {{time}}",
+    "loadOlder": "Muat pesan sebelumnya",
+    "olderFailed": "Pesan sebelumnya tidak dapat dimuat. Coba lagi.",
+    "loadingMessages": "Memuat pesan…",
+    "messagesErrorTitle": "Percakapan ini tidak dapat dimuat",
+    "messagesErrorText": "Periksa koneksi Anda lalu buka lagi.",
+    "emptyThreadTitle": "Belum ada pesan",
+    "emptyThreadText": "Sapa untuk memulai percakapan.",
+    "typing": "{{name}} sedang mengetik…",
+    "conversationWith": "Percakapan dengan {{name}}"
+  },
+  "errors": {
+    "network": "Tidak dapat terhubung ke server. Periksa koneksi Anda lalu coba lagi."
+  },
+  "farmerNav": {
+    "sections": "Bagian",
+    "navigation": "Navigasi Farmer",
+    "home": "MarketLink — Ringkasan Farmer",
+    "badge": "Farmer",
+    "expand": "Bentangkan bilah samping",
+    "collapse": "Ciutkan bilah samping",
+    "approvedMarkets_one": "Disetujui · {{count}} pasar",
+    "approvedMarkets_other": "Disetujui · {{count}} pasar",
+    "changeMarket": "Ganti pasar yang sedang dilihat",
+    "roleStall": "Farmer · {{stall}}",
+    "openNavigation": "Buka navigasi",
+    "searchPlaceholder": "Kode pesanan atau pelanggan",
+    "yourAccount": "Akun Anda",
+    "today": "Hari ini",
+    "overview": "Ringkasan",
+    "incomingOrders": "Pesanan masuk",
+    "pickupSlots": "Jadwal pengambilan",
+    "stock": "Stok",
+    "weekStock": "Stok minggu ini",
+    "products": "Produk",
+    "stall": "Lapak",
+    "stallPickup": "Lapak & pengambilan",
+    "reviews": "Ulasan",
+    "salesHistory": "Riwayat penjualan",
+    "inbox": "Kotak masuk",
+    "messages": "Pesan",
+    "notifications": "Notifikasi",
+    "account": "Akun",
+    "promote": "Promosi & listing",
+    "approval": "Status persetujuan",
+    "settings": "Pengaturan",
+    "shop": "Belanja",
+    "shopMarkets": "Belanja di pasar"
+  },
+  "footer": {
+    "tagline": "Pesan dulu dari pasar tani terdekat, ambil di lapak. Bayar langsung ke Farmer saat mengambil.",
+    "shop": "Belanja",
+    "marketsNearYou": "Pasar di dekat Anda",
+    "inSeason": "Sedang musim",
+    "marketMap": "Peta pasar",
+    "favoriteStalls": "Lapak favorit",
+    "sell": "Jual",
+    "registerFarmer": "Daftar sebagai Farmer",
+    "handlingPreOrders": "Mengelola pra-pesan",
+    "stallGuidelines": "Panduan lapak",
+    "marketLink": "MarketLink",
+    "aboutUs": "Tentang kami",
+    "contactUs": "Hubungi kami",
+    "feedback": "Masukan & laporan bug",
+    "terms": "Ketentuan layanan",
+    "privacy": "Kebijakan privasi",
+    "mapData": "Data peta © kontributor OpenStreetMap",
+    "mapDataFrom": "Data peta {{credit}}"
+  },
+  "header": {
+    "cart": "Keranjang",
+    "cartItems_one": "Keranjang, {{count}} barang",
+    "cartItems_other": "Keranjang, {{count}} barang",
+    "hi": "Hai, <b>{{name}}</b>",
+    "main": "Utama",
+    "menu": "Menu",
+    "messages": "Pesan",
+    "notifications": "Notifikasi",
+    "notificationsUnread_one": "Notifikasi, {{count}} belum dibaca",
+    "notificationsUnread_other": "Notifikasi, {{count}} belum dibaca",
+    "openMenu": "Buka menu",
+    "search": "Cari"
+  },
+  "kpi": {
+    "noChange": "tidak berubah",
+    "vsBefore": "dibanding periode sebelumnya"
+  },
+  "loadError": {
+    "title": "Kami tidak dapat memuat {{noun}}",
+    "text": "Daftarnya tidak kembali kali ini. Apa pun yang Anda simpan atau pesan tidak terpengaruh.",
+    "help": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <link>ceritakan apa yang terjadi</link> dan kami akan memeriksanya.",
+    "helpAlt": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <alt />, atau <link>ceritakan apa yang terjadi</link> dan kami akan memeriksanya."
+  },
+  "loading": {
+    "markets": "Memuat pasar"
+  },
+  "logo": {
+    "home": "MarketLink — beranda"
+  },
+  "map": {
+    "attribution": "© kontributor {{link}}",
+    "open": "Buka",
+    "placeholder": "Peta — {{label}}",
+    "stallPickup": "Lapak {{code}} · ambil {{pickup}}",
+    "tilesFailed": "Peta memerlukan koneksi. Daftar tetap bisa dipakai tanpa peta.",
+    "yourStall": "Lapak Anda"
+  },
+  "marketCard": {
+    "save": "Simpan {{name}}",
+    "unsave": "Batal simpan {{name}}",
+    "days": "Hari pasar",
+    "open": "buka",
+    "closed": "tutup",
+    "hours": "Jam <b>{{open}}–{{close}}</b>",
+    "stalls_one": "<b>{{count}}</b> lapak",
+    "stalls_other": "<b>{{count}}</b> lapak",
+    "away": "<b>{{distance}}</b> dari sini",
+    "seeStalls": "Lihat lapak"
+  },
+  "nav": {
+    "markets": "Pasar",
+    "products": "Produk",
+    "map": "Peta",
+    "aboutUs": "Tentang kami",
+    "myOrders": "Pesanan saya",
+    "favorites": "Favorit",
+    "messages": "Pesan",
+    "dashboard": "Dasbor",
+    "farmerPanel": "Panel petani",
+    "adminPanel": "Panel admin",
+    "profile": "Profil",
+    "settings": "Pengaturan",
+    "signIn": "Masuk",
+    "createAccount": "Buat akun",
+    "signOut": "Keluar",
+    "yourAccount": "Akun Anda"
+  },
+  "order": {
+    "code": "Pesanan {{code}}",
+    "market": "Pasar",
+    "pickup": "Pengambilan",
+    "payOnPickup": "Bayar saat mengambil",
+    "declinedReason": "Alasan dari lapak: {{reason}} Tidak ada yang perlu dibayar.",
+    "cancelledNote": "Anda membatalkan pesanan ini sebelum batas waktu. Stok sudah kembali ke lapak.",
+    "lockedNote": "Batas waktu sudah lewat pada {{cutoff}}. Untuk mengubahnya, hubungi lapak secara langsung.",
+    "editableNote": "Ubah atau batalkan sebelum {{cutoff}}. Setelah itu pesanan dikunci.",
+    "edit": "Ubah pesanan",
+    "cancel": "Batalkan pesanan",
+    "reviewed": "Anda sudah mengulas pesanan ini",
+    "review": "Ulas lapak & produk",
+    "reorder": "Pesan lagi"
+  },
+  "orderStatus": {
+    "placed": "Dipesan",
+    "accepted": "Diterima",
+    "ready": "Siap diambil",
+    "completed": "Selesai",
+    "declined": "Ditolak",
+    "cancelled": "Dibatalkan"
+  },
+  "pagination": {
+    "label": "Paginasi",
+    "previous": "Halaman sebelumnya",
+    "next": "Halaman berikutnya",
+    "page": "Halaman {{n}}"
+  },
+  "password": {
+    "show": "Tampilkan kata sandi",
+    "hide": "Sembunyikan kata sandi"
+  },
+  "period": {
+    "length": "Panjang periode",
+    "day": "Hari",
+    "week": "Minggu",
+    "month": "Bulan",
+    "quarter": "Kuartal",
+    "year": "Tahun",
+    "custom": "Kustom",
+    "from": "Dari",
+    "to": "Sampai",
+    "compareWith": "Bandingkan dengan",
+    "cmpBefore": "Periode sebelumnya, panjang sama",
+    "cmpLastYear": "Periode yang sama tahun lalu",
+    "cmpNone": "Tanpa perbandingan",
+    "comparedWith": "dibanding <b>{{compare}}</b>, panjang sama"
+  },
+  "price": {
+    "was": "Sebelumnya"
+  },
+  "product": {
+    "notThisWeek": "Tidak ada minggu ini",
+    "backSoon": "Segera tersedia lagi",
+    "onlyLeft": "Tinggal {{qty}}",
+    "left": "Sisa {{qty}}",
+    "paused": "Dijeda",
+    "soldOut": "Habis",
+    "addFavorite": "Tambahkan ke favorit: {{name}}",
+    "removeFavorite": "Hapus dari favorit: {{name}}",
+    "notifyMe": "Beri tahu saya saat tersedia",
+    "addToCart": "Tambah ke keranjang"
+  },
+  "qty": {
+    "label": "Jumlah ({{unit}})",
+    "decrease": "Kurangi 1",
+    "increase": "Tambah 1",
+    "max": "Maks. {{qty}}",
+    "left": "Sisa {{qty}}"
+  },
+  "rating": {
+    "count_one": "({{count}} ulasan)",
+    "count_other": "({{count}} ulasan)",
+    "sr": "{{value}} dari 5 bintang",
+    "srWithCount_one": "{{value}} dari 5 bintang, {{count}} ulasan",
+    "srWithCount_other": "{{value}} dari 5 bintang, {{count}} ulasan",
+    "stars_one": "{{count}} bintang — {{word}}",
+    "stars_other": "{{count}} bintang — {{word}}",
+    "words": {
+      "none": "belum dinilai",
+      "poor": "Buruk",
+      "fair": "Cukup",
+      "good": "Bagus",
+      "veryGood": "Sangat bagus",
+      "excellent": "Luar biasa"
+    }
+  },
+  "review": {
+    "verified": "Pembelian terverifikasi",
+    "replied": "{{by}} membalas · {{date}}"
+  },
+  "slot": {
+    "full": "Penuh",
+    "left": "Sisa {{left}} dari {{max}}"
+  },
+  "stall": {
+    "markets": "Pasar",
+    "days": "Hari pasar",
+    "pickup": "Pengambilan",
+    "distance": "Jarak",
+    "see": "Lihat lapak & stok minggu ini"
+  },
+  "stock": {
+    "left": "sisa",
+    "reserved": "{{reserved}} dari {{total}} dipesan",
+    "runningLow": "hampir habis",
+    "soldOut": "habis"
+  },
+  "toast": {
+    "signedOut": "Anda sudah keluar."
+  },
+  "validation": {
+    "fullNameRequired": "Masukkan nama lengkap Anda.",
+    "fullNameMax": "Nama lengkap maksimal {{max}} karakter.",
+    "phoneRequired": "Masukkan nomor telepon Anda.",
+    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit).",
+    "addressRequired": "Masukkan alamat Anda.",
+    "addressMax": "Alamat maksimal {{max}} karakter."
+  },
+  "adminNav": {
+    "sections": "Bagian admin",
+    "overview": "Ringkasan",
+    "farmers": "Petani",
+    "customers": "Pelanggan",
+    "markets": "Pasar",
+    "moderation": "Moderasi",
+    "orders": "Pesanan",
+    "revenue": "Pendapatan",
+    "reports": "Laporan",
+    "categories": "Kategori",
+    "announcements": "Pengumuman",
+    "feedback": "Masukan",
+    "pricing": "Harga",
+    "settings": "Pengaturan",
+    "account": "Akun Anda",
+    "analytics": "Analitik",
+    "people": "Pengguna",
+    "marketplace": "Pasar",
+    "platform": "Platform",
+    "navigation": "Navigasi admin",
+    "home": "MarketLink — Ringkasan admin",
+    "contextSub": "Platform · seluruh pasar",
+    "userLine": "Admin · seluruh platform",
+    "searchPlaceholder": "Lapak, pelanggan, atau pasar"
+  },
+  "carousel": {
+    "roleCarousel": "korsel",
+    "roleSlide": "slide",
+    "slideOf": "{{n}} dari {{total}}: {{topic}}",
+    "previous": "Slide sebelumnya",
+    "next": "Slide berikutnya",
+    "show": "Tampilkan slide {{n}}: {{topic}}",
+    "pause": "Jeda tayangan slide",
+    "play": "Putar tayangan slide"
+  },
+  "geo": {
+    "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda, atau gunakan alamat.",
+    "insecure": "Browser Anda hanya membagikan lokasi melalui koneksi aman (https).",
+    "failed": "Perangkat Anda tidak dapat menentukan lokasi Anda. Coba lagi, atau ketik alamat.",
+    "finding": "Mencari lokasi Anda…"
+  },
+  "directions": {
+    "title": "Petunjuk arah ke {{name}}",
+    "question": "Anda berangkat dari mana?",
+    "current": "Lokasi saya saat ini",
+    "currentShared": "Sudah dibagikan",
+    "currentAsk": "Browser Anda akan bertanya dulu",
+    "address": "Sebuah alamat",
+    "addressNote": "Jalan atau landmark di Kota Ho Chi Minh.",
+    "addressLabel": "Alamat awal",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "Nama jalan dan distrik paling efektif. Nomor rumah sering tidak ada di peta, dan OpenStreetMap akan meminta Anda memilih tempat jika tidak menemukannya.",
+    "useSaved": "Gunakan alamat tersimpan",
+    "none": "Saya akan mengetiknya di peta",
+    "noneNote": "Membuka OpenStreetMap dengan tujuan saja yang terisi.",
+    "privacy": "Petunjuk arah dibuka di openstreetmap.org di tab baru. MarketLink tidak melacak lokasi Anda.",
+    "open": "Buka petunjuk arah"
+  },
+  "tier": {
+    "bronze": "Perunggu",
+    "silver": "Perak",
+    "gold": "Emas",
+    "diamond": "Berlian",
+    "badge": "Tingkat {{tier}}"
+  },
+  "video": {
+    "play": "Putar video",
+    "preview": "Video",
+    "close": "Tutup"
+  },
+  "application": {
+    "attempt": "Lamaran ke-{{n}}",
+    "sentOn": "Dikirim {{date}}",
+    "answeredOn": "dijawab {{date}}",
+    "reason": "Alasan:",
+    "photoAlt": "Foto dari lamaran ke-{{n}}"
+  },
+  "notify": {
+    "open": "Buka",
+    "prompt": {
+      "title": "Aktifkan notifikasi",
+      "text": "Terima pesan baru, keputusan lapak, dan pengumuman MarketLink di layar, bahkan saat tab ini di latar belakang.",
+      "enable": "Aktifkan",
+      "later": "Nanti saja",
+      "onTitle": "Notifikasi aktif",
+      "onText": "Ubah apa yang Anda terima di Pengaturan → Notifikasi."
+    },
+    "settings": {
+      "title": "Notifikasi",
+      "intro": "Pilih apa yang Anda terima dan bagaimana caranya. Semuanya tetap masuk ke daftar notifikasi.",
+      "browser": "Notifikasi browser",
+      "permission": {
+        "granted": "Aktif. Notifikasi tetap muncul saat MarketLink di latar belakang.",
+        "default": "Nonaktif. Aktifkan untuk melihat notifikasi saat tab ini di latar belakang.",
+        "denied": "Diblokir browser. Izinkan notifikasi untuk situs ini di pengaturan situs browser, lalu muat ulang halaman.",
+        "unsupported": "Browser ini tidak bisa menampilkan notifikasi. Anda tetap melihatnya di halaman."
+      },
+      "loading": "Memuat pengaturan notifikasi…",
+      "loadErrorTitle": "Pengaturan notifikasi tidak dapat dimuat",
+      "loadErrorText": "Periksa koneksi Anda lalu coba lagi.",
+      "retry": "Coba lagi",
+      "group": "Jenis",
+      "inApp": "Di halaman",
+      "inBrowser": "Browser",
+      "groups": {
+        "messages": {
+          "title": "Pesan",
+          "note": "Saat pelanggan atau lapak mengirim pesan"
+        },
+        "announcements": {
+          "title": "Pengumuman",
+          "note": "Kabar dari MarketLink, misalnya pasar tutup"
+        },
+        "account": {
+          "title": "Pendaftaran lapak Anda",
+          "note": "Saat disetujui, ditolak, ditangguhkan, atau dibuka kembali"
+        },
+        "farmerApplications": {
+          "title": "Pendaftaran Farmer",
+          "note": "Saat seseorang mendaftar berjualan di MarketLink"
+        }
+      },
+      "sound": "Putar suara",
+      "quiet": "Jam tenang",
+      "quietNote": "Tanpa pop-up, suara, atau notifikasi browser di jam ini (waktu Vietnam). Tetap masuk ke daftar Anda.",
+      "from": "Dari",
+      "to": "Sampai",
+      "testNote": "Kirim notifikasi ke diri sendiri untuk melihat tampilannya.",
+      "test": "Kirim tes",
+      "testing": "Mengirim…",
+      "testError": "Tes tidak terkirim. Coba lagi beberapa detik lagi.",
+      "saveError": "Pengaturan notifikasi tidak dapat disimpan."
+    },
+    "list": {
+      "all": "Semua",
+      "unread": "Belum dibaca",
+      "unreadCount_one": "{{count}} belum dibaca",
+      "unreadCount_other": "{{count}} belum dibaca",
+      "unreadMark": "belum dibaca",
+      "markAllRead": "Tandai semua sudah dibaca",
+      "loading": "Memuat…",
+      "more": "Tampilkan yang lebih lama",
+      "emptyTitle": "Belum ada apa-apa",
+      "emptyUnreadTitle": "Semua sudah dibaca",
+      "emptyText": "Notifikasi baru muncul di sini begitu ada.",
+      "errorTitle": "Notifikasi tidak dapat dimuat",
+      "errorText": "Periksa koneksi Anda lalu coba lagi.",
+      "loadError": "Tidak dapat memuat lebih banyak notifikasi.",
+      "readAllError": "Tidak dapat menandai sudah dibaca."
+    },
+    "admin": {
+      "title": "Notifikasi",
+      "intro": "Pendaftaran Farmer baru yang menunggu Anda tinjau."
+    }
+  },
+  "comingSoon": {
+    "title": "Halaman ini belum dibuka",
+    "text": "Kami masih membangunnya. Semua menu lainnya tetap berfungsi seperti biasa."
+  }
+}

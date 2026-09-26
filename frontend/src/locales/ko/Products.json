@@ -1,0 +1,47 @@
+{
+  "markets_one": "장터 {{count}}곳",
+  "markets_other": "장터 {{count}}곳",
+  "stallsSelling_one": "판매 중인 가게 {{count}}곳",
+  "stallsSelling_other": "판매 중인 가게 {{count}}곳",
+  "title": "상품",
+  "intro": "가게들이 이번 주에 올린 모든 상품이에요. 카테고리, 가격, 장터, 요일로 걸러서 장바구니에 담으세요.",
+  "filters": {
+    "title": "필터",
+    "clearAll": "모두 지우기",
+    "day": "장날",
+    "category": "카테고리",
+    "price": "단위당 가격",
+    "market": "장터",
+    "allMarkets": "모든 장터",
+    "inStock": "재고 있는 상품만",
+    "inStockNote": "품절되었거나 판매 중지된 상품을 숨겨요"
+  },
+  "price": {
+    "any": "모든 가격",
+    "low": "{{low}} 미만",
+    "mid": "{{low}} – {{high}}",
+    "high": "{{high}} 초과"
+  },
+  "summary_one": "{{day}}에 맞는 <b>상품 {{count}}개</b>",
+  "summary_other": "{{day}}에 맞는 <b>상품 {{count}}개</b>",
+  "sort": "정렬",
+  "sorts": {
+    "newest": "최신순",
+    "priceAsc": "낮은 가격순",
+    "priceDesc": "높은 가격순",
+    "rating": "평점 높은 순"
+  },
+  "pager": {
+    "showing": "{{total}}개 중 {{from}}–{{to}}",
+    "onePage_one": "상품 {{count}}개를 한 페이지에",
+    "onePage_other": "상품 {{count}}개 모두 한 페이지에"
+  },
+  "empty": {
+    "title": "이 필터에 맞는 상품이 없어요",
+    "text": "가격 필터를 빼거나 다른 카테고리나 장터로 넓혀 보세요.",
+    "clear": "필터 모두 지우기"
+  },
+  "error": {
+    "noun": "상품"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "breadcrumb": "Demande",
+  "loading": "Chargement de la demande",
+  "loadError": {
+    "title": "Impossible de charger cette demande",
+    "text": "Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer"
+  },
+  "sentOn": "Envoyée le {{date}}",
+  "approveText": "Son rôle devient Farmer et un espace étal s’ouvre sur son compte. Il garde toutes les fonctions client dont il dispose. Rien n’apparaît aux acheteurs tant qu’il n’a pas ajouté de produits et fixé un créneau de retrait.",
+  "suspendedBanner": {
+    "title": "Cet étal est suspendu.",
+    "text": "Ses produits restent masqués aux clients. Les commandes déjà passées suivent leur cours."
+  },
+  "rejectedBanner": {
+    "title": "Cette demande a été refusée.",
+    "text": "Raison indiquée au demandeur : {{reason}}"
+  },
+  "photos": {
+    "title": "Photos de la parcelle",
+    "alt": "Photo de la parcelle",
+    "hint": "Vérifiez que la parcelle des photos correspond à l’épingle sur la carte et cultive ce que le demandeur a indiqué. Vous ne vérifiez ni licences, ni sécurité alimentaire, ni mentions bio."
+  },
+  "stall": {
+    "title": "L’étal demandé",
+    "name": "Nom de l’étal",
+    "contact": "Personne à contacter",
+    "email": "E-mail",
+    "description": "Description"
+  },
+  "history": {
+    "title": "Historique",
+    "suspended": "Suspendu",
+    "approved": "Validée",
+    "sent": "Demande envoyée",
+    "customer": "Compte créé en tant que client",
+    "byAdmin": "Un admin"
+  },
+  "applicant": {
+    "title": "Demandeur",
+    "name": "Nom",
+    "since": "Client depuis",
+    "status": "État du compte"
+  },
+  "accountStatus": {
+    "active": "Actif",
+    "inactive": "Inactif",
+    "suspended": "Suspendu"
+  },
+  "approval": {
+    "title": "Ce que fait l’approbation",
+    "text": "Son rôle devient Farmer et un espace étal s’ouvre. Il continue d’acheter aux autres étals avec le même compte. Rien n’est publié tant qu’il n’a pas ajouté de produits et fixé un créneau de retrait."
+  },
+  "attempts": {
+    "title": "Historique des demandes",
+    "text": "Chaque demande de ce compte, avec son contenu et la réponse donnée."
+  }
+}

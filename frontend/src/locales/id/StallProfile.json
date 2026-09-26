@@ -1,0 +1,68 @@
+{
+  "notFound": {
+    "title": "Lapak itu sudah tidak ada di sini",
+    "browse": "Lihat pasar"
+  },
+  "breadcrumb": "Pasar",
+  "approved": "Lapak terverifikasi",
+  "savedToast": "{{name}} disimpan.",
+  "save": "Simpan lapak",
+  "message": "Kirim pesan ke lapak",
+  "stats": {
+    "reviews_one": "{{count}} ulasan",
+    "reviews_other": "{{count}} ulasan",
+    "markets_one": "pasar",
+    "markets_other": "pasar",
+    "since": "berjualan di sini sejak",
+    "cutoff": "jam sebelum pengambilan, pesanan ditutup"
+  },
+  "tabs": {
+    "label": "Bagian lapak",
+    "stock": "Stok minggu ini",
+    "reviews": "Ulasan",
+    "about": "Tentang lapak"
+  },
+  "stock": {
+    "count_one": "{{count}} produk",
+    "count_other": "{{count}} produk",
+    "availableOn": "Tersedia hari",
+    "notSelling": "{{stall}} tidak berjualan hari {{day}}. Produk di atas adalah yang mereka jual pada hari jualannya ({{days}})."
+  },
+  "reviews": {
+    "summary_one": "{{count}} ulasan, semuanya dari pesanan yang selesai",
+    "summary_other": "{{count}} ulasan, semuanya dari pesanan yang selesai",
+    "all": "Semua",
+    "farmer": "Tentang lapak",
+    "product": "Tentang produk",
+    "newest": "Terbaru dulu"
+  },
+  "about": {
+    "whereWhen": "Di mana dan kapan",
+    "table": {
+      "market": "Pasar",
+      "days": "Hari",
+      "window": "Jam pengambilan",
+      "stall": "Lapak",
+      "directions": "Petunjuk arah"
+    },
+    "cutoffNote_one": "Pesanan ditutup {{count}} jam sebelum slot yang Anda pilih. Setelah itu hanya lapak yang bisa mengubah pesanan.",
+    "cutoffNote_other": "Pesanan ditutup {{count}} jam sebelum slot yang Anda pilih. Setelah itu hanya lapak yang bisa mengubah pesanan.",
+    "disclaimer": "MarketLink tidak memeriksa izin atau klaim organik. Jika itu penting bagi Anda, tanyakan di lapak.",
+    "contact": "Kontak",
+    "email": "Email",
+    "since": "Berjualan di sini sejak",
+    "mapLabel": "Peta {{name}}",
+    "findingTitle": "Menemukan lapak",
+    "findingText": "Lapak {{code}} · jam pengambilan {{window}}. Slot berdurasi 30 menit dan menampung 5 pesanan.",
+    "preorder": "Pesan dulu di pasar ini"
+  },
+  "report": {
+    "sentTitle": "Laporan terkirim",
+    "sentText": "Admin akan memeriksanya.",
+    "button": "Laporkan lapak ini",
+    "note": "Sering tidak datang, lokasi lapak salah, atau apa pun yang melanggar pedoman platform."
+  },
+  "error": {
+    "noun": "kios"
+  }
+}

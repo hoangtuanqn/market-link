@@ -1,0 +1,81 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "No hay suficiente stock",
+      "day": "No vendo ese día",
+      "time": "No puedo a esa hora de recogida",
+      "other": "Otro"
+    },
+    "item": "{{qty}} de {{name}}",
+    "title": "¿Rechazar el pedido {{code}}?",
+    "keep": "Mantener pedido",
+    "confirm": "Rechazar pedido",
+    "text": "Se avisa a {{who}} al momento y {{items}} vuelven a tu stock.",
+    "reason": "Motivo que verá el cliente"
+  },
+  "history": {
+    "before": "Antes de {{cutoff}}",
+    "cancelled": "Cancelado por el cliente",
+    "title": "Historial"
+  },
+  "missing": {
+    "title": "Ese pedido ya no está aquí",
+    "text": "Puede que el cliente lo haya cancelado o que el enlace sea antiguo. Ábrelo de nuevo desde tu lista de pedidos.",
+    "back": "Mis pedidos"
+  },
+  "item": "artículo",
+  "col": {
+    "product": "Producto",
+    "requested": "Pedido",
+    "left": "Quedan tras este pedido",
+    "amount": "Importe"
+  },
+  "crumb": "Pedidos",
+  "cutoff": "Cierre {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "Pedido aceptado",
+    "acceptedText": "Pedido {{code}} aceptado. Se ha avisado a {{who}}.",
+    "readyTitle": "Pedido listo",
+    "readyText": "Pedido {{code}} marcado como listo.",
+    "completedTitle": "Pedido completado",
+    "completedText": "Pedido {{code}} completado.",
+    "declinedTitle": "Pedido rechazado",
+    "declinedText": "Pedido {{code}} rechazado."
+  },
+  "actions": {
+    "accept": "Aceptar pedido",
+    "decline": "Rechazar",
+    "ready": "Marcar como listo",
+    "complete": "Marcar como completado"
+  },
+  "items": {
+    "title": "Artículos",
+    "note": "El stock que se muestra es lo que queda tras este y otros pedidos hechos. El stock reservado se devuelve si rechazas (D-02)."
+  },
+  "note": "Nota del cliente",
+  "quote": "«{{text}}»",
+  "customer": {
+    "title": "Cliente",
+    "name": "Nombre",
+    "tier": "Nivel",
+    "phone": "Teléfono",
+    "ordersWithYou": "Pedidos contigo",
+    "orders_one": "{{count}} pedido",
+    "orders_other": "{{count}} pedidos",
+    "withCollected_one": "{{orders}}, {{count}} recogido",
+    "withCollected_other": "{{orders}}, {{count}} recogidos"
+  },
+  "pickup": {
+    "title": "Franja de recogida",
+    "market": "Mercado",
+    "marketStall": "{{market}}, puesto {{code}}",
+    "slot": "Franja",
+    "pay": "Pago en la recogida"
+  },
+  "complete": {
+    "title": "¿Marcar {{code}} como completado?",
+    "notYet": "Todavía no",
+    "text": "Hazlo cuando el cliente haya recogido el pedido y pagado en el puesto. Los pedidos completados cuentan para tus ingresos y permiten al cliente dejar su reseña.",
+    "auto": "Los pedidos que sigan marcados como Listo se completan automáticamente 24 horas después de la fecha de recogida (D-03)."
+  }
+}

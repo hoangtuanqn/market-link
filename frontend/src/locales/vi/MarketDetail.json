@@ -1,0 +1,46 @@
+{
+  "notFound": {
+    "title": "Chợ này không còn ở đây nữa",
+    "browse": "Xem các chợ"
+  },
+  "intro_one": "{{count}} sạp. Mỗi sạp tự chốt đơn trước giờ nhận 12 đến 24 tiếng. Nhận hàng tại sạp và trả tiền trực tiếp cho nhà vườn.",
+  "intro_other": "{{count}} sạp. Mỗi sạp tự chốt đơn trước giờ nhận 12 đến 24 tiếng. Nhận hàng tại sạp và trả tiền trực tiếp cho nhà vườn.",
+  "toast": {
+    "saved": "Đã lưu {{name}}.",
+    "removed": "Đã bỏ {{name}} khỏi mục yêu thích."
+  },
+  "save": {
+    "on": "Đã lưu chợ",
+    "off": "Lưu chợ"
+  },
+  "directions": "Chỉ đường",
+  "search": {
+    "scope": "Tìm trong",
+    "scopes": {
+      "product": "Sản phẩm ở chợ này",
+      "farmer": "Sạp ở chợ này"
+    },
+    "keyword": "Từ khoá",
+    "placeholder": "Rau muống, bánh mì sourdough, trứng…",
+    "submit": "Tìm"
+  },
+  "day": "Ngày họp chợ",
+  "all": "Tất cả",
+  "inStock": "Còn hàng",
+  "available": "Có bán vào {{day}}",
+  "productsFrom": "{{products}} từ {{stalls}}",
+  "products_one": "{{count}} sản phẩm",
+  "products_other": "{{count}} sản phẩm",
+  "stalls_one": "{{count}} sạp",
+  "stalls_other": "{{count}} sạp",
+  "mapLabel": "Bản đồ {{name}} và các sạp",
+  "stallsTitle": "Các sạp ở chợ này vào {{day}}",
+  "stallsNote": "Sạp không bán vào ngày đã chọn sẽ không hiện ở đây",
+  "error": {
+    "noun": "chợ"
+  },
+  "stallsNoun": "các gian hàng",
+  "stallsEmpty": {
+    "title": "Không có gian hàng nào vào {{day}}"
+  }
+}

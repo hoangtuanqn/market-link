@@ -1,0 +1,36 @@
+{
+  "title": "Carte des marchés",
+  "intro": "Tous les marchés et les stands qui prennent des précommandes le jour choisi. Touchez une épingle pour les horaires, les créneaux de retrait et l’itinéraire.",
+  "marketDay": "Jour de marché",
+  "filter": {
+    "markets": "Marchés",
+    "stalls": "Stands",
+    "saved": "Favoris seulement"
+  },
+  "legend": {
+    "market": "Carré : marché",
+    "stall": "Rond : stand",
+    "selected": "Anneau : sélectionné"
+  },
+  "mapLabel": "Carte de tous les marchés et stands",
+  "directions": "L’itinéraire s’ouvre dans OpenStreetMap, dans un nouvel onglet.",
+  "openOn": "Ouverts le {{day}}",
+  "empty": {
+    "title": "Aucun marché à afficher",
+    "text": "Rien ne correspond au jour choisi. Essayez un autre jour ou retirez le filtre."
+  },
+  "popup": {
+    "stalls_one": "{{count}} stand",
+    "stalls_other": "{{count}} stands",
+    "pickup": "{{days}} · retrait {{pickup}}"
+  },
+  "bothOff": {
+    "title": "Rien à afficher sur la carte",
+    "text": "Les deux calques sont désactivés. Réactivez les marchés ou les stands pour voir les repères.",
+    "action": "Afficher les deux"
+  },
+  "error": {
+    "noun": "marchés"
+  },
+  "stallsNoun": "stands"
+}

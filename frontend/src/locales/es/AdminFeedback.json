@@ -1,0 +1,55 @@
+{
+  "overline": "Ajustes",
+  "title": "Buzón de comentarios",
+  "intro": "Informes de fallos, sugerencias y preguntas enviados desde el formulario de comentarios. Márcalos como atendidos cuando termines.",
+  "link": {
+    "categories": "Categorías",
+    "announcements": "Avisos"
+  },
+  "filterLabel": "Filtrar comentarios",
+  "filter": {
+    "open": "Sin atender",
+    "answered": "Atendidos",
+    "bug": "Fallo",
+    "suggestion": "Sugerencia",
+    "query": "Pregunta"
+  },
+  "type": {
+    "bug": "Informe de fallo",
+    "suggestion": "Sugerencia",
+    "query": "Pregunta"
+  },
+  "status": {
+    "open": "Sin atender",
+    "answered": "Atendido"
+  },
+  "col": {
+    "type": "Tipo",
+    "message": "Mensaje",
+    "from": "De",
+    "status": "Estado"
+  },
+  "action": {
+    "read": "Leer",
+    "readAndAnswer": "Leer y responder"
+  },
+  "dialog": {
+    "title": "{{type}} de {{from}}",
+    "sent": "Enviado el {{date}} · {{state}}",
+    "notAnswered": "todavía sin atender",
+    "alreadyAnswered": "ya atendido",
+    "yourAnswer": "Tu respuesta",
+    "replyPlaceholder": "Gracias por avisarnos…",
+    "close": "Cerrar",
+    "send": "Enviar y marcar como atendido",
+    "sendAgain": "Enviar otra vez"
+  },
+  "empty": {
+    "title": "Todavía no hay comentarios",
+    "text": "Los informes de fallos, sugerencias y preguntas del formulario llegan aquí."
+  },
+  "toast": {
+    "answered": "Respuesta guardada y mensaje marcado como atendido.",
+    "markedOnly": "Marcado como atendido sin responder."
+  }
+}

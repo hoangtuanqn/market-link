@@ -1,0 +1,172 @@
+{
+  "title": "Ketentuan layanan",
+  "lead": "Apa yang Anda setujui ketika memesan dari sebuah lapak di MarketLink, dan apa yang disetujui lapak serta platform sebagai gantinya.",
+  "meta": "Versi 0.1 · Terakhir diperbarui {{date}} · Berlaku untuk Customer, Farmer, dan pengunjung",
+  "onThisPage": "Di halaman ini",
+  "seeAlso": "Baca juga <link>Kebijakan privasi</link>. Di sana dijelaskan apa yang kami simpan tentang Anda.",
+  "sections": [
+    {
+      "id": "what",
+      "title": "Apa itu MarketLink",
+      "blocks": [
+        {
+          "p": "MarketLink memungkinkan lapak di pasar tani mengumumkan apa yang akan dibawa minggu ini, dan memungkinkan Anda memesan dari daftar itu sebelum hari pasar. Anda mengambil pesanan di lapak, dalam rentang waktu pengambilan yang ditetapkan lapak, dan membayar Farmer di sana."
+        },
+        {
+          "nots": {
+            "title": "Yang tidak dilakukan MarketLink",
+            "items": [
+              [
+                "Tidak menerima uang Anda.",
+                "Tidak ada formulir kartu maupun gerbang pembayaran di bagian mana pun dari produk ini. Setiap pesanan dibayarkan kepada Farmer di lapak."
+              ],
+              ["Tidak mengantar.", "Setiap pesanan diambil sendiri di pasar."],
+              [
+                "Tidak menyertifikasi lapak.",
+                "MarketLink tidak memeriksa izin, cara bertani, atau klaim organik. Tanyakan langsung kepada Farmer di lapak."
+              ],
+              [
+                "Tidak menjual kepada Anda.",
+                "Kontrak jual beli terjadi antara Anda dan lapak. MarketLink hanya mencatat pemesanan, tidak lebih."
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "accounts",
+      "title": "Akun Anda",
+      "blocks": [
+        {
+          "p": "Ada tiga jenis akun. Customer mendaftar dengan nama, nomor telepon, email, dan alamat. Untuk berjualan, Customer mengajukan permohonan dari akunnya untuk menjadi Farmer, dengan menambahkan nama lapak dan narahubung; lapak belum bisa memasang apa pun sampai admin menyetujuinya. Admin masuk lewat halaman masuk terpisah."
+        },
+        {
+          "p": "Satu akun boleh dipakai bersama di rumah. MarketLink tidak membedakan orang di dalam satu akun, jadi apa pun yang dilakukan dengan login Anda dianggap dilakukan oleh Anda. Simpan kata sandi untuk diri sendiri dan beri tahu kami jika Anda merasa orang lain mengetahuinya."
+        },
+        {
+          "p": "Alamat yang Anda isi dipakai untuk menampilkan jarak ke pasar dan mengisi rute terlebih dahulu. Nomor telepon Anda diberikan kepada lapak tempat Anda memesan, agar mereka bisa menghubungi Anda pada pagi hari pasar."
+        }
+      ]
+    },
+    {
+      "id": "reserving",
+      "title": "Memesan dari lapak",
+      "blocks": [
+        {
+          "p": "Anda boleh memasukkan produk dari beberapa lapak ke satu keranjang, tetapi satu pemesanan selalu milik satu lapak. Saat dikirim, keranjang dipecah menjadi satu pesanan per lapak, masing-masing dengan pasar, slot pengambilan, dan batas waktunya sendiri. Layar konfirmasi menampilkan pemecahan itu sebelum Anda memastikan."
+        },
+        {
+          "facts": {
+            "title": "Apa yang terjadi saat Anda memesan",
+            "items": [
+              [
+                "Stok",
+                "Yang Anda pesan langsung dikurangi dari hitungan lapak, sehingga dua orang tidak bisa memesan dua ikat terakhir yang sama. Anda tidak bisa memesan lebih banyak daripada sisa yang dimiliki lapak."
+              ],
+              [
+                "Slot",
+                "Anda memilih tanggal pengambilan dan slot waktu yang disediakan lapak. Setiap slot punya batas jumlah pesanan; slot yang penuh tampil redup dan tidak bisa dipilih."
+              ],
+              [
+                "Batas waktu",
+                "Setiap pesanan punya batas waktu, dihitung mundur dari waktu pengambilan Anda sebanyak jam yang ditetapkan lapak. Sampai saat itu Anda bisa mengubah atau membatalkan pesanan sendiri."
+              ],
+              [
+                "Harga",
+                "Harga dan satuan pada pesanan Anda adalah yang tampil saat Anda memesan. Jika lapak mengubah harganya kemudian, pesanan Anda tidak ikut berubah."
+              ]
+            ]
+          }
+        },
+        {
+          "p": "Pesanan melewati status dipesan, diterima, siap diambil, dan selesai. Lapak juga bisa menolak pesanan, dan Anda bisa membatalkannya. Setiap perubahan dicatat beserta waktunya, dan Anda bisa melihat riwayat itu pada pesanan."
+        },
+        {
+          "p": "Memesan berarti memesan tempat, bukan jaminan. Lapak boleh menolak, dan sebaiknya menyebutkan alasannya. Ketika pesanan ditolak atau dibatalkan, stok kembali ke lapak dan tidak ada kewajiban di kedua sisi."
+        }
+      ]
+    },
+    {
+      "id": "changing",
+      "title": "Mengubah atau membatalkan pesanan",
+      "blocks": [
+        {
+          "p": "Sebelum batas waktu, Anda bisa mengurangi jumlah, menghapus item, atau membatalkan pesanan sepenuhnya. Anda tidak bisa menambahkan produk baru ke pesanan yang sudah ada; buatlah pesanan kedua, agar hitungan dan slot lapak tetap benar."
+        },
+        {
+          "p": "Mengubah pesanan membuatnya kembali ke status dipesan, dan lapak harus menerimanya lagi. Ini disengaja: lapak menyiapkan dan mengemas sesuai apa yang mereka terima."
+        },
+        {
+          "p": "Setelah batas waktu, tombol-tombol terkunci dan layar menjelaskan alasannya, lengkap dengan waktu batas itu terlewat. Sejak saat itu hanya lapak yang bisa menggerakkan pesanan, dan sisanya diselesaikan langsung dengan lapak. Pesanan yang tertinggal di status siap diambil dianggap selesai 24 jam setelah tanggal pengambilannya."
+        }
+      ]
+    },
+    {
+      "id": "paying",
+      "title": "Membayar di lapak",
+      "blocks": [
+        {
+          "p": "Anda membayar Farmer langsung saat mengambil, sebesar jumlah yang tertera pada pesanan Anda. MarketLink tidak pernah memegang uang Anda, tidak mengambil komisi lewat produk ini, dan tidak terlibat dalam pembayaran."
+        },
+        {
+          "p": "Karena itu, pengembalian dana adalah urusan antara Anda dan lapak."
+        }
+      ]
+    },
+    {
+      "id": "stalls",
+      "title": "Yang disetujui lapak",
+      "blocks": [
+        {
+          "p": "Farmer yang berjualan lewat MarketLink setuju menjaga daftar mingguannya tetap jujur: memasang jumlah yang diperkirakan tersedia, menandai produk habis atau tidak tersedia alih-alih membiarkannya tetap terdaftar, dan menepati rentang pengambilan yang sudah diumumkan untuk tiap pasar dan tiap hari."
+        },
+        {
+          "p": "Lapak setuju menanggapi pesanan yang masuk alih-alih membiarkannya menumpuk, memberi alasan ketika menolak, dan menahan pesanan yang sudah diterima sepanjang rentang pengambilannya. Lapak juga setuju bahwa isi tayangannya adalah tanggung jawabnya sendiri, termasuk deskripsi, foto, dan klaim apa pun tentang hasil taninya."
+        }
+      ]
+    },
+    {
+      "id": "reviews",
+      "title": "Ulasan dan konten",
+      "blocks": [
+        {
+          "p": "Anda bisa memberi nilai dan menulis ulasan untuk lapak dan produk yang Anda beli setelah pesanan selesai, dan hanya untuk pesanan milik Anda. Lapak boleh membalas sekali, secara terbuka."
+        },
+        {
+          "p": "Tulislah tentang hasil taninya dan proses pengambilannya. Admin dapat menyembunyikan ulasan atau tayangan produk yang melanggar hal itu, dan konten yang disembunyikan berhenti tampil di halaman publik. Apa yang Anda tulis tetap melekat pada nama akun Anda, di tempat yang bisa dilihat pembeli lain."
+        }
+      ]
+    },
+    {
+      "id": "suspension",
+      "title": "Menangguhkan akun",
+      "blocks": [
+        {
+          "p": "Admin menyetujui lapak sebelum lapak boleh memasang apa pun, dan bisa menolak pengajuan dengan alasan. Lapak yang ditangguhkan hilang dari halaman publik dan tidak menerima pesanan baru, tetapi pesanan yang sedang berjalan tetap dituntaskan agar tidak ada pembeli yang kehilangan pesanannya. Farmer tetap bisa masuk dan melihat pesanan-pesanan itu."
+        },
+        {
+          "p": "Akun Customer dapat dinonaktifkan oleh admin."
+        }
+      ]
+    },
+    {
+      "id": "maps",
+      "title": "Peta dan sumber lain",
+      "blocks": [
+        {
+          "p": "Lokasi pasar dan lapak digambar di atas OpenStreetMap. Data peta adalah © kontributor OpenStreetMap, dan tautan rute membuka OpenStreetMap di tab baru. Penanda dipasang oleh pasar atau lapak sendiri dan seakurat cara mereka memasangnya."
+        },
+        {
+          "p": "Foto produk adalah milik lapak yang mengunggahnya. Foto yang dipakai di halaman platform sendiri dicantumkan sumbernya di ReadMe proyek."
+        }
+      ]
+    }
+  ],
+  "cta": {
+    "title": "Ada yang belum jelas di sini?",
+    "text": "Pertanyaan tentang pesanan langsung ke lapak. Apa pun tentang ketentuan ini sampai ke tim.",
+    "privacy": "Kebijakan privasi",
+    "contact": "Hubungi kami"
+  }
+}

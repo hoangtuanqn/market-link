@@ -1,0 +1,36 @@
+{
+  "title": "Mapa de mercados",
+  "intro": "Todos los mercados y los puestos que aceptan pedidos anticipados el día que elijas. Toca un marcador para ver horarios, franjas de recogida y cómo llegar.",
+  "marketDay": "Día de mercado",
+  "filter": {
+    "markets": "Mercados",
+    "stalls": "Puestos",
+    "saved": "Solo guardados"
+  },
+  "legend": {
+    "market": "Cuadrado: mercado",
+    "stall": "Círculo: puesto",
+    "selected": "Anillo: seleccionado"
+  },
+  "mapLabel": "Mapa de todos los mercados y puestos",
+  "directions": "Las indicaciones se abren en OpenStreetMap en una pestaña nueva.",
+  "openOn": "Abiertos el {{day}}",
+  "empty": {
+    "title": "No hay mercados que mostrar",
+    "text": "Nada coincide con el día elegido. Prueba otro día o quita el filtro."
+  },
+  "popup": {
+    "stalls_one": "{{count}} puesto",
+    "stalls_other": "{{count}} puestos",
+    "pickup": "{{days}} · recogida {{pickup}}"
+  },
+  "bothOff": {
+    "title": "No hay nada que mostrar en el mapa",
+    "text": "Las dos capas están desactivadas. Vuelve a activar mercados o puestos para ver los marcadores.",
+    "action": "Mostrar ambos"
+  },
+  "error": {
+    "noun": "mercados"
+  },
+  "stallsNoun": "puestos"
+}

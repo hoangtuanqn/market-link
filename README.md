@@ -169,7 +169,7 @@ curl http://localhost:8080/ping
 Optionally, test the register API:
 
 ```bash
-curl -i -X POST http://localhost:8080/api/v1/auth/register/customer \
+curl -i -X POST http://localhost:8080/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","address":"12 Le Loi, Q1","password":"123456","confirmPassword":"123456"}'
 ```
@@ -240,6 +240,8 @@ make help   # list every command
 |---|---|
 | `make infra` | Only MySQL + Redis (same as `docker compose up -d`) |
 | `make tools` | Adminer at http://localhost:8081, RedisInsight at http://localhost:5540 |
+| RabbitMQ UI | http://localhost:15672 (user/password from `RABBITMQ_USER` / `RABBITMQ_PASSWORD` in `.env`) — realtime broker for chat and notifications (`/user/topic/notifications`, see `docs/api-contract.md` §9), runs with the stack |
+| Chat photos | Stored on the `chat-uploads` volume at `CHAT_UPLOAD_DIR` (default `/var/lib/marketlink/chat`), **not** under `/uploads`. They are only served through `GET /api/v1/attachments/{id}`, which checks that you are in the conversation. Limits: `CHAT_MAX_UPLOAD_BYTES` (5 MB), `CHAT_MESSAGES_PER_MINUTE` (30), `CHAT_IMAGES_PER_HOUR` (10), `CHAT_CONVERSATIONS_PER_HOUR` (20) |
 | `make logs s=backend` | Follow the logs of one service |
 | `make be-test` | Run backend tests in the container |
 | `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
@@ -264,6 +266,38 @@ docker exec -it intervue-redis redis-cli
 ./mvnw spotless:apply               # format Java code
 ```
 
+### Web Push (thông báo khi đã đóng tab)
+
+1. `make vapid-keys`, dán hai dòng `VAPID_PUBLIC_KEY=…` / `VAPID_PRIVATE_KEY=…` vào `.env` (prod: `.env.production`), rồi
+   `make up` lại. Log backend in `Web Push: enabled`; để trống thì `disabled (no VAPID keys)` và mọi thứ khác vẫn chạy.
+2. Đăng nhập, bấm **Bật** ở thẻ "Bật thông báo" (hoặc Settings → Thông báo). Trình duyệt hỏi quyền → cho phép.
+3. Đóng hết tab MarketLink, cho người khác gửi thông báo (vd. admin đăng một thông báo) → thông báo của hệ điều hành hiện ra.
+
+Lưu ý: Web Push chỉ chạy trên **HTTPS** (localhost được miễn). iOS/iPadOS chỉ nhận khi web đã được "Thêm vào màn hình
+chính" (iOS 16.4+). Đăng xuất thì trình duyệt đó thôi nhận thông báo của tài khoản vừa rời.
+## 4b. Chat — manual two-browser check (FR-111, FR-115, FR-116)
+
+Spec §13 asks for the realtime path to be checked by hand, because unit tests mock the broker.
+Run this once before a demo.
+
+1. Open two browsers. Sign in as a customer in one, as an **approved** farmer in the other.
+   (A farmer account with no `farmer_profiles` row is closed to chat by design — the backend logs a
+   warning about this at startup.)
+2. Customer opens the stall and sends a message → it appears in the farmer's window **within a
+   second, without a reload**.
+3. Farmer starts typing → the customer sees the typing dots; stop typing → they disappear.
+4. Farmer sends a photo → the customer sees it. Copy the photo URL, open it in a third browser
+   signed in as somebody else → **403**.
+5. Customer reports the farmer's message (reason + optional note). Reporting it a second time →
+   **409**.
+6. Sign in as an admin, open **Reported messages**, open the report → you see the reported message
+   plus **at most five on each side**, and nothing else from that conversation.
+7. Admin hides the message → it disappears from **both** windows without a reload.
+8. Still as admin, open the photo URL of the **reported** message → **200**. Open the photo URL of a
+   **neighbouring** message → **403**.
+
+---
+
 ## 5. Troubleshooting
 
 | Error | Cause | Fix |
@@ -280,3 +314,11 @@ docker exec -it intervue-redis redis-cli
 | `FlywayValidateException: Migration checksum mismatch` | An already-applied migration file was edited | Revert the edit and add a new migration file instead. On local only, you can reset with `docker compose down -v` |
 | Lombok `cannot find symbol` (getters/setters) in IDE | Annotation processing is disabled | Enable it (see *Running from an IDE*) |
 | Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
+| Backend log `Chat realtime: app.chat.rabbitmq.host is empty` when running on your machine (way A) | Backend runs outside Docker and `RABBITMQ_HOST` is not set | Chat still works with the in-app broker; for the RabbitMQ relay, `export RABBITMQ_HOST=localhost` and map port 61613 in `docker-compose.yml` |
+| `TCP connection failure in session _system_` repeating | RabbitMQ not healthy yet, or the STOMP plugin is off | `docker compose logs rabbitmq`; check `rabbitmq_stomp` in `rabbitmq-plugins list -e`. The backend keeps serving REST and reconnects on its own |
+| `PATCH /api/v1/admin/messages/{id}/hide` returns 403 `MODERATION_OUT_OF_SCOPE` | The message has not been reported by anyone | Working as designed (spec 8.3): admins act only on reported messages. There is no "browse all inboxes" screen |
+| An admin sees 403 opening a photo they can see in the report context | Only the **reported** message's photo is open to admins; the five messages either side are context, not the thing being reported | Working as designed. Every admin photo view is logged |
+| Backend logs `N account(s) have role=farmer but no farmer_profiles row` at startup | Seed data or a manual DB edit created a farmer without a stall profile | Chat is closed for those accounts. Add an approved `farmer_profiles` row for each |
+| Chat photos return 404 after rebuilding containers | The `chat-uploads` volume was removed; the database rows survive but the files are gone | Stop with `docker compose down` (**without** `-v`) to keep volumes. Photos live on `chat-uploads`, separate from `uploads-data` |
+| `POST /api/v1/attachments` returns 415 for a photo that opens fine on your machine | The file is not JPEG/PNG/WebP — the server reads magic bytes and ignores the file extension and `Content-Type` | Re-save it as JPEG or PNG |
+| `<img src="/api/v1/attachments/5">` shows a broken image | That endpoint checks the JWT in the `Authorization` header, and `<img>` does not send it | `fetch` the URL with the header, then render `URL.createObjectURL(blob)` |

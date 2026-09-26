@@ -1,3 +1,4 @@
+// Hàm tra cứu dữ liệu mẫu đều thuần: NO_SIDE_EFFECTS cho phép build production bỏ chúng (config/wip.ts).
 /**
  * Demo data for the signed-in Customer screens, copied from docs/prototype/data.js. Replace with API calls when the
  * endpoints exist.
@@ -10,14 +11,14 @@ import { markets } from './home';
 export type NotificationType = { kind: NotificationKind; title: string; text?: string; time: string; unread?: boolean };
 
 export const categories = [
-  'Leafy greens',
-  'Fruit',
-  'Dairy',
-  'Baked goods',
-  'Eggs',
-  'Honey & preserves',
+  'Vegetables',
+  'Fruits',
+  'Eggs & dairy',
+  'Grains, beans & nuts',
+  'Meat & poultry',
+  'Seafood',
   'Mushrooms',
-  'Herbs',
+  'Baked goods',
 ];
 
 export const notifications: NotificationType[] = [
@@ -146,14 +147,17 @@ export const farmers = [
   },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function farmerName(id: number): string {
   return farmers.find((f) => f.id === id)?.stall ?? '';
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function farmer(id: number) {
   return farmers.find((f) => f.id === id);
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function marketName(id: number): string {
   return markets.find((m) => m.id === id)?.name ?? '';
 }
@@ -174,10 +178,12 @@ const lineProducts: OrderLineProduct[] = [
   { id: 19, name: 'Lemongrass', price: 6000, unit: 'bunch' },
 ];
 
+/* @__NO_SIDE_EFFECTS__ */
 export function lineProduct(id: number): OrderLineProduct | undefined {
   return lineProducts.find((p) => p.id === id);
 }
 
+/* @__NO_SIDE_EFFECTS__ */
 export function orderTotal(order: OrderType): number {
   return order.items.reduce((sum, i) => sum + i.qty * (lineProduct(i.productId)?.price ?? 0), 0);
 }
@@ -328,7 +334,7 @@ export const dashboardFavoriteProducts: ProductType[] = [
     name: 'Goat yogurt',
     stall: 'Củ Chi Goat Farm',
     marketName: 'Thủ Đức Farmers Market',
-    category: 'Dairy',
+    category: 'Eggs & dairy',
     price: 35000,
     unit: 'jar',
     stock: 0,
@@ -340,7 +346,7 @@ export const dashboardFavoriteProducts: ProductType[] = [
     name: 'Củ Chi water spinach',
     stall: 'Cô Tư Garden',
     marketName: 'Thảo Điền Weekend Market',
-    category: 'Leafy greens',
+    category: 'Vegetables',
     price: 15000,
     unit: 'bunch',
     stock: 12,
@@ -372,7 +378,7 @@ export const wishProducts: WishProductItem[] = [
       name: 'Goat yogurt',
       stall: 'Củ Chi Goat Farm',
       marketName: 'Thủ Đức Farmers Market',
-      category: 'Dairy',
+      category: 'Eggs & dairy',
       price: 35000,
       unit: 'jar',
       stock: 0,
@@ -388,7 +394,7 @@ export const wishProducts: WishProductItem[] = [
       name: 'Củ Chi water spinach',
       stall: 'Cô Tư Garden',
       marketName: 'Thảo Điền Weekend Market',
-      category: 'Leafy greens',
+      category: 'Vegetables',
       price: 15000,
       unit: 'bunch',
       stock: 12,
@@ -404,7 +410,7 @@ export const wishProducts: WishProductItem[] = [
       name: 'Raw forest honey',
       stall: 'U Minh Forest Honey',
       marketName: 'Phú Mỹ Hưng Saturday Market',
-      category: 'Honey & preserves',
+      category: 'Grains, beans & nuts',
       price: 180000,
       was: 195000,
       unit: 'jar',

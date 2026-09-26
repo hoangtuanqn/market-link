@@ -1,0 +1,42 @@
+{
+  "title": "收藏",
+  "intro": "您的心愿单：下次想买的商品、常去的摊位和常逛的市场。售罄的收藏商品到货时会通知您。",
+  "findMore": "查找更多可收藏的",
+  "tabs": {
+    "label": "已收藏",
+    "products": "商品",
+    "stalls": "摊位",
+    "markets": "市场"
+  },
+  "banner": {
+    "title": "您收藏的四件商品中有一件已售罄。",
+    "text": "到货提醒已开启，摊位重新上架时您会立即收到通知。"
+  },
+  "filters": {
+    "all": "全部",
+    "inStock": "现在有货",
+    "soldOut": "已售罄",
+    "priceDropped": "已降价"
+  },
+  "soldOut": "已售罄",
+  "left": "剩 {{qty}}",
+  "alertOn": "提醒已开启",
+  "addToCart": "加入购物车",
+  "remove": "移除",
+  "addInStock_one": "将 {{count}} 件有货商品加入购物车",
+  "addInStock_other": "将 {{count}} 件有货商品加入购物车",
+  "toast": {
+    "alertTitle": "到货提醒",
+    "alertOff": "已关闭 {{name}} 的提醒。",
+    "addedTitle": "已加入购物车",
+    "added": "已将 {{name}} 加入购物车。",
+    "addedMany_one": "已将 {{count}} 件商品加入购物车。结账时会按摊位拆分。",
+    "addedMany_other": "已将 {{count}} 件商品加入购物车。结账时会按摊位拆分。",
+    "removedTitle": "已移除",
+    "removed": "已将 {{name}} 从收藏中移除。"
+  },
+  "holdNote": "收藏商品不会预留库存。只有下单时才会预留。",
+  "stallsNote": "您收藏的摊位，以及每个摊位本周末带来的商品。",
+  "thisWeek": "本周",
+  "marketsNote": "收藏的市场会在列表和地图上排在最前，前往其摊位的路线从您保存的地址出发。"
+}

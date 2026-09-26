@@ -1,0 +1,80 @@
+{
+  "title": "Orders",
+  "intro": "Accept or decline new orders before their cutoff, mark them ready on market day, and complete them when the customer has paid.",
+  "search": {
+    "label": "Search orders",
+    "placeholder": "Order code or customer name",
+    "submit": "Search"
+  },
+  "filter": {
+    "day": "Pickup day",
+    "all": "All",
+    "market": "Market",
+    "bothMarkets": "Both markets"
+  },
+  "tabsLabel": "Orders by status",
+  "status": {
+    "placed": "Awaiting approval",
+    "accepted": "Accepted",
+    "ready": "Ready",
+    "completed": "Completed",
+    "declined": "Declined",
+    "cancelled": "Cancelled"
+  },
+  "empty": {
+    "placed": {
+      "title": "Nothing waiting for you",
+      "text": "New pre-orders land here until 12 hours before their slot."
+    },
+    "accepted": { "title": "No accepted orders", "text": "Orders you accept wait here until you mark them ready." },
+    "ready": { "title": "Nothing ready yet", "text": "Mark an accepted order ready once it is packed for the stall." },
+    "completed": {
+      "title": "No completed orders",
+      "text": "An order completes when the customer collects and pays at the stall."
+    },
+    "declined": { "title": "No declined orders", "text": "Orders you turn down are listed here with the reason." },
+    "cancelled": { "title": "No cancelled orders", "text": "Customers can cancel until the cutoff (D-05)." }
+  },
+  "col": {
+    "order": "Order",
+    "customer": "Customer",
+    "pickup": "Pickup",
+    "cutoff": "Cutoff",
+    "items": "Items",
+    "total": "Total",
+    "status": "Status"
+  },
+  "action": {
+    "accept": "Accept",
+    "decline": "Decline",
+    "markReady": "Mark ready",
+    "markCompleted": "Mark completed",
+    "view": "View"
+  },
+  "toast": {
+    "accepted": "Order {{code}} accepted.",
+    "ready": "Order {{code}} marked ready.",
+    "declined": "Order {{code}} declined.",
+    "completed": "Order {{code}} completed."
+  },
+  "auditNote": "Status changes are recorded with the time and who made them (FR-038). A change in the wrong order is refused (D-04).",
+  "decline": {
+    "title": "Decline order {{code}}?",
+    "keep": "Keep order",
+    "confirm": "Decline order",
+    "text": "The customer is told right away and the items go back to your stock.",
+    "reason": "Reason the customer will see",
+    "reasons": {
+      "stock": "Not enough stock",
+      "day": "Not selling on that day",
+      "time": "Cannot make that pickup time",
+      "other": "Other"
+    }
+  },
+  "complete": {
+    "title": "Mark {{code}} as completed?",
+    "notYet": "Not yet",
+    "text": "Do this after the customer has collected the order and paid at the stall. Completed orders count towards your revenue and unlock the customer's review.",
+    "auto": "Orders still marked Ready are completed automatically 24 hours after the pickup date (D-03)."
+  }
+}

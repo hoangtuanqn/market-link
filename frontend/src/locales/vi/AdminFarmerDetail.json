@@ -1,0 +1,58 @@
+{
+  "breadcrumb": "Đơn đăng ký",
+  "loading": "Đang tải đơn đăng ký",
+  "loadError": {
+    "title": "Không tải được đơn đăng ký này",
+    "text": "Kiểm tra kết nối rồi thử lại.",
+    "retry": "Thử lại"
+  },
+  "sentOn": "Gửi ngày {{date}}",
+  "approveText": "Vai trò của họ chuyển thành Farmer và bảng điều khiển sạp được mở trong tài khoản. Họ vẫn giữ mọi tính năng khách hàng hiện có. Người mua chưa thấy gì cho đến khi họ thêm sản phẩm và đặt khung giờ nhận hàng.",
+  "suspendedBanner": {
+    "title": "Sạp này đang bị tạm ngưng.",
+    "text": "Sản phẩm của sạp bị ẩn khỏi khách. Các đơn đã đặt vẫn tiếp tục như bình thường."
+  },
+  "rejectedBanner": {
+    "title": "Đơn này đã bị từ chối.",
+    "text": "Lý do hiển thị cho người nộp đơn: {{reason}}"
+  },
+  "photos": {
+    "title": "Ảnh vườn",
+    "alt": "Ảnh vườn",
+    "hint": "Kiểm tra vườn trong ảnh có giống vị trí ghim trên bản đồ và có trồng đúng những gì người nộp đơn kê khai không. Bạn không kiểm tra giấy phép, an toàn thực phẩm hay cam kết hữu cơ."
+  },
+  "stall": {
+    "title": "Sạp họ đăng ký",
+    "name": "Tên sạp",
+    "contact": "Người liên hệ",
+    "email": "Email",
+    "description": "Mô tả"
+  },
+  "history": {
+    "title": "Lịch sử",
+    "suspended": "Bị đình chỉ",
+    "approved": "Đã duyệt",
+    "sent": "Đã gửi đơn",
+    "customer": "Tạo tài khoản khách hàng",
+    "byAdmin": "Quản trị viên"
+  },
+  "applicant": {
+    "title": "Người nộp đơn",
+    "name": "Họ tên",
+    "since": "Khách hàng từ",
+    "status": "Trạng thái tài khoản"
+  },
+  "accountStatus": {
+    "active": "Đang hoạt động",
+    "inactive": "Không hoạt động",
+    "suspended": "Tạm ngưng"
+  },
+  "approval": {
+    "title": "Duyệt đơn sẽ làm gì",
+    "text": "Vai trò của họ chuyển thành Farmer và bảng điều khiển sạp được mở. Họ vẫn mua ở các sạp khác bằng cùng tài khoản. Chưa có gì được đăng cho đến khi họ thêm sản phẩm và đặt khung giờ nhận hàng."
+  },
+  "attempts": {
+    "title": "Lịch sử nộp đơn",
+    "text": "Mọi lần tài khoản này nộp đơn, kèm nội dung đã gửi và kết quả đã trả lời."
+  }
+}

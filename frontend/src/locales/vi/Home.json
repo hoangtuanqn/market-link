@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "weekend": "phiên chợ cuối tuần {{from}} – {{to}}",
+    "title": "Đặt trước từ chợ phiên nông sản",
+    "intro_one": "Giữ trước nông sản tuần này từ các sạp tại {{count}} chợ quanh TP. Hồ Chí Minh. Nhận hàng tại sạp và trả tiền trực tiếp cho nhà vườn.",
+    "intro_other": "Giữ trước nông sản tuần này từ các sạp tại {{count}} chợ quanh TP. Hồ Chí Minh. Nhận hàng tại sạp và trả tiền trực tiếp cho nhà vườn.",
+    "browse": "Xem các chợ",
+    "sell": "Bán hàng trên MarketLink"
+  },
+  "search": {
+    "scope": "Tìm trong",
+    "scopes": {
+      "all": "Tất cả",
+      "market": "Chợ",
+      "farmer": "Sạp",
+      "product": "Sản phẩm"
+    },
+    "keyword": "Từ khoá",
+    "placeholder": "Rau muống, Cô Tư Garden, chợ Thảo Điền…",
+    "submit": "Tìm"
+  },
+  "board": {
+    "overline": "Mở cửa cuối tuần này",
+    "title": "Các sạp ở đâu",
+    "seeAll_one": "Xem chợ trên bản đồ",
+    "seeAll_other": "Xem cả {{count}} chợ trên bản đồ"
+  },
+  "nearby": {
+    "title": "Chợ gần bạn",
+    "note": "Khoảng cách tính từ địa chỉ đã lưu của bạn ở Thảo Điền",
+    "noun": "các chợ"
+  },
+  "fresh": {
+    "title": "Tươi trong tuần này",
+    "all": "Tất cả sản phẩm và bộ lọc",
+    "noun": "các sản phẩm"
+  },
+  "how": {
+    "title": "Đặt trước hoạt động thế nào",
+    "steps": {
+      "reserve": {
+        "title": "Đặt trước giờ chốt đơn",
+        "text": "Thêm sản phẩm từ một hoặc nhiều sạp, chọn giờ nhận trong khung giờ của từng sạp rồi đặt hàng. Hàng được giữ cho bạn ngay khi bạn đặt."
+      },
+      "confirm": {
+        "title": "Nhà vườn xác nhận",
+        "text": "Mỗi sạp tự nhận hoặc từ chối đơn của mình. Dù thế nào bạn cũng nhận được thông báo, và bạn có thể sửa hoặc huỷ đơn trước giờ chốt của sạp."
+      },
+      "pickup": {
+        "title": "Nhận hàng và trả tiền tại sạp",
+        "text": "Khi đơn được đánh dấu sẵn sàng, hãy đến sạp đúng khung giờ của bạn, nhận hàng và trả tiền trực tiếp cho nhà vườn. Không có thanh toán trực tuyến."
+      }
+    }
+  }
+}

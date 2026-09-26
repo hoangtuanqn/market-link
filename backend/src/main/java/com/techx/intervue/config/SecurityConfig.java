@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -75,6 +76,9 @@ public class SecurityConfig {
                                                 "/api/v1/auth/set-password",
                                                 "/api/v1/auth/change-password",
                                                 "/api/v1/auth/me",
+                                                "/api/v1/auth/me/avatar",
+                                                "/api/v1/auth/me/settings",
+                                                "/api/v1/auth/me/achievements",
                                                 // FR-008: bật / tắt 2FA (verify lúc đăng nhập vẫn
                                                 // public)
                                                 "/api/v1/auth/mfa",
@@ -85,6 +89,12 @@ public class SecurityConfig {
                                         .authenticated()
                                         // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
+                                        .permitAll()
+                                        // FR-111: WebSocket handshake không mang header
+                                        // Authorization;
+                                        // JWT được kiểm ở frame STOMP CONNECT
+                                        // (StompAuthInterceptor)
+                                        .requestMatchers("/ws", "/ws/**")
                                         .permitAll()
                                         // Ping - health check
                                         .requestMatchers("/ping")
@@ -104,8 +114,39 @@ public class SecurityConfig {
                                         // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
+                                        // FR-020…023, FR-011: sản phẩm và tồn kho của stall xem
+                                        // được trước khi đăng nhập
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/products/*",
+                                                "/api/v1/farmers/*/products")
+                                        .permitAll()
+                                        // FR-020/FR-076: bộ lọc danh mục dùng được trước khi đăng
+                                        // nhập
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/categories")
+                                        .permitAll()
+                                        // FR-010/FR-012: chợ và bản đồ xem được trước khi đăng nhập
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/markets",
+                                                "/api/v1/markets/*")
+                                        .permitAll()
+                                        // FR-011: stall và danh sách Farmer của chợ xem được trước
+                                        // khi đăng nhập
+                                        .requestMatchers(
+                                                HttpMethod.GET,
+                                                "/api/v1/farmers",
+                                                "/api/v1/farmers/*",
+                                                "/api/v1/markets/*/farmers",
+                                                // FR-032: giỏ hàng chọn slot trước khi đăng nhập
+                                                "/api/v1/farmers/*/slots")
+                                        .permitAll()
                                         // Chatbot FR-090…092: khách vãng lai cũng hỏi được
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
+                                        .permitAll()
+                                        // FR-077: banner thông báo ở trang public
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/api/v1/announcements/active")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())

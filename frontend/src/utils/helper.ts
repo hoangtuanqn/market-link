@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios';
+import i18n from '@/i18n';
 import type { ApiResponse } from '@/types/api.types';
 import type { UserType } from '@/types/user.types';
 
@@ -13,11 +14,6 @@ class Helper {
     return '/';
   }
 
-  /** OpenStreetMap directions to a point, opened in a new tab (D-12). */
-  static directionsUrl(lat: number, lng: number) {
-    return `https://www.openstreetmap.org/directions?to=${lat}%2C${lng}`;
-  }
-
   /** Joins class names, skipping falsy values. */
   static cn(...classes: Array<string | false | null | undefined>) {
     return classes.filter(Boolean).join(' ');
@@ -29,7 +25,7 @@ class Helper {
    */
   static getErrorMessage(error: unknown, fallback: string) {
     if (error instanceof AxiosError) {
-      if (!error.response) return 'Could not reach the server. Check your connection and try again.';
+      if (!error.response) return i18n.t('errors.network');
       const message = (error.response.data as Partial<ApiResponse<unknown>> | undefined)?.message;
       if (message) return message;
     }

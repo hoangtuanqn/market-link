@@ -1,0 +1,26 @@
+{
+  "title": "Nous contacter",
+  "intro": "Les questions sur une commande vont directement au stand ; son numéro figure sur votre commande. Pour tout ce qui concerne la plateforme, écrivez à l'équipe ici.",
+  "team": {
+    "title": "L'équipe MarketLink",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "hours": "Horaires",
+    "toAdd": "À compléter",
+    "addressValue": "À compléter. Le repère sur la carte est provisoire, dans le District 1.",
+    "hoursValue": "Lun – ven, 09:00 – 17:00"
+  },
+  "feedback": {
+    "title": "Un bug ou une idée ?",
+    "text": "Utilisez le formulaire de retour : il arrive dans la bonne file, avec la page et votre navigateur joints.",
+    "cta": "Envoyer un retour"
+  },
+  "map": {
+    "label": "Carte de l'emplacement de l'équipe",
+    "markerLabel": "Équipe MarketLink (provisoire)",
+    "popupTitle": "Équipe MarketLink",
+    "popupLine": "Repère provisoire, District 1",
+    "directions": "Itinéraire vers l'équipe"
+  }
+}

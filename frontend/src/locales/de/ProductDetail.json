@@ -1,0 +1,87 @@
+{
+  "notFound": {
+    "title": "Dieses Produkt wird nicht mehr verkauft",
+    "text": "Der Stand hat es vielleicht herausgenommen. Sehen Sie sich an, was er diese Woche sonst anbietet.",
+    "browse": "Produkte ansehen"
+  },
+  "breadcrumb": "Produkte",
+  "photo": "Foto von {{name}}",
+  "favorite": {
+    "add": "Zu Favoriten hinzufügen: {{name}}",
+    "remove": "Aus Favoriten entfernen: {{name}}"
+  },
+  "soldPer": "verkauft pro {{unit}}",
+  "left": "Noch <b>{{qty}}</b> diese Woche",
+  "stockUpdated": "Bestand heute aktualisiert, vor den Bestellungen dieses Wochenendes.",
+  "notifyMe": "Benachrichtigen, wenn wieder da",
+  "added": {
+    "title": "In den Warenkorb gelegt",
+    "text": "{{qty}} {{name}} in Ihren Warenkorb gelegt."
+  },
+  "addToCart": "In den Warenkorb",
+  "payNote": "Die Ware wird bei der Bestellung für Sie zurückgelegt. Sie zahlen {{price}} bei der Abholung am Stand.",
+  "fromStall": "Vom Stand",
+  "sellingSince": "verkauft hier seit {{date}}",
+  "stats": {
+    "reviews_one": "{{count}} Bewertung",
+    "reviews_other": "{{count}} Bewertungen",
+    "markets_one": "Markt",
+    "markets_other": "Märkte",
+    "hours_one": "{{count}} Std.",
+    "hours_other": "{{count}} Std.",
+    "cutoff": "Bestellschluss"
+  },
+  "seeStall": "Stand ansehen",
+  "messageStall": "Stand anschreiben",
+  "details": {
+    "title": "Produktdetails",
+    "soldPer": "Verkauft pro",
+    "category": "Kategorie",
+    "stall": "Stand",
+    "market": "Markt"
+  },
+  "collect": {
+    "title": "Wo und wann Sie abholen",
+    "map": "Auf der Karte ansehen",
+    "note": "Jedes Zeitfenster fasst 5 Bestellungen. Ein volles Zeitfenster wird gesperrt, und der Stand nimmt vor dem obigen Bestellschluss keine Änderungen mehr an."
+  },
+  "table": {
+    "market": "Markt",
+    "stallCode": "Stand {{code}}",
+    "days": "Tage",
+    "window": "Abholzeitfenster",
+    "cutoff": "Bestellschluss",
+    "cutoffValue_one": "{{count}} Stunde vor Ihrem Zeitfenster",
+    "cutoffValue_other": "{{count}} Stunden vor Ihrem Zeitfenster",
+    "product": "Produkt",
+    "price": "Preis",
+    "perUnit": "pro {{unit}}",
+    "left": "Übrig"
+  },
+  "directions": "Route",
+  "reviews": {
+    "title": "Bewertungen dieses Produkts",
+    "write": "Bewertung schreiben",
+    "writeNote": "Möglich, sobald eine Bestellung mit diesem Produkt abgeschlossen ist.",
+    "summary_one": "{{count}} Bewertung aus einer abgeschlossenen Bestellung",
+    "summary_other": "{{count}} Bewertungen, alle aus abgeschlossenen Bestellungen"
+  },
+  "similar": {
+    "title": "{{name}} an anderen Ständen an diesem Wochenende",
+    "note": "Gleiches Gemüse, anderes Feld und anderer Preis",
+    "here": "Sie sind hier",
+    "view": "Ansehen"
+  },
+  "also": {
+    "title": "Außerdem von {{stall}} diese Woche"
+  },
+  "report": {
+    "sentTitle": "Meldung gesendet",
+    "sentText": "Ein Admin sieht sich dieses Angebot an.",
+    "button": "Dieses Angebot melden",
+    "note": "Falscher Preis, falsches Foto oder etwas, das nicht auf einen Bauernmarkt gehört."
+  },
+  "error": {
+    "noun": "Produkt"
+  }
+}

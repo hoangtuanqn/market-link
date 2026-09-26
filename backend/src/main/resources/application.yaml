@@ -17,6 +17,13 @@ spring:
   jpa:
     open-in-view: false
 
+  # Trần an toàn cho upload. Ảnh/video đơn xin thành Farmer (docs/prototype/customer/become-farmer.html) cần mức này —
+  # FarmerUploadService; ảnh đại diện vẫn bị service chặn ở 2 MB với thông báo rõ.
+  servlet:
+    multipart:
+      max-file-size: 40MB
+      max-request-size: 60MB
+
   flyway:
     # Không bao giờ cho phép xoá schema
     clean-disabled: true
@@ -48,6 +55,29 @@ logging:
     org.flywaydb: INFO
 
 app:
+  # Thành tích cá nhân (không có trong SRS, LEAD yêu cầu): ngưỡng lên hạng. Phải đạt đủ cả ba —
+  # số đơn hoàn tất, tổng đã chi (₫, chỉ đơn hoàn tất), tỉ lệ hoàn tất (% trên hoàn tất + tự huỷ).
+  tiers:
+    silver:
+      min-completed: 5
+      min-spent: 500000
+      min-completion-rate: 60
+    gold:
+      min-completed: 15
+      min-spent: 2000000
+      min-completion-rate: 75
+    diamond:
+      min-completed: 40
+      min-spent: 6000000
+      min-completion-rate: 85
+  # FR-042 N3: Web Push (RFC 8291/8292). Sinh khoá: make vapid-keys. Để trống → push tắt, app vẫn chạy.
+  push:
+    vapid-public-key: ${VAPID_PUBLIC_KEY:}
+    vapid-private-key: ${VAPID_PRIVATE_KEY:}
+    subject: ${VAPID_SUBJECT:mailto:admin@marketlink.local}
+  # File người dùng tải lên (ảnh đại diện). Docker: volume uploads-data ở /app/uploads
+  storage:
+    dir: ${STORAGE_DIR:./uploads}
   cors:
     # Origin của frontend React được phép gọi API, nhiều origin cách nhau dấu phẩy.
     # Mặc định là Vite dev server (frontend/vite.config.ts, cổng 3000). Prod bắt buộc truyền biến.
@@ -63,6 +93,10 @@ app:
       redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/google/callback}
   mail:
     from-name: MarketLink
+  # Lưu ảnh/video đơn xin thành Farmer trên ổ đĩa cục bộ (FarmerUploadService) — chỉ phục vụ test/demo.
+  uploads:
+    dir: ${UPLOAD_DIR:uploads}
+    base-url: /uploads
   # FR-007: link trong mail là <url>?token=<token>; url là trang đặt lại mật khẩu của frontend
   password-reset:
     url: ${PASSWORD_RESET_URL:http://localhost:3000/reset-password}
@@ -79,11 +113,37 @@ app:
     pending-ttl-seconds: 300
     max-attempts: 5
     lock-seconds: 900
+  # FR-102: tài khoản admin cho dev/demo. AdminSeeder chỉ chạy ở profile dev và local, và bỏ qua
+  # nếu email (hoặc số điện thoại) đã có trong DB — đổi mật khẩu rồi restart không bị ghi đè.
+  seed:
+    admin:
+      email: ${SEED_ADMIN_EMAIL:admin@marketlink.vn}
+      password: ${SEED_ADMIN_PASSWORD:Admin@123}
+      full-name: ${SEED_ADMIN_FULL_NAME:MarketLink Admin}
+      phone: ${SEED_ADMIN_PHONE:0900000001}
+  # FR-111: chat realtime. Host rỗng = simple broker trong app (CI/test); docker compose và prod
+  # đặt RABBITMQ_HOST để relay sang RabbitMQ (plugin rabbitmq_stomp, cổng 61613).
+  chat:
+    rabbitmq:
+      host: ${RABBITMQ_HOST:}
+      stomp-port: ${RABBITMQ_STOMP_PORT:61613}
+      user: ${RABBITMQ_USER:guest}
+      password: ${RABBITMQ_PASSWORD:guest}
+    # Spec §8.4: chống rải tin. Mỗi user một bucket trên Redis (bucket4j).
+    limits:
+      messages-per-minute: ${CHAT_MESSAGES_PER_MINUTE:30}
+      images-per-hour: ${CHAT_IMAGES_PER_HOUR:10}
+      conversations-per-hour: ${CHAT_CONVERSATIONS_PER_HOUR:20}
+      typing-frames-per-minute: ${CHAT_TYPING_FRAMES_PER_MINUTE:120}
+    # Spec §8.2: ảnh chat nằm TÁCH khỏi app.storage.dir (thư mục đó phục vụ công khai qua /uploads).
+    # Docker: volume chat-uploads ở /var/lib/marketlink/chat.
+    upload-dir: ${CHAT_UPLOAD_DIR:./chat-uploads}
+    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:5242880}
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}
   expiration: 900000
-  issuer: InterVue
+  issuer: MarketLink
   refresh-token-ttl-days: 14
 
 # Tài liệu API. Prod tắt bằng SWAGGER_ENABLED=false (docker-compose.prod.yml)

@@ -1,0 +1,21 @@
+{
+  "loading": {
+    "title": "Google でログインしています…",
+    "text": "少々お待ちください。"
+  },
+  "failed": {
+    "title": "Google ログインが完了しませんでした",
+    "text": "ログインしていません。アカウントは何も変更されていません。",
+    "backToSignIn": "ログインに戻る",
+    "registerWithEmail": "メールアドレスでアカウントを作成する"
+  },
+  "toast": {
+    "signedIn": "ログインしました。"
+  },
+  "errors": {
+    "cancelled": "Google ログインをキャンセルしました。",
+    "google": "Google でログインできませんでした。もう一度お試しください。",
+    "invalidState": "このログインは無効です。ログインページからやり直してください。",
+    "failed": "Google ログインに失敗しました。もう一度お試しください。"
+  }
+}

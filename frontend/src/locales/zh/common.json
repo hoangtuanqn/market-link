@@ -1,0 +1,501 @@
+{
+  "settings": {
+    "appearance": "外观",
+    "theme": "主题",
+    "themeNote": "立即生效。“跟随设备”会跟随你的手机或电脑设置。",
+    "themes": {
+      "light": "浅色",
+      "dark": "深色",
+      "system": "跟随设备"
+    },
+    "language": "语言",
+    "languageNote": "菜单、按钮和消息使用的语言。摊位、商品和地点名称保持摊位填写的原样。",
+    "format": "金额、日期和单位",
+    "currency": "价格显示方式",
+    "currencyNote": "在摊位上你始终用越南盾付款。其他货币仅显示在旁边供参考，按 {{date}} 的固定汇率换算。",
+    "currencies": {
+      "VND": "仅显示 ₫ 越南盾",
+      "USD": "₫ 和 $ 美元",
+      "EUR": "₫ 和 € 欧元",
+      "JPY": "₫ 和 ¥ 日元"
+    },
+    "units": "重量和容量",
+    "unitsNote": "只换算计量单位。按把、按头或按盒出售的摊位保留自己的叫法。",
+    "metric": "公制 · kg、g、升",
+    "imperial": "英制 · lb、oz、品脱",
+    "date": "日期",
+    "clock": "时间格式",
+    "clock24": "24 小时制 · 19:00",
+    "clock12": "12 小时制 · 7:00 pm",
+    "preview": "预览：{{date}} · {{time}} · {{price}}",
+    "save": "保存设置",
+    "saving": "正在保存…",
+    "saveHint": "主题选择后立即生效；其余设置在保存后生效。",
+    "savedTitle": "已保存",
+    "savedText": "你的设置已保存。",
+    "saveError": "无法保存设置。请重试。"
+  },
+  "actions": {
+    "back": "返回",
+    "close": "关闭",
+    "directions": "路线",
+    "dismiss": "关闭提示",
+    "remove": "移除",
+    "tryAgain": "重试",
+    "cancel": "取消"
+  },
+  "admin": {
+    "badge": "管理员",
+    "security": "安全",
+    "signIn": "管理员登录"
+  },
+  "cart": {
+    "orderOf": "第 {{index}} 单，共 {{of}} 单",
+    "payAtPickup": "取货时在摊位付款"
+  },
+  "chart": {
+    "showNumbers": "查看数据"
+  },
+  "chat": {
+    "assistant": "MarketLink 助手",
+    "you": "你",
+    "intent": "意图：{{intent}}",
+    "photoUnavailable": "无法查看此照片。",
+    "photoFrom": "{{name}} 的照片",
+    "seen": "已读",
+    "loadingThreads": "正在加载对话…",
+    "threadsErrorTitle": "无法加载你的对话",
+    "threadsErrorText": "请检查网络连接后重试。",
+    "tryAgain": "重试",
+    "noThreadsTitle": "还没有对话",
+    "noThreadsText": "在摊位页面给摊主发消息，问问本周的农产品。",
+    "unreadCount_other": "{{count}} 条未读消息",
+    "sendFailed": "消息未发送，请重试。",
+    "photoFailed": "照片未发送。请选择 5 MB 以内的 JPEG、PNG 或 WebP 图片。",
+    "attachPhoto": "添加照片",
+    "draftLabel": "输入消息",
+    "draftPlaceholder": "输入消息",
+    "send": "发送",
+    "pickThreadTitle": "选择一个对话",
+    "pickThreadText": "从列表中选择一个对话来阅读。",
+    "back": "返回",
+    "online": "在线",
+    "offline": "离线",
+    "lastSeen": "最后在线 {{time}}",
+    "loadOlder": "加载更早的消息",
+    "olderFailed": "无法加载更早的消息，请重试。",
+    "loadingMessages": "正在加载消息…",
+    "messagesErrorTitle": "无法加载此对话",
+    "messagesErrorText": "请检查网络连接后重新打开。",
+    "emptyThreadTitle": "还没有消息",
+    "emptyThreadText": "打个招呼开始对话吧。",
+    "typing": "{{name}} 正在输入…",
+    "conversationWith": "与 {{name}} 的对话"
+  },
+  "errors": {
+    "network": "无法连接服务器。请检查网络后重试。"
+  },
+  "farmerNav": {
+    "sections": "栏目",
+    "navigation": "农户导航",
+    "home": "MarketLink — 农户概览",
+    "badge": "农户",
+    "expand": "展开侧边栏",
+    "collapse": "收起侧边栏",
+    "approvedMarkets_one": "已通过审核 · {{count}} 个市集",
+    "approvedMarkets_other": "已通过审核 · {{count}} 个市集",
+    "changeMarket": "切换正在查看的市集",
+    "roleStall": "农户 · {{stall}}",
+    "openNavigation": "打开导航",
+    "searchPlaceholder": "订单号或顾客",
+    "yourAccount": "你的账户",
+    "today": "今天",
+    "overview": "概览",
+    "incomingOrders": "新订单",
+    "pickupSlots": "取货时段",
+    "stock": "库存",
+    "weekStock": "本周库存",
+    "products": "商品",
+    "stall": "摊位",
+    "stallPickup": "摊位与取货",
+    "reviews": "评价",
+    "salesHistory": "销售记录",
+    "inbox": "收件箱",
+    "messages": "消息",
+    "notifications": "通知",
+    "account": "账户",
+    "promote": "推广与商品展示",
+    "approval": "审核状态",
+    "settings": "设置",
+    "shop": "购物",
+    "shopMarkets": "去市集购物"
+  },
+  "footer": {
+    "tagline": "在附近的农夫市集预订，到摊位取货。取货时直接付款给农户。",
+    "shop": "购物",
+    "marketsNearYou": "附近的市集",
+    "inSeason": "当季",
+    "marketMap": "市集地图",
+    "favoriteStalls": "收藏的摊位",
+    "sell": "出售",
+    "registerFarmer": "注册成为农户",
+    "handlingPreOrders": "处理预订",
+    "stallGuidelines": "摊位规范",
+    "marketLink": "MarketLink",
+    "aboutUs": "关于我们",
+    "contactUs": "联系我们",
+    "feedback": "意见反馈与问题报告",
+    "terms": "服务条款",
+    "privacy": "隐私政策",
+    "mapData": "地图数据 © OpenStreetMap 贡献者",
+    "mapDataFrom": "地图数据 {{credit}}"
+  },
+  "header": {
+    "cart": "购物车",
+    "cartItems_one": "购物车，{{count}} 件商品",
+    "cartItems_other": "购物车，{{count}} 件商品",
+    "hi": "你好，<b>{{name}}</b>",
+    "main": "主导航",
+    "menu": "菜单",
+    "messages": "消息",
+    "notifications": "通知",
+    "notificationsUnread_one": "通知，{{count}} 条未读",
+    "notificationsUnread_other": "通知，{{count}} 条未读",
+    "openMenu": "打开菜单",
+    "search": "搜索"
+  },
+  "kpi": {
+    "noChange": "无变化",
+    "vsBefore": "与上一周期相比"
+  },
+  "loadError": {
+    "title": "无法加载{{noun}}",
+    "text": "这次列表没有返回。你收藏或下单的内容不受影响。",
+    "help": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<link>请告诉我们发生了什么</link>，我们会跟进处理。",
+    "helpAlt": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<alt />，或<link>告诉我们发生了什么</link>，我们会跟进处理。"
+  },
+  "loading": {
+    "markets": "正在加载市集"
+  },
+  "logo": {
+    "home": "MarketLink — 首页"
+  },
+  "map": {
+    "attribution": "© {{link}} 贡献者",
+    "open": "打开",
+    "placeholder": "地图 — {{label}}",
+    "stallPickup": "摊位 {{code}} · 取货 {{pickup}}",
+    "tilesFailed": "地图图块需要网络连接。没有地图，列表仍可使用。",
+    "yourStall": "你的摊位"
+  },
+  "marketCard": {
+    "save": "收藏{{name}}",
+    "unsave": "取消收藏{{name}}",
+    "days": "开市日",
+    "open": "开市",
+    "closed": "休市",
+    "hours": "营业时间 <b>{{open}}–{{close}}</b>",
+    "stalls_one": "<b>{{count}}</b> 个摊位",
+    "stalls_other": "<b>{{count}}</b> 个摊位",
+    "away": "距离 <b>{{distance}}</b>",
+    "seeStalls": "查看摊位"
+  },
+  "nav": {
+    "markets": "市集",
+    "products": "商品",
+    "map": "地图",
+    "aboutUs": "关于我们",
+    "myOrders": "我的订单",
+    "favorites": "收藏",
+    "messages": "消息",
+    "dashboard": "仪表盘",
+    "farmerPanel": "摊主面板",
+    "adminPanel": "管理后台",
+    "profile": "个人资料",
+    "settings": "设置",
+    "signIn": "登录",
+    "createAccount": "创建账户",
+    "signOut": "退出登录",
+    "yourAccount": "你的账户"
+  },
+  "order": {
+    "code": "订单 {{code}}",
+    "market": "市集",
+    "pickup": "取货",
+    "payOnPickup": "取货时付款",
+    "declinedReason": "摊位给出的原因：{{reason}} 无需付款。",
+    "cancelledNote": "你在截单前取消了此订单。库存已退回摊位。",
+    "lockedNote": "已于 {{cutoff}} 截单。如需更改，请直接联系摊位。",
+    "editableNote": "请在 {{cutoff}} 前修改或取消。之后订单将被锁定。",
+    "edit": "修改订单",
+    "cancel": "取消订单",
+    "reviewed": "你已评价此订单",
+    "review": "评价摊位和商品",
+    "reorder": "再来一单"
+  },
+  "orderStatus": {
+    "placed": "已下单",
+    "accepted": "已接单",
+    "ready": "可取货",
+    "completed": "已完成",
+    "declined": "已拒绝",
+    "cancelled": "已取消"
+  },
+  "pagination": {
+    "label": "分页",
+    "previous": "上一页",
+    "next": "下一页",
+    "page": "第 {{n}} 页"
+  },
+  "password": {
+    "show": "显示密码",
+    "hide": "隐藏密码"
+  },
+  "period": {
+    "length": "周期长度",
+    "day": "日",
+    "week": "周",
+    "month": "月",
+    "quarter": "季度",
+    "year": "年",
+    "custom": "自定义",
+    "from": "开始",
+    "to": "结束",
+    "compareWith": "对比",
+    "cmpBefore": "上一周期，长度相同",
+    "cmpLastYear": "去年同期",
+    "cmpNone": "不对比",
+    "comparedWith": "对比 <b>{{compare}}</b>，长度相同"
+  },
+  "price": {
+    "was": "原价"
+  },
+  "product": {
+    "notThisWeek": "本周不供应",
+    "backSoon": "即将补货",
+    "onlyLeft": "仅剩 {{qty}}",
+    "left": "剩余 {{qty}}",
+    "paused": "已暂停",
+    "soldOut": "已售完",
+    "addFavorite": "加入收藏：{{name}}",
+    "removeFavorite": "取消收藏：{{name}}",
+    "notifyMe": "到货时通知我",
+    "addToCart": "加入购物车"
+  },
+  "qty": {
+    "label": "数量（{{unit}}）",
+    "decrease": "减 1",
+    "increase": "加 1",
+    "max": "最多 {{qty}}",
+    "left": "剩余 {{qty}}"
+  },
+  "rating": {
+    "count_one": "（{{count}} 条评价）",
+    "count_other": "（{{count}} 条评价）",
+    "sr": "{{value}} 星（满分 5 星）",
+    "srWithCount_one": "{{value}} 星（满分 5 星），{{count}} 条评价",
+    "srWithCount_other": "{{value}} 星（满分 5 星），{{count}} 条评价",
+    "stars_one": "{{count}} 星 — {{word}}",
+    "stars_other": "{{count}} 星 — {{word}}",
+    "words": {
+      "none": "未评分",
+      "poor": "差",
+      "fair": "一般",
+      "good": "好",
+      "veryGood": "很好",
+      "excellent": "非常好"
+    }
+  },
+  "review": {
+    "verified": "已验证购买",
+    "replied": "{{by}} 回复于 {{date}}"
+  },
+  "slot": {
+    "full": "已约满",
+    "left": "剩余 {{left}}/{{max}}"
+  },
+  "stall": {
+    "markets": "市集",
+    "days": "开市日",
+    "pickup": "取货",
+    "distance": "距离",
+    "see": "查看摊位和本周库存"
+  },
+  "stock": {
+    "left": "剩余",
+    "reserved": "已预订 {{reserved}}/{{total}}",
+    "runningLow": "库存紧张",
+    "soldOut": "已售完"
+  },
+  "toast": {
+    "signedOut": "已退出登录。"
+  },
+  "validation": {
+    "fullNameRequired": "请输入你的姓名。",
+    "fullNameMax": "姓名最多 {{max}} 个字符。",
+    "phoneRequired": "请输入你的电话号码。",
+    "phoneInvalid": "请输入有效的越南手机号码（10 位数字）。",
+    "addressRequired": "请输入你的地址。",
+    "addressMax": "地址最多 {{max}} 个字符。"
+  },
+  "adminNav": {
+    "sections": "管理区域",
+    "overview": "概览",
+    "farmers": "农户",
+    "customers": "顾客",
+    "markets": "市集",
+    "moderation": "内容审核",
+    "orders": "订单",
+    "revenue": "收入",
+    "reports": "报表",
+    "categories": "分类",
+    "announcements": "公告",
+    "feedback": "反馈",
+    "pricing": "定价",
+    "settings": "设置",
+    "account": "你的账户",
+    "analytics": "分析",
+    "people": "用户",
+    "marketplace": "市场",
+    "platform": "平台",
+    "navigation": "管理导航",
+    "home": "MarketLink — 管理概览",
+    "contextSub": "平台 · 整个市场",
+    "userLine": "管理员 · 整个平台",
+    "searchPlaceholder": "摊位、顾客或市场"
+  },
+  "carousel": {
+    "roleCarousel": "轮播",
+    "roleSlide": "幻灯片",
+    "slideOf": "第 {{n}} 张，共 {{total}} 张：{{topic}}",
+    "previous": "上一张",
+    "next": "下一张",
+    "show": "显示第 {{n}} 张：{{topic}}",
+    "pause": "暂停轮播",
+    "play": "播放轮播"
+  },
+  "geo": {
+    "denied": "你已为本站关闭位置权限。请在浏览器的网站设置中更改，或改用地址。",
+    "insecure": "浏览器只会通过安全连接（https）共享你的位置。",
+    "failed": "你的设备无法确定你的位置。请重试，或改为输入地址。",
+    "finding": "正在定位…"
+  },
+  "directions": {
+    "title": "前往 {{name}} 的路线",
+    "question": "你从哪里出发？",
+    "current": "我的当前位置",
+    "currentShared": "已共享",
+    "currentAsk": "浏览器会先征求你的同意",
+    "address": "一个地址",
+    "addressNote": "胡志明市的一条街道或地标。",
+    "addressLabel": "出发地址",
+    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressHint": "填写街道和区效果最好。地图上常常没有门牌号，找不到时 OpenStreetMap 会请你选择一个地点。",
+    "useSaved": "使用我保存的地址",
+    "none": "我会在地图上输入",
+    "noneNote": "打开 OpenStreetMap，只填好目的地。",
+    "privacy": "路线会在新标签页的 openstreetmap.org 中打开。MarketLink 不会追踪你的位置。",
+    "open": "打开路线"
+  },
+  "tier": {
+    "bronze": "青铜",
+    "silver": "白银",
+    "gold": "黄金",
+    "diamond": "钻石",
+    "badge": "{{tier}} 等级"
+  },
+  "video": {
+    "play": "播放视频",
+    "preview": "视频",
+    "close": "关闭"
+  },
+  "application": {
+    "attempt": "第 {{n}} 次申请",
+    "sentOn": "提交于 {{date}}",
+    "answeredOn": "答复于 {{date}}",
+    "reason": "理由：",
+    "photoAlt": "第 {{n}} 次申请的照片"
+  },
+  "notify": {
+    "open": "打开",
+    "prompt": {
+      "title": "开启通知",
+      "text": "即使此标签页在后台，也能在屏幕上收到新消息、摊位审核结果和 MarketLink 公告。",
+      "enable": "开启",
+      "later": "以后再说",
+      "onTitle": "通知已开启",
+      "onText": "可在“设置 → 通知”中更改接收内容。"
+    },
+    "settings": {
+      "title": "通知",
+      "intro": "选择接收哪些通知以及接收方式。所有通知仍会保存在通知列表中。",
+      "browser": "浏览器通知",
+      "permission": {
+        "granted": "已开启。即使 MarketLink 在后台也会显示通知。",
+        "default": "未开启。开启后，此标签页在后台时也能看到通知。",
+        "denied": "已被浏览器阻止。请在浏览器的网站设置中允许此网站的通知，然后重新加载页面。",
+        "unsupported": "此浏览器无法显示通知。你仍可在页面上看到通知。"
+      },
+      "loading": "正在加载通知设置…",
+      "loadErrorTitle": "无法加载通知设置",
+      "loadErrorText": "请检查网络连接后重试。",
+      "retry": "重试",
+      "group": "类型",
+      "inApp": "页面内",
+      "inBrowser": "浏览器",
+      "groups": {
+        "messages": {
+          "title": "消息",
+          "note": "当顾客或摊位给你发消息时"
+        },
+        "announcements": {
+          "title": "公告",
+          "note": "来自 MarketLink 的消息，例如市集休市"
+        },
+        "account": {
+          "title": "你的摊位申请",
+          "note": "审核通过、未通过、被暂停或重新开放时"
+        },
+        "farmerApplications": {
+          "title": "农户申请",
+          "note": "有人申请在 MarketLink 上销售时"
+        }
+      },
+      "sound": "播放提示音",
+      "quiet": "免打扰时段",
+      "quietNote": "此时段内不弹窗、不响铃、不显示浏览器通知（越南时间）。通知仍会进入列表。",
+      "from": "从",
+      "to": "到",
+      "testNote": "给自己发送一条通知，看看显示效果。",
+      "test": "发送测试",
+      "testing": "正在发送…",
+      "testError": "无法发送测试，请几秒后再试。",
+      "saveError": "无法保存通知设置。"
+    },
+    "list": {
+      "all": "全部",
+      "unread": "未读",
+      "unreadCount_one": "{{count}} 条未读",
+      "unreadCount_other": "{{count}} 条未读",
+      "unreadMark": "未读",
+      "markAllRead": "全部标为已读",
+      "loading": "加载中…",
+      "more": "查看更早的通知",
+      "emptyTitle": "还没有通知",
+      "emptyUnreadTitle": "全部已读",
+      "emptyText": "新通知一到就会显示在这里。",
+      "errorTitle": "无法加载通知",
+      "errorText": "请检查网络连接后重试。",
+      "loadError": "无法加载更多通知。",
+      "readAllError": "无法标为已读。"
+    },
+    "admin": {
+      "title": "通知",
+      "intro": "等待你审核的新农户申请。"
+    }
+  },
+  "comingSoon": {
+    "title": "此页面尚未开放",
+    "text": "我们仍在建设此页面。菜单中的其他功能照常可用。"
+  }
+}

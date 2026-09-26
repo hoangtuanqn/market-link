@@ -12,6 +12,7 @@ export type MarketType = {
   stalls: number;
   distance?: string;
   saved?: boolean;
+  images?: string[];
 };
 
 export type AnnouncementType = {

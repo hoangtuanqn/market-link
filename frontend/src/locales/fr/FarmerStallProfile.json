@@ -1,0 +1,72 @@
+{
+  "title": "Stand et retrait",
+  "intro": "Ce que les clients voient de votre stand, les marchés où vous vendez, vos jours d'ouverture et plages de retrait, et l'emplacement du stand sur la carte.",
+  "approved": "Approuvé le {{date}}",
+  "saved": "Enregistré",
+  "tabs": {
+    "label": "Paramètres du stand",
+    "stall": "Infos du stand",
+    "markets": "Marchés, jours et retrait"
+  },
+  "details": {
+    "title": "Infos du stand",
+    "stallName": "Nom du stand",
+    "person": "Personne à contacter",
+    "phone": "Numéro de téléphone",
+    "phoneHint": "Affiché aux clients sur leur ticket de commande.",
+    "email": "E-mail",
+    "address": "Adresse de la ferme ou de l'entreprise",
+    "about": "À propos du stand",
+    "aboutHint": "Affiché en écriture manuscrite sur la page de votre stand. Une ou deux phrases.",
+    "savedText": "Infos du stand enregistrées.",
+    "save": "Enregistrer les infos du stand",
+    "accountHint": "Téléphone, e-mail et adresse viennent de votre compte."
+  },
+  "cutoff": {
+    "title": "Clôture des commandes",
+    "label": "Nombre d'heures avant le créneau de retrait où les modifications sont bloquées",
+    "hint_one": "Pour un créneau à {{slot}} le {{saturday}}, {{count}} heure correspond à {{time}} le {{day}}. Passé ce délai, les clients ne peuvent plus modifier ni annuler, et les nouvelles commandes pour ce créneau sont aussi fermées (D-05).",
+    "hint_other": "Pour un créneau à {{slot}} le {{saturday}}, {{count}} heures correspondent à {{time}} le {{day}}. Passé ce délai, les clients ne peuvent plus modifier ni annuler, et les nouvelles commandes pour ce créneau sont aussi fermées (D-05)."
+  },
+  "markets": {
+    "title": "Marchés où vous vendez",
+    "intro": "Cochez un marché pour ouvrir ses paramètres. Les jours et plages de retrait se règlent par marché.",
+    "runs": "Marché ouvert {{days}} · {{open}}–{{close}}",
+    "code": "Numéro ou emplacement du stand",
+    "codeHint": "Affiché sur le ticket de commande pour que les clients vous trouvent.",
+    "days": "Jours d'ouverture sur ce marché",
+    "start": "Début de la plage de retrait",
+    "end": "Fin de la plage de retrait",
+    "location": "Emplacement du stand",
+    "mapLabel": "Placer le stand sur la carte",
+    "mapHint": "Faites glisser l'épingle ronde jusqu'à votre place dans le marché. L'épingle carrée est le marché lui-même.",
+    "lat": "Latitude",
+    "lng": "Longitude",
+    "pinMoved": "Épingle déplacée",
+    "pinMovedText": "Épingle déplacée à l'entrée du marché. Faites-la glisser jusqu'à votre place.",
+    "useMarket": "Utiliser l'emplacement du marché",
+    "savedText": "Marchés, jours et plages de retrait enregistrés. Les créneaux de la semaine prochaine suivent les nouvelles plages.",
+    "save": "Enregistrer marchés et retrait",
+    "slotsLink": "Gérer les créneaux de retrait",
+    "notApproved": "Marchés, jours et créneaux de retrait s’ouvrent une fois votre stand approuvé.",
+    "windowError": "{{market}} : choisissez au moins un jour et une fin après le début.",
+    "joined": "{{name}} ajouté à votre stand.",
+    "left": "{{name}} retiré de votre stand."
+  },
+  "map": {
+    "yourStall": "Votre stand"
+  },
+  "error": {
+    "noun": "votre stand"
+  },
+  "status": {
+    "approved": "Stand approuvé",
+    "pending": "En attente d’approbation",
+    "rejected": "Demande refusée",
+    "suspended": "Stand suspendu"
+  },
+  "errors": {
+    "required": "Ce champ est obligatoire.",
+    "cutoff": "Indiquez un nombre entier entre {{min}} et {{max}} heures."
+  }
+}

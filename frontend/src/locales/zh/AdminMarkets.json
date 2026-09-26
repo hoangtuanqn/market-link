@@ -1,0 +1,37 @@
+{
+  "title": "集市",
+  "intro": "每个集市的名称、地址、营业日、时间和地图坐标。移除一个集市会让它对顾客隐藏；历史记录仍然保留。",
+  "caption_other": "{{count}} 个营业中的集市",
+  "stalls_other": "{{count}} 个摊位",
+  "col": {
+    "market": "集市",
+    "days": "营业日 · 时间",
+    "coordinates": "坐标",
+    "stalls": "摊位数"
+  },
+  "action": {
+    "add": "新增集市",
+    "edit": "编辑",
+    "remove": "移除"
+  },
+  "map": {
+    "title": "它们在哪里",
+    "label": "集市地图"
+  },
+  "empty": {
+    "title": "还没有集市",
+    "text": "先添加一个集市，填好地址、营业日和地图坐标，农户才能选它。"
+  },
+  "remove": {
+    "title": "移除 {{name}}？",
+    "text_other": "有 {{count}} 个摊位在这里摆摊。集市会从顾客页面消失，摊位会收到通知。已经为它下过的订单继续进行。",
+    "keep": "保留集市",
+    "confirm": "移除集市"
+  },
+  "toast": {
+    "removed": "已把 {{name}} 从列表中移除。"
+  },
+  "error": {
+    "noun": "市场"
+  }
+}

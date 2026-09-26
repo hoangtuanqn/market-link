@@ -1,0 +1,196 @@
+{
+  "title": "Compte",
+  "intro": "Vos informations ne sont partagées avec un stand que pour les commandes que vous y passez.",
+  "sell": {
+    "title": "Vendre sur MarketLink",
+    "text": "Si vous cultivez des aliments, ce compte peut devenir un stand. Vous gardez vos commandes, favoris et panier, et un panneau pour le stock et les créneaux de retrait apparaît dès qu'un administrateur vous approuve.",
+    "apply": "Demander à vendre",
+    "view": "Voir votre demande",
+    "panel": "Ouvrir le panneau producteur",
+    "loading": "Vérification de votre demande",
+    "status": {
+      "pending": "Votre demande est chez un admin. Rien ne change pour vous d'ici sa réponse.",
+      "approved": "Votre stand est validé. Réglez marchés, créneaux de retrait et produits dans le panneau producteur.",
+      "rejected": "Votre demande a été refusée. Ouvrez-la pour revoir ce qui a été envoyé.",
+      "suspended": "Votre stand est suspendu. Vous pouvez continuer à acheter comme client."
+    },
+    "draft": "Vous avez une demande inachevée. Reprenez où vous en étiez.",
+    "continue": "Terminer votre demande",
+    "history": "Voir vos demandes précédentes"
+  },
+  "signOut": {
+    "title": "Se déconnecter",
+    "text": "Vous déconnecte sur cet appareil uniquement.",
+    "button": "Se déconnecter"
+  },
+  "profile": {
+    "title": "Vos informations",
+    "loading": "Chargement de vos informations…",
+    "loadFailed": "Impossible de charger vos informations. Veuillez réessayer.",
+    "signedOut": {
+      "title": "Vous êtes déconnecté.",
+      "text": "Reconnectez-vous pour voir et modifier vos informations.",
+      "signIn": "Se connecter"
+    },
+    "nothingChanged": "Rien n'a été modifié.",
+    "retry": "Réessayer",
+    "fullName": "Nom complet",
+    "phone": "Numéro de téléphone",
+    "email": "E-mail",
+    "emailHint": "Sert à vous connecter. Il ne peut pas être modifié ici.",
+    "address": "Adresse",
+    "addressHint": "Sert pour les distances et les itinéraires.",
+    "save": "Enregistrer les modifications",
+    "saving": "Enregistrement…",
+    "noChanges": "Aucune modification à enregistrer.",
+    "saved": "Vos informations sont enregistrées.",
+    "saveFailed": "Impossible d'enregistrer vos informations. Veuillez réessayer."
+  },
+  "password": {
+    "section": "Mot de passe et sécurité",
+    "row": "Mot de passe",
+    "rowNote": "Le mot de passe que vous utilisez pour vous connecter par e-mail.",
+    "title": "Changer le mot de passe",
+    "intro": "Vous serez déconnecté sur tous vos appareils et devrez vous reconnecter.",
+    "current": "Mot de passe actuel",
+    "new": "Nouveau mot de passe",
+    "repeat": "Répétez le nouveau mot de passe",
+    "hint": "De {{min}} à {{max}} caractères.",
+    "submit": "Changer le mot de passe",
+    "submitting": "Changement du mot de passe…",
+    "cancel": "Annuler",
+    "changed": "Votre mot de passe a été changé. Veuillez vous reconnecter.",
+    "failed": "Impossible de changer votre mot de passe. Veuillez réessayer.",
+    "errors": {
+      "currentRequired": "Saisissez votre mot de passe actuel.",
+      "newRequired": "Saisissez un nouveau mot de passe.",
+      "length": "Le mot de passe doit contenir de {{min}} à {{max}} caractères.",
+      "same": "Choisissez un mot de passe différent de l'actuel.",
+      "confirmRequired": "Confirmez votre mot de passe.",
+      "mismatch": "Les mots de passe ne correspondent pas."
+    }
+  },
+  "photo": {
+    "title": "Photo de profil",
+    "intro": "Affichée dans le menu et aux stands sur vos commandes. JPEG, PNG ou une photo prise avec votre appareil.",
+    "upload": "Importer une photo",
+    "take": "Prendre une photo",
+    "notUsed": "Photo non utilisée"
+  },
+  "photoErrors": {
+    "notPhoto": "Choisissez une photo (JPEG, PNG, HEIC ou WebP).",
+    "tooBig": "Cette photo dépasse {{mb}} Mo. Choisissez-en une plus petite.",
+    "unreadable": "Ce fichier n'est pas une photo lisible.",
+    "noPicture": "La caméra n'a pas encore d'image. Réessayez.",
+    "captureFailed": "Impossible de prendre la photo."
+  },
+  "dialog": {
+    "takeTitle": "Prendre une photo",
+    "frameTitle": "Cadrer votre photo",
+    "frameHelp": "Faites glisser la photo et zoomez jusqu'à ce que votre visage remplisse le cercle.",
+    "cancel": "Annuler",
+    "uploadInstead": "Importer une photo à la place",
+    "take": "Prendre la photo",
+    "retake": "Reprendre",
+    "chooseAnother": "En choisir une autre",
+    "save": "Enregistrer la photo",
+    "saving": "Enregistrement…",
+    "saved": "Votre photo est enregistrée.",
+    "saveFailed": "Impossible d'enregistrer votre photo. Veuillez réessayer.",
+    "takeFailed": "Impossible de prendre la photo. Réessayez.",
+    "unchanged": "Votre photo actuelle reste inchangée."
+  },
+  "camera": {
+    "preview": "Aperçu de la caméra",
+    "starting": "Démarrage de la caméra…",
+    "blocked": {
+      "title": "L'accès à la caméra est bloqué.",
+      "text": "Autorisez la caméra pour ce site dans les réglages du navigateur, ou importez une photo à la place."
+    },
+    "notFound": {
+      "title": "Aucune caméra trouvée.",
+      "text": "Branchez-en une, ou importez une photo à la place."
+    },
+    "busy": {
+      "title": "La caméra est occupée.",
+      "text": "Fermez les autres applications qui l'utilisent et réessayez, ou importez une photo."
+    },
+    "failed": {
+      "title": "La caméra n'a pas pu démarrer.",
+      "text": "Réessayez, ou importez une photo à la place."
+    },
+    "insecure": {
+      "title": "Ce navigateur ne peut pas ouvrir la caméra ici.",
+      "text": "La caméra nécessite une page sécurisée (https). Importez une photo à la place."
+    }
+  },
+  "crop": {
+    "frame": "Cadrage de la photo. Faites glisser, ou utilisez les flèches pour la déplacer et plus ou moins pour zoomer.",
+    "zoom": "Zoom"
+  },
+  "achievements": {
+    "title": "Vos résultats",
+    "intro": "Comptés à partir des commandes que vous avez retirées aux stands. Vous seul voyez ces chiffres.",
+    "loading": "Chargement de vos résultats…",
+    "loadFailed": "Impossible de charger vos résultats.",
+    "completed": "Commandes retirées",
+    "cancelled": "Annulées par vous",
+    "declined": "Refusées par le stand",
+    "inProgress": "En cours",
+    "spent": "Total dépensé",
+    "rate": "Taux de réussite",
+    "rateNone": "—",
+    "nextTitle": "En route vers {{tier}}",
+    "ofGoal": "{{value}} sur {{goal}}",
+    "rateNeeded": "Il vous faut aussi un taux de réussite d'au moins {{rate}} %. Les commandes refusées par le stand ne comptent jamais contre vous.",
+    "top": "Vous êtes au niveau le plus élevé. Merci de faire vos courses au marché.",
+    "youAreHere": "Votre niveau",
+    "perks": {
+      "bronze": "Cadre bronze autour de votre photo",
+      "silver": "Un cadre argent plus épais",
+      "gold": "Cadre or avec une étoile",
+      "diamond": "Cadre diamant scintillant avec une pierre"
+    },
+    "unavailable": {
+      "title": "Pas encore de chiffres",
+      "text": "Votre niveau et vos chiffres se remplissent tout seuls dès que vos commandes sont enregistrées."
+    },
+    "privacy": "Les stands et les autres acheteurs voient votre niveau à côté de votre nom, jamais ces chiffres.",
+    "hero": {
+      "overline": "Votre adhésion",
+      "line_one": "{{name}}, vous avez retiré {{count}} commande et dépensé {{amount}} au marché.",
+      "line_other": "{{name}}, vous avez retiré {{count}} commandes et dépensé {{amount}} au marché.",
+      "welcome": "Bienvenue au marché, {{name}}. Retirez vos premières commandes pour grimper les niveaux.",
+      "since": "Membre depuis {{date}}"
+    },
+    "titles": {
+      "bronze": "Nouveau au marché",
+      "silver": "Un visage familier",
+      "gold": "Un habitué des stands",
+      "diamond": "Gardien du feu du marché"
+    },
+    "yourPerksTitle": "Vos avantages",
+    "yourPerks": {
+      "bronze": [
+        "Un cadre bronze autour de votre photo, dans le menu et sur votre profil",
+        "Votre niveau à côté de votre nom sur les avis et dans les messages"
+      ],
+      "silver": [
+        "Un cadre argent plus épais autour de votre photo",
+        "Les stands voient le niveau Argent à côté de votre nom sur les commandes et dans les messages",
+        "Vos avis portent le badge du niveau Argent"
+      ],
+      "gold": [
+        "Un cadre or avec une étoile au coin de votre photo",
+        "Les stands voient le niveau Or à côté de votre nom sur les commandes et dans les messages",
+        "Vos avis portent le badge du niveau Or"
+      ],
+      "diamond": [
+        "Un cadre diamant scintillant avec une pierre au coin de votre photo",
+        "Les stands voient le niveau Diamant à côté de votre nom sur les commandes et dans les messages",
+        "Vos avis portent le badge du niveau Diamant",
+        "Une carte de membre étincelante sur votre profil"
+      ]
+    }
+  }
+}

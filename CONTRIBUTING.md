@@ -187,6 +187,7 @@ Lỡ commit bí mật thì báo ngay cho LEAD và đổi bí mật đó. Xoá co
 ## 7. Database migration
 
 - Chỉ đổi DB qua migration Flyway mới: `backend/src/main/resources/db/migration/V<yyyyMMdd><nnn>__<mo_ta>.sql`.
+  Không đổi tên migration đã vào `dev`. Nếu nhánh khác merge trước với số lớn hơn thì cứ để nguyên: dev bật `spring.flyway.out-of-order` nên Flyway tự chạy bù, prod thì không.
 - **Không sửa migration đã merge vào `dev`.** Muốn đổi thì viết migration mới.
 - Hai PR trùng số version: người merge sau đổi tên file của mình sang số lớn hơn trước khi merge.
 - `db/schema.sql` là thiết kế đích do LEAD giữ (R-02), không phải migration.

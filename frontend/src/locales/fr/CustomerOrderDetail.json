@@ -1,0 +1,46 @@
+{
+  "missing": {
+    "title": "Cette commande n'existe plus",
+    "text": "Vous l'avez peut-être annulée, ou le lien est ancien. Rouvrez-la depuis vos commandes."
+  },
+  "myOrders": "Mes commandes",
+  "breadcrumb": "Commande {{code}}",
+  "placedAt": "Passée le {{time}}",
+  "status": {
+    "placed": "Passée",
+    "accepted": "Acceptée",
+    "ready": "Prête à retirer",
+    "completed": "Terminée",
+    "declined": "Refusée",
+    "cancelled": "Annulée"
+  },
+  "previewLocked": "Aperçu : après l'heure limite",
+  "pickup": {
+    "title": "Retrait",
+    "where": "{{market}}, stand {{stall}}",
+    "spot": "Côté rivière du marché, à côté du stand de pain.",
+    "slot": "Votre créneau",
+    "phone": "Téléphone du stand",
+    "bring": "À apporter",
+    "bringText": "{{total}} en espèces ou par virement au stand",
+    "directions": "Itinéraire",
+    "stallPage": "Page du stand",
+    "map": "Point de retrait au stand {{stall}}"
+  },
+  "history": {
+    "title": "Historique",
+    "by": "{{time}} · par {{by}}",
+    "note": "Chaque changement de statut est enregistré avec son auteur."
+  },
+  "change": {
+    "title": "Modifier cette commande",
+    "until": "Vous pouvez modifier les quantités, retirer des articles ou annuler jusqu'à <b>{{cutoff}}</b>. Après modification, {{stall}} valide à nouveau la commande.",
+    "edit": "Modifier la commande",
+    "cancel": "Annuler la commande",
+    "locked": "L'heure limite est passée à {{cutoff}}. Pour la modifier, contactez directement le stand au {{phone}}."
+  },
+  "notify": {
+    "title": "Notifications pour cette commande",
+    "text": "Vous avez été prévenu quand elle a été acceptée. Vous le serez quand elle sera prête, ou si le stand doit la refuser."
+  }
+}

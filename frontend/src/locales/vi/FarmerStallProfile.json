@@ -1,0 +1,72 @@
+{
+  "title": "Sạp & nhận hàng",
+  "intro": "Những gì khách thấy về sạp của bạn, các chợ bạn bán, ngày hoạt động và khung giờ nhận hàng, cùng vị trí sạp trên bản đồ.",
+  "approved": "Được duyệt ngày {{date}}",
+  "saved": "Đã lưu",
+  "tabs": {
+    "label": "Cài đặt sạp",
+    "stall": "Thông tin sạp",
+    "markets": "Chợ, ngày và nhận hàng"
+  },
+  "details": {
+    "title": "Thông tin sạp",
+    "stallName": "Tên sạp",
+    "person": "Người liên hệ",
+    "phone": "Số điện thoại",
+    "phoneHint": "Hiện cho khách trên phiếu đơn hàng.",
+    "email": "Email",
+    "address": "Địa chỉ nông trại hoặc cơ sở",
+    "about": "Giới thiệu sạp",
+    "aboutHint": "Hiện bằng chữ viết tay trên trang sạp. Một hoặc hai câu.",
+    "savedText": "Đã lưu thông tin sạp.",
+    "save": "Lưu thông tin sạp",
+    "accountHint": "Số điện thoại, email và địa chỉ lấy từ tài khoản của bạn."
+  },
+  "cutoff": {
+    "title": "Hạn chốt đơn",
+    "label": "Ngừng nhận thay đổi trước khung giờ nhận hàng bao nhiêu giờ",
+    "hint_one": "Với khung giờ {{slot}} vào {{saturday}}, {{count}} giờ nghĩa là {{time}} {{day}}. Sau đó khách không thể sửa hay huỷ đơn, và khung giờ đó cũng ngừng nhận đơn mới (D-05).",
+    "hint_other": "Với khung giờ {{slot}} vào {{saturday}}, {{count}} giờ nghĩa là {{time}} {{day}}. Sau đó khách không thể sửa hay huỷ đơn, và khung giờ đó cũng ngừng nhận đơn mới (D-05)."
+  },
+  "markets": {
+    "title": "Chợ bạn bán",
+    "intro": "Đánh dấu một chợ để mở phần cài đặt của chợ đó. Ngày và khung giờ nhận hàng được đặt riêng cho từng chợ.",
+    "runs": "Chợ họp {{days}} · {{open}}–{{close}}",
+    "code": "Mã hoặc vị trí sạp",
+    "codeHint": "Hiện trên phiếu đơn hàng để khách tìm thấy bạn.",
+    "days": "Ngày hoạt động tại chợ này",
+    "start": "Giờ bắt đầu nhận hàng",
+    "end": "Giờ kết thúc nhận hàng",
+    "location": "Vị trí sạp",
+    "mapLabel": "Ghim sạp trên bản đồ",
+    "mapHint": "Kéo ghim tròn đến chỗ của bạn trong chợ. Ghim vuông là vị trí của chợ.",
+    "lat": "Vĩ độ",
+    "lng": "Kinh độ",
+    "pinMoved": "Đã dời ghim",
+    "pinMovedText": "Đã dời ghim về lối vào chợ. Hãy kéo ghim đến chỗ của bạn.",
+    "useMarket": "Dùng vị trí của chợ",
+    "savedText": "Đã lưu chợ, ngày và khung giờ nhận hàng. Các khung giờ tuần sau sẽ theo khung giờ mới.",
+    "save": "Lưu chợ và nhận hàng",
+    "slotsLink": "Quản lý khung giờ nhận hàng",
+    "notApproved": "Chợ, ngày và khung giờ nhận mở sau khi admin duyệt gian hàng của bạn.",
+    "windowError": "{{market}}: chọn ít nhất một ngày và giờ kết thúc phải sau giờ bắt đầu.",
+    "joined": "Đã thêm {{name}} vào gian hàng của bạn.",
+    "left": "Đã bỏ {{name}} khỏi gian hàng của bạn."
+  },
+  "map": {
+    "yourStall": "Sạp của bạn"
+  },
+  "error": {
+    "noun": "gian hàng của bạn"
+  },
+  "status": {
+    "approved": "Gian hàng đã duyệt",
+    "pending": "Đang chờ duyệt",
+    "rejected": "Đơn bị từ chối",
+    "suspended": "Gian hàng bị đình chỉ"
+  },
+  "errors": {
+    "required": "Trường này là bắt buộc.",
+    "cutoff": "Nhập số nguyên từ {{min}} đến {{max}} giờ."
+  }
+}

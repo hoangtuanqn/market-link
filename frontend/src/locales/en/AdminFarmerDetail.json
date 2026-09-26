@@ -1,0 +1,58 @@
+{
+  "breadcrumb": "Application",
+  "loading": "Loading application",
+  "loadError": {
+    "title": "Couldn't load this application",
+    "text": "Check your connection and try again.",
+    "retry": "Try again"
+  },
+  "sentOn": "Sent {{date}}",
+  "approveText": "Their role becomes Farmer and a stall panel opens on their account. They keep every customer feature they have now. Nothing appears to shoppers until they add products and set a pickup window.",
+  "suspendedBanner": {
+    "title": "This stall is suspended.",
+    "text": "Its products stay hidden from customers. Orders already placed still run their course."
+  },
+  "rejectedBanner": {
+    "title": "This application was rejected.",
+    "text": "Reason shown to the applicant: {{reason}}"
+  },
+  "photos": {
+    "title": "Photos of the plot",
+    "alt": "Photo of the plot",
+    "hint": "Check that the plot in the photos looks like the pin on the map and grows what the applicant listed. You are not checking licences, food safety or organic claims."
+  },
+  "stall": {
+    "title": "The stall they are asking for",
+    "name": "Stall name",
+    "contact": "Contact person",
+    "email": "Email",
+    "description": "Description"
+  },
+  "history": {
+    "title": "History",
+    "suspended": "Suspended",
+    "approved": "Approved",
+    "sent": "Application sent",
+    "customer": "Account created as a customer",
+    "byAdmin": "An admin"
+  },
+  "applicant": {
+    "title": "Applicant",
+    "name": "Name",
+    "since": "Customer since",
+    "status": "Account status"
+  },
+  "accountStatus": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "suspended": "Suspended"
+  },
+  "approval": {
+    "title": "What approval does",
+    "text": "Their role becomes Farmer and a stall panel opens. They keep buying from other stalls with the same account. Nothing is listed until they add products and set a pickup window."
+  },
+  "attempts": {
+    "title": "Application history",
+    "text": "Every time this account applied, with what was sent and what was answered."
+  }
+}

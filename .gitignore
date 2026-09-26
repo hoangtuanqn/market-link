@@ -93,6 +93,8 @@ yarn-error.log*
 # Phòng trường hợp build được chạy ngay tại root hoặc IDE tạo output ở root.
 # ---------------------------------------------------------------------
 target/
+# Ảnh người dùng tải lên khi chạy backend trên máy (app.storage.dir mặc định)
+backend/uploads/
 !**/src/main/**/target/
 !**/src/test/**/target/
 build/
@@ -102,6 +104,8 @@ build/
 *.jar
 !**/.mvn/wrapper/maven-wrapper.jar
 !**/gradle/wrapper/gradle-wrapper.jar
+# Ảnh/video đơn xin thành Farmer lưu cục bộ (FarmerUploadService, app.uploads.dir) — không commit.
+backend/uploads/
 
 # ---------------------------------------------------------------------
 # Frontend (Node.js / Vite)
@@ -111,6 +115,11 @@ out/
 dist/
 coverage/
 *.tsbuildinfo
+
+# ---------------------------------------------------------------------
+# Transcript session AI (export cục bộ để tra cứu, chứa nội dung file và log)
+# ---------------------------------------------------------------------
+docs/session-*.md
 
 # ---------------------------------------------------------------------
 # Khác

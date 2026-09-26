@@ -1,0 +1,43 @@
+{
+  "title": "Marchés",
+  "intro": "Nom, adresse, jours d'ouverture, horaires et coordonnées sur la carte de chaque marché. Retirer un marché le masque aux clients ; son historique reste.",
+  "caption_one": "{{count}} marché actif",
+  "caption_many": "{{count}} marchés actifs",
+  "caption_other": "{{count}} marchés actifs",
+  "stalls_one": "{{count}} étal",
+  "stalls_many": "{{count}} étals",
+  "stalls_other": "{{count}} étals",
+  "col": {
+    "market": "Marché",
+    "days": "Jours · horaires",
+    "coordinates": "Coordonnées",
+    "stalls": "Étals"
+  },
+  "action": {
+    "add": "Ajouter un marché",
+    "edit": "Modifier",
+    "remove": "Retirer"
+  },
+  "map": {
+    "title": "Où ils se trouvent",
+    "label": "Carte des marchés"
+  },
+  "empty": {
+    "title": "Aucun marché pour l'instant",
+    "text": "Ajoutez un marché avec son adresse, ses jours d'ouverture et ses coordonnées pour que les producteurs puissent le choisir."
+  },
+  "remove": {
+    "title": "Retirer {{name}} ?",
+    "text_one": "{{count}} étal y vend. Le marché disparaît des pages clients et l'étal est prévenu. Les commandes déjà passées pour ce marché continuent.",
+    "text_many": "{{count}} étals y vendent. Le marché disparaît des pages clients et les étals sont prévenus. Les commandes déjà passées pour ce marché continuent.",
+    "text_other": "{{count}} étals y vendent. Le marché disparaît des pages clients et les étals sont prévenus. Les commandes déjà passées pour ce marché continuent.",
+    "keep": "Garder le marché",
+    "confirm": "Retirer le marché"
+  },
+  "toast": {
+    "removed": "{{name}} retiré de la liste."
+  },
+  "error": {
+    "noun": "marchés"
+  }
+}

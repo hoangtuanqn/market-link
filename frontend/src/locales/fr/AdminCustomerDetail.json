@@ -1,0 +1,77 @@
+{
+  "allCustomers": "Clients",
+  "since": "Client depuis le {{joined}} · dernière commande le {{last}}",
+  "missing": {
+    "title": "Ce client n'existe plus",
+    "text": "Le compte a peut-être été supprimé. Rouvrez-le depuis la liste des clients."
+  },
+  "action": {
+    "deactivate": "Désactiver le compte",
+    "reactivate": "Réactiver le compte"
+  },
+  "banner": {
+    "title": "Désactivé aujourd'hui.",
+    "text": "Motif conservé sur le compte : {{reason}}. Les commandes en cours ne sont pas touchées."
+  },
+  "orders": {
+    "title": "Commandes",
+    "all": "Toutes les commandes de la plateforme",
+    "note": "Un administrateur les lit. Seul l'étal fait avancer une commande, il n'y a donc rien à changer ici."
+  },
+  "reviews": {
+    "title": "Avis rédigés",
+    "openInModeration": "Ouvrir dans la modération",
+    "note": "Masquer un avis se fait depuis la Modération, où le signalement à l'origine est visible aussi."
+  },
+  "timeline": {
+    "title": "Historique du compte",
+    "created": "Compte créé",
+    "firstCollected": "Première commande retirée",
+    "noShow": "Ne s'est pas présenté",
+    "lastOrder": "Dernière commande"
+  },
+  "contact": {
+    "title": "Contact",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "joined": "Inscription"
+  },
+  "habits": {
+    "title": "Habitudes d'achat",
+    "orders": "Commandes",
+    "collected": "Retirées",
+    "noShows": "Non retirées",
+    "market": "Marché",
+    "buysMostFrom": "Achète surtout chez"
+  },
+  "whatItDoes": {
+    "title": "Ce que fait la désactivation",
+    "text": "La personne ne peut plus se connecter ni passer de nouvelle commande. Les commandes déjà passées ne sont pas touchées : l'étal remet ce qu'il a mis de côté et personne ne perd des produits cueillis pour lui."
+  },
+  "deactivate": {
+    "title": "Désactiver {{name}} ?",
+    "text": "Elle ne pourra plus se connecter ni commander tant qu'un administrateur ne réactive pas le compte. Les commandes déjà passées vont à leur terme, aucun étal ne reste avec des produits que personne ne vient chercher.",
+    "reason": "Motif conservé sur le compte",
+    "keep": "Pas maintenant",
+    "confirm": "Désactiver"
+  },
+  "reason": {
+    "noShows": "Absences répétées au retrait",
+    "abusive": "Propos injurieux dans un avis",
+    "requested": "A demandé la fermeture de son compte",
+    "other": "Autre"
+  },
+  "toast": {
+    "deactivated": "{{name}} désactivé.",
+    "reactivated": "{{name}} peut se reconnecter."
+  },
+  "col": {
+    "order": "Commande",
+    "stall": "Étal",
+    "pickup": "Retrait",
+    "items": "Articles",
+    "total": "Total",
+    "status": "Statut"
+  }
+}

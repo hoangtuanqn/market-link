@@ -6,8 +6,8 @@ COMPOSE_APP  := docker compose --profile app
 COMPOSE_PROD := docker compose -p market-link-prod --env-file .env.production -f docker-compose.yml -f docker-compose.prod.yml --profile app
 
 .DEFAULT_GOAL := help
-.PHONY: help check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
-        format lint be-format be-test fe-install mysql redis clean
+.PHONY: help vapid-keys check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
+        format lint be-format be-test fe-install seed mysql redis clean
 
 help: ## Hiện danh sách lệnh
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n",$$1,$$2}'
@@ -24,10 +24,10 @@ up: ## Chạy toàn bộ stack dev (mysql, redis, backend, frontend)
 	@test -f .env || cp .env.example .env
 	$(COMPOSE_APP) up -d --build --renew-anon-volumes
 
-infra: ## Chỉ chạy mysql + redis (khi muốn chạy BE/FE trực tiếp trên máy)
-	$(COMPOSE) up -d mysql redis
+infra: ## Chỉ chạy mysql + redis + rabbitmq (khi muốn chạy BE/FE trực tiếp trên máy)
+	$(COMPOSE) up -d mysql redis rabbitmq
 
-tools: ## Chạy thêm Adminer (:8081) và RedisInsight (:5540)
+tools: ## Chạy thêm Adminer (:8081) và RedisInsight (:5540); RabbitMQ UI (:15672) chạy sẵn cùng stack
 	$(COMPOSE) --profile tools up -d
 
 down: ## Dừng stack (giữ data)
@@ -80,11 +80,18 @@ lint: ## ESLint frontend + spotless:check backend
 	$(COMPOSE) exec frontend npm run lint
 	$(COMPOSE) exec backend ./mvnw -q spotless:check
 
+vapid-keys: ## Sinh cặp khoá VAPID cho Web Push (dán vào .env)
+	@$(COMPOSE_APP) run --rm --no-deps --entrypoint node frontend -e "const {generateKeyPairSync}=require('crypto');const k=generateKeyPairSync('ec',{namedCurve:'prime256v1'});const j=k.privateKey.export({format:'jwk'});console.log('VAPID_PUBLIC_KEY='+Buffer.concat([Buffer.from([4]),Buffer.from(j.x,'base64url'),Buffer.from(j.y,'base64url')]).toString('base64url'));console.log('VAPID_PRIVATE_KEY='+j.d)"
+
 be-test: ## Chạy test backend trong container
 	$(COMPOSE) exec backend ./mvnw -B test
 
 fe-install: ## Cài lại package frontend trong container (sau khi đổi package.json)
 	$(COMPOSE) exec frontend npm install
+
+seed: ## Nạp dữ liệu demo db/seed.sql (FR-100…102) — chạy lại được nhiều lần
+	$(COMPOSE) exec -T mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"' < db/seed.sql
+	@echo "Seed xong."
 
 mysql: ## Mở MySQL shell
 	$(COMPOSE) exec mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"'

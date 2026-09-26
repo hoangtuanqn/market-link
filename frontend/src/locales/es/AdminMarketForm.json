@@ -1,0 +1,93 @@
+{
+  "allMarkets": "Mercados",
+  "crumbNew": "Añadir",
+  "crumbEdit": "Editar",
+  "titleNew": "Mercado nuevo",
+  "city": "Ciudad Ho Chi Minh",
+  "meta": "{{stalls}} puestos · añadido el {{added}}",
+  "metaStalls": "{{stalls}} puestos",
+  "missing": {
+    "title": "Ese mercado ya no está aquí",
+    "text": "Puede que se haya quitado. Vuelve a abrirlo desde la lista de mercados."
+  },
+  "field": {
+    "name": "Nombre del mercado",
+    "address": "Dirección",
+    "district": "Distrito",
+    "city": "Ciudad",
+    "days": "Días de apertura",
+    "open": "Abre",
+    "close": "Cierra",
+    "lat": "Latitud",
+    "lng": "Longitud",
+    "lngHint": "O arrastra la chincheta. Los datos del mapa vienen de OpenStreetMap.",
+    "notes": "Notas para los puestos"
+  },
+  "pin": {
+    "label": "Marcar el mercado",
+    "note": "Arrastra la chincheta hasta la entrada del mercado. Los puestos marcarán después su sitio dentro del mercado."
+  },
+  "action": {
+    "save": "Guardar mercado",
+    "cancel": "Cancelar"
+  },
+  "toast": {
+    "saved": "{{name}} guardado."
+  },
+  "closures": {
+    "title": "Días de cierre",
+    "intro": "Un día en que este mercado no abre, aunque caiga en día de apertura. Los clientes lo ven en la página del mercado y en el tablón de inicio, y no pueden hacer pedidos nuevos para ese día.",
+    "add": "Añadir día de cierre",
+    "addConfirm": "Añadir el día",
+    "added": "Día de cierre añadido. Publica un aviso para que los clientes lo vean.",
+    "removed": "Día de cierre eliminado.",
+    "remove": "Eliminar",
+    "removeTitle": "¿Eliminar este día de cierre?",
+    "removeText": "El mercado vuelve a abrir ese día y los clientes pueden pedir.",
+    "keep": "Mantenerlo",
+    "announced": "Anunciado",
+    "notYet": "Todavía no",
+    "noneYet": "Ninguno",
+    "noReason": "Sin indicar",
+    "byAdminToday": "Administrador · hoy",
+    "col": {
+      "date": "Fecha",
+      "reason": "Motivo",
+      "orders": "Pedidos ya realizados",
+      "told": "Clientes avisados"
+    },
+    "field": {
+      "date": "Fecha",
+      "reason": "Motivo que verán los clientes",
+      "reasonPlaceholder": "Obras municipales en Quốc Hương",
+      "handling": "Pedidos ya realizados para ese día"
+    },
+    "empty": {
+      "title": "Sin días de cierre",
+      "text": "Este mercado abre todos sus días de apertura. Añade un día de cierre cuando no vaya a hacerlo."
+    }
+  },
+  "handling": {
+    "move": {
+      "title": "Pasar los pedidos al siguiente día de mercado",
+      "short": "pasados al siguiente día de mercado",
+      "text": "Cada cliente conserva su pedido y recibe la nueva fecha de recogida. El puesto también tiene que vender ese día."
+    },
+    "contact": {
+      "title": "Pedir a cada puesto que avise a sus clientes",
+      "short": "los puestos avisan a sus clientes",
+      "text": "No cambia nada automáticamente. El puesto acuerda otro momento y no devuelve nada, porque no ha cambiado dinero de manos."
+    },
+    "cancel": {
+      "title": "Cancelar los pedidos y avisar a los clientes",
+      "short": "cancelados y clientes avisados",
+      "text": "El stock vuelve al puesto y el pedido acaba como cancelado, no como rechazado, porque el puesto no hizo nada mal."
+    }
+  },
+  "error": {
+    "noun": "mercado",
+    "required": "Este campo es obligatorio.",
+    "days": "Elige al menos un día de apertura.",
+    "close": "La hora de cierre debe ser posterior a la de apertura."
+  }
+}

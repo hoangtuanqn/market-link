@@ -1,0 +1,30 @@
+{
+  "title": "Panier",
+  "products_one": "{{count}} produit",
+  "products_other": "{{count}} produits",
+  "stalls_one": "{{count}} stand",
+  "stalls_other": "{{count}} stands",
+  "intro": "{{products}} de {{stalls}}. Choisissez un créneau de retrait pour chaque stand, puis passez les commandes.",
+  "split": {
+    "title": "Votre panier sera divisé en 2 commandes chez 2 stands différents.",
+    "text": "Chaque stand a son propre créneau de retrait et son heure limite, et accepte sa commande séparément. Vous payez chaque stand au retrait."
+  },
+  "changeTime": "Changer le créneau de retrait chez {{stall}}",
+  "pickupDay": "Jour de retrait",
+  "pickupDayAt": "Jour de retrait chez {{stall}}",
+  "pickupTime": "Heure de retrait · {{day}} {{date}} · plage {{from}} – {{to}}",
+  "cutoffNote": "{{stall}} clôt les commandes {{hours}} heures avant le créneau. Pour {{slot}} le {{slotDay}}, c'est {{cutoff}} le {{cutoffDay}}.",
+  "summary": {
+    "title": "Payez aux stands lors du retrait",
+    "order": "Commande {{n}} · {{stall}}",
+    "total": "Total, les deux stands"
+  },
+  "note": {
+    "label": "Note pour les stands",
+    "placeholder": "ex. des bottes plus petites, s'il vous plaît"
+  },
+  "place": "Passer 2 commandes",
+  "ready": "Les deux stands ont un créneau de retrait. Chaque stand confirme sa propre commande.",
+  "notReady": "Choisissez un créneau de retrait chez {{stall}} pour passer vos commandes.",
+  "stockNote": "Le stock est déduit du stand dès que vous passez la commande. Il n'y a pas de paiement en ligne."
+}

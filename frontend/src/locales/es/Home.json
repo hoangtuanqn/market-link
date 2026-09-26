@@ -1,0 +1,55 @@
+{
+  "hero": {
+    "weekend": "fin de semana de mercado {{from}} – {{to}}",
+    "title": "Reserva en el mercado de agricultores",
+    "intro_one": "Reserva los productos de esta semana en puestos de {{count}} mercado de Ciudad Ho Chi Minh. Recoge en el puesto y paga directamente al agricultor.",
+    "intro_other": "Reserva los productos de esta semana en puestos de {{count}} mercados de Ciudad Ho Chi Minh. Recoge en el puesto y paga directamente al agricultor.",
+    "browse": "Ver mercados",
+    "sell": "Vende en MarketLink"
+  },
+  "search": {
+    "scope": "Buscar en",
+    "scopes": {
+      "all": "Todo",
+      "market": "Mercados",
+      "farmer": "Puestos",
+      "product": "Productos"
+    },
+    "keyword": "Palabra clave",
+    "placeholder": "Espinaca de agua, Cô Tư Garden, mercado de Thảo Điền…",
+    "submit": "Buscar"
+  },
+  "board": {
+    "overline": "Abiertos este fin de semana",
+    "title": "Dónde están los puestos",
+    "seeAll_one": "Ver el mercado en el mapa",
+    "seeAll_other": "Ver los {{count}} mercados en el mapa"
+  },
+  "nearby": {
+    "title": "Mercados cerca de ti",
+    "note": "Distancias desde tu dirección guardada en Thảo Điền",
+    "noun": "mercados"
+  },
+  "fresh": {
+    "title": "Fresco esta semana",
+    "all": "Todos los productos y filtros",
+    "noun": "productos"
+  },
+  "how": {
+    "title": "Cómo funcionan las reservas",
+    "steps": {
+      "reserve": {
+        "title": "Reserva antes del cierre",
+        "text": "Añade productos de uno o varios puestos, elige una hora de recogida dentro del horario de cada puesto y haz el pedido. El stock queda reservado para ti en cuanto pides."
+      },
+      "confirm": {
+        "title": "El agricultor confirma",
+        "text": "Cada puesto acepta o rechaza su propio pedido. Recibes un aviso en ambos casos y puedes editar o cancelar hasta el cierre del puesto."
+      },
+      "pickup": {
+        "title": "Recoge y paga en el puesto",
+        "text": "Cuando el pedido esté listo, ve al puesto en tu franja horaria, recógelo y paga directamente al agricultor. No hay pago en línea."
+      }
+    }
+  }
+}

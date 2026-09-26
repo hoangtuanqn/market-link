@@ -1,0 +1,46 @@
+{
+  "notFound": {
+    "title": "Diesen Markt gibt es hier nicht mehr",
+    "browse": "Märkte ansehen"
+  },
+  "intro_one": "{{count}} Stand. Jeder Stand schließt seine Bestellungen 12 bis 24 Stunden vor der Abholung. Abholung am Stand, Bezahlung direkt beim Erzeuger.",
+  "intro_other": "{{count}} Stände. Jeder Stand schließt seine Bestellungen 12 bis 24 Stunden vor der Abholung. Abholung am Stand, Bezahlung direkt beim Erzeuger.",
+  "toast": {
+    "saved": "{{name}} gespeichert.",
+    "removed": "{{name}} aus den Favoriten entfernt."
+  },
+  "save": {
+    "on": "Markt gespeichert",
+    "off": "Markt speichern"
+  },
+  "directions": "Route",
+  "search": {
+    "scope": "Suchen in",
+    "scopes": {
+      "product": "Produkte auf diesem Markt",
+      "farmer": "Stände auf diesem Markt"
+    },
+    "keyword": "Suchbegriff",
+    "placeholder": "Wasserspinat, Sauerteigbrot, Eier…",
+    "submit": "Suchen"
+  },
+  "day": "Markttag",
+  "all": "Alle",
+  "inStock": "Vorrätig",
+  "available": "Erhältlich am {{day}}",
+  "productsFrom": "{{products}} von {{stalls}}",
+  "products_one": "{{count}} Produkt",
+  "products_other": "{{count}} Produkte",
+  "stalls_one": "{{count}} Stand",
+  "stalls_other": "{{count}} Ständen",
+  "mapLabel": "Karte von {{name}} und seinen Ständen",
+  "stallsTitle": "Stände auf diesem Markt am {{day}}",
+  "stallsNote": "Stände, die am gewählten Tag nicht verkaufen, werden nicht angezeigt",
+  "error": {
+    "noun": "Markt"
+  },
+  "stallsNoun": "Stände",
+  "stallsEmpty": {
+    "title": "Keine Stände am {{day}}"
+  }
+}

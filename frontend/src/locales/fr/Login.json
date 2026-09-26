@@ -1,0 +1,29 @@
+{
+  "title": "Se connecter",
+  "intro": "Les clients et les producteurs se connectent ici. Les administrateurs utilisent la <link>connexion administrateur dédiée</link>.",
+  "fields": {
+    "email": "E-mail",
+    "password": "Mot de passe"
+  },
+  "rememberMe": "Rester connecté",
+  "forgotPassword": "Mot de passe oublié ?",
+  "submit": "Se connecter",
+  "submitting": "Connexion…",
+  "or": "ou",
+  "google": {
+    "continue": "Continuer avec Google",
+    "opening": "Ouverture de Google…",
+    "failed": "Impossible de lancer la connexion Google. Veuillez réessayer.",
+    "note": "Google nous transmet votre nom et votre e-mail. Votre numéro de téléphone et votre adresse restent nécessaires avant votre première commande : nous vous les demandons une fois à l’écran suivant."
+  },
+  "newHere": "Pas encore de compte ? <customer>Inscrivez-vous</customer>",
+  "toast": {
+    "signedIn": "Connecté.",
+    "failed": "Impossible de vous connecter. Veuillez réessayer."
+  },
+  "errors": {
+    "emailRequired": "Saisissez votre e-mail.",
+    "emailInvalid": "Saisissez une adresse e-mail valide.",
+    "passwordRequired": "Saisissez votre mot de passe."
+  }
+}

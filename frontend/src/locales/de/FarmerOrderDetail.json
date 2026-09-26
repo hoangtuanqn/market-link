@@ -1,0 +1,81 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "Nicht genug Bestand",
+      "day": "An diesem Tag kein Verkauf",
+      "time": "Diese Abholzeit ist nicht möglich",
+      "other": "Sonstiges"
+    },
+    "item": "{{qty}} {{name}}",
+    "title": "Bestellung {{code}} ablehnen?",
+    "keep": "Bestellung behalten",
+    "confirm": "Bestellung ablehnen",
+    "text": "{{who}} wird sofort informiert, und {{items}} gehen zurück in Ihren Bestand.",
+    "reason": "Begründung, die der Kunde sieht"
+  },
+  "history": {
+    "before": "Vor {{cutoff}}",
+    "cancelled": "Vom Kunden storniert",
+    "title": "Verlauf"
+  },
+  "missing": {
+    "title": "Diese Bestellung gibt es hier nicht mehr",
+    "text": "Vielleicht hat der Kunde sie storniert, oder der Link ist veraltet. Öffnen Sie sie erneut über Ihre Bestellliste.",
+    "back": "Meine Bestellungen"
+  },
+  "item": "Artikel",
+  "col": {
+    "product": "Produkt",
+    "requested": "Bestellt",
+    "left": "Rest nach dieser Bestellung",
+    "amount": "Betrag"
+  },
+  "crumb": "Bestellungen",
+  "cutoff": "Bestellschluss {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "Bestellung angenommen",
+    "acceptedText": "Bestellung {{code}} angenommen. {{who}} wurde informiert.",
+    "readyTitle": "Bestellung bereit",
+    "readyText": "Bestellung {{code}} als bereit markiert.",
+    "completedTitle": "Bestellung abgeschlossen",
+    "completedText": "Bestellung {{code}} abgeschlossen.",
+    "declinedTitle": "Bestellung abgelehnt",
+    "declinedText": "Bestellung {{code}} abgelehnt."
+  },
+  "actions": {
+    "accept": "Bestellung annehmen",
+    "decline": "Ablehnen",
+    "ready": "Als bereit markieren",
+    "complete": "Als abgeschlossen markieren"
+  },
+  "items": {
+    "title": "Artikel",
+    "note": "Der angezeigte Bestand ist, was nach dieser und anderen Bestellungen übrig bleibt. Reservierter Bestand wird zurückgegeben, wenn Sie ablehnen (D-02)."
+  },
+  "note": "Notiz des Kunden",
+  "quote": "„{{text}}“",
+  "customer": {
+    "title": "Kunde",
+    "name": "Name",
+    "tier": "Stufe",
+    "phone": "Telefon",
+    "ordersWithYou": "Bestellungen bei Ihnen",
+    "orders_one": "{{count}} Bestellung",
+    "orders_other": "{{count}} Bestellungen",
+    "withCollected_one": "{{orders}}, {{count}} abgeholt",
+    "withCollected_other": "{{orders}}, {{count}} abgeholt"
+  },
+  "pickup": {
+    "title": "Abholfenster",
+    "market": "Markt",
+    "marketStall": "{{market}}, Stand {{code}}",
+    "slot": "Fenster",
+    "pay": "Bei Abholung zahlen"
+  },
+  "complete": {
+    "title": "{{code}} als abgeschlossen markieren?",
+    "notYet": "Noch nicht",
+    "text": "Tun Sie das, nachdem der Kunde die Bestellung abgeholt und am Stand bezahlt hat. Abgeschlossene Bestellungen zählen zu Ihrem Umsatz und schalten die Bewertung des Kunden frei.",
+    "auto": "Bestellungen, die noch als Bereit markiert sind, werden 24 Stunden nach dem Abholtag automatisch abgeschlossen (D-03)."
+  }
+}

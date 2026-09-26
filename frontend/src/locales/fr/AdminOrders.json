@@ -1,0 +1,59 @@
+{
+  "title": "Commandes",
+  "intro": "Toutes les commandes de MarketLink, sur les quatre marchés. Les administrateurs les lisent ; seul l'étal fait avancer une commande d'un statut à l'autre.",
+  "days_one": "{{count}} jour",
+  "days_many": "{{count}} jours",
+  "days_other": "{{count}} jours",
+  "export": {
+    "button": "Exporter la période",
+    "title": "Export lancé",
+    "text": "Le CSV reprend la période et les filtres affichés."
+  },
+  "kpi": {
+    "placed": "Commandes passées",
+    "placedNote": "sur {{count}} marchés",
+    "completed": "Terminées",
+    "declined": "Refusées par un étal",
+    "cancelled": "Annulées par un client",
+    "cancelledNote": "toutes avant la clôture",
+    "share": "{{pct}} % de la période"
+  },
+  "perDay": {
+    "title": "Commandes passées par jour",
+    "note": "{{now}} face à {{prev}}, sur les mêmes 30 jours.",
+    "caption": "Commandes passées par jour en {{now}} face à {{prev}}",
+    "axis": "Jour du mois"
+  },
+  "byStatus": {
+    "title": "Où elles ont fini",
+    "note": "Chaque statut a son mot et son symbole : on distingue les lignes sans se fier à la barre."
+  },
+  "byMarket": {
+    "title": "Par marché"
+  },
+  "list": {
+    "title": "Les commandes",
+    "inPeriod": "{{count}} en {{month}}",
+    "filterLabel": "Filtrer les commandes par statut",
+    "market": "Marché",
+    "allMarkets": "Tous les marchés",
+    "showing": "{{from}}–{{to}} sur {{total}}"
+  },
+  "filter": {
+    "all": "Toutes",
+    "completed": "Terminées",
+    "open": "En cours",
+    "declined": "Refusées",
+    "cancelled": "Annulées"
+  },
+  "customerNo": "Client nº {{n}}",
+  "col": {
+    "order": "Commande",
+    "customer": "Client",
+    "stall": "Étal",
+    "market": "Marché",
+    "pickup": "Retrait",
+    "total": "Total",
+    "status": "Statut"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "overline": {
+    "suspended": "{{stall}} · suspendu le {{date}}",
+    "registered": "{{stall}} · inscrit le {{date}}"
+  },
+  "title": {
+    "pending": "Votre stand attend sa validation",
+    "suspended": "Votre stand est suspendu"
+  },
+  "previewToggle": "Aperçu : stand suspendu",
+  "reviewing": {
+    "title": "Un administrateur examine votre inscription.",
+    "text": "Vous recevrez une notification et un e-mail une fois validé. D’ici là, votre stand et vos produits ne sont pas visibles des clients."
+  },
+  "now": {
+    "title": "Ce que vous pouvez faire maintenant",
+    "details": "Complétez les <link>informations du stand</link>, les marchés où vous vendez, vos jours et vos créneaux de retrait.",
+    "pin": "Placez votre stand sur la carte pour que les clients vous trouvent dès le premier jour.",
+    "products": "Les produits pourront être ajoutés une fois le stand validé. Préparez en attendant les noms, les prix et les photos."
+  },
+  "details": {
+    "title": "Détails de l’inscription",
+    "stall": "Stand",
+    "contact": "Contact",
+    "email": "E-mail",
+    "market": "Marché demandé"
+  },
+  "suspended": {
+    "title": "Votre stand a été suspendu le {{date}}.",
+    "text": "Motif de l’administrateur : {{reason}} Vos produits sont masqués et vous ne pouvez plus recevoir de nouvelles commandes."
+  },
+  "running": {
+    "title": "Les commandes déjà passées continuent",
+    "text": "Les clients qui ont commandé avant la suspension gardent leurs commandes (D-09). Marquez-les prêtes puis terminées comme d’habitude pour que personne ne perde ce qu’il a réservé.",
+    "link": "Ouvrir les commandes en cours"
+  },
+  "reinstate": {
+    "title": "Pour être rétabli",
+    "text": "Contactez l’équipe via <link>Nous contacter</link>."
+  }
+}

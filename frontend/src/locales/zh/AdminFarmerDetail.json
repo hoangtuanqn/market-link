@@ -1,0 +1,58 @@
+{
+  "breadcrumb": "申请",
+  "loading": "正在加载申请",
+  "loadError": {
+    "title": "无法加载此申请",
+    "text": "请检查网络连接后重试。",
+    "retry": "重试"
+  },
+  "sentOn": "发送于 {{date}}",
+  "approveText": "其角色变为农户，账户中会开通摊位面板。他们保留现有的所有顾客功能。在添加商品并设置取货时段之前，购物者看不到任何内容。",
+  "suspendedBanner": {
+    "title": "此摊位已被暂停。",
+    "text": "其商品不会向顾客显示。已下的订单仍会照常完成。"
+  },
+  "rejectedBanner": {
+    "title": "此申请已被拒绝。",
+    "text": "向申请人显示的原因：{{reason}}"
+  },
+  "photos": {
+    "title": "地块照片",
+    "alt": "地块照片",
+    "hint": "确认照片中的地块与地图上的定位相符，并且种植的是申请人所列的作物。你不需要核查许可证、食品安全或有机声明。"
+  },
+  "stall": {
+    "title": "申请的摊位",
+    "name": "摊位名称",
+    "contact": "联系人",
+    "email": "邮箱",
+    "description": "描述"
+  },
+  "history": {
+    "title": "历史记录",
+    "suspended": "已停用",
+    "approved": "已通过",
+    "sent": "已提交申请",
+    "customer": "以顾客身份创建账户",
+    "byAdmin": "管理员"
+  },
+  "applicant": {
+    "title": "申请人",
+    "name": "姓名",
+    "since": "成为顾客时间",
+    "status": "账户状态"
+  },
+  "accountStatus": {
+    "active": "正常",
+    "inactive": "未激活",
+    "suspended": "已暂停"
+  },
+  "approval": {
+    "title": "批准后会怎样",
+    "text": "其角色变为农户并开通摊位面板。他们仍可用同一账户在其他摊位购物。在添加商品并设置取货时段之前，不会上架任何内容。"
+  },
+  "attempts": {
+    "title": "申请历史",
+    "text": "该账户每一次申请的内容和处理结果。"
+  }
+}

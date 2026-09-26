@@ -1,0 +1,74 @@
+{
+  "title": "レポート",
+  "intro": "プラットフォーム全体の注文と売上をマーケット別に、そして最も売っている農家を示します。売上は完了した注文の合計で、お金は MarketLink を通らず店舗に支払われます。",
+  "days_other": "{{count}}日間",
+  "points": "ポイント",
+  "market": "マーケット",
+  "allMarkets": "すべてのマーケット",
+  "export": {
+    "button": "この期間を書き出す",
+    "title": "書き出しを開始しました",
+    "text": "CSV には画面上の期間とマーケットがそのまま反映されます。"
+  },
+  "kpi": {
+    "orders": "注文",
+    "ordersNote": "{{month}}、すべてのマーケット",
+    "revenue": "完了した売上",
+    "revenueNote": "₫、店舗で支払われた分",
+    "average": "注文単価",
+    "averageNote": "完了した注文1件あたりの₫",
+    "declineRate": "お断り率",
+    "declineNote": "{{total}}件中{{declined}}件"
+  },
+  "axis": {
+    "dayOfMonth": "日付"
+  },
+  "revenueChart": {
+    "title": "日別の売上",
+    "note": "完了した注文、単位は百万₫。{{now}}と{{prev}}の同じ30日間の比較。",
+    "caption": "{{now}}と{{prev}}の日別売上、単位は百万ドン"
+  },
+  "ordersChart": {
+    "title": "日別の注文数",
+    "note": "最終的な状態にかかわらず、すべての注文です。",
+    "caption": "{{now}}と{{prev}}の日別注文数"
+  },
+  "byMarket": {
+    "title": "マーケット別の売上",
+    "note": "4つのマーケットを同じ尺度で見るので、棒の色はすべて同じです。長さがすべてを語ります。"
+  },
+  "byStatus": {
+    "title": "状態別の注文"
+  },
+  "topFarmers": {
+    "title": "もっとも活発な農家",
+    "note": "この期間の完了注文数順"
+  },
+  "topProducts": {
+    "title": "売れている商品",
+    "note": "それぞれの店舗が使っている単位で表示",
+    "unitsNote": "数量は同じ単位の中でのみ合計します。きのこ1キロと卵1トレイは別のものなので、プラットフォームが数量の総計を1つ出すことはありません。"
+  },
+  "sideBySide": {
+    "title": "マーケットの比較",
+    "note": "同じ期間、各数字に変化幅を添えて"
+  },
+  "col": {
+    "stall": "店舗",
+    "markets": "マーケット",
+    "completedOrders": "完了した注文",
+    "revenue": "売上",
+    "productsListed": "出品中の商品数",
+    "rating": "評価",
+    "product": "商品",
+    "soldPer": "販売単位",
+    "price": "価格",
+    "sold": "販売数",
+    "market": "マーケット",
+    "stalls": "店舗数",
+    "orders": "注文",
+    "change": "変化",
+    "completed": "完了",
+    "declined": "お断り"
+  }
+}

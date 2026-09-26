@@ -1,0 +1,26 @@
+{
+  "title": "문의하기",
+  "intro": "주문에 대한 문의는 가판에 직접 연락하세요. 전화번호는 주문서에 있습니다. 플랫폼에 관한 일은 여기에서 팀에 연락하세요.",
+  "team": {
+    "title": "MarketLink 팀",
+    "email": "이메일",
+    "phone": "전화",
+    "address": "주소",
+    "hours": "운영 시간",
+    "toAdd": "추후 안내",
+    "addressValue": "추후 안내합니다. 지도의 핀은 1군에 있는 임시 위치입니다.",
+    "hoursValue": "월 – 금, 09:00 – 17:00"
+  },
+  "feedback": {
+    "title": "문제가 있거나 아이디어가 있나요",
+    "text": "피드백 양식을 사용하면 페이지와 브라우저 정보가 함께 담겨 담당자에게 바로 전달됩니다.",
+    "cta": "피드백 보내기"
+  },
+  "map": {
+    "label": "팀 위치 지도",
+    "markerLabel": "MarketLink 팀(임시)",
+    "popupTitle": "MarketLink 팀",
+    "popupLine": "임시 핀, 1군",
+    "directions": "팀까지 길찾기"
+  }
+}

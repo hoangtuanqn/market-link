@@ -1,0 +1,68 @@
+{
+  "notFound": {
+    "title": "Ese puesto ya no está aquí",
+    "browse": "Ver mercados"
+  },
+  "breadcrumb": "Mercados",
+  "approved": "Puesto aprobado",
+  "savedToast": "{{name}} guardado.",
+  "save": "Guardar puesto",
+  "message": "Escribir al puesto",
+  "stats": {
+    "reviews_one": "{{count}} reseña",
+    "reviews_other": "{{count}} reseñas",
+    "markets_one": "mercado",
+    "markets_other": "mercados",
+    "since": "vende aquí desde",
+    "cutoff": "horas antes de la recogida se cierran los pedidos"
+  },
+  "tabs": {
+    "label": "Secciones del puesto",
+    "stock": "Stock de esta semana",
+    "reviews": "Reseñas",
+    "about": "Sobre el puesto"
+  },
+  "stock": {
+    "count_one": "{{count}} producto",
+    "count_other": "{{count}} productos",
+    "availableOn": "Disponible el",
+    "notSelling": "{{stall}} no vende el {{day}}. Los productos de arriba son los que tiene en sus días de venta ({{days}})."
+  },
+  "reviews": {
+    "summary_one": "{{count}} reseña, de un pedido completado",
+    "summary_other": "{{count}} reseñas, todas de pedidos completados",
+    "all": "Todas",
+    "farmer": "Sobre el puesto",
+    "product": "Sobre productos",
+    "newest": "Más recientes primero"
+  },
+  "about": {
+    "whereWhen": "Dónde y cuándo",
+    "table": {
+      "market": "Mercado",
+      "days": "Días",
+      "window": "Horario de recogida",
+      "stall": "Puesto",
+      "directions": "Cómo llegar"
+    },
+    "cutoffNote_one": "Los pedidos cierran {{count}} hora antes de la franja que elijas. Después solo el puesto puede cambiar el pedido.",
+    "cutoffNote_other": "Los pedidos cierran {{count}} horas antes de la franja que elijas. Después solo el puesto puede cambiar el pedido.",
+    "disclaimer": "MarketLink no comprueba licencias ni certificaciones ecológicas. Si te importa, pregunta en el puesto.",
+    "contact": "Contacto",
+    "email": "Correo",
+    "since": "Vende aquí desde",
+    "mapLabel": "Mapa de {{name}}",
+    "findingTitle": "Cómo encontrar el puesto",
+    "findingText": "Puesto {{code}} · horario de recogida {{window}}. Las franjas duran 30 minutos y admiten 5 pedidos cada una.",
+    "preorder": "Reservar en este mercado"
+  },
+  "report": {
+    "sentTitle": "Denuncia enviada",
+    "sentText": "Un administrador lo revisará.",
+    "button": "Denunciar este puesto",
+    "note": "Ausencias repetidas, ubicación del puesto incorrecta o cualquier cosa que incumpla las normas de la plataforma."
+  },
+  "error": {
+    "noun": "puesto"
+  }
+}

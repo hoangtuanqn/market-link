@@ -1,0 +1,72 @@
+{
+  "title": "Puesto y recogida",
+  "intro": "Lo que los clientes ven de tu puesto, los mercados donde vendes, tus días de venta y franjas de recogida, y dónde está el puesto en el mapa.",
+  "approved": "Aprobado el {{date}}",
+  "saved": "Guardado",
+  "tabs": {
+    "label": "Ajustes del puesto",
+    "stall": "Datos del puesto",
+    "markets": "Mercados, días y recogida"
+  },
+  "details": {
+    "title": "Datos del puesto",
+    "stallName": "Nombre del puesto",
+    "person": "Persona de contacto",
+    "phone": "Número de teléfono",
+    "phoneHint": "Se muestra a los clientes en su ticket de pedido.",
+    "email": "Correo electrónico",
+    "address": "Dirección de la granja o negocio",
+    "about": "Sobre el puesto",
+    "aboutHint": "Se muestra con letra manuscrita en la página de tu puesto. Una o dos frases.",
+    "savedText": "Datos del puesto guardados.",
+    "save": "Guardar datos del puesto",
+    "accountHint": "Teléfono, correo y dirección vienen de tu cuenta."
+  },
+  "cutoff": {
+    "title": "Cierre de pedidos",
+    "label": "Dejar de aceptar cambios estas horas antes de la franja de recogida",
+    "hint_one": "Para una franja a las {{slot}} del {{saturday}}, {{count}} hora significa las {{time}} del {{day}}. A partir de entonces los clientes no pueden modificar ni cancelar, y también se cierran los pedidos nuevos para esa franja (D-05).",
+    "hint_other": "Para una franja a las {{slot}} del {{saturday}}, {{count}} horas significa las {{time}} del {{day}}. A partir de entonces los clientes no pueden modificar ni cancelar, y también se cierran los pedidos nuevos para esa franja (D-05)."
+  },
+  "markets": {
+    "title": "Mercados donde vendes",
+    "intro": "Marca un mercado para abrir sus ajustes. Los días y las franjas de recogida se configuran por mercado.",
+    "runs": "El mercado abre {{days}} · {{open}}–{{close}}",
+    "code": "Código o ubicación del puesto",
+    "codeHint": "Se muestra en el ticket de pedido para que los clientes te encuentren.",
+    "days": "Días de venta en este mercado",
+    "start": "Inicio de la franja de recogida",
+    "end": "Fin de la franja de recogida",
+    "location": "Ubicación del puesto",
+    "mapLabel": "Marca el puesto en el mapa",
+    "mapHint": "Arrastra el pin redondo hasta tu sitio dentro del mercado. El pin cuadrado es el propio mercado.",
+    "lat": "Latitud",
+    "lng": "Longitud",
+    "pinMoved": "Pin movido",
+    "pinMovedText": "Pin movido a la entrada del mercado. Arrástralo hasta tu sitio.",
+    "useMarket": "Usar la ubicación del mercado",
+    "savedText": "Mercados, días y franjas de recogida guardados. Las franjas de la próxima semana siguen los nuevos horarios.",
+    "save": "Guardar mercados y recogida",
+    "slotsLink": "Gestionar franjas de recogida",
+    "notApproved": "Mercados, días y ventanas de recogida se activan cuando un administrador apruebe tu puesto.",
+    "windowError": "{{market}}: elige al menos un día y una hora de fin posterior al inicio.",
+    "joined": "{{name}} añadido a tu puesto.",
+    "left": "{{name}} quitado de tu puesto."
+  },
+  "map": {
+    "yourStall": "Tu puesto"
+  },
+  "error": {
+    "noun": "tu puesto"
+  },
+  "status": {
+    "approved": "Puesto aprobado",
+    "pending": "Pendiente de aprobación",
+    "rejected": "Solicitud rechazada",
+    "suspended": "Puesto suspendido"
+  },
+  "errors": {
+    "required": "Este campo es obligatorio.",
+    "cutoff": "Usa un número entero entre {{min}} y {{max}} horas."
+  }
+}

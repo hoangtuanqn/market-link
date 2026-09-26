@@ -1,0 +1,87 @@
+{
+  "notFound": {
+    "title": "That product is not on sale any more",
+    "text": "The stall may have taken it down. Look at what else they have this week.",
+    "browse": "Browse products"
+  },
+  "breadcrumb": "Products",
+  "photo": "Photo of {{name}}",
+  "favorite": {
+    "add": "Add to favorites: {{name}}",
+    "remove": "Remove from favorites: {{name}}"
+  },
+  "soldPer": "sold per {{unit}}",
+  "left": "<b>{{qty}}</b> left this week",
+  "stockUpdated": "Stock updated today, before this weekend's orders.",
+  "notifyMe": "Notify me when back",
+  "added": {
+    "title": "Added to cart",
+    "text": "Added {{qty}} of {{name}} to your cart."
+  },
+  "addToCart": "Add to cart",
+  "payNote": "Stock is held for you when you place the order. You pay {{price}} at the stall on pickup.",
+  "fromStall": "From the stall",
+  "sellingSince": "selling here since {{date}}",
+  "stats": {
+    "reviews_one": "{{count}} review",
+    "reviews_other": "{{count}} reviews",
+    "markets_one": "market",
+    "markets_other": "markets",
+    "hours_one": "{{count}}h",
+    "hours_other": "{{count}}h",
+    "cutoff": "order cutoff"
+  },
+  "seeStall": "See the stall",
+  "messageStall": "Message the stall",
+  "details": {
+    "title": "Product details",
+    "soldPer": "Sold per",
+    "category": "Category",
+    "stall": "Stall",
+    "market": "Market"
+  },
+  "collect": {
+    "title": "Where and when you collect",
+    "map": "See on the map",
+    "note": "Slots hold 5 orders each. A full slot is locked, and the stall stops changes before the cutoff above."
+  },
+  "table": {
+    "market": "Market",
+    "stallCode": "Stall {{code}}",
+    "days": "Days",
+    "window": "Pickup window",
+    "cutoff": "Orders close",
+    "cutoffValue_one": "{{count}} hour before your slot",
+    "cutoffValue_other": "{{count}} hours before your slot",
+    "product": "Product",
+    "price": "Price",
+    "perUnit": "per {{unit}}",
+    "left": "Left"
+  },
+  "directions": "Directions",
+  "reviews": {
+    "title": "Reviews of this product",
+    "write": "Write a review",
+    "writeNote": "Available once an order with this product is completed.",
+    "summary_one": "{{count}} review, from a completed order",
+    "summary_other": "{{count}} reviews, all from completed orders"
+  },
+  "similar": {
+    "title": "{{name}} at other stalls this weekend",
+    "note": "Same vegetable, different plot and price",
+    "here": "You are here",
+    "view": "View"
+  },
+  "also": {
+    "title": "Also from {{stall}} this week"
+  },
+  "report": {
+    "sentTitle": "Report sent",
+    "sentText": "An admin will look at this listing.",
+    "button": "Report this listing",
+    "note": "Wrong price, wrong photo or something that does not belong at a farmers market."
+  },
+  "error": {
+    "noun": "product"
+  }
+}

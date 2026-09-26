@@ -1,0 +1,46 @@
+{
+  "title": "Customers",
+  "intro": "Deactivate an account for a policy violation; it can no longer sign in or order. Reactivate when it is resolved. Their past orders stay with the stalls.",
+  "search": {
+    "label": "Search customers",
+    "placeholder": "Name, email or phone",
+    "submit": "Search"
+  },
+  "filterLabel": "Filter customers",
+  "filter": {
+    "all": "All",
+    "active": "Active",
+    "inactive": "Deactivated",
+    "joinedThisMonth": "Joined this month"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Deactivated"
+  },
+  "col": {
+    "customer": "Customer",
+    "joined": "Joined",
+    "orders": "Orders",
+    "status": "Status"
+  },
+  "action": {
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate"
+  },
+  "showing": "Showing {{from}}–{{to}} of {{total}}",
+  "empty": {
+    "title": "No customers yet",
+    "text": "Customer accounts appear here as soon as people register on MarketLink."
+  },
+  "deactivate": {
+    "title": "Deactivate {{name}}?",
+    "text": "They are signed out everywhere and cannot sign in or place orders. Orders already placed stay with the stalls.",
+    "reason": "Reason, kept on the account",
+    "keep": "Keep active",
+    "confirm": "Deactivate account"
+  },
+  "toast": {
+    "deactivated": "{{name}} deactivated.",
+    "reactivated": "{{name}} can sign in again."
+  }
+}

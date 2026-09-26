@@ -1,0 +1,50 @@
+{
+  "title": "Produkte",
+  "intro": "Alles, was Sie anbieten können. Markieren Sie ein Produkt als ausverkauft, wenn es am Markttag aufgebraucht ist, oder pausieren Sie es außerhalb der Saison.",
+  "add": "Produkt hinzufügen",
+  "filterAll": "Alle",
+  "status": {
+    "available": "Verfügbar",
+    "sold_out": "Ausverkauft",
+    "unavailable": "Pausiert"
+  },
+  "caption_one": "{{count}} Produkt",
+  "caption_other": "{{count}} Produkte",
+  "col": {
+    "product": "Produkt",
+    "price": "Preis",
+    "left": "Diese Woche übrig",
+    "reserved": "Reserviert",
+    "status": "Status"
+  },
+  "perUnit": "pro {{unit}}",
+  "statusOf": "Status von {{name}}",
+  "edit": "Bearbeiten",
+  "delete": "Löschen",
+  "footNote": "Wenn Sie ein Produkt löschen, verschwindet es aus dem Katalog; frühere Bestellungen behalten ihre Positionen. Fotos: 4:3, Tageslicht, auf Holz oder Papier.",
+  "toast": {
+    "statusSaved": "Status gespeichert",
+    "status": {
+      "available": "Das Produkt wird wieder angeboten.",
+      "sold_out": "Kunden sehen jetzt „Ausverkauft“ und können sich benachrichtigen lassen, wenn es wieder da ist.",
+      "unavailable": "Das Produkt ist für Kunden ausgeblendet, bis Sie es wieder aktivieren."
+    },
+    "deleted": "Gelöscht",
+    "deletedText": "{{name}} gelöscht."
+  },
+  "dialog": {
+    "title": "{{name}} löschen?",
+    "keep": "Produkt behalten",
+    "confirm": "Produkt löschen",
+    "text": "Es verschwindet aus dem Katalog und aus Ihrer Vorlage. Bestellungen, die es bereits enthalten, bleiben unverändert.",
+    "pauseHint": "Um es eine Weile nicht zu verkaufen, wählen Sie stattdessen Pausiert."
+  },
+  "error": {
+    "noun": "deine Produkte"
+  },
+  "hiddenByAdmin": "Von einem Admin ausgeblendet: {{reason}}",
+  "empty": {
+    "title": "Noch keine Produkte",
+    "text": "Füge dein erstes Produkt hinzu — es erscheint sofort auf deiner Standseite."
+  }
+}

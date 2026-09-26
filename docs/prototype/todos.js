@@ -195,13 +195,25 @@ window.PT_TODOS = [
   "role": "customer",
   "file": "account.html",
   "screen": "Account",
+  "text": "Proposal · A profile photo is not in the SRS. API proposed in docs/proposals/avatar-api.md; LEAD to confirm."
+ },
+ {
+  "role": "customer",
+  "file": "account.html",
+  "screen": "Account",
+  "text": "Proposal · Personal achievements and tiers are not in the SRS; LEAD asked for them 25/09. Backend: GET /api/v1/auth/me/achievements (not in docs/api-contract.md yet). A tier needs all three of orders collected, total spent and completion rate (completed ÷ completed + cancelled by the customer); declined orders never count. Thresholds live in app.tiers. The orders table does not exist yet (FR-030…038), so until it does the app shows 'No order figures yet' and Bronze."
+ },
+ {
+  "role": "customer",
+  "file": "account.html",
+  "screen": "Account",
   "text": "Feature catalog · 'View and update personal details' and 'change password' are marked (proposal), not in the SRS. Keep or cut; the API contract has GET /auth/me but no PUT."
  },
  {
   "role": "customer",
   "file": "assistant.html",
   "screen": "Shopping assistant",
-  "text": "FR-090 · Which model or service does the classification (rule-based, a hosted LLM, tawk.to/Zapier as the SRS suggests) is decided in docs/chatbot-design.md, not in the SRS. Prototype shows the UI only."
+  "text": "FR-090 to FR-092 are optional in the SRS and SHOULD in .ai/REQUIREMENTS.md, so the whole screen can be cut if hours run short. That fact used to sit in a kicker above the heading, where a real user would have read "
  },
  {
   "role": "customer",
@@ -220,6 +232,12 @@ window.PT_TODOS = [
   "file": "become-farmer.html",
   "screen": "Apply to sell",
   "text": "Policy · What a rejected applicant sees, whether they may apply again, and after how long, is not decided. The schema has farmer_profiles.reject_reason but no screen or rule for reapplying."
+ },
+ {
+  "role": "customer",
+  "file": "change-password.html",
+  "screen": "Change password",
+  "text": "Feature catalog · 'change password' is marked (proposal), not in the SRS. In the app this is /account/password (PR #125), opened from the Password & security card on Account."
  },
  {
   "role": "customer",
@@ -304,12 +322,6 @@ window.PT_TODOS = [
   "file": "product-form.html",
   "screen": "Add or edit product",
   "text": "FR-062 · The 'flag' text on the product tag is a design-system idea, not an SRS field. Keep it (needs a column) or drop it."
- },
- {
-  "role": "farmer",
-  "file": "product-form.html",
-  "screen": "Add or edit product",
-  "text": "Schema · products.unit is already VARCHAR(20), so a stall naming its own unit needs no migration. The plural has nowhere to live, and English cannot derive the plural of a phrase like tray of 30. Proposal for LEAD: a nullable products.unit_plural VARCHAR(20) falling back to the guess. order_items.unit snapshots the unit at order time, so it needs the plural too."
  },
  {
   "role": "farmer",

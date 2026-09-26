@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { CircleSlashIcon, ClockIcon, CloseIcon, LockIcon } from '@/components/icons';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
@@ -12,14 +13,15 @@ type OrderTicketProps = { order: OrderType; fluid?: boolean; hideActions?: boole
 
 /** Order receipt: pickup details, items, total and the actions for its current status (design system `.ml-ticket`). */
 const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
+  const { t } = useTranslation();
   const editable = !order.locked && (order.status === 'placed' || order.status === 'accepted');
   const href = `/orders/${order.code.replace('#', '')}`;
 
   return (
-    <Card as="article" className={Helper.cn('flex flex-col gap-3 p-4', fluid ? 'w-full' : 'w-95 max-w-full')}>
+    <Card as="article" className={Helper.cn('flex h-full flex-col gap-3 p-4', fluid ? 'w-full' : 'w-95 max-w-full')}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-ink-muted text-small">Order {order.code}</div>
+          <div className="text-ink-muted text-small">{t('order.code', { code: order.code })}</div>
           <h3 className="mt-0.5 text-[17px] leading-tight font-bold">
             <Link to={href} className="text-inherit no-underline hover:underline hover:underline-offset-3">
               {farmerName(order.farmerId)}
@@ -30,15 +32,17 @@ const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
       </div>
 
       <dl className="bg-surface-sunken text-small m-0 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-sm p-3">
-        <dt className="text-ink-muted">Market</dt>
+        <dt className="text-ink-muted">{t('order.market')}</dt>
         <dd className="m-0 font-bold">{marketName(order.marketId)}</dd>
-        <dt className="text-ink-muted">Pickup</dt>
+        <dt className="text-ink-muted">{t('order.pickup')}</dt>
         <dd className="m-0 font-bold">
           {order.date} · {order.slot}
         </dd>
       </dl>
 
-      <ul className="m-0 flex flex-col p-0 text-[15px]">
+      <div className="ml-ticket-perf" aria-hidden="true" />
+
+      <ul className="m-0 flex flex-1 flex-col p-0 text-[15px]">
         {order.items.map((line) => {
           const p = lineProduct(line.productId);
           if (!p) return null;
@@ -58,61 +62,61 @@ const OrderTicket = ({ order, fluid, hideActions }: OrderTicketProps) => {
       </ul>
 
       <div className="flex items-baseline justify-between gap-3 font-bold">
-        <span>Pay on pickup</span>
+        <span>{t('order.payOnPickup')}</span>
         <span className="font-hand text-price text-[28px] tabular-nums">{vnd(orderTotal(order))}</span>
       </div>
 
-      <div aria-hidden="true" className="border-line-strong -mx-4 border-t-[1.5px] border-dashed" />
-
-      {order.status === 'declined' && order.reason ? (
-        <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
-          <CloseIcon size={16} className="mt-px flex-none" />
-          <span>Reason from the stall: {order.reason} Nothing to pay.</span>
-        </p>
-      ) : order.status === 'cancelled' ? (
-        <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
-          <CircleSlashIcon size={16} className="mt-px flex-none" />
-          <span>You cancelled this order before the cutoff. Stock went back to the stall.</span>
-        </p>
-      ) : (
-        <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
-          {order.locked ? (
-            <LockIcon size={16} className="mt-px flex-none" />
-          ) : (
-            <ClockIcon size={16} className="mt-px flex-none" />
-          )}
-          <span>
-            {order.locked
-              ? `Cutoff passed at ${order.cutoff}. To change it, contact the stall directly.`
-              : `Edit or cancel before ${order.cutoff}. After that the order is locked.`}
-          </span>
-        </p>
-      )}
-
-      {!hideActions && editable && (
-        <div className="flex flex-wrap gap-2">
-          <ButtonLink to={`${href}/edit`} variant="secondary" size="sm">
-            Edit order
-          </ButtonLink>
-          <Button variant="danger" size="sm">
-            Cancel order
-          </Button>
-        </div>
-      )}
-      {!hideActions &&
-        order.status === 'completed' &&
-        (order.reviewed ? (
-          <span className="text-ink-muted text-small">You reviewed this order</span>
+      <div className="mt-auto flex flex-col gap-3">
+        {order.status === 'declined' && order.reason ? (
+          <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
+            <CloseIcon size={16} className="mt-px flex-none" />
+            <span>{t('order.declinedReason', { reason: order.reason })}</span>
+          </p>
+        ) : order.status === 'cancelled' ? (
+          <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
+            <CircleSlashIcon size={16} className="mt-px flex-none" />
+            <span>{t('order.cancelledNote')}</span>
+          </p>
         ) : (
+          <p className="text-ink-muted m-0 flex items-start gap-1.5 text-[13px]">
+            {order.locked ? (
+              <LockIcon size={16} className="mt-px flex-none" />
+            ) : (
+              <ClockIcon size={16} className="mt-px flex-none" />
+            )}
+            <span>
+              {order.locked
+                ? t('order.lockedNote', { cutoff: order.cutoff })
+                : t('order.editableNote', { cutoff: order.cutoff })}
+            </span>
+          </p>
+        )}
+
+        {!hideActions && editable && (
           <div className="flex flex-wrap gap-2">
-            <ButtonLink to={`${href}/review`} size="sm">
-              Review stall &amp; products
+            <ButtonLink to={`${href}/edit`} variant="secondary" size="sm">
+              {t('order.edit')}
             </ButtonLink>
-            <Button variant="ghost" size="sm">
-              Reorder
+            <Button variant="danger" size="sm">
+              {t('order.cancel')}
             </Button>
           </div>
-        ))}
+        )}
+        {!hideActions &&
+          order.status === 'completed' &&
+          (order.reviewed ? (
+            <span className="text-ink-muted text-small">{t('order.reviewed')}</span>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              <ButtonLink to={`${href}/review`} size="sm">
+                {t('order.review')}
+              </ButtonLink>
+              <Button variant="ghost" size="sm">
+                {t('order.reorder')}
+              </Button>
+            </div>
+          ))}
+      </div>
     </Card>
   );
 };

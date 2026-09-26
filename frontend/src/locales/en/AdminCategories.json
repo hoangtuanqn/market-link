@@ -1,0 +1,63 @@
+{
+  "overline": "Settings",
+  "title": "Categories",
+  "intro": "The one list every stall picks from when it adds a product. Sale units are fixed and ship with the app.",
+  "link": {
+    "announcements": "Announcements",
+    "feedback": "Feedback inbox"
+  },
+  "caption": {
+    "categories_one": "{{count}} category",
+    "categories_other": "{{count}} categories"
+  },
+  "col": {
+    "category": "Category",
+    "products": "Products",
+    "stalls": "Stalls",
+    "nameOf": "Name of {{name}}",
+    "oneOfThem": "One of them",
+    "moreThanOne": "More than one",
+    "pluralOf": "Plural of {{name}}",
+    "kind": "Kind",
+    "readsAs": "Reads as"
+  },
+  "action": {
+    "save": "Save",
+    "remove": "Remove",
+    "addToPicker": "Add to picker",
+    "merge": "Merge"
+  },
+  "categoryForm": {
+    "title": "Add a category",
+    "name": "Name",
+    "namePlaceholder": "e.g. Seafood",
+    "nameHint": "In English, sentence case. Hand-lettered on a product tag that has no photo.",
+    "position": "Position in the filter",
+    "submit": "Add category"
+  },
+  "removeCategory": {
+    "title": "Remove {{name}}?",
+    "textUsed_one": "{{count}} product uses it. Choose where it goes.",
+    "textUsed_other": "{{count}} products use it. Choose where they go.",
+    "textUnused": "No products use it.",
+    "moveTo": "Move products to",
+    "keep": "Keep category",
+    "confirm": "Remove category"
+  },
+  "empty": {
+    "categories": {
+      "title": "No categories yet",
+      "text": "Add a category and Farmers can file their products under it."
+    }
+  },
+  "toast": {
+    "categorySaved": "{{name}} saved.",
+    "categoryAdded": "Category added. Stalls can pick it now.",
+    "categoryRemoved": "{{name}} removed.",
+    "promoted": "{{name}} is now in the picker for every stall."
+  },
+  "error": {
+    "noun": "categories",
+    "nameRequired": "Give the category a name."
+  }
+}

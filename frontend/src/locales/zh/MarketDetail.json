@@ -1,0 +1,46 @@
+{
+  "notFound": {
+    "title": "该市集已不在这里",
+    "browse": "浏览市集"
+  },
+  "intro_one": "{{count}} 个摊位。每个摊位在取货前 12 到 24 小时自行截单。到摊位取货，直接付款给农户。",
+  "intro_other": "{{count}} 个摊位。每个摊位在取货前 12 到 24 小时自行截单。到摊位取货，直接付款给农户。",
+  "toast": {
+    "saved": "已收藏 {{name}}。",
+    "removed": "已将 {{name}} 移出收藏。"
+  },
+  "save": {
+    "on": "已收藏市集",
+    "off": "收藏市集"
+  },
+  "directions": "路线",
+  "search": {
+    "scope": "搜索范围",
+    "scopes": {
+      "product": "本市集的商品",
+      "farmer": "本市集的摊位"
+    },
+    "keyword": "关键词",
+    "placeholder": "空心菜、酸面包、鸡蛋…",
+    "submit": "搜索"
+  },
+  "day": "市集日",
+  "all": "全部",
+  "inStock": "有货",
+  "available": "{{day}}可买",
+  "productsFrom": "来自 {{stalls}} 的 {{products}}",
+  "products_one": "{{count}} 件商品",
+  "products_other": "{{count}} 件商品",
+  "stalls_one": "{{count}} 个摊位",
+  "stalls_other": "{{count}} 个摊位",
+  "mapLabel": "{{name}} 及其摊位地图",
+  "stallsTitle": "{{day}}在本市集的摊位",
+  "stallsNote": "所选日期不营业的摊位不会列出",
+  "error": {
+    "noun": "市场"
+  },
+  "stallsNoun": "摊位",
+  "stallsEmpty": {
+    "title": "{{day}}没有摊位"
+  }
+}

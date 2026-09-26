@@ -1,0 +1,17 @@
+{
+  "overline": "Espace admin",
+  "title": "Connectez-vous pour gérer MarketLink",
+  "intro": "Cette connexion est réservée aux admins de la plateforme et mène à un tableau de bord séparé. Les clients et les agriculteurs <link>se connectent ici</link>.",
+  "notAdmin": {
+    "title": "Ce compte n’est pas un compte admin",
+    "text": "Cette connexion est réservée aux admins de la plateforme. <link>Les clients et les agriculteurs se connectent ici</link>."
+  },
+  "form": {
+    "email": "E-mail admin",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "submitting": "Connexion…",
+    "signedIn": "Connecté.",
+    "error": "Impossible de vous connecter. Veuillez réessayer."
+  }
+}

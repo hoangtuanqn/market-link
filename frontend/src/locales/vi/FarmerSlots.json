@@ -1,0 +1,88 @@
+{
+  "crumbStall": "Sạp & nhận hàng",
+  "title": "Khung giờ nhận hàng",
+  "intro": "Mỗi khung giờ dài 30 phút, nằm trong giờ nhận hàng của bạn. Mỗi khung giờ nhận một số đơn giới hạn để không ai phải xếp hàng lâu. Khung giờ đã đầy sẽ hiện màu xám với khách.",
+  "market": "Chợ",
+  "day": "Ngày",
+  "cancel": "Huỷ",
+  "minutes_one": "{{count}} phút",
+  "minutes_other": "{{count}} phút",
+  "table": {
+    "slot": "Khung giờ",
+    "booked": "Đã đặt",
+    "bookedOf": "{{booked}} / {{max}}",
+    "full": "Đầy",
+    "max": "Số đơn tối đa",
+    "maxFor": "Số đơn tối đa {{slot}}",
+    "closes": "Chốt thay đổi",
+    "open": "Nhận đơn mới",
+    "off": "Tắt",
+    "on": "Bật",
+    "caption_one": "{{day}} {{date}} · {{market}} · {{count}} khung giờ",
+    "caption_other": "{{day}} {{date}} · {{market}} · {{count}} khung giờ"
+  },
+  "empty": {
+    "title": "Chưa có khung giờ cho ngày này",
+    "text": "Tạo khung giờ cho một ngày chợ để khách bắt đầu đặt giờ nhận hàng."
+  },
+  "defaults": {
+    "title": "Mặc định",
+    "length": "Độ dài khung giờ",
+    "perSlot": "Số đơn mỗi khung giờ",
+    "windowAt": "Giờ nhận hàng tại {{market}}",
+    "window": "{{start}} – {{end}} vào {{days}}",
+    "cutoff": "Hạn chốt",
+    "cutoffValue_one": "{{count}} giờ trước khung giờ",
+    "cutoffValue_other": "{{count}} giờ trước khung giờ",
+    "note": "Đổi giờ và ngày nhận hàng trong Sạp & nhận hàng. Khung giờ của mỗi ngày được tạo từ đó."
+  },
+  "closing": {
+    "title": "Đóng một khung giờ",
+    "text": "Tắt một khung giờ sẽ ẩn nó khỏi đơn mới. Các đơn đã có vẫn giữ nguyên; hãy liên hệ những khách đó nếu bạn không đến được."
+  },
+  "away": {
+    "title": "Những ngày bạn không bán",
+    "intro": "Một ngày chợ bạn sẽ vắng — mùa thu hoạch kém, ốm, xe không nổ máy. Sạp của bạn sẽ không hiện trên trang chợ ngày đó và không nhận đơn mới. Các đơn đã đặt bị từ chối kèm lý do của bạn, và hàng được trả về cho bạn (D-02).",
+    "open": "Báo khách bạn vắng mặt",
+    "date": "Ngày",
+    "reasonSeen": "Lý do khách thấy",
+    "declined": "Đơn bị từ chối",
+    "backTitle": "Bạn bán lại rồi",
+    "backText": "Bạn đã bán lại vào ngày đó. Các đơn đã từ chối không được khôi phục; khách cần đặt lại.",
+    "back": "Tôi đến được",
+    "emptyTitle": "Bạn bán vào mọi ngày chợ",
+    "emptyText": "Hãy báo trước cho khách nếu có thay đổi, để không ai đến một sạp trống.",
+    "notNow": "Để sau",
+    "confirm": "Báo khách",
+    "declinedTitle": "Đã từ chối đơn",
+    "toldTitle": "Đã báo khách",
+    "declinedText_one": "Đã từ chối {{count}} đơn và báo cho khách.",
+    "declinedText_other": "Đã từ chối {{count}} đơn và báo cho khách.",
+    "toldText": "Khách không thể đặt hàng của bạn cho ngày {{date}} nữa.",
+    "dialogText": "Các đơn đã đặt cho ngày đó sẽ bị từ chối kèm lý do của bạn và hàng được trả về cho bạn. Khách được báo ngay và không mất tiền, vì chỉ thanh toán khi nhận hàng.",
+    "marketDay": "Ngày chợ",
+    "reasonLabel": "Lý do khách sẽ thấy",
+    "seedReason": "Thu hoạch ít sau cơn mưa",
+    "notGiven": "Không nêu lý do",
+    "note": {
+      "placed_one": "đã có {{count}} đơn",
+      "placed_other": "đã có {{count}} đơn",
+      "none": "chưa có đơn",
+      "shut": "chợ vốn nghỉ ngày này"
+    }
+  },
+  "closure": {
+    "title": "Chợ nghỉ vào ngày {{date}}.",
+    "text": "{{reason}}. Bạn không cần làm gì: không ai đặt được hàng từ gian nào cho ngày đó, và MarketLink đã báo cho khách của bạn."
+  },
+  "generate": {
+    "open": "Tạo khung giờ cho tuần sau",
+    "title": "Tạo khung giờ cho {{from}} – {{to}}?",
+    "doneTitle": "Đã tạo khung giờ",
+    "doneText_one": "Đã tạo {{count}} khung giờ cho {{from}} – {{to}}.",
+    "doneText_other": "Đã tạo {{count}} khung giờ cho {{from}} – {{to}}.",
+    "confirm_one": "Tạo {{count}} khung giờ",
+    "confirm_other": "Tạo {{count}} khung giờ",
+    "text": "Tạo khung giờ từ {{start}} đến {{end}} vào {{daysA}} tại Thảo Điền và vào {{daysB}} tại Thủ Đức. Các khung giờ đã có không bị thay đổi."
+  }
+}

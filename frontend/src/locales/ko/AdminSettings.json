@@ -1,0 +1,14 @@
+{
+  "title": "설정",
+  "intro": "내 설정과, 매대가 직접 정하기 전까지 쓰는 기본값이에요.",
+  "platform": "플랫폼 기본값",
+  "platformNote": "지금은 계정에 저장돼요. 바뀐 기본값을 직접 설정한 적 없는 매대에 적용할지는 아직 정해지지 않았어요.",
+  "cutoff": "기본 마감",
+  "max": "기본 시간대별 주문 수",
+  "timezone": "시간대",
+  "timezoneNote": "플랫폼의 모든 날짜와 시간은 이 시간대를 기준으로 해요.",
+  "hours_one": "{{count}}시간",
+  "hours_other": "{{count}}시간",
+  "orders_one": "주문 {{count}}건",
+  "orders_other": "주문 {{count}}건"
+}

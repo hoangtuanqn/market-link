@@ -1,0 +1,196 @@
+{
+  "title": "Cuenta",
+  "intro": "Tus datos solo se comparten con un puesto en los pedidos que haces allí.",
+  "sell": {
+    "title": "Vende en MarketLink",
+    "text": "Si cultivas alimentos, esta cuenta puede convertirse en un puesto. Conservas tus pedidos, favoritos y carrito, y aparece un panel para el stock y las horas de recogida cuando un administrador te aprueba.",
+    "apply": "Solicitar vender",
+    "view": "Ver tu solicitud",
+    "panel": "Abrir el panel de productor",
+    "loading": "Comprobando tu solicitud",
+    "status": {
+      "pending": "Tu solicitud está con un administrador. Nada cambia para ti hasta que responda.",
+      "approved": "Tu puesto está aprobado. Configura mercados, horarios de recogida y productos en el panel de productor.",
+      "rejected": "Tu solicitud no fue aprobada. Ábrela para ver lo que enviaste.",
+      "suspended": "Tu puesto está suspendido. Puedes seguir comprando como cliente."
+    },
+    "draft": "Tienes una solicitud sin terminar. Continúa donde la dejaste.",
+    "continue": "Termina tu solicitud",
+    "history": "Ver tus solicitudes anteriores"
+  },
+  "signOut": {
+    "title": "Cerrar sesión",
+    "text": "Cierra la sesión solo en este dispositivo.",
+    "button": "Cerrar sesión"
+  },
+  "profile": {
+    "title": "Tus datos",
+    "loading": "Cargando tus datos…",
+    "loadFailed": "No se pudieron cargar tus datos. Inténtalo de nuevo.",
+    "signedOut": {
+      "title": "Has cerrado sesión.",
+      "text": "Vuelve a iniciar sesión para ver y editar tus datos.",
+      "signIn": "Iniciar sesión"
+    },
+    "nothingChanged": "No se cambió nada.",
+    "retry": "Reintentar",
+    "fullName": "Nombre completo",
+    "phone": "Número de teléfono",
+    "email": "Correo electrónico",
+    "emailHint": "Se usa para iniciar sesión. No se puede cambiar aquí.",
+    "address": "Dirección",
+    "addressHint": "Se usa para distancias e indicaciones.",
+    "save": "Guardar cambios",
+    "saving": "Guardando…",
+    "noChanges": "No hay cambios que guardar.",
+    "saved": "Tus datos se han guardado.",
+    "saveFailed": "No se pudieron guardar tus datos. Inténtalo de nuevo."
+  },
+  "password": {
+    "section": "Contraseña y seguridad",
+    "row": "Contraseña",
+    "rowNote": "La contraseña con la que inicias sesión con tu correo.",
+    "title": "Cambiar contraseña",
+    "intro": "Se cerrará tu sesión en todos los dispositivos y tendrás que volver a iniciarla.",
+    "current": "Contraseña actual",
+    "new": "Nueva contraseña",
+    "repeat": "Repite la nueva contraseña",
+    "hint": "De {{min}} a {{max}} caracteres.",
+    "submit": "Cambiar contraseña",
+    "submitting": "Cambiando contraseña…",
+    "cancel": "Cancelar",
+    "changed": "Tu contraseña se ha cambiado. Vuelve a iniciar sesión.",
+    "failed": "No se pudo cambiar tu contraseña. Inténtalo de nuevo.",
+    "errors": {
+      "currentRequired": "Escribe tu contraseña actual.",
+      "newRequired": "Escribe una contraseña nueva.",
+      "length": "La contraseña debe tener de {{min}} a {{max}} caracteres.",
+      "same": "Usa una contraseña distinta de la actual.",
+      "confirmRequired": "Confirma tu contraseña.",
+      "mismatch": "Las contraseñas no coinciden."
+    }
+  },
+  "photo": {
+    "title": "Foto de perfil",
+    "intro": "Se muestra en el menú y a los puestos en tus pedidos. JPEG, PNG o una foto de tu cámara.",
+    "upload": "Subir foto",
+    "take": "Hacer foto",
+    "notUsed": "Foto no usada"
+  },
+  "photoErrors": {
+    "notPhoto": "Elige una foto (JPEG, PNG, HEIC o WebP).",
+    "tooBig": "Esa foto pesa más de {{mb}} MB. Elige una más pequeña.",
+    "unreadable": "Este archivo no es una foto que podamos leer.",
+    "noPicture": "La cámara aún no tiene imagen. Inténtalo de nuevo.",
+    "captureFailed": "No se pudo hacer la foto."
+  },
+  "dialog": {
+    "takeTitle": "Hacer una foto",
+    "frameTitle": "Encuadra tu foto",
+    "frameHelp": "Arrastra para mover la foto y haz zoom hasta que tu cara llene el círculo.",
+    "cancel": "Cancelar",
+    "uploadInstead": "Subir una foto en su lugar",
+    "take": "Hacer foto",
+    "retake": "Repetir",
+    "chooseAnother": "Elegir otra",
+    "save": "Guardar foto",
+    "saving": "Guardando…",
+    "saved": "Tu foto se ha guardado.",
+    "saveFailed": "No se pudo guardar tu foto. Inténtalo de nuevo.",
+    "takeFailed": "No se pudo hacer la foto. Inténtalo de nuevo.",
+    "unchanged": "Tu foto actual no ha cambiado."
+  },
+  "camera": {
+    "preview": "Vista previa de la cámara",
+    "starting": "Iniciando la cámara…",
+    "blocked": {
+      "title": "El acceso a la cámara está bloqueado.",
+      "text": "Permite la cámara para este sitio en los ajustes del navegador, o sube una foto en su lugar."
+    },
+    "notFound": {
+      "title": "No se encontró ninguna cámara.",
+      "text": "Conecta una, o sube una foto en su lugar."
+    },
+    "busy": {
+      "title": "La cámara está ocupada.",
+      "text": "Cierra otras apps que la estén usando e inténtalo de nuevo, o sube una foto."
+    },
+    "failed": {
+      "title": "La cámara no pudo iniciarse.",
+      "text": "Inténtalo de nuevo, o sube una foto en su lugar."
+    },
+    "insecure": {
+      "title": "Este navegador no puede abrir la cámara aquí.",
+      "text": "La cámara necesita una página segura (https). Sube una foto en su lugar."
+    }
+  },
+  "crop": {
+    "frame": "Encuadre de la foto. Arrastra, o usa las flechas para moverla y más o menos para hacer zoom.",
+    "zoom": "Zoom"
+  },
+  "achievements": {
+    "title": "Tus logros",
+    "intro": "Se cuentan a partir de los pedidos que recogiste en los puestos. Solo tú ves estas cifras.",
+    "loading": "Cargando tus logros…",
+    "loadFailed": "No se pudieron cargar tus logros.",
+    "completed": "Pedidos recogidos",
+    "cancelled": "Cancelados por ti",
+    "declined": "Rechazados por el puesto",
+    "inProgress": "En curso",
+    "spent": "Total gastado",
+    "rate": "Tasa de finalización",
+    "rateNone": "—",
+    "nextTitle": "Camino a {{tier}}",
+    "ofGoal": "{{value}} de {{goal}}",
+    "rateNeeded": "También necesitas una tasa de finalización de al menos el {{rate}} %. Los pedidos que rechazó el puesto nunca cuentan en tu contra.",
+    "top": "Estás en el nivel más alto. Gracias por comprar en el mercado.",
+    "youAreHere": "Tu nivel",
+    "perks": {
+      "bronze": "Marco de bronce alrededor de tu foto",
+      "silver": "Un marco de plata más grueso",
+      "gold": "Marco de oro con una estrella",
+      "diamond": "Marco de diamante brillante con una gema"
+    },
+    "unavailable": {
+      "title": "Aún no hay cifras de pedidos",
+      "text": "Tu nivel y tus cifras se rellenan solos en cuanto se registren tus pedidos."
+    },
+    "privacy": "Los puestos y otros compradores ven tu nivel junto a tu nombre, nunca estas cifras.",
+    "hero": {
+      "overline": "Tu membresía",
+      "line_one": "{{name}}, has recogido {{count}} pedido y gastado {{amount}} en el mercado.",
+      "line_other": "{{name}}, has recogido {{count}} pedidos y gastado {{amount}} en el mercado.",
+      "welcome": "Bienvenido al mercado, {{name}}. Recoge tus primeros pedidos para ir subiendo de nivel.",
+      "since": "Miembro desde {{date}}"
+    },
+    "titles": {
+      "bronze": "Nuevo en el mercado",
+      "silver": "Una cara conocida",
+      "gold": "Un habitual de los puestos",
+      "diamond": "Guardián del fuego del mercado"
+    },
+    "yourPerksTitle": "Tus ventajas",
+    "yourPerks": {
+      "bronze": [
+        "Un marco de bronce alrededor de tu foto, en el menú y en tu perfil",
+        "Tu nivel junto a tu nombre en las reseñas y en los mensajes"
+      ],
+      "silver": [
+        "Un marco de plata más grueso alrededor de tu foto",
+        "Los puestos ven el nivel Plata junto a tu nombre en los pedidos y en los mensajes",
+        "Tus reseñas llevan la insignia del nivel Plata"
+      ],
+      "gold": [
+        "Un marco de oro con una estrella en la esquina de tu foto",
+        "Los puestos ven el nivel Oro junto a tu nombre en los pedidos y en los mensajes",
+        "Tus reseñas llevan la insignia del nivel Oro"
+      ],
+      "diamond": [
+        "Un marco de diamante brillante con una gema en la esquina de tu foto",
+        "Los puestos ven el nivel Diamante junto a tu nombre en los pedidos y en los mensajes",
+        "Tus reseñas llevan la insignia del nivel Diamante",
+        "Una tarjeta de socio reluciente en tu perfil"
+      ]
+    }
+  }
+}

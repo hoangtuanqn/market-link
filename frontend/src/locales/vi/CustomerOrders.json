@@ -1,0 +1,12 @@
+{
+  "title": "Đơn của tôi",
+  "intro": "Đơn sắp nhận hiện trước. Đơn cũ vẫn giữ hoá đơn, và bạn có thể đặt lại bất cứ món nào đã mua theo giá và số hàng hôm nay.",
+  "stall": "Sạp",
+  "allStalls": "Tất cả sạp",
+  "tabs": {
+    "label": "Đơn hàng",
+    "upcoming": "Sắp tới",
+    "past": "Đã qua",
+    "all": "Tất cả"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "overline": "Platform · {{year}}",
+  "title": "MarketLink hari ini",
+  "vs": "dibanding {{month}}",
+  "tilesNote": "{{now}} sampai sekarang, bersebelahan dengan {{prev}}. Setiap kotak membuka rincian di balik angkanya.",
+  "kpi": {
+    "farmers": "Petani",
+    "farmersNote": "{{waiting}} menunggu persetujuan · {{suspended}} ditangguhkan",
+    "farmersLink": "Tinjau pengajuan",
+    "customers": "Pelanggan",
+    "customersNote": "{{count}} bergabung bulan ini",
+    "customersLink": "Buka daftar pelanggan",
+    "markets": "Pasar",
+    "marketsNote": "semuanya aktif",
+    "marketsLink": "Buka daftar pasar",
+    "orders": "Pesanan",
+    "ordersNote": "{{week}} minggu ini · {{total}} selesai",
+    "ordersLink": "Buka daftar pesanan"
+  },
+  "revenue": {
+    "title": "Pendapatan per hari",
+    "note": "Pesanan yang selesai, dalam jutaan ₫. {{now}} dibanding {{prev}}.",
+    "caption": "Pendapatan per hari pada {{now}} dibanding {{prev}}, dalam jutaan dong",
+    "axis": "Tanggal",
+    "reports": "Laporan lengkap"
+  },
+  "attention": {
+    "title": "Perlu ditangani",
+    "farmers_other": "pengajuan petani menunggu",
+    "reported_other": "ulasan yang dilaporkan sebuah lapak",
+    "feedback_other": "masukan belum ditangani, satu di antaranya bug",
+    "announcements_other": "pengumuman sedang tayang, Thảo Điền tutup 04/10"
+  },
+  "earned": {
+    "title": "Yang diperoleh MarketLink",
+    "link": "Laporan pendapatan",
+    "note": "{{month}}, dari lapak yang membeli penempatan. Terpisah dari uang yang diterima pasar.",
+    "of": "₫ · yaitu {{pct}}% dari {{gmv}} yang diterima pasar"
+  },
+  "byMarket": {
+    "title": "Pesanan minggu ini per pasar",
+    "link": "Semua pesanan",
+    "suffix": "pesanan"
+  },
+  "latest": {
+    "title": "Pesanan terbaru di seluruh platform",
+    "readOnly": "Hanya baca. Admin tidak mengubah status pesanan."
+  },
+  "col": {
+    "order": "Pesanan",
+    "stall": "Lapak",
+    "market": "Pasar",
+    "pickup": "Pengambilan",
+    "total": "Total",
+    "status": "Status"
+  }
+}

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 const pageBtn =
   'text-ink hover:bg-surface-sunken aria-[current=page]:bg-brand aria-[current=page]:text-on-brand min-h-10 min-w-10 cursor-pointer rounded-sm bg-transparent px-2.5 font-bold disabled:cursor-not-allowed disabled:text-line-strong';
 
@@ -11,6 +13,7 @@ export function Pagination({
   pages: number;
   onChange: (page: number) => void;
 }) {
+  const { t } = useTranslation();
   const list: (number | '…')[] = [];
   for (let i = 1; i <= pages; i++) {
     if (i === 1 || i === pages || Math.abs(i - page) <= 1) list.push(i);
@@ -18,13 +21,13 @@ export function Pagination({
   }
 
   return (
-    <nav aria-label="Pagination">
+    <nav aria-label={t('pagination.label')}>
       <ul className="m-0 flex items-center gap-1 p-0">
         <li>
           <button
             type="button"
             disabled={page <= 1}
-            aria-label="Previous page"
+            aria-label={t('pagination.previous')}
             onClick={() => onChange(page - 1)}
             className={pageBtn}
           >
@@ -41,7 +44,7 @@ export function Pagination({
               <button
                 type="button"
                 aria-current={n === page ? 'page' : undefined}
-                aria-label={`Page ${n}`}
+                aria-label={t('pagination.page', { n })}
                 onClick={() => onChange(n)}
                 className={pageBtn}
               >
@@ -54,7 +57,7 @@ export function Pagination({
           <button
             type="button"
             disabled={page >= pages}
-            aria-label="Next page"
+            aria-label={t('pagination.next')}
             onClick={() => onChange(page + 1)}
             className={pageBtn}
           >

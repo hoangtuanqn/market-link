@@ -1,0 +1,81 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "Stok tidak cukup",
+      "day": "Tidak berjualan hari itu",
+      "time": "Tidak bisa di jam pengambilan itu",
+      "other": "Lainnya"
+    },
+    "item": "{{qty}} {{name}}",
+    "title": "Tolak pesanan {{code}}?",
+    "keep": "Pertahankan pesanan",
+    "confirm": "Tolak pesanan",
+    "text": "{{who}} langsung diberi tahu dan {{items}} kembali ke stok Anda.",
+    "reason": "Alasan yang akan dilihat pelanggan"
+  },
+  "history": {
+    "before": "Sebelum {{cutoff}}",
+    "cancelled": "Dibatalkan oleh pelanggan",
+    "title": "Riwayat"
+  },
+  "missing": {
+    "title": "Pesanan itu sudah tidak ada",
+    "text": "Mungkin sudah dibatalkan oleh pelanggan, atau tautannya sudah lama. Buka lagi dari daftar pesanan Anda.",
+    "back": "Pesanan saya"
+  },
+  "item": "barang",
+  "col": {
+    "product": "Produk",
+    "requested": "Diminta",
+    "left": "Sisa setelah pesanan ini",
+    "amount": "Jumlah"
+  },
+  "crumb": "Pesanan",
+  "cutoff": "Batas {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "Pesanan diterima",
+    "acceptedText": "Pesanan {{code}} diterima. {{who}} sudah diberi tahu.",
+    "readyTitle": "Pesanan siap",
+    "readyText": "Pesanan {{code}} ditandai siap.",
+    "completedTitle": "Pesanan selesai",
+    "completedText": "Pesanan {{code}} selesai.",
+    "declinedTitle": "Pesanan ditolak",
+    "declinedText": "Pesanan {{code}} ditolak."
+  },
+  "actions": {
+    "accept": "Terima pesanan",
+    "decline": "Tolak",
+    "ready": "Tandai siap",
+    "complete": "Tandai selesai"
+  },
+  "items": {
+    "title": "Barang",
+    "note": "Stok yang ditampilkan adalah sisa setelah pesanan ini dan pesanan lain yang masuk. Stok yang dipesan dikembalikan jika Anda menolak (D-02)."
+  },
+  "note": "Catatan dari pelanggan",
+  "quote": "“{{text}}”",
+  "customer": {
+    "title": "Pelanggan",
+    "name": "Nama",
+    "tier": "Tingkat",
+    "phone": "Telepon",
+    "ordersWithYou": "Pesanan dengan Anda",
+    "orders_one": "{{count}} pesanan",
+    "orders_other": "{{count}} pesanan",
+    "withCollected_one": "{{orders}}, {{count}} sudah diambil",
+    "withCollected_other": "{{orders}}, {{count}} sudah diambil"
+  },
+  "pickup": {
+    "title": "Slot pengambilan",
+    "market": "Pasar",
+    "marketStall": "{{market}}, lapak {{code}}",
+    "slot": "Slot",
+    "pay": "Bayar saat pengambilan"
+  },
+  "complete": {
+    "title": "Tandai {{code}} sebagai selesai?",
+    "notYet": "Belum",
+    "text": "Lakukan setelah pelanggan mengambil pesanan dan membayar di lapak. Pesanan selesai dihitung dalam pendapatan Anda dan membuka ulasan pelanggan.",
+    "auto": "Pesanan yang masih berstatus Siap otomatis selesai 24 jam setelah tanggal pengambilan (D-03)."
+  }
+}

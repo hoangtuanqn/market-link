@@ -1,0 +1,57 @@
+{
+  "title": "注文",
+  "intro": "4つのマーケットにわたる MarketLink 上のすべての注文です。管理者は閲覧のみ。注文を次の状態へ進められるのは店舗だけです。",
+  "days_other": "{{count}}日間",
+  "export": {
+    "button": "この期間を書き出す",
+    "title": "書き出しを開始しました",
+    "text": "CSV には画面上の期間と絞り込みがそのまま反映されます。"
+  },
+  "kpi": {
+    "placed": "注文数",
+    "placedNote": "{{count}}つのマーケット合計",
+    "completed": "完了",
+    "declined": "店舗が断った注文",
+    "cancelled": "お客様がキャンセル",
+    "cancelledNote": "すべて締切前",
+    "share": "この期間の{{pct}}%"
+  },
+  "perDay": {
+    "title": "日別の注文数",
+    "note": "{{now}}と{{prev}}、同じ30日間の比較です。",
+    "caption": "{{now}}と{{prev}}の日別注文数",
+    "axis": "日付"
+  },
+  "byStatus": {
+    "title": "どの状態で終わったか",
+    "note": "状態ごとに言葉と記号が違うので、棒の長さだけに頼らず見分けられます。"
+  },
+  "byMarket": {
+    "title": "マーケット別"
+  },
+  "list": {
+    "title": "注文一覧",
+    "inPeriod": "{{month}}に{{count}}件",
+    "filterLabel": "状態で注文を絞り込む",
+    "market": "マーケット",
+    "allMarkets": "すべてのマーケット",
+    "showing": "{{total}}件中 {{from}}–{{to}}件を表示"
+  },
+  "filter": {
+    "all": "すべて",
+    "completed": "完了",
+    "open": "進行中",
+    "declined": "断られた",
+    "cancelled": "キャンセル"
+  },
+  "customerNo": "お客様 #{{n}}",
+  "col": {
+    "order": "注文",
+    "customer": "お客様",
+    "stall": "店舗",
+    "market": "マーケット",
+    "pickup": "受け取り",
+    "total": "合計",
+    "status": "ステータス"
+  }
+}

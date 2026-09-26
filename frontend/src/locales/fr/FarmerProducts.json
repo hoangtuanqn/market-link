@@ -1,0 +1,50 @@
+{
+  "title": "Produits",
+  "intro": "Tout ce que vous pouvez proposer. Marquez un produit épuisé quand il n’y en a plus le jour du marché, ou mettez-le en pause hors saison.",
+  "add": "Ajouter un produit",
+  "filterAll": "Tous",
+  "status": {
+    "available": "Disponible",
+    "sold_out": "Épuisé",
+    "unavailable": "En pause"
+  },
+  "caption_one": "{{count}} produit",
+  "caption_other": "{{count}} produits",
+  "col": {
+    "product": "Produit",
+    "price": "Prix",
+    "left": "Reste cette semaine",
+    "reserved": "Réservé",
+    "status": "Statut"
+  },
+  "perUnit": "le {{unit}}",
+  "statusOf": "Statut de {{name}}",
+  "edit": "Modifier",
+  "delete": "Supprimer",
+  "footNote": "Supprimer un produit le retire du catalogue ; les commandes passées gardent leurs lignes. Photos : 4:3, lumière naturelle, sur du bois ou du papier.",
+  "toast": {
+    "statusSaved": "Statut enregistré",
+    "status": {
+      "available": "Le produit est de nouveau proposé.",
+      "sold_out": "Les clients voient désormais « Épuisé » et peuvent demander à être prévenus de son retour.",
+      "unavailable": "Le produit est masqué aux clients jusqu’à ce que vous le réactiviez."
+    },
+    "deleted": "Supprimé",
+    "deletedText": "{{name}} supprimé."
+  },
+  "dialog": {
+    "title": "Supprimer {{name}} ?",
+    "keep": "Garder le produit",
+    "confirm": "Supprimer le produit",
+    "text": "Il disparaît du catalogue et de votre modèle. Les commandes qui le contiennent déjà ne changent pas.",
+    "pauseHint": "Pour arrêter de le vendre un moment, choisissez plutôt En pause."
+  },
+  "error": {
+    "noun": "vos produits"
+  },
+  "hiddenByAdmin": "Masqué par un administrateur : {{reason}}",
+  "empty": {
+    "title": "Aucun produit pour l’instant",
+    "text": "Ajoutez votre premier produit et il apparaît aussitôt sur votre page de stand."
+  }
+}

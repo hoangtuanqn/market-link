@@ -1,0 +1,57 @@
+{
+  "title": "주문",
+  "intro": "네 개 장터에 걸친 MarketLink의 모든 주문입니다. 관리자는 읽기만 하고, 주문을 다음 상태로 넘기는 건 가게뿐입니다.",
+  "days_other": "{{count}}일",
+  "export": {
+    "button": "이 기간 내보내기",
+    "title": "내보내기를 시작했습니다",
+    "text": "CSV에는 화면의 기간과 필터가 그대로 담깁니다."
+  },
+  "kpi": {
+    "placed": "접수된 주문",
+    "placedNote": "{{count}}개 장터 합계",
+    "completed": "완료",
+    "declined": "가게가 거절",
+    "cancelled": "고객이 취소",
+    "cancelledNote": "모두 마감 전",
+    "share": "기간의 {{pct}}%"
+  },
+  "perDay": {
+    "title": "일별 주문 건수",
+    "note": "{{now}}과 {{prev}}, 같은 30일 비교.",
+    "caption": "{{now}}과 {{prev}}의 일별 주문 건수",
+    "axis": "날짜"
+  },
+  "byStatus": {
+    "title": "어떤 상태로 끝났나",
+    "note": "상태마다 글자와 기호가 달라, 막대 길이에만 기대지 않고 구분할 수 있습니다."
+  },
+  "byMarket": {
+    "title": "장터별"
+  },
+  "list": {
+    "title": "주문 목록",
+    "inPeriod": "{{month}}에 {{count}}건",
+    "filterLabel": "상태로 주문 거르기",
+    "market": "장터",
+    "allMarkets": "모든 장터",
+    "showing": "총 {{total}}건 중 {{from}}–{{to}}건 표시"
+  },
+  "filter": {
+    "all": "전체",
+    "completed": "완료",
+    "open": "진행 중",
+    "declined": "거절됨",
+    "cancelled": "취소됨"
+  },
+  "customerNo": "고객 #{{n}}",
+  "col": {
+    "order": "주문",
+    "customer": "고객",
+    "stall": "가게",
+    "market": "장터",
+    "pickup": "수령",
+    "total": "합계",
+    "status": "상태"
+  }
+}

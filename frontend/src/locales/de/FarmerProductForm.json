@@ -1,0 +1,82 @@
+{
+  "products": "Produkte",
+  "crumb": {
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen"
+  },
+  "addTitle": "Produkt hinzufügen",
+  "notFound": {
+    "title": "Dieses Produkt gibt es hier nicht mehr",
+    "text": "Es wurde vielleicht gelöscht. Öffnen Sie es erneut über Ihre Produktliste."
+  },
+  "name": {
+    "label": "Produktname",
+    "hint": "Auf Englisch, mit Herkunft oder Sorte, wenn es wichtig ist: „Củ Chi water spinach“, „Green-skin pomelo“."
+  },
+  "category": {
+    "label": "Kategorie",
+    "hint": "Kategorien werden vom Admin verwaltet."
+  },
+  "unit": {
+    "label": "Verkauft pro",
+    "hint": "Wie ein Kunde es kauft: nach Kilo, Bund, Knolle, Beutel. Wählen Sie eine aus oder benennen Sie Ihre eigene."
+  },
+  "preview": {
+    "label": "So wird es angezeigt",
+    "text": "<b>{{price}}</b> auf dem Etikett · <b>{{left}}</b> übrig · wer eines bestellt, sieht <b>{{one}}</b>"
+  },
+  "price": {
+    "label": "Preis in ₫",
+    "hint": "Angezeigt als {{price}}."
+  },
+  "qty": {
+    "label": "Verfügbare Menge diese Woche",
+    "error": "Die Menge muss 0 oder mehr sein. Nutzen Sie Ausverkauft, wenn nichts mehr da ist."
+  },
+  "desc": {
+    "label": "Beschreibung",
+    "hint": "Wird auf der Produktseite angezeigt. Beschreiben Sie, wie es angebaut wird und wie man es lagert."
+  },
+  "flag": {
+    "label": "Kurzer Hinweis auf der Karte",
+    "hint": "Optional, handgeschrieben auf dem Etikett: „Heute frisch“, „Um 5 Uhr gebacken“."
+  },
+  "status": {
+    "label": "Status",
+    "available": "Verfügbar",
+    "sold_out": "Ausverkauft",
+    "unavailable": "Pausiert"
+  },
+  "photo": {
+    "label": "Foto",
+    "none": "Noch kein Foto. Bis Sie eines hinzufügen, zeigt das Etikett die Kategorie in Handschrift.",
+    "choose": "Foto auswählen",
+    "hint": "JPG oder PNG, 4:3, bis 5 MB. Nah, bei Tageslicht, auf Holz oder Papier."
+  },
+  "save": "Produkt speichern",
+  "add": "Produkt hinzufügen",
+  "cancel": "Abbrechen",
+  "delete": {
+    "button": "Produkt löschen",
+    "title": "{{name}} löschen?",
+    "keep": "Produkt behalten",
+    "text": "Es verschwindet aus dem Katalog und aus Ihrer Vorlage. Bestellungen, die es bereits enthalten, bleiben unverändert."
+  },
+  "toast": {
+    "saved": "Gespeichert",
+    "savedText": "{{name}} gespeichert.",
+    "product": "Produkt",
+    "deletedText": "{{name}} gelöscht."
+  },
+  "error": {
+    "noun": "das Produkt"
+  },
+  "image": {
+    "label": "Foto-Link",
+    "hint": "Optional. Ein öffentlicher Link zu einem Foto; bis dahin zeigt das Etikett die Kategorie in Handschrift."
+  },
+  "errors": {
+    "required": "Dieses Feld ist erforderlich.",
+    "price": "Der Preis muss 0 oder höher sein."
+  }
+}

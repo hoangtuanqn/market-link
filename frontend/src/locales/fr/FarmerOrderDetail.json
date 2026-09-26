@@ -1,0 +1,81 @@
+{
+  "decline": {
+    "reasons": {
+      "stock": "Stock insuffisant",
+      "day": "Je ne vends pas ce jour-là",
+      "time": "Impossible à cette heure de retrait",
+      "other": "Autre"
+    },
+    "item": "{{qty}} de {{name}}",
+    "title": "Refuser la commande {{code}} ?",
+    "keep": "Garder la commande",
+    "confirm": "Refuser la commande",
+    "text": "{{who}} est prévenu tout de suite et {{items}} retournent dans votre stock.",
+    "reason": "Motif que le client verra"
+  },
+  "history": {
+    "before": "Avant {{cutoff}}",
+    "cancelled": "Annulée par le client",
+    "title": "Historique"
+  },
+  "missing": {
+    "title": "Cette commande n'est plus disponible",
+    "text": "Elle a peut-être été annulée par le client, ou le lien est ancien. Rouvrez-la depuis votre liste de commandes.",
+    "back": "Mes commandes"
+  },
+  "item": "article",
+  "col": {
+    "product": "Produit",
+    "requested": "Demandé",
+    "left": "Reste après cette commande",
+    "amount": "Montant"
+  },
+  "crumb": "Commandes",
+  "cutoff": "Clôture {{cutoff}}",
+  "toast": {
+    "acceptedTitle": "Commande acceptée",
+    "acceptedText": "Commande {{code}} acceptée. {{who}} a été prévenu.",
+    "readyTitle": "Commande prête",
+    "readyText": "Commande {{code}} marquée comme prête.",
+    "completedTitle": "Commande terminée",
+    "completedText": "Commande {{code}} terminée.",
+    "declinedTitle": "Commande refusée",
+    "declinedText": "Commande {{code}} refusée."
+  },
+  "actions": {
+    "accept": "Accepter la commande",
+    "decline": "Refuser",
+    "ready": "Marquer prête",
+    "complete": "Marquer terminée"
+  },
+  "items": {
+    "title": "Articles",
+    "note": "Le stock affiché est ce qui reste après cette commande et les autres commandes passées. Le stock réservé est rendu si vous refusez (D-02)."
+  },
+  "note": "Note du client",
+  "quote": "« {{text}} »",
+  "customer": {
+    "title": "Client",
+    "name": "Nom",
+    "tier": "Niveau",
+    "phone": "Téléphone",
+    "ordersWithYou": "Commandes chez vous",
+    "orders_one": "{{count}} commande",
+    "orders_other": "{{count}} commandes",
+    "withCollected_one": "{{orders}}, {{count}} retirée",
+    "withCollected_other": "{{orders}}, {{count}} retirées"
+  },
+  "pickup": {
+    "title": "Créneau de retrait",
+    "market": "Marché",
+    "marketStall": "{{market}}, stand {{code}}",
+    "slot": "Créneau",
+    "pay": "À payer au retrait"
+  },
+  "complete": {
+    "title": "Marquer {{code}} comme terminée ?",
+    "notYet": "Pas encore",
+    "text": "Faites-le après que le client a retiré la commande et payé au stand. Les commandes terminées comptent dans votre chiffre d'affaires et permettent au client de laisser un avis.",
+    "auto": "Les commandes encore marquées Prête sont terminées automatiquement 24 heures après la date de retrait (D-03)."
+  }
+}

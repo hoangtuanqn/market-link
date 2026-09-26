@@ -1,0 +1,173 @@
+{
+  "breadcrumbAccount": "Konto",
+  "breadcrumb": "Verkauf beantragen",
+  "since": "{{name}} · Kunde seit {{date}}",
+  "title": "Verkaufen Sie, was Sie anbauen",
+  "intro": "Wenn Sie Lebensmittel anbauen, kann Ihr Konto zu einem Stand auf einem der vier Märkte werden. Sie behalten alles, was Sie jetzt haben, und kaufen weiter bei anderen Ständen ein.",
+  "next": {
+    "title": "Was nach dem Absenden passiert",
+    "read": "Ein Admin prüft deinen Antrag und deine Fotos.",
+    "panel": "Nach der Freigabe erscheint ein Standbereich in deinem Konto.",
+    "setup": "Dort legst du Märkte, Abholzeiten und Produkte fest."
+  },
+  "step1": {
+    "title": "Ihr Stand",
+    "stallName": "Name des Stands",
+    "stallNamePlaceholder": "z. B. Gemüse der Familie Khang",
+    "stallNameHint": "Kunden sehen ihn auf der Karte und auf ihren Bestellungen.",
+    "person": "Ansprechperson",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "emailHint": "Ihre Anmeldung bleibt gleich.",
+    "about": "Über den Stand",
+    "aboutPlaceholder": "Ein oder zwei Sätze. Wer baut es an und wo.",
+    "address": "Adresse",
+    "fromAccount": "Aus deinem Konto. Änderbar auf der Kontoseite.",
+    "aboutCount": "{{used}} von {{max}} Zeichen"
+  },
+  "step2": {
+    "title": "Fotos der Fläche",
+    "intro": "Eine Gesamtaufnahme und eine Nahaufnahme, höchstens 30 Tage alt. Ohne Filter.",
+    "addPhoto": "Foto hinzufügen",
+    "video": "Ein kurzes Video",
+    "addVideo": "Video hinzufügen, bis 60 Sekunden",
+    "videoHint": "Optional. Ein langsamer Gang an den Beeten entlang beschleunigt die Freigabe.",
+    "banner": {
+      "title": "Der Admin prüft nur, ob die Fläche existiert.",
+      "text": "MarketLink prüft keine Lizenzen, Lebensmittelsicherheit oder Bio-Siegel."
+    },
+    "uploading": "Wird hochgeladen…",
+    "removePhoto": "{{label}} entfernen",
+    "videoAdded": "Video hinzugefügt",
+    "removeVideo": "Entfernen",
+    "photoHint": "Mindestens ein Foto ist nötig. JPEG, PNG oder WEBP, höchstens {{max}} MB pro Foto.",
+    "videoLimit": "Höchstens {{max}} MB.",
+    "photoLabel": "Foto {{n}}",
+    "addPhotoLabel": "Foto {{n}} hinzufügen"
+  },
+  "step3": {
+    "title": "Vor dem Absenden",
+    "true": "Die Angaben und Fotos sind meine und korrekt",
+    "trueHint": "Fremde Fotos führen zu Ablehnung oder Sperrung.",
+    "present": "Ich bin während meines Abholfensters am Stand",
+    "presentHint": "Wiederholtes Fernbleiben führt zur Sperrung.",
+    "pay": "Kundinnen und Kunden zahlen bei mir am Stand",
+    "payHint": "MarketLink hat keine Onlinezahlung und keine Lieferung.",
+    "send": "Antrag absenden",
+    "later": "Speichern und später fertigstellen",
+    "sending": "Wird gesendet…"
+  },
+  "sent": {
+    "title": "Ihr Antrag liegt bei einem Admin",
+    "intro": "In der Zwischenzeit ändert sich für Sie nichts. Kaufen Sie weiter ein und achten Sie auf Ihre Benachrichtigungen.",
+    "summary": "Was Sie gesendet haben",
+    "stall": "Stand",
+    "evidence": "Nachweise",
+    "photos_one": "{{count}} Foto",
+    "photos_other": "{{count}} Fotos",
+    "photosAndVideo_one": "{{count}} Foto und ein Video",
+    "photosAndVideo_other": "{{count}} Fotos und ein Video",
+    "keepShopping": "Weiter einkaufen",
+    "progress": "Fortschritt",
+    "about": "Über den Stand",
+    "noPhotos": "Keine Fotos",
+    "noPhotosVideo": "Keine Fotos, aber ein Video",
+    "status": "Status",
+    "sentOn": "Gesendet",
+    "photoAlt": "Foto der Anbaufläche",
+    "applyAgain": "Erneut beantragen",
+    "historyTitle": "Deine früheren Anträge",
+    "historyText": "Alle Anträge, die du gesendet hast, mit der Antwort des Admins.",
+    "withdraw": "Antrag zurückziehen"
+  },
+  "timeline": {
+    "placed": {
+      "title": "Antrag gesendet",
+      "note": "Gerade eben",
+      "by": "Sie"
+    },
+    "accepted": {
+      "title": "Ein Admin liest ihn",
+      "note": "Meist innerhalb weniger Markttage",
+      "by": "MarketLink"
+    },
+    "ready": {
+      "title": "Standbereich wird geöffnet",
+      "note": "Nach der Freigabe",
+      "by": "MarketLink"
+    }
+  },
+  "toast": {
+    "fixTitle": "Formular prüfen",
+    "fix": "Wir haben markiert, was noch fehlt.",
+    "sentTitle": "Antrag gesendet",
+    "sent": "Die Antwort eines Admins erhalten Sie in Ihren Benachrichtigungen.",
+    "savedTitle": "Für später gespeichert",
+    "saved": "Deine Angaben bleiben auf diesem Gerät. Mach auf der Kontoseite weiter.",
+    "withdrawnTitle": "Antrag zurückgezogen",
+    "withdrawn": "Du kannst jederzeit erneut beantragen."
+  },
+  "loading": "Status deiner Bewerbung wird geladen",
+  "loadError": {
+    "title": "Der Status deiner Bewerbung konnte nicht geladen werden",
+    "text": "Prüfe deine Verbindung und versuche es erneut.",
+    "retry": "Erneut versuchen"
+  },
+  "errors": {
+    "stallName": "Gib den Namen deines Stands ein.",
+    "contactPerson": "Gib eine Kontaktperson ein.",
+    "photo": "Das Foto konnte nicht hochgeladen werden. Bitte versuche es erneut.",
+    "video": "Das Video konnte nicht hochgeladen werden. Bitte versuche es erneut.",
+    "send": "Deine Bewerbung konnte nicht gesendet werden. Bitte versuche es erneut.",
+    "stallNameLong": "Der Standname darf höchstens {{max}} Zeichen haben.",
+    "contactPersonLong": "Der Name der Kontaktperson darf höchstens {{max}} Zeichen haben.",
+    "descriptionLong": "Die Beschreibung darf höchstens {{max}} Zeichen haben.",
+    "photoRequired": "Füge mindestens ein Foto der Fläche hinzu.",
+    "uploadInProgress": "Warte, bis der Upload fertig ist, und sende dann.",
+    "photoType": "Fotos müssen JPEG, PNG oder WEBP sein.",
+    "photoTooLarge": "Dieses Foto ist größer als {{max}} MB.",
+    "videoType": "Das Video muss MP4, WEBM oder MOV sein.",
+    "videoTooLarge": "Dieses Video ist größer als {{max}} MB.",
+    "terms": "Setze alle drei Haken, bevor du sendest.",
+    "withdraw": "Der Antrag konnte nicht zurückgezogen werden. Versuch es erneut."
+  },
+  "approval": {
+    "approved": {
+      "title": "Dein Stand ist freigegeben",
+      "text": "Dein Konto kann jetzt im Farmer-Bereich einen Stand einrichten: Märkte, Abholzeiten und Produkte."
+    },
+    "rejected": {
+      "title": "Deine Bewerbung wurde nicht angenommen",
+      "text": "Wenn du denkst, dass das ein Fehler ist, schreib einem Admin über das Feedback-Formular."
+    },
+    "suspended": {
+      "title": "Dein Stand ist gesperrt",
+      "text": "Du kannst dich weiter anmelden, aber deine Produkte bleiben für Kunden verborgen, bis ein Admin die Sperre aufhebt."
+    }
+  },
+  "suspendedBanner": {
+    "title": "Der Verkauf ist für dieses Konto pausiert.",
+    "text": "Bereits aufgegebene Bestellungen laufen normal weiter; du kannst vorerst nur keine neuen annehmen."
+  },
+  "statusValue": {
+    "pending": "Ausstehend",
+    "approved": "Angenommen",
+    "rejected": "Abgelehnt",
+    "suspended": "Gesperrt"
+  },
+  "rejectedBanner": {
+    "title": "Warum er nicht genehmigt wurde",
+    "noReason": "Es wurde kein Grund festgehalten. Frag über das Feedback-Formular bei einem Admin nach."
+  },
+  "draft": {
+    "title": "Du hast diesen Antrag schon begonnen",
+    "text": "Was du am {{date}} geschrieben hast, ist noch da.",
+    "discard": "Neu anfangen"
+  },
+  "withdrawDialog": {
+    "title": "Antrag zurückziehen?",
+    "text": "Der Admin sieht ihn nicht mehr und nichts bleibt erhalten. Du kannst jederzeit erneut beantragen.",
+    "keep": "Behalten",
+    "confirm": "Zurückziehen"
+  }
+}
