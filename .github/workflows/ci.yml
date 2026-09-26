@@ -61,7 +61,7 @@ jobs:
         run: ./mvnw -B verify
 
   frontend:
-    name: Frontend · lint + build
+    name: Frontend · lint + test + build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -78,6 +78,8 @@ jobs:
         run: npx prettier --check src
       - name: ESLint
         run: npm run lint
+      - name: Test
+        run: npm test
       - name: Build
         run: npm run build
 

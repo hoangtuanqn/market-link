@@ -1,37 +1,5 @@
 {
   "title": "Tin nhắn",
   "intro": "Câu hỏi của khách về hàng tuần này và giờ nhận hàng. Hãy trả lời trước giờ chốt để khách vẫn tự sửa được đơn.",
-  "srs": {
-    "title": "Nhắn tin không có trong SRS.",
-    "text": "Hãy xin LEAD một yêu cầu mới trước khi làm tính năng này. Màn hình này có để nhóm cân nhắc xem có đáng bỏ công hay không."
-  },
-  "conversations": "Cuộc trò chuyện",
-  "unanswered_one": "{{count}} chưa trả lời",
-  "unanswered_other": "{{count}} chưa trả lời",
-  "time": {
-    "yesterday": "Hôm qua",
-    "now": "vừa xong"
-  },
-  "note": {
-    "orders_one": "{{count}} đơn với bạn",
-    "orders_other": "{{count}} đơn với bạn",
-    "withCollected": "{{orders}}, đã nhận {{collected}}"
-  },
-  "conversationWith": "Trò chuyện với {{name}}",
-  "openOrder": "Mở đơn {{code}}",
-  "you": "Bạn",
-  "orderRef": {
-    "title": "Đơn {{code}} · {{name}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · chốt lúc {{cutoff}} ngày {{cutoffDate}}"
-  },
-  "items_one": "{{count}} món",
-  "items_other": "{{count}} món",
-  "replyTo": "Trả lời {{name}}",
-  "placeholder": "Trả lời về hàng hoặc giờ nhận hàng",
-  "send": "Gửi",
-  "notOrder": {
-    "title": "Tin nhắn không làm thay đổi đơn hàng",
-    "text": "Đồng ý thay đổi ở đây mới là một nửa. Khách sửa đơn, đơn quay lại chỗ bạn ở trạng thái Đã đặt, và bạn nhận lại đơn. Nhờ vậy số hàng tồn và khung giờ luôn đúng.",
-    "link": "Đến đơn mới đến"
-  }
+  "noThreadsText": "Khi khách nhắn cho sạp của bạn, cuộc trò chuyện sẽ hiện ở đây."
 }

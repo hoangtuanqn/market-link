@@ -1,37 +1,5 @@
 {
   "title": "Messages",
   "intro": "Questions from customers about this week's stock and their pickup times. Answer before the cutoff so they can still change the order themselves.",
-  "srs": {
-    "title": "Messaging is not in the SRS.",
-    "text": "Ask the LEAD for a new requirement before this is built. The screen exists so the team can judge whether it is worth the hours."
-  },
-  "conversations": "Conversations",
-  "unanswered_one": "{{count}} unanswered",
-  "unanswered_other": "{{count}} unanswered",
-  "time": {
-    "yesterday": "Yesterday",
-    "now": "now"
-  },
-  "note": {
-    "orders_one": "{{count}} order with you",
-    "orders_other": "{{count}} orders with you",
-    "withCollected": "{{orders}}, {{collected}} collected"
-  },
-  "conversationWith": "Conversation with {{name}}",
-  "openOrder": "Open order {{code}}",
-  "you": "You",
-  "orderRef": {
-    "title": "Order {{code}} · {{name}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · closes {{cutoff}} on {{cutoffDate}}"
-  },
-  "items_one": "{{count}} item",
-  "items_other": "{{count}} items",
-  "replyTo": "Reply to {{name}}",
-  "placeholder": "Answer about stock or the pickup time",
-  "send": "Send",
-  "notOrder": {
-    "title": "A message does not change the order",
-    "text": "Agreeing a change here is only half of it. The customer edits the order, it comes back to you as Placed, and you accept it again. That way the stock count and the pickup slot stay right.",
-    "link": "Go to incoming orders"
-  }
+  "noThreadsText": "When a customer messages your stall, the conversation shows up here."
 }

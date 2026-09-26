@@ -332,10 +332,12 @@ mọi proxy trên đường đi.
 
 | Destination | Nội dung |
 |---|---|
-| `/user/queue/messages` | Tin nhắn mới; tin bị admin ẩn |
-| `/user/queue/conversations` | Thread nhảy lên đầu; số chưa đọc đổi; đối phương đã xem |
-| `/user/queue/typing` | Đối phương đang gõ |
-| `/user/queue/presence` | Đối phương online / offline kèm `lastSeenAt` |
+| `/user/topic/messages` | Tin nhắn mới; tin bị admin ẩn |
+| `/user/topic/conversations` | Thread nhảy lên đầu; số chưa đọc đổi; đối phương đã xem |
+| `/user/topic/typing` | Đối phương đang gõ |
+| `/user/topic/presence` | Đối phương online / offline kèm `lastSeenAt` |
+
+> Sửa 26/09/2026 theo code thật (`StompChatEventPublisher`): dùng `/topic/*` qua `convertAndSendToUser` thay vì `/queue/*`, vì trên RabbitMQ `/queue/<x>` tạo queue durable không tự xoá — mỗi phiên WebSocket để lại queue mồ côi.
 
 Vào: chỉ `/app/typing` với `{ conversationId, typing }`. Server kiểm tư cách thành viên rồi chuyển
 tiếp cho người kia. Online/offline suy ra từ `CONNECT`/`DISCONNECT`, không ai gửi gì cả.

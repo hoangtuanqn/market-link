@@ -1,33 +1,4 @@
 {
   "title": "Nachrichten",
-  "intro": "Fragen Sie einen Stand nach den Produkten dieser Woche oder klären Sie Details einer Bestellung vor dem Bestellschluss.",
-  "conversations": "Unterhaltungen",
-  "stallCount_one": "{{count}} Stand",
-  "stallCount_other": "{{count}} Stände",
-  "time": {
-    "yesterday": "Gestern",
-    "now": "gerade eben"
-  },
-  "conversationWith": "Unterhaltung mit {{name}}",
-  "seeStall": "Stand ansehen",
-  "openOrder": "Bestellung {{code}} öffnen",
-  "you": "Sie",
-  "orderRef": {
-    "title": "Bestellung {{code}} · {{stall}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · Schluss {{cutoff}} am {{cutoffDate}}"
-  },
-  "items_one": "{{count}} Artikel",
-  "items_other": "{{count}} Artikel",
-  "messageTo": "Nachricht an {{name}}",
-  "placeholder": "Fragen Sie nach dem Bestand dieser Woche oder Ihrer Abholzeit",
-  "send": "Senden",
-  "for": {
-    "title": "Wofür Nachrichten da sind",
-    "text": "Prüfen, ob etwas noch kommt, den Stand bitten, etwas mehr zurückzulegen, oder eine andere Abholzeit vereinbaren. Änderungen an einer Bestellung laufen weiterhin über die Bestellung selbst, damit beide Seiten denselben Stand haben.",
-    "edit": "Bestellung {{code}} bearbeiten"
-  },
-  "notFor": {
-    "title": "Wofür sie nicht da sind",
-    "text": "Hier wird weder über Preise verhandelt noch bezahlt. Die Preise legt der Stand fest, und Sie bezahlen bei der Abholung am Stand. Eine Nachricht ändert nie von selbst eine Bestellung."
-  }
+  "intro": "Fragen Sie einen Stand nach den Produkten dieser Woche oder klären Sie Details einer Bestellung vor dem Bestellschluss."
 }

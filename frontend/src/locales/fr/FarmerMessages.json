@@ -1,37 +1,5 @@
 {
   "title": "Messages",
   "intro": "Les questions des clients sur le stock de la semaine et leurs heures de retrait. Répondez avant l’heure limite pour qu’ils puissent encore modifier la commande eux-mêmes.",
-  "srs": {
-    "title": "La messagerie ne figure pas dans le SRS.",
-    "text": "Demandez au LEAD une nouvelle exigence avant de la développer. Cet écran existe pour que l'équipe juge si cela vaut les heures."
-  },
-  "conversations": "Conversations",
-  "unanswered_one": "{{count}} sans réponse",
-  "unanswered_other": "{{count}} sans réponse",
-  "time": {
-    "yesterday": "Hier",
-    "now": "à l'instant"
-  },
-  "note": {
-    "orders_one": "{{count}} commande chez vous",
-    "orders_other": "{{count}} commandes chez vous",
-    "withCollected": "{{orders}}, {{collected}} retirée(s)"
-  },
-  "conversationWith": "Conversation avec {{name}}",
-  "openOrder": "Ouvrir la commande {{code}}",
-  "you": "Vous",
-  "orderRef": {
-    "title": "Commande {{code}} · {{name}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · clôture à {{cutoff}} le {{cutoffDate}}"
-  },
-  "items_one": "{{count}} article",
-  "items_other": "{{count}} articles",
-  "replyTo": "Répondre à {{name}}",
-  "placeholder": "Répondez sur le stock ou l’heure de retrait",
-  "send": "Envoyer",
-  "notOrder": {
-    "title": "Un message ne modifie pas la commande",
-    "text": "Se mettre d’accord ici n’est que la moitié du chemin. Le client modifie la commande, elle vous revient au statut Passée, et vous l’acceptez de nouveau. Ainsi, le stock et le créneau de retrait restent justes.",
-    "link": "Voir les commandes reçues"
-  }
+  "noThreadsText": "Quand un client écrit à votre stand, la conversation apparaît ici."
 }

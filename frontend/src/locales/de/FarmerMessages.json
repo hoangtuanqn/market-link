@@ -1,37 +1,5 @@
 {
   "title": "Nachrichten",
   "intro": "Fragen von Kunden zum Bestand dieser Woche und zu ihren Abholzeiten. Antworten Sie vor dem Annahmeschluss, damit sie die Bestellung noch selbst ändern können.",
-  "srs": {
-    "title": "Nachrichten sind nicht im SRS.",
-    "text": "Bitten Sie den LEAD um eine neue Anforderung, bevor dies gebaut wird. Die Seite existiert, damit das Team abwägen kann, ob sich der Aufwand lohnt."
-  },
-  "conversations": "Unterhaltungen",
-  "unanswered_one": "{{count}} unbeantwortet",
-  "unanswered_other": "{{count}} unbeantwortet",
-  "time": {
-    "yesterday": "Gestern",
-    "now": "gerade eben"
-  },
-  "note": {
-    "orders_one": "{{count}} Bestellung bei Ihnen",
-    "orders_other": "{{count}} Bestellungen bei Ihnen",
-    "withCollected": "{{orders}}, {{collected}} abgeholt"
-  },
-  "conversationWith": "Unterhaltung mit {{name}}",
-  "openOrder": "Bestellung {{code}} öffnen",
-  "you": "Sie",
-  "orderRef": {
-    "title": "Bestellung {{code}} · {{name}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · Schluss {{cutoff}} am {{cutoffDate}}"
-  },
-  "items_one": "{{count}} Artikel",
-  "items_other": "{{count}} Artikel",
-  "replyTo": "{{name}} antworten",
-  "placeholder": "Zu Bestand oder Abholzeit antworten",
-  "send": "Senden",
-  "notOrder": {
-    "title": "Eine Nachricht ändert die Bestellung nicht",
-    "text": "Eine Änderung hier zu vereinbaren ist nur die halbe Sache. Der Kunde bearbeitet die Bestellung, sie kommt als Aufgegeben zu Ihnen zurück, und Sie nehmen sie erneut an. So bleiben Bestand und Abholzeitfenster korrekt.",
-    "link": "Zu den eingehenden Bestellungen"
-  }
+  "noThreadsText": "Wenn ein Kunde deinem Stand schreibt, erscheint die Unterhaltung hier."
 }

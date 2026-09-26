@@ -1,33 +1,4 @@
 {
   "title": "Mensajes",
-  "intro": "Pregunta a un puesto por los productos de esta semana o cierra los detalles de un pedido antes de la hora límite.",
-  "conversations": "Conversaciones",
-  "stallCount_one": "{{count}} puesto",
-  "stallCount_other": "{{count}} puestos",
-  "time": {
-    "yesterday": "Ayer",
-    "now": "ahora"
-  },
-  "conversationWith": "Conversación con {{name}}",
-  "seeStall": "Ver el puesto",
-  "openOrder": "Abrir pedido {{code}}",
-  "you": "Tú",
-  "orderRef": {
-    "title": "Pedido {{code}} · {{stall}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · cierra a las {{cutoff}} del {{cutoffDate}}"
-  },
-  "items_one": "{{count}} artículo",
-  "items_other": "{{count}} artículos",
-  "messageTo": "Mensaje a {{name}}",
-  "placeholder": "Pregunta por el stock de esta semana o tu hora de recogida",
-  "send": "Enviar",
-  "for": {
-    "title": "Para qué sirven los mensajes",
-    "text": "Comprobar que algo sigue llegando, pedir al puesto que guarde un poco más o acordar otra hora de recogida. Los cambios de un pedido se hacen en el propio pedido, para que ambas partes tengan el mismo registro.",
-    "edit": "Editar pedido {{code}}"
-  },
-  "notFor": {
-    "title": "Para qué no sirven",
-    "text": "Aquí no se negocian precios ni se paga. Los precios los fija el puesto y pagas en el puesto al recoger. Un mensaje nunca cambia un pedido por sí solo."
-  }
+  "intro": "Pregunta a un puesto por los productos de esta semana o cierra los detalles de un pedido antes de la hora límite."
 }

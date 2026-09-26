@@ -1,37 +1,5 @@
 {
   "title": "메시지",
   "intro": "이번 주 재고와 픽업 시간에 대한 고객 질문이에요. 고객이 직접 주문을 바꿀 수 있도록 마감 전에 답해 주세요.",
-  "srs": {
-    "title": "메시지 기능은 SRS에 없어요.",
-    "text": "만들기 전에 LEAD에게 새 요구 사항을 요청하세요. 이 화면은 팀이 시간을 들일 가치가 있는지 판단하도록 만든 거예요."
-  },
-  "conversations": "대화",
-  "unanswered_one": "답하지 않음 {{count}}개",
-  "unanswered_other": "답하지 않음 {{count}}개",
-  "time": {
-    "yesterday": "어제",
-    "now": "방금"
-  },
-  "note": {
-    "orders_one": "내 매대 주문 {{count}}건",
-    "orders_other": "내 매대 주문 {{count}}건",
-    "withCollected": "{{orders}}, 수령 완료 {{collected}}건"
-  },
-  "conversationWith": "{{name}}와(과)의 대화",
-  "openOrder": "주문 {{code}} 열기",
-  "you": "나",
-  "orderRef": {
-    "title": "주문 {{code}} · {{name}}",
-    "detail": "{{day}} {{date}} · {{slot}} · {{items}} · {{total}} · {{cutoffDate}} {{cutoff}} 마감"
-  },
-  "items_one": "상품 {{count}}개",
-  "items_other": "상품 {{count}}개",
-  "replyTo": "{{name}}에게 답장",
-  "placeholder": "재고나 픽업 시간에 대해 답하기",
-  "send": "보내기",
-  "notOrder": {
-    "title": "메시지로는 주문이 바뀌지 않아요",
-    "text": "여기서 변경에 합의하는 건 절반일 뿐이에요. 고객이 주문을 수정하면 주문이 주문됨 상태로 돌아오고, 다시 수락하면 돼요. 그래야 재고 수량과 픽업 시간대가 정확하게 유지돼요.",
-    "link": "들어온 주문으로 이동"
-  }
+  "noThreadsText": "손님이 가게에 메시지를 보내면 여기에 대화가 표시됩니다."
 }
