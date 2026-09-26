@@ -9,6 +9,7 @@ type Handler = (body: string) => void;
 
 const handlers = new Map<string, Set<Handler>>();
 const subscriptions = new Map<string, StompSubscription>();
+const connectListeners = new Set<() => void>();
 let client: Client | null = null;
 
 const attach = (destination: string) => {
@@ -43,6 +44,7 @@ export const realtime = {
       onConnect: () => {
         subscriptions.clear();
         handlers.forEach((_, destination) => attach(destination));
+        connectListeners.forEach((listener) => listener());
       },
       onWebSocketClose: () => subscriptions.clear(),
     });
@@ -54,6 +56,17 @@ export const realtime = {
     client = null;
     subscriptions.clear();
     void current?.deactivate();
+  },
+
+  /**
+   * Chạy mỗi lần nối (hoặc nối lại) xong. Broker không phát lại những gì tới lúc rớt — kể cả khi backend khởi động lại
+   * mà mạng máy vẫn còn, lúc đó trình duyệt không bắn sự kiện `online` — nên ai giữ dữ liệu realtime thì tải bù ở đây.
+   */
+  onConnect(listener: () => void) {
+    connectListeners.add(listener);
+    return () => {
+      connectListeners.delete(listener);
+    };
   },
 
   /** Gửi một frame lên server (chat: /app/typing). Chưa nối thì bỏ: tín hiệu thoáng qua, không đáng xếp hàng chờ. */
