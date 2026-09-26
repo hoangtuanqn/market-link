@@ -51,6 +51,9 @@ spring:
 
 server:
   shutdown: graceful
+  # FR-081 rate limit keys on the client address: behind a trusted proxy Tomcat takes it from
+  # X-Forwarded-For (RemoteIpValve, private ranges only); a spoofed header from the internet is ignored.
+  forward-headers-strategy: native
 
 logging:
   level:

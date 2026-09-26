@@ -35,12 +35,14 @@ public class FeedbackController extends BaseController {
                 "Thanks, we read every message.");
     }
 
-    /** Behind the compose proxy the real address is the first X-Forwarded-For entry. */
-    private static String clientKey(HttpServletRequest http) {
-        String forwarded = http.getHeader("X-Forwarded-For");
-        if (forwarded != null && !forwarded.isBlank()) {
-            return forwarded.split(",")[0].trim();
-        }
-        return http.getRemoteAddr();
+    /**
+     * The rate-limit key. Never read {@code X-Forwarded-For} here: any client can send it and would
+     * bypass the limit. {@code server.forward-headers-strategy: native} makes Tomcat rewrite {@code
+     * getRemoteAddr()} from that header only for requests arriving from a trusted internal proxy,
+     * so the same code is right with and without a reverse proxy in front.
+     */
+    static String clientKey(HttpServletRequest http) {
+        String address = http.getRemoteAddr();
+        return address == null || address.isBlank() ? "unknown" : address;
     }
 }
