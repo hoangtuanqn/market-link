@@ -10,17 +10,16 @@
     "title": "Nouvelle annonce",
     "headline": "Titre",
     "headlinePlaceholder": "par ex. Le marché de Thủ Đức ouvre à 06h00 dès octobre",
-    "headlineHint": "Une ligne, majuscule à l'initiale seulement, sans point d'exclamation. Affichée en écriture manuscrite.",
+    "headlineHint": "Majuscule en début de phrase, sans point d’exclamation. Affiché en écriture manuscrite dans la bande verte.",
     "detail": "Détail",
     "detailPlaceholder": "Une phrase sur ce qui change pour les clients ou les étals.",
     "showTo": "Afficher à",
-    "aboutMarket": "Marché concerné",
-    "wholePlatform": "Toute la plateforme",
     "from": "Afficher à partir du",
     "to": "Jusqu'au",
     "preview": "Aperçu",
     "previewTitle": "Votre titre apparaît ici",
-    "previewText": "Et la ligne de détail ici, dans le bandeau vert au-dessus de l'en-tête."
+    "previewText": "Et la ligne de détail ici, dans le bandeau vert au-dessus de l'en-tête.",
+    "windowHint": "Laissez les deux dates vides pour l’afficher dès maintenant, jusqu’à ce que vous le retiriez."
   },
   "audience": {
     "Everyone": "Tout le monde",
@@ -28,7 +27,11 @@
     "Farmers": "Producteurs"
   },
   "list": {
-    "title": "Publiées et passées"
+    "title": "Publiées et passées",
+    "loading": "Chargement des annonces…",
+    "errorTitle": "Impossible de charger les annonces",
+    "errorText": "Vérifiez votre connexion et réessayez.",
+    "retry": "Réessayer"
   },
   "col": {
     "announcement": "Annonce",
@@ -38,22 +41,34 @@
   },
   "status": {
     "live": "En ligne",
+    "scheduled": "Programmée",
     "ended": "Terminée"
   },
   "action": {
     "publish": "Publier",
-    "saveDraft": "Enregistrer comme brouillon",
-    "edit": "Modifier",
     "takeDown": "Retirer",
-    "reuse": "Réutiliser"
+    "reuse": "Réutiliser",
+    "publishing": "Publication…"
   },
   "empty": {
     "title": "Aucune annonce",
     "text": "Publiez-en une et toute personne connectée la verra dans le bandeau au-dessus de l'en-tête."
   },
   "toast": {
-    "published": "Annonce publiée. Elle est en ligne dans l'en-tête.",
-    "draftSaved": "Enregistrée comme brouillon.",
-    "takenDown": "Annonce retirée."
+    "published": "Annonce publiée. Chaque destinataire la voit dans ses notifications.",
+    "takenDown": "Annonce retirée de la bande. Les notifications déjà envoyées restent.",
+    "publishError": "Impossible de publier l’annonce.",
+    "takeDownError": "Impossible de retirer l’annonce."
+  },
+  "errors": {
+    "titleRequired": "Ajoutez un titre.",
+    "titleLong": "Le titre doit faire moins de {{max}} caractères.",
+    "contentRequired": "Ajoutez une ligne de détail.",
+    "contentLong": "Le détail doit faire moins de {{max}} caractères.",
+    "window": "La date de fin doit être le jour de début ou après."
+  },
+  "window": {
+    "now": "Maintenant",
+    "open": "sans date de fin"
   }
 }

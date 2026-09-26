@@ -1,23 +1,15 @@
 {
   "overline": "Paramètres",
-  "title": "Catégories et unités",
-  "intro": "Les deux listes dans lesquelles chaque étal puise quand il ajoute un produit. Les catégories vous appartiennent. Les unités aussi, mais un étal peut toujours nommer la sienne quand rien ici ne convient.",
+  "title": "Catégories",
+  "intro": "La seule liste dans laquelle chaque stand choisit quand il ajoute un produit. Les unités de vente sont fixes et livrées avec l'application.",
   "link": {
     "announcements": "Annonces",
     "feedback": "Boîte de retours"
   },
-  "tabsLabel": "Données de référence",
-  "tab": {
-    "categories": "Catégories",
-    "units": "Unités"
-  },
   "caption": {
     "categories_one": "{{count}} catégorie",
     "categories_many": "{{count}} catégories",
-    "categories_other": "{{count}} catégories",
-    "units_one": "{{count}} unité",
-    "units_many": "{{count}} unités",
-    "units_other": "{{count}} unités"
+    "categories_other": "{{count}} catégories"
   },
   "col": {
     "category": "Catégorie",
@@ -30,13 +22,6 @@
     "kind": "Type",
     "readsAs": "Se lit"
   },
-  "kind": {
-    "Weight": "Poids",
-    "Volume": "Volume",
-    "Count": "Unité",
-    "Pack": "Conditionnement"
-  },
-  "addedBy": "ajoutée par {{by}}",
   "action": {
     "save": "Enregistrer",
     "remove": "Supprimer",
@@ -51,23 +36,6 @@
     "position": "Position dans le filtre",
     "submit": "Ajouter la catégorie"
   },
-  "unitNote": {
-    "title": "Deux de ces unités ont été tapées par un étal, pas par vous.",
-    "text": "Un étal nomme sa propre unité quand rien dans la liste ne convient. Promouvez celles qui prennent, fusionnez les doublons, laissez le reste tranquille."
-  },
-  "unitsNote": "Une unité est conservée sous forme de texte sur le produit : un étal n'est donc jamais bloqué par cette liste. Ce que vous choisissez ici, c'est ce qui apparaît dans le sélecteur, et quelles graphies sont fusionnées pour que les rapports ne séparent pas « bag » de « Bag ».",
-  "unitForm": {
-    "title": "Ajouter une unité",
-    "one": "Au singulier",
-    "many": "Au pluriel",
-    "manyHint": "L'anglais n'a pas de règle pour cela : on le saisit plutôt que de le deviner.",
-    "kind": "Type",
-    "preview": "Ce que ça donnera",
-    "previewFallback": "unité",
-    "onTheTag": "sur l'étiquette",
-    "left": "restants",
-    "submit": "Ajouter l'unité"
-  },
   "removeCategory": {
     "title": "Supprimer {{name}} ?",
     "textUsed_one": "{{count}} produit l'utilise. Choisissez où il part.",
@@ -77,13 +45,6 @@
     "moveTo": "Déplacer les produits vers",
     "keep": "Garder la catégorie",
     "confirm": "Supprimer la catégorie"
-  },
-  "mergeUnit": {
-    "title": "Fusionner {{name}} dans une autre unité ?",
-    "text": "Les produits qui l'utilisent sont réécrits avec l'unité choisie, et les commandes passées gardent l'unité sous laquelle elles ont été vendues.",
-    "into": "Fusionner dans",
-    "cancel": "Annuler",
-    "confirm": "Fusionner"
   },
   "empty": {
     "categories": {
@@ -95,10 +56,7 @@
     "categorySaved": "{{name}} enregistrée.",
     "categoryAdded": "Catégorie ajoutée. Les étals peuvent la choisir dès maintenant.",
     "categoryRemoved": "{{name}} supprimée.",
-    "unitSaved": "{{name}} enregistrée.",
-    "unitAdded": "Unité ajoutée au sélecteur.",
-    "promoted": "{{name}} figure désormais dans le sélecteur de tous les étals.",
-    "merged": "Fusionnées. Un produit a été réécrit."
+    "promoted": "{{name}} figure désormais dans le sélecteur de tous les étals."
   },
   "error": {
     "noun": "catégories",

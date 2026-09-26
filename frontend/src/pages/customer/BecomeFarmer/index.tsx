@@ -16,6 +16,7 @@ import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useSession from '@/hooks/useSession';
 import { clearDraft, readDraft, saveDraft } from '@/lib/farmerDraft';
 import { formatDate } from '@/lib/format';
+import { FARMER_DECISION_KINDS, NotificationStore } from '@/lib/notifications/store';
 import type { FarmerApplicationInput, FarmerProfileType } from '@/types/farmer.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -148,6 +149,15 @@ const CustomerBecomeFarmerPage = () => {
 
   useEffect(fetchStatus, [fetchStatus]);
 
+  // Admin quyết định trong lúc trang đang mở: đọc lại để không còn hiện "đang chờ" với nút rút đơn cũ
+  useEffect(
+    () =>
+      NotificationStore.onFrame((frame) => {
+        if (FARMER_DECISION_KINDS.includes(frame.kind)) fetchStatus();
+      }),
+    [fetchStatus],
+  );
+
   const load = () => {
     setStatus({ kind: 'loading' });
     fetchStatus();
@@ -200,6 +210,9 @@ const CustomerBecomeFarmerPage = () => {
       window.scrollTo(0, 0);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('errors.withdraw')) });
+      // Thường là đơn vừa được quyết định (không còn "đang chờ"): hiện đúng trạng thái mới
+      setConfirmWithdraw(false);
+      fetchStatus();
     } finally {
       setIsWithdrawing(false);
     }

@@ -1,10 +1,10 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
-import AnnouncementBanner from '@/components/AnnouncementBanner';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
-import { announcement } from '@/data/home';
+import LiveAnnouncementBanner from '@/components/LiveAnnouncementBanner';
 import { USER_ROLE } from '@/constants/enums';
 import useMyAchievements from '@/hooks/useMyAchievements';
+import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import useSession from '@/hooks/useSession';
 
 type MainLayoutProps = {
@@ -20,6 +20,7 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
   const variant = user ? 'customer' : 'guest';
   const userName = user?.fullName || user?.email || '';
   const { state: achievements } = useMyAchievements();
+  const unread = useUnreadNotifications();
   // Ai đăng nhập cũng có ít nhất viền Đồng, kể cả khi số liệu chưa tải xong hoặc tải lỗi
   const tier = achievements.status === 'ready' ? achievements.data.tier : 'bronze';
 
@@ -32,7 +33,7 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <AnnouncementBanner announcement={announcement} />
+      <LiveAnnouncementBanner />
       <Header
         variant={variant}
         userName={userName}
@@ -41,8 +42,9 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
         tier={tier}
         settingsTo={user?.role === USER_ROLE.FARMER ? '/farmer/settings' : '/settings'}
         messagesTo={user?.role === USER_ROLE.FARMER ? '/farmer/messages' : '/messages'}
+        notificationsTo={user?.role === USER_ROLE.FARMER ? '/farmer/notifications' : '/notifications'}
         cartCount={cartCount}
-        unreadCount={unreadCount}
+        unreadCount={unreadCount ?? unread}
       />
       <main className="mx-auto box-border flex w-full max-w-(--size-container) flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
         <Outlet />

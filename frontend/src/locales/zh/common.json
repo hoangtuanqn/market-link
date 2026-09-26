@@ -28,30 +28,6 @@
     "clock24": "24 小时制 · 19:00",
     "clock12": "12 小时制 · 7:00 pm",
     "preview": "预览：{{date}} · {{time}} · {{price}}",
-    "notifications": "通知",
-    "notificationsNote": "随你的账户保存。MarketLink 目前还不发送通知；开始发送后会遵循这些选择。",
-    "notes": {
-      "customer": {
-        "orderDecided": "订单被接受或拒绝",
-        "orderReady": "订单可以取货",
-        "backInStock": "收藏的商品重新到货",
-        "announcements": "MarketLink 的公告",
-        "stallReply": "摊位回复了你的消息"
-      },
-      "farmer": {
-        "newOrder": "收到新订单",
-        "orderChanged": "顾客修改或取消订单",
-        "cutoffSoon": "距离截单还有一小时",
-        "newReview": "你的摊位有新评价",
-        "announcements": "MarketLink 的公告"
-      },
-      "admin": {
-        "farmerApplication": "收到农户申请",
-        "reported": "有评价或商品被举报",
-        "newFeedback": "新的意见反馈",
-        "marketEdited": "有市集被编辑"
-      }
-    },
     "save": "保存设置",
     "saving": "正在保存…",
     "saveHint": "主题选择后立即生效；其余设置在保存后生效。",
@@ -405,5 +381,83 @@
     "answeredOn": "答复于 {{date}}",
     "reason": "理由：",
     "photoAlt": "第 {{n}} 次申请的照片"
+  },
+  "notify": {
+    "open": "打开",
+    "prompt": {
+      "title": "开启通知",
+      "text": "即使此标签页在后台，也能在屏幕上收到新消息、摊位审核结果和 MarketLink 公告。",
+      "enable": "开启",
+      "later": "以后再说",
+      "onTitle": "通知已开启",
+      "onText": "可在“设置 → 通知”中更改接收内容。"
+    },
+    "settings": {
+      "title": "通知",
+      "intro": "选择接收哪些通知以及接收方式。所有通知仍会保存在通知列表中。",
+      "browser": "浏览器通知",
+      "permission": {
+        "granted": "已开启。即使 MarketLink 在后台也会显示通知。",
+        "default": "未开启。开启后，此标签页在后台时也能看到通知。",
+        "denied": "已被浏览器阻止。请在浏览器的网站设置中允许此网站的通知，然后重新加载页面。",
+        "unsupported": "此浏览器无法显示通知。你仍可在页面上看到通知。"
+      },
+      "loading": "正在加载通知设置…",
+      "loadErrorTitle": "无法加载通知设置",
+      "loadErrorText": "请检查网络连接后重试。",
+      "retry": "重试",
+      "group": "类型",
+      "inApp": "页面内",
+      "inBrowser": "浏览器",
+      "groups": {
+        "messages": {
+          "title": "消息",
+          "note": "当顾客或摊位给你发消息时"
+        },
+        "announcements": {
+          "title": "公告",
+          "note": "来自 MarketLink 的消息，例如市集休市"
+        },
+        "account": {
+          "title": "你的摊位申请",
+          "note": "审核通过、未通过、被暂停或重新开放时"
+        },
+        "farmerApplications": {
+          "title": "农户申请",
+          "note": "有人申请在 MarketLink 上销售时"
+        }
+      },
+      "sound": "播放提示音",
+      "quiet": "免打扰时段",
+      "quietNote": "此时段内不弹窗、不响铃、不显示浏览器通知（越南时间）。通知仍会进入列表。",
+      "from": "从",
+      "to": "到",
+      "testNote": "给自己发送一条通知，看看显示效果。",
+      "test": "发送测试",
+      "testing": "正在发送…",
+      "testError": "无法发送测试，请几秒后再试。",
+      "saveError": "无法保存通知设置。"
+    },
+    "list": {
+      "all": "全部",
+      "unread": "未读",
+      "unreadCount_one": "{{count}} 条未读",
+      "unreadCount_other": "{{count}} 条未读",
+      "unreadMark": "未读",
+      "markAllRead": "全部标为已读",
+      "loading": "加载中…",
+      "more": "查看更早的通知",
+      "emptyTitle": "还没有通知",
+      "emptyUnreadTitle": "全部已读",
+      "emptyText": "新通知一到就会显示在这里。",
+      "errorTitle": "无法加载通知",
+      "errorText": "请检查网络连接后重试。",
+      "loadError": "无法加载更多通知。",
+      "readAllError": "无法标为已读。"
+    },
+    "admin": {
+      "title": "通知",
+      "intro": "等待你审核的新农户申请。"
+    }
   }
 }

@@ -10,17 +10,16 @@
     "title": "Thông báo mới",
     "headline": "Tiêu đề",
     "headlinePlaceholder": "ví dụ Chợ Thủ Đức mở cửa từ 06:00 kể từ tháng 10",
-    "headlineHint": "Một dòng, viết hoa như câu thường, không dùng dấu chấm than. Hiển thị bằng chữ viết tay.",
+    "headlineHint": "Viết hoa chữ đầu câu, không dấu chấm than. Hiện bằng chữ viết tay trong dải xanh.",
     "detail": "Nội dung",
     "detailPlaceholder": "Một câu về việc gì thay đổi với khách hàng hoặc các sạp.",
     "showTo": "Hiện cho",
-    "aboutMarket": "Về chợ",
-    "wholePlatform": "Toàn sàn",
     "from": "Hiện từ",
     "to": "Đến hết",
     "preview": "Xem trước",
     "previewTitle": "Tiêu đề của bạn hiện ở đây",
-    "previewText": "Còn dòng nội dung ở đây, trong dải màu xanh phía trên header."
+    "previewText": "Còn dòng nội dung ở đây, trong dải màu xanh phía trên header.",
+    "windowHint": "Để trống cả hai ngày thì banner hiện từ bây giờ cho tới khi bạn gỡ."
   },
   "audience": {
     "Everyone": "Mọi người",
@@ -28,7 +27,11 @@
     "Farmers": "Nhà vườn"
   },
   "list": {
-    "title": "Đã đăng và đã hết hạn"
+    "title": "Đã đăng và đã hết hạn",
+    "loading": "Đang tải thông báo…",
+    "errorTitle": "Không tải được danh sách thông báo",
+    "errorText": "Kiểm tra kết nối rồi thử lại.",
+    "retry": "Thử lại"
   },
   "col": {
     "announcement": "Thông báo",
@@ -38,22 +41,34 @@
   },
   "status": {
     "live": "Đang chạy",
+    "scheduled": "Đã lên lịch",
     "ended": "Đã kết thúc"
   },
   "action": {
     "publish": "Đăng",
-    "saveDraft": "Lưu nháp",
-    "edit": "Sửa",
     "takeDown": "Gỡ xuống",
-    "reuse": "Dùng lại"
+    "reuse": "Dùng lại",
+    "publishing": "Đang đăng…"
   },
   "empty": {
     "title": "Chưa có thông báo nào",
     "text": "Đăng một cái và mọi người đã đăng nhập đều thấy nó ở dải phía trên header."
   },
   "toast": {
-    "published": "Đã đăng thông báo. Nó đang chạy trên header rồi.",
-    "draftSaved": "Đã lưu nháp.",
-    "takenDown": "Đã gỡ thông báo xuống."
+    "published": "Đã đăng thông báo. Mọi người thuộc đối tượng đã nhận được trong mục thông báo.",
+    "takenDown": "Đã gỡ khỏi banner. Các thông báo đã gửi vẫn giữ nguyên.",
+    "publishError": "Không đăng được thông báo.",
+    "takeDownError": "Không gỡ được thông báo."
+  },
+  "errors": {
+    "titleRequired": "Nhập tiêu đề.",
+    "titleLong": "Tiêu đề tối đa {{max}} ký tự.",
+    "contentRequired": "Nhập nội dung.",
+    "contentLong": "Nội dung tối đa {{max}} ký tự.",
+    "window": "Ngày kết thúc phải từ ngày bắt đầu trở đi."
+  },
+  "window": {
+    "now": "Ngay bây giờ",
+    "open": "không hạn kết thúc"
   }
 }

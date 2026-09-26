@@ -10,17 +10,16 @@
     "title": "新建公告",
     "headline": "标题",
     "headlinePlaceholder": "例如 Thủ Đức 集市自十月起 06:00 开市",
-    "headlineHint": "一行，句首大写，不用感叹号。以手写字体显示。",
+    "headlineHint": "句首大写，不用感叹号。在绿色横幅中以手写体显示。",
     "detail": "详情",
     "detailPlaceholder": "用一句话说明顾客或摊位有什么变化。",
     "showTo": "展示给",
-    "aboutMarket": "关于集市",
-    "wholePlatform": "整个平台",
     "from": "展示开始",
     "to": "展示至",
     "preview": "预览",
     "previewTitle": "你的标题会显示在这里",
-    "previewText": "详情这一行显示在这里，在页眉上方的绿色横幅里。"
+    "previewText": "详情这一行显示在这里，在页眉上方的绿色横幅里。",
+    "windowHint": "两个日期都留空，横幅将从现在起一直显示，直到你撤下。"
   },
   "audience": {
     "Everyone": "所有人",
@@ -28,7 +27,11 @@
     "Farmers": "农户"
   },
   "list": {
-    "title": "已发布与已结束"
+    "title": "已发布与已结束",
+    "loading": "正在加载公告…",
+    "errorTitle": "无法加载公告",
+    "errorText": "请检查网络连接后重试。",
+    "retry": "重试"
   },
   "col": {
     "announcement": "公告",
@@ -38,22 +41,34 @@
   },
   "status": {
     "live": "展示中",
+    "scheduled": "已排期",
     "ended": "已结束"
   },
   "action": {
     "publish": "发布",
-    "saveDraft": "存为草稿",
-    "edit": "编辑",
     "takeDown": "下架",
-    "reuse": "再次使用"
+    "reuse": "再次使用",
+    "publishing": "正在发布…"
   },
   "empty": {
     "title": "没有公告",
     "text": "发布一条，每位登录的用户都会在页眉上方看到它。"
   },
   "toast": {
-    "published": "公告已发布，现在就显示在页眉上。",
-    "draftSaved": "已存为草稿。",
-    "takenDown": "公告已下架。"
+    "published": "公告已发布。目标对象都已在通知中收到。",
+    "takenDown": "已从横幅撤下。已发送的通知仍保留。",
+    "publishError": "无法发布公告。",
+    "takeDownError": "无法撤下公告。"
+  },
+  "errors": {
+    "titleRequired": "请填写标题。",
+    "titleLong": "标题不超过 {{max}} 个字符。",
+    "contentRequired": "请填写详细内容。",
+    "contentLong": "详细内容不超过 {{max}} 个字符。",
+    "window": "结束日期不能早于开始日期。"
+  },
+  "window": {
+    "now": "立即",
+    "open": "无结束日期"
   }
 }

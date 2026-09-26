@@ -10,17 +10,16 @@
     "title": "新しいお知らせ",
     "headline": "タイトル",
     "headlinePlaceholder": "例：Thủ Đức マーケットは10月から6:00開始",
-    "headlineHint": "1行、文頭のみ大文字、感嘆符なし。手書き風で表示されます。",
+    "headlineHint": "文頭のみ大文字、感嘆符なし。緑の帯に手書き風で表示されます。",
     "detail": "詳細",
     "detailPlaceholder": "お客様や店舗にとって何が変わるかを一文で。",
     "showTo": "表示する相手",
-    "aboutMarket": "対象のマーケット",
-    "wholePlatform": "プラットフォーム全体",
     "from": "表示開始",
     "to": "表示終了",
     "preview": "プレビュー",
     "previewTitle": "ここにタイトルが表示されます",
-    "previewText": "詳細の行はここ、ヘッダー上の緑の帯の中に表示されます。"
+    "previewText": "詳細の行はここ、ヘッダー上の緑の帯の中に表示されます。",
+    "windowHint": "両方の日付を空欄にすると、今から取り下げるまで表示されます。"
   },
   "audience": {
     "Everyone": "全員",
@@ -28,7 +27,11 @@
     "Farmers": "農家"
   },
   "list": {
-    "title": "掲載中と過去のお知らせ"
+    "title": "掲載中と過去のお知らせ",
+    "loading": "お知らせを読み込んでいます…",
+    "errorTitle": "お知らせを読み込めませんでした",
+    "errorText": "接続を確認して、もう一度お試しください。",
+    "retry": "再試行"
   },
   "col": {
     "announcement": "お知らせ",
@@ -38,22 +41,34 @@
   },
   "status": {
     "live": "掲載中",
+    "scheduled": "予約済み",
     "ended": "終了"
   },
   "action": {
     "publish": "公開",
-    "saveDraft": "下書き保存",
-    "edit": "編集",
     "takeDown": "取り下げ",
-    "reuse": "再利用"
+    "reuse": "再利用",
+    "publishing": "公開中…"
   },
   "empty": {
     "title": "お知らせはありません",
     "text": "1件公開すると、ログインしている全員がヘッダー上の帯で見られます。"
   },
   "toast": {
-    "published": "お知らせを公開しました。今ヘッダーに表示されています。",
-    "draftSaved": "下書きとして保存しました。",
-    "takenDown": "お知らせを取り下げました。"
+    "published": "お知らせを公開しました。対象の全員の通知に届いています。",
+    "takenDown": "バナーから取り下げました。送信済みの通知は残ります。",
+    "publishError": "お知らせを公開できませんでした。",
+    "takeDownError": "お知らせを取り下げられませんでした。"
+  },
+  "errors": {
+    "titleRequired": "タイトルを入力してください。",
+    "titleLong": "タイトルは {{max}} 文字以内にしてください。",
+    "contentRequired": "詳細を入力してください。",
+    "contentLong": "詳細は {{max}} 文字以内にしてください。",
+    "window": "終了日は開始日以降にしてください。"
+  },
+  "window": {
+    "now": "今すぐ",
+    "open": "終了日なし"
   }
 }

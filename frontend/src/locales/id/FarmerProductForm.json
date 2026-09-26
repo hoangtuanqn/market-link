@@ -19,16 +19,7 @@
   },
   "unit": {
     "label": "Dijual per",
-    "addedByStall": "{{unit}} · ditambahkan oleh lapak",
-    "own": "Beri nama satuan sendiri…",
     "hint": "Cara pelanggan membelinya: per kilo, per ikat, per umbi, per kantong. Pilih satu atau beri nama sendiri."
-  },
-  "own": {
-    "label": "Satuan Anda",
-    "onePlaceholder": "tray of 30",
-    "one": "Satuan, tunggal",
-    "many": "Satuan, jamak",
-    "hint": "Bentuk tunggal, lalu jamak. Kami isikan yang kedua untuk Anda; ubah jika tebakannya salah."
   },
   "preview": {
     "label": "Tampilannya nanti",

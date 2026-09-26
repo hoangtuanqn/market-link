@@ -28,30 +28,6 @@
     "clock24": "24 時間表示 · 19:00",
     "clock12": "12 時間表示 · 7:00 pm",
     "preview": "プレビュー：{{date}} · {{time}} · {{price}}",
-    "notifications": "お知らせ",
-    "notificationsNote": "アカウントに保存されます。MarketLink はまだお知らせを送信していませんが、送信を始めたらこの選択に従います。",
-    "notes": {
-      "customer": {
-        "orderDecided": "注文が受け付けられた、またはお断りされた",
-        "orderReady": "注文の受け取り準備ができた",
-        "backInStock": "保存した商品が再入荷した",
-        "announcements": "MarketLink からのお知らせ",
-        "stallReply": "屋台がメッセージに返信した"
-      },
-      "farmer": {
-        "newOrder": "新しい注文が届いた",
-        "orderChanged": "お客様が注文を変更またはキャンセルした",
-        "cutoffSoon": "締め切りまであと 1 時間",
-        "newReview": "屋台に新しいレビューが付いた",
-        "announcements": "MarketLink からのお知らせ"
-      },
-      "admin": {
-        "farmerApplication": "Farmer の申請が届いた",
-        "reported": "レビューまたは掲載が報告された",
-        "newFeedback": "新しいご意見",
-        "marketEdited": "マーケットが編集された"
-      }
-    },
     "save": "設定を保存",
     "saving": "保存中…",
     "saveHint": "テーマは選んだ時点で反映され、その他は保存したときに反映されます。",
@@ -405,5 +381,83 @@
     "answeredOn": "{{date}} に回答",
     "reason": "理由:",
     "photoAlt": "{{n}} 回目の申請の写真"
+  },
+  "notify": {
+    "open": "開く",
+    "prompt": {
+      "title": "通知をオンにする",
+      "text": "このタブが裏にあっても、新しいメッセージ、店舗の審査結果、MarketLink のお知らせを画面で受け取れます。",
+      "enable": "オンにする",
+      "later": "後で",
+      "onTitle": "通知がオンになりました",
+      "onText": "受け取る内容は「設定 → 通知」で変更できます。"
+    },
+    "settings": {
+      "title": "通知",
+      "intro": "どのお知らせを、どの方法で受け取るかを選びます。お知らせはすべて一覧に残ります。",
+      "browser": "ブラウザの通知",
+      "permission": {
+        "granted": "オン。MarketLink が裏にあっても通知が表示されます。",
+        "default": "オフ。オンにすると、このタブが裏にあっても通知が見られます。",
+        "denied": "ブラウザでブロックされています。ブラウザのサイト設定でこのサイトの通知を許可し、ページを再読み込みしてください。",
+        "unsupported": "このブラウザは通知を表示できません。お知らせはページ上で確認できます。"
+      },
+      "loading": "通知設定を読み込んでいます…",
+      "loadErrorTitle": "通知設定を読み込めませんでした",
+      "loadErrorText": "接続を確認して、もう一度お試しください。",
+      "retry": "再試行",
+      "group": "種類",
+      "inApp": "ページ内",
+      "inBrowser": "ブラウザ",
+      "groups": {
+        "messages": {
+          "title": "メッセージ",
+          "note": "お客様や店舗からメッセージが届いたとき"
+        },
+        "announcements": {
+          "title": "お知らせ",
+          "note": "市場の休業など、MarketLink からのお知らせ"
+        },
+        "account": {
+          "title": "店舗の申請",
+          "note": "承認、却下、一時停止、再開されたとき"
+        },
+        "farmerApplications": {
+          "title": "Farmer の申請",
+          "note": "誰かが MarketLink での販売を申請したとき"
+        }
+      },
+      "sound": "音を鳴らす",
+      "quiet": "おやすみ時間",
+      "quietNote": "この時間帯はポップアップ・音・ブラウザ通知を出しません（ベトナム時間）。お知らせは一覧に届きます。",
+      "from": "開始",
+      "to": "終了",
+      "testNote": "自分宛てに通知を送って、表示を確認します。",
+      "test": "テスト送信",
+      "testing": "送信中…",
+      "testError": "テストを送信できませんでした。数秒後にもう一度お試しください。",
+      "saveError": "通知設定を保存できませんでした。"
+    },
+    "list": {
+      "all": "すべて",
+      "unread": "未読",
+      "unreadCount_one": "未読 {{count}} 件",
+      "unreadCount_other": "未読 {{count}} 件",
+      "unreadMark": "未読",
+      "markAllRead": "すべて既読にする",
+      "loading": "読み込み中…",
+      "more": "古いお知らせを表示",
+      "emptyTitle": "まだお知らせはありません",
+      "emptyUnreadTitle": "すべて確認済みです",
+      "emptyText": "新しいお知らせは届いた時点でここに表示されます。",
+      "errorTitle": "お知らせを読み込めませんでした",
+      "errorText": "接続を確認して、もう一度お試しください。",
+      "loadError": "これ以上読み込めませんでした。",
+      "readAllError": "既読にできませんでした。"
+    },
+    "admin": {
+      "title": "通知",
+      "intro": "審査待ちの新しい Farmer の申請です。"
+    }
   }
 }

@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import NotificationBell from '@/components/notifications/NotificationBell';
+import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import {
   BellIcon,
   BoxIcon,
@@ -58,7 +59,7 @@ const NAV: NavGroup[] = [
     heading: 'inbox',
     items: [
       { to: '/farmer/messages', label: 'messages', icon: ChatIcon, count: 1 },
-      { to: '/farmer/notifications', label: 'notifications', icon: BellIcon, count: 2 },
+      { to: '/farmer/notifications', label: 'notifications', icon: BellIcon },
     ],
   },
   {
@@ -79,11 +80,16 @@ const NAV: NavGroup[] = [
 /** Farmer dashboard — board-green sidebar + quiet work-area header (DashboardShell). */
 const FarmerLayout = () => {
   const { t } = useTranslation();
+  const unread = useUnreadNotifications();
   const f = farmer(1)!;
 
   const nav: ShellNavGroup[] = NAV.map((g) => ({
     heading: t(`farmerNav.${g.heading}`),
-    items: g.items.map((it) => ({ ...it, label: t(`farmerNav.${it.label}`) })),
+    items: g.items.map((it) => ({
+      ...it,
+      label: t(`farmerNav.${it.label}`),
+      count: it.to === '/farmer/notifications' ? unread : it.count,
+    })),
   }));
 
   return (
@@ -102,18 +108,7 @@ const FarmerLayout = () => {
       searchId="farmer-appq"
       searchPlaceholder={t('farmerNav.searchPlaceholder')}
       accountTo="/account"
-      headerActions={
-        <Link
-          to="/farmer/notifications"
-          aria-label={t('header.notificationsUnread', { count: 2 })}
-          className="border-line-strong bg-surface-raised text-ink relative grid size-10 flex-none place-items-center rounded-sm border-[1.5px] no-underline"
-        >
-          <BellIcon />
-          <span className="bg-danger text-on-danger absolute -top-1.5 -right-1.5 grid size-4.5 place-items-center rounded-full text-[10px] font-bold">
-            2
-          </span>
-        </Link>
-      }
+      headerActions={<NotificationBell to="/farmer/notifications" />}
     />
   );
 };

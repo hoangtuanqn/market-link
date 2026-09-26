@@ -1,19 +1,13 @@
 {
   "overline": "Pengaturan",
-  "title": "Kategori & satuan",
-  "intro": "Dua daftar yang dipakai tiap lapak saat menambahkan produk. Kategori Anda yang menentukan. Satuan juga Anda yang merawat, tapi lapak selalu boleh menamai satuannya sendiri bila tidak ada yang cocok di sini.",
+  "title": "Kategori",
+  "intro": "Satu-satunya daftar yang dipilih setiap lapak saat menambah produk. Satuan jual bersifat tetap dan sudah ada di aplikasi.",
   "link": {
     "announcements": "Pengumuman",
     "feedback": "Kotak masukan"
   },
-  "tabsLabel": "Data induk",
-  "tab": {
-    "categories": "Kategori",
-    "units": "Satuan"
-  },
   "caption": {
-    "categories_other": "{{count}} kategori",
-    "units_other": "{{count}} satuan"
+    "categories_other": "{{count}} kategori"
   },
   "col": {
     "category": "Kategori",
@@ -26,13 +20,6 @@
     "kind": "Jenis",
     "readsAs": "Terbaca sebagai"
   },
-  "kind": {
-    "Weight": "Berat",
-    "Volume": "Volume",
-    "Count": "Hitungan",
-    "Pack": "Kemasan"
-  },
-  "addedBy": "ditambahkan oleh {{by}}",
   "action": {
     "save": "Simpan",
     "remove": "Hapus",
@@ -47,23 +34,6 @@
     "position": "Urutan pada filter",
     "submit": "Tambah kategori"
   },
-  "unitNote": {
-    "title": "Dua satuan di daftar ini diketik oleh lapak, bukan oleh Anda.",
-    "text": "Lapak menamai satuannya sendiri kalau tidak ada yang cocok di daftar pilihan. Naikkan yang mulai banyak dipakai, gabungkan yang kembar, sisanya biarkan saja."
-  },
-  "unitsNote": "Satuan disimpan sebagai teks pada produk, jadi lapak tidak pernah terhalang daftar ini. Yang Anda rawat di sini adalah apa yang muncul di kotak pilihan, dan ejaan mana yang digabung supaya laporan tidak memisahkan “bag” dari “Bag”.",
-  "unitForm": {
-    "title": "Tambah satuan",
-    "one": "Bentuk tunggal",
-    "many": "Bentuk jamak",
-    "manyHint": "Bahasa Inggris tidak punya aturan pasti untuk ini, jadi diketik, bukan ditebak.",
-    "kind": "Jenis",
-    "preview": "Akan terbaca begini",
-    "previewFallback": "satuan",
-    "onTheTag": "pada label",
-    "left": "tersisa",
-    "submit": "Tambah satuan"
-  },
   "removeCategory": {
     "title": "Hapus {{name}}?",
     "textUsed_other": "{{count}} produk memakainya. Pilih akan dipindah ke mana.",
@@ -71,13 +41,6 @@
     "moveTo": "Pindahkan produk ke",
     "keep": "Pertahankan kategori",
     "confirm": "Hapus kategori"
-  },
-  "mergeUnit": {
-    "title": "Gabungkan {{name}} ke satuan lain?",
-    "text": "Produk yang memakainya ditulis ulang memakai satuan yang Anda pilih, dan pesanan lama tetap memakai satuan saat dijual.",
-    "into": "Gabungkan ke",
-    "cancel": "Batal",
-    "confirm": "Gabungkan"
   },
   "empty": {
     "categories": {
@@ -89,10 +52,7 @@
     "categorySaved": "{{name}} tersimpan.",
     "categoryAdded": "Kategori ditambahkan. Lapak sudah bisa memilihnya.",
     "categoryRemoved": "{{name}} dihapus.",
-    "unitSaved": "{{name}} tersimpan.",
-    "unitAdded": "Satuan dimasukkan ke daftar pilihan.",
-    "promoted": "{{name}} kini ada di daftar pilihan semua lapak.",
-    "merged": "Digabungkan. Satu produk ditulis ulang."
+    "promoted": "{{name}} kini ada di daftar pilihan semua lapak."
   },
   "error": {
     "noun": "kategori",

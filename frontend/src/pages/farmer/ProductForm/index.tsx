@@ -9,35 +9,31 @@ import { Chip } from '@/components/ui/chip';
 import { LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
-import { UNIT_LIST } from '@/data/units';
+import { UNITS, pluralOf } from '@/constants/units';
 import useRequest from '@/hooks/useRequest';
-import { guessPlural, perUnit, units } from '@/lib/format';
+import { perUnit, units } from '@/lib/format';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 const STATUS_OPTIONS: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
-const OWN_UNIT = '__own';
 
 type FormState = {
   name: string;
   categoryId: number | null;
   unitChoice: string;
-  ownOne: string;
-  ownMany: string;
   price: number;
   qty: number;
   desc: string;
   imageUrl: string;
   status: ProductStatus;
 };
-type FormErrors = Partial<Record<'name' | 'cat' | 'unit' | 'price' | 'qty' | 'image', string>>;
+type FormErrors = Partial<Record<'name' | 'cat' | 'price' | 'qty' | 'image', string>>;
 
 /** Contract §5 field names → this form's field ids. */
 const SERVER_FIELDS: Record<string, keyof FormErrors> = {
   name: 'name',
   categoryId: 'cat',
-  unit: 'unit',
   price: 'price',
   stockQuantity: 'qty',
   imageUrl: 'image',
@@ -46,9 +42,7 @@ const SERVER_FIELDS: Record<string, keyof FormErrors> = {
 const EMPTY: FormState = {
   name: '',
   categoryId: null,
-  unitChoice: UNIT_LIST[0]?.one ?? 'kg',
-  ownOne: '',
-  ownMany: '',
+  unitChoice: 'bunch',
   price: 0,
   qty: 0,
   desc: '',
@@ -57,13 +51,10 @@ const EMPTY: FormState = {
 };
 
 const fromProduct = (p: ProductType): FormState => {
-  const known = UNIT_LIST.some((u) => u.one === p.unit);
   return {
     name: p.name,
     categoryId: p.categoryId ?? null,
-    unitChoice: known ? p.unit : OWN_UNIT,
-    ownOne: known ? '' : p.unit,
-    ownMany: known ? '' : (p.plural ?? ''),
+    unitChoice: p.unit,
     price: p.price,
     qty: p.stock,
     desc: p.desc ?? '',
@@ -116,16 +107,16 @@ const FarmerProductFormPage = () => {
 
   const categoryId = form.categoryId ?? categories[0]?.id ?? null;
   const categoryName = categories.find((c) => c.id === categoryId)?.name ?? '';
-  const [unitOne, unitMany] =
-    form.unitChoice === OWN_UNIT
-      ? [form.ownOne.trim() || 'unit', form.ownMany.trim() || guessPlural(form.ownOne.trim() || 'unit')]
-      : [form.unitChoice, UNIT_LIST.find((u) => u.one === form.unitChoice)?.many ?? guessPlural(form.unitChoice)];
+  const [unitOne, unitMany] = [form.unitChoice, pluralOf(form.unitChoice)];
+  // A product saved with a unit outside the fixed list keeps it selectable, so editing never changes it silently.
+  const unitOptions = UNITS.some((u) => u.one === form.unitChoice)
+    ? UNITS.map((u) => u.one)
+    : [form.unitChoice, ...UNITS.map((u) => u.one)];
 
   const validate = (): FormErrors => {
     const next: FormErrors = {};
     if (!form.name.trim()) next.name = t('errors.required');
     if (categoryId == null) next.cat = t('errors.required');
-    if (form.unitChoice === OWN_UNIT && !form.ownOne.trim()) next.unit = t('errors.required');
     if (!Number.isFinite(form.price) || form.price < 0) next.price = t('errors.price');
     if (!Number.isInteger(form.qty) || form.qty < 0) next.qty = t('qty.error');
     return next;
@@ -231,45 +222,11 @@ const FarmerProductFormPage = () => {
               required
               value={form.unitChoice}
               onChange={(e) => setForm({ unitChoice: e.target.value })}
-              options={[
-                ...UNIT_LIST.map((u) => ({
-                  value: u.one,
-                  label: u.builtin ? u.one : t('unit.addedByStall', { unit: u.one }),
-                })),
-                { value: OWN_UNIT, label: t('unit.own') },
-              ]}
+              options={unitOptions}
             />
             <span className="text-ink-muted text-[13px]">{t('unit.hint')}</span>
           </div>
 
-          {form.unitChoice === OWN_UNIT && (
-            <div className="flex flex-col gap-1.5">
-              <span className="text-small text-ink font-bold">
-                {t('own.label')}
-                <span className="text-danger ml-0.5">*</span>
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <input
-                  value={form.ownOne}
-                  onChange={(e) => setForm({ ownOne: e.target.value })}
-                  placeholder={t('own.onePlaceholder')}
-                  aria-label={t('own.one')}
-                  maxLength={20}
-                  className="border-line-strong bg-surface-raised min-h-11 min-w-40 flex-1 rounded-sm border-[1.5px] px-3"
-                />
-                <input
-                  value={form.ownMany}
-                  onChange={(e) => setForm({ ownMany: e.target.value })}
-                  placeholder={guessPlural(form.ownOne.trim() || 'unit')}
-                  aria-label={t('own.many')}
-                  className="border-line-strong bg-surface-raised min-h-11 min-w-40 flex-1 rounded-sm border-[1.5px] px-3"
-                />
-              </div>
-              <span className={errors.unit ? 'text-danger text-[13px]' : 'text-ink-muted text-[13px]'}>
-                {errors.unit ?? t('own.hint')}
-              </span>
-            </div>
-          )}
 
           <div className="md:col-span-2">
             <span className="text-small text-ink font-bold">{t('preview.label')}</span>

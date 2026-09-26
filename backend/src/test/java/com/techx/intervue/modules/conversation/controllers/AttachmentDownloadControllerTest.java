@@ -5,9 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.techx.intervue.modules.conversation.entities.Conversation;
 import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.entities.MessageAttachment;
+import com.techx.intervue.modules.conversation.entities.MessageReport;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
+import com.techx.intervue.modules.conversation.enums.ReportReason;
 import com.techx.intervue.modules.conversation.repositories.ConversationRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
+import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.services.impl.AttachmentService;
 import com.techx.intervue.modules.user.entities.User;
@@ -54,6 +57,7 @@ class AttachmentDownloadControllerTest {
     @Autowired ConversationRepository conversations;
     @Autowired MessageRepository messages;
     @Autowired MessageAttachmentRepository attachments;
+    @Autowired MessageReportRepository reports;
     @Autowired JwtServiceInterface jwt;
     @Autowired UserSessionCache sessions;
 
@@ -216,5 +220,83 @@ class AttachmentDownloadControllerTest {
                                 .build());
         sessions.set(saved.getId(), saved.getEmail(), Set.of(role), Duration.ofMinutes(10));
         return saved;
+    }
+
+    /**
+     * Quyết định LEAD 26/09 đi qua HTTP thật: admin bị 403 cho tới khi có ai đó báo cáo tin, rồi
+     * mới xem được ảnh. Không thế thì báo cáo một bức ảnh khiêu dâm hay ảnh lừa đảo là vô dụng —
+     * admin nhìn thấy ô trống rồi phải quyết định mù.
+     */
+    @Test
+    void anAdminGetsThePhotoOnlyOnceTheMessageIsReported() throws Exception {
+        User admin = newUser(RoleType.ADMIN);
+        MessageReport report = null;
+        try {
+            assertThat(download(url(), admin).statusCode()).isEqualTo(403);
+
+            report =
+                    reports.saveAndFlush(
+                            MessageReport.builder()
+                                    .messageId(imageMessage.getId())
+                                    .reportedBy(recipient.getId())
+                                    .reason(ReportReason.ABUSE)
+                                    .build());
+
+            assertThat(downloadBytes(url(), admin).statusCode()).isEqualTo(200);
+        } finally {
+            if (report != null) {
+                reports.deleteById(report.getId());
+            }
+            users.deleteById(admin.getId());
+        }
+    }
+
+    /** Review Focus #2 qua HTTP: ảnh của tin ngữ cảnh vẫn đóng với admin. */
+    @Test
+    void anAdminStillCannotOpenThePhotoOfANeighbouringMessage() throws Exception {
+        User admin = newUser(RoleType.ADMIN);
+        Message neighbour =
+                messages.save(
+                        Message.builder()
+                                .conversationId(thread.getId())
+                                .senderId(sender.getId())
+                                .kind(MessageKind.IMAGE)
+                                .createdAt(Instant.now())
+                                .build());
+        String neighbourKey = UUID.randomUUID() + ".jpg";
+        chatStorage.store(AttachmentService.FOLDER, neighbourKey, new byte[] {9, 9, 9});
+        MessageAttachment neighbourPhoto =
+                attachments.save(
+                        MessageAttachment.builder()
+                                .messageId(neighbour.getId())
+                                .uploaderId(sender.getId())
+                                .storageKey(neighbourKey)
+                                .mime("image/jpeg")
+                                .sizeBytes(3)
+                                .width(10)
+                                .height(10)
+                                .build());
+        MessageReport report =
+                reports.saveAndFlush(
+                        MessageReport.builder()
+                                .messageId(imageMessage.getId())
+                                .reportedBy(recipient.getId())
+                                .reason(ReportReason.ABUSE)
+                                .build());
+        try {
+            // Tin bị báo cáo: mở được
+            assertThat(downloadBytes(url(), admin).statusCode()).isEqualTo(200);
+            // Tin hàng xóm trong cùng thread, chưa ai báo cáo: đóng
+            assertThat(
+                            download("/api/v1/attachments/" + neighbourPhoto.getId(), admin)
+                                    .statusCode())
+                    .isEqualTo(403);
+        } finally {
+            reports.deleteById(report.getId());
+            attachments.deleteById(neighbourPhoto.getId());
+            chatStorage.delete(AttachmentService.FOLDER, neighbourKey);
+            messages.deleteById(neighbour.getId());
+            users.deleteById(admin.getId());
+        }
     }
 }

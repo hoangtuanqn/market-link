@@ -29,6 +29,8 @@ type HeaderProps = {
   settingsTo?: string;
   /** Hộp thư theo vai: Customer /messages, Farmer /farmer/messages. */
   messagesTo?: string;
+  /** Trang thông báo của vai đang đăng nhập (Farmer: /farmer/notifications). */
+  notificationsTo?: string;
   cartCount?: number;
   unreadCount?: number;
 };
@@ -41,6 +43,7 @@ const Header = ({
   tier,
   settingsTo = '/settings',
   messagesTo = '/messages',
+  notificationsTo = '/notifications',
   cartCount = 0,
   unreadCount = 0,
 }: HeaderProps) => {
@@ -86,7 +89,7 @@ const Header = ({
             )}
             {signedIn && (
               <Link
-                to="/notifications"
+                to={notificationsTo}
                 aria-label={
                   unreadCount ? t('header.notificationsUnread', { count: unreadCount }) : t('header.notifications')
                 }

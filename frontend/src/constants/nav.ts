@@ -45,6 +45,8 @@ export const ADMIN_MODERATION_PATH = '/admin/moderation';
 export const ADMIN_CATEGORIES_PATH = '/admin/categories';
 /** FR-077: thông báo toàn sàn. */
 export const ADMIN_ANNOUNCEMENTS_PATH = '/admin/announcements';
+/** FR-042 — thông báo của chính admin (đơn Farmer mới). */
+export const ADMIN_NOTIFICATIONS_PATH = '/admin/notifications';
 /** FR-081: hộp thư góp ý. */
 export const ADMIN_FEEDBACK_PATH = '/admin/feedback';
 /** Thông tin cá nhân và mật khẩu của admin; phần xác thực hai bước nằm ở ADMIN_SECURITY_PATH. */

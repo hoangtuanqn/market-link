@@ -2,6 +2,7 @@ package com.techx.intervue.modules.notification.services.interfaces;
 
 import com.techx.intervue.modules.notification.requests.AnnouncementRequest;
 import com.techx.intervue.modules.notification.resources.AnnouncementResource;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.resources.PageResource;
 import java.util.Optional;
 
@@ -18,6 +19,10 @@ public interface AnnouncementServiceInterface {
     /** Gỡ banner; thông báo đã gửi vẫn giữ. */
     void deactivate(Long id);
 
-    /** Banner đang hiệu lực mới nhất cho trang public. */
-    Optional<AnnouncementResource> live();
+    /**
+     * Banner đang hiệu lực mới nhất mà người xem thuộc audience của nó.
+     *
+     * @param viewer role của người đang xem; null = khách vãng lai
+     */
+    Optional<AnnouncementResource> live(RoleType viewer);
 }

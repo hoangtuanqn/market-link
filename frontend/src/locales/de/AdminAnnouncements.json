@@ -10,17 +10,16 @@
     "title": "Neuer Hinweis",
     "headline": "Titel",
     "headlinePlaceholder": "z. B. Der Markt Thủ Đức öffnet ab Oktober um 06:00",
-    "headlineHint": "Eine Zeile, nur der erste Buchstabe groß, keine Ausrufezeichen. Wird handschriftlich dargestellt.",
+    "headlineHint": "Satzanfang groß, keine Ausrufezeichen. Erscheint in Handschrift im grünen Band.",
     "detail": "Details",
     "detailPlaceholder": "Ein Satz dazu, was sich für Kundschaft oder Stände ändert.",
     "showTo": "Anzeigen für",
-    "aboutMarket": "Betrifft Markt",
-    "wholePlatform": "Ganze Plattform",
     "from": "Anzeigen ab",
     "to": "Bis",
     "preview": "Vorschau",
     "previewTitle": "Hier steht dein Titel",
-    "previewText": "Und hier die Detailzeile, im grünen Band über der Kopfzeile."
+    "previewText": "Und hier die Detailzeile, im grünen Band über der Kopfzeile.",
+    "windowHint": "Lassen Sie beide Daten leer, um es ab sofort anzuzeigen, bis Sie es entfernen."
   },
   "audience": {
     "Everyone": "Alle",
@@ -28,7 +27,11 @@
     "Farmers": "Erzeuger"
   },
   "list": {
-    "title": "Veröffentlicht und vergangen"
+    "title": "Veröffentlicht und vergangen",
+    "loading": "Mitteilungen werden geladen…",
+    "errorTitle": "Mitteilungen konnten nicht geladen werden",
+    "errorText": "Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "retry": "Erneut versuchen"
   },
   "col": {
     "announcement": "Hinweis",
@@ -38,22 +41,34 @@
   },
   "status": {
     "live": "Läuft",
+    "scheduled": "Geplant",
     "ended": "Beendet"
   },
   "action": {
     "publish": "Veröffentlichen",
-    "saveDraft": "Als Entwurf speichern",
-    "edit": "Bearbeiten",
     "takeDown": "Zurückziehen",
-    "reuse": "Erneut verwenden"
+    "reuse": "Erneut verwenden",
+    "publishing": "Wird veröffentlicht…"
   },
   "empty": {
     "title": "Keine Hinweise",
     "text": "Veröffentliche einen, und alle angemeldeten Personen sehen ihn im Band über der Kopfzeile."
   },
   "toast": {
-    "published": "Hinweis veröffentlicht. Er läuft jetzt in der Kopfzeile.",
-    "draftSaved": "Als Entwurf gespeichert.",
-    "takenDown": "Hinweis zurückgezogen."
+    "published": "Mitteilung veröffentlicht. Alle Empfänger haben sie in ihren Benachrichtigungen.",
+    "takenDown": "Aus dem Band entfernt. Bereits gesendete Benachrichtigungen bleiben.",
+    "publishError": "Die Mitteilung konnte nicht veröffentlicht werden.",
+    "takeDownError": "Die Mitteilung konnte nicht entfernt werden."
+  },
+  "errors": {
+    "titleRequired": "Geben Sie einen Titel ein.",
+    "titleLong": "Der Titel darf höchstens {{max}} Zeichen haben.",
+    "contentRequired": "Geben Sie eine Zeile Details ein.",
+    "contentLong": "Die Details dürfen höchstens {{max}} Zeichen haben.",
+    "window": "Das Enddatum muss am oder nach dem Startdatum liegen."
+  },
+  "window": {
+    "now": "Ab sofort",
+    "open": "ohne Enddatum"
   }
 }
