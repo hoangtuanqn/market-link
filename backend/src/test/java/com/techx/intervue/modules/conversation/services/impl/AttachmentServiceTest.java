@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.entities.MessageAttachment;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
+import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
@@ -190,12 +191,17 @@ class AttachmentServiceTest {
         assertThat(file.sizeBytes()).isEqualTo(100);
     }
 
+    /**
+     * Cùng mã với lúc gắn ảnh của người khác vào tin của mình: cả hai đều là "ảnh này không phải
+     * của bạn". NOT_A_MEMBER dành riêng cho ảnh ĐÃ gắn tin mà người xin không thuộc thread — đó là
+     * một ý khác.
+     */
     @Test
     void nobodyElseCanSeeAnUploadThatIsNotOnAMessageYet() {
         when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, null)));
 
         assertThatThrownBy(() -> service.read(3L, 55L))
-                .isInstanceOf(ConversationAccessDeniedException.class);
+                .isInstanceOf(AttachmentNotYoursException.class);
     }
 
     @Test

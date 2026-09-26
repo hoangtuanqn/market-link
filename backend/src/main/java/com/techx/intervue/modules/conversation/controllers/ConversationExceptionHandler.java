@@ -33,12 +33,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 /**
- * Mã HTTP theo spec mục 6.3 (repo chưa có handler chung nên advice này chỉ áp cho controller của
- * module chat). Thêm controller mới vào module thì phải thêm vào assignableTypes dưới đây, nếu
- * không mọi exception của nó thành 500 — ConversationExceptionHandlerScopeTest ghim điều đó.
+ * Mã HTTP theo spec mục 6.3, cho các controller của module chat. Lỗi multipart quá cỡ do
+ * UploadExceptionHandler TOÀN CỤC xử lý (Tomcat chặn khi đọc body, trước khi biết controller nào
+ * nhận), nên đừng thêm lại ở đây: hai advice cùng bắt một exception mà không cái nào khai @Order
+ * thì error.code trả về là không xác định.
+ *
+ * <p>Thêm controller mới vào module thì phải thêm vào assignableTypes dưới đây, nếu không mọi
+ * exception của nó thành 500 — ConversationExceptionHandlerScopeTest ghim điều đó.
  */
 @Slf4j
 @RestControllerAdvice(
@@ -142,16 +145,6 @@ public class ConversationExceptionHandler {
     ResponseEntity<ApiResource<Void>> tooLarge(AttachmentTooLargeException e) {
         return error(
                 HttpStatus.PAYLOAD_TOO_LARGE, "ATTACHMENT_TOO_LARGE", e.getMessage(), List.of());
-    }
-
-    /** Trần multipart của Tomcat chặn trước khi vào service — vẫn phải 413, không phải 500. */
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    ResponseEntity<ApiResource<Void>> multipartTooLarge(MaxUploadSizeExceededException e) {
-        return error(
-                HttpStatus.PAYLOAD_TOO_LARGE,
-                "ATTACHMENT_TOO_LARGE",
-                "The photo must be 5 MB or smaller.",
-                List.of());
     }
 
     /** Spec §6.3 — 415. Kết luận từ magic bytes, không từ Content-Type client gửi. */

@@ -2,8 +2,8 @@ package com.techx.intervue.modules.conversation.services.impl;
 
 import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.entities.MessageAttachment;
+import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
-import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
 import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
@@ -98,9 +98,10 @@ public class AttachmentService implements AttachmentServiceInterface {
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
 
         if (attachment.getMessageId() == null) {
-            // Chưa gắn vào tin nào: chỉ người vừa upload được xem, để hiện preview trước khi gửi
+            // Chưa gắn vào tin nào: chỉ người vừa upload được xem, để hiện preview trước khi gửi.
+            // Cùng mã với lúc gắn ảnh của người khác vào tin của mình — cùng một ý, một mã.
             if (!attachment.getUploaderId().equals(meId)) {
-                throw new ConversationAccessDeniedException();
+                throw new AttachmentNotYoursException();
             }
         } else {
             Message message =
