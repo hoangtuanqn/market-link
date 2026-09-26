@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import FarmerApi from '@/api-requests/farmer.requests';
+import { StoreIcon } from '@/components/icons';
 import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import useSession from '@/hooks/useSession';
@@ -57,24 +58,38 @@ const SellCard = () => {
         : t('sell.apply');
 
   return (
-    <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
-      <div className="flex max-w-130 flex-col gap-2">
-        <h2 className="text-h3">{t('sell.title')}</h2>
-        <p className="text-[15px]">{text}</p>
+    <Card className="border-brand/40 bg-surface-raised hover:border-brand relative flex flex-wrap items-center justify-between gap-6 overflow-hidden p-6 shadow-md transition-all">
+      {/* Decorative accent top bar */}
+      <div className="bg-brand absolute inset-x-0 top-0 h-1.5" />
+      <div className="flex max-w-2xl flex-col gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <span className="bg-brand/10 text-brand flex h-8 w-8 items-center justify-center rounded-full">
+            <StoreIcon size={18} />
+          </span>
+          <h2 className="text-h3">{t('sell.title')}</h2>
+          <span className="bg-brand text-on-brand rounded-full px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase">
+            Partner
+          </span>
+        </div>
+        <p className="text-ink-muted text-[15px] leading-relaxed">{text}</p>
         {/* Đã duyệt thì nút chính dẫn sang panel Farmer, nên đơn cũ cần một lối đi riêng. */}
         {state.kind === 'applied' && state.status === 'approved' && (
-          <Link to="/become-farmer" className="text-brand text-small w-fit underline">
+          <Link to="/become-farmer" className="text-brand text-small w-fit font-medium underline">
             {t('sell.history')}
           </Link>
         )}
       </div>
-      {state.kind === 'loading' ? (
-        <span aria-busy="true" className="bg-surface-sunken h-[var(--size-control)] w-40 rounded-sm">
-          <span className="sr-only">{t('sell.loading')}</span>
-        </span>
-      ) : (
-        <ButtonLink to={to}>{label}</ButtonLink>
-      )}
+      <div className="flex flex-none items-center">
+        {state.kind === 'loading' ? (
+          <span aria-busy="true" className="bg-surface-sunken h-[var(--size-control)] w-40 rounded-sm">
+            <span className="sr-only">{t('sell.loading')}</span>
+          </span>
+        ) : (
+          <ButtonLink to={to} className="shadow-sm">
+            {label}
+          </ButtonLink>
+        )}
+      </div>
     </Card>
   );
 };
