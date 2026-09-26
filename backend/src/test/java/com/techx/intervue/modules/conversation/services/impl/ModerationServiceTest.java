@@ -1,11 +1,14 @@
 package com.techx.intervue.modules.conversation.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.conversation.controllers.AdminMessageReportController;
 import com.techx.intervue.modules.conversation.entities.Message;
 import com.techx.intervue.modules.conversation.entities.MessageReport;
 import com.techx.intervue.modules.conversation.enums.MessageKind;
@@ -13,14 +16,19 @@ import com.techx.intervue.modules.conversation.enums.ReportReason;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
+import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.conversation.resources.AdminReportListItemResource;
+import com.techx.intervue.modules.conversation.resources.ModeratedMessageResource;
+import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.resources.PageResource;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +37,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 class ModerationServiceTest {
 
@@ -175,5 +186,170 @@ class ModerationServiceTest {
 
     private static User named(Long id, String fullName) {
         return User.builder().id(id).fullName(fullName).build();
+    }
+
+    @Test
+    void detailPutsTheReportedMessageInTheMiddleOfItsNeighbours() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+        when(messages.findByConversationIdAndIdLessThanOrderByIdDesc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of(textMessageWithId(100L, "before")));
+        when(messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of(textMessageWithId(102L, "after")));
+
+        AdminReportDetailResource detail = service.detail(9L);
+
+        assertThat(detail.reportId()).isEqualTo(9L);
+        assertThat(detail.conversationId()).isEqualTo(42L);
+        assertThat(detail.reporterName()).isEqualTo("Buyer Bea");
+        assertThat(detail.context())
+                .extracting(ModeratedMessageResource::id)
+                .containsExactly(100L, 101L, 102L);
+        assertThat(detail.context())
+                .filteredOn(ModeratedMessageResource::reported)
+                .extracting(ModeratedMessageResource::id)
+                .containsExactly(101L);
+    }
+
+    @Test
+    void detailAsksForAtMostFiveMessagesOnEachSide() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+        when(messages.findByConversationIdAndIdLessThanOrderByIdDesc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+        when(messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+
+        service.detail(9L);
+
+        ArgumentCaptor<Pageable> pageable = ArgumentCaptor.forClass(Pageable.class);
+        verify(messages)
+                .findByConversationIdAndIdLessThanOrderByIdDesc(
+                        eq(42L), eq(101L), pageable.capture());
+        assertThat(pageable.getValue().getPageSize()).isEqualTo(ModerationService.CONTEXT_RADIUS);
+        assertThat(ModerationService.CONTEXT_RADIUS).isEqualTo(5);
+    }
+
+    /** Ngữ cảnh trả về theo thứ tự cũ → mới, dù truy vấn "trước" trả mới → cũ. */
+    @Test
+    void theContextReadsOldestFirst() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+        when(messages.findByConversationIdAndIdLessThanOrderByIdDesc(eq(42L), eq(101L), any()))
+                .thenReturn(
+                        List.of(
+                                textMessageWithId(100L, "newest before"),
+                                textMessageWithId(99L, "older"),
+                                textMessageWithId(98L, "oldest")));
+        when(messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+
+        assertThat(service.detail(9L).context())
+                .extracting(ModeratedMessageResource::id)
+                .containsExactly(98L, 99L, 100L, 101L);
+    }
+
+    @Test
+    void detailShowsWhetherAContextMessageCarriesAPhotoWithoutLeakingIt() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+        when(messages.findByConversationIdAndIdLessThanOrderByIdDesc(eq(42L), eq(101L), any()))
+                .thenReturn(
+                        List.of(
+                                Message.builder()
+                                        .id(100L)
+                                        .conversationId(42L)
+                                        .senderId(3L)
+                                        .kind(MessageKind.IMAGE)
+                                        .createdAt(NOW)
+                                        .build()));
+        when(messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+
+        assertThat(service.detail(9L).context())
+                .filteredOn(m -> m.id().equals(100L))
+                .singleElement()
+                .satisfies(
+                        m -> {
+                            assertThat(m.hasPhoto()).isTrue();
+                            assertThat(m.body()).isNull();
+                        });
+    }
+
+    /** Admin thấy tin đã bị ẩn (khác người dùng thường), kèm cờ để UI hiện khác đi. */
+    @Test
+    void detailMarksAHiddenNeighbourAsHidden() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+        Message hidden = textMessageWithId(100L, "hidden earlier");
+        hidden.setHiddenAt(NOW);
+        when(messages.findByConversationIdAndIdLessThanOrderByIdDesc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of(hidden));
+        when(messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+
+        assertThat(service.detail(9L).context())
+                .filteredOn(m -> m.id().equals(100L))
+                .singleElement()
+                .satisfies(m -> assertThat(m.hidden()).isTrue());
+    }
+
+    /** Tin ngữ cảnh nào cũng đang có báo cáo riêng thì cũng mang cờ reported. */
+    @Test
+    void aNeighbourThatIsAlsoReportedCarriesTheFlagToo() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+        when(reports.existsByMessageId(100L)).thenReturn(true);
+        when(messages.findByConversationIdAndIdLessThanOrderByIdDesc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of(textMessageWithId(100L, "also reported")));
+        when(messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+
+        assertThat(service.detail(9L).context())
+                .filteredOn(ModeratedMessageResource::reported)
+                .extracting(ModeratedMessageResource::id)
+                .containsExactly(100L, 101L);
+    }
+
+    @Test
+    void anUnknownReportIsNotFound() {
+        when(reports.findById(9L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.detail(9L)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    /**
+     * Review Focus #1. Thứ cần ghim là **sự vắng mặt** của một khả năng, nên test soi chính bề mặt
+     * API: không method nào của service nhận một conversationId, và không đường dẫn nào của
+     * controller admin nhắc tới conversation. Thêm một endpoint như vậy là phá spec §8.3.
+     */
+    @Test
+    void adminCannotReachAThreadThatHasNoReport() {
+        assertThat(ModerationServiceInterface.class.getDeclaredMethods())
+                .describedAs("cửa vào duy nhất của admin là reportId / messageId")
+                .noneMatch(m -> m.getName().toLowerCase(Locale.ROOT).contains("conversation"));
+
+        String base =
+                AdminMessageReportController.class.getAnnotation(RequestMapping.class).value()[0];
+        assertThat(base).isEqualTo("/api/v1/admin/message-reports");
+        assertThat(AdminMessageReportController.class.getDeclaredMethods())
+                .allSatisfy(
+                        m -> {
+                            GetMapping get = m.getAnnotation(GetMapping.class);
+                            PatchMapping patch = m.getAnnotation(PatchMapping.class);
+                            String path =
+                                    get != null && get.value().length > 0
+                                            ? get.value()[0]
+                                            : patch != null && patch.value().length > 0
+                                                    ? patch.value()[0]
+                                                    : "";
+                            assertThat(path.toLowerCase(Locale.ROOT))
+                                    .doesNotContain("conversation");
+                        });
+    }
+
+    private static Message textMessageWithId(Long id, String body) {
+        return Message.builder()
+                .id(id)
+                .conversationId(42L)
+                .senderId(3L)
+                .kind(MessageKind.TEXT)
+                .body(body)
+                .createdAt(NOW)
+                .build();
     }
 }

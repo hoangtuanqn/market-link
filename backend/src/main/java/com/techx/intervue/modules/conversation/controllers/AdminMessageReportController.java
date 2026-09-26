@@ -2,6 +2,7 @@ package com.techx.intervue.modules.conversation.controllers;
 
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
+import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.conversation.resources.AdminReportListItemResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +40,11 @@ public class AdminMessageReportController extends BaseController {
             @RequestParam(defaultValue = "1") @Min(1) int page,
             @RequestParam(defaultValue = "20") @Min(1) @Max(50) int pageSize) {
         return ok(moderation.list(parseStatus(status), page, pageSize), "Reports loaded.");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResource<AdminReportDetailResource>> detail(@PathVariable Long id) {
+        return ok(moderation.detail(id), "Report loaded.");
     }
 
     /** Giá trị lạ → 400 qua handler, không âm thầm trả về cả danh sách. */

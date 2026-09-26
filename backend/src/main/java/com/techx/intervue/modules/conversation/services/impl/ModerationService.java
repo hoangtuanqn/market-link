@@ -6,12 +6,17 @@ import com.techx.intervue.modules.conversation.enums.MessageKind;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
+import com.techx.intervue.modules.conversation.resources.AdminReportDetailResource;
 import com.techx.intervue.modules.conversation.resources.AdminReportListItemResource;
+import com.techx.intervue.modules.conversation.resources.ModeratedMessageResource;
 import com.techx.intervue.modules.conversation.services.interfaces.ModerationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.resources.PageResource;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.Clock;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,6 +36,9 @@ public class ModerationService implements ModerationServiceInterface {
     static final String IMAGE_PREVIEW = "Photo";
 
     static final String UNKNOWN_USER = "Unknown user";
+
+    /** Spec §8.3: "tối đa 5 tin liền trước và 5 tin liền sau". */
+    static final int CONTEXT_RADIUS = 5;
 
     private final MessageReportRepository reports;
     private final MessageRepository messages;
@@ -57,6 +65,64 @@ public class ModerationService implements ModerationServiceInterface {
                 .pageSize(pageSize)
                 .total(found.getTotalElements())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public AdminReportDetailResource detail(Long reportId) {
+        MessageReport report =
+                reports.findById(reportId)
+                        .orElseThrow(() -> new EntityNotFoundException("Report not found."));
+        Message reported =
+                messages.findById(report.getMessageId())
+                        .orElseThrow(() -> new EntityNotFoundException("Message not found."));
+
+        Pageable window = PageRequest.of(0, CONTEXT_RADIUS);
+        List<Message> before =
+                new ArrayList<>(
+                        messages.findByConversationIdAndIdLessThanOrderByIdDesc(
+                                reported.getConversationId(), reported.getId(), window));
+        Collections.reverse(before); // truy vấn trả mới→cũ, hiển thị thì cũ→mới
+        List<Message> after =
+                messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(
+                        reported.getConversationId(), reported.getId(), window);
+
+        List<Message> window2 = new ArrayList<>(before);
+        window2.add(reported);
+        window2.addAll(after);
+
+        List<ModeratedMessageResource> context =
+                window2.stream()
+                        .map(m -> toModerated(m, m.getId().equals(reported.getId())))
+                        .toList();
+
+        return new AdminReportDetailResource(
+                report.getId(),
+                report.getMessageId(),
+                reported.getConversationId(),
+                report.getReason(),
+                report.getNote(),
+                report.getStatus(),
+                nameOf(report.getReportedBy()),
+                report.getCreatedAt(),
+                context);
+    }
+
+    /**
+     * `reported` đúng cho tin trung tâm, và cũng đúng cho tin ngữ cảnh nào đang có báo cáo riêng —
+     * Task 7 dùng cờ này để quyết cho admin xem ảnh hay không.
+     */
+    private ModeratedMessageResource toModerated(Message m, boolean isCentre) {
+        return new ModeratedMessageResource(
+                m.getId(),
+                m.getSenderId(),
+                nameOf(m.getSenderId()),
+                m.getKind(),
+                m.getBody(),
+                m.getKind() == MessageKind.IMAGE,
+                isCentre || reports.existsByMessageId(m.getId()),
+                m.isHidden(),
+                m.getCreatedAt());
     }
 
     private AdminReportListItemResource toItem(MessageReport report) {
