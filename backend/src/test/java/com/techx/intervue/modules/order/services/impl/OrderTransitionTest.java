@@ -445,6 +445,28 @@ class OrderTransitionTest {
     }
 
     /**
+     * I-3/FR-064 — sản phẩm Farmer tự đặt {@code sold_out} dù tồn còn (không phải hết hàng thật):
+     * hoàn tồn kho lúc huỷ/từ chối không được tự bật lại {@code available}. Chỉ tồn trước lúc hoàn
+     * đúng bằng 0 (sold_out do hết hàng) mới được tự bật lại — xem {@link #declineRestoresStock()}.
+     */
+    @Test
+    void declineDoesNotReactivateASoldOutProductThatStillHadStock() {
+        Order order = orderWithStatus(OrderStatus.PLACED);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        Product a = product(PRODUCT_A, 5, ProductStatus.SOLD_OUT);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item(PRODUCT_A, 2)));
+        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        PickupSlot slot = slotWith(3);
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
+
+        service.decline(FARMER_USER_ID, ORDER_ID, "reason");
+
+        assertThat(a.getStockQuantity()).isEqualTo(7);
+        assertThat(a.getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
+        assertThat(slot.getBookedCount()).isEqualTo(2);
+    }
+
+    /**
      * Controller ruling — sản phẩm đã xoá mềm ({@code is_deleted}) vẫn có dòng thật trong bảng
      * products, nên vẫn nhận lại tồn kho khi đơn chết: order_items cũ trỏ về nó vẫn còn giá trị dù
      * Farmer đã gỡ nó khỏi kệ.

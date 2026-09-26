@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { OrderDetailDto } from './order.requests';
-import { toOrder } from './order.requests';
+import { toOrder, toOrderView } from './order.requests';
 
 const baseDto = (overrides: Partial<OrderDetailDto> = {}): OrderDetailDto => ({
   summary: {
@@ -119,5 +119,17 @@ describe('toOrder', () => {
       ['placed', '2026-09-26T08:00:00Z', ''],
       ['accepted', '2026-09-26T09:00:00Z', 'Nguyễn Thị Tư'],
     ]);
+  });
+});
+
+describe('toOrderView', () => {
+  it('carries the numeric order id alongside the same OrderType toOrder would build (I-1)', () => {
+    const dto = baseDto();
+
+    const view = toOrderView(dto);
+
+    expect(view.id).toBe(42);
+    expect(view.id).toBe(dto.summary.orderId);
+    expect(view.order).toEqual(toOrder(dto));
   });
 });

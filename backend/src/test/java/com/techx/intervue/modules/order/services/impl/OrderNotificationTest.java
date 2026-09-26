@@ -15,6 +15,7 @@ import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.notification.enums.NotificationKind;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.order.entities.Order;
+import com.techx.intervue.modules.order.entities.OrderItem;
 import com.techx.intervue.modules.order.enums.OrderStatus;
 import com.techx.intervue.modules.order.repositories.CheckoutQueryRepository;
 import com.techx.intervue.modules.order.repositories.OrderItemRepository;
@@ -23,6 +24,7 @@ import com.techx.intervue.modules.order.repositories.OrderQueryRepository.OrderD
 import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.order.repositories.OrderStatusHistoryRepository;
 import com.techx.intervue.modules.order.requests.CartLine;
+import com.techx.intervue.modules.order.requests.ModifyOrderRequest;
 import com.techx.intervue.modules.order.requests.OrderGroupInput;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
@@ -252,7 +254,7 @@ class OrderNotificationTest {
                                                                 "/farmer/orders/"
                                                                         + savedOrders
                                                                                 .getFirst()
-                                                                                .getOrderCode())
+                                                                                .getId())
                                                 && e.params().get("customer").equals("Khách Bảy")));
         verify(notifications, never()).dispatch(eq(List.of(CUSTOMER_ID)), any());
     }
@@ -270,8 +272,7 @@ class OrderNotificationTest {
                         argThat(
                                 e ->
                                         e.kind() == NotificationKind.ORDER_ACCEPTED
-                                                && e.link()
-                                                        .equals("/orders/" + order.getOrderCode())
+                                                && e.link().equals("/orders/" + order.getId())
                                                 && e.params().get("stall").equals("Vườn Út Hiền")));
     }
 
@@ -335,6 +336,49 @@ class OrderNotificationTest {
                                                 && e.link()
                                                         .equals(
                                                                 "/farmer/orders/"
-                                                                        + order.getOrderCode())));
+                                                                        + order.getId())));
+    }
+
+    /**
+     * M-1 — sửa đơn xuống còn 0 item cũng là huỷ đơn (D-07): Farmer phải nhận {@code
+     * order_cancelled} y hệt như khi khách bấm nút huỷ thẳng ({@link #cancelNotifiesTheFarmer}).
+     */
+    @Test
+    void modifyingDownToNoItemsNotifiesTheFarmerLikeCancel() {
+        Order order = orderWithStatus(OrderStatus.PLACED);
+        order.setCutoffAt(LocalDateTime.of(2026, 9, 29, 1, 0));
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem item = new OrderItem();
+        item.setOrderId(ORDER_ID);
+        item.setProductId(PRODUCT_ID);
+        item.setProductName("Rau muống");
+        item.setUnitPrice(new BigDecimal("12000"));
+        item.setUnit("bó");
+        item.setQuantity(2);
+        item.setSubtotal(new BigDecimal("24000"));
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item));
+        Product product = new Product();
+        product.setId(PRODUCT_ID);
+        product.setFarmerId(FARMER_PROFILE_ID);
+        product.setName("Rau muống");
+        product.setPrice(new BigDecimal("12000"));
+        product.setUnit("bó");
+        product.setStockQuantity(5);
+        product.setStatus(ProductStatus.AVAILABLE);
+        when(productRepository.lockAllById(any())).thenReturn(List.of(product));
+
+        service.modifyItems(
+                CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(line(PRODUCT_ID, 0))));
+
+        verify(notifications)
+                .dispatch(
+                        eq(List.of(FARMER_USER_ID)),
+                        argThat(
+                                e ->
+                                        e.kind() == NotificationKind.ORDER_CANCELLED
+                                                && e.link()
+                                                        .equals(
+                                                                "/farmer/orders/"
+                                                                        + order.getId())));
     }
 }

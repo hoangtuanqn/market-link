@@ -300,10 +300,9 @@ public class OrderService implements OrderServiceInterface {
         for (Map.Entry<Long, Integer> line : wanted.entrySet()) {
             Product p = products.get(line.getKey());
             int qty = line.getValue();
-            p.setStockQuantity(p.getStockQuantity() - qty);
-            if (p.getStockQuantity() == 0) {
-                p.setStatus(ProductStatus.SOLD_OUT);
-            }
+            int stockBefore = p.getStockQuantity();
+            p.setStockQuantity(stockBefore - qty);
+            adjustStatusForStockChange(p, stockBefore);
             BigDecimal subtotal = p.getPrice().multiply(BigDecimal.valueOf(qty));
             total = total.add(subtotal);
             items.add(OrderItem.snapshot(p, qty, subtotal));
@@ -550,6 +549,7 @@ public class OrderService implements OrderServiceInterface {
 
         List<Product> products = productRepository.lockAllById(new TreeSet<>(existing.keySet()));
         BigDecimal total = BigDecimal.ZERO;
+        int remainingItems = 0;
         for (Product p : products) {
             OrderItem item = existing.get(p.getId());
             int before = item.getQuantity();
@@ -559,16 +559,16 @@ public class OrderService implements OrderServiceInterface {
             if (delta > 0 && !canRaiseBy(p, delta)) {
                 throw new OutOfStockException(p.getId(), p.getName());
             }
-            p.setStockQuantity(p.getStockQuantity() - delta);
-            if (p.getStockQuantity() == 0) {
-                p.setStatus(ProductStatus.SOLD_OUT);
-            } else if (p.getStatus() == ProductStatus.SOLD_OUT) {
-                p.setStatus(ProductStatus.AVAILABLE);
+            if (delta != 0) {
+                int stockBefore = p.getStockQuantity();
+                p.setStockQuantity(stockBefore - delta);
+                adjustStatusForStockChange(p, stockBefore);
             }
 
             if (after == 0) {
                 orderItemRepository.delete(item);
             } else {
+                remainingItems++;
                 item.setQuantity(after);
                 item.setSubtotal(item.getUnitPrice().multiply(BigDecimal.valueOf(after)));
                 orderItemRepository.save(item);
@@ -581,9 +581,11 @@ public class OrderService implements OrderServiceInterface {
         // bỏ khỏi đơn ở vòng lặp trên.
         orderItemRepository.flush();
 
-        if (total.signum() == 0) {
-            // Bỏ hết item = huỷ đơn. Đừng để lại một đơn rỗng trị giá 0 đồng.
+        if (remainingItems == 0) {
+            // M-1: bỏ hết item mới là huỷ đơn — KHÔNG phải "total == 0", giá 0₫ hợp lệ (một món
+            // miễn phí vẫn còn hàng trong đơn). Đừng để lại một đơn rỗng không món nào.
             transition(order, OrderStatus.CANCELLED, userId, "All items removed.");
+            notifyFarmer(order, NotificationKind.ORDER_CANCELLED, Map.of());
             return detail(userId, orderId);
         }
 
@@ -599,12 +601,31 @@ public class OrderService implements OrderServiceInterface {
         return detail(userId, orderId);
     }
 
-    /** Raise chỉ được khi sản phẩm còn bán được (chưa xoá mềm/ẩn/unavailable) và đủ tồn. */
+    /**
+     * I-3/FR-064: tăng số lượng dùng đúng luật "bán được" như {@link #place} ({@link #sellable} —
+     * loại cả {@code sold_out} do Farmer tự đặt dù còn tồn, không chỉ {@code unavailable}) và đủ
+     * tồn. Giảm/bỏ không đi qua hàm này — luôn được phép bất kể trạng thái.
+     */
     private static boolean canRaiseBy(Product p, int delta) {
-        return !p.isDeleted()
-                && !p.isHidden()
-                && p.getStatus() != ProductStatus.UNAVAILABLE
-                && p.getStockQuantity() >= delta;
+        return sellable(p) && p.getStockQuantity() >= delta;
+    }
+
+    /**
+     * I-3/FR-064 — luật tự động chuyển trạng thái do tồn kho đổi, dùng chung cho {@link
+     * #placeGroup}, {@link #modifyItems} và nhánh hoàn tồn kho của {@link #transition}: AVAILABLE →
+     * SOLD_OUT khi tồn về 0; SOLD_OUT → AVAILABLE CHỈ khi tồn TRƯỚC lúc đổi ({@code stockBefore})
+     * đúng bằng 0 (sold_out do hết hàng thật, không phải Farmer tự đặt trong lúc còn tồn — Review
+     * focus I-3); UNAVAILABLE (Farmer tạm ngưng bán) không bao giờ tự đổi, bất kể tồn kho.
+     */
+    private static void adjustStatusForStockChange(Product p, int stockBefore) {
+        if (p.getStatus() == ProductStatus.UNAVAILABLE) {
+            return;
+        }
+        if (p.getStockQuantity() == 0) {
+            p.setStatus(ProductStatus.SOLD_OUT);
+        } else if (p.getStatus() == ProductStatus.SOLD_OUT && stockBefore == 0) {
+            p.setStatus(ProductStatus.AVAILABLE);
+        }
     }
 
     /**
@@ -700,10 +721,9 @@ public class OrderService implements OrderServiceInterface {
                                     Collectors.toMap(
                                             OrderItem::getProductId, OrderItem::getQuantity));
             for (Product p : products) {
-                p.setStockQuantity(p.getStockQuantity() + qty.get(p.getId()));
-                if (p.getStatus() == ProductStatus.SOLD_OUT && p.getStockQuantity() > 0) {
-                    p.setStatus(ProductStatus.AVAILABLE);
-                }
+                int stockBefore = p.getStockQuantity();
+                p.setStockQuantity(stockBefore + qty.get(p.getId()));
+                adjustStatusForStockChange(p, stockBefore);
             }
         }
 
@@ -719,20 +739,22 @@ public class OrderService implements OrderServiceInterface {
     /**
      * Farmer nhận việc khi khách đặt xong — {@code farmer} đã có sẵn trong scope của {@link
      * #placeGroup} (đã lọc APPROVED ở trên), không cần truy vấn lại. Người nhận là {@code
-     * farmer_profiles.user_id}, không phải {@code farmer_profiles.id} (C5-19).
+     * farmer_profiles.user_id}, không phải {@code farmer_profiles.id} (C5-19). Link mang id số của
+     * đơn (I-1) — route FE {@code farmer/orders/:code} vẫn giữ tên tham số cũ, người nối trang sẽ
+     * đọc nó như id.
      */
     private void notifyOrderPlaced(Order order, FarmerProfile farmer, User customer) {
         notifications.dispatch(
                 List.of(farmer.getUserId()),
                 NotificationEvent.of(
                         NotificationKind.ORDER_PLACED,
-                        "/farmer/orders/" + order.getOrderCode(),
+                        "/farmer/orders/" + order.getId(),
                         Map.of("order", order.getOrderCode(), "customer", customer.getFullName())));
     }
 
     /**
      * Khách nhận tin khi Farmer đổi trạng thái đơn của chính mình (accept/decline/ready) — link
-     * theo route Customer thật ({@code orders/:code} trong {@code App.tsx}), không phải id số.
+     * mang id số của đơn (I-1), route FE {@code orders/:code} vẫn giữ tên tham số cũ.
      */
     private void notifyBuyer(Order order, NotificationKind kind, Map<String, String> extra) {
         Map<String, String> params = new HashMap<>(extra);
@@ -742,12 +764,12 @@ public class OrderService implements OrderServiceInterface {
                 .ifPresent(f -> params.put("stall", f.getStallName()));
         notifications.dispatch(
                 List.of(order.getCustomerId()),
-                NotificationEvent.of(kind, "/orders/" + order.getOrderCode(), params));
+                NotificationEvent.of(kind, "/orders/" + order.getId(), params));
     }
 
     /**
-     * Farmer nhận tin khi khách huỷ đơn của chính mình — link theo route Farmer thật ({@code
-     * farmer/orders/:code}).
+     * Farmer nhận tin khi khách huỷ đơn của chính mình — link mang id số của đơn (I-1), route FE
+     * {@code farmer/orders/:code} vẫn giữ tên tham số cũ.
      */
     private void notifyFarmer(Order order, NotificationKind kind, Map<String, String> extra) {
         farmerRepository
@@ -759,9 +781,7 @@ public class OrderService implements OrderServiceInterface {
                             notifications.dispatch(
                                     List.of(f.getUserId()),
                                     NotificationEvent.of(
-                                            kind,
-                                            "/farmer/orders/" + order.getOrderCode(),
-                                            params));
+                                            kind, "/farmer/orders/" + order.getId(), params));
                         });
     }
 

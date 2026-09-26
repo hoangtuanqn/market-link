@@ -136,6 +136,16 @@ export const toOrder = (dto: OrderDetailDto): OrderType => ({
 });
 
 /**
+ * I-1 — `toOrder` làm rơi `orderId`, và `OrderType` (types/order.types.ts) không có chỗ chứa id. Notification links
+ * (backend) và mọi lời gọi `OrderApi` (`get`/`cancel`/`modifyItems`/...) đều cần id số, không phải `orderCode` — dùng
+ * hàm này ở nơi cần cả hai thay vì `toOrder` một mình.
+ */
+export const toOrderView = (dto: OrderDetailDto): { id: number; order: OrderType } => ({
+  id: dto.summary.orderId,
+  order: toOrder(dto),
+});
+
+/**
  * FR-030…039, 065…067 — giỏ hàng, đơn của khách và của Farmer (docs/api-contract.md §7). Mọi hàm cần đăng nhập
  * (`privateApi`): mua hàng mở cho `CUSTOMER` và `FARMER` (D-13), admin bị chặn ở server → 403.
  */

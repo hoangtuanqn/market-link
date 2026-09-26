@@ -491,6 +491,59 @@ class OrderModifyTest {
     }
 
     /**
+     * I-3/FR-064 — sản phẩm Farmer tự đặt {@code sold_out} dù tồn còn (không phải hết hàng thật)
+     * cũng không được tăng số lượng: cùng luật "bán được" như {@code place} ({@code sellable(p) &&
+     * stock >= delta}), không chỉ loại {@code unavailable}.
+     */
+    @Test
+    void modifyRaisingASoldOutProductWithRemainingStockIs409() {
+        Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem itemA = item(PRODUCT_A, 2, TEN);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
+        Product a = product(PRODUCT_A, 50, ProductStatus.SOLD_OUT);
+        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        assertThatThrownBy(
+                        () ->
+                                service.modifyItems(
+                                        CUSTOMER_ID,
+                                        ORDER_ID,
+                                        new ModifyOrderRequest(
+                                                List.of(new CartLine(PRODUCT_A, 5)))))
+                .isInstanceOf(OutOfStockException.class);
+
+        assertThat(a.getStockQuantity()).isEqualTo(50);
+        assertThat(a.getStatus()).isEqualTo(ProductStatus.SOLD_OUT);
+        assertThat(itemA.getQuantity()).isEqualTo(2);
+    }
+
+    /**
+     * I-3/FR-064 — gửi lại đúng số lượng cũ (delta = 0) không được đổi trạng thái sản phẩm: đây là
+     * lỗi thao tác của khách lật trạng thái Farmer tự đặt — một sản phẩm {@code unavailable} tồn 0
+     * gửi kèm cùng số lượng phải giữ nguyên {@code unavailable}, không bị bật thành {@code
+     * sold_out}.
+     */
+    @Test
+    void modifyWithUnchangedQuantityDoesNotFlipAnUnavailableProductsStatus() {
+        Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem itemA = item(PRODUCT_A, 2, TEN);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
+        Product a = product(PRODUCT_A, 0, ProductStatus.UNAVAILABLE);
+        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        service.modifyItems(
+                CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
+
+        assertThat(a.getStockQuantity()).isEqualTo(0);
+        assertThat(a.getStatus()).isEqualTo(ProductStatus.UNAVAILABLE);
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
+    }
+
+    /**
      * @NotEmpty + @Min(1) chặn "gửi request rỗng" hay "số lượng 0" ở tầng HTTP; nhánh phòng thủ "bỏ
      * hết item = huỷ đơn" chỉ tới được bằng cách gọi thẳng service (test này) với một dòng có
      * quantity 0 mà validation không có cơ hội chặn.
@@ -537,6 +590,51 @@ class OrderModifyTest {
         assertThat(history).hasSize(1);
         assertThat(history.getFirst().getToStatus()).isEqualTo(OrderStatus.CANCELLED);
         assertThat(history.getFirst().getNote()).isEqualTo("All items removed.");
+    }
+
+    /**
+     * M-1 — giá 0₫ hợp lệ: tổng đơn về 0 vì còn một món miễn phí không phải là "bỏ hết item", đơn
+     * phải giữ nguyên {@code placed}, không bị huỷ nhầm.
+     */
+    @Test
+    void modifyingToAFreeItemKeepsTheOrderPlacedInsteadOfCancellingIt() {
+        Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem itemA = item(PRODUCT_A, 2, BigDecimal.ZERO);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
+        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
+        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        service.modifyItems(
+                CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 3))));
+
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
+        assertThat(order.getTotalAmount()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(itemA.getQuantity()).isEqualTo(3);
+        assertThat(history).isEmpty();
+        verify(orderItemRepository, never()).delete(any());
+    }
+
+    /** M-1 — cùng luật cho nhánh {@code accepted} → {@code placed}: 0₫ không phải là huỷ. */
+    @Test
+    void modifyingAnAcceptedOrderToAFreeItemGoesBackToPlacedInsteadOfCancelling() {
+        Order order = anOrder(OrderStatus.ACCEPTED, CUTOFF_TOMORROW);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem itemA = item(PRODUCT_A, 5, BigDecimal.ZERO);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
+        Product a = product(PRODUCT_A, 10, ProductStatus.AVAILABLE);
+        when(productRepository.lockAllById(any())).thenReturn(List.of(a));
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        service.modifyItems(
+                CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
+
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
+        assertThat(order.getTotalAmount()).isEqualByComparingTo(BigDecimal.ZERO);
+        assertThat(history).hasSize(1);
+        assertThat(history.getFirst().getFromStatus()).isEqualTo(OrderStatus.ACCEPTED);
+        assertThat(history.getFirst().getToStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
     /** Đơn placed sửa xong vẫn placed — KHÔNG ghi lịch sử vì trạng thái không đổi. */
