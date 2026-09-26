@@ -41,8 +41,9 @@ export default function ProductPin({ productId, compact }: Props) {
     <Link
       to={`/products/${productId}`}
       className={Helper.cn(
-        'bg-surface-raised border-line-strong hover:border-line-stronger flex items-center gap-2 rounded-md border p-2 no-underline transition-colors',
-        compact && 'text-small p-1.5',
+        'bg-surface-raised border-line-strong hover:border-ink flex items-center gap-2 rounded-md border no-underline transition-colors',
+        // Helper.cn không gộp class xung đột: chọn một padding, đừng đặt p-2 rồi đè p-1
+        compact ? 'text-small p-1' : 'p-2',
       )}
     >
       <div className="min-w-0 flex-1">

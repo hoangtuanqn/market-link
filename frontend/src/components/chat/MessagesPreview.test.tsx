@@ -66,4 +66,16 @@ describe('MessagesPreview', () => {
 
     expect(await screen.findByText(/could not load/i)).toBeInTheDocument();
   });
+
+  /** FR-084: đang tải là một trạng thái có chữ, đọc được bằng trình đọc màn hình và đã dịch. */
+  it('says it is loading, in the reader’s language', () => {
+    vi.mocked(ConversationApi.list).mockReturnValue(new Promise(() => {}) as never);
+    render(
+      <MemoryRouter>
+        <MessagesPreview to="/messages" />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent('Loading conversations…');
+  });
 });

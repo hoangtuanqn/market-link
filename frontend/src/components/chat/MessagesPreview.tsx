@@ -23,7 +23,11 @@ export default function MessagesPreview({ to }: Props) {
   }
 
   if (state.kind === 'loading') {
-    return <div className="text-small text-ink-muted p-4 text-center">Loading...</div>;
+    return (
+      <div role="status" className="text-small text-ink-muted p-4 text-center">
+        {t('chat.loadingThreads')}
+      </div>
+    );
   }
 
   if (state.data.length === 0) {
@@ -45,10 +49,11 @@ export default function MessagesPreview({ to }: Props) {
                 <time className="text-small text-ink-muted whitespace-nowrap">{chatWhen(thread.lastMessageAt)}</time>
               )}
             </div>
-            <p className="text-small text-ink-muted mt-0.5 truncate">{thread.lastMessageText || '...'}</p>
+            {/* Thread vừa mở chưa có tin nào: để trống, không bịa dấu "..." */}
+            <p className="text-small text-ink-muted mt-1 truncate">{thread.lastMessageText ?? ''}</p>
           </div>
           {thread.unreadCount > 0 && (
-            <div className="bg-accent mt-1.5 h-2.5 w-2.5 flex-shrink-0 rounded-full">
+            <div className="bg-accent mt-2 size-2 flex-shrink-0 rounded-full">
               <span className="sr-only">{t('chat.unreadCount', { count: thread.unreadCount })}</span>
             </div>
           )}

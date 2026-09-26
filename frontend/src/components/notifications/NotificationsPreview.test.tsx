@@ -60,4 +60,16 @@ describe('NotificationsPreview', () => {
 
     expect(await screen.findByText(/could not load/i)).toBeInTheDocument();
   });
+
+  /** FR-084: đang tải là một trạng thái có chữ, đọc được bằng trình đọc màn hình và đã dịch. */
+  it('says it is loading, in the reader’s language', () => {
+    vi.mocked(NotificationApi.list).mockReturnValue(new Promise(() => {}) as never);
+    render(
+      <MemoryRouter>
+        <NotificationsPreview />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent('Loading…');
+  });
 });

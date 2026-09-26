@@ -38,7 +38,11 @@ export default function NotificationsPreview() {
   }
 
   if (state.kind === 'loading') {
-    return <div className="text-small text-ink-muted p-4 text-center">Loading...</div>;
+    return (
+      <div role="status" className="text-small text-ink-muted p-4 text-center">
+        {t('notify.list.loading')}
+      </div>
+    );
   }
 
   if (state.data.length === 0) {
@@ -67,10 +71,13 @@ export default function NotificationsPreview() {
               <span className="block truncate text-[14px] font-bold">
                 {n.title}
                 {!n.isRead && (
-                  <span aria-hidden="true" className="bg-brand ml-1.5 inline-block size-2 rounded-full align-middle" />
+                  <>
+                    <span aria-hidden="true" className="bg-brand ml-2 inline-block size-2 rounded-full align-middle" />
+                    <span className="sr-only">{t('notify.list.unread')}</span>
+                  </>
                 )}
               </span>
-              <span className="text-ink-muted mt-0.5 line-clamp-2 block text-[13px] break-words">{n.message}</span>
+              <span className="text-ink-muted mt-1 line-clamp-2 block text-[13px] break-words">{n.message}</span>
               <span className="text-ink-muted mt-1 block text-[12px] whitespace-nowrap">
                 {formatDate(at)} {formatTime(at)}
               </span>
