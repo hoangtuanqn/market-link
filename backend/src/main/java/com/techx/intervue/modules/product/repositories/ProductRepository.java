@@ -13,6 +13,8 @@ import org.springframework.data.repository.query.Param;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByIdAndDeletedFalse(Long id);
 
+    List<Product> findByFarmerIdAndDeletedFalse(Long farmerId);
+
     /**
      * Locks the product row until the transaction ends. Without it, two orders both read stock = 1,
      * both see enough, both deduct, and stock goes negative (Review focus #1).
