@@ -18,7 +18,7 @@
 
 Sao nguyên văn từ spec và từ luật repo. Mọi task đều phải thoả.
 
-- **R-03 / CONTRIBUTING §7:** đổi DB chỉ qua migration Flyway mới `V<yyyyMMdd><nnn>__<mo_ta>.sql`; **không sửa file đã merge**. Migration mới nhất trên `dev` lúc viết plan là `V20260926003`; plan này dùng **`V20260926004`**. Trước khi commit Task 1, chạy `git fetch origin && git ls-tree -r --name-only origin/dev -- backend/src/main/resources/db/migration | sort | tail -3` — có ai chiếm 004 thì đổi lên số kế tiếp và sửa mọi chỗ nhắc số này.
+- **R-03 / CONTRIBUTING §7:** đổi DB chỉ qua migration Flyway mới `V<yyyyMMdd><nnn>__<mo_ta>.sql`; **không sửa file đã merge**. Migration mới nhất trên `dev` lúc viết plan là `V20260926003`; plan này dùng **`V20260926005`**. Trước khi commit Task 1, chạy `git fetch origin && git ls-tree -r --name-only origin/dev -- backend/src/main/resources/db/migration | sort | tail -3` — có ai chiếm 004 thì đổi lên số kế tiếp và sửa mọi chỗ nhắc số này.
   ⚠️ Worktree `market-link-notify` (agent khác) đang giữ `V20260925012`, `013`, `014` **chưa merge**. Số của họ thấp hơn `dev` hiện tại; đó là việc của họ, nhưng đừng lấy ba số đó.
 - **Khoá ngoại tới `users` phải là `BIGINT UNSIGNED`** và để RESTRICT mặc định (tài khoản không bao giờ xoá cứng — FR-072 chỉ vô hiệu hoá). Khoá ngoại tới `messages` thì `ON DELETE CASCADE`.
 - **API:** `/api/v1`, JSON **camelCase**, response bọc `ApiResource<T>` qua `ok(...)` / `created(...)` của `BaseController`. Controller mới `extends BaseController`. Controller admin mang `@PreAuthorize("hasRole('ADMIN')")` ở mức class.
@@ -113,7 +113,7 @@ Expected: `BUILD SUCCESS`, 0 failure. **Nếu đỏ: dừng lại, báo người
 ### Task 1: Migration, entity và repository cho `message_reports`
 
 **Files:**
-- Create: `backend/src/main/resources/db/migration/V20260926004__create_message_reports_table.sql`
+- Create: `backend/src/main/resources/db/migration/V20260926005__create_message_reports_table.sql`
 - Create: `backend/src/main/java/com/techx/intervue/modules/conversation/enums/ReportReason.java`
 - Create: `backend/src/main/java/com/techx/intervue/modules/conversation/enums/ReportStatus.java`
 - Create: `backend/src/main/java/com/techx/intervue/modules/conversation/entities/MessageReport.java`
@@ -138,7 +138,7 @@ Expected: số lớn nhất là `V20260926003`. Nếu đã có `004`, đổi tê
 - [ ] **Bước 2: Viết migration**
 
 ```sql
--- V20260926004__create_message_reports_table.sql
+-- V20260926005__create_message_reports_table.sql
 -- FR-116 (spec §5.1). Admin chỉ đọc được tin ĐÃ có hàng ở bảng này (spec §8.3) — quyền đọc của
 -- admin bắt nguồn từ báo cáo, không phải từ vai.
 CREATE TABLE message_reports (
@@ -316,7 +316,7 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** Khớp ENUM('spam','abuse','scam','other') trong migration V20260926004. */
+/** Khớp ENUM('spam','abuse','scam','other') trong migration V20260926005. */
 public enum ReportReason {
     SPAM,
     ABUSE,
@@ -347,7 +347,7 @@ import java.util.Locale;
 
 /**
  * new = chưa ai xem · reviewed = admin đã xem và quyết định không ẩn · actioned = đã ẩn tin. Khớp
- * ENUM trong migration V20260926004.
+ * ENUM trong migration V20260926005.
  */
 public enum ReportStatus {
     NEW,
@@ -493,7 +493,7 @@ Expected: PASS (5 test). Flyway lỗi thì đọc `docker compose -p market-link
 
 ```bash
 make be-format
-git add backend/src/main/resources/db/migration/V20260926004__create_message_reports_table.sql \
+git add backend/src/main/resources/db/migration/V20260926005__create_message_reports_table.sql \
         backend/src/main/java/com/techx/intervue/modules/conversation/enums/ReportReason.java \
         backend/src/main/java/com/techx/intervue/modules/conversation/enums/ReportStatus.java \
         backend/src/main/java/com/techx/intervue/modules/conversation/entities/MessageReport.java \
@@ -2895,7 +2895,7 @@ Ghi kết quả vào scratchpad `chat-plan3b/smoke.log`. Dùng cổng **8084**.
 
 ```bash
 git fetch origin && git rebase origin/dev
-# dev đã có V20260926004? Đổi tên migration của mình lên số kế tiếp (CONTRIBUTING §7)
+# dev đã có V20260926005? Đổi tên migration của mình lên số kế tiếp (CONTRIBUTING §7)
 ls backend/src/main/resources/db/migration | sort | tail -3
 docker compose -p market-link-chat3b -f docker-compose.yml -f ../compose.chat3b-override.yml exec -T backend ./mvnw -B test
 git push -u origin feature/FR-116-chat-reports

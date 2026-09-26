@@ -7,7 +7,7 @@ import java.util.Locale;
 
 /**
  * new = chưa ai xem · reviewed = admin đã xem và quyết định không ẩn · actioned = đã ẩn tin. Khớp
- * ENUM trong migration V20260926004.
+ * ENUM trong migration V20260926005.
  */
 public enum ReportStatus {
     NEW,
