@@ -5,6 +5,9 @@
 # Giá trị DB mặc định khớp .env.example.
 # ---------------------------------------------------------------------
 spring:
+  # Chạy bù migration có số nhỏ hơn cái DB đã chạy (hai nhánh merge lệch thứ tự). Chỉ dev.
+  flyway:
+    out-of-order: true
   datasource:
     username: ${MYSQL_USER:intervue}
     password: ${MYSQL_PASSWORD:intervue_pass}

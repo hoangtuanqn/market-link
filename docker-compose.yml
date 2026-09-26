@@ -79,6 +79,9 @@ services:
     restart: unless-stopped
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
+      # Hai nhánh song song dễ đẻ migration có số nhỏ hơn cái DB đã chạy (vd #130 sau #132).
+      # Dev cho Flyway chạy bù thay vì chặn khởi động; prod giữ mặc định (false).
+      SPRING_FLYWAY_OUT_OF_ORDER: ${SPRING_FLYWAY_OUT_OF_ORDER:-true}
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-intervue_db}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       MYSQL_DATABASE: ${MYSQL_DATABASE:-intervue_db}
       MYSQL_USER: ${MYSQL_USER:-intervue}
