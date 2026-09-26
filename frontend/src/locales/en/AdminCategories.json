@@ -33,6 +33,9 @@
     "namePlaceholder": "e.g. Seafood",
     "nameHint": "In English, sentence case. Hand-lettered on a product tag that has no photo.",
     "position": "Position in the filter",
+    "minShelfLife": "Min shelf life (days)",
+    "maxShelfLife": "Max shelf life (days)",
+    "shelfLifeHint": "Standard freshness window for this category. Shown to Farmers as a guide when they list a product.",
     "submit": "Add category"
   },
   "removeCategory": {
@@ -58,6 +61,8 @@
   },
   "error": {
     "noun": "categories",
-    "nameRequired": "Give the category a name."
+    "nameRequired": "Give the category a name.",
+    "shelfLifeRequired": "Enter a whole number of 1 or more.",
+    "shelfLifeRange": "Max must be at least the minimum."
   }
 }

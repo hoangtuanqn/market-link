@@ -31,14 +31,15 @@ public class Category {
     @Column(nullable = false, unique = true, length = 80)
     private String slug;
 
-    @Column(length = 255)
-    private String description;
-
-    @Column(length = 50)
-    private String icon;
-
     @Column(name = "sort_order", nullable = false)
     private int sortOrder;
+
+    /** Khoảng ngày tươi chuẩn của category — gợi ý và ràng buộc mềm cho Product.shelfLifeDays. */
+    @Column(name = "min_shelf_life_days", nullable = false)
+    private int minShelfLifeDays;
+
+    @Column(name = "max_shelf_life_days", nullable = false)
+    private int maxShelfLifeDays;
 
     /** Xoá mềm: tắt thì biến mất khỏi bộ lọc của khách, sản phẩm cũ vẫn trỏ về được. */
     @Column(name = "is_active", nullable = false)

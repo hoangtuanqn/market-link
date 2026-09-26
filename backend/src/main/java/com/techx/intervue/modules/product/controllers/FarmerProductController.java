@@ -44,6 +44,12 @@ public class FarmerProductController extends BaseController {
         return ok(products.mine(user.getId(), status, page, pageSize), "");
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResource<FarmerProductResource>> mineOne(
+            @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
+        return ok(products.mineOne(user.getId(), id), "");
+    }
+
     @PostMapping
     public ResponseEntity<ApiResource<FarmerProductResource>> create(
             @AuthenticationPrincipal CustomUserDetails user,

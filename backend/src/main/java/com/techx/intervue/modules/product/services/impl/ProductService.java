@@ -46,6 +46,14 @@ public class ProductService implements ProductServiceInterface {
     }
 
     @Override
+    public FarmerProductResource mineOne(long userId, long productId) {
+        FarmerProfile profile = mine(userId);
+        Product product = owned(profile, productId);
+        return toResource(
+                product, profile, categories.findById(product.getCategoryId()).orElse(null));
+    }
+
+    @Override
     @Transactional
     public FarmerProductResource create(long userId, ProductRequest request) {
         FarmerProfile profile = mine(userId);
@@ -172,6 +180,7 @@ public class ProductService implements ProductServiceInterface {
                 request.imageUrl() == null || request.imageUrl().isBlank()
                         ? null
                         : request.imageUrl().trim());
+        product.setShelfLifeDays(request.shelfLifeDays());
     }
 
     private static FarmerProductResource toResource(
@@ -192,7 +201,8 @@ public class ProductService implements ProductServiceInterface {
                         p.getImageUrl(),
                         p.getStatus().value(),
                         p.getRatingAvg(),
-                        p.getRatingCount());
+                        p.getRatingCount(),
+                        p.getShelfLifeDays());
         return new FarmerProductResource(
                 item, p.getDescription(), p.isHidden(), p.getHiddenReason());
     }

@@ -49,9 +49,13 @@
   },
   "photo": {
     "label": "照片",
-    "none": "还没有照片。添加之前，标签上会以手写字显示类别。",
-    "choose": "选择照片",
-    "hint": "JPG 或 PNG，4:3，最大 5 MB。近距离、自然光，放在木板或纸上拍摄。"
+    "add": "添加照片",
+    "replace": "更换照片",
+    "remove": "删除照片",
+    "uploading": "上传中",
+    "uploadInProgress": "请等照片上传完成后再保存。",
+    "alt": "产品照片",
+    "hint": "JPEG、PNG 或 WEBP，最大 8 MB。近距离、自然光，放在木板或纸上拍摄。"
   },
   "save": "保存商品",
   "add": "添加商品",

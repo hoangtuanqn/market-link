@@ -33,6 +33,9 @@
     "namePlaceholder": "ví dụ Hải sản",
     "nameHint": "Viết tiếng Anh, viết hoa như câu thường. Chữ này viết tay lên thẻ sản phẩm không có ảnh.",
     "position": "Vị trí trong bộ lọc",
+    "minShelfLife": "Hạn tươi tối thiểu (ngày)",
+    "maxShelfLife": "Hạn tươi tối đa (ngày)",
+    "shelfLifeHint": "Khoảng ngày tươi chuẩn của danh mục. Làm gợi ý cho nhà vườn khi đăng bán sản phẩm.",
     "submit": "Thêm danh mục"
   },
   "removeCategory": {
@@ -58,6 +61,8 @@
   },
   "error": {
     "noun": "danh mục",
-    "nameRequired": "Đặt tên cho danh mục."
+    "nameRequired": "Đặt tên cho danh mục.",
+    "shelfLifeRequired": "Nhập một số nguyên từ 1 trở lên.",
+    "shelfLifeRange": "Tối đa phải lớn hơn hoặc bằng tối thiểu."
   }
 }

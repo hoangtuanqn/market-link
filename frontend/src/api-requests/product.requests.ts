@@ -20,6 +20,8 @@ export type ProductDto = {
   status: ProductStatus;
   ratingAvg: number;
   ratingCount: number;
+  /** Số ngày còn tươi — chưa có FR chính thức, xem migration V20260926016. */
+  shelfLifeDays: number;
 };
 
 export type ReviewSummaryDto = { ratingAvg: number; ratingCount: number; histogram: number[] };
@@ -48,6 +50,7 @@ export type ProductInput = {
   unit: string;
   stockQuantity: number;
   imageUrl?: string;
+  shelfLifeDays: number;
 };
 
 export type ProductListParams = {
@@ -78,6 +81,7 @@ export const toProduct = (dto: ProductDto, description?: string | null): Product
   farmerId: dto.farmerId,
   desc: description ?? undefined,
   imageUrl: dto.imageUrl ?? undefined,
+  shelfLifeDays: dto.shelfLifeDays,
 });
 
 export const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
@@ -115,6 +119,23 @@ class ProductApi {
       params: { pageSize: 50, ...(status ? { status } : {}) },
     });
     return response.data.data.items.map(toFarmerProduct);
+  };
+
+  /** Farmer — một sản phẩm của chính mình, để mở form sửa. 404 nếu không có hoặc thuộc stall khác. */
+  static getMine = async (id: number) => {
+    const response = await privateApi.get<ApiResponse<FarmerProductDto>>(`/farmer/products/${id}`);
+    return toFarmerProduct(response.data.data);
+  };
+
+  /** Tải một ảnh sản phẩm lên trước khi gửi form chính; trả URL để đưa vào `ProductInput.imageUrl`. */
+  static uploadProductImage = async (file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    const response = await privateApi.post<ApiResponse<{ url: string }>>('/farmer/products/images', form, {
+      // Bỏ header mặc định application/json để trình duyệt tự set multipart/form-data kèm boundary.
+      headers: { 'Content-Type': undefined },
+    });
+    return response.data.data.url;
   };
 
   static create = async (input: ProductInput) => {

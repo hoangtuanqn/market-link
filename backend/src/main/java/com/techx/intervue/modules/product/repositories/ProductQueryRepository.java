@@ -62,7 +62,7 @@ public class ProductQueryRepository {
     private static final String SELECT_ITEM =
             """
             SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
-                   p.rating_avg, p.rating_count, p.description,
+                   p.rating_avg, p.rating_count, p.description, p.shelf_life_days,
                    f.id AS farmer_id, f.stall_name,
                    c.id AS category_id, c.name AS category_name,
                    MIN(m.id) AS market_id, MIN(m.market_name) AS market_name
@@ -71,7 +71,8 @@ public class ProductQueryRepository {
     private static final String GROUP_BY =
             """
             GROUP BY p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
-                     p.rating_avg, p.rating_count, p.description, f.id, f.stall_name, c.id, c.name
+                     p.rating_avg, p.rating_count, p.description, p.shelf_life_days, f.id,
+                     f.stall_name, c.id, c.name
             """;
 
     public static final String SEARCH_SQL =
@@ -91,7 +92,8 @@ public class ProductQueryRepository {
     public static final String MINE_SQL =
             """
             SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
-                   p.rating_avg, p.rating_count, p.description, p.is_hidden, p.hidden_reason,
+                   p.rating_avg, p.rating_count, p.description, p.shelf_life_days, p.is_hidden,
+                   p.hidden_reason,
                    f.id AS farmer_id, f.stall_name,
                    c.id AS category_id, c.name AS category_name,
                    NULL AS market_id, NULL AS market_name
@@ -208,7 +210,8 @@ public class ProductQueryRepository {
                 rs.getString("image_url"),
                 rs.getString("status"),
                 rs.getBigDecimal("rating_avg"),
-                rs.getInt("rating_count"));
+                rs.getInt("rating_count"),
+                rs.getInt("shelf_life_days"));
     }
 
     /** '%' và '_' người dùng gõ không được thành ký tự đại diện. */

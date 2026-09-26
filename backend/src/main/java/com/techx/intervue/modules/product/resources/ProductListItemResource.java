@@ -21,4 +21,5 @@ public record ProductListItemResource(
         String imageUrl,
         String status,
         BigDecimal ratingAvg,
-        int ratingCount) {}
+        int ratingCount,
+        int shelfLifeDays) {}

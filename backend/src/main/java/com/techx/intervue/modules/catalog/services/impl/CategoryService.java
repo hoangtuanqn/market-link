@@ -7,6 +7,7 @@ import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.catalog.requests.CategoryRequest;
 import com.techx.intervue.modules.catalog.resources.CategoryResource;
 import com.techx.intervue.modules.catalog.services.interfaces.CategoryServiceInterface;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
@@ -82,11 +83,15 @@ public class CategoryService implements CategoryServiceInterface {
     }
 
     private static void apply(Category category, CategoryRequest request, String slug) {
+        if (request.maxShelfLifeDays() < request.minShelfLifeDays()) {
+            throw new InvalidFieldException(
+                    "maxShelfLifeDays", "Maximum shelf life must be at least the minimum.");
+        }
         category.setName(request.name());
         category.setSlug(slug);
-        category.setDescription(request.description());
-        category.setIcon(request.icon());
         category.setSortOrder(request.sortOrder());
+        category.setMinShelfLifeDays(request.minShelfLifeDays());
+        category.setMaxShelfLifeDays(request.maxShelfLifeDays());
     }
 
     private static CategoryResource toResource(Category c) {
@@ -94,9 +99,9 @@ public class CategoryService implements CategoryServiceInterface {
                 c.getId(),
                 c.getName(),
                 c.getSlug(),
-                c.getDescription(),
-                c.getIcon(),
                 c.getSortOrder(),
-                c.isActive());
+                c.isActive(),
+                c.getMinShelfLifeDays(),
+                c.getMaxShelfLifeDays());
     }
 }

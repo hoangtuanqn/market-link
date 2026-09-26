@@ -38,10 +38,11 @@ export type CategoryDto = {
   id: number;
   name: string;
   slug: string;
-  description?: string | null;
-  icon?: string | null;
   sortOrder: number;
   isActive: boolean;
+  /** Khoảng ngày tươi chuẩn — chưa có FR chính thức, xem migration V20260926015. */
+  minShelfLifeDays: number;
+  maxShelfLifeDays: number;
 };
 
 /** Body của POST/PUT /admin/markets. `city` bỏ trống thì server điền "TP. Hồ Chí Minh". */
@@ -77,7 +78,12 @@ export type MarketClosureDto = {
 
 export type MarketClosureInput = { closedOn: string; reason?: string; handling: ClosureHandling };
 
-export type CategoryInput = { name: string; description?: string; icon?: string; sortOrder: number };
+export type CategoryInput = {
+  name: string;
+  sortOrder: number;
+  minShelfLifeDays: number;
+  maxShelfLifeDays: number;
+};
 
 /** Hình dạng mà màn Admin → Categories đang dùng. `count` là số sản phẩm — có thật từ cụm C3, trước đó là 0. */
 export type CategoryType = {
@@ -87,6 +93,8 @@ export type CategoryType = {
   sortOrder: number;
   isActive: boolean;
   count: number;
+  minShelfLifeDays: number;
+  maxShelfLifeDays: number;
 };
 
 /**
@@ -135,6 +143,8 @@ export const toCategory = (dto: CategoryDto): CategoryType => ({
   sortOrder: dto.sortOrder,
   isActive: dto.isActive,
   count: 0,
+  minShelfLifeDays: dto.minShelfLifeDays,
+  maxShelfLifeDays: dto.maxShelfLifeDays,
 });
 
 export type MarketListParams = {

@@ -21,6 +21,7 @@ import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
+import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
@@ -87,7 +88,7 @@ class ProductServiceTest {
 
     private static ProductRequest request() {
         return new ProductRequest(
-                1L, "Rau muống", "Cắt sáng", new BigDecimal("12000"), "bó", 40, null);
+                1L, "Rau muống", "Cắt sáng", new BigDecimal("12000"), "bó", 40, null, 4);
     }
 
     private void approvedStall() {
@@ -185,6 +186,31 @@ class ProductServiceTest {
 
         assertThat(p.isHidden()).isTrue();
         assertThat(p.getHiddenReason()).isEqualTo("Vi phạm.");
+    }
+
+    /** Farmer mở form sửa sản phẩm của mình — không cần stall đã duyệt, giống {@code mine()}. */
+    @Test
+    void mineOneReturnsOwnProductEvenWhenStallSuspended() {
+        when(farmers.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
+        when(categories.findById(1L)).thenReturn(Optional.of(leafyGreens()));
+        Product p = product(FARMER_ID);
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
+
+        FarmerProductResource resource = service.mineOne(USER_ID, PRODUCT_ID);
+
+        assertThat(resource.item().id()).isEqualTo(PRODUCT_ID);
+    }
+
+    /** Review focus #3, áp dụng cho GET: giám khảo đổi id trên URL → 403, không phải 404. */
+    @Test
+    void mineOneOnAnotherFarmersProductIs403() {
+        approvedStall();
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID))
+                .thenReturn(Optional.of(product(OTHER_FARMER_ID)));
+
+        assertThatThrownBy(() -> service.mineOne(USER_ID, PRODUCT_ID))
+                .isInstanceOf(ProductNotYoursException.class);
     }
 
     /** Danh sách của Farmer bỏ sản phẩm đã xoá mềm, nhưng vẫn hiện sản phẩm bị ẩn kèm lý do. */

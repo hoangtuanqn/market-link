@@ -12,6 +12,12 @@ import com.techx.intervue.resources.PageResource;
 public interface ProductServiceInterface {
     PageResource<FarmerProductResource> mine(long userId, String status, int page, int pageSize);
 
+    /**
+     * Một sản phẩm của chính Farmer, để mở form sửa. Không đòi stall đã duyệt: Farmer phải xem được
+     * hàng của mình dù stall đang bị đình chỉ (D-09), giống {@link #mine}.
+     */
+    FarmerProductResource mineOne(long userId, long productId);
+
     /** 403 STALL_NOT_APPROVED khi stall chưa duyệt / bị đình chỉ (D-09). */
     FarmerProductResource create(long userId, ProductRequest request);
 
