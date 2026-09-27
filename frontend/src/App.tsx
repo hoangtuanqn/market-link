@@ -28,7 +28,7 @@ import CustomerAccountPage from './pages/customer/Account';
 import CustomerCartPage from './pages/customer/Cart';
 import CustomerOrdersPage from './pages/customer/Orders';
 import CustomerOrderDetailPage from './pages/customer/OrderDetail';
-import CustomerFavoritesWip from './pages/customer/Favorites';
+import CustomerFavoritesPage from './pages/customer/Favorites';
 import CustomerMessagesPage from './pages/customer/Messages';
 import CustomerNotificationsPage from './pages/customer/Notifications';
 import CustomerOrderEditPage from './pages/customer/OrderEdit';
@@ -85,7 +85,6 @@ import AdminReportsWip from './pages/admin/Reports';
 
 // A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
 // Once a screen's API is wired up, remove it from this list.
-const CustomerFavoritesPage = SHOW_WIP ? CustomerFavoritesWip : ComingSoon;
 const FarmerOverviewPage = SHOW_WIP ? FarmerOverviewWip : ComingSoon;
 const FarmerOrdersPage = SHOW_WIP ? FarmerOrdersWip : ComingSoon;
 const FarmerOrderDetailPage = SHOW_WIP ? FarmerOrderDetailWip : ComingSoon;

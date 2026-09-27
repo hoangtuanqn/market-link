@@ -1,105 +1,98 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
+import FavoriteApi, { type FavoriteDto } from '@/api-requests/favorite.requests';
+import ProductApi from '@/api-requests/product.requests';
+import StallApi, { type StallDetailDto } from '@/api-requests/stall.requests';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import MarketCard from '@/components/MarketCard';
-import PriceTag from '@/components/PriceTag';
-import StallCard from '@/components/StallCard';
-import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import Tabs from '@/components/ui/tabs';
-import { farmer, wishProducts, type WishProductItem } from '@/data/customer';
-import { markets } from '@/data/home';
-import { units } from '@/lib/format';
-import Notification from '@/utils/notification';
+import { Cart } from '@/lib/cart';
+import type { MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
+import useRequest from '@/hooks/useRequest';
+import Notification from '@/utils/notification';
+import { settledRows } from './favorites.helpers';
 
-const NEW_THIS_WEEK: Record<number, string> = {
-  1: 'Choy sum and Thai basil are back this Saturday',
-  3: 'Goat cheese and milk, no yogurt until Sunday',
-  4: 'Rye loaf and sourdough, baked at 5am on Friday',
-};
-
-const FILTERS = ['all', 'inStock', 'soldOut', 'priceDropped'] as const;
+const FILTERS = ['all', 'inStock', 'soldOut'] as const;
 type Filter = (typeof FILTERS)[number];
 
-const isSoldOut = (item: WishProductItem) => item.product.status !== 'available' || item.product.stock === 0;
+/**
+ * A favourite paired with its detail fetch. `detail` is `null` when that fetch was rejected (a suspended stall or a
+ * removed market answering 404, say) — the row still renders, from the favourite itself, with Remove still working.
+ */
+type StallRow = { fav: FavoriteDto; detail: StallDetailDto | null };
+type MarketRow = { fav: FavoriteDto; detail: MarketType | null };
 
-const WishItem = ({ item, onRemove }: { item: WishProductItem; onRemove: () => void }) => {
+const NO_FAVORITES: FavoriteDto[] = [];
+const NO_STALLS: StallRow[] = [];
+const NO_MARKETS: MarketRow[] = [];
+
+/** One row of the products tab: title, subtitle, availability, add to cart / remove (contract §9, FR-040, FR-041). */
+const FavoriteProductRow = ({
+  fav,
+  onAddToCart,
+  onRemove,
+}: {
+  fav: FavoriteDto;
+  onAddToCart: () => void;
+  onRemove: () => void;
+}) => {
   const { t } = useTranslation('CustomerFavorites');
-  const p = item.product;
-  const soldOut = isSoldOut(item);
 
   return (
     <li className="border-line-strong bg-surface-raised shadow-tag grid grid-cols-[72px_minmax(0,1fr)] items-center gap-4 rounded-md border-[1.5px] p-4 md:grid-cols-[96px_minmax(0,1fr)_auto]">
       <span
         className={Helper.cn(
-          'border-line bg-surface-sunken text-ink-muted font-hand flex aspect-4/3 w-18 items-center justify-center rounded-[6px] border p-1 text-center text-[15px] md:w-24',
-          soldOut && 'grayscale',
+          'border-line bg-surface-sunken text-ink-muted font-hand flex aspect-4/3 w-18 items-center justify-center overflow-hidden rounded-[6px] border p-1 text-center text-[15px] md:w-24',
+          !fav.available && 'grayscale',
         )}
       >
-        {p.category}
+        {fav.imageUrl ? (
+          <img src={fav.imageUrl} alt="" className="size-full object-cover" />
+        ) : (
+          fav.title.charAt(0).toUpperCase()
+        )}
       </span>
       <div>
         <b className="block text-[17px] leading-tight">
-          <Link to={`/products/${p.id}`} className="text-inherit no-underline hover:underline hover:underline-offset-3">
-            {p.name}
+          <Link
+            to={`/products/${fav.targetId}`}
+            className="text-inherit no-underline hover:underline hover:underline-offset-3"
+          >
+            {fav.title}
           </Link>
         </b>
-        <p className="text-small text-ink-muted mt-0.5">
-          <Link to={`/stalls/${p.farmerId}`} className="text-inherit no-underline hover:underline">
-            {p.stall}
-          </Link>{' '}
-          · {p.marketName}
-        </p>
+        {fav.subtitle && <p className="text-small text-ink-muted mt-0.5">{fav.subtitle}</p>}
         <div className="mt-2 flex flex-wrap items-center gap-3 text-[13px]">
-          <PriceTag amount={p.price} unit={p.unit} was={p.was} />
-          {soldOut ? (
-            <span className="bg-status-declined-bg text-status-declined-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 font-bold">
-              <CloseIcon size={14} />
-              {t('soldOut')}
-            </span>
-          ) : (
+          {fav.available ? (
             <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 font-bold">
               <CheckIcon size={14} />
-              {t('left', { qty: units(p.stock, p.unit) })}
+              {t('inStock')}
             </span>
+          ) : (
+            <>
+              <span className="bg-status-declined-bg text-status-declined-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 font-bold">
+                <CloseIcon size={14} />
+                {t('soldOut')}
+              </span>
+              <span className="text-ink-muted">{t('alertOn')}</span>
+            </>
           )}
-          <span className="text-ink-muted">{item.saved}</span>
-          {item.note && <span className="text-ink-muted">{item.note}</span>}
         </div>
       </div>
       <div className="col-span-full flex flex-row flex-wrap items-center gap-2 md:col-span-1 md:flex-col md:items-end">
-        {soldOut ? (
-          <Button
-            variant="secondary"
-            size="sm"
-            aria-pressed="true"
-            onClick={() =>
-              Notification.success({ title: t('toast.alertTitle'), text: t('toast.alertOff', { name: p.name }) })
-            }
-          >
-            {t('alertOn')}
-          </Button>
-        ) : (
-          <Button
-            size="sm"
-            onClick={() =>
-              Notification.success({ title: t('toast.addedTitle'), text: t('toast.added', { name: p.name }) })
-            }
-          >
+        {fav.available && (
+          <Button size="sm" onClick={onAddToCart}>
             {t('addToCart')}
           </Button>
         )}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            onRemove();
-            Notification.info({ title: t('toast.removedTitle'), text: t('toast.removed', { name: p.name }) });
-          }}
-        >
+        <Button variant="ghost" size="sm" onClick={onRemove}>
           {t('remove')}
         </Button>
       </div>
@@ -107,29 +100,194 @@ const WishItem = ({ item, onRemove }: { item: WishProductItem; onRemove: () => v
   );
 };
 
-/** FR-014 — wishlist: saved products, stalls and markets. */
+/**
+ * A favourite whose target could not be loaded this time (a suspended stall, a removed market...). Still shown, from
+ * the favourite itself, so it is not silently dropped and Remove still works.
+ */
+const UnavailableFavoriteRow = ({ fav, onRemove }: { fav: FavoriteDto; onRemove: () => void }) => {
+  const { t } = useTranslation('CustomerFavorites');
+
+  return (
+    <Card as="article" className="flex flex-col gap-3 p-4">
+      <div>
+        <b className="text-ink-muted block text-[17px] leading-tight">{fav.title}</b>
+        {fav.subtitle && <p className="text-small text-ink-muted mt-0.5">{fav.subtitle}</p>}
+        <span className="bg-status-declined-bg text-status-declined-ink mt-2 inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] font-bold">
+          <CloseIcon size={14} />
+          {t('unavailable')}
+        </span>
+      </div>
+      <Button variant="ghost" size="sm" className="w-fit" onClick={onRemove}>
+        {t('remove')}
+      </Button>
+    </Card>
+  );
+};
+
+/** A saved stall: name, the markets it sells at, a link to its page, and Remove. */
+const FavoriteStallCard = ({ stall, onRemove }: { stall: StallDetailDto; onRemove: () => void }) => {
+  const { t } = useTranslation('CustomerFavorites');
+  const marketNames = stall.markets.map((m) => m.marketName).join(', ');
+
+  return (
+    <Card as="article" className="grid grid-cols-[56px_1fr] gap-x-4 gap-y-3 p-4">
+      <span
+        aria-hidden="true"
+        className="bg-brand text-on-brand font-hand grid size-14 place-items-center rounded-full text-[28px] uppercase"
+      >
+        {stall.stallName.charAt(0)}
+      </span>
+      <div>
+        <h3 className="text-[17px] leading-tight font-bold">
+          <Link
+            to={`/stalls/${stall.farmerId}`}
+            className="text-inherit no-underline hover:underline hover:underline-offset-3"
+          >
+            {stall.stallName}
+          </Link>
+        </h3>
+        {marketNames && <p className="text-small text-ink-muted mt-0.5">{marketNames}</p>}
+      </div>
+      <div className="col-span-full flex flex-wrap gap-2">
+        <ButtonLink to={`/stalls/${stall.farmerId}`} size="sm">
+          {t('viewStall')}
+        </ButtonLink>
+        <Button variant="ghost" size="sm" onClick={onRemove}>
+          {t('remove')}
+        </Button>
+      </div>
+    </Card>
+  );
+};
+
+/** FR-014, FR-040, FR-041 — saved products, stalls and markets of the signed-in customer. */
 const CustomerFavoritesPage = () => {
   const { t } = useTranslation('CustomerFavorites');
+  const { t: tc } = useTranslation();
   const [tab, setTab] = useState<'products' | 'stalls' | 'markets'>('products');
   const [filter, setFilter] = useState<Filter>('all');
-  const [items, setItems] = useState(wishProducts);
+
+  const {
+    state: productsLoad,
+    retry: retryProducts,
+    mutate: mutateProducts,
+  } = useRequest('favorites:products', () => FavoriteApi.list('product'));
+  const {
+    state: stallFavsLoad,
+    retry: retryStallFavs,
+    mutate: mutateStallFavs,
+  } = useRequest('favorites:stalls', () => FavoriteApi.list('farmer'));
+  const {
+    state: marketFavsLoad,
+    retry: retryMarketFavs,
+    mutate: mutateMarketFavs,
+  } = useRequest('favorites:markets', () => FavoriteApi.list('market'));
+
+  const products = productsLoad.kind === 'ready' ? productsLoad.data : NO_FAVORITES;
+  const stallFavs = stallFavsLoad.kind === 'ready' ? stallFavsLoad.data : NO_FAVORITES;
+  const marketFavs = marketFavsLoad.kind === 'ready' ? marketFavsLoad.data : NO_FAVORITES;
+
+  // The stall / market details are only worth fetching once their tab is open — a favourite list can hold many.
+  // Promise.allSettled, not Promise.all: one favourite whose target is gone (a suspended stall, a removed market —
+  // both answer 404) must not reject the whole tab and take every other favourite down with it.
+  const stallIds = stallFavs.map((f) => f.targetId).join(',');
+  const {
+    state: stallDetailsLoad,
+    retry: retryStallDetails,
+    mutate: mutateStallDetails,
+  } = useRequest(`favorite-stall-details:${tab === 'stalls' ? stallIds : 'idle'}`, () =>
+    tab === 'stalls' && stallFavsLoad.kind === 'ready'
+      ? Promise.allSettled(stallFavs.map((fav) => StallApi.get(fav.targetId))).then((results) =>
+          settledRows(stallFavs, results),
+        )
+      : Promise.resolve(NO_STALLS),
+  );
+
+  const marketIds = marketFavs.map((f) => f.targetId).join(',');
+  const {
+    state: marketDetailsLoad,
+    retry: retryMarketDetails,
+    mutate: mutateMarketDetails,
+  } = useRequest(`favorite-market-details:${tab === 'markets' ? marketIds : 'idle'}`, () =>
+    tab === 'markets' && marketFavsLoad.kind === 'ready'
+      ? Promise.allSettled(marketFavs.map((fav) => CatalogApi.getMarket(fav.targetId).then((dto) => dto.market))).then(
+          (results) => settledRows(marketFavs, results),
+        )
+      : Promise.resolve(NO_MARKETS),
+  );
 
   const counts: Record<Filter, number> = {
-    all: items.length,
-    inStock: items.filter((i) => !isSoldOut(i)).length,
-    soldOut: items.filter(isSoldOut).length,
-    priceDropped: items.filter((i) => i.product.was != null).length,
+    all: products.length,
+    inStock: products.filter((p) => p.available).length,
+    soldOut: products.filter((p) => !p.available).length,
   };
-  const shown = items.filter((i) => {
-    if (filter === 'inStock') return !isSoldOut(i);
-    if (filter === 'soldOut') return isSoldOut(i);
-    if (filter === 'priceDropped') return i.product.was != null;
+  const shownProducts = products.filter((p) => {
+    if (filter === 'inStock') return p.available;
+    if (filter === 'soldOut') return !p.available;
     return true;
   });
-  const inStockCount = items.filter((i) => !isSoldOut(i)).length;
 
-  const stallIds = [1, 3, 4];
-  const savedMarket = markets.find((m) => m.id === 1);
+  const addToCart = async (fav: FavoriteDto) => {
+    try {
+      const detail = await ProductApi.get(fav.targetId);
+      const p = detail.product;
+      Cart.add(
+        {
+          productId: p.id,
+          name: p.name,
+          unit: p.unit,
+          price: Number(p.price),
+          max: p.stockQuantity,
+          farmerId: p.farmerId,
+          stallName: p.stallName,
+        },
+        1,
+      );
+      Notification.success({ title: t('toast.addedTitle'), text: t('toast.added', { name: p.name }) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    }
+  };
+
+  const removeProduct = async (fav: FavoriteDto) => {
+    try {
+      await FavoriteApi.remove(fav.id);
+      mutateProducts((list) => list.filter((f) => f.id !== fav.id));
+      Notification.info({ title: t('toast.removedTitle'), text: t('toast.removed', { name: fav.title }) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    }
+  };
+
+  const removeStall = async (fav: FavoriteDto) => {
+    try {
+      await FavoriteApi.remove(fav.id);
+      mutateStallFavs((list) => list.filter((f) => f.id !== fav.id));
+      mutateStallDetails((list) => list.filter((item) => item.fav.id !== fav.id));
+      Notification.info({ title: t('toast.removedTitle'), text: t('toast.removed', { name: fav.title }) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    }
+  };
+
+  const removeMarket = async (fav: FavoriteDto) => {
+    try {
+      await FavoriteApi.remove(fav.id);
+      mutateMarketFavs((list) => list.filter((f) => f.id !== fav.id));
+      mutateMarketDetails((list) => list.filter((item) => item.fav.id !== fav.id));
+      Notification.info({ title: t('toast.removedTitle'), text: t('toast.removed', { name: fav.title }) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    }
+  };
+
+  // A MarketCard on this tab has its own heart (FavoriteButton), already wired to favoriteId. When the visitor
+  // unsaves from there, the API call already happened inside the button — this only drops the row from the two
+  // lists this page keeps, so it does not go stale (filled heart, or a "Remove" that 404s a favourite already gone).
+  const dropMarketFavorite = (favoriteId: number) => {
+    mutateMarketFavs((list) => list.filter((f) => f.id !== favoriteId));
+    mutateMarketDetails((list) => list.filter((item) => item.fav.id !== favoriteId));
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -148,78 +306,131 @@ const CustomerFavoritesPage = () => {
         value={tab}
         onChange={(id) => setTab(id as typeof tab)}
         tabs={[
-          { id: 'products', label: t('tabs.products'), count: items.length },
-          { id: 'stalls', label: t('tabs.stalls'), count: stallIds.length },
-          { id: 'markets', label: t('tabs.markets'), count: savedMarket ? 1 : 0 },
+          { id: 'products', label: t('tabs.products'), count: products.length },
+          { id: 'stalls', label: t('tabs.stalls'), count: stallFavs.length },
+          { id: 'markets', label: t('tabs.markets'), count: marketFavs.length },
         ]}
       />
 
-      {tab === 'products' && (
-        <div className="flex flex-col gap-4">
-          <Banner title={t('banner.title')}>{t('banner.text')}</Banner>
-
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap gap-2">
-              {FILTERS.map((f) => (
-                <Chip key={f} pressed={filter === f} onClick={() => setFilter(f)}>
-                  {t(`filters.${f}`)} <span className="text-[12px] tabular-nums opacity-80">{counts[f]}</span>
-                </Chip>
-              ))}
+      {tab === 'products' &&
+        (productsLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {t('loading')}
+          </p>
+        ) : productsLoad.kind === 'error' ? (
+          <LoadError noun={t('error.products')} onRetry={retryProducts} />
+        ) : products.length === 0 ? (
+          <DataState
+            fill
+            title={t('empty.products.title')}
+            text={t('empty.products.text')}
+            action={<ButtonLink to="/products">{t('empty.products.browse')}</ButtonLink>}
+          />
+        ) : (
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-2">
+                {FILTERS.map((f) => (
+                  <Chip key={f} pressed={filter === f} onClick={() => setFilter(f)}>
+                    {t(`filters.${f}`)} <span className="text-[12px] tabular-nums opacity-80">{counts[f]}</span>
+                  </Chip>
+                ))}
+              </div>
             </div>
-            <Button
-              size="sm"
-              onClick={() =>
-                Notification.success({
-                  title: t('toast.addedTitle'),
-                  text: t('toast.addedMany', { count: inStockCount }),
-                })
-              }
-            >
-              {t('addInStock', { count: inStockCount })}
-            </Button>
-          </div>
 
-          <ul className="m-0 flex flex-col gap-3 p-0">
-            {shown.map((item) => (
-              <WishItem
-                key={item.product.id}
-                item={item}
-                onRemove={() => setItems((prev) => prev.filter((i) => i.product.id !== item.product.id))}
-              />
-            ))}
-          </ul>
-          <p className="text-small text-ink-muted">{t('holdNote')}</p>
-        </div>
-      )}
-
-      {tab === 'stalls' && (
-        <div className="flex flex-col gap-4">
-          <p className="text-small text-ink-muted">{t('stallsNote')}</p>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {stallIds.map((id) => {
-              const f = farmer(id);
-              if (!f) return null;
-              return (
-                <StallCard key={id} farmer={f}>
-                  <p className="text-small col-span-full m-0 flex justify-between gap-3">
-                    <span className="text-ink-muted">{t('thisWeek')}</span>
-                    <span>{NEW_THIS_WEEK[id]}</span>
-                  </p>
-                </StallCard>
-              );
-            })}
+            {shownProducts.length === 0 ? (
+              <DataState title={t('filters.emptyTitle')} text={t('filters.emptyText')} />
+            ) : (
+              <ul className="m-0 flex flex-col gap-3 p-0">
+                {shownProducts.map((fav) => (
+                  <FavoriteProductRow
+                    key={fav.id}
+                    fav={fav}
+                    onAddToCart={() => void addToCart(fav)}
+                    onRemove={() => void removeProduct(fav)}
+                  />
+                ))}
+              </ul>
+            )}
+            <p className="text-small text-ink-muted">{t('holdNote')}</p>
           </div>
-        </div>
-      )}
+        ))}
 
-      {tab === 'markets' && (
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {savedMarket && <MarketCard market={savedMarket} />}
+      {tab === 'stalls' &&
+        (stallFavsLoad.kind === 'loading' || stallDetailsLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {t('loading')}
+          </p>
+        ) : stallFavsLoad.kind === 'error' ? (
+          <LoadError noun={t('error.stalls')} onRetry={retryStallFavs} />
+        ) : stallDetailsLoad.kind === 'error' ? (
+          <LoadError noun={t('error.stalls')} onRetry={retryStallDetails} />
+        ) : stallFavs.length === 0 ? (
+          <DataState
+            fill
+            title={t('empty.stalls.title')}
+            text={t('empty.stalls.text')}
+            action={<ButtonLink to="/markets">{t('empty.stalls.browse')}</ButtonLink>}
+          />
+        ) : (
+          <div className="flex flex-col gap-4">
+            <p className="text-small text-ink-muted">{t('stallsNote')}</p>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {stallDetailsLoad.kind === 'ready' &&
+                stallDetailsLoad.data.map((row) =>
+                  row.detail ? (
+                    <FavoriteStallCard key={row.fav.id} stall={row.detail} onRemove={() => void removeStall(row.fav)} />
+                  ) : (
+                    <UnavailableFavoriteRow key={row.fav.id} fav={row.fav} onRemove={() => void removeStall(row.fav)} />
+                  ),
+                )}
+            </div>
           </div>
-          <p className="text-small text-ink-muted">{t('marketsNote')}</p>
-        </div>
-      )}
+        ))}
+
+      {tab === 'markets' &&
+        (marketFavsLoad.kind === 'loading' || marketDetailsLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {t('loading')}
+          </p>
+        ) : marketFavsLoad.kind === 'error' ? (
+          <LoadError noun={t('error.markets')} onRetry={retryMarketFavs} />
+        ) : marketDetailsLoad.kind === 'error' ? (
+          <LoadError noun={t('error.markets')} onRetry={retryMarketDetails} />
+        ) : marketFavs.length === 0 ? (
+          <DataState
+            fill
+            title={t('empty.markets.title')}
+            text={t('empty.markets.text')}
+            action={<ButtonLink to="/markets">{t('empty.markets.browse')}</ButtonLink>}
+          />
+        ) : (
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {marketDetailsLoad.kind === 'ready' &&
+                marketDetailsLoad.data.map((row) =>
+                  row.detail ? (
+                    // MarketCard already renders its own heart (FavoriteButton, favoriteId={row.fav.id}); its
+                    // onChange drops this row via dropMarketFavorite once unsaved, so there is only one control that
+                    // removes a market favourite here — no separate "Remove" button duplicating it.
+                    <MarketCard
+                      key={row.fav.id}
+                      market={row.detail}
+                      favoriteId={row.fav.id}
+                      onFavoriteChange={(id) => id === null && dropMarketFavorite(row.fav.id)}
+                    />
+                  ) : (
+                    <UnavailableFavoriteRow
+                      key={row.fav.id}
+                      fav={row.fav}
+                      onRemove={() => void removeMarket(row.fav)}
+                    />
+                  ),
+                )}
+            </div>
+            <p className="text-small text-ink-muted">{t('marketsNote')}</p>
+          </div>
+        ))}
     </div>
   );
 };
