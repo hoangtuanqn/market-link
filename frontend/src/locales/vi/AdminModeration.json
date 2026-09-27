@@ -98,5 +98,11 @@
       "actioned": "Đã xử lý"
     },
     "statusLabel": "Trạng thái"
+  },
+  "hiddenQueue": {
+    "listings": "Sản phẩm đã ẩn",
+    "reviews": "Đánh giá đã ẩn",
+    "noListings": "Chưa có sản phẩm nào bị ẩn",
+    "noListingsText": "Sản phẩm bạn ẩn sẽ hiện ở đây kèm lý do để bạn có thể hiện lại."
   }
 }

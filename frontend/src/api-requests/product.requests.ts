@@ -166,6 +166,14 @@ class ProductApi {
     await privateApi.patch<ApiResponse<null>>(`/admin/products/${id}/hide`, { reason });
   };
 
+  /** Admin — FR-074. Hidden listings, newest change first, so each one can be found again and unhidden. */
+  static adminHidden = async () => {
+    const response = await privateApi.get<ApiResponse<PageType<FarmerProductDto>>>('/admin/products/hidden', {
+      params: { pageSize: 50 },
+    });
+    return response.data.data.items.map(toFarmerProduct);
+  };
+
   static adminUnhide = async (id: number) => {
     await privateApi.patch<ApiResponse<null>>(`/admin/products/${id}/unhide`);
   };

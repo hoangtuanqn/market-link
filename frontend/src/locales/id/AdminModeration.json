@@ -98,5 +98,11 @@
       "actioned": "Ditindaklanjuti"
     },
     "statusLabel": "Status"
+  },
+  "hiddenQueue": {
+    "listings": "Produk yang disembunyikan",
+    "reviews": "Ulasan yang disembunyikan",
+    "noListings": "Tidak ada produk yang disembunyikan",
+    "noListingsText": "Produk yang Anda sembunyikan muncul di sini beserta alasannya, agar bisa ditampilkan lagi."
   }
 }

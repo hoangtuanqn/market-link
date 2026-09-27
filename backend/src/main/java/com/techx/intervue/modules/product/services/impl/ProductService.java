@@ -123,6 +123,13 @@ public class ProductService implements ProductServiceInterface {
     }
 
     @Override
+    public PageResource<FarmerProductResource> adminHidden(int page, int pageSize) {
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return query.hidden((safePage - 1) * safeSize, safeSize);
+    }
+
+    @Override
     @Transactional
     public void adminHide(long productId, String reason) {
         Product product = locked(productId);

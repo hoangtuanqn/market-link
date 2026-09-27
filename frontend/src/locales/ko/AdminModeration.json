@@ -98,5 +98,11 @@
       "actioned": "처리됨"
     },
     "statusLabel": "상태"
+  },
+  "hiddenQueue": {
+    "listings": "숨긴 상품",
+    "reviews": "숨긴 리뷰",
+    "noListings": "숨긴 상품이 없습니다",
+    "noListingsText": "숨긴 상품은 사유와 함께 여기에 표시되며 다시 공개할 수 있습니다."
   }
 }

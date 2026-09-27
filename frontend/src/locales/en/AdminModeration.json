@@ -98,5 +98,11 @@
       "actioned": "Actioned"
     },
     "statusLabel": "Status"
+  },
+  "hiddenQueue": {
+    "listings": "Hidden listings",
+    "reviews": "Hidden reviews",
+    "noListings": "No hidden listings",
+    "noListingsText": "Listings you hide appear here with the reason, so you can put them back."
   }
 }

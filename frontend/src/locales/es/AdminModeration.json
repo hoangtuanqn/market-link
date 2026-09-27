@@ -98,5 +98,11 @@
       "actioned": "Atendida"
     },
     "statusLabel": "Estado"
+  },
+  "hiddenQueue": {
+    "listings": "Productos ocultos",
+    "reviews": "Reseñas ocultas",
+    "noListings": "No hay productos ocultos",
+    "noListingsText": "Los productos que ocultes aparecen aquí con el motivo, para que puedas volver a mostrarlos."
   }
 }

@@ -98,5 +98,11 @@
       "actioned": "已处理"
     },
     "statusLabel": "状态"
+  },
+  "hiddenQueue": {
+    "listings": "已隐藏的商品",
+    "reviews": "已隐藏的评价",
+    "noListings": "没有已隐藏的商品",
+    "noListingsText": "你隐藏的商品会连同原因显示在这里，方便你恢复。"
   }
 }
