@@ -770,5 +770,11 @@
       "fakeReviews": "虚假评价",
       "ownerRequest": "应账户持有人要求"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie 提示",
+    "text": "我们仅使用必要的 Cookie 来保持您的登录状态和购物车正常运作，不使用任何广告或分析类 Cookie。<link>隐私政策</link>。",
+    "decline": "拒绝",
+    "accept": "接受"
   }
 }

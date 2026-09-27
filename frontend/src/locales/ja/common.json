@@ -770,5 +770,11 @@
       "fakeReviews": "不正なレビュー",
       "ownerRequest": "アカウント所有者本人の希望による"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie に関するお知らせ",
+    "text": "サインイン状態の維持とカートの動作に必要な Cookie のみを使用しています。広告や解析用の Cookie はありません。<link>プライバシーポリシー</link>。",
+    "decline": "拒否",
+    "accept": "同意する"
   }
 }

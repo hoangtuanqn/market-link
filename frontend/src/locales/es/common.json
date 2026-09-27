@@ -770,5 +770,11 @@
       "fakeReviews": "Reseñas falsas",
       "ownerRequest": "A petición del titular de la cuenta"
     }
+  },
+  "cookieConsent": {
+    "label": "Aviso de cookies",
+    "text": "Usamos solo cookies esenciales para mantener tu sesión iniciada y tu carrito funcionando. No usamos cookies de publicidad ni de análisis. <link>Política de privacidad</link>.",
+    "decline": "Rechazar",
+    "accept": "Aceptar"
   }
 }

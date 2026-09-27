@@ -770,5 +770,11 @@
       "fakeReviews": "Gefälschte Bewertungen",
       "ownerRequest": "Auf Wunsch der Kontoinhaber"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie-Hinweis",
+    "text": "Wir verwenden nur technisch notwendige Cookies, damit Sie angemeldet bleiben und Ihr Warenkorb funktioniert. Es gibt keine Werbe- oder Analyse-Cookies. <link>Datenschutzerklärung</link>.",
+    "decline": "Ablehnen",
+    "accept": "Akzeptieren"
   }
 }

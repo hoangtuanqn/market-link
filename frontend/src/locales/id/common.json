@@ -770,5 +770,11 @@
       "fakeReviews": "Ulasan palsu",
       "ownerRequest": "Atas permintaan pemilik akun"
     }
+  },
+  "cookieConsent": {
+    "label": "Pemberitahuan cookie",
+    "text": "Kami hanya menggunakan cookie esensial agar Anda tetap masuk dan keranjang belanja berfungsi. Tidak ada cookie iklan atau analitik. <link>Kebijakan privasi</link>.",
+    "decline": "Tolak",
+    "accept": "Terima"
   }
 }

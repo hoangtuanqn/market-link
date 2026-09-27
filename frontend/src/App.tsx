@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
+import CookieConsentBar from './components/CookieConsentBar';
 import ScrollToTop from './components/ScrollToTop';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import { USER_ROLE } from './constants/enums';
@@ -293,6 +294,7 @@ const App = () => {
       <NotificationCenter />
       <ChatUnreadCenter />
       <NotificationPermissionBanner />
+      <CookieConsentBar />
     </BrowserRouter>
   );
 };

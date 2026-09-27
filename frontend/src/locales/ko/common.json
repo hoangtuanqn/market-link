@@ -770,5 +770,11 @@
       "fakeReviews": "조작된 리뷰",
       "ownerRequest": "계정 소유자의 요청"
     }
+  },
+  "cookieConsent": {
+    "label": "쿠키 안내",
+    "text": "로그인 상태 유지와 장바구니 작동을 위한 필수 쿠키만 사용해요. 광고나 분석용 쿠키는 없어요. <link>개인정보 처리방침</link>.",
+    "decline": "거부",
+    "accept": "동의"
   }
 }

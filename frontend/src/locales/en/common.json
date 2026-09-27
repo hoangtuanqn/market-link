@@ -770,5 +770,11 @@
       "fakeReviews": "Fake reviews",
       "ownerRequest": "At the account owner’s request"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie notice",
+    "text": "We use essential cookies to keep you signed in and your cart working. We set no advertising or analytics cookies. <link>Privacy policy</link>.",
+    "decline": "Decline",
+    "accept": "Accept"
   }
 }
