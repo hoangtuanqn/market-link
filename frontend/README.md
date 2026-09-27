@@ -31,7 +31,7 @@ frontend/
 │   ├── App.tsx       # Root component
 │   ├── index.css     # Tailwind + design system imports
 │   ├── styles/       # marketlink-theme.css (tokens) · marketlink-components.css (ml-* classes)
-│   └── lib/format.ts # vnd(), units(), formatDate() …
+│   └── lib/format.ts # money(), units(), formatDate() …
 └── vite.config.ts    # Vite config (`@/` alias → `src/`)
 ```
 

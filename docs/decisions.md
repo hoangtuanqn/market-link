@@ -142,5 +142,6 @@ nhỏ của cùng một xung đột. Hiện tại là được.
 ---
 
 ### Đơn vị và locale
-Tiền tệ **VND**, hiển thị `₫` phân cách hàng nghìn. Ngày `dd/MM/yyyy`, giờ 24h.
+Tiền tệ **USD**, hiển thị `$1.50` (hai số lẻ, phân cách hàng nghìn), giá lưu trong DB là số đô. LEAD chốt lại
+27/09/2026, thay cho VND `₫` ban đầu. Ngày `dd/MM/yyyy`, giờ 24h.
 Timezone `Asia/Ho_Chi_Minh`. Lưu DATETIME theo giờ local, ghi rõ trong ReadMe.

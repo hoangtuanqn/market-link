@@ -68,7 +68,8 @@ const newFarmerStalls = [
   { n: 20, name: 'Cá khô Châu Đốc', desc: 'Khô cá lóc, khô cá sặc, mắm Châu Đốc truyền thống.', cat: 'seafood', mkts: ['Chợ Bến Thành','Chợ Thảo Điền'], cutoff: 48 },
 ];
 
-// New products for new farmers
+// New products for new farmers. Prices are in US dollars, the app's display currency (docs/decisions.md), the
+// same ~25,000 VND to the dollar as db/seed.sql.
 const newProducts = {
   11: [
     { name: 'Rau cải bó xôi', desc: 'Cải bó xôi hữu cơ, lá non.', price: 1.00, unit: 'bunch', stock: 40 },
@@ -339,10 +340,10 @@ for (const [farmN, prods] of Object.entries(newProducts)) {
   const catSlug = newFarmerStalls.find(f => f.n === Number(farmN)).cat;
   for (const p of prods) {
     sql += `INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, '${esc(p.name)}', '${esc(p.desc)}', ${p.price}, '${p.unit}', ${p.stock}, 'available', FALSE
+SELECT f.id, c.id, '${esc(p.name)}', '${esc(p.desc)}', ${p.price.toFixed(2)}, '${p.unit}', ${p.stock}, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = '${catSlug}'
 WHERE u.email = 'farmer${farmN}@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = '${esc(p.desc)}', price = ${p.price}, stock_quantity = ${p.stock};\n`;
+ON DUPLICATE KEY UPDATE description = '${esc(p.desc)}', price = ${p.price.toFixed(2)}, stock_quantity = ${p.stock};\n`;
   }
   sql += '\n';
 }

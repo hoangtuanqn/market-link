@@ -133,6 +133,11 @@ class FarmerReportServiceTest {
         fx.everyDayTemplate(farmer, fx.product(farmer, category, "Plenty", 10000), 20);
         fx.everyDayTemplate(farmer, fx.product(farmer, category, "Nearly gone", 10000), 3);
         fx.product(farmer, category, "No template", 10000);
+        // Stock only counts on a date the stall can still take orders for
+        fx.openSlot(
+                farmer,
+                fx.market("Stock market"),
+                java.time.LocalDate.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh")).plusDays(1));
 
         FarmerDashboardResource d = reports.dashboard(userId);
 

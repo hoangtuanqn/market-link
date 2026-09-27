@@ -17,11 +17,20 @@ const EMPTY: CartLine[] = [];
 const listeners = new Set<() => void>();
 let cache: CartLine[] | null = null;
 
+/**
+ * A line the preview can use: a whole-number product id and a quantity of at least 1. Anything else (an old copy, a NaN
+ * written by an earlier bug) makes POST /orders/preview answer 400 and would lock the whole cart.
+ */
+const isUsable = (line: unknown): line is CartLine => {
+  const l = line as Partial<CartLine> | null;
+  return !!l && Number.isInteger(l.productId) && Number.isInteger(l.qty) && (l.qty as number) >= 1;
+};
+
 const read = (): CartLine[] => {
   if (cache) return cache;
   try {
     const parsed: unknown = JSON.parse(localStorage.getItem(KEY) ?? '[]');
-    cache = Array.isArray(parsed) ? (parsed as CartLine[]) : EMPTY;
+    cache = Array.isArray(parsed) ? parsed.filter(isUsable) : EMPTY;
   } catch {
     cache = EMPTY;
   }
@@ -38,7 +47,12 @@ const write = (lines: CartLine[]) => {
   listeners.forEach((l) => l());
 };
 
-const clamp = (line: CartLine, qty: number) => Math.max(1, Math.min(line.max, qty));
+/** 1…max; a missing or non-numeric max or qty never turns into NaN (JSON would store it as null). */
+const clamp = (line: CartLine, qty: number) => {
+  const wanted = Number.isFinite(qty) ? Math.floor(qty) : 1;
+  const max = Number.isFinite(line.max) && line.max >= 1 ? line.max : wanted;
+  return Math.max(1, Math.min(max, wanted));
+};
 
 /** FR-030 — the cart lives in the browser (S.4.3, no `carts` table); one order per stall is split on preview. */
 export const Cart = {

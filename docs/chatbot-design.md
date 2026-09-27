@@ -118,7 +118,7 @@ Ký tự `%`, `_`, `\` trong keyword được escape trước khi truyền vào.
 
 1. "xin chào" → `GREETING`, bot giới thiệu các loại câu hỏi.
 2. "tìm cà chua" → `FIND_PRODUCT`, danh sách sản phẩm + stall + chợ.
-3. "ca chua gia bao nhieu" (không dấu) → `PRODUCT_DETAIL`, giá ₫ + tồn kho.
+3. "ca chua gia bao nhieu" (không dấu) → `PRODUCT_DETAIL`, giá (USD) + tồn kho.
 4. "chợ Bến Thành mở cửa mấy giờ" → `MARKET_HOURS`.
 5. "thứ 7 có farmer nào ở chợ Bến Thành" → `FARMER_AVAILABILITY`.
 6. "khung giờ lấy hàng của <stall>" → `PICKUP_WINDOW`.

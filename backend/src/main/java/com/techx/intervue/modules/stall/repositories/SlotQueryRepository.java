@@ -52,23 +52,42 @@ public class SlotQueryRepository {
                     """;
 
     /**
-     * Per product, the dates that still have at least one bookable slot of its stall — what
-     * "orderable on that date" means for the nearest-date stock number (FR-031). A full slot still
-     * counts: capacity is checked when the order is placed.
+     * Dates a customer can still order for, per stall: at least one slot with room left that is
+     * still before its cutoff — the same conditions as {@link #PUBLIC_SLOTS} plus a free place,
+     * i.e. what placing an order accepts.
      */
-    private static final String BOOKABLE_DATES =
-            "SELECT DISTINCT p.id AS product_id, b.slot_date\n"
-                    + "FROM products p\n"
-                    + "JOIN (SELECT fm.farmer_id, s.slot_date\n"
+    public static final String ORDERABLE_DATES =
+            "SELECT DISTINCT fm.farmer_id, s.slot_date\n"
                     + BOOKABLE_FROM
                     + """
-                      AND fm.farmer_id IN (SELECT p2.farmer_id FROM products p2
-                                           WHERE p2.id IN (:productIds))
-                    ) b ON b.farmer_id = p.farmer_id
-                    WHERE p.id IN (:productIds)
+                      AND fm.farmer_id IN (:farmerIds)
+                      AND s.booked_count < s.max_orders
                     """;
 
     private final NamedParameterJdbcTemplate jdbc;
+
+    /** Stall id → the dates between {@code from} and {@code to} it can still take an order for. */
+    public Map<Long, Set<LocalDate>> orderableDates(
+            Collection<Long> farmerIds, LocalDate from, LocalDate to, LocalDateTime now) {
+        Map<Long, Set<LocalDate>> out = new HashMap<>();
+        if (farmerIds.isEmpty()) {
+            return out;
+        }
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("farmerIds", farmerIds)
+                        .addValue("fromDate", from)
+                        .addValue("toDate", to)
+                        .addValue("now", now);
+        jdbc.query(
+                ORDERABLE_DATES,
+                params,
+                rs -> {
+                    out.computeIfAbsent(rs.getLong("farmer_id"), k -> new HashSet<>())
+                            .add(rs.getObject("slot_date", LocalDate.class));
+                });
+        return out;
+    }
 
     public List<SlotResource> publicSlots(
             long farmerId, Long marketId, LocalDate from, LocalDate to, LocalDateTime now) {
@@ -94,28 +113,5 @@ public class SlotQueryRepository {
                     slot.setActive(true);
                     return SlotResource.of(slot, rs.getLong("market_id"));
                 });
-    }
-
-    /** See {@link #BOOKABLE_DATES}; a product with no such date is absent from the map. */
-    public Map<Long, Set<LocalDate>> bookableDates(
-            Collection<Long> productIds, LocalDate from, LocalDate to, LocalDateTime now) {
-        if (productIds.isEmpty()) {
-            return Map.of();
-        }
-        MapSqlParameterSource params =
-                new MapSqlParameterSource()
-                        .addValue("productIds", productIds)
-                        .addValue("fromDate", from)
-                        .addValue("toDate", to)
-                        .addValue("now", now);
-        Map<Long, Set<LocalDate>> dates = new HashMap<>();
-        jdbc.query(
-                BOOKABLE_DATES,
-                params,
-                rs -> {
-                    dates.computeIfAbsent(rs.getLong("product_id"), k -> new HashSet<>())
-                            .add(rs.getObject("slot_date", LocalDate.class));
-                });
-        return dates;
     }
 }

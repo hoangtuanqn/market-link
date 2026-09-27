@@ -85,7 +85,7 @@ const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
             name={`slot-${group.farmerId}`}
             slots={slotOptions}
             value={choice.slotId}
-            // Commit the date on screen with the slot: the first day shows as picked before anyone clicks it (#5).
+            // The day shown selected may be the default (first) one that was never clicked: keep it with the time
             onChange={(v) => onChange({ date, slotId: v })}
             legend={t('pickupTime', {
               day: date ? dayName(localDay(date).getDay(), 'long') : '',
@@ -111,20 +111,19 @@ const CustomerCartPage = () => {
   const navigate = useNavigate();
   const { user } = useSession();
   const previewKey = lines.map((l) => `${l.productId}:${l.qty}`).join(',');
-  // keepPrevious: a quantity change re-prices the cart without swapping the page for a loading line (#3).
-  const {
-    state: previewLoad,
-    refreshing,
-    retry,
-  } = useRequest(
-    `cart-preview:${previewKey}`,
-    () =>
-      lines.length && user
-        ? OrderApi.preview(lines.map((l) => ({ productId: l.productId, quantity: l.qty })))
-        : Promise.resolve([]),
-    { keepPrevious: true },
+  const { state: previewLoad, retry } = useRequest(`cart-preview:${previewKey}`, () =>
+    lines.length && user
+      ? OrderApi.preview(lines.map((l) => ({ productId: l.productId, quantity: l.qty })))
+      : Promise.resolve([]),
   );
-  const groups = previewLoad.kind === 'ready' ? previewLoad.data : [];
+  // A quantity change re-runs the preview. Keep the last answer on screen meanwhile: swapping the whole page for
+  // "loading" made it flash and remounted every stall's pickup picker (re-fetching its slots) on each +/- tap.
+  const [lastPreview, setLastPreview] = useState<OrderGroupPreviewDto[] | null>(null);
+  if (previewLoad.kind === 'ready' && previewLoad.data !== lastPreview) setLastPreview(previewLoad.data);
+  const refreshing = previewLoad.kind === 'loading' && lastPreview !== null;
+  const groups = previewLoad.kind === 'ready' ? previewLoad.data : (lastPreview ?? []);
+  // Quantities follow the cart right away; the server's figures catch up when the preview answers
+  const qtyOf = (productId: number, fallback: number) => lines.find((l) => l.productId === productId)?.qty ?? fallback;
   const [choices, setChoices] = useState<Record<number, Choice>>({});
   const choice = (g: OrderGroupPreviewDto): Choice =>
     choices[g.farmerId] ?? {
@@ -178,7 +177,7 @@ const CustomerCartPage = () => {
     );
   }
 
-  if (previewLoad.kind === 'loading') {
+  if (previewLoad.kind === 'loading' && lastPreview === null) {
     return (
       <p role="status" className="text-ink-muted">
         {tc('notify.list.loading')}
@@ -187,7 +186,42 @@ const CustomerCartPage = () => {
   }
 
   if (previewLoad.kind === 'error') {
-    return <LoadError noun={t('noun')} onRetry={retry} />;
+    // The server could not check the cart (e.g. a product that no longer exists answers 400). Keep the lines in reach
+    // so the customer can remove the bad one instead of being stuck on "try again".
+    return (
+      <div className="flex flex-col gap-4">
+        <LoadError noun={t('noun')} onRetry={retry} />
+        {lines.length > 0 && (
+          <Card className="flex flex-col gap-3 p-6">
+            <h2 className="text-h3">{t('stuck.title')}</h2>
+            <p className="text-small text-ink-muted">{t('stuck.text')}</p>
+            <ul className="m-0 flex list-none flex-col gap-2 p-0">
+              {lines.map((l) => (
+                <li
+                  key={l.productId}
+                  className="border-line flex items-center justify-between gap-3 border-b pb-2 last:border-b-0"
+                >
+                  <span className="min-w-0">
+                    <b className="block truncate">{l.name}</b>
+                    <span className="text-small text-ink-muted">
+                      {l.stallName} · {l.qty} {l.unit}
+                    </span>
+                  </span>
+                  <Button variant="ghost" size="sm" onClick={() => Cart.remove(l.productId)}>
+                    {tc('actions.remove')}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+            <div>
+              <Button variant="secondary" size="sm" onClick={() => Cart.clear()}>
+                {t('stuck.clear')}
+              </Button>
+            </div>
+          </Card>
+        )}
+      </div>
+    );
   }
 
   const total = groups.reduce((s, g) => s + g.subtotal, 0);
@@ -233,7 +267,6 @@ const CustomerCartPage = () => {
         <div className="flex flex-col gap-8">
           {groups.map((g, i) => {
             const c = choice(g);
-            const picked = c.date != null && c.slotId != null;
             return (
               <section key={g.farmerId} className="flex flex-col gap-3">
                 {g.problems.map((p) => (
@@ -246,31 +279,24 @@ const CustomerCartPage = () => {
                   of={groups.length}
                   stallName={g.stallName}
                   where={whereOf(g)}
-                  items={g.items.map((it): CartLineType => ({
-                    id: it.productId,
-                    name: it.name,
-                    unit: it.unit,
-                    price: it.unitPrice,
-                    max: it.stockQuantity,
-                    qty: it.quantity,
-                  }))}
+                  items={g.items
+                    .filter((it) => lines.some((l) => l.productId === it.productId))
+                    .map((it): CartLineType => ({
+                      id: it.productId,
+                      name: it.name,
+                      unit: it.unit,
+                      price: it.unitPrice,
+                      max: it.stockQuantity,
+                      qty: qtyOf(it.productId, it.quantity),
+                    }))}
                   onQtyChange={(id, qty) => Cart.setQty(id, qty)}
                   onRemove={(id) => Cart.remove(id)}
                 />
-                {picked ? (
-                  <details className="border-line-strong bg-surface-raised shadow-tag rounded-md border-[1.5px] p-4">
-                    <summary className="text-small cursor-pointer font-bold">
-                      {t('changeTime', { stall: g.stallName })}
-                    </summary>
-                    <div className="mt-3 flex flex-col gap-4">
-                      <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
-                    </div>
-                  </details>
-                ) : (
-                  <Card className="flex flex-col gap-4 p-4">
-                    <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
-                  </Card>
-                )}
+                {/* Always the same open picker: collapsing it after a pick (or swapping its wrapper) moved the page
+                    under the cursor and remounted the slot request. Picking now only highlights the choice. */}
+                <Card className="flex flex-col gap-4 p-4">
+                  <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
+                </Card>
               </section>
             );
           })}

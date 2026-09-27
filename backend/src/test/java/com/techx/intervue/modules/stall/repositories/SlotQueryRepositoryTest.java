@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -266,37 +265,41 @@ class SlotQueryRepositoryTest {
     }
 
     /**
-     * The dates a product can still be ordered for, by the same rule as the public slots: a date
-     * whose every slot has passed its cutoff is left out, so "the nearest orderable date" moves on
-     * to the next open day (FR-031).
+     * A date counts as orderable only when a slot still has room, is switched on and is before its
+     * cutoff — the dates the availability resolver may show stock for.
      */
     @Test
-    void bookableDatesAreTheDatesWithASlotStillBeforeItsCutoff() {
-        FarmerProfile f = approvedFarmer(); // order_cutoff_hours = 12
+    void orderableDatesKeepOnlyDatesWithAFreeSlotBeforeItsCutoff() {
+        FarmerProfile f = approvedFarmer();
         FarmerMarket fm = link(f, market());
-        slot(fm, DAY, 7, 0, true); // cutoff DAY-1 19:00
-        slot(fm, DAY.plusDays(1), 7, 5, true); // full still counts: capacity is checked at order
-        slot(fm, DAY.plusDays(2), 7, 0, false); // switched off
-        String tag = tag();
-        jdbc.update(
-                "INSERT INTO categories (name, slug) VALUES (?, ?)", "Slot " + tag, "slot-" + tag);
-        jdbc.update(
-                "INSERT INTO products (farmer_id, category_id, name, price, unit, stock_quantity)"
-                        + " SELECT ?, id, 'Bookable', 10, 'kg', 0 FROM categories WHERE slug = ?",
-                f.getId(),
-                "slot-" + tag);
-        long product =
-                jdbc.queryForObject(
-                        "SELECT id FROM products WHERE farmer_id = ?", Long.class, f.getId());
+        slot(fm, DAY, 7, 2, true); // open
+        slot(fm, DAY.plusDays(1), 7, 5, true); // full
+        slot(fm, DAY.plusDays(2), 7, 0, false); // turned off
+        slot(fm, DAY.plusDays(3), 7, 0, true); // past its cutoff at "now" below
 
-        Map<Long, Set<LocalDate>> before =
-                query.bookableDates(List.of(product), DAY, DAY.plusDays(3), EARLY);
-        Map<Long, Set<LocalDate>> afterDayCutoff =
-                query.bookableDates(
-                        List.of(product), DAY, DAY.plusDays(3), DAY.minusDays(1).atTime(20, 0));
+        // 12 hours (the default cutoff) before DAY+3 07:00 is DAY+2 19:00
+        LocalDateTime now = DAY.plusDays(2).atTime(20, 0);
+        assertThat(query.orderableDates(List.of(f.getId()), DAY, DAY.plusDays(6), EARLY))
+                .containsEntry(f.getId(), java.util.Set.of(DAY, DAY.plusDays(3)));
+        assertThat(query.orderableDates(List.of(f.getId()), DAY, DAY.plusDays(6), now))
+                .doesNotContainKey(f.getId());
+        assertThat(query.orderableDates(List.of(), DAY, DAY, EARLY)).isEmpty();
+    }
 
-        assertThat(before.get(product)).containsExactlyInAnyOrder(DAY, DAY.plusDays(1));
-        assertThat(afterDayCutoff.get(product)).containsExactly(DAY.plusDays(1));
-        assertThat(query.bookableDates(List.of(), DAY, DAY, EARLY)).isEmpty();
+    /**
+     * The availability resolver reads the same open-day rule: a dropped weekday is not orderable.
+     */
+    @Test
+    void orderableDatesSkipAWeekdayTheMarketNoLongerHolds() {
+        FarmerProfile f = approvedFarmer();
+        Market m = market();
+        FarmerMarket fm = link(f, m);
+        slot(fm, DAY, 7, 0, true);
+        slot(fm, DAY.plusDays(1), 7, 0, true);
+        marketDays.replaceDays(
+                m.getId(), IntStream.range(0, 7).filter(d -> d != weekdayOf(DAY)).boxed().toList());
+
+        assertThat(query.orderableDates(List.of(f.getId()), DAY, DAY.plusDays(1), EARLY))
+                .containsEntry(f.getId(), Set.of(DAY.plusDays(1)));
     }
 }

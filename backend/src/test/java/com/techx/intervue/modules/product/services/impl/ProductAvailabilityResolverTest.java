@@ -6,9 +6,11 @@ import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.entities.WeeklyStockTemplate;
 import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
+import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.stall.repositories.SlotQueryRepository;
 import java.math.BigDecimal;
@@ -22,7 +24,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,7 @@ class ProductAvailabilityResolverTest {
     private static final LocalDate TODAY = LocalDate.of(2026, 9, 26);
 
     private static final long PRODUCT_ID = 1L;
+    private static final long FARMER_ID = 7L;
 
     private WeeklyStockTemplateRepository templates;
     private ProductDailyStockRepository dailyStock;
@@ -42,20 +44,25 @@ class ProductAvailabilityResolverTest {
     void setUp() {
         templates = mock(WeeklyStockTemplateRepository.class);
         dailyStock = mock(ProductDailyStockRepository.class);
-        slots = mock(SlotQueryRepository.class);
-        // By default every date of the lookahead still has a slot before its cutoff
-        bookableOn(IntStream.range(0, 14).mapToObj(TODAY::plusDays).collect(Collectors.toSet()));
         Clock clock =
                 Clock.fixed(
                         ZonedDateTime.of(TODAY, LocalTime.NOON, ZoneId.of("Asia/Ho_Chi_Minh"))
                                 .toInstant(),
                         ZoneId.of("Asia/Ho_Chi_Minh"));
-        resolver = new ProductAvailabilityResolver(templates, dailyStock, slots, clock);
+        ProductRepository products = mock(ProductRepository.class);
+        Product product = new Product();
+        product.setId(PRODUCT_ID);
+        product.setFarmerId(FARMER_ID);
+        when(products.findAllById(any())).thenReturn(List.of(product));
+        slots = mock(SlotQueryRepository.class);
+        // By default every date in the lookahead still has an open slot
+        openDates(TODAY.datesUntil(TODAY.plusDays(14)).collect(Collectors.toSet()));
+        resolver = new ProductAvailabilityResolver(templates, dailyStock, products, slots, clock);
     }
 
-    private void bookableOn(Set<LocalDate> dates) {
-        when(slots.bookableDates(anyCollection(), any(), any(), any()))
-                .thenReturn(Map.of(PRODUCT_ID, dates));
+    private void openDates(Set<LocalDate> dates) {
+        when(slots.orderableDates(anyCollection(), any(), any(), any()))
+                .thenReturn(Map.of(FARMER_ID, dates));
     }
 
     private static WeeklyStockTemplate template(int dayOfWeek, int qty, BigDecimal price) {
@@ -188,32 +195,36 @@ class ProductAvailabilityResolverTest {
     }
 
     /**
-     * FR-031: today's slots have all passed their cutoff (e.g. Sunday afternoon for a 07:00 slot),
-     * so today cannot be ordered any more and the number shown must be the next open day's.
+     * The reported bug: today (Saturday) is past its cutoff, so orders go to next Saturday — the
+     * number shown must be that date's stock, which a sale lowers, not today's untouched template.
      */
     @Test
-    void resolveSkipsADateWithNoSlotStillBeforeItsCutoff() {
-        // TODAY (26/09) is a Saturday = 6; the stall sells on Saturday and Monday
+    void resolveSkipsADateThatNoLongerHasAnOrderableSlot() {
+        LocalDate nextSaturday = TODAY.plusDays(7);
+        openDates(Set.of(nextSaturday));
         when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
-                .thenReturn(List.of(template(6, 30, null), template(1, 20, null)));
-        when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.empty());
-        bookableOn(Set.of(LocalDate.of(2026, 9, 28), LocalDate.of(2026, 10, 3)));
+                .thenReturn(List.of(template(6, 30, null)));
+        ProductDailyStock afterASale = new ProductDailyStock();
+        afterASale.setQuantityAvailable(25);
+        afterASale.setUnitPrice(new BigDecimal("12000"));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, nextSaturday))
+                .thenReturn(Optional.of(afterASale));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, TODAY))
+                .thenReturn(Optional.empty());
 
         ProductAvailabilityResolver.Availability a =
                 resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))).get(PRODUCT_ID);
 
-        assertThat(a.date()).isEqualTo(LocalDate.of(2026, 9, 28));
-        assertThat(a.quantity()).isEqualTo(20);
+        assertThat(a.date()).isEqualTo(nextSaturday);
+        assertThat(a.quantity()).isEqualTo(25);
     }
 
-    /** No slot is still open on any template date: nothing can be ordered, so nothing is shown. */
     @Test
-    void resolveOmitsAProductWhoseStallHasNoBookableSlot() {
+    void resolveOmitsAProductWhoseStallHasNoOrderableSlot() {
+        openDates(Set.of());
         when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
                 .thenReturn(List.of(template(6, 30, null)));
-        when(slots.bookableDates(anyCollection(), any(), any(), any())).thenReturn(Map.of());
 
-        assertThat(resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))))
-                .doesNotContainKey(PRODUCT_ID);
+        assertThat(resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000")))).isEmpty();
     }
 }

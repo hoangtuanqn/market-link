@@ -61,7 +61,7 @@ branch protection ở §11 mới là lớp cuối cùng.
 | Spring profile | `dev` (`application-dev.yaml`) | `prod` (`application-prod.yaml`) |
 | File env | `.env` ← copy từ `.env.example` (commit sẵn, chạy được ngay) | `.env.production` ← copy từ `.env.production.example`, thay mọi `<...>` |
 | Frontend | `frontend/.env.development` | `frontend/.env.production` + build arg `VITE_API_URL` |
-| Lệnh chạy | `make up` hoặc cách chạy trên máy trong `README.md` | `make prod-init` → sửa `.env.production` → `make prod` |
+| Lệnh chạy | `make up` hoặc cách chạy trên máy trong `docs/setup.md` | `make prod-init` → sửa `.env.production` → `make prod` |
 | Docker | project `market-link`, DB + Redis mở cổng ra máy | project `market-link-prod` riêng, DB + Redis **không** mở cổng |
 | Bí mật | Giá trị dev mẫu, không nhạy cảm | Bắt buộc truyền qua biến môi trường, thiếu là không khởi động |
 | CI | Backend (Spotless + test) + Frontend (Prettier + ESLint + build) | Như DEV + build image production |
@@ -72,7 +72,7 @@ Dev lấy môi trường dev về làm:
 git clone https://github.com/hoangtuanqn/market-link.git && cd market-link
 git switch dev
 make init        # tạo .env từ .env.example, cài git hook
-make up          # hoặc làm theo README (docker compose up -d + chạy BE/FE trên máy)
+make up          # hoặc làm theo docs/setup.md (docker compose up -d + chạy BE/FE trên máy)
 ```
 
 ---

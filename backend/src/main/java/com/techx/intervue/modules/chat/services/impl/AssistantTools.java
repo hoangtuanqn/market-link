@@ -228,7 +228,7 @@ public class AssistantTools {
             int left = a == null || "sold_out".equals(p.status()) ? 0 : a.quantity();
             Map<String, Object> row = new LinkedHashMap<>();
             row.put("name", p.name());
-            row.put("price_vnd", price.longValue());
+            row.put("price_usd", price);
             row.put("unit", p.unit());
             row.put("left", left);
             row.put("next_pickup_date", a == null ? null : a.date().toString());

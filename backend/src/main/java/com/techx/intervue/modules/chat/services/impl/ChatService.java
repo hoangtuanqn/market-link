@@ -484,7 +484,7 @@ public class ChatService implements ChatServiceInterface {
                 .replaceAll("\\s+", " ");
     }
 
-    /** Prices are stored and shown in US dollars (lead decision 2026-09-27), e.g. "$1.40". */
+    /** USD with cents, like every amount the app shows (docs/decisions.md, LEAD 27/09). */
     static String formatPrice(BigDecimal price) {
         return NumberFormat.getCurrencyInstance(Locale.US).format(price);
     }

@@ -47,5 +47,10 @@
   "ready_one": "Your stall has a pickup time. It confirms your order.",
   "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "주문하려면 {{stall}} 픽업 시간을 고르세요.",
-  "stockNote": "주문하는 순간 가게 재고에서 수량이 빠져요. 온라인 결제는 없어요."
+  "stockNote": "주문하는 순간 가게 재고에서 수량이 빠져요. 온라인 결제는 없어요.",
+  "stuck": {
+    "title": "장바구니 상품",
+    "text": "더 이상 판매하지 않는 상품이 있으면 여기서 삭제하면 장바구니가 다시 불러와집니다.",
+    "clear": "장바구니 비우기"
+  }
 }
