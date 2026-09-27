@@ -515,21 +515,23 @@ LEFT JOIN (
      ) c ON c.slot_id = ps.id
 SET ps.booked_count = COALESCE(c.cnt, 0);
 
--- ---- Weekly stock templates (FR-063): farmer@ and farmer2@ can refill stock in one click ----
--- One row per product and per weekday the stall attends a market (farmer_operating_days): 30 on
--- weekends, 20 on weekdays, price NULL (keep the current price). Paused ("unavailable") products get
--- no template, so "apply" lists them under skipped[]. uq_template (product_id, day_of_week) makes
--- the upsert re-runnable.
+-- ---- Weekly stock templates (FR-063): what every stall can sell on each pickup day ----
+-- With per-date stock a product with no active template can never be ordered and the public
+-- catalogue leaves it out, so all ten demo stalls get one: one row per product and per weekday the
+-- stall attends a market (farmer_operating_days), 30 on weekends, 20 on weekdays, price NULL (the
+-- product's own price). Paused ("unavailable") products get one too, so the catalogue still shows
+-- them with their "Paused" tag. Stalls opened by real accounts keep the templates their Farmer set.
+-- uq_weekly_stock_template (product_id, day_of_week) makes the upsert re-runnable.
 INSERT INTO weekly_stock_templates (farmer_id, product_id, day_of_week, default_quantity, default_price, is_active)
 SELECT f.id, p.id, d.day_of_week, IF(d.day_of_week IN (0, 6), 30, 20), NULL, TRUE
 FROM farmer_profiles f
 JOIN users u ON u.id = f.user_id
-JOIN products p ON p.farmer_id = f.id AND p.is_deleted = FALSE AND p.status <> 'unavailable'
+JOIN products p ON p.farmer_id = f.id AND p.is_deleted = FALSE
 JOIN (SELECT DISTINCT fm.farmer_id, od.day_of_week
         FROM farmer_operating_days od
         JOIN farmer_markets fm ON fm.id = od.farmer_market_id AND fm.is_active = TRUE) d
   ON d.farmer_id = f.id
-WHERE u.email IN ('farmer@marketlink.vn', 'farmer2@marketlink.vn')
+WHERE u.email REGEXP '^farmer[0-9]*@marketlink[.]vn$'
 ON DUPLICATE KEY UPDATE default_quantity = IF(d.day_of_week IN (0, 6), 30, 20), default_price = NULL,
                         is_active = TRUE;
 
