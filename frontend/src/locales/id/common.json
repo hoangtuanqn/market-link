@@ -568,6 +568,32 @@
       "hours": "Jam berapa pasar Bến Thành buka?",
       "stalls": "Lapak apa saja di pasar Thảo Điền hari Sabtu?",
       "cancel": "Bagaimana cara membatalkan pesanan?"
+    },
+    "action": {
+      "confirm": "Konfirmasi",
+      "openPage": "Buka halaman",
+      "done": "Selesai",
+      "doneTitle": "Selesai",
+      "failedTitle": "Tidak jadi",
+      "failedText": "Perubahan ditolak. Buka halaman untuk melihat alasannya.",
+      "accept_order": "Terima pesanan {{label}}?",
+      "decline_order": "Tolak pesanan {{label}}?",
+      "ready_order": "Tandai pesanan {{label}} siap?",
+      "complete_order": "Tandai pesanan {{label}} selesai?",
+      "approve_farmer": "Setujui {{label}}?",
+      "reject_farmer": "Tolak {{label}}?",
+      "suspend_farmer": "Hentikan sementara {{label}}?"
+    },
+    "askAboutThis": "Tanya asisten",
+    "ask": {
+      "order": "Pesanan {{code}}: isinya apa, masih sebelum batas waktu? Sebaiknya saya terima?",
+      "review": "Buatkan balasan singkat dan jujur untuk ulasan {{rating}} bintang ini.",
+      "application": "Pengajuan lapak ini sudah lengkap belum, ada yang perlu dicek sebelum saya setujui?",
+      "reports": "Jelaskan angka dari {{from}} sampai {{to}}: pasar mana yang paling ramai, mana yang sepi, dan kenapa.",
+      "cart": "Jelaskan keranjang saya: kenapa terpisah, berapa biaya tiap lapak, dan apakah saya masih keburu semua batas waktu?",
+      "announcement": "Buatkan pengumuman untuk seluruh platform. Isinya saya beri tahu.",
+      "product": "Tulis deskripsi singkat dan catatan tulisan tangan untuk label {{name}}.",
+      "feedback": "Ringkas kotak masukan: orang melaporkan apa, pesan mana yang sebenarnya masalah yang sama, dan mana yang harus saya lihat dulu?"
     }
   },
   "tour": {

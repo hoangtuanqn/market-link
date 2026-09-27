@@ -568,6 +568,32 @@
       "hours": "¿A qué hora abre el mercado Bến Thành?",
       "stalls": "¿Qué puestos hay en el mercado Thảo Điền el sábado?",
       "cancel": "¿Cómo cancelo un pedido?"
+    },
+    "action": {
+      "confirm": "Confirmar",
+      "openPage": "Abrir la página",
+      "done": "Hecho",
+      "doneTitle": "Hecho",
+      "failedTitle": "No se hizo",
+      "failedText": "Se rechazó el cambio. Abre la página para ver por qué.",
+      "accept_order": "¿Aceptar el pedido {{label}}?",
+      "decline_order": "¿Rechazar el pedido {{label}}?",
+      "ready_order": "¿Marcar el pedido {{label}} como listo?",
+      "complete_order": "¿Marcar el pedido {{label}} como completado?",
+      "approve_farmer": "¿Aprobar {{label}}?",
+      "reject_farmer": "¿Rechazar {{label}}?",
+      "suspend_farmer": "¿Suspender {{label}}?"
+    },
+    "askAboutThis": "Preguntar al asistente",
+    "ask": {
+      "order": "Pedido {{code}}: qué lleva, ¿sigue antes de la hora de cierre? ¿lo acepto?",
+      "review": "Redacta una respuesta breve y honesta a esta reseña de {{rating}} estrellas.",
+      "application": "¿Esta solicitud de puesto está completa? ¿Hay algo que revisar antes de aprobarla?",
+      "reports": "Explica estos números del {{from}} al {{to}}: qué mercado va mejor, cuál está flojo y por qué.",
+      "cart": "Explícame el carrito: ¿por qué se divide, cuánto cuesta cada puesto y llego a todas las horas de cierre?",
+      "announcement": "Redacta un anuncio para toda la plataforma. Yo te digo de qué trata.",
+      "product": "Escribe una descripción corta y una nota manuscrita para la etiqueta de {{name}}.",
+      "feedback": "Resume la bandeja de comentarios: qué está reportando la gente, qué mensajes son en realidad el mismo problema y qué debería mirar primero."
     }
   },
   "tour": {

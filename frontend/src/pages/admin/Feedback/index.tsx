@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import { CheckIcon, ClockIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
@@ -33,6 +34,7 @@ const NO_ROWS: FeedbackDto[] = [];
  */
 const AdminFeedbackPage = () => {
   const { t } = useTranslation('AdminFeedback');
+  const { t: tAssistant } = useTranslation('common');
   const { t: tc } = useTranslation();
   const [filter, setFilter] = useState<Filter>('new');
   const [open, setOpen] = useState<FeedbackDto | null>(null);
@@ -120,7 +122,10 @@ const AdminFeedbackPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('title')}</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-h1">{t('title')}</h1>
+          <AskAssistant question={tAssistant('assistant.ask.feedback')} />
+        </div>
         <p className="text-body max-w-160">{t('intro')}</p>
       </div>
 

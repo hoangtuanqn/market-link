@@ -1,5 +1,6 @@
 import { useEffect, useState, type SubmitEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import AnnouncementApi from '@/api-requests/announcement.requests';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import { CheckIcon, CircleSlashIcon, ClockIcon } from '@/components/icons';
@@ -54,6 +55,7 @@ const PHASE_BADGE = {
  */
 const AdminAnnouncementsPage = () => {
   const { t } = useTranslation('AdminAnnouncements');
+  const { t: tAssistant } = useTranslation('common');
   const [form, setForm] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [publishing, setPublishing] = useState(false);
@@ -175,7 +177,10 @@ const AdminAnnouncementsPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-h1">{t('title')}</h1>
+            <AskAssistant question={tAssistant('assistant.ask.announcement')} />
+          </div>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         <div className="flex flex-wrap gap-2">

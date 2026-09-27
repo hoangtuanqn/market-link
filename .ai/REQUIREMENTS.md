@@ -121,9 +121,18 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 | FR-090 | Chatbot giúp tìm sản phẩm **xuyên các chợ và Farmer** | SHOULD | Customer | BE2 | STAGING |
 | FR-091 | Chatbot trả lời FAQ: giờ chợ, Farmer có mặt, pickup window, chi tiết sản phẩm | SHOULD | Customer | BE2 | STAGING |
 | FR-092 | Lưu `chat_messages` kèm **intent đã nhận diện** (để giải thích với giám khảo) | SHOULD | System | BE2 | STAGING |
+| FR-093 | Trợ lý cho **Farmer**: tra đơn chờ duyệt, hàng sắp hết, lịch bán, doanh thu, review chưa trả lời; tóm tắt đầu buổi chợ trên Overview | SHOULD | Farmer | BE2 | STAGING |
+| FR-094 | Trợ lý cho **Admin**: thống kê nền tảng, hàng đợi duyệt Farmer, hàng đợi kiểm duyệt; soạn thông báo `FR-077` theo giọng brand và dịch sẵn 10 ngôn ngữ | SHOULD | Admin | BE2 | STAGING |
 
 > Cách làm FR-090/091 an toàn: phân loại **intent** rồi map sang **câu SQL có sẵn với tham số**.
 > Tuyệt đối không để LLM sinh SQL tự do. Giải thích được và không có rủi ro injection.
+
+> FR-093/094 giữ nguyên luật đó và thêm bốn ràng buộc, vì hai vai này đọc dữ liệu riêng tư:
+> 1. Quyền sở hữu lấy từ JWT ở server, **không bao giờ** là tham số do model điền.
+> 2. Danh sách tool lọc theo role ở server; model không nhìn thấy tool ngoài vai của nó.
+> 3. Mọi hành động ghi đi hai bước: model đề xuất → người dùng xác nhận → server kiểm quyền lại (R-06).
+> 4. `tool_result` chứa chữ do người dùng nhập (tên sạp, mô tả sản phẩm, review) nên phải bọc rõ là
+>    **dữ liệu**, không phải chỉ thị — nếu không, một Farmer đặt tên sản phẩm thành câu lệnh là điều khiển được trợ lý.
 
 ## K · Dữ liệu mẫu — rủi ro số 1 của đề này
 
