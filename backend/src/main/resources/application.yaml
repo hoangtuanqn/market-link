@@ -63,19 +63,20 @@ logging:
 
 app:
   # Personal achievements (not in the SRS, requested by the LEAD): tier thresholds. All three must be met —
-  # completed orders, total spent (₫, completed orders only), completion rate (% of completed + self-cancelled).
+  # completed orders, total spent (USD like every amount in the app, completed orders only), completion rate
+  # (% of completed + self-cancelled).
   tiers:
     silver:
       min-completed: 5
-      min-spent: 500000
+      min-spent: 20
       min-completion-rate: 60
     gold:
       min-completed: 15
-      min-spent: 2000000
+      min-spent: 80
       min-completion-rate: 75
     diamond:
       min-completed: 40
-      min-spent: 6000000
+      min-spent: 240
       min-completion-rate: 85
   # FR-042 N3: Web Push (RFC 8291/8292). Generate keys: make vapid-keys. Empty → push off, the app still runs.
   push:
