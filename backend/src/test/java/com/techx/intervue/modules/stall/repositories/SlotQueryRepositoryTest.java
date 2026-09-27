@@ -85,7 +85,6 @@ class SlotQueryRepositoryTest {
         Market m = new Market();
         m.setMarketName("Chợ slot " + tag());
         m.setAddress("Test");
-        m.setCity("TP. Hồ Chí Minh");
         m.setLatitude(new BigDecimal("10.80000000"));
         m.setLongitude(new BigDecimal("106.70000000"));
         m.setOpeningTime(LocalTime.of(6, 0));

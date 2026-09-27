@@ -1,5 +1,7 @@
 package com.techx.intervue.modules.catalog.requests;
 
+import com.techx.intervue.modules.geo.requests.AddressPartsRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -20,9 +22,8 @@ import java.util.List;
  */
 public record MarketRequest(
         @NotBlank(message = "Market name is required.") @Size(max = 150) String marketName,
-        @NotBlank(message = "Address is required.") @Size(max = 255) String address,
-        @Size(max = 100) String district,
-        @Size(max = 100) String city,
+        // Must be in Vietnam; the ward and street replace the old district/city text
+        @NotNull(message = "Choose the market's address.") @Valid AddressPartsRequest addressParts,
         @NotNull(message = "Latitude is required.") @DecimalMin("-90") @DecimalMax("90")
                 BigDecimal latitude,
         @NotNull(message = "Longitude is required.") @DecimalMin("-180") @DecimalMax("180")

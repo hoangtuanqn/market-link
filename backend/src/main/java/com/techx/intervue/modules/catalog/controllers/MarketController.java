@@ -32,11 +32,11 @@ public class MarketController extends BaseController {
     public ResponseEntity<ApiResource<PageResource<MarketResource>>> search(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) Integer day,
-            @RequestParam(required = false) String city,
-            @RequestParam(required = false) String district,
+            @RequestParam(required = false) String provinceCode,
+            @RequestParam(required = false) String wardCode,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "12") int pageSize) {
-        return ok(marketService.search(q, day, city, district, page, pageSize), "");
+        return ok(marketService.search(q, day, provinceCode, wardCode, page, pageSize), "");
     }
 
     @GetMapping("/{id}")

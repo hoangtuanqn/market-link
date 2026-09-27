@@ -9,18 +9,18 @@ import com.techx.intervue.modules.geo.resources.ProvinceResource;
 import com.techx.intervue.modules.geo.resources.WardRow;
 import java.util.List;
 
-/** A tiny slice of the real master data, enough for the geo and address tests. */
-final class GeoFixtures {
+/** A tiny slice of the real master data, enough for the tests that check addresses. */
+public final class GeoFixtures {
 
-    static final String HCM = "79";
-    static final String HANOI = "01";
-    static final String BEN_THANH = "26743";
-    static final String TAN_DINH = "26737";
-    static final String BA_DINH = "00004";
+    public static final String HCM = "79";
+    public static final String HANOI = "01";
+    public static final String BEN_THANH = "26743";
+    public static final String TAN_DINH = "26737";
+    public static final String BA_DINH = "00004";
 
     private GeoFixtures() {}
 
-    static GeoQueryRepository repository() {
+    public static GeoQueryRepository repository() {
         GeoQueryRepository repository = mock(GeoQueryRepository.class);
         when(repository.countries())
                 .thenReturn(
