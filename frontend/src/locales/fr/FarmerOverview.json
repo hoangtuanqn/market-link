@@ -82,5 +82,19 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "Aujourd'hui à {{markets}}",
+    "titleNoMarket": "Vous n'êtes sur aucun marché aujourd'hui",
+    "orders_one": "{{count}} commande pour aujourd'hui",
+    "orders_other": "{{count}} commandes pour aujourd'hui",
+    "waiting_one": "{{count}} attend encore que vous l'acceptiez ou la refusiez",
+    "waiting_other": "{{count}} attendent encore que vous les acceptiez ou les refusiez",
+    "cutoffPassed_one": "{{count}} d'entre elles a dépassé sa limite, le client ne peut plus la modifier",
+    "cutoffPassed_other": "{{count}} d'entre elles ont dépassé leur limite, les clients ne peuvent plus les modifier",
+    "soldOut_one": "{{count}} produit est marqué épuisé",
+    "soldOut_other": "{{count}} produits sont marqués épuisés",
+    "lowStock_one": "{{count}} produit arrive à court",
+    "lowStock_other": "{{count}} produits arrivent à court"
   }
 }

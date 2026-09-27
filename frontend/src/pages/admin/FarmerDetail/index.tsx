@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
@@ -34,6 +35,7 @@ const fileUrl = (path: string) => `${import.meta.env.VITE_API_URL ?? 'http://loc
 /** §6.2, §7, §8 — an Admin views the detail of a Farmer application, approves/rejects/suspends/reinstates. */
 const AdminFarmerDetailPage = () => {
   const { t } = useTranslation('AdminFarmerDetail');
+  const { t: tAssistant } = useTranslation('common');
   // the dialogs, status, rejection reason and toast are shared with the list page
   const { t: tf } = useTranslation('AdminFarmers');
   const { id } = useParams<{ id: string }>();
@@ -156,6 +158,10 @@ const AdminFarmerDetailPage = () => {
                   </p>
                   <div className="flex items-center gap-4">
                     <h1 className="text-h1">{f.stallName}</h1>
+                    <AskAssistant
+                      question={tAssistant('assistant.ask.application')}
+                      record={{ type: 'farmer', ref: String(f.id) }}
+                    />
                     <span
                       className={Helper.cn(
                         'inline-flex w-fit items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold',

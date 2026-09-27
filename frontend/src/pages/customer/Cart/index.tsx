@@ -1,6 +1,8 @@
 import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { useAssistantCart } from '@/components/assistant/assistantContext';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import OrderApi, { type OrderGroupPreviewDto } from '@/api-requests/order.requests';
 import StallApi, { toSlotOption } from '@/api-requests/stall.requests';
 import CartGroup, { type CartLineType } from '@/components/CartGroup';
@@ -107,7 +109,10 @@ const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
 const CustomerCartPage = () => {
   const { t } = useTranslation('CustomerCart');
   const { t: tc } = useTranslation();
+  const { t: tAssistant } = useTranslation('common');
   const lines = useCart();
+  // FR-030/032: the cart lives in the browser, so the assistant only sees it while this screen is open.
+  useAssistantCart(lines.map((l) => ({ productId: l.productId, quantity: l.qty })));
   const navigate = useNavigate();
   const { user } = useSession();
   const previewKey = lines.map((l) => `${l.productId}:${l.qty}`).join(',');
@@ -251,7 +256,7 @@ const CustomerCartPage = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col items-start gap-2">
         <h1 className="text-h1">{t('title')}</h1>
         <p className="text-body-lg">
           {t('intro', {
@@ -259,6 +264,7 @@ const CustomerCartPage = () => {
             stalls: t('stalls', { count: groups.length }),
           })}
         </p>
+        <AskAssistant question={tAssistant('assistant.ask.cart')} />
       </div>
 
       {groups.length > 1 && <Banner title={t('split.title', { count: groups.length })}>{t('split.text')}</Banner>}

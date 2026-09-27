@@ -568,6 +568,32 @@
       "hours": "Wann öffnet der Markt Bến Thành?",
       "stalls": "Welche Stände sind samstags auf dem Markt Thảo Điền?",
       "cancel": "Wie storniere ich eine Bestellung?"
+    },
+    "action": {
+      "confirm": "Bestätigen",
+      "openPage": "Seite öffnen",
+      "done": "Erledigt",
+      "doneTitle": "Erledigt",
+      "failedTitle": "Nicht ausgeführt",
+      "failedText": "Die Änderung wurde abgelehnt. Öffnen Sie die Seite, um zu sehen warum.",
+      "accept_order": "Bestellung {{label}} annehmen?",
+      "decline_order": "Bestellung {{label}} ablehnen?",
+      "ready_order": "Bestellung {{label}} als bereit markieren?",
+      "complete_order": "Bestellung {{label}} als abgeschlossen markieren?",
+      "approve_farmer": "{{label}} freigeben?",
+      "reject_farmer": "{{label}} ablehnen?",
+      "suspend_farmer": "{{label}} sperren?"
+    },
+    "askAboutThis": "Assistenten fragen",
+    "ask": {
+      "order": "Bestellung {{code}}: Was ist darin, ist die Frist noch offen, und soll ich sie annehmen?",
+      "review": "Entwirf eine kurze, ehrliche Antwort auf diese Bewertung mit {{rating}} Sternen.",
+      "application": "Ist diese Standbewerbung vollständig, und sollte ich vor der Freigabe etwas prüfen?",
+      "reports": "Erkläre diese Zahlen von {{from}} bis {{to}}: Welcher Markt läuft am besten, welcher schwach, und warum?",
+      "cart": "Erkläre meinen Warenkorb: Warum ist er geteilt, was kostet jeder Stand, und schaffe ich alle Fristen?",
+      "announcement": "Entwirf eine Ankündigung für die Plattform. Den Inhalt sage ich dir.",
+      "product": "Schreibe eine kurze Beschreibung und eine handgeschriebene Notiz für das Schild von {{name}}.",
+      "feedback": "Fasse den Feedback-Eingang zusammen: Was wird gemeldet, welche Meldungen sind dasselbe Problem, und was sollte ich zuerst ansehen?"
     }
   },
   "tour": {

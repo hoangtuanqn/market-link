@@ -82,5 +82,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "今天在 {{markets}}",
+    "titleNoMarket": "今天你不在任何市集出摊",
+    "orders_other": "今天有 {{count}} 张订单",
+    "waiting_other": "其中 {{count}} 张还在等你接受或拒绝",
+    "cutoffPassed_other": "其中 {{count}} 张已过截止时间，顾客无法再修改",
+    "soldOut_other": "{{count}} 个商品标记为售罄",
+    "lowStock_other": "{{count}} 个商品快卖完了"
   }
 }

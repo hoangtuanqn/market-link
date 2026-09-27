@@ -568,6 +568,32 @@
       "hours": "Chợ Bến Thành mở cửa mấy giờ?",
       "stalls": "Thứ 7 chợ Thảo Điền có gian hàng nào?",
       "cancel": "Làm sao để huỷ đơn hàng?"
+    },
+    "action": {
+      "confirm": "Xác nhận",
+      "openPage": "Mở trang",
+      "done": "Đã xong",
+      "doneTitle": "Đã xong",
+      "failedTitle": "Chưa thực hiện được",
+      "failedText": "Thay đổi bị từ chối. Mở trang để xem lý do.",
+      "accept_order": "Nhận đơn {{label}}?",
+      "decline_order": "Từ chối đơn {{label}}?",
+      "ready_order": "Đánh dấu đơn {{label}} sẵn sàng?",
+      "complete_order": "Đánh dấu đơn {{label}} hoàn tất?",
+      "approve_farmer": "Duyệt {{label}}?",
+      "reject_farmer": "Từ chối {{label}}?",
+      "suspend_farmer": "Tạm ngưng {{label}}?"
+    },
+    "askAboutThis": "Hỏi trợ lý",
+    "ask": {
+      "order": "Đơn {{code}}: có những gì, còn trước giờ chốt không, tôi có nên nhận không?",
+      "review": "Soạn giúp tôi một lời đáp ngắn và thành thật cho đánh giá {{rating}} sao này.",
+      "application": "Hồ sơ đăng ký sạp này đã đủ chưa, có gì đáng kiểm tra trước khi tôi duyệt không?",
+      "reports": "Giải thích giúp các số liệu từ {{from}} đến {{to}}: chợ nào đông nhất, chợ nào đang ế, và vì sao.",
+      "cart": "Giải thích giúp giỏ của tôi: vì sao bị tách, mỗi sạp hết bao nhiêu, tôi còn kịp giờ chốt của từng sạp không?",
+      "announcement": "Soạn giúp tôi một thông báo toàn sàn. Tôi sẽ nói nội dung.",
+      "product": "Viết giúp tôi mô tả ngắn và dòng chữ tay trên thẻ cho {{name}}.",
+      "feedback": "Tóm tắt hộp góp ý: mọi người đang báo gì, những mục nào thực ra cùng một vấn đề, và tôi nên xem cái nào trước?"
     }
   },
   "tour": {

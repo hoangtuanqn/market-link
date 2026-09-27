@@ -568,6 +568,32 @@
       "hours": "Bến Thành 集市几点开门？",
       "stalls": "周六 Thảo Điền 集市有哪些摊位？",
       "cancel": "如何取消订单？"
+    },
+    "action": {
+      "confirm": "确认",
+      "openPage": "打开页面",
+      "done": "已完成",
+      "doneTitle": "已完成",
+      "failedTitle": "未执行",
+      "failedText": "更改被拒绝。打开页面查看原因。",
+      "accept_order": "接受订单 {{label}}？",
+      "decline_order": "拒绝订单 {{label}}？",
+      "ready_order": "把订单 {{label}} 标记为已备妥？",
+      "complete_order": "把订单 {{label}} 标记为已完成？",
+      "approve_farmer": "批准 {{label}}？",
+      "reject_farmer": "拒绝 {{label}}？",
+      "suspend_farmer": "暂停 {{label}}？"
+    },
+    "askAboutThis": "问助手",
+    "ask": {
+      "order": "订单 {{code}} 有哪些商品？还在截止时间前吗？我应该接受吗？",
+      "review": "帮我给这条 {{rating}} 星评价写一段简短诚恳的回复。",
+      "application": "这份摊位申请齐全吗？批准前有什么需要核对的？",
+      "reports": "解释一下 {{from}} 到 {{to}} 的数据：哪个市集最旺，哪个冷清，为什么。",
+      "cart": "解释一下我的购物车：为什么会拆分，每个摊位多少钱，各摊位的截止时间我还来得及吗？",
+      "announcement": "帮我起草一条全平台公告，内容我来说。",
+      "product": "帮 {{name}} 写一段简短介绍和标签上的手写小字。",
+      "feedback": "总结一下反馈箱：大家在反映什么，哪些其实是同一个问题，我应该先看哪条？"
     }
   },
   "tour": {

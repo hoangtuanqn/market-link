@@ -13,9 +13,11 @@ import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatMessageRepository;
+import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
@@ -54,6 +56,7 @@ class ChatServiceTest {
     private ProductAvailabilityResolver availability;
     private ClaudeAssistant assistant;
     private AssistantRateLimiter assistantLimit;
+    private FarmerKnowledgeRepository farmerKnowledge;
     private ChatService service;
 
     @BeforeEach
@@ -66,8 +69,10 @@ class ChatServiceTest {
         availability = mock(ProductAvailabilityResolver.class);
         assistant = mock(ClaudeAssistant.class);
         assistantLimit = mock(AssistantRateLimiter.class);
+        farmerKnowledge = mock(FarmerKnowledgeRepository.class);
         when(assistant.enabled()).thenReturn(true);
-        when(assistantLimit.tryAcquire(any())).thenReturn(true);
+        when(assistantLimit.tryAcquirePlatform()).thenReturn(true);
+        when(assistantLimit.tryAcquire(any(), any())).thenReturn(true);
         service =
                 new ChatService(
                         new IntentClassifier(),
@@ -77,7 +82,9 @@ class ChatServiceTest {
                         availability,
                         assistant,
                         assistantLimit,
-                        new ChatbotAiProperties("key", "claude-haiku-4-5", 1024, 4, 10, 30));
+                        farmerKnowledge,
+                        new ChatbotAiProperties(
+                                "key", "claude-haiku-4-5", 1024, 4, 10, 30, 60, 1500));
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH));
     }
 
@@ -242,7 +249,7 @@ class ChatServiceTest {
     @Test
     void signedInCustomerIsAnsweredByTheAssistantAndToolsAreLogged() {
         ChatResultItem card = new ChatResultItem("product", 5L, "Cà chua", "25000 ₫/kg · Vườn A");
-        when(assistant.reply(any(), eq("tìm cà chua")))
+        when(assistant.reply(any(), eq("tìm cà chua"), any(), any()))
                 .thenReturn(
                         new ClaudeAssistant.AiReply(
                                 "Có 1 sản phẩm.",
@@ -250,7 +257,9 @@ class ChatServiceTest {
                                 "AI:search_products",
                                 List.of(card)));
 
-        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "tìm cà chua"), 42L, true);
+        ChatReplyResource reply =
+                service.reply(
+                        new ChatRequest(SESSION, "tìm cà chua"), 42L, AssistantAudience.CUSTOMER);
 
         assertThat(reply.reply()).isEqualTo("Có 1 sản phẩm.");
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
@@ -265,9 +274,12 @@ class ChatServiceTest {
 
     @Test
     void assistantFailureFallsBackToTheKeywordEngine() {
-        when(assistant.reply(any(), any())).thenThrow(new IllegalStateException("API down"));
+        when(assistant.reply(any(), any(), any(), any()))
+                .thenThrow(new IllegalStateException("API down"));
 
-        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "xin chào"), 42L, true);
+        ChatReplyResource reply =
+                service.reply(
+                        new ChatRequest(SESSION, "xin chào"), 42L, AssistantAudience.CUSTOMER);
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.GREETING);
         assertThat(reply.reply()).isEqualTo(ChatService.GREETING_REPLY);
@@ -275,21 +287,23 @@ class ChatServiceTest {
 
     @Test
     void overTheHourlyCapTheKeywordEngineAnswersWithoutCallingClaude() {
-        when(assistantLimit.tryAcquire(42L)).thenReturn(false);
+        when(assistantLimit.tryAcquire(eq(42L), any())).thenReturn(false);
 
-        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "xin chào"), 42L, true);
+        ChatReplyResource reply =
+                service.reply(
+                        new ChatRequest(SESSION, "xin chào"), 42L, AssistantAudience.CUSTOMER);
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.GREETING);
-        verify(assistant, never()).reply(any(), any());
+        verify(assistant, never()).reply(any(), any(), any(), any());
     }
 
     @Test
     void guestsAndNonCustomerAccountsNeverReachClaude() {
-        service.reply(new ChatRequest(SESSION, "xin chào"), null, true);
-        service.reply(new ChatRequest(SESSION, "xin chào"), 42L, false);
+        service.reply(new ChatRequest(SESSION, "xin chào"), null, AssistantAudience.CUSTOMER);
+        service.reply(new ChatRequest(SESSION, "xin chào"), 42L, null);
 
-        verify(assistant, never()).reply(any(), any());
-        verify(assistantLimit, never()).tryAcquire(any());
+        verify(assistant, never()).reply(any(), any(), any(), any());
+        verify(assistantLimit, never()).tryAcquire(any(), any());
     }
 
     @Test
@@ -300,16 +314,16 @@ class ChatServiceTest {
                                 message(3L, 42L, "câu mới"),
                                 message(2L, 7L, "của người khác"),
                                 message(1L, 42L, "câu cũ")));
-        when(assistant.reply(any(), any()))
+        when(assistant.reply(any(), any(), any(), any()))
                 .thenReturn(
                         new ClaudeAssistant.AiReply(
                                 "ok", ChatIntent.UNKNOWN, "AI:none", List.of()));
 
-        service.reply(new ChatRequest(SESSION, "tiếp"), 42L, true);
+        service.reply(new ChatRequest(SESSION, "tiếp"), 42L, AssistantAudience.CUSTOMER);
 
         @SuppressWarnings("unchecked")
         ArgumentCaptor<List<ChatMessage>> history = ArgumentCaptor.forClass(List.class);
-        verify(assistant).reply(history.capture(), eq("tiếp"));
+        verify(assistant).reply(history.capture(), eq("tiếp"), any(), any());
         assertThat(history.getValue()).extracting("message").containsExactly("câu cũ", "câu mới");
     }
 
