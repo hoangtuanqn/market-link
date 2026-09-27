@@ -196,6 +196,7 @@ const DashboardShell = ({
                   key={it.to}
                   to={it.to}
                   end={it.to === home}
+                  data-tour={`nav:${it.to}`}
                   title={it.label}
                   className={({ isActive }) =>
                     Helper.cn(
@@ -256,6 +257,7 @@ const DashboardShell = ({
             type="button"
             onClick={() => setMobileOpen(true)}
             aria-label={t('farmerNav.openNavigation')}
+            data-tour="shell:menu"
             className="border-line-strong bg-surface-raised text-ink grid size-10 flex-none place-items-center rounded-sm border-[1.5px] lg:hidden"
           >
             <MenuIcon />

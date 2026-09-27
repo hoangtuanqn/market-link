@@ -537,5 +537,122 @@
   "comingSoon": {
     "title": "This page is not open yet",
     "text": "We are still building it. Everything else in the menu works as usual."
+  },
+  "tour": {
+    "next": "Next",
+    "back": "Back",
+    "done": "Finish",
+    "skip": "Skip tour",
+    "progress": "{{current}} of {{total}}",
+    "steps": {
+      "customerWelcome": {
+        "title": "Welcome to MarketLink",
+        "body": "Reserve fresh produce from farmers at the weekly markets in Ho Chi Minh City, then collect it at their stall. This short tour shows you around."
+      },
+      "customerMarkets": {
+        "title": "Browse markets",
+        "body": "See every market, its opening hours and the stalls that sell there."
+      },
+      "customerProducts": {
+        "title": "Find products",
+        "body": "Filter produce by category, price and market. Each listing shows how much is left this week."
+      },
+      "customerMap": {
+        "title": "Market map",
+        "body": "Find the markets closest to you and get directions in OpenStreetMap."
+      },
+      "customerSearch": {
+        "title": "Search",
+        "body": "Look up a product, a stall or a market by name."
+      },
+      "customerCart": {
+        "title": "Your cart",
+        "body": "Add products, choose a pickup time at the stall, then place your order."
+      },
+      "customerOrders": {
+        "title": "Your orders",
+        "body": "Follow each order from placed to accepted, ready and completed. The farmer confirms it before you go."
+      },
+      "customerFavorites": {
+        "title": "Favorites",
+        "body": "Save the stalls and products you like so you can find them again quickly."
+      },
+      "customerMessages": {
+        "title": "Messages",
+        "body": "Chat with a farmer about a product or an order."
+      },
+      "customerNotifications": {
+        "title": "Notifications",
+        "body": "Order updates and market announcements arrive here."
+      },
+      "customerAccount": {
+        "title": "Your account",
+        "body": "Edit your profile, change settings such as language and currency, or apply to sell as a farmer."
+      },
+      "customerMenu": {
+        "title": "Menu",
+        "body": "Markets, products, your orders and your account are all in this menu."
+      },
+      "customerDone": {
+        "title": "You are all set",
+        "body": "Start by picking a market near you. You can change your preferences any time in Settings."
+      },
+      "farmerWelcome": {
+        "title": "Welcome to your stall panel",
+        "body": "This is where you run your stall on MarketLink. Here is a quick look at each section."
+      },
+      "farmerOverview": {
+        "title": "Overview",
+        "body": "Today's orders, pickups and sales at a glance."
+      },
+      "farmerOrders": {
+        "title": "Incoming orders",
+        "body": "Accept or decline new orders, then mark them ready and completed when the customer collects."
+      },
+      "farmerSlots": {
+        "title": "Pickup slots",
+        "body": "Set the time windows when customers can collect their orders at your stall."
+      },
+      "farmerStock": {
+        "title": "This week's stock",
+        "body": "Update how much of each product you can sell this week."
+      },
+      "farmerProducts": {
+        "title": "Products",
+        "body": "Add products with photos, prices and units, or hide the ones you no longer sell."
+      },
+      "farmerStall": {
+        "title": "Stall and pickup",
+        "body": "Edit your stall profile and choose the markets and days you attend."
+      },
+      "farmerReviews": {
+        "title": "Reviews",
+        "body": "Read the ratings and reviews customers leave after pickup."
+      },
+      "farmerHistory": {
+        "title": "Sales history",
+        "body": "Look back at past orders and how your sales are going."
+      },
+      "farmerMessages": {
+        "title": "Messages",
+        "body": "Answer customer questions about products and orders."
+      },
+      "farmerNotifications": {
+        "title": "Notifications",
+        "body": "New orders and news from the MarketLink team arrive here."
+      },
+      "farmerSettings": {
+        "title": "Settings",
+        "body": "Change language, currency and your selling defaults."
+      },
+      "farmerDone": {
+        "title": "Your stall is ready",
+        "body": "Start by checking this week's stock and your pickup slots."
+      },
+      "dashboardMenu": {
+        "title": "Menu",
+        "body": "Open the menu to reach every section of the panel."
+      }
+    }
   }
 }

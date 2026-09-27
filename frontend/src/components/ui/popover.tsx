@@ -10,13 +10,15 @@ type Props = {
   to: string;
   children: ReactNode;
   buttonClassName?: string;
+  /** `data-tour` anchor for the first-visit guided tour (lib/onboarding.ts). */
+  tourId?: string;
 };
 
 /**
  * The header's popover (spec §9.1): hover **and** click/keyboard, Esc or clicking outside closes it, `aria-expanded` on
  * the button. Panel `shadow-pop`, `z-50` — above the header (`z-40`).
  */
-export function Popover({ label, trigger, to, children, buttonClassName }: Props) {
+export function Popover({ label, trigger, to, children, buttonClassName, tourId }: Props) {
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
@@ -59,6 +61,7 @@ export function Popover({ label, trigger, to, children, buttonClassName }: Props
   return (
     <div
       ref={root}
+      data-tour={tourId}
       className="relative flex items-center"
       onPointerEnter={(e) => e.pointerType === 'mouse' && enter()}
       onPointerLeave={(e) => e.pointerType === 'mouse' && leave()}
