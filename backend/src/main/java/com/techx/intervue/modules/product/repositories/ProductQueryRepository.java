@@ -25,13 +25,17 @@ public class ProductQueryRepository {
 
     /**
      * The single place that defines "which products a customer may see" (D-09, FR-074). Every
-     * public statement pastes this fragment in.
+     * public statement pastes this fragment in. FR-063 daily stock: a product with no active weekly
+     * template is never orderable on any date, so it is left out here — in the SQL, never after
+     * paging, or a page would come back short and its total wrong.
      */
     public static final String VISIBILITY_FILTER =
             """
               AND p.is_deleted = FALSE
               AND p.is_hidden = FALSE
               AND f.approval_status = 'approved'
+              AND EXISTS (SELECT 1 FROM weekly_stock_templates t
+                          WHERE t.product_id = p.id AND t.is_active = TRUE)
             """;
 
     private static final String FROM =

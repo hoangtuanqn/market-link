@@ -53,7 +53,7 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                         (page - 1) * size,
                         size);
         List<ProductListItemResource> overlaid = overlayAvailability(page1.items());
-        return new PageResource<>(overlaid, page1.page(), page1.pageSize(), overlaid.size());
+        return new PageResource<>(overlaid, page1.page(), page1.pageSize(), page1.total());
     }
 
     @Override
@@ -61,9 +61,6 @@ public class ProductQueryService implements ProductQueryServiceInterface {
         ProductDetailRow row =
                 repository.findVisibleById(id).orElseThrow(() -> new ProductNotFoundException(id));
         List<ProductListItemResource> overlaid = overlayAvailability(List.of(row.item()));
-        if (overlaid.isEmpty()) {
-            throw new ProductNotFoundException(id);
-        }
         StallSummaryResource farmer = summarize(stallService.publicDetail(row.item().farmerId()));
         // FR-052: average + 1★…5★ histogram of the visible reviews (C8).
         return new ProductDetailResource(
@@ -75,9 +72,10 @@ public class ProductQueryService implements ProductQueryServiceInterface {
 
     /**
      * Replaces stockQuantity/price read straight from products with the numbers for the nearest
-     * orderable pickup date. A product with no orderable date (no active weekly template covers any
-     * of the next 14 days) is dropped from the results — matches the decision that a product with
-     * no template is never orderable, on any date.
+     * orderable pickup date. Products with no active weekly template never get here — {@link
+     * ProductQueryRepository#VISIBILITY_FILTER} leaves them out in the SQL, so the page and its
+     * total agree. A row is never dropped here: one whose template was switched off in between
+     * shows as sold out.
      */
     private List<ProductListItemResource> overlayAvailability(List<ProductListItemResource> items) {
         Map<Long, BigDecimal> basePrices =
@@ -89,11 +87,12 @@ public class ProductQueryService implements ProductQueryServiceInterface {
         Map<Long, ProductAvailabilityResolver.Availability> resolved =
                 availability.resolve(basePrices);
         return items.stream()
-                .filter(i -> resolved.containsKey(i.id()))
                 .map(
                         i -> {
                             ProductAvailabilityResolver.Availability a = resolved.get(i.id());
-                            return i.withAvailability(a.quantity(), a.price());
+                            return a == null
+                                    ? i.withAvailability(0, i.price())
+                                    : i.withAvailability(a.quantity(), a.price());
                         })
                 .toList();
     }

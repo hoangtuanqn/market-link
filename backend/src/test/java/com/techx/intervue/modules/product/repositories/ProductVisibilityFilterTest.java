@@ -21,6 +21,18 @@ class ProductVisibilityFilterTest {
         assertThat(sql).doesNotContain("'suspended'");
     }
 
+    /**
+     * FR-063 daily stock: a product with no active weekly template is never orderable, so the
+     * public pages leave it out — inside the SQL, so the page and its total count agree.
+     */
+    @Test
+    void publicProductSqlOnlyListsProductsWithAnActiveWeeklyTemplate() {
+        assertThat(ProductQueryRepository.VISIBILITY_FILTER)
+                .contains("FROM weekly_stock_templates t")
+                .contains("t.product_id = p.id")
+                .contains("t.is_active = TRUE");
+    }
+
     @Test
     void searchSqlAndDetailSqlBothUseTheSameFilter() {
         assertThat(ProductQueryRepository.SEARCH_SQL)
