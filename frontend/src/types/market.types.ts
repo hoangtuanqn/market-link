@@ -11,7 +11,6 @@ export type MarketType = {
   lng: number;
   stalls: number;
   distance?: string;
-  saved?: boolean;
   images?: string[];
 };
 
