@@ -12,7 +12,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
 import type { OrderListItemDto } from '@/api-requests/order.requests';
 import useRequest from '@/hooks/useRequest';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 
 const FILTERS = ['all', 'placed', 'accepted', 'ready', 'completed', 'declined', 'cancelled'] as const;
@@ -102,7 +102,7 @@ const AdminOrdersPage = () => {
       label: t('col.pickup'),
       render: (o) => pickupLabel(o.pickupDate, `${o.pickupStart}–${o.pickupEnd}`),
     },
-    { key: 'total', label: t('col.total'), align: 'num', render: (o) => vnd(o.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (o) => money(o.totalAmount) },
     { key: 'status', label: t('col.status'), render: (o) => <OrderStatusBadge status={o.status} /> },
   ];
 

@@ -10,7 +10,7 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import useRequest from '@/hooks/useRequest';
-import { dayName, firstOpenDay, nextSevenDays, vnd } from '@/lib/format';
+import { dayName, firstOpenDay, nextSevenDays, money } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 
 const PAGE_SIZE = 12;
@@ -89,7 +89,7 @@ const ProductsPage = () => {
 
   const stallsSelling = new Set(pageItems.map((p) => p.farmerId)).size;
   const dayLabel = dayName(day, 'long');
-  const bandLabel = (value: PriceBand) => t(`price.${value}`, { low: vnd(LOW), high: vnd(HIGH) });
+  const bandLabel = (value: PriceBand) => t(`price.${value}`, { low: money(LOW), high: money(HIGH) });
 
   return (
     <div className="flex flex-col gap-8">
