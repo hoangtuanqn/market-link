@@ -44,10 +44,6 @@
     "label": "Description",
     "hint": "Shown on the product page. Say how it is grown and how to keep it."
   },
-  "flag": {
-    "label": "Short tag on the card",
-    "hint": "Optional, hand-lettered on the tag: “Fresh today”, “Baked at 5am”."
-  },
   "status": {
     "label": "Status",
     "available": "Available",

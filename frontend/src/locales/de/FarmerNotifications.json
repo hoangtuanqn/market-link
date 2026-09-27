@@ -5,10 +5,7 @@
     "all": "Alle",
     "unread": "Ungelesen"
   },
-  "unreadCount_one": "{{count}} ungelesen",
-  "unreadCount_other": "{{count}} ungelesen",
   "unread": "ungelesen",
-  "markAllRead": "Alle als gelesen markieren",
   "empty": {
     "title": "Nichts Neues",
     "text": "Hier erfahren Sie, wenn eine Bestellung aufgegeben, geändert oder storniert wird und wenn ein Admin eine Mitteilung veröffentlicht."

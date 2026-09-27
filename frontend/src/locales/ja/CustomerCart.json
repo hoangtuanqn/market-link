@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "{{stall}} の受け取り時間を変更",
-  "pickupDay": "受け取り日",
   "pickupDayAt": "{{stall}} の受け取り日",
   "pickupTime": "受け取り時間 · {{day}} {{date}} · 受付 {{from}} – {{to}}",
   "summary": {

@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "更改在 {{stall}} 的取货时间",
-  "pickupDay": "取货日期",
   "pickupDayAt": "在 {{stall}} 的取货日期",
   "pickupTime": "取货时间 · {{day}} {{date}} · 时段 {{from}} – {{to}}",
   "summary": {

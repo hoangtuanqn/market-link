@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "Cambiar la hora de recogida en {{stall}}",
-  "pickupDay": "Día de recogida",
   "pickupDayAt": "Día de recogida en {{stall}}",
   "pickupTime": "Hora de recogida · {{day}} {{date}} · franja {{from}} – {{to}}",
   "summary": {

@@ -13,7 +13,6 @@
   "left": "Quedan <b>{{qty}}</b>",
   "leftOn": "Quedan <b>{{qty}}</b> para el {{day}}",
   "stockUpdated": "Stock actualizado hoy, antes de los pedidos de este fin de semana.",
-  "notifyMe": "Avísame cuando vuelva",
   "added": {
     "title": "Añadido al carrito",
     "text": "Se añadió {{qty}} de {{name}} a tu carrito."
@@ -21,7 +20,6 @@
   "addToCart": "Añadir al carrito",
   "payNote": "El stock queda reservado cuando haces el pedido. Pagas {{price}} en el puesto al recoger.",
   "fromStall": "Del puesto",
-  "sellingSince": "vende aquí desde el {{date}}",
   "stats": {
     "reviews_one": "{{count}} reseña",
     "reviews_other": "{{count}} reseñas",
@@ -32,7 +30,6 @@
     "cutoff": "cierre de pedidos"
   },
   "seeStall": "Ver el puesto",
-  "messageStall": "Escribir al puesto",
   "details": {
     "title": "Detalles del producto",
     "soldPer": "Se vende por",
@@ -75,7 +72,6 @@
   "similar": {
     "title": "{{name}} en otros puestos este fin de semana",
     "note": "La misma verdura, otra parcela y otro precio",
-    "here": "Estás aquí",
     "view": "Ver"
   },
   "also": {

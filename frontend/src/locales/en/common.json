@@ -45,9 +45,6 @@
     "orderOf": "Order {{index}} of {{of}}",
     "payAtPickup": "Pay at the stall on pickup"
   },
-  "chart": {
-    "showNumbers": "Show the numbers"
-  },
   "chat": {
     "assistant": "MarketLink assistant",
     "you": "You",
@@ -296,22 +293,6 @@
     "show": "Show password",
     "hide": "Hide password"
   },
-  "period": {
-    "length": "Period length",
-    "day": "Day",
-    "week": "Week",
-    "month": "Month",
-    "quarter": "Quarter",
-    "year": "Year",
-    "custom": "Custom",
-    "from": "From",
-    "to": "To",
-    "compareWith": "Compare with",
-    "cmpBefore": "The period before, same length",
-    "cmpLastYear": "The same period last year",
-    "cmpNone": "No comparison",
-    "comparedWith": "compared with <b>{{compare}}</b>, the same length"
-  },
   "price": {
     "was": "Was"
   },
@@ -382,7 +363,6 @@
     "phoneInvalid": "Enter a valid Vietnamese mobile number (10 digits)."
   },
   "adminNav": {
-    "sections": "Admin sections",
     "overview": "Overview",
     "farmers": "Farmers",
     "customers": "Customers",

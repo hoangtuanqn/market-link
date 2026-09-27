@@ -44,10 +44,6 @@
     "label": "Deskripsi",
     "hint": "Ditampilkan di halaman produk. Ceritakan cara menanam dan cara menyimpannya."
   },
-  "flag": {
-    "label": "Tag pendek di kartu",
-    "hint": "Opsional, ditulis tangan di label: “Segar hari ini”, “Dipanggang jam 5 pagi”."
-  },
   "status": {
     "label": "Status",
     "available": "Tersedia",

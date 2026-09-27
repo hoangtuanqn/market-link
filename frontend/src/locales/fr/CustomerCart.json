@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "Changer le créneau de retrait chez {{stall}}",
-  "pickupDay": "Jour de retrait",
   "pickupDayAt": "Jour de retrait chez {{stall}}",
   "pickupTime": "Heure de retrait · {{day}} {{date}} · plage {{from}} – {{to}}",
   "summary": {

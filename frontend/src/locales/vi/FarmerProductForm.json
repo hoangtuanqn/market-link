@@ -44,10 +44,6 @@
     "label": "Mô tả",
     "hint": "Hiển thị trên trang sản phẩm. Hãy nói cách trồng và cách bảo quản."
   },
-  "flag": {
-    "label": "Nhãn ngắn trên thẻ",
-    "hint": "Không bắt buộc, viết tay trên nhãn: “Tươi hôm nay”, “Nướng lúc 5 giờ sáng”."
-  },
   "status": {
     "label": "Trạng thái",
     "available": "Đang bán",

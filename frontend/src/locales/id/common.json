@@ -45,9 +45,6 @@
     "orderOf": "Pesanan {{index}} dari {{of}}",
     "payAtPickup": "Bayar di lapak saat mengambil"
   },
-  "chart": {
-    "showNumbers": "Lihat angkanya"
-  },
   "chat": {
     "assistant": "Asisten MarketLink",
     "you": "Anda",
@@ -296,22 +293,6 @@
     "show": "Tampilkan kata sandi",
     "hide": "Sembunyikan kata sandi"
   },
-  "period": {
-    "length": "Panjang periode",
-    "day": "Hari",
-    "week": "Minggu",
-    "month": "Bulan",
-    "quarter": "Kuartal",
-    "year": "Tahun",
-    "custom": "Kustom",
-    "from": "Dari",
-    "to": "Sampai",
-    "compareWith": "Bandingkan dengan",
-    "cmpBefore": "Periode sebelumnya, panjang sama",
-    "cmpLastYear": "Periode yang sama tahun lalu",
-    "cmpNone": "Tanpa perbandingan",
-    "comparedWith": "dibanding <b>{{compare}}</b>, panjang sama"
-  },
   "price": {
     "was": "Sebelumnya"
   },
@@ -382,7 +363,6 @@
     "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit)."
   },
   "adminNav": {
-    "sections": "Bagian admin",
     "overview": "Ringkasan",
     "farmers": "Petani",
     "customers": "Pelanggan",
