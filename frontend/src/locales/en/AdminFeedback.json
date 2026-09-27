@@ -1,15 +1,14 @@
 {
-  "overline": "Settings",
   "title": "Feedback inbox",
-  "intro": "Bug reports, suggestions and questions sent through the feedback form. Mark them answered when done.",
-  "link": {
-    "categories": "Categories",
-    "announcements": "Announcements"
-  },
+  "intro": "Bug reports, suggestions and questions sent through the feedback form. Move each one from new to reviewed, then resolved.",
+  "noun": "feedback",
+  "anonymous": "Anonymous",
+  "caption": "{{count}} feedback messages",
   "filterLabel": "Filter feedback",
   "filter": {
-    "open": "Open",
-    "answered": "Answered",
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved",
     "bug": "Bug",
     "suggestion": "Suggestion",
     "query": "Question"
@@ -20,8 +19,9 @@
     "query": "Question"
   },
   "status": {
-    "open": "Open",
-    "answered": "Answered"
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved"
   },
   "col": {
     "type": "Type",
@@ -30,26 +30,21 @@
     "status": "Status"
   },
   "action": {
-    "read": "Read",
-    "readAndAnswer": "Read and answer"
+    "read": "Read"
   },
   "dialog": {
     "title": "{{type}} from {{from}}",
     "sent": "Sent {{date}} · {{state}}",
-    "notAnswered": "not answered yet",
-    "alreadyAnswered": "already answered",
-    "yourAnswer": "Your answer",
-    "replyPlaceholder": "Thank you for telling us…",
     "close": "Close",
-    "send": "Send and mark answered",
-    "sendAgain": "Send again"
+    "markReviewed": "Mark reviewed",
+    "markResolved": "Mark resolved"
   },
   "empty": {
     "title": "No feedback yet",
     "text": "Bug reports, suggestions and questions from the feedback form arrive here."
   },
   "toast": {
-    "answered": "Answer saved and the message marked answered.",
-    "markedOnly": "Marked answered without a reply."
+    "reviewed": "Marked reviewed.",
+    "resolved": "Marked resolved."
   }
 }

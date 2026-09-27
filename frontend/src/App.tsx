@@ -49,7 +49,7 @@ import AboutPage from './pages/public/About';
 import PrivacyPage from './pages/public/Privacy';
 import TermsPage from './pages/public/Terms';
 import ContactPage from './pages/public/Contact';
-import FeedbackWip from './pages/public/Feedback';
+import FeedbackPage from './pages/public/Feedback';
 import FarmerOverviewWip from './pages/farmer/Overview';
 import FarmerOrdersWip from './pages/farmer/Orders';
 import FarmerOrderDetailWip from './pages/farmer/OrderDetail';
@@ -64,7 +64,7 @@ import FarmerMessagesPage from './pages/farmer/Messages';
 import FarmerNotificationsPage from './pages/farmer/Notifications';
 import FarmerPendingPage from './pages/farmer/Pending';
 import AdminLoginPage from './pages/admin/Login';
-import AdminHomeWip from './pages/admin/Home';
+import AdminHomePage from './pages/admin/Home';
 import AdminVerifyPage from './pages/admin/Verify';
 import AdminSecurityPage from './pages/admin/Security';
 import AdminFarmersPage from './pages/admin/Farmers';
@@ -73,15 +73,15 @@ import AdminAccountPage from './pages/admin/Account';
 import AdminAnnouncementsPage from './pages/admin/Announcements';
 import AdminNotificationsPage from './pages/admin/Notifications';
 import AdminCategoriesPage from './pages/admin/Categories';
-import AdminCustomerDetailWip from './pages/admin/CustomerDetail';
-import AdminCustomersWip from './pages/admin/Customers';
-import AdminFeedbackWip from './pages/admin/Feedback';
+import AdminCustomerDetailPage from './pages/admin/CustomerDetail';
+import AdminCustomersPage from './pages/admin/Customers';
+import AdminFeedbackPage from './pages/admin/Feedback';
 import AdminMarketFormPage from './pages/admin/MarketForm';
 import AdminMarketsPage from './pages/admin/Markets';
 import AdminModerationPage from './pages/admin/Moderation';
-import AdminOrderDetailWip from './pages/admin/OrderDetail';
-import AdminOrdersWip from './pages/admin/Orders';
-import AdminReportsWip from './pages/admin/Reports';
+import AdminOrderDetailPage from './pages/admin/OrderDetail';
+import AdminOrdersPage from './pages/admin/Orders';
+import AdminReportsPage from './pages/admin/Reports';
 
 // A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
 // Once a screen's API is wired up, remove it from this list.
@@ -89,14 +89,6 @@ const FarmerOverviewPage = SHOW_WIP ? FarmerOverviewWip : ComingSoon;
 const FarmerOrdersPage = SHOW_WIP ? FarmerOrdersWip : ComingSoon;
 const FarmerOrderDetailPage = SHOW_WIP ? FarmerOrderDetailWip : ComingSoon;
 const FarmerHistoryPage = SHOW_WIP ? FarmerHistoryWip : ComingSoon;
-const AdminHomePage = SHOW_WIP ? AdminHomeWip : ComingSoon;
-const AdminReportsPage = SHOW_WIP ? AdminReportsWip : ComingSoon;
-const AdminOrdersPage = SHOW_WIP ? AdminOrdersWip : ComingSoon;
-const AdminOrderDetailPage = SHOW_WIP ? AdminOrderDetailWip : ComingSoon;
-const AdminCustomersPage = SHOW_WIP ? AdminCustomersWip : ComingSoon;
-const AdminCustomerDetailPage = SHOW_WIP ? AdminCustomerDetailWip : ComingSoon;
-const AdminFeedbackPage = SHOW_WIP ? AdminFeedbackWip : ComingSoon;
-const FeedbackPage = SHOW_WIP ? FeedbackWip : ComingSoon;
 
 const App = () => {
   return (

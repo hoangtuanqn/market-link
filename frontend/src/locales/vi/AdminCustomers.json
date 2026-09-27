@@ -1,6 +1,7 @@
 {
   "title": "Khách hàng",
-  "intro": "Khoá một tài khoản khi vi phạm chính sách; tài khoản đó không đăng nhập hay đặt đơn được nữa. Mở lại khi đã giải quyết xong. Các đơn cũ vẫn thuộc về sạp.",
+  "intro": "Vô hiệu hoá tài khoản khi vi phạm chính sách; tài khoản không thể đăng nhập hay đặt hàng nữa. Kích hoạt lại khi đã xử lý xong. Đơn hàng cũ vẫn giữ nguyên với các sạp.",
+  "noun": "khách hàng",
   "search": {
     "label": "Tìm khách hàng",
     "placeholder": "Tên, email hoặc số điện thoại",
@@ -10,37 +11,45 @@
   "filter": {
     "all": "Tất cả",
     "active": "Đang hoạt động",
-    "inactive": "Đã khoá",
-    "joinedThisMonth": "Mới trong tháng"
+    "inactive": "Đã vô hiệu hoá"
   },
   "status": {
     "active": "Đang hoạt động",
-    "inactive": "Đã khoá"
+    "inactive": "Đã vô hiệu hoá"
   },
+  "caption": "{{count}} khách hàng",
   "col": {
     "customer": "Khách hàng",
     "joined": "Ngày tham gia",
-    "orders": "Số đơn",
+    "orders": "Đơn hàng",
     "status": "Trạng thái"
   },
   "action": {
-    "deactivate": "Khoá",
-    "reactivate": "Mở lại"
+    "deactivate": "Vô hiệu hoá",
+    "reactivate": "Kích hoạt lại"
   },
-  "showing": "Đang xem {{from}}–{{to}} trong {{total}}",
+  "showing": "Hiện {{from}}–{{to}} trong {{total}}",
   "empty": {
-    "title": "Chưa có khách hàng nào",
-    "text": "Tài khoản khách sẽ hiện ở đây ngay khi có người đăng ký trên MarketLink."
+    "title": "Chưa có khách hàng",
+    "text": "Tài khoản khách hàng sẽ hiện ở đây ngay khi có người đăng ký trên MarketLink."
   },
   "deactivate": {
-    "title": "Khoá tài khoản {{name}}?",
-    "text": "Họ bị đăng xuất khỏi mọi thiết bị, không đăng nhập hay đặt đơn được nữa. Các đơn đã đặt vẫn thuộc về sạp.",
-    "reason": "Lý do, lưu lại trên tài khoản",
+    "title": "Vô hiệu hoá {{name}}?",
+    "text": "Tài khoản bị đăng xuất ở mọi nơi và không thể đăng nhập hay đặt hàng. Đơn hàng đã đặt vẫn giữ nguyên với các sạp.",
+    "reason": "Lý do (chỉ hiện trong thông báo này, chưa lưu vào tài khoản)",
+    "reasonHint": "Máy chủ chưa lưu lý do — nội dung này không được gửi kèm yêu cầu.",
     "keep": "Giữ hoạt động",
-    "confirm": "Khoá tài khoản"
+    "confirm": "Vô hiệu hoá tài khoản"
+  },
+  "reactivate": {
+    "title": "Kích hoạt lại {{name}}?",
+    "text": "Họ có thể đăng nhập và đặt hàng lại ngay.",
+    "keep": "Chưa vội",
+    "confirm": "Kích hoạt lại tài khoản"
   },
   "toast": {
-    "deactivated": "Đã khoá {{name}}.",
-    "reactivated": "{{name}} đăng nhập lại được rồi."
+    "deactivated": "Đã vô hiệu hoá {{name}}.",
+    "deactivatedWithReason": "Đã vô hiệu hoá {{name}}. Lý do: {{reason}}",
+    "reactivated": "{{name}} có thể đăng nhập lại."
   }
 }
