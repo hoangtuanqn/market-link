@@ -13,11 +13,12 @@
   "col": {
     "product": "Produkt",
     "price": "Preis",
-    "left": "Diese Woche übrig",
+    "left": "Nächste Abholung · übrig",
     "reserved": "Reserviert",
     "status": "Status"
   },
   "perUnit": "pro {{unit}}",
+  "nextLeft": "{{day}} · noch {{qty}}",
   "statusOf": "Status von {{name}}",
   "edit": "Bearbeiten",
   "delete": "Löschen",

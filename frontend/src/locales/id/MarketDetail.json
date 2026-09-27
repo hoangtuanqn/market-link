@@ -38,5 +38,15 @@
   "stallsNoun": "kios",
   "stallsEmpty": {
     "title": "Tidak ada kios pada {{day}}"
+  },
+  "productsEmpty": {
+    "title": "Tidak ada yang dijual pada {{day}}",
+    "text": "Coba hari pasar lain atau hapus filter."
+  },
+  "searchEmpty": {
+    "products": "Tidak ada produk yang cocok dengan “{{q}}”",
+    "stalls": "Tidak ada lapak yang cocok dengan “{{q}}”",
+    "text": "Hapus pencarian untuk melihat semua yang ada di pasar ini pada {{day}}.",
+    "clear": "Hapus pencarian"
   }
 }

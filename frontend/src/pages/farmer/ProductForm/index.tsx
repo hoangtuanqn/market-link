@@ -23,9 +23,9 @@ type FormState = {
   name: string;
   categoryId: number | null;
   unitChoice: string;
-  /** Kept as typed so "1." survives until the cents follow; read with {@link priceOf}. */
+  /** Kept as typed, so a minus sign or a decimal point is never dropped mid-edit; parsed on save. */
   price: string;
-  qty: number;
+  qty: string;
   desc: string;
   imageUrl: string;
   status: ProductStatus;
@@ -48,16 +48,13 @@ const EMPTY: FormState = {
   name: '',
   categoryId: null,
   unitChoice: 'bunch',
-  price: '0',
-  qty: 0,
+  price: '',
+  qty: '',
   desc: '',
   imageUrl: '',
   status: 'available',
   shelfLife: '',
 };
-
-/** The typed price as a number of dollars (USD, cents allowed); NaN while it is not a number yet. */
-const priceOf = (form: FormState) => Number(form.price.trim().replace(',', '.'));
 
 const fromProduct = (p: ProductType): FormState => {
   return {
@@ -65,7 +62,7 @@ const fromProduct = (p: ProductType): FormState => {
     categoryId: p.categoryId ?? null,
     unitChoice: p.unit,
     price: String(p.price),
-    qty: p.stock,
+    qty: String(p.stock),
     desc: p.desc ?? '',
     imageUrl: p.imageUrl ?? '',
     status: p.status,
@@ -134,14 +131,18 @@ const FarmerProductFormPage = () => {
     ? UNITS.map((u) => u.one)
     : [form.unitChoice, ...UNITS.map((u) => u.one)];
 
+  // Blank or unparsable reads as NaN, so validate() flags it instead of saving 0. A comma counts as the decimal
+  // point, as Vietnamese keyboards type it ("1,50").
+  const price = form.price.trim() === '' ? NaN : Number(form.price.trim().replace(',', '.'));
+  const qty = form.qty.trim() === '' ? NaN : Number(form.qty);
+  const previewPrice = Number.isFinite(price) ? price : 0;
+
   const validate = (): FormErrors => {
     const next: FormErrors = {};
     if (!form.name.trim()) next.name = t('errors.required');
     if (categoryId == null) next.cat = t('errors.required');
-    if (form.price.trim() === '' || !Number.isFinite(priceOf(form)) || priceOf(form) < 0) {
-      next.price = t('errors.price');
-    }
-    if (!Number.isInteger(form.qty) || form.qty < 0) next.qty = t('qty.error');
+    if (!Number.isFinite(price) || price < 0) next.price = t('errors.price');
+    if (!Number.isInteger(qty) || qty < 0) next.qty = t('qty.error');
     if (form.shelfLife === '' || !Number.isInteger(form.shelfLife) || form.shelfLife < 1) {
       next.shelfLife = t('shelfLife.error');
     }
@@ -176,9 +177,9 @@ const FarmerProductFormPage = () => {
       categoryId,
       name: form.name.trim(),
       description: form.desc.trim() || undefined,
-      price: priceOf(form),
+      price,
       unit: unitOne.slice(0, 20),
-      stockQuantity: form.qty,
+      stockQuantity: qty,
       imageUrl: form.imageUrl.trim() || undefined,
       shelfLifeDays: form.shelfLife,
     };
@@ -280,7 +281,7 @@ const FarmerProductFormPage = () => {
                 t={t}
                 i18nKey="preview.text"
                 values={{
-                  price: perUnit(priceOf(form) || 0, unitOne),
+                  price: perUnit(previewPrice, unitOne),
                   left: units(12, unitOne, unitMany),
                   one: units(1, unitOne, unitMany),
                 }}
@@ -296,7 +297,7 @@ const FarmerProductFormPage = () => {
             inputMode="decimal"
             value={form.price}
             onChange={(e) => setForm({ price: e.target.value })}
-            hint={t('price.hint', { price: perUnit(priceOf(form) || 0, unitOne) })}
+            hint={t('price.hint', { price: perUnit(previewPrice, unitOne) })}
             error={errors.price}
           />
           <Field
@@ -305,7 +306,7 @@ const FarmerProductFormPage = () => {
             required
             inputMode="numeric"
             value={form.qty}
-            onChange={(e) => setForm({ qty: Number(e.target.value) || 0 })}
+            onChange={(e) => setForm({ qty: e.target.value })}
             error={errors.qty}
           />
 

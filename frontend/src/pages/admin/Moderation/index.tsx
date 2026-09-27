@@ -49,6 +49,13 @@ const AdminModerationPage = () => {
   } = useRequest('moderation-products', () =>
     ProductApi.list({ pageSize: 50, sort: 'newest' }).then((result) => result.items),
   );
+  // Listings an admin has hidden; the 'hidden' tab lists them so each can be unhidden (FR-074).
+  const {
+    state: hiddenListingsLoad,
+    retry: retryHiddenListings,
+    mutate: mutateHiddenListings,
+  } = useRequest('moderation-hidden-products', () => ProductApi.adminHidden());
+  const [unhidingListingId, setUnhidingListingId] = useState<number | null>(null);
   const [reviewFilter, setReviewFilter] = useState<(typeof REVIEW_FILTERS)[number]>('newest');
   const [query, setQuery] = useState('');
   const [hiding, setHiding] = useState<HideTarget>(null);
@@ -83,6 +90,7 @@ const AdminModerationPage = () => {
       if (hiding.kind === 'listing') {
         await ProductApi.adminHide(hiding.id, reason || t(`reason.${REASONS[0]}`));
         mutateListed((list) => list.filter((p) => p.id !== hiding.id));
+        retryHiddenListings();
       } else {
         await ReviewApi.hide(hiding.id);
         mutateReviews((list) => list.filter((r) => r.id !== hiding.id));
@@ -110,6 +118,53 @@ const AdminModerationPage = () => {
       setUnhidingId(null);
     }
   };
+
+  const unhideListing = async (id: number) => {
+    setUnhidingListingId(id);
+    try {
+      await ProductApi.adminUnhide(id);
+      mutateHiddenListings((list) => list.filter((p) => p.id !== id));
+      retryListed();
+      Notification.success({ text: t('action.unhidden') });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setUnhidingListingId(null);
+    }
+  };
+
+  const hiddenListingColumns: TableColumn<ProductType>[] = [
+    {
+      key: 'name',
+      label: t('col.product'),
+      render: (p) => (
+        <>
+          <b>{p.name}</b>
+          <span className="text-ink-muted block text-[13px]">
+            {p.stall} · {p.category}
+          </span>
+        </>
+      ),
+    },
+    { key: 'reason', label: t('col.reason'), render: (p) => <span className="text-small">{p.hiddenReason}</span> },
+    {
+      key: 'action',
+      label: '',
+      align: 'actions',
+      render: (p) => (
+        <div className="flex justify-end">
+          <Button
+            variant="secondary"
+            size="sm"
+            disabled={unhidingListingId === p.id}
+            onClick={() => void unhideListing(p.id)}
+          >
+            {t('action.unhide')}
+          </Button>
+        </div>
+      ),
+    },
+  ];
 
   const productColumns: TableColumn<ProductType>[] = [
     {
@@ -170,6 +225,24 @@ const AdminModerationPage = () => {
           { id: 'messages', label: t('tab.messages') },
         ]}
       />
+
+      {tab === 'hidden' && (
+        <section aria-labelledby="hidden-listings" className="flex flex-col gap-4">
+          <h2 id="hidden-listings" className="text-h3">
+            {t('hiddenQueue.listings')}
+          </h2>
+          {hiddenListingsLoad.kind === 'loading' ? (
+            <MarketCardSkeleton count={2} />
+          ) : hiddenListingsLoad.kind === 'error' ? (
+            <LoadError noun={t('error.noun')} onRetry={retryHiddenListings} />
+          ) : hiddenListingsLoad.data.length ? (
+            <Table columns={hiddenListingColumns} rows={hiddenListingsLoad.data} />
+          ) : (
+            <DataState title={t('hiddenQueue.noListings')} text={t('hiddenQueue.noListingsText')} />
+          )}
+          <h2 className="text-h3">{t('hiddenQueue.reviews')}</h2>
+        </section>
+      )}
 
       {(tab === 'reviews' || tab === 'hidden') && (
         <div className="flex flex-col gap-4">

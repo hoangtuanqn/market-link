@@ -10,7 +10,7 @@
     "orders": "订单",
     "ordersNote": "{{month}}，全部集市",
     "revenue": "已完成营收",
-    "revenueNote": "₫，在摊位付款"
+    "revenueNote": "$，在摊位付款"
   },
   "byMarket": {
     "title": "各集市营收",

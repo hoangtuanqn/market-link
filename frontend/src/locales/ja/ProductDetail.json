@@ -10,7 +10,8 @@
     "remove": "お気に入りから外す：{{name}}"
   },
   "soldPer": "{{unit}}単位で販売",
-  "left": "今週の残り <b>{{qty}}</b>",
+  "left": "残り <b>{{qty}}</b>",
+  "leftOn": "{{day}} の残り <b>{{qty}}</b>",
   "stockUpdated": "在庫は今週末の注文に向けて本日更新されました。",
   "notifyMe": "再入荷を通知",
   "added": {

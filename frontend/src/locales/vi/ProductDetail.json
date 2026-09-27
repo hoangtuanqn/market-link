@@ -10,7 +10,8 @@
     "remove": "Bỏ khỏi yêu thích: {{name}}"
   },
   "soldPer": "bán theo {{unit}}",
-  "left": "còn <b>{{qty}}</b> trong tuần này",
+  "left": "còn <b>{{qty}}</b>",
+  "leftOn": "còn <b>{{qty}}</b> cho {{day}}",
   "stockUpdated": "Tồn kho cập nhật hôm nay, trước các đơn cuối tuần này.",
   "notifyMe": "Báo cho tôi khi có lại",
   "added": {

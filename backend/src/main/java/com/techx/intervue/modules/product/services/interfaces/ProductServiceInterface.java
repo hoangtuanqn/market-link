@@ -31,6 +31,9 @@ public interface ProductServiceInterface {
     /** FR-064: changing the status does not touch stock or the admin's hide flag. */
     FarmerProductResource setStatus(long userId, long productId, ProductStatus status);
 
+    /** FR-074: the Admin's queue of hidden listings, so each one can be unhidden again. */
+    PageResource<FarmerProductResource> adminHidden(int page, int pageSize);
+
     void adminHide(long productId, String reason);
 
     void adminUnhide(long productId);

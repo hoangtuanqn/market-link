@@ -40,7 +40,6 @@ describe('FarmerProductFormPage', () => {
     renderNew();
     const price = await screen.findByLabelText(/^Price/);
 
-    await userEvent.clear(price);
     await userEvent.type(price, '1.50');
 
     expect(price).toHaveValue('1.50');
@@ -52,5 +51,31 @@ describe('FarmerProductFormPage', () => {
     renderNew();
 
     expect(await screen.findByLabelText(/^Price/)).toHaveAttribute('inputmode', 'decimal');
+  });
+
+  /** QA e2e round 3, bug 4: a minus sign stays in the field and saving shows the error instead of a silent 0. */
+  it('keeps a negative price and quantity and refuses to save them', async () => {
+    renderNew();
+    const price = await screen.findByLabelText(/^Price/);
+    const qty = screen.getByLabelText(/^Quantity/);
+
+    await userEvent.type(price, '-1');
+    await userEvent.type(qty, '-1');
+    expect(price).toHaveValue('-1');
+    expect(qty).toHaveValue('-1');
+
+    await userEvent.click(screen.getByRole('button', { name: /Add product/ }));
+    expect(screen.getByText('Price must be 0 or more.')).toBeInTheDocument();
+    expect(screen.getByText(/Quantity must be 0 or more/)).toBeInTheDocument();
+    expect(ProductApi.create).not.toHaveBeenCalled();
+  });
+
+  it('reads a comma as the decimal point', async () => {
+    renderNew();
+    const price = await screen.findByLabelText(/^Price/);
+
+    await userEvent.type(price, '1,50');
+
+    expect(screen.getByText(/Shown as \$1\.50/)).toBeInTheDocument();
   });
 });

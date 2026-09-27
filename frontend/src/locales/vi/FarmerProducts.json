@@ -13,11 +13,12 @@
   "col": {
     "product": "Sản phẩm",
     "price": "Giá",
-    "left": "Còn trong tuần",
+    "left": "Ngày lấy gần nhất · còn",
     "reserved": "Đã giữ",
     "status": "Trạng thái"
   },
   "perUnit": "mỗi {{unit}}",
+  "nextLeft": "{{day}} · còn {{qty}}",
   "statusOf": "Trạng thái của {{name}}",
   "edit": "Sửa",
   "delete": "Xoá",

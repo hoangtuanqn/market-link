@@ -54,7 +54,14 @@ class ProductServiceTest {
         categories = mock(CategoryRepository.class);
         query = mock(ProductQueryRepository.class);
         restock = mock(RestockNotifier.class);
-        service = new ProductService(products, farmers, categories, query, restock);
+        service =
+                new ProductService(
+                        products,
+                        farmers,
+                        categories,
+                        query,
+                        restock,
+                        mock(ProductAvailabilityResolver.class));
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 

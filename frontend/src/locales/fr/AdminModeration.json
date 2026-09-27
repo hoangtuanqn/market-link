@@ -98,5 +98,11 @@
       "actioned": "Traité"
     },
     "statusLabel": "Statut"
+  },
+  "hiddenQueue": {
+    "listings": "Annonces masquées",
+    "reviews": "Avis masqués",
+    "noListings": "Aucune annonce masquée",
+    "noListingsText": "Les annonces que vous masquez apparaissent ici avec le motif, pour pouvoir les rétablir."
   }
 }

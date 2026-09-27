@@ -13,11 +13,12 @@
   "col": {
     "product": "상품",
     "price": "가격",
-    "left": "이번 주 남은 수량",
+    "left": "다음 픽업일 · 남은 수량",
     "reserved": "예약됨",
     "status": "상태"
   },
   "perUnit": "{{unit}}당",
+  "nextLeft": "{{day}} · {{qty}} 남음",
   "statusOf": "{{name}} 상태",
   "edit": "수정",
   "delete": "삭제",

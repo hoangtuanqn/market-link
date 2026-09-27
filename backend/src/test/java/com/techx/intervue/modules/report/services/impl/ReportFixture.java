@@ -120,6 +120,43 @@ public final class ReportFixture {
     }
 
     /**
+     * The stall sells at the market every day and has a 07:00 slot on each date from the day after
+     * tomorrow until the end of the 14-day lookahead, so every product with a template has an
+     * orderable date whatever the time of day the test runs (FR-031: a date needs a slot still
+     * before its cutoff). The slots and operating days go with the farmer_markets row.
+     */
+    public void sellsEveryDay(long farmerId, long marketId) {
+        long farmerMarket =
+                track(
+                        "farmer_markets",
+                        insert(
+                                "INSERT INTO farmer_markets (farmer_id, market_id) VALUES (?, ?)",
+                                farmerId,
+                                marketId));
+        for (int day = 0; day <= 6; day++) {
+            jdbc.update(
+                    "INSERT IGNORE INTO market_operating_days (market_id, day_of_week) VALUES (?,"
+                            + " ?)",
+                    marketId,
+                    day);
+            jdbc.update(
+                    "INSERT INTO farmer_operating_days (farmer_market_id, day_of_week,"
+                            + " pickup_start_time, pickup_end_time) VALUES (?, ?, '07:00',"
+                            + " '10:00')",
+                    farmerMarket,
+                    day);
+        }
+        LocalDate today = LocalDate.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh"));
+        for (int i = 2; i < 14; i++) {
+            jdbc.update(
+                    "INSERT INTO pickup_slots (farmer_market_id, slot_date, start_time, end_time)"
+                            + " VALUES (?, ?, '07:00', '08:00')",
+                    farmerMarket,
+                    java.sql.Date.valueOf(today.plusDays(i)));
+        }
+    }
+
+    /**
      * The stall sells at {@code marketId} and has one free slot on {@code date} (07:00, far from
      * its cutoff when the date is in the future), so that date counts as orderable.
      */
@@ -131,6 +168,17 @@ public final class ReportFixture {
                                 "INSERT INTO farmer_markets (farmer_id, market_id) VALUES (?, ?)",
                                 farmerId,
                                 marketId));
+        int dayOfWeek = date.getDayOfWeek().getValue() % 7;
+        // The slot only counts on a weekday the market and the stall still open (FR-060, FR-073)
+        jdbc.update(
+                "INSERT IGNORE INTO market_operating_days (market_id, day_of_week) VALUES (?, ?)",
+                marketId,
+                dayOfWeek);
+        jdbc.update(
+                "INSERT INTO farmer_operating_days (farmer_market_id, day_of_week,"
+                        + " pickup_start_time, pickup_end_time) VALUES (?, ?, '07:00', '10:00')",
+                link,
+                dayOfWeek);
         track(
                 "pickup_slots",
                 insert(

@@ -14,12 +14,10 @@ import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
-import { dayName, formatClock, formatDayMonth, upcomingDate } from '@/lib/format';
+import { dayName, formatClock, formatDayMonth, nextSevenDays } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 
-/** Thursday to Sunday; each chip shows the next date that weekday falls on, counted from today. */
-const DAY_OPTIONS = [4, 5, 6, 0];
 const SORTS = ['best', 'nearest', 'price', 'rating'] as const;
 const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
 const FETCH_SIZE = 50;
@@ -37,7 +35,9 @@ const SearchPage = () => {
 
   const [draftScope, setDraftScope] = useState(scopeParam);
   const [draftQ, setDraftQ] = useState(q);
-  const [day, setDay] = useState(6);
+  // The coming week from today; the search starts on today (FR-021).
+  const [week] = useState(() => nextSevenDays());
+  const [day, setDay] = useState(() => week[0].dow);
   const [sort, setSort] = useState<(typeof SORTS)[number]>('best');
   const [tab, setTab] = useState<'all' | 'market' | 'farmer' | 'product'>('all');
 
@@ -148,10 +148,10 @@ const SearchPage = () => {
             name="day"
             value={String(day)}
             onChange={(v) => setDay(Number(v))}
-            options={DAY_OPTIONS.map((d) => ({
-              value: String(d),
-              label: dayName(d, 'long'),
-              date: formatDayMonth(upcomingDate(d)),
+            options={week.map((d) => ({
+              value: String(d.dow),
+              label: dayName(d.dow, 'long'),
+              date: formatDayMonth(d.date),
             }))}
           />
           <div className="flex flex-col gap-2">

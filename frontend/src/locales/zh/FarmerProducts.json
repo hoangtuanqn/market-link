@@ -13,11 +13,12 @@
   "col": {
     "product": "商品",
     "price": "价格",
-    "left": "本周剩余",
+    "left": "最近取货日 · 剩余",
     "reserved": "已预订",
     "status": "状态"
   },
   "perUnit": "每{{unit}}",
+  "nextLeft": "{{day}} · 剩余 {{qty}}",
   "statusOf": "{{name}}的状态",
   "edit": "编辑",
   "delete": "删除",

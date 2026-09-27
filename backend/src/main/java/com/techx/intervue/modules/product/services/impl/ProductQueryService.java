@@ -72,10 +72,10 @@ public class ProductQueryService implements ProductQueryServiceInterface {
 
     /**
      * Replaces stockQuantity/price read straight from products with the numbers for the nearest
-     * orderable pickup date. Products with no active weekly template never get here — {@link
-     * ProductQueryRepository#VISIBILITY_FILTER} leaves them out in the SQL, so the page and its
-     * total agree. A row is never dropped here: one whose template was switched off in between
-     * shows as sold out.
+     * orderable pickup date, and names that date in availableDate. Products with no active weekly
+     * template never get here — {@link ProductQueryRepository#VISIBILITY_FILTER} leaves them out in
+     * the SQL, so the page and its total agree. A row is never dropped here: one whose template was
+     * switched off in between shows as sold out.
      */
     private List<ProductListItemResource> overlayAvailability(List<ProductListItemResource> items) {
         Map<Long, BigDecimal> basePrices =
@@ -91,8 +91,9 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                         i -> {
                             ProductAvailabilityResolver.Availability a = resolved.get(i.id());
                             return a == null
-                                    ? i.withAvailability(0, i.price())
-                                    : i.withAvailability(a.quantity(), a.price());
+                                    ? i.withAvailability(0, i.price(), null)
+                                    : i.withAvailability(
+                                            a.quantity(), a.price(), a.date().toString());
                         })
                 .toList();
     }

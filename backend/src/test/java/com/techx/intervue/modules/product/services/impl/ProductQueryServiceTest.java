@@ -67,7 +67,8 @@ class ProductQueryServiceTest {
                 "available",
                 BigDecimal.ZERO,
                 0,
-                3);
+                3,
+                null);
     }
 
     private static ProductSearchCriteria criteria(
@@ -134,7 +135,10 @@ class ProductQueryServiceTest {
         assertThatThrownBy(() -> service.detail(5L)).isInstanceOf(ProductNotFoundException.class);
     }
 
-    /** search() overwrites stockQuantity/price with the nearest orderable date's numbers. */
+    /**
+     * search() overwrites stockQuantity/price with the nearest orderable date's numbers, and names
+     * that date.
+     */
     @Test
     void searchOverlaysTheNearestAvailableDateOntoEachItem() {
         ProductListItemResource raw = item(1L);
@@ -152,6 +156,8 @@ class ProductQueryServiceTest {
 
         assertThat(result.items().getFirst().stockQuantity()).isEqualTo(40);
         assertThat(result.items().getFirst().price()).isEqualByComparingTo("13000");
+        // FR-022: the number names the pickup date it is for
+        assertThat(result.items().getFirst().availableDate()).isEqualTo("2026-09-28");
     }
 
     /**

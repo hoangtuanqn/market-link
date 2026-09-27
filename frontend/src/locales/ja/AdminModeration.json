@@ -98,5 +98,11 @@
       "actioned": "対応済み"
     },
     "statusLabel": "状態"
+  },
+  "hiddenQueue": {
+    "listings": "非表示の商品",
+    "reviews": "非表示のレビュー",
+    "noListings": "非表示の商品はありません",
+    "noListingsText": "非表示にした商品は理由とともにここに表示され、元に戻せます。"
   }
 }

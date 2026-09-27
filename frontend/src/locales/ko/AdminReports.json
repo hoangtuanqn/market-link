@@ -10,7 +10,7 @@
     "orders": "주문",
     "ordersNote": "{{month}}, 모든 장터",
     "revenue": "완료된 매출",
-    "revenueNote": "₫, 가게에서 받은 돈"
+    "revenueNote": "$, 가게에서 받은 돈"
   },
   "byMarket": {
     "title": "장터별 매출",

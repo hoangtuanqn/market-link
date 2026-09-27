@@ -87,7 +87,11 @@ const FarmerHistoryPage = () => {
     {
       key: 'code',
       label: t('col.order'),
-      render: (r) => <Link to={`/farmer/orders/${r.orderId}`}>{r.orderCode}</Link>,
+      render: (r) => (
+        <Link to={`/farmer/orders/${r.orderId}`} className="text-brand font-bold underline">
+          {r.orderCode}
+        </Link>
+      ),
     },
     { key: 'who', label: t('col.customer'), render: (r) => r.customerName },
     { key: 'i', label: t('col.items'), align: 'num', render: (r) => r.itemCount },

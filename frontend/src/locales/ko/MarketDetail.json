@@ -38,5 +38,15 @@
   "stallsNoun": "매장",
   "stallsEmpty": {
     "title": "{{day}}에는 매장이 없습니다"
+  },
+  "productsEmpty": {
+    "title": "{{day}}에 판매 중인 상품이 없습니다",
+    "text": "다른 장날을 고르거나 필터를 지워 보세요."
+  },
+  "searchEmpty": {
+    "products": "“{{q}}”와 일치하는 상품이 없습니다",
+    "stalls": "“{{q}}”와 일치하는 가게가 없습니다",
+    "text": "검색을 지우면 {{day}} 이 장터의 모든 항목이 보여요.",
+    "clear": "검색 지우기"
   }
 }

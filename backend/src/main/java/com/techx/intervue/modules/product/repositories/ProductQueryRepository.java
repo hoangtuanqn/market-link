@@ -7,7 +7,11 @@ import com.techx.intervue.modules.product.resources.ProductListItemResource;
 import com.techx.intervue.resources.PageResource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -120,7 +124,77 @@ public class ProductQueryRepository {
               AND (:status IS NULL OR p.status = :status)
             """;
 
+    /**
+     * FR-074: every listing the Admin has hidden, newest change first, so a hidden listing can be
+     * found again and unhidden. Soft-deleted products are left out: nobody can restore them.
+     */
+    public static final String HIDDEN_SQL =
+            """
+            SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
+                   p.rating_avg, p.rating_count, p.description, p.shelf_life_days, p.is_hidden,
+                   p.hidden_reason,
+                   f.id AS farmer_id, f.stall_name,
+                   c.id AS category_id, c.name AS category_name,
+                   NULL AS market_id, NULL AS market_name
+            FROM products p
+            JOIN farmer_profiles f ON f.id = p.farmer_id
+            JOIN categories c ON c.id = p.category_id
+            WHERE p.is_hidden = TRUE
+              AND p.is_deleted = FALSE
+            ORDER BY p.updated_at DESC, p.id
+            LIMIT :limit OFFSET :offset
+            """;
+
+    private static final String HIDDEN_COUNT_SQL =
+            """
+            SELECT COUNT(*) FROM products p
+            WHERE p.is_hidden = TRUE
+              AND p.is_deleted = FALSE
+            """;
+
+    /**
+     * Units that orders still holding stock (placed, accepted, ready — D-02) take per product and
+     * pickup date. Declined and cancelled orders gave their stock back; completed ones were handed
+     * over.
+     */
+    private static final String RESERVED_SQL =
+            """
+            SELECT oi.product_id, o.pickup_date, SUM(oi.quantity) AS reserved
+            FROM order_items oi
+            JOIN orders o ON o.id = oi.order_id
+            WHERE oi.product_id IN (:productIds)
+              AND o.pickup_date IN (:dates)
+              AND o.status IN ('placed', 'accepted', 'ready')
+            GROUP BY oi.product_id, o.pickup_date
+            """;
+
     private final NamedParameterJdbcTemplate jdbc;
+
+    /**
+     * For each product, the units active orders hold for the one pickup date given for it; a
+     * product with none is absent from the map.
+     */
+    public Map<Long, Integer> reservedOn(Map<Long, LocalDate> dateByProductId) {
+        if (dateByProductId.isEmpty()) {
+            return Map.of();
+        }
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("productIds", dateByProductId.keySet())
+                        .addValue("dates", new HashSet<>(dateByProductId.values()));
+        Map<Long, Integer> reserved = new HashMap<>();
+        jdbc.query(
+                RESERVED_SQL,
+                params,
+                rs -> {
+                    long productId = rs.getLong("product_id");
+                    LocalDate date = rs.getObject("pickup_date", LocalDate.class);
+                    if (date.equals(dateByProductId.get(productId))) {
+                        reserved.put(productId, rs.getInt("reserved"));
+                    }
+                });
+        return reserved;
+    }
 
     public PageResource<FarmerProductResource> mine(
             long farmerId, String status, int offset, int limit) {
@@ -133,6 +207,23 @@ public class ProductQueryRepository {
         List<FarmerProductResource> items =
                 jdbc.query(
                         MINE_SQL,
+                        params,
+                        (rs, i) ->
+                                new FarmerProductResource(
+                                        item(rs),
+                                        rs.getString("description"),
+                                        rs.getBoolean("is_hidden"),
+                                        rs.getString("hidden_reason")));
+        return new PageResource<>(items, offset / limit + 1, limit, total == null ? 0 : total);
+    }
+
+    public PageResource<FarmerProductResource> hidden(int offset, int limit) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        Long total = jdbc.queryForObject(HIDDEN_COUNT_SQL, params, Long.class);
+        params.addValue("limit", limit).addValue("offset", offset);
+        List<FarmerProductResource> items =
+                jdbc.query(
+                        HIDDEN_SQL,
                         params,
                         (rs, i) ->
                                 new FarmerProductResource(
@@ -217,7 +308,8 @@ public class ProductQueryRepository {
                 rs.getString("status"),
                 rs.getBigDecimal("rating_avg"),
                 rs.getInt("rating_count"),
-                rs.getInt("shelf_life_days"));
+                rs.getInt("shelf_life_days"),
+                null);
     }
 
     /** '%' and '_' typed by the user must not act as wildcards. */

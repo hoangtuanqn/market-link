@@ -55,6 +55,8 @@
     "noun": "categories",
     "nameRequired": "Give the category a name.",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "Keep the name to {{max}} characters or fewer.",
+    "nameTaken": "A category with this name already exists."
   }
 }

@@ -16,7 +16,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Slots a customer may see: of a stall still selling at a market that is still open, and still
+ * Slots a customer may see: of a stall still selling at a market that is still open, on a weekday
+ * both the market and the stall still open ({@link PickupSlotRepository#OPEN_DAYS}), and still
  * before their cutoff (start − the stall's order_cutoff_hours, the same rule placing an order
  * enforces with 409 CUTOFF_PASSED). JdbcTemplate because market_id is needed from farmer_markets in
  * the same read; every value goes through parameters (R-04).
@@ -25,21 +26,30 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class SlotQueryRepository {
 
-    public static final String PUBLIC_SLOTS =
+    /** The single definition of "a slot a customer can still book", shared by both reads below. */
+    private static final String BOOKABLE_FROM =
             """
-            SELECT s.id, s.farmer_market_id, fm.market_id, s.slot_date, s.start_time, s.end_time,
-                   s.max_orders, s.booked_count
             FROM pickup_slots s
             JOIN farmer_markets fm ON fm.id = s.farmer_market_id AND fm.is_active = TRUE
             JOIN markets m ON m.id = fm.market_id AND m.is_active = TRUE
             JOIN farmer_profiles f ON f.id = fm.farmer_id
-            WHERE fm.farmer_id = :farmerId
-              AND s.is_active = TRUE
-              AND (:marketId IS NULL OR fm.market_id = :marketId)
+            WHERE s.is_active = TRUE
               AND s.slot_date BETWEEN :fromDate AND :toDate
               AND TIMESTAMP(s.slot_date, s.start_time) - INTERVAL f.order_cutoff_hours HOUR > :now
-            ORDER BY s.slot_date, s.start_time, fm.market_id
-            """;
+            """
+                    + PickupSlotRepository.OPEN_DAYS;
+
+    public static final String PUBLIC_SLOTS =
+            """
+            SELECT s.id, s.farmer_market_id, fm.market_id, s.slot_date, s.start_time, s.end_time,
+                   s.max_orders, s.booked_count
+            """
+                    + BOOKABLE_FROM
+                    + """
+                      AND fm.farmer_id = :farmerId
+                      AND (:marketId IS NULL OR fm.market_id = :marketId)
+                    ORDER BY s.slot_date, s.start_time, fm.market_id
+                    """;
 
     /**
      * Dates a customer can still order for, per stall: at least one slot with room left that is
@@ -47,18 +57,12 @@ public class SlotQueryRepository {
      * i.e. what placing an order accepts.
      */
     public static final String ORDERABLE_DATES =
-            """
-            SELECT DISTINCT fm.farmer_id, s.slot_date
-            FROM pickup_slots s
-            JOIN farmer_markets fm ON fm.id = s.farmer_market_id AND fm.is_active = TRUE
-            JOIN markets m ON m.id = fm.market_id AND m.is_active = TRUE
-            JOIN farmer_profiles f ON f.id = fm.farmer_id
-            WHERE fm.farmer_id IN (:farmerIds)
-              AND s.is_active = TRUE
-              AND s.booked_count < s.max_orders
-              AND s.slot_date BETWEEN :fromDate AND :toDate
-              AND TIMESTAMP(s.slot_date, s.start_time) - INTERVAL f.order_cutoff_hours HOUR > :now
-            """;
+            "SELECT DISTINCT fm.farmer_id, s.slot_date\n"
+                    + BOOKABLE_FROM
+                    + """
+                      AND fm.farmer_id IN (:farmerIds)
+                      AND s.booked_count < s.max_orders
+                    """;
 
     private final NamedParameterJdbcTemplate jdbc;
 

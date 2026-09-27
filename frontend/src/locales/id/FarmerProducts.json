@@ -13,11 +13,12 @@
   "col": {
     "product": "Produk",
     "price": "Harga",
-    "left": "Sisa minggu ini",
+    "left": "Hari ambil berikutnya · sisa",
     "reserved": "Dipesan",
     "status": "Status"
   },
   "perUnit": "per {{unit}}",
+  "nextLeft": "{{day}} · sisa {{qty}}",
   "statusOf": "Status {{name}}",
   "edit": "Ubah",
   "delete": "Hapus",

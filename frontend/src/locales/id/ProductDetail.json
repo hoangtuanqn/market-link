@@ -10,7 +10,8 @@
     "remove": "Hapus dari favorit: {{name}}"
   },
   "soldPer": "dijual per {{unit}}",
-  "left": "Sisa <b>{{qty}}</b> minggu ini",
+  "left": "Sisa <b>{{qty}}</b>",
+  "leftOn": "Sisa <b>{{qty}}</b> untuk {{day}}",
   "stockUpdated": "Stok diperbarui hari ini, sebelum pesanan akhir pekan ini.",
   "notifyMe": "Kabari saat tersedia lagi",
   "added": {

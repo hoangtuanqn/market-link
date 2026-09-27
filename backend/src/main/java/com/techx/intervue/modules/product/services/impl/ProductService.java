@@ -20,8 +20,11 @@ import com.techx.intervue.modules.product.services.interfaces.ProductServiceInte
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class ProductService implements ProductServiceInterface {
     private final CategoryRepository categories;
     private final ProductQueryRepository query;
     private final RestockNotifier restock;
+    private final ProductAvailabilityResolver availability;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -45,7 +49,42 @@ public class ProductService implements ProductServiceInterface {
         int safePage = Math.max(1, page);
         int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
         String dbStatus = status == null || status.isBlank() ? null : parseStatus(status).value();
-        return query.mine(profile.getId(), dbStatus, (safePage - 1) * safeSize, safeSize);
+        PageResource<FarmerProductResource> rows =
+                query.mine(profile.getId(), dbStatus, (safePage - 1) * safeSize, safeSize);
+        return new PageResource<>(
+                withNextDate(rows.items()), rows.page(), rows.pageSize(), rows.total());
+    }
+
+    /**
+     * FR-031, FR-063: the nearest date a customer can still order for — the same date and number
+     * the public pages show — plus what active orders already hold for that date. The raw {@code
+     * stockQuantity} is left as the Farmer typed it.
+     */
+    private List<FarmerProductResource> withNextDate(List<FarmerProductResource> rows) {
+        Map<Long, BigDecimal> prices =
+                rows.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        r -> r.item().id(), r -> r.item().price(), (a, b) -> a));
+        Map<Long, ProductAvailabilityResolver.Availability> next = availability.resolve(prices);
+        Map<Long, Integer> reserved =
+                query.reservedOn(
+                        next.entrySet().stream()
+                                .collect(
+                                        Collectors.toMap(
+                                                Map.Entry::getKey, e -> e.getValue().date())));
+        return rows.stream()
+                .map(
+                        r -> {
+                            ProductAvailabilityResolver.Availability a = next.get(r.item().id());
+                            return a == null
+                                    ? r
+                                    : r.withNextDate(
+                                            a.date().toString(),
+                                            a.quantity(),
+                                            reserved.getOrDefault(r.item().id(), 0));
+                        })
+                .toList();
     }
 
     /**
@@ -120,6 +159,13 @@ public class ProductService implements ProductServiceInterface {
         // FR-041: lifting a pause or a manual "sold out" can make it orderable again
         restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
         return toResource(saved, profile, categories.findById(saved.getCategoryId()).orElse(null));
+    }
+
+    @Override
+    public PageResource<FarmerProductResource> adminHidden(int page, int pageSize) {
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return query.hidden((safePage - 1) * safeSize, safeSize);
     }
 
     @Override
@@ -253,7 +299,8 @@ public class ProductService implements ProductServiceInterface {
                         p.getStatus().value(),
                         p.getRatingAvg(),
                         p.getRatingCount(),
-                        p.getShelfLifeDays());
+                        p.getShelfLifeDays(),
+                        null);
         return new FarmerProductResource(
                 item, p.getDescription(), p.isHidden(), p.getHiddenReason());
     }

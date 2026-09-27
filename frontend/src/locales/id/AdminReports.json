@@ -10,7 +10,7 @@
     "orders": "Pesanan",
     "ordersNote": "{{month}}, semua pasar",
     "revenue": "Pendapatan yang selesai",
-    "revenueNote": "₫, dibayar di lapak"
+    "revenueNote": "$, dibayar di lapak"
   },
   "byMarket": {
     "title": "Pendapatan per pasar",

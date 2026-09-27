@@ -10,7 +10,7 @@
     "orders": "注文",
     "ordersNote": "{{month}}、すべてのマーケット",
     "revenue": "完了した売上",
-    "revenueNote": "₫、店舗で支払われた分"
+    "revenueNote": "$、店舗で支払われた分"
   },
   "byMarket": {
     "title": "マーケット別の売上",

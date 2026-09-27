@@ -98,5 +98,11 @@
       "actioned": "Erledigt"
     },
     "statusLabel": "Status"
+  },
+  "hiddenQueue": {
+    "listings": "Ausgeblendete Angebote",
+    "reviews": "Ausgeblendete Bewertungen",
+    "noListings": "Keine ausgeblendeten Angebote",
+    "noListingsText": "Angebote, die du ausblendest, erscheinen hier mit dem Grund, damit du sie wieder einblenden kannst."
   }
 }

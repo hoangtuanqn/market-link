@@ -55,6 +55,8 @@
     "noun": "kategori",
     "nameRequired": "Beri nama kategori.",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "Nama paling banyak {{max}} karakter.",
+    "nameTaken": "Kategori dengan nama ini sudah ada."
   }
 }

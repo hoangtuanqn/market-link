@@ -29,10 +29,10 @@ import org.springframework.stereotype.Component;
  * already sold out is skipped for the next one that still has stock — only when every date is sold
  * out does the nearest one come back, with 0.
  *
- * <p>"Orderable" means the stall still has a slot with room on that date before its cutoff — the
- * dates placing an order accepts. Without that check today (past its cutoff) was shown with the
- * template's fresh quantity while orders went to a later date, so the stock on screen never went
- * down after a sale.
+ * <p>"Orderable" means the stall still has a slot with room on that date before its cutoff, on a
+ * weekday the market and the stall both still open — the dates placing an order accepts. Without
+ * that check today (past its cutoff) was shown with the template's fresh quantity while orders went
+ * to a later date, so the stock on screen never went down after a sale.
  */
 @Component
 @AllArgsConstructor
