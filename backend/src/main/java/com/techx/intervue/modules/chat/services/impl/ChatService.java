@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.chat.services.impl;
 
+import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
@@ -13,6 +14,7 @@ import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ScheduleRow;
 import com.techx.intervue.modules.chat.resources.ParsedMessage;
+import com.techx.intervue.modules.chat.services.impl.ClaudeAssistant.AiReply;
 import com.techx.intervue.modules.chat.services.interfaces.ChatServiceInterface;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import java.math.BigDecimal;
@@ -33,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -64,41 +65,90 @@ public class ChatService implements ChatServiceInterface {
     private final ChatMessageRepository messages;
     private final Clock clock;
     private final ProductAvailabilityResolver availability;
+    private final ClaudeAssistant assistant;
+    private final AssistantRateLimiter assistantLimit;
+    private final ChatbotAiProperties aiProperties;
 
     private record Answer(ChatIntent intent, String reply, List<ChatResultItem> results) {}
 
+    /**
+     * Not transactional on purpose: the Claude call can take seconds and must not hold a DB
+     * connection. The two chat_messages rows are written together by saveAll.
+     */
     @Override
-    @Transactional
-    public ChatReplyResource reply(ChatRequest request, Long userId) {
-        ParsedMessage parsed = classifier.classify(request.message(), LocalDate.now(clock));
+    public ChatReplyResource reply(ChatRequest request, Long userId, boolean assistantAllowed) {
+        Answer answer = null;
+        String loggedIntent = null;
 
-        Answer answer;
+        if (assistantAllowed && userId != null && assistant.enabled()) {
+            AiReply ai = askAssistant(request, userId);
+            if (ai != null) {
+                answer = new Answer(ai.intent(), ai.reply(), ai.results());
+                loggedIntent = ai.loggedIntent();
+            }
+        }
+        if (answer == null) {
+            answer = keywordAnswer(request.message());
+            loggedIntent = answer.intent().name();
+        }
+
+        messages.saveAll(
+                List.of(
+                        message(
+                                request.sessionKey(),
+                                userId,
+                                ChatMessage.ROLE_USER,
+                                request.message(),
+                                loggedIntent),
+                        message(
+                                request.sessionKey(),
+                                userId,
+                                ChatMessage.ROLE_BOT,
+                                answer.reply(),
+                                loggedIntent)));
+
+        return new ChatReplyResource(answer.reply(), answer.intent(), answer.results());
+    }
+
+    /**
+     * Claude's answer, or null to fall back to the keyword engine: over the hourly cap, or the
+     * Claude API / a lookup failed. The user always gets an answer.
+     */
+    private AiReply askAssistant(ChatRequest request, Long userId) {
+        if (!assistantLimit.tryAcquire(userId)) {
+            log.info("Assistant hourly cap reached for user {}, keyword engine answers", userId);
+            return null;
+        }
         try {
-            answer = answer(parsed);
+            return assistant.reply(recentHistory(request.sessionKey(), userId), request.message());
+        } catch (RuntimeException e) {
+            // AnthropicException (network, 4xx/5xx, rate limit) or a failed lookup
+            log.warn("Assistant failed, keyword engine answers: {}", e.toString());
+            return null;
+        }
+    }
+
+    /** The last few messages of this session that belong to this account, oldest first. */
+    private List<ChatMessage> recentHistory(String sessionKey, Long userId) {
+        List<ChatMessage> mine =
+                messages.findTop50BySessionKeyOrderByIdDesc(sessionKey).stream()
+                        .filter(m -> Objects.equals(m.getUserId(), userId))
+                        .limit(Math.max(0, aiProperties.historyMessages()))
+                        .collect(Collectors.toCollection(ArrayList::new));
+        java.util.Collections.reverse(mine);
+        return mine;
+    }
+
+    private Answer keywordAnswer(String text) {
+        ParsedMessage parsed = classifier.classify(text, LocalDate.now(clock));
+        try {
+            return answer(parsed);
         } catch (DataAccessException e) {
             // The domain table does not exist or the DB failed: still answer, do not expose a 500
             // to the UI
             log.warn("Chatbot lookup failed for intent {}", parsed.intent(), e);
-            answer = new Answer(parsed.intent(), DATA_UNAVAILABLE_REPLY, List.of());
+            return new Answer(parsed.intent(), DATA_UNAVAILABLE_REPLY, List.of());
         }
-
-        String intent = answer.intent().name();
-        messages.save(
-                message(
-                        request.sessionKey(),
-                        userId,
-                        ChatMessage.ROLE_USER,
-                        request.message(),
-                        intent));
-        messages.save(
-                message(
-                        request.sessionKey(),
-                        userId,
-                        ChatMessage.ROLE_BOT,
-                        answer.reply(),
-                        intent));
-
-        return new ChatReplyResource(answer.reply(), answer.intent(), answer.results());
     }
 
     /**

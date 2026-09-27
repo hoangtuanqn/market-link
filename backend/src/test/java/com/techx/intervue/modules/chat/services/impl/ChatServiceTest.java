@@ -6,16 +6,19 @@ import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatMessageRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
+import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
@@ -49,6 +52,8 @@ class ChatServiceTest {
     private ChatKnowledgeRepository knowledge;
     private ChatMessageRepository messages;
     private ProductAvailabilityResolver availability;
+    private ClaudeAssistant assistant;
+    private AssistantRateLimiter assistantLimit;
     private ChatService service;
 
     @BeforeEach
@@ -59,7 +64,20 @@ class ChatServiceTest {
         Clock clock =
                 Clock.fixed(Instant.parse("2026-09-24T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
         availability = mock(ProductAvailabilityResolver.class);
-        service = new ChatService(new IntentClassifier(), knowledge, messages, clock, availability);
+        assistant = mock(ClaudeAssistant.class);
+        assistantLimit = mock(AssistantRateLimiter.class);
+        when(assistant.enabled()).thenReturn(true);
+        when(assistantLimit.tryAcquire(any())).thenReturn(true);
+        service =
+                new ChatService(
+                        new IntentClassifier(),
+                        knowledge,
+                        messages,
+                        clock,
+                        availability,
+                        assistant,
+                        assistantLimit,
+                        new ChatbotAiProperties("key", "claude-haiku-4-5", 1024, 4, 10, 30));
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH));
     }
 
@@ -212,13 +230,94 @@ class ChatServiceTest {
     void savesUserAndBotMessagesWithIntent() {
         service.reply(new ChatRequest(SESSION, "hello"), 42L);
 
-        ArgumentCaptor<ChatMessage> saved = ArgumentCaptor.forClass(ChatMessage.class);
-        verify(messages, times(2)).save(saved.capture());
-        assertThat(saved.getAllValues())
+        assertThat(savedMessages())
                 .extracting("role", "intent", "userId", "sessionKey")
                 .containsExactly(
                         tuple(ChatMessage.ROLE_USER, "GREETING", 42L, SESSION),
                         tuple(ChatMessage.ROLE_BOT, "GREETING", 42L, SESSION));
+    }
+
+    // ---------------------------------------------------------------- Claude assistant
+
+    @Test
+    void signedInCustomerIsAnsweredByTheAssistantAndToolsAreLogged() {
+        ChatResultItem card = new ChatResultItem("product", 5L, "Cà chua", "25000 ₫/kg · Vườn A");
+        when(assistant.reply(any(), eq("tìm cà chua")))
+                .thenReturn(
+                        new ClaudeAssistant.AiReply(
+                                "Có 1 sản phẩm.",
+                                ChatIntent.FIND_PRODUCT,
+                                "AI:search_products",
+                                List.of(card)));
+
+        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "tìm cà chua"), 42L, true);
+
+        assertThat(reply.reply()).isEqualTo("Có 1 sản phẩm.");
+        assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
+        assertThat(reply.results()).containsExactly(card);
+        assertThat(savedMessages())
+                .extracting("role", "intent")
+                .containsExactly(
+                        tuple(ChatMessage.ROLE_USER, "AI:search_products"),
+                        tuple(ChatMessage.ROLE_BOT, "AI:search_products"));
+        verify(knowledge, never()).searchProducts(any(), any(), anyBoolean());
+    }
+
+    @Test
+    void assistantFailureFallsBackToTheKeywordEngine() {
+        when(assistant.reply(any(), any())).thenThrow(new IllegalStateException("API down"));
+
+        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "xin chào"), 42L, true);
+
+        assertThat(reply.intent()).isEqualTo(ChatIntent.GREETING);
+        assertThat(reply.reply()).isEqualTo(ChatService.GREETING_REPLY);
+    }
+
+    @Test
+    void overTheHourlyCapTheKeywordEngineAnswersWithoutCallingClaude() {
+        when(assistantLimit.tryAcquire(42L)).thenReturn(false);
+
+        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "xin chào"), 42L, true);
+
+        assertThat(reply.intent()).isEqualTo(ChatIntent.GREETING);
+        verify(assistant, never()).reply(any(), any());
+    }
+
+    @Test
+    void guestsAndNonCustomerAccountsNeverReachClaude() {
+        service.reply(new ChatRequest(SESSION, "xin chào"), null, true);
+        service.reply(new ChatRequest(SESSION, "xin chào"), 42L, false);
+
+        verify(assistant, never()).reply(any(), any());
+        verify(assistantLimit, never()).tryAcquire(any());
+    }
+
+    @Test
+    void assistantGetsOnlyThisAccountsRecentMessagesOldestFirst() {
+        when(messages.findTop50BySessionKeyOrderByIdDesc(SESSION))
+                .thenReturn(
+                        List.of(
+                                message(3L, 42L, "câu mới"),
+                                message(2L, 7L, "của người khác"),
+                                message(1L, 42L, "câu cũ")));
+        when(assistant.reply(any(), any()))
+                .thenReturn(
+                        new ClaudeAssistant.AiReply(
+                                "ok", ChatIntent.UNKNOWN, "AI:none", List.of()));
+
+        service.reply(new ChatRequest(SESSION, "tiếp"), 42L, true);
+
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<List<ChatMessage>> history = ArgumentCaptor.forClass(List.class);
+        verify(assistant).reply(history.capture(), eq("tiếp"));
+        assertThat(history.getValue()).extracting("message").containsExactly("câu cũ", "câu mới");
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<ChatMessage> savedMessages() {
+        ArgumentCaptor<Iterable<ChatMessage>> saved = ArgumentCaptor.forClass(Iterable.class);
+        verify(messages).saveAll(saved.capture());
+        return (List<ChatMessage>) saved.getValue();
     }
 
     @Test
