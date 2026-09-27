@@ -34,7 +34,6 @@ const CustomerOrderEditPage = () => {
   // "Mirror-until-edited": every line starts at its order quantity; only lines the customer touched get an entry
   // here. Never written from inside an effect — it is the source of truth for what the customer changed.
   const [edits, setEdits] = useState<Record<number, number>>({});
-  const [note, setNote] = useState('Please pick the smaller bunches if you can.');
   const [saving, setSaving] = useState(false);
 
   if (state.kind === 'loading' && id !== null) {
@@ -144,17 +143,6 @@ const CustomerOrderEditPage = () => {
       <p className="text-small text-ink-muted">{t('help', { stall: stallName })}</p>
 
       <Card className="flex flex-col gap-4 p-6">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="note" className="text-small font-bold">
-            {t('note')}
-          </label>
-          <textarea
-            id="note"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className="border-line-strong bg-surface-raised text-body min-h-16 rounded-sm border-[1.5px] p-3"
-          />
-        </div>
         <div className="flex flex-wrap gap-2">
           <Button onClick={() => void onSave()} disabled={visibleItems.length === 0 || saving}>
             {t('submit')}

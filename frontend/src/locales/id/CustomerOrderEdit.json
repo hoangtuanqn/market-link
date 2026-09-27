@@ -18,7 +18,6 @@
     "text": "Stok Anda tetap dipesan selama mereka meninjau. Anda akan mendapat notifikasi saat pesanan diterima."
   },
   "help": "Di sini Anda bisa mengurangi jumlah atau menghapus item. Untuk menambah barang lain dari {{stall}}, buat pesanan baru. Jumlah dibatasi sisa stok lapak hari ini.",
-  "note": "Catatan untuk lapak",
   "submit": "Kirim perubahan untuk disetujui",
   "discard": "Buang perubahan",
   "toast": {

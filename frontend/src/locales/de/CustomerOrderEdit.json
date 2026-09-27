@@ -18,7 +18,6 @@
     "text": "Ihre Ware bleibt während der Prüfung reserviert. Sie erhalten eine Benachrichtigung, sobald sie angenommen wird."
   },
   "help": "Hier können Sie Mengen verringern oder Artikel entfernen. Um etwas anderes von {{stall}} hinzuzufügen, geben Sie eine neue Bestellung auf. Die Mengen sind auf den heutigen Restbestand des Stands begrenzt.",
-  "note": "Notiz an den Stand",
   "submit": "Änderungen zur Freigabe senden",
   "discard": "Änderungen verwerfen",
   "toast": {
