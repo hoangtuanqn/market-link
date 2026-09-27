@@ -47,5 +47,10 @@
   "ready_one": "Your stall has a pickup time. It confirms your order.",
   "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Choose a pickup time at {{stall}} to place your orders.",
-  "stockNote": "Stock is taken out of the stall's count the moment you place the order. There is no online payment."
+  "stockNote": "Stock is taken out of the stall's count the moment you place the order. There is no online payment.",
+  "stuck": {
+    "title": "Items in your cart",
+    "text": "If a product is no longer on sale, remove it here and the cart loads again.",
+    "clear": "Empty the cart"
+  }
 }
