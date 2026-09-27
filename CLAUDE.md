@@ -8,13 +8,15 @@ Customer đặt trước → Farmer duyệt → nhận hàng tại stall. Ba vai
 | File | Nội dung | Chủ sở hữu |
 |---|---|---|
 | `.ai/REQUIREMENTS.md` | Nguồn sự thật duy nhất về scope (FR-xxx, MUST/SHOULD/NICE) | QA/DOC |
-| `docs/decisions.md` | 12 quyết định D-01…D-12 đã chốt — **không bàn lại** | LEAD |
+| `docs/decisions.md` | 13 quyết định D-01…D-13 đã chốt — **không bàn lại** | LEAD |
 | `docs/api-contract.md` | Contract BE ↔ FE | LEAD |
 | `db/schema.sql` | Schema đích 19 bảng (MySQL 8, utf8mb4) | LEAD |
-| `docs/MarketLink-Feature-Catalog-by-Module-and-Role.md` | Danh mục tính năng theo module và vai | — |
+| `docs/requirements/MarketLink-Feature-Catalog-by-Module-and-Role.md` | Danh mục tính năng theo module và vai | — |
 | `docs/chatbot-design.md` | Thiết kế chatbot FR-090…092 | BE2 |
 | `docs/design-system/README.md` | Design system "Hang tag": token, component `ml-*`, giọng văn UI — mọi UI phải theo | FE1 |
-| `README.md` | Hướng dẫn cài đặt và chạy dự án | — |
+| `README.md` | Giới thiệu dự án, kiến trúc, quick start | — |
+| `docs/setup.md` | Cài đặt chi tiết, hai cách chạy, Web Push, troubleshooting | — |
+| `docs/README.md` | Mục lục mọi tài liệu trong `docs/` | — |
 | `CONTRIBUTING.md` | Luật nhánh `dev`/`main` (§0 luật cứng H-1…H-10), môi trường, commit, PR, release | LEAD |
 | `AGENTS.md` | Luật git bắt buộc cho mọi AI agent: không trộn `dev` và `main` | LEAD |
 | `docs/ai-tooling.md` | Plugin Claude Code dùng chung (superpowers, harness, code-review…) và cách cài | AI lead |
@@ -70,33 +72,35 @@ AI **không tự tick DONE** trong REQUIREMENTS. Khi xong, báo đủ 7 điều 
 - UI: design system `docs/design-system/` (tokens + Tailwind theme + class `ml-*`), xem `frontend/CLAUDE.md`.
 - Locale: VND `₫`, `dd/MM/yyyy`, 24h, `Asia/Ho_Chi_Minh`.
 
-Hai cách chạy (chi tiết trong `README.md`):
+Hai cách chạy (chi tiết trong `docs/setup.md`):
 
 ```bash
-# A. Trên máy: Docker chỉ chạy MySQL + Redis, BE/FE chạy trực tiếp
-docker compose up -d
-cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
-cd frontend && npm run dev
-
-# B. Full Docker (máy không cần JDK 25 / Node)
-make up        # mysql, redis, backend :8080, frontend :3000
+# A. Full Docker (máy không cần JDK 25 / Node)
+make up        # mysql, redis, rabbitmq, backend :8080, frontend :3000
+make seed      # dữ liệu demo (docs/DEMO_CREDENTIALS.md)
 make be-test   # test backend trong container
 make lint      # eslint + spotless:check
 make format    # prettier + spotless:apply
 make help      # xem mọi lệnh
+
+# B. Trên máy: Docker chỉ chạy MySQL + Redis + RabbitMQ, BE/FE chạy trực tiếp
+docker compose up -d
+cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+cd frontend && npm run dev
 ```
 
-## Hiện trạng cần biết (24/09/2026)
+## Hiện trạng cần biết (27/09/2026)
 
-Code khởi tạo từ dự án cũ InterVue nên còn lệch so với tài liệu MarketLink:
-
-- Package Java vẫn là `com.techx.intervue`, DB mặc định `intervue_db`.
-- Migration thật khác `db/schema.sql`: `users.id BIGINT UNSIGNED`, cột `name`/`password`, bảng `roles`
-  với `ADMIN/USER/EDITOR` thay vì `customer/farmer/admin`. Chưa có migration cho markets, products, orders…
-- ~~Code dùng prefix `/api/v1` và JSON camelCase; contract ghi `/api` và snake_case.~~
-  **LEAD đã chốt 25/09/2026:** toàn dự án dùng `/api/v1` và JSON `camelCase`; cột database giữ
-  `snake_case`. `docs/api-contract.md` đã viết lại theo quyết định này và bổ sung đủ các endpoint
-  auth đang chạy thật. Không còn chỗ nào phải "tạm theo code hiện có" nữa.
+- Package Java vẫn là `com.techx.intervue`, DB mặc định `intervue_db`, container `intervue-*` — tên còn lại từ dự án
+  khởi tạo InterVue, **không đổi** (đổi là vỡ migration, volume và cấu hình của cả đội).
+- DB thật do 39 migration Flyway dựng (`V20260923001` … `V20260926021`): user 3 vai `customer/farmer/admin`, farmer,
+  chợ, sản phẩm, tồn kho theo ngày, slot, đơn hàng, yêu thích, review, feedback, chat, thông báo. Bảng thật khác
+  `db/schema.sql` (thiết kế ban đầu) — so sánh với `db/marketlink-schema-dump.sql`.
+- **LEAD đã chốt 25/09/2026:** toàn dự án dùng `/api/v1` và JSON `camelCase`; cột database giữ `snake_case`.
+  `docs/api-contract.md` viết theo quyết định này.
+- Backend đã có endpoint cho mọi dòng SRS §1.6 (`docs/requirements/SRS-COVERAGE.md`). Một số màn FE còn chạy trên dữ
+  liệu mẫu `src/data/*`: bọc trong `SHOW_WIP` ở `frontend/src/App.tsx`, hiện ở dev, build production hiện "Coming soon".
+  Nối màn nào vào API thật thì gỡ nó khỏi danh sách đó.
 - ~2.150 dòng comment tiếng Việt trong `backend/src`, `frontend/src` và hạ tầng (docker, scripts, prototype) đã
   dịch sang tiếng Anh (PR #153, đếm ngày 26/09/2026). 30/638 commit vẫn có tiếng Việt (26 nằm trên `dev`); R-09 và
   R-10 áp dụng từ nay, lịch sử commit không viết lại.

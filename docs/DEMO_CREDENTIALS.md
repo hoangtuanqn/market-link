@@ -61,5 +61,3 @@ Dữ liệu dựng sẵn cho vài kịch bản:
   vẫn là `Admin@123`.
 - **Xác thực hai bước.** Seed không bật 2FA cho tài khoản nào. Nếu ai đó đã bật 2FA cho admin trên máy của mình thì
   vẫn phải nhập mã; nạp lại seed không tắt 2FA.
-- **Chưa có trong seed** (FR-101 còn TODO): đơn hàng đủ 6 trạng thái, review, yêu thích. Khi bổ sung thì cập nhật
-  bảng trên.
