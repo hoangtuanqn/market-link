@@ -35,8 +35,9 @@ describe('ProductPin', () => {
     );
 
     expect(await screen.findByText('Carrot')).toBeInTheDocument();
-    // The price goes through lib/format (the currency is a dev decision — USD is locked for now): compare against perUnit itself, do not hardcode the symbol
-    expect(screen.getByText(perUnit(15000, 'kg'))).toBeInTheDocument();
+    // The price goes through lib/format: compare against perUnit itself, do not hardcode the format
+    // Testing Library reads the page with the no-break space before ₫ as a plain space; the text we look for must too
+    expect(screen.getByText(perUnit(15000, 'kg').replace(/\s/g, ' '))).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/products/8');
   });
 

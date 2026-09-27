@@ -46,7 +46,8 @@ describe('OrderPin', () => {
     // pickupDate is a date without a time: build the Date in local time, not new Date('yyyy-MM-dd') (UTC shift)
     expect(screen.getByText(new RegExp(formatDate(new Date(2026, 8, 27))))).toBeInTheDocument();
     expect(screen.getByText(new RegExp(`${formatClock('07:00')}.*${formatClock('07:30')}`))).toBeInTheDocument();
-    expect(screen.getByText(money(56000))).toBeInTheDocument();
+    // Testing Library reads the page with the no-break space before ₫ as a plain space; the text we look for must too
+    expect(screen.getByText(money(56000).replace(/\s/g, ' '))).toBeInTheDocument();
   });
 
   it('links a customer to their order', async () => {

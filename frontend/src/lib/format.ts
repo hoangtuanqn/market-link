@@ -1,8 +1,8 @@
 /**
  * Formatting helpers that follow the MarketLink design system (docs/design-system/README.md → Voice), and the reader's
  * Settings (src/lib/settings.ts): language, date format, clock, metric or imperial. Every page goes through these, so a
- * setting changes the whole app in one place. Currency is locked to USD (user decision 2026-09-26) — no per-reader
- * choice any more, see `money()`.
+ * setting changes the whole app in one place. Money is always Vietnamese đồng (docs/decisions.md, units and locale):
+ * stalls are paid in đồng and every price in the database is in đồng, so there is no per-reader currency.
  */
 import SettingsStore from './settings';
 
@@ -13,21 +13,15 @@ const settings = () => SettingsStore.get();
 const locale = () => settings().language;
 
 /**
- * Locked to USD (user decision 2026-09-26) — no per-reader currency choice any more. `amount` is a plain number of
- * dollars, not cents. Kept a new name (not the old `vnd`) so nobody misreads what a call site formats.
+ * 25000 → "25,000 ₫": whole đồng, thousands grouped the way the interface language groups them. `amount` is a plain
+ * number of đồng, as the API returns it.
  */
 export function money(amount: number): string {
-  return new Intl.NumberFormat(locale(), {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 2,
-  }).format(amount);
+  return `${new Intl.NumberFormat(locale(), { maximumFractionDigits: 0 }).format(Math.round(amount))}\u00a0₫`;
 }
 
-/** Alias to money() locked to USD across the entire application. */
+/** The same formatter under the name most call sites use. */
 export const vnd = money;
-export const usd = money;
-export const RATES_DATE = '26/09/2026';
 
 /* ---------- units ---------- */
 
@@ -55,7 +49,7 @@ export function unitName(unit: string): string {
   return imperialFor(unit)?.unit ?? unit;
 }
 
-/** Price per sale unit in the reader's units: (4.5, 'kg') → "$4.50 / kg", or "$2.04 / lb". */
+/** Price per sale unit in the reader's units: (45000, 'kg') → "45,000 ₫ / kg", or "20,412 ₫ / lb". */
 export function perUnit(price: number, unit: string): string {
   const to = imperialFor(unit);
   return to ? `${money(price / to.factor)} / ${to.unit}` : `${money(price)} / ${unit}`;

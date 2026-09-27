@@ -120,8 +120,9 @@ describe('CustomerOrderDetailPage', () => {
 
     const items = await screen.findByRole('list', { name: /what you ordered/i });
     expect(within(items).getByText('Water spinach')).toBeInTheDocument();
-    expect(within(items).getByText(money(36000))).toBeInTheDocument();
-    expect(screen.getAllByText(money(66000)).length).toBeGreaterThan(0);
+    // Testing Library reads the page with the no-break space before ₫ as a plain space; the text we look for must too
+    expect(within(items).getByText(money(36000).replace(/\s/g, ' '))).toBeInTheDocument();
+    expect(screen.getAllByText(money(66000).replace(/\s/g, ' ')).length).toBeGreaterThan(0);
   });
 
   it('says where to collect it: market, stall code and address', async () => {

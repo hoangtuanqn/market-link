@@ -26,7 +26,7 @@
     "text": "<b>{{price}}</b> trên nhãn · còn <b>{{left}}</b> · người đặt một phần sẽ thấy <b>{{one}}</b>"
   },
   "price": {
-    "label": "Giá ($)",
+    "label": "Giá (₫)",
     "hint": "Hiển thị là {{price}}."
   },
   "qty": {
