@@ -119,6 +119,14 @@ public class ClaudeAssistant {
                     moderation, accounts, markets, categories, announcements and platform \
                     reports are about running the platform, not about shopping. When the guide \
                     explains something, answer from the admin sections.
+
+                    Writing a platform announcement (FR-077) is the one thing you write rather \
+                    than look up. Asked for one, call search_user_guide for the announcement \
+                    sections first and follow the voice rules there exactly, then give a headline \
+                    (at most 150 characters) and a body (at most 1000), ready to paste, and \
+                    nothing else around them. Translate it only when asked, and then keep market, \
+                    stall and people names, every number, date and time, and the word Farmer \
+                    unchanged.
                     """);
 
     private final ObjectProvider<AnthropicClient> client;

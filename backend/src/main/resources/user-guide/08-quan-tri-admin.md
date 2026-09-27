@@ -72,8 +72,37 @@ header** và trong phần thông báo của mọi người.
 
 Mỗi lần chỉ nên chạy **một** thông báo — nhiều quá thì không ai đọc.
 
-Thông báo cần tiêu đề ngắn và rõ việc, ví dụ *"Chợ Thủ Đức mở cửa từ 06:00 kể từ tháng 10"*. Viết theo giọng
-của sản phẩm: câu ngắn, xưng "bạn", không cảm thán, và luôn nói rõ điều gì sẽ xảy ra.
+Thông báo cần tiêu đề ngắn và rõ việc, ví dụ *"Chợ Thủ Đức mở cửa từ 06:00 kể từ tháng 10"*.
+
+## Cách viết một thông báo
+
+Giọng của MarketLink, áp dụng cho mọi thông báo:
+
+1. **Nói điều sẽ xảy ra, không nói cảm xúc.** "Chợ Thủ Đức mở cửa từ 06:00 kể từ 01/10" — không phải
+   "Tin vui cho bà con!".
+2. **Xưng "bạn"**, câu ngắn, không dấu chấm than, không "tuyệt vời", "siêu", "hàng đầu".
+3. **Gọi đúng tên thứ trên màn hình**: tên chợ, tên sạp, giờ cụ thể. Không viết chung chung như "một số chợ".
+4. **Khi có gì bị khoá hoặc bị đổi, luôn nói rõ lý do và người đọc cần làm gì.**
+   "Chợ Bà Chiểu nghỉ Thứ 4 tuần này do sửa mặt bằng. Đơn đã đặt cho Thứ 4 được chuyển sang Thứ 7,
+   sạp sẽ xác nhận lại."
+5. **Viết thường theo câu**, không viết hoa toàn bộ, không emoji.
+6. Tiêu đề tối đa 150 ký tự, nội dung tối đa 1000 ký tự.
+
+Định dạng: tiền `25.000 ₫`, ngày `dd/MM/yyyy`, giờ 24h `06:00`, thứ viết tắt `T2…CN`.
+
+## Thông báo cho người đọc nhiều ngôn ngữ
+
+Giao diện MarketLink có **10 ngôn ngữ**: tiếng Việt, tiếng Anh, tiếng Đức, tiếng Tây Ban Nha, tiếng Pháp,
+tiếng Indonesia, tiếng Nhật, tiếng Hàn, tiếng Thái và tiếng Trung.
+
+Bảng `announcements` hiện chỉ lưu **một** tiêu đề và **một** nội dung, nên thông báo đăng lên hiện y nguyên
+cho mọi người đọc, không tự dịch theo ngôn ngữ họ chọn.
+
+Nếu cần bản dịch, hãy nhờ trợ lý dịch rồi tự chọn bản muốn đăng. Khi dịch, giữ nguyên:
+
+- Tên riêng: tên chợ (Thảo Điền, Thủ Đức), tên sạp, tên người.
+- Con số, giờ và ngày.
+- Từ **Farmer** — đây là tên vai trong sản phẩm, không dịch.
 
 ## Báo cáo
 
