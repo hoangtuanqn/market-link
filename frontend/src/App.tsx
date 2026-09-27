@@ -1,12 +1,16 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router';
 import AppToaster from './components/AppToaster';
 import CookieConsentBar from './components/CookieConsentBar';
+import PlatformStatusSync from './components/PlatformStatusSync';
 import ScrollToTop from './components/ScrollToTop';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import { USER_ROLE } from './constants/enums';
+import usePlatformStatus from './hooks/usePlatformStatus';
+import useSession from './hooks/useSession';
 import NotificationCenter from './components/notifications/NotificationCenter';
 import NotificationPermissionBanner from './components/notifications/NotificationPermissionBanner';
 import SettingsSync from './components/SettingsSync';
+import MaintenancePage from './pages/public/Maintenance';
 import AdminLayout from './layout/AdminLayout';
 import AdminSettingsPage from './pages/admin/Settings';
 import FarmerSettingsPage from './pages/farmer/Settings';
@@ -86,9 +90,24 @@ import AdminOrderDetailPage from './pages/admin/OrderDetail';
 import AdminOrdersPage from './pages/admin/Orders';
 import AdminReportsPage from './pages/admin/Reports';
 
-const App = () => {
+/**
+ * Site-wide maintenance mode (MaintenanceModeFilter is the real gate; this is the UX on top of it): while it is on,
+ * anyone but a signed-in admin gets the notice instead of whatever path they asked for. The admin area itself (login
+ * included, since a fresh browser has no session yet) stays reachable so an admin can always get in to turn it back
+ * off.
+ */
+const AppRoutes = () => {
+  const { user } = useSession();
+  const maintenanceMode = usePlatformStatus();
+  const location = useLocation();
+
+  const isAdminArea = location.pathname.startsWith('/admin');
+  if (maintenanceMode && user?.role !== USER_ROLE.ADMIN && !isAdminArea) {
+    return <MaintenancePage />;
+  }
+
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
       <SettingsSync>
         <Routes>
@@ -299,8 +318,15 @@ const App = () => {
       <ChatUnreadCenter />
       <NotificationPermissionBanner />
       <CookieConsentBar />
-    </BrowserRouter>
+    </>
   );
 };
+
+const App = () => (
+  <BrowserRouter>
+    <PlatformStatusSync />
+    <AppRoutes />
+  </BrowserRouter>
+);
 
 export default App;

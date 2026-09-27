@@ -10,5 +10,26 @@
   "hours_one": "{{count}} hora",
   "hours_other": "{{count}} horas",
   "orders_one": "{{count}} pedido",
-  "orders_other": "{{count}} pedidos"
+  "orders_other": "{{count}} pedidos",
+  "website": {
+    "title": "Estado del sitio web",
+    "intro": "Apaga todo el sitio temporalmente mientras arreglas algo, y vuelve a encenderlo cuando termines.",
+    "loading": "Cargando el estado del sitio web",
+    "loadErrorTitle": "No se pudo cargar el estado del sitio web",
+    "loadErrorText": "Revisa tu conexión e inténtalo de nuevo.",
+    "retry": "Reintentar",
+    "pillActive": "En línea",
+    "pillMaintenance": "En mantenimiento",
+    "activeText": "MarketLink está abierto para todos.",
+    "maintenanceText": "Por ahora solo los administradores pueden iniciar sesión. Todos los demás ven un aviso de mantenimiento.",
+    "enable": "Activar el modo de mantenimiento",
+    "disable": "Desactivar el modo de mantenimiento",
+    "confirmTitle": "¿Activar el modo de mantenimiento?",
+    "confirmText": "Todos los visitantes, salvo los administradores, son redirigidos de inmediato a un aviso de mantenimiento. Puedes desactivarlo de nuevo cuando quieras.",
+    "confirmButton": "Activarlo ahora",
+    "cancelButton": "Todavía no",
+    "toastOn": "El modo de mantenimiento está activado. Todos menos los administradores quedan bloqueados.",
+    "toastOff": "El modo de mantenimiento está desactivado. MarketLink está abierto de nuevo.",
+    "error": "No se pudo actualizar el estado del sitio web. Inténtalo de nuevo."
+  }
 }
