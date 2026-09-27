@@ -130,6 +130,16 @@ app:
       phone: ${SEED_ADMIN_PHONE:0900000001}
   # FR-111: realtime chat. An empty host = the in-app simple broker (CI/test); docker compose and prod
   # set RABBITMQ_HOST to relay to RabbitMQ (rabbitmq_stomp plugin, port 61613).
+  # FR-090/091: the Claude assistant for signed-in customer-panel accounts. No key = keyword engine only.
+  # Put the key in .env (ANTHROPIC_API_KEY=...) or application-local.yml, never in this file.
+  chatbot:
+    ai:
+      api-key: ${ANTHROPIC_API_KEY:}
+      model: ${CHATBOT_AI_MODEL:claude-haiku-4-5}
+      max-tokens: 1024
+      max-tool-rounds: 4
+      history-messages: 10
+      messages-per-hour: ${CHATBOT_AI_MESSAGES_PER_HOUR:30}
   chat:
     rabbitmq:
       host: ${RABBITMQ_HOST:}
