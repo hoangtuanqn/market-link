@@ -23,15 +23,15 @@ import ResetPasswordPage from './pages/auth/ResetPassword';
 import GoogleCallbackPage from './pages/auth/GoogleCallback';
 import CompleteProfilePage from './pages/auth/CompleteProfile';
 import SetPasswordPage from './pages/auth/SetPassword';
-import CustomerDashboardWip from './pages/customer/Dashboard';
+import CustomerDashboardPage from './pages/customer/Dashboard';
 import CustomerAccountPage from './pages/customer/Account';
 import CustomerCartWip from './pages/customer/Cart';
-import CustomerOrdersWip from './pages/customer/Orders';
+import CustomerOrdersPage from './pages/customer/Orders';
 import CustomerOrderDetailPage from './pages/customer/OrderDetail';
 import CustomerFavoritesWip from './pages/customer/Favorites';
 import CustomerMessagesPage from './pages/customer/Messages';
 import CustomerNotificationsPage from './pages/customer/Notifications';
-import CustomerOrderEditWip from './pages/customer/OrderEdit';
+import CustomerOrderEditPage from './pages/customer/OrderEdit';
 import CustomerOrderPlacedWip from './pages/customer/OrderPlaced';
 import CustomerReviewWip from './pages/customer/Review';
 import CustomerBecomeFarmerPage from './pages/customer/BecomeFarmer';
@@ -85,10 +85,7 @@ import AdminReportsWip from './pages/admin/Reports';
 
 // A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
 // Once a screen's API is wired up, remove it from this list.
-const CustomerDashboardPage = SHOW_WIP ? CustomerDashboardWip : ComingSoon;
-const CustomerOrdersPage = SHOW_WIP ? CustomerOrdersWip : ComingSoon;
 const CustomerFavoritesPage = SHOW_WIP ? CustomerFavoritesWip : ComingSoon;
-const CustomerOrderEditPage = SHOW_WIP ? CustomerOrderEditWip : ComingSoon;
 const CustomerOrderPlacedPage = SHOW_WIP ? CustomerOrderPlacedWip : ComingSoon;
 const CustomerReviewPage = SHOW_WIP ? CustomerReviewWip : ComingSoon;
 const FarmerOverviewPage = SHOW_WIP ? FarmerOverviewWip : ComingSoon;
