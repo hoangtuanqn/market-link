@@ -14,13 +14,10 @@
     "declined": "已拒绝",
     "cancelled": "已取消"
   },
-  "previewLocked": "预览：截单后",
   "pickup": {
     "title": "取货",
     "where": "{{market}}，摊位 {{stall}}",
-    "spot": "市场靠河一侧，面包摊旁边。",
     "slot": "您的时段",
-    "phone": "摊位电话",
     "bring": "请携带",
     "bringText": "{{total}}，在摊位用现金或银行转账支付",
     "directions": "路线",
@@ -37,11 +34,24 @@
     "until": "在 <b>{{cutoff}}</b> 之前，您可以修改数量、删除商品或取消订单。修改后，{{stall}} 会重新确认订单。",
     "edit": "修改订单",
     "cancel": "取消订单",
-    "locked": "截单时间 {{cutoff}} 已过。如需修改，请直接致电摊位 {{phone}}。",
-    "settled": "该订单已无法更改。如有疑问，请直接致电摊位 {{phone}}。"
+    "lockedContact": "已于 {{cutoff}} 截单。如需更改，请给摊位发消息。",
+    "settledContact": "此订单已无法更改。如有疑问，请给摊位发消息。",
+    "cancelFailed": "无法取消订单。可能已过截单时间，请刷新查看状态。"
   },
   "notify": {
     "title": "此订单的通知",
     "text": "订单被接受时已通知您。订单可取货时，或摊位不得不拒绝时，您会收到通知。"
+  },
+  "noun": "订单",
+  "items": {
+    "title": "你订购的商品",
+    "line": "{{qty}} {{unit}} × {{price}}",
+    "total": "合计"
+  },
+  "declined": "摊位拒绝了此订单：{{reason}}",
+  "cancelDialog": {
+    "title": "取消此订单？",
+    "text": "{{stall}} 会立即收到通知，商品将重新开售。",
+    "keep": "保留订单"
   }
 }

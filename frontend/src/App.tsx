@@ -27,7 +27,7 @@ import CustomerDashboardWip from './pages/customer/Dashboard';
 import CustomerAccountPage from './pages/customer/Account';
 import CustomerCartWip from './pages/customer/Cart';
 import CustomerOrdersWip from './pages/customer/Orders';
-import CustomerOrderDetailWip from './pages/customer/OrderDetail';
+import CustomerOrderDetailPage from './pages/customer/OrderDetail';
 import CustomerFavoritesWip from './pages/customer/Favorites';
 import CustomerMessagesPage from './pages/customer/Messages';
 import CustomerNotificationsPage from './pages/customer/Notifications';
@@ -87,7 +87,6 @@ import AdminReportsWip from './pages/admin/Reports';
 // Once a screen's API is wired up, remove it from this list.
 const CustomerDashboardPage = SHOW_WIP ? CustomerDashboardWip : ComingSoon;
 const CustomerOrdersPage = SHOW_WIP ? CustomerOrdersWip : ComingSoon;
-const CustomerOrderDetailPage = SHOW_WIP ? CustomerOrderDetailWip : ComingSoon;
 const CustomerFavoritesPage = SHOW_WIP ? CustomerFavoritesWip : ComingSoon;
 const CustomerOrderEditPage = SHOW_WIP ? CustomerOrderEditWip : ComingSoon;
 const CustomerOrderPlacedPage = SHOW_WIP ? CustomerOrderPlacedWip : ComingSoon;

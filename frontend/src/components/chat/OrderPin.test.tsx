@@ -52,14 +52,14 @@ describe('OrderPin', () => {
   it('links a customer to their order', async () => {
     renderPin();
 
-    expect(await screen.findByRole('link')).toHaveAttribute('href', '/orders/ML-0421');
+    expect(await screen.findByRole('link')).toHaveAttribute('href', '/orders/21');
   });
 
   it('links the stall to the order in its own panel', async () => {
     session.user = { id: 3, role: 'farmer' };
     renderPin();
 
-    expect(await screen.findByRole('link')).toHaveAttribute('href', '/farmer/orders/ML-0421');
+    expect(await screen.findByRole('link')).toHaveAttribute('href', '/farmer/orders/21');
   });
 
   /** Review Focus #4: the order can no longer be read (403/404/network) — a fallback line, the bubble stays intact. */
