@@ -47,5 +47,10 @@
   "ready_one": "Your stall has a pickup time. It confirms your order.",
   "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Elige una hora de recogida en {{stall}} para hacer tus pedidos.",
-  "stockNote": "El stock se descuenta del puesto en cuanto haces el pedido. No hay pago en línea."
+  "stockNote": "El stock se descuenta del puesto en cuanto haces el pedido. No hay pago en línea.",
+  "stuck": {
+    "title": "Productos en tu carrito",
+    "text": "Si un producto ya no está a la venta, quítalo aquí y el carrito se volverá a cargar.",
+    "clear": "Vaciar el carrito"
+  }
 }

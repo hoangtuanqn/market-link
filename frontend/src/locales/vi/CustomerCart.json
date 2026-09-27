@@ -47,5 +47,10 @@
   "ready_one": "Sạp của bạn đã có giờ nhận hàng. Sạp sẽ tự xác nhận đơn.",
   "ready_other": "Tất cả sạp đã có giờ nhận hàng. Mỗi sạp tự xác nhận đơn của mình.",
   "notReady": "Chọn giờ nhận hàng ở {{stall}} để đặt đơn.",
-  "stockNote": "Hàng được trừ khỏi số lượng của sạp ngay khi bạn đặt đơn. Không có thanh toán trực tuyến."
+  "stockNote": "Hàng được trừ khỏi số lượng của sạp ngay khi bạn đặt đơn. Không có thanh toán trực tuyến.",
+  "stuck": {
+    "title": "Sản phẩm trong giỏ",
+    "text": "Nếu có sản phẩm không còn bán, hãy xoá nó ở đây để giỏ hàng tải lại.",
+    "clear": "Xoá hết giỏ hàng"
+  }
 }

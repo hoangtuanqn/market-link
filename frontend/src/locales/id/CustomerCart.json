@@ -47,5 +47,10 @@
   "ready_one": "Your stall has a pickup time. It confirms your order.",
   "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Pilih waktu ambil di {{stall}} untuk membuat pesanan.",
-  "stockNote": "Stok langsung dikurangi dari jumlah lapak saat Anda memesan. Tidak ada pembayaran online."
+  "stockNote": "Stok langsung dikurangi dari jumlah lapak saat Anda memesan. Tidak ada pembayaran online.",
+  "stuck": {
+    "title": "Isi keranjang",
+    "text": "Jika ada produk yang sudah tidak dijual, hapus di sini dan keranjang akan dimuat ulang.",
+    "clear": "Kosongkan keranjang"
+  }
 }

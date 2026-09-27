@@ -47,5 +47,10 @@
   "ready_one": "Your stall has a pickup time. It confirms your order.",
   "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "注文するには {{stall}} の受け取り時間を選んでください。",
-  "stockNote": "注文した時点で、在庫はお店の数量から差し引かれます。オンライン決済はありません。"
+  "stockNote": "注文した時点で、在庫はお店の数量から差し引かれます。オンライン決済はありません。",
+  "stuck": {
+    "title": "カートの商品",
+    "text": "販売が終了した商品があれば、ここで削除するとカートが再読み込みされます。",
+    "clear": "カートを空にする"
+  }
 }
