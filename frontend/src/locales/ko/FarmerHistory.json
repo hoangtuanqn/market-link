@@ -9,7 +9,7 @@
     "noun": "your numbers",
     "completed": "완료된 주문",
     "revenue": "매출",
-    "revenueNote": "₫, 매대에서 결제",
+    "revenueNote": "$, 매대에서 결제",
     "average": "평균 주문 금액",
     "declined": "거절한 주문",
     "cancelled": "Cancelled",

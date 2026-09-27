@@ -26,7 +26,7 @@
     "text": "标签上显示 <b>{{price}}</b> · 剩余 <b>{{left}}</b> · 订购一份的人会看到 <b>{{one}}</b>"
   },
   "price": {
-    "label": "价格（₫）",
+    "label": "价格（$）",
     "hint": "显示为 {{price}}。"
   },
   "qty": {

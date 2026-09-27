@@ -10,7 +10,7 @@
     "orders": "Bestellungen",
     "ordersNote": "{{month}}, alle Märkte",
     "revenue": "Abgeschlossener Umsatz",
-    "revenueNote": "₫, an den Ständen bezahlt"
+    "revenueNote": "$, an den Ständen bezahlt"
   },
   "byMarket": {
     "title": "Umsatz nach Markt",
