@@ -589,7 +589,10 @@
       "order": "Pesanan {{code}}: isinya apa, masih sebelum batas waktu? Sebaiknya saya terima?",
       "review": "Buatkan balasan singkat dan jujur untuk ulasan {{rating}} bintang ini.",
       "application": "Pengajuan lapak ini sudah lengkap belum, ada yang perlu dicek sebelum saya setujui?",
-      "reports": "Jelaskan angka dari {{from}} sampai {{to}}: pasar mana yang paling ramai, mana yang sepi, dan kenapa."
+      "reports": "Jelaskan angka dari {{from}} sampai {{to}}: pasar mana yang paling ramai, mana yang sepi, dan kenapa.",
+      "cart": "Jelaskan keranjang saya: kenapa terpisah, berapa biaya tiap lapak, dan apakah saya masih keburu semua batas waktu?",
+      "announcement": "Buatkan pengumuman untuk seluruh platform. Isinya saya beri tahu.",
+      "product": "Tulis deskripsi singkat dan catatan tulisan tangan untuk label {{name}}."
     }
   },
   "tour": {

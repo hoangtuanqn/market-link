@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react';
-import { AssistantCtx, type AssistantRecord, type AssistantState } from './assistantContext';
+import { AssistantCtx, type AssistantCartLine, type AssistantRecord, type AssistantState } from './assistantContext';
 
 /**
  * Holds the assistant panel's open/closed state, the composer text and the row the current screen is showing.
@@ -11,6 +11,7 @@ export const AssistantProvider = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState('');
   const [record, setRecord] = useState<AssistantRecord | null>(null);
+  const [cart, setCart] = useState<AssistantCartLine[]>([]);
 
   const openWith = useCallback((prefill?: string) => {
     if (prefill) setDraft(prefill);
@@ -21,14 +22,16 @@ export const AssistantProvider = ({ children }: { children: ReactNode }) => {
     () => ({
       open,
       record,
+      cart,
       draft,
       setDraft,
       openWith,
       close: () => setOpen(false),
       toggle: () => setOpen((v) => !v),
       setRecord,
+      setCart,
     }),
-    [open, record, draft, openWith],
+    [open, record, cart, draft, openWith],
   );
 
   return <AssistantCtx.Provider value={value}>{children}</AssistantCtx.Provider>;

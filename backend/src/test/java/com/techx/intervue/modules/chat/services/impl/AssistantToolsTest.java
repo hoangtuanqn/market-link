@@ -16,6 +16,7 @@ import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.AdminKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
+import com.techx.intervue.modules.chat.requests.ChatRequest.PageContext;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
@@ -23,6 +24,8 @@ import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ScheduleRow;
 import com.techx.intervue.modules.chat.services.impl.AssistantTools.ToolOutcome;
+import com.techx.intervue.modules.order.requests.PreviewRequest;
+import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver.Availability;
 import java.math.BigDecimal;
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class AssistantToolsTest {
 
@@ -60,6 +64,7 @@ class AssistantToolsTest {
     private ProductAvailabilityResolver availability;
     private FarmerKnowledgeRepository farmerKnowledge;
     private AdminKnowledgeRepository adminKnowledge;
+    private OrderServiceInterface orders;
     private AssistantTools tools;
 
     @BeforeEach
@@ -68,13 +73,15 @@ class AssistantToolsTest {
         availability = mock(ProductAvailabilityResolver.class);
         farmerKnowledge = mock(FarmerKnowledgeRepository.class);
         adminKnowledge = mock(AdminKnowledgeRepository.class);
+        orders = mock(OrderServiceInterface.class);
         tools =
                 new AssistantTools(
                         knowledge,
                         farmerKnowledge,
                         adminKnowledge,
                         availability,
-                        new UserGuideIndex());
+                        new UserGuideIndex(),
+                        orders);
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH, THAO_DIEN));
     }
 
@@ -227,6 +234,7 @@ class AssistantToolsTest {
                         AssistantTools.LIST_MARKETS,
                         AssistantTools.FIND_STALLS,
                         AssistantTools.PICKUP_TIMES,
+                        AssistantTools.CART_PREVIEW,
                         AssistantTools.SEARCH_GUIDE);
     }
 
@@ -428,5 +436,46 @@ class AssistantToolsTest {
                         AssistantTools.allows(
                                 AssistantAudience.FARMER, AssistantTools.PROPOSE_FARMER_DECISION))
                 .isFalse();
+    }
+
+    // ------------------------------------------------- FR-030/032 the cart comes from the screen
+
+    @Test
+    void anEmptyCartIsSaidPlainlyRatherThanGuessedAt() {
+        ToolOutcome out =
+                tools.run(
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                        AssistantTools.CART_PREVIEW,
+                        Map.of());
+
+        assertThat(out.error()).isTrue();
+        verifyNoInteractions(orders);
+    }
+
+    @Test
+    void theCartComesFromTheContextAndArgumentsAreIgnored() {
+        AssistantContext withCart =
+                new AssistantContext(
+                        AssistantAudience.CUSTOMER,
+                        7L,
+                        null,
+                        List.of(new PageContext.CartLine(11L, 2)));
+        when(orders.preview(eq(7L), any())).thenReturn(List.of());
+
+        // The model tries to name its own lines; they are not read.
+        tools.run(
+                withCart,
+                AssistantTools.CART_PREVIEW,
+                Map.of("items", List.of(Map.of("productId", 99))));
+
+        ArgumentCaptor<PreviewRequest> sent = ArgumentCaptor.forClass(PreviewRequest.class);
+        verify(orders).preview(eq(7L), sent.capture());
+        assertThat(sent.getValue().items())
+                .singleElement()
+                .satisfies(
+                        line -> {
+                            assertThat(line.productId()).isEqualTo(11L);
+                            assertThat(line.quantity()).isEqualTo(2);
+                        });
     }
 }

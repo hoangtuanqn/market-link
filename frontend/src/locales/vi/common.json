@@ -589,7 +589,10 @@
       "order": "Đơn {{code}}: có những gì, còn trước giờ chốt không, tôi có nên nhận không?",
       "review": "Soạn giúp tôi một lời đáp ngắn và thành thật cho đánh giá {{rating}} sao này.",
       "application": "Hồ sơ đăng ký sạp này đã đủ chưa, có gì đáng kiểm tra trước khi tôi duyệt không?",
-      "reports": "Giải thích giúp các số liệu từ {{from}} đến {{to}}: chợ nào đông nhất, chợ nào đang ế, và vì sao."
+      "reports": "Giải thích giúp các số liệu từ {{from}} đến {{to}}: chợ nào đông nhất, chợ nào đang ế, và vì sao.",
+      "cart": "Giải thích giúp giỏ của tôi: vì sao bị tách, mỗi sạp hết bao nhiêu, tôi còn kịp giờ chốt của từng sạp không?",
+      "announcement": "Soạn giúp tôi một thông báo toàn sàn. Tôi sẽ nói nội dung.",
+      "product": "Viết giúp tôi mô tả ngắn và dòng chữ tay trên thẻ cho {{name}}."
     }
   },
   "tour": {

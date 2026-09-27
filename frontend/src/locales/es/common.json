@@ -589,7 +589,10 @@
       "order": "Pedido {{code}}: qué lleva, ¿sigue antes de la hora de cierre? ¿lo acepto?",
       "review": "Redacta una respuesta breve y honesta a esta reseña de {{rating}} estrellas.",
       "application": "¿Esta solicitud de puesto está completa? ¿Hay algo que revisar antes de aprobarla?",
-      "reports": "Explica estos números del {{from}} al {{to}}: qué mercado va mejor, cuál está flojo y por qué."
+      "reports": "Explica estos números del {{from}} al {{to}}: qué mercado va mejor, cuál está flojo y por qué.",
+      "cart": "Explícame el carrito: ¿por qué se divide, cuánto cuesta cada puesto y llego a todas las horas de cierre?",
+      "announcement": "Redacta un anuncio para toda la plataforma. Yo te digo de qué trata.",
+      "product": "Escribe una descripción corta y una nota manuscrita para la etiqueta de {{name}}."
     }
   },
   "tour": {

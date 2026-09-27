@@ -589,7 +589,10 @@
       "order": "Bestellung {{code}}: Was ist darin, ist die Frist noch offen, und soll ich sie annehmen?",
       "review": "Entwirf eine kurze, ehrliche Antwort auf diese Bewertung mit {{rating}} Sternen.",
       "application": "Ist diese Standbewerbung vollständig, und sollte ich vor der Freigabe etwas prüfen?",
-      "reports": "Erkläre diese Zahlen von {{from}} bis {{to}}: Welcher Markt läuft am besten, welcher schwach, und warum?"
+      "reports": "Erkläre diese Zahlen von {{from}} bis {{to}}: Welcher Markt läuft am besten, welcher schwach, und warum?",
+      "cart": "Erkläre meinen Warenkorb: Warum ist er geteilt, was kostet jeder Stand, und schaffe ich alle Fristen?",
+      "announcement": "Entwirf eine Ankündigung für die Plattform. Den Inhalt sage ich dir.",
+      "product": "Schreibe eine kurze Beschreibung und eine handgeschriebene Notiz für das Schild von {{name}}."
     }
   },
   "tour": {

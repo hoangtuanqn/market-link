@@ -9,6 +9,7 @@ import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.AdminKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
+import com.techx.intervue.modules.chat.requests.ChatRequest.PageContext;
 import com.techx.intervue.modules.chat.resources.AdminRows.AccountRow;
 import com.techx.intervue.modules.chat.resources.AdminRows.FlaggedReviewRow;
 import com.techx.intervue.modules.chat.resources.AdminRows.HiddenItemRow;
@@ -28,6 +29,10 @@ import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ScheduleRow;
+import com.techx.intervue.modules.order.requests.CartLine;
+import com.techx.intervue.modules.order.requests.PreviewRequest;
+import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
+import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver.Availability;
 import java.math.BigDecimal;
@@ -60,6 +65,7 @@ public class AssistantTools {
     static final String FIND_STALLS = "find_stalls";
     static final String PICKUP_TIMES = "get_pickup_times";
     static final String SEARCH_GUIDE = "search_user_guide";
+    static final String CART_PREVIEW = "get_cart_preview";
     static final String MY_ORDERS = "get_my_orders";
     static final String CUTOFF_STATUS = "get_cutoff_status";
     static final String MY_PRODUCTS = "get_my_products";
@@ -86,6 +92,7 @@ public class AssistantTools {
     private final AdminKnowledgeRepository adminKnowledge;
     private final ProductAvailabilityResolver availability;
     private final UserGuideIndex guide;
+    private final OrderServiceInterface orders;
 
     /**
      * What one tool call produced.
@@ -169,6 +176,18 @@ public class AssistantTools {
                                     property("string", MARKET_HINT),
                                     "day_of_week",
                                     dayProperty()),
+                            List.of()),
+                    tool(
+                            CART_PREVIEW,
+                            "The cart in this person's browser right now, split the way it will be"
+                                    + " placed: one order per stall, with each stall's items, its"
+                                    + " subtotal, how many hours before pickup it stops taking"
+                                    + " changes, and any problem with a line. Use it whenever they"
+                                    + " ask about \"my cart\", why it is split, what it costs, or"
+                                    + " whether they are in time. It takes no arguments: the cart"
+                                    + " comes from the screen, not from you. Empty means they are"
+                                    + " not on the cart screen — say so rather than guessing.",
+                            Map.of(),
                             List.of()),
                     tool(
                             SEARCH_GUIDE,
@@ -417,6 +436,7 @@ public class AssistantTools {
                 case FIND_STALLS -> findStalls(input);
                 case PICKUP_TIMES -> pickupTimes(input);
                 case SEARCH_GUIDE -> searchGuide(input);
+                case CART_PREVIEW -> cartPreview(context);
                 case MY_ORDERS -> myOrders(context, input);
                 case CUTOFF_STATUS -> cutoffStatus(context, input);
                 case MY_PRODUCTS -> myProducts(context, input);
@@ -447,6 +467,7 @@ public class AssistantTools {
             case FIND_STALLS -> ChatIntent.FARMER_AVAILABILITY;
             case PICKUP_TIMES -> ChatIntent.PICKUP_WINDOW;
             case SEARCH_GUIDE -> ChatIntent.HELP;
+            case CART_PREVIEW -> ChatIntent.PRODUCT_DETAIL;
             case MY_ORDERS, CUTOFF_STATUS -> ChatIntent.PICKUP_WINDOW;
             case MY_PRODUCTS, MY_SALES -> ChatIntent.PRODUCT_DETAIL;
             case MY_REVIEWS -> ChatIntent.HELP;
@@ -1097,5 +1118,72 @@ public class AssistantTools {
 
     private static String lower(String value) {
         return value == null ? null : value.toLowerCase(java.util.Locale.ROOT);
+    }
+
+    // ---------------------------------------------------------------- FR-030/032 cart
+
+    /**
+     * The cart is client state — there is no cart table — so it arrives with the request and is fed
+     * to the same preview the cart screen calls. Two things follow. The lines come from {@code
+     * context}, never from the model's arguments, for the same reason a farmer tool takes no stall
+     * id. And nothing here is reimplemented: the splitting, the cutoff hours and the per-line
+     * problems are the ones the person is already looking at, so the assistant cannot disagree with
+     * their own screen.
+     */
+    private ToolOutcome cartPreview(AssistantContext context) {
+        List<PageContext.CartLine> lines = context == null ? List.of() : context.cart();
+        if (lines == null || lines.isEmpty()) {
+            return error(
+                    ChatIntent.PRODUCT_DETAIL,
+                    "The cart is empty, or they are not on the cart screen so it was not sent.");
+        }
+        List<OrderGroupPreviewResource> groups =
+                orders.preview(
+                        context.userId(),
+                        new PreviewRequest(
+                                lines.stream()
+                                        .map(l -> new CartLine(l.productId(), l.quantity()))
+                                        .toList()));
+
+        List<Map<String, Object>> out = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+        for (OrderGroupPreviewResource g : groups) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("stall", g.stallName());
+            if (g.marketName() != null) {
+                row.put("market", g.marketName());
+            } else {
+                row.put(
+                        "market_not_chosen_yet",
+                        g.markets().stream().map(m -> m.marketName()).toList());
+            }
+            row.put("closes_hours_before_pickup", g.orderCutoffHours());
+            row.put("subtotal_vnd", g.subtotal());
+            row.put(
+                    "items",
+                    g.items().stream()
+                            .map(
+                                    i -> {
+                                        Map<String, Object> line = new LinkedHashMap<>();
+                                        line.put("name", i.name());
+                                        line.put("quantity", i.quantity() + " " + i.unit());
+                                        line.put("price_vnd", i.unitPrice());
+                                        line.put("left", i.stockQuantity());
+                                        line.put("status", i.status());
+                                        return line;
+                                    })
+                            .toList());
+            if (!g.problems().isEmpty()) {
+                row.put("problems", g.problems());
+            }
+            out.add(row);
+            total = total.add(g.subtotal());
+        }
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("orders_it_will_become", groups.size());
+        result.put("total_vnd", total);
+        result.put("paid_at_the_stall", true);
+        result.put("groups", out);
+        return ok(ChatIntent.PRODUCT_DETAIL, result, List.of());
     }
 }

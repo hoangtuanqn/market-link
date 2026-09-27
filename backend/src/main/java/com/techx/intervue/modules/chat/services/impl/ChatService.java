@@ -138,7 +138,7 @@ public class ChatService implements ChatServiceInterface {
             return assistant.reply(
                     recentHistory(request.sessionKey(), userId),
                     request.message(),
-                    contextFor(userId, audience),
+                    contextFor(userId, audience, request.context()),
                     request.context());
         } catch (RuntimeException e) {
             // AnthropicException (network, 4xx/5xx, rate limit) or a failed lookup
@@ -151,12 +151,15 @@ public class ChatService implements ChatServiceInterface {
      * Resolves the stall a Farmer owns here, once per message, from the signed-in account. It is
      * deliberately not a tool argument: an argument is filled by the model (FR-093 note 1).
      */
-    private AssistantContext contextFor(Long userId, AssistantAudience audience) {
+    private AssistantContext contextFor(
+            Long userId, AssistantAudience audience, ChatRequest.PageContext page) {
         Long farmerId =
                 audience == AssistantAudience.FARMER
                         ? farmerKnowledge.farmerIdOf(userId).orElse(null)
                         : null;
-        return new AssistantContext(audience, userId, farmerId);
+        List<ChatRequest.PageContext.CartLine> cart =
+                page == null || page.cart() == null ? List.of() : page.cart();
+        return new AssistantContext(audience, userId, farmerId, cart);
     }
 
     /** The last few messages of this session that belong to this account, oldest first. */

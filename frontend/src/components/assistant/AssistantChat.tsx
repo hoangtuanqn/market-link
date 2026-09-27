@@ -127,6 +127,7 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
   const { pathname } = useLocation();
   const assistant = useAssistant();
   const record = assistant?.record ?? null;
+  const cart = assistant?.cart ?? [];
   // FR-093, FR-094: a proposed action is pressed once. `running` disables the button while the real endpoint
   // works, `done` replaces it afterwards so the same change cannot be sent twice from scrollback.
   const [running, setRunning] = useState<string | null>(null);
@@ -222,6 +223,7 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
         page: routePattern(pathname),
         recordType: record?.type,
         recordRef: record?.ref,
+        cart: cart.length > 0 ? cart : undefined,
       };
       const data = await ChatApi.ask(sessionKey, message, context);
       if (data) {

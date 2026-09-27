@@ -10,9 +10,13 @@ export type AssistantRecordType = 'order' | 'review' | 'farmer' | 'product' | 'm
 
 export type AssistantRecord = { type: AssistantRecordType; ref: string };
 
+/** One cart line, ids and numbers only. */
+export type AssistantCartLine = { productId: number; quantity: number };
+
 export type AssistantState = {
   open: boolean;
   record: AssistantRecord | null;
+  cart: AssistantCartLine[];
   /** The composer text. It lives here so a screen can ask a question on the person's behalf. */
   draft: string;
   setDraft: (text: string) => void;
@@ -20,6 +24,7 @@ export type AssistantState = {
   close: () => void;
   toggle: () => void;
   setRecord: (record: AssistantRecord | null) => void;
+  setCart: (cart: AssistantCartLine[]) => void;
 };
 
 export const AssistantCtx = createContext<AssistantState | null>(null);
@@ -41,4 +46,26 @@ export const useAssistantRecord = (record: AssistantRecord | null) => {
     setRecord(type && ref ? { type, ref } : null);
     return () => setRecord(null);
   }, [setRecord, type, ref]);
+};
+
+/**
+ * Hand the assistant the cart this screen is showing, for as long as it is mounted. Only the cart screen calls this:
+ * everywhere else the assistant has no cart and says so rather than guessing.
+ */
+export const useAssistantCart = (cart: AssistantCartLine[]) => {
+  const assistant = useAssistant();
+  const setCart = assistant?.setCart;
+  const key = cart.map((l) => `${l.productId}:${l.quantity}`).join(',');
+  useEffect(() => {
+    if (!setCart) return;
+    setCart(
+      key
+        ? key.split(',').map((part) => {
+            const [productId, quantity] = part.split(':');
+            return { productId: Number(productId), quantity: Number(quantity) };
+          })
+        : [],
+    );
+    return () => setCart([]);
+  }, [setCart, key]);
 };

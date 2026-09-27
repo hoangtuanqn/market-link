@@ -1,9 +1,12 @@
 package com.techx.intervue.modules.chat.requests;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 
 public record ChatRequest(
         @NotBlank(message = "Session key is required!")
@@ -33,6 +36,10 @@ public record ChatRequest(
      *     hyphens and colons only
      * @param recordType one of order, review, farmer, product, market
      * @param recordRef the id or code that route is showing
+     * @param cart the cart as it stands in the browser, when they are on the cart screen. The cart
+     *     is client state — there is no cart table — so this is the only way the assistant can
+     *     answer "do I make both cutoffs?". Ids and quantities only, and it is fed to the same
+     *     preview the cart screen itself uses rather than to anything new.
      */
     public record PageContext(
             @Pattern(regexp = "^[a-z/:-]{1,64}$", message = "Page invalid!") String page,
@@ -41,5 +48,18 @@ public record ChatRequest(
                             message = "Record type invalid!")
                     String recordType,
             @Pattern(regexp = "^[A-Za-z0-9_-]{1,32}$", message = "Record reference invalid!")
-                    String recordRef) {}
+                    String recordRef,
+            @Size(max = 30, message = "Cart too large!") @Valid List<CartLine> cart) {
+
+        /** One cart line. Numbers only: nothing here is text a person typed. */
+        public record CartLine(
+                @Min(1) long productId,
+                @Min(value = 1, message = "Quantity must be at least 1!")
+                        @Max(value = 999, message = "Quantity too large!")
+                        int quantity) {}
+
+        public PageContext(String page, String recordType, String recordRef) {
+            this(page, recordType, recordRef, List.of());
+        }
+    }
 }

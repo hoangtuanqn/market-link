@@ -589,7 +589,10 @@
       "order": "Commande {{code}} : que contient-elle, est-on encore avant la limite, dois-je l'accepter ?",
       "review": "Rédige une réponse courte et honnête à cet avis de {{rating}} étoiles.",
       "application": "Cette demande de stand est-elle complète, et y a-t-il quelque chose à vérifier avant d'approuver ?",
-      "reports": "Explique ces chiffres du {{from}} au {{to}} : quel marché marche le mieux, lequel est calme, et pourquoi ?"
+      "reports": "Explique ces chiffres du {{from}} au {{to}} : quel marché marche le mieux, lequel est calme, et pourquoi ?",
+      "cart": "Explique mon panier : pourquoi est-il divisé, combien coûte chaque stand, et suis-je encore dans les temps ?",
+      "announcement": "Rédige une annonce pour toute la plateforme. Je te dis de quoi il s'agit.",
+      "product": "Écris une courte description et une note manuscrite pour l'étiquette de {{name}}."
     }
   },
   "tour": {

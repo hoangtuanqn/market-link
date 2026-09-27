@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import CatalogApi from '@/api-requests/catalog.requests';
 import ProductApi, { type ProductInput } from '@/api-requests/product.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
@@ -73,6 +74,7 @@ const fromProduct = (p: ProductType): FormState => {
 /** FR-062 — add or edit one product: name, category, unit (built-in or the stall's own), price, quantity, description. */
 const FarmerProductFormPage = () => {
   const { t } = useTranslation('FarmerProductForm');
+  const { t: tAssistant } = useTranslation('common');
   const { t: tc } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -226,7 +228,10 @@ const FarmerProductFormPage = () => {
         · {editing ? t('crumb.edit') : t('crumb.add')}
       </p>
 
-      <h1 className="font-hand text-h1">{existing ? existing.name : t('addTitle')}</h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="font-hand text-h1">{existing ? existing.name : t('addTitle')}</h1>
+        <AskAssistant question={tAssistant('assistant.ask.product', { name: form.name || t('addTitle') })} />
+      </div>
 
       <form
         onSubmit={(e) => {
