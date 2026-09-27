@@ -7,7 +7,7 @@ của Farmer để nhận hàng và trả tiền. Mục này hướng dẫn các
 
 1. Bấm **Markets** trên thanh đầu trang (trang `/markets`).
 2. Chọn **Market day** (ngày họp chợ) bạn muốn đi.
-3. Lọc theo **Area** (khu vực/quận) và sắp xếp bằng **Sort by**: **Nearest first** (gần nhất),
+3. Lọc theo **Area** (phường có chợ) và sắp xếp bằng **Sort by**: **Nearest first** (gần nhất),
    **Most stalls** (nhiều gian hàng nhất) hoặc **Opens earliest** (mở cửa sớm nhất).
 
 Mỗi chợ hiện địa chỉ, giờ mở cửa, các ngày họp chợ và số gian hàng. Không có chợ nào mở vào ngày bạn chọn thì

@@ -433,7 +433,7 @@
     "address": "Eine Adresse",
     "addressNote": "Eine Straße oder ein Wahrzeichen in Ho-Chi-Minh-Stadt.",
     "addressLabel": "Startadresse",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
     "addressHint": "Straße und Bezirk funktionieren am besten. Hausnummern fehlen oft auf der Karte, und OpenStreetMap lässt Sie einen Ort wählen, wenn es keinen findet.",
     "useSaved": "Meine gespeicherte Adresse verwenden",
     "none": "Ich gebe ihn auf der Karte ein",
