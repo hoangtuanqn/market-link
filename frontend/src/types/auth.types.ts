@@ -1,3 +1,4 @@
+import type { AddressParts } from './address.types';
 import type { RoleType, UserType } from './user.types';
 
 export type LoginInput = {
@@ -16,7 +17,7 @@ export type RegisterInput = {
   fullName: string;
   phone: string;
   email: string;
-  address: string;
+  addressParts: AddressParts;
   password: string;
   confirmPassword: string;
 };
@@ -30,7 +31,8 @@ export type ResetPasswordInput = {
 export type UpdateProfileInput = {
   fullName: string;
   phone: string;
-  address: string;
+  /** Required for customers and farmers; an admin may leave it out to keep the address on file. */
+  addressParts?: AddressParts;
 };
 
 export type ChangePasswordInput = {

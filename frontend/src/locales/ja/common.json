@@ -382,9 +382,7 @@
     "fullNameRequired": "氏名を入力してください。",
     "fullNameMax": "氏名は {{max}} 文字以内で入力してください。",
     "phoneRequired": "電話番号を入力してください。",
-    "phoneInvalid": "有効なベトナムの携帯電話番号（10 桁）を入力してください。",
-    "addressRequired": "住所を入力してください。",
-    "addressMax": "住所は {{max}} 文字以内で入力してください。"
+    "phoneInvalid": "有効なベトナムの携帯電話番号（10 桁）を入力してください。"
   },
   "adminNav": {
     "sections": "管理メニュー",

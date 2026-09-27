@@ -6,8 +6,6 @@
     "phone": "Số điện thoại",
     "email": "Email",
     "emailHint": "Dùng để đăng nhập và nhận thông báo đơn hàng.",
-    "address": "Địa chỉ",
-    "addressPlaceholder": "Số nhà, đường, phường, quận",
     "password": "Mật khẩu",
     "passwordHint": "Từ {{min}} đến {{max}} ký tự.",
     "confirmPassword": "Nhập lại mật khẩu"
@@ -33,8 +31,6 @@
     "emailRequired": "Nhập email.",
     "emailInvalid": "Nhập địa chỉ email hợp lệ.",
     "emailMax": "Email tối đa {{max}} ký tự.",
-    "addressRequired": "Nhập địa chỉ.",
-    "addressMax": "Địa chỉ tối đa {{max}} ký tự.",
     "passwordRequired": "Nhập mật khẩu.",
     "passwordLength": "Mật khẩu phải có từ {{min}} đến {{max}} ký tự.",
     "confirmRequired": "Nhập lại mật khẩu.",

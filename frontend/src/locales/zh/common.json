@@ -382,9 +382,7 @@
     "fullNameRequired": "请输入你的姓名。",
     "fullNameMax": "姓名最多 {{max}} 个字符。",
     "phoneRequired": "请输入你的电话号码。",
-    "phoneInvalid": "请输入有效的越南手机号码（10 位数字）。",
-    "addressRequired": "请输入你的地址。",
-    "addressMax": "地址最多 {{max}} 个字符。"
+    "phoneInvalid": "请输入有效的越南手机号码（10 位数字）。"
   },
   "adminNav": {
     "sections": "管理区域",

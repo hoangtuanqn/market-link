@@ -38,8 +38,6 @@
     "phone": "Phone number",
     "email": "Email",
     "emailHint": "Used to sign in. It cannot be changed here.",
-    "address": "Address",
-    "addressHint": "Used for distances and directions.",
     "save": "Save changes",
     "saving": "Saving…",
     "noChanges": "No changes to save.",

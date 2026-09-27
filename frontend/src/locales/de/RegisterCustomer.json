@@ -6,8 +6,6 @@
     "phone": "Telefonnummer",
     "email": "E-Mail",
     "emailHint": "Für die Anmeldung und Bestellbenachrichtigungen.",
-    "address": "Adresse",
-    "addressPlaceholder": "Straße, Bezirk, Stadtteil",
     "password": "Passwort",
     "passwordHint": "{{min}} bis {{max}} Zeichen.",
     "confirmPassword": "Passwort wiederholen"
@@ -33,8 +31,6 @@
     "emailRequired": "Geben Sie Ihre E-Mail-Adresse ein.",
     "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein.",
     "emailMax": "Die E-Mail-Adresse darf höchstens {{max}} Zeichen lang sein.",
-    "addressRequired": "Geben Sie Ihre Adresse ein.",
-    "addressMax": "Die Adresse darf höchstens {{max}} Zeichen lang sein.",
     "passwordRequired": "Geben Sie Ihr Passwort ein.",
     "passwordLength": "Das Passwort muss {{min}} bis {{max}} Zeichen lang sein.",
     "confirmRequired": "Bestätigen Sie Ihr Passwort.",

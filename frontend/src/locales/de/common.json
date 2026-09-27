@@ -382,9 +382,7 @@
     "fullNameRequired": "Geben Sie Ihren vollständigen Namen ein.",
     "fullNameMax": "Der vollständige Name darf höchstens {{max}} Zeichen lang sein.",
     "phoneRequired": "Geben Sie Ihre Telefonnummer ein.",
-    "phoneInvalid": "Geben Sie eine gültige vietnamesische Mobilnummer ein (10 Ziffern).",
-    "addressRequired": "Geben Sie Ihre Adresse ein.",
-    "addressMax": "Die Adresse darf höchstens {{max}} Zeichen lang sein."
+    "phoneInvalid": "Geben Sie eine gültige vietnamesische Mobilnummer ein (10 Ziffern)."
   },
   "adminNav": {
     "sections": "Admin-Bereiche",

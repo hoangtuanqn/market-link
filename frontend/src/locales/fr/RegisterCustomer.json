@@ -6,8 +6,6 @@
     "phone": "Numéro de téléphone",
     "email": "E-mail",
     "emailHint": "Pour vous connecter et recevoir les notifications de commande.",
-    "address": "Adresse",
-    "addressPlaceholder": "Rue, quartier, district",
     "password": "Mot de passe",
     "passwordHint": "De {{min}} à {{max}} caractères.",
     "confirmPassword": "Confirmer le mot de passe"
@@ -33,8 +31,6 @@
     "emailRequired": "Saisissez votre e-mail.",
     "emailInvalid": "Saisissez une adresse e-mail valide.",
     "emailMax": "L’e-mail ne peut pas dépasser {{max}} caractères.",
-    "addressRequired": "Saisissez votre adresse.",
-    "addressMax": "L’adresse ne peut pas dépasser {{max}} caractères.",
     "passwordRequired": "Saisissez votre mot de passe.",
     "passwordLength": "Le mot de passe doit comporter de {{min}} à {{max}} caractères.",
     "confirmRequired": "Confirmez votre mot de passe.",

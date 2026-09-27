@@ -382,9 +382,7 @@
     "fullNameRequired": "Nhập họ và tên của bạn.",
     "fullNameMax": "Họ và tên tối đa {{max}} ký tự.",
     "phoneRequired": "Nhập số điện thoại của bạn.",
-    "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số).",
-    "addressRequired": "Nhập địa chỉ của bạn.",
-    "addressMax": "Địa chỉ tối đa {{max}} ký tự."
+    "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số)."
   },
   "adminNav": {
     "sections": "Các mục quản trị",

@@ -6,8 +6,6 @@
     "phone": "เบอร์โทรศัพท์",
     "email": "อีเมล",
     "emailHint": "ใช้สำหรับเข้าสู่ระบบและรับการแจ้งเตือนคำสั่งซื้อ",
-    "address": "ที่อยู่",
-    "addressPlaceholder": "ถนน แขวง เขต",
     "password": "รหัสผ่าน",
     "passwordHint": "{{min}} ถึง {{max}} ตัวอักษร",
     "confirmPassword": "ยืนยันรหัสผ่าน"
@@ -33,8 +31,6 @@
     "emailRequired": "กรอกอีเมล",
     "emailInvalid": "กรอกอีเมลที่ถูกต้อง",
     "emailMax": "อีเมลยาวได้ไม่เกิน {{max}} ตัวอักษร",
-    "addressRequired": "กรอกที่อยู่",
-    "addressMax": "ที่อยู่ยาวได้ไม่เกิน {{max}} ตัวอักษร",
     "passwordRequired": "กรอกรหัสผ่าน",
     "passwordLength": "รหัสผ่านต้องมี {{min}} ถึง {{max}} ตัวอักษร",
     "confirmRequired": "ยืนยันรหัสผ่าน",

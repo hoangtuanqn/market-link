@@ -382,9 +382,7 @@
     "fullNameRequired": "Masukkan nama lengkap Anda.",
     "fullNameMax": "Nama lengkap maksimal {{max}} karakter.",
     "phoneRequired": "Masukkan nomor telepon Anda.",
-    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit).",
-    "addressRequired": "Masukkan alamat Anda.",
-    "addressMax": "Alamat maksimal {{max}} karakter."
+    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit)."
   },
   "adminNav": {
     "sections": "Bagian admin",

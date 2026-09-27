@@ -382,9 +382,7 @@
     "fullNameRequired": "이름을 입력해 주세요.",
     "fullNameMax": "이름은 최대 {{max}}자까지 입력할 수 있어요.",
     "phoneRequired": "전화번호를 입력해 주세요.",
-    "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요.",
-    "addressRequired": "주소를 입력해 주세요.",
-    "addressMax": "주소는 최대 {{max}}자까지 입력할 수 있어요."
+    "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요."
   },
   "adminNav": {
     "sections": "관리 메뉴",

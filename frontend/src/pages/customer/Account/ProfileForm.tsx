@@ -2,20 +2,29 @@ import { AxiosError } from 'axios';
 import { useCallback, useEffect, useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import AuthApi from '@/api-requests/auth.requests';
+import AddressFields from '@/components/address/AddressFields';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Field } from '@/components/ui/input';
-import type { UpdateProfileInput } from '@/types/auth.types';
+import { addressErrorsFrom, cleanAddress, sameAddress, validateAddress } from '@/lib/address';
+import { emptyAddress, type AddressErrors, type AddressParts } from '@/types/address.types';
+import type { UserType } from '@/types/user.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 import { validateProfile, type ProfileErrors } from '@/utils/validation';
 
 type Status = 'loading' | 'error' | 'signed-out' | 'ready';
-type FormErrors = ProfileErrors;
+type Details = { fullName: string; phone: string };
+type Saved = Details & { addressParts?: AddressParts };
 
-const EMPTY: UpdateProfileInput = { fullName: '', phone: '', address: '' };
-const validate = validateProfile;
+const EMPTY: Details = { fullName: '', phone: '' };
+
+const savedFrom = (user: UserType): Saved => ({
+  fullName: user.fullName ?? '',
+  phone: user.phone ?? '',
+  addressParts: user.addressParts,
+});
 
 const isUnauthorized = (error: unknown) => error instanceof AxiosError && error.response?.status === 401;
 
@@ -28,20 +37,26 @@ const ProfileForm = () => {
   const [status, setStatus] = useState<Status>('loading');
   const [loadError, setLoadError] = useState('');
   const [email, setEmail] = useState('');
-  const [form, setForm] = useState<UpdateProfileInput>(EMPTY);
-  const [saved, setSaved] = useState<UpdateProfileInput>(EMPTY);
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [form, setForm] = useState<Details>(EMPTY);
+  const [address, setAddress] = useState<AddressParts>(emptyAddress);
+  const [saved, setSaved] = useState<Saved>(EMPTY);
+  /** The plain-text address of an account saved before addresses had parts (FR-001). */
+  const [legacyAddress, setLegacyAddress] = useState<string>();
+  const [errors, setErrors] = useState<ProfileErrors>({});
+  const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
   const [isSaving, setIsSaving] = useState(false);
 
   const load = useCallback(async () => {
     setStatus('loading');
     try {
       const { data: user } = await AuthApi.getMe();
-      const values = { fullName: user.fullName ?? '', phone: user.phone ?? '', address: user.address ?? '' };
+      const values = savedFrom(user);
       setEmail(user.email);
       // A session from before avatarUrl existed (or the image changed in another tab) → take the latest from the server
       Session.updateUser({ avatarUrl: user.avatarUrl });
-      setForm(values);
+      setForm({ fullName: values.fullName, phone: values.phone });
+      setAddress(values.addressParts ?? emptyAddress());
+      setLegacyAddress(values.addressParts ? undefined : user.address || undefined);
       setSaved(values);
       setStatus('ready');
     } catch (error) {
@@ -59,37 +74,44 @@ const ProfileForm = () => {
     load();
   }, [load]);
 
-  const onChange = (key: keyof UpdateProfileInput) => (e: ChangeEvent<HTMLInputElement>) =>
+  const onChange = (key: keyof Details) => (e: ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
+  // An old account has no parts yet: choosing them is a change even if nothing else is
   const isDirty =
     form.fullName.trim() !== saved.fullName ||
     form.phone.trim() !== saved.phone ||
-    form.address.trim() !== saved.address;
+    !sameAddress(address, saved.addressParts ?? emptyAddress());
 
   const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const clientErrors = validate(form);
+    const clientErrors = validateProfile(form);
+    const clientAddressErrors = validateAddress(address);
     setErrors(clientErrors);
-    if (Object.keys(clientErrors).length > 0) return;
+    setAddressErrors(clientAddressErrors);
+    if (Object.keys(clientErrors).length > 0 || Object.keys(clientAddressErrors).length > 0) return;
 
     setIsSaving(true);
     try {
       const response = await AuthApi.updateMe({
         fullName: form.fullName.trim(),
         phone: form.phone.trim(),
-        address: form.address.trim(),
+        addressParts: cleanAddress(address),
       });
       const user = response.data;
-      const values = { fullName: user.fullName, phone: user.phone ?? '', address: user.address ?? '' };
-      setForm(values);
+      const values = savedFrom(user);
+      setForm({ fullName: values.fullName, phone: values.phone });
+      setAddress(values.addressParts ?? emptyAddress());
+      setLegacyAddress(undefined);
       setSaved(values);
       // The header ("Hi, …") reads from the session so it updates right away
       Session.updateUser(user);
       Notification.success({ text: response.message || t('profile.saved') });
     } catch (error) {
       // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (the phone number is already used by someone) → error under the input
-      setErrors(Helper.getFieldErrors(error));
+      const fieldErrors = Helper.getFieldErrors(error);
+      setErrors(fieldErrors);
+      setAddressErrors(addressErrorsFrom(fieldErrors));
       Notification.error({ text: Helper.getErrorMessage(error, t('profile.saveFailed')) });
     } finally {
       setIsSaving(false);
@@ -169,15 +191,12 @@ const ProfileForm = () => {
           disabled
           hint={t('profile.emailHint')}
         />
-        <Field
-          id="address"
-          label={t('profile.address')}
-          required
-          autoComplete="street-address"
-          value={form.address}
-          onChange={onChange('address')}
-          error={errors.address}
-          hint={errors.address ? undefined : t('profile.addressHint')}
+        <AddressFields
+          idPrefix="profile-address"
+          value={address}
+          onChange={setAddress}
+          errors={addressErrors}
+          legacyAddress={legacyAddress}
           disabled={isSaving}
         />
       </div>
