@@ -2,5 +2,10 @@
   "overline": "Seite nicht gefunden",
   "title": "Diese Seite konnten wir nicht finden",
   "text": "Der Link ist vielleicht veraltet, oder dieser Teil von MarketLink ist noch nicht freigeschaltet.",
-  "home": "Zurück zur Startseite"
+  "home": "Zurück zur Startseite",
+  "exploreMarkets": "Märkte entdecken",
+  "quickLinks": "Beliebte Ziele",
+  "products": "Frische Produkte",
+  "marketMap": "Marktkarte",
+  "contact": "Hilfe & Kontakt"
 }

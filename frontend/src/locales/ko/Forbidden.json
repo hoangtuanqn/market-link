@@ -1,0 +1,11 @@
+{
+  "overline": "403 접근 금지",
+  "title": "접근 권한이 제한되었습니다",
+  "text": "현재 계정으로는 관리자 페이지에 접근할 수 있는 권한이 없습니다.",
+  "backHome": "홈으로 돌아가기",
+  "backDashboard": "대시보드로 돌아가기",
+  "backFarmer": "농가 포털로 돌아가기",
+  "switchAccount": "관리자로 로그인",
+  "needHelp": "도움이 필요하신가요?",
+  "contactSupport": "고객 지원 문의"
+}

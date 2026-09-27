@@ -1,0 +1,11 @@
+{
+  "overline": "403 禁止访问",
+  "title": "访问受限",
+  "text": "您当前的账户没有权限访问此管理区域。",
+  "backHome": "返回首页",
+  "backDashboard": "返回控制台",
+  "backFarmer": "返回农户中心",
+  "switchAccount": "以管理员身份登录",
+  "needHelp": "需要帮助？",
+  "contactSupport": "联系技术支持"
+}

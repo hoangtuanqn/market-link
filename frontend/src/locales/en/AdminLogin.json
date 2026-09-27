@@ -1,17 +1,32 @@
 {
-  "overline": "Admin area",
-  "title": "Sign in to manage MarketLink",
-  "intro": "This sign-in is only for platform admins and leads to a separate dashboard. Customers and Farmers <link>sign in here</link>.",
-  "notAdmin": {
-    "title": "This account is not an admin",
-    "text": "This sign-in is only for platform admins. <link>Customers and Farmers sign in here</link>."
+  "brand": {
+    "headline": "Sign in to manage the marketplace",
+    "intro": "This sign-in is only for platform admins and leads to a separate dashboard from Customers and Farmers.",
+    "bullet1": "Approve Farmer stall applications",
+    "bullet2": "Moderate product listings and reviews",
+    "bullet3": "Read platform reports across markets",
+    "foot": "MarketLink admin"
   },
   "form": {
+    "eyebrow": "Admin portal",
+    "heading": "Welcome back",
+    "subheading": "Sign in to manage MarketLink",
     "email": "Admin email",
+    "emailPlaceholder": "admin@marketlink.com",
     "password": "Password",
+    "passwordPlaceholder": "Enter your password",
     "submit": "Sign in",
     "submitting": "Signing in…",
     "signedIn": "Signed in.",
-    "error": "Could not sign you in. Please try again."
+    "error": "Could not sign you in. Please try again.",
+    "note": "For security, admin sessions are not remembered."
+  },
+  "switchRole": {
+    "question": "Not an admin?",
+    "cta": "Go to MarketLink"
+  },
+  "notAdmin": {
+    "title": "This account is not an admin",
+    "text": "This sign-in is only for platform admins. <link>Customers and Farmers sign in here</link>."
   }
 }

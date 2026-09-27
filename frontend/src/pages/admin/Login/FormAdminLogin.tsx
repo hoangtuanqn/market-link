@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
+import { ChevronRightIcon } from '@/components/icons';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/input';
@@ -82,6 +83,7 @@ const FormAdminLogin = () => {
         type="email"
         required
         autoComplete="username"
+        placeholder={t('form.emailPlaceholder')}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         error={errors.email}
@@ -93,14 +95,27 @@ const FormAdminLogin = () => {
         type="password"
         required
         autoComplete="current-password"
+        placeholder={t('form.passwordPlaceholder')}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         error={errors.password}
         disabled={isSubmitting}
       />
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? t('form.submitting') : t('form.submit')}
-      </Button>
+
+      <div>
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting ? t('form.submitting') : t('form.submit')}
+        </Button>
+        <p className="text-ink-muted text-caption mt-2 text-center">{t('form.note')}</p>
+      </div>
+
+      <p className="border-line text-small text-ink-muted flex items-center justify-center gap-1 border-t pt-4">
+        <span>{t('switchRole.question')}</span>
+        <Link to="/" className="text-brand inline-flex items-center gap-0.5 font-bold no-underline hover:underline">
+          {t('switchRole.cta')}
+          <ChevronRightIcon />
+        </Link>
+      </p>
     </form>
   );
 };
