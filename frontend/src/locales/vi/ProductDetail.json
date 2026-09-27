@@ -5,7 +5,6 @@
     "browse": "Xem sản phẩm"
   },
   "breadcrumb": "Sản phẩm",
-  "photo": "Ảnh {{name}}",
   "favorite": {
     "add": "Thêm vào yêu thích: {{name}}",
     "remove": "Bỏ khỏi yêu thích: {{name}}"

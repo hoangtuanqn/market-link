@@ -8,7 +8,6 @@ import ReviewApi, { toReviewCard, type ReviewDto } from '@/api-requests/review.r
 import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DirectionsButton from '@/components/DirectionsButton';
 import FavoriteButton from '@/components/FavoriteButton';
-import MapPlaceholder from '@/components/MapPlaceholder';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import ProductCard from '@/components/ProductCard';
 import QtyStepper from '@/components/QtyStepper';
@@ -155,7 +154,13 @@ const ProductDetailPage = () => {
       </p>
 
       <div className="grid items-stretch gap-6 lg:grid-cols-2">
-        <MapPlaceholder label={t('photo', { name: p.name })} className="min-h-60" />
+        {p.imageUrl ? (
+          <img src={p.imageUrl} alt={p.name} className="min-h-60 w-full rounded-md object-cover" />
+        ) : (
+          <div className="bg-surface-sunken font-hand text-ink-muted grid min-h-60 place-items-center rounded-md">
+            {p.categoryName}
+          </div>
+        )}
 
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">

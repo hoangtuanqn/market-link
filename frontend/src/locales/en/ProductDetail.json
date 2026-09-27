@@ -5,7 +5,6 @@
     "browse": "Browse products"
   },
   "breadcrumb": "Products",
-  "photo": "Photo of {{name}}",
   "favorite": {
     "add": "Add to favorites: {{name}}",
     "remove": "Remove from favorites: {{name}}"
