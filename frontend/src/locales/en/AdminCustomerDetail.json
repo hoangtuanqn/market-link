@@ -1,49 +1,45 @@
 {
   "allCustomers": "Customers",
-  "since": "Customer since {{joined}} · last order {{last}}",
+  "noun": "customer",
+  "since": "Customer since {{joined}}",
   "missing": {
     "title": "That customer is not here any more",
-    "text": "The account may have been deleted. Open it again from the customers list."
+    "text": "The account may have been deleted, or the id in the address is not a customer. Open it again from the customers list."
   },
   "action": {
     "deactivate": "Deactivate account",
     "reactivate": "Reactivate account"
   },
-  "banner": {
-    "title": "Deactivated today.",
-    "text": "Reason kept on the account: {{reason}}. Their running orders are not touched."
-  },
   "orders": {
     "title": "Orders",
+    "noun": "orders",
     "all": "All orders on the platform",
-    "note": "An admin reads these. Only the stall moves an order through its states, so there is nothing to change here."
+    "note": "An admin reads these. Only the stall moves an order through its states, so there is nothing to change here.",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders this customer places will show up here."
+    }
   },
   "reviews": {
     "title": "Reviews they wrote",
+    "noun": "reviews",
     "openInModeration": "Open in moderation",
-    "note": "Hiding a review is done from Moderation, where the report that triggered it is visible too."
-  },
-  "timeline": {
-    "title": "Account history",
-    "created": "Account created",
-    "firstCollected": "First order collected",
-    "noShow": "Did not turn up",
-    "lastOrder": "Last order"
+    "note": "Hiding a review is done from Moderation, where the report that triggered it is visible too.",
+    "empty": {
+      "title": "No reviews yet",
+      "text": "Reviews this customer writes will show up here."
+    }
   },
   "contact": {
     "title": "Contact",
     "email": "Email",
     "phone": "Phone",
-    "address": "Address",
     "joined": "Joined"
   },
   "habits": {
-    "title": "How they shop",
-    "orders": "Orders",
-    "collected": "Collected",
-    "noShows": "Did not turn up",
-    "market": "Market",
-    "buysMostFrom": "Buys most from"
+    "title": "Orders by state",
+    "orders": "Total orders",
+    "loadedNote": "Counted from the {{count}} most recently loaded orders, not the full history."
   },
   "whatItDoes": {
     "title": "What deactivating does",
@@ -52,18 +48,20 @@
   "deactivate": {
     "title": "Deactivate {{name}}?",
     "text": "They cannot sign in or order again until an admin reactivates them. Orders already placed run to the end, so no stall is left holding food nobody collects.",
-    "reason": "Reason kept on the account",
+    "reason": "Reason (kept in this toast only, not saved on the account)",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Not yet",
     "confirm": "Deactivate"
   },
-  "reason": {
-    "noShows": "Repeated no-shows",
-    "abusive": "Abusive language in a review",
-    "requested": "Asked for their account to be closed",
-    "other": "Other"
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate"
   },
   "toast": {
     "deactivated": "{{name}} deactivated.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} can sign in again."
   },
   "col": {

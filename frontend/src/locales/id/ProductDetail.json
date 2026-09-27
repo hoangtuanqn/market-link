@@ -5,7 +5,6 @@
     "browse": "Lihat produk"
   },
   "breadcrumb": "Produk",
-  "photo": "Foto {{name}}",
   "favorite": {
     "add": "Tambahkan ke favorit: {{name}}",
     "remove": "Hapus dari favorit: {{name}}"
@@ -36,6 +35,9 @@
   "details": {
     "title": "Detail produk",
     "soldPer": "Dijual per",
+    "shelfLife": "Stays fresh for",
+    "shelfLifeValue_one": "{{count}} day",
+    "shelfLifeValue_other": "{{count}} days",
     "category": "Kategori",
     "stall": "Lapak",
     "market": "Pasar"
@@ -64,7 +66,10 @@
     "write": "Tulis ulasan",
     "writeNote": "Tersedia setelah pesanan dengan produk ini selesai.",
     "summary_one": "{{count}} ulasan, semuanya dari pesanan yang selesai",
-    "summary_other": "{{count}} ulasan, semuanya dari pesanan yang selesai"
+    "summary_other": "{{count}} ulasan, semuanya dari pesanan yang selesai",
+    "emptyTitle": "No reviews yet",
+    "emptyText": "Be the first to review this product once your order is completed.",
+    "noun": "reviews"
   },
   "similar": {
     "title": "{{name}} di lapak lain akhir pekan ini",
@@ -74,12 +79,6 @@
   },
   "also": {
     "title": "Juga dari {{stall}} minggu ini"
-  },
-  "report": {
-    "sentTitle": "Laporan terkirim",
-    "sentText": "Admin akan memeriksa produk ini.",
-    "button": "Laporkan produk ini",
-    "note": "Harga salah, foto salah, atau sesuatu yang tidak pantas ada di pasar petani."
   },
   "error": {
     "noun": "produk"

@@ -1,47 +1,48 @@
 {
   "overline": "プラットフォーム · {{year}}",
   "title": "今日の MarketLink",
-  "vs": "{{month}}比",
-  "tilesNote": "{{now}}の現時点まで、{{prev}}と並べています。どのタイルからもその数字の内訳を開けます。",
+  "noun": "dashboard",
   "kpi": {
     "farmers": "農家",
     "farmersNote": "{{waiting}}件が承認待ち · {{suspended}}件が停止中",
     "farmersLink": "申請を審査する",
     "customers": "お客様",
-    "customersNote": "今月{{count}}人が登録",
     "customersLink": "お客様一覧を開く",
     "markets": "マーケット",
-    "marketsNote": "すべて営業中",
     "marketsLink": "マーケット一覧を開く",
     "orders": "注文",
     "ordersNote": "今週{{week}}件 · 完了{{total}}",
     "ordersLink": "注文一覧を開く"
   },
-  "revenue": {
-    "title": "日別の売上",
-    "note": "完了した注文、単位は百万₫。{{now}}と{{prev}}の比較。",
-    "caption": "{{now}}と{{prev}}の日別売上、単位は百万ドン",
-    "axis": "日付",
-    "reports": "レポート全体を見る"
-  },
   "attention": {
     "title": "対応が必要なもの",
+    "farmers_one": "Farmer application waiting",
     "farmers_other": "件の農家申請が承認待ちです",
+    "reported_one": "message reported, not yet reviewed",
     "reported_other": "件の店舗から通報されたレビュー",
-    "feedback_other": "件の未対応フィードバック、うち1件は不具合",
-    "announcements_other": "件のお知らせを掲載中、Thảo Điền は10月4日休み"
+    "feedback_one": "new feedback message",
+    "feedback_other": "件の未対応フィードバック、うち1件は不具合"
   },
   "byMarket": {
     "title": "今週のマーケット別注文数",
-    "link": "すべての注文",
-    "suffix": "件"
+    "noun": "revenue by market",
+    "empty": {
+      "title": "No completed orders yet",
+      "text": "Revenue by market appears once a market has a completed order."
+    }
   },
   "latest": {
     "title": "プラットフォーム全体の最新注文",
-    "readOnly": "閲覧のみ。管理者は注文のステータスを変更しません。"
+    "noun": "orders",
+    "readOnly": "閲覧のみ。管理者は注文のステータスを変更しません。",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders placed anywhere on the platform will show up here."
+    }
   },
   "col": {
     "order": "注文",
+    "customer": "Customer",
     "stall": "店舗",
     "market": "マーケット",
     "pickup": "受け取り",

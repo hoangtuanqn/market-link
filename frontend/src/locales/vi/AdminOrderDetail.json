@@ -1,53 +1,47 @@
 {
   "allOrders": "Đơn hàng",
-  "kicker": "Đặt lúc {{placed}} · chốt lúc {{cutoff}}",
+  "noun": "đơn hàng",
+  "kicker": "Đặt lúc {{placed}} · đóng lúc {{cutoff}}",
   "missing": {
-    "title": "Đơn hàng này không còn ở đây",
-    "text": "Có thể đơn đã bị xoá cùng tài khoản. Hãy mở lại từ danh sách đơn hàng."
+    "title": "Đơn hàng này không còn ở đây nữa",
+    "text": "Có thể đã bị xoá cùng tài khoản, hoặc id trên đường dẫn không phải đơn hàng. Hãy mở lại từ danh sách đơn hàng."
   },
   "readOnly": {
-    "title": "Quản trị viên chỉ đọc đơn; sạp mới là người chuyển trạng thái.",
-    "text": "Mọi nút đổi trạng thái đều nằm ở màn hình của sạp, nên không thao tác nào ở đây đẩy đơn vào trạng thái sai được."
+    "title": "Admin chỉ xem đơn hàng; sạp mới là người chuyển trạng thái.",
+    "text": "Mọi nút đổi trạng thái đều nằm ở màn hình của sạp, nên không gì ở đây có thể đưa đơn hàng vào trạng thái sai."
   },
   "items": {
-    "title": "Sản phẩm trong đơn",
-    "note": "Giá là mức sạp niêm yết lúc đặt đơn. Không có dòng tiền nào đi qua MarketLink; khách trả tiền trực tiếp tại sạp."
+    "title": "Món hàng",
+    "note": "Giá là giá sạp tính khi đặt đơn. Không có tiền chuyển qua MarketLink; khách trả trực tiếp tại sạp."
   },
+  "declined": "Từ chối: {{reason}}",
   "history": {
-    "title": "Mọi trạng thái đơn đã đi qua",
+    "title": "Mọi trạng thái đã trải qua",
     "by": "{{time}} · {{by}}",
-    "note": "Mỗi lần đổi trạng thái đều được ghi lại kèm người thực hiện. Đây là bằng chứng quản trị viên đọc khi khách và sạp nói khác nhau."
+    "note": "Mỗi lần đổi trạng thái đều được ghi lại cùng người thực hiện. Đây là hồ sơ admin đọc khi khách hàng và sạp bất đồng về việc đã xảy ra."
   },
   "stall": {
-    "title": "Sạp bán",
+    "title": "Sạp",
     "stall": "Sạp",
-    "contact": "Liên hệ",
-    "approval": "Trạng thái duyệt",
     "record": "Hồ sơ sạp"
-  },
-  "approval": {
-    "pending": "Chờ duyệt",
-    "approved": "Đã duyệt",
-    "rejected": "Đã từ chối",
-    "suspended": "Tạm ngưng"
   },
   "customer": {
     "title": "Khách hàng",
-    "name": "Họ tên",
+    "name": "Tên",
     "phone": "Điện thoại",
-    "orders": "Số đơn trên MarketLink",
-    "record": "Hồ sơ khách hàng"
+    "record": "Hồ sơ khách hàng",
+    "hidden": "Thông tin liên hệ chỉ hiện cho đúng sạp của đơn hàng."
   },
   "pickup": {
     "title": "Nhận hàng",
     "market": "Chợ",
     "slot": "Ngày và khung giờ",
-    "cutoff": "Giờ chốt",
-    "total": "Tổng tiền"
+    "cutoff": "Hạn chốt",
+    "total": "Tổng"
   },
   "noButtons": {
-    "title": "Vì sao ở đây không có nút nào",
-    "text": "Một đơn thuộc về một sạp và một khách. Sạp có quyền chuyển trạng thái, khách có quyền huỷ trước giờ chốt; quản trị viên không nằm trong danh sách đó, nên màn hình này chỉ đọc."
+    "title": "Vì sao không có nút bấm",
+    "text": "Một đơn hàng thuộc về một sạp và một khách hàng. Sạp có quyền chuyển trạng thái, khách có quyền huỷ trước hạn chốt; admin không nằm trong danh sách đó nên màn này chỉ xem, không chỉnh sửa."
   },
   "col": {
     "product": "Sản phẩm",

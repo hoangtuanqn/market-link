@@ -1,15 +1,14 @@
 {
-  "overline": "Ajustes",
   "title": "Buzón de comentarios",
   "intro": "Informes de fallos, sugerencias y preguntas enviados desde el formulario de comentarios. Márcalos como atendidos cuando termines.",
-  "link": {
-    "categories": "Categorías",
-    "announcements": "Avisos"
-  },
+  "noun": "feedback",
+  "anonymous": "Anonymous",
+  "caption": "{{count}} feedback messages",
   "filterLabel": "Filtrar comentarios",
   "filter": {
-    "open": "Sin atender",
-    "answered": "Atendidos",
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved",
     "bug": "Fallo",
     "suggestion": "Sugerencia",
     "query": "Pregunta"
@@ -20,8 +19,9 @@
     "query": "Pregunta"
   },
   "status": {
-    "open": "Sin atender",
-    "answered": "Atendido"
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved"
   },
   "col": {
     "type": "Tipo",
@@ -30,26 +30,21 @@
     "status": "Estado"
   },
   "action": {
-    "read": "Leer",
-    "readAndAnswer": "Leer y responder"
+    "read": "Leer"
   },
   "dialog": {
     "title": "{{type}} de {{from}}",
     "sent": "Enviado el {{date}} · {{state}}",
-    "notAnswered": "todavía sin atender",
-    "alreadyAnswered": "ya atendido",
-    "yourAnswer": "Tu respuesta",
-    "replyPlaceholder": "Gracias por avisarnos…",
     "close": "Cerrar",
-    "send": "Enviar y marcar como atendido",
-    "sendAgain": "Enviar otra vez"
+    "markReviewed": "Mark reviewed",
+    "markResolved": "Mark resolved"
   },
   "empty": {
     "title": "Todavía no hay comentarios",
     "text": "Los informes de fallos, sugerencias y preguntas del formulario llegan aquí."
   },
   "toast": {
-    "answered": "Respuesta guardada y mensaje marcado como atendido.",
-    "markedOnly": "Marcado como atendido sin responder."
+    "reviewed": "Marked reviewed.",
+    "resolved": "Marked resolved."
   }
 }

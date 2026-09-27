@@ -10,13 +10,8 @@
   },
   "reviewFilterLabel": "Lọc đánh giá",
   "reviewFilter": {
-    "reported": "Bị báo cáo",
     "lowRated": "1 hoặc 2 sao",
     "newest": "Mới nhất"
-  },
-  "report": {
-    "title": "{{by}} báo cáo ngày {{date}}: “{{quote}}”",
-    "text": "Ẩn đi thì đánh giá biến mất khỏi trang sản phẩm và trang sạp. Khách hàng được cho biết lý do."
   },
   "recentlyListed": "Sản phẩm mới đăng gần đây",
   "search": {
@@ -37,11 +32,9 @@
     "view": "Xem",
     "hideReview": "Ẩn đánh giá",
     "hideListing": "Ẩn sản phẩm",
-    "keepVisible": "Giữ hiển thị",
     "customerAccount": "Tài khoản khách",
     "unhide": "Bỏ ẩn",
-    "unhidden": "Nội dung đã hiện lại.",
-    "dismissed": "Đã bỏ qua báo cáo. Đánh giá vẫn hiển thị."
+    "unhidden": "Nội dung đã hiện lại."
   },
   "hide": {
     "title": {
@@ -71,7 +64,8 @@
     "text": "Sản phẩm và đánh giá bị báo cáo sẽ về đây để bạn đọc trước khi quyết định ẩn."
   },
   "error": {
-    "noun": "các listing"
+    "noun": "các listing",
+    "reviewsNoun": "đánh giá"
   },
   "messages": {
     "boundary": "Bạn chỉ đọc được tin nhắn đã bị báo cáo, kèm tối đa năm tin mỗi bên để hiểu ngữ cảnh. Phần còn lại của cuộc trò chuyện không mở cho quản trị viên.",

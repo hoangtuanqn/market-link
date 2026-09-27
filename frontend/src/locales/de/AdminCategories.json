@@ -26,6 +26,9 @@
     "namePlaceholder": "z. B. Seafood",
     "nameHint": "Auf Englisch, nur der erste Buchstabe groß. Der Text steht handgeschrieben auf einem Produktschild ohne Foto.",
     "position": "Position im Filter",
+    "minShelfLife": "Min shelf life (days)",
+    "maxShelfLife": "Max shelf life (days)",
+    "shelfLifeHint": "Standard freshness window for this category. Shown to Farmers as a guide when they list a product.",
     "submit": "Kategorie hinzufügen"
   },
   "removeCategory": {
@@ -50,6 +53,8 @@
   },
   "error": {
     "noun": "Kategorien",
-    "nameRequired": "Gib der Kategorie einen Namen."
+    "nameRequired": "Gib der Kategorie einen Namen.",
+    "shelfLifeRequired": "Enter a whole number of 1 or more.",
+    "shelfLifeRange": "Max must be at least the minimum."
   }
 }

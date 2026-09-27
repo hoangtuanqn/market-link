@@ -94,7 +94,7 @@ const UserMenu = ({
   };
 
   return (
-    <div ref={rootRef} className="relative ml-1 hidden md:block">
+    <div ref={rootRef} data-tour="header:account" className="relative ml-1 hidden md:block">
       <button
         ref={buttonRef}
         type="button"

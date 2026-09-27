@@ -3,6 +3,12 @@
   "greeting_other": "你好 {{name}}，本周末有 {{count}} 个取货",
   "intro": "有一个订单仍在等待摊位确认，其他一切正常。",
   "browseMarkets": "浏览本周末的市集",
+  "noun": {
+    "orders": "orders",
+    "favorites": "favorites",
+    "notifications": "notifications",
+    "products": "products"
+  },
   "cards": {
     "upcoming_one": "{{count}} 个待取订单",
     "upcoming_other": "{{count}} 个待取订单",
@@ -30,5 +36,15 @@
   "nextPickups": "即将取货",
   "allOrders": "我的全部订单",
   "newFromFavorites": "收藏摊位本周新品",
-  "favorites": "收藏"
+  "favorites": "收藏",
+  "empty": {
+    "pickups": {
+      "title": "No pickups coming up",
+      "text": "Orders that are placed, accepted or ready for pickup show up here."
+    },
+    "favorites": {
+      "title": "No favorite products yet",
+      "text": "Save products you like and new stock from them shows up here."
+    }
+  }
 }

@@ -1,13 +1,16 @@
 {
+  "error": {
+    "noun": "your registration"
+  },
   "overline": {
     "suspended": "{{stall}} · {{date}} に停止",
     "registered": "{{stall}} · {{date}} に登録"
   },
   "title": {
     "pending": "屋台は審査待ちです",
+    "rejected": "Your stall registration was declined",
     "suspended": "屋台は停止中です"
   },
-  "previewToggle": "プレビュー：停止中の屋台",
   "reviewing": {
     "title": "管理者が登録内容を確認しています。",
     "text": "承認されると通知とメールが届きます。それまでは、屋台と商品はお客さまに表示されません。"
@@ -25,9 +28,18 @@
     "email": "メール",
     "market": "希望する市場"
   },
+  "rejected": {
+    "bannerTitle": "This registration was not approved.",
+    "noReason": "No reason was given.",
+    "again": {
+      "title": "Apply again",
+      "text": "You can send a new registration with updated details or evidence.",
+      "link": "Apply again"
+    }
+  },
   "suspended": {
-    "title": "屋台は {{date}} に停止されました。",
-    "text": "管理者からの理由：{{reason}} 商品は非表示になり、新しい注文は受けられません。"
+    "bannerTitle": "Your stall is suspended.",
+    "noReason": "No reason was given."
   },
   "running": {
     "title": "受付済みの注文はそのまま続きます",

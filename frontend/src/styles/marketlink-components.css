@@ -2020,6 +2020,17 @@
     color: var(--board-muted);
     max-width: 300px;
   }
+  /* Selector carries .ml-footer too: .ml-footer p would otherwise out-specify a bare .ml-slogan
+     and drag the slogan back to 14px board-muted. */
+  .ml-slogan,
+  .ml-footer p.ml-slogan {
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-hand);
+    font-size: 24px;
+    line-height: 1.15;
+    color: var(--on-board);
+    max-width: 300px;
+  }
   .ml-footer h2 {
     margin: 0 0 var(--space-3);
     font-size: 12px;

@@ -14,9 +14,8 @@
     "reason": "Motif que le client verra"
   },
   "history": {
-    "before": "Avant {{cutoff}}",
-    "cancelled": "Annulée par le client",
-    "title": "Historique"
+    "title": "Historique",
+    "by": "{{time}} · by {{by}}"
   },
   "missing": {
     "title": "Cette commande n'est plus disponible",
@@ -24,10 +23,10 @@
     "back": "Mes commandes"
   },
   "item": "article",
+  "noun": "order",
   "col": {
     "product": "Produit",
     "requested": "Demandé",
-    "left": "Reste après cette commande",
     "amount": "Montant"
   },
   "crumb": "Commandes",
@@ -50,25 +49,19 @@
   },
   "items": {
     "title": "Articles",
-    "note": "Le stock affiché est ce qui reste après cette commande et les autres commandes passées. Le stock réservé est rendu si vous refusez (D-02)."
+    "total": "Total"
   },
   "note": "Note du client",
   "quote": "« {{text}} »",
   "customer": {
     "title": "Client",
     "name": "Nom",
-    "tier": "Niveau",
     "phone": "Téléphone",
-    "ordersWithYou": "Commandes chez vous",
-    "orders_one": "{{count}} commande",
-    "orders_other": "{{count}} commandes",
-    "withCollected_one": "{{orders}}, {{count}} retirée",
-    "withCollected_other": "{{orders}}, {{count}} retirées"
+    "email": "Email"
   },
   "pickup": {
     "title": "Créneau de retrait",
     "market": "Marché",
-    "marketStall": "{{market}}, stand {{code}}",
     "slot": "Créneau",
     "pay": "À payer au retrait"
   },

@@ -1,77 +1,75 @@
 {
   "allCustomers": "Khách hàng",
-  "since": "Khách từ {{joined}} · đơn gần nhất {{last}}",
+  "noun": "khách hàng",
+  "since": "Khách hàng từ {{joined}}",
   "missing": {
-    "title": "Khách hàng này không còn ở đây",
-    "text": "Có thể tài khoản đã bị xoá. Hãy mở lại từ danh sách khách hàng."
+    "title": "Khách hàng này không còn ở đây nữa",
+    "text": "Tài khoản có thể đã bị xoá, hoặc id trên đường dẫn không phải khách hàng. Hãy mở lại từ danh sách khách hàng."
   },
   "action": {
-    "deactivate": "Khoá tài khoản",
-    "reactivate": "Mở lại tài khoản"
-  },
-  "banner": {
-    "title": "Đã khoá hôm nay.",
-    "text": "Lý do lưu trên tài khoản: {{reason}}. Các đơn đang chạy không bị động tới."
+    "deactivate": "Vô hiệu hoá tài khoản",
+    "reactivate": "Kích hoạt lại tài khoản"
   },
   "orders": {
     "title": "Đơn hàng",
-    "all": "Tất cả đơn trên sàn",
-    "note": "Quản trị viên chỉ đọc. Chỉ sạp mới chuyển đơn qua các trạng thái, nên ở đây không có gì để sửa."
+    "noun": "đơn hàng",
+    "all": "Tất cả đơn hàng trên nền tảng",
+    "note": "Admin chỉ xem các đơn này. Chỉ sạp mới chuyển trạng thái đơn hàng, nên không có gì để đổi ở đây.",
+    "empty": {
+      "title": "Chưa có đơn hàng",
+      "text": "Đơn hàng khách này đặt sẽ hiện ở đây."
+    }
   },
   "reviews": {
     "title": "Đánh giá họ đã viết",
-    "openInModeration": "Mở trong Kiểm duyệt",
-    "note": "Việc ẩn một đánh giá làm ở trang Kiểm duyệt, nơi nhìn thấy luôn báo cáo dẫn tới nó."
-  },
-  "timeline": {
-    "title": "Lịch sử tài khoản",
-    "created": "Tạo tài khoản",
-    "firstCollected": "Nhận đơn đầu tiên",
-    "noShow": "Không đến lấy hàng",
-    "lastOrder": "Đơn gần nhất"
+    "noun": "đánh giá",
+    "openInModeration": "Mở trong kiểm duyệt",
+    "note": "Ẩn một đánh giá được thực hiện từ trang Kiểm duyệt, nơi cũng thấy được báo cáo dẫn tới việc ẩn.",
+    "empty": {
+      "title": "Chưa có đánh giá",
+      "text": "Đánh giá khách này viết sẽ hiện ở đây."
+    }
   },
   "contact": {
     "title": "Liên hệ",
     "email": "Email",
     "phone": "Điện thoại",
-    "address": "Địa chỉ",
     "joined": "Ngày tham gia"
   },
   "habits": {
-    "title": "Thói quen mua",
-    "orders": "Số đơn",
-    "collected": "Đã nhận hàng",
-    "noShows": "Không đến lấy",
-    "market": "Chợ hay đi",
-    "buysMostFrom": "Mua nhiều nhất ở"
+    "title": "Đơn hàng theo trạng thái",
+    "orders": "Tổng số đơn",
+    "loadedNote": "Đếm trên {{count}} đơn hàng mới tải gần nhất, không phải toàn bộ lịch sử."
   },
   "whatItDoes": {
-    "title": "Khoá tài khoản thì chuyện gì xảy ra",
-    "text": "Họ không đăng nhập hay đặt đơn mới được. Các đơn đã đặt không bị động tới, nên sạp vẫn giao phần hàng đã để dành và không ai mất đồ đã hái sẵn cho mình."
+    "title": "Vô hiệu hoá làm gì",
+    "text": "Họ không thể đăng nhập hay đặt đơn mới. Đơn đã đặt vẫn được giữ nguyên, nên sạp vẫn giao đúng phần đã chuẩn bị và không ai mất nông sản đã được chọn sẵn."
   },
   "deactivate": {
-    "title": "Khoá tài khoản {{name}}?",
-    "text": "Họ không đăng nhập hay đặt đơn được cho tới khi quản trị viên mở lại. Các đơn đã đặt vẫn chạy tới hết, nên không sạp nào phải ôm hàng không ai lấy.",
-    "reason": "Lý do lưu trên tài khoản",
-    "keep": "Chưa khoá",
-    "confirm": "Khoá"
+    "title": "Vô hiệu hoá {{name}}?",
+    "text": "Họ không thể đăng nhập hay đặt đơn cho tới khi admin kích hoạt lại. Đơn đã đặt vẫn tiếp tục tới cùng, nên không sạp nào bị giữ lại nông sản mà không ai nhận.",
+    "reason": "Lý do (chỉ hiện trong thông báo này, chưa lưu vào tài khoản)",
+    "reasonHint": "Máy chủ chưa lưu lý do — nội dung này không được gửi kèm yêu cầu.",
+    "keep": "Chưa vội",
+    "confirm": "Vô hiệu hoá"
   },
-  "reason": {
-    "noShows": "Nhiều lần không đến lấy hàng",
-    "abusive": "Dùng lời lẽ xúc phạm trong đánh giá",
-    "requested": "Tự yêu cầu đóng tài khoản",
-    "other": "Lý do khác"
+  "reactivate": {
+    "title": "Kích hoạt lại {{name}}?",
+    "text": "Họ có thể đăng nhập và đặt hàng lại ngay.",
+    "keep": "Chưa vội",
+    "confirm": "Kích hoạt lại"
   },
   "toast": {
-    "deactivated": "Đã khoá {{name}}.",
-    "reactivated": "{{name}} đăng nhập lại được rồi."
+    "deactivated": "Đã vô hiệu hoá {{name}}.",
+    "deactivatedWithReason": "Đã vô hiệu hoá {{name}}. Lý do: {{reason}}",
+    "reactivated": "{{name}} có thể đăng nhập lại."
   },
   "col": {
-    "order": "Đơn hàng",
+    "order": "Đơn",
     "stall": "Sạp",
     "pickup": "Nhận hàng",
-    "items": "Số món",
-    "total": "Tổng tiền",
+    "items": "Món",
+    "total": "Tổng",
     "status": "Trạng thái"
   }
 }

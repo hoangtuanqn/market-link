@@ -10,6 +10,11 @@
     "title": "Este pedido aún no ha terminado",
     "text": "Podrás valorar el puesto y lo que compraste cuando hayas recogido el pedido."
   },
+  "done": {
+    "title": "Already reviewed",
+    "text": "You have already reviewed this order. Thanks for taking the time."
+  },
+  "noun": "order",
   "completed": "Completado el {{date}}",
   "title": "¿Qué tal {{stall}}?",
   "intro": "Las reseñas están vinculadas a este pedido completado, así que otros clientes las ven como compra verificada. El puesto puede responder.",

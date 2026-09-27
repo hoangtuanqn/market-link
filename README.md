@@ -316,6 +316,7 @@ Run this once before a demo.
 | `./mvnw: Permission denied` | Missing execute permission (macOS/Linux) | `chmod +x backend/mvnw` |
 | `/usr/bin/env: 'sh\r': No such file or directory` | `mvnw` was checked out with CRLF line endings | `git config core.autocrlf input`, then `git checkout -- backend/mvnw` |
 | `FlywayValidateException: Migration checksum mismatch` | An already-applied migration file was edited | Revert the edit and add a new migration file instead. On local only, you can reset with `docker compose down -v` |
+| `Migration checksum mismatch for migration version 20260926017` (and `…018`) after pulling `dev` | PR #167 (27/09/2026) rewrote migration 017, replaced 018 and moved favourites to 019 after they had been merged, so a database created before it no longer matches | Reset the local database: `make clean && make up && make seed` (deletes local data). There is no in-place fix: the old and new 017/018 build different tables |
 | Lombok `cannot find symbol` (getters/setters) in IDE | Annotation processing is disabled | Enable it (see *Running from an IDE*) |
 | Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
 | Backend log `Chat realtime: app.chat.rabbitmq.host is empty` when running on your machine (way A) | Backend runs outside Docker and `RABBITMQ_HOST` is not set | Chat still works with the in-app broker; for the RabbitMQ relay, `export RABBITMQ_HOST=localhost` and map port 61613 in `docker-compose.yml` |
@@ -326,3 +327,12 @@ Run this once before a demo.
 | Chat photos return 404 after rebuilding containers | The `chat-uploads` volume was removed; the database rows survive but the files are gone | Stop with `docker compose down` (**without** `-v`) to keep volumes. Photos live on `chat-uploads`, separate from `uploads-data` |
 | `POST /api/v1/attachments` returns 415 for a photo that opens fine on your machine | The file is not JPEG/PNG/WebP — the server reads magic bytes and ignores the file extension and `Content-Type` | Re-save it as JPEG or PNG |
 | `<img src="/api/v1/attachments/5">` shows a broken image | That endpoint checks the JWT in the `Authorization` header, and `<img>` does not send it | `fetch` the URL with the header, then render `URL.createObjectURL(blob)` |
+
+## AI tools used
+
+The team used **Claude Code** (Anthropic) as a coding assistant throughout the project — for scaffolding
+new features, refactoring, code review, and drafting documentation such as this README and the files in
+`docs/`. All AI-generated code was reviewed, tested and adapted by the team before merging; no part of the
+codebase was accepted unreviewed. No ready-made website template was used — the UI is built from the
+project's own design system (`docs/design-system/`). Image assets are placeholders or the team's own
+photos; no AI image-generation tool was used for shipped assets.

@@ -11,4 +11,7 @@ public interface AdminCustomerServiceInterface {
 
     /** {@code "active"} | {@code "inactive"}; other values and non-customer accounts are a 400. */
     AdminCustomerResource setStatus(long userId, String status);
+
+    /** {@code GET /admin/customers/{id}} — 404 when the id is not a customer account. */
+    AdminCustomerResource detail(long userId);
 }

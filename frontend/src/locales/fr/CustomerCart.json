@@ -5,15 +5,33 @@
   "stalls_one": "{{count}} stand",
   "stalls_other": "{{count}} stands",
   "intro": "{{products}} de {{stalls}}. Choisissez un créneau de retrait pour chaque stand, puis passez les commandes.",
+  "empty": {
+    "title": "Your cart is empty",
+    "text": "Add products from a stall's page and they show up here, split by stall.",
+    "cta": "Browse products"
+  },
+  "noun": "cart",
+  "slotsNoun": "pickup times",
   "split": {
-    "title": "Votre panier sera divisé en 2 commandes chez 2 stands différents.",
+    "title_one": "Your cart will be split into {{count}} order at {{count}} stall.",
+    "title_other": "Your cart will be split into {{count}} orders at {{count}} stalls.",
     "text": "Chaque stand a son propre créneau de retrait et son heure limite, et accepte sa commande séparément. Vous payez chaque stand au retrait."
+  },
+  "market": "Market",
+  "noSlots": {
+    "title": "No pickup times yet",
+    "text": "This stall has not opened any pickup slots for this market. Try again later or remove this stall's items."
+  },
+  "problem": {
+    "out_of_stock": "One or more items have less stock than you asked for.",
+    "sold_out": "One or more items are sold out.",
+    "unavailable": "One or more items are no longer for sale.",
+    "stall_suspended": "This stall is not taking orders right now."
   },
   "changeTime": "Changer le créneau de retrait chez {{stall}}",
   "pickupDay": "Jour de retrait",
   "pickupDayAt": "Jour de retrait chez {{stall}}",
   "pickupTime": "Heure de retrait · {{day}} {{date}} · plage {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} clôt les commandes {{hours}} heures avant le créneau. Pour {{slot}} le {{slotDay}}, c'est {{cutoff}} le {{cutoffDay}}.",
   "summary": {
     "title": "Payez aux stands lors du retrait",
     "order": "Commande {{n}} · {{stall}}",
@@ -23,8 +41,16 @@
     "label": "Note pour les stands",
     "placeholder": "ex. des bottes plus petites, s'il vous plaît"
   },
-  "place": "Passer 2 commandes",
-  "ready": "Les deux stands ont un créneau de retrait. Chaque stand confirme sa propre commande.",
+  "place_one": "Place {{count}} order",
+  "place_other": "Place {{count}} orders",
+  "placing": "Placing your orders…",
+  "ready_one": "Your stall has a pickup time. It confirms your order.",
+  "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Choisissez un créneau de retrait chez {{stall}} pour passer vos commandes.",
-  "stockNote": "Le stock est déduit du stand dès que vous passez la commande. Il n'y a pas de paiement en ligne."
+  "stockNote": "Le stock est déduit du stand dès que vous passez la commande. Il n'y a pas de paiement en ligne.",
+  "stuck": {
+    "title": "Articles du panier",
+    "text": "Si un produit n'est plus en vente, retirez-le ici et le panier se recharge.",
+    "clear": "Vider le panier"
+  }
 }

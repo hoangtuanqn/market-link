@@ -8,7 +8,6 @@
   },
   "caption": {
     "categories_one": "{{count}} catégorie",
-    "categories_many": "{{count}} catégories",
     "categories_other": "{{count}} catégories"
   },
   "col": {
@@ -27,12 +26,14 @@
     "namePlaceholder": "par ex. Seafood",
     "nameHint": "En anglais, majuscule à l'initiale seulement. Ce mot est calligraphié sur l'étiquette d'un produit sans photo.",
     "position": "Position dans le filtre",
+    "minShelfLife": "Min shelf life (days)",
+    "maxShelfLife": "Max shelf life (days)",
+    "shelfLifeHint": "Standard freshness window for this category. Shown to Farmers as a guide when they list a product.",
     "submit": "Ajouter la catégorie"
   },
   "removeCategory": {
     "title": "Supprimer {{name}} ?",
     "textUsed_one": "{{count}} produit l'utilise. Choisissez où il part.",
-    "textUsed_many": "{{count}} produits l'utilisent. Choisissez où ils partent.",
     "textUsed_other": "{{count}} produits l'utilisent. Choisissez où ils partent.",
     "textUnused": "Aucun produit ne l'utilise.",
     "moveTo": "Déplacer les produits vers",
@@ -52,6 +53,8 @@
   },
   "error": {
     "noun": "catégories",
-    "nameRequired": "Donnez un nom à la catégorie."
+    "nameRequired": "Donnez un nom à la catégorie.",
+    "shelfLifeRequired": "Enter a whole number of 1 or more.",
+    "shelfLifeRange": "Max must be at least the minimum."
   }
 }

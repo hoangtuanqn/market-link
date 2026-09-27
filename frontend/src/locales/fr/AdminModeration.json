@@ -10,13 +10,8 @@
   },
   "reviewFilterLabel": "Filtrer les avis",
   "reviewFilter": {
-    "reported": "Signalés",
     "lowRated": "Notés 1 ou 2",
     "newest": "Plus récents"
-  },
-  "report": {
-    "title": "Signalé par {{by}} le {{date}} : « {{quote}} »",
-    "text": "Le masquer le retire des pages produit et étal. Le client en connaît la raison."
   },
   "recentlyListed": "Produits récemment mis en ligne",
   "search": {
@@ -37,11 +32,9 @@
     "view": "Voir",
     "hideReview": "Masquer l'avis",
     "hideListing": "Masquer la fiche",
-    "keepVisible": "Laisser visible",
     "customerAccount": "Compte client",
     "unhide": "Réafficher",
-    "unhidden": "L'élément est de nouveau visible.",
-    "dismissed": "Signalement écarté. L'avis reste visible."
+    "unhidden": "L'élément est de nouveau visible."
   },
   "hide": {
     "title": {
@@ -71,7 +64,8 @@
     "text": "Les produits et avis signalés arrivent ici pour que vous les lisiez avant de masquer quoi que ce soit."
   },
   "error": {
-    "noun": "annonces"
+    "noun": "annonces",
+    "reviewsNoun": "reviews"
   },
   "messages": {
     "boundary": "Vous ne pouvez lire que les messages signalés, avec jusqu’à cinq messages de chaque côté pour le contexte. Le reste de la conversation n’est pas ouvert aux administrateurs.",

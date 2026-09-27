@@ -105,7 +105,9 @@ class OrderAccessTest {
                 "2026-09-28T18:00:00Z",
                 new BigDecimal("39000"),
                 2,
-                "2026-09-26T02:00:00Z");
+                "2026-09-26T02:00:00Z",
+                7L,
+                "Khách 7");
     }
 
     private static OrderDetailRow order(
@@ -265,5 +267,17 @@ class OrderAccessTest {
 
         assertThatThrownBy(() -> service.farmerOrders(FARMER_USER_ID, null, null, 1, 10))
                 .isInstanceOf(AccessDeniedException.class);
+    }
+
+    /**
+     * FR-065: the Farmer's order list must carry the customer's name so the chat "order pin" can
+     * show who placed it, without a separate lookup.
+     */
+    @Test
+    void listRowsCarryTheCustomerNameForTheStall() {
+        assertThat(OrderQueryRepository.FARMER_ORDERS_SQL)
+                .contains("cu.full_name AS customer_name");
+        assertThat(OrderQueryRepository.FARMER_ORDERS_SQL)
+                .contains("JOIN users cu ON cu.id = o.customer_id");
     }
 }

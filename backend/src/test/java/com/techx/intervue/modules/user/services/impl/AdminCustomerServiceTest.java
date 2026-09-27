@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.techx.intervue.modules.report.services.impl.ReportFixture;
+import com.techx.intervue.modules.user.exceptions.CustomerNotFoundException;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AdminCustomerResource;
 import com.techx.intervue.modules.user.services.interfaces.AdminCustomerServiceInterface;
@@ -37,6 +38,7 @@ class AdminCustomerServiceTest {
     private long customerId;
     private String email;
     private long orderId;
+    private long farmerUserId;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +49,8 @@ class AdminCustomerServiceTest {
         email =
                 jdbc.queryForObject(
                         "SELECT email FROM users WHERE id = ?", String.class, customerId);
-        long farmer = fx.farmer(fx.user("farmer", "Farmer", "x"), "Stall", "approved");
+        farmerUserId = fx.user("farmer", "Farmer", "x");
+        long farmer = fx.farmer(farmerUserId, "Stall", "approved");
         long product = fx.product(farmer, category, "Product", 10000);
         orderId = fx.order(customerId, farmer, market, "placed", 10000, LocalDate.of(2026, 10, 1));
         fx.item(orderId, product, 10000, 1);
@@ -93,6 +96,14 @@ class AdminCustomerServiceTest {
         assertThat(row.userId()).isEqualTo(customerId);
         assertThat(row.orderCount()).isEqualTo(1);
         assertThat(row.status()).isEqualTo("inactive");
+    }
+
+    /** FR-072: {@code GET /admin/customers/{id}} — one customer, 404 for a non-customer account. */
+    @Test
+    void detailReturnsOneCustomerAndRefusesAStall() {
+        assertThat(customers.detail(customerId).email()).isEqualTo(email);
+        assertThatThrownBy(() -> customers.detail(farmerUserId))
+                .isInstanceOf(CustomerNotFoundException.class);
     }
 
     @Test

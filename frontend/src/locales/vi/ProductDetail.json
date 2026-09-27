@@ -5,7 +5,6 @@
     "browse": "Xem sản phẩm"
   },
   "breadcrumb": "Sản phẩm",
-  "photo": "Ảnh {{name}}",
   "favorite": {
     "add": "Thêm vào yêu thích: {{name}}",
     "remove": "Bỏ khỏi yêu thích: {{name}}"
@@ -67,7 +66,10 @@
     "write": "Viết đánh giá",
     "writeNote": "Mở khi một đơn có sản phẩm này đã hoàn tất.",
     "summary_one": "{{count}} đánh giá, tất cả từ đơn đã hoàn tất",
-    "summary_other": "{{count}} đánh giá, tất cả từ đơn đã hoàn tất"
+    "summary_other": "{{count}} đánh giá, tất cả từ đơn đã hoàn tất",
+    "emptyTitle": "Chưa có đánh giá nào",
+    "emptyText": "Hãy là người đầu tiên đánh giá sản phẩm này sau khi đơn của bạn hoàn tất.",
+    "noun": "đánh giá"
   },
   "similar": {
     "title": "{{name}} ở các sạp khác cuối tuần này",
@@ -77,12 +79,6 @@
   },
   "also": {
     "title": "Còn có ở {{stall}} tuần này"
-  },
-  "report": {
-    "sentTitle": "Đã gửi báo cáo",
-    "sentText": "Quản trị viên sẽ xem xét tin đăng này.",
-    "button": "Báo cáo tin đăng này",
-    "note": "Sai giá, sai ảnh hoặc thứ không nên có ở chợ nông sản."
   },
   "error": {
     "noun": "sản phẩm"

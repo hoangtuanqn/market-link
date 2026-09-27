@@ -7,6 +7,7 @@
     "feedback": "의견함"
   },
   "caption": {
+    "categories_one": "{{count}} category",
     "categories_other": "분류 {{count}}개"
   },
   "col": {
@@ -25,10 +26,14 @@
     "namePlaceholder": "예: Seafood",
     "nameHint": "영어로, 문장 첫 글자만 대문자. 사진 없는 상품 태그에 손글씨로 적힙니다.",
     "position": "필터에서의 순서",
+    "minShelfLife": "Min shelf life (days)",
+    "maxShelfLife": "Max shelf life (days)",
+    "shelfLifeHint": "Standard freshness window for this category. Shown to Farmers as a guide when they list a product.",
     "submit": "분류 추가"
   },
   "removeCategory": {
     "title": "{{name}}을(를) 삭제할까요?",
+    "textUsed_one": "{{count}} product uses it. Choose where it goes.",
     "textUsed_other": "{{count}}개 상품이 쓰고 있습니다. 어디로 옮길지 고르세요.",
     "textUnused": "쓰고 있는 상품이 없습니다.",
     "moveTo": "상품을 옮길 곳",
@@ -48,6 +53,8 @@
   },
   "error": {
     "noun": "카테고리",
-    "nameRequired": "카테고리 이름을 입력하세요."
+    "nameRequired": "카테고리 이름을 입력하세요.",
+    "shelfLifeRequired": "Enter a whole number of 1 or more.",
+    "shelfLifeRange": "Max must be at least the minimum."
   }
 }

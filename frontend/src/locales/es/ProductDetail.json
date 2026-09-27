@@ -5,7 +5,6 @@
     "browse": "Ver productos"
   },
   "breadcrumb": "Productos",
-  "photo": "Foto de {{name}}",
   "favorite": {
     "add": "Añadir a favoritos: {{name}}",
     "remove": "Quitar de favoritos: {{name}}"
@@ -36,6 +35,9 @@
   "details": {
     "title": "Detalles del producto",
     "soldPer": "Se vende por",
+    "shelfLife": "Stays fresh for",
+    "shelfLifeValue_one": "{{count}} day",
+    "shelfLifeValue_other": "{{count}} days",
     "category": "Categoría",
     "stall": "Puesto",
     "market": "Mercado"
@@ -64,7 +66,10 @@
     "write": "Escribir una reseña",
     "writeNote": "Disponible cuando se complete un pedido con este producto.",
     "summary_one": "{{count}} reseña, de un pedido completado",
-    "summary_other": "{{count}} reseñas, todas de pedidos completados"
+    "summary_other": "{{count}} reseñas, todas de pedidos completados",
+    "emptyTitle": "No reviews yet",
+    "emptyText": "Be the first to review this product once your order is completed.",
+    "noun": "reviews"
   },
   "similar": {
     "title": "{{name}} en otros puestos este fin de semana",
@@ -74,12 +79,6 @@
   },
   "also": {
     "title": "Más de {{stall}} esta semana"
-  },
-  "report": {
-    "sentTitle": "Denuncia enviada",
-    "sentText": "Un administrador revisará este anuncio.",
-    "button": "Denunciar este anuncio",
-    "note": "Precio erróneo, foto errónea o algo que no corresponde a un mercado de agricultores."
   },
   "error": {
     "noun": "producto"

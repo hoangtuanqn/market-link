@@ -2,41 +2,56 @@
   "title": "Favoriten",
   "intro": "Ihre Wunschliste: Produkte fürs nächste Mal, Stände, zu denen Sie zurückkehren, und die Märkte, auf denen Sie einkaufen. Ein ausverkaufter Favorit meldet sich, wenn er wieder da ist.",
   "findMore": "Mehr zum Merken finden",
+  "loading": "Loading your favorites…",
   "tabs": {
     "label": "Gemerkte Einträge",
     "products": "Produkte",
     "stalls": "Stände",
     "markets": "Märkte"
   },
-  "banner": {
-    "title": "Eines Ihrer vier gemerkten Produkte ist ausverkauft.",
-    "text": "Nachschub-Benachrichtigungen sind an, Sie erfahren es also sofort, wenn der Stand es wieder anbietet."
-  },
   "filters": {
     "all": "Alle",
     "inStock": "Jetzt vorrätig",
     "soldOut": "Ausverkauft",
-    "priceDropped": "Preis gesenkt"
+    "emptyTitle": "Nothing matches this filter",
+    "emptyText": "Try a different filter to see the rest of your saved products."
   },
+  "inStock": "In stock",
   "soldOut": "Ausverkauft",
-  "left": "Noch {{qty}}",
+  "unavailable": "No longer available",
   "alertOn": "Benachrichtigung an",
   "addToCart": "In den Warenkorb",
   "remove": "Entfernen",
-  "addInStock_one": "Den {{count}} vorrätigen Artikel in den Warenkorb",
-  "addInStock_other": "Die {{count}} vorrätigen Artikel in den Warenkorb",
+  "viewStall": "View stall",
   "toast": {
-    "alertTitle": "Nachschub-Benachrichtigung",
-    "alertOff": "Benachrichtigung für {{name}} ist aus.",
     "addedTitle": "In den Warenkorb gelegt",
     "added": "{{name}} liegt jetzt in Ihrem Warenkorb.",
-    "addedMany_one": "{{count}} Produkt in den Warenkorb gelegt. Beim Bestellen wird nach Stand aufgeteilt.",
-    "addedMany_other": "{{count}} Produkte in den Warenkorb gelegt. Beim Bestellen wird nach Stand aufgeteilt.",
     "removedTitle": "Entfernt",
     "removed": "{{name}} wurde aus Ihren Favoriten entfernt."
   },
   "holdNote": "Ein gemerktes Produkt reserviert keinen Bestand. Reserviert wird erst, wenn Sie bestellen.",
   "stallsNote": "Ihre gemerkten Stände und was jeder dieses Wochenende mitbringt.",
-  "thisWeek": "Diese Woche",
-  "marketsNote": "Ein gemerkter Markt steht in Listen und auf der Karte an erster Stelle, und Routen zu seinen Ständen starten an Ihrer gespeicherten Adresse."
+  "marketsNote": "Ein gemerkter Markt steht in Listen und auf der Karte an erster Stelle, und Routen zu seinen Ständen starten an Ihrer gespeicherten Adresse.",
+  "error": {
+    "products": "saved products",
+    "stalls": "saved stalls",
+    "markets": "saved markets"
+  },
+  "empty": {
+    "products": {
+      "title": "No saved products yet",
+      "text": "Save a product from its page to find it here, with a restock alert if it ever sells out.",
+      "browse": "Browse products"
+    },
+    "stalls": {
+      "title": "No saved stalls yet",
+      "text": "Save a stall from its page to keep it here for next time.",
+      "browse": "Browse markets"
+    },
+    "markets": {
+      "title": "No saved markets yet",
+      "text": "Save a market from its page to keep it here for next time.",
+      "browse": "Browse markets"
+    }
+  }
 }

@@ -5,15 +5,33 @@
   "stalls_one": "{{count}} stall",
   "stalls_other": "{{count}} stalls",
   "intro": "{{products}} from {{stalls}}. Pick a pickup time for each stall, then place the orders.",
+  "empty": {
+    "title": "Your cart is empty",
+    "text": "Add products from a stall's page and they show up here, split by stall.",
+    "cta": "Browse products"
+  },
+  "noun": "cart",
+  "slotsNoun": "pickup times",
   "split": {
-    "title": "Your cart will be split into 2 orders at 2 different stalls.",
+    "title_one": "Your cart will be split into {{count}} order at {{count}} stall.",
+    "title_other": "Your cart will be split into {{count}} orders at {{count}} stalls.",
     "text": "Each stall has its own pickup time and cutoff, and accepts its order separately. You pay each stall on pickup."
+  },
+  "market": "Market",
+  "noSlots": {
+    "title": "No pickup times yet",
+    "text": "This stall has not opened any pickup slots for this market. Try again later or remove this stall's items."
+  },
+  "problem": {
+    "out_of_stock": "One or more items have less stock than you asked for.",
+    "sold_out": "One or more items are sold out.",
+    "unavailable": "One or more items are no longer for sale.",
+    "stall_suspended": "This stall is not taking orders right now."
   },
   "changeTime": "Change pickup time at {{stall}}",
   "pickupDay": "Pickup day",
   "pickupDayAt": "Pickup day at {{stall}}",
   "pickupTime": "Pickup time · {{day}} {{date}} · window {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} closes orders {{hours}} hours before the slot. For {{slot}} on {{slotDay}} that is {{cutoff}} on {{cutoffDay}}.",
   "summary": {
     "title": "Pay at the stalls on pickup",
     "order": "Order {{n}} · {{stall}}",
@@ -23,8 +41,16 @@
     "label": "Note to the stalls",
     "placeholder": "e.g. smaller bunches please"
   },
-  "place": "Place 2 orders",
-  "ready": "Both stalls have a pickup time. Each stall confirms its own order.",
+  "place_one": "Place {{count}} order",
+  "place_other": "Place {{count}} orders",
+  "placing": "Placing your orders…",
+  "ready_one": "Your stall has a pickup time. It confirms your order.",
+  "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Choose a pickup time at {{stall}} to place your orders.",
-  "stockNote": "Stock is taken out of the stall's count the moment you place the order. There is no online payment."
+  "stockNote": "Stock is taken out of the stall's count the moment you place the order. There is no online payment.",
+  "stuck": {
+    "title": "Items in your cart",
+    "text": "If a product is no longer on sale, remove it here and the cart loads again.",
+    "clear": "Empty the cart"
+  }
 }

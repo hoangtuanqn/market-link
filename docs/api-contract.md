@@ -221,8 +221,6 @@ tạo hoặc sửa sản phẩm trả **403** kèm message "Your stall is pendin
 
 ## 5. Categories & Products — FR-020…023, 062…064, 076
 
-> **Chưa triển khai.**
-
 | Method | Path | Role | Ghi chú |
 |---|---|---|---|
 | GET | `/api/v1/categories` | Public | |
@@ -236,6 +234,15 @@ tạo hoặc sửa sản phẩm trả **403** kèm message "Your stall is pendin
 
 `sort` nhận `price_asc`, `price_desc`, `newest`, `rating`.
 
+**Tồn kho theo ngày lấy hàng (FR-063, từ PR #167).** Tồn kho thật nằm ở từng ngày (`product_daily_stock`,
+sinh tự động từ template tuần), không còn một con số chung. Vì vậy ở `GET /products` và `GET /products/{id}`:
+
+- `stockQuantity` và `price` là số của **ngày lấy hàng gần nhất còn hàng** trong 14 ngày tới; mọi ngày đều hết thì
+  là ngày gần nhất với `stockQuantity: 0`.
+- Sản phẩm **chưa có template tuần nào đang bật** thì không bao giờ đặt được, nên không có trong danh sách và
+  `GET /products/{id}` trả 404. `total` của trang đếm đúng tập này.
+- `stockQuantity`/`price` gửi lên ở `POST/PUT /farmer/products` chỉ là số tham khảo của Farmer, không dùng để đặt đơn.
+
 > Giá trị enum trong JSON giữ nguyên `snake_case` (`sold_out`), vì chúng là giá trị lưu thẳng
 > xuống cột ENUM của database. Chỉ **tên field** mới là camelCase.
 
@@ -245,17 +252,18 @@ tạo hoặc sửa sản phẩm trả **403** kèm message "Your stall is pendin
 |---|---|---|
 | GET | `/api/v1/farmer/stock-templates` | Farmer |
 | PUT | `/api/v1/farmer/stock-templates` | Farmer — `{ items:[{ productId, dayOfWeek, defaultQuantity, defaultPrice }] }` |
-| POST | `/api/v1/farmer/stock-templates/apply` | Farmer — `{ targetDate }` → nạp tồn kho theo template của thứ tương ứng |
+| PATCH | `/api/v1/farmer/products/{id}/daily-stock/{date}` | Farmer — `{ quantityAvailable, unitPrice? }` → chỉnh riêng một ngày, không đụng template; `unitPrice` bỏ trống thì giữ giá cũ của ngày đó. Thứ của `date` chưa có template → 400 |
+
+Không còn bước "Apply": tồn kho của một ngày tự sinh từ template lần đầu có người xem/đặt. `defaultPrice` null thì
+ngày đó lấy `price` của sản phẩm.
 
 ---
 
 ## 6. Slots — FR-032, 067
 
-> **Chưa triển khai.**
-
 | Method | Path | Role | Ghi chú |
 |---|---|---|---|
-| GET | `/api/v1/farmers/{id}/slots` | Public | query: `marketId, date` → `{ slotId, startTime, endTime, maxOrders, bookedCount, isFull }` |
+| GET | `/api/v1/farmers/{id}/slots` | Public | query: `marketId, date` → `{ slotId, startTime, endTime, maxOrders, bookedCount, isFull }`. Chỉ trả slot còn nhận đơn: đang bật và chưa qua giờ chốt (`startTime` − `orderCutoffHours` của sạp). Slot đầy vẫn trả, kèm `isFull: true` |
 | POST | `/api/v1/farmer/slots/generate` | Farmer | `{ farmerMarketId, fromDate, toDate, slotMinutes, maxOrders }` sinh slot từ operating days |
 | PATCH | `/api/v1/farmer/slots/{id}` | Farmer | `{ maxOrders, isActive }` |
 

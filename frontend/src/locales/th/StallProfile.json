@@ -5,7 +5,6 @@
   },
   "breadcrumb": "ตลาด",
   "approved": "ร้านที่อนุมัติแล้ว",
-  "savedToast": "บันทึก {{name}} แล้ว",
   "save": "บันทึกร้าน",
   "stats": {
     "reviews_one": "{{count}} รีวิว",
@@ -33,7 +32,10 @@
     "all": "ทั้งหมด",
     "farmer": "เกี่ยวกับร้าน",
     "product": "เกี่ยวกับสินค้า",
-    "newest": "ใหม่สุดก่อน"
+    "newest": "ใหม่สุดก่อน",
+    "emptyTitle": "No reviews yet",
+    "emptyText": "Be the first to review this stall once your order is completed.",
+    "noun": "reviews"
   },
   "about": {
     "whereWhen": "ที่ไหนและเมื่อไร",
@@ -63,5 +65,6 @@
   },
   "error": {
     "noun": "ร้านค้า"
-  }
+  },
+  "saved": "Stall saved"
 }

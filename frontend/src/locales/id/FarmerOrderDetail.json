@@ -14,9 +14,8 @@
     "reason": "Alasan yang akan dilihat pelanggan"
   },
   "history": {
-    "before": "Sebelum {{cutoff}}",
-    "cancelled": "Dibatalkan oleh pelanggan",
-    "title": "Riwayat"
+    "title": "Riwayat",
+    "by": "{{time}} · by {{by}}"
   },
   "missing": {
     "title": "Pesanan itu sudah tidak ada",
@@ -24,10 +23,10 @@
     "back": "Pesanan saya"
   },
   "item": "barang",
+  "noun": "order",
   "col": {
     "product": "Produk",
     "requested": "Diminta",
-    "left": "Sisa setelah pesanan ini",
     "amount": "Jumlah"
   },
   "crumb": "Pesanan",
@@ -50,25 +49,19 @@
   },
   "items": {
     "title": "Barang",
-    "note": "Stok yang ditampilkan adalah sisa setelah pesanan ini dan pesanan lain yang masuk. Stok yang dipesan dikembalikan jika Anda menolak (D-02)."
+    "total": "Total"
   },
   "note": "Catatan dari pelanggan",
   "quote": "“{{text}}”",
   "customer": {
     "title": "Pelanggan",
     "name": "Nama",
-    "tier": "Tingkat",
     "phone": "Telepon",
-    "ordersWithYou": "Pesanan dengan Anda",
-    "orders_one": "{{count}} pesanan",
-    "orders_other": "{{count}} pesanan",
-    "withCollected_one": "{{orders}}, {{count}} sudah diambil",
-    "withCollected_other": "{{orders}}, {{count}} sudah diambil"
+    "email": "Email"
   },
   "pickup": {
     "title": "Slot pengambilan",
     "market": "Pasar",
-    "marketStall": "{{market}}, lapak {{code}}",
     "slot": "Slot",
     "pay": "Bayar saat pengambilan"
   },

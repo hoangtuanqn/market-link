@@ -1,15 +1,14 @@
 {
-  "overline": "การตั้งค่า",
   "title": "กล่องข้อเสนอแนะ",
   "intro": "รายงานข้อผิดพลาด ข้อเสนอแนะ และคำถามที่ส่งมาผ่านแบบฟอร์ม ทำเครื่องหมายว่าตอบแล้วเมื่อจัดการเสร็จ",
-  "link": {
-    "categories": "หมวดหมู่",
-    "announcements": "ประกาศ"
-  },
+  "noun": "feedback",
+  "anonymous": "Anonymous",
+  "caption": "{{count}} feedback messages",
   "filterLabel": "กรองข้อเสนอแนะ",
   "filter": {
-    "open": "ยังไม่ตอบ",
-    "answered": "ตอบแล้ว",
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved",
     "bug": "ข้อผิดพลาด",
     "suggestion": "ข้อเสนอแนะ",
     "query": "คำถาม"
@@ -20,8 +19,9 @@
     "query": "คำถาม"
   },
   "status": {
-    "open": "ยังไม่ตอบ",
-    "answered": "ตอบแล้ว"
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved"
   },
   "col": {
     "type": "ประเภท",
@@ -30,26 +30,21 @@
     "status": "สถานะ"
   },
   "action": {
-    "read": "อ่าน",
-    "readAndAnswer": "อ่านและตอบ"
+    "read": "อ่าน"
   },
   "dialog": {
     "title": "{{type}} จาก {{from}}",
     "sent": "ส่งเมื่อ {{date}} · {{state}}",
-    "notAnswered": "ยังไม่ได้ตอบ",
-    "alreadyAnswered": "ตอบไปแล้ว",
-    "yourAnswer": "คำตอบของคุณ",
-    "replyPlaceholder": "ขอบคุณที่แจ้งให้เราทราบ…",
     "close": "ปิด",
-    "send": "ส่งและทำเครื่องหมายว่าตอบแล้ว",
-    "sendAgain": "ส่งอีกครั้ง"
+    "markReviewed": "Mark reviewed",
+    "markResolved": "Mark resolved"
   },
   "empty": {
     "title": "ยังไม่มีข้อเสนอแนะ",
     "text": "รายงานข้อผิดพลาด ข้อเสนอแนะ และคำถามจากแบบฟอร์มจะมาอยู่ที่นี่"
   },
   "toast": {
-    "answered": "บันทึกคำตอบและทำเครื่องหมายข้อความว่าตอบแล้ว",
-    "markedOnly": "ทำเครื่องหมายว่าตอบแล้วโดยไม่ได้ส่งคำตอบ"
+    "reviewed": "Marked reviewed.",
+    "resolved": "Marked resolved."
   }
 }

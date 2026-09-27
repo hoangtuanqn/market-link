@@ -1,7 +1,9 @@
 {
   "title": "マーケット",
   "intro": "各マーケットの名前、住所、営業日、時間、地図の座標です。マーケットを削除するとお客様からは見えなくなりますが、履歴は残ります。",
+  "caption_one": "{{count}} active market",
   "caption_other": "営業中のマーケット{{count}}件",
+  "stalls_one": "{{count}} stall",
   "stalls_other": "{{count}}店舗",
   "col": {
     "market": "マーケット",
@@ -28,6 +30,7 @@
   },
   "remove": {
     "title": "{{name}} を削除しますか？",
+    "text_one": "{{count}} stall sells here. The market disappears from customer pages and the stall is told. Orders already placed for it continue.",
     "text_other": "{{count}}店舗がここで販売しています。マーケットはお客様のページから消え、店舗には通知されます。すでに入っている注文はそのまま進みます。",
     "keep": "マーケットを残す",
     "confirm": "マーケットを削除"

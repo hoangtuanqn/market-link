@@ -1,4 +1,5 @@
 {
+  "noun": "order",
   "myOrders": "Pesanan saya",
   "breadcrumbOrder": "Pesanan {{code}}",
   "breadcrumbEdit": "Ubah",

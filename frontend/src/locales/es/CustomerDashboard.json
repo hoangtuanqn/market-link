@@ -3,6 +3,12 @@
   "greeting_other": "Hola, {{name}}: {{count}} recogidas este fin de semana",
   "intro": "Un pedido sigue esperando la confirmación del puesto. Todo lo demás va bien.",
   "browseMarkets": "Ver los mercados de este fin de semana",
+  "noun": {
+    "orders": "orders",
+    "favorites": "favorites",
+    "notifications": "notifications",
+    "products": "products"
+  },
   "cards": {
     "upcoming_one": "{{count}} pedido próximo",
     "upcoming_other": "{{count}} pedidos próximos",
@@ -30,5 +36,15 @@
   "nextPickups": "Próximas recogidas",
   "allOrders": "Todos mis pedidos",
   "newFromFavorites": "Novedades de la semana de tus puestos favoritos",
-  "favorites": "Favoritos"
+  "favorites": "Favoritos",
+  "empty": {
+    "pickups": {
+      "title": "No pickups coming up",
+      "text": "Orders that are placed, accepted or ready for pickup show up here."
+    },
+    "favorites": {
+      "title": "No favorite products yet",
+      "text": "Save products you like and new stock from them shows up here."
+    }
+  }
 }

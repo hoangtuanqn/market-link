@@ -5,10 +5,6 @@
   },
   "intro_one": "{{count}} lapak. Setiap lapak menutup pesanannya sendiri 12 sampai 24 jam sebelum pengambilan. Ambil di lapak dan bayar langsung ke petani.",
   "intro_other": "{{count}} lapak. Setiap lapak menutup pesanannya sendiri 12 sampai 24 jam sebelum pengambilan. Ambil di lapak dan bayar langsung ke petani.",
-  "toast": {
-    "saved": "{{name}} disimpan.",
-    "removed": "{{name}} dihapus dari favorit."
-  },
   "save": {
     "on": "Pasar disimpan",
     "off": "Simpan pasar"

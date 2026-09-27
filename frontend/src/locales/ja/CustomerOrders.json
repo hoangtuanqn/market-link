@@ -3,10 +3,26 @@
   "intro": "今後の受け取りが先に表示されます。過去の注文にはレシートが残り、以前買ったものを今日の価格と在庫で再注文できます。",
   "stall": "店舗",
   "allStalls": "すべての店舗",
+  "noun": "orders",
   "tabs": {
     "label": "注文",
     "upcoming": "今後",
     "past": "過去",
     "all": "すべて"
+  },
+  "empty": {
+    "up": {
+      "title": "No upcoming orders",
+      "text": "Once you place an order, it stays here until it has been picked up."
+    },
+    "past": {
+      "title": "No past orders yet",
+      "text": "Orders you have picked up, cancelled or that were declined will show up here."
+    },
+    "all": {
+      "title": "No orders yet",
+      "text": "Browse this weekend's markets and place your first order."
+    },
+    "cta": "Browse products"
   }
 }

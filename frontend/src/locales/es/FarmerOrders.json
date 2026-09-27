@@ -1,13 +1,16 @@
 {
   "title": "Pedidos",
   "intro": "Acepta o rechaza los pedidos nuevos antes de su hora límite, márcalos como listos el día de mercado y complétalos cuando el cliente haya pagado.",
-  "search": { "label": "Buscar pedidos", "placeholder": "Código de pedido o nombre del cliente", "submit": "Buscar" },
+  "search": {
+    "label": "Buscar pedidos",
+    "placeholder": "Código de pedido o nombre del cliente",
+    "submit": "Buscar"
+  },
   "filter": {
     "day": "Día de recogida",
-    "all": "Todos",
-    "market": "Mercado",
-    "bothMarkets": "Ambos mercados"
+    "all": "Todos"
   },
+  "noun": "orders",
   "tabsLabel": "Pedidos por estado",
   "status": {
     "placed": "Realizado",

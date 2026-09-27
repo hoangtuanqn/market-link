@@ -8,10 +8,9 @@
   },
   "filter": {
     "day": "Jour de retrait",
-    "all": "Tous",
-    "market": "Marché",
-    "bothMarkets": "Les deux marchés"
+    "all": "Tous"
   },
+  "noun": "orders",
   "tabsLabel": "Commandes par statut",
   "status": {
     "placed": "Passée",

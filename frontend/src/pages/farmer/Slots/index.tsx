@@ -1,100 +1,204 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import StallApi, { type SlotDto, type StallMarketDto } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
-import { Banner } from '@/components/ui/banner';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { farmer, marketName } from '@/data/catalog';
-import { dayList, dayName, formatClock, formatDate, formatDayMonth, weekday } from '@/lib/format';
+import useRequest from '@/hooks/useRequest';
+import { dayList, dayName, formatClock, formatDayMonth, formatTime } from '@/lib/format';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-const f = farmer(1)!;
+const NO_MARKETS: StallMarketDto[] = [];
+/** How far ahead the day picker looks for a day that matches this market's operating days. */
+const DAYS_AHEAD = 14;
+/** The Generate dialog defaults to a 2-week range, same as the manual check in the task brief. */
+const GEN_RANGE_DAYS = 14;
 
-type Slot = { value: string; time: string; booked: number; max: number; off?: boolean };
-
-const INITIAL_SLOTS: Slot[] = [
-  { value: '0600', time: '06:00–06:30', booked: 5, max: 5 },
-  { value: '0630', time: '06:30–07:00', booked: 3, max: 5 },
-  { value: '0700', time: '07:00–07:30', booked: 1, max: 5 },
-  { value: '0730', time: '07:30–08:00', booked: 0, max: 5 },
-  { value: '0800', time: '08:00–08:30', booked: 0, max: 5 },
-  { value: '0830', time: '08:30–09:00', booked: 2, max: 5 },
-  { value: '0900', time: '09:00–09:30', booked: 0, max: 5 },
-  { value: '0930', time: '09:30–10:00', booked: 1, max: 5 },
-  { value: '1000', time: '10:00–10:30', booked: 0, max: 3, off: true },
-];
-
-/** "06:00–06:30" (stored 24-hour) → the reader's clock. */
-const clockRange = (range: string) => range.split('–').map(formatClock).join('–');
-
-const DAY_OPTIONS = [
-  { value: 'sat', date: new Date(2026, 8, 26) },
-  { value: 'sun', date: new Date(2026, 8, 27) },
-  { value: 'sat2', date: new Date(2026, 9, 3) },
-  { value: 'sun2', date: new Date(2026, 9, 4), disabled: true },
-];
-
-/** `reason` is what the farmer typed; `reasonKey` is a page string (the seeded example, or "not given"). */
-type DayOff = {
-  id: number;
-  marketId: number;
-  date: Date;
-  reason?: string;
-  reasonKey?: 'away.seedReason' | 'away.notGiven';
-  orders: number;
+const pad = (n: number) => String(n).padStart(2, '0');
+/** Local date → "yyyy-MM-dd", the wire format for `date`, `fromDate` and `toDate`. */
+const isoDate = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+/** "yyyy-MM-dd" → a Date in local time (a UTC parse would land on the wrong day at UTC-x). */
+const localDay = (ymd: string) => {
+  const [y, m, d] = ymd.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+const addDays = (d: Date, n: number) => {
+  const next = new Date(d);
+  next.setDate(next.getDate() + n);
+  return next;
 };
 
-/** The market days a farmer can step away from; `note` picks the hint shown after the date. */
-const AWAY_OPTIONS = [
-  { value: '2026-09-27', date: new Date(2026, 8, 27), orders: 2, note: 'placed' },
-  { value: '2026-10-03', date: new Date(2026, 9, 3), orders: 0, note: 'none' },
-  { value: '2026-10-04', date: new Date(2026, 9, 4), orders: 0, note: 'shut' },
-] as const;
+/** The next `DAYS_AHEAD` days that fall on one of this market's operating weekdays. */
+const buildDayOptions = (operatingDays: StallMarketDto['operatingDays']) => {
+  const allowed = new Set(operatingDays.map((d) => d.dayOfWeek));
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const options: { value: string; date: Date }[] = [];
+  for (let i = 0; i < DAYS_AHEAD; i++) {
+    const date = addDays(today, i);
+    if (allowed.has(date.getDay())) options.push({ value: isoDate(date), date });
+  }
+  return options;
+};
 
-/** The one market closure that touches this farmer's markets (04/10 at Thảo Điền, called by the admin). */
-const MARKET_CLOSURE = { date: new Date(2026, 9, 4), reason: 'Ward street works on Quốc Hương' };
-const GEN_FROM = new Date(2026, 9, 3);
-const GEN_TO = new Date(2026, 9, 4);
+/** "06:00–06:30" from the DTO's own 24-hour fields, in the reader's clock. */
+const clockRange = (s: SlotDto) => `${formatClock(s.startTime)}–${formatClock(s.endTime)}`;
 
-/** FR-032 FR-067 — pickup slots for one market day, and the days this stall is not attending. */
+/** The slot's start as a real Date, from its `slotDate` + `startTime`. */
+const slotStart = (s: SlotDto) => {
+  const [h, m] = s.startTime.split(':').map(Number);
+  const d = localDay(s.slotDate);
+  d.setHours(h, m, 0, 0);
+  return d;
+};
+
+/** When changes to this slot stop being accepted: its start minus the stall's order cutoff. */
+const closesAt = (s: SlotDto, cutoffHours: number) => new Date(slotStart(s).getTime() - cutoffHours * 3_600_000);
+
+/**
+ * FR-032 FR-067 — pickup slots for one market day. The list comes from the public slots endpoint (same one customers
+ * use), which only ever returns active slots; turning a slot off therefore drops it out of this table too. Calling
+ * Generate again does not flip it back on (checked against the live API), and there is no farmer endpoint that lists
+ * inactive slots either, so once a slot is off this screen has no way to show it or turn it back on — see
+ * `table.reenableNote` (proposed to LEAD: a farmer-only slots list that includes inactive rows, docs/api-contract.md §6
+ * handoff). Cancelling a whole market day ("away days") has no farmer-facing API and is not in the SRS, so it is not
+ * part of this screen either.
+ */
 const FarmerSlotsPage = () => {
   const { t } = useTranslation('FarmerSlots');
-  const [market, setMarket] = useState(marketName(1));
-  const [day, setDay] = useState('sat');
-  const [slots, setSlots] = useState<Slot[]>(INITIAL_SLOTS);
+  const { t: tc } = useTranslation();
+
+  const { state: profileLoad, retry: retryProfile } = useRequest('farmer-slots-profile', () => StallApi.myProfile());
+  const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
+  const markets = profile?.markets ?? NO_MARKETS;
+
+  const [marketId, setMarketId] = useState<number | null>(null);
+  const [date, setDate] = useState<string | null>(null);
+  const activeMarket = markets.find((m) => m.marketId === (marketId ?? markets[0]?.marketId)) ?? null;
+  const dayOptions = activeMarket ? buildDayOptions(activeMarket.operatingDays) : [];
+  const activeDate = date ?? dayOptions[0]?.value ?? null;
+  const activeDay = dayOptions.find((d) => d.value === activeDate) ?? null;
+
+  const {
+    state: slotsLoad,
+    retry: retrySlots,
+    mutate: mutateSlots,
+  } = useRequest(`slots:${activeMarket?.marketId ?? 'none'}:${activeDate ?? 'none'}`, () =>
+    profile && activeMarket && activeDate
+      ? StallApi.slots(profile.farmerId, { marketId: activeMarket.marketId, date: activeDate })
+      : Promise.resolve([]),
+  );
+  const slots = slotsLoad.kind === 'ready' ? slotsLoad.data : [];
+
+  const [savingMax, setSavingMax] = useState<number | null>(null);
+  // Bumped after every save attempt (success or not) so the input's `key` changes and it remounts from the latest
+  // committed value — the plain way to revert a failed edit without controlled state fighting the user's typing.
+  const [maxAttempt, setMaxAttempt] = useState<Record<number, number>>({});
+  const [closingId, setClosingId] = useState<number | null>(null);
+
   const [genOpen, setGenOpen] = useState(false);
-  const [away, setAway] = useState<DayOff[]>([
-    {
-      id: 1,
-      marketId: 1,
-      date: new Date(2026, 8, 27),
-      reasonKey: 'away.seedReason',
-      orders: 2,
-    },
-  ]);
-  const [awayOpen, setAwayOpen] = useState(false);
-  const [awayChoice, setAwayChoice] = useState<string>(AWAY_OPTIONS[0].value);
-  const [awayReason, setAwayReason] = useState('');
+  const [genFrom, setGenFrom] = useState(() => isoDate(new Date()));
+  const [genTo, setGenTo] = useState(() => isoDate(addDays(new Date(), GEN_RANGE_DAYS - 1)));
+  const [genMinutes, setGenMinutes] = useState('30');
+  const [genMax, setGenMax] = useState('5');
+  const [generating, setGenerating] = useState(false);
 
-  const updateSlot = (value: string, patch: Partial<Slot>) =>
-    setSlots((prev) => prev.map((s) => (s.value === value ? { ...s, ...patch } : s)));
+  if (profileLoad.kind === 'loading') {
+    return (
+      <p role="status" className="text-ink-muted">
+        {tc('notify.list.loading')}
+      </p>
+    );
+  }
+  if (profileLoad.kind === 'error' || !profile) {
+    return <LoadError noun={t('error.noun')} onRetry={retryProfile} />;
+  }
 
-  const columns: TableColumn<Slot>[] = [
-    { key: 't', label: t('table.slot'), render: (s) => <b className="tabular-nums">{clockRange(s.time)}</b> },
+  const bumpAttempt = (slotId: number) => setMaxAttempt((prev) => ({ ...prev, [slotId]: (prev[slotId] ?? 0) + 1 }));
+
+  const saveMax = async (slot: SlotDto, raw: string) => {
+    const parsed = Number(raw);
+    // The server also rejects maxOrders below 1 (VALIDATION_ERROR) regardless of bookedCount.
+    const next = Number.isFinite(parsed) ? Math.max(slot.bookedCount, 1, Math.trunc(parsed)) : slot.maxOrders;
+    if (next === slot.maxOrders) return;
+    setSavingMax(slot.slotId);
+    try {
+      const updated = await StallApi.updateSlot(slot.slotId, { maxOrders: next });
+      mutateSlots((rows) => rows.map((r) => (r.slotId === slot.slotId ? updated : r)));
+    } catch (error) {
+      const code = Helper.getErrorCode(error);
+      Notification.error({
+        text:
+          code === 'SLOT_BELOW_BOOKED' ? t('table.belowBooked') : Helper.getErrorMessage(error, tc('errors.network')),
+      });
+    } finally {
+      setSavingMax(null);
+      bumpAttempt(slot.slotId);
+    }
+  };
+
+  const closeSlot = async (slot: SlotDto) => {
+    setClosingId(slot.slotId);
+    try {
+      await StallApi.updateSlot(slot.slotId, { isActive: false });
+      mutateSlots((rows) => rows.filter((r) => r.slotId !== slot.slotId));
+      Notification.success({ title: t('table.closedTitle'), text: t('table.closedText') });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setClosingId(null);
+    }
+  };
+
+  const generate = async () => {
+    if (!activeMarket) return;
+    if (!genFrom || !genTo || genTo < genFrom) {
+      Notification.error({ text: t('generate.rangeError') });
+      return;
+    }
+    setGenerating(true);
+    try {
+      const created = await StallApi.generateSlots({
+        farmerMarketId: activeMarket.farmerMarketId,
+        fromDate: genFrom,
+        toDate: genTo,
+        slotMinutes: Number(genMinutes) || 30,
+        maxOrders: Number(genMax) || 1,
+      });
+      setGenOpen(false);
+      retrySlots();
+      Notification.success({
+        title: t('generate.doneTitle'),
+        text: t('generate.doneText', {
+          count: created.length,
+          from: formatDayMonth(localDay(genFrom)),
+          to: formatDayMonth(localDay(genTo)),
+        }),
+      });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const columns: TableColumn<SlotDto>[] = [
+    { key: 't', label: t('table.slot'), render: (s) => <b className="tabular-nums">{clockRange(s)}</b> },
     {
       key: 'b',
       label: t('table.booked'),
       align: 'num',
       render: (s) => (
         <>
-          {t('table.bookedOf', { booked: s.booked, max: s.max })}
-          {s.booked >= s.max && <span className="text-ink-muted ml-1 font-normal">{t('table.full')}</span>}
+          {t('table.bookedOf', { booked: s.bookedCount, max: s.maxOrders })}
+          {s.isFull && <span className="text-ink-muted ml-1 font-normal">{t('table.full')}</span>}
         </>
       ),
     },
@@ -104,30 +208,41 @@ const FarmerSlotsPage = () => {
       align: 'num',
       render: (s) => (
         <input
+          key={`${s.slotId}:${s.maxOrders}:${maxAttempt[s.slotId] ?? 0}`}
           type="number"
-          min={s.booked}
-          value={s.max}
-          onChange={(e) => updateSlot(s.value, { max: Math.max(s.booked, Number(e.target.value) || s.booked) })}
-          aria-label={t('table.maxFor', { slot: clockRange(s.time) })}
-          className="border-line-strong bg-surface-raised min-h-9 w-21 rounded-sm border-[1.5px] px-2 text-right tabular-nums"
+          min={Math.max(s.bookedCount, 1)}
+          defaultValue={s.maxOrders}
+          disabled={savingMax === s.slotId}
+          onBlur={(e) => void saveMax(s, e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') e.currentTarget.blur();
+          }}
+          aria-label={t('table.maxFor', { slot: clockRange(s) })}
+          className="border-line-strong bg-surface-raised min-h-9 w-21 rounded-sm border-[1.5px] px-2 text-right tabular-nums disabled:opacity-60"
         />
       ),
     },
     {
       key: 'c',
       label: t('table.closes'),
-      render: () => `${formatClock('19:00')} ${formatDayMonth(new Date(2026, 8, 25))}`,
+      render: (s) => {
+        const closes = closesAt(s, profile.orderCutoffHours);
+        return `${formatTime(closes)} ${formatDayMonth(closes)}`;
+      },
     },
     {
       key: 'o',
       label: t('table.open'),
       render: (s) => (
         <Checkbox
-          id={`open-${s.value}`}
-          checked={!s.off}
-          onChange={(e) => updateSlot(s.value, { off: !e.target.checked })}
+          id={`open-${s.slotId}`}
+          checked
+          disabled={closingId === s.slotId}
+          onChange={(e) => {
+            if (!e.target.checked) void closeSlot(s);
+          }}
         >
-          {s.off ? t('table.off') : t('table.on')}
+          {t('table.on')}
         </Checkbox>
       ),
     },
@@ -147,248 +262,164 @@ const FarmerSlotsPage = () => {
           <h1 className="text-h1">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
-        <Button onClick={() => setGenOpen(true)}>{t('generate.open')}</Button>
+        <Button onClick={() => setGenOpen(true)} disabled={!activeMarket}>
+          {t('generate.open')}
+        </Button>
       </div>
 
-      <div className="flex flex-wrap items-end gap-6">
-        <SelectField
-          id="mk"
-          label={t('market')}
-          value={market}
-          onChange={(e) => setMarket(e.target.value)}
-          options={[marketName(1), marketName(2)]}
-        />
-        <DayChips
-          legend={t('day')}
-          name="slot-day"
-          options={DAY_OPTIONS.map((d) => ({
-            value: d.value,
-            label: dayName(d.date.getDay(), 'long'),
-            date: formatDayMonth(d.date),
-            disabled: d.disabled,
-          }))}
-          value={day}
-          onChange={setDay}
-        />
-      </div>
-
-      {slots.length ? (
-        <Table
-          caption={t('table.caption', {
-            count: slots.length,
-            day: dayName(6, 'long'),
-            date: formatDayMonth(new Date(2026, 8, 26)),
-            market: marketName(1),
-          })}
-          columns={columns}
-          rows={slots}
+      {markets.length === 0 ? (
+        <DataState
+          title={t('noMarkets.title')}
+          text={t('noMarkets.text')}
+          action={<ButtonLink to="/farmer/stall">{t('crumbStall')}</ButtonLink>}
         />
       ) : (
-        <DataState title={t('empty.title')} text={t('empty.text')} />
+        <>
+          <div className="flex flex-wrap items-end gap-6">
+            <SelectField
+              id="mk"
+              label={t('market')}
+              value={String(activeMarket?.marketId ?? '')}
+              onChange={(e) => {
+                setMarketId(Number(e.target.value));
+                setDate(null);
+              }}
+              options={markets.map((m) => ({ value: String(m.marketId), label: m.marketName }))}
+            />
+            {dayOptions.length > 0 && (
+              <DayChips
+                legend={t('day')}
+                name="slot-day"
+                options={dayOptions.map((d) => ({
+                  value: d.value,
+                  label: dayName(d.date.getDay(), 'long'),
+                  date: formatDayMonth(d.date),
+                }))}
+                value={activeDate ?? ''}
+                onChange={setDate}
+              />
+            )}
+          </div>
+
+          {dayOptions.length === 0 ? (
+            <DataState
+              title={t('noDays.title')}
+              text={t('noDays.text')}
+              action={<ButtonLink to="/farmer/stall">{t('crumbStall')}</ButtonLink>}
+            />
+          ) : slotsLoad.kind === 'loading' ? (
+            <p role="status" className="text-ink-muted">
+              {tc('notify.list.loading')}
+            </p>
+          ) : slotsLoad.kind === 'error' ? (
+            <LoadError noun={t('error.slotsNoun')} onRetry={retrySlots} />
+          ) : slots.length ? (
+            <>
+              <Table
+                caption={t('table.caption', {
+                  count: slots.length,
+                  day: activeDay ? dayName(activeDay.date.getDay(), 'long') : '',
+                  date: activeDay ? formatDayMonth(activeDay.date) : '',
+                  market: activeMarket?.marketName ?? '',
+                })}
+                columns={columns}
+                rows={slots}
+              />
+              <p className="text-small text-ink-muted">
+                <Trans
+                  t={t}
+                  i18nKey="table.reenableNote"
+                  components={{ link: <Link to="/contact" className="text-brand underline" /> }}
+                />
+              </p>
+            </>
+          ) : (
+            <DataState title={t('empty.title')} text={t('empty.text')} />
+          )}
+        </>
       )}
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card className="flex flex-col gap-3 p-6">
-          <h2 className="text-h3">{t('defaults.title')}</h2>
-          <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-            <dt className="text-ink-muted">{t('defaults.length')}</dt>
-            <dd className="m-0">{t('minutes', { count: 30 })}</dd>
-            <dt className="text-ink-muted">{t('defaults.perSlot')}</dt>
-            <dd className="m-0">5 (D-06)</dd>
-            <dt className="text-ink-muted">{t('defaults.windowAt', { market: 'Thảo Điền' })}</dt>
-            <dd className="m-0">
-              {t('defaults.window', { start: formatClock('06:00'), end: formatClock('10:30'), days: dayList([6, 0]) })}
-            </dd>
-            <dt className="text-ink-muted">{t('defaults.cutoff')}</dt>
-            <dd className="m-0">{t('defaults.cutoffValue', { count: f.cutoffHours })}</dd>
-          </dl>
-          <p className="text-small text-ink-muted">{t('defaults.note')}</p>
-        </Card>
-        <Card className="flex flex-col gap-3 p-6">
-          <h2 className="text-h3">{t('closing.title')}</h2>
-          <p className="text-[15px]">{t('closing.text')}</p>
-        </Card>
-      </div>
+      {activeMarket && (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <Card className="flex flex-col gap-3 p-6">
+            <h2 className="text-h3">{t('defaults.title')}</h2>
+            <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
+              {activeMarket.operatingDays.length > 0 && (
+                <>
+                  <dt className="text-ink-muted">{t('defaults.windowAt', { market: activeMarket.marketName })}</dt>
+                  <dd className="m-0">
+                    {t('defaults.window', {
+                      start: formatClock(activeMarket.operatingDays[0].pickupStartTime),
+                      end: formatClock(activeMarket.operatingDays[0].pickupEndTime),
+                      days: dayList(activeMarket.operatingDays.map((d) => d.dayOfWeek)),
+                    })}
+                  </dd>
+                </>
+              )}
+              <dt className="text-ink-muted">{t('defaults.cutoff')}</dt>
+              <dd className="m-0">{t('defaults.cutoffValue', { count: profile.orderCutoffHours })}</dd>
+            </dl>
+            <p className="text-small text-ink-muted">{t('defaults.note')}</p>
+          </Card>
+          <Card className="flex flex-col gap-3 p-6">
+            <h2 className="text-h3">{t('closing.title')}</h2>
+            <p className="text-[15px]">{t('closing.text')}</p>
+          </Card>
+        </div>
+      )}
 
-      <section className="border-line-strong bg-surface-raised shadow-tag flex flex-col gap-4 rounded-md border-[1.5px] p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="flex max-w-160 flex-col gap-2">
-            <h2 className="text-h3">{t('away.title')}</h2>
-            <p className="text-small text-ink-muted">{t('away.intro')}</p>
+      {activeMarket && (
+        <Dialog
+          open={genOpen}
+          title={t('generate.title', { market: activeMarket.marketName })}
+          onClose={() => setGenOpen(false)}
+          actions={
+            <>
+              <Button variant="secondary" onClick={() => setGenOpen(false)} disabled={generating}>
+                {t('cancel')}
+              </Button>
+              <Button onClick={() => void generate()} disabled={generating}>
+                {t('generate.confirm')}
+              </Button>
+            </>
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <Field
+                id="genFrom"
+                type="date"
+                label={t('generate.from')}
+                value={genFrom}
+                onChange={(e) => setGenFrom(e.target.value)}
+              />
+              <Field
+                id="genTo"
+                type="date"
+                label={t('generate.to')}
+                value={genTo}
+                onChange={(e) => setGenTo(e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <SelectField
+                id="len"
+                label={t('defaults.length')}
+                value={genMinutes}
+                onChange={(e) => setGenMinutes(e.target.value)}
+                options={[30, 15, 60].map((n) => ({ value: String(n), label: t('minutes', { count: n }) }))}
+              />
+              <Field
+                id="mx"
+                label={t('defaults.perSlot')}
+                inputMode="numeric"
+                value={genMax}
+                onChange={(e) => setGenMax(e.target.value)}
+              />
+            </div>
           </div>
-          <Button variant="secondary" onClick={() => setAwayOpen(true)}>
-            {t('away.open')}
-          </Button>
-        </div>
-
-        {away.length ? (
-          <Table
-            columns={[
-              {
-                key: 'd',
-                label: t('away.date'),
-                render: (d: DayOff) => (
-                  <>
-                    <b>{formatDate(d.date)}</b>
-                    <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">
-                      {dayName(d.date.getDay(), 'long')}
-                    </span>
-                  </>
-                ),
-              },
-              { key: 'm', label: t('market'), render: () => marketName(1) },
-              {
-                key: 'r',
-                label: t('away.reasonSeen'),
-                render: (d: DayOff) => d.reason ?? (d.reasonKey ? t(d.reasonKey) : ''),
-              },
-              { key: 'o', label: t('away.declined'), align: 'num', render: (d: DayOff) => d.orders || '—' },
-              {
-                key: 'a',
-                label: '',
-                align: 'actions',
-                render: (d: DayOff) => (
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => {
-                      setAway((prev) => prev.filter((x) => x.id !== d.id));
-                      Notification.success({
-                        title: t('away.backTitle'),
-                        text: t('away.backText'),
-                      });
-                    }}
-                  >
-                    {t('away.back')}
-                  </Button>
-                ),
-              },
-            ]}
-            rows={away}
-          />
-        ) : (
-          <DataState title={t('away.emptyTitle')} text={t('away.emptyText')} />
-        )}
-
-        <Banner variant="info" title={t('closure.title', { date: formatDate(MARKET_CLOSURE.date) })}>
-          {t('closure.text', { reason: MARKET_CLOSURE.reason })}
-        </Banner>
-      </section>
-
-      <Dialog
-        open={genOpen}
-        title={t('generate.title', { from: formatDayMonth(GEN_FROM), to: formatDayMonth(GEN_TO) })}
-        onClose={() => setGenOpen(false)}
-        actions={
-          <>
-            <Button variant="secondary" onClick={() => setGenOpen(false)}>
-              {t('cancel')}
-            </Button>
-            <Button
-              onClick={() => {
-                setGenOpen(false);
-                Notification.success({
-                  title: t('generate.doneTitle'),
-                  text: t('generate.doneText', {
-                    count: 27,
-                    from: formatDayMonth(GEN_FROM),
-                    to: formatDayMonth(GEN_TO),
-                  }),
-                });
-              }}
-            >
-              {t('generate.confirm', { count: 27 })}
-            </Button>
-          </>
-        }
-      >
-        <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <SelectField
-              id="len"
-              label={t('defaults.length')}
-              options={[30, 15, 60].map((n) => ({ value: String(n), label: t('minutes', { count: n }) }))}
-            />
-            <Field id="mx" label={t('defaults.perSlot')} inputMode="numeric" defaultValue={5} />
-          </div>
-          <p className="text-ink-muted text-[14px]">
-            {t('generate.text', {
-              start: formatClock('06:00'),
-              end: formatClock('10:30'),
-              daysA: dayList([6, 0]),
-              daysB: dayList([0]),
-            })}
-          </p>
-        </div>
-      </Dialog>
-
-      <Dialog
-        open={awayOpen}
-        title={t('away.open')}
-        tone="danger"
-        onClose={() => setAwayOpen(false)}
-        actions={
-          <>
-            <Button variant="secondary" onClick={() => setAwayOpen(false)}>
-              {t('away.notNow')}
-            </Button>
-            <Button
-              variant="danger"
-              onClick={() => {
-                const choice = AWAY_OPTIONS.find((o) => o.value === awayChoice) ?? AWAY_OPTIONS[0];
-                const { date, orders } = choice;
-                const typed = awayReason.trim();
-                setAway((prev) => [
-                  ...prev,
-                  {
-                    id: Date.now(),
-                    marketId: 1,
-                    date,
-                    reason: typed || undefined,
-                    reasonKey: typed ? undefined : 'away.notGiven',
-                    orders,
-                  },
-                ]);
-                setAwayOpen(false);
-                setAwayReason('');
-                Notification.success({
-                  title: orders ? t('away.declinedTitle') : t('away.toldTitle'),
-                  text: orders
-                    ? t('away.declinedText', { count: orders })
-                    : t('away.toldText', { date: formatDate(date) }),
-                });
-              }}
-            >
-              {t('away.confirm')}
-            </Button>
-          </>
-        }
-      >
-        <div className="flex flex-col gap-4">
-          <p className="text-[15px]">{t('away.dialogText')}</p>
-          <SelectField
-            id="odate"
-            label={t('away.marketDay')}
-            value={awayChoice}
-            onChange={(e) => setAwayChoice(e.target.value)}
-            options={AWAY_OPTIONS.map((o) => ({
-              value: o.value,
-              label: [
-                `${weekday(o.date)} ${formatDayMonth(o.date)}`,
-                'Thảo Điền',
-                t(`away.note.${o.note}`, { count: o.orders }),
-              ].join(' · '),
-            }))}
-          />
-          <Field
-            id="oreason"
-            label={t('away.reasonLabel')}
-            placeholder={t('away.seedReason')}
-            value={awayReason}
-            onChange={(e) => setAwayReason(e.target.value)}
-          />
-        </div>
-      </Dialog>
+        </Dialog>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@
   "summary": "매대 {{stall}} · 상품 {{products}} · {{reviews}}",
   "reviewCount_one": "리뷰 {{count}}개",
   "reviewCount_other": "리뷰 {{count}}개",
+  "noun": "reviews",
   "filter": {
     "all": "전체",
     "needs": "답글 필요",
@@ -14,13 +15,10 @@
   "toast": {
     "postedTitle": "답글을 올렸어요",
     "postedText": "{{name}} 님의 리뷰에 답글을 올렸어요.",
-    "editTitle": "답글 수정",
-    "editText": "답글을 수정할 수 있어요."
+    "alreadyReplied": "You already replied to this review."
   },
   "action": {
-    "editReply": "답글 수정",
     "reply": "답글",
-    "report": "리뷰 신고",
     "post": "답글 올리기"
   },
   "form": {

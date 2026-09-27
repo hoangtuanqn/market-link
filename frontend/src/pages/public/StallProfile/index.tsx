@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
+import FavoriteApi, { type FavoriteDto } from '@/api-requests/favorite.requests';
 import ProductApi from '@/api-requests/product.requests';
+import ReviewApi, { toReviewCard, type ReviewDto } from '@/api-requests/review.requests';
 import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
+import FavoriteButton from '@/components/FavoriteButton';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
@@ -16,14 +19,12 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import MessageStallButton from '@/components/chat/MessageStallButton';
-import { LoadError } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Pagination } from '@/components/ui/pagination';
 import Tabs from '@/components/ui/tabs';
 import { Table } from '@/components/ui/table';
-import { reviewTags, reviewsForFarmer } from '@/data/catalog';
-import { demoTierOf } from '@/data/tiers';
-import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
+import useSession from '@/hooks/useSession';
 import { dayName, formatClock, upcoming } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
@@ -33,8 +34,12 @@ import Notification from '@/utils/notification';
 const REVIEWS_PER_PAGE = 6;
 /** Contract §3 caps a page at 50; every market of the city fits in one call. */
 const FETCH_SIZE = 50;
+/** Contract §8 caps a review page at 50 too; the whole stall's public reviews fit in one call. */
+const REVIEWS_FETCH_SIZE = 50;
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
+const NO_REVIEWS: ReviewDto[] = [];
+const NO_FAVORITES: FavoriteDto[] = [];
 
 /** The window a stall keeps at one market: earliest start to latest end across its days there. */
 const windowOf = (m: StallMarketDto) => {
@@ -48,6 +53,7 @@ const StallProfilePage = () => {
   const { t } = useTranslation('StallProfile');
   const { t: tc } = useTranslation();
   const { id } = useParams<{ id: string }>();
+  const { isLoggedIn } = useSession();
 
   const farmerId = Number(id);
   const validId = Number.isInteger(farmerId) && farmerId > 0;
@@ -58,6 +64,12 @@ const StallProfilePage = () => {
   const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'NOT_FOUND');
   const stall = load.kind === 'ready' ? load.data : undefined;
 
+  // FR-040 — whether this stall is already a favourite of the signed-in customer.
+  const { state: favLoad } = useRequest(`fav-farmer:${farmerId}`, () =>
+    isLoggedIn ? FavoriteApi.list('farmer') : Promise.resolve(NO_FAVORITES),
+  );
+  const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === farmerId)?.id ?? null) : null;
+
   // Market coordinates and addresses, for the pins and the "where and when" table.
   const { state: marketsLoad } = useRequest('markets', () =>
     CatalogApi.listMarkets({ pageSize: FETCH_SIZE }).then((result) => result.items),
@@ -67,6 +79,12 @@ const StallProfilePage = () => {
   // This week's stock (FR-011); products are visible only while the stall is approved (D-09).
   const { state: productsLoad } = useRequest(`stall-products:${id}`, () =>
     validId ? ProductApi.byFarmer(farmerId) : Promise.resolve(NO_PRODUCTS),
+  );
+  // Visible reviews of the stall and its products (FR-052); client-side filter and pagination below.
+  const { state: reviewsLoad, retry: retryReviews } = useRequest(`stall-reviews:${id}`, () =>
+    validId
+      ? ReviewApi.forFarmer(farmerId, { pageSize: REVIEWS_FETCH_SIZE }).then((r) => r.items)
+      : Promise.resolve(NO_REVIEWS),
   );
 
   const availableDays = stall
@@ -141,8 +159,9 @@ const StallProfilePage = () => {
   const firstWindow = firstMarket ? windowOf(firstMarket) : '';
   const days = dayNames(availableDays);
   const stallProducts = productsLoad.kind === 'ready' ? productsLoad.data : NO_PRODUCTS;
-  // Reviews are still the demo set until C8; they follow the real stall id.
-  const allReviews = SHOW_WIP ? reviewsForFarmer(stall.farmerId) : [];
+  const allReviews = (reviewsLoad.kind === 'ready' ? reviewsLoad.data : NO_REVIEWS).map((r) =>
+    toReviewCard(r, stall.stallName),
+  );
   const filteredReviews = reviewFilter === 'all' ? allReviews : allReviews.filter((r) => r.targetType === reviewFilter);
   const reviewPages = Math.max(1, Math.ceil(filteredReviews.length / REVIEWS_PER_PAGE));
   const reviewFrom = (Math.min(reviewPage, reviewPages) - 1) * REVIEWS_PER_PAGE;
@@ -175,7 +194,7 @@ const StallProfilePage = () => {
               {stall.stallName.charAt(0)}
             </span>
             <div className="flex flex-col gap-2">
-              <h1 className="text-h1">{stall.stallName}</h1>
+              <h1 className="font-hand text-h1">{stall.stallName}</h1>
               <p className="text-body">
                 {stall.contactPerson} {rating != null && <Rating value={rating} count={stall.ratingCount} />}
               </p>
@@ -188,12 +207,14 @@ const StallProfilePage = () => {
               {t('approved')}
             </span>
             <div className="flex flex-wrap justify-end gap-2">
-              {/* Favorites (FR-040) has no API yet: this button only shows a toast, so production does not show it. */}
-              {SHOW_WIP && (
-                <Chip onClick={() => Notification.success({ text: t('savedToast', { name: stall.stallName }) })}>
-                  {t('save')}
-                </Chip>
-              )}
+              <FavoriteButton
+                key={favoriteId ?? 'none'}
+                targetType="farmer"
+                targetId={stall.farmerId}
+                favoriteId={favoriteId}
+                labelOff={t('save')}
+                labelOn={t('saved')}
+              />
               <MessageStallButton farmerId={stall.farmerId} />
             </div>
           </div>
@@ -220,8 +241,7 @@ const StallProfilePage = () => {
         onChange={(id) => setTab(id as typeof tab)}
         tabs={[
           { id: 'stock', label: t('tabs.stock'), count: stallProducts.length },
-          // Reviews are still sample data pending C8 → shown in dev only (config/wip.ts).
-          ...(SHOW_WIP ? [{ id: 'reviews', label: t('tabs.reviews'), count: allReviews.length }] : []),
+          { id: 'reviews', label: t('tabs.reviews'), count: allReviews.length },
           { id: 'about', label: t('tabs.about') },
         ]}
       />
@@ -261,7 +281,7 @@ const StallProfilePage = () => {
         </div>
       )}
 
-      {SHOW_WIP && tab === 'reviews' && (
+      {tab === 'reviews' && (
         <div className="flex flex-col gap-4">
           <Card className="flex flex-col gap-4 p-6">
             <div className="flex flex-wrap items-baseline gap-3">
@@ -269,18 +289,6 @@ const StallProfilePage = () => {
               {rating != null && <Rating value={rating} />}
               <span className="text-small text-ink-muted">{t('reviews.summary', { count: stall.ratingCount })}</span>
             </div>
-            {reviewTags[stall.farmerId] && (
-              <div className="flex flex-wrap gap-2">
-                {reviewTags[stall.farmerId].map(([tag, count]) => (
-                  <span
-                    key={tag}
-                    className="bg-brand-tint text-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[14px]"
-                  >
-                    {tag} <b className="tabular-nums">{count}</b>
-                  </span>
-                ))}
-              </div>
-            )}
           </Card>
 
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -322,23 +330,32 @@ const StallProfilePage = () => {
             <span className="text-small text-ink-muted">{t('reviews.newest')}</span>
           </div>
 
-          <div className="flex flex-col gap-4">
-            {shownReviews.map((r) => (
-              <ReviewCard
-                key={r.id}
-                author={r.author}
-                authorTier={demoTierOf(r.author)}
-                date={r.date}
-                target={r.target}
-                rating={r.rating}
-                text={r.text}
-                reply={r.reply}
-                fluid
-              />
-            ))}
-          </div>
-          {reviewPages > 1 && (
-            <Pagination page={Math.min(reviewPage, reviewPages)} pages={reviewPages} onChange={setReviewPage} />
+          {reviewsLoad.kind === 'loading' ? (
+            <MarketCardSkeleton count={2} />
+          ) : reviewsLoad.kind === 'error' ? (
+            <LoadError noun={t('reviews.noun')} onRetry={retryReviews} />
+          ) : shownReviews.length ? (
+            <>
+              <div className="flex flex-col gap-4">
+                {shownReviews.map((r) => (
+                  <ReviewCard
+                    key={r.id}
+                    author={r.author}
+                    date={r.date}
+                    target={r.target}
+                    rating={r.rating}
+                    text={r.text}
+                    reply={r.reply}
+                    fluid
+                  />
+                ))}
+              </div>
+              {reviewPages > 1 && (
+                <Pagination page={Math.min(reviewPage, reviewPages)} pages={reviewPages} onChange={setReviewPage} />
+              )}
+            </>
+          ) : (
+            <DataState title={t('reviews.emptyTitle')} text={t('reviews.emptyText')} />
           )}
         </div>
       )}

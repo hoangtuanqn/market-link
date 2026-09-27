@@ -30,11 +30,12 @@ class FarmerReportServiceTest {
     private long farmerBUserId;
     private long p1;
     private long p2;
+    private long category;
 
     @BeforeEach
     void setUp() {
         fx = new ReportFixture(jdbc);
-        long category = fx.category();
+        category = fx.category();
         long market = fx.market("Market");
         long customer = fx.user("customer", "Report customer", "x");
         farmerAUserId = fx.user("farmer", "Farmer A", "x");
@@ -117,5 +118,29 @@ class FarmerReportServiceTest {
         assertThat(d.revenueTotal()).isEqualByComparingTo("0");
         assertThat(d.revenueThisMonth()).isEqualByComparingTo("0");
         assertThat(reports.bestSellers(newFarmerUserId, null, null, 5)).isEmpty();
+    }
+
+    /**
+     * Per-date stock (FR-063): "low stock" is what the nearest pickup date still has, not
+     * products.stock_quantity (9 for every fixture product, only the Farmer's reference now). A
+     * product no weekly template makes orderable counts too — it cannot be sold at all.
+     */
+    @Test
+    void lowStockCountsTheNearestPickupDateStock() {
+        long userId = fx.user("farmer", "Farmer stock", "x");
+        long farmer = fx.farmer(userId, "Stall stock", "approved");
+        fx.everyDayTemplate(farmer, fx.product(farmer, category, "Plenty", 10000), 20);
+        fx.everyDayTemplate(farmer, fx.product(farmer, category, "Nearly gone", 10000), 3);
+        fx.product(farmer, category, "No template", 10000);
+        // Stock only counts on a date the stall can still take orders for
+        fx.openSlot(
+                farmer,
+                fx.market("Stock market"),
+                java.time.LocalDate.now(java.time.ZoneId.of("Asia/Ho_Chi_Minh")).plusDays(1));
+
+        FarmerDashboardResource d = reports.dashboard(userId);
+
+        assertThat(d.productCount()).isEqualTo(3);
+        assertThat(d.lowStockCount()).isEqualTo(2);
     }
 }

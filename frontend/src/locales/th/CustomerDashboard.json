@@ -3,6 +3,12 @@
   "greeting_other": "สวัสดี {{name}} สุดสัปดาห์นี้มีรับสินค้า {{count}} รายการ",
   "intro": "มีคำสั่งซื้อหนึ่งรายการที่ยังรอร้านยืนยัน นอกนั้นเป็นไปตามแผน",
   "browseMarkets": "ดูตลาดสุดสัปดาห์นี้",
+  "noun": {
+    "orders": "orders",
+    "favorites": "favorites",
+    "notifications": "notifications",
+    "products": "products"
+  },
   "cards": {
     "upcoming_one": "คำสั่งซื้อที่กำลังจะถึง {{count}} รายการ",
     "upcoming_other": "คำสั่งซื้อที่กำลังจะถึง {{count}} รายการ",
@@ -30,5 +36,15 @@
   "nextPickups": "การรับสินค้าครั้งถัดไป",
   "allOrders": "คำสั่งซื้อทั้งหมดของฉัน",
   "newFromFavorites": "ใหม่สัปดาห์นี้จากร้านโปรดของคุณ",
-  "favorites": "รายการโปรด"
+  "favorites": "รายการโปรด",
+  "empty": {
+    "pickups": {
+      "title": "No pickups coming up",
+      "text": "Orders that are placed, accepted or ready for pickup show up here."
+    },
+    "favorites": {
+      "title": "No favorite products yet",
+      "text": "Save products you like and new stock from them shows up here."
+    }
+  }
 }

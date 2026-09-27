@@ -1,4 +1,5 @@
 {
+  "noun": "placed orders",
   "title_one": "{{count}} Bestellung aufgegeben",
   "title_other": "{{count}} Bestellungen aufgegeben",
   "intro": "Jeder Stand prüft jetzt seine Bestellung. Sie erhalten eine Benachrichtigung, wenn sie angenommen wird, und eine weitere, wenn sie abholbereit ist. Die Ware ist bereits für Sie reserviert.",

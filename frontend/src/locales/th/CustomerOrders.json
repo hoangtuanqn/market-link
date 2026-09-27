@@ -3,10 +3,26 @@
   "intro": "การรับสินค้าที่กำลังจะถึงแสดงก่อน คำสั่งซื้อที่ผ่านมายังเก็บใบเสร็จไว้ และคุณสั่งซ้ำสิ่งที่เคยซื้อได้ในราคาและสต็อกของวันนี้",
   "stall": "ร้าน",
   "allStalls": "ทุกร้าน",
+  "noun": "orders",
   "tabs": {
     "label": "คำสั่งซื้อ",
     "upcoming": "กำลังจะถึง",
     "past": "ที่ผ่านมา",
     "all": "ทั้งหมด"
+  },
+  "empty": {
+    "up": {
+      "title": "No upcoming orders",
+      "text": "Once you place an order, it stays here until it has been picked up."
+    },
+    "past": {
+      "title": "No past orders yet",
+      "text": "Orders you have picked up, cancelled or that were declined will show up here."
+    },
+    "all": {
+      "title": "No orders yet",
+      "text": "Browse this weekend's markets and place your first order."
+    },
+    "cta": "Browse products"
   }
 }

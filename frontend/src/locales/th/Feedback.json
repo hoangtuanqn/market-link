@@ -7,21 +7,12 @@
     "suggestion": "ข้อเสนอแนะ: มีบางอย่างทำให้ดีขึ้นได้",
     "query": "คำถาม: ต้องการคำตอบ"
   },
-  "pageLabel": "หน้าไหน",
-  "pages": {
-    "cart": "ตะกร้า",
-    "product": "หน้าสินค้า",
-    "map": "แผนที่ตลาด",
-    "orders": "คำสั่งซื้อของฉัน",
-    "farmer": "แดชบอร์ดเกษตรกร",
-    "other": "อื่น ๆ"
-  },
   "messageLabel": "ข้อความ",
   "messagePlaceholder": "คุณคาดว่าจะเกิดอะไร แล้วเกิดอะไรขึ้นแทน",
   "messageHint": "ถ้าเป็นข้อผิดพลาด ช่วยบอกรุ่นโทรศัพท์หรือเบราว์เซอร์ด้วย",
-  "emailLabel": "อีเมลสำหรับรับคำตอบ",
-  "emailHint": "ไม่บังคับ ระบบกรอกให้เมื่อคุณเข้าสู่ระบบแล้ว",
   "submit": "ส่งความคิดเห็น",
+  "sendFailed": "Could not send. Try again.",
+  "tooMany": "Too many messages sent recently. Try again in a while.",
   "sent": {
     "title": "ส่งแล้ว",
     "bug": "ขอบคุณ รายงานข้อผิดพลาดของคุณถึงทีมงานแล้ว",

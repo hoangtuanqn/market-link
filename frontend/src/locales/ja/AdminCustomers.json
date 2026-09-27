@@ -1,6 +1,7 @@
 {
   "title": "お客様",
   "intro": "規約違反があればアカウントを停止できます。停止するとログインも注文もできません。解決したら再開してください。過去の注文は店舗側に残ります。",
+  "noun": "customers",
   "search": {
     "label": "お客様を検索",
     "placeholder": "名前、メール、電話番号",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "すべて",
     "active": "有効",
-    "inactive": "停止中",
-    "joinedThisMonth": "今月登録"
+    "inactive": "停止中"
   },
   "status": {
     "active": "有効",
     "inactive": "停止中"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "お客様",
     "joined": "登録日",
@@ -36,11 +37,19 @@
     "title": "{{name}} を停止しますか？",
     "text": "すべての端末からログアウトされ、ログインも注文もできなくなります。すでに入っている注文は店舗側にそのまま残ります。",
     "reason": "理由（アカウントに記録されます）",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "有効のままにする",
     "confirm": "アカウントを停止"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "{{name}} を停止しました。",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} は再びログインできます。"
   }
 }

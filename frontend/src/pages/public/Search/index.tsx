@@ -110,7 +110,7 @@ const SearchPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <h1 className="text-h1">{t('title')}</h1>
+        <h1 className="font-hand md:text-display text-h1">{t('title')}</h1>
         <form
           key={`${scopeParam}:${q}`}
           onSubmit={onSubmit}

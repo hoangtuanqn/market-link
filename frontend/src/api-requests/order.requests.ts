@@ -77,6 +77,8 @@ export type OrderListItemDto = {
   totalAmount: number;
   itemCount: number;
   createdAt: string;
+  customerId: number;
+  customerName: string;
 };
 
 /** One `order_items` line — name/price/unit as copied at order time (contract §7). */
@@ -118,31 +120,60 @@ export type OrderDetailDto = {
   customerNote: string | null;
   farmerNote: string | null;
   customer?: CustomerSummaryDto;
+  /** Set once the customer has reviewed a `completed` order — OrderTicket hides the review button after that. */
+  reviewed: boolean;
 };
+
+const pastCutoff = (status: OrderStatus, cutoffAt: string) =>
+  (status === 'placed' || status === 'accepted') && Date.now() > Date.parse(cutoffAt);
+
+/**
+ * A list row (`GET /orders`, `GET /farmer/orders`, `GET /admin/reports/orders`) → the shape OrderTicket and tables
+ * take.
+ */
+export const toOrderCard = (dto: OrderListItemDto): OrderType => ({
+  id: dto.orderId,
+  code: dto.orderCode,
+  farmerId: dto.farmerId,
+  marketId: dto.marketId,
+  stallName: dto.stallName,
+  marketName: dto.marketName,
+  date: dto.pickupDate,
+  slot: `${dto.pickupStart}–${dto.pickupEnd}`,
+  status: dto.status,
+  cutoff: dto.cutoffAt,
+  locked: pastCutoff(dto.status, dto.cutoffAt),
+  items: [],
+  itemCount: dto.itemCount,
+  total: dto.totalAmount,
+  history: [],
+});
 
 /** Contract (camelCase) → the `OrderType` shape the pages use. The only place that knows both. */
 export const toOrder = (dto: OrderDetailDto): OrderType => ({
+  id: dto.summary.orderId,
   code: dto.summary.orderCode,
   farmerId: dto.summary.farmerId,
   marketId: dto.summary.marketId,
+  stallName: dto.summary.stallName,
+  marketName: dto.summary.marketName,
   date: dto.summary.pickupDate,
   slot: `${dto.summary.pickupStart}–${dto.summary.pickupEnd}`,
   status: dto.summary.status,
   cutoff: dto.summary.cutoffAt,
   locked: (dto.summary.status === 'placed' || dto.summary.status === 'accepted') && !dto.canCancel,
-  items: dto.items.map((i) => ({ productId: i.productId, qty: i.quantity })),
+  items: dto.items.map((i) => ({
+    productId: i.productId,
+    qty: i.quantity,
+    name: i.productName,
+    unit: i.unit,
+    price: i.unitPrice,
+  })),
+  itemCount: dto.summary.itemCount,
+  total: dto.summary.totalAmount,
+  reviewed: dto.reviewed,
   reason: dto.summary.status === 'declined' ? (dto.farmerNote ?? undefined) : undefined,
   history: dto.statusHistory.map((h): OrderHistoryEntry => [h.toStatus, h.changedAt, h.changedByName ?? '']),
-});
-
-/**
- * I-1 — `toOrder` drops `orderId`, and `OrderType` (types/order.types.ts) has no place for the id. Notification links
- * (backend) and every `OrderApi` call (`get`/`cancel`/`modifyItems`/...) need the numeric id, not `orderCode` — use
- * this function where both are needed instead of `toOrder` alone.
- */
-export const toOrderView = (dto: OrderDetailDto): { id: number; order: OrderType } => ({
-  id: dto.summary.orderId,
-  order: toOrder(dto),
 });
 
 /**

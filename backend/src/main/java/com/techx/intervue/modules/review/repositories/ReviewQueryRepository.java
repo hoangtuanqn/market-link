@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.review.repositories;
 
 import com.techx.intervue.modules.review.enums.ReviewTarget;
+import com.techx.intervue.modules.review.resources.AdminReviewResource;
 import com.techx.intervue.modules.review.resources.ReviewResource;
 import com.techx.intervue.modules.review.resources.ReviewResponseResource;
 import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
@@ -10,6 +11,7 @@ import java.math.RoundingMode;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +33,13 @@ public class ReviewQueryRepository {
             """
             SELECT r.id, r.target_type, r.product_id, r.farmer_id, r.rating, r.comment, r.created_at,
                    u.full_name AS customer_name,
+                   COALESCE(p.name, f.stall_name) AS target_name,
                    rr.id AS response_id, rr.response_text, rr.created_at AS response_created_at
             FROM reviews r
             JOIN users u ON u.id = r.customer_id
             LEFT JOIN review_responses rr ON rr.review_id = r.id
+            LEFT JOIN products p ON p.id = r.product_id
+            LEFT JOIN farmer_profiles f ON f.id = r.farmer_id
             """;
 
     private static final String FOR_PRODUCT_WHERE =
@@ -47,6 +52,12 @@ public class ReviewQueryRepository {
             WHERE r.target_type = 'farmer' AND r.farmer_id = :targetId AND r.status = 'visible'
             """;
 
+    /** FR-053: the stall owner's own inbox — reviews of the stall itself and of its products. */
+    private static final String FOR_STALL_OWNER_WHERE =
+            """
+            WHERE r.status = 'visible' AND (r.farmer_id = :farmerId OR p.farmer_id = :farmerId)
+            """;
+
     private static final String NEWEST_FIRST =
             "ORDER BY r.created_at DESC, r.id DESC\nLIMIT :limit OFFSET :offset";
 
@@ -56,10 +67,46 @@ public class ReviewQueryRepository {
     /** {@code GET /farmers/{id}/reviews}, newest first, visible only. */
     public static final String FOR_FARMER_SQL = LIST_COLUMNS + FOR_FARMER_WHERE + NEWEST_FIRST;
 
+    /** {@code GET /farmer/reviews}, newest first, visible only. */
+    public static final String FOR_STALL_OWNER_SQL =
+            LIST_COLUMNS + FOR_STALL_OWNER_WHERE + NEWEST_FIRST;
+
     private static final String FOR_PRODUCT_COUNT_SQL =
             "SELECT COUNT(*) FROM reviews r " + FOR_PRODUCT_WHERE;
     private static final String FOR_FARMER_COUNT_SQL =
             "SELECT COUNT(*) FROM reviews r " + FOR_FARMER_WHERE;
+    private static final String FOR_STALL_OWNER_COUNT_SQL =
+            "SELECT COUNT(*) FROM reviews r LEFT JOIN products p ON p.id = r.product_id "
+                    + FOR_STALL_OWNER_WHERE;
+
+    /** FR-074: the admin moderation queue — every status, filterable by rating and customer. */
+    private static final String ADMIN_LIST_SQL =
+            """
+            SELECT r.id, r.target_type, r.product_id, r.farmer_id, r.rating, r.comment, r.created_at,
+                   r.status, r.customer_id, u.full_name AS customer_name,
+                   COALESCE(p.name, f.stall_name) AS target_name, sp.stall_name,
+                   rr.id AS response_id, rr.response_text, rr.created_at AS response_created_at
+            FROM reviews r
+            JOIN users u ON u.id = r.customer_id
+            LEFT JOIN review_responses rr ON rr.review_id = r.id
+            LEFT JOIN products p ON p.id = r.product_id
+            LEFT JOIN farmer_profiles f ON f.id = r.farmer_id
+            LEFT JOIN farmer_profiles sp ON sp.id = COALESCE(r.farmer_id, p.farmer_id)
+            WHERE (:status IS NULL OR r.status = :status)
+              AND (:maxRating IS NULL OR r.rating <= :maxRating)
+              AND (:customerId IS NULL OR r.customer_id = :customerId)
+            ORDER BY r.created_at DESC, r.id DESC
+            LIMIT :limit OFFSET :offset
+            """;
+
+    private static final String ADMIN_LIST_COUNT_SQL =
+            """
+            SELECT COUNT(*)
+            FROM reviews r
+            WHERE (:status IS NULL OR r.status = :status)
+              AND (:maxRating IS NULL OR r.rating <= :maxRating)
+              AND (:customerId IS NULL OR r.customer_id = :customerId)
+            """;
 
     /** One row per star value; the service turns it into the 5-slot histogram and the average. */
     public static final String SUMMARY_SQL =
@@ -109,6 +156,35 @@ public class ReviewQueryRepository {
 
     public PageResource<ReviewResource> forFarmer(long farmerId, int page, int pageSize) {
         return page(FOR_FARMER_SQL, FOR_FARMER_COUNT_SQL, farmerId, page, pageSize);
+    }
+
+    /** FR-053: the stall owner's own reviews — of the stall itself and of its products. */
+    public PageResource<ReviewResource> forStallOwner(long farmerId, int page, int pageSize) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("farmerId", farmerId)
+                        .addValue("limit", pageSize)
+                        .addValue("offset", (page - 1) * pageSize);
+        List<ReviewResource> items =
+                jdbc.query(FOR_STALL_OWNER_SQL, params, ReviewQueryRepository::mapReview);
+        Long total = jdbc.queryForObject(FOR_STALL_OWNER_COUNT_SQL, params, Long.class);
+        return new PageResource<>(items, page, pageSize, total == null ? 0 : total);
+    }
+
+    /** FR-074: the admin moderation queue, newest first. */
+    public PageResource<AdminReviewResource> adminList(
+            String status, Integer maxRating, Long customerId, int page, int pageSize) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("status", status, Types.VARCHAR)
+                        .addValue("maxRating", maxRating, Types.INTEGER)
+                        .addValue("customerId", customerId, Types.BIGINT)
+                        .addValue("limit", pageSize)
+                        .addValue("offset", (page - 1) * pageSize);
+        List<AdminReviewResource> items =
+                jdbc.query(ADMIN_LIST_SQL, params, ReviewQueryRepository::mapAdminReview);
+        Long total = jdbc.queryForObject(ADMIN_LIST_COUNT_SQL, params, Long.class);
+        return new PageResource<>(items, page, pageSize, total == null ? 0 : total);
     }
 
     private PageResource<ReviewResource> page(
@@ -177,6 +253,36 @@ public class ReviewQueryRepository {
                 rs.getString("customer_name"),
                 rs.getInt("rating"),
                 rs.getString("comment"),
+                iso(rs.getTimestamp("created_at")),
+                response,
+                rs.getString("target_name"));
+    }
+
+    private static AdminReviewResource mapAdminReview(ResultSet rs, int rowNum)
+            throws SQLException {
+        ReviewTarget target = ReviewTarget.parse(rs.getString("target_type"));
+        long targetId =
+                target == ReviewTarget.PRODUCT ? rs.getLong("product_id") : rs.getLong("farmer_id");
+        ReviewResponseResource response = null;
+        long responseId = rs.getLong("response_id");
+        if (!rs.wasNull()) {
+            response =
+                    new ReviewResponseResource(
+                            responseId,
+                            rs.getString("response_text"),
+                            iso(rs.getTimestamp("response_created_at")));
+        }
+        return new AdminReviewResource(
+                rs.getLong("id"),
+                target.value(),
+                targetId,
+                rs.getString("target_name"),
+                rs.getString("stall_name"),
+                rs.getLong("customer_id"),
+                rs.getString("customer_name"),
+                rs.getInt("rating"),
+                rs.getString("comment"),
+                rs.getString("status"),
                 iso(rs.getTimestamp("created_at")),
                 response);
     }

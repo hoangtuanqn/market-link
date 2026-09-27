@@ -7,21 +7,12 @@
     "suggestion": "Saran: ada yang bisa lebih baik",
     "query": "Pertanyaan: saya butuh jawaban"
   },
-  "pageLabel": "Halaman mana?",
-  "pages": {
-    "cart": "Keranjang",
-    "product": "Halaman produk",
-    "map": "Peta pasar",
-    "orders": "Pesanan saya",
-    "farmer": "Dasbor Farmer",
-    "other": "Lainnya"
-  },
   "messageLabel": "Pesan",
   "messagePlaceholder": "Apa yang Anda harapkan, dan apa yang terjadi?",
   "messageHint": "Untuk bug, sebutkan juga ponsel atau browser Anda.",
-  "emailLabel": "Email untuk balasan",
-  "emailHint": "Opsional. Terisi saat Anda masuk.",
   "submit": "Kirim masukan",
+  "sendFailed": "Could not send. Try again.",
+  "tooMany": "Too many messages sent recently. Try again in a while.",
   "sent": {
     "title": "Terkirim",
     "bug": "Terima kasih. Laporan bug Anda sudah sampai ke tim.",

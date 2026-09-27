@@ -5,15 +5,33 @@
   "stalls_one": "{{count}} Stand",
   "stalls_other": "{{count}} Ständen",
   "intro": "{{products}} von {{stalls}}. Wählen Sie für jeden Stand eine Abholzeit und geben Sie dann die Bestellungen auf.",
+  "empty": {
+    "title": "Your cart is empty",
+    "text": "Add products from a stall's page and they show up here, split by stall.",
+    "cta": "Browse products"
+  },
+  "noun": "cart",
+  "slotsNoun": "pickup times",
   "split": {
-    "title": "Ihr Warenkorb wird in 2 Bestellungen bei 2 verschiedenen Ständen aufgeteilt.",
+    "title_one": "Your cart will be split into {{count}} order at {{count}} stall.",
+    "title_other": "Your cart will be split into {{count}} orders at {{count}} stalls.",
     "text": "Jeder Stand hat eigene Abholzeiten und Bestellschluss und nimmt seine Bestellung separat an. Sie bezahlen jeden Stand bei der Abholung."
+  },
+  "market": "Market",
+  "noSlots": {
+    "title": "No pickup times yet",
+    "text": "This stall has not opened any pickup slots for this market. Try again later or remove this stall's items."
+  },
+  "problem": {
+    "out_of_stock": "One or more items have less stock than you asked for.",
+    "sold_out": "One or more items are sold out.",
+    "unavailable": "One or more items are no longer for sale.",
+    "stall_suspended": "This stall is not taking orders right now."
   },
   "changeTime": "Abholzeit bei {{stall}} ändern",
   "pickupDay": "Abholtag",
   "pickupDayAt": "Abholtag bei {{stall}}",
   "pickupTime": "Abholzeit · {{day}} {{date}} · Zeitfenster {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} schließt Bestellungen {{hours}} Stunden vor dem Zeitfenster. Für {{slot}} am {{slotDay}} ist das {{cutoff}} am {{cutoffDay}}.",
   "summary": {
     "title": "Bei Abholung am Stand bezahlen",
     "order": "Bestellung {{n}} · {{stall}}",
@@ -23,8 +41,16 @@
     "label": "Notiz an die Stände",
     "placeholder": "z. B. bitte kleinere Bunde"
   },
-  "place": "2 Bestellungen aufgeben",
-  "ready": "Beide Stände haben eine Abholzeit. Jeder Stand bestätigt seine eigene Bestellung.",
+  "place_one": "Place {{count}} order",
+  "place_other": "Place {{count}} orders",
+  "placing": "Placing your orders…",
+  "ready_one": "Your stall has a pickup time. It confirms your order.",
+  "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Wählen Sie eine Abholzeit bei {{stall}}, um Ihre Bestellungen aufzugeben.",
-  "stockNote": "Der Bestand wird vom Stand abgezogen, sobald Sie bestellen. Es gibt keine Online-Zahlung."
+  "stockNote": "Der Bestand wird vom Stand abgezogen, sobald Sie bestellen. Es gibt keine Online-Zahlung.",
+  "stuck": {
+    "title": "Artikel im Warenkorb",
+    "text": "Wird ein Produkt nicht mehr verkauft, entferne es hier, dann lädt der Warenkorb neu.",
+    "clear": "Warenkorb leeren"
+  }
 }

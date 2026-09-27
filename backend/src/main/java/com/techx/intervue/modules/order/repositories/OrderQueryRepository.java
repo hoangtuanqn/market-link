@@ -39,7 +39,8 @@ public class OrderQueryRepository {
             """
             SELECT o.id, o.order_code, o.status, o.farmer_id, f.stall_name, o.market_id, m.market_name,
                    o.pickup_date, o.pickup_start, o.pickup_end, o.cutoff_at, o.total_amount, o.created_at,
-                   (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS item_count
+                   (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS item_count,
+                   o.customer_id, cu.full_name AS customer_name
             """;
 
     private static final String MY_ORDERS_FROM =
@@ -47,6 +48,7 @@ public class OrderQueryRepository {
             FROM orders o
             JOIN farmer_profiles f ON f.id = o.farmer_id
             JOIN markets m ON m.id = o.market_id
+            JOIN users cu ON cu.id = o.customer_id
             WHERE o.customer_id = :customerId
               AND (:status IS NULL OR o.status = :status)
             """;
@@ -77,6 +79,7 @@ public class OrderQueryRepository {
             FROM orders o
             JOIN farmer_profiles f ON f.id = o.farmer_id
             JOIN markets m ON m.id = o.market_id
+            JOIN users cu ON cu.id = o.customer_id
             WHERE o.farmer_id = :farmerId
               AND (:status IS NULL OR o.status = :status)
               AND (:date IS NULL OR o.pickup_date = :date)
@@ -98,6 +101,7 @@ public class OrderQueryRepository {
     public static final String DETAIL_SQL =
             """
             SELECT o.id, o.order_code, o.status, o.customer_id, cu.full_name AS customer_full_name,
+                   cu.full_name AS customer_name,
                    cu.phone AS customer_phone, cu.email AS customer_email,
                    o.farmer_id, f.stall_name, f.user_id AS farmer_user_id,
                    o.market_id, m.market_name,
@@ -222,7 +226,9 @@ public class OrderQueryRepository {
                 formatCutoff(rs.getObject("cutoff_at", LocalDateTime.class)),
                 rs.getBigDecimal("total_amount"),
                 rs.getInt("item_count"),
-                readInstant(rs, "created_at"));
+                readInstant(rs, "created_at"),
+                rs.getLong("customer_id"),
+                rs.getString("customer_name"));
     }
 
     private OrderDetailRow detailRow(ResultSet rs) throws SQLException {

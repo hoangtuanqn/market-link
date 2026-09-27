@@ -7,6 +7,7 @@
     "feedback": "กล่องข้อเสนอแนะ"
   },
   "caption": {
+    "categories_one": "{{count}} category",
     "categories_other": "{{count}} หมวดหมู่"
   },
   "col": {
@@ -25,10 +26,14 @@
     "namePlaceholder": "เช่น Seafood",
     "nameHint": "เป็นภาษาอังกฤษ ขึ้นต้นประโยคด้วยตัวใหญ่ตัวเดียว ข้อความนี้จะเขียนด้วยลายมือบนป้ายสินค้าที่ไม่มีรูป",
     "position": "ลำดับในตัวกรอง",
+    "minShelfLife": "Min shelf life (days)",
+    "maxShelfLife": "Max shelf life (days)",
+    "shelfLifeHint": "Standard freshness window for this category. Shown to Farmers as a guide when they list a product.",
     "submit": "เพิ่มหมวดหมู่"
   },
   "removeCategory": {
     "title": "ลบ {{name}} ไหม",
+    "textUsed_one": "{{count}} product uses it. Choose where it goes.",
     "textUsed_other": "มีสินค้า {{count}} รายการใช้อยู่ เลือกว่าจะย้ายไปไหน",
     "textUnused": "ไม่มีสินค้าใช้หมวดนี้",
     "moveTo": "ย้ายสินค้าไปที่",
@@ -48,6 +53,8 @@
   },
   "error": {
     "noun": "หมวดหมู่",
-    "nameRequired": "ตั้งชื่อหมวดหมู่"
+    "nameRequired": "ตั้งชื่อหมวดหมู่",
+    "shelfLifeRequired": "Enter a whole number of 1 or more.",
+    "shelfLifeRange": "Max must be at least the minimum."
   }
 }
