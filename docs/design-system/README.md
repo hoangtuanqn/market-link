@@ -13,7 +13,7 @@ This folder is the source of truth for how MarketLink looks and reads. Every pag
 | `docs/design-system/reference/marketlink-reference.js` | React 18 bundle used only by the gallery. **Not** part of the app                                     |
 | `frontend/src/styles/marketlink-theme.css`             | Tokens as CSS variables + Tailwind v4 `@theme` (generated from `tokens.json`)                         |
 | `frontend/src/styles/marketlink-components.css`        | The `ml-*` component classes (generated from the design system)                                       |
-| `frontend/src/lib/format.ts`                           | `vnd()`, `units()`, `formatDate()`, `formatTime()`, `weekday()`                                       |
+| `frontend/src/lib/format.ts`                           | `money()`, `units()`, `formatDate()`, `formatTime()`, `weekday()`                                     |
 | `frontend/public/brand/`                               | `marketlink-mark.svg` (green arch), `marketlink-mark-light.svg` (cream arch), `marketlink-mark-mono.svg` (single ink)               |
 | `frontend/index.html`                                  | Loads Patrick Hand + Chivo from Google Fonts (Vietnamese subset included)                             |
 
@@ -68,7 +68,7 @@ MarketLink connects Farmers at local farmers markets with shoppers who pre-order
 - The slogan is "Still there when you get there" (`logo.slogan`). It is a promise about stock being real, not a boast: it appears once, under the logo in the footer, and in the page's meta description. Don't repeat it in headings or buttons.
 - No emoji, no exclamation marks, no "amazing", "super", "best-in-class". No filler stats like "10,000+ happy customers".
 - Use sentence case everywhere. Only `type-overline` (table headers, kickers above headings) is uppercase, and only through CSS; the source string stays in sentence case.
-- Formats: money `25,000 ₫` (use `MarketLink.vnd()`), dates `dd/MM/yyyy`, 24-hour time `07:00–07:30`, short weekdays `Mon … Sun`, decimals with a point (4.6), distances `2.4 km`. Unit plurals come from `MarketLink.units()` ("3 bunches", "2 loaves", "1 kg").
+- Formats: money in US dollars `$1.50` (the app uses `money()` from `src/lib/format.ts`; the reference gallery still calls it `MarketLink.vnd()`), dates `dd/MM/yyyy`, 24-hour time `07:00–07:30`, short weekdays `Mon … Sun`, decimals with a point (4.6), distances `2.4 km`. Unit plurals come from `MarketLink.units()` ("3 bunches", "2 loaves", "1 kg").
 
 ## Color
 
