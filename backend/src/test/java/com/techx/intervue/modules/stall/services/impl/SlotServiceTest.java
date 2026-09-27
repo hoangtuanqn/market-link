@@ -28,6 +28,7 @@ import com.techx.intervue.modules.stall.requests.UpdateSlotRequest;
 import com.techx.intervue.modules.stall.resources.SlotResource;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -47,6 +48,7 @@ class SlotServiceTest {
     private static final long FARMER_MARKET_ID = 55L;
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
     private static final LocalDate TODAY = LocalDate.of(2026, 9, 26);
+    private static final LocalDateTime NOW = TODAY.atTime(9, 0);
 
     private FarmerProfileRepository farmerProfileRepository;
     private FarmerMarketRepository farmerMarketRepository;
@@ -325,7 +327,7 @@ class SlotServiceTest {
         when(farmerProfileRepository.findById(FARMER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
         SlotResource full = SlotResource.of(slot(5, 5, true), MARKET_ID);
-        when(queryRepository.publicSlots(FARMER_ID, MARKET_ID, TODAY, TODAY))
+        when(queryRepository.publicSlots(FARMER_ID, MARKET_ID, TODAY, TODAY, NOW))
                 .thenReturn(List.of(full));
 
         assertThat(service.publicSlots(FARMER_ID, MARKET_ID, TODAY)).containsExactly(full);
@@ -342,7 +344,7 @@ class SlotServiceTest {
 
         service.publicSlots(FARMER_ID, null, null);
 
-        verify(queryRepository).publicSlots(FARMER_ID, null, TODAY, TODAY.plusDays(13));
+        verify(queryRepository).publicSlots(FARMER_ID, null, TODAY, TODAY.plusDays(13), NOW);
     }
 
     /**
@@ -355,6 +357,6 @@ class SlotServiceTest {
 
         assertThatThrownBy(() -> service.publicSlots(FARMER_ID, null, TODAY))
                 .isInstanceOf(FarmerProfileNotFoundException.class);
-        verify(queryRepository, never()).publicSlots(anyLong(), any(), any(), any());
+        verify(queryRepository, never()).publicSlots(anyLong(), any(), any(), any(), any());
     }
 }

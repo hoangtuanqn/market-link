@@ -154,9 +154,36 @@ class ProductQueryServiceTest {
         assertThat(result.items().getFirst().price()).isEqualByComparingTo("13000");
     }
 
-    /** No orderable date within the lookahead → the product is dropped from the results. */
+    /**
+     * The total is the query's count of every matching product, not the size of this page — the
+     * catalogue works out how many pages there are from it.
+     */
     @Test
-    void searchDropsAProductWithNoOrderableDate() {
+    void searchKeepsTheQueryTotalNotThePageSize() {
+        ProductListItemResource raw = item(1L);
+        when(repository.search(any(), anyString(), anyInt(), anyInt()))
+                .thenReturn(new PageResource<>(List.of(raw), 1, 1, 30));
+        when(availability.resolve(any()))
+                .thenReturn(
+                        Map.of(
+                                1L,
+                                new ProductAvailabilityResolver.Availability(
+                                        LocalDate.of(2026, 9, 28), 40, new BigDecimal("13000"))));
+
+        PageResource<ProductListItemResource> result =
+                service.search(criteria("newest", null, null, 1));
+
+        assertThat(result.items()).hasSize(1);
+        assertThat(result.total()).isEqualTo(30);
+    }
+
+    /**
+     * Which products are listed is the query's job (VISIBILITY_FILTER: an active weekly template
+     * exists); a row it returned is never dropped afterwards, or the page and its total would
+     * disagree. A template switched off in between shows as sold out.
+     */
+    @Test
+    void searchNeverDropsARowTheQueryReturned() {
         ProductListItemResource raw = item(1L);
         when(repository.search(any(), anyString(), anyInt(), anyInt()))
                 .thenReturn(new PageResource<>(List.of(raw), 1, 20, 1));
@@ -165,13 +192,14 @@ class ProductQueryServiceTest {
         PageResource<ProductListItemResource> result =
                 service.search(criteria("newest", null, null, 20));
 
-        assertThat(result.items()).isEmpty();
-        assertThat(result.total()).isZero();
+        assertThat(result.items()).hasSize(1);
+        assertThat(result.items().getFirst().stockQuantity()).isZero();
+        assertThat(result.total()).isEqualTo(1);
     }
 
     /**
-     * detail() overlays the same way; no orderable date means the product does not exist for a
-     * buyer.
+     * detail() overlays the same way; a product with no active template is already left out by the
+     * query (findVisibleById → empty → 404).
      */
     @Test
     void detailOverlaysTheNearestAvailableDate() {
@@ -203,13 +231,27 @@ class ProductQueryServiceTest {
         assertThat(result.product().price()).isEqualByComparingTo("13000");
     }
 
+    /** Same rule as search: the query decides visibility, a row it returned shows as sold out. */
     @Test
-    void detailThrowsWhenTheProductHasNoOrderableDate() {
+    void detailShowsAProductWithNoResolvedDateAsSoldOut() {
         when(repository.findVisibleById(1L))
                 .thenReturn(Optional.of(new ProductDetailRow(item(1L), "Cắt sáng")));
         when(availability.resolve(any())).thenReturn(Map.of());
+        when(stallService.publicDetail(10L))
+                .thenReturn(
+                        new StallDetailResource(
+                                10L,
+                                "Vườn Út Hiền",
+                                "Hiền",
+                                null,
+                                null,
+                                12,
+                                BigDecimal.ZERO,
+                                0,
+                                "approved",
+                                List.of()));
 
-        assertThatThrownBy(() -> service.detail(1L)).isInstanceOf(ProductNotFoundException.class);
+        assertThat(service.detail(1L).product().stockQuantity()).isZero();
     }
 
     /**

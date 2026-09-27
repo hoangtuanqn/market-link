@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -494,6 +495,38 @@ class OrderTransitionTest {
         assertThat(row.getQuantityAvailable()).isEqualTo(9);
         assertThat(deleted.isDeleted()).isTrue();
         assertThat(slot.getBookedCount()).isEqualTo(2);
+    }
+
+    /**
+     * An order placed before per-date stock existed (the seed's orders, or any database migrated
+     * from the shared-pool model) has no product_daily_stock row for its pickup date: nothing was
+     * taken from that date, so there is nothing to give back. The decline must still go through
+     * instead of failing with a 500, and the rows that do exist still get their stock back.
+     */
+    @Test
+    void declineOfAnOrderPlacedBeforePerDateStockSkipsTheMissingRow() {
+        Order order = orderWithStatus(OrderStatus.PLACED);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        when(orderItemRepository.findByOrderId(ORDER_ID))
+                .thenReturn(List.of(item(PRODUCT_A, 2), item(PRODUCT_B, 1)));
+        when(productRepository.findAllById(any()))
+                .thenReturn(
+                        List.of(
+                                product(PRODUCT_A, ProductStatus.AVAILABLE),
+                                product(PRODUCT_B, ProductStatus.AVAILABLE)));
+        ProductDailyStock rowA = dailyStock(PRODUCT_A, 5);
+        stubDailyStockLock(rowA);
+        when(dailyStockRepository.lockByProductIdAndStockDate(PRODUCT_B, PICKUP))
+                .thenReturn(Optional.empty());
+        PickupSlot slot = slotWith(3);
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
+
+        service.decline(FARMER_USER_ID, ORDER_ID, "reason");
+
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.DECLINED);
+        assertThat(rowA.getQuantityAvailable()).isEqualTo(7);
+        assertThat(slot.getBookedCount()).isEqualTo(2);
+        verify(dailyStockRepository, never()).materialize(any(), any(), anyInt());
     }
 
     // ---------- FR-039 auto-complete (the job calls this once per due order) ----------

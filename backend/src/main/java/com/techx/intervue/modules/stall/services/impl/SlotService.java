@@ -23,6 +23,7 @@ import com.techx.intervue.modules.stall.resources.SlotResource;
 import com.techx.intervue.modules.stall.services.interfaces.SlotServiceInterface;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -195,7 +196,7 @@ public class SlotService implements SlotServiceInterface {
                 .orElseThrow(FarmerProfileNotFoundException::new);
         LocalDate from = date != null ? date : today();
         LocalDate to = date != null ? date : from.plusDays(DEFAULT_PUBLIC_DAYS - 1L);
-        return queryRepository.publicSlots(farmerId, marketId, from, to);
+        return queryRepository.publicSlots(farmerId, marketId, from, to, LocalDateTime.now(clock));
     }
 
     private LocalDate today() {

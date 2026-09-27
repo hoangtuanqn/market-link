@@ -2,6 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LiveAnnouncementBanner from '@/components/LiveAnnouncementBanner';
+import OnboardingTour from '@/components/OnboardingTour';
 import { USER_ROLE } from '@/constants/enums';
 import useMyAchievements from '@/hooks/useMyAchievements';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
@@ -53,6 +54,8 @@ const MainLayout = ({ unreadCount }: MainLayoutProps) => {
         <Outlet />
       </main>
       <Footer />
+      {/* Signed-in Customers only; a Farmer gets their tour in the stall panel */}
+      <OnboardingTour role="customer" />
     </div>
   );
 };

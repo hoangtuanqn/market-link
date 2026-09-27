@@ -94,14 +94,24 @@ class ChatKnowledgeIntegrationTest {
                                 + " pickup_start_time, pickup_end_time) VALUES (?, 6, '07:00:00',"
                                 + " '10:00:00')",
                         farmerMarket));
+        long product =
+                track(
+                        "products",
+                        insert(
+                                "INSERT INTO products (farmer_id, category_id, name, price, unit,"
+                                        + " stock_quantity) VALUES (?, ?, ?, 45000, 'kg', 12)",
+                                farmer,
+                                category,
+                                "Buoi" + tag));
+        // Per-date stock (FR-063): a product with no active weekly template is never orderable
+        // and the chatbot, like the catalogue, leaves it out
         track(
-                "products",
+                "weekly_stock_templates",
                 insert(
-                        "INSERT INTO products (farmer_id, category_id, name, price, unit,"
-                                + " stock_quantity) VALUES (?, ?, ?, 45000, 'kg', 12)",
+                        "INSERT INTO weekly_stock_templates (farmer_id, product_id, day_of_week,"
+                                + " default_quantity) VALUES (?, ?, 6, 12)",
                         farmer,
-                        category,
-                        "Buoi" + tag));
+                        product));
     }
 
     @AfterEach

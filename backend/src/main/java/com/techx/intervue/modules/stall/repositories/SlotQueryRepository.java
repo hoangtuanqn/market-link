@@ -3,6 +3,7 @@ package com.techx.intervue.modules.stall.repositories;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
 import com.techx.intervue.modules.stall.resources.SlotResource;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,9 +11,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 /**
- * Slots a customer may see: of a stall still selling at a market that is still open. JdbcTemplate
- * because market_id is needed from farmer_markets in the same read; every value goes through
- * parameters (R-04).
+ * Slots a customer may see: of a stall still selling at a market that is still open, and still
+ * before their cutoff (start − the stall's order_cutoff_hours, the same rule placing an order
+ * enforces with 409 CUTOFF_PASSED). JdbcTemplate because market_id is needed from farmer_markets in
+ * the same read; every value goes through parameters (R-04).
  */
 @Repository
 @RequiredArgsConstructor
@@ -25,23 +27,26 @@ public class SlotQueryRepository {
             FROM pickup_slots s
             JOIN farmer_markets fm ON fm.id = s.farmer_market_id AND fm.is_active = TRUE
             JOIN markets m ON m.id = fm.market_id AND m.is_active = TRUE
+            JOIN farmer_profiles f ON f.id = fm.farmer_id
             WHERE fm.farmer_id = :farmerId
               AND s.is_active = TRUE
               AND (:marketId IS NULL OR fm.market_id = :marketId)
               AND s.slot_date BETWEEN :fromDate AND :toDate
+              AND TIMESTAMP(s.slot_date, s.start_time) - INTERVAL f.order_cutoff_hours HOUR > :now
             ORDER BY s.slot_date, s.start_time, fm.market_id
             """;
 
     private final NamedParameterJdbcTemplate jdbc;
 
     public List<SlotResource> publicSlots(
-            long farmerId, Long marketId, LocalDate from, LocalDate to) {
+            long farmerId, Long marketId, LocalDate from, LocalDate to, LocalDateTime now) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
                         .addValue("farmerId", farmerId)
                         .addValue("marketId", marketId)
                         .addValue("fromDate", from)
-                        .addValue("toDate", to);
+                        .addValue("toDate", to)
+                        .addValue("now", now);
         return jdbc.query(
                 PUBLIC_SLOTS,
                 params,
