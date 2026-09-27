@@ -55,26 +55,26 @@ class ProductAvailabilityResolverTest {
     }
 
     @Test
-    void nearestDateFindsTheClosestMatchingWeekday() {
+    void candidateDatesAreTheMatchingWeekdaysInsideTheLookaheadNearestFirst() {
         // TODAY (26/09) is a Saturday = 6; the template only sells on Monday = 1, 2 days away.
-        Optional<LocalDate> found =
-                ProductAvailabilityResolver.nearestDate(TODAY, List.of(template(1, 10, null)));
+        List<LocalDate> found =
+                ProductAvailabilityResolver.candidateDates(TODAY, List.of(template(1, 10, null)));
 
-        assertThat(found).contains(LocalDate.of(2026, 9, 28));
+        assertThat(found).containsExactly(LocalDate.of(2026, 9, 28), LocalDate.of(2026, 10, 5));
     }
 
     @Test
-    void nearestDateIncludesToday() {
+    void candidateDatesIncludeToday() {
         // TODAY (26/09) is a Saturday = 6.
-        Optional<LocalDate> found =
-                ProductAvailabilityResolver.nearestDate(TODAY, List.of(template(6, 10, null)));
+        List<LocalDate> found =
+                ProductAvailabilityResolver.candidateDates(TODAY, List.of(template(6, 10, null)));
 
-        assertThat(found).contains(TODAY);
+        assertThat(found).first().isEqualTo(TODAY);
     }
 
     @Test
-    void nearestDateIsEmptyWithNoTemplates() {
-        assertThat(ProductAvailabilityResolver.nearestDate(TODAY, List.of())).isEmpty();
+    void candidateDatesAreEmptyWithNoTemplates() {
+        assertThat(ProductAvailabilityResolver.candidateDates(TODAY, List.of())).isEmpty();
     }
 
     @Test
@@ -119,6 +119,48 @@ class ProductAvailabilityResolverTest {
                 resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000")));
 
         assertThat(result.get(PRODUCT_ID).quantity()).isEqualTo(6);
+    }
+
+    /**
+     * The nearest date is sold out while a later date of the template still has stock: the product
+     * can still be ordered, so browse, the cart and restock alerts must report that later date
+     * instead of showing the product as sold out.
+     */
+    @Test
+    void resolveSkipsASoldOutDateForTheNextDateWithStock() {
+        // TODAY (26/09) is a Saturday = 6; the stall sells on Saturday and Monday
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(6, 30, null), template(1, 20, null)));
+        ProductDailyStock soldOut = new ProductDailyStock();
+        soldOut.setQuantityAvailable(0);
+        soldOut.setUnitPrice(new BigDecimal("12000"));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, TODAY))
+                .thenReturn(Optional.of(soldOut));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, LocalDate.of(2026, 9, 28)))
+                .thenReturn(Optional.empty());
+
+        ProductAvailabilityResolver.Availability a =
+                resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))).get(PRODUCT_ID);
+
+        assertThat(a.date()).isEqualTo(LocalDate.of(2026, 9, 28));
+        assertThat(a.quantity()).isEqualTo(20);
+    }
+
+    /** Every date inside the lookahead is sold out: the nearest one is reported, with 0. */
+    @Test
+    void resolveReportsTheNearestDateWhenEveryDateIsSoldOut() {
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(6, 30, null)));
+        ProductDailyStock soldOut = new ProductDailyStock();
+        soldOut.setQuantityAvailable(0);
+        soldOut.setUnitPrice(new BigDecimal("12000"));
+        when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.of(soldOut));
+
+        ProductAvailabilityResolver.Availability a =
+                resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))).get(PRODUCT_ID);
+
+        assertThat(a.date()).isEqualTo(TODAY);
+        assertThat(a.quantity()).isZero();
     }
 
     @Test

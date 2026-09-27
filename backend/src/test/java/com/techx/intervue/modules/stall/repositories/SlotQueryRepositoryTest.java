@@ -16,6 +16,7 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -34,6 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 class SlotQueryRepositoryTest {
 
     private static final LocalDate DAY = LocalDate.of(2031, 3, 2);
+
+    /** Long before DAY: no slot of DAY has reached its cutoff yet. */
+    private static final LocalDateTime EARLY = LocalDateTime.of(2031, 1, 1, 0, 0);
 
     @Autowired UserRepository users;
     @Autowired FarmerProfileRepository farmers;
@@ -111,14 +115,14 @@ class SlotQueryRepositoryTest {
         slot(fm, DAY, 9, 0, false);
         slot(fm, DAY.plusDays(1), 7, 0, true);
 
-        List<SlotResource> out = query.publicSlots(f.getId(), null, DAY, DAY);
+        List<SlotResource> out = query.publicSlots(f.getId(), null, DAY, DAY, EARLY);
 
         assertThat(out)
                 .extracting(SlotResource::startTime, SlotResource::isFull, SlotResource::marketId)
                 .containsExactly(
                         org.assertj.core.groups.Tuple.tuple("07:00", false, m.getId()),
                         org.assertj.core.groups.Tuple.tuple("08:00", true, m.getId()));
-        assertThat(query.publicSlots(f.getId(), m.getId() + 100_000, DAY, DAY)).isEmpty();
+        assertThat(query.publicSlots(f.getId(), m.getId() + 100_000, DAY, DAY, EARLY)).isEmpty();
     }
 
     /**
@@ -133,7 +137,26 @@ class SlotQueryRepositoryTest {
         fm.setActive(false);
         farmerMarkets.saveAndFlush(fm);
 
-        assertThat(query.publicSlots(f.getId(), null, DAY, DAY)).isEmpty();
+        assertThat(query.publicSlots(f.getId(), null, DAY, DAY, EARLY)).isEmpty();
+    }
+
+    /**
+     * FR-032/D-05: a slot whose cutoff (start − the stall's order_cutoff_hours) has passed no
+     * longer takes orders, so the customer never gets it to pick — placing it would only answer 409
+     * CUTOFF_PASSED.
+     */
+    @Test
+    void publicSlotsHideSlotsPastTheirCutoff() {
+        FarmerProfile f = approvedFarmer(); // order_cutoff_hours = 12
+        FarmerMarket fm = link(f, market());
+        slot(fm, DAY, 7, 0, true); // cutoff DAY-1 19:00
+        slot(fm, DAY, 8, 0, true); // cutoff DAY-1 20:00
+        slot(fm, DAY, 9, 0, true); // cutoff DAY-1 21:00
+
+        List<SlotResource> out =
+                query.publicSlots(f.getId(), null, DAY, DAY, DAY.minusDays(1).atTime(20, 0));
+
+        assertThat(out).extracting(SlotResource::startTime).containsExactly("09:00");
     }
 
     /** D-06: even with a code bug, the database does not let booked_count exceed max_orders. */

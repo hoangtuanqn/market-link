@@ -27,6 +27,7 @@
   --accent: #e8b33c;
   --accent-strong: #d6a12b;
   --on-accent: #2a2016;
+  --awning: #a8402b;
   --price: #2a2016;
   --focus: #2f4a2a;
   --danger: #9a2a1f;
@@ -128,6 +129,7 @@
   --accent: #e8b33c;
   --accent-strong: #f2c260;
   --on-accent: #2a2016;
+  --awning: #a8402b;
   --price: #f2e7d2;
   --focus: #a6cd95;
   --danger: #f09a88;
@@ -251,6 +253,7 @@
   --color-accent: var(--accent);
   --color-accent-strong: var(--accent-strong);
   --color-on-accent: var(--on-accent);
+  --color-awning: var(--awning);
   --color-price: var(--price);
   --color-focus: var(--focus);
   --color-danger: var(--danger);

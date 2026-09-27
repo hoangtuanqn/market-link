@@ -214,7 +214,8 @@
     "markets": "Đang tải danh sách chợ"
   },
   "logo": {
-    "home": "MarketLink — trang chủ"
+    "home": "MarketLink — trang chủ",
+    "slogan": "Đến nơi vẫn còn hàng"
   },
   "map": {
     "attribution": "© những người đóng góp {{link}}",
@@ -533,5 +534,122 @@
   "comingSoon": {
     "title": "Trang này chưa mở",
     "text": "Chúng tôi vẫn đang hoàn thiện trang này. Các mục khác trong menu vẫn dùng bình thường."
+  },
+  "tour": {
+    "next": "Tiếp",
+    "back": "Quay lại",
+    "done": "Hoàn tất",
+    "skip": "Bỏ qua hướng dẫn",
+    "progress": "{{current}}/{{total}}",
+    "steps": {
+      "customerWelcome": {
+        "title": "Chào mừng đến MarketLink",
+        "body": "Đặt trước nông sản tươi từ nhà vườn tại các chợ phiên ở TP.HCM, rồi nhận hàng tại gian hàng. Hướng dẫn ngắn này giúp bạn làm quen."
+      },
+      "customerMarkets": {
+        "title": "Xem các chợ",
+        "body": "Xem mọi chợ, giờ mở cửa và các gian hàng bán ở đó."
+      },
+      "customerProducts": {
+        "title": "Tìm sản phẩm",
+        "body": "Lọc nông sản theo danh mục, giá và chợ. Mỗi sản phẩm cho biết tuần này còn bao nhiêu."
+      },
+      "customerMap": {
+        "title": "Bản đồ chợ",
+        "body": "Tìm chợ gần bạn nhất và xem chỉ đường trên OpenStreetMap."
+      },
+      "customerSearch": {
+        "title": "Tìm kiếm",
+        "body": "Tra cứu sản phẩm, gian hàng hoặc chợ theo tên."
+      },
+      "customerCart": {
+        "title": "Giỏ hàng",
+        "body": "Thêm sản phẩm, chọn giờ nhận tại gian hàng rồi đặt đơn."
+      },
+      "customerOrders": {
+        "title": "Đơn của bạn",
+        "body": "Theo dõi từng đơn từ lúc đặt, được nhận, sẵn sàng đến hoàn tất. Nhà vườn xác nhận trước khi bạn đến lấy."
+      },
+      "customerFavorites": {
+        "title": "Yêu thích",
+        "body": "Lưu gian hàng và sản phẩm bạn thích để tìm lại nhanh."
+      },
+      "customerMessages": {
+        "title": "Tin nhắn",
+        "body": "Nhắn tin với nhà vườn về sản phẩm hoặc đơn hàng."
+      },
+      "customerNotifications": {
+        "title": "Thông báo",
+        "body": "Cập nhật đơn hàng và thông báo của chợ hiện ở đây."
+      },
+      "customerAccount": {
+        "title": "Tài khoản",
+        "body": "Sửa hồ sơ, đổi cài đặt như ngôn ngữ và tiền tệ, hoặc đăng ký bán hàng với vai trò nhà vườn."
+      },
+      "customerMenu": {
+        "title": "Menu",
+        "body": "Chợ, sản phẩm, đơn hàng và tài khoản đều nằm trong menu này."
+      },
+      "customerDone": {
+        "title": "Bạn đã sẵn sàng",
+        "body": "Hãy bắt đầu bằng việc chọn một chợ gần bạn. Bạn có thể đổi tuỳ chọn bất cứ lúc nào trong Cài đặt."
+      },
+      "farmerWelcome": {
+        "title": "Chào mừng đến trang quản lý gian hàng",
+        "body": "Đây là nơi bạn vận hành gian hàng trên MarketLink. Cùng xem nhanh từng mục."
+      },
+      "farmerOverview": {
+        "title": "Tổng quan",
+        "body": "Đơn hàng, lượt nhận hàng và doanh số hôm nay trong một màn hình."
+      },
+      "farmerOrders": {
+        "title": "Đơn mới",
+        "body": "Nhận hoặc từ chối đơn mới, rồi đánh dấu sẵn sàng và hoàn tất khi khách đến lấy."
+      },
+      "farmerSlots": {
+        "title": "Khung giờ nhận hàng",
+        "body": "Đặt các khung giờ khách có thể đến gian hàng nhận đơn."
+      },
+      "farmerStock": {
+        "title": "Tồn kho tuần này",
+        "body": "Cập nhật số lượng mỗi sản phẩm bạn có thể bán trong tuần."
+      },
+      "farmerProducts": {
+        "title": "Sản phẩm",
+        "body": "Thêm sản phẩm kèm ảnh, giá và đơn vị, hoặc ẩn những sản phẩm không còn bán."
+      },
+      "farmerStall": {
+        "title": "Gian hàng và nhận hàng",
+        "body": "Sửa hồ sơ gian hàng, chọn chợ và những ngày bạn có mặt."
+      },
+      "farmerReviews": {
+        "title": "Đánh giá",
+        "body": "Xem điểm và nhận xét khách để lại sau khi nhận hàng."
+      },
+      "farmerHistory": {
+        "title": "Lịch sử bán hàng",
+        "body": "Xem lại các đơn đã qua và tình hình doanh số."
+      },
+      "farmerMessages": {
+        "title": "Tin nhắn",
+        "body": "Trả lời câu hỏi của khách về sản phẩm và đơn hàng."
+      },
+      "farmerNotifications": {
+        "title": "Thông báo",
+        "body": "Đơn mới và tin tức từ đội ngũ MarketLink hiện ở đây."
+      },
+      "farmerSettings": {
+        "title": "Cài đặt",
+        "body": "Đổi ngôn ngữ, tiền tệ và các mặc định bán hàng."
+      },
+      "farmerDone": {
+        "title": "Gian hàng đã sẵn sàng",
+        "body": "Hãy bắt đầu bằng việc kiểm tra tồn kho tuần này và khung giờ nhận hàng."
+      },
+      "dashboardMenu": {
+        "title": "Menu",
+        "body": "Mở menu để tới mọi mục của trang quản lý."
+      }
+    }
   }
 }

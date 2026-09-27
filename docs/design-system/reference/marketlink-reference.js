@@ -70,15 +70,32 @@
 
   /* ================= Identity ================= */
 
-  /* Logo: a hang tag with a real punched hole (evenodd) and twine through the hole. Single ink: currentColor. */
-  var LOGO_TAG = "M9 8.5h14.5a2 2 0 012 2V26a2.5 2.5 0 01-2.5 2.5H9A2.5 2.5 0 016.5 26V11.5zM18.4 13.2a2.4 2.4 0 10-4.8 0 2.4 2.4 0 104.8 0z";
-  var LOGO_TWINE = "M16 13.2C15.2 8.5 12.6 4.6 8 2.6";
+  /* Logo: a market stall under an arch. Same artwork as the app's LogoMark and the prototype's PT.logo.
+     Two skins, because the arch green is the same green as `board`: pass variant "light" on dark
+     surfaces, or the arch disappears into the background. */
+  var LOGO_ARCH = "M0 48a48 48 0 0 1 96 0v40a8 8 0 0 1-8 8H8a8 8 0 0 1-8-8Z";
+  var LOGO_STRIPES = [[16, 28.8], [28.8, 41.6], [41.6, 54.4], [54.4, 67.2], [67.2, 80]];
+  var LOGO_SKINS = {
+    ink: { arch: "#2f4a2a", stripe: "#a8402b", art: "#f1e5cb", ground: "#e8b33c" },
+    light: { arch: "#f1e5cb", stripe: "#a8402b", art: "#2f4a2a", ground: "#a8402b" }
+  };
   function Logo(p) {
     var s = p.size || 32;
-    var mark = h("svg", { viewBox: "0 0 32 32", width: s, height: s, "aria-hidden": "true" },
-      h("path", { d: LOGO_TAG, fill: "currentColor", fillRule: "evenodd" }),
-      h("path", { d: LOGO_TWINE, fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round", strokeDasharray: "2.2 2" })
-    );
+    var skin = LOGO_SKINS[p.variant] || LOGO_SKINS.ink;
+    var parts = [h("path", { key: "arch", d: LOGO_ARCH, fill: skin.arch })];
+    LOGO_STRIPES.forEach(function (x, i) {
+      parts.push(h("path", { key: "s" + i, d: "M" + x[0] + " 22H" + x[1] + "v18a6.4 6.4 0 0 1-12.8 0Z",
+        fill: i % 2 === 0 ? skin.stripe : skin.arch }));
+    });
+    parts.push(h("path", { key: "l1", d: "M28 68C23 63 21 56 23 50c6 4 9 10 8 18Z", fill: skin.art }));
+    parts.push(h("path", { key: "l2", d: "M36 68c-4-5-4-13 1-18 5 5 5 13 2 18Z", fill: skin.art }));
+    parts.push(h("circle", { key: "fr", cx: 52, cy: 59, r: 9, fill: "#e8b33c" }));
+    parts.push(h("path", { key: "lf", d: "M64 68c0-6 4-10 7-10s7 4 7 10Z", fill: skin.art }));
+    parts.push(h("rect", { key: "ct", x: 17, y: 68, width: 62, height: 9, rx: 4.5, fill: skin.art }));
+    parts.push(h("rect", { key: "g1", x: 23, y: 77, width: 6, height: 8, rx: 3, fill: skin.art }));
+    parts.push(h("rect", { key: "g2", x: 67, y: 77, width: 6, height: 8, rx: 3, fill: skin.art }));
+    parts.push(h("rect", { key: "gr", x: 16, y: 87, width: 64, height: 5, rx: 2.5, fill: skin.ground }));
+    var mark = h.apply(null, ["svg", { viewBox: "0 0 96 96", width: s, height: s, "aria-hidden": "true" }].concat(parts));
     return h(p.href ? "a" : "span", { className: cx("ml-logo", p.className), href: p.href, "aria-label": p.href ? "MarketLink — home" : undefined },
       mark, p.markOnly ? null : h("span", { className: "ml-logo-word" }, "MarketLink"));
   }
@@ -95,7 +112,7 @@
     var items = p.items || NAV[role];
     return h("header", { className: cx("ml-header", p.className) },
       h("div", { className: "ml-header-in" },
-        h(Logo, { href: "#", size: 30 }),
+        h(Logo, { href: "#", size: 30, variant: "light" }),
         h("nav", { "aria-label": "Main" }, h("ul", { className: "ml-nav" }, items.map(function (it) {
           return h("li", { key: it[0] }, h("a", { href: "#" + it[0], "aria-current": p.active === it[0] ? "page" : undefined }, it[1]));
         }))),
@@ -122,7 +139,7 @@
     ];
     return h("footer", { className: cx("ml-footer", p.className) },
       h("div", { className: "ml-footer-in" },
-        h("div", null, h(Logo, { size: 30 }), h("p", null, "Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.")),
+        h("div", null, h(Logo, { size: 30, variant: "light" }), h("p", { className: "ml-slogan" }, "Still there when you get there"), h("p", null, "Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.")),
         cols.map(function (c) {
           return h("div", { key: c[0] }, h("h2", null, c[0]), h("ul", null, c[1].map(function (l) { return h("li", { key: l }, h("a", { href: "#" }, l)); })));
         }),

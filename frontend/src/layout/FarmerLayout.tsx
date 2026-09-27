@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import NotificationBell from '@/components/notifications/NotificationBell';
+import OnboardingTour from '@/components/OnboardingTour';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import useChatUnread from '@/hooks/useChatUnread';
 import {
@@ -108,30 +109,33 @@ const FarmerLayout = () => {
   }));
 
   return (
-    <DashboardShell
-      badge={t('farmerNav.badge')}
-      navLabel={t('farmerNav.navigation')}
-      homeLabel={t('farmerNav.home')}
-      home="/farmer"
-      nav={nav}
-      context={{
-        mono: stallName.trim().charAt(0).toUpperCase(),
-        name: stallName,
-        sub:
-          profile?.approvalStatus === 'approved'
-            ? t('farmerNav.approvedMarkets', { count: profile.markets.length })
-            : t('farmerNav.badge'),
-      }}
-      user={{
-        mono: initials(user?.fullName, user?.email),
-        email: user?.email ?? '',
-        line: t('farmerNav.roleStall', { stall: stallName }),
-      }}
-      searchId="farmer-appq"
-      searchPlaceholder={t('farmerNav.searchPlaceholder')}
-      accountTo="/account"
-      headerActions={<NotificationBell to="/farmer/notifications" />}
-    />
+    <>
+      <OnboardingTour role="farmer" />
+      <DashboardShell
+        badge={t('farmerNav.badge')}
+        navLabel={t('farmerNav.navigation')}
+        homeLabel={t('farmerNav.home')}
+        home="/farmer"
+        nav={nav}
+        context={{
+          mono: stallName.trim().charAt(0).toUpperCase(),
+          name: stallName,
+          sub:
+            profile?.approvalStatus === 'approved'
+              ? t('farmerNav.approvedMarkets', { count: profile.markets.length })
+              : t('farmerNav.badge'),
+        }}
+        user={{
+          mono: initials(user?.fullName, user?.email),
+          email: user?.email ?? '',
+          line: t('farmerNav.roleStall', { stall: stallName }),
+        }}
+        searchId="farmer-appq"
+        searchPlaceholder={t('farmerNav.searchPlaceholder')}
+        accountTo="/account"
+        headerActions={<NotificationBell to="/farmer/notifications" />}
+      />
+    </>
   );
 };
 

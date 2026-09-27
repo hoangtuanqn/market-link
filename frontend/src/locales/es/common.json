@@ -217,7 +217,8 @@
     "markets": "Cargando mercados"
   },
   "logo": {
-    "home": "MarketLink — inicio"
+    "home": "MarketLink — inicio",
+    "slogan": "Sigue ahí cuando llegas"
   },
   "map": {
     "attribution": "© colaboradores de {{link}}",
@@ -536,5 +537,122 @@
   "comingSoon": {
     "title": "Esta página aún no está disponible",
     "text": "Todavía la estamos construyendo. El resto del menú funciona con normalidad."
+  },
+  "tour": {
+    "next": "Siguiente",
+    "back": "Atrás",
+    "done": "Terminar",
+    "skip": "Omitir recorrido",
+    "progress": "{{current}} de {{total}}",
+    "steps": {
+      "customerWelcome": {
+        "title": "Te damos la bienvenida a MarketLink",
+        "body": "Reserva productos frescos de los agricultores de los mercados semanales de Ciudad Ho Chi Minh y recógelos en su puesto. Este breve recorrido te muestra lo básico."
+      },
+      "customerMarkets": {
+        "title": "Explorar mercados",
+        "body": "Consulta cada mercado, su horario y los puestos que venden allí."
+      },
+      "customerProducts": {
+        "title": "Buscar productos",
+        "body": "Filtra por categoría, precio y mercado. Cada producto muestra cuánto queda esta semana."
+      },
+      "customerMap": {
+        "title": "Mapa de mercados",
+        "body": "Encuentra los mercados más cercanos y obtén indicaciones en OpenStreetMap."
+      },
+      "customerSearch": {
+        "title": "Búsqueda",
+        "body": "Busca un producto, un puesto o un mercado por su nombre."
+      },
+      "customerCart": {
+        "title": "Tu carrito",
+        "body": "Añade productos, elige una hora de recogida en el puesto y haz tu pedido."
+      },
+      "customerOrders": {
+        "title": "Tus pedidos",
+        "body": "Sigue cada pedido desde realizado hasta aceptado, listo y completado. El agricultor lo confirma antes de que vayas."
+      },
+      "customerFavorites": {
+        "title": "Favoritos",
+        "body": "Guarda los puestos y productos que te gustan para encontrarlos rápido."
+      },
+      "customerMessages": {
+        "title": "Mensajes",
+        "body": "Habla con un agricultor sobre un producto o un pedido."
+      },
+      "customerNotifications": {
+        "title": "Notificaciones",
+        "body": "Aquí llegan las novedades de tus pedidos y los avisos de los mercados."
+      },
+      "customerAccount": {
+        "title": "Tu cuenta",
+        "body": "Edita tu perfil, cambia ajustes como idioma y moneda, o solicita vender como agricultor."
+      },
+      "customerMenu": {
+        "title": "Menú",
+        "body": "Mercados, productos, pedidos y tu cuenta están en este menú."
+      },
+      "customerDone": {
+        "title": "Todo listo",
+        "body": "Empieza eligiendo un mercado cerca de ti. Puedes cambiar tus preferencias en cualquier momento en Ajustes."
+      },
+      "farmerWelcome": {
+        "title": "Te damos la bienvenida a tu panel",
+        "body": "Aquí gestionas tu puesto en MarketLink. Veamos rápidamente cada sección."
+      },
+      "farmerOverview": {
+        "title": "Resumen",
+        "body": "Los pedidos, recogidas y ventas de hoy de un vistazo."
+      },
+      "farmerOrders": {
+        "title": "Pedidos nuevos",
+        "body": "Acepta o rechaza pedidos nuevos y márcalos como listos y completados cuando el cliente los recoja."
+      },
+      "farmerSlots": {
+        "title": "Horarios de recogida",
+        "body": "Define las franjas en las que los clientes pueden recoger sus pedidos en tu puesto."
+      },
+      "farmerStock": {
+        "title": "Existencias de la semana",
+        "body": "Actualiza cuánto puedes vender de cada producto esta semana."
+      },
+      "farmerProducts": {
+        "title": "Productos",
+        "body": "Añade productos con fotos, precios y unidades, u oculta los que ya no vendes."
+      },
+      "farmerStall": {
+        "title": "Puesto y recogida",
+        "body": "Edita el perfil de tu puesto y elige los mercados y días en que estás."
+      },
+      "farmerReviews": {
+        "title": "Reseñas",
+        "body": "Lee las valoraciones y reseñas que dejan los clientes tras recoger."
+      },
+      "farmerHistory": {
+        "title": "Historial de ventas",
+        "body": "Revisa pedidos anteriores y cómo van tus ventas."
+      },
+      "farmerMessages": {
+        "title": "Mensajes",
+        "body": "Responde las preguntas de los clientes sobre productos y pedidos."
+      },
+      "farmerNotifications": {
+        "title": "Notificaciones",
+        "body": "Aquí llegan los pedidos nuevos y las noticias del equipo de MarketLink."
+      },
+      "farmerSettings": {
+        "title": "Ajustes",
+        "body": "Cambia el idioma, la moneda y tus opciones de venta predeterminadas."
+      },
+      "farmerDone": {
+        "title": "Tu puesto está listo",
+        "body": "Empieza revisando las existencias de esta semana y tus horarios de recogida."
+      },
+      "dashboardMenu": {
+        "title": "Menú",
+        "body": "Abre el menú para ir a cualquier sección del panel."
+      }
+    }
   }
 }

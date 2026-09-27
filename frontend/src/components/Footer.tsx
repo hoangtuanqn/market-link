@@ -53,8 +53,9 @@ const Footer = () => {
     <footer className="bg-board text-on-board">
       <div className="mx-auto grid max-w-(--size-container) grid-cols-2 gap-8 px-4 pt-8 pb-4 md:grid-cols-[1.4fr_repeat(3,1fr)] md:px-6 md:pt-12 md:pb-6">
         <div className="col-span-full md:col-span-1">
-          <Logo />
-          <p className="text-small text-board-muted mt-3 max-w-75">{t('footer.tagline')}</p>
+          <Logo variant="light" />
+          <p className="font-hand mt-2 text-2xl leading-tight">{t('logo.slogan')}</p>
+          <p className="text-small text-board-muted mt-2 max-w-75">{t('footer.tagline')}</p>
         </div>
 
         {COLUMNS.map((col) => (

@@ -159,11 +159,27 @@
     play: function () { return svg('<path d="M5.5 3.4l6.2 4.6-6.2 4.6z"/>'); },
     external: function () { return svg('<path d="M9 2.5h4.5V7"/><path d="M13.5 2.5L7 9"/><path d="M12 9.5v4H2.5V4h4"/>'); },
   };
-  var LOGO_TAG = 'M9 8.5h14.5a2 2 0 012 2V26a2.5 2.5 0 01-2.5 2.5H9A2.5 2.5 0 016.5 26V11.5zM18.4 13.2a2.4 2.4 0 10-4.8 0 2.4 2.4 0 104.8 0z';
-  var LOGO_TWINE = 'M16 13.2C15.2 8.5 12.6 4.6 8 2.6';
+  /* Brand mark: a market stall under an arch. Same artwork as frontend/src/components/icons.tsx LogoMark.
+     Header, footer and the dashboard rail are all `board`, so the prototype only needs the light skin. */
+  var LOGO_ARCH = 'M0 48a48 48 0 0 1 96 0v40a8 8 0 0 1-8 8H8a8 8 0 0 1-8-8Z';
+  var LOGO_STRIPES = [[16, 28.8], [28.8, 41.6], [41.6, 54.4], [54.4, 67.2], [67.2, 80]];
   PT.logo = function (size, href, markOnly) {
     var s = size || 32;
-    var mark = '<svg viewBox="0 0 32 32" width="' + s + '" height="' + s + '" aria-hidden="true"><path d="' + LOGO_TAG + '" fill="currentColor" fill-rule="evenodd"/><path d="' + LOGO_TWINE + '" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="2.2 2"/></svg>';
+    var arch = '#f1e5cb', art = '#2f4a2a', stripe = '#a8402b', ground = '#a8402b';
+    var parts = '<path d="' + LOGO_ARCH + '" fill="' + arch + '"/>';
+    for (var i = 0; i < LOGO_STRIPES.length; i++) {
+      var a = LOGO_STRIPES[i][0], b = LOGO_STRIPES[i][1];
+      parts += '<path d="M' + a + ' 22H' + b + 'v18a6.4 6.4 0 0 1-12.8 0Z" fill="' + (i % 2 === 0 ? stripe : arch) + '"/>';
+    }
+    parts += '<path d="M28 68C23 63 21 56 23 50c6 4 9 10 8 18Z" fill="' + art + '"/>' +
+      '<path d="M36 68c-4-5-4-13 1-18 5 5 5 13 2 18Z" fill="' + art + '"/>' +
+      '<circle cx="52" cy="59" r="9" fill="#e8b33c"/>' +
+      '<path d="M64 68c0-6 4-10 7-10s7 4 7 10Z" fill="' + art + '"/>' +
+      '<rect x="17" y="68" width="62" height="9" rx="4.5" fill="' + art + '"/>' +
+      '<rect x="23" y="77" width="6" height="8" rx="3" fill="' + art + '"/>' +
+      '<rect x="67" y="77" width="6" height="8" rx="3" fill="' + art + '"/>' +
+      '<rect x="16" y="87" width="64" height="5" rx="2.5" fill="' + ground + '"/>';
+    var mark = '<svg viewBox="0 0 96 96" width="' + s + '" height="' + s + '" aria-hidden="true" style="display:block;flex:none">' + parts + '</svg>';
     var word = markOnly ? '' : '<span class="ml-logo-word">MarketLink</span>';
     return href ? '<a class="ml-logo" href="' + href + '" aria-label="MarketLink — home">' + mark + word + '</a>' : '<span class="ml-logo">' + mark + word + '</span>';
   };
@@ -256,7 +272,7 @@
       ['Sell', [sell, ['Stall guidelines', 'public/about.html']]],
       ['MarketLink', [['About us', 'public/about.html'], ['Contact us', 'public/contact.html'], ['Feedback & bug reports', 'public/feedback.html'], ['Terms of service', 'public/terms.html'], ['Privacy policy', 'public/privacy.html'], ['Sitemap', '../index.html']]],
     ];
-    return '<footer class="ml-footer"><div class="ml-footer-in"><div>' + PT.logo(30) + '<p>Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.</p></div>' +
+    return '<footer class="ml-footer"><div class="ml-footer-in"><div>' + PT.logo(30) + '<p class="ml-slogan">Still there when you get there</p>' + '<p>Pre-order from your local farmers market, pick up at the stall. Pay the Farmer directly at pickup.</p></div>' +
       cols.map(function (c) { return '<div><h2>' + c[0] + '</h2><ul>' + c[1].map(function (l) { return '<li><a href="' + (l[1].indexOf('..') === 0 ? l[1] : link(l[1])) + '">' + l[0] + '</a></li>'; }).join('') + '</ul></div>'; }).join('') +
       '<div class="ml-footer-base"><span>© 2026 MarketLink · TechWiz 7</span><span>Map data © OpenStreetMap contributors</span></div></div></footer>';
   };

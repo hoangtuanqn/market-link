@@ -14,6 +14,7 @@ import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ScheduleRow;
 import com.techx.intervue.modules.chat.resources.ParsedMessage;
 import com.techx.intervue.modules.chat.services.interfaces.ChatServiceInterface;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.Clock;
@@ -62,6 +63,7 @@ public class ChatService implements ChatServiceInterface {
     private final ChatKnowledgeRepository knowledge;
     private final ChatMessageRepository messages;
     private final Clock clock;
+    private final ProductAvailabilityResolver availability;
 
     private record Answer(ChatIntent intent, String reply, List<ChatResultItem> results) {}
 
@@ -172,13 +174,26 @@ public class ChatService implements ChatServiceInterface {
                                 + "\""
                                 + where
                                 + ":");
+        // Per-date stock (FR-063): price and stock are those of the nearest pickup date that still
+        // has stock, the same numbers the product pages show — products.price / stock_quantity are
+        // only the Farmer's reference values now
+        Map<Long, ProductAvailabilityResolver.Availability> resolved =
+                availability.resolve(
+                        products.stream()
+                                .collect(
+                                        Collectors.toMap(
+                                                ProductRow::productId,
+                                                ProductRow::price,
+                                                (a, b) -> a)));
         List<ChatResultItem> results = new ArrayList<>();
         for (ProductRow p : products) {
-            String priceUnit = formatPrice(p.price()) + "/" + p.unit();
+            ProductAvailabilityResolver.Availability a = resolved.get(p.productId());
+            int left = a == null ? 0 : a.quantity();
+            String priceUnit = formatPrice(a == null ? p.price() : a.price()) + "/" + p.unit();
             String stock =
-                    "sold_out".equals(p.status()) || p.stockQuantity() == 0
+                    "sold_out".equals(p.status()) || left == 0
                             ? "sold out"
-                            : p.stockQuantity() + " " + p.unit() + " left";
+                            : left + " " + p.unit() + " left";
             String markets =
                     p.marketNames().isEmpty()
                             ? ""
