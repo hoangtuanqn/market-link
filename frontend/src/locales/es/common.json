@@ -270,7 +270,15 @@
     "cancel": "Cancelar pedido",
     "reviewed": "Ya reseñaste este pedido",
     "review": "Reseñar puesto y productos",
-    "reorder": "Volver a pedir"
+    "reorder": "Volver a pedir",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "Realizado",
@@ -454,6 +462,8 @@
     "photoAlt": "Foto de la solicitud {{n}}"
   },
   "notify": {
+    "notificationsEmpty": "Todavía no hay notificaciones.",
+    "notificationsError": "No se pudieron cargar las notificaciones.",
     "open": "Abrir",
     "prompt": {
       "title": "Activar las notificaciones",
@@ -529,8 +539,6 @@
     "admin": {
       "title": "Notificaciones",
       "intro": "Nuevas solicitudes de Farmer esperando tu revisión."
-    },
-    "notificationsEmpty": "Todavía no hay notificaciones.",
-    "notificationsError": "No se pudieron cargar las notificaciones."
+    }
   }
 }

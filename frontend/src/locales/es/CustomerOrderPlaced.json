@@ -1,4 +1,5 @@
 {
+  "noun": "placed orders",
   "title_one": "{{count}} pedido realizado",
   "title_other": "{{count}} pedidos realizados",
   "intro": "Cada puesto revisa ahora su pedido. Recibirás una notificación cuando se acepte y otra cuando esté listo para recoger. Los productos ya están reservados para ti.",

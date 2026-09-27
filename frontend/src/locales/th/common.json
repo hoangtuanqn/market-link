@@ -69,6 +69,7 @@
     "tryAgain": "ลองอีกครั้ง",
     "noThreadsTitle": "ยังไม่มีการสนทนา",
     "noThreadsText": "ส่งข้อความถึงร้านจากหน้าร้านเพื่อถามเรื่องผลผลิตสัปดาห์นี้",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "ข้อความที่ยังไม่อ่าน {{count}} ข้อความ",
     "sendFailed": "ส่งข้อความไม่สำเร็จ ลองอีกครั้ง",
     "photoFailed": "ส่งรูปไม่สำเร็จ เลือกไฟล์ JPEG, PNG หรือ WebP ที่เล็กกว่า 5 MB",
@@ -112,6 +113,7 @@
       "other": "เหตุผลอื่น"
     },
     "reportNote": "เล่าเพิ่มเติม (ไม่บังคับ)",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "เหลือ {{count}} ตัวอักษร",
     "chooseReason": "เลือกเหตุผลเพื่อส่งรายงาน",
     "report": "รายงาน",
@@ -198,6 +200,7 @@
     "openMenu": "เปิดเมนู",
     "search": "ค้นหา",
     "seeAll": "ดูทั้งหมด",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "ข้อความ ยังไม่อ่าน {{count}}"
   },
   "kpi": {
@@ -267,7 +270,15 @@
     "cancel": "ยกเลิกคำสั่งซื้อ",
     "reviewed": "คุณรีวิวคำสั่งซื้อนี้แล้ว",
     "review": "รีวิวแผงและสินค้า",
-    "reorder": "สั่งซื้ออีกครั้ง"
+    "reorder": "สั่งซื้ออีกครั้ง",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "สั่งแล้ว",
@@ -451,6 +462,8 @@
     "photoAlt": "รูปจากการสมัครครั้งที่ {{n}}"
   },
   "notify": {
+    "notificationsEmpty": "ยังไม่มีการแจ้งเตือน",
+    "notificationsError": "โหลดการแจ้งเตือนไม่ได้",
     "open": "เปิด",
     "prompt": {
       "title": "เปิดการแจ้งเตือน",
@@ -526,8 +539,6 @@
     "admin": {
       "title": "การแจ้งเตือน",
       "intro": "ใบสมัคร Farmer ใหม่ที่รอคุณตรวจสอบ"
-    },
-    "notificationsEmpty": "ยังไม่มีการแจ้งเตือน",
-    "notificationsError": "โหลดการแจ้งเตือนไม่ได้"
+    }
   }
 }

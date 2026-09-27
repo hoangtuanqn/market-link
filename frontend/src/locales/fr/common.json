@@ -270,7 +270,15 @@
     "cancel": "Annuler la commande",
     "reviewed": "Vous avez donné votre avis sur cette commande",
     "review": "Évaluer le stand et les produits",
-    "reorder": "Commander à nouveau"
+    "reorder": "Commander à nouveau",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "Passée",
@@ -454,6 +462,8 @@
     "photoAlt": "Photo de la demande {{n}}"
   },
   "notify": {
+    "notificationsEmpty": "Aucune notification pour l’instant.",
+    "notificationsError": "Impossible de charger les notifications.",
     "open": "Ouvrir",
     "prompt": {
       "title": "Activer les notifications",
@@ -529,8 +539,6 @@
     "admin": {
       "title": "Notifications",
       "intro": "Les nouvelles demandes Farmer en attente de votre examen."
-    },
-    "notificationsEmpty": "Aucune notification pour l’instant.",
-    "notificationsError": "Impossible de charger les notifications."
+    }
   }
 }

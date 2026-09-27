@@ -69,6 +69,7 @@
     "tryAgain": "Coba lagi",
     "noThreadsTitle": "Belum ada percakapan",
     "noThreadsText": "Kirim pesan ke lapak dari halamannya untuk menanyakan hasil panen minggu ini.",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} pesan belum dibaca",
     "sendFailed": "Pesan Anda tidak terkirim. Coba lagi.",
     "photoFailed": "Foto tidak terkirim. Pilih JPEG, PNG, atau WebP di bawah 5 MB.",
@@ -112,6 +113,7 @@
       "other": "Alasan lain"
     },
     "reportNote": "Ceritakan lebih lanjut (opsional)",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "Sisa {{count}} karakter",
     "chooseReason": "Pilih alasan untuk mengirim laporan.",
     "report": "Laporkan",
@@ -198,6 +200,7 @@
     "openMenu": "Buka menu",
     "search": "Cari",
     "seeAll": "Lihat semua",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "Pesan, {{count}} belum dibaca"
   },
   "kpi": {
@@ -267,7 +270,15 @@
     "cancel": "Batalkan pesanan",
     "reviewed": "Anda sudah mengulas pesanan ini",
     "review": "Ulas lapak & produk",
-    "reorder": "Pesan lagi"
+    "reorder": "Pesan lagi",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "Dipesan",
@@ -451,6 +462,8 @@
     "photoAlt": "Foto dari lamaran ke-{{n}}"
   },
   "notify": {
+    "notificationsEmpty": "Belum ada notifikasi.",
+    "notificationsError": "Notifikasi tidak dapat dimuat.",
     "open": "Buka",
     "prompt": {
       "title": "Aktifkan notifikasi",
@@ -526,8 +539,6 @@
     "admin": {
       "title": "Notifikasi",
       "intro": "Pendaftaran Farmer baru yang menunggu Anda tinjau."
-    },
-    "notificationsEmpty": "Belum ada notifikasi.",
-    "notificationsError": "Notifikasi tidak dapat dimuat."
+    }
   }
 }

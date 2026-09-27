@@ -14,9 +14,8 @@
     "reason": "เหตุผลที่ลูกค้าจะเห็น"
   },
   "history": {
-    "before": "ก่อน {{cutoff}}",
-    "cancelled": "ลูกค้ายกเลิก",
-    "title": "ประวัติ"
+    "title": "ประวัติ",
+    "by": "{{time}} · by {{by}}"
   },
   "missing": {
     "title": "ไม่พบคำสั่งซื้อนี้แล้ว",
@@ -24,10 +23,10 @@
     "back": "คำสั่งซื้อของฉัน"
   },
   "item": "สินค้า",
+  "noun": "order",
   "col": {
     "product": "สินค้า",
     "requested": "จำนวนที่สั่ง",
-    "left": "คงเหลือหลังคำสั่งซื้อนี้",
     "amount": "จำนวนเงิน"
   },
   "crumb": "คำสั่งซื้อ",
@@ -50,25 +49,19 @@
   },
   "items": {
     "title": "รายการสินค้า",
-    "note": "สต็อกที่แสดงคือจำนวนคงเหลือหลังหักคำสั่งซื้อนี้และคำสั่งซื้ออื่นแล้ว หากคุณปฏิเสธ สต็อกที่จองไว้จะคืนกลับมา (D-02)"
+    "total": "Total"
   },
   "note": "หมายเหตุจากลูกค้า",
   "quote": "“{{text}}”",
   "customer": {
     "title": "ลูกค้า",
     "name": "ชื่อ",
-    "tier": "ระดับ",
     "phone": "โทรศัพท์",
-    "ordersWithYou": "คำสั่งซื้อกับคุณ",
-    "orders_one": "{{count}} คำสั่งซื้อ",
-    "orders_other": "{{count}} คำสั่งซื้อ",
-    "withCollected_one": "{{orders}} รับแล้ว {{count}}",
-    "withCollected_other": "{{orders}} รับแล้ว {{count}}"
+    "email": "Email"
   },
   "pickup": {
     "title": "ช่วงเวลารับสินค้า",
     "market": "ตลาด",
-    "marketStall": "{{market}} ร้าน {{code}}",
     "slot": "ช่วงเวลา",
     "pay": "ชำระเมื่อรับสินค้า"
   },

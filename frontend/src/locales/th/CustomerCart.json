@@ -5,15 +5,33 @@
   "stalls_one": "{{count}} ร้าน",
   "stalls_other": "{{count}} ร้าน",
   "intro": "{{products}} จาก {{stalls}} เลือกเวลารับสินค้าของแต่ละร้าน แล้วสั่งซื้อ",
+  "empty": {
+    "title": "Your cart is empty",
+    "text": "Add products from a stall's page and they show up here, split by stall.",
+    "cta": "Browse products"
+  },
+  "noun": "cart",
+  "slotsNoun": "pickup times",
   "split": {
-    "title": "ตะกร้าของคุณจะแยกเป็น 2 คำสั่งซื้อจาก 2 ร้านที่ต่างกัน",
+    "title_one": "Your cart will be split into {{count}} order at {{count}} stall.",
+    "title_other": "Your cart will be split into {{count}} orders at {{count}} stalls.",
     "text": "แต่ละร้านมีเวลารับสินค้าและเวลาปิดรับคำสั่งซื้อของตัวเอง และรับคำสั่งซื้อแยกกัน คุณชำระเงินให้แต่ละร้านตอนรับสินค้า"
+  },
+  "market": "Market",
+  "noSlots": {
+    "title": "No pickup times yet",
+    "text": "This stall has not opened any pickup slots for this market. Try again later or remove this stall's items."
+  },
+  "problem": {
+    "out_of_stock": "One or more items have less stock than you asked for.",
+    "sold_out": "One or more items are sold out.",
+    "unavailable": "One or more items are no longer for sale.",
+    "stall_suspended": "This stall is not taking orders right now."
   },
   "changeTime": "เปลี่ยนเวลารับสินค้าที่ {{stall}}",
   "pickupDay": "วันรับสินค้า",
   "pickupDayAt": "วันรับสินค้าที่ {{stall}}",
   "pickupTime": "เวลารับสินค้า · {{day}} {{date}} · ช่วง {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} ปิดรับคำสั่งซื้อ {{hours}} ชั่วโมงก่อนช่วงเวลารับ สำหรับ {{slot}} {{slotDay}} จะปิดเวลา {{cutoff}} {{cutoffDay}}",
   "summary": {
     "title": "ชำระเงินที่ร้านตอนรับสินค้า",
     "order": "คำสั่งซื้อ {{n}} · {{stall}}",
@@ -23,8 +41,11 @@
     "label": "หมายเหตุถึงร้าน",
     "placeholder": "เช่น ขอกำเล็กลงหน่อย"
   },
-  "place": "สั่งซื้อ 2 รายการ",
-  "ready": "ทั้งสองร้านมีเวลารับสินค้าแล้ว แต่ละร้านจะยืนยันคำสั่งซื้อของตัวเอง",
+  "place_one": "Place {{count}} order",
+  "place_other": "Place {{count}} orders",
+  "placing": "Placing your orders…",
+  "ready_one": "Your stall has a pickup time. It confirms your order.",
+  "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "เลือกเวลารับสินค้าที่ {{stall}} เพื่อสั่งซื้อ",
   "stockNote": "สต็อกจะถูกหักจากจำนวนของร้านทันทีที่คุณสั่งซื้อ ไม่มีการชำระเงินออนไลน์"
 }

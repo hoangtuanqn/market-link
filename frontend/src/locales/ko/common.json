@@ -69,6 +69,7 @@
     "tryAgain": "다시 시도",
     "noThreadsTitle": "아직 대화가 없습니다",
     "noThreadsText": "가게 페이지에서 메시지를 보내 이번 주 농산물에 대해 물어보세요.",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "읽지 않은 메시지 {{count}}개",
     "sendFailed": "메시지를 보내지 못했습니다. 다시 시도하세요.",
     "photoFailed": "사진을 보내지 못했습니다. 5 MB 이하의 JPEG, PNG, WebP를 선택하세요.",
@@ -112,6 +113,7 @@
       "other": "기타"
     },
     "reportNote": "자세히 알려 주세요 (선택)",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "{{count}}자 남음",
     "chooseReason": "신고하려면 이유를 선택하세요.",
     "report": "신고",
@@ -198,6 +200,7 @@
     "openMenu": "메뉴 열기",
     "search": "검색",
     "seeAll": "모두 보기",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "메시지, 읽지 않음 {{count}}"
   },
   "kpi": {
@@ -267,7 +270,15 @@
     "cancel": "주문 취소",
     "reviewed": "이 주문에 리뷰를 남겼어요",
     "review": "매대 및 상품 리뷰하기",
-    "reorder": "다시 주문"
+    "reorder": "다시 주문",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "주문됨",
@@ -451,6 +462,8 @@
     "photoAlt": "{{n}}번째 신청의 사진"
   },
   "notify": {
+    "notificationsEmpty": "아직 알림이 없습니다.",
+    "notificationsError": "알림을 불러오지 못했습니다.",
     "open": "열기",
     "prompt": {
       "title": "알림 켜기",
@@ -526,8 +539,6 @@
     "admin": {
       "title": "알림",
       "intro": "검토를 기다리는 새 Farmer 신청입니다."
-    },
-    "notificationsEmpty": "아직 알림이 없습니다.",
-    "notificationsError": "알림을 불러오지 못했습니다."
+    }
   }
 }

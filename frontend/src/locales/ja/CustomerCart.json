@@ -5,15 +5,33 @@
   "stalls_one": "{{count}} 店",
   "stalls_other": "{{count}} 店",
   "intro": "{{stalls}}の{{products}}。お店ごとに受け取り時間を選んでから、注文してください。",
+  "empty": {
+    "title": "Your cart is empty",
+    "text": "Add products from a stall's page and they show up here, split by stall.",
+    "cta": "Browse products"
+  },
+  "noun": "cart",
+  "slotsNoun": "pickup times",
   "split": {
-    "title": "カートは 2 つのお店で 2 件の注文に分かれます。",
+    "title_one": "Your cart will be split into {{count}} order at {{count}} stall.",
+    "title_other": "Your cart will be split into {{count}} orders at {{count}} stalls.",
     "text": "お店ごとに受け取り時間と締め切りがあり、注文も別々に受け付けます。お支払いは受け取り時に各お店で行います。"
+  },
+  "market": "Market",
+  "noSlots": {
+    "title": "No pickup times yet",
+    "text": "This stall has not opened any pickup slots for this market. Try again later or remove this stall's items."
+  },
+  "problem": {
+    "out_of_stock": "One or more items have less stock than you asked for.",
+    "sold_out": "One or more items are sold out.",
+    "unavailable": "One or more items are no longer for sale.",
+    "stall_suspended": "This stall is not taking orders right now."
   },
   "changeTime": "{{stall}} の受け取り時間を変更",
   "pickupDay": "受け取り日",
   "pickupDayAt": "{{stall}} の受け取り日",
   "pickupTime": "受け取り時間 · {{day}} {{date}} · 受付 {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} は受け取り枠の {{hours}} 時間前に注文を締め切ります。{{slotDay}} {{slot}} の枠なら、締め切りは {{cutoffDay}} {{cutoff}} です。",
   "summary": {
     "title": "受け取り時にお店で支払い",
     "order": "注文 {{n}} · {{stall}}",
@@ -23,8 +41,11 @@
     "label": "お店へのメモ",
     "placeholder": "例：束を小さめにしてください"
   },
-  "place": "2 件の注文を確定",
-  "ready": "両方のお店で受け取り時間が決まりました。注文はお店ごとに確認されます。",
+  "place_one": "Place {{count}} order",
+  "place_other": "Place {{count}} orders",
+  "placing": "Placing your orders…",
+  "ready_one": "Your stall has a pickup time. It confirms your order.",
+  "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "注文するには {{stall}} の受け取り時間を選んでください。",
   "stockNote": "注文した時点で、在庫はお店の数量から差し引かれます。オンライン決済はありません。"
 }

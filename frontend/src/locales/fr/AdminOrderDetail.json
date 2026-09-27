@@ -1,5 +1,6 @@
 {
   "allOrders": "Commandes",
+  "noun": "order",
   "kicker": "Passée le {{placed}} · clôture le {{cutoff}}",
   "missing": {
     "title": "Cette commande n'existe plus",
@@ -13,6 +14,7 @@
     "title": "Articles",
     "note": "Les prix sont ceux affichés par l'étal au moment de la commande. Aucun argent ne transite par MarketLink ; le client paie à l'étal."
   },
+  "declined": "Declined: {{reason}}",
   "history": {
     "title": "Tous les statuts traversés",
     "by": "{{time}} · {{by}}",
@@ -21,22 +23,14 @@
   "stall": {
     "title": "L'étal",
     "stall": "Étal",
-    "contact": "Contact",
-    "approval": "Approbation",
     "record": "Fiche de l'étal"
-  },
-  "approval": {
-    "pending": "En attente d'approbation",
-    "approved": "Approuvé",
-    "rejected": "Refusé",
-    "suspended": "Suspendu"
   },
   "customer": {
     "title": "Le client",
     "name": "Nom",
     "phone": "Téléphone",
-    "orders": "Commandes sur MarketLink",
-    "record": "Fiche du client"
+    "record": "Fiche du client",
+    "hidden": "Contact details are only shown to the order's own stall."
   },
   "pickup": {
     "title": "Retrait",

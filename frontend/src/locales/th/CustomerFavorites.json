@@ -2,41 +2,56 @@
   "title": "รายการโปรด",
   "intro": "รายการที่อยากได้ของคุณ: สินค้าที่อยากซื้อครั้งหน้า ร้านที่กลับไปซื้อบ่อย และตลาดที่คุณไปประจำ รายการโปรดที่หมดจะแจ้งเมื่อมีของอีกครั้ง",
   "findMore": "หาเพิ่มเพื่อบันทึก",
+  "loading": "Loading your favorites…",
   "tabs": {
     "label": "รายการที่บันทึก",
     "products": "สินค้า",
     "stalls": "ร้าน",
     "markets": "ตลาด"
   },
-  "banner": {
-    "title": "หนึ่งในสี่สินค้าที่คุณบันทึกไว้หมดแล้ว",
-    "text": "เปิดการแจ้งเตือนของเข้าแล้ว คุณจะได้รับการแจ้งเตือนทันทีที่ร้านลงขายอีกครั้ง"
-  },
   "filters": {
     "all": "ทั้งหมด",
     "inStock": "มีของตอนนี้",
     "soldOut": "หมด",
-    "priceDropped": "ลดราคา"
+    "emptyTitle": "Nothing matches this filter",
+    "emptyText": "Try a different filter to see the rest of your saved products."
   },
+  "inStock": "In stock",
   "soldOut": "หมด",
-  "left": "เหลือ {{qty}}",
+  "unavailable": "No longer available",
   "alertOn": "เปิดการแจ้งเตือนแล้ว",
   "addToCart": "ใส่ตะกร้า",
   "remove": "ลบ",
-  "addInStock_one": "ใส่สินค้าที่มีของ {{count}} รายการลงตะกร้า",
-  "addInStock_other": "ใส่สินค้าที่มีของ {{count}} รายการลงตะกร้า",
+  "viewStall": "View stall",
   "toast": {
-    "alertTitle": "แจ้งเตือนของเข้า",
-    "alertOff": "ปิดการแจ้งเตือนของ {{name}} แล้ว",
     "addedTitle": "ใส่ตะกร้าแล้ว",
     "added": "ใส่ {{name}} ลงตะกร้าแล้ว",
-    "addedMany_one": "ใส่สินค้า {{count}} รายการลงตะกร้าแล้ว จะแยกตามร้านตอนสั่งซื้อ",
-    "addedMany_other": "ใส่สินค้า {{count}} รายการลงตะกร้าแล้ว จะแยกตามร้านตอนสั่งซื้อ",
     "removedTitle": "ลบแล้ว",
     "removed": "ลบ {{name}} ออกจากรายการโปรดแล้ว"
   },
   "holdNote": "การบันทึกสินค้าไม่ได้จองสต็อกไว้ จะจองเมื่อคุณสั่งซื้อเท่านั้น",
   "stallsNote": "ร้านที่คุณบันทึกไว้ พร้อมสิ่งที่แต่ละร้านนำมาสุดสัปดาห์นี้",
-  "thisWeek": "สัปดาห์นี้",
-  "marketsNote": "ตลาดที่บันทึกไว้จะแสดงก่อนในรายการและบนแผนที่ และเส้นทางไปยังร้านในตลาดจะเริ่มจากที่อยู่ที่คุณบันทึกไว้"
+  "marketsNote": "ตลาดที่บันทึกไว้จะแสดงก่อนในรายการและบนแผนที่ และเส้นทางไปยังร้านในตลาดจะเริ่มจากที่อยู่ที่คุณบันทึกไว้",
+  "error": {
+    "products": "saved products",
+    "stalls": "saved stalls",
+    "markets": "saved markets"
+  },
+  "empty": {
+    "products": {
+      "title": "No saved products yet",
+      "text": "Save a product from its page to find it here, with a restock alert if it ever sells out.",
+      "browse": "Browse products"
+    },
+    "stalls": {
+      "title": "No saved stalls yet",
+      "text": "Save a stall from its page to keep it here for next time.",
+      "browse": "Browse markets"
+    },
+    "markets": {
+      "title": "No saved markets yet",
+      "text": "Save a market from its page to keep it here for next time.",
+      "browse": "Browse markets"
+    }
+  }
 }

@@ -1,6 +1,7 @@
 {
   "title": "Pelanggan",
   "intro": "Nonaktifkan akun bila melanggar aturan; akun itu tidak bisa masuk atau memesan lagi. Aktifkan kembali setelah beres. Pesanan lamanya tetap ada pada lapak.",
+  "noun": "customers",
   "search": {
     "label": "Cari pelanggan",
     "placeholder": "Nama, email, atau telepon",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "Semua",
     "active": "Aktif",
-    "inactive": "Dinonaktifkan",
-    "joinedThisMonth": "Bergabung bulan ini"
+    "inactive": "Dinonaktifkan"
   },
   "status": {
     "active": "Aktif",
     "inactive": "Dinonaktifkan"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "Pelanggan",
     "joined": "Bergabung",
@@ -36,11 +37,19 @@
     "title": "Nonaktifkan {{name}}?",
     "text": "Dia keluar dari semua perangkat dan tidak bisa masuk atau memesan. Pesanan yang sudah dibuat tetap ada pada lapak.",
     "reason": "Alasan, tersimpan pada akun",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Biarkan aktif",
     "confirm": "Nonaktifkan akun"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "{{name}} dinonaktifkan.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} bisa masuk lagi."
   }
 }

@@ -69,6 +69,7 @@
     "tryAgain": "Thử lại",
     "noThreadsTitle": "Chưa có cuộc trò chuyện nào",
     "noThreadsText": "Vào trang một sạp rồi nhắn cho họ để hỏi hàng tuần này.",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} tin chưa đọc",
     "sendFailed": "Tin nhắn chưa gửi được. Thử lại nhé.",
     "photoFailed": "Ảnh chưa gửi được. Chọn ảnh JPEG, PNG hoặc WebP dưới 5 MB.",
@@ -112,6 +113,7 @@
       "other": "Lý do khác"
     },
     "reportNote": "Kể thêm (không bắt buộc)",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "Còn {{count}} ký tự",
     "chooseReason": "Chọn một lý do để gửi báo cáo.",
     "report": "Báo cáo",
@@ -198,6 +200,7 @@
     "openMenu": "Mở menu",
     "search": "Tìm kiếm",
     "seeAll": "Xem tất cả",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "Tin nhắn, {{count}} chưa đọc"
   },
   "kpi": {
@@ -459,6 +462,8 @@
     "photoAlt": "Ảnh của lần nộp {{n}}"
   },
   "notify": {
+    "notificationsEmpty": "Chưa có thông báo nào.",
+    "notificationsError": "Không tải được thông báo.",
     "open": "Mở",
     "prompt": {
       "title": "Bật thông báo",
@@ -534,8 +539,6 @@
     "admin": {
       "title": "Thông báo",
       "intro": "Các đơn đăng ký nhà vườn mới đang chờ bạn duyệt."
-    },
-    "notificationsEmpty": "Chưa có thông báo nào.",
-    "notificationsError": "Không tải được thông báo."
+    }
   }
 }

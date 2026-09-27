@@ -1,6 +1,7 @@
 {
   "title": "고객",
   "intro": "정책을 어기면 계정을 정지할 수 있습니다. 정지되면 로그인도 주문도 못 합니다. 해결되면 다시 풀어 주세요. 지난 주문은 가게 쪽에 그대로 남습니다.",
+  "noun": "customers",
   "search": {
     "label": "고객 검색",
     "placeholder": "이름, 이메일 또는 전화번호",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "전체",
     "active": "정상",
-    "inactive": "정지됨",
-    "joinedThisMonth": "이번 달 가입"
+    "inactive": "정지됨"
   },
   "status": {
     "active": "정상",
     "inactive": "정지됨"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "고객",
     "joined": "가입일",
@@ -36,11 +37,19 @@
     "title": "{{name}} 님을 정지할까요?",
     "text": "모든 기기에서 로그아웃되고 로그인도 주문도 할 수 없습니다. 이미 넣은 주문은 가게 쪽에 그대로 남습니다.",
     "reason": "사유, 계정에 기록됩니다",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "정상 유지",
     "confirm": "계정 정지"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "{{name}} 님을 정지했습니다.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} 님이 다시 로그인할 수 있습니다."
   }
 }

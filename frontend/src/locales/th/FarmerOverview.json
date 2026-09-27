@@ -27,13 +27,9 @@
     "status": "สถานะ"
   },
   "toast": {
-    "acceptedTitle": "รับคำสั่งซื้อแล้ว",
     "acceptedText": "รับคำสั่งซื้อ {{code}} แล้ว แจ้ง {{who}} แล้ว",
-    "readyTitle": "คำสั่งซื้อพร้อมแล้ว",
     "readyText": "ทำเครื่องหมายคำสั่งซื้อ {{code}} ว่าพร้อมแล้ว",
-    "completedTitle": "คำสั่งซื้อเสร็จสิ้น",
     "completedText": "คำสั่งซื้อ {{code}} เสร็จสิ้นแล้ว",
-    "declinedTitle": "ปฏิเสธคำสั่งซื้อแล้ว",
     "declinedText": "ปฏิเสธคำสั่งซื้อ {{code}} แล้ว สินค้ากลับเข้าสต็อกแล้ว"
   },
   "actions": {
@@ -43,11 +39,6 @@
     "complete": "ทำเครื่องหมายว่าเสร็จ",
     "view": "ดู"
   },
-  "captions": {
-    "new": "สั่งแล้ว · {{sat}} และ {{sun}}",
-    "ready": "พร้อมให้รับ"
-  },
-  "overline": "ร้านของคุณที่ {{market}} · วันตลาดถัดไป {{day}}",
   "greeting": "อรุณสวัสดิ์ {{name}}",
   "applyTemplate": "ใช้เทมเพลตรายสัปดาห์",
   "addProduct": "เพิ่มสินค้า",
@@ -57,36 +48,39 @@
     "text": "คำสั่งซื้อที่ยังไม่อนุมัติยังคงจองสต็อกไว้ รับหรือปฏิเสธก่อนเวลาปิดรับ เพื่อให้ลูกค้าวางแผนได้"
   },
   "kpi": {
+    "noun": "your numbers",
     "orders": "คำสั่งซื้อทั้งหมด",
-    "ordersNote_one": "{{count}} รายการสัปดาห์นี้",
-    "ordersNote_other": "{{count}} รายการสัปดาห์นี้",
-    "vsAugust": "เทียบกับสิงหาคม",
     "openHistory": "เปิดประวัติการขาย",
-    "awaitingNote_one": "<b>{{count}}</b> รายการปิดรับเวลา {{time}} วันที่ {{date}}",
-    "awaitingNote_other": "<b>{{count}}</b> รายการปิดรับเวลา {{time}} วันที่ {{date}}",
-    "vsThursday": "เทียบกับวันพฤหัสบดีปกติ",
+    "pending": "Awaiting you",
     "openIncoming": "เปิดคำสั่งซื้อที่เข้ามา",
     "revenue": "รายได้เดือนกันยายน",
-    "revenueNote": "₫ จากคำสั่งซื้อที่เสร็จสิ้น ชำระที่ร้าน",
-    "best": "ขายดีที่สุด",
-    "bestNote": "{{qty}} เดือนนี้",
-    "openProducts": "เปิดสินค้า",
-    "note": "กันยายนจนถึงตอนนี้ เทียบกับสิงหาคม แต่ละช่องเปิดหน้าจอที่อยู่เบื้องหลังตัวเลขนั้น"
+    "revenueMonth": "Revenue this month"
   },
   "incoming": {
     "title": "คำสั่งซื้อที่เข้ามา",
     "all": "คำสั่งซื้อทั้งหมดและตัวกรอง",
-    "note": "คำสั่งซื้อใหม่จะถูกไฮไลต์จนกว่าคุณจะเปิดดู"
+    "noun": "incoming orders",
+    "empty": {
+      "title": "Nothing here",
+      "text": "Orders in this status will show up here."
+    }
   },
   "stock": {
     "title": "สต็อกสำหรับ{{day}}",
     "link": "สต็อกสัปดาห์นี้",
-    "note": "จองแล้วหมายถึงมีคำสั่งซื้อจองไว้ จำนวนนี้จะถูกหักจากสต็อกทันทีที่ลูกค้าสั่ง"
+    "noun": "stock",
+    "empty": {
+      "title": "No products yet",
+      "text": "Add a product to see its stock here."
+    }
   },
   "best": {
     "title": "สินค้าขายดี",
     "link": "ประวัติการขาย",
-    "note": "ขายในเดือนกันยายน แต่ละรายการตามหน่วยของตัวเอง"
-  },
-  "protoNote": "แถบด้านข้างและส่วนหัวด้านบนเป็นส่วนใหม่เมื่อเทียบกับต้นแบบ"
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold yet",
+      "text": "Your best-selling products will show up here once orders complete."
+    }
+  }
 }

@@ -7,23 +7,24 @@
   "message": "メッセージ",
   "placeholder": "例：土曜日に Thảo Điền で卵を売っているのは？",
   "send": "送信",
-  "reply": {
-    "greeting": "こんにちは、{{name}} さん。今週末に何があるか、市場がいつ開くかを聞いてください。",
-    "pomelo": "{{day}} {{date}} は、2 店が青皮ザボンを扱っています：Thủ Đức Farmers Market の <b>Út Hiền Orchard</b>（残り 2 個、{{price1}}）と Thảo Điền Weekend Market の <b>Ba Lành Farm</b>（残り 9 個、{{price2}}）。",
-    "slots": "Út Hiền Orchard の受け取りは {{day}} {{date}} {{from}} – {{to}}、Thủ Đức Farmers Market です。空き枠：{{free}}。{{full}} の枠は満員です。注文は枠の 12 時間前に締め切ります。",
-    "unknown": "すみません、よく分かりませんでした。商品名、市場名、お店の名前で試してください。"
-  },
-  "question": {
-    "pomeloMorning": "土曜の朝、青皮ザボンがある市場は？"
-  },
+  "sending": "Sending…",
+  "error": "Something went wrong. Try again in a moment.",
+  "loading": "Loading your conversation…",
+  "loadErrorTitle": "We could not load your conversation history",
+  "loadErrorText": "Check your connection and try again.",
+  "retry": "Try again",
+  "emptyTitle": "No messages yet",
+  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
   "suggest": {
-    "pomeloSat": "土曜日に青皮ザボンはどこで買えますか？",
-    "baChieuOpen": "Bà Chiểu Green Market はいつ開きますか？",
-    "showMap": "2 店を地図で表示",
-    "slotsUtHien": "Út Hiền の受け取り時間",
-    "addPomelos": "ザボン 2 個をカートに追加",
-    "directionsThuDuc": "Thủ Đức Farmers Market への道順",
-    "thaoDien": "土曜日の Thảo Điền には何がありますか？"
+    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
+    "pomeloStock": "có bưởi không",
+    "benThanhSat": "farmers at Ben Thanh on saturday",
+    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
+  },
+  "resultLink": {
+    "product": "View product: {{title}}",
+    "market": "View market: {{title}}",
+    "farmer": "View stall: {{title}}"
   },
   "canAnswer": {
     "title": "答えられること",

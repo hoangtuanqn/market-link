@@ -7,23 +7,24 @@
   "message": "Nachricht",
   "placeholder": "z. B. Wer hat am Samstag Eier in Thảo Điền?",
   "send": "Senden",
-  "reply": {
-    "greeting": "Hallo {{name}}. Fragen Sie mich, was es dieses Wochenende gibt oder wann ein Markt öffnet.",
-    "pomelo": "Am {{day}}, {{date}}, haben 2 Stände grünschalige Pomelo: <b>Út Hiền Orchard</b> auf dem Thủ Đức Farmers Market (noch 2, {{price1}}) und <b>Ba Lành Farm</b> auf dem Thảo Điền Weekend Market (noch 9, {{price2}}).",
-    "slots": "Bei Út Hiền Orchard ist die Abholung am {{day}}, {{date}}, von {{from}} bis {{to}} auf dem Thủ Đức Farmers Market. Freie Zeiten: {{free}}. Die Zeit {{full}} ist ausgebucht. Bestellschluss ist 12 Stunden vor der Abholzeit.",
-    "unknown": "Das habe ich nicht verstanden. Versuchen Sie einen Produkt-, Markt- oder Standnamen."
-  },
-  "question": {
-    "pomeloMorning": "Welcher Markt hat am Samstagmorgen grünschalige Pomelo?"
-  },
+  "sending": "Sending…",
+  "error": "Something went wrong. Try again in a moment.",
+  "loading": "Loading your conversation…",
+  "loadErrorTitle": "We could not load your conversation history",
+  "loadErrorText": "Check your connection and try again.",
+  "retry": "Try again",
+  "emptyTitle": "No messages yet",
+  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
   "suggest": {
-    "pomeloSat": "Wo bekomme ich am Samstag grünschalige Pomelo?",
-    "baChieuOpen": "Wann öffnet Bà Chiểu Green Market?",
-    "showMap": "Die 2 Stände auf der Karte zeigen",
-    "slotsUtHien": "Abholzeiten bei Út Hiền",
-    "addPomelos": "2 Pomelos in den Warenkorb legen",
-    "directionsThuDuc": "Route zum Thủ Đức Farmers Market",
-    "thaoDien": "Was gibt es am Samstag in Thảo Điền?"
+    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
+    "pomeloStock": "có bưởi không",
+    "benThanhSat": "farmers at Ben Thanh on saturday",
+    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
+  },
+  "resultLink": {
+    "product": "View product: {{title}}",
+    "market": "View market: {{title}}",
+    "farmer": "View stall: {{title}}"
   },
   "canAnswer": {
     "title": "Was er beantworten kann",

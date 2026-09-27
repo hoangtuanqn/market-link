@@ -270,7 +270,15 @@
     "cancel": "Bestellung stornieren",
     "reviewed": "Sie haben diese Bestellung bewertet",
     "review": "Stand & Produkte bewerten",
-    "reorder": "Erneut bestellen"
+    "reorder": "Erneut bestellen",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "Aufgegeben",
@@ -454,6 +462,8 @@
     "photoAlt": "Foto aus Antrag {{n}}"
   },
   "notify": {
+    "notificationsEmpty": "Noch keine Benachrichtigungen.",
+    "notificationsError": "Benachrichtigungen konnten nicht geladen werden.",
     "open": "Öffnen",
     "prompt": {
       "title": "Benachrichtigungen einschalten",
@@ -529,8 +539,6 @@
     "admin": {
       "title": "Benachrichtigungen",
       "intro": "Neue Farmer-Anträge, die auf Ihre Prüfung warten."
-    },
-    "notificationsEmpty": "Noch keine Benachrichtigungen.",
-    "notificationsError": "Benachrichtigungen konnten nicht geladen werden."
+    }
   }
 }

@@ -1,7 +1,9 @@
 {
   "title": "Pasar",
   "intro": "Nama, alamat, hari buka, jam, dan koordinat peta tiap pasar. Menghapus sebuah pasar menyembunyikannya dari pelanggan; riwayatnya tetap ada.",
+  "caption_one": "{{count}} active market",
   "caption_other": "{{count}} pasar aktif",
+  "stalls_one": "{{count}} stall",
   "stalls_other": "{{count}} lapak",
   "col": {
     "market": "Pasar",
@@ -28,6 +30,7 @@
   },
   "remove": {
     "title": "Hapus {{name}}?",
+    "text_one": "{{count}} stall sells here. The market disappears from customer pages and the stall is told. Orders already placed for it continue.",
     "text_other": "{{count}} lapak berjualan di sini. Pasar ini hilang dari halaman pelanggan dan lapak-lapaknya diberi tahu. Pesanan yang sudah masuk untuk pasar ini tetap berjalan.",
     "keep": "Pertahankan pasar",
     "confirm": "Hapus pasar"

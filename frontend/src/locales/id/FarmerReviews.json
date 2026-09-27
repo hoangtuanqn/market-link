@@ -4,6 +4,7 @@
   "summary": "Lapak {{stall}} · produk {{products}} · {{reviews}}",
   "reviewCount_one": "{{count}} ulasan",
   "reviewCount_other": "{{count}} ulasan",
+  "noun": "reviews",
   "filter": {
     "all": "Semua",
     "needs": "Perlu dibalas",
@@ -14,13 +15,10 @@
   "toast": {
     "postedTitle": "Balasan diposting",
     "postedText": "Balasan diposting di bawah ulasan {{name}}.",
-    "editTitle": "Edit balasan",
-    "editText": "Edit balasan dibuka."
+    "alreadyReplied": "You already replied to this review."
   },
   "action": {
-    "editReply": "Edit balasan",
     "reply": "Balas",
-    "report": "Laporkan ulasan",
     "post": "Posting balasan"
   },
   "form": {

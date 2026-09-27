@@ -1,7 +1,9 @@
 {
   "title": "集市",
   "intro": "每个集市的名称、地址、营业日、时间和地图坐标。移除一个集市会让它对顾客隐藏；历史记录仍然保留。",
+  "caption_one": "{{count}} active market",
   "caption_other": "{{count}} 个营业中的集市",
+  "stalls_one": "{{count}} stall",
   "stalls_other": "{{count}} 个摊位",
   "col": {
     "market": "集市",
@@ -28,6 +30,7 @@
   },
   "remove": {
     "title": "移除 {{name}}？",
+    "text_one": "{{count}} stall sells here. The market disappears from customer pages and the stall is told. Orders already placed for it continue.",
     "text_other": "有 {{count}} 个摊位在这里摆摊。集市会从顾客页面消失，摊位会收到通知。已经为它下过的订单继续进行。",
     "keep": "保留集市",
     "confirm": "移除集市"

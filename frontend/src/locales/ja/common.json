@@ -69,6 +69,7 @@
     "tryAgain": "もう一度試す",
     "noThreadsTitle": "まだ会話はありません",
     "noThreadsText": "お店のページからメッセージを送って、今週の野菜について聞いてみましょう。",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "未読メッセージ {{count}} 件",
     "sendFailed": "メッセージを送信できませんでした。もう一度お試しください。",
     "photoFailed": "写真を送信できませんでした。5 MB 以下の JPEG、PNG、WebP を選んでください。",
@@ -112,6 +113,7 @@
       "other": "その他"
     },
     "reportNote": "詳しく教えてください（任意）",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "残り {{count}} 文字",
     "chooseReason": "報告を送るには理由を選んでください。",
     "report": "報告",
@@ -198,6 +200,7 @@
     "openMenu": "メニューを開く",
     "search": "検索",
     "seeAll": "すべて見る",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "メッセージ、未読 {{count}} 件"
   },
   "kpi": {
@@ -267,7 +270,15 @@
     "cancel": "注文をキャンセル",
     "reviewed": "この注文はレビュー済みです",
     "review": "屋台と商品をレビュー",
-    "reorder": "もう一度注文"
+    "reorder": "もう一度注文",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "注文済み",
@@ -451,6 +462,8 @@
     "photoAlt": "{{n}} 回目の申請の写真"
   },
   "notify": {
+    "notificationsEmpty": "まだお知らせはありません。",
+    "notificationsError": "お知らせを読み込めませんでした。",
     "open": "開く",
     "prompt": {
       "title": "通知をオンにする",
@@ -526,8 +539,6 @@
     "admin": {
       "title": "通知",
       "intro": "審査待ちの新しい Farmer の申請です。"
-    },
-    "notificationsEmpty": "まだお知らせはありません。",
-    "notificationsError": "お知らせを読み込めませんでした。"
+    }
   }
 }

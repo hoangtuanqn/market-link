@@ -1,13 +1,16 @@
 {
   "title": "Pesanan",
   "intro": "Terima atau tolak pesanan baru sebelum batas waktunya, tandai siap pada hari pasar, dan selesaikan setelah pelanggan membayar.",
-  "search": { "label": "Cari pesanan", "placeholder": "Kode pesanan atau nama pelanggan", "submit": "Cari" },
+  "search": {
+    "label": "Cari pesanan",
+    "placeholder": "Kode pesanan atau nama pelanggan",
+    "submit": "Cari"
+  },
   "filter": {
     "day": "Hari pengambilan",
-    "all": "Semua",
-    "market": "Pasar",
-    "bothMarkets": "Kedua pasar"
+    "all": "Semua"
   },
+  "noun": "orders",
   "tabsLabel": "Pesanan menurut status",
   "status": {
     "placed": "Dipesan",

@@ -27,13 +27,9 @@
     "status": "Status"
   },
   "toast": {
-    "acceptedTitle": "Pesanan diterima",
     "acceptedText": "Pesanan {{code}} diterima. {{who}} sudah diberi tahu.",
-    "readyTitle": "Pesanan siap",
     "readyText": "Pesanan {{code}} ditandai siap.",
-    "completedTitle": "Pesanan selesai",
     "completedText": "Pesanan {{code}} selesai.",
-    "declinedTitle": "Pesanan ditolak",
     "declinedText": "Pesanan {{code}} ditolak. Stok kembali ke hitungan Anda."
   },
   "actions": {
@@ -43,11 +39,6 @@
     "complete": "Tandai selesai",
     "view": "Lihat"
   },
-  "captions": {
-    "new": "Dipesan · {{sat}} dan {{sun}}",
-    "ready": "Siap diambil"
-  },
-  "overline": "lapak Anda di {{market}} · hari pasar berikutnya {{day}}",
   "greeting": "Selamat pagi, {{name}}",
   "applyTemplate": "Terapkan templat mingguan",
   "addProduct": "Tambah produk",
@@ -57,36 +48,39 @@
     "text": "Pesanan yang belum disetujui tetap menahan stok. Terima atau tolak sebelum batas waktu agar pelanggan bisa merencanakan."
   },
   "kpi": {
+    "noun": "your numbers",
     "orders": "Total pesanan",
-    "ordersNote_one": "{{count}} minggu ini",
-    "ordersNote_other": "{{count}} minggu ini",
-    "vsAugust": "vs Agustus",
     "openHistory": "Buka riwayat penjualan",
-    "awaitingNote_one": "<b>{{count}}</b> ditutup pukul {{time}} pada {{date}}",
-    "awaitingNote_other": "<b>{{count}}</b> ditutup pukul {{time}} pada {{date}}",
-    "vsThursday": "vs Kamis biasa",
+    "pending": "Awaiting you",
     "openIncoming": "Buka pesanan masuk",
     "revenue": "Pendapatan September",
-    "revenueNote": "₫, dari pesanan selesai, dibayar di lapak",
-    "best": "Terlaris",
-    "bestNote": "{{qty}} bulan ini",
-    "openProducts": "Buka produk",
-    "note": "September sejauh ini, dibandingkan Agustus. Setiap kotak membuka layar di balik angkanya."
+    "revenueMonth": "Revenue this month"
   },
   "incoming": {
     "title": "Pesanan masuk",
     "all": "Semua pesanan dan filter",
-    "note": "Pesanan baru disorot sampai Anda membukanya."
+    "noun": "incoming orders",
+    "empty": {
+      "title": "Nothing here",
+      "text": "Orders in this status will show up here."
+    }
   },
   "stock": {
     "title": "Stok untuk {{day}}",
     "link": "Stok minggu ini",
-    "note": "Dipesan berarti ada pesanan yang menahannya. Jumlah itu langsung dikurangi dari stok saat pelanggan memesan."
+    "noun": "stock",
+    "empty": {
+      "title": "No products yet",
+      "text": "Add a product to see its stock here."
+    }
   },
   "best": {
     "title": "Terlaris",
     "link": "Riwayat penjualan",
-    "note": "Terjual pada September, masing-masing dalam satuannya"
-  },
-  "protoNote": "Bilah samping dan header di atasnya adalah bagian baru dari prototipe."
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold yet",
+      "text": "Your best-selling products will show up here once orders complete."
+    }
+  }
 }

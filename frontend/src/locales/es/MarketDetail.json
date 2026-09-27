@@ -5,10 +5,6 @@
   },
   "intro_one": "{{count}} puesto. Cada puesto cierra sus pedidos entre 12 y 24 horas antes de la recogida. Recoge en el puesto y paga directamente al agricultor.",
   "intro_other": "{{count}} puestos. Cada puesto cierra sus pedidos entre 12 y 24 horas antes de la recogida. Recoge en el puesto y paga directamente al agricultor.",
-  "toast": {
-    "saved": "{{name}} guardado.",
-    "removed": "{{name}} quitado de favoritos."
-  },
   "save": {
     "on": "Mercado guardado",
     "off": "Guardar mercado"
