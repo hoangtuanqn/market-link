@@ -27,7 +27,8 @@ public class OrderRows {
             """
             SELECT o.id, o.order_code, o.status, o.farmer_id, f.stall_name, o.market_id, m.market_name,
                    o.pickup_date, o.pickup_start, o.pickup_end, o.cutoff_at, o.total_amount, o.created_at,
-                   (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS item_count
+                   (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS item_count,
+                   o.customer_id, cu.full_name AS customer_name
             """;
 
     public static final String LIST_FROM =
@@ -35,6 +36,7 @@ public class OrderRows {
             FROM orders o
             JOIN farmer_profiles f ON f.id = o.farmer_id
             JOIN markets m ON m.id = o.market_id
+            JOIN users cu ON cu.id = o.customer_id
             """;
 
     /** Everything a report can filter on; a null parameter means "no filter". */
@@ -64,7 +66,9 @@ public class OrderRows {
                         .toString(),
                 rs.getBigDecimal("total_amount"),
                 rs.getInt("item_count"),
-                rs.getTimestamp("created_at").toInstant().toString());
+                rs.getTimestamp("created_at").toInstant().toString(),
+                rs.getLong("customer_id"),
+                rs.getString("customer_name"));
     }
 
     /** Whitelist for a {@code status} query parameter: unknown text is a 400, never SQL. */

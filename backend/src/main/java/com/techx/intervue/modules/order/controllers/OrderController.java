@@ -71,10 +71,11 @@ public class OrderController extends BaseController {
     }
 
     /**
-     * Only the order's buyer or the Farmer who owns it can read it (R-06); anyone else gets 403,
-     * even when the id exists (Review focus #3).
+     * Only the order's buyer, the Farmer who owns it, or an admin (D-04, read-only oversight) can
+     * read it (R-06); anyone else gets 403, even when the id exists (Review focus #3).
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CUSTOMER','FARMER','ADMIN')")
     public ResponseEntity<ApiResource<OrderDetailResource>> detail(
             @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
         return ok(orderService.detail(user.getId(), id), "");
