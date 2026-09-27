@@ -30,7 +30,8 @@ const OrderTicket = ({ order, fluid, hideActions, onChanged }: OrderTicketProps)
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const editable = !order.locked && (order.status === 'placed' || order.status === 'accepted');
-  const href = `/orders/${order.code.replace('#', '')}`;
+  // By id, never by code: the detail, edit and review pages all read the route param as a number.
+  const href = `/orders/${order.id}`;
 
   const cancel = async () => {
     if (order.id == null) return;

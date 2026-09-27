@@ -13,8 +13,10 @@ const Hero = ({ markets }: { markets: MarketType[] }) => {
   const now = useClock();
   const weekend = upcomingWeekend(now);
 
+  // [&>*]:min-w-0 — below lg this is a single auto column, which sizes to its widest child; the search bar's
+  // select and button do not shrink, so without it the hero pushes the whole page sideways on a phone.
   return (
-    <section className="grid items-end gap-8 pt-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+    <section className="grid items-end gap-8 pt-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] [&>*]:min-w-0">
       <div className="flex flex-col gap-4">
         <p className="font-hand text-hand text-ink-muted">
           <time dateTime={now.toISOString()}>{nowLabel(now)}</time> ·{' '}
