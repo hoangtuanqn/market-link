@@ -8,6 +8,7 @@ const NavLink = ({ item }: { item: NavItem }) => {
   return (
     <RouterNavLink
       to={item.to}
+      data-tour={`header:${item.label}`}
       className="text-board-muted hover:text-on-board aria-[current=page]:text-on-board inline-flex min-h-16 items-center px-3 text-[15px] font-bold no-underline aria-[current=page]:shadow-[inset_0_-4px_0_var(--accent)]"
     >
       {t(`nav.${item.label}`)}
