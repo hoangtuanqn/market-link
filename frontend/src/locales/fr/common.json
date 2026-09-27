@@ -592,7 +592,8 @@
       "reports": "Explique ces chiffres du {{from}} au {{to}} : quel marché marche le mieux, lequel est calme, et pourquoi ?",
       "cart": "Explique mon panier : pourquoi est-il divisé, combien coûte chaque stand, et suis-je encore dans les temps ?",
       "announcement": "Rédige une annonce pour toute la plateforme. Je te dis de quoi il s'agit.",
-      "product": "Écris une courte description et une note manuscrite pour l'étiquette de {{name}}."
+      "product": "Écris une courte description et une note manuscrite pour l'étiquette de {{name}}.",
+      "feedback": "Résume la boîte de retours : que signale-t-on, quels messages sont en fait le même problème, et que dois-je regarder en premier ?"
     }
   },
   "tour": {

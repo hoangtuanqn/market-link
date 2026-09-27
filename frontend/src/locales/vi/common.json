@@ -592,7 +592,8 @@
       "reports": "Giải thích giúp các số liệu từ {{from}} đến {{to}}: chợ nào đông nhất, chợ nào đang ế, và vì sao.",
       "cart": "Giải thích giúp giỏ của tôi: vì sao bị tách, mỗi sạp hết bao nhiêu, tôi còn kịp giờ chốt của từng sạp không?",
       "announcement": "Soạn giúp tôi một thông báo toàn sàn. Tôi sẽ nói nội dung.",
-      "product": "Viết giúp tôi mô tả ngắn và dòng chữ tay trên thẻ cho {{name}}."
+      "product": "Viết giúp tôi mô tả ngắn và dòng chữ tay trên thẻ cho {{name}}.",
+      "feedback": "Tóm tắt hộp góp ý: mọi người đang báo gì, những mục nào thực ra cùng một vấn đề, và tôi nên xem cái nào trước?"
     }
   },
   "tour": {

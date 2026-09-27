@@ -592,7 +592,8 @@
       "reports": "Erkläre diese Zahlen von {{from}} bis {{to}}: Welcher Markt läuft am besten, welcher schwach, und warum?",
       "cart": "Erkläre meinen Warenkorb: Warum ist er geteilt, was kostet jeder Stand, und schaffe ich alle Fristen?",
       "announcement": "Entwirf eine Ankündigung für die Plattform. Den Inhalt sage ich dir.",
-      "product": "Schreibe eine kurze Beschreibung und eine handgeschriebene Notiz für das Schild von {{name}}."
+      "product": "Schreibe eine kurze Beschreibung und eine handgeschriebene Notiz für das Schild von {{name}}.",
+      "feedback": "Fasse den Feedback-Eingang zusammen: Was wird gemeldet, welche Meldungen sind dasselbe Problem, und was sollte ich zuerst ansehen?"
     }
   },
   "tour": {

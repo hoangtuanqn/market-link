@@ -44,4 +44,15 @@ public final class AdminRows {
             LocalDate createdOn) {}
 
     public record HiddenItemRow(String kind, long id, String name, String reason) {}
+
+    /** One message from the feedback inbox (FR-094). The body is text a person wrote. */
+    public record FeedbackRow(
+            long feedbackId,
+            String type,
+            String status,
+            String fromName,
+            LocalDate createdOn,
+            String message) {}
+
+    public record FeedbackCountRow(String type, String status, long count) {}
 }

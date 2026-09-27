@@ -592,7 +592,8 @@
       "reports": "Explain these numbers for {{from}} to {{to}}: which market is busiest, which one is quiet, and why.",
       "cart": "Explain my cart: why is it split, what does each stall cost, and am I still in time for every cutoff?",
       "announcement": "Draft a platform announcement. I will tell you what it is about.",
-      "product": "Write a short description and a hand-lettered tag note for {{name}}."
+      "product": "Write a short description and a hand-lettered tag note for {{name}}.",
+      "feedback": "Summarise the feedback inbox: what are people reporting, which messages are really the same problem, and what should I look at first?"
     }
   },
   "tour": {

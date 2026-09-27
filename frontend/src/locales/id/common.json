@@ -592,7 +592,8 @@
       "reports": "Jelaskan angka dari {{from}} sampai {{to}}: pasar mana yang paling ramai, mana yang sepi, dan kenapa.",
       "cart": "Jelaskan keranjang saya: kenapa terpisah, berapa biaya tiap lapak, dan apakah saya masih keburu semua batas waktu?",
       "announcement": "Buatkan pengumuman untuk seluruh platform. Isinya saya beri tahu.",
-      "product": "Tulis deskripsi singkat dan catatan tulisan tangan untuk label {{name}}."
+      "product": "Tulis deskripsi singkat dan catatan tulisan tangan untuk label {{name}}.",
+      "feedback": "Ringkas kotak masukan: orang melaporkan apa, pesan mana yang sebenarnya masalah yang sama, dan mana yang harus saya lihat dulu?"
     }
   },
   "tour": {

@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.chat.repositories;
 
 import com.techx.intervue.modules.chat.resources.AdminRows.AccountRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.FeedbackCountRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.FeedbackRow;
 import com.techx.intervue.modules.chat.resources.AdminRows.FlaggedReviewRow;
 import com.techx.intervue.modules.chat.resources.AdminRows.HiddenItemRow;
 import com.techx.intervue.modules.chat.resources.AdminRows.MarketActivityRow;
@@ -114,7 +116,56 @@ public class AdminKnowledgeRepository {
             WHERE f.id = :farmerId
             """;
 
+    private static final String FEEDBACK_INBOX =
+            """
+            SELECT f.id AS feedback_id, f.type, f.status,
+                   COALESCE(u.full_name, 'Anonymous') AS from_name,
+                   DATE(f.created_at) AS created_on, f.message
+            FROM feedbacks f
+            LEFT JOIN users u ON u.id = f.user_id
+            WHERE (:status IS NULL OR f.status = :status)
+              AND (:type IS NULL OR f.type = :type)
+            ORDER BY f.created_at DESC
+            LIMIT :limit
+            """;
+
+    private static final String FEEDBACK_COUNTS =
+            """
+            SELECT type, status, COUNT(*) AS total
+            FROM feedbacks
+            GROUP BY type, status
+            ORDER BY type, status
+            """;
+
     private final NamedParameterJdbcTemplate jdbc;
+
+    public List<FeedbackRow> feedbackInbox(String status, String type, int limit) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("status", status, Types.VARCHAR)
+                        .addValue("type", type, Types.VARCHAR)
+                        .addValue("limit", limit);
+        return jdbc.query(
+                FEEDBACK_INBOX,
+                params,
+                (rs, i) ->
+                        new FeedbackRow(
+                                rs.getLong("feedback_id"),
+                                rs.getString("type"),
+                                rs.getString("status"),
+                                rs.getString("from_name"),
+                                rs.getObject("created_on", LocalDate.class),
+                                rs.getString("message")));
+    }
+
+    public List<FeedbackCountRow> feedbackCounts() {
+        return jdbc.query(
+                FEEDBACK_COUNTS,
+                new MapSqlParameterSource(),
+                (rs, i) ->
+                        new FeedbackCountRow(
+                                rs.getString("type"), rs.getString("status"), rs.getLong("total")));
+    }
 
     public java.util.Optional<PendingFarmerRow> application(long farmerId) {
         return jdbc

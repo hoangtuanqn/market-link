@@ -592,7 +592,8 @@
       "reports": "Explica estos números del {{from}} al {{to}}: qué mercado va mejor, cuál está flojo y por qué.",
       "cart": "Explícame el carrito: ¿por qué se divide, cuánto cuesta cada puesto y llego a todas las horas de cierre?",
       "announcement": "Redacta un anuncio para toda la plataforma. Yo te digo de qué trata.",
-      "product": "Escribe una descripción corta y una nota manuscrita para la etiqueta de {{name}}."
+      "product": "Escribe una descripción corta y una nota manuscrita para la etiqueta de {{name}}.",
+      "feedback": "Resume la bandeja de comentarios: qué está reportando la gente, qué mensajes son en realidad el mismo problema y qué debería mirar primero."
     }
   },
   "tour": {
