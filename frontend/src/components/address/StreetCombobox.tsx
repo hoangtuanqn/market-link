@@ -14,6 +14,7 @@ type StreetComboboxProps = {
   hint?: string;
   required?: boolean;
   disabled?: boolean;
+  containerClassName?: string;
 };
 
 /** Wait for a pause in typing before asking the server. */
@@ -39,6 +40,7 @@ export default function StreetCombobox({
   hint,
   required,
   disabled,
+  containerClassName,
 }: StreetComboboxProps) {
   const { t } = useTranslation();
   const listId = useId();
@@ -103,7 +105,7 @@ export default function StreetCombobox({
   };
 
   return (
-    <div className="flex min-w-55 flex-col gap-1.5">
+    <div className={Helper.cn('flex min-w-0 flex-col gap-1.5', containerClassName)}>
       <label htmlFor={id} className="text-small text-ink font-bold">
         {label}
         {required && (

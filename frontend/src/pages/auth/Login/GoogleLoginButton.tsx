@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AuthApi from '@/api-requests/auth.requests';
+import { GoogleIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { GOOGLE_OAUTH_STATE_KEY } from '@/constants/oauth';
 import Helper from '@/utils/helper';
@@ -29,8 +30,14 @@ const GoogleLoginButton = () => {
   };
 
   return (
-    <Button variant="secondary" className="w-full" onClick={onClick} disabled={isRedirecting}>
-      {isRedirecting ? t('google.opening') : t('google.continue')}
+    <Button
+      variant="secondary"
+      className="flex w-full items-center justify-center gap-2.5 font-medium shadow-xs"
+      onClick={onClick}
+      disabled={isRedirecting}
+    >
+      <GoogleIcon size={18} />
+      <span>{isRedirecting ? t('google.opening') : t('google.continue')}</span>
     </Button>
   );
 };

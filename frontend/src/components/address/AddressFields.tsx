@@ -81,17 +81,6 @@ export default function AddressFields({
         [{ value: '', label: placeholder }, ...state.data.map((o) => ({ value: o.code, label: o.name }))]
       : [{ value: '', label: state.kind === 'loading' ? t('address.loading') : t('address.loadFailed') }];
 
-  const loadError = (onRetry: () => void) => (
-    <div className="flex flex-wrap items-center gap-2 md:col-span-2">
-      <span role="alert" className="text-danger text-[13px] font-bold">
-        {t('address.loadFailed')}
-      </span>
-      <Button type="button" variant="secondary" size="sm" onClick={onRetry}>
-        {t('address.retry')}
-      </Button>
-    </div>
-  );
-
   return (
     <fieldset className="m-0 flex flex-col gap-4 border-0 p-0" disabled={disabled}>
       <legend className="text-small text-ink mb-2 p-0 font-bold">{t('address.legend')}</legend>
@@ -100,6 +89,29 @@ export default function AddressFields({
           {t('address.current', { address: legacyAddress })}
         </p>
       )}
+
+      {((!lockCountry && countries.state.kind === 'error') ||
+        (vietnam && provinces.state.kind === 'error') ||
+        (vietnam && Boolean(provinceCode) && wards.state.kind === 'error')) && (
+        <div className="border-danger/40 bg-danger/10 flex flex-wrap items-center justify-between gap-2 rounded-sm border px-3 py-2 text-[13px]">
+          <span role="alert" className="text-danger font-bold">
+            {t('address.loadFailed')}
+          </span>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              if (countries.state.kind === 'error') countries.retry();
+              if (provinces.state.kind === 'error') provinces.retry();
+              if (wards.state.kind === 'error') wards.retry();
+            }}
+          >
+            {t('address.retry')}
+          </Button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <SelectField
           id={id('country')}
@@ -113,7 +125,6 @@ export default function AddressFields({
           onChange={(e) => onChange({ countryCode: e.target.value })}
           options={countryOptions}
         />
-        {!lockCountry && countries.state.kind === 'error' && loadError(countries.retry)}
 
         {vietnam ? (
           <>
@@ -134,7 +145,6 @@ export default function AddressFields({
               }
               options={listOptions(provinces.state, t('address.choose.province'))}
             />
-            {provinces.state.kind === 'error' && loadError(provinces.retry)}
             <SelectField
               id={id('ward')}
               label={t('address.ward')}
@@ -151,7 +161,6 @@ export default function AddressFields({
                   : [{ value: '', label: t('address.choose.ward') }]
               }
             />
-            {provinceCode && wards.state.kind === 'error' && loadError(wards.retry)}
             <StreetCombobox
               id={id('street')}
               label={t('address.street')}
@@ -196,6 +205,7 @@ export default function AddressFields({
           value={value.addressLine ?? ''}
           onChange={(e) => set({ addressLine: e.target.value })}
           error={errors.addressLine}
+          containerClassName="md:col-span-2"
         />
       </div>
     </fieldset>

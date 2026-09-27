@@ -109,7 +109,7 @@ const RegisterCustomerPage = () => {
   };
 
   return (
-    <Card className="mx-auto my-8 w-full max-w-160 p-4 md:p-8">
+    <Card className="mx-auto my-4 w-full max-w-160 p-4 sm:p-6 md:my-8 md:p-8">
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="font-hand text-h1">{t('title')}</h1>
@@ -152,6 +152,7 @@ const RegisterCustomerPage = () => {
             onChange={onChange('email')}
             error={errors.email}
             disabled={isSubmitting}
+            containerClassName="md:col-span-2"
           />
           <Field
             id="password"
