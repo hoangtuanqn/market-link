@@ -66,6 +66,20 @@ describe('StreetCombobox (FR-001)', () => {
     expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
   });
 
+  it('snaps text typed without diacritics to the matching street on blur', async () => {
+    vi.spyOn(GeoApi, 'streets').mockResolvedValue(['Lê Lợi', 'Lê Lai']);
+    const onValue = vi.fn();
+    render(<Harness onValue={onValue} />);
+    const box = screen.getByRole('combobox', { name: 'Street' });
+
+    await userEvent.type(box, 'le loi');
+    await screen.findByRole('option', { name: 'Lê Lợi' });
+    await userEvent.click(screen.getByRole('button', { name: 'elsewhere' }));
+
+    expect(box).toHaveValue('Lê Lợi');
+    expect(onValue).toHaveBeenLastCalledWith('Lê Lợi');
+  });
+
   it('does not offer the typed text again when it matches a suggestion', async () => {
     vi.spyOn(GeoApi, 'streets').mockResolvedValue(['Lê Lợi']);
     render(<Harness />);

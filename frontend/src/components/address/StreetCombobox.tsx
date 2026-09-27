@@ -136,6 +136,9 @@ export default function StreetCombobox({
           }}
           onKeyDown={onKeyDown}
           onBlur={() => {
+            // "le loi" typed without diacritics saves as the street it matched, "Lê Lợi", not as typed
+            const match = names.find((n) => fold(n) === fold(typed));
+            if (match && match !== value) onChange(match);
             setOpen(false);
             setActive(-1);
           }}

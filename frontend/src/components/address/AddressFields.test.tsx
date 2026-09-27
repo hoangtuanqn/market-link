@@ -53,7 +53,7 @@ describe('AddressFields (FR-001, FR-073)', () => {
   it('opens in Vietnam with the ward locked until a province is chosen', async () => {
     render(<Harness />);
 
-    expect(await screen.findByRole('option', { name: 'Thành phố Hồ Chí Minh' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'Hồ Chí Minh' })).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: /Country/ })).toHaveValue('VN');
     expect(screen.getByRole('combobox', { name: /Ward or commune/ })).toBeDisabled();
     expect(screen.getByText('Choose the province first.')).toBeInTheDocument();
@@ -61,11 +61,11 @@ describe('AddressFields (FR-001, FR-073)', () => {
 
   it('loads the wards of the chosen province', async () => {
     render(<Harness />);
-    await screen.findByRole('option', { name: 'Thành phố Hồ Chí Minh' });
+    await screen.findByRole('option', { name: 'Hồ Chí Minh' });
 
     await userEvent.selectOptions(screen.getByRole('combobox', { name: /Province or city/ }), '79');
 
-    expect(await screen.findByRole('option', { name: 'Phường Bến Thành' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'Bến Thành' })).toBeInTheDocument();
     expect(GeoApi.wards).toHaveBeenCalledWith('79');
     expect(screen.getByRole('combobox', { name: /Ward or commune/ })).toBeEnabled();
   });
@@ -76,7 +76,7 @@ describe('AddressFields (FR-001, FR-073)', () => {
         initial={{ countryCode: 'VN', provinceCode: '79', wardCode: '26743', streetName: 'Lê Lợi', addressLine: '12' }}
       />,
     );
-    await screen.findByRole('option', { name: 'Phường Bến Thành' });
+    await screen.findByRole('option', { name: 'Bến Thành' });
 
     await userEvent.selectOptions(screen.getByRole('combobox', { name: /Province or city/ }), '01');
 
@@ -102,6 +102,30 @@ describe('AddressFields (FR-001, FR-073)', () => {
     expect(valueOf()).toEqual({ countryCode: 'JP', regionName: 'Tokyo', cityName: 'Shibuya', addressLine: '1-2-3' });
   });
 
+  it('names provinces and wards without their prefix, so typing a letter jumps to them', async () => {
+    render(
+      <Harness
+        initial={{ countryCode: 'VN', provinceCode: '79', wardCode: '26743', streetName: 'Lê Lợi', addressLine: '12' }}
+      />,
+    );
+
+    expect(await screen.findByRole('option', { name: 'Bến Thành' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'Hồ Chí Minh' })).toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Phường Bến Thành' })).not.toBeInTheDocument();
+  });
+
+  it('offers a retry when the countries fail to load, and keeps the list locked until then', async () => {
+    vi.mocked(GeoApi.countries).mockRejectedValueOnce(new Error('offline'));
+    render(<Harness />);
+
+    const retry = await screen.findByRole('button', { name: 'Try again' });
+    expect(screen.getByRole('combobox', { name: /Country/ })).toBeDisabled();
+    await userEvent.click(retry);
+
+    expect(await screen.findByRole('option', { name: 'Japan' })).toBeInTheDocument();
+    expect(screen.getByRole('combobox', { name: /Country/ })).toBeEnabled();
+  });
+
   it('lists Vietnam first and names countries in the reader’s language', async () => {
     render(<Harness />);
     await screen.findByRole('option', { name: 'Japan' });
@@ -112,7 +136,7 @@ describe('AddressFields (FR-001, FR-073)', () => {
 
   it('keeps the country fixed to Vietnam for a market', async () => {
     render(<Harness lockCountry />);
-    await screen.findByRole('option', { name: 'Thành phố Hồ Chí Minh' });
+    await screen.findByRole('option', { name: 'Hồ Chí Minh' });
 
     expect(screen.getByRole('combobox', { name: /Country/ })).toBeDisabled();
     expect(screen.getByRole('combobox', { name: /Country/ })).toHaveValue('VN');
@@ -120,7 +144,7 @@ describe('AddressFields (FR-001, FR-073)', () => {
 
   it('shows each error under its own field', async () => {
     render(<Harness errors={{ wardCode: 'Choose a ward or commune.', streetName: 'Enter the street.' }} />);
-    await screen.findByRole('option', { name: 'Thành phố Hồ Chí Minh' });
+    await screen.findByRole('option', { name: 'Hồ Chí Minh' });
 
     expect(screen.getByRole('combobox', { name: /Ward or commune/ })).toHaveAccessibleDescription(
       'Choose a ward or commune.',
@@ -141,6 +165,6 @@ describe('AddressFields (FR-001, FR-073)', () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Try again' }));
 
     await waitFor(() => expect(GeoApi.provinces).toHaveBeenCalledTimes(2));
-    expect(await screen.findByRole('option', { name: 'Thành phố Hồ Chí Minh' })).toBeInTheDocument();
+    expect(await screen.findByRole('option', { name: 'Hồ Chí Minh' })).toBeInTheDocument();
   });
 });

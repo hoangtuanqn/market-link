@@ -76,7 +76,9 @@ export default function AddressFields({
 
   const listOptions = (state: typeof provinces.state, placeholder: string): { value: string; label: string }[] =>
     state.kind === 'ready'
-      ? [{ value: '', label: placeholder }, ...state.data.map((o) => ({ value: o.code, label: o.fullName }))]
+      ? // The short name ("Bến Thành", not "Phường Bến Thành"): a native select jumps to the letter typed, and every
+        // full name would start with "Phường" / "Xã" / "Tỉnh". The full name is what the composed address shows.
+        [{ value: '', label: placeholder }, ...state.data.map((o) => ({ value: o.code, label: o.name }))]
       : [{ value: '', label: state.kind === 'loading' ? t('address.loading') : t('address.loadFailed') }];
 
   const loadError = (onRetry: () => void) => (
@@ -105,12 +107,13 @@ export default function AddressFields({
           required
           autoComplete="country"
           value={value.countryCode}
-          disabled={lockCountry || disabled}
+          disabled={lockCountry || countries.state.kind !== 'ready' || disabled}
           hint={lockCountry ? t('address.vietnamOnly') : undefined}
           error={errors.countryCode}
           onChange={(e) => onChange({ countryCode: e.target.value })}
           options={countryOptions}
         />
+        {!lockCountry && countries.state.kind === 'error' && loadError(countries.retry)}
 
         {vietnam ? (
           <>

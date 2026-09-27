@@ -50,7 +50,7 @@ describe('ProfileForm address (FR-001)', () => {
     renderForm();
 
     expect(await screen.findByText(/Current address: 12 Le Loi, Quan 1/)).toBeInTheDocument();
-    await screen.findByRole('option', { name: 'Thành phố Hồ Chí Minh' });
+    await screen.findByRole('option', { name: 'Hồ Chí Minh' });
     await userEvent.type(screen.getByRole('textbox', { name: /Full name/ }), ' B');
     await userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
 
@@ -60,7 +60,7 @@ describe('ProfileForm address (FR-001)', () => {
     );
 
     await userEvent.selectOptions(screen.getByRole('combobox', { name: /Province or city/ }), '79');
-    await screen.findByRole('option', { name: 'Phường Bến Thành' });
+    await screen.findByRole('option', { name: 'Bến Thành' });
     await userEvent.selectOptions(screen.getByRole('combobox', { name: /Ward or commune/ }), '26743');
     await userEvent.type(screen.getByRole('combobox', { name: /Street/ }), 'Lê Lợi');
     await userEvent.type(screen.getByRole('textbox', { name: /House number and details/ }), '12');
@@ -83,7 +83,7 @@ describe('ProfileForm address (FR-001)', () => {
     vi.spyOn(AuthApi, 'getMe').mockResolvedValue(answer(structured));
     renderForm();
 
-    await screen.findByRole('option', { name: 'Phường Bến Thành' });
+    await screen.findByRole('option', { name: 'Bến Thành' });
     expect(screen.getByRole('combobox', { name: /Ward or commune/ })).toHaveValue('26743');
     expect(screen.getByRole('combobox', { name: /Street/ })).toHaveValue('Lê Lợi');
     expect(screen.queryByText(/Current address/)).not.toBeInTheDocument();
