@@ -635,6 +635,32 @@ FROM (
 WHERE NOT EXISTS (SELECT 1 FROM announcements a WHERE a.title = x.title);
 `;
 
+// Pickup slots for the stalls added above (db/seed.sql only covers the stalls that exist when it runs)
+sql += `
+-- ===== PICKUP SLOTS FOR THE NEW STALLS =====
+-- db/seed.sql generates slots for the stalls that exist when it runs; the stalls added above come later, so
+-- without this block they had operating days but no slot to book and every product read as sold out. Same
+-- statement as db/seed.sql (next 4 weeks, 60-minute windows, 5 orders each); INSERT IGNORE keeps it re-runnable.
+INSERT IGNORE INTO pickup_slots (farmer_market_id, slot_date, start_time, end_time, max_orders)
+SELECT fm.id, x.slot_date,
+       ADDTIME(od.pickup_start_time, SEC_TO_TIME(h.n * 3600)),
+       ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)),
+       5
+FROM farmer_markets fm
+JOIN farmer_operating_days od ON od.farmer_market_id = fm.id
+JOIN (
+      SELECT DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) + INTERVAL (w.n * 7 + d.n) DAY AS slot_date
+      FROM (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) w
+      CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+                  UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6) d
+     ) x ON DAYOFWEEK(x.slot_date) - 1 = od.day_of_week
+CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+            UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+            UNION ALL SELECT 10 UNION ALL SELECT 11) h
+WHERE fm.is_active = TRUE
+  AND ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)) <= od.pickup_end_time;
+`;
+
 // Write file
 fs.writeFileSync(OUT, sql, 'utf8');
 const lines = sql.split('\n').length;
