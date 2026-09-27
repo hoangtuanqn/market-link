@@ -529,9 +529,5 @@
     },
     "notificationsEmpty": "아직 알림이 없습니다.",
     "notificationsError": "알림을 불러오지 못했습니다."
-  },
-  "comingSoon": {
-    "title": "이 페이지는 아직 열리지 않았습니다",
-    "text": "아직 준비 중입니다. 메뉴의 다른 기능은 평소처럼 사용할 수 있습니다."
   }
 }

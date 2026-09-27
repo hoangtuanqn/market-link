@@ -532,9 +532,5 @@
     },
     "notificationsEmpty": "Noch keine Benachrichtigungen.",
     "notificationsError": "Benachrichtigungen konnten nicht geladen werden."
-  },
-  "comingSoon": {
-    "title": "Diese Seite ist noch nicht verfügbar",
-    "text": "Wir bauen sie noch. Alles andere im Menü funktioniert wie gewohnt."
   }
 }

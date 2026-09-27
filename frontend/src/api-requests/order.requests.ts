@@ -177,16 +177,6 @@ export const toOrder = (dto: OrderDetailDto): OrderType => ({
 });
 
 /**
- * I-1 — `toOrder` now includes the numeric id (`order.id`) directly, but this pairing is still handy at call sites that
- * pass the id and the order separately (notification links, `OrderApi` calls that need `orderCode` for display and the
- * id for `get`/`cancel`/`modifyItems`/...).
- */
-export const toOrderView = (dto: OrderDetailDto): { id: number; order: OrderType } => ({
-  id: dto.summary.orderId,
-  order: toOrder(dto),
-});
-
-/**
  * FR-030…039, 065…067 — cart, the customer's and the Farmer's orders (docs/api-contract.md §7). Every function needs a
  * signed-in user (`privateApi`): buying is open to `CUSTOMER` and `FARMER` (D-13), an admin is blocked by the server →
  * 403.

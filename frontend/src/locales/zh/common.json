@@ -529,9 +529,5 @@
     },
     "notificationsEmpty": "还没有通知。",
     "notificationsError": "无法加载通知。"
-  },
-  "comingSoon": {
-    "title": "此页面尚未开放",
-    "text": "我们仍在建设此页面。菜单中的其他功能照常可用。"
   }
 }

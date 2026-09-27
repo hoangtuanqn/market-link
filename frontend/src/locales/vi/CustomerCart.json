@@ -32,7 +32,6 @@
   "pickupDay": "Ngày nhận hàng",
   "pickupDayAt": "Ngày nhận hàng ở {{stall}}",
   "pickupTime": "Giờ nhận hàng · {{day}} {{date}} · khung {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} chốt đơn {{hours}} giờ trước khung giờ. Với {{slot}} {{slotDay}}, giờ chốt là {{cutoff}} {{cutoffDay}}.",
   "summary": {
     "title": "Trả tiền tại sạp khi nhận hàng",
     "order": "Đơn {{n}} · {{stall}}",

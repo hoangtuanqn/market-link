@@ -34,7 +34,6 @@ const MarketMapPage = () => {
   const [day, setDay] = useState<DayValue>('sat');
   const [showMarkets, setShowMarkets] = useState(true);
   const [showStalls, setShowStalls] = useState(true);
-  const [savedOnly, setSavedOnly] = useState(false);
 
   const { state: load, retry } = useRequest('markets', () =>
     CatalogApi.listMarkets({ pageSize: FETCH_SIZE }).then((result) => result.items),
@@ -42,10 +41,7 @@ const MarketMapPage = () => {
   const all = load.kind === 'ready' ? load.data : NO_MARKETS;
 
   const dow = DOW[day];
-  const openMarkets = useMemo(
-    () => all.filter((m) => m.days.includes(dow) && (!savedOnly || m.saved)),
-    [all, dow, savedOnly],
-  );
+  const openMarkets = useMemo(() => all.filter((m) => m.days.includes(dow)), [all, dow]);
 
   // A stall is only on the map for a day it actually trades: one request per market open that day (≤ a handful),
   // keyed by day and market list so a new chip or freshly loaded markets start a new round.
@@ -130,9 +126,6 @@ const MarketMapPage = () => {
           </Chip>
           <Chip pressed={showStalls} onClick={() => setShowStalls((v) => !v)}>
             {t('filter.stalls')}
-          </Chip>
-          <Chip pressed={savedOnly} onClick={() => setSavedOnly((v) => !v)}>
-            {t('filter.saved')}
           </Chip>
         </div>
         <div className="text-small text-ink-muted flex flex-wrap gap-4">

@@ -29,7 +29,6 @@
     "belowBooked": "That is fewer than the orders already in this slot.",
     "closes": "Closes for changes",
     "open": "Open to new orders",
-    "off": "Off",
     "on": "On",
     "closedTitle": "Slot closed",
     "closedText": "This slot is off and no longer takes orders. This screen cannot turn it back on yet; contact the team if you need it reopened.",
