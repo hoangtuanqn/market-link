@@ -2,13 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { ReasonField } from '@/components/ReasonField';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
+import type { ReasonValue } from '@/lib/reasons';
 import type { ConfirmAction } from './constants';
 
 type ConfirmActionDialogProps = {
   action: ConfirmAction;
-  reason: string;
+  reason: ReasonValue;
   reasonError?: string;
-  onReasonChange: (next: string) => void;
+  onReasonChange: (next: ReasonValue) => void;
   onClose: () => void;
   onConfirm: () => void;
 };

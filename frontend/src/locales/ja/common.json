@@ -688,5 +688,33 @@
         "body": "メニューを開くとパネルのすべてのセクションに移動できます。"
       }
     }
+  },
+  "reasons": {
+    "pick": "1つ以上選んでください",
+    "note": "補足",
+    "noteOptional": "補足（任意）",
+    "preview": "相手に表示される文：「{{text}}」",
+    "length": "{{used}}/{{max}} 文字。",
+    "reject": {
+      "incompleteInfo": "出店情報が不足しています",
+      "unclearPhotos": "写真が不鮮明、または農園の写真ではありません",
+      "unreachable": "登録の電話番号に連絡がつきませんでした",
+      "notFarmProduce": "販売予定の品が農産物ではありません",
+      "duplicate": "この出店はすでに登録されています"
+    },
+    "suspend": {
+      "complaints": "お客様からの苦情が続いています",
+      "notAsDescribed": "商品が掲載内容と違いました",
+      "missedPickups": "受け取り時間に出店がいませんでした",
+      "rulesBroken": "プラットフォームの規約違反",
+      "ownerRequest": "出店者本人の希望による"
+    },
+    "deactivate": {
+      "noShows": "注文して受け取らないことが続いています",
+      "abusiveMessages": "暴言またはスパムのメッセージ",
+      "fakeAccount": "偽または重複したアカウント",
+      "fakeReviews": "不正なレビュー",
+      "ownerRequest": "アカウント所有者本人の希望による"
+    }
   }
 }

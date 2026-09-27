@@ -688,5 +688,33 @@
         "body": "打开菜单即可进入面板的每个部分。"
       }
     }
+  },
+  "reasons": {
+    "pick": "选择一个或多个",
+    "note": "补充说明",
+    "noteOptional": "补充说明（可选）",
+    "preview": "对方将看到：“{{text}}”",
+    "length": "{{used}}/{{max}} 个字符。",
+    "reject": {
+      "incompleteInfo": "摊位信息不完整",
+      "unclearPhotos": "照片不清楚或不是您的农场",
+      "unreachable": "我们无法通过您的电话号码联系到您",
+      "notFarmProduce": "计划出售的不是农产品",
+      "duplicate": "该摊位已注册"
+    },
+    "suspend": {
+      "complaints": "多次收到顾客投诉",
+      "notAsDescribed": "商品与描述不符",
+      "missedPickups": "取货时摊位不在",
+      "rulesBroken": "违反平台规定",
+      "ownerRequest": "应摊主要求"
+    },
+    "deactivate": {
+      "noShows": "多次下单却未取货",
+      "abusiveMessages": "辱骂或垃圾信息",
+      "fakeAccount": "虚假或重复账户",
+      "fakeReviews": "虚假评价",
+      "ownerRequest": "应账户持有人要求"
+    }
   }
 }
