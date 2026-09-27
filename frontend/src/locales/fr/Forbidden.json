@@ -1,0 +1,9 @@
+{
+  "overline": "403 Accès interdit",
+  "title": "Accès restreint",
+  "text": "Vous n'avez pas l'autorisation d'accéder à l'espace d'administration avec votre compte actuel.",
+  "backHome": "Retour à l'accueil",
+  "backDashboard": "Retour au tableau de bord",
+  "backFarmer": "Retour à l'espace producteur",
+  "switchAccount": "Se connecter en tant qu'administrateur"
+}

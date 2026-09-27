@@ -1,0 +1,9 @@
+{
+  "overline": "403 Prohibido",
+  "title": "Acceso restringido",
+  "text": "No tiene permisos para acceder al área de administración con su cuenta actual.",
+  "backHome": "Volver al inicio",
+  "backDashboard": "Volver al panel",
+  "backFarmer": "Volver al portal de agricultor",
+  "switchAccount": "Iniciar sesión como administrador"
+}

@@ -14,6 +14,7 @@ import MainLayout from './layout/MainLayout';
 import RequireAuth from './layout/RequireAuth';
 import HomePage from './pages/public/Home';
 import NotFoundPage from './pages/public/NotFound';
+import ForbiddenPage from './pages/public/Forbidden';
 import RemountOnParam from './components/RemountOnParam';
 import LoginPage from './pages/auth/Login';
 import RegisterCustomerPage from './pages/auth/RegisterCustomer';
@@ -132,6 +133,7 @@ const App = () => {
             <Route path="privacy" element={<PrivacyPage />} />
             <Route path="contact" element={<ContactPage />} />
             <Route path="feedback" element={<FeedbackPage />} />
+            <Route path="403" element={<ForbiddenPage />} />
           </Route>
 
           {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}

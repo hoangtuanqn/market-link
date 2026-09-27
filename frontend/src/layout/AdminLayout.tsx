@@ -86,12 +86,13 @@ const initials = (name: string) =>
     .join('') || 'AD';
 
 /**
- * FR-004 — the admin area frame, separate from the Customer/Farmer layout. If not signed in or not an admin, go back to
- * the admin sign-in page. This is only UX: the real permission is checked by the backend at each admin API (FR-005).
+ * FR-004 — the admin area frame, separate from the Customer/Farmer layout. If not signed in, go back to the admin
+ * sign-in page. If signed in with another role, redirect to 403 Forbidden. This is only UX: the real permission is
+ * checked by the backend at each admin API (FR-005).
  */
 const AdminLayout = () => {
   const { t } = useTranslation();
-  const { user } = useSession();
+  const { user, isLoggedIn } = useSession();
   const { pathname } = useLocation();
   const logout = useLogout(ADMIN_LOGIN_PATH);
   const isAdmin = user?.role === USER_ROLE.ADMIN;
@@ -105,8 +106,12 @@ const AdminLayout = () => {
       .catch(() => {});
   }, [isAdmin, pathname]);
 
-  if (!isAdmin) {
+  if (!isLoggedIn) {
     return <Navigate to={ADMIN_LOGIN_PATH} replace />;
+  }
+
+  if (!isAdmin) {
+    return <Navigate to="/403" replace />;
   }
 
   return (

@@ -33,6 +33,7 @@ import farmerSlots from '@/locales/en/FarmerSlots.json';
 import farmerStallProfile from '@/locales/en/FarmerStallProfile.json';
 import farmerStockWeek from '@/locales/en/FarmerStockWeek.json';
 import forgotPassword from '@/locales/en/ForgotPassword.json';
+import forbidden from '@/locales/en/Forbidden.json';
 import googleCallback from '@/locales/en/GoogleCallback.json';
 import home from '@/locales/en/Home.json';
 import login from '@/locales/en/Login.json';
@@ -104,6 +105,7 @@ export const en = {
   FarmerStallProfile: farmerStallProfile,
   FarmerStockWeek: farmerStockWeek,
   ForgotPassword: forgotPassword,
+  Forbidden: forbidden,
   GoogleCallback: googleCallback,
   Home: home,
   Login: login,
