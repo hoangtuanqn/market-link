@@ -47,7 +47,8 @@ Mỗi gian hàng tự khoá nhận đơn trước giờ nhận hàng từ 12 đ�
 
 ## Xem chi tiết sản phẩm
 
-Trang chi tiết sản phẩm cho biết: giá theo đơn vị (kg, bó, quả…), **số lượng còn lại tuần này**, gian hàng bán,
+Trang chi tiết sản phẩm cho biết: giá theo đơn vị (kg, bó, quả…) bằng **đô la Mỹ (USD)**, **số lượng còn lại của
+ngày lấy hàng gần nhất còn hàng** (mỗi ngày lấy hàng có tồn kho riêng), gian hàng bán,
 các chợ và **khung giờ nhận hàng**, thời gian **cutoff** (đóng nhận đơn trước giờ nhận bao nhiêu tiếng),
 thời gian giữ tươi và đánh giá của khách khác.
 

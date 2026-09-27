@@ -98,31 +98,31 @@ class ChatServiceTest {
      * FR-063), not from products.price / products.stock_quantity.
      */
     @Test
-    void productDetailShowsTheNearestDatePriceInVndAndStock() {
+    void productDetailShowsTheNearestDatePriceInUsdAndStock() {
         when(knowledge.searchProducts("ca chua", null, true))
                 .thenReturn(
                         List.of(
                                 new ProductRow(
                                         10L,
                                         "Cà chua bi",
-                                        new BigDecimal("35000.00"),
+                                        new BigDecimal("1.40"),
                                         "kg",
                                         40,
                                         "available",
                                         3L,
                                         "Vườn Xanh",
                                         List.of("Chợ Bến Thành"))));
-        when(availability.resolve(Map.of(10L, new BigDecimal("35000.00"))))
+        when(availability.resolve(Map.of(10L, new BigDecimal("1.40"))))
                 .thenReturn(
                         Map.of(
                                 10L,
                                 new ProductAvailabilityResolver.Availability(
-                                        LocalDate.of(2026, 9, 28), 12, new BigDecimal("36000"))));
+                                        LocalDate.of(2026, 9, 28), 12, new BigDecimal("1.50"))));
 
         ChatReplyResource reply = ask("Cà chua giá bao nhiêu?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PRODUCT_DETAIL);
-        assertThat(reply.reply()).contains("36,000 ₫/kg", "12 kg left", "Vườn Xanh");
+        assertThat(reply.reply()).contains("$1.50/kg", "12 kg left", "Vườn Xanh");
         assertThat(reply.results()).extracting("type", "id").containsExactly(tuple("product", 10L));
     }
 
