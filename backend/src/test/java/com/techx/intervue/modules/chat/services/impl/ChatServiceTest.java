@@ -20,12 +20,15 @@ import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ScheduleRow;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -45,6 +48,7 @@ class ChatServiceTest {
 
     private ChatKnowledgeRepository knowledge;
     private ChatMessageRepository messages;
+    private ProductAvailabilityResolver availability;
     private ChatService service;
 
     @BeforeEach
@@ -54,7 +58,8 @@ class ChatServiceTest {
         // Thursday, 24/09/2026 Vietnam time
         Clock clock =
                 Clock.fixed(Instant.parse("2026-09-24T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
-        service = new ChatService(new IntentClassifier(), knowledge, messages, clock);
+        availability = mock(ProductAvailabilityResolver.class);
+        service = new ChatService(new IntentClassifier(), knowledge, messages, clock, availability);
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH));
     }
 
@@ -70,8 +75,12 @@ class ChatServiceTest {
         verify(knowledge, times(0)).searchProducts(any(), any(), anyBoolean());
     }
 
+    /**
+     * Price and stock come from the nearest pickup date that still has stock (per-date stock,
+     * FR-063), not from products.price / products.stock_quantity.
+     */
     @Test
-    void productDetailShowsPriceInVndAndStock() {
+    void productDetailShowsTheNearestDatePriceInVndAndStock() {
         when(knowledge.searchProducts("ca chua", null, true))
                 .thenReturn(
                         List.of(
@@ -80,16 +89,22 @@ class ChatServiceTest {
                                         "Cà chua bi",
                                         new BigDecimal("35000.00"),
                                         "kg",
-                                        12,
+                                        40,
                                         "available",
                                         3L,
                                         "Vườn Xanh",
                                         List.of("Chợ Bến Thành"))));
+        when(availability.resolve(Map.of(10L, new BigDecimal("35000.00"))))
+                .thenReturn(
+                        Map.of(
+                                10L,
+                                new ProductAvailabilityResolver.Availability(
+                                        LocalDate.of(2026, 9, 28), 12, new BigDecimal("36000"))));
 
         ChatReplyResource reply = ask("Cà chua giá bao nhiêu?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PRODUCT_DETAIL);
-        assertThat(reply.reply()).contains("35,000 ₫/kg", "12 kg left", "Vườn Xanh");
+        assertThat(reply.reply()).contains("36,000 ₫/kg", "12 kg left", "Vườn Xanh");
         assertThat(reply.results()).extracting("type", "id").containsExactly(tuple("product", 10L));
     }
 
