@@ -168,7 +168,7 @@ Lỗi trả **400** theo envelope sẵn có, tên field dạng `addressParts.<t�
 | `auth/CompleteProfile` (sau đăng nhập Google) | như trên |
 | `customer/Account/ProfileForm` | như trên; so "đã sửa" theo từng phần; tài khoản cũ thấy dòng "Địa chỉ cũ: …" |
 | `admin/Account` | gửi `addressParts` đang có (có thể thiếu, admin được bỏ trống) |
-| `admin/MarketForm` | ô Address + ô District → `AddressFields lockCountry lineRequired={false}`; chọn phường xong thì bản đồ ghim bay tới phường đó (tra một lần qua Nominatim, lỗi thì bản đồ đứng yên) |
+| `admin/MarketForm` | ô Address + ô District → `AddressFields lockCountry lineRequired={false}`. Ghim bản đồ **không** tự bay theo phường nữa, vì danh mục phường không có toạ độ và app không gọi geocoder (D-12). Admin đặt ghim trên bản đồ hoặc dán toạ độ như cũ |
 | `public/Markets` | bộ lọc khu vực theo `wardName`, chỉ liệt kê phường đang có chợ |
 | `public/Search` | dòng khu vực của chợ dùng `wardName` |
 | `config/districts.ts` | xoá (22 quận cũ) |
@@ -204,7 +204,6 @@ Việt có dấu ở mọi ngôn ngữ, như tên riêng.
 | Danh mục tải lỗi | ô liên quan khoá, dòng lỗi + nút Thử lại; nút Lưu vẫn bấm được nhưng bị chặn bởi validate |
 | Gợi ý đường tải lỗi | combobox vẫn nhận chữ gõ tay, không hiện lỗi chặn |
 | Server trả lỗi `addressParts.*` | hiện dưới đúng ô |
-| Nominatim lỗi (form chợ) | bản đồ đứng yên, admin tự kéo ghim như cũ |
 
 ## 8. Kiểm thử
 
