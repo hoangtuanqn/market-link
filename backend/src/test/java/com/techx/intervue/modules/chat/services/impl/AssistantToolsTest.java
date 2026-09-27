@@ -7,11 +7,14 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
+import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
+import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
@@ -28,6 +31,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class AssistantToolsTest {
+
+    private static final AssistantContext CUSTOMER =
+            new AssistantContext(AssistantAudience.CUSTOMER, 7L, null);
+    private static final AssistantContext NO_ONE = null;
 
     private static final MarketRow BEN_THANH =
             new MarketRow(
@@ -48,13 +55,15 @@ class AssistantToolsTest {
 
     private ChatKnowledgeRepository knowledge;
     private ProductAvailabilityResolver availability;
+    private FarmerKnowledgeRepository farmerKnowledge;
     private AssistantTools tools;
 
     @BeforeEach
     void setUp() {
         knowledge = mock(ChatKnowledgeRepository.class);
         availability = mock(ProductAvailabilityResolver.class);
-        tools = new AssistantTools(knowledge, availability, new UserGuideIndex());
+        farmerKnowledge = mock(FarmerKnowledgeRepository.class);
+        tools = new AssistantTools(knowledge, farmerKnowledge, availability, new UserGuideIndex());
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH, THAO_DIEN));
     }
 
@@ -82,7 +91,7 @@ class AssistantToolsTest {
 
         ToolOutcome out =
                 tools.run(
-                        AssistantAudience.CUSTOMER,
+                        CUSTOMER,
                         AssistantTools.SEARCH_PRODUCTS,
                         Map.of("keyword", "cà chua", "market", "chợ bến thành"));
 
@@ -102,7 +111,7 @@ class AssistantToolsTest {
     void anUnknownMarketIsAnErrorThatListsTheRealOnesAndRunsNoSearch() {
         ToolOutcome out =
                 tools.run(
-                        AssistantAudience.CUSTOMER,
+                        CUSTOMER,
                         AssistantTools.SEARCH_PRODUCTS,
                         Map.of("keyword", "cà chua", "market", "Chợ Không Có"));
 
@@ -114,7 +123,7 @@ class AssistantToolsTest {
     @Test
     void askingAboutStockAlsoListsSoldOutProducts() {
         tools.run(
-                AssistantAudience.CUSTOMER,
+                CUSTOMER,
                 AssistantTools.SEARCH_PRODUCTS,
                 Map.of("keyword", "xà lách", "include_sold_out", true));
 
@@ -123,8 +132,7 @@ class AssistantToolsTest {
 
     @Test
     void missingKeywordIsAnError() {
-        ToolOutcome out =
-                tools.run(AssistantAudience.CUSTOMER, AssistantTools.SEARCH_PRODUCTS, Map.of());
+        ToolOutcome out = tools.run(CUSTOMER, AssistantTools.SEARCH_PRODUCTS, Map.of());
 
         assertThat(out.error()).isTrue();
         assertThat(out.content()).contains("keyword");
@@ -133,10 +141,7 @@ class AssistantToolsTest {
     @Test
     void listMarketsFiltersByDay() {
         ToolOutcome out =
-                tools.run(
-                        AssistantAudience.CUSTOMER,
-                        AssistantTools.LIST_MARKETS,
-                        Map.of("day_of_week", 0));
+                tools.run(CUSTOMER, AssistantTools.LIST_MARKETS, Map.of("day_of_week", 0));
 
         assertThat(out.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
         assertThat(out.content()).contains("Chợ Thảo Điền").doesNotContain("Chợ Bến Thành");
@@ -146,18 +151,14 @@ class AssistantToolsTest {
     @Test
     void dayOutsideZeroToSixIsAnError() {
         ToolOutcome out =
-                tools.run(
-                        AssistantAudience.CUSTOMER,
-                        AssistantTools.LIST_MARKETS,
-                        Map.of("day_of_week", 7));
+                tools.run(CUSTOMER, AssistantTools.LIST_MARKETS, Map.of("day_of_week", 7));
 
         assertThat(out.error()).isTrue();
     }
 
     @Test
     void pickupTimesNeedAStallOrAMarket() {
-        ToolOutcome out =
-                tools.run(AssistantAudience.CUSTOMER, AssistantTools.PICKUP_TIMES, Map.of());
+        ToolOutcome out = tools.run(CUSTOMER, AssistantTools.PICKUP_TIMES, Map.of());
 
         assertThat(out.error()).isTrue();
         verify(knowledge, never()).farmerSchedules(any(), any(), any());
@@ -180,7 +181,7 @@ class AssistantToolsTest {
 
         ToolOutcome out =
                 tools.run(
-                        AssistantAudience.CUSTOMER,
+                        CUSTOMER,
                         AssistantTools.PICKUP_TIMES,
                         Map.of("stall", "vườn út hiền", "day_of_week", 6));
 
@@ -194,10 +195,7 @@ class AssistantToolsTest {
     @Test
     void userGuideSearchReturnsSectionsWithoutCards() {
         ToolOutcome out =
-                tools.run(
-                        AssistantAudience.CUSTOMER,
-                        AssistantTools.SEARCH_GUIDE,
-                        Map.of("query", "quên mật khẩu"));
+                tools.run(CUSTOMER, AssistantTools.SEARCH_GUIDE, Map.of("query", "quên mật khẩu"));
 
         assertThat(out.intent()).isEqualTo(ChatIntent.HELP);
         assertThat(out.content()).contains("Quên mật khẩu").contains("15 phút");
@@ -206,7 +204,7 @@ class AssistantToolsTest {
 
     @Test
     void unknownToolIsAnError() {
-        assertThat(tools.run(AssistantAudience.CUSTOMER, "drop_table", Map.of()).error()).isTrue();
+        assertThat(tools.run(CUSTOMER, "drop_table", Map.of()).error()).isTrue();
     }
 
     @Test
@@ -240,5 +238,66 @@ class AssistantToolsTest {
                                         Map.of("keyword", "cà chua"))
                                 .error())
                 .isTrue();
+    }
+
+    // ------------------------------------------------------------------ FR-093 ownership
+
+    private static final AssistantContext FARMER_9 =
+            new AssistantContext(AssistantAudience.FARMER, 7L, 9L);
+
+    @Test
+    void farmerToolsAreNotOfferedToCustomers() {
+        assertThat(AssistantTools.allows(AssistantAudience.CUSTOMER, AssistantTools.MY_ORDERS))
+                .isFalse();
+        assertThat(AssistantTools.allows(AssistantAudience.FARMER, AssistantTools.MY_ORDERS))
+                .isTrue();
+        // A Farmer still gets the catalogue tools, so shopping questions keep working.
+        assertThat(AssistantTools.allows(AssistantAudience.FARMER, AssistantTools.SEARCH_PRODUCTS))
+                .isTrue();
+    }
+
+    @Test
+    void aFarmerToolReadsTheStallFromTheContextAndIgnoresAnyIdInTheArguments() {
+        when(farmerKnowledge.myOrders(9L, "placed", null)).thenReturn(List.of());
+
+        // The model tries to name a different stall; the argument is not even looked at.
+        tools.run(
+                FARMER_9,
+                AssistantTools.MY_ORDERS,
+                Map.of("status", "placed", "farmer_id", 4321, "farmerId", 4321));
+
+        verify(farmerKnowledge).myOrders(9L, "placed", null);
+        verify(farmerKnowledge, never()).myOrders(eq(4321L), any(), any());
+    }
+
+    @Test
+    void aFarmerToolWithoutAStallIsAnErrorRatherThanAnUnscopedRead() {
+        ToolOutcome out =
+                tools.run(
+                        new AssistantContext(AssistantAudience.FARMER, 7L, null),
+                        AssistantTools.MY_ORDERS,
+                        Map.of());
+
+        assertThat(out.error()).isTrue();
+        verifyNoInteractions(farmerKnowledge);
+    }
+
+    @Test
+    void salesNeedsBothDatesAndARangeThatMakesSense() {
+        assertThat(
+                        tools.run(
+                                        FARMER_9,
+                                        AssistantTools.MY_SALES,
+                                        Map.of("from_date", "2026-09-01"))
+                                .error())
+                .isTrue();
+        assertThat(
+                        tools.run(
+                                        FARMER_9,
+                                        AssistantTools.MY_SALES,
+                                        Map.of("from_date", "2026-09-30", "to_date", "2026-09-01"))
+                                .error())
+                .isTrue();
+        verifyNoInteractions(farmerKnowledge);
     }
 }

@@ -7,7 +7,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
+import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
+import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
+import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.FarmerReviewRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.ProductStockRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.SalesRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.ScheduleDayRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
@@ -15,6 +23,7 @@ import com.techx.intervue.modules.chat.resources.KnowledgeRows.ScheduleRow;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver.Availability;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -24,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +52,12 @@ public class AssistantTools {
     static final String FIND_STALLS = "find_stalls";
     static final String PICKUP_TIMES = "get_pickup_times";
     static final String SEARCH_GUIDE = "search_user_guide";
+    static final String MY_ORDERS = "get_my_orders";
+    static final String CUTOFF_STATUS = "get_cutoff_status";
+    static final String MY_PRODUCTS = "get_my_products";
+    static final String MY_SALES = "get_my_sales";
+    static final String MY_REVIEWS = "get_my_reviews";
+    static final String MY_SCHEDULE = "get_my_schedule";
 
     private static final int GUIDE_SECTIONS = 3;
     private static final int MAX_ROWS = 15;
@@ -52,6 +68,7 @@ public class AssistantTools {
     private static final ObjectMapper JSON = new ObjectMapper();
 
     private final ChatKnowledgeRepository knowledge;
+    private final FarmerKnowledgeRepository farmerKnowledge;
     private final ProductAvailabilityResolver availability;
     private final UserGuideIndex guide;
 
@@ -144,6 +161,77 @@ public class AssistantTools {
                                                     + " e.g. 'huỷ đơn cutoff' or 'quên mật khẩu'.")),
                             List.of("query")));
 
+    private static final String ORDER_STATUS_HINT =
+            "Order status: placed (waiting for the stall to accept), accepted, ready, completed,"
+                    + " declined, cancelled. Omit for every status.";
+    private static final String DATE_HINT =
+            "A date as yyyy-MM-dd, taken from the day list in the system prompt, never computed.";
+
+    /** FR-093. Every one of these reads only the signed-in farmer's own rows. */
+    private static final List<Tool> FARMER_ONLY =
+            List.of(
+                    tool(
+                            MY_ORDERS,
+                            "The signed-in Farmer's own orders: customer, market, pickup date and"
+                                    + " window, cutoff, total and status. Use it for 'my orders',"
+                                    + " 'orders waiting for me' (status placed), or a given day.",
+                            Map.of(
+                                    "status", property("string", ORDER_STATUS_HINT),
+                                    "pickup_date", property("string", DATE_HINT)),
+                            List.of()),
+                    tool(
+                            CUTOFF_STATUS,
+                            "The Farmer's orders still waiting to be accepted whose cutoff is close."
+                                    + " Use it for 'what is urgent', 'what closes soon'.",
+                            Map.of(
+                                    "within_hours",
+                                    property(
+                                            "integer",
+                                            "How far ahead to look, in hours. Default 24.")),
+                            List.of()),
+                    tool(
+                            MY_PRODUCTS,
+                            "The Farmer's own products with stock, how much is already reserved by"
+                                    + " orders, and status. Use it for 'what is running out',"
+                                    + " 'what is sold out', 'my stock'.",
+                            Map.of(
+                                    "only_low_stock",
+                                            property(
+                                                    "boolean",
+                                                    "true to list only products at or below the"
+                                                            + " low-stock threshold."),
+                                    "status",
+                                            property(
+                                                    "string",
+                                                    "available, sold_out or unavailable. Omit for"
+                                                            + " all.")),
+                            List.of()),
+                    tool(
+                            MY_SALES,
+                            "The Farmer's completed-order count, revenue and best sellers between"
+                                    + " two dates. Revenue is paid at the stall, not through"
+                                    + " MarketLink.",
+                            Map.of(
+                                    "from_date", property("string", DATE_HINT),
+                                    "to_date", property("string", DATE_HINT)),
+                            List.of("from_date", "to_date")),
+                    tool(
+                            MY_REVIEWS,
+                            "Reviews customers left on the Farmer's stall and products, and whether"
+                                    + " each one already has a reply.",
+                            Map.of(
+                                    "only_unanswered",
+                                    property(
+                                            "boolean",
+                                            "true to list only reviews with no reply yet.")),
+                            List.of()),
+                    tool(
+                            MY_SCHEDULE,
+                            "Which market the Farmer sells at on which day, with the pickup window"
+                                    + " for that day.",
+                            Map.of(),
+                            List.of()));
+
     /**
      * Which tools each audience is shown. Filtering happens here, on the server: the model never
      * sees a tool outside its audience, rather than seeing it and being refused. Farmer and Admin
@@ -157,7 +245,9 @@ public class AssistantTools {
 
     static {
         BY_AUDIENCE.put(AssistantAudience.CUSTOMER, CUSTOMER_DEFINITIONS);
-        BY_AUDIENCE.put(AssistantAudience.FARMER, CUSTOMER_DEFINITIONS);
+        BY_AUDIENCE.put(
+                AssistantAudience.FARMER,
+                Stream.concat(CUSTOMER_DEFINITIONS.stream(), FARMER_ONLY.stream()).toList());
         BY_AUDIENCE.put(AssistantAudience.ADMIN, CUSTOMER_DEFINITIONS);
         BY_AUDIENCE.forEach(
                 (audience, tools) ->
@@ -204,7 +294,8 @@ public class AssistantTools {
     // ---------------------------------------------------------------- execution
 
     /** Runs one tool call. Bad arguments come back as an error outcome, never as an exception. */
-    public ToolOutcome run(AssistantAudience audience, String name, Map<String, Object> input) {
+    public ToolOutcome run(AssistantContext context, String name, Map<String, Object> input) {
+        AssistantAudience audience = context == null ? null : context.audience();
         if (!allows(audience, name)) {
             // Defence in depth: the model was never given this tool, so asking for it means the
             // conversation went somewhere it should not.
@@ -221,6 +312,12 @@ public class AssistantTools {
                 case FIND_STALLS -> findStalls(input);
                 case PICKUP_TIMES -> pickupTimes(input);
                 case SEARCH_GUIDE -> searchGuide(input);
+                case MY_ORDERS -> myOrders(context, input);
+                case CUTOFF_STATUS -> cutoffStatus(context, input);
+                case MY_PRODUCTS -> myProducts(context, input);
+                case MY_SALES -> mySales(context, input);
+                case MY_REVIEWS -> myReviews(context, input);
+                case MY_SCHEDULE -> mySchedule(context);
                 default -> error(ChatIntent.UNKNOWN, "Unknown tool: " + name);
             };
         } catch (IllegalArgumentException e) {
@@ -239,6 +336,10 @@ public class AssistantTools {
             case FIND_STALLS -> ChatIntent.FARMER_AVAILABILITY;
             case PICKUP_TIMES -> ChatIntent.PICKUP_WINDOW;
             case SEARCH_GUIDE -> ChatIntent.HELP;
+            case MY_ORDERS, CUTOFF_STATUS -> ChatIntent.PICKUP_WINDOW;
+            case MY_PRODUCTS, MY_SALES -> ChatIntent.PRODUCT_DETAIL;
+            case MY_REVIEWS -> ChatIntent.HELP;
+            case MY_SCHEDULE -> ChatIntent.FARMER_AVAILABILITY;
             default -> ChatIntent.UNKNOWN;
         };
     }
@@ -478,6 +579,180 @@ public class AssistantTools {
             return JSON.writeValueAsString(value);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Cannot serialise a tool result", e);
+        }
+    }
+
+    // ---------------------------------------------------------------- FR-093 farmer tools
+
+    private static final int LOW_STOCK_THRESHOLD = 5;
+    private static final int DEFAULT_CUTOFF_HOURS = 24;
+
+    /**
+     * The stall id never comes from {@code input}: it is resolved from the signed-in account. A
+     * farmer tool called without one is a bug, not a request to read somebody else's stall.
+     */
+    private static long requireFarmer(AssistantContext context) {
+        if (context == null || context.farmerId() == null) {
+            // An account with ROLE_FARMER but no approved stall row. Claude should say so rather
+            // than the turn dying, so this is an IllegalArgumentException that run() turns into a
+            // tool error.
+            throw new IllegalArgumentException(
+                    "This account has no stall yet, so there are no orders, products or reviews to"
+                            + " read.");
+        }
+        return context.farmerId();
+    }
+
+    private ToolOutcome myOrders(AssistantContext context, Map<String, Object> input) {
+        long farmerId = requireFarmer(context);
+        String status = text(input, "status");
+        LocalDate pickupDate = date(input, "pickup_date");
+        List<OrderRow> rows = farmerKnowledge.myOrders(farmerId, status, pickupDate);
+        return orders(rows, ChatIntent.PICKUP_WINDOW);
+    }
+
+    private ToolOutcome cutoffStatus(AssistantContext context, Map<String, Object> input) {
+        long farmerId = requireFarmer(context);
+        int hours =
+                input.get("within_hours") instanceof Number n && n.intValue() > 0
+                        ? n.intValue()
+                        : DEFAULT_CUTOFF_HOURS;
+        return orders(farmerKnowledge.cutoffSoon(farmerId, hours), ChatIntent.PICKUP_WINDOW);
+    }
+
+    private ToolOutcome orders(List<OrderRow> rows, ChatIntent intent) {
+        List<Map<String, Object>> out = new ArrayList<>();
+        List<ChatResultItem> cards = new ArrayList<>();
+        for (OrderRow r : rows) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("order_code", r.orderCode());
+            row.put("customer", r.customerName());
+            row.put("market", r.marketName());
+            row.put("pickup_date", String.valueOf(r.pickupDate()));
+            row.put(
+                    "pickup_window",
+                    TIME.format(r.pickupStart()) + "-" + TIME.format(r.pickupEnd()));
+            row.put("cutoff_at", String.valueOf(r.cutoffAt()));
+            row.put("items", r.itemCount());
+            row.put("total_vnd", r.total());
+            row.put("status", r.status());
+            out.add(row);
+            cards.add(
+                    new ChatResultItem(
+                            "order",
+                            r.orderId(),
+                            r.orderCode(),
+                            r.customerName() + " · " + r.marketName() + " · " + r.status()));
+        }
+        return ok(intent, Map.of("orders", out), cards);
+    }
+
+    private ToolOutcome myProducts(AssistantContext context, Map<String, Object> input) {
+        long farmerId = requireFarmer(context);
+        boolean lowStock = Boolean.TRUE.equals(input.get("only_low_stock"));
+        List<ProductStockRow> rows =
+                farmerKnowledge.myProducts(
+                        farmerId, text(input, "status"), lowStock, LOW_STOCK_THRESHOLD);
+        List<Map<String, Object>> out = new ArrayList<>();
+        List<ChatResultItem> cards = new ArrayList<>();
+        for (ProductStockRow r : rows) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("name", r.name());
+            row.put("price_vnd", r.price());
+            row.put("unit", r.unit());
+            row.put("stock", r.stockQuantity());
+            row.put("reserved_by_orders", r.reserved());
+            row.put("status", r.status());
+            out.add(row);
+            cards.add(
+                    new ChatResultItem(
+                            "product",
+                            r.productId(),
+                            r.name(),
+                            r.stockQuantity() + " " + r.unit() + " · " + r.status()));
+        }
+        return ok(ChatIntent.PRODUCT_DETAIL, Map.of("products", out), cards);
+    }
+
+    private ToolOutcome mySales(AssistantContext context, Map<String, Object> input) {
+        long farmerId = requireFarmer(context);
+        LocalDate from = date(input, "from_date");
+        LocalDate to = date(input, "to_date");
+        if (from == null || to == null) {
+            return error(
+                    ChatIntent.PRODUCT_DETAIL, "Give both from_date and to_date as yyyy-MM-dd.");
+        }
+        if (from.isAfter(to)) {
+            return error(ChatIntent.PRODUCT_DETAIL, "from_date is after to_date.");
+        }
+        SalesRow totals = farmerKnowledge.mySales(farmerId, from, to);
+        List<BestSellerRow> best = farmerKnowledge.bestSellers(farmerId, from, to);
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("from", String.valueOf(from));
+        out.put("to", String.valueOf(to));
+        out.put("completed_orders", totals.orderCount());
+        out.put("revenue_vnd", totals.revenue());
+        out.put(
+                "best_sellers",
+                best.stream()
+                        .map(
+                                b -> {
+                                    Map<String, Object> row = new LinkedHashMap<>();
+                                    row.put("product", b.productName());
+                                    row.put("sold", b.quantitySold() + " " + b.unit());
+                                    row.put("revenue_vnd", b.revenue());
+                                    return row;
+                                })
+                        .toList());
+        return ok(ChatIntent.PRODUCT_DETAIL, out, List.of());
+    }
+
+    private ToolOutcome myReviews(AssistantContext context, Map<String, Object> input) {
+        long farmerId = requireFarmer(context);
+        boolean onlyUnanswered = Boolean.TRUE.equals(input.get("only_unanswered"));
+        List<FarmerReviewRow> rows = farmerKnowledge.myReviews(farmerId, onlyUnanswered);
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (FarmerReviewRow r : rows) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("rating", r.rating());
+            row.put("about", r.targetName());
+            row.put("customer", r.customerName());
+            row.put("on", String.valueOf(r.createdOn()));
+            row.put("answered", r.answered());
+            row.put("comment", r.comment());
+            out.add(row);
+        }
+        return ok(ChatIntent.HELP, Map.of("reviews", out), List.of());
+    }
+
+    private ToolOutcome mySchedule(AssistantContext context) {
+        long farmerId = requireFarmer(context);
+        List<ScheduleDayRow> rows = farmerKnowledge.mySchedule(farmerId);
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (ScheduleDayRow r : rows) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("market", r.marketName());
+            row.put("day", DAY_NAMES[r.dayOfWeek()]);
+            row.put("day_of_week", r.dayOfWeek());
+            row.put("pickup", TIME.format(r.pickupStart()) + "-" + TIME.format(r.pickupEnd()));
+            out.add(row);
+        }
+        return ok(ChatIntent.FARMER_AVAILABILITY, Map.of("days", out), List.of());
+    }
+
+    private static String text(Map<String, Object> input, String key) {
+        return input.get(key) instanceof String value && !value.isBlank() ? value.trim() : null;
+    }
+
+    private static LocalDate date(Map<String, Object> input, String key) {
+        String value = text(input, key);
+        if (value == null) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(value);
+        } catch (java.time.format.DateTimeParseException e) {
+            return null;
         }
     }
 }

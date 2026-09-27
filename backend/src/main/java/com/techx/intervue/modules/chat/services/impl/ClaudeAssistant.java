@@ -16,6 +16,7 @@ import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
+import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
 import com.techx.intervue.modules.chat.services.impl.AssistantTools.ToolOutcome;
 import java.time.Clock;
@@ -154,8 +155,8 @@ public class ClaudeAssistant {
      *
      * @param history earlier messages of this session and account, oldest first
      */
-    public AiReply reply(
-            List<ChatMessage> history, String userMessage, AssistantAudience audience) {
+    public AiReply reply(List<ChatMessage> history, String userMessage, AssistantContext context) {
+        AssistantAudience audience = context.audience();
         AnthropicClient anthropic = client.getObject();
         List<MessageParam> conversation = new ArrayList<>(toParams(history));
         conversation.add(text(MessageParam.Role.USER, userMessage));
@@ -193,7 +194,7 @@ public class ClaudeAssistant {
                 }
                 ToolUseBlock use = call.get();
                 Map<String, Object> input = inputOf(use);
-                ToolOutcome outcome = tools.run(audience, use.name(), input);
+                ToolOutcome outcome = tools.run(context, use.name(), input);
                 log.debug("Assistant tool {} {} → error={}", use.name(), input, outcome.error());
 
                 toolsUsed.add(use.name());

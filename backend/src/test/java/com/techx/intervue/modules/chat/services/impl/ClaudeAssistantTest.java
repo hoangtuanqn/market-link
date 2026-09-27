@@ -20,6 +20,7 @@ import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
+import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
 import com.techx.intervue.modules.chat.services.impl.AssistantTools.ToolOutcome;
 import com.techx.intervue.modules.chat.services.impl.ClaudeAssistant.AiReply;
@@ -68,10 +69,7 @@ class ClaudeAssistantTest {
 
     @Test
     void runsTheRequestedToolAndAnswersFromItsResult() {
-        when(tools.run(
-                        eq(AssistantAudience.CUSTOMER),
-                        eq(AssistantTools.SEARCH_PRODUCTS),
-                        anyMap()))
+        when(tools.run(any(), eq(AssistantTools.SEARCH_PRODUCTS), anyMap()))
                 .thenReturn(
                         new ToolOutcome(
                                 "{\"products\":[]}",
@@ -83,15 +81,20 @@ class ClaudeAssistantTest {
                         toolUse("toolu_1", AssistantTools.SEARCH_PRODUCTS, "cà chua"),
                         text("Cà chua bi $1.10/kg ở Vườn Út Hiền."));
 
-        AiReply reply = assistant.reply(List.of(), "tìm cà chua", AssistantAudience.CUSTOMER);
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "tìm cà chua",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null));
 
         assertThat(reply.reply()).isEqualTo("Cà chua bi $1.10/kg ở Vườn Út Hiền.");
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
         assertThat(reply.loggedIntent()).isEqualTo("AI:search_products");
         assertThat(reply.results()).containsExactly(CARD);
+        // The context reaches the tool unchanged: this is what scopes a farmer tool to its stall.
         verify(tools)
                 .run(
-                        AssistantAudience.CUSTOMER,
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
                         AssistantTools.SEARCH_PRODUCTS,
                         Map.of("keyword", "cà chua"));
 
@@ -117,7 +120,10 @@ class ClaudeAssistantTest {
                         });
 
         AiReply reply =
-                assistant.reply(List.of(), "làm sao để huỷ đơn", AssistantAudience.CUSTOMER);
+                assistant.reply(
+                        List.of(),
+                        "làm sao để huỷ đơn",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null));
 
         assertThat(reply.reply()).isEqualTo("Đây là câu trả lời.");
         // maxToolRounds = 2 tool rounds, then one forced text round
@@ -140,7 +146,11 @@ class ClaudeAssistantTest {
                         toolUse("toolu_1", AssistantTools.SEARCH_PRODUCTS, "cà chua"),
                         text("Không có chợ đó."));
 
-        AiReply reply = assistant.reply(List.of(), "cà chua ở chợ X", AssistantAudience.CUSTOMER);
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "cà chua ở chợ X",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null));
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.UNKNOWN);
         List<ContentBlockParam> results =
@@ -152,7 +162,9 @@ class ClaudeAssistantTest {
     void aRefusalGetsAFixedPoliteReply() {
         when(messageService.create(any(MessageCreateParams.class))).thenReturn(message("refusal"));
 
-        AiReply reply = assistant.reply(List.of(), "…", AssistantAudience.CUSTOMER);
+        AiReply reply =
+                assistant.reply(
+                        List.of(), "…", new AssistantContext(AssistantAudience.CUSTOMER, 7L, null));
 
         assertThat(reply.loggedIntent()).isEqualTo("AI:refusal");
         assertThat(reply.reply()).contains("Sorry");
@@ -162,7 +174,11 @@ class ClaudeAssistantTest {
     void anAnswerWithoutToolsIsLoggedAsNone() {
         when(messageService.create(any(MessageCreateParams.class))).thenReturn(text("Xin chào!"));
 
-        AiReply reply = assistant.reply(List.of(), "xin chào", AssistantAudience.CUSTOMER);
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "xin chào",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null));
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.UNKNOWN);
         assertThat(reply.loggedIntent()).isEqualTo("AI:none");
@@ -172,7 +188,10 @@ class ClaudeAssistantTest {
     void todaysDateAndWeekdayAreGivenToClaude() {
         when(messageService.create(any(MessageCreateParams.class))).thenReturn(text("ok"));
 
-        assistant.reply(List.of(), "hôm nay chợ nào mở", AssistantAudience.CUSTOMER);
+        assistant.reply(
+                List.of(),
+                "hôm nay chợ nào mở",
+                new AssistantContext(AssistantAudience.CUSTOMER, 7L, null));
 
         String system =
                 sentParams(1).getFirst().system().orElseThrow().asTextBlockParams().get(1).text();

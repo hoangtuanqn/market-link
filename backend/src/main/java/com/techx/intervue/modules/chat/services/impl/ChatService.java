@@ -6,7 +6,9 @@ import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatMessageRepository;
+import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
+import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
@@ -68,6 +70,7 @@ public class ChatService implements ChatServiceInterface {
     private final ProductAvailabilityResolver availability;
     private final ClaudeAssistant assistant;
     private final AssistantRateLimiter assistantLimit;
+    private final FarmerKnowledgeRepository farmerKnowledge;
     private final ChatbotAiProperties aiProperties;
 
     private record Answer(ChatIntent intent, String reply, List<ChatResultItem> results) {}
@@ -127,12 +130,26 @@ public class ChatService implements ChatServiceInterface {
         }
         try {
             return assistant.reply(
-                    recentHistory(request.sessionKey(), userId), request.message(), audience);
+                    recentHistory(request.sessionKey(), userId),
+                    request.message(),
+                    contextFor(userId, audience));
         } catch (RuntimeException e) {
             // AnthropicException (network, 4xx/5xx, rate limit) or a failed lookup
             log.warn("Assistant failed, keyword engine answers: {}", e.toString());
             return null;
         }
+    }
+
+    /**
+     * Resolves the stall a Farmer owns here, once per message, from the signed-in account. It is
+     * deliberately not a tool argument: an argument is filled by the model (FR-093 note 1).
+     */
+    private AssistantContext contextFor(Long userId, AssistantAudience audience) {
+        Long farmerId =
+                audience == AssistantAudience.FARMER
+                        ? farmerKnowledge.farmerIdOf(userId).orElse(null)
+                        : null;
+        return new AssistantContext(audience, userId, farmerId);
     }
 
     /** The last few messages of this session that belong to this account, oldest first. */
