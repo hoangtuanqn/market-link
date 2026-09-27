@@ -176,3 +176,25 @@ export function dayList(days: number[]): string {
     [1, 2, 3, 4, 5, 6, 0].filter((d) => days.includes(d)).map((d) => dayName(d)),
   );
 }
+
+/** "yyyy-MM-dd" → a Date in local time; `new Date('2026-10-03')` is midnight UTC and lands on the previous day at UTC−x. */
+const localDay = (ymd: string) => {
+  const [y, m, d] = ymd.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+
+/**
+ * An order's pickup window for the ticket: "yyyy-MM-dd" + "HH:mm–HH:mm" → "Sat 26/09 · 07:00–08:00". A non-ISO date
+ * (sample/demo data) is returned as-is next to the slot instead of throwing.
+ */
+export function pickupLabel(date: string, slot: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return `${date} · ${slot}`;
+  const d = localDay(date);
+  return `${dayName(d.getDay())} ${formatDayMonth(d)} · ${slot.split('–').map(formatClock).join('–')}`;
+}
+
+/** An ISO instant (an order's cutoff) as the reader's time then date. The raw string when it cannot be parsed. */
+export function cutoffLabel(iso: string): string {
+  const at = new Date(iso);
+  return Number.isNaN(at.getTime()) ? iso : `${formatTime(at)} ${formatDate(at)}`;
+}

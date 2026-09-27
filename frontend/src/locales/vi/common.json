@@ -267,7 +267,15 @@
     "cancel": "Huỷ đơn",
     "reviewed": "Bạn đã đánh giá đơn này",
     "review": "Đánh giá sạp & sản phẩm",
-    "reorder": "Đặt lại"
+    "reorder": "Đặt lại",
+    "itemCount_one": "{{count}} sản phẩm",
+    "itemCount_other": "{{count}} sản phẩm",
+    "cancelConfirmTitle": "Huỷ đơn này?",
+    "cancelConfirmText": "Sạp sẽ được báo và hàng trả lại kệ.",
+    "cancelledToast": "Đã huỷ đơn {{code}}.",
+    "reordered": "Đã cho lại vào giỏ.",
+    "reorderedPartly_one": "Đã cho vào giỏ; {{count}} sản phẩm không còn bán.",
+    "reorderedPartly_other": "Đã cho vào giỏ; {{count}} sản phẩm không còn bán."
   },
   "orderStatus": {
     "placed": "Đã đặt",
