@@ -7,23 +7,24 @@
   "message": "Message",
   "placeholder": "e.g. Who has eggs at Thảo Điền on Saturday?",
   "send": "Send",
-  "reply": {
-    "greeting": "Hi {{name}}. Ask me what is available this weekend, or when a market opens.",
-    "pomelo": "On {{day}} {{date}}, 2 stalls have green-skin pomelo: <b>Út Hiền Orchard</b> at Thủ Đức Farmers Market (2 left, {{price1}}) and <b>Ba Lành Farm</b> at Thảo Điền Weekend Market (9 left, {{price2}}).",
-    "slots": "Út Hiền Orchard picks up {{from}} – {{to}} on {{day}} {{date}} at Thủ Đức Farmers Market. Free slots: {{free}}. The {{full}} slot is full. Orders close 12 hours before the slot.",
-    "unknown": "I did not understand that. Try a product name, a market, or a stall."
-  },
-  "question": {
-    "pomeloMorning": "Which market has green-skin pomelo on Saturday morning?"
-  },
+  "sending": "Sending…",
+  "error": "Something went wrong. Try again in a moment.",
+  "loading": "Loading your conversation…",
+  "loadErrorTitle": "We could not load your conversation history",
+  "loadErrorText": "Check your connection and try again.",
+  "retry": "Try again",
+  "emptyTitle": "No messages yet",
+  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
   "suggest": {
-    "pomeloSat": "Where can I get green-skin pomelo on Saturday?",
-    "baChieuOpen": "When does Bà Chiểu Green Market open?",
-    "showMap": "Show the 2 stalls on the map",
-    "slotsUtHien": "Pickup times at Út Hiền",
-    "addPomelos": "Add 2 pomelos to my cart",
-    "directionsThuDuc": "Directions to Thủ Đức Farmers Market",
-    "thaoDien": "What is at Thảo Điền on Saturday?"
+    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
+    "pomeloStock": "có bưởi không",
+    "benThanhSat": "farmers at Ben Thanh on saturday",
+    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
+  },
+  "resultLink": {
+    "product": "View product: {{title}}",
+    "market": "View market: {{title}}",
+    "farmer": "View stall: {{title}}"
   },
   "canAnswer": {
     "title": "What it can answer",
