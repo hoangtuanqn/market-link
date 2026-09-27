@@ -55,8 +55,7 @@
     "reason": "Lý do nhà vườn sẽ thấy",
     "confirm": "Từ chối đơn đăng ký",
     "placeholder": "Nói rõ cần sửa gì thì sạp này mới được duyệt.",
-    "hint": "{{used}} trên {{max}} ký tự. Người nộp đơn đọc đúng từng chữ này.",
-    "required": "Viết lý do mà người nộp đơn sẽ đọc.",
+    "required": "Chọn một lý do hoặc viết lý do mà người đăng ký sẽ đọc.",
     "tooLong": "Lý do không quá {{max}} ký tự."
   },
   "suspend": {
@@ -65,8 +64,7 @@
     "confirm": "Tạm ngưng sạp",
     "reason": "Lý do nhà vườn sẽ thấy",
     "placeholder": "Nói rõ sạp phải sửa gì thì mới bán lại được.",
-    "hint": "{{used}} trên {{max}} ký tự. Farmer đọc đúng từng chữ này.",
-    "required": "Viết lý do mà Farmer sẽ đọc.",
+    "required": "Chọn một lý do hoặc viết lý do mà nhà vườn sẽ đọc.",
     "tooLong": "Lý do không quá {{max}} ký tự."
   },
   "toast": {

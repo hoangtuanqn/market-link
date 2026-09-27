@@ -11,6 +11,7 @@ import { ApplicationHistory } from '@/components/ApplicationHistory';
 import { ReasonField } from '@/components/ReasonField';
 import { VideoThumb } from '@/components/VideoThumb';
 import { APPROVAL_STATUS_META, REASON_MAX } from '@/constants/approvalStatus';
+import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
@@ -40,7 +41,7 @@ const AdminFarmerDetailPage = () => {
   const [busy, setBusy] = useState(false);
   const [dialog, setDialog] = useState<DialogKind | null>(null);
   /** One reason used for both reject and suspend — only one dialog can be open at a time. */
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
 
   // only setState in a promise callback (the initial state is already loading)
@@ -58,7 +59,7 @@ const AdminFarmerDetailPage = () => {
   };
 
   const openDialog = (kind: DialogKind) => {
-    setReason('');
+    setReason(emptyReason());
     setReasonError(undefined);
     setDialog(kind);
   };
@@ -83,7 +84,7 @@ const AdminFarmerDetailPage = () => {
   const confirmDialog = async () => {
     if (!dialog) return;
     // The server requires a reason for both (@NotBlank, at most 255) — block it here so the admin does not lose the dialog.
-    const written = reason.trim();
+    const written = dialog === 'reject' || dialog === 'suspend' ? composeReason(dialog, reason) : '';
     if (dialog === 'reject' || dialog === 'suspend') {
       if (!written) return setReasonError(tf(`${dialog}.required`));
       if (written.length > REASON_MAX) return setReasonError(tf(`${dialog}.tooLong`, { max: REASON_MAX }));

@@ -724,5 +724,33 @@
       "cityRequired": "Enter the city.",
       "tooLong": "Keep this under {{max}} characters."
     }
+  },
+  "reasons": {
+    "pick": "Pick one or more",
+    "note": "Anything to add",
+    "noteOptional": "Anything to add (optional)",
+    "preview": "They will read: “{{text}}”",
+    "length": "{{used}} of {{max}} characters.",
+    "reject": {
+      "incompleteInfo": "Your stall details are incomplete",
+      "unclearPhotos": "The photos are unclear or not of your farm",
+      "unreachable": "We could not reach you on your phone number",
+      "notFarmProduce": "What you plan to sell is not farm produce",
+      "duplicate": "This stall is already registered"
+    },
+    "suspend": {
+      "complaints": "Repeated complaints from customers",
+      "notAsDescribed": "Produce did not match its listing",
+      "missedPickups": "The stall was not there at pickup time",
+      "rulesBroken": "The platform rules were broken",
+      "ownerRequest": "At the stall owner’s request"
+    },
+    "deactivate": {
+      "noShows": "Repeatedly ordered and did not collect",
+      "abusiveMessages": "Abusive or spam messages",
+      "fakeAccount": "Fake or duplicate account",
+      "fakeReviews": "Fake reviews",
+      "ownerRequest": "At the account owner’s request"
+    }
   }
 }

@@ -724,5 +724,33 @@
       "cityRequired": "Isi kota.",
       "tooLong": "Maksimal {{max}} karakter."
     }
+  },
+  "reasons": {
+    "pick": "Pilih satu atau beberapa",
+    "note": "Tambahan",
+    "noteOptional": "Tambahan (opsional)",
+    "preview": "Yang akan dibaca: “{{text}}”",
+    "length": "{{used}} dari {{max}} karakter.",
+    "reject": {
+      "incompleteInfo": "Data lapak belum lengkap",
+      "unclearPhotos": "Foto tidak jelas atau bukan kebun Anda",
+      "unreachable": "Kami tidak dapat menghubungi nomor telepon Anda",
+      "notFarmProduce": "Yang akan dijual bukan hasil pertanian",
+      "duplicate": "Lapak ini sudah terdaftar"
+    },
+    "suspend": {
+      "complaints": "Keluhan pelanggan berulang kali",
+      "notAsDescribed": "Barang tidak sesuai deskripsi",
+      "missedPickups": "Lapak tidak ada saat waktu pengambilan",
+      "rulesBroken": "Melanggar aturan platform",
+      "ownerRequest": "Atas permintaan pemilik lapak"
+    },
+    "deactivate": {
+      "noShows": "Berulang kali memesan tanpa mengambil",
+      "abusiveMessages": "Pesan kasar atau spam",
+      "fakeAccount": "Akun palsu atau ganda",
+      "fakeReviews": "Ulasan palsu",
+      "ownerRequest": "Atas permintaan pemilik akun"
+    }
   }
 }

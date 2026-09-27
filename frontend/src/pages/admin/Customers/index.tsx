@@ -6,6 +6,7 @@ import { CheckIcon, CloseIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
+import ReasonPicker from '@/components/ReasonPicker';
 import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
@@ -13,6 +14,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH } from '@/constants/nav';
 import useRequest from '@/hooks/useRequest';
 import { formatDate } from '@/lib/format';
+import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
@@ -54,7 +56,7 @@ const AdminCustomersPage = () => {
   const [page, setPage] = useState(1);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<ReasonValue>(emptyReason);
 
   const {
     state: load,
@@ -100,7 +102,7 @@ const AdminCustomersPage = () => {
   };
 
   const openConfirm = (kind: ConfirmKind, item: AdminCustomerDto) => {
-    setReason('');
+    setReason(emptyReason());
     setConfirmAction({ kind, item });
   };
 
@@ -114,7 +116,7 @@ const AdminCustomersPage = () => {
       const updated = await AdminReportApi.setCustomerStatus(item.userId, status);
       mutate((data) => ({ ...data, items: data.items.map((c) => (c.userId === item.userId ? updated : c)) }));
       retryCounts();
-      const trimmedReason = reason.trim();
+      const trimmedReason = composeReason('deactivate', reason);
       const toastKey =
         kind === 'deactivate'
           ? trimmedReason
@@ -244,14 +246,12 @@ const AdminCustomersPage = () => {
           <p>{confirmAction ? t(`${confirmAction.kind}.text`) : ''}</p>
           {confirmAction?.kind === 'deactivate' && (
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="deactivate-reason" className="text-small font-bold">
-                {t('deactivate.reason')}
-              </label>
-              <textarea
+              <ReasonPicker
                 id="deactivate-reason"
+                kind="deactivate"
+                label={t('deactivate.reason')}
                 value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="border-line-strong bg-surface-raised focus:outline-focus min-h-18 rounded-sm border-[1.5px] p-3 focus:outline-2"
+                onChange={setReason}
               />
               <span className="text-ink-muted text-[13px]">{t('deactivate.reasonHint')}</span>
             </div>

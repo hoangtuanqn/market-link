@@ -724,5 +724,33 @@
       "cityRequired": "도시를 입력하세요.",
       "tooLong": "{{max}}자 이내로 입력하세요."
     }
+  },
+  "reasons": {
+    "pick": "하나 이상 고르세요",
+    "note": "추가 설명",
+    "noteOptional": "추가 설명(선택)",
+    "preview": "상대가 보게 될 문장: “{{text}}”",
+    "length": "{{used}}/{{max}}자.",
+    "reject": {
+      "incompleteInfo": "가판 정보가 부족합니다",
+      "unclearPhotos": "사진이 흐리거나 농장 사진이 아닙니다",
+      "unreachable": "등록한 전화번호로 연락이 닿지 않았습니다",
+      "notFarmProduce": "판매하려는 품목이 농산물이 아닙니다",
+      "duplicate": "이미 등록된 가판입니다"
+    },
+    "suspend": {
+      "complaints": "고객 불만이 반복되었습니다",
+      "notAsDescribed": "상품이 설명과 달랐습니다",
+      "missedPickups": "수령 시간에 가판이 없었습니다",
+      "rulesBroken": "플랫폼 규정을 위반했습니다",
+      "ownerRequest": "가판 운영자의 요청"
+    },
+    "deactivate": {
+      "noShows": "주문 후 수령하지 않은 일이 반복되었습니다",
+      "abusiveMessages": "욕설 또는 스팸 메시지",
+      "fakeAccount": "가짜 또는 중복 계정",
+      "fakeReviews": "조작된 리뷰",
+      "ownerRequest": "계정 소유자의 요청"
+    }
   }
 }

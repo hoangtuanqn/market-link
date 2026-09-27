@@ -11,6 +11,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import { REASON_MAX } from '@/constants/approvalStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
+import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import type { AdminFarmerListItemType, FarmerApproval } from '@/types/farmer.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -30,7 +31,7 @@ const AdminFarmersPage = () => {
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [rejectTarget, setRejectTarget] = useState<AdminFarmerListItemType | null>(null);
   /** One reason used for both reject and suspend — only one dialog can be open at a time. */
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
   /** The text being typed in the search box, separate from the applied keyword: only Enter or the button calls the API. */
   const [queryDraft, setQueryDraft] = useState('');
@@ -93,7 +94,7 @@ const AdminFarmersPage = () => {
   };
 
   const openConfirm = (kind: ConfirmKind, item: AdminFarmerListItemType) => {
-    setReason('');
+    setReason(emptyReason());
     setReasonError(undefined);
     setConfirmAction({ kind, item });
   };
@@ -101,7 +102,7 @@ const AdminFarmersPage = () => {
   const runConfirmedAction = async () => {
     if (!confirmAction) return;
     const { kind, item } = confirmAction;
-    const written = reason.trim();
+    const written = composeReason('suspend', reason);
     // Suspension needs a reason too: the Farmer reads this sentence back on their own profile page.
     if (kind === 'suspend') {
       if (!written) return setReasonError(t('suspend.required'));
@@ -126,7 +127,7 @@ const AdminFarmersPage = () => {
   const submitReject = async () => {
     if (!rejectTarget) return;
     // The server requires a reason (@NotBlank, at most 255) — block it here so the admin does not lose the dialog.
-    const written = reason.trim();
+    const written = composeReason('reject', reason);
     if (!written) return setReasonError(t('reject.required'));
     if (written.length > REASON_MAX) return setReasonError(t('reject.tooLong', { max: REASON_MAX }));
     setReasonError(undefined);
@@ -147,11 +148,11 @@ const AdminFarmersPage = () => {
 
   const openReject = (f: AdminFarmerListItemType) => {
     setRejectTarget(f);
-    setReason('');
+    setReason(emptyReason());
     setReasonError(undefined);
   };
 
-  const onReasonChange = (next: string) => {
+  const onReasonChange = (next: ReasonValue) => {
     setReason(next);
     if (reasonError) setReasonError(undefined);
   };
