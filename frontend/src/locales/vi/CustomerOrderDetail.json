@@ -14,13 +14,10 @@
     "declined": "Bị từ chối",
     "cancelled": "Đã huỷ"
   },
-  "previewLocked": "Xem trước: sau giờ chốt",
   "pickup": {
     "title": "Nhận hàng",
     "where": "{{market}}, sạp {{stall}}",
-    "spot": "Phía bờ sông của chợ, cạnh sạp bánh mì.",
     "slot": "Khung giờ của bạn",
-    "phone": "Điện thoại sạp",
     "bring": "Mang theo",
     "bringText": "{{total}} tiền mặt hoặc chuyển khoản tại sạp",
     "directions": "Chỉ đường",
@@ -37,11 +34,24 @@
     "until": "Bạn có thể sửa số lượng, bỏ món hoặc huỷ đơn đến <b>{{cutoff}}</b>. Sau khi bạn sửa, {{stall}} sẽ duyệt lại đơn.",
     "edit": "Sửa đơn",
     "cancel": "Huỷ đơn",
-    "locked": "Đã qua giờ chốt lúc {{cutoff}}. Muốn thay đổi, hãy liên hệ trực tiếp với sạp qua số {{phone}}.",
-    "settled": "Đơn này không đổi được nữa. Cần hỏi gì, hãy liên hệ trực tiếp với sạp qua số {{phone}}."
+    "lockedContact": "Đã qua giờ chốt lúc {{cutoff}}. Muốn đổi, hãy nhắn cho sạp.",
+    "settledContact": "Đơn này không thể thay đổi nữa. Muốn hỏi thêm, hãy nhắn cho sạp.",
+    "cancelFailed": "Chưa huỷ được đơn. Có thể đã qua giờ chốt; tải lại trang để xem trạng thái."
   },
   "notify": {
     "title": "Thông báo cho đơn này",
     "text": "Bạn đã được báo khi đơn được nhận. Bạn sẽ được báo khi đơn sẵn sàng, hoặc nếu sạp phải từ chối."
+  },
+  "noun": "đơn hàng",
+  "items": {
+    "title": "Bạn đã đặt",
+    "line": "{{qty}} {{unit}} × {{price}}",
+    "total": "Tổng cộng"
+  },
+  "declined": "Sạp đã từ chối đơn này: {{reason}}",
+  "cancelDialog": {
+    "title": "Huỷ đơn này?",
+    "text": "{{stall}} được báo ngay và hàng được mở bán lại.",
+    "keep": "Giữ đơn"
   }
 }

@@ -14,13 +14,10 @@
     "declined": "Abgelehnt",
     "cancelled": "Storniert"
   },
-  "previewLocked": "Vorschau: nach Bestellschluss",
   "pickup": {
     "title": "Abholung",
     "where": "{{market}}, Stand {{stall}}",
-    "spot": "Flussseite des Markts, neben dem Brotstand.",
     "slot": "Ihr Zeitfenster",
-    "phone": "Telefon des Stands",
     "bring": "Mitbringen",
     "bringText": "{{total}} in bar oder per Überweisung am Stand",
     "directions": "Route",
@@ -37,11 +34,24 @@
     "until": "Bis <b>{{cutoff}}</b> können Sie Mengen ändern, Artikel entfernen oder stornieren. Nach einer Änderung bestätigt {{stall}} die Bestellung erneut.",
     "edit": "Bestellung bearbeiten",
     "cancel": "Bestellung stornieren",
-    "locked": "Der Bestellschluss war um {{cutoff}}. Für Änderungen wenden Sie sich direkt unter {{phone}} an den Stand.",
-    "settled": "Diese Bestellung lässt sich nicht mehr ändern. Bei Fragen wenden Sie sich direkt unter {{phone}} an den Stand."
+    "lockedContact": "Bestellschluss war {{cutoff}}. Für Änderungen schreib dem Stand.",
+    "settledContact": "Diese Bestellung lässt sich nicht mehr ändern. Bei Fragen schreib dem Stand.",
+    "cancelFailed": "Die Bestellung konnte nicht storniert werden. Der Bestellschluss ist vielleicht vorbei; lade neu, um den Status zu sehen."
   },
   "notify": {
     "title": "Benachrichtigungen zu dieser Bestellung",
     "text": "Sie wurden informiert, als sie angenommen wurde. Sie werden informiert, wenn sie abholbereit ist oder der Stand sie ablehnen muss."
+  },
+  "noun": "Bestellung",
+  "items": {
+    "title": "Deine Bestellung",
+    "line": "{{qty}} {{unit}} × {{price}}",
+    "total": "Summe"
+  },
+  "declined": "Der Stand hat diese Bestellung abgelehnt: {{reason}}",
+  "cancelDialog": {
+    "title": "Diese Bestellung stornieren?",
+    "text": "{{stall}} wird sofort benachrichtigt und die Waren gehen wieder in den Verkauf.",
+    "keep": "Bestellung behalten"
   }
 }
