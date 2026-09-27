@@ -102,6 +102,7 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 | FR-075 | Báo cáo nền tảng: total orders, revenue theo chợ, Farmer hoạt động nhiều nhất | MUST | Admin | BE2/FE2 | STAGING |
 | FR-076 | Master data: quản product categories | MUST | Admin | BE2/FE2 | STAGING |
 | FR-077 | Publish thông báo toàn nền tảng | MUST | Admin | BE2/FE2 | STAGING |
+| FR-078 | **Chế độ bảo trì toàn nền tảng** (không có trong đề gốc, đội tự thêm): Admin bật/tắt ở Settings, khi bật thì mọi request trừ Admin đã đăng nhập và `/api/v1/auth/**` trả 503 `MAINTENANCE_MODE` | NICE | Admin | BE2/FE2 | STAGING |
 
 ## I · Chung, UI, nội dung
 
@@ -149,11 +150,12 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 ```
 MUST:   56 tổng · 54 STAGING · ___ DONE   → cần 40% ở H38 · 80% ở H60 · 100% ở H84
 SHOULD:  6 tổng ·  6 STAGING · ___ DONE
-NICE:    2 tổng ·  0 STAGING · ___ DONE   → cắt đầu tiên khi trượt gate
+NICE:    3 tổng ·  1 STAGING · ___ DONE   → cắt đầu tiên khi trượt gate
 ```
 
 STAGING = nối API, chờ QA kiểm tay để tick DONE (Task 13). FR-082/083 (About/Contact) đang `WIP`,
-chờ dữ liệu thật của đội (Task 11). FR-043, FR-085 (NICE) vẫn `TODO`.
+chờ dữ liệu thật của đội (Task 11). FR-043, FR-085 (NICE) vẫn `TODO`. FR-078 (maintenance mode,
+NICE) đã build xong (BE + FE + test) và ở `STAGING`, chờ QA kiểm 7 điều kiện Definition of Done.
 
 **Không nằm trong scope** (đề miễn trừ, ghi vào ReadMe): cổng thanh toán · giao hàng/logistics
 · xác thực danh tính hoặc chứng nhận organic của Farmer · multi-profile trong một tài khoản (D-08).
