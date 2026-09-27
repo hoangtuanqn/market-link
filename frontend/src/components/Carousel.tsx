@@ -109,18 +109,20 @@ const Carousel = ({ slides, label }: { slides: CarouselSlide[]; label: string })
               decoding="async"
               className="absolute inset-0 size-full object-cover"
             />
+            {/* The text sits straight on the photo; this chalkboard shade keeps on-board text readable in both themes. */}
+            <div className="bg-board/70 md:via-board/55 md:from-board/90 pointer-events-none absolute inset-0 md:bg-transparent md:bg-gradient-to-r md:via-45% md:to-transparent md:to-80%" />
             {s.note && (
               <span className="bg-accent text-on-accent absolute top-4 right-4 rounded-sm px-2.5 py-0.5 text-[12px] font-bold md:top-6 md:right-6">
                 {s.note}
               </span>
             )}
-            <div className="relative box-border w-full p-4 pb-17 md:pt-8 md:pr-19 md:pb-18 md:pl-8">
-              <div className="bg-surface-raised shadow-card flex w-full max-w-115 flex-col items-start gap-3 rounded-md p-4 md:p-5">
-                <p className="text-overline text-ink-muted m-0">{s.topic}</p>
+            <div className="relative box-border w-full p-4 pb-17 md:pt-8 md:pr-19 md:pb-18 md:pl-19">
+              <div className="text-on-board flex w-full max-w-115 flex-col items-start gap-3">
+                <p className="text-overline text-board-muted m-0">{s.topic}</p>
                 <h3 className="m-0 text-[20px] leading-[28px] font-bold md:text-[24px] md:leading-[32px]">{s.title}</h3>
                 <p className="m-0 text-[16px] leading-[24px]">{s.text}</p>
                 {s.cta && (
-                  <ButtonLink to={s.cta[1]} variant="secondary" size="sm" className="mt-1">
+                  <ButtonLink to={s.cta[1]} variant="onboard" size="sm" className="mt-1">
                     {s.cta[0]}
                   </ButtonLink>
                 )}
