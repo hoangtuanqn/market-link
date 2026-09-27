@@ -25,14 +25,14 @@ import CompleteProfilePage from './pages/auth/CompleteProfile';
 import SetPasswordPage from './pages/auth/SetPassword';
 import CustomerDashboardPage from './pages/customer/Dashboard';
 import CustomerAccountPage from './pages/customer/Account';
-import CustomerCartWip from './pages/customer/Cart';
+import CustomerCartPage from './pages/customer/Cart';
 import CustomerOrdersPage from './pages/customer/Orders';
 import CustomerOrderDetailPage from './pages/customer/OrderDetail';
 import CustomerFavoritesWip from './pages/customer/Favorites';
 import CustomerMessagesPage from './pages/customer/Messages';
 import CustomerNotificationsPage from './pages/customer/Notifications';
 import CustomerOrderEditPage from './pages/customer/OrderEdit';
-import CustomerOrderPlacedWip from './pages/customer/OrderPlaced';
+import CustomerOrderPlacedPage from './pages/customer/OrderPlaced';
 import CustomerReviewWip from './pages/customer/Review';
 import CustomerBecomeFarmerPage from './pages/customer/BecomeFarmer';
 import ChangePasswordPage from './pages/customer/ChangePassword';
@@ -86,7 +86,6 @@ import AdminReportsWip from './pages/admin/Reports';
 // A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
 // Once a screen's API is wired up, remove it from this list.
 const CustomerFavoritesPage = SHOW_WIP ? CustomerFavoritesWip : ComingSoon;
-const CustomerOrderPlacedPage = SHOW_WIP ? CustomerOrderPlacedWip : ComingSoon;
 const CustomerReviewPage = SHOW_WIP ? CustomerReviewWip : ComingSoon;
 const FarmerOverviewPage = SHOW_WIP ? FarmerOverviewWip : ComingSoon;
 const FarmerOrdersPage = SHOW_WIP ? FarmerOrdersWip : ComingSoon;
@@ -103,7 +102,6 @@ const AdminCustomersPage = SHOW_WIP ? AdminCustomersWip : ComingSoon;
 const AdminCustomerDetailPage = SHOW_WIP ? AdminCustomerDetailWip : ComingSoon;
 const AdminFeedbackPage = SHOW_WIP ? AdminFeedbackWip : ComingSoon;
 const FeedbackPage = SHOW_WIP ? FeedbackWip : ComingSoon;
-const CustomerCartPage = SHOW_WIP ? CustomerCartWip : ComingSoon;
 
 const App = () => {
   return (

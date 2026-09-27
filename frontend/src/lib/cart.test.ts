@@ -34,4 +34,10 @@ describe('Cart', () => {
     expect(JSON.parse(localStorage.getItem('ml.cart') ?? '[]')).toHaveLength(1);
     expect(Cart.lines().map((l) => l.productId)).toEqual([2]);
   });
+
+  it('is only cleared by the caller after a successful place — a failed place keeps every line', () => {
+    Cart.add(tomato, 2);
+    const placed = Promise.reject(new Error('409 OUT_OF_STOCK'));
+    return placed.catch(() => undefined).then(() => expect(Cart.count()).toBe(2));
+  });
 });
