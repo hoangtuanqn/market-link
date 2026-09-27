@@ -7,23 +7,24 @@
   "message": "Tin nhắn",
   "placeholder": "vd: Ai có trứng ở Thảo Điền vào thứ Bảy?",
   "send": "Gửi",
-  "reply": {
-    "greeting": "Chào {{name}}. Hãy hỏi mình cuối tuần này có gì, hoặc khi nào chợ mở.",
-    "pomelo": "{{day}} {{date}}, 2 sạp có bưởi da xanh: <b>Út Hiền Orchard</b> ở Thủ Đức Farmers Market (còn 2, {{price1}}) và <b>Ba Lành Farm</b> ở Thảo Điền Weekend Market (còn 9, {{price2}}).",
-    "slots": "Út Hiền Orchard giao hàng {{from}} – {{to}} {{day}} {{date}} tại Thủ Đức Farmers Market. Khung giờ trống: {{free}}. Khung {{full}} đã kín. Đơn chốt 12 giờ trước khung giờ.",
-    "unknown": "Mình chưa hiểu câu này. Hãy thử tên sản phẩm, tên chợ hoặc tên sạp."
-  },
-  "question": {
-    "pomeloMorning": "Chợ nào có bưởi da xanh vào sáng thứ Bảy?"
-  },
+  "sending": "Đang gửi…",
+  "error": "Có lỗi xảy ra. Thử lại sau một lát.",
+  "loading": "Đang tải cuộc trò chuyện…",
+  "loadErrorTitle": "Không tải được lịch sử trò chuyện",
+  "loadErrorText": "Kiểm tra kết nối và thử lại.",
+  "retry": "Thử lại",
+  "emptyTitle": "Chưa có tin nhắn",
+  "emptyText": "Đặt câu hỏi hoặc chọn một gợi ý bên dưới để bắt đầu.",
   "suggest": {
-    "pomeloSat": "Mua bưởi da xanh ở đâu vào thứ Bảy?",
-    "baChieuOpen": "Bà Chiểu Green Market mở cửa khi nào?",
-    "showMap": "Xem 2 sạp trên bản đồ",
-    "slotsUtHien": "Giờ nhận hàng ở Út Hiền",
-    "addPomelos": "Thêm 2 quả bưởi vào giỏ",
-    "directionsThuDuc": "Chỉ đường đến Thủ Đức Farmers Market",
-    "thaoDien": "Thảo Điền có gì vào thứ Bảy?"
+    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
+    "pomeloStock": "có bưởi không",
+    "benThanhSat": "farmers at Ben Thanh on saturday",
+    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
+  },
+  "resultLink": {
+    "product": "Xem sản phẩm: {{title}}",
+    "market": "Xem chợ: {{title}}",
+    "farmer": "Xem sạp: {{title}}"
   },
   "canAnswer": {
     "title": "Trợ lý trả lời được gì",
