@@ -160,9 +160,22 @@ export function weekday(date: Date): string {
  * and reveal this on hover, so you can see which market morning you are actually picking.
  */
 export function upcoming(dow: number, from: Date = new Date()): string {
+  return formatDayMonth(upcomingDate(dow, from));
+}
+
+/** The same next date as {@link upcoming}, as a Date. */
+export function upcomingDate(dow: number, from: Date = new Date()): Date {
   const d = new Date(from);
   d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7));
-  return formatDayMonth(d);
+  return d;
+}
+
+/** The market weekend to show: Friday to Sunday, the one under way on a Saturday or Sunday, else the coming one. */
+export function upcomingWeekend(from: Date = new Date()): { from: Date; to: Date } {
+  const to = upcomingDate(0, from);
+  const friday = new Date(to);
+  friday.setDate(to.getDate() - 2);
+  return { from: friday, to };
 }
 
 /** Date → "Thu 24/09 · 14:35" */

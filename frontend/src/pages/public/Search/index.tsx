@@ -14,17 +14,12 @@ import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
-import { dayName, formatClock, formatDayMonth } from '@/lib/format';
+import { dayName, formatClock, formatDayMonth, upcomingDate } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 
-/** The demo market week, Thursday 24 to Sunday 27 September 2026. */
-const DAY_OPTIONS = [
-  { value: 4, date: new Date(2026, 8, 24) },
-  { value: 5, date: new Date(2026, 8, 25) },
-  { value: 6, date: new Date(2026, 8, 26) },
-  { value: 0, date: new Date(2026, 8, 27) },
-];
+/** Thursday to Sunday; each chip shows the next date that weekday falls on, counted from today. */
+const DAY_OPTIONS = [4, 5, 6, 0];
 const SORTS = ['best', 'nearest', 'price', 'rating'] as const;
 const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
 const FETCH_SIZE = 50;
@@ -154,9 +149,9 @@ const SearchPage = () => {
             value={String(day)}
             onChange={(v) => setDay(Number(v))}
             options={DAY_OPTIONS.map((d) => ({
-              value: String(d.value),
-              label: dayName(d.value, 'long'),
-              date: formatDayMonth(d.date),
+              value: String(d),
+              label: dayName(d, 'long'),
+              date: formatDayMonth(upcomingDate(d)),
             }))}
           />
           <div className="flex flex-col gap-2">
