@@ -19,7 +19,8 @@
     "submitting": "Connexion…",
     "signedIn": "Connecté.",
     "error": "Impossible de vous connecter. Veuillez réessayer.",
-    "note": "Pour des raisons de sécurité, les sessions admin ne sont pas mémorisées."
+    "note": "Pour des raisons de sécurité, les sessions admin ne sont pas mémorisées.",
+    "setupRequired": "Configurez la validation en deux étapes pour terminer la connexion."
   },
   "switchRole": {
     "question": "Pas admin ?",

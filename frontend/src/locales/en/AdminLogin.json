@@ -19,7 +19,8 @@
     "submitting": "Signing in…",
     "signedIn": "Signed in.",
     "error": "Could not sign you in. Please try again.",
-    "note": "For security, admin sessions are not remembered."
+    "note": "For security, admin sessions are not remembered.",
+    "setupRequired": "Set up two-step verification to finish signing in."
   },
   "switchRole": {
     "question": "Not an admin?",

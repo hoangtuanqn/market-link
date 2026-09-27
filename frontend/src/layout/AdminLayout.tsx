@@ -5,6 +5,7 @@ import AssistantLauncher from '@/components/assistant/AssistantLauncher';
 import { AssistantProvider } from '@/components/assistant/AssistantProvider';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
+import MfaApi from '@/api-requests/mfa.requests';
 import {
   ChartIcon,
   ChatIcon,
@@ -35,6 +36,7 @@ import {
   ADMIN_REPORTS_PATH,
   ADMIN_SECURITY_PATH,
   ADMIN_SETTINGS_PATH,
+  ADMIN_SETUP_2FA_PATH,
 } from '@/constants/nav';
 import useLogout from '@/hooks/useLogout';
 import useSession from '@/hooks/useSession';
@@ -99,6 +101,7 @@ const AdminLayout = () => {
   const logout = useLogout(ADMIN_LOGIN_PATH);
   const isAdmin = user?.role === USER_ROLE.ADMIN;
   const [pendingFarmers, setPendingFarmers] = useState(0);
+  const [setupRequired, setSetupRequired] = useState(false);
 
   // The "awaiting approval" badge on the Farmers item; reloaded on page change to match after an approve / reject.
   useEffect(() => {
@@ -108,12 +111,28 @@ const AdminLayout = () => {
       .catch(() => {});
   }, [isAdmin, pathname]);
 
+  // Mandatory 2FA setup check: if not yet configured, redirect to the dedicated setup page
+  useEffect(() => {
+    if (!isAdmin) return;
+    MfaApi.status()
+      .then((response) => {
+        if (response.data.setupRequired) {
+          setSetupRequired(true);
+        }
+      })
+      .catch(() => {});
+  }, [isAdmin, pathname]);
+
   if (!isLoggedIn) {
     return <Navigate to={ADMIN_LOGIN_PATH} replace />;
   }
 
   if (!isAdmin) {
     return <Navigate to="/403" replace />;
+  }
+
+  if (setupRequired) {
+    return <Navigate to={ADMIN_SETUP_2FA_PATH} replace />;
   }
 
   return (

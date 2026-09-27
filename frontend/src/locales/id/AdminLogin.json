@@ -19,7 +19,8 @@
     "submitting": "Sedang masuk…",
     "signedIn": "Berhasil masuk.",
     "error": "Tidak dapat memasukkan Anda. Silakan coba lagi.",
-    "note": "Demi keamanan, sesi admin tidak diingat."
+    "note": "Demi keamanan, sesi admin tidak diingat.",
+    "setupRequired": "Siapkan verifikasi dua langkah untuk menyelesaikan proses masuk."
   },
   "switchRole": {
     "question": "Bukan admin?",

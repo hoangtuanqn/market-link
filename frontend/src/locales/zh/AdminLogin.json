@@ -19,7 +19,8 @@
     "submitting": "正在登录…",
     "signedIn": "已登录。",
     "error": "无法登录，请重试。",
-    "note": "出于安全考虑，管理员登录不会被记住。"
+    "note": "出于安全考虑，管理员登录不会被记住。",
+    "setupRequired": "请先设置两步验证以完成登录。"
   },
   "switchRole": {
     "question": "不是管理员？",

@@ -68,6 +68,7 @@ import FarmerPendingPage from './pages/farmer/Pending';
 import AdminLoginPage from './pages/admin/Login';
 import AdminHomePage from './pages/admin/Home';
 import AdminVerifyPage from './pages/admin/Verify';
+import AdminSetup2FAPage from './pages/admin/Setup2FA';
 import AdminSecurityPage from './pages/admin/Security';
 import AdminFarmersPage from './pages/admin/Farmers';
 import AdminFarmerDetailPage from './pages/admin/FarmerDetail';
@@ -228,6 +229,9 @@ const App = () => {
           <Route path="admin/login" element={<AdminLoginPage />} />
           {/* FR-008: step 2 of admin sign-in, no session yet so it sits outside AdminLayout. */}
           <Route path="admin/verify" element={<AdminVerifyPage />} />
+          {/* FR-008: mandatory first-time 2FA setup. Has a real session already (issued at login), but sits
+              outside AdminLayout so its own guard (not setupRequired) never fights AdminLayout's redirect here. */}
+          <Route path="admin/setup-2fa" element={<AdminSetup2FAPage />} />
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<AdminHomePage />} />
             <Route path="security" element={<AdminSecurityPage />} />
