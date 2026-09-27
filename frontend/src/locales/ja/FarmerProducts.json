@@ -13,11 +13,12 @@
   "col": {
     "product": "商品",
     "price": "価格",
-    "left": "今週の残り",
+    "left": "次の受取日 · 残り",
     "reserved": "予約済み",
     "status": "ステータス"
   },
   "perUnit": "{{unit}} あたり",
+  "nextLeft": "{{day}} · 残り {{qty}}",
   "statusOf": "{{name}} のステータス",
   "edit": "編集",
   "delete": "削除",

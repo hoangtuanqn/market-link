@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import ProductApi from '@/api-requests/product.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import { Button, ButtonLink } from '@/components/ui/button';
+import { stockDay } from '@/components/stockDay';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
@@ -18,7 +19,7 @@ const STATUSES: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
 const FILTERS: ('all' | ProductStatus)[] = ['all', ...STATUSES];
 const NO_PRODUCTS: ProductType[] = [];
 
-/** FR-062 FR-064 — everything this stall can list: price, this week's count, reserved units and status. */
+/** FR-062 FR-064 — everything this stall can list: price, what is left and reserved for the next pickup day, status. */
 const FarmerProductsPage = () => {
   const { t } = useTranslation('FarmerProducts');
   const { t: tc } = useTranslation();
@@ -40,7 +41,14 @@ const FarmerProductsPage = () => {
     setBusyId(p.id);
     try {
       const saved = await ProductApi.setStatus(p.id, value);
-      mutate((list) => list.map((row) => (row.id === p.id ? saved : row)));
+      // A status change moves no stock; keep the next-date numbers only the list read carries
+      mutate((list) =>
+        list.map((row) =>
+          row.id === p.id
+            ? { ...saved, nextDate: row.nextDate, nextLeft: row.nextLeft, nextReserved: row.nextReserved }
+            : row,
+        ),
+      );
       Notification.success({ title: t('toast.statusSaved'), text: t(`toast.status.${value}`) });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
@@ -100,13 +108,25 @@ const FarmerProductsPage = () => {
       },
     },
     {
+      // FR-031/FR-063: stock is per pickup date, so show the nearest date a customer can still order for and what is
+      // left for it — not products.stock_quantity, which is only the base number the edit form starts from.
       key: 's',
       label: t('col.left'),
       align: 'num',
-      render: (p) => (p.status === 'available' ? units(p.stock, p.unit, p.plural) : '—'),
+      render: (p) => {
+        const day = stockDay(p.nextDate);
+        return p.status === 'available' && day
+          ? t('nextLeft', { day, qty: units(p.nextLeft ?? 0, p.unit, p.plural) })
+          : '—';
+      },
     },
-    // Reserved units come with orders (C5); until then there is nothing honest to show here.
-    { key: 'r', label: t('col.reserved'), align: 'num', render: () => '—' },
+    {
+      // Units that placed, accepted and ready orders hold for that same date.
+      key: 'r',
+      label: t('col.reserved'),
+      align: 'num',
+      render: (p) => (p.nextDate ? units(p.nextReserved ?? 0, p.unit, p.plural) : '—'),
+    },
     {
       key: 'st',
       label: t('col.status'),

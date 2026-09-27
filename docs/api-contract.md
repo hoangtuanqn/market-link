@@ -227,6 +227,7 @@ tạo hoặc sửa sản phẩm trả **403** kèm message "Your stall is pendin
 | POST/PUT/DELETE | `/api/v1/admin/categories/{id}?` | Admin | master data |
 | GET | `/api/v1/products` | Public | query: `q, categoryId, marketId, farmerId, day, minPrice, maxPrice, sort, page, pageSize` |
 | GET | `/api/v1/products/{id}` | Public | kèm `farmer`, `reviewsSummary` |
+| GET | `/api/v1/farmer/products` | Farmer | sản phẩm của chính mình, query `status, page, pageSize`; mỗi dòng thêm `nextDate` (ISO, ngày gần nhất khách còn đặt được, `null` nếu không có), `nextDateAvailable` (còn lại cho ngày đó) và `nextDateReserved` (số đơn placed/accepted/ready đang giữ cho ngày đó); hai số là `null` khi `nextDate` là `null` |
 | POST | `/api/v1/farmer/products` | Farmer | `{ categoryId, name, description, price, unit, stockQuantity, imageUrl }` |
 | PUT | `/api/v1/farmer/products/{id}` | Farmer | chỉ sản phẩm của chính mình, ngược lại 403 |
 | DELETE | `/api/v1/farmer/products/{id}` | Farmer | xoá mềm `isDeleted = true` |
@@ -239,6 +240,8 @@ sinh tự động từ template tuần), không còn một con số chung. Vì v
 
 - `stockQuantity` và `price` là số của **ngày lấy hàng gần nhất còn hàng** trong 14 ngày tới; mọi ngày đều hết thì
   là ngày gần nhất với `stockQuantity: 0`.
+- `availableDate` (ISO `yyyy-MM-dd`, có thể `null`): ngày mà `stockQuantity`/`price` đang nói tới. Ngày chỉ được tính khi
+  sạp còn slot đặt được (trước cutoff, đúng thứ chợ và sạp còn mở); không có ngày nào thì `null` và `stockQuantity: 0`.
 - Sản phẩm **chưa có template tuần nào đang bật** thì không bao giờ đặt được, nên không có trong danh sách và
   `GET /products/{id}` trả 404. `total` của trang đếm đúng tập này.
 - `stockQuantity`/`price` gửi lên ở `POST/PUT /farmer/products` chỉ là số tham khảo của Farmer, không dùng để đặt đơn.
@@ -387,7 +390,9 @@ trả 404/410 → subscription bị xoá. Web Push chỉ chạy trên HTTPS (loc
 | PATCH | `/api/v1/admin/farmers/{id}/suspend` | D-09: ẩn sản phẩm, đơn đang chạy vẫn chạy |
 | GET | `/api/v1/admin/customers` | |
 | PATCH | `/api/v1/admin/customers/{id}/status` | `{ status: "active" \| "inactive" }` |
+| GET | `/api/v1/admin/products/hidden` | listing đang bị ẩn (mới đổi trước), query `page, pageSize`; cùng dạng dòng với `GET /farmer/products`, kèm `hidden`, `hiddenReason` |
 | PATCH | `/api/v1/admin/products/{id}/hide` | kiểm duyệt listing |
+| PATCH | `/api/v1/admin/products/{id}/unhide` | hiện lại listing, xoá `hiddenReason` |
 | GET | `/api/v1/admin/reports/orders` | query `from, to, marketId` |
 | GET | `/api/v1/admin/reports/revenue` | doanh thu theo chợ |
 | GET | `/api/v1/admin/reports/top-farmers` | |

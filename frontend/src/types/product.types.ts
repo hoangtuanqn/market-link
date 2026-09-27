@@ -27,4 +27,12 @@ export type ProductType = {
   hiddenReason?: string;
   /** Days still fresh — no official FR yet, see migration V20260926016. Empty on screens still on demo data. */
   shelfLifeDays?: number;
+  /** Public pages: the pickup date ("yyyy-MM-dd") that `stock` and `price` are for; absent when nothing is orderable. */
+  availableDate?: string;
+  /** Farmer's own list: the nearest date a customer can still order for ("yyyy-MM-dd"), if any within 14 days. */
+  nextDate?: string;
+  /** Farmer's own list: units still left for `nextDate`. */
+  nextLeft?: number;
+  /** Farmer's own list: units that placed, accepted and ready orders hold for `nextDate`. */
+  nextReserved?: number;
 };

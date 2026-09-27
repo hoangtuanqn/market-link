@@ -414,7 +414,9 @@ public class OrderService implements OrderServiceInterface {
 
     /**
      * C5-5: the slot must exist, be enabled, be on the right pickup day, and belong to the right
-     * stall at the right market in the group — the stall–market link must still be on. Any mismatch
+     * stall at the right market in the group — the stall–market link must still be on. Its weekday
+     * must also still be open for both the market and the stall (FR-060, FR-073): slots are
+     * generated ahead, and a weekday dropped since then no longer takes new bookings. Any mismatch
      * → 409 SLOT_UNAVAILABLE.
      */
     private PickupSlot bookableSlot(
@@ -430,7 +432,7 @@ public class OrderService implements OrderServiceInterface {
                         .filter(fm -> fm.getFarmerId().equals(farmer.getId()))
                         .filter(fm -> fm.getMarketId().equals(group.marketId()))
                         .isPresent();
-        if (!atThisStallAndMarket) {
+        if (!atThisStallAndMarket || !slotRepository.isOnOpenDay(slot.getId())) {
             throw new SlotNotAvailableException();
         }
         return slot;

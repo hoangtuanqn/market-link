@@ -10,7 +10,8 @@
     "remove": "Aus Favoriten entfernen: {{name}}"
   },
   "soldPer": "verkauft pro {{unit}}",
-  "left": "Noch <b>{{qty}}</b> diese Woche",
+  "left": "Noch <b>{{qty}}</b>",
+  "leftOn": "Noch <b>{{qty}}</b> für {{day}}",
   "stockUpdated": "Bestand heute aktualisiert, vor den Bestellungen dieses Wochenendes.",
   "notifyMe": "Benachrichtigen, wenn wieder da",
   "added": {

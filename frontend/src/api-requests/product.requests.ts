@@ -22,6 +22,8 @@ export type ProductDto = {
   ratingCount: number;
   /** Days still fresh — no official FR yet, see migration V20260926016. */
   shelfLifeDays: number;
+  /** The pickup date ("yyyy-MM-dd") `stockQuantity`/`price` are for on public pages; null when none applies. */
+  availableDate?: string | null;
 };
 
 export type ReviewSummaryDto = { ratingAvg: number; ratingCount: number; histogram: number[] };
@@ -40,6 +42,12 @@ export type FarmerProductDto = {
   description?: string | null;
   hidden: boolean;
   hiddenReason?: string | null;
+  /** `GET /farmer/products` only: the nearest date a customer can still order for, null when none in 14 days. */
+  nextDate?: string | null;
+  /** Units left for `nextDate`; null when there is no date. */
+  nextDateAvailable?: number | null;
+  /** Units placed / accepted / ready orders hold for `nextDate`. */
+  nextDateReserved?: number | null;
 };
 
 export type ProductInput = {
@@ -82,12 +90,16 @@ export const toProduct = (dto: ProductDto, description?: string | null): Product
   desc: description ?? undefined,
   imageUrl: dto.imageUrl ?? undefined,
   shelfLifeDays: dto.shelfLifeDays,
+  availableDate: dto.availableDate ?? undefined,
 });
 
 export const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
   ...toProduct(dto.item, dto.description),
   hidden: dto.hidden,
   hiddenReason: dto.hiddenReason ?? undefined,
+  nextDate: dto.nextDate ?? undefined,
+  nextLeft: dto.nextDateAvailable ?? undefined,
+  nextReserved: dto.nextDateReserved ?? undefined,
 });
 
 /** FR-020…023, FR-062, FR-064, FR-074 — products (docs/api-contract.md §5, §10). */

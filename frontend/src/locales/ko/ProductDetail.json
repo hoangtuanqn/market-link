@@ -10,7 +10,8 @@
     "remove": "즐겨찾기에서 빼기: {{name}}"
   },
   "soldPer": "{{unit}} 단위 판매",
-  "left": "이번 주 <b>{{qty}}</b> 남음",
+  "left": "<b>{{qty}}</b> 남음",
+  "leftOn": "{{day}} <b>{{qty}}</b> 남음",
   "stockUpdated": "이번 주말 주문 전에 오늘 재고를 업데이트했어요.",
   "notifyMe": "다시 들어오면 알림 받기",
   "added": {

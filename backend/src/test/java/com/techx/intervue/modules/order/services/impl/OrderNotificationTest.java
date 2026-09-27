@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.order.services.impl;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -97,6 +98,8 @@ class OrderNotificationTest {
         farmerRepository = mock(FarmerProfileRepository.class);
         farmerMarketRepository = mock(FarmerMarketRepository.class);
         slotRepository = mock(PickupSlotRepository.class);
+        // Every slot's weekday is still open for its market and stall unless a test says otherwise
+        when(slotRepository.isOnOpenDay(anyLong())).thenReturn(true);
         productRepository = mock(ProductRepository.class);
         dailyStockRepository = mock(ProductDailyStockRepository.class);
         orderRepository = mock(OrderRepository.class);

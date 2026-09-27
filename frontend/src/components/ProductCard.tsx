@@ -7,6 +7,7 @@ import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import FavoriteButton from './FavoriteButton';
 import PriceTag from './PriceTag';
+import { stockDay } from './stockDay';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 
@@ -21,13 +22,10 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
   const soldOut = product.status !== PRODUCT_STATUS.AVAILABLE || product.stock === 0;
   const low = !soldOut && product.stock <= LOW_STOCK;
   const qty = units(product.stock, product.unit, product.plural);
-  const stock = soldOut
-    ? paused
-      ? t('product.notThisWeek')
-      : t('product.backSoon')
-    : low
-      ? t('product.onlyLeft', { qty })
-      : t('product.left', { qty });
+  const left = low ? t('product.onlyLeft', { qty }) : t('product.left', { qty });
+  // FR-022: the number is for one pickup date (the nearest one still open to orders), so name it
+  const day = stockDay(product.availableDate);
+  const stock = soldOut ? (paused ? t('product.notThisWeek') : t('product.backSoon')) : day ? `${day} · ${left}` : left;
   const href = `/products/${product.id}`;
 
   return (

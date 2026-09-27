@@ -13,11 +13,12 @@
   "col": {
     "product": "สินค้า",
     "price": "ราคา",
-    "left": "เหลือสัปดาห์นี้",
+    "left": "วันรับครั้งถัดไป · เหลือ",
     "reserved": "จองแล้ว",
     "status": "สถานะ"
   },
   "perUnit": "ต่อ{{unit}}",
+  "nextLeft": "{{day}} · เหลือ {{qty}}",
   "statusOf": "สถานะของ {{name}}",
   "edit": "แก้ไข",
   "delete": "ลบ",

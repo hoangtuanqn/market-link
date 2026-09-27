@@ -10,7 +10,8 @@
     "remove": "Remove from favorites: {{name}}"
   },
   "soldPer": "sold per {{unit}}",
-  "left": "<b>{{qty}}</b> left this week",
+  "left": "<b>{{qty}}</b> left",
+  "leftOn": "<b>{{qty}}</b> left for {{day}}",
   "stockUpdated": "Stock updated today, before this weekend's orders.",
   "notifyMe": "Notify me when back",
   "added": {

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.inOrder;
@@ -130,6 +131,8 @@ class OrderServiceTest {
         farmerRepository = mock(FarmerProfileRepository.class);
         farmerMarketRepository = mock(FarmerMarketRepository.class);
         slotRepository = mock(PickupSlotRepository.class);
+        // Every slot's weekday is still open for its market and stall unless a test says otherwise
+        when(slotRepository.isOnOpenDay(anyLong())).thenReturn(true);
         productRepository = mock(ProductRepository.class);
         orderRepository = mock(OrderRepository.class);
         orderItemRepository = mock(OrderItemRepository.class);
@@ -762,6 +765,15 @@ class OrderServiceTest {
                         null);
 
         assertThatThrownBy(() -> service.place(CUSTOMER_ID, request(atAnotherMarket)))
+                .isInstanceOf(SlotNotAvailableException.class);
+    }
+
+    /** FR-060, FR-073: the slot exists, but its weekday was dropped after it was generated. */
+    @Test
+    void placeRefusesASlotOnAWeekdayTheMarketOrStallNoLongerOpens() {
+        when(slotRepository.isOnOpenDay(SLOT_A)).thenReturn(false);
+
+        assertThatThrownBy(() -> service.place(CUSTOMER_ID, aValidRequest()))
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 

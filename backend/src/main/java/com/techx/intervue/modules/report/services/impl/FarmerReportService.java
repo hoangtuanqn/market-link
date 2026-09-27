@@ -46,9 +46,9 @@ public class FarmerReportService implements FarmerReportServiceInterface {
 
     /**
      * Available products whose nearest pickup date with stock has {@link
-     * FarmerReportRepository#LOW_STOCK} or fewer left — or that no weekly template makes orderable
-     * at all: the Farmer has to act on both. Per-date stock (FR-063), the same numbers the
-     * catalogue shows.
+     * FarmerReportRepository#LOW_STOCK} or fewer left — or that nothing makes orderable at all (no
+     * weekly template, or no pickup slot still open to orders): the Farmer has to act on both.
+     * Per-date stock (FR-063), the same numbers the catalogue shows.
      */
     private long lowStockCount(long farmerId) {
         Map<Long, BigDecimal> prices =

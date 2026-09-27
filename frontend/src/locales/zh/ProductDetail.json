@@ -10,7 +10,8 @@
     "remove": "移出收藏：{{name}}"
   },
   "soldPer": "按{{unit}}出售",
-  "left": "本周剩余 <b>{{qty}}</b>",
+  "left": "剩余 <b>{{qty}}</b>",
+  "leftOn": "{{day}} 剩余 <b>{{qty}}</b>",
   "stockUpdated": "库存已于今天更新，在本周末订单之前。",
   "notifyMe": "到货时通知我",
   "added": {

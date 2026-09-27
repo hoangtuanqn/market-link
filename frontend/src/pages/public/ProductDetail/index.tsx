@@ -13,6 +13,7 @@ import ProductCard from '@/components/ProductCard';
 import QtyStepper from '@/components/QtyStepper';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
+import { stockDay } from '@/components/stockDay';
 import { BarList } from '@/components/ui/bar-list';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -116,6 +117,8 @@ const ProductDetailPage = () => {
   const stallRating = detail.farmer.ratingCount === 0 ? null : Number(detail.farmer.ratingAvg);
   const soldOut = p.status !== 'available' || p.stockQuantity === 0;
   const qty = pickedQty ?? Math.min(2, Math.max(1, p.stockQuantity));
+  // FR-022: the stock number is for one pickup date, the nearest one still open to orders
+  const availableDay = stockDay(p.availableDate);
   const stallLink = (
     <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
       {p.stallName}
@@ -187,8 +190,8 @@ const ProductDetailPage = () => {
                 <span className="text-body">
                   <Trans
                     t={t}
-                    i18nKey="left"
-                    values={{ qty: units(p.stockQuantity, p.unit) }}
+                    i18nKey={availableDay ? 'leftOn' : 'left'}
+                    values={{ qty: units(p.stockQuantity, p.unit), day: availableDay }}
                     components={{ b: <b /> }}
                   />
                 </span>
@@ -422,7 +425,17 @@ const ProductDetailPage = () => {
                 key: 'left',
                 label: t('table.left'),
                 align: 'num',
-                render: (row: ProductType) => units(row.stock, row.unit, row.plural),
+                // Each row can be for a different pickup day, so the day goes under the number.
+                render: (row: ProductType) => (
+                  <>
+                    {units(row.stock, row.unit, row.plural)}
+                    {stockDay(row.availableDate) && (
+                      <span className="text-ink-muted block text-[12px] font-normal">
+                        {stockDay(row.availableDate)}
+                      </span>
+                    )}
+                  </>
+                ),
               },
               {
                 key: 'action',
