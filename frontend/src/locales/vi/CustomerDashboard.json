@@ -1,8 +1,14 @@
 {
-  "greeting_one": "Chào {{name}}, cuối tuần này có {{count}} đơn cần nhận",
-  "greeting_other": "Chào {{name}}, cuối tuần này có {{count}} đơn cần nhận",
-  "intro": "Một đơn vẫn đang chờ sạp xác nhận. Mọi thứ khác đều ổn.",
+  "greeting_one": "Chào {{name}}, sắp có {{count}} đơn cần nhận",
+  "greeting_other": "Chào {{name}}, sắp có {{count}} đơn cần nhận",
+  "intro": "Đây là những gì sắp tới, và những gì mới từ các sạp bạn theo dõi.",
   "browseMarkets": "Xem các chợ cuối tuần này",
+  "noun": {
+    "orders": "đơn hàng",
+    "favorites": "mục yêu thích",
+    "notifications": "thông báo",
+    "products": "sản phẩm"
+  },
   "cards": {
     "upcoming_one": "{{count}} đơn sắp tới",
     "upcoming_other": "{{count}} đơn sắp tới",
@@ -17,7 +23,7 @@
     "markets_other": "{{count}} chợ",
     "unread_one": "{{count}} thông báo chưa đọc",
     "unread_other": "{{count}} thông báo chưa đọc",
-    "unreadText": "Một đơn đã sẵn sàng, và sữa chua dê đã có lại",
+    "unreadText": "Cập nhật đơn hàng và phản hồi từ sạp hiện ở đây",
     "account": "Tài khoản"
   },
   "sell": {
@@ -30,5 +36,15 @@
   "nextPickups": "Đơn nhận sắp tới",
   "allOrders": "Tất cả đơn của tôi",
   "newFromFavorites": "Mới tuần này từ các sạp yêu thích",
-  "favorites": "Yêu thích"
+  "favorites": "Yêu thích",
+  "empty": {
+    "pickups": {
+      "title": "Chưa có đơn sắp nhận",
+      "text": "Đơn đã đặt, đã nhận hoặc sẵn sàng để nhận sẽ hiện ở đây."
+    },
+    "favorites": {
+      "title": "Chưa có sản phẩm yêu thích",
+      "text": "Lưu sản phẩm bạn thích, hàng mới từ sản phẩm đó sẽ hiện ở đây."
+    }
+  }
 }

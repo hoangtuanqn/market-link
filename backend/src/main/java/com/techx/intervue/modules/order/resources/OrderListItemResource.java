@@ -21,4 +21,6 @@ public record OrderListItemResource(
         String cutoffAt,
         BigDecimal totalAmount,
         int itemCount,
-        String createdAt) {}
+        String createdAt,
+        Long customerId,
+        String customerName) {}

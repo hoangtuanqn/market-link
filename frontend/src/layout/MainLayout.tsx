@@ -7,21 +7,23 @@ import { USER_ROLE } from '@/constants/enums';
 import useMyAchievements from '@/hooks/useMyAchievements';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import useSession from '@/hooks/useSession';
+import { useCart } from '@/lib/cart';
 
 type MainLayoutProps = {
-  cartCount?: number;
   unreadCount?: number;
 };
 /** The page for completing a required profile (a Google account with no phone number / address yet). */
 const COMPLETE_PROFILE_PATH = '/auth/complete-profile';
 
-const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
+const MainLayout = ({ unreadCount }: MainLayoutProps) => {
   const { user } = useSession();
   const { pathname } = useLocation();
   const variant = user ? 'customer' : 'guest';
   const userName = user?.fullName || user?.email || '';
   const { state: achievements } = useMyAchievements();
   const unread = useUnreadNotifications();
+  const cartLines = useCart();
+  const cartCount = cartLines.reduce((n, l) => n + l.qty, 0);
   // Everyone who signs in has at least a Bronze ring, even when the figures have not finished loading or failed to load
   const tier = achievements.status === 'ready' ? achievements.data.tier : 'bronze';
 

@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
+import FavoriteApi, { type FavoriteDto } from '@/api-requests/favorite.requests';
 import ProductApi from '@/api-requests/product.requests';
+import ReviewApi, { toReviewCard, type ReviewDto } from '@/api-requests/review.requests';
 import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DirectionsButton from '@/components/DirectionsButton';
 import FavoriteButton from '@/components/FavoriteButton';
@@ -12,31 +14,26 @@ import ProductCard from '@/components/ProductCard';
 import QtyStepper from '@/components/QtyStepper';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
+import { BarList } from '@/components/ui/bar-list';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import MessageStallButton from '@/components/chat/MessageStallButton';
-import { LoadError } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Table } from '@/components/ui/table';
-import { reviewTags, reviewsForProduct } from '@/data/catalog';
-import { demoTierOf } from '@/data/tiers';
 import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
+import { Cart } from '@/lib/cart';
+import useSession from '@/hooks/useSession';
 import { perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** Still the demo set until reviews arrive with C8. */
-const EXTRA_REVIEW = {
-  author: 'Bích Ngọc',
-  date: '19/09/2026',
-  rating: 5,
-  text: 'Bought 3 bunches for a family lunch. Nothing wilted and the stems snapped clean.',
-};
-
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
+const NO_REVIEWS: ReviewDto[] = [];
+const NO_FAVORITES: FavoriteDto[] = [];
 
 /** Earliest start to latest end across the days a stall keeps at one market. */
 const windowOf = (m: StallMarketDto) => {
@@ -49,6 +46,7 @@ const windowOf = (m: StallMarketDto) => {
 const ProductDetailPage = () => {
   const { t } = useTranslation('ProductDetail');
   const { id } = useParams<{ id: string }>();
+  const { isLoggedIn } = useSession();
   const productId = Number(id);
   const validId = Number.isInteger(productId) && productId > 0;
 
@@ -58,6 +56,12 @@ const ProductDetailPage = () => {
   const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'PRODUCT_NOT_FOUND');
   const detail = load.kind === 'ready' ? load.data : undefined;
   const farmerId = detail?.product.farmerId;
+
+  // FR-040 — whether this product is already a favourite of the signed-in customer (heart starts filled).
+  const { state: favLoad } = useRequest(`fav-product:${productId}`, () =>
+    isLoggedIn ? FavoriteApi.list('product') : Promise.resolve(NO_FAVORITES),
+  );
+  const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === productId)?.id ?? null) : null;
 
   // The stall with its markets, days and cutoff — one request keyed by the stall, so it is not repeated per product.
   const { state: stallLoad } = useRequest(`stall:${farmerId ?? 'none'}`, () =>
@@ -72,6 +76,14 @@ const ProductDetailPage = () => {
   const categoryId = detail?.product.categoryId;
   const { state: similarLoad } = useRequest(`similar:${categoryId ?? 'none'}`, () =>
     categoryId ? ProductApi.list({ categoryId, pageSize: 8 }).then((r) => r.items) : Promise.resolve(NO_PRODUCTS),
+  );
+  const reviewedProductId = detail?.product.id;
+  const { state: reviewsLoad, retry: retryReviews } = useRequest(
+    `reviews-product:${reviewedProductId ?? 'none'}`,
+    () =>
+      reviewedProductId
+        ? ReviewApi.forProduct(reviewedProductId, { pageSize: 20 }).then((r) => r.items)
+        : Promise.resolve(NO_REVIEWS),
   );
 
   const [pickedQty, setPickedQty] = useState<number | null>(null);
@@ -119,9 +131,15 @@ const ProductDetailPage = () => {
     (o) => o.id !== p.id && o.farmerId !== p.farmerId,
   );
 
-  // Reviews stay the demo set until C8; they follow the real product id.
-  const allReviews = SHOW_WIP ? [...reviewsForProduct(p.id), EXTRA_REVIEW] : [];
-  const avgRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+  const reviewCards = (reviewsLoad.kind === 'ready' ? reviewsLoad.data : NO_REVIEWS).map((r) =>
+    toReviewCard(r, p.stallName),
+  );
+  const summary = detail.reviewsSummary;
+  const histogramRows = [5, 4, 3, 2, 1].map((star) => ({
+    id: String(star),
+    label: `${star}★`,
+    value: summary.histogram[star - 1] ?? 0,
+  }));
 
   return (
     <div className="flex flex-col gap-8">
@@ -143,6 +161,10 @@ const ProductDetailPage = () => {
           <div className="flex items-start justify-between gap-3">
             <h1 className="font-hand text-h1">{p.name}</h1>
             <FavoriteButton
+              key={favoriteId ?? 'none'}
+              targetType="product"
+              targetId={p.id}
+              favoriteId={favoriteId}
               labelOff={t('favorite.add', { name: p.name })}
               labelOn={t('favorite.remove', { name: p.name })}
             />
@@ -169,27 +191,34 @@ const ProductDetailPage = () => {
               )}
             </div>
             <p className="text-small text-ink-muted">{t('stockUpdated')}</p>
-            {/* The cart and the in-stock notice have no API wired up: the button only shows a toast → dev only (config/wip.ts). */}
-            {SHOW_WIP &&
-              (soldOut ? (
-                <Button variant="secondary" className="w-fit">
-                  {t('notifyMe')}
+            {/* Restock alerts go through Favorites (Task 5), not a notify-me button here. */}
+            {soldOut ? null : (
+              <div className="flex flex-wrap items-center gap-6">
+                <QtyStepper value={qty} max={p.stockQuantity} unit={p.unit} onChange={setPickedQty} />
+                <Button
+                  onClick={() => {
+                    Cart.add(
+                      {
+                        productId: p.id,
+                        name: p.name,
+                        unit: p.unit,
+                        price: Number(p.price),
+                        max: p.stockQuantity,
+                        farmerId: p.farmerId,
+                        stallName: p.stallName,
+                      },
+                      qty,
+                    );
+                    Notification.success({
+                      title: t('added.title'),
+                      text: t('added.text', { qty: units(qty, p.unit), name: p.name.toLowerCase() }),
+                    });
+                  }}
+                >
+                  {t('addToCart')}
                 </Button>
-              ) : (
-                <div className="flex flex-wrap items-center gap-6">
-                  <QtyStepper value={qty} max={p.stockQuantity} unit={p.unit} onChange={setPickedQty} />
-                  <Button
-                    onClick={() =>
-                      Notification.success({
-                        title: t('added.title'),
-                        text: t('added.text', { qty: units(qty, p.unit), name: p.name.toLowerCase() }),
-                      })
-                    }
-                  >
-                    {t('addToCart')}
-                  </Button>
-                </div>
-              ))}
+              </div>
+            )}
             <p className="text-small text-ink-muted">{t('payNote', { price: perUnit(Number(p.price), p.unit) })}</p>
           </Card>
         </div>
@@ -312,52 +341,46 @@ const ProductDetailPage = () => {
         </section>
       )}
 
-      {/* Reviews are still sample data pending C8 → shown in dev only (config/wip.ts). */}
-      {SHOW_WIP && (
-        <section className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="text-h2">{t('reviews.title')}</h2>
-            <div className="flex flex-wrap items-center gap-3">
-              <Button variant="secondary" size="sm" disabled>
-                {t('reviews.write')}
-              </Button>
-              <span className="text-small text-ink-muted">{t('reviews.writeNote')}</span>
-            </div>
+      <section className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h2 className="text-h2">{t('reviews.title')}</h2>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="secondary" size="sm" disabled>
+              {t('reviews.write')}
+            </Button>
+            <span className="text-small text-ink-muted">{t('reviews.writeNote')}</span>
           </div>
-          <Card className="flex flex-col gap-4 p-6">
-            <div className="flex flex-wrap items-baseline gap-3">
-              <b className="font-hand text-[48px] leading-none tabular-nums">{avgRating.toFixed(1)}</b>
-              <Rating value={avgRating} />
-              <span className="text-small text-ink-muted">{t('reviews.summary', { count: allReviews.length })}</span>
-            </div>
-            {reviewTags[p.farmerId] && (
-              <div className="flex flex-wrap gap-2">
-                {reviewTags[p.farmerId].map(([tag, count]) => (
-                  <span
-                    key={tag}
-                    className="bg-brand-tint text-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[14px]"
-                  >
-                    {tag} <b className="tabular-nums">{count}</b>
-                  </span>
-                ))}
-              </div>
-            )}
-          </Card>
+        </div>
+        <Card className="flex flex-col gap-4 p-6">
+          <div className="flex flex-wrap items-baseline gap-3">
+            <b className="font-hand text-[48px] leading-none tabular-nums">{summary.ratingAvg.toFixed(1)}</b>
+            <Rating value={summary.ratingAvg} />
+            <span className="text-small text-ink-muted">{t('reviews.summary', { count: summary.ratingCount })}</span>
+          </div>
+          {summary.ratingCount > 0 && <BarList rows={histogramRows} />}
+        </Card>
+        {reviewsLoad.kind === 'loading' ? (
+          <MarketCardSkeleton count={2} />
+        ) : reviewsLoad.kind === 'error' ? (
+          <LoadError noun={t('reviews.noun')} onRetry={retryReviews} />
+        ) : reviewCards.length ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {allReviews.map((r, i) => (
+            {reviewCards.map((r) => (
               <ReviewCard
-                key={i}
+                key={r.id}
                 author={r.author}
-                authorTier={demoTierOf(r.author)}
                 date={r.date}
                 rating={r.rating}
                 text={r.text}
+                reply={r.reply}
                 fluid
               />
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <DataState title={t('reviews.emptyTitle')} text={t('reviews.emptyText')} />
+        )}
+      </section>
 
       {similar.length > 0 && (
         <section className="flex flex-col gap-4">

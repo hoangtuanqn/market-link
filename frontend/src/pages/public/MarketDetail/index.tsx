@@ -2,10 +2,12 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
+import FavoriteApi, { type FavoriteDto } from '@/api-requests/favorite.requests';
 import ProductApi from '@/api-requests/product.requests';
 import StallApi, { toStallCard, type StallCardData } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
+import FavoriteButton from '@/components/FavoriteButton';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketCarousel from '@/components/MarketCarousel';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
@@ -16,10 +18,10 @@ import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
+import useSession from '@/hooks/useSession';
 import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
-import Notification from '@/utils/notification';
 
 /** The demo market week, Thursday 24 to Sunday 27 September 2026. */
 const DAY_OPTIONS = [
@@ -30,6 +32,7 @@ const DAY_OPTIONS = [
 ];
 
 const NO_PRODUCTS: ProductType[] = [];
+const NO_FAVORITES: FavoriteDto[] = [];
 
 /** FR-010 FR-011 — one market: who sells there on a given day, and what they have. */
 const MarketDetailPage = () => {
@@ -37,6 +40,7 @@ const MarketDetailPage = () => {
   const { t } = useTranslation('MarketDetail');
   const { t: tc } = useTranslation();
   const navigate = useNavigate();
+  const { isLoggedIn } = useSession();
 
   const marketId = Number(id);
   const validId = Number.isInteger(marketId) && marketId > 0;
@@ -47,11 +51,15 @@ const MarketDetailPage = () => {
   const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'MARKET_NOT_FOUND');
   const market = load.kind === 'ready' ? load.data : undefined;
 
+  // FR-040 — whether this market is already a favourite of the signed-in customer.
+  const { state: favLoad } = useRequest(`fav-market:${marketId}`, () =>
+    isLoggedIn ? FavoriteApi.list('market') : Promise.resolve(NO_FAVORITES),
+  );
+  const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === marketId)?.id ?? null) : null;
+
   const [day, setDay] = useState(6);
   const [category, setCategory] = useState('All');
   const [inStockOnly, setInStockOnly] = useState(false);
-  // Saved markets arrive with favorites (C7); until then the chip only remembers the click.
-  const [saved, setSaved] = useState(false);
   const [scope, setScope] = useState<'product' | 'farmer'>('product');
   const [query, setQuery] = useState('');
 
@@ -176,17 +184,14 @@ const MarketDetailPage = () => {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Chip
-            pressed={saved}
-            onClick={() => {
-              setSaved((v) => !v);
-              Notification.success({
-                text: saved ? t('toast.removed', { name: market.name }) : t('toast.saved', { name: market.name }),
-              });
-            }}
-          >
-            {saved ? t('save.on') : t('save.off')}
-          </Chip>
+          <FavoriteButton
+            key={favoriteId ?? 'none'}
+            targetType="market"
+            targetId={market.id}
+            favoriteId={favoriteId}
+            labelOff={t('save.off')}
+            labelOn={t('save.on')}
+          />
           <DirectionsButton to={{ lat: market.lat, lng: market.lng }} name={market.name} size="md" />
         </div>
       </div>

@@ -1,103 +1,109 @@
 import { useState, type FormEvent } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
+import ChatApi, { type ChatResultDto } from '@/api-requests/chat.requests';
 import ChatMessage from '@/components/ChatMessage';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { dayName, formatClock, formatDayMonth, perUnit } from '@/lib/format';
+import { Chip } from '@/components/ui/chip';
+import { DataState } from '@/components/ui/data-state';
+import useRequest from '@/hooks/useRequest';
+import { formatTime } from '@/lib/format';
 
-type Suggestion =
-  'pomeloSat' | 'baChieuOpen' | 'showMap' | 'slotsUtHien' | 'addPomelos' | 'directionsThuDuc' | 'thaoDien';
-type Reply = 'greeting' | 'pomelo' | 'slots' | 'unknown';
+const SUGGESTIONS = ['baChieuHours', 'pomeloStock', 'benThanhSat', 'utHienPickup'] as const;
 
-/** What a message says: a prepared reply (translated when shown), a suggestion the user tapped, or typed text. */
-type Say = { reply: Reply } | { suggestion: Suggestion } | { question: 'pomeloMorning' } | { text: string };
-
-type LogEntry = { from: 'user' | 'bot'; time: string; intent?: string; say: Say; suggestions?: Suggestion[] };
-
-const SAT = new Date(2026, 8, 26);
-const SUN = new Date(2026, 8, 27);
-
-const INITIAL_LOG: LogEntry[] = [
-  { from: 'bot', time: '20:13', say: { reply: 'greeting' }, suggestions: ['pomeloSat', 'baChieuOpen'] },
-  { from: 'user', time: '20:14', say: { question: 'pomeloMorning' } },
-  {
-    from: 'bot',
-    time: '20:14',
-    intent: 'find product',
-    say: { reply: 'pomelo' },
-    suggestions: ['showMap', 'slotsUtHien'],
-  },
-  { from: 'user', time: '20:15', say: { suggestion: 'slotsUtHien' } },
-  {
-    from: 'bot',
-    time: '20:15',
-    intent: 'pickup slots',
-    say: { reply: 'slots' },
-    suggestions: ['addPomelos', 'directionsThuDuc'],
-  },
-];
+type LogEntry = {
+  from: 'user' | 'bot';
+  time: string;
+  intent?: string;
+  text: string;
+  results?: ChatResultDto[];
+};
 
 const CAN_ANSWER = ['product', 'hours', 'stalls', 'slots', 'price'] as const;
 
-/** FR-090 FR-091 FR-092, Optional (SHOULD) — intent → prepared query with parameters, never LLM-generated SQL (R-04). */
+/** "FIND_PRODUCT" → "find product", shown under a bot reply. */
+const intentLabel = (intent: string) => intent.toLowerCase().replace(/_/g, ' ');
+
+/** A chat result points at the real page for what it names (R-04: the assistant only ever reads). */
+const resultHref = (result: ChatResultDto) => {
+  switch (result.type) {
+    case 'product':
+      return `/products/${result.id}`;
+    case 'market':
+      return `/markets/${result.id}`;
+    case 'farmer':
+      return `/stalls/${result.id}`;
+  }
+};
+
+/** A per-browser session id so a guest's chat history survives a reload without signing in. */
+const readSessionKey = () => {
+  try {
+    const existing = localStorage.getItem('ml.chat.session');
+    if (existing) return existing;
+    const created = crypto.randomUUID();
+    localStorage.setItem('ml.chat.session', created);
+    return created;
+  } catch {
+    return Math.random().toString(36).slice(2);
+  }
+};
+
+/**
+ * FR-090 FR-091 FR-092 — intent → prepared query with parameters run on the server, never LLM-generated SQL (R-04).
+ * Mirror-until-edited: `history` is what the server already has for this session; `sent` is what happened this visit.
+ * Nothing here is written from inside an effect.
+ */
 const CustomerAssistantPage = () => {
   const { t } = useTranslation('CustomerAssistant');
-  const [log, setLog] = useState(INITIAL_LOG);
+  const [sessionKey] = useState(readSessionKey);
+  const { state, retry } = useRequest(`chat:${sessionKey}`, () => ChatApi.history(sessionKey));
+
+  const [sent, setSent] = useState<LogEntry[]>([]);
   const [draft, setDraft] = useState('');
+  const [sending, setSending] = useState(false);
 
-  const ask = (text: string) => {
+  const history: LogEntry[] =
+    state.kind === 'ready'
+      ? state.data.map((m) => ({
+          from: m.role,
+          time: formatTime(new Date(m.createdAt)),
+          intent: m.intent ? intentLabel(m.intent) : undefined,
+          text: m.message,
+        }))
+      : [];
+  const log = [...history, ...sent];
+
+  const send = async (text: string) => {
     const value = text.trim();
-    if (!value) return;
-    setLog((prev) => [
-      ...prev,
-      { from: 'user', time: '20:16', say: { text: value } },
-      { from: 'bot', time: '20:16', intent: 'unknown', say: { reply: 'unknown' }, suggestions: ['thaoDien'] },
-    ]);
-  };
-
-  const reply = (r: Reply) => {
-    switch (r) {
-      case 'greeting':
-        return t('reply.greeting', { name: 'Khang' });
-      case 'pomelo':
-        return (
-          <Trans
-            t={t}
-            i18nKey="reply.pomelo"
-            values={{
-              day: dayName(6, 'long'),
-              date: formatDayMonth(SAT),
-              price1: perUnit(65000, 'piece'),
-              price2: perUnit(60000, 'piece'),
-            }}
-            components={{ b: <b /> }}
-          />
-        );
-      case 'slots':
-        return t('reply.slots', {
-          from: formatClock('06:00'),
-          to: formatClock('09:30'),
-          day: dayName(0, 'long'),
-          date: formatDayMonth(SUN),
-          free: ['06:30', '07:00', '08:00'].map(formatClock).join(', '),
-          full: formatClock('06:00'),
-        });
-      default:
-        return t('reply.unknown');
+    if (!value || sending) return;
+    setSent((prev) => [...prev, { from: 'user', time: formatTime(new Date()), text: value }]);
+    setSending(true);
+    try {
+      const r = await ChatApi.ask(sessionKey, value);
+      setSent((prev) => [
+        ...prev,
+        {
+          from: 'bot',
+          time: formatTime(new Date()),
+          intent: intentLabel(r.intent),
+          text: r.reply,
+          results: r.results,
+        },
+      ]);
+    } catch {
+      setSent((prev) => [...prev, { from: 'bot', time: formatTime(new Date()), text: t('error') }]);
+    } finally {
+      setSending(false);
     }
-  };
-
-  const content = (say: Say) => {
-    if ('reply' in say) return reply(say.reply);
-    if ('suggestion' in say) return t(`suggest.${say.suggestion}`);
-    if ('question' in say) return t(`question.${say.question}`);
-    return say.text;
   };
 
   const onSend = (e: FormEvent) => {
     e.preventDefault();
-    ask(draft);
+    const value = draft;
     setDraft('');
+    void send(value);
   };
 
   return (
@@ -118,33 +124,77 @@ const CustomerAssistantPage = () => {
           </div>
 
           <div className="flex flex-col gap-3 overflow-y-auto p-4">
+            {state.kind === 'loading' ? (
+              <p role="status" className="text-ink-muted text-small">
+                {t('loading')}
+              </p>
+            ) : null}
+            {state.kind === 'error' ? (
+              <DataState
+                variant="error"
+                title={t('loadErrorTitle')}
+                text={t('loadErrorText')}
+                action={
+                  <Button variant="secondary" size="sm" onClick={retry}>
+                    {t('retry')}
+                  </Button>
+                }
+              />
+            ) : null}
+            {state.kind === 'ready' && log.length === 0 ? (
+              <DataState title={t('emptyTitle')} text={t('emptyText')} />
+            ) : null}
             {log.map((m, i) => (
-              <ChatMessage
-                key={i}
-                from={m.from}
-                time={formatClock(m.time)}
-                intent={m.intent}
-                suggestions={m.suggestions?.map((x) => t(`suggest.${x}`))}
-                onSuggestion={ask}
-              >
-                {content(m.say)}
+              <ChatMessage key={i} from={m.from} time={m.time} intent={m.intent}>
+                {m.text}
+                {m.results?.map((r) => (
+                  <Link
+                    key={`${r.type}-${r.id}`}
+                    to={resultHref(r)}
+                    className="text-brand mt-1.5 block text-[13px] underline"
+                  >
+                    {t(`resultLink.${r.type}`, { title: r.title })}
+                  </Link>
+                ))}
               </ChatMessage>
             ))}
+            {sending ? (
+              <p role="status" className="text-ink-muted text-small">
+                {t('sending')}
+              </p>
+            ) : null}
           </div>
 
-          <form onSubmit={onSend} className="border-line-strong flex items-center gap-2 border-t-[1.5px] p-3 px-4">
-            <label htmlFor="q" className="sr-only">
-              {t('message')}
-            </label>
-            <input
-              id="q"
-              value={draft}
-              onChange={(e) => setDraft(e.target.value)}
-              placeholder={t('placeholder')}
-              className="border-line-strong bg-surface-raised text-body focus-visible:border-focus focus-visible:outline-focus min-h-11 flex-1 rounded-sm border-[1.5px] px-3 focus-visible:outline-2 focus-visible:outline-offset-1"
-            />
-            <Button type="submit">{t('send')}</Button>
-          </form>
+          <div className="border-line-strong flex flex-col gap-2 border-t-[1.5px] p-3 px-4">
+            <div className="flex flex-wrap gap-2">
+              {SUGGESTIONS.map((s) => (
+                <Chip
+                  key={s}
+                  disabled={sending}
+                  className={sending ? 'pointer-events-none opacity-60' : undefined}
+                  onClick={() => void send(t(`suggest.${s}`))}
+                >
+                  {t(`suggest.${s}`)}
+                </Chip>
+              ))}
+            </div>
+            <form onSubmit={onSend} className="flex items-center gap-2">
+              <label htmlFor="q" className="sr-only">
+                {t('message')}
+              </label>
+              <input
+                id="q"
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                placeholder={t('placeholder')}
+                disabled={sending}
+                className="border-line-strong bg-surface-raised text-body focus-visible:border-focus focus-visible:outline-focus min-h-11 flex-1 rounded-sm border-[1.5px] px-3 focus-visible:outline-2 focus-visible:outline-offset-1"
+              />
+              <Button type="submit" disabled={sending || !draft.trim()}>
+                {t('send')}
+              </Button>
+            </form>
+          </div>
         </section>
 
         <aside className="flex flex-col gap-4">

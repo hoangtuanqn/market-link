@@ -1,0 +1,40 @@
+import type { ApiResponse } from '@/types/api.types';
+import { privateApi, publicApi } from '@/utils/axiosInstance';
+import Session from '@/utils/session';
+
+export type ChatIntent =
+  | 'GREETING'
+  | 'HELP'
+  | 'FIND_PRODUCT'
+  | 'PRODUCT_DETAIL'
+  | 'MARKET_HOURS'
+  | 'FARMER_AVAILABILITY'
+  | 'PICKUP_WINDOW'
+  | 'UNKNOWN';
+export type ChatResultDto = {
+  type: 'product' | 'market' | 'farmer';
+  id: number;
+  title: string;
+  subtitle: string | null;
+};
+export type ChatReplyDto = { reply: string; intent: ChatIntent; results: ChatResultDto[] };
+export type ChatMessageDto = { role: 'user' | 'bot'; message: string; intent: string | null; createdAt: string };
+
+/**
+ * `privateApi` when signed in so the backend can filter history by user, `publicApi` for a guest (client-made session
+ * key).
+ */
+const api = () => (Session.getRawUser() ? privateApi : publicApi);
+
+/** FR-090…092 — intent → prepared SQL on the server (R-04); the session key is a client-made UUID. */
+class ChatApi {
+  static ask = async (sessionKey: string, message: string) => {
+    const response = await api().post<ApiResponse<ChatReplyDto>>('/chat', { sessionKey, message });
+    return response.data.data;
+  };
+  static history = async (sessionKey: string) => {
+    const response = await api().get<ApiResponse<ChatMessageDto[]>>('/chat/history', { params: { sessionKey } });
+    return response.data.data;
+  };
+}
+export default ChatApi;

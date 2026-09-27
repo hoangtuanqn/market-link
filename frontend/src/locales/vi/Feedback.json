@@ -7,21 +7,12 @@
     "suggestion": "Đề xuất: có thứ gì đó có thể tốt hơn",
     "query": "Câu hỏi: tôi cần một câu trả lời"
   },
-  "pageLabel": "Ở trang nào?",
-  "pages": {
-    "cart": "Giỏ hàng",
-    "product": "Trang sản phẩm",
-    "map": "Bản đồ chợ",
-    "orders": "Đơn của tôi",
-    "farmer": "Bảng điều khiển nhà vườn",
-    "other": "Khác"
-  },
   "messageLabel": "Nội dung",
   "messagePlaceholder": "Bạn mong đợi điều gì, và thực tế đã xảy ra chuyện gì?",
-  "messageHint": "Nếu là lỗi, ghi thêm điện thoại hoặc trình duyệt bạn dùng.",
-  "emailLabel": "Email để nhận trả lời",
-  "emailHint": "Không bắt buộc. Tự điền khi bạn đã đăng nhập.",
+  "messageHint": "Ít nhất 10 ký tự. Nếu là lỗi, ghi thêm điện thoại hoặc trình duyệt bạn dùng.",
   "submit": "Gửi góp ý",
+  "sendFailed": "Không gửi được. Hãy thử lại.",
+  "tooMany": "Bạn vừa gửi quá nhiều tin nhắn. Hãy thử lại sau.",
   "sent": {
     "title": "Đã gửi",
     "bug": "Cảm ơn bạn. Báo lỗi của bạn đã tới đội ngũ.",
@@ -35,6 +26,6 @@
   },
   "after": {
     "title": "Sau khi gửi",
-    "text": "Báo lỗi được đọc vào mỗi ngày chợ. Câu trả lời sẽ gửi qua email nếu bạn để lại email."
+    "text": "Báo lỗi được đọc vào mỗi ngày chợ. Người đã đăng nhập có thể được liên hệ lại về câu hỏi của mình."
   }
 }

@@ -1,84 +1,209 @@
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import OrderApi, { type OrderGroupPreviewDto } from '@/api-requests/order.requests';
+import StallApi, { toSlotOption } from '@/api-requests/stall.requests';
 import CartGroup, { type CartLineType } from '@/components/CartGroup';
 import DayChips from '@/components/DayChips';
 import SlotPicker from '@/components/SlotPicker';
 import { Banner } from '@/components/ui/banner';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { DataState, LoadError } from '@/components/ui/data-state';
+import { SelectField } from '@/components/ui/input';
+import useRequest from '@/hooks/useRequest';
+import useSession from '@/hooks/useSession';
+import { Cart, useCart } from '@/lib/cart';
 import { dayName, formatClock, formatDayMonth, vnd } from '@/lib/format';
+import Helper from '@/utils/helper';
+import Notification from '@/utils/notification';
 
-type Slot = { value: string; from: string; to: string; booked: number; max: number };
+/** Per stall: chosen market (when the stall sells at several), pickup date, slot, note. */
+type Choice = { marketId: number | null; date: string | null; slotId: string | null; note: string };
 
-const SLOTS_1: Slot[] = [
-  { value: '0600', from: '06:00', to: '06:30', booked: 5, max: 5 },
-  { value: '0630', from: '06:30', to: '07:00', booked: 3, max: 5 },
-  { value: '0700', from: '07:00', to: '07:30', booked: 1, max: 5 },
-  { value: '0730', from: '07:30', to: '08:00', booked: 0, max: 5 },
-  { value: '0800', from: '08:00', to: '08:30', booked: 0, max: 5 },
-  { value: '0830', from: '08:30', to: '09:00', booked: 2, max: 5 },
-];
+/** `group.problems` values (order.requests.ts `OrderGroupPreviewDto`) — kept as a union so `t()` accepts the key. */
+type ProblemCode = 'out_of_stock' | 'sold_out' | 'unavailable' | 'stall_suspended';
 
-const SLOTS_2: Slot[] = [
-  { value: 'a', from: '06:00', to: '06:30', booked: 5, max: 5 },
-  { value: 'b', from: '06:30', to: '07:00', booked: 2, max: 5 },
-  { value: 'c', from: '07:00', to: '07:30', booked: 0, max: 5 },
-  { value: 'd', from: '07:30', to: '08:00', booked: 4, max: 5 },
-  { value: 'e', from: '08:00', to: '08:30', booked: 0, max: 5 },
-];
+/** `yyyy-MM-dd` → a Date in local time; `new Date('2026-10-03')` is midnight UTC and lands on the previous day at UTC−x. */
+const localDay = (ymd: string) => {
+  const [y, m, d] = ymd.split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
 
-/** The two market mornings this cart can pick up on (Saturday 26/09, Sunday 27/09). */
-const DAYS = [
-  { value: 'sat', dow: 6, date: new Date(2026, 8, 26) },
-  { value: 'sun', dow: 0, date: new Date(2026, 8, 27) },
-];
+type StallPickupProps = { group: OrderGroupPreviewDto; choice: Choice; onChange: (patch: Partial<Choice>) => void };
 
-const slotTime = (s: Slot) => `${formatClock(s.from)}–${formatClock(s.to)}`;
-const dayOf = (value: string) => DAYS.find((d) => d.value === value) ?? DAYS[0];
+/** Pickup market/day/slot for one stall's group (FR-032): its own slot request, so groups load independently. */
+const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
+  const { t } = useTranslation('CustomerCart');
+  const { t: tc } = useTranslation();
+  const { state, retry } = useRequest(`slots:${group.farmerId}:${choice.marketId}`, () =>
+    choice.marketId ? StallApi.slots(group.farmerId, { marketId: choice.marketId }) : Promise.resolve([]),
+  );
+  const slots = state.kind === 'ready' ? state.data : [];
+  const dates = [...new Set(slots.map((s) => s.slotDate))];
+  const date = choice.date ?? dates[0] ?? null;
+  const dayOptions = dates.map((d) => {
+    const x = localDay(d);
+    return { value: d, label: dayName(x.getDay(), 'long'), date: formatDayMonth(x) };
+  });
+  const daySlots = slots.filter((s) => s.slotDate === date);
+  const slotOptions = daySlots
+    .map(toSlotOption)
+    .map((o) => ({ ...o, time: o.time.split('–').map(formatClock).join('–') }));
+  const starts = daySlots.map((s) => s.startTime).sort();
+  const ends = daySlots.map((s) => s.endTime).sort();
 
-type ItemsSetter = Dispatch<SetStateAction<CartLineType[]>>;
+  return (
+    <div className="flex flex-col gap-4">
+      {group.markets.length > 1 && (
+        <SelectField
+          id={`market-${group.farmerId}`}
+          label={t('market')}
+          options={group.markets.map((m) => ({ value: String(m.marketId), label: m.marketName }))}
+          value={choice.marketId != null ? String(choice.marketId) : ''}
+          onChange={(e) => onChange({ marketId: Number(e.target.value), date: null, slotId: null })}
+        />
+      )}
+      {state.kind === 'loading' ? (
+        <p role="status" className="text-ink-muted text-small">
+          {tc('notify.list.loading')}
+        </p>
+      ) : state.kind === 'error' ? (
+        <LoadError noun={t('slotsNoun')} onRetry={retry} />
+      ) : slots.length === 0 ? (
+        <DataState title={t('noSlots.title')} text={t('noSlots.text')} />
+      ) : (
+        <>
+          <DayChips
+            name={`day-${group.farmerId}`}
+            legend={t('pickupDayAt', { stall: group.stallName })}
+            options={dayOptions}
+            value={date ?? ''}
+            onChange={(v) => onChange({ date: v, slotId: null })}
+          />
+          <SlotPicker
+            name={`slot-${group.farmerId}`}
+            slots={slotOptions}
+            value={choice.slotId}
+            onChange={(v) => onChange({ slotId: v })}
+            legend={t('pickupTime', {
+              day: date ? dayName(localDay(date).getDay(), 'long') : '',
+              date: date ? formatDayMonth(localDay(date)) : '',
+              from: starts[0] ? formatClock(starts[0]) : '',
+              to: ends[ends.length - 1] ? formatClock(ends[ends.length - 1]) : '',
+            })}
+          />
+        </>
+      )}
+    </div>
+  );
+};
 
 /**
- * FR-030 — cart split into one order per Farmer (D-01). The 409 "stock changed" illustration on the prototype is
- * reviewer scaffolding, not real UI, so it is left out here.
+ * FR-030 FR-031 FR-032 — the cart previews against the server, splits into one order per stall (D-01) and places the
+ * real orders. Not logged in never reaches this page: it sits behind RequireAuth (App.tsx).
  */
 const CustomerCartPage = () => {
   const { t } = useTranslation('CustomerCart');
+  const { t: tc } = useTranslation();
+  const lines = useCart();
   const navigate = useNavigate();
-  const [items1, setItems1] = useState<CartLineType[]>([
-    { id: 1, name: 'Củ Chi water spinach', unit: 'bunch', price: 15000, max: 12, qty: 2 },
-    { id: 2, name: 'Choy sum', unit: 'bunch', price: 18000, max: 8, qty: 1 },
-  ]);
-  const [items2, setItems2] = useState<CartLineType[]>([
-    { id: 3, name: 'Green-skin pomelo', unit: 'piece', price: 65000, max: 2, qty: 2 },
-  ]);
-  const [day1, setDay1] = useState('sat');
-  const [slot1, setSlot1] = useState<string | null>('0700');
-  const [day2, setDay2] = useState('sun');
-  const [slot2, setSlot2] = useState<string | null>(null);
+  const { user } = useSession();
+  const previewKey = lines.map((l) => `${l.productId}:${l.qty}`).join(',');
+  const { state: previewLoad, retry } = useRequest(`cart-preview:${previewKey}`, () =>
+    lines.length && user
+      ? OrderApi.preview(lines.map((l) => ({ productId: l.productId, quantity: l.qty })))
+      : Promise.resolve([]),
+  );
+  const groups = previewLoad.kind === 'ready' ? previewLoad.data : [];
+  const [choices, setChoices] = useState<Record<number, Choice>>({});
+  const choice = (g: OrderGroupPreviewDto): Choice =>
+    choices[g.farmerId] ?? {
+      marketId: g.marketId ?? g.markets[0]?.marketId ?? null,
+      date: null,
+      slotId: null,
+      note: '',
+    };
+  const setChoice = (farmerId: number, patch: Partial<Choice>) =>
+    setChoices((prev) => ({
+      ...prev,
+      [farmerId]: { ...choice(groups.find((g) => g.farmerId === farmerId)!), ...prev[farmerId], ...patch },
+    }));
+
   const [note, setNote] = useState('');
-
-  const found1 = SLOTS_1.find((s) => s.value === slot1);
-  const found2 = SLOTS_2.find((s) => s.value === slot2);
-  const slot1Time = found1 && slotTime(found1);
-  const slot2Time = found2 && slotTime(found2);
-  const d1 = dayOf(day1);
-  const d2 = dayOf(day2);
-  const dayOptions = DAYS.map((d) => ({ value: d.value, label: dayName(d.dow, 'long'), date: formatDayMonth(d.date) }));
-  const slots1 = SLOTS_1.map((s) => ({ ...s, time: slotTime(s) }));
-  const slots2 = SLOTS_2.map((s) => ({ ...s, time: slotTime(s) }));
-
-  const total1 = items1.reduce((sum, i) => sum + i.qty * i.price, 0);
-  const total2 = items2.reduce((sum, i) => sum + i.qty * i.price, 0);
-  const stallCount = [items1.length > 0, items2.length > 0].filter(Boolean).length;
-  const ready = Boolean(slot1 && slot2 && items1.length && items2.length);
-
-  const updateQty = (setter: ItemsSetter, id: number, qty: number) => {
-    setter((prev) => prev.map((i) => (i.id === id ? { ...i, qty } : i)));
+  const [placing, setPlacing] = useState(false);
+  const place = async () => {
+    setPlacing(true);
+    try {
+      const orders = await OrderApi.place(
+        groups.map((g) => {
+          const c = choice(g);
+          return {
+            farmerId: g.farmerId,
+            marketId: c.marketId!,
+            slotId: Number(c.slotId),
+            pickupDate: c.date!,
+            items: g.items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+            customerNote: c.note || note || undefined,
+          };
+        }),
+      );
+      Cart.clear();
+      navigate('/orders/placed', { state: { orders } });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      retry(); // stock or slot changed under us (409): show the fresh preview, keep the cart
+    } finally {
+      setPlacing(false);
+    }
   };
-  const removeItem = (setter: ItemsSetter, id: number) => {
-    setter((prev) => prev.filter((i) => i.id !== id));
+
+  if (lines.length === 0) {
+    return (
+      <DataState
+        fill
+        title={t('empty.title')}
+        text={t('empty.text')}
+        action={<ButtonLink to="/products">{t('empty.cta')}</ButtonLink>}
+      />
+    );
+  }
+
+  if (previewLoad.kind === 'loading') {
+    return (
+      <p role="status" className="text-ink-muted">
+        {tc('notify.list.loading')}
+      </p>
+    );
+  }
+
+  if (previewLoad.kind === 'error') {
+    return <LoadError noun={t('noun')} onRetry={retry} />;
+  }
+
+  const total = groups.reduce((s, g) => s + g.subtotal, 0);
+  const ready =
+    lines.length > 0 &&
+    groups.length > 0 &&
+    groups.every((g) => {
+      const c = choice(g);
+      return c.slotId != null && c.date != null && g.problems.length === 0;
+    });
+  const blocked = groups.find((g) => {
+    const c = choice(g);
+    return g.problems.length > 0 || c.slotId == null || c.date == null;
+  });
+
+  const marketNameOf = (g: OrderGroupPreviewDto, c: Choice) =>
+    g.marketName ?? g.markets.find((m) => m.marketId === c.marketId)?.marketName ?? '';
+  const whereOf = (g: OrderGroupPreviewDto) => {
+    const c = choice(g);
+    const market = marketNameOf(g, c);
+    if (!c.date) return market;
+    const d = localDay(c.date);
+    return market
+      ? `${market} · ${dayName(d.getDay())} ${formatDayMonth(d)}`
+      : `${dayName(d.getDay())} ${formatDayMonth(d)}`;
   };
 
   return (
@@ -87,104 +212,75 @@ const CustomerCartPage = () => {
         <h1 className="text-h1">{t('title')}</h1>
         <p className="text-body-lg">
           {t('intro', {
-            products: t('products', { count: items1.length + items2.length }),
-            stalls: t('stalls', { count: stallCount }),
+            products: t('products', { count: lines.length }),
+            stalls: t('stalls', { count: groups.length }),
           })}
         </p>
       </div>
 
-      <Banner title={t('split.title')}>{t('split.text')}</Banner>
+      {groups.length > 1 && <Banner title={t('split.title', { count: groups.length })}>{t('split.text')}</Banner>}
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-8">
-          <section className="flex flex-col gap-3">
-            <CartGroup
-              index={1}
-              of={2}
-              stallName="Cô Tư Garden"
-              where={`Thảo Điền Weekend Market${slot1Time ? ` · ${dayName(d1.dow)} ${formatDayMonth(d1.date)} · ${slot1Time}` : ''}`}
-              items={items1}
-              onQtyChange={(id, qty) => updateQty(setItems1, id, qty)}
-              onRemove={(id) => removeItem(setItems1, id)}
-            />
-            <details className="border-line-strong bg-surface-raised shadow-tag rounded-md border-[1.5px] p-4">
-              <summary className="text-small cursor-pointer font-bold">
-                {t('changeTime', { stall: 'Cô Tư Garden' })}
-              </summary>
-              <div className="mt-3 flex flex-col gap-4">
-                <DayChips name="day1" legend={t('pickupDay')} options={dayOptions} value={day1} onChange={setDay1} />
-                <SlotPicker
-                  name="slot1"
-                  slots={slots1}
-                  value={slot1}
-                  onChange={setSlot1}
-                  legend={t('pickupTime', {
-                    day: dayName(d1.dow, 'long'),
-                    date: formatDayMonth(d1.date),
-                    from: formatClock('06:00'),
-                    to: formatClock('10:30'),
-                  })}
+          {groups.map((g, i) => {
+            const c = choice(g);
+            const picked = c.date != null && c.slotId != null;
+            return (
+              <section key={g.farmerId} className="flex flex-col gap-3">
+                {g.problems.map((p) => (
+                  <Banner key={p} variant="warning" title={t(`problem.${p as ProblemCode}`)}>
+                    {''}
+                  </Banner>
+                ))}
+                <CartGroup
+                  index={i + 1}
+                  of={groups.length}
+                  stallName={g.stallName}
+                  where={whereOf(g)}
+                  items={g.items.map((it): CartLineType => ({
+                    id: it.productId,
+                    name: it.name,
+                    unit: it.unit,
+                    price: it.unitPrice,
+                    max: it.stockQuantity,
+                    qty: it.quantity,
+                  }))}
+                  onQtyChange={(id, qty) => Cart.setQty(id, qty)}
+                  onRemove={(id) => Cart.remove(id)}
                 />
-              </div>
-            </details>
-          </section>
-
-          <section className="flex flex-col gap-3">
-            <CartGroup
-              index={2}
-              of={2}
-              stallName="Út Hiền Orchard"
-              where={`Thủ Đức Farmers Market${slot2Time ? ` · ${dayName(d2.dow)} ${formatDayMonth(d2.date)} · ${slot2Time}` : ''}`}
-              items={items2}
-              onQtyChange={(id, qty) => updateQty(setItems2, id, qty)}
-              onRemove={(id) => removeItem(setItems2, id)}
-            />
-            <Card className="flex flex-col gap-4 p-4">
-              <DayChips
-                name="day2"
-                legend={t('pickupDayAt', { stall: 'Út Hiền Orchard' })}
-                options={dayOptions}
-                value={day2}
-                onChange={setDay2}
-              />
-              <SlotPicker
-                name="slot2"
-                slots={slots2}
-                value={slot2}
-                onChange={setSlot2}
-                legend={t('pickupTime', {
-                  day: dayName(d2.dow, 'long'),
-                  date: formatDayMonth(d2.date),
-                  from: formatClock('06:00'),
-                  to: formatClock('09:30'),
-                })}
-              />
-              <p className="text-small text-ink-muted">
-                {t('cutoffNote', {
-                  stall: 'Út Hiền Orchard',
-                  hours: 12,
-                  slot: formatClock('06:00'),
-                  slotDay: dayName(0, 'long'),
-                  cutoff: formatClock('18:00'),
-                  cutoffDay: dayName(6, 'long'),
-                })}
-              </p>
-            </Card>
-          </section>
+                {picked ? (
+                  <details className="border-line-strong bg-surface-raised shadow-tag rounded-md border-[1.5px] p-4">
+                    <summary className="text-small cursor-pointer font-bold">
+                      {t('changeTime', { stall: g.stallName })}
+                    </summary>
+                    <div className="mt-3 flex flex-col gap-4">
+                      <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
+                    </div>
+                  </details>
+                ) : (
+                  <Card className="flex flex-col gap-4 p-4">
+                    <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
+                  </Card>
+                )}
+              </section>
+            );
+          })}
         </div>
 
         <aside className="sticky top-20 flex flex-col gap-4">
           <Card className="flex flex-col gap-3 p-6">
             <h2 className="text-h3">{t('summary.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-              <dt className="text-ink-muted">{t('summary.order', { n: 1, stall: 'Cô Tư Garden' })}</dt>
-              <dd className="text-price m-0 font-bold tabular-nums">{vnd(total1)}</dd>
-              <dt className="text-ink-muted">{t('summary.order', { n: 2, stall: 'Út Hiền Orchard' })}</dt>
-              <dd className="text-price m-0 font-bold tabular-nums">{vnd(total2)}</dd>
+              {groups.map((g, i) => (
+                <Fragment key={g.farmerId}>
+                  <dt className="text-ink-muted">{t('summary.order', { n: i + 1, stall: g.stallName })}</dt>
+                  <dd className="text-price m-0 font-bold tabular-nums">{vnd(g.subtotal)}</dd>
+                </Fragment>
+              ))}
             </dl>
             <div className="border-line-strong flex items-center justify-between gap-3 border-t-[1.5px] border-dashed pt-3">
               <span className="text-body font-bold">{t('summary.total')}</span>
-              <span className="font-hand text-price text-[28px] tabular-nums">{vnd(total1 + total2)}</span>
+              <span className="font-hand text-price text-[28px] tabular-nums">{vnd(total)}</span>
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="note" className="text-small font-bold">
@@ -198,11 +294,11 @@ const CustomerCartPage = () => {
                 className="border-line-strong bg-surface-raised text-body min-h-16 rounded-sm border-[1.5px] p-3"
               />
             </div>
-            <Button disabled={!ready} className="w-full" onClick={() => navigate('/orders/placed')}>
-              {t('place')}
+            <Button disabled={!ready || placing} className="w-full" onClick={() => void place()}>
+              {placing ? t('placing') : t('place', { count: groups.length })}
             </Button>
             <p className="text-small text-ink-muted text-center">
-              {ready ? t('ready') : t('notReady', { stall: 'Út Hiền Orchard' })}
+              {ready ? t('ready', { count: groups.length }) : t('notReady', { stall: blocked?.stallName ?? '' })}
             </p>
             <p className="text-ink-muted text-[13px]">{t('stockNote')}</p>
           </Card>

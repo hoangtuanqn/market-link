@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { OrderDetailDto } from './order.requests';
-import { toOrder, toOrderView } from './order.requests';
+import { toOrder, toOrderCard, toOrderView } from './order.requests';
 
 const baseDto = (overrides: Partial<OrderDetailDto> = {}): OrderDetailDto => ({
   summary: {
@@ -18,6 +18,8 @@ const baseDto = (overrides: Partial<OrderDetailDto> = {}): OrderDetailDto => ({
     totalAmount: 150000,
     itemCount: 2,
     createdAt: '2026-09-26T08:00:00Z',
+    customerId: 2,
+    customerName: 'An',
   },
   items: [
     { productId: 1, productName: 'Tomato', unit: 'kg', unitPrice: 25000, quantity: 2, subtotal: 50000 },
@@ -37,6 +39,7 @@ const baseDto = (overrides: Partial<OrderDetailDto> = {}): OrderDetailDto => ({
   canModify: true,
   customerNote: null,
   farmerNote: null,
+  reviewed: false,
   ...overrides,
 });
 
@@ -52,10 +55,10 @@ describe('toOrder', () => {
     expect(order.status).toBe('placed');
     expect(order.cutoff).toBe('2026-09-27T12:00:00Z');
     expect(order.items).toEqual([
-      { productId: 1, qty: 2 },
-      { productId: 2, qty: 3 },
+      { productId: 1, qty: 2, name: 'Tomato', unit: 'kg', price: 25000 },
+      { productId: 2, qty: 3, name: 'Lettuce', unit: 'bunch', price: 10000 },
     ]);
-    expect(order.reviewed).toBeUndefined();
+    expect(order.reviewed).toBe(false);
   });
 
   it('is locked while placed/accepted and cancellation is no longer allowed', () => {
@@ -131,5 +134,34 @@ describe('toOrderView', () => {
     expect(view.id).toBe(42);
     expect(view.id).toBe(dto.summary.orderId);
     expect(view.order).toEqual(toOrder(dto));
+  });
+});
+
+describe('toOrderCard', () => {
+  it('keeps the names and the total the ticket shows, and locks a placed order after its cutoff', () => {
+    const card = toOrderCard({
+      ...baseDto().summary,
+      cutoffAt: '2000-01-01T00:00:00Z',
+      customerId: 2,
+      customerName: 'An',
+    });
+    expect(card).toMatchObject({
+      id: 42,
+      stallName: 'Cô Tư Garden',
+      marketName: 'Thảo Điền Weekend Market',
+      total: 150000,
+      itemCount: 2,
+      locked: true,
+      items: [],
+    });
+  });
+});
+
+describe('toOrder — items and the reviewed flag', () => {
+  it('carries product names, unit prices and the reviewed flag into the ticket', () => {
+    const order = toOrder({ ...baseDto(), reviewed: true });
+    expect(order.items[0]).toEqual({ productId: 1, qty: 2, name: 'Tomato', unit: 'kg', price: 25000 });
+    expect(order.reviewed).toBe(true);
+    expect(order.total).toBe(150000);
   });
 });

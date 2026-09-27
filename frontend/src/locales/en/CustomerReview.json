@@ -10,6 +10,11 @@
     "title": "This order is not finished yet",
     "text": "You can review the stall and what you bought once you have collected the order."
   },
+  "done": {
+    "title": "Already reviewed",
+    "text": "You have already reviewed this order. Thanks for taking the time."
+  },
+  "noun": "order",
   "completed": "Completed {{date}}",
   "title": "How was {{stall}}?",
   "intro": "Reviews are tied to this completed order, so other customers see them as a verified purchase. The stall can reply.",

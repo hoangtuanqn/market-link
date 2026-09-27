@@ -1,55 +1,52 @@
 {
-  "overline": "Nền tảng · {{year}}",
+  "overline": "Nền tảng",
   "title": "MarketLink hôm nay",
-  "vs": "so với {{month}}",
-  "tilesNote": "{{now}} tính đến hiện tại, đặt cạnh {{prev}}. Bấm vào ô nào cũng mở được chi tiết đằng sau con số đó.",
+  "noun": "bảng điều khiển",
   "kpi": {
     "farmers": "Nhà vườn",
-    "farmersNote": "{{waiting}} chờ duyệt · {{suspended}} đang tạm ngưng",
-    "farmersLink": "Xét duyệt đơn đăng ký",
+    "farmersNote": "{{waiting}} đang chờ duyệt",
+    "farmersLink": "Duyệt đơn đăng ký",
     "customers": "Khách hàng",
-    "customersNote": "{{count}} người mới trong tháng này",
-    "customersLink": "Mở danh sách khách hàng",
+    "customersLink": "Mở khách hàng",
     "markets": "Chợ",
-    "marketsNote": "tất cả đang hoạt động",
     "marketsLink": "Mở danh sách chợ",
     "orders": "Đơn hàng",
-    "ordersNote": "{{week}} trong tuần này · {{total}} đã hoàn tất",
-    "ordersLink": "Mở danh sách đơn hàng"
-  },
-  "revenue": {
-    "title": "Doanh thu theo ngày",
-    "note": "Đơn đã hoàn tất, đơn vị triệu ₫. {{now}} so với {{prev}}.",
-    "caption": "Doanh thu theo ngày của {{now}} so với {{prev}}, đơn vị triệu đồng",
-    "axis": "Ngày trong tháng",
-    "reports": "Xem báo cáo đầy đủ"
+    "ordersNote": "{{revenue}} từ đơn đã hoàn tất",
+    "ordersLink": "Mở đơn hàng"
   },
   "attention": {
-    "title": "Cần xử lý",
+    "title": "Cần chú ý",
     "farmers_one": "đơn đăng ký nhà vườn đang chờ",
     "farmers_other": "đơn đăng ký nhà vườn đang chờ",
-    "reported_one": "đánh giá bị sạp báo cáo",
-    "reported_other": "đánh giá bị sạp báo cáo",
-    "feedback_one": "góp ý chưa xử lý",
-    "feedback_other": "góp ý chưa xử lý, trong đó có một lỗi",
-    "announcements_one": "thông báo đang chạy, Thảo Điền nghỉ ngày 04/10",
-    "announcements_other": "thông báo đang chạy"
+    "reported_one": "tin nhắn bị báo cáo, chưa xem",
+    "reported_other": "tin nhắn bị báo cáo, chưa xem",
+    "feedback_one": "góp ý mới",
+    "feedback_other": "góp ý mới"
   },
   "byMarket": {
-    "title": "Đơn hàng tuần này theo chợ",
-    "link": "Tất cả đơn hàng",
-    "suffix": "đơn"
+    "title": "Doanh thu theo chợ",
+    "noun": "doanh thu theo chợ",
+    "empty": {
+      "title": "Chưa có đơn hoàn tất",
+      "text": "Doanh thu theo chợ sẽ hiện khi một chợ có đơn hàng hoàn tất."
+    }
   },
   "latest": {
-    "title": "Đơn hàng mới nhất trên toàn sàn",
-    "readOnly": "Chỉ xem. Quản trị viên không đổi trạng thái đơn."
+    "title": "Đơn hàng mới nhất trên nền tảng",
+    "noun": "đơn hàng",
+    "readOnly": "Chỉ xem. Admin không đổi trạng thái đơn hàng.",
+    "empty": {
+      "title": "Chưa có đơn hàng",
+      "text": "Đơn hàng đặt ở bất kỳ đâu trên nền tảng sẽ hiện ở đây."
+    }
   },
   "col": {
-    "order": "Đơn hàng",
+    "order": "Đơn",
+    "customer": "Khách hàng",
     "stall": "Sạp",
     "market": "Chợ",
     "pickup": "Nhận hàng",
-    "total": "Tổng tiền",
+    "total": "Tổng",
     "status": "Trạng thái"
   }
 }

@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import OnboardingTour from '@/components/OnboardingTour';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
@@ -21,9 +22,8 @@ import {
   UsersIcon,
   type IconProps,
 } from '@/components/icons';
+import OrderApi from '@/api-requests/order.requests';
 import StallApi from '@/api-requests/stall.requests';
-import { SHOW_WIP } from '@/config/wip';
-import { farmerOrders } from '@/data/farmer';
 import useRequest from '@/hooks/useRequest';
 import useSession from '@/hooks/useSession';
 import { initials } from '@/lib/avatar';
@@ -35,15 +35,12 @@ type FarmerNavKey = keyof (typeof common)['farmerNav'];
 type NavItem = { to: string; label: FarmerNavKey; icon: ComponentType<IconProps>; count?: number };
 type NavGroup = { heading: FarmerNavKey; items: NavItem[] };
 
-// The two count badges still come from sample data (orders: C5, unread messages not yet wired into the sidebar) → shown in dev only.
-const AWAITING_COUNT = SHOW_WIP ? farmerOrders.filter((o) => o.status === 'placed').length : undefined;
-
 const NAV: NavGroup[] = [
   {
     heading: 'today',
     items: [
       { to: '/farmer', label: 'overview', icon: DashboardIcon },
-      { to: '/farmer/orders', label: 'incomingOrders', icon: ReceiptIcon, count: AWAITING_COUNT },
+      { to: '/farmer/orders', label: 'incomingOrders', icon: ReceiptIcon },
       { to: '/farmer/slots', label: 'pickupSlots', icon: ClockIcon },
     ],
   },
@@ -88,11 +85,18 @@ const FarmerLayout = () => {
   const { t } = useTranslation();
   const unread = useUnreadNotifications();
   const { user } = useSession();
+  const { pathname } = useLocation();
   const { state: profileLoad } = useRequest('farmer-layout-profile', () => StallApi.myProfile());
   const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
   const stallName = profile?.stallName ?? user?.fullName ?? '';
   // FR-113: the real unread count, replacing the hardcoded 1
   const chatUnread = useChatUnread();
+  // The "incoming orders" badge; re-fetched on every navigation inside the panel (FarmerLayout is the persistent
+  // Outlet parent, so accept/decline on /farmer/orders would otherwise leave a stale count until a full reload).
+  const { state: placedLoad } = useRequest(`farmer-placed-count:${pathname}`, () =>
+    OrderApi.farmerList({ status: 'placed', pageSize: 1 }),
+  );
+  const awaiting = placedLoad.kind === 'ready' ? placedLoad.data.total : undefined;
 
   const nav: ShellNavGroup[] = NAV.map((g) => ({
     heading: t(`farmerNav.${g.heading}`),
@@ -104,7 +108,9 @@ const FarmerLayout = () => {
           ? unread || undefined
           : it.to === '/farmer/messages'
             ? chatUnread || undefined
-            : it.count,
+            : it.to === '/farmer/orders'
+              ? awaiting || undefined
+              : it.count,
     })),
   }));
 

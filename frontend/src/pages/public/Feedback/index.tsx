@@ -1,32 +1,46 @@
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import FeedbackApi, { type FeedbackType } from '@/api-requests/feedback.requests';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Field, SelectField } from '@/components/ui/input';
-import useSession from '@/hooks/useSession';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 /** Keys under `types.` and `sent.` in Feedback.json. */
-const TYPES = ['bug', 'suggestion', 'query'] as const;
-type FeedbackType = (typeof TYPES)[number];
+const TYPES: FeedbackType[] = ['bug', 'suggestion', 'query'];
 
-/** Keys under `pages.` in Feedback.json; the value stored on the report stays the key. */
-const PAGES = ['cart', 'product', 'map', 'orders', 'farmer', 'other'] as const;
+/** The server rule (`message` 10–2000 characters); repeated here so the form can guide before it submits. */
+const MESSAGE_MIN = 10;
 
-/** FR-081 — bugs, suggestions and questions for the platform team, routed by type. */
+/**
+ * FR-081 — bugs, suggestions and questions for the platform team, routed by type. Anyone can send; a signed-in user is
+ * attached on the server automatically, so the form asks for nothing about who is sending it.
+ */
 const FeedbackPage = () => {
   const { t } = useTranslation('Feedback');
-  const { user } = useSession();
   const [type, setType] = useState<FeedbackType>('bug');
-  const [page, setPage] = useState<string>('cart');
   const [message, setMessage] = useState('');
-  const [email, setEmail] = useState(user?.email ?? '');
+  const [sending, setSending] = useState(false);
 
-  const send = () => {
-    if (!message.trim()) return;
-    Notification.success({ title: t('sent.title'), text: t(`sent.${type}`) });
-    setMessage('');
+  const send = async () => {
+    const trimmed = message.trim();
+    if (trimmed.length < MESSAGE_MIN) return;
+    setSending(true);
+    try {
+      await FeedbackApi.submit({ type, message: trimmed });
+      Notification.success({ title: t('sent.title'), text: t(`sent.${type}`) });
+      setMessage('');
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 429) {
+        Notification.error({ text: t('tooMany') });
+      } else {
+        Notification.error({ text: Helper.getErrorMessage(error, t('sendFailed')) });
+      }
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -35,7 +49,7 @@ const FeedbackPage = () => {
         as="form"
         onSubmit={(e) => {
           e.preventDefault();
-          send();
+          void send();
         }}
         className="mx-auto flex w-full max-w-160 flex-col gap-4 p-8"
       >
@@ -61,14 +75,6 @@ const FeedbackPage = () => {
           ))}
         </fieldset>
 
-        <SelectField
-          id="page"
-          label={t('pageLabel')}
-          value={page}
-          onChange={(e) => setPage(e.target.value)}
-          options={PAGES.map((p) => ({ value: p, label: t(`pages.${p}`) }))}
-        />
-
         <div className="flex flex-col gap-1.5">
           <label htmlFor="msg" className="text-small font-bold">
             {t('messageLabel')}
@@ -77,6 +83,7 @@ const FeedbackPage = () => {
           <textarea
             id="msg"
             required
+            minLength={MESSAGE_MIN}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={t('messagePlaceholder')}
@@ -85,17 +92,10 @@ const FeedbackPage = () => {
           <span className="text-ink-muted text-[13px]">{t('messageHint')}</span>
         </div>
 
-        <Field
-          id="email"
-          label={t('emailLabel')}
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          hint={t('emailHint')}
-        />
-
         <div>
-          <Button type="submit">{t('submit')}</Button>
+          <Button type="submit" disabled={sending || message.trim().length < MESSAGE_MIN}>
+            {t('submit')}
+          </Button>
         </div>
       </Card>
 

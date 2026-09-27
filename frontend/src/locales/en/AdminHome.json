@@ -1,51 +1,48 @@
 {
-  "overline": "Platform · {{year}}",
+  "overline": "Platform",
   "title": "MarketLink today",
-  "vs": "vs {{month}}",
-  "tilesNote": "{{now}} so far, next to {{prev}}. Every tile opens the detail behind its number.",
+  "noun": "dashboard",
   "kpi": {
     "farmers": "Farmers",
-    "farmersNote": "{{waiting}} waiting for approval · {{suspended}} suspended",
+    "farmersNote": "{{waiting}} waiting for approval",
     "farmersLink": "Review applications",
     "customers": "Customers",
-    "customersNote": "{{count}} joined this month",
     "customersLink": "Open customers",
     "markets": "Markets",
-    "marketsNote": "all active",
     "marketsLink": "Open markets",
     "orders": "Orders",
-    "ordersNote": "{{week}} this week · {{total}} completed",
+    "ordersNote": "{{revenue}} from completed orders",
     "ordersLink": "Open orders"
-  },
-  "revenue": {
-    "title": "Revenue by day",
-    "note": "Completed orders, in millions of ₫. {{now}} against {{prev}}.",
-    "caption": "Revenue by day in {{now}} against {{prev}}, in millions of dong",
-    "axis": "Day of the month",
-    "reports": "Full reports"
   },
   "attention": {
     "title": "Needs attention",
     "farmers_one": "Farmer application waiting",
     "farmers_other": "Farmer applications waiting",
-    "reported_one": "review reported by a stall",
-    "reported_other": "reviews reported by a stall",
-    "feedback_one": "open feedback item",
-    "feedback_other": "open feedback items, one a bug",
-    "announcements_one": "announcement live, Thảo Điền closed 04/10",
-    "announcements_other": "announcements live"
+    "reported_one": "message reported, not yet reviewed",
+    "reported_other": "messages reported, not yet reviewed",
+    "feedback_one": "new feedback message",
+    "feedback_other": "new feedback messages"
   },
   "byMarket": {
-    "title": "Orders this week by market",
-    "link": "All orders",
-    "suffix": "orders"
+    "title": "Revenue by market",
+    "noun": "revenue by market",
+    "empty": {
+      "title": "No completed orders yet",
+      "text": "Revenue by market appears once a market has a completed order."
+    }
   },
   "latest": {
     "title": "Latest orders across the platform",
-    "readOnly": "Read-only. Admins do not change order status."
+    "noun": "orders",
+    "readOnly": "Read-only. Admins do not change order status.",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders placed anywhere on the platform will show up here."
+    }
   },
   "col": {
     "order": "Order",
+    "customer": "Customer",
     "stall": "Stall",
     "market": "Market",
     "pickup": "Pickup",

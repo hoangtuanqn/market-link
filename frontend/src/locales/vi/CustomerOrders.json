@@ -3,10 +3,26 @@
   "intro": "Đơn sắp nhận hiện trước. Đơn cũ vẫn giữ hoá đơn, và bạn có thể đặt lại bất cứ món nào đã mua theo giá và số hàng hôm nay.",
   "stall": "Sạp",
   "allStalls": "Tất cả sạp",
+  "noun": "đơn hàng",
   "tabs": {
     "label": "Đơn hàng",
     "upcoming": "Sắp tới",
     "past": "Đã qua",
     "all": "Tất cả"
+  },
+  "empty": {
+    "up": {
+      "title": "Chưa có đơn sắp tới",
+      "text": "Khi bạn đặt đơn, đơn sẽ hiện ở đây cho tới khi được nhận hàng."
+    },
+    "past": {
+      "title": "Chưa có đơn cũ",
+      "text": "Đơn bạn đã nhận, đã huỷ hoặc bị từ chối sẽ hiện ở đây."
+    },
+    "all": {
+      "title": "Chưa có đơn nào",
+      "text": "Hãy xem các chợ cuối tuần này và đặt đơn đầu tiên."
+    },
+    "cta": "Xem sản phẩm"
   }
 }

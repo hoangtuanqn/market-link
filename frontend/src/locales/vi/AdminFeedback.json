@@ -1,55 +1,50 @@
 {
-  "overline": "Cài đặt",
-  "title": "Hộp thư góp ý",
-  "intro": "Báo lỗi, góp ý và câu hỏi gửi qua biểu mẫu góp ý. Xử lý xong thì đánh dấu đã trả lời.",
-  "link": {
-    "categories": "Danh mục",
-    "announcements": "Thông báo"
-  },
+  "title": "Hộp góp ý",
+  "intro": "Báo lỗi, đề xuất và câu hỏi gửi qua form góp ý. Chuyển từng mục từ mới sang đã xem, rồi đã xử lý.",
+  "noun": "góp ý",
+  "anonymous": "Ẩn danh",
+  "caption": "{{count}} góp ý",
   "filterLabel": "Lọc góp ý",
   "filter": {
-    "open": "Chưa xử lý",
-    "answered": "Đã trả lời",
+    "new": "Mới",
+    "reviewed": "Đã xem",
+    "resolved": "Đã xử lý",
     "bug": "Lỗi",
-    "suggestion": "Góp ý",
+    "suggestion": "Đề xuất",
     "query": "Câu hỏi"
   },
   "type": {
     "bug": "Báo lỗi",
-    "suggestion": "Góp ý",
+    "suggestion": "Đề xuất",
     "query": "Câu hỏi"
   },
   "status": {
-    "open": "Chưa xử lý",
-    "answered": "Đã trả lời"
+    "new": "Mới",
+    "reviewed": "Đã xem",
+    "resolved": "Đã xử lý"
   },
   "col": {
     "type": "Loại",
     "message": "Nội dung",
-    "from": "Người gửi",
+    "from": "Từ",
     "status": "Trạng thái"
   },
   "action": {
-    "read": "Đọc",
-    "readAndAnswer": "Đọc và trả lời"
+    "read": "Đọc"
   },
   "dialog": {
     "title": "{{type}} từ {{from}}",
-    "sent": "Gửi ngày {{date}} · {{state}}",
-    "notAnswered": "chưa trả lời",
-    "alreadyAnswered": "đã trả lời",
-    "yourAnswer": "Câu trả lời của bạn",
-    "replyPlaceholder": "Cảm ơn bạn đã báo cho chúng tôi…",
+    "sent": "Gửi {{date}} · {{state}}",
     "close": "Đóng",
-    "send": "Gửi và đánh dấu đã trả lời",
-    "sendAgain": "Gửi lại"
+    "markReviewed": "Đánh dấu đã xem",
+    "markResolved": "Đánh dấu đã xử lý"
   },
   "empty": {
-    "title": "Chưa có góp ý nào",
-    "text": "Báo lỗi, góp ý và câu hỏi từ biểu mẫu góp ý sẽ về đây."
+    "title": "Chưa có góp ý",
+    "text": "Báo lỗi, đề xuất và câu hỏi từ form góp ý sẽ hiện ở đây."
   },
   "toast": {
-    "answered": "Đã lưu câu trả lời và đánh dấu tin nhắn đã trả lời.",
-    "markedOnly": "Đã đánh dấu đã trả lời mà không gửi phản hồi."
+    "reviewed": "Đã đánh dấu đã xem.",
+    "resolved": "Đã đánh dấu đã xử lý."
   }
 }
