@@ -6,6 +6,7 @@ import com.techx.intervue.modules.report.repositories.OrderRows;
 import com.techx.intervue.modules.report.resources.AdminDashboardResource;
 import com.techx.intervue.modules.report.resources.RevenueByMarketResource;
 import com.techx.intervue.modules.report.resources.TopFarmerResource;
+import com.techx.intervue.modules.report.resources.TopProductResource;
 import com.techx.intervue.modules.report.services.interfaces.AdminReportServiceInterface;
 import com.techx.intervue.resources.PageResource;
 import java.time.LocalDate;
@@ -47,15 +48,29 @@ public class AdminReportService implements AdminReportServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public PageResource<OrderListItemResource> orders(
-            LocalDate from, LocalDate to, Long marketId, String status, int page, int pageSize) {
+            LocalDate from,
+            LocalDate to,
+            Long marketId,
+            String status,
+            Long customerId,
+            int page,
+            int pageSize) {
         LocalDate[] r = ordered(from, to);
         return reports.orders(
                 r[0],
                 r[1],
                 marketId,
                 OrderRows.statusOrNull(status),
+                customerId,
                 Math.max(1, page),
                 Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TopProductResource> topProducts(LocalDate from, LocalDate to, int limit) {
+        LocalDate[] r = ordered(from, to);
+        return reports.topProducts(r[0], r[1], Math.min(MAX_LIMIT, Math.max(1, limit)));
     }
 
     private static LocalDate[] ordered(LocalDate from, LocalDate to) {
