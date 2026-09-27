@@ -48,5 +48,12 @@
     "pickup": "Pickup",
     "total": "Total",
     "status": "Status"
+  },
+  "maintenance": {
+    "title": "Maintenance mode is active",
+    "badge": "Active",
+    "text": "The entire platform is currently restricted to administrators only. All visitors and farmers are seeing the maintenance notice.",
+    "reminder": "Remember to turn off maintenance mode as soon as possible once maintenance is complete so users can access MarketLink.",
+    "action": "Go to Settings"
   }
 }

@@ -2,7 +2,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
 import { Link, type LinkProps } from 'react-router';
 import Helper from '@/utils/helper';
 
-type Variant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'onboard' | 'danger' | 'dangerFill';
+type Variant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'onboard' | 'danger' | 'dangerFill' | 'success';
 type Size = 'md' | 'sm';
 
 const base =
@@ -18,6 +18,8 @@ const variants: Record<Variant, string> = {
   danger: 'bg-surface-raised text-danger shadow-[inset_0_0_0_1.5px_var(--danger)] hover:bg-danger-bg',
   // `.ml-btn-danger-fill`: the confirm button of a dangerous dialog. The design system sets no hover for it.
   dangerFill: 'bg-danger text-on-danger',
+  success:
+    'bg-status-ready-bg text-status-ready-ink shadow-[inset_0_0_0_1.5px_var(--brand)] hover:bg-brand hover:text-on-brand',
 };
 
 const sizes: Record<Size, string> = {
