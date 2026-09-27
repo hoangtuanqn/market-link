@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation } from 'react-router';
 import NotificationBell from '@/components/notifications/NotificationBell';
+import OnboardingTour from '@/components/OnboardingTour';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import {
   ChartIcon,
@@ -110,21 +111,24 @@ const AdminLayout = () => {
   }
 
   return (
-    <DashboardShell
-      badge={t('admin.badge')}
-      navLabel={t('adminNav.navigation')}
-      homeLabel={t('adminNav.home')}
-      home={ADMIN_HOME_PATH}
-      nav={buildNav(t, pendingFarmers)}
-      context={{ mono: 'M', name: 'MarketLink', sub: t('adminNav.contextSub') }}
-      user={{ mono: initials(user.fullName ?? ''), email: user.email, line: t('adminNav.userLine') }}
-      onSignOut={logout}
-      searchId="admin-appq"
-      searchPlaceholder={t('adminNav.searchPlaceholder')}
-      accountTo={ADMIN_ACCOUNT_PATH}
-      headerActions={<NotificationBell to={ADMIN_NOTIFICATIONS_PATH} />}
-      className="bg-surface-quiet"
-    />
+    <>
+      <OnboardingTour role="admin" />
+      <DashboardShell
+        badge={t('admin.badge')}
+        navLabel={t('adminNav.navigation')}
+        homeLabel={t('adminNav.home')}
+        home={ADMIN_HOME_PATH}
+        nav={buildNav(t, pendingFarmers)}
+        context={{ mono: 'M', name: 'MarketLink', sub: t('adminNav.contextSub') }}
+        user={{ mono: initials(user.fullName ?? ''), email: user.email, line: t('adminNav.userLine') }}
+        onSignOut={logout}
+        searchId="admin-appq"
+        searchPlaceholder={t('adminNav.searchPlaceholder')}
+        accountTo={ADMIN_ACCOUNT_PATH}
+        headerActions={<NotificationBell to={ADMIN_NOTIFICATIONS_PATH} />}
+        className="bg-surface-quiet"
+      />
+    </>
   );
 };
 
