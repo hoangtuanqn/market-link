@@ -10,7 +10,8 @@
     "emailValue": "contact@marketlink.vn",
     "phoneValue": "090 123 4567",
     "addressValue": "123 Lê Lợi, Phường Bến Nghé, Quận 1, TP.HCM",
-    "hoursValue": "Thứ Hai – Thứ Sáu, 09:00 – 17:00"
+    "hoursValue": "Thứ Hai – Thứ Sáu, 09:00 – 17:00",
+    "toAdd": "Sẽ bổ sung"
   },
   "feedback": {
     "title": "Có lỗi hay có ý tưởng?",

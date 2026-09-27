@@ -217,7 +217,8 @@
     "markets": "Memuat pasar"
   },
   "logo": {
-    "home": "MarketLink — beranda"
+    "home": "MarketLink — beranda",
+    "slogan": "Masih ada saat kamu sampai"
   },
   "map": {
     "attribution": "© kontributor {{link}}",
@@ -569,6 +570,123 @@
       "hours": "Jam berapa pasar Bến Thành buka?",
       "stalls": "Lapak apa saja di pasar Thảo Điền hari Sabtu?",
       "cancel": "Bagaimana cara membatalkan pesanan?"
+    }
+  },
+  "tour": {
+    "next": "Berikutnya",
+    "back": "Kembali",
+    "done": "Selesai",
+    "skip": "Lewati panduan",
+    "progress": "{{current}} dari {{total}}",
+    "steps": {
+      "customerWelcome": {
+        "title": "Selamat datang di MarketLink",
+        "body": "Pesan hasil tani segar dari petani di pasar mingguan Kota Ho Chi Minh, lalu ambil di lapak mereka. Panduan singkat ini akan mengajak Anda berkeliling."
+      },
+      "customerMarkets": {
+        "title": "Jelajahi pasar",
+        "body": "Lihat setiap pasar, jam bukanya, dan lapak yang berjualan di sana."
+      },
+      "customerProducts": {
+        "title": "Cari produk",
+        "body": "Saring hasil tani berdasarkan kategori, harga, dan pasar. Setiap produk menunjukkan sisa stok minggu ini."
+      },
+      "customerMap": {
+        "title": "Peta pasar",
+        "body": "Temukan pasar terdekat dan dapatkan petunjuk arah di OpenStreetMap."
+      },
+      "customerSearch": {
+        "title": "Pencarian",
+        "body": "Cari produk, lapak, atau pasar berdasarkan nama."
+      },
+      "customerCart": {
+        "title": "Keranjang Anda",
+        "body": "Tambahkan produk, pilih waktu pengambilan di lapak, lalu buat pesanan."
+      },
+      "customerOrders": {
+        "title": "Pesanan Anda",
+        "body": "Pantau setiap pesanan dari dibuat, diterima, siap, hingga selesai. Petani mengonfirmasinya sebelum Anda datang."
+      },
+      "customerFavorites": {
+        "title": "Favorit",
+        "body": "Simpan lapak dan produk yang Anda sukai agar mudah ditemukan lagi."
+      },
+      "customerMessages": {
+        "title": "Pesan",
+        "body": "Mengobrol dengan petani tentang produk atau pesanan."
+      },
+      "customerNotifications": {
+        "title": "Notifikasi",
+        "body": "Kabar pesanan dan pengumuman pasar muncul di sini."
+      },
+      "customerAccount": {
+        "title": "Akun Anda",
+        "body": "Ubah profil, ganti pengaturan seperti bahasa dan mata uang, atau daftar untuk berjualan sebagai petani."
+      },
+      "customerMenu": {
+        "title": "Menu",
+        "body": "Pasar, produk, pesanan, dan akun Anda ada di menu ini."
+      },
+      "customerDone": {
+        "title": "Semua siap",
+        "body": "Mulailah dengan memilih pasar di dekat Anda. Anda bisa mengubah preferensi kapan saja di Pengaturan."
+      },
+      "farmerWelcome": {
+        "title": "Selamat datang di panel lapak",
+        "body": "Di sinilah Anda mengelola lapak di MarketLink. Mari lihat setiap bagian secara singkat."
+      },
+      "farmerOverview": {
+        "title": "Ringkasan",
+        "body": "Pesanan, pengambilan, dan penjualan hari ini dalam sekilas."
+      },
+      "farmerOrders": {
+        "title": "Pesanan masuk",
+        "body": "Terima atau tolak pesanan baru, lalu tandai siap dan selesai saat pelanggan mengambilnya."
+      },
+      "farmerSlots": {
+        "title": "Slot pengambilan",
+        "body": "Atur rentang waktu pelanggan dapat mengambil pesanan di lapak Anda."
+      },
+      "farmerStock": {
+        "title": "Stok minggu ini",
+        "body": "Perbarui jumlah setiap produk yang bisa Anda jual minggu ini."
+      },
+      "farmerProducts": {
+        "title": "Produk",
+        "body": "Tambahkan produk dengan foto, harga, dan satuan, atau sembunyikan yang tidak lagi dijual."
+      },
+      "farmerStall": {
+        "title": "Lapak dan pengambilan",
+        "body": "Ubah profil lapak dan pilih pasar serta hari Anda berjualan."
+      },
+      "farmerReviews": {
+        "title": "Ulasan",
+        "body": "Baca penilaian dan ulasan yang ditinggalkan pelanggan setelah pengambilan."
+      },
+      "farmerHistory": {
+        "title": "Riwayat penjualan",
+        "body": "Tinjau pesanan sebelumnya dan perkembangan penjualan Anda."
+      },
+      "farmerMessages": {
+        "title": "Pesan",
+        "body": "Jawab pertanyaan pelanggan tentang produk dan pesanan."
+      },
+      "farmerNotifications": {
+        "title": "Notifikasi",
+        "body": "Pesanan baru dan kabar dari tim MarketLink muncul di sini."
+      },
+      "farmerSettings": {
+        "title": "Pengaturan",
+        "body": "Ubah bahasa, mata uang, dan pengaturan default penjualan."
+      },
+      "farmerDone": {
+        "title": "Lapak Anda siap",
+        "body": "Mulailah dengan memeriksa stok minggu ini dan slot pengambilan."
+      },
+      "dashboardMenu": {
+        "title": "Menu",
+        "body": "Buka menu untuk menuju setiap bagian panel."
+      }
     }
   }
 }

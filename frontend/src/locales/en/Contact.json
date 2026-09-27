@@ -10,7 +10,8 @@
     "emailValue": "contact@marketlink.vn",
     "phoneValue": "+84 90 123 4567",
     "addressValue": "123 Le Loi, Ben Nghe Ward, District 1, Ho Chi Minh City",
-    "hoursValue": "Mon – Fri, 09:00 – 17:00"
+    "hoursValue": "Mon – Fri, 09:00 – 17:00",
+    "toAdd": "To add"
   },
   "feedback": {
     "title": "Something broken or an idea?",
