@@ -85,7 +85,8 @@ const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
             name={`slot-${group.farmerId}`}
             slots={slotOptions}
             value={choice.slotId}
-            onChange={(v) => onChange({ slotId: v })}
+            // Commit the date on screen with the slot: the first day shows as picked before anyone clicks it (#5).
+            onChange={(v) => onChange({ date, slotId: v })}
             legend={t('pickupTime', {
               day: date ? dayName(localDay(date).getDay(), 'long') : '',
               date: date ? formatDayMonth(localDay(date)) : '',
@@ -110,10 +111,18 @@ const CustomerCartPage = () => {
   const navigate = useNavigate();
   const { user } = useSession();
   const previewKey = lines.map((l) => `${l.productId}:${l.qty}`).join(',');
-  const { state: previewLoad, retry } = useRequest(`cart-preview:${previewKey}`, () =>
-    lines.length && user
-      ? OrderApi.preview(lines.map((l) => ({ productId: l.productId, quantity: l.qty })))
-      : Promise.resolve([]),
+  // keepPrevious: a quantity change re-prices the cart without swapping the page for a loading line (#3).
+  const {
+    state: previewLoad,
+    refreshing,
+    retry,
+  } = useRequest(
+    `cart-preview:${previewKey}`,
+    () =>
+      lines.length && user
+        ? OrderApi.preview(lines.map((l) => ({ productId: l.productId, quantity: l.qty })))
+        : Promise.resolve([]),
+    { keepPrevious: true },
   );
   const groups = previewLoad.kind === 'ready' ? previewLoad.data : [];
   const [choices, setChoices] = useState<Record<number, Choice>>({});
@@ -294,7 +303,7 @@ const CustomerCartPage = () => {
                 className="border-line-strong bg-surface-raised text-body min-h-16 rounded-sm border-[1.5px] p-3"
               />
             </div>
-            <Button disabled={!ready || placing} className="w-full" onClick={() => void place()}>
+            <Button disabled={!ready || placing || refreshing} className="w-full" onClick={() => void place()}>
               {placing ? t('placing') : t('place', { count: groups.length })}
             </Button>
             <p className="text-small text-ink-muted text-center">
