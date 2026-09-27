@@ -5833,6 +5833,7 @@ Kiểm tay ở 375 / 768 / 1440 px: dòng giảm giá và dòng nhắc xuống h
 
 **Files:**
 - Modify: `db/seed.sql` (khối mới ở **cuối file**, sau khối Feedback: mỗi cụm tính năng nối khối của mình vào cuối file)
+- Modify: `docs/DEMO_CREDENTIALS.md` (một mục riêng ở **cuối file**)
 - Modify: `docs/api-contract.md` (§5, §7 — chỉ thêm)
 
 **Interfaces:**
@@ -5934,9 +5935,26 @@ curl -s 'http://localhost:8080/api/v1/deals' | python3 -c 'import json,sys; d=js
 
 Expected: `2 [('Trứng vịt', '<T+2>', 20, 4), ('Trứng cút', '<T+3>', 40, 2)]` — ngày gần nhất trước.
 
-- [ ] **Step 3: Thêm dòng vào `docs/api-contract.md`**
+- [ ] **Step 3: Ghi 2 ngày giảm giá demo vào `docs/DEMO_CREDENTIALS.md`**
 
-Chỉ thêm, không sửa dòng cũ. LEAD đã duyệt các endpoint này ở spec §6; riêng chỗ có ⚑ là do plan thêm và **chờ LEAD duyệt** (Ruling 1, 2).
+Giai đoạn 2 cũng sửa file này: dòng Customer / Farmer / Admin, đoạn "Dữ liệu demo đi kèm" và danh sách "Dữ liệu dựng sẵn cho vài kịch bản". Để hai lần sửa không đụng nhau, giai đoạn 3 **không** sửa các chỗ đó mà chỉ nối một mục riêng vào **cuối file** (sau mục "Lưu ý"):
+
+```markdown
+
+## Giảm giá sắp hết hạn (FR-124, FR-125)
+
+`make seed` đưa 2 ngày giảm giá vào sạp "Trứng gà Khánh Hòa" (`farmer8@marketlink.vn`), luôn ở các ngày còn đặt được:
+
+- "Trứng vịt" giảm 20% vào ngày nhận đầu tiên từ hôm nay + 2, "Trứng cút" giảm 40% vào ngày nhận đầu tiên từ hôm nay + 3.
+  Hạn của lô tính từ hạn dùng của sản phẩm, nên thẻ ở `/deals` ghi rõ còn dùng tốt tới ngày nào.
+- Đăng nhập `farmer8@` → Products: khối "On sale (2)", nút "Near-expiry deal" ở từng sản phẩm để đăng thêm.
+- Khách (`customer@marketlink.vn`) thêm một món từ `/deals`: giỏ chọn sẵn đúng ngày giảm giá và tính giá của ngày đó.
+- Chạy lại `make seed` thì 2 ngày giảm giá dời về các ngày gần nhất và giảm giá cũ của hai sản phẩm này kết thúc.
+```
+
+- [ ] **Step 4: Thêm dòng vào `docs/api-contract.md`**
+
+Chỉ thêm, không sửa dòng cũ. LEAD đã duyệt các endpoint này ở spec §6; riêng chỗ có ⚑ là do plan thêm và **chờ LEAD duyệt** (Ruling 1, 2). Không mở mục mới trong contract (giai đoạn 2 đã dùng số `§8a`): mọi dòng của giai đoạn này vào các bảng và đoạn có sẵn của §5 và §7.
 
 §5, bảng endpoint chính, ngay sau dòng `| GET | \`/api/v1/products/{id}\` | …`:
 
@@ -5965,7 +5983,7 @@ và một đoạn ngay dưới bảng đó (sau đoạn "Không còn bước "Ap
 **Giá theo ngày nhận (FR-125).** `POST /api/v1/orders/preview` nhận thêm tuỳ chọn `pickupDates: [{ farmerId, date }]`: sạp có trong danh sách được tính giá, số còn, mức giảm và hạn dùng của đúng ngày đó; sạp không có thì như cũ (ngày gần nhất còn đặt được). Mỗi món trong `items[]` thêm `listPrice`, `discountPercent` (chỉ khi ngày đó đang giảm giá), `bestBefore` và `storageMode`. Đơn đặt vào ngày đang giảm giá chụp `listPrice` và `bestBefore` của lô vào món (`GET /api/v1/orders/{id}`).
 ```
 
-- [ ] **Step 4: Chạy toàn bộ test**
+- [ ] **Step 5: Chạy toàn bộ test**
 
 Run: `make be-test`
 Expected: `BUILD SUCCESS`, `Failures: 0, Errors: 0`. Nếu JVM test bị kill giữa chừng ("The forked VM terminated without properly saying goodbye"), đó là do thiếu RAM trong Docker, không phải test fail: tắt container frontend của stack này rồi chạy lại.
@@ -5973,7 +5991,7 @@ Expected: `BUILD SUCCESS`, `Failures: 0, Errors: 0`. Nếu JVM test bị kill gi
 Run: `docker compose exec -T frontend sh -c 'npx prettier --check src && npx tsc -b && npx eslint src && npx vitest run'`
 Expected: sạch, toàn bộ test PASS.
 
-- [ ] **Step 5: Kiểm đủ key ở 10 ngôn ngữ**
+- [ ] **Step 6: Kiểm đủ key ở 10 ngôn ngữ**
 
 ```bash
 python3 - <<'EOF'
@@ -5997,7 +6015,7 @@ EOF
 
 Expected: chỉ in `checked`.
 
-- [ ] **Step 6: Kiểm tay luồng chính**
+- [ ] **Step 7: Kiểm tay luồng chính**
 
 `make be-restart` rồi `make seed`. Trên stack của worktree (mật khẩu mọi tài khoản demo `Demo@1234`):
 1. `farmer8@marketlink.vn` → Products: khối "On sale (2)" có "Trứng vịt" (−20%) và "Trứng cút" (−40%). Bấm "Near-expiry deal" ở "Trứng gà thả vườn", chọn ngày thứ hai, ngày đóng gói 7 ngày trước: dialog hiện hạn của lô, số ngày khách còn dùng và mức gợi ý; −/+ dừng ở 5% và 70%; "Post deal" → khối thành "On sale (3)". Chọn ngày đóng gói là hôm qua: nút "Post deal" bị khoá, có dòng lý do. "Remove deal" một dòng → dòng biến mất.
@@ -6005,21 +6023,21 @@ Expected: chỉ in `checked`.
 3. `customer@marketlink.vn`: "Add to cart" ở thẻ "Trứng cút" → giỏ chọn sẵn ngày giảm giá, món có "−40% near-expiry deal" và "Good until end of …"; chọn ngày khác → giá về giá thường và có dòng "The deal only applies to …"; chọn lại ngày giảm giá, chọn giờ, đặt đơn → trang chi tiết đơn hiện hạn của lô dưới món.
 4. Ở 375 / 768 / 1440 px: `/deals`, trang chủ, trang sản phẩm, giỏ và Farmer Products không tràn ngang.
 
-- [ ] **Step 7: Commit**
+- [ ] **Step 8: Commit**
 
 ```bash
-git add db/seed.sql docs/api-contract.md
+git add db/seed.sql docs/DEMO_CREDENTIALS.md docs/api-contract.md
 git commit -m "chore(FR-125): seed two near-expiry deals and document the deal endpoints"
 ```
 
-- [ ] **Step 8: Ghi chú cho PR (không push nếu chưa được phép)**
+- [ ] **Step 9: Ghi chú cho PR (không push nếu chưa được phép)**
 
 PR body (tiếng Anh) phải nêu:
 - FR đề xuất FR-124, FR-125 (spec §11, LEAD duyệt 27/09/2026); nếu `.ai/REQUIREMENTS.md` chưa có hai mã này thì ghi rõ để QA/DOC thêm;
 - migration `V20260927007__daily_stock_deals.sql` và 4 cột mới của `product_daily_stock` để LEAD cập nhật `db/schema.sql` (R-02);
 - các dòng contract đã thêm (chỉ thêm), và **hai chỗ chờ LEAD duyệt**: endpoint đọc `GET /api/v1/farmer/products/{id}/daily-stock` và tham số `productId` của `GET /api/v1/deals` (Ruling 1, 2);
 - hành vi đổi ở endpoint cũ: `PATCH …/daily-stock/{date}` có `unitPrice` giờ kết thúc giảm giá của ngày đó (Ruling 10); `POST /orders/preview` nhận thêm `pickupDates` (tương thích ngược);
-- lệnh seed và luồng kiểm tay ở Step 6;
+- lệnh seed và luồng kiểm tay ở Step 7; mục riêng mới trong `docs/DEMO_CREDENTIALS.md`;
 - "đủ 7 điều kiện" của Definition of Done trong `CLAUDE.md`.
 
 ---
@@ -6038,11 +6056,11 @@ PR body (tiếng Anh) phải nêu:
    - §8: sửa hạn dùng sau khi đăng → Task 6 `editingTheShelfLifeLaterKeepsTheBatchBestBefore`; giảm giá cho ngày đã có đơn → Task 6 `anOrderPlacedBeforeTheDealKeepsItsPrice`; đăng và đặt cùng lúc khoá cùng dòng → Task 4 `postPutsTheLockedDayOnTheDeal` (khoá theo khoá tự nhiên, không đọc trước khi khoá) và Task 6 Step 5 chạy lại `PlaceOrderConcurrencyTest`; sạp bị đình chỉ không đăng được → Task 4 `postRefusesAStallThatIsNotApproved`.
    - §9: hàm thuần dùng chung một bảng số → Task 2, 9; MySQL `/deals` loại hết slot / sạp đình chỉ / sản phẩm ẩn → Task 7 `DealSearchIntegrationTest`; OrderService đặt đơn ngày giảm giá chụp `list_price`, `best_before` → Task 6; preview có và không có `pickupDates` → Task 8; test đặt đơn đồng thời vẫn xanh → Task 6 Step 5; quyền (sạp không sửa giảm giá của sạp khác → 403) → Task 4; FE dialog tính `B`, `L`, gợi ý và chặn → Task 10; `/deals` đủ 4 trạng thái → Task 11; giỏ đổi ngày thì đổi giá → Task 13.
    - §12 (ngoài phạm vi): không có hai giá trong một ngày, không báo tin giảm giá cho người yêu thích, không giảm giá tự động — plan không làm các việc này.
-2. **Không để trống:** đã quét `TBD`, `TODO`, `FIXME`, "implement later", "fill in", "similar to Task": không còn. Mỗi bước code có code đầy đủ; các chỉ dẫn "dịch 8 ngôn ngữ còn lại từ bản `en`" là luật của repo (frontend/CLAUDE.md), kèm bước kiểm key ở Task 14 Step 5.
+2. **Không để trống:** đã quét `TBD`, `TODO`, `FIXME`, "implement later", "fill in", "similar to Task": không còn. Mỗi bước code có code đầy đủ; các chỉ dẫn "dịch 8 ngôn ngữ còn lại từ bản `en`" là luật của repo (frontend/CLAUDE.md), kèm bước kiểm key ở Task 14 Step 6.
 3. **Tên thống nhất:** dùng đúng tên của giai đoạn 1 theo `/private/tmp/claude-501/shelf/phase1-interfaces.md` và plan giai đoạn 1: `ShelfLifePolicy.bestBefore(LocalDate, int)`, `OrderItem.snapshot(Product, BigDecimal, int, BigDecimal, LocalDate)` + `setListPrice`/`setBestBefore`, `Product.getStorageMode().value()`, `StorageMode` (FE, `api-requests/shelf-life.requests.ts`), `BestBeforeLine` (props `bestBefore`, `storageMode`), key `bestBefore.line`, `storageMode.chilled` = "Fridge 0–5 °C"; migration `V20260927007__daily_stock_deals.sql` đúng ruling đánh số. Tên của chính plan này giữ nguyên qua các task: `startDeal/endDeal/basePrice/hasDeal` (Task 1 → 3, 4, 6), `DealPolicy.check/suggestedPercent/dealPrice/validPercent` (Task 2 → 4), `Availability(…, Deal deal)` + constructor 3 tham số, `upcoming`, `onDate`, `LOOKAHEAD_DAYS` (Task 3, 8 → 4, 7), `FarmerDealServiceInterface.post/remove/mine/upcomingDays` (Task 4 → 5, 6), `DealQueryRepository.farmerDeals/openDeals/marketNamesByWeekday` (Task 4, 7), `PreviewRequest.pickupDateByFarmer()` (Task 8), `DealApi.list/mine/pickupDays/post/remove` (Task 9 → 10–13), `CartLine.pickupDate` (Task 9 → 11–13), `DealCard` (Task 11 → 12).
 4. **Review Focus:** mỗi dòng có test ở task sở hữu — (1) Task 13 `re-prices a stall when another day is picked and says the deal is for its own day`; (2) Task 1 `postingAgainKeepsTheFirstListPrice`, Task 4 `postingAgainTakesTheNewDiscountOffTheNormalPrice`; (3) Task 2 `roundsTheDealPriceToTheCent`, Task 9 bảng `dealPrice`; (4) Task 6 `editingTheShelfLifeLaterKeepsTheBatchBestBefore`; (5) Task 7 `keepsOnlyDealDaysCustomersCanStillOrderNearestDayFirstThenTheBiggestDiscount`, Task 4 `postRefusesADayCustomersCanNoLongerOrder`, Task 13 `says so when the deal day can no longer be picked`.
 5. **Việc cần đối chiếu khi ráp với giai đoạn 1 và 2:**
    - Hai chỗ thêm ngoài spec §6 chờ LEAD duyệt: `GET /api/v1/farmer/products/{id}/daily-stock` và tham số `productId` của `GET /api/v1/deals` (Ruling 1, 2).
-   - File giai đoạn 2 cũng sửa: `ProductExceptionHandler` (409 `SHELF_LIFE_EXTENSION_LOCKED`), cuối `db/seed.sql`, `docs/api-contract.md`, `common.json`, `OrderServiceTest`. Test phạm vi ở Task 5, 7 dùng `contains(...)` chứ không `containsExactly`, để handler thêm controller của giai đoạn khác vẫn xanh.
+   - File giai đoạn 2 cũng sửa: `ProductExceptionHandler` (409 `SHELF_LIFE_EXTENSION_LOCKED`), cuối `db/seed.sql`, `docs/api-contract.md` (giai đoạn 2 mở mục `§8a`; giai đoạn này chỉ thêm vào §5, §7), `docs/DEMO_CREDENTIALS.md` (giai đoạn này chỉ nối một mục riêng ở cuối file, Task 14 Step 3), `common.json`, `OrderServiceTest`. Khối seed của giai đoạn này có comment đầu khối riêng và tự đứng được. Test phạm vi ở Task 5, 7 dùng `contains(...)` chứ không `containsExactly`, để handler thêm controller của giai đoạn khác vẫn xanh. `OrderItemResource` không bị sửa ở giai đoạn này.
    - Số migration: giai đoạn 2 là 006, giai đoạn này 007. Nếu 007 chạy trên một DB trước khi 006 có mặt, Flyway sẽ từ chối 006 (out-of-order); khi đó giai đoạn vào sau đổi sang số kế tiếp như Global Constraints đã ghi.
    - Expected của seed (Task 14 Step 2) giả định seed giai đoạn 1 để "Trứng vịt", "Trứng cút" ở Eggs, nhiệt độ thường, 10 ngày; câu `INSERT` vẫn đúng luật với N khác, chỉ các con số trong Expected đổi.
