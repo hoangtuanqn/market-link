@@ -85,7 +85,8 @@ const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
             name={`slot-${group.farmerId}`}
             slots={slotOptions}
             value={choice.slotId}
-            onChange={(v) => onChange({ slotId: v })}
+            // Store the day on screen too: the first day shows as picked before the customer taps any day
+            onChange={(v) => onChange({ slotId: v, date })}
             legend={t('pickupTime', {
               day: date ? dayName(localDay(date).getDay(), 'long') : '',
               date: date ? formatDayMonth(localDay(date)) : '',
@@ -259,7 +260,6 @@ const CustomerCartPage = () => {
         <div className="flex flex-col gap-8">
           {groups.map((g, i) => {
             const c = choice(g);
-            const picked = c.date != null && c.slotId != null;
             return (
               <section key={g.farmerId} className="flex flex-col gap-3">
                 {g.problems.map((p) => (
@@ -283,20 +283,11 @@ const CustomerCartPage = () => {
                   onQtyChange={(id, qty) => Cart.setQty(id, qty)}
                   onRemove={(id) => Cart.remove(id)}
                 />
-                {picked ? (
-                  <details className="border-line-strong bg-surface-raised shadow-tag rounded-md border-[1.5px] p-4">
-                    <summary className="text-small cursor-pointer font-bold">
-                      {t('changeTime', { stall: g.stallName })}
-                    </summary>
-                    <div className="mt-3 flex flex-col gap-4">
-                      <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
-                    </div>
-                  </details>
-                ) : (
-                  <Card className="flex flex-col gap-4 p-4">
-                    <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
-                  </Card>
-                )}
+                {/* Always the same open picker: collapsing it after a pick (or swapping its wrapper) moved the page
+                    under the cursor and remounted the slot request. Picking now only highlights the choice. */}
+                <Card className="flex flex-col gap-4 p-4">
+                  <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
+                </Card>
               </section>
             );
           })}
