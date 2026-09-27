@@ -111,14 +111,17 @@ class MfaServiceTest {
     }
 
     @Test
-    void disableWithRightCodeRemovesSecretAndRecoveryCodes() {
+    void disableWithRightCodeDisablesMfaAndRemovesRecoveryCodes() {
+        assertThat(service.isSetupRequired(ADMIN_ID)).isTrue();
         turnOn();
+        assertThat(service.isSetupRequired(ADMIN_ID)).isFalse();
         advance(Duration.ofSeconds(30));
 
         service.disable(ADMIN_ID, currentCode());
 
         assertThat(service.isEnabled(ADMIN_ID)).isFalse();
-        assertThat(mfaRows).isEmpty();
+        assertThat(service.isSetupRequired(ADMIN_ID)).isFalse();
+        assertThat(mfaRows.get(ADMIN_ID).getDisabledAt()).isNotNull();
         assertThat(codeRows).isEmpty();
     }
 

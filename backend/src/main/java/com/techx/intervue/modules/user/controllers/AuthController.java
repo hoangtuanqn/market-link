@@ -137,7 +137,9 @@ public class AuthController extends BaseController {
                         Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
                         auth.rememberMe());
 
-        LoginResource body = new LoginResource(auth.accessToken(), auth.user());
+        LoginResource body =
+                new LoginResource(
+                        auth.accessToken(), auth.user(), false, null, auth.mfaSetupRequired());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .body(ApiResource.success(body, "Signed in."));
