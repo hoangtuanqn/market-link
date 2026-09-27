@@ -1,17 +1,32 @@
 {
-  "overline": "관리자 영역",
-  "title": "MarketLink를 관리하려면 로그인하세요",
-  "intro": "이 로그인은 플랫폼 관리자 전용이며 별도의 대시보드로 연결돼요. 고객과 농부는 <link>여기에서 로그인</link>하세요.",
-  "notAdmin": {
-    "title": "이 계정은 관리자가 아니에요",
-    "text": "이 로그인은 플랫폼 관리자 전용이에요. <link>고객과 농부는 여기에서 로그인하세요</link>."
+  "brand": {
+    "headline": "마켓플레이스를 관리하려면 로그인하세요",
+    "intro": "이 로그인은 플랫폼 관리자 전용이며, 고객·농부와는 별도의 대시보드로 연결돼요.",
+    "bullet1": "농부의 매대 신청을 승인해요",
+    "bullet2": "상품 등록과 리뷰를 관리해요",
+    "bullet3": "시장별 플랫폼 리포트를 확인해요",
+    "foot": "MarketLink 관리자"
   },
   "form": {
+    "eyebrow": "관리자 포털",
+    "heading": "다시 오셨네요",
+    "subheading": "MarketLink를 관리하려면 로그인하세요",
     "email": "관리자 이메일",
+    "emailPlaceholder": "admin@marketlink.com",
     "password": "비밀번호",
+    "passwordPlaceholder": "비밀번호를 입력하세요",
     "submit": "로그인",
     "submitting": "로그인하는 중…",
     "signedIn": "로그인했어요.",
-    "error": "로그인할 수 없어요. 다시 시도하세요."
+    "error": "로그인할 수 없어요. 다시 시도하세요.",
+    "note": "보안을 위해 관리자 로그인은 기억되지 않아요."
+  },
+  "switchRole": {
+    "question": "관리자가 아니신가요?",
+    "cta": "MarketLink로 이동"
+  },
+  "notAdmin": {
+    "title": "이 계정은 관리자가 아니에요",
+    "text": "이 로그인은 플랫폼 관리자 전용이에요. <link>고객과 농부는 여기에서 로그인하세요</link>."
   }
 }
