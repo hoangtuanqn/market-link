@@ -23,7 +23,8 @@ type FormState = {
   name: string;
   categoryId: number | null;
   unitChoice: string;
-  price: number;
+  /** Kept as typed so "1." survives until the cents follow; read with {@link priceOf}. */
+  price: string;
   qty: number;
   desc: string;
   imageUrl: string;
@@ -47,7 +48,7 @@ const EMPTY: FormState = {
   name: '',
   categoryId: null,
   unitChoice: 'bunch',
-  price: 0,
+  price: '0',
   qty: 0,
   desc: '',
   imageUrl: '',
@@ -55,12 +56,15 @@ const EMPTY: FormState = {
   shelfLife: '',
 };
 
+/** The typed price as a number of dollars (USD, cents allowed); NaN while it is not a number yet. */
+const priceOf = (form: FormState) => Number(form.price.trim().replace(',', '.'));
+
 const fromProduct = (p: ProductType): FormState => {
   return {
     name: p.name,
     categoryId: p.categoryId ?? null,
     unitChoice: p.unit,
-    price: p.price,
+    price: String(p.price),
     qty: p.stock,
     desc: p.desc ?? '',
     imageUrl: p.imageUrl ?? '',
@@ -134,7 +138,9 @@ const FarmerProductFormPage = () => {
     const next: FormErrors = {};
     if (!form.name.trim()) next.name = t('errors.required');
     if (categoryId == null) next.cat = t('errors.required');
-    if (!Number.isFinite(form.price) || form.price < 0) next.price = t('errors.price');
+    if (form.price.trim() === '' || !Number.isFinite(priceOf(form)) || priceOf(form) < 0) {
+      next.price = t('errors.price');
+    }
     if (!Number.isInteger(form.qty) || form.qty < 0) next.qty = t('qty.error');
     if (form.shelfLife === '' || !Number.isInteger(form.shelfLife) || form.shelfLife < 1) {
       next.shelfLife = t('shelfLife.error');
@@ -170,7 +176,7 @@ const FarmerProductFormPage = () => {
       categoryId,
       name: form.name.trim(),
       description: form.desc.trim() || undefined,
-      price: form.price,
+      price: priceOf(form),
       unit: unitOne.slice(0, 20),
       stockQuantity: form.qty,
       imageUrl: form.imageUrl.trim() || undefined,
@@ -274,7 +280,7 @@ const FarmerProductFormPage = () => {
                 t={t}
                 i18nKey="preview.text"
                 values={{
-                  price: perUnit(form.price, unitOne),
+                  price: perUnit(priceOf(form) || 0, unitOne),
                   left: units(12, unitOne, unitMany),
                   one: units(1, unitOne, unitMany),
                 }}
@@ -287,10 +293,10 @@ const FarmerProductFormPage = () => {
             id="price"
             label={t('price.label')}
             required
-            inputMode="numeric"
+            inputMode="decimal"
             value={form.price}
-            onChange={(e) => setForm({ price: Math.max(0, Number(e.target.value) || 0) })}
-            hint={t('price.hint', { price: perUnit(form.price, unitOne) })}
+            onChange={(e) => setForm({ price: e.target.value })}
+            hint={t('price.hint', { price: perUnit(priceOf(form) || 0, unitOne) })}
             error={errors.price}
           />
           <Field

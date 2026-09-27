@@ -18,7 +18,6 @@
     "text": "Your stock stays reserved while they review. You get a notification when it is accepted."
   },
   "help": "You can lower quantities or remove items here. To add something else from {{stall}}, place a new order. Quantities are capped at what the stall has left today.",
-  "note": "Note to the stall",
   "submit": "Send changes for approval",
   "discard": "Discard changes",
   "toast": {

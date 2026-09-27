@@ -19,17 +19,12 @@ import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
 import useSession from '@/hooks/useSession';
-import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
+import { dayList, dayName, formatClock, formatDayMonth, upcomingDate } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 
-/** The demo market week, Thursday 24 to Sunday 27 September 2026. */
-const DAY_OPTIONS = [
-  { value: 4, date: new Date(2026, 8, 24) },
-  { value: 5, date: new Date(2026, 8, 25) },
-  { value: 6, date: new Date(2026, 8, 26) },
-  { value: 0, date: new Date(2026, 8, 27) },
-];
+/** Thursday to Sunday; each chip shows the next date that weekday falls on, counted from today. */
+const DAY_OPTIONS = [4, 5, 6, 0];
 
 const NO_PRODUCTS: ProductType[] = [];
 const NO_FAVORITES: FavoriteDto[] = [];
@@ -160,7 +155,7 @@ const MarketDetailPage = () => {
   }
 
   const dayLong = dayName(day, 'long');
-  const dayDate = DAY_OPTIONS.find((d) => d.value === day)?.date;
+  const dayDate = upcomingDate(day);
 
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -243,9 +238,9 @@ const MarketDetailPage = () => {
             value={String(day)}
             onChange={(v) => setDay(Number(v))}
             options={DAY_OPTIONS.map((d) => ({
-              value: String(d.value),
-              label: dayName(d.value, 'long'),
-              date: formatDayMonth(d.date),
+              value: String(d),
+              label: dayName(d, 'long'),
+              date: formatDayMonth(upcomingDate(d)),
             }))}
           />
         </div>

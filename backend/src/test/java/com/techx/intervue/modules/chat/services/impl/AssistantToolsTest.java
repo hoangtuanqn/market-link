@@ -65,19 +65,19 @@ class AssistantToolsTest {
                                 new ProductRow(
                                         9L,
                                         "Cà chua bi",
-                                        new BigDecimal("30000"),
+                                        new BigDecimal("1.20"),
                                         "kg",
                                         99,
                                         "available",
                                         4L,
                                         "Vườn Út Hiền",
                                         List.of("Chợ Bến Thành"))));
-        when(availability.resolve(Map.of(9L, new BigDecimal("30000"))))
+        when(availability.resolve(Map.of(9L, new BigDecimal("1.20"))))
                 .thenReturn(
                         Map.of(
                                 9L,
                                 new Availability(
-                                        LocalDate.of(2026, 9, 28), 7, new BigDecimal("28000"))));
+                                        LocalDate.of(2026, 9, 28), 7, new BigDecimal("1.15"))));
 
         ToolOutcome out =
                 tools.run(
@@ -87,11 +87,13 @@ class AssistantToolsTest {
         assertThat(out.error()).isFalse();
         assertThat(out.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
         assertThat(out.content())
-                .contains("\"price_vnd\":28000")
+                .contains("\"price_usd\":1.15")
                 .contains("\"left\":7")
                 .contains("\"next_pickup_date\":\"2026-09-28\"")
                 .contains("\"market\":\"Chợ Bến Thành\"");
         assertThat(out.cards()).extracting("type", "id").containsExactly(tuple("product", 9L));
+        // USD with cents, like every amount in the app (docs/decisions.md, 27/09)
+        assertThat(out.cards().getFirst().subtitle()).isEqualTo("$1.15/kg · Vườn Út Hiền");
     }
 
     @Test
