@@ -33,7 +33,10 @@
     "all": "Tất cả",
     "farmer": "Về sạp",
     "product": "Về sản phẩm",
-    "newest": "Mới nhất trước"
+    "newest": "Mới nhất trước",
+    "emptyTitle": "Chưa có đánh giá nào",
+    "emptyText": "Hãy là người đầu tiên đánh giá sạp này sau khi đơn của bạn hoàn tất.",
+    "noun": "đánh giá"
   },
   "about": {
     "whereWhen": "Ở đâu và khi nào",

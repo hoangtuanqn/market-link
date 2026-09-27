@@ -33,7 +33,10 @@
     "all": "All",
     "farmer": "About the stall",
     "product": "About products",
-    "newest": "Newest first"
+    "newest": "Newest first",
+    "emptyTitle": "No reviews yet",
+    "emptyText": "Be the first to review this stall once your order is completed.",
+    "noun": "reviews"
   },
   "about": {
     "whereWhen": "Where and when",

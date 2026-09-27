@@ -10,6 +10,11 @@
     "title": "Đơn này chưa xong",
     "text": "Bạn đánh giá sạp và hàng đã mua sau khi nhận đơn."
   },
+  "done": {
+    "title": "Đã đánh giá rồi",
+    "text": "Bạn đã đánh giá đơn này rồi. Cảm ơn bạn đã dành thời gian."
+  },
+  "noun": "đơn hàng",
   "completed": "Hoàn tất {{date}}",
   "title": "{{stall}} thế nào?",
   "intro": "Đánh giá gắn với đơn đã hoàn tất này, nên khách khác thấy đây là giao dịch đã xác thực. Sạp có thể trả lời.",

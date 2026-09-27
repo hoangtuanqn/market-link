@@ -10,13 +10,8 @@
   },
   "reviewFilterLabel": "Filter reviews",
   "reviewFilter": {
-    "reported": "Reported",
     "lowRated": "Rated 1 or 2",
     "newest": "Newest"
-  },
-  "report": {
-    "title": "Reported by {{by}} on {{date}}: “{{quote}}”",
-    "text": "Hiding it removes it from the product and stall pages. The customer is told why."
   },
   "recentlyListed": "Recently listed products",
   "search": {
@@ -37,11 +32,9 @@
     "view": "View",
     "hideReview": "Hide review",
     "hideListing": "Hide listing",
-    "keepVisible": "Keep visible",
     "customerAccount": "Customer account",
     "unhide": "Unhide",
-    "unhidden": "Item is visible again.",
-    "dismissed": "Report dismissed. The review stays visible."
+    "unhidden": "Item is visible again."
   },
   "hide": {
     "title": {
@@ -71,7 +64,8 @@
     "text": "Reported products and reviews arrive here for you to read before hiding anything."
   },
   "error": {
-    "noun": "listings"
+    "noun": "listings",
+    "reviewsNoun": "reviews"
   },
   "messages": {
     "boundary": "You can read only messages someone reported, plus up to five on each side for context. Nothing else in a conversation is open to admins.",
