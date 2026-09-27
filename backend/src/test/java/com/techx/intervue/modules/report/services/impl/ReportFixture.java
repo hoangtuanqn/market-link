@@ -119,6 +119,28 @@ public final class ReportFixture {
         }
     }
 
+    /**
+     * The stall sells at {@code marketId} and has one free slot on {@code date} (07:00, far from
+     * its cutoff when the date is in the future), so that date counts as orderable.
+     */
+    public void openSlot(long farmerId, long marketId, java.time.LocalDate date) {
+        long link =
+                track(
+                        "farmer_markets",
+                        insert(
+                                "INSERT INTO farmer_markets (farmer_id, market_id) VALUES (?, ?)",
+                                farmerId,
+                                marketId));
+        track(
+                "pickup_slots",
+                insert(
+                        "INSERT INTO pickup_slots (farmer_market_id, slot_date, start_time,"
+                                + " end_time, max_orders, booked_count) VALUES (?, ?, '07:00',"
+                                + " '08:00', 5, 0)",
+                        link,
+                        date));
+    }
+
     public void item(long orderId, long productId, int unitPrice, int quantity) {
         insert(
                 "INSERT INTO order_items (order_id, product_id, product_name, unit_price, unit,"
