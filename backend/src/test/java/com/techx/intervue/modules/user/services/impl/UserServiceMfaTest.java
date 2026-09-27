@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.modules.geo.services.interfaces.AddressServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
@@ -57,7 +58,8 @@ class UserServiceMfaTest {
                         mock(BlacklistServiceInterface.class),
                         authConfig,
                         mock(JobQueueInterface.class),
-                        mfaService);
+                        mfaService,
+                        mock(AddressServiceInterface.class));
         when(passwordEncoder.matches("secret", "hash")).thenReturn(true);
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(jwtService.generateToken(anyLong())).thenReturn("access");

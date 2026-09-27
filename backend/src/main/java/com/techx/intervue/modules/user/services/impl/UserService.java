@@ -2,6 +2,10 @@ package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.helpers.TransactionHelper;
+import com.techx.intervue.modules.geo.enums.AddressPolicy;
+import com.techx.intervue.modules.geo.resources.AddressPartsResource;
+import com.techx.intervue.modules.geo.services.impl.ResolvedAddress;
+import com.techx.intervue.modules.geo.services.interfaces.AddressServiceInterface;
 import com.techx.intervue.modules.user.entities.SocialAccount;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
@@ -58,6 +62,7 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final AuthConfig authConfig;
     private final JobQueueInterface jobQueue;
     private final MfaServiceInterface mfaService;
+    private final AddressServiceInterface addressService;
 
     /**
      * FR-006: the access token goes into the Redis blacklist until it expires (JwtAuthFilter blocks
@@ -94,13 +99,16 @@ public class UserService extends BaseService implements UserServiceInterface {
         if (!taken.isEmpty()) {
             throw new DuplicateAccountException(taken);
         }
+        ResolvedAddress address =
+                addressService.resolve(request.addressParts(), AddressPolicy.ACCOUNT);
         User user =
                 userRepository.save(
                         User.builder()
                                 .fullName(request.fullName().trim())
                                 .email(email)
                                 .phone(phone)
-                                .address(request.address().trim())
+                                .address(address.formatted())
+                                .addressParts(address.columns())
                                 .passwordHash(passwordEncoder.encode(request.password()))
                                 .role(RoleType.CUSTOMER)
                                 .build());
@@ -285,7 +293,8 @@ public class UserService extends BaseService implements UserServiceInterface {
      * Only your own account can be edited (userId comes from the access token, not accepted from
      * the request). The email is unchanged. A phone number that duplicates another account → 409;
      * if two requests race past the check, the DB's UNIQUE blocks (AuthExceptionHandler returns
-     * 409).
+     * 409). The address is required except for an admin, whose address no screen shows: leaving it
+     * out keeps the one on file.
      */
     @Override
     @Transactional
@@ -296,9 +305,16 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DuplicateAccountException(
                     "phone", "This phone number is already registered.");
         }
+        if (request.addressParts() != null) {
+            ResolvedAddress address =
+                    addressService.resolve(request.addressParts(), AddressPolicy.ACCOUNT);
+            user.setAddress(address.formatted());
+            user.setAddressParts(address.columns());
+        } else if (user.getRole() != RoleType.ADMIN) {
+            throw new InvalidFieldException("addressParts", "Choose your address.");
+        }
         user.setFullName(request.fullName().trim());
         user.setPhone(phone);
-        user.setAddress(request.address().trim());
         return toResource(userRepository.saveAndFlush(user));
     }
 
@@ -354,6 +370,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                 .fullName(user.getFullName())
                 .phone(user.getPhone())
                 .address(user.getAddress())
+                .addressParts(AddressPartsResource.from(user.getAddressParts()))
                 .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .hasPassword(user.getPasswordHash() != null)
