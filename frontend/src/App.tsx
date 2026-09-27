@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
+import ScrollToTop from './components/ScrollToTop';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import { USER_ROLE } from './constants/enums';
 import NotificationCenter from './components/notifications/NotificationCenter';
@@ -84,6 +85,7 @@ import AdminReportsPage from './pages/admin/Reports';
 const App = () => {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <SettingsSync>
         <Routes>
           <Route path="/" element={<MainLayout />}>
