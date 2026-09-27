@@ -47,5 +47,10 @@
   "ready_one": "Your stall has a pickup time. It confirms your order.",
   "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Wählen Sie eine Abholzeit bei {{stall}}, um Ihre Bestellungen aufzugeben.",
-  "stockNote": "Der Bestand wird vom Stand abgezogen, sobald Sie bestellen. Es gibt keine Online-Zahlung."
+  "stockNote": "Der Bestand wird vom Stand abgezogen, sobald Sie bestellen. Es gibt keine Online-Zahlung.",
+  "stuck": {
+    "title": "Artikel im Warenkorb",
+    "text": "Wird ein Produkt nicht mehr verkauft, entferne es hier, dann lädt der Warenkorb neu.",
+    "clear": "Warenkorb leeren"
+  }
 }

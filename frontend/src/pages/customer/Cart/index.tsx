@@ -178,7 +178,42 @@ const CustomerCartPage = () => {
   }
 
   if (previewLoad.kind === 'error') {
-    return <LoadError noun={t('noun')} onRetry={retry} />;
+    // The server could not check the cart (e.g. a product that no longer exists answers 400). Keep the lines in reach
+    // so the customer can remove the bad one instead of being stuck on "try again".
+    return (
+      <div className="flex flex-col gap-4">
+        <LoadError noun={t('noun')} onRetry={retry} />
+        {lines.length > 0 && (
+          <Card className="flex flex-col gap-3 p-6">
+            <h2 className="text-h3">{t('stuck.title')}</h2>
+            <p className="text-small text-ink-muted">{t('stuck.text')}</p>
+            <ul className="m-0 flex list-none flex-col gap-2 p-0">
+              {lines.map((l) => (
+                <li
+                  key={l.productId}
+                  className="border-line flex items-center justify-between gap-3 border-b pb-2 last:border-b-0"
+                >
+                  <span className="min-w-0">
+                    <b className="block truncate">{l.name}</b>
+                    <span className="text-small text-ink-muted">
+                      {l.stallName} · {l.qty} {l.unit}
+                    </span>
+                  </span>
+                  <Button variant="ghost" size="sm" onClick={() => Cart.remove(l.productId)}>
+                    {tc('actions.remove')}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+            <div>
+              <Button variant="secondary" size="sm" onClick={() => Cart.clear()}>
+                {t('stuck.clear')}
+              </Button>
+            </div>
+          </Card>
+        )}
+      </div>
+    );
   }
 
   const total = groups.reduce((s, g) => s + g.subtotal, 0);

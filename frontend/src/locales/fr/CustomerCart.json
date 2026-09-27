@@ -47,5 +47,10 @@
   "ready_one": "Your stall has a pickup time. It confirms your order.",
   "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Choisissez un créneau de retrait chez {{stall}} pour passer vos commandes.",
-  "stockNote": "Le stock est déduit du stand dès que vous passez la commande. Il n'y a pas de paiement en ligne."
+  "stockNote": "Le stock est déduit du stand dès que vous passez la commande. Il n'y a pas de paiement en ligne.",
+  "stuck": {
+    "title": "Articles du panier",
+    "text": "Si un produit n'est plus en vente, retirez-le ici et le panier se recharge.",
+    "clear": "Vider le panier"
+  }
 }

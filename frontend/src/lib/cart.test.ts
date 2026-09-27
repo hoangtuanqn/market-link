@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Cart } from './cart';
 
 const tomato = { productId: 1, name: 'Tomato', unit: 'kg', price: 25000, max: 5, farmerId: 7, stallName: 'Cô Tư' };
@@ -39,5 +39,39 @@ describe('Cart', () => {
     Cart.add(tomato, 2);
     const placed = Promise.reject(new Error('409 OUT_OF_STOCK'));
     return placed.catch(() => undefined).then(() => expect(Cart.count()).toBe(2));
+  });
+});
+
+/** Reading a stored cart needs a fresh module: lib/cart caches what it read first. */
+const loadFreshCart = async () => {
+  vi.resetModules();
+  return (await import('./cart')).Cart;
+};
+
+describe('Cart — lines the preview would reject', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('drops stored lines with a bad id or quantity, so one bad line cannot lock the cart', async () => {
+    localStorage.setItem(
+      'ml.cart',
+      JSON.stringify([
+        { ...tomato, productId: 1, qty: 2 },
+        { ...tomato, productId: 2, qty: null }, // a NaN once stored by JSON
+        { ...tomato, productId: '3', qty: 1 },
+        { ...tomato, productId: 4, qty: 0 },
+      ]),
+    );
+    const FreshCart = await loadFreshCart();
+
+    expect(FreshCart.lines().map((l) => l.productId)).toEqual([1]);
+  });
+
+  it('never stores NaN when the stock is unknown', async () => {
+    const FreshCart = await loadFreshCart();
+
+    FreshCart.add({ ...tomato, productId: 7, max: undefined as unknown as number }, 3);
+
+    expect(FreshCart.lines()[0].qty).toBe(3);
+    expect(JSON.parse(localStorage.getItem('ml.cart') ?? '[]')[0].qty).toBe(3);
   });
 });

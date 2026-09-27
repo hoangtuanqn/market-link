@@ -167,4 +167,26 @@ class SlotQueryRepositoryTest {
         assertThatThrownBy(() -> slot(fm, DAY, 7, 6, true))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
+
+    /**
+     * A date counts as orderable only when a slot still has room, is switched on and is before its
+     * cutoff — the dates the availability resolver may show stock for.
+     */
+    @Test
+    void orderableDatesKeepOnlyDatesWithAFreeSlotBeforeItsCutoff() {
+        FarmerProfile f = approvedFarmer();
+        FarmerMarket fm = link(f, market());
+        slot(fm, DAY, 7, 2, true); // open
+        slot(fm, DAY.plusDays(1), 7, 5, true); // full
+        slot(fm, DAY.plusDays(2), 7, 0, false); // turned off
+        slot(fm, DAY.plusDays(3), 7, 0, true); // past its cutoff at "now" below
+
+        // 12 hours (the default cutoff) before DAY+3 07:00 is DAY+2 19:00
+        LocalDateTime now = DAY.plusDays(2).atTime(20, 0);
+        assertThat(query.orderableDates(List.of(f.getId()), DAY, DAY.plusDays(6), EARLY))
+                .containsEntry(f.getId(), java.util.Set.of(DAY, DAY.plusDays(3)));
+        assertThat(query.orderableDates(List.of(f.getId()), DAY, DAY.plusDays(6), now))
+                .doesNotContainKey(f.getId());
+        assertThat(query.orderableDates(List.of(), DAY, DAY, EARLY)).isEmpty();
+    }
 }
