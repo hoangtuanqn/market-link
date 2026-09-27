@@ -227,11 +227,12 @@ const AdminCustomersPage = () => {
         onClose={() => setConfirmAction(null)}
         actions={
           <>
-            <Button variant="secondary" onClick={() => setConfirmAction(null)}>
+            <Button variant="secondary" onClick={() => setConfirmAction(null)} disabled={busyId !== null}>
               {t(confirmAction?.kind === 'deactivate' ? 'deactivate.keep' : 'reactivate.keep')}
             </Button>
             <Button
               variant={confirmAction?.kind === 'deactivate' ? 'danger' : 'primary'}
+              disabled={busyId !== null}
               onClick={() => void runConfirmedAction()}
             >
               {confirmAction ? t(`${confirmAction.kind}.confirm`) : ''}

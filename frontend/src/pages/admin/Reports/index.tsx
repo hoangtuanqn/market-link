@@ -11,6 +11,7 @@ import { Kpi } from '@/components/ui/kpi';
 import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
 import { perUnit, units, vnd } from '@/lib/format';
+import { clampRange } from './reports.helpers';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 /** A Date → "yyyy-MM-dd" for the `from`/`to` query params (contract's date-only format, not the reader's Settings). */
@@ -98,7 +99,11 @@ const AdminReportsPage = () => {
             type="date"
             value={from}
             max={to}
-            onChange={(e) => setFrom(e.target.value)}
+            onChange={(e) => {
+              const next = clampRange(from, to, 'from', e.target.value);
+              setFrom(next.from);
+              setTo(next.to);
+            }}
             className="border-line-strong bg-surface-raised text-body min-h-11 rounded-sm border-[1.5px] px-3"
           />
         </div>
@@ -111,7 +116,11 @@ const AdminReportsPage = () => {
             type="date"
             value={to}
             min={from}
-            onChange={(e) => setTo(e.target.value)}
+            onChange={(e) => {
+              const next = clampRange(from, to, 'to', e.target.value);
+              setFrom(next.from);
+              setTo(next.to);
+            }}
             className="border-line-strong bg-surface-raised text-body min-h-11 rounded-sm border-[1.5px] px-3"
           />
         </div>
