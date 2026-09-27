@@ -38,8 +38,11 @@ import com.techx.intervue.modules.order.resources.PlacedOrderResource;
 import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
@@ -53,6 +56,7 @@ import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -70,8 +74,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * FR-030…032 — the cart splits by stall (D-01), stock is deducted right at order time (D-02), a
- * slot has a capacity (D-06), the cutoff is per Farmer (D-05), an admin cannot buy (D-13).
+ * FR-030…032, 033, 036, 065 — the cart splits by stall (D-01), stock is deducted right at order
+ * time per pickup date (D-02, product_daily_stock), a slot has a capacity (D-06), the cutoff is per
+ * Farmer (D-05), an admin cannot buy (D-13), and reading/changing orders for both sides.
  */
 @Service
 @AllArgsConstructor
@@ -95,8 +100,10 @@ public class OrderService implements OrderServiceInterface {
     private final OrderStatusHistoryWriter history;
     private final OrderCodeGenerator codeGenerator;
     private final CheckoutQueryRepository checkoutQueries;
-    private final OrderQueryRepository orderQueries;
     private final Clock clock;
+    private final ProductDailyStockRepository dailyStockRepository;
+    private final ProductAvailabilityResolver availability;
+    private final OrderQueryRepository orderQueries;
     private final NotificationServiceInterface notifications;
     private final RestockNotifier restock;
 
@@ -131,6 +138,11 @@ public class OrderService implements OrderServiceInterface {
                 farmerRepository.findAllById(byFarmer.keySet()).stream()
                         .collect(Collectors.toMap(FarmerProfile::getId, Function.identity()));
         Map<Long, List<MarketOption>> markets = checkoutQueries.marketsOf(byFarmer.keySet());
+        Map<Long, BigDecimal> basePrices =
+                products.values().stream()
+                        .collect(Collectors.toMap(Product::getId, Product::getPrice));
+        Map<Long, ProductAvailabilityResolver.Availability> resolved =
+                availability.resolve(basePrices);
 
         List<OrderGroupPreviewResource> groups = new ArrayList<>();
         byFarmer.forEach(
@@ -141,7 +153,8 @@ public class OrderService implements OrderServiceInterface {
                                         farmers.get(farmerId),
                                         lines,
                                         wanted,
-                                        markets.getOrDefault(farmerId, List.of()))));
+                                        markets.getOrDefault(farmerId, List.of()),
+                                        resolved)));
         return groups;
     }
 
@@ -150,7 +163,8 @@ public class OrderService implements OrderServiceInterface {
             FarmerProfile farmer,
             List<Product> lines,
             Map<Long, Integer> wanted,
-            List<MarketOption> markets) {
+            List<MarketOption> markets,
+            Map<Long, ProductAvailabilityResolver.Availability> resolved) {
         Set<String> problems = new LinkedHashSet<>();
         if (farmer == null || farmer.getApprovalStatus() != ApprovalStatus.APPROVED) {
             problems.add(STALL_SUSPENDED);
@@ -159,21 +173,24 @@ public class OrderService implements OrderServiceInterface {
         BigDecimal subtotal = BigDecimal.ZERO;
         for (Product p : lines) {
             int qty = wanted.get(p.getId());
-            String problem = problemOf(p, qty);
+            ProductAvailabilityResolver.Availability a = resolved.get(p.getId());
+            int available = a == null ? 0 : a.quantity();
+            BigDecimal unitPrice = a == null ? p.getPrice() : a.price();
+            String problem = problemOf(p, qty, available);
             if (problem != null) {
                 problems.add(problem);
             }
-            BigDecimal lineTotal = p.getPrice().multiply(BigDecimal.valueOf(qty));
+            BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(qty));
             subtotal = subtotal.add(lineTotal);
             items.add(
                     new PreviewItemResource(
                             p.getId(),
                             p.getName(),
                             p.getUnit(),
-                            p.getPrice(),
+                            unitPrice,
                             qty,
                             lineTotal,
-                            p.getStockQuantity(),
+                            available,
                             listed(p) ? p.getStatus().value() : UNAVAILABLE));
         }
         // C5-11: the pickup market is only pre-filled when the stall sells at exactly one market;
@@ -191,15 +208,18 @@ public class OrderService implements OrderServiceInterface {
                 markets);
     }
 
-    /** The issue with one cart line, or null. Same rule as {@link #sellable} at order time. */
-    private static String problemOf(Product p, int quantity) {
+    /**
+     * The issue with one cart line, or null. {@code available} is the nearest orderable date's
+     * quantity — advisory only, the real gate is {@link #placeGroup} at order time.
+     */
+    private static String problemOf(Product p, int quantity, int available) {
         if (!listed(p) || p.getStatus() == ProductStatus.UNAVAILABLE) {
             return UNAVAILABLE;
         }
         if (p.getStatus() == ProductStatus.SOLD_OUT) {
             return SOLD_OUT;
         }
-        return p.getStockQuantity() < quantity ? OUT_OF_STOCK : null;
+        return available < quantity ? OUT_OF_STOCK : null;
     }
 
     /**
@@ -218,9 +238,9 @@ public class OrderService implements OrderServiceInterface {
      * the cart is created and stock / slots are deducted, or nothing happens at all.
      *
      * <p>C5-2 — the shared locking order for every write path: every slot of the whole call first
-     * (ascending id), then every product of the whole call in exactly one {@code lockAllById}
-     * (ascending id). No slot / product row is read before it is locked — an unlocked read could be
-     * a stale snapshot.
+     * (ascending id), then every daily-stock row of the whole call in ascending (productId, date)
+     * order (see {@link #lockDailyStock}). No slot / daily-stock row is read before it is locked —
+     * an unlocked read could be a stale snapshot.
      */
     @Override
     @Transactional
@@ -228,12 +248,14 @@ public class OrderService implements OrderServiceInterface {
         User customer = requireBuyer(customerUserId);
 
         Map<Long, PickupSlot> slots = lockSlots(request.groups());
-        Map<Long, Product> products = lockProducts(request.groups());
+        Map<String, ProductDailyStock> dailyStock = lockDailyStock(request.groups());
+        Map<Long, Product> products = findProducts(request.groups());
 
         LocalDateTime now = LocalDateTime.now(clock);
         List<PlacedOrderResource> placed = new ArrayList<>();
         for (OrderGroupInput group : request.groups()) {
-            placed.add(placeGroup(customerUserId, customer, group, slots, products, now));
+            placed.add(
+                    placeGroup(customerUserId, customer, group, slots, dailyStock, products, now));
         }
         return placed;
     }
@@ -249,14 +271,58 @@ public class OrderService implements OrderServiceInterface {
         return locked;
     }
 
-    private Map<Long, Product> lockProducts(List<OrderGroupInput> groups) {
+    private Map<Long, Product> findProducts(List<OrderGroupInput> groups) {
         Set<Long> ids = new TreeSet<>();
         groups.forEach(g -> g.items().forEach(line -> ids.add(line.productId())));
         if (ids.isEmpty()) {
             return Map.of();
         }
-        return productRepository.lockAllById(ids).stream()
+        return productRepository.findAllById(ids).stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
+    }
+
+    /**
+     * D-02 applied per pickup date: creates whatever daily-stock row is still missing (never
+     * overwriting one that already exists), then locks it by its natural key in the same call that
+     * reads it — the C5-2 anti-deadlock rule for products/slots was "ascending id order"; a fresh
+     * row has no id yet before it is created, so the equivalent here is a fixed, deterministic
+     * order over (productId, date) pairs, applied by every transaction the same way. Deliberately
+     * does not do an unlocked find first to collect ids and lock in one batched call afterward:
+     * Hibernate's first-level cache would then hand back the entity already loaded by that earlier
+     * unlocked read instead of the value the lock just read, defeating the lock (reproduced live:
+     * two concurrent orders for the last unit both succeeded before this fix).
+     */
+    private Map<String, ProductDailyStock> lockDailyStock(List<OrderGroupInput> groups) {
+        record Need(Long productId, LocalDate date) {}
+        Set<Need> needed =
+                new TreeSet<>(Comparator.comparing(Need::productId).thenComparing(Need::date));
+        groups.forEach(
+                g ->
+                        g.items()
+                                .forEach(
+                                        line ->
+                                                needed.add(
+                                                        new Need(
+                                                                line.productId(),
+                                                                g.pickupDate()))));
+
+        Map<String, ProductDailyStock> locked = new HashMap<>();
+        for (Need n : needed) {
+            int dayOfWeek = n.date().getDayOfWeek().getValue() % 7;
+            dailyStockRepository.materialize(n.productId(), n.date(), dayOfWeek);
+            dailyStockRepository
+                    .lockByProductIdAndStockDate(n.productId(), n.date())
+                    .ifPresent(
+                            row ->
+                                    locked.put(
+                                            dailyStockKey(row.getProductId(), row.getStockDate()),
+                                            row));
+        }
+        return locked;
+    }
+
+    private static String dailyStockKey(Long productId, LocalDate date) {
+        return productId + "@" + date;
     }
 
     /**
@@ -270,6 +336,7 @@ public class OrderService implements OrderServiceInterface {
             User customer,
             OrderGroupInput group,
             Map<Long, PickupSlot> slots,
+            Map<String, ProductDailyStock> dailyStock,
             Map<Long, Product> products,
             LocalDateTime now) {
         FarmerProfile farmer =
@@ -298,7 +365,8 @@ public class OrderService implements OrderServiceInterface {
                 throw new IllegalArgumentException(
                         "Product " + p.getId() + " is not sold by this stall.");
             }
-            if (!sellable(p) || p.getStockQuantity() < line.getValue()) {
+            ProductDailyStock row = dailyStock.get(dailyStockKey(p.getId(), group.pickupDate()));
+            if (!sellable(p) || row == null || row.getQuantityAvailable() < line.getValue()) {
                 throw new OutOfStockException(p.getId(), p.getName());
             }
         }
@@ -310,13 +378,12 @@ public class OrderService implements OrderServiceInterface {
         List<OrderItem> items = new ArrayList<>();
         for (Map.Entry<Long, Integer> line : wanted.entrySet()) {
             Product p = products.get(line.getKey());
+            ProductDailyStock row = dailyStock.get(dailyStockKey(p.getId(), group.pickupDate()));
             int qty = line.getValue();
-            int stockBefore = p.getStockQuantity();
-            p.setStockQuantity(stockBefore - qty);
-            adjustStatusForStockChange(p, stockBefore);
-            BigDecimal subtotal = p.getPrice().multiply(BigDecimal.valueOf(qty));
+            row.setQuantityAvailable(row.getQuantityAvailable() - qty);
+            BigDecimal subtotal = row.getUnitPrice().multiply(BigDecimal.valueOf(qty));
             total = total.add(subtotal);
-            items.add(OrderItem.snapshot(p, qty, subtotal));
+            items.add(OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal));
         }
 
         Order order = new Order();
@@ -531,13 +598,15 @@ public class OrderService implements OrderServiceInterface {
 
     /**
      * D-07 — only lower quantities or drop items, never add a new product: compute each product's
-     * difference, then add/subtract exactly that difference from stock. Cancelling and re-placing
-     * would release the stock for someone else to grab in between, and would also change the {@code
-     * order_code} — not what a customer who just edited wants to see.
+     * difference, then add/subtract exactly that difference from the daily-stock row for this
+     * order's own pickup date (D-02 redesign — never {@code Product.stockQuantity}). Cancelling and
+     * re-placing would release the stock for someone else to grab in between, and would also change
+     * the {@code order_code} — not what a customer who just edited wants to see.
      *
      * <p>C5-2/C5-18 — lock order: order ({@link #loadOwnedByCustomer}) → slot (if any, even though
-     * this path does not change {@code booked_count}) → the products currently in the order, one
-     * {@code lockAllById}, ascending id ({@link ProductRepository#lockAllById} sorts by id itself).
+     * this path does not change {@code booked_count}) → the daily-stock rows of the products
+     * currently in the order, one per product, ascending productId (every row shares this order's
+     * one pickup date, so productId alone is the deterministic order).
      */
     @Override
     @Transactional
@@ -563,25 +632,32 @@ public class OrderService implements OrderServiceInterface {
             }
         }
 
-        List<Product> products = productRepository.lockAllById(new TreeSet<>(existing.keySet()));
+        Map<Long, Product> products =
+                productRepository.findAllById(existing.keySet()).stream()
+                        .collect(Collectors.toMap(Product::getId, Function.identity()));
         BigDecimal total = BigDecimal.ZERO;
         int remainingItems = 0;
-        for (Product p : products) {
-            OrderItem item = existing.get(p.getId());
+        for (Long productId : new TreeSet<>(existing.keySet())) {
+            OrderItem item = existing.get(productId);
+            Product p = products.get(productId);
+            ProductDailyStock row =
+                    dailyStockRepository
+                            .lockByProductIdAndStockDate(productId, order.getPickupDate())
+                            .orElseThrow();
             int before = item.getQuantity();
-            int after = wanted.getOrDefault(p.getId(), 0);
+            int after = wanted.getOrDefault(productId, 0);
             int delta = after - before;
 
-            if (delta > 0 && !canRaiseBy(p, delta)) {
-                throw new OutOfStockException(p.getId(), p.getName());
+            if (delta > 0 && !canRaiseBy(p, row, delta)) {
+                throw new OutOfStockException(productId, p == null ? null : p.getName());
             }
             if (delta != 0) {
-                int stockBefore = p.getStockQuantity();
-                boolean wasOrderable = RestockNotifier.orderable(p);
-                p.setStockQuantity(stockBefore - delta);
-                adjustStatusForStockChange(p, stockBefore);
+                boolean wasOrderable = orderableOn(p, row);
+                row.setQuantityAvailable(row.getQuantityAvailable() - delta);
                 // FR-041: lowering a quantity gives stock back
-                restock.afterChange(p, wasOrderable);
+                if (p != null) {
+                    restock.afterChange(p, wasOrderable, orderableOn(p, row));
+                }
             }
 
             if (after == 0) {
@@ -623,30 +699,16 @@ public class OrderService implements OrderServiceInterface {
     /**
      * I-3/FR-064: raising a quantity uses exactly the same "sellable" rule as {@link #place}
      * ({@link #sellable} — also excludes a {@code sold_out} the Farmer set while stock remains, not
-     * only {@code unavailable}) plus enough stock. Lowering/dropping does not go through here — it
-     * is always allowed whatever the status.
+     * only {@code unavailable}) plus enough stock left in this order's own pickup-date row.
+     * Lowering/dropping does not go through here — it is always allowed whatever the status.
      */
-    private static boolean canRaiseBy(Product p, int delta) {
-        return sellable(p) && p.getStockQuantity() >= delta;
+    private static boolean canRaiseBy(Product p, ProductDailyStock row, int delta) {
+        return p != null && sellable(p) && row.getQuantityAvailable() >= delta;
     }
 
-    /**
-     * I-3/FR-064 — the rule for automatic status changes caused by a stock change, shared by {@link
-     * #placeGroup}, {@link #modifyItems} and the stock-restoring branch of {@link #transition}:
-     * AVAILABLE → SOLD_OUT when stock reaches 0; SOLD_OUT → AVAILABLE ONLY when the stock BEFORE
-     * the change ({@code stockBefore}) was exactly 0 (sold out because it really ran out, not set
-     * by the Farmer while stock remained — Review focus I-3); UNAVAILABLE (the Farmer paused
-     * selling) never changes on its own, whatever the stock.
-     */
-    private static void adjustStatusForStockChange(Product p, int stockBefore) {
-        if (p.getStatus() == ProductStatus.UNAVAILABLE) {
-            return;
-        }
-        if (p.getStockQuantity() == 0) {
-            p.setStatus(ProductStatus.SOLD_OUT);
-        } else if (p.getStatus() == ProductStatus.SOLD_OUT && stockBefore == 0) {
-            p.setStatus(ProductStatus.AVAILABLE);
-        }
+    /** Can be put in a cart today, on the one pickup date this daily-stock row is for. */
+    private static boolean orderableOn(Product p, ProductDailyStock row) {
+        return p != null && sellable(p) && row.getQuantityAvailable() > 0;
     }
 
     /**
@@ -706,14 +768,15 @@ public class OrderService implements OrderServiceInterface {
      * (restoring stock) cannot be forgotten on some branch: forget to call this and the status does
      * not change either.
      *
-     * <p>C5-2 — this path's lock order: the order is already locked (by {@link #lockOwnedOrder}) →
-     * lock the slot (if any) → lock the products, the reverse of the task's original draft
-     * (products first, then the slot) per ruling C5-2.
+     * <p>C5-2 — this path's lock order: the order is already locked (by {@link #lockOwnedOrder} /
+     * {@link #loadOwnedByCustomer}) → lock the slot (if any) → lock the daily-stock rows of the
+     * order's own pickup date, ascending productId.
      *
      * <p>The final {@code flush()}: {@link #detail} reads through {@code OrderQueryRepository} with
      * raw JDBC, separate from the JPA persistence context — without a flush the changes made here
-     * (status, farmer_note, stock, booked_count) are not guaranteed to show up when the public
-     * methods above call {@link #detail} again to build the response in the same transaction.
+     * (status, farmer_note, daily stock, booked_count) are not guaranteed to show up when the
+     * public methods above call {@link #detail} again to build the response in the same
+     * transaction.
      *
      * <p>C5-17: NO {@code @Transactional} here. This method is only ever self-invoked
      * (this.transition(...)) from inside the class — the call does not go through the Spring proxy,
@@ -733,22 +796,8 @@ public class OrderService implements OrderServiceInterface {
                         .lockById(order.getSlotId())
                         .ifPresent(s -> s.setBookedCount(Math.max(0, s.getBookedCount() - 1)));
             }
-            List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
-            List<Product> products =
-                    productRepository.lockAllById(
-                            items.stream().map(OrderItem::getProductId).toList());
-            Map<Long, Integer> qty =
-                    items.stream()
-                            .collect(
-                                    Collectors.toMap(
-                                            OrderItem::getProductId, OrderItem::getQuantity));
-            for (Product p : products) {
-                int stockBefore = p.getStockQuantity();
-                boolean wasOrderable = RestockNotifier.orderable(p);
-                p.setStockQuantity(stockBefore + qty.get(p.getId()));
-                adjustStatusForStockChange(p, stockBefore);
-                restock.afterChange(p, wasOrderable);
-            }
+            restoreDailyStock(
+                    order.getPickupDate(), orderItemRepository.findByOrderId(order.getId()));
         }
 
         order.setStatus(to);
@@ -756,6 +805,35 @@ public class OrderService implements OrderServiceInterface {
         history.record(order.getId(), from, to, actorUserId, note);
         orderRepository.flush();
         return order;
+    }
+
+    /**
+     * D-02 restored per pickup date: locks each item's {@code product_daily_stock} row by natural
+     * key, ascending productId (every row here shares the order's one pickup date, so productId
+     * alone gives C5-2's deterministic order), adds the ordered quantity back, and tells FR-041
+     * when that date's row crossed "cannot be ordered" → "can be ordered", for a product still
+     * listed and available. An unlocked {@code Product} read is enough here: this path never
+     * mutates the product row, only the daily-stock row.
+     */
+    private void restoreDailyStock(LocalDate pickupDate, List<OrderItem> items) {
+        Map<Long, Integer> qty =
+                items.stream()
+                        .collect(Collectors.toMap(OrderItem::getProductId, OrderItem::getQuantity));
+        Map<Long, Product> products =
+                productRepository.findAllById(qty.keySet()).stream()
+                        .collect(Collectors.toMap(Product::getId, Function.identity()));
+        for (Long productId : new TreeSet<>(qty.keySet())) {
+            ProductDailyStock row =
+                    dailyStockRepository
+                            .lockByProductIdAndStockDate(productId, pickupDate)
+                            .orElseThrow();
+            Product p = products.get(productId);
+            boolean wasOrderable = orderableOn(p, row);
+            row.setQuantityAvailable(row.getQuantityAvailable() + qty.get(productId));
+            if (p != null) {
+                restock.afterChange(p, wasOrderable, orderableOn(p, row));
+            }
+        }
     }
 
     // ---------- FR-042/D-11: order milestone notifications ----------
@@ -827,7 +905,9 @@ public class OrderService implements OrderServiceInterface {
 
     /**
      * FR-037 — read-only: nothing is locked or reserved; the suggested cart goes through preview
-     * and place like any other cart. Only the buyer may reorder (403), a missing order is 404.
+     * and place like any other cart. Only the buyer may reorder (403), a missing order is 404. The
+     * old order carries no pickup date guarantee any more (D-02 redesign is per-date) — quantities
+     * are capped at the nearest orderable date's availability, the same rule browse/search uses.
      */
     @Override
     @Transactional(readOnly = true)
@@ -854,14 +934,20 @@ public class OrderService implements OrderServiceInterface {
                         .findAllById(lines.stream().map(OrderItem::getProductId).toList())
                         .stream()
                         .collect(Collectors.toMap(Product::getId, Function.identity()));
+        Map<Long, BigDecimal> basePrices =
+                byId.values().stream().collect(Collectors.toMap(Product::getId, Product::getPrice));
+        Map<Long, ProductAvailabilityResolver.Availability> resolved =
+                availability.resolve(basePrices);
         List<CartLine> cart = new ArrayList<>();
         for (OrderItem line : lines) {
             Product p = byId.get(line.getProductId());
-            // Same "can be bought" rule as place: deleted, hidden, paused or empty lines drop out
-            if (p == null || !sellable(p) || p.getStockQuantity() <= 0) {
+            ProductAvailabilityResolver.Availability a = p == null ? null : resolved.get(p.getId());
+            // Same "can be bought" rule as place: deleted, hidden, paused, sold out or no
+            // orderable date drop out
+            if (p == null || !sellable(p) || a == null || a.quantity() <= 0) {
                 continue;
             }
-            cart.add(new CartLine(p.getId(), Math.min(line.getQuantity(), p.getStockQuantity())));
+            cart.add(new CartLine(p.getId(), Math.min(line.getQuantity(), a.quantity())));
         }
         return cart;
     }
@@ -869,7 +955,8 @@ public class OrderService implements OrderServiceInterface {
     /**
      * FR-039 / D-03 — the system completes a ready order once the pickup window is 24 hours behind
      * it. The order row is locked and re-read (C5-8), so an order a farmer moved meanwhile is left
-     * alone. No actor on the history row and no notification (completing notifies nobody).
+     * alone. No actor on the history row and no notification (completing notifies nobody). Never
+     * restores stock (COMPLETED is not in {@link OrderLifecycle#restoresStock}).
      */
     @Override
     @Transactional

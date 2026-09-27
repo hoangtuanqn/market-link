@@ -1,327 +1,232 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
+import ProductApi from '@/api-requests/product.requests';
+import StockTemplateApi, {
+  type StockTemplateDto,
+  type StockTemplateItemInput,
+} from '@/api-requests/stock-template.requests';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Dialog } from '@/components/ui/dialog';
-import Tabs from '@/components/ui/tabs';
-import { farmer, product } from '@/data/catalog';
-import { dayName, formatDayMonth, unitName, vnd, weekday } from '@/lib/format';
-import type { ProductStatus } from '@/types/product.types';
+import { DataState, LoadError } from '@/components/ui/data-state';
+import useRequest from '@/hooks/useRequest';
+import { dayName, unitName, vnd } from '@/lib/format';
+import type { ProductType } from '@/types/product.types';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-const FARMER_PRODUCT_IDS = [1, 2, 7, 19];
-/** Reserved stock per product this week — same figures as the Overview "Stock for Saturday" panel. */
-const RESERVED: Record<number, number> = { 1: 8, 2: 7, 7: 10, 19: 3 };
-
-type WeekRow = { productId: number; status: ProductStatus; sat: number; sunThaoDien: number; sunThuDuc: number };
-type TemplateRow = { productId: number; price: number; sat: number; sun: number };
-
-function initialWeekRows(): WeekRow[] {
-  return FARMER_PRODUCT_IDS.map((id) => {
-    const p = product(id)!;
-    const total = p.stock + (RESERVED[id] ?? 0);
-    return {
-      productId: id,
-      status: p.status,
-      sat: total,
-      sunThaoDien: Math.round(total * 0.7),
-      sunThuDuc: Math.round(total * 0.4),
-    };
-  });
-}
-
-function initialTemplateRows(): TemplateRow[] {
-  return FARMER_PRODUCT_IDS.map((id) => {
-    const p = product(id)!;
-    const total = p.stock + (RESERVED[id] ?? 0);
-    return { productId: id, price: p.price, sat: total, sun: Math.round(total * 0.7) };
-  });
-}
-
-const NumberInput = ({ value, onChange, label }: { value: number; onChange: (v: number) => void; label: string }) => (
-  <input
-    type="number"
-    min={0}
-    value={value}
-    onChange={(e) => onChange(Math.max(0, Number(e.target.value)))}
-    aria-label={label}
-    className="border-line-strong bg-surface-raised min-h-9 w-21 rounded-sm border-[1.5px] px-2 text-right text-[14px] tabular-nums"
-  />
-);
-
-const OffCell = () => (
-  <td className="bg-surface-quiet text-ink-muted px-2.5 py-2 text-center" aria-hidden="true">
-    —
-  </td>
-);
-
-const STATUS_OPTIONS = [
-  { value: 'available', label: 'status.available' },
-  { value: 'sold_out', label: 'status.soldOut' },
-  { value: 'unavailable', label: 'status.paused' },
-] as const satisfies readonly { value: ProductStatus; label: string }[];
-
-const FRI = new Date(2026, 8, 25);
-const SAT = new Date(2026, 8, 26);
-const SUN = new Date(2026, 8, 27);
-/** Monday first, like the template table. */
-const WEEK = [1, 2, 3, 4, 5, 6, 0];
+/** Monday first, matches how FarmerOperatingDays already lists the week in this app. */
+const DAYS = [1, 2, 3, 4, 5, 6, 0];
+const NO_PRODUCTS: ProductType[] = [];
 
 const th =
   'bg-surface-sunken text-ink-muted px-2.5 py-2 text-left text-[12px] font-bold tracking-[0.08em] whitespace-nowrap uppercase';
 const td = 'border-line border-t px-2.5 py-2 align-middle';
 
-/** FR-063 FR-064 — this week's stock per product and market day, and the weekly template it starts from. */
-const FarmerStockWeekPage = () => {
-  const { t } = useTranslation('FarmerStockWeek');
-  const [tab, setTab] = useState<'week' | 'tpl'>('week');
-  const [rows, setRows] = useState<WeekRow[]>(initialWeekRows);
-  const [templateRows, setTemplateRows] = useState<TemplateRow[]>(initialTemplateRows);
-  const [applyOpen, setApplyOpen] = useState(false);
+type Cell = { quantity: string; price: string };
+const cellKey = (productId: number, day: number) => `${productId}:${day}`;
 
-  const updateRow = (id: number, patch: Partial<WeekRow>) =>
-    setRows((prev) => prev.map((r) => (r.productId === id ? { ...r, ...patch } : r)));
-  const updateTemplateRow = (id: number, patch: Partial<TemplateRow>) =>
-    setTemplateRows((prev) => prev.map((r) => (r.productId === id ? { ...r, ...patch } : r)));
+function seedCells(templates: StockTemplateDto[]): Record<string, Cell> {
+  const cells: Record<string, Cell> = {};
+  for (const row of templates) {
+    cells[cellKey(row.productId, row.dayOfWeek)] = {
+      quantity: String(row.defaultQuantity),
+      price: row.defaultPrice == null ? '' : String(row.defaultPrice),
+    };
+  }
+  return cells;
+}
+
+/** The table hasn't loaded yet — same column count as the real table so nothing jumps once data lands (FR-084). */
+const TemplateGridSkeleton = () => {
+  const { t } = useTranslation('FarmerStockWeek');
+  return (
+    <Card className="overflow-x-auto" role="status" aria-live="polite">
+      <span className="sr-only">{t('title')}</span>
+      <table className="w-full border-collapse text-[14px]" aria-hidden="true">
+        <tbody>
+          {Array.from({ length: 4 }, (_, i) => (
+            <tr key={i}>
+              <td className={td}>
+                <span className="ml-skel h-4.5 w-28" />
+              </td>
+              {DAYS.map((d) => (
+                <td key={d} className={td}>
+                  <span className="ml-skel h-9 w-20" />
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </Card>
+  );
+};
+
+/**
+ * A locally-edited grid, seeded once from the loaded data via a lazy initializer instead of effect + setState — the
+ * same `react-hooks/set-state-in-effect` trap hit on the Markets page. The parent only renders this component once both
+ * `products` and `initialTemplates` are ready, so the initial state is always the latest data.
+ */
+const TemplateGrid = ({
+  products,
+  initialTemplates,
+  onSaved,
+}: {
+  products: ProductType[];
+  initialTemplates: StockTemplateDto[];
+  onSaved: (rows: StockTemplateDto[]) => void;
+}) => {
+  const { t } = useTranslation('FarmerStockWeek');
+  const { t: tc } = useTranslation();
+  const [cells, setCells] = useState<Record<string, Cell>>(() => seedCells(initialTemplates));
+  const [saving, setSaving] = useState(false);
+
+  const setCell = (productId: number, day: number, patch: Partial<Cell>) => {
+    const key = cellKey(productId, day);
+    setCells((prev) => ({ ...prev, [key]: { ...(prev[key] ?? { quantity: '', price: '' }), ...patch } }));
+  };
+
+  const save = async () => {
+    const items: StockTemplateItemInput[] = [];
+    for (const p of products) {
+      for (const day of DAYS) {
+        const cell = cells[cellKey(p.id, day)];
+        if (!cell || cell.quantity.trim() === '') continue;
+        const quantity = Number(cell.quantity);
+        if (!Number.isFinite(quantity) || quantity <= 0) continue;
+        const price = cell.price.trim() === '' ? null : Number(cell.price);
+        items.push({ productId: p.id, dayOfWeek: day, defaultQuantity: quantity, defaultPrice: price });
+      }
+    }
+    setSaving(true);
+    try {
+      const rows = await StockTemplateApi.replace(items);
+      onSaved(rows);
+      Notification.success({ title: t('saved'), text: t('template.savedText') });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <p className="text-overline text-ink-muted m-0">
-            {t('overline', {
-              from: formatDayMonth(new Date(2026, 8, 22)),
-              to: formatDayMonth(new Date(2026, 8, 28)),
-              daysA: `${dayName(5)}–${dayName(0)}`,
-              daysB: dayName(0),
-            })}
-          </p>
-          <h1 className="text-h1">{t('title')}</h1>
-          <p className="text-body max-w-160">{t('intro')}</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" onClick={() => setApplyOpen(true)}>
-            {t('apply.open')}
-          </Button>
-          <Button
-            onClick={() =>
-              Notification.success({
-                title: t('saved'),
-                text: t('week.savedText'),
-              })
-            }
-          >
-            {t('week.save')}
-          </Button>
-        </div>
-      </div>
-
-      <Tabs
-        label={t('tabs.label')}
-        value={tab}
-        onChange={(id) => setTab(id as typeof tab)}
-        tabs={[
-          { id: 'week', label: t('tabs.week') },
-          { id: 'tpl', label: t('tabs.template') },
-        ]}
-      />
-
-      {tab === 'week' && (
-        <div className="flex flex-col gap-3">
-          <Card className="overflow-x-auto">
-            <table className="w-full border-collapse text-[14px]">
-              <caption className="sr-only">{t('week.caption')}</caption>
-              <thead>
-                <tr>
-                  <th className={th}>{t('col.product')}</th>
-                  <th className={th}>{t('col.status')}</th>
-                  <th className={th}>{t('col.price')}</th>
-                  {(
-                    [
-                      [FRI, 'Thảo Điền'],
-                      [SAT, 'Thảo Điền'],
-                      [SUN, 'Thảo Điền'],
-                      [SUN, 'Thủ Đức'],
-                    ] as const
-                  ).map(([date, market]) => (
-                    <th key={`${date.getDay()}${market}`} className={th}>
-                      {weekday(date)} {formatDayMonth(date)}
-                      <br />
-                      {market}
-                    </th>
-                  ))}
-                  <th className={`${th} text-right`}>{t('col.reserved')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r) => {
-                  const p = product(r.productId)!;
+    <div className="flex flex-col gap-3">
+      <Card className="overflow-x-auto">
+        <table className="w-full border-collapse text-[14px]">
+          <caption className="sr-only">{t('table.caption')}</caption>
+          <thead>
+            <tr>
+              <th className={th}>{t('col.product')}</th>
+              {DAYS.map((day) => (
+                <th key={day} className={th}>
+                  {dayName(day)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((p) => (
+              <tr key={p.id}>
+                <td className={td}>
+                  <b>{p.name}</b>
+                  <span className="text-ink-muted mt-0.5 block text-[12px] font-normal">
+                    {t('per', { unit: unitName(p.unit) })} · {t('currentPrice', { price: vnd(p.price) })}
+                  </span>
+                </td>
+                {DAYS.map((day) => {
+                  const cell = cells[cellKey(p.id, day)] ?? { quantity: '', price: '' };
                   return (
-                    <tr key={r.productId}>
-                      <td className={td}>
-                        <b>{p.name}</b>
-                        <span className="text-ink-muted mt-0.5 block text-[12px] font-normal">
-                          {p.category} · {t('per', { unit: unitName(p.unit) })}
-                        </span>
-                      </td>
-                      <td className={td}>
-                        <select
-                          value={r.status}
-                          onChange={(e) => updateRow(r.productId, { status: e.target.value as ProductStatus })}
-                          aria-label={t('aria.status', { product: p.name })}
-                          className="border-line-strong bg-surface-raised min-h-9 rounded-sm border-[1.5px] px-2 text-[14px]"
-                        >
-                          {STATUS_OPTIONS.map((o) => (
-                            <option key={o.value} value={o.value}>
-                              {t(o.label)}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className={`${td} tabular-nums`}>{vnd(p.price)}</td>
-                      <OffCell />
-                      <td className={td}>
-                        <NumberInput
-                          value={r.sat}
-                          onChange={(v) => updateRow(r.productId, { sat: v })}
-                          label={t('aria.day', { product: p.name, day: dayName(6, 'long') })}
+                    <td key={day} className={td}>
+                      <div className="flex flex-col gap-1">
+                        <input
+                          type="number"
+                          min={0}
+                          value={cell.quantity}
+                          onChange={(e) => setCell(p.id, day, { quantity: e.target.value })}
+                          aria-label={t('aria.quantity', { product: p.name, day: dayName(day, 'long') })}
+                          placeholder="0"
+                          className="border-line-strong bg-surface-raised min-h-9 w-20 rounded-sm border-[1.5px] px-2 text-right text-[14px] tabular-nums"
                         />
-                      </td>
-                      <td className={td}>
-                        <NumberInput
-                          value={r.sunThaoDien}
-                          onChange={(v) => updateRow(r.productId, { sunThaoDien: v })}
-                          label={t('aria.day', { product: p.name, day: dayName(0, 'long') })}
-                        />
-                      </td>
-                      <td className={td}>
-                        <NumberInput
-                          value={r.sunThuDuc}
-                          onChange={(v) => updateRow(r.productId, { sunThuDuc: v })}
-                          label={t('aria.dayAt', { product: p.name, day: dayName(0, 'long'), market: 'Thủ Đức' })}
-                        />
-                      </td>
-                      <td className={`${td} text-right font-bold tabular-nums`}>{RESERVED[r.productId] ?? 0}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </Card>
-          <p className="text-small text-ink-muted">{t('week.note', { stall: farmer(1)?.stall })}</p>
-        </div>
-      )}
-
-      {tab === 'tpl' && (
-        <div className="flex flex-col gap-3">
-          <Card className="overflow-x-auto">
-            <table className="w-full border-collapse text-[14px]">
-              <caption className="sr-only">{t('tabs.template')}</caption>
-              <thead>
-                <tr>
-                  <th className={th}>{t('col.product')}</th>
-                  <th className={th}>{t('col.defaultPrice')}</th>
-                  {WEEK.map((d) => (
-                    <th key={d} className={th}>
-                      {dayName(d)}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {templateRows.map((r) => {
-                  const p = product(r.productId)!;
-                  return (
-                    <tr key={r.productId}>
-                      <td className={td}>
-                        <b>{p.name}</b>
-                        <span className="text-ink-muted mt-0.5 block text-[12px] font-normal">
-                          {t('per', { unit: unitName(p.unit) })}
-                        </span>
-                      </td>
-                      <td className={td}>
                         <input
                           type="number"
                           min={0}
                           step={1000}
-                          value={r.price}
-                          onChange={(e) =>
-                            updateTemplateRow(r.productId, { price: Math.max(0, Number(e.target.value)) })
-                          }
-                          aria-label={t('aria.price', { product: p.name })}
-                          className="border-line-strong bg-surface-raised min-h-9 w-27.5 rounded-sm border-[1.5px] px-2 text-right text-[14px] tabular-nums"
+                          value={cell.price}
+                          onChange={(e) => setCell(p.id, day, { price: e.target.value })}
+                          aria-label={t('aria.price', { product: p.name, day: dayName(day, 'long') })}
+                          placeholder={t('defaultPricePlaceholder')}
+                          className="border-line text-ink-muted min-h-8 w-20 rounded-sm border px-2 text-right text-[12px] tabular-nums"
                         />
-                      </td>
-                      <OffCell />
-                      <OffCell />
-                      <OffCell />
-                      <OffCell />
-                      <OffCell />
-                      <td className={td}>
-                        <NumberInput
-                          value={r.sat}
-                          onChange={(v) => updateTemplateRow(r.productId, { sat: v })}
-                          label={t('aria.templateDay', { product: p.name, day: dayName(6, 'long') })}
-                        />
-                      </td>
-                      <td className={td}>
-                        <NumberInput
-                          value={r.sun}
-                          onChange={(v) => updateTemplateRow(r.productId, { sun: v })}
-                          label={t('aria.templateDay', { product: p.name, day: dayName(0, 'long') })}
-                        />
-                      </td>
-                    </tr>
+                      </div>
+                    </td>
                   );
                 })}
-              </tbody>
-            </table>
-          </Card>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button
-              onClick={() =>
-                Notification.success({
-                  title: t('saved'),
-                  text: t('template.savedText'),
-                })
-              }
-            >
-              {t('template.save')}
-            </Button>
-            <span className="text-small text-ink-muted">{t('template.note')}</span>
-          </div>
-        </div>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button onClick={() => void save()} disabled={saving}>
+          {t('template.save')}
+        </Button>
+        <span className="text-small text-ink-muted">{t('template.note')}</span>
+      </div>
+    </div>
+  );
+};
+
+/**
+ * FR-063 — the weekly stock template a Farmer's products refill from. Availability for a pickup date is now computed
+ * automatically from this template (see the backend design doc); there is no "Apply" action here anymore.
+ */
+const FarmerStockWeekPage = () => {
+  const { t } = useTranslation('FarmerStockWeek');
+  const products = useRequest('farmer-products-for-templates', () => ProductApi.mine());
+  const templates = useRequest('stock-templates', () => StockTemplateApi.list());
+
+  const loading = products.state.kind === 'loading' || templates.state.kind === 'loading';
+  const productList = products.state.kind === 'ready' ? products.state.data : NO_PRODUCTS;
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body max-w-160">{t('intro')}</p>
+      </div>
+
+      {loading && <TemplateGridSkeleton />}
+
+      {!loading && products.state.kind === 'error' && (
+        <LoadError noun={t('error.productsNoun')} onRetry={products.retry} />
       )}
 
-      <Dialog
-        open={applyOpen}
-        title={t('apply.title')}
-        onClose={() => setApplyOpen(false)}
-        actions={
-          <>
-            <Button variant="secondary" onClick={() => setApplyOpen(false)}>
-              {t('apply.keep')}
-            </Button>
-            <Button
-              onClick={() => {
-                setApplyOpen(false);
-                Notification.success({
-                  title: t('apply.doneTitle'),
-                  text: t('apply.doneText', {
-                    sat: `${weekday(SAT)} ${formatDayMonth(SAT)}`,
-                    sun: `${weekday(SUN)} ${formatDayMonth(SUN)}`,
-                  }),
-                });
-              }}
-            >
-              {t('apply.confirm')}
-            </Button>
-          </>
-        }
-      >
-        <p>{t('apply.text', { sat: dayName(6, 'long'), sun: dayName(0, 'long') })}</p>
-        <p className="text-ink-muted text-[14px]">{t('apply.warning')}</p>
-      </Dialog>
+      {!loading && products.state.kind === 'ready' && templates.state.kind === 'error' && (
+        <LoadError noun={t('error.templateNoun')} onRetry={templates.retry} />
+      )}
+
+      {!loading && productList.length === 0 && products.state.kind === 'ready' && templates.state.kind !== 'error' && (
+        <DataState
+          variant="empty"
+          fill
+          title={t('empty.title')}
+          text={t('empty.text')}
+          action={
+            <ButtonLink to="/farmer/products/new" size="sm">
+              {t('empty.action')}
+            </ButtonLink>
+          }
+        />
+      )}
+
+      {!loading && products.state.kind === 'ready' && templates.state.kind === 'ready' && productList.length > 0 && (
+        <TemplateGrid
+          products={productList}
+          initialTemplates={templates.state.data}
+          onSaved={(rows) => templates.mutate(() => rows)}
+        />
+      )}
     </div>
   );
 };

@@ -6,36 +6,23 @@ import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundExcepti
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
-import com.techx.intervue.modules.product.entities.WeeklyStockTemplate;
-import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.StockTemplateRequest;
-import com.techx.intervue.modules.product.resources.ApplyTemplateResultResource;
-import com.techx.intervue.modules.product.resources.StockTemplateItemResource;
+import com.techx.intervue.modules.product.resources.StockTemplateResource;
 import com.techx.intervue.modules.product.services.interfaces.StockTemplateServiceInterface;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-063 — a stall keeps one quantity (and optionally a price) per product and weekday, then
- * refills its stock for a market day in one click. Everything is looked up from the token's user
- * (R-06).
- */
 @Service
 @AllArgsConstructor
 public class StockTemplateService implements StockTemplateServiceInterface {
@@ -46,155 +33,59 @@ public class StockTemplateService implements StockTemplateServiceInterface {
     private final RestockNotifier restock;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<StockTemplateItemResource> getTemplates(long userId) {
-        return toResources(mine(userId));
+    public List<StockTemplateResource> list(long userId) {
+        FarmerProfile profile = mine(userId);
+        return templates.findResourcesByFarmerId(profile.getId());
     }
 
     /**
-     * Replaces the stall's whole set. Every product is checked before anything is deleted, so a
-     * rejected request leaves the old set in place.
+     * FR-041: a product with zero templates is never orderable, on any date (the per-date-stock
+     * redesign). Adding a farmer's first template for a product can take it from "never orderable"
+     * to orderable — a restock event. {@code wasOrderable} is captured per distinct product in
+     * {@code request.items()} before the old templates are wiped, then compared to the same check
+     * after {@code replaceAll} writes the new set.
      */
     @Override
     @Transactional
-    public List<StockTemplateItemResource> saveTemplates(
-            long userId, StockTemplateRequest request) {
+    public List<StockTemplateResource> replace(long userId, StockTemplateRequest request) {
         FarmerProfile profile = mine(userId);
         requireApproved(profile);
-        List<StockTemplateRequest.TemplateItem> items = request.items();
 
         Set<String> seen = new HashSet<>();
-        for (StockTemplateRequest.TemplateItem item : items) {
+        Map<Long, Product> touched = new HashMap<>();
+        for (StockTemplateRequest.Item item : request.items()) {
             if (!seen.add(item.productId() + "@" + item.dayOfWeek())) {
-                throw new IllegalArgumentException(
-                        "Each product can have one template per weekday.");
+                throw new IllegalArgumentException("Each product can appear once per weekday.");
             }
-        }
-        Set<Long> ids =
-                items.stream()
-                        .map(StockTemplateRequest.TemplateItem::productId)
-                        .collect(Collectors.toSet());
-        Map<Long, Product> byId =
-                products.findAllById(ids).stream()
-                        .collect(Collectors.toMap(Product::getId, Function.identity()));
-        for (Long id : ids) {
-            Product p = byId.get(id);
-            if (p == null || p.isDeleted()) {
-                throw new ProductNotFoundException(id);
-            }
-            if (!p.getFarmerId().equals(profile.getId())) {
+            Product product =
+                    products.findByIdAndDeletedFalse(item.productId())
+                            .orElseThrow(() -> new ProductNotFoundException(item.productId()));
+            if (!product.getFarmerId().equals(profile.getId())) {
                 throw new ProductNotYoursException();
             }
+            touched.put(item.productId(), product);
         }
+        Map<Long, Boolean> wasOrderable = new HashMap<>();
+        touched.forEach((id, product) -> wasOrderable.put(id, restock.isOrderable(product)));
 
-        templates.deleteByFarmerId(profile.getId());
-        // Hibernate orders INSERT before DELETE on flush; without this, saving a row that already
-        // existed would hit uq_template.
-        templates.flush();
-        List<WeeklyStockTemplate> rows = new ArrayList<>();
-        for (StockTemplateRequest.TemplateItem item : items) {
-            WeeklyStockTemplate t = new WeeklyStockTemplate();
-            t.setFarmerId(profile.getId());
-            t.setProductId(item.productId());
-            t.setDayOfWeek(item.dayOfWeek());
-            t.setDefaultQuantity(item.defaultQuantity());
-            t.setDefaultPrice(item.defaultPrice());
-            t.setActive(true);
-            rows.add(t);
-        }
-        templates.saveAll(rows);
-        return toResources(profile);
+        templates.replaceAll(profile.getId(), request.items());
+        touched.forEach(
+                (id, product) ->
+                        restock.afterChange(
+                                product, wasOrderable.get(id), restock.isOrderable(product)));
+
+        return templates.findResourcesByFarmerId(profile.getId());
     }
 
-    /**
-     * Sets stock to the template's quantity (it does not add to it). Rows are loaded through the
-     * row lock (C5-14) so an order placed at the same moment cannot be overwritten.
-     */
-    @Override
-    @Transactional
-    public ApplyTemplateResultResource applyTemplate(long userId, LocalDate targetDate) {
-        FarmerProfile profile = mine(userId);
-        requireApproved(profile);
-        // 0 = Sunday … 6 = Saturday; Java's DayOfWeek is Monday = 1 … Sunday = 7
-        int day = targetDate.getDayOfWeek().getValue() % 7;
-        Map<Long, WeeklyStockTemplate> forDay =
-                templates.findByFarmerIdAndDayOfWeekAndActiveTrue(profile.getId(), day).stream()
-                        .collect(
-                                Collectors.toMap(
-                                        WeeklyStockTemplate::getProductId, Function.identity()));
-
-        int updated = 0;
-        if (!forDay.isEmpty()) {
-            for (Product p : products.lockAllById(new TreeSet<>(forDay.keySet()))) {
-                if (p.isDeleted() || !p.getFarmerId().equals(profile.getId())) {
-                    continue;
-                }
-                WeeklyStockTemplate t = forDay.get(p.getId());
-                boolean wasOrderable = RestockNotifier.orderable(p);
-                p.setStockQuantity(t.getDefaultQuantity());
-                if (t.getDefaultPrice() != null) {
-                    p.setPrice(t.getDefaultPrice());
-                }
-                refreshStatus(p);
-                restock.afterChange(p, wasOrderable);
-                updated++;
-            }
-        }
-
-        List<String> skipped =
-                products.findByFarmerIdAndDeletedFalse(profile.getId()).stream()
-                        .filter(p -> !forDay.containsKey(p.getId()))
-                        .map(Product::getName)
-                        .toList();
-        return new ApplyTemplateResultResource(updated, skipped);
+    /** R-06: hồ sơ luôn tra theo userId của token; không có đường nào nhận farmerId từ request. */
+    private FarmerProfile mine(long userId) {
+        return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
     }
 
-    /**
-     * FR-064: "unavailable" is the farmer's own pause and is never changed here; otherwise stock
-     * decides between available and sold out.
-     */
-    private static void refreshStatus(Product p) {
-        if (p.getStatus() == ProductStatus.UNAVAILABLE) {
-            return;
-        }
-        p.setStatus(p.getStockQuantity() > 0 ? ProductStatus.AVAILABLE : ProductStatus.SOLD_OUT);
-    }
-
-    private List<StockTemplateItemResource> toResources(FarmerProfile profile) {
-        Map<Long, Product> own =
-                products.findByFarmerIdAndDeletedFalse(profile.getId()).stream()
-                        .collect(Collectors.toMap(Product::getId, Function.identity()));
-        return templates.findByFarmerId(profile.getId()).stream()
-                .filter(t -> own.containsKey(t.getProductId()))
-                .sorted(
-                        Comparator.comparing(WeeklyStockTemplate::getProductId)
-                                .thenComparing(WeeklyStockTemplate::getDayOfWeek))
-                .map(
-                        t -> {
-                            Product p = own.get(t.getProductId());
-                            return new StockTemplateItemResource(
-                                    p.getId(),
-                                    p.getName(),
-                                    p.getUnit(),
-                                    t.getDayOfWeek(),
-                                    t.getDefaultQuantity(),
-                                    t.getDefaultPrice());
-                        })
-                .toList();
-    }
-
-    /**
-     * Contract §4 / D-09: a stall that is not approved cannot edit stock or prices (403). Reading
-     * the saved templates stays allowed.
-     */
+    /** D-09 / contract §4: chưa duyệt hoặc bị đình chỉ thì mọi thao tác ghi lịch tuần bị chặn. */
     private static void requireApproved(FarmerProfile profile) {
         if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
             throw new StallNotApprovedException();
         }
-    }
-
-    /** R-06: the profile always comes from the token's user id. */
-    private FarmerProfile mine(long userId) {
-        return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
     }
 }

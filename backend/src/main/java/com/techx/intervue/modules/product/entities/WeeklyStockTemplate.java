@@ -11,10 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * FR-063: how much of one product a stall usually brings on one weekday. Table {@code
- * weekly_stock_templates} (V20260926017).
- */
+/** FR-063 lịch tồn kho lặp lại theo tuần của một product. Bảng `weekly_stock_templates`. */
 @Entity
 @Getter
 @Setter
@@ -32,14 +29,14 @@ public class WeeklyStockTemplate {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    /** 0 = Sunday … 6 = Saturday, like farmer_operating_days. */
+    /** 0 = Chủ nhật … 6 = Thứ bảy, như farmer_operating_days. */
     @Column(name = "day_of_week", nullable = false)
     private int dayOfWeek;
 
     @Column(name = "default_quantity", nullable = false)
     private int defaultQuantity;
 
-    /** Null keeps the product's current price when the template is applied. */
+    /** null = khi apply giữ nguyên giá hiện tại của product. */
     @Column(name = "default_price", precision = 10, scale = 2)
     private BigDecimal defaultPrice;
 

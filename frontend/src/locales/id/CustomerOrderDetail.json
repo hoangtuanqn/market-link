@@ -14,13 +14,10 @@
     "declined": "Ditolak",
     "cancelled": "Dibatalkan"
   },
-  "previewLocked": "Pratinjau: setelah batas pesan",
   "pickup": {
     "title": "Pengambilan",
     "where": "{{market}}, lapak {{stall}}",
-    "spot": "Sisi sungai pasar, di sebelah lapak roti.",
     "slot": "Slot Anda",
-    "phone": "Telepon lapak",
     "bring": "Bawa",
     "bringText": "{{total}} tunai atau transfer bank di lapak",
     "directions": "Rute",
@@ -37,11 +34,24 @@
     "until": "Anda dapat mengubah jumlah, menghapus barang, atau membatalkan sampai <b>{{cutoff}}</b>. Setelah Anda mengubah, {{stall}} menyetujui pesanan lagi.",
     "edit": "Ubah pesanan",
     "cancel": "Batalkan pesanan",
-    "locked": "Batas pesan sudah lewat pada {{cutoff}}. Untuk mengubahnya, hubungi lapak langsung di {{phone}}.",
-    "settled": "Pesanan ini tidak bisa diubah lagi. Kalau ada pertanyaan, hubungi lapak langsung di {{phone}}."
+    "lockedContact": "Batas pesan sudah lewat pada {{cutoff}}. Untuk mengubahnya, kirim pesan ke lapak.",
+    "settledContact": "Pesanan ini tidak bisa diubah lagi. Untuk bertanya, kirim pesan ke lapak.",
+    "cancelFailed": "Pesanan tidak dapat dibatalkan. Mungkin batas pesan sudah lewat; muat ulang untuk melihat statusnya."
   },
   "notify": {
     "title": "Notifikasi untuk pesanan ini",
     "text": "Anda sudah diberi tahu saat pesanan diterima. Anda akan diberi tahu saat siap, atau jika lapak harus menolaknya."
+  },
+  "noun": "pesanan",
+  "items": {
+    "title": "Yang Anda pesan",
+    "line": "{{qty}} {{unit}} × {{price}}",
+    "total": "Total"
+  },
+  "declined": "Lapak menolak pesanan ini: {{reason}}",
+  "cancelDialog": {
+    "title": "Batalkan pesanan ini?",
+    "text": "{{stall}} langsung diberi tahu dan barang dijual kembali.",
+    "keep": "Simpan pesanan"
   }
 }

@@ -24,12 +24,15 @@ import com.techx.intervue.modules.order.repositories.OrderStatusHistoryRepositor
 import com.techx.intervue.modules.order.requests.CartLine;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
 import com.techx.intervue.modules.stall.repositories.PickupSlotRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -40,25 +43,35 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** FR-037 — "Order again" turns an old order into a suggested cart; it never creates an order. */
+/**
+ * FR-037 — "Order again" turns an old order into a suggested cart; it never creates an order.
+ * Quantities are capped at the nearest orderable date's availability ({@link
+ * ProductAvailabilityResolver}, the same rule browse/search uses) — never {@code
+ * Product.stockQuantity} (D-02 redesign): the old order carries no guarantee its own pickup date
+ * still has any stock left.
+ */
 class ReorderTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
     private static final long ORDER_ID = 500L;
     private static final long CUSTOMER_ID = 7L;
     private static final long OTHER_CUSTOMER_ID = 8L;
+    private static final LocalDate NEAREST_DATE = LocalDate.of(2026, 9, 28);
 
     private ProductRepository productRepository;
+    private ProductAvailabilityResolver availability;
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
     private OrderService service;
     private FarmerProfileRepository farmerRepository;
 
     private final Map<Long, Product> productRows = new HashMap<>();
+    private final Map<Long, Integer> availableQty = new HashMap<>();
 
     @BeforeEach
     void setUp() {
         productRepository = mock(ProductRepository.class);
+        availability = mock(ProductAvailabilityResolver.class);
         farmerRepository = mock(FarmerProfileRepository.class);
         when(farmerRepository.findById(10L))
                 .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
@@ -77,8 +90,10 @@ class ReorderTest {
                         new OrderStatusHistoryWriter(mock(OrderStatusHistoryRepository.class)),
                         new OrderCodeGenerator(orderRepository, clock),
                         mock(CheckoutQueryRepository.class),
-                        mock(OrderQueryRepository.class),
                         clock,
+                        mock(ProductDailyStockRepository.class),
+                        availability,
+                        mock(OrderQueryRepository.class),
                         mock(NotificationServiceInterface.class),
                         mock(RestockNotifier.class));
         when(productRepository.findAllById(any()))
@@ -90,6 +105,29 @@ class ReorderTest {
                                     id ->
                                             Optional.ofNullable(productRows.get(id))
                                                     .ifPresent(out::add));
+                            return out;
+                        });
+        when(availability.resolve(any()))
+                .thenAnswer(
+                        inv -> {
+                            Map<Long, BigDecimal> requested = inv.getArgument(0);
+                            Map<Long, ProductAvailabilityResolver.Availability> out =
+                                    new HashMap<>();
+                            requested
+                                    .keySet()
+                                    .forEach(
+                                            id ->
+                                                    Optional.ofNullable(availableQty.get(id))
+                                                            .ifPresent(
+                                                                    qty ->
+                                                                            out.put(
+                                                                                    id,
+                                                                                    new ProductAvailabilityResolver
+                                                                                            .Availability(
+                                                                                            NEAREST_DATE,
+                                                                                            qty,
+                                                                                            BigDecimal
+                                                                                                    .TEN))));
                             return out;
                         });
     }
@@ -114,6 +152,9 @@ class ReorderTest {
         return i;
     }
 
+    /**
+     * {@code stock} is the nearest orderable date's quantity, resolved via {@code availability}.
+     */
     private Product product(long id, int stock, ProductStatus status) {
         Product p = new Product();
         p.setId(id);
@@ -121,9 +162,9 @@ class ReorderTest {
         p.setName("P" + id);
         p.setPrice(BigDecimal.TEN);
         p.setUnit("kg");
-        p.setStockQuantity(stock);
         p.setStatus(status);
         productRows.put(id, p);
+        availableQty.put(id, stock);
         return p;
     }
 
@@ -164,7 +205,8 @@ class ReorderTest {
     }
 
     /**
-     * The same "can be bought" rule as placing an order: hidden, paused or sold-out lines drop out.
+     * The same "can be bought" rule as placing an order: hidden, paused, sold-out or no-orderable-
+     * date lines drop out.
      */
     @Test
     void reorderDropsHiddenPausedAndSoldOutProducts() {
@@ -175,6 +217,23 @@ class ReorderTest {
         anOrderOf(CUSTOMER_ID, line(1, 1), line(2, 1), line(3, 1), line(4, 2));
 
         assertThat(service.reorder(CUSTOMER_ID, ORDER_ID)).containsExactly(new CartLine(4L, 2));
+    }
+
+    /** No orderable date within the lookahead (no active template) → the line drops out. */
+    @Test
+    void reorderDropsAProductWithNoOrderableDate() {
+        Product p = new Product();
+        p.setId(1L);
+        p.setFarmerId(10L);
+        p.setName("P1");
+        p.setPrice(BigDecimal.TEN);
+        p.setUnit("kg");
+        p.setStatus(ProductStatus.AVAILABLE);
+        productRows.put(1L, p);
+        // Deliberately no availableQty entry: resolve() returns nothing for it.
+        anOrderOf(CUSTOMER_ID, line(1, 3));
+
+        assertThat(service.reorder(CUSTOMER_ID, ORDER_ID)).isEmpty();
     }
 
     @Test

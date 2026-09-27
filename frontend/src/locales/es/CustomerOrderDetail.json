@@ -14,13 +14,10 @@
     "declined": "Rechazado",
     "cancelled": "Cancelado"
   },
-  "previewLocked": "Vista previa: después de la hora límite",
   "pickup": {
     "title": "Recogida",
     "where": "{{market}}, puesto {{stall}}",
-    "spot": "Del lado del río del mercado, junto al puesto de pan.",
     "slot": "Tu hora",
-    "phone": "Teléfono del puesto",
     "bring": "Lleva",
     "bringText": "{{total}} en efectivo o transferencia en el puesto",
     "directions": "Cómo llegar",
@@ -37,11 +34,24 @@
     "until": "Puedes cambiar cantidades, quitar productos o cancelar hasta las <b>{{cutoff}}</b>. Después de editarlo, {{stall}} vuelve a aprobar el pedido.",
     "edit": "Editar pedido",
     "cancel": "Cancelar pedido",
-    "locked": "La hora límite pasó a las {{cutoff}}. Para cambiarlo, contacta directamente con el puesto al {{phone}}.",
-    "settled": "Este pedido ya no se puede cambiar. Si tienes dudas, contacta directamente con el puesto al {{phone}}."
+    "lockedContact": "El cierre fue a las {{cutoff}}. Para cambiarlo, escribe al puesto.",
+    "settledContact": "Este pedido ya no se puede cambiar. Para preguntar, escribe al puesto.",
+    "cancelFailed": "No pudimos cancelar el pedido. Puede que ya haya pasado el cierre; recarga para ver su estado."
   },
   "notify": {
     "title": "Notificaciones de este pedido",
     "text": "Te avisamos cuando se aceptó. Te avisaremos cuando esté listo, o si el puesto tiene que rechazarlo."
+  },
+  "noun": "pedido",
+  "items": {
+    "title": "Lo que pediste",
+    "line": "{{qty}} {{unit}} × {{price}}",
+    "total": "Total"
+  },
+  "declined": "El puesto rechazó este pedido: {{reason}}",
+  "cancelDialog": {
+    "title": "¿Cancelar este pedido?",
+    "text": "{{stall}} recibe el aviso al momento y los productos vuelven a la venta.",
+    "keep": "Mantener pedido"
   }
 }

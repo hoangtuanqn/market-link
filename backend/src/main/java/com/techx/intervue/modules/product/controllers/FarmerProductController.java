@@ -1,14 +1,18 @@
 package com.techx.intervue.modules.product.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.product.requests.FarmerDailyStockRequest;
 import com.techx.intervue.modules.product.requests.ProductRequest;
 import com.techx.intervue.modules.product.requests.ProductStatusRequest;
+import com.techx.intervue.modules.product.resources.DailyStockResource;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
+import com.techx.intervue.modules.product.services.interfaces.FarmerDailyStockServiceInterface;
 import com.techx.intervue.modules.product.services.interfaces.ProductServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FarmerProductController extends BaseController {
 
     private final ProductServiceInterface products;
+    private final FarmerDailyStockServiceInterface dailyStock;
 
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<FarmerProductResource>>> mine(
@@ -79,5 +84,15 @@ public class FarmerProductController extends BaseController {
             @PathVariable long id,
             @Valid @RequestBody ProductStatusRequest request) {
         return ok(products.setStatus(user.getId(), id, request.status()), "Product status saved.");
+    }
+
+    @PatchMapping("/{id}/daily-stock/{date}")
+    public ResponseEntity<ApiResource<DailyStockResource>> overrideDailyStock(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @PathVariable long id,
+            @PathVariable LocalDate date,
+            @Valid @RequestBody FarmerDailyStockRequest request) {
+        return ok(
+                dailyStock.override(user.getId(), id, date, request), "Stock for that day saved.");
     }
 }

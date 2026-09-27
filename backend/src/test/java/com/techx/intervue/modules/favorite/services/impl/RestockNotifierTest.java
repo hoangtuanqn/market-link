@@ -16,14 +16,25 @@ import com.techx.intervue.modules.notification.resources.NotificationEvent;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-/** FR-041 — "back in stock" means the stock went from zero to something, nothing else. */
+/**
+ * FR-041 — "back in stock" means a product went from "could not be ordered" to "can be ordered",
+ * nothing else. Since the per-date redesign, "can be ordered" is answered per pickup date
+ * (product_daily_stock), not by a single {@code Product.stockQuantity}; {@link
+ * RestockNotifier#afterChange} takes both booleans explicitly so callers can compute them either
+ * from a full {@link ProductAvailabilityResolver} lookup (a product edit) or cheaply from the one
+ * daily-stock row they already hold (an order restoring stock).
+ */
 class RestockNotifierTest {
 
     private static final long PRODUCT_ID = 30L;
@@ -33,6 +44,7 @@ class RestockNotifierTest {
     private FavoriteRepository favorites;
     private FarmerProfileRepository farmers;
     private NotificationServiceInterface notifications;
+    private ProductAvailabilityResolver availability;
     private RestockNotifier notifier;
     private Product product;
     private FarmerProfile farmer;
@@ -42,13 +54,14 @@ class RestockNotifierTest {
         favorites = mock(FavoriteRepository.class);
         farmers = mock(FarmerProfileRepository.class);
         notifications = mock(NotificationServiceInterface.class);
-        notifier = new RestockNotifier(favorites, farmers, notifications);
+        availability = mock(ProductAvailabilityResolver.class);
+        notifier = new RestockNotifier(favorites, farmers, notifications, availability);
 
         product = new Product();
         product.setId(PRODUCT_ID);
         product.setFarmerId(FARMER_PROFILE_ID);
         product.setName("Xà lách xoong");
-        product.setStockQuantity(20);
+        product.setPrice(new BigDecimal("12000"));
         product.setStatus(ProductStatus.AVAILABLE);
         farmer =
                 FarmerProfile.builder()
@@ -71,7 +84,7 @@ class RestockNotifierTest {
 
     @Test
     void notifiesEveryCustomerWhoFavouritedTheProduct() {
-        notifier.afterChange(product, false);
+        notifier.afterChange(product, false, true);
 
         ArgumentCaptor<NotificationEvent> event = ArgumentCaptor.forClass(NotificationEvent.class);
         verify(notifications).dispatch(any(), event.capture());
@@ -82,32 +95,64 @@ class RestockNotifierTest {
     /** 5 → 8 is more stock, not "back in stock": it could already be ordered. */
     @Test
     void staysQuietWhenItCouldAlreadyBeOrdered() {
-        notifier.afterChange(product, true);
+        notifier.afterChange(product, true, true);
 
         verify(notifications, never()).dispatch(any(), any());
     }
 
     @Test
     void staysQuietWhenStockFellToZero() {
-        product.setStockQuantity(0);
-
-        notifier.afterChange(product, true);
+        notifier.afterChange(product, true, false);
 
         verify(notifications, never()).dispatch(any(), any());
     }
 
-    /** "Back in stock" means "can be ordered again": listed, available and with stock left. */
+    /**
+     * "Can be ordered right now" = listed, available, and the nearest orderable date still has
+     * stock — {@link ProductAvailabilityResolver} resolves that nearest date.
+     */
     @Test
-    void orderableMeansListedAvailableAndInStock() {
-        assertThat(RestockNotifier.orderable(product)).isTrue();
+    void isOrderableMeansListedAvailableAndTheNearestDateHasStock() {
+        when(availability.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))))
+                .thenReturn(
+                        Map.of(
+                                PRODUCT_ID,
+                                new ProductAvailabilityResolver.Availability(
+                                        LocalDate.of(2026, 9, 28), 5, new BigDecimal("12000"))));
+        assertThat(notifier.isOrderable(product)).isTrue();
+
         product.setStatus(ProductStatus.SOLD_OUT);
-        assertThat(RestockNotifier.orderable(product)).isFalse();
+        assertThat(notifier.isOrderable(product)).isFalse();
         product.setStatus(ProductStatus.AVAILABLE);
-        product.setStockQuantity(0);
-        assertThat(RestockNotifier.orderable(product)).isFalse();
-        product.setStockQuantity(3);
+
+        when(availability.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))))
+                .thenReturn(Map.of());
+        assertThat(notifier.isOrderable(product)).isFalse();
+    }
+
+    @Test
+    void isOrderableIsFalseWhenTheNearestDateHasZeroStock() {
+        when(availability.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))))
+                .thenReturn(
+                        Map.of(
+                                PRODUCT_ID,
+                                new ProductAvailabilityResolver.Availability(
+                                        LocalDate.of(2026, 9, 28), 0, new BigDecimal("12000"))));
+
+        assertThat(notifier.isOrderable(product)).isFalse();
+    }
+
+    @Test
+    void isOrderableIsFalseForAHiddenProductEvenWithStock() {
+        when(availability.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))))
+                .thenReturn(
+                        Map.of(
+                                PRODUCT_ID,
+                                new ProductAvailabilityResolver.Availability(
+                                        LocalDate.of(2026, 9, 28), 3, new BigDecimal("12000"))));
         product.setHidden(true);
-        assertThat(RestockNotifier.orderable(product)).isFalse();
+
+        assertThat(notifier.isOrderable(product)).isFalse();
     }
 
     /** A farmer who favourited their own product does not get their own bell. */
@@ -116,7 +161,7 @@ class RestockNotifierTest {
         when(favorites.customerIdsFavouritingProduct(PRODUCT_ID))
                 .thenReturn(List.of(7L, FARMER_USER_ID));
 
-        notifier.afterChange(product, false);
+        notifier.afterChange(product, false, true);
 
         assertThat(recipients()).containsExactly(7L);
     }
@@ -124,10 +169,10 @@ class RestockNotifierTest {
     @Test
     void staysQuietForHiddenOrDeletedProducts() {
         product.setHidden(true);
-        notifier.afterChange(product, false);
+        notifier.afterChange(product, false, false);
         product.setHidden(false);
         product.setDeleted(true);
-        notifier.afterChange(product, false);
+        notifier.afterChange(product, false, false);
 
         verify(notifications, never()).dispatch(any(), any());
     }
@@ -135,9 +180,7 @@ class RestockNotifierTest {
     /** FR-064: a paused product has stock but cannot be ordered — no alert yet. */
     @Test
     void staysQuietWhileTheFarmerHasPausedTheProduct() {
-        product.setStatus(ProductStatus.UNAVAILABLE);
-
-        notifier.afterChange(product, false);
+        notifier.afterChange(product, false, false);
 
         verify(notifications, never()).dispatch(any(), any());
     }
@@ -147,14 +190,14 @@ class RestockNotifierTest {
     void staysQuietForASuspendedStall() {
         farmer.setApprovalStatus(ApprovalStatus.SUSPENDED);
 
-        notifier.afterChange(product, false);
+        notifier.afterChange(product, false, true);
 
         verify(notifications, never()).dispatch(any(), any());
     }
 
     @Test
     void theAlertLinksToTheProductAndNamesItAndTheStall() {
-        notifier.afterChange(product, false);
+        notifier.afterChange(product, false, true);
 
         ArgumentCaptor<NotificationEvent> event = ArgumentCaptor.forClass(NotificationEvent.class);
         verify(notifications).dispatch(any(), event.capture());

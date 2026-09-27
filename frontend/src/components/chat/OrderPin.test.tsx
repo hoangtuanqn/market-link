@@ -15,11 +15,15 @@ const summary = {
   status: 'accepted' as const,
   farmerId: 30,
   stallName: 'Cô Tư Garden',
+  marketId: 1,
   marketName: 'Thảo Điền Weekend Market',
   pickupDate: '2026-09-27',
   pickupStart: '07:00',
   pickupEnd: '07:30',
   totalAmount: 56000,
+  cutoffAt: '2026-09-26T12:00:00Z',
+  itemCount: 3,
+  createdAt: '2026-09-25T02:00:00Z',
 };
 
 const renderPin = () =>
@@ -48,14 +52,14 @@ describe('OrderPin', () => {
   it('links a customer to their order', async () => {
     renderPin();
 
-    expect(await screen.findByRole('link')).toHaveAttribute('href', '/orders/ML-0421');
+    expect(await screen.findByRole('link')).toHaveAttribute('href', '/orders/21');
   });
 
   it('links the stall to the order in its own panel', async () => {
     session.user = { id: 3, role: 'farmer' };
     renderPin();
 
-    expect(await screen.findByRole('link')).toHaveAttribute('href', '/farmer/orders/ML-0421');
+    expect(await screen.findByRole('link')).toHaveAttribute('href', '/farmer/orders/21');
   });
 
   /** Review Focus #4: the order can no longer be read (403/404/network) — a fallback line, the bubble stays intact. */

@@ -30,8 +30,11 @@ import com.techx.intervue.modules.order.requests.OrderGroupInput;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.repositories.ProductDailyStockRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
@@ -77,6 +80,7 @@ class OrderNotificationTest {
     private FarmerMarketRepository farmerMarketRepository;
     private PickupSlotRepository slotRepository;
     private ProductRepository productRepository;
+    private ProductDailyStockRepository dailyStockRepository;
     private OrderRepository orderRepository;
     private OrderItemRepository orderItemRepository;
     private OrderStatusHistoryRepository historyRepository;
@@ -94,6 +98,7 @@ class OrderNotificationTest {
         farmerMarketRepository = mock(FarmerMarketRepository.class);
         slotRepository = mock(PickupSlotRepository.class);
         productRepository = mock(ProductRepository.class);
+        dailyStockRepository = mock(ProductDailyStockRepository.class);
         orderRepository = mock(OrderRepository.class);
         orderItemRepository = mock(OrderItemRepository.class);
         historyRepository = mock(OrderStatusHistoryRepository.class);
@@ -112,8 +117,10 @@ class OrderNotificationTest {
                         new OrderStatusHistoryWriter(historyRepository),
                         new OrderCodeGenerator(orderRepository, clock),
                         mock(CheckoutQueryRepository.class),
-                        orderQueries,
                         clock,
+                        dailyStockRepository,
+                        mock(ProductAvailabilityResolver.class),
+                        orderQueries,
                         notifications,
                         mock(RestockNotifier.class));
 
@@ -146,8 +153,18 @@ class OrderNotificationTest {
         order.setCustomerId(CUSTOMER_ID);
         order.setFarmerId(FARMER_PROFILE_ID);
         order.setSlotId(SLOT_ID);
+        order.setPickupDate(PICKUP);
         order.setStatus(status);
         return order;
+    }
+
+    private static ProductDailyStock dailyStock(long productId, int quantity) {
+        ProductDailyStock row = new ProductDailyStock();
+        row.setProductId(productId);
+        row.setStockDate(PICKUP);
+        row.setQuantityAvailable(quantity);
+        row.setUnitPrice(BigDecimal.TEN);
+        return row;
     }
 
     private static OrderListItemResource summary() {
@@ -220,11 +237,12 @@ class OrderNotificationTest {
         product.setName("Rau muống");
         product.setPrice(new BigDecimal("12000"));
         product.setUnit("bó");
-        product.setStockQuantity(10);
         product.setStatus(ProductStatus.AVAILABLE);
         when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(link));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slot));
-        when(productRepository.lockAllById(any())).thenReturn(List.of(product));
+        when(productRepository.findAllById(any())).thenReturn(List.of(product));
+        when(dailyStockRepository.lockByProductIdAndStockDate(PRODUCT_ID, PICKUP))
+                .thenReturn(Optional.of(dailyStock(PRODUCT_ID, 10)));
         when(orderRepository.save(any()))
                 .thenAnswer(
                         inv -> {
@@ -284,7 +302,6 @@ class OrderNotificationTest {
         Order order = orderWithStatus(OrderStatus.PLACED);
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
         when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of());
-        when(productRepository.lockAllById(any())).thenReturn(List.of());
 
         service.decline(FARMER_USER_ID, ORDER_ID, "Hết hàng rồi");
 
@@ -367,9 +384,10 @@ class OrderNotificationTest {
         product.setName("Rau muống");
         product.setPrice(new BigDecimal("12000"));
         product.setUnit("bó");
-        product.setStockQuantity(5);
         product.setStatus(ProductStatus.AVAILABLE);
-        when(productRepository.lockAllById(any())).thenReturn(List.of(product));
+        when(productRepository.findAllById(any())).thenReturn(List.of(product));
+        when(dailyStockRepository.lockByProductIdAndStockDate(PRODUCT_ID, PICKUP))
+                .thenReturn(Optional.of(dailyStock(PRODUCT_ID, 5)));
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(line(PRODUCT_ID, 0))));

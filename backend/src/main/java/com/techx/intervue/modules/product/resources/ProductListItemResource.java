@@ -23,4 +23,31 @@ public record ProductListItemResource(
         String status,
         BigDecimal ratingAvg,
         int ratingCount,
-        int shelfLifeDays) {}
+        int shelfLifeDays) {
+
+    /**
+     * Overwrites {@code stockQuantity}/{@code price} with the numbers for the nearest orderable
+     * pickup date (contract §5, FR-063 daily stock). Used only on public/preview pages, never on
+     * {@code mine()} — a Farmer editing their own product needs the raw reference values, not a
+     * date-scoped number.
+     */
+    public ProductListItemResource withAvailability(int stockQuantity, BigDecimal price) {
+        return new ProductListItemResource(
+                id,
+                name,
+                farmerId,
+                stallName,
+                marketId,
+                marketName,
+                categoryId,
+                categoryName,
+                price,
+                unit,
+                stockQuantity,
+                imageUrl,
+                status,
+                ratingAvg,
+                ratingCount,
+                shelfLifeDays);
+    }
+}

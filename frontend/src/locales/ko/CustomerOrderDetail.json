@@ -14,13 +14,10 @@
     "declined": "거절됨",
     "cancelled": "취소됨"
   },
-  "previewLocked": "미리 보기: 마감 후",
   "pickup": {
     "title": "픽업",
     "where": "{{market}}, {{stall}}번 가게",
-    "spot": "시장 강가 쪽, 빵 가게 옆이에요.",
     "slot": "픽업 시간",
-    "phone": "가게 전화",
     "bring": "준비물",
     "bringText": "가게에서 현금 또는 계좌 이체로 {{total}}",
     "directions": "길 찾기",
@@ -37,11 +34,24 @@
     "until": "<b>{{cutoff}}</b>까지 수량을 바꾸거나 상품을 빼거나 주문을 취소할 수 있어요. 수정하면 {{stall}}에서 주문을 다시 승인해요.",
     "edit": "주문 수정",
     "cancel": "주문 취소",
-    "locked": "마감 시간 {{cutoff}}이(가) 지났어요. 바꾸려면 {{phone}}(으)로 가게에 직접 연락하세요.",
-    "settled": "이 주문은 더 이상 바꿀 수 없어요. 궁금한 점은 {{phone}}(으)로 가게에 직접 연락하세요."
+    "lockedContact": "{{cutoff}}에 마감되었습니다. 변경하려면 가게에 메시지를 보내세요.",
+    "settledContact": "이 주문은 더 이상 변경할 수 없습니다. 문의는 가게에 메시지를 보내세요.",
+    "cancelFailed": "주문을 취소하지 못했습니다. 마감이 지났을 수 있으니 새로고침해 상태를 확인하세요."
   },
   "notify": {
     "title": "이 주문 알림",
     "text": "주문이 수락되었을 때 알려 드렸어요. 준비가 끝나거나 가게가 주문을 거절해야 하면 알려 드려요."
+  },
+  "noun": "주문",
+  "items": {
+    "title": "주문하신 상품",
+    "line": "{{qty}} {{unit}} × {{price}}",
+    "total": "합계"
+  },
+  "declined": "가게가 이 주문을 거절했습니다: {{reason}}",
+  "cancelDialog": {
+    "title": "이 주문을 취소할까요?",
+    "text": "{{stall}}에 바로 알려지고 상품은 다시 판매됩니다.",
+    "keep": "주문 유지"
   }
 }

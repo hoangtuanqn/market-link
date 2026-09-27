@@ -20,7 +20,7 @@ type Props = { orderId: number; compact?: boolean };
 
 /**
  * FR-114: an order pinned to a message. The buyer and the stall owner can read it (the server checks); anyone else sees
- * a fallback line. Order detail pages route by order code, and each role has its own page.
+ * a fallback line. Each role has its own order page, addressed by the numeric order id.
  */
 export default function OrderPin({ orderId, compact }: Props) {
   const { t } = useTranslation('common');
@@ -41,7 +41,8 @@ export default function OrderPin({ orderId, compact }: Props) {
   }
 
   const o = state.data;
-  const to = user?.role === USER_ROLE.FARMER ? `/farmer/orders/${o.orderCode}` : `/orders/${o.orderCode}`;
+  // Order pages take the numeric id, like the backend's notification links and every OrderApi call
+  const to = user?.role === USER_ROLE.FARMER ? `/farmer/orders/${o.orderId}` : `/orders/${o.orderId}`;
 
   return (
     <Link to={to} className={Helper.cn(box, 'hover:border-ink block no-underline')}>

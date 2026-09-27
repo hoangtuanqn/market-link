@@ -90,6 +90,30 @@ class PlaceOrderConcurrencyTest {
         assertThat(stockOf(productId)).isZero();
     }
 
+    /** Two different pickup dates of the same product don't share a reserve. */
+    @Test
+    void orderingOneDateDoesNotTouchAnotherDateOfTheSameProduct() {
+        long productId = givenProductWithStock(5);
+        LocalDate otherDate = PICKUP.plusDays(1);
+        insert(
+                "INSERT INTO product_daily_stock (product_id, stock_date, quantity_available,"
+                        + " unit_price) VALUES (?, ?, 7, 20000)",
+                productId,
+                java.sql.Date.valueOf(otherDate));
+        long slotId = givenSlotWithCapacity(5);
+
+        service.place(someCustomer(), requestFor(productId, 5, slotId));
+
+        assertThat(
+                        jdbc.queryForObject(
+                                "SELECT quantity_available FROM product_daily_stock WHERE"
+                                        + " product_id = ? AND stock_date = ?",
+                                Integer.class,
+                                productId,
+                                java.sql.Date.valueOf(otherDate)))
+                .isEqualTo(7);
+    }
+
     @Test
     void bookedCountNeverExceedsMaxOrders() throws Exception {
         long productId = givenProductWithStock(100);
@@ -186,6 +210,8 @@ class PlaceOrderConcurrencyTest {
         if (farmerId != null) {
             jdbc.update("DELETE FROM orders WHERE farmer_id = ?", farmerId);
         }
+        productIds.forEach(
+                id -> jdbc.update("DELETE FROM product_daily_stock WHERE product_id = ?", id));
         productIds.forEach(id -> jdbc.update("DELETE FROM products WHERE id = ?", id));
         slotIds.forEach(id -> jdbc.update("DELETE FROM pickup_slots WHERE id = ?", id));
         deleteById("farmer_markets", farmerMarketId);
@@ -215,12 +241,17 @@ class PlaceOrderConcurrencyTest {
         long id =
                 insert(
                         "INSERT INTO products (farmer_id, category_id, name, price, unit,"
-                                + " stock_quantity) VALUES (?, ?, ?, 20000, 'kg', ?)",
+                                + " stock_quantity) VALUES (?, ?, ?, 20000, 'kg', 0)",
                         farmerId,
                         categoryId,
-                        "Lô cuối " + tag + " #" + productIds.size(),
-                        stock);
+                        "Lô cuối " + tag + " #" + productIds.size());
         productIds.add(id);
+        insert(
+                "INSERT INTO product_daily_stock (product_id, stock_date, quantity_available,"
+                        + " unit_price) VALUES (?, ?, ?, 20000)",
+                id,
+                java.sql.Date.valueOf(PICKUP),
+                stock);
         return id;
     }
 
@@ -255,7 +286,11 @@ class PlaceOrderConcurrencyTest {
 
     private int stockOf(long productId) {
         return jdbc.queryForObject(
-                "SELECT stock_quantity FROM products WHERE id = ?", Integer.class, productId);
+                "SELECT quantity_available FROM product_daily_stock WHERE product_id = ? AND"
+                        + " stock_date = ?",
+                Integer.class,
+                productId,
+                java.sql.Date.valueOf(PICKUP));
     }
 
     private int bookedCountOf(long slotId) {
