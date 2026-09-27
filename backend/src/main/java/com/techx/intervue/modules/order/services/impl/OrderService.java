@@ -64,6 +64,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -308,10 +309,7 @@ public class OrderService implements OrderServiceInterface {
 
         Map<String, ProductDailyStock> locked = new HashMap<>();
         for (Need n : needed) {
-            int dayOfWeek = n.date().getDayOfWeek().getValue() % 7;
-            dailyStockRepository.materialize(n.productId(), n.date(), dayOfWeek);
-            dailyStockRepository
-                    .lockByProductIdAndStockDate(n.productId(), n.date())
+            materializeAndLock(n.productId(), n.date())
                     .ifPresent(
                             row ->
                                     locked.put(
@@ -643,15 +641,21 @@ public class OrderService implements OrderServiceInterface {
             ProductDailyStock row =
                     dailyStockRepository
                             .lockByProductIdAndStockDate(productId, order.getPickupDate())
-                            .orElseThrow();
+                            .orElse(null);
             int before = item.getQuantity();
             int after = wanted.getOrDefault(productId, 0);
             int delta = after - before;
 
-            if (delta > 0 && !canRaiseBy(p, row, delta)) {
+            if (delta > 0 && row == null) {
+                // Placed before per-date stock existed: the extra units still come from this
+                // date, created from the weekly template exactly as place() does
+                row = materializeAndLock(productId, order.getPickupDate()).orElse(null);
+            }
+            if (delta > 0 && (row == null || !canRaiseBy(p, row, delta))) {
                 throw new OutOfStockException(productId, p == null ? null : p.getName());
             }
-            if (delta != 0) {
+            // No row and not raising: nothing was taken from this date, nothing to give back
+            if (delta != 0 && row != null) {
                 boolean wasOrderable = orderableOn(p, row);
                 row.setQuantityAvailable(row.getQuantityAvailable() - delta);
                 // FR-041: lowering a quantity gives stock back
@@ -694,6 +698,12 @@ public class OrderService implements OrderServiceInterface {
             orderRepository.flush();
         }
         return detail(userId, orderId);
+    }
+
+    /** The same create-if-missing-then-lock step {@link #lockDailyStock} runs for every line. */
+    private Optional<ProductDailyStock> materializeAndLock(Long productId, LocalDate date) {
+        dailyStockRepository.materialize(productId, date, date.getDayOfWeek().getValue() % 7);
+        return dailyStockRepository.lockByProductIdAndStockDate(productId, date);
     }
 
     /**
@@ -814,6 +824,11 @@ public class OrderService implements OrderServiceInterface {
      * when that date's row crossed "cannot be ordered" → "can be ordered", for a product still
      * listed and available. An unlocked {@code Product} read is enough here: this path never
      * mutates the product row, only the daily-stock row.
+     *
+     * <p>No row for that date means the order was placed before per-date stock existed (the seed's
+     * orders, or a database migrated from the shared pool): nothing was taken from that date, so
+     * nothing is given back — creating the row here would hand out the template quantity plus this
+     * order's units.
      */
     private void restoreDailyStock(LocalDate pickupDate, List<OrderItem> items) {
         Map<Long, Integer> qty =
@@ -826,7 +841,10 @@ public class OrderService implements OrderServiceInterface {
             ProductDailyStock row =
                     dailyStockRepository
                             .lockByProductIdAndStockDate(productId, pickupDate)
-                            .orElseThrow();
+                            .orElse(null);
+            if (row == null) {
+                continue;
+            }
             Product p = products.get(productId);
             boolean wasOrderable = orderableOn(p, row);
             row.setQuantityAvailable(row.getQuantityAvailable() + qty.get(productId));
