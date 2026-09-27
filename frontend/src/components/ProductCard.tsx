@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import { SHOW_WIP } from '@/config/wip';
 import { PRODUCT_STATUS } from '@/constants/enums';
+import { Cart } from '@/lib/cart';
 import { units } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
@@ -84,15 +84,25 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
             {stock}
           </span>
         </div>
-        {/* The cart and the in-stock notice have no API wired up yet → shown in dev only (config/wip.ts). */}
-        {SHOW_WIP &&
-          (soldOut ? (
-            <Button variant="secondary" size="sm">
-              {t('product.notifyMe')}
-            </Button>
-          ) : (
-            <Button size="sm">{t('product.addToCart')}</Button>
-          ))}
+        {/* Restock alerts go through Favorites (Task 5), not a notify-me button here. */}
+        {soldOut ? null : (
+          <Button
+            size="sm"
+            onClick={() =>
+              Cart.add({
+                productId: product.id,
+                name: product.name,
+                unit: product.unit,
+                price: product.price,
+                max: product.stock,
+                farmerId: product.farmerId ?? 0,
+                stallName: product.stall,
+              })
+            }
+          >
+            {t('product.addToCart')}
+          </Button>
+        )}
       </div>
     </Card>
   );

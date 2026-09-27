@@ -21,6 +21,7 @@ import { reviewTags, reviewsForProduct } from '@/data/catalog';
 import { demoTierOf } from '@/data/tiers';
 import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
+import { Cart } from '@/lib/cart';
 import { perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
@@ -169,27 +170,34 @@ const ProductDetailPage = () => {
               )}
             </div>
             <p className="text-small text-ink-muted">{t('stockUpdated')}</p>
-            {/* The cart and the in-stock notice have no API wired up: the button only shows a toast → dev only (config/wip.ts). */}
-            {SHOW_WIP &&
-              (soldOut ? (
-                <Button variant="secondary" className="w-fit">
-                  {t('notifyMe')}
+            {/* Restock alerts go through Favorites (Task 5), not a notify-me button here. */}
+            {soldOut ? null : (
+              <div className="flex flex-wrap items-center gap-6">
+                <QtyStepper value={qty} max={p.stockQuantity} unit={p.unit} onChange={setPickedQty} />
+                <Button
+                  onClick={() => {
+                    Cart.add(
+                      {
+                        productId: p.id,
+                        name: p.name,
+                        unit: p.unit,
+                        price: Number(p.price),
+                        max: p.stockQuantity,
+                        farmerId: p.farmerId,
+                        stallName: p.stallName,
+                      },
+                      qty,
+                    );
+                    Notification.success({
+                      title: t('added.title'),
+                      text: t('added.text', { qty: units(qty, p.unit), name: p.name.toLowerCase() }),
+                    });
+                  }}
+                >
+                  {t('addToCart')}
                 </Button>
-              ) : (
-                <div className="flex flex-wrap items-center gap-6">
-                  <QtyStepper value={qty} max={p.stockQuantity} unit={p.unit} onChange={setPickedQty} />
-                  <Button
-                    onClick={() =>
-                      Notification.success({
-                        title: t('added.title'),
-                        text: t('added.text', { qty: units(qty, p.unit), name: p.name.toLowerCase() }),
-                      })
-                    }
-                  >
-                    {t('addToCart')}
-                  </Button>
-                </div>
-              ))}
+              </div>
+            )}
             <p className="text-small text-ink-muted">{t('payNote', { price: perUnit(Number(p.price), p.unit) })}</p>
           </Card>
         </div>
