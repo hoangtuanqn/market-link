@@ -10,13 +10,8 @@
   },
   "reviewFilterLabel": "Saring ulasan",
   "reviewFilter": {
-    "reported": "Dilaporkan",
     "lowRated": "Bernilai 1 atau 2",
     "newest": "Terbaru"
-  },
-  "report": {
-    "title": "Dilaporkan {{by}} pada {{date}}: “{{quote}}”",
-    "text": "Menyembunyikannya membuat ulasan hilang dari halaman produk dan halaman lapak. Pelanggan diberi tahu alasannya."
   },
   "recentlyListed": "Produk yang baru dipasang",
   "search": {
@@ -37,11 +32,9 @@
     "view": "Lihat",
     "hideReview": "Sembunyikan ulasan",
     "hideListing": "Sembunyikan iklan",
-    "keepVisible": "Biarkan tampil",
     "customerAccount": "Akun pelanggan",
     "unhide": "Tampilkan lagi",
-    "unhidden": "Butir ini tampil kembali.",
-    "dismissed": "Laporan diabaikan. Ulasan tetap tampil."
+    "unhidden": "Butir ini tampil kembali."
   },
   "hide": {
     "title": {
@@ -71,7 +64,8 @@
     "text": "Produk dan ulasan yang dilaporkan sampai ke sini supaya Anda baca dulu sebelum menyembunyikan apa pun."
   },
   "error": {
-    "noun": "daftar produk"
+    "noun": "daftar produk",
+    "reviewsNoun": "reviews"
   },
   "messages": {
     "boundary": "Anda hanya dapat membaca pesan yang dilaporkan, ditambah paling banyak lima pesan di tiap sisi sebagai konteks. Bagian lain percakapan tidak terbuka bagi admin.",

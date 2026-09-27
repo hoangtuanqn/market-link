@@ -1,47 +1,48 @@
 {
   "overline": "แพลตฟอร์ม · {{year}}",
   "title": "MarketLink วันนี้",
-  "vs": "เทียบกับ {{month}}",
-  "tilesNote": "{{now}} จนถึงตอนนี้ วางคู่กับ {{prev}} แตะช่องไหนก็เปิดรายละเอียดเบื้องหลังตัวเลขนั้นได้",
+  "noun": "dashboard",
   "kpi": {
     "farmers": "เกษตรกร",
     "farmersNote": "รออนุมัติ {{waiting}} ราย · ระงับ {{suspended}} ราย",
     "farmersLink": "ตรวจใบสมัคร",
     "customers": "ลูกค้า",
-    "customersNote": "เดือนนี้สมัครใหม่ {{count}} คน",
     "customersLink": "เปิดรายชื่อลูกค้า",
     "markets": "ตลาด",
-    "marketsNote": "เปิดทำการทั้งหมด",
     "marketsLink": "เปิดรายชื่อตลาด",
     "orders": "คำสั่งซื้อ",
     "ordersNote": "สัปดาห์นี้ {{week}} รายการ · เสร็จสิ้น {{total}}",
     "ordersLink": "เปิดรายการคำสั่งซื้อ"
   },
-  "revenue": {
-    "title": "ยอดขายรายวัน",
-    "note": "คำสั่งซื้อที่เสร็จสิ้น หน่วยล้าน ₫ {{now}} เทียบกับ {{prev}}",
-    "caption": "ยอดขายรายวันของ {{now}} เทียบกับ {{prev}} หน่วยล้านด่ง",
-    "axis": "วันที่ในเดือน",
-    "reports": "ดูรายงานทั้งหมด"
-  },
   "attention": {
     "title": "เรื่องที่ต้องจัดการ",
+    "farmers_one": "Farmer application waiting",
     "farmers_other": "ใบสมัครเกษตรกรรออนุมัติ",
+    "reported_one": "message reported, not yet reviewed",
     "reported_other": "รีวิวที่ร้านค้ารายงานเข้ามา",
-    "feedback_other": "ข้อเสนอแนะที่ยังไม่ได้ตอบ หนึ่งในนั้นเป็นข้อผิดพลาด",
-    "announcements_other": "ประกาศที่กำลังแสดง Thảo Điền ปิด 04/10"
+    "feedback_one": "new feedback message",
+    "feedback_other": "ข้อเสนอแนะที่ยังไม่ได้ตอบ หนึ่งในนั้นเป็นข้อผิดพลาด"
   },
   "byMarket": {
     "title": "คำสั่งซื้อสัปดาห์นี้แยกตามตลาด",
-    "link": "คำสั่งซื้อทั้งหมด",
-    "suffix": "รายการ"
+    "noun": "revenue by market",
+    "empty": {
+      "title": "No completed orders yet",
+      "text": "Revenue by market appears once a market has a completed order."
+    }
   },
   "latest": {
     "title": "คำสั่งซื้อล่าสุดทั้งแพลตฟอร์ม",
-    "readOnly": "อ่านอย่างเดียว ผู้ดูแลระบบไม่เปลี่ยนสถานะคำสั่งซื้อ"
+    "noun": "orders",
+    "readOnly": "อ่านอย่างเดียว ผู้ดูแลระบบไม่เปลี่ยนสถานะคำสั่งซื้อ",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders placed anywhere on the platform will show up here."
+    }
   },
   "col": {
     "order": "คำสั่งซื้อ",
+    "customer": "Customer",
     "stall": "ร้านค้า",
     "market": "ตลาด",
     "pickup": "รับสินค้า",

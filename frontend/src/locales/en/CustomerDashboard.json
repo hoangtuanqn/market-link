@@ -1,8 +1,14 @@
 {
-  "greeting_one": "Hi {{name}}, {{count}} pickup this weekend",
-  "greeting_other": "Hi {{name}}, {{count}} pickups this weekend",
-  "intro": "One order is still waiting for the stall to confirm. Everything else is on track.",
+  "greeting_one": "Hi {{name}}, {{count}} pickup coming up",
+  "greeting_other": "Hi {{name}}, {{count}} pickups coming up",
+  "intro": "Here is what is coming up, and what is new from the stalls you follow.",
   "browseMarkets": "Browse this weekend's markets",
+  "noun": {
+    "orders": "orders",
+    "favorites": "favorites",
+    "notifications": "notifications",
+    "products": "products"
+  },
   "cards": {
     "upcoming_one": "{{count}} upcoming order",
     "upcoming_other": "{{count}} upcoming orders",
@@ -17,7 +23,7 @@
     "markets_other": "{{count}} markets",
     "unread_one": "{{count}} unread notification",
     "unread_other": "{{count}} unread notifications",
-    "unreadText": "An order is ready, and goat yogurt is back",
+    "unreadText": "Order updates and stall replies land here",
     "account": "Account"
   },
   "sell": {
@@ -30,5 +36,15 @@
   "nextPickups": "Next pickups",
   "allOrders": "All my orders",
   "newFromFavorites": "New this week from your favorite stalls",
-  "favorites": "Favorites"
+  "favorites": "Favorites",
+  "empty": {
+    "pickups": {
+      "title": "No pickups coming up",
+      "text": "Orders that are placed, accepted or ready for pickup show up here."
+    },
+    "favorites": {
+      "title": "No favorite products yet",
+      "text": "Save products you like and new stock from them shows up here."
+    }
+  }
 }

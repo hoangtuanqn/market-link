@@ -19,8 +19,9 @@ import org.springframework.stereotype.Repository;
 public class FavoriteQueryRepository {
 
     /**
-     * available: a stall is approved; a product is on sale (not deleted, not hidden, available,
-     * stock left) at an approved stall; a market is open.
+     * available: a stall is approved; a product is on sale (not deleted, not hidden, available) at
+     * an approved stall; a market is open. Whether a product still has stock is per pickup date
+     * since FR-063, so FavoriteService settles that part, not this statement.
      */
     public static final String LIST_SQL =
             """
@@ -40,7 +41,7 @@ public class FavoriteQueryRepository {
                    CASE fv.target_type
                         WHEN 'farmer' THEN fp.approval_status = 'approved'
                         WHEN 'product' THEN p.is_deleted = FALSE AND p.is_hidden = FALSE
-                                            AND p.status = 'available' AND p.stock_quantity > 0
+                                            AND p.status = 'available'
                                             AND pf.approval_status = 'approved'
                         ELSE m.is_active = TRUE END AS available
             FROM favorites fv

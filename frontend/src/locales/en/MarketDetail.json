@@ -5,10 +5,6 @@
   },
   "intro_one": "{{count}} stall. Each stall closes its own orders 12 to 24 hours before pickup. Pick up at the stall and pay the Farmer directly.",
   "intro_other": "{{count}} stalls. Each stall closes its own orders 12 to 24 hours before pickup. Pick up at the stall and pay the Farmer directly.",
-  "toast": {
-    "saved": "Saved {{name}}.",
-    "removed": "Removed {{name}} from favorites."
-  },
   "save": {
     "on": "Saved market",
     "off": "Save market"

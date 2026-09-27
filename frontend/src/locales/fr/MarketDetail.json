@@ -5,10 +5,6 @@
   },
   "intro_one": "{{count}} stand. Chaque stand clôt ses commandes 12 à 24 heures avant le retrait. Retirez au stand et payez directement le producteur.",
   "intro_other": "{{count}} stands. Chaque stand clôt ses commandes 12 à 24 heures avant le retrait. Retirez au stand et payez directement le producteur.",
-  "toast": {
-    "saved": "{{name}} enregistré.",
-    "removed": "{{name}} retiré des favoris."
-  },
   "save": {
     "on": "Marché enregistré",
     "off": "Enregistrer le marché"

@@ -5,7 +5,6 @@
     "browse": "ดูสินค้า"
   },
   "breadcrumb": "สินค้า",
-  "photo": "รูปของ {{name}}",
   "favorite": {
     "add": "เพิ่มในรายการโปรด: {{name}}",
     "remove": "นำออกจากรายการโปรด: {{name}}"
@@ -36,6 +35,9 @@
   "details": {
     "title": "รายละเอียดสินค้า",
     "soldPer": "ขายต่อ",
+    "shelfLife": "Stays fresh for",
+    "shelfLifeValue_one": "{{count}} day",
+    "shelfLifeValue_other": "{{count}} days",
     "category": "หมวดหมู่",
     "stall": "ร้าน",
     "market": "ตลาด"
@@ -64,7 +66,10 @@
     "write": "เขียนรีวิว",
     "writeNote": "เขียนได้เมื่อคำสั่งซื้อที่มีสินค้านี้เสร็จสมบูรณ์",
     "summary_one": "{{count}} รีวิว ทั้งหมดจากคำสั่งซื้อที่เสร็จสมบูรณ์",
-    "summary_other": "{{count}} รีวิว ทั้งหมดจากคำสั่งซื้อที่เสร็จสมบูรณ์"
+    "summary_other": "{{count}} รีวิว ทั้งหมดจากคำสั่งซื้อที่เสร็จสมบูรณ์",
+    "emptyTitle": "No reviews yet",
+    "emptyText": "Be the first to review this product once your order is completed.",
+    "noun": "reviews"
   },
   "similar": {
     "title": "{{name}} ที่ร้านอื่นสุดสัปดาห์นี้",
@@ -74,12 +79,6 @@
   },
   "also": {
     "title": "สินค้าอื่นจาก {{stall}} สัปดาห์นี้"
-  },
-  "report": {
-    "sentTitle": "ส่งรายงานแล้ว",
-    "sentText": "ผู้ดูแลจะตรวจสอบรายการนี้",
-    "button": "รายงานรายการนี้",
-    "note": "ราคาผิด รูปผิด หรือสิ่งที่ไม่ควรอยู่ในตลาดเกษตรกร"
   },
   "error": {
     "noun": "สินค้า"

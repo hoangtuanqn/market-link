@@ -217,7 +217,8 @@
     "markets": "Märkte werden geladen"
   },
   "logo": {
-    "home": "MarketLink — Startseite"
+    "home": "MarketLink — Startseite",
+    "slogan": "Noch da, wenn Sie ankommen"
   },
   "map": {
     "attribution": "© {{link}}-Mitwirkende",
@@ -270,7 +271,15 @@
     "cancel": "Bestellung stornieren",
     "reviewed": "Sie haben diese Bestellung bewertet",
     "review": "Stand & Produkte bewerten",
-    "reorder": "Erneut bestellen"
+    "reorder": "Erneut bestellen",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "Aufgegeben",
@@ -454,6 +463,8 @@
     "photoAlt": "Foto aus Antrag {{n}}"
   },
   "notify": {
+    "notificationsEmpty": "Noch keine Benachrichtigungen.",
+    "notificationsError": "Benachrichtigungen konnten nicht geladen werden.",
     "open": "Öffnen",
     "prompt": {
       "title": "Benachrichtigungen einschalten",
@@ -529,12 +540,153 @@
     "admin": {
       "title": "Benachrichtigungen",
       "intro": "Neue Farmer-Anträge, die auf Ihre Prüfung warten."
-    },
-    "notificationsEmpty": "Noch keine Benachrichtigungen.",
-    "notificationsError": "Benachrichtigungen konnten nicht geladen werden."
+    }
   },
-  "comingSoon": {
-    "title": "Diese Seite ist noch nicht verfügbar",
-    "text": "Wir bauen sie noch. Alles andere im Menü funktioniert wie gewohnt."
+  "assistant": {
+    "open": "Assistent fragen",
+    "close": "Assistent schließen",
+    "fullPage": "Ganze Seite öffnen",
+    "note": "Die Antworten stammen aus den Daten von MarketLink.",
+    "newChat": "Neues Gespräch",
+    "loading": "Gespräch wird geladen…",
+    "loadErrorTitle": "Frühere Nachrichten konnten nicht geladen werden",
+    "loadErrorText": "Prüfe deine Verbindung und versuche es erneut. Neue Fragen kannst du trotzdem stellen.",
+    "emptyTitle": "Frag mich zu MarketLink",
+    "emptyText": "Ich finde Produkte auf allen Märkten, nenne Öffnungs- und Abholzeiten oder erkläre, wie Bestellen funktioniert.",
+    "thinking": "Wird nachgeschlagen…",
+    "sendError": "Der Assistent konnte nicht antworten. Deine Nachricht steht wieder im Feld, sende sie erneut.",
+    "message": "Nachricht",
+    "placeholder": "Frag nach einem Produkt, einem Markt oder dem Bestellen",
+    "send": "Senden",
+    "sending": "Wird gesendet…",
+    "aiTools": "KI · {{tools}}",
+    "result": {
+      "product": "Produkt",
+      "market": "Markt",
+      "farmer": "Stand"
+    },
+    "suggest": {
+      "find": "Wo kaufe ich dieses Wochenende Tomaten?",
+      "hours": "Wann öffnet der Markt Bến Thành?",
+      "stalls": "Welche Stände sind samstags auf dem Markt Thảo Điền?",
+      "cancel": "Wie storniere ich eine Bestellung?"
+    }
+  },
+  "tour": {
+    "next": "Weiter",
+    "back": "Zurück",
+    "done": "Fertig",
+    "skip": "Tour überspringen",
+    "progress": "{{current}} von {{total}}",
+    "steps": {
+      "customerWelcome": {
+        "title": "Willkommen bei MarketLink",
+        "body": "Reserviere frische Erzeugnisse bei Bauern auf den Wochenmärkten in Ho-Chi-Minh-Stadt und hole sie an ihrem Stand ab. Diese kurze Tour zeigt dir das Wichtigste."
+      },
+      "customerMarkets": {
+        "title": "Märkte ansehen",
+        "body": "Sieh dir jeden Markt, seine Öffnungszeiten und die Stände dort an."
+      },
+      "customerProducts": {
+        "title": "Produkte finden",
+        "body": "Filtere nach Kategorie, Preis und Markt. Jedes Angebot zeigt, wie viel diese Woche noch übrig ist."
+      },
+      "customerMap": {
+        "title": "Marktkarte",
+        "body": "Finde die nächstgelegenen Märkte und lass dir den Weg in OpenStreetMap zeigen."
+      },
+      "customerSearch": {
+        "title": "Suche",
+        "body": "Suche ein Produkt, einen Stand oder einen Markt nach Namen."
+      },
+      "customerCart": {
+        "title": "Warenkorb",
+        "body": "Lege Produkte hinein, wähle eine Abholzeit am Stand und gib deine Bestellung auf."
+      },
+      "customerOrders": {
+        "title": "Deine Bestellungen",
+        "body": "Verfolge jede Bestellung von aufgegeben über angenommen und bereit bis abgeschlossen. Der Bauer bestätigt sie, bevor du losgehst."
+      },
+      "customerFavorites": {
+        "title": "Favoriten",
+        "body": "Speichere Stände und Produkte, die dir gefallen, um sie schnell wiederzufinden."
+      },
+      "customerMessages": {
+        "title": "Nachrichten",
+        "body": "Schreibe einem Bauern zu einem Produkt oder einer Bestellung."
+      },
+      "customerNotifications": {
+        "title": "Benachrichtigungen",
+        "body": "Hier kommen Bestellupdates und Ankündigungen der Märkte an."
+      },
+      "customerAccount": {
+        "title": "Dein Konto",
+        "body": "Bearbeite dein Profil, ändere Einstellungen wie Sprache und Währung oder bewirb dich als Bauer."
+      },
+      "customerMenu": {
+        "title": "Menü",
+        "body": "Märkte, Produkte, Bestellungen und dein Konto findest du in diesem Menü."
+      },
+      "customerDone": {
+        "title": "Alles bereit",
+        "body": "Wähle zuerst einen Markt in deiner Nähe. Deine Einstellungen kannst du jederzeit ändern."
+      },
+      "farmerWelcome": {
+        "title": "Willkommen in deinem Standbereich",
+        "body": "Hier führst du deinen Stand auf MarketLink. Ein kurzer Blick auf jeden Bereich."
+      },
+      "farmerOverview": {
+        "title": "Übersicht",
+        "body": "Die heutigen Bestellungen, Abholungen und Verkäufe auf einen Blick."
+      },
+      "farmerOrders": {
+        "title": "Neue Bestellungen",
+        "body": "Nimm neue Bestellungen an oder lehne sie ab und markiere sie bei Abholung als bereit und abgeschlossen."
+      },
+      "farmerSlots": {
+        "title": "Abholzeiten",
+        "body": "Lege die Zeitfenster fest, in denen Kunden ihre Bestellungen an deinem Stand abholen können."
+      },
+      "farmerStock": {
+        "title": "Bestand dieser Woche",
+        "body": "Aktualisiere, wie viel du von jedem Produkt diese Woche verkaufen kannst."
+      },
+      "farmerProducts": {
+        "title": "Produkte",
+        "body": "Füge Produkte mit Fotos, Preisen und Einheiten hinzu oder blende nicht mehr verkaufte aus."
+      },
+      "farmerStall": {
+        "title": "Stand und Abholung",
+        "body": "Bearbeite dein Standprofil und wähle die Märkte und Tage, an denen du da bist."
+      },
+      "farmerReviews": {
+        "title": "Bewertungen",
+        "body": "Lies die Bewertungen, die Kunden nach der Abholung hinterlassen."
+      },
+      "farmerHistory": {
+        "title": "Verkaufsverlauf",
+        "body": "Sieh dir vergangene Bestellungen und die Entwicklung deiner Verkäufe an."
+      },
+      "farmerMessages": {
+        "title": "Nachrichten",
+        "body": "Beantworte Kundenfragen zu Produkten und Bestellungen."
+      },
+      "farmerNotifications": {
+        "title": "Benachrichtigungen",
+        "body": "Neue Bestellungen und Neuigkeiten vom MarketLink-Team kommen hier an."
+      },
+      "farmerSettings": {
+        "title": "Einstellungen",
+        "body": "Ändere Sprache, Währung und deine Standardwerte für den Verkauf."
+      },
+      "farmerDone": {
+        "title": "Dein Stand ist bereit",
+        "body": "Prüfe zuerst den Bestand dieser Woche und deine Abholzeiten."
+      },
+      "dashboardMenu": {
+        "title": "Menü",
+        "body": "Öffne das Menü, um jeden Bereich zu erreichen."
+      }
+    }
   }
 }

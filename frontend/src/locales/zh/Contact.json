@@ -7,9 +7,11 @@
     "phone": "电话",
     "address": "地址",
     "hours": "服务时间",
-    "toAdd": "待补充",
+    "emailValue": "contact@marketlink.vn",
+    "phoneValue": "+84 90 123 4567",
     "addressValue": "待补充。地图上的标记是第一郡的临时位置。",
-    "hoursValue": "周一至周五，09:00 – 17:00"
+    "hoursValue": "周一至周五，09:00 – 17:00",
+    "toAdd": "待补充"
   },
   "feedback": {
     "title": "发现问题或有好点子？",

@@ -5,15 +5,33 @@
   "stalls_one": "{{count}} 个摊位",
   "stalls_other": "{{count}} 个摊位",
   "intro": "来自 {{stalls}} 的 {{products}}。为每个摊位选择取货时间，然后下单。",
+  "empty": {
+    "title": "Your cart is empty",
+    "text": "Add products from a stall's page and they show up here, split by stall.",
+    "cta": "Browse products"
+  },
+  "noun": "cart",
+  "slotsNoun": "pickup times",
   "split": {
-    "title": "您的购物车将拆分为 2 个订单，分别在 2 个不同的摊位。",
+    "title_one": "Your cart will be split into {{count}} order at {{count}} stall.",
+    "title_other": "Your cart will be split into {{count}} orders at {{count}} stalls.",
     "text": "每个摊位有自己的取货时间和截单时间，并分别接受订单。取货时向各摊位付款。"
+  },
+  "market": "Market",
+  "noSlots": {
+    "title": "No pickup times yet",
+    "text": "This stall has not opened any pickup slots for this market. Try again later or remove this stall's items."
+  },
+  "problem": {
+    "out_of_stock": "One or more items have less stock than you asked for.",
+    "sold_out": "One or more items are sold out.",
+    "unavailable": "One or more items are no longer for sale.",
+    "stall_suspended": "This stall is not taking orders right now."
   },
   "changeTime": "更改在 {{stall}} 的取货时间",
   "pickupDay": "取货日期",
   "pickupDayAt": "在 {{stall}} 的取货日期",
   "pickupTime": "取货时间 · {{day}} {{date}} · 时段 {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} 在时段开始前 {{hours}} 小时截单。{{slotDay}} {{slot}} 的时段，截单时间为 {{cutoffDay}} {{cutoff}}。",
   "summary": {
     "title": "取货时在摊位付款",
     "order": "订单 {{n}} · {{stall}}",
@@ -23,8 +41,11 @@
     "label": "给摊位的备注",
     "placeholder": "例如：请把每把分小一点"
   },
-  "place": "提交 2 个订单",
-  "ready": "两个摊位都已选好取货时间。每个摊位各自确认订单。",
+  "place_one": "Place {{count}} order",
+  "place_other": "Place {{count}} orders",
+  "placing": "Placing your orders…",
+  "ready_one": "Your stall has a pickup time. It confirms your order.",
+  "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "请选择在 {{stall}} 的取货时间后再下单。",
   "stockNote": "下单后，库存会立即从摊位的数量中扣除。不支持在线支付。"
 }

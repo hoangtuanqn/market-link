@@ -3,6 +3,7 @@ package com.techx.intervue.modules.order.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
@@ -222,7 +223,9 @@ class OrderModifyTest {
                 "2026-09-28T18:00:00Z",
                 new BigDecimal("39000"),
                 1,
-                "2026-09-26T02:00:00Z");
+                "2026-09-26T02:00:00Z",
+                7L,
+                "Khách 7");
     }
 
     private static OrderDetailRow aDetailRow() {
@@ -399,6 +402,81 @@ class OrderModifyTest {
         assertThat(rowA.getQuantityAvailable()).isEqualTo(7);
         assertThat(itemA.getQuantity()).isEqualTo(5);
         assertThat(order.getTotalAmount()).isEqualByComparingTo(new BigDecimal("50"));
+    }
+
+    /**
+     * An order placed before per-date stock existed has no product_daily_stock row for its pickup
+     * date. Lowering it gives nothing back (nothing was taken from that date) and must not fail
+     * with a 500.
+     */
+    @Test
+    void modifyLoweringAnOrderPlacedBeforePerDateStockLeavesStockAlone() {
+        Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem itemA = item(PRODUCT_A, 5, TEN);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
+        when(productRepository.findAllById(any()))
+                .thenReturn(List.of(product(PRODUCT_A, ProductStatus.AVAILABLE)));
+        when(dailyStockRepository.lockByProductIdAndStockDate(PRODUCT_A, PICKUP))
+                .thenReturn(Optional.empty());
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        service.modifyItems(
+                CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));
+
+        assertThat(itemA.getQuantity()).isEqualTo(2);
+        assertThat(order.getTotalAmount()).isEqualByComparingTo(new BigDecimal("20"));
+        verify(dailyStockRepository, never()).materialize(any(), any(), anyInt());
+    }
+
+    /**
+     * Raising the same kind of order needs the extra units from this date: the row is created from
+     * the weekly template first, exactly like placing an order does, then the difference is taken.
+     */
+    @Test
+    void modifyRaisingAnOrderPlacedBeforePerDateStockCreatesTheRowFirst() {
+        Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem itemA = item(PRODUCT_A, 2, TEN);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
+        when(productRepository.findAllById(any()))
+                .thenReturn(List.of(product(PRODUCT_A, ProductStatus.AVAILABLE)));
+        ProductDailyStock created = dailyStock(PRODUCT_A, 30);
+        when(dailyStockRepository.lockByProductIdAndStockDate(PRODUCT_A, PICKUP))
+                .thenReturn(Optional.empty(), Optional.of(created));
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        service.modifyItems(
+                CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 5))));
+
+        // 29/09/2026 is a Tuesday = 2
+        verify(dailyStockRepository).materialize(PRODUCT_A, PICKUP, 2);
+        assertThat(created.getQuantityAvailable()).isEqualTo(27);
+        assertThat(itemA.getQuantity()).isEqualTo(5);
+    }
+
+    /** No weekly template covers that weekday: raising is refused (409), the order is unchanged. */
+    @Test
+    void modifyRaisingWhenNoTemplateCoversThePickupDayIs409() {
+        Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem itemA = item(PRODUCT_A, 2, TEN);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(itemA));
+        when(productRepository.findAllById(any()))
+                .thenReturn(List.of(product(PRODUCT_A, ProductStatus.AVAILABLE)));
+        when(dailyStockRepository.lockByProductIdAndStockDate(PRODUCT_A, PICKUP))
+                .thenReturn(Optional.empty());
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+
+        assertThatThrownBy(
+                        () ->
+                                service.modifyItems(
+                                        CUSTOMER_ID,
+                                        ORDER_ID,
+                                        new ModifyOrderRequest(
+                                                List.of(new CartLine(PRODUCT_A, 5)))))
+                .isInstanceOf(OutOfStockException.class);
+        assertThat(itemA.getQuantity()).isEqualTo(2);
     }
 
     /** order_items loses the dropped line, and its stock is returned in full. */

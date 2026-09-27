@@ -14,7 +14,7 @@ This folder is the source of truth for how MarketLink looks and reads. Every pag
 | `frontend/src/styles/marketlink-theme.css`             | Tokens as CSS variables + Tailwind v4 `@theme` (generated from `tokens.json`)                         |
 | `frontend/src/styles/marketlink-components.css`        | The `ml-*` component classes (generated from the design system)                                       |
 | `frontend/src/lib/format.ts`                           | `money()`, `units()`, `formatDate()`, `formatTime()`, `weekday()`                                     |
-| `frontend/public/brand/`                               | `marketlink-mark.svg` (brand ink) and `marketlink-mark-light.svg` (on-board ink)                      |
+| `frontend/public/brand/`                               | `marketlink-mark.svg` (green arch), `marketlink-mark-light.svg` (cream arch), `marketlink-mark-mono.svg` (single ink)               |
 | `frontend/index.html`                                  | Loads Patrick Hand + Chivo from Google Fonts (Vietnamese subset included)                             |
 
 ## Using it in code
@@ -65,6 +65,7 @@ MarketLink connects Farmers at local farmers markets with shoppers who pre-order
 - Handwriting (`font-hand`) is the voice of the stall and the market: market names, prices, "Fresh today", Farmer notes, the dashboard greeting ("Morning, Cô Tư"). Print (`font-sans`) is the voice of the system: buttons, forms, order status, errors, tables. Never set buttons, form labels or error messages in handwriting.
 - When an action is locked, always give the reason: "Cutoff passed at 19:00 25/09. To change it, contact the stall directly." Never leave a grey button unexplained.
 - Mention paying at the stall wherever a total appears: "Pay at the stall on pickup". There is no payment gateway.
+- The slogan is "Still there when you get there" (`logo.slogan`). It is a promise about stock being real, not a boast: it appears once, under the logo in the footer, and in the page's meta description. Don't repeat it in headings or buttons.
 - No emoji, no exclamation marks, no "amazing", "super", "best-in-class". No filler stats like "10,000+ happy customers".
 - Use sentence case everywhere. Only `type-overline` (table headers, kickers above headings) is uppercase, and only through CSS; the source string stays in sentence case.
 - Formats: money in US dollars `$1.50` (the app uses `money()` from `src/lib/format.ts`; the reference gallery still calls it `MarketLink.vnd()`), dates `dd/MM/yyyy`, 24-hour time `07:00–07:30`, short weekdays `Mon … Sun`, decimals with a point (4.6), distances `2.4 km`. Unit plurals come from `MarketLink.units()` ("3 bunches", "2 loaves", "1 kg").
@@ -82,6 +83,7 @@ There is a single theme (`tag`). Every color comes from a token; components cont
 | Green band  | `board` + `on-board` / `board-muted`                          | Header, footer, platform announcements, highlighted stat tile                                      |
 | Twine       | `brand` / `brand-strong` / `on-brand` / `brand-tint`          | Primary buttons, links, selected items, rating stars                                               |
 | Price tag   | `accent` / `accent-strong` / `on-accent`                      | `PriceTag` fill, "Fresh today" flag, count badges, stall pins                                      |
+| Awning      | `awning`                                                      | Logo artwork only: the striped canopy on the mark. Never text, borders or state           |
 | Ink         | `ink`, `ink-muted`                                            | Primary and secondary text                                                                         |
 | Rules       | `line` (decorative), `line-strong` (meaningful borders, ≥3:1) | Image borders, tag borders, inputs, tear lines                                                     |
 
@@ -92,6 +94,7 @@ Rules:
 - Order states use `status-*-bg` / `status-*-ink` pairs and always carry a word and their own glyph. Never tell states apart by color alone.
 - There are 4 feedback pairs: `info-bg`/`info-ink` (explanations), `warning-bg`/`warning-ink` (cutoff approaching, low stock), `danger-bg`/`danger` (errors), and `highlight` (unread notifications, new orders). Don't use `accent` for warnings.
 - `twine` is decoration only (the line under the header, the string on the cover), never for text or meaningful borders.
+- `awning` (`#a8402b`) belongs to the logo and brand illustration, nothing else. It is a different red from `danger` on purpose: an error must never look like the brand, and the brand must never look like an error.
 - Keyboard focus: `outline: 2px solid var(--focus); outline-offset: 2px` on every control. `focus` reaches ≥3:1 on every background.
 
 ## Type
@@ -144,7 +147,7 @@ Rules:
 - Icons are 1.75px-stroke SVGs with `stroke="currentColor"` on a 16×16 box, bundled in `MarketLink.icons` (order states, lock, clock, search, cart, bell, menu, close, info, alert, megaphone, heart, star, pin).
 - For anything else, use **Lucide** (`lucide-react`) with `strokeWidth={1.75}` to match.
 - No emoji as icons. No icons in colored circles above headings (the landing-page feature card look).
-- The logo lives in the Logos asset group: `marketlink-mark.svg` (`brand` ink) and `marketlink-mark-light.svg` (`on-board` ink, for dark backgrounds). In React, use the `Logo` component.
+- The logo is a market stall inside an arch, not an icon, and it does not follow the icon rules above: `marketlink-mark.svg` (green arch, for paper), `marketlink-mark-light.svg` (cream arch, for `board` and other dark surfaces) and `marketlink-mark-mono.svg` (single ink, for embossing and print). In React use the `Logo` component and pass the `variant` that matches the background. The mark carries fixed hex values — the one exception to the tokens-only rule, because brand artwork must not change between light and dark mode. See [Logo](components/Logo.md).
 
 ## Map
 

@@ -7,21 +7,12 @@
     "suggestion": "Suggestion : quelque chose pourrait être mieux",
     "query": "Question : j'ai besoin d'une réponse"
   },
-  "pageLabel": "Quelle page ?",
-  "pages": {
-    "cart": "Panier",
-    "product": "Page produit",
-    "map": "Carte des marchés",
-    "orders": "Mes commandes",
-    "farmer": "Tableau de bord Farmer",
-    "other": "Autre"
-  },
   "messageLabel": "Message",
   "messagePlaceholder": "Qu'attendiez-vous, et que s'est-il passé à la place ?",
   "messageHint": "Pour un bug, ajoutez votre téléphone ou votre navigateur.",
-  "emailLabel": "E-mail pour la réponse",
-  "emailHint": "Facultatif. Rempli quand vous êtes connecté.",
   "submit": "Envoyer un retour",
+  "sendFailed": "Could not send. Try again.",
+  "tooMany": "Too many messages sent recently. Try again in a while.",
   "sent": {
     "title": "Envoyé",
     "bug": "Merci. Votre signalement de bug est arrivé chez l'équipe.",

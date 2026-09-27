@@ -7,6 +7,18 @@
   "cancel": "Cancelar",
   "minutes_one": "{{count}} minuto",
   "minutes_other": "{{count}} minutos",
+  "error": {
+    "noun": "your stall profile",
+    "slotsNoun": "these slots"
+  },
+  "noMarkets": {
+    "title": "You are not selling at any market yet",
+    "text": "Join a market under Stall & pickup, then come back here to open pickup slots."
+  },
+  "noDays": {
+    "title": "This market has no pickup days set",
+    "text": "Set the days and pickup window for this market under Stall & pickup, then generate slots for them here."
+  },
   "table": {
     "slot": "Franja",
     "booked": "Reservados",
@@ -14,10 +26,13 @@
     "full": "Completa",
     "max": "Pedidos máx.",
     "maxFor": "Pedidos máx. {{slot}}",
+    "belowBooked": "That is fewer than the orders already in this slot.",
     "closes": "Cierre de cambios",
     "open": "Abierta a pedidos nuevos",
-    "off": "No",
     "on": "Sí",
+    "closedTitle": "Slot closed",
+    "closedText": "This slot is off and no longer takes orders. This screen cannot turn it back on yet; contact the team if you need it reopened.",
+    "reenableNote": "A slot you turn off drops off this list, the same way it drops off the market page. There is no way to turn it back on from here yet; <link>contact the team</link> if you need it reopened.",
     "caption_one": "{{day}} {{date}} · {{market}} · {{count}} franja",
     "caption_other": "{{day}} {{date}} · {{market}} · {{count}} franjas"
   },
@@ -40,49 +55,15 @@
     "title": "Cerrar una franja",
     "text": "Desactivar una franja la oculta a los pedidos nuevos. Los pedidos que ya tiene se mantienen; contacta con esos clientes si no puedes ir."
   },
-  "away": {
-    "title": "Días en que no vendes",
-    "intro": "Un día de mercado que te vas a perder: poca cosecha, enfermedad, una furgoneta que no arranca. Tu puesto desaparece de la página del mercado ese día y no acepta pedidos nuevos. Los pedidos ya hechos se rechazan con tu motivo y el stock vuelve a ti (D-02).",
-    "open": "Avisar a los clientes de que no estarás",
-    "date": "Fecha",
-    "reasonSeen": "Motivo que ven los clientes",
-    "declined": "Pedidos rechazados",
-    "backTitle": "Vuelves a vender",
-    "backText": "Vuelves a vender ese día. Los pedidos rechazados no se recuperan; el cliente tiene que pedir de nuevo.",
-    "back": "Sí puedo ir",
-    "emptyTitle": "Vendes todos los días de mercado",
-    "emptyText": "Avisa a los clientes con antelación si eso cambia, para que nadie llegue a un puesto vacío.",
-    "notNow": "Ahora no",
-    "confirm": "Avisarles",
-    "declinedTitle": "Pedidos rechazados",
-    "toldTitle": "Clientes avisados",
-    "declinedText_one": "{{count}} pedido rechazado y el cliente avisado.",
-    "declinedText_other": "{{count}} pedidos rechazados y los clientes avisados.",
-    "toldText": "Los clientes ya no pueden pedirte para el {{date}}.",
-    "dialogText": "Los pedidos ya hechos para ese día se rechazan con tu motivo y el stock vuelve a ti. El cliente recibe el aviso al momento y no paga nada, porque no se paga hasta la recogida.",
-    "marketDay": "Día de mercado",
-    "reasonLabel": "Motivo que verán los clientes",
-    "seedReason": "La cosecha fue escasa después de la lluvia",
-    "notGiven": "Sin motivo",
-    "note": {
-      "placed_one": "{{count}} pedido hecho",
-      "placed_other": "{{count}} pedidos hechos",
-      "none": "aún sin pedidos",
-      "shut": "el mercado cierra de todos modos"
-    }
-  },
-  "closure": {
-    "title": "El propio mercado cierra el {{date}}.",
-    "text": "{{reason}}. No tienes que hacer nada: nadie puede pedir a ningún puesto para ese día y MarketLink ya ha avisado a tus clientes."
-  },
   "generate": {
     "open": "Generar franjas para la próxima semana",
     "title": "¿Generar franjas del {{from}} al {{to}}?",
+    "from": "From",
+    "to": "To",
+    "rangeError": "Pick an end date on or after the start date.",
     "doneTitle": "Franjas creadas",
     "doneText_one": "{{count}} franja creada del {{from}} al {{to}}.",
     "doneText_other": "{{count}} franjas creadas del {{from}} al {{to}}.",
-    "confirm_one": "Generar {{count}} franja",
-    "confirm_other": "Generar {{count}} franjas",
-    "text": "Crea franjas de {{start}} a {{end}} los {{daysA}} en Thảo Điền y los {{daysB}} en Thủ Đức. Las franjas existentes no cambian."
+    "confirm": "Generate slots"
   }
 }

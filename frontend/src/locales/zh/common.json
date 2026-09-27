@@ -69,6 +69,7 @@
     "tryAgain": "重试",
     "noThreadsTitle": "还没有对话",
     "noThreadsText": "在摊位页面给摊主发消息，问问本周的农产品。",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} 条未读消息",
     "sendFailed": "消息未发送，请重试。",
     "photoFailed": "照片未发送。请选择 5 MB 以内的 JPEG、PNG 或 WebP 图片。",
@@ -112,6 +113,7 @@
       "other": "其他原因"
     },
     "reportNote": "补充说明（可选）",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "还可输入 {{count}} 个字符",
     "chooseReason": "请选择一个原因后再提交举报。",
     "report": "举报",
@@ -198,6 +200,7 @@
     "openMenu": "打开菜单",
     "search": "搜索",
     "seeAll": "查看全部",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "消息，{{count}} 条未读"
   },
   "kpi": {
@@ -214,7 +217,8 @@
     "markets": "正在加载市集"
   },
   "logo": {
-    "home": "MarketLink — 首页"
+    "home": "MarketLink — 首页",
+    "slogan": "到摊位时，货还在"
   },
   "map": {
     "attribution": "© {{link}} 贡献者",
@@ -267,7 +271,15 @@
     "cancel": "取消订单",
     "reviewed": "你已评价此订单",
     "review": "评价摊位和商品",
-    "reorder": "再来一单"
+    "reorder": "再来一单",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "已下单",
@@ -451,6 +463,8 @@
     "photoAlt": "第 {{n}} 次申请的照片"
   },
   "notify": {
+    "notificationsEmpty": "还没有通知。",
+    "notificationsError": "无法加载通知。",
     "open": "打开",
     "prompt": {
       "title": "开启通知",
@@ -526,12 +540,153 @@
     "admin": {
       "title": "通知",
       "intro": "等待你审核的新农户申请。"
-    },
-    "notificationsEmpty": "还没有通知。",
-    "notificationsError": "无法加载通知。"
+    }
   },
-  "comingSoon": {
-    "title": "此页面尚未开放",
-    "text": "我们仍在建设此页面。菜单中的其他功能照常可用。"
+  "assistant": {
+    "open": "询问助手",
+    "close": "关闭助手",
+    "fullPage": "打开完整页面",
+    "note": "回答来自 MarketLink 自己的数据。",
+    "newChat": "新对话",
+    "loading": "正在加载对话…",
+    "loadErrorTitle": "无法加载之前的消息",
+    "loadErrorText": "请检查网络后重试。你仍然可以提出新问题。",
+    "emptyTitle": "问我关于 MarketLink 的问题",
+    "emptyText": "我可以在各个集市查找农产品，告诉你营业时间和取货时间，或解释如何下单。",
+    "thinking": "正在查询…",
+    "sendError": "助手暂时无法回答。你的消息已放回输入框，请重新发送。",
+    "message": "消息",
+    "placeholder": "询问商品、集市或如何下单",
+    "send": "发送",
+    "sending": "正在发送…",
+    "aiTools": "AI · {{tools}}",
+    "result": {
+      "product": "商品",
+      "market": "集市",
+      "farmer": "摊位"
+    },
+    "suggest": {
+      "find": "这个周末在哪里能买到番茄？",
+      "hours": "Bến Thành 集市几点开门？",
+      "stalls": "周六 Thảo Điền 集市有哪些摊位？",
+      "cancel": "如何取消订单？"
+    }
+  },
+  "tour": {
+    "next": "下一步",
+    "back": "上一步",
+    "done": "完成",
+    "skip": "跳过引导",
+    "progress": "{{current}} / {{total}}",
+    "steps": {
+      "customerWelcome": {
+        "title": "欢迎来到 MarketLink",
+        "body": "在胡志明市的周末集市向农户预订新鲜农产品，然后到摊位取货。这个简短的引导带你熟悉一下。"
+      },
+      "customerMarkets": {
+        "title": "浏览集市",
+        "body": "查看所有集市、营业时间以及在那里销售的摊位。"
+      },
+      "customerProducts": {
+        "title": "查找商品",
+        "body": "按类别、价格和集市筛选农产品。每件商品都会显示本周剩余数量。"
+      },
+      "customerMap": {
+        "title": "集市地图",
+        "body": "找到离你最近的集市，并在 OpenStreetMap 中查看路线。"
+      },
+      "customerSearch": {
+        "title": "搜索",
+        "body": "按名称查找商品、摊位或集市。"
+      },
+      "customerCart": {
+        "title": "购物车",
+        "body": "添加商品，选择在摊位取货的时间，然后下单。"
+      },
+      "customerOrders": {
+        "title": "我的订单",
+        "body": "跟踪每个订单从已下单、已接受、已备好到已完成。农户会在你出发前确认。"
+      },
+      "customerFavorites": {
+        "title": "收藏",
+        "body": "收藏喜欢的摊位和商品，方便以后快速找到。"
+      },
+      "customerMessages": {
+        "title": "消息",
+        "body": "就商品或订单与农户聊天。"
+      },
+      "customerNotifications": {
+        "title": "通知",
+        "body": "订单更新和集市公告会显示在这里。"
+      },
+      "customerAccount": {
+        "title": "我的账户",
+        "body": "编辑个人资料，更改语言和货币等设置，或申请成为农户开店。"
+      },
+      "customerMenu": {
+        "title": "菜单",
+        "body": "集市、商品、订单和账户都在这个菜单里。"
+      },
+      "customerDone": {
+        "title": "一切就绪",
+        "body": "先选一个离你近的集市吧。你随时可以在设置中更改偏好。"
+      },
+      "farmerWelcome": {
+        "title": "欢迎来到摊位管理面板",
+        "body": "你在这里经营 MarketLink 上的摊位。下面快速看看每个部分。"
+      },
+      "farmerOverview": {
+        "title": "概览",
+        "body": "一眼查看今天的订单、取货和销售情况。"
+      },
+      "farmerOrders": {
+        "title": "新订单",
+        "body": "接受或拒绝新订单，顾客取货时将其标记为已备好和已完成。"
+      },
+      "farmerSlots": {
+        "title": "取货时段",
+        "body": "设置顾客可以到摊位取货的时间段。"
+      },
+      "farmerStock": {
+        "title": "本周库存",
+        "body": "更新本周每种商品可售的数量。"
+      },
+      "farmerProducts": {
+        "title": "商品",
+        "body": "添加带有照片、价格和单位的商品，或隐藏不再出售的商品。"
+      },
+      "farmerStall": {
+        "title": "摊位与取货",
+        "body": "编辑摊位资料，选择你出摊的集市和日期。"
+      },
+      "farmerReviews": {
+        "title": "评价",
+        "body": "查看顾客取货后留下的评分和评价。"
+      },
+      "farmerHistory": {
+        "title": "销售记录",
+        "body": "回顾过去的订单和销售情况。"
+      },
+      "farmerMessages": {
+        "title": "消息",
+        "body": "回答顾客关于商品和订单的问题。"
+      },
+      "farmerNotifications": {
+        "title": "通知",
+        "body": "新订单和 MarketLink 团队的消息会显示在这里。"
+      },
+      "farmerSettings": {
+        "title": "设置",
+        "body": "更改语言、货币和你的销售默认设置。"
+      },
+      "farmerDone": {
+        "title": "摊位已就绪",
+        "body": "先检查本周库存和取货时段吧。"
+      },
+      "dashboardMenu": {
+        "title": "菜单",
+        "body": "打开菜单即可进入面板的每个部分。"
+      }
+    }
   }
 }

@@ -7,7 +7,8 @@ enable Web Push, or when something fails.
 **Contents:** [Prerequisites](#1-prerequisites) · [Option A — Docker](#2-option-a--run-everything-in-docker) ·
 [Option B — on your machine](#3-option-b--run-the-backend-and-frontend-on-your-machine) ·
 [Useful commands](#4-useful-commands) · [Web Push](#5-web-push-notifications-after-the-tab-is-closed) ·
-[Chat check](#6-chat--manual-two-browser-check-fr-111-fr-115-fr-116) · [Troubleshooting](#7-troubleshooting)
+[Shopping assistant](#6-shopping-assistant-answered-by-claude) ·
+[Chat check](#7-chat--manual-two-browser-check-fr-111-fr-115-fr-116) · [Troubleshooting](#8-troubleshooting)
 
 ## 1. Prerequisites
 
@@ -298,7 +299,27 @@ docker exec -it intervue-redis redis-cli
 Notes: Web Push only works over **HTTPS** (localhost is exempt). iOS/iPadOS only receives it once the site has been
 added to the Home Screen (iOS 16.4+). Signing out stops that browser from receiving the account's notifications.
 
-## 6. Chat — manual two-browser check (FR-111, FR-115, FR-116)
+## 6. Shopping assistant answered by Claude
+
+Signed-in customers (and farmers using the customer panel) get their answers from Claude; visitors and admins
+get the keyword engine. Claude only chooses among read-only tools — product search, markets, stalls, pickup
+times and the user guide — which run the same fixed, parameterised SQL as the keyword engine, so it never writes
+SQL (CLAUDE.md R-04). How it works: [`chatbot-design.md`](chatbot-design.md).
+
+1. Get a key at https://console.anthropic.com and put it in `.env` (production: `.env.production`):
+
+   ```env
+   ANTHROPIC_API_KEY=<your-key>
+   CHATBOT_AI_MODEL=claude-haiku-4-5      # default
+   CHATBOT_AI_MESSAGES_PER_HOUR=30        # per account; above it the keyword engine answers
+   ```
+
+2. Run `make up` again (or restart the backend with the variable exported, for option B).
+
+With no key, over the hourly limit, or when the API fails, the keyword engine answers instead, so the assistant
+never stops replying.
+
+## 7. Chat — manual two-browser check (FR-111, FR-115, FR-116)
 
 Spec §13 asks for the realtime path to be checked by hand, because unit tests mock the broker.
 Run this once before a demo.
@@ -319,7 +340,7 @@ Run this once before a demo.
 8. Still as admin, open the photo URL of the **reported** message → **200**. Open the photo URL of a
    **neighbouring** message → **403**.
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 | Error | Cause | Fix |
 |---|---|---|

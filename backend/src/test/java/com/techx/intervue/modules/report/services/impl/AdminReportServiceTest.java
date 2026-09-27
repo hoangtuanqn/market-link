@@ -6,6 +6,7 @@ import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.report.resources.AdminDashboardResource;
 import com.techx.intervue.modules.report.resources.RevenueByMarketResource;
 import com.techx.intervue.modules.report.resources.TopFarmerResource;
+import com.techx.intervue.modules.report.resources.TopProductResource;
 import com.techx.intervue.modules.report.services.interfaces.AdminReportServiceInterface;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
@@ -32,6 +33,8 @@ class AdminReportServiceTest {
     private long m1;
     private long m2;
     private long farmerA;
+    private long customer;
+    private long p1;
 
     @BeforeEach
     void setUp() {
@@ -39,10 +42,10 @@ class AdminReportServiceTest {
         long category = fx.category();
         m1 = fx.market("Market one");
         m2 = fx.market("Market two");
-        long customer = fx.user("customer", "Report customer", "x");
+        customer = fx.user("customer", "Report customer", "x");
         farmerA = fx.farmer(fx.user("farmer", "Farmer A", "x"), "Stall A", "approved");
         fx.farmer(fx.user("farmer", "Farmer C", "x"), "Stall C", "pending");
-        long p1 = fx.product(farmerA, category, "Product", 10000);
+        p1 = fx.product(farmerA, category, "Product", 10000);
         LocalDate day = LocalDate.of(2026, 9, 20);
 
         fx.item(fx.order(customer, farmerA, m1, "completed", 40000, day), p1, 10000, 4);
@@ -118,18 +121,37 @@ class AdminReportServiceTest {
 
         assertThat(all).isEqualTo(wide);
         assertThat(reports.topFarmers(null, null, 5)).isNotNull();
-        assertThat(reports.orders(null, null, null, null, 1, 10).total())
+        assertThat(reports.orders(null, null, null, null, null, 1, 10).total())
                 .isEqualTo(count("orders"));
     }
 
     @Test
     void ordersReportFiltersByMarketAndDate() {
-        PageResource<OrderListItemResource> page = reports.orders(null, null, m1, null, 1, 10);
+        PageResource<OrderListItemResource> page =
+                reports.orders(null, null, m1, null, null, 1, 10);
 
         assertThat(page.total()).isEqualTo(2);
         assertThat(page.items()).allMatch(o -> o.marketId() == m1);
-        assertThat(reports.orders(LocalDate.of(2026, 9, 21), null, m1, null, 1, 10).total())
+        assertThat(reports.orders(LocalDate.of(2026, 9, 21), null, m1, null, null, 1, 10).total())
                 .isZero();
+    }
+
+    /** FR-072: the admin drills from a customer's profile into their own orders. */
+    @Test
+    void ordersReportFiltersByCustomer() {
+        assertThat(reports.orders(null, null, null, null, customer, 1, 10).total()).isEqualTo(3);
+    }
+
+    /** FR-075: completed quantities only — the still-placed order's unit does not count. */
+    @Test
+    void topProductsSumCompletedQuantities() {
+        List<TopProductResource> top = reports.topProducts(null, null, 50);
+
+        TopProductResource mine =
+                top.stream().filter(p -> p.productId() == p1).findFirst().orElseThrow();
+        assertThat(mine.quantitySold())
+                .isEqualTo(7); // 4 + 3 completed; the placed order's 1 is not counted
+        assertThat(mine.revenue()).isEqualByComparingTo("70000");
     }
 
     private long count(String fromWhere) {

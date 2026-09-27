@@ -3,10 +3,26 @@
   "intro": "Pengambilan mendatang ditampilkan lebih dulu. Pesanan lama menyimpan struknya, dan Anda bisa memesan ulang apa pun yang pernah dibeli dengan harga dan stok hari ini.",
   "stall": "Lapak",
   "allStalls": "Semua lapak",
+  "noun": "orders",
   "tabs": {
     "label": "Pesanan",
     "upcoming": "Mendatang",
     "past": "Lampau",
     "all": "Semua"
+  },
+  "empty": {
+    "up": {
+      "title": "No upcoming orders",
+      "text": "Once you place an order, it stays here until it has been picked up."
+    },
+    "past": {
+      "title": "No past orders yet",
+      "text": "Orders you have picked up, cancelled or that were declined will show up here."
+    },
+    "all": {
+      "title": "No orders yet",
+      "text": "Browse this weekend's markets and place your first order."
+    },
+    "cta": "Browse products"
   }
 }

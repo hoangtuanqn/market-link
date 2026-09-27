@@ -57,6 +57,17 @@ export type AdminCustomerDto = {
   createdAt: string;
 };
 
+/** `GET /admin/reports/top-products` (FR-075): the best-selling products platform-wide, completed orders only. */
+export type TopProductDto = {
+  productId: number;
+  name: string;
+  stallName: string;
+  unit: string;
+  unitPrice: number;
+  quantitySold: number;
+  revenue: number;
+};
+
 /** FR-068/069 — the signed-in Farmer's own numbers (plan C9, Task 9.1). The stall comes from the token. */
 class FarmerReportApi {
   static dashboard = async () => {
@@ -84,9 +95,18 @@ class AdminReportApi {
     return response.data.data;
   };
 
-  /** Platform-wide orders, newest first; admin is read-only here (D-04). */
+  /**
+   * Platform-wide orders, newest first; admin is read-only here (D-04). `customerId` drills into one customer's own
+   * orders.
+   */
   static orders = async (
-    params: DateRange & { marketId?: number; status?: OrderStatus; page?: number; pageSize?: number } = {},
+    params: DateRange & {
+      marketId?: number;
+      status?: OrderStatus;
+      customerId?: number;
+      page?: number;
+      pageSize?: number;
+    } = {},
   ) => {
     const response = await privateApi.get<ApiResponse<PageType<OrderListItemDto>>>('/admin/reports/orders', { params });
     return response.data.data;
@@ -103,11 +123,23 @@ class AdminReportApi {
     return response.data.data;
   };
 
+  /** `GET /admin/reports/top-products`: best-selling products platform-wide. `limit` 1–50 (default 10). */
+  static topProducts = async (params: DateRange & { limit?: number } = {}) => {
+    const response = await privateApi.get<ApiResponse<TopProductDto[]>>('/admin/reports/top-products', { params });
+    return response.data.data;
+  };
+
   /** `q` matches name, email or phone; `status` filters `active` / `inactive`. `page` starts at 1. */
   static customers = async (
     params: { status?: 'active' | 'inactive'; q?: string; page?: number; pageSize?: number } = {},
   ) => {
     const response = await privateApi.get<ApiResponse<PageType<AdminCustomerDto>>>('/admin/customers', { params });
+    return response.data.data;
+  };
+
+  /** `GET /admin/customers/{id}`: one customer's profile. 404 when the id is not a customer account. */
+  static customer = async (id: number) => {
+    const response = await privateApi.get<ApiResponse<AdminCustomerDto>>(`/admin/customers/${id}`);
     return response.data.data;
   };
 

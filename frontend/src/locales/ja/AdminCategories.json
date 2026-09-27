@@ -7,6 +7,7 @@
     "feedback": "フィードバック受信箱"
   },
   "caption": {
+    "categories_one": "{{count}} category",
     "categories_other": "{{count}}件のカテゴリー"
   },
   "col": {
@@ -25,10 +26,14 @@
     "namePlaceholder": "例：Seafood",
     "nameHint": "英語で、文頭のみ大文字。写真のない商品タグに手書き風で表示されます。",
     "position": "絞り込みでの並び順",
+    "minShelfLife": "Min shelf life (days)",
+    "maxShelfLife": "Max shelf life (days)",
+    "shelfLifeHint": "Standard freshness window for this category. Shown to Farmers as a guide when they list a product.",
     "submit": "カテゴリーを追加"
   },
   "removeCategory": {
     "title": "{{name}} を削除しますか？",
+    "textUsed_one": "{{count}} product uses it. Choose where it goes.",
     "textUsed_other": "{{count}}件の商品が使っています。移動先を選んでください。",
     "textUnused": "使っている商品はありません。",
     "moveTo": "商品の移動先",
@@ -48,6 +53,8 @@
   },
   "error": {
     "noun": "カテゴリー",
-    "nameRequired": "カテゴリー名を入力してください。"
+    "nameRequired": "カテゴリー名を入力してください。",
+    "shelfLifeRequired": "Enter a whole number of 1 or more.",
+    "shelfLifeRange": "Max must be at least the minimum."
   }
 }

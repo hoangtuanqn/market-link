@@ -2,41 +2,56 @@
   "title": "Favoritos",
   "intro": "Tu lista de deseos: productos que quieres la próxima vez, puestos a los que vuelves y los mercados donde compras. Un favorito agotado te avisa cuando vuelve.",
   "findMore": "Buscar más para guardar",
+  "loading": "Loading your favorites…",
   "tabs": {
     "label": "Guardados",
     "products": "Productos",
     "stalls": "Puestos",
     "markets": "Mercados"
   },
-  "banner": {
-    "title": "Uno de tus cuatro productos guardados está agotado.",
-    "text": "Las alertas de reposición están activadas, así que recibirás un aviso en cuanto el puesto lo vuelva a publicar."
-  },
   "filters": {
     "all": "Todos",
     "inStock": "Con stock",
     "soldOut": "Agotado",
-    "priceDropped": "Bajó de precio"
+    "emptyTitle": "Nothing matches this filter",
+    "emptyText": "Try a different filter to see the rest of your saved products."
   },
+  "inStock": "In stock",
   "soldOut": "Agotado",
-  "left": "Quedan {{qty}}",
+  "unavailable": "No longer available",
   "alertOn": "Alerta activada",
   "addToCart": "Añadir al carrito",
   "remove": "Quitar",
-  "addInStock_one": "Añadir el {{count}} artículo con stock al carrito",
-  "addInStock_other": "Añadir los {{count}} artículos con stock al carrito",
+  "viewStall": "View stall",
   "toast": {
-    "alertTitle": "Alerta de reposición",
-    "alertOff": "Alerta desactivada para {{name}}.",
     "addedTitle": "Añadido al carrito",
     "added": "Se añadió {{name}} a tu carrito.",
-    "addedMany_one": "Se añadió {{count}} producto a tu carrito. Se dividirá por puesto al pagar.",
-    "addedMany_other": "Se añadieron {{count}} productos a tu carrito. Se dividirán por puesto al pagar.",
     "removedTitle": "Quitado",
     "removed": "Se quitó {{name}} de tus favoritos."
   },
   "holdNote": "Guardar un producto no reserva stock. Solo se reserva cuando haces el pedido.",
   "stallsNote": "Tus puestos guardados, con lo que trae cada uno este fin de semana.",
-  "thisWeek": "Esta semana",
-  "marketsNote": "Un mercado guardado aparece primero en las listas y en el mapa, y las indicaciones a sus puestos salen de tu dirección guardada."
+  "marketsNote": "Un mercado guardado aparece primero en las listas y en el mapa, y las indicaciones a sus puestos salen de tu dirección guardada.",
+  "error": {
+    "products": "saved products",
+    "stalls": "saved stalls",
+    "markets": "saved markets"
+  },
+  "empty": {
+    "products": {
+      "title": "No saved products yet",
+      "text": "Save a product from its page to find it here, with a restock alert if it ever sells out.",
+      "browse": "Browse products"
+    },
+    "stalls": {
+      "title": "No saved stalls yet",
+      "text": "Save a stall from its page to keep it here for next time.",
+      "browse": "Browse markets"
+    },
+    "markets": {
+      "title": "No saved markets yet",
+      "text": "Save a market from its page to keep it here for next time.",
+      "browse": "Browse markets"
+    }
+  }
 }

@@ -14,7 +14,7 @@ const AdminAuthShell = ({ children }: { children: ReactNode }) => {
       <header className="bg-board text-on-board">
         <div className="mx-auto flex min-h-16 max-w-(--size-container) items-center gap-4 px-4 md:px-6">
           {/* The public home, as everywhere else: a link back to this same page looked dead (QA BUG-007). */}
-          <Logo to="/" />
+          <Logo to="/" variant="light" />
           <span className="text-small text-board-muted border-board-muted border-l pl-3">{t('admin.signIn')}</span>
         </div>
         <div aria-hidden="true" className="border-twine h-0 border-t-2 border-dashed" />

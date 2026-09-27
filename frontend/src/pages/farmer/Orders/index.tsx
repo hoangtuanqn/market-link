@@ -1,96 +1,143 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import OrderApi, { type OrderDetailDto, type OrderListItemDto } from '@/api-requests/order.requests';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import DayChips from '@/components/DayChips';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Button, ButtonLink } from '@/components/ui/button';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
-import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
-import { farmerOrders, farmerOrderTotal, type FarmerOrderType } from '@/data/farmer';
-import { dayName, formatDayMonth, vnd } from '@/lib/format';
+import useRequest from '@/hooks/useRequest';
+import { cutoffLabel, dayName, formatDayMonth, pickupLabel, vnd } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
-import { clockRange, cutoffLabel, marketDay } from './demoDates';
 
 const STATUSES: OrderStatus[] = ['placed', 'accepted', 'ready', 'completed', 'declined', 'cancelled'];
-
-/** Market mornings on screen: the Friday-to-Sunday weekend of the seeded orders. */
-const DAY_OPTIONS = [
-  { value: 'fri', dow: 5, date: new Date(2026, 8, 25) },
-  { value: 'sat', dow: 6, date: new Date(2026, 8, 26) },
-  { value: 'sun', dow: 0, date: new Date(2026, 8, 27) },
-];
-/** How the seeded orders spell the day (data, not UI) */
-const DAY_PREFIX: Record<string, string> = { fri: 'Fri', sat: 'Sat', sun: 'Sun' };
+const PAGE_SIZE = 50;
 
 const DECLINE_REASONS = ['stock', 'day', 'time', 'other'] as const;
 type DeclineReason = (typeof DECLINE_REASONS)[number];
 
-type ConfirmDialog = { kind: 'decline' | 'complete'; code: string } | null;
+type ConfirmDialog = { kind: 'decline' | 'complete'; orderId: number; orderCode: string } | null;
+
+const pad = (n: number) => String(n).padStart(2, '0');
+/** A Date, local time, as "yyyy-MM-dd" — what the server expects for `date`. */
+const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+/** The next 7 market mornings, starting today. */
+const dayOptions = () =>
+  Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() + i);
+    return d;
+  });
 
 /**
- * FR-065 FR-066 — Incoming orders: accept, decline, mark ready and complete, one status move at a time (D-04). Nothing
- * is stored here: a reload gives the seeded orders back, matching the prototype.
+ * FR-065 FR-066 — Incoming orders: accept, decline, mark ready and complete, one status move at a time (D-04). Each tab
+ * and pickup day is its own request to `GET /farmer/orders`; the search box only narrows what is already loaded.
  */
 const FarmerOrdersPage = () => {
   const { t } = useTranslation('FarmerOrders');
-  const [rows, setRows] = useState<FarmerOrderType[]>(farmerOrders);
+  const { t: tc } = useTranslation();
+  const [days] = useState(dayOptions);
   const [tab, setTab] = useState<OrderStatus>('placed');
   const [day, setDay] = useState('all');
+  const [page, setPage] = useState(1);
   const [q, setQ] = useState('');
   const [confirm, setConfirm] = useState<ConfirmDialog>(null);
   const [reason, setReason] = useState<DeclineReason>(DECLINE_REASONS[0]);
+  const [busyId, setBusyId] = useState<number | null>(null);
 
-  const move = (code: string, to: OrderStatus, message: string) => {
-    setRows((prev) => prev.map((o) => (o.code === code ? { ...o, status: to, isNew: false } : o)));
-    Notification.success({ text: message });
+  const changeTab = (next: OrderStatus) => {
+    setTab(next);
+    setPage(1);
+  };
+  const changeDay = (next: string) => {
+    setDay(next);
+    setPage(1);
   };
 
-  const qLower = q.trim().toLowerCase();
-  const filtered = rows.filter((o) => {
-    if (day !== 'all' && !o.date.startsWith(DAY_PREFIX[day])) return false;
-    if (qLower && !o.code.toLowerCase().includes(qLower) && !o.who.toLowerCase().includes(qLower)) return false;
-    return true;
-  });
-  const by = (status: OrderStatus) => filtered.filter((o) => o.status === status);
+  const {
+    state: load,
+    retry,
+    mutate,
+  } = useRequest(`farmer-orders:${tab}:${day}:${page}`, () =>
+    OrderApi.farmerList({ status: tab, date: day === 'all' ? undefined : day, page, pageSize: PAGE_SIZE }),
+  );
+  const data = load.kind === 'ready' ? load.data : null;
 
-  const columns: TableColumn<FarmerOrderType>[] = [
+  const qLower = q.trim().toLowerCase();
+  const rows = (data?.items ?? []).filter(
+    (o) => !qLower || o.orderCode.toLowerCase().includes(qLower) || o.customerName.toLowerCase().includes(qLower),
+  );
+
+  const runAction = async (id: number, action: () => Promise<OrderDetailDto>, successText: string) => {
+    setBusyId(id);
+    try {
+      await action();
+      // The row's status changed server-side, so it no longer belongs to this status tab.
+      mutate((current) => ({
+        ...current,
+        items: current.items.filter((r) => r.orderId !== id),
+        total: Math.max(0, current.total - 1),
+      }));
+      Notification.success({ text: successText });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const columns: TableColumn<OrderListItemDto>[] = [
     {
       key: 'code',
       label: t('col.order'),
-      render: (r) => <Link to={`/farmer/orders/${r.code.replace('#', '')}`}>{r.code}</Link>,
+      render: (r) => <Link to={`/farmer/orders/${r.orderId}`}>{r.orderCode}</Link>,
     },
+    { key: 'who', label: t('col.customer'), render: (r) => r.customerName },
     {
-      key: 'who',
-      label: t('col.customer'),
-      render: (r) => (
-        <>
-          {r.who}
-          <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">{r.phone}</span>
-        </>
-      ),
+      key: 'slot',
+      label: t('col.pickup'),
+      render: (r) => pickupLabel(r.pickupDate, `${r.pickupStart}–${r.pickupEnd}`),
     },
-    { key: 'slot', label: t('col.pickup'), render: (r) => `${marketDay(r.date)} · ${clockRange(r.slot)}` },
-    { key: 'cut', label: t('col.cutoff'), render: (r) => cutoffLabel(r.cutoff) },
-    { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.items.length },
-    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(farmerOrderTotal(r)) },
+    { key: 'cut', label: t('col.cutoff'), render: (r) => cutoffLabel(r.cutoffAt) },
+    { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
     { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
       label: '',
       align: 'actions',
       render: (r) => {
+        const busy = busyId === r.orderId;
         if (r.status === 'placed')
           return (
             <div className="flex justify-end gap-2">
-              <Button size="sm" onClick={() => move(r.code, 'accepted', t('toast.accepted', { code: r.code }))}>
+              <Button
+                size="sm"
+                disabled={busy}
+                onClick={() =>
+                  void runAction(
+                    r.orderId,
+                    () => OrderApi.accept(r.orderId),
+                    t('toast.accepted', { code: r.orderCode }),
+                  )
+                }
+              >
                 {t('action.accept')}
               </Button>
-              <Button variant="danger" size="sm" onClick={() => setConfirm({ kind: 'decline', code: r.code })}>
+              <Button
+                variant="danger"
+                size="sm"
+                disabled={busy}
+                onClick={() => setConfirm({ kind: 'decline', orderId: r.orderId, orderCode: r.orderCode })}
+              >
                 {t('action.decline')}
               </Button>
             </div>
@@ -100,19 +147,26 @@ const FarmerOrdersPage = () => {
             <Button
               variant="secondary"
               size="sm"
-              onClick={() => move(r.code, 'ready', t('toast.ready', { code: r.code }))}
+              disabled={busy}
+              onClick={() =>
+                void runAction(r.orderId, () => OrderApi.markReady(r.orderId), t('toast.ready', { code: r.orderCode }))
+              }
             >
               {t('action.markReady')}
             </Button>
           );
         if (r.status === 'ready')
           return (
-            <Button size="sm" onClick={() => setConfirm({ kind: 'complete', code: r.code })}>
+            <Button
+              size="sm"
+              disabled={busy}
+              onClick={() => setConfirm({ kind: 'complete', orderId: r.orderId, orderCode: r.orderCode })}
+            >
               {t('action.markCompleted')}
             </Button>
           );
         return (
-          <ButtonLink variant="ghost" size="sm" to={`/farmer/orders/${r.code.replace('#', '')}`}>
+          <ButtonLink variant="ghost" size="sm" to={`/farmer/orders/${r.orderId}`}>
             {t('action.view')}
           </ButtonLink>
         );
@@ -120,7 +174,7 @@ const FarmerOrdersPage = () => {
     },
   ];
 
-  const activeRows = by(tab);
+  const pages = data ? Math.max(1, Math.ceil(data.total / PAGE_SIZE)) : 1;
 
   return (
     <div className="flex flex-col gap-6">
@@ -149,49 +203,44 @@ const FarmerOrdersPage = () => {
         </form>
       </div>
 
-      <div className="flex flex-wrap items-end gap-6">
-        <DayChips
-          legend={t('filter.day')}
-          name="pickup-day"
-          options={[
-            { value: 'all', label: t('filter.all') },
-            ...DAY_OPTIONS.map((d) => ({
-              value: d.value,
-              label: dayName(d.dow, 'long'),
-              date: formatDayMonth(d.date),
-            })),
-          ]}
-          value={day}
-          onChange={setDay}
-        />
-        <SelectField
-          id="mk"
-          label={t('filter.market')}
-          options={[t('filter.bothMarkets'), 'Thảo Điền Weekend Market', 'Thủ Đức Farmers Market']}
-        />
-      </div>
+      <DayChips
+        legend={t('filter.day')}
+        name="pickup-day"
+        options={[
+          { value: 'all', label: t('filter.all') },
+          ...days.map((d) => ({ value: ymd(d), label: dayName(d.getDay(), 'long'), date: formatDayMonth(d) })),
+        ]}
+        value={day}
+        onChange={changeDay}
+      />
 
       <div className="flex flex-col gap-4">
         <Tabs
           label={t('tabsLabel')}
           value={tab}
-          onChange={(id) => setTab(id as OrderStatus)}
-          tabs={STATUSES.map((s) => ({ id: s, label: t(`status.${s}`), count: by(s).length }))}
+          onChange={(id) => changeTab(id as OrderStatus)}
+          tabs={STATUSES.map((s) => ({ id: s, label: t(`status.${s}`) }))}
         />
-        {activeRows.length ? (
-          <Table columns={columns} rows={activeRows} rowClassName={(r) => (r.isNew ? '!bg-highlight' : undefined)} />
+        {load.kind === 'loading' ? (
+          <MarketCardSkeleton count={3} />
+        ) : load.kind === 'error' ? (
+          <LoadError noun={t('noun')} onRetry={retry} />
+        ) : rows.length ? (
+          <>
+            <Table columns={columns} rows={rows} />
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="text-small text-ink-muted">{t('auditNote')}</span>
+              <Pagination page={page} pages={pages} onChange={setPage} />
+            </div>
+          </>
         ) : (
           <DataState title={t(`empty.${tab}.title`)} text={t(`empty.${tab}.text`)} />
         )}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-small text-ink-muted">{t('auditNote')}</span>
-          <Pagination page={1} pages={1} onChange={() => {}} />
-        </div>
       </div>
 
       <Dialog
         open={confirm?.kind === 'decline'}
-        title={t('decline.title', { code: confirm?.code ?? '' })}
+        title={t('decline.title', { code: confirm?.orderCode ?? '' })}
         tone="danger"
         onClose={() => setConfirm(null)}
         actions={
@@ -201,8 +250,14 @@ const FarmerOrdersPage = () => {
             </Button>
             <Button
               variant="danger"
+              disabled={busyId !== null}
               onClick={() => {
-                if (confirm) move(confirm.code, 'declined', t('toast.declined', { code: confirm.code }));
+                if (confirm)
+                  void runAction(
+                    confirm.orderId,
+                    () => OrderApi.decline(confirm.orderId, t(`decline.reasons.${reason}`)),
+                    t('toast.declined', { code: confirm.orderCode }),
+                  );
                 setConfirm(null);
               }}
             >
@@ -231,7 +286,7 @@ const FarmerOrdersPage = () => {
 
       <Dialog
         open={confirm?.kind === 'complete'}
-        title={t('complete.title', { code: confirm?.code ?? '' })}
+        title={t('complete.title', { code: confirm?.orderCode ?? '' })}
         onClose={() => setConfirm(null)}
         actions={
           <>
@@ -239,8 +294,14 @@ const FarmerOrdersPage = () => {
               {t('complete.notYet')}
             </Button>
             <Button
+              disabled={busyId !== null}
               onClick={() => {
-                if (confirm) move(confirm.code, 'completed', t('toast.completed', { code: confirm.code }));
+                if (confirm)
+                  void runAction(
+                    confirm.orderId,
+                    () => OrderApi.complete(confirm.orderId),
+                    t('toast.completed', { code: confirm.orderCode }),
+                  );
                 setConfirm(null);
               }}
             >

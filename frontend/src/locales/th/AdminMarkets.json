@@ -1,7 +1,9 @@
 {
   "title": "ตลาด",
   "intro": "ชื่อ ที่อยู่ วันเปิด เวลา และพิกัดบนแผนที่ของแต่ละตลาด การนำตลาดออกจะซ่อนตลาดนั้นจากลูกค้า แต่ประวัติยังอยู่",
+  "caption_one": "{{count}} active market",
   "caption_other": "ตลาดที่เปิดอยู่ {{count}} แห่ง",
+  "stalls_one": "{{count}} stall",
   "stalls_other": "{{count}} ร้านค้า",
   "col": {
     "market": "ตลาด",
@@ -28,6 +30,7 @@
   },
   "remove": {
     "title": "นำ {{name}} ออกไหม",
+    "text_one": "{{count}} stall sells here. The market disappears from customer pages and the stall is told. Orders already placed for it continue.",
     "text_other": "มี {{count}} ร้านค้าขายที่นี่ ตลาดจะหายไปจากหน้าลูกค้า และร้านค้าจะได้รับแจ้ง คำสั่งซื้อที่ทำไว้แล้วยังดำเนินต่อ",
     "keep": "เก็บตลาดไว้",
     "confirm": "นำตลาดออก"

@@ -1,4 +1,5 @@
 {
+  "noun": "order",
   "myOrders": "คำสั่งซื้อของฉัน",
   "breadcrumbOrder": "คำสั่งซื้อ {{code}}",
   "breadcrumbEdit": "แก้ไข",

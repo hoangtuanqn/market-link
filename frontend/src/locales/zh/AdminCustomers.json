@@ -1,6 +1,7 @@
 {
   "title": "顾客",
   "intro": "违反规定时可停用账号；停用后无法登录或下单。问题解决后再启用。他们过去的订单仍留在摊位那里。",
+  "noun": "customers",
   "search": {
     "label": "搜索顾客",
     "placeholder": "姓名、邮箱或电话",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "全部",
     "active": "正常",
-    "inactive": "已停用",
-    "joinedThisMonth": "本月加入"
+    "inactive": "已停用"
   },
   "status": {
     "active": "正常",
     "inactive": "已停用"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "顾客",
     "joined": "加入时间",
@@ -36,11 +37,19 @@
     "title": "停用 {{name}}？",
     "text": "他们会在所有设备上退出登录，无法再登录或下单。已经下过的订单仍留在摊位那里。",
     "reason": "原因，会记在账号上",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "保持正常",
     "confirm": "停用账号"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "已停用 {{name}}。",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} 可以重新登录了。"
   }
 }

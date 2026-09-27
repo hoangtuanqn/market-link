@@ -108,7 +108,9 @@ class OrderReviewedFlagTest {
                         "2026-09-15T13:00:00Z",
                         new BigDecimal("39000"),
                         2,
-                        "2026-09-14T01:00:00Z");
+                        "2026-09-14T01:00:00Z",
+                        7L,
+                        "Khách 7");
         return new OrderDetailRow(
                 summary,
                 OrderStatus.COMPLETED,

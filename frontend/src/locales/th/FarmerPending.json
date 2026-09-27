@@ -1,13 +1,16 @@
 {
+  "error": {
+    "noun": "your registration"
+  },
   "overline": {
     "suspended": "{{stall}} · ถูกระงับเมื่อ {{date}}",
     "registered": "{{stall}} · ลงทะเบียนเมื่อ {{date}}"
   },
   "title": {
     "pending": "แผงของคุณกำลังรอการอนุมัติ",
+    "rejected": "Your stall registration was declined",
     "suspended": "แผงของคุณถูกระงับ"
   },
-  "previewToggle": "ตัวอย่าง: แผงที่ถูกระงับ",
   "reviewing": {
     "title": "ผู้ดูแลกำลังตรวจสอบการลงทะเบียนของคุณ",
     "text": "คุณจะได้รับการแจ้งเตือนและอีเมลเมื่อได้รับอนุมัติ ระหว่างนี้ลูกค้าจะยังไม่เห็นแผงและสินค้าของคุณ"
@@ -25,9 +28,18 @@
     "email": "อีเมล",
     "market": "ตลาดที่ขอ"
   },
+  "rejected": {
+    "bannerTitle": "This registration was not approved.",
+    "noReason": "No reason was given.",
+    "again": {
+      "title": "Apply again",
+      "text": "You can send a new registration with updated details or evidence.",
+      "link": "Apply again"
+    }
+  },
   "suspended": {
-    "title": "แผงของคุณถูกระงับเมื่อ {{date}}",
-    "text": "เหตุผลจากผู้ดูแล: {{reason}} สินค้าของคุณถูกซ่อนและคุณรับคำสั่งซื้อใหม่ไม่ได้"
+    "bannerTitle": "Your stall is suspended.",
+    "noReason": "No reason was given."
   },
   "running": {
     "title": "คำสั่งซื้อที่สั่งไว้แล้วยังดำเนินต่อ",

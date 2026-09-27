@@ -10,13 +10,8 @@
   },
   "reviewFilterLabel": "レビューを絞り込む",
   "reviewFilter": {
-    "reported": "通報あり",
     "lowRated": "評価1または2",
     "newest": "新着順"
-  },
-  "report": {
-    "title": "{{by}} が {{date}} に通報：「{{quote}}」",
-    "text": "非表示にすると商品ページと店舗ページから消えます。理由はお客様に伝わります。"
   },
   "recentlyListed": "最近出品された商品",
   "search": {
@@ -37,11 +32,9 @@
     "view": "表示",
     "hideReview": "レビューを非表示",
     "hideListing": "商品を非表示",
-    "keepVisible": "表示したままにする",
     "customerAccount": "お客様のアカウント",
     "unhide": "再表示",
-    "unhidden": "項目を再び表示しました。",
-    "dismissed": "通報を却下しました。レビューは表示されたままです。"
+    "unhidden": "項目を再び表示しました。"
   },
   "hide": {
     "title": {
@@ -71,7 +64,8 @@
     "text": "通報された商品やレビューがここに届き、非表示にする前に目を通せます。"
   },
   "error": {
-    "noun": "出品一覧"
+    "noun": "出品一覧",
+    "reviewsNoun": "reviews"
   },
   "messages": {
     "boundary": "読めるのは報告されたメッセージと、前後それぞれ最大 5 件の文脈だけです。会話のそれ以外の部分は管理者に公開されていません。",

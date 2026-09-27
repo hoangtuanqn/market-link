@@ -51,7 +51,7 @@ export function Kpi({ label, value, note, delta, spark, href, linkLabel, highlig
   }
 
   const className = Helper.cn(
-    'group flex min-w-50 flex-col gap-1 rounded-md border-[1.5px] p-4 no-underline',
+    'group flex min-w-50 flex-col gap-1 rounded-md border-[1.5px] p-4 no-underline overflow-hidden',
     highlight ? 'bg-board text-on-board border-board' : 'border-line-strong bg-surface-raised shadow-tag text-ink',
     href && !highlight && 'hover:bg-board hover:text-on-board hover:border-board transition-colors',
   );
@@ -66,7 +66,12 @@ export function Kpi({ label, value, note, delta, spark, href, linkLabel, highlig
       >
         {label}
       </span>
-      <span className="font-hand text-[48px] leading-[1.05] tabular-nums">{value}</span>
+      <span
+        className="font-hand truncate text-[38px] leading-[1.05] tabular-nums xl:text-[48px]"
+        title={typeof value === 'string' || typeof value === 'number' ? String(value) : undefined}
+      >
+        {value}
+      </span>
       {deltaEl}
       {note && (
         <span

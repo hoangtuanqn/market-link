@@ -13,7 +13,51 @@ Trợ lý tra cứu cho Customer: tìm sản phẩm xuyên chợ/Farmer và tr�
 3. Chấp nhận gõ **có dấu, không dấu và tiếng Anh**. Văn bản được chuẩn hoá: chữ thường, bỏ dấu, `đ → d`.
 4. Mọi lượt hỏi–đáp lưu vào `chat_messages` kèm intent (FR-092) để xem lại vì sao bot trả lời như vậy.
 
-## Luồng
+## Hai engine: Claude (tài khoản khách hàng) và luật từ khoá (dự phòng)
+
+Từ 27/09/2026, tài khoản **Customer / Farmer đã đăng nhập** (các vai dùng panel khách hàng) được
+**Claude** trả lời; khách vãng lai và admin vẫn dùng **luật từ khoá** bên dưới. Claude cũng tự
+lùi về luật từ khoá khi: chưa cấu hình API key, vượt hạn mức mỗi giờ, hoặc API lỗi / timeout —
+người dùng luôn nhận được câu trả lời.
+
+```
+POST /api/v1/chat (có token Customer/Farmer)
+  │
+  ├─ AssistantRateLimiter   30 tin/giờ/tài khoản (Redis bucket4j) — vượt → luật từ khoá
+  ├─ ClaudeAssistant        vòng lặp tool use thủ công, model claude-haiku-4-5
+  │     ├─ system prompt cố định (cache) + "hôm nay là …" + 10 tin gần nhất của phiên
+  │     ├─ Claude chọn tool ─► AssistantTools (chỉ đọc)
+  │     │     search_products · list_markets · find_stalls · get_pickup_times
+  │     │        └─ ChatKnowledgeRepository: vẫn là các câu SQL viết sẵn có tham số (R-04)
+  │     │     search_user_guide ─► UserGuideIndex (RAG, xem dưới)
+  │     ├─ tối đa 4 vòng tool; vòng cuối tool_choice = none để luôn có câu trả lời chữ
+  │     └─ refusal / lỗi API → ChatService lùi về luật từ khoá
+  ├─ lưu 2 dòng chat_messages, intent = "AI:<các tool đã gọi>" (FR-092)
+  └─ { reply, intent, results[] }   intent = intent của tool đầu tiên; UNKNOWN nếu không gọi tool
+```
+
+**Claude không bao giờ sinh SQL.** Nó chỉ chọn tool và điền tham số; tên chợ / gian hàng được so
+khớp với danh sách đang hoạt động (như luật từ khoá), không đưa thẳng vào câu SQL. Tool không có
+thao tác ghi, không đọc đơn hàng hay dữ liệu cá nhân.
+
+**RAG cho câu hỏi cách dùng website.** Tài liệu hướng dẫn nằm ở
+`backend/src/main/resources/user-guide/*.md` (tiếng Việt). Lúc khởi động, `UserGuideIndex` cắt mỗi
+mục `##` thành một đoạn, chuẩn hoá bỏ dấu, lập chỉ mục **BM25** trên từ đơn + cặp từ liền nhau
+(từ tiếng Việt thường hai âm tiết: "bán hàng", "mật khẩu"). Claude viết lại câu hỏi thành từ khoá
+tiếng Việt, gọi `search_user_guide`, nhận 3 đoạn khớp nhất và chỉ trả lời từ đó. Không cần dịch vụ
+embedding hay vector DB. **Sửa hướng dẫn = sửa file .md**, khởi động lại backend là có hiệu lực.
+
+| Cấu hình (`app.chatbot.ai.*`) | Biến môi trường | Mặc định |
+|---|---|---|
+| `api-key` | `ANTHROPIC_API_KEY` | trống → chỉ luật từ khoá |
+| `model` | `CHATBOT_AI_MODEL` | `claude-haiku-4-5` |
+| `messages-per-hour` | `CHATBOT_AI_MESSAGES_PER_HOUR` | 30 |
+| `max-tool-rounds` / `history-messages` / `max-tokens` | — | 4 / 10 / 1024 |
+
+UI: nút chat nổi ở góc phải panel khách hàng (`AssistantLauncher`, chỉ hiện cho Customer/Farmer đã
+đăng nhập) và trang `/assistant`; cả hai dùng chung `AssistantChat`.
+
+## Luồng (luật từ khoá)
 
 ```
 POST /api/v1/chat { sessionKey, message }

@@ -1,4 +1,5 @@
 {
+  "noun": "placed orders",
   "title_one": "{{count}} order placed",
   "title_other": "{{count}} orders placed",
   "intro": "Each stall now reviews its order. You get a notification when it is accepted, and another when it is ready to pick up. Stock is already held for you.",

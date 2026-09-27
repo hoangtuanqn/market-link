@@ -7,6 +7,18 @@
   "cancel": "취소",
   "minutes_one": "{{count}}분",
   "minutes_other": "{{count}}분",
+  "error": {
+    "noun": "your stall profile",
+    "slotsNoun": "these slots"
+  },
+  "noMarkets": {
+    "title": "You are not selling at any market yet",
+    "text": "Join a market under Stall & pickup, then come back here to open pickup slots."
+  },
+  "noDays": {
+    "title": "This market has no pickup days set",
+    "text": "Set the days and pickup window for this market under Stall & pickup, then generate slots for them here."
+  },
   "table": {
     "slot": "시간대",
     "booked": "예약",
@@ -14,10 +26,13 @@
     "full": "마감",
     "max": "최대 주문 수",
     "maxFor": "{{slot}} 최대 주문 수",
+    "belowBooked": "That is fewer than the orders already in this slot.",
     "closes": "변경 마감",
     "open": "새 주문 받기",
-    "off": "꺼짐",
     "on": "켜짐",
+    "closedTitle": "Slot closed",
+    "closedText": "This slot is off and no longer takes orders. This screen cannot turn it back on yet; contact the team if you need it reopened.",
+    "reenableNote": "A slot you turn off drops off this list, the same way it drops off the market page. There is no way to turn it back on from here yet; <link>contact the team</link> if you need it reopened.",
     "caption_one": "{{day}} {{date}} · {{market}} · 시간대 {{count}}개",
     "caption_other": "{{day}} {{date}} · {{market}} · 시간대 {{count}}개"
   },
@@ -40,49 +55,15 @@
     "title": "시간대 닫기",
     "text": "시간대를 끄면 새 주문에서 보이지 않아요. 이미 들어온 주문은 그대로 남아요. 갈 수 없다면 해당 고객에게 연락하세요."
   },
-  "away": {
-    "title": "판매하지 않는 날",
-    "intro": "빠지게 될 마켓 날이에요. 수확이 적거나, 몸이 아프거나, 차가 시동이 안 걸리는 경우요. 그날은 마켓 페이지에서 매장이 빠지고 새 주문을 받지 않아요. 이미 들어온 주문은 사유와 함께 거절되고, 재고는 돌아와요(D-02).",
-    "open": "고객에게 휴무 알리기",
-    "date": "날짜",
-    "reasonSeen": "고객에게 보이는 사유",
-    "declined": "거절된 주문",
-    "backTitle": "다시 판매해요",
-    "backText": "그날 다시 판매해요. 거절된 주문은 되돌아오지 않으니 고객이 다시 주문해야 해요.",
-    "back": "갈 수 있어요",
-    "emptyTitle": "모든 마켓 날에 판매해요",
-    "emptyText": "일정이 바뀌면 미리 알려 주세요. 빈 매장에 오는 사람이 없도록요.",
-    "notNow": "나중에",
-    "confirm": "알리기",
-    "declinedTitle": "주문을 거절했어요",
-    "toldTitle": "고객에게 알렸어요",
-    "declinedText_one": "주문 {{count}}건을 거절하고 고객에게 알렸어요.",
-    "declinedText_other": "주문 {{count}}건을 거절하고 고객에게 알렸어요.",
-    "toldText": "고객은 더 이상 {{date}}에 주문할 수 없어요.",
-    "dialogText": "그날 이미 들어온 주문은 사유와 함께 거절되고 재고는 돌아와요. 고객은 바로 알림을 받고 돈을 내지 않아요. 결제는 픽업할 때 하니까요.",
-    "marketDay": "마켓 날",
-    "reasonLabel": "고객에게 보일 사유",
-    "seedReason": "비가 온 뒤 수확이 적었어요",
-    "notGiven": "사유 없음",
-    "note": {
-      "placed_one": "주문 {{count}}건",
-      "placed_other": "주문 {{count}}건",
-      "none": "아직 주문 없음",
-      "shut": "원래 마켓 휴무일"
-    }
-  },
-  "closure": {
-    "title": "{{date}}에는 마켓이 쉬어요.",
-    "text": "{{reason}}. 따로 할 일은 없어요. 그날은 어느 매장에서도 주문할 수 없고, MarketLink가 고객에게 알렸어요."
-  },
   "generate": {
     "open": "다음 주 시간대 만들기",
     "title": "{{from}} – {{to}} 시간대를 만들까요?",
+    "from": "From",
+    "to": "To",
+    "rangeError": "Pick an end date on or after the start date.",
     "doneTitle": "시간대를 만들었어요",
     "doneText_one": "{{from}} – {{to}} 시간대 {{count}}개를 만들었어요.",
     "doneText_other": "{{from}} – {{to}} 시간대 {{count}}개를 만들었어요.",
-    "confirm_one": "시간대 {{count}}개 만들기",
-    "confirm_other": "시간대 {{count}}개 만들기",
-    "text": "Thảo Điền은 {{daysA}}, Thủ Đức은 {{daysB}}에 {{start}}부터 {{end}}까지 시간대를 만들어요. 기존 시간대는 바뀌지 않아요."
+    "confirm": "Generate slots"
   }
 }

@@ -79,7 +79,7 @@ const Header = ({
     <>
       <header className="bg-board text-on-board sticky top-0 z-40">
         <div className="mx-auto flex min-h-16 max-w-(--size-container) items-center gap-2 px-4 md:gap-6 md:px-6">
-          <Logo to="/" />
+          <Logo to="/" variant="light" />
 
           <nav aria-label={t('header.main')} className="hidden lg:block">
             <ul className="flex gap-1">
@@ -92,7 +92,12 @@ const Header = ({
           </nav>
 
           <div className="ml-auto flex items-center gap-1">
-            <Link to="/search" aria-label={t('header.search')} className={Helper.cn(iconButton, 'max-lg:hidden')}>
+            <Link
+              to="/search"
+              data-tour="header:search"
+              aria-label={t('header.search')}
+              className={Helper.cn(iconButton, 'max-lg:hidden')}
+            >
               <SearchIcon />
             </Link>
             {/* Messages and notifications are two separate icons, not merged (chat spec §9.1) */}
@@ -100,6 +105,7 @@ const Header = ({
               <Popover
                 label={chatUnread ? t('header.messagesUnread', { count: chatUnread }) : t('header.messages')}
                 to={messagesTo}
+                tourId="header:messages"
                 buttonClassName={iconButton}
                 trigger={
                   <>
@@ -121,6 +127,7 @@ const Header = ({
                   unreadCount ? t('header.notificationsUnread', { count: unreadCount }) : t('header.notifications')
                 }
                 to={notificationsTo}
+                tourId="header:notifications"
                 buttonClassName={iconButton}
                 trigger={
                   <>
@@ -138,6 +145,7 @@ const Header = ({
             )}
             <Link
               to="/cart"
+              data-tour="header:cart"
               aria-label={cartCount ? t('header.cartItems', { count: cartCount }) : t('header.cart')}
               className={iconButton}
             >
@@ -166,6 +174,7 @@ const Header = ({
             <button
               type="button"
               aria-label={t('header.openMenu')}
+              data-tour="header:menu"
               onClick={() => setMenuOpen(true)}
               className={Helper.cn(iconButton, 'lg:hidden')}
             >

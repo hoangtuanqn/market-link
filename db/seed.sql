@@ -515,23 +515,46 @@ LEFT JOIN (
      ) c ON c.slot_id = ps.id
 SET ps.booked_count = COALESCE(c.cnt, 0);
 
--- ---- Weekly stock templates (FR-063): farmer@ and farmer2@ can refill stock in one click ----
--- One row per product and per weekday the stall attends a market (farmer_operating_days): 30 on
--- weekends, 20 on weekdays, price NULL (keep the current price). Paused ("unavailable") products get
--- no template, so "apply" lists them under skipped[]. uq_template (product_id, day_of_week) makes
--- the upsert re-runnable.
+-- ---- Weekly stock templates (FR-063): what every stall can sell on each pickup day ----
+-- With per-date stock a product with no active template can never be ordered and the public
+-- catalogue leaves it out, so all ten demo stalls get one: one row per product and per weekday the
+-- stall attends a market (farmer_operating_days), 30 on weekends, 20 on weekdays, price NULL (the
+-- product's own price). Paused ("unavailable") products get one too, so the catalogue still shows
+-- them with their "Paused" tag. Stalls opened by real accounts keep the templates their Farmer set.
+-- uq_weekly_stock_template (product_id, day_of_week) makes the upsert re-runnable.
 INSERT INTO weekly_stock_templates (farmer_id, product_id, day_of_week, default_quantity, default_price, is_active)
 SELECT f.id, p.id, d.day_of_week, IF(d.day_of_week IN (0, 6), 30, 20), NULL, TRUE
 FROM farmer_profiles f
 JOIN users u ON u.id = f.user_id
-JOIN products p ON p.farmer_id = f.id AND p.is_deleted = FALSE AND p.status <> 'unavailable'
+JOIN products p ON p.farmer_id = f.id AND p.is_deleted = FALSE
 JOIN (SELECT DISTINCT fm.farmer_id, od.day_of_week
         FROM farmer_operating_days od
         JOIN farmer_markets fm ON fm.id = od.farmer_market_id AND fm.is_active = TRUE) d
   ON d.farmer_id = f.id
-WHERE u.email IN ('farmer@marketlink.vn', 'farmer2@marketlink.vn')
+WHERE u.email REGEXP '^farmer[0-9]*@marketlink[.]vn$'
 ON DUPLICATE KEY UPDATE default_quantity = IF(d.day_of_week IN (0, 6), 30, 20), default_price = NULL,
                         is_active = TRUE;
+
+-- ---- Daily stock (FR-063) behind the seeded orders that still hold stock ----
+-- Placing an order takes its units from the product_daily_stock row of its pickup date; the seeded
+-- orders skip that step, so each (product, pickup date) they use gets the row placing them would
+-- have left: the template quantity minus what the running seeded orders (placed/accepted/ready)
+-- hold. Cancelling or declining one of them then gives back exactly what it took. DAYOFWEEK() - 1
+-- is the app's 0 = Sunday … 6 = Saturday. A row that already exists is left alone: it already
+-- carries real orders or a Farmer's own override.
+INSERT INTO product_daily_stock (product_id, stock_date, quantity_available, unit_price)
+SELECT oi.product_id, o.pickup_date, GREATEST(t.default_quantity - SUM(oi.quantity), 0),
+       COALESCE(t.default_price, p.price)
+FROM orders o
+JOIN order_items oi ON oi.order_id = o.id
+JOIN products p ON p.id = oi.product_id
+JOIN weekly_stock_templates t ON t.product_id = oi.product_id
+                             AND t.day_of_week = DAYOFWEEK(o.pickup_date) - 1
+                             AND t.is_active = TRUE
+WHERE o.order_code LIKE 'ML-20260920-%'
+  AND o.status IN ('placed', 'accepted', 'ready')
+GROUP BY oi.product_id, o.pickup_date, t.default_quantity, t.default_price, p.price
+ON DUPLICATE KEY UPDATE id = id;
 
 -- ---- Favourites (FR-040, FR-014) of customer@marketlink.vn ----
 -- Two stalls, three products (one sold out, to demo the FR-041 restock alert) and one market.

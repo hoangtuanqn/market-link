@@ -24,6 +24,8 @@ const summary = {
   cutoffAt: '2026-09-26T12:00:00Z',
   itemCount: 3,
   createdAt: '2026-09-25T02:00:00Z',
+  customerId: 7,
+  customerName: 'An',
 };
 
 const renderPin = () =>

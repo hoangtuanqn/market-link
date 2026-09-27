@@ -98,9 +98,11 @@ cd frontend && npm run dev
   `db/schema.sql` (thiết kế ban đầu) — so sánh với `db/marketlink-schema-dump.sql`.
 - **LEAD đã chốt 25/09/2026:** toàn dự án dùng `/api/v1` và JSON `camelCase`; cột database giữ `snake_case`.
   `docs/api-contract.md` viết theo quyết định này.
-- Backend đã có endpoint cho mọi dòng SRS §1.6 (`docs/requirements/SRS-COVERAGE.md`). Một số màn FE còn chạy trên dữ
-  liệu mẫu `src/data/*`: bọc trong `SHOW_WIP` ở `frontend/src/App.tsx`, hiện ở dev, build production hiện "Coming soon".
-  Nối màn nào vào API thật thì gỡ nó khỏi danh sách đó.
+- Backend đã có endpoint cho mọi dòng SRS §1.6 (`docs/requirements/SRS-COVERAGE.md`), và mọi màn FE gọi API thật
+  (Task 12 của SRS gap closure, 27/09): dữ liệu mẫu và công tắc `SHOW_WIP` đã gỡ.
+- Chatbot (FR-090…092): tài khoản đã đăng nhập được **Claude** trả lời qua tool chỉ-đọc, khách vãng lai và admin dùng luật
+  từ khoá; thiếu `ANTHROPIC_API_KEY` thì toàn bộ về luật từ khoá. Claude không sinh SQL (R-04), xem `docs/chatbot-design.md`.
+- Dữ liệu demo: `db/seed.sql` (`make seed`) + tuỳ chọn `db/seed-extended.sql` (6 tháng lịch sử, `db/README.md`).
 - ~2.150 dòng comment tiếng Việt trong `backend/src`, `frontend/src` và hạ tầng (docker, scripts, prototype) đã
   dịch sang tiếng Anh (PR #153, đếm ngày 26/09/2026). 30/638 commit vẫn có tiếng Việt (26 nằm trên `dev`); R-09 và
   R-10 áp dụng từ nay, lịch sử commit không viết lại.

@@ -5,7 +5,6 @@
   },
   "breadcrumb": "Märkte",
   "approved": "Geprüfter Stand",
-  "savedToast": "{{name}} gespeichert.",
   "save": "Stand speichern",
   "stats": {
     "reviews_one": "{{count}} Bewertung",
@@ -33,7 +32,10 @@
     "all": "Alle",
     "farmer": "Zum Stand",
     "product": "Zu Produkten",
-    "newest": "Neueste zuerst"
+    "newest": "Neueste zuerst",
+    "emptyTitle": "No reviews yet",
+    "emptyText": "Be the first to review this stall once your order is completed.",
+    "noun": "reviews"
   },
   "about": {
     "whereWhen": "Wo und wann",
@@ -63,5 +65,6 @@
   },
   "error": {
     "noun": "Stand"
-  }
+  },
+  "saved": "Stall saved"
 }

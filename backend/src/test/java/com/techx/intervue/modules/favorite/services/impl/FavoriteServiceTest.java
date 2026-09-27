@@ -24,6 +24,7 @@ import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,7 @@ class FavoriteServiceTest {
     private FavoriteQueryRepository query;
     private UserRepository users;
     private ProductRepository products;
+    private RestockNotifier restock;
     private FavoriteService service;
 
     @BeforeEach
@@ -50,6 +52,7 @@ class FavoriteServiceTest {
         query = mock(FavoriteQueryRepository.class);
         users = mock(UserRepository.class);
         products = mock(ProductRepository.class);
+        restock = mock(RestockNotifier.class);
         service =
                 new FavoriteService(
                         favorites,
@@ -57,12 +60,15 @@ class FavoriteServiceTest {
                         users,
                         mock(FarmerProfileRepository.class),
                         products,
-                        mock(MarketRepository.class));
+                        mock(MarketRepository.class),
+                        restock);
         when(users.findById(USER_ID)).thenReturn(Optional.of(user(USER_ID, RoleType.CUSTOMER)));
         when(users.findById(ADMIN_ID)).thenReturn(Optional.of(user(ADMIN_ID, RoleType.ADMIN)));
         when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(product(false)));
         when(query.one(anyLong(), anyLong()))
                 .thenAnswer(inv -> Optional.of(resource(inv.getArgument(1))));
+        when(products.findAllById(any())).thenReturn(List.of(product(false)));
+        when(restock.isOrderable(any())).thenReturn(true);
     }
 
     private static User user(long id, RoleType role) {
@@ -103,6 +109,30 @@ class FavoriteServiceTest {
 
     private static FavoriteRequest aProduct() {
         return new FavoriteRequest("product", null, PRODUCT_ID, null);
+    }
+
+    /**
+     * Per-date stock (FR-063): a product still listed at an approved stall but sold out on every
+     * pickup date ahead is not available — the same rule as the FR-041 restock alert, never
+     * products.stock_quantity.
+     */
+    @Test
+    void listMarksAProductSoldOutOnEveryDateUnavailable() {
+        when(query.list(USER_ID, null)).thenReturn(List.of(resource(FAVORITE_ID)));
+        when(restock.isOrderable(any())).thenReturn(false);
+
+        assertThat(service.list(USER_ID, null))
+                .singleElement()
+                .satisfies(f -> assertThat(f.available()).isFalse());
+    }
+
+    @Test
+    void listKeepsAnOrderableProductAvailable() {
+        when(query.list(USER_ID, null)).thenReturn(List.of(resource(FAVORITE_ID)));
+
+        assertThat(service.list(USER_ID, null))
+                .singleElement()
+                .satisfies(f -> assertThat(f.available()).isTrue());
     }
 
     /** A second click on the heart returns the same favourite — no second row, no 409. */

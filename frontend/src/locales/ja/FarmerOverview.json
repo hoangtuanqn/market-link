@@ -27,13 +27,9 @@
     "status": "状態"
   },
   "toast": {
-    "acceptedTitle": "注文を受け付けました",
     "acceptedText": "注文 {{code}} を受け付け、{{who}} さんに通知しました。",
-    "readyTitle": "準備ができました",
     "readyText": "注文 {{code}} を準備完了にしました。",
-    "completedTitle": "注文が完了しました",
     "completedText": "注文 {{code}} が完了しました。",
-    "declinedTitle": "注文をお断りしました",
     "declinedText": "注文 {{code}} をお断りしました。在庫は元に戻りました。"
   },
   "actions": {
@@ -43,11 +39,6 @@
     "complete": "完了にする",
     "view": "見る"
   },
-  "captions": {
-    "new": "注文済み · {{sat}} と {{sun}}",
-    "ready": "受け取り待ち"
-  },
-  "overline": "{{market}} のあなたのお店 · 次のマーケットの日 {{day}}",
   "greeting": "おはようございます、{{name}}さん",
   "applyTemplate": "週間テンプレートを適用",
   "addProduct": "商品を追加",
@@ -57,36 +48,39 @@
     "text": "未承認の注文も在庫を確保しています。お客さまが予定を立てられるよう、締め切り前に受け付けるかお断りしてください。"
   },
   "kpi": {
+    "noun": "your numbers",
     "orders": "注文数の合計",
-    "ordersNote_one": "今週 {{count}} 件",
-    "ordersNote_other": "今週 {{count}} 件",
-    "vsAugust": "8 月比",
     "openHistory": "販売履歴を開く",
-    "awaitingNote_one": "<b>{{count}}</b> 件が {{date}} {{time}} に締め切り",
-    "awaitingNote_other": "<b>{{count}}</b> 件が {{date}} {{time}} に締め切り",
-    "vsThursday": "いつもの木曜日比",
+    "pending": "Awaiting you",
     "openIncoming": "新しい注文を開く",
     "revenue": "9 月の売上",
-    "revenueNote": "₫、完了した注文から。お店で支払い済み",
-    "best": "売れ筋",
-    "bestNote": "今月 {{qty}}",
-    "openProducts": "商品を開く",
-    "note": "9 月のここまでの数字を 8 月と比べています。各タイルから数字の元の画面を開けます。"
+    "revenueMonth": "Revenue this month"
   },
   "incoming": {
     "title": "新しい注文",
     "all": "すべての注文と絞り込み",
-    "note": "新しい注文は開くまでハイライト表示されます。"
+    "noun": "incoming orders",
+    "empty": {
+      "title": "Nothing here",
+      "text": "Orders in this status will show up here."
+    }
   },
   "stock": {
     "title": "{{day}}の在庫",
     "link": "今週の在庫",
-    "note": "予約済みは注文で確保されている分です。お客さまが注文した時点で在庫から差し引かれます。"
+    "noun": "stock",
+    "empty": {
+      "title": "No products yet",
+      "text": "Add a product to see its stock here."
+    }
   },
   "best": {
     "title": "売れ筋",
     "link": "販売履歴",
-    "note": "9 月の販売数、それぞれの単位で"
-  },
-  "protoNote": "サイドバーとその上のヘッダーはプロトタイプから新しく加わったものです。"
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold yet",
+      "text": "Your best-selling products will show up here once orders complete."
+    }
+  }
 }

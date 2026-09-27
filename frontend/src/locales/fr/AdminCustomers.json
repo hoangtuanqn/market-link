@@ -1,6 +1,7 @@
 {
   "title": "Clients",
   "intro": "Désactivez un compte en cas de manquement : il ne peut plus se connecter ni commander. Réactivez-le une fois la situation réglée. Leurs commandes passées restent chez les étals.",
+  "noun": "customers",
   "search": {
     "label": "Rechercher un client",
     "placeholder": "Nom, e-mail ou téléphone",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "Tous",
     "active": "Actifs",
-    "inactive": "Désactivés",
-    "joinedThisMonth": "Inscrits ce mois-ci"
+    "inactive": "Désactivés"
   },
   "status": {
     "active": "Actif",
     "inactive": "Désactivé"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "Client",
     "joined": "Inscription",
@@ -36,11 +37,19 @@
     "title": "Désactiver {{name}} ?",
     "text": "La personne est déconnectée partout et ne peut plus se connecter ni commander. Les commandes déjà passées restent chez les étals.",
     "reason": "Motif, conservé sur le compte",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Laisser actif",
     "confirm": "Désactiver le compte"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "{{name}} désactivé.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} peut se reconnecter."
   }
 }

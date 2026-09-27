@@ -56,6 +56,12 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
         return queries.findOne(userId).orElseThrow(CustomerNotFoundException::new);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public AdminCustomerResource detail(long userId) {
+        return queries.findOne(userId).orElseThrow(CustomerNotFoundException::new);
+    }
+
     /** Only the two values of contract §10; {@code suspended} is not an admin action here. */
     private static UserStatus parseStatus(String status) {
         String s = status == null ? "" : status.trim().toLowerCase(Locale.ROOT);

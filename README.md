@@ -51,15 +51,11 @@ Every rule behind the order flow is written down in [`docs/decisions.md`](docs/d
 | Edit or cancel before the cutoff, reorder in one click | Incoming orders: accept, decline, ready, complete | Markets (with map coordinates, closures) and categories |
 | Favourites with restock alerts, in-app and Web Push notifications | Order cutoff and pickup-slot capacity | Moderate products, reviews and reported chat messages |
 | Reviews and ratings for farmers and products | Dashboard: total and pending orders, revenue, best sellers | Platform reports: revenue per market, most active farmers |
-| Chat with a stall, shopping assistant chatbot | Reply to reviews, chat with customers | Customer accounts, feedback queue, platform announcements |
+| Chat with a stall; a shopping assistant that Claude answers for signed-in users | Reply to reviews, chat with customers | Customer accounts, feedback queue, platform announcements |
 
 Across the app: 10 UI languages, light and dark themes, responsive from 375 px to 1440 px, and a loading / empty /
 error state on every data screen. The full scope, one `FR-xxx` ID per requirement, is in
 [`.ai/REQUIREMENTS.md`](.ai/REQUIREMENTS.md).
-
-> **Status.** The backend covers the whole scope above. A number of dashboard screens still read sample data while
-> they are being connected to their endpoints: they run in the dev stack (`make up`) and show "Coming soon" in a
-> production build. [`docs/requirements/SRS-COVERAGE.md`](docs/requirements/SRS-COVERAGE.md) tracks each screen.
 
 ## Screenshots
 
@@ -77,6 +73,7 @@ error state on every data screen. The full scope, one `FR-xxx` ID per requiremen
 | Backend | Spring Boot 4.1 on Java 25: Spring Security with JWT, Spring Data JPA, WebSocket (STOMP), Bean Validation, springdoc OpenAPI |
 | Data | MySQL 8.4 with Flyway migrations, Redis 7.4 |
 | Messaging | RabbitMQ 4 as the STOMP relay for realtime chat and notifications, Web Push (VAPID) |
+| AI assistant | Claude (`claude-haiku-4-5`) through the Anthropic API, calling read-only tools that run fixed, parameterised SQL; a keyword engine answers when no key is set |
 | Quality | JUnit + Mockito, Vitest + Testing Library, ESLint, Prettier, Spotless, Lefthook pre-commit hooks |
 | Delivery | Docker Compose for dev and production, GitHub Actions for CI and branch guards |
 
@@ -95,6 +92,7 @@ flowchart LR
     API --> DB[("MySQL<br/>Flyway migrations")]
     API --> RD[("Redis<br/>sessions · token blacklist · presence · job queue")]
     API <--> MQ["RabbitMQ<br/>STOMP relay"]
+    API -.->|"optional"| AI["Anthropic API<br/>shopping assistant"]
     API -.->|"Web Push"| SPA
 ```
 
@@ -116,6 +114,10 @@ cd market-link
 make up      # MySQL, Redis, RabbitMQ, backend :8080, frontend :3000 — first build takes a few minutes
 make seed    # demo data: 4 markets, 10 stalls, 51 products, orders in every status
 ```
+
+Six months of history for the dashboards and reports (100+ customers, 500+ orders) is optional — see
+[`db/README.md`](db/README.md). To let Claude answer the shopping assistant, put an `ANTHROPIC_API_KEY` in `.env`
+and run `make up` again ([`docs/setup.md`](docs/setup.md#6-shopping-assistant-answered-by-claude)).
 
 Open **http://localhost:3000** and sign in with a demo account (password `Demo@1234` for all):
 
@@ -141,10 +143,10 @@ make down      # stop, keep data
 market-link/
 ├── backend/                 Spring Boot API (Java 25) — src/main/java/.../modules/<module>/
 ├── frontend/                React SPA — src/pages/<role>/<Page>/, src/components/, src/locales/<lang>/
-├── db/                      schema.sql (design), schema dump (live tables), seed.sql, seed-images/
+├── db/                      schema.sql (design), schema dump (live tables), seed.sql, seed-extended.sql, seed-images/
 ├── docs/                    requirements, API contract, decisions, design system, prototype, setup guide
 ├── docker/                  Dockerfiles for the backend and frontend images
-├── scripts/                 git and environment guards used by the hooks and CI
+├── scripts/                 git and environment guards used by the hooks and CI, the demo-history generator
 ├── .ai/REQUIREMENTS.md      scope: every requirement with its FR-xxx ID, priority and owner
 ├── .github/                 CI (format, lint, test, build), branch-policy guard, PR template
 ├── docker-compose.yml       dev stack (make up)
@@ -164,6 +166,15 @@ market-link/
 | [`docs/prototype/`](docs/prototype) | Clickable HTML prototype of every screen |
 | [`docs/setup.md`](docs/setup.md) | Full setup, both ways of running, troubleshooting |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Branches (`dev` → `main`), commits, pull requests, releases |
+
+## AI tools used
+
+The team used **Claude Code** (Anthropic) as a coding assistant throughout the project — for scaffolding
+new features, refactoring, code review, and drafting documentation such as this README and the files in
+`docs/`. All AI-generated code was reviewed, tested and adapted by the team before merging; no part of the
+codebase was accepted unreviewed. No ready-made website template was used — the UI is built from the
+project's own design system (`docs/design-system/`). Image assets are placeholders or the team's own
+photos; no AI image-generation tool was used for shipped assets.
 
 ## Contributing
 

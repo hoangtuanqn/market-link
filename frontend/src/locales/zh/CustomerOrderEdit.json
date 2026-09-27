@@ -1,4 +1,5 @@
 {
+  "noun": "order",
   "myOrders": "我的订单",
   "breadcrumbOrder": "订单 {{code}}",
   "breadcrumbEdit": "编辑",

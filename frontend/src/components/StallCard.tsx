@@ -4,8 +4,6 @@ import { Link } from 'react-router';
 import Rating from '@/components/Rating';
 import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { SHOW_WIP } from '@/config/wip';
-import { marketName } from '@/data/customer';
 import DirectionsButton from './DirectionsButton';
 
 type StallCardFarmer = {
@@ -15,7 +13,6 @@ type StallCardFarmer = {
   lat: number | null;
   lng: number | null;
   markets: number[];
-  /** Real names, when the caller has them; otherwise the ids are looked up in the demo data (until C11). */
   marketNames?: string[];
   days: string;
   pickup: string;
@@ -54,9 +51,7 @@ const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: R
 
       <dl className="text-small col-span-full m-0 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
         <dt className="text-ink-muted">{t('stall.markets')}</dt>
-        <dd className="m-0">
-          {(farmer.marketNames ?? (SHOW_WIP ? farmer.markets.map((id) => marketName(id)) : [])).join(', ')}
-        </dd>
+        <dd className="m-0">{(farmer.marketNames ?? []).join(', ')}</dd>
         <dt className="text-ink-muted">{t('stall.days')}</dt>
         <dd className="m-0">{farmer.days}</dd>
         <dt className="text-ink-muted">{t('stall.pickup')}</dt>

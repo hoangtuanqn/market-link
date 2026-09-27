@@ -5,6 +5,7 @@ import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.report.resources.AdminDashboardResource;
 import com.techx.intervue.modules.report.resources.RevenueByMarketResource;
 import com.techx.intervue.modules.report.resources.TopFarmerResource;
+import com.techx.intervue.modules.report.resources.TopProductResource;
 import com.techx.intervue.modules.report.services.interfaces.AdminReportServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -41,9 +42,12 @@ public class AdminReportController extends BaseController {
                     LocalDate to,
             @RequestParam(required = false) Long marketId,
             @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long customerId,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int pageSize) {
-        return ok(reports.orders(from, to, marketId, status, page, pageSize), "Orders loaded.");
+        return ok(
+                reports.orders(from, to, marketId, status, customerId, page, pageSize),
+                "Orders loaded.");
     }
 
     @GetMapping("/reports/revenue")
@@ -63,5 +67,15 @@ public class AdminReportController extends BaseController {
                     LocalDate to,
             @RequestParam(defaultValue = "10") int limit) {
         return ok(reports.topFarmers(from, to, limit), "Top farmers loaded.");
+    }
+
+    @GetMapping("/reports/top-products")
+    public ResponseEntity<ApiResource<List<TopProductResource>>> topProducts(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                    LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                    LocalDate to,
+            @RequestParam(defaultValue = "10") int limit) {
+        return ok(reports.topProducts(from, to, limit), "Top products loaded.");
     }
 }

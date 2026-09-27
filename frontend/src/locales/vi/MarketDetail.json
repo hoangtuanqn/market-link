@@ -5,10 +5,6 @@
   },
   "intro_one": "{{count}} sạp. Mỗi sạp tự chốt đơn trước giờ nhận 12 đến 24 tiếng. Nhận hàng tại sạp và trả tiền trực tiếp cho nhà vườn.",
   "intro_other": "{{count}} sạp. Mỗi sạp tự chốt đơn trước giờ nhận 12 đến 24 tiếng. Nhận hàng tại sạp và trả tiền trực tiếp cho nhà vườn.",
-  "toast": {
-    "saved": "Đã lưu {{name}}.",
-    "removed": "Đã bỏ {{name}} khỏi mục yêu thích."
-  },
   "save": {
     "on": "Đã lưu chợ",
     "off": "Lưu chợ"

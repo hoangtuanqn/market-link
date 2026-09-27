@@ -1,15 +1,14 @@
 {
-  "overline": "Paramètres",
   "title": "Boîte de retours",
   "intro": "Signalements de bugs, suggestions et questions envoyés via le formulaire de retour. Marquez-les comme traités une fois répondu.",
-  "link": {
-    "categories": "Catégories",
-    "announcements": "Annonces"
-  },
+  "noun": "feedback",
+  "anonymous": "Anonymous",
+  "caption": "{{count}} feedback messages",
   "filterLabel": "Filtrer les retours",
   "filter": {
-    "open": "Ouverts",
-    "answered": "Traités",
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved",
     "bug": "Bug",
     "suggestion": "Suggestion",
     "query": "Question"
@@ -20,8 +19,9 @@
     "query": "Question"
   },
   "status": {
-    "open": "Ouvert",
-    "answered": "Traité"
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved"
   },
   "col": {
     "type": "Type",
@@ -30,26 +30,21 @@
     "status": "Statut"
   },
   "action": {
-    "read": "Lire",
-    "readAndAnswer": "Lire et répondre"
+    "read": "Lire"
   },
   "dialog": {
     "title": "{{type}} de {{from}}",
     "sent": "Envoyé le {{date}} · {{state}}",
-    "notAnswered": "pas encore traité",
-    "alreadyAnswered": "déjà traité",
-    "yourAnswer": "Votre réponse",
-    "replyPlaceholder": "Merci de nous l'avoir signalé…",
     "close": "Fermer",
-    "send": "Envoyer et marquer comme traité",
-    "sendAgain": "Renvoyer"
+    "markReviewed": "Mark reviewed",
+    "markResolved": "Mark resolved"
   },
   "empty": {
     "title": "Aucun retour pour l'instant",
     "text": "Les signalements de bugs, suggestions et questions du formulaire arrivent ici."
   },
   "toast": {
-    "answered": "Réponse enregistrée et message marqué comme traité.",
-    "markedOnly": "Marqué comme traité sans réponse."
+    "reviewed": "Marked reviewed.",
+    "resolved": "Marked resolved."
   }
 }

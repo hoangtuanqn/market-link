@@ -13,11 +13,15 @@ import com.techx.intervue.modules.favorite.repositories.FavoriteRepository;
 import com.techx.intervue.modules.favorite.requests.FavoriteRequest;
 import com.techx.intervue.modules.favorite.resources.FavoriteResource;
 import com.techx.intervue.modules.favorite.services.interfaces.FavoriteServiceInterface;
+import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -39,6 +43,7 @@ public class FavoriteService implements FavoriteServiceInterface {
     private final FarmerProfileRepository farmers;
     private final ProductRepository products;
     private final MarketRepository markets;
+    private final RestockNotifier restock;
 
     @Override
     @Transactional(readOnly = true)
@@ -47,7 +52,51 @@ public class FavoriteService implements FavoriteServiceInterface {
                 targetType == null || targetType.isBlank()
                         ? null
                         : FavoriteTargetType.parse(targetType.trim());
-        return query.list(userId, type);
+        return withPerDateStock(query.list(userId, type));
+    }
+
+    /**
+     * Per-date stock (FR-063): whether a favourite product can still be ordered is the FR-041
+     * restock rule ({@link RestockNotifier#isOrderable} — the nearest pickup date still has stock),
+     * never products.stock_quantity, which is only the Farmer's reference number now. The SQL
+     * already settled the rest (listed, available, approved stall), so only those rows are checked.
+     */
+    private List<FavoriteResource> withPerDateStock(List<FavoriteResource> rows) {
+        List<Long> ids =
+                rows.stream()
+                        .filter(FavoriteService::productStillListed)
+                        .map(FavoriteResource::targetId)
+                        .toList();
+        if (ids.isEmpty()) {
+            return rows;
+        }
+        Map<Long, Product> byId =
+                products.findAllById(ids).stream()
+                        .collect(Collectors.toMap(Product::getId, Function.identity()));
+        return rows.stream()
+                .map(
+                        r -> {
+                            if (!productStillListed(r)) {
+                                return r;
+                            }
+                            Product p = byId.get(r.targetId());
+                            boolean orderable = p != null && restock.isOrderable(p);
+                            return orderable
+                                    ? r
+                                    : new FavoriteResource(
+                                            r.id(),
+                                            r.targetType(),
+                                            r.targetId(),
+                                            r.title(),
+                                            r.subtitle(),
+                                            r.imageUrl(),
+                                            false);
+                        })
+                .toList();
+    }
+
+    private static boolean productStillListed(FavoriteResource r) {
+        return r.available() && FavoriteTargetType.PRODUCT.value().equals(r.targetType());
     }
 
     /**
@@ -66,7 +115,9 @@ public class FavoriteService implements FavoriteServiceInterface {
                 favorites
                         .findByCustomerIdAndTargetTypeAndTargetId(userId, type, targetId)
                         .orElseGet(() -> create(userId, type, targetId));
-        return query.one(userId, favorite.getId()).orElseThrow(FavoriteNotFoundException::new);
+        FavoriteResource one =
+                query.one(userId, favorite.getId()).orElseThrow(FavoriteNotFoundException::new);
+        return withPerDateStock(List.of(one)).getFirst();
     }
 
     @Override

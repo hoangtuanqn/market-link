@@ -4,6 +4,7 @@
   "summary": "摊位 {{stall}} · 商品 {{products}} · {{reviews}}",
   "reviewCount_one": "{{count}} 条评价",
   "reviewCount_other": "{{count}} 条评价",
+  "noun": "reviews",
   "filter": {
     "all": "全部",
     "needs": "待回复",
@@ -14,13 +15,10 @@
   "toast": {
     "postedTitle": "回复已发布",
     "postedText": "已在 {{name}} 的评价下发布回复。",
-    "editTitle": "编辑回复",
-    "editText": "已打开回复编辑。"
+    "alreadyReplied": "You already replied to this review."
   },
   "action": {
-    "editReply": "编辑回复",
     "reply": "回复",
-    "report": "举报评价",
     "post": "发布回复"
   },
   "form": {

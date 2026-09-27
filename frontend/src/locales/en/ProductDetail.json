@@ -5,7 +5,6 @@
     "browse": "Browse products"
   },
   "breadcrumb": "Products",
-  "photo": "Photo of {{name}}",
   "favorite": {
     "add": "Add to favorites: {{name}}",
     "remove": "Remove from favorites: {{name}}"
@@ -67,7 +66,10 @@
     "write": "Write a review",
     "writeNote": "Available once an order with this product is completed.",
     "summary_one": "{{count}} review, from a completed order",
-    "summary_other": "{{count}} reviews, all from completed orders"
+    "summary_other": "{{count}} reviews, all from completed orders",
+    "emptyTitle": "No reviews yet",
+    "emptyText": "Be the first to review this product once your order is completed.",
+    "noun": "reviews"
   },
   "similar": {
     "title": "{{name}} at other stalls this weekend",
@@ -77,12 +79,6 @@
   },
   "also": {
     "title": "Also from {{stall}} this week"
-  },
-  "report": {
-    "sentTitle": "Report sent",
-    "sentText": "An admin will look at this listing.",
-    "button": "Report this listing",
-    "note": "Wrong price, wrong photo or something that does not belong at a farmers market."
   },
   "error": {
     "noun": "product"

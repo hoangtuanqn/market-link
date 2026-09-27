@@ -27,13 +27,9 @@
     "status": "状态"
   },
   "toast": {
-    "acceptedTitle": "订单已接受",
     "acceptedText": "订单 {{code}} 已接受，已通知 {{who}}。",
-    "readyTitle": "订单已备好",
     "readyText": "订单 {{code}} 已标记为备好。",
-    "completedTitle": "订单已完成",
     "completedText": "订单 {{code}} 已完成。",
-    "declinedTitle": "订单已拒绝",
     "declinedText": "订单 {{code}} 已拒绝，库存已退回。"
   },
   "actions": {
@@ -43,11 +39,6 @@
     "complete": "标记为完成",
     "view": "查看"
   },
-  "captions": {
-    "new": "已下单 · {{sat}} 和 {{sun}}",
-    "ready": "待取货"
-  },
-  "overline": "你在 {{market}} 的摊位 · 下个市集日 {{day}}",
   "greeting": "早上好，{{name}}",
   "applyTemplate": "套用每周模板",
   "addProduct": "添加商品",
@@ -57,36 +48,39 @@
     "text": "未确认的订单仍占用库存。请在截止前接受或拒绝，方便顾客安排。"
   },
   "kpi": {
+    "noun": "your numbers",
     "orders": "订单总数",
-    "ordersNote_one": "本周 {{count}} 个",
-    "ordersNote_other": "本周 {{count}} 个",
-    "vsAugust": "对比 8 月",
     "openHistory": "打开销售记录",
-    "awaitingNote_one": "<b>{{count}}</b> 个将于 {{date}} {{time}} 截止",
-    "awaitingNote_other": "<b>{{count}}</b> 个将于 {{date}} {{time}} 截止",
-    "vsThursday": "对比平常的周四",
+    "pending": "Awaiting you",
     "openIncoming": "打开新订单",
     "revenue": "9 月收入",
-    "revenueNote": "₫，来自已完成订单，在摊位付款",
-    "best": "最畅销",
-    "bestNote": "本月 {{qty}}",
-    "openProducts": "打开商品",
-    "note": "9 月至今，与 8 月对比。每个卡片都可打开对应数字背后的页面。"
+    "revenueMonth": "Revenue this month"
   },
   "incoming": {
     "title": "新订单",
     "all": "全部订单与筛选",
-    "note": "新订单会高亮显示，直到你打开它。"
+    "noun": "incoming orders",
+    "empty": {
+      "title": "Nothing here",
+      "text": "Orders in this status will show up here."
+    }
   },
   "stock": {
     "title": "{{day}}的库存",
     "link": "本周库存",
-    "note": "已预留表示有订单占用。顾客下单时即从你的库存中扣除。"
+    "noun": "stock",
+    "empty": {
+      "title": "No products yet",
+      "text": "Add a product to see its stock here."
+    }
   },
   "best": {
     "title": "畅销商品",
     "link": "销售记录",
-    "note": "9 月售出量，按各自单位计"
-  },
-  "protoNote": "侧边栏及其上方的页头是相对原型新增的。"
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold yet",
+      "text": "Your best-selling products will show up here once orders complete."
+    }
+  }
 }

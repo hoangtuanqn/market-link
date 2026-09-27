@@ -7,9 +7,11 @@
     "phone": "Điện thoại",
     "address": "Địa chỉ",
     "hours": "Giờ làm việc",
-    "toAdd": "Sẽ bổ sung",
-    "addressValue": "Sẽ bổ sung. Ghim trên bản đồ chỉ là chỗ tạm ở Quận 1.",
-    "hoursValue": "Thứ Hai – Thứ Sáu, 09:00 – 17:00"
+    "emailValue": "contact@marketlink.vn",
+    "phoneValue": "090 123 4567",
+    "addressValue": "123 Lê Lợi, Phường Bến Nghé, Quận 1, TP.HCM",
+    "hoursValue": "Thứ Hai – Thứ Sáu, 09:00 – 17:00",
+    "toAdd": "Sẽ bổ sung"
   },
   "feedback": {
     "title": "Có lỗi hay có ý tưởng?",
@@ -18,9 +20,9 @@
   },
   "map": {
     "label": "Bản đồ vị trí đội ngũ",
-    "markerLabel": "Đội ngũ MarketLink (chỗ tạm)",
+    "markerLabel": "Đội ngũ MarketLink",
     "popupTitle": "Đội ngũ MarketLink",
-    "popupLine": "Ghim tạm, Quận 1",
+    "popupLine": "123 Lê Lợi, Quận 1",
     "directions": "Chỉ đường tới đội ngũ"
   }
 }
