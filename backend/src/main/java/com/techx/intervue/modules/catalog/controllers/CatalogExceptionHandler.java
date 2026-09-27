@@ -32,7 +32,8 @@ import org.springframework.web.multipart.MultipartException;
             MarketController.class,
             AdminMarketController.class,
             AdminMarketImageController.class,
-            AdminMarketClosureController.class
+            AdminMarketClosureController.class,
+            ShelfLifeGuideController.class
         })
 public class CatalogExceptionHandler {
 
