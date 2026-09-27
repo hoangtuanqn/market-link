@@ -91,9 +91,9 @@
     "mapData": "Données cartographiques",
     "mapDataValue": "© contributeurs OpenStreetMap",
     "photos": "Photos",
-    "photosValue": "Provisoires pour l'instant, créditées ici dès que les photos de l'équipe seront prêtes",
+    "photosValue": "Photos d'Unsplash, sous licence Unsplash",
     "locale": "Devise et heure",
-    "localeValue": "Dông vietnamien, dates au format {{format}}, horloge 24 heures, {{zone}}"
+    "localeValue": "Dollars américains, dates au format {{format}}, horloge 24 heures, {{zone}}"
   },
   "contact": {
     "title": "Quelque chose à nous dire ?",

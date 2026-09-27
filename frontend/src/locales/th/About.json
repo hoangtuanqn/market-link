@@ -91,9 +91,9 @@
     "mapData": "ข้อมูลแผนที่",
     "mapDataValue": "© ผู้ร่วมพัฒนา OpenStreetMap",
     "photos": "รูปภาพ",
-    "photosValue": "ตอนนี้เป็นภาพชั่วคราว จะให้เครดิตที่นี่เมื่อได้ภาพของทีมเอง",
+    "photosValue": "ภาพจาก Unsplash ภายใต้สัญญาอนุญาต Unsplash",
     "locale": "สกุลเงินและเวลา",
-    "localeValue": "ดองเวียดนาม วันที่แบบ {{format}} นาฬิกา 24 ชั่วโมง {{zone}}"
+    "localeValue": "ดอลลาร์สหรัฐ วันที่แบบ {{format}} นาฬิกา 24 ชั่วโมง {{zone}}"
   },
   "contact": {
     "title": "มีอะไรอยากบอกเราไหม",

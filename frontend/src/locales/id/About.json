@@ -91,9 +91,9 @@
     "mapData": "Data peta",
     "mapDataValue": "© kontributor OpenStreetMap",
     "photos": "Foto",
-    "photosValue": "Masih foto sementara; kreditnya dicantumkan di sini setelah foto milik tim tersedia",
+    "photosValue": "Foto dari Unsplash, dengan Lisensi Unsplash",
     "locale": "Mata uang dan waktu",
-    "localeValue": "Dong Vietnam, tanggal {{format}}, format 24 jam, {{zone}}"
+    "localeValue": "Dolar AS, tanggal {{format}}, format 24 jam, {{zone}}"
   },
   "contact": {
     "title": "Ada yang ingin disampaikan?",

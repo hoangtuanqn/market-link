@@ -91,9 +91,9 @@
     "mapData": "地图数据",
     "mapDataValue": "© OpenStreetMap 贡献者",
     "photos": "照片",
-    "photosValue": "目前为占位图，团队自己的照片到位后会在这里注明出处",
+    "photosValue": "照片来自 Unsplash，遵循 Unsplash 许可",
     "locale": "货币与时间",
-    "localeValue": "越南盾，日期格式 {{format}}，24 小时制，{{zone}}"
+    "localeValue": "美元，日期格式 {{format}}，24 小时制，{{zone}}"
   },
   "contact": {
     "title": "有话想对我们说？",
