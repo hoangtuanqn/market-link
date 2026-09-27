@@ -98,6 +98,14 @@ CREATE TABLE `conversations` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `countries` (
+  `code` char(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name_en` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `farmer_application_history` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `user_id` bigint unsigned NOT NULL,
@@ -271,8 +279,13 @@ CREATE TABLE `markets` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `market_name` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `district` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'TP. Hồ Chí Minh',
+  `country_code` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `province_code` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ward_code` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `street_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address_line` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region_name` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `city_name` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `latitude` decimal(10,8) NOT NULL,
   `longitude` decimal(11,8) NOT NULL,
   `map_provider` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'osm',
@@ -284,7 +297,13 @@ CREATE TABLE `markets` (
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_market_name` (`market_name`),
-  KEY `idx_markets_city_active` (`city`,`is_active`)
+  KEY `fk_markets_country` (`country_code`),
+  KEY `fk_markets_ward` (`province_code`,`ward_code`),
+  KEY `idx_markets_ward_active` (`ward_code`,`is_active`),
+  CONSTRAINT `fk_markets_country` FOREIGN KEY (`country_code`) REFERENCES `countries` (`code`),
+  CONSTRAINT `fk_markets_province` FOREIGN KEY (`province_code`) REFERENCES `provinces` (`code`),
+  CONSTRAINT `fk_markets_ward` FOREIGN KEY (`province_code`, `ward_code`) REFERENCES `wards` (`province_code`, `code`),
+  CONSTRAINT `chk_markets_ward_has_province` CHECK (((`ward_code` is null) or (`province_code` is not null)))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -484,6 +503,20 @@ CREATE TABLE `pickup_slots` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product_daily_stock` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` bigint unsigned NOT NULL,
+  `stock_date` date NOT NULL,
+  `quantity_available` int NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_product_daily_stock` (`product_id`,`stock_date`),
+  CONSTRAINT `fk_pds_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `ck_pds_quantity` CHECK ((`quantity_available` >= 0))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `products` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `farmer_id` bigint unsigned NOT NULL,
@@ -513,6 +546,17 @@ CREATE TABLE `products` (
   CONSTRAINT `ck_products_price` CHECK ((`price` >= 0)),
   CONSTRAINT `ck_products_shelf_life` CHECK ((`shelf_life_days` >= 1)),
   CONSTRAINT `ck_products_stock` CHECK ((`stock_quantity` >= 0))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `provinces` (
+  `code` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `full_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name_en` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `full_name_en` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -595,6 +639,19 @@ CREATE TABLE `reviews` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `streets` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `province_code` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `name_search` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_streets_province_name` (`province_code`,`name`),
+  KEY `idx_streets_search` (`province_code`,`name_search`),
+  CONSTRAINT `fk_streets_province` FOREIGN KEY (`province_code`) REFERENCES `provinces` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_presence` (
   `user_id` bigint unsigned NOT NULL,
   `last_seen_at` datetime(6) NOT NULL,
@@ -645,6 +702,13 @@ CREATE TABLE `users` (
   `role` enum('customer','farmer','admin') COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `country_code` char(2) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `province_code` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ward_code` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `street_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address_line` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `region_name` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `city_name` varchar(60) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `status` enum('active','inactive','suspended') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
   `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -652,7 +716,27 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `phone` (`phone`),
-  KEY `idx_users_role_status` (`role`,`status`)
+  KEY `idx_users_role_status` (`role`,`status`),
+  KEY `fk_users_country` (`country_code`),
+  KEY `fk_users_ward` (`province_code`,`ward_code`),
+  CONSTRAINT `fk_users_country` FOREIGN KEY (`country_code`) REFERENCES `countries` (`code`),
+  CONSTRAINT `fk_users_province` FOREIGN KEY (`province_code`) REFERENCES `provinces` (`code`),
+  CONSTRAINT `fk_users_ward` FOREIGN KEY (`province_code`, `ward_code`) REFERENCES `wards` (`province_code`, `code`),
+  CONSTRAINT `chk_users_ward_has_province` CHECK (((`ward_code` is null) or (`province_code` is not null)))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `wards` (
+  `code` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `province_code` varchar(5) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `full_name` varchar(120) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name_en` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `full_name_en` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`code`),
+  UNIQUE KEY `uq_wards_province_code` (`province_code`,`code`),
+  CONSTRAINT `fk_wards_province` FOREIGN KEY (`province_code`) REFERENCES `provinces` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -666,12 +750,12 @@ CREATE TABLE `weekly_stock_templates` (
   `default_price` decimal(10,2) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_template` (`product_id`,`day_of_week`),
-  KEY `idx_template_farmer_day` (`farmer_id`,`day_of_week`),
-  CONSTRAINT `fk_template_farmer` FOREIGN KEY (`farmer_id`) REFERENCES `farmer_profiles` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_template_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `ck_template_day` CHECK ((`day_of_week` between 0 and 6)),
-  CONSTRAINT `ck_template_price` CHECK (((`default_price` is null) or (`default_price` >= 0))),
-  CONSTRAINT `ck_template_quantity` CHECK ((`default_quantity` >= 0))
+  UNIQUE KEY `uq_weekly_stock_template` (`product_id`,`day_of_week`),
+  KEY `fk_weekly_stock_templates_farmer` (`farmer_id`),
+  CONSTRAINT `fk_weekly_stock_templates_farmer` FOREIGN KEY (`farmer_id`) REFERENCES `farmer_profiles` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_weekly_stock_templates_product` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `ck_weekly_stock_templates_day` CHECK ((`day_of_week` between 0 and 6)),
+  CONSTRAINT `ck_weekly_stock_templates_price` CHECK (((`default_price` is null) or (`default_price` >= 0))),
+  CONSTRAINT `ck_weekly_stock_templates_quantity` CHECK ((`default_quantity` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

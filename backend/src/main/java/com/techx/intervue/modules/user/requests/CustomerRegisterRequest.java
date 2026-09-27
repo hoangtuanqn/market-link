@@ -1,7 +1,10 @@
 package com.techx.intervue.modules.user.requests;
 
+import com.techx.intervue.modules.geo.requests.AddressPartsRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -17,9 +20,8 @@ public record CustomerRegisterRequest(
                 @Email(regexp = RegisterRules.EMAIL_REGEX, message = RegisterRules.EMAIL_MESSAGE)
                 @Size(max = 100, message = "Email can be at most 100 characters.")
                 String email,
-        @NotBlank(message = "Enter your address.")
-                @Size(max = 255, message = "Address can be at most 255 characters.")
-                String address,
+        // The rules that depend on the country (province/ward for Vietnam…) are in AddressService
+        @NotNull(message = "Choose your address.") @Valid AddressPartsRequest addressParts,
         @NotBlank(message = "Enter your password.")
                 @Size(
                         min = RegisterRules.PASSWORD_MIN,

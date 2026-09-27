@@ -57,9 +57,9 @@ const MarketsPage = () => {
   const day = picked ?? defaultDay;
 
   const onDay = useMemo(() => openOn(day), [openOn, day]);
-  // Areas come from the markets themselves, so a new market in a new district needs no edit here (FR-010).
+  // Areas come from the markets themselves, so a new market in a new ward needs no edit here (FR-010).
   const areas = useMemo(
-    () => [...new Set(all.map((m) => m.district).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
+    () => [...new Set(all.map((m) => m.area).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
     [all],
   );
 
@@ -71,7 +71,7 @@ const MarketsPage = () => {
 
   const { preferredMarket } = useSettings();
   const matches = useMemo(() => {
-    const list = onDay.filter((m) => area === 'all' || m.district === area);
+    const list = onDay.filter((m) => area === 'all' || m.area === area);
     return [...list].sort((a, b) => {
       // Settings → Market you shop at most: that market leads whatever the sort
       const pa = String(a.id) === preferredMarket ? 0 : 1;
@@ -104,7 +104,7 @@ const MarketsPage = () => {
         lines: [
           `${dayList(m.days)} · ${formatClock(m.open)}–${formatClock(m.close)}`,
           t('popupStalls', { count: m.stalls }),
-          m.district,
+          m.area,
         ],
         href: `/markets/${m.id}`,
       },
@@ -179,7 +179,7 @@ const MarketsPage = () => {
               { value: 'all', label: t('filters.allAreas', { count: onDay.length }) },
               ...areas.map((a) => ({
                 value: a,
-                label: `${a} (${onDay.filter((m) => m.district === a).length})`,
+                label: `${a} (${onDay.filter((m) => m.area === a).length})`,
               })),
             ]}
             className="min-w-65"

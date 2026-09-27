@@ -80,7 +80,7 @@ const SearchPage = () => {
       label: m.name,
       popup: {
         title: m.name,
-        lines: [`${formatClock(m.open)}–${formatClock(m.close)}`, m.district],
+        lines: [`${formatClock(m.open)}–${formatClock(m.close)}`, m.area],
         href: `/markets/${m.id}`,
       },
     }));

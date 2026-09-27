@@ -382,9 +382,7 @@
     "fullNameRequired": "Nhập họ và tên của bạn.",
     "fullNameMax": "Họ và tên tối đa {{max}} ký tự.",
     "phoneRequired": "Nhập số điện thoại của bạn.",
-    "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số).",
-    "addressRequired": "Nhập địa chỉ của bạn.",
-    "addressMax": "Địa chỉ tối đa {{max}} ký tự."
+    "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số)."
   },
   "adminNav": {
     "sections": "Các mục quản trị",
@@ -435,8 +433,8 @@
     "address": "Một địa chỉ",
     "addressNote": "Một con đường hoặc địa danh ở TP. Hồ Chí Minh.",
     "addressLabel": "Địa chỉ xuất phát",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "Nhập tên đường và quận là tốt nhất. Bản đồ thường thiếu số nhà, và OpenStreetMap sẽ nhờ bạn chọn một địa điểm khi không tìm thấy.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "Nhập tên đường và phường là tốt nhất. Bản đồ thường thiếu số nhà, và OpenStreetMap sẽ nhờ bạn chọn một địa điểm khi không tìm thấy.",
     "useSaved": "Dùng địa chỉ đã lưu",
     "none": "Tôi sẽ nhập trên bản đồ",
     "noneNote": "Mở OpenStreetMap với chỉ điểm đến được điền sẵn.",
@@ -687,6 +685,44 @@
         "title": "Menu",
         "body": "Mở menu để tới mọi mục của trang quản lý."
       }
+    }
+  },
+  "address": {
+    "legend": "Địa chỉ",
+    "country": "Quốc gia",
+    "province": "Tỉnh / thành phố",
+    "ward": "Phường / xã",
+    "street": "Đường",
+    "addressLine": "Số nhà và chi tiết",
+    "addressLineOptional": "Số nhà (nếu có)",
+    "addressLinePlaceholder": "12, hoặc 12/3A",
+    "region": "Tỉnh / bang",
+    "city": "Thành phố",
+    "choose": {
+      "country": "Chọn quốc gia",
+      "province": "Chọn tỉnh / thành phố",
+      "ward": "Chọn phường / xã"
+    },
+    "wardNeedsProvince": "Chọn tỉnh / thành phố trước.",
+    "loading": "Đang tải…",
+    "loadFailed": "Không tải được danh sách này.",
+    "retry": "Thử lại",
+    "streetPlaceholder": "Gõ tên đường, ví dụ Lê Lợi",
+    "streetHint": "Chọn một gợi ý, hoặc giữ nguyên chữ đã gõ nếu đường của bạn không có trong danh sách.",
+    "useTyped": "Dùng “{{text}}”",
+    "noSuggestions": "Không có gợi ý — sẽ dùng đúng chữ bạn đã gõ.",
+    "suggestions": "Gợi ý tên đường",
+    "current": "Địa chỉ hiện tại: {{address}}. Chọn lại bên dưới để lưu thay đổi.",
+    "vietnamOnly": "Chợ phải ở Việt Nam.",
+    "errors": {
+      "countryRequired": "Chọn quốc gia.",
+      "provinceRequired": "Chọn tỉnh / thành phố.",
+      "wardRequired": "Chọn phường / xã.",
+      "streetRequired": "Nhập tên đường.",
+      "lineRequired": "Nhập số nhà và chi tiết.",
+      "regionRequired": "Nhập tỉnh / bang.",
+      "cityRequired": "Nhập thành phố.",
+      "tooLong": "Tối đa {{max}} ký tự."
     }
   },
   "reasons": {

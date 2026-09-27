@@ -59,11 +59,11 @@ const AdminAccountPage = () => {
 
     setSavingProfile(true);
     try {
-      // The admin's address is not shown anywhere, but the endpoint takes all three fields together.
+      // The admin's address is not shown anywhere: send the parts on file, or none to keep the address as it is.
       const response = await AuthApi.updateMe({
         fullName: profile.fullName.trim(),
         phone: profile.phone.trim(),
-        address: user?.address ?? '',
+        addressParts: user?.addressParts,
       });
       Session.updateUser(response.data);
       Notification.success({ text: response.message || t('details.saved') });

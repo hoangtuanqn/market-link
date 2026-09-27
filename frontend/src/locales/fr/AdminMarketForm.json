@@ -3,7 +3,6 @@
   "crumbNew": "Ajouter",
   "crumbEdit": "Modifier",
   "titleNew": "Nouveau marché",
-  "city": "Hô Chi Minh-Ville",
   "metaStalls": "{{stalls}} étals",
   "missing": {
     "title": "Ce marché n'existe plus",
@@ -11,9 +10,6 @@
   },
   "field": {
     "name": "Nom du marché",
-    "address": "Adresse",
-    "district": "District",
-    "city": "Ville",
     "days": "Jours d'ouverture",
     "open": "Ouverture",
     "close": "Fermeture",

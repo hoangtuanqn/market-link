@@ -3105,3 +3105,57 @@ CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT
             UNION ALL SELECT 10 UNION ALL SELECT 11) h
 WHERE fm.is_active = TRUE
   AND ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)) <= od.pickup_end_time;
+
+-- ===== 12. STRUCTURED ADDRESSES (FR-001, V20260927002) =====
+-- The rows above still carry the old "N Street, <district>" text. Each old district maps to one ward of the
+-- two-level units (01/07/2025) it now lies in; rows without a house number get a stand-in street. Only rows that
+-- still have no parts are touched, so the block is safe to re-run. Values are computed into a temporary table first:
+-- a multi-table UPDATE does not promise the order of its assignments, and `address` is both read and rewritten.
+DROP TEMPORARY TABLE IF EXISTS seed_address_parts;
+CREATE TEMPORARY TABLE seed_address_parts AS
+SELECT u.id,
+       w.province_code,
+       w.code AS ward_code,
+       CASE WHEN u.address REGEXP '^[0-9]+ '
+            THEN SUBSTRING(SUBSTRING_INDEX(u.address, ', ', 1),
+                           CHAR_LENGTH(SUBSTRING_INDEX(u.address, ' ', 1)) + 2)
+            WHEN u.role = 'admin' THEN 'Nguyễn Đình Chiểu'
+            ELSE 'Tỉnh lộ 8' END AS street_name,
+       CASE WHEN u.address REGEXP '^[0-9]+ '
+            THEN SUBSTRING_INDEX(u.address, ' ', 1)
+            ELSE CAST(100 + u.id AS CHAR) END AS address_line,
+       w.full_name AS ward_name,
+       p.full_name AS province_name
+FROM users u
+JOIN (SELECT 'Quận 1' AS district, '26740' AS ward_code, FALSE AS whole
+      UNION ALL SELECT 'Quận 3', '27154', FALSE
+      UNION ALL SELECT 'Quận 5', '27343', FALSE
+      UNION ALL SELECT 'Quận 7', '27487', FALSE
+      UNION ALL SELECT 'Quận 10', '27169', FALSE
+      UNION ALL SELECT 'Bình Thạnh', '26929', FALSE
+      UNION ALL SELECT 'Phú Nhuận', '27073', FALSE
+      UNION ALL SELECT 'Tân Bình', '27004', FALSE
+      UNION ALL SELECT 'Gò Vấp', '26884', FALSE
+      UNION ALL SELECT 'TP. Thủ Đức', '26824', FALSE
+      UNION ALL SELECT 'Tân Phú', '27031', FALSE
+      UNION ALL SELECT 'Bình Tân', '27442', FALSE
+      -- Whole-text matches: admin2, the pending farmer and the generated farmers' "TP. Hồ Chí Minh"
+      UNION ALL SELECT 'Quận 3, TP. Hồ Chí Minh', '27154', TRUE
+      UNION ALL SELECT 'Hóc Môn, TP. Hồ Chí Minh', '27559', TRUE
+      UNION ALL SELECT 'TP. Hồ Chí Minh', '27553', TRUE) d
+  ON (d.whole AND u.address = d.district)
+  OR (NOT d.whole AND u.address LIKE CONCAT('%, ', d.district))
+JOIN wards w ON w.code = d.ward_code
+JOIN provinces p ON p.code = w.province_code
+WHERE u.email LIKE '%@marketlink.vn' AND u.ward_code IS NULL;
+
+UPDATE users u
+JOIN seed_address_parts s ON s.id = u.id
+SET u.country_code  = 'VN',
+    u.province_code = s.province_code,
+    u.ward_code     = s.ward_code,
+    u.street_name   = s.street_name,
+    u.address_line  = s.address_line,
+    u.address       = CONCAT(s.address_line, ' ', s.street_name, ', ', s.ward_name, ', ', s.province_name);
+
+DROP TEMPORARY TABLE seed_address_parts;

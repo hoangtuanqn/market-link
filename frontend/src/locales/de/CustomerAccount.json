@@ -38,8 +38,6 @@
     "phone": "Telefonnummer",
     "email": "E-Mail",
     "emailHint": "Wird zur Anmeldung verwendet. Kann hier nicht geändert werden.",
-    "address": "Adresse",
-    "addressHint": "Wird für Entfernungen und Routen verwendet.",
     "save": "Änderungen speichern",
     "saving": "Wird gespeichert…",
     "noChanges": "Keine Änderungen zu speichern.",

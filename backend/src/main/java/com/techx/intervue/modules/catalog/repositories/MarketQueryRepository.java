@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.catalog.repositories;
 
 import com.techx.intervue.modules.catalog.resources.MarketResource;
+import com.techx.intervue.modules.geo.entities.AddressColumns;
+import com.techx.intervue.modules.geo.resources.AddressPartsResource;
 import com.techx.intervue.resources.PageResource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +25,10 @@ public class MarketQueryRepository {
 
     private static final String SELECT_BODY =
             """
-            SELECT m.id, m.market_name, m.address, m.district, m.city,
+            SELECT m.id, m.market_name, m.address,
+                   m.country_code, m.province_code, m.ward_code, m.street_name,
+                   m.address_line, m.region_name, m.city_name,
+                   w.full_name AS ward_name, p.full_name AS province_name,
                    m.latitude, m.longitude, m.map_provider,
                    m.opening_time, m.closing_time,
                    (SELECT GROUP_CONCAT(d.day_of_week ORDER BY d.day_of_week)
@@ -37,14 +42,16 @@ public class MarketQueryRepository {
                        AND fm.is_active = TRUE
                        AND f.approval_status = 'approved') AS farmer_count
             FROM markets m
+            LEFT JOIN wards w ON w.code = m.ward_code
+            LEFT JOIN provinces p ON p.code = m.province_code
             WHERE m.is_active = TRUE
             """;
 
     private static final String FILTERS =
             """
               AND (:q IS NULL OR m.market_name LIKE :q ESCAPE '!' OR m.address LIKE :q ESCAPE '!')
-              AND (:city IS NULL OR m.city = :city)
-              AND (:district IS NULL OR m.district = :district)
+              AND (:provinceCode IS NULL OR m.province_code = :provinceCode)
+              AND (:wardCode IS NULL OR m.ward_code = :wardCode)
               AND (:day IS NULL OR EXISTS (SELECT 1 FROM market_operating_days d
                                             WHERE d.market_id = m.id AND d.day_of_week = :day))
             """;
@@ -52,13 +59,13 @@ public class MarketQueryRepository {
     private final NamedParameterJdbcTemplate jdbc;
 
     public PageResource<MarketResource> search(
-            String q, Integer day, String city, String district, int offset, int limit) {
+            String q, Integer day, String provinceCode, String wardCode, int offset, int limit) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
                         .addValue("q", q == null || q.isBlank() ? null : "%" + escapeLike(q) + "%")
                         .addValue("day", day)
-                        .addValue("city", city)
-                        .addValue("district", district);
+                        .addValue("provinceCode", provinceCode)
+                        .addValue("wardCode", wardCode);
 
         Long total =
                 jdbc.queryForObject(
@@ -105,8 +112,17 @@ public class MarketQueryRepository {
                 rs.getLong("id"),
                 rs.getString("market_name"),
                 rs.getString("address"),
-                rs.getString("district"),
-                rs.getString("city"),
+                AddressPartsResource.from(
+                        new AddressColumns(
+                                rs.getString("country_code"),
+                                rs.getString("province_code"),
+                                rs.getString("ward_code"),
+                                rs.getString("street_name"),
+                                rs.getString("address_line"),
+                                rs.getString("region_name"),
+                                rs.getString("city_name"))),
+                rs.getString("ward_name"),
+                rs.getString("province_name"),
                 rs.getBigDecimal("latitude"),
                 rs.getBigDecimal("longitude"),
                 rs.getString("map_provider"),

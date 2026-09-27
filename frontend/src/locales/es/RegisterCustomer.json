@@ -6,8 +6,6 @@
     "phone": "Número de teléfono",
     "email": "Correo electrónico",
     "emailHint": "Para iniciar sesión y recibir avisos de pedidos.",
-    "address": "Dirección",
-    "addressPlaceholder": "Calle, barrio, distrito",
     "password": "Contraseña",
     "passwordHint": "De {{min}} a {{max}} caracteres.",
     "confirmPassword": "Repite la contraseña"
@@ -33,8 +31,6 @@
     "emailRequired": "Escribe tu correo.",
     "emailInvalid": "Escribe un correo electrónico válido.",
     "emailMax": "El correo puede tener como máximo {{max}} caracteres.",
-    "addressRequired": "Escribe tu dirección.",
-    "addressMax": "La dirección puede tener como máximo {{max}} caracteres.",
     "passwordRequired": "Escribe tu contraseña.",
     "passwordLength": "La contraseña debe tener de {{min}} a {{max}} caracteres.",
     "confirmRequired": "Confirma tu contraseña.",

@@ -1,3 +1,4 @@
+import type { AddressParts } from '@/types/address.types';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { ClosureHandling, ClosureType, MarketType } from '@/types/market.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
@@ -7,9 +8,12 @@ import { dayName, formatDate } from '@/lib/format';
 export type MarketDto = {
   id: number;
   marketName: string;
+  /** The whole address as one line, composed by the server from `addressParts`. */
   address: string;
-  district?: string | null;
-  city: string;
+  /** Null only for a market saved before addresses had parts. */
+  addressParts?: AddressParts | null;
+  wardName?: string | null;
+  provinceName?: string | null;
   latitude: number;
   longitude: number;
   mapProvider: string;
@@ -44,12 +48,10 @@ export type CategoryDto = {
   maxShelfLifeDays: number;
 };
 
-/** Body of POST/PUT /admin/markets. If `city` is left empty the server fills in "TP. Hồ Chí Minh". */
+/** Body of POST/PUT /admin/markets. The address must be in Vietnam; the server composes `address` from it. */
 export type MarketInput = {
   marketName: string;
-  address: string;
-  district?: string;
-  city?: string;
+  addressParts: AddressParts;
   latitude: number;
   longitude: number;
   openingTime: string;
@@ -107,7 +109,9 @@ export const toMarket = (dto: MarketDto): MarketType => ({
   id: dto.id,
   name: dto.marketName,
   address: dto.address,
-  district: dto.district ?? '',
+  // The area markets are browsed by (FR-010): the ward, since Vietnam has no districts any more
+  area: dto.wardName ?? dto.provinceName ?? '',
+  addressParts: dto.addressParts ?? undefined,
   days: dto.operatingDays,
   open: dto.openingTime.slice(0, 5),
   close: dto.closingTime.slice(0, 5),
@@ -152,8 +156,8 @@ export const toCategory = (dto: CategoryDto): CategoryType => ({
 export type MarketListParams = {
   q?: string;
   day?: number;
-  city?: string;
-  district?: string;
+  provinceCode?: string;
+  wardCode?: string;
   page?: number;
   pageSize?: number;
 };

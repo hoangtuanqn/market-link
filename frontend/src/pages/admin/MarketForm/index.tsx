@@ -7,6 +7,7 @@ import CatalogApi, {
   type MarketClosureDto,
   type MarketInput,
 } from '@/api-requests/catalog.requests';
+import AddressFields from '@/components/address/AddressFields';
 import { CheckIcon } from '@/components/icons';
 import LocationPicker from '@/components/LocationPicker';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
@@ -14,13 +15,14 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
-import { Field, SelectField } from '@/components/ui/input';
+import { Field } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { HCMC_DISTRICTS } from '@/config/districts';
 import { ADMIN_MARKETS_PATH } from '@/constants/nav';
 import useRequest from '@/hooks/useRequest';
+import { addressErrorsFrom, cleanAddress, validateAddress } from '@/lib/address';
 import { isLatitude, isLongitude, parseCoordinate, parseCoordinatePair } from '@/lib/coordinates';
 import { dayName, formatDate } from '@/lib/format';
+import { emptyAddress, type AddressErrors, type AddressParts } from '@/types/address.types';
 import { CLOSURE_HANDLINGS, type ClosureHandling, type ClosureType, type MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -34,12 +36,10 @@ const FORM_ID = 'market-form';
 /** Matches MarketRequest.images's @Size(max=8) on the server. */
 const MAX_IMAGES = 8;
 
-const DISTRICTS = HCMC_DISTRICTS.map((d) => d.name);
-
 type FormState = {
   name: string;
-  address: string;
-  district: string;
+  /** Vietnam only (FR-073): the server composes the one-line address from these parts. */
+  addressParts: AddressParts;
   days: number[];
   open: string;
   close: string;
@@ -51,7 +51,7 @@ type FormState = {
 };
 
 /** Keys are the form's own; the server's camelCase field names are translated onto them in `fieldErrors`. */
-type FormErrors = Partial<Record<'name' | 'address' | 'days' | 'open' | 'close' | 'lat' | 'lng' | 'images', string>>;
+type FormErrors = Partial<Record<'name' | 'days' | 'open' | 'close' | 'lat' | 'lng' | 'images', string>>;
 
 /** A closed day plus the raw ISO date `toClosure` drops, so a newly added one can be synced on submit. */
 type FormClosure = ClosureType & { closedOn: string };
@@ -59,8 +59,7 @@ type FormClosure = ClosureType & { closedOn: string };
 /** A blank market, for the add form. */
 const EMPTY: FormState = {
   name: '',
-  address: '',
-  district: DISTRICTS[0],
+  addressParts: emptyAddress(),
   days: [6],
   open: '06:00',
   close: '10:00',
@@ -78,7 +77,6 @@ const EMPTY_DRAFT = { date: '', reason: '', handling: 'move' as ClosureHandling 
 /** Contract §3 field names → the form's keys, so a server-side validation message lands under the right input. */
 const SERVER_FIELDS: Record<string, keyof FormErrors> = {
   marketName: 'name',
-  address: 'address',
   operatingDays: 'days',
   openingTime: 'open',
   closingTime: 'close',
@@ -89,8 +87,7 @@ const SERVER_FIELDS: Record<string, keyof FormErrors> = {
 
 const fromMarket = (m: MarketType, notes: string): FormState => ({
   name: m.name,
-  address: m.address,
-  district: m.district,
+  addressParts: m.addressParts ?? emptyAddress(),
   days: m.days,
   open: m.open,
   close: m.close,
@@ -132,6 +129,7 @@ const AdminMarketFormPage = () => {
   const setForm = (next: FormState | ((current: FormState) => FormState)) =>
     setEdited((current) => (typeof next === 'function' ? next(current ?? loadedForm) : next));
   const [errors, setErrors] = useState<FormErrors>({});
+  const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
   const [saving, setSaving] = useState(false);
   // Closed days: fetched independently of the market load, same isNew/validId guard as it. Never persisted until
   // the whole form is submitted (see the diff-and-sync in onSubmit), same mirror-until-edited pattern as the rest.
@@ -153,9 +151,6 @@ const AdminMarketFormPage = () => {
   // In-flight uploads only, never persisted: each id becomes a skeleton tile until the URL lands in form.images.
   const [uploadingImages, setUploadingImages] = useState<string[]>([]);
   const imageInputRef = useRef<HTMLInputElement>(null);
-  // Bumped to fly the pin map to a district's centre — see LocationPicker's `focusToken` prop for why it is not
-  // just "whenever lat/lng changes".
-  const [mapFocusToken, setMapFocusToken] = useState(0);
   // Latitude / longitude exactly as typed, until the field is left: re-formatting to 6 decimals on every keystroke made
   // the fields impossible to type in or clear (QA E2E v2 MARKET-ADMIN-002). Absent = show the form's number.
   const [coordText, setCoordText] = useState<Partial<Record<'lat' | 'lng', string>>>({});
@@ -180,19 +175,6 @@ const AdminMarketFormPage = () => {
 
   const toggleDay = (dow: number) =>
     setForm((f) => ({ ...f, days: f.days.includes(dow) ? f.days.filter((d) => d !== dow) : [...f.days, dow].sort() }));
-
-  /**
-   * Jumps the pin (and the map beside it) to the district's centre, so placing it is scrolling from nearby, not from
-   * wherever the previous market or the city default happened to leave the view.
-   */
-  const onDistrictChange = (name: string) => {
-    const center = HCMC_DISTRICTS.find((d) => d.name === name);
-    setForm((f) => (center ? { ...f, district: name, lat: center.lat, lng: center.lng } : { ...f, district: name }));
-    if (center) {
-      setCoordText({});
-      setMapFocusToken((n) => n + 1);
-    }
-  };
 
   /** A whole "lat, lng" pasted into either field fills both; otherwise keep the text until the field is left. */
   const onCoordChange = (axis: 'lat' | 'lng', text: string) => {
@@ -262,7 +244,6 @@ const AdminMarketFormPage = () => {
   const validate = (f: FormState): FormErrors => {
     const next: FormErrors = {};
     if (!f.name.trim()) next.name = t('error.required');
-    if (!f.address.trim()) next.address = t('error.required');
     if (f.days.length === 0) next.days = t('error.days');
     if (!f.open) next.open = t('error.required');
     if (!f.close) next.close = t('error.required');
@@ -281,16 +262,17 @@ const AdminMarketFormPage = () => {
     }
     const current = withTypedCoords(form);
     const found = validate(current);
+    const foundInAddress = validateAddress(form.addressParts, { lineRequired: false });
     setErrors(found);
-    if (Object.keys(found).length) {
+    setAddressErrors(foundInAddress);
+    if (Object.keys(found).length || Object.keys(foundInAddress).length) {
       Notification.error({ title: t('toast.fixTitle'), text: t('toast.fix') });
       return;
     }
 
     const input: MarketInput = {
       marketName: form.name.trim(),
-      address: form.address.trim(),
-      district: form.district || undefined,
+      addressParts: cleanAddress(form.addressParts),
       latitude: current.lat,
       longitude: current.lng,
       openingTime: form.open,
@@ -334,8 +316,10 @@ const AdminMarketFormPage = () => {
         const key = SERVER_FIELDS[field];
         if (key) mapped[key] = message;
       });
+      const mappedAddress = addressErrorsFrom(fromServer);
       setErrors(mapped);
-      if (Object.keys(mapped).length) {
+      setAddressErrors(mappedAddress);
+      if (Object.keys(mapped).length || Object.keys(mappedAddress).length) {
         Notification.error({ title: t('toast.fixTitle'), text: t('toast.fix') });
       } else {
         Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
@@ -344,9 +328,6 @@ const AdminMarketFormPage = () => {
       setSaving(false);
     }
   };
-
-  // The real market's district may not be in the short list above; keep it selectable rather than blanking the field.
-  const districtOptions = [...new Set([...DISTRICTS, form.district].filter(Boolean))];
 
   /**
    * Adds the closed day to the list; it is only sent with the rest of the form on Save (QA E2E v2 MARKET-ADMIN-007: a
@@ -470,23 +451,17 @@ const AdminMarketFormPage = () => {
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               error={errors.name}
             />
-            <Field
-              id="market-address"
-              label={t('field.address')}
-              required
-              className="sm:col-span-2"
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-              error={errors.address}
-            />
-            <SelectField
-              id="market-district"
-              label={t('field.district')}
-              value={form.district}
-              onChange={(e) => onDistrictChange(e.target.value)}
-              options={districtOptions}
-            />
-            <Field id="market-city" label={t('field.city')} value={t('city')} readOnly />
+            <div className="sm:col-span-2">
+              <AddressFields
+                idPrefix="market-address"
+                value={form.addressParts}
+                onChange={(addressParts) => setForm((f) => ({ ...f, addressParts }))}
+                errors={addressErrors}
+                lockCountry
+                lineRequired={false}
+                legacyAddress={existing && !existing.addressParts ? existing.address : undefined}
+              />
+            </div>
 
             <fieldset className="m-0 flex flex-col gap-2 border-0 p-0 sm:col-span-2">
               <legend className="text-small mb-1 p-0 font-bold">
@@ -646,7 +621,6 @@ const AdminMarketFormPage = () => {
               setForm((f) => ({ ...f, lat, lng }));
               setCoordText({});
             }}
-            focusToken={mapFocusToken}
             className="min-h-75"
           />
           <p className="text-ink-muted text-[13px]">{t('pin.note')}</p>

@@ -38,8 +38,6 @@
     "phone": "手机号码",
     "email": "邮箱",
     "emailHint": "用于登录，无法在此修改。",
-    "address": "地址",
-    "addressHint": "用于计算距离和路线。",
     "save": "保存更改",
     "saving": "正在保存…",
     "noChanges": "没有需要保存的更改。",

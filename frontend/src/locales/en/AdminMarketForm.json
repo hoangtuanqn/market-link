@@ -3,7 +3,6 @@
   "crumbNew": "Add",
   "crumbEdit": "Edit",
   "titleNew": "New market",
-  "city": "Ho Chi Minh City",
   "metaStalls": "{{stalls}} stalls",
   "missing": {
     "title": "That market is not here any more",
@@ -11,9 +10,6 @@
   },
   "field": {
     "name": "Market name",
-    "address": "Address",
-    "district": "District",
-    "city": "City",
     "days": "Operating days",
     "open": "Opens",
     "close": "Closes",

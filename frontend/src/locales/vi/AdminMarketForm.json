@@ -3,7 +3,6 @@
   "crumbNew": "Thêm mới",
   "crumbEdit": "Sửa",
   "titleNew": "Chợ mới",
-  "city": "Thành phố Hồ Chí Minh",
   "metaStalls": "{{stalls}} sạp",
   "missing": {
     "title": "Chợ này không còn ở đây",
@@ -11,9 +10,6 @@
   },
   "field": {
     "name": "Tên chợ",
-    "address": "Địa chỉ",
-    "district": "Quận / huyện",
-    "city": "Thành phố",
     "days": "Ngày họp chợ",
     "open": "Mở cửa",
     "close": "Đóng cửa",

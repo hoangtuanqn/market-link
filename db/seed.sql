@@ -22,18 +22,26 @@ AS new
 ON DUPLICATE KEY UPDATE sort_order = new.sort_order, is_active = new.is_active;
 
 -- ---- Markets (FR-073, FR-012) ----
-INSERT INTO markets (market_name, address, district, city, latitude, longitude,
-                     opening_time, closing_time, map_provider, is_active) VALUES
-  ('Chợ Bà Chiểu',  'Bạch Đằng, Phường 1, Bình Thạnh',       'Bình Thạnh',  'TP. Hồ Chí Minh',
+-- Addresses follow Vietnam's two-level units (V20260927001): the ward of each market was looked up from its
+-- coordinates on OpenStreetMap (27/09/2026). `address` is what AddressService composes from the parts.
+INSERT INTO markets (market_name, address, country_code, province_code, ward_code, street_name, address_line,
+                     latitude, longitude, opening_time, closing_time, map_provider, is_active) VALUES
+  ('Chợ Bà Chiểu',  'Bạch Đằng, Phường Gia Định, Thành phố Hồ Chí Minh',
+   'VN', '79', '26944', 'Bạch Đằng', NULL,
    10.80290000, 106.69920000, '05:00:00', '18:00:00', 'osm', TRUE),
-  ('Chợ Thảo Điền', '10 Quốc Hương, Thảo Điền, TP. Thủ Đức', 'TP. Thủ Đức', 'TP. Hồ Chí Minh',
+  ('Chợ Thảo Điền', '10 Quốc Hương, Phường An Khánh, Thành phố Hồ Chí Minh',
+   'VN', '79', '27094', 'Quốc Hương', '10',
    10.80640000, 106.73380000, '06:00:00', '20:00:00', 'osm', TRUE),
-  ('Chợ Bến Thành', 'Lê Lợi, Bến Thành, Quận 1',             'Quận 1',      'TP. Hồ Chí Minh',
+  ('Chợ Bến Thành', 'Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh',
+   'VN', '79', '26743', 'Lê Lợi', NULL,
    10.77250000, 106.69800000, '06:00:00', '19:00:00', 'osm', TRUE),
-  ('Chợ Tân Định',  '336 Hai Bà Trưng, Tân Định, Quận 1',    'Quận 1',      'TP. Hồ Chí Minh',
+  ('Chợ Tân Định',  '336 Hai Bà Trưng, Phường Tân Định, Thành phố Hồ Chí Minh',
+   'VN', '79', '26737', 'Hai Bà Trưng', '336',
    10.79050000, 106.69080000, '05:30:00', '18:30:00', 'osm', TRUE)
 AS new
-ON DUPLICATE KEY UPDATE address = new.address, district = new.district,
+ON DUPLICATE KEY UPDATE address = new.address, country_code = new.country_code,
+                        province_code = new.province_code, ward_code = new.ward_code,
+                        street_name = new.street_name, address_line = new.address_line,
                         latitude = new.latitude, longitude = new.longitude,
                         opening_time = new.opening_time, closing_time = new.closing_time,
                         is_active = new.is_active;
@@ -55,22 +63,40 @@ WHERE (m.market_name IN ('Chợ Bà Chiểu', 'Chợ Tân Định'))
 -- starts; the seed overwrites the password to match the submission documents.
 SET @pw := '$2y$10$QECyiDw14FWH42GLLZE9l.wmNFH4v8ZHLz.UORUBYw3xGS4iDsTtW';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status) VALUES
-  ('admin@marketlink.vn',    @pw, 'admin',    'Trần Quản Trị', '0900000001', 'Quận 1, TP. Hồ Chí Minh', 'active'),
-  ('customer@marketlink.vn', @pw, 'customer', 'Nguyễn Văn An', '0900000002', '12 Lê Lợi, Quận 1',       'active'),
-  ('farmer@marketlink.vn', @pw, 'farmer', 'Lê Thị Út Hiền', '0900000003', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer2@marketlink.vn', @pw, 'farmer', 'Nguyễn Văn Ba', '0900000004', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer3@marketlink.vn', @pw, 'farmer', 'Trần Thị Mai', '0900000005', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer4@marketlink.vn', @pw, 'farmer', 'Phạm Hữu Đức', '0900000006', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer5@marketlink.vn', @pw, 'farmer', 'Võ Thị Lan', '0900000007', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer6@marketlink.vn', @pw, 'farmer', 'Hoàng Minh Tuấn', '0900000008', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer7@marketlink.vn', @pw, 'farmer', 'Đặng Thị Hoa', '0900000009', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer8@marketlink.vn', @pw, 'farmer', 'Bùi Quốc Khánh', '0900000010', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer9@marketlink.vn', @pw, 'farmer', 'Lý Thu Thảo', '0900000011', 'TP. Hồ Chí Minh', 'active'),
-  ('farmer10@marketlink.vn', @pw, 'farmer', 'Ngô Đình Phúc', '0900000012', 'TP. Hồ Chí Minh', 'active')
+-- Addresses have parts (FR-001, V20260927002). Farmers outside Ho Chi Minh City show a street typed by hand: the
+-- street list only covers the city, the rest of the form still works.
+INSERT INTO users (email, password_hash, role, full_name, phone, address,
+                   country_code, province_code, ward_code, street_name, address_line, status) VALUES
+  ('admin@marketlink.vn', @pw, 'admin', 'Trần Quản Trị', '0900000001', '3 Lê Duẩn, Phường Sài Gòn, Thành phố Hồ Chí Minh',
+   'VN', '79', '26740', 'Lê Duẩn', '3', 'active'),
+  ('customer@marketlink.vn', @pw, 'customer', 'Nguyễn Văn An', '0900000002', '12 Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh',
+   'VN', '79', '26743', 'Lê Lợi', '12', 'active'),
+  ('farmer@marketlink.vn', @pw, 'farmer', 'Lê Thị Út Hiền', '0900000003', '25 Lê Quang Định, Phường Gia Định, Thành phố Hồ Chí Minh',
+   'VN', '79', '26944', 'Lê Quang Định', '25', 'active'),
+  ('farmer2@marketlink.vn', @pw, 'farmer', 'Nguyễn Văn Ba', '0900000004', '15 Quốc lộ 24, Xã Ba Tơ, Tỉnh Quảng Ngãi',
+   'VN', '51', '21484', 'Quốc lộ 24', '15', 'active'),
+  ('farmer3@marketlink.vn', @pw, 'farmer', 'Trần Thị Mai', '0900000005', '120 Lê Duẩn, Phường Long Thành, Thành phố Đồng Nai',
+   'VN', '75', '26368', 'Lê Duẩn', '120', 'active'),
+  ('farmer4@marketlink.vn', @pw, 'farmer', 'Phạm Hữu Đức', '0900000006', '450 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh',
+   'VN', '79', '27553', 'Tỉnh lộ 8', '450', 'active'),
+  ('farmer5@marketlink.vn', @pw, 'farmer', 'Võ Thị Lan', '0900000007', '40 Trần Quang Khải, Phường Tân Định, Thành phố Hồ Chí Minh',
+   'VN', '79', '26737', 'Trần Quang Khải', '40', 'active'),
+  ('farmer6@marketlink.vn', @pw, 'farmer', 'Hoàng Minh Tuấn', '0900000008', '18 Thảo Điền, Phường An Khánh, Thành phố Hồ Chí Minh',
+   'VN', '79', '27094', 'Thảo Điền', '18', 'active'),
+  ('farmer7@marketlink.vn', @pw, 'farmer', 'Đặng Thị Hoa', '0900000009', '5 Mai Anh Đào, Phường Xuân Hương - Đà Lạt, Tỉnh Lâm Đồng',
+   'VN', '68', '24781', 'Mai Anh Đào', '5', 'active'),
+  ('farmer8@marketlink.vn', @pw, 'farmer', 'Bùi Quốc Khánh', '0900000010', '88 Lạc Long Quân, Xã Diên Khánh, Tỉnh Khánh Hoà',
+   'VN', '56', '22651', 'Lạc Long Quân', '88', 'active'),
+  ('farmer9@marketlink.vn', @pw, 'farmer', 'Lý Thu Thảo', '0900000011', '210 Nơ Trang Long, Phường Bình Thạnh, Thành phố Hồ Chí Minh',
+   'VN', '79', '26929', 'Nơ Trang Long', '210', 'active'),
+  ('farmer10@marketlink.vn', @pw, 'farmer', 'Ngô Đình Phúc', '0900000012', '52 Quốc lộ 63, Xã U Minh, Tỉnh Cà Mau',
+   'VN', '96', '32047', 'Quốc lộ 63', '52', 'active')
 AS new
 ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
-                        phone = new.phone, role = new.role, status = new.status;
+                        phone = new.phone, role = new.role, status = new.status,
+                        address = new.address, country_code = new.country_code,
+                        province_code = new.province_code, ward_code = new.ward_code,
+                        street_name = new.street_name, address_line = new.address_line;
 
 
 -- ---- Stall profiles (FR-060): 10 Farmers, all approved so they can sell right away (D-09) ----

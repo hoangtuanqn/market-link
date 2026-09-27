@@ -382,9 +382,7 @@
     "fullNameRequired": "이름을 입력해 주세요.",
     "fullNameMax": "이름은 최대 {{max}}자까지 입력할 수 있어요.",
     "phoneRequired": "전화번호를 입력해 주세요.",
-    "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요.",
-    "addressRequired": "주소를 입력해 주세요.",
-    "addressMax": "주소는 최대 {{max}}자까지 입력할 수 있어요."
+    "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요."
   },
   "adminNav": {
     "sections": "관리 메뉴",
@@ -435,8 +433,8 @@
     "address": "주소",
     "addressNote": "호찌민시의 거리나 랜드마크.",
     "addressLabel": "출발 주소",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "거리와 군(구)을 입력하는 것이 가장 좋습니다. 지도에 번지가 없는 경우가 많고, 찾지 못하면 OpenStreetMap이 장소를 고르라고 합니다.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "거리와 방(동)을 입력하는 것이 가장 좋습니다. 지도에 번지가 없는 경우가 많고, 찾지 못하면 OpenStreetMap이 장소를 고르라고 합니다.",
     "useSaved": "저장된 주소 사용",
     "none": "지도에서 직접 입력할게요",
     "noneNote": "목적지만 채운 상태로 OpenStreetMap을 엽니다.",
@@ -687,6 +685,44 @@
         "title": "메뉴",
         "body": "메뉴를 열면 관리 화면의 모든 섹션으로 이동할 수 있습니다."
       }
+    }
+  },
+  "address": {
+    "legend": "주소",
+    "country": "국가",
+    "province": "성 / 시",
+    "ward": "방 / 사",
+    "street": "거리",
+    "addressLine": "번지 및 상세 주소",
+    "addressLineOptional": "번지 (있는 경우)",
+    "addressLinePlaceholder": "12 또는 12/3A",
+    "region": "주 / 도",
+    "city": "도시",
+    "choose": {
+      "country": "국가 선택",
+      "province": "성 / 시 선택",
+      "ward": "방 / 사 선택"
+    },
+    "wardNeedsProvince": "먼저 성 / 시를 선택하세요.",
+    "loading": "불러오는 중…",
+    "loadFailed": "이 목록을 불러오지 못했습니다.",
+    "retry": "다시 시도",
+    "streetPlaceholder": "입력을 시작하세요 (예: Lê Lợi)",
+    "streetHint": "제안을 선택하거나, 거리가 목록에 없으면 입력한 내용을 그대로 두세요.",
+    "useTyped": "“{{text}}” 사용",
+    "noSuggestions": "제안이 없습니다 — 입력한 내용이 그대로 사용됩니다.",
+    "suggestions": "거리 제안",
+    "current": "현재 주소: {{address}}. 변경 사항을 저장하려면 아래에서 다시 선택하세요.",
+    "vietnamOnly": "시장은 베트남에 있어야 합니다.",
+    "errors": {
+      "countryRequired": "국가를 선택하세요.",
+      "provinceRequired": "성 / 시를 선택하세요.",
+      "wardRequired": "방 / 사를 선택하세요.",
+      "streetRequired": "거리를 입력하세요.",
+      "lineRequired": "번지 및 상세 주소를 입력하세요.",
+      "regionRequired": "주 / 도를 입력하세요.",
+      "cityRequired": "도시를 입력하세요.",
+      "tooLong": "{{max}}자 이내로 입력하세요."
     }
   },
   "reasons": {

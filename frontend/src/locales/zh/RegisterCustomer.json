@@ -6,8 +6,6 @@
     "phone": "手机号",
     "email": "邮箱",
     "emailHint": "用于登录和接收订单通知。",
-    "address": "地址",
-    "addressPlaceholder": "街道、坊、郡",
     "password": "密码",
     "passwordHint": "{{min}} 至 {{max}} 个字符。",
     "confirmPassword": "再次输入密码"
@@ -33,8 +31,6 @@
     "emailRequired": "请输入邮箱。",
     "emailInvalid": "请输入有效的邮箱地址。",
     "emailMax": "邮箱最多 {{max}} 个字符。",
-    "addressRequired": "请输入地址。",
-    "addressMax": "地址最多 {{max}} 个字符。",
     "passwordRequired": "请输入密码。",
     "passwordLength": "密码长度须为 {{min}} 至 {{max}} 个字符。",
     "confirmRequired": "请确认密码。",

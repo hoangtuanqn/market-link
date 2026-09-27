@@ -382,9 +382,7 @@
     "fullNameRequired": "请输入你的姓名。",
     "fullNameMax": "姓名最多 {{max}} 个字符。",
     "phoneRequired": "请输入你的电话号码。",
-    "phoneInvalid": "请输入有效的越南手机号码（10 位数字）。",
-    "addressRequired": "请输入你的地址。",
-    "addressMax": "地址最多 {{max}} 个字符。"
+    "phoneInvalid": "请输入有效的越南手机号码（10 位数字）。"
   },
   "adminNav": {
     "sections": "管理区域",
@@ -435,8 +433,8 @@
     "address": "一个地址",
     "addressNote": "胡志明市的一条街道或地标。",
     "addressLabel": "出发地址",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "填写街道和区效果最好。地图上常常没有门牌号，找不到时 OpenStreetMap 会请你选择一个地点。",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "填写街道和坊效果最好。地图上常常没有门牌号，找不到时 OpenStreetMap 会请你选择一个地点。",
     "useSaved": "使用我保存的地址",
     "none": "我会在地图上输入",
     "noneNote": "打开 OpenStreetMap，只填好目的地。",
@@ -687,6 +685,44 @@
         "title": "菜单",
         "body": "打开菜单即可进入面板的每个部分。"
       }
+    }
+  },
+  "address": {
+    "legend": "地址",
+    "country": "国家/地区",
+    "province": "省 / 市",
+    "ward": "坊 / 社",
+    "street": "街道",
+    "addressLine": "门牌号及详细信息",
+    "addressLineOptional": "门牌号（如有）",
+    "addressLinePlaceholder": "12，或 12/3A",
+    "region": "州 / 省",
+    "city": "城市",
+    "choose": {
+      "country": "选择国家/地区",
+      "province": "选择省 / 市",
+      "ward": "选择坊 / 社"
+    },
+    "wardNeedsProvince": "请先选择省 / 市。",
+    "loading": "加载中…",
+    "loadFailed": "无法加载此列表。",
+    "retry": "重试",
+    "streetPlaceholder": "开始输入，例如 Lê Lợi",
+    "streetHint": "选择一个建议；如果您的街道不在列表中，保留您输入的内容即可。",
+    "useTyped": "使用“{{text}}”",
+    "noSuggestions": "没有建议——将使用您输入的内容。",
+    "suggestions": "街道建议",
+    "current": "当前地址：{{address}}。请在下方重新选择以保存更改。",
+    "vietnamOnly": "集市必须位于越南。",
+    "errors": {
+      "countryRequired": "请选择国家/地区。",
+      "provinceRequired": "请选择省 / 市。",
+      "wardRequired": "请选择坊 / 社。",
+      "streetRequired": "请输入街道。",
+      "lineRequired": "请输入门牌号及详细信息。",
+      "regionRequired": "请输入州 / 省。",
+      "cityRequired": "请输入城市。",
+      "tooLong": "请不要超过 {{max}} 个字符。"
     }
   },
   "reasons": {
