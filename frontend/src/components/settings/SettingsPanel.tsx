@@ -16,7 +16,7 @@ import Notification from '@/utils/notification';
 export type SettingsRole = 'customer' | 'farmer' | 'admin';
 
 const SAMPLE_DATE = new Date(2026, 11, 31, 19, 0);
-const SAMPLE_PRICE = 45000;
+const SAMPLE_PRICE = 1.8;
 
 type SettingsPanelProps = {
   /** The page's role (pages still pass it; the notification categories now come from the API by role on the server). */
