@@ -3,6 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
 import ProductApi from '@/api-requests/product.requests';
+import ReviewApi, { toReviewCard, type ReviewDto } from '@/api-requests/review.requests';
 import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DirectionsButton from '@/components/DirectionsButton';
 import FavoriteButton from '@/components/FavoriteButton';
@@ -12,13 +13,12 @@ import ProductCard from '@/components/ProductCard';
 import QtyStepper from '@/components/QtyStepper';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
+import { BarList } from '@/components/ui/bar-list';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import MessageStallButton from '@/components/chat/MessageStallButton';
-import { LoadError } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Table } from '@/components/ui/table';
-import { reviewTags, reviewsForProduct } from '@/data/catalog';
-import { demoTierOf } from '@/data/tiers';
 import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
 import { Cart } from '@/lib/cart';
@@ -28,16 +28,9 @@ import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** Still the demo set until reviews arrive with C8. */
-const EXTRA_REVIEW = {
-  author: 'Bích Ngọc',
-  date: '19/09/2026',
-  rating: 5,
-  text: 'Bought 3 bunches for a family lunch. Nothing wilted and the stems snapped clean.',
-};
-
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
+const NO_REVIEWS: ReviewDto[] = [];
 
 /** Earliest start to latest end across the days a stall keeps at one market. */
 const windowOf = (m: StallMarketDto) => {
@@ -73,6 +66,14 @@ const ProductDetailPage = () => {
   const categoryId = detail?.product.categoryId;
   const { state: similarLoad } = useRequest(`similar:${categoryId ?? 'none'}`, () =>
     categoryId ? ProductApi.list({ categoryId, pageSize: 8 }).then((r) => r.items) : Promise.resolve(NO_PRODUCTS),
+  );
+  const reviewedProductId = detail?.product.id;
+  const { state: reviewsLoad, retry: retryReviews } = useRequest(
+    `reviews-product:${reviewedProductId ?? 'none'}`,
+    () =>
+      reviewedProductId
+        ? ReviewApi.forProduct(reviewedProductId, { pageSize: 20 }).then((r) => r.items)
+        : Promise.resolve(NO_REVIEWS),
   );
 
   const [pickedQty, setPickedQty] = useState<number | null>(null);
@@ -120,9 +121,15 @@ const ProductDetailPage = () => {
     (o) => o.id !== p.id && o.farmerId !== p.farmerId,
   );
 
-  // Reviews stay the demo set until C8; they follow the real product id.
-  const allReviews = SHOW_WIP ? [...reviewsForProduct(p.id), EXTRA_REVIEW] : [];
-  const avgRating = allReviews.reduce((sum, r) => sum + r.rating, 0) / allReviews.length;
+  const reviewCards = (reviewsLoad.kind === 'ready' ? reviewsLoad.data : NO_REVIEWS).map((r) =>
+    toReviewCard(r, p.stallName),
+  );
+  const summary = detail.reviewsSummary;
+  const histogramRows = [5, 4, 3, 2, 1].map((star) => ({
+    id: String(star),
+    label: `${star}★`,
+    value: summary.histogram[star - 1] ?? 0,
+  }));
 
   return (
     <div className="flex flex-col gap-8">
@@ -320,52 +327,46 @@ const ProductDetailPage = () => {
         </section>
       )}
 
-      {/* Reviews are still sample data pending C8 → shown in dev only (config/wip.ts). */}
-      {SHOW_WIP && (
-        <section className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="text-h2">{t('reviews.title')}</h2>
-            <div className="flex flex-wrap items-center gap-3">
-              <Button variant="secondary" size="sm" disabled>
-                {t('reviews.write')}
-              </Button>
-              <span className="text-small text-ink-muted">{t('reviews.writeNote')}</span>
-            </div>
+      <section className="flex flex-col gap-4">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h2 className="text-h2">{t('reviews.title')}</h2>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="secondary" size="sm" disabled>
+              {t('reviews.write')}
+            </Button>
+            <span className="text-small text-ink-muted">{t('reviews.writeNote')}</span>
           </div>
-          <Card className="flex flex-col gap-4 p-6">
-            <div className="flex flex-wrap items-baseline gap-3">
-              <b className="font-hand text-[48px] leading-none tabular-nums">{avgRating.toFixed(1)}</b>
-              <Rating value={avgRating} />
-              <span className="text-small text-ink-muted">{t('reviews.summary', { count: allReviews.length })}</span>
-            </div>
-            {reviewTags[p.farmerId] && (
-              <div className="flex flex-wrap gap-2">
-                {reviewTags[p.farmerId].map(([tag, count]) => (
-                  <span
-                    key={tag}
-                    className="bg-brand-tint text-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[14px]"
-                  >
-                    {tag} <b className="tabular-nums">{count}</b>
-                  </span>
-                ))}
-              </div>
-            )}
-          </Card>
+        </div>
+        <Card className="flex flex-col gap-4 p-6">
+          <div className="flex flex-wrap items-baseline gap-3">
+            <b className="font-hand text-[48px] leading-none tabular-nums">{summary.ratingAvg.toFixed(1)}</b>
+            <Rating value={summary.ratingAvg} />
+            <span className="text-small text-ink-muted">{t('reviews.summary', { count: summary.ratingCount })}</span>
+          </div>
+          {summary.ratingCount > 0 && <BarList rows={histogramRows} />}
+        </Card>
+        {reviewsLoad.kind === 'loading' ? (
+          <MarketCardSkeleton count={2} />
+        ) : reviewsLoad.kind === 'error' ? (
+          <LoadError noun={t('reviews.noun')} onRetry={retryReviews} />
+        ) : reviewCards.length ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {allReviews.map((r, i) => (
+            {reviewCards.map((r) => (
               <ReviewCard
-                key={i}
+                key={r.id}
                 author={r.author}
-                authorTier={demoTierOf(r.author)}
                 date={r.date}
                 rating={r.rating}
                 text={r.text}
+                reply={r.reply}
                 fluid
               />
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <DataState title={t('reviews.emptyTitle')} text={t('reviews.emptyText')} />
+        )}
+      </section>
 
       {similar.length > 0 && (
         <section className="flex flex-col gap-4">

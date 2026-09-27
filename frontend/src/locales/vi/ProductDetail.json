@@ -67,7 +67,10 @@
     "write": "Viết đánh giá",
     "writeNote": "Mở khi một đơn có sản phẩm này đã hoàn tất.",
     "summary_one": "{{count}} đánh giá, tất cả từ đơn đã hoàn tất",
-    "summary_other": "{{count}} đánh giá, tất cả từ đơn đã hoàn tất"
+    "summary_other": "{{count}} đánh giá, tất cả từ đơn đã hoàn tất",
+    "emptyTitle": "Chưa có đánh giá nào",
+    "emptyText": "Hãy là người đầu tiên đánh giá sản phẩm này sau khi đơn của bạn hoàn tất.",
+    "noun": "đánh giá"
   },
   "similar": {
     "title": "{{name}} ở các sạp khác cuối tuần này",
