@@ -5,7 +5,11 @@
     "intro_one": "Reserva los productos de esta semana en puestos de {{count}} mercado de Ciudad Ho Chi Minh. Recoge en el puesto y paga directamente al agricultor.",
     "intro_other": "Reserva los productos de esta semana en puestos de {{count}} mercados de Ciudad Ho Chi Minh. Recoge en el puesto y paga directamente al agricultor.",
     "browse": "Ver mercados",
-    "sell": "Vende en MarketLink"
+    "sell": "Vende en MarketLink",
+    "livePill": "Fin de semana de mercado: {{count}} ubicaciones abiertas ({{from}} – {{to}})",
+    "lead": "Reserve productos cosechados por la mañana directamente de granjas familiares locales. Recoja fresco en el mercado de fin de semana y pague al productor en persona.",
+    "explore": "Explorar productos frescos",
+    "sellPrompt": "¿Cultivas? Vende en MarketLink →"
   },
   "search": {
     "scope": "Buscar en",
@@ -23,33 +27,107 @@
     "overline": "Abiertos este fin de semana",
     "title": "Dónde están los puestos",
     "seeAll_one": "Ver el mercado en el mapa",
-    "seeAll_other": "Ver los {{count}} mercados en el mapa"
+    "seeAll_other": "Ver los {{count}} mercados en el mapa",
+    "takingOrders": "Aceptando pedidos anticipados",
+    "hours": "Ubicaciones y horarios"
   },
   "nearby": {
     "title": "Mercados cerca de ti",
     "note": "Distancias desde tu dirección guardada en Thảo Điền",
-    "noun": "mercados"
+    "noun": "mercados",
+    "eyebrow": "UBICACIONES DE MERCADOS",
+    "filterAll": "Todos",
+    "empty": "No se encontraron mercados en esta área."
   },
   "fresh": {
     "title": "Fresco esta semana",
     "all": "Todos los productos y filtros",
-    "noun": "productos"
+    "noun": "productos",
+    "eyebrow": "COSECHA DESTACADA",
+    "cutoff": "Límite de reserva: 20:00 este jueves y viernes por la noche",
+    "filterLink": "Filtrar por precio y categoría →",
+    "empty": "No hay productos frescos disponibles en este momento."
   },
   "how": {
     "title": "Cómo funcionan las reservas",
     "steps": {
       "reserve": {
         "title": "Reserva antes del cierre",
-        "text": "Añade productos de uno o varios puestos, elige una hora de recogida dentro del horario de cada puesto y haz el pedido. El stock queda reservado para ti en cuanto pides."
+        "text": "Añade productos de uno o varios puestos, elige una hora de recogida dentro del horario de cada puesto y haz el pedido. El stock queda reservado para ti en cuanto pides.",
+        "highlight": "No requiere pago previo con tarjeta"
       },
       "confirm": {
         "title": "El agricultor confirma",
-        "text": "Cada puesto acepta o rechaza su propio pedido. Recibes un aviso en ambos casos y puedes editar o cancelar hasta el cierre del puesto."
+        "text": "Cada puesto acepta o rechaza su propio pedido. Recibes un aviso en ambos casos y puedes editar o cancelar hasta el cierre del puesto.",
+        "highlight": "Sus productos se reservan al 100%"
       },
       "pickup": {
         "title": "Recoge y paga en el puesto",
-        "text": "Cuando el pedido esté listo, ve al puesto en tu franja horaria, recógelo y paga directamente al agricultor. No hay pago en línea."
+        "text": "Cuando el pedido esté listo, ve al puesto en tu franja horaria, recógelo y paga directamente al agricultor. No hay pago en línea.",
+        "highlight": "Se recomienda traer bolsas reutilizables"
       }
+    },
+    "eyebrow": "CÓMO FUNCIONA",
+    "desc": "Disfrute de comida de granja honesta cada fin de semana sin colas ni dudas"
+  },
+  "pillars": {
+    "fresh": {
+      "title": "100% Fresco de la Granja",
+      "desc": "Cosechado la víspera o la misma mañana del mercado para un sabor y nutrición óptimos."
+    },
+    "direct": {
+      "title": "Directo de los Productores",
+      "desc": "Sin sobreprecios de intermediarios. Precios justos para usted, 100% de ingresos para las familias campesinas."
+    },
+    "guarantee": {
+      "title": "Garantía de Reserva",
+      "desc": "Asegure su cosecha con antelación: sin madrugar ni quedarse sin sus favoritos."
+    },
+    "pay": {
+      "title": "Pague en el Puesto",
+      "desc": "Compruebe la frescura en persona y pague en efectivo o con QR directamente al agricultor."
     }
+  },
+  "categories": {
+    "eyebrow": "CATEGORÍAS DE PRODUCTOS",
+    "title": "Explorar por categoría",
+    "desc": "Organizado por cosecha de temporada y método de cultivo",
+    "all": "Ver todos los productos →",
+    "items": {
+      "vegetables": "Verduras",
+      "fruits": "Frutas",
+      "dairy": "Huevos y Lácteos",
+      "grains": "Granos y Frutos Secos",
+      "meat": "Carnes y Aves",
+      "seafood": "Pescados y Mariscos",
+      "mushrooms": "Setas y Hongos",
+      "baked": "Panadería y Repostería"
+    },
+    "itemsCount": "{{count}} artículos"
+  },
+  "farmers": {
+    "eyebrow": "PRODUCTORES DESTACADOS",
+    "title": "Conozca a sus agricultores locales",
+    "desc": "Productores dedicados que traen comida limpia y honesta a nuestros mercados de fin de semana",
+    "all": "Explorar todos los puestos →",
+    "grower": "Productor",
+    "at": "En",
+    "visit": "Visitar puesto →",
+    "empty": "No hay productores disponibles por el momento."
+  },
+  "reviews": {
+    "eyebrow": "VOCES DE LA COMUNIDAD",
+    "title": "Apreciado por compradores del mercado",
+    "desc": "Más de 140 opiniones de 5 estrellas de amantes de la comida consciente en Ciudad Ho Chi Minh",
+    "score": "⭐ 4.8 / 5 puntuación comunitaria",
+    "verified": "Compra verificada"
+  },
+  "banner": {
+    "badge": "PARA PRODUCTORES Y ARTESANOS LOCALES",
+    "free": "· Publicación gratuita en MarketLink",
+    "title": "¿Listo para llevar su cosecha fresca directamente a las mesas de la ciudad?",
+    "desc": "Reciba pedidos a mitad de semana, planifique cosechas exactas y elimine el desperdicio.",
+    "apply": "Solicitar un puesto de granja →",
+    "guidelines": "Leer pautas de calidad y puestos"
   }
 }

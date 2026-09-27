@@ -5,7 +5,11 @@
     "intro_one": "Pesan hasil panen minggu ini dari lapak di {{count}} pasar di sekitar Kota Ho Chi Minh. Ambil di lapak dan bayar langsung ke petani.",
     "intro_other": "Pesan hasil panen minggu ini dari lapak di {{count}} pasar di sekitar Kota Ho Chi Minh. Ambil di lapak dan bayar langsung ke petani.",
     "browse": "Lihat pasar",
-    "sell": "Berjualan di MarketLink"
+    "sell": "Berjualan di MarketLink",
+    "livePill": "Akhir pekan pasar: {{count}} lokasi buka ({{from}} – {{to}})",
+    "lead": "Pesan hasil panen pagi langsung dari kebun keluarga lokal. Ambil di pasar akhir pekan dan bayar langsung ke petani.",
+    "explore": "Jelajahi hasil panen segar",
+    "sellPrompt": "Petani lokal? Berjualan di MarketLink →"
   },
   "search": {
     "scope": "Cari di",
@@ -23,33 +27,107 @@
     "overline": "Buka akhir pekan ini",
     "title": "Di mana lapaknya",
     "seeAll_one": "Lihat pasar di peta",
-    "seeAll_other": "Lihat semua {{count}} pasar di peta"
+    "seeAll_other": "Lihat semua {{count}} pasar di peta",
+    "takingOrders": "Menerima pre-order",
+    "hours": "Lokasi & jam buka"
   },
   "nearby": {
     "title": "Pasar di dekat Anda",
     "note": "Jarak dari alamat tersimpan Anda di Thảo Điền",
-    "noun": "pasar"
+    "noun": "pasar",
+    "eyebrow": "LOKASI PASAR",
+    "filterAll": "Semua",
+    "empty": "Tidak ada pasar yang ditemukan di area ini."
   },
   "fresh": {
     "title": "Segar minggu ini",
     "all": "Semua produk dan filter",
-    "noun": "produk"
+    "noun": "produk",
+    "eyebrow": "PANEN UNGGULAN",
+    "cutoff": "Batas pre-order: 20.00 Kamis & Jumat malam ini",
+    "filterLink": "Saring menurut harga & kategori →",
+    "empty": "Belum ada produk segar yang tersedia saat ini."
   },
   "how": {
     "title": "Cara kerja pesan dulu",
     "steps": {
       "reserve": {
         "title": "Pesan sebelum batas waktu",
-        "text": "Tambahkan produk dari satu atau beberapa lapak, pilih waktu ambil dalam jadwal tiap lapak, lalu pesan. Stok langsung disisihkan untuk Anda saat memesan."
+        "text": "Tambahkan produk dari satu atau beberapa lapak, pilih waktu ambil dalam jadwal tiap lapak, lalu pesan. Stok langsung disisihkan untuk Anda saat memesan.",
+        "highlight": "Tidak perlu pembayaran kartu di muka"
       },
       "confirm": {
         "title": "Petani mengonfirmasi",
-        "text": "Setiap lapak menerima atau menolak pesanannya sendiri. Anda mendapat notifikasi apa pun hasilnya, dan bisa mengubah atau membatalkan sampai batas waktu lapak."
+        "text": "Setiap lapak menerima atau menolak pesanannya sendiri. Anda mendapat notifikasi apa pun hasilnya, dan bisa mengubah atau membatalkan sampai batas waktu lapak.",
+        "highlight": "Pesanan Anda dijamin 100% tersimpan"
       },
       "pickup": {
         "title": "Ambil dan bayar di lapak",
-        "text": "Saat pesanan ditandai siap, datanglah ke lapak di jadwal Anda, ambil pesanan, dan bayar langsung ke petani. Tidak ada pembayaran online."
+        "text": "Saat pesanan ditandai siap, datanglah ke lapak di jadwal Anda, ambil pesanan, dan bayar langsung ke petani. Tidak ada pembayaran online.",
+        "highlight": "Dianjurkan membawa tas belanja sendiri"
       }
+    },
+    "eyebrow": "CARA KERJA",
+    "desc": "Nikmati makanan segar dari kebun setiap akhir pekan tanpa antre atau ragu"
+  },
+  "pillars": {
+    "fresh": {
+      "title": "100% Segar dari Kebun",
+      "desc": "Dipanen sore sebelum atau pagi hari pasar untuk rasa dan nutrisi terbaik."
+    },
+    "direct": {
+      "title": "Langsung dari Petani",
+      "desc": "Tanpa biaya perantara. Harga jujur untuk Anda, 100% pendapatan untuk keluarga petani."
+    },
+    "guarantee": {
+      "title": "Jaminan Pre-Order",
+      "desc": "Amankan panen Anda lebih awal — tidak perlu bangun subuh atau kehabisan barang favorit."
+    },
+    "pay": {
+      "title": "Bayar di Kios",
+      "desc": "Periksa kesegaran secara langsung, lalu bayar tunai atau QR langsung ke petani."
     }
+  },
+  "categories": {
+    "eyebrow": "KATEGORI PRODUK",
+    "title": "Jelajahi berdasarkan kategori",
+    "desc": "Dikelompokkan berdasarkan musim panen dan metode bertani",
+    "all": "Lihat semua produk →",
+    "items": {
+      "vegetables": "Sayur-mayur",
+      "fruits": "Buah-buahan",
+      "dairy": "Telur & Susu",
+      "grains": "Biji-bijian & Kacang",
+      "meat": "Daging & Unggas",
+      "seafood": "Hasil Laut",
+      "mushrooms": "Jamur",
+      "baked": "Roti & Kue"
+    },
+    "itemsCount": "{{count}} produk"
+  },
+  "farmers": {
+    "eyebrow": "PETANI KAMI",
+    "title": "Kenali petani lokal Anda",
+    "desc": "Petani berdedikasi yang membawa makanan bersih dan jujur ke pasar akhir pekan kami",
+    "all": "Jelajahi semua kios →",
+    "grower": "Petani",
+    "at": "Di",
+    "visit": "Kunjungi kios →",
+    "empty": "Belum ada petani yang tersedia saat ini."
+  },
+  "reviews": {
+    "eyebrow": "SUARA KOMUNITAS",
+    "title": "Disukai pelanggan pasar",
+    "desc": "Lebih dari 140+ ulasan bintang 5 dari pencinta makanan sehat di seluruh Ho Chi Minh",
+    "score": "⭐ 4.8 / 5 skor komunitas",
+    "verified": "Pembelian terverifikasi"
+  },
+  "banner": {
+    "badge": "UNTUK PETANI & PENGRAJIN LOKAL",
+    "free": "· Pendaftaran gratis di MarketLink",
+    "title": "Siap membawa hasil panen segar langsung ke meja keluarga kota?",
+    "desc": "Terima pre-order di pertengahan minggu, rencanakan panen dengan tepat, dan kurangi sisa panen terbuang.",
+    "apply": "Daftar untuk buka kios kebun →",
+    "guidelines": "Baca pedoman mutu dan kios"
   }
 }
