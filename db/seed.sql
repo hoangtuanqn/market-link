@@ -535,6 +535,27 @@ WHERE u.email REGEXP '^farmer[0-9]*@marketlink[.]vn$'
 ON DUPLICATE KEY UPDATE default_quantity = IF(d.day_of_week IN (0, 6), 30, 20), default_price = NULL,
                         is_active = TRUE;
 
+-- ---- Daily stock (FR-063) behind the seeded orders that still hold stock ----
+-- Placing an order takes its units from the product_daily_stock row of its pickup date; the seeded
+-- orders skip that step, so each (product, pickup date) they use gets the row placing them would
+-- have left: the template quantity minus what the running seeded orders (placed/accepted/ready)
+-- hold. Cancelling or declining one of them then gives back exactly what it took. DAYOFWEEK() - 1
+-- is the app's 0 = Sunday … 6 = Saturday. A row that already exists is left alone: it already
+-- carries real orders or a Farmer's own override.
+INSERT INTO product_daily_stock (product_id, stock_date, quantity_available, unit_price)
+SELECT oi.product_id, o.pickup_date, GREATEST(t.default_quantity - SUM(oi.quantity), 0),
+       COALESCE(t.default_price, p.price)
+FROM orders o
+JOIN order_items oi ON oi.order_id = o.id
+JOIN products p ON p.id = oi.product_id
+JOIN weekly_stock_templates t ON t.product_id = oi.product_id
+                             AND t.day_of_week = DAYOFWEEK(o.pickup_date) - 1
+                             AND t.is_active = TRUE
+WHERE o.order_code LIKE 'ML-20260920-%'
+  AND o.status IN ('placed', 'accepted', 'ready')
+GROUP BY oi.product_id, o.pickup_date, t.default_quantity, t.default_price, p.price
+ON DUPLICATE KEY UPDATE id = id;
+
 -- ---- Favourites (FR-040, FR-014) of customer@marketlink.vn ----
 -- Two stalls, three products (one sold out, to demo the FR-041 restock alert) and one market.
 -- target_id repeats the one id that is set; uq_fav (customer_id, target_type, target_id) makes this
