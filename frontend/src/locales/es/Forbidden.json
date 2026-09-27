@@ -5,5 +5,7 @@
   "backHome": "Volver al inicio",
   "backDashboard": "Volver al panel",
   "backFarmer": "Volver al portal de agricultor",
-  "switchAccount": "Iniciar sesión como administrador"
+  "switchAccount": "Iniciar sesión como administrador",
+  "needHelp": "¿Necesita ayuda?",
+  "contactSupport": "Contactar soporte"
 }

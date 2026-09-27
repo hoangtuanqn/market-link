@@ -133,7 +133,6 @@ const App = () => {
             <Route path="privacy" element={<PrivacyPage />} />
             <Route path="contact" element={<ContactPage />} />
             <Route path="feedback" element={<FeedbackPage />} />
-            <Route path="403" element={<ForbiddenPage />} />
           </Route>
 
           {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
@@ -178,10 +177,9 @@ const App = () => {
             </Route>
           </Route>
 
-          {/* An unknown path / an unbuilt page (search, map, about…) → 404 instead of a blank screen */}
-          <Route element={<MainLayout />}>
-            <Route path="*" element={<NotFoundPage />} />
-          </Route>
+          {/* Standalone error screens (403 Forbidden and 404 Not Found) with no Header and Footer */}
+          <Route path="403" element={<ForbiddenPage />} />
+          <Route path="*" element={<NotFoundPage />} />
 
           {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader.
               FR-005: signed-in Farmers only — guests go to /login, other roles to their own home. */}
@@ -280,8 +278,8 @@ const App = () => {
             <Route path="notifications" element={<AdminNotificationsPage />} />
             <Route path="feedback" element={<AdminFeedbackPage />} />
 
-            {/* An admin path that matches nothing → 404 right inside the admin frame, not falling out to the Customer layout */}
-            <Route path="*" element={<NotFoundPage />} />
+            {/* An admin path that matches nothing → 404 right inside the admin frame */}
+            <Route path="*" element={<NotFoundPage standalone={false} />} />
           </Route>
         </Routes>
       </SettingsSync>

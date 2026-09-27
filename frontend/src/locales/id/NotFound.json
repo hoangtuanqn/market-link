@@ -1,6 +1,11 @@
 {
   "overline": "Halaman tidak ditemukan",
-  "title": "Kami tidak dapat menemukan halaman itu",
-  "text": "Tautannya mungkin sudah lama, atau bagian MarketLink ini belum dibuka.",
-  "home": "Kembali ke beranda"
+  "title": "Kami tidak dapat menemukan halaman ini",
+  "text": "Tautan mungkin rusak, atau bagian MarketLink ini belum tersedia.",
+  "home": "Kembali ke beranda",
+  "exploreMarkets": "Jelajahi pasar",
+  "quickLinks": "Tujuan populer",
+  "products": "Produk segar",
+  "marketMap": "Peta pasar",
+  "contact": "Hubungi dukungan"
 }

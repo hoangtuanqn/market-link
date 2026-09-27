@@ -5,5 +5,7 @@
   "backHome": "返回首页",
   "backDashboard": "返回控制台",
   "backFarmer": "返回农户中心",
-  "switchAccount": "以管理员身份登录"
+  "switchAccount": "以管理员身份登录",
+  "needHelp": "需要帮助？",
+  "contactSupport": "联系技术支持"
 }

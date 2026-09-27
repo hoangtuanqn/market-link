@@ -5,5 +5,7 @@
   "backHome": "Retour à l'accueil",
   "backDashboard": "Retour au tableau de bord",
   "backFarmer": "Retour à l'espace producteur",
-  "switchAccount": "Se connecter en tant qu'administrateur"
+  "switchAccount": "Se connecter en tant qu'administrateur",
+  "needHelp": "Besoin d'aide ?",
+  "contactSupport": "Contacter l'assistance"
 }

@@ -18,7 +18,7 @@ describe('ForbiddenPage', () => {
     );
 
     expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
-    expect(screen.getByText('Back to home page')).toBeInTheDocument();
+    expect(screen.getAllByText('Back to home page').length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('Sign in as administrator')).toBeInTheDocument();
   });
 

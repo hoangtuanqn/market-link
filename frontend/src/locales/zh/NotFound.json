@@ -1,6 +1,11 @@
 {
-  "overline": "页面未找到",
-  "title": "找不到该页面",
-  "text": "链接可能已过期，或 MarketLink 的这一部分尚未开放。",
-  "home": "返回首页"
+  "overline": "未找到页面",
+  "title": "无法找到该页面",
+  "text": "该链接可能已损坏，或者该板块尚未开放。",
+  "home": "返回首页",
+  "exploreMarkets": "探索市场",
+  "quickLinks": "常用导航",
+  "products": "新鲜农产品",
+  "marketMap": "市场地图",
+  "contact": "联系客服"
 }
