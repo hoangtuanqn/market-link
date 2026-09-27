@@ -376,23 +376,40 @@ export function PlayIcon(props: IconProps) {
   );
 }
 
-/** MarketLink mark: a hang tag on dashed twine. */
-export function LogoMark({ size = 30 }: { size?: number }) {
+/**
+ * MarketLink mark: a market stall under an arch — striped awning, produce on the counter. The logo is brand artwork, so
+ * its colours are fixed hex rather than theme tokens: it must look the same in light and dark mode. Pick the skin that
+ * matches what is behind it — `light` on `board` and other dark surfaces, `ink` on paper.
+ */
+const LOGO_SKINS = {
+  ink: { arch: '#2f4a2a', stripe: '#a8402b', gap: '#f1e5cb', art: '#f1e5cb', ground: '#e8b33c' },
+  light: { arch: '#f1e5cb', stripe: '#a8402b', gap: '#f1e5cb', art: '#2f4a2a', ground: '#a8402b' },
+} as const;
+
+const AWNING_STRIPES: [number, number][] = [
+  [16, 28.8],
+  [28.8, 41.6],
+  [41.6, 54.4],
+  [54.4, 67.2],
+  [67.2, 80],
+];
+
+export function LogoMark({ size = 30, variant = 'ink' }: { size?: number; variant?: keyof typeof LOGO_SKINS }) {
+  const skin = LOGO_SKINS[variant];
   return (
-    <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true" className="block flex-none">
-      <path
-        d="M9 8.5h14.5a2 2 0 012 2V26a2.5 2.5 0 01-2.5 2.5H9A2.5 2.5 0 016.5 26V11.5zM18.4 13.2a2.4 2.4 0 10-4.8 0 2.4 2.4 0 104.8 0z"
-        fill="currentColor"
-        fillRule="evenodd"
-      />
-      <path
-        d="M16 13.2C15.2 8.5 12.6 4.6 8 2.6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.6}
-        strokeLinecap="round"
-        strokeDasharray="2.2 2"
-      />
+    <svg viewBox="0 0 96 96" width={size} height={size} aria-hidden="true" className="block flex-none">
+      <path d="M0 48a48 48 0 0 1 96 0v40a8 8 0 0 1-8 8H8a8 8 0 0 1-8-8Z" fill={skin.arch} />
+      {AWNING_STRIPES.map(([from, to], i) => (
+        <path key={from} d={`M${from} 22H${to}v18a6.4 6.4 0 0 1-12.8 0Z`} fill={i % 2 === 0 ? skin.stripe : skin.gap} />
+      ))}
+      <path d="M28 68C23 63 21 56 23 50c6 4 9 10 8 18Z" fill={skin.art} />
+      <path d="M36 68c-4-5-4-13 1-18 5 5 5 13 2 18Z" fill={skin.art} />
+      <circle cx="52" cy="59" r="9" fill="#e8b33c" />
+      <path d="M64 68c0-6 4-10 7-10s7 4 7 10Z" fill={skin.art} />
+      <rect x="17" y="68" width="62" height="9" rx="4.5" fill={skin.art} />
+      <rect x="23" y="77" width="6" height="8" rx="3" fill={skin.art} />
+      <rect x="67" y="77" width="6" height="8" rx="3" fill={skin.art} />
+      <rect x="16" y="87" width="64" height="5" rx="2.5" fill={skin.ground} />
     </svg>
   );
 }

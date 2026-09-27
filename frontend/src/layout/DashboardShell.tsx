@@ -135,7 +135,7 @@ const DashboardShell = ({
             }}
             className="text-on-board inline-flex items-center gap-2 no-underline"
           >
-            <LogoMark size={26} />
+            <LogoMark size={26} variant="light" />
             {!folded && <span className="font-hand text-xl leading-none">MarketLink</span>}
           </Link>
           {!folded && (

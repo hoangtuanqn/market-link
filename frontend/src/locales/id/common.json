@@ -214,7 +214,8 @@
     "markets": "Memuat pasar"
   },
   "logo": {
-    "home": "MarketLink — beranda"
+    "home": "MarketLink — beranda",
+    "slogan": "Masih ada saat kamu sampai"
   },
   "map": {
     "attribution": "© kontributor {{link}}",

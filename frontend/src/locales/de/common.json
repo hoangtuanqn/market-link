@@ -217,7 +217,8 @@
     "markets": "Märkte werden geladen"
   },
   "logo": {
-    "home": "MarketLink — Startseite"
+    "home": "MarketLink — Startseite",
+    "slogan": "Noch da, wenn Sie ankommen"
   },
   "map": {
     "attribution": "© {{link}}-Mitwirkende",

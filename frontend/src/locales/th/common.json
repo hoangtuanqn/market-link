@@ -214,7 +214,8 @@
     "markets": "กำลังโหลดตลาด"
   },
   "logo": {
-    "home": "MarketLink — หน้าแรก"
+    "home": "MarketLink — หน้าแรก",
+    "slogan": "ไปถึงแล้วของยังอยู่"
   },
   "map": {
     "attribution": "© ผู้ร่วมพัฒนา {{link}}",

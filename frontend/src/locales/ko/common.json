@@ -214,7 +214,8 @@
     "markets": "시장 불러오는 중"
   },
   "logo": {
-    "home": "MarketLink — 홈"
+    "home": "MarketLink — 홈",
+    "slogan": "도착해도 그대로 있어요"
   },
   "map": {
     "attribution": "© {{link}} 기여자",
