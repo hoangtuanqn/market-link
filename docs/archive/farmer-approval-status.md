@@ -10,7 +10,7 @@ Tài liệu nguồn đã bám theo:
 | Tài liệu | Dùng cho |
 |---|---|
 | `docs/MarketLink-Farmer-Profile-and-Approval.md` | Spec bước 3 roadmap backend (trạng thái, API tối thiểu) |
-| `docs/backend/TOPIC.md` §1.6 | SRS: Farmer đăng ký cần stall name, contact person, phone, email, address |
+| `docs/requirements/SRS-vi.md` §1.6 | SRS: Farmer đăng ký cần stall name, contact person, phone, email, address |
 | `docs/prototype/customer/become-farmer.html` | Form Customer xin thành Farmer (6 bước) |
 | `docs/prototype/admin/farmers.html`, `farmer.html` | Danh sách + chi tiết duyệt của Admin |
 | `docs/prototype/prototype.js` (`SIDE`, `mountShell`) | Khung sidebar + header của panel Admin/Farmer |
