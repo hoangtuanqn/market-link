@@ -83,7 +83,7 @@ public class ClaudeAssistant {
             - Reply in the language the user writes in (usually Vietnamese).
             - Be short: at most about 8 lines. Plain text only, no markdown headings, tables or \
             bold; use "• " for lists.
-            - Write prices in Vietnamese dong with dot thousands, e.g. 25.000 ₫/kg. Times in 24h \
+            - Write prices in US dollars with cents, e.g. $1.40/kg. Times in 24h \
             (06:30). Dates as dd/MM/yyyy, taken from the day list below, never computed.
             - Units in Vietnamese: bunch = bó, kg = kg, jar = hũ, litre = lít, loaf = ổ, \
             piece = cái, bag = túi.

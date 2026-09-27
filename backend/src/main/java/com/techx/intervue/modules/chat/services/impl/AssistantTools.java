@@ -76,7 +76,7 @@ public class AssistantTools {
                     tool(
                             SEARCH_PRODUCTS,
                             "Search products that approved stalls sell, across all markets or one"
-                                    + " market. Returns price in VND per unit, how much is left for the"
+                                    + " market. Returns price in US dollars per unit, how much is left for the"
                                     + " nearest pickup date, the stall and its markets. Use it for"
                                     + " finding a product, its price, or whether it is in stock.",
                             Map.of(
@@ -240,7 +240,11 @@ public class AssistantTools {
                             "product",
                             p.productId(),
                             p.name(),
-                            price.longValue() + " ₫/" + p.unit() + " · " + p.stallName()));
+                            ChatService.formatPrice(price)
+                                    + "/"
+                                    + p.unit()
+                                    + " · "
+                                    + p.stallName()));
         }
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("keyword", keyword);

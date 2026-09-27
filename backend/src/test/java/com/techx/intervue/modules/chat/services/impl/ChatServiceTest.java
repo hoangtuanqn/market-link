@@ -105,24 +105,24 @@ class ChatServiceTest {
                                 new ProductRow(
                                         10L,
                                         "Cà chua bi",
-                                        new BigDecimal("35000.00"),
+                                        new BigDecimal("1.40"),
                                         "kg",
                                         40,
                                         "available",
                                         3L,
                                         "Vườn Xanh",
                                         List.of("Chợ Bến Thành"))));
-        when(availability.resolve(Map.of(10L, new BigDecimal("35000.00"))))
+        when(availability.resolve(Map.of(10L, new BigDecimal("1.40"))))
                 .thenReturn(
                         Map.of(
                                 10L,
                                 new ProductAvailabilityResolver.Availability(
-                                        LocalDate.of(2026, 9, 28), 12, new BigDecimal("36000"))));
+                                        LocalDate.of(2026, 9, 28), 12, new BigDecimal("1.45"))));
 
         ChatReplyResource reply = ask("Cà chua giá bao nhiêu?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PRODUCT_DETAIL);
-        assertThat(reply.reply()).contains("36,000 ₫/kg", "12 kg left", "Vườn Xanh");
+        assertThat(reply.reply()).contains("$1.45/kg", "12 kg left", "Vườn Xanh");
         assertThat(reply.results()).extracting("type", "id").containsExactly(tuple("product", 10L));
     }
 
@@ -241,7 +241,7 @@ class ChatServiceTest {
 
     @Test
     void signedInCustomerIsAnsweredByTheAssistantAndToolsAreLogged() {
-        ChatResultItem card = new ChatResultItem("product", 5L, "Cà chua", "25000 ₫/kg · Vườn A");
+        ChatResultItem card = new ChatResultItem("product", 5L, "Cà chua", "$1.00/kg · Vườn A");
         when(assistant.reply(any(), eq("tìm cà chua")))
                 .thenReturn(
                         new ClaudeAssistant.AiReply(

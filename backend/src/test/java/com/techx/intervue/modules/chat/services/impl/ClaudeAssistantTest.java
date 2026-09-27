@@ -36,7 +36,7 @@ import org.springframework.beans.factory.ObjectProvider;
 class ClaudeAssistantTest {
 
     private static final ChatResultItem CARD =
-            new ChatResultItem("product", 9L, "Cà chua bi", "28000 ₫/kg · Vườn Út Hiền");
+            new ChatResultItem("product", 9L, "Cà chua bi", "$1.10/kg · Vườn Út Hiền");
 
     private MessageService messageService;
     private AssistantTools tools;
@@ -76,11 +76,11 @@ class ClaudeAssistantTest {
         when(messageService.create(any(MessageCreateParams.class)))
                 .thenReturn(
                         toolUse("toolu_1", AssistantTools.SEARCH_PRODUCTS, "cà chua"),
-                        text("Cà chua bi 28.000 ₫/kg ở Vườn Út Hiền."));
+                        text("Cà chua bi $1.10/kg ở Vườn Út Hiền."));
 
         AiReply reply = assistant.reply(List.of(), "tìm cà chua");
 
-        assertThat(reply.reply()).isEqualTo("Cà chua bi 28.000 ₫/kg ở Vườn Út Hiền.");
+        assertThat(reply.reply()).isEqualTo("Cà chua bi $1.10/kg ở Vườn Út Hiền.");
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
         assertThat(reply.loggedIntent()).isEqualTo("AI:search_products");
         assertThat(reply.results()).containsExactly(CARD);

@@ -484,9 +484,9 @@ public class ChatService implements ChatServiceInterface {
                 .replaceAll("\\s+", " ");
     }
 
-    private static String formatPrice(BigDecimal price) {
-        NumberFormat format = NumberFormat.getIntegerInstance(Locale.US);
-        return format.format(price) + " ₫";
+    /** Prices are stored and shown in US dollars (lead decision 2026-09-27), e.g. "$1.40". */
+    static String formatPrice(BigDecimal price) {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(price);
     }
 
     private static String formatRange(LocalTime start, LocalTime end) {
