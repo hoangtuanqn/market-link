@@ -36,7 +36,7 @@ const MainLayout = ({ unreadCount }: MainLayoutProps) => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="bg-surface-quiet flex min-h-screen flex-col">
       <LiveAnnouncementBanner />
       <Header
         variant={variant}

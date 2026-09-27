@@ -140,6 +140,7 @@ const FarmerLayout = () => {
         searchPlaceholder={t('farmerNav.searchPlaceholder')}
         accountTo="/account"
         headerActions={<NotificationBell to="/farmer/notifications" />}
+        className="bg-surface-quiet"
       />
     </>
   );
