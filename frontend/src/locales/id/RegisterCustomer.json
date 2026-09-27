@@ -6,8 +6,6 @@
     "phone": "Nomor telepon",
     "email": "Email",
     "emailHint": "Dipakai untuk masuk dan notifikasi pesanan.",
-    "address": "Alamat",
-    "addressPlaceholder": "Jalan, kelurahan, distrik",
     "password": "Kata sandi",
     "passwordHint": "{{min}} sampai {{max}} karakter.",
     "confirmPassword": "Ulangi kata sandi"
@@ -33,8 +31,6 @@
     "emailRequired": "Masukkan email.",
     "emailInvalid": "Masukkan alamat email yang valid.",
     "emailMax": "Email maksimal {{max}} karakter.",
-    "addressRequired": "Masukkan alamat.",
-    "addressMax": "Alamat maksimal {{max}} karakter.",
     "passwordRequired": "Masukkan kata sandi.",
     "passwordLength": "Kata sandi harus {{min}} sampai {{max}} karakter.",
     "confirmRequired": "Konfirmasi kata sandi.",

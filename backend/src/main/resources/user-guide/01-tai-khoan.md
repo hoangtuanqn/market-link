@@ -7,7 +7,11 @@ Nhãn nút ghi theo giao diện tiếng Anh mặc định; nếu bạn chọn ng
 
 1. Bấm **Sign in** ở góc phải trên cùng, rồi chọn **Sign up** (hoặc mở trang `/register/customer`).
 2. Điền đủ các ô bắt buộc: **Full name** (họ tên), **Phone number** (số di động Việt Nam 10 số), **Email**,
-   **Address** (địa chỉ: số nhà, phường, quận) và **Password** hai lần.
+   **Address** và **Password** hai lần.
+   Địa chỉ chọn lần lượt: **Country** (quốc gia) → **Province or city** (tỉnh/thành phố) → **Ward or commune**
+   (phường/xã, theo đơn vị hành chính 2 cấp từ 01/07/2025, không còn quận/huyện) → **Street** (gõ vài chữ để chọn
+   gợi ý; đường không có trong gợi ý thì cứ giữ chữ đã gõ) → **House number and details** (số nhà, hẻm).
+   Địa chỉ ở nước ngoài thì chọn quốc gia rồi gõ tay tỉnh/bang, thành phố và địa chỉ.
 3. Mật khẩu dài từ 6 đến 72 ký tự. Ô **Repeat password** phải giống hệt ô mật khẩu.
 4. Tích ô đồng ý **Terms of service** và **Privacy policy**, rồi bấm **Create account**.
 
@@ -54,7 +58,9 @@ Sau khi đổi, bạn bị đăng xuất khỏi **mọi thiết bị** và cần
 ## Sửa thông tin cá nhân
 
 1. Mở trang **Account**.
-2. Ở mục **Your details**, sửa **Full name**, **Phone number** hoặc **Address**.
+2. Ở mục **Your details**, sửa **Full name**, **Phone number** hoặc các ô **Address**.
+   Tài khoản tạo trước khi có ô địa chỉ mới sẽ thấy dòng **Current address** (địa chỉ cũ): chọn lại tỉnh, phường,
+   đường rồi mới lưu được.
 3. Bấm **Save changes**.
 
 Email là thông tin đăng nhập nên không đổi được ở đây.

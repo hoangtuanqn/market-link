@@ -2,6 +2,7 @@ package com.techx.intervue.modules.user.requests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.techx.intervue.modules.geo.requests.AddressPartsRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -39,7 +40,7 @@ class CustomerRegisterRequestTest {
                         "Nguyen Van An",
                         "0900000002",
                         email,
-                        "12 Le Loi, Quan 1",
+                        new AddressPartsRequest("VN", "79", "26743", "Le Loi", "12", null, null),
                         "secret123",
                         "secret123");
         return validator.validate(request).stream()
@@ -59,5 +60,38 @@ class CustomerRegisterRequestTest {
             strings = {"customer@marketlink.vn", "an.nguyen+demo@gmail.com", "qa@sub.example.co"})
     void acceptsARegularEmail(String email) {
         assertThat(invalidFields(email)).doesNotContain("email");
+    }
+
+    @org.junit.jupiter.api.Test
+    void requiresTheAddressParts() {
+        CustomerRegisterRequest request =
+                new CustomerRegisterRequest(
+                        "Nguyen Van An",
+                        "0900000002",
+                        "an@example.com",
+                        null,
+                        "secret123",
+                        "secret123");
+
+        assertThat(validator.validate(request))
+                .extracting(v -> v.getPropertyPath().toString())
+                .contains("addressParts");
+    }
+
+    @org.junit.jupiter.api.Test
+    void checksTheNestedAddressParts() {
+        CustomerRegisterRequest request =
+                new CustomerRegisterRequest(
+                        "Nguyen Van An",
+                        "0900000002",
+                        "an@example.com",
+                        new AddressPartsRequest(
+                                "VN", "79", "26743", "x".repeat(101), "12", null, null),
+                        "secret123",
+                        "secret123");
+
+        assertThat(validator.validate(request))
+                .extracting(v -> v.getPropertyPath().toString())
+                .contains("addressParts.streetName");
     }
 }

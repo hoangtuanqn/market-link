@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.modules.geo.services.interfaces.AddressServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.RoleMismatchException;
@@ -65,7 +66,8 @@ class UserServiceLoginTest {
                         authConfig,
                         jobQueue,
                         // FR-008: nobody has 2FA on → sign in as before
-                        mock(MfaServiceInterface.class));
+                        mock(MfaServiceInterface.class),
+                        mock(AddressServiceInterface.class));
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(passwordEncoder.matches(PASSWORD, "hash")).thenReturn(true);
         when(jwtService.generateToken(anyLong())).thenReturn("access");

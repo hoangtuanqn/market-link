@@ -6,7 +6,7 @@
 -- CHỦ SỞ HỮU: LEAD. Không ai khác được sửa file này (CLAUDE.md R-02).
 -- Chạy được từ database RỖNG, không phụ thuộc thứ tự thủ công.
 --
--- 19 bảng. Đã vá 2 lỗ hổng trong schema gợi ý của đề:
+-- 28 bảng. Đã vá 2 lỗ hổng trong schema gợi ý của đề:
 --   1. Đề để product_id thẳng trong Orders -> không làm được giỏ hàng.
 --      Đã tách thành orders + order_items.
 --   2. Đề để Reviews chỉ có product_id -> không review được Farmer.
@@ -16,6 +16,49 @@
 DROP DATABASE IF EXISTS marketlink;
 CREATE DATABASE marketlink CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE marketlink;
+
+-- ---------------------------------------------------------------------------
+-- 0. ADDRESS MASTER DATA (FR-001, FR-073)
+-- Vietnam has two levels since 01/07/2025: province -> ward/commune, no district.
+-- The rows (249 countries, 34 provinces, 3,321 wards, Ho Chi Minh City streets)
+-- are loaded by migration V20260927001; this file only defines the tables.
+-- ---------------------------------------------------------------------------
+
+CREATE TABLE countries (
+  code     CHAR(2)      NOT NULL PRIMARY KEY,   -- ISO 3166-1 alpha-2
+  name_en  VARCHAR(100) NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE provinces (
+  code          VARCHAR(5)   NOT NULL PRIMARY KEY,   -- General Statistics Office code
+  name          VARCHAR(100) NOT NULL,
+  full_name     VARCHAR(120) NOT NULL,
+  name_en       VARCHAR(100) NULL,
+  full_name_en  VARCHAR(120) NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE wards (
+  code           VARCHAR(5)   NOT NULL PRIMARY KEY,
+  province_code  VARCHAR(5)   NOT NULL,
+  name           VARCHAR(100) NOT NULL,
+  full_name      VARCHAR(120) NOT NULL,
+  name_en        VARCHAR(100) NULL,
+  full_name_en   VARCHAR(120) NULL,
+  -- Target of the composite FK below: a ward can only be stored under its own province
+  UNIQUE KEY uq_wards_province_code (province_code, code),
+  FOREIGN KEY (province_code) REFERENCES provinces(code)
+) ENGINE=InnoDB;
+
+-- Suggestions only: an address may name a street that is not listed
+CREATE TABLE streets (
+  street_id      INT AUTO_INCREMENT PRIMARY KEY,
+  province_code  VARCHAR(5)   NOT NULL,
+  name           VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  name_search    VARCHAR(100) NOT NULL,   -- lower case, no diacritics: "le loi" finds "Lê Lợi"
+  UNIQUE KEY uq_streets_province_name (province_code, name),
+  INDEX idx_streets_search (province_code, name_search),
+  FOREIGN KEY (province_code) REFERENCES provinces(code)
+) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------------
 -- 1. NGƯỜI DÙNG & PHÂN QUYỀN
@@ -28,11 +71,26 @@ CREATE TABLE users (
   role           ENUM('customer','farmer','admin') NOT NULL,
   full_name      VARCHAR(100) NOT NULL,
   phone          VARCHAR(20)  NOT NULL,
-  address        VARCHAR(255) NULL,          -- bắt buộc với customer khi đăng ký
+  -- One line composed by the server from the parts below; required for customers at sign-up
+  address        VARCHAR(255) NULL,
+  -- Structured address (FR-001). Vietnam: province + ward + street (+ house number).
+  -- Other countries: region + city + address line. NULL on rows saved before 27/09/2026.
+  country_code   CHAR(2)      NULL,
+  province_code  VARCHAR(5)   NULL,
+  ward_code      VARCHAR(5)   NULL,
+  street_name    VARCHAR(100) NULL,   -- free text, not a FK: the street list only suggests
+  address_line   VARCHAR(60)  NULL,   -- house number and details
+  region_name    VARCHAR(60)  NULL,
+  city_name      VARCHAR(60)  NULL,
   status         ENUM('active','inactive','suspended') NOT NULL DEFAULT 'active',
   created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  INDEX idx_users_role_status (role, status)
+  INDEX idx_users_role_status (role, status),
+  FOREIGN KEY (country_code)  REFERENCES countries(code),
+  FOREIGN KEY (province_code) REFERENCES provinces(code),
+  FOREIGN KEY (province_code, ward_code) REFERENCES wards(province_code, code),
+  -- A composite FK skips rows with a NULL part, so a ward without its province needs this check
+  CHECK (ward_code IS NULL OR province_code IS NOT NULL)
 ) ENGINE=InnoDB;
 
 CREATE TABLE password_reset_tokens (
@@ -78,9 +136,15 @@ CREATE TABLE farmer_profiles (
 CREATE TABLE markets (
   market_id     INT AUTO_INCREMENT PRIMARY KEY,
   market_name   VARCHAR(150) NOT NULL,
-  address       VARCHAR(255) NOT NULL,
-  district      VARCHAR(100) NULL,
-  city          VARCHAR(100) NOT NULL DEFAULT 'TP. Hồ Chí Minh',
+  address       VARCHAR(255) NOT NULL,   -- composed by the server from the parts below
+  -- Structured address (FR-073), always in Vietnam; replaces the old district/city text
+  country_code  CHAR(2)      NULL,
+  province_code VARCHAR(5)   NULL,
+  ward_code     VARCHAR(5)   NULL,
+  street_name   VARCHAR(100) NULL,
+  address_line  VARCHAR(60)  NULL,
+  region_name   VARCHAR(60)  NULL,
+  city_name     VARCHAR(60)  NULL,
   latitude      DECIMAL(10,8) NOT NULL,
   longitude     DECIMAL(11,8) NOT NULL,
   map_provider  VARCHAR(30) NOT NULL DEFAULT 'osm',   -- D-12
@@ -89,7 +153,11 @@ CREATE TABLE markets (
   image_url     VARCHAR(255) NULL,
   is_active     BOOLEAN NOT NULL DEFAULT TRUE,
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_markets_city_active (city, is_active)
+  INDEX idx_markets_ward_active (ward_code, is_active),
+  FOREIGN KEY (country_code)  REFERENCES countries(code),
+  FOREIGN KEY (province_code) REFERENCES provinces(code),
+  FOREIGN KEY (province_code, ward_code) REFERENCES wards(province_code, code),
+  CHECK (ward_code IS NULL OR province_code IS NOT NULL)
 ) ENGINE=InnoDB;
 
 -- Chợ họp vào những thứ mấy trong tuần (0=CN ... 6=T7)

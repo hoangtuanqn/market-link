@@ -55,8 +55,7 @@
     "reason": "Motivo que verá el productor",
     "confirm": "Rechazar solicitud",
     "placeholder": "Di qué hay que cambiar para aprobar este puesto.",
-    "hint": "{{used}} de {{max}} caracteres. El solicitante lo lee palabra por palabra.",
-    "required": "Escribe el motivo que verá el solicitante.",
+    "required": "Elige un motivo o escribe el que leerá el solicitante.",
     "tooLong": "El motivo no puede superar {{max}} caracteres."
   },
   "suspend": {
@@ -65,8 +64,7 @@
     "confirm": "Suspender puesto",
     "reason": "Motivo que verá el productor",
     "placeholder": "Di qué debe corregir el puesto para volver a vender.",
-    "hint": "{{used}} de {{max}} caracteres. El productor lo lee palabra por palabra.",
-    "required": "Escribe el motivo que verá el productor.",
+    "required": "Elige un motivo o escribe el que leerá el agricultor.",
     "tooLong": "El motivo no puede superar {{max}} caracteres."
   },
   "toast": {

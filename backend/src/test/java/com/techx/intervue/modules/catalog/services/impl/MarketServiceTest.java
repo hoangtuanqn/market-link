@@ -17,6 +17,10 @@ import com.techx.intervue.modules.catalog.repositories.MarketQueryRepository;
 import com.techx.intervue.modules.catalog.repositories.MarketRepository;
 import com.techx.intervue.modules.catalog.requests.MarketRequest;
 import com.techx.intervue.modules.catalog.resources.MarketResource;
+import com.techx.intervue.modules.geo.requests.AddressPartsRequest;
+import com.techx.intervue.modules.geo.services.impl.AddressService;
+import com.techx.intervue.modules.geo.services.impl.GeoDirectory;
+import com.techx.intervue.modules.geo.services.impl.GeoFixtures;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
@@ -46,18 +50,32 @@ class MarketServiceTest {
         stallService = mock(StallServiceInterface.class);
         service =
                 new MarketService(
-                        repository, dayRepository, imageRepository, queryRepository, stallService);
+                        repository,
+                        dayRepository,
+                        imageRepository,
+                        queryRepository,
+                        stallService,
+                        // Real address rules on a slice of the master data
+                        new AddressService(new GeoDirectory(GeoFixtures.repository())));
     }
 
     /** A valid images list, for tests that are not themselves about the images field. */
     private static final List<String> ONE_IMAGE = List.of("/uploads/market-images/a.jpg");
 
+    /** A market address in Vietnam without a house number, as markets usually are. */
+    private static final AddressPartsRequest LE_LOI =
+            new AddressPartsRequest(
+                    "VN", GeoFixtures.HCM, GeoFixtures.BEN_THANH, "Lê Lợi", null, null, null);
+
     private static MarketRequest request(List<Integer> days, List<String> images) {
+        return request(LE_LOI, days, images);
+    }
+
+    private static MarketRequest request(
+            AddressPartsRequest address, List<Integer> days, List<String> images) {
         return new MarketRequest(
                 "Chợ Bà Chiểu",
-                "Bạch Đằng, Bình Thạnh",
-                "Bình Thạnh",
-                "TP. Hồ Chí Minh",
+                address,
                 new BigDecimal("10.80290000"),
                 new BigDecimal("106.69920000"),
                 "05:00",
@@ -70,8 +88,7 @@ class MarketServiceTest {
         Market m = new Market();
         m.setId(1L);
         m.setMarketName("Chợ Bà Chiểu");
-        m.setAddress("Bạch Đằng, Bình Thạnh");
-        m.setCity("TP. Hồ Chí Minh");
+        m.setAddress("Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh");
         m.setLatitude(new BigDecimal("10.80290000"));
         m.setLongitude(new BigDecimal("106.69920000"));
         m.setOpeningTime(LocalTime.of(5, 0));
@@ -94,6 +111,35 @@ class MarketServiceTest {
     }
 
     @Test
+    void createStoresTheComposedAddressAndReturnsTheWardAndProvince() {
+        when(repository.save(any(Market.class))).thenReturn(saved());
+        ArgumentCaptor<Market> captor = ArgumentCaptor.forClass(Market.class);
+
+        MarketResource result = service.create(request(List.of(0), ONE_IMAGE));
+
+        verify(repository).save(captor.capture());
+        assertThat(captor.getValue().getAddress())
+                .isEqualTo("Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh");
+        assertThat(captor.getValue().getAddressParts().getWardCode())
+                .isEqualTo(GeoFixtures.BEN_THANH);
+        assertThat(result.wardName()).isEqualTo("Phường Bến Thành");
+        assertThat(result.provinceName()).isEqualTo("Thành phố Hồ Chí Minh");
+        assertThat(result.addressParts().streetName()).isEqualTo("Lê Lợi");
+    }
+
+    /** Customers pick up at the market, so it has to be somewhere they can go. */
+    @Test
+    void createRejectsAMarketOutsideVietnam() {
+        AddressPartsRequest tokyo =
+                new AddressPartsRequest("JP", null, null, null, "1-2-3", "Tokyo", "Shibuya");
+
+        assertThatThrownBy(() -> service.create(request(tokyo, List.of(0), ONE_IMAGE)))
+                .isInstanceOfSatisfying(
+                        InvalidFieldException.class,
+                        e -> assertThat(e.getField()).isEqualTo("addressParts.countryCode"));
+    }
+
+    @Test
     void createRejectsDayOutsideZeroToSix() {
         assertThatThrownBy(() -> service.create(request(List.of(0, 7), null)))
                 .isInstanceOf(InvalidFieldException.class)
@@ -105,9 +151,7 @@ class MarketServiceTest {
         MarketRequest bad =
                 new MarketRequest(
                         "Chợ X",
-                        "Y",
-                        null,
-                        "TP. Hồ Chí Minh",
+                        LE_LOI,
                         BigDecimal.ONE,
                         BigDecimal.ONE,
                         "18:00",

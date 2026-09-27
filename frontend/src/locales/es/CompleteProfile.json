@@ -3,10 +3,7 @@
   "intro": "Iniciaste sesión con Google como <b>{{email}}</b>. Google solo nos da tu nombre y tu correo, así que te pedimos una vez tu teléfono y tu dirección. El puesto donde haces el pedido los usa para entregártelo el día de mercado.",
   "fields": {
     "fullName": "Nombre completo",
-    "phone": "Número de teléfono",
-    "address": "Dirección",
-    "addressPlaceholder": "Calle, barrio, distrito",
-    "addressHint": "Para distancias e indicaciones."
+    "phone": "Número de teléfono"
   },
   "submit": "Guardar y continuar",
   "saving": "Guardando…",

@@ -78,7 +78,7 @@ HTTP: 200 đọc · 201 tạo · 400 validation · 401 chưa đăng nhập · 40
 
 | Method | Path | Role | Request | data trả về |
 |---|---|---|---|---|
-| POST | `/api/v1/auth/register` | Guest | `{ fullName, phone, email, address, password, confirmPassword }` | `{ accessToken, user }` · 201 |
+| POST | `/api/v1/auth/register` | Guest | `{ fullName, phone, email, addressParts, password, confirmPassword }` | `{ accessToken, user }` · 201 |
 | POST | `/api/v1/auth/login` | Guest | `{ email, password, rememberMe?, requiredRole? }` | `{ accessToken, user, mfaRequired, mfaToken }` |
 | POST | `/api/v1/auth/refresh` ⚑ | Guest | — (đọc cookie `refresh_token`) | `{ accessToken, user }` |
 | POST | `/api/v1/auth/logout` | All | — | `null` |
@@ -88,6 +88,7 @@ HTTP: 200 đọc · 201 tạo · 400 validation · 401 chưa đăng nhập · 40
 - `requiredRole` để trang đăng nhập admin gửi `"admin"` (FR-004). Sai vai thì **403**, và
   **không** cấp token hay cookie, để không ghi đè phiên đang có trong trình duyệt.
 - `mfaRequired = true` nghĩa là chưa có phiên: `accessToken` là `null`, FE chuyển sang màn nhập mã.
+- `addressParts` là địa chỉ có cấu trúc, xem §3a. Bắt buộc khi đăng ký; server tự ghép chuỗi `user.address`.
 
 ### 1.2 Mật khẩu
 
@@ -122,9 +123,11 @@ Chưa cấu hình client id/secret thì trả **503**.
 | Method | Path | Role | Request | data trả về |
 |---|---|---|---|---|
 | GET | `/api/v1/auth/me` | All | — | `user` |
-| PUT | `/api/v1/auth/me` ⚑ | All | `{ fullName, phone, address }` | `user` |
+| PUT | `/api/v1/auth/me` ⚑ | All | `{ fullName, phone, addressParts }` | `user` |
 
 Id lấy từ access token nên không sửa được tài khoản người khác (R-06). Email không đổi được ở đây.
+`addressParts` bắt buộc với customer và farmer (thiếu → **400** ở field `addressParts`). Admin được bỏ trống, khi đó
+địa chỉ đang lưu giữ nguyên.
 
 **Hình dạng `user`** dùng chung cho mọi endpoint trên:
 
@@ -134,7 +137,11 @@ Id lấy từ access token nên không sửa được tài khoản người khá
   "email": "an@example.com",
   "fullName": "Nguyễn Văn An",
   "phone": "0912345678",
-  "address": "12 Lê Lợi, Quận 1",
+  "address": "12 Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh",  // server ghép từ addressParts
+  "addressParts": {            // thiếu với tài khoản tạo trước khi có địa chỉ có cấu trúc (§3a)
+    "countryCode": "VN", "provinceCode": "79", "wardCode": "26743",
+    "streetName": "Lê Lợi", "addressLine": "12"
+  },
   "role": "customer",          // customer | farmer | admin — luôn viết thường
   "createdAt": "2026-09-20T03:11:00Z",
   "hasPassword": true          // false: tạo qua Google, chưa đặt mật khẩu
@@ -183,19 +190,57 @@ Nằm ngoài `/api/v1` vì là health check hạ tầng, không phải API nghi�
 
 ## 3. Markets — FR-010, 012, 073
 
-> **Chưa triển khai.** Thiết kế để BE và FE bám theo. Bảng `markets` chưa có migration.
-
 | Method | Path | Role | Ghi chú |
 |---|---|---|---|
-| GET | `/api/v1/markets` | Public | query: `q, day, city, district, page, pageSize` → `{ marketId, marketName, address, district, city, latitude, longitude, openingTime, closingTime, operatingDays:[0..6], farmerCount }` |
+| GET | `/api/v1/markets` | Public | query: `q, day, provinceCode, wardCode, page, pageSize` → `{ id, marketName, address, addressParts, wardName, provinceName, latitude, longitude, mapProvider, openingTime, closingTime, images, operatingDays:[0..6], farmerCount }` |
 | GET | `/api/v1/markets/{id}` | Public | kèm `farmers[]` đang bán tại chợ |
 | GET | `/api/v1/markets/{id}/farmers` | Public | query: `day` |
-| POST | `/api/v1/admin/markets` | Admin | `{ marketName, address, district, city, latitude, longitude, openingTime, closingTime, operatingDays:[] }` |
+| POST | `/api/v1/admin/markets` | Admin | `{ marketName, addressParts, latitude, longitude, openingTime, closingTime, images:[], operatingDays:[] }` |
 | PUT | `/api/v1/admin/markets/{id}` | Admin | như trên |
 | DELETE | `/api/v1/admin/markets/{id}` | Admin | xoá mềm bằng `isActive = false` |
 
 `operatingDays` là mảng số 0…6, trong đó 0 là Chủ nhật, khớp cột `market_operating_days.day_of_week`.
 `latitude` và `longitude` là số thập phân, không phải chuỗi.
+Chợ phải ở Việt Nam (`addressParts.countryCode = "VN"`, sai → **400** ở `addressParts.countryCode`); số nhà không bắt
+buộc. `wardName` / `provinceName` là tên đầy đủ ("Phường Bến Thành") để màn hình hiện khu vực mà không phải tải danh
+mục. Từ 27/09/2026 không còn `district` / `city`.
+
+---
+
+## 3a. Địa chỉ có cấu trúc — FR-001, FR-073 ⚑
+
+Việt Nam dùng đơn vị hành chính **2 cấp** từ 01/07/2025: 34 tỉnh/thành → 3.321 phường/xã/đặc khu, không còn
+quận/huyện. Danh mục nạp bằng migration `V20260927001` (mã theo Cục Thống kê; tên đường TP.HCM từ OpenStreetMap).
+
+| Method | Path | Role | data trả về |
+|---|---|---|---|
+| GET | `/api/v1/geo/countries` | Public | `[{ code, name }]`: mã ISO 3166-1, `name` tiếng Anh (FE tự dịch theo mã) |
+| GET | `/api/v1/geo/provinces` | Public | `[{ code, name, fullName }]`, chỉ Việt Nam |
+| GET | `/api/v1/geo/provinces/{code}/wards` | Public | `[{ code, name, fullName }]`; mã tỉnh không có → **404** `PROVINCE_NOT_FOUND` |
+| GET | `/api/v1/geo/provinces/{code}/streets?q=` | Public | `[{ name }]`, tối đa 20, tìm không dấu; `q` rỗng → `[]` |
+
+Ba danh sách đầu có `Cache-Control: public, max-age=86400`.
+
+**Hình dạng `addressParts`** (request và response):
+
+```jsonc
+{
+  "countryCode": "VN",       // bắt buộc, ISO 3166-1 alpha-2
+  "provinceCode": "79",      // Việt Nam: bắt buộc
+  "wardCode": "26743",       // Việt Nam: bắt buộc, phải thuộc provinceCode
+  "streetName": "Lê Lợi",    // Việt Nam: bắt buộc, ≤ 100, chữ tự do (danh sách đường chỉ để gợi ý)
+  "addressLine": "12",       // số nhà / chi tiết, ≤ 60 — bắt buộc với tài khoản, không bắt buộc với chợ
+  "regionName": "Tokyo",     // nước khác: bắt buộc, ≤ 60
+  "cityName": "Shibuya"      // nước khác: bắt buộc, ≤ 60
+}
+```
+
+- Phần không thuộc quốc gia đã chọn bị bỏ, không lưu. Ví dụ gửi `wardCode` kèm `countryCode: "JP"` thì không lỗi,
+  `wardCode` chỉ bị bỏ qua.
+- Server ghép chuỗi `address`: Việt Nam `12 Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh`; nước khác
+  `1-2-3 Jingumae, Shibuya, Tokyo, Japan`.
+- Lỗi trả **400** `VALIDATION_ERROR`, `details[].field` dạng `addressParts.<phần>`, ví dụ `addressParts.wardCode`.
+- Response thiếu `addressParts` (trường `null` bị lược) nghĩa là dữ liệu tạo trước 27/09/2026, chỉ có chuỗi `address`.
 
 ---
 

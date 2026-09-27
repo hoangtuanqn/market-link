@@ -3,7 +3,6 @@
   "crumbNew": "Hinzufügen",
   "crumbEdit": "Bearbeiten",
   "titleNew": "Neuer Markt",
-  "city": "Ho-Chi-Minh-Stadt",
   "metaStalls": "{{stalls}} Stände",
   "missing": {
     "title": "Diesen Markt gibt es nicht mehr",
@@ -11,9 +10,6 @@
   },
   "field": {
     "name": "Name des Marktes",
-    "address": "Adresse",
-    "district": "Bezirk",
-    "city": "Stadt",
     "days": "Markttage",
     "open": "Öffnet",
     "close": "Schließt",

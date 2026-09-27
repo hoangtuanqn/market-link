@@ -382,9 +382,7 @@
     "fullNameRequired": "氏名を入力してください。",
     "fullNameMax": "氏名は {{max}} 文字以内で入力してください。",
     "phoneRequired": "電話番号を入力してください。",
-    "phoneInvalid": "有効なベトナムの携帯電話番号（10 桁）を入力してください。",
-    "addressRequired": "住所を入力してください。",
-    "addressMax": "住所は {{max}} 文字以内で入力してください。"
+    "phoneInvalid": "有効なベトナムの携帯電話番号（10 桁）を入力してください。"
   },
   "adminNav": {
     "sections": "管理メニュー",
@@ -435,8 +433,8 @@
     "address": "住所",
     "addressNote": "ホーチミン市内の通りや目印。",
     "addressLabel": "出発地の住所",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "通り名と区を入れるのが確実です。地図には番地がないことが多く、見つからないときは OpenStreetMap が場所を選ぶよう求めます。",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "通り名と坊（区）を入れるのが確実です。地図には番地がないことが多く、見つからないときは OpenStreetMap が場所を選ぶよう求めます。",
     "useSaved": "保存した住所を使う",
     "none": "地図上で入力する",
     "noneNote": "目的地だけを入力した状態で OpenStreetMap を開きます。",
@@ -687,6 +685,72 @@
         "title": "メニュー",
         "body": "メニューを開くとパネルのすべてのセクションに移動できます。"
       }
+    }
+  },
+  "address": {
+    "legend": "住所",
+    "country": "国・地域",
+    "province": "省 / 市",
+    "ward": "坊 / 社",
+    "street": "通り",
+    "addressLine": "番地・詳細",
+    "addressLineOptional": "番地（ある場合）",
+    "addressLinePlaceholder": "12、または 12/3A",
+    "region": "州 / 県",
+    "city": "市区町村",
+    "choose": {
+      "country": "国・地域を選択",
+      "province": "省 / 市を選択",
+      "ward": "坊 / 社を選択"
+    },
+    "wardNeedsProvince": "先に省 / 市を選択してください。",
+    "loading": "読み込み中…",
+    "loadFailed": "このリストを読み込めませんでした。",
+    "retry": "再試行",
+    "streetPlaceholder": "入力してください（例：Lê Lợi）",
+    "streetHint": "候補を選ぶか、通りが一覧にない場合は入力したままにしてください。",
+    "useTyped": "「{{text}}」を使う",
+    "noSuggestions": "候補がありません。入力した内容がそのまま使われます。",
+    "suggestions": "通りの候補",
+    "current": "現在の住所：{{address}}。変更を保存するには下で選び直してください。",
+    "vietnamOnly": "市場はベトナム国内にある必要があります。",
+    "errors": {
+      "countryRequired": "国・地域を選択してください。",
+      "provinceRequired": "省 / 市を選択してください。",
+      "wardRequired": "坊 / 社を選択してください。",
+      "streetRequired": "通りを入力してください。",
+      "lineRequired": "番地・詳細を入力してください。",
+      "regionRequired": "州 / 県を入力してください。",
+      "cityRequired": "市区町村を入力してください。",
+      "tooLong": "{{max}} 文字以内で入力してください。"
+    }
+  },
+  "reasons": {
+    "pick": "1つ以上選んでください",
+    "note": "補足",
+    "noteOptional": "補足（任意）",
+    "preview": "相手に表示される文：「{{text}}」",
+    "length": "{{used}}/{{max}} 文字。",
+    "reject": {
+      "incompleteInfo": "出店情報が不足しています",
+      "unclearPhotos": "写真が不鮮明、または農園の写真ではありません",
+      "unreachable": "登録の電話番号に連絡がつきませんでした",
+      "notFarmProduce": "販売予定の品が農産物ではありません",
+      "duplicate": "この出店はすでに登録されています"
+    },
+    "suspend": {
+      "complaints": "お客様からの苦情が続いています",
+      "notAsDescribed": "商品が掲載内容と違いました",
+      "missedPickups": "受け取り時間に出店がいませんでした",
+      "rulesBroken": "プラットフォームの規約違反",
+      "ownerRequest": "出店者本人の希望による"
+    },
+    "deactivate": {
+      "noShows": "注文して受け取らないことが続いています",
+      "abusiveMessages": "暴言またはスパムのメッセージ",
+      "fakeAccount": "偽または重複したアカウント",
+      "fakeReviews": "不正なレビュー",
+      "ownerRequest": "アカウント所有者本人の希望による"
     }
   }
 }

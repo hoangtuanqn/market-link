@@ -9,6 +9,7 @@ import ReviewCard from '@/components/ReviewCard';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
+import ReasonPicker from '@/components/ReasonPicker';
 import { Dialog } from '@/components/ui/dialog';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH, ADMIN_MODERATION_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
@@ -16,6 +17,7 @@ import type { OrderListItemDto } from '@/api-requests/order.requests';
 import useRequest from '@/hooks/useRequest';
 import { formatDate, pickupLabel, vnd } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
+import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import { CustomerStatusPill } from '@/pages/admin/Customers';
@@ -53,7 +55,7 @@ const AdminCustomerDetailPage = () => {
   );
 
   const [confirmKind, setConfirmKind] = useState<ConfirmKind | null>(null);
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [busy, setBusy] = useState(false);
 
   if (customerLoad.kind === 'loading') {
@@ -87,7 +89,7 @@ const AdminCustomerDetailPage = () => {
   })).filter((s) => s.count > 0);
 
   const openConfirm = (kind: ConfirmKind) => {
-    setReason('');
+    setReason(emptyReason());
     setConfirmKind(kind);
   };
 
@@ -98,7 +100,7 @@ const AdminCustomerDetailPage = () => {
     try {
       const updated = await AdminReportApi.setCustomerStatus(customer.userId, status);
       mutateCustomer(() => updated);
-      const trimmedReason = reason.trim();
+      const trimmedReason = composeReason('deactivate', reason);
       const toastKey =
         confirmKind === 'deactivate'
           ? trimmedReason
@@ -301,14 +303,12 @@ const AdminCustomerDetailPage = () => {
           <p>{confirmKind ? t(`${confirmKind}.text`) : ''}</p>
           {confirmKind === 'deactivate' && (
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="deactivate-reason" className="text-small font-bold">
-                {t('deactivate.reason')}
-              </label>
-              <textarea
+              <ReasonPicker
                 id="deactivate-reason"
+                kind="deactivate"
+                label={t('deactivate.reason')}
                 value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="border-line-strong bg-surface-raised focus:outline-focus min-h-18 rounded-sm border-[1.5px] p-3 focus:outline-2"
+                onChange={setReason}
               />
               <span className="text-ink-muted text-[13px]">{t('deactivate.reasonHint')}</span>
             </div>

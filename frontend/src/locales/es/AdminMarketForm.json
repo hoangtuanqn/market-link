@@ -3,7 +3,6 @@
   "crumbNew": "Añadir",
   "crumbEdit": "Editar",
   "titleNew": "Mercado nuevo",
-  "city": "Ciudad Ho Chi Minh",
   "metaStalls": "{{stalls}} puestos",
   "missing": {
     "title": "Ese mercado ya no está aquí",
@@ -11,9 +10,6 @@
   },
   "field": {
     "name": "Nombre del mercado",
-    "address": "Dirección",
-    "district": "Distrito",
-    "city": "Ciudad",
     "days": "Días de apertura",
     "open": "Abre",
     "close": "Cierra",

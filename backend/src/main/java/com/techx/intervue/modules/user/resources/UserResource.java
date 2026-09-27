@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.user.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.techx.intervue.modules.geo.resources.AddressPartsResource;
 import com.techx.intervue.modules.user.enums.RoleType;
 import java.time.Instant;
 import lombok.Builder;
@@ -13,6 +14,8 @@ public record UserResource(
         String fullName,
         String phone,
         String address,
+        /* the parts behind `address`; absent on accounts saved before addresses had parts */
+        AddressPartsResource addressParts,
         RoleType role,
         Instant createdAt,
         /* false: an account created through Google has not set a password → the FE invites them to set one */

@@ -2,11 +2,13 @@ import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Navigate, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
+import AddressFields from '@/components/address/AddressFields';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Field } from '@/components/ui/input';
 import useLogout from '@/hooks/useLogout';
-import type { UpdateProfileInput } from '@/types/auth.types';
+import { addressErrorsFrom, cleanAddress, validateAddress } from '@/lib/address';
+import { emptyAddress, type AddressErrors, type AddressParts } from '@/types/address.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
@@ -23,39 +25,41 @@ const CompleteProfilePage = () => {
   const navigate = useNavigate();
   const logout = useLogout();
   const [user] = useState(Session.getUser);
-  const [form, setForm] = useState<UpdateProfileInput>(() => ({
-    fullName: user?.fullName ?? '',
-    phone: user?.phone ?? '',
-    address: user?.address ?? '',
-  }));
+  const [form, setForm] = useState(() => ({ fullName: user?.fullName ?? '', phone: user?.phone ?? '' }));
+  const [address, setAddress] = useState<AddressParts>(() => user?.addressParts ?? emptyAddress());
   const [errors, setErrors] = useState<ProfileErrors>({});
+  const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
   const [isSaving, setIsSaving] = useState(false);
 
   // Not signed in means there is no profile to complete
   if (!Session.getAccessToken() || !user) return <Navigate to="/login" replace />;
 
-  const onChange = (key: keyof UpdateProfileInput) => (e: ChangeEvent<HTMLInputElement>) =>
+  const onChange = (key: keyof typeof form) => (e: ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
   const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const clientErrors = validateProfile(form);
+    const clientAddressErrors = validateAddress(address);
     setErrors(clientErrors);
-    if (Object.keys(clientErrors).length > 0) return;
+    setAddressErrors(clientAddressErrors);
+    if (Object.keys(clientErrors).length > 0 || Object.keys(clientAddressErrors).length > 0) return;
 
     setIsSaving(true);
     try {
       const response = await AuthApi.updateMe({
         fullName: form.fullName.trim(),
         phone: form.phone.trim(),
-        address: form.address.trim(),
+        addressParts: cleanAddress(address),
       });
       Session.updateUser(response.data);
       Notification.success({ text: response.message || t('toast.saved') });
       navigate(Helper.nextStepAfterSocialLogin({ ...user, ...response.data }), { replace: true });
     } catch (error) {
       // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (the phone number already belongs to another account) → error under the input
-      setErrors(Helper.getFieldErrors(error));
+      const fieldErrors = Helper.getFieldErrors(error);
+      setErrors(fieldErrors);
+      setAddressErrors(addressErrorsFrom(fieldErrors));
       Notification.error({ text: Helper.getErrorMessage(error, t('toast.failed')) });
       setIsSaving(false);
     }
@@ -100,21 +104,15 @@ const CompleteProfilePage = () => {
             error={errors.phone}
             disabled={isSaving}
           />
-          <div className="md:col-span-2">
-            <Field
-              id="address"
-              label={t('fields.address')}
-              required
-              autoComplete="street-address"
-              placeholder={t('fields.addressPlaceholder')}
-              value={form.address}
-              onChange={onChange('address')}
-              error={errors.address}
-              hint={errors.address ? undefined : t('fields.addressHint')}
-              disabled={isSaving}
-            />
-          </div>
         </div>
+
+        <AddressFields
+          idPrefix="address"
+          value={address}
+          onChange={setAddress}
+          errors={addressErrors}
+          disabled={isSaving}
+        />
 
         <div className="flex flex-wrap items-center gap-3 pt-2">
           <Button type="submit" disabled={isSaving}>

@@ -382,9 +382,7 @@
     "fullNameRequired": "Masukkan nama lengkap Anda.",
     "fullNameMax": "Nama lengkap maksimal {{max}} karakter.",
     "phoneRequired": "Masukkan nomor telepon Anda.",
-    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit).",
-    "addressRequired": "Masukkan alamat Anda.",
-    "addressMax": "Alamat maksimal {{max}} karakter."
+    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit)."
   },
   "adminNav": {
     "sections": "Bagian admin",
@@ -435,8 +433,8 @@
     "address": "Sebuah alamat",
     "addressNote": "Jalan atau landmark di Kota Ho Chi Minh.",
     "addressLabel": "Alamat awal",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "Nama jalan dan distrik paling efektif. Nomor rumah sering tidak ada di peta, dan OpenStreetMap akan meminta Anda memilih tempat jika tidak menemukannya.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "Nama jalan dan kelurahan paling efektif. Nomor rumah sering tidak ada di peta, dan OpenStreetMap akan meminta Anda memilih tempat jika tidak menemukannya.",
     "useSaved": "Gunakan alamat tersimpan",
     "none": "Saya akan mengetiknya di peta",
     "noneNote": "Membuka OpenStreetMap dengan tujuan saja yang terisi.",
@@ -687,6 +685,72 @@
         "title": "Menu",
         "body": "Buka menu untuk menuju setiap bagian panel."
       }
+    }
+  },
+  "address": {
+    "legend": "Alamat",
+    "country": "Negara",
+    "province": "Provinsi atau kota",
+    "ward": "Kelurahan atau desa",
+    "street": "Jalan",
+    "addressLine": "Nomor rumah dan detail",
+    "addressLineOptional": "Nomor rumah (jika ada)",
+    "addressLinePlaceholder": "12, atau 12/3A",
+    "region": "Negara bagian atau provinsi",
+    "city": "Kota",
+    "choose": {
+      "country": "Pilih negara",
+      "province": "Pilih provinsi atau kota",
+      "ward": "Pilih kelurahan atau desa"
+    },
+    "wardNeedsProvince": "Pilih provinsi terlebih dahulu.",
+    "loading": "Memuat…",
+    "loadFailed": "Daftar ini tidak dapat dimuat.",
+    "retry": "Coba lagi",
+    "streetPlaceholder": "Mulai mengetik, mis. Lê Lợi",
+    "streetHint": "Pilih saran, atau biarkan yang Anda ketik jika jalan Anda tidak ada di daftar.",
+    "useTyped": "Gunakan “{{text}}”",
+    "noSuggestions": "Tidak ada saran — yang Anda ketik akan dipakai.",
+    "suggestions": "Saran nama jalan",
+    "current": "Alamat saat ini: {{address}}. Pilih ulang di bawah untuk menyimpan perubahan.",
+    "vietnamOnly": "Pasar berada di Vietnam.",
+    "errors": {
+      "countryRequired": "Pilih negara.",
+      "provinceRequired": "Pilih provinsi atau kota.",
+      "wardRequired": "Pilih kelurahan atau desa.",
+      "streetRequired": "Isi nama jalan.",
+      "lineRequired": "Isi nomor rumah dan detail.",
+      "regionRequired": "Isi negara bagian atau provinsi.",
+      "cityRequired": "Isi kota.",
+      "tooLong": "Maksimal {{max}} karakter."
+    }
+  },
+  "reasons": {
+    "pick": "Pilih satu atau beberapa",
+    "note": "Tambahan",
+    "noteOptional": "Tambahan (opsional)",
+    "preview": "Yang akan dibaca: “{{text}}”",
+    "length": "{{used}} dari {{max}} karakter.",
+    "reject": {
+      "incompleteInfo": "Data lapak belum lengkap",
+      "unclearPhotos": "Foto tidak jelas atau bukan kebun Anda",
+      "unreachable": "Kami tidak dapat menghubungi nomor telepon Anda",
+      "notFarmProduce": "Yang akan dijual bukan hasil pertanian",
+      "duplicate": "Lapak ini sudah terdaftar"
+    },
+    "suspend": {
+      "complaints": "Keluhan pelanggan berulang kali",
+      "notAsDescribed": "Barang tidak sesuai deskripsi",
+      "missedPickups": "Lapak tidak ada saat waktu pengambilan",
+      "rulesBroken": "Melanggar aturan platform",
+      "ownerRequest": "Atas permintaan pemilik lapak"
+    },
+    "deactivate": {
+      "noShows": "Berulang kali memesan tanpa mengambil",
+      "abusiveMessages": "Pesan kasar atau spam",
+      "fakeAccount": "Akun palsu atau ganda",
+      "fakeReviews": "Ulasan palsu",
+      "ownerRequest": "Atas permintaan pemilik akun"
     }
   }
 }

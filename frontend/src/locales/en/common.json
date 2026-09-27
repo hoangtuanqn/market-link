@@ -382,9 +382,7 @@
     "fullNameRequired": "Enter your full name.",
     "fullNameMax": "Full name can be at most {{max}} characters.",
     "phoneRequired": "Enter your phone number.",
-    "phoneInvalid": "Enter a valid Vietnamese mobile number (10 digits).",
-    "addressRequired": "Enter your address.",
-    "addressMax": "Address can be at most {{max}} characters."
+    "phoneInvalid": "Enter a valid Vietnamese mobile number (10 digits)."
   },
   "adminNav": {
     "sections": "Admin sections",
@@ -435,8 +433,8 @@
     "address": "An address",
     "addressNote": "A street or a landmark in Ho Chi Minh City.",
     "addressLabel": "Starting address",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "Street and district work best. House numbers are often missing from the map, and OpenStreetMap will ask you to pick a place when it cannot find one.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "Street and ward work best. House numbers are often missing from the map, and OpenStreetMap will ask you to pick a place when it cannot find one.",
     "useSaved": "Use my saved address",
     "none": "I will type it on the map",
     "noneNote": "Opens OpenStreetMap with only the destination filled in.",
@@ -687,6 +685,72 @@
         "title": "Menu",
         "body": "Open the menu to reach every section of the panel."
       }
+    }
+  },
+  "address": {
+    "legend": "Address",
+    "country": "Country",
+    "province": "Province or city",
+    "ward": "Ward or commune",
+    "street": "Street",
+    "addressLine": "House number and details",
+    "addressLineOptional": "House number (if any)",
+    "addressLinePlaceholder": "12, or 12/3A",
+    "region": "State or province",
+    "city": "City",
+    "choose": {
+      "country": "Choose a country",
+      "province": "Choose a province or city",
+      "ward": "Choose a ward or commune"
+    },
+    "wardNeedsProvince": "Choose the province first.",
+    "loading": "Loading…",
+    "loadFailed": "Could not load this list.",
+    "retry": "Try again",
+    "streetPlaceholder": "Start typing, e.g. Lê Lợi",
+    "streetHint": "Pick a suggestion, or keep what you typed if your street is not listed.",
+    "useTyped": "Use “{{text}}”",
+    "noSuggestions": "No suggestions — what you typed will be used.",
+    "suggestions": "Street suggestions",
+    "current": "Current address: {{address}}. Choose it again below to save changes.",
+    "vietnamOnly": "Markets are in Vietnam.",
+    "errors": {
+      "countryRequired": "Choose a country.",
+      "provinceRequired": "Choose a province or city.",
+      "wardRequired": "Choose a ward or commune.",
+      "streetRequired": "Enter the street.",
+      "lineRequired": "Enter the house number and details.",
+      "regionRequired": "Enter the state or province.",
+      "cityRequired": "Enter the city.",
+      "tooLong": "Keep this under {{max}} characters."
+    }
+  },
+  "reasons": {
+    "pick": "Pick one or more",
+    "note": "Anything to add",
+    "noteOptional": "Anything to add (optional)",
+    "preview": "They will read: “{{text}}”",
+    "length": "{{used}} of {{max}} characters.",
+    "reject": {
+      "incompleteInfo": "Your stall details are incomplete",
+      "unclearPhotos": "The photos are unclear or not of your farm",
+      "unreachable": "We could not reach you on your phone number",
+      "notFarmProduce": "What you plan to sell is not farm produce",
+      "duplicate": "This stall is already registered"
+    },
+    "suspend": {
+      "complaints": "Repeated complaints from customers",
+      "notAsDescribed": "Produce did not match its listing",
+      "missedPickups": "The stall was not there at pickup time",
+      "rulesBroken": "The platform rules were broken",
+      "ownerRequest": "At the stall owner’s request"
+    },
+    "deactivate": {
+      "noShows": "Repeatedly ordered and did not collect",
+      "abusiveMessages": "Abusive or spam messages",
+      "fakeAccount": "Fake or duplicate account",
+      "fakeReviews": "Fake reviews",
+      "ownerRequest": "At the account owner’s request"
     }
   }
 }

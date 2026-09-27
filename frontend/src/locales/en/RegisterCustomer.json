@@ -6,8 +6,6 @@
     "phone": "Phone number",
     "email": "Email",
     "emailHint": "Used to sign in and for order notifications.",
-    "address": "Address",
-    "addressPlaceholder": "Street, ward, district",
     "password": "Password",
     "passwordHint": "{{min}} to {{max}} characters.",
     "confirmPassword": "Repeat password"
@@ -33,8 +31,6 @@
     "emailRequired": "Enter your email.",
     "emailInvalid": "Enter a valid email address.",
     "emailMax": "Email can be at most {{max}} characters.",
-    "addressRequired": "Enter your address.",
-    "addressMax": "Address can be at most {{max}} characters.",
     "passwordRequired": "Enter your password.",
     "passwordLength": "Password must be {{min}} to {{max}} characters.",
     "confirmRequired": "Confirm your password.",

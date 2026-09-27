@@ -382,9 +382,7 @@
     "fullNameRequired": "Geben Sie Ihren vollständigen Namen ein.",
     "fullNameMax": "Der vollständige Name darf höchstens {{max}} Zeichen lang sein.",
     "phoneRequired": "Geben Sie Ihre Telefonnummer ein.",
-    "phoneInvalid": "Geben Sie eine gültige vietnamesische Mobilnummer ein (10 Ziffern).",
-    "addressRequired": "Geben Sie Ihre Adresse ein.",
-    "addressMax": "Die Adresse darf höchstens {{max}} Zeichen lang sein."
+    "phoneInvalid": "Geben Sie eine gültige vietnamesische Mobilnummer ein (10 Ziffern)."
   },
   "adminNav": {
     "sections": "Admin-Bereiche",
@@ -435,7 +433,7 @@
     "address": "Eine Adresse",
     "addressNote": "Eine Straße oder ein Wahrzeichen in Ho-Chi-Minh-Stadt.",
     "addressLabel": "Startadresse",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
     "addressHint": "Straße und Bezirk funktionieren am besten. Hausnummern fehlen oft auf der Karte, und OpenStreetMap lässt Sie einen Ort wählen, wenn es keinen findet.",
     "useSaved": "Meine gespeicherte Adresse verwenden",
     "none": "Ich gebe ihn auf der Karte ein",
@@ -687,6 +685,72 @@
         "title": "Menü",
         "body": "Öffne das Menü, um jeden Bereich zu erreichen."
       }
+    }
+  },
+  "address": {
+    "legend": "Adresse",
+    "country": "Land",
+    "province": "Provinz oder Stadt",
+    "ward": "Bezirk oder Gemeinde",
+    "street": "Straße",
+    "addressLine": "Hausnummer und Details",
+    "addressLineOptional": "Hausnummer (falls vorhanden)",
+    "addressLinePlaceholder": "12 oder 12/3A",
+    "region": "Bundesland oder Provinz",
+    "city": "Stadt",
+    "choose": {
+      "country": "Land wählen",
+      "province": "Provinz oder Stadt wählen",
+      "ward": "Bezirk oder Gemeinde wählen"
+    },
+    "wardNeedsProvince": "Wähle zuerst die Provinz.",
+    "loading": "Wird geladen…",
+    "loadFailed": "Diese Liste konnte nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "streetPlaceholder": "Tippe los, z. B. Lê Lợi",
+    "streetHint": "Wähle einen Vorschlag oder behalte deine Eingabe, wenn deine Straße nicht in der Liste steht.",
+    "useTyped": "„{{text}}“ verwenden",
+    "noSuggestions": "Keine Vorschläge – deine Eingabe wird verwendet.",
+    "suggestions": "Straßenvorschläge",
+    "current": "Aktuelle Adresse: {{address}}. Wähle sie unten neu, um Änderungen zu speichern.",
+    "vietnamOnly": "Märkte liegen in Vietnam.",
+    "errors": {
+      "countryRequired": "Wähle ein Land.",
+      "provinceRequired": "Wähle eine Provinz oder Stadt.",
+      "wardRequired": "Wähle einen Bezirk oder eine Gemeinde.",
+      "streetRequired": "Gib die Straße ein.",
+      "lineRequired": "Gib Hausnummer und Details ein.",
+      "regionRequired": "Gib das Bundesland oder die Provinz ein.",
+      "cityRequired": "Gib die Stadt ein.",
+      "tooLong": "Höchstens {{max}} Zeichen."
+    }
+  },
+  "reasons": {
+    "pick": "Einen oder mehrere Gründe wählen",
+    "note": "Ergänzung",
+    "noteOptional": "Ergänzung (optional)",
+    "preview": "Die Person liest: „{{text}}“",
+    "length": "{{used}} von {{max}} Zeichen.",
+    "reject": {
+      "incompleteInfo": "Die Angaben zum Stand sind unvollständig",
+      "unclearPhotos": "Die Fotos sind unscharf oder zeigen nicht deinen Hof",
+      "unreachable": "Wir haben dich unter deiner Telefonnummer nicht erreicht",
+      "notFarmProduce": "Was du verkaufen willst, ist kein Hofprodukt",
+      "duplicate": "Dieser Stand ist bereits registriert"
+    },
+    "suspend": {
+      "complaints": "Wiederholte Beschwerden von Kunden",
+      "notAsDescribed": "Ware entsprach nicht der Beschreibung",
+      "missedPickups": "Der Stand war zur Abholzeit nicht da",
+      "rulesBroken": "Die Regeln der Plattform wurden verletzt",
+      "ownerRequest": "Auf Wunsch der Standbetreiber"
+    },
+    "deactivate": {
+      "noShows": "Wiederholt bestellt und nicht abgeholt",
+      "abusiveMessages": "Beleidigende oder Spam-Nachrichten",
+      "fakeAccount": "Falsches oder doppeltes Konto",
+      "fakeReviews": "Gefälschte Bewertungen",
+      "ownerRequest": "Auf Wunsch der Kontoinhaber"
     }
   }
 }

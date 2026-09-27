@@ -382,9 +382,7 @@
     "fullNameRequired": "Escribe tu nombre completo.",
     "fullNameMax": "El nombre completo puede tener como máximo {{max}} caracteres.",
     "phoneRequired": "Escribe tu número de teléfono.",
-    "phoneInvalid": "Escribe un número de móvil vietnamita válido (10 dígitos).",
-    "addressRequired": "Escribe tu dirección.",
-    "addressMax": "La dirección puede tener como máximo {{max}} caracteres."
+    "phoneInvalid": "Escribe un número de móvil vietnamita válido (10 dígitos)."
   },
   "adminNav": {
     "sections": "Secciones de administración",
@@ -435,8 +433,8 @@
     "address": "Una dirección",
     "addressNote": "Una calle o un punto de referencia en Ciudad Ho Chi Minh.",
     "addressLabel": "Dirección de salida",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "La calle y el distrito funcionan mejor. A menudo faltan los números de casa en el mapa, y OpenStreetMap te pedirá elegir un lugar si no encuentra uno.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "La calle y el barrio funcionan mejor. A menudo faltan los números de casa en el mapa, y OpenStreetMap te pedirá elegir un lugar si no encuentra uno.",
     "useSaved": "Usar mi dirección guardada",
     "none": "Lo escribiré en el mapa",
     "noneNote": "Abre OpenStreetMap solo con el destino rellenado.",
@@ -687,6 +685,72 @@
         "title": "Menú",
         "body": "Abre el menú para ir a cualquier sección del panel."
       }
+    }
+  },
+  "address": {
+    "legend": "Dirección",
+    "country": "País",
+    "province": "Provincia o ciudad",
+    "ward": "Barrio o comuna",
+    "street": "Calle",
+    "addressLine": "Número y detalles",
+    "addressLineOptional": "Número (si lo hay)",
+    "addressLinePlaceholder": "12, o 12/3A",
+    "region": "Estado o provincia",
+    "city": "Ciudad",
+    "choose": {
+      "country": "Elige un país",
+      "province": "Elige una provincia o ciudad",
+      "ward": "Elige un barrio o comuna"
+    },
+    "wardNeedsProvince": "Elige primero la provincia.",
+    "loading": "Cargando…",
+    "loadFailed": "No se pudo cargar esta lista.",
+    "retry": "Reintentar",
+    "streetPlaceholder": "Empieza a escribir, p. ej. Lê Lợi",
+    "streetHint": "Elige una sugerencia o deja lo que escribiste si tu calle no aparece.",
+    "useTyped": "Usar «{{text}}»",
+    "noSuggestions": "Sin sugerencias: se usará lo que escribiste.",
+    "suggestions": "Sugerencias de calles",
+    "current": "Dirección actual: {{address}}. Vuelve a elegirla abajo para guardar los cambios.",
+    "vietnamOnly": "Los mercados están en Vietnam.",
+    "errors": {
+      "countryRequired": "Elige un país.",
+      "provinceRequired": "Elige una provincia o ciudad.",
+      "wardRequired": "Elige un barrio o comuna.",
+      "streetRequired": "Escribe la calle.",
+      "lineRequired": "Escribe el número y los detalles.",
+      "regionRequired": "Escribe el estado o la provincia.",
+      "cityRequired": "Escribe la ciudad.",
+      "tooLong": "Máximo {{max}} caracteres."
+    }
+  },
+  "reasons": {
+    "pick": "Elige uno o varios motivos",
+    "note": "Algo que añadir",
+    "noteOptional": "Algo que añadir (opcional)",
+    "preview": "Leerá: «{{text}}»",
+    "length": "{{used}} de {{max}} caracteres.",
+    "reject": {
+      "incompleteInfo": "Los datos del puesto están incompletos",
+      "unclearPhotos": "Las fotos no son claras o no son de tu finca",
+      "unreachable": "No pudimos contactarte en tu número de teléfono",
+      "notFarmProduce": "Lo que quieres vender no es producto agrícola",
+      "duplicate": "Este puesto ya está registrado"
+    },
+    "suspend": {
+      "complaints": "Quejas repetidas de clientes",
+      "notAsDescribed": "El producto no coincidía con el anuncio",
+      "missedPickups": "El puesto no estaba a la hora de recogida",
+      "rulesBroken": "Se incumplieron las normas de la plataforma",
+      "ownerRequest": "A petición del responsable del puesto"
+    },
+    "deactivate": {
+      "noShows": "Pidió varias veces y no recogió",
+      "abusiveMessages": "Mensajes ofensivos o spam",
+      "fakeAccount": "Cuenta falsa o duplicada",
+      "fakeReviews": "Reseñas falsas",
+      "ownerRequest": "A petición del titular de la cuenta"
     }
   }
 }
