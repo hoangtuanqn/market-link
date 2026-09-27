@@ -5,7 +5,6 @@
   },
   "breadcrumb": "Các chợ",
   "approved": "Sạp đã duyệt",
-  "savedToast": "Đã lưu {{name}}.",
   "save": "Lưu sạp",
   "stats": {
     "reviews_one": "{{count}} đánh giá",
@@ -63,5 +62,6 @@
   },
   "error": {
     "noun": "gian hàng"
-  }
+  },
+  "saved": "Đã lưu sạp"
 }

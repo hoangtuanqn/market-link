@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
+import FavoriteApi, { type FavoriteDto } from '@/api-requests/favorite.requests';
 import ProductApi from '@/api-requests/product.requests';
 import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DayChips from '@/components/DayChips';
 import DirectionsButton from '@/components/DirectionsButton';
+import FavoriteButton from '@/components/FavoriteButton';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
@@ -24,6 +26,7 @@ import { reviewTags, reviewsForFarmer } from '@/data/catalog';
 import { demoTierOf } from '@/data/tiers';
 import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
+import useSession from '@/hooks/useSession';
 import { dayName, formatClock, upcoming } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
@@ -35,6 +38,7 @@ const REVIEWS_PER_PAGE = 6;
 const FETCH_SIZE = 50;
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
+const NO_FAVORITES: FavoriteDto[] = [];
 
 /** The window a stall keeps at one market: earliest start to latest end across its days there. */
 const windowOf = (m: StallMarketDto) => {
@@ -48,6 +52,7 @@ const StallProfilePage = () => {
   const { t } = useTranslation('StallProfile');
   const { t: tc } = useTranslation();
   const { id } = useParams<{ id: string }>();
+  const { isLoggedIn } = useSession();
 
   const farmerId = Number(id);
   const validId = Number.isInteger(farmerId) && farmerId > 0;
@@ -57,6 +62,12 @@ const StallProfilePage = () => {
   );
   const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'NOT_FOUND');
   const stall = load.kind === 'ready' ? load.data : undefined;
+
+  // FR-040 — whether this stall is already a favourite of the signed-in customer.
+  const { state: favLoad } = useRequest(`fav-farmer:${farmerId}`, () =>
+    isLoggedIn ? FavoriteApi.list('farmer') : Promise.resolve(NO_FAVORITES),
+  );
+  const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === farmerId)?.id ?? null) : null;
 
   // Market coordinates and addresses, for the pins and the "where and when" table.
   const { state: marketsLoad } = useRequest('markets', () =>
@@ -188,12 +199,14 @@ const StallProfilePage = () => {
               {t('approved')}
             </span>
             <div className="flex flex-wrap justify-end gap-2">
-              {/* Favorites (FR-040) has no API yet: this button only shows a toast, so production does not show it. */}
-              {SHOW_WIP && (
-                <Chip onClick={() => Notification.success({ text: t('savedToast', { name: stall.stallName }) })}>
-                  {t('save')}
-                </Chip>
-              )}
+              <FavoriteButton
+                key={favoriteId ?? 'none'}
+                targetType="farmer"
+                targetId={stall.farmerId}
+                favoriteId={favoriteId}
+                labelOff={t('save')}
+                labelOn={t('saved')}
+              />
               <MessageStallButton farmerId={stall.farmerId} />
             </div>
           </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
+import FavoriteApi, { type FavoriteDto } from '@/api-requests/favorite.requests';
 import ProductApi from '@/api-requests/product.requests';
 import StallApi, { dayNames, pickupWindow, type StallMarketDto } from '@/api-requests/stall.requests';
 import DirectionsButton from '@/components/DirectionsButton';
@@ -21,6 +22,7 @@ import { reviewTags, reviewsForProduct } from '@/data/catalog';
 import { demoTierOf } from '@/data/tiers';
 import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
+import useSession from '@/hooks/useSession';
 import { perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
@@ -37,6 +39,7 @@ const EXTRA_REVIEW = {
 
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
+const NO_FAVORITES: FavoriteDto[] = [];
 
 /** Earliest start to latest end across the days a stall keeps at one market. */
 const windowOf = (m: StallMarketDto) => {
@@ -49,6 +52,7 @@ const windowOf = (m: StallMarketDto) => {
 const ProductDetailPage = () => {
   const { t } = useTranslation('ProductDetail');
   const { id } = useParams<{ id: string }>();
+  const { isLoggedIn } = useSession();
   const productId = Number(id);
   const validId = Number.isInteger(productId) && productId > 0;
 
@@ -58,6 +62,12 @@ const ProductDetailPage = () => {
   const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'PRODUCT_NOT_FOUND');
   const detail = load.kind === 'ready' ? load.data : undefined;
   const farmerId = detail?.product.farmerId;
+
+  // FR-040 — whether this product is already a favourite of the signed-in customer (heart starts filled).
+  const { state: favLoad } = useRequest(`fav-product:${productId}`, () =>
+    isLoggedIn ? FavoriteApi.list('product') : Promise.resolve(NO_FAVORITES),
+  );
+  const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === productId)?.id ?? null) : null;
 
   // The stall with its markets, days and cutoff — one request keyed by the stall, so it is not repeated per product.
   const { state: stallLoad } = useRequest(`stall:${farmerId ?? 'none'}`, () =>
@@ -143,6 +153,10 @@ const ProductDetailPage = () => {
           <div className="flex items-start justify-between gap-3">
             <h1 className="font-hand text-h1">{p.name}</h1>
             <FavoriteButton
+              key={favoriteId ?? 'none'}
+              targetType="product"
+              targetId={p.id}
+              favoriteId={favoriteId}
               labelOff={t('favorite.add', { name: p.name })}
               labelOn={t('favorite.remove', { name: p.name })}
             />

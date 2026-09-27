@@ -56,7 +56,8 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
           </span>
         )}
         <FavoriteButton
-          initial={product.favorite}
+          targetType="product"
+          targetId={product.id}
           labelOff={t('product.addFavorite', { name: product.name })}
           labelOn={t('product.removeFavorite', { name: product.name })}
           className="absolute top-2 right-2"

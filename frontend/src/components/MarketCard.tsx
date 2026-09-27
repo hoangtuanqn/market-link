@@ -16,9 +16,11 @@ type MarketCardProps = {
   market: MarketType;
   /** Real straight-line distance, once the visitor has shared where they are. Overrides the demo figure. */
   distanceKm?: number;
+  /** The favourite's id when the caller already knows this market is saved (e.g. the Favorites page). */
+  favoriteId?: number | null;
 };
 
-const MarketCard = ({ market, distanceKm }: MarketCardProps) => {
+const MarketCard = ({ market, distanceKm, favoriteId }: MarketCardProps) => {
   const { t } = useTranslation();
   const href = `/markets/${market.id}`;
   const away = distanceKm != null ? formatDistance(distanceKm) : market.distance;
@@ -35,7 +37,10 @@ const MarketCard = ({ market, distanceKm }: MarketCardProps) => {
       </div>
 
       <FavoriteButton
-        initial={market.saved}
+        key={favoriteId ?? 'none'}
+        targetType="market"
+        targetId={market.id}
+        favoriteId={favoriteId}
         labelOff={t('marketCard.save', { name: market.name })}
         labelOn={t('marketCard.unsave', { name: market.name })}
         className="self-start"

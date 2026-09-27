@@ -1,17 +1,19 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import CatalogApi from '@/api-requests/catalog.requests';
 import SettingsRow from '@/components/SettingsRow';
 import SettingsPanel from '@/components/settings/SettingsPanel';
 import { Card } from '@/components/ui/card';
 import { SelectField } from '@/components/ui/input';
-import { SHOW_WIP } from '@/config/wip';
-import { markets } from '@/data/home';
+import useRequest from '@/hooks/useRequest';
 
 const SLOTS = ['earliest', '06-07', '07-08', '08-09'] as const;
 
 /** Customer settings: the shared panel plus Shopping (market you shop at most is used on Markets). */
 const CustomerSettingsPage = () => {
   const { t } = useTranslation('CustomerSettings');
+  const { state: marketsLoad } = useRequest('markets', () => CatalogApi.listMarkets());
+  const markets = marketsLoad.kind === 'ready' ? marketsLoad.data.items : [];
   return (
     <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
       <p className="text-small text-ink-muted">
@@ -33,22 +35,19 @@ const CustomerSettingsPage = () => {
               {t('shopping')}
             </h2>
             <ul className="m-0 flex flex-col p-0">
-              {/* The market list here is still sample data (ids do not match real markets) → shown in dev only (config/wip.ts). */}
-              {SHOW_WIP && (
-                <SettingsRow title={t('market')} note={t('marketNote')}>
-                  <SelectField
-                    id="set-market"
-                    label={t('market')}
-                    hideLabel
-                    value={draft.preferredMarket}
-                    onChange={(e) => set({ preferredMarket: e.target.value })}
-                    options={[
-                      { value: '', label: t('marketNone') },
-                      ...markets.map((m) => ({ value: String(m.id), label: m.name })),
-                    ]}
-                  />
-                </SettingsRow>
-              )}
+              <SettingsRow title={t('market')} note={t('marketNote')}>
+                <SelectField
+                  id="set-market"
+                  label={t('market')}
+                  hideLabel
+                  value={draft.preferredMarket}
+                  onChange={(e) => set({ preferredMarket: e.target.value })}
+                  options={[
+                    { value: '', label: t('marketNone') },
+                    ...markets.map((m) => ({ value: String(m.id), label: m.name })),
+                  ]}
+                />
+              </SettingsRow>
               <SettingsRow title={t('slot')} note={t('slotNote')}>
                 <SelectField
                   id="set-slot"

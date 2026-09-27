@@ -5,7 +5,6 @@
   },
   "breadcrumb": "Markets",
   "approved": "Approved stall",
-  "savedToast": "Saved {{name}}.",
   "save": "Save stall",
   "stats": {
     "reviews_one": "{{count}} review",
@@ -63,5 +62,6 @@
   },
   "error": {
     "noun": "stall"
-  }
+  },
+  "saved": "Stall saved"
 }
