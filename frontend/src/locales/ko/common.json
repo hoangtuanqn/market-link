@@ -651,5 +651,35 @@
         "body": "메뉴를 열면 관리 화면의 모든 섹션으로 이동할 수 있습니다."
       }
     }
+  },
+  "assistant": {
+    "open": "어시스턴트에게 묻기",
+    "close": "어시스턴트 닫기",
+    "fullPage": "전체 페이지로 열기",
+    "note": "답변은 MarketLink 자체 데이터를 기반으로 합니다.",
+    "newChat": "새 대화",
+    "loading": "대화를 불러오는 중…",
+    "loadErrorTitle": "이전 메시지를 불러오지 못했습니다",
+    "loadErrorText": "연결을 확인하고 다시 시도하세요. 새 질문은 계속 할 수 있습니다.",
+    "emptyTitle": "MarketLink에 대해 물어보세요",
+    "emptyText": "여러 시장의 농산물을 찾고, 영업시간과 픽업 시간을 알려 드리거나 주문 방법을 설명해 드립니다.",
+    "thinking": "찾아보는 중…",
+    "sendError": "어시스턴트가 답하지 못했습니다. 메시지를 입력창에 되돌려 두었으니 다시 보내 주세요.",
+    "message": "메시지",
+    "placeholder": "상품, 시장 또는 주문 방법에 대해 질문하세요",
+    "send": "보내기",
+    "sending": "보내는 중…",
+    "aiTools": "AI · {{tools}}",
+    "result": {
+      "product": "상품",
+      "market": "시장",
+      "farmer": "가판대"
+    },
+    "suggest": {
+      "find": "이번 주말 토마토는 어디서 살 수 있나요?",
+      "hours": "Bến Thành 시장은 몇 시에 여나요?",
+      "stalls": "토요일 Thảo Điền 시장에는 어떤 가판대가 있나요?",
+      "cancel": "주문은 어떻게 취소하나요?"
+    }
   }
 }

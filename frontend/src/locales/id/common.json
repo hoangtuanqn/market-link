@@ -651,5 +651,35 @@
         "body": "Buka menu untuk menuju setiap bagian panel."
       }
     }
+  },
+  "assistant": {
+    "open": "Tanya asisten",
+    "close": "Tutup asisten",
+    "fullPage": "Buka halaman penuh",
+    "note": "Jawaban berasal dari data MarketLink sendiri.",
+    "newChat": "Percakapan baru",
+    "loading": "Memuat percakapan…",
+    "loadErrorTitle": "Pesan sebelumnya tidak dapat dimuat",
+    "loadErrorText": "Periksa koneksi lalu coba lagi. Anda tetap bisa bertanya hal baru.",
+    "emptyTitle": "Tanyakan apa saja tentang MarketLink",
+    "emptyText": "Saya bisa mencari hasil tani di semua pasar, memberi jam buka dan waktu pengambilan, atau menjelaskan cara memesan.",
+    "thinking": "Sedang mencari…",
+    "sendError": "Asisten tidak dapat menjawab. Pesan Anda sudah dikembalikan ke kotak, kirim lagi.",
+    "message": "Pesan",
+    "placeholder": "Tanya tentang produk, pasar, atau cara memesan",
+    "send": "Kirim",
+    "sending": "Mengirim…",
+    "aiTools": "AI · {{tools}}",
+    "result": {
+      "product": "Produk",
+      "market": "Pasar",
+      "farmer": "Lapak"
+    },
+    "suggest": {
+      "find": "Di mana beli tomat akhir pekan ini?",
+      "hours": "Jam berapa pasar Bến Thành buka?",
+      "stalls": "Lapak apa saja di pasar Thảo Điền hari Sabtu?",
+      "cancel": "Bagaimana cara membatalkan pesanan?"
+    }
   }
 }

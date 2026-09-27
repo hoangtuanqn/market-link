@@ -1,4 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
+import AssistantLauncher from '@/components/assistant/AssistantLauncher';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LiveAnnouncementBanner from '@/components/LiveAnnouncementBanner';
@@ -52,6 +53,7 @@ const MainLayout = ({ cartCount, unreadCount }: MainLayoutProps) => {
         <Outlet />
       </main>
       <Footer />
+      <AssistantLauncher />
       {/* Signed-in Customers only; a Farmer gets their tour in the stall panel */}
       <OnboardingTour role="customer" />
     </div>

@@ -654,5 +654,35 @@
         "body": "Öffne das Menü, um jeden Bereich zu erreichen."
       }
     }
+  },
+  "assistant": {
+    "open": "Assistent fragen",
+    "close": "Assistent schließen",
+    "fullPage": "Ganze Seite öffnen",
+    "note": "Die Antworten stammen aus den Daten von MarketLink.",
+    "newChat": "Neues Gespräch",
+    "loading": "Gespräch wird geladen…",
+    "loadErrorTitle": "Frühere Nachrichten konnten nicht geladen werden",
+    "loadErrorText": "Prüfe deine Verbindung und versuche es erneut. Neue Fragen kannst du trotzdem stellen.",
+    "emptyTitle": "Frag mich zu MarketLink",
+    "emptyText": "Ich finde Produkte auf allen Märkten, nenne Öffnungs- und Abholzeiten oder erkläre, wie Bestellen funktioniert.",
+    "thinking": "Wird nachgeschlagen…",
+    "sendError": "Der Assistent konnte nicht antworten. Deine Nachricht steht wieder im Feld, sende sie erneut.",
+    "message": "Nachricht",
+    "placeholder": "Frag nach einem Produkt, einem Markt oder dem Bestellen",
+    "send": "Senden",
+    "sending": "Wird gesendet…",
+    "aiTools": "KI · {{tools}}",
+    "result": {
+      "product": "Produkt",
+      "market": "Markt",
+      "farmer": "Stand"
+    },
+    "suggest": {
+      "find": "Wo kaufe ich dieses Wochenende Tomaten?",
+      "hours": "Wann öffnet der Markt Bến Thành?",
+      "stalls": "Welche Stände sind samstags auf dem Markt Thảo Điền?",
+      "cancel": "Wie storniere ich eine Bestellung?"
+    }
   }
 }

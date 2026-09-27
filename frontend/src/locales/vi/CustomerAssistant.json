@@ -1,40 +1,18 @@
 {
   "title": "Trợ lý mua sắm",
-  "intro": "Hỏi nơi tìm món gì đó cuối tuần này, khi nào chợ mở, hoặc sạp còn khung giờ nhận hàng nào. Mọi câu trả lời đều lấy từ dữ liệu của chính MarketLink.",
+  "intro": "Hỏi cuối tuần này mua gì ở đâu, chợ mở cửa lúc nào, gian hàng có khung giờ nhận hàng nào, hoặc cách dùng MarketLink. Câu trả lời lấy từ dữ liệu và tài liệu hướng dẫn của MarketLink.",
   "conversation": "Cuộc trò chuyện với trợ lý",
-  "botName": "Trợ lý MarketLink",
-  "botNote": "Câu trả lời dùng danh mục trực tiếp. Ý định hiện dưới mỗi câu trả lời.",
-  "message": "Tin nhắn",
-  "placeholder": "vd: Ai có trứng ở Thảo Điền vào thứ Bảy?",
-  "send": "Gửi",
-  "reply": {
-    "greeting": "Chào {{name}}. Hãy hỏi mình cuối tuần này có gì, hoặc khi nào chợ mở.",
-    "pomelo": "{{day}} {{date}}, 2 sạp có bưởi da xanh: <b>Út Hiền Orchard</b> ở Thủ Đức Farmers Market (còn 2, {{price1}}) và <b>Ba Lành Farm</b> ở Thảo Điền Weekend Market (còn 9, {{price2}}).",
-    "slots": "Út Hiền Orchard giao hàng {{from}} – {{to}} {{day}} {{date}} tại Thủ Đức Farmers Market. Khung giờ trống: {{free}}. Khung {{full}} đã kín. Đơn chốt 12 giờ trước khung giờ.",
-    "unknown": "Mình chưa hiểu câu này. Hãy thử tên sản phẩm, tên chợ hoặc tên sạp."
-  },
-  "question": {
-    "pomeloMorning": "Chợ nào có bưởi da xanh vào sáng thứ Bảy?"
-  },
-  "suggest": {
-    "pomeloSat": "Mua bưởi da xanh ở đâu vào thứ Bảy?",
-    "baChieuOpen": "Bà Chiểu Green Market mở cửa khi nào?",
-    "showMap": "Xem 2 sạp trên bản đồ",
-    "slotsUtHien": "Giờ nhận hàng ở Út Hiền",
-    "addPomelos": "Thêm 2 quả bưởi vào giỏ",
-    "directionsThuDuc": "Chỉ đường đến Thủ Đức Farmers Market",
-    "thaoDien": "Thảo Điền có gì vào thứ Bảy?"
-  },
   "canAnswer": {
     "title": "Trợ lý trả lời được gì",
     "product": "Tìm sản phẩm ở các chợ và sạp, kèm số lượng còn lại",
+    "price": "Giá, đơn vị và tồn kho của một sản phẩm",
     "hours": "Ngày họp chợ và giờ mở cửa",
     "stalls": "Sạp nào có mặt ở một chợ vào một ngày",
     "slots": "Khung giờ nhận hàng và khung còn trống của một sạp",
-    "price": "Giá, đơn vị và tồn kho của một sản phẩm"
+    "guide": "Cách dùng website: đặt hàng, cutoff, huỷ đơn, đánh giá, cài đặt"
   },
   "how": {
     "title": "Cách hoạt động",
-    "text": "Câu hỏi của bạn được khớp với một trong số các ý định có sẵn, và mỗi ý định chạy một truy vấn soạn sẵn trên dữ liệu của chính MarketLink. Câu trả lời không bao giờ lấy từ nơi khác, và trợ lý không thể thay đổi gì — nó chỉ đọc."
+    "text": "Một mô hình AI (Claude) đọc câu hỏi và chọn trong một bộ tra cứu cố định, chỉ đọc, chạy các truy vấn soạn sẵn trên dữ liệu MarketLink; câu trả lời về cách sử dụng chỉ lấy từ tài liệu hướng dẫn. Trợ lý không bao giờ thay đổi tài khoản hay đơn hàng của bạn. Khi AI không sẵn sàng, trợ lý theo từ khoá sẽ trả lời thay."
   }
 }
