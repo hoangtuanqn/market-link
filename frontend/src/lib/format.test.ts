@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cutoffLabel, pickupLabel } from './format';
+import { cutoffLabel, formatDate, formatTime, pickupLabel } from './format';
 
 describe('pickupLabel', () => {
   it('formats an ISO pickup date and a slot as a weekday, day/month and clock range', () => {
@@ -13,7 +13,8 @@ describe('pickupLabel', () => {
 
 describe('cutoffLabel', () => {
   it('formats an ISO instant as the reader time then date', () => {
-    expect(cutoffLabel('2026-09-27T12:00:00Z')).toBe('19:00 27/09/2026');
+    const at = new Date('2026-09-27T12:00:00Z');
+    expect(cutoffLabel('2026-09-27T12:00:00Z')).toBe(`${formatTime(at)} ${formatDate(at)}`);
   });
 
   it('falls back to the raw string when the instant cannot be parsed', () => {

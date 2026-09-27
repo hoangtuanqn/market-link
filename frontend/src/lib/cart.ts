@@ -49,7 +49,11 @@ export const Cart = {
     const found = lines.find((l) => l.productId === line.productId);
     write(
       found
-        ? lines.map((l) => (l === found ? { ...l, ...line, qty: clamp(l, l.qty + qty) } : l))
+        ? lines.map((l) => {
+            if (l !== found) return l;
+            const merged = { ...l, ...line };
+            return { ...merged, qty: clamp(merged, l.qty + qty) };
+          })
         : [...lines, { ...line, qty: clamp({ ...line, qty }, qty) }],
     );
   },

@@ -21,6 +21,12 @@ describe('Cart', () => {
     expect(Cart.lines()[0].qty).toBe(5);
   });
 
+  it('clamps a re-added line against its new stock, not the stock it had before', () => {
+    Cart.add(tomato, 4);
+    Cart.add({ ...tomato, max: 2 }, 1);
+    expect(Cart.lines()[0]).toMatchObject({ qty: 2, max: 2 });
+  });
+
   it('removes a line and survives a reload through localStorage', () => {
     Cart.add(tomato, 1);
     Cart.add({ ...tomato, productId: 2, name: 'Lettuce' }, 1);
