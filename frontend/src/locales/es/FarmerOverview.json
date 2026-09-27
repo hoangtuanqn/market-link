@@ -27,13 +27,9 @@
     "status": "Estado"
   },
   "toast": {
-    "acceptedTitle": "Pedido aceptado",
     "acceptedText": "Pedido {{code}} aceptado. Se ha avisado a {{who}}.",
-    "readyTitle": "Pedido listo",
     "readyText": "Pedido {{code}} marcado como listo.",
-    "completedTitle": "Pedido completado",
     "completedText": "Pedido {{code}} completado.",
-    "declinedTitle": "Pedido rechazado",
     "declinedText": "Pedido {{code}} rechazado. El stock vuelve a tu recuento."
   },
   "actions": {
@@ -43,11 +39,6 @@
     "complete": "Marcar como completado",
     "view": "Ver"
   },
-  "captions": {
-    "new": "Realizado · {{sat}} y {{sun}}",
-    "ready": "Listos para recoger"
-  },
-  "overline": "tu puesto en {{market}} · próximo día de mercado {{day}}",
   "greeting": "Buenos días, {{name}}",
   "applyTemplate": "Aplicar plantilla semanal",
   "addProduct": "Añadir producto",
@@ -57,36 +48,39 @@
     "text": "Los pedidos sin aprobar siguen reservando stock. Acepta o rechaza antes del cierre para que los clientes puedan organizarse."
   },
   "kpi": {
+    "noun": "your numbers",
     "orders": "Pedidos totales",
-    "ordersNote_one": "{{count}} esta semana",
-    "ordersNote_other": "{{count}} esta semana",
-    "vsAugust": "frente a agosto",
     "openHistory": "Abrir historial de ventas",
-    "awaitingNote_one": "<b>{{count}}</b> cierra a las {{time}} del {{date}}",
-    "awaitingNote_other": "<b>{{count}}</b> cierran a las {{time}} del {{date}}",
-    "vsThursday": "frente a un jueves normal",
+    "pending": "Awaiting you",
     "openIncoming": "Abrir pedidos entrantes",
     "revenue": "Ingresos de septiembre",
-    "revenueNote": "₫, de pedidos completados, pagados en el puesto",
-    "best": "Más vendido",
-    "bestNote": "{{qty}} este mes",
-    "openProducts": "Abrir productos",
-    "note": "Septiembre hasta ahora, junto a agosto. Cada tarjeta abre la pantalla que hay detrás de su cifra."
+    "revenueMonth": "Revenue this month"
   },
   "incoming": {
     "title": "Pedidos entrantes",
     "all": "Todos los pedidos y filtros",
-    "note": "Los pedidos nuevos se resaltan hasta que los abres."
+    "noun": "incoming orders",
+    "empty": {
+      "title": "Nothing here",
+      "text": "Orders in this status will show up here."
+    }
   },
   "stock": {
     "title": "Stock para el {{day}}",
     "link": "Stock de esta semana",
-    "note": "Reservado significa que un pedido lo tiene apartado. Se descuenta de tu recuento en cuanto un cliente hace el pedido."
+    "noun": "stock",
+    "empty": {
+      "title": "No products yet",
+      "text": "Add a product to see its stock here."
+    }
   },
   "best": {
     "title": "Más vendidos",
     "link": "Historial de ventas",
-    "note": "Vendido en septiembre, cada uno en su unidad"
-  },
-  "protoNote": "La barra lateral y el encabezado de arriba son nuevos respecto al prototipo."
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold yet",
+      "text": "Your best-selling products will show up here once orders complete."
+    }
+  }
 }

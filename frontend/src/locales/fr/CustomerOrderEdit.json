@@ -1,4 +1,5 @@
 {
+  "noun": "order",
   "myOrders": "Mes commandes",
   "breadcrumbOrder": "Commande {{code}}",
   "breadcrumbEdit": "Modifier",

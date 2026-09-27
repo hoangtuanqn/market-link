@@ -10,6 +10,11 @@
     "title": "Pesanan ini belum selesai",
     "text": "Anda bisa menilai lapak dan barang yang dibeli setelah pesanan diambil."
   },
+  "done": {
+    "title": "Already reviewed",
+    "text": "You have already reviewed this order. Thanks for taking the time."
+  },
+  "noun": "order",
   "completed": "Selesai {{date}}",
   "title": "Bagaimana {{stall}}?",
   "intro": "Ulasan terkait dengan pesanan yang selesai ini, jadi pelanggan lain melihatnya sebagai pembelian terverifikasi. Lapak bisa membalas.",

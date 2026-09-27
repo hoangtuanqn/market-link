@@ -194,7 +194,7 @@ const StallProfilePage = () => {
               {stall.stallName.charAt(0)}
             </span>
             <div className="flex flex-col gap-2">
-              <h1 className="text-h1">{stall.stallName}</h1>
+              <h1 className="font-hand text-h1">{stall.stallName}</h1>
               <p className="text-body">
                 {stall.contactPerson} {rating != null && <Rating value={rating} count={stall.ratingCount} />}
               </p>

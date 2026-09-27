@@ -1,5 +1,6 @@
 {
   "allCustomers": "Clients",
+  "noun": "customer",
   "since": "Client depuis le {{joined}} · dernière commande le {{last}}",
   "missing": {
     "title": "Ce client n'existe plus",
@@ -9,41 +10,36 @@
     "deactivate": "Désactiver le compte",
     "reactivate": "Réactiver le compte"
   },
-  "banner": {
-    "title": "Désactivé aujourd'hui.",
-    "text": "Motif conservé sur le compte : {{reason}}. Les commandes en cours ne sont pas touchées."
-  },
   "orders": {
     "title": "Commandes",
+    "noun": "orders",
     "all": "Toutes les commandes de la plateforme",
-    "note": "Un administrateur les lit. Seul l'étal fait avancer une commande, il n'y a donc rien à changer ici."
+    "note": "Un administrateur les lit. Seul l'étal fait avancer une commande, il n'y a donc rien à changer ici.",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders this customer places will show up here."
+    }
   },
   "reviews": {
     "title": "Avis rédigés",
+    "noun": "reviews",
     "openInModeration": "Ouvrir dans la modération",
-    "note": "Masquer un avis se fait depuis la Modération, où le signalement à l'origine est visible aussi."
-  },
-  "timeline": {
-    "title": "Historique du compte",
-    "created": "Compte créé",
-    "firstCollected": "Première commande retirée",
-    "noShow": "Ne s'est pas présenté",
-    "lastOrder": "Dernière commande"
+    "note": "Masquer un avis se fait depuis la Modération, où le signalement à l'origine est visible aussi.",
+    "empty": {
+      "title": "No reviews yet",
+      "text": "Reviews this customer writes will show up here."
+    }
   },
   "contact": {
     "title": "Contact",
     "email": "E-mail",
     "phone": "Téléphone",
-    "address": "Adresse",
     "joined": "Inscription"
   },
   "habits": {
     "title": "Habitudes d'achat",
     "orders": "Commandes",
-    "collected": "Retirées",
-    "noShows": "Non retirées",
-    "market": "Marché",
-    "buysMostFrom": "Achète surtout chez"
+    "loadedNote": "Counted from the {{count}} most recently loaded orders, not the full history."
   },
   "whatItDoes": {
     "title": "Ce que fait la désactivation",
@@ -53,17 +49,19 @@
     "title": "Désactiver {{name}} ?",
     "text": "Elle ne pourra plus se connecter ni commander tant qu'un administrateur ne réactive pas le compte. Les commandes déjà passées vont à leur terme, aucun étal ne reste avec des produits que personne ne vient chercher.",
     "reason": "Motif conservé sur le compte",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Pas maintenant",
     "confirm": "Désactiver"
   },
-  "reason": {
-    "noShows": "Absences répétées au retrait",
-    "abusive": "Propos injurieux dans un avis",
-    "requested": "A demandé la fermeture de son compte",
-    "other": "Autre"
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate"
   },
   "toast": {
     "deactivated": "{{name}} désactivé.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} peut se reconnecter."
   },
   "col": {

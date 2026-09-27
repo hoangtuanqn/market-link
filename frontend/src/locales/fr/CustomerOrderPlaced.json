@@ -1,4 +1,5 @@
 {
+  "noun": "placed orders",
   "title_one": "{{count}} commande passée",
   "title_other": "{{count}} commandes passées",
   "intro": "Chaque stand examine maintenant sa commande. Vous recevez une notification quand elle est acceptée, puis une autre quand elle est prête à retirer. Les produits vous sont déjà réservés.",

@@ -4,7 +4,6 @@
   "crumbEdit": "수정",
   "titleNew": "새 장터",
   "city": "호찌민시",
-  "meta": "가게 {{stalls}}개 · {{added}}에 추가",
   "metaStalls": "가게 {{stalls}}개",
   "missing": {
     "title": "이 장터는 더 이상 없습니다",

@@ -1,6 +1,7 @@
 {
   "title": "ลูกค้า",
   "intro": "ระงับบัญชีเมื่อทำผิดกฎ บัญชีนั้นจะเข้าสู่ระบบและสั่งซื้อไม่ได้ ปลดระงับเมื่อเรื่องคลี่คลาย คำสั่งซื้อเดิมยังอยู่กับร้านค้าตามเดิม",
+  "noun": "customers",
   "search": {
     "label": "ค้นหาลูกค้า",
     "placeholder": "ชื่อ อีเมล หรือเบอร์โทร",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "ทั้งหมด",
     "active": "ใช้งานอยู่",
-    "inactive": "ถูกระงับ",
-    "joinedThisMonth": "สมัครเดือนนี้"
+    "inactive": "ถูกระงับ"
   },
   "status": {
     "active": "ใช้งานอยู่",
     "inactive": "ถูกระงับ"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "ลูกค้า",
     "joined": "วันที่สมัคร",
@@ -36,11 +37,19 @@
     "title": "ระงับบัญชี {{name}} ไหม",
     "text": "ระบบจะออกจากระบบทุกอุปกรณ์ และเข้าสู่ระบบหรือสั่งซื้อไม่ได้อีก คำสั่งซื้อที่ทำไปแล้วยังอยู่กับร้านค้า",
     "reason": "เหตุผล จะบันทึกไว้กับบัญชี",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "คงสถานะใช้งาน",
     "confirm": "ระงับบัญชี"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "ระงับบัญชี {{name}} แล้ว",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} เข้าสู่ระบบได้อีกครั้งแล้ว"
   }
 }

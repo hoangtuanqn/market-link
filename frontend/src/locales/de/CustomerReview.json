@@ -10,6 +10,11 @@
     "title": "Diese Bestellung ist noch nicht abgeschlossen",
     "text": "Den Stand und die gekaufte Ware können Sie bewerten, sobald Sie die Bestellung abgeholt haben."
   },
+  "done": {
+    "title": "Already reviewed",
+    "text": "You have already reviewed this order. Thanks for taking the time."
+  },
+  "noun": "order",
   "completed": "Abgeschlossen am {{date}}",
   "title": "Wie war {{stall}}?",
   "intro": "Bewertungen sind mit dieser abgeschlossenen Bestellung verknüpft, daher sehen andere Kunden sie als verifizierten Kauf. Der Stand kann antworten.",

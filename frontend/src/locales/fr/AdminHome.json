@@ -1,55 +1,48 @@
 {
   "overline": "Plateforme · {{year}}",
   "title": "MarketLink aujourd'hui",
-  "vs": "contre {{month}}",
-  "tilesNote": "{{now}} jusqu'ici, à côté de {{prev}}. Chaque tuile ouvre le détail derrière son chiffre.",
+  "noun": "dashboard",
   "kpi": {
     "farmers": "Producteurs",
     "farmersNote": "{{waiting}} en attente d'approbation · {{suspended}} suspendus",
     "farmersLink": "Examiner les demandes",
     "customers": "Clients",
-    "customersNote": "{{count}} inscrits ce mois-ci",
     "customersLink": "Ouvrir les clients",
     "markets": "Marchés",
-    "marketsNote": "tous actifs",
     "marketsLink": "Ouvrir les marchés",
     "orders": "Commandes",
     "ordersNote": "{{week}} cette semaine · {{total}} terminées",
     "ordersLink": "Ouvrir les commandes"
   },
-  "revenue": {
-    "title": "Chiffre d'affaires par jour",
-    "note": "Commandes terminées, en millions de ₫. {{now}} face à {{prev}}.",
-    "caption": "Chiffre d'affaires par jour en {{now}} face à {{prev}}, en millions de dongs",
-    "axis": "Jour du mois",
-    "reports": "Rapports complets"
-  },
   "attention": {
     "title": "À traiter",
     "farmers_one": "demande de producteur en attente",
-    "farmers_many": "demandes de producteurs en attente",
     "farmers_other": "demandes de producteurs en attente",
     "reported_one": "avis signalé par un étal",
-    "reported_many": "avis signalés par un étal",
     "reported_other": "avis signalés par un étal",
     "feedback_one": "retour ouvert",
-    "feedback_many": "retours ouverts, dont un bug",
-    "feedback_other": "retours ouverts, dont un bug",
-    "announcements_one": "annonce en ligne, Thảo Điền fermé le 04/10",
-    "announcements_many": "annonces en ligne",
-    "announcements_other": "annonces en ligne"
+    "feedback_other": "retours ouverts, dont un bug"
   },
   "byMarket": {
     "title": "Commandes de la semaine par marché",
-    "link": "Toutes les commandes",
-    "suffix": "commandes"
+    "noun": "revenue by market",
+    "empty": {
+      "title": "No completed orders yet",
+      "text": "Revenue by market appears once a market has a completed order."
+    }
   },
   "latest": {
     "title": "Dernières commandes de la plateforme",
-    "readOnly": "Lecture seule. Les administrateurs ne changent pas le statut d'une commande."
+    "noun": "orders",
+    "readOnly": "Lecture seule. Les administrateurs ne changent pas le statut d'une commande.",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders placed anywhere on the platform will show up here."
+    }
   },
   "col": {
     "order": "Commande",
+    "customer": "Customer",
     "stall": "Étal",
     "market": "Marché",
     "pickup": "Retrait",

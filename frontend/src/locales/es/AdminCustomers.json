@@ -1,6 +1,7 @@
 {
   "title": "Clientes",
   "intro": "Desactiva una cuenta si incumple las normas: deja de poder entrar y de hacer pedidos. Vuelve a activarla cuando se resuelva. Sus pedidos anteriores siguen con los puestos.",
+  "noun": "customers",
   "search": {
     "label": "Buscar clientes",
     "placeholder": "Nombre, correo o teléfono",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "Todos",
     "active": "Activos",
-    "inactive": "Desactivados",
-    "joinedThisMonth": "Nuevos este mes"
+    "inactive": "Desactivados"
   },
   "status": {
     "active": "Activo",
     "inactive": "Desactivado"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "Cliente",
     "joined": "Alta",
@@ -36,11 +37,19 @@
     "title": "¿Desactivar a {{name}}?",
     "text": "Se cierra su sesión en todas partes y no puede entrar ni hacer pedidos. Los pedidos ya realizados siguen con los puestos.",
     "reason": "Motivo, se guarda en la cuenta",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Dejar activa",
     "confirm": "Desactivar cuenta"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "{{name}} desactivado.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} ya puede volver a entrar."
   }
 }

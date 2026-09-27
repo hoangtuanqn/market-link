@@ -1,5 +1,6 @@
 {
   "allCustomers": "ลูกค้า",
+  "noun": "customer",
   "since": "เป็นลูกค้าตั้งแต่ {{joined}} · สั่งซื้อล่าสุด {{last}}",
   "missing": {
     "title": "ไม่พบลูกค้ารายนี้แล้ว",
@@ -9,41 +10,36 @@
     "deactivate": "ระงับบัญชี",
     "reactivate": "ปลดระงับบัญชี"
   },
-  "banner": {
-    "title": "ระงับวันนี้",
-    "text": "เหตุผลที่บันทึกไว้กับบัญชี: {{reason}} คำสั่งซื้อที่กำลังดำเนินอยู่ไม่ถูกแตะต้อง"
-  },
   "orders": {
     "title": "คำสั่งซื้อ",
+    "noun": "orders",
     "all": "คำสั่งซื้อทั้งแพลตฟอร์ม",
-    "note": "ผู้ดูแลระบบอ่านอย่างเดียว มีเพียงร้านค้าที่เลื่อนสถานะคำสั่งซื้อได้ จึงไม่มีอะไรให้แก้ที่นี่"
+    "note": "ผู้ดูแลระบบอ่านอย่างเดียว มีเพียงร้านค้าที่เลื่อนสถานะคำสั่งซื้อได้ จึงไม่มีอะไรให้แก้ที่นี่",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders this customer places will show up here."
+    }
   },
   "reviews": {
     "title": "รีวิวที่เขียนไว้",
+    "noun": "reviews",
     "openInModeration": "เปิดในหน้าตรวจสอบเนื้อหา",
-    "note": "การซ่อนรีวิวทำที่หน้าตรวจสอบเนื้อหา ซึ่งเห็นรายงานที่เป็นต้นเรื่องด้วย"
-  },
-  "timeline": {
-    "title": "ประวัติบัญชี",
-    "created": "สร้างบัญชี",
-    "firstCollected": "รับสินค้าครั้งแรกสำเร็จ",
-    "noShow": "ไม่มารับสินค้า",
-    "lastOrder": "คำสั่งซื้อล่าสุด"
+    "note": "การซ่อนรีวิวทำที่หน้าตรวจสอบเนื้อหา ซึ่งเห็นรายงานที่เป็นต้นเรื่องด้วย",
+    "empty": {
+      "title": "No reviews yet",
+      "text": "Reviews this customer writes will show up here."
+    }
   },
   "contact": {
     "title": "ข้อมูลติดต่อ",
     "email": "อีเมล",
     "phone": "โทรศัพท์",
-    "address": "ที่อยู่",
     "joined": "วันที่สมัคร"
   },
   "habits": {
     "title": "พฤติกรรมการซื้อ",
     "orders": "คำสั่งซื้อ",
-    "collected": "รับสินค้าแล้ว",
-    "noShows": "ไม่มารับ",
-    "market": "ตลาดที่ไปบ่อย",
-    "buysMostFrom": "ซื้อมากที่สุดจาก"
+    "loadedNote": "Counted from the {{count}} most recently loaded orders, not the full history."
   },
   "whatItDoes": {
     "title": "ระงับแล้วเกิดอะไรขึ้น",
@@ -53,17 +49,19 @@
     "title": "ระงับบัญชี {{name}} ไหม",
     "text": "เขาจะเข้าสู่ระบบและสั่งซื้อไม่ได้จนกว่าผู้ดูแลระบบจะปลดระงับ คำสั่งซื้อที่ทำไปแล้วจะดำเนินจนจบ จึงไม่มีร้านค้าไหนต้องแบกของที่ไม่มีใครมารับ",
     "reason": "เหตุผลที่บันทึกไว้กับบัญชี",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "ยังไม่ระงับ",
     "confirm": "ระงับ"
   },
-  "reason": {
-    "noShows": "ไม่มารับสินค้าซ้ำหลายครั้ง",
-    "abusive": "ใช้ถ้อยคำหยาบคายในรีวิว",
-    "requested": "ขอปิดบัญชีด้วยตนเอง",
-    "other": "เหตุผลอื่น"
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate"
   },
   "toast": {
     "deactivated": "ระงับบัญชี {{name}} แล้ว",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} เข้าสู่ระบบได้อีกครั้งแล้ว"
   },
   "col": {

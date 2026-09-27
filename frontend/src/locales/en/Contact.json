@@ -7,8 +7,9 @@
     "phone": "Phone",
     "address": "Address",
     "hours": "Hours",
-    "toAdd": "To add",
-    "addressValue": "To add. The pin on the map is a placeholder in District 1.",
+    "emailValue": "contact@marketlink.vn",
+    "phoneValue": "+84 90 123 4567",
+    "addressValue": "123 Le Loi, Ben Nghe Ward, District 1, Ho Chi Minh City",
     "hoursValue": "Mon – Fri, 09:00 – 17:00"
   },
   "feedback": {
@@ -18,9 +19,9 @@
   },
   "map": {
     "label": "Map of the team location",
-    "markerLabel": "MarketLink team (placeholder)",
+    "markerLabel": "MarketLink team",
     "popupTitle": "MarketLink team",
-    "popupLine": "Placeholder pin, District 1",
+    "popupLine": "123 Le Loi, District 1",
     "directions": "Directions to the team"
   }
 }

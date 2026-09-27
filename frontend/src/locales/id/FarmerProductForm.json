@@ -33,6 +33,13 @@
     "label": "Jumlah tersedia minggu ini",
     "error": "Jumlah harus 0 atau lebih. Gunakan Habis jika tidak tersisa."
   },
+  "shelfLife": {
+    "label": "Shelf life (days)",
+    "hint": "This category is usually {{min}}–{{max}} days.",
+    "error": "Enter a whole number of 1 or more.",
+    "warningTitle": "Outside the usual range",
+    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+  },
   "desc": {
     "label": "Deskripsi",
     "hint": "Ditampilkan di halaman produk. Ceritakan cara menanam dan cara menyimpannya."
@@ -49,8 +56,12 @@
   },
   "photo": {
     "label": "Foto",
-    "none": "Belum ada foto. Sampai Anda menambahkannya, label menampilkan kategori dengan tulisan tangan.",
-    "choose": "Pilih foto",
+    "add": "Add photo",
+    "replace": "Replace photo",
+    "remove": "Remove photo",
+    "uploading": "Uploading",
+    "uploadInProgress": "Wait for the photo to finish uploading, then save.",
+    "alt": "Product photo",
     "hint": "JPG atau PNG, 4:3, maks. 5 MB. Dari dekat, cahaya alami, di atas kayu atau kertas."
   },
   "save": "Simpan produk",

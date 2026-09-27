@@ -27,13 +27,9 @@
     "status": "Status"
   },
   "toast": {
-    "acceptedTitle": "Bestellung angenommen",
     "acceptedText": "Bestellung {{code}} angenommen. {{who}} wurde informiert.",
-    "readyTitle": "Bestellung bereit",
     "readyText": "Bestellung {{code}} als bereit markiert.",
-    "completedTitle": "Bestellung abgeschlossen",
     "completedText": "Bestellung {{code}} abgeschlossen.",
-    "declinedTitle": "Bestellung abgelehnt",
     "declinedText": "Bestellung {{code}} abgelehnt. Der Bestand ist wieder verfügbar."
   },
   "actions": {
@@ -43,11 +39,6 @@
     "complete": "Als abgeschlossen markieren",
     "view": "Ansehen"
   },
-  "captions": {
-    "new": "Aufgegeben · {{sat}} und {{sun}}",
-    "ready": "Bereit zur Abholung"
-  },
-  "overline": "Ihr Stand bei {{market}} · nächster Markttag {{day}}",
   "greeting": "Guten Morgen, {{name}}",
   "applyTemplate": "Wochenvorlage anwenden",
   "addProduct": "Produkt hinzufügen",
@@ -57,36 +48,39 @@
     "text": "Nicht freigegebene Bestellungen halten weiterhin Bestand. Nehmen Sie sie vor dem Bestellschluss an oder lehnen Sie sie ab, damit Kunden planen können."
   },
   "kpi": {
+    "noun": "your numbers",
     "orders": "Bestellungen gesamt",
-    "ordersNote_one": "{{count}} diese Woche",
-    "ordersNote_other": "{{count}} diese Woche",
-    "vsAugust": "ggü. August",
     "openHistory": "Verkaufsverlauf öffnen",
-    "awaitingNote_one": "<b>{{count}}</b> schließt um {{time}} am {{date}}",
-    "awaitingNote_other": "<b>{{count}}</b> schließen um {{time}} am {{date}}",
-    "vsThursday": "ggü. einem normalen Donnerstag",
+    "pending": "Awaiting you",
     "openIncoming": "Eingehende Bestellungen öffnen",
     "revenue": "Umsatz im September",
-    "revenueNote": "₫, aus abgeschlossenen Bestellungen, am Stand bezahlt",
-    "best": "Bestseller",
-    "bestNote": "{{qty}} in diesem Monat",
-    "openProducts": "Produkte öffnen",
-    "note": "September bisher, im Vergleich zum August. Jede Kachel öffnet die Ansicht hinter ihrer Zahl."
+    "revenueMonth": "Revenue this month"
   },
   "incoming": {
     "title": "Eingehende Bestellungen",
     "all": "Alle Bestellungen und Filter",
-    "note": "Neue Bestellungen bleiben hervorgehoben, bis Sie sie öffnen."
+    "noun": "incoming orders",
+    "empty": {
+      "title": "Nothing here",
+      "text": "Orders in this status will show up here."
+    }
   },
   "stock": {
     "title": "Bestand für {{day}}",
     "link": "Bestand dieser Woche",
-    "note": "Reserviert heißt, eine Bestellung hält diese Menge. Sie wird abgezogen, sobald ein Kunde bestellt."
+    "noun": "stock",
+    "empty": {
+      "title": "No products yet",
+      "text": "Add a product to see its stock here."
+    }
   },
   "best": {
     "title": "Bestseller",
     "link": "Verkaufsverlauf",
-    "note": "Im September verkauft, jeweils in der eigenen Einheit"
-  },
-  "protoNote": "Die Seitenleiste und die Kopfzeile darüber sind gegenüber dem Prototyp neu."
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold yet",
+      "text": "Your best-selling products will show up here once orders complete."
+    }
+  }
 }

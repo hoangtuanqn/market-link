@@ -3,6 +3,12 @@
   "greeting_other": "Hallo {{name}}, {{count}} Abholungen an diesem Wochenende",
   "intro": "Eine Bestellung wartet noch auf die Bestätigung des Stands. Alles andere läuft nach Plan.",
   "browseMarkets": "Märkte an diesem Wochenende ansehen",
+  "noun": {
+    "orders": "orders",
+    "favorites": "favorites",
+    "notifications": "notifications",
+    "products": "products"
+  },
   "cards": {
     "upcoming_one": "{{count}} anstehende Bestellung",
     "upcoming_other": "{{count}} anstehende Bestellungen",
@@ -30,5 +36,15 @@
   "nextPickups": "Nächste Abholungen",
   "allOrders": "Alle meine Bestellungen",
   "newFromFavorites": "Neu diese Woche bei Ihren Lieblingsständen",
-  "favorites": "Favoriten"
+  "favorites": "Favoriten",
+  "empty": {
+    "pickups": {
+      "title": "No pickups coming up",
+      "text": "Orders that are placed, accepted or ready for pickup show up here."
+    },
+    "favorites": {
+      "title": "No favorite products yet",
+      "text": "Save products you like and new stock from them shows up here."
+    }
+  }
 }

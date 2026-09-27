@@ -1,13 +1,16 @@
 {
+  "error": {
+    "noun": "your registration"
+  },
   "overline": {
     "suspended": "{{stall}} · {{date}} 정지됨",
     "registered": "{{stall}} · {{date}} 등록"
   },
   "title": {
     "pending": "매대가 승인을 기다리고 있어요",
+    "rejected": "Your stall registration was declined",
     "suspended": "매대가 정지되었어요"
   },
-  "previewToggle": "미리보기: 정지된 매대",
   "reviewing": {
     "title": "관리자가 등록 내용을 검토하고 있어요.",
     "text": "승인되면 알림과 이메일을 보내 드려요. 그 전까지는 매대와 상품이 고객에게 보이지 않아요."
@@ -25,9 +28,18 @@
     "email": "이메일",
     "market": "신청한 장터"
   },
+  "rejected": {
+    "bannerTitle": "This registration was not approved.",
+    "noReason": "No reason was given.",
+    "again": {
+      "title": "Apply again",
+      "text": "You can send a new registration with updated details or evidence.",
+      "link": "Apply again"
+    }
+  },
   "suspended": {
-    "title": "매대가 {{date}}에 정지되었어요.",
-    "text": "관리자가 남긴 사유: {{reason}} 상품이 숨겨졌고 새 주문을 받을 수 없어요."
+    "bannerTitle": "Your stall is suspended.",
+    "noReason": "No reason was given."
   },
   "running": {
     "title": "이미 들어온 주문은 계속 진행돼요",

@@ -1,28 +1,18 @@
 {
   "overline": "Plattform · {{year}}",
   "title": "MarketLink heute",
-  "vs": "gegenüber {{month}}",
-  "tilesNote": "{{now}} bis jetzt, neben {{prev}}. Jede Kachel öffnet, was hinter ihrer Zahl steckt.",
+  "noun": "dashboard",
   "kpi": {
     "farmers": "Erzeuger",
     "farmersNote": "{{waiting}} warten auf Freigabe · {{suspended}} gesperrt",
     "farmersLink": "Anträge prüfen",
     "customers": "Kundinnen und Kunden",
-    "customersNote": "{{count}} in diesem Monat dazugekommen",
     "customersLink": "Kundenliste öffnen",
     "markets": "Märkte",
-    "marketsNote": "alle aktiv",
     "marketsLink": "Marktliste öffnen",
     "orders": "Bestellungen",
     "ordersNote": "{{week}} diese Woche · {{total}} abgeschlossen",
     "ordersLink": "Bestellungen öffnen"
-  },
-  "revenue": {
-    "title": "Umsatz pro Tag",
-    "note": "Abgeschlossene Bestellungen, in Millionen ₫. {{now}} gegen {{prev}}.",
-    "caption": "Umsatz pro Tag im {{now}} gegen {{prev}}, in Millionen Dong",
-    "axis": "Tag des Monats",
-    "reports": "Vollständige Berichte"
   },
   "attention": {
     "title": "Braucht Aufmerksamkeit",
@@ -31,21 +21,28 @@
     "reported_one": "von einem Stand gemeldete Bewertung",
     "reported_other": "von einem Stand gemeldete Bewertungen",
     "feedback_one": "offene Rückmeldung",
-    "feedback_other": "offene Rückmeldungen, eine davon ein Fehler",
-    "announcements_one": "Hinweis läuft, Thảo Điền am 04.10. geschlossen",
-    "announcements_other": "Hinweise laufen"
+    "feedback_other": "offene Rückmeldungen, eine davon ein Fehler"
   },
   "byMarket": {
     "title": "Bestellungen dieser Woche nach Markt",
-    "link": "Alle Bestellungen",
-    "suffix": "Bestellungen"
+    "noun": "revenue by market",
+    "empty": {
+      "title": "No completed orders yet",
+      "text": "Revenue by market appears once a market has a completed order."
+    }
   },
   "latest": {
     "title": "Neueste Bestellungen auf der ganzen Plattform",
-    "readOnly": "Nur lesen. Administratoren ändern keinen Bestellstatus."
+    "noun": "orders",
+    "readOnly": "Nur lesen. Administratoren ändern keinen Bestellstatus.",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders placed anywhere on the platform will show up here."
+    }
   },
   "col": {
     "order": "Bestellung",
+    "customer": "Customer",
     "stall": "Stand",
     "market": "Markt",
     "pickup": "Abholung",

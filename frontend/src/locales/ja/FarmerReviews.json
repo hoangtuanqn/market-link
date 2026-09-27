@@ -4,6 +4,7 @@
   "summary": "屋台 {{stall}} · 商品 {{products}} · {{reviews}}",
   "reviewCount_one": "レビュー {{count}}件",
   "reviewCount_other": "レビュー {{count}}件",
+  "noun": "reviews",
   "filter": {
     "all": "すべて",
     "needs": "返信が必要",
@@ -14,13 +15,10 @@
   "toast": {
     "postedTitle": "返信を投稿しました",
     "postedText": "{{name}} さんのレビューに返信を投稿しました。",
-    "editTitle": "返信の編集",
-    "editText": "返信を編集できます。"
+    "alreadyReplied": "You already replied to this review."
   },
   "action": {
-    "editReply": "返信を編集",
     "reply": "返信",
-    "report": "レビューを報告",
     "post": "返信を投稿"
   },
   "form": {

@@ -1,4 +1,5 @@
 {
+  "noun": "order",
   "myOrders": "내 주문",
   "breadcrumbOrder": "주문 {{code}}",
   "breadcrumbEdit": "수정",

@@ -1,13 +1,16 @@
 {
+  "error": {
+    "noun": "your registration"
+  },
   "overline": {
     "suspended": "{{stall}} · gesperrt am {{date}}",
     "registered": "{{stall}} · registriert am {{date}}"
   },
   "title": {
     "pending": "Ihr Stand wartet auf Freigabe",
+    "rejected": "Your stall registration was declined",
     "suspended": "Ihr Stand ist gesperrt"
   },
-  "previewToggle": "Vorschau: gesperrter Stand",
   "reviewing": {
     "title": "Ein Admin prüft Ihre Registrierung.",
     "text": "Sie erhalten eine Benachrichtigung und eine E-Mail, sobald er freigegeben ist. Bis dahin sind Ihr Stand und Ihre Produkte für Kunden nicht sichtbar."
@@ -25,9 +28,18 @@
     "email": "E-Mail",
     "market": "Gewünschter Markt"
   },
+  "rejected": {
+    "bannerTitle": "This registration was not approved.",
+    "noReason": "No reason was given.",
+    "again": {
+      "title": "Apply again",
+      "text": "You can send a new registration with updated details or evidence.",
+      "link": "Apply again"
+    }
+  },
   "suspended": {
-    "title": "Ihr Stand wurde am {{date}} gesperrt.",
-    "text": "Begründung des Admins: {{reason}} Ihre Produkte sind ausgeblendet und Sie können keine neuen Bestellungen annehmen."
+    "bannerTitle": "Your stall is suspended.",
+    "noReason": "No reason was given."
   },
   "running": {
     "title": "Bereits aufgegebene Bestellungen laufen weiter",

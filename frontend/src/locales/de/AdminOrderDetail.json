@@ -1,5 +1,6 @@
 {
   "allOrders": "Bestellungen",
+  "noun": "order",
   "kicker": "Aufgegeben am {{placed}} · Annahmeschluss {{cutoff}}",
   "missing": {
     "title": "Diese Bestellung gibt es nicht mehr",
@@ -13,6 +14,7 @@
     "title": "Artikel",
     "note": "Die Preise sind die, die der Stand zum Zeitpunkt der Bestellung verlangt hat. Über MarketLink fließt kein Geld; bezahlt wird am Stand."
   },
+  "declined": "Declined: {{reason}}",
   "history": {
     "title": "Alle Status, die sie durchlaufen hat",
     "by": "{{time}} · {{by}}",
@@ -21,22 +23,14 @@
   "stall": {
     "title": "Der Stand",
     "stall": "Stand",
-    "contact": "Kontakt",
-    "approval": "Freigabe",
     "record": "Standakte"
-  },
-  "approval": {
-    "pending": "Wartet auf Freigabe",
-    "approved": "Freigegeben",
-    "rejected": "Abgelehnt",
-    "suspended": "Gesperrt"
   },
   "customer": {
     "title": "Die Kundschaft",
     "name": "Name",
     "phone": "Telefon",
-    "orders": "Bestellungen auf MarketLink",
-    "record": "Kundenakte"
+    "record": "Kundenakte",
+    "hidden": "Contact details are only shown to the order's own stall."
   },
   "pickup": {
     "title": "Abholung",
