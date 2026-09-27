@@ -3,7 +3,6 @@
   "crumbNew": "เพิ่ม",
   "crumbEdit": "แก้ไข",
   "titleNew": "ตลาดใหม่",
-  "city": "นครโฮจิมินห์",
   "metaStalls": "{{stalls}} ร้านค้า",
   "missing": {
     "title": "ไม่พบตลาดนี้แล้ว",
@@ -11,9 +10,6 @@
   },
   "field": {
     "name": "ชื่อตลาด",
-    "address": "ที่อยู่",
-    "district": "เขต",
-    "city": "เมือง",
     "days": "วันเปิดตลาด",
     "open": "เปิด",
     "close": "ปิด",

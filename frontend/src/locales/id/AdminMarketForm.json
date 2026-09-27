@@ -3,7 +3,6 @@
   "crumbNew": "Tambah",
   "crumbEdit": "Ubah",
   "titleNew": "Pasar baru",
-  "city": "Kota Ho Chi Minh",
   "metaStalls": "{{stalls}} lapak",
   "missing": {
     "title": "Pasar itu sudah tidak ada",
@@ -11,9 +10,6 @@
   },
   "field": {
     "name": "Nama pasar",
-    "address": "Alamat",
-    "district": "Distrik",
-    "city": "Kota",
     "days": "Hari buka",
     "open": "Buka",
     "close": "Tutup",

@@ -3,7 +3,6 @@
   "crumbNew": "추가",
   "crumbEdit": "수정",
   "titleNew": "새 장터",
-  "city": "호찌민시",
   "metaStalls": "가게 {{stalls}}개",
   "missing": {
     "title": "이 장터는 더 이상 없습니다",
@@ -11,9 +10,6 @@
   },
   "field": {
     "name": "장터 이름",
-    "address": "주소",
-    "district": "구",
-    "city": "도시",
     "days": "여는 요일",
     "open": "여는 시각",
     "close": "닫는 시각",
