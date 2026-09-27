@@ -116,7 +116,14 @@ const CustomerCartPage = () => {
       ? OrderApi.preview(lines.map((l) => ({ productId: l.productId, quantity: l.qty })))
       : Promise.resolve([]),
   );
-  const groups = previewLoad.kind === 'ready' ? previewLoad.data : [];
+  // A quantity change re-runs the preview. Keep the last answer on screen meanwhile: swapping the whole page for
+  // "loading" made it flash and remounted every stall's pickup picker (re-fetching its slots) on each +/- tap.
+  const [lastPreview, setLastPreview] = useState<OrderGroupPreviewDto[] | null>(null);
+  if (previewLoad.kind === 'ready' && previewLoad.data !== lastPreview) setLastPreview(previewLoad.data);
+  const refreshing = previewLoad.kind === 'loading' && lastPreview !== null;
+  const groups = previewLoad.kind === 'ready' ? previewLoad.data : (lastPreview ?? []);
+  // Quantities follow the cart right away; the server's figures catch up when the preview answers
+  const qtyOf = (productId: number, fallback: number) => lines.find((l) => l.productId === productId)?.qty ?? fallback;
   const [choices, setChoices] = useState<Record<number, Choice>>({});
   const choice = (g: OrderGroupPreviewDto): Choice =>
     choices[g.farmerId] ?? {
@@ -170,7 +177,7 @@ const CustomerCartPage = () => {
     );
   }
 
-  if (previewLoad.kind === 'loading') {
+  if (previewLoad.kind === 'loading' && lastPreview === null) {
     return (
       <p role="status" className="text-ink-muted">
         {tc('notify.list.loading')}
@@ -272,14 +279,16 @@ const CustomerCartPage = () => {
                   of={groups.length}
                   stallName={g.stallName}
                   where={whereOf(g)}
-                  items={g.items.map((it): CartLineType => ({
-                    id: it.productId,
-                    name: it.name,
-                    unit: it.unit,
-                    price: it.unitPrice,
-                    max: it.stockQuantity,
-                    qty: it.quantity,
-                  }))}
+                  items={g.items
+                    .filter((it) => lines.some((l) => l.productId === it.productId))
+                    .map((it): CartLineType => ({
+                      id: it.productId,
+                      name: it.name,
+                      unit: it.unit,
+                      price: it.unitPrice,
+                      max: it.stockQuantity,
+                      qty: qtyOf(it.productId, it.quantity),
+                    }))}
                   onQtyChange={(id, qty) => Cart.setQty(id, qty)}
                   onRemove={(id) => Cart.remove(id)}
                 />
@@ -320,7 +329,7 @@ const CustomerCartPage = () => {
                 className="border-line-strong bg-surface-raised text-body min-h-16 rounded-sm border-[1.5px] p-3"
               />
             </div>
-            <Button disabled={!ready || placing} className="w-full" onClick={() => void place()}>
+            <Button disabled={!ready || placing || refreshing} className="w-full" onClick={() => void place()}>
               {placing ? t('placing') : t('place', { count: groups.length })}
             </Button>
             <p className="text-small text-ink-muted text-center">
