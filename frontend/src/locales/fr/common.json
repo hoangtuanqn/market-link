@@ -688,5 +688,43 @@
         "body": "Ouvrez le menu pour accéder à chaque section de l’espace."
       }
     }
+  },
+  "address": {
+    "legend": "Adresse",
+    "country": "Pays",
+    "province": "Province ou ville",
+    "ward": "Quartier ou commune",
+    "street": "Rue",
+    "addressLine": "Numéro et précisions",
+    "addressLineOptional": "Numéro (s’il y en a un)",
+    "addressLinePlaceholder": "12, ou 12/3A",
+    "region": "État ou province",
+    "city": "Ville",
+    "choose": {
+      "country": "Choisissez un pays",
+      "province": "Choisissez une province ou une ville",
+      "ward": "Choisissez un quartier ou une commune"
+    },
+    "wardNeedsProvince": "Choisissez d’abord la province.",
+    "loading": "Chargement…",
+    "loadFailed": "Impossible de charger cette liste.",
+    "retry": "Réessayer",
+    "streetPlaceholder": "Commencez à taper, par ex. Lê Lợi",
+    "streetHint": "Choisissez une suggestion, ou gardez ce que vous avez tapé si votre rue n’est pas dans la liste.",
+    "useTyped": "Utiliser « {{text}} »",
+    "noSuggestions": "Aucune suggestion — ce que vous avez tapé sera utilisé.",
+    "suggestions": "Suggestions de rues",
+    "current": "Adresse actuelle : {{address}}. Choisissez-la de nouveau ci-dessous pour enregistrer.",
+    "vietnamOnly": "Les marchés sont au Vietnam.",
+    "errors": {
+      "countryRequired": "Choisissez un pays.",
+      "provinceRequired": "Choisissez une province ou une ville.",
+      "wardRequired": "Choisissez un quartier ou une commune.",
+      "streetRequired": "Indiquez la rue.",
+      "lineRequired": "Indiquez le numéro et les précisions.",
+      "regionRequired": "Indiquez l’État ou la province.",
+      "cityRequired": "Indiquez la ville.",
+      "tooLong": "{{max}} caractères au maximum."
+    }
   }
 }

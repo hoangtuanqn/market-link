@@ -688,5 +688,43 @@
         "body": "メニューを開くとパネルのすべてのセクションに移動できます。"
       }
     }
+  },
+  "address": {
+    "legend": "住所",
+    "country": "国・地域",
+    "province": "省 / 市",
+    "ward": "坊 / 社",
+    "street": "通り",
+    "addressLine": "番地・詳細",
+    "addressLineOptional": "番地（ある場合）",
+    "addressLinePlaceholder": "12、または 12/3A",
+    "region": "州 / 県",
+    "city": "市区町村",
+    "choose": {
+      "country": "国・地域を選択",
+      "province": "省 / 市を選択",
+      "ward": "坊 / 社を選択"
+    },
+    "wardNeedsProvince": "先に省 / 市を選択してください。",
+    "loading": "読み込み中…",
+    "loadFailed": "このリストを読み込めませんでした。",
+    "retry": "再試行",
+    "streetPlaceholder": "入力してください（例：Lê Lợi）",
+    "streetHint": "候補を選ぶか、通りが一覧にない場合は入力したままにしてください。",
+    "useTyped": "「{{text}}」を使う",
+    "noSuggestions": "候補がありません。入力した内容がそのまま使われます。",
+    "suggestions": "通りの候補",
+    "current": "現在の住所：{{address}}。変更を保存するには下で選び直してください。",
+    "vietnamOnly": "市場はベトナム国内にある必要があります。",
+    "errors": {
+      "countryRequired": "国・地域を選択してください。",
+      "provinceRequired": "省 / 市を選択してください。",
+      "wardRequired": "坊 / 社を選択してください。",
+      "streetRequired": "通りを入力してください。",
+      "lineRequired": "番地・詳細を入力してください。",
+      "regionRequired": "州 / 県を入力してください。",
+      "cityRequired": "市区町村を入力してください。",
+      "tooLong": "{{max}} 文字以内で入力してください。"
+    }
   }
 }

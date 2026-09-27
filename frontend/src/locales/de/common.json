@@ -688,5 +688,43 @@
         "body": "Öffne das Menü, um jeden Bereich zu erreichen."
       }
     }
+  },
+  "address": {
+    "legend": "Adresse",
+    "country": "Land",
+    "province": "Provinz oder Stadt",
+    "ward": "Bezirk oder Gemeinde",
+    "street": "Straße",
+    "addressLine": "Hausnummer und Details",
+    "addressLineOptional": "Hausnummer (falls vorhanden)",
+    "addressLinePlaceholder": "12 oder 12/3A",
+    "region": "Bundesland oder Provinz",
+    "city": "Stadt",
+    "choose": {
+      "country": "Land wählen",
+      "province": "Provinz oder Stadt wählen",
+      "ward": "Bezirk oder Gemeinde wählen"
+    },
+    "wardNeedsProvince": "Wähle zuerst die Provinz.",
+    "loading": "Wird geladen…",
+    "loadFailed": "Diese Liste konnte nicht geladen werden.",
+    "retry": "Erneut versuchen",
+    "streetPlaceholder": "Tippe los, z. B. Lê Lợi",
+    "streetHint": "Wähle einen Vorschlag oder behalte deine Eingabe, wenn deine Straße nicht in der Liste steht.",
+    "useTyped": "„{{text}}“ verwenden",
+    "noSuggestions": "Keine Vorschläge – deine Eingabe wird verwendet.",
+    "suggestions": "Straßenvorschläge",
+    "current": "Aktuelle Adresse: {{address}}. Wähle sie unten neu, um Änderungen zu speichern.",
+    "vietnamOnly": "Märkte liegen in Vietnam.",
+    "errors": {
+      "countryRequired": "Wähle ein Land.",
+      "provinceRequired": "Wähle eine Provinz oder Stadt.",
+      "wardRequired": "Wähle einen Bezirk oder eine Gemeinde.",
+      "streetRequired": "Gib die Straße ein.",
+      "lineRequired": "Gib Hausnummer und Details ein.",
+      "regionRequired": "Gib das Bundesland oder die Provinz ein.",
+      "cityRequired": "Gib die Stadt ein.",
+      "tooLong": "Höchstens {{max}} Zeichen."
+    }
   }
 }

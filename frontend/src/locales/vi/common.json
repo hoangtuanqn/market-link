@@ -688,5 +688,43 @@
         "body": "Mở menu để tới mọi mục của trang quản lý."
       }
     }
+  },
+  "address": {
+    "legend": "Địa chỉ",
+    "country": "Quốc gia",
+    "province": "Tỉnh / thành phố",
+    "ward": "Phường / xã",
+    "street": "Đường",
+    "addressLine": "Số nhà và chi tiết",
+    "addressLineOptional": "Số nhà (nếu có)",
+    "addressLinePlaceholder": "12, hoặc 12/3A",
+    "region": "Tỉnh / bang",
+    "city": "Thành phố",
+    "choose": {
+      "country": "Chọn quốc gia",
+      "province": "Chọn tỉnh / thành phố",
+      "ward": "Chọn phường / xã"
+    },
+    "wardNeedsProvince": "Chọn tỉnh / thành phố trước.",
+    "loading": "Đang tải…",
+    "loadFailed": "Không tải được danh sách này.",
+    "retry": "Thử lại",
+    "streetPlaceholder": "Gõ tên đường, ví dụ Lê Lợi",
+    "streetHint": "Chọn một gợi ý, hoặc giữ nguyên chữ đã gõ nếu đường của bạn không có trong danh sách.",
+    "useTyped": "Dùng “{{text}}”",
+    "noSuggestions": "Không có gợi ý — sẽ dùng đúng chữ bạn đã gõ.",
+    "suggestions": "Gợi ý tên đường",
+    "current": "Địa chỉ hiện tại: {{address}}. Chọn lại bên dưới để lưu thay đổi.",
+    "vietnamOnly": "Chợ phải ở Việt Nam.",
+    "errors": {
+      "countryRequired": "Chọn quốc gia.",
+      "provinceRequired": "Chọn tỉnh / thành phố.",
+      "wardRequired": "Chọn phường / xã.",
+      "streetRequired": "Nhập tên đường.",
+      "lineRequired": "Nhập số nhà và chi tiết.",
+      "regionRequired": "Nhập tỉnh / bang.",
+      "cityRequired": "Nhập thành phố.",
+      "tooLong": "Tối đa {{max}} ký tự."
+    }
   }
 }

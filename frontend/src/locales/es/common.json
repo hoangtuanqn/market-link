@@ -688,5 +688,43 @@
         "body": "Abre el menú para ir a cualquier sección del panel."
       }
     }
+  },
+  "address": {
+    "legend": "Dirección",
+    "country": "País",
+    "province": "Provincia o ciudad",
+    "ward": "Barrio o comuna",
+    "street": "Calle",
+    "addressLine": "Número y detalles",
+    "addressLineOptional": "Número (si lo hay)",
+    "addressLinePlaceholder": "12, o 12/3A",
+    "region": "Estado o provincia",
+    "city": "Ciudad",
+    "choose": {
+      "country": "Elige un país",
+      "province": "Elige una provincia o ciudad",
+      "ward": "Elige un barrio o comuna"
+    },
+    "wardNeedsProvince": "Elige primero la provincia.",
+    "loading": "Cargando…",
+    "loadFailed": "No se pudo cargar esta lista.",
+    "retry": "Reintentar",
+    "streetPlaceholder": "Empieza a escribir, p. ej. Lê Lợi",
+    "streetHint": "Elige una sugerencia o deja lo que escribiste si tu calle no aparece.",
+    "useTyped": "Usar «{{text}}»",
+    "noSuggestions": "Sin sugerencias: se usará lo que escribiste.",
+    "suggestions": "Sugerencias de calles",
+    "current": "Dirección actual: {{address}}. Vuelve a elegirla abajo para guardar los cambios.",
+    "vietnamOnly": "Los mercados están en Vietnam.",
+    "errors": {
+      "countryRequired": "Elige un país.",
+      "provinceRequired": "Elige una provincia o ciudad.",
+      "wardRequired": "Elige un barrio o comuna.",
+      "streetRequired": "Escribe la calle.",
+      "lineRequired": "Escribe el número y los detalles.",
+      "regionRequired": "Escribe el estado o la provincia.",
+      "cityRequired": "Escribe la ciudad.",
+      "tooLong": "Máximo {{max}} caracteres."
+    }
   }
 }

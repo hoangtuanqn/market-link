@@ -688,5 +688,43 @@
         "body": "Open the menu to reach every section of the panel."
       }
     }
+  },
+  "address": {
+    "legend": "Address",
+    "country": "Country",
+    "province": "Province or city",
+    "ward": "Ward or commune",
+    "street": "Street",
+    "addressLine": "House number and details",
+    "addressLineOptional": "House number (if any)",
+    "addressLinePlaceholder": "12, or 12/3A",
+    "region": "State or province",
+    "city": "City",
+    "choose": {
+      "country": "Choose a country",
+      "province": "Choose a province or city",
+      "ward": "Choose a ward or commune"
+    },
+    "wardNeedsProvince": "Choose the province first.",
+    "loading": "Loading…",
+    "loadFailed": "Could not load this list.",
+    "retry": "Try again",
+    "streetPlaceholder": "Start typing, e.g. Lê Lợi",
+    "streetHint": "Pick a suggestion, or keep what you typed if your street is not listed.",
+    "useTyped": "Use “{{text}}”",
+    "noSuggestions": "No suggestions — what you typed will be used.",
+    "suggestions": "Street suggestions",
+    "current": "Current address: {{address}}. Choose it again below to save changes.",
+    "vietnamOnly": "Markets are in Vietnam.",
+    "errors": {
+      "countryRequired": "Choose a country.",
+      "provinceRequired": "Choose a province or city.",
+      "wardRequired": "Choose a ward or commune.",
+      "streetRequired": "Enter the street.",
+      "lineRequired": "Enter the house number and details.",
+      "regionRequired": "Enter the state or province.",
+      "cityRequired": "Enter the city.",
+      "tooLong": "Keep this under {{max}} characters."
+    }
   }
 }
