@@ -108,7 +108,7 @@ const FarmerOrderDetailPage = () => {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
           <p className="font-hand text-hand text-ink-muted">{t('cutoff', { cutoff: cutoffLabel(s.cutoffAt) })}</p>
-          <h1 className="font-hand text-h1">
+          <h1 className="text-h1 text-ink font-bold">
             {s.orderCode} · {order.customer?.fullName ?? '—'} ·{' '}
             {pickupLabel(s.pickupDate, `${s.pickupStart}–${s.pickupEnd}`)}
           </h1>

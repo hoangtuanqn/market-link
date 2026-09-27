@@ -178,7 +178,7 @@ const AdminAnnouncementsPage = () => {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-h1">{t('title')}</h1>
+            <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
             <AskAssistant question={tAssistant('assistant.ask.announcement')} />
           </div>
           <p className="text-body max-w-160">{t('intro')}</p>

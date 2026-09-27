@@ -157,7 +157,7 @@ const AdminFarmerDetailPage = () => {
                     {t('sentOn', { date: formatDate(new Date(f.createdAt)) })}
                   </p>
                   <div className="flex items-center gap-4">
-                    <h1 className="text-h1">{f.stallName}</h1>
+                    <h1 className="text-h1 text-ink font-bold">{f.stallName}</h1>
                     <AskAssistant
                       question={tAssistant('assistant.ask.application')}
                       record={{ type: 'farmer', ref: String(f.id) }}

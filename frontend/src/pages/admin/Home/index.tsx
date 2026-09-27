@@ -86,7 +86,7 @@ const AdminHomePage = () => {
     <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-2">
         <p className="text-overline text-ink-muted uppercase">{t('overline')}</p>
-        <h1 className="font-hand text-h1">{t('title')}</h1>
+        <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
       </div>
 
       {maintenanceMode && (

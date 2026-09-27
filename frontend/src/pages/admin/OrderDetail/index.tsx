@@ -93,7 +93,7 @@ const AdminOrderDetailPage = () => {
         <p className="text-overline text-ink-muted uppercase">
           {t('kicker', { placed: placed ? when(placed.changedAt) : '—', cutoff: cutoffLabel(s.cutoffAt) })}
         </p>
-        <h1 className="text-h2">
+        <h1 className="text-h2 text-ink font-bold">
           {s.orderCode} · {s.stallName}
           {buyer ? ` · ${buyer.fullName}` : ''}
         </h1>
