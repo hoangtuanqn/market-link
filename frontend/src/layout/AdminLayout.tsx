@@ -7,6 +7,7 @@ import NotificationBell from '@/components/notifications/NotificationBell';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import MfaApi from '@/api-requests/mfa.requests';
 import {
+  BellIcon,
   ChartIcon,
   ChatIcon,
   DashboardIcon,
@@ -40,11 +41,12 @@ import {
 } from '@/constants/nav';
 import useLogout from '@/hooks/useLogout';
 import useSession from '@/hooks/useSession';
+import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import type { TFunction } from 'i18next';
 import DashboardShell, { type ShellNavGroup } from './DashboardShell';
 
 /** Sidebar groups from docs/prototype/prototype.js (SIDE.admin). Every item now has a screen behind it. */
-const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
+const buildNav = (t: TFunction, pendingFarmers: number, unreadNotifications: number): ShellNavGroup[] => [
   {
     heading: t('adminNav.analytics'),
     items: [
@@ -73,6 +75,12 @@ const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
       { to: ADMIN_CATEGORIES_PATH, label: t('adminNav.categories'), icon: TagIcon },
       { to: ADMIN_ANNOUNCEMENTS_PATH, label: t('adminNav.announcements'), icon: MegaphoneIcon },
       { to: ADMIN_FEEDBACK_PATH, label: t('adminNav.feedback'), icon: ChatIcon },
+      {
+        to: ADMIN_NOTIFICATIONS_PATH,
+        label: t('adminNav.notifications'),
+        icon: BellIcon,
+        count: unreadNotifications || undefined,
+      },
       { to: ADMIN_SETTINGS_PATH, label: t('adminNav.settings'), icon: SlidersIcon },
       { to: ADMIN_ACCOUNT_PATH, label: t('adminNav.account'), icon: UsersIcon },
       // FR-008: turn two-step verification on / off
@@ -102,6 +110,7 @@ const AdminLayout = () => {
   const isAdmin = user?.role === USER_ROLE.ADMIN;
   const [pendingFarmers, setPendingFarmers] = useState(0);
   const [setupRequired, setSetupRequired] = useState(false);
+  const unreadNotifications = useUnreadNotifications();
 
   // The "awaiting approval" badge on the Farmers item; reloaded on page change to match after an approve / reject.
   useEffect(() => {
@@ -142,7 +151,7 @@ const AdminLayout = () => {
         navLabel={t('adminNav.navigation')}
         homeLabel={t('adminNav.home')}
         home={ADMIN_HOME_PATH}
-        nav={buildNav(t, pendingFarmers)}
+        nav={buildNav(t, pendingFarmers, unreadNotifications)}
         context={{ mono: 'M', name: 'MarketLink', sub: t('adminNav.contextSub') }}
         user={{ mono: initials(user.fullName ?? ''), email: user.email, line: t('adminNav.userLine') }}
         onSignOut={logout}

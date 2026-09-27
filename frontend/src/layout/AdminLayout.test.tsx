@@ -78,4 +78,12 @@ describe('AdminLayout access control (FR-004, FR-005)', () => {
     expect(screen.queryByText('Admin Login Page')).not.toBeInTheDocument();
     expect(screen.queryByText('403 Forbidden Page')).not.toBeInTheDocument();
   });
+
+  it('renders notifications link in the admin sidebar', async () => {
+    signIn(USER_ROLE.ADMIN);
+    renderAdminArea();
+
+    const notificationsLink = await screen.findByRole('link', { name: /notifications/i });
+    expect(notificationsLink).toHaveAttribute('href', '/admin/notifications');
+  });
 });

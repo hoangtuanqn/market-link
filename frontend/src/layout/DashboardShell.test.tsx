@@ -44,4 +44,14 @@ describe('DashboardShell logo', () => {
 
     expect(scrollTo).not.toHaveBeenCalled();
   });
+
+  it('toggles sidebar fold state when fold button is clicked', () => {
+    renderShellAt('/admin');
+
+    const toggleBtn = screen.getByTitle(/collapse/i);
+    expect(toggleBtn).toBeInTheDocument();
+
+    fireEvent.click(toggleBtn);
+    expect(screen.getByTitle(/expand/i)).toBeInTheDocument();
+  });
 });
