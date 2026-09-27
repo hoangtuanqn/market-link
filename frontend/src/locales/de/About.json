@@ -91,7 +91,7 @@
     "mapData": "Kartendaten",
     "mapDataValue": "© OpenStreetMap-Mitwirkende",
     "photos": "Fotos",
-    "photosValue": "Fotos von Unsplash, unter der Unsplash-Lizenz",
+    "photosValue": "Fotos auf dieser Seite von Unsplash, unter der Unsplash-Lizenz",
     "locale": "Währung und Zeit",
     "localeValue": "US-Dollar, Datum im Format {{format}}, 24-Stunden-Uhr, {{zone}}"
   },

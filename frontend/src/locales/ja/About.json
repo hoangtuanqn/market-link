@@ -91,7 +91,7 @@
     "mapData": "地図データ",
     "mapDataValue": "© OpenStreetMap 寄稿者",
     "photos": "写真",
-    "photosValue": "写真は Unsplash より、Unsplash ライセンスに基づく",
+    "photosValue": "このページの写真は Unsplash より、Unsplash ライセンスに基づく",
     "locale": "通貨と時刻",
     "localeValue": "米ドル、日付は {{format}}、24 時間表記、{{zone}}"
   },

@@ -66,7 +66,10 @@ const FarmerPendingPage = () => {
     <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
       <div className="flex flex-col gap-2">
         <p className="text-overline text-ink-muted m-0">
-          {t('overline', { stall: application.stallName, date: registeredOn })}
+          {t(application.approvalStatus === 'suspended' ? 'overline.suspended' : 'overline.registered', {
+            stall: application.stallName,
+            date: registeredOn,
+          })}
         </p>
         <h1 className="font-hand text-h1">{title}</h1>
       </div>

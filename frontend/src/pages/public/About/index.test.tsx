@@ -36,39 +36,27 @@ describe('About page credits (FR-082)', () => {
 
 const LOCALES = { de, en, es, fr, id, ja, ko, th, vi, zh };
 
-/** Every key present in `o`, flattened to dotted paths. */
-const keysOf = (o: object, prefix = ''): string[] =>
-  Object.entries(o).flatMap(([k, v]) =>
-    v !== null && typeof v === 'object' ? keysOf(v as object, `${prefix}${k}.`) : [`${prefix}${k}`],
-  );
+/**
+ * The dollar, written the way each language writes it. Matching on the word rather than banning "đồng" outright,
+ * because Vietnamese says "đồng hồ 24 giờ" for the 24-hour clock in the very same sentence.
+ *
+ * Key and shape parity across languages is covered once for every namespace in src/i18n/locales.test.ts.
+ */
+const DOLLAR: Record<keyof typeof LOCALES, string> = {
+  de: 'US-Dollar',
+  en: 'US dollars',
+  es: 'Dólares estadounidenses',
+  fr: 'Dollars américains',
+  id: 'Dolar AS',
+  ja: '米ドル',
+  ko: '미국 달러',
+  th: 'ดอลลาร์สหรัฐ',
+  vi: 'Đô la Mỹ',
+  zh: '美元',
+};
 
-describe('About translations stay in step across all ten languages', () => {
-  it('gives every language the same set of keys as English', () => {
-    const expected = keysOf(en).sort();
-    for (const [lang, file] of Object.entries(LOCALES)) {
-      // A missing key falls back to English, so a reader of that language sees a language they did not pick.
-      expect(keysOf(file).sort(), lang).toEqual(expected);
-    }
-  });
-
-  /**
-   * The dollar, written the way each language writes it. Matching on the word rather than banning "đồng" outright,
-   * because Vietnamese says "đồng hồ 24 giờ" for the 24-hour clock in the very same sentence.
-   */
-  const DOLLAR: Record<keyof typeof LOCALES, string> = {
-    de: 'US-Dollar',
-    en: 'US dollars',
-    es: 'Dólares estadounidenses',
-    fr: 'Dollars américains',
-    id: 'Dolar AS',
-    ja: '米ドル',
-    ko: '미국 달러',
-    th: 'ดอลลาร์สหรัฐ',
-    vi: 'Đô la Mỹ',
-    zh: '美元',
-  };
-
-  it('names the dollar, not the dong, in every language', () => {
+describe('About credits name the dollar in every language', () => {
+  it('names the dollar, not the dong', () => {
     for (const [lang, file] of Object.entries(LOCALES)) {
       expect(file.credits.localeValue, lang).toContain(DOLLAR[lang as keyof typeof LOCALES]);
     }

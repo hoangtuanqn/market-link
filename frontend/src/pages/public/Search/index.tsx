@@ -54,9 +54,22 @@ const SearchPage = () => {
   const [day, setDay] = useState(() => week[0].dow);
   const [sort, setSort] = useState<(typeof SORTS)[number]>('best');
   const [tab, setTab] = useState<'all' | 'market' | 'farmer' | 'product'>('all');
-  const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [priceBand, setPriceBand] = useState<PriceBand>('any');
-  const [marketFilter, setMarketFilter] = useState(ALL_MARKETS);
+  // The facets live in the URL next to the keyword. Kept in component state they would survive neither Back
+  // nor a reload nor a link sent to someone else, while the keyword did — the results would change with no
+  // visible cause.
+  const categoryParam = searchParams.get('category');
+  const categoryId = categoryParam === null || categoryParam === '' ? null : Number(categoryParam);
+  const bandParam = searchParams.get('price');
+  const priceBand: PriceBand = PRICE_BANDS.some((b) => b.value === bandParam) ? (bandParam as PriceBand) : 'any';
+  const marketFilter = searchParams.get('market') ?? ALL_MARKETS;
+
+  /** Replaces one facet in the URL, leaving the keyword, the scope and the other facets alone. */
+  const setFacet = (key: 'category' | 'price' | 'market', value: string) => {
+    const next = new URLSearchParams(searchParams);
+    if (value === '' || value === ALL_MARKETS || value === 'any') next.delete(key);
+    else next.set(key, value);
+    setSearchParams(next, { replace: true });
+  };
 
   // The facet lists are small and shared with /products; they load once and do not depend on the keyword.
   const { state: categoriesLoad } = useRequest('categories', () => CatalogApi.listCategories());
@@ -68,7 +81,11 @@ const SearchPage = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    setSearchParams({ scope: draftScope, q: draftQ.trim() });
+    // Keep the facets: a new keyword narrows the same filtered view, it does not reset it.
+    const next = new URLSearchParams(searchParams);
+    next.set('scope', draftScope);
+    next.set('q', draftQ.trim());
+    setSearchParams(next);
   };
 
   // One round to the three public lists (contract §3, §4, §5), all filtered by the same keyword and day.
@@ -193,7 +210,7 @@ const SearchPage = () => {
             id="q-category"
             label={t('filters.category')}
             value={categoryId === null ? '' : String(categoryId)}
-            onChange={(e) => setCategoryId(e.target.value === '' ? null : Number(e.target.value))}
+            onChange={(e) => setFacet('category', e.target.value)}
             options={[
               { value: '', label: t('filters.allCategories') },
               ...categories.map((c) => ({ value: String(c.id), label: c.name })),
@@ -203,7 +220,7 @@ const SearchPage = () => {
             id="q-market"
             label={t('filters.market')}
             value={marketFilter}
-            onChange={(e) => setMarketFilter(e.target.value)}
+            onChange={(e) => setFacet('market', e.target.value)}
             options={[
               { value: ALL_MARKETS, label: t('filters.allMarkets') },
               ...facetMarkets.map((m) => ({ value: String(m.id), label: m.name })),
@@ -213,7 +230,7 @@ const SearchPage = () => {
             <span className="text-small font-bold">{t('filters.price')}</span>
             <div className="flex flex-wrap gap-2">
               {PRICE_BANDS.map((b) => (
-                <Chip key={b.value} pressed={priceBand === b.value} onClick={() => setPriceBand(b.value)}>
+                <Chip key={b.value} pressed={priceBand === b.value} onClick={() => setFacet('price', b.value)}>
                   {t(`price.${b.value}`, { low: money(LOW), high: money(HIGH) })}
                 </Chip>
               ))}

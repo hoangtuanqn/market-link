@@ -91,7 +91,7 @@
     "mapData": "지도 데이터",
     "mapDataValue": "© OpenStreetMap 기여자",
     "photos": "사진",
-    "photosValue": "사진 출처 Unsplash, Unsplash 라이선스",
+    "photosValue": "이 페이지의 사진 출처 Unsplash, Unsplash 라이선스",
     "locale": "통화와 시간",
     "localeValue": "미국 달러, 날짜 {{format}}, 24시간제, {{zone}}"
   },

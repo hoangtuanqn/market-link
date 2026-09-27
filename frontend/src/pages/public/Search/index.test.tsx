@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, useLocation } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import CatalogApi from '@/api-requests/catalog.requests';
 import ProductApi from '@/api-requests/product.requests';
@@ -37,6 +37,9 @@ const product: ProductType = {
   status: 'available',
   farmerId: 4,
 };
+
+/** MemoryRouter never touches window.location, so the URL under test has to be read from the router. */
+const LocationProbe = () => <span data-testid="search-string">{useLocation().search}</span>;
 
 const searchFor = (q: string) =>
   render(
@@ -107,6 +110,38 @@ describe('Search facets (FR-023)', () => {
     // A market has no price. Narrowing by price must not make markets disappear.
     await waitFor(() => expect(ProductApi.list).toHaveBeenLastCalledWith(expect.objectContaining({ maxPrice: 0.99 })));
     expect(screen.getByRole('link', { name: /Chợ Bà Chiểu/ })).toBeInTheDocument();
+  });
+
+  it('reads the facets back from the URL, so Back and a shared link keep them', async () => {
+    render(
+      <MemoryRouter initialEntries={['/search?q=rau&scope=all&category=3&price=low&market=7']}>
+        <SearchPage />
+      </MemoryRouter>,
+    );
+    await screen.findByText('Rau muống');
+
+    // The keyword survives a reload because it lives in the URL; a facet that does not would silently reset.
+    await waitFor(() =>
+      expect(ProductApi.list).toHaveBeenLastCalledWith(
+        expect.objectContaining({ categoryId: 3, maxPrice: 0.99, marketId: 7 }),
+      ),
+    );
+    expect(screen.getByLabelText('Category')).toHaveValue('3');
+    expect(screen.getByLabelText('Market')).toHaveValue('7');
+  });
+
+  it('puts a chosen facet in the URL', async () => {
+    render(
+      <MemoryRouter initialEntries={['/search?q=rau&scope=all']}>
+        <SearchPage />
+        <LocationProbe />
+      </MemoryRouter>,
+    );
+    await screen.findByText('Rau muống');
+
+    await userEvent.selectOptions(screen.getByLabelText('Category'), '2');
+
+    await waitFor(() => expect(screen.getByTestId('search-string').textContent).toContain('category=2'));
   });
 
   it('sends the price band and the price sort in the same request', async () => {

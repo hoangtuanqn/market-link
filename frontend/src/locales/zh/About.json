@@ -91,7 +91,7 @@
     "mapData": "地图数据",
     "mapDataValue": "© OpenStreetMap 贡献者",
     "photos": "照片",
-    "photosValue": "照片来自 Unsplash，遵循 Unsplash 许可",
+    "photosValue": "本页照片来自 Unsplash，遵循 Unsplash 许可",
     "locale": "货币与时间",
     "localeValue": "美元，日期格式 {{format}}，24 小时制，{{zone}}"
   },

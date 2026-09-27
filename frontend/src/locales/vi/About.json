@@ -91,7 +91,7 @@
     "mapData": "Dữ liệu bản đồ",
     "mapDataValue": "© những người đóng góp OpenStreetMap",
     "photos": "Ảnh",
-    "photosValue": "Ảnh lấy từ Unsplash, theo giấy phép Unsplash",
+    "photosValue": "Ảnh trên trang này lấy từ Unsplash, theo giấy phép Unsplash",
     "locale": "Tiền tệ và thời gian",
     "localeValue": "Đô la Mỹ, ngày dạng {{format}}, đồng hồ 24 giờ, {{zone}}"
   },

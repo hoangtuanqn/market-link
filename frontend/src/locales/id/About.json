@@ -91,7 +91,7 @@
     "mapData": "Data peta",
     "mapDataValue": "© kontributor OpenStreetMap",
     "photos": "Foto",
-    "photosValue": "Foto dari Unsplash, dengan Lisensi Unsplash",
+    "photosValue": "Foto di halaman ini dari Unsplash, dengan Lisensi Unsplash",
     "locale": "Mata uang dan waktu",
     "localeValue": "Dolar AS, tanggal {{format}}, format 24 jam, {{zone}}"
   },

@@ -43,6 +43,7 @@ require 'docs/DEMO_CREDENTIALS.md'
 require 'docs/ASSUMPTIONS.md'
 require 'docs/setup.md'
 require 'README.md'
+require 'docs/IMAGE-CREDITS.md'
 require 'backend/src/main/java'
 require 'frontend/src'
 
@@ -53,5 +54,12 @@ refuse 'AGENTS.md'
 refuse '.ai/'
 refuse 'node_modules/'
 refuse '.git/'
+# docs/submission holds the team's working sheets: blank matrices to fill in, an outline addressed to
+# QA/DOC, notes about the marking scheme. Their finished form is the project report, which is not in the repo.
+refuse 'docs/submission/'
+refuse '.claude/'
+refuse '.vscode/'
+# 61MB of stock photos nothing loads — see docs/IMAGE-CREDITS.md
+refuse 'db/seed-images/'
 
 exit $fail
