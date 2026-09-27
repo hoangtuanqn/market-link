@@ -26,3 +26,8 @@ app:
     google:
       client-id: ${GOOGLE_CLIENT_ID:your-google-client-id.apps.googleusercontent.com}
       client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+  # FR-090/091: Claude API key for the customer assistant (https://console.anthropic.com → API Keys).
+  # Leave it empty and the chatbot answers with the keyword engine only; the app still runs.
+  chatbot:
+    ai:
+      api-key: ${ANTHROPIC_API_KEY:}

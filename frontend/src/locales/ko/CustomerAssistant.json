@@ -1,41 +1,18 @@
 {
   "title": "쇼핑 도우미",
-  "intro": "이번 주말에 무엇을 어디서 살 수 있는지, 시장이 언제 여는지, 가게에 남은 픽업 시간이 있는지 물어보세요. 모든 답은 MarketLink 자체 데이터에서 나와요.",
+  "intro": "이번 주말 어디서 무엇을 살 수 있는지, 시장이 언제 여는지, 가판대 픽업 시간이 언제인지, MarketLink 사용법을 물어보세요. 답변은 MarketLink 데이터와 사용 가이드를 기반으로 합니다.",
   "conversation": "도우미 대화",
-  "botName": "MarketLink 도우미",
-  "botNote": "실시간 상품 목록으로 답해요. 답마다 아래에 인텐트가 표시돼요.",
-  "message": "메시지",
-  "placeholder": "예: 토요일에 Thảo Điền에서 달걀 파는 곳은?",
-  "send": "보내기",
-  "sending": "Sending…",
-  "error": "Something went wrong. Try again in a moment.",
-  "loading": "Loading your conversation…",
-  "loadErrorTitle": "We could not load your conversation history",
-  "loadErrorText": "Check your connection and try again.",
-  "retry": "Try again",
-  "emptyTitle": "No messages yet",
-  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
-  "suggest": {
-    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
-    "pomeloStock": "có bưởi không",
-    "benThanhSat": "farmers at Ben Thanh on saturday",
-    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
-  },
-  "resultLink": {
-    "product": "View product: {{title}}",
-    "market": "View market: {{title}}",
-    "farmer": "View stall: {{title}}"
-  },
   "canAnswer": {
     "title": "답할 수 있는 것",
     "product": "시장과 가게에서 상품 찾기, 남은 수량 포함",
+    "price": "상품의 가격, 단위, 재고",
     "hours": "시장 여는 날과 영업시간",
     "stalls": "특정 날짜에 시장에 나오는 가게",
     "slots": "가게의 픽업 시간대와 빈 시간",
-    "price": "상품의 가격, 단위, 재고"
+    "guide": "웹사이트 사용법: 주문, 마감 시간, 취소, 리뷰, 설정"
   },
   "how": {
     "title": "작동 방식",
-    "text": "질문은 정해진 의도 중 하나와 연결되고, 각 의도는 MarketLink 자체 데이터에 미리 준비된 조회를 실행해요. 답변은 다른 곳에서 오지 않으며, 도우미는 아무것도 바꿀 수 없고 읽기만 해요."
+    "text": "AI 모델(Claude)이 질문을 읽고 읽기 전용으로 정해진 조회 중에서 골라 MarketLink 데이터에 미리 작성된 쿼리를 실행합니다. 사용법 답변은 사용 가이드에서만 가져옵니다. 계정이나 주문을 바꾸지 않습니다. AI를 쓸 수 없을 때는 키워드 기반 어시스턴트가 대신 답합니다."
   }
 }

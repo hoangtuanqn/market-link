@@ -1,41 +1,18 @@
 {
   "title": "Einkaufsassistent",
-  "intro": "Fragen Sie, wo es dieses Wochenende etwas gibt, wann ein Markt öffnet oder welche Abholzeiten ein Stand hat. Jede Antwort stammt aus den eigenen Daten von MarketLink.",
+  "intro": "Frag, wo du dieses Wochenende etwas findest, wann ein Markt öffnet, welche Abholzeiten ein Stand hat oder wie MarketLink funktioniert. Die Antworten stammen aus den Daten und der Anleitung von MarketLink.",
   "conversation": "Unterhaltung mit dem Assistenten",
-  "botName": "MarketLink-Assistent",
-  "botNote": "Antworten nutzen den aktuellen Katalog. Der Intent steht unter jeder Antwort.",
-  "message": "Nachricht",
-  "placeholder": "z. B. Wer hat am Samstag Eier in Thảo Điền?",
-  "send": "Senden",
-  "sending": "Sending…",
-  "error": "Something went wrong. Try again in a moment.",
-  "loading": "Loading your conversation…",
-  "loadErrorTitle": "We could not load your conversation history",
-  "loadErrorText": "Check your connection and try again.",
-  "retry": "Try again",
-  "emptyTitle": "No messages yet",
-  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
-  "suggest": {
-    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
-    "pomeloStock": "có bưởi không",
-    "benThanhSat": "farmers at Ben Thanh on saturday",
-    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
-  },
-  "resultLink": {
-    "product": "View product: {{title}}",
-    "market": "View market: {{title}}",
-    "farmer": "View stall: {{title}}"
-  },
   "canAnswer": {
     "title": "Was er beantworten kann",
     "product": "Ein Produkt auf Märkten und an Ständen finden, mit verbleibender Menge",
+    "price": "Preis, Einheit und Bestand eines Produkts",
     "hours": "Markttage und Öffnungszeiten",
     "stalls": "Welche Stände an einem Tag auf einem Markt sind",
     "slots": "Abholfenster und freie Zeiten eines Stands",
-    "price": "Preis, Einheit und Bestand eines Produkts"
+    "guide": "Die Website nutzen: Bestellen, Annahmeschluss, Stornieren, Bewertungen, Einstellungen"
   },
   "how": {
     "title": "So funktioniert es",
-    "text": "Ihre Frage wird einer von festgelegten Absichten zugeordnet, und jede Absicht führt eine vorbereitete Abfrage auf den eigenen Daten von MarketLink aus. Antworten kommen nie von anderswo, und der Assistent kann nichts ändern – er liest nur."
+    "text": "Ein KI-Modell (Claude) liest deine Frage und wählt aus einer festen Reihe schreibgeschützter Abfragen, die vorbereitete Suchen auf den Daten von MarketLink ausführen; Anleitungsfragen beantwortet es nur aus der Anleitung. Es ändert nie dein Konto oder deine Bestellungen. Ist die KI nicht erreichbar, antwortet ein stichwortbasierter Assistent."
   }
 }

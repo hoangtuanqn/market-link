@@ -10,7 +10,8 @@
     "emailValue": "contact@marketlink.vn",
     "phoneValue": "+84 90 123 4567",
     "addressValue": "추후 안내합니다. 지도의 핀은 1군에 있는 임시 위치입니다.",
-    "hoursValue": "월 – 금, 09:00 – 17:00"
+    "hoursValue": "월 – 금, 09:00 – 17:00",
+    "toAdd": "추후 안내"
   },
   "feedback": {
     "title": "문제가 있거나 아이디어가 있나요",

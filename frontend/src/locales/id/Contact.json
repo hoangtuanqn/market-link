@@ -10,7 +10,8 @@
     "emailValue": "contact@marketlink.vn",
     "phoneValue": "+84 90 123 4567",
     "addressValue": "Menyusul. Penanda di peta hanya sementara di Distrik 1.",
-    "hoursValue": "Sen – Jum, 09:00 – 17:00"
+    "hoursValue": "Sen – Jum, 09:00 – 17:00",
+    "toAdd": "Menyusul"
   },
   "feedback": {
     "title": "Ada yang rusak atau punya ide?",

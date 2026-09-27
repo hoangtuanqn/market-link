@@ -1,41 +1,18 @@
 {
   "title": "Asisten belanja",
-  "intro": "Tanyakan di mana mencari sesuatu akhir pekan ini, kapan pasar buka, atau slot ambil apa yang dimiliki sebuah lapak. Setiap jawaban berasal dari data MarketLink sendiri.",
+  "intro": "Tanyakan di mana menemukan sesuatu akhir pekan ini, kapan pasar buka, waktu pengambilan sebuah lapak, atau cara memakai MarketLink. Jawaban berasal dari data dan panduan MarketLink.",
   "conversation": "Percakapan dengan asisten",
-  "botName": "Asisten MarketLink",
-  "botNote": "Jawaban memakai katalog langsung. Intent ditampilkan di bawah setiap balasan.",
-  "message": "Pesan",
-  "placeholder": "mis. Siapa yang jual telur di Thảo Điền hari Sabtu?",
-  "send": "Kirim",
-  "sending": "Sending…",
-  "error": "Something went wrong. Try again in a moment.",
-  "loading": "Loading your conversation…",
-  "loadErrorTitle": "We could not load your conversation history",
-  "loadErrorText": "Check your connection and try again.",
-  "retry": "Try again",
-  "emptyTitle": "No messages yet",
-  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
-  "suggest": {
-    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
-    "pomeloStock": "có bưởi không",
-    "benThanhSat": "farmers at Ben Thanh on saturday",
-    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
-  },
-  "resultLink": {
-    "product": "View product: {{title}}",
-    "market": "View market: {{title}}",
-    "farmer": "View stall: {{title}}"
-  },
   "canAnswer": {
     "title": "Yang bisa dijawab",
     "product": "Cari produk di berbagai pasar dan lapak, beserta sisanya",
+    "price": "Harga, satuan, dan stok produk",
     "hours": "Hari pasar dan jam buka",
     "stalls": "Lapak mana yang ada di pasar pada hari tertentu",
     "slots": "Jendela ambil dan slot kosong sebuah lapak",
-    "price": "Harga, satuan, dan stok produk"
+    "guide": "Cara memakai situs: memesan, batas waktu, membatalkan, ulasan, pengaturan"
   },
   "how": {
     "title": "Cara kerjanya",
-    "text": "Pertanyaan Anda dicocokkan dengan salah satu dari sekumpulan maksud yang sudah ditentukan, dan setiap maksud menjalankan kueri siap pakai pada data MarketLink sendiri. Jawaban tidak pernah berasal dari tempat lain, dan asisten tidak bisa mengubah apa pun — ia hanya membaca."
+    "text": "Model AI (Claude) membaca pertanyaan Anda dan memilih dari sekumpulan pencarian baca-saja yang tetap, yang menjalankan kueri siap pakai pada data MarketLink; jawaban cara pakai hanya berasal dari panduan. Asisten tidak pernah mengubah akun atau pesanan Anda. Jika AI tidak tersedia, asisten berbasis kata kunci yang menjawab."
   }
 }

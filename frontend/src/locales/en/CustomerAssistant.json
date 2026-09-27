@@ -1,41 +1,18 @@
 {
   "title": "Shopping assistant",
-  "intro": "Ask where to find something this weekend, when a market opens, or which pickup slots a stall has. Every answer comes from MarketLink's own data.",
+  "intro": "Ask where to find something this weekend, when a market opens, which pickup times a stall has, or how to use MarketLink. Answers come from MarketLink's own data and user guide.",
   "conversation": "Assistant conversation",
-  "botName": "MarketLink assistant",
-  "botNote": "Answers use the live catalogue. Intent shown under each reply.",
-  "message": "Message",
-  "placeholder": "e.g. Who has eggs at Thảo Điền on Saturday?",
-  "send": "Send",
-  "sending": "Sending…",
-  "error": "Something went wrong. Try again in a moment.",
-  "loading": "Loading your conversation…",
-  "loadErrorTitle": "We could not load your conversation history",
-  "loadErrorText": "Check your connection and try again.",
-  "retry": "Try again",
-  "emptyTitle": "No messages yet",
-  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
-  "suggest": {
-    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
-    "pomeloStock": "có bưởi không",
-    "benThanhSat": "farmers at Ben Thanh on saturday",
-    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
-  },
-  "resultLink": {
-    "product": "View product: {{title}}",
-    "market": "View market: {{title}}",
-    "farmer": "View stall: {{title}}"
-  },
   "canAnswer": {
     "title": "What it can answer",
     "product": "Find a product across markets and stalls, with how many are left",
+    "price": "A product's price, unit and stock",
     "hours": "Market days and opening hours",
     "stalls": "Which stalls are at a market on a given day",
     "slots": "A stall's pickup windows and free slots",
-    "price": "A product's price, unit and stock"
+    "guide": "How to use the website: ordering, cutoff, cancelling, reviews, settings"
   },
   "how": {
     "title": "How it works",
-    "text": "Your question is matched to one of a fixed set of intents, and each intent runs a prepared query against MarketLink's own data. Answers never come from anywhere else, and the assistant cannot change anything — it only reads."
+    "text": "An AI model (Claude) reads your question and picks from a fixed set of read-only lookups that run prepared queries on MarketLink's data; how-to answers come only from the user guide. It never writes to your account or orders. If the AI is unavailable, a keyword-based assistant answers instead."
   }
 }

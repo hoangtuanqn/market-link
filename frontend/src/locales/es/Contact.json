@@ -10,7 +10,8 @@
     "emailValue": "contact@marketlink.vn",
     "phoneValue": "+84 90 123 4567",
     "addressValue": "Por añadir. El marcador del mapa es provisional, en el Distrito 1.",
-    "hoursValue": "Lun – vie, 09:00 – 17:00"
+    "hoursValue": "Lun – vie, 09:00 – 17:00",
+    "toAdd": "Por añadir"
   },
   "feedback": {
     "title": "¿Algo no funciona o tienes una idea?",

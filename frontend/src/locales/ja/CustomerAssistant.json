@@ -1,41 +1,18 @@
 {
   "title": "お買い物アシスタント",
-  "intro": "今週末どこで何が買えるか、市場がいつ開くか、お店の空いている受け取り枠などを聞いてください。回答はすべて MarketLink のデータに基づいています。",
+  "intro": "今週末どこで何が買えるか、市場の開始時間、屋台の受け取り時間、MarketLink の使い方を質問できます。回答は MarketLink のデータと利用ガイドに基づきます。",
   "conversation": "アシスタントとの会話",
-  "botName": "MarketLink アシスタント",
-  "botNote": "回答は最新のカタログを使います。各回答の下にインテントを表示します。",
-  "message": "メッセージ",
-  "placeholder": "例：土曜日に Thảo Điền で卵を売っているのは？",
-  "send": "送信",
-  "sending": "Sending…",
-  "error": "Something went wrong. Try again in a moment.",
-  "loading": "Loading your conversation…",
-  "loadErrorTitle": "We could not load your conversation history",
-  "loadErrorText": "Check your connection and try again.",
-  "retry": "Try again",
-  "emptyTitle": "No messages yet",
-  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
-  "suggest": {
-    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
-    "pomeloStock": "có bưởi không",
-    "benThanhSat": "farmers at Ben Thanh on saturday",
-    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
-  },
-  "resultLink": {
-    "product": "View product: {{title}}",
-    "market": "View market: {{title}}",
-    "farmer": "View stall: {{title}}"
-  },
   "canAnswer": {
     "title": "答えられること",
     "product": "市場やお店をまたいで商品を探し、残りの数を表示",
+    "price": "商品の価格、単位、在庫",
     "hours": "市場の開催日と営業時間",
     "stalls": "ある日に市場に出ているお店",
     "slots": "お店の受け取り時間帯と空き枠",
-    "price": "商品の価格、単位、在庫"
+    "guide": "サイトの使い方：注文、締め切り、キャンセル、レビュー、設定"
   },
   "how": {
     "title": "仕組み",
-    "text": "質問はあらかじめ決められた意図のいずれかに照合され、それぞれの意図が MarketLink 自身のデータに対して用意済みのクエリを実行します。回答が他の場所から来ることはなく、アシスタントは何も変更できません。読み取るだけです。"
+    "text": "AI モデル（Claude）が質問を読み、読み取り専用の決まった検索の中から選んで、MarketLink のデータに対して用意済みのクエリを実行します。使い方の回答は利用ガイドだけに基づきます。アカウントや注文を変更することはありません。AI が使えないときは、キーワード型のアシスタントが回答します。"
   }
 }

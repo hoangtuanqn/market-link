@@ -1,41 +1,18 @@
 {
   "title": "Assistant d'achat",
-  "intro": "Demandez où trouver quelque chose ce week-end, quand un marché ouvre ou quels créneaux de retrait un stand propose. Chaque réponse vient des données de MarketLink.",
+  "intro": "Demandez où trouver un produit ce week-end, quand un marché ouvre, quels créneaux de retrait a un stand, ou comment utiliser MarketLink. Les réponses viennent des données et du guide de MarketLink.",
   "conversation": "Conversation avec l'assistant",
-  "botName": "Assistant MarketLink",
-  "botNote": "Les réponses utilisent le catalogue en direct. L'intention s'affiche sous chaque réponse.",
-  "message": "Message",
-  "placeholder": "ex. Qui a des œufs à Thảo Điền samedi ?",
-  "send": "Envoyer",
-  "sending": "Sending…",
-  "error": "Something went wrong. Try again in a moment.",
-  "loading": "Loading your conversation…",
-  "loadErrorTitle": "We could not load your conversation history",
-  "loadErrorText": "Check your connection and try again.",
-  "retry": "Try again",
-  "emptyTitle": "No messages yet",
-  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
-  "suggest": {
-    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
-    "pomeloStock": "có bưởi không",
-    "benThanhSat": "farmers at Ben Thanh on saturday",
-    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
-  },
-  "resultLink": {
-    "product": "View product: {{title}}",
-    "market": "View market: {{title}}",
-    "farmer": "View stall: {{title}}"
-  },
   "canAnswer": {
     "title": "Ce qu'il sait répondre",
     "product": "Trouver un produit sur les marchés et les stands, avec la quantité restante",
+    "price": "Le prix, l'unité et le stock d'un produit",
     "hours": "Jours de marché et horaires d'ouverture",
     "stalls": "Quels stands sont présents à un marché un jour donné",
     "slots": "Les plages et créneaux libres de retrait d'un stand",
-    "price": "Le prix, l'unité et le stock d'un produit"
+    "guide": "Utiliser le site : commande, heure limite, annulation, avis, réglages"
   },
   "how": {
     "title": "Comment ça marche",
-    "text": "Votre question est associée à l'une des intentions d'une liste fixe, et chaque intention exécute une requête préparée sur les données de MarketLink. Les réponses ne viennent de nulle part ailleurs, et l'assistant ne peut rien modifier : il ne fait que lire."
+    "text": "Un modèle d'IA (Claude) lit votre question et choisit parmi un ensemble fixe de recherches en lecture seule qui exécutent des requêtes préparées sur les données de MarketLink ; les réponses pratiques viennent uniquement du guide. Il ne modifie jamais votre compte ni vos commandes. Si l'IA est indisponible, un assistant par mots-clés répond à sa place."
   }
 }
