@@ -4,6 +4,7 @@ import com.anthropic.core.JsonValue;
 import com.anthropic.models.messages.Tool;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
@@ -17,9 +18,11 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -71,12 +74,12 @@ public class AssistantTools {
             "Market name as the user wrote it, e.g. 'Bến Thành' or 'chợ Tân Định'. Omit for all"
                     + " markets.";
 
-    static final List<Tool> DEFINITIONS =
+    private static final List<Tool> CUSTOMER_DEFINITIONS =
             List.of(
                     tool(
                             SEARCH_PRODUCTS,
                             "Search products that approved stalls sell, across all markets or one"
-                                    + " market. Returns price in US dollars per unit, how much is left for the"
+                                    + " market. Returns price in Vietnamese dong per unit, how much is left for the"
                                     + " nearest pickup date, the stall and its markets. Use it for"
                                     + " finding a product, its price, or whether it is in stock.",
                             Map.of(
@@ -141,6 +144,36 @@ public class AssistantTools {
                                                     + " e.g. 'huỷ đơn cutoff' or 'quên mật khẩu'.")),
                             List.of("query")));
 
+    /**
+     * Which tools each audience is shown. Filtering happens here, on the server: the model never
+     * sees a tool outside its audience, rather than seeing it and being refused. Farmer and Admin
+     * keep the catalogue and guide tools because those questions come up in every role.
+     */
+    private static final Map<AssistantAudience, List<Tool>> BY_AUDIENCE =
+            new EnumMap<>(AssistantAudience.class);
+
+    private static final Map<AssistantAudience, Set<String>> NAMES_BY_AUDIENCE =
+            new EnumMap<>(AssistantAudience.class);
+
+    static {
+        BY_AUDIENCE.put(AssistantAudience.CUSTOMER, CUSTOMER_DEFINITIONS);
+        BY_AUDIENCE.put(AssistantAudience.FARMER, CUSTOMER_DEFINITIONS);
+        BY_AUDIENCE.put(AssistantAudience.ADMIN, CUSTOMER_DEFINITIONS);
+        BY_AUDIENCE.forEach(
+                (audience, tools) ->
+                        NAMES_BY_AUDIENCE.put(
+                                audience,
+                                tools.stream().map(Tool::name).collect(Collectors.toSet())));
+    }
+
+    public static List<Tool> definitionsFor(AssistantAudience audience) {
+        return BY_AUDIENCE.getOrDefault(audience, CUSTOMER_DEFINITIONS);
+    }
+
+    static boolean allows(AssistantAudience audience, String name) {
+        return NAMES_BY_AUDIENCE.getOrDefault(audience, Set.of()).contains(name);
+    }
+
     private static Tool tool(
             String name, String description, Map<String, JsonValue> props, List<String> required) {
         Tool.InputSchema.Properties.Builder properties = Tool.InputSchema.Properties.builder();
@@ -171,7 +204,16 @@ public class AssistantTools {
     // ---------------------------------------------------------------- execution
 
     /** Runs one tool call. Bad arguments come back as an error outcome, never as an exception. */
-    public ToolOutcome run(String name, Map<String, Object> input) {
+    public ToolOutcome run(AssistantAudience audience, String name, Map<String, Object> input) {
+        if (!allows(audience, name)) {
+            // Defence in depth: the model was never given this tool, so asking for it means the
+            // conversation went somewhere it should not.
+            return new ToolOutcome(
+                    "{\"error\":\"This tool is not available.\"}",
+                    true,
+                    ChatIntent.UNKNOWN,
+                    List.of());
+        }
         try {
             return switch (name) {
                 case SEARCH_PRODUCTS -> searchProducts(input);

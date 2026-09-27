@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.chat.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
@@ -10,9 +11,10 @@ import com.techx.intervue.resources.ApiResource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +35,6 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class ChatController extends BaseController {
 
-    private static final Set<String> ASSISTANT_ROLES = Set.of("ROLE_CUSTOMER", "ROLE_FARMER");
-
     private final ChatServiceInterface chatService;
 
     @PostMapping
@@ -42,7 +42,7 @@ public class ChatController extends BaseController {
             @Valid @RequestBody ChatRequest request,
             @AuthenticationPrincipal CustomUserDetails user) {
         Long userId = user == null ? null : user.getId();
-        return ok(chatService.reply(request, userId, assistantAllowed(user)), "OK");
+        return ok(chatService.reply(request, userId, audienceOf(user)), "OK");
     }
 
     @GetMapping("/history")
@@ -55,9 +55,17 @@ public class ChatController extends BaseController {
         return ok(chatService.history(sessionKey, userId), "OK");
     }
 
-    private static boolean assistantAllowed(CustomUserDetails user) {
-        return user != null
-                && user.getAuthorities().stream()
-                        .anyMatch(a -> ASSISTANT_ROLES.contains(a.getAuthority()));
+    /**
+     * Which assistant the caller gets, from the authenticated principal only (FR-093, FR-094). A
+     * guest, or an account with none of the three roles, gets null and the keyword engine answers.
+     */
+    private static AssistantAudience audienceOf(CustomUserDetails user) {
+        if (user == null) {
+            return null;
+        }
+        return AssistantAudience.of(
+                user.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toSet()));
     }
 }

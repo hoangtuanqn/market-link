@@ -141,6 +141,8 @@ app:
       max-tool-rounds: 4
       history-messages: 10
       messages-per-hour: ${CHATBOT_AI_MESSAGES_PER_HOUR:30}
+      admin-messages-per-hour: ${CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR:60}
+      platform-messages-per-day: ${CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY:1500}
   chat:
     rabbitmq:
       host: ${RABBITMQ_HOST:}

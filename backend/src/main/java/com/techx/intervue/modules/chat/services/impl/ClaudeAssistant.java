@@ -14,6 +14,7 @@ import com.anthropic.models.messages.ToolResultBlockParam;
 import com.anthropic.models.messages.ToolUseBlock;
 import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
 import com.techx.intervue.modules.chat.services.impl.AssistantTools.ToolOutcome;
@@ -90,6 +91,35 @@ public class ClaudeAssistant {
             - Result cards with links are shown under your reply, so do not paste URLs.
             """;
 
+    /**
+     * Appended to the cached system prefix, so each audience gets its own cache entry. Kept short:
+     * the tool list already tells Claude what it can do, this says who it is talking to.
+     */
+    private static final Map<AssistantAudience, String> AUDIENCE_PROMPT =
+            Map.of(
+                    AssistantAudience.CUSTOMER,
+                    """
+
+                    You are talking to a customer: someone who reserves produce and collects it \
+                    at the stall.
+                    """,
+                    AssistantAudience.FARMER,
+                    """
+
+                    You are talking to a Farmer: someone who runs a stall and sells on \
+                    MarketLink. Questions about "my orders", "my products", "my stall" mean \
+                    theirs. When the guide explains something a Farmer does, answer from the \
+                    Farmer sections, not the customer ones.
+                    """,
+                    AssistantAudience.ADMIN,
+                    """
+
+                    You are talking to a MarketLink administrator. Questions about approvals, \
+                    moderation, accounts, markets, categories, announcements and platform \
+                    reports are about running the platform, not about shopping. When the guide \
+                    explains something, answer from the admin sections.
+                    """);
+
     private final ObjectProvider<AnthropicClient> client;
     private final ChatbotAiProperties properties;
     private final AssistantTools tools;
@@ -124,7 +154,8 @@ public class ClaudeAssistant {
      *
      * @param history earlier messages of this session and account, oldest first
      */
-    public AiReply reply(List<ChatMessage> history, String userMessage) {
+    public AiReply reply(
+            List<ChatMessage> history, String userMessage, AssistantAudience audience) {
         AnthropicClient anthropic = client.getObject();
         List<MessageParam> conversation = new ArrayList<>(toParams(history));
         conversation.add(text(MessageParam.Role.USER, userMessage));
@@ -136,7 +167,8 @@ public class ClaudeAssistant {
         int rounds = Math.max(1, properties.maxToolRounds());
         for (int round = 0; round <= rounds; round++) {
             boolean lastRound = round == rounds;
-            Message response = anthropic.messages().create(params(conversation, lastRound));
+            Message response =
+                    anthropic.messages().create(params(conversation, lastRound, audience));
             StopReason stop = response.stopReason().orElse(StopReason.END_TURN);
 
             if (StopReason.REFUSAL.equals(stop)) {
@@ -161,7 +193,7 @@ public class ClaudeAssistant {
                 }
                 ToolUseBlock use = call.get();
                 Map<String, Object> input = inputOf(use);
-                ToolOutcome outcome = tools.run(use.name(), input);
+                ToolOutcome outcome = tools.run(audience, use.name(), input);
                 log.debug("Assistant tool {} {} → error={}", use.name(), input, outcome.error());
 
                 toolsUsed.add(use.name());
@@ -187,7 +219,8 @@ public class ClaudeAssistant {
         throw new IllegalStateException("Assistant loop ended without a reply");
     }
 
-    private MessageCreateParams params(List<MessageParam> conversation, boolean lastRound) {
+    private MessageCreateParams params(
+            List<MessageParam> conversation, boolean lastRound, AssistantAudience audience) {
         MessageCreateParams.Builder builder =
                 MessageCreateParams.builder()
                         .model(properties.model())
@@ -195,13 +228,13 @@ public class ClaudeAssistant {
                         .systemOfTextBlockParams(
                                 List.of(
                                         TextBlockParam.builder()
-                                                .text(SYSTEM_PROMPT)
+                                                .text(SYSTEM_PROMPT + AUDIENCE_PROMPT.get(audience))
                                                 .cacheControl(
                                                         CacheControlEphemeral.builder().build())
                                                 .build(),
                                         TextBlockParam.builder().text(today()).build()))
                         .messages(conversation);
-        AssistantTools.DEFINITIONS.forEach(builder::addTool);
+        AssistantTools.definitionsFor(audience).forEach(builder::addTool);
         if (lastRound) {
             // Out of tool rounds: the tools stay declared (earlier tool_use blocks refer to them)
             // but Claude must now answer with what it has

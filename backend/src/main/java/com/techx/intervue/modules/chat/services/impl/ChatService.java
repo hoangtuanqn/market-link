@@ -2,6 +2,7 @@ package com.techx.intervue.modules.chat.services.impl;
 
 import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatMessageRepository;
@@ -76,12 +77,12 @@ public class ChatService implements ChatServiceInterface {
      * connection. The two chat_messages rows are written together by saveAll.
      */
     @Override
-    public ChatReplyResource reply(ChatRequest request, Long userId, boolean assistantAllowed) {
+    public ChatReplyResource reply(ChatRequest request, Long userId, AssistantAudience audience) {
         Answer answer = null;
         String loggedIntent = null;
 
-        if (assistantAllowed && userId != null && assistant.enabled()) {
-            AiReply ai = askAssistant(request, userId);
+        if (audience != null && userId != null && assistant.enabled()) {
+            AiReply ai = askAssistant(request, userId, audience);
             if (ai != null) {
                 answer = new Answer(ai.intent(), ai.reply(), ai.results());
                 loggedIntent = ai.loggedIntent();
@@ -111,16 +112,22 @@ public class ChatService implements ChatServiceInterface {
     }
 
     /**
-     * Claude's answer, or null to fall back to the keyword engine: over the hourly cap, or the
-     * Claude API / a lookup failed. The user always gets an answer.
+     * Claude's answer, or null to fall back to the keyword engine: over the daily platform cap,
+     * over the account's hourly cap, or the Claude API / a lookup failed. The user always gets an
+     * answer.
      */
-    private AiReply askAssistant(ChatRequest request, Long userId) {
-        if (!assistantLimit.tryAcquire(userId)) {
+    private AiReply askAssistant(ChatRequest request, Long userId, AssistantAudience audience) {
+        if (!assistantLimit.tryAcquirePlatform()) {
+            log.info("Assistant daily platform cap reached, keyword engine answers");
+            return null;
+        }
+        if (!assistantLimit.tryAcquire(userId, audience)) {
             log.info("Assistant hourly cap reached for user {}, keyword engine answers", userId);
             return null;
         }
         try {
-            return assistant.reply(recentHistory(request.sessionKey(), userId), request.message());
+            return assistant.reply(
+                    recentHistory(request.sessionKey(), userId), request.message(), audience);
         } catch (RuntimeException e) {
             // AnthropicException (network, 4xx/5xx, rate limit) or a failed lookup
             log.warn("Assistant failed, keyword engine answers: {}", e.toString());

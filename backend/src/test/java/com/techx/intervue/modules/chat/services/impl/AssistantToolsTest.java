@@ -9,6 +9,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
@@ -81,6 +82,7 @@ class AssistantToolsTest {
 
         ToolOutcome out =
                 tools.run(
+                        AssistantAudience.CUSTOMER,
                         AssistantTools.SEARCH_PRODUCTS,
                         Map.of("keyword", "cà chua", "market", "chợ bến thành"));
 
@@ -100,6 +102,7 @@ class AssistantToolsTest {
     void anUnknownMarketIsAnErrorThatListsTheRealOnesAndRunsNoSearch() {
         ToolOutcome out =
                 tools.run(
+                        AssistantAudience.CUSTOMER,
                         AssistantTools.SEARCH_PRODUCTS,
                         Map.of("keyword", "cà chua", "market", "Chợ Không Có"));
 
@@ -111,6 +114,7 @@ class AssistantToolsTest {
     @Test
     void askingAboutStockAlsoListsSoldOutProducts() {
         tools.run(
+                AssistantAudience.CUSTOMER,
                 AssistantTools.SEARCH_PRODUCTS,
                 Map.of("keyword", "xà lách", "include_sold_out", true));
 
@@ -119,7 +123,8 @@ class AssistantToolsTest {
 
     @Test
     void missingKeywordIsAnError() {
-        ToolOutcome out = tools.run(AssistantTools.SEARCH_PRODUCTS, Map.of());
+        ToolOutcome out =
+                tools.run(AssistantAudience.CUSTOMER, AssistantTools.SEARCH_PRODUCTS, Map.of());
 
         assertThat(out.error()).isTrue();
         assertThat(out.content()).contains("keyword");
@@ -127,7 +132,11 @@ class AssistantToolsTest {
 
     @Test
     void listMarketsFiltersByDay() {
-        ToolOutcome out = tools.run(AssistantTools.LIST_MARKETS, Map.of("day_of_week", 0));
+        ToolOutcome out =
+                tools.run(
+                        AssistantAudience.CUSTOMER,
+                        AssistantTools.LIST_MARKETS,
+                        Map.of("day_of_week", 0));
 
         assertThat(out.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
         assertThat(out.content()).contains("Chợ Thảo Điền").doesNotContain("Chợ Bến Thành");
@@ -136,14 +145,19 @@ class AssistantToolsTest {
 
     @Test
     void dayOutsideZeroToSixIsAnError() {
-        ToolOutcome out = tools.run(AssistantTools.LIST_MARKETS, Map.of("day_of_week", 7));
+        ToolOutcome out =
+                tools.run(
+                        AssistantAudience.CUSTOMER,
+                        AssistantTools.LIST_MARKETS,
+                        Map.of("day_of_week", 7));
 
         assertThat(out.error()).isTrue();
     }
 
     @Test
     void pickupTimesNeedAStallOrAMarket() {
-        ToolOutcome out = tools.run(AssistantTools.PICKUP_TIMES, Map.of());
+        ToolOutcome out =
+                tools.run(AssistantAudience.CUSTOMER, AssistantTools.PICKUP_TIMES, Map.of());
 
         assertThat(out.error()).isTrue();
         verify(knowledge, never()).farmerSchedules(any(), any(), any());
@@ -166,6 +180,7 @@ class AssistantToolsTest {
 
         ToolOutcome out =
                 tools.run(
+                        AssistantAudience.CUSTOMER,
                         AssistantTools.PICKUP_TIMES,
                         Map.of("stall", "vườn út hiền", "day_of_week", 6));
 
@@ -178,7 +193,11 @@ class AssistantToolsTest {
 
     @Test
     void userGuideSearchReturnsSectionsWithoutCards() {
-        ToolOutcome out = tools.run(AssistantTools.SEARCH_GUIDE, Map.of("query", "quên mật khẩu"));
+        ToolOutcome out =
+                tools.run(
+                        AssistantAudience.CUSTOMER,
+                        AssistantTools.SEARCH_GUIDE,
+                        Map.of("query", "quên mật khẩu"));
 
         assertThat(out.intent()).isEqualTo(ChatIntent.HELP);
         assertThat(out.content()).contains("Quên mật khẩu").contains("15 phút");
@@ -187,12 +206,12 @@ class AssistantToolsTest {
 
     @Test
     void unknownToolIsAnError() {
-        assertThat(tools.run("drop_table", Map.of()).error()).isTrue();
+        assertThat(tools.run(AssistantAudience.CUSTOMER, "drop_table", Map.of()).error()).isTrue();
     }
 
     @Test
     void everyToolIsDeclaredForClaude() {
-        assertThat(AssistantTools.DEFINITIONS)
+        assertThat(AssistantTools.definitionsFor(AssistantAudience.CUSTOMER))
                 .extracting(t -> t.name())
                 .containsExactlyInAnyOrder(
                         AssistantTools.SEARCH_PRODUCTS,
@@ -204,5 +223,22 @@ class AssistantToolsTest {
 
     private static org.assertj.core.groups.Tuple tuple(Object... values) {
         return org.assertj.core.groups.Tuple.tuple(values);
+    }
+
+    @Test
+    void toolsOutsideTheAudienceAreRefused() {
+        // Filtering happens server-side: even a tool that exists is refused for the wrong audience.
+        assertThat(
+                        AssistantTools.allows(
+                                AssistantAudience.CUSTOMER, AssistantTools.SEARCH_PRODUCTS))
+                .isTrue();
+        assertThat(AssistantTools.allows(null, AssistantTools.SEARCH_PRODUCTS)).isFalse();
+        assertThat(
+                        tools.run(
+                                        null,
+                                        AssistantTools.SEARCH_PRODUCTS,
+                                        Map.of("keyword", "cà chua"))
+                                .error())
+                .isTrue();
     }
 }
