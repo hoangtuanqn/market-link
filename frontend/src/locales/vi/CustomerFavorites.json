@@ -18,6 +18,7 @@
   },
   "inStock": "Còn hàng",
   "soldOut": "Hết hàng",
+  "unavailable": "Không còn khả dụng",
   "alertOn": "Đã bật cảnh báo có hàng lại",
   "addToCart": "Thêm vào giỏ",
   "remove": "Bỏ",

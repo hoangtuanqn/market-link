@@ -17,6 +17,12 @@ type FavoriteButtonProps = {
   labelOff: string;
   labelOn: string;
   className?: string;
+  /**
+   * Called after a successful add/remove, with the new favourite id (`null` once removed). Lets a caller that shows its
+   * own list of favourites (e.g. the Favorites page) drop or update the row instead of leaving it stale after the heart
+   * itself — not a page-level Remove button — is what the visitor clicked.
+   */
+  onChange?: (favoriteId: number | null) => void;
 };
 
 /** `FavoriteInput` sends exactly the id field that matches `targetType` (contract §9). */
@@ -31,7 +37,15 @@ const toInput = (targetType: FavoriteTargetType, targetId: number): FavoriteInpu
  * target is already saved (`favoriteId`) and passes `key={favoriteId ?? 'none'}` so a freshly loaded value resets the
  * button's own state instead of fighting with it.
  */
-const FavoriteButton = ({ targetType, targetId, favoriteId, labelOff, labelOn, className }: FavoriteButtonProps) => {
+const FavoriteButton = ({
+  targetType,
+  targetId,
+  favoriteId,
+  labelOff,
+  labelOn,
+  className,
+  onChange,
+}: FavoriteButtonProps) => {
   const { t } = useTranslation();
   const [id, setId] = useState<number | null>(favoriteId ?? null);
   const [busy, setBusy] = useState(false);
@@ -54,9 +68,11 @@ const FavoriteButton = ({ targetType, targetId, favoriteId, labelOff, labelOn, c
       if (on && id != null) {
         await FavoriteApi.remove(id);
         setId(null);
+        onChange?.(null);
       } else {
         const created = await FavoriteApi.add(toInput(targetType, targetId));
         setId(created.id);
+        onChange?.(created.id);
       }
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('errors.network')) });

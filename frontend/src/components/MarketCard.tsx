@@ -18,9 +18,14 @@ type MarketCardProps = {
   distanceKm?: number;
   /** The favourite's id when the caller already knows this market is saved (e.g. the Favorites page). */
   favoriteId?: number | null;
+  /**
+   * Forwarded to the FavoriteButton's `onChange` — a caller showing its own list of saved markets uses this to drop or
+   * update the row instead of leaving it stale after the card's own heart is what got clicked.
+   */
+  onFavoriteChange?: (favoriteId: number | null) => void;
 };
 
-const MarketCard = ({ market, distanceKm, favoriteId }: MarketCardProps) => {
+const MarketCard = ({ market, distanceKm, favoriteId, onFavoriteChange }: MarketCardProps) => {
   const { t } = useTranslation();
   const href = `/markets/${market.id}`;
   const away = distanceKm != null ? formatDistance(distanceKm) : market.distance;
@@ -44,6 +49,7 @@ const MarketCard = ({ market, distanceKm, favoriteId }: MarketCardProps) => {
         labelOff={t('marketCard.save', { name: market.name })}
         labelOn={t('marketCard.unsave', { name: market.name })}
         className="self-start"
+        onChange={onFavoriteChange}
       />
 
       <ul aria-label={t('marketCard.days')} className="col-span-full mt-1 grid max-w-md grid-cols-7 gap-1 sm:gap-2">

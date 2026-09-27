@@ -18,6 +18,7 @@
   },
   "inStock": "In stock",
   "soldOut": "Sold out",
+  "unavailable": "No longer available",
   "alertOn": "Restock alert is on",
   "addToCart": "Add to cart",
   "remove": "Remove",
