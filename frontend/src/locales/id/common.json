@@ -568,6 +568,21 @@
       "hours": "Jam berapa pasar Bến Thành buka?",
       "stalls": "Lapak apa saja di pasar Thảo Điền hari Sabtu?",
       "cancel": "Bagaimana cara membatalkan pesanan?"
+    },
+    "action": {
+      "confirm": "Konfirmasi",
+      "openPage": "Buka halaman",
+      "done": "Selesai",
+      "doneTitle": "Selesai",
+      "failedTitle": "Tidak jadi",
+      "failedText": "Perubahan ditolak. Buka halaman untuk melihat alasannya.",
+      "accept_order": "Terima pesanan {{label}}?",
+      "decline_order": "Tolak pesanan {{label}}?",
+      "ready_order": "Tandai pesanan {{label}} siap?",
+      "complete_order": "Tandai pesanan {{label}} selesai?",
+      "approve_farmer": "Setujui {{label}}?",
+      "reject_farmer": "Tolak {{label}}?",
+      "suspend_farmer": "Hentikan sementara {{label}}?"
     }
   },
   "tour": {

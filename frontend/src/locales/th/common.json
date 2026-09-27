@@ -568,6 +568,21 @@
       "hours": "ตลาด Bến Thành เปิดกี่โมง",
       "stalls": "วันเสาร์ตลาด Thảo Điền มีแผงร้านไหนบ้าง",
       "cancel": "ยกเลิกคำสั่งซื้ออย่างไร"
+    },
+    "action": {
+      "confirm": "ยืนยัน",
+      "openPage": "เปิดหน้า",
+      "done": "เสร็จแล้ว",
+      "doneTitle": "เสร็จแล้ว",
+      "failedTitle": "ยังไม่สำเร็จ",
+      "failedText": "การเปลี่ยนแปลงถูกปฏิเสธ เปิดหน้าเพื่อดูเหตุผล",
+      "accept_order": "รับคำสั่งซื้อ {{label}} ไหม",
+      "decline_order": "ปฏิเสธคำสั่งซื้อ {{label}} ไหม",
+      "ready_order": "ทำเครื่องหมายคำสั่งซื้อ {{label}} ว่าพร้อมไหม",
+      "complete_order": "ทำเครื่องหมายคำสั่งซื้อ {{label}} ว่าเสร็จสิ้นไหม",
+      "approve_farmer": "อนุมัติ {{label}} ไหม",
+      "reject_farmer": "ปฏิเสธ {{label}} ไหม",
+      "suspend_farmer": "ระงับ {{label}} ไหม"
     }
   },
   "tour": {

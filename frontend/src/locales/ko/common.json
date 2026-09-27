@@ -568,6 +568,21 @@
       "hours": "Bến Thành 시장은 몇 시에 여나요?",
       "stalls": "토요일 Thảo Điền 시장에는 어떤 가판대가 있나요?",
       "cancel": "주문은 어떻게 취소하나요?"
+    },
+    "action": {
+      "confirm": "확인",
+      "openPage": "페이지 열기",
+      "done": "완료",
+      "doneTitle": "완료",
+      "failedTitle": "처리되지 않음",
+      "failedText": "변경이 거부되었어요. 이유는 페이지에서 확인해 주세요.",
+      "accept_order": "주문 {{label}}을(를) 수락할까요?",
+      "decline_order": "주문 {{label}}을(를) 거절할까요?",
+      "ready_order": "주문 {{label}}을(를) 준비 완료로 표시할까요?",
+      "complete_order": "주문 {{label}}을(를) 완료로 표시할까요?",
+      "approve_farmer": "{{label}}을(를) 승인할까요?",
+      "reject_farmer": "{{label}}을(를) 거절할까요?",
+      "suspend_farmer": "{{label}}을(를) 정지할까요?"
     }
   },
   "tour": {

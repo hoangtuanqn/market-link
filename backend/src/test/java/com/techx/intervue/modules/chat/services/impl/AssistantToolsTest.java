@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
@@ -16,6 +17,7 @@ import com.techx.intervue.modules.chat.repositories.AdminKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
+import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
@@ -337,5 +339,94 @@ class AssistantToolsTest {
 
         assertThat(out.error()).isTrue();
         verifyNoInteractions(adminKnowledge);
+    }
+
+    // ----------------------------------------------------- FR-093 proposals never write
+
+    private static OrderRow order(String code, String status) {
+        return new OrderRow(
+                77L,
+                code,
+                "Nguyễn Thị Tư",
+                "Chợ Thảo Điền",
+                java.time.LocalDate.of(2026, 9, 26),
+                java.time.LocalTime.of(6, 0),
+                java.time.LocalTime.of(9, 30),
+                java.time.LocalDateTime.of(2026, 9, 25, 19, 0),
+                new java.math.BigDecimal("120000"),
+                status,
+                3);
+    }
+
+    @Test
+    void proposingAnOrderActionReturnsAButtonAndChangesNothing() {
+        when(farmerKnowledge.myOrderByCode(9L, "ML-1"))
+                .thenReturn(java.util.Optional.of(order("ML-1", "placed")));
+
+        ToolOutcome out =
+                tools.run(
+                        FARMER_9,
+                        AssistantTools.PROPOSE_ORDER_ACTION,
+                        Map.of("order_code", "ML-1", "action", "accept"));
+
+        assertThat(out.error()).isFalse();
+        assertThat(out.actions())
+                .singleElement()
+                .satisfies(
+                        a -> {
+                            assertThat(a.action()).isEqualTo("accept_order");
+                            assertThat(a.id()).isEqualTo(77L);
+                        });
+        assertThat(out.content()).contains("nothing_changed_yet");
+        // The only repository call is the read that verified ownership.
+        verify(farmerKnowledge).myOrderByCode(9L, "ML-1");
+        verifyNoMoreInteractions(farmerKnowledge);
+    }
+
+    @Test
+    void anOrderInTheWrongStateIsNotOffered() {
+        when(farmerKnowledge.myOrderByCode(9L, "ML-2"))
+                .thenReturn(java.util.Optional.of(order("ML-2", "completed")));
+
+        ToolOutcome out =
+                tools.run(
+                        FARMER_9,
+                        AssistantTools.PROPOSE_ORDER_ACTION,
+                        Map.of("order_code", "ML-2", "action", "accept"));
+
+        assertThat(out.error()).isTrue();
+        assertThat(out.actions()).isEmpty();
+    }
+
+    @Test
+    void anOrderCodeFromAnotherStallIsSimplyNotFound() {
+        when(farmerKnowledge.myOrderByCode(9L, "ML-OTHER")).thenReturn(java.util.Optional.empty());
+
+        ToolOutcome out =
+                tools.run(
+                        FARMER_9,
+                        AssistantTools.PROPOSE_ORDER_ACTION,
+                        Map.of("order_code", "ML-OTHER", "action", "accept"));
+
+        assertThat(out.error()).isTrue();
+        assertThat(out.actions()).isEmpty();
+        // Same wording as a code that does not exist, so it cannot be used to probe other stalls.
+        assertThat(out.content()).contains("No order ML-OTHER on this stall.");
+    }
+
+    @Test
+    void customersAndAdminsAreNotOfferedTheOrderProposal() {
+        assertThat(
+                        AssistantTools.allows(
+                                AssistantAudience.CUSTOMER, AssistantTools.PROPOSE_ORDER_ACTION))
+                .isFalse();
+        assertThat(
+                        AssistantTools.allows(
+                                AssistantAudience.ADMIN, AssistantTools.PROPOSE_ORDER_ACTION))
+                .isFalse();
+        assertThat(
+                        AssistantTools.allows(
+                                AssistantAudience.FARMER, AssistantTools.PROPOSE_FARMER_DECISION))
+                .isFalse();
     }
 }

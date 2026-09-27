@@ -568,6 +568,21 @@
       "hours": "Chợ Bến Thành mở cửa mấy giờ?",
       "stalls": "Thứ 7 chợ Thảo Điền có gian hàng nào?",
       "cancel": "Làm sao để huỷ đơn hàng?"
+    },
+    "action": {
+      "confirm": "Xác nhận",
+      "openPage": "Mở trang",
+      "done": "Đã xong",
+      "doneTitle": "Đã xong",
+      "failedTitle": "Chưa thực hiện được",
+      "failedText": "Thay đổi bị từ chối. Mở trang để xem lý do.",
+      "accept_order": "Nhận đơn {{label}}?",
+      "decline_order": "Từ chối đơn {{label}}?",
+      "ready_order": "Đánh dấu đơn {{label}} sẵn sàng?",
+      "complete_order": "Đánh dấu đơn {{label}} hoàn tất?",
+      "approve_farmer": "Duyệt {{label}}?",
+      "reject_farmer": "Từ chối {{label}}?",
+      "suspend_farmer": "Tạm ngưng {{label}}?"
     }
   },
   "tour": {

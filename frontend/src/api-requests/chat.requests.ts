@@ -17,7 +17,29 @@ export type ChatResultDto = {
   title: string;
   subtitle: string | null;
 };
-export type ChatReplyDto = { reply: string; intent: ChatIntent; results: ChatResultDto[] };
+/**
+ * FR-093, FR-094: an action the assistant suggests. Nothing has happened yet — pressing the button calls the ordinary
+ * endpoint for that action, which checks the role, the ownership and the state transition again.
+ */
+export type ProposedActionDto = {
+  action:
+    | 'accept_order'
+    | 'decline_order'
+    | 'ready_order'
+    | 'complete_order'
+    | 'approve_farmer'
+    | 'reject_farmer'
+    | 'suspend_farmer';
+  id: number;
+  label: string;
+  detail: string;
+};
+export type ChatReplyDto = {
+  reply: string;
+  intent: ChatIntent;
+  results: ChatResultDto[];
+  actions: ProposedActionDto[];
+};
 /** FR-093: the Farmer Overview banner. Counted on the server; the sentence is built from i18n here. */
 export type FarmerBriefingDto = {
   marketsToday: string[];

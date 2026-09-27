@@ -105,7 +105,33 @@ public class AdminKnowledgeRepository {
             LIMIT :limit
             """;
 
+    private static final String APPLICATION_BY_ID =
+            """
+            SELECT f.id AS farmer_id, f.stall_name, f.contact_person, u.email,
+                   DATE(f.created_at) AS applied_on, f.approval_status
+            FROM farmer_profiles f
+            JOIN users u ON u.id = f.user_id
+            WHERE f.id = :farmerId
+            """;
+
     private final NamedParameterJdbcTemplate jdbc;
+
+    public java.util.Optional<PendingFarmerRow> application(long farmerId) {
+        return jdbc
+                .query(
+                        APPLICATION_BY_ID,
+                        new MapSqlParameterSource("farmerId", farmerId),
+                        (rs, i) ->
+                                new PendingFarmerRow(
+                                        rs.getLong("farmer_id"),
+                                        rs.getString("stall_name"),
+                                        rs.getString("contact_person"),
+                                        rs.getString("email"),
+                                        rs.getObject("applied_on", LocalDate.class),
+                                        rs.getString("approval_status")))
+                .stream()
+                .findFirst();
+    }
 
     public PlatformTotalsRow platformTotals(LocalDate from, LocalDate to) {
         PlatformTotalsRow row =

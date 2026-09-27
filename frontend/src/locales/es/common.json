@@ -568,6 +568,21 @@
       "hours": "¿A qué hora abre el mercado Bến Thành?",
       "stalls": "¿Qué puestos hay en el mercado Thảo Điền el sábado?",
       "cancel": "¿Cómo cancelo un pedido?"
+    },
+    "action": {
+      "confirm": "Confirmar",
+      "openPage": "Abrir la página",
+      "done": "Hecho",
+      "doneTitle": "Hecho",
+      "failedTitle": "No se hizo",
+      "failedText": "Se rechazó el cambio. Abre la página para ver por qué.",
+      "accept_order": "¿Aceptar el pedido {{label}}?",
+      "decline_order": "¿Rechazar el pedido {{label}}?",
+      "ready_order": "¿Marcar el pedido {{label}} como listo?",
+      "complete_order": "¿Marcar el pedido {{label}} como completado?",
+      "approve_farmer": "¿Aprobar {{label}}?",
+      "reject_farmer": "¿Rechazar {{label}}?",
+      "suspend_farmer": "¿Suspender {{label}}?"
     }
   },
   "tour": {

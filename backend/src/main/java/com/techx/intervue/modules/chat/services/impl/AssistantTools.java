@@ -17,6 +17,7 @@ import com.techx.intervue.modules.chat.resources.AdminRows.PendingFarmerRow;
 import com.techx.intervue.modules.chat.resources.AdminRows.PlatformTotalsRow;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
+import com.techx.intervue.modules.chat.resources.ChatReplyResource.ProposedAction;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.FarmerReviewRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
@@ -69,6 +70,8 @@ public class AssistantTools {
     static final String FARMER_APPLICATIONS = "get_farmer_applications";
     static final String SEARCH_ACCOUNTS = "search_accounts";
     static final String MODERATION_QUEUE = "get_moderation_queue";
+    static final String PROPOSE_ORDER_ACTION = "propose_order_action";
+    static final String PROPOSE_FARMER_DECISION = "propose_farmer_decision";
 
     private static final int GUIDE_SECTIONS = 3;
     private static final int MAX_ROWS = 15;
@@ -93,7 +96,17 @@ public class AssistantTools {
      * @param cards result cards the UI renders as links
      */
     public record ToolOutcome(
-            String content, boolean error, ChatIntent intent, List<ChatResultItem> cards) {}
+            String content,
+            boolean error,
+            ChatIntent intent,
+            List<ChatResultItem> cards,
+            List<ProposedAction> actions) {
+
+        public ToolOutcome(
+                String content, boolean error, ChatIntent intent, List<ChatResultItem> cards) {
+            this(content, error, intent, cards, List.of());
+        }
+    }
 
     // ---------------------------------------------------------------- definitions
 
@@ -238,6 +251,24 @@ public class AssistantTools {
                                             "true to list only reviews with no reply yet.")),
                             List.of()),
                     tool(
+                            PROPOSE_ORDER_ACTION,
+                            "Offer the Farmer a button to change one of their orders: accept,"
+                                    + " decline, mark ready or mark completed. This does NOT change"
+                                    + " anything — it checks the order is theirs and the change is"
+                                    + " legal right now, then shows a button they must press. Say"
+                                    + " in your reply that they still need to confirm.",
+                            Map.of(
+                                    "order_code",
+                                            property(
+                                                    "string",
+                                                    "The order code exactly as it appears, e.g."
+                                                            + " 'ML-2026-0412'."),
+                                    "action",
+                                            property(
+                                                    "string",
+                                                    "accept, decline, ready or complete.")),
+                            List.of("order_code", "action")),
+                    tool(
                             MY_SCHEDULE,
                             "Which market the Farmer sells at on which day, with the pickup window"
                                     + " for that day.",
@@ -280,6 +311,19 @@ public class AssistantTools {
                                                     "Part of a name or email. Omit to list"
                                                             + " everyone matching the filters.")),
                             List.of()),
+                    tool(
+                            PROPOSE_FARMER_DECISION,
+                            "Offer the admin a button to approve, reject or suspend one stall. This"
+                                    + " does NOT change anything — it checks the application exists"
+                                    + " and the decision is legal now, then shows a button they must"
+                                    + " press. Get the id from get_farmer_applications first.",
+                            Map.of(
+                                    "farmer_id",
+                                            property(
+                                                    "integer",
+                                                    "Stall id from get_farmer_applications."),
+                                    "decision", property("string", "approve, reject or suspend.")),
+                            List.of("farmer_id", "decision")),
                     tool(
                             MODERATION_QUEUE,
                             "The moderation queue: visible low-rated reviews worth a look, and the"
@@ -379,10 +423,12 @@ public class AssistantTools {
                 case MY_SALES -> mySales(context, input);
                 case MY_REVIEWS -> myReviews(context, input);
                 case MY_SCHEDULE -> mySchedule(context);
+                case PROPOSE_ORDER_ACTION -> proposeOrderAction(context, input);
                 case PLATFORM_STATS -> platformStats(input);
                 case FARMER_APPLICATIONS -> farmerApplications(input);
                 case SEARCH_ACCOUNTS -> searchAccounts(input);
                 case MODERATION_QUEUE -> moderationQueue(input);
+                case PROPOSE_FARMER_DECISION -> proposeFarmerDecision(input);
                 default -> error(ChatIntent.UNKNOWN, "Unknown tool: " + name);
             };
         } catch (IllegalArgumentException e) {
@@ -408,6 +454,8 @@ public class AssistantTools {
             case PLATFORM_STATS -> ChatIntent.PRODUCT_DETAIL;
             case FARMER_APPLICATIONS -> ChatIntent.FARMER_AVAILABILITY;
             case SEARCH_ACCOUNTS, MODERATION_QUEUE -> ChatIntent.HELP;
+            case PROPOSE_ORDER_ACTION -> ChatIntent.PICKUP_WINDOW;
+            case PROPOSE_FARMER_DECISION -> ChatIntent.FARMER_AVAILABILITY;
             default -> ChatIntent.UNKNOWN;
         };
     }
@@ -929,5 +977,125 @@ public class AssistantTools {
         out.put("low_rated_reviews", reviews);
         out.put("already_hidden", hidden);
         return ok(ChatIntent.HELP, out, List.of());
+    }
+
+    // ------------------------------------------------------- FR-093/094 proposals (never writes)
+
+    /**
+     * What each action needs the row to look like right now. The real endpoint checks this again;
+     * this copy only exists so the assistant does not offer a button that is going to fail.
+     */
+    private static final Map<String, String> ORDER_ACTION_REQUIRES =
+            Map.of(
+                    "accept", "placed",
+                    "decline", "placed",
+                    "ready", "accepted",
+                    "complete", "ready");
+
+    private static final Set<String> FARMER_DECISIONS = Set.of("approve", "reject", "suspend");
+
+    private ToolOutcome proposeOrderAction(AssistantContext context, Map<String, Object> input) {
+        long farmerId = requireFarmer(context);
+        String action = lower(text(input, "action"));
+        String orderCode = text(input, "order_code");
+        String required = ORDER_ACTION_REQUIRES.get(action);
+        if (required == null || orderCode == null) {
+            return error(
+                    ChatIntent.PICKUP_WINDOW,
+                    "Give an order_code and an action: accept, decline, ready or complete.");
+        }
+        OrderRow order = farmerKnowledge.myOrderByCode(farmerId, orderCode).orElse(null);
+        if (order == null) {
+            // Either the code does not exist or it belongs to another stall. The assistant is told
+            // the same thing either way, so it cannot be used to probe for other stalls' codes.
+            return error(ChatIntent.PICKUP_WINDOW, "No order " + orderCode + " on this stall.");
+        }
+        if (!required.equals(order.status())) {
+            return error(
+                    ChatIntent.PICKUP_WINDOW,
+                    "Order "
+                            + order.orderCode()
+                            + " is "
+                            + order.status()
+                            + ", and "
+                            + action
+                            + " is only possible from "
+                            + required
+                            + ".");
+        }
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("proposed", action);
+        out.put("order_code", order.orderCode());
+        out.put("customer", order.customerName());
+        out.put("pickup_date", String.valueOf(order.pickupDate()));
+        out.put("total_vnd", order.total());
+        out.put("nothing_changed_yet", true);
+        String detail =
+                order.customerName()
+                        + " · "
+                        + order.pickupDate()
+                        + " "
+                        + TIME.format(order.pickupStart())
+                        + "-"
+                        + TIME.format(order.pickupEnd());
+        return new ToolOutcome(
+                json(out),
+                false,
+                ChatIntent.PICKUP_WINDOW,
+                List.of(),
+                List.of(
+                        new ProposedAction(
+                                action + "_order", order.orderId(), order.orderCode(), detail)));
+    }
+
+    private ToolOutcome proposeFarmerDecision(Map<String, Object> input) {
+        String decision = lower(text(input, "decision"));
+        Long farmerId = input.get("farmer_id") instanceof Number n ? n.longValue() : null;
+        if (farmerId == null || !FARMER_DECISIONS.contains(decision)) {
+            return error(
+                    ChatIntent.FARMER_AVAILABILITY,
+                    "Give a farmer_id and a decision: approve, reject or suspend.");
+        }
+        PendingFarmerRow application = adminKnowledge.application(farmerId).orElse(null);
+        if (application == null) {
+            return error(ChatIntent.FARMER_AVAILABILITY, "No stall application with that id.");
+        }
+        boolean legal =
+                switch (decision) {
+                    case "approve", "reject" -> "pending".equals(application.status());
+                    case "suspend" -> "approved".equals(application.status());
+                    default -> false;
+                };
+        if (!legal) {
+            return error(
+                    ChatIntent.FARMER_AVAILABILITY,
+                    application.stallName()
+                            + " is "
+                            + application.status()
+                            + ", so "
+                            + decision
+                            + " does not apply.");
+        }
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("proposed", decision);
+        out.put("stall", application.stallName());
+        out.put("contact", application.contactPerson());
+        out.put("current_status", application.status());
+        out.put("nothing_changed_yet", true);
+        return new ToolOutcome(
+                json(out),
+                false,
+                ChatIntent.FARMER_AVAILABILITY,
+                List.of(),
+                List.of(
+                        new ProposedAction(
+                                decision + "_farmer",
+                                application.farmerId(),
+                                application.stallName(),
+                                application.contactPerson() + " · " + application.email())));
+    }
+
+    private static String lower(String value) {
+        return value == null ? null : value.toLowerCase(java.util.Locale.ROOT);
     }
 }

@@ -568,6 +568,21 @@
       "hours": "Bến Thành 市場は何時に開きますか？",
       "stalls": "土曜日の Thảo Điền 市場にはどの屋台がありますか？",
       "cancel": "注文をキャンセルするには？"
+    },
+    "action": {
+      "confirm": "確定",
+      "openPage": "ページを開く",
+      "done": "完了",
+      "doneTitle": "完了",
+      "failedTitle": "実行されませんでした",
+      "failedText": "変更が拒否されました。理由はページで確認してください。",
+      "accept_order": "注文 {{label}} を受けますか？",
+      "decline_order": "注文 {{label}} を断りますか？",
+      "ready_order": "注文 {{label}} を準備完了にしますか？",
+      "complete_order": "注文 {{label}} を完了にしますか？",
+      "approve_farmer": "{{label}} を承認しますか？",
+      "reject_farmer": "{{label}} を却下しますか？",
+      "suspend_farmer": "{{label}} を停止しますか？"
     }
   },
   "tour": {

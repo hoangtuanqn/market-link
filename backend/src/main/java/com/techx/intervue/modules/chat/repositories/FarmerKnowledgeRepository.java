@@ -161,7 +161,35 @@ public class FarmerKnowledgeRepository {
                    AND stock_quantity <= :lowStock)                       AS low_stock
             """;
 
+    /**
+     * One order of this stall, found by the code the person typed. Another stall's code finds
+     * nothing.
+     */
+    private static final String MY_ORDER_BY_CODE =
+            """
+            SELECT o.id AS order_id, o.order_code, u.full_name AS customer_name, m.market_name,
+                   o.pickup_date, o.pickup_start, o.pickup_end, o.cutoff_at, o.total_amount,
+                   o.status, COUNT(i.id) AS item_count
+            FROM orders o
+            JOIN users u   ON u.id = o.customer_id
+            JOIN markets m ON m.id = o.market_id
+            LEFT JOIN order_items i ON i.order_id = o.id
+            WHERE o.farmer_id = :farmerId
+              AND o.order_code = :orderCode
+            GROUP BY o.id, o.order_code, u.full_name, m.market_name, o.pickup_date, o.pickup_start,
+                     o.pickup_end, o.cutoff_at, o.total_amount, o.status
+            """;
+
     private final NamedParameterJdbcTemplate jdbc;
+
+    public Optional<OrderRow> myOrderByCode(long farmerId, String orderCode) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("farmerId", farmerId)
+                        .addValue("orderCode", orderCode);
+        return jdbc.query(MY_ORDER_BY_CODE, params, FarmerKnowledgeRepository::orderRow).stream()
+                .findFirst();
+    }
 
     public BriefingRow briefing(long farmerId, LocalDate onDate, int lowStockThreshold) {
         MapSqlParameterSource params =

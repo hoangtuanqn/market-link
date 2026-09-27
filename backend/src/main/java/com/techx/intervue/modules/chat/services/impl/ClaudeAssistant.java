@@ -18,6 +18,7 @@ import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
+import com.techx.intervue.modules.chat.resources.ChatReplyResource.ProposedAction;
 import com.techx.intervue.modules.chat.services.impl.AssistantTools.ToolOutcome;
 import java.time.Clock;
 import java.time.LocalDate;
@@ -76,9 +77,8 @@ public class ClaudeAssistant {
             they do not cover the question, say you do not know and suggest the Feedback page.
             - "Today", "tomorrow", "this Saturday": convert to day_of_week (0 = Sunday … \
             6 = Saturday) using today's date given below.
-            - You only read. You cannot place, change or cancel orders, and you cannot see the \
-            user's orders or account; point them to the right page (My orders, Account, \
-            Settings) instead.
+            - You never change anything on your own. Where you can offer an action, it is a \
+            button the person has to press, and you say so.
             - Politely decline anything unrelated to MarketLink.
 
             Style:
@@ -102,7 +102,9 @@ public class ClaudeAssistant {
                     """
 
                     You are talking to a customer: someone who reserves produce and collects it \
-                    at the stall.
+                    at the stall. You cannot place, change or cancel their orders, and you cannot \
+                    see their orders or account; point them to the right page (My orders, \
+                    Account, Settings) instead.
                     """,
                     AssistantAudience.FARMER,
                     """
@@ -111,6 +113,12 @@ public class ClaudeAssistant {
                     MarketLink. Questions about "my orders", "my products", "my stall" mean \
                     theirs. When the guide explains something a Farmer does, answer from the \
                     Farmer sections, not the customer ones.
+
+                    You may offer to accept, decline, mark ready or mark completed one of their \
+                    orders with propose_order_action. That call changes nothing: it checks the \
+                    order is theirs and the change is possible right now, and the client shows a \
+                    button. Always end such a reply by saying they still have to press it. If the \
+                    tool comes back with an error, tell them why and do not offer the button.
                     """,
                     AssistantAudience.ADMIN,
                     """
@@ -127,6 +135,11 @@ public class ClaudeAssistant {
                     nothing else around them. Translate it only when asked, and then keep market, \
                     stall and people names, every number, date and time, and the word Farmer \
                     unchanged.
+
+                    You may offer to approve, reject or suspend one stall with \
+                    propose_farmer_decision, after looking the stall up with \
+                    get_farmer_applications. That call changes nothing: the client shows a button \
+                    the admin has to press. Always say so.
                     """);
 
     private final ObjectProvider<AnthropicClient> client;
@@ -152,7 +165,20 @@ public class ClaudeAssistant {
      * @param results result cards from every tool call, deduplicated
      */
     public record AiReply(
-            String reply, ChatIntent intent, String loggedIntent, List<ChatResultItem> results) {}
+            String reply,
+            ChatIntent intent,
+            String loggedIntent,
+            List<ChatResultItem> results,
+            List<ProposedAction> actions) {
+
+        public AiReply(
+                String reply,
+                ChatIntent intent,
+                String loggedIntent,
+                List<ChatResultItem> results) {
+            this(reply, intent, loggedIntent, results, List.of());
+        }
+    }
 
     public boolean enabled() {
         return properties.enabled() && client.getIfAvailable() != null;
@@ -172,6 +198,7 @@ public class ClaudeAssistant {
         Set<String> toolsUsed = new LinkedHashSet<>();
         ChatIntent intent = null;
         Map<String, ChatResultItem> cards = new LinkedHashMap<>();
+        Map<String, ProposedAction> actions = new LinkedHashMap<>();
 
         int rounds = Math.max(1, properties.maxToolRounds());
         for (int round = 0; round <= rounds; round++) {
@@ -188,7 +215,8 @@ public class ClaudeAssistant {
                         textOf(response),
                         intent == null ? ChatIntent.UNKNOWN : intent,
                         loggedIntent(toolsUsed),
-                        List.copyOf(cards.values()));
+                        List.copyOf(cards.values()),
+                        List.copyOf(actions.values()));
             }
 
             // Keep the whole assistant turn (text + tool_use blocks), then answer every tool_use
@@ -210,6 +238,7 @@ public class ClaudeAssistant {
                     intent = outcome.intent();
                 }
                 outcome.cards().forEach(c -> cards.putIfAbsent(c.type() + ":" + c.id(), c));
+                outcome.actions().forEach(a -> actions.putIfAbsent(a.action() + ":" + a.id(), a));
                 results.add(
                         ContentBlockParam.ofToolResult(
                                 ToolResultBlockParam.builder()

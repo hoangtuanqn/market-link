@@ -568,6 +568,21 @@
       "hours": "Bến Thành 集市几点开门？",
       "stalls": "周六 Thảo Điền 集市有哪些摊位？",
       "cancel": "如何取消订单？"
+    },
+    "action": {
+      "confirm": "确认",
+      "openPage": "打开页面",
+      "done": "已完成",
+      "doneTitle": "已完成",
+      "failedTitle": "未执行",
+      "failedText": "更改被拒绝。打开页面查看原因。",
+      "accept_order": "接受订单 {{label}}？",
+      "decline_order": "拒绝订单 {{label}}？",
+      "ready_order": "把订单 {{label}} 标记为已备妥？",
+      "complete_order": "把订单 {{label}} 标记为已完成？",
+      "approve_farmer": "批准 {{label}}？",
+      "reject_farmer": "拒绝 {{label}}？",
+      "suspend_farmer": "暂停 {{label}}？"
     }
   },
   "tour": {

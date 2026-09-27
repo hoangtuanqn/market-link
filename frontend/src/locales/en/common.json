@@ -568,6 +568,21 @@
       "hours": "When is Bến Thành market open?",
       "stalls": "Which stalls are at Thảo Điền on Saturday?",
       "cancel": "How do I cancel an order?"
+    },
+    "action": {
+      "confirm": "Confirm",
+      "openPage": "Open the page",
+      "done": "Done",
+      "doneTitle": "Done",
+      "failedTitle": "Not done",
+      "failedText": "The change was refused. Open the page to see why.",
+      "accept_order": "Accept order {{label}}?",
+      "decline_order": "Decline order {{label}}?",
+      "ready_order": "Mark order {{label}} ready?",
+      "complete_order": "Mark order {{label}} completed?",
+      "approve_farmer": "Approve {{label}}?",
+      "reject_farmer": "Reject {{label}}?",
+      "suspend_farmer": "Suspend {{label}}?"
     }
   },
   "tour": {

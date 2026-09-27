@@ -12,6 +12,7 @@ import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
+import com.techx.intervue.modules.chat.resources.ChatReplyResource.ProposedAction;
 import com.techx.intervue.modules.chat.resources.FarmerBriefingResource;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BriefingRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.ScheduleDayRow;
@@ -86,12 +87,14 @@ public class ChatService implements ChatServiceInterface {
     public ChatReplyResource reply(ChatRequest request, Long userId, AssistantAudience audience) {
         Answer answer = null;
         String loggedIntent = null;
+        List<ProposedAction> actions = List.of();
 
         if (audience != null && userId != null && assistant.enabled()) {
             AiReply ai = askAssistant(request, userId, audience);
             if (ai != null) {
                 answer = new Answer(ai.intent(), ai.reply(), ai.results());
                 loggedIntent = ai.loggedIntent();
+                actions = ai.actions();
             }
         }
         if (answer == null) {
@@ -114,7 +117,7 @@ public class ChatService implements ChatServiceInterface {
                                 answer.reply(),
                                 loggedIntent)));
 
-        return new ChatReplyResource(answer.reply(), answer.intent(), answer.results());
+        return new ChatReplyResource(answer.reply(), answer.intent(), answer.results(), actions);
     }
 
     /**
