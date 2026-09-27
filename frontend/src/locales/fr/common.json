@@ -537,5 +537,174 @@
   "comingSoon": {
     "title": "Cette page n'est pas encore ouverte",
     "text": "Nous sommes encore en train de la construire. Le reste du menu fonctionne normalement."
+  },
+  "tour": {
+    "next": "Suivant",
+    "back": "Retour",
+    "done": "Terminer",
+    "skip": "Passer la visite",
+    "progress": "{{current}} sur {{total}}",
+    "steps": {
+      "customerWelcome": {
+        "title": "Bienvenue sur MarketLink",
+        "body": "Réservez des produits frais auprès des producteurs des marchés hebdomadaires de Hô Chi Minh-Ville, puis récupérez-les à leur stand. Cette courte visite vous montre l’essentiel."
+      },
+      "customerMarkets": {
+        "title": "Parcourir les marchés",
+        "body": "Consultez chaque marché, ses horaires et les stands qui y vendent."
+      },
+      "customerProducts": {
+        "title": "Trouver des produits",
+        "body": "Filtrez les produits par catégorie, prix et marché. Chaque fiche indique la quantité restante cette semaine."
+      },
+      "customerMap": {
+        "title": "Carte des marchés",
+        "body": "Trouvez les marchés les plus proches et obtenez l’itinéraire sur OpenStreetMap."
+      },
+      "customerSearch": {
+        "title": "Recherche",
+        "body": "Cherchez un produit, un stand ou un marché par son nom."
+      },
+      "customerCart": {
+        "title": "Votre panier",
+        "body": "Ajoutez des produits, choisissez un créneau de retrait au stand, puis passez commande."
+      },
+      "customerOrders": {
+        "title": "Vos commandes",
+        "body": "Suivez chaque commande : passée, acceptée, prête puis terminée. Le producteur la confirme avant votre passage."
+      },
+      "customerFavorites": {
+        "title": "Favoris",
+        "body": "Enregistrez les stands et produits que vous aimez pour les retrouver rapidement."
+      },
+      "customerMessages": {
+        "title": "Messages",
+        "body": "Discutez avec un producteur d’un produit ou d’une commande."
+      },
+      "customerNotifications": {
+        "title": "Notifications",
+        "body": "Les mises à jour de commande et les annonces des marchés arrivent ici."
+      },
+      "customerAccount": {
+        "title": "Votre compte",
+        "body": "Modifiez votre profil, changez vos réglages comme la langue et la devise, ou demandez à vendre en tant que producteur."
+      },
+      "customerMenu": {
+        "title": "Menu",
+        "body": "Marchés, produits, commandes et compte sont tous dans ce menu."
+      },
+      "customerDone": {
+        "title": "Tout est prêt",
+        "body": "Commencez par choisir un marché près de chez vous. Vous pouvez modifier vos préférences à tout moment dans les réglages."
+      },
+      "farmerWelcome": {
+        "title": "Bienvenue dans votre espace stand",
+        "body": "C’est ici que vous gérez votre stand sur MarketLink. Voici un aperçu rapide de chaque section."
+      },
+      "farmerOverview": {
+        "title": "Vue d’ensemble",
+        "body": "Les commandes, retraits et ventes du jour en un coup d’œil."
+      },
+      "farmerOrders": {
+        "title": "Nouvelles commandes",
+        "body": "Acceptez ou refusez les nouvelles commandes, puis marquez-les prêtes et terminées au retrait."
+      },
+      "farmerSlots": {
+        "title": "Créneaux de retrait",
+        "body": "Définissez les plages horaires où les clients peuvent récupérer leurs commandes à votre stand."
+      },
+      "farmerStock": {
+        "title": "Stock de la semaine",
+        "body": "Mettez à jour la quantité de chaque produit que vous pouvez vendre cette semaine."
+      },
+      "farmerProducts": {
+        "title": "Produits",
+        "body": "Ajoutez des produits avec photos, prix et unités, ou masquez ceux que vous ne vendez plus."
+      },
+      "farmerStall": {
+        "title": "Stand et retrait",
+        "body": "Modifiez le profil de votre stand et choisissez les marchés et les jours où vous êtes présent."
+      },
+      "farmerReviews": {
+        "title": "Avis",
+        "body": "Lisez les notes et avis laissés par les clients après le retrait."
+      },
+      "farmerHistory": {
+        "title": "Historique des ventes",
+        "body": "Revoyez vos commandes passées et l’évolution de vos ventes."
+      },
+      "farmerMessages": {
+        "title": "Messages",
+        "body": "Répondez aux questions des clients sur les produits et les commandes."
+      },
+      "farmerNotifications": {
+        "title": "Notifications",
+        "body": "Les nouvelles commandes et les nouvelles de l’équipe MarketLink arrivent ici."
+      },
+      "farmerSettings": {
+        "title": "Réglages",
+        "body": "Changez la langue, la devise et vos paramètres de vente par défaut."
+      },
+      "farmerDone": {
+        "title": "Votre stand est prêt",
+        "body": "Commencez par vérifier le stock de la semaine et vos créneaux de retrait."
+      },
+      "adminWelcome": {
+        "title": "Bienvenue dans l’administration",
+        "body": "Vous gérez les marchés, les producteurs et le contenu de toute la plateforme. Tout se trouve ici."
+      },
+      "adminOverview": {
+        "title": "Vue d’ensemble",
+        "body": "Les chiffres clés des commandes, clients et producteurs."
+      },
+      "adminReports": {
+        "title": "Rapports",
+        "body": "Rapports de ventes et d’activité sur toute la plateforme."
+      },
+      "adminOrders": {
+        "title": "Commandes",
+        "body": "Retrouvez n’importe quelle commande et suivez son statut."
+      },
+      "adminFarmers": {
+        "title": "Producteurs",
+        "body": "Examinez les candidatures, approuvez-les ou refusez-les, et suspendez un stand si nécessaire."
+      },
+      "adminCustomers": {
+        "title": "Clients",
+        "body": "Consultez les comptes clients et leurs commandes."
+      },
+      "adminMarkets": {
+        "title": "Marchés",
+        "body": "Ajoutez des marchés et définissez leur emplacement, leurs horaires et leurs jours."
+      },
+      "adminModeration": {
+        "title": "Modération",
+        "body": "Masquez les annonces qui enfreignent les règles de la plateforme."
+      },
+      "adminCategories": {
+        "title": "Catégories",
+        "body": "Gérez les catégories de produits utilisées par les clients pour filtrer."
+      },
+      "adminAnnouncements": {
+        "title": "Annonces",
+        "body": "Envoyez un avis aux clients et aux producteurs."
+      },
+      "adminFeedback": {
+        "title": "Retours",
+        "body": "Lisez les signalements de bugs, suggestions et questions des utilisateurs."
+      },
+      "adminSecurity": {
+        "title": "Sécurité",
+        "body": "Activez la validation en deux étapes pour protéger votre compte administrateur."
+      },
+      "adminDone": {
+        "title": "Vous êtes prêt",
+        "body": "Commencez par les candidatures de producteurs en attente de validation."
+      },
+      "dashboardMenu": {
+        "title": "Menu",
+        "body": "Ouvrez le menu pour accéder à chaque section de l’espace."
+      }
+    }
   }
 }

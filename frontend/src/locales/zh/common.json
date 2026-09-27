@@ -534,5 +534,174 @@
   "comingSoon": {
     "title": "此页面尚未开放",
     "text": "我们仍在建设此页面。菜单中的其他功能照常可用。"
+  },
+  "tour": {
+    "next": "下一步",
+    "back": "上一步",
+    "done": "完成",
+    "skip": "跳过引导",
+    "progress": "{{current}} / {{total}}",
+    "steps": {
+      "customerWelcome": {
+        "title": "欢迎来到 MarketLink",
+        "body": "在胡志明市的周末集市向农户预订新鲜农产品，然后到摊位取货。这个简短的引导带你熟悉一下。"
+      },
+      "customerMarkets": {
+        "title": "浏览集市",
+        "body": "查看所有集市、营业时间以及在那里销售的摊位。"
+      },
+      "customerProducts": {
+        "title": "查找商品",
+        "body": "按类别、价格和集市筛选农产品。每件商品都会显示本周剩余数量。"
+      },
+      "customerMap": {
+        "title": "集市地图",
+        "body": "找到离你最近的集市，并在 OpenStreetMap 中查看路线。"
+      },
+      "customerSearch": {
+        "title": "搜索",
+        "body": "按名称查找商品、摊位或集市。"
+      },
+      "customerCart": {
+        "title": "购物车",
+        "body": "添加商品，选择在摊位取货的时间，然后下单。"
+      },
+      "customerOrders": {
+        "title": "我的订单",
+        "body": "跟踪每个订单从已下单、已接受、已备好到已完成。农户会在你出发前确认。"
+      },
+      "customerFavorites": {
+        "title": "收藏",
+        "body": "收藏喜欢的摊位和商品，方便以后快速找到。"
+      },
+      "customerMessages": {
+        "title": "消息",
+        "body": "就商品或订单与农户聊天。"
+      },
+      "customerNotifications": {
+        "title": "通知",
+        "body": "订单更新和集市公告会显示在这里。"
+      },
+      "customerAccount": {
+        "title": "我的账户",
+        "body": "编辑个人资料，更改语言和货币等设置，或申请成为农户开店。"
+      },
+      "customerMenu": {
+        "title": "菜单",
+        "body": "集市、商品、订单和账户都在这个菜单里。"
+      },
+      "customerDone": {
+        "title": "一切就绪",
+        "body": "先选一个离你近的集市吧。你随时可以在设置中更改偏好。"
+      },
+      "farmerWelcome": {
+        "title": "欢迎来到摊位管理面板",
+        "body": "你在这里经营 MarketLink 上的摊位。下面快速看看每个部分。"
+      },
+      "farmerOverview": {
+        "title": "概览",
+        "body": "一眼查看今天的订单、取货和销售情况。"
+      },
+      "farmerOrders": {
+        "title": "新订单",
+        "body": "接受或拒绝新订单，顾客取货时将其标记为已备好和已完成。"
+      },
+      "farmerSlots": {
+        "title": "取货时段",
+        "body": "设置顾客可以到摊位取货的时间段。"
+      },
+      "farmerStock": {
+        "title": "本周库存",
+        "body": "更新本周每种商品可售的数量。"
+      },
+      "farmerProducts": {
+        "title": "商品",
+        "body": "添加带有照片、价格和单位的商品，或隐藏不再出售的商品。"
+      },
+      "farmerStall": {
+        "title": "摊位与取货",
+        "body": "编辑摊位资料，选择你出摊的集市和日期。"
+      },
+      "farmerReviews": {
+        "title": "评价",
+        "body": "查看顾客取货后留下的评分和评价。"
+      },
+      "farmerHistory": {
+        "title": "销售记录",
+        "body": "回顾过去的订单和销售情况。"
+      },
+      "farmerMessages": {
+        "title": "消息",
+        "body": "回答顾客关于商品和订单的问题。"
+      },
+      "farmerNotifications": {
+        "title": "通知",
+        "body": "新订单和 MarketLink 团队的消息会显示在这里。"
+      },
+      "farmerSettings": {
+        "title": "设置",
+        "body": "更改语言、货币和你的销售默认设置。"
+      },
+      "farmerDone": {
+        "title": "摊位已就绪",
+        "body": "先检查本周库存和取货时段吧。"
+      },
+      "adminWelcome": {
+        "title": "欢迎来到管理后台",
+        "body": "你负责管理整个平台的集市、农户和内容。所有功能都在这里。"
+      },
+      "adminOverview": {
+        "title": "概览",
+        "body": "订单、顾客和农户的关键数据。"
+      },
+      "adminReports": {
+        "title": "报表",
+        "body": "整个平台的销售和活动报表。"
+      },
+      "adminOrders": {
+        "title": "订单",
+        "body": "查找任意订单并跟踪其状态。"
+      },
+      "adminFarmers": {
+        "title": "农户",
+        "body": "审核农户申请，批准或拒绝，并在需要时暂停摊位。"
+      },
+      "adminCustomers": {
+        "title": "顾客",
+        "body": "查找顾客账户及其订单。"
+      },
+      "adminMarkets": {
+        "title": "集市",
+        "body": "添加集市并设置位置、营业时间和开市日期。"
+      },
+      "adminModeration": {
+        "title": "内容审核",
+        "body": "隐藏违反平台规则的商品信息。"
+      },
+      "adminCategories": {
+        "title": "类别",
+        "body": "管理顾客用于筛选的商品类别。"
+      },
+      "adminAnnouncements": {
+        "title": "公告",
+        "body": "向顾客和农户发送通知。"
+      },
+      "adminFeedback": {
+        "title": "反馈",
+        "body": "阅读用户提交的错误报告、建议和问题。"
+      },
+      "adminSecurity": {
+        "title": "安全",
+        "body": "开启两步验证以保护管理员账户。"
+      },
+      "adminDone": {
+        "title": "准备就绪",
+        "body": "先从等待审核的农户申请开始吧。"
+      },
+      "dashboardMenu": {
+        "title": "菜单",
+        "body": "打开菜单即可进入面板的每个部分。"
+      }
+    }
   }
 }
