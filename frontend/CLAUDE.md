@@ -9,7 +9,8 @@
 - Mọi màn có dữ liệu phải có đủ 4 trạng thái: loading / empty / error / có data (FR-084).
 - Responsive 375 / 768 / 1440 px, không tràn ngang (FR-080).
 - Bản đồ dùng Leaflet + OpenStreetMap, chỉ đường mở OSM directions ở tab mới (D-12).
-- Mặc định: tiền `₫` có phân cách hàng nghìn, ngày `dd/MM/yyyy`, giờ 24h; người dùng đổi được trong Settings.
+- Mặc định: tiền USD `$1.50` (cố định, không đổi trong Settings), ngày `dd/MM/yyyy`, giờ 24h; ngày giờ người dùng đổi
+  được trong Settings.
 - Ẩn nút theo role chỉ là UX — quyền thật do backend kiểm tra.
 - Lệnh: `npm run dev` · `npm run build` · `npm run lint` · `npx prettier --write .`
 
@@ -28,8 +29,8 @@
   `common.json`), đọc bằng `useTranslation('<Thư mục trang>')` + `t('key')`, rồi dịch đủ 9 ngôn ngữ còn lại
   (`vi zh ja ko fr es de th id`). Key thiếu sẽ hiện English. Trang mới: thêm file JSON cho cả 10 ngôn ngữ và một dòng
   trong `src/i18n/resources.ts`. Tiếng Anh: sentence case, không emoji, không dấu chấm than; nút bị khoá có lý do.
-- Tiền, đơn vị, ngày giờ đi qua `src/lib/format.ts` (`vnd`, `perUnit`, `units`, `formatDate`, `formatTime`,
-  `formatClock`, `dayName`, `weekday`): nó theo Settings của người đọc (ngôn ngữ, ngày, giờ, tiền, kg/lb).
+- Tiền, đơn vị, ngày giờ đi qua `src/lib/format.ts` (`money`, `perUnit`, `units`, `formatDate`, `formatTime`,
+  `formatClock`, `dayName`, `weekday`): nó theo Settings của người đọc (ngôn ngữ, ngày, giờ, kg/lb); tiền luôn là USD.
 - Dark theme: `data-theme="dark"` trên `<html>` (Settings → Theme). Chỉ dùng token màu thì tự đúng cả hai theme.
 - Spacing theo token: `p-1/2/3/4/6/8/12/16` (4 → 64px). Không dùng `p-5`, `p-7` hay giá trị tuỳ ý `p-[18px]`.
 - Không sửa tay `src/styles/marketlink-*.css` và `docs/design-system/tokens.json`: muốn đổi style thì đổi design system

@@ -23,7 +23,7 @@ yet (R-07). Design: `docs/superpowers/specs/2026-09-25-settings-theme-i18n-desig
 }
 ```
 
-Defaults: `light`, `en`, `VND`, `metric`, `dmy`, `h24`, no market, no extras.
+Defaults: `light`, `en`, `USD`, `metric`, `dmy`, `h24`, no market, no extras.
 
 `extras` holds the notification switches and each role's own block (Customer preferred pickup time, Farmer
 selling defaults, Admin platform defaults). Nothing reads them yet; they are saved so the choices survive.

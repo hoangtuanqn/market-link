@@ -333,6 +333,7 @@ Run this once before a demo.
 | `./mvnw: Permission denied` | Missing execute permission (macOS/Linux) | `chmod +x backend/mvnw` |
 | `/usr/bin/env: 'sh\r': No such file or directory` | `mvnw` was checked out with CRLF line endings | `git config core.autocrlf input`, then `git checkout -- backend/mvnw` |
 | `FlywayValidateException: Migration checksum mismatch` | An already-applied migration file was edited | Revert the edit and add a new migration file instead. On local only, you can reset with `docker compose down -v` |
+| `Migration checksum mismatch for migration version 20260926017` (and `…018`) after pulling `dev` | PR #167 (27/09/2026) rewrote migration 017, replaced 018 and moved favourites to 019 after they had been merged, so a database created before it no longer matches | Reset the local database: `make clean && make up && make seed` (deletes local data). There is no in-place fix: the old and new 017/018 build different tables |
 | Lombok `cannot find symbol` (getters/setters) in IDE | Annotation processing is disabled | Enable it (see *Running from an IDE*) |
 | Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
 | Backend log `Chat realtime: app.chat.rabbitmq.host is empty` when running on your machine (Option B) | Backend runs outside Docker and `RABBITMQ_HOST` is not set | Chat still works with the in-app broker; for the RabbitMQ relay, `export RABBITMQ_HOST=localhost` and map port 61613 in `docker-compose.yml` |

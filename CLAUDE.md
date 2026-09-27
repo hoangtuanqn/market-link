@@ -70,7 +70,7 @@ AI **không tự tick DONE** trong REQUIREMENTS. Khi xong, báo đủ 7 điều 
 - Frontend: React 19 · Vite · TypeScript · Tailwind 4 (SPA). Xem `frontend/CLAUDE.md`.
 - Bản đồ: Leaflet + OpenStreetMap (D-12), không Google Maps.
 - UI: design system `docs/design-system/` (tokens + Tailwind theme + class `ml-*`), xem `frontend/CLAUDE.md`.
-- Locale: VND `₫`, `dd/MM/yyyy`, 24h, `Asia/Ho_Chi_Minh`.
+- Locale: tiền **USD** `$1.50` (LEAD chốt 27/09, `docs/decisions.md`), `dd/MM/yyyy`, 24h, `Asia/Ho_Chi_Minh`.
 
 Hai cách chạy (chi tiết trong `docs/setup.md`):
 
