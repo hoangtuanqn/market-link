@@ -9,6 +9,7 @@ import SettingsSync from './components/SettingsSync';
 import AdminLayout from './layout/AdminLayout';
 import AdminSettingsPage from './pages/admin/Settings';
 import FarmerSettingsPage from './pages/farmer/Settings';
+import AuthLayout from './layout/AuthLayout';
 import FarmerLayout from './layout/FarmerLayout';
 import MainLayout from './layout/MainLayout';
 import RequireAuth from './layout/RequireAuth';
@@ -89,17 +90,9 @@ const App = () => {
       <ScrollToTop />
       <SettingsSync>
         <Routes>
+          {/* Public informational pages (Guest shell: Header with guest actions + Footer) */}
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register/customer" element={<RegisterCustomerPage />} />
-            {/* FR-002: no separate stall sign-up — create a customer account first, then submit the Farmer application at /become-farmer */}
-            <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="reset-password" element={<ResetPasswordPage />} />
-            <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
-            <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
-            <Route path="auth/set-password" element={<SetPasswordPage />} />
             <Route path="markets" element={<MarketsPage />} />
             <Route
               path="markets/:id"
@@ -133,6 +126,19 @@ const App = () => {
             <Route path="privacy" element={<PrivacyPage />} />
             <Route path="contact" element={<ContactPage />} />
             <Route path="feedback" element={<FeedbackPage />} />
+          </Route>
+
+          {/* Authentication flow pages (Focused Auth shell: Logo + page content, no Header/Footer) */}
+          <Route element={<AuthLayout />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register/customer" element={<RegisterCustomerPage />} />
+            {/* FR-002: no separate stall sign-up — create a customer account first, then submit the Farmer application at /become-farmer */}
+            <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="reset-password" element={<ResetPasswordPage />} />
+            <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
+            <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
+            <Route path="auth/set-password" element={<SetPasswordPage />} />
           </Route>
 
           {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
