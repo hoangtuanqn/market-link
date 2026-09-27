@@ -20,7 +20,9 @@ import org.springframework.stereotype.Repository;
  * The fixed SQL the chatbot may run (R-04): read-only, every user value goes in as a parameter,
  * nothing is concatenated. Primary keys are {@code id} on every table (plan S.4.1); the {@code
  * *_id} names only survive as column aliases so the row mappers keep reading the same labels.
- * Hidden listings (FR-074) and unapproved stalls (D-09) never appear in an answer.
+ * Hidden listings (FR-074), unapproved stalls (D-09) and products with no active weekly template
+ * (never orderable with per-date stock, FR-063 — the catalogue leaves them out too) never appear in
+ * an answer.
  */
 @Repository
 @RequiredArgsConstructor
@@ -42,8 +44,10 @@ public class ChatKnowledgeRepository {
               AND p.status IN (:statuses)
               AND (p.name LIKE :keyword ESCAPE '!' OR c.name LIKE :keyword ESCAPE '!')
               AND p.is_hidden = FALSE
+              AND EXISTS (SELECT 1 FROM weekly_stock_templates t
+                          WHERE t.product_id = p.id AND t.is_active = TRUE)
               AND (:marketId IS NULL OR m.id = :marketId)
-            ORDER BY p.stock_quantity DESC, p.name
+            ORDER BY p.name
             LIMIT 30
             """;
 

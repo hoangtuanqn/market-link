@@ -7,6 +7,7 @@ import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateReposi
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,9 @@ import org.springframework.stereotype.Component;
  * "Nearest orderable date" for read-only pages (cart preview, product browse/search) — never
  * materializes a {@code product_daily_stock} row, only reads. See
  * docs/superpowers/specs/2026-09-26-product-daily-stock-design.md, section "Browse / search". Looks
- * at most 14 days ahead; no orderable date within that window means the product is omitted.
+ * at most 14 days ahead; no orderable date within that window means the product is omitted. A date
+ * already sold out is skipped for the next one that still has stock — only when every date is sold
+ * out does the nearest one come back, with 0.
  */
 @Component
 @AllArgsConstructor
@@ -40,12 +43,20 @@ public class ProductAvailabilityResolver {
         for (Map.Entry<Long, BigDecimal> entry : basePriceByProductId.entrySet()) {
             Long productId = entry.getKey();
             List<WeeklyStockTemplate> active = templates.findByProductIdAndActiveTrue(productId);
-            nearestDate(today, active)
-                    .ifPresent(
-                            date ->
-                                    result.put(
-                                            productId,
-                                            resolveOne(productId, date, active, entry.getValue())));
+            Availability found = null;
+            for (LocalDate date : candidateDates(today, active)) {
+                Availability a = resolveOne(productId, date, active, entry.getValue());
+                if (found == null) {
+                    found = a; // the nearest date, kept in case every date is sold out
+                }
+                if (a.quantity() > 0) {
+                    found = a;
+                    break;
+                }
+            }
+            if (found != null) {
+                result.put(productId, found);
+            }
         }
         return result;
     }
@@ -73,23 +84,21 @@ public class ProductAvailabilityResolver {
     }
 
     /**
-     * The closest date from {@code today} onward (today itself counts) whose weekday matches an
-     * active template.
+     * Every date from {@code today} onward (today itself counts) inside the lookahead whose weekday
+     * matches an active template, nearest first.
      */
-    static Optional<LocalDate> nearestDate(LocalDate today, List<WeeklyStockTemplate> templates) {
-        if (templates.isEmpty()) {
-            return Optional.empty();
-        }
+    static List<LocalDate> candidateDates(LocalDate today, List<WeeklyStockTemplate> templates) {
         Set<Integer> activeDays =
                 templates.stream()
                         .map(WeeklyStockTemplate::getDayOfWeek)
                         .collect(Collectors.toSet());
+        List<LocalDate> dates = new ArrayList<>();
         for (int i = 0; i < LOOKAHEAD_DAYS; i++) {
             LocalDate candidate = today.plusDays(i);
             if (activeDays.contains(candidate.getDayOfWeek().getValue() % 7)) {
-                return Optional.of(candidate);
+                dates.add(candidate);
             }
         }
-        return Optional.empty();
+        return dates;
     }
 }

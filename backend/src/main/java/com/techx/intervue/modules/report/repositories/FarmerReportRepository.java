@@ -37,10 +37,13 @@ public class FarmerReportRepository {
             WHERE o.farmer_id = :farmerId
             """;
 
+    /**
+     * Low stock is per pickup date since FR-063 (products.stock_quantity is only the Farmer's
+     * reference number now), so FarmerReportService counts it; this only counts the products.
+     */
     public static final String STOCK_SQL =
             """
-            SELECT COUNT(*) AS product_count,
-                   COALESCE(SUM(p.status = 'available' AND p.stock_quantity <= :lowStock), 0) AS low_stock_count
+            SELECT COUNT(*) AS product_count
             FROM products p
             WHERE p.farmer_id = :farmerId AND p.is_deleted = FALSE
             """;
@@ -82,13 +85,13 @@ public class FarmerReportRepository {
     private final NamedParameterJdbcTemplate jdbc;
     private final OrderRows rows;
 
+    /** {@code lowStockCount} is left at 0: FarmerReportService fills it in from per-date stock. */
     public FarmerDashboardResource dashboard(long farmerId, LocalDate monthStart) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
                         .addValue("farmerId", farmerId)
                         .addValue("monthStart", monthStart, Types.DATE)
-                        .addValue("nextMonth", monthStart.plusMonths(1), Types.DATE)
-                        .addValue("lowStock", LOW_STOCK);
+                        .addValue("nextMonth", monthStart.plusMonths(1), Types.DATE);
         var orders = jdbc.queryForMap(DASHBOARD_SQL, params);
         var stock = jdbc.queryForMap(STOCK_SQL, params);
         return new FarmerDashboardResource(
@@ -98,7 +101,7 @@ public class FarmerReportRepository {
                 (java.math.BigDecimal) orders.get("revenue_this_month"),
                 asLong(orders.get("completed_orders")),
                 asLong(stock.get("product_count")),
-                asLong(stock.get("low_stock_count")));
+                0);
     }
 
     public List<BestSellerResource> bestSellers(
