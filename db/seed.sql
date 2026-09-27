@@ -182,60 +182,62 @@ JOIN (
 JOIN market_operating_days mod_ ON mod_.market_id = m.id AND mod_.day_of_week = d.day;
 
 -- ---- Products (FR-062, FR-064): 51 products from 10 stalls, all 6 categories, including sold_out / unavailable ----
+-- Prices are in USD, the currency the app shows everywhere (format.ts money()): market prices converted at about
+-- 25,000 VND to the dollar, rounded to 5 cents. Order items and totals below are computed from these.
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, hidden_reason)
 SELECT f.id, c.id, x.name, x.description, x.price, x.unit, x.stock, x.status, FALSE, NULL
 FROM (
-      SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Rau muống' AS name, 'Rau muống nước cắt sáng, cọng non.' AS description, 12000 AS price, 'bunch' AS unit, 40 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Cải ngọt' AS name, 'Cải ngọt lá mềm, luộc hoặc xào đều ngon.' AS description, 15000 AS price, 'bunch' AS unit, 30 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Xà lách xoong' AS name, 'Hết hàng tuần này, tuần sau có lại.' AS description, 18000 AS price, 'bunch' AS unit, 0 AS stock, 'sold_out' AS status
-      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Rau dền' AS name, 'Rau dền đỏ nấu canh tôm.' AS description, 12000 AS price, 'bunch' AS unit, 25 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Mồng tơi' AS name, NULL AS description, 12000 AS price, 'bunch' AS unit, 20 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Rau lang' AS name, 'Ngọn rau lang non, luộc chấm mắm.' AS description, 10000 AS price, 'bunch' AS unit, 35 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Bưởi da xanh' AS name, 'Bưởi da xanh Bến Tre, ruột hồng, ít hạt.' AS description, 65000 AS price, 'kg' AS unit, 50 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Cam sành' AS name, 'Cam sành vắt nước, ngọt thanh.' AS description, 35000 AS price, 'kg' AS unit, 60 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Xoài cát Hoà Lộc' AS name, 'Xoài chín cây, thơm, thịt dày.' AS description, 85000 AS price, 'kg' AS unit, 20 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Chuối sứ' AS name, NULL AS description, 25000 AS price, 'bunch' AS unit, 15 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Ổi nữ hoàng' AS name, 'Hết hàng.' AS description, 30000 AS price, 'kg' AS unit, 0 AS stock, 'sold_out' AS status
-      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Đu đủ' AS name, 'Đu đủ chín vừa, mua hôm nay ăn ngày mai.' AS description, 22000 AS price, 'piece' AS unit, 12 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer3@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Sữa tươi thanh trùng' AS name, 'Sữa bò Long Thành thanh trùng, dùng trong 5 ngày.' AS description, 45000 AS price, 'litre' AS unit, 30 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer3@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Sữa chua nhà làm' AS name, 'Hộp 100 ml, không đường hoặc có đường.' AS description, 12000 AS price, 'jar' AS unit, 60 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer3@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Phô mai tươi' AS name, 'Hộp 250 g, làm từ sữa tươi cùng trại.' AS description, 95000 AS price, 'jar' AS unit, 8 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer3@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Bơ lạt' AS name, 'Tạm ngưng cho tới đầu tháng sau.' AS description, 120000 AS price, 'jar' AS unit, 0 AS stock, 'unavailable' AS status
-      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Khoai lang mật' AS name, 'Khoai lang mật Củ Chi, nướng chảy mật.' AS description, 28000 AS price, 'kg' AS unit, 70 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Cà rốt' AS name, NULL AS description, 20000 AS price, 'kg' AS unit, 50 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Củ dền' AS name, 'Củ dền đỏ, ép nước hoặc nấu canh.' AS description, 25000 AS price, 'kg' AS unit, 30 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Khoai môn' AS name, NULL AS description, 32000 AS price, 'kg' AS unit, 25 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Củ cải trắng' AS name, 'Củ cải trắng muối chua hoặc hầm.' AS description, 15000 AS price, 'kg' AS unit, 40 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Gừng tươi' AS name, 'Gừng ta, thơm, cay vừa.' AS description, 45000 AS price, 'kg' AS unit, 10 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Húng quế' AS name, 'Húng quế ăn phở, cắt sáng.' AS description, 8000 AS price, 'bunch' AS unit, 40 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Rau răm' AS name, NULL AS description, 8000 AS price, 'bunch' AS unit, 30 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Ngò gai' AS name, NULL AS description, 8000 AS price, 'bunch' AS unit, 30 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Sả cây' AS name, 'Bó 5 cây, đập dập nấu canh chua.' AS description, 10000 AS price, 'bunch' AS unit, 25 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Tía tô' AS name, NULL AS description, 8000 AS price, 'bunch' AS unit, 20 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Diếp cá' AS name, 'Hết hàng hôm nay.' AS description, 8000 AS price, 'bunch' AS unit, 0 AS stock, 'sold_out' AS status
-      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh mì men tự nhiên' AS name, 'Ổ 700 g, ủ 24 giờ, vỏ giòn.' AS description, 65000 AS price, 'loaf' AS unit, 20 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh chuối nướng' AS name, 'Bánh chuối sứ nướng, hộp 6 miếng.' AS description, 35000 AS price, 'jar' AS unit, 15 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh quy bơ' AS name, 'Hộp 200 g, bơ động vật.' AS description, 55000 AS price, 'jar' AS unit, 25 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh bông lan trứng muối' AS name, NULL AS description, 48000 AS price, 'jar' AS unit, 10 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh mì đen' AS name, 'Bột lúa mạch đen 60 %.' AS description, 70000 AS price, 'loaf' AS unit, 8 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'vegetables' AS slug, 'Xà lách lô lô' AS name, 'Xà lách Đà Lạt, trồng thuỷ canh.' AS description, 32000 AS price, 'kg' AS unit, 30 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'vegetables' AS slug, 'Cải kale' AS name, 'Kale xanh, làm sinh tố hoặc salad.' AS description, 55000 AS price, 'kg' AS unit, 15 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'fruits' AS slug, 'Cà chua bi' AS name, 'Cà chua bi đỏ, ngọt.' AS description, 48000 AS price, 'kg' AS unit, 40 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'vegetables' AS slug, 'Bông cải xanh' AS name, NULL AS description, 45000 AS price, 'kg' AS unit, 20 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'fruits' AS slug, 'Ớt chuông' AS name, 'Ớt chuông ba màu.' AS description, 60000 AS price, 'kg' AS unit, 12 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer8@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Trứng gà thả vườn' AS name, 'Vỉ 10 trứng, gà ăn thóc.' AS description, 45000 AS price, 'tray of 30' AS unit, 50 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer8@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Trứng vịt' AS name, 'Vỉ 10 trứng.' AS description, 40000 AS price, 'tray of 30' AS unit, 30 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer8@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Trứng cút' AS name, 'Vỉ 30 trứng cút.' AS description, 25000 AS price, 'tray of 30' AS unit, 20 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer8@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Trứng gà ác' AS name, 'Hết hàng, cuối tuần có lại.' AS description, 55000 AS price, 'tray of 30' AS unit, 0 AS stock, 'sold_out' AS status
-      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm bào ngư' AS name, 'Nấm bào ngư xám, hái buổi sáng.' AS description, 40000 AS price, 'kg' AS unit, 30 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm mối đen' AS name, 'Nấm mối đen, hiếm, đặt trước.' AS description, 180000 AS price, 'kg' AS unit, 6 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm rơm' AS name, NULL AS description, 60000 AS price, 'kg' AS unit, 15 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm đông cô tươi' AS name, NULL AS description, 95000 AS price, 'kg' AS unit, 10 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm kim châm' AS name, 'Tạm ngưng.' AS description, 20000 AS price, 'bag' AS unit, 0 AS stock, 'unavailable' AS status
-      UNION ALL SELECT 'farmer10@marketlink.vn' AS email, 'grains_beans_and_nuts' AS slug, 'Mật ong rừng tràm' AS name, 'Mật ong rừng tràm U Minh, đặc, thơm.' AS description, 250000 AS price, 'litre' AS unit, 12 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer10@marketlink.vn' AS email, 'grains_beans_and_nuts' AS slug, 'Phấn hoa' AS name, 'Hộp 250 g.' AS description, 180000 AS price, 'jar' AS unit, 8 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer10@marketlink.vn' AS email, 'grains_beans_and_nuts' AS slug, 'Sáp ong nguyên chất' AS name, NULL AS description, 120000 AS price, 'jar' AS unit, 5 AS stock, 'available' AS status
-      UNION ALL SELECT 'farmer10@marketlink.vn' AS email, 'grains_beans_and_nuts' AS slug, 'Mật ong hoa nhãn' AS name, 'Mật ong hoa nhãn Hưng Yên.' AS description, 220000 AS price, 'litre' AS unit, 10 AS stock, 'available' AS status
+      SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Rau muống' AS name, 'Rau muống nước cắt sáng, cọng non.' AS description, 0.50 AS price, 'bunch' AS unit, 40 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Cải ngọt' AS name, 'Cải ngọt lá mềm, luộc hoặc xào đều ngon.' AS description, 0.60 AS price, 'bunch' AS unit, 30 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Xà lách xoong' AS name, 'Hết hàng tuần này, tuần sau có lại.' AS description, 0.70 AS price, 'bunch' AS unit, 0 AS stock, 'sold_out' AS status
+      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Rau dền' AS name, 'Rau dền đỏ nấu canh tôm.' AS description, 0.50 AS price, 'bunch' AS unit, 25 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Mồng tơi' AS name, NULL AS description, 0.50 AS price, 'bunch' AS unit, 20 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer@marketlink.vn' AS email, 'vegetables' AS slug, 'Rau lang' AS name, 'Ngọn rau lang non, luộc chấm mắm.' AS description, 0.40 AS price, 'bunch' AS unit, 35 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Bưởi da xanh' AS name, 'Bưởi da xanh Bến Tre, ruột hồng, ít hạt.' AS description, 2.60 AS price, 'kg' AS unit, 50 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Cam sành' AS name, 'Cam sành vắt nước, ngọt thanh.' AS description, 1.40 AS price, 'kg' AS unit, 60 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Xoài cát Hoà Lộc' AS name, 'Xoài chín cây, thơm, thịt dày.' AS description, 3.40 AS price, 'kg' AS unit, 20 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Chuối sứ' AS name, NULL AS description, 1.00 AS price, 'bunch' AS unit, 15 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Ổi nữ hoàng' AS name, 'Hết hàng.' AS description, 1.20 AS price, 'kg' AS unit, 0 AS stock, 'sold_out' AS status
+      UNION ALL SELECT 'farmer2@marketlink.vn' AS email, 'fruits' AS slug, 'Đu đủ' AS name, 'Đu đủ chín vừa, mua hôm nay ăn ngày mai.' AS description, 0.90 AS price, 'piece' AS unit, 12 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer3@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Sữa tươi thanh trùng' AS name, 'Sữa bò Long Thành thanh trùng, dùng trong 5 ngày.' AS description, 1.80 AS price, 'litre' AS unit, 30 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer3@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Sữa chua nhà làm' AS name, 'Hộp 100 ml, không đường hoặc có đường.' AS description, 0.50 AS price, 'jar' AS unit, 60 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer3@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Phô mai tươi' AS name, 'Hộp 250 g, làm từ sữa tươi cùng trại.' AS description, 3.80 AS price, 'jar' AS unit, 8 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer3@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Bơ lạt' AS name, 'Tạm ngưng cho tới đầu tháng sau.' AS description, 4.80 AS price, 'jar' AS unit, 0 AS stock, 'unavailable' AS status
+      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Khoai lang mật' AS name, 'Khoai lang mật Củ Chi, nướng chảy mật.' AS description, 1.10 AS price, 'kg' AS unit, 70 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Cà rốt' AS name, NULL AS description, 0.80 AS price, 'kg' AS unit, 50 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Củ dền' AS name, 'Củ dền đỏ, ép nước hoặc nấu canh.' AS description, 1.00 AS price, 'kg' AS unit, 30 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Khoai môn' AS name, NULL AS description, 1.30 AS price, 'kg' AS unit, 25 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Củ cải trắng' AS name, 'Củ cải trắng muối chua hoặc hầm.' AS description, 0.60 AS price, 'kg' AS unit, 40 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer4@marketlink.vn' AS email, 'vegetables' AS slug, 'Gừng tươi' AS name, 'Gừng ta, thơm, cay vừa.' AS description, 1.80 AS price, 'kg' AS unit, 10 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Húng quế' AS name, 'Húng quế ăn phở, cắt sáng.' AS description, 0.30 AS price, 'bunch' AS unit, 40 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Rau răm' AS name, NULL AS description, 0.30 AS price, 'bunch' AS unit, 30 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Ngò gai' AS name, NULL AS description, 0.30 AS price, 'bunch' AS unit, 30 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Sả cây' AS name, 'Bó 5 cây, đập dập nấu canh chua.' AS description, 0.40 AS price, 'bunch' AS unit, 25 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Tía tô' AS name, NULL AS description, 0.30 AS price, 'bunch' AS unit, 20 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer5@marketlink.vn' AS email, 'vegetables' AS slug, 'Diếp cá' AS name, 'Hết hàng hôm nay.' AS description, 0.30 AS price, 'bunch' AS unit, 0 AS stock, 'sold_out' AS status
+      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh mì men tự nhiên' AS name, 'Ổ 700 g, ủ 24 giờ, vỏ giòn.' AS description, 2.60 AS price, 'loaf' AS unit, 20 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh chuối nướng' AS name, 'Bánh chuối sứ nướng, hộp 6 miếng.' AS description, 1.40 AS price, 'jar' AS unit, 15 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh quy bơ' AS name, 'Hộp 200 g, bơ động vật.' AS description, 2.20 AS price, 'jar' AS unit, 25 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh bông lan trứng muối' AS name, NULL AS description, 1.90 AS price, 'jar' AS unit, 10 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer6@marketlink.vn' AS email, 'baked_goods' AS slug, 'Bánh mì đen' AS name, 'Bột lúa mạch đen 60 %.' AS description, 2.80 AS price, 'loaf' AS unit, 8 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'vegetables' AS slug, 'Xà lách lô lô' AS name, 'Xà lách Đà Lạt, trồng thuỷ canh.' AS description, 1.30 AS price, 'kg' AS unit, 30 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'vegetables' AS slug, 'Cải kale' AS name, 'Kale xanh, làm sinh tố hoặc salad.' AS description, 2.20 AS price, 'kg' AS unit, 15 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'fruits' AS slug, 'Cà chua bi' AS name, 'Cà chua bi đỏ, ngọt.' AS description, 1.90 AS price, 'kg' AS unit, 40 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'vegetables' AS slug, 'Bông cải xanh' AS name, NULL AS description, 1.80 AS price, 'kg' AS unit, 20 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer7@marketlink.vn' AS email, 'fruits' AS slug, 'Ớt chuông' AS name, 'Ớt chuông ba màu.' AS description, 2.40 AS price, 'kg' AS unit, 12 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer8@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Trứng gà thả vườn' AS name, 'Vỉ 10 trứng, gà ăn thóc.' AS description, 1.80 AS price, 'tray of 30' AS unit, 50 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer8@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Trứng vịt' AS name, 'Vỉ 10 trứng.' AS description, 1.60 AS price, 'tray of 30' AS unit, 30 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer8@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Trứng cút' AS name, 'Vỉ 30 trứng cút.' AS description, 1.00 AS price, 'tray of 30' AS unit, 20 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer8@marketlink.vn' AS email, 'eggs_and_dairy' AS slug, 'Trứng gà ác' AS name, 'Hết hàng, cuối tuần có lại.' AS description, 2.20 AS price, 'tray of 30' AS unit, 0 AS stock, 'sold_out' AS status
+      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm bào ngư' AS name, 'Nấm bào ngư xám, hái buổi sáng.' AS description, 1.60 AS price, 'kg' AS unit, 30 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm mối đen' AS name, 'Nấm mối đen, hiếm, đặt trước.' AS description, 7.20 AS price, 'kg' AS unit, 6 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm rơm' AS name, NULL AS description, 2.40 AS price, 'kg' AS unit, 15 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm đông cô tươi' AS name, NULL AS description, 3.80 AS price, 'kg' AS unit, 10 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer9@marketlink.vn' AS email, 'mushrooms' AS slug, 'Nấm kim châm' AS name, 'Tạm ngưng.' AS description, 0.80 AS price, 'bag' AS unit, 0 AS stock, 'unavailable' AS status
+      UNION ALL SELECT 'farmer10@marketlink.vn' AS email, 'grains_beans_and_nuts' AS slug, 'Mật ong rừng tràm' AS name, 'Mật ong rừng tràm U Minh, đặc, thơm.' AS description, 10.00 AS price, 'litre' AS unit, 12 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer10@marketlink.vn' AS email, 'grains_beans_and_nuts' AS slug, 'Phấn hoa' AS name, 'Hộp 250 g.' AS description, 7.20 AS price, 'jar' AS unit, 8 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer10@marketlink.vn' AS email, 'grains_beans_and_nuts' AS slug, 'Sáp ong nguyên chất' AS name, NULL AS description, 4.80 AS price, 'jar' AS unit, 5 AS stock, 'available' AS status
+      UNION ALL SELECT 'farmer10@marketlink.vn' AS email, 'grains_beans_and_nuts' AS slug, 'Mật ong hoa nhãn' AS name, 'Mật ong hoa nhãn Hưng Yên.' AS description, 8.80 AS price, 'litre' AS unit, 10 AS stock, 'available' AS status
      ) x
 JOIN users u ON u.email = x.email
 JOIN farmer_profiles f ON f.user_id = u.id
