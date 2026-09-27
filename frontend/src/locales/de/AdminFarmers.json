@@ -55,8 +55,7 @@
     "reason": "Grund, den der Erzeuger sieht",
     "confirm": "Antrag ablehnen",
     "placeholder": "Schreibe, was sich ändern muss, damit dieser Stand freigegeben wird.",
-    "hint": "{{used}} von {{max}} Zeichen. Die antragstellende Person liest das wörtlich.",
-    "required": "Schreibe den Grund, den die antragstellende Person sieht.",
+    "required": "Wähle einen Grund oder schreibe den, den der Antragsteller liest.",
     "tooLong": "Der Grund darf höchstens {{max}} Zeichen haben."
   },
   "suspend": {
@@ -65,8 +64,7 @@
     "confirm": "Stand sperren",
     "reason": "Grund, den der Erzeuger sieht",
     "placeholder": "Schreibe, was der Stand ändern muss, um wieder zu verkaufen.",
-    "hint": "{{used}} von {{max}} Zeichen. Die erzeugende Person liest das wörtlich.",
-    "required": "Schreibe den Grund, den die erzeugende Person sieht.",
+    "required": "Wähle einen Grund oder schreibe den, den der Landwirt liest.",
     "tooLong": "Der Grund darf höchstens {{max}} Zeichen haben."
   },
   "toast": {

@@ -55,8 +55,7 @@
     "reason": "Motif que verra le producteur",
     "confirm": "Refuser la candidature",
     "placeholder": "Dites ce qui doit changer pour que ce stand soit validé.",
-    "hint": "{{used}} sur {{max}} caractères. Le demandeur lit ce texte mot pour mot.",
-    "required": "Écrivez le motif que le demandeur verra.",
+    "required": "Choisissez un motif ou écrivez celui que le candidat lira.",
     "tooLong": "Le motif ne doit pas dépasser {{max}} caractères."
   },
   "suspend": {
@@ -65,8 +64,7 @@
     "confirm": "Suspendre le stand",
     "reason": "Motif que verra le producteur",
     "placeholder": "Dites ce que le stand doit corriger pour vendre à nouveau.",
-    "hint": "{{used}} sur {{max}} caractères. Le producteur lit ce texte mot pour mot.",
-    "required": "Écrivez le motif que le producteur verra.",
+    "required": "Choisissez un motif ou écrivez celui que le producteur lira.",
     "tooLong": "Le motif ne doit pas dépasser {{max}} caractères."
   },
   "toast": {

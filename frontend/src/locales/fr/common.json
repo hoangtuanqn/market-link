@@ -688,5 +688,33 @@
         "body": "Ouvrez le menu pour accéder à chaque section de l’espace."
       }
     }
+  },
+  "reasons": {
+    "pick": "Choisissez un ou plusieurs motifs",
+    "note": "À ajouter",
+    "noteOptional": "À ajouter (facultatif)",
+    "preview": "La personne lira : « {{text}} »",
+    "length": "{{used}} sur {{max}} caractères.",
+    "reject": {
+      "incompleteInfo": "Les informations du stand sont incomplètes",
+      "unclearPhotos": "Les photos sont floues ou ne montrent pas votre exploitation",
+      "unreachable": "Nous n’avons pas pu vous joindre à votre numéro",
+      "notFarmProduce": "Ce que vous voulez vendre n’est pas un produit agricole",
+      "duplicate": "Ce stand est déjà inscrit"
+    },
+    "suspend": {
+      "complaints": "Plaintes répétées de clients",
+      "notAsDescribed": "Produits non conformes à l’annonce",
+      "missedPickups": "Stand absent à l’heure du retrait",
+      "rulesBroken": "Règles de la plateforme non respectées",
+      "ownerRequest": "À la demande du responsable du stand"
+    },
+    "deactivate": {
+      "noShows": "Commandes répétées jamais retirées",
+      "abusiveMessages": "Messages injurieux ou indésirables",
+      "fakeAccount": "Compte faux ou en double",
+      "fakeReviews": "Faux avis",
+      "ownerRequest": "À la demande du titulaire du compte"
+    }
   }
 }

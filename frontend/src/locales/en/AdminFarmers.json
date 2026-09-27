@@ -55,8 +55,7 @@
     "reason": "Reason the Farmer will see",
     "confirm": "Reject registration",
     "placeholder": "Say what has to change before this stall can be approved.",
-    "hint": "{{used}} of {{max}} characters. The applicant reads this word for word.",
-    "required": "Write the reason the applicant will see.",
+    "required": "Pick a reason or write one the applicant will see.",
     "tooLong": "Keep the reason under {{max}} characters."
   },
   "suspend": {
@@ -65,8 +64,7 @@
     "confirm": "Suspend stall",
     "reason": "Reason the Farmer will see",
     "placeholder": "Say what the stall has to fix before it can sell again.",
-    "hint": "{{used}} of {{max}} characters. The farmer reads this word for word.",
-    "required": "Write the reason the farmer will see.",
+    "required": "Pick a reason or write one the Farmer will see.",
     "tooLong": "Keep the reason under {{max}} characters."
   },
   "toast": {

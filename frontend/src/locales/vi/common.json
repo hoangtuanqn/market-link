@@ -688,5 +688,33 @@
         "body": "Mở menu để tới mọi mục của trang quản lý."
       }
     }
+  },
+  "reasons": {
+    "pick": "Chọn một hoặc nhiều lý do",
+    "note": "Ghi thêm",
+    "noteOptional": "Ghi thêm (không bắt buộc)",
+    "preview": "Họ sẽ đọc: “{{text}}”",
+    "length": "{{used}}/{{max}} ký tự.",
+    "reject": {
+      "incompleteInfo": "Thông tin sạp chưa đầy đủ",
+      "unclearPhotos": "Ảnh không rõ hoặc không phải ảnh vườn của bạn",
+      "unreachable": "Chúng tôi không liên lạc được qua số điện thoại của bạn",
+      "notFarmProduce": "Mặt hàng định bán không phải nông sản",
+      "duplicate": "Sạp này đã được đăng ký"
+    },
+    "suspend": {
+      "complaints": "Khách khiếu nại nhiều lần",
+      "notAsDescribed": "Hàng không đúng như mô tả",
+      "missedPickups": "Sạp vắng mặt khi khách đến nhận hàng",
+      "rulesBroken": "Vi phạm quy định của nền tảng",
+      "ownerRequest": "Theo yêu cầu của chủ sạp"
+    },
+    "deactivate": {
+      "noShows": "Đặt hàng nhiều lần nhưng không đến nhận",
+      "abusiveMessages": "Nhắn tin xúc phạm hoặc spam",
+      "fakeAccount": "Tài khoản giả hoặc trùng lặp",
+      "fakeReviews": "Đánh giá gian lận",
+      "ownerRequest": "Theo yêu cầu của chủ tài khoản"
+    }
   }
 }
