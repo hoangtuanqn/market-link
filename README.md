@@ -326,3 +326,12 @@ Run this once before a demo.
 | Chat photos return 404 after rebuilding containers | The `chat-uploads` volume was removed; the database rows survive but the files are gone | Stop with `docker compose down` (**without** `-v`) to keep volumes. Photos live on `chat-uploads`, separate from `uploads-data` |
 | `POST /api/v1/attachments` returns 415 for a photo that opens fine on your machine | The file is not JPEG/PNG/WebP — the server reads magic bytes and ignores the file extension and `Content-Type` | Re-save it as JPEG or PNG |
 | `<img src="/api/v1/attachments/5">` shows a broken image | That endpoint checks the JWT in the `Authorization` header, and `<img>` does not send it | `fetch` the URL with the header, then render `URL.createObjectURL(blob)` |
+
+## AI tools used
+
+The team used **Claude Code** (Anthropic) as a coding assistant throughout the project — for scaffolding
+new features, refactoring, code review, and drafting documentation such as this README and the files in
+`docs/`. All AI-generated code was reviewed, tested and adapted by the team before merging; no part of the
+codebase was accepted unreviewed. No ready-made website template was used — the UI is built from the
+project's own design system (`docs/design-system/`). Image assets are placeholders or the team's own
+photos; no AI image-generation tool was used for shipped assets.
