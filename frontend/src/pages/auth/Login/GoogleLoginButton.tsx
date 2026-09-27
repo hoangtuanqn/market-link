@@ -30,12 +30,7 @@ const GoogleLoginButton = () => {
   };
 
   return (
-    <Button
-      variant="secondary"
-      className="flex w-full items-center justify-center gap-2.5 font-medium shadow-xs"
-      onClick={onClick}
-      disabled={isRedirecting}
-    >
+    <Button variant="secondary" className="w-full gap-2.5" onClick={onClick} disabled={isRedirecting}>
       <GoogleIcon size={18} />
       <span>{isRedirecting ? t('google.opening') : t('google.continue')}</span>
     </Button>
