@@ -8,10 +8,9 @@
   },
   "filter": {
     "day": "Pickup day",
-    "all": "All",
-    "market": "Market",
-    "bothMarkets": "Both markets"
+    "all": "All"
   },
+  "noun": "orders",
   "tabsLabel": "Orders by status",
   "status": {
     "placed": "Placed",

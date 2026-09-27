@@ -14,9 +14,8 @@
     "reason": "Reason the customer will see"
   },
   "history": {
-    "before": "Before {{cutoff}}",
-    "cancelled": "Cancelled by the customer",
-    "title": "History"
+    "title": "History",
+    "by": "{{time}} · by {{by}}"
   },
   "missing": {
     "title": "That order is not here any more",
@@ -24,10 +23,10 @@
     "back": "My orders"
   },
   "item": "item",
+  "noun": "order",
   "col": {
     "product": "Product",
     "requested": "Requested",
-    "left": "Left after this order",
     "amount": "Amount"
   },
   "crumb": "Orders",
@@ -50,25 +49,19 @@
   },
   "items": {
     "title": "Items",
-    "note": "Stock shown is what is left after this and other placed orders. Reserved stock is returned if you decline (D-02)."
+    "total": "Total"
   },
   "note": "Note from the customer",
   "quote": "“{{text}}”",
   "customer": {
     "title": "Customer",
     "name": "Name",
-    "tier": "Tier",
     "phone": "Phone",
-    "ordersWithYou": "Orders with you",
-    "orders_one": "{{count}} order",
-    "orders_other": "{{count}} orders",
-    "withCollected_one": "{{orders}}, {{count}} collected",
-    "withCollected_other": "{{orders}}, {{count}} collected"
+    "email": "Email"
   },
   "pickup": {
     "title": "Pickup slot",
     "market": "Market",
-    "marketStall": "{{market}}, stall {{code}}",
     "slot": "Slot",
     "pay": "Pay on pickup"
   },

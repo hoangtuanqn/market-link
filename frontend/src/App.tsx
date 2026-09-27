@@ -1,8 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
 import AppToaster from './components/AppToaster';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
-import ComingSoon from './components/ComingSoon';
-import { SHOW_WIP } from './config/wip';
 import { USER_ROLE } from './constants/enums';
 import NotificationCenter from './components/notifications/NotificationCenter';
 import NotificationPermissionBanner from './components/notifications/NotificationPermissionBanner';
@@ -50,15 +48,15 @@ import PrivacyPage from './pages/public/Privacy';
 import TermsPage from './pages/public/Terms';
 import ContactPage from './pages/public/Contact';
 import FeedbackPage from './pages/public/Feedback';
-import FarmerOverviewWip from './pages/farmer/Overview';
-import FarmerOrdersWip from './pages/farmer/Orders';
-import FarmerOrderDetailWip from './pages/farmer/OrderDetail';
+import FarmerOverviewPage from './pages/farmer/Overview';
+import FarmerOrdersPage from './pages/farmer/Orders';
+import FarmerOrderDetailPage from './pages/farmer/OrderDetail';
 import FarmerStockWeekPage from './pages/farmer/StockWeek';
 import FarmerProductsPage from './pages/farmer/Products';
 import FarmerProductFormPage from './pages/farmer/ProductForm';
 import FarmerStallProfilePage from './pages/farmer/StallProfile';
 import FarmerSlotsPage from './pages/farmer/Slots';
-import FarmerHistoryWip from './pages/farmer/History';
+import FarmerHistoryPage from './pages/farmer/History';
 import FarmerReviewsPage from './pages/farmer/Reviews';
 import FarmerMessagesPage from './pages/farmer/Messages';
 import FarmerNotificationsPage from './pages/farmer/Notifications';
@@ -82,13 +80,6 @@ import AdminModerationPage from './pages/admin/Moderation';
 import AdminOrderDetailPage from './pages/admin/OrderDetail';
 import AdminOrdersPage from './pages/admin/Orders';
 import AdminReportsPage from './pages/admin/Reports';
-
-// A screen still running on sample data (src/data): the production build shows "Coming soon" instead (config/wip.ts).
-// Once a screen's API is wired up, remove it from this list.
-const FarmerOverviewPage = SHOW_WIP ? FarmerOverviewWip : ComingSoon;
-const FarmerOrdersPage = SHOW_WIP ? FarmerOrdersWip : ComingSoon;
-const FarmerOrderDetailPage = SHOW_WIP ? FarmerOrderDetailWip : ComingSoon;
-const FarmerHistoryPage = SHOW_WIP ? FarmerHistoryWip : ComingSoon;
 
 const App = () => {
   return (
