@@ -15,9 +15,4 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     boolean existsByOrderIdAndTargetTypeAndFarmerId(
             Long orderId, ReviewTarget targetType, Long farmerId);
-
-    /**
-     * {@code OrderDetailResource.reviewed} (Task 8.3): has the customer reviewed this order at all.
-     */
-    boolean existsByOrderId(Long orderId);
 }

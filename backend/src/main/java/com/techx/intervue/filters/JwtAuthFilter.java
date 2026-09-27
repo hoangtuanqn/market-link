@@ -101,15 +101,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     return;
                 }
 
-                // Load permissions from the Redis cache by roles
-                // Set<String> permissions = permissionCacheService.getPermissionsByRoles(
-                // session.roles().stream().toList());
-
                 // Build authorities
                 Set<GrantedAuthority> authorities = new HashSet<>();
                 session.roles()
                         .forEach(r -> authorities.add(new SimpleGrantedAuthority("ROLE_" + r)));
-                // permissions.forEach(p -> authorities.add(new SimpleGrantedAuthority(p)));
 
                 // Build principal
                 CustomUserDetails userDetails =

@@ -38,10 +38,4 @@ public interface UserServiceInterface {
      * Update the full name, phone number, address of the signed-in user themself (PUT /auth/me).
      */
     UserResource updateProfile(Long userId, UpdateProfileRequest request);
-
-    // Optional<User> findById(Long userId);
-
-    // Optional<User> findByEmail(String email);
-
-    // UserResource getMe(Long userId);
 }
