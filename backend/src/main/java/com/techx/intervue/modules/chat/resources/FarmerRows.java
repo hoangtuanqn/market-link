@@ -46,6 +46,17 @@ public final class FarmerRows {
             LocalDate createdOn,
             boolean answered) {}
 
+    /**
+     * FR-093: everything the Overview banner says, in one row. Counted for one pickup date so the
+     * numbers match what the Farmer is about to work through.
+     */
+    public record BriefingRow(
+            long ordersToday,
+            long waitingToBeAccepted,
+            long cutoffAlreadyPassed,
+            long soldOutProducts,
+            long lowStockProducts) {}
+
     public record ScheduleDayRow(
             String marketName, int dayOfWeek, LocalTime pickupStart, LocalTime pickupEnd) {}
 }

@@ -82,5 +82,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "Hari ini di {{markets}}",
+    "titleNoMarket": "Hari ini kamu tidak berjualan di pasar mana pun",
+    "orders_other": "{{count}} pesanan untuk hari ini",
+    "waiting_other": "{{count}} masih menunggu kamu terima atau tolak",
+    "cutoffPassed_other": "{{count}} di antaranya sudah lewat batas waktu, pembeli tidak bisa mengubahnya lagi",
+    "soldOut_other": "{{count}} produk ditandai habis",
+    "lowStock_other": "{{count}} produk hampir habis"
   }
 }

@@ -5,6 +5,7 @@ import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
+import com.techx.intervue.modules.chat.resources.FarmerBriefingResource;
 import com.techx.intervue.modules.chat.services.interfaces.ChatServiceInterface;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -67,5 +69,16 @@ public class ChatController extends BaseController {
                 user.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet()));
+    }
+
+    /**
+     * FR-093: the Farmer Overview banner. Farmer only, and the stall is resolved from the
+     * principal, so there is nothing in the request that could point at another stall.
+     */
+    @GetMapping("/farmer-briefing")
+    @PreAuthorize("hasRole('FARMER')")
+    public ResponseEntity<ApiResource<FarmerBriefingResource>> farmerBriefing(
+            @AuthenticationPrincipal CustomUserDetails user) {
+        return ok(chatService.farmerBriefing(user == null ? null : user.getId()), "OK");
     }
 }

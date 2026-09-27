@@ -18,6 +18,15 @@ export type ChatResultDto = {
   subtitle: string | null;
 };
 export type ChatReplyDto = { reply: string; intent: ChatIntent; results: ChatResultDto[] };
+/** FR-093: the Farmer Overview banner. Counted on the server; the sentence is built from i18n here. */
+export type FarmerBriefingDto = {
+  marketsToday: string[];
+  ordersToday: number;
+  waitingToBeAccepted: number;
+  cutoffAlreadyPassed: number;
+  soldOutProducts: number;
+  lowStockProducts: number;
+};
 export type ChatMessageDto = { role: 'user' | 'bot'; message: string; intent: string | null; createdAt: string };
 
 /**
@@ -30,6 +39,10 @@ const api = () => (Session.getRawUser() ? privateApi : publicApi);
 class ChatApi {
   static ask = async (sessionKey: string, message: string) => {
     const response = await api().post<ApiResponse<ChatReplyDto>>('/chat', { sessionKey, message });
+    return response.data.data;
+  };
+  static farmerBriefing = async () => {
+    const response = await privateApi.get<ApiResponse<FarmerBriefingDto>>('/chat/farmer-briefing');
     return response.data.data;
   };
   static history = async (sessionKey: string) => {

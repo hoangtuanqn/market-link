@@ -4,6 +4,7 @@ import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
+import com.techx.intervue.modules.chat.resources.FarmerBriefingResource;
 import java.util.List;
 
 public interface ChatServiceInterface {
@@ -20,4 +21,7 @@ public interface ChatServiceInterface {
     ChatReplyResource reply(ChatRequest request, Long userId, AssistantAudience audience);
 
     List<ChatMessageResource> history(String sessionKey, Long userId);
+
+    /** FR-093: the Overview banner for the signed-in Farmer, for today in Vietnam time. */
+    FarmerBriefingResource farmerBriefing(Long userId);
 }

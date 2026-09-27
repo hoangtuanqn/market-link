@@ -12,6 +12,9 @@ import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
+import com.techx.intervue.modules.chat.resources.FarmerBriefingResource;
+import com.techx.intervue.modules.chat.resources.FarmerRows.BriefingRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.ScheduleDayRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
@@ -542,5 +545,33 @@ public class ChatService implements ChatServiceInterface {
                 .message(text)
                 .intent(intent)
                 .build();
+    }
+
+    /** Products at or below this are "running low" in the banner. Same number the tools use. */
+    private static final int BRIEFING_LOW_STOCK = 5;
+
+    @Override
+    public FarmerBriefingResource farmerBriefing(Long userId) {
+        Long farmerId = userId == null ? null : farmerKnowledge.farmerIdOf(userId).orElse(null);
+        if (farmerId == null) {
+            return new FarmerBriefingResource(List.of(), 0, 0, 0, 0, 0);
+        }
+        LocalDate today = LocalDate.now(clock);
+        // java.time: Mon = 1 … Sun = 7, schema: Sun = 0 … Sat = 6
+        int dayOfWeek = today.getDayOfWeek().getValue() % 7;
+        List<String> markets =
+                farmerKnowledge.mySchedule(farmerId).stream()
+                        .filter(day -> day.dayOfWeek() == dayOfWeek)
+                        .map(ScheduleDayRow::marketName)
+                        .distinct()
+                        .toList();
+        BriefingRow row = farmerKnowledge.briefing(farmerId, today, BRIEFING_LOW_STOCK);
+        return new FarmerBriefingResource(
+                markets,
+                row.ordersToday(),
+                row.waitingToBeAccepted(),
+                row.cutoffAlreadyPassed(),
+                row.soldOutProducts(),
+                row.lowStockProducts());
     }
 }

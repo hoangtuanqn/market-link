@@ -82,5 +82,19 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "Today at {{markets}}",
+    "titleNoMarket": "You are not at a market today",
+    "orders_one": "{{count}} order for today",
+    "orders_other": "{{count}} orders for today",
+    "waiting_one": "{{count}} still waiting for you to accept or decline",
+    "waiting_other": "{{count}} still waiting for you to accept or decline",
+    "cutoffPassed_one": "{{count}} of those is past its cutoff, so the customer can no longer change it",
+    "cutoffPassed_other": "{{count}} of those are past their cutoff, so customers can no longer change them",
+    "soldOut_one": "{{count}} product is marked sold out",
+    "soldOut_other": "{{count}} products are marked sold out",
+    "lowStock_one": "{{count}} product is running low",
+    "lowStock_other": "{{count}} products are running low"
   }
 }

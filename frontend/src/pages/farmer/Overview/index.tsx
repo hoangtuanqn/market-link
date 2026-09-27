@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import ChatApi from '@/api-requests/chat.requests';
 import OrderApi, { type OrderDetailDto, type OrderListItemDto } from '@/api-requests/order.requests';
 import ProductApi from '@/api-requests/product.requests';
 import { FarmerReportApi } from '@/api-requests/report.requests';
@@ -48,6 +49,7 @@ const FarmerOverviewPage = () => {
   const [busyId, setBusyId] = useState<number | null>(null);
 
   const { state: kpiLoad, retry: retryKpi } = useRequest('farmer-dash', () => FarmerReportApi.dashboard());
+  const { state: briefingLoad } = useRequest('farmer-briefing', () => ChatApi.farmerBriefing());
   const activeTab = TABS.find((x) => x.id === tab)!;
   const {
     state: ordersLoad,
@@ -172,6 +174,7 @@ const FarmerOverviewPage = () => {
   ];
 
   const dashboard = kpiLoad.kind === 'ready' ? kpiLoad.data : null;
+  const briefing = briefingLoad.kind === 'ready' ? briefingLoad.data : null;
   const orders = ordersLoad.kind === 'ready' ? ordersLoad.data.items : [];
   const stock =
     stockLoad.kind === 'ready' ? [...stockLoad.data].sort((a, b) => a.stock - b.stock).slice(0, STOCK_ROWS) : [];
@@ -193,6 +196,29 @@ const FarmerOverviewPage = () => {
           <ButtonLink to="/farmer/products/new">{t('addProduct')}</ButtonLink>
         </div>
       </div>
+
+      {briefingLoad.kind === 'ready' && briefing && (
+        <Banner
+          variant={briefing.cutoffAlreadyPassed > 0 ? 'warning' : 'info'}
+          title={
+            briefing.marketsToday.length > 0
+              ? t('briefing.title', { markets: briefing.marketsToday.join(', ') })
+              : t('briefing.titleNoMarket')
+          }
+        >
+          <ul className="m-0 flex list-disc flex-col gap-1 pl-4.5">
+            <li>{t('briefing.orders', { count: briefing.ordersToday })}</li>
+            {briefing.waitingToBeAccepted > 0 && (
+              <li>{t('briefing.waiting', { count: briefing.waitingToBeAccepted })}</li>
+            )}
+            {briefing.cutoffAlreadyPassed > 0 && (
+              <li>{t('briefing.cutoffPassed', { count: briefing.cutoffAlreadyPassed })}</li>
+            )}
+            {briefing.soldOutProducts > 0 && <li>{t('briefing.soldOut', { count: briefing.soldOutProducts })}</li>}
+            {briefing.lowStockProducts > 0 && <li>{t('briefing.lowStock', { count: briefing.lowStockProducts })}</li>}
+          </ul>
+        </Banner>
+      )}
 
       {dashboard && dashboard.pendingOrders > 0 && (
         <Banner variant="warning" title={t('banner.title', { count: dashboard.pendingOrders })}>

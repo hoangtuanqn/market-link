@@ -82,5 +82,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "วันนี้ที่ {{markets}}",
+    "titleNoMarket": "วันนี้คุณไม่ได้ขายที่ตลาดใด",
+    "orders_other": "คำสั่งซื้อวันนี้ {{count}} รายการ",
+    "waiting_other": "{{count}} รายการยังรอให้คุณรับหรือปฏิเสธ",
+    "cutoffPassed_other": "{{count}} รายการเลยเวลาปิดรับแล้ว ลูกค้าแก้ไขไม่ได้",
+    "soldOut_other": "สินค้า {{count}} รายการถูกทำเครื่องหมายว่าหมด",
+    "lowStock_other": "สินค้า {{count}} รายการใกล้หมด"
   }
 }

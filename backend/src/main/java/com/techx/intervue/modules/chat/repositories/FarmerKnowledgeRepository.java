@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.chat.repositories;
 
 import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.BriefingRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.FarmerReviewRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.ProductStockRow;
@@ -138,7 +139,49 @@ public class FarmerKnowledgeRepository {
             LIMIT 30
             """;
 
+    /** FR-093 Overview banner: one round trip, five numbers, all for one pickup date. */
+    private static final String BRIEFING =
+            """
+            SELECT
+              (SELECT COUNT(*) FROM orders
+                 WHERE farmer_id = :farmerId AND pickup_date = :onDate
+                   AND status NOT IN ('declined','cancelled'))            AS orders_today,
+              (SELECT COUNT(*) FROM orders
+                 WHERE farmer_id = :farmerId AND pickup_date = :onDate
+                   AND status = 'placed')                                 AS waiting,
+              (SELECT COUNT(*) FROM orders
+                 WHERE farmer_id = :farmerId AND pickup_date = :onDate
+                   AND status = 'placed' AND cutoff_at < NOW())           AS cutoff_passed,
+              (SELECT COUNT(*) FROM products
+                 WHERE farmer_id = :farmerId AND is_deleted = FALSE
+                   AND status = 'sold_out')                               AS sold_out,
+              (SELECT COUNT(*) FROM products
+                 WHERE farmer_id = :farmerId AND is_deleted = FALSE
+                   AND status = 'available'
+                   AND stock_quantity <= :lowStock)                       AS low_stock
+            """;
+
     private final NamedParameterJdbcTemplate jdbc;
+
+    public BriefingRow briefing(long farmerId, LocalDate onDate, int lowStockThreshold) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("farmerId", farmerId)
+                        .addValue("onDate", onDate)
+                        .addValue("lowStock", lowStockThreshold);
+        BriefingRow row =
+                jdbc.queryForObject(
+                        BRIEFING,
+                        params,
+                        (rs, i) ->
+                                new BriefingRow(
+                                        rs.getLong("orders_today"),
+                                        rs.getLong("waiting"),
+                                        rs.getLong("cutoff_passed"),
+                                        rs.getLong("sold_out"),
+                                        rs.getLong("low_stock")));
+        return row == null ? new BriefingRow(0, 0, 0, 0, 0) : row;
+    }
 
     /** The stall this account owns, or empty when it owns none. Resolved from the JWT's user id. */
     public Optional<Long> farmerIdOf(long userId) {
