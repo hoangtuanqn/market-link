@@ -646,58 +646,6 @@
         "title": "Gian hàng đã sẵn sàng",
         "body": "Hãy bắt đầu bằng việc kiểm tra tồn kho tuần này và khung giờ nhận hàng."
       },
-      "adminWelcome": {
-        "title": "Chào mừng đến trang quản trị",
-        "body": "Bạn quản lý chợ, nhà vườn và nội dung của toàn nền tảng. Đây là nơi đặt mọi thứ."
-      },
-      "adminOverview": {
-        "title": "Tổng quan",
-        "body": "Các số liệu chính về đơn hàng, khách hàng và nhà vườn."
-      },
-      "adminReports": {
-        "title": "Báo cáo",
-        "body": "Báo cáo doanh số và hoạt động trên toàn nền tảng."
-      },
-      "adminOrders": {
-        "title": "Đơn hàng",
-        "body": "Tra cứu bất kỳ đơn nào và theo dõi trạng thái."
-      },
-      "adminFarmers": {
-        "title": "Nhà vườn",
-        "body": "Xét duyệt hồ sơ nhà vườn, duyệt hoặc từ chối, và tạm ngưng gian hàng khi cần."
-      },
-      "adminCustomers": {
-        "title": "Khách hàng",
-        "body": "Tra cứu tài khoản khách hàng và đơn hàng của họ."
-      },
-      "adminMarkets": {
-        "title": "Chợ",
-        "body": "Thêm chợ, đặt vị trí, giờ mở cửa và ngày họp chợ."
-      },
-      "adminModeration": {
-        "title": "Kiểm duyệt",
-        "body": "Ẩn các tin đăng vi phạm quy định của nền tảng."
-      },
-      "adminCategories": {
-        "title": "Danh mục",
-        "body": "Quản lý danh mục sản phẩm mà khách dùng để lọc."
-      },
-      "adminAnnouncements": {
-        "title": "Thông báo chung",
-        "body": "Gửi thông báo tới khách hàng và nhà vườn."
-      },
-      "adminFeedback": {
-        "title": "Góp ý",
-        "body": "Đọc báo lỗi, đề xuất và câu hỏi từ người dùng."
-      },
-      "adminSecurity": {
-        "title": "Bảo mật",
-        "body": "Bật xác minh hai bước để bảo vệ tài khoản quản trị."
-      },
-      "adminDone": {
-        "title": "Bạn đã sẵn sàng",
-        "body": "Hãy bắt đầu với các hồ sơ nhà vườn đang chờ duyệt."
-      },
       "dashboardMenu": {
         "title": "Menu",
         "body": "Mở menu để tới mọi mục của trang quản lý."

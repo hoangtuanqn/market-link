@@ -646,58 +646,6 @@
         "title": "摊位已就绪",
         "body": "先检查本周库存和取货时段吧。"
       },
-      "adminWelcome": {
-        "title": "欢迎来到管理后台",
-        "body": "你负责管理整个平台的集市、农户和内容。所有功能都在这里。"
-      },
-      "adminOverview": {
-        "title": "概览",
-        "body": "订单、顾客和农户的关键数据。"
-      },
-      "adminReports": {
-        "title": "报表",
-        "body": "整个平台的销售和活动报表。"
-      },
-      "adminOrders": {
-        "title": "订单",
-        "body": "查找任意订单并跟踪其状态。"
-      },
-      "adminFarmers": {
-        "title": "农户",
-        "body": "审核农户申请，批准或拒绝，并在需要时暂停摊位。"
-      },
-      "adminCustomers": {
-        "title": "顾客",
-        "body": "查找顾客账户及其订单。"
-      },
-      "adminMarkets": {
-        "title": "集市",
-        "body": "添加集市并设置位置、营业时间和开市日期。"
-      },
-      "adminModeration": {
-        "title": "内容审核",
-        "body": "隐藏违反平台规则的商品信息。"
-      },
-      "adminCategories": {
-        "title": "类别",
-        "body": "管理顾客用于筛选的商品类别。"
-      },
-      "adminAnnouncements": {
-        "title": "公告",
-        "body": "向顾客和农户发送通知。"
-      },
-      "adminFeedback": {
-        "title": "反馈",
-        "body": "阅读用户提交的错误报告、建议和问题。"
-      },
-      "adminSecurity": {
-        "title": "安全",
-        "body": "开启两步验证以保护管理员账户。"
-      },
-      "adminDone": {
-        "title": "准备就绪",
-        "body": "先从等待审核的农户申请开始吧。"
-      },
       "dashboardMenu": {
         "title": "菜单",
         "body": "打开菜单即可进入面板的每个部分。"

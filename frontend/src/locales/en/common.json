@@ -649,58 +649,6 @@
         "title": "Your stall is ready",
         "body": "Start by checking this week's stock and your pickup slots."
       },
-      "adminWelcome": {
-        "title": "Welcome to the admin panel",
-        "body": "You look after markets, farmers and content for the whole platform. Here is where everything lives."
-      },
-      "adminOverview": {
-        "title": "Overview",
-        "body": "Key figures for orders, customers and farmers."
-      },
-      "adminReports": {
-        "title": "Reports",
-        "body": "Sales and activity reports across the platform."
-      },
-      "adminOrders": {
-        "title": "Orders",
-        "body": "Look up any order and follow its status."
-      },
-      "adminFarmers": {
-        "title": "Farmers",
-        "body": "Review farmer applications, approve or reject them, and suspend a stall when needed."
-      },
-      "adminCustomers": {
-        "title": "Customers",
-        "body": "Look up customer accounts and their orders."
-      },
-      "adminMarkets": {
-        "title": "Markets",
-        "body": "Add markets and set their location, opening hours and days."
-      },
-      "adminModeration": {
-        "title": "Moderation",
-        "body": "Hide listings that break the platform rules."
-      },
-      "adminCategories": {
-        "title": "Categories",
-        "body": "Manage the product categories customers filter by."
-      },
-      "adminAnnouncements": {
-        "title": "Announcements",
-        "body": "Send a notice to customers and farmers."
-      },
-      "adminFeedback": {
-        "title": "Feedback",
-        "body": "Read bug reports, suggestions and questions from users."
-      },
-      "adminSecurity": {
-        "title": "Security",
-        "body": "Turn on two-step verification to protect your admin account."
-      },
-      "adminDone": {
-        "title": "You are ready",
-        "body": "Start with the farmer applications waiting for approval."
-      },
       "dashboardMenu": {
         "title": "Menu",
         "body": "Open the menu to reach every section of the panel."

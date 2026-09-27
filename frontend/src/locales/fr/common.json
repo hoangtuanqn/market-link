@@ -649,58 +649,6 @@
         "title": "Votre stand est prêt",
         "body": "Commencez par vérifier le stock de la semaine et vos créneaux de retrait."
       },
-      "adminWelcome": {
-        "title": "Bienvenue dans l’administration",
-        "body": "Vous gérez les marchés, les producteurs et le contenu de toute la plateforme. Tout se trouve ici."
-      },
-      "adminOverview": {
-        "title": "Vue d’ensemble",
-        "body": "Les chiffres clés des commandes, clients et producteurs."
-      },
-      "adminReports": {
-        "title": "Rapports",
-        "body": "Rapports de ventes et d’activité sur toute la plateforme."
-      },
-      "adminOrders": {
-        "title": "Commandes",
-        "body": "Retrouvez n’importe quelle commande et suivez son statut."
-      },
-      "adminFarmers": {
-        "title": "Producteurs",
-        "body": "Examinez les candidatures, approuvez-les ou refusez-les, et suspendez un stand si nécessaire."
-      },
-      "adminCustomers": {
-        "title": "Clients",
-        "body": "Consultez les comptes clients et leurs commandes."
-      },
-      "adminMarkets": {
-        "title": "Marchés",
-        "body": "Ajoutez des marchés et définissez leur emplacement, leurs horaires et leurs jours."
-      },
-      "adminModeration": {
-        "title": "Modération",
-        "body": "Masquez les annonces qui enfreignent les règles de la plateforme."
-      },
-      "adminCategories": {
-        "title": "Catégories",
-        "body": "Gérez les catégories de produits utilisées par les clients pour filtrer."
-      },
-      "adminAnnouncements": {
-        "title": "Annonces",
-        "body": "Envoyez un avis aux clients et aux producteurs."
-      },
-      "adminFeedback": {
-        "title": "Retours",
-        "body": "Lisez les signalements de bugs, suggestions et questions des utilisateurs."
-      },
-      "adminSecurity": {
-        "title": "Sécurité",
-        "body": "Activez la validation en deux étapes pour protéger votre compte administrateur."
-      },
-      "adminDone": {
-        "title": "Vous êtes prêt",
-        "body": "Commencez par les candidatures de producteurs en attente de validation."
-      },
       "dashboardMenu": {
         "title": "Menu",
         "body": "Ouvrez le menu pour accéder à chaque section de l’espace."

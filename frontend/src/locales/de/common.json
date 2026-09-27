@@ -649,58 +649,6 @@
         "title": "Dein Stand ist bereit",
         "body": "Prüfe zuerst den Bestand dieser Woche und deine Abholzeiten."
       },
-      "adminWelcome": {
-        "title": "Willkommen in der Verwaltung",
-        "body": "Du betreust Märkte, Bauern und Inhalte der gesamten Plattform. Hier findest du alles."
-      },
-      "adminOverview": {
-        "title": "Übersicht",
-        "body": "Kennzahlen zu Bestellungen, Kunden und Bauern."
-      },
-      "adminReports": {
-        "title": "Berichte",
-        "body": "Verkaufs- und Aktivitätsberichte für die gesamte Plattform."
-      },
-      "adminOrders": {
-        "title": "Bestellungen",
-        "body": "Finde jede Bestellung und verfolge ihren Status."
-      },
-      "adminFarmers": {
-        "title": "Bauern",
-        "body": "Prüfe Bewerbungen, genehmige oder lehne sie ab und sperre bei Bedarf einen Stand."
-      },
-      "adminCustomers": {
-        "title": "Kunden",
-        "body": "Sieh dir Kundenkonten und ihre Bestellungen an."
-      },
-      "adminMarkets": {
-        "title": "Märkte",
-        "body": "Füge Märkte hinzu und lege Standort, Öffnungszeiten und Markttage fest."
-      },
-      "adminModeration": {
-        "title": "Moderation",
-        "body": "Blende Angebote aus, die gegen die Regeln verstoßen."
-      },
-      "adminCategories": {
-        "title": "Kategorien",
-        "body": "Verwalte die Produktkategorien, nach denen Kunden filtern."
-      },
-      "adminAnnouncements": {
-        "title": "Ankündigungen",
-        "body": "Sende eine Mitteilung an Kunden und Bauern."
-      },
-      "adminFeedback": {
-        "title": "Feedback",
-        "body": "Lies Fehlerberichte, Vorschläge und Fragen von Nutzern."
-      },
-      "adminSecurity": {
-        "title": "Sicherheit",
-        "body": "Aktiviere die Zwei-Schritt-Bestätigung, um dein Admin-Konto zu schützen."
-      },
-      "adminDone": {
-        "title": "Alles bereit",
-        "body": "Beginne mit den Bewerbungen von Bauern, die auf Freigabe warten."
-      },
       "dashboardMenu": {
         "title": "Menü",
         "body": "Öffne das Menü, um jeden Bereich zu erreichen."

@@ -7,7 +7,7 @@ import SettingsApi from '@/api-requests/settings.requests';
 import SettingsStore, { normalize } from '@/lib/settings';
 import type common from '@/locales/en/common.json';
 
-export type TourRole = 'customer' | 'farmer' | 'admin';
+export type TourRole = 'customer' | 'farmer';
 
 /** Keys under `tour.steps.` in common.json. */
 type StepKey = keyof (typeof common)['tour']['steps'];
@@ -54,22 +54,6 @@ export const TOURS: Record<TourRole, TourStep[]> = {
     nav('/farmer/settings', 'farmerSettings'),
     { key: 'dashboardMenu', target: 'shell:menu', side: 'bottom' },
     { key: 'farmerDone' },
-  ],
-  admin: [
-    { key: 'adminWelcome' },
-    nav('/admin', 'adminOverview'),
-    nav('/admin/reports', 'adminReports'),
-    nav('/admin/orders', 'adminOrders'),
-    nav('/admin/farmers', 'adminFarmers'),
-    nav('/admin/customers', 'adminCustomers'),
-    nav('/admin/markets', 'adminMarkets'),
-    nav('/admin/moderation', 'adminModeration'),
-    nav('/admin/categories', 'adminCategories'),
-    nav('/admin/announcements', 'adminAnnouncements'),
-    nav('/admin/feedback', 'adminFeedback'),
-    nav('/admin/security', 'adminSecurity'),
-    { key: 'dashboardMenu', target: 'shell:menu', side: 'bottom' },
-    { key: 'adminDone' },
   ],
 };
 

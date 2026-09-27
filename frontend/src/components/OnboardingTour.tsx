@@ -10,7 +10,7 @@ import '@/styles/driver-theme.css';
  * The tour only opens on the role's home page, never on a flow page (set password, complete profile, checkout…). Not
  * seen yet = it waits for the next visit to home.
  */
-const HOME: Record<TourRole, string> = { customer: '/', farmer: '/farmer', admin: '/admin' };
+const HOME: Record<TourRole, string> = { customer: '/', farmer: '/farmer' };
 
 /** Give the layout (sidebar, header icons, fonts) a moment to settle before measuring targets. */
 const START_DELAY_MS = 800;

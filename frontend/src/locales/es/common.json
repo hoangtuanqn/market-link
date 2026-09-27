@@ -649,58 +649,6 @@
         "title": "Tu puesto está listo",
         "body": "Empieza revisando las existencias de esta semana y tus horarios de recogida."
       },
-      "adminWelcome": {
-        "title": "Te damos la bienvenida a la administración",
-        "body": "Gestionas los mercados, los agricultores y el contenido de toda la plataforma. Aquí está todo."
-      },
-      "adminOverview": {
-        "title": "Resumen",
-        "body": "Cifras clave de pedidos, clientes y agricultores."
-      },
-      "adminReports": {
-        "title": "Informes",
-        "body": "Informes de ventas y actividad de toda la plataforma."
-      },
-      "adminOrders": {
-        "title": "Pedidos",
-        "body": "Busca cualquier pedido y sigue su estado."
-      },
-      "adminFarmers": {
-        "title": "Agricultores",
-        "body": "Revisa solicitudes, apruébalas o recházalas y suspende un puesto si hace falta."
-      },
-      "adminCustomers": {
-        "title": "Clientes",
-        "body": "Consulta las cuentas de clientes y sus pedidos."
-      },
-      "adminMarkets": {
-        "title": "Mercados",
-        "body": "Añade mercados y define su ubicación, horario y días."
-      },
-      "adminModeration": {
-        "title": "Moderación",
-        "body": "Oculta publicaciones que incumplen las normas de la plataforma."
-      },
-      "adminCategories": {
-        "title": "Categorías",
-        "body": "Gestiona las categorías que los clientes usan para filtrar."
-      },
-      "adminAnnouncements": {
-        "title": "Avisos",
-        "body": "Envía un aviso a clientes y agricultores."
-      },
-      "adminFeedback": {
-        "title": "Comentarios",
-        "body": "Lee informes de errores, sugerencias y preguntas de los usuarios."
-      },
-      "adminSecurity": {
-        "title": "Seguridad",
-        "body": "Activa la verificación en dos pasos para proteger tu cuenta de administrador."
-      },
-      "adminDone": {
-        "title": "Todo listo",
-        "body": "Empieza por las solicitudes de agricultores pendientes de aprobación."
-      },
       "dashboardMenu": {
         "title": "Menú",
         "body": "Abre el menú para ir a cualquier sección del panel."

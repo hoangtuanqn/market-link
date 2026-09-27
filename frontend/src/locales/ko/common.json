@@ -646,58 +646,6 @@
         "title": "가판대 준비 완료",
         "body": "이번 주 재고와 픽업 시간부터 확인해 보세요."
       },
-      "adminWelcome": {
-        "title": "관리자 화면에 오신 것을 환영합니다",
-        "body": "플랫폼 전체의 시장, 농가, 콘텐츠를 관리합니다. 모든 기능이 여기에 있습니다."
-      },
-      "adminOverview": {
-        "title": "개요",
-        "body": "주문, 고객, 농가의 주요 수치입니다."
-      },
-      "adminReports": {
-        "title": "보고서",
-        "body": "플랫폼 전체의 매출 및 활동 보고서입니다."
-      },
-      "adminOrders": {
-        "title": "주문",
-        "body": "모든 주문을 찾아보고 상태를 확인하세요."
-      },
-      "adminFarmers": {
-        "title": "농가",
-        "body": "농가 신청을 검토해 승인하거나 거절하고, 필요하면 가판대를 정지하세요."
-      },
-      "adminCustomers": {
-        "title": "고객",
-        "body": "고객 계정과 주문을 찾아보세요."
-      },
-      "adminMarkets": {
-        "title": "시장",
-        "body": "시장을 추가하고 위치, 영업시간, 장날을 설정하세요."
-      },
-      "adminModeration": {
-        "title": "검수",
-        "body": "플랫폼 규칙을 위반한 상품 게시물을 숨기세요."
-      },
-      "adminCategories": {
-        "title": "카테고리",
-        "body": "고객이 필터에 사용하는 상품 카테고리를 관리하세요."
-      },
-      "adminAnnouncements": {
-        "title": "공지",
-        "body": "고객과 농가에게 공지를 보내세요."
-      },
-      "adminFeedback": {
-        "title": "피드백",
-        "body": "사용자의 버그 신고, 제안, 문의를 확인하세요."
-      },
-      "adminSecurity": {
-        "title": "보안",
-        "body": "2단계 인증을 켜서 관리자 계정을 보호하세요."
-      },
-      "adminDone": {
-        "title": "준비가 끝났습니다",
-        "body": "승인을 기다리는 농가 신청부터 시작해 보세요."
-      },
       "dashboardMenu": {
         "title": "메뉴",
         "body": "메뉴를 열면 관리 화면의 모든 섹션으로 이동할 수 있습니다."

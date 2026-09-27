@@ -646,58 +646,6 @@
         "title": "Lapak Anda siap",
         "body": "Mulailah dengan memeriksa stok minggu ini dan slot pengambilan."
       },
-      "adminWelcome": {
-        "title": "Selamat datang di panel admin",
-        "body": "Anda mengelola pasar, petani, dan konten di seluruh platform. Semuanya ada di sini."
-      },
-      "adminOverview": {
-        "title": "Ringkasan",
-        "body": "Angka utama untuk pesanan, pelanggan, dan petani."
-      },
-      "adminReports": {
-        "title": "Laporan",
-        "body": "Laporan penjualan dan aktivitas di seluruh platform."
-      },
-      "adminOrders": {
-        "title": "Pesanan",
-        "body": "Cari pesanan apa pun dan pantau statusnya."
-      },
-      "adminFarmers": {
-        "title": "Petani",
-        "body": "Tinjau pendaftaran petani, setujui atau tolak, dan tangguhkan lapak bila perlu."
-      },
-      "adminCustomers": {
-        "title": "Pelanggan",
-        "body": "Cari akun pelanggan dan pesanan mereka."
-      },
-      "adminMarkets": {
-        "title": "Pasar",
-        "body": "Tambahkan pasar dan atur lokasi, jam buka, serta harinya."
-      },
-      "adminModeration": {
-        "title": "Moderasi",
-        "body": "Sembunyikan produk yang melanggar aturan platform."
-      },
-      "adminCategories": {
-        "title": "Kategori",
-        "body": "Kelola kategori produk yang dipakai pelanggan untuk menyaring."
-      },
-      "adminAnnouncements": {
-        "title": "Pengumuman",
-        "body": "Kirim pemberitahuan ke pelanggan dan petani."
-      },
-      "adminFeedback": {
-        "title": "Masukan",
-        "body": "Baca laporan bug, saran, dan pertanyaan dari pengguna."
-      },
-      "adminSecurity": {
-        "title": "Keamanan",
-        "body": "Aktifkan verifikasi dua langkah untuk melindungi akun admin Anda."
-      },
-      "adminDone": {
-        "title": "Anda siap",
-        "body": "Mulailah dengan pendaftaran petani yang menunggu persetujuan."
-      },
       "dashboardMenu": {
         "title": "Menu",
         "body": "Buka menu untuk menuju setiap bagian panel."
