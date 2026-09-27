@@ -55,6 +55,8 @@
     "noun": "카테고리",
     "nameRequired": "카테고리 이름을 입력하세요.",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "이름은 {{max}}자 이내로 입력하세요.",
+    "nameTaken": "같은 이름의 카테고리가 이미 있습니다."
   }
 }

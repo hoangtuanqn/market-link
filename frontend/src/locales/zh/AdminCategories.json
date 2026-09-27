@@ -55,6 +55,8 @@
     "noun": "分类",
     "nameRequired": "请为分类命名。",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "名称不能超过 {{max}} 个字符。",
+    "nameTaken": "已有同名的分类。"
   }
 }

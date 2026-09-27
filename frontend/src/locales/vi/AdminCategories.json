@@ -55,6 +55,8 @@
     "noun": "danh mục",
     "nameRequired": "Đặt tên cho danh mục.",
     "shelfLifeRequired": "Nhập một số nguyên từ 1 trở lên.",
-    "shelfLifeRange": "Tối đa phải lớn hơn hoặc bằng tối thiểu."
+    "shelfLifeRange": "Tối đa phải lớn hơn hoặc bằng tối thiểu.",
+    "nameTooLong": "Tên danh mục tối đa {{max}} ký tự.",
+    "nameTaken": "Đã có danh mục trùng tên này."
   }
 }

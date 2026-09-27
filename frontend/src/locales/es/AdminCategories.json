@@ -55,6 +55,8 @@
     "noun": "categorías",
     "nameRequired": "Ponle un nombre a la categoría.",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "El nombre debe tener {{max}} caracteres como máximo.",
+    "nameTaken": "Ya existe una categoría con este nombre."
   }
 }

@@ -16,6 +16,8 @@ import Notification from '@/utils/notification';
 type CategoryRow = CategoryType;
 const NO_CATEGORIES: CategoryRow[] = [];
 const PAGE_SIZE = 8;
+/** Matches the server cap on categories.name (CategoryRequest, VARCHAR(80)). */
+const NAME_MAX = 80;
 
 const bySortThenName = (a: CategoryRow, b: CategoryRow) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name);
 
@@ -79,6 +81,7 @@ const AdminCategoriesPage = () => {
     const max = Number(newCategory.maxShelfLife);
     const errors: NewCategoryErrors = {};
     if (!name) errors.name = t('error.nameRequired');
+    else if (name.length > NAME_MAX) errors.name = t('error.nameTooLong', { max: NAME_MAX });
     if (!Number.isInteger(min) || min < 1) errors.min = t('error.shelfLifeRequired');
     if (!Number.isInteger(max) || max < 1) errors.max = t('error.shelfLifeRequired');
     else if (!errors.min && max < min) errors.max = t('error.shelfLifeRange');
@@ -100,7 +103,9 @@ const AdminCategoriesPage = () => {
     } catch (error) {
       const fromServer = Helper.getFieldErrors(error);
       const mapped: NewCategoryErrors = {
-        name: fromServer.name,
+        // A taken name comes back as a 409 without field details; it still belongs under the name field.
+        name:
+          fromServer.name ?? (Helper.getErrorCode(error) === 'DUPLICATE_CATEGORY' ? t('error.nameTaken') : undefined),
         min: fromServer.minShelfLifeDays,
         max: fromServer.maxShelfLifeDays,
       };

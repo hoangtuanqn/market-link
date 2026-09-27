@@ -55,6 +55,8 @@
     "noun": "カテゴリー",
     "nameRequired": "カテゴリー名を入力してください。",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "名前は{{max}}文字以内にしてください。",
+    "nameTaken": "同じ名前のカテゴリーがすでにあります。"
   }
 }
