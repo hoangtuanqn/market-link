@@ -214,7 +214,8 @@
     "markets": "正在加载市集"
   },
   "logo": {
-    "home": "MarketLink — 首页"
+    "home": "MarketLink — 首页",
+    "slogan": "到摊位时，货还在"
   },
   "map": {
     "attribution": "© {{link}} 贡献者",

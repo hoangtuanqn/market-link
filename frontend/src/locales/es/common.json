@@ -217,7 +217,8 @@
     "markets": "Cargando mercados"
   },
   "logo": {
-    "home": "MarketLink — inicio"
+    "home": "MarketLink — inicio",
+    "slogan": "Sigue ahí cuando llegas"
   },
   "map": {
     "attribution": "© colaboradores de {{link}}",

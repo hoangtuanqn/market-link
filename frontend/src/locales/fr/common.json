@@ -217,7 +217,8 @@
     "markets": "Chargement des marchés"
   },
   "logo": {
-    "home": "MarketLink — accueil"
+    "home": "MarketLink — accueil",
+    "slogan": "Toujours là quand vous arrivez"
   },
   "map": {
     "attribution": "© contributeurs {{link}}",

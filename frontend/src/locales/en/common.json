@@ -217,7 +217,8 @@
     "markets": "Loading markets"
   },
   "logo": {
-    "home": "MarketLink — home"
+    "home": "MarketLink — home",
+    "slogan": "Still there when you get there"
   },
   "map": {
     "attribution": "© {{link}} contributors",

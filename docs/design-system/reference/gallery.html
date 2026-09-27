@@ -47,7 +47,7 @@
   var M = window.MarketLink, h = React.createElement;
   ReactDOM.createRoot(document.getElementById('demo-Logo')).render(h('div',{className:'ml-row',style:{gap:40}},
     h(M.Logo,{size:40}),
-    h('div',{className:'ml-board',style:{padding:'14px 20px',borderRadius:10}}, h(M.Logo,{size:40})),
+    h('div',{className:'ml-board',style:{padding:'14px 20px',borderRadius:10}}, h(M.Logo,{size:40,variant:'light'})),
     h('span',{style:{color:'var(--brand)'}}, h(M.Logo,{size:48,markOnly:true}))));
   })();
   </script>
