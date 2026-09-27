@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import useMyAchievements from '@/hooks/useMyAchievements';
 import useSession from '@/hooks/useSession';
-import { formatDate, vnd } from '@/lib/format';
+import { formatDate, money } from '@/lib/format';
 import { TIERS, type AchievementType, type Tier } from '@/types/achievement.types';
 import Helper from '@/utils/helper';
 
@@ -61,7 +61,7 @@ const TierHero = ({ data }: { data: AchievementType | null }) => {
   const firstName = user.fullName?.trim() || user.email;
   const line =
     data?.available && data.completed > 0
-      ? t('achievements.hero.line', { name: firstName, count: data.completed, amount: vnd(data.totalSpent) })
+      ? t('achievements.hero.line', { name: firstName, count: data.completed, amount: money(data.totalSpent) })
       : t('achievements.hero.welcome', { name: firstName });
 
   return (
@@ -89,7 +89,7 @@ const Figures = ({ data }: { data: AchievementType }) => {
     [t('achievements.cancelled'), String(data.cancelled)],
     [t('achievements.declined'), String(data.declined)],
     [t('achievements.inProgress'), String(data.inProgress)],
-    [t('achievements.spent'), vnd(data.totalSpent)],
+    [t('achievements.spent'), money(data.totalSpent)],
     [t('achievements.rate'), data.completionRate === null ? t('achievements.rateNone') : `${data.completionRate}%`],
   ];
   return (
@@ -129,7 +129,7 @@ const NextTier = ({ data }: { data: AchievementType }) => {
         label={t('achievements.spent')}
         value={data.totalSpent}
         max={Math.max(spendGoal, 1)}
-        text={t('achievements.ofGoal', { value: vnd(data.totalSpent), goal: vnd(spendGoal) })}
+        text={t('achievements.ofGoal', { value: money(data.totalSpent), goal: money(spendGoal) })}
         tier={next.tier}
       />
       {next.completionRateNeeded !== null && (

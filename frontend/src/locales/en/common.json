@@ -11,14 +11,6 @@
     "language": "Language",
     "languageNote": "The language of menus, buttons and messages. Stall, product and place names stay as the stall wrote them.",
     "format": "Money, dates and units",
-    "currency": "Show prices in",
-    "currencyNote": "You always pay in Vietnamese đồng at the stall. Another currency is shown next to it for reading only, at fixed rates from {{date}}.",
-    "currencies": {
-      "VND": "₫ Vietnamese đồng only",
-      "USD": "₫ and $ US dollar",
-      "EUR": "₫ and € euro",
-      "JPY": "₫ and ¥ Japanese yen"
-    },
     "units": "Weights and volumes",
     "unitsNote": "Only converts units that measure something. A stall that sells by the bunch, the bulb or the tray keeps its own word.",
     "metric": "Metric · kg, g, litre",

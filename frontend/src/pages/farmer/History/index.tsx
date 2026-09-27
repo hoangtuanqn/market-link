@@ -14,7 +14,7 @@ import { Kpi } from '@/components/ui/kpi';
 import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 import { fetchAllSales, sumSales } from './history.helpers';
 
 const PAGE_SIZE = 50;
@@ -95,7 +95,7 @@ const FarmerHistoryPage = () => {
     },
     { key: 'who', label: t('col.customer'), render: (r) => r.customerName },
     { key: 'i', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
-    { key: 't', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
+    { key: 't', label: t('col.total'), align: 'num', render: (r) => money(r.totalAmount) },
     { key: 's', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
   ];
 
@@ -134,11 +134,11 @@ const FarmerHistoryPage = () => {
           <Kpi label={t('kpi.completed')} value={num(completed)} />
           <Kpi
             label={t('kpi.revenue')}
-            value={vnd(revenue)}
+            value={money(revenue)}
             note={partial ? t('kpi.partial') : t('kpi.revenueNote')}
             highlight
           />
-          <Kpi label={t('kpi.average')} value={vnd(average)} note={partial ? t('kpi.partial') : undefined} />
+          <Kpi label={t('kpi.average')} value={money(average)} note={partial ? t('kpi.partial') : undefined} />
           <Kpi label={t('kpi.declined')} value={declined == null ? '—' : num(declined)} note={t('kpi.allTime')} />
           <Kpi label={t('kpi.cancelled')} value={cancelled == null ? '—' : num(cancelled)} note={t('kpi.allTime')} />
         </div>
@@ -152,7 +152,7 @@ const FarmerHistoryPage = () => {
         ) : bestLoad.kind === 'error' ? (
           <LoadError noun={t('best.noun')} onRetry={retryBest} />
         ) : best.length ? (
-          <BarList rows={best.map((b) => ({ label: b.name, value: b.revenue }))} format={vnd} />
+          <BarList rows={best.map((b) => ({ label: b.name, value: b.revenue }))} format={money} />
         ) : (
           <DataState title={t('best.empty.title')} text={t('best.empty.text')} />
         )}

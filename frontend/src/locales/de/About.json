@@ -91,9 +91,9 @@
     "mapData": "Kartendaten",
     "mapDataValue": "© OpenStreetMap-Mitwirkende",
     "photos": "Fotos",
-    "photosValue": "Vorerst Platzhalter; die Quellen stehen hier, sobald die eigenen Fotos des Teams da sind",
+    "photosValue": "Fotos auf dieser Seite von Unsplash, unter der Unsplash-Lizenz",
     "locale": "Währung und Zeit",
-    "localeValue": "Vietnamesischer Đồng, Datum im Format {{format}}, 24-Stunden-Uhr, {{zone}}"
+    "localeValue": "US-Dollar, Datum im Format {{format}}, 24-Stunden-Uhr, {{zone}}"
   },
   "contact": {
     "title": "Möchten Sie uns etwas mitteilen?",

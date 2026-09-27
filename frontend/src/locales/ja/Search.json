@@ -12,6 +12,21 @@
     "submit": "検索"
   },
   "day": "開催日",
+  "filters": {
+    "category": "カテゴリ",
+    "allCategories": "すべてのカテゴリ",
+    "market": "マーケット",
+    "allMarkets": "すべてのマーケット",
+    "price": "単価",
+    "clear": "フィルターを解除"
+  },
+  "price": {
+    "any": "すべての価格",
+    "low": "{{low}} 未満",
+    "mid": "{{low}} – {{high}}",
+    "high": "{{high}} 超"
+  },
+  "stallsNotByCategory": "カテゴリでは屋台を絞り込めません。屋台にカテゴリはないためです。下の商品に適用されます。",
   "sort": "並べ替え",
   "sorts": {
     "best": "関連度順",

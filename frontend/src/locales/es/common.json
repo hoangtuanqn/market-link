@@ -11,14 +11,6 @@
     "language": "Idioma",
     "languageNote": "El idioma de los menús, botones y mensajes. Los nombres de puestos, productos y lugares se quedan como los escribió el puesto.",
     "format": "Dinero, fechas y unidades",
-    "currency": "Mostrar precios en",
-    "currencyNote": "En el puesto siempre pagas en dong vietnamita. Otra moneda se muestra al lado solo como referencia, con tipos fijos del {{date}}.",
-    "currencies": {
-      "VND": "Solo ₫ dong vietnamita",
-      "USD": "₫ y $ dólar estadounidense",
-      "EUR": "₫ y € euro",
-      "JPY": "₫ y ¥ yen japonés"
-    },
     "units": "Pesos y volúmenes",
     "unitsNote": "Solo convierte unidades que miden algo. Un puesto que vende por manojo, por cabeza o por bandeja conserva su propia palabra.",
     "metric": "Métrico · kg, g, litro",

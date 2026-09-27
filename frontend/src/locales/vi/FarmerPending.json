@@ -2,7 +2,10 @@
   "error": {
     "noun": "hồ sơ đăng ký của bạn"
   },
-  "overline": "{{stall}} · đăng ký ngày {{date}}",
+  "overline": {
+    "suspended": "{{stall}} · bị đình chỉ ngày {{date}}",
+    "registered": "{{stall}} · đăng ký ngày {{date}}"
+  },
   "title": {
     "pending": "Sạp của bạn đang chờ duyệt",
     "rejected": "Đăng ký sạp của bạn đã bị từ chối",

@@ -12,7 +12,7 @@ import { LoadError } from '@/components/ui/data-state';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useRequest from '@/hooks/useRequest';
-import { cutoffLabel, perUnit, pickupLabel, units, vnd } from '@/lib/format';
+import { cutoffLabel, perUnit, pickupLabel, units, money } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
@@ -93,7 +93,7 @@ const FarmerOrderDetailPage = () => {
       ),
     },
     { key: 'q', label: t('col.requested'), align: 'num', render: (i) => units(i.quantity, i.unit) },
-    { key: 't', label: t('col.amount'), align: 'num', render: (i) => vnd(i.subtotal) },
+    { key: 't', label: t('col.amount'), align: 'num', render: (i) => money(i.subtotal) },
   ];
 
   return (
@@ -168,7 +168,7 @@ const FarmerOrderDetailPage = () => {
             <Table columns={columns} rows={order.items} />
             <p className="border-line-strong flex justify-between gap-3 border-t pt-3 font-bold">
               <span>{t('items.total')}</span>
-              <span className="font-hand text-price">{vnd(total)}</span>
+              <span className="font-hand text-price">{money(total)}</span>
             </p>
           </section>
 
@@ -236,7 +236,7 @@ const FarmerOrderDetailPage = () => {
               <dt className="text-ink-muted">{t('pickup.slot')}</dt>
               <dd className="m-0">{pickupLabel(s.pickupDate, `${s.pickupStart}–${s.pickupEnd}`)}</dd>
               <dt className="text-ink-muted">{t('pickup.pay')}</dt>
-              <dd className="text-price m-0">{vnd(total)}</dd>
+              <dd className="text-price m-0">{money(total)}</dd>
             </dl>
           </Card>
         </aside>

@@ -11,14 +11,6 @@
     "language": "Bahasa",
     "languageNote": "Bahasa untuk menu, tombol, dan pesan. Nama lapak, produk, dan tempat tetap seperti yang ditulis lapak.",
     "format": "Uang, tanggal, dan satuan",
-    "currency": "Tampilkan harga dalam",
-    "currencyNote": "Anda selalu membayar dengan dong Vietnam di lapak. Mata uang lain ditampilkan di sebelahnya hanya sebagai acuan, dengan kurs tetap per {{date}}.",
-    "currencies": {
-      "VND": "Hanya ₫ dong Vietnam",
-      "USD": "₫ dan $ dolar AS",
-      "EUR": "₫ dan € euro",
-      "JPY": "₫ dan ¥ yen Jepang"
-    },
     "units": "Berat dan volume",
     "unitsNote": "Hanya satuan ukur yang dikonversi. Lapak yang menjual per ikat, per umbi, atau per nampan tetap memakai istilahnya sendiri.",
     "metric": "Metrik · kg, g, liter",

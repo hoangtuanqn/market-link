@@ -23,7 +23,7 @@ import { Table } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
 import { Cart } from '@/lib/cart';
 import useSession from '@/hooks/useSession';
-import { perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
+import { perUnit, unitName, unitPrice, units, money } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
@@ -184,7 +184,7 @@ const ProductDetailPage = () => {
           <Card className="flex flex-col gap-3 p-6">
             <div className="flex flex-wrap items-center gap-6">
               <span className="font-hand text-price text-[36px] tabular-nums">
-                {vnd(unitPrice(Number(p.price), p.unit).amount)}
+                {money(unitPrice(Number(p.price), p.unit).amount)}
               </span>
               {!soldOut && (
                 <span className="text-body">
@@ -414,7 +414,7 @@ const ProductDetailPage = () => {
                 align: 'num',
                 render: (row: ProductType) => (
                   <>
-                    {vnd(unitPrice(row.price, row.unit).amount)}{' '}
+                    {money(unitPrice(row.price, row.unit).amount)}{' '}
                     <span className="text-ink-muted block text-[12px] font-normal">
                       {t('table.perUnit', { unit: unitName(row.unit) })}
                     </span>

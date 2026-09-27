@@ -91,9 +91,9 @@
     "mapData": "地図データ",
     "mapDataValue": "© OpenStreetMap 寄稿者",
     "photos": "写真",
-    "photosValue": "現在は仮の写真です。チーム自身の写真がそろったら、ここにクレジットを記載します",
+    "photosValue": "このページの写真は Unsplash より、Unsplash ライセンスに基づく",
     "locale": "通貨と時刻",
-    "localeValue": "ベトナムドン、日付は {{format}}、24 時間表記、{{zone}}"
+    "localeValue": "米ドル、日付は {{format}}、24 時間表記、{{zone}}"
   },
   "contact": {
     "title": "伝えたいことがありますか？",

@@ -12,6 +12,21 @@
     "submit": "Tìm"
   },
   "day": "Ngày họp chợ",
+  "filters": {
+    "category": "Loại",
+    "allCategories": "Mọi loại",
+    "market": "Chợ",
+    "allMarkets": "Mọi chợ",
+    "price": "Giá mỗi đơn vị",
+    "clear": "Xoá bộ lọc"
+  },
+  "price": {
+    "any": "Mọi mức giá",
+    "low": "Dưới {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Trên {{high}}"
+  },
+  "stallsNotByCategory": "Danh mục không lọc được sạp — sạp không thuộc danh mục nào. Bộ lọc này áp cho phần sản phẩm bên dưới.",
   "sort": "Sắp xếp",
   "sorts": {
     "best": "Phù hợp nhất",

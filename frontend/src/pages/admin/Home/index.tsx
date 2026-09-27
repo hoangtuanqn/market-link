@@ -19,7 +19,7 @@ import {
   ADMIN_ORDERS_PATH,
 } from '@/constants/nav';
 import useRequest from '@/hooks/useRequest';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 
 /** Docs/prototype/admin/overview.html — the six most recent orders across the whole platform. */
 const LATEST = 6;
@@ -73,7 +73,7 @@ const AdminHomePage = () => {
       label: t('col.pickup'),
       render: (o) => pickupLabel(o.pickupDate, `${o.pickupStart}–${o.pickupEnd}`),
     },
-    { key: 'total', label: t('col.total'), align: 'num', render: (o) => vnd(o.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (o) => money(o.totalAmount) },
     { key: 'status', label: t('col.status'), render: (o) => <OrderStatusBadge status={o.status} /> },
   ];
 
@@ -115,7 +115,7 @@ const AdminHomePage = () => {
             <Kpi
               label={t('kpi.orders')}
               value={homeLoad.data.dashboard.totalOrders}
-              note={t('kpi.ordersNote', { revenue: vnd(homeLoad.data.dashboard.revenueTotal) })}
+              note={t('kpi.ordersNote', { revenue: money(homeLoad.data.dashboard.revenueTotal) })}
               href={ADMIN_ORDERS_PATH}
               linkLabel={t('kpi.ordersLink')}
             />
@@ -167,7 +167,7 @@ const AdminHomePage = () => {
         ) : revenueLoad.kind === 'error' ? (
           <LoadError noun={t('byMarket.noun')} onRetry={retryRevenue} />
         ) : revenueLoad.data.length ? (
-          <BarList rows={revenueLoad.data.map((r) => ({ label: r.marketName, value: r.revenue }))} format={vnd} />
+          <BarList rows={revenueLoad.data.map((r) => ({ label: r.marketName, value: r.revenue }))} format={money} />
         ) : (
           <DataState title={t('byMarket.empty.title')} text={t('byMarket.empty.text')} />
         )}

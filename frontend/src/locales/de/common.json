@@ -11,14 +11,6 @@
     "language": "Sprache",
     "languageNote": "Die Sprache von Menüs, Schaltflächen und Meldungen. Namen von Ständen, Produkten und Orten bleiben so, wie der Stand sie geschrieben hat.",
     "format": "Geld, Datum und Einheiten",
-    "currency": "Preise anzeigen in",
-    "currencyNote": "Am Stand zahlen Sie immer in Vietnamesischen Đồng. Eine andere Währung wird nur zur Orientierung daneben angezeigt, zu festen Kursen vom {{date}}.",
-    "currencies": {
-      "VND": "Nur ₫ Vietnamesischer Đồng",
-      "USD": "₫ und $ US-Dollar",
-      "EUR": "₫ und € Euro",
-      "JPY": "₫ und ¥ Japanischer Yen"
-    },
     "units": "Gewichte und Volumen",
     "unitsNote": "Umgerechnet werden nur Maßeinheiten. Ein Stand, der pro Bund, Knolle oder Schale verkauft, behält seine eigene Bezeichnung.",
     "metric": "Metrisch · kg, g, Liter",

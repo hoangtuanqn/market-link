@@ -18,7 +18,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
 import useSession from '@/hooks/useSession';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -97,7 +97,7 @@ const FarmerOverviewPage = () => {
       render: (r) => pickupLabel(r.pickupDate, `${r.pickupStart}–${r.pickupEnd}`),
     },
     { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
-    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => money(r.totalAmount) },
     { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
@@ -248,13 +248,13 @@ const FarmerOverviewPage = () => {
             />
             <Kpi
               label={t('kpi.revenue')}
-              value={vnd(dashboard.revenueTotal)}
+              value={money(dashboard.revenueTotal)}
               href="/farmer/history"
               linkLabel={t('kpi.openHistory')}
             />
             <Kpi
               label={t('kpi.revenueMonth')}
-              value={vnd(dashboard.revenueThisMonth)}
+              value={money(dashboard.revenueThisMonth)}
               href="/farmer/history"
               linkLabel={t('kpi.openHistory')}
             />

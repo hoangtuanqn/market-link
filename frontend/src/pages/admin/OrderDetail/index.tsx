@@ -11,7 +11,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH, ADMIN_FARMERS_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useRequest from '@/hooks/useRequest';
-import { cutoffLabel, formatDate, formatTime, pickupLabel, units, vnd } from '@/lib/format';
+import { cutoffLabel, formatDate, formatTime, pickupLabel, units, money } from '@/lib/format';
 import Helper from '@/utils/helper';
 
 /** 403 (should not happen for an admin, Task 1.4) and 404 read the same: the order is not here to show. */
@@ -73,11 +73,11 @@ const AdminOrderDetailPage = () => {
       align: 'num',
       render: (line) => (
         <>
-          {vnd(line.unitPrice)} <span className="text-ink-muted font-normal">/ {line.unit}</span>
+          {money(line.unitPrice)} <span className="text-ink-muted font-normal">/ {line.unit}</span>
         </>
       ),
     },
-    { key: 'line', label: t('col.lineTotal'), align: 'num', render: (line) => vnd(line.subtotal) },
+    { key: 'line', label: t('col.lineTotal'), align: 'num', render: (line) => money(line.subtotal) },
   ];
 
   return (
@@ -197,7 +197,7 @@ const AdminOrderDetailPage = () => {
               <dt className="text-ink-muted">{t('pickup.cutoff')}</dt>
               <dd className="m-0">{cutoffLabel(s.cutoffAt)}</dd>
               <dt className="text-ink-muted">{t('pickup.total')}</dt>
-              <dd className="m-0">{vnd(s.totalAmount)}</dd>
+              <dd className="m-0">{money(s.totalAmount)}</dd>
             </dl>
           </Card>
 
