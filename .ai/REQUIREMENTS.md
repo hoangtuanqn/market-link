@@ -121,8 +121,8 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 | FR-090 | Chatbot giúp tìm sản phẩm **xuyên các chợ và Farmer** | SHOULD | Customer | BE2 | STAGING |
 | FR-091 | Chatbot trả lời FAQ: giờ chợ, Farmer có mặt, pickup window, chi tiết sản phẩm | SHOULD | Customer | BE2 | STAGING |
 | FR-092 | Lưu `chat_messages` kèm **intent đã nhận diện** (để giải thích với giám khảo) | SHOULD | System | BE2 | STAGING |
-| FR-093 | Trợ lý cho **Farmer**: tra đơn chờ duyệt, hàng sắp hết, lịch bán, doanh thu, review chưa trả lời; tóm tắt đầu buổi chợ trên Overview | SHOULD | Farmer | BE2 | TODO |
-| FR-094 | Trợ lý cho **Admin**: thống kê nền tảng, hàng đợi duyệt Farmer, hàng đợi kiểm duyệt; soạn thông báo `FR-077` theo giọng brand và dịch sẵn 10 ngôn ngữ | SHOULD | Admin | BE2 | TODO |
+| FR-093 | Trợ lý cho **Farmer**: tra đơn chờ duyệt, hàng sắp hết, lịch bán, doanh thu, review chưa trả lời; tóm tắt đầu buổi chợ trên Overview | SHOULD | Farmer | BE2 | STAGING |
+| FR-094 | Trợ lý cho **Admin**: thống kê nền tảng, hàng đợi duyệt Farmer, hàng đợi kiểm duyệt; soạn thông báo `FR-077` theo giọng brand và dịch sẵn 10 ngôn ngữ | SHOULD | Admin | BE2 | STAGING |
 
 > Cách làm FR-090/091 an toàn: phân loại **intent** rồi map sang **câu SQL có sẵn với tham số**.
 > Tuyệt đối không để LLM sinh SQL tự do. Giải thích được và không có rủi ro injection.
