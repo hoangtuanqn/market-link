@@ -32,7 +32,6 @@
   "pickupDay": "Pickup day",
   "pickupDayAt": "Pickup day at {{stall}}",
   "pickupTime": "Pickup time · {{day}} {{date}} · window {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} closes orders {{hours}} hours before the slot. For {{slot}} on {{slotDay}} that is {{cutoff}} on {{cutoffDay}}.",
   "summary": {
     "title": "Pay at the stalls on pickup",
     "order": "Order {{n}} · {{stall}}",

@@ -13,7 +13,6 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
-import { SHOW_WIP } from '@/config/wip';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useRequest from '@/hooks/useRequest';
 import { formatClock, formatDate, formatTime, money } from '@/lib/format';
@@ -273,8 +272,7 @@ const CustomerOrderDetailPage = () => {
                 {pastCutoff ? t('change.lockedContact', { cutoff: when(s.cutoffAt) }) : t('change.settledContact')}
               </p>
             )}
-            {/* The edit screen still runs on sample data (SHOW_WIP), so production does not link to it yet */}
-            {SHOW_WIP && order.canModify ? (
+            {order.canModify ? (
               <ButtonLink to={`/orders/${s.orderId}/edit`} variant="secondary" className="w-full">
                 {t('change.edit')}
               </ButtonLink>

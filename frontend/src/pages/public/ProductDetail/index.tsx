@@ -19,7 +19,6 @@ import { Card } from '@/components/ui/card';
 import MessageStallButton from '@/components/chat/MessageStallButton';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Table } from '@/components/ui/table';
-import { SHOW_WIP } from '@/config/wip';
 import useRequest from '@/hooks/useRequest';
 import { Cart } from '@/lib/cart';
 import useSession from '@/hooks/useSession';
@@ -455,20 +454,6 @@ const ProductDetailPage = () => {
             ))}
           </div>
         </section>
-      )}
-
-      {/* Reporting a listing has no API yet, the button only shows a toast → dev only (config/wip.ts). */}
-      {SHOW_WIP && (
-        <p className="text-small">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => Notification.success({ title: t('report.sentTitle'), text: t('report.sentText') })}
-          >
-            {t('report.button')}
-          </Button>{' '}
-          <span className="text-ink-muted">{t('report.note')}</span>
-        </p>
       )}
     </div>
   );

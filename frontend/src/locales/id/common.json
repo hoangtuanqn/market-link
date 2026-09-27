@@ -529,9 +529,5 @@
     },
     "notificationsEmpty": "Belum ada notifikasi.",
     "notificationsError": "Notifikasi tidak dapat dimuat."
-  },
-  "comingSoon": {
-    "title": "Halaman ini belum dibuka",
-    "text": "Kami masih membangunnya. Semua menu lainnya tetap berfungsi seperti biasa."
   }
 }

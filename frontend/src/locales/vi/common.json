@@ -537,9 +537,5 @@
     },
     "notificationsEmpty": "Chưa có thông báo nào.",
     "notificationsError": "Không tải được thông báo."
-  },
-  "comingSoon": {
-    "title": "Trang này chưa mở",
-    "text": "Chúng tôi vẫn đang hoàn thiện trang này. Các mục khác trong menu vẫn dùng bình thường."
   }
 }

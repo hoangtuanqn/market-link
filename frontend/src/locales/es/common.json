@@ -532,9 +532,5 @@
     },
     "notificationsEmpty": "Todavía no hay notificaciones.",
     "notificationsError": "No se pudieron cargar las notificaciones."
-  },
-  "comingSoon": {
-    "title": "Esta página aún no está disponible",
-    "text": "Todavía la estamos construyendo. El resto del menú funciona con normalidad."
   }
 }

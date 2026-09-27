@@ -80,12 +80,6 @@
   "also": {
     "title": "Also from {{stall}} this week"
   },
-  "report": {
-    "sentTitle": "Report sent",
-    "sentText": "An admin will look at this listing.",
-    "button": "Report this listing",
-    "note": "Wrong price, wrong photo or something that does not belong at a farmers market."
-  },
   "error": {
     "noun": "product"
   }
