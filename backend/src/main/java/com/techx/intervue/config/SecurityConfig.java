@@ -133,6 +133,10 @@ public class SecurityConfig {
                                         // in
                                         .requestMatchers(HttpMethod.GET, "/api/v1/categories")
                                         .permitAll()
+                                        // FR-001: the sign-up form lists countries, provinces,
+                                        // wards and streets before there is an account
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/geo/**")
+                                        .permitAll()
                                         // FR-010/FR-012: markets and the map can be viewed before
                                         // signing in
                                         .requestMatchers(
