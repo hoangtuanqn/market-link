@@ -9,7 +9,7 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
-import { dayName, unitName, vnd } from '@/lib/format';
+import { dayName, unitName, money } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -131,7 +131,7 @@ const TemplateGrid = ({
                 <td className={td}>
                   <b>{p.name}</b>
                   <span className="text-ink-muted mt-0.5 block text-[12px] font-normal">
-                    {t('per', { unit: unitName(p.unit) })} · {t('currentPrice', { price: vnd(p.price) })}
+                    {t('per', { unit: unitName(p.unit) })} · {t('currentPrice', { price: money(p.price) })}
                   </span>
                 </td>
                 {DAYS.map((day) => {

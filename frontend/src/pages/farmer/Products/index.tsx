@@ -10,7 +10,7 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
-import { unitPrice, units, vnd } from '@/lib/format';
+import { unitPrice, units, money } from '@/lib/format';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -101,7 +101,7 @@ const FarmerProductsPage = () => {
         const price = unitPrice(p.price, p.unit);
         return (
           <>
-            {vnd(price.amount)}{' '}
+            {money(price.amount)}{' '}
             <span className="text-ink-muted font-normal">{t('perUnit', { unit: price.unit ?? p.unit })}</span>
           </>
         );

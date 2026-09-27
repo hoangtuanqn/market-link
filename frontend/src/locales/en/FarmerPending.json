@@ -2,7 +2,10 @@
   "error": {
     "noun": "your registration"
   },
-  "overline": "{{stall}} · registered {{date}}",
+  "overline": {
+    "suspended": "{{stall}} · suspended on {{date}}",
+    "registered": "{{stall}} · registered {{date}}"
+  },
   "title": {
     "pending": "Your stall is waiting for approval",
     "rejected": "Your stall registration was declined",

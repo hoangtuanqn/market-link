@@ -82,5 +82,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "오늘은 {{markets}}",
+    "titleNoMarket": "오늘은 어느 시장에도 나가지 않아요",
+    "orders_other": "오늘 주문 {{count}}건",
+    "waiting_other": "그중 {{count}}건이 수락 또는 거절을 기다리고 있어요",
+    "cutoffPassed_other": "그중 {{count}}건은 마감이 지나 고객이 변경할 수 없어요",
+    "soldOut_other": "품절로 표시된 상품 {{count}}개",
+    "lowStock_other": "재고가 얼마 남지 않은 상품 {{count}}개"
   }
 }

@@ -2,13 +2,20 @@ package com.techx.intervue.modules.chat.services.impl;
 
 import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatMessageRepository;
+import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
+import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
+import com.techx.intervue.modules.chat.resources.ChatReplyResource.ProposedAction;
+import com.techx.intervue.modules.chat.resources.FarmerBriefingResource;
+import com.techx.intervue.modules.chat.resources.FarmerRows.BriefingRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.ScheduleDayRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
@@ -67,6 +74,7 @@ public class ChatService implements ChatServiceInterface {
     private final ProductAvailabilityResolver availability;
     private final ClaudeAssistant assistant;
     private final AssistantRateLimiter assistantLimit;
+    private final FarmerKnowledgeRepository farmerKnowledge;
     private final ChatbotAiProperties aiProperties;
 
     private record Answer(ChatIntent intent, String reply, List<ChatResultItem> results) {}
@@ -76,15 +84,17 @@ public class ChatService implements ChatServiceInterface {
      * connection. The two chat_messages rows are written together by saveAll.
      */
     @Override
-    public ChatReplyResource reply(ChatRequest request, Long userId, boolean assistantAllowed) {
+    public ChatReplyResource reply(ChatRequest request, Long userId, AssistantAudience audience) {
         Answer answer = null;
         String loggedIntent = null;
+        List<ProposedAction> actions = List.of();
 
-        if (assistantAllowed && userId != null && assistant.enabled()) {
-            AiReply ai = askAssistant(request, userId);
+        if (audience != null && userId != null && assistant.enabled()) {
+            AiReply ai = askAssistant(request, userId, audience);
             if (ai != null) {
                 answer = new Answer(ai.intent(), ai.reply(), ai.results());
                 loggedIntent = ai.loggedIntent();
+                actions = ai.actions();
             }
         }
         if (answer == null) {
@@ -107,25 +117,49 @@ public class ChatService implements ChatServiceInterface {
                                 answer.reply(),
                                 loggedIntent)));
 
-        return new ChatReplyResource(answer.reply(), answer.intent(), answer.results());
+        return new ChatReplyResource(answer.reply(), answer.intent(), answer.results(), actions);
     }
 
     /**
-     * Claude's answer, or null to fall back to the keyword engine: over the hourly cap, or the
-     * Claude API / a lookup failed. The user always gets an answer.
+     * Claude's answer, or null to fall back to the keyword engine: over the daily platform cap,
+     * over the account's hourly cap, or the Claude API / a lookup failed. The user always gets an
+     * answer.
      */
-    private AiReply askAssistant(ChatRequest request, Long userId) {
-        if (!assistantLimit.tryAcquire(userId)) {
+    private AiReply askAssistant(ChatRequest request, Long userId, AssistantAudience audience) {
+        if (!assistantLimit.tryAcquirePlatform()) {
+            log.info("Assistant daily platform cap reached, keyword engine answers");
+            return null;
+        }
+        if (!assistantLimit.tryAcquire(userId, audience)) {
             log.info("Assistant hourly cap reached for user {}, keyword engine answers", userId);
             return null;
         }
         try {
-            return assistant.reply(recentHistory(request.sessionKey(), userId), request.message());
+            return assistant.reply(
+                    recentHistory(request.sessionKey(), userId),
+                    request.message(),
+                    contextFor(userId, audience, request.context()),
+                    request.context());
         } catch (RuntimeException e) {
             // AnthropicException (network, 4xx/5xx, rate limit) or a failed lookup
             log.warn("Assistant failed, keyword engine answers: {}", e.toString());
             return null;
         }
+    }
+
+    /**
+     * Resolves the stall a Farmer owns here, once per message, from the signed-in account. It is
+     * deliberately not a tool argument: an argument is filled by the model (FR-093 note 1).
+     */
+    private AssistantContext contextFor(
+            Long userId, AssistantAudience audience, ChatRequest.PageContext page) {
+        Long farmerId =
+                audience == AssistantAudience.FARMER
+                        ? farmerKnowledge.farmerIdOf(userId).orElse(null)
+                        : null;
+        List<ChatRequest.PageContext.CartLine> cart =
+                page == null || page.cart() == null ? List.of() : page.cart();
+        return new AssistantContext(audience, userId, farmerId, cart);
     }
 
     /** The last few messages of this session that belong to this account, oldest first. */
@@ -518,5 +552,33 @@ public class ChatService implements ChatServiceInterface {
                 .message(text)
                 .intent(intent)
                 .build();
+    }
+
+    /** Products at or below this are "running low" in the banner. Same number the tools use. */
+    private static final int BRIEFING_LOW_STOCK = 5;
+
+    @Override
+    public FarmerBriefingResource farmerBriefing(Long userId) {
+        Long farmerId = userId == null ? null : farmerKnowledge.farmerIdOf(userId).orElse(null);
+        if (farmerId == null) {
+            return new FarmerBriefingResource(List.of(), 0, 0, 0, 0, 0);
+        }
+        LocalDate today = LocalDate.now(clock);
+        // java.time: Mon = 1 … Sun = 7, schema: Sun = 0 … Sat = 6
+        int dayOfWeek = today.getDayOfWeek().getValue() % 7;
+        List<String> markets =
+                farmerKnowledge.mySchedule(farmerId).stream()
+                        .filter(day -> day.dayOfWeek() == dayOfWeek)
+                        .map(ScheduleDayRow::marketName)
+                        .distinct()
+                        .toList();
+        BriefingRow row = farmerKnowledge.briefing(farmerId, today, BRIEFING_LOW_STOCK);
+        return new FarmerBriefingResource(
+                markets,
+                row.ordersToday(),
+                row.waitingToBeAccepted(),
+                row.cutoffAlreadyPassed(),
+                row.soldOutProducts(),
+                row.lowStockProducts());
     }
 }

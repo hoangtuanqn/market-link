@@ -174,7 +174,9 @@ const AdminCategoriesPage = () => {
       </div>
 
       <div className="grid flex-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="flex h-full min-h-[440px] flex-1 flex-col">
+        {/* min-w-0: a flex item defaults to min-width:auto, so without it this column grows to the table's
+            natural width and the table's own overflow-x-auto never gets a chance to scroll. */}
+        <div className="flex h-full min-h-[440px] min-w-0 flex-1 flex-col">
           {load.kind === 'loading' ? (
             <MarketCardSkeleton count={3} />
           ) : load.kind === 'error' ? (
@@ -231,7 +233,9 @@ const AdminCategoriesPage = () => {
             value={newCategory.position}
             onChange={(e) => setNewCategory({ ...newCategory, position: e.target.value })}
           />
-          <div className="grid grid-cols-2 gap-3">
+          {/* The fields carry a min width for flex rows; inside this grid the columns set the width, so let
+              them shrink — two 220px fields do not fit the 380px sidebar and push the page sideways. */}
+          <div className="grid grid-cols-2 gap-3 [&>*]:min-w-0">
             <Field
               id="new-category-min-shelf-life"
               label={t('categoryForm.minShelfLife')}

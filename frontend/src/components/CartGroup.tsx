@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import QtyStepper from '@/components/QtyStepper';
 import { Card } from '@/components/ui/card';
-import { perUnit, vnd } from '@/lib/format';
+import { perUnit, money } from '@/lib/format';
 
 export type CartLineType = { id: number; name: string; unit: string; price: number; max: number; qty: number };
 
@@ -53,7 +53,7 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
             </span>
             <QtyStepper value={it.qty} max={it.max} unit={it.unit} onChange={(qty) => onQtyChange(it.id, qty)} />
             <span className="text-price min-w-22 text-right font-bold tabular-nums max-[480px]:col-span-full max-[480px]:-mt-1 max-[480px]:text-left">
-              {vnd(it.qty * it.price)}
+              {money(it.qty * it.price)}
             </span>
           </li>
         ))}
@@ -61,7 +61,7 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
 
       <div className="bg-surface-sunken flex flex-wrap items-center justify-between gap-3 p-3 px-4">
         <span className="text-ink-muted text-small">{t('cart.payAtPickup')}</span>
-        <span className="font-hand text-price text-[28px] tabular-nums">{vnd(total)}</span>
+        <span className="font-hand text-price text-[28px] tabular-nums">{money(total)}</span>
       </div>
     </Card>
   );

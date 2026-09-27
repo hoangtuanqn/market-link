@@ -11,14 +11,6 @@
     "language": "Language",
     "languageNote": "The language of menus, buttons and messages. Stall, product and place names stay as the stall wrote them.",
     "format": "Money, dates and units",
-    "currency": "Show prices in",
-    "currencyNote": "You always pay in Vietnamese đồng at the stall. Another currency is shown next to it for reading only, at fixed rates from {{date}}.",
-    "currencies": {
-      "VND": "₫ Vietnamese đồng only",
-      "USD": "₫ and $ US dollar",
-      "EUR": "₫ and € euro",
-      "JPY": "₫ and ¥ Japanese yen"
-    },
     "units": "Weights and volumes",
     "unitsNote": "Only converts units that measure something. A stall that sells by the bunch, the bulb or the tray keeps its own word.",
     "metric": "Metric · kg, g, litre",
@@ -568,6 +560,32 @@
       "hours": "When is Bến Thành market open?",
       "stalls": "Which stalls are at Thảo Điền on Saturday?",
       "cancel": "How do I cancel an order?"
+    },
+    "action": {
+      "confirm": "Confirm",
+      "openPage": "Open the page",
+      "done": "Done",
+      "doneTitle": "Done",
+      "failedTitle": "Not done",
+      "failedText": "The change was refused. Open the page to see why.",
+      "accept_order": "Accept order {{label}}?",
+      "decline_order": "Decline order {{label}}?",
+      "ready_order": "Mark order {{label}} ready?",
+      "complete_order": "Mark order {{label}} completed?",
+      "approve_farmer": "Approve {{label}}?",
+      "reject_farmer": "Reject {{label}}?",
+      "suspend_farmer": "Suspend {{label}}?"
+    },
+    "askAboutThis": "Ask the assistant",
+    "ask": {
+      "order": "Order {{code}}: what is in it, is it still before the cutoff, and should I accept it?",
+      "review": "Draft a short, honest reply to this {{rating}}-star review.",
+      "application": "Is this stall application complete, and is anything worth checking before I approve it?",
+      "reports": "Explain these numbers for {{from}} to {{to}}: which market is busiest, which one is quiet, and why.",
+      "cart": "Explain my cart: why is it split, what does each stall cost, and am I still in time for every cutoff?",
+      "announcement": "Draft a platform announcement. I will tell you what it is about.",
+      "product": "Write a short description and a hand-lettered tag note for {{name}}.",
+      "feedback": "Summarise the feedback inbox: what are people reporting, which messages are really the same problem, and what should I look at first?"
     }
   },
   "tour": {

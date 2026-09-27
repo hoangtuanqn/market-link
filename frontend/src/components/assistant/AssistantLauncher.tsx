@@ -1,33 +1,40 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router';
 import { ChatIcon, CloseIcon } from '@/components/icons';
 import { USER_ROLE } from '@/constants/enums';
 import useSession from '@/hooks/useSession';
 import AssistantChat from './AssistantChat';
+import { useAssistant } from './assistantContext';
 
 const FULL_PAGE = '/assistant';
 
 /**
- * FR-090 — the floating assistant button of the customer panel (MainLayout). Only for signed-in customer-panel accounts
- * (Customer, and a Farmer shopping as a customer), the same ones the server lets Claude answer; hidden on the
- * assistant's own page.
+ * FR-090, FR-093, FR-094 — the floating assistant button, in all three panels. Shown to any signed-in account the
+ * server will let Claude answer: Customer, Farmer and Admin. Hidden on the assistant's own page.
+ *
+ * Open/closed lives in AssistantProvider rather than here, so a screen can open the panel with a question already typed
+ * (the "ask about this" buttons).
  */
 const AssistantLauncher = () => {
   const { t } = useTranslation('common');
   const { user } = useSession();
   const { pathname } = useLocation();
-  const [open, setOpen] = useState(false);
+  const assistant = useAssistant();
+
+  const open = assistant?.open ?? false;
+  const close = assistant?.close;
 
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    if (!open || !close) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && close();
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [open]);
+  }, [open, close]);
 
-  const allowed = user?.role === USER_ROLE.CUSTOMER || user?.role === USER_ROLE.FARMER;
-  if (!allowed || pathname === FULL_PAGE) return null;
+  const allowed =
+    user?.role === USER_ROLE.CUSTOMER || user?.role === USER_ROLE.FARMER || user?.role === USER_ROLE.ADMIN;
+  if (!assistant || !allowed || pathname === FULL_PAGE) return null;
 
   return (
     <>
@@ -39,7 +46,7 @@ const AssistantLauncher = () => {
         >
           <AssistantChat className="min-h-0 flex-1" />
           <div className="border-line flex justify-end border-t px-4 py-2">
-            <Link to={FULL_PAGE} onClick={() => setOpen(false)} className="text-small font-bold">
+            <Link to={FULL_PAGE} onClick={assistant.close} className="text-small font-bold">
               {t('assistant.fullPage')}
             </Link>
           </div>
@@ -47,7 +54,7 @@ const AssistantLauncher = () => {
       )}
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={assistant.toggle}
         aria-expanded={open}
         aria-label={open ? t('assistant.close') : t('assistant.open')}
         title={open ? t('assistant.close') : t('assistant.open')}

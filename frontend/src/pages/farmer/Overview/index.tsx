@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import ChatApi from '@/api-requests/chat.requests';
 import OrderApi, { type OrderDetailDto, type OrderListItemDto } from '@/api-requests/order.requests';
 import ProductApi from '@/api-requests/product.requests';
 import { FarmerReportApi } from '@/api-requests/report.requests';
@@ -17,7 +18,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
 import useSession from '@/hooks/useSession';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -48,6 +49,7 @@ const FarmerOverviewPage = () => {
   const [busyId, setBusyId] = useState<number | null>(null);
 
   const { state: kpiLoad, retry: retryKpi } = useRequest('farmer-dash', () => FarmerReportApi.dashboard());
+  const { state: briefingLoad } = useRequest('farmer-briefing', () => ChatApi.farmerBriefing());
   const activeTab = TABS.find((x) => x.id === tab)!;
   const {
     state: ordersLoad,
@@ -95,7 +97,7 @@ const FarmerOverviewPage = () => {
       render: (r) => pickupLabel(r.pickupDate, `${r.pickupStart}–${r.pickupEnd}`),
     },
     { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
-    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => money(r.totalAmount) },
     { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
@@ -172,6 +174,7 @@ const FarmerOverviewPage = () => {
   ];
 
   const dashboard = kpiLoad.kind === 'ready' ? kpiLoad.data : null;
+  const briefing = briefingLoad.kind === 'ready' ? briefingLoad.data : null;
   const orders = ordersLoad.kind === 'ready' ? ordersLoad.data.items : [];
   const stock =
     stockLoad.kind === 'ready' ? [...stockLoad.data].sort((a, b) => a.stock - b.stock).slice(0, STOCK_ROWS) : [];
@@ -193,6 +196,29 @@ const FarmerOverviewPage = () => {
           <ButtonLink to="/farmer/products/new">{t('addProduct')}</ButtonLink>
         </div>
       </div>
+
+      {briefingLoad.kind === 'ready' && briefing && (
+        <Banner
+          variant={briefing.cutoffAlreadyPassed > 0 ? 'warning' : 'info'}
+          title={
+            briefing.marketsToday.length > 0
+              ? t('briefing.title', { markets: briefing.marketsToday.join(', ') })
+              : t('briefing.titleNoMarket')
+          }
+        >
+          <ul className="m-0 flex list-disc flex-col gap-1 pl-4.5">
+            <li>{t('briefing.orders', { count: briefing.ordersToday })}</li>
+            {briefing.waitingToBeAccepted > 0 && (
+              <li>{t('briefing.waiting', { count: briefing.waitingToBeAccepted })}</li>
+            )}
+            {briefing.cutoffAlreadyPassed > 0 && (
+              <li>{t('briefing.cutoffPassed', { count: briefing.cutoffAlreadyPassed })}</li>
+            )}
+            {briefing.soldOutProducts > 0 && <li>{t('briefing.soldOut', { count: briefing.soldOutProducts })}</li>}
+            {briefing.lowStockProducts > 0 && <li>{t('briefing.lowStock', { count: briefing.lowStockProducts })}</li>}
+          </ul>
+        </Banner>
+      )}
 
       {dashboard && dashboard.pendingOrders > 0 && (
         <Banner variant="warning" title={t('banner.title', { count: dashboard.pendingOrders })}>
@@ -222,13 +248,13 @@ const FarmerOverviewPage = () => {
             />
             <Kpi
               label={t('kpi.revenue')}
-              value={vnd(dashboard.revenueTotal)}
+              value={money(dashboard.revenueTotal)}
               href="/farmer/history"
               linkLabel={t('kpi.openHistory')}
             />
             <Kpi
               label={t('kpi.revenueMonth')}
-              value={vnd(dashboard.revenueThisMonth)}
+              value={money(dashboard.revenueThisMonth)}
               href="/farmer/history"
               linkLabel={t('kpi.openHistory')}
             />

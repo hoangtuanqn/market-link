@@ -82,5 +82,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "今日は {{markets}}",
+    "titleNoMarket": "今日はどのマーケットにも出店しません",
+    "orders_other": "今日の注文は {{count}} 件",
+    "waiting_other": "そのうち {{count}} 件があなたの承諾か辞退を待っています",
+    "cutoffPassed_other": "そのうち {{count}} 件は締切を過ぎ、お客様は変更できません",
+    "soldOut_other": "{{count}} 商品が売り切れになっています",
+    "lowStock_other": "{{count}} 商品が残りわずかです"
   }
 }

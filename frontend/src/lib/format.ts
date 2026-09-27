@@ -13,8 +13,8 @@ const settings = () => SettingsStore.get();
 const locale = () => settings().language;
 
 /**
- * Locked to USD (user decision 2026-09-26) — no per-reader currency choice any more. `amount` is a plain number of
- * dollars, not cents. Kept a new name (not the old `vnd`) so nobody misreads what a call site formats.
+ * Locked to USD (user decision 2026-09-26) — no per-reader currency choice. `amount` is a plain number of dollars, not
+ * cents.
  */
 export function money(amount: number): string {
   return new Intl.NumberFormat(locale(), {
@@ -23,11 +23,6 @@ export function money(amount: number): string {
     maximumFractionDigits: 2,
   }).format(amount);
 }
-
-/** Alias to money() locked to USD across the entire application. */
-export const vnd = money;
-export const usd = money;
-export const RATES_DATE = '26/09/2026';
 
 /* ---------- units ---------- */
 

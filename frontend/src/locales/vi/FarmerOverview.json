@@ -82,5 +82,14 @@
       "title": "Chưa bán được gì",
       "text": "Sản phẩm bán chạy sẽ hiện ở đây khi có đơn hoàn tất."
     }
+  },
+  "briefing": {
+    "title": "Hôm nay ở {{markets}}",
+    "titleNoMarket": "Hôm nay bạn không bán ở chợ nào",
+    "orders_other": "{{count}} đơn cho hôm nay",
+    "waiting_other": "{{count}} đơn đang chờ bạn nhận hoặc từ chối",
+    "cutoffPassed_other": "{{count}} đơn trong số đó đã qua giờ chốt, khách không sửa được nữa",
+    "soldOut_other": "{{count}} sản phẩm đang để hết hàng",
+    "lowStock_other": "{{count}} sản phẩm sắp hết"
   }
 }

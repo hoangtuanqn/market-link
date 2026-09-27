@@ -11,14 +11,6 @@
     "language": "Langue",
     "languageNote": "La langue des menus, des boutons et des messages. Les noms de stands, de produits et de lieux restent tels que le stand les a écrits.",
     "format": "Argent, dates et unités",
-    "currency": "Afficher les prix en",
-    "currencyNote": "Vous payez toujours en dôngs vietnamiens au stand. Une autre devise est affichée à côté à titre indicatif, à des taux fixes du {{date}}.",
-    "currencies": {
-      "VND": "₫ dông vietnamien uniquement",
-      "USD": "₫ et $ dollar américain",
-      "EUR": "₫ et € euro",
-      "JPY": "₫ et ¥ yen japonais"
-    },
     "units": "Poids et volumes",
     "unitsNote": "Seules les unités de mesure sont converties. Un stand qui vend à la botte, à la tête ou à la barquette garde son propre mot.",
     "metric": "Métrique · kg, g, litre",
@@ -568,6 +560,32 @@
       "hours": "À quelle heure ouvre le marché Bến Thành ?",
       "stalls": "Quels stands sont au marché Thảo Điền samedi ?",
       "cancel": "Comment annuler une commande ?"
+    },
+    "action": {
+      "confirm": "Confirmer",
+      "openPage": "Ouvrir la page",
+      "done": "Fait",
+      "doneTitle": "Fait",
+      "failedTitle": "Non effectué",
+      "failedText": "Le changement a été refusé. Ouvrez la page pour voir pourquoi.",
+      "accept_order": "Accepter la commande {{label}} ?",
+      "decline_order": "Refuser la commande {{label}} ?",
+      "ready_order": "Marquer la commande {{label}} comme prête ?",
+      "complete_order": "Marquer la commande {{label}} comme terminée ?",
+      "approve_farmer": "Approuver {{label}} ?",
+      "reject_farmer": "Refuser {{label}} ?",
+      "suspend_farmer": "Suspendre {{label}} ?"
+    },
+    "askAboutThis": "Demander à l'assistant",
+    "ask": {
+      "order": "Commande {{code}} : que contient-elle, est-on encore avant la limite, dois-je l'accepter ?",
+      "review": "Rédige une réponse courte et honnête à cet avis de {{rating}} étoiles.",
+      "application": "Cette demande de stand est-elle complète, et y a-t-il quelque chose à vérifier avant d'approuver ?",
+      "reports": "Explique ces chiffres du {{from}} au {{to}} : quel marché marche le mieux, lequel est calme, et pourquoi ?",
+      "cart": "Explique mon panier : pourquoi est-il divisé, combien coûte chaque stand, et suis-je encore dans les temps ?",
+      "announcement": "Rédige une annonce pour toute la plateforme. Je te dis de quoi il s'agit.",
+      "product": "Écris une courte description et une note manuscrite pour l'étiquette de {{name}}.",
+      "feedback": "Résume la boîte de retours : que signale-t-on, quels messages sont en fait le même problème, et que dois-je regarder en premier ?"
     }
   },
   "tour": {

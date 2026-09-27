@@ -8,7 +8,7 @@ import NotificationSettingsCard from '@/components/notifications/NotificationSet
 import { Card } from '@/components/ui/card';
 import { SelectField } from '@/components/ui/input';
 import useSettings from '@/hooks/useSettings';
-import { formatDate, formatTime, vnd } from '@/lib/format';
+import { formatDate, formatTime, money } from '@/lib/format';
 import SettingsStore, { LANGUAGES, type Settings, type Theme } from '@/lib/settings';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -135,7 +135,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
           {t('settings.preview', {
             date: withDraft(draft, () => formatDate(SAMPLE_DATE)),
             time: withDraft(draft, () => formatTime(SAMPLE_DATE)),
-            price: withDraft(draft, () => vnd(SAMPLE_PRICE)),
+            price: withDraft(draft, () => money(SAMPLE_PRICE)),
           })}
         </p>
       </Card>

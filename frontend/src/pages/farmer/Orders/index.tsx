@@ -12,7 +12,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
-import { cutoffLabel, dayName, formatDayMonth, pickupLabel, vnd } from '@/lib/format';
+import { cutoffLabel, dayName, formatDayMonth, pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -112,7 +112,7 @@ const FarmerOrdersPage = () => {
     },
     { key: 'cut', label: t('col.cutoff'), render: (r) => cutoffLabel(r.cutoffAt) },
     { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
-    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => money(r.totalAmount) },
     { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
