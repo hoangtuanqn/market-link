@@ -15,6 +15,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
 import { pickupLabel, vnd } from '@/lib/format';
+import { fetchAllSales, sumSales } from './history.helpers';
 
 const PAGE_SIZE = 50;
 const BEST_SELLER_LIMIT = 8;
@@ -46,8 +47,14 @@ const FarmerHistoryPage = () => {
   const from = ymd(startOfMonth(month));
   const to = ymd(endOfMonth(month));
 
+  // The "past orders" table: its own paged request, independent of the month totals below.
   const { state: salesLoad, retry: retrySales } = useRequest(`farmer-sales:${from}:${to}:${page}`, () =>
     FarmerReportApi.sales({ from, to, page, pageSize: PAGE_SIZE }),
+  );
+  // The month's revenue/average KPIs: every completed order in range, not just the table's current page — a
+  // partial sum here would silently change as the reader pages through the table.
+  const { state: totalsLoad, retry: retryTotals } = useRequest(`history-totals:${from}:${to}`, () =>
+    fetchAllSales(from, to),
   );
   const { state: bestLoad, retry: retryBest } = useRequest(`farmer-history-best:${from}:${to}`, () =>
     FarmerReportApi.bestSellers({ from, to, limit: BEST_SELLER_LIMIT }),
@@ -63,14 +70,17 @@ const FarmerHistoryPage = () => {
 
   const sales = salesLoad.kind === 'ready' ? salesLoad.data : null;
   const best = bestLoad.kind === 'ready' ? bestLoad.data : [];
-  const revenue = sales ? sales.items.reduce((sum, o) => sum + o.totalAmount, 0) : 0;
-  const completed = sales?.total ?? 0;
-  const average = sales && sales.items.length ? revenue / sales.items.length : 0;
+  const totalsData = totalsLoad.kind === 'ready' ? totalsLoad.data : null;
+  const totals = totalsData ? sumSales(totalsData.rows) : null;
+  const completed = totalsData?.total ?? 0;
+  const revenue = totals?.revenue ?? 0;
+  const average = totals?.average ?? 0;
+  const partial = totalsData?.partial ?? false;
   const declined = declinedLoad.kind === 'ready' ? declinedLoad.data.total : null;
   const cancelled = cancelledLoad.kind === 'ready' ? cancelledLoad.data.total : null;
   const kpiLoading =
-    salesLoad.kind === 'loading' || declinedLoad.kind === 'loading' || cancelledLoad.kind === 'loading';
-  const kpiError = salesLoad.kind === 'error' || declinedLoad.kind === 'error' || cancelledLoad.kind === 'error';
+    totalsLoad.kind === 'loading' || declinedLoad.kind === 'loading' || cancelledLoad.kind === 'loading';
+  const kpiError = totalsLoad.kind === 'error' || declinedLoad.kind === 'error' || cancelledLoad.kind === 'error';
 
   const columns: TableColumn<OrderListItemDto>[] = [
     { key: 'd', label: t('col.pickup'), render: (r) => pickupLabel(r.pickupDate, `${r.pickupStart}–${r.pickupEnd}`) },
@@ -114,12 +124,17 @@ const FarmerHistoryPage = () => {
       {kpiLoading ? (
         <MarketCardSkeleton count={4} />
       ) : kpiError ? (
-        <LoadError noun={t('kpi.noun')} onRetry={retrySales} />
+        <LoadError noun={t('kpi.noun')} onRetry={retryTotals} />
       ) : (
         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
           <Kpi label={t('kpi.completed')} value={num(completed)} />
-          <Kpi label={t('kpi.revenue')} value={vnd(revenue)} note={t('kpi.revenueNote')} highlight />
-          <Kpi label={t('kpi.average')} value={vnd(average)} />
+          <Kpi
+            label={t('kpi.revenue')}
+            value={vnd(revenue)}
+            note={partial ? t('kpi.partial') : t('kpi.revenueNote')}
+            highlight
+          />
+          <Kpi label={t('kpi.average')} value={vnd(average)} note={partial ? t('kpi.partial') : undefined} />
           <Kpi label={t('kpi.declined')} value={declined == null ? '—' : num(declined)} note={t('kpi.allTime')} />
           <Kpi label={t('kpi.cancelled')} value={cancelled == null ? '—' : num(cancelled)} note={t('kpi.allTime')} />
         </div>

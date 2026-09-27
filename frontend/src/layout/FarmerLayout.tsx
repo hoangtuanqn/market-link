@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import useChatUnread from '@/hooks/useChatUnread';
@@ -83,12 +84,15 @@ const FarmerLayout = () => {
   const { t } = useTranslation();
   const unread = useUnreadNotifications();
   const { user } = useSession();
+  const { pathname } = useLocation();
   const { state: profileLoad } = useRequest('farmer-layout-profile', () => StallApi.myProfile());
   const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
   const stallName = profile?.stallName ?? user?.fullName ?? '';
   // FR-113: the real unread count, replacing the hardcoded 1
   const chatUnread = useChatUnread();
-  const { state: placedLoad } = useRequest('farmer-placed-count', () =>
+  // The "incoming orders" badge; re-fetched on every navigation inside the panel (FarmerLayout is the persistent
+  // Outlet parent, so accept/decline on /farmer/orders would otherwise leave a stale count until a full reload).
+  const { state: placedLoad } = useRequest(`farmer-placed-count:${pathname}`, () =>
     OrderApi.farmerList({ status: 'placed', pageSize: 1 }),
   );
   const awaiting = placedLoad.kind === 'ready' ? placedLoad.data.total : undefined;

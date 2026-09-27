@@ -13,7 +13,8 @@
     "average": "Trung bình mỗi đơn",
     "declined": "Đã từ chối",
     "cancelled": "Đã huỷ",
-    "allTime": "Từ trước tới nay"
+    "allTime": "Từ trước tới nay",
+    "partial": "Chỉ 500 đơn đầu"
   },
   "best": {
     "title": "Bán chạy nhất",

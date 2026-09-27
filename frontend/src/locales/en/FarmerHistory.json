@@ -13,7 +13,8 @@
     "average": "Average order",
     "declined": "Declined",
     "cancelled": "Cancelled",
-    "allTime": "All time"
+    "allTime": "All time",
+    "partial": "First 500 orders only"
   },
   "best": {
     "title": "Best sellers",
