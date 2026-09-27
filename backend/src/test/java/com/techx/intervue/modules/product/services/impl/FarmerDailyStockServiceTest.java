@@ -3,6 +3,7 @@ package com.techx.intervue.modules.product.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -10,6 +11,7 @@ import static org.mockito.Mockito.when;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.entities.ProductDailyStock;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
@@ -35,6 +37,7 @@ class FarmerDailyStockServiceTest {
     private ProductDailyStockRepository dailyStock;
     private ProductRepository products;
     private FarmerProfileRepository farmers;
+    private RestockNotifier restock;
     private FarmerDailyStockService service;
 
     @BeforeEach
@@ -42,7 +45,8 @@ class FarmerDailyStockServiceTest {
         dailyStock = mock(ProductDailyStockRepository.class);
         products = mock(ProductRepository.class);
         farmers = mock(FarmerProfileRepository.class);
-        service = new FarmerDailyStockService(dailyStock, products, farmers);
+        restock = mock(RestockNotifier.class);
+        service = new FarmerDailyStockService(dailyStock, products, farmers, restock);
     }
 
     private static FarmerProfile stall(ApprovalStatus status) {
@@ -150,5 +154,25 @@ class FarmerDailyStockServiceTest {
                 service.override(USER_ID, PRODUCT_ID, DATE, new FarmerDailyStockRequest(15, null));
 
         assertThat(result.unitPrice()).isEqualByComparingTo("12000");
+    }
+
+    /**
+     * FR-041: putting stock back on a sold-out date can make the product orderable again — the
+     * customers who favourited it are told, the same way a weekly template gaining a day does.
+     */
+    @Test
+    void overrideReportsWhetherTheProductBecameOrderable() {
+        approvedStall();
+        ProductDailyStock row = new ProductDailyStock();
+        row.setId(500L);
+        row.setQuantityAvailable(0);
+        row.setUnitPrice(new BigDecimal("12000"));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(restock.isOrderable(any())).thenReturn(false, true);
+
+        service.override(USER_ID, PRODUCT_ID, DATE, new FarmerDailyStockRequest(15, null));
+
+        verify(restock).afterChange(any(Product.class), eq(false), eq(true));
     }
 }
