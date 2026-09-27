@@ -24,8 +24,6 @@ export function money(amount: number): string {
   }).format(amount);
 }
 
-export const RATES_DATE = '26/09/2026';
-
 /* ---------- units ---------- */
 
 /** Metric unit → imperial unit and how many imperial units one metric unit is. Count units (bunch, tray) are absent. */

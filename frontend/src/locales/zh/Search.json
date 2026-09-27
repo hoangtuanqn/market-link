@@ -17,7 +17,8 @@
     "allCategories": "所有类别",
     "market": "市集",
     "allMarkets": "所有市集",
-    "price": "单价"
+    "price": "单价",
+    "clear": "清除筛选"
   },
   "price": {
     "any": "不限价格",
@@ -25,6 +26,7 @@
     "mid": "{{low}} – {{high}}",
     "high": "高于 {{high}}"
   },
+  "stallsNotByCategory": "类别不会筛选摊位——摊位没有类别。它作用于下方的商品。",
   "sort": "排序",
   "sorts": {
     "best": "最相关",

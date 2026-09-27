@@ -18,8 +18,12 @@ fail=0
 # refuse() ones, which would then pass for the wrong reason and never catch a leak.
 LISTING=$(unzip -l "$ZIP")
 
+# grep -F everywhere below: the patterns are paths, not regexes. Without -F, '.ai/' also matches "mai/" and
+# 'CLAUDE.md' matches "CLAUDEXmd". They stay unanchored on purpose — frontend/CLAUDE.md is as much a leak as
+# a CLAUDE.md at the root.
+
 require() {
-  if grep -q -- "$1" <<<"$LISTING"; then
+  if grep -qF -- "$1" <<<"$LISTING"; then
     echo "ok       $1"
   else
     echo "MISSING  $1"
@@ -28,7 +32,7 @@ require() {
 }
 
 refuse() {
-  if grep -q -- "$1" <<<"$LISTING"; then
+  if grep -qF -- "$1" <<<"$LISTING"; then
     echo "LEAKED   $1"
     fail=1
   else

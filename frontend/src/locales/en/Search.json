@@ -17,7 +17,8 @@
     "allCategories": "All categories",
     "market": "Market",
     "allMarkets": "All markets",
-    "price": "Price per unit"
+    "price": "Price per unit",
+    "clear": "Clear filters"
   },
   "price": {
     "any": "Any price",
@@ -25,6 +26,7 @@
     "mid": "{{low}} – {{high}}",
     "high": "Over {{high}}"
   },
+  "stallsNotByCategory": "The category does not narrow stalls — a stall belongs to no category. It applies to the products below.",
   "sort": "Sort",
   "sorts": {
     "best": "Best match",

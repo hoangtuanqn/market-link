@@ -17,7 +17,8 @@
     "allCategories": "Toutes les catégories",
     "market": "Marché",
     "allMarkets": "Tous les marchés",
-    "price": "Prix unitaire"
+    "price": "Prix unitaire",
+    "clear": "Effacer les filtres"
   },
   "price": {
     "any": "Tous les prix",
@@ -25,6 +26,7 @@
     "mid": "{{low}} – {{high}}",
     "high": "Plus de {{high}}"
   },
+  "stallsNotByCategory": "La catégorie ne filtre pas les étals — un étal n'appartient à aucune catégorie. Elle s'applique aux produits ci-dessous.",
   "sort": "Trier",
   "sorts": {
     "best": "Pertinence",

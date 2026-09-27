@@ -144,6 +144,40 @@ describe('Search facets (FR-023)', () => {
     await waitFor(() => expect(screen.getByTestId('search-string').textContent).toContain('category=2'));
   });
 
+  it('clears every facet at once and leaves the keyword alone', async () => {
+    render(
+      <MemoryRouter initialEntries={['/search?q=rau&scope=all&category=3&price=low&market=7']}>
+        <SearchPage />
+        <LocationProbe />
+      </MemoryRouter>,
+    );
+    await screen.findByText('Rau muống');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+
+    await waitFor(() => {
+      const url = screen.getByTestId('search-string').textContent ?? '';
+      expect(url).toContain('q=rau');
+      expect(url).not.toContain('category=');
+      expect(url).not.toContain('price=');
+      expect(url).not.toContain('market=');
+    });
+  });
+
+  it('says so when a category is chosen, because stalls cannot be narrowed by one', async () => {
+    vi.spyOn(StallApi, 'list').mockResolvedValue(
+      page([{ id: 4, stallName: 'Vườn Út Hiền', markets: [], rating: 0, ratingCount: 0 }]) as never,
+    );
+    render(
+      <MemoryRouter initialEntries={['/search?q=rau&scope=all&category=3']}>
+        <SearchPage />
+      </MemoryRouter>,
+    );
+
+    // Products narrow, stalls do not — without a word on screen the stall count looks like a bug.
+    expect(await screen.findByText(/category does not narrow stalls/i)).toBeInTheDocument();
+  });
+
   it('sends the price band and the price sort in the same request', async () => {
     searchFor('rau');
     await screen.findByText('Rau muống');

@@ -16,6 +16,7 @@ import { SelectField } from '@/components/ui/input';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
 import { dayName, formatClock, formatDayMonth, money, nextSevenDays } from '@/lib/format';
+import { bandOf, HIGH, LOW, PRICE_BANDS, type PriceBand } from '@/lib/priceBands';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 
@@ -23,16 +24,6 @@ const SORTS = ['best', 'nearest', 'price', 'rating'] as const;
 const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
 const FETCH_SIZE = 50;
 
-const LOW = 1;
-const HIGH = 3;
-/** Price bands become `minPrice`/`maxPrice` on the request (contract §5); prices are USD with cents. */
-const PRICE_BANDS = [
-  { value: 'any', min: undefined, max: undefined },
-  { value: 'low', min: undefined, max: LOW - 0.01 },
-  { value: 'mid', min: LOW, max: HIGH },
-  { value: 'high', min: HIGH + 0.01, max: undefined },
-] as const;
-type PriceBand = (typeof PRICE_BANDS)[number]['value'];
 /** The market facet's "no filter" value. */
 const ALL_MARKETS = 'all';
 
@@ -59,8 +50,8 @@ const SearchPage = () => {
   // visible cause.
   const categoryParam = searchParams.get('category');
   const categoryId = categoryParam === null || categoryParam === '' ? null : Number(categoryParam);
-  const bandParam = searchParams.get('price');
-  const priceBand: PriceBand = PRICE_BANDS.some((b) => b.value === bandParam) ? (bandParam as PriceBand) : 'any';
+  const band = bandOf(searchParams.get('price'));
+  const priceBand: PriceBand = band.value;
   const marketFilter = searchParams.get('market') ?? ALL_MARKETS;
 
   /** Replaces one facet in the URL, leaving the keyword, the scope and the other facets alone. */
@@ -68,6 +59,15 @@ const SearchPage = () => {
     const next = new URLSearchParams(searchParams);
     if (value === '' || value === ALL_MARKETS || value === 'any') next.delete(key);
     else next.set(key, value);
+    setSearchParams(next, { replace: true });
+  };
+
+  const anyFacet = categoryId !== null || priceBand !== 'any' || marketFilter !== ALL_MARKETS;
+
+  /** Drops all three facets in one go, keeping the keyword and the scope that found these results. */
+  const clearFacets = () => {
+    const next = new URLSearchParams(searchParams);
+    for (const key of ['category', 'price', 'market']) next.delete(key);
     setSearchParams(next, { replace: true });
   };
 
@@ -91,7 +91,6 @@ const SearchPage = () => {
   // One round to the three public lists (contract §3, §4, §5), all filtered by the same keyword and day.
   // "Nearest" needs a location the page does not ask for, so it sorts like "best match" until it does.
   const keyword = q.trim();
-  const band = PRICE_BANDS.find((b) => b.value === priceBand)!;
   const marketId = marketFilter === ALL_MARKETS ? undefined : Number(marketFilter);
   const { state: load, retry } = useRequest(
     `search:${keyword}:${day}:${sort}:${categoryId ?? ''}:${priceBand}:${marketFilter}`,
@@ -226,8 +225,8 @@ const SearchPage = () => {
               ...facetMarkets.map((m) => ({ value: String(m.id), label: m.name })),
             ]}
           />
-          <div className="flex flex-col gap-2">
-            <span className="text-small font-bold">{t('filters.price')}</span>
+          <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
+            <legend className="text-small mb-2 p-0 font-bold">{t('filters.price')}</legend>
             <div className="flex flex-wrap gap-2">
               {PRICE_BANDS.map((b) => (
                 <Chip key={b.value} pressed={priceBand === b.value} onClick={() => setFacet('price', b.value)}>
@@ -235,7 +234,12 @@ const SearchPage = () => {
                 </Chip>
               ))}
             </div>
-          </div>
+          </fieldset>
+          {anyFacet && (
+            <div className="flex flex-col justify-end gap-2">
+              <Chip onClick={clearFacets}>{t('filters.clear')}</Chip>
+            </div>
+          )}
           <div className="flex flex-col gap-2">
             <span className="text-small font-bold">{t('sort')}</span>
             <div className="flex flex-wrap gap-2">
@@ -278,6 +282,9 @@ const SearchPage = () => {
               {(tab === 'all' || tab === 'farmer') && (
                 <section className="flex flex-col gap-4">
                   <h2 className="text-h3">{t('tabs.farmer')}</h2>
+                  {/* A stall has no category of its own, so the category facet cannot narrow this list. Left
+                      unsaid, the stall count next to a narrowed product list reads as a bug. */}
+                  {categoryId !== null && <p className="text-small text-ink-muted m-0">{t('stallsNotByCategory')}</p>}
                   {results.farmers.length ? (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       {results.farmers.map((f) => (

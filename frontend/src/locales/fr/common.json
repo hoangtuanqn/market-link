@@ -11,14 +11,6 @@
     "language": "Langue",
     "languageNote": "La langue des menus, des boutons et des messages. Les noms de stands, de produits et de lieux restent tels que le stand les a écrits.",
     "format": "Argent, dates et unités",
-    "currency": "Afficher les prix en",
-    "currencyNote": "Vous payez toujours en dôngs vietnamiens au stand. Une autre devise est affichée à côté à titre indicatif, à des taux fixes du {{date}}.",
-    "currencies": {
-      "VND": "₫ dông vietnamien uniquement",
-      "USD": "₫ et $ dollar américain",
-      "EUR": "₫ et € euro",
-      "JPY": "₫ et ¥ yen japonais"
-    },
     "units": "Poids et volumes",
     "unitsNote": "Seules les unités de mesure sont converties. Un stand qui vend à la botte, à la tête ou à la barquette garde son propre mot.",
     "metric": "Métrique · kg, g, litre",

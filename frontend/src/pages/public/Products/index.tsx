@@ -10,20 +10,11 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import useRequest from '@/hooks/useRequest';
-import { dayName, firstOpenDay, nextSevenDays, money } from '@/lib/format';
+import { dayName, firstOpenDay, money, nextSevenDays } from '@/lib/format';
+import { bandOf, HIGH, LOW, PRICE_BANDS, type PriceBand } from '@/lib/priceBands';
 import type { MarketType } from '@/types/market.types';
 
 const PAGE_SIZE = 12;
-const LOW = 1;
-const HIGH = 3;
-/** Price bands become `minPrice`/`maxPrice` on the request (contract §5); prices are USD with cents. */
-const PRICE_BANDS = [
-  { value: 'any', min: undefined, max: undefined },
-  { value: 'low', min: undefined, max: LOW - 0.01 },
-  { value: 'mid', min: LOW, max: HIGH },
-  { value: 'high', min: HIGH + 0.01, max: undefined },
-] as const;
-type PriceBand = (typeof PRICE_BANDS)[number]['value'];
 /** Chip label → the server's whitelist value. */
 const SORTS = { newest: 'newest', priceAsc: 'price_asc', priceDesc: 'price_desc', rating: 'rating' } as const;
 type SortKey = keyof typeof SORTS;
@@ -56,7 +47,7 @@ const ProductsPage = () => {
   const [week] = useState(() => nextSevenDays());
   const day = picked ?? firstOpenDay(anyMarketOn, week[0].date);
 
-  const band = PRICE_BANDS.find((b) => b.value === priceBand)!;
+  const band = bandOf(priceBand);
   const params: ProductListParams = {
     day,
     categoryId: categoryId ?? undefined,
