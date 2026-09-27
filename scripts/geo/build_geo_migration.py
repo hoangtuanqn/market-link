@@ -12,6 +12,7 @@ TextNormalizer.normalize on the backend, so a search typed without diacritics fi
 """
 
 import argparse
+import csv
 import re
 import unicodedata
 from collections import Counter
@@ -19,10 +20,11 @@ from collections import Counter
 BATCH = 500
 STREET_PROVINCE = '79'  # Ho Chi Minh City, the only province with a street list for now
 
-# Alleys, bridges, roundabouts and the like are not streets a house number sits on
+# Alleys, bridges, roundabouts, stations and the like are not streets a house number sits on. "Bến" alone
+# stays: "Bến Vân Đồn" and "Bến Chương Dương" are streets named after the wharves along them.
 NOT_A_STREET = re.compile(
-    r'^(hẻm|hẽm|hèm|hem|ngõ|ngách|kiệt|kiet|lối|lô|khu|chung cư|cầu|bến|nút giao|vòng xoay|'
-    r'đường vào|đường dẫn|đường nội bộ|ramp|nhánh)\b'
+    r'^(hẻm|hẽm|hèm|hem|ngõ|ngách|kiệt|kiet|lối|lô|khu|chung cư|cầu|nút giao|vòng xoay|'
+    r'bến (xe|phà|đò|tàu|cảng|thuyền)|đường vào|đường dẫn|đường nội bộ|ramp|nhánh)\b'
 )
 
 
@@ -85,26 +87,44 @@ def clean_street(raw):
         return None
     if NOT_A_STREET.match(name.lower()) or re.fullmatch(r'[\d\s\-]+', name):
         return None
+    bare_number = re.match(r'^(số|Số|SỐ)\s*(\S.*)$', name)
+    if bare_number:
+        # "số 4-IV" is the numbered street "Đường số 4-IV" with its prefix left out
+        return 'Đường số ' + bare_number.group(2)
     prefixed = re.match(r'^(đường|Đường|ĐƯỜNG|duong|Duong)\s+(.*)$', name)
+    if not prefixed and name[:1].islower():
+        # A name typed in lower case on OpenStreetMap ("bình nhâm 42")
+        return name[:1].upper() + name[1:]
     if prefixed:
         rest = prefixed.group(2)
-        if re.match(r'^(số|Số|SỐ|so|So)\s*\d', rest):
-            # "Đường Số 12" and "đường số 12" are the same numbered street
+        if re.match(r'^(số|Số|SỐ|so|So)\s*\S', rest):
+            # "Đường Số 12", "đường số P8": one spelling for the numbered streets
             return 'Đường số ' + re.sub(r'^(số|Số|SỐ|so|So)\s*', '', rest)
-        if re.match(r'^[A-ZĐ]\d', rest) or re.match(r'^\d', rest) or ' ' not in rest:
-            # "Đường D1", "Đường 30/4": the prefix is part of the name
+        if rest[:1].islower() or re.match(r'^[A-ZĐ]\d', rest) or re.match(r'^\d', rest) or ' ' not in rest:
+            # "Đường tỉnh 749A", "Đường liên ấp 2-3", "Đường D1": the prefix is part of the name
             return 'Đường ' + rest
         # "Đường Lê Lợi" is written "Lê Lợi" on every address
         return rest
     return name
 
 
-def streets_from(lines):
-    counts = Counter(v for v in (clean_street(l) for l in lines if l.strip()) if v)
+def read_street_names(path):
+    """Overpass writes CSV: a name with a comma arrives quoted ('"Đường số 5, KP.7"')."""
+    with open(path, encoding='utf-8', newline='') as f:
+        return [row[0] for row in csv.reader(f) if row and row[0].strip()]
+
+
+def dedupe_key(name):
+    """Spellings of one street fold to the same key: "Bình Giã"/"Bĩnh Giã", "D1"/"Đường D1"."""
+    return re.sub(r'^duong ', '', fold(name))
+
+
+def streets_from(names):
+    counts = Counter(v for v in (clean_street(n) for n in names if n.strip()) if v)
     best = {}
     for name, _ in counts.most_common():
-        best.setdefault(name.lower(), name)  # keep the most frequent spelling of each name
-    # Two spellings can still fold to the same search text; both stay, they are distinct names
+        # The most frequent spelling wins; the rest are mostly typos in OpenStreetMap
+        best.setdefault(dedupe_key(name), name)
     return sorted(best.values(), key=lambda s: (fold(s), s))
 
 
@@ -134,7 +154,7 @@ def main():
     provinces = sorted(parse_tuples(units, 'provinces'), key=lambda p: p['code'])
     wards = sorted(parse_tuples(units, 'wards'), key=lambda w: w['code'])
     countries = [l.rstrip('\n').split('\t') for l in open(args.countries, encoding='utf-8') if l.strip()]
-    streets = streets_from(open(args.streets, encoding='utf-8'))
+    streets = streets_from(read_street_names(args.streets))
     hcm_wards = sum(1 for w in wards if w['province_code'] == STREET_PROVINCE)
 
     header = f"""-- FR-001, FR-073: address master data. Vietnam has two levels since 01/07/2025

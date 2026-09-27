@@ -53,9 +53,13 @@ already exist by then.
 
 ## What the script cleans
 
-- Streets: drops alleys (`Hẻm …`), bridges, roundabouts, junctions, lots and compounds, plus names with `/`.
+- Streets: drops alleys (`Hẻm …`), bridges, roundabouts, junctions, lots, compounds and stations (`Bến xe`, `Bến phà`),
+  plus names with `/`. Streets named after a wharf stay (`Bến Vân Đồn`).
+- The input is read as CSV, because Overpass quotes a name that contains a comma.
 - `"Đường Lê Lợi"` and `"Lê Lợi"` become one name, `Lê Lợi`. The prefix stays where it belongs to the name:
-  `Đường số 7`, `Đường D1`.
-- Different spellings of one name keep the most frequent one.
+  `Đường số 7`, `Đường D1`, `Đường tỉnh 749A`. A bare `số 4` becomes `Đường số 4`. A name written in lower case gets a
+  capital first letter.
+- Spellings that fold to the same text (`Bình Giã`/`Bĩnh Giã`, `D1`/`Đường D1`) keep the most frequent one.
+- Tests: `python3 -m unittest scripts/geo/test_build_geo_migration.py`.
 - `streets.name_search` is folded exactly like `TextNormalizer.normalize` on the backend (lower case, no diacritics,
   `đ → d`), so a search typed without diacritics still matches.
