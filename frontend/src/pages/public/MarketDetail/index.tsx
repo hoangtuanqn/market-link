@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
 import FavoriteApi, { type FavoriteDto } from '@/api-requests/favorite.requests';
 import ProductApi from '@/api-requests/product.requests';
@@ -13,23 +13,15 @@ import MarketCarousel from '@/components/MarketCarousel';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import ProductCard from '@/components/ProductCard';
 import StallCard from '@/components/StallCard';
-import { ButtonLink } from '@/components/ui/button';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
 import useSession from '@/hooks/useSession';
-import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
+import { dayList, dayName, firstOpenDay, formatClock, formatDayMonth, matchesQuery, nextSevenDays } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
-
-/** The demo market week, Thursday 24 to Sunday 27 September 2026. */
-const DAY_OPTIONS = [
-  { value: 4, date: new Date(2026, 8, 24) },
-  { value: 5, date: new Date(2026, 8, 25) },
-  { value: 6, date: new Date(2026, 8, 26) },
-  { value: 0, date: new Date(2026, 8, 27) },
-];
 
 const NO_PRODUCTS: ProductType[] = [];
 const NO_FAVORITES: FavoriteDto[] = [];
@@ -39,7 +31,6 @@ const MarketDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation('MarketDetail');
   const { t: tc } = useTranslation();
-  const navigate = useNavigate();
   const { isLoggedIn } = useSession();
 
   const marketId = Number(id);
@@ -57,16 +48,24 @@ const MarketDetailPage = () => {
   );
   const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === marketId)?.id ?? null) : null;
 
-  const [day, setDay] = useState(6);
+  // The coming week from today (FR-010); a day the market does not open on is struck through. Until the visitor picks
+  // a chip, the day is the first one from today that the market opens on.
+  const [week] = useState(() => nextSevenDays());
+  // A pick belongs to the market it was made on, so moving to another market starts again from its first open day.
+  const [picked, setPicked] = useState<{ market: string | undefined; dow: number } | null>(null);
+  const pickedDay = picked && picked.market === id ? picked.dow : null;
+  const day = pickedDay ?? (market ? firstOpenDay((d) => market.days.includes(d), week[0].date) : week[0].dow);
+  /** No request goes out for a day before the market's own days are known, so a closed day is never fetched. */
+  const dayKey = market ? String(day) : 'pending';
   const [category, setCategory] = useState('All');
   const [inStockOnly, setInStockOnly] = useState(false);
   const [scope, setScope] = useState<'product' | 'farmer'>('product');
   const [query, setQuery] = useState('');
 
   // FR-010: who is selling here on the chosen day, straight from the API. Keyed by market and day, so a new
-  // chip or a new id starts a new request; the market itself may still be loading, in which case this waits.
-  const { state: stallsLoad, retry: retryStalls } = useRequest(`market-stalls:${id}:${day}`, () =>
-    validId ? StallApi.atMarket(marketId, day) : Promise.resolve([]),
+  // chip or a new id starts a new request; while the market itself is still loading, this waits.
+  const { state: stallsLoad, retry: retryStalls } = useRequest(`market-stalls:${id}:${dayKey}`, () =>
+    validId && market ? StallApi.atMarket(marketId, day) : Promise.resolve([]),
   );
   const stallsToday = useMemo<StallCardData[]>(
     () =>
@@ -75,8 +74,10 @@ const MarketDetailPage = () => {
   );
 
   // What is on sale here on the chosen day (FR-020), from the same filters the products page uses.
-  const { state: productsLoad } = useRequest(`market-products:${id}:${day}`, () =>
-    validId ? ProductApi.list({ marketId, day, pageSize: 50 }).then((r) => r.items) : Promise.resolve(NO_PRODUCTS),
+  const { state: productsLoad } = useRequest(`market-products:${id}:${dayKey}`, () =>
+    validId && market
+      ? ProductApi.list({ marketId, day, pageSize: 50 }).then((r) => r.items)
+      : Promise.resolve(NO_PRODUCTS),
   );
   const productsToday: ProductType[] = productsLoad.kind === 'ready' ? productsLoad.data : NO_PRODUCTS;
 
@@ -119,11 +120,19 @@ const MarketDetailPage = () => {
     return pins;
   }, [market, stallsToday, tc]);
 
+  // FR-010 FR-021 — the search box narrows the lists already loaded for this market and day, in place: products by
+  // name, or stalls by stall or Farmer name, whichever the scope says. Clearing it brings the full lists back.
+  const searching = query.trim() !== '';
   const shownProducts = productsToday.filter((p) => {
     if (category !== 'All' && p.category !== category) return false;
     if (inStockOnly && (p.status !== 'available' || p.stock === 0)) return false;
+    if (scope === 'product' && !matchesQuery(query, p.name)) return false;
     return true;
   });
+  const shownStalls =
+    scope === 'farmer' ? stallsToday.filter((f) => matchesQuery(query, f.stall, f.person)) : stallsToday;
+  const productsRef = useRef<HTMLDivElement>(null);
+  const stallsRef = useRef<HTMLElement>(null);
 
   // Hook, so it has to run before either early return below — it stays unconditional even though
   // the fallback photos only matter once `market` is loaded.
@@ -160,12 +169,28 @@ const MarketDetailPage = () => {
   }
 
   const dayLong = dayName(day, 'long');
-  const dayDate = DAY_OPTIONS.find((d) => d.value === day)?.date;
+  const dayDate = week.find((d) => d.dow === day)?.date;
 
+  // The lists filter as you type; submitting brings the list being searched into view (the stalls sit below the map).
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate(`/search?${new URLSearchParams({ scope, q: query.trim() })}`);
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    (scope === 'product' ? productsRef : stallsRef).current?.scrollIntoView({
+      block: 'start',
+      behavior: still ? 'auto' : 'smooth',
+    });
   };
+  const searchEmpty = (title: string) => (
+    <DataState
+      title={title}
+      text={t('searchEmpty.text', { day: dayLong })}
+      action={
+        <Button variant="secondary" size="sm" onClick={() => setQuery('')}>
+          {t('searchEmpty.clear')}
+        </Button>
+      }
+    />
+  );
 
   return (
     <div className="flex flex-col gap-8">
@@ -241,11 +266,12 @@ const MarketDetailPage = () => {
             legend={t('day')}
             name="market-day"
             value={String(day)}
-            onChange={(v) => setDay(Number(v))}
-            options={DAY_OPTIONS.map((d) => ({
-              value: String(d.value),
-              label: dayName(d.value, 'long'),
+            onChange={(v) => setPicked({ market: id, dow: Number(v) })}
+            options={week.map((d) => ({
+              value: String(d.dow),
+              label: dayName(d.dow, 'long'),
               date: formatDayMonth(d.date),
+              disabled: !market.days.includes(d.dow),
             }))}
           />
         </div>
@@ -270,21 +296,27 @@ const MarketDetailPage = () => {
       </Card>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="flex flex-col gap-4">
+        <div ref={productsRef} className="flex scroll-mt-20 flex-col gap-4">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <h2 className="text-h2">{t('available', { day: dayLong })}</h2>
             <span className="text-small text-ink-muted">
               {t('productsFrom', {
                 products: t('products', { count: shownProducts.length }),
-                stalls: t('stalls', { count: stallsToday.length }),
+                stalls: t('stalls', { count: shownStalls.length }),
               })}
             </span>
           </div>
-          <div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
-            {shownProducts.map((p) => (
-              <ProductCard key={p.id} product={p} showMarket={false} />
-            ))}
-          </div>
+          {shownProducts.length ? (
+            <div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
+              {shownProducts.map((p) => (
+                <ProductCard key={p.id} product={p} showMarket={false} />
+              ))}
+            </div>
+          ) : productsLoad.kind !== 'ready' ? null : searching && scope === 'product' ? (
+            searchEmpty(t('searchEmpty.products', { q: query.trim() }))
+          ) : (
+            <DataState title={t('productsEmpty.title', { day: dayLong })} text={t('productsEmpty.text')} />
+          )}
         </div>
 
         <div className="sticky top-20 flex flex-col gap-4">
@@ -297,7 +329,7 @@ const MarketDetailPage = () => {
         </div>
       </div>
 
-      <section className="flex flex-col gap-4">
+      <section ref={stallsRef} className="flex scroll-mt-20 flex-col gap-4">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <h2 className="text-h2">{t('stallsTitle', { day: dayLong })}</h2>
           <span className="text-small text-ink-muted">{t('stallsNote')}</span>
@@ -306,12 +338,14 @@ const MarketDetailPage = () => {
           <MarketCardSkeleton count={2} />
         ) : stallsLoad.kind === 'error' ? (
           <LoadError noun={t('stallsNoun')} onRetry={retryStalls} />
-        ) : stallsToday.length ? (
+        ) : shownStalls.length ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {stallsToday.map((f) => (
+            {shownStalls.map((f) => (
               <StallCard key={f.id} farmer={f} />
             ))}
           </div>
+        ) : stallsToday.length ? (
+          searchEmpty(t('searchEmpty.stalls', { q: query.trim() }))
         ) : (
           <DataState title={t('stallsEmpty.title', { day: dayLong })} text={t('stallsNote')} />
         )}

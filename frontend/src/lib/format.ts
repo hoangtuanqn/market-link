@@ -165,6 +165,27 @@ export function upcoming(dow: number, from: Date = new Date()): string {
   return formatDayMonth(d);
 }
 
+/**
+ * Today and the six days after it, each at local midnight, today first: the market mornings a visitor can still shop
+ * for. `dow` is 0 = Sunday … 6 = Saturday, like `market_operating_days.day_of_week`. Built from the calendar date
+ * rather than by adding 24 hours, so a daylight-saving change can neither skip nor repeat a day. Day chips use this so
+ * they always start from today instead of a fixed week.
+ */
+export function nextSevenDays(from: Date = new Date()): { dow: number; date: Date }[] {
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(from.getFullYear(), from.getMonth(), from.getDate() + i);
+    return { dow: date.getDay(), date };
+  });
+}
+
+/**
+ * The first weekday, counting from today, on which `isOpen` holds — the default "market day" of a day picker. Falls
+ * back to today's weekday when no day of the coming week is open, so a picker always has a value.
+ */
+export function firstOpenDay(isOpen: (dow: number) => boolean, from: Date = new Date()): number {
+  return nextSevenDays(from).find((d) => isOpen(d.dow))?.dow ?? from.getDay();
+}
+
 /** Date → "Thu 24/09 · 14:35" */
 export function nowLabel(date: Date): string {
   return `${weekday(date)} ${formatDayMonth(date)} · ${formatTime(date)}`;
@@ -197,4 +218,21 @@ export function pickupLabel(date: string, slot: string): string {
 export function cutoffLabel(iso: string): string {
   const at = new Date(iso);
   return Number.isNaN(at.getTime()) ? iso : `${formatTime(at)} ${formatDate(at)}`;
+}
+
+/* ---------- text matching ---------- */
+
+/**
+ * Lower-case text without accents, for matching what a visitor types against names: "Rau Muống" and "rau muong" both
+ * become "rau muong". NFD splits a letter from its combining marks, which are then dropped; "đ" is its own letter in
+ * Unicode, not "d" plus a mark, so it is mapped by hand.
+ */
+export function foldText(text: string): string {
+  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/đ/g, 'd');
+}
+
+/** Whether any of `fields` contains `query`, ignoring case and accents. An empty or blank query matches everything. */
+export function matchesQuery(query: string, ...fields: (string | undefined)[]): boolean {
+  const q = foldText(query.trim());
+  return q === '' || fields.some((f) => f != null && foldText(f).includes(q));
 }

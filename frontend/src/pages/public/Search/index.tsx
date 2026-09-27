@@ -14,17 +14,10 @@ import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
-import { dayName, formatClock, formatDayMonth } from '@/lib/format';
+import { dayName, formatClock, formatDayMonth, nextSevenDays } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 
-/** The demo market week, Thursday 24 to Sunday 27 September 2026. */
-const DAY_OPTIONS = [
-  { value: 4, date: new Date(2026, 8, 24) },
-  { value: 5, date: new Date(2026, 8, 25) },
-  { value: 6, date: new Date(2026, 8, 26) },
-  { value: 0, date: new Date(2026, 8, 27) },
-];
 const SORTS = ['best', 'nearest', 'price', 'rating'] as const;
 const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
 const FETCH_SIZE = 50;
@@ -42,7 +35,9 @@ const SearchPage = () => {
 
   const [draftScope, setDraftScope] = useState(scopeParam);
   const [draftQ, setDraftQ] = useState(q);
-  const [day, setDay] = useState(6);
+  // The coming week from today; the search starts on today (FR-021).
+  const [week] = useState(() => nextSevenDays());
+  const [day, setDay] = useState(() => week[0].dow);
   const [sort, setSort] = useState<(typeof SORTS)[number]>('best');
   const [tab, setTab] = useState<'all' | 'market' | 'farmer' | 'product'>('all');
 
@@ -153,9 +148,9 @@ const SearchPage = () => {
             name="day"
             value={String(day)}
             onChange={(v) => setDay(Number(v))}
-            options={DAY_OPTIONS.map((d) => ({
-              value: String(d.value),
-              label: dayName(d.value, 'long'),
+            options={week.map((d) => ({
+              value: String(d.dow),
+              label: dayName(d.dow, 'long'),
               date: formatDayMonth(d.date),
             }))}
           />
