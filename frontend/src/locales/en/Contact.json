@@ -7,11 +7,10 @@
     "phone": "Phone",
     "address": "Address",
     "hours": "Hours",
-    "emailValue": "contact@marketlink.vn",
-    "phoneValue": "+84 90 123 4567",
-    "addressValue": "123 Le Loi, Ben Nghe Ward, District 1, Ho Chi Minh City",
-    "hoursValue": "Mon – Fri, 09:00 – 17:00",
-    "toAdd": "To add"
+    "emailValue": "admin@marketlink.vn",
+    "phoneValue": "0900000001",
+    "addressValue": "3 Lê Duẩn, Phường Sài Gòn, Thành phố Hồ Chí Minh",
+    "hoursValue": "Mon – Fri, 09:00 – 17:00"
   },
   "feedback": {
     "title": "Something broken or an idea?",
@@ -22,7 +21,7 @@
     "label": "Map of the team location",
     "markerLabel": "MarketLink team",
     "popupTitle": "MarketLink team",
-    "popupLine": "123 Le Loi, District 1",
+    "popupLine": "3 Lê Duẩn, Phường Sài Gòn",
     "directions": "Directions to the team"
   }
 }
