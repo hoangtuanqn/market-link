@@ -116,7 +116,14 @@ const CustomerCartPage = () => {
       ? OrderApi.preview(lines.map((l) => ({ productId: l.productId, quantity: l.qty })))
       : Promise.resolve([]),
   );
-  const groups = previewLoad.kind === 'ready' ? previewLoad.data : [];
+  // A quantity change re-runs the preview. Keep the last answer on screen meanwhile: swapping the whole page for
+  // "loading" made it flash and remounted every stall's pickup picker (re-fetching its slots) on each +/- tap.
+  const [lastPreview, setLastPreview] = useState<OrderGroupPreviewDto[] | null>(null);
+  if (previewLoad.kind === 'ready' && previewLoad.data !== lastPreview) setLastPreview(previewLoad.data);
+  const refreshing = previewLoad.kind === 'loading' && lastPreview !== null;
+  const groups = previewLoad.kind === 'ready' ? previewLoad.data : (lastPreview ?? []);
+  // Quantities follow the cart right away; the server's figures catch up when the preview answers
+  const qtyOf = (productId: number, fallback: number) => lines.find((l) => l.productId === productId)?.qty ?? fallback;
   const [choices, setChoices] = useState<Record<number, Choice>>({});
   const choice = (g: OrderGroupPreviewDto): Choice =>
     choices[g.farmerId] ?? {
@@ -170,7 +177,7 @@ const CustomerCartPage = () => {
     );
   }
 
-  if (previewLoad.kind === 'loading') {
+  if (previewLoad.kind === 'loading' && lastPreview === null) {
     return (
       <p role="status" className="text-ink-muted">
         {tc('notify.list.loading')}
@@ -260,7 +267,6 @@ const CustomerCartPage = () => {
         <div className="flex flex-col gap-8">
           {groups.map((g, i) => {
             const c = choice(g);
-            const picked = c.date != null && c.slotId != null;
             return (
               <section key={g.farmerId} className="flex flex-col gap-3">
                 {g.problems.map((p) => (
@@ -273,31 +279,24 @@ const CustomerCartPage = () => {
                   of={groups.length}
                   stallName={g.stallName}
                   where={whereOf(g)}
-                  items={g.items.map((it): CartLineType => ({
-                    id: it.productId,
-                    name: it.name,
-                    unit: it.unit,
-                    price: it.unitPrice,
-                    max: it.stockQuantity,
-                    qty: it.quantity,
-                  }))}
+                  items={g.items
+                    .filter((it) => lines.some((l) => l.productId === it.productId))
+                    .map((it): CartLineType => ({
+                      id: it.productId,
+                      name: it.name,
+                      unit: it.unit,
+                      price: it.unitPrice,
+                      max: it.stockQuantity,
+                      qty: qtyOf(it.productId, it.quantity),
+                    }))}
                   onQtyChange={(id, qty) => Cart.setQty(id, qty)}
                   onRemove={(id) => Cart.remove(id)}
                 />
-                {picked ? (
-                  <details className="border-line-strong bg-surface-raised shadow-tag rounded-md border-[1.5px] p-4">
-                    <summary className="text-small cursor-pointer font-bold">
-                      {t('changeTime', { stall: g.stallName })}
-                    </summary>
-                    <div className="mt-3 flex flex-col gap-4">
-                      <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
-                    </div>
-                  </details>
-                ) : (
-                  <Card className="flex flex-col gap-4 p-4">
-                    <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
-                  </Card>
-                )}
+                {/* Always the same open picker: collapsing it after a pick (or swapping its wrapper) moved the page
+                    under the cursor and remounted the slot request. Picking now only highlights the choice. */}
+                <Card className="flex flex-col gap-4 p-4">
+                  <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
+                </Card>
               </section>
             );
           })}
@@ -330,7 +329,7 @@ const CustomerCartPage = () => {
                 className="border-line-strong bg-surface-raised text-body min-h-16 rounded-sm border-[1.5px] p-3"
               />
             </div>
-            <Button disabled={!ready || placing} className="w-full" onClick={() => void place()}>
+            <Button disabled={!ready || placing || refreshing} className="w-full" onClick={() => void place()}>
               {placing ? t('placing') : t('place', { count: groups.length })}
             </Button>
             <p className="text-small text-ink-muted text-center">
