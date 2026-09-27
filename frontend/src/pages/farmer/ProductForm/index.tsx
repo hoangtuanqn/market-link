@@ -131,8 +131,9 @@ const FarmerProductFormPage = () => {
     ? UNITS.map((u) => u.one)
     : [form.unitChoice, ...UNITS.map((u) => u.one)];
 
-  // Blank or unparsable reads as NaN, so validate() flags it instead of saving 0.
-  const price = form.price.trim() === '' ? NaN : Number(form.price);
+  // Blank or unparsable reads as NaN, so validate() flags it instead of saving 0. A comma counts as the decimal
+  // point, as Vietnamese keyboards type it ("1,50").
+  const price = form.price.trim() === '' ? NaN : Number(form.price.trim().replace(',', '.'));
   const qty = form.qty.trim() === '' ? NaN : Number(form.qty);
   const previewPrice = Number.isFinite(price) ? price : 0;
 
