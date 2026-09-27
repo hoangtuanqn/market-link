@@ -12,6 +12,19 @@
     "submit": "検索"
   },
   "day": "開催日",
+  "filters": {
+    "category": "カテゴリ",
+    "allCategories": "すべてのカテゴリ",
+    "market": "マーケット",
+    "allMarkets": "すべてのマーケット",
+    "price": "単価"
+  },
+  "price": {
+    "any": "すべての価格",
+    "low": "{{low}} 未満",
+    "mid": "{{low}} – {{high}}",
+    "high": "{{high}} 超"
+  },
   "sort": "並べ替え",
   "sorts": {
     "best": "関連度順",

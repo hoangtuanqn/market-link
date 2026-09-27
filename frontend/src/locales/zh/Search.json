@@ -12,6 +12,19 @@
     "submit": "搜索"
   },
   "day": "市集日",
+  "filters": {
+    "category": "类别",
+    "allCategories": "所有类别",
+    "market": "市集",
+    "allMarkets": "所有市集",
+    "price": "单价"
+  },
+  "price": {
+    "any": "不限价格",
+    "low": "低于 {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "高于 {{high}}"
+  },
   "sort": "排序",
   "sorts": {
     "best": "最相关",

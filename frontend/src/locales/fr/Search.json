@@ -12,6 +12,19 @@
     "submit": "Rechercher"
   },
   "day": "Jour de marché",
+  "filters": {
+    "category": "Catégorie",
+    "allCategories": "Toutes les catégories",
+    "market": "Marché",
+    "allMarkets": "Tous les marchés",
+    "price": "Prix unitaire"
+  },
+  "price": {
+    "any": "Tous les prix",
+    "low": "Moins de {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Plus de {{high}}"
+  },
   "sort": "Trier",
   "sorts": {
     "best": "Pertinence",

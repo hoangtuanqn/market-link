@@ -12,6 +12,19 @@
     "submit": "Cari"
   },
   "day": "Hari pasar",
+  "filters": {
+    "category": "Kategori",
+    "allCategories": "Semua kategori",
+    "market": "Pasar",
+    "allMarkets": "Semua pasar",
+    "price": "Harga per satuan"
+  },
+  "price": {
+    "any": "Semua harga",
+    "low": "Di bawah {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Di atas {{high}}"
+  },
   "sort": "Urutkan",
   "sorts": {
     "best": "Paling cocok",

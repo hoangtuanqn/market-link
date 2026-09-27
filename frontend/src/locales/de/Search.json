@@ -12,6 +12,19 @@
     "submit": "Suchen"
   },
   "day": "Markttag",
+  "filters": {
+    "category": "Kategorie",
+    "allCategories": "Alle Kategorien",
+    "market": "Markt",
+    "allMarkets": "Alle Märkte",
+    "price": "Preis pro Einheit"
+  },
+  "price": {
+    "any": "Jeder Preis",
+    "low": "Unter {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Über {{high}}"
+  },
   "sort": "Sortieren",
   "sorts": {
     "best": "Beste Treffer",

@@ -12,6 +12,19 @@
     "submit": "Tìm"
   },
   "day": "Ngày họp chợ",
+  "filters": {
+    "category": "Loại",
+    "allCategories": "Mọi loại",
+    "market": "Chợ",
+    "allMarkets": "Mọi chợ",
+    "price": "Giá mỗi đơn vị"
+  },
+  "price": {
+    "any": "Mọi mức giá",
+    "low": "Dưới {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Trên {{high}}"
+  },
   "sort": "Sắp xếp",
   "sorts": {
     "best": "Phù hợp nhất",

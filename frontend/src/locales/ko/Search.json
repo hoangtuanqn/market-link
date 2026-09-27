@@ -12,6 +12,19 @@
     "submit": "검색"
   },
   "day": "장날",
+  "filters": {
+    "category": "카테고리",
+    "allCategories": "모든 카테고리",
+    "market": "장터",
+    "allMarkets": "모든 장터",
+    "price": "단위당 가격"
+  },
+  "price": {
+    "any": "모든 가격",
+    "low": "{{low}} 미만",
+    "mid": "{{low}} – {{high}}",
+    "high": "{{high}} 초과"
+  },
   "sort": "정렬",
   "sorts": {
     "best": "관련도순",
