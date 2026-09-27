@@ -104,6 +104,21 @@ public final class ReportFixture {
                         status));
     }
 
+    /** The same weekly stock template on all seven days, so any "nearest date" is today. */
+    public void everyDayTemplate(long farmerId, long productId, int quantity) {
+        for (int day = 0; day <= 6; day++) {
+            track(
+                    "weekly_stock_templates",
+                    insert(
+                            "INSERT INTO weekly_stock_templates (farmer_id, product_id,"
+                                    + " day_of_week, default_quantity) VALUES (?, ?, ?, ?)",
+                            farmerId,
+                            productId,
+                            day,
+                            quantity));
+        }
+    }
+
     public void item(long orderId, long productId, int unitPrice, int quantity) {
         insert(
                 "INSERT INTO order_items (order_id, product_id, product_name, unit_price, unit,"

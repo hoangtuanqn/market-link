@@ -2,14 +2,21 @@ package com.techx.intervue.modules.report.services.impl;
 
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
+import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.enums.ProductStatus;
+import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.report.repositories.FarmerReportRepository;
 import com.techx.intervue.modules.report.resources.BestSellerResource;
 import com.techx.intervue.modules.report.resources.FarmerDashboardResource;
 import com.techx.intervue.modules.report.services.interfaces.FarmerReportServiceInterface;
 import com.techx.intervue.resources.PageResource;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -26,12 +33,36 @@ public class FarmerReportService implements FarmerReportServiceInterface {
     private final FarmerProfileRepository farmerRepository;
     private final FarmerReportRepository reports;
     private final Clock clock;
+    private final ProductRepository products;
+    private final ProductAvailabilityResolver availability;
 
     @Override
     @Transactional(readOnly = true)
     public FarmerDashboardResource dashboard(long userId) {
         LocalDate monthStart = LocalDate.now(clock).withDayOfMonth(1);
-        return reports.dashboard(stallOf(userId), monthStart);
+        long farmerId = stallOf(userId);
+        return reports.dashboard(farmerId, monthStart).withLowStockCount(lowStockCount(farmerId));
+    }
+
+    /**
+     * Available products whose nearest pickup date with stock has {@link
+     * FarmerReportRepository#LOW_STOCK} or fewer left — or that no weekly template makes orderable
+     * at all: the Farmer has to act on both. Per-date stock (FR-063), the same numbers the
+     * catalogue shows.
+     */
+    private long lowStockCount(long farmerId) {
+        Map<Long, BigDecimal> prices =
+                products.findByFarmerIdAndDeletedFalse(farmerId).stream()
+                        .filter(p -> p.getStatus() == ProductStatus.AVAILABLE)
+                        .collect(Collectors.toMap(Product::getId, Product::getPrice));
+        Map<Long, ProductAvailabilityResolver.Availability> resolved = availability.resolve(prices);
+        return prices.keySet().stream()
+                .filter(
+                        id ->
+                                !resolved.containsKey(id)
+                                        || resolved.get(id).quantity()
+                                                <= FarmerReportRepository.LOW_STOCK)
+                .count();
     }
 
     @Override
