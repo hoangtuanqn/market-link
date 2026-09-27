@@ -27,6 +27,26 @@ export type ReviewDto = {
 export type ReviewSummaryDto = { ratingAvg: number; ratingCount: number; histogram: number[] };
 
 /**
+ * `GET /admin/reviews` row (FR-074): every review, visible or hidden, with the moderation fields the public lists never
+ * send. `targetName` is the product name or the stall name depending on `targetType`; `stallName` is always the stall
+ * the review is ultimately about (the product's stall, or the stall itself).
+ */
+export type AdminReviewDto = {
+  id: number;
+  targetType: ReviewTarget;
+  targetId: number;
+  targetName: string;
+  stallName: string;
+  customerId: number;
+  customerName: string;
+  rating: number;
+  comment: string | null;
+  status: 'visible' | 'hidden';
+  createdAt: string;
+  response: ReviewResponseDto | null;
+};
+
+/**
  * `POST /reviews` body. Exactly one of `productId` (targetType `product`) / `farmerId` (targetType `farmer`) is set;
  * `rating` is 1–5, `comment` up to 2000 characters.
  */
@@ -85,6 +105,24 @@ class ReviewApi {
 
   static unhide = async (reviewId: number) => {
     await privateApi.patch<ApiResponse<null>>(`/admin/reviews/${reviewId}/unhide`);
+  };
+
+  /**
+   * Admin moderation queue (FR-074): every review, newest first, with the fields the public lists omit. `status`
+   * filters visible/hidden, `maxRating` caps the rating (e.g. 2 for "low rated"), `customerId` scopes to one customer
+   * (CustomerDetail). `page` starts at 1.
+   */
+  static adminList = async (
+    params: {
+      status?: 'visible' | 'hidden';
+      maxRating?: number;
+      customerId?: number;
+      page?: number;
+      pageSize?: number;
+    } = {},
+  ) => {
+    const response = await privateApi.get<ApiResponse<PageType<AdminReviewDto>>>('/admin/reviews', { params });
+    return response.data.data;
   };
 }
 

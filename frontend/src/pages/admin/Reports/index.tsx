@@ -1,243 +1,166 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import OrderStatusBadge from '@/components/OrderStatusBadge';
-import { BarList } from '@/components/ui/bar-list';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { ColumnChart } from '@/components/ui/column-chart';
-import { SelectField } from '@/components/ui/input';
-import { Kpi } from '@/components/ui/kpi';
-import { PeriodBar } from '@/components/ui/period-bar';
-import { Table, type TableColumn } from '@/components/ui/table';
 import {
-  marketsSideBySide,
-  orderTotals,
-  ordersByStatus,
-  period,
-  revenueByMarket,
-  series,
-  topFarmers,
-  topProducts,
-  type MarketReportRow,
-  type TopFarmerRow,
-  type TopProductRow,
-} from '@/data/admin';
-import { marketName } from '@/data/customer';
-import { product } from '@/data/catalog';
-import { markets } from '@/data/home';
+  AdminReportApi,
+  type TopFarmerDto,
+  type TopProductDto,
+  type RevenueByMarketDto,
+} from '@/api-requests/report.requests';
+import { DataState, LoadError } from '@/components/ui/data-state';
+import { Kpi } from '@/components/ui/kpi';
+import { Table, type TableColumn } from '@/components/ui/table';
+import useRequest from '@/hooks/useRequest';
 import { perUnit, units, vnd } from '@/lib/format';
-import Helper from '@/utils/helper';
-import Notification from '@/utils/notification';
 
-/** The period on screen and the one it is compared with (the seeded figures are September against August 2026). */
-const PERIOD = new Date(2026, 8, 1);
-const PREVIOUS = new Date(2026, 7, 1);
+const pad = (n: number) => String(n).padStart(2, '0');
+/** A Date → "yyyy-MM-dd" for the `from`/`to` query params (contract's date-only format, not the reader's Settings). */
+const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-/** Signed percentage, coloured up or down. The sign carries the meaning, not the colour alone. */
-const Change = ({ value }: { value: number }) => (
-  <span className={Helper.cn('font-bold', value >= 0 ? 'text-accent-ink' : 'text-danger')}>
-    {value >= 0 ? '+' : ''}
-    {value}%
-  </span>
-);
+const today = new Date();
+const DEFAULT_FROM = ymd(new Date(today.getFullYear(), today.getMonth(), 1));
+const DEFAULT_TO = ymd(new Date(today.getFullYear(), today.getMonth() + 1, 0));
+
+const TOP_LIMIT = 10;
 
 /**
- * FR-075 — orders and revenue across the platform, split by market, and the Farmers who sell the most. Revenue is the
- * total of completed orders, paid to the stalls rather than through MarketLink.
+ * FR-075 — orders and revenue across the platform, split by market, and the Farmers and products that sell the most.
+ * Revenue is the total of completed orders, paid to the stalls rather than through MarketLink. The two totals up top
+ * come from the platform dashboard and are not scoped to the date range below (the server does not date-filter them).
  */
 const AdminReportsPage = () => {
-  const { t, i18n } = useTranslation('AdminReports');
-  const monthYear = (d: Date) => new Intl.DateTimeFormat(i18n.language, { month: 'long', year: 'numeric' }).format(d);
-  const month = (d: Date) => new Intl.DateTimeFormat(i18n.language, { month: 'long' }).format(d);
-  const num = (n: number, digits = 0) =>
-    new Intl.NumberFormat(i18n.language, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(n);
+  const { t } = useTranslation('AdminReports');
+  const { t: tc } = useTranslation();
+  const [from, setFrom] = useState(DEFAULT_FROM);
+  const [to, setTo] = useState(DEFAULT_TO);
 
-  const [market, setMarket] = useState('');
+  const { state: dashboardLoad, retry: retryDashboard } = useRequest('admin-reports-dashboard', () =>
+    AdminReportApi.dashboard(),
+  );
 
-  const farmerColumns: TableColumn<TopFarmerRow>[] = [
-    { key: 'rank', label: '#', align: 'num' },
-    { key: 'stall', label: t('col.stall') },
-    { key: 'markets', label: t('col.markets') },
-    { key: 'orders', label: t('col.completedOrders'), align: 'num' },
+  const { state: marketLoad, retry: retryMarket } = useRequest(`admin-reports-market:${from}:${to}`, () =>
+    AdminReportApi.revenueByMarket({ from, to }),
+  );
+
+  const { state: farmerLoad, retry: retryFarmer } = useRequest(`admin-reports-farmers:${from}:${to}`, () =>
+    AdminReportApi.topFarmers({ from, to, limit: TOP_LIMIT }),
+  );
+
+  const { state: productLoad, retry: retryProduct } = useRequest(`admin-reports-products:${from}:${to}`, () =>
+    AdminReportApi.topProducts({ from, to, limit: TOP_LIMIT }),
+  );
+
+  const marketColumns: TableColumn<RevenueByMarketDto>[] = [
+    { key: 'market', label: t('col.market'), render: (r) => r.marketName },
+    { key: 'orders', label: t('col.orders'), align: 'num', render: (r) => r.orderCount },
     { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => vnd(r.revenue) },
-    { key: 'products', label: t('col.productsListed'), align: 'num' },
-    { key: 'rating', label: t('col.rating'), align: 'num' },
   ];
 
-  const productColumns: TableColumn<TopProductRow>[] = [
-    { key: 'rank', label: '#', align: 'num' },
+  const farmerColumns: TableColumn<TopFarmerDto & { rank: number }>[] = [
+    { key: 'rank', label: '#', align: 'num', render: (r) => r.rank },
+    { key: 'stall', label: t('col.stall'), render: (r) => r.stallName },
+    { key: 'orders', label: t('col.completedOrders'), align: 'num', render: (r) => r.orderCount },
+    { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => vnd(r.revenue) },
+    { key: 'rating', label: t('col.rating'), align: 'num', render: (r) => r.ratingAvg.toFixed(1) },
+  ];
+  const rankedFarmers = farmerLoad.kind === 'ready' ? farmerLoad.data.map((r, i) => ({ ...r, rank: i + 1 })) : [];
+
+  const productColumns: TableColumn<TopProductDto>[] = [
     {
       key: 'name',
       label: t('col.product'),
-      render: (r) => {
-        const p = product(r.productId);
-        return (
-          <>
-            <b>{p?.name}</b>
-            <span className="text-ink-muted block text-[13px]">{p?.stall}</span>
-          </>
-        );
-      },
+      render: (r) => (
+        <>
+          <b>{r.name}</b>
+          <span className="text-ink-muted block text-[13px]">{r.stallName}</span>
+        </>
+      ),
     },
-    { key: 'unit', label: t('col.soldPer'), render: (r) => product(r.productId)?.unit },
-    {
-      key: 'price',
-      label: t('col.price'),
-      align: 'num',
-      render: (r) => {
-        const p = product(r.productId);
-        return p ? perUnit(p.price, p.unit) : '';
-      },
-    },
-    {
-      key: 'qty',
-      label: t('col.sold'),
-      align: 'num',
-      render: (r) => {
-        const p = product(r.productId);
-        return units(r.qty, p?.unit, p?.plural);
-      },
-    },
-    { key: 'value', label: t('col.revenue'), align: 'num', render: (r) => vnd(r.value) },
-  ];
-
-  const marketColumns: TableColumn<MarketReportRow>[] = [
-    { key: 'market', label: t('col.market'), render: (r) => marketName(r.marketId) },
-    { key: 'stalls', label: t('col.stalls'), align: 'num' },
-    { key: 'orders', label: t('col.orders'), align: 'num' },
-    { key: 'ordersChange', label: t('col.change'), align: 'num', render: (r) => <Change value={r.ordersChange} /> },
-    { key: 'completed', label: t('col.completed'), align: 'num' },
-    { key: 'declined', label: t('col.declined'), align: 'num' },
+    { key: 'unit', label: t('col.soldPer'), render: (r) => r.unit },
+    { key: 'price', label: t('col.price'), align: 'num', render: (r) => perUnit(r.unitPrice, r.unit) },
+    { key: 'qty', label: t('col.sold'), align: 'num', render: (r) => units(r.quantitySold, r.unit) },
     { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => vnd(r.revenue) },
-    { key: 'revenueChange', label: t('col.change'), align: 'num', render: (r) => <Change value={r.revenueChange} /> },
   ];
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
-          <p className="text-body max-w-160">{t('intro')}</p>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body max-w-160">{t('intro')}</p>
+      </div>
+
+      <form onSubmit={(e) => e.preventDefault()} className="flex flex-wrap items-end gap-4">
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="reports-from" className="text-small font-bold">
+            {t('range.from')}
+          </label>
+          <input
+            id="reports-from"
+            type="date"
+            value={from}
+            max={to}
+            onChange={(e) => setFrom(e.target.value)}
+            className="border-line-strong bg-surface-raised text-body min-h-11 rounded-sm border-[1.5px] px-3"
+          />
         </div>
-        <Button
-          variant="secondary"
-          onClick={() => Notification.success({ title: t('export.title'), text: t('export.text') })}
-        >
-          {t('export.button')}
-        </Button>
-      </div>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="reports-to" className="text-small font-bold">
+            {t('range.to')}
+          </label>
+          <input
+            id="reports-to"
+            type="date"
+            value={to}
+            min={from}
+            onChange={(e) => setTo(e.target.value)}
+            className="border-line-strong bg-surface-raised text-body min-h-11 rounded-sm border-[1.5px] px-3"
+          />
+        </div>
+      </form>
 
-      <PeriodBar
-        from={period.from}
-        to={period.to}
-        label={monthYear(PERIOD)}
-        days={t('days', { count: 30 })}
-        compare={monthYear(PREVIOUS)}
-      />
+      {dashboardLoad.kind === 'loading' ? (
+        <p role="status" className="text-ink-muted">
+          {tc('notify.list.loading')}
+        </p>
+      ) : dashboardLoad.kind === 'error' ? (
+        <LoadError noun={t('kpi.noun')} onRetry={retryDashboard} />
+      ) : (
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+          <Kpi label={t('kpi.orders')} value={dashboardLoad.data.totalOrders} note={t('kpi.ordersNote')} />
+          <Kpi label={t('kpi.revenue')} value={vnd(dashboardLoad.data.revenueTotal)} note={t('kpi.revenueNote')} />
+        </div>
+      )}
 
-      <SelectField
-        id="reports-market"
-        label={t('market')}
-        className="max-w-80"
-        value={market}
-        onChange={(e) => setMarket(e.target.value)}
-        options={[{ value: '', label: t('allMarkets') }, ...markets.map((m) => ({ value: m.name, label: m.name }))]}
-      />
-
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-        <Kpi
-          label={t('kpi.orders')}
-          value={num(orderTotals.placed)}
-          note={t('kpi.ordersNote', { month: month(PERIOD) })}
-          delta={{ pct: 12.7 }}
-          spark={series.sparkOrders}
-        />
-        <Kpi
-          label={t('kpi.revenue')}
-          value={num(orderTotals.revenue)}
-          note={t('kpi.revenueNote')}
-          delta={{ pct: 15.2 }}
-          highlight
-        />
-        <Kpi
-          label={t('kpi.average')}
-          value={num(orderTotals.averageOrder)}
-          note={t('kpi.averageNote')}
-          delta={{ pct: 4.2 }}
-        />
-        <Kpi
-          label={t('kpi.declineRate')}
-          value={`${num((orderTotals.declined / orderTotals.placed) * 100, 1)}%`}
-          note={t('kpi.declineNote', { declined: orderTotals.declined, total: orderTotals.placed })}
-          delta={{ pct: 0.3, unit: t('points'), good: false }}
-        />
-      </div>
-
-      <Card className="flex flex-col gap-3 p-6">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-h3">{t('revenueChart.title')}</h2>
-          <p className="text-small text-ink-muted">
-            {t('revenueChart.note', { now: month(PERIOD), prev: month(PREVIOUS) })}
+      <section className="flex flex-col gap-3">
+        <h2 className="text-h2">{t('byMarket.title')}</h2>
+        {marketLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
           </p>
-        </div>
-        <ColumnChart
-          type="line"
-          height={260}
-          caption={t('revenueChart.caption', { now: month(PERIOD), prev: month(PREVIOUS) })}
-          axisLabel={t('axis.dayOfMonth')}
-          labels={series.dayLabels}
-          series={[
-            { name: month(PERIOD), values: series.revenueNow },
-            { name: month(PREVIOUS), values: series.revenuePrev, compare: true },
-          ]}
-          format={(v) => num(v / 1e6, 1)}
-        />
-      </Card>
-
-      <Card className="flex flex-col gap-3 p-6">
-        <div className="flex flex-col gap-1">
-          <h2 className="text-h3">{t('ordersChart.title')}</h2>
-          <p className="text-small text-ink-muted">{t('ordersChart.note')}</p>
-        </div>
-        <ColumnChart
-          height={230}
-          caption={t('ordersChart.caption', { now: month(PERIOD), prev: month(PREVIOUS) })}
-          axisLabel={t('axis.dayOfMonth')}
-          labels={series.dayLabels}
-          series={[
-            { name: month(PERIOD), values: series.ordersNow },
-            { name: month(PREVIOUS), values: series.ordersPrev, compare: true },
-          ]}
-        />
-      </Card>
-
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card className="flex flex-col gap-3 p-6">
-          <h2 className="text-h3">{t('byMarket.title')}</h2>
-          <BarList
-            rows={revenueByMarket.map((r) => ({ label: marketName(r.marketId), value: r.value }))}
-            format={vnd}
-          />
-          <p className="text-small text-ink-muted">{t('byMarket.note')}</p>
-        </Card>
-        <Card className="flex flex-col gap-3 p-6">
-          <h2 className="text-h3">{t('byStatus.title')}</h2>
-          <BarList
-            rows={ordersByStatus.map((r) => ({
-              id: r.status,
-              label: <OrderStatusBadge status={r.status} />,
-              value: r.value,
-            }))}
-          />
-        </Card>
-      </div>
+        ) : marketLoad.kind === 'error' ? (
+          <LoadError noun={t('byMarket.noun')} onRetry={retryMarket} />
+        ) : marketLoad.data.length ? (
+          <Table columns={marketColumns} rows={marketLoad.data} />
+        ) : (
+          <DataState title={t('byMarket.empty.title')} text={t('byMarket.empty.text')} />
+        )}
+      </section>
 
       <section className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-h2">{t('topFarmers.title')}</h2>
           <span className="text-small text-ink-muted">{t('topFarmers.note')}</span>
         </div>
-        <Table columns={farmerColumns} rows={topFarmers} />
+        {farmerLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : farmerLoad.kind === 'error' ? (
+          <LoadError noun={t('topFarmers.noun')} onRetry={retryFarmer} />
+        ) : rankedFarmers.length ? (
+          <Table columns={farmerColumns} rows={rankedFarmers} />
+        ) : (
+          <DataState title={t('topFarmers.empty.title')} text={t('topFarmers.empty.text')} />
+        )}
       </section>
 
       <section className="flex flex-col gap-3">
@@ -245,16 +168,20 @@ const AdminReportsPage = () => {
           <h2 className="text-h2">{t('topProducts.title')}</h2>
           <span className="text-small text-ink-muted">{t('topProducts.note')}</span>
         </div>
-        <Table columns={productColumns} rows={topProducts} />
-        <p className="text-small text-ink-muted">{t('topProducts.unitsNote')}</p>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-h2">{t('sideBySide.title')}</h2>
-          <span className="text-small text-ink-muted">{t('sideBySide.note')}</span>
-        </div>
-        <Table columns={marketColumns} rows={marketsSideBySide} />
+        {productLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : productLoad.kind === 'error' ? (
+          <LoadError noun={t('topProducts.noun')} onRetry={retryProduct} />
+        ) : productLoad.data.length ? (
+          <>
+            <Table columns={productColumns} rows={productLoad.data} />
+            <p className="text-small text-ink-muted">{t('topProducts.unitsNote')}</p>
+          </>
+        ) : (
+          <DataState title={t('topProducts.empty.title')} text={t('topProducts.empty.text')} />
+        )}
       </section>
     </div>
   );

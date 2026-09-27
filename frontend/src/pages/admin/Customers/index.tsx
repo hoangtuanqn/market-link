@@ -1,20 +1,25 @@
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import { AdminReportApi, type AdminCustomerDto } from '@/api-requests/report.requests';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
+import { Field } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH } from '@/constants/nav';
-import { customerCounts, customers, type AdminCustomerType } from '@/data/admin';
+import useRequest from '@/hooks/useRequest';
+import { formatDate } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-const FILTERS = ['all', 'active', 'inactive', 'joinedThisMonth'] as const;
+const FILTERS = ['all', 'active', 'inactive'] as const;
 type Filter = (typeof FILTERS)[number];
+const PAGE_SIZE = 20;
+const NO_ROWS: AdminCustomerDto[] = [];
 
 /** Pill for the account state. Colour never carries the meaning alone — each state has its own word and glyph. */
 export const CustomerStatusPill = ({ active }: { active: boolean }) => {
@@ -32,179 +37,224 @@ export const CustomerStatusPill = ({ active }: { active: boolean }) => {
   );
 };
 
+type ConfirmKind = 'deactivate' | 'reactivate';
+type ConfirmAction = { kind: ConfirmKind; item: AdminCustomerDto } | null;
+
 /**
  * FR-072 — deactivate an account for a policy violation; it can no longer sign in or order. Reactivate when it is
- * resolved. Past orders stay with the stalls either way.
- *
- * The list is the frozen demo data in `@/data/admin` until customers have an admin endpoint.
+ * resolved. Past orders stay with the stalls either way. The server does not store a reason (`AdminReportApi.
+ * setCustomerStatus` takes only the new status) — the reason box here is echoed in the toast only, not sent.
  */
 const AdminCustomersPage = () => {
-  const { t, i18n } = useTranslation('AdminCustomers');
-  const num = (n: number) => new Intl.NumberFormat(i18n.language).format(n);
-
+  const { t } = useTranslation('AdminCustomers');
+  const { t: tc } = useTranslation();
   const [filter, setFilter] = useState<Filter>('all');
+  const [queryDraft, setQueryDraft] = useState('');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
-  const [deactivating, setDeactivating] = useState<AdminCustomerType | null>(null);
+  const [busyId, setBusyId] = useState<number | null>(null);
+  const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [reason, setReason] = useState('');
 
-  const needle = query.trim().toLowerCase();
-  const rows = customers.filter((c) => {
-    if (filter === 'active' && c.status !== 'active') return false;
-    if (filter === 'inactive' && c.status !== 'inactive') return false;
-    // "This month" is September 2026, the month every seeded figure reports on.
-    if (filter === 'joinedThisMonth' && !c.joined.endsWith('/09/2026')) return false;
-    if (!needle) return true;
-    return [c.name, c.email, c.phone].some((field) => field.toLowerCase().includes(needle));
-  });
+  const {
+    state: load,
+    retry,
+    mutate,
+  } = useRequest(`admin-customers:${filter}:${query}:${page}`, () =>
+    AdminReportApi.customers({
+      status: filter === 'all' ? undefined : filter,
+      q: query || undefined,
+      page,
+      pageSize: PAGE_SIZE,
+    }),
+  );
 
-  const counts: Record<Filter, number> = {
-    all: customerCounts.all,
-    active: customerCounts.active,
-    inactive: customerCounts.inactive,
-    joinedThisMonth: customerCounts.joinedThisMonth,
+  const { state: countsLoad, retry: retryCounts } = useRequest(`admin-customer-counts:${query}`, () =>
+    Promise.all(
+      FILTERS.map((f) =>
+        AdminReportApi.customers({ status: f === 'all' ? undefined : f, q: query || undefined, page: 1, pageSize: 1 }),
+      ),
+    ).then((responses) => {
+      const next: Partial<Record<Filter, number>> = {};
+      FILTERS.forEach((f, i) => {
+        next[f] = responses[i]?.total;
+      });
+      return next;
+    }),
+  );
+  const counts = countsLoad.kind === 'ready' ? countsLoad.data : {};
+
+  const rows = load.kind === 'ready' ? load.data.items : NO_ROWS;
+  const total = load.kind === 'ready' ? load.data.total : 0;
+
+  const changeFilter = (f: Filter) => {
+    if (f === filter) return;
+    setFilter(f);
+    setPage(1);
   };
 
-  const confirmDeactivate = () => {
-    if (!deactivating) return;
-    Notification.success({ text: t('toast.deactivated', { name: deactivating.name }) });
-    setDeactivating(null);
+  const submitSearch = (e: FormEvent) => {
+    e.preventDefault();
+    setQuery(queryDraft.trim());
+    setPage(1);
+  };
+
+  const openConfirm = (kind: ConfirmKind, item: AdminCustomerDto) => {
     setReason('');
+    setConfirmAction({ kind, item });
   };
 
-  const columns: TableColumn<AdminCustomerType>[] = [
+  const runConfirmedAction = async () => {
+    if (!confirmAction) return;
+    const { kind, item } = confirmAction;
+    const status = kind === 'deactivate' ? 'inactive' : 'active';
+    setBusyId(item.userId);
+    setConfirmAction(null);
+    try {
+      const updated = await AdminReportApi.setCustomerStatus(item.userId, status);
+      mutate((data) => ({ ...data, items: data.items.map((c) => (c.userId === item.userId ? updated : c)) }));
+      retryCounts();
+      const trimmedReason = reason.trim();
+      const toastKey =
+        kind === 'deactivate'
+          ? trimmedReason
+            ? 'toast.deactivatedWithReason'
+            : 'toast.deactivated'
+          : 'toast.reactivated';
+      Notification.success({ text: t(toastKey, { name: item.fullName, reason: trimmedReason }) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const columns: TableColumn<AdminCustomerDto>[] = [
     {
       key: 'name',
       label: t('col.customer'),
       render: (c) => (
         <>
-          <Link to={`${ADMIN_CUSTOMERS_PATH}/${c.id}`} className="text-brand underline">
-            <b>{c.name}</b>
+          <Link to={`${ADMIN_CUSTOMERS_PATH}/${c.userId}`} className="text-brand underline">
+            <b>{c.fullName}</b>
           </Link>
           <span className="text-ink-muted block text-[13px]">
-            {c.email} · {c.phone}
+            {c.email} {c.phone ? `· ${c.phone}` : ''}
           </span>
         </>
       ),
     },
-    { key: 'joined', label: t('col.joined') },
-    { key: 'orders', label: t('col.orders'), align: 'num' },
-    {
-      key: 'status',
-      label: t('col.status'),
-      render: (c) => (
-        <>
-          <CustomerStatusPill active={c.status === 'active'} />
-          {c.reason && <span className="text-ink-muted block text-[13px]">{c.reason}</span>}
-        </>
-      ),
-    },
+    { key: 'joined', label: t('col.joined'), render: (c) => formatDate(new Date(c.createdAt)) },
+    { key: 'orders', label: t('col.orders'), align: 'num', render: (c) => c.orderCount },
+    { key: 'status', label: t('col.status'), render: (c) => <CustomerStatusPill active={c.status === 'active'} /> },
     {
       key: 'action',
       label: '',
       align: 'actions',
-      render: (c) =>
-        c.status === 'active' ? (
-          <Button variant="danger" size="sm" onClick={() => setDeactivating(c)}>
+      render: (c) => {
+        const busy = busyId === c.userId;
+        return c.status === 'active' ? (
+          <Button variant="danger" size="sm" disabled={busy} onClick={() => openConfirm('deactivate', c)}>
             {t('action.deactivate')}
           </Button>
         ) : (
-          <Button size="sm" onClick={() => Notification.success({ text: t('toast.reactivated', { name: c.name }) })}>
+          <Button size="sm" disabled={busy} onClick={() => openConfirm('reactivate', c)}>
             {t('action.reactivate')}
           </Button>
-        ),
+        );
+      },
     },
   ];
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-h1">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
-        <form
-          role="search"
-          onSubmit={(e) => e.preventDefault()}
-          className="border-line-strong bg-surface-raised focus-within:outline-focus flex w-full max-w-105 items-stretch overflow-hidden rounded-sm border-[1.5px] focus-within:outline-2 focus-within:outline-offset-1 [&_button]:rounded-none"
-        >
-          <label htmlFor="admin-customer-q" className="sr-only">
-            {t('search.label')}
-          </label>
-          <input
-            id="admin-customer-q"
-            type="search"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setPage(1);
-            }}
-            placeholder={t('search.placeholder')}
-            className="text-body min-w-0 flex-1 bg-transparent px-3 outline-none"
-          />
+        <form role="search" onSubmit={submitSearch} className="flex min-w-70 flex-1 items-end gap-2">
+          <div className="flex-1">
+            <Field
+              id="admin-customer-q"
+              label={t('search.label')}
+              hideLabel
+              type="search"
+              placeholder={t('search.placeholder')}
+              value={queryDraft}
+              onChange={(e) => setQueryDraft(e.target.value)}
+            />
+          </div>
           <Button type="submit">{t('search.submit')}</Button>
         </form>
       </div>
 
       <div role="group" aria-label={t('filterLabel')} className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
-          <Chip
-            key={f}
-            pressed={filter === f}
-            onClick={() => {
-              setFilter(f);
-              setPage(1);
-            }}
-          >
+          <Chip key={f} pressed={filter === f} onClick={() => changeFilter(f)}>
             {t(`filter.${f}`)}
-            <span className="text-ink-muted ml-1">({num(counts[f])})</span>
+            {counts[f] !== undefined && <span className="text-ink-muted ml-1">({counts[f]})</span>}
           </Chip>
         ))}
       </div>
 
-      {rows.length ? (
-        <>
-          <Table columns={columns} rows={rows} />
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-small text-ink-muted">
-              {t('showing', { from: 1, to: rows.length, total: customerCounts.all })}
-            </span>
-            <Pagination page={page} pages={Math.ceil(customerCounts.all / 6)} onChange={setPage} />
-          </div>
-        </>
+      {load.kind === 'loading' ? (
+        <p role="status" className="text-ink-muted">
+          {tc('notify.list.loading')}
+        </p>
+      ) : load.kind === 'error' ? (
+        <LoadError noun={t('noun')} onRetry={retry} />
+      ) : rows.length ? (
+        <div className="flex flex-col gap-4">
+          <Table caption={t('caption', { count: total })} columns={columns} rows={rows} />
+          {total > PAGE_SIZE && (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="text-small text-ink-muted">
+                {t('showing', { from: (page - 1) * PAGE_SIZE + 1, to: (page - 1) * PAGE_SIZE + rows.length, total })}
+              </span>
+              <Pagination page={page} pages={Math.ceil(total / PAGE_SIZE)} onChange={setPage} />
+            </div>
+          )}
+        </div>
       ) : (
-        <DataState title={t('empty.title')} text={t('empty.text')} />
+        <DataState fill title={t('empty.title')} text={t('empty.text')} />
       )}
 
       <Dialog
-        open={deactivating !== null}
-        tone="danger"
-        title={deactivating ? t('deactivate.title', { name: deactivating.name }) : ''}
-        onClose={() => setDeactivating(null)}
+        open={confirmAction !== null}
+        tone={confirmAction?.kind === 'deactivate' ? 'danger' : undefined}
+        title={confirmAction ? t(`${confirmAction.kind}.title`, { name: confirmAction.item.fullName }) : ''}
+        onClose={() => setConfirmAction(null)}
         actions={
           <>
-            <Button variant="secondary" onClick={() => setDeactivating(null)}>
-              {t('deactivate.keep')}
+            <Button variant="secondary" onClick={() => setConfirmAction(null)}>
+              {t(confirmAction?.kind === 'deactivate' ? 'deactivate.keep' : 'reactivate.keep')}
             </Button>
-            <Button variant="danger" onClick={confirmDeactivate}>
-              {t('deactivate.confirm')}
+            <Button
+              variant={confirmAction?.kind === 'deactivate' ? 'danger' : 'primary'}
+              onClick={() => void runConfirmedAction()}
+            >
+              {confirmAction ? t(`${confirmAction.kind}.confirm`) : ''}
             </Button>
           </>
         }
       >
         <div className="flex flex-col gap-3">
-          <p>{t('deactivate.text')}</p>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="deactivate-reason" className="text-small font-bold">
-              {t('deactivate.reason')}
-            </label>
-            <textarea
-              id="deactivate-reason"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              className="border-line-strong bg-surface-raised focus:outline-focus min-h-18 rounded-sm border-[1.5px] p-3 focus:outline-2"
-            />
-          </div>
+          <p>{confirmAction ? t(`${confirmAction.kind}.text`) : ''}</p>
+          {confirmAction?.kind === 'deactivate' && (
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="deactivate-reason" className="text-small font-bold">
+                {t('deactivate.reason')}
+              </label>
+              <textarea
+                id="deactivate-reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                className="border-line-strong bg-surface-raised focus:outline-focus min-h-18 rounded-sm border-[1.5px] p-3 focus:outline-2"
+              />
+              <span className="text-ink-muted text-[13px]">{t('deactivate.reasonHint')}</span>
+            </div>
+          )}
         </div>
       </Dialog>
     </div>

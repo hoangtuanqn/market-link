@@ -7,21 +7,12 @@
     "suggestion": "Suggestion: something could be better",
     "query": "Question: I need an answer"
   },
-  "pageLabel": "Which page?",
-  "pages": {
-    "cart": "Cart",
-    "product": "Product page",
-    "map": "Market map",
-    "orders": "My orders",
-    "farmer": "Farmer dashboard",
-    "other": "Other"
-  },
   "messageLabel": "Message",
   "messagePlaceholder": "What did you expect, and what happened instead?",
-  "messageHint": "For a bug, add your phone or browser model.",
-  "emailLabel": "Email for a reply",
-  "emailHint": "Optional. Filled in when you are signed in.",
+  "messageHint": "At least 10 characters. For a bug, add your phone or browser model.",
   "submit": "Send feedback",
+  "sendFailed": "Could not send. Try again.",
+  "tooMany": "Too many messages sent recently. Try again in a while.",
   "sent": {
     "title": "Sent",
     "bug": "Thanks. Your bug report is with the team.",
@@ -35,6 +26,6 @@
   },
   "after": {
     "title": "After you send",
-    "text": "Bug reports are read every market day. Answers to questions come by email when you leave one."
+    "text": "Bug reports are read every market day. A signed-in reader may be contacted about their question."
   }
 }

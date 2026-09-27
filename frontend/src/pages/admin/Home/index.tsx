@@ -1,199 +1,194 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
+import { AdminReportApi } from '@/api-requests/report.requests';
+import FeedbackApi from '@/api-requests/feedback.requests';
+import ModerationApi from '@/api-requests/moderation.requests';
+import type { OrderListItemDto } from '@/api-requests/order.requests';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { BarList } from '@/components/ui/bar-list';
-import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ColumnChart } from '@/components/ui/column-chart';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Kpi } from '@/components/ui/kpi';
 import { Table, type TableColumn } from '@/components/ui/table';
 import {
-  ADMIN_ANNOUNCEMENTS_PATH,
   ADMIN_CUSTOMERS_PATH,
   ADMIN_FARMERS_PATH,
   ADMIN_FEEDBACK_PATH,
   ADMIN_MARKETS_PATH,
   ADMIN_MODERATION_PATH,
   ADMIN_ORDERS_PATH,
-  ADMIN_REPORTS_PATH,
 } from '@/constants/nav';
-import { ordersThisWeekByMarket, platformTotals, series } from '@/data/admin';
-import { farmerName, marketName, orderTotal, orders } from '@/data/customer';
-import { vnd } from '@/lib/format';
-import type { OrderType } from '@/types/order.types';
-
-/** The period on screen and the one it is compared with (the seeded figures are September against August 2026). */
-const PERIOD = new Date(2026, 8, 1);
-const PREVIOUS = new Date(2026, 7, 1);
+import useRequest from '@/hooks/useRequest';
+import { pickupLabel, vnd } from '@/lib/format';
 
 /** Docs/prototype/admin/overview.html — the six most recent orders across the whole platform. */
 const LATEST = 6;
+const NO_ORDERS: OrderListItemDto[] = [];
 
 /**
- * FR-070 — the dashboard an admin lands on. Totals for farmers, customers, markets and orders, revenue by day, what
- * still needs attention, and the newest orders across every market.
- *
- * Only the waiting-farmer count is real (FR-071 has a backend); everything else is the frozen demo data in
- * `@/data/admin` until markets, orders and products have tables of their own.
+ * FR-070 — the dashboard an admin lands on. Platform totals, revenue by market, what still needs attention, and the
+ * newest orders across every market. No daily series exists on the server, so there is no time chart here (see Reports
+ * for the same numbers over a chosen date range).
  */
 const AdminHomePage = () => {
-  const { t, i18n } = useTranslation('AdminHome');
-  const monthYear = (d: Date) => new Intl.DateTimeFormat(i18n.language, { month: 'long', year: 'numeric' }).format(d);
-  const month = (d: Date) => new Intl.DateTimeFormat(i18n.language, { month: 'long' }).format(d);
-  const num = (n: number, digits = 0) =>
-    new Intl.NumberFormat(i18n.language, { minimumFractionDigits: digits, maximumFractionDigits: digits }).format(n);
+  const { t } = useTranslation('AdminHome');
+  const { t: tc } = useTranslation();
 
-  const [waiting, setWaiting] = useState(platformTotals.farmersWaiting);
+  const { state: homeLoad, retry: retryHome } = useRequest('admin-home', () =>
+    Promise.all([
+      AdminReportApi.dashboard(),
+      FeedbackApi.list({ status: 'new', pageSize: 1 }),
+      ModerationApi.reports({ status: 'new', page: 1, pageSize: 1 }),
+    ]).then(([dashboard, feedback, reports]) => ({
+      dashboard,
+      feedbackCount: feedback.total,
+      reportedCount: reports.data.total,
+    })),
+  );
 
-  // The sidebar badge counts the same queue, so the dashboard reads it from the API too rather than showing a
-  // demo number next to a real one.
-  useEffect(() => {
-    AdminFarmerApi.list({ status: 'pending', page: 1, pageSize: 1 })
-      .then((response) => setWaiting(response.data.total))
-      .catch(() => {});
-  }, []);
+  const { state: revenueLoad, retry: retryRevenue } = useRequest('admin-home-revenue', () =>
+    AdminReportApi.revenueByMarket(),
+  );
 
-  const attention = [
-    { to: ADMIN_FARMERS_PATH, count: waiting, text: t('attention.farmers', { count: waiting }) },
-    { to: ADMIN_MODERATION_PATH, count: 1, text: t('attention.reported', { count: 1 }) },
-    { to: ADMIN_FEEDBACK_PATH, count: 2, text: t('attention.feedback', { count: 2 }) },
-    { to: ADMIN_ANNOUNCEMENTS_PATH, count: 1, text: t('attention.announcements', { count: 1 }) },
-  ];
+  const { state: ordersLoad, retry: retryOrders } = useRequest('admin-home-orders', () =>
+    AdminReportApi.orders({ pageSize: LATEST }).then((r) => r.items),
+  );
+  const latestOrders = ordersLoad.kind === 'ready' ? ordersLoad.data : NO_ORDERS;
 
-  const columns: TableColumn<OrderType>[] = [
+  const columns: TableColumn<OrderListItemDto>[] = [
     {
       key: 'code',
       label: t('col.order'),
       render: (o) => (
-        <Link to={`${ADMIN_ORDERS_PATH}/${o.code.replace('#', '')}`} className="text-brand underline">
-          {o.code}
+        <Link to={`${ADMIN_ORDERS_PATH}/${o.orderId}`} className="text-brand underline">
+          {o.orderCode}
         </Link>
       ),
     },
-    { key: 'stall', label: t('col.stall'), render: (o) => farmerName(o.farmerId) },
-    { key: 'market', label: t('col.market'), render: (o) => marketName(o.marketId) },
-    { key: 'when', label: t('col.pickup'), render: (o) => `${o.date} · ${o.slot}` },
-    { key: 'total', label: t('col.total'), align: 'num', render: (o) => vnd(orderTotal(o)) },
+    { key: 'customer', label: t('col.customer'), render: (o) => o.customerName },
+    { key: 'stall', label: t('col.stall'), render: (o) => o.stallName },
+    { key: 'market', label: t('col.market'), render: (o) => o.marketName },
+    {
+      key: 'when',
+      label: t('col.pickup'),
+      render: (o) => pickupLabel(o.pickupDate, `${o.pickupStart}–${o.pickupEnd}`),
+    },
+    { key: 'total', label: t('col.total'), align: 'num', render: (o) => vnd(o.totalAmount) },
     { key: 'status', label: t('col.status'), render: (o) => <OrderStatusBadge status={o.status} /> },
   ];
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <p className="text-overline text-ink-muted uppercase">{t('overline', { year: PERIOD.getFullYear() })}</p>
+        <p className="text-overline text-ink-muted uppercase">{t('overline')}</p>
         <h1 className="font-hand text-h1">{t('title')}</h1>
       </div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-        <Kpi
-          label={t('kpi.farmers')}
-          value={num(platformTotals.farmers)}
-          note={t('kpi.farmersNote', { waiting, suspended: platformTotals.farmersSuspended })}
-          delta={{ pct: 14.3, vs: t('vs', { month: month(PREVIOUS) }) }}
-          spark={series.sparkFarmers}
-          highlight
-          href={ADMIN_FARMERS_PATH}
-          linkLabel={t('kpi.farmersLink')}
-        />
-        <Kpi
-          label={t('kpi.customers')}
-          value={num(platformTotals.customers)}
-          note={t('kpi.customersNote', { count: platformTotals.customersThisMonth })}
-          delta={{ pct: 9.9, vs: t('vs', { month: month(PREVIOUS) }) }}
-          spark={series.sparkCustomers}
-          href={ADMIN_CUSTOMERS_PATH}
-          linkLabel={t('kpi.customersLink')}
-        />
-        <Kpi
-          label={t('kpi.markets')}
-          value={num(platformTotals.markets)}
-          note={t('kpi.marketsNote')}
-          delta={{ pct: 0, vs: t('vs', { month: month(PREVIOUS) }) }}
-          spark={series.sparkMarkets}
-          href={ADMIN_MARKETS_PATH}
-          linkLabel={t('kpi.marketsLink')}
-        />
-        <Kpi
-          label={t('kpi.orders')}
-          value={num(platformTotals.orders)}
-          note={t('kpi.ordersNote', {
-            week: num(platformTotals.ordersThisWeek),
-            total: vnd(platformTotals.completedValue),
-          })}
-          delta={{ pct: 12.7, vs: t('vs', { month: month(PREVIOUS) }) }}
-          spark={series.sparkOrders}
-          href={ADMIN_ORDERS_PATH}
-          linkLabel={t('kpi.ordersLink')}
-        />
-      </div>
-      <p className="text-small text-ink-muted">{t('tilesNote', { now: monthYear(PERIOD), prev: month(PREVIOUS) })}</p>
-
-      <Card className="flex flex-col gap-3 p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <h2 className="text-h3">{t('revenue.title')}</h2>
-            <p className="text-small text-ink-muted">
-              {t('revenue.note', { now: month(PERIOD), prev: month(PREVIOUS) })}
-            </p>
+      {homeLoad.kind === 'loading' ? (
+        <p role="status" className="text-ink-muted">
+          {tc('notify.list.loading')}
+        </p>
+      ) : homeLoad.kind === 'error' ? (
+        <LoadError noun={t('noun')} onRetry={retryHome} />
+      ) : (
+        <>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+            <Kpi
+              label={t('kpi.farmers')}
+              value={homeLoad.data.dashboard.totalFarmers}
+              note={t('kpi.farmersNote', { waiting: homeLoad.data.dashboard.pendingFarmers })}
+              href={ADMIN_FARMERS_PATH}
+              linkLabel={t('kpi.farmersLink')}
+            />
+            <Kpi
+              label={t('kpi.customers')}
+              value={homeLoad.data.dashboard.totalCustomers}
+              href={ADMIN_CUSTOMERS_PATH}
+              linkLabel={t('kpi.customersLink')}
+            />
+            <Kpi
+              label={t('kpi.markets')}
+              value={homeLoad.data.dashboard.totalMarkets}
+              href={ADMIN_MARKETS_PATH}
+              linkLabel={t('kpi.marketsLink')}
+            />
+            <Kpi
+              label={t('kpi.orders')}
+              value={homeLoad.data.dashboard.totalOrders}
+              note={t('kpi.ordersNote', { revenue: vnd(homeLoad.data.dashboard.revenueTotal) })}
+              href={ADMIN_ORDERS_PATH}
+              linkLabel={t('kpi.ordersLink')}
+            />
           </div>
-          <ButtonLink to={ADMIN_REPORTS_PATH} variant="secondary" size="sm">
-            {t('revenue.reports')}
-          </ButtonLink>
-        </div>
-        <ColumnChart
-          type="line"
-          height={250}
-          caption={t('revenue.caption', { now: month(PERIOD), prev: month(PREVIOUS) })}
-          axisLabel={t('revenue.axis')}
-          labels={series.dayLabels}
-          series={[
-            { name: month(PERIOD), values: series.revenueNow },
-            { name: month(PREVIOUS), values: series.revenuePrev, compare: true },
-          ]}
-          format={(v) => num(v / 1e6, 1)}
-        />
-      </Card>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Card className="flex flex-col gap-3 p-6">
-          <h2 className="text-h3">{t('attention.title')}</h2>
-          <ul className="m-0 flex flex-col gap-2 p-0">
-            {attention.map((row) => (
-              <li key={row.to}>
-                <Link to={row.to} className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1">
-                  <b className="font-hand text-h3 text-brand">{num(row.count)}</b>
-                  <span className="text-[15px]">{row.text}</span>
+          <Card className="flex flex-col gap-3 p-6">
+            <h2 className="text-h3">{t('attention.title')}</h2>
+            <ul className="m-0 flex flex-col gap-2 p-0">
+              <li>
+                <Link
+                  to={ADMIN_FARMERS_PATH}
+                  className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
+                >
+                  <b className="font-hand text-h3 text-brand">{homeLoad.data.dashboard.pendingFarmers}</b>
+                  <span className="text-[15px]">
+                    {t('attention.farmers', { count: homeLoad.data.dashboard.pendingFarmers })}
+                  </span>
                 </Link>
               </li>
-            ))}
-          </ul>
-        </Card>
+              <li>
+                <Link
+                  to={ADMIN_MODERATION_PATH}
+                  className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
+                >
+                  <b className="font-hand text-h3 text-brand">{homeLoad.data.reportedCount}</b>
+                  <span className="text-[15px]">{t('attention.reported', { count: homeLoad.data.reportedCount })}</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={ADMIN_FEEDBACK_PATH}
+                  className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
+                >
+                  <b className="font-hand text-h3 text-brand">{homeLoad.data.feedbackCount}</b>
+                  <span className="text-[15px]">{t('attention.feedback', { count: homeLoad.data.feedbackCount })}</span>
+                </Link>
+              </li>
+            </ul>
+          </Card>
+        </>
+      )}
 
-        <Card className="flex flex-col gap-3 p-6">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-h3">{t('byMarket.title')}</h2>
-            <Link to={ADMIN_ORDERS_PATH} className="text-brand text-small underline">
-              {t('byMarket.link')}
-            </Link>
-          </div>
-          <BarList
-            rows={ordersThisWeekByMarket.map((r) => ({
-              label: marketName(r.marketId),
-              value: r.value,
-              suffix: t('byMarket.suffix'),
-            }))}
-          />
-        </Card>
-      </div>
+      <Card className="flex flex-col gap-3 p-6">
+        <h2 className="text-h3">{t('byMarket.title')}</h2>
+        {revenueLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : revenueLoad.kind === 'error' ? (
+          <LoadError noun={t('byMarket.noun')} onRetry={retryRevenue} />
+        ) : revenueLoad.data.length ? (
+          <BarList rows={revenueLoad.data.map((r) => ({ label: r.marketName, value: r.revenue }))} format={vnd} />
+        ) : (
+          <DataState title={t('byMarket.empty.title')} text={t('byMarket.empty.text')} />
+        )}
+      </Card>
 
       <section className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-h2">{t('latest.title')}</h2>
           <span className="text-small text-ink-muted">{t('latest.readOnly')}</span>
         </div>
-        <Table columns={columns} rows={orders.slice(0, LATEST)} />
+        {ordersLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : ordersLoad.kind === 'error' ? (
+          <LoadError noun={t('latest.noun')} onRetry={retryOrders} />
+        ) : latestOrders.length ? (
+          <Table columns={columns} rows={latestOrders} />
+        ) : (
+          <DataState title={t('latest.empty.title')} text={t('latest.empty.text')} />
+        )}
       </section>
     </div>
   );
