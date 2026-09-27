@@ -160,6 +160,9 @@ const AppRoutes = () => {
             <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
             <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
             <Route path="auth/set-password" element={<SetPasswordPage />} />
+            <Route element={<RequireAuth />}>
+              <Route path="account/password" element={<ChangePasswordPage />} />
+            </Route>
           </Route>
 
           {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
@@ -167,7 +170,6 @@ const AppRoutes = () => {
             <Route element={<RequireAuth />}>
               <Route path="dashboard" element={<CustomerDashboardPage />} />
               <Route path="account" element={<CustomerAccountPage />} />
-              <Route path="account/password" element={<ChangePasswordPage />} />
               <Route path="cart" element={<CustomerCartPage />} />
               <Route path="orders" element={<CustomerOrdersPage />} />
               <Route
