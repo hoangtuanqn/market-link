@@ -7,9 +7,11 @@
     "phone": "Téléphone",
     "address": "Adresse",
     "hours": "Horaires",
-    "toAdd": "À compléter",
+    "emailValue": "contact@marketlink.vn",
+    "phoneValue": "+84 90 123 4567",
     "addressValue": "À compléter. Le repère sur la carte est provisoire, dans le District 1.",
-    "hoursValue": "Lun – ven, 09:00 – 17:00"
+    "hoursValue": "Lun – ven, 09:00 – 17:00",
+    "toAdd": "À compléter"
   },
   "feedback": {
     "title": "Un bug ou une idée ?",

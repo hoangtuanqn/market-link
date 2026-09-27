@@ -1,5 +1,6 @@
 {
   "allCustomers": "Clientes",
+  "noun": "customer",
   "since": "Cliente desde el {{joined}} · último pedido el {{last}}",
   "missing": {
     "title": "Ese cliente ya no está aquí",
@@ -9,41 +10,36 @@
     "deactivate": "Desactivar cuenta",
     "reactivate": "Reactivar cuenta"
   },
-  "banner": {
-    "title": "Desactivada hoy.",
-    "text": "Motivo guardado en la cuenta: {{reason}}. Sus pedidos en curso no se tocan."
-  },
   "orders": {
     "title": "Pedidos",
+    "noun": "orders",
     "all": "Todos los pedidos de la plataforma",
-    "note": "Un administrador los lee. Solo el puesto mueve un pedido, así que aquí no hay nada que cambiar."
+    "note": "Un administrador los lee. Solo el puesto mueve un pedido, así que aquí no hay nada que cambiar.",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders this customer places will show up here."
+    }
   },
   "reviews": {
     "title": "Reseñas que escribió",
+    "noun": "reviews",
     "openInModeration": "Abrir en Moderación",
-    "note": "Ocultar una reseña se hace desde Moderación, donde además se ve la denuncia que la llevó ahí."
-  },
-  "timeline": {
-    "title": "Historial de la cuenta",
-    "created": "Cuenta creada",
-    "firstCollected": "Primer pedido recogido",
-    "noShow": "No se presentó",
-    "lastOrder": "Último pedido"
+    "note": "Ocultar una reseña se hace desde Moderación, donde además se ve la denuncia que la llevó ahí.",
+    "empty": {
+      "title": "No reviews yet",
+      "text": "Reviews this customer writes will show up here."
+    }
   },
   "contact": {
     "title": "Contacto",
     "email": "Correo",
     "phone": "Teléfono",
-    "address": "Dirección",
     "joined": "Alta"
   },
   "habits": {
     "title": "Cómo compra",
     "orders": "Pedidos",
-    "collected": "Recogidos",
-    "noShows": "No recogidos",
-    "market": "Mercado",
-    "buysMostFrom": "Compra sobre todo en"
+    "loadedNote": "Counted from the {{count}} most recently loaded orders, not the full history."
   },
   "whatItDoes": {
     "title": "Qué hace desactivar",
@@ -53,17 +49,19 @@
     "title": "¿Desactivar a {{name}}?",
     "text": "No podrá entrar ni pedir hasta que un administrador lo reactive. Los pedidos ya realizados llegan a su fin, así que ningún puesto se queda con comida que nadie recoge.",
     "reason": "Motivo guardado en la cuenta",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Todavía no",
     "confirm": "Desactivar"
   },
-  "reason": {
-    "noShows": "No se presenta a recoger, de forma repetida",
-    "abusive": "Lenguaje ofensivo en una reseña",
-    "requested": "Pidió cerrar su cuenta",
-    "other": "Otro"
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate"
   },
   "toast": {
     "deactivated": "{{name}} desactivado.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} ya puede volver a entrar."
   },
   "col": {

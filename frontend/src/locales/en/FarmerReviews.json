@@ -1,9 +1,10 @@
 {
   "title": "Reviews",
   "intro": "What customers said after collecting their orders. A short reply goes a long way, especially on a low rating.",
-  "summary": "Stall {{stall}} · products {{products}} · {{reviews}}",
+  "summary": "Stall {{stall}} · {{reviews}}",
   "reviewCount_one": "{{count}} review",
   "reviewCount_other": "{{count}} reviews",
+  "noun": "reviews",
   "filter": {
     "all": "All",
     "needs": "Needs a reply",
@@ -14,13 +15,10 @@
   "toast": {
     "postedTitle": "Reply posted",
     "postedText": "Reply posted under {{name}}'s review.",
-    "editTitle": "Reply editing",
-    "editText": "Reply editing is open."
+    "alreadyReplied": "You already replied to this review."
   },
   "action": {
-    "editReply": "Edit reply",
     "reply": "Reply",
-    "report": "Report review",
     "post": "Post reply"
   },
   "form": {
@@ -31,5 +29,5 @@
     "title": "No reviews yet",
     "text": "A customer can review your stall and what they bought once their order is completed (D-10)."
   },
-  "note": "Reviews cannot be removed by the stall. If one breaks the guidelines, report it and the admin decides (FR-074)."
+  "note": "Reviews cannot be removed or edited by the stall. Reply once — it stays with the review."
 }

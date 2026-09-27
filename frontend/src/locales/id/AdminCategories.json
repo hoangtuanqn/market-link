@@ -7,6 +7,7 @@
     "feedback": "Kotak masukan"
   },
   "caption": {
+    "categories_one": "{{count}} category",
     "categories_other": "{{count}} kategori"
   },
   "col": {
@@ -25,10 +26,14 @@
     "namePlaceholder": "mis. Seafood",
     "nameHint": "Dalam bahasa Inggris, huruf besar hanya di awal. Kata ini ditulis tangan pada label produk yang tidak berfoto.",
     "position": "Urutan pada filter",
+    "minShelfLife": "Min shelf life (days)",
+    "maxShelfLife": "Max shelf life (days)",
+    "shelfLifeHint": "Standard freshness window for this category. Shown to Farmers as a guide when they list a product.",
     "submit": "Tambah kategori"
   },
   "removeCategory": {
     "title": "Hapus {{name}}?",
+    "textUsed_one": "{{count}} product uses it. Choose where it goes.",
     "textUsed_other": "{{count}} produk memakainya. Pilih akan dipindah ke mana.",
     "textUnused": "Tidak ada produk yang memakainya.",
     "moveTo": "Pindahkan produk ke",
@@ -48,6 +53,8 @@
   },
   "error": {
     "noun": "kategori",
-    "nameRequired": "Beri nama kategori."
+    "nameRequired": "Beri nama kategori.",
+    "shelfLifeRequired": "Enter a whole number of 1 or more.",
+    "shelfLifeRange": "Max must be at least the minimum."
   }
 }

@@ -1,13 +1,13 @@
 {
-  "overline": {
-    "suspended": "{{stall}} · bị đình chỉ ngày {{date}}",
-    "registered": "{{stall}} · đăng ký ngày {{date}}"
+  "error": {
+    "noun": "hồ sơ đăng ký của bạn"
   },
+  "overline": "{{stall}} · đăng ký ngày {{date}}",
   "title": {
     "pending": "Sạp của bạn đang chờ duyệt",
+    "rejected": "Đăng ký sạp của bạn đã bị từ chối",
     "suspended": "Sạp của bạn đang bị đình chỉ"
   },
-  "previewToggle": "Xem trước: sạp bị đình chỉ",
   "reviewing": {
     "title": "Quản trị viên đang xem xét đăng ký của bạn.",
     "text": "Bạn sẽ nhận thông báo và email khi sạp được duyệt. Trước đó, khách chưa thấy sạp và sản phẩm của bạn."
@@ -25,9 +25,18 @@
     "email": "Email",
     "market": "Chợ đăng ký"
   },
+  "rejected": {
+    "bannerTitle": "Đăng ký này chưa được duyệt.",
+    "noReason": "Không có lý do được nêu.",
+    "again": {
+      "title": "Đăng ký lại",
+      "text": "Bạn có thể gửi đăng ký mới với thông tin hoặc bằng chứng đã cập nhật.",
+      "link": "Đăng ký lại"
+    }
+  },
   "suspended": {
-    "title": "Sạp của bạn bị đình chỉ từ ngày {{date}}.",
-    "text": "Lý do từ quản trị viên: {{reason}} Sản phẩm của bạn đang bị ẩn và bạn không thể nhận đơn mới."
+    "bannerTitle": "Sạp của bạn đang bị đình chỉ.",
+    "noReason": "Không có lý do được nêu."
   },
   "running": {
     "title": "Đơn đã đặt vẫn tiếp tục",

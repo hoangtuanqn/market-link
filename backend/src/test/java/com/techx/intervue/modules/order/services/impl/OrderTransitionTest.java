@@ -236,7 +236,9 @@ class OrderTransitionTest {
                 "2026-09-28T18:00:00Z",
                 new BigDecimal("39000"),
                 1,
-                "2026-09-26T02:00:00Z");
+                "2026-09-26T02:00:00Z",
+                7L,
+                "Khách 7");
     }
 
     private static OrderDetailRow aDetailRow() {

@@ -3,6 +3,12 @@
   "greeting_other": "{{name}}님, 이번 주말 픽업이 {{count}}건 있어요",
   "intro": "주문 하나가 아직 가게의 확인을 기다리고 있어요. 나머지는 모두 순조로워요.",
   "browseMarkets": "이번 주말 시장 둘러보기",
+  "noun": {
+    "orders": "orders",
+    "favorites": "favorites",
+    "notifications": "notifications",
+    "products": "products"
+  },
   "cards": {
     "upcoming_one": "예정된 주문 {{count}}건",
     "upcoming_other": "예정된 주문 {{count}}건",
@@ -30,5 +36,15 @@
   "nextPickups": "다음 픽업",
   "allOrders": "내 주문 전체",
   "newFromFavorites": "즐겨찾는 가게의 이번 주 신상품",
-  "favorites": "즐겨찾기"
+  "favorites": "즐겨찾기",
+  "empty": {
+    "pickups": {
+      "title": "No pickups coming up",
+      "text": "Orders that are placed, accepted or ready for pickup show up here."
+    },
+    "favorites": {
+      "title": "No favorite products yet",
+      "text": "Save products you like and new stock from them shows up here."
+    }
+  }
 }

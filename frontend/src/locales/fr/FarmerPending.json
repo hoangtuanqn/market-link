@@ -1,13 +1,16 @@
 {
+  "error": {
+    "noun": "your registration"
+  },
   "overline": {
     "suspended": "{{stall}} · suspendu le {{date}}",
     "registered": "{{stall}} · inscrit le {{date}}"
   },
   "title": {
     "pending": "Votre stand attend sa validation",
+    "rejected": "Your stall registration was declined",
     "suspended": "Votre stand est suspendu"
   },
-  "previewToggle": "Aperçu : stand suspendu",
   "reviewing": {
     "title": "Un administrateur examine votre inscription.",
     "text": "Vous recevrez une notification et un e-mail une fois validé. D’ici là, votre stand et vos produits ne sont pas visibles des clients."
@@ -25,9 +28,18 @@
     "email": "E-mail",
     "market": "Marché demandé"
   },
+  "rejected": {
+    "bannerTitle": "This registration was not approved.",
+    "noReason": "No reason was given.",
+    "again": {
+      "title": "Apply again",
+      "text": "You can send a new registration with updated details or evidence.",
+      "link": "Apply again"
+    }
+  },
   "suspended": {
-    "title": "Votre stand a été suspendu le {{date}}.",
-    "text": "Motif de l’administrateur : {{reason}} Vos produits sont masqués et vous ne pouvez plus recevoir de nouvelles commandes."
+    "bannerTitle": "Your stall is suspended.",
+    "noReason": "No reason was given."
   },
   "running": {
     "title": "Les commandes déjà passées continuent",

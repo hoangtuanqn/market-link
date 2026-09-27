@@ -7,21 +7,12 @@
     "suggestion": "Vorschlag: etwas könnte besser sein",
     "query": "Frage: ich brauche eine Antwort"
   },
-  "pageLabel": "Welche Seite?",
-  "pages": {
-    "cart": "Warenkorb",
-    "product": "Produktseite",
-    "map": "Marktkarte",
-    "orders": "Meine Bestellungen",
-    "farmer": "Farmer-Dashboard",
-    "other": "Andere"
-  },
   "messageLabel": "Nachricht",
   "messagePlaceholder": "Was hast du erwartet, und was ist stattdessen passiert?",
   "messageHint": "Bei einem Fehler: Telefon oder Browser mit angeben.",
-  "emailLabel": "E-Mail für eine Antwort",
-  "emailHint": "Optional. Wird ausgefüllt, wenn du angemeldet bist.",
   "submit": "Feedback senden",
+  "sendFailed": "Could not send. Try again.",
+  "tooMany": "Too many messages sent recently. Try again in a while.",
   "sent": {
     "title": "Gesendet",
     "bug": "Danke. Deine Fehlermeldung ist beim Team.",

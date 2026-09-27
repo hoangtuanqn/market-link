@@ -10,13 +10,8 @@
   },
   "reviewFilterLabel": "Bewertungen filtern",
   "reviewFilter": {
-    "reported": "Gemeldet",
     "lowRated": "Mit 1 oder 2 bewertet",
     "newest": "Neueste"
-  },
-  "report": {
-    "title": "Am {{date}} von {{by}} gemeldet: „{{quote}}“",
-    "text": "Ausblenden entfernt sie von der Produkt- und der Standseite. Die Kundschaft erfährt den Grund."
   },
   "recentlyListed": "Kürzlich eingestellte Produkte",
   "search": {
@@ -37,11 +32,9 @@
     "view": "Ansehen",
     "hideReview": "Bewertung ausblenden",
     "hideListing": "Anzeige ausblenden",
-    "keepVisible": "Sichtbar lassen",
     "customerAccount": "Kundenkonto",
     "unhide": "Wieder einblenden",
-    "unhidden": "Der Eintrag ist wieder sichtbar.",
-    "dismissed": "Meldung verworfen. Die Bewertung bleibt sichtbar."
+    "unhidden": "Der Eintrag ist wieder sichtbar."
   },
   "hide": {
     "title": {
@@ -71,7 +64,8 @@
     "text": "Gemeldete Produkte und Bewertungen landen hier, damit du sie liest, bevor du etwas ausblendest."
   },
   "error": {
-    "noun": "Angebote"
+    "noun": "Angebote",
+    "reviewsNoun": "reviews"
   },
   "messages": {
     "boundary": "Du kannst nur gemeldete Nachrichten lesen, dazu höchstens fünf auf jeder Seite als Kontext. Der Rest der Unterhaltung ist für Admins nicht offen.",

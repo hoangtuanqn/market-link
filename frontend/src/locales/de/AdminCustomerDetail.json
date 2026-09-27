@@ -1,5 +1,6 @@
 {
   "allCustomers": "Kundschaft",
+  "noun": "customer",
   "since": "Kundschaft seit {{joined}} · letzte Bestellung {{last}}",
   "missing": {
     "title": "Diese Person gibt es nicht mehr",
@@ -9,41 +10,36 @@
     "deactivate": "Konto sperren",
     "reactivate": "Konto freigeben"
   },
-  "banner": {
-    "title": "Heute gesperrt.",
-    "text": "Am Konto vermerkter Grund: {{reason}}. Laufende Bestellungen bleiben unangetastet."
-  },
   "orders": {
     "title": "Bestellungen",
+    "noun": "orders",
     "all": "Alle Bestellungen der Plattform",
-    "note": "Ein Administrator liest sie. Nur der Stand bewegt eine Bestellung, hier gibt es also nichts zu ändern."
+    "note": "Ein Administrator liest sie. Nur der Stand bewegt eine Bestellung, hier gibt es also nichts zu ändern.",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders this customer places will show up here."
+    }
   },
   "reviews": {
     "title": "Geschriebene Bewertungen",
+    "noun": "reviews",
     "openInModeration": "In der Moderation öffnen",
-    "note": "Eine Bewertung wird in der Moderation ausgeblendet, dort ist auch die Meldung dazu sichtbar."
-  },
-  "timeline": {
-    "title": "Kontoverlauf",
-    "created": "Konto angelegt",
-    "firstCollected": "Erste Bestellung abgeholt",
-    "noShow": "Nicht erschienen",
-    "lastOrder": "Letzte Bestellung"
+    "note": "Eine Bewertung wird in der Moderation ausgeblendet, dort ist auch die Meldung dazu sichtbar.",
+    "empty": {
+      "title": "No reviews yet",
+      "text": "Reviews this customer writes will show up here."
+    }
   },
   "contact": {
     "title": "Kontakt",
     "email": "E-Mail",
     "phone": "Telefon",
-    "address": "Adresse",
     "joined": "Angemeldet"
   },
   "habits": {
     "title": "Kaufverhalten",
     "orders": "Bestellungen",
-    "collected": "Abgeholt",
-    "noShows": "Nicht abgeholt",
-    "market": "Markt",
-    "buysMostFrom": "Kauft am meisten bei"
+    "loadedNote": "Counted from the {{count}} most recently loaded orders, not the full history."
   },
   "whatItDoes": {
     "title": "Was das Sperren bewirkt",
@@ -53,17 +49,19 @@
     "title": "{{name}} sperren?",
     "text": "Anmelden und bestellen ist erst wieder möglich, wenn ein Administrator das Konto freigibt. Bereits aufgegebene Bestellungen laufen zu Ende, damit kein Stand auf Ware sitzen bleibt, die niemand abholt.",
     "reason": "Grund, der am Konto vermerkt wird",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Noch nicht",
     "confirm": "Sperren"
   },
-  "reason": {
-    "noShows": "Wiederholt nicht zur Abholung erschienen",
-    "abusive": "Beleidigende Sprache in einer Bewertung",
-    "requested": "Hat um Schließung des Kontos gebeten",
-    "other": "Anderer Grund"
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate"
   },
   "toast": {
     "deactivated": "{{name}} gesperrt.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} kann sich wieder anmelden."
   },
   "col": {

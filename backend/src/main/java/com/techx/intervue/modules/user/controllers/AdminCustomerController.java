@@ -38,6 +38,11 @@ public class AdminCustomerController extends BaseController {
         return ok(customers.list(status, q, page, pageSize), "Customers loaded.");
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResource<AdminCustomerResource>> detail(@PathVariable long id) {
+        return ok(customers.detail(id), "Customer loaded.");
+    }
+
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApiResource<AdminCustomerResource>> setStatus(
             @PathVariable long id, @Valid @RequestBody CustomerStatusRequest request) {

@@ -1,15 +1,14 @@
 {
-  "overline": "Pengaturan",
   "title": "Kotak masukan",
   "intro": "Laporan bug, saran, dan pertanyaan yang dikirim lewat formulir masukan. Tandai sudah dijawab setelah selesai.",
-  "link": {
-    "categories": "Kategori",
-    "announcements": "Pengumuman"
-  },
+  "noun": "feedback",
+  "anonymous": "Anonymous",
+  "caption": "{{count}} feedback messages",
   "filterLabel": "Saring masukan",
   "filter": {
-    "open": "Belum dijawab",
-    "answered": "Sudah dijawab",
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved",
     "bug": "Bug",
     "suggestion": "Saran",
     "query": "Pertanyaan"
@@ -20,8 +19,9 @@
     "query": "Pertanyaan"
   },
   "status": {
-    "open": "Belum dijawab",
-    "answered": "Sudah dijawab"
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved"
   },
   "col": {
     "type": "Jenis",
@@ -30,26 +30,21 @@
     "status": "Status"
   },
   "action": {
-    "read": "Baca",
-    "readAndAnswer": "Baca dan jawab"
+    "read": "Baca"
   },
   "dialog": {
     "title": "{{type}} dari {{from}}",
     "sent": "Dikirim {{date}} · {{state}}",
-    "notAnswered": "belum dijawab",
-    "alreadyAnswered": "sudah dijawab",
-    "yourAnswer": "Jawaban Anda",
-    "replyPlaceholder": "Terima kasih sudah memberi tahu kami…",
     "close": "Tutup",
-    "send": "Kirim dan tandai sudah dijawab",
-    "sendAgain": "Kirim lagi"
+    "markReviewed": "Mark reviewed",
+    "markResolved": "Mark resolved"
   },
   "empty": {
     "title": "Belum ada masukan",
     "text": "Laporan bug, saran, dan pertanyaan dari formulir masukan akan sampai di sini."
   },
   "toast": {
-    "answered": "Jawaban tersimpan dan pesan ditandai sudah dijawab.",
-    "markedOnly": "Ditandai sudah dijawab tanpa mengirim balasan."
+    "reviewed": "Marked reviewed.",
+    "resolved": "Marked resolved."
   }
 }

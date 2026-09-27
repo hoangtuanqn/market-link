@@ -1,47 +1,38 @@
 {
   "title": "Sales history",
-  "intro": "What you sold, and how it compares with the period before. Revenue counts completed orders only, the money customers handed you at the stall.",
-  "export": {
-    "button": "Export the period",
-    "title": "Export started",
-    "text": "Export started. The CSV covers the period and the market on screen."
+  "intro": "What you sold this month. Revenue counts completed orders only, the money customers handed you at the stall.",
+  "month": {
+    "previous": "Previous month",
+    "next": "Next month"
   },
-  "days_one": "{{count}} day",
-  "days_other": "{{count}} days",
-  "market": "Market",
-  "bothMarkets": "Both markets",
   "kpi": {
+    "noun": "your numbers",
     "completed": "Completed orders",
-    "completedNote": "of {{total}} placed with you",
     "revenue": "Revenue",
-    "revenueNote": "₫, paid at the stall",
+    "revenueNote": "From completed orders, paid at the stall",
     "average": "Average order",
-    "averageNote": "₫ per completed order",
-    "declined": "You declined",
-    "declinedNote": "{{pct}}% of orders placed with you"
-  },
-  "byDay": {
-    "title": "Revenue by market day",
-    "note": "In millions of ₫. You only sell on Saturday and Sunday, so each column is one market morning.",
-    "caption": "Revenue by market day in {{now}} against {{prev}}, in millions of dong"
+    "declined": "Declined",
+    "cancelled": "Cancelled",
+    "allTime": "All time",
+    "partial": "First 500 orders only"
   },
   "best": {
     "title": "Best sellers",
-    "note": "Revenue in {{month}}. Quantities are in each product's own unit, so they are never added together.",
-    "product": "Product",
-    "soldPer": "Sold per",
-    "price": "Price",
-    "sold": "Sold",
-    "revenue": "Revenue"
-  },
-  "where": {
-    "title": "Where it sold",
-    "note_one": "{{count}} order was declined and {{cancelled}} cancelled this month. Neither counts here.",
-    "note_other": "{{count}} orders were declined and {{cancelled}} cancelled this month. Neither counts here."
+    "note": "Revenue in {{month}}.",
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold this month",
+      "text": "Best sellers for this month will show up here once orders complete."
+    }
   },
   "past": {
-    "title": "Past orders",
-    "note": "Completed, declined and cancelled"
+    "title": "Completed orders",
+    "note": "Declined and cancelled orders are counted above but not listed here.",
+    "noun": "completed orders",
+    "empty": {
+      "title": "No completed orders this month",
+      "text": "Orders you complete this month will be listed here."
+    }
   },
   "col": {
     "pickup": "Pickup",
@@ -50,6 +41,5 @@
     "items": "Items",
     "total": "Total",
     "status": "Status"
-  },
-  "itemLine": "{{qty}}× {{name}}"
+  }
 }

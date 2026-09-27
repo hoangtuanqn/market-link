@@ -1,5 +1,6 @@
 {
   "allOrders": "คำสั่งซื้อ",
+  "noun": "order",
   "kicker": "สั่งเมื่อ {{placed}} · ปิดรับ {{cutoff}}",
   "missing": {
     "title": "ไม่พบคำสั่งซื้อนี้แล้ว",
@@ -13,6 +14,7 @@
     "title": "รายการสินค้า",
     "note": "ราคาคือราคาที่ร้านค้าตั้งไว้ตอนสั่งซื้อ ไม่มีเงินผ่าน MarketLink ลูกค้าจ่ายที่ร้านค้าโดยตรง"
   },
+  "declined": "Declined: {{reason}}",
   "history": {
     "title": "ทุกสถานะที่ผ่านมา",
     "by": "{{time}} · {{by}}",
@@ -21,22 +23,14 @@
   "stall": {
     "title": "ร้านค้า",
     "stall": "ชื่อร้าน",
-    "contact": "ผู้ติดต่อ",
-    "approval": "สถานะอนุมัติ",
     "record": "ประวัติร้านค้า"
-  },
-  "approval": {
-    "pending": "รออนุมัติ",
-    "approved": "อนุมัติแล้ว",
-    "rejected": "ปฏิเสธแล้ว",
-    "suspended": "ถูกระงับ"
   },
   "customer": {
     "title": "ลูกค้า",
     "name": "ชื่อ",
     "phone": "โทรศัพท์",
-    "orders": "คำสั่งซื้อบน MarketLink",
-    "record": "ประวัติลูกค้า"
+    "record": "ประวัติลูกค้า",
+    "hidden": "Contact details are only shown to the order's own stall."
   },
   "pickup": {
     "title": "รับสินค้า",

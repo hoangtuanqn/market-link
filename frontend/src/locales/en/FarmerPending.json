@@ -1,13 +1,13 @@
 {
-  "overline": {
-    "suspended": "{{stall}} · suspended {{date}}",
-    "registered": "{{stall}} · registered {{date}}"
+  "error": {
+    "noun": "your registration"
   },
+  "overline": "{{stall}} · registered {{date}}",
   "title": {
     "pending": "Your stall is waiting for approval",
+    "rejected": "Your stall registration was declined",
     "suspended": "Your stall is suspended"
   },
-  "previewToggle": "Preview: suspended stall",
   "reviewing": {
     "title": "An admin is reviewing your registration.",
     "text": "You will get a notification and an email when it is approved. Until then your stall and products are not visible to customers."
@@ -25,9 +25,18 @@
     "email": "Email",
     "market": "Market requested"
   },
+  "rejected": {
+    "bannerTitle": "This registration was not approved.",
+    "noReason": "No reason was given.",
+    "again": {
+      "title": "Apply again",
+      "text": "You can send a new registration with updated details or evidence.",
+      "link": "Apply again"
+    }
+  },
   "suspended": {
-    "title": "Your stall was suspended on {{date}}.",
-    "text": "Reason from the admin: {{reason}} Your products are hidden and you cannot take new orders."
+    "bannerTitle": "Your stall is suspended.",
+    "noReason": "No reason was given."
   },
   "running": {
     "title": "Orders already placed still run",

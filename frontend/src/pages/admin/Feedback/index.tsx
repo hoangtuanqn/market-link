@@ -1,44 +1,68 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckIcon, ClockIcon } from '@/components/icons';
-import { Button, ButtonLink } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { ADMIN_ANNOUNCEMENTS_PATH, ADMIN_CATEGORIES_PATH } from '@/constants/nav';
-import { feedback, type FeedbackType } from '@/data/admin';
+import FeedbackApi, { type FeedbackDto, type FeedbackStatus } from '@/api-requests/feedback.requests';
+import useRequest from '@/hooks/useRequest';
+import { formatDate } from '@/lib/format';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-const FILTERS = ['open', 'answered', 'bug', 'suggestion', 'query'] as const;
+/** Statuses filter server-side via `status`; the three types filter client-side over the fetched page. */
+const FILTERS = ['new', 'reviewed', 'resolved', 'bug', 'suggestion', 'query'] as const;
 type Filter = (typeof FILTERS)[number];
+const STATUS_FILTERS: FeedbackStatus[] = ['new', 'reviewed', 'resolved'];
+
+const isStatusFilter = (f: Filter): f is FeedbackStatus => (STATUS_FILTERS as string[]).includes(f);
+
+const STATUS_META: Record<FeedbackStatus, { icon: typeof ClockIcon; className: string }> = {
+  new: { icon: ClockIcon, className: 'bg-status-placed-bg text-status-placed-ink' },
+  reviewed: { icon: ClockIcon, className: 'bg-status-accepted-bg text-status-accepted-ink' },
+  resolved: { icon: CheckIcon, className: 'bg-status-completed-bg text-status-completed-ink' },
+};
+
+const NO_ROWS: FeedbackDto[] = [];
 
 /**
  * FR-081 — bug reports, suggestions and questions sent through the feedback form. A row opens the whole message in a
- * dialog: there is no reply screen because where an answer goes is still an open question.
+ * dialog; the admin only moves it between `new`, `reviewed` and `resolved` (the platform sends no reply).
  */
 const AdminFeedbackPage = () => {
   const { t } = useTranslation('AdminFeedback');
-  const [filter, setFilter] = useState<Filter>('open');
-  const [open, setOpen] = useState<FeedbackType | null>(null);
-  const [reply, setReply] = useState('');
+  const { t: tc } = useTranslation();
+  const [filter, setFilter] = useState<Filter>('new');
+  const [open, setOpen] = useState<FeedbackDto | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const count = (f: Filter) =>
-    f === 'open' || f === 'answered'
-      ? feedback.filter((x) => x.status === f).length
-      : feedback.filter((x) => x.type === f).length;
-
-  const rows = feedback.filter((x) =>
-    filter === 'open' || filter === 'answered' ? x.status === filter : x.type === filter,
+  const {
+    state: load,
+    retry,
+    mutate,
+  } = useRequest(`feedback:${filter}`, () =>
+    FeedbackApi.list({ status: isStatusFilter(filter) ? filter : undefined, pageSize: 50 }).then((r) => r.items),
   );
+  const all = load.kind === 'ready' ? load.data : NO_ROWS;
+  const rows = isStatusFilter(filter) ? all : all.filter((f) => f.type === filter);
 
-  const send = () => {
-    Notification.success({ text: reply.trim() ? t('toast.answered') : t('toast.markedOnly') });
-    setOpen(null);
-    setReply('');
+  const setStatus = async (id: number, status: Exclude<FeedbackStatus, 'new'>) => {
+    setBusy(true);
+    try {
+      const updated = await FeedbackApi.setStatus(id, status);
+      mutate((items) => items.map((f) => (f.id === id ? updated : f)));
+      setOpen(updated);
+      Notification.success({ text: t(`toast.${status}`) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusy(false);
+    }
   };
 
-  const columns: TableColumn<FeedbackType>[] = [
+  const columns: TableColumn<FeedbackDto>[] = [
     { key: 'type', label: t('col.type'), render: (f) => t(`type.${f.type}`) },
     {
       key: 'text',
@@ -49,7 +73,7 @@ const AdminFeedbackPage = () => {
           onClick={() => setOpen(f)}
           className="text-brand text-small cursor-pointer bg-transparent text-left underline"
         >
-          {f.text}
+          {f.message}
         </button>
       ),
     },
@@ -58,26 +82,28 @@ const AdminFeedbackPage = () => {
       label: t('col.from'),
       render: (f) => (
         <>
-          {f.from}
-          <span className="text-ink-muted block text-[13px]">{f.date}</span>
+          {f.userName ?? t('anonymous')}
+          <span className="text-ink-muted block text-[13px]">{formatDate(new Date(f.createdAt))}</span>
         </>
       ),
     },
     {
       key: 'status',
       label: t('col.status'),
-      render: (f) =>
-        f.status === 'open' ? (
-          <span className="bg-status-placed-bg text-status-placed-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold">
-            <ClockIcon size={14} />
-            {t('status.open')}
+      render: (f) => {
+        const { icon: Icon, className } = STATUS_META[f.status];
+        return (
+          <span
+            className={Helper.cn(
+              'inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold',
+              className,
+            )}
+          >
+            <Icon size={14} />
+            {t(`status.${f.status}`)}
           </span>
-        ) : (
-          <span className="bg-status-completed-bg text-status-completed-ink inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold">
-            <CheckIcon size={14} />
-            {t('status.answered')}
-          </span>
-        ),
+        );
+      },
     },
     {
       key: 'action',
@@ -85,7 +111,7 @@ const AdminFeedbackPage = () => {
       align: 'actions',
       render: (f) => (
         <Button variant="secondary" size="sm" onClick={() => setOpen(f)}>
-          {t(f.status === 'open' ? 'action.readAndAnswer' : 'action.read')}
+          {t('action.read')}
         </Button>
       ),
     },
@@ -93,70 +119,60 @@ const AdminFeedbackPage = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
-          <p className="text-body max-w-160">{t('intro')}</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <ButtonLink to={ADMIN_CATEGORIES_PATH} variant="secondary">
-            {t('link.categories')}
-          </ButtonLink>
-          <ButtonLink to={ADMIN_ANNOUNCEMENTS_PATH} variant="secondary">
-            {t('link.announcements')}
-          </ButtonLink>
-        </div>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-h1">{t('title')}</h1>
+        <p className="text-body max-w-160">{t('intro')}</p>
       </div>
 
       <div role="group" aria-label={t('filterLabel')} className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
           <Chip key={f} pressed={filter === f} onClick={() => setFilter(f)}>
             {t(`filter.${f}`)}
-            <span className="text-ink-muted ml-1">({count(f)})</span>
           </Chip>
         ))}
       </div>
 
-      {rows.length ? (
-        <Table columns={columns} rows={rows} />
+      {load.kind === 'loading' ? (
+        <p role="status" className="text-ink-muted">
+          {tc('notify.list.loading')}
+        </p>
+      ) : load.kind === 'error' ? (
+        <LoadError noun={t('noun')} onRetry={retry} />
+      ) : rows.length ? (
+        <Table caption={t('caption', { count: rows.length })} columns={columns} rows={rows} />
       ) : (
-        <DataState title={t('empty.title')} text={t('empty.text')} />
+        <DataState fill title={t('empty.title')} text={t('empty.text')} />
       )}
 
       <Dialog
         open={open !== null}
-        title={open ? t('dialog.title', { type: t(`type.${open.type}`), from: open.from }) : ''}
+        title={open ? t('dialog.title', { type: t(`type.${open.type}`), from: open.userName ?? t('anonymous') }) : ''}
         onClose={() => setOpen(null)}
         actions={
           <>
-            <Button variant="secondary" onClick={() => setOpen(null)}>
+            <Button variant="secondary" onClick={() => setOpen(null)} disabled={busy}>
               {t('dialog.close')}
             </Button>
-            <Button onClick={send}>{open?.status === 'open' ? t('dialog.send') : t('dialog.sendAgain')}</Button>
+            {open && open.status !== 'reviewed' && (
+              <Button variant="secondary" disabled={busy} onClick={() => open && void setStatus(open.id, 'reviewed')}>
+                {t('dialog.markReviewed')}
+              </Button>
+            )}
+            {open && open.status !== 'resolved' && (
+              <Button disabled={busy} onClick={() => open && void setStatus(open.id, 'resolved')}>
+                {t('dialog.markResolved')}
+              </Button>
+            )}
           </>
         }
       >
         <div className="flex flex-col gap-3">
           <p className="text-small text-ink-muted">
-            {t('dialog.sent', {
-              date: open?.date,
-              state: open?.status === 'open' ? t('dialog.notAnswered') : t('dialog.alreadyAnswered'),
-            })}
+            {open
+              ? t('dialog.sent', { date: formatDate(new Date(open.createdAt)), state: t(`status.${open.status}`) })
+              : ''}
           </p>
-          <p className="bg-surface-sunken border-line rounded-sm border p-4 text-[15px]">{open?.text}</p>
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="feedback-reply" className="text-small font-bold">
-              {t('dialog.yourAnswer')}
-            </label>
-            <textarea
-              id="feedback-reply"
-              rows={4}
-              value={reply}
-              placeholder={t('dialog.replyPlaceholder')}
-              onChange={(e) => setReply(e.target.value)}
-              className="border-line-strong bg-surface-raised focus:outline-focus rounded-sm border-[1.5px] p-3 focus:outline-2"
-            />
-          </div>
+          <p className="bg-surface-sunken border-line rounded-sm border p-4 text-[15px]">{open?.message}</p>
         </div>
       </Dialog>
     </div>

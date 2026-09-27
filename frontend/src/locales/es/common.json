@@ -271,7 +271,15 @@
     "cancel": "Cancelar pedido",
     "reviewed": "Ya reseñaste este pedido",
     "review": "Reseñar puesto y productos",
-    "reorder": "Volver a pedir"
+    "reorder": "Volver a pedir",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "Realizado",
@@ -455,6 +463,8 @@
     "photoAlt": "Foto de la solicitud {{n}}"
   },
   "notify": {
+    "notificationsEmpty": "Todavía no hay notificaciones.",
+    "notificationsError": "No se pudieron cargar las notificaciones.",
     "open": "Abrir",
     "prompt": {
       "title": "Activar las notificaciones",
@@ -530,13 +540,37 @@
     "admin": {
       "title": "Notificaciones",
       "intro": "Nuevas solicitudes de Farmer esperando tu revisión."
-    },
-    "notificationsEmpty": "Todavía no hay notificaciones.",
-    "notificationsError": "No se pudieron cargar las notificaciones."
+    }
   },
-  "comingSoon": {
-    "title": "Esta página aún no está disponible",
-    "text": "Todavía la estamos construyendo. El resto del menú funciona con normalidad."
+  "assistant": {
+    "open": "Preguntar al asistente",
+    "close": "Cerrar el asistente",
+    "fullPage": "Abrir en página completa",
+    "note": "Las respuestas salen de los datos de MarketLink.",
+    "newChat": "Nueva conversación",
+    "loading": "Cargando la conversación…",
+    "loadErrorTitle": "No pudimos cargar tus mensajes anteriores",
+    "loadErrorText": "Revisa tu conexión e inténtalo de nuevo. Aún puedes hacer una pregunta nueva.",
+    "emptyTitle": "Pregúntame sobre MarketLink",
+    "emptyText": "Puedo buscar productos en todos los mercados, darte horarios y horas de recogida, o explicarte cómo hacer un pedido.",
+    "thinking": "Buscando…",
+    "sendError": "El asistente no pudo responder. Tu mensaje volvió al cuadro, envíalo de nuevo.",
+    "message": "Mensaje",
+    "placeholder": "Pregunta por un producto, un mercado o cómo pedir",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "aiTools": "IA · {{tools}}",
+    "result": {
+      "product": "Producto",
+      "market": "Mercado",
+      "farmer": "Puesto"
+    },
+    "suggest": {
+      "find": "¿Dónde compro tomates este fin de semana?",
+      "hours": "¿A qué hora abre el mercado Bến Thành?",
+      "stalls": "¿Qué puestos hay en el mercado Thảo Điền el sábado?",
+      "cancel": "¿Cómo cancelo un pedido?"
+    }
   },
   "tour": {
     "next": "Siguiente",

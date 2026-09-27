@@ -1,6 +1,7 @@
 {
   "title": "Customers",
   "intro": "Deactivate an account for a policy violation; it can no longer sign in or order. Reactivate when it is resolved. Their past orders stay with the stalls.",
+  "noun": "customers",
   "search": {
     "label": "Search customers",
     "placeholder": "Name, email or phone",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "All",
     "active": "Active",
-    "inactive": "Deactivated",
-    "joinedThisMonth": "Joined this month"
+    "inactive": "Deactivated"
   },
   "status": {
     "active": "Active",
     "inactive": "Deactivated"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "Customer",
     "joined": "Joined",
@@ -35,12 +36,20 @@
   "deactivate": {
     "title": "Deactivate {{name}}?",
     "text": "They are signed out everywhere and cannot sign in or place orders. Orders already placed stay with the stalls.",
-    "reason": "Reason, kept on the account",
+    "reason": "Reason (kept in this toast only, not saved on the account)",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Keep active",
     "confirm": "Deactivate account"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "{{name}} deactivated.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} can sign in again."
   }
 }

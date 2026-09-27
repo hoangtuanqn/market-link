@@ -1,5 +1,6 @@
 {
   "allOrders": "订单",
+  "noun": "order",
   "kicker": "下单于 {{placed}} · 截单于 {{cutoff}}",
   "missing": {
     "title": "这份订单已经不在了",
@@ -13,6 +14,7 @@
     "title": "订单商品",
     "note": "价格是下单时摊位的标价。没有任何款项经过 MarketLink；顾客在摊位当面付款。"
   },
+  "declined": "Declined: {{reason}}",
   "history": {
     "title": "经历过的全部状态",
     "by": "{{time}} · {{by}}",
@@ -21,22 +23,14 @@
   "stall": {
     "title": "摊位",
     "stall": "摊位",
-    "contact": "联系人",
-    "approval": "审核状态",
     "record": "摊位档案"
-  },
-  "approval": {
-    "pending": "待审核",
-    "approved": "已通过",
-    "rejected": "已拒绝",
-    "suspended": "已停用"
   },
   "customer": {
     "title": "顾客",
     "name": "姓名",
     "phone": "电话",
-    "orders": "在 MarketLink 的订单数",
-    "record": "顾客档案"
+    "record": "顾客档案",
+    "hidden": "Contact details are only shown to the order's own stall."
   },
   "pickup": {
     "title": "取货",

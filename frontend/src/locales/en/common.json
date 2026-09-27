@@ -271,7 +271,15 @@
     "cancel": "Cancel order",
     "reviewed": "You reviewed this order",
     "review": "Review stall & products",
-    "reorder": "Reorder"
+    "reorder": "Reorder",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "Placed",
@@ -534,9 +542,35 @@
       "intro": "New Farmer applications waiting for you to review."
     }
   },
-  "comingSoon": {
-    "title": "This page is not open yet",
-    "text": "We are still building it. Everything else in the menu works as usual."
+  "assistant": {
+    "open": "Ask the assistant",
+    "close": "Close the assistant",
+    "fullPage": "Open full page",
+    "note": "Answers come from MarketLink's own data.",
+    "newChat": "New conversation",
+    "loading": "Loading your conversation…",
+    "loadErrorTitle": "We could not load your earlier messages",
+    "loadErrorText": "Check your connection and try again. You can still ask a new question.",
+    "emptyTitle": "Ask me about MarketLink",
+    "emptyText": "I can find produce across the markets, give opening hours and pickup times, or explain how ordering works.",
+    "thinking": "Looking it up…",
+    "sendError": "The assistant could not answer. Your message is back in the box, send it again.",
+    "message": "Message",
+    "placeholder": "Ask about a product, a market or how to order",
+    "send": "Send",
+    "sending": "Sending…",
+    "aiTools": "AI · {{tools}}",
+    "result": {
+      "product": "Product",
+      "market": "Market",
+      "farmer": "Stall"
+    },
+    "suggest": {
+      "find": "Where can I buy tomatoes this weekend?",
+      "hours": "When is Bến Thành market open?",
+      "stalls": "Which stalls are at Thảo Điền on Saturday?",
+      "cancel": "How do I cancel an order?"
+    }
   },
   "tour": {
     "next": "Next",

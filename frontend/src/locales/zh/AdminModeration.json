@@ -10,13 +10,8 @@
   },
   "reviewFilterLabel": "筛选评价",
   "reviewFilter": {
-    "reported": "被举报",
     "lowRated": "1 或 2 星",
     "newest": "最新"
-  },
-  "report": {
-    "title": "{{by}} 于 {{date}} 举报：「{{quote}}」",
-    "text": "隐藏后它会从商品页和摊位页消失。顾客会知道原因。"
   },
   "recentlyListed": "最近上架的商品",
   "search": {
@@ -37,11 +32,9 @@
     "view": "查看",
     "hideReview": "隐藏评价",
     "hideListing": "隐藏商品",
-    "keepVisible": "保持显示",
     "customerAccount": "顾客账号",
     "unhide": "取消隐藏",
-    "unhidden": "内容已重新显示。",
-    "dismissed": "已忽略举报。评价继续显示。"
+    "unhidden": "内容已重新显示。"
   },
   "hide": {
     "title": {
@@ -71,7 +64,8 @@
     "text": "被举报的商品和评价会来到这里，供你先读一遍再决定是否隐藏。"
   },
   "error": {
-    "noun": "商品列表"
+    "noun": "商品列表",
+    "reviewsNoun": "reviews"
   },
   "messages": {
     "boundary": "你只能查看被举报的消息，以及前后各最多五条用于了解上下文。对话的其他内容不对管理员开放。",

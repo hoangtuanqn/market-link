@@ -33,6 +33,13 @@
     "label": "이번 주 판매 가능 수량",
     "error": "수량은 0 이상이어야 해요. 남은 게 없으면 품절을 사용하세요."
   },
+  "shelfLife": {
+    "label": "Shelf life (days)",
+    "hint": "This category is usually {{min}}–{{max}} days.",
+    "error": "Enter a whole number of 1 or more.",
+    "warningTitle": "Outside the usual range",
+    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+  },
   "desc": {
     "label": "설명",
     "hint": "상품 페이지에 표시돼요. 어떻게 키웠고 어떻게 보관하는지 적어 주세요."

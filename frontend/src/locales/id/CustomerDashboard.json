@@ -3,6 +3,12 @@
   "greeting_other": "Halo {{name}}, {{count}} pengambilan akhir pekan ini",
   "intro": "Satu pesanan masih menunggu konfirmasi lapak. Selebihnya berjalan lancar.",
   "browseMarkets": "Lihat pasar akhir pekan ini",
+  "noun": {
+    "orders": "orders",
+    "favorites": "favorites",
+    "notifications": "notifications",
+    "products": "products"
+  },
   "cards": {
     "upcoming_one": "{{count}} pesanan mendatang",
     "upcoming_other": "{{count}} pesanan mendatang",
@@ -30,5 +36,15 @@
   "nextPickups": "Pengambilan berikutnya",
   "allOrders": "Semua pesanan saya",
   "newFromFavorites": "Baru minggu ini dari lapak favorit Anda",
-  "favorites": "Favorit"
+  "favorites": "Favorit",
+  "empty": {
+    "pickups": {
+      "title": "No pickups coming up",
+      "text": "Orders that are placed, accepted or ready for pickup show up here."
+    },
+    "favorites": {
+      "title": "No favorite products yet",
+      "text": "Save products you like and new stock from them shows up here."
+    }
+  }
 }

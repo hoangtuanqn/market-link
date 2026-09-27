@@ -4,6 +4,7 @@ import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.report.resources.AdminDashboardResource;
 import com.techx.intervue.modules.report.resources.RevenueByMarketResource;
 import com.techx.intervue.modules.report.resources.TopFarmerResource;
+import com.techx.intervue.modules.report.resources.TopProductResource;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
 import java.sql.Types;
@@ -67,6 +68,7 @@ public class AdminReportRepository {
             """
             WHERE (:marketId IS NULL OR o.market_id = :marketId)
               AND (:status IS NULL OR o.status = :status)
+              AND (:customerId IS NULL OR o.customer_id = :customerId)
             """
                     + OrderRows.RANGE_FILTER;
 
@@ -81,6 +83,22 @@ public class AdminReportRepository {
 
     private static final String ORDERS_COUNT_SQL =
             "SELECT COUNT(*) " + OrderRows.LIST_FROM + ORDERS_WHERE;
+
+    /** {@code GET /admin/reports/top-products} (FR-075): every stall, completed orders only. */
+    public static final String TOP_PRODUCTS_SQL =
+            """
+            SELECT oi.product_id, oi.product_name AS name, f.stall_name, oi.unit,
+                   MAX(oi.unit_price) AS unit_price, SUM(oi.quantity) AS quantity_sold, SUM(oi.subtotal) AS revenue
+            FROM order_items oi
+            JOIN orders o ON o.id = oi.order_id
+            JOIN farmer_profiles f ON f.id = o.farmer_id
+            WHERE o.status = 'completed'
+              AND (:from IS NULL OR o.pickup_date >= :from)
+              AND (:to   IS NULL OR o.pickup_date <= :to)
+            GROUP BY oi.product_id, oi.product_name, f.stall_name, oi.unit
+            ORDER BY quantity_sold DESC, revenue DESC
+            LIMIT :limit
+            """;
 
     private final NamedParameterJdbcTemplate jdbc;
     private final OrderRows rows;
@@ -123,15 +141,37 @@ public class AdminReportRepository {
     }
 
     public PageResource<OrderListItemResource> orders(
-            LocalDate from, LocalDate to, Long marketId, String status, int page, int pageSize) {
+            LocalDate from,
+            LocalDate to,
+            Long marketId,
+            String status,
+            Long customerId,
+            int page,
+            int pageSize) {
         MapSqlParameterSource params =
                 FarmerReportRepository.range(from, to)
                         .addValue("marketId", marketId, Types.BIGINT)
                         .addValue("status", status, Types.VARCHAR)
+                        .addValue("customerId", customerId, Types.BIGINT)
                         .addValue("limit", pageSize)
                         .addValue("offset", (page - 1) * pageSize);
         List<OrderListItemResource> items = jdbc.query(ORDERS_SQL, params, rows::map);
         Long total = jdbc.queryForObject(ORDERS_COUNT_SQL, params, Long.class);
         return new PageResource<>(items, page, pageSize, total == null ? 0 : total);
+    }
+
+    public List<TopProductResource> topProducts(LocalDate from, LocalDate to, int limit) {
+        return jdbc.query(
+                TOP_PRODUCTS_SQL,
+                FarmerReportRepository.range(from, to).addValue("limit", limit),
+                (rs, i) ->
+                        new TopProductResource(
+                                rs.getLong("product_id"),
+                                rs.getString("name"),
+                                rs.getString("stall_name"),
+                                rs.getString("unit"),
+                                rs.getBigDecimal("unit_price"),
+                                rs.getLong("quantity_sold"),
+                                rs.getBigDecimal("revenue")));
     }
 }

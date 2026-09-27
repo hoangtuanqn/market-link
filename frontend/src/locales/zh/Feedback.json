@@ -7,21 +7,12 @@
     "suggestion": "建议：有地方可以做得更好",
     "query": "提问：我想得到解答"
   },
-  "pageLabel": "哪个页面？",
-  "pages": {
-    "cart": "购物车",
-    "product": "商品页",
-    "map": "市集地图",
-    "orders": "我的订单",
-    "farmer": "农户后台",
-    "other": "其他"
-  },
   "messageLabel": "内容",
   "messagePlaceholder": "你原本期待什么，实际发生了什么？",
   "messageHint": "如果是问题报告，请补充你的手机或浏览器型号。",
-  "emailLabel": "接收回复的邮箱",
-  "emailHint": "可不填。登录后会自动填入。",
   "submit": "发送反馈",
+  "sendFailed": "Could not send. Try again.",
+  "tooMany": "Too many messages sent recently. Try again in a while.",
   "sent": {
     "title": "已发送",
     "bug": "谢谢。你的问题报告已送到团队。",

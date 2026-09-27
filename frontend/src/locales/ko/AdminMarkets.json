@@ -1,7 +1,9 @@
 {
   "title": "장터",
   "intro": "장터마다 이름, 주소, 여는 요일, 시간, 지도 좌표를 관리합니다. 장터를 지우면 고객에게는 보이지 않지만 기록은 남습니다.",
+  "caption_one": "{{count}} active market",
   "caption_other": "운영 중인 장터 {{count}}곳",
+  "stalls_one": "{{count}} stall",
   "stalls_other": "{{count}}개 가게",
   "col": {
     "market": "장터",
@@ -28,6 +30,7 @@
   },
   "remove": {
     "title": "{{name}}을(를) 삭제할까요?",
+    "text_one": "{{count}} stall sells here. The market disappears from customer pages and the stall is told. Orders already placed for it continue.",
     "text_other": "{{count}}개 가게가 여기서 팝니다. 장터는 고객 페이지에서 사라지고 가게들에는 알림이 갑니다. 이미 들어온 주문은 그대로 진행됩니다.",
     "keep": "장터 유지",
     "confirm": "장터 삭제"

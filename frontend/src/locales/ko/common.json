@@ -69,6 +69,7 @@
     "tryAgain": "다시 시도",
     "noThreadsTitle": "아직 대화가 없습니다",
     "noThreadsText": "가게 페이지에서 메시지를 보내 이번 주 농산물에 대해 물어보세요.",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "읽지 않은 메시지 {{count}}개",
     "sendFailed": "메시지를 보내지 못했습니다. 다시 시도하세요.",
     "photoFailed": "사진을 보내지 못했습니다. 5 MB 이하의 JPEG, PNG, WebP를 선택하세요.",
@@ -112,6 +113,7 @@
       "other": "기타"
     },
     "reportNote": "자세히 알려 주세요 (선택)",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "{{count}}자 남음",
     "chooseReason": "신고하려면 이유를 선택하세요.",
     "report": "신고",
@@ -198,6 +200,7 @@
     "openMenu": "메뉴 열기",
     "search": "검색",
     "seeAll": "모두 보기",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "메시지, 읽지 않음 {{count}}"
   },
   "kpi": {
@@ -268,7 +271,15 @@
     "cancel": "주문 취소",
     "reviewed": "이 주문에 리뷰를 남겼어요",
     "review": "매대 및 상품 리뷰하기",
-    "reorder": "다시 주문"
+    "reorder": "다시 주문",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "주문됨",
@@ -452,6 +463,8 @@
     "photoAlt": "{{n}}번째 신청의 사진"
   },
   "notify": {
+    "notificationsEmpty": "아직 알림이 없습니다.",
+    "notificationsError": "알림을 불러오지 못했습니다.",
     "open": "열기",
     "prompt": {
       "title": "알림 켜기",
@@ -527,13 +540,37 @@
     "admin": {
       "title": "알림",
       "intro": "검토를 기다리는 새 Farmer 신청입니다."
-    },
-    "notificationsEmpty": "아직 알림이 없습니다.",
-    "notificationsError": "알림을 불러오지 못했습니다."
+    }
   },
-  "comingSoon": {
-    "title": "이 페이지는 아직 열리지 않았습니다",
-    "text": "아직 준비 중입니다. 메뉴의 다른 기능은 평소처럼 사용할 수 있습니다."
+  "assistant": {
+    "open": "어시스턴트에게 묻기",
+    "close": "어시스턴트 닫기",
+    "fullPage": "전체 페이지로 열기",
+    "note": "답변은 MarketLink 자체 데이터를 기반으로 합니다.",
+    "newChat": "새 대화",
+    "loading": "대화를 불러오는 중…",
+    "loadErrorTitle": "이전 메시지를 불러오지 못했습니다",
+    "loadErrorText": "연결을 확인하고 다시 시도하세요. 새 질문은 계속 할 수 있습니다.",
+    "emptyTitle": "MarketLink에 대해 물어보세요",
+    "emptyText": "여러 시장의 농산물을 찾고, 영업시간과 픽업 시간을 알려 드리거나 주문 방법을 설명해 드립니다.",
+    "thinking": "찾아보는 중…",
+    "sendError": "어시스턴트가 답하지 못했습니다. 메시지를 입력창에 되돌려 두었으니 다시 보내 주세요.",
+    "message": "메시지",
+    "placeholder": "상품, 시장 또는 주문 방법에 대해 질문하세요",
+    "send": "보내기",
+    "sending": "보내는 중…",
+    "aiTools": "AI · {{tools}}",
+    "result": {
+      "product": "상품",
+      "market": "시장",
+      "farmer": "가판대"
+    },
+    "suggest": {
+      "find": "이번 주말 토마토는 어디서 살 수 있나요?",
+      "hours": "Bến Thành 시장은 몇 시에 여나요?",
+      "stalls": "토요일 Thảo Điền 시장에는 어떤 가판대가 있나요?",
+      "cancel": "주문은 어떻게 취소하나요?"
+    }
   },
   "tour": {
     "next": "다음",

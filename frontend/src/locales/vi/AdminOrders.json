@@ -1,58 +1,34 @@
 {
   "title": "Đơn hàng",
-  "intro": "Mọi đơn hàng trên MarketLink, qua cả bốn chợ. Quản trị viên chỉ đọc; chỉ sạp mới chuyển đơn qua các trạng thái.",
-  "days_one": "{{count}} ngày",
-  "days_other": "{{count}} ngày",
-  "export": {
-    "button": "Xuất dữ liệu kỳ này",
-    "title": "Đã bắt đầu xuất",
-    "text": "File CSV lấy đúng kỳ và bộ lọc đang hiển thị."
-  },
-  "kpi": {
-    "placed": "Đơn đã đặt",
-    "placedNote": "qua {{count}} chợ",
-    "completed": "Đã hoàn tất",
-    "declined": "Sạp từ chối",
-    "cancelled": "Khách tự huỷ",
-    "cancelledNote": "đều trước giờ chốt",
-    "share": "chiếm {{pct}}% của kỳ"
-  },
-  "perDay": {
-    "title": "Số đơn đặt mỗi ngày",
-    "note": "{{now}} so với {{prev}}, cùng 30 ngày.",
-    "caption": "Số đơn đặt mỗi ngày của {{now}} so với {{prev}}",
-    "axis": "Ngày trong tháng"
-  },
-  "byStatus": {
-    "title": "Đơn kết thúc ở đâu",
-    "note": "Mỗi trạng thái có chữ và ký hiệu riêng, nên phân biệt được mà không cần nhìn độ dài thanh."
-  },
-  "byMarket": {
-    "title": "Theo chợ"
-  },
+  "intro": "Mọi đơn hàng trên MarketLink, ở tất cả các chợ. Admin chỉ xem; chỉ sạp mới chuyển trạng thái đơn hàng.",
+  "noun": "đơn hàng",
   "list": {
-    "title": "Danh sách đơn",
-    "inPeriod": "{{count}} đơn trong {{month}}",
-    "filterLabel": "Lọc đơn theo trạng thái",
+    "inPeriod": "{{count}} đơn hàng",
+    "filterLabel": "Lọc đơn hàng theo trạng thái",
     "market": "Chợ",
-    "allMarkets": "Tất cả các chợ",
-    "showing": "Đang xem {{from}}–{{to}} trong {{total}}"
+    "allMarkets": "Tất cả chợ",
+    "showing": "Hiện {{from}}–{{to}} trong {{total}}"
   },
   "filter": {
     "all": "Tất cả",
-    "completed": "Đã hoàn tất",
-    "open": "Đang mở",
-    "declined": "Bị từ chối",
+    "placed": "Đã đặt",
+    "accepted": "Đã nhận",
+    "ready": "Sẵn sàng",
+    "completed": "Hoàn tất",
+    "declined": "Từ chối",
     "cancelled": "Đã huỷ"
   },
-  "customerNo": "Khách hàng #{{n}}",
+  "empty": {
+    "title": "Không có đơn hàng",
+    "text": "Chưa có đơn hàng nào khớp bộ lọc này."
+  },
   "col": {
-    "order": "Đơn hàng",
+    "order": "Đơn",
     "customer": "Khách hàng",
     "stall": "Sạp",
     "market": "Chợ",
     "pickup": "Nhận hàng",
-    "total": "Tổng tiền",
+    "total": "Tổng",
     "status": "Trạng thái"
   }
 }

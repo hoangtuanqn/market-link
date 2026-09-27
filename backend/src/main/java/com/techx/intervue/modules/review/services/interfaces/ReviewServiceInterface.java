@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.review.services.interfaces;
 
 import com.techx.intervue.modules.review.requests.CreateReviewRequest;
+import com.techx.intervue.modules.review.resources.AdminReviewResource;
 import com.techx.intervue.modules.review.resources.ReviewResource;
 import com.techx.intervue.modules.review.resources.ReviewResponseResource;
 import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
@@ -28,4 +29,17 @@ public interface ReviewServiceInterface {
 
     /** FR-074: hide or unhide a review and recompute the affected rating cache. */
     void adminSetStatus(long reviewId, boolean hidden);
+
+    /**
+     * FR-074: the admin moderation queue — {@code status} is {@code "visible"}, {@code "hidden"} or
+     * null (any); {@code maxRating} and {@code customerId} are optional filters.
+     */
+    PageResource<AdminReviewResource> adminList(
+            String status, Integer maxRating, Long customerId, int page, int pageSize);
+
+    /**
+     * FR-053: the stall owner's own reviews — of the stall itself and of every one of its products,
+     * visible only. 403 when the account has no stall.
+     */
+    PageResource<ReviewResource> forStallOwner(long farmerUserId, int page, int pageSize);
 }

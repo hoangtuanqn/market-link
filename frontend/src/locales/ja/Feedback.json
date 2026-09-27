@@ -7,21 +7,12 @@
     "suggestion": "提案：もっとよくできそうなところがある",
     "query": "質問：答えが知りたい"
   },
-  "pageLabel": "どのページですか",
-  "pages": {
-    "cart": "カート",
-    "product": "商品ページ",
-    "map": "マーケットの地図",
-    "orders": "自分の注文",
-    "farmer": "Farmer ダッシュボード",
-    "other": "その他"
-  },
   "messageLabel": "内容",
   "messagePlaceholder": "期待していたことと、実際に起きたことを書いてください",
   "messageHint": "不具合の場合は、お使いの端末やブラウザも書いてください。",
-  "emailLabel": "返信先のメールアドレス",
-  "emailHint": "任意です。ログインしていると自動で入ります。",
   "submit": "フィードバックを送る",
+  "sendFailed": "Could not send. Try again.",
+  "tooMany": "Too many messages sent recently. Try again in a while.",
   "sent": {
     "title": "送信しました",
     "bug": "ありがとうございます。不具合の報告はチームに届きました。",

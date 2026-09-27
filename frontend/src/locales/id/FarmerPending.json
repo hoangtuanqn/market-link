@@ -1,13 +1,16 @@
 {
+  "error": {
+    "noun": "your registration"
+  },
   "overline": {
     "suspended": "{{stall}} · ditangguhkan {{date}}",
     "registered": "{{stall}} · terdaftar {{date}}"
   },
   "title": {
     "pending": "Lapak Anda menunggu persetujuan",
+    "rejected": "Your stall registration was declined",
     "suspended": "Lapak Anda ditangguhkan"
   },
-  "previewToggle": "Pratinjau: lapak ditangguhkan",
   "reviewing": {
     "title": "Admin sedang meninjau pendaftaran Anda.",
     "text": "Anda akan menerima notifikasi dan email saat disetujui. Sampai saat itu lapak dan produk Anda tidak terlihat oleh pelanggan."
@@ -25,9 +28,18 @@
     "email": "Email",
     "market": "Pasar yang diajukan"
   },
+  "rejected": {
+    "bannerTitle": "This registration was not approved.",
+    "noReason": "No reason was given.",
+    "again": {
+      "title": "Apply again",
+      "text": "You can send a new registration with updated details or evidence.",
+      "link": "Apply again"
+    }
+  },
   "suspended": {
-    "title": "Lapak Anda ditangguhkan pada {{date}}.",
-    "text": "Alasan dari admin: {{reason}} Produk Anda disembunyikan dan Anda tidak dapat menerima pesanan baru."
+    "bannerTitle": "Your stall is suspended.",
+    "noReason": "No reason was given."
   },
   "running": {
     "title": "Pesanan yang sudah masuk tetap berjalan",

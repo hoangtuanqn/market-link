@@ -14,9 +14,8 @@
     "reason": "お客さまに表示される理由"
   },
   "history": {
-    "before": "{{cutoff}} より前",
-    "cancelled": "お客さまがキャンセル",
-    "title": "履歴"
+    "title": "履歴",
+    "by": "{{time}} · by {{by}}"
   },
   "missing": {
     "title": "この注文はもうありません",
@@ -24,10 +23,10 @@
     "back": "注文一覧"
   },
   "item": "商品",
+  "noun": "order",
   "col": {
     "product": "商品",
     "requested": "注文数",
-    "left": "この注文後の残り",
     "amount": "金額"
   },
   "crumb": "注文",
@@ -50,25 +49,19 @@
   },
   "items": {
     "title": "商品",
-    "note": "表示の在庫は、この注文とほかの注文を差し引いた残りです。お断りすると予約分の在庫は戻ります（D-02）。"
+    "total": "Total"
   },
   "note": "お客さまからのメモ",
   "quote": "「{{text}}」",
   "customer": {
     "title": "お客さま",
     "name": "名前",
-    "tier": "ランク",
     "phone": "電話",
-    "ordersWithYou": "あなたのお店での注文",
-    "orders_one": "{{count}} 件",
-    "orders_other": "{{count}} 件",
-    "withCollected_one": "{{orders}}、うち受け取り済み {{count}} 件",
-    "withCollected_other": "{{orders}}、うち受け取り済み {{count}} 件"
+    "email": "Email"
   },
   "pickup": {
     "title": "受け取り枠",
     "market": "マーケット",
-    "marketStall": "{{market}}、区画 {{code}}",
     "slot": "枠",
     "pay": "受け取り時に支払い"
   },

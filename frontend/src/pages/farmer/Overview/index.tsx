@@ -1,27 +1,25 @@
 import { useState } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
+import OrderApi, { type OrderDetailDto, type OrderListItemDto } from '@/api-requests/order.requests';
+import ProductApi from '@/api-requests/product.requests';
+import { FarmerReportApi } from '@/api-requests/report.requests';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
+import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Banner } from '@/components/ui/banner';
 import { BarList } from '@/components/ui/bar-list';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { Kpi } from '@/components/ui/kpi';
-import { Pagination } from '@/components/ui/pagination';
-import { StockList } from '@/components/ui/stock-list';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
-import OrderStatusBadge from '@/components/OrderStatusBadge';
-import { marketName } from '@/data/catalog';
-import {
-  bestSellers,
-  farmerOrderTotal,
-  farmerOrders,
-  overviewSpark,
-  stockForSaturday,
-  type FarmerOrderType,
-} from '@/data/farmer';
-import { dayName, formatClock, formatDayMonth, units, vnd, weekday } from '@/lib/format';
+import useRequest from '@/hooks/useRequest';
+import useSession from '@/hooks/useSession';
+import { pickupLabel, vnd } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import LiveClock from './LiveClock';
 
@@ -31,64 +29,98 @@ const TABS = [
   { id: 'ready', label: 'tabs.ready', status: 'ready' as OrderStatus },
   { id: 'done', label: 'tabs.done', status: 'completed' as OrderStatus },
 ] as const;
+type TabId = (typeof TABS)[number]['id'];
 
-const DECLINE_REASONS = [
-  'decline.reasons.stock',
-  'decline.reasons.day',
-  'decline.reasons.time',
-  'decline.reasons.other',
-] as const;
+const DECLINE_REASONS = ['stock', 'day', 'time', 'other'] as const;
+type DeclineReason = (typeof DECLINE_REASONS)[number];
 
-const SAT = new Date(2026, 8, 26);
-const SUN = new Date(2026, 8, 27);
-const dayDate = (d: Date) => `${weekday(d)} ${formatDayMonth(d)}`;
+const STOCK_ROWS = 6;
+const BEST_SELLER_LIMIT = 5;
 
-/** FR-065 FR-068 FR-069 — Farmer dashboard: KPIs, incoming orders, stock for Saturday and best sellers. */
+/** FR-065 FR-068 FR-069 — Farmer dashboard: KPIs, incoming orders, current stock and best sellers. */
 const FarmerOverviewPage = () => {
-  const { t, i18n } = useTranslation('FarmerOverview');
-  const [tab, setTab] = useState<'new' | 'acc' | 'ready' | 'done'>('new');
-  const [declineCode, setDeclineCode] = useState<string | null>(null);
-  const [reason, setReason] = useState<string>(DECLINE_REASONS[0]);
+  const { t } = useTranslation('FarmerOverview');
+  const { t: tc } = useTranslation();
+  const { user } = useSession();
+  const [tab, setTab] = useState<TabId>('new');
+  const [declineOrder, setDeclineOrder] = useState<{ orderId: number; orderCode: string } | null>(null);
+  const [reason, setReason] = useState<DeclineReason>(DECLINE_REASONS[0]);
+  const [busyId, setBusyId] = useState<number | null>(null);
 
-  const by = (status: OrderStatus) => farmerOrders.filter((o) => o.status === status);
-  const awaiting = by('placed');
+  const { state: kpiLoad, retry: retryKpi } = useRequest('farmer-dash', () => FarmerReportApi.dashboard());
+  const activeTab = TABS.find((x) => x.id === tab)!;
+  const {
+    state: ordersLoad,
+    retry: retryOrders,
+    mutate: mutateOrders,
+  } = useRequest(`farmer-overview-orders:${tab}`, () =>
+    OrderApi.farmerList({ status: activeTab.status, pageSize: 10 }),
+  );
+  const { state: stockLoad, retry: retryStock } = useRequest('farmer-my-products', () => ProductApi.mine());
+  const { state: bestLoad, retry: retryBest } = useRequest('farmer-best-sellers', () =>
+    FarmerReportApi.bestSellers({ limit: BEST_SELLER_LIMIT }),
+  );
 
-  const columns: TableColumn<FarmerOrderType>[] = [
-    { key: 'code', label: t('col.order') },
+  const runAction = async (id: number, action: () => Promise<OrderDetailDto>, successText: string) => {
+    setBusyId(id);
+    try {
+      await action();
+      mutateOrders((current) => ({
+        ...current,
+        items: current.items.filter((r) => r.orderId !== id),
+        total: Math.max(0, current.total - 1),
+      }));
+      Notification.success({ text: successText });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const columns: TableColumn<OrderListItemDto>[] = [
     {
-      key: 'who',
-      label: t('col.customer'),
-      render: (r) => (
-        <>
-          {r.who}
-          <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">{r.phone}</span>
-        </>
-      ),
+      key: 'code',
+      label: t('col.order'),
+      render: (r) => <Link to={`/farmer/orders/${r.orderId}`}>{r.orderCode}</Link>,
     },
-    { key: 'slot', label: t('col.pickup'), render: (r) => `${r.date} · ${r.slot}` },
-    { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.items.length },
-    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(farmerOrderTotal(r)) },
+    { key: 'who', label: t('col.customer'), render: (r) => r.customerName },
+    {
+      key: 'slot',
+      label: t('col.pickup'),
+      render: (r) => pickupLabel(r.pickupDate, `${r.pickupStart}–${r.pickupEnd}`),
+    },
+    { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
     { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
       label: '',
       align: 'actions',
       render: (r) => {
+        const busy = busyId === r.orderId;
         if (r.status === 'placed')
           return (
             <div className="flex justify-end gap-2">
               <Button
                 size="sm"
+                disabled={busy}
                 onClick={() =>
-                  Notification.success({
-                    title: t('toast.acceptedTitle'),
-                    text: t('toast.acceptedText', { code: r.code, who: r.who }),
-                  })
+                  void runAction(
+                    r.orderId,
+                    () => OrderApi.accept(r.orderId),
+                    t('toast.acceptedText', { code: r.orderCode, who: r.customerName }),
+                  )
                 }
               >
                 {t('actions.accept')}
               </Button>
-              <Button variant="danger" size="sm" onClick={() => setDeclineCode(r.code)}>
+              <Button
+                variant="danger"
+                size="sm"
+                disabled={busy}
+                onClick={() => setDeclineOrder({ orderId: r.orderId, orderCode: r.orderCode })}
+              >
                 {t('actions.decline')}
               </Button>
             </div>
@@ -98,8 +130,13 @@ const FarmerOverviewPage = () => {
             <Button
               variant="secondary"
               size="sm"
+              disabled={busy}
               onClick={() =>
-                Notification.success({ title: t('toast.readyTitle'), text: t('toast.readyText', { code: r.code }) })
+                void runAction(
+                  r.orderId,
+                  () => OrderApi.markReady(r.orderId),
+                  t('toast.readyText', { code: r.orderCode }),
+                )
               }
             >
               {t('actions.ready')}
@@ -109,18 +146,20 @@ const FarmerOverviewPage = () => {
           return (
             <Button
               size="sm"
+              disabled={busy}
               onClick={() =>
-                Notification.success({
-                  title: t('toast.completedTitle'),
-                  text: t('toast.completedText', { code: r.code }),
-                })
+                void runAction(
+                  r.orderId,
+                  () => OrderApi.complete(r.orderId),
+                  t('toast.completedText', { code: r.orderCode }),
+                )
               }
             >
               {t('actions.complete')}
             </Button>
           );
         return (
-          <ButtonLink variant="ghost" size="sm" to={`/farmer/orders/${r.code.replace('#', '')}`}>
+          <ButtonLink variant="ghost" size="sm" to={`/farmer/orders/${r.orderId}`}>
             {t('actions.view')}
           </ButtonLink>
         );
@@ -128,23 +167,20 @@ const FarmerOverviewPage = () => {
     },
   ];
 
-  const activeTab = TABS.find((x) => x.id === tab)!;
-  const rows = by(activeTab.status);
-  const captions: Record<typeof tab, string> = {
-    new: t('captions.new', { sat: dayDate(SAT), sun: dayDate(SUN) }),
-    acc: t('tabs.acc'),
-    ready: t('captions.ready'),
-    done: t('tabs.done'),
-  };
+  const dashboard = kpiLoad.kind === 'ready' ? kpiLoad.data : null;
+  const orders = ordersLoad.kind === 'ready' ? ordersLoad.data.items : [];
+  const stock =
+    stockLoad.kind === 'ready' ? [...stockLoad.data].sort((a, b) => a.stock - b.stock).slice(0, STOCK_ROWS) : [];
+  const best = bestLoad.kind === 'ready' ? bestLoad.data : [];
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <p className="text-overline text-ink-muted m-0">
-            <LiveClock /> · {t('overline', { market: marketName(1), day: dayDate(SAT) })}
+            <LiveClock />
           </p>
-          <h1 className="font-hand text-h1">{t('greeting', { name: 'Cô Tư' })}</h1>
+          <h1 className="font-hand text-h1">{t('greeting', { name: user?.fullName ?? '' })}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <ButtonLink variant="secondary" to="/farmer/stock">
@@ -154,56 +190,47 @@ const FarmerOverviewPage = () => {
         </div>
       </div>
 
-      <Banner variant="warning" title={t('banner.title', { count: 4, closing: 3, time: formatClock('19:00') })}>
-        {t('banner.text')}
-      </Banner>
+      {dashboard && dashboard.pendingOrders > 0 && (
+        <Banner variant="warning" title={t('banner.title', { count: dashboard.pendingOrders })}>
+          {t('banner.text')}
+        </Banner>
+      )}
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-        <Kpi
-          label={t('kpi.orders')}
-          value="128"
-          note={t('kpi.ordersNote', { count: 23 })}
-          delta={{ pct: 18.9, vs: t('kpi.vsAugust') }}
-          spark={overviewSpark.orders}
-          href="/farmer/history"
-          linkLabel={t('kpi.openHistory')}
-        />
-        <Kpi
-          label={t('tabs.new')}
-          value={awaiting.length}
-          note={
-            <Trans
-              t={t}
-              i18nKey="kpi.awaitingNote"
-              count={3}
-              values={{ time: formatClock('19:00'), date: formatDayMonth(new Date(2026, 8, 25)) }}
-              components={{ b: <b /> }}
+      {kpiLoad.kind === 'loading' ? (
+        <MarketCardSkeleton count={4} />
+      ) : kpiLoad.kind === 'error' ? (
+        <LoadError noun={t('kpi.noun')} onRetry={retryKpi} />
+      ) : (
+        dashboard && (
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+            <Kpi
+              label={t('kpi.orders')}
+              value={dashboard.totalOrders}
+              href="/farmer/history"
+              linkLabel={t('kpi.openHistory')}
             />
-          }
-          delta={{ pct: 33.3, good: false, vs: t('kpi.vsThursday') }}
-          highlight
-          href="/farmer/orders"
-          linkLabel={t('kpi.openIncoming')}
-        />
-        <Kpi
-          label={t('kpi.revenue')}
-          value={new Intl.NumberFormat(i18n.language).format(8_450_000)}
-          note={t('kpi.revenueNote')}
-          delta={{ pct: 21.4, vs: t('kpi.vsAugust') }}
-          spark={overviewSpark.revenue}
-          href="/farmer/history"
-          linkLabel={t('kpi.openHistory')}
-        />
-        <Kpi
-          label={t('kpi.best')}
-          value="Water spinach"
-          note={t('kpi.bestNote', { qty: units(64, 'bunch') })}
-          delta={{ pct: 11.2, vs: t('kpi.vsAugust') }}
-          href="/farmer/products"
-          linkLabel={t('kpi.openProducts')}
-        />
-      </div>
-      <p className="text-small text-ink-muted -mt-2">{t('kpi.note')}</p>
+            <Kpi
+              label={t('kpi.pending')}
+              value={dashboard.pendingOrders}
+              highlight
+              href="/farmer/orders"
+              linkLabel={t('kpi.openIncoming')}
+            />
+            <Kpi
+              label={t('kpi.revenue')}
+              value={vnd(dashboard.revenueTotal)}
+              href="/farmer/history"
+              linkLabel={t('kpi.openHistory')}
+            />
+            <Kpi
+              label={t('kpi.revenueMonth')}
+              value={vnd(dashboard.revenueThisMonth)}
+              href="/farmer/history"
+              linkLabel={t('kpi.openHistory')}
+            />
+          </div>
+        )
+      )}
 
       <section className="flex flex-col gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -215,35 +242,37 @@ const FarmerOverviewPage = () => {
         <Tabs
           label={t('incoming.title')}
           value={tab}
-          onChange={(id) => setTab(id as typeof tab)}
-          tabs={TABS.map((x) => ({
-            id: x.id,
-            label: t(x.label),
-            count: x.id === 'done' ? undefined : by(x.status).length,
-          }))}
+          onChange={(id) => setTab(id as TabId)}
+          tabs={TABS.map((x) => ({ id: x.id, label: t(x.label) }))}
         />
-        <Table
-          caption={captions[tab]}
-          columns={columns}
-          rows={rows}
-          rowClassName={(r) => (r.isNew ? '!bg-highlight' : undefined)}
-        />
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span className="text-small text-ink-muted">{t('incoming.note')}</span>
-          <Pagination page={1} pages={1} onChange={() => {}} />
-        </div>
+        {ordersLoad.kind === 'loading' ? (
+          <MarketCardSkeleton count={3} />
+        ) : ordersLoad.kind === 'error' ? (
+          <LoadError noun={t('incoming.noun')} onRetry={retryOrders} />
+        ) : orders.length ? (
+          <Table columns={columns} rows={orders} />
+        ) : (
+          <DataState title={t('incoming.empty.title')} text={t('incoming.empty.text')} />
+        )}
       </section>
 
       <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="flex flex-col gap-3 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-h3">{t('stock.title', { day: dayName(6, 'long') })}</h2>
+            <h2 className="text-h3">{t('stock.title')}</h2>
             <ButtonLink variant="ghost" size="sm" to="/farmer/stock">
               {t('stock.link')}
             </ButtonLink>
           </div>
-          <StockList rows={stockForSaturday} />
-          <p className="text-small text-ink-muted">{t('stock.note')}</p>
+          {stockLoad.kind === 'loading' ? (
+            <MarketCardSkeleton count={2} />
+          ) : stockLoad.kind === 'error' ? (
+            <LoadError noun={t('stock.noun')} onRetry={retryStock} />
+          ) : stock.length ? (
+            <BarList rows={stock.map((p) => ({ label: p.name, value: p.stock }))} />
+          ) : (
+            <DataState title={t('stock.empty.title')} text={t('stock.empty.text')} />
+          )}
         </Card>
         <Card className="flex flex-col gap-3 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -252,31 +281,39 @@ const FarmerOverviewPage = () => {
               {t('best.link')}
             </ButtonLink>
           </div>
-          <p className="text-small text-ink-muted -mt-1">{t('best.note')}</p>
-          <BarList rows={bestSellers} />
+          {bestLoad.kind === 'loading' ? (
+            <MarketCardSkeleton count={2} />
+          ) : bestLoad.kind === 'error' ? (
+            <LoadError noun={t('best.noun')} onRetry={retryBest} />
+          ) : best.length ? (
+            <BarList rows={best.map((b) => ({ label: b.name, value: b.quantitySold }))} />
+          ) : (
+            <DataState title={t('best.empty.title')} text={t('best.empty.text')} />
+          )}
         </Card>
       </section>
 
-      <p className="text-caption text-ink-muted">{t('protoNote')}</p>
-
       <Dialog
-        open={declineCode !== null}
-        title={t('decline.title', { code: declineCode ?? '' })}
+        open={declineOrder !== null}
+        title={t('decline.title', { code: declineOrder?.orderCode ?? '' })}
         tone="danger"
-        onClose={() => setDeclineCode(null)}
+        onClose={() => setDeclineOrder(null)}
         actions={
           <>
-            <Button variant="secondary" onClick={() => setDeclineCode(null)}>
+            <Button variant="secondary" onClick={() => setDeclineOrder(null)}>
               {t('decline.keep')}
             </Button>
             <Button
               variant="danger"
+              disabled={busyId !== null}
               onClick={() => {
-                Notification.success({
-                  title: t('toast.declinedTitle'),
-                  text: t('toast.declinedText', { code: declineCode }),
-                });
-                setDeclineCode(null);
+                if (declineOrder)
+                  void runAction(
+                    declineOrder.orderId,
+                    () => OrderApi.decline(declineOrder.orderId, t(`decline.reasons.${reason}`)),
+                    t('toast.declinedText', { code: declineOrder.orderCode }),
+                  );
+                setDeclineOrder(null);
               }}
             >
               {t('decline.confirm')}
@@ -291,12 +328,12 @@ const FarmerOverviewPage = () => {
         <select
           id="decline-reason"
           value={reason}
-          onChange={(e) => setReason(e.target.value)}
+          onChange={(e) => setReason(e.target.value as DeclineReason)}
           className="border-line-strong bg-surface-raised text-body mt-1 min-h-11 w-full rounded-sm border-[1.5px] px-3"
         >
           {DECLINE_REASONS.map((r) => (
             <option key={r} value={r}>
-              {t(r)}
+              {t(`decline.reasons.${r}`)}
             </option>
           ))}
         </select>

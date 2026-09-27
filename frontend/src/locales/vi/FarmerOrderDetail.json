@@ -14,9 +14,8 @@
     "reason": "Lý do khách sẽ thấy"
   },
   "history": {
-    "before": "Trước {{cutoff}}",
-    "cancelled": "Khách đã huỷ",
-    "title": "Lịch sử"
+    "title": "Lịch sử",
+    "by": "{{time}} · bởi {{by}}"
   },
   "missing": {
     "title": "Đơn này không còn ở đây",
@@ -24,10 +23,10 @@
     "back": "Đơn của tôi"
   },
   "item": "món",
+  "noun": "đơn hàng",
   "col": {
     "product": "Sản phẩm",
     "requested": "Số lượng đặt",
-    "left": "Còn lại sau đơn này",
     "amount": "Thành tiền"
   },
   "crumb": "Đơn hàng",
@@ -50,25 +49,19 @@
   },
   "items": {
     "title": "Món hàng",
-    "note": "Số hàng hiển thị là phần còn lại sau đơn này và các đơn đã đặt khác. Hàng đã giữ được trả lại nếu bạn từ chối (D-02)."
+    "total": "Tổng"
   },
   "note": "Ghi chú của khách",
   "quote": "“{{text}}”",
   "customer": {
     "title": "Khách hàng",
     "name": "Tên",
-    "tier": "Hạng",
     "phone": "Điện thoại",
-    "ordersWithYou": "Số đơn với bạn",
-    "orders_one": "{{count}} đơn",
-    "orders_other": "{{count}} đơn",
-    "withCollected_one": "{{orders}}, đã nhận {{count}}",
-    "withCollected_other": "{{orders}}, đã nhận {{count}}"
+    "email": "Email"
   },
   "pickup": {
     "title": "Khung giờ nhận hàng",
     "market": "Chợ",
-    "marketStall": "{{market}}, gian {{code}}",
     "slot": "Khung giờ",
     "pay": "Trả khi nhận hàng"
   },

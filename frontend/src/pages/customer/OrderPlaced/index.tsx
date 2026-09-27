@@ -1,46 +1,52 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link, Navigate, useLocation } from 'react-router';
+import OrderApi, { toOrder, type PlacedOrderDto } from '@/api-requests/order.requests';
 import OrderTicket from '@/components/OrderTicket';
 import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { farmerName, orders } from '@/data/customer';
-import { dayName, formatClock, formatDayMonth, formatTime } from '@/lib/format';
-import type { OrderType } from '@/types/order.types';
-
-const order2: OrderType = {
-  code: '#ML-0422',
-  farmerId: 2,
-  marketId: 2,
-  date: 'Sun 27/09/2026',
-  slot: '06:30–07:00',
-  status: 'placed',
-  cutoff: '18:30 26/09',
-  items: [{ productId: 3, qty: 2 }],
-  history: [['placed', '24/09/2026 09:12', 'You']],
-};
-/** The time the order was placed (demo) and each order's edit/cancel deadline. */
-const PLACED_AT = new Date(2026, 8, 24, 9, 12);
-const CUTOFFS = [
-  { time: '19:00', date: new Date(2026, 8, 25) },
-  { time: '18:30', date: new Date(2026, 8, 26) },
-];
+import { LoadError } from '@/components/ui/data-state';
+import useRequest from '@/hooks/useRequest';
+import { dayName, formatDayMonth, formatTime } from '@/lib/format';
 
 /** FR-031 FR-032 — confirmation after placing pre-orders; stock is already held (D-02). */
 const CustomerOrderPlacedPage = () => {
   const { t, i18n } = useTranslation('CustomerOrderPlaced');
-  // Created inside the component, not at the top level: a top-level find call would make the production build keep the whole sample-order array.
-  const order1: OrderType = {
-    ...orders.find((o) => o.code === '#ML-0421')!,
-    items: [
-      { productId: 1, qty: 2 },
-      { productId: 2, qty: 1 },
-    ],
-  };
-  const placedOrders = [order1, order2];
-  const list = (items: string[]) => new Intl.ListFormat(i18n.language, { type: 'conjunction' }).format(items);
-  const stalls = list(placedOrders.map((o) => farmerName(o.farmerId)));
-  const cutoffs = list(
-    CUTOFFS.map((c) => t('steps.cutoffAt', { time: formatClock(c.time), date: formatDayMonth(c.date) })),
+  const { t: tc } = useTranslation();
+  const { state: nav } = useLocation() as { state: { orders?: PlacedOrderDto[] } | null };
+  const placed = nav?.orders ?? [];
+  const { state } = useRequest(`placed:${placed.map((o) => o.orderId).join(',')}`, () =>
+    Promise.all(placed.map((o) => OrderApi.get(o.orderId))),
   );
+  // Fallback only: a freshly placed order always has a first status-history row. Captured once (not Date.now() at
+  // render time) so the render stays pure (react-hooks/purity).
+  const [openedAt] = useState(() => new Date());
+
+  if (!placed.length) return <Navigate to="/orders" replace />;
+
+  if (state.kind === 'loading') {
+    return (
+      <p role="status" className="text-ink-muted">
+        {tc('notify.list.loading')}
+      </p>
+    );
+  }
+
+  if (state.kind === 'error') {
+    return <LoadError noun={t('noun')} alt={<Link to="/orders">{t('seeOrders')}</Link>} />;
+  }
+
+  const placedOrders = state.data.map(toOrder);
+  const list = (items: string[]) => new Intl.ListFormat(i18n.language, { type: 'conjunction' }).format(items);
+  const stalls = list(placedOrders.map((o) => o.stallName ?? ''));
+  const cutoffs = list(
+    placedOrders.map((o) => {
+      const at = new Date(o.cutoff);
+      return t('steps.cutoffAt', { time: formatTime(at), date: formatDayMonth(at) });
+    }),
+  );
+  const firstChange = state.data[0].statusHistory[0]?.changedAt;
+  const PLACED_AT = firstChange ? new Date(firstChange) : openedAt;
 
   return (
     <div className="flex flex-col gap-6">

@@ -1,16 +1,17 @@
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReviewApi, { toReviewCard, type ReviewDto } from '@/api-requests/review.requests';
+import StallApi from '@/api-requests/stall.requests';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
-import { DataState } from '@/components/ui/data-state';
-import { farmer, reviewsForFarmer, type ReviewType } from '@/data/catalog';
-import { formatDate } from '@/lib/format';
+import { DataState, LoadError } from '@/components/ui/data-state';
+import MarketCardSkeleton from '@/components/MarketCardSkeleton';
+import useRequest from '@/hooks/useRequest';
+import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
-import { demoTierOf } from '@/data/tiers';
-
-const f = farmer(1)!;
 
 type Filter = 'all' | 'needs' | 'replied' | 'stall' | 'products';
 
@@ -23,26 +24,32 @@ const FILTERS: { id: Filter; countable?: boolean }[] = [
   { id: 'products' },
 ];
 
-/** Product rating shown next to the stall's own (not modeled in the demo data). */
-const PRODUCTS_RATING = 4.8;
-
-/** "21/09/2026" (how the seeded reviews spell it) → the reader's date format */
-const dmy = (s: string) => {
-  const [d, m, y] = s.split('/').map(Number);
-  return y ? formatDate(new Date(y, m - 1, d)) : s;
-};
+const NO_REVIEWS: ReviewDto[] = [];
 
 /** FR-053 — reviews of the stall and its products, with a reply the customer sees under theirs. */
 const FarmerReviewsPage = () => {
   const { t, i18n } = useTranslation('FarmerReviews');
+  const { t: tc } = useTranslation();
   const rating = (n: number) =>
     new Intl.NumberFormat(i18n.language, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n);
-  const [reviews, setReviews] = useState<ReviewType[]>(reviewsForFarmer(f.id));
+
+  const { state: profileLoad } = useRequest('farmer-profile', () => StallApi.myProfile());
+  const {
+    state: reviewsLoad,
+    retry: retryReviews,
+    mutate,
+  } = useRequest('my-reviews', () => ReviewApi.mine({ pageSize: 50 }));
+
   const [filter, setFilter] = useState<Filter>('all');
   const [openReply, setOpenReply] = useState<number | null>(null);
   const [drafts, setDrafts] = useState<Record<number, string>>({});
+  const [posting, setPosting] = useState<number | null>(null);
 
-  const matches = (r: ReviewType, id: Filter) => {
+  const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
+  const items = reviewsLoad.kind === 'ready' ? reviewsLoad.data.items : NO_REVIEWS;
+  const cards = items.map((r) => toReviewCard(r, profile?.stallName ?? ''));
+
+  const matches = (r: (typeof cards)[number], id: Filter) => {
     if (id === 'all') return true;
     if (id === 'needs') return !r.reply;
     if (id === 'replied') return !!r.reply;
@@ -50,20 +57,34 @@ const FarmerReviewsPage = () => {
     return r.targetType === 'product';
   };
   const counts: Partial<Record<Filter, number>> = {
-    all: reviews.length,
-    needs: reviews.filter((r) => matches(r, 'needs')).length,
-    replied: reviews.filter((r) => matches(r, 'replied')).length,
+    all: cards.length,
+    needs: cards.filter((r) => matches(r, 'needs')).length,
+    replied: cards.filter((r) => matches(r, 'replied')).length,
   };
-  const shown = reviews.filter((r) => matches(r, filter));
+  const shown = cards.filter((r) => matches(r, filter));
 
-  const postReply = (r: ReviewType) => {
-    const text = (drafts[r.id] ?? '').trim();
+  const postReply = async (reviewId: number, authorName: string) => {
+    const text = (drafts[reviewId] ?? '').trim();
     if (!text) return;
-    setReviews((prev) =>
-      prev.map((x) => (x.id === r.id ? { ...x, reply: { by: f.stall, date: '24/09/2026', text } } : x)),
-    );
-    setOpenReply(null);
-    Notification.success({ title: t('toast.postedTitle'), text: t('toast.postedText', { name: r.author }) });
+    setPosting(reviewId);
+    try {
+      const res = await ReviewApi.respond(reviewId, text);
+      mutate((page) => ({
+        ...page,
+        items: page.items.map((x) => (x.id === reviewId ? { ...x, response: res } : x)),
+      }));
+      setOpenReply(null);
+      Notification.success({ title: t('toast.postedTitle'), text: t('toast.postedText', { name: authorName }) });
+    } catch (error) {
+      if (isAxiosError(error) && error.response?.status === 409) {
+        Notification.info({ text: t('toast.alreadyReplied') });
+        retryReviews();
+      } else {
+        Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      }
+    } finally {
+      setPosting(null);
+    }
   };
 
   return (
@@ -73,16 +94,17 @@ const FarmerReviewsPage = () => {
           <h1 className="text-h1">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
-        <div className="flex flex-col items-end gap-1">
-          <Rating value={f.rating ?? 0} count={f.reviews} />
-          <span className="text-small text-ink-muted">
-            {t('summary', {
-              stall: rating(f.rating ?? 0),
-              products: rating(PRODUCTS_RATING),
-              reviews: t('reviewCount', { count: f.reviews ?? 0 }),
-            })}
-          </span>
-        </div>
+        {profile && (
+          <div className="flex flex-col items-end gap-1">
+            <Rating value={profile.ratingAvg} count={profile.ratingCount} />
+            <span className="text-small text-ink-muted">
+              {t('summary', {
+                stall: rating(profile.ratingAvg),
+                reviews: t('reviewCount', { count: profile.ratingCount }),
+              })}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -94,37 +116,27 @@ const FarmerReviewsPage = () => {
         ))}
       </div>
 
-      {shown.length ? (
+      {reviewsLoad.kind === 'loading' || profileLoad.kind === 'loading' ? (
+        <MarketCardSkeleton count={2} />
+      ) : reviewsLoad.kind === 'error' ? (
+        <LoadError noun={t('noun')} onRetry={retryReviews} />
+      ) : shown.length ? (
         <div className="flex flex-col gap-4">
           {shown.map((r) => (
             <ReviewCard
               key={r.id}
               author={r.author}
-              authorTier={demoTierOf(r.author)}
-              date={dmy(r.date)}
+              date={r.date}
               target={r.target}
               rating={r.rating}
               text={r.text}
-              reply={r.reply && { ...r.reply, date: dmy(r.reply.date) }}
+              reply={r.reply}
               fluid
               actions={
-                r.reply ? (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => Notification.success({ title: t('toast.editTitle'), text: t('toast.editText') })}
-                  >
-                    {t('action.editReply')}
+                r.reply || openReply === r.id ? undefined : (
+                  <Button variant="secondary" size="sm" onClick={() => setOpenReply(r.id)}>
+                    {t('action.reply')}
                   </Button>
-                ) : openReply === r.id ? undefined : (
-                  <>
-                    <Button variant="secondary" size="sm" onClick={() => setOpenReply(r.id)}>
-                      {t('action.reply')}
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      {t('action.report')}
-                    </Button>
-                  </>
                 )
               }
             >
@@ -132,7 +144,7 @@ const FarmerReviewsPage = () => {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    postReply(r);
+                    void postReply(r.id, r.author);
                   }}
                   className="mt-2 flex flex-col gap-2"
                 >
@@ -149,11 +161,11 @@ const FarmerReviewsPage = () => {
                     />
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Button type="submit" size="sm">
+                    <Button type="submit" size="sm" disabled={posting === r.id}>
                       {t('action.post')}
                     </Button>
-                    <Button type="button" variant="ghost" size="sm">
-                      {t('action.report')}
+                    <Button type="button" variant="ghost" size="sm" onClick={() => setOpenReply(null)}>
+                      {tc('actions.cancel')}
                     </Button>
                   </div>
                 </form>

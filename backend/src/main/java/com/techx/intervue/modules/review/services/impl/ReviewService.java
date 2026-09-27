@@ -24,6 +24,7 @@ import com.techx.intervue.modules.review.repositories.ReviewQueryRepository;
 import com.techx.intervue.modules.review.repositories.ReviewRepository;
 import com.techx.intervue.modules.review.repositories.ReviewResponseRepository;
 import com.techx.intervue.modules.review.requests.CreateReviewRequest;
+import com.techx.intervue.modules.review.resources.AdminReviewResource;
 import com.techx.intervue.modules.review.resources.ReviewResource;
 import com.techx.intervue.modules.review.resources.ReviewResponseResource;
 import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
@@ -34,6 +35,7 @@ import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.resources.PageResource;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Locale;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -88,6 +90,7 @@ public class ReviewService implements ReviewServiceInterface {
         review.setComment(blankToNull(request.comment()));
         review.setCreatedAt(Instant.now(clock));
 
+        String targetName;
         if (target == ReviewTarget.PRODUCT) {
             Long productId = request.productId();
             if (productId == null || !orderContains(order.getId(), productId)) {
@@ -98,6 +101,7 @@ public class ReviewService implements ReviewServiceInterface {
                 throw new AlreadyReviewedException();
             }
             review.setProductId(productId);
+            targetName = productRepository.findById(productId).map(p -> p.getName()).orElse(null);
         } else {
             Long farmerId = request.farmerId();
             if (farmerId == null || !Objects.equals(order.getFarmerId(), farmerId)) {
@@ -108,11 +112,13 @@ public class ReviewService implements ReviewServiceInterface {
                 throw new AlreadyReviewedException();
             }
             review.setFarmerId(farmerId);
+            targetName =
+                    farmerRepository.findById(farmerId).map(f -> f.getStallName()).orElse(null);
         }
 
         Review saved = reviewRepository.save(review);
         recompute(saved);
-        return toResource(saved, reviewer.getFullName(), null);
+        return toResource(saved, reviewer.getFullName(), null, targetName);
     }
 
     @Override
@@ -173,7 +179,45 @@ public class ReviewService implements ReviewServiceInterface {
         recompute(review);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<AdminReviewResource> adminList(
+            String status, Integer maxRating, Long customerId, int page, int pageSize) {
+        return queries.adminList(
+                parseStatusOrNull(status),
+                maxRating,
+                customerId,
+                safePage(page),
+                safeSize(pageSize));
+    }
+
+    /**
+     * R-06: {@code farmerId} always comes from the caller's own stall profile, never from the
+     * request — a Farmer only ever sees their own inbox.
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<ReviewResource> forStallOwner(long farmerUserId, int page, int pageSize) {
+        FarmerProfile stall =
+                farmerRepository
+                        .findByUserId(farmerUserId)
+                        .orElseThrow(() -> new AccessDeniedException("No stall for this account."));
+        return queries.forStallOwner(stall.getId(), safePage(page), safeSize(pageSize));
+    }
+
     // ---------- helpers ----------
+
+    /** Whitelisted: unknown text is a 400, never concatenated into SQL (R-04). */
+    private static String parseStatusOrNull(String status) {
+        if (status == null || status.isBlank()) {
+            return null;
+        }
+        String s = status.trim().toLowerCase(Locale.ROOT);
+        if (!s.equals("visible") && !s.equals("hidden")) {
+            throw new IllegalArgumentException("status must be 'visible' or 'hidden'.");
+        }
+        return s;
+    }
 
     /** D-13: admin accounts never review; the FE hiding the form is not enough. */
     private User requireReviewer(long userId) {
@@ -220,7 +264,7 @@ public class ReviewService implements ReviewServiceInterface {
     }
 
     private static ReviewResource toResource(
-            Review r, String customerName, ReviewResponseResource response) {
+            Review r, String customerName, ReviewResponseResource response, String targetName) {
         return new ReviewResource(
                 r.getId(),
                 r.getTargetType().value(),
@@ -229,7 +273,8 @@ public class ReviewService implements ReviewServiceInterface {
                 r.getRating(),
                 r.getComment(),
                 r.getCreatedAt() == null ? null : r.getCreatedAt().toString(),
-                response);
+                response,
+                targetName);
     }
 
     private static String blankToNull(String s) {

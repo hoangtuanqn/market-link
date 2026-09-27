@@ -3,6 +3,12 @@
   "greeting_other": "{{name}}さん、今週末の受け取りは{{count}}件です",
   "intro": "1件の注文がまだ店舗の確認待ちです。ほかはすべて順調です。",
   "browseMarkets": "今週末のマーケットを見る",
+  "noun": {
+    "orders": "orders",
+    "favorites": "favorites",
+    "notifications": "notifications",
+    "products": "products"
+  },
   "cards": {
     "upcoming_one": "今後の注文 {{count}}件",
     "upcoming_other": "今後の注文 {{count}}件",
@@ -30,5 +36,15 @@
   "nextPickups": "次の受け取り",
   "allOrders": "すべての注文",
   "newFromFavorites": "お気に入り店舗の今週の新商品",
-  "favorites": "お気に入り"
+  "favorites": "お気に入り",
+  "empty": {
+    "pickups": {
+      "title": "No pickups coming up",
+      "text": "Orders that are placed, accepted or ready for pickup show up here."
+    },
+    "favorites": {
+      "title": "No favorite products yet",
+      "text": "Save products you like and new stock from them shows up here."
+    }
+  }
 }

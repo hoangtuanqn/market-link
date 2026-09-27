@@ -492,7 +492,14 @@ public class OrderService implements OrderServiceInterface {
                         .orElseThrow(() -> new OrderNotFoundException(orderId));
         boolean isBuyer = row.customerId() == userId;
         boolean isOwningFarmer = row.farmerUserId() == userId;
-        if (!isBuyer && !isOwningFarmer) {
+        // D-04: an admin is read-only oversight — may read any order (with the customer block),
+        // never act on it.
+        boolean isAdmin =
+                userRepository
+                        .findById(userId)
+                        .map(u -> u.getRole() == RoleType.ADMIN)
+                        .orElse(false);
+        if (!isBuyer && !isOwningFarmer && !isAdmin) {
             throw new OrderNotYoursException();
         }
 
@@ -502,7 +509,7 @@ public class OrderService implements OrderServiceInterface {
         boolean canModify =
                 isBuyer && OrderLifecycle.canCustomerModify(row.status(), row.cutoffAt(), now);
         CustomerSummaryResource customer =
-                isOwningFarmer
+                (isOwningFarmer || isAdmin)
                         ? new CustomerSummaryResource(
                                 row.customerId(),
                                 row.customerFullName(),

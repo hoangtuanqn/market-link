@@ -1,5 +1,6 @@
 {
   "allOrders": "주문",
+  "noun": "order",
   "kicker": "{{placed}}에 접수 · {{cutoff}}에 마감",
   "missing": {
     "title": "이 주문은 더 이상 없습니다",
@@ -13,6 +14,7 @@
     "title": "주문 상품",
     "note": "가격은 주문 당시 가게가 매긴 금액입니다. MarketLink를 거치는 돈은 없고, 고객은 가게에서 직접 냅니다."
   },
+  "declined": "Declined: {{reason}}",
   "history": {
     "title": "거쳐온 모든 상태",
     "by": "{{time}} · {{by}}",
@@ -21,22 +23,14 @@
   "stall": {
     "title": "가게",
     "stall": "가게 이름",
-    "contact": "연락처",
-    "approval": "승인 상태",
     "record": "가게 기록"
-  },
-  "approval": {
-    "pending": "승인 대기",
-    "approved": "승인됨",
-    "rejected": "거절됨",
-    "suspended": "정지됨"
   },
   "customer": {
     "title": "고객",
     "name": "이름",
     "phone": "전화번호",
-    "orders": "MarketLink 주문 수",
-    "record": "고객 기록"
+    "record": "고객 기록",
+    "hidden": "Contact details are only shown to the order's own stall."
   },
   "pickup": {
     "title": "수령",

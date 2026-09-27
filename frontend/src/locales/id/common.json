@@ -69,6 +69,7 @@
     "tryAgain": "Coba lagi",
     "noThreadsTitle": "Belum ada percakapan",
     "noThreadsText": "Kirim pesan ke lapak dari halamannya untuk menanyakan hasil panen minggu ini.",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} pesan belum dibaca",
     "sendFailed": "Pesan Anda tidak terkirim. Coba lagi.",
     "photoFailed": "Foto tidak terkirim. Pilih JPEG, PNG, atau WebP di bawah 5 MB.",
@@ -112,6 +113,7 @@
       "other": "Alasan lain"
     },
     "reportNote": "Ceritakan lebih lanjut (opsional)",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "Sisa {{count}} karakter",
     "chooseReason": "Pilih alasan untuk mengirim laporan.",
     "report": "Laporkan",
@@ -198,6 +200,7 @@
     "openMenu": "Buka menu",
     "search": "Cari",
     "seeAll": "Lihat semua",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "Pesan, {{count}} belum dibaca"
   },
   "kpi": {
@@ -268,7 +271,15 @@
     "cancel": "Batalkan pesanan",
     "reviewed": "Anda sudah mengulas pesanan ini",
     "review": "Ulas lapak & produk",
-    "reorder": "Pesan lagi"
+    "reorder": "Pesan lagi",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "Dipesan",
@@ -452,6 +463,8 @@
     "photoAlt": "Foto dari lamaran ke-{{n}}"
   },
   "notify": {
+    "notificationsEmpty": "Belum ada notifikasi.",
+    "notificationsError": "Notifikasi tidak dapat dimuat.",
     "open": "Buka",
     "prompt": {
       "title": "Aktifkan notifikasi",
@@ -527,13 +540,37 @@
     "admin": {
       "title": "Notifikasi",
       "intro": "Pendaftaran Farmer baru yang menunggu Anda tinjau."
-    },
-    "notificationsEmpty": "Belum ada notifikasi.",
-    "notificationsError": "Notifikasi tidak dapat dimuat."
+    }
   },
-  "comingSoon": {
-    "title": "Halaman ini belum dibuka",
-    "text": "Kami masih membangunnya. Semua menu lainnya tetap berfungsi seperti biasa."
+  "assistant": {
+    "open": "Tanya asisten",
+    "close": "Tutup asisten",
+    "fullPage": "Buka halaman penuh",
+    "note": "Jawaban berasal dari data MarketLink sendiri.",
+    "newChat": "Percakapan baru",
+    "loading": "Memuat percakapan…",
+    "loadErrorTitle": "Pesan sebelumnya tidak dapat dimuat",
+    "loadErrorText": "Periksa koneksi lalu coba lagi. Anda tetap bisa bertanya hal baru.",
+    "emptyTitle": "Tanyakan apa saja tentang MarketLink",
+    "emptyText": "Saya bisa mencari hasil tani di semua pasar, memberi jam buka dan waktu pengambilan, atau menjelaskan cara memesan.",
+    "thinking": "Sedang mencari…",
+    "sendError": "Asisten tidak dapat menjawab. Pesan Anda sudah dikembalikan ke kotak, kirim lagi.",
+    "message": "Pesan",
+    "placeholder": "Tanya tentang produk, pasar, atau cara memesan",
+    "send": "Kirim",
+    "sending": "Mengirim…",
+    "aiTools": "AI · {{tools}}",
+    "result": {
+      "product": "Produk",
+      "market": "Pasar",
+      "farmer": "Lapak"
+    },
+    "suggest": {
+      "find": "Di mana beli tomat akhir pekan ini?",
+      "hours": "Jam berapa pasar Bến Thành buka?",
+      "stalls": "Lapak apa saja di pasar Thảo Điền hari Sabtu?",
+      "cancel": "Bagaimana cara membatalkan pesanan?"
+    }
   },
   "tour": {
     "next": "Berikutnya",

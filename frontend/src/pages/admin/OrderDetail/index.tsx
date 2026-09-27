@@ -1,18 +1,28 @@
+import { isAxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
+import OrderApi, { type OrderItemDto } from '@/api-requests/order.requests';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
-import { ButtonLink } from '@/components/ui/button';
 import { Banner } from '@/components/ui/banner';
+import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { LoadError } from '@/components/ui/data-state';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import { ADMIN_CUSTOMERS_PATH, ADMIN_FARMERS_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
-import { customers } from '@/data/admin';
-import { farmer, product } from '@/data/catalog';
-import { marketName, orderTotal, orders } from '@/data/customer';
-import { units, vnd } from '@/lib/format';
-import type { OrderLineType } from '@/types/order.types';
+import { ORDER_STATUS_META } from '@/constants/orderStatus';
+import useRequest from '@/hooks/useRequest';
+import { cutoffLabel, formatDate, formatTime, pickupLabel, units, vnd } from '@/lib/format';
 import Helper from '@/utils/helper';
+
+/** 403 (should not happen for an admin, Task 1.4) and 404 read the same: the order is not here to show. */
+const isGone = (error: unknown) =>
+  isAxiosError(error) && (error.response?.status === 403 || error.response?.status === 404);
+
+/** An ISO instant (history entries) as the reader's date and time. */
+const when = (iso: string) => {
+  const at = new Date(iso);
+  return `${formatDate(at)} ${formatTime(at)}`;
+};
 
 /**
  * FR-070 / FR-038 — one order, read-only. D-04 gives the stall the transitions and the customer the cancel before
@@ -20,11 +30,24 @@ import Helper from '@/utils/helper';
  */
 const AdminOrderDetailPage = () => {
   const { t } = useTranslation('AdminOrderDetail');
+  const { t: tc } = useTranslation();
   const { code } = useParams<{ code: string }>();
-  const index = orders.findIndex((o) => o.code.replace('#', '') === code);
-  const order = index >= 0 ? orders[index] : undefined;
+  const id = /^\d+$/.test(code ?? '') ? Number(code) : null;
 
-  if (!order) {
+  const { state, retry } = useRequest(`admin-order:${id ?? 'none'}`, () =>
+    id === null ? Promise.reject(new Error('not an order id')) : OrderApi.get(id),
+  );
+  const order = state.kind === 'ready' ? state.data : null;
+
+  if (state.kind === 'loading' && id !== null) {
+    return (
+      <p role="status" className="text-ink-muted">
+        {tc('notify.list.loading')}
+      </p>
+    );
+  }
+
+  if (id === null || (state.kind === 'error' && isGone(state.error))) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
         <h1 className="text-h2">{t('missing.title')}</h1>
@@ -34,50 +57,27 @@ const AdminOrderDetailPage = () => {
     );
   }
 
-  const stall = farmer(order.farmerId);
-  // No customer table yet, so the demo list stands in. Picking by index keeps the same order showing the same person.
-  const buyer = customers[index % customers.length];
-  const [placed] = order.history;
+  if (state.kind === 'error' || !order) {
+    return <LoadError noun={t('noun')} onRetry={retry} />;
+  }
+  const s = order.summary;
+  const buyer = order.customer;
+  const placed = order.statusHistory[0];
 
-  const columns: TableColumn<OrderLineType>[] = [
-    {
-      key: 'name',
-      label: t('col.product'),
-      render: (line) => {
-        const p = product(line.productId);
-        return (
-          <>
-            <b>{p?.name}</b>
-            <span className="text-ink-muted block text-[13px]">{p?.category}</span>
-          </>
-        );
-      },
-    },
-    {
-      key: 'qty',
-      label: t('col.quantity'),
-      align: 'num',
-      render: (line) => units(line.qty, product(line.productId)?.unit, product(line.productId)?.plural),
-    },
+  const columns: TableColumn<OrderItemDto>[] = [
+    { key: 'name', label: t('col.product'), render: (line) => <b>{line.productName}</b> },
+    { key: 'qty', label: t('col.quantity'), align: 'num', render: (line) => units(line.quantity, line.unit) },
     {
       key: 'price',
       label: t('col.unitPrice'),
       align: 'num',
-      render: (line) => {
-        const p = product(line.productId);
-        return (
-          <>
-            {vnd(p?.price ?? 0)} <span className="text-ink-muted font-normal">/ {p?.unit}</span>
-          </>
-        );
-      },
+      render: (line) => (
+        <>
+          {vnd(line.unitPrice)} <span className="text-ink-muted font-normal">/ {line.unit}</span>
+        </>
+      ),
     },
-    {
-      key: 'line',
-      label: t('col.lineTotal'),
-      align: 'num',
-      render: (line) => vnd((product(line.productId)?.price ?? 0) * line.qty),
-    },
+    { key: 'line', label: t('col.lineTotal'), align: 'num', render: (line) => vnd(line.subtotal) },
   ];
 
   return (
@@ -86,18 +86,19 @@ const AdminOrderDetailPage = () => {
         <Link to={ADMIN_ORDERS_PATH} className="text-brand underline">
           {t('allOrders')}
         </Link>{' '}
-        · {order.code}
+        · {s.orderCode}
       </p>
 
       <div className="flex flex-col gap-2">
         <p className="text-overline text-ink-muted uppercase">
-          {t('kicker', { placed: placed?.[1], cutoff: order.cutoff })}
+          {t('kicker', { placed: placed ? when(placed.changedAt) : '—', cutoff: cutoffLabel(s.cutoffAt) })}
         </p>
         <h1 className="text-h2">
-          {order.code} · {stall?.stall} · {buyer.name}
+          {s.orderCode} · {s.stallName}
+          {buyer ? ` · ${buyer.fullName}` : ''}
         </h1>
         <div>
-          <OrderStatusBadge status={order.status} />
+          <OrderStatusBadge status={s.status} />
         </div>
       </div>
 
@@ -110,14 +111,18 @@ const AdminOrderDetailPage = () => {
           <section className="flex flex-col gap-3">
             <h2 className="text-h2">{t('items.title')}</h2>
             <Table columns={columns} rows={order.items} />
+            {order.customerNote ? <p className="text-small">{order.customerNote}</p> : null}
+            {s.status === 'declined' && order.farmerNote ? (
+              <p className="text-small">{t('declined', { reason: order.farmerNote })}</p>
+            ) : null}
             <p className="text-small text-ink-muted">{t('items.note')}</p>
           </section>
 
           <section className="flex flex-col gap-3">
             <h2 className="text-h2">{t('history.title')}</h2>
             <ol className="m-0 flex flex-col p-0">
-              {order.history.map(([status, time, by], i) => {
-                const Icon = ORDER_STATUS_META[status].icon;
+              {order.statusHistory.map((h, i) => {
+                const Icon = ORDER_STATUS_META[h.toStatus].icon;
                 return (
                   <li key={i} className="relative grid grid-cols-[28px_1fr] items-start gap-3 py-2">
                     {i > 0 && (
@@ -129,14 +134,19 @@ const AdminOrderDetailPage = () => {
                     <span
                       className={Helper.cn(
                         'grid size-7 flex-none place-items-center rounded-full',
-                        ORDER_STATUS_META[status].className,
+                        ORDER_STATUS_META[h.toStatus].className,
                       )}
                     >
                       <Icon size={14} />
                     </span>
                     <div>
-                      <OrderStatusBadge status={status} />
-                      <time className="text-ink-muted mt-0.5 block text-[13px]">{t('history.by', { time, by })}</time>
+                      <OrderStatusBadge status={h.toStatus} />
+                      <time className="text-ink-muted mt-0.5 block text-[13px]">
+                        {h.changedByName
+                          ? t('history.by', { time: when(h.changedAt), by: h.changedByName })
+                          : when(h.changedAt)}
+                      </time>
+                      {h.note ? <p className="text-small text-ink-muted">{h.note}</p> : null}
                     </div>
                   </li>
                 );
@@ -151,47 +161,43 @@ const AdminOrderDetailPage = () => {
             <h2 className="text-h3">{t('stall.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
               <dt className="text-ink-muted">{t('stall.stall')}</dt>
-              <dd className="m-0">{stall?.stall}</dd>
-              <dt className="text-ink-muted">{t('stall.contact')}</dt>
-              <dd className="m-0">
-                {stall?.person} · {stall?.phone}
-              </dd>
-              <dt className="text-ink-muted">{t('stall.approval')}</dt>
-              <dd className="m-0">{stall && t(`approval.${stall.approval}`)}</dd>
+              <dd className="m-0">{s.stallName}</dd>
             </dl>
-            <ButtonLink to={`${ADMIN_FARMERS_PATH}/${order.farmerId}`} variant="secondary" size="sm">
+            <ButtonLink to={`${ADMIN_FARMERS_PATH}/${s.farmerId}`} variant="secondary" size="sm">
               {t('stall.record')}
             </ButtonLink>
           </Card>
 
           <Card className="flex flex-col gap-3 p-6">
             <h2 className="text-h3">{t('customer.title')}</h2>
-            <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
-              <dt className="text-ink-muted">{t('customer.name')}</dt>
-              <dd className="m-0">{buyer.name}</dd>
-              <dt className="text-ink-muted">{t('customer.phone')}</dt>
-              <dd className="m-0">{buyer.phone}</dd>
-              <dt className="text-ink-muted">{t('customer.orders')}</dt>
-              <dd className="m-0">{buyer.orders}</dd>
-            </dl>
-            <ButtonLink to={`${ADMIN_CUSTOMERS_PATH}/${buyer.id}`} variant="secondary" size="sm">
-              {t('customer.record')}
-            </ButtonLink>
+            {buyer ? (
+              <>
+                <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
+                  <dt className="text-ink-muted">{t('customer.name')}</dt>
+                  <dd className="m-0">{buyer.fullName}</dd>
+                  <dt className="text-ink-muted">{t('customer.phone')}</dt>
+                  <dd className="m-0">{buyer.phone}</dd>
+                </dl>
+                <ButtonLink to={`${ADMIN_CUSTOMERS_PATH}/${buyer.userId}`} variant="secondary" size="sm">
+                  {t('customer.record')}
+                </ButtonLink>
+              </>
+            ) : (
+              <p className="text-small text-ink-muted">{t('customer.hidden')}</p>
+            )}
           </Card>
 
           <Card className="flex flex-col gap-3 p-6">
             <h2 className="text-h3">{t('pickup.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
               <dt className="text-ink-muted">{t('pickup.market')}</dt>
-              <dd className="m-0">{marketName(order.marketId)}</dd>
+              <dd className="m-0">{s.marketName}</dd>
               <dt className="text-ink-muted">{t('pickup.slot')}</dt>
-              <dd className="m-0">
-                {order.date} · {order.slot}
-              </dd>
+              <dd className="m-0">{pickupLabel(s.pickupDate, `${s.pickupStart}–${s.pickupEnd}`)}</dd>
               <dt className="text-ink-muted">{t('pickup.cutoff')}</dt>
-              <dd className="m-0">{order.cutoff}</dd>
+              <dd className="m-0">{cutoffLabel(s.cutoffAt)}</dd>
               <dt className="text-ink-muted">{t('pickup.total')}</dt>
-              <dd className="m-0">{vnd(orderTotal(order))}</dd>
+              <dd className="m-0">{vnd(s.totalAmount)}</dd>
             </dl>
           </Card>
 

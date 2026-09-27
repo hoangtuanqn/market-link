@@ -1,52 +1,32 @@
 {
-  "overline": "Minggu {{from}} – {{to}} · Thảo Điền {{daysA}} · Thủ Đức {{daysB}}",
   "title": "Stok minggu ini",
   "intro": "Templat mingguan adalah jumlah awal untuk setiap hari pasar. Terapkan, lalu sesuaikan hari yang panennya berbeda. Stok yang dipesan sudah dikurangkan dari yang dilihat pelanggan.",
   "saved": "Tersimpan",
   "per": "per {{unit}}",
-  "tabs": {
-    "label": "Tampilan stok",
-    "week": "Minggu ini",
-    "template": "Templat mingguan"
-  },
-  "status": {
-    "available": "Tersedia",
-    "soldOut": "Habis",
-    "paused": "Dijeda minggu ini"
-  },
+  "currentPrice": "now {{price}}",
+  "defaultPricePlaceholder": "Same price",
   "col": {
-    "product": "Produk",
-    "status": "Status",
-    "price": "Harga",
-    "reserved": "Dipesan",
-    "defaultPrice": "Harga bawaan"
+    "product": "Produk"
+  },
+  "error": {
+    "productsNoun": "your products",
+    "templateNoun": "your weekly template"
   },
   "aria": {
-    "status": "Status {{product}}",
-    "day": "{{product}} {{day}}",
-    "dayAt": "{{product}} {{day}} {{market}}",
-    "price": "Harga {{product}}",
-    "templateDay": "{{product}} templat {{day}}"
+    "quantity": "{{product}} quantity on {{day}}",
+    "price": "Harga {{product}}"
   },
-  "week": {
-    "caption": "Stok per produk dan hari pasar minggu ini",
-    "note": "Jumlah adalah unit yang tersedia pada hari itu. Hari kosong berarti produk tidak ditawarkan. Hari Jumat berwarna abu-abu karena {{stall}} tidak berjualan pada hari Jumat.",
-    "savedText": "Stok minggu ini tersimpan. Pelanggan langsung melihat jumlah yang baru.",
-    "save": "Simpan perubahan"
+  "table": {
+    "caption": "Weekly stock template, one row per product and one column per weekday"
   },
   "template": {
-    "savedText": "Templat tersimpan. Berlaku mulai minggu depan kecuali Anda menerapkannya sekarang.",
     "save": "Simpan templat",
+    "savedText": "Templat tersimpan. Berlaku mulai minggu depan kecuali Anda menerapkannya sekarang.",
     "note": "Hari di templat mengikuti hari buka Anda. Ubah di Lapak & pengambilan."
   },
-  "apply": {
-    "open": "Terapkan templat ke minggu ini",
-    "title": "Terapkan templat ke minggu ini?",
-    "keep": "Pertahankan editan saya",
-    "doneTitle": "Templat diterapkan",
-    "doneText": "Templat diterapkan ke {{sat}} dan {{sun}}.",
-    "confirm": "Terapkan templat",
-    "text": "Jumlah hari {{sat}} dan {{sun}} diganti dengan nilai templat. Stok yang dipesan tidak dihitung dalam jumlah yang dilihat pelanggan.",
-    "warning": "Editan yang Anda buat untuk minggu ini akan ditimpa."
+  "empty": {
+    "title": "Add a product first",
+    "text": "A weekly template needs at least one product.",
+    "action": "Add a product"
   }
 }

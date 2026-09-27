@@ -27,13 +27,9 @@
     "status": "Statut"
   },
   "toast": {
-    "acceptedTitle": "Commande acceptée",
     "acceptedText": "Commande {{code}} acceptée. {{who}} a été prévenu.",
-    "readyTitle": "Commande prête",
     "readyText": "Commande {{code}} marquée comme prête.",
-    "completedTitle": "Commande terminée",
     "completedText": "Commande {{code}} terminée.",
-    "declinedTitle": "Commande refusée",
     "declinedText": "Commande {{code}} refusée. Le stock est de nouveau disponible."
   },
   "actions": {
@@ -43,11 +39,6 @@
     "complete": "Marquer terminée",
     "view": "Voir"
   },
-  "captions": {
-    "new": "Passée · {{sat}} et {{sun}}",
-    "ready": "Prêtes à retirer"
-  },
-  "overline": "votre stand à {{market}} · prochain jour de marché {{day}}",
   "greeting": "Bonjour, {{name}}",
   "applyTemplate": "Appliquer le modèle hebdomadaire",
   "addProduct": "Ajouter un produit",
@@ -57,36 +48,39 @@
     "text": "Les commandes non validées bloquent toujours du stock. Acceptez ou refusez avant la clôture pour que les clients puissent s'organiser."
   },
   "kpi": {
+    "noun": "your numbers",
     "orders": "Commandes au total",
-    "ordersNote_one": "{{count}} cette semaine",
-    "ordersNote_other": "{{count}} cette semaine",
-    "vsAugust": "par rapport à août",
     "openHistory": "Ouvrir l'historique des ventes",
-    "awaitingNote_one": "<b>{{count}}</b> se ferme à {{time}} le {{date}}",
-    "awaitingNote_other": "<b>{{count}}</b> se ferment à {{time}} le {{date}}",
-    "vsThursday": "par rapport à un jeudi normal",
+    "pending": "Awaiting you",
     "openIncoming": "Ouvrir les commandes reçues",
     "revenue": "Chiffre d'affaires de septembre",
-    "revenueNote": "₫, des commandes terminées, payées au stand",
-    "best": "Meilleure vente",
-    "bestNote": "{{qty}} ce mois-ci",
-    "openProducts": "Ouvrir les produits",
-    "note": "Septembre jusqu'ici, comparé à août. Chaque tuile ouvre l'écran derrière son chiffre."
+    "revenueMonth": "Revenue this month"
   },
   "incoming": {
     "title": "Commandes reçues",
     "all": "Toutes les commandes et filtres",
-    "note": "Les nouvelles commandes restent en surbrillance jusqu'à ce que vous les ouvriez."
+    "noun": "incoming orders",
+    "empty": {
+      "title": "Nothing here",
+      "text": "Orders in this status will show up here."
+    }
   },
   "stock": {
     "title": "Stock pour {{day}}",
     "link": "Stock de la semaine",
-    "note": "Réservé signifie qu'une commande le bloque. Il est déduit de votre stock dès qu'un client commande."
+    "noun": "stock",
+    "empty": {
+      "title": "No products yet",
+      "text": "Add a product to see its stock here."
+    }
   },
   "best": {
     "title": "Meilleures ventes",
     "link": "Historique des ventes",
-    "note": "Vendu en septembre, chacun dans son unité"
-  },
-  "protoNote": "La barre latérale et l'en-tête au-dessus sont nouveaux par rapport au prototype."
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold yet",
+      "text": "Your best-selling products will show up here once orders complete."
+    }
+  }
 }

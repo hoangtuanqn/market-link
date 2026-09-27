@@ -5,15 +5,33 @@
   "stalls_one": "{{count}} lapak",
   "stalls_other": "{{count}} lapak",
   "intro": "{{products}} dari {{stalls}}. Pilih waktu ambil untuk setiap lapak, lalu buat pesanan.",
+  "empty": {
+    "title": "Your cart is empty",
+    "text": "Add products from a stall's page and they show up here, split by stall.",
+    "cta": "Browse products"
+  },
+  "noun": "cart",
+  "slotsNoun": "pickup times",
   "split": {
-    "title": "Keranjang Anda akan dibagi menjadi 2 pesanan di 2 lapak berbeda.",
+    "title_one": "Your cart will be split into {{count}} order at {{count}} stall.",
+    "title_other": "Your cart will be split into {{count}} orders at {{count}} stalls.",
     "text": "Setiap lapak punya waktu ambil dan batas pesan sendiri, dan menerima pesanannya secara terpisah. Anda membayar setiap lapak saat mengambil."
+  },
+  "market": "Market",
+  "noSlots": {
+    "title": "No pickup times yet",
+    "text": "This stall has not opened any pickup slots for this market. Try again later or remove this stall's items."
+  },
+  "problem": {
+    "out_of_stock": "One or more items have less stock than you asked for.",
+    "sold_out": "One or more items are sold out.",
+    "unavailable": "One or more items are no longer for sale.",
+    "stall_suspended": "This stall is not taking orders right now."
   },
   "changeTime": "Ubah waktu ambil di {{stall}}",
   "pickupDay": "Hari ambil",
   "pickupDayAt": "Hari ambil di {{stall}}",
   "pickupTime": "Waktu ambil · {{day}} {{date}} · jendela {{from}} – {{to}}",
-  "cutoffNote": "{{stall}} menutup pesanan {{hours}} jam sebelum slot. Untuk pukul {{slot}} hari {{slotDay}}, batasnya pukul {{cutoff}} hari {{cutoffDay}}.",
   "summary": {
     "title": "Bayar di lapak saat mengambil",
     "order": "Pesanan {{n}} · {{stall}}",
@@ -23,8 +41,11 @@
     "label": "Catatan untuk lapak",
     "placeholder": "mis. ikatannya lebih kecil"
   },
-  "place": "Buat 2 pesanan",
-  "ready": "Kedua lapak sudah punya waktu ambil. Setiap lapak mengonfirmasi pesanannya sendiri.",
+  "place_one": "Place {{count}} order",
+  "place_other": "Place {{count}} orders",
+  "placing": "Placing your orders…",
+  "ready_one": "Your stall has a pickup time. It confirms your order.",
+  "ready_other": "All stalls have a pickup time. Each stall confirms its own order.",
   "notReady": "Pilih waktu ambil di {{stall}} untuk membuat pesanan.",
   "stockNote": "Stok langsung dikurangi dari jumlah lapak saat Anda memesan. Tidak ada pembayaran online."
 }
