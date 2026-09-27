@@ -6,8 +6,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
+import com.techx.intervue.modules.chat.repositories.AdminKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
+import com.techx.intervue.modules.chat.resources.AdminRows.AccountRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.FlaggedReviewRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.HiddenItemRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.MarketActivityRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.PendingFarmerRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.PlatformTotalsRow;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
@@ -58,6 +65,10 @@ public class AssistantTools {
     static final String MY_SALES = "get_my_sales";
     static final String MY_REVIEWS = "get_my_reviews";
     static final String MY_SCHEDULE = "get_my_schedule";
+    static final String PLATFORM_STATS = "get_platform_stats";
+    static final String FARMER_APPLICATIONS = "get_farmer_applications";
+    static final String SEARCH_ACCOUNTS = "search_accounts";
+    static final String MODERATION_QUEUE = "get_moderation_queue";
 
     private static final int GUIDE_SECTIONS = 3;
     private static final int MAX_ROWS = 15;
@@ -69,6 +80,7 @@ public class AssistantTools {
 
     private final ChatKnowledgeRepository knowledge;
     private final FarmerKnowledgeRepository farmerKnowledge;
+    private final AdminKnowledgeRepository adminKnowledge;
     private final ProductAvailabilityResolver availability;
     private final UserGuideIndex guide;
 
@@ -232,6 +244,53 @@ public class AssistantTools {
                             Map.of(),
                             List.of()));
 
+    /** FR-094. An admin sees the whole platform, so the boundary is the role, not a row filter. */
+    private static final List<Tool> ADMIN_ONLY =
+            List.of(
+                    tool(
+                            PLATFORM_STATS,
+                            "Platform totals for a period and the breakdown by market: approved and"
+                                    + " pending stalls, customers, active markets, orders and"
+                                    + " completed revenue. Use it for 'how are we doing', 'revenue"
+                                    + " by market', 'which market is quiet'.",
+                            Map.of(
+                                    "from_date", property("string", DATE_HINT),
+                                    "to_date", property("string", DATE_HINT)),
+                            List.of("from_date", "to_date")),
+                    tool(
+                            FARMER_APPLICATIONS,
+                            "Stall applications with the person, email and the day they applied."
+                                    + " Use it for the approval queue.",
+                            Map.of(
+                                    "status",
+                                    property(
+                                            "string",
+                                            "pending, approved, suspended or rejected. Omit for"
+                                                    + " every status; pending is the queue.")),
+                            List.of()),
+                    tool(
+                            SEARCH_ACCOUNTS,
+                            "Find accounts by role, status or a name/email fragment.",
+                            Map.of(
+                                    "role", property("string", "customer, farmer or admin."),
+                                    "status", property("string", "active, inactive or suspended."),
+                                    "keyword",
+                                            property(
+                                                    "string",
+                                                    "Part of a name or email. Omit to list"
+                                                            + " everyone matching the filters.")),
+                            List.of()),
+                    tool(
+                            MODERATION_QUEUE,
+                            "The moderation queue: visible low-rated reviews worth a look, and the"
+                                    + " listings already hidden with the reason given.",
+                            Map.of(
+                                    "max_rating",
+                                    property(
+                                            "integer",
+                                            "Highest star rating to include. Default 2.")),
+                            List.of()));
+
     /**
      * Which tools each audience is shown. Filtering happens here, on the server: the model never
      * sees a tool outside its audience, rather than seeing it and being refused. Farmer and Admin
@@ -248,7 +307,9 @@ public class AssistantTools {
         BY_AUDIENCE.put(
                 AssistantAudience.FARMER,
                 Stream.concat(CUSTOMER_DEFINITIONS.stream(), FARMER_ONLY.stream()).toList());
-        BY_AUDIENCE.put(AssistantAudience.ADMIN, CUSTOMER_DEFINITIONS);
+        BY_AUDIENCE.put(
+                AssistantAudience.ADMIN,
+                Stream.concat(CUSTOMER_DEFINITIONS.stream(), ADMIN_ONLY.stream()).toList());
         BY_AUDIENCE.forEach(
                 (audience, tools) ->
                         NAMES_BY_AUDIENCE.put(
@@ -318,6 +379,10 @@ public class AssistantTools {
                 case MY_SALES -> mySales(context, input);
                 case MY_REVIEWS -> myReviews(context, input);
                 case MY_SCHEDULE -> mySchedule(context);
+                case PLATFORM_STATS -> platformStats(input);
+                case FARMER_APPLICATIONS -> farmerApplications(input);
+                case SEARCH_ACCOUNTS -> searchAccounts(input);
+                case MODERATION_QUEUE -> moderationQueue(input);
                 default -> error(ChatIntent.UNKNOWN, "Unknown tool: " + name);
             };
         } catch (IllegalArgumentException e) {
@@ -340,6 +405,9 @@ public class AssistantTools {
             case MY_PRODUCTS, MY_SALES -> ChatIntent.PRODUCT_DETAIL;
             case MY_REVIEWS -> ChatIntent.HELP;
             case MY_SCHEDULE -> ChatIntent.FARMER_AVAILABILITY;
+            case PLATFORM_STATS -> ChatIntent.PRODUCT_DETAIL;
+            case FARMER_APPLICATIONS -> ChatIntent.FARMER_AVAILABILITY;
+            case SEARCH_ACCOUNTS, MODERATION_QUEUE -> ChatIntent.HELP;
             default -> ChatIntent.UNKNOWN;
         };
     }
@@ -754,5 +822,112 @@ public class AssistantTools {
         } catch (java.time.format.DateTimeParseException e) {
             return null;
         }
+    }
+
+    // ---------------------------------------------------------------- FR-094 admin tools
+
+    private static final int DEFAULT_MAX_RATING = 2;
+
+    private ToolOutcome platformStats(Map<String, Object> input) {
+        LocalDate from = date(input, "from_date");
+        LocalDate to = date(input, "to_date");
+        if (from == null || to == null) {
+            return error(
+                    ChatIntent.PRODUCT_DETAIL, "Give both from_date and to_date as yyyy-MM-dd.");
+        }
+        if (from.isAfter(to)) {
+            return error(ChatIntent.PRODUCT_DETAIL, "from_date is after to_date.");
+        }
+        PlatformTotalsRow totals = adminKnowledge.platformTotals(from, to);
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("from", String.valueOf(from));
+        out.put("to", String.valueOf(to));
+        out.put("approved_stalls", totals.farmers());
+        out.put("stalls_waiting_for_approval", totals.pendingFarmers());
+        out.put("customers", totals.customers());
+        out.put("active_markets", totals.markets());
+        out.put("orders_in_period", totals.orders());
+        out.put("completed_revenue_vnd", totals.revenue());
+        List<Map<String, Object>> markets = new ArrayList<>();
+        for (MarketActivityRow m : adminKnowledge.marketActivity(from, to)) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("market", m.marketName());
+            row.put("orders", m.orderCount());
+            row.put("completed_revenue_vnd", m.revenue());
+            row.put("stalls_with_orders", m.activeStalls());
+            markets.add(row);
+        }
+        out.put("by_market", markets);
+        return ok(ChatIntent.PRODUCT_DETAIL, out, List.of());
+    }
+
+    private ToolOutcome farmerApplications(Map<String, Object> input) {
+        List<PendingFarmerRow> rows = adminKnowledge.farmerApplications(text(input, "status"));
+        List<Map<String, Object>> out = new ArrayList<>();
+        List<ChatResultItem> cards = new ArrayList<>();
+        for (PendingFarmerRow r : rows) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("stall", r.stallName());
+            row.put("contact", r.contactPerson());
+            row.put("email", r.email());
+            row.put("applied_on", String.valueOf(r.appliedOn()));
+            row.put("status", r.status());
+            out.add(row);
+            cards.add(
+                    new ChatResultItem(
+                            "farmer",
+                            r.farmerId(),
+                            r.stallName(),
+                            r.contactPerson() + " · " + r.status()));
+        }
+        return ok(ChatIntent.FARMER_AVAILABILITY, Map.of("applications", out), cards);
+    }
+
+    private ToolOutcome searchAccounts(Map<String, Object> input) {
+        List<AccountRow> rows =
+                adminKnowledge.searchUsers(
+                        text(input, "role"), text(input, "status"), text(input, "keyword"));
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (AccountRow r : rows) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("name", r.fullName());
+            row.put("email", r.email());
+            row.put("role", r.role());
+            row.put("status", r.status());
+            row.put("joined_on", String.valueOf(r.joinedOn()));
+            out.add(row);
+        }
+        return ok(ChatIntent.HELP, Map.of("accounts", out), List.of());
+    }
+
+    private ToolOutcome moderationQueue(Map<String, Object> input) {
+        int maxRating =
+                input.get("max_rating") instanceof Number n
+                                && n.intValue() >= 1
+                                && n.intValue() <= 5
+                        ? n.intValue()
+                        : DEFAULT_MAX_RATING;
+        List<Map<String, Object>> reviews = new ArrayList<>();
+        for (FlaggedReviewRow r : adminKnowledge.flaggedReviews(maxRating)) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("rating", r.rating());
+            row.put("stall", r.stallName());
+            row.put("about", r.targetName());
+            row.put("on", String.valueOf(r.createdOn()));
+            row.put("comment", r.comment());
+            reviews.add(row);
+        }
+        List<Map<String, Object>> hidden = new ArrayList<>();
+        for (HiddenItemRow h : adminKnowledge.hiddenItems()) {
+            Map<String, Object> row = new LinkedHashMap<>();
+            row.put("kind", h.kind());
+            row.put("name", h.name());
+            row.put("reason", h.reason());
+            hidden.add(row);
+        }
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("low_rated_reviews", reviews);
+        out.put("already_hidden", hidden);
+        return ok(ChatIntent.HELP, out, List.of());
     }
 }

@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
+import com.techx.intervue.modules.chat.repositories.AdminKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
@@ -56,6 +57,7 @@ class AssistantToolsTest {
     private ChatKnowledgeRepository knowledge;
     private ProductAvailabilityResolver availability;
     private FarmerKnowledgeRepository farmerKnowledge;
+    private AdminKnowledgeRepository adminKnowledge;
     private AssistantTools tools;
 
     @BeforeEach
@@ -63,7 +65,14 @@ class AssistantToolsTest {
         knowledge = mock(ChatKnowledgeRepository.class);
         availability = mock(ProductAvailabilityResolver.class);
         farmerKnowledge = mock(FarmerKnowledgeRepository.class);
-        tools = new AssistantTools(knowledge, farmerKnowledge, availability, new UserGuideIndex());
+        adminKnowledge = mock(AdminKnowledgeRepository.class);
+        tools =
+                new AssistantTools(
+                        knowledge,
+                        farmerKnowledge,
+                        adminKnowledge,
+                        availability,
+                        new UserGuideIndex());
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH, THAO_DIEN));
     }
 
@@ -299,5 +308,34 @@ class AssistantToolsTest {
                                 .error())
                 .isTrue();
         verifyNoInteractions(farmerKnowledge);
+    }
+
+    // ------------------------------------------------------------------ FR-094 admin boundary
+
+    @Test
+    void adminToolsAreOnlyOfferedToAdmins() {
+        assertThat(AssistantTools.allows(AssistantAudience.ADMIN, AssistantTools.PLATFORM_STATS))
+                .isTrue();
+        assertThat(AssistantTools.allows(AssistantAudience.FARMER, AssistantTools.PLATFORM_STATS))
+                .isFalse();
+        assertThat(
+                        AssistantTools.allows(
+                                AssistantAudience.CUSTOMER, AssistantTools.SEARCH_ACCOUNTS))
+                .isFalse();
+        // And an admin is not handed the farmer tools either: they own no stall.
+        assertThat(AssistantTools.allows(AssistantAudience.ADMIN, AssistantTools.MY_ORDERS))
+                .isFalse();
+    }
+
+    @Test
+    void aFarmerAskingForPlatformStatsIsRefusedWithoutTouchingTheDatabase() {
+        ToolOutcome out =
+                tools.run(
+                        FARMER_9,
+                        AssistantTools.PLATFORM_STATS,
+                        Map.of("from_date", "2026-09-01", "to_date", "2026-09-30"));
+
+        assertThat(out.error()).isTrue();
+        verifyNoInteractions(adminKnowledge);
     }
 }
