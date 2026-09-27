@@ -23,7 +23,15 @@ const dem = ['Văn','Thị','Đức','Minh','Thanh','Hữu','Quốc','Ngọc','H
 const ten_nam = ['An','Bình','Cường','Đạt','Em','Phúc','Gia','Hào','Khang','Lâm','Minh','Nam','Phong','Quang','Sơn','Thắng','Trung','Vinh','Huy','Dũng','Tài','Kiệt','Long','Toàn','Hiếu'];
 const ten_nu = ['Anh','Bích','Chi','Diễm','Hà','Hương','Lan','Mai','Ngọc','Phượng','Quyên','Trang','Uyên','Vân','Yến','Thảo','Linh','Nhung','Hoa','Trinh','Tuyết','Hiền','Oanh','Thuỷ','My'];
 
-const districts = ['Quận 1','Quận 3','Quận 5','Quận 7','Quận 10','Bình Thạnh','Phú Nhuận','Tân Bình','Gò Vấp','TP. Thủ Đức','Tân Phú','Bình Tân'];
+// Wards of Ho Chi Minh City after the 2025 reform (two levels, no district): code + full name, as in the wards
+// table of migration V20260927001 (FR-001).
+const HCM = { code: '79', name: 'Thành phố Hồ Chí Minh' };
+const wards = [
+  ['26740', 'Phường Sài Gòn'], ['27154', 'Phường Bàn Cờ'], ['27343', 'Phường Chợ Lớn'], ['27487', 'Phường Tân Mỹ'],
+  ['27169', 'Phường Diên Hồng'], ['26929', 'Phường Bình Thạnh'], ['27073', 'Phường Phú Nhuận'],
+  ['27004', 'Phường Tân Bình'], ['26884', 'Phường Gò Vấp'], ['26824', 'Phường Thủ Đức'], ['27031', 'Phường Tân Phú'],
+  ['27442', 'Phường Bình Tân'],
+];
 const streets = ['Nguyễn Huệ','Lê Lợi','Hai Bà Trưng','Pasteur','Điện Biên Phủ','Võ Văn Tần','Cách Mạng Tháng 8','Phan Đình Phùng','Nguyễn Văn Trỗi','Lý Tự Trọng','Trần Hưng Đạo','Lê Duẩn','Nguyễn Đình Chiểu','Sương Nguyệt Ánh','Bùi Viện','Nam Kỳ Khởi Nghĩa','Nguyễn Thị Minh Khai','Trương Định','Lê Văn Sỹ','Hoàng Sa'];
 
 function vietName(gender) {
@@ -33,8 +41,15 @@ function vietName(gender) {
   return `${h} ${d} ${t}`;
 }
 
-function vietAddress() {
-  return `${rnd(1,200)} ${pick(streets)}, ${pick(districts)}`;
+/** A structured Ho Chi Minh City address: the parts plus the text AddressService would compose from them. */
+function vietAddress(line = String(rnd(1, 200)), street = pick(streets), ward = pick(wards)) {
+  return { line, street, wardCode: ward[0], text: `${line} ${street}, ${ward[1]}, ${HCM.name}` };
+}
+
+/** The columns and values of an address, for an INSERT INTO users (…) row. */
+const ADDRESS_COLS = 'address, country_code, province_code, ward_code, street_name, address_line';
+function addressValues(a) {
+  return `'${esc(a.text)}', 'VN', '${HCM.code}', '${a.wardCode}', '${esc(a.street)}', '${esc(a.line)}'`;
 }
 
 // --- Markets (existing) ---
@@ -240,9 +255,9 @@ SET @pw := '\$2y\$10\$QECyiDw14FWH42GLLZE9l.wmNFH4v8ZHLz.UORUBYw3xGS4iDsTtW';
 -- ===== 1. ADDITIONAL USERS =====
 
 -- 1.1 Second admin
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
+INSERT INTO users (email, password_hash, role, full_name, phone, ${ADDRESS_COLS}, status, created_at) VALUES
   ('admin2@marketlink.vn', @pw, 'admin', '${esc('Phạm Minh Quang')}', '0900000100',
-   '${esc('Quận 3, TP. Hồ Chí Minh')}', 'active', UTC_TIMESTAMP() - INTERVAL 170 DAY)
+   ${addressValues(vietAddress('115', 'Nguyễn Đình Chiểu', ['27154', 'Phường Bàn Cờ']))}, 'active', UTC_TIMESTAMP() - INTERVAL 170 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, role = new.role, status = new.status;
 
@@ -267,9 +282,9 @@ for (let i = 2; i <= 110; i++) {
 // Write customers in batches of 20
 for (let batch = 0; batch < customers.length; batch += 20) {
   const chunk = customers.slice(batch, batch + 20);
-  sql += `INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES\n`;
+  sql += `INSERT INTO users (email, password_hash, role, full_name, phone, ${ADDRESS_COLS}, status, created_at) VALUES\n`;
   sql += chunk.map((c, idx) =>
-    `  ('${c.email}', @pw, 'customer', '${esc(c.name)}', '${c.phone}', '${esc(c.addr)}', '${c.status}', UTC_TIMESTAMP() - INTERVAL ${c.daysAgo} DAY)`
+    `  ('${c.email}', @pw, 'customer', '${esc(c.name)}', '${c.phone}', ${addressValues(c.addr)}, '${c.status}', UTC_TIMESTAMP() - INTERVAL ${c.daysAgo} DAY)`
   ).join(',\n');
   sql += `\nAS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,\n`;
   sql += `                        phone = new.phone, status = new.status;\n\n`;
@@ -284,8 +299,8 @@ for (const f of newFarmerStalls) {
   usedPhones.add(phone);
   const daysAgo = rnd(120, 170);
 
-  sql += `INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer${f.n}@marketlink.vn', @pw, 'farmer', '${esc(name)}', '${phone}', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL ${daysAgo} DAY)
+  sql += `INSERT INTO users (email, password_hash, role, full_name, phone, ${ADDRESS_COLS}, status, created_at) VALUES
+  ('farmer${f.n}@marketlink.vn', @pw, 'farmer', '${esc(name)}', '${phone}', ${addressValues(vietAddress(String(rnd(100, 500)), 'Tỉnh lộ 8', ['27553', 'Xã Củ Chi']))}, 'active', UTC_TIMESTAMP() - INTERVAL ${daysAgo} DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;\n\n`;
 
   sql += `INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -321,9 +336,9 @@ WHERE u.email = 'farmer${f.n}@marketlink.vn' AND m.market_name = '${esc(mkt)}';\
 
 // 1.4 Pending farmer
 sql += `-- 1.4 Pending farmer
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
+INSERT INTO users (email, password_hash, role, full_name, phone, ${ADDRESS_COLS}, status, created_at) VALUES
   ('farmer-pending@marketlink.vn', @pw, 'farmer', '${esc('Trịnh Văn Tài')}', '0900000301',
-   '${esc('Hóc Môn, TP. Hồ Chí Minh')}', 'active', UTC_TIMESTAMP() - INTERVAL 3 DAY)
+   ${addressValues(vietAddress('235', 'Tỉnh lộ 8', ['27559', 'Xã Hóc Môn']))}, 'active', UTC_TIMESTAMP() - INTERVAL 3 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status)
