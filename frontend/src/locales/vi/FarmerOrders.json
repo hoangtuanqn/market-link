@@ -8,10 +8,9 @@
   },
   "filter": {
     "day": "Ngày nhận hàng",
-    "all": "Tất cả",
-    "market": "Chợ",
-    "bothMarkets": "Cả hai chợ"
+    "all": "Tất cả"
   },
+  "noun": "đơn hàng",
   "tabsLabel": "Đơn hàng theo trạng thái",
   "status": {
     "placed": "Đã đặt",
