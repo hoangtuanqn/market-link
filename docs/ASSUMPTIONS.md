@@ -10,7 +10,7 @@ Nguồn cho phần "Assumptions" của `ReadMe.doc` nộp bài (SRS mục 1.9). 
 - Tài khoản admin được seed sẵn (`admin@marketlink.vn`), không có luồng tự đăng ký tài khoản admin.
 - Một tài khoản gắn với một vai trò; khách hàng muốn bán hàng đăng ký qua `/become-farmer` và chờ admin
   duyệt, hệ thống không hỗ trợ nhiều hồ sơ trong một tài khoản (D-08).
-- Giờ hệ thống theo múi giờ `Asia/Ho_Chi_Minh`, tiền tệ VND.
+- Giờ hệ thống theo múi giờ `Asia/Ho_Chi_Minh`, tiền tệ USD.
 - Cutoff đặt/sửa/huỷ đơn tính theo cấu hình riêng của từng sạp (`orderCutoffHours`, mặc định 12 giờ).
 - Đơn hàng chỉ sửa hoặc huỷ được trước thời điểm cutoff của chính đơn đó; sau cutoff chỉ Farmer đổi
   được trạng thái.

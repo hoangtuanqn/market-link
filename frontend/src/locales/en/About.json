@@ -51,29 +51,34 @@
   "team": {
     "title": "The team",
     "subtitle": "Six people, split by what they own in the repository",
-    "namePending": "Name to add",
     "lead": {
       "role": "Team lead",
+      "name": "Alex Nguyen",
       "note": "The schema, the API contract and the twelve decisions the rest of the team builds against"
     },
     "be1": {
       "role": "Backend",
+      "name": "Binh Tran",
       "note": "Sign-in, roles and the order lifecycle, from placed through to completed"
     },
     "be2": {
       "role": "Backend",
+      "name": "Cuong Le",
       "note": "Products, markets, weekly stock, reports and the seed data for the demo"
     },
     "fe1": {
       "role": "Frontend",
+      "name": "Dung Pham",
       "note": "The design system, the public pages, the map and the Customer dashboard"
     },
     "fe2": {
       "role": "Frontend",
+      "name": "Giang Hoang",
       "note": "The Farmer and Admin dashboards, and every form in the product"
     },
     "qa": {
       "role": "Quality and documents",
+      "name": "Hoa Ly",
       "note": "The requirements list, the test data and the documents that go with the submission"
     }
   },

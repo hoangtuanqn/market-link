@@ -85,7 +85,7 @@ const AboutPage = () => {
           {TEAM.map((key) => (
             <Card key={key} className="flex flex-col gap-1 p-4">
               <p className="text-overline text-ink-muted m-0">{t(`team.${key}.role`)}</p>
-              <b className="text-[16px]">{t('team.namePending')}</b>
+              <b className="text-[16px]">{t(`team.${key}.name`)}</b>
               <span className="text-[14px]">{t(`team.${key}.note`)}</span>
             </Card>
           ))}

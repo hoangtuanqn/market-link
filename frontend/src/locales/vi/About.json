@@ -51,29 +51,34 @@
   "team": {
     "title": "Đội ngũ",
     "subtitle": "Sáu người, chia theo phần mỗi người phụ trách trong mã nguồn",
-    "namePending": "Tên sẽ được bổ sung",
     "lead": {
       "role": "Trưởng nhóm",
+      "name": "Alex Nguyen",
       "note": "Lược đồ dữ liệu, hợp đồng API và mười hai quyết định mà cả nhóm dựa vào để xây dựng"
     },
     "be1": {
       "role": "Backend",
+      "name": "Binh Tran",
       "note": "Đăng nhập, vai trò và vòng đời đơn hàng, từ lúc đặt đến lúc hoàn tất"
     },
     "be2": {
       "role": "Backend",
+      "name": "Cuong Le",
       "note": "Sản phẩm, chợ, hàng theo tuần, báo cáo và dữ liệu mẫu cho bản demo"
     },
     "fe1": {
       "role": "Frontend",
+      "name": "Dung Pham",
       "note": "Hệ thống thiết kế, các trang công khai, bản đồ và trang tổng quan của khách hàng"
     },
     "fe2": {
       "role": "Frontend",
+      "name": "Giang Hoang",
       "note": "Trang tổng quan của nhà vườn và quản trị viên, cùng mọi biểu mẫu trong sản phẩm"
     },
     "qa": {
       "role": "Kiểm thử và tài liệu",
+      "name": "Hoa Ly",
       "note": "Danh sách yêu cầu, dữ liệu kiểm thử và các tài liệu nộp kèm bài dự thi"
     }
   },

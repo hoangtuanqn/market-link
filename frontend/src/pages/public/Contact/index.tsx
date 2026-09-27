@@ -24,9 +24,9 @@ const ContactPage = () => {
             <h2 className="text-h2">{t('team.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
               <dt className="text-ink-muted">{t('team.email')}</dt>
-              <dd className="m-0">{t('team.toAdd')}</dd>
+              <dd className="m-0">{t('team.emailValue')}</dd>
               <dt className="text-ink-muted">{t('team.phone')}</dt>
-              <dd className="m-0">{t('team.toAdd')}</dd>
+              <dd className="m-0">{t('team.phoneValue')}</dd>
               <dt className="text-ink-muted">{t('team.address')}</dt>
               <dd className="m-0">{t('team.addressValue')}</dd>
               <dt className="text-ink-muted">{t('team.hours')}</dt>
