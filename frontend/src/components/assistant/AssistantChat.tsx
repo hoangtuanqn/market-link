@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
-import ChatApi, { type ChatResultDto, type ProposedActionDto } from '@/api-requests/chat.requests';
+import ChatApi, { type ChatResultDto, type PageContextDto, type ProposedActionDto } from '@/api-requests/chat.requests';
 import OrderApi from '@/api-requests/order.requests';
 import ChatMessage from '@/components/ChatMessage';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState } from '@/components/ui/data-state';
 import useSession from '@/hooks/useSession';
+import { useAssistant } from './assistantContext';
 import { formatTime } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -27,6 +28,20 @@ type Entry = {
 };
 
 type Load = 'loading' | 'error' | 'ready';
+
+/**
+ * The route pattern rather than the URL: ids and codes belong in `recordRef`, and the server only accepts lowercase
+ * letters, slashes, hyphens and colons here. A path segment that looks like an id or a code is replaced by its
+ * placeholder, so /farmer/orders/ML-2026-0412 becomes farmer/orders/:code.
+ */
+const routePattern = (pathname: string) =>
+  pathname
+    .split('/')
+    .filter(Boolean)
+    .map((part) => (/^\d+$/.test(part) ? ':id' : /[0-9]/.test(part) ? ':code' : part.toLowerCase()))
+    .join('/')
+    .replace(/[^a-z/:-]/g, '')
+    .slice(0, 64);
 
 /**
  * FR-093, FR-094: what a proposed action does when the person presses it.
@@ -109,6 +124,9 @@ type AssistantChatProps = {
  */
 const AssistantChat = ({ className }: AssistantChatProps) => {
   const { t } = useTranslation('common');
+  const { pathname } = useLocation();
+  const assistant = useAssistant();
+  const record = assistant?.record ?? null;
   // FR-093, FR-094: a proposed action is pressed once. `running` disables the button while the real endpoint
   // works, `done` replaces it afterwards so the same change cannot be sent twice from scrollback.
   const [running, setRunning] = useState<string | null>(null);
@@ -142,7 +160,11 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
   // Which key's history has answered, and how; any other key is still loading
   const [loaded, setLoaded] = useState<{ key: string; ok: boolean } | null>(null);
   const load: Load = !sessionKey || loaded?.key !== sessionKey ? 'loading' : loaded.ok ? 'ready' : 'error';
-  const [draft, setDraft] = useState('');
+  // The composer text belongs to the provider so an "ask about this" button can fill it in; the local state is the
+  // fallback for a chat mounted outside one.
+  const [localDraft, setLocalDraft] = useState('');
+  const draft = assistant ? assistant.draft : localDraft;
+  const setDraft = assistant ? assistant.setDraft : setLocalDraft;
   const [sending, setSending] = useState(false);
   const [sendFailed, setSendFailed] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -196,7 +218,12 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
     setLog((prev) => [...prev, { from: 'user', text: message, at: new Date() }]);
     setSending(true);
     try {
-      const data = await ChatApi.ask(sessionKey, message);
+      const context: PageContextDto = {
+        page: routePattern(pathname),
+        recordType: record?.type,
+        recordRef: record?.ref,
+      };
+      const data = await ChatApi.ask(sessionKey, message, context);
       if (data) {
         setLog((prev) => [
           ...prev,

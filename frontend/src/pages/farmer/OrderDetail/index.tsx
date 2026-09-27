@@ -2,6 +2,7 @@ import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import OrderApi, { type OrderDetailDto, type OrderItemDto } from '@/api-requests/order.requests';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -26,6 +27,7 @@ const isGone = (error: unknown) =>
 const FarmerOrderDetailPage = () => {
   const { t, i18n } = useTranslation('FarmerOrderDetail');
   const { t: tc } = useTranslation();
+  const { t: tAssistant } = useTranslation('common');
   const { code } = useParams<{ code: string }>();
   const id = /^\d+$/.test(code ?? '') ? Number(code) : null;
 
@@ -113,6 +115,10 @@ const FarmerOrderDetailPage = () => {
           <OrderStatusBadge status={s.status} />
         </div>
         <div className="flex flex-wrap gap-2">
+          <AskAssistant
+            question={tAssistant('assistant.ask.order', { code: s.orderCode })}
+            record={{ type: 'order', ref: s.orderCode }}
+          />
           {s.status === 'placed' && (
             <>
               <Button

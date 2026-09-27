@@ -249,7 +249,7 @@ class ChatServiceTest {
     @Test
     void signedInCustomerIsAnsweredByTheAssistantAndToolsAreLogged() {
         ChatResultItem card = new ChatResultItem("product", 5L, "Cà chua", "25000 ₫/kg · Vườn A");
-        when(assistant.reply(any(), eq("tìm cà chua"), any()))
+        when(assistant.reply(any(), eq("tìm cà chua"), any(), any()))
                 .thenReturn(
                         new ClaudeAssistant.AiReply(
                                 "Có 1 sản phẩm.",
@@ -274,7 +274,8 @@ class ChatServiceTest {
 
     @Test
     void assistantFailureFallsBackToTheKeywordEngine() {
-        when(assistant.reply(any(), any(), any())).thenThrow(new IllegalStateException("API down"));
+        when(assistant.reply(any(), any(), any(), any()))
+                .thenThrow(new IllegalStateException("API down"));
 
         ChatReplyResource reply =
                 service.reply(
@@ -293,7 +294,7 @@ class ChatServiceTest {
                         new ChatRequest(SESSION, "xin chào"), 42L, AssistantAudience.CUSTOMER);
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.GREETING);
-        verify(assistant, never()).reply(any(), any(), any());
+        verify(assistant, never()).reply(any(), any(), any(), any());
     }
 
     @Test
@@ -301,7 +302,7 @@ class ChatServiceTest {
         service.reply(new ChatRequest(SESSION, "xin chào"), null, AssistantAudience.CUSTOMER);
         service.reply(new ChatRequest(SESSION, "xin chào"), 42L, null);
 
-        verify(assistant, never()).reply(any(), any(), any());
+        verify(assistant, never()).reply(any(), any(), any(), any());
         verify(assistantLimit, never()).tryAcquire(any(), any());
     }
 
@@ -313,7 +314,7 @@ class ChatServiceTest {
                                 message(3L, 42L, "câu mới"),
                                 message(2L, 7L, "của người khác"),
                                 message(1L, 42L, "câu cũ")));
-        when(assistant.reply(any(), any(), any()))
+        when(assistant.reply(any(), any(), any(), any()))
                 .thenReturn(
                         new ClaudeAssistant.AiReply(
                                 "ok", ChatIntent.UNKNOWN, "AI:none", List.of()));
@@ -322,7 +323,7 @@ class ChatServiceTest {
 
         @SuppressWarnings("unchecked")
         ArgumentCaptor<List<ChatMessage>> history = ArgumentCaptor.forClass(List.class);
-        verify(assistant).reply(history.capture(), eq("tiếp"), any());
+        verify(assistant).reply(history.capture(), eq("tiếp"), any(), any());
         assertThat(history.getValue()).extracting("message").containsExactly("câu cũ", "câu mới");
     }
 

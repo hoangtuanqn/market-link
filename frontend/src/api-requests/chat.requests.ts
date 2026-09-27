@@ -57,10 +57,16 @@ export type ChatMessageDto = { role: 'user' | 'bot'; message: string; intent: st
  */
 const api = () => (Session.getRawUser() ? privateApi : publicApi);
 
+/**
+ * Where the person is while they ask, so "this order" resolves. Shaped values only, no names and no descriptions: the
+ * server rejects anything else, because this is the one part of the prompt the client fills in.
+ */
+export type PageContextDto = { page: string; recordType?: string; recordRef?: string };
+
 /** FR-090…092 — intent → prepared SQL on the server (R-04); the session key is a client-made UUID. */
 class ChatApi {
-  static ask = async (sessionKey: string, message: string) => {
-    const response = await api().post<ApiResponse<ChatReplyDto>>('/chat', { sessionKey, message });
+  static ask = async (sessionKey: string, message: string, context?: PageContextDto) => {
+    const response = await api().post<ApiResponse<ChatReplyDto>>('/chat', { sessionKey, message, context });
     return response.data.data;
   };
   static farmerBriefing = async () => {

@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
 import AssistantLauncher from '@/components/assistant/AssistantLauncher';
+import { AssistantProvider } from '@/components/assistant/AssistantProvider';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import LiveAnnouncementBanner from '@/components/LiveAnnouncementBanner';
@@ -36,29 +37,31 @@ const MainLayout = ({ unreadCount }: MainLayoutProps) => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <LiveAnnouncementBanner />
-      <Header
-        variant={variant}
-        userName={userName}
-        userEmail={user?.email}
-        avatarUrl={user?.avatarUrl}
-        tier={tier}
-        role={user?.role}
-        settingsTo={user?.role === USER_ROLE.FARMER ? '/farmer/settings' : '/settings'}
-        messagesTo={user?.role === USER_ROLE.FARMER ? '/farmer/messages' : '/messages'}
-        notificationsTo={user?.role === USER_ROLE.FARMER ? '/farmer/notifications' : '/notifications'}
-        cartCount={cartCount}
-        unreadCount={unreadCount ?? unread}
-      />
-      <main className="mx-auto box-border flex w-full max-w-(--size-container) flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
-        <Outlet />
-      </main>
-      <Footer />
-      <AssistantLauncher />
-      {/* Signed-in Customers only; a Farmer gets their tour in the stall panel */}
-      <OnboardingTour role="customer" />
-    </div>
+    <AssistantProvider>
+      <div className="flex min-h-screen flex-col">
+        <LiveAnnouncementBanner />
+        <Header
+          variant={variant}
+          userName={userName}
+          userEmail={user?.email}
+          avatarUrl={user?.avatarUrl}
+          tier={tier}
+          role={user?.role}
+          settingsTo={user?.role === USER_ROLE.FARMER ? '/farmer/settings' : '/settings'}
+          messagesTo={user?.role === USER_ROLE.FARMER ? '/farmer/messages' : '/messages'}
+          notificationsTo={user?.role === USER_ROLE.FARMER ? '/farmer/notifications' : '/notifications'}
+          cartCount={cartCount}
+          unreadCount={unreadCount ?? unread}
+        />
+        <main className="mx-auto box-border flex w-full max-w-(--size-container) flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
+          <Outlet />
+        </main>
+        <Footer />
+        <AssistantLauncher />
+        {/* Signed-in Customers only; a Farmer gets their tour in the stall panel */}
+        <OnboardingTour role="customer" />
+      </div>
+    </AssistantProvider>
   );
 };
 

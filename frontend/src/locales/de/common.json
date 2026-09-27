@@ -583,6 +583,13 @@
       "approve_farmer": "{{label}} freigeben?",
       "reject_farmer": "{{label}} ablehnen?",
       "suspend_farmer": "{{label}} sperren?"
+    },
+    "askAboutThis": "Assistenten fragen",
+    "ask": {
+      "order": "Bestellung {{code}}: Was ist darin, ist die Frist noch offen, und soll ich sie annehmen?",
+      "review": "Entwirf eine kurze, ehrliche Antwort auf diese Bewertung mit {{rating}} Sternen.",
+      "application": "Ist diese Standbewerbung vollständig, und sollte ich vor der Freigabe etwas prüfen?",
+      "reports": "Erkläre diese Zahlen von {{from}} bis {{to}}: Welcher Markt läuft am besten, welcher schwach, und warum?"
     }
   },
   "tour": {

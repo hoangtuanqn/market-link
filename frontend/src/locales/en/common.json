@@ -583,6 +583,13 @@
       "approve_farmer": "Approve {{label}}?",
       "reject_farmer": "Reject {{label}}?",
       "suspend_farmer": "Suspend {{label}}?"
+    },
+    "askAboutThis": "Ask the assistant",
+    "ask": {
+      "order": "Order {{code}}: what is in it, is it still before the cutoff, and should I accept it?",
+      "review": "Draft a short, honest reply to this {{rating}}-star review.",
+      "application": "Is this stall application complete, and is anything worth checking before I approve it?",
+      "reports": "Explain these numbers for {{from}} to {{to}}: which market is busiest, which one is quiet, and why."
     }
   },
   "tour": {

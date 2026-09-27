@@ -583,6 +583,13 @@
       "approve_farmer": "Setujui {{label}}?",
       "reject_farmer": "Tolak {{label}}?",
       "suspend_farmer": "Hentikan sementara {{label}}?"
+    },
+    "askAboutThis": "Tanya asisten",
+    "ask": {
+      "order": "Pesanan {{code}}: isinya apa, masih sebelum batas waktu? Sebaiknya saya terima?",
+      "review": "Buatkan balasan singkat dan jujur untuk ulasan {{rating}} bintang ini.",
+      "application": "Pengajuan lapak ini sudah lengkap belum, ada yang perlu dicek sebelum saya setujui?",
+      "reports": "Jelaskan angka dari {{from}} sampai {{to}}: pasar mana yang paling ramai, mana yang sepi, dan kenapa."
     }
   },
   "tour": {

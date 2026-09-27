@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import ReviewApi, { toReviewCard, type ReviewDto } from '@/api-requests/review.requests';
 import StallApi from '@/api-requests/stall.requests';
 import Rating from '@/components/Rating';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import ReviewCard from '@/components/ReviewCard';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
@@ -30,6 +31,7 @@ const NO_REVIEWS: ReviewDto[] = [];
 const FarmerReviewsPage = () => {
   const { t, i18n } = useTranslation('FarmerReviews');
   const { t: tc } = useTranslation();
+  const { t: tAssistant } = useTranslation('common');
   const rating = (n: number) =>
     new Intl.NumberFormat(i18n.language, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n);
 
@@ -134,9 +136,13 @@ const FarmerReviewsPage = () => {
               fluid
               actions={
                 r.reply || openReply === r.id ? undefined : (
-                  <Button variant="secondary" size="sm" onClick={() => setOpenReply(r.id)}>
-                    {t('action.reply')}
-                  </Button>
+                  <>
+                    <Button variant="secondary" size="sm" onClick={() => setOpenReply(r.id)}>
+                      {t('action.reply')}
+                    </Button>
+                    {/* FR-093: the assistant drafts the reply; the Farmer still types it into the box and posts it. */}
+                    <AskAssistant question={tAssistant('assistant.ask.review', { rating: r.rating })} />
+                  </>
                 )
               }
             >

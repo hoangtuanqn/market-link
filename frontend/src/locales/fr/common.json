@@ -583,6 +583,13 @@
       "approve_farmer": "Approuver {{label}} ?",
       "reject_farmer": "Refuser {{label}} ?",
       "suspend_farmer": "Suspendre {{label}} ?"
+    },
+    "askAboutThis": "Demander à l'assistant",
+    "ask": {
+      "order": "Commande {{code}} : que contient-elle, est-on encore avant la limite, dois-je l'accepter ?",
+      "review": "Rédige une réponse courte et honnête à cet avis de {{rating}} étoiles.",
+      "application": "Cette demande de stand est-elle complète, et y a-t-il quelque chose à vérifier avant d'approuver ?",
+      "reports": "Explique ces chiffres du {{from}} au {{to}} : quel marché marche le mieux, lequel est calme, et pourquoi ?"
     }
   },
   "tour": {

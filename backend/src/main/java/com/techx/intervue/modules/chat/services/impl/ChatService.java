@@ -138,7 +138,8 @@ public class ChatService implements ChatServiceInterface {
             return assistant.reply(
                     recentHistory(request.sessionKey(), userId),
                     request.message(),
-                    contextFor(userId, audience));
+                    contextFor(userId, audience),
+                    request.context());
         } catch (RuntimeException e) {
             // AnthropicException (network, 4xx/5xx, rate limit) or a failed lookup
             log.warn("Assistant failed, keyword engine answers: {}", e.toString());

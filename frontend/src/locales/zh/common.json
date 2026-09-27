@@ -583,6 +583,13 @@
       "approve_farmer": "批准 {{label}}？",
       "reject_farmer": "拒绝 {{label}}？",
       "suspend_farmer": "暂停 {{label}}？"
+    },
+    "askAboutThis": "问助手",
+    "ask": {
+      "order": "订单 {{code}} 有哪些商品？还在截止时间前吗？我应该接受吗？",
+      "review": "帮我给这条 {{rating}} 星评价写一段简短诚恳的回复。",
+      "application": "这份摊位申请齐全吗？批准前有什么需要核对的？",
+      "reports": "解释一下 {{from}} 到 {{to}} 的数据：哪个市集最旺，哪个冷清，为什么。"
     }
   },
   "tour": {

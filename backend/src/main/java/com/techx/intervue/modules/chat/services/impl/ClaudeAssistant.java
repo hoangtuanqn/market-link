@@ -16,6 +16,7 @@ import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
+import com.techx.intervue.modules.chat.requests.ChatRequest.PageContext;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ProposedAction;
@@ -189,7 +190,11 @@ public class ClaudeAssistant {
      *
      * @param history earlier messages of this session and account, oldest first
      */
-    public AiReply reply(List<ChatMessage> history, String userMessage, AssistantContext context) {
+    public AiReply reply(
+            List<ChatMessage> history,
+            String userMessage,
+            AssistantContext context,
+            PageContext page) {
         AssistantAudience audience = context.audience();
         AnthropicClient anthropic = client.getObject();
         List<MessageParam> conversation = new ArrayList<>(toParams(history));
@@ -204,7 +209,7 @@ public class ClaudeAssistant {
         for (int round = 0; round <= rounds; round++) {
             boolean lastRound = round == rounds;
             Message response =
-                    anthropic.messages().create(params(conversation, lastRound, audience));
+                    anthropic.messages().create(params(conversation, lastRound, audience, page));
             StopReason stop = response.stopReason().orElse(StopReason.END_TURN);
 
             if (StopReason.REFUSAL.equals(stop)) {
@@ -258,7 +263,10 @@ public class ClaudeAssistant {
     }
 
     private MessageCreateParams params(
-            List<MessageParam> conversation, boolean lastRound, AssistantAudience audience) {
+            List<MessageParam> conversation,
+            boolean lastRound,
+            AssistantAudience audience,
+            PageContext page) {
         MessageCreateParams.Builder builder =
                 MessageCreateParams.builder()
                         .model(properties.model())
@@ -270,7 +278,9 @@ public class ClaudeAssistant {
                                                 .cacheControl(
                                                         CacheControlEphemeral.builder().build())
                                                 .build(),
-                                        TextBlockParam.builder().text(today()).build()))
+                                        TextBlockParam.builder()
+                                                .text(today() + onScreen(page))
+                                                .build()))
                         .messages(conversation);
         AssistantTools.definitionsFor(audience).forEach(builder::addTool);
         if (lastRound) {
@@ -347,5 +357,29 @@ public class ClaudeAssistant {
     private static String loggedIntent(Set<String> toolsUsed) {
         String value = "AI:" + (toolsUsed.isEmpty() ? "none" : String.join("+", toolsUsed));
         return value.length() <= INTENT_COLUMN ? value : value.substring(0, INTENT_COLUMN);
+    }
+
+    /**
+     * What the person is looking at, appended after the cache breakpoint because it changes per
+     * request. Only shaped values reach this: a route pattern and a record reference, both
+     * validated on the request. There is nothing here a person could have typed.
+     */
+    private static String onScreen(PageContext page) {
+        if (page == null || page.page() == null || page.page().isBlank()) {
+            return "";
+        }
+        StringBuilder text =
+                new StringBuilder("\n\nThey are on the screen \"").append(page.page()).append("\"");
+        if (page.recordType() != null && page.recordRef() != null) {
+            text.append(", looking at the ")
+                    .append(page.recordType())
+                    .append(" ")
+                    .append(page.recordRef());
+        }
+        text.append(
+                ". If they say \"this order\", \"this stall\" or anything else without naming it, that"
+                        + " is what they mean. Look it up with a tool before answering; never"
+                        + " describe it from this line alone.");
+        return text.toString();
     }
 }

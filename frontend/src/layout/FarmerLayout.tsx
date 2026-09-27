@@ -1,6 +1,8 @@
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
+import AssistantLauncher from '@/components/assistant/AssistantLauncher';
+import { AssistantProvider } from '@/components/assistant/AssistantProvider';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import OnboardingTour from '@/components/OnboardingTour';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
@@ -115,7 +117,7 @@ const FarmerLayout = () => {
   }));
 
   return (
-    <>
+    <AssistantProvider>
       <OnboardingTour role="farmer" />
       <DashboardShell
         badge={t('farmerNav.badge')}
@@ -141,7 +143,9 @@ const FarmerLayout = () => {
         accountTo="/account"
         headerActions={<NotificationBell to="/farmer/notifications" />}
       />
-    </>
+      {/* FR-093: without this the Farmer tools exist on the server and nothing in this panel can reach them. */}
+      <AssistantLauncher />
+    </AssistantProvider>
   );
 };
 

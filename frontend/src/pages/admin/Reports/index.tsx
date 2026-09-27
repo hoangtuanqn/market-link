@@ -6,6 +6,7 @@ import {
   type TopProductDto,
   type RevenueByMarketDto,
 } from '@/api-requests/report.requests';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Kpi } from '@/components/ui/kpi';
 import { Table, type TableColumn } from '@/components/ui/table';
@@ -30,6 +31,7 @@ const TOP_LIMIT = 10;
  */
 const AdminReportsPage = () => {
   const { t } = useTranslation('AdminReports');
+  const { t: tAssistant } = useTranslation('common');
   const { t: tc } = useTranslation();
   const [from, setFrom] = useState(DEFAULT_FROM);
   const [to, setTo] = useState(DEFAULT_TO);
@@ -85,7 +87,10 @@ const AdminReportsPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('title')}</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-h1">{t('title')}</h1>
+          <AskAssistant question={tAssistant('assistant.ask.reports', { from, to })} />
+        </div>
         <p className="text-body max-w-160">{t('intro')}</p>
       </div>
 
