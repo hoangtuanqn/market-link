@@ -10,18 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
-import { dayList, dayName, formatClock, formatDayMonth } from '@/lib/format';
+import { dayList, dayName, formatClock, formatDayMonth, upcomingDate } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 
 type DayValue = 'thu' | 'fri' | 'sat' | 'sun';
 
-/** The demo market week (24–27/09/2026); labels come from format.ts so they follow the language and date order. */
-const DAYS: { value: DayValue; date: Date; disabled?: boolean }[] = [
-  { value: 'thu', date: new Date(2026, 8, 24), disabled: true },
-  { value: 'fri', date: new Date(2026, 8, 25) },
-  { value: 'sat', date: new Date(2026, 8, 26) },
-  { value: 'sun', date: new Date(2026, 8, 27) },
-];
+/** Thursday to Sunday; each chip shows the next date that weekday falls on, counted from today. */
+const DAYS: DayValue[] = ['thu', 'fri', 'sat', 'sun'];
 const DOW: Record<DayValue, number> = { thu: 4, fri: 5, sat: 6, sun: 0 };
 /** Contract §3 caps a page at 50; every market of the city fits in one call. */
 const FETCH_SIZE = 50;
@@ -92,7 +87,6 @@ const MarketMapPage = () => {
     return out;
   }, [openMarkets, openStalls, showMarkets, showStalls, t]);
 
-  const picked = DAYS.find((d) => d.value === day)!;
   const pickedName = dayName(DOW[day], 'long');
 
   return (
@@ -100,7 +94,7 @@ const MarketMapPage = () => {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <p className="font-hand text-hand text-ink-muted">
-            {pickedName} {formatDayMonth(picked.date)}
+            {pickedName} {formatDayMonth(upcomingDate(DOW[day]))}
           </p>
           <h1 className="font-hand md:text-display text-h1">{t('title')}</h1>
           <p className="text-body-lg max-w-160">{t('intro')}</p>
@@ -109,10 +103,11 @@ const MarketMapPage = () => {
           legend={t('marketDay')}
           name="map-day"
           options={DAYS.map((d) => ({
-            value: d.value,
-            label: dayName(DOW[d.value], 'long'),
-            date: formatDayMonth(d.date),
-            disabled: d.disabled,
+            value: d,
+            label: dayName(DOW[d], 'long'),
+            date: formatDayMonth(upcomingDate(DOW[d])),
+            // Like the Markets page: a day no market opens on is struck through, from the data, not hard-coded
+            disabled: load.kind === 'ready' && !all.some((m) => m.days.includes(DOW[d])),
           }))}
           value={day}
           onChange={(v) => setDay(v as DayValue)}

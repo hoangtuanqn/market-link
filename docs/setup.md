@@ -1,0 +1,367 @@
+# Setup guide
+
+Everything needed to run MarketLink on a development machine. For a first look, the Docker quick start in the
+[README](../README.md#quick-start) is enough; come back here to run the backend or frontend outside Docker, to
+enable Web Push, or when something fails.
+
+**Contents:** [Prerequisites](#1-prerequisites) · [Option A — Docker](#2-option-a--run-everything-in-docker) ·
+[Option B — on your machine](#3-option-b--run-the-backend-and-frontend-on-your-machine) ·
+[Useful commands](#4-useful-commands) · [Web Push](#5-web-push-notifications-after-the-tab-is-closed) ·
+[Shopping assistant](#6-shopping-assistant-answered-by-claude) ·
+[Chat check](#7-chat--manual-two-browser-check-fr-111-fr-115-fr-116) · [Troubleshooting](#8-troubleshooting)
+
+## 1. Prerequisites
+
+Install the following tools and verify each one with its check command:
+
+| Tool | Required version | Check command | Needed for |
+|---|---|---|---|
+| Git | Any | `git --version` | Both options |
+| Docker Desktop | Latest, with Compose v2 | `docker compose version` | Both options. On Windows, enable WSL 2 |
+| `make` | Any | `make --version` | Option A. On Windows, run it from WSL or Git Bash |
+| JDK | **25** | `java -version` | Option B. `JAVA_HOME` must point to JDK 25 (e.g. Eclipse Temurin 25) |
+| Node.js | **>= 20.9** | `node -v` | Option B, and the Git hooks. Comes with `npm` |
+
+> You do **not** need to install Maven, MySQL, Redis or RabbitMQ. The project uses the Maven Wrapper (`mvnw`), and
+> MySQL, Redis and RabbitMQ run in Docker.
+
+## 2. Option A — Run Everything in Docker
+
+The recommended way, and the one used for demos. Only Docker Desktop and `make` are needed.
+
+```bash
+make up     # mysql + redis + rabbitmq + backend (:8080) + frontend (:3000); creates .env on first run
+make seed   # demo data (db/seed.sql), once the backend has started; safe to re-run
+make init   # optional, needs Node.js: install the Git hooks that format code on commit
+make help   # list every command
+```
+
+Demo accounts for every role (shared password `Demo@1234`) are listed in
+[`DEMO_CREDENTIALS.md`](DEMO_CREDENTIALS.md).
+
+- Backend and frontend are in the Compose profile `app`, so plain `docker compose up -d` (Option B, Step 4)
+  starts **only** MySQL, Redis and RabbitMQ and does not clash with a backend/frontend run on your machine.
+  Do not use both ways at the same time — they use the same ports 8080 and 3000.
+- Source code is mounted into the containers: the frontend hot-reloads; after editing Java run `make be-restart`.
+- The backend container uses the `dev` profile (`application-dev.yaml`, values match `.env.example`),
+  so `application-local.yml` is not needed here.
+- Remote debug the backend by attaching to port `5005` (VS Code config *Attach backend (Docker :5005)*).
+
+| Command | What it does |
+|---|---|
+| `make infra` | Only MySQL + Redis + RabbitMQ (same as `docker compose up -d`) |
+| `make tools` | Adminer at http://localhost:8081, RedisInsight at http://localhost:5540 |
+| RabbitMQ UI | http://localhost:15672 (user/password from `RABBITMQ_USER` / `RABBITMQ_PASSWORD` in `.env`) — realtime broker for chat and notifications (`/user/topic/notifications`, see `docs/api-contract.md` §9), runs with the stack |
+| Chat photos | Stored on the `chat-uploads` volume at `CHAT_UPLOAD_DIR` (default `/var/lib/marketlink/chat`), **not** under `/uploads`. They are only served through `GET /api/v1/attachments/{id}`, which checks that you are in the conversation. Limits: `CHAT_MAX_UPLOAD_BYTES` (5 MB), `CHAT_MESSAGES_PER_MINUTE` (30), `CHAT_IMAGES_PER_HOUR` (10), `CHAT_CONVERSATIONS_PER_HOUR` (20) |
+| `make logs s=backend` | Follow the logs of one service |
+| `make be-test` | Run backend tests in the container |
+| `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
+| `make mysql` / `make redis` | Open a MySQL / Redis shell |
+| `make prod-init` / `make prod` | Create `.env.production` from the template / build and run production (separate containers and data) |
+| `make down` / `make clean` | Stop the stack / stop and **delete** DB + Redis data |
+
+## 3. Option B — Run the Backend and Frontend on Your Machine
+
+Use this when you work on the code every day: the backend runs from your IDE or `mvnw`, the frontend from `npm run dev`,
+and Docker only runs MySQL, Redis and RabbitMQ.
+
+> Commands below are for **Git Bash / macOS / Linux**.
+> On **PowerShell**, replace `./mvnw` with `.\mvnw.cmd`, `cp` with `copy`, and wrap `-D...` arguments in quotes (see Step 6).
+
+### Step 1 — Clone the repository
+
+```bash
+git clone https://github.com/hoangtuanqn/market-link.git
+cd market-link
+git switch dev      # work on dev; main is production
+```
+
+> Branches, environments (dev / production), commit and PR rules: see **[CONTRIBUTING.md](../CONTRIBUTING.md)**.
+
+### Step 2 — Install Git hooks
+
+Run in the **project root**:
+
+```bash
+npm install
+```
+
+This installs [Lefthook](https://github.com/evilmartians/lefthook) and registers a pre-commit hook that auto-formats Java (Spotless) and TS/JS (Prettier) files on every commit.
+
+### Step 3 — Create the `.env` file (root only)
+
+The `.env` file is used by **Docker Compose** to create the MySQL database and user. It lives in the **project root only**.
+
+```bash
+cp .env.example .env
+```
+
+The defaults in `.env.example` work as they are. The four MySQL values are the ones that matter for this option:
+
+```env
+MYSQL_ROOT_PASSWORD=<your-root-password>
+MYSQL_DATABASE=intervue_db
+MYSQL_USER=intervue
+MYSQL_PASSWORD=<your-db-password>
+```
+
+| Variable | Value |
+|---|---|
+| `MYSQL_DATABASE` | Keep `intervue_db` — this is the database name the backend uses in `application.yaml` |
+| `MYSQL_USER` | Must be `intervue` — this is the username the backend uses in `application.yaml` |
+| `MYSQL_ROOT_PASSWORD` | Any password you like (MySQL root account) |
+| `MYSQL_PASSWORD` | Any password you like. **Remember it** — you will put the same value in `application-local.yml` in Step 5 |
+
+> `.env` is git-ignored. Never commit it.
+
+### Step 4 — Start MySQL, Redis and RabbitMQ
+
+Open Docker Desktop first, then in the **project root**:
+
+```bash
+docker compose up -d
+```
+
+Wait until the three containers are `healthy` (10–30 seconds on first run):
+
+```bash
+docker compose ps
+```
+
+Expected output:
+
+```
+NAME                IMAGE                          STATUS              PORTS
+intervue-mysql      mysql:8.4                      Up ... (healthy)    0.0.0.0:3306->3306/tcp
+intervue-rabbitmq   rabbitmq:4-management-alpine   Up ... (healthy)    0.0.0.0:15672->15672/tcp, ...
+intervue-redis      redis:7.4-alpine               Up ... (healthy)    0.0.0.0:6379->6379/tcp
+```
+
+| Service | Address | Credentials |
+|---|---|---|
+| MySQL | `localhost:3306` | Database, user and password from your `.env` |
+| Redis | `localhost:6379` | No password |
+| RabbitMQ UI | http://localhost:15672 | `RABBITMQ_USER` / `RABBITMQ_PASSWORD` from your `.env` |
+
+Data is stored in the Docker volumes `mysql-data`, `redis-data` and `rabbitmq-data`, so it survives container restarts.
+
+### Step 5 — Create `application-local.yml` for secrets
+
+The backend config is split into two files in `backend/src/main/resources/`:
+
+| File | Committed? | Contains |
+|---|---|---|
+| `application.yaml` | Yes | All the main config (datasource URL, username, JWT expiration, issuer...). **Do not put secrets here.** |
+| `application-local.yml` | **No** (git-ignored) | **Only the sensitive values**, which override the placeholders in `application.yaml` when the `local` profile is active |
+
+Every developer must create `application-local.yml` manually. Create the file at:
+
+```
+backend/src/main/resources/application-local.yml
+```
+
+with the following content:
+
+```yaml
+spring:
+  datasource:
+    password: <your-db-password>
+
+jwt:
+  secret: <your-base64-secret>
+```
+
+| Key | Value |
+|---|---|
+| `spring.datasource.password` | Exactly the same as `MYSQL_PASSWORD` in the root `.env` (Step 3) |
+| `jwt.secret` | A **Base64-encoded** key of at least 32 bytes (256 bits), used to sign JWT tokens. Generate one with the command below |
+
+Generate a JWT secret:
+
+```bash
+# Git Bash / macOS / Linux
+openssl rand -base64 48
+```
+
+```powershell
+# PowerShell
+[Convert]::ToBase64String((1..48 | ForEach-Object { Get-Random -Maximum 256 }))
+```
+
+Copy the output and paste it as the value of `jwt.secret`.
+
+> Everything else (database URL, username, JWT expiration...) comes from `application.yaml` — do not copy it into `application-local.yml`. If you add a new secret to the project later, put a placeholder in `application.yaml` and the real value in `application-local.yml`.
+
+### Step 6 — Run the backend
+
+From the `backend/` folder, start the app with the `local` profile:
+
+```bash
+cd backend
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+```powershell
+# PowerShell
+cd backend
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
+- The first run downloads Maven and all dependencies, which can take a few minutes.
+- On startup, **Flyway runs the migrations** in `src/main/resources/db/migration/` and creates all tables automatically. You do not need to create tables by hand.
+- The backend runs at **http://localhost:8080**.
+
+Verify it is running:
+
+```bash
+curl http://localhost:8080/ping
+# {"status":true,"message":"Pong!"}
+```
+
+Optionally, test the register API:
+
+```bash
+curl -i -X POST http://localhost:8080/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","address":"12 Le Loi, Q1","password":"123456","confirmPassword":"123456"}'
+```
+
+A successful response (`201`) returns an `accessToken` and the user in the body, plus a refresh token in the `Set-Cookie` header.
+
+#### API docs (Swagger UI)
+
+While the backend is running, open **http://localhost:8080/swagger-ui.html** to browse and try every endpoint
+(raw OpenAPI JSON: `/v3/api-docs`). For endpoints that need login, click **Authorize** and paste the
+`accessToken` (without the `Bearer ` prefix). Swagger is disabled in the `prod` profile unless `SWAGGER_ENABLED=true`.
+
+#### Running from an IDE
+
+- **IntelliJ IDEA:** open `backend/` as a Maven project. Enable *Settings → Build, Execution, Deployment → Compiler → Annotation Processors → Enable annotation processing* (required for Lombok). Edit the run configuration for `IntervueApplication` and set *Active profiles* to `local`.
+- **VS Code:** install *Extension Pack for Java*. Run `IntervueApplication` with this in `.vscode/launch.json`:
+  ```json
+  {
+    "type": "java",
+    "name": "IntervueApplication (local)",
+    "request": "launch",
+    "mainClass": "com.techx.intervue.IntervueApplication",
+    "projectName": "intervue",
+    "env": { "SPRING_PROFILES_ACTIVE": "local" }
+  }
+  ```
+
+### Step 7 — Run the frontend
+
+Open a new terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend runs at **http://localhost:3000**.
+
+### Daily run (after the first setup)
+
+```bash
+docker compose up -d                                                  # project root
+cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local  # terminal 1
+cd frontend && npm run dev                                            # terminal 2
+```
+
+## 4. Useful Commands
+
+```bash
+# Docker (project root)
+docker compose stop                 # stop containers, keep data
+docker compose down                 # remove containers, keep data
+docker compose down -v              # remove containers AND delete all DB/Redis data
+
+# Open MySQL / Redis CLI
+docker exec -it intervue-mysql mysql -u intervue -p intervue_db
+docker exec -it intervue-redis redis-cli
+
+# Backend (backend/)
+./mvnw test                         # run tests
+./mvnw spotless:apply               # format Java code
+```
+
+## 5. Web Push (notifications after the tab is closed)
+
+1. Run `make vapid-keys`, paste the two printed lines `VAPID_PUBLIC_KEY=…` / `VAPID_PRIVATE_KEY=…` into `.env`
+   (production: `.env.production`), then run `make up` again. The backend logs `Web Push: enabled`; with the keys left
+   empty it logs `disabled (no VAPID keys)` and everything else still works.
+2. Sign in and click **Turn on** on the "Turn on notifications" card (or Settings → Notifications). Allow the browser
+   permission prompt.
+3. Close every MarketLink tab and have someone send you a notification (for example, an admin posts an announcement)
+   → the operating system shows it.
+
+Notes: Web Push only works over **HTTPS** (localhost is exempt). iOS/iPadOS only receives it once the site has been
+added to the Home Screen (iOS 16.4+). Signing out stops that browser from receiving the account's notifications.
+
+## 6. Shopping assistant answered by Claude
+
+Signed-in customers (and farmers using the customer panel) get their answers from Claude; visitors and admins
+get the keyword engine. Claude only chooses among read-only tools — product search, markets, stalls, pickup
+times and the user guide — which run the same fixed, parameterised SQL as the keyword engine, so it never writes
+SQL (CLAUDE.md R-04). How it works: [`chatbot-design.md`](chatbot-design.md).
+
+1. Get a key at https://console.anthropic.com and put it in `.env` (production: `.env.production`):
+
+   ```env
+   ANTHROPIC_API_KEY=<your-key>
+   CHATBOT_AI_MODEL=claude-haiku-4-5      # default
+   CHATBOT_AI_MESSAGES_PER_HOUR=30        # per account; above it the keyword engine answers
+   ```
+
+2. Run `make up` again (or restart the backend with the variable exported, for option B).
+
+With no key, over the hourly limit, or when the API fails, the keyword engine answers instead, so the assistant
+never stops replying.
+
+## 7. Chat — manual two-browser check (FR-111, FR-115, FR-116)
+
+Spec §13 asks for the realtime path to be checked by hand, because unit tests mock the broker.
+Run this once before a demo.
+
+1. Open two browsers. Sign in as a customer in one, as an **approved** farmer in the other.
+   (A farmer account with no `farmer_profiles` row is closed to chat by design — the backend logs a
+   warning about this at startup.)
+2. Customer opens the stall and sends a message → it appears in the farmer's window **within a
+   second, without a reload**.
+3. Farmer starts typing → the customer sees the typing dots; stop typing → they disappear.
+4. Farmer sends a photo → the customer sees it. Copy the photo URL, open it in a third browser
+   signed in as somebody else → **403**.
+5. Customer reports the farmer's message (reason + optional note). Reporting it a second time →
+   **409**.
+6. Sign in as an admin, open **Reported messages**, open the report → you see the reported message
+   plus **at most five on each side**, and nothing else from that conversation.
+7. Admin hides the message → it disappears from **both** windows without a reload.
+8. Still as admin, open the photo URL of the **reported** message → **200**. Open the photo URL of a
+   **neighbouring** message → **403**.
+
+## 8. Troubleshooting
+
+| Error | Cause | Fix |
+|---|---|---|
+| `Access denied for user 'intervue'@...` | Backend started without the `local` profile, **or** `spring.datasource.password` in `application-local.yml` does not match `MYSQL_PASSWORD` in `.env`, **or** `MYSQL_USER` in `.env` is not `intervue` | Run with `-Dspring-boot.run.profiles=local`, and check Step 3 and Step 5 values match |
+| `Access denied` even though all values match | The MySQL volume was created earlier with a different user/password (MySQL only reads `.env` on first start) | Reset the volume: `docker compose down -v` then `docker compose up -d` (deletes local data) |
+| `Communications link failure` / `Connection refused` on 3306 or 6379 | Docker is not running or containers are not healthy yet | Start Docker Desktop, run `docker compose ps` and wait for `healthy` |
+| `Bind for 0.0.0.0:3306 failed: port is already allocated` | Another MySQL (XAMPP, MySQL Server...) is using port 3306 | Stop the other MySQL, or change the port mapping in `docker-compose.yml` (e.g. `"3307:3306"`) and update the port in `spring.datasource.url` in `application.yaml` locally (do not commit it) |
+| `Port 8080 was already in use` | Another process is using port 8080 | Stop the process using port 8080 |
+| `Illegal base64 character` / `WeakKeyException` on startup | `jwt.secret` is not valid Base64 or is shorter than 256 bits | Generate a new secret with the command in Step 5 |
+| `invalid target release: 25` | `JAVA_HOME` points to an older JDK | Install JDK 25, update `JAVA_HOME`, reopen the terminal and check `java -version` |
+| `./mvnw: Permission denied` | Missing execute permission (macOS/Linux) | `chmod +x backend/mvnw` |
+| `/usr/bin/env: 'sh\r': No such file or directory` | `mvnw` was checked out with CRLF line endings | `git config core.autocrlf input`, then `git checkout -- backend/mvnw` |
+| `FlywayValidateException: Migration checksum mismatch` | An already-applied migration file was edited | Revert the edit and add a new migration file instead. On local only, you can reset with `docker compose down -v` |
+| `Migration checksum mismatch for migration version 20260926017` (and `…018`) after pulling `dev` | PR #167 (27/09/2026) rewrote migration 017, replaced 018 and moved favourites to 019 after they had been merged, so a database created before it no longer matches | Reset the local database: `make clean && make up && make seed` (deletes local data). There is no in-place fix: the old and new 017/018 build different tables |
+| Lombok `cannot find symbol` (getters/setters) in IDE | Annotation processing is disabled | Enable it (see *Running from an IDE*) |
+| Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
+| Backend log `Chat realtime: app.chat.rabbitmq.host is empty` when running on your machine (Option B) | Backend runs outside Docker and `RABBITMQ_HOST` is not set | Chat still works with the in-app broker; for the RabbitMQ relay, `export RABBITMQ_HOST=localhost` and map port 61613 in `docker-compose.yml` |
+| `TCP connection failure in session _system_` repeating | RabbitMQ not healthy yet, or the STOMP plugin is off | `docker compose logs rabbitmq`; check `rabbitmq_stomp` in `rabbitmq-plugins list -e`. The backend keeps serving REST and reconnects on its own |
+| `PATCH /api/v1/admin/messages/{id}/hide` returns 403 `MODERATION_OUT_OF_SCOPE` | The message has not been reported by anyone | Working as designed (spec 8.3): admins act only on reported messages. There is no "browse all inboxes" screen |
+| An admin sees 403 opening a photo they can see in the report context | Only the **reported** message's photo is open to admins; the five messages either side are context, not the thing being reported | Working as designed. Every admin photo view is logged |
+| Backend logs `N account(s) have role=farmer but no farmer_profiles row` at startup | Seed data or a manual DB edit created a farmer without a stall profile | Chat is closed for those accounts. Add an approved `farmer_profiles` row for each |
+| Chat photos return 404 after rebuilding containers | The `chat-uploads` volume was removed; the database rows survive but the files are gone | Stop with `docker compose down` (**without** `-v`) to keep volumes. Photos live on `chat-uploads`, separate from `uploads-data` |
+| `POST /api/v1/attachments` returns 415 for a photo that opens fine on your machine | The file is not JPEG/PNG/WebP — the server reads magic bytes and ignores the file extension and `Content-Type` | Re-save it as JPEG or PNG |
+| `<img src="/api/v1/attachments/5">` shows a broken image | That endpoint checks the JWT in the `Authorization` header, and `<img>` does not send it | `fetch` the URL with the header, then render `URL.createObjectURL(blob)` |

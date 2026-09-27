@@ -20,7 +20,7 @@ place pre-orders far ahead (`FarmerProfile.orderCutoffHours` goes up to 72h, `Sl
 - FR-063 (`weekly_stock_templates`, already shipped this session) could only ever be a shortcut for
   refilling that one shared pool — its `dayOfWeek` was not actually scoping anything.
 
-Verified against the original SRS (`docs/MarketLink End-to-End Web Solutions_SRS.pdf`, p.9): "place a
+Verified against the original SRS (`docs/requirements/MarketLink-SRS.pdf`, p.9): "place a
 pre-order against the Farmer's available stock" plus "Farmers can view incoming pre-orders, accept or
 decline them" — deduction-at-placement with Farmer review *afterward* is the documented flow (matches
 D-02); there is no requirement to hold deduction until Farmer approval. That part of D-02 is not

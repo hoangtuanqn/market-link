@@ -18,7 +18,6 @@
     "text": "Vos produits restent réservés pendant l’examen. Vous recevez une notification quand elle est acceptée."
   },
   "help": "Ici, vous pouvez réduire les quantités ou retirer des articles. Pour ajouter autre chose de {{stall}}, passez une nouvelle commande. Les quantités sont limitées au stock restant du stand aujourd’hui.",
-  "note": "Note pour le stand",
   "submit": "Envoyer les modifications pour validation",
   "discard": "Annuler les modifications",
   "toast": {

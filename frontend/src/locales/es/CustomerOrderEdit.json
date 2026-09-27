@@ -18,7 +18,6 @@
     "text": "Tus productos siguen reservados mientras lo revisan. Recibirás una notificación cuando se acepte."
   },
   "help": "Aquí puedes reducir cantidades o quitar artículos. Para añadir algo más de {{stall}}, haz un pedido nuevo. Las cantidades tienen como límite lo que le queda hoy al puesto.",
-  "note": "Nota para el puesto",
   "submit": "Enviar cambios para aprobación",
   "discard": "Descartar cambios",
   "toast": {

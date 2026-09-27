@@ -16,14 +16,14 @@ import type { MarketType } from '@/types/market.types';
 const PAGE_SIZE = 12;
 /** Monday first; 0 = Sunday. */
 const DOW = [1, 2, 3, 4, 5, 6, 0];
-const LOW = 30000;
-const HIGH = 80000;
-/** Price bands become `minPrice`/`maxPrice` on the request (contract §5); prices are whole đồng. */
+const LOW = 1;
+const HIGH = 3;
+/** Price bands become `minPrice`/`maxPrice` on the request (contract §5); prices are USD with cents. */
 const PRICE_BANDS = [
   { value: 'any', min: undefined, max: undefined },
-  { value: 'low', min: undefined, max: LOW - 1 },
+  { value: 'low', min: undefined, max: LOW - 0.01 },
   { value: 'mid', min: LOW, max: HIGH },
-  { value: 'high', min: HIGH + 1, max: undefined },
+  { value: 'high', min: HIGH + 0.01, max: undefined },
 ] as const;
 type PriceBand = (typeof PRICE_BANDS)[number]['value'];
 /** Chip label → the server's whitelist value. */

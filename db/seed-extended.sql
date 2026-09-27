@@ -751,219 +751,219 @@ ON DUPLICATE KEY UPDATE stall_name = 'Rau sạch Tài Hóc Môn', approval_statu
 
 -- ===== 2. NEW PRODUCTS =====
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Rau cải bó xôi', 'Cải bó xôi hữu cơ, lá non.', 25000, 'bunch', 40, 'available', FALSE
+SELECT f.id, c.id, 'Rau cải bó xôi', 'Cải bó xôi hữu cơ, lá non.', 1.00, 'bunch', 40, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cải bó xôi hữu cơ, lá non.', price = 25000, stock_quantity = 40;
+ON DUPLICATE KEY UPDATE description = 'Cải bó xôi hữu cơ, lá non.', price = 1.00, stock_quantity = 40;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Rau xà lách Iceberg', 'Xà lách giòn, trồng sạch.', 18000, 'kg', 35, 'available', FALSE
+SELECT f.id, c.id, 'Rau xà lách Iceberg', 'Xà lách giòn, trồng sạch.', 0.70, 'kg', 35, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Xà lách giòn, trồng sạch.', price = 18000, stock_quantity = 35;
+ON DUPLICATE KEY UPDATE description = 'Xà lách giòn, trồng sạch.', price = 0.70, stock_quantity = 35;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cải thìa', 'Cải thìa baby, nấu canh ngọt.', 15000, 'bunch', 50, 'available', FALSE
+SELECT f.id, c.id, 'Cải thìa', 'Cải thìa baby, nấu canh ngọt.', 0.60, 'bunch', 50, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cải thìa baby, nấu canh ngọt.', price = 15000, stock_quantity = 50;
+ON DUPLICATE KEY UPDATE description = 'Cải thìa baby, nấu canh ngọt.', price = 0.60, stock_quantity = 50;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Rau má', 'Rau má tươi, xay sinh tố.', 12000, 'bunch', 30, 'available', FALSE
+SELECT f.id, c.id, 'Rau má', 'Rau má tươi, xay sinh tố.', 0.50, 'bunch', 30, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Rau má tươi, xay sinh tố.', price = 12000, stock_quantity = 30;
+ON DUPLICATE KEY UPDATE description = 'Rau má tươi, xay sinh tố.', price = 0.50, stock_quantity = 30;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Chôm chôm', 'Chôm chôm nhãn Bến Tre, ngọt lịm.', 35000, 'kg', 60, 'available', FALSE
+SELECT f.id, c.id, 'Chôm chôm', 'Chôm chôm nhãn Bến Tre, ngọt lịm.', 1.40, 'kg', 60, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Chôm chôm nhãn Bến Tre, ngọt lịm.', price = 35000, stock_quantity = 60;
+ON DUPLICATE KEY UPDATE description = 'Chôm chôm nhãn Bến Tre, ngọt lịm.', price = 1.40, stock_quantity = 60;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Mận An Phước', 'Mận hồng đào, giòn ngọt.', 40000, 'kg', 25, 'available', FALSE
+SELECT f.id, c.id, 'Mận An Phước', 'Mận hồng đào, giòn ngọt.', 1.60, 'kg', 25, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Mận hồng đào, giòn ngọt.', price = 40000, stock_quantity = 25;
+ON DUPLICATE KEY UPDATE description = 'Mận hồng đào, giòn ngọt.', price = 1.60, stock_quantity = 25;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nhãn lồng', 'Nhãn lồng Hưng Yên cơm dày.', 55000, 'kg', 30, 'available', FALSE
+SELECT f.id, c.id, 'Nhãn lồng', 'Nhãn lồng Hưng Yên cơm dày.', 2.20, 'kg', 30, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nhãn lồng Hưng Yên cơm dày.', price = 55000, stock_quantity = 30;
+ON DUPLICATE KEY UPDATE description = 'Nhãn lồng Hưng Yên cơm dày.', price = 2.20, stock_quantity = 30;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Măng cụt', 'Măng cụt Lái Thiêu tím đậm.', 65000, 'kg', 20, 'available', FALSE
+SELECT f.id, c.id, 'Măng cụt', 'Măng cụt Lái Thiêu tím đậm.', 2.60, 'kg', 20, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Măng cụt Lái Thiêu tím đậm.', price = 65000, stock_quantity = 20;
+ON DUPLICATE KEY UPDATE description = 'Măng cụt Lái Thiêu tím đậm.', price = 2.60, stock_quantity = 20;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Vú sữa', 'Vú sữa Lò Rèn Vĩnh Kim.', 45000, 'kg', 15, 'available', FALSE
+SELECT f.id, c.id, 'Vú sữa', 'Vú sữa Lò Rèn Vĩnh Kim.', 1.80, 'kg', 15, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Vú sữa Lò Rèn Vĩnh Kim.', price = 45000, stock_quantity = 15;
+ON DUPLICATE KEY UPDATE description = 'Vú sữa Lò Rèn Vĩnh Kim.', price = 1.80, stock_quantity = 15;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Tôm sú', 'Tôm sú biển tươi sống, size 20 con/kg.', 280000, 'kg', 20, 'available', FALSE
+SELECT f.id, c.id, 'Tôm sú', 'Tôm sú biển tươi sống, size 20 con/kg.', 11.20, 'kg', 20, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Tôm sú biển tươi sống, size 20 con/kg.', price = 280000, stock_quantity = 20;
+ON DUPLICATE KEY UPDATE description = 'Tôm sú biển tươi sống, size 20 con/kg.', price = 11.20, stock_quantity = 20;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cá thu', 'Cá thu một nắng Phan Thiết.', 180000, 'kg', 15, 'available', FALSE
+SELECT f.id, c.id, 'Cá thu', 'Cá thu một nắng Phan Thiết.', 7.20, 'kg', 15, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cá thu một nắng Phan Thiết.', price = 180000, stock_quantity = 15;
+ON DUPLICATE KEY UPDATE description = 'Cá thu một nắng Phan Thiết.', price = 7.20, stock_quantity = 15;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Mực ống', 'Mực ống tươi, đánh bắt đêm.', 220000, 'kg', 10, 'available', FALSE
+SELECT f.id, c.id, 'Mực ống', 'Mực ống tươi, đánh bắt đêm.', 8.80, 'kg', 10, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Mực ống tươi, đánh bắt đêm.', price = 220000, stock_quantity = 10;
+ON DUPLICATE KEY UPDATE description = 'Mực ống tươi, đánh bắt đêm.', price = 8.80, stock_quantity = 10;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nghêu', 'Nghêu lụa Bến Tre, sạch cát.', 45000, 'kg', 40, 'available', FALSE
+SELECT f.id, c.id, 'Nghêu', 'Nghêu lụa Bến Tre, sạch cát.', 1.80, 'kg', 40, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nghêu lụa Bến Tre, sạch cát.', price = 45000, stock_quantity = 40;
+ON DUPLICATE KEY UPDATE description = 'Nghêu lụa Bến Tre, sạch cát.', price = 1.80, stock_quantity = 40;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Gà ta nguyên con', 'Gà ta thả vườn 1.5–2 kg.', 160000, 'kg', 15, 'available', FALSE
+SELECT f.id, c.id, 'Gà ta nguyên con', 'Gà ta thả vườn 1.5–2 kg.', 6.40, 'kg', 15, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'meat_and_poultry'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Gà ta thả vườn 1.5–2 kg.', price = 160000, stock_quantity = 15;
+ON DUPLICATE KEY UPDATE description = 'Gà ta thả vườn 1.5–2 kg.', price = 6.40, stock_quantity = 15;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Vịt cỏ', 'Vịt cỏ nuôi đồng, thịt chắc.', 120000, 'kg', 10, 'available', FALSE
+SELECT f.id, c.id, 'Vịt cỏ', 'Vịt cỏ nuôi đồng, thịt chắc.', 4.80, 'kg', 10, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'meat_and_poultry'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Vịt cỏ nuôi đồng, thịt chắc.', price = 120000, stock_quantity = 10;
+ON DUPLICATE KEY UPDATE description = 'Vịt cỏ nuôi đồng, thịt chắc.', price = 4.80, stock_quantity = 10;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Ức gà', 'Ức gà lọc xương, đóng gói sạch.', 95000, 'kg', 25, 'available', FALSE
+SELECT f.id, c.id, 'Ức gà', 'Ức gà lọc xương, đóng gói sạch.', 3.80, 'kg', 25, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'meat_and_poultry'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Ức gà lọc xương, đóng gói sạch.', price = 95000, stock_quantity = 25;
+ON DUPLICATE KEY UPDATE description = 'Ức gà lọc xương, đóng gói sạch.', price = 3.80, stock_quantity = 25;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Trứng gà ta', 'Trứng gà ta thả vườn Bình Dương.', 50000, 'tray of 30', 30, 'available', FALSE
+SELECT f.id, c.id, 'Trứng gà ta', 'Trứng gà ta thả vườn Bình Dương.', 2.00, 'tray of 30', 30, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'meat_and_poultry'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Trứng gà ta thả vườn Bình Dương.', price = 50000, stock_quantity = 30;
+ON DUPLICATE KEY UPDATE description = 'Trứng gà ta thả vườn Bình Dương.', price = 2.00, stock_quantity = 30;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Đậu phộng rang', 'Đậu phộng rang tỏi ớt, giòn rụm.', 60000, 'kg', 30, 'available', FALSE
+SELECT f.id, c.id, 'Đậu phộng rang', 'Đậu phộng rang tỏi ớt, giòn rụm.', 2.40, 'kg', 30, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Đậu phộng rang tỏi ớt, giòn rụm.', price = 60000, stock_quantity = 30;
+ON DUPLICATE KEY UPDATE description = 'Đậu phộng rang tỏi ớt, giòn rụm.', price = 2.40, stock_quantity = 30;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Hạt điều rang muối', 'Hạt điều Bình Phước A+, rang muối.', 220000, 'kg', 15, 'available', FALSE
+SELECT f.id, c.id, 'Hạt điều rang muối', 'Hạt điều Bình Phước A+, rang muối.', 8.80, 'kg', 15, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Hạt điều Bình Phước A+, rang muối.', price = 220000, stock_quantity = 15;
+ON DUPLICATE KEY UPDATE description = 'Hạt điều Bình Phước A+, rang muối.', price = 8.80, stock_quantity = 15;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cà phê rang xay', 'Cà phê Robusta Đắk Lắk, rang mộc.', 150000, 'kg', 20, 'available', FALSE
+SELECT f.id, c.id, 'Cà phê rang xay', 'Cà phê Robusta Đắk Lắk, rang mộc.', 6.00, 'kg', 20, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cà phê Robusta Đắk Lắk, rang mộc.', price = 150000, stock_quantity = 20;
+ON DUPLICATE KEY UPDATE description = 'Cà phê Robusta Đắk Lắk, rang mộc.', price = 6.00, stock_quantity = 20;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Gạo ST25', 'Gạo ST25 Sóc Trăng, thơm dẻo.', 35000, 'kg', 50, 'available', FALSE
+SELECT f.id, c.id, 'Gạo ST25', 'Gạo ST25 Sóc Trăng, thơm dẻo.', 1.40, 'kg', 50, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Gạo ST25 Sóc Trăng, thơm dẻo.', price = 35000, stock_quantity = 50;
+ON DUPLICATE KEY UPDATE description = 'Gạo ST25 Sóc Trăng, thơm dẻo.', price = 1.40, stock_quantity = 50;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Đậu đen', 'Đậu đen xanh lòng, nấu chè.', 40000, 'kg', 25, 'available', FALSE
+SELECT f.id, c.id, 'Đậu đen', 'Đậu đen xanh lòng, nấu chè.', 1.60, 'kg', 25, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Đậu đen xanh lòng, nấu chè.', price = 40000, stock_quantity = 25;
+ON DUPLICATE KEY UPDATE description = 'Đậu đen xanh lòng, nấu chè.', price = 1.60, stock_quantity = 25;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Bánh flan caramel', 'Bánh flan mềm mịn, caramel đắng nhẹ.', 15000, 'jar', 40, 'available', FALSE
+SELECT f.id, c.id, 'Bánh flan caramel', 'Bánh flan mềm mịn, caramel đắng nhẹ.', 0.60, 'jar', 40, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'baked_goods'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Bánh flan mềm mịn, caramel đắng nhẹ.', price = 15000, stock_quantity = 40;
+ON DUPLICATE KEY UPDATE description = 'Bánh flan mềm mịn, caramel đắng nhẹ.', price = 0.60, stock_quantity = 40;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Chè khúc bạch', 'Chè khúc bạch vải thiều.', 20000, 'jar', 30, 'available', FALSE
+SELECT f.id, c.id, 'Chè khúc bạch', 'Chè khúc bạch vải thiều.', 0.80, 'jar', 30, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'baked_goods'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Chè khúc bạch vải thiều.', price = 20000, stock_quantity = 30;
+ON DUPLICATE KEY UPDATE description = 'Chè khúc bạch vải thiều.', price = 0.80, stock_quantity = 30;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Bánh tiramisu hộp', 'Tiramisu cà phê, hộp 2 người.', 85000, 'jar', 12, 'available', FALSE
+SELECT f.id, c.id, 'Bánh tiramisu hộp', 'Tiramisu cà phê, hộp 2 người.', 3.40, 'jar', 12, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'baked_goods'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Tiramisu cà phê, hộp 2 người.', price = 85000, stock_quantity = 12;
+ON DUPLICATE KEY UPDATE description = 'Tiramisu cà phê, hộp 2 người.', price = 3.40, stock_quantity = 12;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cookies socola', 'Cookies socola chip, bơ thật.', 65000, 'jar', 20, 'available', FALSE
+SELECT f.id, c.id, 'Cookies socola', 'Cookies socola chip, bơ thật.', 2.60, 'jar', 20, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'baked_goods'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cookies socola chip, bơ thật.', price = 65000, stock_quantity = 20;
+ON DUPLICATE KEY UPDATE description = 'Cookies socola chip, bơ thật.', price = 2.60, stock_quantity = 20;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nấm linh chi đỏ', 'Nấm linh chi đỏ Lâm Đồng sấy khô.', 350000, 'kg', 8, 'available', FALSE
+SELECT f.id, c.id, 'Nấm linh chi đỏ', 'Nấm linh chi đỏ Lâm Đồng sấy khô.', 14.00, 'kg', 8, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'mushrooms'
 WHERE u.email = 'farmer17@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nấm linh chi đỏ Lâm Đồng sấy khô.', price = 350000, stock_quantity = 8;
+ON DUPLICATE KEY UPDATE description = 'Nấm linh chi đỏ Lâm Đồng sấy khô.', price = 14.00, stock_quantity = 8;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nấm hương khô', 'Nấm hương rừng Lâm Đồng.', 280000, 'kg', 10, 'available', FALSE
+SELECT f.id, c.id, 'Nấm hương khô', 'Nấm hương rừng Lâm Đồng.', 11.20, 'kg', 10, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'mushrooms'
 WHERE u.email = 'farmer17@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nấm hương rừng Lâm Đồng.', price = 280000, stock_quantity = 10;
+ON DUPLICATE KEY UPDATE description = 'Nấm hương rừng Lâm Đồng.', price = 11.20, stock_quantity = 10;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nấm đùi gà', 'Nấm đùi gà tươi, thịt chắc.', 55000, 'kg', 25, 'available', FALSE
+SELECT f.id, c.id, 'Nấm đùi gà', 'Nấm đùi gà tươi, thịt chắc.', 2.20, 'kg', 25, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'mushrooms'
 WHERE u.email = 'farmer17@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nấm đùi gà tươi, thịt chắc.', price = 55000, stock_quantity = 25;
+ON DUPLICATE KEY UPDATE description = 'Nấm đùi gà tươi, thịt chắc.', price = 2.20, stock_quantity = 25;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Súp lơ trắng', 'Súp lơ trắng Đà Lạt, bông to.', 30000, 'kg', 30, 'available', FALSE
+SELECT f.id, c.id, 'Súp lơ trắng', 'Súp lơ trắng Đà Lạt, bông to.', 1.20, 'kg', 30, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Súp lơ trắng Đà Lạt, bông to.', price = 30000, stock_quantity = 30;
+ON DUPLICATE KEY UPDATE description = 'Súp lơ trắng Đà Lạt, bông to.', price = 1.20, stock_quantity = 30;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Atiso', 'Atiso tươi Đà Lạt, nấu canh.', 45000, 'kg', 20, 'available', FALSE
+SELECT f.id, c.id, 'Atiso', 'Atiso tươi Đà Lạt, nấu canh.', 1.80, 'kg', 20, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Atiso tươi Đà Lạt, nấu canh.', price = 45000, stock_quantity = 20;
+ON DUPLICATE KEY UPDATE description = 'Atiso tươi Đà Lạt, nấu canh.', price = 1.80, stock_quantity = 20;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Bắp cải tím', 'Bắp cải tím Đà Lạt, làm salad.', 25000, 'kg', 25, 'available', FALSE
+SELECT f.id, c.id, 'Bắp cải tím', 'Bắp cải tím Đà Lạt, làm salad.', 1.00, 'kg', 25, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Bắp cải tím Đà Lạt, làm salad.', price = 25000, stock_quantity = 25;
+ON DUPLICATE KEY UPDATE description = 'Bắp cải tím Đà Lạt, làm salad.', price = 1.00, stock_quantity = 25;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cà rốt baby', 'Cà rốt baby Đà Lạt, ăn sống.', 35000, 'kg', 40, 'available', FALSE
+SELECT f.id, c.id, 'Cà rốt baby', 'Cà rốt baby Đà Lạt, ăn sống.', 1.40, 'kg', 40, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cà rốt baby Đà Lạt, ăn sống.', price = 35000, stock_quantity = 40;
+ON DUPLICATE KEY UPDATE description = 'Cà rốt baby Đà Lạt, ăn sống.', price = 1.40, stock_quantity = 40;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Đậu Hà Lan', 'Đậu Hà Lan tươi, bóc vỏ.', 50000, 'kg', 15, 'available', FALSE
+SELECT f.id, c.id, 'Đậu Hà Lan', 'Đậu Hà Lan tươi, bóc vỏ.', 2.00, 'kg', 15, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Đậu Hà Lan tươi, bóc vỏ.', price = 50000, stock_quantity = 15;
+ON DUPLICATE KEY UPDATE description = 'Đậu Hà Lan tươi, bóc vỏ.', price = 2.00, stock_quantity = 15;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Sữa dê tươi', 'Sữa dê tươi thanh trùng Long An.', 65000, 'litre', 20, 'available', FALSE
+SELECT f.id, c.id, 'Sữa dê tươi', 'Sữa dê tươi thanh trùng Long An.', 2.60, 'litre', 20, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'eggs_and_dairy'
 WHERE u.email = 'farmer19@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Sữa dê tươi thanh trùng Long An.', price = 65000, stock_quantity = 20;
+ON DUPLICATE KEY UPDATE description = 'Sữa dê tươi thanh trùng Long An.', price = 2.60, stock_quantity = 20;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Sữa chua dê', 'Sữa chua dê nhà làm, hũ 120ml.', 18000, 'jar', 50, 'available', FALSE
+SELECT f.id, c.id, 'Sữa chua dê', 'Sữa chua dê nhà làm, hũ 120ml.', 0.70, 'jar', 50, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'eggs_and_dairy'
 WHERE u.email = 'farmer19@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Sữa chua dê nhà làm, hũ 120ml.', price = 18000, stock_quantity = 50;
+ON DUPLICATE KEY UPDATE description = 'Sữa chua dê nhà làm, hũ 120ml.', price = 0.70, stock_quantity = 50;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Phô mai dê', 'Phô mai dê soft, hộp 200g.', 120000, 'jar', 10, 'available', FALSE
+SELECT f.id, c.id, 'Phô mai dê', 'Phô mai dê soft, hộp 200g.', 4.80, 'jar', 10, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'eggs_and_dairy'
 WHERE u.email = 'farmer19@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Phô mai dê soft, hộp 200g.', price = 120000, stock_quantity = 10;
+ON DUPLICATE KEY UPDATE description = 'Phô mai dê soft, hộp 200g.', price = 4.80, stock_quantity = 10;
 
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Khô cá lóc', 'Khô cá lóc Châu Đốc, phơi nắng.', 200000, 'kg', 15, 'available', FALSE
+SELECT f.id, c.id, 'Khô cá lóc', 'Khô cá lóc Châu Đốc, phơi nắng.', 8.00, 'kg', 15, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Khô cá lóc Châu Đốc, phơi nắng.', price = 200000, stock_quantity = 15;
+ON DUPLICATE KEY UPDATE description = 'Khô cá lóc Châu Đốc, phơi nắng.', price = 8.00, stock_quantity = 15;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Khô cá sặc', 'Khô cá sặc bướm An Giang.', 180000, 'kg', 12, 'available', FALSE
+SELECT f.id, c.id, 'Khô cá sặc', 'Khô cá sặc bướm An Giang.', 7.20, 'kg', 12, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Khô cá sặc bướm An Giang.', price = 180000, stock_quantity = 12;
+ON DUPLICATE KEY UPDATE description = 'Khô cá sặc bướm An Giang.', price = 7.20, stock_quantity = 12;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Mắm cá linh', 'Mắm cá linh truyền thống.', 80000, 'litre', 20, 'available', FALSE
+SELECT f.id, c.id, 'Mắm cá linh', 'Mắm cá linh truyền thống.', 3.20, 'litre', 20, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Mắm cá linh truyền thống.', price = 80000, stock_quantity = 20;
+ON DUPLICATE KEY UPDATE description = 'Mắm cá linh truyền thống.', price = 3.20, stock_quantity = 20;
 INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Tôm khô', 'Tôm khô loại 1 Cà Mau.', 350000, 'kg', 8, 'available', FALSE
+SELECT f.id, c.id, 'Tôm khô', 'Tôm khô loại 1 Cà Mau.', 14.00, 'kg', 8, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Tôm khô loại 1 Cà Mau.', price = 350000, stock_quantity = 8;
+ON DUPLICATE KEY UPDATE description = 'Tôm khô loại 1 Cà Mau.', price = 14.00, stock_quantity = 8;
 
 -- Weekly stock templates for new products
 INSERT INTO weekly_stock_templates (farmer_id, product_id, day_of_week, default_quantity, default_price, is_active)

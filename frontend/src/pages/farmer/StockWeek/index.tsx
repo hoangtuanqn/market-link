@@ -151,7 +151,7 @@ const TemplateGrid = ({
                         <input
                           type="number"
                           min={0}
-                          step={1000}
+                          step={0.01}
                           value={cell.price}
                           onChange={(e) => setCell(p.id, day, { price: e.target.value })}
                           aria-label={t('aria.price', { product: p.name, day: dayName(day, 'long') })}

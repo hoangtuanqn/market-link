@@ -85,8 +85,8 @@ const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
             name={`slot-${group.farmerId}`}
             slots={slotOptions}
             value={choice.slotId}
-            // Store the day on screen too: the first day shows as picked before the customer taps any day
-            onChange={(v) => onChange({ slotId: v, date })}
+            // The day shown selected may be the default (first) one that was never clicked: keep it with the time
+            onChange={(v) => onChange({ date, slotId: v })}
             legend={t('pickupTime', {
               day: date ? dayName(localDay(date).getDay(), 'long') : '',
               date: date ? formatDayMonth(localDay(date)) : '',

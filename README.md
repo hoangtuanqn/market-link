@@ -1,332 +1,171 @@
-# Market Link — Setup Guide
+<div align="center">
 
-## 1. Prerequisites
+<img src="frontend/public/brand/marketlink-mark.svg" width="72" alt="MarketLink logo">
 
-Install the following tools and verify each one with its check command:
+# MarketLink
 
-| Tool | Required version | Check command | Notes |
-|---|---|---|---|
-| Git | Any | `git --version` | |
-| JDK | **25** | `java -version` | `JAVA_HOME` must point to JDK 25 (e.g. Eclipse Temurin 25) |
-| Node.js | **>= 20.9** | `node -v` | Comes with `npm` |
-| Docker Desktop | Latest, with Compose v2 | `docker compose version` | On Windows, enable WSL 2 |
+**Pre-order fresh produce from the farmers at Ho Chi Minh City's weekend markets, then pick it up at their stall.**
 
-> You do **not** need to install Maven, MySQL or Redis. The project uses the Maven Wrapper (`mvnw`), and MySQL + Redis run in Docker.
+TechWiz 7 · End-to-End Web Solutions · theme *eGreen Basket*
 
-## 2. Setup Steps
+[![CI](https://github.com/hoangtuanqn/market-link/actions/workflows/ci.yml/badge.svg?branch=dev)](https://github.com/hoangtuanqn/market-link/actions/workflows/ci.yml)
+![Java 25](https://img.shields.io/badge/Java-25-e76f00)
+![Spring Boot 4.1](https://img.shields.io/badge/Spring_Boot-4.1-6db33f)
+![React 19](https://img.shields.io/badge/React-19-149eca)
+![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6)
+![MySQL 8.4](https://img.shields.io/badge/MySQL-8.4-00758f)
 
-> Commands below are for **Git Bash / macOS / Linux**.
-> On **PowerShell**, replace `./mvnw` with `.\mvnw.cmd`, `cp` with `copy`, and wrap `-D...` arguments in quotes (see Step 6).
+[Quick start](#quick-start) · [Features](#features) · [Architecture](#architecture) ·
+[Documentation](docs/README.md) · [Contributing](CONTRIBUTING.md)
 
-### Step 1 — Clone the repository
+</div>
+
+---
+
+## About
+
+Farmers' markets sell out early, and shoppers only find out what a stall has once they get there. MarketLink puts
+every market, stall and product online: a customer reserves produce ahead of time, the farmer accepts the order, and
+the customer collects it in a chosen pickup slot. Farmers know their demand before market day; customers never
+make a wasted trip.
+
+```mermaid
+flowchart LR
+    A["Customer browses<br/>markets, stalls, products"] --> B["Cart splits into<br/>one order per farmer"]
+    B --> C["Farmer accepts<br/>or declines"]
+    C --> D["Farmer marks<br/>ready for pickup"]
+    D --> E["Pickup at the stall<br/>→ completed"]
+    E --> F["Customer reviews<br/>farmer and product"]
+```
+
+Stock is reserved the moment an order is placed, and the customer can edit or cancel until the farmer's cutoff time.
+Every rule behind the order flow is written down in [`docs/decisions.md`](docs/decisions.md) (D-01…D-13).
+
+## Features
+
+| Customer | Farmer | Admin |
+|---|---|---|
+| Browse markets by location and day, on a list or an interactive map with directions | Stall profile: markets, operating days, pickup windows, map pin | Separate admin sign-in, optional two-factor authentication |
+| Search and filter products by category, price, market and day | Products with photos, sold-out / paused flags | Dashboard: farmers, customers, markets, orders |
+| Cart that splits into one order per farmer, with a pickup date and time slot | Weekly stock template, applied per market day | Approve, reject or suspend farmer applications |
+| Edit or cancel before the cutoff, reorder in one click | Incoming orders: accept, decline, ready, complete | Markets (with map coordinates, closures) and categories |
+| Favourites with restock alerts, in-app and Web Push notifications | Order cutoff and pickup-slot capacity | Moderate products, reviews and reported chat messages |
+| Reviews and ratings for farmers and products | Dashboard: total and pending orders, revenue, best sellers | Platform reports: revenue per market, most active farmers |
+| Chat with a stall; a shopping assistant that Claude answers for signed-in users | Reply to reviews, chat with customers | Customer accounts, feedback queue, platform announcements |
+
+Across the app: 10 UI languages, light and dark themes, responsive from 375 px to 1440 px, and a loading / empty /
+error state on every data screen. The full scope, one `FR-xxx` ID per requirement, is in
+[`.ai/REQUIREMENTS.md`](.ai/REQUIREMENTS.md).
+
+## Screenshots
+
+| Home — markets open this weekend | Market map — markets and stalls by day |
+|---|---|
+| ![Home page](docs/images/customer-home.webp) | ![Market map](docs/images/customer-market-map.webp) |
+| **Farmer — stall, markets and pickup windows** | **Admin — markets with hours and coordinates** |
+| ![Farmer stall profile](docs/images/farmer-stall.webp) | ![Admin markets](docs/images/admin-markets.webp) |
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS 4, React Router, i18next, Leaflet + OpenStreetMap, STOMP.js |
+| Backend | Spring Boot 4.1 on Java 25: Spring Security with JWT, Spring Data JPA, WebSocket (STOMP), Bean Validation, springdoc OpenAPI |
+| Data | MySQL 8.4 with Flyway migrations, Redis 7.4 |
+| Messaging | RabbitMQ 4 as the STOMP relay for realtime chat and notifications, Web Push (VAPID) |
+| AI assistant | Claude (`claude-haiku-4-5`) through the Anthropic API, calling read-only tools that run fixed, parameterised SQL; a keyword engine answers when no key is set |
+| Quality | JUnit + Mockito, Vitest + Testing Library, ESLint, Prettier, Spotless, Lefthook pre-commit hooks |
+| Delivery | Docker Compose for dev and production, GitHub Actions for CI and branch guards |
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Browser
+        SPA["React SPA<br/>:3000"]
+    end
+    subgraph Server
+        API["Spring Boot API<br/>:8080 · /api/v1"]
+    end
+    SPA -->|"REST + JWT"| API
+    SPA <-->|"STOMP over WebSocket"| API
+    API --> DB[("MySQL<br/>Flyway migrations")]
+    API --> RD[("Redis<br/>sessions · token blacklist · presence · job queue")]
+    API <--> MQ["RabbitMQ<br/>STOMP relay"]
+    API -.->|"optional"| AI["Anthropic API<br/>shopping assistant"]
+    API -.->|"Web Push"| SPA
+```
+
+- The backend is split into feature modules (`user`, `farmer`, `catalog`, `product`, `stall`, `order`, `review`,
+  `favorite`, `notification`, `conversation`, `chat`, `report`, `feedback`, `achievement`), each with its own
+  controllers, services, requests, resources and exception handler. Conventions: [`backend/CLAUDE.md`](backend/CLAUDE.md).
+- The frontend is one page folder per screen under `src/pages/<role>/`, shared UI in `src/components/`, and API calls
+  in `src/api-requests/`. Every screen follows the "Hang tag" design system in [`docs/design-system/`](docs/design-system/README.md).
+- The API contract between the two is [`docs/api-contract.md`](docs/api-contract.md); Swagger UI runs at
+  http://localhost:8080/swagger-ui.html while the backend is up.
+
+## Quick start
+
+You need **Docker Desktop** and **make** (on Windows, run `make` from WSL or Git Bash).
 
 ```bash
 git clone https://github.com/hoangtuanqn/market-link.git
 cd market-link
-git switch dev      # work on dev; main is production
+make up      # MySQL, Redis, RabbitMQ, backend :8080, frontend :3000 — first build takes a few minutes
+make seed    # demo data: 4 markets, 10 stalls, 51 products, orders in every status
 ```
 
-> Branches, environments (dev / production), commit and PR rules: see **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+Six months of history for the dashboards and reports (100+ customers, 500+ orders) is optional — see
+[`db/README.md`](db/README.md). To let Claude answer the shopping assistant, put an `ANTHROPIC_API_KEY` in `.env`
+and run `make up` again ([`docs/setup.md`](docs/setup.md#6-shopping-assistant-answered-by-claude)).
 
-### Step 2 — Install Git hooks
+Open **http://localhost:3000** and sign in with a demo account (password `Demo@1234` for all):
 
-Run in the **project root**:
-
-```bash
-npm install
-```
-
-This installs [Lefthook](https://github.com/evilmartians/lefthook) and registers a pre-commit hook that auto-formats Java (Spotless) and TS/JS (Prettier) files on every commit.
-
-### Step 3 — Create the `.env` file (root only)
-
-The `.env` file is used by **Docker Compose** to create the MySQL database and user. It lives in the **project root only**.
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` so it looks like this:
-
-```env
-MYSQL_ROOT_PASSWORD=<your-root-password>
-MYSQL_DATABASE=intervue_db
-MYSQL_USER=intervue
-MYSQL_PASSWORD=<your-db-password>
-```
-
-| Variable | Value |
-|---|---|
-| `MYSQL_DATABASE` | Keep `intervue_db` — this is the database name the backend uses in `application.yaml` |
-| `MYSQL_USER` | Must be `intervue` — this is the username the backend uses in `application.yaml` |
-| `MYSQL_ROOT_PASSWORD` | Any password you like (MySQL root account) |
-| `MYSQL_PASSWORD` | Any password you like. **Remember it** — you will put the same value in `application-local.yml` in Step 5 |
-
-> `.env` is git-ignored. Never commit it.
-
-### Step 4 — Start MySQL and Redis
-
-Open Docker Desktop first, then in the **project root**:
-
-```bash
-docker compose up -d
-```
-
-Wait until both containers are `healthy` (10–30 seconds on first run):
-
-```bash
-docker compose ps
-```
-
-Expected output:
-
-```
-NAME             IMAGE              STATUS              PORTS
-intervue-mysql   mysql:8.4          Up ... (healthy)    0.0.0.0:3306->3306/tcp
-intervue-redis   redis:7.4-alpine   Up ... (healthy)    0.0.0.0:6379->6379/tcp
-```
-
-| Service | Address | Credentials |
+| Role | Email | Sign in at |
 |---|---|---|
-| MySQL | `localhost:3306` | Database, user and password from your `.env` |
-| Redis | `localhost:6379` | No password |
+| Customer | `customer@marketlink.vn` | http://localhost:3000/login |
+| Farmer | `farmer@marketlink.vn` | http://localhost:3000/login |
+| Admin | `admin@marketlink.vn` | http://localhost:3000/admin/login |
 
-Data is stored in the Docker volumes `mysql-data` and `redis-data`, so it survives container restarts.
+Every seeded account and what it shows: [`docs/DEMO_CREDENTIALS.md`](docs/DEMO_CREDENTIALS.md). To run the backend
+or frontend outside Docker, enable Web Push, or fix a failing start: [`docs/setup.md`](docs/setup.md).
 
-### Step 5 — Create `application-local.yml` for secrets
-
-The backend config is split into two files in `backend/src/main/resources/`:
-
-| File | Committed? | Contains |
-|---|---|---|
-| `application.yaml` | Yes | All the main config (datasource URL, username, JWT expiration, issuer...). **Do not put secrets here.** |
-| `application-local.yml` | **No** (git-ignored) | **Only the sensitive values**, which override the placeholders in `application.yaml` when the `local` profile is active |
-
-Every developer must create `application-local.yml` manually. Create the file at:
-
-```
-backend/src/main/resources/application-local.yml
+```bash
+make help      # every command
+make be-test   # backend tests
+make lint      # ESLint + Spotless check
+make down      # stop, keep data
 ```
 
-with the following content:
+## Project structure
 
-```yaml
-spring:
-  datasource:
-    password: <your-db-password>
-
-jwt:
-  secret: <your-base64-secret>
+```
+market-link/
+├── backend/                 Spring Boot API (Java 25) — src/main/java/.../modules/<module>/
+├── frontend/                React SPA — src/pages/<role>/<Page>/, src/components/, src/locales/<lang>/
+├── db/                      schema.sql (design), schema dump (live tables), seed.sql, seed-extended.sql, seed-images/
+├── docs/                    requirements, API contract, decisions, design system, prototype, setup guide
+├── docker/                  Dockerfiles for the backend and frontend images
+├── scripts/                 git and environment guards used by the hooks and CI, the demo-history generator
+├── .ai/REQUIREMENTS.md      scope: every requirement with its FR-xxx ID, priority and owner
+├── .github/                 CI (format, lint, test, build), branch-policy guard, PR template
+├── docker-compose.yml       dev stack (make up)
+├── docker-compose.prod.yml  production overrides (make prod)
+└── Makefile                 day-to-day commands (make help)
 ```
 
-| Key | Value |
+## Documentation
+
+| Document | What it covers |
 |---|---|
-| `spring.datasource.password` | Exactly the same as `MYSQL_PASSWORD` in the root `.env` (Step 3) |
-| `jwt.secret` | A **Base64-encoded** key of at least 32 bytes (256 bits), used to sign JWT tokens. Generate one with the command below |
-
-Generate a JWT secret:
-
-```bash
-# Git Bash / macOS / Linux
-openssl rand -base64 48
-```
-
-```powershell
-# PowerShell
-[Convert]::ToBase64String((1..48 | ForEach-Object { Get-Random -Maximum 256 }))
-```
-
-Copy the output and paste it as the value of `jwt.secret`.
-
-> Everything else (database URL, username, JWT expiration...) comes from `application.yaml` — do not copy it into `application-local.yml`. If you add a new secret to the project later, put a placeholder in `application.yaml` and the real value in `application-local.yml`.
-
-### Step 6 — Run the backend
-
-From the `backend/` folder, start the app with the `local` profile:
-
-```bash
-cd backend
-./mvnw spring-boot:run -Dspring-boot.run.profiles=local
-```
-
-```powershell
-# PowerShell
-cd backend
-.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
-```
-
-- The first run downloads Maven and all dependencies, which can take a few minutes.
-- On startup, **Flyway runs the migrations** in `src/main/resources/db/migration/` and creates all tables automatically. You do not need to create tables by hand.
-- The backend runs at **http://localhost:8080**.
-
-Verify it is running:
-
-```bash
-curl http://localhost:8080/ping
-# {"status":true,"message":"Pong!"}
-```
-
-Optionally, test the register API:
-
-```bash
-curl -i -X POST http://localhost:8080/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","address":"12 Le Loi, Q1","password":"123456","confirmPassword":"123456"}'
-```
-
-A successful response (`201`) returns an `accessToken` and the user in the body, plus a refresh token in the `Set-Cookie` header.
-
-#### API docs (Swagger UI)
-
-While the backend is running, open **http://localhost:8080/swagger-ui.html** to browse and try every endpoint
-(raw OpenAPI JSON: `/v3/api-docs`). For endpoints that need login, click **Authorize** and paste the
-`accessToken` (without the `Bearer ` prefix). Swagger is disabled in the `prod` profile unless `SWAGGER_ENABLED=true`.
-
-#### Running from an IDE
-
-- **IntelliJ IDEA:** open `backend/` as a Maven project. Enable *Settings → Build, Execution, Deployment → Compiler → Annotation Processors → Enable annotation processing* (required for Lombok). Edit the run configuration for `IntervueApplication` and set *Active profiles* to `local`.
-- **VS Code:** install *Extension Pack for Java*. Run `IntervueApplication` with this in `.vscode/launch.json`:
-  ```json
-  {
-    "type": "java",
-    "name": "IntervueApplication (local)",
-    "request": "launch",
-    "mainClass": "com.techx.intervue.IntervueApplication",
-    "projectName": "intervue",
-    "env": { "SPRING_PROFILES_ACTIVE": "local" }
-  }
-  ```
-
-### Step 7 — Run the frontend
-
-Open a new terminal:
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-The frontend runs at **http://localhost:3000**.
-
-## 3. Daily Run (after the first setup)
-
-```bash
-docker compose up -d                                                  # project root
-cd backend && ./mvnw spring-boot:run -Dspring-boot.run.profiles=local  # terminal 1
-cd frontend && npm run dev                                            # terminal 2
-```
-
-## 3b. Alternative — Run Everything in Docker
-
-Use this if you do not want to install JDK 25 or Node.js. Only Docker Desktop and `make` are needed
-(on Windows, run `make` from WSL or Git Bash).
-
-```bash
-make init   # first time only: create .env, install git hooks
-make up     # mysql + redis + backend (:8080) + frontend (:3000)
-make seed   # demo data (db/seed.sql), once the backend has started; safe to re-run
-make help   # list every command
-```
-
-Demo accounts for every role (shared password `Demo@1234`) are listed in
-[`docs/DEMO_CREDENTIALS.md`](docs/DEMO_CREDENTIALS.md).
-
-- Backend and frontend are in the Compose profile `app`, so plain `docker compose up -d` (Step 4)
-  still starts **only** MySQL and Redis and does not clash with a backend/frontend run on your machine.
-  Do not use both ways at the same time — they use the same ports 8080 and 3000.
-- Source code is mounted into the containers: the frontend hot-reloads; after editing Java run `make be-restart`.
-- The backend container uses the `dev` profile (`application-dev.yaml`, values match `.env.example`),
-  so `application-local.yml` is not needed here.
-- Remote debug the backend by attaching to port `5005` (VS Code config *Attach backend (Docker :5005)*).
-
-| Command | What it does |
-|---|---|
-| `make infra` | Only MySQL + Redis (same as `docker compose up -d`) |
-| `make tools` | Adminer at http://localhost:8081, RedisInsight at http://localhost:5540 |
-| RabbitMQ UI | http://localhost:15672 (user/password from `RABBITMQ_USER` / `RABBITMQ_PASSWORD` in `.env`) — realtime broker for chat and notifications (`/user/topic/notifications`, see `docs/api-contract.md` §9), runs with the stack |
-| Chat photos | Stored on the `chat-uploads` volume at `CHAT_UPLOAD_DIR` (default `/var/lib/marketlink/chat`), **not** under `/uploads`. They are only served through `GET /api/v1/attachments/{id}`, which checks that you are in the conversation. Limits: `CHAT_MAX_UPLOAD_BYTES` (5 MB), `CHAT_MESSAGES_PER_MINUTE` (30), `CHAT_IMAGES_PER_HOUR` (10), `CHAT_CONVERSATIONS_PER_HOUR` (20) |
-| `make logs s=backend` | Follow the logs of one service |
-| `make be-test` | Run backend tests in the container |
-| `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
-| `make mysql` / `make redis` | Open a MySQL / Redis shell |
-| `make prod-init` / `make prod` | Create `.env.production` from the template / build and run production (separate containers and data) |
-| `make down` / `make clean` | Stop the stack / stop and **delete** DB + Redis data |
-
-## 4. Useful Commands
-
-```bash
-# Docker (project root)
-docker compose stop                 # stop containers, keep data
-docker compose down                 # remove containers, keep data
-docker compose down -v              # remove containers AND delete all DB/Redis data
-
-# Open MySQL / Redis CLI
-docker exec -it intervue-mysql mysql -u intervue -p intervue_db
-docker exec -it intervue-redis redis-cli
-
-# Backend (backend/)
-./mvnw test                         # run tests
-./mvnw spotless:apply               # format Java code
-```
-
-### Web Push (thông báo khi đã đóng tab)
-
-1. `make vapid-keys`, dán hai dòng `VAPID_PUBLIC_KEY=…` / `VAPID_PRIVATE_KEY=…` vào `.env` (prod: `.env.production`), rồi
-   `make up` lại. Log backend in `Web Push: enabled`; để trống thì `disabled (no VAPID keys)` và mọi thứ khác vẫn chạy.
-2. Đăng nhập, bấm **Bật** ở thẻ "Bật thông báo" (hoặc Settings → Thông báo). Trình duyệt hỏi quyền → cho phép.
-3. Đóng hết tab MarketLink, cho người khác gửi thông báo (vd. admin đăng một thông báo) → thông báo của hệ điều hành hiện ra.
-
-Lưu ý: Web Push chỉ chạy trên **HTTPS** (localhost được miễn). iOS/iPadOS chỉ nhận khi web đã được "Thêm vào màn hình
-chính" (iOS 16.4+). Đăng xuất thì trình duyệt đó thôi nhận thông báo của tài khoản vừa rời.
-## 4b. Chat — manual two-browser check (FR-111, FR-115, FR-116)
-
-Spec §13 asks for the realtime path to be checked by hand, because unit tests mock the broker.
-Run this once before a demo.
-
-1. Open two browsers. Sign in as a customer in one, as an **approved** farmer in the other.
-   (A farmer account with no `farmer_profiles` row is closed to chat by design — the backend logs a
-   warning about this at startup.)
-2. Customer opens the stall and sends a message → it appears in the farmer's window **within a
-   second, without a reload**.
-3. Farmer starts typing → the customer sees the typing dots; stop typing → they disappear.
-4. Farmer sends a photo → the customer sees it. Copy the photo URL, open it in a third browser
-   signed in as somebody else → **403**.
-5. Customer reports the farmer's message (reason + optional note). Reporting it a second time →
-   **409**.
-6. Sign in as an admin, open **Reported messages**, open the report → you see the reported message
-   plus **at most five on each side**, and nothing else from that conversation.
-7. Admin hides the message → it disappears from **both** windows without a reload.
-8. Still as admin, open the photo URL of the **reported** message → **200**. Open the photo URL of a
-   **neighbouring** message → **403**.
-
----
-
-## 5. Troubleshooting
-
-| Error | Cause | Fix |
-|---|---|---|
-| `Access denied for user 'intervue'@...` | Backend started without the `local` profile, **or** `spring.datasource.password` in `application-local.yml` does not match `MYSQL_PASSWORD` in `.env`, **or** `MYSQL_USER` in `.env` is not `intervue` | Run with `-Dspring-boot.run.profiles=local`, and check Step 3 and Step 5 values match |
-| `Access denied` even though all values match | The MySQL volume was created earlier with a different user/password (MySQL only reads `.env` on first start) | Reset the volume: `docker compose down -v` then `docker compose up -d` (deletes local data) |
-| `Communications link failure` / `Connection refused` on 3306 or 6379 | Docker is not running or containers are not healthy yet | Start Docker Desktop, run `docker compose ps` and wait for `healthy` |
-| `Bind for 0.0.0.0:3306 failed: port is already allocated` | Another MySQL (XAMPP, MySQL Server...) is using port 3306 | Stop the other MySQL, or change the port mapping in `docker-compose.yml` (e.g. `"3307:3306"`) and update the port in `spring.datasource.url` in `application.yaml` locally (do not commit it) |
-| `Port 8080 was already in use` | Another process is using port 8080 | Stop the process using port 8080 |
-| `Illegal base64 character` / `WeakKeyException` on startup | `jwt.secret` is not valid Base64 or is shorter than 256 bits | Generate a new secret with the command in Step 5 |
-| `invalid target release: 25` | `JAVA_HOME` points to an older JDK | Install JDK 25, update `JAVA_HOME`, reopen the terminal and check `java -version` |
-| `./mvnw: Permission denied` | Missing execute permission (macOS/Linux) | `chmod +x backend/mvnw` |
-| `/usr/bin/env: 'sh\r': No such file or directory` | `mvnw` was checked out with CRLF line endings | `git config core.autocrlf input`, then `git checkout -- backend/mvnw` |
-| `FlywayValidateException: Migration checksum mismatch` | An already-applied migration file was edited | Revert the edit and add a new migration file instead. On local only, you can reset with `docker compose down -v` |
-| `Migration checksum mismatch for migration version 20260926017` (and `…018`) after pulling `dev` | PR #167 (27/09/2026) rewrote migration 017, replaced 018 and moved favourites to 019 after they had been merged, so a database created before it no longer matches | Reset the local database: `make clean && make up && make seed` (deletes local data). There is no in-place fix: the old and new 017/018 build different tables |
-| Lombok `cannot find symbol` (getters/setters) in IDE | Annotation processing is disabled | Enable it (see *Running from an IDE*) |
-| Code is not auto-formatted on commit | Git hooks not installed | Run `npm install` in the project root |
-| Backend log `Chat realtime: app.chat.rabbitmq.host is empty` when running on your machine (way A) | Backend runs outside Docker and `RABBITMQ_HOST` is not set | Chat still works with the in-app broker; for the RabbitMQ relay, `export RABBITMQ_HOST=localhost` and map port 61613 in `docker-compose.yml` |
-| `TCP connection failure in session _system_` repeating | RabbitMQ not healthy yet, or the STOMP plugin is off | `docker compose logs rabbitmq`; check `rabbitmq_stomp` in `rabbitmq-plugins list -e`. The backend keeps serving REST and reconnects on its own |
-| `PATCH /api/v1/admin/messages/{id}/hide` returns 403 `MODERATION_OUT_OF_SCOPE` | The message has not been reported by anyone | Working as designed (spec 8.3): admins act only on reported messages. There is no "browse all inboxes" screen |
-| An admin sees 403 opening a photo they can see in the report context | Only the **reported** message's photo is open to admins; the five messages either side are context, not the thing being reported | Working as designed. Every admin photo view is logged |
-| Backend logs `N account(s) have role=farmer but no farmer_profiles row` at startup | Seed data or a manual DB edit created a farmer without a stall profile | Chat is closed for those accounts. Add an approved `farmer_profiles` row for each |
-| Chat photos return 404 after rebuilding containers | The `chat-uploads` volume was removed; the database rows survive but the files are gone | Stop with `docker compose down` (**without** `-v`) to keep volumes. Photos live on `chat-uploads`, separate from `uploads-data` |
-| `POST /api/v1/attachments` returns 415 for a photo that opens fine on your machine | The file is not JPEG/PNG/WebP — the server reads magic bytes and ignores the file extension and `Content-Type` | Re-save it as JPEG or PNG |
-| `<img src="/api/v1/attachments/5">` shows a broken image | That endpoint checks the JWT in the `Authorization` header, and `<img>` does not send it | `fetch` the URL with the header, then render `URL.createObjectURL(blob)` |
+| [`docs/README.md`](docs/README.md) | Index of every document in `docs/` |
+| [`docs/requirements/`](docs/requirements) | The SRS, and how each SRS item maps to an FR and a screen |
+| [`docs/decisions.md`](docs/decisions.md) | Product decisions that shape the order flow (D-01…D-13) |
+| [`docs/api-contract.md`](docs/api-contract.md) | Every endpoint: path, request, response, errors |
+| [`docs/design-system/`](docs/design-system/README.md) | Tokens, `ml-*` components and UI copy rules |
+| [`docs/prototype/`](docs/prototype) | Clickable HTML prototype of every screen |
+| [`docs/setup.md`](docs/setup.md) | Full setup, both ways of running, troubleshooting |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Branches (`dev` → `main`), commits, pull requests, releases |
 
 ## AI tools used
 
@@ -336,3 +175,10 @@ new features, refactoring, code review, and drafting documentation such as this 
 codebase was accepted unreviewed. No ready-made website template was used — the UI is built from the
 project's own design system (`docs/design-system/`). Image assets are placeholders or the team's own
 photos; no AI image-generation tool was used for shipped assets.
+
+## Contributing
+
+Work happens on `feature/*`, `fix/*`, `docs/*`, `chore/*` or `refactor/*` branches cut from `dev`; `main` only takes
+releases from `dev`. Commits follow `<type>(FR-xxx): <description>`, CI must be green, and every pull request needs a
+review. The full rules are in [`CONTRIBUTING.md`](CONTRIBUTING.md); AI assistants also read [`CLAUDE.md`](CLAUDE.md)
+and [`AGENTS.md`](AGENTS.md).
