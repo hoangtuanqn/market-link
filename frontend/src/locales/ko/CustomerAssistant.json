@@ -7,23 +7,24 @@
   "message": "메시지",
   "placeholder": "예: 토요일에 Thảo Điền에서 달걀 파는 곳은?",
   "send": "보내기",
-  "reply": {
-    "greeting": "안녕하세요, {{name}} 님. 이번 주말에 무엇이 있는지, 시장이 언제 여는지 물어보세요.",
-    "pomelo": "{{day}} {{date}}에 청피 포멜로를 파는 가게는 2곳이에요: Thủ Đức Farmers Market의 <b>Út Hiền Orchard</b>(2개 남음, {{price1}}), Thảo Điền Weekend Market의 <b>Ba Lành Farm</b>(9개 남음, {{price2}}).",
-    "slots": "Út Hiền Orchard는 {{day}} {{date}} {{from}} – {{to}}에 Thủ Đức Farmers Market에서 픽업해요. 빈 시간: {{free}}. {{full}} 시간은 다 찼어요. 주문은 픽업 12시간 전에 마감해요.",
-    "unknown": "이해하지 못했어요. 상품 이름, 시장 또는 가게 이름으로 물어보세요."
-  },
-  "question": {
-    "pomeloMorning": "토요일 아침에 청피 포멜로가 있는 시장은 어디예요?"
-  },
+  "sending": "Sending…",
+  "error": "Something went wrong. Try again in a moment.",
+  "loading": "Loading your conversation…",
+  "loadErrorTitle": "We could not load your conversation history",
+  "loadErrorText": "Check your connection and try again.",
+  "retry": "Try again",
+  "emptyTitle": "No messages yet",
+  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
   "suggest": {
-    "pomeloSat": "토요일에 청피 포멜로는 어디서 살 수 있어요?",
-    "baChieuOpen": "Bà Chiểu Green Market은 언제 열어요?",
-    "showMap": "가게 2곳을 지도에서 보기",
-    "slotsUtHien": "Út Hiền 픽업 시간",
-    "addPomelos": "포멜로 2개 장바구니에 담기",
-    "directionsThuDuc": "Thủ Đức Farmers Market 길 찾기",
-    "thaoDien": "토요일 Thảo Điền에는 뭐가 있어요?"
+    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
+    "pomeloStock": "có bưởi không",
+    "benThanhSat": "farmers at Ben Thanh on saturday",
+    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
+  },
+  "resultLink": {
+    "product": "View product: {{title}}",
+    "market": "View market: {{title}}",
+    "farmer": "View stall: {{title}}"
   },
   "canAnswer": {
     "title": "답할 수 있는 것",

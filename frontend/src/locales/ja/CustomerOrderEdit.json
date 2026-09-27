@@ -1,4 +1,5 @@
 {
+  "noun": "order",
   "myOrders": "注文履歴",
   "breadcrumbOrder": "注文 {{code}}",
   "breadcrumbEdit": "編集",

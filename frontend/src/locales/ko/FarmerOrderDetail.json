@@ -14,9 +14,8 @@
     "reason": "고객에게 보일 사유"
   },
   "history": {
-    "before": "{{cutoff}} 이전",
-    "cancelled": "고객이 취소함",
-    "title": "기록"
+    "title": "기록",
+    "by": "{{time}} · by {{by}}"
   },
   "missing": {
     "title": "이 주문은 더 이상 없어요",
@@ -24,10 +23,10 @@
     "back": "내 주문"
   },
   "item": "상품",
+  "noun": "order",
   "col": {
     "product": "상품",
     "requested": "요청 수량",
-    "left": "이 주문 후 남은 수량",
     "amount": "금액"
   },
   "crumb": "주문",
@@ -50,25 +49,19 @@
   },
   "items": {
     "title": "상품",
-    "note": "표시된 재고는 이 주문과 다른 주문을 뺀 남은 수량이에요. 거절하면 예약된 재고가 돌아와요(D-02)."
+    "total": "Total"
   },
   "note": "고객 메모",
   "quote": "“{{text}}”",
   "customer": {
     "title": "고객",
     "name": "이름",
-    "tier": "등급",
     "phone": "전화",
-    "ordersWithYou": "내 매장 주문",
-    "orders_one": "주문 {{count}}건",
-    "orders_other": "주문 {{count}}건",
-    "withCollected_one": "{{orders}}, 픽업 완료 {{count}}건",
-    "withCollected_other": "{{orders}}, 픽업 완료 {{count}}건"
+    "email": "Email"
   },
   "pickup": {
     "title": "픽업 시간대",
     "market": "마켓",
-    "marketStall": "{{market}}, 매장 {{code}}",
     "slot": "시간대",
     "pay": "픽업 시 결제"
   },

@@ -33,6 +33,13 @@
     "label": "จำนวนที่มีสัปดาห์นี้",
     "error": "จำนวนต้องเป็น 0 ขึ้นไป ใช้ “หมด” เมื่อไม่เหลือแล้ว"
   },
+  "shelfLife": {
+    "label": "Shelf life (days)",
+    "hint": "This category is usually {{min}}–{{max}} days.",
+    "error": "Enter a whole number of 1 or more.",
+    "warningTitle": "Outside the usual range",
+    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+  },
   "desc": {
     "label": "คำอธิบาย",
     "hint": "แสดงบนหน้าสินค้า บอกว่าปลูกอย่างไรและเก็บรักษาอย่างไร"

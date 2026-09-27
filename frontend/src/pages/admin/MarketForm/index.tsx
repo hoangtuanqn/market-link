@@ -17,13 +17,11 @@ import { Dialog } from '@/components/ui/dialog';
 import { Field, SelectField } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { HCMC_DISTRICTS } from '@/config/districts';
-import { SHOW_WIP } from '@/config/wip';
 import { ADMIN_MARKETS_PATH } from '@/constants/nav';
-import { CLOSURE_HANDLINGS, marketAdmin, type ClosureHandling, type ClosureType } from '@/data/admin';
 import useRequest from '@/hooks/useRequest';
 import { isLatitude, isLongitude, parseCoordinate, parseCoordinatePair } from '@/lib/coordinates';
 import { dayName, formatDate } from '@/lib/format';
-import type { MarketType } from '@/types/market.types';
+import { CLOSURE_HANDLINGS, type ClosureHandling, type ClosureType, type MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
@@ -127,7 +125,8 @@ const AdminMarketFormPage = () => {
   const existing = load.kind === 'ready' ? load.data : null;
 
   // The form mirrors the loaded market until something is typed, then it is its own state (no effect needed).
-  const loadedForm = existing ? fromMarket(existing, SHOW_WIP ? (marketAdmin[existing.id]?.notes ?? '') : '') : EMPTY;
+  // Notes have no API yet (see marketAdmin removal in Task 12), so an edited market always starts with an empty note.
+  const loadedForm = existing ? fromMarket(existing, '') : EMPTY;
   const [edited, setEdited] = useState<FormState | null>(null);
   const form = edited ?? loadedForm;
   const setForm = (next: FormState | ((current: FormState) => FormState)) =>
@@ -451,13 +450,7 @@ const AdminMarketFormPage = () => {
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-h2">{isNew ? t('titleNew') : existing?.name}</h1>
-        {existing && (
-          <span className="text-small text-ink-muted">
-            {SHOW_WIP
-              ? t('meta', { stalls: existing.stalls, added: marketAdmin[existing.id]?.added })
-              : t('metaStalls', { stalls: existing.stalls })}
-          </span>
-        )}
+        {existing && <span className="text-small text-ink-muted">{t('metaStalls', { stalls: existing.stalls })}</span>}
       </div>
 
       <form

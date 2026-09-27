@@ -1,7 +1,6 @@
 import type { ApiResponse, PageType } from '@/types/api.types';
-import type { MarketType } from '@/types/market.types';
+import type { ClosureHandling, ClosureType, MarketType } from '@/types/market.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
-import type { ClosureHandling, ClosureType } from '@/data/admin';
 import { dayName, formatDate } from '@/lib/format';
 
 /** A market exactly as contract §3 returns it: camelCase, times "HH:mm", operating days 0…6 (0 = Sunday). */

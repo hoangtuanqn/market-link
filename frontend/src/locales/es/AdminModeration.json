@@ -10,13 +10,8 @@
   },
   "reviewFilterLabel": "Filtrar reseñas",
   "reviewFilter": {
-    "reported": "Denunciadas",
     "lowRated": "Con 1 o 2 estrellas",
     "newest": "Más recientes"
-  },
-  "report": {
-    "title": "Denunciada por {{by}} el {{date}}: «{{quote}}»",
-    "text": "Al ocultarla desaparece de las páginas de producto y de puesto. El cliente sabrá por qué."
   },
   "recentlyListed": "Productos publicados hace poco",
   "search": {
@@ -37,11 +32,9 @@
     "view": "Ver",
     "hideReview": "Ocultar reseña",
     "hideListing": "Ocultar ficha",
-    "keepVisible": "Dejar visible",
     "customerAccount": "Cuenta del cliente",
     "unhide": "Mostrar de nuevo",
-    "unhidden": "El elemento vuelve a estar visible.",
-    "dismissed": "Denuncia descartada. La reseña sigue visible."
+    "unhidden": "El elemento vuelve a estar visible."
   },
   "hide": {
     "title": {
@@ -71,7 +64,8 @@
     "text": "Los productos y reseñas denunciados llegan aquí para que los leas antes de ocultar nada."
   },
   "error": {
-    "noun": "publicaciones"
+    "noun": "publicaciones",
+    "reviewsNoun": "reviews"
   },
   "messages": {
     "boundary": "Solo puedes leer los mensajes denunciados, con hasta cinco a cada lado para dar contexto. El resto de la conversación no está abierto a los administradores.",

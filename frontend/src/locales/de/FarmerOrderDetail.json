@@ -14,9 +14,8 @@
     "reason": "Begründung, die der Kunde sieht"
   },
   "history": {
-    "before": "Vor {{cutoff}}",
-    "cancelled": "Vom Kunden storniert",
-    "title": "Verlauf"
+    "title": "Verlauf",
+    "by": "{{time}} · by {{by}}"
   },
   "missing": {
     "title": "Diese Bestellung gibt es hier nicht mehr",
@@ -24,10 +23,10 @@
     "back": "Meine Bestellungen"
   },
   "item": "Artikel",
+  "noun": "order",
   "col": {
     "product": "Produkt",
     "requested": "Bestellt",
-    "left": "Rest nach dieser Bestellung",
     "amount": "Betrag"
   },
   "crumb": "Bestellungen",
@@ -50,25 +49,19 @@
   },
   "items": {
     "title": "Artikel",
-    "note": "Der angezeigte Bestand ist, was nach dieser und anderen Bestellungen übrig bleibt. Reservierter Bestand wird zurückgegeben, wenn Sie ablehnen (D-02)."
+    "total": "Total"
   },
   "note": "Notiz des Kunden",
   "quote": "„{{text}}“",
   "customer": {
     "title": "Kunde",
     "name": "Name",
-    "tier": "Stufe",
     "phone": "Telefon",
-    "ordersWithYou": "Bestellungen bei Ihnen",
-    "orders_one": "{{count}} Bestellung",
-    "orders_other": "{{count}} Bestellungen",
-    "withCollected_one": "{{orders}}, {{count}} abgeholt",
-    "withCollected_other": "{{orders}}, {{count}} abgeholt"
+    "email": "Email"
   },
   "pickup": {
     "title": "Abholfenster",
     "market": "Markt",
-    "marketStall": "{{market}}, Stand {{code}}",
     "slot": "Fenster",
     "pay": "Bei Abholung zahlen"
   },

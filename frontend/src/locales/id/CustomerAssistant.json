@@ -7,23 +7,24 @@
   "message": "Pesan",
   "placeholder": "mis. Siapa yang jual telur di Thảo Điền hari Sabtu?",
   "send": "Kirim",
-  "reply": {
-    "greeting": "Halo {{name}}. Tanyakan apa yang tersedia akhir pekan ini, atau kapan pasar buka.",
-    "pomelo": "Pada {{day}} {{date}}, 2 lapak punya jeruk bali kulit hijau: <b>Út Hiền Orchard</b> di Thủ Đức Farmers Market (sisa 2, {{price1}}) dan <b>Ba Lành Farm</b> di Thảo Điền Weekend Market (sisa 9, {{price2}}).",
-    "slots": "Út Hiền Orchard melayani pengambilan {{from}} – {{to}} pada {{day}} {{date}} di Thủ Đức Farmers Market. Slot kosong: {{free}}. Slot {{full}} penuh. Pesanan ditutup 12 jam sebelum slot.",
-    "unknown": "Saya tidak mengerti. Coba nama produk, pasar, atau lapak."
-  },
-  "question": {
-    "pomeloMorning": "Pasar mana yang punya jeruk bali kulit hijau Sabtu pagi?"
-  },
+  "sending": "Sending…",
+  "error": "Something went wrong. Try again in a moment.",
+  "loading": "Loading your conversation…",
+  "loadErrorTitle": "We could not load your conversation history",
+  "loadErrorText": "Check your connection and try again.",
+  "retry": "Try again",
+  "emptyTitle": "No messages yet",
+  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
   "suggest": {
-    "pomeloSat": "Di mana bisa dapat jeruk bali kulit hijau hari Sabtu?",
-    "baChieuOpen": "Kapan Bà Chiểu Green Market buka?",
-    "showMap": "Tampilkan 2 lapak di peta",
-    "slotsUtHien": "Waktu ambil di Út Hiền",
-    "addPomelos": "Tambahkan 2 jeruk bali ke keranjang",
-    "directionsThuDuc": "Rute ke Thủ Đức Farmers Market",
-    "thaoDien": "Ada apa di Thảo Điền hari Sabtu?"
+    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
+    "pomeloStock": "có bưởi không",
+    "benThanhSat": "farmers at Ben Thanh on saturday",
+    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
+  },
+  "resultLink": {
+    "product": "View product: {{title}}",
+    "market": "View market: {{title}}",
+    "farmer": "View stall: {{title}}"
   },
   "canAnswer": {
     "title": "Yang bisa dijawab",

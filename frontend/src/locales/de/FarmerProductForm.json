@@ -33,6 +33,13 @@
     "label": "Verfügbare Menge diese Woche",
     "error": "Die Menge muss 0 oder mehr sein. Nutzen Sie Ausverkauft, wenn nichts mehr da ist."
   },
+  "shelfLife": {
+    "label": "Shelf life (days)",
+    "hint": "This category is usually {{min}}–{{max}} days.",
+    "error": "Enter a whole number of 1 or more.",
+    "warningTitle": "Outside the usual range",
+    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+  },
   "desc": {
     "label": "Beschreibung",
     "hint": "Wird auf der Produktseite angezeigt. Beschreiben Sie, wie es angebaut wird und wie man es lagert."

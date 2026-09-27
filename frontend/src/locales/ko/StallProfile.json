@@ -5,7 +5,6 @@
   },
   "breadcrumb": "장터",
   "approved": "승인된 가게",
-  "savedToast": "{{name}}을(를) 저장했어요.",
   "save": "가게 저장",
   "stats": {
     "reviews_one": "리뷰 {{count}}개",
@@ -33,7 +32,10 @@
     "all": "전체",
     "farmer": "가게 리뷰",
     "product": "상품 리뷰",
-    "newest": "최신순"
+    "newest": "최신순",
+    "emptyTitle": "No reviews yet",
+    "emptyText": "Be the first to review this stall once your order is completed.",
+    "noun": "reviews"
   },
   "about": {
     "whereWhen": "장소와 시간",
@@ -63,5 +65,6 @@
   },
   "error": {
     "noun": "매장"
-  }
+  },
+  "saved": "Stall saved"
 }

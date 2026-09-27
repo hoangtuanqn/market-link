@@ -1,6 +1,7 @@
 {
   "title": "Kundschaft",
   "intro": "Sperre ein Konto bei einem Regelverstoß; es kann sich dann nicht mehr anmelden und nichts mehr bestellen. Gib es wieder frei, sobald die Sache geklärt ist. Frühere Bestellungen bleiben bei den Ständen.",
+  "noun": "customers",
   "search": {
     "label": "Kundschaft suchen",
     "placeholder": "Name, E-Mail oder Telefon",
@@ -10,13 +11,13 @@
   "filter": {
     "all": "Alle",
     "active": "Aktiv",
-    "inactive": "Gesperrt",
-    "joinedThisMonth": "Diesen Monat dazugekommen"
+    "inactive": "Gesperrt"
   },
   "status": {
     "active": "Aktiv",
     "inactive": "Gesperrt"
   },
+  "caption": "{{count}} customers",
   "col": {
     "customer": "Kundschaft",
     "joined": "Angemeldet",
@@ -36,11 +37,19 @@
     "title": "{{name}} sperren?",
     "text": "Die Person wird überall abgemeldet und kann sich weder anmelden noch bestellen. Bereits aufgegebene Bestellungen bleiben bei den Ständen.",
     "reason": "Grund, bleibt am Konto vermerkt",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Aktiv lassen",
     "confirm": "Konto sperren"
   },
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate account"
+  },
   "toast": {
     "deactivated": "{{name}} gesperrt.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} kann sich wieder anmelden."
   }
 }

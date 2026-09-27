@@ -95,7 +95,7 @@ const ProductsPage = () => {
         <p className="font-hand text-hand text-ink-muted">
           {dayLabel} · {t('markets', { count: markets.length })} · {t('stallsSelling', { count: stallsSelling })}
         </p>
-        <h1 className="text-h1">{t('title')}</h1>
+        <h1 className="font-hand md:text-display text-h1">{t('title')}</h1>
         <p className="text-body-lg max-w-155">{t('intro')}</p>
       </div>
 

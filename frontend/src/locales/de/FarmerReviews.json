@@ -4,6 +4,7 @@
   "summary": "Stand {{stall}} · Produkte {{products}} · {{reviews}}",
   "reviewCount_one": "{{count}} Bewertung",
   "reviewCount_other": "{{count}} Bewertungen",
+  "noun": "reviews",
   "filter": {
     "all": "Alle",
     "needs": "Antwort nötig",
@@ -14,13 +15,10 @@
   "toast": {
     "postedTitle": "Antwort veröffentlicht",
     "postedText": "Antwort unter der Bewertung von {{name}} veröffentlicht.",
-    "editTitle": "Antwort bearbeiten",
-    "editText": "Die Antwort kann jetzt bearbeitet werden."
+    "alreadyReplied": "You already replied to this review."
   },
   "action": {
-    "editReply": "Antwort bearbeiten",
     "reply": "Antworten",
-    "report": "Bewertung melden",
     "post": "Antwort veröffentlichen"
   },
   "form": {

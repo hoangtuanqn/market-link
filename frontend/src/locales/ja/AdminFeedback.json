@@ -1,15 +1,14 @@
 {
-  "overline": "設定",
   "title": "フィードバック受信箱",
   "intro": "フィードバックフォームから届いた不具合報告、ご提案、ご質問です。対応が終わったら「対応済み」にしてください。",
-  "link": {
-    "categories": "カテゴリー",
-    "announcements": "お知らせ"
-  },
+  "noun": "feedback",
+  "anonymous": "Anonymous",
+  "caption": "{{count}} feedback messages",
   "filterLabel": "フィードバックを絞り込む",
   "filter": {
-    "open": "未対応",
-    "answered": "対応済み",
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved",
     "bug": "不具合",
     "suggestion": "ご提案",
     "query": "ご質問"
@@ -20,8 +19,9 @@
     "query": "ご質問"
   },
   "status": {
-    "open": "未対応",
-    "answered": "対応済み"
+    "new": "New",
+    "reviewed": "Reviewed",
+    "resolved": "Resolved"
   },
   "col": {
     "type": "種類",
@@ -30,26 +30,21 @@
     "status": "ステータス"
   },
   "action": {
-    "read": "読む",
-    "readAndAnswer": "読んで返信する"
+    "read": "読む"
   },
   "dialog": {
     "title": "{{from}} からの{{type}}",
     "sent": "{{date}}送信 · {{state}}",
-    "notAnswered": "まだ返信していません",
-    "alreadyAnswered": "返信済みです",
-    "yourAnswer": "返信内容",
-    "replyPlaceholder": "お知らせいただきありがとうございます…",
     "close": "閉じる",
-    "send": "送信して対応済みにする",
-    "sendAgain": "もう一度送る"
+    "markReviewed": "Mark reviewed",
+    "markResolved": "Mark resolved"
   },
   "empty": {
     "title": "フィードバックはまだありません",
     "text": "フィードバックフォームからの不具合報告、ご提案、ご質問がここに届きます。"
   },
   "toast": {
-    "answered": "返信を保存し、メッセージを対応済みにしました。",
-    "markedOnly": "返信せずに対応済みにしました。"
+    "reviewed": "Marked reviewed.",
+    "resolved": "Marked resolved."
   }
 }

@@ -33,6 +33,13 @@
     "label": "今週の販売可能数",
     "error": "数量は 0 以上にしてください。在庫がないときは売り切れを使ってください。"
   },
+  "shelfLife": {
+    "label": "Shelf life (days)",
+    "hint": "This category is usually {{min}}–{{max}} days.",
+    "error": "Enter a whole number of 1 or more.",
+    "warningTitle": "Outside the usual range",
+    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+  },
   "desc": {
     "label": "説明",
     "hint": "商品ページに表示されます。育て方と保存方法を書いてください。"

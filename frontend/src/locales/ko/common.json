@@ -69,6 +69,7 @@
     "tryAgain": "다시 시도",
     "noThreadsTitle": "아직 대화가 없습니다",
     "noThreadsText": "가게 페이지에서 메시지를 보내 이번 주 농산물에 대해 물어보세요.",
+    "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "읽지 않은 메시지 {{count}}개",
     "sendFailed": "메시지를 보내지 못했습니다. 다시 시도하세요.",
     "photoFailed": "사진을 보내지 못했습니다. 5 MB 이하의 JPEG, PNG, WebP를 선택하세요.",
@@ -112,6 +113,7 @@
       "other": "기타"
     },
     "reportNote": "자세히 알려 주세요 (선택)",
+    "noteLeft_one": "{{count}} character left",
     "noteLeft_other": "{{count}}자 남음",
     "chooseReason": "신고하려면 이유를 선택하세요.",
     "report": "신고",
@@ -198,6 +200,7 @@
     "openMenu": "메뉴 열기",
     "search": "검색",
     "seeAll": "모두 보기",
+    "messagesUnread_one": "Messages, {{count}} unread",
     "messagesUnread_other": "메시지, 읽지 않음 {{count}}"
   },
   "kpi": {
@@ -214,8 +217,7 @@
     "markets": "시장 불러오는 중"
   },
   "logo": {
-    "home": "MarketLink — 홈",
-    "slogan": "도착해도 그대로 있어요"
+    "home": "MarketLink — 홈"
   },
   "map": {
     "attribution": "© {{link}} 기여자",
@@ -268,7 +270,15 @@
     "cancel": "주문 취소",
     "reviewed": "이 주문에 리뷰를 남겼어요",
     "review": "매대 및 상품 리뷰하기",
-    "reorder": "다시 주문"
+    "reorder": "다시 주문",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
+    "cancelConfirmTitle": "Cancel this order?",
+    "cancelConfirmText": "The stall will be told and the stock goes back on sale.",
+    "cancelledToast": "Order {{code}} cancelled.",
+    "reordered": "Everything is back in your cart.",
+    "reorderedPartly_one": "Added to your cart; {{count}} item is no longer sold.",
+    "reorderedPartly_other": "Added to your cart; {{count}} items are no longer sold."
   },
   "orderStatus": {
     "placed": "주문됨",
@@ -452,6 +462,8 @@
     "photoAlt": "{{n}}번째 신청의 사진"
   },
   "notify": {
+    "notificationsEmpty": "아직 알림이 없습니다.",
+    "notificationsError": "알림을 불러오지 못했습니다.",
     "open": "열기",
     "prompt": {
       "title": "알림 켜기",
@@ -527,129 +539,6 @@
     "admin": {
       "title": "알림",
       "intro": "검토를 기다리는 새 Farmer 신청입니다."
-    },
-    "notificationsEmpty": "아직 알림이 없습니다.",
-    "notificationsError": "알림을 불러오지 못했습니다."
-  },
-  "comingSoon": {
-    "title": "이 페이지는 아직 열리지 않았습니다",
-    "text": "아직 준비 중입니다. 메뉴의 다른 기능은 평소처럼 사용할 수 있습니다."
-  },
-  "tour": {
-    "next": "다음",
-    "back": "이전",
-    "done": "완료",
-    "skip": "안내 건너뛰기",
-    "progress": "{{current}} / {{total}}",
-    "steps": {
-      "customerWelcome": {
-        "title": "MarketLink에 오신 것을 환영합니다",
-        "body": "호찌민시 주말 시장의 농가에서 신선한 농산물을 예약하고 가판대에서 받아 가세요. 짧은 안내로 둘러보겠습니다."
-      },
-      "customerMarkets": {
-        "title": "시장 둘러보기",
-        "body": "모든 시장과 영업시간, 그곳에서 판매하는 가판대를 확인하세요."
-      },
-      "customerProducts": {
-        "title": "상품 찾기",
-        "body": "카테고리, 가격, 시장별로 농산물을 필터링하세요. 각 상품에 이번 주 남은 수량이 표시됩니다."
-      },
-      "customerMap": {
-        "title": "시장 지도",
-        "body": "가장 가까운 시장을 찾고 OpenStreetMap에서 길 안내를 받으세요."
-      },
-      "customerSearch": {
-        "title": "검색",
-        "body": "상품, 가판대, 시장을 이름으로 찾아보세요."
-      },
-      "customerCart": {
-        "title": "장바구니",
-        "body": "상품을 담고 가판대에서 받을 시간을 고른 뒤 주문하세요."
-      },
-      "customerOrders": {
-        "title": "내 주문",
-        "body": "주문 접수부터 수락, 준비 완료, 완료까지 각 주문을 확인하세요. 방문 전에 농가가 주문을 확인합니다."
-      },
-      "customerFavorites": {
-        "title": "즐겨찾기",
-        "body": "마음에 드는 가판대와 상품을 저장해 빠르게 다시 찾으세요."
-      },
-      "customerMessages": {
-        "title": "메시지",
-        "body": "상품이나 주문에 대해 농가와 대화하세요."
-      },
-      "customerNotifications": {
-        "title": "알림",
-        "body": "주문 업데이트와 시장 공지가 여기에 표시됩니다."
-      },
-      "customerAccount": {
-        "title": "내 계정",
-        "body": "프로필을 수정하고, 언어와 통화 같은 설정을 바꾸거나, 농가로 판매를 신청하세요."
-      },
-      "customerMenu": {
-        "title": "메뉴",
-        "body": "시장, 상품, 주문, 계정이 모두 이 메뉴에 있습니다."
-      },
-      "customerDone": {
-        "title": "준비가 끝났습니다",
-        "body": "가까운 시장을 골라 시작해 보세요. 설정은 언제든지 바꿀 수 있습니다."
-      },
-      "farmerWelcome": {
-        "title": "가판대 관리 화면에 오신 것을 환영합니다",
-        "body": "MarketLink에서 가판대를 운영하는 곳입니다. 각 메뉴를 빠르게 살펴보겠습니다."
-      },
-      "farmerOverview": {
-        "title": "개요",
-        "body": "오늘의 주문, 픽업, 매출을 한눈에 확인하세요."
-      },
-      "farmerOrders": {
-        "title": "새 주문",
-        "body": "새 주문을 수락하거나 거절하고, 고객이 받아 가면 준비 완료와 완료로 표시하세요."
-      },
-      "farmerSlots": {
-        "title": "픽업 시간",
-        "body": "고객이 가판대에서 주문을 받아 갈 수 있는 시간대를 설정하세요."
-      },
-      "farmerStock": {
-        "title": "이번 주 재고",
-        "body": "이번 주에 판매할 수 있는 상품별 수량을 업데이트하세요."
-      },
-      "farmerProducts": {
-        "title": "상품",
-        "body": "사진, 가격, 단위를 넣어 상품을 추가하거나 더 이상 팔지 않는 상품을 숨기세요."
-      },
-      "farmerStall": {
-        "title": "가판대와 픽업",
-        "body": "가판대 프로필을 수정하고 참여하는 시장과 요일을 선택하세요."
-      },
-      "farmerReviews": {
-        "title": "리뷰",
-        "body": "고객이 픽업 후 남긴 평점과 리뷰를 확인하세요."
-      },
-      "farmerHistory": {
-        "title": "판매 내역",
-        "body": "지난 주문과 매출 흐름을 돌아보세요."
-      },
-      "farmerMessages": {
-        "title": "메시지",
-        "body": "상품과 주문에 대한 고객 문의에 답하세요."
-      },
-      "farmerNotifications": {
-        "title": "알림",
-        "body": "새 주문과 MarketLink 팀의 소식이 여기에 표시됩니다."
-      },
-      "farmerSettings": {
-        "title": "설정",
-        "body": "언어, 통화, 판매 기본값을 변경하세요."
-      },
-      "farmerDone": {
-        "title": "가판대 준비 완료",
-        "body": "이번 주 재고와 픽업 시간부터 확인해 보세요."
-      },
-      "dashboardMenu": {
-        "title": "메뉴",
-        "body": "메뉴를 열면 관리 화면의 모든 섹션으로 이동할 수 있습니다."
-      }
     }
   }
 }

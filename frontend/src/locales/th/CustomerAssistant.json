@@ -7,23 +7,24 @@
   "message": "ข้อความ",
   "placeholder": "เช่น ใครมีไข่ที่ Thảo Điền วันเสาร์บ้าง",
   "send": "ส่ง",
-  "reply": {
-    "greeting": "สวัสดี {{name}} ถามได้ว่าสุดสัปดาห์นี้มีอะไรบ้าง หรือตลาดเปิดเมื่อไร",
-    "pomelo": "{{day}} {{date}} มี 2 ร้านที่มีส้มโอเปลือกเขียว: <b>Út Hiền Orchard</b> ที่ Thủ Đức Farmers Market (เหลือ 2, {{price1}}) และ <b>Ba Lành Farm</b> ที่ Thảo Điền Weekend Market (เหลือ 9, {{price2}})",
-    "slots": "Út Hiền Orchard ให้รับสินค้า {{from}} – {{to}} {{day}} {{date}} ที่ Thủ Đức Farmers Market ช่วงที่ว่าง: {{free}} ช่วง {{full}} เต็มแล้ว ปิดรับคำสั่งซื้อ 12 ชั่วโมงก่อนช่วงเวลารับ",
-    "unknown": "ไม่เข้าใจคำถามนี้ ลองพิมพ์ชื่อสินค้า ชื่อตลาด หรือชื่อร้าน"
-  },
-  "question": {
-    "pomeloMorning": "ตลาดไหนมีส้มโอเปลือกเขียวเช้าวันเสาร์"
-  },
+  "sending": "Sending…",
+  "error": "Something went wrong. Try again in a moment.",
+  "loading": "Loading your conversation…",
+  "loadErrorTitle": "We could not load your conversation history",
+  "loadErrorText": "Check your connection and try again.",
+  "retry": "Try again",
+  "emptyTitle": "No messages yet",
+  "emptyText": "Ask a question or pick one of the suggestions below to get started.",
   "suggest": {
-    "pomeloSat": "วันเสาร์หาส้มโอเปลือกเขียวได้ที่ไหน",
-    "baChieuOpen": "Bà Chiểu Green Market เปิดเมื่อไร",
-    "showMap": "ดู 2 ร้านบนแผนที่",
-    "slotsUtHien": "เวลารับสินค้าที่ Út Hiền",
-    "addPomelos": "ใส่ส้มโอ 2 ลูกลงตะกร้า",
-    "directionsThuDuc": "เส้นทางไป Thủ Đức Farmers Market",
-    "thaoDien": "วันเสาร์ที่ Thảo Điền มีอะไรบ้าง"
+    "baChieuHours": "Chợ Bà Chiểu mấy giờ mở cửa?",
+    "pomeloStock": "có bưởi không",
+    "benThanhSat": "farmers at Ben Thanh on saturday",
+    "utHienPickup": "giờ lấy hàng Vườn Út Hiền"
+  },
+  "resultLink": {
+    "product": "View product: {{title}}",
+    "market": "View market: {{title}}",
+    "farmer": "View stall: {{title}}"
   },
   "canAnswer": {
     "title": "สิ่งที่ตอบได้",

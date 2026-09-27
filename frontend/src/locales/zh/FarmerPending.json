@@ -1,13 +1,16 @@
 {
+  "error": {
+    "noun": "your registration"
+  },
   "overline": {
     "suspended": "{{stall}} · {{date}} 被暂停",
     "registered": "{{stall}} · {{date}} 注册"
   },
   "title": {
     "pending": "你的摊位正在等待审核",
+    "rejected": "Your stall registration was declined",
     "suspended": "你的摊位已被暂停"
   },
-  "previewToggle": "预览：被暂停的摊位",
   "reviewing": {
     "title": "管理员正在审核你的注册。",
     "text": "审核通过后你会收到通知和邮件。在此之前，顾客看不到你的摊位和商品。"
@@ -25,9 +28,18 @@
     "email": "邮箱",
     "market": "申请的集市"
   },
+  "rejected": {
+    "bannerTitle": "This registration was not approved.",
+    "noReason": "No reason was given.",
+    "again": {
+      "title": "Apply again",
+      "text": "You can send a new registration with updated details or evidence.",
+      "link": "Apply again"
+    }
+  },
   "suspended": {
-    "title": "你的摊位已于 {{date}} 被暂停。",
-    "text": "管理员给出的原因：{{reason}} 你的商品已被隐藏，也无法接收新订单。"
+    "bannerTitle": "Your stall is suspended.",
+    "noReason": "No reason was given."
   },
   "running": {
     "title": "已下的订单照常进行",

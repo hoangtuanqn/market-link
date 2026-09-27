@@ -1,5 +1,6 @@
 {
   "allCustomers": "Pelanggan",
+  "noun": "customer",
   "since": "Pelanggan sejak {{joined}} · pesanan terakhir {{last}}",
   "missing": {
     "title": "Pelanggan itu sudah tidak ada",
@@ -9,41 +10,36 @@
     "deactivate": "Nonaktifkan akun",
     "reactivate": "Aktifkan akun"
   },
-  "banner": {
-    "title": "Dinonaktifkan hari ini.",
-    "text": "Alasan yang tersimpan pada akun: {{reason}}. Pesanan yang sedang berjalan tidak disentuh."
-  },
   "orders": {
     "title": "Pesanan",
+    "noun": "orders",
     "all": "Semua pesanan di platform",
-    "note": "Admin hanya membacanya. Hanya lapak yang memindahkan status pesanan, jadi di sini tidak ada yang perlu diubah."
+    "note": "Admin hanya membacanya. Hanya lapak yang memindahkan status pesanan, jadi di sini tidak ada yang perlu diubah.",
+    "empty": {
+      "title": "No orders yet",
+      "text": "Orders this customer places will show up here."
+    }
   },
   "reviews": {
     "title": "Ulasan yang ditulis",
+    "noun": "reviews",
     "openInModeration": "Buka di Moderasi",
-    "note": "Menyembunyikan ulasan dilakukan dari Moderasi, di sana laporan yang memicunya juga terlihat."
-  },
-  "timeline": {
-    "title": "Riwayat akun",
-    "created": "Akun dibuat",
-    "firstCollected": "Pesanan pertama diambil",
-    "noShow": "Tidak datang mengambil",
-    "lastOrder": "Pesanan terakhir"
+    "note": "Menyembunyikan ulasan dilakukan dari Moderasi, di sana laporan yang memicunya juga terlihat.",
+    "empty": {
+      "title": "No reviews yet",
+      "text": "Reviews this customer writes will show up here."
+    }
   },
   "contact": {
     "title": "Kontak",
     "email": "Email",
     "phone": "Telepon",
-    "address": "Alamat",
     "joined": "Bergabung"
   },
   "habits": {
     "title": "Cara dia berbelanja",
     "orders": "Pesanan",
-    "collected": "Sudah diambil",
-    "noShows": "Tidak diambil",
-    "market": "Pasar",
-    "buysMostFrom": "Paling sering beli di"
+    "loadedNote": "Counted from the {{count}} most recently loaded orders, not the full history."
   },
   "whatItDoes": {
     "title": "Apa yang terjadi saat dinonaktifkan",
@@ -53,17 +49,19 @@
     "title": "Nonaktifkan {{name}}?",
     "text": "Dia tidak bisa masuk atau memesan sampai admin mengaktifkannya kembali. Pesanan yang sudah dibuat berjalan sampai selesai, jadi tidak ada lapak yang menahan barang yang tak diambil siapa pun.",
     "reason": "Alasan yang tersimpan pada akun",
+    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
     "keep": "Belum sekarang",
     "confirm": "Nonaktifkan"
   },
-  "reason": {
-    "noShows": "Berulang kali tidak datang mengambil",
-    "abusive": "Kata-kata kasar dalam ulasan",
-    "requested": "Meminta akunnya ditutup",
-    "other": "Alasan lain"
+  "reactivate": {
+    "title": "Reactivate {{name}}?",
+    "text": "They can sign in and place orders again right away.",
+    "keep": "Not yet",
+    "confirm": "Reactivate"
   },
   "toast": {
     "deactivated": "{{name}} dinonaktifkan.",
+    "deactivatedWithReason": "{{name}} deactivated. Reason: {{reason}}",
     "reactivated": "{{name}} bisa masuk lagi."
   },
   "col": {

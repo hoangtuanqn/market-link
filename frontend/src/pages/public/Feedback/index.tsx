@@ -54,7 +54,7 @@ const FeedbackPage = () => {
         className="mx-auto flex w-full max-w-160 flex-col gap-4 p-8"
       >
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="font-hand md:text-display text-h1">{t('title')}</h1>
           <p className="text-small text-ink-muted">{t('intro')}</p>
         </div>
 

@@ -7,21 +7,12 @@
     "suggestion": "제안: 더 나아질 수 있는 곳이 있어요",
     "query": "질문: 답이 필요해요"
   },
-  "pageLabel": "어느 페이지인가요?",
-  "pages": {
-    "cart": "장바구니",
-    "product": "상품 페이지",
-    "map": "마켓 지도",
-    "orders": "내 주문",
-    "farmer": "Farmer 대시보드",
-    "other": "기타"
-  },
   "messageLabel": "내용",
   "messagePlaceholder": "무엇을 기대했고, 실제로는 무슨 일이 있었나요?",
   "messageHint": "버그라면 사용 중인 휴대폰이나 브라우저도 적어 주세요.",
-  "emailLabel": "답변받을 이메일",
-  "emailHint": "선택 사항입니다. 로그인하면 자동으로 채워집니다.",
   "submit": "피드백 보내기",
+  "sendFailed": "Could not send. Try again.",
+  "tooMany": "Too many messages sent recently. Try again in a while.",
   "sent": {
     "title": "보냈습니다",
     "bug": "감사합니다. 버그 신고가 팀에 전달되었습니다.",

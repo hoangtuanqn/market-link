@@ -1,45 +1,39 @@
 {
   "title": "Riwayat penjualan",
   "intro": "Apa yang Anda jual, dan perbandingannya dengan periode sebelumnya. Pendapatan hanya menghitung pesanan selesai, yaitu uang yang diberikan pelanggan di lapak.",
-  "export": {
-    "button": "Ekspor periode ini",
-    "title": "Ekspor dimulai",
-    "text": "Ekspor dimulai. CSV mencakup periode dan pasar yang ditampilkan."
+  "month": {
+    "previous": "Previous month",
+    "next": "Next month"
   },
-  "days_one": "{{count}} hari",
-  "days_other": "{{count}} hari",
-  "market": "Pasar",
-  "bothMarkets": "Kedua pasar",
   "kpi": {
+    "noun": "your numbers",
     "completed": "Pesanan selesai",
-    "completedNote": "dari {{total}} pesanan di tempat Anda",
     "revenue": "Pendapatan",
     "revenueNote": "₫, dibayar di lapak",
     "average": "Rata-rata pesanan",
-    "averageNote": "₫ per pesanan selesai",
     "declined": "Anda tolak",
-    "declinedNote": "{{pct}}% dari pesanan di tempat Anda"
-  },
-  "byDay": {
-    "title": "Pendapatan per hari pasar",
-    "note": "Dalam juta ₫. Anda hanya berjualan hari Sabtu dan Minggu, jadi setiap kolom adalah satu pagi pasar.",
-    "caption": "Pendapatan per hari pasar pada {{now}} dibandingkan {{prev}}, dalam juta dong"
+    "cancelled": "Cancelled",
+    "allTime": "All time",
+    "partial": "First 500 orders only"
   },
   "best": {
     "title": "Terlaris",
     "note": "Pendapatan pada {{month}}. Jumlah memakai satuan masing-masing produk, jadi tidak pernah dijumlahkan.",
-    "product": "Produk",
-    "soldPer": "Dijual per",
-    "price": "Harga",
-    "sold": "Terjual",
-    "revenue": "Pendapatan"
+    "noun": "best sellers",
+    "empty": {
+      "title": "Nothing sold this month",
+      "text": "Best sellers for this month will show up here once orders complete."
+    }
   },
-  "where": {
-    "title": "Tempat terjual",
-    "note_one": "Bulan ini {{count}} pesanan ditolak dan {{cancelled}} dibatalkan. Keduanya tidak dihitung di sini.",
-    "note_other": "Bulan ini {{count}} pesanan ditolak dan {{cancelled}} dibatalkan. Keduanya tidak dihitung di sini."
+  "past": {
+    "title": "Pesanan sebelumnya",
+    "note": "Selesai, ditolak, dan dibatalkan",
+    "noun": "completed orders",
+    "empty": {
+      "title": "No completed orders this month",
+      "text": "Orders you complete this month will be listed here."
+    }
   },
-  "past": { "title": "Pesanan sebelumnya", "note": "Selesai, ditolak, dan dibatalkan" },
   "col": {
     "pickup": "Pengambilan",
     "order": "Pesanan",
@@ -47,6 +41,5 @@
     "items": "Item",
     "total": "Total",
     "status": "Status"
-  },
-  "itemLine": "{{qty}}× {{name}}"
+  }
 }
