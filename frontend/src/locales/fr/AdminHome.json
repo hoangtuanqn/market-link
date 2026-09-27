@@ -48,5 +48,12 @@
     "pickup": "Retrait",
     "total": "Total",
     "status": "Statut"
+  },
+  "maintenance": {
+    "title": "Le mode maintenance est actif",
+    "badge": "Actif",
+    "text": "La plateforme entière est actuellement réservée aux administrateurs. Tous les visiteurs et producteurs voient la notice de maintenance.",
+    "reminder": "N'oubliez pas de désactiver le mode maintenance dès que possible une fois les opérations terminées afin que les utilisateurs puissent accéder à MarketLink.",
+    "action": "Aller aux paramètres"
   }
 }

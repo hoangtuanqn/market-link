@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.filters.JwtAuthFilter;
+import com.techx.intervue.filters.MaintenanceModeFilter;
 import com.techx.intervue.filters.TraceIdFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -24,7 +25,10 @@ class SecurityConfigEntryPointTest {
     void missingTokenIsA401AskingToSignIn() throws Exception {
         SecurityConfig config =
                 new SecurityConfig(
-                        objectMapper, mock(JwtAuthFilter.class), mock(TraceIdFilter.class));
+                        objectMapper,
+                        mock(JwtAuthFilter.class),
+                        mock(TraceIdFilter.class),
+                        mock(MaintenanceModeFilter.class));
         MockHttpServletResponse response = new MockHttpServletResponse();
 
         config.signInRequired()

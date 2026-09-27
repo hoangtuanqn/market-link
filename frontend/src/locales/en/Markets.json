@@ -33,7 +33,7 @@
   },
   "error": {
     "noun": "markets",
-    "alt": "the <link>market map</link> opens on its own page"
+    "alt": "the <a>market map</a> opens on its own page"
   },
   "pager": {
     "showing": "Showing {{from}}–{{to}} of {{total}}",

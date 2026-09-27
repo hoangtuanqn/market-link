@@ -10,5 +10,26 @@
   "hours_one": "{{count}} Stunde",
   "hours_other": "{{count}} Stunden",
   "orders_one": "{{count}} Bestellung",
-  "orders_other": "{{count}} Bestellungen"
+  "orders_other": "{{count}} Bestellungen",
+  "website": {
+    "title": "Website-Status",
+    "intro": "Schalten Sie die ganze Website vorübergehend ab, während Sie etwas reparieren, und wieder ein, wenn Sie fertig sind.",
+    "loading": "Website-Status wird geladen",
+    "loadErrorTitle": "Website-Status konnte nicht geladen werden",
+    "loadErrorText": "Prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "retry": "Erneut versuchen",
+    "pillActive": "Live",
+    "pillMaintenance": "In Wartung",
+    "activeText": "MarketLink ist für alle geöffnet.",
+    "maintenanceText": "Im Moment können sich nur Admins anmelden. Alle anderen sehen einen Wartungshinweis.",
+    "enable": "Wartungsmodus einschalten",
+    "disable": "Wartungsmodus ausschalten",
+    "confirmTitle": "Wartungsmodus einschalten?",
+    "confirmText": "Jeder Besucher außer Admins wird sofort zu einem Wartungshinweis weitergeleitet. Sie können ihn jederzeit wieder ausschalten.",
+    "confirmButton": "Jetzt einschalten",
+    "cancelButton": "Noch nicht",
+    "toastOn": "Der Wartungsmodus ist an. Alle außer Admins sind ausgesperrt.",
+    "toastOff": "Der Wartungsmodus ist aus. MarketLink ist wieder geöffnet.",
+    "error": "Der Website-Status konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+  }
 }

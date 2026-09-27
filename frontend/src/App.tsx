@@ -1,14 +1,20 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router';
 import AppToaster from './components/AppToaster';
+import CookieConsentBar from './components/CookieConsentBar';
+import PlatformStatusSync from './components/PlatformStatusSync';
 import ScrollToTop from './components/ScrollToTop';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import { USER_ROLE } from './constants/enums';
+import usePlatformStatus from './hooks/usePlatformStatus';
+import useSession from './hooks/useSession';
 import NotificationCenter from './components/notifications/NotificationCenter';
 import NotificationPermissionBanner from './components/notifications/NotificationPermissionBanner';
 import SettingsSync from './components/SettingsSync';
+import MaintenancePage from './pages/public/Maintenance';
 import AdminLayout from './layout/AdminLayout';
 import AdminSettingsPage from './pages/admin/Settings';
 import FarmerSettingsPage from './pages/farmer/Settings';
+import AuthLayout from './layout/AuthLayout';
 import FarmerLayout from './layout/FarmerLayout';
 import MainLayout from './layout/MainLayout';
 import RequireAuth from './layout/RequireAuth';
@@ -66,6 +72,7 @@ import FarmerPendingPage from './pages/farmer/Pending';
 import AdminLoginPage from './pages/admin/Login';
 import AdminHomePage from './pages/admin/Home';
 import AdminVerifyPage from './pages/admin/Verify';
+import AdminSetup2FAPage from './pages/admin/Setup2FA';
 import AdminSecurityPage from './pages/admin/Security';
 import AdminFarmersPage from './pages/admin/Farmers';
 import AdminFarmerDetailPage from './pages/admin/FarmerDetail';
@@ -83,23 +90,30 @@ import AdminOrderDetailPage from './pages/admin/OrderDetail';
 import AdminOrdersPage from './pages/admin/Orders';
 import AdminReportsPage from './pages/admin/Reports';
 
-const App = () => {
+/**
+ * Site-wide maintenance mode (MaintenanceModeFilter is the real gate; this is the UX on top of it): while it is on,
+ * anyone but a signed-in admin gets the notice instead of whatever path they asked for. The admin area itself (login
+ * included, since a fresh browser has no session yet) stays reachable so an admin can always get in to turn it back
+ * off.
+ */
+const AppRoutes = () => {
+  const { user } = useSession();
+  const maintenanceMode = usePlatformStatus();
+  const location = useLocation();
+
+  const isAdminArea = location.pathname.startsWith('/admin');
+  if (maintenanceMode && user?.role !== USER_ROLE.ADMIN && !isAdminArea) {
+    return <MaintenancePage />;
+  }
+
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
       <SettingsSync>
         <Routes>
+          {/* Public informational pages (Guest shell: Header with guest actions + Footer) */}
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="register/customer" element={<RegisterCustomerPage />} />
-            {/* FR-002: no separate stall sign-up — create a customer account first, then submit the Farmer application at /become-farmer */}
-            <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
-            <Route path="forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="reset-password" element={<ResetPasswordPage />} />
-            <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
-            <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
-            <Route path="auth/set-password" element={<SetPasswordPage />} />
             <Route path="markets" element={<MarketsPage />} />
             <Route
               path="markets/:id"
@@ -135,12 +149,27 @@ const App = () => {
             <Route path="feedback" element={<FeedbackPage />} />
           </Route>
 
+          {/* Authentication flow pages (Focused Auth shell: Logo + page content, no Header/Footer) */}
+          <Route element={<AuthLayout />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="register/customer" element={<RegisterCustomerPage />} />
+            {/* FR-002: no separate stall sign-up — create a customer account first, then submit the Farmer application at /become-farmer */}
+            <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
+            <Route path="forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="reset-password" element={<ResetPasswordPage />} />
+            <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
+            <Route path="auth/complete-profile" element={<CompleteProfilePage />} />
+            <Route path="auth/set-password" element={<SetPasswordPage />} />
+            <Route element={<RequireAuth />}>
+              <Route path="account/password" element={<ChangePasswordPage />} />
+            </Route>
+          </Route>
+
           {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
           <Route element={<MainLayout />}>
             <Route element={<RequireAuth />}>
               <Route path="dashboard" element={<CustomerDashboardPage />} />
               <Route path="account" element={<CustomerAccountPage />} />
-              <Route path="account/password" element={<ChangePasswordPage />} />
               <Route path="cart" element={<CustomerCartPage />} />
               <Route path="orders" element={<CustomerOrdersPage />} />
               <Route
@@ -221,6 +250,9 @@ const App = () => {
           <Route path="admin/login" element={<AdminLoginPage />} />
           {/* FR-008: step 2 of admin sign-in, no session yet so it sits outside AdminLayout. */}
           <Route path="admin/verify" element={<AdminVerifyPage />} />
+          {/* FR-008: mandatory first-time 2FA setup. Has a real session already (issued at login), but sits
+              outside AdminLayout so its own guard (not setupRequired) never fights AdminLayout's redirect here. */}
+          <Route path="admin/setup-2fa" element={<AdminSetup2FAPage />} />
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<AdminHomePage />} />
             <Route path="security" element={<AdminSecurityPage />} />
@@ -287,8 +319,16 @@ const App = () => {
       <NotificationCenter />
       <ChatUnreadCenter />
       <NotificationPermissionBanner />
-    </BrowserRouter>
+      <CookieConsentBar />
+    </>
   );
 };
+
+const App = () => (
+  <BrowserRouter>
+    <PlatformStatusSync />
+    <AppRoutes />
+  </BrowserRouter>
+);
 
 export default App;

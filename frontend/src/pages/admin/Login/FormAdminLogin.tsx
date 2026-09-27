@@ -7,7 +7,7 @@ import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/input';
 import { USER_ROLE } from '@/constants/enums';
-import { ADMIN_HOME_PATH, ADMIN_VERIFY_PATH } from '@/constants/nav';
+import { ADMIN_HOME_PATH, ADMIN_SETUP_2FA_PATH, ADMIN_VERIFY_PATH } from '@/constants/nav';
 import validateLogin, { type LoginFieldErrors } from '@/pages/auth/Login/validateLogin';
 import Helper from '@/utils/helper';
 import { splitLoginResult } from '@/utils/mfa';
@@ -52,6 +52,11 @@ const FormAdminLogin = () => {
         return;
       }
       Session.save(session, false);
+      if (response.data.mfaSetupRequired) {
+        Notification.info({ text: t('form.setupRequired') });
+        navigate(ADMIN_SETUP_2FA_PATH, { replace: true });
+        return;
+      }
       Notification.success({ text: response.message || t('form.signedIn') });
       navigate(ADMIN_HOME_PATH, { replace: true });
     } catch (error) {
@@ -73,7 +78,7 @@ const FormAdminLogin = () => {
           <Trans
             t={t}
             i18nKey="notAdmin.text"
-            components={{ link: <Link to="/login" className="text-danger underline" /> }}
+            components={{ a: <Link to="/login" className="text-danger underline" /> }}
           />
         </Banner>
       )}

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maintenance — MarketLink prototype</title>
+  <link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+  <link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+  <link rel="stylesheet" href="../prototype.css">
+  <style>
+    /* Layout-only additions for this page; not part of the ml-* design system (frontend/CLAUDE.md). */
+    .pt-maint-shell { display: flex; flex-direction: column; justify-content: space-between; min-height: 100vh; background: var(--surface-quiet); }
+    .pt-maint-header, .pt-maint-footer { width: 100%; }
+    .pt-maint-header-in, .pt-maint-footer-in { max-width: var(--size-container); margin: 0 auto; padding: 0 24px; }
+    .pt-maint-header-in { height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .pt-maint-header-in nav a { font-size: 13px; color: var(--ink-muted); text-decoration: none; }
+    .pt-maint-header-in nav a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+    .pt-maint-footer-in { padding-top: 16px; padding-bottom: 16px; font-size: 13px; color: var(--ink-muted); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .pt-maint-lang { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+    .pt-maint-lang select { min-height: 34px; border-radius: var(--radius-sm); border: 1.5px solid var(--line); background: var(--surface-raised); color: var(--ink); padding: 0 8px; font-size: 13px; }
+    .pt-maint-rule { border-top: 1px dashed var(--line); height: 0; }
+    .pt-maint-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 16px; }
+    .pt-maint-card { width: 100%; max-width: 520px; padding: 48px 32px; text-align: center; }
+    .pt-maint-icon { width: 64px; height: 64px; margin: 0 auto 20px; border-radius: var(--radius-pill); background: var(--surface-sunken); color: var(--brand); border: 1.5px solid var(--line-strong); display: flex; align-items: center; justify-content: center; }
+    .pt-maint-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-muted); margin: 0 0 10px; }
+    .pt-maint-heading { font-family: var(--font-hand); font-weight: 400; font-size: 48px; line-height: 52px; margin: 0 0 16px; color: var(--ink); }
+    .pt-maint-text { color: var(--ink-muted); max-width: 400px; margin: 0 auto 28px; line-height: 1.6; }
+    .pt-maint-actions { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    .pt-maint-rule-card { border-top: 1px dashed var(--line); height: 0; margin: 28px 0 20px; }
+    .pt-maint-contact { font-size: 14px; color: var(--ink-muted); }
+    .pt-maint-contact a { color: var(--brand-strong); text-decoration: underline; text-underline-offset: 3px; }
+  </style>
+  <script src="../data.js"></script>
+  <script src="../prototype.js"></script>
+</head>
+
+<body data-role="guest">
+  <div id="pt-top"></div>
+
+  <div class="pt-maint-shell">
+    <header class="pt-maint-header">
+      <div class="pt-maint-header-in">
+        <span class="ml-logo">
+          <img src="../../../frontend/public/brand/marketlink-mark.svg" width="30" height="30" alt="">
+          <span class="ml-logo-word">MarketLink</span>
+        </span>
+        <nav>
+          <a href="home.html">MarketLink — home</a>
+        </nav>
+      </div>
+      <div class="pt-maint-rule" aria-hidden="true"></div>
+    </header>
+
+    <main class="pt-maint-main">
+      <div class="ml-card pt-maint-card">
+        <div class="pt-maint-icon" aria-hidden="true">
+          <svg width="28" height="28" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="8" r="6" />
+            <path d="M8 5v3.2l2 1.3" />
+          </svg>
+        </div>
+
+        <p class="pt-maint-eyebrow">Site maintenance</p>
+        <h1 class="pt-maint-heading">Back in just a bit</h1>
+        <p class="pt-maint-text">
+          We've stepped away for a moment to tidy things up behind the scenes. Your account, orders and
+          saved favourites are exactly as you left them.
+        </p>
+
+        <div class="pt-maint-actions">
+          <button type="button" class="ml-btn ml-btn-primary" onclick="location.reload()">Try again</button>
+          <a class="ml-btn ml-btn-secondary" href="mailto:admin@marketlink.vn">Email support</a>
+        </div>
+
+        <div class="pt-maint-rule-card" aria-hidden="true"></div>
+
+        <p class="pt-maint-contact">Thanks for your patience while we get things back in order.</p>
+      </div>
+    </main>
+
+    <footer class="pt-maint-footer">
+      <div class="pt-maint-rule" aria-hidden="true"></div>
+      <div class="pt-maint-footer-in">
+        <p>© 2026 MarketLink · TechWiz 7</p>
+        <label class="pt-maint-lang">
+          <span>Language</span>
+          <select><option>English</option></select>
+        </label>
+      </div>
+    </footer>
+  </div>
+
+  <script>PT.boot({ role: 'guest', active: null, announce: false });</script>
+  <div id="pt-foot"></div>
+</body>
+
+</html>

@@ -30,7 +30,7 @@ const LoginPage = () => {
           <Trans
             t={t}
             i18nKey="intro"
-            components={{ link: <Link to="/admin/login" className="text-brand underline" /> }}
+            components={{ a: <Link to="/admin/login" className="text-brand underline" /> }}
           />
         </p>
       </div>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set up two-step verification — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="admin" data-shell="none" class="pt-quiet">
+<div id="pt-top"></div>
+<main class="pt-main pt-layout">
+  <div class="ml-card p-6" style="padding: 2rem;">
+    <h1 class="pt-title-sm">Set up two-step verification</h1>
+    <p>Mandatory right after an admin's first sign-in (FR-008). Same three steps as admin/security.html's
+      enrolment (scan QR / enter manual key, confirm the six-digit code, save the recovery codes), on its own
+      page with the AdminAuthShell frame — no dashboard chrome until this is done. An admin who later turns
+      this off from Security and wants it back on is sent back to this same page. Built directly in TSX
+      (frontend/src/pages/admin/Setup2FA), matching how admin/security.html's own enrolment flow works.</p>
+  </div>
+</main>
+<script>PT.boot({ role: 'admin', active: null, announce: false });</script>
+<div id="pt-foot"></div>
+</body>
+</html>

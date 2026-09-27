@@ -5,7 +5,11 @@
     "intro_one": "Giữ trước nông sản tuần này từ các sạp tại {{count}} chợ quanh TP. Hồ Chí Minh. Nhận hàng tại sạp và trả tiền trực tiếp cho nhà vườn.",
     "intro_other": "Giữ trước nông sản tuần này từ các sạp tại {{count}} chợ quanh TP. Hồ Chí Minh. Nhận hàng tại sạp và trả tiền trực tiếp cho nhà vườn.",
     "browse": "Xem các chợ",
-    "sell": "Bán hàng trên MarketLink"
+    "sell": "Bán hàng trên MarketLink",
+    "livePill": "Phiên chợ cuối tuần: {{count}} điểm họp chợ ({{from}} – {{to}})",
+    "lead": "Giữ trước nông sản tươi ngon hái sớm từ các nhà vườn gia đình. Nhận hàng tại chợ phiên cuối tuần và thanh toán trực tiếp cho người trồng.",
+    "explore": "Khám phá nông sản tươi",
+    "sellPrompt": "Bạn là nhà vườn? Bán hàng trên MarketLink →"
   },
   "search": {
     "scope": "Tìm trong",
@@ -23,33 +27,107 @@
     "overline": "Mở cửa cuối tuần này",
     "title": "Các sạp ở đâu",
     "seeAll_one": "Xem chợ trên bản đồ",
-    "seeAll_other": "Xem cả {{count}} chợ trên bản đồ"
+    "seeAll_other": "Xem cả {{count}} chợ trên bản đồ",
+    "takingOrders": "Đang mở đặt trước",
+    "hours": "Địa điểm & giờ mở cửa"
   },
   "nearby": {
     "title": "Chợ gần bạn",
     "note": "Khoảng cách tính từ địa chỉ đã lưu của bạn ở Thảo Điền",
-    "noun": "các chợ"
+    "noun": "các chợ",
+    "eyebrow": "ĐIỂM HỌP CHỢ",
+    "filterAll": "Tất cả",
+    "empty": "Chưa có chợ phiên nào ở khu vực này."
   },
   "fresh": {
     "title": "Tươi trong tuần này",
     "all": "Tất cả sản phẩm và bộ lọc",
-    "noun": "các sản phẩm"
+    "noun": "các sản phẩm",
+    "eyebrow": "NÔNG SẢN NỔI BẬT",
+    "cutoff": "Hạn chốt đặt trước: 20:00 tối thứ Năm & thứ Sáu tuần này",
+    "filterLink": "Lọc theo giá & danh mục →",
+    "empty": "Hiện chưa có nông sản mở đặt trước."
   },
   "how": {
     "title": "Đặt trước hoạt động thế nào",
     "steps": {
       "reserve": {
         "title": "Đặt trước giờ chốt đơn",
-        "text": "Thêm sản phẩm từ một hoặc nhiều sạp, chọn giờ nhận trong khung giờ của từng sạp rồi đặt hàng. Hàng được giữ cho bạn ngay khi bạn đặt."
+        "text": "Thêm sản phẩm từ một hoặc nhiều sạp, chọn giờ nhận trong khung giờ của từng sạp rồi đặt hàng. Hàng được giữ cho bạn ngay khi bạn đặt.",
+        "highlight": "Không yêu cầu thanh toán thẻ trước"
       },
       "confirm": {
         "title": "Nhà vườn xác nhận",
-        "text": "Mỗi sạp tự nhận hoặc từ chối đơn của mình. Dù thế nào bạn cũng nhận được thông báo, và bạn có thể sửa hoặc huỷ đơn trước giờ chốt của sạp."
+        "text": "Mỗi sạp tự nhận hoặc từ chối đơn của mình. Dù thế nào bạn cũng nhận được thông báo, và bạn có thể sửa hoặc huỷ đơn trước giờ chốt của sạp.",
+        "highlight": "Hàng được giữ chắc chắn 100% cho bạn"
       },
       "pickup": {
         "title": "Nhận hàng và trả tiền tại sạp",
-        "text": "Khi đơn được đánh dấu sẵn sàng, hãy đến sạp đúng khung giờ của bạn, nhận hàng và trả tiền trực tiếp cho nhà vườn. Không có thanh toán trực tuyến."
+        "text": "Khi đơn được đánh dấu sẵn sàng, hãy đến sạp đúng khung giờ của bạn, nhận hàng và trả tiền trực tiếp cho nhà vườn. Không có thanh toán trực tuyến.",
+        "highlight": "Khuyến khích mang theo túi đựng đồ tái sử dụng"
       }
+    },
+    "eyebrow": "QUY TRÌNH ĐƠN GIẢN",
+    "desc": "Thưởng thức thực phẩm tươi ngon mỗi cuối tuần mà không cần xếp hàng hay âu lo hết hàng"
+  },
+  "pillars": {
+    "fresh": {
+      "title": "100% Tươi từ vườn",
+      "desc": "Thu hoạch chiều hôm trước hoặc sáng sớm ngày họp chợ, giữ trọn độ tươi ngon và dưỡng chất."
+    },
+    "direct": {
+      "title": "Trực tiếp từ nhà vườn",
+      "desc": "Không qua trung gian nâng giá. Mức giá hợp lý cho bạn, 100% thu nhập về tay nông dân."
+    },
+    "guarantee": {
+      "title": "Đặt trước giữ phần",
+      "desc": "Chắc chắn có phần ngon từ giữa tuần — không lo dậy sớm chen chúc hay hết hàng yêu thích."
+    },
+    "pay": {
+      "title": "Thanh toán tại sạp",
+      "desc": "Tận tay kiểm tra chất lượng khi nhận hàng, thanh toán tiền mặt hoặc chuyển khoản QR cho nông dân."
     }
+  },
+  "categories": {
+    "eyebrow": "DANH MỤC NÔNG SẢN",
+    "title": "Khám phá theo danh mục",
+    "desc": "Phân loại theo mùa vụ thu hoạch và phương thức canh tác",
+    "all": "Xem tất cả sản phẩm →",
+    "items": {
+      "vegetables": "Rau củ quả",
+      "fruits": "Trái cây vườn",
+      "dairy": "Trứng & bơ sữa",
+      "grains": "Ngũ cốc & hạt",
+      "meat": "Thịt & gia cầm",
+      "seafood": "Thủy hải sản",
+      "mushrooms": "Nấm tươi sạch",
+      "baked": "Bánh & đồ thủ công"
+    },
+    "itemsCount": "{{count}} sản phẩm"
+  },
+  "farmers": {
+    "eyebrow": "NHÀ VƯỜN TIÊU BIỂU",
+    "title": "Gặp gỡ nhà vườn địa phương",
+    "desc": "Những nông dân tận tâm mang thực phẩm sạch, an lành đến phiên chợ cuối tuần",
+    "all": "Khám phá tất cả các sạp →",
+    "grower": "Chủ sạp",
+    "at": "Tại",
+    "visit": "Ghé thăm sạp →",
+    "empty": "Hiện chưa có nhà vườn nào hiển thị."
+  },
+  "reviews": {
+    "eyebrow": "Ý KIẾN CỘNG ĐỒNG",
+    "title": "Khách hàng yêu mến MarketLink",
+    "desc": "Hơn 140+ đánh giá 5 sao từ những gia đình yêu thích thực phẩm sạch khắp TP. Hồ Chí Minh",
+    "score": "⭐ 4.8 / 5 điểm cộng đồng",
+    "verified": "Đã mua hàng thực tế"
+  },
+  "banner": {
+    "badge": "DÀNH CHO NHÀ VƯỜN & NGHỆ NHÂN ĐỊA PHƯƠNG",
+    "free": "· Đăng ký mở sạp miễn phí trên MarketLink",
+    "title": "Sẵn sàng đưa nông sản tươi ngon từ vườn đến bàn ăn thành phố?",
+    "desc": "Nhận đơn đặt trước từ giữa tuần, chủ động kế hoạch thu hoạch và giảm thiểu hao hụt. Kết nối trực tiếp với hàng ngàn gia đình tại Thảo Điền, Phú Mỹ Hưng và Bình Thạnh.",
+    "apply": "Đăng ký mở sạp nhà vườn →",
+    "guidelines": "Xem tiêu chuẩn chất lượng nông sản & quy định sạp"
   }
 }

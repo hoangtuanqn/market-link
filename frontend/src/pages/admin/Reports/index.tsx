@@ -85,7 +85,7 @@ const AdminReportsPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-h1">{t('title')}</h1>

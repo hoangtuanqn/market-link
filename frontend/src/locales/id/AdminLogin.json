@@ -19,7 +19,8 @@
     "submitting": "Sedang masuk…",
     "signedIn": "Berhasil masuk.",
     "error": "Tidak dapat memasukkan Anda. Silakan coba lagi.",
-    "note": "Demi keamanan, sesi admin tidak diingat."
+    "note": "Demi keamanan, sesi admin tidak diingat.",
+    "setupRequired": "Siapkan verifikasi dua langkah untuk menyelesaikan proses masuk."
   },
   "switchRole": {
     "question": "Bukan admin?",
@@ -27,6 +28,6 @@
   },
   "notAdmin": {
     "title": "Akun ini bukan admin",
-    "text": "Halaman masuk ini hanya untuk admin platform. <link>Pelanggan dan Petani masuk di sini</link>."
+    "text": "Halaman masuk ini hanya untuk admin platform. <a>Pelanggan dan Petani masuk di sini</a>."
   }
 }

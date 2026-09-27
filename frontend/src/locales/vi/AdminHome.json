@@ -48,5 +48,12 @@
     "pickup": "Nhận hàng",
     "total": "Tổng",
     "status": "Trạng thái"
+  },
+  "maintenance": {
+    "title": "Hệ thống đang trong chế độ bảo trì",
+    "badge": "Đang bật",
+    "text": "Toàn bộ website hiện đang bị khoá và chỉ có quản trị viên mới có thể truy cập. Khách hàng và nhà vườn sẽ thấy thông báo bảo trì.",
+    "reminder": "Lưu ý: Hãy nhớ tắt chế độ bảo trì sớm nhất có thể sau khi hoàn tất để người dùng có thể tiếp tục truy cập MarketLink.",
+    "action": "Đến trang Cài đặt"
   }
 }

@@ -202,8 +202,8 @@
   "loadError": {
     "title": "无法加载{{noun}}",
     "text": "这次列表没有返回。你收藏或下单的内容不受影响。",
-    "help": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<link>请告诉我们发生了什么</link>，我们会跟进处理。",
-    "helpAlt": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<alt />，或<link>告诉我们发生了什么</link>，我们会跟进处理。"
+    "help": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<a>请告诉我们发生了什么</a>，我们会跟进处理。",
+    "helpAlt": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<alt />，或<a>告诉我们发生了什么</a>，我们会跟进处理。"
   },
   "loading": {
     "markets": "正在加载市集"
@@ -388,6 +388,7 @@
     "categories": "分类",
     "announcements": "公告",
     "feedback": "反馈",
+    "notifications": "通知",
     "settings": "设置",
     "account": "你的账户",
     "analytics": "分析",
@@ -770,5 +771,11 @@
       "fakeReviews": "虚假评价",
       "ownerRequest": "应账户持有人要求"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie 提示",
+    "text": "我们仅使用必要的 Cookie 来保持您的登录状态和购物车正常运作，不使用任何广告或分析类 Cookie。<a>隐私政策</a>。",
+    "decline": "拒绝",
+    "accept": "接受"
   }
 }

@@ -17,7 +17,7 @@
   },
   "now": {
     "title": "Lo que puedes hacer ahora",
-    "details": "Completa los <link>datos del puesto</link>, los mercados donde vendes, tus días y franjas de recogida.",
+    "details": "Completa los <a>datos del puesto</a>, los mercados donde vendes, tus días y franjas de recogida.",
     "pin": "Marca tu puesto en el mapa para que los clientes te encuentren desde el primer día.",
     "products": "Podrás añadir productos cuando se apruebe el puesto. Mientras tanto, prepara nombres, precios y fotos."
   },
@@ -48,6 +48,6 @@
   },
   "reinstate": {
     "title": "Para reactivarlo",
-    "text": "Contacta con el equipo en <link>Contacto</link>."
+    "text": "Contacta con el equipo en <a>Contacto</a>."
   }
 }

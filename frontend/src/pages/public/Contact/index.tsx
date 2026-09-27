@@ -1,11 +1,15 @@
 import { useTranslation } from 'react-i18next';
 import MarketMap from '@/components/MarketMap';
 import { ButtonLink } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { directionsUrl } from '@/lib/directions';
 
-const TEAM_LAT = 10.7769;
-const TEAM_LNG = 106.7009;
+/**
+ * The team's registered address (`admin@marketlink.vn`, seed.sql) has no geocode of its own — the nearest real
+ * coordinate we have is Chợ Bến Thành, seeded a few streets away in the same district. The pin sits there; the label
+ * and popup show the team's real address, not the market's.
+ */
+const TEAM_LAT = 10.7725;
+const TEAM_LNG = 106.698;
 
 /** FR-083 — how to reach the MarketLink team, separate from a stall's own contact on an order. */
 const ContactPage = () => {
@@ -20,26 +24,26 @@ const ContactPage = () => {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-6">
-          <Card className="flex flex-col gap-3 p-6">
+          <div className="border-line-strong bg-surface-raised flex flex-col gap-3 rounded-xl border p-6 shadow-xs">
             <h2 className="text-h2">{t('team.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
               <dt className="text-ink-muted">{t('team.email')}</dt>
-              <dd className="m-0">{t('team.toAdd')}</dd>
+              <dd className="m-0">{t('team.emailValue')}</dd>
               <dt className="text-ink-muted">{t('team.phone')}</dt>
-              <dd className="m-0">{t('team.toAdd')}</dd>
+              <dd className="m-0">{t('team.phoneValue')}</dd>
               <dt className="text-ink-muted">{t('team.address')}</dt>
               <dd className="m-0">{t('team.addressValue')}</dd>
               <dt className="text-ink-muted">{t('team.hours')}</dt>
               <dd className="m-0">{t('team.hoursValue')}</dd>
             </dl>
-          </Card>
-          <Card className="flex flex-col gap-2 p-6">
+          </div>
+          <div className="border-line-strong bg-surface-raised flex flex-col gap-2 rounded-xl border p-6 shadow-xs">
             <h2 className="text-h3">{t('feedback.title')}</h2>
             <p className="text-[15px]">{t('feedback.text')}</p>
             <ButtonLink to="/feedback" variant="secondary" className="self-start">
               {t('feedback.cta')}
             </ButtonLink>
-          </Card>
+          </div>
         </div>
 
         <div className="flex flex-col gap-2">

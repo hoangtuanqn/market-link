@@ -10,5 +10,26 @@
   "hours_one": "{{count}} jam",
   "hours_other": "{{count}} jam",
   "orders_one": "{{count}} pesanan",
-  "orders_other": "{{count}} pesanan"
+  "orders_other": "{{count}} pesanan",
+  "website": {
+    "title": "Status situs",
+    "intro": "Matikan seluruh situs sementara saat Anda memperbaiki sesuatu, lalu nyalakan kembali setelah selesai.",
+    "loading": "Memuat status situs",
+    "loadErrorTitle": "Status situs tidak dapat dimuat",
+    "loadErrorText": "Periksa koneksi Anda dan coba lagi.",
+    "retry": "Coba lagi",
+    "pillActive": "Aktif",
+    "pillMaintenance": "Sedang pemeliharaan",
+    "activeText": "MarketLink terbuka untuk semua orang.",
+    "maintenanceText": "Saat ini hanya admin yang bisa masuk. Semua orang lain akan melihat pemberitahuan pemeliharaan.",
+    "enable": "Aktifkan mode pemeliharaan",
+    "disable": "Nonaktifkan mode pemeliharaan",
+    "confirmTitle": "Aktifkan mode pemeliharaan?",
+    "confirmText": "Semua pengunjung selain admin akan langsung dialihkan ke pemberitahuan pemeliharaan. Anda bisa menonaktifkannya lagi kapan saja.",
+    "confirmButton": "Aktifkan sekarang",
+    "cancelButton": "Belum",
+    "toastOn": "Mode pemeliharaan aktif. Semua orang selain admin terkunci.",
+    "toastOff": "Mode pemeliharaan nonaktif. MarketLink terbuka kembali.",
+    "error": "Status situs tidak dapat diperbarui. Silakan coba lagi."
+  }
 }

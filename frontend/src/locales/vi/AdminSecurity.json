@@ -32,21 +32,13 @@
     "title": "Quét mã này bằng ứng dụng xác thực",
     "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password — ứng dụng nào cũng được. Không có gì được gửi đi: mã bên dưới do chính trình duyệt của bạn vẽ ra.",
     "qr": "Mã QR cho ứng dụng xác thực",
-    "manual": "<b>Không quét được?</b> Nhập tay khoá này:",
-    "type": "Loại",
-    "typeValue": "Theo thời gian (TOTP)",
-    "algorithm": "Thuật toán",
-    "digits": "Số chữ số",
-    "period": "Chu kỳ",
-    "seconds_one": "{{count}} giây",
-    "seconds_other": "{{count}} giây"
+    "manual": "<b>Không quét được?</b> Nhập tay khoá này:"
   },
   "step2": {
     "title": "Nhập mã ứng dụng hiển thị",
     "text": "Việc này xác nhận điện thoại và máy chủ khớp giờ với nhau trước khi bật bất cứ thứ gì.",
     "code": "Mã sáu số",
-    "confirm": "Xác nhận",
-    "confirmed": "Đã xác nhận"
+    "confirm": "Xác nhận"
   },
   "step3": {
     "title": "Lưu mã khôi phục",
@@ -80,5 +72,19 @@
     "copyFailed": "Không sao chép được. Hãy chọn các mã và sao chép thủ công.",
     "downloaded": "Đã tải về thành {{file}}.",
     "fileHeading": "Mã khôi phục admin MarketLink"
+  },
+  "setup": {
+    "overline": "Bảo mật admin",
+    "title": "Thiết lập xác thực hai bước",
+    "copySecret": "Sao chép khoá",
+    "secretCopied": "Đã sao chép khoá.",
+    "completeTitle": "Xác thực hai bước đã bật!",
+    "completeText": "Tài khoản admin của bạn đã được bảo vệ. Lưu lại mã khôi phục bên dưới rồi vào bảng điều khiển.",
+    "goToDashboard": "Vào bảng điều khiển Admin",
+    "alreadyActive": "Xác thực hai bước đã được bật cho tài khoản của bạn.",
+    "backToDashboard": "Về bảng điều khiển",
+    "manageSecurity": "Cài đặt bảo mật",
+    "notYou": "Không phải bạn?",
+    "signOut": "Đăng xuất"
   }
 }

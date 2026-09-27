@@ -3,7 +3,7 @@
   "lead": "What you agree to when you reserve from a stall on MarketLink, and what the stall and the platform agree to in return.",
   "meta": "Version 0.1 · Last updated {{date}} · Applies to Customers, Farmers and visitors",
   "onThisPage": "On this page",
-  "seeAlso": "Read the <link>Privacy policy</link> as well. It covers what we hold about you.",
+  "seeAlso": "Read the <a>Privacy policy</a> as well. It covers what we hold about you.",
   "sections": [
     {
       "id": "what",
@@ -109,7 +109,9 @@
         {
           "p": "You pay the Farmer directly when you collect, for the amount shown on your order. MarketLink never holds your money, takes no commission through the product, and is not part of the payment."
         },
-        { "p": "Because of that, a refund is something you and the stall settle between you." }
+        {
+          "p": "Because of that, a refund is something you and the stall settle between you."
+        }
       ]
     },
     {
@@ -143,7 +145,9 @@
         {
           "p": "An admin approves a stall before it can list anything, and can reject an application with a reason. A stall that is suspended disappears from the public pages and takes no new orders, but its orders already in progress run to the end so no shopper loses what they reserved. The Farmer can still sign in and see those orders."
         },
-        { "p": "A Customer account can be deactivated by an admin." }
+        {
+          "p": "A Customer account can be deactivated by an admin."
+        }
       ]
     },
     {

@@ -3,7 +3,7 @@
   "lead": "Ce que vous acceptez lorsque vous réservez auprès d'un stand sur MarketLink, et ce que le stand et la plateforme acceptent en retour.",
   "meta": "Version 0.1 · Dernière mise à jour {{date}} · S'applique aux Customers, aux Farmers et aux visiteurs",
   "onThisPage": "Sur cette page",
-  "seeAlso": "Lisez aussi la <link>Politique de confidentialité</link>. Elle décrit ce que nous conservons à votre sujet.",
+  "seeAlso": "Lisez aussi la <a>Politique de confidentialité</a>. Elle décrit ce que nous conservons à votre sujet.",
   "sections": [
     {
       "id": "what",

@@ -202,8 +202,8 @@
   "loadError": {
     "title": "No pudimos cargar los {{noun}}",
     "text": "Esta vez la lista no llegó. Lo que guardaste o pediste no se ve afectado.",
-    "help": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <link>cuéntanos qué pasó</link> y lo revisaremos.",
-    "helpAlt": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <alt />, o <link>cuéntanos qué pasó</link> y lo revisaremos."
+    "help": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <a>cuéntanos qué pasó</a> y lo revisaremos.",
+    "helpAlt": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <alt />, o <a>cuéntanos qué pasó</a> y lo revisaremos."
   },
   "loading": {
     "markets": "Cargando mercados"
@@ -388,6 +388,7 @@
     "categories": "Categorías",
     "announcements": "Anuncios",
     "feedback": "Comentarios",
+    "notifications": "Notificaciones",
     "settings": "Ajustes",
     "account": "Tu cuenta",
     "analytics": "Analítica",
@@ -770,5 +771,11 @@
       "fakeReviews": "Reseñas falsas",
       "ownerRequest": "A petición del titular de la cuenta"
     }
+  },
+  "cookieConsent": {
+    "label": "Aviso de cookies",
+    "text": "Usamos solo cookies esenciales para mantener tu sesión iniciada y tu carrito funcionando. No usamos cookies de publicidad ni de análisis. <a>Política de privacidad</a>.",
+    "decline": "Rechazar",
+    "accept": "Aceptar"
   }
 }

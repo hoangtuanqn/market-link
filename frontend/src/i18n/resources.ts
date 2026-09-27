@@ -37,6 +37,7 @@ import forbidden from '@/locales/en/Forbidden.json';
 import googleCallback from '@/locales/en/GoogleCallback.json';
 import home from '@/locales/en/Home.json';
 import login from '@/locales/en/Login.json';
+import maintenance from '@/locales/en/Maintenance.json';
 import marketDetail from '@/locales/en/MarketDetail.json';
 import markets from '@/locales/en/Markets.json';
 import notFound from '@/locales/en/NotFound.json';
@@ -109,6 +110,7 @@ export const en = {
   GoogleCallback: googleCallback,
   Home: home,
   Login: login,
+  Maintenance: maintenance,
   MarketDetail: marketDetail,
   Markets: markets,
   NotFound: notFound,

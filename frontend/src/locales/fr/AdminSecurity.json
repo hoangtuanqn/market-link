@@ -32,21 +32,13 @@
     "title": "Scannez ceci avec votre application d’authentification",
     "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password — n’importe laquelle. Rien n’est envoyé : le code ci-dessous est dessiné par votre propre navigateur.",
     "qr": "Code QR pour votre application d’authentification",
-    "manual": "<b>Impossible de scanner ?</b> Saisissez cette clé à la main :",
-    "type": "Type",
-    "typeValue": "Basé sur le temps (TOTP)",
-    "algorithm": "Algorithme",
-    "digits": "Chiffres",
-    "period": "Période",
-    "seconds_one": "{{count}} seconde",
-    "seconds_other": "{{count}} secondes"
+    "manual": "<b>Impossible de scanner ?</b> Saisissez cette clé à la main :"
   },
   "step2": {
     "title": "Saisissez le code affiché",
     "text": "Cela prouve que le téléphone et le serveur sont d’accord sur l’heure avant que quoi que ce soit ne soit activé.",
     "code": "Code à six chiffres",
-    "confirm": "Confirmer",
-    "confirmed": "Confirmé"
+    "confirm": "Confirmer"
   },
   "step3": {
     "title": "Enregistrez vos codes de récupération",
@@ -80,5 +72,19 @@
     "copyFailed": "Impossible de copier. Sélectionnez les codes et copiez-les à la main.",
     "downloaded": "Téléchargé sous le nom {{file}}.",
     "fileHeading": "Codes de récupération admin MarketLink"
+  },
+  "setup": {
+    "overline": "Sécurité admin",
+    "title": "Configurer la validation en deux étapes",
+    "copySecret": "Copier la clé",
+    "secretCopied": "Clé copiée dans le presse-papiers.",
+    "completeTitle": "La validation en deux étapes est maintenant activée !",
+    "completeText": "Votre compte admin est maintenant protégé. Enregistrez vos codes de récupération ci-dessous, puis passez au tableau de bord.",
+    "goToDashboard": "Aller au tableau de bord admin",
+    "alreadyActive": "La validation en deux étapes est déjà activée pour votre compte.",
+    "backToDashboard": "Retour au tableau de bord",
+    "manageSecurity": "Paramètres de sécurité",
+    "notYou": "Pas vous ?",
+    "signOut": "Se déconnecter"
   }
 }

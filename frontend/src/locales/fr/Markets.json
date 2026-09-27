@@ -33,7 +33,7 @@
   },
   "error": {
     "noun": "marchés",
-    "alt": "la <link>carte des marchés</link> s'ouvre sur sa propre page"
+    "alt": "la <a>carte des marchés</a> s'ouvre sur sa propre page"
   },
   "pager": {
     "showing": "{{from}}–{{to}} sur {{total}}",

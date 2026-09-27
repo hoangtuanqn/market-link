@@ -32,21 +32,13 @@
     "title": "Escanea esto con tu app de autenticación",
     "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password: cualquiera sirve. No se envía nada: el código de abajo lo dibuja tu propio navegador.",
     "qr": "Código QR para tu app de autenticación",
-    "manual": "<b>¿No puedes escanearlo?</b> Escribe esta clave a mano:",
-    "type": "Tipo",
-    "typeValue": "Basado en tiempo (TOTP)",
-    "algorithm": "Algoritmo",
-    "digits": "Dígitos",
-    "period": "Periodo",
-    "seconds_one": "{{count}} segundo",
-    "seconds_other": "{{count}} segundos"
+    "manual": "<b>¿No puedes escanearlo?</b> Escribe esta clave a mano:"
   },
   "step2": {
     "title": "Escribe el código que muestra",
     "text": "Así se comprueba que el teléfono y el servidor coinciden en la hora antes de activar nada.",
     "code": "Código de seis dígitos",
-    "confirm": "Confirmar",
-    "confirmed": "Confirmado"
+    "confirm": "Confirmar"
   },
   "step3": {
     "title": "Guarda tus códigos de recuperación",
@@ -80,5 +72,19 @@
     "copyFailed": "No se pudo copiar. Selecciona los códigos y cópialos a mano.",
     "downloaded": "Descargado como {{file}}.",
     "fileHeading": "Códigos de recuperación de admin de MarketLink"
+  },
+  "setup": {
+    "overline": "Seguridad de admin",
+    "title": "Configurar la verificación en dos pasos",
+    "copySecret": "Copiar clave",
+    "secretCopied": "Clave copiada al portapapeles.",
+    "completeTitle": "¡La verificación en dos pasos ya está activada!",
+    "completeText": "Tu cuenta de admin ya está protegida. Guarda tus códigos de recuperación abajo y luego continúa al panel.",
+    "goToDashboard": "Ir al panel de administración",
+    "alreadyActive": "La verificación en dos pasos ya está activada para tu cuenta.",
+    "backToDashboard": "Volver al panel",
+    "manageSecurity": "Ajustes de seguridad",
+    "notYou": "¿No eres tú?",
+    "signOut": "Cerrar sesión"
   }
 }

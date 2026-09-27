@@ -2,6 +2,7 @@ package com.techx.intervue.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.filters.JwtAuthFilter;
+import com.techx.intervue.filters.MaintenanceModeFilter;
 import com.techx.intervue.filters.TraceIdFilter;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
@@ -36,6 +37,7 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final JwtAuthFilter jwtAuthFilter;
     private final TraceIdFilter traceIdFilter;
+    private final MaintenanceModeFilter maintenanceModeFilter;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -172,6 +174,10 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 HttpMethod.GET, "/api/v1/announcements/active")
                                         .permitAll()
+                                        // Maintenance mode: every visitor polls this, signed in or
+                                        // not
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/platform/status")
+                                        .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .sessionManagement(
@@ -182,7 +188,8 @@ public class SecurityConfig {
                 // UsernamePasswordAuthenticationFilter.class (which runs but does nothing)
                 // two parameters are required
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(traceIdFilter, JwtAuthFilter.class);
+                .addFilterBefore(traceIdFilter, JwtAuthFilter.class)
+                .addFilterAfter(maintenanceModeFilter, JwtAuthFilter.class);
 
         return http.build();
     }

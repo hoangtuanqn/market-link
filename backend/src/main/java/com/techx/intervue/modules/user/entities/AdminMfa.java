@@ -32,6 +32,9 @@ public class AdminMfa {
     @Column(name = "enabled_at")
     private Instant enabledAt;
 
+    @Column(name = "disabled_at")
+    private Instant disabledAt;
+
     @Column(name = "last_used_step")
     private Long lastUsedStep;
 

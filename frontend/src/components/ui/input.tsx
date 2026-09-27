@@ -9,13 +9,26 @@ type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   hint?: string;
   /** A label for screen readers only — a search box with a placeholder is already clear enough to sighted people. */
   hideLabel?: boolean;
+  containerClassName?: string;
 };
 
 /**
  * Labelled input: required mark, hint or error line, focus ring (design system `.ml-field` + `.ml-input`).
  * type="password" gets an extra eye button to show / hide the password.
  */
-export function Field({ id, label, required, error, hint, hideLabel, className, type, disabled, ...rest }: FieldProps) {
+export function Field({
+  id,
+  label,
+  required,
+  error,
+  hint,
+  hideLabel,
+  className,
+  containerClassName,
+  type,
+  disabled,
+  ...rest
+}: FieldProps) {
   const describedBy = error ? `${id}-err` : hint ? `${id}-hint` : undefined;
   const isPassword = type === 'password';
   const { t } = useTranslation();
@@ -42,7 +55,7 @@ export function Field({ id, label, required, error, hint, hideLabel, className, 
   );
 
   return (
-    <div className="flex min-w-55 flex-col gap-1.5">
+    <div className={Helper.cn('flex min-w-0 flex-col gap-1.5', containerClassName)}>
       <label htmlFor={id} className={Helper.cn('text-small text-ink font-bold', hideLabel && 'sr-only')}>
         {label}
         {required && (
@@ -91,6 +104,7 @@ type SelectFieldProps = SelectHTMLAttributes<HTMLSelectElement> & {
   /** Same error / hint line as `Field`; the error wins when both are given. */
   error?: string;
   hint?: string;
+  containerClassName?: string;
 };
 
 /** Labelled select (design system `.ml-field` + `.ml-input`). */
@@ -100,6 +114,7 @@ export function SelectField({
   options,
   hideLabel,
   className,
+  containerClassName,
   required,
   error,
   hint,
@@ -107,7 +122,7 @@ export function SelectField({
 }: SelectFieldProps) {
   const describedBy = error ? `${id}-err` : hint ? `${id}-hint` : undefined;
   return (
-    <div className="flex min-w-55 flex-col gap-1.5">
+    <div className={Helper.cn('flex min-w-0 flex-col gap-1.5', containerClassName)}>
       <label htmlFor={id} className={Helper.cn('text-small text-ink font-bold', hideLabel && 'sr-only')}>
         {label}
         {required && (

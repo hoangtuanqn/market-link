@@ -19,7 +19,8 @@
     "submitting": "Anmeldung läuft…",
     "signedIn": "Angemeldet.",
     "error": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
-    "note": "Aus Sicherheitsgründen werden Admin-Sitzungen nicht gespeichert."
+    "note": "Aus Sicherheitsgründen werden Admin-Sitzungen nicht gespeichert.",
+    "setupRequired": "Richten Sie die Zwei-Faktor-Authentifizierung ein, um die Anmeldung abzuschließen."
   },
   "switchRole": {
     "question": "Kein Admin?",
@@ -27,6 +28,6 @@
   },
   "notAdmin": {
     "title": "Dieses Konto ist kein Admin-Konto",
-    "text": "Diese Anmeldung ist nur für Plattform-Admins. <link>Kunden und Landwirte melden sich hier an</link>."
+    "text": "Diese Anmeldung ist nur für Plattform-Admins. <a>Kunden und Landwirte melden sich hier an</a>."
   }
 }

@@ -253,7 +253,7 @@ const MarketsPage = () => {
           {load.kind === 'error' ? (
             <LoadError
               noun={t('error.noun')}
-              alt={<Trans t={t} i18nKey="error.alt" components={{ link: <Link to="/map" /> }} />}
+              alt={<Trans t={t} i18nKey="error.alt" components={{ a: <Link to="/map" /> }} />}
               onRetry={retry}
             />
           ) : load.kind === 'loading' || matches.length ? (

@@ -48,5 +48,12 @@
     "pickup": "Recogida",
     "total": "Total",
     "status": "Estado"
+  },
+  "maintenance": {
+    "title": "El modo de mantenimiento está activo",
+    "badge": "Activo",
+    "text": "Toda la plataforma está restringida únicamente a administradores. Todos los visitantes y agricultores ven el aviso de mantenimiento.",
+    "reminder": "Recuerde desactivar el modo de mantenimiento lo antes posible una vez finalizado para que los usuarios puedan acceder a MarketLink.",
+    "action": "Ir a Configuración"
   }
 }

@@ -24,6 +24,7 @@ export const ADMIN_LOGIN_PATH = '/admin/login';
 export const ADMIN_HOME_PATH = '/admin';
 /** FR-008: step 2 of admin sign-in and the page to turn two-step verification on / off. */
 export const ADMIN_VERIFY_PATH = '/admin/verify';
+export const ADMIN_SETUP_2FA_PATH = '/admin/setup-2fa';
 export const ADMIN_SECURITY_PATH = '/admin/security';
 export const ADMIN_SETTINGS_PATH = '/admin/settings';
 /** FR-071/D-09: Admin views, approves, suspends a Farmer. */

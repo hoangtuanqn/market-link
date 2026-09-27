@@ -202,8 +202,8 @@
   "loadError": {
     "title": "Die {{noun}} konnten nicht geladen werden",
     "text": "Die Liste ist diesmal nicht angekommen. Was Sie gespeichert oder bestellt haben, ist nicht betroffen.",
-    "help": "Das liegt meist an der Verbindung, nicht an Ihnen. Wenn ein erneuter Versuch nicht hilft, <link>sagen Sie uns, was passiert ist</link>, und wir sehen uns das an.",
-    "helpAlt": "Das liegt meist an der Verbindung, nicht an Ihnen. Wenn ein erneuter Versuch nicht hilft, <alt />, oder <link>sagen Sie uns, was passiert ist</link>, und wir sehen uns das an."
+    "help": "Das liegt meist an der Verbindung, nicht an Ihnen. Wenn ein erneuter Versuch nicht hilft, <a>sagen Sie uns, was passiert ist</a>, und wir sehen uns das an.",
+    "helpAlt": "Das liegt meist an der Verbindung, nicht an Ihnen. Wenn ein erneuter Versuch nicht hilft, <alt />, oder <a>sagen Sie uns, was passiert ist</a>, und wir sehen uns das an."
   },
   "loading": {
     "markets": "Märkte werden geladen"
@@ -388,6 +388,7 @@
     "categories": "Kategorien",
     "announcements": "Ankündigungen",
     "feedback": "Feedback",
+    "notifications": "Benachrichtigungen",
     "settings": "Einstellungen",
     "account": "Dein Konto",
     "analytics": "Analysen",
@@ -770,5 +771,11 @@
       "fakeReviews": "Gefälschte Bewertungen",
       "ownerRequest": "Auf Wunsch der Kontoinhaber"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie-Hinweis",
+    "text": "Wir verwenden nur technisch notwendige Cookies, damit Sie angemeldet bleiben und Ihr Warenkorb funktioniert. Es gibt keine Werbe- oder Analyse-Cookies. <a>Datenschutzerklärung</a>.",
+    "decline": "Ablehnen",
+    "accept": "Akzeptieren"
   }
 }

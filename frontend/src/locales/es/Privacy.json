@@ -3,7 +3,7 @@
   "lead": "Qué guarda MarketLink sobre ti, por qué lo guarda y quién puede verlo. Escrito a partir de las tablas que el producto tiene de verdad, no de una plantilla.",
   "meta": "Versión 0.1 · Última actualización {{date}} · Se aplica a Customers, Farmers y visitantes",
   "onThisPage": "En esta página",
-  "seeAlso": "Lee también los <link>Términos del servicio</link>. Tratan de la reserva y la recogida.",
+  "seeAlso": "Lee también los <a>Términos del servicio</a>. Tratan de la reserva y la recogida.",
   "sections": [
     {
       "id": "collect",

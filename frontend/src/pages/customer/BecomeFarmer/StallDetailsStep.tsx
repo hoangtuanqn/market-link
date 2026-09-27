@@ -44,7 +44,7 @@ const StallDetailsStep = ({
             hint={t('step1.stallNameHint')}
             error={errors.stallName}
             disabled={isSubmitting}
-            className="md:col-span-2"
+            containerClassName="md:col-span-2"
           />
           <Field
             id="person"

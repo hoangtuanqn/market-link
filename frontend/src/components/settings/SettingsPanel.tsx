@@ -60,7 +60,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
   return (
     <div className="flex flex-col gap-6">
       <Card as="section" aria-labelledby="set-appearance" className="flex flex-col gap-4 p-6">
-        <h2 id="set-appearance" className="text-h3">
+        <h2 id="set-appearance" className="text-h3 text-ink font-bold">
           {t('settings.appearance')}
         </h2>
         <ul className="m-0 flex flex-col p-0">
@@ -85,7 +85,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
       </Card>
 
       <Card as="section" aria-labelledby="set-format" className="flex flex-col gap-4 p-6">
-        <h2 id="set-format" className="text-h3">
+        <h2 id="set-format" className="text-h3 text-ink font-bold">
           {t('settings.format')}
         </h2>
         <ul className="m-0 flex flex-col p-0">

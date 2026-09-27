@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
+import { SearchIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 
 const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
@@ -20,7 +21,7 @@ const SearchBar = () => {
     <form
       role="search"
       onSubmit={onSubmit}
-      className="border-line-strong bg-surface-raised focus-within:outline-focus flex w-full max-w-160 items-stretch overflow-hidden rounded-sm border-[1.5px] focus-within:outline-2 focus-within:outline-offset-1"
+      className="border-line-strong bg-surface-raised focus-within:outline-focus flex w-full max-w-160 items-stretch overflow-hidden rounded-md border-[1.5px] shadow-xs focus-within:outline-2 focus-within:outline-offset-1"
     >
       <label className="sr-only" htmlFor="s-scope">
         {t('search.scope')}
@@ -29,7 +30,7 @@ const SearchBar = () => {
         id="s-scope"
         value={scope}
         onChange={(e) => setScope(e.target.value)}
-        className="border-line-strong bg-surface-sunken text-small text-ink min-h-11 border-r-[1.5px] px-3 font-bold focus:outline-none"
+        className="border-line bg-surface-sunken text-small text-ink min-h-12 cursor-pointer border-r-[1.5px] px-3.5 font-bold focus:outline-none"
       >
         {SCOPES.map((s) => (
           <option key={s} value={s}>
@@ -47,11 +48,12 @@ const SearchBar = () => {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder={t('search.placeholder')}
-        className="text-body text-ink placeholder:text-ink-muted min-h-11 min-w-0 flex-1 bg-transparent px-3 focus:outline-none"
+        className="text-body text-ink placeholder:text-ink-muted min-h-12 min-w-0 flex-1 bg-transparent px-4 focus:outline-none"
       />
 
-      <Button type="submit" className="rounded-none">
-        {t('search.submit')}
+      <Button type="submit" className="flex items-center gap-2 rounded-none px-5">
+        <SearchIcon size={16} />
+        <span>{t('search.submit')}</span>
       </Button>
     </form>
   );

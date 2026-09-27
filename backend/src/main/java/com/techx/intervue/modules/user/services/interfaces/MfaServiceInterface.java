@@ -12,6 +12,8 @@ public interface MfaServiceInterface {
 
     boolean isEnabled(Long userId);
 
+    boolean isSetupRequired(Long userId);
+
     /** After the password step: store a pending token in Redis, return the raw token to the FE. */
     String startChallenge(Long userId, boolean rememberMe);
 

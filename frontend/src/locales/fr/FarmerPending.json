@@ -17,7 +17,7 @@
   },
   "now": {
     "title": "Ce que vous pouvez faire maintenant",
-    "details": "Complétez les <link>informations du stand</link>, les marchés où vous vendez, vos jours et vos créneaux de retrait.",
+    "details": "Complétez les <a>informations du stand</a>, les marchés où vous vendez, vos jours et vos créneaux de retrait.",
     "pin": "Placez votre stand sur la carte pour que les clients vous trouvent dès le premier jour.",
     "products": "Les produits pourront être ajoutés une fois le stand validé. Préparez en attendant les noms, les prix et les photos."
   },
@@ -48,6 +48,6 @@
   },
   "reinstate": {
     "title": "Pour être rétabli",
-    "text": "Contactez l’équipe via <link>Nous contacter</link>."
+    "text": "Contactez l’équipe via <a>Nous contacter</a>."
   }
 }
