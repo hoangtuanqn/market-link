@@ -14,7 +14,7 @@ const ContactPage = () => {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('title')}</h1>
+        <h1 className="font-hand md:text-display text-h1">{t('title')}</h1>
         <p className="text-body-lg max-w-155">{t('intro')}</p>
       </div>
 
@@ -24,9 +24,9 @@ const ContactPage = () => {
             <h2 className="text-h2">{t('team.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
               <dt className="text-ink-muted">{t('team.email')}</dt>
-              <dd className="m-0">{t('team.emailValue')}</dd>
+              <dd className="m-0">{t('team.toAdd')}</dd>
               <dt className="text-ink-muted">{t('team.phone')}</dt>
-              <dd className="m-0">{t('team.phoneValue')}</dd>
+              <dd className="m-0">{t('team.toAdd')}</dd>
               <dt className="text-ink-muted">{t('team.address')}</dt>
               <dd className="m-0">{t('team.addressValue')}</dd>
               <dt className="text-ink-muted">{t('team.hours')}</dt>

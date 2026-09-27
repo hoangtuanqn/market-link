@@ -49,7 +49,7 @@ const AboutPage = () => {
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <p className="font-hand text-hand text-ink-muted">TechWiz 7 · eGreen Basket</p>
-        <h1 className="text-h1">{t('title')}</h1>
+        <h1 className="font-hand md:text-display text-h1">{t('title')}</h1>
         <p className="text-body-lg max-w-160">{t('intro')}</p>
       </div>
 
@@ -85,7 +85,7 @@ const AboutPage = () => {
           {TEAM.map((key) => (
             <Card key={key} className="flex flex-col gap-1 p-4">
               <p className="text-overline text-ink-muted m-0">{t(`team.${key}.role`)}</p>
-              <b className="text-[16px]">{t(`team.${key}.name`)}</b>
+              <b className="text-[16px]">{t('team.namePending')}</b>
               <span className="text-[14px]">{t(`team.${key}.note`)}</span>
             </Card>
           ))}

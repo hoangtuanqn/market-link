@@ -102,7 +102,7 @@ const MarketMapPage = () => {
           <p className="font-hand text-hand text-ink-muted">
             {pickedName} {formatDayMonth(picked.date)}
           </p>
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="font-hand md:text-display text-h1">{t('title')}</h1>
           <p className="text-body-lg max-w-160">{t('intro')}</p>
         </div>
         <DayChips

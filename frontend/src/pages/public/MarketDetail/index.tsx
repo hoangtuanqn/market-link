@@ -177,7 +177,7 @@ const MarketDetailPage = () => {
           <p className="font-hand text-hand text-ink-muted">
             {dayLong} {dayDate && formatDayMonth(dayDate)} · {formatClock(market.open)}–{formatClock(market.close)}
           </p>
-          <h1 className="text-h1">{market.name}</h1>
+          <h1 className="font-hand md:text-display text-h1">{market.name}</h1>
           <p className="text-body-lg max-w-155">{t('intro', { count: market.stalls })}</p>
           <p className="text-small text-ink-muted">
             {market.address} · {dayList(market.days)}
