@@ -659,5 +659,35 @@
         "body": "Mở menu để tới mọi mục của trang quản lý."
       }
     }
+  },
+  "assistant": {
+    "open": "Hỏi trợ lý",
+    "close": "Đóng trợ lý",
+    "fullPage": "Mở trang đầy đủ",
+    "note": "Câu trả lời lấy từ dữ liệu của MarketLink.",
+    "newChat": "Cuộc trò chuyện mới",
+    "loading": "Đang tải cuộc trò chuyện…",
+    "loadErrorTitle": "Không tải được tin nhắn trước đó",
+    "loadErrorText": "Kiểm tra kết nối rồi thử lại. Bạn vẫn có thể hỏi câu mới.",
+    "emptyTitle": "Hỏi mình về MarketLink",
+    "emptyText": "Mình tìm được nông sản ở các chợ, cho biết giờ mở cửa và giờ nhận hàng, hoặc giải thích cách đặt hàng.",
+    "thinking": "Đang tra cứu…",
+    "sendError": "Trợ lý chưa trả lời được. Tin nhắn đã được đưa lại vào ô nhập, hãy gửi lại.",
+    "message": "Tin nhắn",
+    "placeholder": "Hỏi về sản phẩm, chợ hoặc cách đặt hàng",
+    "send": "Gửi",
+    "sending": "Đang gửi…",
+    "aiTools": "AI · {{tools}}",
+    "result": {
+      "product": "Sản phẩm",
+      "market": "Chợ",
+      "farmer": "Gian hàng"
+    },
+    "suggest": {
+      "find": "Cuối tuần này mua cà chua ở đâu?",
+      "hours": "Chợ Bến Thành mở cửa mấy giờ?",
+      "stalls": "Thứ 7 chợ Thảo Điền có gian hàng nào?",
+      "cancel": "Làm sao để huỷ đơn hàng?"
+    }
   }
 }

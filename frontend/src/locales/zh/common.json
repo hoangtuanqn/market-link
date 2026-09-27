@@ -651,5 +651,35 @@
         "body": "打开菜单即可进入面板的每个部分。"
       }
     }
+  },
+  "assistant": {
+    "open": "询问助手",
+    "close": "关闭助手",
+    "fullPage": "打开完整页面",
+    "note": "回答来自 MarketLink 自己的数据。",
+    "newChat": "新对话",
+    "loading": "正在加载对话…",
+    "loadErrorTitle": "无法加载之前的消息",
+    "loadErrorText": "请检查网络后重试。你仍然可以提出新问题。",
+    "emptyTitle": "问我关于 MarketLink 的问题",
+    "emptyText": "我可以在各个集市查找农产品，告诉你营业时间和取货时间，或解释如何下单。",
+    "thinking": "正在查询…",
+    "sendError": "助手暂时无法回答。你的消息已放回输入框，请重新发送。",
+    "message": "消息",
+    "placeholder": "询问商品、集市或如何下单",
+    "send": "发送",
+    "sending": "正在发送…",
+    "aiTools": "AI · {{tools}}",
+    "result": {
+      "product": "商品",
+      "market": "集市",
+      "farmer": "摊位"
+    },
+    "suggest": {
+      "find": "这个周末在哪里能买到番茄？",
+      "hours": "Bến Thành 集市几点开门？",
+      "stalls": "周六 Thảo Điền 集市有哪些摊位？",
+      "cancel": "如何取消订单？"
+    }
   }
 }
