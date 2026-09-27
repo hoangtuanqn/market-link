@@ -3,7 +3,7 @@
   "lead": "Những gì bạn đồng ý khi đặt hàng từ một sạp trên MarketLink, và những gì sạp cùng nền tảng đồng ý đáp lại.",
   "meta": "Phiên bản 0.1 · Cập nhật lần cuối {{date}} · Áp dụng cho Khách hàng, Nhà vườn và khách ghé thăm",
   "onThisPage": "Trong trang này",
-  "seeAlso": "Đọc thêm <link>Chính sách quyền riêng tư</link>. Phần đó nói về những gì chúng tôi lưu về bạn.",
+  "seeAlso": "Đọc thêm <a>Chính sách quyền riêng tư</a>. Phần đó nói về những gì chúng tôi lưu về bạn.",
   "sections": [
     {
       "id": "what",

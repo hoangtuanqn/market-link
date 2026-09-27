@@ -27,6 +27,6 @@
   },
   "notAdmin": {
     "title": "Tài khoản này không phải admin",
-    "text": "Trang đăng nhập này chỉ dành cho admin nền tảng. <link>Khách hàng và nhà vườn đăng nhập tại đây</link>."
+    "text": "Trang đăng nhập này chỉ dành cho admin nền tảng. <a>Khách hàng và nhà vườn đăng nhập tại đây</a>."
   }
 }

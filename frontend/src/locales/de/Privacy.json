@@ -3,7 +3,7 @@
   "lead": "Was MarketLink über dich speichert, warum es gespeichert wird und wer es sehen darf. Geschrieben anhand der Tabellen, die das Produkt tatsächlich hat, nicht nach einer Vorlage.",
   "meta": "Version 0.1 · Zuletzt aktualisiert {{date}} · Gilt für Customers, Farmers und Besucher",
   "onThisPage": "Auf dieser Seite",
-  "seeAlso": "Lies auch die <link>Nutzungsbedingungen</link>. Sie behandeln Reservierung und Abholung.",
+  "seeAlso": "Lies auch die <a>Nutzungsbedingungen</a>. Sie behandeln Reservierung und Abholung.",
   "sections": [
     {
       "id": "collect",

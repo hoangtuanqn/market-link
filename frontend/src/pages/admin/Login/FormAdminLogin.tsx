@@ -73,7 +73,7 @@ const FormAdminLogin = () => {
           <Trans
             t={t}
             i18nKey="notAdmin.text"
-            components={{ link: <Link to="/login" className="text-danger underline" /> }}
+            components={{ a: <Link to="/login" className="text-danger underline" /> }}
           />
         </Banner>
       )}

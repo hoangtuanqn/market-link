@@ -88,7 +88,7 @@ export function LoadError({ noun, alt, onRetry, className }: LoadErrorProps) {
         <Trans
           t={t}
           i18nKey={alt ? 'loadError.helpAlt' : 'loadError.help'}
-          components={{ alt: <Slot node={alt} />, link: <Link to="/feedback" /> }}
+          components={{ alt: <Slot node={alt} />, a: <Link to="/feedback" /> }}
         />
       </p>
     </div>

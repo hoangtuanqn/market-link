@@ -329,7 +329,7 @@ const FarmerSlotsPage = () => {
                 <Trans
                   t={t}
                   i18nKey="table.reenableNote"
-                  components={{ link: <Link to="/contact" className="text-brand underline" /> }}
+                  components={{ a: <Link to="/contact" className="text-brand underline" /> }}
                 />
               </p>
             </>

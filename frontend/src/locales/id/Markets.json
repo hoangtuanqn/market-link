@@ -33,7 +33,7 @@
   },
   "error": {
     "noun": "pasar",
-    "alt": "<link>peta pasar</link> terbuka di halamannya sendiri"
+    "alt": "<a>peta pasar</a> terbuka di halamannya sendiri"
   },
   "pager": {
     "showing": "Menampilkan {{from}}–{{to}} dari {{total}}",

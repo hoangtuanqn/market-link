@@ -46,7 +46,7 @@ const CookieConsentBar = () => {
           <Trans
             t={t}
             i18nKey="cookieConsent.text"
-            components={{ link: <Link to="/privacy#sessions" className="text-brand underline" /> }}
+            components={{ a: <Link to="/privacy#sessions" className="text-brand font-bold underline" /> }}
           />
         </p>
         <div className="flex flex-none items-center gap-3">

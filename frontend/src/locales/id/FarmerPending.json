@@ -17,7 +17,7 @@
   },
   "now": {
     "title": "Yang bisa Anda lakukan sekarang",
-    "details": "Lengkapi <link>detail lapak</link>, pasar tempat Anda berjualan, hari berjualan, dan slot pengambilan.",
+    "details": "Lengkapi <a>detail lapak</a>, pasar tempat Anda berjualan, hari berjualan, dan slot pengambilan.",
     "pin": "Tandai lapak Anda di peta agar pelanggan bisa menemukan Anda sejak hari pertama.",
     "products": "Produk bisa ditambahkan setelah lapak disetujui. Sementara itu siapkan nama, harga, dan foto."
   },
@@ -48,6 +48,6 @@
   },
   "reinstate": {
     "title": "Agar diaktifkan kembali",
-    "text": "Hubungi tim melalui <link>Hubungi kami</link>."
+    "text": "Hubungi tim melalui <a>Hubungi kami</a>."
   }
 }

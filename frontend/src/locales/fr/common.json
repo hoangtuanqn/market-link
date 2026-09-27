@@ -202,8 +202,8 @@
   "loadError": {
     "title": "Impossible de charger les {{noun}}",
     "text": "La liste n’est pas arrivée cette fois-ci. Ce que vous avez enregistré ou commandé n’est pas concerné.",
-    "help": "C’est généralement la connexion, pas quelque chose que vous avez fait. Si réessayer ne suffit pas, <link>dites-nous ce qui s’est passé</link> et nous examinerons le problème.",
-    "helpAlt": "C’est généralement la connexion, pas quelque chose que vous avez fait. Si réessayer ne suffit pas, <alt />, ou <link>dites-nous ce qui s’est passé</link> et nous examinerons le problème."
+    "help": "C’est généralement la connexion, pas quelque chose que vous avez fait. Si réessayer ne suffit pas, <a>dites-nous ce qui s’est passé</a> et nous examinerons le problème.",
+    "helpAlt": "C’est généralement la connexion, pas quelque chose que vous avez fait. Si réessayer ne suffit pas, <alt />, ou <a>dites-nous ce qui s’est passé</a> et nous examinerons le problème."
   },
   "loading": {
     "markets": "Chargement des marchés"
@@ -773,7 +773,7 @@
   },
   "cookieConsent": {
     "label": "Avis sur les cookies",
-    "text": "Nous utilisons uniquement des cookies essentiels pour vous garder connecté et faire fonctionner votre panier. Aucun cookie publicitaire ou d'analyse. <link>Politique de confidentialité</link>.",
+    "text": "Nous utilisons uniquement des cookies essentiels pour vous garder connecté et faire fonctionner votre panier. Aucun cookie publicitaire ou d'analyse. <a>Politique de confidentialité</a>.",
     "decline": "Refuser",
     "accept": "Accepter"
   }

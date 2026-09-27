@@ -202,8 +202,8 @@
   "loadError": {
     "title": "We could not load the {{noun}}",
     "text": "The list did not come back this time. Nothing you saved or ordered is affected.",
-    "help": "This is usually the connection rather than anything you did. If trying again does not help, <link>tell us what happened</link> and we will look into it.",
-    "helpAlt": "This is usually the connection rather than anything you did. If trying again does not help, <alt />, or <link>tell us what happened</link> and we will look into it."
+    "help": "This is usually the connection rather than anything you did. If trying again does not help, <a>tell us what happened</a> and we will look into it.",
+    "helpAlt": "This is usually the connection rather than anything you did. If trying again does not help, <alt />, or <a>tell us what happened</a> and we will look into it."
   },
   "loading": {
     "markets": "Loading markets"
@@ -773,7 +773,7 @@
   },
   "cookieConsent": {
     "label": "Cookie notice",
-    "text": "We use essential cookies to keep you signed in and your cart working. We set no advertising or analytics cookies. <link>Privacy policy</link>.",
+    "text": "We use essential cookies to keep you signed in and your cart working. We set no advertising or analytics cookies. <a>Privacy policy</a>.",
     "decline": "Decline",
     "accept": "Accept"
   }

@@ -1,6 +1,6 @@
 {
   "title": "Đăng nhập",
-  "intro": "Khách hàng và nhà vườn đăng nhập tại đây. Quản trị viên dùng <link>trang đăng nhập quản trị riêng</link>.",
+  "intro": "Khách hàng và nhà vườn đăng nhập tại đây. Quản trị viên dùng <a>trang đăng nhập quản trị riêng</a>.",
   "fields": {
     "email": "Email",
     "password": "Mật khẩu"

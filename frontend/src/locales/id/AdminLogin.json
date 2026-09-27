@@ -27,6 +27,6 @@
   },
   "notAdmin": {
     "title": "Akun ini bukan admin",
-    "text": "Halaman masuk ini hanya untuk admin platform. <link>Pelanggan dan Petani masuk di sini</link>."
+    "text": "Halaman masuk ini hanya untuk admin platform. <a>Pelanggan dan Petani masuk di sini</a>."
   }
 }

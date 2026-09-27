@@ -3,7 +3,7 @@
   "lead": "Lo que aceptas cuando reservas en un puesto de MarketLink, y lo que el puesto y la plataforma aceptan a cambio.",
   "meta": "Versión 0.1 · Última actualización {{date}} · Se aplica a Customers, Farmers y visitantes",
   "onThisPage": "En esta página",
-  "seeAlso": "Lee también la <link>Política de privacidad</link>. Explica qué guardamos sobre ti.",
+  "seeAlso": "Lee también la <a>Política de privacidad</a>. Explica qué guardamos sobre ti.",
   "sections": [
     {
       "id": "what",

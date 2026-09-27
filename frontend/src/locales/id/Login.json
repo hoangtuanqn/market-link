@@ -1,6 +1,6 @@
 {
   "title": "Masuk",
-  "intro": "Pelanggan dan petani masuk di sini. Admin memakai <link>halaman masuk admin terpisah</link>.",
+  "intro": "Pelanggan dan petani masuk di sini. Admin memakai <a>halaman masuk admin terpisah</a>.",
   "fields": {
     "email": "Email",
     "password": "Kata sandi"

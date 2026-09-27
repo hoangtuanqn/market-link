@@ -1,6 +1,6 @@
 {
   "title": "Se connecter",
-  "intro": "Les clients et les producteurs se connectent ici. Les administrateurs utilisent la <link>connexion administrateur dédiée</link>.",
+  "intro": "Les clients et les producteurs se connectent ici. Les administrateurs utilisent la <a>connexion administrateur dédiée</a>.",
   "fields": {
     "email": "E-mail",
     "password": "Mot de passe"

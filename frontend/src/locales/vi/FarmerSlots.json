@@ -32,7 +32,7 @@
     "on": "Bật",
     "closedTitle": "Đã tắt khung giờ",
     "closedText": "Khung giờ này đã tắt và không nhận đơn nữa. Màn hình này chưa thể bật lại; liên hệ nhóm hỗ trợ nếu bạn cần mở lại.",
-    "reenableNote": "Khung giờ bạn tắt sẽ biến mất khỏi danh sách này, giống như nó biến mất khỏi trang chợ. Hiện chưa có cách bật lại từ đây; <link>liên hệ nhóm hỗ trợ</link> nếu bạn cần mở lại.",
+    "reenableNote": "Khung giờ bạn tắt sẽ biến mất khỏi danh sách này, giống như nó biến mất khỏi trang chợ. Hiện chưa có cách bật lại từ đây; <a>liên hệ nhóm hỗ trợ</a> nếu bạn cần mở lại.",
     "caption_one": "{{day}} {{date}} · {{market}} · {{count}} khung giờ",
     "caption_other": "{{day}} {{date}} · {{market}} · {{count}} khung giờ"
   },

@@ -27,6 +27,6 @@
   },
   "notAdmin": {
     "title": "Ce compte n’est pas un compte admin",
-    "text": "Cette connexion est réservée aux admins de la plateforme. <link>Les clients et les agriculteurs se connectent ici</link>."
+    "text": "Cette connexion est réservée aux admins de la plateforme. <a>Les clients et les agriculteurs se connectent ici</a>."
   }
 }

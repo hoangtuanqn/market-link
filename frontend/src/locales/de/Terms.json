@@ -3,7 +3,7 @@
   "lead": "Was du zusagst, wenn du bei einem Stand auf MarketLink reservierst, und was Stand und Plattform im Gegenzug zusagen.",
   "meta": "Version 0.1 · Zuletzt aktualisiert {{date}} · Gilt für Customers, Farmers und Besucher",
   "onThisPage": "Auf dieser Seite",
-  "seeAlso": "Lies auch die <link>Datenschutzerklärung</link>. Sie beschreibt, was wir über dich speichern.",
+  "seeAlso": "Lies auch die <a>Datenschutzerklärung</a>. Sie beschreibt, was wir über dich speichern.",
   "sections": [
     {
       "id": "what",

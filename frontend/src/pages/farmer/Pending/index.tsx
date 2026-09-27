@@ -87,7 +87,7 @@ const FarmerPendingPage = () => {
                 <Trans
                   t={t}
                   i18nKey="now.details"
-                  components={{ link: <Link to="/farmer/stall" className="text-brand underline" /> }}
+                  components={{ a: <Link to="/farmer/stall" className="text-brand underline" /> }}
                 />
               </li>
               <li>{t('now.pin')}</li>
@@ -151,7 +151,7 @@ const FarmerPendingPage = () => {
               <Trans
                 t={t}
                 i18nKey="reinstate.text"
-                components={{ link: <Link to="/contact" className="text-brand underline" /> }}
+                components={{ a: <Link to="/contact" className="text-brand underline" /> }}
               />
             </p>
           </Card>

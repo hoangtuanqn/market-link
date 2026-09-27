@@ -27,6 +27,6 @@
   },
   "notAdmin": {
     "title": "Esta cuenta no es de admin",
-    "text": "Este inicio de sesión es solo para los admins de la plataforma. <link>Clientes y agricultores inician sesión aquí</link>."
+    "text": "Este inicio de sesión es solo para los admins de la plataforma. <a>Clientes y agricultores inician sesión aquí</a>."
   }
 }

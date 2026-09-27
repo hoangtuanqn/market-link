@@ -27,6 +27,6 @@
   },
   "notAdmin": {
     "title": "Dieses Konto ist kein Admin-Konto",
-    "text": "Diese Anmeldung ist nur für Plattform-Admins. <link>Kunden und Landwirte melden sich hier an</link>."
+    "text": "Diese Anmeldung ist nur für Plattform-Admins. <a>Kunden und Landwirte melden sich hier an</a>."
   }
 }

@@ -33,7 +33,7 @@
   },
   "error": {
     "noun": "danh sách chợ",
-    "alt": "<link>bản đồ chợ</link> mở ở một trang riêng"
+    "alt": "<a>bản đồ chợ</a> mở ở một trang riêng"
   },
   "pager": {
     "showing": "Đang hiện {{from}}–{{to}} trong {{total}}",

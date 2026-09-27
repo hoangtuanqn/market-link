@@ -32,7 +32,7 @@
     "on": "开",
     "closedTitle": "Slot closed",
     "closedText": "This slot is off and no longer takes orders. This screen cannot turn it back on yet; contact the team if you need it reopened.",
-    "reenableNote": "A slot you turn off drops off this list, the same way it drops off the market page. There is no way to turn it back on from here yet; <link>contact the team</link> if you need it reopened.",
+    "reenableNote": "A slot you turn off drops off this list, the same way it drops off the market page. There is no way to turn it back on from here yet; <a>contact the team</a> if you need it reopened.",
     "caption_one": "{{day}} {{date}} · {{market}} · {{count}} 个时段",
     "caption_other": "{{day}} {{date}} · {{market}} · {{count}} 个时段"
   },

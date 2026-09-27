@@ -202,8 +202,8 @@
   "loadError": {
     "title": "Chưa tải được {{noun}}",
     "text": "Lần này danh sách chưa về. Những gì bạn đã lưu hoặc đã đặt không bị ảnh hưởng.",
-    "help": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <link>hãy cho chúng tôi biết chuyện gì xảy ra</link> và chúng tôi sẽ xem xét.",
-    "helpAlt": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <alt />, hoặc <link>cho chúng tôi biết chuyện gì xảy ra</link> và chúng tôi sẽ xem xét."
+    "help": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <a>hãy cho chúng tôi biết chuyện gì xảy ra</a> và chúng tôi sẽ xem xét.",
+    "helpAlt": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <alt />, hoặc <a>cho chúng tôi biết chuyện gì xảy ra</a> và chúng tôi sẽ xem xét."
   },
   "loading": {
     "markets": "Đang tải danh sách chợ"
@@ -773,7 +773,7 @@
   },
   "cookieConsent": {
     "label": "Thông báo cookie",
-    "text": "MarketLink dùng cookie thiết yếu để giữ bạn đăng nhập và giỏ hàng hoạt động. Không có cookie quảng cáo hay theo dõi nào. <link>Chính sách quyền riêng tư</link>.",
+    "text": "MarketLink dùng cookie thiết yếu để giữ bạn đăng nhập và giỏ hàng hoạt động. Không có cookie quảng cáo hay theo dõi nào. <a>Chính sách quyền riêng tư</a>.",
     "decline": "Từ chối",
     "accept": "Đồng ý"
   }

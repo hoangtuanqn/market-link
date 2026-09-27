@@ -3,7 +3,7 @@
   "lead": "Apa yang disimpan MarketLink tentang Anda, mengapa disimpan, dan siapa yang bisa melihatnya. Ditulis dari tabel yang benar-benar dimiliki produk ini, bukan dari templat.",
   "meta": "Versi 0.1 · Terakhir diperbarui {{date}} · Berlaku untuk Customer, Farmer, dan pengunjung",
   "onThisPage": "Di halaman ini",
-  "seeAlso": "Baca juga <link>Ketentuan layanan</link>. Di sana dibahas pemesanan dan pengambilan.",
+  "seeAlso": "Baca juga <a>Ketentuan layanan</a>. Di sana dibahas pemesanan dan pengambilan.",
   "sections": [
     {
       "id": "collect",

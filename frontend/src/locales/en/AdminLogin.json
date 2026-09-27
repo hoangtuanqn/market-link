@@ -27,6 +27,6 @@
   },
   "notAdmin": {
     "title": "This account is not an admin",
-    "text": "This sign-in is only for platform admins. <link>Customers and Farmers sign in here</link>."
+    "text": "This sign-in is only for platform admins. <a>Customers and Farmers sign in here</a>."
   }
 }

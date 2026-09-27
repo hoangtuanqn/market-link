@@ -33,7 +33,7 @@
   },
   "error": {
     "noun": "市集",
-    "alt": "<link>市集地图</link>在单独的页面打开"
+    "alt": "<a>市集地图</a>在单独的页面打开"
   },
   "pager": {
     "showing": "显示第 {{from}}–{{to}} 个，共 {{total}} 个",
