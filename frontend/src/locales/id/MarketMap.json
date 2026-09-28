@@ -13,7 +13,7 @@
     "selected": "Cincin: dipilih"
   },
   "mapLabel": "Peta semua pasar dan lapak",
-  "directions": "Petunjuk arah dibuka di OpenStreetMap pada tab baru.",
+  "directions": "Petunjuk arah dibuka di Google Maps pada tab baru.",
   "openOn": "Buka pada {{day}}",
   "empty": {
     "title": "Tidak ada pasar untuk ditampilkan",

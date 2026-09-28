@@ -400,21 +400,7 @@
     "finding": "Finding you…"
   },
   "directions": {
-    "title": "Directions to {{name}}",
-    "question": "Where are you setting off from?",
-    "current": "My current location",
-    "currentShared": "Already shared",
-    "currentAsk": "Your browser will ask first",
-    "address": "An address",
-    "addressNote": "A street or a landmark in Ho Chi Minh City.",
-    "addressLabel": "Starting address",
-    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
-    "addressHint": "Street and ward work best. House numbers are often missing from the map, and OpenStreetMap will ask you to pick a place when it cannot find one.",
-    "useSaved": "Use my saved address",
-    "none": "I will type it on the map",
-    "noneNote": "Opens OpenStreetMap with only the destination filled in.",
-    "privacy": "Directions open on openstreetmap.org in a new tab. MarketLink does not track where you are.",
-    "open": "Open directions"
+    "title": "Directions to {{name}}"
   },
   "tier": {
     "bronze": "Bronze",
@@ -592,7 +578,7 @@
       },
       "customerMap": {
         "title": "Market map",
-        "body": "Find the markets closest to you and get directions in OpenStreetMap."
+        "body": "Find the markets closest to you and get directions in Google Maps."
       },
       "customerSearch": {
         "title": "Search",

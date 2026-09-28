@@ -45,7 +45,7 @@
           "p": "Một tài khoản có thể dùng chung trong nhà. MarketLink không phân biệt được từng người trong cùng một tài khoản, nên mọi việc làm bằng đăng nhập của bạn đều tính là bạn làm. Hãy giữ kín mật khẩu và báo cho chúng tôi nếu bạn nghĩ có người khác biết nó."
         },
         {
-          "p": "Địa chỉ bạn cung cấp được dùng để hiện khoảng cách tới các chợ và điền sẵn chỉ đường. Số điện thoại của bạn được đưa cho sạp bạn đặt hàng, để họ liên lạc được vào sáng ngày họp chợ."
+          "p": "Địa chỉ bạn cung cấp được dùng để hiện khoảng cách tới các chợ. Số điện thoại của bạn được đưa cho sạp bạn đặt hàng, để họ liên lạc được vào sáng ngày họp chợ."
         }
       ]
     },
@@ -155,7 +155,7 @@
       "title": "Bản đồ và các nguồn khác",
       "blocks": [
         {
-          "p": "Vị trí chợ và sạp được vẽ trên OpenStreetMap. Dữ liệu bản đồ thuộc © những người đóng góp cho OpenStreetMap, và liên kết chỉ đường mở OpenStreetMap trong tab mới. Ghim do chợ hoặc sạp tự đặt và chính xác tới đâu là tuỳ họ."
+          "p": "Vị trí chợ và sạp được vẽ trên Google Maps, hoặc trên OpenStreetMap khi Google Maps không dùng được. Dữ liệu bản đồ thuộc © Google hoặc © những người đóng góp cho OpenStreetMap, và liên kết chỉ đường mở Google Maps trong tab mới. Ghim do chợ hoặc sạp tự đặt và chính xác tới đâu là tuỳ họ."
         },
         {
           "p": "Ảnh sản phẩm thuộc về sạp đã tải lên. Ảnh dùng trên các trang của chính nền tảng được ghi nguồn trong ReadMe của dự án."

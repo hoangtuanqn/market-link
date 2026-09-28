@@ -15,7 +15,7 @@
     "close": "닫는 시각",
     "lat": "위도",
     "lng": "경도",
-    "lngHint": "핀을 끌어도 됩니다. 지도 데이터는 OpenStreetMap입니다.",
+    "lngHint": "핀을 끌어도 됩니다.",
     "notes": "가게에 남기는 메모",
     "images": "사진"
   },

@@ -1,10 +1,11 @@
 import type { LatLng } from '@/lib/geo';
 
 /**
- * Where the browser thinks the visitor is (FR-010, FR-013).
+ * Where the browser thinks the visitor is (FR-010), for sorting the markets list by distance. Directions (FR-013) do
+ * not need it: Google Maps finds the visitor's location itself.
  *
- * Shared through one module-level value rather than per-component state, the same way `Session` works, so the markets
- * list and a directions dialog never disagree about where you are or ask for permission twice.
+ * Shared through one module-level value rather than per-component state, the same way `Session` works, so leaving the
+ * markets list and coming back neither loses the position nor asks for permission twice.
  *
  * Nothing here runs on its own: `request()` is only ever called from a click. Asking for someone's location the moment
  * a page loads is the pattern browsers penalise and people refuse, and a refusal is permanent until they go and change

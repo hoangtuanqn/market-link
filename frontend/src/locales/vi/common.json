@@ -393,21 +393,7 @@
     "finding": "Đang tìm vị trí…"
   },
   "directions": {
-    "title": "Chỉ đường đến {{name}}",
-    "question": "Bạn xuất phát từ đâu?",
-    "current": "Vị trí hiện tại của tôi",
-    "currentShared": "Đã chia sẻ",
-    "currentAsk": "Trình duyệt sẽ hỏi bạn trước",
-    "address": "Một địa chỉ",
-    "addressNote": "Một con đường hoặc địa danh ở TP. Hồ Chí Minh.",
-    "addressLabel": "Địa chỉ xuất phát",
-    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
-    "addressHint": "Nhập tên đường và phường là tốt nhất. Bản đồ thường thiếu số nhà, và OpenStreetMap sẽ nhờ bạn chọn một địa điểm khi không tìm thấy.",
-    "useSaved": "Dùng địa chỉ đã lưu",
-    "none": "Tôi sẽ nhập trên bản đồ",
-    "noneNote": "Mở OpenStreetMap với chỉ điểm đến được điền sẵn.",
-    "privacy": "Chỉ đường mở trên openstreetmap.org ở tab mới. MarketLink không theo dõi vị trí của bạn.",
-    "open": "Mở chỉ đường"
+    "title": "Chỉ đường đến {{name}}"
   },
   "tier": {
     "bronze": "Đồng",
@@ -585,7 +571,7 @@
       },
       "customerMap": {
         "title": "Bản đồ chợ",
-        "body": "Tìm chợ gần bạn nhất và xem chỉ đường trên OpenStreetMap."
+        "body": "Tìm chợ gần bạn nhất và xem chỉ đường trên Google Maps."
       },
       "customerSearch": {
         "title": "Tìm kiếm",

@@ -13,7 +13,7 @@
     "selected": "Anneau : sélectionné"
   },
   "mapLabel": "Carte de tous les marchés et stands",
-  "directions": "L’itinéraire s’ouvre dans OpenStreetMap, dans un nouvel onglet.",
+  "directions": "L’itinéraire s’ouvre dans Google Maps, dans un nouvel onglet.",
   "openOn": "Ouverts le {{day}}",
   "empty": {
     "title": "Aucun marché à afficher",

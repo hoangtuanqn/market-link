@@ -1,39 +1,32 @@
 import type { TFunction } from 'i18next';
 
 /**
- * Where the map gets its tiles (D-12). Leaflet only draws; the pictures come from a tile server, and that server is the
- * one thing about the map that changes between a demo and a real deployment.
+ * Where the map gets its tiles (D-12). Leaflet only draws; the pictures come from a tile server.
  *
- * The default is OpenStreetMap's own server. It needs no account and normal interactive browsing is exactly what their
- * tile policy allows, so it is right for development and for the submitted demo. What it does not come with is any
- * promise of uptime: the OSM Foundation says access can be withdrawn at any time. Anything carrying real traffic should
- * point `VITE_MAP_TILE_URL` at a provider of its own.
+ * With `VITE_GOOGLE_MAPS_KEY` set the tiles are Google's (Map Tiles API, `lib/baseLayer.ts`). That key ships inside the
+ * JavaScript bundle where anyone can read it. That is how browser keys work, so it is locked in the Google Cloud
+ * console to our own sites and to the Map Tiles API, and a daily tile cap there keeps it inside the free allowance
+ * (docs/setup.md). Never put a key that must stay secret in a `VITE_*` variable (CONTRIBUTING.md §6).
  *
- * A tile URL usually carries an API key, and that key ships inside the JavaScript bundle where anyone can read it. That
- * is not a leak to fix, it is how browser keys work — so lock the key to your domains in the provider's dashboard and
- * treat it as public. Never put a key that must stay secret in a `VITE_*` variable (CONTRIBUTING.md §6).
+ * Without a key, on a teammate's machine or a reviewer's `make up`, the map uses OpenStreetMap's own server, which
+ * needs no account. It is also where a Google map falls back to when Google refuses.
  */
+export const GOOGLE_MAPS_KEY: string = import.meta.env.VITE_GOOGLE_MAPS_KEY || '';
 
-const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+export const OSM_TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 const OSM_LINK = '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
-/** Tile template Leaflet fills in with z/x/y. */
-export const TILE_URL = import.meta.env.VITE_MAP_TILE_URL || OSM_TILE_URL;
-
-/** The provider's own credit line, when one is configured. Provider names are not translated, so it is used as is. */
-const CUSTOM_ATTRIBUTION: string = import.meta.env.VITE_MAP_ATTRIBUTION || '';
+/**
+ * OpenStreetMap credit line in the map's own corner, in the reader's language (`map.attribution` in common.json). May
+ * contain a link, which Leaflet renders as HTML. Google's credit comes from Google instead, per area on screen.
+ */
+export const osmAttribution = (t: TFunction) => t('map.attribution', { link: OSM_LINK });
 
 /**
- * Credit line in the map's own corner. May contain a link, which Leaflet renders as HTML. Without a configured provider
- * it is the OpenStreetMap credit in the reader's language (`map.attribution` in common.json).
+ * The map credit as plain text, for the site footer and the About page, which render text rather than HTML. Null means
+ * the OpenStreetMap credit, which both already have translated.
  */
-export const tileAttribution = (t: TFunction) => CUSTOM_ATTRIBUTION || t('map.attribution', { link: OSM_LINK });
-
-/**
- * The configured credit as plain text, for the site footer, which renders text rather than HTML. Null means the default
- * OpenStreetMap credit, which the footer already has translated (`footer.mapData`).
- */
-export const MAP_CREDIT: string | null = CUSTOM_ATTRIBUTION ? CUSTOM_ATTRIBUTION.replace(/<[^>]*>/g, '') : null;
+export const MAP_CREDIT: string | null = GOOGLE_MAPS_KEY ? '© Google' : null;
 
 export const MAX_ZOOM = 19;
 

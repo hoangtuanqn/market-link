@@ -56,7 +56,7 @@
       "title": "Mengapa kami menyimpannya",
       "blocks": [
         {
-          "p": "Nama dan nomor telepon Anda ada agar lapak tahu siapa yang akan mengambil dan bisa menghubungi Anda pada pagi hari pasar. Alamat Anda ada untuk menunjukkan seberapa jauh sebuah pasar dan mengisi rute terlebih dahulu. Email Anda adalah cara Anda masuk dan cara Anda diberi tahu tentang pesanan."
+          "p": "Nama dan nomor telepon Anda ada agar lapak tahu siapa yang akan mengambil dan bisa menghubungi Anda pada pagi hari pasar. Alamat Anda ada untuk menunjukkan seberapa jauh sebuah pasar. Email Anda adalah cara Anda masuk dan cara Anda diberi tahu tentang pesanan."
         },
         {
           "p": "Pesanan dan riwayatnya ada agar kedua pihak bisa melihat apa yang disepakati dan kapan berubah. Ulasan ada agar pembeli lain bisa menilai sebuah lapak. Favorit ada agar Anda bisa diberi tahu ketika barang yang Anda inginkan tersedia lagi."
@@ -132,8 +132,8 @@
           "facts": {
             "items": [
               [
-                "OpenStreetMap",
-                "Ubin peta berasal dari server OpenStreetMap, yang melihat alamat IP Anda dan kira-kira bagian peta mana yang sedang Anda lihat. Data peta adalah © kontributor OpenStreetMap. Tautan rute membuka OpenStreetMap di tab baru."
+                "Google Maps dan OpenStreetMap",
+                "Ubin peta berasal dari server Google Maps, yang melihat alamat IP Anda dan kira-kira bagian peta mana yang sedang Anda lihat. Jika Google Maps tidak tersedia, ubin berasal dari server OpenStreetMap, yang melihat hal yang sama. Data peta adalah © Google, atau © kontributor OpenStreetMap. Tautan rute membuka Google Maps di tab baru, tempat kebijakan privasi Google berlaku."
               ],
               [
                 "Google Fonts",

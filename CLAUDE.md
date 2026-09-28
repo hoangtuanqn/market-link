@@ -68,7 +68,8 @@ AI **không tự tick DONE** trong REQUIREMENTS. Khi xong, báo đủ 7 điều 
 
 - Backend: Spring Boot 4.1 · **Java 25** · Maven wrapper · MySQL 8 · Redis · Flyway · JWT. Xem `backend/CLAUDE.md`.
 - Frontend: React 19 · Vite · TypeScript · Tailwind 4 (SPA). Xem `frontend/CLAUDE.md`.
-- Bản đồ: Leaflet + OpenStreetMap (D-12), không Google Maps.
+- Bản đồ: Leaflet, nền Google Maps khi có `VITE_GOOGLE_MAPS_KEY`, không có key hoặc Google từ chối thì OpenStreetMap;
+  chỉ đường mở Google Maps ở tab mới (D-12).
 - UI: design system `docs/design-system/` (tokens + Tailwind theme + class `ml-*`), xem `frontend/CLAUDE.md`.
 - Locale: tiền **USD** `$1.50` (LEAD chốt 27/09, `docs/decisions.md`), `dd/MM/yyyy`, 24h, `Asia/Ho_Chi_Minh`.
 

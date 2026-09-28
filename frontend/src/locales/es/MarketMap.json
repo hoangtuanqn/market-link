@@ -13,7 +13,7 @@
     "selected": "Anillo: seleccionado"
   },
   "mapLabel": "Mapa de todos los mercados y puestos",
-  "directions": "Las indicaciones se abren en OpenStreetMap en una pestaña nueva.",
+  "directions": "Las indicaciones se abren en Google Maps en una pestaña nueva.",
   "openOn": "Abiertos el {{day}}",
   "empty": {
     "title": "No hay mercados que mostrar",

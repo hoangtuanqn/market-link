@@ -13,7 +13,7 @@
     "selected": "Ring: ausgewählt"
   },
   "mapLabel": "Karte aller Märkte und Stände",
-  "directions": "Die Route öffnet sich in OpenStreetMap in einem neuen Tab.",
+  "directions": "Die Route öffnet sich in Google Maps in einem neuen Tab.",
   "openOn": "Geöffnet am {{day}}",
   "empty": {
     "title": "Keine Märkte anzuzeigen",
