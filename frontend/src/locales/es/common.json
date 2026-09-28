@@ -492,6 +492,14 @@
           "title": "Tu solicitud de puesto",
           "note": "Cuando se aprueba, rechaza, suspende o reabre"
         },
+        "orders": {
+          "title": "Pedidos",
+          "note": "Cuando cambia el estado de un pedido que hiciste o recibiste"
+        },
+        "favorites": {
+          "title": "Favoritos",
+          "note": "Cuando un producto que guardaste vuelve a estar disponible"
+        },
         "farmerApplications": {
           "title": "Solicitudes de Farmer",
           "note": "Cuando alguien solicita vender en MarketLink"

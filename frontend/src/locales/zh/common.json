@@ -492,6 +492,14 @@
           "title": "你的摊位申请",
           "note": "审核通过、未通过、被暂停或重新开放时"
         },
+        "orders": {
+          "title": "订单",
+          "note": "你下的订单或收到的订单状态变化时"
+        },
+        "favorites": {
+          "title": "收藏",
+          "note": "你收藏的商品重新有货时"
+        },
         "farmerApplications": {
           "title": "农户申请",
           "note": "有人申请在 MarketLink 上销售时"

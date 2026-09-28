@@ -492,6 +492,14 @@
           "title": "가게 신청",
           "note": "승인, 거절, 일시 정지, 재개되었을 때"
         },
+        "orders": {
+          "title": "주문",
+          "note": "내가 한 주문이나 받은 주문의 상태가 바뀔 때"
+        },
+        "favorites": {
+          "title": "즐겨찾기",
+          "note": "저장한 상품이 다시 입고되었을 때"
+        },
         "farmerApplications": {
           "title": "Farmer 신청",
           "note": "누군가 MarketLink 판매를 신청했을 때"
