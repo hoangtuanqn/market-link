@@ -53,6 +53,8 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
       SettingsStore.set(response.data ?? draft);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('settings.saveError')) });
+    } finally {
+      // A save that changes neither language nor format does not remount the page, so the button must reset here
       setSaving(false);
     }
   };
