@@ -54,12 +54,65 @@
     "title": "Sesuaikan stok untuk {{day}}",
     "quantity": "Unit yang tersedia",
     "price": "Harga untuk hari ini (opsional)",
-    "priceHint": "Biarkan kosong untuk mempertahankan harga saat ini.",
+    "priceHint": "Biarkan kosong untuk mempertahankan harga saat ini. Mengisi harga di sini juga mengakhiri diskon hampir kedaluwarsa untuk hari ini.",
     "cancel": "Batal",
     "confirm": "Simpan",
     "error": {
       "quantity": "Masukkan bilangan bulat 0 atau lebih.",
       "price": "Masukkan harga 0 atau lebih."
+    }
+  },
+  "dealAction": "Diskon hampir kedaluwarsa",
+  "deals": {
+    "title_one": "Sedang diskon ({{count}})",
+    "title_other": "Sedang diskon ({{count}})",
+    "col": {
+      "product": "Produk",
+      "day": "Hari ambil",
+      "discount": "Diskon",
+      "left": "Sisa",
+      "until": "Baik hingga"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, sebelumnya {{was}}",
+    "until_one": "Akhir {{day}} ({{count}} hari)",
+    "until_other": "Akhir {{day}} ({{count}} hari)",
+    "remove": "Hapus diskon",
+    "removed": "Diskon dihapus",
+    "removedText": "{{name}} kembali ke harga biasa untuk {{day}}.",
+    "noun": "diskon Anda"
+  },
+  "dealDialog": {
+    "title": "Diskon hampir kedaluwarsa · {{name}}",
+    "day": "Hari ambil",
+    "qty": "Jumlah yang dibawa ({{unit}})",
+    "onSale": "{{qty}} sedang didiskon untuk hari itu",
+    "packedOn": "Dipanen atau dikemas pada",
+    "result_one": "Baik hingga akhir {{until}} · pelanggan punya {{count}} hari (masa simpan {{shelfLife}} hari)",
+    "result_other": "Baik hingga akhir {{until}} · pelanggan punya {{count}} hari (masa simpan {{shelfLife}} hari)",
+    "discount": "Diskon",
+    "less": "Turunkan diskon",
+    "more": "Naikkan diskon",
+    "suggested": "Disarankan {{percent}}%",
+    "price": "Harga",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "Pasang diskon",
+    "posting": "Memasang…",
+    "posted": "Diskon dipasang",
+    "postedText": "{{name}} diskon {{percent}}% untuk {{day}}.",
+    "loadingDays": "Memuat hari ambil…",
+    "daysNoun": "hari ambil",
+    "noDays": {
+      "title": "Belum ada hari ambil yang dibuka",
+      "text": "Pelanggan tidak dapat memesan produk ini untuk 14 hari ke depan. Periksa stok mingguan dan slot pengambilan Anda."
+    },
+    "why": {
+      "packedOn": "Masukkan tanggal panen atau pengemasan.",
+      "qty": "Bawa minimal 1.",
+      "packedInFuture": "Tanggal panen atau pengemasan tidak boleh setelah hari ini.",
+      "fresh": "Dipanen pada hari ambil dianggap segar, jadi tidak perlu diskon.",
+      "notNearExpiry": "Pada hari itu, lebih dari separuh masa simpan {{shelfLife}} hari masih tersisa. Diskon hanya untuk produk yang sudah melewati separuh masa simpannya.",
+      "expiredBeforePickup": "Batch ini sudah tidak baik lagi pada hari itu, jadi tidak dapat dijual untuk hari tersebut."
     }
   }
 }

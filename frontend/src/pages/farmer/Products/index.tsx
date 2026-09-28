@@ -15,6 +15,8 @@ import { unitPrice, units, money } from '@/lib/format';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import ActiveDeals from './ActiveDeals';
+import DealDialog from './DealDialog';
 
 const STATUSES: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
 const FILTERS: ('all' | ProductStatus)[] = ['all', ...STATUSES];
@@ -33,6 +35,9 @@ const FarmerProductsPage = () => {
   const [adjustPrice, setAdjustPrice] = useState('');
   const [adjustError, setAdjustError] = useState<string | undefined>();
   const [busyId, setBusyId] = useState<number | null>(null);
+  // FR-124: the product whose near-expiry deal dialog is open, and a counter that makes "On sale" read again
+  const [dealTarget, setDealTarget] = useState<ProductType | null>(null);
+  const [dealsVersion, setDealsVersion] = useState(0);
 
   const counts: Record<'all' | ProductStatus, number> = {
     all: all.length,
@@ -88,6 +93,8 @@ const FarmerProductsPage = () => {
       // The new number can change which date is "next" (e.g. dropping to 0), so reload the list
       // instead of hand-patching nextLeft.
       retry();
+      // A price here also ends that day's near-expiry deal (Ruling 10), so "On sale" must read again.
+      setDealsVersion((v) => v + 1);
       Notification.success({ text: t('toast.stockAdjusted', { day: stockDay(adjustTarget.nextDate) }) });
       setAdjustTarget(null);
     } catch (error) {
@@ -192,6 +199,11 @@ const FarmerProductsPage = () => {
       align: 'actions',
       render: (p) => (
         <div className="flex justify-end gap-2">
+          {p.status === 'available' && !p.hidden && p.nextDate && (
+            <Button variant="secondary" size="sm" onClick={() => setDealTarget(p)}>
+              {t('dealAction')}
+            </Button>
+          )}
           {p.nextDate && (
             <Button variant="secondary" size="sm" onClick={() => openAdjust(p)} disabled={busyId === p.id}>
               {t('adjust')}
@@ -217,6 +229,8 @@ const FarmerProductsPage = () => {
         </div>
         <ButtonLink to="/farmer/products/new">{t('add')}</ButtonLink>
       </div>
+
+      <ActiveDeals version={dealsVersion} />
 
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
@@ -245,6 +259,22 @@ const FarmerProductsPage = () => {
       </div>
 
       <p className="text-small text-ink-muted">{t('footNote')}</p>
+
+      {dealTarget && (
+        <DealDialog
+          product={dealTarget}
+          onClose={() => setDealTarget(null)}
+          onPosted={(row) => {
+            setDealsVersion((v) => v + 1);
+            // The deal sets what is left for its day; the row's "next pickup day" number follows when it is that day
+            mutate((list) =>
+              list.map((r) =>
+                r.id === row.productId && r.nextDate === row.stockDate ? { ...r, nextLeft: row.quantityAvailable } : r,
+              ),
+            );
+          }}
+        />
+      )}
 
       <Dialog
         open={deleteTarget !== null}

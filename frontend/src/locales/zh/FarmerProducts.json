@@ -54,12 +54,65 @@
     "title": "调整 {{day}} 的库存",
     "quantity": "可用数量",
     "price": "当天价格（可选）",
-    "priceHint": "留空以保留当前价格。",
+    "priceHint": "留空以保留当前价格。在此处填写价格也会结束该日期的临期优惠。",
     "cancel": "取消",
     "confirm": "保存",
     "error": {
       "quantity": "请输入0或以上的整数。",
       "price": "请输入0或以上的价格。"
+    }
+  },
+  "dealAction": "临期优惠",
+  "deals": {
+    "title_one": "特价中 ({{count}})",
+    "title_other": "特价中 ({{count}})",
+    "col": {
+      "product": "商品",
+      "day": "取货日",
+      "discount": "折扣",
+      "left": "剩余",
+      "until": "食用期至"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}，原价 {{was}}",
+    "until_one": "{{day}} 结束（{{count}} 天）",
+    "until_other": "{{day}} 结束（{{count}} 天）",
+    "remove": "取消优惠",
+    "removed": "已取消优惠",
+    "removedText": "{{name}} 在 {{day}} 恢复原价。",
+    "noun": "您的优惠"
+  },
+  "dealDialog": {
+    "title": "临期优惠 · {{name}}",
+    "day": "取货日",
+    "qty": "带来的数量（{{unit}}）",
+    "onSale": "该日目前有 {{qty}} 在售",
+    "packedOn": "采摘或包装日期",
+    "result_one": "食用期至 {{until}} 结束 · 顾客还有 {{count}} 天（保鲜期 {{shelfLife}} 天）",
+    "result_other": "食用期至 {{until}} 结束 · 顾客还有 {{count}} 天（保鲜期 {{shelfLife}} 天）",
+    "discount": "折扣",
+    "less": "降低折扣",
+    "more": "提高折扣",
+    "suggested": "建议 {{percent}}%",
+    "price": "价格",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "发布优惠",
+    "posting": "发布中…",
+    "posted": "优惠已发布",
+    "postedText": "{{name}} 在 {{day}} 降价 {{percent}}%。",
+    "loadingDays": "正在加载取货日…",
+    "daysNoun": "取货日",
+    "noDays": {
+      "title": "暂无可选取货日",
+      "text": "未来14天内顾客都无法预订该商品。请检查您的每周库存和取货时段。"
+    },
+    "why": {
+      "packedOn": "请输入采摘或包装日期。",
+      "qty": "至少带来 1 份。",
+      "packedInFuture": "采摘或包装日期不能晚于今天。",
+      "fresh": "取货当天采摘视为新鲜，无需设置优惠。",
+      "notNearExpiry": "到那天为止，商品的{{shelfLife}}天保鲜期还剩一半以上。优惠仅适用于已过保鲜期一半的商品。",
+      "expiredBeforePickup": "这批货到那天已不新鲜，无法在该日期出售。"
     }
   }
 }

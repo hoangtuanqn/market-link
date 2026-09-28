@@ -54,12 +54,65 @@
     "title": "{{day}} の在庫を調整",
     "quantity": "利用可能な数量",
     "price": "この日の価格（任意）",
-    "priceHint": "空欄のままにすると現在の価格を維持します。",
+    "priceHint": "空欄のままにすると現在の価格を維持します。ここに価格を入力すると、この日の賞味期限間近セールも終了します。",
     "cancel": "キャンセル",
     "confirm": "保存",
     "error": {
       "quantity": "0以上の整数を入力してください。",
       "price": "0以上の価格を入力してください。"
+    }
+  },
+  "dealAction": "賞味期限間近セール",
+  "deals": {
+    "title_one": "セール中 ({{count}})",
+    "title_other": "セール中 ({{count}})",
+    "col": {
+      "product": "商品",
+      "day": "受取日",
+      "discount": "割引",
+      "left": "残り",
+      "until": "賞味期限"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}（元の価格 {{was}}）",
+    "until_one": "{{day}}まで（あと{{count}}日）",
+    "until_other": "{{day}}まで（あと{{count}}日）",
+    "remove": "セールを取り消す",
+    "removed": "セールを取り消しました",
+    "removedText": "{{name}}は{{day}}分、通常価格に戻ります。",
+    "noun": "あなたのセール"
+  },
+  "dealDialog": {
+    "title": "賞味期限間近セール · {{name}}",
+    "day": "受取日",
+    "qty": "持ち込む数量（{{unit}}）",
+    "onSale": "その日は現在 {{qty}} がセール中",
+    "packedOn": "収穫または梱包日",
+    "result_one": "{{until}}まで良好 · お客様は{{count}}日利用できます（賞味期限{{shelfLife}}日）",
+    "result_other": "{{until}}まで良好 · お客様は{{count}}日利用できます（賞味期限{{shelfLife}}日）",
+    "discount": "割引",
+    "less": "割引を下げる",
+    "more": "割引を上げる",
+    "suggested": "おすすめ {{percent}}%",
+    "price": "価格",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "セールを登録",
+    "posting": "登録中…",
+    "posted": "セールを登録しました",
+    "postedText": "{{name}}は{{day}}に{{percent}}%引きになります。",
+    "loadingDays": "受取日を読み込み中…",
+    "daysNoun": "受取日",
+    "noDays": {
+      "title": "利用できる受取日がありません",
+      "text": "今後14日間、お客様はこの商品を注文できません。週の在庫と受取枠を確認してください。"
+    },
+    "why": {
+      "packedOn": "収穫または梱包日を入力してください。",
+      "qty": "1以上を持ち込んでください。",
+      "packedInFuture": "収穫または梱包日は今日より後にはできません。",
+      "fresh": "受取日に収穫したものは新鮮とみなされるため、セールは不要です。",
+      "notNearExpiry": "その日の時点で{{shelfLife}}日の賞味期限の半分以上が残っています。セールは賞味期限の半分を過ぎた商品のみが対象です。",
+      "expiredBeforePickup": "この商品はその日にはもう鮮度が保てないため、販売できません。"
     }
   }
 }

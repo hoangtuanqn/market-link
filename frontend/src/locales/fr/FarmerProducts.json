@@ -54,12 +54,65 @@
     "title": "Ajuster le stock pour {{day}}",
     "quantity": "Unités disponibles",
     "price": "Prix pour ce jour (facultatif)",
-    "priceHint": "Laissez vide pour conserver le prix actuel.",
+    "priceHint": "Laissez vide pour conserver le prix actuel. Indiquer un prix ici met aussi fin à une promo date proche pour ce jour.",
     "cancel": "Annuler",
     "confirm": "Enregistrer",
     "error": {
       "quantity": "Entrez un nombre entier de 0 ou plus.",
       "price": "Entrez un prix de 0 ou plus."
+    }
+  },
+  "dealAction": "Promo date proche",
+  "deals": {
+    "title_one": "En promo ({{count}})",
+    "title_other": "En promo ({{count}})",
+    "col": {
+      "product": "Produit",
+      "day": "Jour de retrait",
+      "discount": "Remise",
+      "left": "Restant",
+      "until": "Bon jusqu'au"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, avant {{was}}",
+    "until_one": "Fin {{day}} ({{count}} jour)",
+    "until_other": "Fin {{day}} ({{count}} jours)",
+    "remove": "Retirer la promo",
+    "removed": "Promo retirée",
+    "removedText": "{{name}} revient à son prix habituel pour {{day}}.",
+    "noun": "vos promos"
+  },
+  "dealDialog": {
+    "title": "Promo date proche · {{name}}",
+    "day": "Jour de retrait",
+    "qty": "Quantité apportée ({{unit}})",
+    "onSale": "{{qty}} déjà en promo ce jour-là",
+    "packedOn": "Récolté ou conditionné le",
+    "result_one": "Bon jusqu'à la fin de {{until}} · il reste {{count}} jour au client (durée de conservation : {{shelfLife}} jours)",
+    "result_other": "Bon jusqu'à la fin de {{until}} · il reste {{count}} jours au client (durée de conservation : {{shelfLife}} jours)",
+    "discount": "Remise",
+    "less": "Baisser la remise",
+    "more": "Augmenter la remise",
+    "suggested": "Suggéré {{percent}}%",
+    "price": "Prix",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "Publier la promo",
+    "posting": "Publication…",
+    "posted": "Promo publiée",
+    "postedText": "{{name}} est à {{percent}}% de réduction pour {{day}}.",
+    "loadingDays": "Chargement des jours de retrait…",
+    "daysNoun": "jours de retrait",
+    "noDays": {
+      "title": "Aucun jour de retrait ouvert",
+      "text": "Les clients ne peuvent commander ce produit pour aucun des 14 prochains jours. Vérifiez votre stock hebdomadaire et vos créneaux de retrait."
+    },
+    "why": {
+      "packedOn": "Indiquez la date de récolte ou de conditionnement.",
+      "qty": "Apportez au moins 1 unité.",
+      "packedInFuture": "La date de récolte ou de conditionnement ne peut pas être postérieure à aujourd'hui.",
+      "fresh": "Récolté le jour du retrait compte comme frais, donc aucune promo n'est nécessaire.",
+      "notNearExpiry": "Plus de la moitié de sa durée de conservation de {{shelfLife}} jours reste ce jour-là. Les promos sont réservées aux produits ayant dépassé la moitié de leur durée de conservation.",
+      "expiredBeforePickup": "Ce lot n'est plus bon ce jour-là, il ne peut donc pas être vendu pour cette date."
     }
   }
 }
