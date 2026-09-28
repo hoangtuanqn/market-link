@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/** FR-120: the shelf-life guide table and its two finders, against real MySQL. */
+/** FR-120: the shelf-life guide table and its finders, against real MySQL. */
 @SpringBootTest
 class ShelfLifeGuideRepositoryTest {
 
@@ -69,6 +69,18 @@ class ShelfLifeGuideRepositoryTest {
 
         assertThatThrownBy(() -> save("Leafy greens", StorageMode.CHILLED, 4, true))
                 .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    /** The name lookup behind "reuse the existing spelling" relies on the column's collation. */
+    @Test
+    void findsAGroupByNameIgnoringCaseAndAccents() {
+        save("Rau thơm", StorageMode.CHILLED, 3, true);
+
+        assertThat(guides.findFirstByCategoryIdAndGroupNameOrderByIdAsc(categoryId, "rau THOM"))
+                .map(ShelfLifeGuide::getGroupName)
+                .contains("Rau thơm");
+        assertThat(guides.findFirstByCategoryIdAndGroupNameOrderByIdAsc(categoryId, "Rau răm"))
+                .isEmpty();
     }
 
     private ShelfLifeGuide save(String group, StorageMode mode, int days, boolean active) {

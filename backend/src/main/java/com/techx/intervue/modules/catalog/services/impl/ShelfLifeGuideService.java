@@ -12,6 +12,9 @@ import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideGroupResource;
 import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideResource;
 import com.techx.intervue.modules.catalog.resources.ShelfLifeModeResource;
 import com.techx.intervue.modules.catalog.services.interfaces.ShelfLifeGuideServiceInterface;
+import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,14 +33,17 @@ public class ShelfLifeGuideService implements ShelfLifeGuideServiceInterface {
     private final ShelfLifeGuideRepository guides;
     private final ShelfLifePeerQueryRepository peers;
     private final CategoryRepository categories;
+    private final FarmerProfileRepository farmers;
 
     @Override
-    public List<ShelfLifeGuideGroupResource> listForCategory(long categoryId, Long viewerFarmerId) {
+    public List<ShelfLifeGuideGroupResource> listForCategory(long categoryId, long viewerUserId) {
+        // The asking stall's own products never count as "other stalls" (spec §4.1); an admin has
+        // no stall, so every stall counts
+        Long ownStall = farmers.findByUserId(viewerUserId).map(FarmerProfile::getId).orElse(null);
         List<ShelfLifeGuide> rows =
                 guides.findByCategoryIdAndActiveTrueOrderByGroupNameAscStorageModeAsc(categoryId);
         Map<Long, List<Integer>> peerDays =
-                peers.daysByGuide(
-                        rows.stream().map(ShelfLifeGuide::getId).toList(), viewerFarmerId);
+                peers.daysByGuide(rows.stream().map(ShelfLifeGuide::getId).toList(), ownStall);
         Map<String, List<ShelfLifeGuide>> byGroup =
                 rows.stream()
                         .collect(
@@ -88,6 +94,11 @@ public class ShelfLifeGuideService implements ShelfLifeGuideServiceInterface {
         requireCategory(request.categoryId());
         ShelfLifeGuide guide = new ShelfLifeGuide();
         apply(guide, request);
+        // The product form groups rows by their exact name, while the unique key ignores case and
+        // accents: a new way of keeping for "leafy Greens" joins the existing "Leafy greens"
+        guides.findFirstByCategoryIdAndGroupNameOrderByIdAsc(
+                        guide.getCategoryId(), guide.getGroupName())
+                .ifPresent(same -> guide.setGroupName(same.getGroupName()));
         guide.setActive(request.active() == null || request.active());
         return toResource(guides.saveAndFlush(guide));
     }
@@ -97,7 +108,19 @@ public class ShelfLifeGuideService implements ShelfLifeGuideServiceInterface {
     public ShelfLifeGuideResource update(long id, ShelfLifeGuideRequest request) {
         ShelfLifeGuide guide =
                 guides.findById(id).orElseThrow(() -> new ShelfLifeGuideNotFoundException(id));
-        requireCategory(request.categoryId());
+        // A group never moves: the products that use it would point at another category's group,
+        // or keep a way of keeping the group no longer has, and the form and the peer numbers
+        // both follow the guide
+        if (!guide.getCategoryId().equals(request.categoryId())) {
+            throw new InvalidFieldException(
+                    "categoryId",
+                    "A group cannot move to another category. Add it there as a new group.");
+        }
+        if (guide.getStorageMode() != StorageMode.parse(request.storageMode())) {
+            throw new InvalidFieldException(
+                    "storageMode",
+                    "A group cannot change how it is kept. Add the other way as a new row.");
+        }
         apply(guide, request);
         if (request.active() != null) {
             guide.setActive(request.active());
