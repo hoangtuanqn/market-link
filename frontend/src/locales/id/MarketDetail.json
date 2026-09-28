@@ -22,6 +22,7 @@
   },
   "day": "Hari pasar",
   "all": "Semua",
+  "category": "Kategori",
   "inStock": "Tersedia",
   "available": "Tersedia hari {{day}}",
   "productsFrom": "{{products}} dari {{stalls}}",

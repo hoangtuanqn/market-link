@@ -26,13 +26,14 @@ public class SettingsService implements SettingsServiceInterface {
 
     private final UserSettingsRepository repository;
 
+    /**
+     * null when the user never saved: the frontend then keeps the choices already on the device
+     * instead of resetting them to made-up defaults.
+     */
     @Override
     @Transactional(readOnly = true)
     public SettingsResource get(Long userId) {
-        return repository
-                .findById(userId)
-                .map(SettingsService::toResource)
-                .orElseGet(SettingsService::defaults);
+        return repository.findById(userId).map(SettingsService::toResource).orElse(null);
     }
 
     @Override
@@ -75,18 +76,6 @@ public class SettingsService implements SettingsServiceInterface {
                     out.put(key, value);
                 });
         return out;
-    }
-
-    private static SettingsResource defaults() {
-        return SettingsResource.builder()
-                .theme("light")
-                .language("en")
-                .currency("VND")
-                .units("metric")
-                .dateFormat("dmy")
-                .clock("h24")
-                .extras(Map.of())
-                .build();
     }
 
     private static SettingsResource toResource(UserSettings s) {

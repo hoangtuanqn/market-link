@@ -42,6 +42,21 @@ const wanted = (lang: string) => (key: string) => {
   return suffix === undefined || PLURALS[lang].has(suffix);
 };
 
+/** Leaf key without its plural suffix → the `{{variable}}` names its strings use (merged over the plural forms). */
+const variablesByKey = (o: object, prefix = '', out: Record<string, Set<string>> = {}) => {
+  for (const [k, v] of Object.entries(o)) {
+    const path = `${prefix}${k}`;
+    if (v !== null && typeof v === 'object') {
+      variablesByKey(v as object, `${path}.`, out);
+    } else if (typeof v === 'string') {
+      const key = path.replace(/_(zero|one|two|few|many|other)$/, '');
+      out[key] ??= new Set();
+      for (const m of v.matchAll(/\{\{\s*([^},\s]+)[^}]*\}\}/g)) out[key].add(m[1]);
+    }
+  }
+  return out;
+};
+
 const byNamespace = new Map<string, Map<string, object>>();
 for (const [path, mod] of Object.entries(FILES)) {
   const { lang, ns } = parse(path);
@@ -82,6 +97,22 @@ describe('Locale files stay in step across all ten languages', () => {
           // t('x') on an object prints "key 'x' returned an object instead of string." — in English, to a
           // reader who chose another language.
           expect(mine[key], `${ns}.${key} (${lang})`).toBe(kind);
+        }
+      }
+    }
+  });
+
+  it('uses the same {{variables}} as English, so no translation prints a raw placeholder', () => {
+    for (const [ns, langs] of byNamespace) {
+      const en = variablesByKey(langs.get('en')!);
+      for (const lang of LANGS) {
+        if (lang === 'en') continue;
+        for (const [key, vars] of Object.entries(variablesByKey(langs.get(lang)!))) {
+          const expected = en[key];
+          if (expected === undefined) continue;
+          // `count` is always passed to a plural key, so a language may leave it out of the sentence ("one order")
+          const strip = (set: Set<string>) => [...set].filter((v) => v !== 'count').sort();
+          expect(strip(vars), `${ns}.${key} (${lang})`).toEqual(strip(expected));
         }
       }
     }

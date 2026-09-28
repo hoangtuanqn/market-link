@@ -37,19 +37,11 @@ class SettingsServiceTest {
     }
 
     @Test
-    void returnsDefaultsWhenNothingIsSaved() {
+    void returnsNothingWhenNothingIsSaved() {
         when(repository.findById(7L)).thenReturn(Optional.empty());
 
-        SettingsResource s = service.get(7L);
-
-        assertThat(s.theme()).isEqualTo("light");
-        assertThat(s.language()).isEqualTo("en");
-        assertThat(s.currency()).isEqualTo("VND");
-        assertThat(s.units()).isEqualTo("metric");
-        assertThat(s.dateFormat()).isEqualTo("dmy");
-        assertThat(s.clock()).isEqualTo("h24");
-        assertThat(s.preferredMarket()).isNull();
-        assertThat(s.extras()).isEmpty();
+        // null, not made-up defaults: the client keeps the language / theme already on the device
+        assertThat(service.get(7L)).isNull();
         verify(repository, never()).save(any());
     }
 

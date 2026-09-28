@@ -22,6 +22,7 @@
   },
   "day": "Market day",
   "all": "All",
+  "category": "Category",
   "inStock": "In stock",
   "available": "Available on {{day}}",
   "productsFrom": "{{products}} from {{stalls}}",

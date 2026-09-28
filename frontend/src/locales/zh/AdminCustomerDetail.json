@@ -1,7 +1,7 @@
 {
   "allCustomers": "顾客",
   "noun": "customer",
-  "since": "自 {{joined}} 起的顾客 · 最近一单 {{last}}",
+  "since": "自 {{joined}} 起的顾客",
   "missing": {
     "title": "这位顾客已经不在了",
     "text": "账号可能已被删除。请从顾客列表重新打开。"

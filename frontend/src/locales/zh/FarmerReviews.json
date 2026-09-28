@@ -1,7 +1,7 @@
 {
   "title": "评价",
   "intro": "顾客取货后的评价。简短的回复很有帮助，尤其是低分评价。",
-  "summary": "摊位 {{stall}} · 商品 {{products}} · {{reviews}}",
+  "summary": "摊位 {{stall}} · {{reviews}}",
   "reviewCount_one": "{{count}} 条评价",
   "reviewCount_other": "{{count}} 条评价",
   "noun": "reviews",

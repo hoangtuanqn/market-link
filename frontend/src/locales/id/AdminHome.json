@@ -1,17 +1,17 @@
 {
-  "overline": "Platform · {{year}}",
+  "overline": "Platform",
   "title": "Ringkasan",
   "noun": "dashboard",
   "kpi": {
     "farmers": "Petani",
-    "farmersNote": "{{waiting}} menunggu persetujuan · {{suspended}} ditangguhkan",
+    "farmersNote": "{{waiting}} menunggu persetujuan",
     "farmersLink": "Tinjau pengajuan",
     "customers": "Pelanggan",
     "customersLink": "Buka daftar pelanggan",
     "markets": "Pasar",
     "marketsLink": "Buka daftar pasar",
     "orders": "Pesanan",
-    "ordersNote": "{{week}} minggu ini · {{total}} selesai",
+    "ordersNote": "{{revenue}} dari pesanan selesai",
     "ordersLink": "Buka daftar pesanan"
   },
   "attention": {

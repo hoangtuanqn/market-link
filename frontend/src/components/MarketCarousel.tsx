@@ -70,7 +70,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
     <div
       role="region"
       aria-roledescription="carousel"
-      aria-label={t('market.galleryLabel', { name: marketName, defaultValue: `Photos of ${marketName}` })}
+      aria-label={t('gallery.label', { name: marketName })}
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onTouchStart={handleTouchStart}
@@ -88,7 +88,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
             key={src + idx}
             role="group"
             aria-roledescription="slide"
-            aria-label={`${idx + 1} of ${total}`}
+            aria-label={t('gallery.slide', { n: idx + 1, total })}
             className={Helper.cn(
               'absolute inset-0 size-full transition-opacity duration-500 ease-in-out',
               idx === currentIndex ? 'z-10 opacity-100' : 'pointer-events-none z-0 opacity-0',
@@ -96,7 +96,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
           >
             <img
               src={Helper.mediaUrl(src)}
-              alt={`${marketName} - photo ${idx + 1}`}
+              alt={t('gallery.photoAlt', { name: marketName, n: idx + 1 })}
               className="size-full object-cover"
               loading={idx === 0 ? 'eager' : 'lazy'}
             />
@@ -115,7 +115,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
               e.stopPropagation();
               goToPrev();
             }}
-            aria-label={t('common.prev', { defaultValue: 'Previous photo' })}
+            aria-label={t('gallery.previous')}
             className="border-line-strong bg-surface-raised/90 text-ink hover:bg-surface-raised absolute top-1/2 left-3 z-20 flex size-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-[1.5px] shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
           >
             <ChevronLeftIcon size={18} />
@@ -126,7 +126,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
               e.stopPropagation();
               goToNext();
             }}
-            aria-label={t('common.next', { defaultValue: 'Next photo' })}
+            aria-label={t('gallery.next')}
             className="border-line-strong bg-surface-raised/90 text-ink hover:bg-surface-raised absolute top-1/2 right-3 z-20 flex size-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-[1.5px] shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
           >
             <ChevronRightIcon size={18} />
@@ -147,7 +147,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
               key={idx}
               type="button"
               onClick={() => goToIndex(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
+              aria-label={t('gallery.goTo', { n: idx + 1 })}
               // The visible dot stays 10px; py-4 + background-clip gives it a 44px box to tap
               // (Apple HIG, WCAG 2.5.5) without changing how it looks.
               className={Helper.cn(

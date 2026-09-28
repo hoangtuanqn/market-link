@@ -118,14 +118,9 @@
     "grower": "Erzeuger",
     "at": "Bei",
     "visit": "Stand ansehen →",
-    "empty": "Derzeit sind keine Erzeuger verfügbar."
-  },
-  "reviews": {
-    "eyebrow": "STIMMEN AUS DER GEMEINSCHAFT",
-    "title": "Beliebt bei Marktbesuchern",
-    "desc": "Über 140+ 5-Sterne-Bewertungen von Feinschmeckern in ganz Ho-Chi-Minh-Stadt",
-    "score": "⭐ 4.8 / 5 Gemeinschaftsbewertung",
-    "verified": "Verifizierter Kauf"
+    "empty": "Derzeit sind keine Erzeuger verfügbar.",
+    "noun": "Stände",
+    "emptyText": "Sehen Sie sich die Märkte an, um zu erfahren, wer dort verkauft."
   },
   "banner": {
     "badge": "FÜR LOKALE ERZEUGER & MANUFAKTUREN",

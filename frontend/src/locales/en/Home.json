@@ -118,14 +118,9 @@
     "grower": "Grower",
     "at": "At",
     "visit": "Visit stall →",
-    "empty": "No growers available at the moment."
-  },
-  "reviews": {
-    "eyebrow": "COMMUNITY VOICES",
-    "title": "Loved by market shoppers",
-    "desc": "Over 140+ 5-star reviews from conscious food lovers across Ho Chi Minh City",
-    "score": "⭐ 4.8 / 5 community score",
-    "verified": "Verified purchase"
+    "empty": "No growers available at the moment.",
+    "noun": "stalls",
+    "emptyText": "Browse the markets to see who sells there."
   },
   "banner": {
     "badge": "FOR LOCAL GROWERS & ARTISANS",

@@ -15,8 +15,6 @@ const renderShellAt = (path: string, userOverrides?: { name?: string }) =>
         nav={[]}
         context={{ mono: 'M', name: 'MarketLink', sub: 'Platform' }}
         user={{ mono: 'AD', email: 'admin@marketlink.vn', line: 'Administrator', ...userOverrides }}
-        searchId="admin-appq"
-        searchPlaceholder="Search"
         accountTo="/admin/account"
       />
     </MemoryRouter>,
@@ -54,6 +52,16 @@ describe('DashboardShell logo', () => {
 
     fireEvent.click(toggleBtn);
     expect(screen.getByTitle(/expand/i)).toBeInTheDocument();
+  });
+});
+
+describe('DashboardShell controls', () => {
+  /** A search box and a "change market" button that did nothing read as broken: the shell offers neither. */
+  it('offers no control without an action behind it', () => {
+    renderShellAt('/admin');
+
+    expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /change which market/i })).not.toBeInTheDocument();
   });
 });
 

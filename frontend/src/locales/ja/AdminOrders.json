@@ -3,7 +3,7 @@
   "intro": "4つのマーケットにわたる MarketLink 上のすべての注文です。管理者は閲覧のみ。注文を次の状態へ進められるのは店舗だけです。",
   "noun": "orders",
   "list": {
-    "inPeriod": "{{month}}に{{count}}件",
+    "inPeriod": "{{count}}件の注文",
     "filterLabel": "状態で注文を絞り込む",
     "market": "マーケット",
     "allMarkets": "すべてのマーケット",

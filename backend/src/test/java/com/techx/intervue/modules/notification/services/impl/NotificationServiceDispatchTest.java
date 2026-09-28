@@ -3,9 +3,11 @@ package com.techx.intervue.modules.notification.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -21,8 +23,10 @@ import com.techx.intervue.modules.notification.resources.NotificationPayload;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationDeliveryInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPreferenceServiceInterface;
 import com.techx.intervue.modules.user.entities.UserSettings;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserSettingsRepository;
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -34,6 +38,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationServiceDispatchTest {
@@ -116,6 +121,25 @@ class NotificationServiceDispatchTest {
                         NotificationKind.FARMER_APPROVED, "/farmer", Map.of("stall", "S")));
 
         verify(delivery).deliver(eq(7L), argThat(p -> p.title().equals("Your stall is approved")));
+    }
+
+    @Test
+    void theTestNotificationOpensTheSettingsPageOfTheRecipientsRole() {
+        @SuppressWarnings("unchecked")
+        ValueOperations<String, String> values = mock(ValueOperations.class);
+        when(redis.opsForValue()).thenReturn(values);
+        when(values.setIfAbsent(anyString(), eq("1"), any(Duration.class))).thenReturn(true);
+
+        service.sendTest(7L, RoleType.FARMER);
+        service.sendTest(8L, RoleType.ADMIN);
+        service.sendTest(9L, RoleType.CUSTOMER);
+
+        ArgumentCaptor<NotificationPayload> sent =
+                ArgumentCaptor.forClass(NotificationPayload.class);
+        verify(delivery, times(3)).deliver(anyLong(), sent.capture());
+        assertThat(sent.getAllValues())
+                .extracting(NotificationPayload::link)
+                .containsExactly("/farmer/settings", "/admin/settings", "/settings");
     }
 
     @Test

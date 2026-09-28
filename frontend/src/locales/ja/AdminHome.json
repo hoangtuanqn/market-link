@@ -1,17 +1,17 @@
 {
-  "overline": "プラットフォーム · {{year}}",
+  "overline": "プラットフォーム",
   "title": "概要",
   "noun": "dashboard",
   "kpi": {
     "farmers": "農家",
-    "farmersNote": "{{waiting}}件が承認待ち · {{suspended}}件が停止中",
+    "farmersNote": "{{waiting}}件が承認待ち",
     "farmersLink": "申請を審査する",
     "customers": "お客様",
     "customersLink": "お客様一覧を開く",
     "markets": "マーケット",
     "marketsLink": "マーケット一覧を開く",
     "orders": "注文",
-    "ordersNote": "今週{{week}}件 · 完了{{total}}",
+    "ordersNote": "完了した注文から{{revenue}}",
     "ordersLink": "注文一覧を開く"
   },
   "attention": {

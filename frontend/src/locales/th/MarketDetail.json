@@ -22,6 +22,7 @@
   },
   "day": "วันตลาดนัด",
   "all": "ทั้งหมด",
+  "category": "หมวดหมู่",
   "inStock": "มีสินค้า",
   "available": "มีขาย{{day}}",
   "productsFrom": "{{products}} จาก {{stalls}}",

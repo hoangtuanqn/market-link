@@ -49,6 +49,8 @@
   },
   "results_one": "{{day}}の「{{q}}」の検索結果 {{count}} 件",
   "results_other": "{{day}}の「{{q}}」の検索結果 {{count}} 件",
+  "stallsOn_one": "{{day}}に出店する屋台 {{count}} 件",
+  "stallsOn_other": "{{day}}に出店する屋台 {{count}} 件",
   "noStalls": "一致する店はありません。",
   "noProducts": "一致する商品はありません。",
   "noMarket": {

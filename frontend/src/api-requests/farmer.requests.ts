@@ -29,6 +29,8 @@ class FarmerApi {
       params: { kind },
       // Drop the default application/json header so the browser sets multipart/form-data with the boundary itself.
       headers: { 'Content-Type': undefined },
+      // No timeout: the instance's 10 s would cut off a 40 MB video on a phone connection.
+      timeout: 0,
     });
     return response.data;
   };

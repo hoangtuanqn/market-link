@@ -1,17 +1,17 @@
 {
-  "overline": "平台 · {{year}}",
+  "overline": "平台",
   "title": "概览",
   "noun": "dashboard",
   "kpi": {
     "farmers": "农户",
-    "farmersNote": "{{waiting}} 个待审核 · {{suspended}} 个已停用",
+    "farmersNote": "{{waiting}} 个待审核",
     "farmersLink": "审核申请",
     "customers": "顾客",
     "customersLink": "打开顾客列表",
     "markets": "集市",
     "marketsLink": "打开集市列表",
     "orders": "订单",
-    "ordersNote": "本周 {{week}} 单 · 已完成 {{total}}",
+    "ordersNote": "已完成订单共 {{revenue}}",
     "ordersLink": "打开订单列表"
   },
   "attention": {

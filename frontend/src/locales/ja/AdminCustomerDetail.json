@@ -1,7 +1,7 @@
 {
   "allCustomers": "お客様",
   "noun": "customer",
-  "since": "{{joined}}からのお客様 · 直近の注文 {{last}}",
+  "since": "{{joined}}からのお客様",
   "missing": {
     "title": "このお客様はもういません",
     "text": "アカウントが削除された可能性があります。お客様一覧から開き直してください。"

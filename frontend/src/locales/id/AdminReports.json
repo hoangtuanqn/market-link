@@ -8,7 +8,7 @@
   "kpi": {
     "noun": "dashboard totals",
     "orders": "Pesanan",
-    "ordersNote": "{{month}}, semua pasar",
+    "ordersNote": "Sepanjang waktu, semua status",
     "revenue": "Pendapatan yang selesai",
     "revenueNote": "$, dibayar di lapak"
   },

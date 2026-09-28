@@ -1,7 +1,7 @@
 {
   "title": "Avis",
   "intro": "Ce que les clients ont dit après avoir retiré leur commande. Une courte réponse compte beaucoup, surtout sur une note basse.",
-  "summary": "Stand {{stall}} · produits {{products}} · {{reviews}}",
+  "summary": "Stand {{stall}} · {{reviews}}",
   "reviewCount_one": "{{count}} avis",
   "reviewCount_other": "{{count}} avis",
   "noun": "reviews",

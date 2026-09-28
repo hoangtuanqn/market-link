@@ -3,7 +3,7 @@
   "intro": "Toutes les commandes de MarketLink, sur les quatre marchés. Les administrateurs les lisent ; seul l'étal fait avancer une commande d'un statut à l'autre.",
   "noun": "orders",
   "list": {
-    "inPeriod": "{{count}} en {{month}}",
+    "inPeriod": "{{count}} commandes",
     "filterLabel": "Filtrer les commandes par statut",
     "market": "Marché",
     "allMarkets": "Tous les marchés",

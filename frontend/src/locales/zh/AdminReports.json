@@ -8,7 +8,7 @@
   "kpi": {
     "noun": "dashboard totals",
     "orders": "订单",
-    "ordersNote": "{{month}}，全部集市",
+    "ordersNote": "全部时间，所有状态",
     "revenue": "已完成营收",
     "revenueNote": "$，在摊位付款"
   },

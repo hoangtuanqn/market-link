@@ -1,7 +1,7 @@
 {
   "allCustomers": "Pelanggan",
   "noun": "customer",
-  "since": "Pelanggan sejak {{joined}} · pesanan terakhir {{last}}",
+  "since": "Pelanggan sejak {{joined}}",
   "missing": {
     "title": "Pelanggan itu sudah tidak ada",
     "text": "Akunnya mungkin sudah dihapus. Buka lagi dari daftar pelanggan."

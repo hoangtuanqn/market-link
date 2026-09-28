@@ -1,60 +1,21 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
-import type { StallSummaryDto } from '@/api-requests/stall.requests';
+import type { StallDetailDto } from '@/api-requests/stall.requests';
 import Rating from '@/components/Rating';
 import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { DataState } from '@/components/ui/data-state';
 
 type FeaturedFarmersProps = {
-  stalls?: StallSummaryDto[];
+  /** Full stall profiles (GET /farmers/{id}): the card shows the stall's own bio and markets, nothing made up. */
+  stalls?: StallDetailDto[];
   loading?: boolean;
-};
-
-// Fallback showcase farmers if stalls list is empty
-const SAMPLE_FARMERS: StallSummaryDto[] = [
-  {
-    farmerId: 1,
-    stallName: 'Cô Tư Garden',
-    contactPerson: 'Nguyễn Thị Tư',
-    ratingAvg: 4.9,
-    ratingCount: 42,
-    operatingDays: [5, 6, 0],
-    pickupStartTime: '06:30',
-    pickupEndTime: '11:30',
-  },
-  {
-    farmerId: 2,
-    stallName: 'Út Hiền Orchard',
-    contactPerson: 'Lê Văn Hiền',
-    ratingAvg: 4.8,
-    ratingCount: 38,
-    operatingDays: [6, 0],
-    pickupStartTime: '07:00',
-    pickupEndTime: '12:00',
-  },
-  {
-    farmerId: 4,
-    stallName: 'Gió Nam Bakery & Farm',
-    contactPerson: 'Trần Minh Nam',
-    ratingAvg: 5.0,
-    ratingCount: 29,
-    operatingDays: [6, 0],
-    pickupStartTime: '06:00',
-    pickupEndTime: '10:30',
-  },
-];
-
-const FARMER_BIOS: Record<number, string> = {
-  1: 'Third-generation organic vegetable grower from Củ Chi, delivering morning-picked leafy greens with zero chemical pesticides.',
-  2: 'Specializing in naturally ripened green-skin pomelos, sweet mangoes, and dragon fruits from sustainable Long An orchards.',
-  3: 'Highland farm bringing fresh heirloom tomatoes, bell peppers, and crisp lettuces cultivated with organic compost in Đà Lạt.',
-  4: 'Artisan sourdough baker and microgreen grower, baking naturally fermented rustic loaves at dawn for market mornings.',
 };
 
 const FeaturedFarmers = ({ stalls = [], loading = false }: FeaturedFarmersProps) => {
   const { t } = useTranslation('Home');
 
-  const displayedStalls = stalls.length > 0 ? stalls.slice(0, 3) : SAMPLE_FARMERS;
+  const displayedStalls = stalls.slice(0, 3);
 
   return (
     <section className="flex flex-col gap-6">
@@ -72,72 +33,81 @@ const FeaturedFarmers = ({ stalls = [], loading = false }: FeaturedFarmersProps)
         </Link>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        {loading
-          ? Array.from({ length: 3 }).map((_, i) => (
-              <Card key={i} className="flex animate-pulse flex-col gap-4 rounded-xl p-6">
-                <div className="flex items-center gap-4">
-                  <div className="bg-surface-sunken size-14 rounded-full" />
-                  <div className="flex-1 space-y-2">
-                    <div className="bg-surface-sunken h-4 w-3/4 rounded" />
-                    <div className="bg-surface-sunken h-3 w-1/2 rounded" />
-                  </div>
-                </div>
-                <div className="bg-surface-sunken h-12 w-full rounded" />
-                <div className="bg-surface-sunken mt-auto h-8 w-1/3 rounded" />
-              </Card>
-            ))
-          : displayedStalls.map((stall) => (
-              <Card
-                key={stall.farmerId}
-                as="article"
-                className="hover:border-brand/40 relative flex flex-col gap-4 rounded-xl p-6 shadow-xs transition-transform duration-150 hover:-translate-y-0.5"
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    aria-hidden="true"
-                    className="border-brand bg-surface-sunken font-hand text-brand flex size-15 shrink-0 items-center justify-center rounded-full border-2 text-2xl font-bold shadow-2xs"
-                  >
-                    {(stall.stallName || '?').trim().charAt(0).toUpperCase()}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="text-[18px] leading-tight font-bold">
-                      {/* after:inset-0 stretches the hit area over the whole card; the button below
-                          sits above it with z-2. */}
-                      <Link
-                        to={`/stalls/${stall.farmerId}`}
-                        className="text-inherit after:absolute after:inset-0 hover:underline"
-                      >
-                        {stall.stallName}
-                      </Link>
-                    </h3>
-                    <p className="text-ink-muted text-small mt-0.5 truncate">
-                      {t('farmers.grower')}: <b className="text-ink">{stall.contactPerson}</b>
-                    </p>
-                    <div className="mt-1">
-                      <Rating value={stall.ratingAvg} count={stall.ratingCount} />
+      {!loading && displayedStalls.length === 0 ? (
+        <DataState title={t('farmers.empty')} text={t('farmers.emptyText')} />
+      ) : (
+        <div className="grid gap-6 md:grid-cols-3">
+          {loading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <Card key={i} className="flex animate-pulse flex-col gap-4 rounded-xl p-6">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-surface-sunken size-14 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <div className="bg-surface-sunken h-4 w-3/4 rounded" />
+                      <div className="bg-surface-sunken h-3 w-1/2 rounded" />
                     </div>
                   </div>
-                </div>
+                  <div className="bg-surface-sunken h-12 w-full rounded" />
+                  <div className="bg-surface-sunken mt-auto h-8 w-1/3 rounded" />
+                </Card>
+              ))
+            : displayedStalls.map((stall) => (
+                <Card
+                  key={stall.farmerId}
+                  as="article"
+                  className="hover:border-brand/40 relative flex flex-col gap-4 rounded-xl p-6 shadow-xs transition-transform duration-150 hover:-translate-y-0.5"
+                >
+                  <div className="flex items-center gap-4">
+                    <div
+                      aria-hidden="true"
+                      className="border-brand bg-surface-sunken font-hand text-brand flex size-15 shrink-0 items-center justify-center rounded-full border-2 text-2xl font-bold shadow-2xs"
+                    >
+                      {(stall.stallName || '?').trim().charAt(0).toUpperCase()}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-[18px] leading-tight font-bold">
+                        {/* after:inset-0 stretches the hit area over the whole card; the button below
+                          sits above it with z-2. */}
+                        <Link
+                          to={`/stalls/${stall.farmerId}`}
+                          className="text-inherit after:absolute after:inset-0 hover:underline"
+                        >
+                          {stall.stallName}
+                        </Link>
+                      </h3>
+                      <p className="text-ink-muted text-small mt-0.5 truncate">
+                        {t('farmers.grower')}: <b className="text-ink">{stall.contactPerson}</b>
+                      </p>
+                      {stall.ratingCount > 0 && (
+                        <div className="mt-1">
+                          <Rating value={Number(stall.ratingAvg)} count={stall.ratingCount} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
-                <p className="text-ink-muted text-[14px] leading-relaxed italic">
-                  “
-                  {FARMER_BIOS[stall.farmerId] ??
-                    'Committed to pesticide-free, sustainably cultivated harvests straight from local soil to your family table.'}
-                  ”
-                </p>
+                  {stall.description && (
+                    <p className="text-ink-muted line-clamp-3 text-[14px] leading-relaxed italic">
+                      “{stall.description}”
+                    </p>
+                  )}
 
-                <div className="border-line mt-auto flex items-center justify-between border-t border-dashed pt-4">
-                  <span className="text-ink-muted text-[13px]">
-                    {t('farmers.at')}: <b>Thảo Điền Market</b>
-                  </span>
-                  <ButtonLink to={`/stalls/${stall.farmerId}`} variant="secondary" size="sm" className="relative z-2">
-                    {t('farmers.visit')}
-                  </ButtonLink>
-                </div>
-              </Card>
-            ))}
-      </div>
+                  <div className="border-line mt-auto flex items-center justify-between border-t border-dashed pt-4">
+                    <span className="text-ink-muted min-w-0 text-[13px]">
+                      {stall.markets.length > 0 && (
+                        <>
+                          {t('farmers.at')}: <b>{stall.markets.map((m) => m.marketName).join(', ')}</b>
+                        </>
+                      )}
+                    </span>
+                    <ButtonLink to={`/stalls/${stall.farmerId}`} variant="secondary" size="sm" className="relative z-2">
+                      {t('farmers.visit')}
+                    </ButtonLink>
+                  </div>
+                </Card>
+              ))}
+        </div>
+      )}
     </section>
   );
 };

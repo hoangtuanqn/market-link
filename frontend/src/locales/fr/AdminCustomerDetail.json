@@ -1,7 +1,7 @@
 {
   "allCustomers": "Clients",
   "noun": "customer",
-  "since": "Client depuis le {{joined}} · dernière commande le {{last}}",
+  "since": "Client depuis le {{joined}}",
   "missing": {
     "title": "Ce client n'existe plus",
     "text": "Le compte a peut-être été supprimé. Rouvrez-le depuis la liste des clients."

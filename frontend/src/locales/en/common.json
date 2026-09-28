@@ -158,17 +158,15 @@
     "collapse": "Collapse the sidebar",
     "approvedMarkets_one": "Approved · {{count}} market",
     "approvedMarkets_other": "Approved · {{count}} markets",
-    "changeMarket": "Change which market you are looking at",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Open navigation",
-    "searchPlaceholder": "Order code or customer",
     "yourAccount": "Your account",
     "today": "Today",
     "overview": "Overview",
     "incomingOrders": "Orders",
     "pickupSlots": "Pickup slots",
     "stock": "Stock",
-    "weekStock": "This week's stock",
+    "weekStock": "Weekly template",
     "products": "Products",
     "stall": "Stall",
     "stallPickup": "Stall & pickup",
@@ -421,8 +419,7 @@
     "navigation": "Admin navigation",
     "home": "MarketLink — Admin overview",
     "contextSub": "Platform · whole marketplace",
-    "userLine": "Admin · whole platform",
-    "searchPlaceholder": "Stall, customer or market"
+    "userLine": "Admin · whole platform"
   },
   "geo": {
     "denied": "You turned location off for this site. Change it in your browser’s site settings, or use an address instead.",
@@ -507,6 +504,14 @@
         "account": {
           "title": "Your stall application",
           "note": "When it is approved, declined, suspended or reopened"
+        },
+        "orders": {
+          "title": "Orders",
+          "note": "When an order you placed or received changes status"
+        },
+        "favorites": {
+          "title": "Favorites",
+          "note": "When a product you saved is back in stock"
         },
         "farmerApplications": {
           "title": "Farmer applications",
@@ -687,8 +692,8 @@
         "body": "Set the time windows when customers can collect their orders at your stall."
       },
       "farmerStock": {
-        "title": "This week's stock",
-        "body": "Update how much of each product you can sell this week."
+        "title": "Weekly stock template",
+        "body": "Set how much of each product you usually bring on each weekday. It refills on its own every week."
       },
       "farmerProducts": {
         "title": "Products",
@@ -716,11 +721,11 @@
       },
       "farmerSettings": {
         "title": "Settings",
-        "body": "Change language, currency and your selling defaults."
+        "body": "Change the theme, language, date and unit formats, and your notifications."
       },
       "farmerDone": {
         "title": "Your stall is ready",
-        "body": "Start by checking this week's stock and your pickup slots."
+        "body": "Start by checking your weekly stock template and your pickup slots."
       },
       "dashboardMenu": {
         "title": "Menu",
@@ -835,5 +840,13 @@
     "beforePromise": "before its date",
     "afterPromise": "after its date",
     "strikes": "Shelf-life strikes: {{count}} of {{limit}} in {{days}} days"
+  },
+  "gallery": {
+    "label": "Photos of {{name}}",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "goTo": "Go to photo {{n}}",
+    "slide": "{{n}} of {{total}}",
+    "photoAlt": "{{name}}, photo {{n}}"
   }
 }

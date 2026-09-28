@@ -144,17 +144,15 @@
     "collapse": "サイドバーをたたむ",
     "approvedMarkets_one": "承認済み · {{count}} マーケット",
     "approvedMarkets_other": "承認済み · {{count}} マーケット",
-    "changeMarket": "表示するマーケットを変更",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "ナビゲーションを開く",
-    "searchPlaceholder": "注文番号またはお客様",
     "yourAccount": "アカウント",
     "today": "今日",
     "overview": "概要",
     "incomingOrders": "注文",
     "pickupSlots": "受け取り枠",
     "stock": "在庫",
-    "weekStock": "今週の在庫",
+    "weekStock": "週間テンプレート",
     "products": "商品",
     "stall": "屋台",
     "stallPickup": "屋台と受け取り",
@@ -407,8 +405,7 @@
     "navigation": "管理ナビゲーション",
     "home": "MarketLink — 管理概要",
     "contextSub": "プラットフォーム · マーケット全体",
-    "userLine": "管理者 · プラットフォーム全体",
-    "searchPlaceholder": "店舗、顧客、市場"
+    "userLine": "管理者 · プラットフォーム全体"
   },
   "geo": {
     "denied": "このサイトの位置情報がオフになっています。ブラウザのサイト設定で変更するか、住所を使ってください。",
@@ -493,6 +490,14 @@
         "account": {
           "title": "店舗の申請",
           "note": "承認、却下、一時停止、再開されたとき"
+        },
+        "orders": {
+          "title": "注文",
+          "note": "あなたが出した注文や受けた注文の状態が変わったとき"
+        },
+        "favorites": {
+          "title": "お気に入り",
+          "note": "保存した商品が再入荷したとき"
         },
         "farmerApplications": {
           "title": "Farmer の申請",
@@ -673,8 +678,8 @@
         "body": "お客様が屋台で注文を受け取れる時間帯を設定します。"
       },
       "farmerStock": {
-        "title": "今週の在庫",
-        "body": "今週販売できる各商品の数量を更新します。"
+        "title": "週間在庫テンプレート",
+        "body": "曜日ごとに、各商品をふだんどれだけ持ってくるかを設定します。毎週自動で補充されます。"
       },
       "farmerProducts": {
         "title": "商品",
@@ -702,11 +707,11 @@
       },
       "farmerSettings": {
         "title": "設定",
-        "body": "言語、通貨、販売のデフォルト設定を変更できます。"
+        "body": "テーマ、言語、日付と単位の表示形式、通知を変更できます。"
       },
       "farmerDone": {
         "title": "屋台の準備ができました",
-        "body": "まずは今週の在庫と受け取り枠を確認しましょう。"
+        "body": "まずは週間テンプレートと受け取り枠を確認しましょう。"
       },
       "dashboardMenu": {
         "title": "メニュー",
@@ -835,5 +840,13 @@
     "beforePromise": "期限前",
     "afterPromise": "期限後",
     "strikes": "賞味期限違反：{{count}}/{{limit}}（{{days}}日以内）"
+  },
+  "gallery": {
+    "label": "{{name}}の写真",
+    "previous": "前の写真",
+    "next": "次の写真",
+    "goTo": "{{n}}枚目の写真へ",
+    "slide": "{{total}}枚中{{n}}枚目",
+    "photoAlt": "{{name}}、写真{{n}}"
   }
 }

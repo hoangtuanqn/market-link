@@ -1,32 +1,32 @@
 {
-  "title": "本周库存",
-  "intro": "每周模板是每个市集日的初始数量。先套用模板，再调整收成不同的日子。已预留的库存已从顾客看到的数量中扣除。",
+  "title": "每周库存模板",
+  "intro": "设置每种商品在一周中某天通常带来多少、卖什么价。浏览那一天的顾客会看到自动补满的库存，无需额外操作。",
   "saved": "已保存",
   "per": "每{{unit}}",
-  "currentPrice": "now {{price}}",
-  "defaultPricePlaceholder": "Same price",
+  "currentPrice": "现价 {{price}}",
+  "defaultPricePlaceholder": "价格不变",
   "col": {
     "product": "商品"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "你的商品",
+    "templateNoun": "每周模板"
   },
   "aria": {
-    "quantity": "{{product}} quantity on {{day}}",
-    "price": "{{product}} 价格"
+    "quantity": "{{day}} {{product}} 数量",
+    "price": "{{day}} {{product}} 价格"
   },
   "table": {
-    "caption": "Weekly stock template, one row per product and one column per weekday"
+    "caption": "每周库存模板，每个商品一行，每个星期几一列"
   },
   "template": {
     "save": "保存模板",
-    "savedText": "模板已保存。除非你现在套用，否则从下周开始生效。",
-    "note": "模板日期跟随你的营业日。可在“摊位与取货”中修改。"
+    "savedText": "模板已保存。",
+    "note": "某天的数量留空即跳过这一天。价格留空则沿用商品当前价格。"
   },
   "empty": {
-    "title": "Add a product first",
-    "text": "A weekly template needs at least one product.",
-    "action": "Add a product"
+    "title": "请先添加商品",
+    "text": "每周模板至少需要一个商品。",
+    "action": "添加商品"
   }
 }

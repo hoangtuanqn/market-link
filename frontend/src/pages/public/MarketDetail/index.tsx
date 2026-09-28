@@ -277,7 +277,7 @@ const MarketDetailPage = () => {
         </div>
 
         <div className="border-line flex flex-col gap-2 border-t pt-3">
-          <span className="text-small text-ink font-bold">{tc('category', { defaultValue: 'Category' })}</span>
+          <span className="text-small text-ink font-bold">{t('category')}</span>
           <div className="flex flex-wrap items-center gap-2">
             <Chip pressed={category === 'All'} onClick={() => setCategory('All')}>
               {t('all')}

@@ -57,7 +57,7 @@
   },
   "generate": {
     "open": "다음 주 시간대 만들기",
-    "title": "{{from}} – {{to}} 시간대를 만들까요?",
+    "title": "{{market}} 시간대 만들기",
     "from": "From",
     "to": "To",
     "rangeError": "Pick an end date on or after the start date.",

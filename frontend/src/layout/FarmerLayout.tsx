@@ -7,6 +7,7 @@ import NotificationBell from '@/components/notifications/NotificationBell';
 import OnboardingTour from '@/components/OnboardingTour';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import useChatUnread from '@/hooks/useChatUnread';
+import useLogout from '@/hooks/useLogout';
 import {
   BellIcon,
   BoxIcon,
@@ -102,6 +103,7 @@ const FarmerLayout = () => {
   const unread = useUnreadNotifications();
   const { user } = useSession();
   const { pathname } = useLocation();
+  const logout = useLogout();
   const { state: profileLoad } = useRequest('farmer-layout-profile', () => StallApi.myProfile());
   const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
   const stallName = profile?.stallName ?? user?.fullName ?? '';
@@ -156,9 +158,8 @@ const FarmerLayout = () => {
           line: t('farmerNav.roleStall', { stall: stallName }),
           name: user?.fullName,
         }}
-        searchId="farmer-appq"
-        searchPlaceholder={t('farmerNav.searchPlaceholder')}
         accountTo="/account"
+        onSignOut={logout}
         headerActions={<NotificationBell to="/farmer/notifications" />}
         className="bg-surface-quiet"
       />

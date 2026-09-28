@@ -49,6 +49,8 @@
   },
   "results_one": "{{count}} résultat pour « {{q}} » le {{day}}",
   "results_other": "{{count}} résultats pour « {{q}} » le {{day}}",
+  "stallsOn_one": "{{count}} stand ouvert le {{day}}",
+  "stallsOn_other": "{{count}} stands ouverts le {{day}}",
   "noStalls": "Aucun stand ne correspond.",
   "noProducts": "Aucun produit ne correspond.",
   "noMarket": {

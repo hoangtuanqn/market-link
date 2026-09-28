@@ -40,11 +40,11 @@
     "view": "Voir"
   },
   "title": "Vue d'ensemble",
-  "applyTemplate": "Appliquer le modèle hebdomadaire",
+  "editTemplate": "Modifier le modèle hebdomadaire",
   "addProduct": "Ajouter un produit",
   "banner": {
-    "title_one": "{{count}} commande vous attend. {{closing}} d'entre elles se ferment demain à {{time}}.",
-    "title_other": "{{count}} commandes vous attendent. {{closing}} d'entre elles se ferment demain à {{time}}.",
+    "title_one": "{{count}} commande vous attend.",
+    "title_other": "{{count}} commandes vous attendent.",
     "text": "Les commandes non validées bloquent toujours du stock. Acceptez ou refusez avant la clôture pour que les clients puissent s'organiser."
   },
   "strikes": {
@@ -72,8 +72,8 @@
     }
   },
   "stock": {
-    "title": "Stock pour {{day}}",
-    "link": "Stock de la semaine",
+    "title": "Stock actuel",
+    "link": "Modèle hebdomadaire",
     "noun": "stock",
     "empty": {
       "title": "No products yet",

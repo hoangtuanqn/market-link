@@ -57,7 +57,7 @@
   },
   "generate": {
     "open": "生成下周的时段",
-    "title": "为 {{from}} – {{to}} 生成时段？",
+    "title": "为 {{market}} 生成时段",
     "from": "From",
     "to": "To",
     "rangeError": "Pick an end date on or after the start date.",

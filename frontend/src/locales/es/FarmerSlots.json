@@ -57,7 +57,7 @@
   },
   "generate": {
     "open": "Generar franjas para la próxima semana",
-    "title": "¿Generar franjas del {{from}} al {{to}}?",
+    "title": "Generar franjas en {{market}}",
     "from": "From",
     "to": "To",
     "rangeError": "Pick an end date on or after the start date.",

@@ -21,7 +21,7 @@ const SAMPLE_PRICE = 1.8;
 type SettingsPanelProps = {
   /** The page's role (pages still pass it; the notification categories now come from the API by role on the server). */
   role: SettingsRole;
-  /** A role's own block (Shopping / Selling defaults / Platform defaults), reads and edits the draft's extras. */
+  /** A role's own block (Shopping / Platform defaults), reads and edits the draft's extras. */
   children?: (draft: Settings, set: (patch: Partial<Settings>) => void) => ReactNode;
 };
 
@@ -53,6 +53,8 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
       SettingsStore.set(response.data ?? draft);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('settings.saveError')) });
+    } finally {
+      // A save that changes neither language nor format does not remount the page, so the button must reset here
       setSaving(false);
     }
   };

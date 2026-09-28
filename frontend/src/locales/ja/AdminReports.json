@@ -8,7 +8,7 @@
   "kpi": {
     "noun": "dashboard totals",
     "orders": "注文",
-    "ordersNote": "{{month}}、すべてのマーケット",
+    "ordersNote": "全期間・すべての状態",
     "revenue": "完了した売上",
     "revenueNote": "$、店舗で支払われた分"
   },

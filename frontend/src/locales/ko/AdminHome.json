@@ -1,17 +1,17 @@
 {
-  "overline": "플랫폼 · {{year}}",
+  "overline": "플랫폼",
   "title": "개요",
   "noun": "dashboard",
   "kpi": {
     "farmers": "농가",
-    "farmersNote": "승인 대기 {{waiting}}건 · 정지 {{suspended}}건",
+    "farmersNote": "승인 대기 {{waiting}}건",
     "farmersLink": "신청 검토하기",
     "customers": "고객",
     "customersLink": "고객 목록 열기",
     "markets": "장터",
     "marketsLink": "장터 목록 열기",
     "orders": "주문",
-    "ordersNote": "이번 주 {{week}}건 · 완료 {{total}}",
+    "ordersNote": "완료된 주문에서 {{revenue}}",
     "ordersLink": "주문 목록 열기"
   },
   "attention": {

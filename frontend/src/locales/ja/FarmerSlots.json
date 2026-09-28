@@ -57,7 +57,7 @@
   },
   "generate": {
     "open": "来週の枠を作る",
-    "title": "{{from}} – {{to}} の枠を作りますか？",
+    "title": "{{market}}の枠を作成",
     "from": "From",
     "to": "To",
     "rangeError": "Pick an end date on or after the start date.",

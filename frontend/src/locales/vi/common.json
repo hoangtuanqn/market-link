@@ -144,17 +144,15 @@
     "collapse": "Thu gọn thanh bên",
     "approvedMarkets_one": "Đã duyệt · {{count}} chợ",
     "approvedMarkets_other": "Đã duyệt · {{count}} chợ",
-    "changeMarket": "Đổi chợ đang xem",
     "roleStall": "Nhà vườn · {{stall}}",
     "openNavigation": "Mở điều hướng",
-    "searchPlaceholder": "Mã đơn hoặc tên khách",
     "yourAccount": "Tài khoản của bạn",
     "today": "Hôm nay",
     "overview": "Tổng quan",
     "incomingOrders": "Đơn hàng",
     "pickupSlots": "Khung giờ nhận hàng",
     "stock": "Hàng",
-    "weekStock": "Hàng tuần này",
+    "weekStock": "Mẫu hằng tuần",
     "products": "Sản phẩm",
     "stall": "Sạp",
     "stallPickup": "Sạp & nhận hàng",
@@ -407,8 +405,7 @@
     "navigation": "Điều hướng quản trị",
     "home": "MarketLink — Tổng quan quản trị",
     "contextSub": "Nền tảng · toàn bộ chợ",
-    "userLine": "Quản trị viên · toàn nền tảng",
-    "searchPlaceholder": "Sạp, khách hàng hoặc chợ"
+    "userLine": "Quản trị viên · toàn nền tảng"
   },
   "geo": {
     "denied": "Bạn đã tắt vị trí cho trang này. Hãy bật lại trong cài đặt trang web của trình duyệt, hoặc dùng một địa chỉ.",
@@ -493,6 +490,14 @@
         "account": {
           "title": "Đơn đăng ký sạp",
           "note": "Khi đơn được duyệt, bị từ chối, bị tạm khoá hoặc mở lại"
+        },
+        "orders": {
+          "title": "Đơn hàng",
+          "note": "Khi đơn bạn đặt hoặc đơn sạp nhận được đổi trạng thái"
+        },
+        "favorites": {
+          "title": "Món yêu thích",
+          "note": "Khi món bạn đã lưu có hàng trở lại"
         },
         "farmerApplications": {
           "title": "Đơn đăng ký nhà vườn",
@@ -673,8 +678,8 @@
         "body": "Đặt các khung giờ khách có thể đến gian hàng nhận đơn."
       },
       "farmerStock": {
-        "title": "Tồn kho tuần này",
-        "body": "Cập nhật số lượng mỗi sản phẩm bạn có thể bán trong tuần."
+        "title": "Mẫu hàng hằng tuần",
+        "body": "Đặt số lượng mỗi sản phẩm bạn thường mang đến vào từng ngày trong tuần. Mẫu tự làm đầy lại mỗi tuần."
       },
       "farmerProducts": {
         "title": "Sản phẩm",
@@ -702,11 +707,11 @@
       },
       "farmerSettings": {
         "title": "Cài đặt",
-        "body": "Đổi ngôn ngữ, tiền tệ và các mặc định bán hàng."
+        "body": "Đổi giao diện, ngôn ngữ, định dạng ngày và đơn vị, cùng các thông báo."
       },
       "farmerDone": {
         "title": "Gian hàng đã sẵn sàng",
-        "body": "Hãy bắt đầu bằng việc kiểm tra tồn kho tuần này và khung giờ nhận hàng."
+        "body": "Hãy bắt đầu bằng việc kiểm tra mẫu hằng tuần và khung giờ nhận hàng."
       },
       "dashboardMenu": {
         "title": "Menu",
@@ -835,5 +840,13 @@
     "beforePromise": "trước hạn",
     "afterPromise": "sau hạn",
     "strikes": "Lỗi hạn dùng: {{count}}/{{limit}} trong {{days}} ngày"
+  },
+  "gallery": {
+    "label": "Ảnh {{name}}",
+    "previous": "Ảnh trước",
+    "next": "Ảnh sau",
+    "goTo": "Xem ảnh {{n}}",
+    "slide": "{{n}} / {{total}}",
+    "photoAlt": "{{name}}, ảnh {{n}}"
   }
 }

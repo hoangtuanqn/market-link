@@ -22,6 +22,7 @@ import type { ProductType } from '@/types/product.types';
 
 const SORTS = ['best', 'nearest', 'price', 'rating'] as const;
 const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
+type Scope = (typeof SCOPES)[number];
 const FETCH_SIZE = 50;
 
 /** The market facet's "no filter" value. */
@@ -44,7 +45,13 @@ const SearchPage = () => {
   const [week] = useState(() => nextSevenDays());
   const [day, setDay] = useState(() => week[0].dow);
   const [sort, setSort] = useState<(typeof SORTS)[number]>('best');
-  const [tab, setTab] = useState<'all' | 'market' | 'farmer' | 'product'>('all');
+  // The scope picked in the search box opens the matching result tab; a tab clicked afterwards holds until the next
+  // search (a new scope or keyword).
+  const scopeTab: Scope = (SCOPES as readonly string[]).includes(scopeParam) ? (scopeParam as Scope) : 'all';
+  const [tabPick, setTabPick] = useState<{ search: string; tab: Scope } | null>(null);
+  const searchKey = `${scopeParam}:${q}`;
+  const tab = tabPick?.search === searchKey ? tabPick.tab : scopeTab;
+  const setTab = (next: Scope) => setTabPick({ search: searchKey, tab: next });
   // The facets live in the URL next to the keyword. Kept in component state they would survive neither Back
   // nor a reload nor a link sent to someone else, while the keyword did — the results would change with no
   // visible cause.
@@ -92,33 +99,42 @@ const SearchPage = () => {
   // "Nearest" needs a location the page does not ask for, so it sorts like "best match" until it does.
   const keyword = q.trim();
   const marketId = marketFilter === ALL_MARKETS ? undefined : Number(marketFilter);
+  // "See all stalls" (/search?scope=farmer) has no keyword: list every stall selling that day instead of asking for one
+  const browseStalls = keyword === '' && scopeTab === 'farmer';
   const { state: load, retry } = useRequest(
-    `search:${keyword}:${day}:${sort}:${categoryId ?? ''}:${priceBand}:${marketFilter}`,
+    `search:${browseStalls ? 'stalls' : ''}:${keyword}:${day}:${sort}:${categoryId ?? ''}:${priceBand}:${marketFilter}`,
     () =>
-      keyword === ''
-        ? Promise.resolve(NO_RESULTS)
-        : Promise.all([
-            CatalogApi.listMarkets({ q: keyword, day, pageSize: FETCH_SIZE }),
-            StallApi.list({ q: keyword, day, marketId, pageSize: FETCH_SIZE }),
-            ProductApi.list({
-              q: keyword,
-              day,
-              marketId,
-              categoryId: categoryId ?? undefined,
-              minPrice: band.min,
-              maxPrice: band.max,
-              pageSize: FETCH_SIZE,
-              sort: sort === 'price' ? 'price_asc' : sort === 'rating' ? 'rating' : 'newest',
-            }),
-          ]).then(([markets, stalls, products]) => ({
-            // A market has no category and no price, so only the market facet can narrow this list, and it does so
-            // here rather than on the server: /markets takes no marketId, the market *is* the result.
-            markets: marketId == null ? markets.items : markets.items.filter((m) => m.id === marketId),
+      browseStalls
+        ? StallApi.list({ day, marketId, pageSize: FETCH_SIZE }).then((stalls) => ({
+            ...NO_RESULTS,
             farmers: stalls.items.map((s) => toStallCard(s, 0, '')),
-            products: products.items,
-          })),
+          }))
+        : keyword === ''
+          ? Promise.resolve(NO_RESULTS)
+          : Promise.all([
+              CatalogApi.listMarkets({ q: keyword, day, pageSize: FETCH_SIZE }),
+              StallApi.list({ q: keyword, day, marketId, pageSize: FETCH_SIZE }),
+              ProductApi.list({
+                q: keyword,
+                day,
+                marketId,
+                categoryId: categoryId ?? undefined,
+                minPrice: band.min,
+                maxPrice: band.max,
+                pageSize: FETCH_SIZE,
+                sort: sort === 'price' ? 'price_asc' : sort === 'rating' ? 'rating' : 'newest',
+              }),
+            ]).then(([markets, stalls, products]) => ({
+              // A market has no category and no price, so only the market facet can narrow this list, and it does so
+              // here rather than on the server: /markets takes no marketId, the market *is* the result.
+              markets: marketId == null ? markets.items : markets.items.filter((m) => m.id === marketId),
+              farmers: stalls.items.map((s) => toStallCard(s, 0, '')),
+              products: products.items,
+            })),
   );
   const results = load.kind === 'ready' ? load.data : NO_RESULTS;
+  // Browsing stalls has only stall results, so the other tabs would only ever say "nothing called “”"
+  const shownTab: Scope = browseStalls ? 'farmer' : tab;
   const total = results.markets.length + results.farmers.length + results.products.length;
 
   // FR-023 asks for results on a map. Products have no coordinates of their own, so a product match is
@@ -253,33 +269,39 @@ const SearchPage = () => {
         </div>
       </div>
 
-      <Tabs
-        label={t('tabs.label')}
-        value={tab}
-        onChange={(id) => setTab(id as typeof tab)}
-        tabs={[
-          { id: 'all', label: t('tabs.all'), count: total },
-          { id: 'market', label: t('tabs.market'), count: results.markets.length },
-          { id: 'farmer', label: t('tabs.farmer'), count: results.farmers.length },
-          { id: 'product', label: t('tabs.product'), count: results.products.length },
-        ]}
-      />
+      {!browseStalls && (
+        <Tabs
+          label={t('tabs.label')}
+          value={tab}
+          onChange={(id) => setTab(id as Scope)}
+          tabs={[
+            { id: 'all', label: t('tabs.all'), count: total },
+            { id: 'market', label: t('tabs.market'), count: results.markets.length },
+            { id: 'farmer', label: t('tabs.farmer'), count: results.farmers.length },
+            { id: 'product', label: t('tabs.product'), count: results.products.length },
+          ]}
+        />
+      )}
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-6">
-          {keyword === '' ? (
+          {keyword === '' && !browseStalls ? (
             <DataState title={t('empty.startTitle')} text={t('empty.startText')} />
           ) : load.kind === 'loading' ? (
             <MarketCardSkeleton count={3} />
           ) : load.kind === 'error' ? (
             <LoadError noun={t('error.noun')} onRetry={retry} />
-          ) : total === 0 ? (
+          ) : total === 0 && !browseStalls ? (
             <DataState title={t('empty.noneTitle')} text={t('empty.noneText')} />
           ) : (
             <>
-              <p className="text-small text-ink-muted">{t('results', { count: total, q, day: dayLabel })}</p>
+              <p className="text-small text-ink-muted">
+                {browseStalls
+                  ? t('stallsOn', { count: total, day: dayLabel })
+                  : t('results', { count: total, q, day: dayLabel })}
+              </p>
 
-              {(tab === 'all' || tab === 'farmer') && (
+              {(shownTab === 'all' || shownTab === 'farmer') && (
                 <section className="flex flex-col gap-4">
                   <h2 className="text-h3">{t('tabs.farmer')}</h2>
                   {/* A stall has no category of its own, so the category facet cannot narrow this list. Left
@@ -297,7 +319,7 @@ const SearchPage = () => {
                 </section>
               )}
 
-              {(tab === 'all' || tab === 'product') && (
+              {(shownTab === 'all' || shownTab === 'product') && (
                 <section className="flex flex-col gap-4">
                   <h2 className="text-h3">{t('tabs.product')}</h2>
                   {results.products.length ? (
@@ -312,7 +334,7 @@ const SearchPage = () => {
                 </section>
               )}
 
-              {(tab === 'all' || tab === 'market') && (
+              {(shownTab === 'all' || shownTab === 'market') && (
                 <section className="flex flex-col gap-4">
                   <h2 className="text-h3">{t('tabs.market')}</h2>
                   {results.markets.length ? (

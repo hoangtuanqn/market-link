@@ -1,7 +1,7 @@
 {
   "allCustomers": "고객",
   "noun": "customer",
-  "since": "{{joined}}부터 고객 · 최근 주문 {{last}}",
+  "since": "{{joined}}부터 고객",
   "missing": {
     "title": "이 고객은 더 이상 없습니다",
     "text": "계정이 삭제되었을 수 있습니다. 고객 목록에서 다시 열어 주세요."

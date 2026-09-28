@@ -1,32 +1,32 @@
 {
-  "title": "Bestand dieser Woche",
-  "intro": "Ihre Wochenvorlage ist der Startbestand für jeden Markttag. Wenden Sie sie an und passen Sie dann die Tage an, an denen die Ernte anders ausfällt. Reservierter Bestand ist bereits von dem abgezogen, was Kunden sehen.",
+  "title": "Wöchentliche Bestandsvorlage",
+  "intro": "Legen Sie fest, wie viel Sie von jedem Produkt an einem Wochentag normalerweise mitbringen und zu welchem Preis. Der Bestand füllt sich für Kunden, die diesen Wochentag ansehen, automatisch wieder auf – ohne weiteren Schritt.",
   "saved": "Gespeichert",
   "per": "pro {{unit}}",
-  "currentPrice": "now {{price}}",
-  "defaultPricePlaceholder": "Same price",
+  "currentPrice": "jetzt {{price}}",
+  "defaultPricePlaceholder": "Gleicher Preis",
   "col": {
     "product": "Produkt"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "Produkte",
+    "templateNoun": "Vorlagendaten"
   },
   "aria": {
-    "quantity": "{{product}} quantity on {{day}}",
-    "price": "Preis von {{product}}"
+    "quantity": "Menge von {{product}} am {{day}}",
+    "price": "Preis von {{product}} am {{day}}"
   },
   "table": {
-    "caption": "Weekly stock template, one row per product and one column per weekday"
+    "caption": "Wöchentliche Bestandsvorlage, eine Zeile pro Produkt und eine Spalte pro Wochentag"
   },
   "template": {
     "save": "Vorlage speichern",
-    "savedText": "Vorlage gespeichert. Sie gilt ab nächster Woche, es sei denn, Sie wenden sie jetzt an.",
-    "note": "Die Tage der Vorlage folgen Ihren Verkaufstagen. Diese ändern Sie unter Stand und Abholung."
+    "savedText": "Vorlage gespeichert.",
+    "note": "Lassen Sie die Menge eines Tages leer, um ihn auszulassen. Ein leerer Preis behält den aktuellen Preis des Produkts bei."
   },
   "empty": {
-    "title": "Add a product first",
-    "text": "A weekly template needs at least one product.",
-    "action": "Add a product"
+    "title": "Fügen Sie zuerst ein Produkt hinzu",
+    "text": "Eine Wochenvorlage braucht mindestens ein Produkt.",
+    "action": "Produkt hinzufügen"
   }
 }

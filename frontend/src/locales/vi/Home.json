@@ -118,14 +118,9 @@
     "grower": "Chủ sạp",
     "at": "Tại",
     "visit": "Ghé thăm sạp →",
-    "empty": "Hiện chưa có nhà vườn nào hiển thị."
-  },
-  "reviews": {
-    "eyebrow": "Ý KIẾN CỘNG ĐỒNG",
-    "title": "Khách hàng yêu mến MarketLink",
-    "desc": "Hơn 140+ đánh giá 5 sao từ những gia đình yêu thích thực phẩm sạch khắp TP. Hồ Chí Minh",
-    "score": "⭐ 4.8 / 5 điểm cộng đồng",
-    "verified": "Đã mua hàng thực tế"
+    "empty": "Hiện chưa có nhà vườn nào hiển thị.",
+    "noun": "các sạp",
+    "emptyText": "Xem các chợ để biết ai đang bán ở đó."
   },
   "banner": {
     "badge": "DÀNH CHO NHÀ VƯỜN & NGHỆ NHÂN ĐỊA PHƯƠNG",

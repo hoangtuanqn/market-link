@@ -144,17 +144,15 @@
     "collapse": "Seitenleiste einklappen",
     "approvedMarkets_one": "Freigegeben · {{count}} Markt",
     "approvedMarkets_other": "Freigegeben · {{count}} Märkte",
-    "changeMarket": "Angezeigten Markt wechseln",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Navigation öffnen",
-    "searchPlaceholder": "Bestellnummer oder Kunde",
     "yourAccount": "Ihr Konto",
     "today": "Heute",
     "overview": "Übersicht",
     "incomingOrders": "Bestellungen",
     "pickupSlots": "Abholzeiten",
     "stock": "Bestand",
-    "weekStock": "Bestand dieser Woche",
+    "weekStock": "Wochenvorlage",
     "products": "Produkte",
     "stall": "Stand",
     "stallPickup": "Stand & Abholung",
@@ -407,8 +405,7 @@
     "navigation": "Admin-Navigation",
     "home": "MarketLink — Admin-Übersicht",
     "contextSub": "Plattform · gesamter Marktplatz",
-    "userLine": "Admin · gesamte Plattform",
-    "searchPlaceholder": "Stand, Kunde oder Markt"
+    "userLine": "Admin · gesamte Plattform"
   },
   "geo": {
     "denied": "Sie haben den Standort für diese Website deaktiviert. Ändern Sie das in den Website-Einstellungen Ihres Browsers oder nutzen Sie eine Adresse.",
@@ -493,6 +490,14 @@
         "account": {
           "title": "Ihr Standantrag",
           "note": "Wenn er freigegeben, abgelehnt, gesperrt oder wieder geöffnet wird"
+        },
+        "orders": {
+          "title": "Bestellungen",
+          "note": "Wenn sich der Status einer Bestellung ändert, die Sie aufgegeben oder erhalten haben"
+        },
+        "favorites": {
+          "title": "Favoriten",
+          "note": "Wenn ein gespeichertes Produkt wieder vorrätig ist"
         },
         "farmerApplications": {
           "title": "Farmer-Anträge",
@@ -673,8 +678,8 @@
         "body": "Lege die Zeitfenster fest, in denen Kunden ihre Bestellungen an deinem Stand abholen können."
       },
       "farmerStock": {
-        "title": "Bestand dieser Woche",
-        "body": "Aktualisiere, wie viel du von jedem Produkt diese Woche verkaufen kannst."
+        "title": "Wöchentliche Bestandsvorlage",
+        "body": "Lege fest, wie viel du von jedem Produkt an jedem Wochentag normalerweise mitbringst. Die Vorlage füllt sich jede Woche von selbst auf."
       },
       "farmerProducts": {
         "title": "Produkte",
@@ -702,11 +707,11 @@
       },
       "farmerSettings": {
         "title": "Einstellungen",
-        "body": "Ändere Sprache, Währung und deine Standardwerte für den Verkauf."
+        "body": "Ändere Design, Sprache, Datums- und Einheitenformat sowie deine Benachrichtigungen."
       },
       "farmerDone": {
         "title": "Dein Stand ist bereit",
-        "body": "Prüfe zuerst den Bestand dieser Woche und deine Abholzeiten."
+        "body": "Prüfe zuerst deine Wochenvorlage und deine Abholzeiten."
       },
       "dashboardMenu": {
         "title": "Menü",
@@ -835,5 +840,13 @@
     "beforePromise": "vor dem Datum",
     "afterPromise": "nach dem Datum",
     "strikes": "Haltbarkeitsverstöße: {{count}}/{{limit}} in {{days}} Tagen"
+  },
+  "gallery": {
+    "label": "Fotos von {{name}}",
+    "previous": "Vorheriges Foto",
+    "next": "Nächstes Foto",
+    "goTo": "Zu Foto {{n}}",
+    "slide": "{{n}} von {{total}}",
+    "photoAlt": "{{name}}, Foto {{n}}"
   }
 }

@@ -1,32 +1,32 @@
 {
-  "title": "Stock de esta semana",
-  "intro": "Tu plantilla semanal es la cantidad inicial de cada día de mercado. Aplícala y luego ajusta los días en que la cosecha sea distinta. El stock reservado ya está descontado de lo que ven los clientes.",
+  "title": "Plantilla semanal de existencias",
+  "intro": "Indica cuánto sueles traer de cada producto un día de la semana y a qué precio. Se repone sola para los clientes que miran ese día, sin ningún paso extra.",
   "saved": "Guardado",
   "per": "por {{unit}}",
-  "currentPrice": "now {{price}}",
-  "defaultPricePlaceholder": "Same price",
+  "currentPrice": "ahora {{price}}",
+  "defaultPricePlaceholder": "Mismo precio",
   "col": {
     "product": "Producto"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "productos",
+    "templateNoun": "datos de la plantilla semanal"
   },
   "aria": {
-    "quantity": "{{product}} quantity on {{day}}",
-    "price": "Precio de {{product}}"
+    "quantity": "Cantidad de {{product}} el {{day}}",
+    "price": "Precio de {{product}} el {{day}}"
   },
   "table": {
-    "caption": "Weekly stock template, one row per product and one column per weekday"
+    "caption": "Plantilla semanal de existencias, una fila por producto y una columna por día de la semana"
   },
   "template": {
     "save": "Guardar plantilla",
-    "savedText": "Plantilla guardada. Se aplica a partir de la próxima semana, salvo que la apliques ahora.",
-    "note": "Los días de la plantilla siguen tus días de venta. Cámbialos en Puesto y recogida."
+    "savedText": "Plantilla guardada.",
+    "note": "Deja en blanco la cantidad de un día para saltarlo. Un precio en blanco mantiene el precio actual del producto."
   },
   "empty": {
-    "title": "Add a product first",
-    "text": "A weekly template needs at least one product.",
-    "action": "Add a product"
+    "title": "Primero añade un producto",
+    "text": "Una plantilla semanal necesita al menos un producto.",
+    "action": "Añadir un producto"
   }
 }

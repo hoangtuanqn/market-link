@@ -144,17 +144,15 @@
     "collapse": "Ciutkan bilah samping",
     "approvedMarkets_one": "Disetujui · {{count}} pasar",
     "approvedMarkets_other": "Disetujui · {{count}} pasar",
-    "changeMarket": "Ganti pasar yang sedang dilihat",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Buka navigasi",
-    "searchPlaceholder": "Kode pesanan atau pelanggan",
     "yourAccount": "Akun Anda",
     "today": "Hari ini",
     "overview": "Ringkasan",
     "incomingOrders": "Pesanan",
     "pickupSlots": "Jadwal pengambilan",
     "stock": "Stok",
-    "weekStock": "Stok minggu ini",
+    "weekStock": "Templat mingguan",
     "products": "Produk",
     "stall": "Lapak",
     "stallPickup": "Lapak & pengambilan",
@@ -407,8 +405,7 @@
     "navigation": "Navigasi admin",
     "home": "MarketLink — Ringkasan admin",
     "contextSub": "Platform · seluruh pasar",
-    "userLine": "Admin · seluruh platform",
-    "searchPlaceholder": "Lapak, pelanggan, atau pasar"
+    "userLine": "Admin · seluruh platform"
   },
   "geo": {
     "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda, atau gunakan alamat.",
@@ -493,6 +490,14 @@
         "account": {
           "title": "Pendaftaran lapak Anda",
           "note": "Saat disetujui, ditolak, ditangguhkan, atau dibuka kembali"
+        },
+        "orders": {
+          "title": "Pesanan",
+          "note": "Saat status pesanan yang Anda buat atau terima berubah"
+        },
+        "favorites": {
+          "title": "Favorit",
+          "note": "Saat produk yang Anda simpan tersedia lagi"
         },
         "farmerApplications": {
           "title": "Pendaftaran Farmer",
@@ -673,8 +678,8 @@
         "body": "Atur rentang waktu pelanggan dapat mengambil pesanan di lapak Anda."
       },
       "farmerStock": {
-        "title": "Stok minggu ini",
-        "body": "Perbarui jumlah setiap produk yang bisa Anda jual minggu ini."
+        "title": "Templat stok mingguan",
+        "body": "Atur berapa banyak setiap produk yang biasanya Anda bawa di tiap hari. Templat terisi ulang sendiri setiap minggu."
       },
       "farmerProducts": {
         "title": "Produk",
@@ -702,11 +707,11 @@
       },
       "farmerSettings": {
         "title": "Pengaturan",
-        "body": "Ubah bahasa, mata uang, dan pengaturan default penjualan."
+        "body": "Ubah tema, bahasa, format tanggal dan satuan, serta notifikasi Anda."
       },
       "farmerDone": {
         "title": "Lapak Anda siap",
-        "body": "Mulailah dengan memeriksa stok minggu ini dan slot pengambilan."
+        "body": "Mulailah dengan memeriksa templat mingguan dan slot pengambilan Anda."
       },
       "dashboardMenu": {
         "title": "Menu",
@@ -835,5 +840,13 @@
     "beforePromise": "sebelum tanggalnya",
     "afterPromise": "setelah tanggalnya",
     "strikes": "Pelanggaran masa simpan: {{count}}/{{limit}} dalam {{days}} hari"
+  },
+  "gallery": {
+    "label": "Foto {{name}}",
+    "previous": "Foto sebelumnya",
+    "next": "Foto berikutnya",
+    "goTo": "Buka foto {{n}}",
+    "slide": "{{n}} dari {{total}}",
+    "photoAlt": "{{name}}, foto {{n}}"
   }
 }

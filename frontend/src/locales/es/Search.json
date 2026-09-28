@@ -49,6 +49,8 @@
   },
   "results_one": "{{count}} resultado para “{{q}}” el {{day}}",
   "results_other": "{{count}} resultados para “{{q}}” el {{day}}",
+  "stallsOn_one": "{{count}} puesto que vende el {{day}}",
+  "stallsOn_other": "{{count}} puestos que venden el {{day}}",
   "noStalls": "Ningún puesto coincide.",
   "noProducts": "Ningún producto coincide.",
   "noMarket": {

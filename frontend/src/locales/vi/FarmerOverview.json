@@ -40,7 +40,7 @@
     "view": "Xem"
   },
   "title": "Tổng quan",
-  "applyTemplate": "Áp dụng mẫu tuần",
+  "editTemplate": "Sửa mẫu hằng tuần",
   "addProduct": "Thêm sản phẩm",
   "banner": {
     "title_one": "{{count}} đơn đang chờ bạn.",
@@ -73,7 +73,7 @@
   },
   "stock": {
     "title": "Hàng còn hiện tại",
-    "link": "Hàng tuần này",
+    "link": "Mẫu hằng tuần",
     "noun": "hàng còn",
     "empty": {
       "title": "Chưa có sản phẩm nào",

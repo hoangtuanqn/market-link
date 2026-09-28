@@ -144,17 +144,15 @@
     "collapse": "Contraer la barra lateral",
     "approvedMarkets_one": "Aprobado · {{count}} mercado",
     "approvedMarkets_other": "Aprobado · {{count}} mercados",
-    "changeMarket": "Cambiar el mercado que estás viendo",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Abrir navegación",
-    "searchPlaceholder": "Código de pedido o cliente",
     "yourAccount": "Tu cuenta",
     "today": "Hoy",
     "overview": "Resumen",
     "incomingOrders": "Pedidos",
     "pickupSlots": "Horarios de recogida",
     "stock": "Existencias",
-    "weekStock": "Existencias de esta semana",
+    "weekStock": "Plantilla semanal",
     "products": "Productos",
     "stall": "Puesto",
     "stallPickup": "Puesto y recogida",
@@ -407,8 +405,7 @@
     "navigation": "Navegación de administración",
     "home": "MarketLink — Resumen de administración",
     "contextSub": "Plataforma · todo el mercado",
-    "userLine": "Admin · toda la plataforma",
-    "searchPlaceholder": "Puesto, cliente o mercado"
+    "userLine": "Admin · toda la plataforma"
   },
   "geo": {
     "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador o usa una dirección.",
@@ -493,6 +490,14 @@
         "account": {
           "title": "Tu solicitud de puesto",
           "note": "Cuando se aprueba, rechaza, suspende o reabre"
+        },
+        "orders": {
+          "title": "Pedidos",
+          "note": "Cuando cambia el estado de un pedido que hiciste o recibiste"
+        },
+        "favorites": {
+          "title": "Favoritos",
+          "note": "Cuando un producto que guardaste vuelve a estar disponible"
         },
         "farmerApplications": {
           "title": "Solicitudes de Farmer",
@@ -673,8 +678,8 @@
         "body": "Define las franjas en las que los clientes pueden recoger sus pedidos en tu puesto."
       },
       "farmerStock": {
-        "title": "Existencias de la semana",
-        "body": "Actualiza cuánto puedes vender de cada producto esta semana."
+        "title": "Plantilla semanal de existencias",
+        "body": "Indica cuánto sueles traer de cada producto cada día de la semana. Se repone sola cada semana."
       },
       "farmerProducts": {
         "title": "Productos",
@@ -702,11 +707,11 @@
       },
       "farmerSettings": {
         "title": "Ajustes",
-        "body": "Cambia el idioma, la moneda y tus opciones de venta predeterminadas."
+        "body": "Cambia el tema, el idioma, los formatos de fecha y unidades, y tus notificaciones."
       },
       "farmerDone": {
         "title": "Tu puesto está listo",
-        "body": "Empieza revisando las existencias de esta semana y tus horarios de recogida."
+        "body": "Empieza revisando tu plantilla semanal y tus horarios de recogida."
       },
       "dashboardMenu": {
         "title": "Menú",
@@ -835,5 +840,13 @@
     "beforePromise": "antes de su fecha",
     "afterPromise": "después de su fecha",
     "strikes": "Infracciones de vida útil: {{count}}/{{limit}} en {{days}} días"
+  },
+  "gallery": {
+    "label": "Fotos de {{name}}",
+    "previous": "Foto anterior",
+    "next": "Foto siguiente",
+    "goTo": "Ir a la foto {{n}}",
+    "slide": "{{n}} de {{total}}",
+    "photoAlt": "{{name}}, foto {{n}}"
   }
 }
