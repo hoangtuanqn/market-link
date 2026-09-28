@@ -45,9 +45,6 @@
     "orderOf": "第 {{index}} 单，共 {{of}} 单",
     "payAtPickup": "取货时在摊位付款"
   },
-  "chart": {
-    "showNumbers": "查看数据"
-  },
   "chat": {
     "assistant": "MarketLink 助手",
     "you": "你",
@@ -296,22 +293,6 @@
     "show": "显示密码",
     "hide": "隐藏密码"
   },
-  "period": {
-    "length": "周期长度",
-    "day": "日",
-    "week": "周",
-    "month": "月",
-    "quarter": "季度",
-    "year": "年",
-    "custom": "自定义",
-    "from": "开始",
-    "to": "结束",
-    "compareWith": "对比",
-    "cmpBefore": "上一周期，长度相同",
-    "cmpLastYear": "去年同期",
-    "cmpNone": "不对比",
-    "comparedWith": "对比 <b>{{compare}}</b>，长度相同"
-  },
   "price": {
     "was": "原价"
   },
@@ -382,7 +363,6 @@
     "phoneInvalid": "请输入有效的越南手机号码（10 位数字）。"
   },
   "adminNav": {
-    "sections": "管理区域",
     "overview": "概览",
     "farmers": "农户",
     "customers": "顾客",

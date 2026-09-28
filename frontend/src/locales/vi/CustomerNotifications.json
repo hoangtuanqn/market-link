@@ -5,9 +5,6 @@
     "all": "Tất cả",
     "unread": "Chưa đọc"
   },
-  "unreadCount_one": "{{count}} chưa đọc",
-  "unreadCount_other": "{{count}} chưa đọc",
   "unread": "chưa đọc",
-  "markAllRead": "Đánh dấu đã đọc tất cả",
   "note": "Hiện chỉ có thông báo trong ứng dụng. Email xác nhận và báo sẵn sàng nhận hàng sẽ có sau."
 }

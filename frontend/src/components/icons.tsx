@@ -228,15 +228,6 @@ export function HeartIcon({ filled = false, size = 18 }: { filled?: boolean; siz
   );
 }
 
-export function RestockIcon(props: IconProps) {
-  return (
-    <Glyph {...props}>
-      <path d="M13.5 8a5.5 5.5 0 11-1.6-3.9" />
-      <path d="M13.5 2.5v2.8h-2.8" />
-    </Glyph>
-  );
-}
-
 export function StoreIcon(props: IconProps) {
   return (
     <Glyph {...props}>

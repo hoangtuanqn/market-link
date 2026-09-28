@@ -44,10 +44,6 @@
     "label": "Description",
     "hint": "Affichée sur la page du produit. Dites comment il est cultivé et comment le conserver."
   },
-  "flag": {
-    "label": "Petite mention sur la carte",
-    "hint": "Facultatif, écrit à la main sur l’étiquette : « Frais du jour », « Cuit à 5 h »."
-  },
   "status": {
     "label": "Statut",
     "available": "Disponible",

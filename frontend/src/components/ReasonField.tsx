@@ -30,5 +30,3 @@ export function ReasonField({ kind, value, error, onChange }: ReasonFieldProps) 
     />
   );
 }
-
-export default ReasonField;

@@ -101,7 +101,7 @@ export const toProduct = (dto: ProductDto, description?: string | null): Product
   availableDate: dto.availableDate ?? undefined,
 });
 
-export const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
+const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
   ...toProduct(dto.item, dto.description),
   hidden: dto.hidden,
   hiddenReason: dto.hiddenReason ?? undefined,

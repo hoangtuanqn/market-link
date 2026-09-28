@@ -54,15 +54,6 @@
     "label": "Bản đồ các chợ phù hợp",
     "note": "Bản đồ đi theo bộ lọc và chỉ hiện các chợ trong danh sách."
   },
-  "demo": {
-    "title": "Các trạng thái khác của danh sách này (FR-084)",
-    "views": {
-      "loaded": "Có dữ liệu",
-      "loading": "Đang tải",
-      "error": "Lỗi"
-    },
-    "note": "Trạng thái trống có thật: chọn <b>{{day}}</b> và khu vực <b>{{area}}</b>. Nó nêu rõ điều bạn đã chọn và gợi ý cách thoát ra."
-  },
   "location": {
     "measured": "Khoảng cách được tính từ vị trí của bạn.",
     "forget": "Quên vị trí của tôi",

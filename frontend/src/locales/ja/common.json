@@ -45,9 +45,6 @@
     "orderOf": "注文 {{index}} / {{of}}",
     "payAtPickup": "受け取り時に屋台で支払い"
   },
-  "chart": {
-    "showNumbers": "数値を表示"
-  },
   "chat": {
     "assistant": "MarketLink アシスタント",
     "you": "あなた",
@@ -296,22 +293,6 @@
     "show": "パスワードを表示",
     "hide": "パスワードを隠す"
   },
-  "period": {
-    "length": "期間の長さ",
-    "day": "日",
-    "week": "週",
-    "month": "月",
-    "quarter": "四半期",
-    "year": "年",
-    "custom": "カスタム",
-    "from": "開始",
-    "to": "終了",
-    "compareWith": "比較対象",
-    "cmpBefore": "直前の同じ長さの期間",
-    "cmpLastYear": "前年の同じ期間",
-    "cmpNone": "比較しない",
-    "comparedWith": "<b>{{compare}}</b>（同じ長さ）と比較"
-  },
   "price": {
     "was": "通常価格"
   },
@@ -382,7 +363,6 @@
     "phoneInvalid": "有効なベトナムの携帯電話番号（10 桁）を入力してください。"
   },
   "adminNav": {
-    "sections": "管理メニュー",
     "overview": "概要",
     "farmers": "農家",
     "customers": "お客様",

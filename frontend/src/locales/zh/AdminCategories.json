@@ -3,7 +3,6 @@
   "title": "分类",
   "intro": "每个摊位添加商品时唯一可选的列表。销售单位是应用内置的固定列表。",
   "link": {
-    "announcements": "公告",
     "feedback": "反馈收件箱"
   },
   "caption": {

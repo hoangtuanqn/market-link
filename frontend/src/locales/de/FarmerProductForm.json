@@ -44,10 +44,6 @@
     "label": "Beschreibung",
     "hint": "Wird auf der Produktseite angezeigt. Beschreiben Sie, wie es angebaut wird und wie man es lagert."
   },
-  "flag": {
-    "label": "Kurzer Hinweis auf der Karte",
-    "hint": "Optional, handgeschrieben auf dem Etikett: „Heute frisch“, „Um 5 Uhr gebacken“."
-  },
   "status": {
     "label": "Status",
     "available": "Verfügbar",

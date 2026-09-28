@@ -45,9 +45,6 @@
     "orderOf": "Pedido {{index}} de {{of}}",
     "payAtPickup": "Paga en el puesto al recoger"
   },
-  "chart": {
-    "showNumbers": "Ver los números"
-  },
   "chat": {
     "assistant": "Asistente de MarketLink",
     "you": "Tú",
@@ -296,22 +293,6 @@
     "show": "Mostrar contraseña",
     "hide": "Ocultar contraseña"
   },
-  "period": {
-    "length": "Duración del periodo",
-    "day": "Día",
-    "week": "Semana",
-    "month": "Mes",
-    "quarter": "Trimestre",
-    "year": "Año",
-    "custom": "Personalizado",
-    "from": "Desde",
-    "to": "Hasta",
-    "compareWith": "Comparar con",
-    "cmpBefore": "El periodo anterior, misma duración",
-    "cmpLastYear": "El mismo periodo del año pasado",
-    "cmpNone": "Sin comparación",
-    "comparedWith": "comparado con <b>{{compare}}</b>, misma duración"
-  },
   "price": {
     "was": "Antes"
   },
@@ -382,7 +363,6 @@
     "phoneInvalid": "Escribe un número de móvil vietnamita válido (10 dígitos)."
   },
   "adminNav": {
-    "sections": "Secciones de administración",
     "overview": "Resumen",
     "farmers": "Productores",
     "customers": "Clientes",

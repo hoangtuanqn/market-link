@@ -44,10 +44,6 @@
     "label": "Descripción",
     "hint": "Se muestra en la página del producto. Cuenta cómo se cultiva y cómo conservarlo."
   },
-  "flag": {
-    "label": "Etiqueta corta en la tarjeta",
-    "hint": "Opcional, escrita a mano en la etiqueta: “Fresco de hoy”, “Horneado a las 5”."
-  },
   "status": {
     "label": "Estado",
     "available": "Disponible",

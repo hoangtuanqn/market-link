@@ -45,9 +45,6 @@
     "orderOf": "Commande {{index}} sur {{of}}",
     "payAtPickup": "Paiement au stand lors du retrait"
   },
-  "chart": {
-    "showNumbers": "Afficher les chiffres"
-  },
   "chat": {
     "assistant": "Assistant MarketLink",
     "you": "Vous",
@@ -296,22 +293,6 @@
     "show": "Afficher le mot de passe",
     "hide": "Masquer le mot de passe"
   },
-  "period": {
-    "length": "Durée de la période",
-    "day": "Jour",
-    "week": "Semaine",
-    "month": "Mois",
-    "quarter": "Trimestre",
-    "year": "Année",
-    "custom": "Personnalisée",
-    "from": "Du",
-    "to": "Au",
-    "compareWith": "Comparer avec",
-    "cmpBefore": "La période précédente, même durée",
-    "cmpLastYear": "La même période l’an dernier",
-    "cmpNone": "Aucune comparaison",
-    "comparedWith": "par rapport à <b>{{compare}}</b>, même durée"
-  },
   "price": {
     "was": "Avant"
   },
@@ -382,7 +363,6 @@
     "phoneInvalid": "Saisissez un numéro de mobile vietnamien valide (10 chiffres)."
   },
   "adminNav": {
-    "sections": "Sections d’administration",
     "overview": "Vue d’ensemble",
     "farmers": "Producteurs",
     "customers": "Clients",

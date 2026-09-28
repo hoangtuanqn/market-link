@@ -45,9 +45,6 @@
     "orderOf": "Đơn {{index}} / {{of}}",
     "payAtPickup": "Trả tiền tại sạp khi nhận hàng"
   },
-  "chart": {
-    "showNumbers": "Xem số liệu"
-  },
   "chat": {
     "assistant": "Trợ lý MarketLink",
     "you": "Bạn",
@@ -296,22 +293,6 @@
     "show": "Hiện mật khẩu",
     "hide": "Ẩn mật khẩu"
   },
-  "period": {
-    "length": "Độ dài kỳ",
-    "day": "Ngày",
-    "week": "Tuần",
-    "month": "Tháng",
-    "quarter": "Quý",
-    "year": "Năm",
-    "custom": "Tuỳ chọn",
-    "from": "Từ",
-    "to": "Đến",
-    "compareWith": "So sánh với",
-    "cmpBefore": "Kỳ trước, cùng độ dài",
-    "cmpLastYear": "Cùng kỳ năm ngoái",
-    "cmpNone": "Không so sánh",
-    "comparedWith": "so với <b>{{compare}}</b>, cùng độ dài"
-  },
   "price": {
     "was": "Giá cũ"
   },
@@ -382,7 +363,6 @@
     "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số)."
   },
   "adminNav": {
-    "sections": "Các mục quản trị",
     "overview": "Tổng quan",
     "farmers": "Nhà vườn",
     "customers": "Khách hàng",

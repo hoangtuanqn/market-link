@@ -28,8 +28,6 @@
     "unavailable": "Một hoặc nhiều sản phẩm không còn được bán nữa.",
     "stall_suspended": "Sạp này hiện không nhận đơn."
   },
-  "changeTime": "Đổi giờ nhận hàng ở {{stall}}",
-  "pickupDay": "Ngày nhận hàng",
   "pickupDayAt": "Ngày nhận hàng ở {{stall}}",
   "pickupTime": "Giờ nhận hàng · {{day}} {{date}} · khung {{from}} – {{to}}",
   "summary": {

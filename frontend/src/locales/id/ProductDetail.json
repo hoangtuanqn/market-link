@@ -13,7 +13,6 @@
   "left": "Sisa <b>{{qty}}</b>",
   "leftOn": "Sisa <b>{{qty}}</b> untuk {{day}}",
   "stockUpdated": "Stok diperbarui hari ini, sebelum pesanan akhir pekan ini.",
-  "notifyMe": "Kabari saat tersedia lagi",
   "added": {
     "title": "Ditambahkan ke keranjang",
     "text": "{{qty}} {{name}} ditambahkan ke keranjang Anda."
@@ -21,7 +20,6 @@
   "addToCart": "Tambah ke keranjang",
   "payNote": "Stok disisihkan untuk Anda saat memesan. Anda membayar {{price}} di lapak saat pengambilan.",
   "fromStall": "Dari lapak",
-  "sellingSince": "berjualan di sini sejak {{date}}",
   "stats": {
     "reviews_one": "{{count}} ulasan",
     "reviews_other": "{{count}} ulasan",
@@ -32,7 +30,6 @@
     "cutoff": "batas pesanan"
   },
   "seeStall": "Lihat lapak",
-  "messageStall": "Kirim pesan ke lapak",
   "details": {
     "title": "Detail produk",
     "soldPer": "Dijual per",
@@ -75,7 +72,6 @@
   "similar": {
     "title": "{{name}} di lapak lain akhir pekan ini",
     "note": "Sayur yang sama, kebun dan harga berbeda",
-    "here": "Anda di sini",
     "view": "Lihat"
   },
   "also": {

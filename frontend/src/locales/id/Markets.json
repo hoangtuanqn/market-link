@@ -54,15 +54,6 @@
     "label": "Peta pasar yang cocok",
     "note": "Peta mengikuti filter dan hanya menampilkan pasar dalam daftar."
   },
-  "demo": {
-    "title": "Status lain dari daftar ini (FR-084)",
-    "views": {
-      "loaded": "Ada data",
-      "loading": "Memuat",
-      "error": "Galat"
-    },
-    "note": "Status kosong bisa muncul sungguhan: pilih <b>{{day}}</b> dan area <b>{{area}}</b>. Status ini menyebut pilihan Anda dan menawarkan jalan keluar."
-  },
   "location": {
     "measured": "Jarak diukur dari lokasi Anda.",
     "forget": "Lupakan lokasi saya",

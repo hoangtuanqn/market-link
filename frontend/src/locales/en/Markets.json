@@ -54,15 +54,6 @@
     "label": "Map of the markets that match",
     "note": "The map follows the filters and shows only the markets in the list."
   },
-  "demo": {
-    "title": "Other states of this list (FR-084)",
-    "views": {
-      "loaded": "With data",
-      "loading": "Loading",
-      "error": "Error"
-    },
-    "note": "The empty state is reachable for real: pick <b>{{day}}</b> and the area <b>{{area}}</b>. It names what you chose and offers the way out."
-  },
   "location": {
     "measured": "Distances are measured from where you are.",
     "forget": "Forget my location",

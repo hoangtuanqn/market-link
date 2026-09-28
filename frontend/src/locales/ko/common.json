@@ -45,9 +45,6 @@
     "orderOf": "주문 {{index}}/{{of}}",
     "payAtPickup": "픽업할 때 매대에서 결제"
   },
-  "chart": {
-    "showNumbers": "수치 보기"
-  },
   "chat": {
     "assistant": "MarketLink 도우미",
     "you": "나",
@@ -296,22 +293,6 @@
     "show": "비밀번호 보기",
     "hide": "비밀번호 숨기기"
   },
-  "period": {
-    "length": "기간 단위",
-    "day": "일",
-    "week": "주",
-    "month": "월",
-    "quarter": "분기",
-    "year": "연",
-    "custom": "직접 설정",
-    "from": "시작",
-    "to": "종료",
-    "compareWith": "비교 대상",
-    "cmpBefore": "같은 길이의 이전 기간",
-    "cmpLastYear": "작년 같은 기간",
-    "cmpNone": "비교 안 함",
-    "comparedWith": "<b>{{compare}}</b>(같은 길이)와 비교"
-  },
   "price": {
     "was": "이전 가격"
   },
@@ -382,7 +363,6 @@
     "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요."
   },
   "adminNav": {
-    "sections": "관리 메뉴",
     "overview": "개요",
     "farmers": "농가",
     "customers": "고객",
