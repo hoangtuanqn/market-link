@@ -9,7 +9,7 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { ADMIN_CUSTOMERS_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
+import { ADMIN_ORDERS_PATH } from '@/constants/nav';
 import type { OrderListItemDto } from '@/api-requests/order.requests';
 import useRequest from '@/hooks/useRequest';
 import { pickupLabel, money } from '@/lib/format';
@@ -99,15 +99,9 @@ const AdminOrdersPage = () => {
         </Link>
       ),
     },
-    {
-      key: 'customer',
-      label: t('col.customer'),
-      render: (o) => (
-        <Link to={`${ADMIN_CUSTOMERS_PATH}/${o.customerId}`} className="text-brand underline">
-          {o.customerName}
-        </Link>
-      ),
-    },
+    // Plain text: the buyer can be a Farmer (D-13), whose account the customer record does not open, and a list row
+    // does not say which. The order page links the buyer to the record that exists (FR-072).
+    { key: 'customer', label: t('col.customer'), render: (o) => o.customerName },
     { key: 'stall', label: t('col.stall'), render: (o) => o.stallName },
     { key: 'market', label: t('col.market'), render: (o) => o.marketName },
     {

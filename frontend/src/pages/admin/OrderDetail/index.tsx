@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
+import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import OrderApi, { type OrderItemDto } from '@/api-requests/order.requests';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Banner } from '@/components/ui/banner';
@@ -48,6 +49,18 @@ const AdminOrderDetailPage = () => {
     id === null ? Promise.reject(new Error('not an order id')) : OrderApi.get(id),
   );
   const order = state.kind === 'ready' ? state.data : null;
+
+  // A Farmer can buy too (D-13), but the customer record only opens customer accounts: find the buyer's own stall by
+  // email so the button opens the record that exists (FR-072).
+  const buyerEmail = order?.customer?.email.toLowerCase() ?? '';
+  const { state: buyerStallLoad } = useRequest(`admin-order-buyer-stall:${buyerEmail}`, () =>
+    buyerEmail
+      ? AdminFarmerApi.list({ q: buyerEmail, pageSize: 5 }).then(
+          (res) => res.data.items.find((f) => f.email.toLowerCase() === buyerEmail) ?? null,
+        )
+      : Promise.resolve(null),
+  );
+  const buyerStall = buyerStallLoad.kind === 'ready' ? buyerStallLoad.data : null;
 
   if ((state.kind === 'loading' || initialLoading) && id !== null) {
     return <OrderDetailSkeleton />;
@@ -184,9 +197,15 @@ const AdminOrderDetailPage = () => {
                   <dt className="text-ink-muted">{t('customer.phone')}</dt>
                   <dd className="m-0">{buyer.phone}</dd>
                 </dl>
-                <ButtonLink to={`${ADMIN_CUSTOMERS_PATH}/${buyer.userId}`} variant="secondary" size="sm">
-                  {t('customer.record')}
-                </ButtonLink>
+                {buyerStall ? (
+                  <ButtonLink to={`${ADMIN_FARMERS_PATH}/${buyerStall.id}`} variant="secondary" size="sm">
+                    {t('stall.record')}
+                  </ButtonLink>
+                ) : buyerStallLoad.kind !== 'loading' ? (
+                  <ButtonLink to={`${ADMIN_CUSTOMERS_PATH}/${buyer.userId}`} variant="secondary" size="sm">
+                    {t('customer.record')}
+                  </ButtonLink>
+                ) : null}
               </>
             ) : (
               <p className="text-small text-ink-muted">{t('customer.hidden')}</p>
