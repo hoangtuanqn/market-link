@@ -3,6 +3,7 @@ package com.techx.intervue.modules.catalog.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -14,6 +15,7 @@ import com.techx.intervue.modules.catalog.exceptions.DuplicateCategoryException;
 import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.catalog.requests.CategoryRequest;
 import com.techx.intervue.modules.catalog.resources.CategoryResource;
+import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +25,14 @@ import org.junit.jupiter.api.Test;
 class CategoryServiceTest {
 
     private CategoryRepository repository;
+    private ProductRepository productRepository;
     private CategoryService service;
 
     @BeforeEach
     void setUp() {
         repository = mock(CategoryRepository.class);
-        service = new CategoryService(repository);
+        productRepository = mock(ProductRepository.class);
+        service = new CategoryService(repository, productRepository);
     }
 
     private static Category leafyGreens() {
@@ -37,6 +41,16 @@ class CategoryServiceTest {
         c.setName("Leafy greens");
         c.setSlug("leafy-greens");
         c.setSortOrder(1);
+        c.setActive(true);
+        return c;
+    }
+
+    private static Category fruit() {
+        Category c = new Category();
+        c.setId(2L);
+        c.setName("Fruit");
+        c.setSlug("fruit");
+        c.setSortOrder(2);
         c.setActive(true);
         return c;
     }
@@ -101,10 +115,104 @@ class CategoryServiceTest {
         Category c = leafyGreens();
         when(repository.findById(1L)).thenReturn(Optional.of(c));
 
-        service.deactivate(1L);
+        service.deactivate(1L, null);
 
         assertThat(c.isActive()).isFalse();
         verify(repository).save(c);
+        verify(productRepository, never()).reassignCategory(anyLong(), anyLong());
+    }
+
+    @Test
+    void deactivateWithMoveToReassignsProductsBeforeTurningOff() {
+        Category c = leafyGreens();
+        Category target = fruit();
+        when(repository.findById(1L)).thenReturn(Optional.of(c));
+        when(repository.findById(2L)).thenReturn(Optional.of(target));
+
+        service.deactivate(1L, 2L);
+
+        verify(productRepository).reassignCategory(1L, 2L);
+        assertThat(c.isActive()).isFalse();
+        verify(repository).save(c);
+    }
+
+    @Test
+    void deactivateRejectsMovingToItself() {
+        Category c = leafyGreens();
+        when(repository.findById(1L)).thenReturn(Optional.of(c));
+
+        assertThatThrownBy(() -> service.deactivate(1L, 1L))
+                .isInstanceOf(InvalidFieldException.class);
+        verify(productRepository, never()).reassignCategory(anyLong(), anyLong());
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void deactivateRejectsMovingToAnInactiveCategory() {
+        Category c = leafyGreens();
+        Category target = fruit();
+        target.setActive(false);
+        when(repository.findById(1L)).thenReturn(Optional.of(c));
+        when(repository.findById(2L)).thenReturn(Optional.of(target));
+
+        assertThatThrownBy(() -> service.deactivate(1L, 2L))
+                .isInstanceOf(InvalidFieldException.class);
+        verify(productRepository, never()).reassignCategory(anyLong(), anyLong());
+    }
+
+    @Test
+    void deactivateRejectsMovingToAMissingCategory() {
+        Category c = leafyGreens();
+        when(repository.findById(1L)).thenReturn(Optional.of(c));
+        when(repository.findById(9L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.deactivate(1L, 9L))
+                .isInstanceOf(CategoryNotFoundException.class);
+    }
+
+    @Test
+    void activateTurnsTheCategoryBackOn() {
+        Category c = leafyGreens();
+        c.setActive(false);
+        when(repository.findById(1L)).thenReturn(Optional.of(c));
+        when(repository.save(c)).thenReturn(c);
+        when(productRepository.countByCategoryIdAndDeletedFalse(1L)).thenReturn(3L);
+
+        CategoryResource resource = service.activate(1L);
+
+        assertThat(c.isActive()).isTrue();
+        assertThat(resource.isActive()).isTrue();
+        assertThat(resource.productCount()).isEqualTo(3);
+    }
+
+    @Test
+    void activateOnMissingCategoryThrows() {
+        when(repository.findById(77L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.activate(77L))
+                .isInstanceOf(CategoryNotFoundException.class);
+    }
+
+    @Test
+    void listAllIncludesTheRealProductCount() {
+        Category c = leafyGreens();
+        when(repository.findAllByOrderBySortOrderAscNameAsc()).thenReturn(List.of(c));
+        when(productRepository.countByCategoryIdAndDeletedFalse(1L)).thenReturn(5L);
+
+        List<CategoryResource> list = service.listAll();
+
+        assertThat(list).extracting(CategoryResource::productCount).containsExactly(5);
+    }
+
+    @Test
+    void listActiveAlsoIncludesTheRealProductCount() {
+        Category c = leafyGreens();
+        when(repository.findByActiveTrueOrderBySortOrderAscNameAsc()).thenReturn(List.of(c));
+        when(productRepository.countByCategoryIdAndDeletedFalse(1L)).thenReturn(7L);
+
+        List<CategoryResource> list = service.listActive();
+
+        assertThat(list).extracting(CategoryResource::productCount).containsExactly(7);
     }
 
     @Test
