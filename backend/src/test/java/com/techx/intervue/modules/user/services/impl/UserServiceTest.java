@@ -29,8 +29,12 @@ import com.techx.intervue.modules.user.requests.ChangePasswordRequest;
 import com.techx.intervue.modules.user.requests.CustomerRegisterRequest;
 import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.PendingSignup;
+import com.techx.intervue.modules.user.resources.SignupStartedResource;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
+import com.techx.intervue.modules.user.resources.VerifiedSignup;
+import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
@@ -47,6 +51,7 @@ class UserServiceTest {
 
     private static final String EMAIL = "an@example.com";
     private static final String PASSWORD = "secret123";
+    private static final String IP = "203.0.113.9";
 
     private UserSessionCache sessionCache;
     private UserRepository userRepository;
@@ -57,6 +62,7 @@ class UserServiceTest {
     private AuthConfig authConfig;
     private JobQueueInterface jobQueue;
     private AddressServiceInterface addressService;
+    private EmailVerificationServiceInterface emailVerification;
     private UserService service;
 
     @BeforeEach
@@ -70,6 +76,7 @@ class UserServiceTest {
         authConfig = mock(AuthConfig.class);
         jobQueue = mock(JobQueueInterface.class);
         addressService = mock(AddressServiceInterface.class);
+        emailVerification = mock(EmailVerificationServiceInterface.class);
         service =
                 new UserService(
                         sessionCache,
@@ -83,7 +90,8 @@ class UserServiceTest {
                         jobQueue,
                         // FR-008: nobody has 2FA on → sign in as before
                         mock(MfaServiceInterface.class),
-                        addressService);
+                        addressService,
+                        emailVerification);
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(passwordEncoder.matches(PASSWORD, "hash")).thenReturn(true);
         when(jwtService.generateToken(anyLong())).thenReturn("access");
@@ -161,7 +169,7 @@ class UserServiceTest {
 
     private static CustomerRegisterRequest signUp(String email, String phone) {
         return new CustomerRegisterRequest(
-                "Nguyen Van An", phone, email, BEN_THANH, PASSWORD, PASSWORD);
+                "Nguyen Van An", phone, email, BEN_THANH, PASSWORD, PASSWORD, "vi", null);
     }
 
     /**
@@ -177,9 +185,63 @@ class UserServiceTest {
                                 "Thành phố Hồ Chí Minh"));
     }
 
+    private PendingSignup parked(String email) {
+        return new PendingSignup(
+                "Nguyen Van An",
+                email,
+                "0900000002",
+                BEN_THANH_TEXT,
+                new AddressColumns("VN", "79", "26743", "Lê Lợi", "12", null, null),
+                "bcrypt",
+                "vi");
+    }
+
     @Test
-    void signUpStoresTheComposedAddressAndItsParts() {
+    void signUpParksTheFormUntilTheCodeIsEntered() {
         addressResolves();
+        when(passwordEncoder.encode(PASSWORD)).thenReturn("bcrypt");
+        when(emailVerification.start(any(PendingSignup.class), eq(IP)))
+                .thenReturn(new SignupStartedResource(EMAIL, 600, 60));
+
+        SignupStartedResource started =
+                service.registerCustomer(signUp("  An@Example.com ", "0900000002"), IP);
+
+        ArgumentCaptor<PendingSignup> parked = ArgumentCaptor.forClass(PendingSignup.class);
+        verify(emailVerification).start(parked.capture(), eq(IP));
+        assertThat(parked.getValue().email()).isEqualTo(EMAIL);
+        assertThat(parked.getValue().address()).isEqualTo(BEN_THANH_TEXT);
+        assertThat(parked.getValue().addressParts().getWardCode()).isEqualTo("26743");
+        assertThat(parked.getValue().passwordHash()).isEqualTo("bcrypt");
+        assertThat(parked.getValue().language()).isEqualTo("vi");
+        assertThat(started.codeExpiresInSeconds()).isEqualTo(600);
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void aFilledHoneypotSendsNothing() {
+        addressResolves();
+        when(emailVerification.decoy(EMAIL)).thenReturn(new SignupStartedResource(EMAIL, 600, 60));
+        CustomerRegisterRequest bot =
+                new CustomerRegisterRequest(
+                        "Bot",
+                        "0900000002",
+                        EMAIL,
+                        BEN_THANH,
+                        PASSWORD,
+                        PASSWORD,
+                        "en",
+                        "http://spam");
+
+        service.registerCustomer(bot, IP);
+
+        verify(emailVerification, never()).start(any(), any());
+        verify(passwordEncoder, never()).encode(any());
+    }
+
+    @Test
+    void theRightCodeCreatesTheAccountAndSignsIn() {
+        when(emailVerification.verify(EMAIL, "123456"))
+                .thenReturn(new VerifiedSignup(parked(EMAIL), "hash", 500));
         when(userRepository.save(any(User.class)))
                 .thenAnswer(
                         call -> {
@@ -188,14 +250,33 @@ class UserServiceTest {
                             return saved;
                         });
 
-        AuthResult result = service.registerCustomer(signUp(EMAIL, "0900000002"));
+        AuthResult result = service.completeSignup(EMAIL, "123456");
 
         ArgumentCaptor<User> saved = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(saved.capture());
-        assertThat(saved.getValue().getAddress()).isEqualTo(BEN_THANH_TEXT);
+        assertThat(saved.getValue().getPasswordHash()).isEqualTo("bcrypt");
+        assertThat(saved.getValue().getRole()).isEqualTo(RoleType.CUSTOMER);
         assertThat(saved.getValue().getAddressParts().getWardCode()).isEqualTo("26743");
+        assertThat(result.accessToken()).isEqualTo("access");
         assertThat(result.user().address()).isEqualTo(BEN_THANH_TEXT);
-        assertThat(result.user().addressParts().streetName()).isEqualTo("Lê Lợi");
+        // No transaction in a unit test, so the after-commit clean-up runs straight away
+        verify(emailVerification).discard(EMAIL);
+    }
+
+    @Test
+    void aSignUpThatLostTheRaceIsDiscarded() {
+        when(emailVerification.verify(EMAIL, "123456"))
+                .thenReturn(new VerifiedSignup(parked(EMAIL), "hash", 500));
+        when(userRepository.existsByEmail(EMAIL)).thenReturn(true);
+
+        DuplicateAccountException e =
+                catchThrowableOfType(
+                        DuplicateAccountException.class,
+                        () -> service.completeSignup(EMAIL, "123456"));
+
+        assertThat(e.getFields()).containsOnlyKeys("email");
+        verify(emailVerification).discard(EMAIL);
+        verify(userRepository, never()).save(any());
     }
 
     @Test
@@ -264,7 +345,7 @@ class UserServiceTest {
         DuplicateAccountException e =
                 catchThrowableOfType(
                         DuplicateAccountException.class,
-                        () -> service.registerCustomer(signUp(EMAIL, "0900000002")));
+                        () -> service.registerCustomer(signUp(EMAIL, "0900000002"), IP));
 
         assertThat(e.getFields())
                 .containsExactly(
@@ -280,7 +361,7 @@ class UserServiceTest {
         DuplicateAccountException e =
                 catchThrowableOfType(
                         DuplicateAccountException.class,
-                        () -> service.registerCustomer(signUp(EMAIL, "0900000002")));
+                        () -> service.registerCustomer(signUp(EMAIL, "0900000002"), IP));
 
         assertThat(e.getFields()).containsOnlyKeys("phone");
     }

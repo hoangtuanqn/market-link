@@ -28,4 +28,8 @@ public record CustomerRegisterRequest(
                         max = RegisterRules.PASSWORD_MAX,
                         message = RegisterRules.PASSWORD_MESSAGE)
                 String password,
-        @NotBlank(message = "Confirm your password.") String confirmPassword) {}
+        @NotBlank(message = "Confirm your password.") String confirmPassword,
+        // FR-009: language of the code email; anything unknown becomes English
+        @Size(max = 16, message = "Language can be at most 16 characters.") String language,
+        // FR-009: honeypot — the real form always sends it empty
+        String website) {}
