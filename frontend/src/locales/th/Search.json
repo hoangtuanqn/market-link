@@ -49,6 +49,8 @@
   },
   "results_one": "{{count}} ผลลัพธ์สำหรับ “{{q}}” {{day}}",
   "results_other": "{{count}} ผลลัพธ์สำหรับ “{{q}}” {{day}}",
+  "stallsOn_one": "{{count}} แผงที่ขาย{{day}}",
+  "stallsOn_other": "{{count}} แผงที่ขาย{{day}}",
   "noStalls": "ไม่มีร้านที่ตรงกัน",
   "noProducts": "ไม่มีสินค้าที่ตรงกัน",
   "noMarket": {

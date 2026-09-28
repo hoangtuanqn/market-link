@@ -49,6 +49,8 @@
   },
   "results_one": "{{count}} hasil untuk “{{q}}” hari {{day}}",
   "results_other": "{{count}} hasil untuk “{{q}}” hari {{day}}",
+  "stallsOn_one": "{{count}} lapak berjualan hari {{day}}",
+  "stallsOn_other": "{{count}} lapak berjualan hari {{day}}",
   "noStalls": "Tidak ada lapak yang cocok.",
   "noProducts": "Tidak ada produk yang cocok.",
   "noMarket": {

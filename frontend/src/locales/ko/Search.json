@@ -49,6 +49,8 @@
   },
   "results_one": "{{day}} “{{q}}” 검색 결과 {{count}}개",
   "results_other": "{{day}} “{{q}}” 검색 결과 {{count}}개",
+  "stallsOn_one": "{{day}}에 판매하는 매대 {{count}}곳",
+  "stallsOn_other": "{{day}}에 판매하는 매대 {{count}}곳",
   "noStalls": "일치하는 가게가 없어요.",
   "noProducts": "일치하는 상품이 없어요.",
   "noMarket": {

@@ -49,6 +49,8 @@
   },
   "results_one": "{{count}} result for “{{q}}” on {{day}}",
   "results_other": "{{count}} results for “{{q}}” on {{day}}",
+  "stallsOn_one": "{{count}} stall selling on {{day}}",
+  "stallsOn_other": "{{count}} stalls selling on {{day}}",
   "noStalls": "No stalls matched.",
   "noProducts": "No products matched.",
   "noMarket": {

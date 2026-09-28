@@ -49,6 +49,8 @@
   },
   "results_one": "{{count}} kết quả cho “{{q}}” vào {{day}}",
   "results_other": "{{count}} kết quả cho “{{q}}” vào {{day}}",
+  "stallsOn_one": "{{count}} sạp bán vào {{day}}",
+  "stallsOn_other": "{{count}} sạp bán vào {{day}}",
   "noStalls": "Không có sạp nào phù hợp.",
   "noProducts": "Không có sản phẩm nào phù hợp.",
   "noMarket": {
