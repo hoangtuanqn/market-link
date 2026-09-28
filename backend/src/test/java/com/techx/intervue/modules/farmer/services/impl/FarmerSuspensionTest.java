@@ -14,6 +14,9 @@ import com.techx.intervue.modules.product.services.interfaces.StockTemplateServi
 import com.techx.intervue.modules.report.services.impl.FarmerReportService;
 import com.techx.intervue.modules.report.services.impl.ReportFixture;
 import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
+import com.techx.intervue.modules.stall.requests.StallProfileRequest;
+import com.techx.intervue.modules.stall.requests.UpdateSlotRequest;
+import com.techx.intervue.modules.stall.services.interfaces.SlotServiceInterface;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -45,6 +48,7 @@ class FarmerSuspensionTest {
     @Autowired private StockTemplateServiceInterface stockTemplates;
     @Autowired private FarmerReportService farmerReports;
     @Autowired private StallServiceInterface stalls;
+    @Autowired private SlotServiceInterface slots;
     @Autowired private JdbcTemplate jdbc;
 
     private ReportFixture fx;
@@ -188,6 +192,42 @@ class FarmerSuspensionTest {
         assertThatThrownBy(() -> stockTemplates.list(farmerUserId))
                 .isInstanceOf(StallSuspendedException.class);
         assertThatThrownBy(() -> farmerReports.dashboard(farmerUserId))
+                .isInstanceOf(StallSuspendedException.class);
+    }
+
+    /**
+     * Review finding on FR-071: updateProfile, leaveMarket and SlotService.updateSlot had no guard
+     * at all before this test — a suspended stall could still rename itself, leave a market or
+     * change slot capacity while the FE menu hid those very screens (server must be the real gate).
+     */
+    @Test
+    void aSuspendedStallCannotWriteToItsProfileMarketsOrSlots() {
+        long market = fx.market("Market");
+        fx.openSlot(farmerId, market, LocalDate.now().plusDays(3));
+        long farmerMarketId =
+                jdbc.queryForObject(
+                        "SELECT id FROM farmer_markets WHERE farmer_id = ?", Long.class, farmerId);
+        long slotId =
+                jdbc.queryForObject(
+                        "SELECT id FROM pickup_slots WHERE farmer_market_id = ?",
+                        Long.class,
+                        farmerMarketId);
+
+        farmers.suspend(farmerId, permanent("Complaints"), adminUserId);
+
+        assertThatThrownBy(
+                        () ->
+                                stalls.updateProfile(
+                                        farmerUserId,
+                                        new StallProfileRequest(
+                                                "New name", "Contact", null, null, 12)))
+                .isInstanceOf(StallSuspendedException.class);
+        assertThatThrownBy(() -> stalls.leaveMarket(farmerUserId, farmerMarketId))
+                .isInstanceOf(StallSuspendedException.class);
+        assertThatThrownBy(
+                        () ->
+                                slots.updateSlot(
+                                        farmerUserId, slotId, new UpdateSlotRequest(10, null)))
                 .isInstanceOf(StallSuspendedException.class);
     }
 

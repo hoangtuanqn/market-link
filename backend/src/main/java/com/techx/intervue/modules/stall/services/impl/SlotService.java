@@ -162,6 +162,7 @@ public class SlotService implements SlotServiceInterface {
     @Transactional
     public SlotResource updateSlot(long userId, long slotId, UpdateSlotRequest request) {
         FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
         // Locked the same way as placing an order (C5): the order count read here cannot change
         // until this write finishes
         PickupSlot slot = slotRepository.lockById(slotId).orElseThrow(SlotNotFoundException::new);

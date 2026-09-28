@@ -84,6 +84,7 @@ public class StallService implements StallServiceInterface {
     @Transactional
     public StallDetailResource updateProfile(long userId, StallProfileRequest request) {
         FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
         int cutoff = request.orderCutoffHours();
         if (cutoff < MIN_CUTOFF_HOURS || cutoff > MAX_CUTOFF_HOURS) {
             throw new IllegalArgumentException("Order cutoff must be between 1 and 72 hours.");
@@ -131,6 +132,7 @@ public class StallService implements StallServiceInterface {
     @Transactional
     public void leaveMarket(long userId, long farmerMarketId) {
         FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
         FarmerMarket link = owned(profile, farmerMarketId);
         link.setActive(false);
         farmerMarketRepository.save(link);
