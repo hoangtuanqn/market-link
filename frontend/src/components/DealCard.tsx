@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import type { DealDto } from '@/api-requests/deal.requests';
-import { Cart } from '@/lib/cart';
+import useAddDeal from '@/hooks/useAddDeal';
 import { units } from '@/lib/format';
-import Notification from '@/utils/notification';
 import PriceTag from './PriceTag';
 import { stockDay } from './stockDay';
 import { Button } from './ui/button';
@@ -15,22 +14,9 @@ import { Card } from './ui/card';
  */
 const DealCard = ({ deal }: { deal: DealDto }) => {
   const { t } = useTranslation();
+  const addDeal = useAddDeal();
   const day = stockDay(deal.stockDate) ?? deal.stockDate;
   const until = stockDay(deal.bestBefore) ?? deal.bestBefore;
-
-  const add = () => {
-    Cart.add({
-      productId: deal.productId,
-      name: deal.name,
-      unit: deal.unit,
-      price: deal.unitPrice,
-      max: deal.quantityAvailable,
-      farmerId: deal.farmerId,
-      stallName: deal.stallName,
-      pickupDate: deal.stockDate,
-    });
-    Notification.success({ title: t('deal.added.title'), text: t('deal.added.text', { name: deal.name, day }) });
-  };
 
   return (
     <Card as="article" className="flex flex-col overflow-hidden">
@@ -56,7 +42,7 @@ const DealCard = ({ deal }: { deal: DealDto }) => {
         <p className="text-small">
           {t('deal.pickupLine', { day, until, qty: units(deal.quantityAvailable, deal.unit) })}
         </p>
-        <Button size="sm" className="mt-auto" onClick={add}>
+        <Button size="sm" className="mt-auto" onClick={() => addDeal(deal)}>
           {t('product.addToCart')}
         </Button>
       </div>

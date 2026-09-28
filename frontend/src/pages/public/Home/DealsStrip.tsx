@@ -25,7 +25,7 @@ const DealsStrip = () => {
           </h2>
           <p className="text-small text-ink-muted">{t('deals.note')}</p>
         </div>
-        <Link to="/deals" className="text-brand font-semibold hover:underline">
+        <Link to="/deals" className="text-brand inline-flex min-h-11 items-center font-semibold hover:underline">
           {t('deals.all')}
         </Link>
       </div>

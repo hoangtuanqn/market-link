@@ -1,13 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import DealApi, { type DealDto } from '@/api-requests/deal.requests';
+import DealApi from '@/api-requests/deal.requests';
 import { stockDay } from '@/components/stockDay';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { LoadError } from '@/components/ui/data-state';
+import useAddDeal from '@/hooks/useAddDeal';
 import useRequest from '@/hooks/useRequest';
-import { Cart } from '@/lib/cart';
 import { perUnit, units } from '@/lib/format';
-import Notification from '@/utils/notification';
 
 /** Every pickup day of the 14-day window fits. */
 const MAX_DAYS = 14;
@@ -18,7 +17,7 @@ const MAX_DAYS = 14;
  */
 const ProductDeals = ({ productId }: { productId: number }) => {
   const { t } = useTranslation('ProductDetail');
-  const { t: tc } = useTranslation();
+  const addDeal = useAddDeal();
   const { state, retry } = useRequest(`product-deals:${productId}`, () =>
     DealApi.list({ productId, pageSize: MAX_DAYS }),
   );
@@ -26,20 +25,6 @@ const ProductDeals = ({ productId }: { productId: number }) => {
   if (state.kind === 'error') return <LoadError noun={t('deals.noun')} onRetry={retry} />;
   const deals = state.data.items;
   if (deals.length === 0) return null;
-
-  const add = (d: DealDto, day: string) => {
-    Cart.add({
-      productId: d.productId,
-      name: d.name,
-      unit: d.unit,
-      price: d.unitPrice,
-      max: d.quantityAvailable,
-      farmerId: d.farmerId,
-      stallName: d.stallName,
-      pickupDate: d.stockDate,
-    });
-    Notification.success({ title: tc('deal.added.title'), text: tc('deal.added.text', { name: d.name, day }) });
-  };
 
   return (
     <Card className="flex flex-col gap-3 p-6">
@@ -63,7 +48,7 @@ const ProductDeals = ({ productId }: { productId: number }) => {
                   })}
                 </span>
               </span>
-              <Button variant="secondary" size="sm" onClick={() => add(d, day)}>
+              <Button variant="secondary" size="sm" onClick={() => addDeal(d)}>
                 {t('deals.add', { day })}
               </Button>
             </li>
