@@ -48,6 +48,40 @@ class IntentClassifierTest {
         assertThat(classify(message).intent()).isEqualTo(expected);
     }
 
+    /** Words that contain a trigger without meaning it (test run 28/09, G08 and G09). */
+    @ParameterizedTest
+    @CsvSource(
+            delimiter = '|',
+            value = {
+                "tôi muốn dùng chung tài khoản gia đình | UNKNOWN",
+                "how do I close my account | UNKNOWN",
+                "can I open an account for my shop | UNKNOWN",
+                "when does ben thanh open | MARKET_HOURS",
+                "rau muống giá bao nhiêu | PRODUCT_DETAIL",
+            })
+    void wordsThatOnlyLookLikeATriggerAreNotOne(String message, ChatIntent expected) {
+        assertThat(classify(message).intent()).isEqualTo(expected);
+    }
+
+    /** The keyword engine answers in the language of the question, like the Claude assistant. */
+    @ParameterizedTest
+    @CsvSource(
+            delimiter = '|',
+            value = {
+                "Cà chua giá bao nhiêu? | true",
+                "ca chua gia bao nhieu | true",
+                "chợ Bến Thành mở cửa mấy giờ | true",
+                "xin chào | true",
+                "hôm nay chợ nào họp | true",
+                "where can I buy tomatoes | false",
+                "Ben Thanh market hours | false",
+                "hello | false",
+                "which markets are open on Thu | false",
+            })
+    void tellsAVietnameseQuestionFromAnEnglishOne(String message, boolean vietnamese) {
+        assertThat(classify(message).vietnamese()).isEqualTo(vietnamese);
+    }
+
     @Test
     void acceptsTextWithoutDiacritics() {
         assertThat(classify("ca chua gia bao nhieu").intent()).isEqualTo(ChatIntent.PRODUCT_DETAIL);
