@@ -893,6 +893,7 @@ class OrderModifyTest {
         when(productRepository.findAllById(any())).thenReturn(List.of(a));
         stubDailyStockLock(dailyStock(PRODUCT_A, 0));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+        when(restock.isOrderable(a)).thenReturn(false, true);
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));

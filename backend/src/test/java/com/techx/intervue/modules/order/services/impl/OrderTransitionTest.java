@@ -559,7 +559,31 @@ class OrderTransitionTest {
         assertThat(history).isEmpty();
     }
 
-    /** FR-041: stock given back by a decline reaches the restock alert, per product. */
+    /**
+     * FR-041 (reproduced 29/09): cancelling an order that bought out 04/10 alerted favouriters
+     * while 03/10 still had 27 — the product never stopped being orderable, so no alert.
+     */
+    @Test
+    void freeingASoldOutDateIsNoRestockWhileAnotherDateHadStock() {
+        Order order = orderWithStatus(OrderStatus.PLACED);
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        Product a = product(PRODUCT_A, ProductStatus.AVAILABLE);
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item(PRODUCT_A, 30)));
+        when(productRepository.findAllById(any())).thenReturn(List.of(a));
+        stubDailyStockLock(dailyStock(PRODUCT_A, 0));
+        when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+        when(restock.isOrderable(a)).thenReturn(true, true);
+
+        service.decline(FARMER_USER_ID, ORDER_ID, "Out of stock");
+
+        verify(restock).afterChange(a, true, true);
+    }
+
+    /**
+     * FR-041: stock given back by a decline reaches the restock alert, per product, with whether
+     * the product as a whole could be ordered before and after (RestockNotifier#isOrderable) — not
+     * whether this one date's row was empty.
+     */
     @Test
     void decliningAnOrderAlertsCustomersWhoFavouritedTheProduct() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -569,11 +593,12 @@ class OrderTransitionTest {
         when(orderItemRepository.findByOrderId(ORDER_ID))
                 .thenReturn(List.of(item(PRODUCT_A, 2), item(PRODUCT_B, 1)));
         when(productRepository.findAllById(any())).thenReturn(List.of(a, b));
-        // a already had stock left on this date (still orderable before) — no alert
         stubDailyStockLock(dailyStock(PRODUCT_A, 5));
-        // b's date had run out to zero — this decline crosses 0 → 1, an alert
         stubDailyStockLock(dailyStock(PRODUCT_B, 0));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+        // a could already be ordered — no alert; b had no orderable date — this decline gives one
+        when(restock.isOrderable(a)).thenReturn(true, true);
+        when(restock.isOrderable(b)).thenReturn(false, true);
 
         service.decline(FARMER_USER_ID, ORDER_ID, "Out of stock");
 
