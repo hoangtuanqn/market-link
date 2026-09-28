@@ -17,7 +17,7 @@ import lombok.Setter;
 
 /**
  * FR-122: a customer's report of spoiled produce on one line of a completed order (table {@code
- * quality_reports}, V20260928006). The promise is copied from the order line when the report is
+ * quality_reports}, V20260928014). The promise is copied from the order line when the report is
  * made, so a later edit of the product never changes how the report is judged. Reports are never
  * deleted: they are the trail behind every shelf-life strike.
  */

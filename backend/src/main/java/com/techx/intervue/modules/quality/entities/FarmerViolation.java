@@ -13,7 +13,7 @@ import lombok.Setter;
 
 /**
  * FR-123: one shelf-life strike, recorded when an admin confirms a report on an extended shelf life
- * that spoiled before its promise (table {@code farmer_violations}, V20260928006). It counts for 90
+ * that spoiled before its promise (table {@code farmer_violations}, V20260928014). It counts for 90
  * days from {@code createdAt}; strikes are never edited or deleted (spec §12).
  */
 @Entity

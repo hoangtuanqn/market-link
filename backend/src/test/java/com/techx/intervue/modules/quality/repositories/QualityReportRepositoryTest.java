@@ -89,7 +89,7 @@ class QualityReportRepositoryTest {
         assertThat(active.get(0)).isAfter(active.get(1));
     }
 
-    /** V20260928006: a decided report always says when it was decided. */
+    /** V20260928014: a decided report always says when it was decided. */
     @Test
     void aDecidedReportWithoutADecisionTimeIsRefused() {
         long item = fx.line(order, product("D"), PICKUP.plusDays(4), true);
