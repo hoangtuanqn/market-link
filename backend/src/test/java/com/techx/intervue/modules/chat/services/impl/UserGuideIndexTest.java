@@ -32,6 +32,8 @@ class UserGuideIndexTest {
         "đăng ký bán hàng farmer, Đăng ký bán hàng (trở thành Farmer)",
         "đổi ngôn ngữ giao diện tối, 'Đổi ngôn ngữ, giao diện sáng/tối, tiền tệ'",
         "đánh giá gian hàng sao, Đánh giá gian hàng và sản phẩm",
+        "không nhận được mã xác nhận email đăng ký, Không nhận được mã xác nhận email",
+        "khong nhan duoc ma 6 so, Không nhận được mã xác nhận email",
     })
     void findsTheAnsweringSectionInTheTopThree(String query, String expectedTitle) {
         assertThat(guide.search(query, 3)).extracting(Section::title).contains(expectedTitle);

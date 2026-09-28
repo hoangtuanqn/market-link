@@ -218,15 +218,25 @@ curl http://localhost:8080/ping
 # {"status":true,"message":"Pong!"}
 ```
 
-Optionally, test the register API:
+Optionally, try sign-up through the API (FR-009: the account is only created once the emailed code is entered):
 
 ```bash
 curl -i -X POST http://localhost:8080/api/v1/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","address":"12 Le Loi, Q1","password":"123456","confirmPassword":"123456"}'
+  -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","addressParts":{"countryCode":"VN","provinceCode":"79","wardCode":"26743","streetName":"Lê Lợi","addressLine":"12"},"password":"123456","confirmPassword":"123456","language":"en"}'
 ```
 
-A successful response (`201`) returns an `accessToken` and the user in the body, plus a refresh token in the `Set-Cookie` header.
+It answers `202` with `{ email, codeExpiresInSeconds, resendAvailableInSeconds, signupToken }` and sends the code by
+mail — or, without SMTP, writes it to the backend log (§7). Finish with the code and the token:
+
+```bash
+curl -i -X POST http://localhost:8080/api/v1/auth/register/verify \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","code":"<code>","signupToken":"<signupToken>"}'
+```
+
+A successful response (`201`) returns an `accessToken` and the user in the body, plus a refresh token in the
+`Set-Cookie` header.
 
 #### API docs (Swagger UI)
 
