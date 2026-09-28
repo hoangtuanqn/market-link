@@ -81,6 +81,7 @@
       "other": "その他"
     },
     "reportedBy": "報告者：{{name}}",
+    "note": "報告者のメモ：{{note}}",
     "sentBy": "送信者：{{name}}",
     "review": "確認",
     "reviewLabel": "{{name}} さんの報告を確認",

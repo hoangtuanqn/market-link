@@ -81,6 +81,7 @@
       "other": "Alasan lain"
     },
     "reportedBy": "Dilaporkan oleh {{name}}",
+    "note": "Catatan pelapor: {{note}}",
     "sentBy": "Dikirim oleh {{name}}",
     "review": "Tinjau",
     "reviewLabel": "Tinjau laporan dari {{name}}",

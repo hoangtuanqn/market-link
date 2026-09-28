@@ -81,6 +81,7 @@
       "other": "Autre chose"
     },
     "reportedBy": "Signalé par {{name}}",
+    "note": "Note du signalement : {{note}}",
     "sentBy": "Envoyé par {{name}}",
     "review": "Examiner",
     "reviewLabel": "Examiner le signalement de {{name}}",

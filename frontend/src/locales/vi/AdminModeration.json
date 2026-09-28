@@ -81,6 +81,7 @@
       "other": "Lý do khác"
     },
     "reportedBy": "{{name}} báo cáo",
+    "note": "Ghi chú của người báo cáo: {{note}}",
     "sentBy": "{{name}} gửi",
     "review": "Xem xét",
     "reviewLabel": "Xem báo cáo của {{name}}",

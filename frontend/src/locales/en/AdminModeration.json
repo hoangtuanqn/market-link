@@ -81,6 +81,7 @@
       "other": "Something else"
     },
     "reportedBy": "Reported by {{name}}",
+    "note": "Reporter's note: {{note}}",
     "sentBy": "Sent by {{name}}",
     "review": "Review",
     "reviewLabel": "Review report from {{name}}",

@@ -81,6 +81,7 @@
       "other": "Otro motivo"
     },
     "reportedBy": "Denunciado por {{name}}",
+    "note": "Nota de la denuncia: {{note}}",
     "sentBy": "Enviado por {{name}}",
     "review": "Revisar",
     "reviewLabel": "Revisar la denuncia de {{name}}",

@@ -81,6 +81,7 @@
       "other": "Etwas anderes"
     },
     "reportedBy": "Gemeldet von {{name}}",
+    "note": "Notiz zur Meldung: {{note}}",
     "sentBy": "Gesendet von {{name}}",
     "review": "Prüfen",
     "reviewLabel": "Meldung von {{name}} prüfen",

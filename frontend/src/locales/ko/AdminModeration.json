@@ -81,6 +81,7 @@
       "other": "기타"
     },
     "reportedBy": "신고자: {{name}}",
+    "note": "신고자 메모: {{note}}",
     "sentBy": "보낸 사람: {{name}}",
     "review": "검토",
     "reviewLabel": "{{name}} 님의 신고 검토",

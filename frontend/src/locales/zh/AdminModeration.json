@@ -81,6 +81,7 @@
       "other": "其他原因"
     },
     "reportedBy": "举报人：{{name}}",
+    "note": "举报人备注：{{note}}",
     "sentBy": "发送人：{{name}}",
     "review": "查看",
     "reviewLabel": "查看 {{name}} 的举报",
