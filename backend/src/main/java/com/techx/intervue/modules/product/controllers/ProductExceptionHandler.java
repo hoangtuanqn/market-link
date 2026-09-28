@@ -6,6 +6,7 @@ import com.techx.intervue.modules.product.exceptions.ExpiredBeforePickupExceptio
 import com.techx.intervue.modules.product.exceptions.NotNearExpiryException;
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
+import com.techx.intervue.modules.quality.exceptions.ShelfLifeExtensionLockedException;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -109,6 +110,23 @@ public class ProductExceptionHandler {
     @ExceptionHandler(StallNotApprovedException.class)
     ResponseEntity<ApiResource<Void>> notApproved(StallNotApprovedException e) {
         return error(HttpStatus.FORBIDDEN, "STALL_NOT_APPROVED", e.getMessage(), List.of());
+    }
+
+    /**
+     * FR-123 (spec §4.2): the stall is locked out of longer shelf lives — 409, attached to
+     * shelfLifeDays so the product form marks that box.
+     */
+    @ExceptionHandler(ShelfLifeExtensionLockedException.class)
+    ResponseEntity<ApiResource<Void>> extensionLocked(ShelfLifeExtensionLockedException e) {
+        return error(
+                HttpStatus.CONFLICT,
+                "SHELF_LIFE_EXTENSION_LOCKED",
+                e.getMessage(),
+                List.of(
+                        FieldErrorResource.builder()
+                                .field("shelfLifeDays")
+                                .message(e.getMessage())
+                                .build()));
     }
 
     /** Last safety net: UNIQUE (farmer_id, name) when a stall posts a duplicate name. */

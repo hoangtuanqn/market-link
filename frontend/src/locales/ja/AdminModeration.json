@@ -6,7 +6,8 @@
     "reviews": "レビュー",
     "products": "商品",
     "hidden": "非表示にした項目",
-    "messages": "報告されたメッセージ"
+    "messages": "報告されたメッセージ",
+    "quality": "傷み報告"
   },
   "reviewFilterLabel": "レビューを絞り込む",
   "reviewFilter": {
@@ -105,5 +106,37 @@
     "reviews": "非表示のレビュー",
     "noListings": "非表示の商品はありません",
     "noListingsText": "非表示にした商品は理由とともにここに表示され、元に戻せます。"
+  },
+  "quality": {
+    "boundary": "延長した賞味期限の商品が期限前に傷んだと確認された報告だけが違反として記録されます。お客さまが報告しただけでは、店舗には何も起こりません。",
+    "filterLabel": "傷み報告を絞り込む",
+    "filter": {
+      "needs": "判定が必要",
+      "open": "未対応すべて",
+      "decided": "判定済み"
+    },
+    "noun": "傷み報告",
+    "emptyTitle": "判定するものはありません",
+    "emptyText": "お客さまからの傷み報告はここで待機します。",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "お客さま：{{customer}} · 受け取り {{pickup}} · 賞味期限 {{bestBefore}} · 傷んだ日 {{spoiled}}（{{when}}）",
+    "photoAlt": "お客さまが送った傷んだ農産物の写真",
+    "reply": "店舗の返信：「{{text}}」",
+    "noReply": "店舗はまだ返信していません。",
+    "dismiss": "店舗の落ち度ではない",
+    "confirm": "違反を確認",
+    "dismissTitle": "店舗の落ち度ではありませんか？",
+    "dismissText": "違反を記録せずに報告を終了します。お客さまと店舗の両方に知らされます。",
+    "confirmTitle": "違反を確認しますか？",
+    "confirmText": "報告は確認済みとして終了します。お客さまと店舗の両方に知らされます。",
+    "confirmStrike": "店舗がこの賞味期限を延長し、期限前に傷んだため、違反が1件記録され、商品の賞味期限は推奨値に戻ります。",
+    "noteLabel": "店舗の落ち度ではない理由",
+    "noteOptional": "店舗と他の管理者へのメモ（任意）",
+    "noteRequired": "店舗の落ち度ではない理由を記入してください。",
+    "decisionNote": "メモ：{{text}}",
+    "done": "判定を保存しました。お客さまと店舗の両方に知らされました。",
+    "alreadyDecided": "別の管理者がこの報告をすでに判断しました。",
+    "suspend": "屋台を停止",
+    "suspendLabel": "屋台を停止：{{stall}}"
   }
 }

@@ -74,5 +74,12 @@
   "attempts": {
     "title": "Lịch sử nộp đơn",
     "text": "Mọi lần tài khoản này nộp đơn, kèm nội dung đã gửi và kết quả đã trả lời."
+  },
+  "strikes": {
+    "title": "Lỗi hạn dùng",
+    "count": "{{count}}/{{limit}} trong {{days}} ngày gần nhất",
+    "locked": "Bị khoá kéo dài hạn dùng tới {{date}}.",
+    "clear": "Sạp vẫn kéo dài hạn dùng được nếu có cam kết.",
+    "text": "Mỗi lỗi được ghi khi admin xác nhận một báo hư trên món có hạn dùng do sạp kéo dài."
   }
 }

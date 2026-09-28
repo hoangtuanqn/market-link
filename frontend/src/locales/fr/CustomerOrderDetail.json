@@ -53,5 +53,29 @@
     "title": "Annuler cette commande ?",
     "text": "{{stall}} est prévenu tout de suite et les articles sont remis en vente.",
     "keep": "Garder la commande"
+  },
+  "spoilage": {
+    "report": "Signaler comme abîmé",
+    "reportLabel": "Signaler comme abîmé : {{name}}",
+    "reported": "Signalé comme abîmé · {{status}}",
+    "title": "Signaler un produit abîmé",
+    "intro": "Dites à {{stall}} ce qui n'allait pas avec {{name}}. Chaque article ne peut être signalé qu'une fois, jusqu'à 2 jours après sa date limite.",
+    "day": "Abîmé le",
+    "problem": "Qu'est-ce qui n'allait pas",
+    "note": "Décrivez (facultatif)",
+    "notePlaceholder": "Les feuilles ont noirci après 2 jours au réfrigérateur.",
+    "noteCount": "{{used}} sur 500 caractères.",
+    "photo": "Ajouter une photo (facultatif)",
+    "photoReplace": "Remplacer la photo",
+    "photoRemove": "Retirer la photo",
+    "photoAlt": "Photo du produit abîmé",
+    "photoHint": "JPG, PNG ou WebP, jusqu'à 5 Mo.",
+    "photoTooBig": "La photo doit faire 5 Mo maximum.",
+    "photoType": "Envoyez une photo JPG, PNG ou WebP.",
+    "uploading": "Envoi de la photo en cours",
+    "send": "Envoyer le signalement",
+    "needProblem": "Choisissez d'abord ce qui n'allait pas.",
+    "sent": "Signalement envoyé. Le stand peut répondre, et un admin pourrait l'examiner.",
+    "failed": "Nous n'avons pas pu envoyer le signalement."
   }
 }

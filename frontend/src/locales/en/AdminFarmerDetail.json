@@ -74,5 +74,12 @@
   "attempts": {
     "title": "Application history",
     "text": "Every time this account applied, with what was sent and what was answered."
+  },
+  "strikes": {
+    "title": "Shelf-life strikes",
+    "count": "{{count}} of {{limit}} in the last {{days}} days",
+    "locked": "Longer shelf lives are locked until {{date}}.",
+    "clear": "The stall can still set a longer shelf life with a promise.",
+    "text": "A strike is recorded when an admin confirms a spoiled report on an extended shelf life."
   }
 }

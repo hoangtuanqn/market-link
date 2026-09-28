@@ -495,6 +495,10 @@
         "farmerApplications": {
           "title": "Đơn đăng ký nhà vườn",
           "note": "Khi có người đăng ký bán hàng trên MarketLink"
+        },
+        "qualityReports": {
+          "title": "Báo hàng hư",
+          "note": "Khi khách báo hư món có hạn dùng do sạp kéo dài, trước hạn đã hứa"
         }
       },
       "sound": "Phát âm thanh",
@@ -760,7 +764,8 @@
       "notAsDescribed": "Hàng không đúng như mô tả",
       "missedPickups": "Sạp vắng mặt khi khách đến nhận hàng",
       "rulesBroken": "Vi phạm quy định của nền tảng",
-      "ownerRequest": "Theo yêu cầu của chủ sạp"
+      "ownerRequest": "Theo yêu cầu của chủ sạp",
+      "shelfLifeViolations": "Vi phạm hạn dùng"
     },
     "deactivate": {
       "noShows": "Đặt hàng nhiều lần nhưng không đến nhận",
@@ -804,5 +809,25 @@
   },
   "bestBefore": {
     "line": "Dùng tốt đến hết {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Úng/dập",
+      "mold": "Mốc",
+      "smell": "Có mùi",
+      "wilted": "Héo/khô",
+      "other": "Khác"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "Chờ admin xử lý",
+      "confirmed": "Admin đã xác nhận",
+      "dismissed": "Không phải lỗi sạp"
+    },
+    "extended_one": "Kéo dài +{{count}} ngày",
+    "extended_other": "Kéo dài +{{count}} ngày",
+    "beforePromise": "trước hạn",
+    "afterPromise": "sau hạn",
+    "strikes": "Lỗi hạn dùng: {{count}}/{{limit}} trong {{days}} ngày"
   }
 }

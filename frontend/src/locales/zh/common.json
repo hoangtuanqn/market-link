@@ -495,6 +495,10 @@
         "farmerApplications": {
           "title": "农户申请",
           "note": "有人申请在 MarketLink 上销售时"
+        },
+        "qualityReports": {
+          "title": "变质商品报告",
+          "note": "当延长保鲜期的商品在到期前被反映变质时"
         }
       },
       "sound": "播放提示音",
@@ -760,7 +764,8 @@
       "notAsDescribed": "商品与描述不符",
       "missedPickups": "取货时摊位不在",
       "rulesBroken": "违反平台规定",
-      "ownerRequest": "应摊主要求"
+      "ownerRequest": "应摊主要求",
+      "shelfLifeViolations": "保鲜期违规"
     },
     "deactivate": {
       "noShows": "多次下单却未取货",
@@ -804,5 +809,25 @@
   },
   "bestBefore": {
     "line": "最佳食用期至 {{day}} 结束 · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "碰伤或压烂",
+      "mold": "发霉",
+      "smell": "有异味",
+      "wilted": "枯萎或干瘪",
+      "other": "其他"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "等待处理",
+      "confirmed": "管理员已确认",
+      "dismissed": "不是摊位的责任"
+    },
+    "extended_one": "延长 +{{count}} 天",
+    "extended_other": "延长 +{{count}} 天",
+    "beforePromise": "到期前",
+    "afterPromise": "到期后",
+    "strikes": "保鲜期违规：{{count}}/{{limit}}（{{days}} 天内）"
   }
 }

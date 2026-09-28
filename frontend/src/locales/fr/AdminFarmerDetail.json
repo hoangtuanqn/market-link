@@ -74,5 +74,12 @@
   "attempts": {
     "title": "Historique des demandes",
     "text": "Chaque demande de ce compte, avec son contenu et la réponse donnée."
+  },
+  "strikes": {
+    "title": "Infractions de conservation",
+    "count": "{{count}}/{{limit}} au cours des {{days}} derniers jours",
+    "locked": "Les durées de conservation plus longues sont bloquées jusqu’au {{date}}.",
+    "clear": "L’étal peut encore fixer une durée de conservation plus longue avec une promesse.",
+    "text": "Une infraction est enregistrée quand un administrateur confirme un signalement d’altération sur une durée de conservation prolongée."
   }
 }

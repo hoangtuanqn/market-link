@@ -6,7 +6,8 @@
     "reviews": "评价",
     "products": "商品",
     "hidden": "已隐藏",
-    "messages": "被举报的消息"
+    "messages": "被举报的消息",
+    "quality": "变质报告"
   },
   "reviewFilterLabel": "筛选评价",
   "reviewFilter": {
@@ -105,5 +106,37 @@
     "reviews": "已隐藏的评价",
     "noListings": "没有已隐藏的商品",
     "noListingsText": "你隐藏的商品会连同原因显示在这里，方便你恢复。"
+  },
+  "quality": {
+    "boundary": "只有关于延长保质期的报告被确认、且商品在到期前变质，才会记一次违规。顾客只是提交报告本身不会对摊位造成任何影响。",
+    "filterLabel": "筛选变质报告",
+    "filter": {
+      "needs": "待处理",
+      "open": "全部未处理",
+      "decided": "已处理"
+    },
+    "noun": "变质报告",
+    "emptyTitle": "没有需要处理的",
+    "emptyText": "顾客提交的变质报告会在这里等你处理。",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "顾客：{{customer}} · 取货 {{pickup}} · 保质期至 {{bestBefore}} · 变质于 {{spoiled}}（{{when}}）",
+    "photoAlt": "顾客提供的变质农产品照片",
+    "reply": "摊位回复：“{{text}}”",
+    "noReply": "摊位尚未回复。",
+    "dismiss": "不是摊位的责任",
+    "confirm": "确认违规",
+    "dismissTitle": "不是摊位的责任？",
+    "dismissText": "报告关闭，不记违规。顾客和摊位都会收到通知。",
+    "confirmTitle": "确认违规？",
+    "confirmText": "报告关闭，标记为已确认。顾客和摊位都会收到通知。",
+    "confirmStrike": "摊位延长了这件商品的保质期，而且它在到期前就变质了，因此会记一次违规，该商品的保质期将恢复为建议值。",
+    "noteLabel": "为什么不是摊位的责任",
+    "noteOptional": "给摊位和其他管理员的备注（可选）",
+    "noteRequired": "请说明为什么不是摊位的责任。",
+    "decisionNote": "备注：{{text}}",
+    "done": "决定已保存。顾客和摊位都已收到通知。",
+    "alreadyDecided": "另一位管理员已经处理了这份报告。",
+    "suspend": "暂停摊位",
+    "suspendLabel": "暂停摊位：{{stall}}"
   }
 }

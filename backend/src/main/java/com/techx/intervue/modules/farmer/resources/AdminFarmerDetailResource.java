@@ -32,4 +32,8 @@ public record AdminFarmerDetailResource(
          * profile.
          */
         Instant customerSince,
-        UserStatus accountStatus) {}
+        UserStatus accountStatus,
+        /** FR-123: shelf-life strikes of the last 90 days (spec §4.4.4). */
+        int activeViolations,
+        /** FR-123: when the lock on longer shelf lives ends; null when the stall is not locked. */
+        Instant extensionLockedUntil) {}

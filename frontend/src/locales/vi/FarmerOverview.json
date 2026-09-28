@@ -47,6 +47,12 @@
     "title_other": "{{count}} đơn đang chờ bạn.",
     "text": "Đơn chưa duyệt vẫn giữ hàng. Nhận hoặc từ chối trước giờ chốt để khách còn sắp xếp."
   },
+  "strikes": {
+    "title": "Lỗi hạn dùng: {{count}}/{{limit}} trong {{days}} ngày",
+    "text": "Báo hư được xác nhận trên món kéo dài hạn tính là một lỗi. Đủ 3 lỗi thì bị khoá kéo dài hạn dùng.",
+    "locked": "Sạp bị khoá kéo dài hạn dùng tới {{date}}.",
+    "link": "Xem các báo cáo"
+  },
   "kpi": {
     "noun": "số liệu của bạn",
     "orders": "Tổng số đơn",

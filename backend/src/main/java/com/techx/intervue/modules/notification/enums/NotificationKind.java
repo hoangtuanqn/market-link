@@ -33,6 +33,16 @@ public enum NotificationKind {
     ORDER_CANCELLED_ACCOUNT_DEACTIVATED(NotificationCategory.ORDERS, true),
     /** FR-041: a favourite product went from no stock to some stock. */
     RESTOCK(NotificationCategory.FAVORITES, true),
+    /** FR-122: a customer reported spoiled produce (spec §4.6) — to the stall. */
+    QUALITY_REPORTED(NotificationCategory.ORDERS, true),
+    /** FR-122: spoiled before its date on a shelf life the stall extended — to every admin. */
+    QUALITY_ESCALATED(NotificationCategory.QUALITY_REPORTS, true),
+    /** FR-123: an admin confirmed or dismissed the report — to the customer and the stall. */
+    QUALITY_DECIDED(NotificationCategory.ORDERS, true),
+    /** FR-123: a confirmed report recorded a shelf-life strike on the stall. */
+    SHELF_LIFE_VIOLATION(NotificationCategory.ORDERS, true),
+    /** FR-123: the stall has 3 strikes in 90 days and cannot extend shelf lives for now. */
+    SHELF_LIFE_LOCKED(NotificationCategory.ORDERS, true),
     MESSAGE(NotificationCategory.MESSAGES, false),
     /** The "Send test" button in Settings — belongs to no category, always shown. */
     TEST(null, false);

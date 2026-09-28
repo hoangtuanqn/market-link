@@ -74,5 +74,12 @@
   "attempts": {
     "title": "Antragsverlauf",
     "text": "Jeder Antrag dieses Kontos, mit Inhalt und Antwort."
+  },
+  "strikes": {
+    "title": "Haltbarkeitsverstöße",
+    "count": "{{count}}/{{limit}} in den letzten {{days}} Tagen",
+    "locked": "Längere Haltbarkeiten sind bis {{date}} gesperrt.",
+    "clear": "Der Stand kann mit einem Versprechen weiterhin eine längere Haltbarkeit festlegen.",
+    "text": "Ein Verstoß wird erfasst, wenn ein Admin eine Verderb-Meldung zu einer verlängerten Haltbarkeit bestätigt."
   }
 }

@@ -15,7 +15,9 @@ type DialogProps = {
  */
 export function Dialog({ open, title, children, actions, tone, onClose }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
-  // One id per dialog: a page with three dialogs (Farmer Products: delete, adjust and deal) must name each by its own title
+  // M-2: a hardcoded id meant only one <dialog> on a page could ever be named correctly. When two are mounted at
+  // once (e.g. the cancel-order dialog and the spoilage-report dialog), aria-labelledby resolved to whichever
+  // dialog's title landed first in the DOM, so the other announced the wrong name to screen readers.
   const titleId = useId();
 
   useEffect(() => {

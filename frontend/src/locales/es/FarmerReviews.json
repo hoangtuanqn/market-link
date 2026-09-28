@@ -29,5 +29,29 @@
     "title": "Aún no hay reseñas",
     "text": "Un cliente puede reseñar tu puesto y lo que compró cuando su pedido se completa (D-10)."
   },
-  "note": "El puesto no puede eliminar reseñas. Si una incumple las normas, denúnciala y el administrador decide (FR-074)."
+  "note": "El puesto no puede eliminar reseñas. Si una incumple las normas, denúnciala y el administrador decide (FR-074).",
+  "tabs": {
+    "label": "Reseñas y reportes de deterioro",
+    "reviews": "Reseñas",
+    "spoiled": "Reportes de deterioro"
+  },
+  "spoiled": {
+    "intro": "Los clientes pueden reportar productos que se deterioraron poco después de recogerlos. Responde con lo que sepas; un admin decide.",
+    "noun": "reportes de deterioro",
+    "emptyTitle": "No hay reportes de deterioro",
+    "emptyText": "Cuando un cliente reporta un producto de uno de tus pedidos, aparece aquí para que respondas.",
+    "line": "Pedido {{code}} · {{customer}}",
+    "dates": "Recogido {{pickup}} · bueno hasta {{bestBefore}} · deteriorado {{spoiled}} ({{when}})",
+    "photoAlt": "La foto del cliente",
+    "replyLabel": "Tu respuesta, para el admin",
+    "replyPlaceholder": "Cómo se conservó, qué viste al empacarlo.",
+    "save": "Guardar respuesta",
+    "saved": "Respuesta guardada.",
+    "yourReply": "Tu respuesta: {{text}}",
+    "decisionNote": "Nota del admin: {{text}}",
+    "alreadyDecided": "Un admin ya decidió sobre este reporte.",
+    "strikesText": "Un reporte confirmado sobre una vida útil ampliada cuenta como una infracción. 3 infracciones en 90 días bloquean las ampliaciones.",
+    "lockTitle": "Las ampliaciones están bloqueadas hasta el {{date}}",
+    "lockText": "Hasta entonces, tus productos solo pueden usar la vida útil sugerida."
+  }
 }

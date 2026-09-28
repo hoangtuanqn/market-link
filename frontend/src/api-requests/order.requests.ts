@@ -1,3 +1,4 @@
+import type { ItemQualityReportDto } from '@/api-requests/quality-report.requests';
 import type { StorageMode } from '@/api-requests/shelf-life.requests';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { OrderHistoryEntry, OrderStatus, OrderType } from '@/types/order.types';
@@ -104,6 +105,10 @@ export type OrderItemDto = {
   storageMode?: StorageMode | null;
   /** FR-124: the price before a near-expiry discount; null when there was none. */
   listPrice?: number | null;
+  /** FR-122: the customer's spoilage report on this line; null until reported. */
+  qualityReport?: ItemQualityReportDto | null;
+  /** `order_items.id` — the `{itemId}` of the report endpoint (FR-122). */
+  itemId?: number;
 };
 
 /**

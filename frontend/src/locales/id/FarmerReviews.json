@@ -29,5 +29,29 @@
     "title": "Belum ada ulasan",
     "text": "Pelanggan bisa mengulas lapak Anda dan barang yang dibeli setelah pesanan selesai (D-10)."
   },
-  "note": "Ulasan tidak bisa dihapus oleh lapak. Jika ada yang melanggar pedoman, laporkan dan admin yang memutuskan (FR-074)."
+  "note": "Ulasan tidak bisa dihapus oleh lapak. Jika ada yang melanggar pedoman, laporkan dan admin yang memutuskan (FR-074).",
+  "tabs": {
+    "label": "Ulasan dan laporan kerusakan",
+    "reviews": "Ulasan",
+    "spoiled": "Laporan kerusakan"
+  },
+  "spoiled": {
+    "intro": "Pelanggan dapat melaporkan produk yang rusak tidak lama setelah diambil. Balas dengan yang Anda tahu; admin yang memutuskan.",
+    "noun": "laporan kerusakan",
+    "emptyTitle": "Belum ada laporan kerusakan",
+    "emptyText": "Saat pelanggan melaporkan produk dari salah satu pesanan Anda, laporannya muncul di sini untuk Anda balas.",
+    "line": "Pesanan {{code}} · {{customer}}",
+    "dates": "Diambil {{pickup}} · baik hingga {{bestBefore}} · rusak {{spoiled}} ({{when}})",
+    "photoAlt": "Foto dari pelanggan",
+    "replyLabel": "Balasan Anda, untuk admin",
+    "replyPlaceholder": "Bagaimana cara penyimpanannya, apa yang Anda lihat saat mengemasnya.",
+    "save": "Simpan balasan",
+    "saved": "Balasan disimpan.",
+    "yourReply": "Balasan Anda: {{text}}",
+    "decisionNote": "Catatan admin: {{text}}",
+    "alreadyDecided": "Admin sudah memutuskan laporan ini.",
+    "strikesText": "Laporan yang dikonfirmasi pada masa simpan yang diperpanjang dihitung sebagai satu pelanggaran. 3 pelanggaran dalam 90 hari mengunci perpanjangan masa simpan.",
+    "lockTitle": "Perpanjangan masa simpan terkunci hingga {{date}}",
+    "lockText": "Sampai saat itu, produk Anda hanya bisa memakai masa simpan yang disarankan."
+  }
 }
