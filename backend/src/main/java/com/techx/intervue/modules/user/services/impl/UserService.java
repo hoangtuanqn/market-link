@@ -368,13 +368,15 @@ public class UserService extends BaseService implements UserServiceInterface {
 
     /**
      * FR-008: an admin with 2FA on → only return the pending token; an admin who has never set up
-     * 2FA → issue session with mfaSetupRequired = true; otherwise issue the session as before.
+     * 2FA → issue session with mfaSetupRequired = true; otherwise issue the session as before. The
+     * pending answer carries only the email (the code screen shows it): the profile — phone,
+     * address — waits until the code is right.
      */
     private AuthResult issueTokensOrChallenge(User user, boolean rememberMe) {
         if (user.getRole() == RoleType.ADMIN) {
             if (mfaService.isEnabled(user.getId())) {
                 return AuthResult.mfaPending(
-                        toResource(user),
+                        UserResource.builder().email(user.getEmail()).build(),
                         rememberMe,
                         mfaService.startChallenge(user.getId(), rememberMe));
             }
@@ -459,6 +461,24 @@ public class UserService extends BaseService implements UserServiceInterface {
                     jobQueue.enqueue(
                             PasswordResetService.JOB_NOTIFY_CHANGED, Map.of("email", email));
                 });
+    }
+
+    /**
+     * FR-008: right after two-step verification is turned on. A session opened earlier with only
+     * the password (JwtAuthFilter recomputes the MFA_SETUP_PENDING mark on every request) would
+     * otherwise get full admin access the moment the code is confirmed, so every refresh token is
+     * revoked and every access token issued before now rejected, like a password change. The caller
+     * — who just proved they hold the code — gets a new session so the setup screen can go on to
+     * the dashboard. Admin sign-in never remembers the session, so neither does this one.
+     */
+    @Override
+    @Transactional
+    public AuthResult restartSession(Long userId) {
+        User user = findActiveUser(userId);
+        refreshTokenService.revokeAllTokens(userId);
+        // writes the revoked-before marker first: the token issued below is not older than it
+        userSessionCache.revokeAll(userId);
+        return issueTokens(user, false);
     }
 
     /**

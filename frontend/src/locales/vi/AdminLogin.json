@@ -20,7 +20,9 @@
     "signedIn": "Đã đăng nhập.",
     "error": "Không đăng nhập được. Vui lòng thử lại.",
     "note": "Vì bảo mật, phiên đăng nhập admin sẽ không được ghi nhớ.",
-    "setupRequired": "Hãy thiết lập xác thực hai bước để hoàn tất đăng nhập."
+    "setupRequired": "Hãy thiết lập xác thực hai bước để hoàn tất đăng nhập.",
+    "tooMany_one": "Bạn đã đăng nhập sai quá nhiều lần. Thử lại sau {{count}} phút.",
+    "tooMany_other": "Bạn đã đăng nhập sai quá nhiều lần. Thử lại sau {{count}} phút."
   },
   "switchRole": {
     "question": "Không phải admin?",

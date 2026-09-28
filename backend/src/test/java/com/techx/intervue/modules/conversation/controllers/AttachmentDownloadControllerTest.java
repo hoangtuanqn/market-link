@@ -13,8 +13,10 @@ import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRep
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.services.impl.AttachmentService;
+import com.techx.intervue.modules.user.entities.AdminMfa;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.repositories.AdminMfaRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -56,6 +58,7 @@ class AttachmentDownloadControllerTest {
     @LocalServerPort int port;
 
     @Autowired UserRepository users;
+    @Autowired AdminMfaRepository adminMfa;
     @Autowired ConversationRepository conversations;
     @Autowired MessageRepository messages;
     @Autowired MessageAttachmentRepository attachments;
@@ -264,6 +267,16 @@ class AttachmentDownloadControllerTest {
                                 .passwordHash("x")
                                 .role(role)
                                 .build());
+        if (role == RoleType.ADMIN) {
+            // FR-008: a session still owing the 2FA setup is refused every non-auth route, so the
+            // admin in these tests is one that finished it
+            adminMfa.save(
+                    AdminMfa.builder()
+                            .userId(saved.getId())
+                            .secretEncrypted("test-secret")
+                            .enabledAt(Instant.now())
+                            .build());
+        }
         sessions.set(saved.getId(), saved.getEmail(), Set.of(role), Duration.ofMinutes(10));
         return saved;
     }

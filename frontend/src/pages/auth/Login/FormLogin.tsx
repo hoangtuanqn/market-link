@@ -46,6 +46,12 @@ const FormLogin = () => {
       // If RequireAuth sent them here, go back to the page they had open
       navigate((location.state as LoginRedirectState | null)?.from ?? '/', { replace: true });
     } catch (error) {
+      if (Helper.getErrorCode(error) === 'LOGIN_LOCKED') {
+        // FR-003: too many wrong passwords — say in the reader's language how long to wait
+        const minutes = Math.max(1, Math.ceil((Helper.getRetryAfterSeconds(error) ?? 900) / 60));
+        Notification.error({ text: t('toast.tooMany', { count: minutes }) });
+        return;
+      }
       // 400: per-field errors (VALIDATION_ERROR) → shown under the input; 401/403: the backend's general message
       setErrors(Helper.getFieldErrors(error));
       Notification.error({ text: Helper.getErrorMessage(error, t('toast.failed')) });

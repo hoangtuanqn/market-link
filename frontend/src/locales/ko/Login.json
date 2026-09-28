@@ -19,7 +19,9 @@
   "newHere": "계정이 없으신가요? <customer>회원가입</customer>",
   "toast": {
     "signedIn": "로그인했어요.",
-    "failed": "로그인하지 못했어요. 다시 시도해 주세요."
+    "failed": "로그인하지 못했어요. 다시 시도해 주세요.",
+    "tooMany_one": "로그인 실패가 너무 많아요. {{count}}분 후에 다시 시도해 주세요.",
+    "tooMany_other": "로그인 실패가 너무 많아요. {{count}}분 후에 다시 시도해 주세요."
   },
   "errors": {
     "emailRequired": "이메일을 입력해 주세요.",

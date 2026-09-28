@@ -55,8 +55,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     /**
      * FR-008: marks a session belonging to an admin who has never set up two-step verification.
      * Sign-in still hands them a working session — the setup screen needs one to call
-     * /auth/mfa/setup — but SecurityConfig refuses /api/v1/admin/** while this is present, so the
-     * mandatory step cannot be walked around by calling the API directly.
+     * /auth/mfa/setup — but SecurityConfig refuses every signed-in route outside the /auth/** ones
+     * the setup screen uses while this is present, so the mandatory step cannot be walked around by
+     * calling the API directly.
      */
     public static final String MFA_SETUP_PENDING = "MFA_SETUP_PENDING";
 

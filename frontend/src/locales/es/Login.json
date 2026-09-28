@@ -19,7 +19,9 @@
   "newHere": "¿No tienes cuenta? <customer>Regístrate</customer>",
   "toast": {
     "signedIn": "Sesión iniciada.",
-    "failed": "No se pudo iniciar sesión. Inténtalo de nuevo."
+    "failed": "No se pudo iniciar sesión. Inténtalo de nuevo.",
+    "tooMany_one": "Demasiados intentos fallidos de inicio de sesión. Inténtalo de nuevo en {{count}} minuto.",
+    "tooMany_other": "Demasiados intentos fallidos de inicio de sesión. Inténtalo de nuevo en {{count}} minutos."
   },
   "errors": {
     "emailRequired": "Escribe tu correo.",

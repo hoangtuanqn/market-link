@@ -17,10 +17,15 @@ final class RegisterRules {
 
     static final int PASSWORD_MIN = 6;
 
-    /** BCrypt only accepts at most 72 bytes. */
+    /** BCrypt only accepts at most 72 bytes; FitsBcrypt checks the bytes. */
     static final int PASSWORD_MAX = 72;
 
     static final String PASSWORD_MESSAGE = "Password must be 6 to 72 characters.";
+
+    /** FitsBcrypt: within 72 characters but over BCrypt's 72 bytes. */
+    static final String PASSWORD_BYTES_MESSAGE =
+            "Password is too long. Letters with accents and emoji take more room, so use a shorter"
+                    + " one.";
 
     private RegisterRules() {}
 }

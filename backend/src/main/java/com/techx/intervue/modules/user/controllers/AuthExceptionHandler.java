@@ -3,6 +3,7 @@ package com.techx.intervue.modules.user.controllers;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.InvalidResetTokenException;
+import com.techx.intervue.modules.user.exceptions.LoginRateLimitedException;
 import com.techx.intervue.modules.user.exceptions.MfaCodeInvalidException;
 import com.techx.intervue.modules.user.exceptions.MfaLockedException;
 import com.techx.intervue.modules.user.exceptions.MfaStateException;
@@ -271,6 +272,16 @@ public class AuthExceptionHandler {
     ResponseEntity<ApiResource<Void>> signupRateLimited(SignupRateLimitedException e) {
         ErrorResource error =
                 ErrorResource.builder().code("RATE_LIMITED").details(List.of()).build();
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header(HttpHeaders.RETRY_AFTER, String.valueOf(e.getRetryAfterSeconds()))
+                .body(ApiResource.error(error, e.getMessage()));
+    }
+
+    /** FR-003: too many wrong passwords; the FE counts the minutes from Retry-After. */
+    @ExceptionHandler(LoginRateLimitedException.class)
+    ResponseEntity<ApiResource<Void>> loginRateLimited(LoginRateLimitedException e) {
+        ErrorResource error =
+                ErrorResource.builder().code("LOGIN_LOCKED").details(List.of()).build();
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                 .header(HttpHeaders.RETRY_AFTER, String.valueOf(e.getRetryAfterSeconds()))
                 .body(ApiResource.error(error, e.getMessage()));

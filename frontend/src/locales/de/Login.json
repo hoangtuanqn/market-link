@@ -19,7 +19,9 @@
   "newHere": "Noch kein Konto? <customer>Registrieren</customer>",
   "toast": {
     "signedIn": "Angemeldet.",
-    "failed": "Sie konnten nicht angemeldet werden. Bitte versuchen Sie es erneut."
+    "failed": "Sie konnten nicht angemeldet werden. Bitte versuchen Sie es erneut.",
+    "tooMany_one": "Zu viele fehlgeschlagene Anmeldeversuche. Versuchen Sie es in {{count}} Minute erneut.",
+    "tooMany_other": "Zu viele fehlgeschlagene Anmeldeversuche. Versuchen Sie es in {{count}} Minuten erneut."
   },
   "errors": {
     "emailRequired": "Geben Sie Ihre E-Mail-Adresse ein.",

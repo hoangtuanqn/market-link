@@ -1,5 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import AuthApi from '@/api-requests/auth.requests';
+import { Cart } from '@/lib/cart';
 import PlatformStatus from '@/lib/platformStatus';
 import BlockedNotice from './blockedNotice';
 import Session from './session';
@@ -40,6 +41,8 @@ privateApi.interceptors.response.use((res) => res, watchForMaintenanceMode);
 export const watchForAccountDeactivated = (error: unknown) => {
   if (error instanceof AxiosError && error.response?.data?.error?.code === 'ACCOUNT_DEACTIVATED') {
     Session.clear();
+    // signed out for good: the cart in localStorage must not wait for whoever uses this browser next (FR-006)
+    Cart.clear();
     // The reason sits on the envelope root (`message`); ErrorResource only carries `code` +
     // `details`. An empty stash means the screen falls back to its own generic wording rather than
     // showing the word "undefined" to someone who has just been locked out.
@@ -111,6 +114,14 @@ const refreshAccessToken = (staleToken: string | null) => {
   return refreshPromise;
 };
 
+/**
+ * Whether a failed /auth/refresh means the session is really over: 401/403 (the cookie is missing, revoked or reused,
+ * or the account is off). A network drop, a timeout or a 5xx is not — the backend answers 503 when Redis is down
+ * precisely so the FE does not sign the user out — and the next request simply tries again.
+ */
+export const isRefreshRejected = (error: unknown) =>
+  error instanceof AxiosError && (error.response?.status === 401 || error.response?.status === 403);
+
 privateApi.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -129,7 +140,7 @@ privateApi.interceptors.response.use(
       await refreshAccessToken(staleToken);
       return privateApi(origin); // the request interceptor attaches the new token from Session
     } catch (err) {
-      Session.clear();
+      if (isRefreshRejected(err)) Session.clear();
       return Promise.reject(err);
     }
   },

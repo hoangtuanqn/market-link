@@ -19,7 +19,9 @@
   "newHere": "还没有账户？<customer>注册</customer>",
   "toast": {
     "signedIn": "已登录。",
-    "failed": "无法登录，请重试。"
+    "failed": "无法登录，请重试。",
+    "tooMany_one": "登录失败次数过多，请在 {{count}} 分钟后重试。",
+    "tooMany_other": "登录失败次数过多，请在 {{count}} 分钟后重试。"
   },
   "errors": {
     "emailRequired": "请输入邮箱。",

@@ -20,7 +20,9 @@
     "signedIn": "Sesión iniciada.",
     "error": "No se pudo iniciar sesión. Inténtalo de nuevo.",
     "note": "Por seguridad, las sesiones de admin no se recuerdan.",
-    "setupRequired": "Configura la verificación en dos pasos para terminar de iniciar sesión."
+    "setupRequired": "Configura la verificación en dos pasos para terminar de iniciar sesión.",
+    "tooMany_one": "Demasiados intentos fallidos de inicio de sesión. Inténtalo de nuevo en {{count}} minuto.",
+    "tooMany_other": "Demasiados intentos fallidos de inicio de sesión. Inténtalo de nuevo en {{count}} minutos."
   },
   "switchRole": {
     "question": "¿No eres admin?",

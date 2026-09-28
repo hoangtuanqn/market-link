@@ -28,6 +28,7 @@ import com.techx.intervue.modules.user.resources.ResetTokenResource;
 import com.techx.intervue.modules.user.resources.SignupStartedResource;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
+import com.techx.intervue.modules.user.services.impl.LoginRateLimiter;
 import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
@@ -65,6 +66,7 @@ public class AuthController extends BaseController {
     private final AuthConfig authConfig;
     private final GoogleOAuthClient googleClient;
     private final EmailVerificationServiceInterface emailVerification;
+    private final LoginRateLimiter loginRateLimiter;
 
     /**
      * FR-001 + FR-009: nothing is created yet — the account waits for the code mailed to the
@@ -109,11 +111,25 @@ public class AuthController extends BaseController {
                 "We sent a new code to your email.");
     }
 
-    /** FR-003: shared by customer, farmer and admin — the FE routes by user.role. */
+    /**
+     * FR-003: shared by customer, farmer and admin — the FE routes by user.role. Too many wrong
+     * passwords for the email or from the IP → 429 LOGIN_LOCKED with Retry-After
+     * (LoginRateLimiter).
+     */
     @PostMapping("/login")
     public ResponseEntity<ApiResource<LoginResource>> login(
-            @Valid @RequestBody LoginRequest request) {
-        return loggedIn(userService.authenticate(request));
+            @Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+        String clientIp = IpHelper.getClientIp(httpRequest);
+        loginRateLimiter.ensureAllowed(request.email(), clientIp);
+        AuthResult auth;
+        try {
+            auth = userService.authenticate(request);
+        } catch (BadCredentialsException e) {
+            loginRateLimiter.recordFailure(request.email(), clientIp);
+            throw e;
+        }
+        loginRateLimiter.reset(request.email());
+        return loggedIn(auth);
     }
 
     /**

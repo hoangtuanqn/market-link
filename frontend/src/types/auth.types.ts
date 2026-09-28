@@ -85,7 +85,8 @@ export type AuthResultType = {
 
 /**
  * FR-008: an admin with two-step verification on → login (and Google sign-in) does not issue a session yet:
- * `mfaRequired = true`, `accessToken = null`, send `mfaToken` with the code to POST /auth/mfa/verify.
+ * `mfaRequired = true`, `accessToken = null`, send `mfaToken` with the code to POST /auth/mfa/verify. In that answer
+ * `user` only carries `email`: the rest of the profile comes with the session, after the code.
  */
 export type LoginResultType = Omit<AuthResultType, 'accessToken'> & {
   accessToken: string | null;
@@ -115,4 +116,12 @@ export type MfaSetupType = {
 
 export type MfaRecoveryCodesType = {
   codes: string[];
+};
+
+/**
+ * FR-008: turning two-step verification on signs out every earlier session, this one included; the new access token
+ * comes back here (the refresh cookie is replaced too).
+ */
+export type MfaEnabledType = MfaRecoveryCodesType & {
+  accessToken: string;
 };

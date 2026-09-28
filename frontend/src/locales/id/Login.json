@@ -19,7 +19,9 @@
   "newHere": "Belum punya akun? <customer>Daftar</customer>",
   "toast": {
     "signedIn": "Berhasil masuk.",
-    "failed": "Tidak dapat masuk. Silakan coba lagi."
+    "failed": "Tidak dapat masuk. Silakan coba lagi.",
+    "tooMany_one": "Terlalu banyak percobaan masuk yang gagal. Coba lagi dalam {{count}} menit.",
+    "tooMany_other": "Terlalu banyak percobaan masuk yang gagal. Coba lagi dalam {{count}} menit."
   },
   "errors": {
     "emailRequired": "Masukkan email.",

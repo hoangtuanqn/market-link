@@ -20,7 +20,9 @@
     "signedIn": "Signed in.",
     "error": "Could not sign you in. Please try again.",
     "note": "For security, admin sessions are not remembered.",
-    "setupRequired": "Set up two-step verification to finish signing in."
+    "setupRequired": "Set up two-step verification to finish signing in.",
+    "tooMany_one": "Too many failed sign-in attempts. Try again in {{count}} minute.",
+    "tooMany_other": "Too many failed sign-in attempts. Try again in {{count}} minutes."
   },
   "switchRole": {
     "question": "Not an admin?",
