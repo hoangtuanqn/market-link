@@ -1,7 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import AuthApi from '@/api-requests/auth.requests';
 import PlatformStatus from '@/lib/platformStatus';
-import Notification from './notification';
+import AccountDeactivatedNotice from './accountDeactivatedNotice';
 import Session from './session';
 
 const options = {
@@ -40,7 +40,7 @@ privateApi.interceptors.response.use((res) => res, watchForMaintenanceMode);
 export const watchForAccountDeactivated = (error: unknown) => {
   if (error instanceof AxiosError && error.response?.data?.error?.code === 'ACCOUNT_DEACTIVATED') {
     Session.clear();
-    Notification.error({ text: error.response.data.error.message });
+    AccountDeactivatedNotice.stash(error.response.data.error.message);
     window.location.assign('/');
   }
   return Promise.reject(error);

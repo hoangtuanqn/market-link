@@ -210,6 +210,24 @@ class AdminCustomerServiceTest {
     }
 
     @Test
+    void permanentBanCancelsAnAcceptedOrderTooAndNotifiesTheFarmerWithTheDistinctKind() {
+        jdbc.update("UPDATE orders SET status = 'accepted' WHERE id = ?", orderId);
+
+        customers.setStatus(customerId, "inactive", "Fake account", null, adminUserId);
+
+        String status =
+                jdbc.queryForObject(
+                        "SELECT status FROM orders WHERE id = ?", String.class, orderId);
+        assertThat(status).isEqualTo("cancelled");
+        String kind =
+                jdbc.queryForObject(
+                        "SELECT kind FROM notifications WHERE user_id = ? ORDER BY id DESC LIMIT 1",
+                        String.class,
+                        farmerUserId);
+        assertThat(kind).isEqualTo("order_cancelled_account_deactivated");
+    }
+
+    @Test
     void permanentBanLeavesAnotherCustomersOrdersAlone() {
         long otherCustomer =
                 fx.user("customer", "Other customer", passwordEncoder.encode(PASSWORD));

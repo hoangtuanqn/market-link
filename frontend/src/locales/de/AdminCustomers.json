@@ -35,7 +35,7 @@
   },
   "deactivate": {
     "title": "{{name}} sperren?",
-    "text": "Die Person wird überall abgemeldet und kann sich weder anmelden noch bestellen. Bereits aufgegebene Bestellungen bleiben bei den Ständen.",
+    "text": "Die Person wird sofort überall abgemeldet und kann sich weder anmelden noch bestellen. Eine vorübergehende Sperre lässt bestehende Bestellungen unangetastet; eine dauerhafte storniert zusätzlich jede noch offene oder angenommene Bestellung und gibt den Bestand zurück.",
     "reason": "Grund",
     "reasonRequired": "Wähle mindestens einen Grund oder füge eine Notiz hinzu.",
     "keep": "Aktiv lassen",

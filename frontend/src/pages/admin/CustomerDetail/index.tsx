@@ -17,7 +17,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH, ADMIN_MODERATION_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
 import type { OrderListItemDto } from '@/api-requests/order.requests';
 import useRequest from '@/hooks/useRequest';
-import { formatDate, pickupLabel, money } from '@/lib/format';
+import { formatDate, cutoffLabel, pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import Helper from '@/utils/helper';
@@ -118,6 +118,7 @@ const AdminCustomerDetailPage = () => {
         until,
       );
       mutateCustomer(() => updated);
+      retryHistory();
       const toastKey =
         confirmKind === 'deactivate'
           ? trimmedReason
@@ -285,7 +286,7 @@ const AdminCustomerDetailPage = () => {
                   {
                     key: 'when',
                     label: t('history.col.when'),
-                    render: (h) => formatDate(new Date(h.changedAt)),
+                    render: (h) => cutoffLabel(h.changedAt),
                   },
                   {
                     key: 'action',
@@ -296,7 +297,7 @@ const AdminCustomerDetailPage = () => {
                   {
                     key: 'until',
                     label: t('history.col.until'),
-                    render: (h) => (h.until ? formatDate(new Date(h.until)) : '—'),
+                    render: (h) => (h.until ? cutoffLabel(h.until) : '—'),
                   },
                   {
                     key: 'by',

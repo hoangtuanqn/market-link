@@ -35,7 +35,7 @@
   },
   "deactivate": {
     "title": "Nonaktifkan {{name}}?",
-    "text": "Dia keluar dari semua perangkat dan tidak bisa masuk atau memesan. Pesanan yang sudah dibuat tetap ada pada lapak.",
+    "text": "Dia langsung keluar dari semua perangkat dan tidak bisa masuk atau memesan. Penonaktifan sementara tidak menyentuh pesanan yang sudah ada; penonaktifan permanen juga membatalkan semua pesanan yang masih menunggu atau sudah diterima, lalu mengembalikan stok.",
     "reason": "Alasan",
     "reasonRequired": "Pilih minimal satu alasan atau tambahkan catatan.",
     "keep": "Biarkan aktif",

@@ -7,6 +7,7 @@ import com.techx.intervue.modules.user.services.interfaces.AdminCustomerServiceI
 import java.time.Clock;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
  * null} — the exact same reactivate path a manual admin click takes (clears reason/expiry, writes
  * history, enqueues the "active again" email) — so this job never duplicates that logic.
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class CustomerBanExpiryJob {
@@ -29,7 +31,13 @@ public class CustomerBanExpiryJob {
         for (User user :
                 userRepository.findByStatusAndDeactivatedUntilLessThanEqual(
                         UserStatus.INACTIVE, Instant.now(clock))) {
-            customers.setStatus(user.getId(), "active", null, null, null);
+            // One user's failure (a lock timeout, a stale row) must not strand every other expired
+            // ban behind it — the next tick would just hit the same user first and abort again.
+            try {
+                customers.setStatus(user.getId(), "active", null, null, null);
+            } catch (Exception e) {
+                log.error("Could not auto-reactivate user {}: {}", user.getId(), e.getMessage(), e);
+            }
         }
     }
 }

@@ -2,17 +2,20 @@ import { AxiosError } from 'axios';
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { watchForAccountDeactivated } from './axiosInstance';
 import Session from './session';
-import Notification from './notification';
+import AccountDeactivatedNotice from './accountDeactivatedNotice';
 
 describe('watchForAccountDeactivated', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     Session.clear();
+    sessionStorage.clear();
   });
 
-  it('clears the session, toasts the server message, and redirects home', async () => {
+  it('clears the session, stashes the server message for the next page, and redirects home', async () => {
+    // The redirect that follows is a full document navigation — it tears down React (and any toast
+    // shown now) before it can paint. Stashing across the reload, instead of toasting here, is what
+    // lets AccountDeactivatedToastSync show it once the new page has actually mounted.
     Session.save({ accessToken: 'stale-token', user: { id: 1 } as never }, false);
-    const toastSpy = vi.spyOn(Notification, 'error').mockImplementation(() => '');
     const assignSpy = vi.fn();
     vi.stubGlobal('location', { ...window.location, assign: assignSpy });
     const error = new AxiosError('Unauthorized');
@@ -32,13 +35,12 @@ describe('watchForAccountDeactivated', () => {
     await expect(watchForAccountDeactivated(error)).rejects.toBe(error);
 
     expect(Session.getAccessToken()).toBeNull();
-    expect(toastSpy).toHaveBeenCalledWith({ text: 'Your account has been deactivated. Reason: No-shows.' });
+    expect(AccountDeactivatedNotice.consume()).toBe('Your account has been deactivated. Reason: No-shows.');
     expect(assignSpy).toHaveBeenCalledWith('/');
   });
 
   it('leaves every other error alone', async () => {
     Session.save({ accessToken: 'still-valid', user: { id: 1 } as never }, false);
-    const toastSpy = vi.spyOn(Notification, 'error').mockImplementation(() => '');
     const error = new AxiosError('Server error');
     error.response = {
       status: 500,
@@ -50,7 +52,7 @@ describe('watchForAccountDeactivated', () => {
 
     await expect(watchForAccountDeactivated(error)).rejects.toBe(error);
 
-    expect(toastSpy).not.toHaveBeenCalled();
+    expect(AccountDeactivatedNotice.consume()).toBeNull();
     expect(Session.getAccessToken()).toBe('still-valid');
   });
 });

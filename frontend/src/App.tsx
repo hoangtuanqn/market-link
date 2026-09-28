@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import AppToaster from './components/AppToaster';
 import CookieConsentBar from './components/CookieConsentBar';
 import PlatformStatusSync from './components/PlatformStatusSync';
+import AccountDeactivatedToastSync from './components/AccountDeactivatedToastSync';
 import ScrollToTop from './components/ScrollToTop';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import { USER_ROLE } from './constants/enums';
@@ -330,6 +331,7 @@ const AppRoutes = () => {
 const App = () => (
   <BrowserRouter>
     <PlatformStatusSync />
+    <AccountDeactivatedToastSync />
     <AppRoutes />
   </BrowserRouter>
 );

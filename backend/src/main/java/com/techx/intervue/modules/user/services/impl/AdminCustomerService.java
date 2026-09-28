@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.user.services.impl;
 
+import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
@@ -78,6 +79,12 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
         return queries.findOne(userId).orElseThrow(CustomerNotFoundException::new);
     }
 
+    /**
+     * DB work first (status, refresh-token revoke, history, order cancellation — all rolled back
+     * together on failure); the Redis session kick and the email only run after commit — a failed
+     * permanent-ban order cancellation must not leave the customer signed out and emailed for a
+     * deactivation that never actually took effect.
+     */
     private void deactivate(
             User user, String reason, Instant until, Long actorId, UserStatus from) {
         if (reason == null || reason.isBlank()) {
@@ -93,19 +100,25 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
         userRepository.saveAndFlush(user);
 
         refreshTokens.revokeAllTokens(user.getId());
-        sessionCache.revokeAll(user.getId());
         history.record(user.getId(), from, UserStatus.INACTIVE, reason, until, actorId);
-
-        Map<String, String> payload = new HashMap<>();
-        payload.put("email", user.getEmail());
-        payload.put("fullName", user.getFullName());
-        payload.put("reason", reason);
-        payload.put("until", until == null ? "" : until.toString());
-        jobQueue.enqueue(JOB_NOTIFY_DEACTIVATED, payload);
 
         if (until == null) {
             orders.cancelAllForDeactivatedCustomer(user.getId(), actorId);
         }
+
+        Long userId = user.getId();
+        String email = user.getEmail();
+        String fullName = user.getFullName();
+        TransactionHelper.afterCommit(
+                () -> {
+                    sessionCache.revokeAll(userId);
+                    Map<String, String> payload = new HashMap<>();
+                    payload.put("email", email);
+                    payload.put("fullName", fullName);
+                    payload.put("reason", reason);
+                    payload.put("until", until == null ? "" : until.toString());
+                    jobQueue.enqueue(JOB_NOTIFY_DEACTIVATED, payload);
+                });
     }
 
     private void reactivate(User user, Long actorId, UserStatus from) {
@@ -116,10 +129,15 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
 
         history.record(user.getId(), from, UserStatus.ACTIVE, null, null, actorId);
 
-        Map<String, String> payload = new HashMap<>();
-        payload.put("email", user.getEmail());
-        payload.put("fullName", user.getFullName());
-        jobQueue.enqueue(JOB_NOTIFY_REACTIVATED, payload);
+        String email = user.getEmail();
+        String fullName = user.getFullName();
+        TransactionHelper.afterCommit(
+                () -> {
+                    Map<String, String> payload = new HashMap<>();
+                    payload.put("email", email);
+                    payload.put("fullName", fullName);
+                    jobQueue.enqueue(JOB_NOTIFY_REACTIVATED, payload);
+                });
     }
 
     @Override

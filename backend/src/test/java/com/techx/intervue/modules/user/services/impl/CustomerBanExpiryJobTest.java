@@ -48,4 +48,18 @@ class CustomerBanExpiryJobTest {
 
         verify(customers, never()).setStatus(anyLong(), any(), any(), any(), any());
     }
+
+    @Test
+    void oneFailingUserDoesNotStrandTheRest() {
+        User broken = User.builder().id(1L).status(UserStatus.INACTIVE).build();
+        User ok = User.builder().id(2L).status(UserStatus.INACTIVE).build();
+        when(userRepository.findByStatusAndDeactivatedUntilLessThanEqual(any(), any()))
+                .thenReturn(List.of(broken, ok));
+        when(customers.setStatus(eq(1L), any(), any(), any(), any()))
+                .thenThrow(new RuntimeException("lock timeout"));
+
+        job.reactivateExpiredBans();
+
+        verify(customers).setStatus(2L, "active", null, null, null);
+    }
 }

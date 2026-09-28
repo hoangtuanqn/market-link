@@ -47,7 +47,7 @@
   },
   "deactivate": {
     "title": "Désactiver {{name}} ?",
-    "text": "Elle ne pourra plus se connecter ni commander tant qu'un administrateur ne réactive pas le compte. Les commandes déjà passées vont à leur terme, aucun étal ne reste avec des produits que personne ne vient chercher.",
+    "text": "La personne est déconnectée partout immédiatement et ne peut plus se connecter ni commander. Une désactivation temporaire ne touche pas aux commandes déjà passées ; une désactivation permanente annule aussi toute commande encore en attente ou acceptée et restitue le stock.",
     "reason": "Motif",
     "reasonRequired": "Choisissez au moins un motif ou ajoutez une note.",
     "keep": "Pas maintenant",

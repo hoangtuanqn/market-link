@@ -35,7 +35,7 @@
   },
   "deactivate": {
     "title": "¿Desactivar a {{name}}?",
-    "text": "Se cierra su sesión en todas partes y no puede entrar ni hacer pedidos. Los pedidos ya realizados siguen con los puestos.",
+    "text": "Se cierra su sesión en todas partes de inmediato y no puede entrar ni hacer pedidos. Una desactivación temporal no toca los pedidos ya realizados; una permanente también cancela cualquier pedido aún pendiente o aceptado y repone el stock.",
     "reason": "Motivo",
     "reasonRequired": "Elige al menos un motivo o añade una nota.",
     "keep": "Dejar activa",

@@ -47,7 +47,7 @@
   },
   "deactivate": {
     "title": "{{name}} sperren?",
-    "text": "Anmelden und bestellen ist erst wieder möglich, wenn ein Administrator das Konto freigibt. Bereits aufgegebene Bestellungen laufen zu Ende, damit kein Stand auf Ware sitzen bleibt, die niemand abholt.",
+    "text": "Die Person wird sofort überall abgemeldet und kann sich weder anmelden noch bestellen. Eine vorübergehende Sperre lässt bestehende Bestellungen unangetastet; eine dauerhafte storniert zusätzlich jede noch offene oder angenommene Bestellung und gibt den Bestand zurück.",
     "reason": "Grund",
     "reasonRequired": "Wähle mindestens einen Grund oder füge eine Notiz hinzu.",
     "keep": "Noch nicht",

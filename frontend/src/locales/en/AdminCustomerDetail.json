@@ -47,7 +47,7 @@
   },
   "deactivate": {
     "title": "Deactivate {{name}}?",
-    "text": "They cannot sign in or order again until an admin reactivates them. Orders already placed run to the end, so no stall is left holding food nobody collects.",
+    "text": "They are signed out everywhere right away and cannot sign in or place orders. A temporary ban leaves their orders alone; a permanent one also cancels any order still placed or accepted and returns the stock.",
     "reason": "Reason",
     "reasonRequired": "Choose at least one reason or add a note.",
     "keep": "Not yet",
