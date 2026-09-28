@@ -494,6 +494,14 @@
           "title": "店舗の申請",
           "note": "承認、却下、一時停止、再開されたとき"
         },
+        "orders": {
+          "title": "注文",
+          "note": "注文が入った、承認・辞退された、受け取り準備ができた、キャンセルされたとき"
+        },
+        "favorites": {
+          "title": "お気に入り",
+          "note": "保存した商品が再入荷したとき"
+        },
         "farmerApplications": {
           "title": "Farmer の申請",
           "note": "誰かが MarketLink での販売を申請したとき"

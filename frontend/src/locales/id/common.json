@@ -494,6 +494,14 @@
           "title": "Pendaftaran lapak Anda",
           "note": "Saat disetujui, ditolak, ditangguhkan, atau dibuka kembali"
         },
+        "orders": {
+          "title": "Pesanan",
+          "note": "Saat pesanan dibuat, diterima, ditolak, siap diambil, atau dibatalkan"
+        },
+        "favorites": {
+          "title": "Favorit",
+          "note": "Saat produk yang Anda simpan tersedia lagi"
+        },
         "farmerApplications": {
           "title": "Pendaftaran Farmer",
           "note": "Saat seseorang mendaftar berjualan di MarketLink"

@@ -494,6 +494,14 @@
           "title": "Đơn đăng ký sạp",
           "note": "Khi đơn được duyệt, bị từ chối, bị tạm khoá hoặc mở lại"
         },
+        "orders": {
+          "title": "Đơn hàng",
+          "note": "Khi đơn được đặt, nhận, từ chối, sẵn sàng hoặc bị huỷ"
+        },
+        "favorites": {
+          "title": "Yêu thích",
+          "note": "Khi món bạn đã lưu có hàng trở lại"
+        },
         "farmerApplications": {
           "title": "Đơn đăng ký nhà vườn",
           "note": "Khi có người đăng ký bán hàng trên MarketLink"

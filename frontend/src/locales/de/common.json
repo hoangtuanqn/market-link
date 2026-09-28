@@ -494,6 +494,14 @@
           "title": "Ihr Standantrag",
           "note": "Wenn er freigegeben, abgelehnt, gesperrt oder wieder geöffnet wird"
         },
+        "orders": {
+          "title": "Bestellungen",
+          "note": "Wenn eine Bestellung aufgegeben, angenommen, abgelehnt, abholbereit oder storniert wird"
+        },
+        "favorites": {
+          "title": "Favoriten",
+          "note": "Wenn ein gespeichertes Produkt wieder vorrätig ist"
+        },
         "farmerApplications": {
           "title": "Farmer-Anträge",
           "note": "Wenn jemand auf MarketLink verkaufen möchte"
