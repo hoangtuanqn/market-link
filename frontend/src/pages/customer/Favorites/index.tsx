@@ -54,7 +54,7 @@ const FavoriteProductRow = ({
         )}
       >
         {fav.imageUrl ? (
-          <img src={fav.imageUrl} alt="" className="size-full object-cover" />
+          <img src={Helper.mediaUrl(fav.imageUrl)} alt="" className="size-full object-cover" />
         ) : (
           fav.title.charAt(0).toUpperCase()
         )}

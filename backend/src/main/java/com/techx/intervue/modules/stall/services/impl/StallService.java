@@ -15,11 +15,13 @@ import com.techx.intervue.modules.stall.repositories.StallQueryRepository;
 import com.techx.intervue.modules.stall.requests.JoinMarketRequest;
 import com.techx.intervue.modules.stall.requests.OperatingDaysRequest;
 import com.techx.intervue.modules.stall.requests.StallProfileRequest;
+import com.techx.intervue.modules.stall.requests.UpdateStallMarketRequest;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
 import com.techx.intervue.modules.stall.resources.StallMarketResource;
 import com.techx.intervue.modules.stall.resources.StallSummaryResource;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.resources.PageResource;
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.List;
@@ -102,9 +104,14 @@ public class StallService implements StallServiceInterface {
     public StallMarketResource joinMarket(long userId, JoinMarketRequest request) {
         FarmerProfile profile = mine(userId);
         StallSuspensionMessage.assertUsable(profile);
-        if (!queryRepository.marketExists(request.marketId())) {
-            throw new IllegalArgumentException("Unknown market.");
+        if ((request.stallLatitude() == null) != (request.stallLongitude() == null)) {
+            throw new IllegalArgumentException("Latitude and longitude must be provided together.");
         }
+        StallQueryRepository.MarketSchedule schedule =
+                queryRepository
+                        .findMarketSchedule(request.marketId())
+                        .orElseThrow(() -> new IllegalArgumentException("Unknown market."));
+
         FarmerMarket link =
                 farmerMarketRepository
                         .findByFarmerIdAndMarketId(profile.getId(), request.marketId())
@@ -122,8 +129,34 @@ public class StallService implements StallServiceInterface {
         // the right place
         link.setActive(true);
         link.setStallCode(blankToNull(request.stallCode()));
-        link.setStallLatitude(request.stallLatitude());
-        link.setStallLongitude(request.stallLongitude());
+        BigDecimal lat =
+                request.stallLatitude() != null ? request.stallLatitude() : schedule.latitude();
+        BigDecimal lng =
+                request.stallLongitude() != null ? request.stallLongitude() : schedule.longitude();
+        link.setStallLatitude(lat);
+        link.setStallLongitude(lng);
+        FarmerMarket saved = farmerMarketRepository.save(link);
+        return queryRepository.stallMarket(saved.getId()).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public StallMarketResource updateMarket(
+            long userId, long farmerMarketId, UpdateStallMarketRequest request) {
+        FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
+        FarmerMarket link = owned(profile, farmerMarketId);
+        if (!link.isActive()) {
+            throw new IllegalArgumentException("You no longer sell at this market.");
+        }
+        if ((request.stallLatitude() == null) != (request.stallLongitude() == null)) {
+            throw new IllegalArgumentException("Latitude and longitude must be provided together.");
+        }
+        link.setStallCode(blankToNull(request.stallCode()));
+        if (request.stallLatitude() != null && request.stallLongitude() != null) {
+            link.setStallLatitude(request.stallLatitude());
+            link.setStallLongitude(request.stallLongitude());
+        }
         FarmerMarket saved = farmerMarketRepository.save(link);
         return queryRepository.stallMarket(saved.getId()).orElse(null);
     }
@@ -134,6 +167,9 @@ public class StallService implements StallServiceInterface {
         FarmerProfile profile = mine(userId);
         StallSuspensionMessage.assertUsable(profile);
         FarmerMarket link = owned(profile, farmerMarketId);
+        if (!link.isActive()) {
+            return;
+        }
         link.setActive(false);
         farmerMarketRepository.save(link);
     }
@@ -145,16 +181,40 @@ public class StallService implements StallServiceInterface {
         FarmerProfile profile = mine(userId);
         StallSuspensionMessage.assertUsable(profile);
         FarmerMarket link = owned(profile, farmerMarketId);
+        if (!link.isActive()) {
+            throw new IllegalArgumentException("You no longer sell at this market.");
+        }
+        if (request.days() == null || request.days().isEmpty()) {
+            throw new IllegalArgumentException("At least one operating day is required.");
+        }
+        StallQueryRepository.MarketSchedule schedule =
+                queryRepository
+                        .findMarketSchedule(link.getMarketId())
+                        .orElseThrow(
+                                () -> new IllegalArgumentException("Unknown or inactive market."));
 
         Set<Integer> seen = new HashSet<>();
         for (OperatingDaysRequest.Day day : request.days()) {
             if (!seen.add(day.dayOfWeek())) {
                 throw new IllegalArgumentException("Each weekday can appear once.");
             }
+            if (!schedule.operatingDays().contains(day.dayOfWeek())) {
+                throw new IllegalArgumentException(
+                        "Market is not held on weekday " + day.dayOfWeek() + ".");
+            }
             LocalTime start = LocalTime.parse(day.pickupStartTime());
             LocalTime end = LocalTime.parse(day.pickupEndTime());
             if (!end.isAfter(start)) {
                 throw new IllegalArgumentException("The pickup window must end after it starts.");
+            }
+            if (schedule.openingTime() != null && schedule.closingTime() != null) {
+                if (start.isBefore(schedule.openingTime()) || end.isAfter(schedule.closingTime())) {
+                    throw new IllegalArgumentException(
+                            String.format(
+                                    "Pickup window must be within market operating hours (%s – %s).",
+                                    StallQueryRepository.hhmm(schedule.openingTime().toString()),
+                                    StallQueryRepository.hhmm(schedule.closingTime().toString())));
+                }
             }
         }
         operatingDayRepository.replaceDays(link.getId(), request.days());

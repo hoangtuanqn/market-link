@@ -200,6 +200,23 @@ public class SlotService implements SlotServiceInterface {
         return queryRepository.publicSlots(farmerId, marketId, from, to, LocalDateTime.now(clock));
     }
 
+    @Override
+    public List<SlotResource> farmerSlots(long userId, long farmerMarketId, LocalDate date) {
+        FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
+        FarmerMarket link = owned(profile, farmerMarketId);
+        LocalDate from = date != null ? date : today();
+        LocalDate to = date != null ? date : from.plusDays(DEFAULT_PUBLIC_DAYS - 1L);
+        List<PickupSlot> slots =
+                slotRepository.findByFarmerMarketIdAndSlotDateBetween(link.getId(), from, to);
+        return slots.stream()
+                .sorted(
+                        Comparator.comparing(PickupSlot::getSlotDate)
+                                .thenComparing(PickupSlot::getStartTime))
+                .map(s -> SlotResource.of(s, link.getMarketId()))
+                .toList();
+    }
+
     private LocalDate today() {
         return LocalDate.now(clock);
     }

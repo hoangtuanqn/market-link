@@ -37,4 +37,10 @@ public interface ProductServiceInterface {
     void adminHide(long productId, String reason);
 
     void adminUnhide(long productId);
+
+    /** Farmer's trash bin: soft-deleted products. */
+    PageResource<FarmerProductResource> mineDeleted(long userId, int page, int pageSize);
+
+    /** Restores a soft-deleted product to unavailable status. */
+    FarmerProductResource restore(long userId, long productId);
 }

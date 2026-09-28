@@ -3,6 +3,7 @@ package com.techx.intervue.modules.stall.services.interfaces;
 import com.techx.intervue.modules.stall.requests.JoinMarketRequest;
 import com.techx.intervue.modules.stall.requests.OperatingDaysRequest;
 import com.techx.intervue.modules.stall.requests.StallProfileRequest;
+import com.techx.intervue.modules.stall.requests.UpdateStallMarketRequest;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
 import com.techx.intervue.modules.stall.resources.StallMarketResource;
 import com.techx.intervue.modules.stall.resources.StallSummaryResource;
@@ -26,6 +27,10 @@ public interface StallServiceInterface {
     StallDetailResource updateProfile(long userId, StallProfileRequest request);
 
     StallMarketResource joinMarket(long userId, JoinMarketRequest request);
+
+    /** Updates booth code and pin coordinates of an already joined market. */
+    StallMarketResource updateMarket(
+            long userId, long farmerMarketId, UpdateStallMarketRequest request);
 
     /**
      * Leaving a market = turn off the farmer_markets row; old slots and orders can still point back
