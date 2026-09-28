@@ -138,7 +138,8 @@ class ChatKnowledgeIntegrationTest {
         ChatReplyResource reply = ask("cho " + marketCore + " may gio mo cua");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
-        assertThat(reply.reply()).contains("06:00–12:00").contains("Sat");
+        // Asked in Vietnamese (without diacritics), answered in Vietnamese: Saturday is "T7"
+        assertThat(reply.reply()).contains("06:00–12:00").contains("T7");
         assertThat(reply.results()).extracting("type").contains("market");
     }
 

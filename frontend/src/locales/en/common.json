@@ -541,7 +541,8 @@
     "result": {
       "product": "Product",
       "market": "Market",
-      "farmer": "Stall"
+      "farmer": "Stall",
+      "order": "Order"
     },
     "suggest": {
       "find": "Where can I buy tomatoes this weekend?",

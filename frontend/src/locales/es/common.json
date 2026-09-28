@@ -527,7 +527,8 @@
     "result": {
       "product": "Producto",
       "market": "Mercado",
-      "farmer": "Puesto"
+      "farmer": "Puesto",
+      "order": "Pedido"
     },
     "suggest": {
       "find": "¿Dónde compro tomates este fin de semana?",

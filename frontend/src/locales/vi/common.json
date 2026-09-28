@@ -527,7 +527,8 @@
     "result": {
       "product": "Sản phẩm",
       "market": "Chợ",
-      "farmer": "Gian hàng"
+      "farmer": "Gian hàng",
+      "order": "Đơn hàng"
     },
     "suggest": {
       "find": "Cuối tuần này mua cà chua ở đâu?",

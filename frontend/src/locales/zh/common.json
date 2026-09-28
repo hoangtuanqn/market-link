@@ -527,7 +527,8 @@
     "result": {
       "product": "商品",
       "market": "集市",
-      "farmer": "摊位"
+      "farmer": "摊位",
+      "order": "订单"
     },
     "suggest": {
       "find": "这个周末在哪里能买到番茄？",

@@ -527,7 +527,8 @@
     "result": {
       "product": "商品",
       "market": "市場",
-      "farmer": "屋台"
+      "farmer": "屋台",
+      "order": "注文"
     },
     "suggest": {
       "find": "今週末トマトはどこで買えますか？",

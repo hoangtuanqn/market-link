@@ -527,7 +527,8 @@
     "result": {
       "product": "상품",
       "market": "시장",
-      "farmer": "가판대"
+      "farmer": "가판대",
+      "order": "주문"
     },
     "suggest": {
       "find": "이번 주말 토마토는 어디서 살 수 있나요?",

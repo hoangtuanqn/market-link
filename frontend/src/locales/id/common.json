@@ -527,7 +527,8 @@
     "result": {
       "product": "Produk",
       "market": "Pasar",
-      "farmer": "Lapak"
+      "farmer": "Lapak",
+      "order": "Pesanan"
     },
     "suggest": {
       "find": "Di mana beli tomat akhir pekan ini?",

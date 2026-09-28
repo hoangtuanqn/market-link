@@ -3,13 +3,16 @@ package com.techx.intervue.modules.chat.repositories;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BriefingRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.FarmerReviewRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.OrderItemRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.ProductStockRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.SalesRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.ScheduleDayRow;
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,20 @@ public class FarmerKnowledgeRepository {
     private static final String FARMER_ID_OF_USER =
             "SELECT id FROM farmer_profiles WHERE user_id = :userId";
 
+    private static final String STALL_NAME =
+            "SELECT stall_name FROM farmer_profiles WHERE id = :farmerId";
+
+    /** What is in one order of this stall; another stall's order id finds nothing. */
+    private static final String MY_ORDER_ITEMS =
+            """
+            SELECT i.product_name, i.quantity, i.unit, i.subtotal
+            FROM order_items i
+            JOIN orders o ON o.id = i.order_id
+            WHERE o.farmer_id = :farmerId
+              AND o.id = :orderId
+            ORDER BY i.id
+            """;
+
     private static final String MY_ORDERS =
             """
             SELECT o.id AS order_id, o.order_code, u.full_name AS customer_name, m.market_name,
@@ -44,7 +61,7 @@ public class FarmerKnowledgeRepository {
             WHERE o.farmer_id = :farmerId
               AND (:status IS NULL OR o.status = :status)
               AND (:pickupDate IS NULL OR o.pickup_date = :pickupDate)
-            GROUP BY o.id, o.order_code, u.name, m.market_name, o.pickup_date, o.pickup_start,
+            GROUP BY o.id, o.order_code, u.full_name, m.market_name, o.pickup_date, o.pickup_start,
                      o.pickup_end, o.cutoff_at, o.total_amount, o.status
             ORDER BY o.pickup_date, o.pickup_start, o.order_code
             LIMIT :limit
@@ -62,8 +79,8 @@ public class FarmerKnowledgeRepository {
             LEFT JOIN order_items i ON i.order_id = o.id
             WHERE o.farmer_id = :farmerId
               AND o.status = 'placed'
-              AND o.cutoff_at <= DATE_ADD(NOW(), INTERVAL :hours HOUR)
-            GROUP BY o.id, o.order_code, u.name, m.market_name, o.pickup_date, o.pickup_start,
+              AND o.cutoff_at <= :until
+            GROUP BY o.id, o.order_code, u.full_name, m.market_name, o.pickup_date, o.pickup_start,
                      o.pickup_end, o.cutoff_at, o.total_amount, o.status
             ORDER BY o.cutoff_at
             LIMIT :limit
@@ -151,7 +168,7 @@ public class FarmerKnowledgeRepository {
                    AND status = 'placed')                                 AS waiting,
               (SELECT COUNT(*) FROM orders
                  WHERE farmer_id = :farmerId AND pickup_date = :onDate
-                   AND status = 'placed' AND cutoff_at < NOW())           AS cutoff_passed,
+                   AND status = 'placed' AND cutoff_at < :now)            AS cutoff_passed,
               (SELECT COUNT(*) FROM products
                  WHERE farmer_id = :farmerId AND is_deleted = FALSE
                    AND status = 'sold_out')                               AS sold_out,
@@ -182,6 +199,9 @@ public class FarmerKnowledgeRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
 
+    /** Vietnam time ({@code ChatConfig}), the zone {@code orders.cutoff_at} is written in. */
+    private final Clock clock;
+
     public Optional<OrderRow> myOrderByCode(long farmerId, String orderCode) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
@@ -196,6 +216,7 @@ public class FarmerKnowledgeRepository {
                 new MapSqlParameterSource()
                         .addValue("farmerId", farmerId)
                         .addValue("onDate", onDate)
+                        .addValue("now", LocalDateTime.now(clock))
                         .addValue("lowStock", lowStockThreshold);
         BriefingRow row =
                 jdbc.queryForObject(
@@ -209,6 +230,31 @@ public class FarmerKnowledgeRepository {
                                         rs.getLong("sold_out"),
                                         rs.getLong("low_stock")));
         return row == null ? new BriefingRow(0, 0, 0, 0, 0) : row;
+    }
+
+    public List<OrderItemRow> myOrderItems(long farmerId, long orderId) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("farmerId", farmerId)
+                        .addValue("orderId", orderId);
+        return jdbc.query(
+                MY_ORDER_ITEMS,
+                params,
+                (rs, i) ->
+                        new OrderItemRow(
+                                rs.getString("product_name"),
+                                rs.getInt("quantity"),
+                                rs.getString("unit"),
+                                rs.getBigDecimal("subtotal")));
+    }
+
+    /** The name of a stall, so a Farmer tool result can say whose numbers it holds. */
+    public Optional<String> stallName(long farmerId) {
+        return jdbc
+                .queryForList(
+                        STALL_NAME, new MapSqlParameterSource("farmerId", farmerId), String.class)
+                .stream()
+                .findFirst();
     }
 
     /** The stall this account owns, or empty when it owns none. Resolved from the JWT's user id. */
@@ -234,7 +280,7 @@ public class FarmerKnowledgeRepository {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
                         .addValue("farmerId", farmerId)
-                        .addValue("hours", hours)
+                        .addValue("until", LocalDateTime.now(clock).plusHours(hours))
                         .addValue("limit", ROW_LIMIT);
         return jdbc.query(CUTOFF_SOON, params, FarmerKnowledgeRepository::orderRow);
     }
