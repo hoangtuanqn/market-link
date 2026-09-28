@@ -97,6 +97,7 @@
     "productGone": "Sản phẩm này không còn được bán.",
     "tooFast": "Bạn gửi nhanh quá. Đợi một chút rồi thử lại.",
     "mediaTooBig": "Tệp này lớn hơn 50 MB. Chọn tệp nhỏ hơn.",
+    "mediaTooBigForServer": "Tệp này lớn hơn mức máy chủ đang cho phép. Chọn tệp nhỏ hơn.",
     "mediaType": "Chọn ảnh (JPEG, PNG, WebP, GIF, AVIF hoặc HEIC) hoặc video (MP4, MOV hoặc WebM).",
     "converting": "Đang chuyển đổi ảnh…",
     "convertFailed": "Không chuyển đổi được ảnh này. Lưu lại dạng JPEG rồi thử lại.",

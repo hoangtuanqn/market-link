@@ -42,7 +42,10 @@ Server **không tin** đuôi file hay Content-Type; loại file suy ra từ nộ
   ở cuối file (size 1 = largesize 64 bit, size 0 = tới cuối file); GIF phải kết thúc bằng `3B`; WebP giữ các kiểm
   hiện có. Chặn đuôi file gắn thêm và file cụt.
 - **Chống "bom giải nén":** WebP/GIF/AVIF cạnh > 4096 px → 400 như hiện nay (không giải mã được để thu nhỏ). JPEG/PNG
-  có cạnh > 30 000 px trong header → 400 (không giải mã).
+  có cạnh > 30 000 px trong header → 400 (không giải mã). Bổ sung sau review cuối: tổng > 200 MP → 400; JPEG
+  **progressive** > 24 MP → 400 (libjpeg giữ toàn bộ hệ số DCT trong bộ nhớ native, subsampling không giảm được).
+- **Hướng ảnh:** JPEG mã hoá lại mất EXIF nên Orientation được áp vào điểm ảnh trước (ảnh dọc chụp bằng điện thoại
+  không bị xoay ngang); `width`/`height` lưu là kích thước thật của tệp đã lưu.
 - **Đánh đổi đã biết:** GIF/AVIF lưu nguyên có thể còn metadata (AVIF có thể chứa EXIF) — giống WebP hiện nay; file chỉ
   ra ngoài qua endpoint có kiểm quyền và chỉ tới người nhận do người gửi chọn.
 
@@ -61,7 +64,7 @@ Server **không tin** đuôi file hay Content-Type; loại file suy ra từ nộ
 
 ## 4. Tin nhắn video
 
-- `MessageKind` thêm `VIDEO`; migration `V20260928004__add_video_message_kind.sql` sửa ENUM
+- `MessageKind` thêm `VIDEO`; migration `V20260928010__add_video_message_kind.sql` sửa ENUM
   `messages.kind` thành `('text','image','video','offer','system')`.
 - `POST /conversations/{id}/messages` nhận `kind: "video"` + `attachmentId`. Loại tệp phải khớp loại tin: `image` cần
   mime `image/*`, `video` cần `video/*`, sai → 400 `VALIDATION_ERROR` (field `attachmentId`).
@@ -88,7 +91,9 @@ Server **không tin** đuôi file hay Content-Type; loại file suy ra từ nộ
 
 ## 6. Frontend
 
-- **Chọn tệp:** nút "Add a photo or video"; `accept` gồm các mime ở §2 + `.heic .heif .mov .m4v`.
+- **Chọn tệp:** nút "Add a photo or video"; `accept` gồm các mime ở §2 + `.heic .heif .mov .m4v`. Trên iPhone/iPad
+  bỏ HEIC khỏi `accept` để iOS tự đổi sang JPEG (đổi bằng JS trên máy iOS hỏng với ảnh 24/48 MP vì canvas iOS giới hạn
+  ~16,7 MP) — bổ sung sau review cuối.
   - Kiểm loại (theo mime hoặc đuôi) và ≤ 50 MB trước khi gửi, báo lỗi tại chỗ như hiện nay.
   - HEIC/HEIF: đổi sang JPEG bằng `heic2any` (**dependency npm mới**, `import()` động — chỉ nạp khi cần), hiện
     "Converting the photo…". Đổi xong vẫn phải ≤ 50 MB.
@@ -96,8 +101,9 @@ Server **không tin** đuôi file hay Content-Type; loại file suy ra từ nộ
   (`AbortController`). Upload xong gửi tin `image` hoặc `video` theo `mime` trả về.
 - **Bong bóng video (`ChatVideo`):** khung có nút play (giữ chỗ 16:9, tối đa 280 px); bấm → xin `stream-url` →
   `<video controls playsInline autoPlay preload="metadata">`. Lỗi phát (định dạng máy không hỗ trợ) → "This video
-  can't play here" + nút **Download** (link `download=1`). Link hết hạn khi đang xem → xin link mới một lần.
-- **Lỗi:** 413 → "That file is over 50 MB…", 415 → danh sách định dạng mới, 429 → như hiện nay.
+  cannot be played in this browser." + nút **Download** (link `download=1`). Link hết hạn khi đang xem → xin link mới một lần.
+- **Lỗi:** quá 50 MB (trình duyệt tự chặn) → "That file is over 50 MB…"; 413 từ server (trần server thấp hơn, vd
+  `.env` cũ còn 5 MB) → câu không nêu con số; 415 → danh sách định dạng mới, 429 → như hiện nay.
 - **Admin:** `ReportedMessages` hiện video (qua cùng endpoint, nhánh admin) khi `hasVideo`; danh sách hiện "Video".
 - Chữ mới / sửa trong `common.json` (`chat.*`) và `AdminModeration.json`, đủ 10 ngôn ngữ.
 

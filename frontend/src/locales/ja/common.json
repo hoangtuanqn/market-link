@@ -97,6 +97,7 @@
     "productGone": "この商品は掲載終了しました。",
     "tooFast": "送信が速すぎます。少し待ってからもう一度お試しください。",
     "mediaTooBig": "このファイルは 50 MB を超えています。小さいファイルを選んでください。",
+    "mediaTooBigForServer": "このファイルはサーバーが現在受け付けるサイズを超えています。小さいファイルを選んでください。",
     "mediaType": "写真（JPEG、PNG、WebP、GIF、AVIF、HEIC）または動画（MP4、MOV、WebM）を選んでください。",
     "converting": "写真を変換しています…",
     "convertFailed": "この写真を変換できませんでした。JPEG で保存してからもう一度お試しください。",

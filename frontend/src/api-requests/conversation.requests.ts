@@ -62,6 +62,9 @@ class ConversationApi {
     const form = new FormData();
     form.append('file', file);
     const response = await privateApi.post<ApiResponse<ChatAttachment>>('/attachments', form, {
+      // Drop the default application/json header: with it axios sends the FormData as JSON ("{"file":{}}") instead of
+      // multipart/form-data, and the server never sees a file. The browser sets the multipart boundary itself.
+      headers: { 'Content-Type': undefined },
       timeout: 0,
       signal,
       onUploadProgress: (event) => {

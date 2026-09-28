@@ -277,6 +277,63 @@ class AttachmentServiceTest {
         assertThatThrownBy(() -> service.read(7L, 55L)).isInstanceOf(EntityNotFoundException.class);
     }
 
+    /** Final review #5 at the service: the saved width/height are the upright, stored ones. */
+    @Test
+    void aSidewaysPhoneJpegIsSavedWithItsUprightSize() throws Exception {
+        BufferedImage landscape = new BufferedImage(40, 20, BufferedImage.TYPE_INT_RGB);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(landscape, "jpeg", out);
+        byte[] jpeg = out.toByteArray();
+        byte[] exif = {
+            (byte) 0xFF,
+            (byte) 0xE1,
+            0,
+            34,
+            'E',
+            'x',
+            'i',
+            'f',
+            0,
+            0,
+            'M',
+            'M',
+            0,
+            42,
+            0,
+            0,
+            0,
+            8,
+            0,
+            1,
+            0x01,
+            0x12,
+            0,
+            3,
+            0,
+            0,
+            0,
+            1,
+            0,
+            6,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        };
+        byte[] sideways = new byte[jpeg.length + exif.length];
+        System.arraycopy(jpeg, 0, sideways, 0, 2);
+        System.arraycopy(exif, 0, sideways, 2, exif.length);
+        System.arraycopy(jpeg, 2, sideways, 2 + exif.length, jpeg.length - 2);
+
+        AttachmentResource resource =
+                service.upload(7L, new MockMultipartFile("file", "p.jpg", "image/jpeg", sideways));
+
+        assertThat(resource.width()).isEqualTo(20);
+        assertThat(resource.height()).isEqualTo(40);
+    }
+
     // ---------- FR-115 §5: signed stream links ----------
 
     @Test

@@ -17,6 +17,19 @@ const HEIC_EXTENSIONS = ['heic', 'heif'];
 /** The file picker's `accept`: the mime types plus the extensions some systems report no mime for. */
 export const ACCEPT = [...IMAGE_TYPES, ...VIDEO_TYPES, ...HEIC_TYPES, '.heic', '.heif', '.mov', '.m4v'].join(',');
 
+/** Without HEIC: iOS then converts a HEIC photo to JPEG itself, upright and at full size. */
+const ACCEPT_WITHOUT_HEIC = [...IMAGE_TYPES, ...VIDEO_TYPES, '.mov', '.m4v'].join(',');
+
+/**
+ * The `accept` for this device. On an iPhone or iPad, naming HEIC makes iOS hand over the raw HEIC, and converting it
+ * in JavaScript there fails for 24/48 MP photos (iOS caps a canvas at about 16.7 MP) — left out, iOS sends a JPEG.
+ * iPadOS asks for the desktop site and says "Macintosh", so a touch screen on a "Mac" counts as an iPad.
+ */
+export function acceptFor({ userAgent, maxTouchPoints }: { userAgent: string; maxTouchPoints: number }): string {
+  const ios = /iPhone|iPad|iPod/.test(userAgent) || (/Macintosh/.test(userAgent) && maxTouchPoints > 1);
+  return ios ? ACCEPT_WITHOUT_HEIC : ACCEPT;
+}
+
 export type MediaKind = 'image' | 'video';
 
 export class MediaError extends Error {

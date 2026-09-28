@@ -81,6 +81,8 @@ describe('ConversationApi', () => {
 
     const config = vi.mocked(privateApi.post).mock.calls[0][2]!;
     expect(config.timeout).toBe(0);
+    // The instance's default application/json would make axios send the FormData as JSON ("{"file":{}}")
+    expect(config.headers).toEqual({ 'Content-Type': undefined });
     expect(config.signal).toBe(signal);
     config.onUploadProgress!({ loaded: 21, total: 50 } as never);
     expect(onProgress).toHaveBeenCalledWith(42);

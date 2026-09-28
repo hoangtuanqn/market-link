@@ -2,7 +2,7 @@ import { type FormEvent, type KeyboardEvent, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { sendErrorKey } from '@/lib/chat/errors';
-import { ACCEPT, prepareMedia } from '@/lib/chat/media';
+import { acceptFor, prepareMedia } from '@/lib/chat/media';
 import OrderPin from './OrderPin';
 import ProductPin from './ProductPin';
 
@@ -153,7 +153,7 @@ export default function Composer({
         <input
           ref={fileInput}
           type="file"
-          accept={ACCEPT}
+          accept={acceptFor(navigator)}
           className="sr-only"
           tabIndex={-1}
           onChange={(event) => void pickMedia(event.target.files?.[0])}

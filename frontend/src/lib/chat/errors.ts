@@ -6,6 +6,7 @@ export type SendErrorKey =
   | 'chat.closed'
   | 'chat.tooFast'
   | 'chat.mediaTooBig'
+  | 'chat.mediaTooBigForServer'
   | 'chat.mediaType'
   | 'chat.mediaFailed'
   | 'chat.convertFailed'
@@ -24,7 +25,8 @@ export function sendErrorKey(error: unknown, what: 'text' | 'media'): SendErrorK
   const status = isAxiosError(error) ? error.response?.status : undefined;
   if (status === 409) return 'chat.closed';
   if (status === 429) return 'chat.tooFast';
-  if (what === 'media' && status === 413) return 'chat.mediaTooBig';
+  // The browser already stopped anything over 50 MB, so a 413 means the server's cap is lower: name no number
+  if (what === 'media' && status === 413) return 'chat.mediaTooBigForServer';
   if (what === 'media' && status === 415) return 'chat.mediaType';
   return what === 'media' ? 'chat.mediaFailed' : 'chat.sendFailed';
 }

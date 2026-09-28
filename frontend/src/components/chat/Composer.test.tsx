@@ -148,6 +148,7 @@ describe('Composer', () => {
       expect(screen.getByRole('button', { name: 'Add a photo or video' })).toBeEnabled();
       const accept = container.querySelector('input[type="file"]')!.getAttribute('accept')!;
       expect(accept).toContain('video/mp4');
+      // jsdom is not an iPhone, so HEIC stays in the list
       expect(accept).toContain('.heic');
     });
 

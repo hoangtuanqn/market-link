@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const heic2any = vi.fn();
 vi.mock('heic2any', () => ({ default: heic2any }));
 
-const { ACCEPT, MAX_MEDIA_BYTES, MediaError, classify, prepareMedia } = await import('./media');
+const { ACCEPT, MAX_MEDIA_BYTES, MediaError, acceptFor, classify, prepareMedia } = await import('./media');
 
 const file = (name: string, type: string, size = 10) => new File([new Uint8Array(size)], name, { type });
 
@@ -63,6 +63,35 @@ describe('classify', () => {
     ]) {
       expect(ACCEPT.split(',')).toContain(part);
     }
+  });
+});
+
+describe('acceptFor', () => {
+  const IPHONE =
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148';
+  const MAC = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 Version/18.0 Safari/605.1.15';
+
+  /**
+   * Final review #4: iOS converts a HEIC photo to JPEG itself unless the picker says it takes HEIC — and converting in
+   * JavaScript on the phone fails for 24/48 MP photos (iOS caps a canvas at about 16.7 MP).
+   */
+  it('leaves HEIC out on an iPhone or iPad so iOS hands over a JPEG', () => {
+    for (const device of [
+      { userAgent: IPHONE, maxTouchPoints: 5 },
+      // iPadOS asks for the desktop site and says "Macintosh"; only the touch screen gives it away
+      { userAgent: MAC, maxTouchPoints: 5 },
+    ]) {
+      const accept = acceptFor(device).split(',');
+      expect(accept).not.toContain('image/heic');
+      expect(accept).not.toContain('.heic');
+      expect(accept).toContain('image/jpeg');
+      expect(accept).toContain('video/quicktime');
+    }
+  });
+
+  it('keeps HEIC on a computer, where a HEIC copied from a phone is converted here', () => {
+    expect(acceptFor({ userAgent: MAC, maxTouchPoints: 0 })).toBe(ACCEPT);
+    expect(ACCEPT.split(',')).toContain('.heic');
   });
 });
 

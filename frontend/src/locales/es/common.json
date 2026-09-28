@@ -97,6 +97,7 @@
     "productGone": "Este producto ya no está a la venta.",
     "tooFast": "Estás enviando demasiado rápido. Espera un momento e inténtalo de nuevo.",
     "mediaTooBig": "Ese archivo supera los 50 MB. Elige uno más pequeño.",
+    "mediaTooBigForServer": "Ese archivo supera el tamaño que el servidor acepta ahora. Elige uno más pequeño.",
     "mediaType": "Elige una foto (JPEG, PNG, WebP, GIF, AVIF o HEIC) o un video (MP4, MOV o WebM).",
     "converting": "Convirtiendo la foto…",
     "convertFailed": "No se pudo convertir esta foto. Guárdala como JPEG e inténtalo de nuevo.",

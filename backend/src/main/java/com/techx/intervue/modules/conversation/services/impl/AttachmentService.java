@@ -102,15 +102,16 @@ public class AttachmentService implements AttachmentServiceInterface {
             MessageAttachment.MessageAttachmentBuilder record =
                     MessageAttachment.builder().uploaderId(meId);
             if (probed.handling() == MediaProbe.Handling.REENCODE) {
-                byte[] stored = ImageProbe.normalize(Files.readAllBytes(temp), probed.mime());
+                ImageProbe.Normalized stored =
+                        ImageProbe.reencode(Files.readAllBytes(temp), probed.mime());
                 String storageKey = newStorageKey(ImageProbe.JPEG);
-                storage.store(FOLDER, storageKey, stored);
-                int[] size = ImageProbe.storedSize(probed.width(), probed.height());
+                storage.store(FOLDER, storageKey, stored.bytes());
+                // The stored photo's own size: scaled down, subsampled and turned upright
                 record.storageKey(storageKey)
                         .mime(ImageProbe.JPEG)
-                        .sizeBytes(stored.length)
-                        .width(size[0])
-                        .height(size[1]);
+                        .sizeBytes(stored.bytes().length)
+                        .width(stored.width())
+                        .height(stored.height());
             } else {
                 String storageKey = newStorageKey(probed.mime());
                 storage.storeFile(FOLDER, storageKey, temp);

@@ -22,8 +22,12 @@ describe('sendErrorKey', () => {
     expect(sendErrorKey(http(429), 'text')).toBe('chat.tooFast');
   });
 
-  it('names the file problem on 413 and 415', () => {
-    expect(sendErrorKey(http(413), 'media')).toBe('chat.mediaTooBig');
+  /**
+   * The browser already refuses anything over 50 MB, so a 413 means the server's own cap is lower (an old
+   * CHAT_MAX_UPLOAD_BYTES): "over 50 MB" would be false, so it gets words that name no number.
+   */
+  it('names the file problem on 413 and 415 without claiming a size the server did not use', () => {
+    expect(sendErrorKey(http(413), 'media')).toBe('chat.mediaTooBigForServer');
     expect(sendErrorKey(http(415), 'media')).toBe('chat.mediaType');
   });
 

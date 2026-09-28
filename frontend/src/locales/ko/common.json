@@ -97,6 +97,7 @@
     "productGone": "더 이상 판매하지 않는 상품입니다.",
     "tooFast": "너무 빨리 보내고 있습니다. 잠시 후 다시 시도하세요.",
     "mediaTooBig": "파일이 50MB를 넘습니다. 더 작은 파일을 선택하세요.",
+    "mediaTooBigForServer": "파일이 서버가 현재 허용하는 크기보다 큽니다. 더 작은 파일을 선택하세요.",
     "mediaType": "사진(JPEG, PNG, WebP, GIF, AVIF, HEIC) 또는 동영상(MP4, MOV, WebM)을 선택하세요.",
     "converting": "사진 변환 중…",
     "convertFailed": "이 사진을 변환할 수 없습니다. JPEG로 저장한 뒤 다시 시도하세요.",

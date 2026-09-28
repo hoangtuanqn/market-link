@@ -119,7 +119,7 @@ pin them. Each task: failing test → implementation → green → commit.
 ### Task 4: Video messages
 
 **Files:**
-- Create: `backend/src/main/resources/db/migration/V20260928004__add_video_message_kind.sql`
+- Create: `backend/src/main/resources/db/migration/V20260928010__add_video_message_kind.sql`
   (`ALTER TABLE messages MODIFY kind ENUM('text','image','video','offer','system') NOT NULL DEFAULT 'text';`)
 - Modify: `…/conversation/enums/MessageKind.java` (+ `VIDEO`), `MessageService.java` (accept VIDEO; mime family must
   match the kind → `InvalidFieldException("attachmentId", …)`; `VIDEO_PREVIEW = "Video"`; `list` loads attachments

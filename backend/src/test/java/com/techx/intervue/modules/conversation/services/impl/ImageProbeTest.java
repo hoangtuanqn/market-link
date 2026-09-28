@@ -191,6 +191,157 @@ class ImageProbeTest {
         assertThat(ImageProbe.probe(pngHeaderOnly(6000, 4000)).width()).isEqualTo(6000);
     }
 
+    /**
+     * Final review #3: subsampling bounds the Java raster, not libjpeg. A progressive JPEG keeps
+     * every DCT coefficient in native memory (about 6 bytes a pixel), so a small file declaring a
+     * large progressive image must be refused from its header, before ImageIO touches it.
+     */
+    @Test
+    void refusesAProgressiveJpegOverThePixelBudgetBeforeDecoding() {
+        byte[] bomb = jpegHeaderOnly(0xC2, 10_000, 10_000);
+
+        assertThatThrownBy(() -> ImageProbe.probe(bomb))
+                .isInstanceOf(InvalidFieldException.class)
+                .hasMessageContaining("too large");
+    }
+
+    /** A baseline JPEG decodes row by row, so the same size stays acceptable (48 MP phones). */
+    @Test
+    void aBaselineJpegOfTheSameSizeIsStillAccepted() {
+        ImageProbe.Probed probed = ImageProbe.probe(jpegHeaderOnly(0xC0, 10_000, 10_000));
+
+        assertThat(probed.width()).isEqualTo(10_000);
+        assertThat(probed.height()).isEqualTo(10_000);
+    }
+
+    @Test
+    void refusesAnyJpegOrPngOverTheTotalPixelCap() {
+        // 25000 × 25000 is under the side limit but far over any real camera
+        assertThatThrownBy(() -> ImageProbe.probe(jpegHeaderOnly(0xC0, 25_000, 25_000)))
+                .isInstanceOf(InvalidFieldException.class);
+        assertThatThrownBy(() -> ImageProbe.probe(pngHeaderOnly(25_000, 25_000)))
+                .isInstanceOf(InvalidFieldException.class);
+    }
+
+    @Test
+    void recognisesARealProgressiveJpegAndStillTakesASmallOne() throws Exception {
+        byte[] small = progressiveJpeg(64, 48);
+
+        assertThat(ImageProbe.probe(small).width()).isEqualTo(64);
+        assertThat(ImageProbe.reencode(small, "image/jpeg").width()).isEqualTo(64);
+    }
+
+    /**
+     * Final review #5: phones store a portrait photo as landscape pixels plus EXIF Orientation.
+     * Re-encoding drops EXIF, so the rotation must be applied to the pixels, and the stored size
+     * must be the upright one.
+     */
+    @Test
+    void aSidewaysPhoneJpegIsStoredUpright() throws Exception {
+        byte[] sideways = withOrientation(halves(40, 20), 6);
+
+        ImageProbe.Normalized stored = ImageProbe.reencode(sideways, "image/jpeg");
+        BufferedImage upright = ImageIO.read(new ByteArrayInputStream(stored.bytes()));
+
+        assertThat(stored.width()).isEqualTo(20);
+        assertThat(stored.height()).isEqualTo(40);
+        assertThat(upright.getWidth()).isEqualTo(20);
+        assertThat(upright.getHeight()).isEqualTo(40);
+        // Rotating 90° clockwise puts the left (red) half on top
+        assertThat(new java.awt.Color(upright.getRGB(10, 5)).getRed()).isGreaterThan(200);
+        assertThat(new java.awt.Color(upright.getRGB(10, 35)).getBlue()).isGreaterThan(200);
+    }
+
+    @Test
+    void everyMirroredOrRotatedOrientationComesOutWithTheRightShape() throws Exception {
+        for (int orientation = 1; orientation <= 8; orientation++) {
+            ImageProbe.Normalized stored =
+                    ImageProbe.reencode(withOrientation(halves(40, 20), orientation), "image/jpeg");
+            boolean turned = orientation >= 5;
+            assertThat(stored.width()).as("orientation " + orientation).isEqualTo(turned ? 20 : 40);
+            assertThat(stored.height())
+                    .as("orientation " + orientation)
+                    .isEqualTo(turned ? 40 : 20);
+        }
+    }
+
+    /** Final review #7: the size saved with the photo is the size of the file actually stored. */
+    @Test
+    void theReportedSizeIsTheEncodedSize() throws Exception {
+        ImageProbe.Normalized stored = ImageProbe.reencode(jpeg(5000, 2500), "image/jpeg");
+        BufferedImage decoded = ImageIO.read(new ByteArrayInputStream(stored.bytes()));
+
+        assertThat(stored.width()).isEqualTo(decoded.getWidth());
+        assertThat(stored.height()).isEqualTo(decoded.getHeight());
+    }
+
+    /** Left half red, right half blue. */
+    private static byte[] halves(int w, int h) throws Exception {
+        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                image.setRGB(x, y, x < w / 2 ? 0xFF0000 : 0x0000FF);
+            }
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpeg", out);
+        return out.toByteArray();
+    }
+
+    /** Inserts an APP1 Exif segment right after SOI whose IFD0 holds only the Orientation tag. */
+    private static byte[] withOrientation(byte[] jpeg, int orientation) {
+        ByteBuffer app1 = ByteBuffer.allocate(2 + 2 + 6 + 26).order(ByteOrder.BIG_ENDIAN);
+        app1.put((byte) 0xFF).put((byte) 0xE1).putShort((short) (2 + 6 + 26));
+        app1.put("Exif".getBytes(StandardCharsets.US_ASCII)).put((byte) 0).put((byte) 0);
+        app1.put("MM".getBytes(StandardCharsets.US_ASCII)).putShort((short) 42).putInt(8);
+        app1.putShort((short) 1); // one IFD entry
+        app1.putShort((short) 0x0112).putShort((short) 3).putInt(1);
+        app1.putShort((short) orientation).putShort((short) 0);
+        app1.putInt(0); // no next IFD
+        byte[] segment = app1.array();
+        byte[] out = new byte[jpeg.length + segment.length];
+        System.arraycopy(jpeg, 0, out, 0, 2);
+        System.arraycopy(segment, 0, out, 2, segment.length);
+        System.arraycopy(jpeg, 2, out, 2 + segment.length, jpeg.length - 2);
+        return out;
+    }
+
+    /** SOI + one SOFn segment (1 component) + EOI: enough for a header check, nothing to decode. */
+    private static byte[] jpegHeaderOnly(int sofMarker, int w, int h) {
+        ByteBuffer b = ByteBuffer.allocate(2 + 2 + 11 + 2).order(ByteOrder.BIG_ENDIAN);
+        b.put((byte) 0xFF).put((byte) 0xD8);
+        b.put((byte) 0xFF).put((byte) sofMarker).putShort((short) 11);
+        b.put((byte) 8).putShort((short) h).putShort((short) w);
+        b.put((byte) 1).put((byte) 1).put((byte) 0x11).put((byte) 0);
+        b.put((byte) 0xFF).put((byte) 0xD9);
+        return b.array();
+    }
+
+    private static byte[] progressiveJpeg(int w, int h) throws Exception {
+        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        javax.imageio.ImageWriter writer = ImageIO.getImageWritersByFormatName("jpeg").next();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (javax.imageio.stream.ImageOutputStream ios = ImageIO.createImageOutputStream(out)) {
+            writer.setOutput(ios);
+            javax.imageio.ImageWriteParam param = writer.getDefaultWriteParam();
+            param.setProgressiveMode(javax.imageio.ImageWriteParam.MODE_DEFAULT);
+            writer.write(null, new javax.imageio.IIOImage(image, null, null), param);
+        } finally {
+            writer.dispose();
+        }
+        byte[] bytes = out.toByteArray();
+        // Make sure the fixture really is progressive (SOF2), or the test proves nothing
+        boolean sof2 = false;
+        for (int i = 0; i + 1 < bytes.length; i++) {
+            if ((bytes[i] & 0xFF) == 0xFF && (bytes[i + 1] & 0xFF) == 0xC2) {
+                sof2 = true;
+                break;
+            }
+        }
+        assertThat(sof2).isTrue();
+        return bytes;
+    }
+
     private static byte[] jpeg(int w, int h) throws Exception {
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         ByteArrayOutputStream out = new ByteArrayOutputStream();

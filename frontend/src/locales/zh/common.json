@@ -97,6 +97,7 @@
     "productGone": "该商品已下架。",
     "tooFast": "发送太快了，请稍等再试。",
     "mediaTooBig": "该文件超过 50 MB，请选择更小的文件。",
+    "mediaTooBigForServer": "该文件超过了服务器目前允许的大小，请选择更小的文件。",
     "mediaType": "请选择照片（JPEG、PNG、WebP、GIF、AVIF 或 HEIC）或视频（MP4、MOV 或 WebM）。",
     "converting": "正在转换照片…",
     "convertFailed": "无法转换这张照片。请另存为 JPEG 后重试。",

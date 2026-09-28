@@ -581,7 +581,8 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**, trừ `GET /at
 - Upload (đổi 28/09/2026, spec `2026-09-28-chat-media-design.md`): tối đa **50 MB** mỗi tệp, kiểu kết
   luận từ **nội dung tệp** (magic bytes + cấu trúc) chứ không từ tên hay `Content-Type` client gửi.
   - Ảnh JPEG/PNG: mã hoá lại thành JPEG nên EXIF/GPS rụng hết; cạnh > 4096 px được **thu nhỏ** còn
-    4096 px (không từ chối); cạnh > 30 000 px trong header → 400.
+    4096 px (không từ chối); cạnh > 30 000 px trong header, tổng > 200 MP, hoặc JPEG progressive > 24 MP → 400.
+    EXIF Orientation được áp vào điểm ảnh (ảnh dọc không bị xoay ngang); `width`/`height` là kích thước tệp đã lưu.
   - Ảnh WebP, GIF (giữ ảnh động), AVIF: lưu nguyên sau khi kiểm cấu trúc; cạnh > 4096 px → 400.
   - HEIC/HEIF → **415** với lời nhắc đổi sang JPEG — frontend tự đổi trước khi gửi.
   - Video MP4/M4V, MOV, WebM: lưu nguyên, **không chuyển mã**. MP4/MOV phải là chuỗi hộp ISO BMFF
@@ -623,7 +624,7 @@ Thẻ `<video>` không gửi được header `Authorization`, nên video phát q
 
 | Mã | `error.code` | Khi nào |
 |---|---|---|
-| 400 | `VALIDATION_ERROR` | Tự nhắn cho chính mình · tin text rỗng · `kind` chưa hỗ trợ · ảnh WebP/GIF/AVIF quá 4096 px mỗi cạnh (JPEG/PNG: quá 30 000 px) · loại tệp không khớp `kind` (field `attachmentId`) |
+| 400 | `VALIDATION_ERROR` | Tự nhắn cho chính mình · tin text rỗng · `kind` chưa hỗ trợ · ảnh WebP/GIF/AVIF quá 4096 px mỗi cạnh (JPEG/PNG: quá 30 000 px, quá 200 MP, JPEG progressive quá 24 MP) · loại tệp không khớp `kind` (field `attachmentId`) |
 | 403 | `NOT_A_MEMBER` | Không thuộc thread |
 | 403 | `STALL_NOT_OPEN` | Stall chưa được duyệt hoặc đang bị đình chỉ — không mở thread mới được |
 | 403 | `ACCOUNT_RESTRICTED` | Tài khoản không còn `active` |
