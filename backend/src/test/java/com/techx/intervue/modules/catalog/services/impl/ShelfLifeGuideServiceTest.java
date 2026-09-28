@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.catalog.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -8,12 +10,17 @@ import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.catalog.entities.ShelfLifeGuide;
 import com.techx.intervue.modules.catalog.enums.StorageMode;
+import com.techx.intervue.modules.catalog.exceptions.CategoryNotFoundException;
+import com.techx.intervue.modules.catalog.exceptions.ShelfLifeGuideNotFoundException;
 import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.catalog.repositories.ShelfLifeGuideRepository;
 import com.techx.intervue.modules.catalog.repositories.ShelfLifePeerQueryRepository;
+import com.techx.intervue.modules.catalog.requests.ShelfLifeGuideRequest;
 import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideGroupResource;
+import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideResource;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -91,5 +98,66 @@ class ShelfLifeGuideServiceTest {
         when(peers.daysByGuide(anyCollection(), eq(null))).thenReturn(Map.of());
 
         assertThat(service.listForCategory(1L, null)).isEmpty();
+    }
+
+    private static ShelfLifeGuideRequest request(Boolean active) {
+        return new ShelfLifeGuideRequest(
+                1L, "  Leafy greens ", " rau muống, lettuce ", "chilled", 3, active);
+    }
+
+    @Test
+    void createsAnActiveGroupWithTrimmedText() {
+        when(categories.existsById(1L)).thenReturn(true);
+        when(guides.saveAndFlush(any(ShelfLifeGuide.class)))
+                .thenAnswer(
+                        i -> {
+                            ShelfLifeGuide g = i.getArgument(0);
+                            g.setId(5L);
+                            return g;
+                        });
+
+        ShelfLifeGuideResource created = service.create(request(null));
+
+        assertThat(created.id()).isEqualTo(5L);
+        assertThat(created.groupName()).isEqualTo("Leafy greens");
+        assertThat(created.examples()).isEqualTo("rau muống, lettuce");
+        assertThat(created.storageMode()).isEqualTo("chilled");
+        assertThat(created.isActive()).isTrue();
+    }
+
+    @Test
+    void refusesAnUnknownCategory() {
+        when(categories.existsById(1L)).thenReturn(false);
+
+        assertThatThrownBy(() -> service.create(request(null)))
+                .isInstanceOf(CategoryNotFoundException.class);
+    }
+
+    @Test
+    void updatesAndCanTurnAGroupBackOn() {
+        ShelfLifeGuide existing = guide(5L, "Old", StorageMode.ROOM, 1);
+        existing.setActive(false);
+        when(categories.existsById(1L)).thenReturn(true);
+        when(guides.findById(5L)).thenReturn(Optional.of(existing));
+        when(guides.saveAndFlush(any(ShelfLifeGuide.class))).thenAnswer(i -> i.getArgument(0));
+
+        ShelfLifeGuideResource saved = service.update(5L, request(true));
+
+        assertThat(saved.groupName()).isEqualTo("Leafy greens");
+        assertThat(saved.suggestedDays()).isEqualTo(3);
+        assertThat(saved.isActive()).isTrue();
+    }
+
+    @Test
+    void turnsAGroupOffAndReportsAMissingOne() {
+        ShelfLifeGuide existing = guide(5L, "Leafy greens", StorageMode.ROOM, 1);
+        when(guides.findById(5L)).thenReturn(Optional.of(existing));
+        when(guides.findById(6L)).thenReturn(Optional.empty());
+
+        service.deactivate(5L);
+
+        assertThat(existing.isActive()).isFalse();
+        assertThatThrownBy(() -> service.deactivate(6L))
+                .isInstanceOf(ShelfLifeGuideNotFoundException.class);
     }
 }

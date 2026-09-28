@@ -1,10 +1,15 @@
 package com.techx.intervue.modules.catalog.services.impl;
 
 import com.techx.intervue.modules.catalog.entities.ShelfLifeGuide;
+import com.techx.intervue.modules.catalog.enums.StorageMode;
+import com.techx.intervue.modules.catalog.exceptions.CategoryNotFoundException;
+import com.techx.intervue.modules.catalog.exceptions.ShelfLifeGuideNotFoundException;
 import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.catalog.repositories.ShelfLifeGuideRepository;
 import com.techx.intervue.modules.catalog.repositories.ShelfLifePeerQueryRepository;
+import com.techx.intervue.modules.catalog.requests.ShelfLifeGuideRequest;
 import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideGroupResource;
+import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideResource;
 import com.techx.intervue.modules.catalog.resources.ShelfLifeModeResource;
 import com.techx.intervue.modules.catalog.services.interfaces.ShelfLifeGuideServiceInterface;
 import java.util.LinkedHashMap;
@@ -13,6 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -64,5 +70,72 @@ public class ShelfLifeGuideService implements ShelfLifeGuideServiceInterface {
                 g.getSuggestedDays(),
                 days.size() >= MIN_PEERS ? ShelfLifePolicy.median(days) : null,
                 days.size());
+    }
+
+    @Override
+    public List<ShelfLifeGuideResource> adminList(long categoryId) {
+        return guides.findByCategoryIdOrderByGroupNameAscStorageModeAsc(categoryId).stream()
+                .map(ShelfLifeGuideService::toResource)
+                .toList();
+    }
+
+    /**
+     * saveAndFlush: a duplicate group and mode fails inside the call, where the handler maps it.
+     */
+    @Override
+    @Transactional
+    public ShelfLifeGuideResource create(ShelfLifeGuideRequest request) {
+        requireCategory(request.categoryId());
+        ShelfLifeGuide guide = new ShelfLifeGuide();
+        apply(guide, request);
+        guide.setActive(request.active() == null || request.active());
+        return toResource(guides.saveAndFlush(guide));
+    }
+
+    @Override
+    @Transactional
+    public ShelfLifeGuideResource update(long id, ShelfLifeGuideRequest request) {
+        ShelfLifeGuide guide =
+                guides.findById(id).orElseThrow(() -> new ShelfLifeGuideNotFoundException(id));
+        requireCategory(request.categoryId());
+        apply(guide, request);
+        if (request.active() != null) {
+            guide.setActive(request.active());
+        }
+        return toResource(guides.saveAndFlush(guide));
+    }
+
+    @Override
+    @Transactional
+    public void deactivate(long id) {
+        ShelfLifeGuide guide =
+                guides.findById(id).orElseThrow(() -> new ShelfLifeGuideNotFoundException(id));
+        guide.setActive(false);
+        guides.save(guide);
+    }
+
+    private void requireCategory(Long categoryId) {
+        if (!categories.existsById(categoryId)) {
+            throw new CategoryNotFoundException(categoryId);
+        }
+    }
+
+    private static void apply(ShelfLifeGuide guide, ShelfLifeGuideRequest request) {
+        guide.setCategoryId(request.categoryId());
+        guide.setGroupName(request.groupName().trim());
+        guide.setExamples(request.examples() == null ? "" : request.examples().trim());
+        guide.setStorageMode(StorageMode.parse(request.storageMode()));
+        guide.setSuggestedDays(request.suggestedDays());
+    }
+
+    private static ShelfLifeGuideResource toResource(ShelfLifeGuide g) {
+        return new ShelfLifeGuideResource(
+                g.getId(),
+                g.getCategoryId(),
+                g.getGroupName(),
+                g.getExamples(),
+                g.getStorageMode().value(),
+                g.getSuggestedDays(),
+                g.isActive());
     }
 }
