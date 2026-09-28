@@ -8,7 +8,7 @@ export type Offset = { x: number; y: number };
 export const MIN_ZOOM = 1;
 export const MAX_ZOOM = 4;
 /** The side of the image sent to the server (the backend also scales down to at most 512px). */
-export const OUTPUT_SIZE = 512;
+const OUTPUT_SIZE = 512;
 
 /** Screen px per image px, when the image just covers the frame (zoom 1). */
 export const coverScale = (imgW: number, imgH: number, frame: number) => frame / Math.min(imgW, imgH);
@@ -28,7 +28,7 @@ export const clampOffset = (offset: Offset, imgW: number, imgH: number, frame: n
 };
 
 /** The region of the source image (image px) currently inside the frame. */
-export const sourceRect = (imgW: number, imgH: number, frame: number, zoom: number, offset: Offset) => {
+const sourceRect = (imgW: number, imgH: number, frame: number, zoom: number, offset: Offset) => {
   const scale = coverScale(imgW, imgH, frame) * zoom;
   const side = frame / scale;
   return {

@@ -1,5 +1,5 @@
 /** Limit on the source image before cropping; the image sent after cropping is only a few tens of KB. */
-export const MAX_SOURCE_BYTES = 15 * 1024 * 1024;
+const MAX_SOURCE_BYTES = 15 * 1024 * 1024;
 
 /** Why a photo cannot be used; the dialog shows `CustomerAccount:photoErrors.<code>`. */
 export type PhotoErrorCode = 'notPhoto' | 'tooBig' | 'unreadable' | 'noPicture' | 'captureFailed';

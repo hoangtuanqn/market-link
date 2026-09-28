@@ -141,7 +141,7 @@ export const toClosure = (dto: MarketClosureDto): ClosureType => {
   };
 };
 
-export const toCategory = (dto: CategoryDto): CategoryType => ({
+const toCategory = (dto: CategoryDto): CategoryType => ({
   id: dto.id,
   name: dto.name,
   slug: dto.slug,

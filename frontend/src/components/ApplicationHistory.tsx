@@ -76,5 +76,3 @@ export function ApplicationHistory({ entries, statusLabel }: ApplicationHistoryP
     </ol>
   );
 }
-
-export default ApplicationHistory;
