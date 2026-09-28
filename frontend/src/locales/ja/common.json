@@ -386,16 +386,6 @@
     "userLine": "管理者 · プラットフォーム全体",
     "searchPlaceholder": "店舗、顧客、市場"
   },
-  "carousel": {
-    "roleCarousel": "カルーセル",
-    "roleSlide": "スライド",
-    "slideOf": "{{n}} / {{total}}：{{topic}}",
-    "previous": "前のスライド",
-    "next": "次のスライド",
-    "show": "スライド {{n}} を表示：{{topic}}",
-    "pause": "スライドショーを一時停止",
-    "play": "スライドショーを再生"
-  },
   "geo": {
     "denied": "このサイトの位置情報がオフになっています。ブラウザのサイト設定で変更するか、住所を使ってください。",
     "insecure": "ブラウザは安全な接続（https）でのみ位置情報を共有します。",

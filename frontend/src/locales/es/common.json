@@ -386,16 +386,6 @@
     "userLine": "Admin · toda la plataforma",
     "searchPlaceholder": "Puesto, cliente o mercado"
   },
-  "carousel": {
-    "roleCarousel": "carrusel",
-    "roleSlide": "diapositiva",
-    "slideOf": "{{n}} de {{total}}: {{topic}}",
-    "previous": "Diapositiva anterior",
-    "next": "Diapositiva siguiente",
-    "show": "Mostrar la diapositiva {{n}}: {{topic}}",
-    "pause": "Pausar la presentación",
-    "play": "Reproducir la presentación"
-  },
   "geo": {
     "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador o usa una dirección.",
     "insecure": "Tu navegador solo comparte tu ubicación mediante una conexión segura (https).",

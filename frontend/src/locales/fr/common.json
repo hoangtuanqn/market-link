@@ -386,16 +386,6 @@
     "userLine": "Admin · toute la plateforme",
     "searchPlaceholder": "Étal, client ou marché"
   },
-  "carousel": {
-    "roleCarousel": "carrousel",
-    "roleSlide": "diapositive",
-    "slideOf": "{{n}} sur {{total}} : {{topic}}",
-    "previous": "Diapositive précédente",
-    "next": "Diapositive suivante",
-    "show": "Afficher la diapositive {{n}} : {{topic}}",
-    "pause": "Mettre le diaporama en pause",
-    "play": "Lancer le diaporama"
-  },
   "geo": {
     "denied": "Vous avez désactivé la localisation pour ce site. Modifiez-la dans les paramètres du site de votre navigateur, ou utilisez une adresse.",
     "insecure": "Votre navigateur ne partage votre position que sur une connexion sécurisée (https).",
