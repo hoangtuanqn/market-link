@@ -61,6 +61,12 @@ export type JoinMarketInput = {
   stallLongitude?: number;
 };
 
+export type UpdateStallMarketInput = {
+  stallCode?: string;
+  stallLatitude?: number | null;
+  stallLongitude?: number | null;
+};
+
 export type OperatingDayInput = { dayOfWeek: number; pickupStartTime: string; pickupEndTime: string };
 
 /** One pickup slot (contract §6): date "yyyy-MM-dd", time "HH:mm"; `isActive` is always true on the public list. */
@@ -185,6 +191,12 @@ class StallApi {
     return response.data.data;
   };
 
+  /** Updates booth code and pin coordinates of an already joined market. */
+  static updateMarket = async (farmerMarketId: number, input: UpdateStallMarketInput) => {
+    const response = await privateApi.put<ApiResponse<StallMarketDto>>(`/farmer/markets/${farmerMarketId}`, input);
+    return response.data.data;
+  };
+
   static leaveMarket = async (farmerMarketId: number) => {
     await privateApi.delete<ApiResponse<null>>(`/farmer/markets/${farmerMarketId}`);
   };
@@ -204,6 +216,17 @@ class StallApi {
    */
   static slots = async (farmerId: number, params: { marketId?: number; date?: string } = {}) => {
     const response = await publicApi.get<ApiResponse<SlotDto[]>>(`/farmers/${farmerId}/slots`, { params });
+    return response.data.data;
+  };
+
+  /**
+   * Farmer. Returns every slot of that market on that date (including inactive and full ones) so the Farmer can view
+   * and manage their full schedule.
+   */
+  static farmerSlots = async (farmerMarketId: number, date?: string) => {
+    const response = await privateApi.get<ApiResponse<SlotDto[]>>('/farmer/slots', {
+      params: date ? { farmerMarketId, date } : { farmerMarketId },
+    });
     return response.data.data;
   };
 
