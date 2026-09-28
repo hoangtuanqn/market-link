@@ -15,9 +15,8 @@ import ProductCard from '@/components/ProductCard';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
 import { CheckIcon } from '@/components/icons';
-import { Button, ButtonLink } from '@/components/ui/button';
+import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Chip } from '@/components/ui/chip';
 import MessageStallButton from '@/components/chat/MessageStallButton';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Pagination } from '@/components/ui/pagination';
@@ -29,7 +28,6 @@ import { dayName, formatClock, upcoming } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
-import Notification from '@/utils/notification';
 
 const REVIEWS_PER_PAGE = 6;
 /** Contract §3 caps a page at 50; every market of the city fits in one call. */
@@ -76,11 +74,7 @@ const StallProfilePage = () => {
   );
   const allMarkets = marketsLoad.kind === 'ready' ? marketsLoad.data : NO_MARKETS;
   const marketById = (marketId: number) => allMarkets.find((m) => m.id === marketId);
-  // This week's stock (FR-011); products are visible only while the stall is approved (D-09).
-  const { state: productsLoad } = useRequest(`stall-products:${id}`, () =>
-    validId ? ProductApi.byFarmer(farmerId) : Promise.resolve(NO_PRODUCTS),
-  );
-  // Visible reviews of the stall and its products (FR-052); client-side filter and pagination below.
+  // Visible reviews of the stall (FR-052: GET /farmers/{id}/reviews carries only stall reviews); paged below.
   const { state: reviewsLoad, retry: retryReviews } = useRequest(`stall-reviews:${id}`, () =>
     validId
       ? ReviewApi.forFarmer(farmerId, { pageSize: REVIEWS_FETCH_SIZE }).then((r) => r.items)
@@ -95,8 +89,12 @@ const StallProfilePage = () => {
   // Defaults to the stall's first selling day, not a fixed Saturday; null until the stall has arrived.
   const [pickedDay, setPickedDay] = useState<number | null>(null);
   const day = pickedDay ?? availableDays[0] ?? 6;
-  const [reviewFilter, setReviewFilter] = useState<'all' | 'farmer' | 'product'>('all');
   const [reviewPage, setReviewPage] = useState(1);
+  // This week's stock (FR-011) for the picked selling day; products are visible only while the stall is approved (D-09).
+  const stockDay = availableDays.includes(day) ? day : undefined;
+  const { state: productsLoad } = useRequest(`stall-products:${id}:${stockDay ?? ''}`, () =>
+    validId ? ProductApi.byFarmer(farmerId, stockDay) : Promise.resolve(NO_PRODUCTS),
+  );
 
   // The stall at each market it trades at, plus the markets themselves (FR-011, FR-012). Plain per-render work.
   const mapMarkers: MapMarker[] = [];
@@ -162,10 +160,9 @@ const StallProfilePage = () => {
   const allReviews = (reviewsLoad.kind === 'ready' ? reviewsLoad.data : NO_REVIEWS).map((r) =>
     toReviewCard(r, stall.stallName),
   );
-  const filteredReviews = reviewFilter === 'all' ? allReviews : allReviews.filter((r) => r.targetType === reviewFilter);
-  const reviewPages = Math.max(1, Math.ceil(filteredReviews.length / REVIEWS_PER_PAGE));
+  const reviewPages = Math.max(1, Math.ceil(allReviews.length / REVIEWS_PER_PAGE));
   const reviewFrom = (Math.min(reviewPage, reviewPages) - 1) * REVIEWS_PER_PAGE;
-  const shownReviews = filteredReviews.slice(reviewFrom, reviewFrom + REVIEWS_PER_PAGE);
+  const shownReviews = allReviews.slice(reviewFrom, reviewFrom + REVIEWS_PER_PAGE);
 
   return (
     <div className="flex flex-col gap-6">
@@ -266,6 +263,8 @@ const StallProfilePage = () => {
           />
           {productsLoad.kind === 'loading' ? (
             <MarketCardSkeleton count={3} />
+          ) : stallProducts.length === 0 && stockDay != null ? (
+            <DataState title={t('stock.emptyTitle', { day: dayName(day, 'long') })} text={t('stock.emptyText')} />
           ) : (
             <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
               {stallProducts.map((p) => (
@@ -291,42 +290,7 @@ const StallProfilePage = () => {
             </div>
           </Card>
 
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap gap-2">
-              <Chip
-                pressed={reviewFilter === 'all'}
-                onClick={() => {
-                  setReviewFilter('all');
-                  setReviewPage(1);
-                }}
-              >
-                {t('reviews.all')} <span className="text-[12px] tabular-nums opacity-80">{allReviews.length}</span>
-              </Chip>
-              <Chip
-                pressed={reviewFilter === 'farmer'}
-                onClick={() => {
-                  setReviewFilter('farmer');
-                  setReviewPage(1);
-                }}
-              >
-                {t('reviews.farmer')}{' '}
-                <span className="text-[12px] tabular-nums opacity-80">
-                  {allReviews.filter((r) => r.targetType === 'farmer').length}
-                </span>
-              </Chip>
-              <Chip
-                pressed={reviewFilter === 'product'}
-                onClick={() => {
-                  setReviewFilter('product');
-                  setReviewPage(1);
-                }}
-              >
-                {t('reviews.product')}{' '}
-                <span className="text-[12px] tabular-nums opacity-80">
-                  {allReviews.filter((r) => r.targetType === 'product').length}
-                </span>
-              </Chip>
-            </div>
+          <div className="flex flex-wrap items-center justify-end gap-3">
             <span className="text-small text-ink-muted">{t('reviews.newest')}</span>
           </div>
 
@@ -436,17 +400,6 @@ const StallProfilePage = () => {
           </div>
         </div>
       )}
-
-      <p className="text-small">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => Notification.success({ title: t('report.sentTitle'), text: t('report.sentText') })}
-        >
-          {t('report.button')}
-        </Button>{' '}
-        <span className="text-ink-muted">{t('report.note')}</span>
-      </p>
     </div>
   );
 };

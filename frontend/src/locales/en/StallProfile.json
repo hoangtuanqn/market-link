@@ -23,14 +23,13 @@
     "count_one": "{{count}} product",
     "count_other": "{{count}} products",
     "availableOn": "Available on",
-    "notSelling": "{{stall}} does not sell on {{day}}. Products above are what they carry on their selling days ({{days}})."
+    "notSelling": "{{stall}} does not sell on {{day}}. Products above are what they carry on their selling days ({{days}}).",
+    "emptyTitle": "Nothing listed for {{day}}",
+    "emptyText": "The stall has no stock set for that day yet. Try another day."
   },
   "reviews": {
     "summary_one": "{{count}} review, from a completed order",
     "summary_other": "{{count}} reviews, every one from a completed order",
-    "all": "All",
-    "farmer": "About the stall",
-    "product": "About products",
     "newest": "Newest first",
     "emptyTitle": "No reviews yet",
     "emptyText": "Be the first to review this stall once your order is completed.",
@@ -55,12 +54,6 @@
     "findingTitle": "Finding the stall",
     "findingText": "Stall {{code}} · pickup window {{window}}. Slots are 30 minutes and hold 5 orders each.",
     "preorder": "Pre-order at this market"
-  },
-  "report": {
-    "sentTitle": "Report sent",
-    "sentText": "An admin will look into it.",
-    "button": "Report this stall",
-    "note": "Repeated no-shows, wrong stall location, or anything that breaks the platform guidelines."
   },
   "error": {
     "noun": "stall"

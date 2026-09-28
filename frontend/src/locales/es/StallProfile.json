@@ -23,14 +23,13 @@
     "count_one": "{{count}} producto",
     "count_other": "{{count}} productos",
     "availableOn": "Disponible el",
-    "notSelling": "{{stall}} no vende el {{day}}. Los productos de arriba son los que tiene en sus días de venta ({{days}})."
+    "notSelling": "{{stall}} no vende el {{day}}. Los productos de arriba son los que tiene en sus días de venta ({{days}}).",
+    "emptyTitle": "Nada para el {{day}}",
+    "emptyText": "El puesto aún no tiene stock para ese día. Prueba otro día."
   },
   "reviews": {
     "summary_one": "{{count}} reseña, de un pedido completado",
     "summary_other": "{{count}} reseñas, todas de pedidos completados",
-    "all": "Todas",
-    "farmer": "Sobre el puesto",
-    "product": "Sobre productos",
     "newest": "Más recientes primero",
     "emptyTitle": "No reviews yet",
     "emptyText": "Be the first to review this stall once your order is completed.",
@@ -55,12 +54,6 @@
     "findingTitle": "Cómo encontrar el puesto",
     "findingText": "Puesto {{code}} · horario de recogida {{window}}. Las franjas duran 30 minutos y admiten 5 pedidos cada una.",
     "preorder": "Reservar en este mercado"
-  },
-  "report": {
-    "sentTitle": "Denuncia enviada",
-    "sentText": "Un administrador lo revisará.",
-    "button": "Denunciar este puesto",
-    "note": "Ausencias repetidas, ubicación del puesto incorrecta o cualquier cosa que incumpla las normas de la plataforma."
   },
   "error": {
     "noun": "puesto"
