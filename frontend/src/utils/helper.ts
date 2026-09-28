@@ -44,5 +44,12 @@ class Helper {
     const details = (error.response?.data as Partial<ApiResponse<unknown>> | undefined)?.error?.details ?? [];
     return Object.fromEntries(details.filter((d) => d.field).map((d) => [d.field, d.message]));
   }
+
+  /** The Retry-After header of a 429, in seconds (exposed by the backend's CORS config). */
+  static getRetryAfterSeconds(error: unknown): number | undefined {
+    if (!(error instanceof AxiosError)) return undefined;
+    const seconds = Number(error.response?.headers?.['retry-after']);
+    return Number.isFinite(seconds) && seconds > 0 ? seconds : undefined;
+  }
 }
 export default Helper;

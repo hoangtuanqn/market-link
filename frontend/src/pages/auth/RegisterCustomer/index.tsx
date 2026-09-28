@@ -8,12 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
+import { VERIFY_EMAIL_PATH } from '@/constants/nav';
 import { addressErrorsFrom, cleanAddress, validateAddress } from '@/lib/address';
+import SignupStore from '@/lib/signup';
 import { emptyAddress, type AddressErrors } from '@/types/address.types';
 import type { RegisterInput } from '@/types/auth.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
-import Session from '@/utils/session';
 import { PHONE_REGEX } from '@/utils/validation';
 
 type FormErrors = Partial<Record<Exclude<keyof RegisterInput, 'addressParts'>, string>>;
@@ -59,9 +60,11 @@ const validate = (form: RegisterInput, t: TFunction<'RegisterCustomer'>): FormEr
 
 /** FR-001 — Customer registration. */
 const RegisterCustomerPage = () => {
-  const { t } = useTranslation('RegisterCustomer');
+  const { t, i18n } = useTranslation('RegisterCustomer');
   const navigate = useNavigate();
-  const [form, setForm] = useState<RegisterInput>(EMPTY_FORM);
+  // After "Change email" on the code screen the form comes back filled in (passwords are never kept)
+  const [form, setForm] = useState<RegisterInput>(() => ({ ...EMPTY_FORM, ...SignupStore.getDraft() }));
+  const [website, setWebsite] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
   const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
   const [accepted, setAccepted] = useState(false);
@@ -81,20 +84,38 @@ const RegisterCustomerPage = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await AuthApi.register({
+      const payload = {
         ...form,
         fullName: form.fullName.trim(),
         phone: form.phone.trim(),
         email: form.email.trim(),
         addressParts: cleanAddress(form.addressParts),
+      };
+      // The same address again from this tab: send its token so the waiting sign-up is corrected, not replaced
+      const previous = SignupStore.getPending();
+      const response = await AuthApi.register({
+        ...payload,
+        language: i18n.resolvedLanguage ?? i18n.language,
+        website,
+        signupToken: previous?.email === payload.email.toLowerCase() ? previous.token : undefined,
       });
 
-      // The backend signs in right after sign-up (the refresh token lives in an HttpOnly cookie)
-      Session.save(response.data);
-
-      Notification.success({ text: response.message || t('toast.created') });
-      navigate('/');
+      // FR-009: no account yet — it is created once the emailed code is entered
+      SignupStore.savePending(response.data);
+      SignupStore.saveDraft({
+        fullName: payload.fullName,
+        phone: payload.phone,
+        email: payload.email,
+        addressParts: payload.addressParts,
+      });
+      navigate(VERIFY_EMAIL_PATH);
     } catch (error) {
+      if (Helper.getErrorCode(error) === 'RATE_LIMITED') {
+        // FR-009: too many codes for this address or network, or a sign-up from another tab is still waiting
+        const minutes = Math.max(1, Math.ceil((Helper.getRetryAfterSeconds(error) ?? 60) / 60));
+        Notification.error({ text: t('errors.tooMany', { count: minutes }) });
+        return;
+      }
       // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT: per-field errors (email, phone, confirmPassword…) shown under the input
       const fieldErrors = Helper.getFieldErrors(error);
       setErrors(fieldErrors);
@@ -185,6 +206,20 @@ const RegisterCustomerPage = () => {
           errors={addressErrors}
           disabled={isSubmitting}
         />
+
+        {/* FR-009: a trap for form-filling bots; people never see or reach it */}
+        <div aria-hidden="true" className="sr-only">
+          <label htmlFor="website">{t('honeypot')}</label>
+          <input
+            id="website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </div>
 
         <Checkbox id="consent" required checked={accepted} onChange={(e) => setAccepted(e.target.checked)}>
           <Trans

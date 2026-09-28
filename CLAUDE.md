@@ -8,7 +8,7 @@ Customer đặt trước → Farmer duyệt → nhận hàng tại stall. Ba vai
 | File | Nội dung | Chủ sở hữu |
 |---|---|---|
 | `.ai/REQUIREMENTS.md` | Nguồn sự thật duy nhất về scope (FR-xxx, MUST/SHOULD/NICE) | QA/DOC |
-| `docs/decisions.md` | 13 quyết định D-01…D-13 đã chốt — **không bàn lại** | LEAD |
+| `docs/decisions.md` | 14 quyết định D-01…D-14 đã chốt — **không bàn lại** | LEAD |
 | `docs/api-contract.md` | Contract BE ↔ FE | LEAD |
 | `db/schema.sql` | Schema đích 19 bảng (MySQL 8, utf8mb4) | LEAD |
 | `docs/requirements/MarketLink-Feature-Catalog-by-Module-and-Role.md` | Danh mục tính năng theo module và vai | — |

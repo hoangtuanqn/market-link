@@ -112,6 +112,11 @@ services:
       CHATBOT_AI_MESSAGES_PER_HOUR: ${CHATBOT_AI_MESSAGES_PER_HOUR:-30}
       CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR: ${CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR:-60}
       CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY: ${CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY:-1500}
+      # FR-009 / FR-007: SMTP for the sign-up code and password emails; empty user → mails go to the log
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
     ports:
       - "${BACKEND_PORT:-8080}:8080"
       - "${BACKEND_DEBUG_PORT:-5005}:5005" # remote debug (IntelliJ / VS Code attach)

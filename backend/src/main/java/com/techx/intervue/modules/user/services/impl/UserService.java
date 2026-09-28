@@ -22,8 +22,12 @@ import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.PendingSignup;
+import com.techx.intervue.modules.user.resources.SignupStartedResource;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
+import com.techx.intervue.modules.user.resources.VerifiedSignup;
+import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface.PendingLogin;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
@@ -63,6 +67,7 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final JobQueueInterface jobQueue;
     private final MfaServiceInterface mfaService;
     private final AddressServiceInterface addressService;
+    private final EmailVerificationServiceInterface emailVerification;
 
     /**
      * FR-006: the access token goes into the Redis blacklist until it expires (JwtAuthFilter blocks
@@ -80,15 +85,77 @@ public class UserService extends BaseService implements UserServiceInterface {
         }
     }
 
+    /**
+     * FR-001 + FR-009: check the form, then hold it in Redis until the code mailed to that address
+     * is entered. No account exists before that.
+     */
     @Override
-    @Transactional
-    public AuthResult registerCustomer(CustomerRegisterRequest request) {
+    public SignupStartedResource registerCustomer(
+            CustomerRegisterRequest request, String clientIp) {
         if (!request.password().equals(request.confirmPassword())) {
             throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
         }
-        String email = request.email().trim().toLowerCase(Locale.ROOT);
+        String email = EmailVerificationService.normalizeEmail(request.email());
         String phone = request.phone().trim();
-        // Check both before failing, so the form marks every taken field in one go (QA BUG-005)
+        throwIfTaken(email, phone);
+        ResolvedAddress address =
+                addressService.resolve(request.addressParts(), AddressPolicy.ACCOUNT);
+        if (StringUtils.hasText(request.website())) {
+            // Honeypot: people never see this field, so only a bot fills it in
+            log.info("Sign-up honeypot filled in, request dropped");
+            return emailVerification.decoy(email);
+        }
+        PendingSignup pending =
+                new PendingSignup(
+                        request.fullName().trim(),
+                        email,
+                        phone,
+                        address.formatted(),
+                        address.columns(),
+                        passwordEncoder.encode(request.password()),
+                        EmailVerificationService.normalizeLanguage(request.language()),
+                        null);
+        return emailVerification.start(pending, request.signupToken(), clientIp);
+    }
+
+    /**
+     * FR-009: the right code turns the parked form into an account and signs it in, like the old
+     * register did. If saving fails the code is given back so the person can try again.
+     */
+    @Override
+    @Transactional
+    public AuthResult completeSignup(String email, String code, String signupToken) {
+        VerifiedSignup verified = emailVerification.verify(email, code, signupToken);
+        PendingSignup pending = verified.pending();
+        try {
+            throwIfTaken(pending.email(), pending.phone());
+        } catch (DuplicateAccountException e) {
+            // Someone else finished first with this email or phone: this sign-up can never succeed
+            emailVerification.discard(pending.email());
+            throw e;
+        }
+        // Registered before the save, so a failed insert (e.g. a phone taken a moment ago) also
+        // gives
+        // the code back
+        TransactionHelper.afterCompletion(
+                () -> emailVerification.discard(pending.email()),
+                () -> emailVerification.restore(verified));
+        User user =
+                userRepository.save(
+                        User.builder()
+                                .fullName(pending.fullName())
+                                .email(pending.email())
+                                .phone(pending.phone())
+                                .address(pending.address())
+                                .addressParts(pending.addressParts())
+                                .passwordHash(pending.passwordHash())
+                                .role(RoleType.CUSTOMER)
+                                .build());
+        return issueTokens(user);
+    }
+
+    /** Check both before failing, so the form marks every taken field in one go (QA BUG-005). */
+    private void throwIfTaken(String email, String phone) {
         Map<String, String> taken = new LinkedHashMap<>();
         if (userRepository.existsByEmail(email)) {
             taken.put("email", "This email is already registered.");
@@ -99,20 +166,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         if (!taken.isEmpty()) {
             throw new DuplicateAccountException(taken);
         }
-        ResolvedAddress address =
-                addressService.resolve(request.addressParts(), AddressPolicy.ACCOUNT);
-        User user =
-                userRepository.save(
-                        User.builder()
-                                .fullName(request.fullName().trim())
-                                .email(email)
-                                .phone(phone)
-                                .address(address.formatted())
-                                .addressParts(address.columns())
-                                .passwordHash(passwordEncoder.encode(request.password()))
-                                .role(RoleType.CUSTOMER)
-                                .build());
-        return issueTokens(user);
     }
 
     /**

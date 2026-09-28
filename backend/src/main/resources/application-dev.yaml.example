@@ -13,8 +13,9 @@ spring:
     password: ${MYSQL_PASSWORD:intervue_pass}
   # Gmail + App Password (Google Account → Security → App passwords)
   mail:
-    username: ${MAIL_USERNAME:your-email@gmail.com}
-    password: ${MAIL_PASSWORD:your-gmail-app-password}
+    # Empty = mails are written to the log instead of being sent (FR-009 sign-up codes, FR-007 reset links)
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
 
 jwt:
   # Secret for dev only

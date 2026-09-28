@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign-up code email — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <div class="pt-col-2" style="max-width:640px;margin:0 auto">
+    <h1 class="pt-title-sm">The sign-up code email</h1>
+    <p class="pt-small ml-muted">What the person receives after the sign-up form (FR-009). The backend sends this exact layout from <code>backend/src/main/resources/mail/signup-code.html</code>, in the language chosen on the form, with a plain-text copy for mail apps that do not show HTML. Subject: <b>482917 is your MarketLink code</b>.</p>
+    <p class="pt-caption ml-muted">Mail apps cannot read CSS variables, so this is the only place that writes the light theme's hex values inline. The chalkboard tag with the punched hole is the one accent.</p>
+    <a class="pt-small" href="../public/verify-email.html">Back to the code screen</a>
+  </div>
+  <!-- Rendered from backend/src/main/resources/mail/signup-code.html with sample values -->
+  <div style="background:#dcc59d;margin-top:16px;border-radius:10px;overflow:hidden">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:#dcc59d;">Enter it on the sign-up page. It expires in 10 minutes.</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#dcc59d;">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;background:#f1e5cb;border:1.5px solid #6e5a3c;border-radius:10px;box-shadow:0 2px 0 0 rgba(110,90,60,.28);">
+        <tr>
+          <td style="background:#2f4a2a;border-radius:8px 8px 0 0;padding:16px 24px;font-family:'Patrick Hand','Trebuchet MS',Arial,sans-serif;font-size:28px;line-height:32px;color:#f1e5cb;">MarketLink</td>
+        </tr>
+        <tr>
+          <td style="padding:24px 24px 8px;font-family:Chivo,Arial,Helvetica,sans-serif;color:#2a2016;">
+            <h1 style="margin:0 0 12px;font-size:22px;line-height:30px;font-weight:700;color:#2a2016;">Finish creating your account</h1>
+            <p style="margin:0 0 4px;font-size:16px;line-height:24px;">Hi Khang,</p>
+            <p style="margin:0;font-size:16px;line-height:24px;">Enter this code on the sign-up page to confirm this email is yours.</p>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:20px 24px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background:#2f4a2a;border-radius:10px;">
+              <tr>
+                <td align="center" style="padding:10px 32px 0;line-height:0;font-size:0;">
+                  <span style="display:inline-block;width:12px;height:12px;border-radius:6px;background:#f1e5cb;border:2px solid #8a6a3f;"></span>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding:6px 32px 0;font-family:Chivo,Arial,Helvetica,sans-serif;font-size:13px;line-height:18px;color:#bccaa9;">Your code</td>
+              </tr>
+              <tr>
+                <td align="center" style="padding:4px 22px 18px 32px;font-family:ui-monospace,Menlo,Consolas,'Courier New',monospace;font-size:34px;line-height:44px;font-weight:700;letter-spacing:10px;color:#f1e5cb;">482917</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 24px 20px;font-family:Chivo,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#57462f;">The code works once and expires in 10 minutes.</td>
+        </tr>
+        <tr>
+          <td style="padding:0 24px;"><div style="border-top:1.5px dashed #c4ab7e;line-height:0;font-size:0;">&nbsp;</div></td>
+        </tr>
+        <tr>
+          <td style="padding:16px 24px 24px;font-family:Chivo,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#57462f;">Didn&#x27;t try to sign up? Ignore this email. Nobody can create an account with this address without the code.</td>
+        </tr>
+      </table>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+        <tr>
+          <td align="center" style="padding:16px 8px 0;font-family:Chivo,Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#57462f;">MarketLink · Farmers markets around Ho Chi Minh City<br>You got this email because someone signed up at MarketLink with khang@example.com.</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+  </div>
+</main>
+<script>
+  PT.boot({ active: null, announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>
