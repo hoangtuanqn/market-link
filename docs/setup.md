@@ -415,6 +415,13 @@ Run this once before a demo.
 7. Admin hides the message → it disappears from **both** windows without a reload.
 8. Still as admin, open the photo URL of the **reported** message → **200**. Open the photo URL of a
    **neighbouring** message → **403**.
+9. Photos and videos (spec `2026-09-28-chat-media-design.md`): send each of these and check the other
+   window shows it — a large phone JPEG (over 4096 px, it arrives scaled down), an iPhone HEIC photo
+   (the composer shows "Converting the photo…" first), an animated GIF (it still moves), an MP4 and a
+   MOV video under 50 MB. Press play on the video, drag the seek bar → it jumps without downloading
+   the whole file. A file over 50 MB is refused in the composer before any upload.
+10. Copy a video's stream link from the browser's network tab and open it after five minutes →
+    **403 `STREAM_LINK_INVALID`**. Change the `u=` number in a fresh link → **403** as well.
 
 ## 10. Troubleshooting
 
@@ -439,5 +446,7 @@ Run this once before a demo.
 | An admin sees 403 opening a photo they can see in the report context | Only the **reported** message's photo is open to admins; the five messages either side are context, not the thing being reported | Working as designed. Every admin photo view is logged |
 | Backend logs `N account(s) have role=farmer but no farmer_profiles row` at startup | Seed data or a manual DB edit created a farmer without a stall profile | Chat is closed for those accounts. Add an approved `farmer_profiles` row for each |
 | Chat photos return 404 after rebuilding containers | The `chat-uploads` volume was removed; the database rows survive but the files are gone | Stop with `docker compose down` (**without** `-v`) to keep volumes. Photos live on `chat-uploads`, separate from `uploads-data` |
-| `POST /api/v1/attachments` returns 415 for a photo that opens fine on your machine | The file is not JPEG/PNG/WebP — the server reads magic bytes and ignores the file extension and `Content-Type` | Re-save it as JPEG or PNG |
+| `POST /api/v1/attachments` returns 415 for a file that opens fine on your machine | The server reads the file's bytes and ignores its extension and `Content-Type`: it takes JPEG, PNG, WebP, GIF, AVIF, MP4, MOV and WebM. HEIC must be converted first (the web app does it for you), and an MKV is not a WebM even though they share a header | Re-save it as JPEG, or export the video as MP4 |
+| Chat uploads over 5 MB return 413 "The file must be 5 MB or smaller." after pulling the 50 MB change | Your `.env` still has the old `CHAT_MAX_UPLOAD_BYTES=5242880` | Set `CHAT_MAX_UPLOAD_BYTES=52428800` in `.env`, then `docker compose up -d backend` |
+| A chat video shows "This video cannot be played in this browser." | The browser has no decoder for that file (for example HEVC video from an iPhone in a browser without HEVC support). The server stores videos as uploaded and does not convert them | Use the **Download** button under the message, or record/export the video as H.264 MP4 |
 | `<img src="/api/v1/attachments/5">` shows a broken image | That endpoint checks the JWT in the `Authorization` header, and `<img>` does not send it | `fetch` the URL with the header, then render `URL.createObjectURL(blob)` |

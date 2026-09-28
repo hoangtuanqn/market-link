@@ -29,15 +29,20 @@ export type ConversationSummary = {
 export type ChatAttachment = {
   attachmentId: number;
   url: string;
-  width: number | null;
-  height: number | null;
+  /** The real type the server read from the file's bytes; a video has no width/height. */
+  mime: string;
+  width?: number | null;
+  height?: number | null;
 };
+
+/** GET /attachments/{id}/stream-url. */
+export type StreamUrl = { url: string; expiresAt: string };
 
 export type ChatMessageItem = {
   id: number;
   conversationId: number;
   senderId: number;
-  kind: 'text' | 'image';
+  kind: 'text' | 'image' | 'video';
   body?: string;
   productId?: number | null;
   orderId?: number | null;
@@ -86,9 +91,10 @@ export type ModeratedMessage = {
   id: number;
   senderId: number;
   senderName: string;
-  kind: 'text' | 'image';
+  kind: 'text' | 'image' | 'video';
   body?: string;
   hasPhoto: boolean;
+  hasVideo: boolean;
   attachmentId?: number;
   reported: boolean;
   hidden: boolean;

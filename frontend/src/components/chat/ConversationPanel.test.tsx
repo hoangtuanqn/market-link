@@ -31,7 +31,7 @@ const state = (patch: object) => ({
   loadOlder: vi.fn(),
   olderError: false,
   send: vi.fn(),
-  sendPhoto: vi.fn(),
+  sendMedia: vi.fn(),
   typing: vi.fn(),
   otherTyping: false,
   otherReadAt: null,

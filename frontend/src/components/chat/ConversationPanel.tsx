@@ -59,7 +59,7 @@ export default function ConversationPanel({
     loadOlder,
     olderError,
     send,
-    sendPhoto,
+    sendMedia,
     typing,
     otherTyping,
     otherReadAt,
@@ -152,7 +152,7 @@ export default function ConversationPanel({
 
       <Composer
         onSend={send}
-        onSendPhoto={sendPhoto}
+        onSendMedia={sendMedia}
         onTyping={typing}
         disabled={false}
         pinnedProductId={pinnedProductId}

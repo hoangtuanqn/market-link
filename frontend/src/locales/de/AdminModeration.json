@@ -73,6 +73,7 @@
     "emptyTitle": "Keine gemeldeten Nachrichten",
     "emptyText": "Wenn ein Kunde oder ein Stand eine Nachricht meldet, wartet sie hier auf dich.",
     "photo": "Foto",
+    "video": "Video",
     "reason": {
       "spam": "Spam oder Werbung",
       "abuse": "Unhöflich oder beleidigend",

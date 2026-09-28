@@ -73,6 +73,7 @@
     "emptyTitle": "No hay mensajes denunciados",
     "emptyText": "Cuando un cliente o un puesto denuncia un mensaje, te espera aquí.",
     "photo": "Foto",
+    "video": "Video",
     "reason": {
       "spam": "Spam o publicidad",
       "abuse": "Grosero u ofensivo",

@@ -10,7 +10,7 @@ vi.mock('@/api-requests/conversation.requests', () => ({
     messages: vi.fn(),
     send: vi.fn(),
     markRead: vi.fn(),
-    uploadPhoto: vi.fn(),
+    uploadMedia: vi.fn(),
   },
 }));
 
@@ -157,6 +157,28 @@ describe('useConversation', () => {
     emit('/user/topic/messages', msg(4, 7));
 
     await waitFor(() => expect(result.current.messages.filter((m) => m.id === 4)).toHaveLength(1));
+  });
+
+  /** The server tells the real type from the bytes; the message kind follows it, not the file name. */
+  it('sends a video message for an uploaded video and a photo message for a photo', async () => {
+    vi.mocked(ConversationApi.uploadMedia)
+      .mockResolvedValueOnce(ok({ attachmentId: 55, url: '/api/v1/attachments/55', mime: 'video/quicktime' }))
+      .mockResolvedValueOnce(ok({ attachmentId: 56, url: '/api/v1/attachments/56', mime: 'image/jpeg' }));
+    vi.mocked(ConversationApi.send)
+      .mockResolvedValueOnce(ok({ ...msg(4, 7), kind: 'video' }))
+      .mockResolvedValueOnce(ok({ ...msg(5, 7), kind: 'image' }));
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+    const onProgress = vi.fn();
+    const signal = new AbortController().signal;
+
+    await act(() => result.current.sendMedia(new File(['x'], 'clip.mov'), { onProgress, signal }));
+    await act(() => result.current.sendMedia(new File(['x'], 'a.jpg')));
+
+    expect(ConversationApi.uploadMedia).toHaveBeenCalledWith(expect.any(File), { onProgress, signal });
+    expect(ConversationApi.send).toHaveBeenNthCalledWith(1, 42, { kind: 'video', attachmentId: 55 });
+    expect(ConversationApi.send).toHaveBeenNthCalledWith(2, 42, { kind: 'image', attachmentId: 56 });
+    expect(result.current.messages.map((m) => m.id)).toEqual([1, 2, 3, 4, 5]);
   });
 
   it('asks for the next page back with the oldest id it has', async () => {
