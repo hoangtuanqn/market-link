@@ -1,6 +1,7 @@
 import { AxiosError, AxiosHeaders } from 'axios';
 import { describe, expect, it } from 'vitest';
 import { sendErrorKey } from './errors';
+import { MediaError } from './media';
 
 const http = (status: number) =>
   new AxiosError('x', 'ERR', undefined, undefined, {
@@ -21,13 +22,20 @@ describe('sendErrorKey', () => {
     expect(sendErrorKey(http(429), 'text')).toBe('chat.tooFast');
   });
 
-  it('names the photo problem on 413 and 415', () => {
-    expect(sendErrorKey(http(413), 'photo')).toBe('chat.photoTooBig');
-    expect(sendErrorKey(http(415), 'photo')).toBe('chat.photoType');
+  it('names the file problem on 413 and 415', () => {
+    expect(sendErrorKey(http(413), 'media')).toBe('chat.mediaTooBig');
+    expect(sendErrorKey(http(415), 'media')).toBe('chat.mediaType');
+  });
+
+  /** The same words whether the browser caught it before the upload or the server after it. */
+  it('names the problem the browser found before uploading', () => {
+    expect(sendErrorKey(new MediaError('size'), 'media')).toBe('chat.mediaTooBig');
+    expect(sendErrorKey(new MediaError('type'), 'media')).toBe('chat.mediaType');
+    expect(sendErrorKey(new MediaError('convert'), 'media')).toBe('chat.convertFailed');
   });
 
   it('falls back to the plain message for anything else', () => {
     expect(sendErrorKey(new Error('network'), 'text')).toBe('chat.sendFailed');
-    expect(sendErrorKey(new Error('network'), 'photo')).toBe('chat.photoFailed');
+    expect(sendErrorKey(new Error('network'), 'media')).toBe('chat.mediaFailed');
   });
 });

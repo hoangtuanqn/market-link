@@ -128,7 +128,7 @@ function ReportDetailDialog({
             </div>
             {m.hasPhoto && m.attachmentId ? (
               <ChatPhoto
-                attachment={{ attachmentId: m.attachmentId, url: '', width: null, height: null }}
+                attachment={{ attachmentId: m.attachmentId, width: null, height: null }}
                 alt={t('messages.photo')}
               />
             ) : null}

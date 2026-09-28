@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import ConversationApi from '@/api-requests/conversation.requests';
 import type { ChatAttachment } from '@/types/chat.types';
 
-type Props = { attachment: ChatAttachment; alt: string };
+/** Only what drawing the photo needs, so the admin view can pass an attachment it only knows the id of. */
+type Props = { attachment: Pick<ChatAttachment, 'attachmentId' | 'width' | 'height'>; alt: string };
 
 /**
  * The JWT travels in the `Authorization` header, not a cookie, so `<img src="/api/v1/attachments/5">` returns 401. Load
