@@ -128,3 +128,8 @@ docs/session-*.md
 *.bak
 *.swp
 *.orig
+
+# ---------------------------------------------------------------------
+# Superpowers plan-execution scratch (ledgers, task briefs) — local only
+# ---------------------------------------------------------------------
+.superpowers/
