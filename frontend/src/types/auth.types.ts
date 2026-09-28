@@ -20,6 +20,22 @@ export type RegisterInput = {
   addressParts: AddressParts;
   password: string;
   confirmPassword: string;
+  /** FR-009: language of the code email (i18n.resolvedLanguage). */
+  language?: string;
+  /** FR-009: honeypot, always empty from a person. */
+  website?: string;
+};
+
+/** FR-009: register and resend answer with this — no account exists yet. */
+export type SignupStartedType = {
+  email: string;
+  codeExpiresInSeconds: number;
+  resendAvailableInSeconds: number;
+};
+
+export type SignupVerifyInput = {
+  email: string;
+  code: string;
 };
 
 export type ResetPasswordInput = {

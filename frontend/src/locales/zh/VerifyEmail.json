@@ -1,0 +1,42 @@
+{
+  "title": "查看你的邮箱",
+  "sentTo": "我们已向 <b>{{email}}</b> 发送了 6 位验证码。在这里输入即可完成创建账户。",
+  "codeLabel": "6 位验证码",
+  "expiresIn": "验证码将在 {{time}} 后失效。",
+  "expired": "验证码已失效，请发送新的验证码。",
+  "submit": "验证并创建账户",
+  "submitting": "正在核对验证码…",
+  "enterAll": "请输入全部 6 位数字。",
+  "help": "一分钟后还没收到？请查看垃圾邮件，或发送新的验证码。",
+  "resend": "发送新的验证码",
+  "resendIn_one": "{{count}} 秒后可发送新的验证码",
+  "resendIn_other": "{{count}} 秒后可发送新的验证码",
+  "resending": "正在发送…",
+  "changeEmail": "邮箱填错了？修改",
+  "fillAgain": "重新填写表单",
+  "haveAccount": "我已有账户",
+  "wrong": {
+    "title": "验证码不正确",
+    "text_one": "请查看邮件后重试。你还有 {{count}} 次机会。",
+    "text_other": "请查看邮件后重试。你还有 {{count}} 次机会。"
+  },
+  "usedUp": {
+    "title": "此验证码已无法使用",
+    "text": "请发送新的验证码，并输入最新邮件中的验证码。"
+  },
+  "signupExpired": {
+    "title": "注册已过期",
+    "text": "未完成的注册只保留 30 分钟。请重新填写表单以获取新的验证码。"
+  },
+  "duplicate": {
+    "title": "此邮箱或手机号已被使用",
+    "text": "已有人先用它完成了注册。请返回并换用其他信息。"
+  },
+  "toast": {
+    "created": "账户已创建。",
+    "resent": "已发送新的验证码。",
+    "tooMany_one": "请求验证码次数过多，请 {{count}} 分钟后再试。",
+    "tooMany_other": "请求验证码次数过多，请 {{count}} 分钟后再试。",
+    "failed": "无法核对验证码，请重试。"
+  }
+}

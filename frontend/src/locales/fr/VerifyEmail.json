@@ -1,0 +1,42 @@
+{
+  "title": "Consultez vos e-mails",
+  "sentTo": "Nous avons envoyé un code à 6 chiffres à <b>{{email}}</b>. Saisissez-le ici pour terminer la création de votre compte.",
+  "codeLabel": "Code à 6 chiffres",
+  "expiresIn": "Le code expire dans {{time}}.",
+  "expired": "Ce code a expiré. Demandez-en un nouveau.",
+  "submit": "Vérifier et créer le compte",
+  "submitting": "Vérification du code…",
+  "enterAll": "Saisissez les 6 chiffres pour continuer.",
+  "help": "Rien après une minute ? Regardez dans les spams ou demandez un nouveau code.",
+  "resend": "Envoyer un nouveau code",
+  "resendIn_one": "Nouveau code possible dans {{count}} seconde",
+  "resendIn_other": "Nouveau code possible dans {{count}} secondes",
+  "resending": "Envoi…",
+  "changeEmail": "Mauvaise adresse ? La modifier",
+  "fillAgain": "Remplir à nouveau le formulaire",
+  "haveAccount": "J’ai déjà un compte",
+  "wrong": {
+    "title": "Ce code n’est pas le bon",
+    "text_one": "Vérifiez l’e-mail et réessayez. Il vous reste {{count}} essai.",
+    "text_other": "Vérifiez l’e-mail et réessayez. Il vous reste {{count}} essais."
+  },
+  "usedUp": {
+    "title": "Ce code ne peut plus être utilisé",
+    "text": "Demandez un nouveau code et saisissez celui du dernier e-mail reçu."
+  },
+  "signupExpired": {
+    "title": "Votre inscription a expiré",
+    "text": "Une inscription non terminée est gardée 30 minutes. Remplissez à nouveau le formulaire pour recevoir un nouveau code."
+  },
+  "duplicate": {
+    "title": "Cet e-mail ou ce numéro est déjà utilisé",
+    "text": "Quelqu’un a terminé son inscription avec avant vous. Revenez en arrière et utilisez-en un autre."
+  },
+  "toast": {
+    "created": "Compte créé.",
+    "resent": "Nous avons envoyé un nouveau code.",
+    "tooMany_one": "Trop de codes demandés. Réessayez dans {{count}} minute.",
+    "tooMany_other": "Trop de codes demandés. Réessayez dans {{count}} minutes.",
+    "failed": "Impossible de vérifier le code. Veuillez réessayer."
+  }
+}

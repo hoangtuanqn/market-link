@@ -1,0 +1,42 @@
+{
+  "title": "Sieh in dein E-Mail-Postfach",
+  "sentTo": "Wir haben einen 6-stelligen Code an <b>{{email}}</b> geschickt. Gib ihn hier ein, um dein Konto fertig anzulegen.",
+  "codeLabel": "6-stelliger Code",
+  "expiresIn": "Der Code läuft in {{time}} ab.",
+  "expired": "Dieser Code ist abgelaufen. Fordere einen neuen an.",
+  "submit": "Bestätigen und Konto anlegen",
+  "submitting": "Code wird geprüft…",
+  "enterAll": "Gib alle 6 Ziffern ein, um fortzufahren.",
+  "help": "Nach einer Minute noch nichts da? Sieh im Spam nach oder fordere einen neuen Code an.",
+  "resend": "Neuen Code senden",
+  "resendIn_one": "Neuer Code in {{count}} Sekunde",
+  "resendIn_other": "Neuer Code in {{count}} Sekunden",
+  "resending": "Wird gesendet…",
+  "changeEmail": "Falsche E-Mail? Ändern",
+  "fillAgain": "Formular neu ausfüllen",
+  "haveAccount": "Ich habe schon ein Konto",
+  "wrong": {
+    "title": "Der Code stimmt nicht",
+    "text_one": "Prüfe die E-Mail und versuche es noch einmal. Du hast noch {{count}} Versuch.",
+    "text_other": "Prüfe die E-Mail und versuche es noch einmal. Du hast noch {{count}} Versuche."
+  },
+  "usedUp": {
+    "title": "Dieser Code kann nicht mehr verwendet werden",
+    "text": "Fordere einen neuen Code an und gib den aus der neuesten E-Mail ein."
+  },
+  "signupExpired": {
+    "title": "Deine Registrierung ist abgelaufen",
+    "text": "Eine unvollständige Registrierung bewahren wir 30 Minuten auf. Fülle das Formular neu aus, um einen neuen Code zu bekommen."
+  },
+  "duplicate": {
+    "title": "Diese E-Mail oder Telefonnummer ist vergeben",
+    "text": "Jemand hat die Registrierung damit zuerst abgeschlossen. Geh zurück und nimm eine andere."
+  },
+  "toast": {
+    "created": "Konto angelegt.",
+    "resent": "Wir haben einen neuen Code geschickt.",
+    "tooMany_one": "Zu viele Codes angefordert. Versuche es in {{count}} Minute noch einmal.",
+    "tooMany_other": "Zu viele Codes angefordert. Versuche es in {{count}} Minuten noch einmal.",
+    "failed": "Der Code konnte nicht geprüft werden. Bitte versuche es noch einmal."
+  }
+}

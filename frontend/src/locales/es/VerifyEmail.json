@@ -1,0 +1,42 @@
+{
+  "title": "Revisa tu correo",
+  "sentTo": "Enviamos un código de 6 dígitos a <b>{{email}}</b>. Escríbelo aquí para terminar de crear tu cuenta.",
+  "codeLabel": "Código de 6 dígitos",
+  "expiresIn": "El código caduca en {{time}}.",
+  "expired": "Este código ha caducado. Pide uno nuevo.",
+  "submit": "Verificar y crear la cuenta",
+  "submitting": "Comprobando el código…",
+  "enterAll": "Escribe los 6 dígitos para continuar.",
+  "help": "¿No llega después de un minuto? Mira en spam o pide un código nuevo.",
+  "resend": "Enviar un código nuevo",
+  "resendIn_one": "Enviar un código nuevo en {{count}} segundo",
+  "resendIn_other": "Enviar un código nuevo en {{count}} segundos",
+  "resending": "Enviando…",
+  "changeEmail": "¿Correo equivocado? Cámbialo",
+  "fillAgain": "Rellenar el formulario de nuevo",
+  "haveAccount": "Ya tengo una cuenta",
+  "wrong": {
+    "title": "Ese código no es correcto",
+    "text_one": "Revisa el correo e inténtalo de nuevo. Te queda {{count}} intento.",
+    "text_other": "Revisa el correo e inténtalo de nuevo. Te quedan {{count}} intentos."
+  },
+  "usedUp": {
+    "title": "Este código ya no se puede usar",
+    "text": "Pide un código nuevo y escribe el del correo más reciente."
+  },
+  "signupExpired": {
+    "title": "Tu registro ha caducado",
+    "text": "Guardamos un registro sin terminar durante 30 minutos. Rellena el formulario de nuevo para recibir un código nuevo."
+  },
+  "duplicate": {
+    "title": "Este correo o teléfono ya está en uso",
+    "text": "Otra persona terminó de registrarse con él antes. Vuelve y usa otro."
+  },
+  "toast": {
+    "created": "Cuenta creada.",
+    "resent": "Enviamos un código nuevo.",
+    "tooMany_one": "Demasiados códigos pedidos. Inténtalo de nuevo en {{count}} minuto.",
+    "tooMany_other": "Demasiados códigos pedidos. Inténtalo de nuevo en {{count}} minutos.",
+    "failed": "No se pudo comprobar el código. Inténtalo de nuevo."
+  }
+}

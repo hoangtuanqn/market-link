@@ -1,0 +1,42 @@
+{
+  "title": "Kiểm tra email của bạn",
+  "sentTo": "Chúng tôi đã gửi mã 6 số tới <b>{{email}}</b>. Nhập mã ở đây để hoàn tất tạo tài khoản.",
+  "codeLabel": "Mã 6 số",
+  "expiresIn": "Mã hết hạn sau {{time}}.",
+  "expired": "Mã này đã hết hạn. Hãy gửi mã mới.",
+  "submit": "Xác minh và tạo tài khoản",
+  "submitting": "Đang kiểm tra mã…",
+  "enterAll": "Nhập đủ 6 số để tiếp tục.",
+  "help": "Sau một phút vẫn chưa thấy? Hãy xem thư rác, hoặc gửi mã mới.",
+  "resend": "Gửi mã mới",
+  "resendIn_one": "Gửi mã mới sau {{count}} giây",
+  "resendIn_other": "Gửi mã mới sau {{count}} giây",
+  "resending": "Đang gửi…",
+  "changeEmail": "Sai email? Đổi email",
+  "fillAgain": "Điền lại biểu mẫu",
+  "haveAccount": "Tôi đã có tài khoản",
+  "wrong": {
+    "title": "Mã chưa đúng",
+    "text_one": "Kiểm tra email rồi thử lại. Bạn còn {{count}} lần.",
+    "text_other": "Kiểm tra email rồi thử lại. Bạn còn {{count}} lần."
+  },
+  "usedUp": {
+    "title": "Mã này không dùng được nữa",
+    "text": "Gửi mã mới và nhập mã trong email mới nhất."
+  },
+  "signupExpired": {
+    "title": "Phiên đăng ký đã hết hạn",
+    "text": "Chúng tôi chỉ giữ phiên đăng ký chưa hoàn tất trong 30 phút. Điền lại biểu mẫu để nhận mã mới."
+  },
+  "duplicate": {
+    "title": "Email hoặc số điện thoại này đã có người dùng",
+    "text": "Có người đã hoàn tất đăng ký bằng thông tin này trước. Quay lại và dùng thông tin khác."
+  },
+  "toast": {
+    "created": "Đã tạo tài khoản.",
+    "resent": "Đã gửi mã mới.",
+    "tooMany_one": "Bạn đã yêu cầu quá nhiều mã. Thử lại sau {{count}} phút.",
+    "tooMany_other": "Bạn đã yêu cầu quá nhiều mã. Thử lại sau {{count}} phút.",
+    "failed": "Không kiểm tra được mã. Vui lòng thử lại."
+  }
+}
