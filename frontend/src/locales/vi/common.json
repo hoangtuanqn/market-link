@@ -50,6 +50,8 @@
     "you": "Bạn",
     "intent": "Ý định: {{intent}}",
     "photoUnavailable": "Không xem được ảnh này.",
+    "previewPhoto": "Ảnh",
+    "previewVideo": "Video",
     "photoFrom": "Ảnh của {{name}}",
     "videoFrom": "Video của {{name}}",
     "playVideo": "Phát video",

@@ -50,6 +50,8 @@
     "you": "あなた",
     "intent": "インテント：{{intent}}",
     "photoUnavailable": "この写真は表示できません。",
+    "previewPhoto": "写真",
+    "previewVideo": "動画",
     "photoFrom": "{{name}} さんの写真",
     "videoFrom": "{{name}} さんからの動画",
     "playVideo": "動画を再生",

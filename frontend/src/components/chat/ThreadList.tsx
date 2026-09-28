@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { DataState } from '@/components/ui/data-state';
 import { Button } from '@/components/ui/button';
 import { displayName } from '@/lib/chat/names';
+import { mediaPreviewKey } from '@/lib/chat/preview';
 import { chatWhen } from '@/lib/chat/time';
 import type { ConversationSummary } from '@/types/chat.types';
 
@@ -32,6 +33,10 @@ export default function ThreadList({
   onLoadMore,
 }: Props) {
   const { t } = useTranslation('common');
+  const preview = (text: string | null) => {
+    const key = mediaPreviewKey(text);
+    return key ? t(key) : (text ?? '');
+  };
 
   if (loading) {
     return (
@@ -77,7 +82,7 @@ export default function ThreadList({
                 <span className="text-ink truncate font-sans font-semibold">{displayName(thread.other)}</span>
                 <span className="text-small text-ink-muted shrink-0">{chatWhen(thread.lastMessageAt)}</span>
               </span>
-              <span className="text-small text-ink-muted mt-1 block truncate">{thread.lastMessageText}</span>
+              <span className="text-small text-ink-muted mt-1 block truncate">{preview(thread.lastMessageText)}</span>
             </span>
             {thread.unreadCount > 0 ? (
               <span

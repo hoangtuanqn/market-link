@@ -50,6 +50,8 @@
     "you": "你",
     "intent": "意图：{{intent}}",
     "photoUnavailable": "无法查看此照片。",
+    "previewPhoto": "照片",
+    "previewVideo": "视频",
     "photoFrom": "{{name}} 的照片",
     "videoFrom": "来自 {{name}} 的视频",
     "playVideo": "播放视频",

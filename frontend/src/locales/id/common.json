@@ -50,6 +50,8 @@
     "you": "Anda",
     "intent": "Maksud: {{intent}}",
     "photoUnavailable": "Foto ini tidak tersedia.",
+    "previewPhoto": "Foto",
+    "previewVideo": "Video",
     "photoFrom": "Foto dari {{name}}",
     "videoFrom": "Video dari {{name}}",
     "playVideo": "Putar video",

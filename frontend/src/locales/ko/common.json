@@ -50,6 +50,8 @@
     "you": "나",
     "intent": "의도: {{intent}}",
     "photoUnavailable": "이 사진을 볼 수 없습니다.",
+    "previewPhoto": "사진",
+    "previewVideo": "동영상",
     "photoFrom": "{{name}} 님의 사진",
     "videoFrom": "{{name}}님이 보낸 동영상",
     "playVideo": "동영상 재생",

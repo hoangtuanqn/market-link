@@ -50,6 +50,8 @@
     "you": "Vous",
     "intent": "Intention : {{intent}}",
     "photoUnavailable": "Cette photo n’est pas disponible.",
+    "previewPhoto": "Photo",
+    "previewVideo": "Vidéo",
     "photoFrom": "Photo de {{name}}",
     "videoFrom": "Vidéo de {{name}}",
     "playVideo": "Lire la vidéo",

@@ -214,7 +214,14 @@ export default function ReportedMessages() {
                 </Button>
               </div>
               {r.note ? <p className="text-small whitespace-pre-wrap">{t('messages.note', { note: r.note })}</p> : null}
-              <p className="text-ink">{r.preview || t('messages.photo')}</p>
+              {/* The server writes "Photo"/"Video" in English for a media message: show them in the admin's language. */}
+              <p className="text-ink">
+                {r.preview === 'Video'
+                  ? t('messages.video')
+                  : !r.preview || r.preview === 'Photo'
+                    ? t('messages.photo')
+                    : r.preview}
+              </p>
             </div>
           ))}
         </div>
