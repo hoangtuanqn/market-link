@@ -6,6 +6,7 @@ import com.techx.intervue.modules.farmer.requests.RejectFarmerRequest;
 import com.techx.intervue.modules.farmer.requests.SuspendFarmerRequest;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
+import com.techx.intervue.modules.farmer.resources.AdminFarmerStatusHistoryResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.resources.PageResource;
 
@@ -29,4 +30,8 @@ public interface FarmerServiceInterface {
             Long farmerId, SuspendFarmerRequest request, Long adminUserId);
 
     AdminFarmerDetailResource reinstate(Long farmerId, Long actorId);
+
+    /** {@code GET /admin/farmers/{id}/status-history} — 404 when the id is not a farmer profile. */
+    PageResource<AdminFarmerStatusHistoryResource> statusHistory(
+            long farmerId, int page, int pageSize);
 }

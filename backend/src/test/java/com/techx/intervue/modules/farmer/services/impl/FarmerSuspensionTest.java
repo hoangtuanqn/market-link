@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.requests.SuspendFarmerRequest;
+import com.techx.intervue.modules.farmer.resources.AdminFarmerStatusHistoryResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.product.services.interfaces.ProductServiceInterface;
@@ -16,6 +18,7 @@ import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterfac
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
+import com.techx.intervue.resources.PageResource;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -222,5 +225,26 @@ class FarmerSuspensionTest {
                         jdbc.queryForObject(
                                 "SELECT status FROM orders WHERE id = ?", String.class, orderId))
                 .isEqualTo("ready");
+    }
+
+    @Test
+    void statusHistoryListsEveryChangeNewestFirstWithTheActorName() {
+        farmers.suspend(farmerId, permanent("No-shows"), adminUserId);
+        farmers.reinstate(farmerId, adminUserId);
+
+        PageResource<AdminFarmerStatusHistoryResource> page =
+                farmers.statusHistory(farmerId, 1, 20);
+
+        assertThat(page.items()).hasSize(2);
+        assertThat(page.items().get(0).toStatus()).isEqualTo("approved");
+        assertThat(page.items().get(0).changedByName()).isEqualTo("Admin " + fx.tag);
+        assertThat(page.items().get(1).toStatus()).isEqualTo("suspended");
+        assertThat(page.items().get(1).reason()).isEqualTo("No-shows");
+    }
+
+    @Test
+    void statusHistoryRefusesAnUnknownFarmerId() {
+        assertThatThrownBy(() -> farmers.statusHistory(999_999L, 1, 20))
+                .isInstanceOf(FarmerProfileNotFoundException.class);
     }
 }

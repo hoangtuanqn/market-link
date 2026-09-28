@@ -7,6 +7,7 @@ import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerApplicationExistsException;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.exceptions.InvalidApprovalTransitionException;
+import com.techx.intervue.modules.farmer.repositories.AdminFarmerStatusHistoryQueryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerApplicationHistoryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.farmer.requests.FarmerApplicationRequest;
@@ -14,6 +15,7 @@ import com.techx.intervue.modules.farmer.requests.RejectFarmerRequest;
 import com.techx.intervue.modules.farmer.requests.SuspendFarmerRequest;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
+import com.techx.intervue.modules.farmer.resources.AdminFarmerStatusHistoryResource;
 import com.techx.intervue.modules.farmer.resources.FarmerApplicationHistoryResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
@@ -66,6 +68,7 @@ public class FarmerService implements FarmerServiceInterface {
     public static final String JOB_NOTIFY_REINSTATED = "farmer.notify-reinstated";
 
     private static final String LIST_SEPARATOR = ";";
+    private static final int MAX_PAGE_SIZE = 50;
 
     /**
      * A freshly uploaded image that has not yet been sent with an application is not garbage — only
@@ -81,6 +84,7 @@ public class FarmerService implements FarmerServiceInterface {
     private final NotificationServiceInterface notifications;
     private final FarmerStatusHistoryWriter statusHistory;
     private final JobQueueInterface jobQueue;
+    private final AdminFarmerStatusHistoryQueryRepository statusHistoryQueries;
 
     /**
      * §4: create a PENDING profile, does not accept approval_status from the client.
@@ -398,6 +402,15 @@ public class FarmerService implements FarmerServiceInterface {
         payload.put("stallName", profile.getStallName());
         TransactionHelper.afterCommit(() -> jobQueue.enqueue(JOB_NOTIFY_REINSTATED, payload));
         return toDetailResource(profile, owner);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<AdminFarmerStatusHistoryResource> statusHistory(
+            long farmerId, int page, int pageSize) {
+        findProfileOrThrow(farmerId); // 404s for an id that is not a farmer, same rule as detail
+        return statusHistoryQueries.search(
+                farmerId, Math.max(1, page), Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize)));
     }
 
     /**

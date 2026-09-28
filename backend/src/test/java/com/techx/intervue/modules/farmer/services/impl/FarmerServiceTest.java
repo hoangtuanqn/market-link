@@ -17,6 +17,7 @@ import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerApplicationExistsException;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.exceptions.InvalidApprovalTransitionException;
+import com.techx.intervue.modules.farmer.repositories.AdminFarmerStatusHistoryQueryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerApplicationHistoryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.farmer.requests.FarmerApplicationRequest;
@@ -53,6 +54,7 @@ class FarmerServiceTest {
     private NotificationServiceInterface notifications;
     private FarmerStatusHistoryWriter statusHistory;
     private JobQueueInterface jobQueue;
+    private AdminFarmerStatusHistoryQueryRepository statusHistoryQueries;
     private FarmerService service;
 
     @BeforeEach
@@ -70,6 +72,7 @@ class FarmerServiceTest {
         notifications = mock(NotificationServiceInterface.class);
         statusHistory = mock(FarmerStatusHistoryWriter.class);
         jobQueue = mock(JobQueueInterface.class);
+        statusHistoryQueries = mock(AdminFarmerStatusHistoryQueryRepository.class);
         service =
                 new FarmerService(
                         farmerProfileRepository,
@@ -79,7 +82,8 @@ class FarmerServiceTest {
                         userSessionCache,
                         notifications,
                         statusHistory,
-                        jobQueue);
+                        jobQueue,
+                        statusHistoryQueries);
     }
 
     private static FarmerProfile pendingProfile() {

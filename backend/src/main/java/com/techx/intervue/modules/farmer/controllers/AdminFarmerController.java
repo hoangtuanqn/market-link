@@ -6,6 +6,7 @@ import com.techx.intervue.modules.farmer.requests.RejectFarmerRequest;
 import com.techx.intervue.modules.farmer.requests.SuspendFarmerRequest;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
+import com.techx.intervue.modules.farmer.resources.AdminFarmerStatusHistoryResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
@@ -80,6 +81,15 @@ public class AdminFarmerController extends BaseController {
     public ResponseEntity<ApiResource<AdminFarmerDetailResource>> reinstate(
             @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails admin) {
         return ok(farmerService.reinstate(id, admin.getId()), "Farmer reinstated.");
+    }
+
+    @GetMapping("/{id}/status-history")
+    public ResponseEntity<ApiResource<PageResource<AdminFarmerStatusHistoryResource>>>
+            statusHistory(
+                    @PathVariable long id,
+                    @RequestParam(defaultValue = "1") int page,
+                    @RequestParam(defaultValue = "20") int pageSize) {
+        return ok(farmerService.statusHistory(id, page, pageSize), "Stall history loaded.");
     }
 
     private static ApprovalStatus parseStatus(String raw) {
