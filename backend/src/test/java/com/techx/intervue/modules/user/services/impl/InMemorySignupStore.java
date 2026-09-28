@@ -82,12 +82,7 @@ class InMemorySignupStore implements SignupStoreInterface {
     }
 
     @Override
-    public int failedAttempts(String email) {
-        return attempts.getOrDefault(email, 0);
-    }
-
-    @Override
-    public int recordFailedAttempt(String email) {
+    public int countAttempt(String email) {
         return attempts.merge(email, 1, Integer::sum);
     }
 

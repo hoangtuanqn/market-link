@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * <pre>
  * signup:pending:{email}      JSON of PendingSignup (TTL = pending TTL, extended on every code)
  * signup:code:{email}         sha256(email:code), never the code itself (TTL = code TTL)
- * signup:attempts:{email}     wrong codes for the current code (TTL follows the code)
+ * signup:attempts:{email}     tries at the current code, right or wrong (TTL follows the code)
  * signup:cooldown:{email}     "1" while a new code may not be sent (SET NX EX)
  * ratelimit:signup:{email}    codes sent to this address in the window
  * ratelimit:signup-ip:{ip}    codes sent from this IP in the window
@@ -95,13 +95,7 @@ public class RedisSignupStore implements SignupStoreInterface {
     }
 
     @Override
-    public int failedAttempts(String email) {
-        String count = redis.opsForValue().get(ATTEMPTS + email);
-        return count == null ? 0 : Integer.parseInt(count);
-    }
-
-    @Override
-    public int recordFailedAttempt(String email) {
+    public int countAttempt(String email) {
         Long count = redis.opsForValue().increment(ATTEMPTS + email);
         redis.expire(ATTEMPTS + email, Duration.ofSeconds(Math.max(1, secondsLeft(CODE + email))));
         return count == null ? 0 : count.intValue();

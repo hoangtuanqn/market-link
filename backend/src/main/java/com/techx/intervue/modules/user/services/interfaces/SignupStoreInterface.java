@@ -29,10 +29,11 @@ public interface SignupStoreInterface {
     /** Seconds before the code expires; 0 when there is none. */
     long codeSecondsLeft(String email);
 
-    int failedAttempts(String email);
-
-    /** Adds one wrong attempt; the counter lives as long as the code. Returns the new count. */
-    int recordFailedAttempt(String email);
+    /**
+     * Counts one try at the current code (INCR), before it is compared, so parallel requests cannot
+     * all slip under the limit. The counter lives as long as the code. Returns the new count.
+     */
+    int countAttempt(String email);
 
     /** SET NX EX; false when a cooldown is already running. */
     boolean startCooldown(String email, Duration ttl);

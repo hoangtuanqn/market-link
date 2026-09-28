@@ -113,12 +113,15 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
         PendingSignup pending =
                 store.findPending(normalized).orElseThrow(SignupExpiredException::new);
         String expected = store.findCode(normalized).orElseThrow(SignupCodeExpiredException::new);
-        if (store.failedAttempts(normalized) >= config.getMaxAttempts()) {
+        // Count the try before comparing: parallel requests each take one of the tries, none slips
+        // by
+        int used = store.countAttempt(normalized);
+        if (used > config.getMaxAttempts()) {
             store.deleteCode(normalized);
             throw new SignupCodeExpiredException();
         }
         if (!sameHash(expected, hash(normalized, code))) {
-            int left = Math.max(0, config.getMaxAttempts() - store.recordFailedAttempt(normalized));
+            int left = config.getMaxAttempts() - used;
             if (left == 0) store.deleteCode(normalized);
             throw new SignupCodeInvalidException(left);
         }

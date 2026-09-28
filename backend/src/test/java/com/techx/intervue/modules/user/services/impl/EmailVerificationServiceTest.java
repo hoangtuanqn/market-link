@@ -159,6 +159,34 @@ class EmailVerificationServiceTest {
                 .isNotNull();
     }
 
+    /**
+     * Final review: a try is counted before the comparison, so parallel requests cannot all
+     * compare.
+     */
+    @Test
+    void everyTryIsCountedBeforeTheCodeIsCompared() {
+        service.start(pending(EMAIL, "Lan"), IP);
+        String code = mailedCode(EMAIL);
+
+        service.verify(EMAIL, code);
+
+        assertThat(store.attempts.get(EMAIL)).isEqualTo(1);
+    }
+
+    @Test
+    void aTryBeyondTheLimitIsRefusedEvenWithTheRightCode() {
+        service.start(pending(EMAIL, "Lan"), IP);
+        String code = mailedCode(EMAIL);
+        // Five other tries are already in flight and counted
+        store.attempts.put(EMAIL, 5);
+
+        assertThat(
+                        catchThrowableOfType(
+                                SignupCodeExpiredException.class,
+                                () -> service.verify(EMAIL, code)))
+                .isNotNull();
+    }
+
     @Test
     void anExpiredCodeAsksForANewOne() {
         service.start(pending(EMAIL, "Lan"), IP);
