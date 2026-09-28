@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router';
 import NotificationApi from '@/api-requests/notification.requests';
 import { ChatIcon, MegaphoneIcon, ReceiptIcon, StoreIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { Chip } from '@/components/ui/chip';
 import { DataState } from '@/components/ui/data-state';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
@@ -14,6 +15,17 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 const PAGE_SIZE = 20;
+
+const NotificationItemSkeleton = () => (
+  <div className="border-line flex items-start gap-4 border-t px-6 py-4 first:border-t-0">
+    <div className="bg-surface-sunken size-9 shrink-0 animate-pulse rounded-full" />
+    <div className="flex min-w-0 flex-1 flex-col gap-2">
+      <div className="bg-surface-sunken h-4 w-48 animate-pulse rounded-sm" />
+      <div className="bg-surface-sunken h-3.5 w-full max-w-md animate-pulse rounded-sm" />
+    </div>
+    <div className="bg-surface-sunken h-3.5 w-24 shrink-0 animate-pulse rounded-sm" />
+  </div>
+);
 
 const iconOf = (kind: NotificationKindCode) => {
   if (kind === 'announcement') return { Icon: MegaphoneIcon, className: 'bg-highlight text-ink' };
@@ -131,11 +143,11 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-wrap items-start justify-between gap-4 sm:items-end">
+        <div className="flex flex-col gap-1">
           <h1 className="text-h1 text-ink font-bold">{title}</h1>
-          <p className="text-body">{intro}</p>
+          <p className="text-body-lg text-ink-muted">{intro}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Chip pressed={filter === 'all'} onClick={() => pick('all')}>
@@ -147,45 +159,54 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
         </div>
       </div>
 
-      <section aria-label={title} className="flex flex-col gap-0">
-        <div className="border-line-strong flex items-center justify-between gap-3 border-b-[1.5px] py-2 pr-2 pl-4">
-          <b className="text-[16px]">
+      <Card as="section" aria-label={title} className="flex flex-col overflow-hidden">
+        <div className="border-line flex items-center justify-between gap-3 border-b px-6 py-4">
+          <h2 className="text-h3 text-ink font-bold">
             {title}
             {unread > 0 && (
-              <span className="text-ink-muted ml-1 text-[14px] font-normal">
+              <span className="text-ink-muted ml-2 text-[14px] font-normal">
                 · {t('notify.list.unreadCount', { count: unread })}
               </span>
             )}
-          </b>
+          </h2>
           <Chip onClick={() => void readAll()} disabled={unread === 0}>
             {t('notify.list.markAllRead')}
           </Chip>
         </div>
 
         {state.status === 'loading' && (
-          <p className="text-small text-ink-muted px-4 py-6">{t('notify.list.loading')}</p>
+          <div className="flex flex-col">
+            <NotificationItemSkeleton />
+            <NotificationItemSkeleton />
+            <NotificationItemSkeleton />
+            <NotificationItemSkeleton />
+          </div>
         )}
 
         {state.status === 'error' && (
-          <DataState
-            variant="error"
-            className="mt-4"
-            title={t('notify.list.errorTitle')}
-            text={t('notify.list.errorText')}
-            action={
-              <Button variant="secondary" size="sm" onClick={retry}>
-                {t('notify.settings.retry')}
-              </Button>
-            }
-          />
+          <div className="p-6">
+            <DataState
+              variant="error"
+              title={t('notify.list.errorTitle')}
+              text={t('notify.list.errorText')}
+              action={
+                <Button variant="secondary" size="sm" onClick={retry}>
+                  {t('notify.settings.retry')}
+                </Button>
+              }
+            />
+          </div>
         )}
 
         {state.status === 'ready' && state.items.length === 0 && (
-          <DataState
-            className="mt-4"
-            title={filter === 'unread' ? t('notify.list.emptyUnreadTitle') : t('notify.list.emptyTitle')}
-            text={t('notify.list.emptyText')}
-          />
+          <div className="p-6">
+            <DataState
+              center
+              className="py-12"
+              title={filter === 'unread' ? t('notify.list.emptyUnreadTitle') : t('notify.list.emptyTitle')}
+              text={t('notify.list.emptyText')}
+            />
+          </div>
         )}
 
         {state.status === 'ready' && state.items.length > 0 && (
@@ -199,27 +220,26 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
                     type="button"
                     onClick={() => open(n)}
                     className={Helper.cn(
-                      'hover:bg-surface-sunken focus-visible:outline-focus grid w-full cursor-pointer grid-cols-[32px_1fr_auto] gap-3 px-4 py-3 text-left focus-visible:outline-2',
-                      !n.isRead && 'bg-highlight',
+                      'hover:bg-surface-sunken focus-visible:outline-focus grid w-full cursor-pointer grid-cols-[36px_1fr_auto] items-start gap-4 px-6 py-4 text-left transition-colors focus-visible:outline-2',
+                      !n.isRead && 'bg-highlight/50',
                     )}
                   >
-                    <span className={Helper.cn('grid size-8 place-items-center rounded-full', className)}>
-                      <Icon size={16} />
+                    <span className={Helper.cn('grid size-9 shrink-0 place-items-center rounded-full', className)}>
+                      <Icon size={18} />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-[14px] font-bold">
+                      <span className="text-ink flex items-center gap-2 text-[15px] font-bold">
                         {n.title}
                         {!n.isRead && (
-                          <span
-                            aria-hidden="true"
-                            className="bg-brand ml-1.5 inline-block size-2 rounded-full align-middle"
-                          />
+                          <span aria-hidden="true" className="bg-brand inline-block size-2 shrink-0 rounded-full" />
                         )}
                         {!n.isRead && <span className="sr-only"> · {t('notify.list.unreadMark')}</span>}
                       </span>
-                      <span className="text-ink-muted mt-0.5 block text-[14px] break-words">{n.message}</span>
+                      <span className="text-ink-muted mt-1 block text-[14px] leading-relaxed break-words">
+                        {n.message}
+                      </span>
                     </span>
-                    <span className="text-ink-muted text-[12px] whitespace-nowrap">
+                    <span className="text-ink-muted shrink-0 pt-0.5 text-[12px] whitespace-nowrap">
                       {formatDate(at)} {formatTime(at)}
                     </span>
                   </button>
@@ -230,13 +250,13 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
         )}
 
         {state.status === 'ready' && state.items.length < state.total && (
-          <div className="flex justify-center pt-4">
+          <div className="border-line flex justify-center border-t py-4">
             <Button variant="secondary" size="sm" disabled={loadingMore} onClick={() => void loadMore()}>
               {loadingMore ? t('notify.list.loading') : t('notify.list.more')}
             </Button>
           </div>
         )}
-      </section>
+      </Card>
     </div>
   );
 };
