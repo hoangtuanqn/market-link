@@ -9,7 +9,9 @@ import com.techx.intervue.modules.chat.resources.FarmerRows.SalesRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.ScheduleDayRow;
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.time.Clock;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +64,7 @@ public class FarmerKnowledgeRepository {
             LEFT JOIN order_items i ON i.order_id = o.id
             WHERE o.farmer_id = :farmerId
               AND o.status = 'placed'
-              AND o.cutoff_at <= DATE_ADD(NOW(), INTERVAL :hours HOUR)
+              AND o.cutoff_at <= :until
             GROUP BY o.id, o.order_code, u.full_name, m.market_name, o.pickup_date, o.pickup_start,
                      o.pickup_end, o.cutoff_at, o.total_amount, o.status
             ORDER BY o.cutoff_at
@@ -151,7 +153,7 @@ public class FarmerKnowledgeRepository {
                    AND status = 'placed')                                 AS waiting,
               (SELECT COUNT(*) FROM orders
                  WHERE farmer_id = :farmerId AND pickup_date = :onDate
-                   AND status = 'placed' AND cutoff_at < NOW())           AS cutoff_passed,
+                   AND status = 'placed' AND cutoff_at < :now)            AS cutoff_passed,
               (SELECT COUNT(*) FROM products
                  WHERE farmer_id = :farmerId AND is_deleted = FALSE
                    AND status = 'sold_out')                               AS sold_out,
@@ -182,6 +184,9 @@ public class FarmerKnowledgeRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
 
+    /** Vietnam time ({@code ChatConfig}), the zone {@code orders.cutoff_at} is written in. */
+    private final Clock clock;
+
     public Optional<OrderRow> myOrderByCode(long farmerId, String orderCode) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
@@ -196,6 +201,7 @@ public class FarmerKnowledgeRepository {
                 new MapSqlParameterSource()
                         .addValue("farmerId", farmerId)
                         .addValue("onDate", onDate)
+                        .addValue("now", LocalDateTime.now(clock))
                         .addValue("lowStock", lowStockThreshold);
         BriefingRow row =
                 jdbc.queryForObject(
@@ -234,7 +240,7 @@ public class FarmerKnowledgeRepository {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
                         .addValue("farmerId", farmerId)
-                        .addValue("hours", hours)
+                        .addValue("until", LocalDateTime.now(clock).plusHours(hours))
                         .addValue("limit", ROW_LIMIT);
         return jdbc.query(CUTOFF_SOON, params, FarmerKnowledgeRepository::orderRow);
     }

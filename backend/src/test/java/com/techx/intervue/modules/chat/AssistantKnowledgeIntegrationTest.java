@@ -8,7 +8,10 @@ import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.UUID;
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
  * FR-093, FR-094. The Farmer and Admin assistants run fixed SQL that no other screen calls, so a
@@ -32,6 +36,7 @@ class AssistantKnowledgeIntegrationTest {
     @Autowired private FarmerKnowledgeRepository farmerKnowledge;
     @Autowired private AdminKnowledgeRepository adminKnowledge;
     @Autowired private JdbcTemplate jdbc;
+    @Autowired private NamedParameterJdbcTemplate named;
 
     private final String tag =
             UUID.randomUUID().toString().substring(0, 8).replaceAll("[^a-z0-9]", "x");
@@ -115,6 +120,54 @@ class AssistantKnowledgeIntegrationTest {
         assertThat(farmerKnowledge.cutoffSoon(farmer, 24))
                 .extracting(OrderRow::customerName)
                 .containsExactly("Khach " + tag);
+    }
+
+    // ------------------------------------------------------ cutoffs are Vietnam time (FR-067)
+
+    /** 08:00 on 02/10/2026 in Ho Chi Minh City, which is 01:00 UTC — the database clock. */
+    private static final Clock EIGHT_AM_IN_VIETNAM =
+            Clock.fixed(Instant.parse("2026-10-02T01:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
+
+    @Test
+    void theMorningBannerCountsACutoffThatHasPassedInVietnam() {
+        // Closed at 02:00 local time, six hours ago. Compared with the UTC database clock (01:00)
+        // it would still look open.
+        order("IB-" + tag, "2026-10-02", "2026-10-02 02:00:00");
+
+        assertThat(
+                        new FarmerKnowledgeRepository(named, EIGHT_AM_IN_VIETNAM)
+                                .briefing(farmer, LocalDate.of(2026, 10, 2), 5)
+                                .cutoffAlreadyPassed())
+                .isEqualTo(1);
+    }
+
+    @Test
+    void closeToCutoffLooksAheadFromVietnamTime() {
+        String tonight = "IT-" + tag + "a";
+        String tomorrowNight = "IT-" + tag + "b";
+        order(tonight, "2026-10-03", "2026-10-02 20:00:00");
+        order(tomorrowNight, "2026-10-04", "2026-10-03 20:00:00");
+
+        assertThat(new FarmerKnowledgeRepository(named, EIGHT_AM_IN_VIETNAM).cutoffSoon(farmer, 24))
+                .extracting(OrderRow::orderCode)
+                .contains(tonight)
+                .doesNotContain(tomorrowNight);
+    }
+
+    private void order(String code, String pickupDate, String cutoffAt) {
+        track(
+                "orders",
+                insert(
+                        "INSERT INTO orders (order_code, customer_id, farmer_id, market_id,"
+                                + " pickup_date, pickup_start, pickup_end, cutoff_at, total_amount,"
+                                + " status) VALUES (?, ?, ?, ?, ?, '07:00:00', '08:00:00', ?, 1.00,"
+                                + " 'placed')",
+                        code,
+                        customer,
+                        farmer,
+                        market,
+                        pickupDate,
+                        cutoffAt));
     }
 
     @Test
