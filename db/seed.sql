@@ -791,3 +791,74 @@ FROM (
      ) x
 LEFT JOIN users u ON u.email = x.email
 WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = x.message);
+
+-- ---- Near-expiry deals (FR-124, FR-125, proposed): two deal days for /deals and the Farmer's "On sale" ----
+-- A deal is the product_daily_stock row of one pickup day with list_price, discount_percent, packed_on and
+-- best_before set (V20260928007); unit_price is then the deal price. Both deals belong to 'Trứng gà Khánh Hòa'
+-- (farmer8@), a stall that is at a market every day, so a slot with room exists from today+2 whatever day the seed
+-- runs; neither product is in a seeded order, so no order's reserved units are touched. The batch is dated from the
+-- product's own shelf life N, so the rules FarmerDealService enforces hold: 'Trứng vịt' keeps ⌈N/2⌉ − 1 days on
+-- pickup, 'Trứng cút' 2 days, and the discount is DealPolicy's suggestion (5·L ≤ N → 40, 20·L ≤ 7·N → 30, else 20).
+-- list_price is the day's normal price (the template's, else the product's); unit_price is rounded half up to the
+-- cent, at least 0.01 and never above the list price.
+
+-- Re-running first ends the deals an earlier run left on these two products, so there are always exactly two.
+-- A single-table UPDATE applies its assignments left to right: unit_price reads list_price before it is cleared.
+UPDATE product_daily_stock
+SET unit_price = list_price, list_price = NULL, discount_percent = NULL, packed_on = NULL, best_before = NULL
+WHERE discount_percent IS NOT NULL
+  AND product_id IN (SELECT p.id
+                     FROM products p
+                     JOIN farmer_profiles f ON f.id = p.farmer_id
+                     JOIN users u ON u.id = f.user_id
+                     WHERE u.email = 'farmer8@marketlink.vn' AND p.name IN ('Trứng vịt', 'Trứng cút'));
+
+INSERT INTO product_daily_stock (product_id, stock_date, quantity_available, unit_price, list_price,
+                                 discount_percent, packed_on, best_before)
+SELECT d.product_id, d.pickup, d.qty,
+       LEAST(d.base, GREATEST(0.01, ROUND(d.base * (100 - d.pct) / 100, 2))),
+       d.base, d.pct, d.packed_on, d.pickup + INTERVAL (d.days_left - 1) DAY
+FROM (
+      SELECT c.*,
+             CASE WHEN c.days_left <= 1 OR 5 * c.days_left <= c.n THEN 40
+                  WHEN 20 * c.days_left <= 7 * c.n THEN 30
+                  ELSE 20 END AS pct,
+             c.pickup + INTERVAL c.days_left DAY - INTERVAL c.n DAY AS packed_on
+      FROM (
+            SELECT p.id AS product_id, p.shelf_life_days AS n, x.qty, slot.pickup,
+                   COALESCE(t.default_price, p.price) AS base,
+                   IF(x.target = 'last_days', LEAST(2, (p.shelf_life_days + 1) DIV 2),
+                      GREATEST(1, (p.shelf_life_days + 1) DIV 2 - 1)) AS days_left
+            FROM (
+                  SELECT 'Trứng vịt' AS product_name, 2 AS from_days, 10 AS qty, 'half' AS target
+                  UNION ALL SELECT 'Trứng cút', 3, 8, 'last_days'
+                 ) x
+            JOIN users u ON u.email = 'farmer8@marketlink.vn'
+            JOIN farmer_profiles f ON f.user_id = u.id
+            JOIN products p ON p.farmer_id = f.id AND p.name = x.product_name AND p.is_deleted = FALSE
+            JOIN LATERAL (
+                  SELECT MIN(ps.slot_date) AS pickup
+                  FROM pickup_slots ps
+                  JOIN farmer_markets fm ON fm.id = ps.farmer_market_id AND fm.is_active = TRUE
+                  WHERE fm.farmer_id = f.id
+                    AND ps.is_active = TRUE
+                    AND ps.booked_count < ps.max_orders
+                    AND ps.slot_date >= DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) + INTERVAL x.from_days DAY
+                 ) slot ON slot.pickup IS NOT NULL
+            JOIN weekly_stock_templates t ON t.product_id = p.id
+                                         AND t.day_of_week = DAYOFWEEK(slot.pickup) - 1
+                                         AND t.is_active = TRUE
+           ) c
+     ) d
+WHERE d.n >= 2
+  AND d.packed_on < d.pickup
+  AND d.packed_on <= DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR)
+  AND d.days_left BETWEEN 1 AND (d.n + 1) DIV 2
+ON DUPLICATE KEY UPDATE
+    list_price = COALESCE(product_daily_stock.list_price, product_daily_stock.unit_price),
+    unit_price = LEAST(product_daily_stock.list_price,
+                       GREATEST(0.01, ROUND(product_daily_stock.list_price * (100 - d.pct) / 100, 2))),
+    discount_percent = d.pct,
+    packed_on = d.packed_on,
+    best_before = d.pickup + INTERVAL (d.days_left - 1) DAY,
+    quantity_available = d.qty;
