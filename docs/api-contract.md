@@ -495,7 +495,8 @@ trả 404/410 → subscription bị xoá. Web Push chỉ chạy trên HTTPS (loc
 > `/api/v1/chat`, bảng `chat_messages`. Tính năng này **không có trong đề** — thiết kế và cảnh báo
 > phạm vi ở `docs/superpowers/specs/2026-09-25-farmer-customer-chat-design.md`.
 
-Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng lai không có chat.
+Mọi endpoint dưới đây **đều yêu cầu đăng nhập**, trừ `GET /attachments/{id}/stream` (link ký tạm, xem
+"Video" bên dưới). Khách vãng lai không có chat.
 
 | Method | Path | Role | Trạng thái | Body / query | data |
 |---|---|---|---|---|---|
@@ -505,8 +506,10 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 | GET | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | query `before`, `size` | `[MessageResource]`, keyset, mới nhất trước |
 | POST | `/api/v1/conversations/{id}/messages` | Thành viên | **Đã có** | `{ kind?, body?, productId?, orderId?, attachmentId? }` | 201 · `MessageResource`. `orderId` phải là đơn của người khách trong thread, mua ở stall của người Farmer trong thread (R-06): không có → **404**, không thuộc cặp → **403 `ORDER_NOT_IN_CONVERSATION`** (thêm 26/09/2026) |
 | POST | `/api/v1/conversations/{id}/read` | Thành viên | **Đã có** | | `null` |
-| POST | `/api/v1/attachments` | Thành viên | **Đã có** | `multipart/form-data`, field `file` | 201 · `{ attachmentId, url, width, height }` |
+| POST | `/api/v1/attachments` | Thành viên | **Đã có** | `multipart/form-data`, field `file` — ảnh hoặc video ≤ 50 MB | 201 · `{ attachmentId, url, mime, width?, height? }` (video không có `width`/`height`). `mime` thêm 28/09/2026 |
 | GET | `/api/v1/attachments/{id}` | Thành viên | **Đã có** | | **File nhị phân** — xem ghi chú |
+| GET | `/api/v1/attachments/{id}/stream-url` | Thành viên / Admin | **Đã có** (28/09/2026) | | `{ url, expiresAt }` — link phát video hạn 5 phút |
+| GET | `/api/v1/attachments/{id}/stream` | Public (link ký) | **Đã có** (28/09/2026) | query `u`, `s`, `e`, `t`, `download?` | **File nhị phân**, hỗ trợ `Range` (206) |
 | POST | `/api/v1/messages/{id}/report` | Thành viên | **Đã có** | `{ reason: "spam"｜"abuse"｜"scam"｜"other", note? }` | 201 · `{ id, messageId, reason, note, status, createdAt }` |
 | GET | `/api/v1/admin/message-reports` | Admin | **Đã có** | query `status`, `page`, `pageSize` | `{ items[], page, pageSize, total }` |
 | GET | `/api/v1/admin/message-reports/{id}` | Admin | **Đã có** | | Chi tiết + `context[]` (tin bị báo + tối đa 5 tin mỗi bên) |
@@ -531,11 +534,16 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 }
 ```
 
-- `kind` là `"text"` | `"image"` (`"offer"` và `"system"` là đợt 2, gửi lên bây giờ trả 400).
-- `kind: "text"` cần `body`; `kind: "image"` cần `attachmentId` và **không** cần `body`.
-- `attachment` chỉ có mặt khi tin là ảnh: `{ attachmentId, url, width, height }`.
+- `kind` là `"text"` | `"image"` | `"video"` (`"offer"` và `"system"` là đợt 2, gửi lên bây giờ trả 400).
+  `"video"` thêm 28/09/2026.
+- `kind: "text"` cần `body`; `kind: "image"` / `"video"` cần `attachmentId` và **không** cần `body`.
+  Loại tệp phải khớp loại tin: `image` cần tệp `image/*`, `video` cần `video/*` (theo `mime` server tự nhận
+  ra lúc upload), sai → **400 `VALIDATION_ERROR`**, field `attachmentId`. Frontend chọn `kind` theo `mime`
+  trả về từ upload.
+- `attachment` chỉ có mặt khi tin là ảnh hoặc video: `{ attachmentId, url, mime, width?, height? }`.
   Trường nào `null` thì **vắng mặt hẳn** khỏi JSON (`@JsonInclude(NON_NULL)`).
-- Tin bị admin ẩn **không xuất hiện** trong danh sách, và ảnh của nó trả 404.
+- Tin bị admin ẩn **không xuất hiện** trong danh sách, và ảnh/video của nó trả 404.
+- Xem trước hội thoại (`lastMessageText`) của tin ảnh là `Photo`, tin video là `Video`.
 
 **Kiểm duyệt — ranh giới của admin (spec §8.3)**
 
@@ -545,21 +553,22 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 - `GET /api/v1/admin/message-reports/{id}` trả `context[]`: tin bị báo cáo cùng **tối đa 5 tin liền
   trước và 5 tin liền sau**, trong đúng thread đó, xếp theo `id` tăng dần. Đó là **toàn bộ** những
   gì admin đọc được trong thread.
-- Mỗi phần tử `context[]`: `{ id, senderId, senderName, kind, body, hasPhoto, attachmentId, reported, hidden, createdAt }`.
-  `attachmentId` chỉ có mặt khi `hasPhoto` và tin đó đã bị báo cáo; admin mở ảnh qua `GET /attachments/{id}`.
+- Mỗi phần tử `context[]`: `{ id, senderId, senderName, kind, body, hasPhoto, hasVideo, attachmentId, reported, hidden, createdAt }`.
+  `attachmentId` chỉ có mặt khi `hasPhoto` hoặc `hasVideo` và tin đó đã bị báo cáo; admin mở ảnh qua
+  `GET /attachments/{id}`, video qua `GET /attachments/{id}/stream-url`. `hasVideo` thêm 28/09/2026.
   Tin bị admin ẩn **vẫn hiện với admin** kèm `hidden: true` (khác người dùng thường, vốn không thấy nó nữa).
 - Hàng đợi chỉ trả `preview` cắt **80 ký tự**, không trả toàn văn — nó là nơi quyết định có mở ra
-  xem không, không phải nơi đọc hàng loạt. Tin ảnh hiện `Photo`.
+  xem không, không phải nơi đọc hàng loạt. Tin ảnh hiện `Photo`, tin video hiện `Video`.
 - `PATCH .../hide` **idempotent**: ẩn một tin đã bị ẩn trả 200 và **không ghi đè** `hiddenBy` /
   `hiddenAt` của admin trước — người xử lý trước là người chịu trách nhiệm.
 - Ẩn một tin **chưa ai báo cáo** → **403 `MODERATION_OUT_OF_SCOPE`**.
 - `PATCH .../dismiss` là bổ sung ngoài bảng gốc của thiết kế: không có nó thì báo cáo admin xem rồi
   quyết định không ẩn sẽ nằm lại `new` mãi và hàng đợi không bao giờ vơi.
-- **Ảnh:** admin xem được ảnh của tin **đã bị báo cáo**, **không** xem được ảnh của ±5 tin ngữ cảnh.
-  Mỗi lần mở ghi một dòng log. Hệ quả có chủ ý: admin đồng thời là khách hàng trong một thread sẽ
+- **Ảnh và video:** admin xem được ảnh/video của tin **đã bị báo cáo**, **không** xem được của ±5 tin
+  ngữ cảnh. Mỗi lần mở ảnh, hoặc mỗi lần xin link video, ghi một dòng log. Hệ quả có chủ ý: admin đồng thời là khách hàng trong một thread sẽ
   đi nhánh admin và không xem được ảnh riêng của chính mình ở đó nếu tin chưa bị báo cáo.
 
-**Ảnh — `GET /api/v1/attachments/{id}`**
+**Ảnh và video — `GET /api/v1/attachments/{id}`**
 
 - Trả **file nhị phân**, **không** bọc `ApiResource`. Đây là ngoại lệ có chủ ý của quy ước envelope,
   giống mọi endpoint tải file. Lỗi thì vẫn trả envelope bình thường.
@@ -569,9 +578,31 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
   thành viên** của thread xem được, người ngoài nhận 403.
 - Ảnh **không** phục vụ qua `/uploads/**`. Thư mục lưu là `CHAT_UPLOAD_DIR`, tách hẳn khỏi
   `app.storage.dir`, nên không có đường dẫn tĩnh nào đoán được.
-- Upload: jpg/png/webp, tối đa **5 MB**, kiểu kết luận từ **magic bytes** chứ không từ
-  `Content-Type` client gửi. JPEG/PNG được mã hoá lại thành JPEG nên EXIF rụng hết.
-  Ảnh upload mà 24 giờ không gửi thì job dọn đi.
+- Upload (đổi 28/09/2026, spec `2026-09-28-chat-media-design.md`): tối đa **50 MB** mỗi tệp, kiểu kết
+  luận từ **nội dung tệp** (magic bytes + cấu trúc) chứ không từ tên hay `Content-Type` client gửi.
+  - Ảnh JPEG/PNG: mã hoá lại thành JPEG nên EXIF/GPS rụng hết; cạnh > 4096 px được **thu nhỏ** còn
+    4096 px (không từ chối); cạnh > 30 000 px trong header → 400.
+  - Ảnh WebP, GIF (giữ ảnh động), AVIF: lưu nguyên sau khi kiểm cấu trúc; cạnh > 4096 px → 400.
+  - HEIC/HEIF → **415** với lời nhắc đổi sang JPEG — frontend tự đổi trước khi gửi.
+  - Video MP4/M4V, MOV, WebM: lưu nguyên, **không chuyển mã**. MP4/MOV phải là chuỗi hộp ISO BMFF
+    dừng đúng ở cuối tệp và có hộp `moov`; tệp cụt hoặc bị gắn thêm đuôi → 415.
+  - Tệp upload mà 24 giờ không gửi thì job dọn đi.
+
+**Video — link ký tạm (thêm 28/09/2026)**
+
+Thẻ `<video>` không gửi được header `Authorization`, nên video phát qua link ký tạm:
+
+- `GET /attachments/{id}/stream-url` (cần đăng nhập) kiểm quyền **giống hệt** `GET /attachments/{id}`
+  (admin: chỉ tin đã bị báo cáo, có ghi log) rồi trả `{ url, expiresAt }`, `url` dạng
+  `/api/v1/attachments/{id}/stream?u={userId}&s={u|a}&e={epochSeconds}&t={chữ ký}`. Hạn 5 phút
+  (`app.chat.stream-url-ttl-seconds`).
+- Chữ ký HMAC-SHA256 trên `id|u|s|e`, khoá suy ra từ `JWT_SECRET` (không thêm biến môi trường).
+- `GET /attachments/{id}/stream` là route **public**: chữ ký thay cho token. Sai chữ ký / hết hạn /
+  thiếu tham số → **403 `STREAM_LINK_INVALID`** (frontend xin link mới một lần). Quyền của `u` được kiểm
+  lại **mỗi request**: tin bị ẩn sau khi cấp link → 404.
+- Hỗ trợ `Range` → **206** + `Content-Range` để tua. Header: `Accept-Ranges: bytes`,
+  `Cache-Control: private`, `X-Content-Type-Options: nosniff`, `Content-Disposition: inline`
+  (hoặc `attachment; filename="marketlink-{id}.{đuôi}"` khi có `download=1`).
 
 ⚠️ **Ghi chú cho frontend:** JWT đi trong header `Authorization`, **không** trong cookie, nên
 `<img src="/api/v1/attachments/5">` sẽ trả **401**. Client phải `fetch` kèm header rồi
@@ -592,20 +623,21 @@ Mọi endpoint dưới đây **đều yêu cầu đăng nhập**. Khách vãng l
 
 | Mã | `error.code` | Khi nào |
 |---|---|---|
-| 400 | `VALIDATION_ERROR` | Tự nhắn cho chính mình · tin text rỗng · `kind` chưa hỗ trợ · ảnh quá 4096 px mỗi cạnh |
+| 400 | `VALIDATION_ERROR` | Tự nhắn cho chính mình · tin text rỗng · `kind` chưa hỗ trợ · ảnh WebP/GIF/AVIF quá 4096 px mỗi cạnh (JPEG/PNG: quá 30 000 px) · loại tệp không khớp `kind` (field `attachmentId`) |
 | 403 | `NOT_A_MEMBER` | Không thuộc thread |
 | 403 | `STALL_NOT_OPEN` | Stall chưa được duyệt hoặc đang bị đình chỉ — không mở thread mới được |
 | 403 | `ACCOUNT_RESTRICTED` | Tài khoản không còn `active` |
 | 400 | `VALIDATION_ERROR` | Tự báo cáo tin của chính mình (spec §8.5: người gửi không gỡ được tin của mình) |
 | 403 | `ATTACHMENT_NOT_YOURS` | Gắn ảnh của người khác vào tin của mình · xin ảnh chưa gắn tin của người khác |
-| 403 | `MODERATION_OUT_OF_SCOPE` | Admin thao tác trên tin chưa ai báo cáo, hoặc xin ảnh của tin ngữ cảnh |
+| 403 | `MODERATION_OUT_OF_SCOPE` | Admin thao tác trên tin chưa ai báo cáo, hoặc xin ảnh/video của tin ngữ cảnh |
+| 403 | `STREAM_LINK_INVALID` | Link phát video sai chữ ký, hết hạn hoặc thiếu tham số |
 | 409 | `ALREADY_REPORTED` | Báo cáo một tin mình đã báo rồi |
 | 409 | `CONVERSATION_CLOSED` | Stall bị đình chỉ — thread cũ vẫn **đọc** được, chỉ không gửi thêm (D-09) |
 | 409 | `ATTACHMENT_ALREADY_USED` | Một ảnh chỉ gắn được vào đúng một tin |
-| 413 | `ATTACHMENT_TOO_LARGE` | Ảnh quá 5 MB (trần của endpoint) |
-| 413 | `PAYLOAD_TOO_LARGE` | File quá 40 MB — Tomcat chặn khi đọc body, trước khi biết controller nào nhận (`UploadExceptionHandler` toàn cục) |
-| 415 | `UNSUPPORTED_IMAGE_TYPE` | Không phải jpg/png/webp (kết luận từ magic bytes) |
-| 429 | `RATE_LIMITED` | 30 tin/phút · 10 ảnh/giờ · 20 thread mới/giờ, mỗi mức tính theo từng user. Thêm **120 frame `/app/typing`/phút**, nhưng frame vượt ngưỡng **bị bỏ im lặng** — STOMP không có mã HTTP để trả |
+| 413 | `ATTACHMENT_TOO_LARGE` | Tệp quá 50 MB (`CHAT_MAX_UPLOAD_BYTES`, trần của endpoint) |
+| 413 | `PAYLOAD_TOO_LARGE` | Tệp quá `spring.servlet.multipart.max-file-size` (50 MB) — Tomcat chặn khi đọc body, trước khi biết controller nào nhận (`UploadExceptionHandler` toàn cục) |
+| 415 | `UNSUPPORTED_IMAGE_TYPE` | Không phải JPEG/PNG/WebP/GIF/AVIF hay MP4/MOV/WebM, HEIC chưa đổi, hoặc tệp cụt/gắn thêm đuôi (kết luận từ nội dung tệp) |
+| 429 | `RATE_LIMITED` | 30 tin/phút · 10 ảnh hoặc video/giờ (tính chung) · 20 thread mới/giờ, mỗi mức tính theo từng user. Thêm **120 frame `/app/typing`/phút**, nhưng frame vượt ngưỡng **bị bỏ im lặng** — STOMP không có mã HTTP để trả |
 
 ---
 

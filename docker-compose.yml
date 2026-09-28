@@ -99,9 +99,9 @@ services:
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:${FRONTEND_PORT:-3000}}
       TZ: ${TZ:-Asia/Ho_Chi_Minh}
       STORAGE_DIR: /app/uploads
-      # FR-115: chat images live separate from /app/uploads (that directory is served publicly through /uploads)
+      # FR-115: chat photos and videos live separate from /app/uploads (that directory is served publicly through /uploads)
       CHAT_UPLOAD_DIR: ${CHAT_UPLOAD_DIR:-/var/lib/marketlink/chat}
-      CHAT_MAX_UPLOAD_BYTES: ${CHAT_MAX_UPLOAD_BYTES:-5242880}
+      CHAT_MAX_UPLOAD_BYTES: ${CHAT_MAX_UPLOAD_BYTES:-52428800}
       CHAT_MESSAGES_PER_MINUTE: ${CHAT_MESSAGES_PER_MINUTE:-30}
       CHAT_IMAGES_PER_HOUR: ${CHAT_IMAGES_PER_HOUR:-10}
       CHAT_CONVERSATIONS_PER_HOUR: ${CHAT_CONVERSATIONS_PER_HOUR:-20}

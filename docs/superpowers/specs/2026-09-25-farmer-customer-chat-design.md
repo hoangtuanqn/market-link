@@ -80,7 +80,7 @@ Dùng dải FR-110 trở đi để không đụng FR-001…102 đang có.
 | FR-112 | Hiện **đang gõ**, **đã xem**, và **online / hoạt động lần cuối** | SHOULD | Cả hai | 1 |
 | FR-113 | Số tin chưa đọc hiện trên header và tự cập nhật khi đang ở trang khác | MUST\* | Cả hai | 1 |
 | FR-114 | Ghim một sản phẩm hoặc một đơn vào tin nhắn; từ trang sản phẩm/stall/đơn có nút nhắn thẳng cho stall | MUST\* | Customer | 1 |
-| FR-115 | Gửi ảnh trong tin nhắn (jpg/png/webp, tối đa 5 MB) | SHOULD | Cả hai | 1 |
+| FR-115 | Gửi ảnh và video trong tin nhắn (ảnh JPEG/PNG/WebP/GIF/AVIF/HEIC, video MP4/MOV/WebM, tối đa 50 MB — mở rộng 28/09/2026) | SHOULD | Cả hai | 1 |
 | FR-116 | Báo cáo một tin nhắn; admin xem tin bị báo cáo và ẩn được | MUST\* | Cả ba | 1 |
 | FR-117 | Popover xem nhanh 3–4 mục từ header cho **thông báo** và cho **tin nhắn** | SHOULD | Cả hai | 1 |
 | FR-118 | Farmer ra giá riêng cho một sản phẩm trong chat; khách chấp nhận hoặc từ chối | SHOULD | Cả hai | 2 |
@@ -269,11 +269,11 @@ Tất cả theo quy ước đang có: `/api/v1`, camelCase, `ApiResource`. Mọi
 |---|---|
 | 400 | Body sai định dạng, `expiresAt` trong quá khứ |
 | 401 | Chưa đăng nhập |
-| 403 | Không thuộc thread · stall chưa được duyệt · tài khoản bị khoá · admin đọc tin chưa bị báo cáo · tự nhắn cho chính mình là 400 |
+| 403 | Không thuộc thread · stall chưa được duyệt · tài khoản bị khoá · admin đọc tin chưa bị báo cáo · link phát video sai hoặc hết hạn (`STREAM_LINK_INVALID`) · tự nhắn cho chính mình là 400 |
 | 404 | Thread, tin nhắn hoặc ảnh không tồn tại |
 | 409 | Offer đã được trả lời · offer hết hạn · stall bị đình chỉ nên không gửi được nữa |
-| 413 | Ảnh quá 5 MB |
-| 415 | Không phải jpg/png/webp |
+| 413 | Ảnh hoặc video quá 50 MB (đổi 28/09/2026, trước là ảnh quá 5 MB) |
+| 415 | Không phải JPEG/PNG/WebP/GIF/AVIF hay MP4/MOV/WebM, HEIC chưa đổi sang JPEG, hoặc tệp cụt/bị gắn thêm đuôi |
 | 429 | Gửi quá nhanh (xem mục 8.4) |
 
 ---
@@ -368,7 +368,7 @@ simple broker hoặc tách service về sau là thay một class, không phải 
 | Khách vãng lai | Không có chat. Nút "Message this stall" đưa sang trang đăng nhập |
 | Mọi endpoint có `{id}` | Kiểm tư cách thành viên **trước khi** trả dữ liệu (R-06) |
 
-### 8.2 Ảnh — chỗ dễ hở nhất
+### 8.2 Ảnh và video — chỗ dễ hở nhất
 
 Ảnh **không** phục vụ như file tĩnh theo đường dẫn đoán được. `storage_key` sinh ngẫu nhiên và ảnh
 chỉ ra qua `GET /api/v1/attachments/{id}`, endpoint này kiểm tư cách thành viên y như khi đọc tin
@@ -379,8 +379,14 @@ Lưu trên một Docker volume (`chat-uploads`), đường dẫn lấy từ bi�
 Không dùng dịch vụ ngoài — cùng lý do D-12 chọn OpenStreetMap thay Google Maps: không cần tài khoản,
 không hết hạn mức giữa lúc demo, không phải nhét API key vào source nộp cho giám khảo.
 
-Kiểm tra khi upload: phần mở rộng **và** magic bytes (không tin `Content-Type` client gửi), tối đa
-5 MB, chỉ jpg/png/webp. Ảnh upload rồi không gắn vào tin nhắn nào trong 24 giờ thì job dọn đi.
+Kiểm tra khi upload (đổi 28/09/2026 theo `2026-09-28-chat-media-design.md`): loại tệp suy ra từ **nội
+dung** (magic bytes + cấu trúc), không tin tên tệp hay `Content-Type` client gửi; tối đa **50 MB**.
+JPEG/PNG được mã hoá lại (bỏ EXIF, thu nhỏ còn tối đa 4096 px); WebP, GIF, AVIF và video MP4/MOV/WebM
+được **lưu nguyên** nên phải qua kiểm toàn vẹn: ISO BMFF đi hết chuỗi hộp và dừng đúng cuối tệp, GIF
+kết thúc bằng `3B`. HEIC trả 415, trình duyệt đổi sang JPEG trước. Upload đi qua tệp tạm, không đọc
+cả tệp vào bộ nhớ. Video phát qua link ký tạm 5 phút (`GET /attachments/{id}/stream-url`) vì thẻ
+`<video>` không gửi được token; link hỗ trợ `Range` để tua. Tệp upload rồi không gắn vào tin nhắn nào
+trong 24 giờ thì job dọn đi.
 
 ### 8.3 Admin đọc tin nhắn tới đâu
 
@@ -393,7 +399,7 @@ ReadMe** như đề yêu cầu.
 ### 8.4 Chống lạm dụng
 
 `bucket4j-redis` **đã có sẵn trong `pom.xml`** — dùng luôn, không thêm thư viện. Hạn mức đề xuất:
-30 tin/phút và 10 ảnh/giờ cho mỗi user; vượt thì 429. Mở thread mới: 20/giờ, chặn spam rải tin.
+30 tin/phút và 10 ảnh hoặc video/giờ (tính chung) cho mỗi user; vượt thì 429. Mở thread mới: 20/giờ, chặn spam rải tin.
 
 ### 8.5 Những thứ cố tình không làm
 
@@ -515,7 +521,7 @@ Theo CONTRIBUTING §6, thêm biến mới là cập nhật **cùng lúc** `.env.
 | `RABBITMQ_STOMP_PORT` | `61613` | `61613` |
 | `RABBITMQ_USER` / `RABBITMQ_PASSWORD` | giá trị mẫu | **bắt buộc truyền vào, không có mặc định** |
 | `CHAT_UPLOAD_DIR` | `/var/lib/marketlink/chat` | như dev |
-| `CHAT_MAX_UPLOAD_BYTES` | `5242880` | như dev |
+| `CHAT_MAX_UPLOAD_BYTES` | `52428800` (50 MB, đổi 28/09/2026 — trước là `5242880`) | như dev |
 | `VITE_WS_URL` | `ws://localhost:8080/ws` | theo domain thật |
 
 ### 12.3 Phụ thuộc mới
