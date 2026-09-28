@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,6 +32,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableMethodSecurity // method-based authorization (the default is URL-based authorization)
 public class SecurityConfig {
+
+    /**
+     * Who may reach /api/v1/admin/**: an admin whose two-step verification is already set up.
+     * JwtAuthFilter marks the session of an admin who has not done it yet with MFA_SETUP_PENDING
+     * (FR-008), and that session is refused here. Kept as a constant so
+     * SecurityConfigAdminAccessTest can exercise the expression — a typo inside it would otherwise
+     * only surface at runtime.
+     */
+    static final String ADMIN_ACCESS = "hasRole('ADMIN') and !hasAuthority('MFA_SETUP_PENDING')";
 
     static final String SIGN_IN_MESSAGE = "Please sign in to continue.";
 
@@ -72,6 +82,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth ->
                                 auth
+                                        // FR-008: an admin who has never set up two-step
+                                        // verification still gets a session, because the setup
+                                        // screen needs one to call /auth/mfa/**. That session must
+                                        // not reach the admin API — otherwise the mandatory step
+                                        // guards the screens only and anyone holding the password
+                                        // can call these endpoints directly. JwtAuthFilter marks
+                                        // such a session with MFA_SETUP_PENDING.
+                                        // Placed first so it wins over any later admin matcher.
+                                        .requestMatchers("/api/v1/admin/**")
+                                        .access(new WebExpressionAuthorizationManager(ADMIN_ACCESS))
                                         // Logout, own profile and setting a password need a valid
                                         // access
                                         // token

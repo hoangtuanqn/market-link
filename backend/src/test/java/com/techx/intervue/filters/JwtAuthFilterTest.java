@@ -12,6 +12,7 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache.SessionData;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import jakarta.servlet.FilterChain;
 import java.time.Instant;
@@ -31,6 +32,7 @@ class JwtAuthFilterTest {
 
     private JwtServiceInterface jwtService;
     private UserSessionCache sessionCache;
+    private MfaServiceInterface mfaService;
     private FilterChain chain;
     private JwtAuthFilter filter;
     private MockHttpServletRequest request;
@@ -40,13 +42,15 @@ class JwtAuthFilterTest {
     void setUp() {
         jwtService = mock(JwtServiceInterface.class);
         sessionCache = mock(UserSessionCache.class);
+        mfaService = mock(MfaServiceInterface.class);
         chain = mock(FilterChain.class);
         filter =
                 new JwtAuthFilter(
                         jwtService,
                         mock(BlacklistServiceInterface.class),
                         new ObjectMapper().findAndRegisterModules(),
-                        sessionCache);
+                        sessionCache,
+                        mfaService);
         request = new MockHttpServletRequest("GET", "/api/v1/auth/me");
         request.addHeader("Authorization", "Bearer " + TOKEN);
         response = new MockHttpServletResponse();
@@ -89,5 +93,47 @@ class JwtAuthFilterTest {
 
         verify(chain).doFilter(request, response);
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNotNull();
+    }
+
+    /**
+     * FR-008: sign-in hands an admin who has never set up two-step verification a working session,
+     * so the SPA can drive the setup screen. Without a marker on that session, the token opens
+     * every admin endpoint to anyone calling the API directly — the mandatory step guards the
+     * screens only. SecurityConfig turns this authority into a 403 on /api/v1/admin/**.
+     */
+    @Test
+    void adminWhoHasNotSetUpMfaIsMarkedPending() throws Exception {
+        when(sessionCache.get(1L)).thenReturn(new SessionData("a@b.c", Set.of(RoleType.ADMIN)));
+        when(mfaService.isSetupRequired(1L)).thenReturn(true);
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(authorities()).contains("ROLE_ADMIN", "MFA_SETUP_PENDING");
+    }
+
+    @Test
+    void adminWithMfaSetUpCarriesNoPendingMarker() throws Exception {
+        when(sessionCache.get(1L)).thenReturn(new SessionData("a@b.c", Set.of(RoleType.ADMIN)));
+        when(mfaService.isSetupRequired(1L)).thenReturn(false);
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(authorities()).contains("ROLE_ADMIN").doesNotContain("MFA_SETUP_PENDING");
+    }
+
+    /** A customer has no row in admin_mfa either; the marker is for admins only. */
+    @Test
+    void customerIsNeverMarkedPending() throws Exception {
+        when(sessionCache.get(1L)).thenReturn(new SessionData("a@b.c", Set.of(RoleType.CUSTOMER)));
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(authorities()).doesNotContain("MFA_SETUP_PENDING");
+    }
+
+    private java.util.List<String> authorities() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .map(Object::toString)
+                .toList();
     }
 }

@@ -6,6 +6,7 @@ import com.techx.intervue.modules.platform.PlatformTestSupport;
 import com.techx.intervue.modules.platform.repositories.PlatformStatusRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.repositories.AdminMfaRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -28,6 +29,7 @@ class PlatformStatusControllerTest {
 
     @LocalServerPort int port;
     @Autowired UserRepository users;
+    @Autowired AdminMfaRepository adminMfa;
     @Autowired UserSessionCache sessions;
     @Autowired JwtServiceInterface jwt;
     @Autowired PlatformStatusRepository statuses;
@@ -38,7 +40,7 @@ class PlatformStatusControllerTest {
 
     @BeforeEach
     void setUp() {
-        api = new PlatformTestSupport(users, sessions, jwt, port);
+        api = new PlatformTestSupport(users, sessions, jwt, adminMfa, port);
         admin = api.user(RoleType.ADMIN);
         customer = api.user(RoleType.CUSTOMER);
     }

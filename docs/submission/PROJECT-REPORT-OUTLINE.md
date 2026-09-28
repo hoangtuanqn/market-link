@@ -93,8 +93,12 @@ Thêm mục xử lý sự cố ngắn: cổng bận, Flyway chưa xong, `make do
 ## 7. User Credentials — **MANDATORY**
 
 Chép nguyên bảng ở `docs/DEMO_CREDENTIALS.md`: bốn tài khoản, mật khẩu chung `Demo@1234`.
-Giữ cột **"đăng nhập ở đâu"** — admin vào `/admin/login`, không phải `/login`. Ghi rõ tài khoản admin không
-bật xác thực hai bước.
+Giữ cột **"đăng nhập ở đâu"** — admin vào `/admin/login`, không phải `/login`.
+
+**Chép cả mục "Đăng nhập admin lần đầu — bắt buộc cài 2FA" sang báo cáo.** Admin bị chặn ở
+`/admin/setup-2fa` cho tới khi cài xong xác thực hai bước, và màn đó không có nút bỏ qua. Giám khảo không
+đọc được hướng dẫn này thì không vào được dashboard, nghĩa là không chấm được FR-004 và FR-070…077.
+Nhắc luôn cách tắt ở `/admin/security` cho người chỉ muốn xem nhanh.
 
 ## 8. Tasks Allotted to Team
 
