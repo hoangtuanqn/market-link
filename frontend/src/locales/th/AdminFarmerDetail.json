@@ -37,23 +37,23 @@
     "byAdmin": "ผู้ดูแล"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "ประวัติแผง",
+    "noun": "ประวัติแผง",
+    "system": "ระบบ (อัตโนมัติ)",
     "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "when": "เมื่อไหร่",
+      "action": "การดำเนินการ",
+      "reason": "เหตุผล",
+      "until": "จนถึง",
+      "by": "ดำเนินการโดย"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "เปิดใช้งานอีกครั้ง",
+      "suspended": "ระงับแล้ว"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "ยังไม่มีประวัติ",
+      "text": "การระงับหรือเปิดใช้งานแผงนี้แต่ละครั้งจะแสดงที่นี่"
     }
   },
   "applicant": {

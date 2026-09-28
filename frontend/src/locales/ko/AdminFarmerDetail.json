@@ -37,23 +37,23 @@
     "byAdmin": "관리자"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "매대 이력",
+    "noun": "매대 이력",
+    "system": "시스템(자동)",
     "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "when": "시간",
+      "action": "작업",
+      "reason": "사유",
+      "until": "종료 시점",
+      "by": "처리자"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "재개됨",
+      "suspended": "정지됨"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "아직 이력이 없습니다",
+      "text": "이 매대를 정지하거나 재개할 때마다 여기에 표시됩니다."
     }
   },
   "applicant": {

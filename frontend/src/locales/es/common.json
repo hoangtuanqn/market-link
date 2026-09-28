@@ -755,10 +755,10 @@
     "acknowledge": "Entendido"
   },
   "stallSuspended": {
-    "title": "Your stall is suspended",
-    "generic": "An administrator suspended this stall, so it is hidden from customers for now.",
-    "whatNow": "Orders customers already placed still run to the end — please complete them. You cannot list produce, change stock or take new orders until the suspension is lifted.",
-    "contactIntro": "If you believe this is a mistake, contact us at",
-    "acknowledge": "I understand"
+    "title": "Tu puesto está suspendido",
+    "generic": "Un administrador ha suspendido este puesto, por lo que ahora mismo no aparece ante los clientes.",
+    "whatNow": "Los pedidos que los clientes ya hicieron deben completarse igualmente — termínalos, por favor. No podrás publicar productos, cambiar tu stock ni aceptar pedidos nuevos hasta que se levante la suspensión.",
+    "contactIntro": "Si crees que es un error, escríbenos a",
+    "acknowledge": "Entendido"
   }
 }

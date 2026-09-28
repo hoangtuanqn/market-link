@@ -37,23 +37,23 @@
     "byAdmin": "管理员"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "摊位历史",
+    "noun": "摊位历史",
+    "system": "系统（自动）",
     "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "when": "时间",
+      "action": "操作",
+      "reason": "原因",
+      "until": "至",
+      "by": "操作人"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "已重新开放",
+      "suspended": "已暂停"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "暂无历史记录",
+      "text": "这个摊位每一次暂停或重新开放都会显示在这里。"
     }
   },
   "applicant": {

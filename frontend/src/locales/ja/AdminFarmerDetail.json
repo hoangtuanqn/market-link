@@ -37,23 +37,23 @@
     "byAdmin": "管理者"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "屋台履歴",
+    "noun": "屋台履歴",
+    "system": "システム（自動）",
     "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "when": "日時",
+      "action": "操作",
+      "reason": "理由",
+      "until": "期限",
+      "by": "実行者"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "再開",
+      "suspended": "停止"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "履歴はまだありません",
+      "text": "この屋台の停止・再開の記録はここに表示されます。"
     }
   },
   "applicant": {

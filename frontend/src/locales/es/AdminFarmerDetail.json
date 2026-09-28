@@ -37,23 +37,23 @@
     "byAdmin": "Un administrador"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "Historial del puesto",
+    "noun": "historial del puesto",
+    "system": "Sistema (automático)",
     "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "when": "Cuándo",
+      "action": "Acción",
+      "reason": "Motivo",
+      "until": "Hasta",
+      "by": "Por"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "Restablecido",
+      "suspended": "Suspendido"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "Aún no hay historial",
+      "text": "Cada suspensión o restablecimiento de este puesto aparecerá aquí."
     }
   },
   "applicant": {

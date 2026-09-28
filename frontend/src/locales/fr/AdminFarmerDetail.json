@@ -37,23 +37,23 @@
     "byAdmin": "Un admin"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "Historique du stand",
+    "noun": "historique du stand",
+    "system": "Système (auto)",
     "col": {
-      "when": "When",
+      "when": "Quand",
       "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "reason": "Motif",
+      "until": "Jusqu'à",
+      "by": "Par"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "Rétabli",
+      "suspended": "Suspendu"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "Pas encore d'historique",
+      "text": "Chaque suspension ou rétablissement de ce stand apparaîtra ici."
     }
   },
   "applicant": {

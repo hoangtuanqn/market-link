@@ -37,23 +37,23 @@
     "byAdmin": "Quản trị viên"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "Lịch sử sạp",
+    "noun": "lịch sử sạp",
+    "system": "Hệ thống (tự động)",
     "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "when": "Thời gian",
+      "action": "Hành động",
+      "reason": "Lý do",
+      "until": "Đến khi",
+      "by": "Thực hiện bởi"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "Đã mở lại",
+      "suspended": "Đã tạm ngừng"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "Chưa có lịch sử",
+      "text": "Mọi lần tạm ngừng hoặc mở lại sạp này sẽ hiện ở đây."
     }
   },
   "applicant": {

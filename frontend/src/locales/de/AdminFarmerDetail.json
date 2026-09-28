@@ -37,23 +37,23 @@
     "byAdmin": "Ein Admin"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "Standverlauf",
+    "noun": "Standverlauf",
+    "system": "System (automatisch)",
     "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "when": "Wann",
+      "action": "Aktion",
+      "reason": "Grund",
+      "until": "Bis",
+      "by": "Von"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "Wiederhergestellt",
+      "suspended": "Gesperrt"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "Noch kein Verlauf",
+      "text": "Jede Sperrung oder Wiederherstellung dieses Stands erscheint hier."
     }
   },
   "applicant": {

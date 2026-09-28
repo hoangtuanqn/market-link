@@ -755,10 +755,10 @@
     "acknowledge": "Tôi đã hiểu"
   },
   "stallSuspended": {
-    "title": "Your stall is suspended",
-    "generic": "An administrator suspended this stall, so it is hidden from customers for now.",
-    "whatNow": "Orders customers already placed still run to the end — please complete them. You cannot list produce, change stock or take new orders until the suspension is lifted.",
-    "contactIntro": "If you believe this is a mistake, contact us at",
-    "acknowledge": "I understand"
+    "title": "Sạp của bạn đã bị tạm ngừng",
+    "generic": "Quản trị viên đã tạm ngừng sạp này, nên hiện khách hàng không nhìn thấy sạp nữa.",
+    "whatNow": "Những đơn khách đã đặt vẫn phải hoàn tất — vui lòng hoàn thành các đơn đó. Bạn không thể đăng sản phẩm, thay đổi tồn kho hay nhận đơn mới cho đến khi lệnh tạm ngừng được gỡ bỏ.",
+    "contactIntro": "Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ",
+    "acknowledge": "Tôi đã hiểu"
   }
 }

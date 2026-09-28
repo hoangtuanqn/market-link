@@ -37,23 +37,23 @@
     "byAdmin": "Admin"
   },
   "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
+    "title": "Riwayat lapak",
+    "noun": "riwayat lapak",
+    "system": "Sistem (otomatis)",
     "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
+      "when": "Kapan",
+      "action": "Tindakan",
+      "reason": "Alasan",
+      "until": "Sampai",
+      "by": "Oleh"
     },
     "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
+      "approved": "Dibuka kembali",
+      "suspended": "Ditangguhkan"
     },
     "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
+      "title": "Belum ada riwayat",
+      "text": "Setiap penangguhan atau pembukaan kembali lapak ini akan tampil di sini."
     }
   },
   "applicant": {
