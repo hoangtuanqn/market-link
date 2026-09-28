@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Confirm your email — MarketLink prototype</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+<main class="pt-main">
+  <form class="ml-card pt-auth" id="verify" novalidate autocomplete="off">
+    <div class="pt-col-2">
+      <h1 class="pt-title-sm">Check your email</h1>
+      <p class="pt-body">We sent a 6-digit code to <b>khang@example.com</b>. Enter it here to finish creating your account.</p>
+    </div>
+
+    <div id="alert"></div>
+
+    <div class="ml-field">
+      <label class="ml-field-label" for="code">Six-digit code</label>
+      <div class="pt-code" id="code-wrap">
+        <input id="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" aria-describedby="code-h">
+        <div class="pt-code-boxes" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <span class="ml-field-hint" id="code-h">The code expires in <span id="left" class="pt-num">10:00</span>.</span>
+    </div>
+
+    <button type="submit" class="ml-btn ml-btn-primary ml-btn-block" id="go" disabled>Verify and create account</button>
+    <p class="pt-caption ml-muted" id="why">Enter all 6 digits to continue.</p>
+
+    <div class="pt-col-2">
+      <p class="pt-small ml-muted">Nothing after a minute? Look in spam, or send a new code.</p>
+      <div class="pt-row-2">
+        <button type="button" class="ml-btn ml-btn-secondary" id="resend" aria-live="polite" disabled>Send a new code in 60 seconds</button>
+        <a class="ml-btn ml-btn-ghost" href="../public/register-customer.html">Wrong email? Change it</a>
+      </div>
+    </div>
+
+    <a class="pt-small" href="../public/login.html">I already have an account</a>
+
+    <div class="pt-col-2" style="border-top:1.5px dashed var(--line-strong);padding-top:16px">
+      <p class="pt-caption ml-muted">Prototype only: there is no real inbox here. In this prototype <b>123456</b> is the right code; anything else counts as a wrong try.</p>
+      <div class="pt-row-2">
+        <a class="ml-btn ml-btn-secondary" href="../public/email-signup-code.html">Open the email</a>
+        <button type="button" class="pt-linkbtn" id="expire">Show the expired state</button>
+      </div>
+    </div>
+
+    <div class="ml-card pt-panel-4 pt-col-2">
+      <h2 class="pt-h3">What the server checks (FR-009, D-14)</h2>
+      <p class="pt-small">No account exists yet. The form waits in Redis for 30 minutes and only the right code turns it into a customer account, so nobody can sign up with someone else's address.</p>
+      <dl class="pt-facts pt-small">
+        <dt>Code</dt><dd>6 digits, 10 minutes, works once; only its SHA-256 is stored</dd>
+        <dt>Wrong tries</dt><dd>5 per code, then the code is thrown away</dd>
+        <dt>New code</dt><dd>One a minute, 5 per address and 20 per IP an hour</dd>
+        <dt>Bots</dt><dd>A hidden honeypot field on the form; no CAPTCHA</dd>
+      </dl>
+    </div>
+  </form>
+</main>
+<script>
+  var input = document.getElementById('code'), wrap = document.getElementById('code-wrap');
+  var boxes = wrap.querySelectorAll('.pt-code-boxes span'), go = document.getElementById('go');
+  var alertEl = document.getElementById('alert'), why = document.getElementById('why'), resend = document.getElementById('resend');
+  var tries = 5, codeLeft = 600, resendLeft = 60, locked = false;
+
+  function paint() {
+    var v = input.value, active = Math.min(v.length, 5), focused = document.activeElement === input;
+    boxes.forEach(function (b, i) { b.textContent = v[i] || ''; b.classList.toggle('is-active', focused && !locked && i === active); });
+    go.disabled = locked || v.length !== 6;
+    why.hidden = locked || v.length === 6;
+  }
+  function lock(title, text) {
+    locked = true; input.value = ''; input.disabled = true; wrap.classList.add('is-locked'); wrap.classList.remove('is-invalid');
+    alertEl.innerHTML = PT.banner('warning', title, text); paint();
+  }
+  function unlock() {
+    locked = false; input.disabled = false; wrap.classList.remove('is-locked', 'is-invalid');
+    alertEl.innerHTML = ''; tries = 5; codeLeft = 600; resendLeft = 60; paint(); input.focus();
+  }
+  function submit() {
+    if (input.value.length !== 6 || locked) return;
+    if (input.value === '123456') { PT.toast('Account created.'); setTimeout(function () { location.href = '../customer/dashboard.html'; }, 700); return; }
+    tries--;
+    input.value = '';
+    if (tries <= 0) { lock('This code can no longer be used', 'Send a new code and enter the one from the newest email.'); return; }
+    wrap.classList.add('is-invalid');
+    alertEl.innerHTML = PT.banner('danger', 'That code is not right', 'Check the email and try again. You have ' + tries + (tries === 1 ? ' try' : ' tries') + ' left.');
+    paint(); input.focus();
+  }
+
+  input.addEventListener('input', function () {
+    var digits = input.value.replace(/\D/g, '').slice(0, 6), wasFull = input.dataset.full === '1';
+    input.value = digits; input.dataset.full = digits.length === 6 ? '1' : '';
+    paint();
+    if (digits.length === 6 && !wasFull) submit();
+  });
+  input.addEventListener('focus', paint);
+  input.addEventListener('blur', paint);
+  document.getElementById('verify').addEventListener('submit', function (e) { e.preventDefault(); submit(); });
+  resend.addEventListener('click', function () { PT.toast('We sent a new code.'); unlock(); });
+  document.getElementById('expire').addEventListener('click', function () { codeLeft = 0; });
+
+  setInterval(function () {
+    if (codeLeft > 0) codeLeft--;
+    if (resendLeft > 0) resendLeft--;
+    document.getElementById('left').textContent = Math.floor(codeLeft / 60) + ':' + String(codeLeft % 60).padStart(2, '0');
+    if (codeLeft === 0 && !locked) lock('This code can no longer be used', 'This code has expired. Send a new one.');
+    resend.disabled = resendLeft > 0;
+    resend.textContent = resendLeft > 0 ? 'Send a new code in ' + resendLeft + (resendLeft === 1 ? ' second' : ' seconds') : 'Send a new code';
+  }, 1000);
+
+  paint();
+  PT.boot({ active: null, announce: false });
+</script>
+<div id="pt-foot"></div>
+</body>
+</html>

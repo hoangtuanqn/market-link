@@ -17,6 +17,8 @@
       ['map.html', 'Market map', 'FR-012 FR-013'],
       ['login.html', 'Sign in', 'FR-003'],
       ['register-customer.html', 'Customer registration', 'FR-001'],
+      ['verify-email.html', 'Confirm your email', 'FR-009'],
+      ['email-signup-code.html', 'Sign-up code email', 'FR-009'],
       ['register-farmer.html', 'Farmer registration', 'FR-002 FR-071'],
       ['forgot-password.html', 'Forgot password', 'FR-007'],
       ['reset-password.html', 'Set a new password', 'FR-007'],
