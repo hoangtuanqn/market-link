@@ -49,6 +49,14 @@ const AdminFarmerDetailPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   // FR-123: the spoiled-report queue links here with ?suspend=<reason> to open the suspend dialog pre-filled, once
   const presetSuspend = useRef(searchParams.get('suspend'));
+  // Kept fresh on every render instead of in fetchDetail's own dependency array (M-3 fix): in react-router 8.4,
+  // useSearchParams memoizes its setter on location.search, so depending on setSearchParams directly would make
+  // fetchDetail change identity the moment the "suspend" param is stripped below, re-running the fetch effect and
+  // firing a second GET that can race the first and overwrite a fast "Suspend stall" click with stale data.
+  const setSearchParamsRef = useRef(setSearchParams);
+  useEffect(() => {
+    setSearchParamsRef.current = setSearchParams;
+  }, [setSearchParams]);
 
   // only setState in a promise callback (the initial state is already loading)
   const fetchDetail = useCallback(() => {
@@ -60,7 +68,7 @@ const AdminFarmerDetailPage = () => {
         if (code && isReasonCode('suspend', code)) {
           // Consumed: drop it from the address (keeping any other params) so a reload, or opening the same link
           // again, does not reopen the dialog (FR-123 fix round 1).
-          setSearchParams(
+          setSearchParamsRef.current(
             (prev) => {
               const next = new URLSearchParams(prev);
               next.delete('suspend');
@@ -76,7 +84,7 @@ const AdminFarmerDetailPage = () => {
         }
       })
       .catch(() => setStatus({ kind: 'error' }));
-  }, [id, setSearchParams]);
+  }, [id]);
 
   useEffect(fetchDetail, [fetchDetail]);
 

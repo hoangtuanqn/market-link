@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -91,7 +91,21 @@ describe('AdminFarmerDetailPage — shelf-life strikes (FR-123)', () => {
 
     await screen.findByRole('alertdialog');
 
-    expect(screen.getByTestId('location').textContent).toBe('/admin/farmers/15');
+    // The address update lands in the same effect but is not guaranteed to be in the DOM the instant the
+    // dialog itself appears, so wait for it instead of asserting right after findByRole (was flaky).
+    await waitFor(() => expect(screen.getByTestId('location').textContent).toBe('/admin/farmers/15'));
+  });
+
+  it('fetches the detail only once even though opening it strips the suspend param (M-3)', async () => {
+    renderAt('/admin/farmers/15?suspend=shelfLifeViolations');
+
+    await screen.findByRole('alertdialog');
+    await waitFor(() => expect(screen.getByTestId('location').textContent).toBe('/admin/farmers/15'));
+
+    // Give a would-be second effect run, triggered by the search-params setter changing identity, a chance to fire.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(AdminFarmerApi.detail).toHaveBeenCalledTimes(1);
   });
 
   it('does not open it for a stall that is not approved any more', async () => {
