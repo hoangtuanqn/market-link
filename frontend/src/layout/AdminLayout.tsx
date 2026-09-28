@@ -153,7 +153,12 @@ const AdminLayout = () => {
         home={ADMIN_HOME_PATH}
         nav={buildNav(t, pendingFarmers, unreadNotifications)}
         context={{ mono: 'M', name: 'MarketLink', sub: t('adminNav.contextSub') }}
-        user={{ mono: initials(user.fullName ?? ''), email: user.email, line: t('adminNav.userLine') }}
+        user={{
+          mono: initials(user.fullName ?? ''),
+          email: user.email,
+          line: t('adminNav.userLine'),
+          name: user.fullName,
+        }}
         onSignOut={logout}
         searchId="admin-appq"
         searchPlaceholder={t('adminNav.searchPlaceholder')}

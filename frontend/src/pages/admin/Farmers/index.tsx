@@ -190,7 +190,7 @@ const AdminFarmersPage = () => {
       {/* docs/prototype/admin/farmers.html: the title on the left, the search box on the right in the same row. */}
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         {/* The search box takes all the remaining space up to the right margin; too narrow and it drops to its own row. */}

@@ -60,6 +60,48 @@ export function ClockIcon(props: IconProps) {
   );
 }
 
+export function SunIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <circle cx="8" cy="8" r="3" />
+      <path d="M8 1.5v1.5M8 13v1.5M1.5 8h1.5M13 8h1.5M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1" />
+    </Glyph>
+  );
+}
+
+export function MoonIcon(props: IconProps) {
+  return (
+    <Glyph {...props}>
+      <path d="M14 8.5A6 6 0 1 1 7.5 2 4.7 4.7 0 0 0 14 8.5z" />
+    </Glyph>
+  );
+}
+
+export function HandWaveIcon({ size = 18, ...rest }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+      {...rest}
+    >
+      <path d="M19.5 7a4 4 0 0 0-1.5-3" />
+      <path d="M22 8.5a7 7 0 0 0-2.5-5.5" />
+      <path d="M16 11V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2" />
+      <path d="M12 10V4a2 2 0 0 0-2-2 2 2 0 0 0-2 2v2" />
+      <path d="M8 10.5V6a2 2 0 0 0-2-2 2 2 0 0 0-2 2v8" />
+      <path d="M16 8a2 2 0 1 1 4 0v5a7 7 0 0 1-7 7H11c-2.5 0-4-.8-5.3-2.1l-3.2-3.2a1.8 1.8 0 0 1 2.5-2.5L7 14" />
+    </svg>
+  );
+}
+
 export function CheckIcon(props: IconProps) {
   return (
     <Glyph {...props}>

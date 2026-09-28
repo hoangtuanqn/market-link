@@ -137,6 +137,7 @@ const FarmerLayout = () => {
           mono: initials(user?.fullName, user?.email),
           email: user?.email ?? '',
           line: t('farmerNav.roleStall', { stall: stallName }),
+          name: user?.fullName,
         }}
         searchId="farmer-appq"
         searchPlaceholder={t('farmerNav.searchPlaceholder')}

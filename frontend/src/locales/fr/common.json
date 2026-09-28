@@ -179,6 +179,11 @@
     "mapDataFrom": "Données cartographiques {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Bonjour",
+      "afternoon": "Bon après-midi",
+      "evening": "Bonsoir"
+    },
     "cart": "Panier",
     "cartItems_one": "Panier, {{count}} article",
     "cartItems_other": "Panier, {{count}} articles",

@@ -229,7 +229,7 @@ const FarmerProductFormPage = () => {
       </p>
 
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="font-hand text-h1">{existing ? existing.name : t('addTitle')}</h1>
+        <h1 className="text-h1 text-ink font-bold">{existing ? existing.name : t('addTitle')}</h1>
         <AskAssistant question={tAssistant('assistant.ask.product', { name: form.name || t('addTitle') })} />
       </div>
 

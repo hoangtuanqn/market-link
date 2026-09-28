@@ -160,7 +160,7 @@ const AdminCustomerDetailPage = () => {
           <p className="text-overline text-ink-muted uppercase">
             {t('since', { joined: formatDate(new Date(customer.createdAt)) })}
           </p>
-          <h1 className="text-h2">{customer.fullName}</h1>
+          <h1 className="text-h2 text-ink font-bold">{customer.fullName}</h1>
           <div>
             <CustomerStatusPill active={active} />
           </div>

@@ -17,7 +17,11 @@ public interface CategoryServiceInterface {
 
     /**
      * Soft delete: is_active = false. The row is not deleted because products.category_id points to
-     * it.
+     * it. When {@code moveToCategoryId} is given, every live product still pointing at this
+     * category is reassigned to it first.
      */
-    void deactivate(long id);
+    void deactivate(long id, Long moveToCategoryId);
+
+    /** Turns a previously deactivated category back on. */
+    CategoryResource activate(long id);
 }

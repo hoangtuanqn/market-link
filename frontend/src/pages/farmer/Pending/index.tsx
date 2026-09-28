@@ -71,7 +71,7 @@ const FarmerPendingPage = () => {
             date: registeredOn,
           })}
         </p>
-        <h1 className="font-hand text-h1">{title}</h1>
+        <h1 className="text-h1 text-ink font-bold">{title}</h1>
       </div>
 
       {application.approvalStatus === 'pending' && (

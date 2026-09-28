@@ -187,7 +187,7 @@ const FarmerOverviewPage = () => {
           <p className="text-overline text-ink-muted m-0">
             <LiveClock />
           </p>
-          <h1 className="font-hand text-h1">{t('greeting', { name: user?.fullName ?? '' })}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('greeting', { name: user?.fullName ?? '' })}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <ButtonLink variant="secondary" to="/farmer/stock">

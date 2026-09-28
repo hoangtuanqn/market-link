@@ -14,11 +14,17 @@
     "category": "Category",
     "products": "Products",
     "stalls": "Stalls",
-    "nameOf": "Name of {{name}}"
+    "nameOf": "Name of {{name}}",
+    "status": "Status",
+    "shelfLife": "Shelf life",
+    "shelfLifeRange": "{{min}}–{{max}} days",
+    "shelfLifeDays_one": "{{count}} day",
+    "shelfLifeDays_other": "{{count}} days"
   },
   "action": {
     "save": "Save",
-    "remove": "Remove"
+    "remove": "Remove",
+    "enable": "Enable"
   },
   "categoryForm": {
     "title": "Add a category",
@@ -38,7 +44,9 @@
     "textUnused": "No products use it.",
     "moveTo": "Move products to",
     "keep": "Keep category",
-    "confirm": "Remove category"
+    "confirm": "Remove category",
+    "moveToHint": "Products currently assigned to this category will be reassigned.",
+    "moveToNone": "None (products keep this category)"
   },
   "empty": {
     "categories": {
@@ -49,7 +57,8 @@
   "toast": {
     "categorySaved": "{{name}} saved.",
     "categoryAdded": "Category added. Stalls can pick it now.",
-    "categoryRemoved": "{{name}} removed."
+    "categoryRemoved": "{{name}} removed.",
+    "categoryEnabled": "{{name}} enabled."
   },
   "error": {
     "noun": "categories",
@@ -58,5 +67,9 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "Keep the name to {{max}} characters or fewer.",
     "nameTaken": "A category with this name already exists."
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
   }
 }

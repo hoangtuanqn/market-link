@@ -179,6 +179,11 @@
     "mapDataFrom": "Data peta {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Selamat pagi",
+      "afternoon": "Selamat siang",
+      "evening": "Selamat malam"
+    },
     "cart": "Keranjang",
     "cartItems_one": "Keranjang, {{count}} barang",
     "cartItems_other": "Keranjang, {{count}} barang",

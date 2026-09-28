@@ -7,6 +7,7 @@ import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.catalog.requests.CategoryRequest;
 import com.techx.intervue.modules.catalog.resources.CategoryResource;
 import com.techx.intervue.modules.catalog.services.interfaces.CategoryServiceInterface;
+import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.text.Normalizer;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CategoryService implements CategoryServiceInterface {
 
     private final CategoryRepository repository;
+    private final ProductRepository productRepository;
 
     /**
      * "Rau củ" -> "rau-cu". Strip Vietnamese diacritics first, then lowercase and join with
@@ -39,15 +41,26 @@ public class CategoryService implements CategoryServiceInterface {
 
     @Override
     public List<CategoryResource> listActive() {
-        return repository.findByActiveTrueOrderBySortOrderAscNameAsc().stream()
-                .map(CategoryService::toResource)
-                .toList();
+        return withProductCounts(repository.findByActiveTrueOrderBySortOrderAscNameAsc());
     }
 
     @Override
     public List<CategoryResource> listAll() {
-        return repository.findAllByOrderBySortOrderAscNameAsc().stream()
-                .map(CategoryService::toResource)
+        return withProductCounts(repository.findAllByOrderBySortOrderAscNameAsc());
+    }
+
+    /**
+     * The categories table is small, admin-curated master data (a handful of rows), so one count
+     * query per row is cheap and simpler than a grouped query.
+     */
+    private List<CategoryResource> withProductCounts(List<Category> categories) {
+        return categories.stream()
+                .map(
+                        c ->
+                                toResource(
+                                        c,
+                                        productRepository.countByCategoryIdAndDeletedFalse(
+                                                c.getId())))
                 .toList();
     }
 
@@ -65,7 +78,8 @@ public class CategoryService implements CategoryServiceInterface {
         Category category = existing.orElseGet(Category::new);
         apply(category, request, slug);
         category.setActive(true);
-        return toResource(repository.save(category));
+        Category saved = repository.save(category);
+        return toResource(saved, productRepository.countByCategoryIdAndDeletedFalse(saved.getId()));
     }
 
     @Override
@@ -78,20 +92,47 @@ public class CategoryService implements CategoryServiceInterface {
             throw new DuplicateCategoryException(slug);
         }
         apply(category, request, slug);
-        return toResource(repository.save(category));
+        Category saved = repository.save(category);
+        return toResource(saved, productRepository.countByCategoryIdAndDeletedFalse(saved.getId()));
     }
 
     /**
      * Soft delete: old products can still point to it, it only disappears from the customer's
-     * filter.
+     * filter. {@code moveToCategoryId}, when given, reassigns every live product off this category
+     * first so it can be retired cleanly.
      */
     @Override
     @Transactional
-    public void deactivate(long id) {
+    public void deactivate(long id, Long moveToCategoryId) {
         Category category =
                 repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        if (moveToCategoryId != null) {
+            if (moveToCategoryId == id) {
+                throw new InvalidFieldException(
+                        "moveToCategoryId", "Choose a different category to move products to.");
+            }
+            Category target =
+                    repository
+                            .findById(moveToCategoryId)
+                            .orElseThrow(() -> new CategoryNotFoundException(moveToCategoryId));
+            if (!target.isActive()) {
+                throw new InvalidFieldException(
+                        "moveToCategoryId", "The target category must be active.");
+            }
+            productRepository.reassignCategory(id, moveToCategoryId);
+        }
         category.setActive(false);
         repository.save(category);
+    }
+
+    @Override
+    @Transactional
+    public CategoryResource activate(long id) {
+        Category category =
+                repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
+        category.setActive(true);
+        Category saved = repository.save(category);
+        return toResource(saved, productRepository.countByCategoryIdAndDeletedFalse(id));
     }
 
     private static void apply(Category category, CategoryRequest request, String slug) {
@@ -106,7 +147,7 @@ public class CategoryService implements CategoryServiceInterface {
         category.setMaxShelfLifeDays(request.maxShelfLifeDays());
     }
 
-    private static CategoryResource toResource(Category c) {
+    private static CategoryResource toResource(Category c, long productCount) {
         return new CategoryResource(
                 c.getId(),
                 c.getName(),
@@ -114,6 +155,7 @@ public class CategoryService implements CategoryServiceInterface {
                 c.getSortOrder(),
                 c.isActive(),
                 c.getMinShelfLifeDays(),
-                c.getMaxShelfLifeDays());
+                c.getMaxShelfLifeDays(),
+                (int) productCount);
     }
 }

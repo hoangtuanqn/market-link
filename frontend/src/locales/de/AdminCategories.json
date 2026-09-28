@@ -14,11 +14,17 @@
     "category": "Kategorie",
     "products": "Produkte",
     "stalls": "Stände",
-    "nameOf": "Name von {{name}}"
+    "nameOf": "Name von {{name}}",
+    "status": "Status",
+    "shelfLife": "Haltbarkeit",
+    "shelfLifeRange": "{{min}}–{{max}} Tage",
+    "shelfLifeDays_one": "{{count}} Tag",
+    "shelfLifeDays_other": "{{count}} Tage"
   },
   "action": {
     "save": "Speichern",
-    "remove": "Entfernen"
+    "remove": "Entfernen",
+    "enable": "Aktivieren"
   },
   "categoryForm": {
     "title": "Kategorie hinzufügen",
@@ -38,7 +44,9 @@
     "textUnused": "Kein Produkt nutzt sie.",
     "moveTo": "Produkte verschieben nach",
     "keep": "Kategorie behalten",
-    "confirm": "Kategorie entfernen"
+    "confirm": "Kategorie entfernen",
+    "moveToHint": "Dieser Kategorie zugewiesene Produkte werden neu zugewiesen.",
+    "moveToNone": "Keine (Produkte behalten diese Kategorie)"
   },
   "empty": {
     "categories": {
@@ -49,7 +57,8 @@
   "toast": {
     "categorySaved": "{{name}} gespeichert.",
     "categoryAdded": "Kategorie hinzugefügt. Die Stände können sie ab sofort wählen.",
-    "categoryRemoved": "{{name}} entfernt."
+    "categoryRemoved": "{{name}} entfernt.",
+    "categoryEnabled": "{{name}} aktiviert."
   },
   "error": {
     "noun": "Kategorien",
@@ -58,5 +67,9 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "Der Name darf höchstens {{max}} Zeichen lang sein.",
     "nameTaken": "Eine Kategorie mit diesem Namen gibt es schon."
+  },
+  "status": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv"
   }
 }

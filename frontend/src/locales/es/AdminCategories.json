@@ -14,11 +14,17 @@
     "category": "Categoría",
     "products": "Productos",
     "stalls": "Puestos",
-    "nameOf": "Nombre de {{name}}"
+    "nameOf": "Nombre de {{name}}",
+    "status": "Estado",
+    "shelfLife": "Vida útil",
+    "shelfLifeRange": "{{min}}–{{max}} días",
+    "shelfLifeDays_one": "{{count}} día",
+    "shelfLifeDays_other": "{{count}} días"
   },
   "action": {
     "save": "Guardar",
-    "remove": "Eliminar"
+    "remove": "Eliminar",
+    "enable": "Activar"
   },
   "categoryForm": {
     "title": "Añadir una categoría",
@@ -38,7 +44,9 @@
     "textUnused": "Ningún producto la usa.",
     "moveTo": "Mover los productos a",
     "keep": "Mantener la categoría",
-    "confirm": "Eliminar la categoría"
+    "confirm": "Eliminar la categoría",
+    "moveToHint": "Los productos asignados a esta categoría serán reasignados.",
+    "moveToNone": "Ninguna (los productos mantienen esta categoría)"
   },
   "empty": {
     "categories": {
@@ -49,7 +57,8 @@
   "toast": {
     "categorySaved": "{{name}} guardada.",
     "categoryAdded": "Categoría añadida. Los puestos ya pueden elegirla.",
-    "categoryRemoved": "{{name}} eliminada."
+    "categoryRemoved": "{{name}} eliminada.",
+    "categoryEnabled": "{{name}} activado."
   },
   "error": {
     "noun": "categorías",
@@ -58,5 +67,9 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "El nombre debe tener {{max}} caracteres como máximo.",
     "nameTaken": "Ya existe una categoría con este nombre."
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo"
   }
 }

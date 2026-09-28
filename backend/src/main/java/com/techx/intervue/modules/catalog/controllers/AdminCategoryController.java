@@ -12,11 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /** FR-076 — master data. Admin only (the role comes from the token, R-06). */
@@ -46,8 +48,14 @@ public class AdminCategoryController extends BaseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResource<Void>> deactivate(@PathVariable long id) {
-        categoryService.deactivate(id);
+    public ResponseEntity<ApiResource<Void>> deactivate(
+            @PathVariable long id, @RequestParam(required = false) Long moveToCategoryId) {
+        categoryService.deactivate(id, moveToCategoryId);
         return ok(null, "Category turned off.");
+    }
+
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<ApiResource<CategoryResource>> activate(@PathVariable long id) {
+        return ok(categoryService.activate(id), "Category turned on.");
     }
 }

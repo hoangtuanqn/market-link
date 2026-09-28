@@ -179,6 +179,11 @@
     "mapDataFrom": "Datos del mapa {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Buenos días",
+      "afternoon": "Buenas tardes",
+      "evening": "Buenas noches"
+    },
     "cart": "Carrito",
     "cartItems_one": "Carrito, {{count}} artículo",
     "cartItems_other": "Carrito, {{count}} artículos",

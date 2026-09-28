@@ -51,7 +51,7 @@ const HomePage = () => {
 
       <ValuePillars />
 
-      <CategoryBrowse categories={categories} />
+      <CategoryBrowse categories={categories} loading={categoriesLoad.kind === 'loading'} />
 
       {marketsLoad.kind === 'error' ? (
         <LoadError noun={t('nearby.noun')} onRetry={retryMarkets} />

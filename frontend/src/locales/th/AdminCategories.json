@@ -14,11 +14,17 @@
     "category": "หมวดหมู่",
     "products": "สินค้า",
     "stalls": "ร้านค้า",
-    "nameOf": "ชื่อของ {{name}}"
+    "nameOf": "ชื่อของ {{name}}",
+    "status": "สถานะ",
+    "shelfLife": "อายุการเก็บรักษา",
+    "shelfLifeRange": "{{min}}–{{max}} วัน",
+    "shelfLifeDays_one": "{{count}} วัน",
+    "shelfLifeDays_other": "{{count}} วัน"
   },
   "action": {
     "save": "บันทึก",
-    "remove": "ลบ"
+    "remove": "ลบ",
+    "enable": "เปิดใช้งาน"
   },
   "categoryForm": {
     "title": "เพิ่มหมวดหมู่",
@@ -38,7 +44,9 @@
     "textUnused": "ไม่มีสินค้าใช้หมวดนี้",
     "moveTo": "ย้ายสินค้าไปที่",
     "keep": "เก็บหมวดหมู่ไว้",
-    "confirm": "ลบหมวดหมู่"
+    "confirm": "ลบหมวดหมู่",
+    "moveToHint": "สินค้าที่อยู่ในหมวดหมู่นี้จะได้รับการจัดหมวดหมู่ใหม่",
+    "moveToNone": "ไม่มี (สินค้ายังคงอยู่ในหมวดหมู่นี้)"
   },
   "empty": {
     "categories": {
@@ -49,7 +57,8 @@
   "toast": {
     "categorySaved": "บันทึก {{name}} แล้ว",
     "categoryAdded": "เพิ่มหมวดหมู่แล้ว ร้านค้าเลือกใช้ได้ทันที",
-    "categoryRemoved": "ลบ {{name}} แล้ว"
+    "categoryRemoved": "ลบ {{name}} แล้ว",
+    "categoryEnabled": "เปิดใช้งาน {{name}} แล้ว"
   },
   "error": {
     "noun": "หมวดหมู่",
@@ -58,5 +67,9 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "ชื่อต้องยาวไม่เกิน {{max}} ตัวอักษร",
     "nameTaken": "มีหมวดหมู่ชื่อนี้อยู่แล้ว"
+  },
+  "status": {
+    "active": "เปิดใช้งาน",
+    "inactive": "ปิดใช้งาน"
   }
 }
