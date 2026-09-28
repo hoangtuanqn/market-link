@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.quality.services.impl;
 
+import com.techx.intervue.modules.quality.exceptions.ShelfLifeExtensionLockedException;
 import com.techx.intervue.modules.quality.repositories.FarmerViolationRepository;
 import com.techx.intervue.modules.quality.resources.ShelfLifeStandingResource;
 import com.techx.intervue.modules.quality.services.interfaces.ShelfLifeStandingServiceInterface;
@@ -31,5 +32,15 @@ public class ShelfLifeStandingService implements ShelfLifeStandingServiceInterfa
                 SpoilagePolicy.STRIKES_TO_LOCK,
                 SpoilagePolicy.STRIKE_WINDOW_DAYS,
                 SpoilagePolicy.lockedUntil(active));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void requireCanExtend(long farmerId) {
+        Instant until = standing(farmerId).extensionLockedUntil();
+        if (until != null) {
+            throw new ShelfLifeExtensionLockedException(
+                    until.atZone(clock.getZone()).toLocalDate());
+        }
     }
 }

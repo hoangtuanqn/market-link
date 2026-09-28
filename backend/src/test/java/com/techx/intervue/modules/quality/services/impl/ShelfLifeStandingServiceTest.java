@@ -1,11 +1,14 @@
 package com.techx.intervue.modules.quality.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.quality.exceptions.ShelfLifeExtensionLockedException;
 import com.techx.intervue.modules.quality.repositories.FarmerViolationRepository;
 import com.techx.intervue.modules.quality.resources.ShelfLifeStandingResource;
 import java.time.Clock;
@@ -54,5 +57,33 @@ class ShelfLifeStandingServiceTest {
 
         assertThat(service.standing(FARMER_ID).extensionLockedUntil())
                 .isEqualTo(Instant.parse("2026-11-30T03:00:00Z"));
+    }
+
+    @Test
+    void twoStrikesDoNotStopALongerShelfLife() {
+        when(violations.activeTimes(eq(FARMER_ID), any()))
+                .thenReturn(
+                        List.of(
+                                Instant.parse("2026-10-20T03:00:00Z"),
+                                Instant.parse("2026-10-10T03:00:00Z")));
+
+        assertThatCode(() -> service.requireCanExtend(FARMER_ID)).doesNotThrowAnyException();
+    }
+
+    /**
+     * The end of the lock is named by its day in Ho Chi Minh City: 20:00 UTC is already the 1st.
+     */
+    @Test
+    void aLockedStallIsRefusedWithTheVietnamDayTheLockEnds() {
+        when(violations.activeTimes(eq(FARMER_ID), any()))
+                .thenReturn(
+                        List.of(
+                                Instant.parse("2026-10-20T03:00:00Z"),
+                                Instant.parse("2026-10-10T03:00:00Z"),
+                                Instant.parse("2026-09-01T20:00:00Z")));
+
+        assertThatThrownBy(() -> service.requireCanExtend(FARMER_ID))
+                .isInstanceOf(ShelfLifeExtensionLockedException.class)
+                .hasMessageContaining("2026-12-01");
     }
 }

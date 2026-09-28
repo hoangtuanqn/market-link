@@ -22,6 +22,7 @@ import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
 import com.techx.intervue.modules.product.resources.ShelfLifeResource;
 import com.techx.intervue.modules.product.services.interfaces.ProductServiceInterface;
+import com.techx.intervue.modules.quality.services.interfaces.ShelfLifeStandingServiceInterface;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
@@ -51,6 +52,7 @@ public class ProductService implements ProductServiceInterface {
     private final ProductAvailabilityResolver availability;
     private final ShelfLifeGuideRepository shelfLifeGuides;
     private final Clock clock;
+    private final ShelfLifeStandingServiceInterface shelfLifeStanding;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -347,6 +349,10 @@ public class ProductService implements ProductServiceInterface {
                     "shelfLifeDays", "At most " + max + " days for this group.");
         }
         boolean extended = ShelfLifePolicy.extendedBy(days, suggested) > 0;
+        if (extended) {
+            // FR-123 (spec §4.2, §4.4.4): 3 strikes in 90 days lock anything above the suggestion
+            shelfLifeStanding.requireCanExtend(product.getFarmerId());
+        }
         if (extended && !Boolean.TRUE.equals(request.acknowledgeLongerShelfLife())) {
             throw new InvalidFieldException(
                     "acknowledgeLongerShelfLife",
