@@ -6,7 +6,8 @@
     "reviews": "Avis",
     "products": "Fiches produits",
     "hidden": "Éléments masqués",
-    "messages": "Messages signalés"
+    "messages": "Messages signalés",
+    "quality": "Signalements d’altération"
   },
   "reviewFilterLabel": "Filtrer les avis",
   "reviewFilter": {
@@ -104,5 +105,36 @@
     "reviews": "Avis masqués",
     "noListings": "Aucune annonce masquée",
     "noListingsText": "Les annonces que vous masquez apparaissent ici avec le motif, pour pouvoir les rétablir."
+  },
+  "quality": {
+    "boundary": "Seul un signalement confirmé sur une durée de conservation prolongée, altéré avant sa date, enregistre une infraction. Il n’arrive rien à un étal simplement parce qu’un client a signalé un produit.",
+    "filterLabel": "Filtrer les signalements d’altération",
+    "filter": {
+      "needs": "Nécessite une décision",
+      "open": "Tous en attente",
+      "decided": "Décidés"
+    },
+    "noun": "signalements d’altération",
+    "emptyTitle": "Rien à décider",
+    "emptyText": "Les signalements d’altération des clients attendent ici.",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "Client : {{customer}} · retiré le {{pickup}} · bon jusqu’au {{bestBefore}} · altéré le {{spoiled}} ({{when}})",
+    "photoAlt": "La photo du client montrant le produit altéré",
+    "reply": "Réponse de l’étal : « {{text}} »",
+    "noReply": "L’étal n’a pas encore répondu.",
+    "dismiss": "Ce n’est pas la faute de l’étal",
+    "confirm": "Confirmer l’infraction",
+    "dismissTitle": "Ce n’est pas la faute de l’étal ?",
+    "dismissText": "Le signalement se ferme sans infraction. Le client et l’étal sont informés.",
+    "confirmTitle": "Confirmer l’infraction ?",
+    "confirmText": "Le signalement se ferme comme confirmé. Le client et l’étal sont informés.",
+    "confirmStrike": "L’étal a prolongé cette durée de conservation et le produit s’est altéré avant sa date, donc une infraction est enregistrée et le produit revient à la durée de conservation suggérée.",
+    "noteLabel": "Pourquoi ce n’est pas la faute de l’étal",
+    "noteOptional": "Note pour le client et l’étal (facultatif)",
+    "noteRequired": "Indiquez pourquoi ce n’est pas la faute de l’étal.",
+    "decisionNote": "Note : {{text}}",
+    "done": "Décision enregistrée. Le client et l’étal ont été informés.",
+    "suspend": "Suspendre le stand",
+    "suspendLabel": "Suspendre le stand : {{stall}}"
   }
 }

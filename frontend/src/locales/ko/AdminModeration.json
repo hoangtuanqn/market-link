@@ -6,7 +6,8 @@
     "reviews": "후기",
     "products": "상품",
     "hidden": "숨긴 항목",
-    "messages": "신고된 메시지"
+    "messages": "신고된 메시지",
+    "quality": "손상 신고"
   },
   "reviewFilterLabel": "후기 거르기",
   "reviewFilter": {
@@ -104,5 +105,36 @@
     "reviews": "숨긴 리뷰",
     "noListings": "숨긴 상품이 없습니다",
     "noListingsText": "숨긴 상품은 사유와 함께 여기에 표시되며 다시 공개할 수 있습니다."
+  },
+  "quality": {
+    "boundary": "연장된 유통기한 상품이 기한 전에 상했다고 확인된 신고만 위반으로 기록돼요. 고객이 신고만 했다고 해서 매대에 아무 일도 생기지 않아요.",
+    "filterLabel": "손상 신고 거르기",
+    "filter": {
+      "needs": "판정 필요",
+      "open": "미처리 전체",
+      "decided": "처리됨"
+    },
+    "noun": "손상 신고",
+    "emptyTitle": "판정할 것이 없어요",
+    "emptyText": "고객이 보낸 손상 신고가 여기서 기다려요.",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "고객: {{customer}} · 수령 {{pickup}} · 유통기한 {{bestBefore}} · 상한 날 {{spoiled}} ({{when}})",
+    "photoAlt": "고객이 보낸 상한 농산물 사진",
+    "reply": "매대 답변: “{{text}}”",
+    "noReply": "매대가 아직 답변하지 않았어요.",
+    "dismiss": "매대의 잘못이 아님",
+    "confirm": "위반 확인",
+    "dismissTitle": "매대의 잘못이 아닌가요?",
+    "dismissText": "위반 없이 신고가 종료돼요. 고객과 매대 모두에게 알려요.",
+    "confirmTitle": "위반을 확인할까요?",
+    "confirmText": "신고가 확인됨으로 종료돼요. 고객과 매대 모두에게 알려요.",
+    "confirmStrike": "매대가 이 유통기한을 연장했고 기한 전에 상했으므로 위반이 1회 기록되고, 상품의 유통기한은 권장 값으로 되돌아가요.",
+    "noteLabel": "매대의 잘못이 아닌 이유",
+    "noteOptional": "고객과 매대에게 남길 메모 (선택)",
+    "noteRequired": "매대의 잘못이 아닌 이유를 적어 주세요.",
+    "decisionNote": "메모: {{text}}",
+    "done": "결정을 저장했어요. 고객과 매대 모두에게 알렸어요.",
+    "suspend": "매대 정지",
+    "suspendLabel": "매대 정지: {{stall}}"
   }
 }

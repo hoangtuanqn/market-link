@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 import ProductApi from '@/api-requests/product.requests';
 import ReviewApi, { toReviewCard } from '@/api-requests/review.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
@@ -17,13 +18,15 @@ import { money } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import QualityReports from './QualityReports';
 import ReportedMessages from './ReportedMessages';
 
 /** Chips filter the visible-reviews queue; the hidden queue is its own tab, always `status: hidden`. */
 const REVIEW_FILTERS = ['newest', 'lowRated'] as const;
 type ReviewFilter = (typeof REVIEW_FILTERS)[number] | 'hidden';
 
-type Tab = 'reviews' | 'products' | 'hidden' | 'messages';
+type Tab = 'reviews' | 'products' | 'hidden' | 'messages' | 'quality';
+const TABS: Tab[] = ['reviews', 'products', 'hidden', 'messages', 'quality'];
 
 /** Reasons an admin picks when hiding a listing. Keys resolve under `reason.` in the locale file. */
 const REASONS = ['advertising', 'abusive', 'offTopic', 'claim', 'other'] as const;
@@ -38,7 +41,11 @@ const NO_PRODUCTS: ProductType[] = [];
 const AdminModerationPage = () => {
   const { t } = useTranslation('AdminModeration');
   const { t: tc } = useTranslation();
-  const [tab, setTab] = useState<Tab>('reviews');
+  // The tab lives in the address, so the QUALITY_ESCALATED notification (/admin/moderation?tab=quality) opens it
+  const [searchParams, setSearchParams] = useSearchParams();
+  const asked = searchParams.get('tab') as Tab | null;
+  const tab: Tab = asked && TABS.includes(asked) ? asked : 'reviews';
+  const setTab = (next: Tab) => setSearchParams(next === 'reviews' ? {} : { tab: next }, { replace: true });
   const [hidingBusy, setHidingBusy] = useState(false);
   const [unhidingId, setUnhidingId] = useState<number | null>(null);
   // What customers currently see (contract §5, newest first); hiding removes a row from this list.
@@ -223,6 +230,7 @@ const AdminModerationPage = () => {
           { id: 'products', label: t('tab.products') },
           { id: 'hidden', label: t('tab.hidden') },
           { id: 'messages', label: t('tab.messages') },
+          { id: 'quality', label: t('tab.quality') },
         ]}
       />
 
@@ -340,6 +348,8 @@ const AdminModerationPage = () => {
       )}
 
       {tab === 'messages' && <ReportedMessages />}
+
+      {tab === 'quality' && <QualityReports />}
 
       <Dialog
         open={hiding !== null}

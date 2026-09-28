@@ -6,7 +6,8 @@
     "reviews": "Ulasan",
     "products": "Iklan produk",
     "hidden": "Yang disembunyikan",
-    "messages": "Pesan yang dilaporkan"
+    "messages": "Pesan yang dilaporkan",
+    "quality": "Laporan kerusakan"
   },
   "reviewFilterLabel": "Saring ulasan",
   "reviewFilter": {
@@ -104,5 +105,36 @@
     "reviews": "Ulasan yang disembunyikan",
     "noListings": "Tidak ada produk yang disembunyikan",
     "noListingsText": "Produk yang Anda sembunyikan muncul di sini beserta alasannya, agar bisa ditampilkan lagi."
+  },
+  "quality": {
+    "boundary": "Hanya laporan yang dikonfirmasi pada masa simpan yang diperpanjang dan rusak sebelum tanggalnya yang mencatat pelanggaran. Tidak terjadi apa-apa pada lapak hanya karena pelanggan melapor.",
+    "filterLabel": "Saring laporan kerusakan",
+    "filter": {
+      "needs": "Perlu keputusan",
+      "open": "Semua terbuka",
+      "decided": "Sudah diputuskan"
+    },
+    "noun": "laporan kerusakan",
+    "emptyTitle": "Tidak ada yang perlu diputuskan",
+    "emptyText": "Laporan kerusakan dari pelanggan menunggu Anda di sini.",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "Pelanggan: {{customer}} · diambil {{pickup}} · baik hingga {{bestBefore}} · rusak {{spoiled}} ({{when}})",
+    "photoAlt": "Foto dari pelanggan tentang produk yang rusak",
+    "reply": "Balasan lapak: “{{text}}”",
+    "noReply": "Lapak belum membalas.",
+    "dismiss": "Bukan kesalahan lapak",
+    "confirm": "Konfirmasi pelanggaran",
+    "dismissTitle": "Bukan kesalahan lapak?",
+    "dismissText": "Laporan ditutup tanpa pelanggaran. Pelanggan dan lapak diberi tahu.",
+    "confirmTitle": "Konfirmasi pelanggaran?",
+    "confirmText": "Laporan ditutup sebagai dikonfirmasi. Pelanggan dan lapak diberi tahu.",
+    "confirmStrike": "Lapak memperpanjang masa simpan ini dan produknya rusak sebelum tanggalnya, jadi satu pelanggaran dicatat dan produk kembali ke masa simpan yang disarankan.",
+    "noteLabel": "Alasan ini bukan kesalahan lapak",
+    "noteOptional": "Catatan untuk pelanggan dan lapak (opsional)",
+    "noteRequired": "Sebutkan alasan ini bukan kesalahan lapak.",
+    "decisionNote": "Catatan: {{text}}",
+    "done": "Keputusan disimpan. Pelanggan dan lapak sudah diberi tahu.",
+    "suspend": "Tangguhkan lapak",
+    "suspendLabel": "Tangguhkan lapak: {{stall}}"
   }
 }

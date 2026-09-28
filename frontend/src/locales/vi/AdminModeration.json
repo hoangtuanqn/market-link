@@ -6,7 +6,8 @@
     "reviews": "Đánh giá",
     "products": "Sản phẩm đăng bán",
     "hidden": "Đã ẩn",
-    "messages": "Tin nhắn bị báo cáo"
+    "messages": "Tin nhắn bị báo cáo",
+    "quality": "Báo hàng hư"
   },
   "reviewFilterLabel": "Lọc đánh giá",
   "reviewFilter": {
@@ -104,5 +105,36 @@
     "reviews": "Đánh giá đã ẩn",
     "noListings": "Chưa có sản phẩm nào bị ẩn",
     "noListingsText": "Sản phẩm bạn ẩn sẽ hiện ở đây kèm lý do để bạn có thể hiện lại."
+  },
+  "quality": {
+    "boundary": "Chỉ báo hư được xác nhận trên món kéo dài hạn và hư trước hạn mới ghi lỗi cho sạp. Khách báo thôi thì sạp không bị gì.",
+    "filterLabel": "Lọc báo hàng hư",
+    "filter": {
+      "needs": "Cần xử lý",
+      "open": "Tất cả đang mở",
+      "decided": "Đã xử lý"
+    },
+    "noun": "báo cáo hàng hư",
+    "emptyTitle": "Không có gì cần xử lý",
+    "emptyText": "Báo hàng hư của khách sẽ chờ bạn ở đây.",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "Khách: {{customer}} · nhận {{pickup}} · hạn đến {{bestBefore}} · hư ngày {{spoiled}} ({{when}})",
+    "photoAlt": "Ảnh hàng hư của khách",
+    "reply": "Sạp phản hồi: “{{text}}”",
+    "noReply": "Sạp chưa phản hồi.",
+    "dismiss": "Không phải lỗi sạp",
+    "confirm": "Xác nhận vi phạm",
+    "dismissTitle": "Không phải lỗi sạp?",
+    "dismissText": "Báo cáo đóng lại, không ghi lỗi. Khách và sạp được báo.",
+    "confirmTitle": "Xác nhận vi phạm?",
+    "confirmText": "Báo cáo đóng lại ở trạng thái đã xác nhận. Khách và sạp được báo.",
+    "confirmStrike": "Sạp đã kéo dài hạn dùng của món này và hàng hư trước hạn, nên sạp bị ghi một lỗi và hạn dùng của sản phẩm về lại mốc gợi ý.",
+    "noteLabel": "Vì sao không phải lỗi sạp",
+    "noteOptional": "Ghi chú cho khách và sạp (không bắt buộc)",
+    "noteRequired": "Hãy ghi vì sao không phải lỗi sạp.",
+    "decisionNote": "Ghi chú: {{text}}",
+    "done": "Đã lưu quyết định. Khách và sạp đã được báo.",
+    "suspend": "Đình chỉ sạp",
+    "suspendLabel": "Đình chỉ sạp: {{stall}}"
   }
 }
