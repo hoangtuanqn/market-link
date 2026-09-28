@@ -189,6 +189,28 @@ class ReviewServiceTest {
         verify(reviews, never()).save(any());
     }
 
+    /**
+     * D-13: a Farmer may buy at their own stall, but reviewing it — or its products — would let
+     * them rate themselves (reproduced 29/09 on dev: 5 stars on "Vườn Út Hiền" from its owner).
+     */
+    @Test
+    void aFarmerCannotReviewTheirOwnStallOrItsProducts() {
+        when(users.findById(FARMER_USER_ID))
+                .thenReturn(Optional.of(user(FARMER_USER_ID, RoleType.FARMER)));
+        when(orders.findById(ORDER_ID))
+                .thenReturn(Optional.of(order(FARMER_USER_ID, OrderStatus.COMPLETED)));
+        FarmerProfile own = profile(FARMER_ID);
+        own.setUserId(FARMER_USER_ID);
+        when(farmers.findById(FARMER_ID)).thenReturn(Optional.of(own));
+
+        assertThatThrownBy(() -> service.create(FARMER_USER_ID, farmerReview(5)))
+                .isInstanceOf(AccessDeniedException.class)
+                .hasMessage("You cannot review your own stall or its products.");
+        assertThatThrownBy(() -> service.create(FARMER_USER_ID, productReview(5)))
+                .isInstanceOf(AccessDeniedException.class);
+        verify(reviews, never()).save(any());
+    }
+
     // ---------- read ----------
 
     @Test
