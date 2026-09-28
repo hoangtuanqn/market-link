@@ -10,5 +10,6 @@ public record SetPasswordRequest(
                         min = RegisterRules.PASSWORD_MIN,
                         max = RegisterRules.PASSWORD_MAX,
                         message = RegisterRules.PASSWORD_MESSAGE)
+                @FitsBcrypt
                 String password,
         @NotBlank(message = "Confirm your password.") String confirmPassword) {}
