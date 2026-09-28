@@ -45,7 +45,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 class UserServiceTest {
 
@@ -289,6 +292,33 @@ class UserServiceTest {
         assertThat(result.user().address()).isEqualTo(BEN_THANH_TEXT);
         // No transaction in a unit test, so the after-commit clean-up runs straight away
         verify(emailVerification).discard(EMAIL);
+    }
+
+    /** Spec §4.2: when saving the account fails, the code goes back so the person can try again. */
+    @Test
+    void aFailedSaveGivesTheCodeBack() {
+        VerifiedSignup verified = new VerifiedSignup(parked(EMAIL), "hash", 500);
+        when(emailVerification.verify(EMAIL, "123456", "token")).thenReturn(verified);
+        when(userRepository.save(any(User.class)))
+                .thenThrow(
+                        new DataIntegrityViolationException(
+                                "Duplicate entry for key 'users.phone'"));
+        TransactionSynchronizationManager.initSynchronization();
+        try {
+            catchThrowableOfType(
+                    DataIntegrityViolationException.class,
+                    () -> service.completeSignup(EMAIL, "123456", "token"));
+            TransactionSynchronizationManager.getSynchronizations()
+                    .forEach(
+                            sync ->
+                                    sync.afterCompletion(
+                                            TransactionSynchronization.STATUS_ROLLED_BACK));
+        } finally {
+            TransactionSynchronizationManager.clearSynchronization();
+        }
+
+        verify(emailVerification).restore(verified);
+        verify(emailVerification, never()).discard(EMAIL);
     }
 
     @Test

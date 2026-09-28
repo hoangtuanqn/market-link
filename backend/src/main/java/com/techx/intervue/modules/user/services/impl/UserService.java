@@ -134,6 +134,12 @@ public class UserService extends BaseService implements UserServiceInterface {
             emailVerification.discard(pending.email());
             throw e;
         }
+        // Registered before the save, so a failed insert (e.g. a phone taken a moment ago) also
+        // gives
+        // the code back
+        TransactionHelper.afterCompletion(
+                () -> emailVerification.discard(pending.email()),
+                () -> emailVerification.restore(verified));
         User user =
                 userRepository.save(
                         User.builder()
@@ -145,9 +151,6 @@ public class UserService extends BaseService implements UserServiceInterface {
                                 .passwordHash(pending.passwordHash())
                                 .role(RoleType.CUSTOMER)
                                 .build());
-        TransactionHelper.afterCompletion(
-                () -> emailVerification.discard(pending.email()),
-                () -> emailVerification.restore(verified));
         return issueTokens(user);
     }
 
