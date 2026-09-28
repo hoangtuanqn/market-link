@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import AskAssistant from '@/components/assistant/AskAssistant';
 import OrderApi, { type OrderDetailDto, type OrderItemDto } from '@/api-requests/order.requests';
+import BestBeforeLine from '@/components/BestBeforeLine';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -89,6 +90,7 @@ const FarmerOrderDetailPage = () => {
         <>
           {i.productName}
           <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">{perUnit(i.unitPrice, i.unit)}</span>
+          <BestBeforeLine bestBefore={i.bestBefore} storageMode={i.storageMode} />
         </>
       ),
     },

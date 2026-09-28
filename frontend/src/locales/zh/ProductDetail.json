@@ -36,9 +36,10 @@
   "details": {
     "title": "商品详情",
     "soldPer": "销售单位",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "保鲜期",
+    "shelfLifeLine_one": "{{storage}} · 取货后可保存 {{count}} 天",
+    "shelfLifeLine_other": "{{storage}} · 取货后可保存 {{count}} 天",
+    "shelfLifePromise": "摊位承诺可保存 {{days}} 天(通常 {{suggested}} 天)。",
     "category": "类别",
     "stall": "摊位",
     "market": "市集"

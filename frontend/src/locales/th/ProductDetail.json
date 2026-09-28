@@ -36,9 +36,10 @@
   "details": {
     "title": "รายละเอียดสินค้า",
     "soldPer": "ขายต่อ",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "อายุการเก็บรักษา",
+    "shelfLifeLine_one": "{{storage}} · เก็บได้ {{count}} วันหลังรับสินค้า",
+    "shelfLifeLine_other": "{{storage}} · เก็บได้ {{count}} วันหลังรับสินค้า",
+    "shelfLifePromise": "ร้านรับรองว่าเก็บได้ {{days}} วัน (โดยปกติ {{suggested}} วัน)",
     "category": "หมวดหมู่",
     "stall": "ร้าน",
     "market": "ตลาด"

@@ -36,9 +36,10 @@
   "details": {
     "title": "Détails du produit",
     "soldPer": "Vendu au",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "Durée de conservation",
+    "shelfLifeLine_one": "{{storage}} · se garde {{count}} jour depuis le retrait",
+    "shelfLifeLine_other": "{{storage}} · se garde {{count}} jours depuis le retrait",
+    "shelfLifePromise": "Le stand garantit {{days}} jours (en général {{suggested}}).",
     "category": "Catégorie",
     "stall": "Stand",
     "market": "Marché"

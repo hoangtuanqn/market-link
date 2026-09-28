@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
 import OrderApi, { type OrderDetailDto } from '@/api-requests/order.requests';
 import StallApi from '@/api-requests/stall.requests';
+import BestBeforeLine from '@/components/BestBeforeLine';
 import MessageStallButton from '@/components/chat/MessageStallButton';
 import DirectionsButton from '@/components/DirectionsButton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
@@ -170,6 +171,7 @@ const CustomerOrderDetailPage = () => {
                     <span className="text-small text-ink-muted">
                       {t('items.line', { qty: item.quantity, unit: item.unit, price: money(item.unitPrice) })}
                     </span>
+                    <BestBeforeLine bestBefore={item.bestBefore} storageMode={item.storageMode} />
                   </span>
                   <span className="font-hand text-price shrink-0">{money(item.subtotal)}</span>
                 </li>

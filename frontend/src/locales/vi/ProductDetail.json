@@ -36,9 +36,10 @@
   "details": {
     "title": "Chi tiết sản phẩm",
     "soldPer": "Bán theo",
-    "shelfLife": "Độ tươi ngon",
-    "shelfLifeValue_one": "{{count}} ngày",
-    "shelfLifeValue_other": "{{count}} ngày",
+    "shelfLife": "Hạn dùng",
+    "shelfLifeLine_one": "{{storage}} · dùng tốt {{count}} ngày kể từ ngày nhận",
+    "shelfLifeLine_other": "{{storage}} · dùng tốt {{count}} ngày kể từ ngày nhận",
+    "shelfLifePromise": "Sạp cam kết {{days}} ngày (thường gặp {{suggested}} ngày).",
     "category": "Loại",
     "stall": "Sạp",
     "market": "Chợ"

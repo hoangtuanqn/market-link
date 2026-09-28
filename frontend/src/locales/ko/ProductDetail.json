@@ -36,9 +36,10 @@
   "details": {
     "title": "상품 정보",
     "soldPer": "판매 단위",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "유통기한",
+    "shelfLifeLine_one": "{{storage}} · 픽업 후 {{count}}일 신선",
+    "shelfLifeLine_other": "{{storage}} · 픽업 후 {{count}}일 신선",
+    "shelfLifePromise": "이 가게는 {{days}}일을 약속해요(보통 {{suggested}}일).",
     "category": "카테고리",
     "stall": "가게",
     "market": "장터"

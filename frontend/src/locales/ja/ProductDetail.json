@@ -36,9 +36,10 @@
   "details": {
     "title": "商品の詳細",
     "soldPer": "販売単位",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "賞味期限",
+    "shelfLifeLine_one": "{{storage}} · 受け取りから{{count}}日保存可能",
+    "shelfLifeLine_other": "{{storage}} · 受け取りから{{count}}日保存可能",
+    "shelfLifePromise": "店は{{days}}日を保証しています(通常{{suggested}}日)。",
     "category": "カテゴリ",
     "stall": "店",
     "market": "マーケット"

@@ -28,6 +28,7 @@ import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import ShelfLifeDetails from './ShelfLifeDetails';
 
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
@@ -282,7 +283,9 @@ const ProductDetailPage = () => {
               <dt className="text-ink-muted">{t('details.soldPer')}</dt>
               <dd className="m-0">{units(1, unitName(p.unit))}</dd>
               <dt className="text-ink-muted">{t('details.shelfLife')}</dt>
-              <dd className="m-0">{t('details.shelfLifeValue', { count: p.shelfLifeDays })}</dd>
+              <dd className="m-0">
+                <ShelfLifeDetails shelfLife={detail.shelfLife} fallbackDays={p.shelfLifeDays} />
+              </dd>
               <dt className="text-ink-muted">{t('details.category')}</dt>
               <dd className="m-0">{p.categoryName}</dd>
               <dt className="text-ink-muted">{t('details.stall')}</dt>
