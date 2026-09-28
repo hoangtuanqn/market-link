@@ -4,14 +4,18 @@ import com.techx.intervue.modules.stall.resources.OperatingDayResource;
 import com.techx.intervue.modules.stall.resources.StallMarketResource;
 import com.techx.intervue.modules.stall.resources.StallSummaryResource;
 import com.techx.intervue.resources.PageResource;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -123,17 +127,61 @@ public class StallQueryRepository {
         return stallMarkets(null, farmerMarketId).stream().findFirst();
     }
 
+    public record MarketSchedule(
+            boolean active,
+            LocalTime openingTime,
+            LocalTime closingTime,
+            Set<Integer> operatingDays,
+            BigDecimal latitude,
+            BigDecimal longitude) {}
+
+    /**
+     * Looks up an active market's operating schedule (opening hours and held weekdays) and its
+     * coordinates.
+     */
+    public Optional<MarketSchedule> findMarketSchedule(long marketId) {
+        String sql =
+                """
+                SELECT m.is_active, m.opening_time, m.closing_time, m.latitude, m.longitude,
+                       (SELECT GROUP_CONCAT(DISTINCT d.day_of_week)
+                          FROM market_operating_days d WHERE d.market_id = m.id) AS days
+                FROM markets m
+                WHERE m.id = :id
+                """;
+        List<MarketSchedule> res =
+                jdbc.query(
+                        sql,
+                        new MapSqlParameterSource("id", marketId),
+                        (rs, i) -> {
+                            boolean active = rs.getBoolean("is_active");
+                            LocalTime opening =
+                                    rs.getTime("opening_time") != null
+                                            ? rs.getTime("opening_time").toLocalTime()
+                                            : null;
+                            LocalTime closing =
+                                    rs.getTime("closing_time") != null
+                                            ? rs.getTime("closing_time").toLocalTime()
+                                            : null;
+                            BigDecimal lat = rs.getBigDecimal("latitude");
+                            BigDecimal lng = rs.getBigDecimal("longitude");
+                            String daysStr = rs.getString("days");
+                            Set<Integer> days =
+                                    daysStr == null || daysStr.isBlank()
+                                            ? Set.of()
+                                            : Arrays.stream(daysStr.split(","))
+                                                    .map(Integer::valueOf)
+                                                    .collect(Collectors.toSet());
+                            return new MarketSchedule(active, opening, closing, days, lat, lng);
+                        });
+        return res.stream().filter(MarketSchedule::active).findFirst();
+    }
+
     /**
      * Does the market exist and is it open? Checked with SQL so the stall module does not have to
      * import the catalog module.
      */
     public boolean marketExists(long marketId) {
-        Integer n =
-                jdbc.queryForObject(
-                        "SELECT COUNT(*) FROM markets WHERE id = :id AND is_active = TRUE",
-                        new MapSqlParameterSource("id", marketId),
-                        Integer.class);
-        return n != null && n > 0;
+        return findMarketSchedule(marketId).isPresent();
     }
 
     private List<StallMarketResource> stallMarkets(Long farmerId, Long farmerMarketId) {
@@ -203,7 +251,7 @@ public class StallQueryRepository {
     }
 
     /** A TIME column reads as "07:00:00"; the contract returns "07:00". */
-    static String hhmm(String time) {
+    public static String hhmm(String time) {
         return time == null ? null : time.substring(0, Math.min(5, time.length()));
     }
 }

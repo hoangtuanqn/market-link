@@ -14,4 +14,7 @@ public interface SlotServiceInterface {
     SlotResource updateSlot(long userId, long slotId, UpdateSlotRequest request);
 
     List<SlotResource> publicSlots(long farmerId, Long marketId, LocalDate date);
+
+    /** Farmer — your own slots for that market and date, including inactive and full slots. */
+    List<SlotResource> farmerSlots(long userId, long farmerMarketId, LocalDate date);
 }

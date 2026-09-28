@@ -90,9 +90,9 @@ const FarmerSlotsPage = () => {
     state: slotsLoad,
     retry: retrySlots,
     mutate: mutateSlots,
-  } = useRequest(`slots:${activeMarket?.marketId ?? 'none'}:${activeDate ?? 'none'}`, () =>
+  } = useRequest(`slots:${activeMarket?.farmerMarketId ?? 'none'}:${activeDate ?? 'none'}`, () =>
     profile && activeMarket && activeDate
-      ? StallApi.slots(profile.farmerId, { marketId: activeMarket.marketId, date: activeDate })
+      ? StallApi.farmerSlots(activeMarket.farmerMarketId, activeDate)
       : Promise.resolve([]),
   );
   const slots = slotsLoad.kind === 'ready' ? slotsLoad.data : [];
@@ -144,12 +144,15 @@ const FarmerSlotsPage = () => {
     }
   };
 
-  const closeSlot = async (slot: SlotDto) => {
+  const toggleSlot = async (slot: SlotDto, active: boolean) => {
     setClosingId(slot.slotId);
     try {
-      await StallApi.updateSlot(slot.slotId, { isActive: false });
-      mutateSlots((rows) => rows.filter((r) => r.slotId !== slot.slotId));
-      Notification.success({ title: t('table.closedTitle'), text: t('table.closedText') });
+      const updated = await StallApi.updateSlot(slot.slotId, { isActive: active });
+      mutateSlots((rows) => rows.map((r) => (r.slotId === slot.slotId ? updated : r)));
+      Notification.success({
+        title: active ? t('table.on') : t('table.closedTitle'),
+        text: active ? t('table.on') : t('table.closedText'),
+      });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
@@ -236,10 +239,10 @@ const FarmerSlotsPage = () => {
       render: (s) => (
         <Checkbox
           id={`open-${s.slotId}`}
-          checked
+          checked={s.isActive}
           disabled={closingId === s.slotId}
           onChange={(e) => {
-            if (!e.target.checked) void closeSlot(s);
+            void toggleSlot(s, e.target.checked);
           }}
         >
           {t('table.on')}
