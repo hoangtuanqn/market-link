@@ -147,6 +147,15 @@ describe('FarmerProductFormPage', () => {
     );
   });
 
+  /** A one-day suggestion reads "1 day", not "1 days". */
+  it('names a one-day suggestion in the singular', async () => {
+    renderNew();
+    await userEvent.click(await screen.findByLabelText(/Room temperature · suggested 1 day/));
+    await userEvent.click(screen.getByRole('button', { name: 'One day more' }));
+
+    expect(screen.getByText('1 day longer than suggested (1 day, Room temperature)')).toBeInTheDocument();
+  });
+
   it('stops at twice the suggestion', async () => {
     renderNew();
     await userEvent.click(await screen.findByLabelText(/Room temperature · suggested 1 day/));

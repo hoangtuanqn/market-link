@@ -79,7 +79,7 @@
       "group": "分组",
       "storage": "保存方式",
       "days": "天数",
-      "daysFor": "{{group}} 的天数 ({{storage}})"
+      "daysFor": "{{group}} 的天数（{{storage}}）"
     },
     "status": {
       "off": "停用"

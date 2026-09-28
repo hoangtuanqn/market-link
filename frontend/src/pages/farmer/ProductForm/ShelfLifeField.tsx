@@ -183,7 +183,12 @@ const ShelfLifeField = ({
       {longer > 0 && (
         <Banner
           variant="warning"
-          title={t('shelfLife.longerTitle', { count: longer, suggested: suggestedDays, storage: storageLabel })}
+          title={t('shelfLife.longerTitle', {
+            count: longer,
+            // Pluralised on its own, so a one-day suggestion reads "1 day"
+            suggested: t('shelfLife.days', { count: suggestedDays }),
+            storage: storageLabel,
+          })}
         >
           <Checkbox id="shelf-ack" checked={acknowledged} onChange={(e) => onAcknowledge(e.target.checked)}>
             {t('shelfLife.ackLabel', { days, storage: storageLabel })}

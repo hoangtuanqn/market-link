@@ -36,7 +36,7 @@
     "shelfLife": "賞味期限",
     "shelfLifeLine_one": "{{storage}} · 受け取りから{{count}}日保存可能",
     "shelfLifeLine_other": "{{storage}} · 受け取りから{{count}}日保存可能",
-    "shelfLifePromise": "店は{{days}}日を保証しています(通常{{suggested}}日)。",
+    "shelfLifePromise": "店は{{days}}日を保証しています（通常{{suggested}}日）。",
     "category": "カテゴリ",
     "stall": "店",
     "market": "マーケット"

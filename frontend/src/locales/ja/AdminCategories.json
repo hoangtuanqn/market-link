@@ -79,7 +79,7 @@
       "group": "グループ",
       "storage": "保存方法",
       "days": "日数",
-      "daysFor": "{{group}} の日数 ({{storage}})"
+      "daysFor": "{{group}} の日数（{{storage}}）"
     },
     "status": {
       "off": "無効"
