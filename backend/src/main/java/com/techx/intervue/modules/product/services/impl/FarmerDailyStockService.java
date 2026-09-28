@@ -1,9 +1,9 @@
 package com.techx.intervue.modules.product.services.impl;
 
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
-import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.entities.ProductDailyStock;
@@ -14,7 +14,6 @@ import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.requests.FarmerDailyStockRequest;
 import com.techx.intervue.modules.product.resources.DailyStockResource;
 import com.techx.intervue.modules.product.services.interfaces.FarmerDailyStockServiceInterface;
-import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class FarmerDailyStockService implements FarmerDailyStockServiceInterface
     public DailyStockResource override(
             long userId, long productId, LocalDate date, FarmerDailyStockRequest request) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         Product product =
                 products.findByIdAndDeletedFalse(productId)
                         .orElseThrow(() -> new ProductNotFoundException(productId));
@@ -80,11 +79,5 @@ public class FarmerDailyStockService implements FarmerDailyStockServiceInterface
 
     private FarmerProfile mine(long userId) {
         return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
-    }
-
-    private static void requireApproved(FarmerProfile profile) {
-        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new StallNotApprovedException();
-        }
     }
 }
