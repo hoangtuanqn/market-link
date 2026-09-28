@@ -20,6 +20,7 @@ import type { AdminFarmerDetailType } from '@/types/farmer.types';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import FarmerDetailSkeleton from './FarmerDetailSkeleton';
 
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; data: AdminFarmerDetailType };
 type DialogKind = 'approve' | 'reject' | 'suspend' | 'reinstate';
@@ -45,6 +46,15 @@ const AdminFarmerDetailPage = () => {
   /** One reason used for both reject and suspend — only one dialog can be open at a time. */
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   // only setState in a promise callback (the initial state is already loading)
   const fetchDetail = useCallback(() => {
@@ -123,15 +133,9 @@ const AdminFarmerDetailPage = () => {
         · {t('breadcrumb')}
       </p>
 
-      {status.kind === 'loading' && (
-        <Card aria-busy="true" className="flex flex-col gap-3 p-6">
-          <span className="sr-only">{t('loading')}</span>
-          <div className="bg-surface-sunken h-6 w-60 max-w-full rounded-sm" />
-          <div className="bg-surface-sunken h-32 w-full rounded-sm" />
-        </Card>
-      )}
+      {(status.kind === 'loading' || initialLoading) && <FarmerDetailSkeleton />}
 
-      {status.kind === 'error' && (
+      {!(status.kind === 'loading' || initialLoading) && status.kind === 'error' && (
         <DataState
           variant="error"
           title={t('loadError.title')}
@@ -144,7 +148,8 @@ const AdminFarmerDetailPage = () => {
         />
       )}
 
-      {status.kind === 'ready' &&
+      {!(status.kind === 'loading' || initialLoading) &&
+        status.kind === 'ready' &&
         (() => {
           const f = status.data;
           const meta = APPROVAL_STATUS_META[f.approvalStatus];

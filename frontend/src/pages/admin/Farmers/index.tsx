@@ -46,6 +46,15 @@ const AdminFarmersPage = () => {
   const [queryDraft, setQueryDraft] = useState('');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   // only setState in a promise callback (the initial state is already loading)
   const fetchList = useCallback(() => {
@@ -207,6 +216,8 @@ const AdminFarmersPage = () => {
     },
   ];
 
+  const showSkeleton = status.kind === 'loading' || initialLoading;
+
   return (
     // The shell's <main> is flex-col so flex-1 here takes all the remaining height — that way the
     // "no data" block grows to fill the free space instead of being a small box at the top.
@@ -242,9 +253,9 @@ const AdminFarmersPage = () => {
         tabs={TABS.map((tab) => ({ id: tab, label: t(`status.${tab}`), count: counts[tab] }))}
       />
 
-      {status.kind === 'loading' && <FarmerTableSkeleton />}
+      {showSkeleton && <FarmerTableSkeleton />}
 
-      {status.kind === 'error' && (
+      {!showSkeleton && status.kind === 'error' && (
         <DataState
           variant="error"
           title={t('loadError.title')}
@@ -257,7 +268,8 @@ const AdminFarmersPage = () => {
         />
       )}
 
-      {status.kind === 'ready' &&
+      {!showSkeleton &&
+        status.kind === 'ready' &&
         (status.items.length ? (
           <div className="flex flex-col gap-4">
             <Table caption={t('caption', { count: status.total })} columns={columns} rows={status.items} />

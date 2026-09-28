@@ -10,6 +10,7 @@ import useRequest from '@/hooks/useRequest';
 import { chatWhen } from '@/lib/chat/time';
 import type { ReportDetail, ReportListItem, ReportStatus } from '@/types/chat.types';
 import Notification from '@/utils/notification';
+import { ReportedMessagesSkeleton } from './ModerationSkeleton';
 
 function ReportDetailDialog({
   reportId,
@@ -171,9 +172,7 @@ export default function ReportedMessages() {
       {state.kind === 'error' ? (
         <LoadError noun={t('messages.noun')} onRetry={retry} />
       ) : state.kind === 'loading' ? (
-        <p role="status" className="text-small text-ink-muted">
-          Loading...
-        </p>
+        <ReportedMessagesSkeleton />
       ) : state.data.length === 0 ? (
         <DataState title={t('messages.emptyTitle')} text={t('messages.emptyText')} />
       ) : (
