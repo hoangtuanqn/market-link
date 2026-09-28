@@ -50,5 +50,10 @@
     "title": "Items in your cart",
     "text": "If a product is no longer on sale, remove it here and the cart loads again.",
     "clear": "Empty the cart"
+  },
+  "deal": {
+    "badge": "−{{percent}}% near-expiry deal",
+    "onlyOn": "The deal only applies to {{day}}.",
+    "dayGone": "The deal day {{day}} can no longer be picked. Choose a day to see its price."
   }
 }

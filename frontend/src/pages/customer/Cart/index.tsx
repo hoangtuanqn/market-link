@@ -8,6 +8,7 @@ import StallApi, { toSlotOption } from '@/api-requests/stall.requests';
 import CartGroup, { type CartLineType } from '@/components/CartGroup';
 import DayChips from '@/components/DayChips';
 import SlotPicker from '@/components/SlotPicker';
+import { stockDay } from '@/components/stockDay';
 import { Banner } from '@/components/ui/banner';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -19,6 +20,7 @@ import { Cart, useCart } from '@/lib/cart';
 import { dayName, formatClock, formatDayMonth, money } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import DealNote from './DealNote';
 
 /** Per stall: chosen market (when the stall sells at several), pickup date, slot, note. */
 type Choice = { marketId: number | null; date: string | null; slotId: string | null; note: string };
@@ -32,10 +34,16 @@ const localDay = (ymd: string) => {
   return new Date(y, m - 1, d);
 };
 
-type StallPickupProps = { group: OrderGroupPreviewDto; choice: Choice; onChange: (patch: Partial<Choice>) => void };
+type StallPickupProps = {
+  group: OrderGroupPreviewDto;
+  choice: Choice;
+  /** FR-125: the day a line of this stall was added for from /deals, if any. */
+  dealDay: string | null;
+  onChange: (patch: Partial<Choice>) => void;
+};
 
 /** Pickup market/day/slot for one stall's group (FR-032): its own slot request, so groups load independently. */
-const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
+const StallPickup = ({ group, choice, dealDay, onChange }: StallPickupProps) => {
   const { t } = useTranslation('CustomerCart');
   const { t: tc } = useTranslation();
   const { state, retry } = useRequest(`slots:${group.farmerId}:${choice.marketId}`, () =>
@@ -43,7 +51,8 @@ const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
   );
   const slots = state.kind === 'ready' ? state.data : [];
   const dates = [...new Set(slots.map((s) => s.slotDate))];
-  const date = choice.date ?? dates[0] ?? null;
+  // FR-125: start on the deal day while it can still be booked, else on the first bookable day
+  const date = choice.date ?? (dealDay && dates.includes(dealDay) ? dealDay : dates[0]) ?? null;
   const dayOptions = dates.map((d) => {
     const x = localDay(d);
     return { value: d, label: dayName(x.getDay(), 'long'), date: formatDayMonth(x) };
@@ -76,6 +85,9 @@ const StallPickup = ({ group, choice, onChange }: StallPickupProps) => {
         <DataState title={t('noSlots.title')} text={t('noSlots.text')} />
       ) : (
         <>
+          {dealDay && !dates.includes(dealDay) && (
+            <p className="text-small text-warning-ink">{t('deal.dayGone', { day: stockDay(dealDay) ?? dealDay })}</p>
+          )}
           <DayChips
             name={`day-${group.farmerId}`}
             legend={t('pickupDayAt', { stall: group.stallName })}
@@ -115,10 +127,25 @@ const CustomerCartPage = () => {
   useAssistantCart(lines.map((l) => ({ productId: l.productId, quantity: l.qty })));
   const navigate = useNavigate();
   const { user } = useSession();
-  const previewKey = lines.map((l) => `${l.productId}:${l.qty}`).join(',');
+  const [choices, setChoices] = useState<Record<number, Choice>>({});
+  // FR-125: the day a line was added for from /deals, per stall
+  const dealDayOf = (farmerId: number) =>
+    lines.find((l) => l.farmerId === farmerId && l.pickupDate)?.pickupDate ?? null;
+  // Each stall is priced for the day it will be picked up: the one chosen, else its deal day; a stall with neither is
+  // not sent and gets its nearest orderable day, as before
+  const pickupDates = [...new Set(lines.map((l) => l.farmerId))].flatMap((farmerId) => {
+    const date = choices[farmerId]?.date ?? dealDayOf(farmerId);
+    return date ? [{ farmerId, date }] : [];
+  });
+  const previewKey = `${lines.map((l) => `${l.productId}:${l.qty}`).join(',')}|${pickupDates
+    .map((d) => `${d.farmerId}@${d.date}`)
+    .join(',')}`;
   const { state: previewLoad, retry } = useRequest(`cart-preview:${previewKey}`, () =>
     lines.length && user
-      ? OrderApi.preview(lines.map((l) => ({ productId: l.productId, quantity: l.qty })))
+      ? OrderApi.preview(
+          lines.map((l) => ({ productId: l.productId, quantity: l.qty })),
+          pickupDates,
+        )
       : Promise.resolve([]),
   );
   // A quantity change re-runs the preview. Keep the last answer on screen meanwhile: swapping the whole page for
@@ -129,7 +156,6 @@ const CustomerCartPage = () => {
   const groups = previewLoad.kind === 'ready' ? previewLoad.data : (lastPreview ?? []);
   // Quantities follow the cart right away; the server's figures catch up when the preview answers
   const qtyOf = (productId: number, fallback: number) => lines.find((l) => l.productId === productId)?.qty ?? fallback;
-  const [choices, setChoices] = useState<Record<number, Choice>>({});
   const choice = (g: OrderGroupPreviewDto): Choice =>
     choices[g.farmerId] ?? {
       marketId: g.marketId ?? g.markets[0]?.marketId ?? null,
@@ -294,6 +320,14 @@ const CustomerCartPage = () => {
                       price: it.unitPrice,
                       max: it.stockQuantity,
                       qty: qtyOf(it.productId, it.quantity),
+                      listPrice: it.listPrice,
+                      note: (
+                        <DealNote
+                          item={it}
+                          dealDay={lines.find((l) => l.productId === it.productId)?.pickupDate}
+                          chosenDay={c.date}
+                        />
+                      ),
                     }))}
                   onQtyChange={(id, qty) => Cart.setQty(id, qty)}
                   onRemove={(id) => Cart.remove(id)}
@@ -301,7 +335,12 @@ const CustomerCartPage = () => {
                 {/* Always the same open picker: collapsing it after a pick (or swapping its wrapper) moved the page
                     under the cursor and remounted the slot request. Picking now only highlights the choice. */}
                 <Card className="flex flex-col gap-4 p-4">
-                  <StallPickup group={g} choice={c} onChange={(patch) => setChoice(g.farmerId, patch)} />
+                  <StallPickup
+                    group={g}
+                    choice={c}
+                    dealDay={dealDayOf(g.farmerId)}
+                    onChange={(patch) => setChoice(g.farmerId, patch)}
+                  />
                 </Card>
               </section>
             );

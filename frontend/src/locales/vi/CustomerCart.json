@@ -50,5 +50,10 @@
     "title": "Sản phẩm trong giỏ",
     "text": "Nếu có sản phẩm không còn bán, hãy xoá nó ở đây để giỏ hàng tải lại.",
     "clear": "Xoá hết giỏ hàng"
+  },
+  "deal": {
+    "badge": "Giảm {{percent}}% hàng sắp hết hạn",
+    "onlyOn": "Giảm giá chỉ áp dụng cho ngày {{day}}.",
+    "dayGone": "Ngày giảm giá {{day}} không còn chọn được. Hãy chọn một ngày để xem giá của ngày đó."
   }
 }
