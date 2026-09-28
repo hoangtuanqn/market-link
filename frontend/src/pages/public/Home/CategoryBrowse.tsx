@@ -2,22 +2,30 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import type { CategoryType } from '@/api-requests/catalog.requests';
 
-const DEFAULT_CATEGORIES = [
-  { key: 'vegetables', emoji: '🥬', count: 12, slug: 'vegetables' },
-  { key: 'fruits', emoji: '🍊', count: 8, slug: 'fruits' },
-  { key: 'dairy', emoji: '🥚', count: 5, slug: 'dairy' },
-  { key: 'grains', emoji: '🌾', count: 4, slug: 'grains' },
-  { key: 'meat', emoji: '🥩', count: 6, slug: 'meat' },
-  { key: 'seafood', emoji: '🐟', count: 4, slug: 'seafood' },
-  { key: 'mushrooms', emoji: '🍄', count: 3, slug: 'mushrooms' },
-  { key: 'baked', emoji: '🥖', count: 5, slug: 'baked' },
-] as const;
+/**
+ * Decorative icon per real category slug (db/seed.sql — "the eight agreed categories", PR #137). A category added later
+ * without a matching slug falls back to FALLBACK_EMOJI instead of being mismatched to whichever slot it happens to land
+ * in.
+ */
+const EMOJI_BY_SLUG: Record<string, string> = {
+  vegetables: '🥬',
+  fruits: '🍊',
+  eggs_and_dairy: '🥚',
+  grains_beans_and_nuts: '🌾',
+  meat_and_poultry: '🥩',
+  seafood: '🐟',
+  mushrooms: '🍄',
+  baked_goods: '🥖',
+};
+const FALLBACK_EMOJI = '🛒';
+const SKELETON_COUNT = 8;
 
 type CategoryBrowseProps = {
   categories?: CategoryType[];
+  loading?: boolean;
 };
 
-const CategoryBrowse = ({ categories = [] }: CategoryBrowseProps) => {
+const CategoryBrowse = ({ categories = [], loading = false }: CategoryBrowseProps) => {
   const { t } = useTranslation('Home');
 
   return (
@@ -34,29 +42,36 @@ const CategoryBrowse = ({ categories = [] }: CategoryBrowseProps) => {
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-8">
-        {DEFAULT_CATEGORIES.map((cat, idx) => {
-          // If server categories are provided, match by slug or index
-          const serverCat = categories[idx];
-          const name = serverCat ? serverCat.name : t(`categories.items.${cat.key}`);
-          const count = serverCat && serverCat.count > 0 ? serverCat.count : cat.count;
-
-          return (
-            <Link
-              key={cat.key}
-              to={`/products?category=${serverCat?.id ?? cat.slug}`}
-              className="border-line-strong bg-surface-raised hover:border-brand hover:bg-highlight group flex flex-col items-center rounded-xl border p-4 text-center shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
-            >
+        {loading
+          ? Array.from({ length: SKELETON_COUNT }).map((_, idx) => (
               <div
+                key={idx}
                 aria-hidden="true"
-                className="bg-surface-sunken mb-2.5 flex size-13 items-center justify-center rounded-full text-2xl transition-transform duration-200 group-hover:scale-110"
+                className="border-line-strong bg-surface-raised flex animate-pulse flex-col items-center rounded-xl border p-4"
               >
-                {cat.emoji}
+                <div className="bg-surface-sunken mb-2.5 size-13 rounded-full" />
+                <div className="bg-surface-sunken h-3.5 w-16 rounded-full" />
+                <div className="bg-surface-sunken mt-1.5 h-3 w-10 rounded-full" />
               </div>
-              <span className="text-ink text-[14px] leading-tight font-bold">{name}</span>
-              <span className="text-ink-muted mt-1 text-[12px]">{t('categories.itemsCount', { count })}</span>
-            </Link>
-          );
-        })}
+            ))
+          : categories.map((cat) => (
+              <Link
+                key={cat.id}
+                to={`/products?category=${cat.id}`}
+                className="border-line-strong bg-surface-raised hover:border-brand hover:bg-highlight group flex flex-col items-center rounded-xl border p-4 text-center shadow-xs transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+              >
+                <div
+                  aria-hidden="true"
+                  className="bg-surface-sunken mb-2.5 flex size-13 items-center justify-center rounded-full text-2xl transition-transform duration-200 group-hover:scale-110"
+                >
+                  {EMOJI_BY_SLUG[cat.slug] ?? FALLBACK_EMOJI}
+                </div>
+                <span className="text-ink text-[14px] leading-tight font-bold">{cat.name}</span>
+                <span className="text-ink-muted mt-1 text-[12px]">
+                  {t('categories.itemsCount', { count: cat.count })}
+                </span>
+              </Link>
+            ))}
       </div>
     </section>
   );
