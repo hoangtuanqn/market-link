@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -351,12 +352,23 @@ public class ProductService implements ProductServiceInterface {
                     "acknowledgeLongerShelfLife",
                     "Confirm that the product stays good for the longer time.");
         }
+        Long guideId = guide == null ? null : guide.getId();
+        // Spec §4.2: the time is when the Farmer ticked the promise, so a save that keeps the same
+        // promise (same group, way of keeping and days), such as a price change, keeps its time
+        boolean samePromise =
+                product.isShelfLifeExtended()
+                        && product.getShelfLifeAckAt() != null
+                        && Objects.equals(product.getShelfLifeGuideId(), guideId)
+                        && product.getStorageMode() == mode
+                        && product.getShelfLifeDays() == days;
+        LocalDateTime promisedAt =
+                samePromise ? product.getShelfLifeAckAt() : LocalDateTime.now(clock);
         product.setShelfLifeDays(days);
-        product.setShelfLifeGuideId(guide == null ? null : guide.getId());
+        product.setShelfLifeGuideId(guideId);
         product.setStorageMode(mode);
         product.setSuggestedShelfLifeDays(suggested);
         product.setShelfLifeExtended(extended);
-        product.setShelfLifeAckAt(extended ? LocalDateTime.now(clock) : null);
+        product.setShelfLifeAckAt(extended ? promisedAt : null);
         return guide;
     }
 
