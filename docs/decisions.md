@@ -144,13 +144,15 @@ LEAD chốt 28/09/2026 (FR-009). Đăng ký bằng email trước đây tạo t�
 ký được bằng email của người khác.
 
 **Chốt:** form đăng ký chỉ được **lưu tạm trong Redis** (30 phút, mật khẩu đã băm) và gửi một **mã 6 số** tới
-email đó. Nhập đúng mã mới tạo dòng `users` và đăng nhập. Không thêm cột `email_verified_at`, không đổi login,
+email đó. Nhập đúng mã mới tạo dòng `users` và đăng nhập. Bản lưu tạm gắn với trình duyệt đã điền form bằng một
+`signupToken`: chỉ trình duyệt đó hoàn tất, gửi lại mã hay sửa form được, nên không ai thay mật khẩu của mình vào
+đăng ký đang chờ của người khác. Không thêm cột `email_verified_at`, không đổi login,
 Google hay refresh. Spec: `docs/superpowers/specs/2026-09-28-email-verification-design.md`.
 
 | Giới hạn | Giá trị |
 |---|---|
 | Mã sống | 10 phút, dùng một lần |
-| Sai mã | 5 lần mỗi mã, rồi huỷ mã |
+| Thử mã | 5 lần mỗi mã (đếm trước khi so), rồi huỷ mã |
 | Gửi lại | chờ 60 giây giữa hai lần |
 | Theo email | 5 mã mỗi giờ |
 | Theo IP | 20 mã mỗi giờ |

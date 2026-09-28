@@ -45,7 +45,8 @@ class RedisSignupStoreTest {
                         "12 Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh",
                         new AddressColumns("VN", "79", "26743", "Lê Lợi", "12", null, null),
                         "bcrypt",
-                        "vi");
+                        "vi",
+                        "token-hash");
         store.savePending(pending, Duration.ofSeconds(1800));
         ArgumentCaptor<String> json = ArgumentCaptor.forClass(String.class);
         verify(values)

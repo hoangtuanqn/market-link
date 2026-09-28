@@ -34,6 +34,8 @@
     "passwordRequired": "Masukkan kata sandi.",
     "passwordLength": "Kata sandi harus {{min}} sampai {{max}} karakter.",
     "confirmRequired": "Konfirmasi kata sandi.",
-    "confirmMismatch": "Kata sandi tidak cocok."
+    "confirmMismatch": "Kata sandi tidak cocok.",
+    "tooMany_one": "Terlalu banyak kode diminta untuk alamat atau jaringan ini. Coba lagi dalam {{count}} menit.",
+    "tooMany_other": "Terlalu banyak kode diminta untuk alamat atau jaringan ini. Coba lagi dalam {{count}} menit."
   }
 }

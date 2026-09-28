@@ -44,6 +44,7 @@ class CustomerRegisterRequestTest {
                         "secret123",
                         "secret123",
                         null,
+                        null,
                         null);
         return validator.validate(request).stream()
                 .map(ConstraintViolation::getPropertyPath)
@@ -75,6 +76,7 @@ class CustomerRegisterRequestTest {
                         "secret123",
                         "secret123",
                         null,
+                        null,
                         null);
 
         assertThat(validator.validate(request))
@@ -93,6 +95,7 @@ class CustomerRegisterRequestTest {
                                 "VN", "79", "26743", "x".repeat(101), "12", null, null),
                         "secret123",
                         "secret123",
+                        null,
                         null,
                         null);
 

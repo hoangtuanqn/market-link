@@ -79,9 +79,9 @@ HTTP: 200 đọc · 201 tạo · 202 đã nhận, chưa tạo (đăng ký chờ 
 
 | Method | Path | Role | Request | data trả về |
 |---|---|---|---|---|
-| POST | `/api/v1/auth/register` | Guest | `{ fullName, phone, email, addressParts, password, confirmPassword, language?, website? }` | `{ email, codeExpiresInSeconds, resendAvailableInSeconds }` · **202** |
-| POST | `/api/v1/auth/register/verify` | Guest | `{ email, code }` | `{ accessToken, user }` · 201 |
-| POST | `/api/v1/auth/register/resend` | Guest | `{ email }` | `{ email, codeExpiresInSeconds, resendAvailableInSeconds }` |
+| POST | `/api/v1/auth/register` | Guest | `{ fullName, phone, email, addressParts, password, confirmPassword, language?, website?, signupToken? }` | `{ email, codeExpiresInSeconds, resendAvailableInSeconds, signupToken }` · **202** |
+| POST | `/api/v1/auth/register/verify` | Guest | `{ email, code, signupToken }` | `{ accessToken, user }` · 201 |
+| POST | `/api/v1/auth/register/resend` | Guest | `{ email, signupToken }` | `{ email, codeExpiresInSeconds, resendAvailableInSeconds, signupToken }` |
 | POST | `/api/v1/auth/login` | Guest | `{ email, password, rememberMe?, requiredRole? }` | `{ accessToken, user, mfaRequired, mfaToken }` |
 | POST | `/api/v1/auth/refresh` ⚑ | Guest | — (đọc cookie `refresh_token`) | `{ accessToken, user }` |
 | POST | `/api/v1/auth/logout` | All | — | `null` |
@@ -96,15 +96,17 @@ HTTP: 200 đọc · 201 tạo · 202 đã nhận, chưa tạo (đăng ký chờ 
   lưu tạm 30 phút trong Redis và gửi mã 6 số tới email. `register/verify` với mã đúng mới tạo tài khoản và đăng
   nhập. `language` (một trong `en vi zh ja ko fr es de th id`, khác → `en`) là ngôn ngữ của mail. `website` là ô
   bẫy bot: form thật luôn gửi rỗng; có nội dung thì server vẫn trả 202 nhưng không làm gì.
-- Gửi lại `register` cùng email trong 60 giây chờ: cập nhật thông tin đã lưu tạm, **không** gửi mã mới, trả số giây
-  chờ còn lại trong `resendAvailableInSeconds`.
+- `signupToken` gắn đăng ký đang chờ với trình duyệt đã điền form. FE giữ nó trong sessionStorage và gửi lại khi
+  verify, resend và khi gửi lại form **cùng email**. Token sai hoặc thiếu ở verify/resend → 410 `SIGNUP_EXPIRED`.
+- Gửi lại `register` cùng email **kèm token** trong 60 giây chờ: cập nhật thông tin đã lưu tạm, **không** gửi mã mới,
+  trả số giây chờ còn lại. **Không kèm token** trong 60 giây chờ → 429; sau đó form mới thay bản cũ với token mới.
 
 | Mã lỗi (FR-009) | HTTP | Khi nào | `details` |
 |---|---|---|---|
 | `SIGNUP_CODE_INVALID` | 400 | sai mã | `[{field:"code"}, {field:"attemptsLeft", message:"3"}]` — số lần còn lại của mã này |
-| `SIGNUP_CODE_EXPIRED` | 400 | mã hết hạn (10 phút) hoặc sai đủ 5 lần | — |
-| `SIGNUP_EXPIRED` | 410 | bản lưu tạm hết hạn (30 phút) → điền form lại | — |
-| `RATE_LIMITED` | 429 | gửi lại trong 60 giây, quá 5 mã/email/giờ hoặc 20 mã/IP/giờ | header `Retry-After` |
+| `SIGNUP_CODE_EXPIRED` | 400 | mã hết hạn (10 phút) hoặc đã thử đủ 5 lần | — |
+| `SIGNUP_EXPIRED` | 410 | bản lưu tạm hết hạn (30 phút), bị thay, hoặc sai token → điền form lại | — |
+| `RATE_LIMITED` | 429 | gửi lại trong 60 giây, quá 5 mã/email/giờ hoặc 20 mã/IP/giờ, hoặc đăng ký từ tab khác đang chờ | header `Retry-After` |
 
 ### 1.2 Mật khẩu
 

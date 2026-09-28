@@ -24,6 +24,8 @@ export type RegisterInput = {
   language?: string;
   /** FR-009: honeypot, always empty from a person. */
   website?: string;
+  /** FR-009: the token from an earlier submit of the same address in this tab, so that sign-up is corrected. */
+  signupToken?: string;
 };
 
 /** FR-009: register and resend answer with this — no account exists yet. */
@@ -31,11 +33,14 @@ export type SignupStartedType = {
   email: string;
   codeExpiresInSeconds: number;
   resendAvailableInSeconds: number;
+  /** Only this browser holds it; verify and resend send it back. */
+  signupToken: string;
 };
 
 export type SignupVerifyInput = {
   email: string;
   code: string;
+  signupToken: string;
 };
 
 export type ResetPasswordInput = {

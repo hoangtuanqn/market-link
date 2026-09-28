@@ -169,7 +169,7 @@ class UserServiceTest {
 
     private static CustomerRegisterRequest signUp(String email, String phone) {
         return new CustomerRegisterRequest(
-                "Nguyen Van An", phone, email, BEN_THANH, PASSWORD, PASSWORD, "vi", null);
+                "Nguyen Van An", phone, email, BEN_THANH, PASSWORD, PASSWORD, "vi", null, null);
     }
 
     /**
@@ -193,21 +193,22 @@ class UserServiceTest {
                 BEN_THANH_TEXT,
                 new AddressColumns("VN", "79", "26743", "Lê Lợi", "12", null, null),
                 "bcrypt",
-                "vi");
+                "vi",
+                "token-hash");
     }
 
     @Test
     void signUpParksTheFormUntilTheCodeIsEntered() {
         addressResolves();
         when(passwordEncoder.encode(PASSWORD)).thenReturn("bcrypt");
-        when(emailVerification.start(any(PendingSignup.class), eq(IP)))
-                .thenReturn(new SignupStartedResource(EMAIL, 600, 60));
+        when(emailVerification.start(any(PendingSignup.class), eq(null), eq(IP)))
+                .thenReturn(new SignupStartedResource(EMAIL, 600, 60, "token"));
 
         SignupStartedResource started =
                 service.registerCustomer(signUp("  An@Example.com ", "0900000002"), IP);
 
         ArgumentCaptor<PendingSignup> parked = ArgumentCaptor.forClass(PendingSignup.class);
-        verify(emailVerification).start(parked.capture(), eq(IP));
+        verify(emailVerification).start(parked.capture(), eq(null), eq(IP));
         assertThat(parked.getValue().email()).isEqualTo(EMAIL);
         assertThat(parked.getValue().address()).isEqualTo(BEN_THANH_TEXT);
         assertThat(parked.getValue().addressParts().getWardCode()).isEqualTo("26743");
@@ -217,10 +218,36 @@ class UserServiceTest {
         verify(userRepository, never()).save(any());
     }
 
+    /**
+     * Final review #1: the browser's token goes with a corrected form, so the same sign-up is
+     * updated.
+     */
+    @Test
+    void aCorrectedFormCarriesTheBrowsersToken() {
+        addressResolves();
+        when(passwordEncoder.encode(PASSWORD)).thenReturn("bcrypt");
+        CustomerRegisterRequest again =
+                new CustomerRegisterRequest(
+                        "Nguyen Van An",
+                        "0900000002",
+                        EMAIL,
+                        BEN_THANH,
+                        PASSWORD,
+                        PASSWORD,
+                        "vi",
+                        null,
+                        "browser-token");
+
+        service.registerCustomer(again, IP);
+
+        verify(emailVerification).start(any(PendingSignup.class), eq("browser-token"), eq(IP));
+    }
+
     @Test
     void aFilledHoneypotSendsNothing() {
         addressResolves();
-        when(emailVerification.decoy(EMAIL)).thenReturn(new SignupStartedResource(EMAIL, 600, 60));
+        when(emailVerification.decoy(EMAIL))
+                .thenReturn(new SignupStartedResource(EMAIL, 600, 60, "token"));
         CustomerRegisterRequest bot =
                 new CustomerRegisterRequest(
                         "Bot",
@@ -230,17 +257,18 @@ class UserServiceTest {
                         PASSWORD,
                         PASSWORD,
                         "en",
-                        "http://spam");
+                        "http://spam",
+                        null);
 
         service.registerCustomer(bot, IP);
 
-        verify(emailVerification, never()).start(any(), any());
+        verify(emailVerification, never()).start(any(), any(), any());
         verify(passwordEncoder, never()).encode(any());
     }
 
     @Test
     void theRightCodeCreatesTheAccountAndSignsIn() {
-        when(emailVerification.verify(EMAIL, "123456"))
+        when(emailVerification.verify(EMAIL, "123456", "token"))
                 .thenReturn(new VerifiedSignup(parked(EMAIL), "hash", 500));
         when(userRepository.save(any(User.class)))
                 .thenAnswer(
@@ -250,7 +278,7 @@ class UserServiceTest {
                             return saved;
                         });
 
-        AuthResult result = service.completeSignup(EMAIL, "123456");
+        AuthResult result = service.completeSignup(EMAIL, "123456", "token");
 
         ArgumentCaptor<User> saved = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(saved.capture());
@@ -265,14 +293,14 @@ class UserServiceTest {
 
     @Test
     void aSignUpThatLostTheRaceIsDiscarded() {
-        when(emailVerification.verify(EMAIL, "123456"))
+        when(emailVerification.verify(EMAIL, "123456", "token"))
                 .thenReturn(new VerifiedSignup(parked(EMAIL), "hash", 500));
         when(userRepository.existsByEmail(EMAIL)).thenReturn(true);
 
         DuplicateAccountException e =
                 catchThrowableOfType(
                         DuplicateAccountException.class,
-                        () -> service.completeSignup(EMAIL, "123456"));
+                        () -> service.completeSignup(EMAIL, "123456", "token"));
 
         assertThat(e.getFields()).containsOnlyKeys("email");
         verify(emailVerification).discard(EMAIL);

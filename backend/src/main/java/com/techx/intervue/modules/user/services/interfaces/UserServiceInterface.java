@@ -20,7 +20,7 @@ public interface UserServiceInterface {
     SignupStartedResource registerCustomer(CustomerRegisterRequest request, String clientIp);
 
     /** FR-009: the right code creates the customer account and signs it in. */
-    AuthResult completeSignup(String email, String code);
+    AuthResult completeSignup(String email, String code, String signupToken);
 
     void logout(Long userId, String accessToken, String refreshToken);
 

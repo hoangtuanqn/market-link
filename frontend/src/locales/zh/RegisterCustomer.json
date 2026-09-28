@@ -34,6 +34,8 @@
     "passwordRequired": "请输入密码。",
     "passwordLength": "密码长度须为 {{min}} 至 {{max}} 个字符。",
     "confirmRequired": "请确认密码。",
-    "confirmMismatch": "两次输入的密码不一致。"
+    "confirmMismatch": "两次输入的密码不一致。",
+    "tooMany_one": "此邮箱或网络请求验证码次数过多，请 {{count}} 分钟后再试。",
+    "tooMany_other": "此邮箱或网络请求验证码次数过多，请 {{count}} 分钟后再试。"
   }
 }

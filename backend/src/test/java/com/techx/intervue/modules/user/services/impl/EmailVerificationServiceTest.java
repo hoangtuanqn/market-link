@@ -57,7 +57,13 @@ class EmailVerificationServiceTest {
                 "12 Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh",
                 new AddressColumns("VN", "79", "26743", "Lê Lợi", "12", null, null),
                 "bcrypt",
-                "vi");
+                "vi",
+                null);
+    }
+
+    /** A first sign-up from a browser; returns the token that browser keeps. */
+    private String begin(String email, String name) {
+        return service.start(pending(email, name), null, IP).signupToken();
     }
 
     /** What the worker would put in the mail. */
@@ -71,49 +77,108 @@ class EmailVerificationServiceTest {
 
     @Test
     void startParksTheFormAndQueuesTheMail() {
-        SignupStartedResource started = service.start(pending(EMAIL, "Lan"), IP);
+        SignupStartedResource started = service.start(pending(EMAIL, "Lan"), null, IP);
 
-        assertThat(started).isEqualTo(new SignupStartedResource(EMAIL, 600, 60));
-        assertThat(store.pending).containsKey(EMAIL);
+        assertThat(started.email()).isEqualTo(EMAIL);
+        assertThat(started.codeExpiresInSeconds()).isEqualTo(600);
+        assertThat(started.resendAvailableInSeconds()).isEqualTo(60);
+        assertThat(started.signupToken()).hasSizeGreaterThanOrEqualTo(40);
+        assertThat(store.pending.get(EMAIL).tokenHash())
+                .isEqualTo(new TokenHashUtil().hash(started.signupToken()));
         verify(jobQueue).enqueue(EmailVerificationService.JOB_SEND_CODE, Map.of("email", EMAIL));
     }
 
-    /** Review Focus #4. */
+    /** Review Focus #4, from the same browser (it sends back its token). */
     @Test
-    void aSecondSubmitDuringTheCooldownUpdatesWithoutANewMail() {
-        service.start(pending(EMAIL, "Lan"), IP);
+    void theSameBrowserUpdatesItsFormDuringTheCooldownWithoutANewMail() {
+        String token = begin(EMAIL, "Lan");
 
-        SignupStartedResource again = service.start(pending(EMAIL, "Lan Nguyen"), IP);
+        SignupStartedResource again = service.start(pending(EMAIL, "Lan Nguyen"), token, IP);
 
         verify(jobQueue, times(1))
                 .enqueue(EmailVerificationService.JOB_SEND_CODE, Map.of("email", EMAIL));
         assertThat(store.pending.get(EMAIL).fullName()).isEqualTo("Lan Nguyen");
         assertThat(again.resendAvailableInSeconds()).isEqualTo(60);
+        assertThat(again.signupToken()).isEqualTo(token);
+    }
+
+    /** Final review #1: nobody can swap their own password into someone else's waiting sign-up. */
+    @Test
+    void aStrangerCannotReplaceAWaitingSignUpDuringItsCooldown() {
+        begin(EMAIL, "Lan");
+
+        SignupRateLimitedException e =
+                catchThrowableOfType(
+                        SignupRateLimitedException.class,
+                        () -> service.start(pending(EMAIL, "Attacker"), null, IP));
+
+        assertThat(e.getRetryAfterSeconds()).isEqualTo(60);
+        assertThat(store.pending.get(EMAIL).fullName()).isEqualTo("Lan");
+    }
+
+    /** Final review #1: after the cooldown a new form replaces the old one, with a new token. */
+    @Test
+    void aReplacedSignUpCanNoLongerBeCompletedByTheFirstBrowser() {
+        String first = begin(EMAIL, "Lan");
+        store.expireCooldown(EMAIL);
+
+        String second = begin(EMAIL, "Someone else");
+        String code = mailedCode(EMAIL);
+
+        assertThat(second).isNotEqualTo(first);
+        assertThat(
+                        catchThrowableOfType(
+                                SignupExpiredException.class,
+                                () -> service.verify(EMAIL, code, first)))
+                .isNotNull();
+        assertThat(service.verify(EMAIL, code, second).pending().fullName())
+                .isEqualTo("Someone else");
+    }
+
+    @Test
+    void verifyAndResendNeedTheTokenOfTheBrowserThatSignedUp() {
+        begin(EMAIL, "Lan");
+        String code = mailedCode(EMAIL);
+        store.expireCooldown(EMAIL);
+
+        assertThat(
+                        catchThrowableOfType(
+                                SignupExpiredException.class,
+                                () -> service.verify(EMAIL, code, "not-the-token")))
+                .isNotNull();
+        assertThat(
+                        catchThrowableOfType(
+                                SignupExpiredException.class,
+                                () -> service.resend(EMAIL, null, IP)))
+                .isNotNull();
+        // A wrong token does not use up one of the five tries
+        assertThat(store.attempts).doesNotContainKey(EMAIL);
     }
 
     /** Review Focus #3. */
     @Test
     void theRightCodeIsUsedOnceOnly() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String code = mailedCode(EMAIL);
 
-        VerifiedSignup verified = service.verify(EMAIL, code);
+        VerifiedSignup verified = service.verify(EMAIL, code, token);
 
         assertThat(verified.pending().fullName()).isEqualTo("Lan");
         assertThat(
                         catchThrowableOfType(
                                 SignupCodeExpiredException.class,
-                                () -> service.verify(EMAIL, code)))
+                                () -> service.verify(EMAIL, code, token)))
                 .isNotNull();
     }
 
     /** Review Focus #1. */
     @Test
     void emailCaseAndSpacesDoNotMatter() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String code = mailedCode(" LAN@example.com");
 
-        assertThat(service.verify("  Lan@Example.COM ", code).pending().email()).isEqualTo(EMAIL);
+        assertThat(service.verify("  Lan@Example.COM ", code, token).pending().email())
+                .isEqualTo(EMAIL);
     }
 
     /** Review Focus #2. */
@@ -123,39 +188,40 @@ class EmailVerificationServiceTest {
 
         EmailVerificationService zeros = spy(service);
         doReturn("004821").when(zeros).generateCode();
-        zeros.start(pending(EMAIL, "Lan"), IP);
+        String token = zeros.start(pending(EMAIL, "Lan"), null, IP).signupToken();
         assertThat(zeros.issueCode(EMAIL).orElseThrow().code()).isEqualTo("004821");
-        assertThat(zeros.verify(EMAIL, "004821")).isNotNull();
+        assertThat(zeros.verify(EMAIL, "004821", token)).isNotNull();
     }
 
     @Test
     void aWrongCodeSaysHowManyTriesAreLeft() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String code = mailedCode(EMAIL);
 
         SignupCodeInvalidException e =
                 catchThrowableOfType(
-                        SignupCodeInvalidException.class, () -> service.verify(EMAIL, wrong(code)));
+                        SignupCodeInvalidException.class,
+                        () -> service.verify(EMAIL, wrong(code), token));
 
         assertThat(e.getAttemptsLeft()).isEqualTo(4);
     }
 
     @Test
     void theFifthWrongCodeThrowsTheCodeAway() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String code = mailedCode(EMAIL);
         for (int left = 4; left >= 0; left--) {
             SignupCodeInvalidException e =
                     catchThrowableOfType(
                             SignupCodeInvalidException.class,
-                            () -> service.verify(EMAIL, wrong(code)));
+                            () -> service.verify(EMAIL, wrong(code), token));
             assertThat(e.getAttemptsLeft()).isEqualTo(left);
         }
 
         assertThat(
                         catchThrowableOfType(
                                 SignupCodeExpiredException.class,
-                                () -> service.verify(EMAIL, code)))
+                                () -> service.verify(EMAIL, code, token)))
                 .isNotNull();
     }
 
@@ -165,17 +231,17 @@ class EmailVerificationServiceTest {
      */
     @Test
     void everyTryIsCountedBeforeTheCodeIsCompared() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String code = mailedCode(EMAIL);
 
-        service.verify(EMAIL, code);
+        service.verify(EMAIL, code, token);
 
         assertThat(store.attempts.get(EMAIL)).isEqualTo(1);
     }
 
     @Test
     void aTryBeyondTheLimitIsRefusedEvenWithTheRightCode() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String code = mailedCode(EMAIL);
         // Five other tries are already in flight and counted
         store.attempts.put(EMAIL, 5);
@@ -183,20 +249,20 @@ class EmailVerificationServiceTest {
         assertThat(
                         catchThrowableOfType(
                                 SignupCodeExpiredException.class,
-                                () -> service.verify(EMAIL, code)))
+                                () -> service.verify(EMAIL, code, token)))
                 .isNotNull();
     }
 
     @Test
     void anExpiredCodeAsksForANewOne() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String code = mailedCode(EMAIL);
         store.expireCode(EMAIL);
 
         assertThat(
                         catchThrowableOfType(
                                 SignupCodeExpiredException.class,
-                                () -> service.verify(EMAIL, code)))
+                                () -> service.verify(EMAIL, code, token)))
                 .isNotNull();
     }
 
@@ -205,95 +271,100 @@ class EmailVerificationServiceTest {
         assertThat(
                         catchThrowableOfType(
                                 SignupExpiredException.class,
-                                () -> service.verify(EMAIL, "123456")))
+                                () -> service.verify(EMAIL, "123456", "token")))
                 .isNotNull();
         assertThat(
                         catchThrowableOfType(
-                                SignupExpiredException.class, () -> service.resend(EMAIL, IP)))
+                                SignupExpiredException.class,
+                                () -> service.resend(EMAIL, "token", IP)))
                 .isNotNull();
     }
 
     @Test
     void resendDuringTheCooldownGivesTheSecondsLeft() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
 
         SignupRateLimitedException e =
                 catchThrowableOfType(
-                        SignupRateLimitedException.class, () -> service.resend(EMAIL, IP));
+                        SignupRateLimitedException.class, () -> service.resend(EMAIL, token, IP));
 
         assertThat(e.getRetryAfterSeconds()).isEqualTo(60);
     }
 
     @Test
     void aNewCodeReplacesTheOldOneAndResetsTheTries() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String old = mailedCode(EMAIL);
         catchThrowableOfType(
-                SignupCodeInvalidException.class, () -> service.verify(EMAIL, wrong(old)));
+                SignupCodeInvalidException.class, () -> service.verify(EMAIL, wrong(old), token));
         store.expireCooldown(EMAIL);
 
-        service.resend(EMAIL, IP);
+        service.resend(EMAIL, token, IP);
         String fresh = mailedCode(EMAIL);
 
         if (!fresh.equals(old)) {
             SignupCodeInvalidException e =
                     catchThrowableOfType(
-                            SignupCodeInvalidException.class, () -> service.verify(EMAIL, old));
+                            SignupCodeInvalidException.class,
+                            () -> service.verify(EMAIL, old, token));
             assertThat(e.getAttemptsLeft()).isEqualTo(4);
         }
-        assertThat(service.verify(EMAIL, fresh)).isNotNull();
+        assertThat(service.verify(EMAIL, fresh, token)).isNotNull();
     }
 
     @Test
     void theSixthCodeToOneAddressInAnHourIsRefused() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         for (int i = 0; i < 4; i++) {
             store.expireCooldown(EMAIL);
-            service.resend(EMAIL, IP);
+            service.resend(EMAIL, token, IP);
         }
         store.expireCooldown(EMAIL);
 
         SignupRateLimitedException e =
                 catchThrowableOfType(
-                        SignupRateLimitedException.class, () -> service.resend(EMAIL, IP));
+                        SignupRateLimitedException.class, () -> service.resend(EMAIL, token, IP));
 
         assertThat(e.getRetryAfterSeconds()).isEqualTo(3600);
     }
 
     @Test
     void oneIpCannotMailTwentyOneAddresses() {
-        for (int i = 0; i < 20; i++) service.start(pending("user" + i + "@example.com", "U"), IP);
+        for (int i = 0; i < 20; i++) begin("user" + i + "@example.com", "U");
 
         assertThat(
                         catchThrowableOfType(
                                 SignupRateLimitedException.class,
-                                () -> service.start(pending("user20@example.com", "U"), IP)))
+                                () -> service.start(pending("user20@example.com", "U"), null, IP)))
                 .isNotNull();
         assertThat(store.pending).doesNotContainKey("user20@example.com");
     }
 
     @Test
     void theDecoyAnswersLikeARealStartAndDoesNothing() {
-        assertThat(service.decoy(" Lan@Example.com"))
-                .isEqualTo(new SignupStartedResource(EMAIL, 600, 60));
+        SignupStartedResource decoy = service.decoy(" Lan@Example.com");
+
+        assertThat(decoy.email()).isEqualTo(EMAIL);
+        assertThat(decoy.codeExpiresInSeconds()).isEqualTo(600);
+        assertThat(decoy.signupToken()).hasSizeGreaterThanOrEqualTo(40);
         assertThat(store.pending).isEmpty();
         verifyNoInteractions(jobQueue);
     }
 
     @Test
     void restoreGivesTheCodeBackAfterAFailedSave() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        String token = begin(EMAIL, "Lan");
         String code = mailedCode(EMAIL);
-        VerifiedSignup verified = service.verify(EMAIL, code);
+        VerifiedSignup verified = service.verify(EMAIL, code, token);
 
         service.restore(verified);
 
-        assertThat(service.verify(EMAIL, code)).isNotNull();
+        assertThat(service.verify(EMAIL, code, token)).isNotNull();
     }
 
     @Test
     void discardForgetsEverything() {
-        service.start(pending(EMAIL, "Lan"), IP);
+        begin(EMAIL, "Lan");
         mailedCode(EMAIL);
 
         service.discard(EMAIL);

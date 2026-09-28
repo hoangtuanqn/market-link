@@ -34,6 +34,8 @@
     "passwordRequired": "パスワードを入力してください。",
     "passwordLength": "パスワードは{{min}}〜{{max}}文字で入力してください。",
     "confirmRequired": "確認用のパスワードを入力してください。",
-    "confirmMismatch": "パスワードが一致しません。"
+    "confirmMismatch": "パスワードが一致しません。",
+    "tooMany_one": "このアドレスまたはネットワークからのコードのリクエストが多すぎます。{{count}} 分後にもう一度お試しください。",
+    "tooMany_other": "このアドレスまたはネットワークからのコードのリクエストが多すぎます。{{count}} 分後にもう一度お試しください。"
   }
 }

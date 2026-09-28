@@ -47,8 +47,11 @@ class AuthApi {
   };
 
   /** FR-009: a new code; 429 RATE_LIMITED carries Retry-After. */
-  static resendSignupCode = async (email: string) => {
-    const response = await publicApi.post<ApiResponse<SignupStartedType>>('/auth/register/resend', { email });
+  static resendSignupCode = async (email: string, signupToken: string) => {
+    const response = await publicApi.post<ApiResponse<SignupStartedType>>('/auth/register/resend', {
+      email,
+      signupToken,
+    });
     return response.data;
   };
 

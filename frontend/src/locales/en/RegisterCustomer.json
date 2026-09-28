@@ -34,6 +34,8 @@
     "passwordRequired": "Enter your password.",
     "passwordLength": "Password must be {{min}} to {{max}} characters.",
     "confirmRequired": "Confirm your password.",
-    "confirmMismatch": "Passwords do not match."
+    "confirmMismatch": "Passwords do not match.",
+    "tooMany_one": "Too many codes asked for this address or network. Try again in {{count}} minute.",
+    "tooMany_other": "Too many codes asked for this address or network. Try again in {{count}} minutes."
   }
 }

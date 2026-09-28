@@ -32,4 +32,6 @@ public record CustomerRegisterRequest(
         // FR-009: language of the code email; anything unknown becomes English
         @Size(max = 16, message = "Language can be at most 16 characters.") String language,
         // FR-009: honeypot — the real form always sends it empty
-        String website) {}
+        String website,
+        // FR-009: the token this browser got for an earlier submit of the same address, if any
+        @Size(max = 64, message = "Fill in the form again.") String signupToken) {}

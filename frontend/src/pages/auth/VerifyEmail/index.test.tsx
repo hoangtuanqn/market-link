@@ -25,6 +25,7 @@ const apiError = (status: number, code: string, details: { field: string; messag
 const park = (resendInMs = 60_000) =>
   SignupStore.setPending({
     email: 'lan@example.com',
+    token: 'tok-1',
     codeExpiresAt: Date.now() + 600_000,
     resendAt: Date.now() + resendInMs,
   });
@@ -73,7 +74,11 @@ describe('VerifyEmail', () => {
 
     await userEvent.type(screen.getByLabelText('Six-digit code'), '482917');
 
-    expect(AuthApi.verifySignup).toHaveBeenCalledWith({ email: 'lan@example.com', code: '482917' });
+    expect(AuthApi.verifySignup).toHaveBeenCalledWith({
+      email: 'lan@example.com',
+      code: '482917',
+      signupToken: 'tok-1',
+    });
     expect(Session.save).toHaveBeenCalled();
     expect(await screen.findByText('home')).toBeInTheDocument();
     expect(SignupStore.getPending()).toBeNull();
@@ -115,7 +120,12 @@ describe('VerifyEmail', () => {
     vi.mocked(AuthApi.resendSignupCode).mockResolvedValue({
       success: true,
       message: 'ok',
-      data: { email: 'lan@example.com', codeExpiresInSeconds: 600, resendAvailableInSeconds: 60 },
+      data: {
+        email: 'lan@example.com',
+        codeExpiresInSeconds: 600,
+        resendAvailableInSeconds: 60,
+        signupToken: 'tok-1',
+      },
     } as never);
     renderAt();
 
@@ -124,6 +134,7 @@ describe('VerifyEmail', () => {
     expect(screen.getByLabelText('Six-digit code')).toBeDisabled();
 
     await userEvent.click(screen.getByRole('button', { name: 'Send a new code' }));
+    expect(AuthApi.resendSignupCode).toHaveBeenCalledWith('lan@example.com', 'tok-1');
     expect(screen.getByLabelText('Six-digit code')).toBeEnabled();
   });
 

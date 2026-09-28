@@ -34,6 +34,8 @@
     "passwordRequired": "Saisissez votre mot de passe.",
     "passwordLength": "Le mot de passe doit comporter de {{min}} à {{max}} caractères.",
     "confirmRequired": "Confirmez votre mot de passe.",
-    "confirmMismatch": "Les mots de passe ne correspondent pas."
+    "confirmMismatch": "Les mots de passe ne correspondent pas.",
+    "tooMany_one": "Trop de codes demandés pour cette adresse ou ce réseau. Réessayez dans {{count}} minute.",
+    "tooMany_other": "Trop de codes demandés pour cette adresse ou ce réseau. Réessayez dans {{count}} minutes."
   }
 }

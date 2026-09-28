@@ -50,8 +50,9 @@ const VerifyEmailPage = () => {
   const usedUp = status.kind === 'usedUp' || codeLeft === 0;
   const locked = finished || usedUp;
 
-  const backToForm = () => {
-    SignupStore.clearPending();
+  /** "Change email" keeps this tab's token, so a corrected form updates the same sign-up; a dead sign-up drops it. */
+  const backToForm = (keepToken: boolean) => {
+    if (!keepToken) SignupStore.clearPending();
     navigate(REGISTER_PATH);
   };
 
@@ -59,7 +60,7 @@ const VerifyEmailPage = () => {
     if (value.length !== CODE_LENGTH || isSubmitting || locked) return;
     setIsSubmitting(true);
     try {
-      const response = await AuthApi.verifySignup({ email: pending.email, code: value });
+      const response = await AuthApi.verifySignup({ email: pending.email, code: value, signupToken: pending.token });
       Session.save(response.data);
       SignupStore.clear();
       Notification.success({ text: t('toast.created') });
@@ -92,7 +93,7 @@ const VerifyEmailPage = () => {
   const resend = async () => {
     setIsResending(true);
     try {
-      const response = await AuthApi.resendSignupCode(pending.email);
+      const response = await AuthApi.resendSignupCode(pending.email, pending.token);
       setPending(SignupStore.savePending(response.data));
       setStatus({ kind: 'idle' });
       setCode('');
@@ -156,7 +157,7 @@ const VerifyEmailPage = () => {
       )}
 
       {finished ? (
-        <Button onClick={backToForm}>{t('fillAgain')}</Button>
+        <Button onClick={() => backToForm(false)}>{t('fillAgain')}</Button>
       ) : (
         <>
           <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
@@ -188,7 +189,7 @@ const VerifyEmailPage = () => {
               <Button variant="secondary" disabled={isResending || resendLeft > 0} onClick={resend} aria-live="polite">
                 {isResending ? t('resending') : resendLeft > 0 ? t('resendIn', { count: resendLeft }) : t('resend')}
               </Button>
-              <Button variant="ghost" onClick={backToForm}>
+              <Button variant="ghost" onClick={() => backToForm(true)}>
                 {t('changeEmail')}
               </Button>
             </div>

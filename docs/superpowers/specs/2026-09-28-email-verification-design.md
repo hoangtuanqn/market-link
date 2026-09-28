@@ -48,8 +48,14 @@ Màn nhập mã ──POST /auth/register/verify {email, code}──▶ so mã
             ◀── 200 {email, codeExpiresInSeconds, resendAvailableInSeconds}
 ```
 
-- Gửi lại form đăng ký với cùng email khi đang chờ: cập nhật thông tin đã lưu tạm (người dùng sửa tên, SĐT…).
-  Nếu đang trong 60 giây chờ thì **không** gửi mã mới, trả thời gian chờ còn lại; hết chờ thì gửi mã mới.
+- **Token đăng ký (bổ sung sau review, 28/09):** mỗi bản lưu tạm gắn với trình duyệt đã điền form. Lần gửi đầu
+  server trả `signupToken` ngẫu nhiên (lưu băm trong bản lưu tạm); verify, resend và việc sửa form đều phải gửi lại
+  token này. Không có nó thì không ai thay được mật khẩu của mình vào đăng ký đang chờ của người khác.
+- Gửi lại form cùng email **kèm token**: cập nhật thông tin đã lưu tạm (người dùng sửa tên, SĐT…). Đang trong 60
+  giây chờ thì **không** gửi mã mới, trả thời gian chờ còn lại; hết chờ thì gửi mã mới.
+- Gửi form cùng email **không có token** (tab khác, máy khác, người khác): đang có bản lưu tạm trong 60 giây chờ →
+  429; hết chờ → form mới **thay** bản cũ, nhận token mới, mã cũ bị xoá. Trình duyệt cũ không hoàn tất được nữa
+  (410), nên tệ nhất là phải điền lại form chứ không bị chiếm tài khoản.
 - Đổi email: quay về form, đăng ký với email mới. Bản lưu tạm của email cũ tự hết hạn.
 - Bỏ ngang quá 30 phút: bản lưu tạm hết hạn, phải đăng ký lại (màn nhập mã báo rõ và có nút quay về form).
 
@@ -59,9 +65,9 @@ Email luôn được `trim()` + chữ thường trước khi làm khoá.
 
 | Khoá | Giá trị | TTL |
 |---|---|---|
-| `signup:pending:{email}` | JSON: `fullName`, `email`, `phone`, địa chỉ đã resolve (chuỗi + các cột), `passwordHash` (BCrypt, như `users.password_hash`), `language` | 1800 s, gia hạn mỗi lần gửi mã |
+| `signup:pending:{email}` | JSON: `fullName`, `email`, `phone`, địa chỉ đã resolve (chuỗi + các cột), `passwordHash` (BCrypt, như `users.password_hash`), `language`, `tokenHash` (SHA-256 của `signupToken`) | 1800 s, gia hạn mỗi lần gửi mã |
 | `signup:code:{email}` | SHA-256 hex của `email + ":" + code` (`TokenHashUtil`) | 600 s |
-| `signup:attempts:{email}` | số lần nhập sai của mã hiện tại (`INCR`) | bằng TTL của mã; xoá khi có mã mới |
+| `signup:attempts:{email}` | số lần thử mã hiện tại, đúng hay sai (`INCR` **trước** khi so) | bằng TTL của mã; xoá khi có mã mới |
 | `signup:cooldown:{email}` | `1` (`SET NX EX`) | 60 s |
 | `ratelimit:signup:{email}` | số lần gửi mã trong giờ (`INCR`, `EXPIRE` ở lần đầu) | 3600 s |
 | `ratelimit:signup-ip:{ip}` | số lần gửi mã trong giờ từ một IP | 3600 s |
@@ -83,6 +89,7 @@ Request như cũ, thêm 2 trường không bắt buộc:
 |---|---|
 | `language` | Ngôn ngữ của mail: một trong `en vi zh ja ko fr es de th id`; thiếu hoặc lạ → `en` |
 | `website` | Ô bẫy bot (honeypot). Form thật luôn gửi rỗng |
+| `signupToken` | Token của lần gửi trước cùng địa chỉ trong tab này (nếu có) |
 
 Thứ tự kiểm tra:
 
@@ -90,26 +97,31 @@ Thứ tự kiểm tra:
 2. Trùng email/SĐT với bảng `users` → 409 `DUPLICATE_ACCOUNT` (liệt kê mọi trường trùng, như cũ).
 3. Resolve địa chỉ (`AddressService`, như cũ).
 4. `website` có nội dung → trả 202 giống hệt trường hợp thật, không lưu, không gửi.
-5. Đang trong thời gian chờ → cập nhật bản lưu tạm, không gửi, trả 202 với thời gian chờ còn lại.
-6. Vượt giới hạn theo email hoặc IP → 429 `RATE_LIMITED`, không lưu gì.
-7. Lưu tạm, đặt thời gian chờ, tăng 2 bộ đếm, xếp job `signup.send-code`.
+5. Có bản lưu tạm và token khớp: trong thời gian chờ → cập nhật, không gửi, trả 202 với thời gian chờ còn lại;
+   hết chờ → qua bước 6 rồi cập nhật và gửi mã mới, giữ token cũ.
+6. Có bản lưu tạm, token không khớp, còn thời gian chờ → 429 `RATE_LIMITED`, không đụng tới bản lưu tạm.
+7. Vượt giới hạn theo email hoặc IP → 429 `RATE_LIMITED`, không lưu gì.
+8. Tạo token mới, xoá mã cũ, lưu tạm (thay bản cũ nếu có), đặt thời gian chờ (`SET NX`; chỉ request thắng mới xếp
+   job), tăng 2 bộ đếm, xếp job `signup.send-code`.
 
 Response **202** (không còn token, không đặt cookie):
 
 ```json
-{ "email": "lan@example.com", "codeExpiresInSeconds": 600, "resendAvailableInSeconds": 60 }
+{ "email": "lan@example.com", "codeExpiresInSeconds": 600, "resendAvailableInSeconds": 60, "signupToken": "…" }
 ```
 
 Message: `"We sent a 6-digit code to your email."`
 
 ### 4.2 `POST /auth/register/verify` (mới)
 
-Request: `{ "email": "…", "code": "123456" }` — `code` phải đúng `\d{6}` (400 `VALIDATION_ERROR`).
+Request: `{ "email": "…", "code": "123456", "signupToken": "…" }` — `code` phải đúng `\d{6}` (400
+`VALIDATION_ERROR`).
 
-1. Không có `signup:pending:{email}` → 410 `SIGNUP_EXPIRED`.
+1. Không có `signup:pending:{email}`, hoặc token không khớp → 410 `SIGNUP_EXPIRED` (không tính là một lần thử).
 2. Không có `signup:code:{email}` (hết hạn, hoặc đã huỷ vì sai quá 5 lần) → 400 `SIGNUP_CODE_EXPIRED`.
-3. Sai mã → tăng `signup:attempts`; trả 400 `SIGNUP_CODE_INVALID` kèm `details[{field:"code", message}]` và số lần còn
-   lại. Còn 0 lần → xoá mã; lần sau sẽ gặp `SIGNUP_CODE_EXPIRED`.
+3. Tăng `signup:attempts` **trước** khi so (request song song không lách được giới hạn); quá 5 → xoá mã, 400
+   `SIGNUP_CODE_EXPIRED`. Sai mã → 400 `SIGNUP_CODE_INVALID` kèm `details[{field:"code"}, {field:"attemptsLeft"}]`.
+   Còn 0 lần → xoá mã; lần sau sẽ gặp `SIGNUP_CODE_EXPIRED`.
 4. Đúng mã → `GETDEL` khoá mã (chỉ dùng một lần, chặn hai request đúng mã cùng lúc). Trong transaction: kiểm tra
    trùng email/SĐT lần nữa (409 `DUPLICATE_ACCOUNT`, xoá bản lưu tạm), tạo `users` (role CUSTOMER, ACTIVE), phát token
    như register cũ (`issueTokens`, rememberMe = true). Transaction lỗi → trả lại khoá mã (như `PasswordResetService`).
@@ -119,9 +131,9 @@ Response **201** giống register cũ: `{ accessToken, user }` + `Set-Cookie: re
 
 ### 4.3 `POST /auth/register/resend` (mới)
 
-Request: `{ "email": "…" }`.
+Request: `{ "email": "…", "signupToken": "…" }`.
 
-1. Không có bản lưu tạm → 410 `SIGNUP_EXPIRED`.
+1. Không có bản lưu tạm, hoặc token không khớp → 410 `SIGNUP_EXPIRED`.
 2. Đang trong thời gian chờ → 429 `RATE_LIMITED`, `Retry-After` = TTL còn lại của `signup:cooldown`.
 3. Vượt giới hạn theo email hoặc IP → 429 `RATE_LIMITED`, `Retry-After` = TTL còn lại của bộ đếm.
 4. Gia hạn bản lưu tạm, đặt thời gian chờ, tăng bộ đếm, xếp job (mã mới thay mã cũ, số lần sai về 0).

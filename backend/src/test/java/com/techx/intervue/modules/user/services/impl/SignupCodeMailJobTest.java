@@ -37,7 +37,7 @@ class SignupCodeMailJobTest {
         IssuedSignupCode issued =
                 new IssuedSignupCode(
                         new PendingSignup(
-                                "Lan", "lan@example.com", "0900000002", "a", null, "h", "en"),
+                                "Lan", "lan@example.com", "0900000002", "a", null, "h", "en", "t"),
                         "004821");
         when(emailVerification.issueCode("lan@example.com")).thenReturn(Optional.of(issued));
         when(signupCodeMail.build(issued))

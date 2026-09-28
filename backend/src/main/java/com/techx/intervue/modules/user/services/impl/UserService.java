@@ -113,8 +113,9 @@ public class UserService extends BaseService implements UserServiceInterface {
                         address.formatted(),
                         address.columns(),
                         passwordEncoder.encode(request.password()),
-                        EmailVerificationService.normalizeLanguage(request.language()));
-        return emailVerification.start(pending, clientIp);
+                        EmailVerificationService.normalizeLanguage(request.language()),
+                        null);
+        return emailVerification.start(pending, request.signupToken(), clientIp);
     }
 
     /**
@@ -123,8 +124,8 @@ public class UserService extends BaseService implements UserServiceInterface {
      */
     @Override
     @Transactional
-    public AuthResult completeSignup(String email, String code) {
-        VerifiedSignup verified = emailVerification.verify(email, code);
+    public AuthResult completeSignup(String email, String code, String signupToken) {
+        VerifiedSignup verified = emailVerification.verify(email, code, signupToken);
         PendingSignup pending = verified.pending();
         try {
             throwIfTaken(pending.email(), pending.phone());

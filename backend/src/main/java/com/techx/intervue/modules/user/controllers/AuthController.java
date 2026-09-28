@@ -85,7 +85,8 @@ public class AuthController extends BaseController {
     @PostMapping("/register/verify")
     public ResponseEntity<ApiResource<RegisterResource>> verifySignup(
             @Valid @RequestBody SignupVerifyRequest request) {
-        AuthResult auth = userService.completeSignup(request.email(), request.code());
+        AuthResult auth =
+                userService.completeSignup(request.email(), request.code(), request.signupToken());
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
                         auth.refreshToken(),
@@ -102,7 +103,8 @@ public class AuthController extends BaseController {
     public ResponseEntity<ApiResource<SignupStartedResource>> resendSignupCode(
             @Valid @RequestBody SignupResendRequest request, HttpServletRequest httpRequest) {
         return ok(
-                emailVerification.resend(request.email(), IpHelper.getClientIp(httpRequest)),
+                emailVerification.resend(
+                        request.email(), request.signupToken(), IpHelper.getClientIp(httpRequest)),
                 "We sent a new code to your email.");
     }
 

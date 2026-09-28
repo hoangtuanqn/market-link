@@ -91,10 +91,13 @@ const RegisterCustomerPage = () => {
         email: form.email.trim(),
         addressParts: cleanAddress(form.addressParts),
       };
+      // The same address again from this tab: send its token so the waiting sign-up is corrected, not replaced
+      const previous = SignupStore.getPending();
       const response = await AuthApi.register({
         ...payload,
         language: i18n.resolvedLanguage ?? i18n.language,
         website,
+        signupToken: previous?.email === payload.email.toLowerCase() ? previous.token : undefined,
       });
 
       // FR-009: no account yet — it is created once the emailed code is entered
@@ -107,6 +110,12 @@ const RegisterCustomerPage = () => {
       });
       navigate(VERIFY_EMAIL_PATH);
     } catch (error) {
+      if (Helper.getErrorCode(error) === 'RATE_LIMITED') {
+        // FR-009: too many codes for this address or network, or a sign-up from another tab is still waiting
+        const minutes = Math.max(1, Math.ceil((Helper.getRetryAfterSeconds(error) ?? 60) / 60));
+        Notification.error({ text: t('errors.tooMany', { count: minutes }) });
+        return;
+      }
       // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT: per-field errors (email, phone, confirmPassword…) shown under the input
       const fieldErrors = Helper.getFieldErrors(error);
       setErrors(fieldErrors);

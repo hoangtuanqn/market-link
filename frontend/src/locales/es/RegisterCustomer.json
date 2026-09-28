@@ -34,6 +34,8 @@
     "passwordRequired": "Escribe tu contraseña.",
     "passwordLength": "La contraseña debe tener de {{min}} a {{max}} caracteres.",
     "confirmRequired": "Confirma tu contraseña.",
-    "confirmMismatch": "Las contraseñas no coinciden."
+    "confirmMismatch": "Las contraseñas no coinciden.",
+    "tooMany_one": "Se pidieron demasiados códigos para esta dirección o red. Inténtalo de nuevo en {{count}} minuto.",
+    "tooMany_other": "Se pidieron demasiados códigos para esta dirección o red. Inténtalo de nuevo en {{count}} minutos."
   }
 }

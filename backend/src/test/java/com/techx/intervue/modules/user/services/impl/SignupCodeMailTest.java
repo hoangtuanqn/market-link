@@ -35,7 +35,7 @@ class SignupCodeMailTest {
     private SignupCodeMail.Content build(String language, String name) {
         PendingSignup pending =
                 new PendingSignup(
-                        name, "lan@example.com", "0900000002", "addr", null, "hash", language);
+                        name, "lan@example.com", "0900000002", "addr", null, "hash", language, "t");
         return mail.build(new IssuedSignupCode(pending, "004821"));
     }
 

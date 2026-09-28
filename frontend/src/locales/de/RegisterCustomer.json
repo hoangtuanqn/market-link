@@ -34,6 +34,8 @@
     "passwordRequired": "Geben Sie Ihr Passwort ein.",
     "passwordLength": "Das Passwort muss {{min}} bis {{max}} Zeichen lang sein.",
     "confirmRequired": "Bestätigen Sie Ihr Passwort.",
-    "confirmMismatch": "Die Passwörter stimmen nicht überein."
+    "confirmMismatch": "Die Passwörter stimmen nicht überein.",
+    "tooMany_one": "Für diese Adresse oder dieses Netzwerk wurden zu viele Codes angefordert. Versuchen Sie es in {{count}} Minute noch einmal.",
+    "tooMany_other": "Für diese Adresse oder dieses Netzwerk wurden zu viele Codes angefordert. Versuchen Sie es in {{count}} Minuten noch einmal."
   }
 }

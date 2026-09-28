@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -27,14 +28,17 @@ import org.springframework.stereotype.Service;
 
 /**
  * FR-009: a sign-up only becomes an account after the 6-digit code mailed to its address is typed
- * in. Limits: one code per minute, 5 codes per address and 20 per IP per hour, 5 wrong tries per
- * code (spec 2026-09-28-email-verification-design §5).
+ * in, from the browser that filled in the form (it holds the signup token). Limits: one code per
+ * minute, 5 codes per address and 20 per IP per hour, 5 tries per code (spec
+ * 2026-09-28-email-verification-design §5).
  */
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationService implements EmailVerificationServiceInterface {
 
     public static final String JOB_SEND_CODE = "signup.send-code";
+
+    private static final int TOKEN_BYTES = 32;
 
     private static final Set<String> LANGUAGES =
             Set.of("en", "vi", "zh", "ja", "ko", "fr", "es", "de", "th", "id");
@@ -59,37 +63,57 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
     }
 
     @Override
-    public SignupStartedResource start(PendingSignup pending, String clientIp) {
-        String email = pending.email();
+    public SignupStartedResource start(PendingSignup form, String signupToken, String clientIp) {
+        String email = form.email();
+        Optional<PendingSignup> waiting = store.findPending(email);
         long cooldownLeft = store.cooldownSecondsLeft(email);
-        if (cooldownLeft > 0 && store.findPending(email).isPresent()) {
-            // Submitted again within the minute: keep the corrected details, send no second mail
-            store.savePending(pending, pendingTtl());
-            long codeLeft = store.codeSecondsLeft(email);
-            return new SignupStartedResource(
-                    email, codeLeft > 0 ? codeLeft : config.getCodeTtlSeconds(), cooldownLeft);
+        if (waiting.isPresent() && holdsToken(waiting.get(), signupToken)) {
+            // The same browser corrects its form: it keeps its token
+            PendingSignup corrected = form.withTokenHash(waiting.get().tokenHash());
+            if (cooldownLeft > 0) {
+                // Within the minute: keep the corrected details, send no second mail
+                store.savePending(corrected, pendingTtl());
+                long codeLeft = store.codeSecondsLeft(email);
+                return new SignupStartedResource(
+                        email,
+                        codeLeft > 0 ? codeLeft : config.getCodeTtlSeconds(),
+                        cooldownLeft,
+                        signupToken);
+            }
+            enforceSendLimits(email, clientIp);
+            store.savePending(corrected, pendingTtl());
+            queueCode(email);
+            return freshStart(email, signupToken);
+        }
+        if (waiting.isPresent() && cooldownLeft > 0) {
+            // Another browser's sign-up is waiting for this address: it is not replaced mid-minute
+            throw new SignupRateLimitedException(cooldownLeft);
         }
         enforceSendLimits(email, clientIp);
-        store.savePending(pending, pendingTtl());
+        // A new form (or one replacing a sign-up started elsewhere) gets a new token, so the old
+        // browser can no longer finish it; the old code must not finish it either
+        String token = newToken();
+        store.deleteCode(email);
+        store.savePending(form.withTokenHash(tokenHashUtil.hash(token)), pendingTtl());
         queueCode(email);
-        return freshStart(email);
+        return freshStart(email, token);
     }
 
     @Override
     public SignupStartedResource decoy(String email) {
-        return freshStart(normalizeEmail(email));
+        return freshStart(normalizeEmail(email), newToken());
     }
 
     @Override
-    public SignupStartedResource resend(String email, String clientIp) {
+    public SignupStartedResource resend(String email, String signupToken, String clientIp) {
         String normalized = normalizeEmail(email);
-        if (store.findPending(normalized).isEmpty()) throw new SignupExpiredException();
+        waitingFor(normalized, signupToken);
         long cooldownLeft = store.cooldownSecondsLeft(normalized);
         if (cooldownLeft > 0) throw new SignupRateLimitedException(cooldownLeft);
         enforceSendLimits(normalized, clientIp);
         store.extendPending(normalized, pendingTtl());
         queueCode(normalized);
-        return freshStart(normalized);
+        return freshStart(normalized, signupToken);
     }
 
     @Override
@@ -108,13 +132,12 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
     }
 
     @Override
-    public VerifiedSignup verify(String email, String code) {
+    public VerifiedSignup verify(String email, String code, String signupToken) {
         String normalized = normalizeEmail(email);
-        PendingSignup pending =
-                store.findPending(normalized).orElseThrow(SignupExpiredException::new);
+        // Checked before counting a try: without the token nobody can guess at this sign-up's code
+        PendingSignup pending = waitingFor(normalized, signupToken);
         String expected = store.findCode(normalized).orElseThrow(SignupCodeExpiredException::new);
-        // Count the try before comparing: parallel requests each take one of the tries, none slips
-        // by
+        // Count the try before comparing, so parallel requests cannot all slip under the limit
         int used = store.countAttempt(normalized);
         if (used > config.getMaxAttempts()) {
             store.deleteCode(normalized);
@@ -171,14 +194,35 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
         }
     }
 
+    /** Only the request that wins the cooldown (SET NX) queues a mail, so two submits send one. */
     private void queueCode(String email) {
-        store.startCooldown(email, Duration.ofSeconds(config.getResendCooldownSeconds()));
-        jobQueue.enqueue(JOB_SEND_CODE, Map.of("email", email));
+        if (store.startCooldown(email, Duration.ofSeconds(config.getResendCooldownSeconds()))) {
+            jobQueue.enqueue(JOB_SEND_CODE, Map.of("email", email));
+        }
     }
 
-    private SignupStartedResource freshStart(String email) {
+    /** The waiting sign-up, only for the browser holding its token; anyone else sees it as gone. */
+    private PendingSignup waitingFor(String email, String signupToken) {
+        return store.findPending(email)
+                .filter(pending -> holdsToken(pending, signupToken))
+                .orElseThrow(SignupExpiredException::new);
+    }
+
+    private boolean holdsToken(PendingSignup pending, String signupToken) {
+        return signupToken != null
+                && pending.tokenHash() != null
+                && sameHash(pending.tokenHash(), tokenHashUtil.hash(signupToken));
+    }
+
+    private String newToken() {
+        byte[] bytes = new byte[TOKEN_BYTES];
+        secureRandom.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    private SignupStartedResource freshStart(String email, String signupToken) {
         return new SignupStartedResource(
-                email, config.getCodeTtlSeconds(), config.getResendCooldownSeconds());
+                email, config.getCodeTtlSeconds(), config.getResendCooldownSeconds(), signupToken);
     }
 
     private String hash(String email, String code) {

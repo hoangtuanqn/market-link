@@ -34,6 +34,8 @@
     "passwordRequired": "Nhập mật khẩu.",
     "passwordLength": "Mật khẩu phải có từ {{min}} đến {{max}} ký tự.",
     "confirmRequired": "Nhập lại mật khẩu.",
-    "confirmMismatch": "Mật khẩu không khớp."
+    "confirmMismatch": "Mật khẩu không khớp.",
+    "tooMany_one": "Địa chỉ hoặc mạng này đã yêu cầu quá nhiều mã. Thử lại sau {{count}} phút.",
+    "tooMany_other": "Địa chỉ hoặc mạng này đã yêu cầu quá nhiều mã. Thử lại sau {{count}} phút."
   }
 }
