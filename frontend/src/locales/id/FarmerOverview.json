@@ -40,7 +40,7 @@
     "view": "Lihat"
   },
   "title": "Ringkasan",
-  "applyTemplate": "Terapkan templat mingguan",
+  "editTemplate": "Ubah templat mingguan",
   "addProduct": "Tambah produk",
   "banner": {
     "title_one": "{{count}} pesanan menunggu Anda.",
@@ -73,7 +73,7 @@
   },
   "stock": {
     "title": "Stok saat ini",
-    "link": "Stok minggu ini",
+    "link": "Templat mingguan",
     "noun": "stock",
     "empty": {
       "title": "No products yet",

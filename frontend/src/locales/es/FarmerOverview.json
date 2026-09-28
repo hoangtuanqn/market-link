@@ -40,7 +40,7 @@
     "view": "Ver"
   },
   "title": "Resumen",
-  "applyTemplate": "Aplicar plantilla semanal",
+  "editTemplate": "Editar plantilla semanal",
   "addProduct": "Añadir producto",
   "banner": {
     "title_one": "Tienes {{count}} pedido esperando.",
@@ -73,7 +73,7 @@
   },
   "stock": {
     "title": "Stock actual",
-    "link": "Stock de esta semana",
+    "link": "Plantilla semanal",
     "noun": "stock",
     "empty": {
       "title": "No products yet",

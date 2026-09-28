@@ -150,7 +150,7 @@
     "incomingOrders": "Commandes",
     "pickupSlots": "Créneaux de retrait",
     "stock": "Stock",
-    "weekStock": "Stock de la semaine",
+    "weekStock": "Modèle hebdomadaire",
     "products": "Produits",
     "stall": "Stand",
     "stallPickup": "Stand et retrait",
@@ -672,8 +672,8 @@
         "body": "Définissez les plages horaires où les clients peuvent récupérer leurs commandes à votre stand."
       },
       "farmerStock": {
-        "title": "Stock de la semaine",
-        "body": "Mettez à jour la quantité de chaque produit que vous pouvez vendre cette semaine."
+        "title": "Modèle de stock hebdomadaire",
+        "body": "Indiquez la quantité de chaque produit que vous apportez d’habitude chaque jour de la semaine. Il se renouvelle tout seul chaque semaine."
       },
       "farmerProducts": {
         "title": "Produits",
@@ -705,7 +705,7 @@
       },
       "farmerDone": {
         "title": "Votre stand est prêt",
-        "body": "Commencez par vérifier le stock de la semaine et vos créneaux de retrait."
+        "body": "Commencez par vérifier votre modèle hebdomadaire et vos créneaux de retrait."
       },
       "dashboardMenu": {
         "title": "Menu",

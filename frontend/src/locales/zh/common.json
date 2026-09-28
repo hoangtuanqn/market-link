@@ -150,7 +150,7 @@
     "incomingOrders": "订单",
     "pickupSlots": "取货时段",
     "stock": "库存",
-    "weekStock": "本周库存",
+    "weekStock": "每周模板",
     "products": "商品",
     "stall": "摊位",
     "stallPickup": "摊位与取货",
@@ -672,8 +672,8 @@
         "body": "设置顾客可以到摊位取货的时间段。"
       },
       "farmerStock": {
-        "title": "本周库存",
-        "body": "更新本周每种商品可售的数量。"
+        "title": "每周库存模板",
+        "body": "设置你每周各天通常带来的每种商品数量。模板每周自动补满。"
       },
       "farmerProducts": {
         "title": "商品",
@@ -705,7 +705,7 @@
       },
       "farmerDone": {
         "title": "摊位已就绪",
-        "body": "先检查本周库存和取货时段吧。"
+        "body": "先检查每周模板和取货时段吧。"
       },
       "dashboardMenu": {
         "title": "菜单",

@@ -150,7 +150,7 @@
     "incomingOrders": "Bestellungen",
     "pickupSlots": "Abholzeiten",
     "stock": "Bestand",
-    "weekStock": "Bestand dieser Woche",
+    "weekStock": "Wochenvorlage",
     "products": "Produkte",
     "stall": "Stand",
     "stallPickup": "Stand & Abholung",
@@ -672,8 +672,8 @@
         "body": "Lege die Zeitfenster fest, in denen Kunden ihre Bestellungen an deinem Stand abholen können."
       },
       "farmerStock": {
-        "title": "Bestand dieser Woche",
-        "body": "Aktualisiere, wie viel du von jedem Produkt diese Woche verkaufen kannst."
+        "title": "Wöchentliche Bestandsvorlage",
+        "body": "Lege fest, wie viel du von jedem Produkt an jedem Wochentag normalerweise mitbringst. Die Vorlage füllt sich jede Woche von selbst auf."
       },
       "farmerProducts": {
         "title": "Produkte",
@@ -705,7 +705,7 @@
       },
       "farmerDone": {
         "title": "Dein Stand ist bereit",
-        "body": "Prüfe zuerst den Bestand dieser Woche und deine Abholzeiten."
+        "body": "Prüfe zuerst deine Wochenvorlage und deine Abholzeiten."
       },
       "dashboardMenu": {
         "title": "Menü",

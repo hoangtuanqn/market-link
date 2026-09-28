@@ -9,8 +9,8 @@
     "product": "Product"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "products",
+    "templateNoun": "weekly template"
   },
   "aria": {
     "quantity": "{{product}} quantity on {{day}}",

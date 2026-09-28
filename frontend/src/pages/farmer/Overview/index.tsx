@@ -190,7 +190,7 @@ const FarmerOverviewPage = () => {
         </div>
         <div className="flex flex-wrap gap-2">
           <ButtonLink variant="secondary" to="/farmer/stock">
-            {t('applyTemplate')}
+            {t('editTemplate')}
           </ButtonLink>
           <ButtonLink to="/farmer/products/new">{t('addProduct')}</ButtonLink>
         </div>

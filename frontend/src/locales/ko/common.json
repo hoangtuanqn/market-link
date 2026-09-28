@@ -150,7 +150,7 @@
     "incomingOrders": "주문",
     "pickupSlots": "픽업 시간대",
     "stock": "재고",
-    "weekStock": "이번 주 재고",
+    "weekStock": "주간 템플릿",
     "products": "상품",
     "stall": "매대",
     "stallPickup": "매대 및 픽업",
@@ -672,8 +672,8 @@
         "body": "고객이 가판대에서 주문을 받아 갈 수 있는 시간대를 설정하세요."
       },
       "farmerStock": {
-        "title": "이번 주 재고",
-        "body": "이번 주에 판매할 수 있는 상품별 수량을 업데이트하세요."
+        "title": "주간 재고 템플릿",
+        "body": "요일마다 상품별로 보통 가져오는 수량을 정하세요. 매주 자동으로 다시 채워져요."
       },
       "farmerProducts": {
         "title": "상품",
@@ -705,7 +705,7 @@
       },
       "farmerDone": {
         "title": "가판대 준비 완료",
-        "body": "이번 주 재고와 픽업 시간부터 확인해 보세요."
+        "body": "주간 템플릿과 픽업 시간부터 확인해 보세요."
       },
       "dashboardMenu": {
         "title": "메뉴",

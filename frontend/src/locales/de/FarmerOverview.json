@@ -40,7 +40,7 @@
     "view": "Ansehen"
   },
   "title": "Übersicht",
-  "applyTemplate": "Wochenvorlage anwenden",
+  "editTemplate": "Wochenvorlage bearbeiten",
   "addProduct": "Produkt hinzufügen",
   "banner": {
     "title_one": "{{count}} Bestellung wartet auf Sie.",
@@ -73,7 +73,7 @@
   },
   "stock": {
     "title": "Aktueller Bestand",
-    "link": "Bestand dieser Woche",
+    "link": "Wochenvorlage",
     "noun": "stock",
     "empty": {
       "title": "No products yet",

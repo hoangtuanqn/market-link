@@ -150,7 +150,7 @@
     "incomingOrders": "Pesanan",
     "pickupSlots": "Jadwal pengambilan",
     "stock": "Stok",
-    "weekStock": "Stok minggu ini",
+    "weekStock": "Templat mingguan",
     "products": "Produk",
     "stall": "Lapak",
     "stallPickup": "Lapak & pengambilan",
@@ -672,8 +672,8 @@
         "body": "Atur rentang waktu pelanggan dapat mengambil pesanan di lapak Anda."
       },
       "farmerStock": {
-        "title": "Stok minggu ini",
-        "body": "Perbarui jumlah setiap produk yang bisa Anda jual minggu ini."
+        "title": "Templat stok mingguan",
+        "body": "Atur berapa banyak setiap produk yang biasanya Anda bawa di tiap hari. Templat terisi ulang sendiri setiap minggu."
       },
       "farmerProducts": {
         "title": "Produk",
@@ -705,7 +705,7 @@
       },
       "farmerDone": {
         "title": "Lapak Anda siap",
-        "body": "Mulailah dengan memeriksa stok minggu ini dan slot pengambilan."
+        "body": "Mulailah dengan memeriksa templat mingguan dan slot pengambilan Anda."
       },
       "dashboardMenu": {
         "title": "Menu",

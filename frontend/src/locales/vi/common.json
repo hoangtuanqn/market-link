@@ -150,7 +150,7 @@
     "incomingOrders": "Đơn hàng",
     "pickupSlots": "Khung giờ nhận hàng",
     "stock": "Hàng",
-    "weekStock": "Hàng tuần này",
+    "weekStock": "Mẫu hằng tuần",
     "products": "Sản phẩm",
     "stall": "Sạp",
     "stallPickup": "Sạp & nhận hàng",
@@ -672,8 +672,8 @@
         "body": "Đặt các khung giờ khách có thể đến gian hàng nhận đơn."
       },
       "farmerStock": {
-        "title": "Tồn kho tuần này",
-        "body": "Cập nhật số lượng mỗi sản phẩm bạn có thể bán trong tuần."
+        "title": "Mẫu hàng hằng tuần",
+        "body": "Đặt số lượng mỗi sản phẩm bạn thường mang đến vào từng ngày trong tuần. Mẫu tự làm đầy lại mỗi tuần."
       },
       "farmerProducts": {
         "title": "Sản phẩm",
@@ -705,7 +705,7 @@
       },
       "farmerDone": {
         "title": "Gian hàng đã sẵn sàng",
-        "body": "Hãy bắt đầu bằng việc kiểm tra tồn kho tuần này và khung giờ nhận hàng."
+        "body": "Hãy bắt đầu bằng việc kiểm tra mẫu hằng tuần và khung giờ nhận hàng."
       },
       "dashboardMenu": {
         "title": "Menu",

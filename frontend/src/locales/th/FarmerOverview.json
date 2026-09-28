@@ -40,7 +40,7 @@
     "view": "ดู"
   },
   "title": "ภาพรวม",
-  "applyTemplate": "ใช้เทมเพลตรายสัปดาห์",
+  "editTemplate": "แก้ไขเทมเพลตรายสัปดาห์",
   "addProduct": "เพิ่มสินค้า",
   "banner": {
     "title_one": "มี {{count}} คำสั่งซื้อรอคุณอยู่",
@@ -73,7 +73,7 @@
   },
   "stock": {
     "title": "สต็อกตอนนี้",
-    "link": "สต็อกสัปดาห์นี้",
+    "link": "เทมเพลตรายสัปดาห์",
     "noun": "stock",
     "empty": {
       "title": "No products yet",

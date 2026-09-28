@@ -40,7 +40,7 @@
     "view": "查看"
   },
   "title": "概览",
-  "applyTemplate": "套用每周模板",
+  "editTemplate": "编辑每周模板",
   "addProduct": "添加商品",
   "banner": {
     "title_one": "有 {{count}} 个订单在等你处理。",
@@ -73,7 +73,7 @@
   },
   "stock": {
     "title": "当前库存",
-    "link": "本周库存",
+    "link": "每周模板",
     "noun": "stock",
     "empty": {
       "title": "No products yet",

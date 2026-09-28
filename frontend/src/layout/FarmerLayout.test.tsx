@@ -51,7 +51,8 @@ describe('FarmerLayout menu while suspended (FR-071, D-09)', () => {
     renderFarmerArea();
 
     expect(await screen.findByRole('link', { name: 'Products' })).toHaveAttribute('href', '/farmer/products');
-    expect(screen.getByRole('link', { name: "This week's stock" })).toBeInTheDocument();
+    // The stock page is a weekly template that refills itself, not a one-off count for this week.
+    expect(screen.getByRole('link', { name: 'Weekly template' })).toHaveAttribute('href', '/farmer/stock');
     expect(screen.getByRole('link', { name: 'Pickup slots' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Stall & pickup' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Overview' })).toBeInTheDocument();
@@ -73,7 +74,7 @@ describe('FarmerLayout menu while suspended (FR-071, D-09)', () => {
 
     // the screens the server now refuses (StallSuspendedException) must not be offered
     expect(screen.queryByRole('link', { name: 'Products' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: "This week's stock" })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Weekly template' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Pickup slots' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Stall & pickup' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Overview' })).not.toBeInTheDocument();

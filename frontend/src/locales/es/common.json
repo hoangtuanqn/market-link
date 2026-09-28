@@ -150,7 +150,7 @@
     "incomingOrders": "Pedidos",
     "pickupSlots": "Horarios de recogida",
     "stock": "Existencias",
-    "weekStock": "Existencias de esta semana",
+    "weekStock": "Plantilla semanal",
     "products": "Productos",
     "stall": "Puesto",
     "stallPickup": "Puesto y recogida",
@@ -672,8 +672,8 @@
         "body": "Define las franjas en las que los clientes pueden recoger sus pedidos en tu puesto."
       },
       "farmerStock": {
-        "title": "Existencias de la semana",
-        "body": "Actualiza cuánto puedes vender de cada producto esta semana."
+        "title": "Plantilla semanal de existencias",
+        "body": "Indica cuánto sueles traer de cada producto cada día de la semana. Se repone sola cada semana."
       },
       "farmerProducts": {
         "title": "Productos",
@@ -705,7 +705,7 @@
       },
       "farmerDone": {
         "title": "Tu puesto está listo",
-        "body": "Empieza revisando las existencias de esta semana y tus horarios de recogida."
+        "body": "Empieza revisando tu plantilla semanal y tus horarios de recogida."
       },
       "dashboardMenu": {
         "title": "Menú",

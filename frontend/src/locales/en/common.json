@@ -164,7 +164,7 @@
     "incomingOrders": "Orders",
     "pickupSlots": "Pickup slots",
     "stock": "Stock",
-    "weekStock": "This week's stock",
+    "weekStock": "Weekly template",
     "products": "Products",
     "stall": "Stall",
     "stallPickup": "Stall & pickup",
@@ -686,8 +686,8 @@
         "body": "Set the time windows when customers can collect their orders at your stall."
       },
       "farmerStock": {
-        "title": "This week's stock",
-        "body": "Update how much of each product you can sell this week."
+        "title": "Weekly stock template",
+        "body": "Set how much of each product you usually bring on each weekday. It refills on its own every week."
       },
       "farmerProducts": {
         "title": "Products",
@@ -719,7 +719,7 @@
       },
       "farmerDone": {
         "title": "Your stall is ready",
-        "body": "Start by checking this week's stock and your pickup slots."
+        "body": "Start by checking your weekly stock template and your pickup slots."
       },
       "dashboardMenu": {
         "title": "Menu",

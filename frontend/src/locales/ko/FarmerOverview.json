@@ -40,7 +40,7 @@
     "view": "보기"
   },
   "title": "개요",
-  "applyTemplate": "주간 템플릿 적용",
+  "editTemplate": "주간 템플릿 편집",
   "addProduct": "상품 추가",
   "banner": {
     "title_one": "주문 {{count}}건이 기다리고 있어요.",
@@ -73,7 +73,7 @@
   },
   "stock": {
     "title": "현재 재고",
-    "link": "이번 주 재고",
+    "link": "주간 템플릿",
     "noun": "stock",
     "empty": {
       "title": "No products yet",
