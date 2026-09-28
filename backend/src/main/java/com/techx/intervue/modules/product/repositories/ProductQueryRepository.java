@@ -4,6 +4,7 @@ import com.techx.intervue.modules.product.requests.ProductSearchCriteria;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.product.resources.ShelfLifeResource;
 import com.techx.intervue.resources.PageResource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -288,6 +289,38 @@ public class ProductQueryRepository {
                         params,
                         (rs, i) -> new ProductDetailRow(item(rs), rs.getString("description")));
         return rows.stream().findFirst();
+    }
+
+    /** FR-121: one product's stored shelf-life block for its public page. */
+    public static final String SHELF_LIFE_SQL =
+            """
+            SELECT p.shelf_life_guide_id, g.group_name, p.storage_mode, p.shelf_life_days,
+                   p.suggested_shelf_life_days, p.shelf_life_extended
+            FROM products p
+            LEFT JOIN shelf_life_guides g ON g.id = p.shelf_life_guide_id
+            WHERE p.id = :id
+            """;
+
+    public Optional<ShelfLifeResource> shelfLife(long productId) {
+        return jdbc
+                .query(
+                        SHELF_LIFE_SQL,
+                        new MapSqlParameterSource("id", productId),
+                        (rs, i) -> {
+                            long guideId = rs.getLong("shelf_life_guide_id");
+                            Long guide = rs.wasNull() ? null : guideId;
+                            int suggested = rs.getInt("suggested_shelf_life_days");
+                            Integer suggestedDays = rs.wasNull() ? null : suggested;
+                            return new ShelfLifeResource(
+                                    guide,
+                                    rs.getString("group_name"),
+                                    rs.getString("storage_mode"),
+                                    rs.getInt("shelf_life_days"),
+                                    suggestedDays,
+                                    rs.getBoolean("shelf_life_extended"));
+                        })
+                .stream()
+                .findFirst();
     }
 
     private static ProductListItemResource item(ResultSet rs) throws SQLException {
