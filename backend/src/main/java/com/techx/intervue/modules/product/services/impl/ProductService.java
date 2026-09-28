@@ -1,7 +1,11 @@
 package com.techx.intervue.modules.product.services.impl;
 
 import com.techx.intervue.modules.catalog.entities.Category;
+import com.techx.intervue.modules.catalog.entities.ShelfLifeGuide;
+import com.techx.intervue.modules.catalog.enums.StorageMode;
 import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
+import com.techx.intervue.modules.catalog.repositories.ShelfLifeGuideRepository;
+import com.techx.intervue.modules.catalog.services.impl.ShelfLifePolicy;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
@@ -17,13 +21,17 @@ import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateReposi
 import com.techx.intervue.modules.product.requests.ProductRequest;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.product.resources.ShelfLifeResource;
 import com.techx.intervue.modules.product.services.interfaces.ProductServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,6 +50,8 @@ public class ProductService implements ProductServiceInterface {
     private final RestockNotifier restock;
     private final ProductAvailabilityResolver availability;
     private final WeeklyStockTemplateRepository templates;
+    private final ShelfLifeGuideRepository shelfLifeGuides;
+    private final Clock clock;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -101,7 +111,10 @@ public class ProductService implements ProductServiceInterface {
                         products.findByIdAndDeletedFalse(productId)
                                 .orElseThrow(() -> new ProductNotFoundException(productId)));
         return toResource(
-                product, profile, categories.findById(product.getCategoryId()).orElse(null));
+                product,
+                profile,
+                categories.findById(product.getCategoryId()).orElse(null),
+                guideOf(product));
     }
 
     @Override
@@ -113,7 +126,8 @@ public class ProductService implements ProductServiceInterface {
         Product product = new Product();
         product.setFarmerId(profile.getId());
         apply(product, request, category);
-        return toResource(products.save(product), profile, category);
+        ShelfLifeGuide guide = applyShelfLife(product, request, category);
+        return toResource(products.save(product), profile, category, guide);
     }
 
     /**
@@ -130,7 +144,8 @@ public class ProductService implements ProductServiceInterface {
         Product product = owned(profile, productId);
         Category category = activeCategory(request.categoryId());
         apply(product, request, category);
-        return toResource(products.save(product), profile, category);
+        ShelfLifeGuide guide = applyShelfLife(product, request, category);
+        return toResource(products.save(product), profile, category, guide);
     }
 
     /** Soft delete — order_items point to product_id, old orders must stay readable (FR-036). */
@@ -160,7 +175,11 @@ public class ProductService implements ProductServiceInterface {
         Product saved = products.save(product);
         // FR-041: lifting a pause or a manual "sold out" can make it orderable again
         restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
-        return toResource(saved, profile, categories.findById(saved.getCategoryId()).orElse(null));
+        return toResource(
+                saved,
+                profile,
+                categories.findById(saved.getCategoryId()).orElse(null),
+                guideOf(saved));
     }
 
     @Override
@@ -210,7 +229,7 @@ public class ProductService implements ProductServiceInterface {
             products.save(product);
         }
         Category category = categories.findById(product.getCategoryId()).orElse(null);
-        return toResource(product, profile, category);
+        return toResource(product, profile, category, guideOf(product));
     }
 
     /**
@@ -302,11 +321,90 @@ public class ProductService implements ProductServiceInterface {
                 request.imageUrl() == null || request.imageUrl().isBlank()
                         ? null
                         : request.imageUrl().trim());
-        product.setShelfLifeDays(request.shelfLifeDays());
+    }
+
+    /**
+     * FR-121 (spec §4.2): the suggestion comes from the chosen group, or from the category's upper
+     * bound when the category has no groups; the server never trusts a number the client sends.
+     * Longer than the suggestion needs the Farmer's promise and is recorded with its time; more
+     * than twice the suggestion is refused.
+     */
+    private ShelfLifeGuide applyShelfLife(
+            Product product, ProductRequest request, Category category) {
+        int days = request.shelfLifeDays();
+        ShelfLifeGuide guide = null;
+        StorageMode mode;
+        int suggested;
+        if (request.shelfLifeGuideId() != null) {
+            guide =
+                    shelfLifeGuides
+                            .findById(request.shelfLifeGuideId())
+                            .filter(ShelfLifeGuide::isActive)
+                            .filter(g -> g.getCategoryId().equals(category.getId()))
+                            .orElseThrow(
+                                    () ->
+                                            new InvalidFieldException(
+                                                    "shelfLifeGuideId",
+                                                    "Choose a group from this category."));
+            mode = guide.getStorageMode();
+            if (request.storageMode() != null && StorageMode.parse(request.storageMode()) != mode) {
+                throw new InvalidFieldException(
+                        "storageMode", "This group cannot be sold that way.");
+            }
+            suggested = guide.getSuggestedDays();
+        } else {
+            if (!shelfLifeGuides
+                    .findByCategoryIdAndActiveTrueOrderByGroupNameAscStorageModeAsc(
+                            category.getId())
+                    .isEmpty()) {
+                throw new InvalidFieldException(
+                        "shelfLifeGuideId", "Choose a group from this category.");
+            }
+            mode =
+                    request.storageMode() == null
+                            ? StorageMode.ROOM
+                            : StorageMode.parse(request.storageMode());
+            suggested = category.getMaxShelfLifeDays();
+        }
+        int max = ShelfLifePolicy.maxDays(suggested);
+        if (days > max) {
+            throw new InvalidFieldException(
+                    "shelfLifeDays", "At most " + max + " days for this group.");
+        }
+        boolean extended = ShelfLifePolicy.extendedBy(days, suggested) > 0;
+        if (extended && !Boolean.TRUE.equals(request.acknowledgeLongerShelfLife())) {
+            throw new InvalidFieldException(
+                    "acknowledgeLongerShelfLife",
+                    "Confirm that the product stays good for the longer time.");
+        }
+        Long guideId = guide == null ? null : guide.getId();
+        // Spec §4.2: the time is when the Farmer ticked the promise, so a save that keeps the same
+        // promise (same group, way of keeping and days), such as a price change, keeps its time
+        boolean samePromise =
+                product.isShelfLifeExtended()
+                        && product.getShelfLifeAckAt() != null
+                        && Objects.equals(product.getShelfLifeGuideId(), guideId)
+                        && product.getStorageMode() == mode
+                        && product.getShelfLifeDays() == days;
+        LocalDateTime promisedAt =
+                samePromise ? product.getShelfLifeAckAt() : LocalDateTime.now(clock);
+        product.setShelfLifeDays(days);
+        product.setShelfLifeGuideId(guideId);
+        product.setStorageMode(mode);
+        product.setSuggestedShelfLifeDays(suggested);
+        product.setShelfLifeExtended(extended);
+        product.setShelfLifeAckAt(extended ? promisedAt : null);
+        return guide;
+    }
+
+    private ShelfLifeGuide guideOf(Product product) {
+        return product.getShelfLifeGuideId() == null
+                ? null
+                : shelfLifeGuides.findById(product.getShelfLifeGuideId()).orElse(null);
     }
 
     private static FarmerProductResource toResource(
-            Product p, FarmerProfile profile, Category category) {
+            Product p, FarmerProfile profile, Category category, ShelfLifeGuide guide) {
         ProductListItemResource item =
                 new ProductListItemResource(
                         p.getId(),
@@ -327,6 +425,16 @@ public class ProductService implements ProductServiceInterface {
                         p.getShelfLifeDays(),
                         null);
         return new FarmerProductResource(
-                item, p.getDescription(), p.isHidden(), p.getHiddenReason());
+                item, p.getDescription(), p.isHidden(), p.getHiddenReason(), shelfLifeOf(p, guide));
+    }
+
+    static ShelfLifeResource shelfLifeOf(Product p, ShelfLifeGuide guide) {
+        return new ShelfLifeResource(
+                p.getShelfLifeGuideId(),
+                guide == null ? null : guide.getGroupName(),
+                p.getStorageMode().value(),
+                p.getShelfLifeDays(),
+                p.getSuggestedShelfLifeDays(),
+                p.isShelfLifeExtended());
     }
 }

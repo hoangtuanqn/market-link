@@ -13,6 +13,7 @@ import useRequest from '@/hooks/useRequest';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import CategoryTableSkeleton from './CategoryTableSkeleton';
+import ShelfLifeGuides from './ShelfLifeGuides';
 
 type CategoryRow = CategoryType;
 const NO_CATEGORIES: CategoryRow[] = [];
@@ -330,6 +331,8 @@ const AdminCategoriesPage = () => {
           </Button>
         </Card>
       </div>
+
+      {load.kind === 'ready' && !initialLoading && categories.length > 0 && <ShelfLifeGuides categories={categories} />}
 
       <Dialog
         open={removing !== null}

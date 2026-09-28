@@ -787,5 +787,12 @@
     "whatNow": "Les commandes déjà passées par des clients doivent tout de même être honorées — merci de les compléter. Vous ne pouvez pas ajouter de produits, modifier votre stock ni accepter de nouvelles commandes tant que la suspension n'est pas levée.",
     "contactIntro": "Si vous pensez qu'il s'agit d'une erreur, contactez-nous à",
     "acknowledge": "J'ai compris"
+  },
+  "storageMode": {
+    "room": "Température ambiante",
+    "chilled": "Réfrigérateur 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Bon jusqu’à la fin de {{day}} · {{storage}}"
   }
 }

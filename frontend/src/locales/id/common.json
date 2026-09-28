@@ -787,5 +787,12 @@
     "whatNow": "Pesanan yang sudah dibuat pelanggan tetap harus diselesaikan — mohon selesaikan pesanan tersebut. Anda tidak dapat menambahkan produk, mengubah stok, atau menerima pesanan baru sampai penangguhan dicabut.",
     "contactIntro": "Jika Anda merasa ini keliru, hubungi kami di",
     "acknowledge": "Saya mengerti"
+  },
+  "storageMode": {
+    "room": "Suhu ruang",
+    "chilled": "Kulkas 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Baik hingga akhir {{day}} · {{storage}}"
   }
 }

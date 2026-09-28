@@ -14,6 +14,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.techx.intervue.modules.catalog.enums.StorageMode;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
@@ -703,6 +704,26 @@ class OrderServiceTest {
         assertThat(item.getUnit()).isEqualTo("bó");
         assertThat(item.getQuantity()).isEqualTo(2);
         assertThat(item.getSubtotal()).isEqualByComparingTo("24000");
+    }
+
+    /** FR-121 (spec §4.3): each line keeps the shelf-life promise as it stood at ordering time. */
+    @Test
+    void placeCopiesTheShelfLifePromiseOntoEachLine() {
+        Product rau = products.get(RAU_MUONG);
+        rau.setShelfLifeDays(5);
+        rau.setStorageMode(StorageMode.CHILLED);
+        rau.setSuggestedShelfLifeDays(3);
+        rau.setShelfLifeExtended(true);
+
+        service.place(CUSTOMER_ID, request(group(FARMER_A, SLOT_A, line(RAU_MUONG, 1))));
+
+        OrderItem line = items.getFirst();
+        assertThat(line.getShelfLifeDays()).isEqualTo(5);
+        assertThat(line.getStorageMode()).isEqualTo(StorageMode.CHILLED);
+        assertThat(line.getBestBefore()).isEqualTo(PICKUP.plusDays(4));
+        assertThat(line.isShelfLifeExtended()).isTrue();
+        assertThat(line.getExtendedByDays()).isEqualTo(2);
+        assertThat(line.getListPrice()).isNull();
     }
 
     /** D-13 — hiding the button is not a control. The admin role must be blocked on the server. */

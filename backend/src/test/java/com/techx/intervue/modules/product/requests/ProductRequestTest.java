@@ -14,7 +14,8 @@ class ProductRequestTest {
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private static ProductRequest withPrice(BigDecimal price) {
-        return new ProductRequest(1L, "Tomatoes", null, price, "kg", 10, null, 7);
+        // No storage group, storage mode or longer-shelf-life promise (FR-121): only price varies.
+        return new ProductRequest(1L, "Tomatoes", null, price, "kg", 10, null, 7, null, null, null);
     }
 
     @Test

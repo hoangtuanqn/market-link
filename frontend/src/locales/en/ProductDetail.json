@@ -33,9 +33,10 @@
   "details": {
     "title": "Product details",
     "soldPer": "Sold per",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "Shelf life",
+    "shelfLifeLine_one": "{{storage}} · good for {{count}} day from pickup",
+    "shelfLifeLine_other": "{{storage}} · good for {{count}} days from pickup",
+    "shelfLifePromise": "The stall promises {{days}} days (usually {{suggested}}).",
     "category": "Category",
     "stall": "Stall",
     "market": "Market"

@@ -70,5 +70,50 @@
   "status": {
     "active": "启用",
     "inactive": "停用"
+  },
+  "guides": {
+    "title": "保鲜分组",
+    "intro": "按分组和保存方式给出的建议保质期。农户从这些数字开始设置。",
+    "category": "分类",
+    "col": {
+      "group": "分组",
+      "storage": "保存方式",
+      "days": "天数",
+      "daysFor": "{{group}} 的天数（{{storage}}）"
+    },
+    "status": {
+      "off": "停用"
+    },
+    "action": {
+      "save": "保存",
+      "off": "停用",
+      "on": "启用"
+    },
+    "form": {
+      "title": "添加分组",
+      "group": "分组名称",
+      "groupPlaceholder": "例如 Leafy greens",
+      "examples": "示例",
+      "examplesHint": "用逗号分隔的商品关键词（越南语和英语），用于根据商品名称匹配分组。",
+      "storage": "保存方式",
+      "days": "建议天数",
+      "submit": "添加分组"
+    },
+    "empty": {
+      "title": "还没有保鲜分组",
+      "text": "在你添加分组之前，该分类下的农户看到的是分类的保质期范围。"
+    },
+    "noun": "保鲜分组",
+    "error": {
+      "nameRequired": "请为分组命名。",
+      "days": "请输入 1 到 365 之间的整数。",
+      "taken": "该分组已经有这种保存方式。"
+    },
+    "toast": {
+      "added": "分组已添加。",
+      "saved": "分组已保存。",
+      "off": "分组已停用。",
+      "on": "分组已启用。"
+    }
   }
 }

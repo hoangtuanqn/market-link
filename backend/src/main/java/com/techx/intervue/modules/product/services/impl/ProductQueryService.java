@@ -67,7 +67,8 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                 overlaid.getFirst(),
                 row.description(),
                 farmer,
-                reviewService.productSummary(row.item().id()));
+                reviewService.productSummary(row.item().id()),
+                repository.shelfLife(id).orElse(null));
     }
 
     /**

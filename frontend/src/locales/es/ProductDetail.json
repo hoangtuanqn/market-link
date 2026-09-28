@@ -33,9 +33,10 @@
   "details": {
     "title": "Detalles del producto",
     "soldPer": "Se vende por",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "Vida útil",
+    "shelfLifeLine_one": "{{storage}} · dura {{count}} día desde la recogida",
+    "shelfLifeLine_other": "{{storage}} · dura {{count}} días desde la recogida",
+    "shelfLifePromise": "El puesto promete {{days}} días (normalmente {{suggested}}).",
     "category": "Categoría",
     "stall": "Puesto",
     "market": "Mercado"

@@ -787,5 +787,12 @@
     "days_one": "{{count}} day",
     "days_other": "{{count}} days",
     "specificTime": "Or pick an exact end time"
+  },
+  "storageMode": {
+    "room": "Room temperature",
+    "chilled": "Fridge 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Good until end of {{day}} · {{storage}}"
   }
 }

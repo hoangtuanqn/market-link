@@ -787,5 +787,12 @@
     "whatNow": "顾客已下的订单仍须完成——请继续处理这些订单。在暂停解除之前，您无法上架农产品、调整库存或接收新订单。",
     "contactIntro": "如果您认为这是误判，请联系",
     "acknowledge": "我知道了"
+  },
+  "storageMode": {
+    "room": "常温",
+    "chilled": "冷藏 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "最佳食用期至 {{day}} 结束 · {{storage}}"
   }
 }

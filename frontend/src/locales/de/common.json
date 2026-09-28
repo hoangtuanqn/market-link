@@ -787,5 +787,12 @@
     "whatNow": "Bereits von Kunden aufgegebene Bestellungen müssen trotzdem abgeschlossen werden — bitte erledigen Sie diese. Bis die Sperre aufgehoben ist, können Sie keine Produkte einstellen, Ihren Bestand nicht ändern und keine neuen Bestellungen annehmen.",
     "contactIntro": "Wenn Sie glauben, dass dies ein Fehler ist, schreiben Sie an",
     "acknowledge": "Verstanden"
+  },
+  "storageMode": {
+    "room": "Raumtemperatur",
+    "chilled": "Kühlschrank 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Gut bis Ende {{day}} · {{storage}}"
   }
 }

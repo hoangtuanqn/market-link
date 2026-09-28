@@ -70,5 +70,50 @@
   "status": {
     "active": "Activo",
     "inactive": "Inactivo"
+  },
+  "guides": {
+    "title": "Grupos de conservación",
+    "intro": "Vida útil sugerida por grupo y forma de conservación. Los productores parten de estos números.",
+    "category": "Categoría",
+    "col": {
+      "group": "Grupo",
+      "storage": "Conservación",
+      "days": "Días",
+      "daysFor": "Días para {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "Inactivo"
+    },
+    "action": {
+      "save": "Guardar",
+      "off": "Desactivar",
+      "on": "Activar"
+    },
+    "form": {
+      "title": "Añadir un grupo",
+      "group": "Nombre del grupo",
+      "groupPlaceholder": "p. ej. Leafy greens",
+      "examples": "Ejemplos",
+      "examplesHint": "Palabras de producto separadas por comas, en vietnamita y en inglés, usadas para elegir el grupo a partir del nombre del producto.",
+      "storage": "Forma de conservación",
+      "days": "Días sugeridos",
+      "submit": "Añadir grupo"
+    },
+    "empty": {
+      "title": "Todavía no hay grupos de conservación",
+      "text": "Los productores de esta categoría ven el rango de la categoría hasta que añadas un grupo."
+    },
+    "noun": "grupos de conservación",
+    "error": {
+      "nameRequired": "Ponle un nombre al grupo.",
+      "days": "Introduce un número entero de 1 a 365.",
+      "taken": "Este grupo ya tiene esa forma de conservación."
+    },
+    "toast": {
+      "added": "Grupo añadido.",
+      "saved": "Grupo guardado.",
+      "off": "Grupo desactivado.",
+      "on": "Grupo activado."
+    }
   }
 }

@@ -70,5 +70,50 @@
   "status": {
     "active": "Aktif",
     "inactive": "Tidak aktif"
+  },
+  "guides": {
+    "title": "Kelompok penyimpanan",
+    "intro": "Perkiraan masa simpan per kelompok dan cara penyimpanan. Petani memulai dari angka-angka ini.",
+    "category": "Kategori",
+    "col": {
+      "group": "Kelompok",
+      "storage": "Penyimpanan",
+      "days": "Hari",
+      "daysFor": "Hari untuk {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "Nonaktif"
+    },
+    "action": {
+      "save": "Simpan",
+      "off": "Nonaktifkan",
+      "on": "Aktifkan"
+    },
+    "form": {
+      "title": "Tambah kelompok",
+      "group": "Nama kelompok",
+      "groupPlaceholder": "mis. Leafy greens",
+      "examples": "Contoh",
+      "examplesHint": "Kata-kata produk dipisah koma, dalam bahasa Vietnam dan Inggris, dipakai untuk memilih kelompok dari nama produk.",
+      "storage": "Cara penyimpanan",
+      "days": "Hari yang disarankan",
+      "submit": "Tambah kelompok"
+    },
+    "empty": {
+      "title": "Belum ada kelompok penyimpanan",
+      "text": "Petani di kategori ini melihat rentang kategori sampai kamu menambahkan kelompok."
+    },
+    "noun": "kelompok penyimpanan",
+    "error": {
+      "nameRequired": "Beri nama kelompok ini.",
+      "days": "Masukkan bilangan bulat dari 1 sampai 365.",
+      "taken": "Kelompok ini sudah punya cara penyimpanan itu."
+    },
+    "toast": {
+      "added": "Kelompok ditambahkan.",
+      "saved": "Kelompok disimpan.",
+      "off": "Kelompok dinonaktifkan.",
+      "on": "Kelompok diaktifkan."
+    }
   }
 }

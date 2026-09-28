@@ -70,5 +70,50 @@
   "status": {
     "active": "Active",
     "inactive": "Inactive"
+  },
+  "guides": {
+    "title": "Storage groups",
+    "intro": "Suggested shelf life per group and way of keeping. Farmers start from these numbers.",
+    "category": "Category",
+    "col": {
+      "group": "Group",
+      "storage": "Kept",
+      "days": "Days",
+      "daysFor": "Days for {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "Off"
+    },
+    "action": {
+      "save": "Save",
+      "off": "Turn off",
+      "on": "Turn on"
+    },
+    "form": {
+      "title": "Add a group",
+      "group": "Group name",
+      "groupPlaceholder": "e.g. Leafy greens",
+      "examples": "Examples",
+      "examplesHint": "Comma-separated product words, in Vietnamese and English, used to pick the group from a product name.",
+      "storage": "How it is kept",
+      "days": "Suggested days",
+      "submit": "Add group"
+    },
+    "empty": {
+      "title": "No storage groups yet",
+      "text": "Farmers in this category see the category's range until you add a group."
+    },
+    "noun": "storage groups",
+    "error": {
+      "nameRequired": "Give the group a name.",
+      "days": "Enter a whole number from 1 to 365.",
+      "taken": "This group already has that way of keeping."
+    },
+    "toast": {
+      "added": "Group added.",
+      "saved": "Group saved.",
+      "off": "Group turned off.",
+      "on": "Group turned on."
+    }
   }
 }

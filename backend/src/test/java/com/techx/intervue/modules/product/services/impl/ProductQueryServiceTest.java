@@ -16,6 +16,7 @@ import com.techx.intervue.modules.product.requests.ProductSearchCriteria;
 import com.techx.intervue.modules.product.resources.ProductDetailResource;
 import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.product.resources.ShelfLifeResource;
 import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
 import com.techx.intervue.modules.review.services.interfaces.ReviewServiceInterface;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
@@ -293,5 +294,34 @@ class ProductQueryServiceTest {
         when(reviewService.productSummary(5L)).thenReturn(summary);
 
         assertThat(service.detail(5L).reviewsSummary()).isSameAs(summary);
+    }
+
+    /** FR-121: the public product page carries the stored shelf-life block as-is. */
+    @Test
+    void detailCarriesTheStoredShelfLife() {
+        when(repository.findVisibleById(1L))
+                .thenReturn(Optional.of(new ProductDetailRow(item(1L), "Cắt sáng")));
+        when(repository.shelfLife(1L))
+                .thenReturn(
+                        Optional.of(
+                                new ShelfLifeResource(7L, "Leafy greens", "chilled", 5, 3, true)));
+        when(stallService.publicDetail(10L))
+                .thenReturn(
+                        new StallDetailResource(
+                                10L,
+                                "Vườn Út Hiền",
+                                "Hiền",
+                                null,
+                                null,
+                                12,
+                                BigDecimal.ZERO,
+                                0,
+                                "approved",
+                                List.of()));
+
+        ProductDetailResource result = service.detail(1L);
+
+        assertThat(result.shelfLife())
+                .isEqualTo(new ShelfLifeResource(7L, "Leafy greens", "chilled", 5, 3, true));
     }
 }

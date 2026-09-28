@@ -787,5 +787,12 @@
     "whatNow": "Los pedidos que los clientes ya hicieron deben completarse igualmente — termínalos, por favor. No podrás publicar productos, cambiar tu stock ni aceptar pedidos nuevos hasta que se levante la suspensión.",
     "contactIntro": "Si crees que es un error, escríbenos a",
     "acknowledge": "Entendido"
+  },
+  "storageMode": {
+    "room": "Temperatura ambiente",
+    "chilled": "Refrigerado 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Bueno hasta el final de {{day}} · {{storage}}"
   }
 }
