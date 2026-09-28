@@ -136,6 +136,41 @@ class ClaudeAssistantTest {
         assertThat(sent.get(2).toolChoice().orElseThrow().isNone()).isTrue();
     }
 
+    /**
+     * With a button on offer, Claude often writes its answer beside the propose_* call and then
+     * ends the turn with nothing, so the person read the refusal line above a working button.
+     */
+    @Test
+    void anAnswerWrittenBesideTheLastToolCallIsKeptWhenTheFinalTurnIsEmpty() {
+        when(tools.run(any(), any(), anyMap()))
+                .thenReturn(
+                        new ToolOutcome("{}", false, ChatIntent.FARMER_AVAILABILITY, List.of()));
+        when(messageService.create(any(MessageCreateParams.class)))
+                .thenReturn(
+                        message(
+                                "tool_use",
+                                Map.of("type", "text", "text", "Nhấn nút bên dưới để duyệt."),
+                                Map.of(
+                                        "type",
+                                        "tool_use",
+                                        "id",
+                                        "toolu_1",
+                                        "name",
+                                        AssistantTools.PROPOSE_FARMER_DECISION,
+                                        "input",
+                                        Map.of("farmer_id", 17, "decision", "approve"))),
+                        message("end_turn"));
+
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "Duyệt sạp Nông trại Chú Tư",
+                        new AssistantContext(AssistantAudience.ADMIN, 1L, null),
+                        null);
+
+        assertThat(reply.reply()).isEqualTo("Nhấn nút bên dưới để duyệt.");
+    }
+
     @Test
     void aToolErrorIsSentBackAsAnErrorResultAndDoesNotSetTheIntent() {
         when(tools.run(any(), any(), anyMap()))
@@ -206,9 +241,30 @@ class ClaudeAssistantTest {
         String system =
                 sentParams(1).getFirst().system().orElseThrow().asTextBlockParams().get(1).text();
         assertThat(system)
-                .contains("SUNDAY 27/09/2026 (day_of_week 0)")
+                .contains("SUNDAY 27/09/2026 (Chủ nhật, day_of_week 0)")
                 // "this Saturday" is looked up in the list, not computed by the model
-                .contains("SATURDAY 03/10/2026 (day_of_week 6)");
+                .contains("SATURDAY 03/10/2026 (Thứ Bảy, day_of_week 6)")
+                // Next to "day_of_week 5" the model called Friday "Thứ Năm", which is Thursday
+                .contains("FRIDAY 02/10/2026 (Thứ Sáu, day_of_week 5)");
+    }
+
+    @Test
+    void tomorrowAndTheTimeNowAreSpelledOutRatherThanLeftToTheModel() {
+        when(messageService.create(any(MessageCreateParams.class))).thenReturn(text("ok"));
+
+        assistant.reply(
+                List.of(),
+                "đơn này còn kịp cutoff không",
+                new AssistantContext(AssistantAudience.FARMER, 7L, 9L),
+                null);
+
+        String system =
+                sentParams(1).getFirst().system().orElseThrow().asTextBlockParams().get(1).text();
+        assertThat(system)
+                // 03:00 UTC is 10:00 in Ho Chi Minh City: enough to tell if a cutoff has passed
+                .contains("the time is 10:00")
+                // The 28/09 test run called a cutoff four days away "tomorrow evening"
+                .contains("Tomorrow is MONDAY 28/09/2026 (Thứ Hai, day_of_week 1)");
     }
 
     @Test

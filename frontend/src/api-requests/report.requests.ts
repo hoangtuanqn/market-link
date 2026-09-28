@@ -55,6 +55,18 @@ export type AdminCustomerDto = {
   status: 'active' | 'inactive' | 'suspended';
   orderCount: number;
   createdAt: string;
+  avatarUrl?: string | null;
+};
+
+/** `GET /admin/customers/{id}/status-history` row (FR-072). `changedByName` null = the system (auto-reactivate). */
+export type AdminCustomerStatusHistoryDto = {
+  id: number;
+  fromStatus: string;
+  toStatus: string;
+  reason: string | null;
+  until: string | null;
+  changedByName: string | null;
+  changedAt: string;
 };
 
 /** `GET /admin/reports/top-products` (FR-075): the best-selling products platform-wide, completed orders only. */
@@ -144,13 +156,30 @@ class AdminReportApi {
   };
 
   /**
-   * Activate or deactivate a customer (FR-072). An inactive customer cannot sign in and their refresh tokens are
-   * revoked; their orders are untouched. 400 for a stall/admin account or any other status value.
+   * Activate or deactivate a customer (FR-072). An inactive customer cannot sign in, their sessions are revoked right
+   * away, and — for a permanent ban (`until` null) — their open orders are cancelled. 400 for a stall/admin account, a
+   * missing reason, or a past `until`.
    */
-  static setCustomerStatus = async (userId: number, status: 'active' | 'inactive') => {
+  static setCustomerStatus = async (
+    userId: number,
+    status: 'active' | 'inactive',
+    reason: string | null = null,
+    until: string | null = null,
+  ) => {
     const response = await privateApi.patch<ApiResponse<AdminCustomerDto>>(`/admin/customers/${userId}/status`, {
       status,
+      reason,
+      until,
     });
+    return response.data.data;
+  };
+
+  /** `GET /admin/customers/{id}/status-history`: every deactivate/reactivate on this account, newest first. */
+  static customerStatusHistory = async (userId: number, page = 1, pageSize = 20) => {
+    const response = await privateApi.get<ApiResponse<PageType<AdminCustomerStatusHistoryDto>>>(
+      `/admin/customers/${userId}/status-history`,
+      { params: { page, pageSize } },
+    );
     return response.data.data;
   };
 }

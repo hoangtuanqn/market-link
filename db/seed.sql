@@ -693,6 +693,15 @@ WHERE o.order_code LIKE 'ML-20260920-%'
 GROUP BY oi.product_id, o.pickup_date, t.default_quantity, t.default_price, p.price
 ON DUPLICATE KEY UPDATE id = id;
 
+-- Rows made before prices moved to US dollars (27/09/2026) kept their dong amounts, because the
+-- insert above leaves an existing row alone: a database seeded then showed water spinach at
+-- $12,000.00 a bunch. No produce here costs $1,000 a unit, so a row at or above that is one of
+-- those rows; put it back on the product's price.
+UPDATE product_daily_stock d
+JOIN products p ON p.id = d.product_id
+SET d.unit_price = p.price
+WHERE d.unit_price >= 1000;
+
 -- ---- Favourites (FR-040, FR-014) of customer@marketlink.vn ----
 -- Two stalls, three products (one sold out, to demo the FR-041 restock alert) and one market.
 -- target_id repeats the one id that is set; uq_fav (customer_id, target_type, target_id) makes this

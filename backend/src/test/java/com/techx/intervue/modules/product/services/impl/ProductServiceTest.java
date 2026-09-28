@@ -26,8 +26,8 @@ import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
-import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
+import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
@@ -260,20 +260,17 @@ class ProductServiceTest {
     }
 
     /**
-     * A Farmer opens the edit form for their own product — does not require the stall to be
-     * approved, like {@code mine()}.
+     * FR-071: reading a product used to be allowed while suspended, on the grounds that only writes
+     * needed an approved stall. D-09 is stricter than that — a suspended Farmer "chỉ thấy đơn cũ" —
+     * so the product screens now close too, with the admin's reason attached.
      */
     @Test
-    void mineOneReturnsOwnProductEvenWhenStallSuspended() {
+    void mineOneIsRefusedWhileTheStallIsSuspended() {
         when(farmers.findByUserId(USER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
-        when(categories.findById(1L)).thenReturn(Optional.of(leafyGreens()));
-        Product p = product(FARMER_ID);
-        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(p));
 
-        FarmerProductResource resource = service.mineOne(USER_ID, PRODUCT_ID);
-
-        assertThat(resource.item().id()).isEqualTo(PRODUCT_ID);
+        assertThatThrownBy(() -> service.mineOne(USER_ID, PRODUCT_ID))
+                .isInstanceOf(StallSuspendedException.class);
     }
 
     /** Review focus #3, applied to GET: the examiner changes the id in the URL → 403, not 404. */

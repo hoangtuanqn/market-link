@@ -6,6 +6,7 @@ import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.SignupStartedResource;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
 
@@ -15,7 +16,11 @@ public interface UserServiceInterface {
     /** FR-008: step 2 of admin sign-in with two-step verification on. */
     AuthResult completeMfaLogin(String mfaToken, String code, String recoveryCode);
 
-    AuthResult registerCustomer(CustomerRegisterRequest request);
+    /** FR-001 + FR-009: park the form and mail a code; no account exists yet. */
+    SignupStartedResource registerCustomer(CustomerRegisterRequest request, String clientIp);
+
+    /** FR-009: the right code creates the customer account and signs it in. */
+    AuthResult completeSignup(String email, String code, String signupToken);
 
     void logout(Long userId, String accessToken, String refreshToken);
 

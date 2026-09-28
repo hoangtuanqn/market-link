@@ -604,6 +604,29 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
+     * FR-072: an admin permanently deactivated this customer — every order of theirs still {@code
+     * placed}/{@code accepted} is cancelled through the same {@link #transition} door as every
+     * other cancellation (D-02 stock restore, FR-038 history), so nothing here duplicates that
+     * logic.
+     */
+    @Override
+    @Transactional
+    public void cancelAllForDeactivatedCustomer(long customerId, Long adminActorId) {
+        List<Order> openOrders =
+                orderRepository.findByCustomerIdAndStatusIn(
+                        customerId, List.of(OrderStatus.PLACED, OrderStatus.ACCEPTED));
+        for (Order summary : openOrders) {
+            Order order = orderRepository.lockById(summary.getId()).orElseThrow();
+            transition(
+                    order,
+                    OrderStatus.CANCELLED,
+                    adminActorId,
+                    "Cancelled: customer account permanently deactivated.");
+            notifyFarmer(order, NotificationKind.ORDER_CANCELLED_ACCOUNT_DEACTIVATED, Map.of());
+        }
+    }
+
+    /**
      * D-07 — only lower quantities or drop items, never add a new product: compute each product's
      * difference, then add/subtract exactly that difference from the daily-stock row for this
      * order's own pickup date (D-02 redesign — never {@code Product.stockQuantity}). Cancelling and

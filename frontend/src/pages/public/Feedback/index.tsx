@@ -23,20 +23,25 @@ const FeedbackPage = () => {
   const [type, setType] = useState<FeedbackType>('bug');
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const send = async () => {
     const trimmed = message.trim();
-    if (trimmed.length < MESSAGE_MIN) return;
+    if (!trimmed || trimmed.length < MESSAGE_MIN) {
+      setError(t('messageHint'));
+      return;
+    }
+    setError(null);
     setSending(true);
     try {
       await FeedbackApi.submit({ type, message: trimmed });
       Notification.success({ title: t('sent.title'), text: t(`sent.${type}`) });
       setMessage('');
-    } catch (error) {
-      if (isAxiosError(error) && error.response?.status === 429) {
+    } catch (err) {
+      if (isAxiosError(err) && err.response?.status === 429) {
         Notification.error({ text: t('tooMany') });
       } else {
-        Notification.error({ text: Helper.getErrorMessage(error, t('sendFailed')) });
+        Notification.error({ text: Helper.getErrorMessage(err, t('sendFailed')) });
       }
     } finally {
       setSending(false);
@@ -96,16 +101,45 @@ const FeedbackPage = () => {
               required
               minLength={MESSAGE_MIN}
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={(e) => {
+                setMessage(e.target.value);
+                if (error && e.target.value.trim().length >= MESSAGE_MIN) {
+                  setError(null);
+                }
+              }}
               placeholder={t('messagePlaceholder')}
-              className="border-line-strong bg-surface-raised text-body min-h-24 rounded-sm border-[1.5px] p-3"
+              className={Helper.cn(
+                'border-line-strong bg-surface-raised text-body focus:outline-focus min-h-24 rounded-sm border-[1.5px] p-3 focus:outline-2',
+                error && 'border-danger focus:outline-danger',
+              )}
             />
-            <span className="text-ink-muted text-[13px]">{t('messageHint')}</span>
+            <div className="flex items-center justify-between text-[13px]">
+              <span className={error ? 'text-danger font-medium' : 'text-ink-muted'}>{error ?? t('messageHint')}</span>
+              <span
+                className={Helper.cn(
+                  'text-[12px] tabular-nums',
+                  message.trim().length === 0
+                    ? 'text-ink-muted'
+                    : message.trim().length < MESSAGE_MIN
+                      ? 'text-danger font-medium'
+                      : 'text-brand font-medium',
+                )}
+              >
+                {message.trim().length} / 2000
+              </span>
+            </div>
           </div>
 
           <div>
-            <Button type="submit" disabled={sending || message.trim().length < MESSAGE_MIN}>
-              {t('submit')}
+            <Button type="submit" disabled={sending}>
+              {sending ? (
+                <span className="inline-flex items-center gap-2">
+                  <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  {t('submit')}
+                </span>
+              ) : (
+                t('submit')
+              )}
             </Button>
           </div>
         </Card>

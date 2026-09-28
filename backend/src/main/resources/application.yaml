@@ -21,7 +21,8 @@ spring:
   # FarmerUploadService; avatars are still capped by the service at 2 MB with a clear message.
   servlet:
     multipart:
-      max-file-size: 40MB
+      # FR-115: chat photos and videos up to 50 MB; every other upload keeps its own, smaller cap
+      max-file-size: 50MB
       max-request-size: 60MB
 
   flyway:
@@ -101,6 +102,9 @@ app:
       redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/google/callback}
   mail:
     from-name: MarketLink
+    # FR-072 account status emails: where "Sign in" points, and the address a locked-out customer writes to.
+    sign-in-url: ${SIGN_IN_URL:http://localhost:3000/login}
+    support-email: ${SUPPORT_EMAIL:admin@marketlink.vn}
   # Stores Farmer application images/videos on the local disk (FarmerUploadService) — for test/demo only.
   uploads:
     dir: ${UPLOAD_DIR:uploads}
@@ -112,6 +116,15 @@ app:
     max-requests: 5
     # Block one IP from sending many different emails
     max-requests-per-ip: 20
+    window-seconds: 3600
+  # FR-009: 6-digit email code at sign-up (docs/superpowers/specs/2026-09-28-email-verification-design.md)
+  email-verification:
+    code-ttl-seconds: 600
+    pending-ttl-seconds: 1800
+    resend-cooldown-seconds: 60
+    max-attempts: 5
+    max-sends-per-email: 5
+    max-sends-per-ip: 20
     window-seconds: 3600
   # FR-008: TOTP two-step verification for admins. encryption-key = 32 bytes Base64 that encrypts the TOTP key in the DB
   # (openssl rand -base64 32). The default value is for dev only; prod requires MFA_ENCRYPTION_KEY.
@@ -158,7 +171,12 @@ app:
     # Spec §8.2: chat images live SEPARATE from app.storage.dir (that directory is served publicly through /uploads).
     # Docker: the chat-uploads volume at /var/lib/marketlink/chat.
     upload-dir: ${CHAT_UPLOAD_DIR:./chat-uploads}
-    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:5242880}
+    # FR-115: 50 MB for photos and videos
+    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:52428800}
+    # Where an upload waits while it is checked (default: the JVM temp dir)
+    temp-dir: ${CHAT_TEMP_DIR:${java.io.tmpdir}}
+    # FR-115: lifetime of a signed video link
+    stream-url-ttl-seconds: 300
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}

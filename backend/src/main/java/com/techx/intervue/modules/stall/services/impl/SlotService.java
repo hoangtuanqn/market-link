@@ -4,6 +4,7 @@ import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.entities.FarmerOperatingDay;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
@@ -12,7 +13,6 @@ import com.techx.intervue.modules.stall.exceptions.FarmerMarketNotYoursException
 import com.techx.intervue.modules.stall.exceptions.SlotBelowBookedException;
 import com.techx.intervue.modules.stall.exceptions.SlotNotFoundException;
 import com.techx.intervue.modules.stall.exceptions.SlotNotYoursException;
-import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
 import com.techx.intervue.modules.stall.repositories.FarmerOperatingDayRepository;
 import com.techx.intervue.modules.stall.repositories.PickupSlotRepository;
@@ -87,7 +87,7 @@ public class SlotService implements SlotServiceInterface {
     @Transactional
     public List<SlotResource> generateSlots(long userId, GenerateSlotsRequest request) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         FarmerMarket link = owned(profile, request.farmerMarketId());
         if (!link.isActive()) {
             throw new IllegalArgumentException("You no longer sell at this market.");
@@ -162,6 +162,7 @@ public class SlotService implements SlotServiceInterface {
     @Transactional
     public SlotResource updateSlot(long userId, long slotId, UpdateSlotRequest request) {
         FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
         // Locked the same way as placing an order (C5): the order count read here cannot change
         // until this write finishes
         PickupSlot slot = slotRepository.lockById(slotId).orElseThrow(SlotNotFoundException::new);
@@ -211,12 +212,6 @@ public class SlotService implements SlotServiceInterface {
         return farmerProfileRepository
                 .findByUserId(userId)
                 .orElseThrow(FarmerProfileNotFoundException::new);
-    }
-
-    private static void requireApproved(FarmerProfile profile) {
-        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new StallNotApprovedException();
-        }
     }
 
     private FarmerMarket owned(FarmerProfile profile, long farmerMarketId) {

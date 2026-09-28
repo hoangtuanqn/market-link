@@ -13,6 +13,12 @@ public interface FileStorageServiceInterface {
     /** Overwrites if a file with the same name exists. */
     void store(String folder, String fileName, byte[] content);
 
+    /**
+     * Same as store, but copies an existing file instead of holding it in memory (FR-115: videos up
+     * to 50 MB). The source is left in place for the caller to delete.
+     */
+    void storeFile(String folder, String fileName, Path source);
+
     /** Files currently on disk; a name that breaks the rules or does not exist gives empty. */
     Optional<Path> find(String folder, String fileName);
 

@@ -53,7 +53,8 @@ class Bucket4jChatRateLimiterTest {
 
         assertThatThrownBy(() -> limiter.check(7L, Action.IMAGE))
                 .isInstanceOf(RateLimitedException.class)
-                .hasMessage("You are sending photos too quickly. Wait a moment and try again.");
+                .hasMessage(
+                        "You are sending photos or videos too quickly. Wait a moment and try again.");
     }
 
     @Test

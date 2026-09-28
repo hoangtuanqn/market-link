@@ -8,7 +8,7 @@ Customer đặt trước → Farmer duyệt → nhận hàng tại stall. Ba vai
 | File | Nội dung | Chủ sở hữu |
 |---|---|---|
 | `.ai/REQUIREMENTS.md` | Nguồn sự thật duy nhất về scope (FR-xxx, MUST/SHOULD/NICE) | QA/DOC |
-| `docs/decisions.md` | 13 quyết định D-01…D-13 đã chốt — **không bàn lại** | LEAD |
+| `docs/decisions.md` | 14 quyết định D-01…D-14 đã chốt — **không bàn lại** | LEAD |
 | `docs/api-contract.md` | Contract BE ↔ FE | LEAD |
 | `db/schema.sql` | Schema đích 19 bảng (MySQL 8, utf8mb4) | LEAD |
 | `docs/requirements/MarketLink-Feature-Catalog-by-Module-and-Role.md` | Danh mục tính năng theo module và vai | — |
@@ -100,8 +100,9 @@ cd frontend && npm run dev
   `docs/api-contract.md` viết theo quyết định này.
 - Backend đã có endpoint cho mọi dòng SRS §1.6 (`docs/requirements/SRS-COVERAGE.md`), và mọi màn FE gọi API thật
   (Task 12 của SRS gap closure, 27/09): dữ liệu mẫu và công tắc `SHOW_WIP` đã gỡ.
-- Chatbot (FR-090…092): tài khoản đã đăng nhập được **Claude** trả lời qua tool chỉ-đọc, khách vãng lai và admin dùng luật
-  từ khoá; thiếu `ANTHROPIC_API_KEY` thì toàn bộ về luật từ khoá. Claude không sinh SQL (R-04), xem `docs/chatbot-design.md`.
+- Chatbot (FR-090…094): Customer, Farmer và Admin đã đăng nhập được **Claude** trả lời, mỗi vai một bộ tool chỉ-đọc riêng;
+  khách vãng lai và admin chưa cài xong 2FA dùng luật từ khoá (trả lời theo ngôn ngữ của câu hỏi, Việt hoặc Anh); thiếu
+  `ANTHROPIC_API_KEY` thì toàn bộ về luật từ khoá. Claude không sinh SQL (R-04), xem `docs/chatbot-design.md`.
 - Dữ liệu demo: `db/seed.sql` (`make seed`) + tuỳ chọn `db/seed-extended.sql` (6 tháng lịch sử, `db/README.md`).
 - ~2.150 dòng comment tiếng Việt trong `backend/src`, `frontend/src` và hạ tầng (docker, scripts, prototype) đã
   dịch sang tiếng Anh (PR #153, đếm ngày 26/09/2026). 30/638 commit vẫn có tiếng Việt (26 nằm trên `dev`); R-09 và

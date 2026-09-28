@@ -51,6 +51,12 @@
     "intent": "Absicht: {{intent}}",
     "photoUnavailable": "Dieses Foto ist nicht verfügbar.",
     "photoFrom": "Foto von {{name}}",
+    "videoFrom": "Video von {{name}}",
+    "playVideo": "Video abspielen",
+    "loadingVideo": "Video wird geladen…",
+    "videoUnavailable": "Dieses Video ist nicht verfügbar.",
+    "videoCantPlay": "Dieser Browser kann das Video nicht abspielen.",
+    "downloadVideo": "Video herunterladen",
     "seen": "Gesehen",
     "loadingThreads": "Unterhaltungen werden geladen…",
     "threadsErrorTitle": "Deine Unterhaltungen konnten nicht geladen werden",
@@ -61,8 +67,8 @@
     "unreadCount_one": "{{count}} ungelesene Nachricht",
     "unreadCount_other": "{{count}} ungelesene Nachrichten",
     "sendFailed": "Deine Nachricht wurde nicht gesendet. Versuche es erneut.",
-    "photoFailed": "Das Foto wurde nicht gesendet. Wähle ein JPEG, PNG oder WebP unter 5 MB.",
-    "attachPhoto": "Foto hinzufügen",
+    "mediaFailed": "Die Datei wurde nicht gesendet. Wähle ein Foto oder Video unter 50 MB.",
+    "attachMedia": "Foto oder Video hinzufügen",
     "draftLabel": "Nachricht schreiben",
     "draftPlaceholder": "Nachricht schreiben",
     "send": "Senden",
@@ -90,8 +96,14 @@
     "unpin": "Entfernen",
     "productGone": "Dieses Produkt ist nicht mehr im Angebot.",
     "tooFast": "Du sendest zu schnell. Warte kurz und versuche es erneut.",
-    "photoTooBig": "Das Foto ist größer als 5 MB. Wähle ein kleineres.",
-    "photoType": "Wähle ein JPEG-, PNG- oder WebP-Foto.",
+    "mediaTooBig": "Diese Datei ist größer als 50 MB. Wähle eine kleinere.",
+    "mediaTooBigForServer": "Diese Datei ist größer, als der Server derzeit annimmt. Wähle eine kleinere.",
+    "mediaType": "Wähle ein Foto (JPEG, PNG, WebP, GIF, AVIF oder HEIC) oder ein Video (MP4, MOV oder WebM).",
+    "converting": "Foto wird umgewandelt…",
+    "convertFailed": "Dieses Foto konnte nicht umgewandelt werden. Speichere es als JPEG und versuche es erneut.",
+    "uploading": "Wird gesendet… {{percent}} %",
+    "uploadProgress": "Upload-Fortschritt",
+    "cancelUpload": "Abbrechen",
     "moreThreads": "Weitere Unterhaltungen laden",
     "reportTitle": "Diese Nachricht melden",
     "reportWhy": "Warum meldest du sie?",
@@ -529,7 +541,8 @@
     "result": {
       "product": "Produkt",
       "market": "Markt",
-      "farmer": "Stand"
+      "farmer": "Stand",
+      "order": "Bestellung"
     },
     "suggest": {
       "find": "Wo kaufe ich dieses Wochenende Tomaten?",
@@ -752,6 +765,28 @@
     "text": "Wir verwenden nur technisch notwendige Cookies, damit Sie angemeldet bleiben und Ihr Warenkorb funktioniert. Es gibt keine Werbe- oder Analyse-Cookies. <a>Datenschutzerklärung</a>.",
     "decline": "Ablehnen",
     "accept": "Akzeptieren"
+  },
+  "banDuration": {
+    "label": "Dauer",
+    "permanent": "Dauerhaft",
+    "temporary": "Vorübergehend",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage",
+    "specificTime": "Oder ein genaues Enddatum wählen"
+  },
+  "accountDeactivated": {
+    "title": "Ihr Konto wurde gesperrt",
+    "generic": "Ein Administrator hat dieses Konto gesperrt, deshalb wurden Sie abgemeldet.",
+    "whatNow": "Sie können Märkte und Produkte weiterhin als Gast ansehen, sich aber währenddessen nicht anmelden oder bestellen.",
+    "contactIntro": "Wenn Sie glauben, dass dies ein Fehler ist, schreiben Sie an",
+    "acknowledge": "Verstanden"
+  },
+  "stallSuspended": {
+    "title": "Ihr Stand ist gesperrt",
+    "generic": "Ein Administrator hat diesen Stand gesperrt, er ist für Kunden vorerst nicht mehr sichtbar.",
+    "whatNow": "Bereits von Kunden aufgegebene Bestellungen müssen trotzdem abgeschlossen werden — bitte erledigen Sie diese. Bis die Sperre aufgehoben ist, können Sie keine Produkte einstellen, Ihren Bestand nicht ändern und keine neuen Bestellungen annehmen.",
+    "contactIntro": "Wenn Sie glauben, dass dies ein Fehler ist, schreiben Sie an",
+    "acknowledge": "Verstanden"
   },
   "storageMode": {
     "room": "Raumtemperatur",

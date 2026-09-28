@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ModerationApi from '@/api-requests/moderation.requests';
 import ChatPhoto from '@/components/chat/ChatPhoto';
+import ChatVideo from '@/components/chat/ChatVideo';
 import { Button } from '@/components/ui/button';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
@@ -10,6 +11,7 @@ import useRequest from '@/hooks/useRequest';
 import { chatWhen } from '@/lib/chat/time';
 import type { ReportDetail, ReportListItem, ReportStatus } from '@/types/chat.types';
 import Notification from '@/utils/notification';
+import { ReportedMessagesSkeleton } from './ModerationSkeleton';
 
 function ReportDetailDialog({
   reportId,
@@ -128,9 +130,12 @@ function ReportDetailDialog({
             </div>
             {m.hasPhoto && m.attachmentId ? (
               <ChatPhoto
-                attachment={{ attachmentId: m.attachmentId, url: '', width: null, height: null }}
+                attachment={{ attachmentId: m.attachmentId, width: null, height: null }}
                 alt={t('messages.photo')}
               />
+            ) : null}
+            {m.hasVideo && m.attachmentId ? (
+              <ChatVideo key={m.attachmentId} attachmentId={m.attachmentId} label={t('messages.video')} />
             ) : null}
             {m.body ? <div className="whitespace-pre-wrap">{m.body}</div> : null}
           </li>
@@ -171,9 +176,7 @@ export default function ReportedMessages() {
       {state.kind === 'error' ? (
         <LoadError noun={t('messages.noun')} onRetry={retry} />
       ) : state.kind === 'loading' ? (
-        <p role="status" className="text-small text-ink-muted">
-          Loading...
-        </p>
+        <ReportedMessagesSkeleton />
       ) : state.data.length === 0 ? (
         <DataState title={t('messages.emptyTitle')} text={t('messages.emptyText')} />
       ) : (

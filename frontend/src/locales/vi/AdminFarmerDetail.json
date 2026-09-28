@@ -36,6 +36,26 @@
     "customer": "Tạo tài khoản khách hàng",
     "byAdmin": "Quản trị viên"
   },
+  "statusHistory": {
+    "title": "Lịch sử sạp",
+    "noun": "lịch sử sạp",
+    "system": "Hệ thống (tự động)",
+    "col": {
+      "when": "Thời gian",
+      "action": "Hành động",
+      "reason": "Lý do",
+      "until": "Đến khi",
+      "by": "Thực hiện bởi"
+    },
+    "action": {
+      "approved": "Đã mở lại",
+      "suspended": "Đã tạm ngừng"
+    },
+    "empty": {
+      "title": "Chưa có lịch sử",
+      "text": "Mọi lần tạm ngừng hoặc mở lại sạp này sẽ hiện ở đây."
+    }
+  },
   "applicant": {
     "title": "Người nộp đơn",
     "name": "Họ tên",

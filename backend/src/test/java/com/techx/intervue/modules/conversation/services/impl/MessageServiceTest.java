@@ -35,6 +35,7 @@ import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Clock;
@@ -329,6 +330,66 @@ class MessageServiceTest {
     }
 
     @Test
+    void sendsAVideoMessage() {
+        MessageAttachment upload = video(56L, 7L, null);
+        when(attachments.findById(56L)).thenReturn(Optional.of(upload));
+
+        MessageResource sent =
+                service.send(
+                        7L, 42L, new SendMessageRequest(MessageKind.VIDEO, null, null, null, 56L));
+
+        assertThat(sent.kind()).isEqualTo(MessageKind.VIDEO);
+        assertThat(sent.attachment().attachmentId()).isEqualTo(56L);
+        assertThat(sent.attachment().mime()).isEqualTo("video/mp4");
+        assertThat(upload.getMessageId()).isEqualTo(sent.id());
+        assertThat(thread.getLastMessageText()).isEqualTo("Video");
+    }
+
+    @Test
+    void aVideoMessageNeedsAnAttachment() {
+        assertThatThrownBy(
+                        () ->
+                                service.send(
+                                        7L,
+                                        42L,
+                                        new SendMessageRequest(
+                                                MessageKind.VIDEO, null, null, null, null)))
+                .isInstanceOf(EmptyMessageException.class);
+    }
+
+    /** A client that lies about the kind cannot make a photo play as a video, or the reverse. */
+    @Test
+    void refusesAVideoMessageWithAPhoto() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload(55L, 7L, null)));
+
+        assertThatThrownBy(
+                        () ->
+                                service.send(
+                                        7L,
+                                        42L,
+                                        new SendMessageRequest(
+                                                MessageKind.VIDEO, null, null, null, 55L)))
+                .isInstanceOf(InvalidFieldException.class)
+                .hasFieldOrPropertyWithValue("field", "attachmentId");
+        verify(messages, never()).save(any(Message.class));
+    }
+
+    @Test
+    void refusesAPhotoMessageWithAVideo() {
+        when(attachments.findById(56L)).thenReturn(Optional.of(video(56L, 7L, null)));
+
+        assertThatThrownBy(
+                        () ->
+                                service.send(
+                                        7L,
+                                        42L,
+                                        new SendMessageRequest(
+                                                MessageKind.IMAGE, null, null, null, 56L)))
+                .isInstanceOf(InvalidFieldException.class);
+        verify(messages, never()).save(any(Message.class));
+    }
+
+    @Test
     void anImageMessageNeedsAnAttachment() {
         assertThatThrownBy(
                         () ->
@@ -410,6 +471,27 @@ class MessageServiceTest {
     }
 
     @Test
+    void listLoadsVideoAttachments() {
+        Message clip =
+                Message.builder()
+                        .id(102L)
+                        .conversationId(42L)
+                        .senderId(3L)
+                        .kind(MessageKind.VIDEO)
+                        .createdAt(NOW)
+                        .build();
+        when(messages.findByConversationIdAndHiddenAtIsNullOrderByIdDesc(
+                        eq(42L), any(Pageable.class)))
+                .thenReturn(List.of(clip));
+        when(attachments.findByMessageIdIn(List.of(102L)))
+                .thenReturn(List.of(video(56L, 3L, 102L)));
+
+        assertThat(service.list(7L, 42L, null, 30))
+                .singleElement()
+                .satisfies(m -> assertThat(m.attachment().mime()).isEqualTo("video/mp4"));
+    }
+
+    @Test
     void listingAThreadOfTextOnlyNeverQueriesTheAttachmentTable() {
         Message text =
                 Message.builder()
@@ -428,6 +510,17 @@ class MessageServiceTest {
 
         verify(attachments, never())
                 .findByMessageIdIn(org.mockito.ArgumentMatchers.anyCollection());
+    }
+
+    private static MessageAttachment video(Long id, Long uploaderId, Long messageId) {
+        return MessageAttachment.builder()
+                .id(id)
+                .uploaderId(uploaderId)
+                .messageId(messageId)
+                .storageKey(id + "-key.mp4")
+                .mime("video/mp4")
+                .sizeBytes(100)
+                .build();
     }
 
     private static MessageAttachment upload(Long id, Long uploaderId, Long messageId) {

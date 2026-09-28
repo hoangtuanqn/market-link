@@ -24,7 +24,7 @@ Every document in the repository, grouped by what you want to do. Language: **EN
 
 | Document | Lang | What it covers |
 |---|---|---|
-| [`decisions.md`](decisions.md) | VI | Product decisions D-01…D-13: one order per farmer, stock reservation, order lifecycle, cutoff, pickup slots… |
+| [`decisions.md`](decisions.md) | VI | Product decisions D-01…D-14: one order per farmer, stock reservation, order lifecycle, cutoff, pickup slots, email verification at sign-up… |
 | [`api-contract.md`](api-contract.md) | VI | Every REST and realtime endpoint: path, request, response, error codes |
 | [`../db/`](../db/README.md) | EN | Target schema, dump of the live tables, demo seed data |
 | [`MarketLink-Farmer-Profile-and-Approval.md`](MarketLink-Farmer-Profile-and-Approval.md) | VI | Backend design: farmer profile, application and approval |

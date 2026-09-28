@@ -13,6 +13,8 @@ import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.MfaVerifyRequest;
 import com.techx.intervue.modules.user.requests.ResetPasswordRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
+import com.techx.intervue.modules.user.requests.SignupResendRequest;
+import com.techx.intervue.modules.user.requests.SignupVerifyRequest;
 import com.techx.intervue.modules.user.requests.SocialLoginRequest;
 import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.requests.VerifyResetTokenRequest;
@@ -23,8 +25,10 @@ import com.techx.intervue.modules.user.resources.LoginResource;
 import com.techx.intervue.modules.user.resources.RefreshResource;
 import com.techx.intervue.modules.user.resources.RegisterResource;
 import com.techx.intervue.modules.user.resources.ResetTokenResource;
+import com.techx.intervue.modules.user.resources.SignupStartedResource;
 import com.techx.intervue.modules.user.resources.UserResource;
 import com.techx.intervue.modules.user.services.impl.GoogleOAuthClient;
+import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.PasswordResetServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
@@ -60,22 +64,48 @@ public class AuthController extends BaseController {
     private final PasswordResetServiceInterface passwordResetService;
     private final AuthConfig authConfig;
     private final GoogleOAuthClient googleClient;
+    private final EmailVerificationServiceInterface emailVerification;
 
-    /** FR-001 */
+    /**
+     * FR-001 + FR-009: nothing is created yet — the account waits for the code mailed to the
+     * address.
+     */
     @PostMapping("/register")
-    public ResponseEntity<ApiResource<RegisterResource>> registerCustomer(
-            @Valid @RequestBody CustomerRegisterRequest request) {
-        AuthResult auth = userService.registerCustomer(request);
+    public ResponseEntity<ApiResource<SignupStartedResource>> registerCustomer(
+            @Valid @RequestBody CustomerRegisterRequest request, HttpServletRequest httpRequest) {
+        SignupStartedResource started =
+                userService.registerCustomer(request, IpHelper.getClientIp(httpRequest));
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(ApiResource.success(started, "We sent a 6-digit code to your email."));
+    }
+
+    /**
+     * FR-009: the right code creates the account and signs in — the answer the old /register gave.
+     */
+    @PostMapping("/register/verify")
+    public ResponseEntity<ApiResource<RegisterResource>> verifySignup(
+            @Valid @RequestBody SignupVerifyRequest request) {
+        AuthResult auth =
+                userService.completeSignup(request.email(), request.code(), request.signupToken());
         ResponseCookie refreshCookie =
                 CookieHelper.buildRefreshTokenCookie(
                         auth.refreshToken(),
                         Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
                         auth.rememberMe());
-
         RegisterResource body = new RegisterResource(auth.accessToken(), auth.user());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .body(ApiResource.success(body, "Account created."));
+    }
+
+    /** FR-009: a new code, after the one-minute cooldown and within the hourly limits. */
+    @PostMapping("/register/resend")
+    public ResponseEntity<ApiResource<SignupStartedResource>> resendSignupCode(
+            @Valid @RequestBody SignupResendRequest request, HttpServletRequest httpRequest) {
+        return ok(
+                emailVerification.resend(
+                        request.email(), request.signupToken(), IpHelper.getClientIp(httpRequest)),
+                "We sent a new code to your email.");
     }
 
     /** FR-003: shared by customer, farmer and admin — the FE routes by user.role. */

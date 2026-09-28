@@ -2,7 +2,6 @@ package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.user.entities.User;
-import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.resources.UserResource;
@@ -26,7 +25,6 @@ import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -208,10 +206,7 @@ public class AvatarService implements AvatarServiceInterface {
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new BadCredentialsException("Account not found."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         return user;
     }
 }

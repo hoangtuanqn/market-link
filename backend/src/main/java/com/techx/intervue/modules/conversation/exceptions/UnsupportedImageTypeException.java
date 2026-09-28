@@ -6,6 +6,11 @@ package com.techx.intervue.modules.conversation.exceptions;
  */
 public class UnsupportedImageTypeException extends RuntimeException {
     public UnsupportedImageTypeException() {
-        super("Send a JPEG, PNG or WebP photo.");
+        super("Send a JPEG, PNG, WebP, GIF or AVIF photo, or an MP4, MOV or WebM video.");
+    }
+
+    /** FR-115: a format we recognise but do not keep, with how to fix it (e.g. HEIC). */
+    public UnsupportedImageTypeException(String message) {
+        super(message);
     }
 }

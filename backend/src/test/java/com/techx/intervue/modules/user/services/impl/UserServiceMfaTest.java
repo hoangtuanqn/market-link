@@ -19,6 +19,7 @@ import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.SocialProfile;
+import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface.PendingLogin;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
@@ -59,7 +60,8 @@ class UserServiceMfaTest {
                         authConfig,
                         mock(JobQueueInterface.class),
                         mfaService,
-                        mock(AddressServiceInterface.class));
+                        mock(AddressServiceInterface.class),
+                        mock(EmailVerificationServiceInterface.class));
         when(passwordEncoder.matches("secret", "hash")).thenReturn(true);
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(jwtService.generateToken(anyLong())).thenReturn("access");

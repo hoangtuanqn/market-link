@@ -129,7 +129,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("Cà chua giá bao nhiêu?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PRODUCT_DETAIL);
-        assertThat(reply.reply()).contains("$1.50/kg", "12 kg left", "Vườn Xanh");
+        assertThat(reply.reply()).contains("$1.50/kg", "còn 12 kg", "Vườn Xanh");
         assertThat(reply.results()).extracting("type", "id").containsExactly(tuple("product", 10L));
     }
 
@@ -140,7 +140,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("tìm rau muống ở chợ Bến Thành");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
-        assertThat(reply.reply()).contains("\"rau muong\" at Chợ Bến Thành");
+        assertThat(reply.reply()).contains("\"rau muong\" ở Chợ Bến Thành");
         verify(knowledge).searchProducts("rau muong", 1L, false);
     }
 
@@ -149,7 +149,25 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("chợ Bến Thành mở cửa mấy giờ");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
-        assertThat(reply.reply()).contains("06:00–11:00", "Sun, Sat");
+        assertThat(reply.reply()).contains("mở cửa 06:00–11:00", "các ngày CN, T7");
+    }
+
+    /**
+     * The keyword engine answers in the language of the question, like the Claude assistant does
+     * (test run 28/09, G10). Market and stall names stay as they are.
+     */
+    @Test
+    void anEnglishQuestionIsStillAnsweredInEnglish() {
+        ChatReplyResource reply = ask("Ben Thanh market hours");
+
+        assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
+        assertThat(reply.reply()).contains("opens 06:00–11:00, on Sun, Sat");
+    }
+
+    @Test
+    void aVietnameseGreetingGetsTheVietnameseHelp() {
+        assertThat(ask("xin chào").reply()).startsWith("Xin chào");
+        assertThat(ask("hello").reply()).startsWith("Hi, I am the MarketLink assistant");
     }
 
     @Test
@@ -169,7 +187,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("Thứ 7 có farmer nào ở chợ Bến Thành?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FARMER_AVAILABILITY);
-        assertThat(reply.reply()).contains("at Chợ Bến Thành on Sat", "Vườn Xanh", "06:00–10:00");
+        assertThat(reply.reply()).contains("ở Chợ Bến Thành vào T7", "Vườn Xanh", "T7 06:00–10:00");
     }
 
     @Test
@@ -190,7 +208,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("khung giờ lấy hàng của vuon xanh");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PICKUP_WINDOW);
-        assertThat(reply.reply()).contains("Sun · Chợ Bến Thành · 07:00–09:30");
+        assertThat(reply.reply()).contains("CN · Chợ Bến Thành · 07:00–09:30");
     }
 
     @Test
@@ -219,7 +237,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("tìm ' OR 1=1 --");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
-        assertThat(reply.reply()).contains("No products found");
+        assertThat(reply.reply()).contains("Không tìm thấy sản phẩm nào");
     }
 
     @Test
@@ -229,7 +247,7 @@ class ChatServiceTest {
 
         ChatReplyResource reply = ask("chợ nào họp chủ nhật");
 
-        assertThat(reply.reply()).isEqualTo(ChatService.DATA_UNAVAILABLE_REPLY);
+        assertThat(reply.reply()).contains("dữ liệu chợ");
         assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
     }
 
@@ -282,7 +300,7 @@ class ChatServiceTest {
                         new ChatRequest(SESSION, "xin chào"), 42L, AssistantAudience.CUSTOMER);
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.GREETING);
-        assertThat(reply.reply()).isEqualTo(ChatService.GREETING_REPLY);
+        assertThat(reply.reply()).startsWith("Xin chào");
     }
 
     @Test

@@ -36,6 +36,26 @@
     "customer": "Cuenta creada como cliente",
     "byAdmin": "Un administrador"
   },
+  "statusHistory": {
+    "title": "Historial del puesto",
+    "noun": "historial del puesto",
+    "system": "Sistema (automático)",
+    "col": {
+      "when": "Cuándo",
+      "action": "Acción",
+      "reason": "Motivo",
+      "until": "Hasta",
+      "by": "Por"
+    },
+    "action": {
+      "approved": "Restablecido",
+      "suspended": "Suspendido"
+    },
+    "empty": {
+      "title": "Aún no hay historial",
+      "text": "Cada suspensión o restablecimiento de este puesto aparecerá aquí."
+    }
+  },
   "applicant": {
     "title": "Solicitante",
     "name": "Nombre",

@@ -54,7 +54,11 @@ services:
       CHATBOT_AI_MESSAGES_PER_HOUR: ${CHATBOT_AI_MESSAGES_PER_HOUR:-30}
       CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR: ${CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR:-60}
       CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY: ${CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY:-1500}
-      CHATBOT_AI_MESSAGES_PER_HOUR: ${CHATBOT_AI_MESSAGES_PER_HOUR:-30}
+      # FR-009 / FR-007: SMTP for the sign-up code and password emails; empty user → mails go to the log
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
       APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
       # Do not publish the API docs in production. If they need to be on (e.g. for the examiner) set SWAGGER_ENABLED=true
       SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}

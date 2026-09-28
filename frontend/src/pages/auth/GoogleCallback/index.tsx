@@ -19,9 +19,13 @@ import Session from '@/utils/session';
  */
 const GoogleCallbackPage = () => {
   const { t } = useTranslation('GoogleCallback');
+  const { t: tc } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [error, setError] = useState<string>();
+  // FR-072: a deactivated account is not a failed sign-in — Google authenticated them fine. Saying
+  // "sign-in did not finish" would send them round the loop again; they need the real reason.
+  const [deactivated, setDeactivated] = useState(false);
   // StrictMode runs effects twice in dev: block sending the same code twice
   const started = useRef(false);
 
@@ -64,7 +68,16 @@ const GoogleCallbackPage = () => {
         // password
         navigate(Helper.nextStepAfterSocialLogin(user), { replace: true });
       })
-      .catch((err) => fail(Helper.getErrorMessage(err, t('errors.failed'))));
+      .catch((err) => {
+        const message = Helper.getErrorMessage(err, t('errors.failed'));
+        if (Helper.getErrorCode(err) === 'ACCOUNT_DISABLED') {
+          // The page states it in full below; a toast on top would only repeat it.
+          setDeactivated(true);
+          setError(message);
+          return;
+        }
+        fail(message);
+      });
     // t changes when the language changes: started blocks a re-run
   }, [searchParams, navigate, t]);
 
@@ -72,7 +85,27 @@ const GoogleCallbackPage = () => {
     <Card className="mx-auto my-4 flex w-full max-w-115 flex-col gap-4 p-4 md:my-8 md:p-8">
       {/* Do not send the URL containing the code to another page through the Referer header */}
       <meta name="referrer" content="no-referrer" />
-      {error ? (
+      {deactivated && error ? (
+        <>
+          <h1 className="font-hand text-h1">{tc('accountDeactivated.title')}</h1>
+          <Banner variant="danger" title={error}>
+            {tc('accountDeactivated.whatNow')}
+          </Banner>
+          <p className="text-small text-ink-muted">
+            {tc('accountDeactivated.contactIntro')}{' '}
+            <a href="mailto:admin@marketlink.vn" className="text-brand underline">
+              admin@marketlink.vn
+            </a>
+            .
+          </p>
+          <ButtonLink to="/" className="w-full">
+            {t('deactivated.browseAsVisitor')}
+          </ButtonLink>
+          <Link to="/login" className="text-small text-brand underline">
+            {t('failed.backToSignIn')}
+          </Link>
+        </>
+      ) : error ? (
         <>
           <h1 className="font-hand text-h1">{t('failed.title')}</h1>
           <Banner variant="danger" title={error}>

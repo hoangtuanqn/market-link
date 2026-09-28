@@ -39,7 +39,7 @@ flowchart LR
 ```
 
 Stock is reserved the moment an order is placed, and the customer can edit or cancel until the farmer's cutoff time.
-Every rule behind the order flow is written down in [`docs/decisions.md`](docs/decisions.md) (D-01…D-13).
+Every rule behind the order flow is written down in [`docs/decisions.md`](docs/decisions.md) (D-01…D-14).
 
 ## Features
 
@@ -160,7 +160,7 @@ market-link/
 |---|---|
 | [`docs/README.md`](docs/README.md) | Index of every document in `docs/` |
 | [`docs/requirements/`](docs/requirements) | The SRS, and how each SRS item maps to an FR and a screen |
-| [`docs/decisions.md`](docs/decisions.md) | Product decisions that shape the order flow (D-01…D-13) |
+| [`docs/decisions.md`](docs/decisions.md) | Product decisions that shape the order flow (D-01…D-14) |
 | [`docs/api-contract.md`](docs/api-contract.md) | Every endpoint: path, request, response, errors |
 | [`docs/design-system/`](docs/design-system/README.md) | Tokens, `ml-*` components and UI copy rules |
 | [`docs/prototype/`](docs/prototype) | Clickable HTML prototype of every screen |

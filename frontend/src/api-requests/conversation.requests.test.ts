@@ -59,16 +59,42 @@ describe('ConversationApi', () => {
     expect(privateApi.post).toHaveBeenCalledWith('/conversations', { farmerId: 30 });
   });
 
-  it('uploads a photo as multipart under the field name the backend reads', async () => {
-    vi.mocked(privateApi.post).mockResolvedValue(ok({ attachmentId: 55 }));
-    const file = new File(['x'], 'photo.png', { type: 'image/png' });
+  it('uploads a photo or a video as multipart under the field name the backend reads', async () => {
+    vi.mocked(privateApi.post).mockResolvedValue(ok({ attachmentId: 55, mime: 'video/mp4' }));
+    const file = new File(['x'], 'clip.mp4', { type: 'video/mp4' });
 
-    await ConversationApi.uploadPhoto(file);
+    await ConversationApi.uploadMedia(file);
 
     const [path, body] = vi.mocked(privateApi.post).mock.calls[0];
     expect(path).toBe('/attachments');
     expect(body).toBeInstanceOf(FormData);
     expect((body as FormData).get('file')).toBe(file);
+  });
+
+  /** A 50 MB video on a phone connection takes minutes: the 10 s default would cut every one of them off. */
+  it('uploads without the default timeout, reports progress in percent and can be cancelled', async () => {
+    vi.mocked(privateApi.post).mockResolvedValue(ok({ attachmentId: 55, mime: 'image/jpeg' }));
+    const onProgress = vi.fn();
+    const signal = new AbortController().signal;
+
+    await ConversationApi.uploadMedia(new File(['x'], 'a.jpg'), { onProgress, signal });
+
+    const config = vi.mocked(privateApi.post).mock.calls[0][2]!;
+    expect(config.timeout).toBe(0);
+    // The instance's default application/json would make axios send the FormData as JSON ("{"file":{}}")
+    expect(config.headers).toEqual({ 'Content-Type': undefined });
+    expect(config.signal).toBe(signal);
+    config.onUploadProgress!({ loaded: 21, total: 50 } as never);
+    expect(onProgress).toHaveBeenCalledWith(42);
+  });
+
+  it('asks for a short-lived link to play a video', async () => {
+    vi.mocked(privateApi.get).mockResolvedValue(ok({ url: '/api/v1/attachments/55/stream?t=x', expiresAt: '' }));
+
+    const response = await ConversationApi.streamUrl(55);
+
+    expect(privateApi.get).toHaveBeenCalledWith('/attachments/55/stream-url');
+    expect(response.data.url).toBe('/api/v1/attachments/55/stream?t=x');
   });
 
   /**

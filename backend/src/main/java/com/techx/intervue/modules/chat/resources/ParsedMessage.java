@@ -9,6 +9,12 @@ import com.techx.intervue.modules.chat.enums.ChatIntent;
  * @param keyword what remains after removing trigger words and stopwords, used to search products
  * @param dayOfWeek 0 = Sunday … 6 = Saturday (matches the day_of_week column), null if the sentence
  *     does not mention one
+ * @param vietnamese true when the question is written in Vietnamese, so the keyword engine answers
+ *     in Vietnamese; otherwise it answers in English
  */
 public record ParsedMessage(
-        ChatIntent intent, String normalized, String keyword, Integer dayOfWeek) {}
+        ChatIntent intent,
+        String normalized,
+        String keyword,
+        Integer dayOfWeek,
+        boolean vietnamese) {}

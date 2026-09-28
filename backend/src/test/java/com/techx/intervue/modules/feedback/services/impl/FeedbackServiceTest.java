@@ -17,6 +17,9 @@ import com.techx.intervue.modules.feedback.repositories.FeedbackQueryRepository;
 import com.techx.intervue.modules.feedback.repositories.FeedbackRepository;
 import com.techx.intervue.modules.feedback.requests.CreateFeedbackRequest;
 import com.techx.intervue.modules.feedback.resources.FeedbackResource;
+import com.techx.intervue.modules.notification.enums.NotificationKind;
+import com.techx.intervue.modules.notification.resources.NotificationEvent;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.distributed.BucketProxy;
@@ -44,6 +47,7 @@ class FeedbackServiceTest {
     private FeedbackQueryRepository queries;
     private RemoteBucketBuilder<String> builder;
     private BucketProxy bucket;
+    private NotificationServiceInterface notifications;
     private FeedbackService service;
 
     @BeforeEach
@@ -54,6 +58,7 @@ class FeedbackServiceTest {
         ProxyManager<String> buckets = mock(ProxyManager.class);
         builder = mock(RemoteBucketBuilder.class);
         bucket = mock(BucketProxy.class);
+        notifications = mock(NotificationServiceInterface.class);
         when(buckets.builder()).thenReturn(builder);
         when(builder.build(any(String.class), any(Supplier.class))).thenReturn(bucket);
         when(bucket.tryConsume(1)).thenReturn(true);
@@ -81,7 +86,19 @@ class FeedbackServiceTest {
                                         null,
                                         null,
                                         "2026-09-26T02:00:00Z")));
-        service = new FeedbackService(feedbacks, queries, new FeedbackRateLimiter(buckets), clock);
+        service =
+                new FeedbackService(
+                        feedbacks, queries, new FeedbackRateLimiter(buckets), notifications, clock);
+    }
+
+    @Test
+    void notifiesAdminsWhenFeedbackSubmitted() {
+        service.submit(7L, IP, request("bug"));
+
+        ArgumentCaptor<NotificationEvent> event = ArgumentCaptor.forClass(NotificationEvent.class);
+        verify(notifications).notifyAdmins(event.capture());
+        assertThat(event.getValue().kind()).isEqualTo(NotificationKind.FEEDBACK);
+        assertThat(event.getValue().link()).isEqualTo("/admin/feedback");
     }
 
     @Test

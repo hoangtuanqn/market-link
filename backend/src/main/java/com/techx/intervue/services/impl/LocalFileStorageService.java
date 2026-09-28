@@ -56,6 +56,28 @@ public class LocalFileStorageService implements FileStorageServiceInterface {
     }
 
     @Override
+    public void storeFile(String folder, String fileName, Path source) {
+        Path target = resolve(folder, fileName);
+        try {
+            Files.createDirectories(target.getParent());
+            // Same temp-then-rename as store: a viewer never receives half a file
+            Path temp = Files.createTempFile(target.getParent(), ".upload-", ".tmp");
+            try {
+                Files.copy(source, temp, StandardCopyOption.REPLACE_EXISTING);
+                Files.move(
+                        temp,
+                        target,
+                        StandardCopyOption.REPLACE_EXISTING,
+                        StandardCopyOption.ATOMIC_MOVE);
+            } finally {
+                Files.deleteIfExists(temp);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not save " + folder + "/" + fileName, e);
+        }
+    }
+
+    @Override
     public Optional<Path> find(String folder, String fileName) {
         if (!isValid(folder, fileName)) {
             return Optional.empty();
