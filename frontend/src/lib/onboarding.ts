@@ -99,7 +99,9 @@ export const markTourSeen = async (userId: string | number, role: TourRole) => {
   }
   try {
     // Read the server copy again right before writing, so the PUT does not overwrite settings with a stale draft
-    const current = normalize((await SettingsApi.get()).data);
+    // Never saved (null) → start from the device's settings, not the defaults, so the language and theme stay
+    const server = (await SettingsApi.get()).data;
+    const current = server ? normalize(server) : SettingsStore.get();
     const saved = await SettingsApi.save({ ...current, extras: { ...current.extras, [extrasKey(role)]: DONE } });
     if (saved.data) SettingsStore.set(normalize(saved.data));
   } catch {

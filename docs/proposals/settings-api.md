@@ -7,7 +7,7 @@ yet (R-07). Design: `docs/superpowers/specs/2026-09-25-settings-theme-i18n-desig
 
 | Method | Path | Role | Body | Response |
 |---|---|---|---|---|
-| GET | `/api/v1/auth/me/settings` | Signed in (all roles) | — | `SettingsResource` (defaults if never saved) |
+| GET | `/api/v1/auth/me/settings` | Signed in (all roles) | — | `SettingsResource`, or `data: null` if never saved |
 | PUT | `/api/v1/auth/me/settings` | Signed in (all roles) | `SettingsResource` (the whole set) | `SettingsResource` |
 
 ```json
@@ -23,7 +23,9 @@ yet (R-07). Design: `docs/superpowers/specs/2026-09-25-settings-theme-i18n-desig
 }
 ```
 
-Defaults: `light`, `en`, `USD`, `metric`, `dmy`, `h24`, no market, no extras.
+Defaults (applied by the frontend): `light`, `en`, `USD`, `metric`, `dmy`, `h24`, no market, no extras. The GET
+returns `data: null` for an account that never saved, so the frontend keeps the guest's choices on the device (and
+saves them to the account) instead of resetting them on sign-in.
 
 `extras` holds the notification switches and each role's own block (Customer preferred pickup time, Farmer
 selling defaults, Admin platform defaults). Nothing reads them yet; they are saved so the choices survive.
