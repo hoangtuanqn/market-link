@@ -58,5 +58,53 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "名前は{{max}}文字以内にしてください。",
     "nameTaken": "同じ名前のカテゴリーがすでにあります。"
+  },
+  "guides": {
+    "title": "保存グループ",
+    "intro": "グループと保存方法ごとの推奨賞味期限です。農家はこの数値を基準に設定します。",
+    "category": "カテゴリー",
+    "col": {
+      "group": "グループ",
+      "examples": "例",
+      "storage": "保存方法",
+      "days": "推奨日数",
+      "daysFor": "{{group}} の日数",
+      "status": "状態"
+    },
+    "status": {
+      "on": "有効",
+      "off": "無効"
+    },
+    "action": {
+      "save": "保存",
+      "off": "無効にする",
+      "on": "有効にする"
+    },
+    "form": {
+      "title": "グループを追加",
+      "group": "グループ名",
+      "groupPlaceholder": "例：Leafy greens",
+      "examples": "例",
+      "examplesHint": "商品名からグループを判定するための、カンマ区切りの商品キーワード（ベトナム語と英語）。",
+      "storage": "保存方法",
+      "days": "推奨日数",
+      "submit": "グループを追加"
+    },
+    "empty": {
+      "title": "保存グループはまだありません",
+      "text": "グループを追加するまで、このカテゴリーの農家にはカテゴリーの範囲が表示されます。"
+    },
+    "noun": "保存グループ",
+    "error": {
+      "nameRequired": "グループ名を入力してください。",
+      "days": "1から365までの整数を入力してください。",
+      "taken": "このグループには、その保存方法がすでに登録されています。"
+    },
+    "toast": {
+      "added": "グループを追加しました。",
+      "saved": "グループを保存しました。",
+      "off": "グループを無効にしました。",
+      "on": "グループを有効にしました。"
+    }
   }
 }

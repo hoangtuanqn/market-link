@@ -58,5 +58,53 @@
     "shelfLifeRange": "Tối đa phải lớn hơn hoặc bằng tối thiểu.",
     "nameTooLong": "Tên danh mục tối đa {{max}} ký tự.",
     "nameTaken": "Đã có danh mục trùng tên này."
+  },
+  "guides": {
+    "title": "Nhóm bảo quản",
+    "intro": "Hạn dùng gợi ý theo nhóm và cách bảo quản. Farmer bắt đầu từ các số này.",
+    "category": "Danh mục",
+    "col": {
+      "group": "Nhóm",
+      "examples": "Ví dụ",
+      "storage": "Bảo quản",
+      "days": "Số ngày gợi ý",
+      "daysFor": "Số ngày cho {{group}}",
+      "status": "Trạng thái"
+    },
+    "status": {
+      "on": "Đang bật",
+      "off": "Đã tắt"
+    },
+    "action": {
+      "save": "Lưu",
+      "off": "Tắt",
+      "on": "Bật lại"
+    },
+    "form": {
+      "title": "Thêm nhóm",
+      "group": "Tên nhóm",
+      "groupPlaceholder": "ví dụ: Leafy greens",
+      "examples": "Ví dụ",
+      "examplesHint": "Các từ chỉ sản phẩm, cách nhau bằng dấu phẩy, cả tiếng Việt lẫn tiếng Anh, dùng để tự chọn nhóm theo tên sản phẩm.",
+      "storage": "Cách bảo quản",
+      "days": "Số ngày gợi ý",
+      "submit": "Thêm nhóm"
+    },
+    "empty": {
+      "title": "Chưa có nhóm bảo quản",
+      "text": "Farmer trong danh mục này sẽ thấy khoảng ngày của danh mục cho tới khi bạn thêm nhóm."
+    },
+    "noun": "nhóm bảo quản",
+    "error": {
+      "nameRequired": "Đặt tên cho nhóm.",
+      "days": "Nhập số nguyên từ 1 đến 365.",
+      "taken": "Nhóm này đã có cách bảo quản đó."
+    },
+    "toast": {
+      "added": "Đã thêm nhóm.",
+      "saved": "Đã lưu nhóm.",
+      "off": "Đã tắt nhóm.",
+      "on": "Đã bật lại nhóm."
+    }
   }
 }

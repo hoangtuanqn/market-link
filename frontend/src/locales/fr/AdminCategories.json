@@ -58,5 +58,53 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "Le nom doit faire {{max}} caractères au plus.",
     "nameTaken": "Une catégorie porte déjà ce nom."
+  },
+  "guides": {
+    "title": "Groupes de conservation",
+    "intro": "Durée de conservation suggérée par groupe et par mode de conservation. Les producteurs partent de ces chiffres.",
+    "category": "Catégorie",
+    "col": {
+      "group": "Groupe",
+      "examples": "Exemples",
+      "storage": "Conservation",
+      "days": "Jours suggérés",
+      "daysFor": "Jours pour {{group}}",
+      "status": "Statut"
+    },
+    "status": {
+      "on": "Actif",
+      "off": "Inactif"
+    },
+    "action": {
+      "save": "Enregistrer",
+      "off": "Désactiver",
+      "on": "Activer"
+    },
+    "form": {
+      "title": "Ajouter un groupe",
+      "group": "Nom du groupe",
+      "groupPlaceholder": "par ex. Leafy greens",
+      "examples": "Exemples",
+      "examplesHint": "Mots de produit séparés par des virgules, en vietnamien et en anglais, utilisés pour choisir le groupe à partir du nom du produit.",
+      "storage": "Mode de conservation",
+      "days": "Jours suggérés",
+      "submit": "Ajouter le groupe"
+    },
+    "empty": {
+      "title": "Pas encore de groupe de conservation",
+      "text": "Les producteurs de cette catégorie voient la plage de la catégorie tant que vous n'ajoutez pas de groupe."
+    },
+    "noun": "groupes de conservation",
+    "error": {
+      "nameRequired": "Donnez un nom au groupe.",
+      "days": "Saisissez un nombre entier de 1 à 365.",
+      "taken": "Ce groupe a déjà ce mode de conservation."
+    },
+    "toast": {
+      "added": "Groupe ajouté.",
+      "saved": "Groupe enregistré.",
+      "off": "Groupe désactivé.",
+      "on": "Groupe activé."
+    }
   }
 }

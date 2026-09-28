@@ -58,5 +58,53 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "이름은 {{max}}자 이내로 입력하세요.",
     "nameTaken": "같은 이름의 카테고리가 이미 있습니다."
+  },
+  "guides": {
+    "title": "보관 그룹",
+    "intro": "그룹과 보관 방법별 권장 유통기한입니다. 농가는 이 수치를 기준으로 시작합니다.",
+    "category": "분류",
+    "col": {
+      "group": "그룹",
+      "examples": "예시",
+      "storage": "보관",
+      "days": "권장 일수",
+      "daysFor": "{{group}}의 일수",
+      "status": "상태"
+    },
+    "status": {
+      "on": "사용 중",
+      "off": "꺼짐"
+    },
+    "action": {
+      "save": "저장",
+      "off": "끄기",
+      "on": "켜기"
+    },
+    "form": {
+      "title": "그룹 추가",
+      "group": "그룹 이름",
+      "groupPlaceholder": "예: Leafy greens",
+      "examples": "예시",
+      "examplesHint": "쉼표로 구분한 상품 단어(베트남어와 영어)로, 상품명에서 그룹을 고르는 데 쓰입니다.",
+      "storage": "보관 방법",
+      "days": "권장 일수",
+      "submit": "그룹 추가"
+    },
+    "empty": {
+      "title": "아직 보관 그룹이 없습니다",
+      "text": "그룹을 추가하기 전까지 이 분류의 농가에는 분류의 범위가 표시됩니다."
+    },
+    "noun": "보관 그룹",
+    "error": {
+      "nameRequired": "그룹 이름을 입력하세요.",
+      "days": "1에서 365 사이의 정수를 입력하세요.",
+      "taken": "이 그룹에는 이미 그 보관 방법이 있습니다."
+    },
+    "toast": {
+      "added": "그룹을 추가했습니다.",
+      "saved": "그룹을 저장했습니다.",
+      "off": "그룹을 껐습니다.",
+      "on": "그룹을 켰습니다."
+    }
   }
 }
