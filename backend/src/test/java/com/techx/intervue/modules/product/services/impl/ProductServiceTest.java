@@ -23,6 +23,7 @@ import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.entities.WeeklyStockTemplate;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
@@ -68,6 +69,7 @@ class ProductServiceTest {
     private WeeklyStockTemplateRepository templates;
     private ShelfLifeGuideRepository shelfLifeGuides;
     private ShelfLifeStandingServiceInterface shelfLifeStanding;
+    private DailyStockTemplateSync dailyStockSync;
 
     @BeforeEach
     void setUp() {
@@ -79,6 +81,7 @@ class ProductServiceTest {
         templates = mock(WeeklyStockTemplateRepository.class);
         shelfLifeGuides = mock(ShelfLifeGuideRepository.class);
         shelfLifeStanding = mock(ShelfLifeStandingServiceInterface.class);
+        dailyStockSync = mock(DailyStockTemplateSync.class);
         service =
                 new ProductService(
                         products,
@@ -90,7 +93,8 @@ class ProductServiceTest {
                         templates,
                         shelfLifeGuides,
                         CLOCK,
-                        shelfLifeStanding);
+                        shelfLifeStanding,
+                        dailyStockSync);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -422,6 +426,24 @@ class ProductServiceTest {
         verify(products).lockAllById(List.of(PRODUCT_ID));
         verify(products, never()).findById(any());
         verify(products, never()).findByIdAndDeletedFalse(any());
+    }
+
+    /**
+     * FR-062/FR-063: a new price must reach the pickup days that already have a daily-stock row —
+     * the sync is handed the price the product had before this edit.
+     */
+    @Test
+    void updateHandsTheOldPriceToTheDailyStockSync() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setPrice(new BigDecimal("0.50"));
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+        List<WeeklyStockTemplate> active = List.of(new WeeklyStockTemplate());
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID)).thenReturn(active);
+
+        service.update(USER_ID, PRODUCT_ID, request());
+
+        verify(dailyStockSync).followPrice(p, new BigDecimal("0.50"), active);
     }
 
     // ---------- FR-041 restock ----------

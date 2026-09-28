@@ -193,6 +193,17 @@ public class ProductQueryRepository {
             GROUP BY oi.product_id, o.pickup_date
             """;
 
+    public static final String SOLD_FROM_SQL =
+            """
+            SELECT o.pickup_date, SUM(oi.quantity) AS sold
+            FROM order_items oi
+            JOIN orders o ON o.id = oi.order_id
+            WHERE oi.product_id = :productId
+              AND o.pickup_date >= :fromDate
+              AND o.status IN ('placed', 'accepted', 'ready', 'completed')
+            GROUP BY o.pickup_date
+            """;
+
     private final NamedParameterJdbcTemplate jdbc;
 
     /**
@@ -219,6 +230,26 @@ public class ProductQueryRepository {
                     }
                 });
         return reserved;
+    }
+
+    /**
+     * Units one product's orders took from each pickup date on or after {@code from} and still hold
+     * — every status but declined and cancelled, the two that give stock back (D-02). A date with
+     * none is absent from the map.
+     */
+    public Map<LocalDate, Integer> soldFrom(long productId, LocalDate from) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("productId", productId)
+                        .addValue("fromDate", from);
+        Map<LocalDate, Integer> sold = new HashMap<>();
+        jdbc.query(
+                SOLD_FROM_SQL,
+                params,
+                rs -> {
+                    sold.put(rs.getObject("pickup_date", LocalDate.class), rs.getInt("sold"));
+                });
+        return sold;
     }
 
     public PageResource<FarmerProductResource> mine(

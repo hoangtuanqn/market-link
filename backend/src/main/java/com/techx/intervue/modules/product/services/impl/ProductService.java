@@ -54,6 +54,7 @@ public class ProductService implements ProductServiceInterface {
     private final ShelfLifeGuideRepository shelfLifeGuides;
     private final Clock clock;
     private final ShelfLifeStandingServiceInterface shelfLifeStanding;
+    private final DailyStockTemplateSync dailyStockSync;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -136,7 +137,8 @@ public class ProductService implements ProductServiceInterface {
      * {@code stockQuantity} here is a reference number only — actual availability is per pickup
      * date ({@code product_daily_stock}, D-02 redesign) and comes from the weekly template, not
      * from this field. Editing it (or anything else {@link ProductRequest} carries) never changes
-     * {@link ProductStatus} and is never a restock event.
+     * {@link ProductStatus} and is never a restock event. A new price reaches the upcoming pickup
+     * days that were still sold at the old one ({@link DailyStockTemplateSync#followPrice}).
      */
     @Override
     @Transactional
@@ -145,9 +147,13 @@ public class ProductService implements ProductServiceInterface {
         StallSuspensionMessage.assertUsable(profile);
         Product product = owned(profile, productId);
         Category category = activeCategory(request.categoryId());
+        BigDecimal oldPrice = product.getPrice();
         apply(product, request, category);
         ShelfLifeGuide guide = applyShelfLife(product, request, category);
-        return toResource(products.save(product), profile, category, guide);
+        Product saved = products.save(product);
+        dailyStockSync.followPrice(
+                saved, oldPrice, templates.findByProductIdAndActiveTrue(saved.getId()));
+        return toResource(saved, profile, category, guide);
     }
 
     /** Soft delete — order_items point to product_id, old orders must stay readable (FR-036). */
