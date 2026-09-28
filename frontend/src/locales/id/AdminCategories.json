@@ -14,11 +14,17 @@
     "category": "Kategori",
     "products": "Produk",
     "stalls": "Lapak",
-    "nameOf": "Nama {{name}}"
+    "nameOf": "Nama {{name}}",
+    "status": "Status",
+    "shelfLife": "Masa simpan",
+    "shelfLifeRange": "{{min}}–{{max}} hari",
+    "shelfLifeDays_one": "{{count}} hari",
+    "shelfLifeDays_other": "{{count}} hari"
   },
   "action": {
     "save": "Simpan",
-    "remove": "Hapus"
+    "remove": "Hapus",
+    "enable": "Aktifkan"
   },
   "categoryForm": {
     "title": "Tambah kategori",
@@ -38,7 +44,9 @@
     "textUnused": "Tidak ada produk yang memakainya.",
     "moveTo": "Pindahkan produk ke",
     "keep": "Pertahankan kategori",
-    "confirm": "Hapus kategori"
+    "confirm": "Hapus kategori",
+    "moveToHint": "Produk yang saat ini ditetapkan ke kategori ini akan dialihkan.",
+    "moveToNone": "Tidak ada (produk tetap memakai kategori ini)"
   },
   "empty": {
     "categories": {
@@ -49,7 +57,8 @@
   "toast": {
     "categorySaved": "{{name}} tersimpan.",
     "categoryAdded": "Kategori ditambahkan. Lapak sudah bisa memilihnya.",
-    "categoryRemoved": "{{name}} dihapus."
+    "categoryRemoved": "{{name}} dihapus.",
+    "categoryEnabled": "{{name}} diaktifkan."
   },
   "error": {
     "noun": "kategori",
@@ -58,5 +67,9 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "Nama paling banyak {{max}} karakter.",
     "nameTaken": "Kategori dengan nama ini sudah ada."
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak aktif"
   }
 }

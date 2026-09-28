@@ -14,11 +14,17 @@
     "category": "분류",
     "products": "상품 수",
     "stalls": "가게 수",
-    "nameOf": "{{name}}의 이름"
+    "nameOf": "{{name}}의 이름",
+    "status": "상태",
+    "shelfLife": "신선 유지 기간",
+    "shelfLifeRange": "{{min}}~{{max}}일",
+    "shelfLifeDays_one": "{{count}}일",
+    "shelfLifeDays_other": "{{count}}일"
   },
   "action": {
     "save": "저장",
-    "remove": "삭제"
+    "remove": "삭제",
+    "enable": "활성화"
   },
   "categoryForm": {
     "title": "분류 추가",
@@ -38,7 +44,9 @@
     "textUnused": "쓰고 있는 상품이 없습니다.",
     "moveTo": "상품을 옮길 곳",
     "keep": "분류 유지",
-    "confirm": "분류 삭제"
+    "confirm": "분류 삭제",
+    "moveToHint": "이 카테고리에 할당된 제품이 재할당됩니다.",
+    "moveToNone": "없음 (제품은 이 카테고리를 유지함)"
   },
   "empty": {
     "categories": {
@@ -49,7 +57,8 @@
   "toast": {
     "categorySaved": "{{name}}을(를) 저장했습니다.",
     "categoryAdded": "분류를 추가했습니다. 가게가 바로 고를 수 있습니다.",
-    "categoryRemoved": "{{name}}을(를) 삭제했습니다."
+    "categoryRemoved": "{{name}}을(를) 삭제했습니다.",
+    "categoryEnabled": "{{name}}이(가) 활성화되었습니다."
   },
   "error": {
     "noun": "카테고리",
@@ -58,5 +67,9 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "이름은 {{max}}자 이내로 입력하세요.",
     "nameTaken": "같은 이름의 카테고리가 이미 있습니다."
+  },
+  "status": {
+    "active": "활성",
+    "inactive": "비활성"
   }
 }

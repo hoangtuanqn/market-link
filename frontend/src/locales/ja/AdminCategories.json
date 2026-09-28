@@ -14,11 +14,17 @@
     "category": "カテゴリー",
     "products": "商品数",
     "stalls": "店舗数",
-    "nameOf": "{{name}} の名称"
+    "nameOf": "{{name}} の名称",
+    "status": "ステータス",
+    "shelfLife": "賞味期限",
+    "shelfLifeRange": "{{min}}〜{{max}}日",
+    "shelfLifeDays_one": "{{count}}日",
+    "shelfLifeDays_other": "{{count}}日"
   },
   "action": {
     "save": "保存",
-    "remove": "削除"
+    "remove": "削除",
+    "enable": "有効化"
   },
   "categoryForm": {
     "title": "カテゴリーを追加",
@@ -38,7 +44,9 @@
     "textUnused": "使っている商品はありません。",
     "moveTo": "商品の移動先",
     "keep": "カテゴリーを残す",
-    "confirm": "カテゴリーを削除"
+    "confirm": "カテゴリーを削除",
+    "moveToHint": "このカテゴリーに属する商品は再割り当てされます。",
+    "moveToNone": "なし（商品はこのカテゴリーのままになります）"
   },
   "empty": {
     "categories": {
@@ -49,7 +57,8 @@
   "toast": {
     "categorySaved": "{{name}} を保存しました。",
     "categoryAdded": "カテゴリーを追加しました。店舗はすぐ選べます。",
-    "categoryRemoved": "{{name}} を削除しました。"
+    "categoryRemoved": "{{name}} を削除しました。",
+    "categoryEnabled": "{{name}} を有効にしました。"
   },
   "error": {
     "noun": "カテゴリー",
@@ -58,5 +67,9 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "名前は{{max}}文字以内にしてください。",
     "nameTaken": "同じ名前のカテゴリーがすでにあります。"
+  },
+  "status": {
+    "active": "有効",
+    "inactive": "無効"
   }
 }

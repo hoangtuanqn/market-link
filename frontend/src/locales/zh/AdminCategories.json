@@ -14,11 +14,17 @@
     "category": "分类",
     "products": "商品数",
     "stalls": "摊位数",
-    "nameOf": "{{name}} 的名称"
+    "nameOf": "{{name}} 的名称",
+    "status": "状态",
+    "shelfLife": "保质期",
+    "shelfLifeRange": "{{min}}–{{max}} 天",
+    "shelfLifeDays_one": "{{count}} 天",
+    "shelfLifeDays_other": "{{count}} 天"
   },
   "action": {
     "save": "保存",
-    "remove": "删除"
+    "remove": "删除",
+    "enable": "启用"
   },
   "categoryForm": {
     "title": "添加分类",
@@ -38,7 +44,9 @@
     "textUnused": "没有商品在用它。",
     "moveTo": "把商品移到",
     "keep": "保留分类",
-    "confirm": "删除分类"
+    "confirm": "删除分类",
+    "moveToHint": "当前分配给该类别的商品将被重新分配。",
+    "moveToNone": "无（商品保留此类别）"
   },
   "empty": {
     "categories": {
@@ -49,7 +57,8 @@
   "toast": {
     "categorySaved": "已保存 {{name}}。",
     "categoryAdded": "分类已添加。摊位现在就能选。",
-    "categoryRemoved": "已删除 {{name}}。"
+    "categoryRemoved": "已删除 {{name}}。",
+    "categoryEnabled": "已启用 {{name}}。"
   },
   "error": {
     "noun": "分类",
@@ -58,5 +67,9 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "名称不能超过 {{max}} 个字符。",
     "nameTaken": "已有同名的分类。"
+  },
+  "status": {
+    "active": "启用",
+    "inactive": "停用"
   }
 }
