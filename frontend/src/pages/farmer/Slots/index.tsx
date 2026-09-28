@@ -218,7 +218,7 @@ const FarmerSlotsPage = () => {
             if (e.key === 'Enter') e.currentTarget.blur();
           }}
           aria-label={t('table.maxFor', { slot: clockRange(s) })}
-          className="border-line-strong bg-surface-raised min-h-9 w-21 rounded-sm border-[1.5px] px-2 text-right tabular-nums disabled:opacity-60"
+          className="border-line-strong bg-surface-raised min-h-11 w-21 rounded-sm border-[1.5px] px-2 text-right tabular-nums disabled:opacity-60"
         />
       ),
     },
