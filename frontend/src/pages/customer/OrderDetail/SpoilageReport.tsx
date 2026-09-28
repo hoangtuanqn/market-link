@@ -33,13 +33,20 @@ const SERVER_FIELDS: Record<string, keyof ReportErrors> = {
   file: 'photo',
 };
 
-type SpoilageActionProps = { item: OrderItemDto; status: OrderStatus; today: string; onReport: () => void };
+type SpoilageActionProps = {
+  item: OrderItemDto;
+  status: OrderStatus;
+  today: string;
+  /** "yyyy-MM-dd" — M-1: an order can be completed before its own pickup day, which must hide the button too. */
+  pickupDate: string;
+  onReport: () => void;
+};
 
 /**
  * FR-122 — under one order line: the report's status once the customer reported it, else the "Report spoiled" button
  * while the line can still be reported (spec §4.4.1).
  */
-export function SpoilageAction({ item, status, today, onReport }: SpoilageActionProps) {
+export function SpoilageAction({ item, status, today, pickupDate, onReport }: SpoilageActionProps) {
   const { t } = useTranslation('CustomerOrderDetail');
   const { t: tc } = useTranslation();
   if (item.qualityReport) {
@@ -49,7 +56,7 @@ export function SpoilageAction({ item, status, today, onReport }: SpoilageAction
       </span>
     );
   }
-  if (!canReportSpoilage(status, item, today)) return null;
+  if (!canReportSpoilage(status, item, today, pickupDate)) return null;
   return (
     <span className="mt-1 block">
       <Button

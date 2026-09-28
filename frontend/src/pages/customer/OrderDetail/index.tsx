@@ -177,7 +177,13 @@ const CustomerOrderDetailPage = () => {
                       {t('items.line', { qty: item.quantity, unit: item.unit, price: money(item.unitPrice) })}
                     </span>
                     <BestBeforeLine bestBefore={item.bestBefore} storageMode={item.storageMode} />
-                    <SpoilageAction item={item} status={s.status} today={today} onReport={() => setReporting(item)} />
+                    <SpoilageAction
+                      item={item}
+                      status={s.status}
+                      today={today}
+                      pickupDate={s.pickupDate}
+                      onReport={() => setReporting(item)}
+                    />
                   </span>
                   <span className="font-hand text-price shrink-0">{money(item.subtotal)}</span>
                 </li>

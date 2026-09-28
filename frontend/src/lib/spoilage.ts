@@ -24,18 +24,22 @@ export const reportDeadline = (bestBefore: string): string => addDays(bestBefore
 
 /**
  * Whether the "Report spoiled" button shows under one line: a completed order, a line with an id and a good-until date
- * (lines placed before the promise existed have none), not reported yet, and still inside the window.
+ * (lines placed before the promise existed have none), not reported yet, still inside the window, and — since a farmer
+ * can mark an order complete before its own pickup day (M-1) — at least one valid "spoiled on" day actually exists,
+ * i.e. pickup has happened by today. Without this, the day select would be empty and the send would 400.
  */
 export function canReportSpoilage(
   status: OrderStatus,
   line: { bestBefore?: string | null; qualityReport?: unknown; itemId?: number },
   today: string,
+  pickupDate: string,
 ): boolean {
   return (
     status === 'completed' &&
     line.itemId != null &&
     !!line.bestBefore &&
     !line.qualityReport &&
+    pickupDate <= today &&
     today <= reportDeadline(line.bestBefore)
   );
 }
