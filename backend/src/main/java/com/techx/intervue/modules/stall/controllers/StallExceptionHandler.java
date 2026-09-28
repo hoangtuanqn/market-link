@@ -8,6 +8,7 @@ import com.techx.intervue.modules.stall.exceptions.SlotBelowBookedException;
 import com.techx.intervue.modules.stall.exceptions.SlotNotFoundException;
 import com.techx.intervue.modules.stall.exceptions.SlotNotYoursException;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
+import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -132,6 +133,12 @@ public class StallExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ApiResource<Void>> unreadableBody(HttpMessageNotReadableException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
+    }
+
+    /** FR-071/D-09: approved once, suspended now — carries the admin's reason. */
+    @ExceptionHandler(StallSuspendedException.class)
+    ResponseEntity<ApiResource<Void>> suspended(StallSuspendedException e) {
+        return error(HttpStatus.FORBIDDEN, "STALL_SUSPENDED", e.getMessage(), List.of());
     }
 
     private static ResponseEntity<ApiResource<Void>> error(

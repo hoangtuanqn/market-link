@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.report.services.impl;
 
+import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
@@ -39,6 +41,11 @@ public class FarmerReportService implements FarmerReportServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public FarmerDashboardResource dashboard(long userId) {
+        // D-09: selling figures are part of the selling panel, so they close with it.
+        StallSuspensionMessage.assertUsable(
+                farmerRepository
+                        .findByUserId(userId)
+                        .orElseThrow(FarmerProfileNotFoundException::new));
         LocalDate monthStart = LocalDate.now(clock).withDayOfMonth(1);
         long farmerId = stallOf(userId);
         return reports.dashboard(farmerId, monthStart).withLowStockCount(lowStockCount(farmerId));

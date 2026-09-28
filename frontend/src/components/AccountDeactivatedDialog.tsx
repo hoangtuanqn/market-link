@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
-import AccountDeactivatedNotice from '@/utils/accountDeactivatedNotice';
+import BlockedNotice from '@/utils/blockedNotice';
 
 const SUPPORT_EMAIL = 'admin@marketlink.vn';
 
@@ -15,11 +15,12 @@ const SUPPORT_EMAIL = 'admin@marketlink.vn';
 const AccountDeactivatedDialog = () => {
   const { t } = useTranslation();
   // Read once during the first render (pure, so a double-invoked initializer is harmless)…
-  const [reason] = useState<string | null>(() => AccountDeactivatedNotice.peek());
+  const [notice] = useState(() => BlockedNotice.peek());
   const [dismissed, setDismissed] = useState(false);
+  const reason = notice?.kind === 'account' ? notice.message : null;
 
   // …and remove it after mounting, so a later reload does not show it again.
-  useEffect(() => AccountDeactivatedNotice.clear(), []);
+  useEffect(() => BlockedNotice.clear(), []);
 
   if (reason === null || dismissed) return null;
 

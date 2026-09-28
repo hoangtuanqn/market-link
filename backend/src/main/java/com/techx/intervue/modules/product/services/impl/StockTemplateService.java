@@ -1,9 +1,9 @@
 package com.techx.intervue.modules.product.services.impl;
 
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
-import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
@@ -13,7 +13,6 @@ import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateReposi
 import com.techx.intervue.modules.product.requests.StockTemplateRequest;
 import com.techx.intervue.modules.product.resources.StockTemplateResource;
 import com.techx.intervue.modules.product.services.interfaces.StockTemplateServiceInterface;
-import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +48,7 @@ public class StockTemplateService implements StockTemplateServiceInterface {
     @Transactional
     public List<StockTemplateResource> replace(long userId, StockTemplateRequest request) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
 
         Set<String> seen = new HashSet<>();
         Map<Long, Product> touched = new HashMap<>();
@@ -78,14 +77,13 @@ public class StockTemplateService implements StockTemplateServiceInterface {
     }
 
     /** R-06: hồ sơ luôn tra theo userId của token; không có đường nào nhận farmerId từ request. */
+    /** D-09: the weekly stock screen, read or written, closes while the stall is suspended. */
     private FarmerProfile mine(long userId) {
-        return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
+        FarmerProfile profile =
+                farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
+        StallSuspensionMessage.assertUsable(profile);
+        return profile;
     }
 
     /** D-09 / contract §4: chưa duyệt hoặc bị đình chỉ thì mọi thao tác ghi lịch tuần bị chặn. */
-    private static void requireApproved(FarmerProfile profile) {
-        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new StallNotApprovedException();
-        }
-    }
 }
