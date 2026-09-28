@@ -760,5 +760,12 @@
     "days_one": "{{count}}일",
     "days_other": "{{count}}일",
     "specificTime": "또는 정확한 종료 시각 선택"
+  },
+  "accountDeactivated": {
+    "title": "계정이 정지되었습니다",
+    "generic": "관리자가 이 계정을 정지하여 로그아웃되었습니다.",
+    "whatNow": "방문자로 시장과 농산물을 둘러볼 수는 있지만, 이 기간에는 로그인하거나 주문할 수 없습니다.",
+    "contactIntro": "착오라고 생각되시면 다음으로 연락 주세요:",
+    "acknowledge": "확인했습니다"
   }
 }

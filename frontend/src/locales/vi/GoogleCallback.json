@@ -17,5 +17,8 @@
     "google": "Google không đăng nhập được cho bạn. Vui lòng thử lại.",
     "invalidState": "Lần đăng nhập này không hợp lệ. Hãy bắt đầu lại từ trang đăng nhập.",
     "failed": "Đăng nhập Google thất bại. Vui lòng thử lại."
+  },
+  "deactivated": {
+    "browseAsVisitor": "Xem với tư cách khách"
   }
 }

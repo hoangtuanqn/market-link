@@ -760,5 +760,12 @@
     "days_one": "{{count}} ngày",
     "days_other": "{{count}} ngày",
     "specificTime": "Hoặc chọn một thời điểm cụ thể"
+  },
+  "accountDeactivated": {
+    "title": "Tài khoản của bạn đã bị vô hiệu hoá",
+    "generic": "Quản trị viên đã vô hiệu hoá tài khoản này, nên bạn đã bị đăng xuất.",
+    "whatNow": "Bạn vẫn có thể xem chợ và nông sản với tư cách khách, nhưng không thể đăng nhập hay đặt hàng trong thời gian này.",
+    "contactIntro": "Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ",
+    "acknowledge": "Tôi đã hiểu"
   }
 }

@@ -24,18 +24,19 @@ describe('watchForAccountDeactivated', () => {
       statusText: 'Unauthorized',
       headers: {},
       config: {} as never,
+      // The real envelope (ApiResource): `message` sits at the root, and ErrorResource carries only
+      // `code` + `details`. Reading `data.error.message` is what made the banner say "undefined".
       data: {
-        error: {
-          code: 'ACCOUNT_DEACTIVATED',
-          message: 'Your account has been deactivated. Reason: No-shows.',
-        },
+        success: false,
+        message: 'Your account has been deactivated. Reason: No-shows.',
+        error: { code: 'ACCOUNT_DEACTIVATED', details: [] },
       },
     };
 
     await expect(watchForAccountDeactivated(error)).rejects.toBe(error);
 
     expect(Session.getAccessToken()).toBeNull();
-    expect(AccountDeactivatedNotice.consume()).toBe('Your account has been deactivated. Reason: No-shows.');
+    expect(AccountDeactivatedNotice.peek()).toBe('Your account has been deactivated. Reason: No-shows.');
     expect(assignSpy).toHaveBeenCalledWith('/');
   });
 
@@ -52,7 +53,7 @@ describe('watchForAccountDeactivated', () => {
 
     await expect(watchForAccountDeactivated(error)).rejects.toBe(error);
 
-    expect(AccountDeactivatedNotice.consume()).toBeNull();
+    expect(AccountDeactivatedNotice.peek()).toBeNull();
     expect(Session.getAccessToken()).toBe('still-valid');
   });
 });

@@ -40,7 +40,11 @@ privateApi.interceptors.response.use((res) => res, watchForMaintenanceMode);
 export const watchForAccountDeactivated = (error: unknown) => {
   if (error instanceof AxiosError && error.response?.data?.error?.code === 'ACCOUNT_DEACTIVATED') {
     Session.clear();
-    AccountDeactivatedNotice.stash(error.response.data.error.message);
+    // The reason sits on the envelope root (`message`); ErrorResource only carries `code` +
+    // `details`. An empty stash means the screen falls back to its own generic wording rather than
+    // showing the word "undefined" to someone who has just been locked out.
+    const reason = error.response.data?.message;
+    AccountDeactivatedNotice.stash(typeof reason === 'string' ? reason : '');
     window.location.assign('/');
   }
   return Promise.reject(error);

@@ -9,7 +9,6 @@ import com.techx.intervue.modules.geo.services.interfaces.AddressServiceInterfac
 import com.techx.intervue.modules.user.entities.SocialAccount;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
-import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
@@ -45,7 +44,6 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -189,13 +187,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                                 () ->
                                         new BadCredentialsException(
                                                 "Email or password is incorrect."));
-        if (user.getStatus() == UserStatus.INACTIVE) {
-            throw new DisabledException(DeactivationMessage.of(user));
-        }
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         // Check before issuing a token: do not hand out a refresh cookie to an account with the
         // wrong role
         if (request.requiredRole() != null && user.getRole() != request.requiredRole()) {
@@ -216,10 +208,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                 userRepository
                         .findById(pending.userId())
                         .orElseThrow(() -> new BadCredentialsException("Account not found."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         return issueTokens(user, pending.rememberMe());
     }
 
@@ -237,10 +226,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .findById(rotated.userId())
                         .orElseThrow(
                                 () -> new BadCredentialsException("Refresh token is not valid."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         return buildAuthResult(user, rotated.newRefreshToken(), rotated.rememberMe());
     }
 
@@ -265,10 +251,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                                                                 new BadCredentialsException(
                                                                         "Account not found.")))
                         .orElseGet(() -> linkOrCreateUser(profile));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         // FR-008: Google sign-in must not skip step 2
         return issueTokensOrChallenge(user, true);
     }
@@ -379,10 +362,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new BadCredentialsException("Account not found."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         return user;
     }
 
@@ -496,10 +476,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new BadCredentialsException("Account not found."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         if (user.getPasswordHash() != null) {
             throw new PasswordAlreadySetException();
         }

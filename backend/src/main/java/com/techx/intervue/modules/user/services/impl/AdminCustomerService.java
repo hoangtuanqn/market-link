@@ -113,6 +113,7 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
                 () -> {
                     sessionCache.revokeAll(userId);
                     Map<String, String> payload = new HashMap<>();
+                    payload.put("userId", String.valueOf(userId));
                     payload.put("email", email);
                     payload.put("fullName", fullName);
                     payload.put("reason", reason);
@@ -122,6 +123,7 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
     }
 
     private void reactivate(User user, Long actorId, UserStatus from) {
+        Long reactivatedId = user.getId();
         user.setStatus(UserStatus.ACTIVE);
         user.setDeactivationReason(null);
         user.setDeactivatedUntil(null);
@@ -134,6 +136,7 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
         TransactionHelper.afterCommit(
                 () -> {
                     Map<String, String> payload = new HashMap<>();
+                    payload.put("userId", String.valueOf(reactivatedId));
                     payload.put("email", email);
                     payload.put("fullName", fullName);
                     jobQueue.enqueue(JOB_NOTIFY_REACTIVATED, payload);

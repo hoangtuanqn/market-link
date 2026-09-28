@@ -121,6 +121,13 @@
   "errors": {
     "network": "Could not reach the server. Check your connection and try again."
   },
+  "accountDeactivated": {
+    "title": "Your account has been deactivated",
+    "generic": "An administrator deactivated this account, so you have been signed out.",
+    "whatNow": "You can still browse markets and produce as a visitor, but you cannot sign in or place orders while this is in effect.",
+    "contactIntro": "If you believe this is a mistake, contact us at",
+    "acknowledge": "I understand"
+  },
   "farmerNav": {
     "sections": "Sections",
     "navigation": "Farmer navigation",
