@@ -13,6 +13,7 @@ import java.util.Locale;
 public enum NotificationKind {
     ANNOUNCEMENT(NotificationCategory.ANNOUNCEMENTS, true),
     FARMER_APPLICATION(NotificationCategory.FARMER_APPLICATIONS, true),
+    FEEDBACK(NotificationCategory.FARMER_APPLICATIONS, true),
     FARMER_APPROVED(NotificationCategory.ACCOUNT, true),
     FARMER_REJECTED(NotificationCategory.ACCOUNT, true),
     FARMER_SUSPENDED(NotificationCategory.ACCOUNT, true),

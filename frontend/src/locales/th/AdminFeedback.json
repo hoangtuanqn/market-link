@@ -6,6 +6,7 @@
   "caption": "{{count}} feedback messages",
   "filterLabel": "กรองข้อเสนอแนะ",
   "filter": {
+    "all": "ทั้งหมด",
     "new": "New",
     "reviewed": "Reviewed",
     "resolved": "Resolved",

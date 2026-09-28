@@ -1,5 +1,5 @@
 import type { ApiResponse, PageType } from '@/types/api.types';
-import { privateApi, publicApi } from '@/utils/axiosInstance';
+import { privateApi } from '@/utils/axiosInstance';
 
 /** FR-081 — the three kinds the form offers (contract §11). */
 export type FeedbackType = 'bug' | 'suggestion' | 'query';
@@ -29,7 +29,7 @@ class FeedbackApi {
    * server). 400 `VALIDATION_ERROR` per field, 429 `RATE_LIMITED` after 5 submissions an hour from one address.
    */
   static submit = async (input: { type: FeedbackType; message: string }) => {
-    const response = await publicApi.post<ApiResponse<FeedbackDto>>('/feedbacks', input);
+    const response = await privateApi.post<ApiResponse<FeedbackDto>>('/feedbacks', input);
     return response.data.data;
   };
 

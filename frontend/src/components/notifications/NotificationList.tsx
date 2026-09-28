@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import NotificationApi from '@/api-requests/notification.requests';
-import { MegaphoneIcon, ReceiptIcon, StoreIcon } from '@/components/icons';
+import { ChatIcon, MegaphoneIcon, ReceiptIcon, StoreIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState } from '@/components/ui/data-state';
@@ -18,6 +18,7 @@ const PAGE_SIZE = 20;
 const iconOf = (kind: NotificationKindCode) => {
   if (kind === 'announcement') return { Icon: MegaphoneIcon, className: 'bg-highlight text-ink' };
   if (kind.startsWith('farmer_')) return { Icon: StoreIcon, className: 'bg-brand-tint text-ink' };
+  if (kind === 'feedback') return { Icon: ChatIcon, className: 'bg-status-accepted-bg text-ink' };
   return { Icon: ReceiptIcon, className: 'bg-surface-sunken text-ink' };
 };
 

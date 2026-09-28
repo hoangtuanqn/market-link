@@ -6,6 +6,7 @@
   "caption": "{{count}} feedback messages",
   "filterLabel": "Filtrer les retours",
   "filter": {
+    "all": "Tous",
     "new": "New",
     "reviewed": "Reviewed",
     "resolved": "Resolved",

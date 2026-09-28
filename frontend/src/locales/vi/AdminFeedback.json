@@ -6,6 +6,7 @@
   "caption": "{{count}} góp ý",
   "filterLabel": "Lọc góp ý",
   "filter": {
+    "all": "Tất cả",
     "new": "Mới",
     "reviewed": "Đã xem",
     "resolved": "Đã xử lý",
