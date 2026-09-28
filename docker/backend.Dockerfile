@@ -29,9 +29,11 @@ RUN ./mvnw -B -q package -DskipTests \
 # ---------- prod ----------
 FROM eclipse-temurin:25-jre AS prod
 WORKDIR /app
-# the uploads-data volume is initialized from /app/uploads, so the spring user can write uploaded images
+# the uploads-data volume is initialized from /app/uploads, so the spring user can write uploaded images.
+# Same for the chat-uploads volume (FR-115): without the directory in the image Docker creates it root-owned.
 RUN groupadd -r spring && useradd -r -g spring spring \
-    && mkdir -p /app/uploads && chown spring:spring /app/uploads
+    && mkdir -p /app/uploads /var/lib/marketlink/chat \
+    && chown spring:spring /app/uploads /var/lib/marketlink/chat
 COPY --from=build /app/app.jar app.jar
 USER spring
 EXPOSE 8080

@@ -52,13 +52,27 @@ Demo accounts for every role (shared password `Demo@1234`) are listed in
 | `make infra` | Only MySQL + Redis + RabbitMQ (same as `docker compose up -d`) |
 | `make tools` | Adminer at http://localhost:8081, RedisInsight at http://localhost:5540 |
 | RabbitMQ UI | http://localhost:15672 (user/password from `RABBITMQ_USER` / `RABBITMQ_PASSWORD` in `.env`) — realtime broker for chat and notifications (`/user/topic/notifications`, see `docs/api-contract.md` §9), runs with the stack |
-| Chat photos | Stored on the `chat-uploads` volume at `CHAT_UPLOAD_DIR` (default `/var/lib/marketlink/chat`), **not** under `/uploads`. They are only served through `GET /api/v1/attachments/{id}`, which checks that you are in the conversation. Limits: `CHAT_MAX_UPLOAD_BYTES` (5 MB), `CHAT_MESSAGES_PER_MINUTE` (30), `CHAT_IMAGES_PER_HOUR` (10), `CHAT_CONVERSATIONS_PER_HOUR` (20) |
+| Chat photos | Stored on the `chat-uploads` volume at `CHAT_UPLOAD_DIR` (default `/var/lib/marketlink/chat`), **not** under `/uploads`. They are only served through `GET /api/v1/attachments/{id}`, which checks that you are in the conversation. Limits: `CHAT_MAX_UPLOAD_BYTES` (50 MB), `CHAT_MESSAGES_PER_MINUTE` (30), `CHAT_IMAGES_PER_HOUR` (10), `CHAT_CONVERSATIONS_PER_HOUR` (20) |
 | `make logs s=backend` | Follow the logs of one service |
 | `make be-test` | Run backend tests in the container |
 | `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
 | `make mysql` / `make redis` | Open a MySQL / Redis shell |
 | `make prod-init` / `make prod` | Create `.env.production` from the template / build and run production (separate containers and data) |
+| `make prod-seed` | Load `db/seed.sql` and the demo photos into the production stack (see below) |
 | `make down` / `make clean` | Stop the stack / stop and **delete** DB + Redis data |
+
+### Production stack
+
+1. `make prod-init`, then replace **every** `<...>` value in `.env.production`. `make prod` refuses to start while
+   one is left, so the API URL, the SMTP account and the email links cannot fall back to localhost or the log.
+   `COOKIE_SECURE` is `true` behind HTTPS. Set it to `false` **only** when the site is served over plain `http://`
+   on a host other than localhost: browsers drop the `Secure` refresh cookie there, so everyone would be signed out
+   when the 15-minute access token expires.
+2. `make prod` (from `main` or a release tag).
+3. Once the backend is up, run `make prod-seed` once. The admin seeder only runs in the `dev` and `local` profiles,
+   so a fresh production database has **no admin** until this seed creates `admin@marketlink.vn` and the demo
+   accounts (password `Demo@1234`, see [`DEMO_CREDENTIALS.md`](DEMO_CREDENTIALS.md)). Change the admin password
+   right after the first sign-in. The seed is safe to re-run.
 
 ## 3. Option B — Run the Backend and Frontend on Your Machine
 
