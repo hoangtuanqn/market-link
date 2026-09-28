@@ -5,10 +5,11 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** Matches ENUM('text','image','offer','system') in migration V20260925006. */
+/** Matches ENUM('text','image','video','offer','system') in migration V20260928004. */
 public enum MessageKind {
     TEXT,
     IMAGE,
+    VIDEO,
     OFFER,
     SYSTEM;
 

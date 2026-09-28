@@ -24,6 +24,7 @@ import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.user.entities.User;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.Clock;
@@ -50,6 +51,8 @@ public class MessageService implements MessageServiceInterface {
     /** Preview of an image message in the thread list — there is no text to show. */
     static final String IMAGE_PREVIEW = "Photo";
 
+    static final String VIDEO_PREVIEW = "Video";
+
     private final MessageRepository messages;
     private final ConversationRepository conversations;
     private final UserRepository users;
@@ -67,14 +70,14 @@ public class MessageService implements MessageServiceInterface {
     public MessageResource send(Long meId, Long conversationId, SendMessageRequest request) {
         rateLimiter.check(meId, ChatRateLimiterInterface.Action.MESSAGE);
         MessageKind kind = request.kind() == null ? MessageKind.TEXT : request.kind();
-        if (kind != MessageKind.TEXT && kind != MessageKind.IMAGE) {
+        if (kind != MessageKind.TEXT && !carriesMedia(kind)) {
             throw new UnsupportedMessageKindException(kind);
         }
         String body = request.body() == null ? "" : request.body().strip();
         if (kind == MessageKind.TEXT && body.isEmpty()) {
             throw new EmptyMessageException();
         }
-        if (kind == MessageKind.IMAGE && request.attachmentId() == null) {
+        if (carriesMedia(kind) && request.attachmentId() == null) {
             throw new EmptyMessageException();
         }
 
@@ -89,11 +92,11 @@ public class MessageService implements MessageServiceInterface {
             requireOrderOfThisPair(conversation, request.orderId());
         }
 
-        // R-06: check the image BEFORE writing the message, so an image that is not yours does not
+        // R-06: check the file BEFORE writing the message, so a file that is not yours does not
         // create an empty message
         MessageAttachment attachment =
-                kind == MessageKind.IMAGE
-                        ? requireOwnUnusedAttachment(meId, request.attachmentId())
+                carriesMedia(kind)
+                        ? requireOwnUnusedAttachment(meId, request.attachmentId(), kind)
                         : null;
 
         Instant now = clock.instant();
@@ -113,7 +116,7 @@ public class MessageService implements MessageServiceInterface {
             attachments.save(attachment);
         }
 
-        conversation.noteNewMessage(kind == MessageKind.IMAGE ? IMAGE_PREVIEW : preview(body), now);
+        conversation.noteNewMessage(threadPreview(kind, body), now);
         // The sender has of course read up to here; the other person's unread is counted from their
         // own marker.
         conversation.markRead(meId, now);
@@ -154,8 +157,13 @@ public class MessageService implements MessageServiceInterface {
         }
     }
 
-    /** The image must be your own and not yet attached to any message — spec §8.2. */
-    private MessageAttachment requireOwnUnusedAttachment(Long meId, Long attachmentId) {
+    /**
+     * The file must be your own and not yet attached to any message — spec §8.2. Its real type
+     * (read from its bytes at upload) must match the kind, so a client cannot label a photo as a
+     * video or the reverse.
+     */
+    private MessageAttachment requireOwnUnusedAttachment(
+            Long meId, Long attachmentId, MessageKind kind) {
         MessageAttachment attachment =
                 attachments
                         .findById(attachmentId)
@@ -165,6 +173,14 @@ public class MessageService implements MessageServiceInterface {
         }
         if (attachment.getMessageId() != null) {
             throw new AttachmentAlreadyUsedException();
+        }
+        String family = kind == MessageKind.VIDEO ? "video/" : "image/";
+        if (!attachment.getMime().startsWith(family)) {
+            throw new InvalidFieldException(
+                    "attachmentId",
+                    kind == MessageKind.VIDEO
+                            ? "This file is not a video. Send it as a photo."
+                            : "This file is not a photo. Send it as a video.");
         }
         return attachment;
     }
@@ -181,21 +197,30 @@ public class MessageService implements MessageServiceInterface {
                         : messages.findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
                                 conversationId, before, page);
         // One query for the whole page, no N+1
-        List<Long> imageIds =
-                found.stream()
-                        .filter(m -> m.getKind() == MessageKind.IMAGE)
-                        .map(Message::getId)
-                        .toList();
+        List<Long> mediaIds =
+                found.stream().filter(m -> carriesMedia(m.getKind())).map(Message::getId).toList();
         Map<Long, MessageAttachment> byMessage =
-                imageIds.isEmpty()
+                mediaIds.isEmpty()
                         ? Map.of()
-                        : attachments.findByMessageIdIn(imageIds).stream()
+                        : attachments.findByMessageIdIn(mediaIds).stream()
                                 .collect(
                                         Collectors.toMap(
                                                 MessageAttachment::getMessageId,
                                                 a -> a,
                                                 (a, b) -> a));
         return found.stream().map(m -> MessageResource.from(m, byMessage.get(m.getId()))).toList();
+    }
+
+    private static boolean carriesMedia(MessageKind kind) {
+        return kind == MessageKind.IMAGE || kind == MessageKind.VIDEO;
+    }
+
+    private static String threadPreview(MessageKind kind, String body) {
+        return switch (kind) {
+            case IMAGE -> IMAGE_PREVIEW;
+            case VIDEO -> VIDEO_PREVIEW;
+            default -> preview(body);
+        };
     }
 
     private User requireUser(Long id) {

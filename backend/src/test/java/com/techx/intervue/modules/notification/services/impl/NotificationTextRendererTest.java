@@ -73,6 +73,23 @@ class NotificationTextRendererTest {
     }
 
     @Test
+    void aMessageKeyPicksAnotherMessageText() {
+        NotificationEvent video =
+                new NotificationEvent(
+                        NotificationKind.MESSAGE,
+                        Map.of("sender", "Cô Tư"),
+                        "/messages?c=1",
+                        1L,
+                        "Cô Tư",
+                        null,
+                        "message.video");
+
+        assertThat(renderer.render(video, "en"))
+                .isEqualTo(new RenderedText("Cô Tư", "Cô Tư sent a video"));
+        assertThat(renderer.render(video, "vi").message()).isEqualTo("Cô Tư đã gửi một video");
+    }
+
+    @Test
     void longTextIsCutToTheColumnSize() {
         NotificationEvent e =
                 new NotificationEvent(
@@ -115,6 +132,22 @@ class NotificationTextRendererTest {
                                     null),
                             lang);
             assertThat(photo.message()).as(lang + " photo").contains("S").doesNotContain("{");
+            RenderedText video =
+                    renderer.render(
+                            new NotificationEvent(
+                                    NotificationKind.MESSAGE,
+                                    Map.of("sender", "S"),
+                                    "/",
+                                    1L,
+                                    "S",
+                                    null,
+                                    "message.video"),
+                            lang);
+            assertThat(video.message())
+                    .as(lang + " video")
+                    .contains("S")
+                    .doesNotContain("{")
+                    .isNotEqualTo(photo.message());
         }
     }
 

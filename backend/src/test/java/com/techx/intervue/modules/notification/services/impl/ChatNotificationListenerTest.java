@@ -124,6 +124,20 @@ class ChatNotificationListenerTest {
     }
 
     @Test
+    void aVideoNotificationSaysVideo() {
+        known(CUSTOMER, "Lan", RoleType.CUSTOMER);
+        known(FARMER, "Tư", RoleType.FARMER);
+
+        listener.on(
+                new ChatMessageCreatedEvent(5L, FARMER, msg(CUSTOMER, MessageKind.VIDEO, null)));
+
+        NotificationEvent e = sent(FARMER);
+        assertThat(e.message()).isNull();
+        assertThat(e.messageKey()).isEqualTo("message.video");
+        assertThat(e.params()).containsEntry("sender", "Lan");
+    }
+
+    @Test
     void longTextIsCutTo120Characters() {
         known(CUSTOMER, "Lan", RoleType.CUSTOMER);
         known(FARMER, "Tư", RoleType.FARMER);
