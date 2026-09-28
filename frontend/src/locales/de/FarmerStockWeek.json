@@ -22,7 +22,8 @@
   "template": {
     "save": "Vorlage speichern",
     "savedText": "Vorlage gespeichert.",
-    "note": "Lassen Sie die Menge eines Tages leer, um ihn auszulassen. Ein leerer Preis behält den aktuellen Preis des Produkts bei."
+    "note": "Lassen Sie die Menge eines Tages leer, um ihn auszulassen. Ein leerer Preis behält den aktuellen Preis des Produkts bei.",
+    "priceError": "Geben Sie für {{product}} am {{day}} einen Preis über 0 $ ein oder lassen Sie das Feld leer, um den aktuellen Preis zu behalten."
   },
   "empty": {
     "title": "Fügen Sie zuerst ein Produkt hinzu",

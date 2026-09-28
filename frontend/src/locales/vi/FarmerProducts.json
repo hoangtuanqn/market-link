@@ -75,7 +75,7 @@
     "confirm": "Lưu",
     "error": {
       "quantity": "Nhập số nguyên từ 0 trở lên.",
-      "price": "Nhập giá từ 0 trở lên."
+      "price": "Nhập giá lớn hơn $0, hoặc để trống."
     }
   },
   "dealAction": "Giảm giá sắp hết hạn",

@@ -75,7 +75,7 @@
     "confirm": "Enregistrer",
     "error": {
       "quantity": "Entrez un nombre entier de 0 ou plus.",
-      "price": "Entrez un prix de 0 ou plus."
+      "price": "Entrez un prix supérieur à 0 $, ou laissez vide."
     }
   },
   "dealAction": "Promo date proche",

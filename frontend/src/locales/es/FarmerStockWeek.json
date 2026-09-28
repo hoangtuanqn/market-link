@@ -22,7 +22,8 @@
   "template": {
     "save": "Guardar plantilla",
     "savedText": "Plantilla guardada.",
-    "note": "Deja en blanco la cantidad de un día para saltarlo. Un precio en blanco mantiene el precio actual del producto."
+    "note": "Deja en blanco la cantidad de un día para saltarlo. Un precio en blanco mantiene el precio actual del producto.",
+    "priceError": "Ingrese un precio mayor que $0 para {{product}} el {{day}}, o déjelo en blanco para mantener el precio actual."
   },
   "empty": {
     "title": "Primero añade un producto",

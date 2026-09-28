@@ -67,7 +67,7 @@
     "confirm": "Save",
     "error": {
       "quantity": "Enter a whole number of 0 or more.",
-      "price": "Enter a price of 0 or more."
+      "price": "Enter a price above $0, or leave it blank."
     }
   },
   "error": {

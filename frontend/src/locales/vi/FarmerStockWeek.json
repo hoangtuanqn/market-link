@@ -22,7 +22,8 @@
   "template": {
     "save": "Lưu mẫu",
     "savedText": "Đã lưu mẫu.",
-    "note": "Để trống số lượng của một ngày để bỏ qua ngày đó. Để trống giá thì giữ giá hiện tại của sản phẩm."
+    "note": "Để trống số lượng của một ngày để bỏ qua ngày đó. Để trống giá thì giữ giá hiện tại của sản phẩm.",
+    "priceError": "Nhập giá lớn hơn $0 cho {{product}} vào {{day}}, hoặc để trống để giữ giá hiện tại."
   },
   "empty": {
     "title": "Hãy thêm sản phẩm trước",

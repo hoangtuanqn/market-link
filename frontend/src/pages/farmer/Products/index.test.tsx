@@ -144,3 +144,19 @@ describe('FarmerProductsPage — restore from trash', () => {
     expect(await screen.findByText(/Its weekly stock was cleared when it was deleted/)).toBeInTheDocument();
   });
 });
+
+describe('FarmerProductsPage — adjust one day', () => {
+  /** FR-063: the server only takes a price above $0 for a day; $0 used to be sent and came back as a vague error. */
+  it('asks for a price above $0 under the price field and sends nothing', async () => {
+    renderPage();
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Adjust' }));
+    const price = await screen.findByLabelText('Price for this day (optional)');
+    await userEvent.type(price, '0');
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(await screen.findByText('Enter a price above $0, or leave it blank.')).toBeInTheDocument();
+    expect(price).toHaveAttribute('aria-invalid', 'true');
+    expect(ProductApi.overrideDailyStock).not.toHaveBeenCalled();
+  });
+});

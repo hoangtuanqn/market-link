@@ -75,7 +75,7 @@
     "confirm": "Simpan",
     "error": {
       "quantity": "Masukkan bilangan bulat 0 atau lebih.",
-      "price": "Masukkan harga 0 atau lebih."
+      "price": "Masukkan harga di atas $0, atau biarkan kosong."
     }
   },
   "dealAction": "Diskon hampir kedaluwarsa",

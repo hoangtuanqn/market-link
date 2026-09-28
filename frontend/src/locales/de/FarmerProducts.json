@@ -75,7 +75,7 @@
     "confirm": "Speichern",
     "error": {
       "quantity": "Geben Sie eine ganze Zahl von 0 oder mehr ein.",
-      "price": "Geben Sie einen Preis von 0 oder mehr ein."
+      "price": "Geben Sie einen Preis über 0 $ ein oder lassen Sie das Feld leer."
     }
   },
   "dealAction": "Angebot: kurze Haltbarkeit",

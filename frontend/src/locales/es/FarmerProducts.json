@@ -75,7 +75,7 @@
     "confirm": "Guardar",
     "error": {
       "quantity": "Ingrese un número entero de 0 o más.",
-      "price": "Ingrese un precio de 0 o más."
+      "price": "Ingrese un precio mayor que $0, o déjelo en blanco."
     }
   },
   "dealAction": "Oferta por vencer",
