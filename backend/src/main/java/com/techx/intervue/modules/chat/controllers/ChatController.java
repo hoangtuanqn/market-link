@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.chat.controllers;
 
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.filters.JwtAuthFilter;
 import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
@@ -12,6 +13,7 @@ import com.techx.intervue.resources.ApiResource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * FR-090…092 — public, guests can use it; with a token the user_id is attached to the history.
- * Signed-in customer-panel accounts (Customer, and a Farmer shopping as a customer — FR-005) are
- * answered by the Claude assistant; guests and admins by the keyword engine.
+ * FR-090…094 — public, guests can use it; with a token the user_id is attached to the history.
+ * Signed-in Customers, Farmers and Admins are answered by the Claude assistant, each with the tools
+ * of their role. Guests, and an admin who has not finished the mandatory two-step setup (FR-008),
+ * get the keyword engine.
  */
 @Validated
 @RestController
@@ -60,15 +63,23 @@ public class ChatController extends BaseController {
     /**
      * Which assistant the caller gets, from the authenticated principal only (FR-093, FR-094). A
      * guest, or an account with none of the three roles, gets null and the keyword engine answers.
+     *
+     * <p>So does an admin whose session JwtAuthFilter marked {@code MFA_SETUP_PENDING}: that
+     * session is refused on /api/v1/admin/** (FR-008), and the admin tools read the same private
+     * data — accounts with their emails, platform revenue, the feedback inbox.
      */
     private static AssistantAudience audienceOf(CustomUserDetails user) {
         if (user == null) {
             return null;
         }
-        return AssistantAudience.of(
+        Set<String> authorities =
                 user.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toSet()));
+                        .collect(Collectors.toSet());
+        if (authorities.contains(JwtAuthFilter.MFA_SETUP_PENDING)) {
+            return null;
+        }
+        return AssistantAudience.of(authorities);
     }
 
     /**
