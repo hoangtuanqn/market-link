@@ -13,7 +13,7 @@
     "selected": "Ring, selected"
   },
   "mapLabel": "Map of all markets and stalls",
-  "directions": "Directions open in Google Maps in a new tab.",
+  "directions": "Directions open in OpenStreetMap in a new tab.",
   "openOn": "Open on {{day}}",
   "empty": {
     "title": "No markets to show",

@@ -56,7 +56,7 @@
       "title": "Por qué lo guardamos",
       "blocks": [
         {
-          "p": "Tu nombre y tu teléfono existen para que el puesto sepa quién va a recoger y pueda localizarte la mañana del mercado. Tu dirección existe para mostrar a qué distancia está un mercado. Tu correo es cómo inicias sesión y cómo se te avisa de un pedido."
+          "p": "Tu nombre y tu teléfono existen para que el puesto sepa quién va a recoger y pueda localizarte la mañana del mercado. Tu dirección existe para mostrar a qué distancia está un mercado y rellenar la ruta. Tu correo es cómo inicias sesión y cómo se te avisa de un pedido."
         },
         {
           "p": "Los pedidos y su historial existen para que ambas partes vean qué se acordó y cuándo cambió. Las reseñas existen para que otros compradores puedan juzgar un puesto. Los favoritos existen para poder avisarte cuando algo que querías vuelve a estar disponible."
@@ -132,8 +132,8 @@
           "facts": {
             "items": [
               [
-                "Google Maps y OpenStreetMap",
-                "Las teselas del mapa vienen de servidores de Google Maps, que ven tu dirección IP y aproximadamente qué parte del mapa estás mirando. Si Google Maps no está disponible, vienen de servidores de OpenStreetMap, que ven lo mismo. Los datos del mapa son © Google, o © colaboradores de OpenStreetMap. El enlace de indicaciones abre Google Maps en una pestaña nueva, donde se aplica la política de privacidad de Google."
+                "OpenStreetMap",
+                "Las teselas del mapa vienen de servidores de OpenStreetMap, que ven tu dirección IP y aproximadamente qué parte del mapa estás mirando. Los datos del mapa son © colaboradores de OpenStreetMap. El enlace de indicaciones abre OpenStreetMap en una pestaña nueva."
               ],
               [
                 "Google Fonts",

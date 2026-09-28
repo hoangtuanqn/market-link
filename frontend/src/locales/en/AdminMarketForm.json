@@ -15,7 +15,7 @@
     "close": "Closes",
     "lat": "Latitude",
     "lng": "Longitude",
-    "lngHint": "Or drag the pin.",
+    "lngHint": "Or drag the pin. Map data comes from OpenStreetMap.",
     "notes": "Notes for stalls",
     "images": "Photos"
   },

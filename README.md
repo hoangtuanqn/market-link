@@ -69,7 +69,7 @@ error state on every data screen. The full scope, one `FR-xxx` ID per requiremen
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 19, TypeScript, Vite, Tailwind CSS 4, React Router, i18next, Leaflet + Google Maps tiles (OpenStreetMap fallback), STOMP.js |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS 4, React Router, i18next, Leaflet + OpenStreetMap, STOMP.js |
 | Backend | Spring Boot 4.1 on Java 25: Spring Security with JWT, Spring Data JPA, WebSocket (STOMP), Bean Validation, springdoc OpenAPI |
 | Data | MySQL 8.4 with Flyway migrations, Redis 7.4 |
 | Messaging | RabbitMQ 4 as the STOMP relay for realtime chat and notifications, Web Push (VAPID) |

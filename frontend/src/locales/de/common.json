@@ -405,7 +405,21 @@
     "finding": "Standort wird ermittelt…"
   },
   "directions": {
-    "title": "Route zu {{name}}"
+    "title": "Route zu {{name}}",
+    "question": "Wo starten Sie?",
+    "current": "Mein aktueller Standort",
+    "currentShared": "Bereits geteilt",
+    "currentAsk": "Ihr Browser fragt zuerst nach",
+    "address": "Eine Adresse",
+    "addressNote": "Eine Straße oder ein Wahrzeichen in Ho-Chi-Minh-Stadt.",
+    "addressLabel": "Startadresse",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "Straße und Bezirk funktionieren am besten. Hausnummern fehlen oft auf der Karte, und OpenStreetMap lässt Sie einen Ort wählen, wenn es keinen findet.",
+    "useSaved": "Meine gespeicherte Adresse verwenden",
+    "none": "Ich gebe ihn auf der Karte ein",
+    "noneNote": "Öffnet OpenStreetMap, nur mit dem Ziel ausgefüllt.",
+    "privacy": "Die Route öffnet sich auf openstreetmap.org in einem neuen Tab. MarketLink verfolgt Ihren Standort nicht.",
+    "open": "Route öffnen"
   },
   "tier": {
     "bronze": "Bronze",
@@ -584,7 +598,7 @@
       },
       "customerMap": {
         "title": "Marktkarte",
-        "body": "Finde die nächstgelegenen Märkte und lass dir den Weg in Google Maps zeigen."
+        "body": "Finde die nächstgelegenen Märkte und lass dir den Weg in OpenStreetMap zeigen."
       },
       "customerSearch": {
         "title": "Suche",

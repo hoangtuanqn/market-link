@@ -103,29 +103,11 @@ Gửi email thật là **NICE**, chỉ làm nếu dư giờ sau H84.
 
 ---
 
-### D-12 · Bản đồ dùng Leaflet, nền Google Maps (dự phòng OpenStreetMap)
-LEAD chốt lại 28/09/2026, thay cho "Leaflet + OpenStreetMap, không dùng Google Maps" ban đầu.
-
-**Chốt:**
-- **Nền bản đồ:** Leaflet vẫn vẽ bản đồ và ghim. Có `VITE_GOOGLE_MAPS_KEY` thì nền là ảnh Google Maps
-  (Map Tiles API, roadmap, nhãn theo ngôn ngữ người đọc, vùng `VN`), kèm logo Google Maps và dòng bản quyền
-  Google theo đúng điều khoản của Google. Không có key thì dùng OpenStreetMap như cũ.
-- **Tự lùi về OpenStreetMap** khi Google từ chối (sai key, chưa gắn billing, hết hạn mức ngày), để bản đồ
-  không bao giờ trắng lúc demo.
-- **Chỉ đường:** mở Google Maps ở tab mới bằng link Maps URLs (`google.com/maps/dir/?api=1&destination=…`),
-  chỉ gửi điểm đến. Google tự lấy vị trí thiết bị làm điểm đi, người dùng chọn phương tiện trên Google Maps.
-  Link này không cần key và không tính tiền. App không tự vẽ route engine.
-
-**Vì sao đổi:** ba lý do ban đầu vẫn đúng với ảnh bản đồ, nhưng xử lý được:
-- *Billing:* tài khoản chỉ dùng demo; 100.000 ô ảnh/tháng miễn phí, và hạn mức ngày đặt trong Google Cloud
-  (3.000 ô/ngày) giữ tổng dưới mức đó.
-- *Hết hạn mức giữa lúc demo:* hết hạn mức thì app tự lùi về OpenStreetMap.
-- *API key trong source nộp giám khảo:* key không nằm trong source. Máy không có key (bạn nhóm, giám khảo chạy
-  `make up`) vẫn có bản đồ OpenStreetMap. Key bản build là key trình duyệt, khoá theo website và chỉ mở Map
-  Tiles API (`docs/setup.md` §8).
-
-Cột `markets.map_provider` vẫn giữ theo schema đề gợi ý, mặc định `'osm'`: cột này ghi nguồn toạ độ của chợ,
-không phải nguồn ảnh nền.
+### D-12 · Bản đồ dùng Leaflet + OpenStreetMap
+**Chốt:** không dùng Google Maps. Lý do: không cần tài khoản billing, không hết hạn mức
+giữa lúc demo, và không phải nhét API key vào source code nộp cho giám khảo.
+Chỉ đường: mở OSM directions ở tab mới, không tự vẽ route engine.
+Cột `markets.map_provider` vẫn giữ theo schema đề gợi ý, mặc định `'osm'`.
 
 ---
 

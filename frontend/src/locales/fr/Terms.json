@@ -45,7 +45,7 @@
           "p": "Un compte peut être partagé à la maison. MarketLink ne distingue pas les personnes au sein d'un même compte : tout ce qui est fait avec votre connexion compte comme fait par vous. Gardez votre mot de passe pour vous et prévenez-nous si vous pensez que quelqu'un d'autre le connaît."
         },
         {
-          "p": "L'adresse que vous indiquez sert à afficher les distances jusqu'aux marchés. Votre numéro de téléphone est transmis au stand auprès duquel vous commandez, pour qu'il puisse vous joindre le matin du marché."
+          "p": "L'adresse que vous indiquez sert à afficher les distances jusqu'aux marchés et à pré-remplir l'itinéraire. Votre numéro de téléphone est transmis au stand auprès duquel vous commandez, pour qu'il puisse vous joindre le matin du marché."
         }
       ]
     },
@@ -155,7 +155,7 @@
       "title": "Cartes et autres sources",
       "blocks": [
         {
-          "p": "Les emplacements des marchés et des stands sont dessinés sur Google Maps, ou sur OpenStreetMap quand Google Maps n'est pas disponible. Les données cartographiques sont © Google ou © les contributeurs d'OpenStreetMap, et le lien d'itinéraire ouvre Google Maps dans un nouvel onglet. Un repère est placé par le marché ou le stand et il est aussi précis qu'ils l'ont fait."
+          "p": "Les emplacements des marchés et des stands sont dessinés sur OpenStreetMap. Les données cartographiques sont © les contributeurs d'OpenStreetMap, et le lien d'itinéraire ouvre OpenStreetMap dans un nouvel onglet. Un repère est placé par le marché ou le stand et il est aussi précis qu'ils l'ont fait."
         },
         {
           "p": "Les photos de produits appartiennent au stand qui les a mises en ligne. Les photos utilisées sur les pages de la plateforme elle-même sont créditées dans le ReadMe du projet."

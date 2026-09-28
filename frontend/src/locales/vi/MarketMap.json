@@ -13,7 +13,7 @@
     "selected": "Vòng viền: đang chọn"
   },
   "mapLabel": "Bản đồ tất cả chợ và sạp",
-  "directions": "Chỉ đường mở trong Google Maps ở tab mới.",
+  "directions": "Chỉ đường mở trong OpenStreetMap ở tab mới.",
   "openOn": "Mở cửa vào {{day}}",
   "empty": {
     "title": "Không có chợ nào",

@@ -405,7 +405,21 @@
     "finding": "Localisation…"
   },
   "directions": {
-    "title": "Itinéraire vers {{name}}"
+    "title": "Itinéraire vers {{name}}",
+    "question": "D’où partez-vous ?",
+    "current": "Ma position actuelle",
+    "currentShared": "Déjà partagée",
+    "currentAsk": "Votre navigateur vous le demandera d’abord",
+    "address": "Une adresse",
+    "addressNote": "Une rue ou un repère à Hô-Chi-Minh-Ville.",
+    "addressLabel": "Adresse de départ",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "La rue et le quartier donnent les meilleurs résultats. Les numéros manquent souvent sur la carte, et OpenStreetMap vous demandera de choisir un lieu s’il n’en trouve pas.",
+    "useSaved": "Utiliser mon adresse enregistrée",
+    "none": "Je la saisirai sur la carte",
+    "noneNote": "Ouvre OpenStreetMap avec seulement la destination renseignée.",
+    "privacy": "L’itinéraire s’ouvre sur openstreetmap.org dans un nouvel onglet. MarketLink ne suit pas votre position.",
+    "open": "Ouvrir l’itinéraire"
   },
   "tier": {
     "bronze": "Bronze",
@@ -584,7 +598,7 @@
       },
       "customerMap": {
         "title": "Carte des marchés",
-        "body": "Trouvez les marchés les plus proches et obtenez l’itinéraire sur Google Maps."
+        "body": "Trouvez les marchés les plus proches et obtenez l’itinéraire sur OpenStreetMap."
       },
       "customerSearch": {
         "title": "Recherche",

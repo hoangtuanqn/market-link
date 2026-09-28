@@ -13,7 +13,7 @@
     "selected": "リング：選択中"
   },
   "mapLabel": "すべてのマーケットと屋台の地図",
-  "directions": "経路は新しいタブの Google マップ で開きます。",
+  "directions": "経路は新しいタブの OpenStreetMap で開きます。",
   "openOn": "{{day}}に営業",
   "empty": {
     "title": "表示するマーケットがありません",

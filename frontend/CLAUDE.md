@@ -8,8 +8,7 @@
 - Gọi API: path, body và response phải khớp `../docs/api-contract.md` (R-05).
 - Mọi màn có dữ liệu phải có đủ 4 trạng thái: loading / empty / error / có data (FR-084).
 - Responsive 375 / 768 / 1440 px, không tràn ngang (FR-080).
-- Bản đồ dùng Leaflet; lớp nền gắn qua `addBaseLayer` (`src/lib/baseLayer.ts`): Google Maps khi có
-  `VITE_GOOGLE_MAPS_KEY`, OpenStreetMap khi không có hoặc Google từ chối. Chỉ đường mở Google Maps ở tab mới (D-12).
+- Bản đồ dùng Leaflet + OpenStreetMap, chỉ đường mở OSM directions ở tab mới (D-12).
 - Mặc định: tiền USD `$1.50` (cố định, không đổi trong Settings), ngày `dd/MM/yyyy`, giờ 24h; ngày giờ người dùng đổi
   được trong Settings.
 - Ẩn nút theo role chỉ là UX — quyền thật do backend kiểm tra.
