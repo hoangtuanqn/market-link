@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -25,6 +25,15 @@ const renderAt = (path: string) =>
     </MemoryRouter>,
   );
 
+const product = (id: number) => ({
+  id,
+  name: `Rau muống ${id}`,
+  stall: 'Vườn Út Hiền',
+  category: 'Vegetables',
+  price: 0.33,
+  unit: 'bunch',
+});
+
 beforeEach(() => {
   vi.mocked(ProductApi.list).mockResolvedValue({ items: [] } as never);
   vi.mocked(ProductApi.adminHidden).mockResolvedValue([] as never);
@@ -46,5 +55,26 @@ describe('AdminModerationPage tabs', () => {
     expect(screen.getByRole('tab', { name: 'Reviews' })).toHaveAttribute('aria-selected', 'true');
     await userEvent.click(screen.getByRole('tab', { name: 'Spoiled reports' }));
     expect(await screen.findByText('spoiled reports queue')).toBeInTheDocument();
+  });
+});
+
+describe('AdminModerationPage product listings (FR-074)', () => {
+  it('searches and pages on the server instead of filtering one fetched page', async () => {
+    vi.mocked(ProductApi.list).mockResolvedValue({ items: [product(1)], page: 1, pageSize: 20, total: 45 } as never);
+    renderAt('/admin/moderation?tab=products');
+
+    expect(await screen.findByText('Rau muống 1')).toBeInTheDocument();
+    expect(ProductApi.list).toHaveBeenLastCalledWith({ q: undefined, sort: 'newest', page: 1, pageSize: 20 });
+
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Search products' }), 'rau');
+    await userEvent.click(screen.getByRole('button', { name: 'Search' }));
+    await waitFor(() =>
+      expect(ProductApi.list).toHaveBeenLastCalledWith({ q: 'rau', sort: 'newest', page: 1, pageSize: 20 }),
+    );
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Page 3' }));
+    await waitFor(() =>
+      expect(ProductApi.list).toHaveBeenLastCalledWith({ q: 'rau', sort: 'newest', page: 3, pageSize: 20 }),
+    );
   });
 });

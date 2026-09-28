@@ -17,13 +17,12 @@
   "recentlyListed": "Productos publicados hace poco",
   "search": {
     "label": "Buscar productos",
-    "placeholder": "Producto o puesto",
+    "placeholder": "Producto o categoría",
     "submit": "Buscar"
   },
   "col": {
     "product": "Producto",
     "price": "Precio",
-    "description": "Descripción",
     "item": "Elemento",
     "owner": "Autor",
     "reason": "Motivo",

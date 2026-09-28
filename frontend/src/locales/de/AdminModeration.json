@@ -17,13 +17,12 @@
   "recentlyListed": "Kürzlich eingestellte Produkte",
   "search": {
     "label": "Produkte suchen",
-    "placeholder": "Produkt oder Stand",
+    "placeholder": "Produkt oder Kategorie",
     "submit": "Suchen"
   },
   "col": {
     "product": "Produkt",
     "price": "Preis",
-    "description": "Beschreibung",
     "item": "Eintrag",
     "owner": "Von",
     "reason": "Grund",

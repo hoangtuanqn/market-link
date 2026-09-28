@@ -17,13 +17,12 @@
   "recentlyListed": "최근 올라온 상품",
   "search": {
     "label": "상품 검색",
-    "placeholder": "상품 또는 가게",
+    "placeholder": "상품 또는 카테고리",
     "submit": "검색"
   },
   "col": {
     "product": "상품",
     "price": "가격",
-    "description": "설명",
     "item": "항목",
     "owner": "올린 사람",
     "reason": "사유",
