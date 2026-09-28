@@ -301,7 +301,7 @@ const DashboardShell = ({
               aria-hidden="true"
             />
             <div className="min-w-0">
-              <p className="text-ink truncate text-[18px] leading-tight sm:text-[20px]">
+              <p className="text-ink truncate text-[16px] leading-tight sm:text-[18px]">
                 <span className="font-normal">{t(`header.greeting.${period}`)}</span>
                 {user.name && <span className="font-bold">, {user.name}</span>}
               </p>
