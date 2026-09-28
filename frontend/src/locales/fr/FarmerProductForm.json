@@ -88,6 +88,6 @@
   },
   "errors": {
     "required": "Ce champ est obligatoire.",
-    "price": "Le prix doit être supérieur ou égal à 0."
+    "price": "Le prix doit être supérieur à 0."
   }
 }

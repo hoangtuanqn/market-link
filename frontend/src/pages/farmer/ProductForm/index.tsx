@@ -143,7 +143,7 @@ const FarmerProductFormPage = () => {
     const next: FormErrors = {};
     if (!form.name.trim()) next.name = t('errors.required');
     if (categoryId == null) next.cat = t('errors.required');
-    if (!Number.isFinite(price) || price < 0) next.price = t('errors.price');
+    if (!Number.isFinite(price) || price <= 0) next.price = t('errors.price');
     if (!Number.isInteger(qty) || qty < 0) next.qty = t('qty.error');
     if (form.shelfLife === '' || !Number.isInteger(form.shelfLife) || form.shelfLife < 1) {
       next.shelfLife = t('shelfLife.error');

@@ -1,8 +1,8 @@
 package com.techx.intervue.modules.product.requests;
 
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 /**
@@ -10,4 +10,5 @@ import java.math.BigDecimal;
  * the recurring template. {@code unitPrice} null keeps that date's existing price.
  */
 public record FarmerDailyStockRequest(
-        @NotNull @Min(0) Integer quantityAvailable, @DecimalMin("0") BigDecimal unitPrice) {}
+        @NotNull @Min(0) Integer quantityAvailable,
+        @Positive(message = "Price must be greater than 0.") BigDecimal unitPrice) {}

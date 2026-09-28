@@ -88,6 +88,6 @@
   },
   "errors": {
     "required": "Kolom ini wajib diisi.",
-    "price": "Harga harus 0 atau lebih."
+    "price": "Harga harus lebih besar dari 0."
   }
 }

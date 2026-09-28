@@ -88,6 +88,6 @@
   },
   "errors": {
     "required": "Trường này là bắt buộc.",
-    "price": "Giá phải từ 0 trở lên."
+    "price": "Giá phải lớn hơn 0."
   }
 }
