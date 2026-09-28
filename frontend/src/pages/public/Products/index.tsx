@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
 import ProductApi, { type ProductListParams } from '@/api-requests/product.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
@@ -26,7 +27,20 @@ const NO_MARKETS: MarketType[] = [];
 const ProductsPage = () => {
   const { t } = useTranslation('Products');
   const [picked, setPicked] = useState<number | null>(null);
-  const [categoryId, setCategoryId] = useState<number | null>(null);
+  // The category lives in the address, so the Home category tiles and the product breadcrumb open it filtered
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = Number(searchParams.get('category'));
+  const categoryId = Number.isInteger(categoryParam) && categoryParam > 0 ? categoryParam : null;
+  const setCategoryId = (next: number | null) =>
+    setSearchParams(
+      (current) => {
+        const out = new URLSearchParams(current);
+        if (next === null) out.delete('category');
+        else out.set('category', String(next));
+        return out;
+      },
+      { replace: true },
+    );
   const [priceBand, setPriceBand] = useState<PriceBand>('any');
   const [marketFilter, setMarketFilter] = useState(ALL_MARKETS);
   const [inStockOnly, setInStockOnly] = useState(true);
@@ -132,7 +146,7 @@ const ProductsPage = () => {
                   key={c.id}
                   pressed={categoryId === c.id}
                   onClick={() => {
-                    setCategoryId((current) => (current === c.id ? null : c.id));
+                    setCategoryId(categoryId === c.id ? null : c.id);
                     setPage(1);
                   }}
                 >

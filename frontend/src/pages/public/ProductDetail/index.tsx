@@ -151,7 +151,7 @@ const ProductDetailPage = () => {
           {t('breadcrumb')}
         </Link>{' '}
         ·{' '}
-        <Link to="/products" className="text-brand underline">
+        <Link to={`/products?category=${p.categoryId}`} className="text-brand underline">
           {p.categoryName}
         </Link>{' '}
         · {stallLink}
