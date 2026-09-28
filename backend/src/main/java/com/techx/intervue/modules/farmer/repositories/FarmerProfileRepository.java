@@ -3,6 +3,7 @@ package com.techx.intervue.modules.farmer.repositories;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,10 @@ public interface FarmerProfileRepository extends JpaRepository<FarmerProfile, Lo
     List<FarmerProfile> findAllByUserIdIn(Collection<Long> userIds);
 
     boolean existsByUserId(Long userId);
+
+    /** FR-071: the stalls a temporary suspension's {@code until} has already passed for. */
+    List<FarmerProfile> findByApprovalStatusAndSuspendedUntilLessThanEqual(
+            ApprovalStatus status, Instant now);
 
     /**
      * §6.1 + docs/prototype/admin/farmers.html (the "Stall, contact person, phone" box). One join
