@@ -21,6 +21,38 @@ INSERT INTO categories (name, slug, sort_order, is_active) VALUES
 AS new
 ON DUPLICATE KEY UPDATE sort_order = new.sort_order, is_active = new.is_active;
 
+-- ---- Shelf-life guides (FR-120, proposed) ----
+-- 12 groups × the ways each may be kept = 21 rows. Days count from pickup, after common household
+-- storage advice; the admin edits them under Categories. A group with no 'room' row cannot be sold
+-- at room temperature. Examples mix Vietnamese and English product words for name matching.
+INSERT INTO shelf_life_guides (category_id, group_name, examples, storage_mode, suggested_days)
+SELECT c.id, x.group_name, x.examples, x.storage_mode, x.suggested_days
+FROM (
+      SELECT 'vegetables' AS slug, 'Leafy greens' AS group_name, 'rau muống, cải ngọt, cải xanh, xà lách, rau dền, mồng tơi, rau lang, cải kale, húng quế, rau răm, ngò gai, tía tô, diếp cá, rau thơm, water spinach, lettuce, kale, herbs' AS examples, 'room' AS storage_mode, 1 AS suggested_days
+      UNION ALL SELECT 'vegetables', 'Leafy greens', 'rau muống, cải ngọt, cải xanh, xà lách, rau dền, mồng tơi, rau lang, cải kale, húng quế, rau răm, ngò gai, tía tô, diếp cá, rau thơm, water spinach, lettuce, kale, herbs', 'chilled', 3
+      UNION ALL SELECT 'vegetables', 'Fruiting vegetables', 'cà chua, dưa leo, bí, mướp, ớt, đậu que, bông cải, tomato, cucumber, pumpkin, chili, broccoli', 'room', 3
+      UNION ALL SELECT 'vegetables', 'Fruiting vegetables', 'cà chua, dưa leo, bí, mướp, ớt, đậu que, bông cải, tomato, cucumber, pumpkin, chili, broccoli', 'chilled', 7
+      UNION ALL SELECT 'vegetables', 'Roots and bulbs', 'khoai lang, khoai tây, khoai môn, cà rốt, củ dền, củ cải, hành, tỏi, gừng, sả, sweet potato, carrot, ginger, lemongrass', 'room', 14
+      UNION ALL SELECT 'vegetables', 'Roots and bulbs', 'khoai lang, khoai tây, khoai môn, cà rốt, củ dền, củ cải, hành, tỏi, gừng, sả, sweet potato, carrot, ginger, lemongrass', 'chilled', 21
+      UNION ALL SELECT 'fruits', 'Soft fruit', 'chuối, xoài, đu đủ, ổi, dâu, nhãn, vải, chôm chôm, cà chua bi, ớt chuông, banana, mango, papaya, guava', 'room', 2
+      UNION ALL SELECT 'fruits', 'Soft fruit', 'chuối, xoài, đu đủ, ổi, dâu, nhãn, vải, chôm chôm, cà chua bi, ớt chuông, banana, mango, papaya, guava', 'chilled', 5
+      UNION ALL SELECT 'fruits', 'Thick-skinned fruit', 'bưởi, cam, quýt, dưa hấu, thơm, pomelo, orange, watermelon, pineapple', 'room', 7
+      UNION ALL SELECT 'fruits', 'Thick-skinned fruit', 'bưởi, cam, quýt, dưa hấu, thơm, pomelo, orange, watermelon, pineapple', 'chilled', 14
+      UNION ALL SELECT 'eggs_and_dairy', 'Eggs', 'trứng gà, trứng vịt, trứng cút, egg', 'room', 10
+      UNION ALL SELECT 'eggs_and_dairy', 'Eggs', 'trứng gà, trứng vịt, trứng cút, egg', 'chilled', 21
+      UNION ALL SELECT 'eggs_and_dairy', 'Fresh milk and yogurt', 'sữa tươi, sữa chua, phô mai, bơ lạt, milk, yogurt, cheese, butter', 'chilled', 5
+      UNION ALL SELECT 'grains_beans_and_nuts', 'Dry grains, beans and nuts', 'gạo, đậu, đậu phộng, mè, mật ong, phấn hoa, sáp ong, rice, beans, peanuts, honey', 'room', 90
+      UNION ALL SELECT 'grains_beans_and_nuts', 'Dry grains, beans and nuts', 'gạo, đậu, đậu phộng, mè, mật ong, phấn hoa, sáp ong, rice, beans, peanuts, honey', 'chilled', 180
+      UNION ALL SELECT 'meat_and_poultry', 'Fresh meat and poultry', 'thịt heo, thịt bò, gà, vịt, pork, beef, chicken, duck', 'chilled', 2
+      UNION ALL SELECT 'seafood', 'Fresh seafood', 'cá, tôm, mực, nghêu, fish, shrimp, squid, clams', 'chilled', 1
+      UNION ALL SELECT 'mushrooms', 'Fresh mushrooms', 'nấm, mushroom', 'room', 1
+      UNION ALL SELECT 'mushrooms', 'Fresh mushrooms', 'nấm, mushroom', 'chilled', 5
+      UNION ALL SELECT 'baked_goods', 'Fresh bakery', 'bánh mì, bánh bao, bánh ngọt, bánh chuối, bánh quy, bông lan, bread, cake', 'room', 2
+      UNION ALL SELECT 'baked_goods', 'Fresh bakery', 'bánh mì, bánh bao, bánh ngọt, bánh chuối, bánh quy, bông lan, bread, cake', 'chilled', 4
+     ) x
+JOIN categories c ON c.slug = x.slug
+ON DUPLICATE KEY UPDATE examples = x.examples, suggested_days = x.suggested_days, is_active = TRUE;
+
 -- ---- Markets (FR-073, FR-012) ----
 -- Addresses follow Vietnam's two-level units (V20260927001): the ward of each market was looked up from its
 -- coordinates on OpenStreetMap (27/09/2026). `address` is what AddressService composes from the parts.
@@ -277,6 +309,73 @@ JOIN farmer_profiles f ON f.id = p.farmer_id
 JOIN users u ON u.id = f.user_id
 SET p.is_hidden = TRUE, p.hidden_reason = 'Ảnh và mô tả không đúng sản phẩm thật (báo cáo của khách).'
 WHERE u.email = 'farmer10@marketlink.vn' AND p.name = 'Sáp ong nguyên chất';
+
+-- ---- Shelf life of the demo products (FR-121, proposed) ----
+-- Every demo product gets its storage group and way of keeping; days = the suggestion, except
+-- 'Rau muống' of 'farmer@marketlink.vn', which the stall set longer (5 days against 3) with the
+-- promise ticked — the one extended product the spoilage demo (phase 2) builds on.
+UPDATE products p
+JOIN (
+      SELECT 'Rau muống' AS name, 'Leafy greens' AS group_name, 'chilled' AS storage_mode, 5 AS days
+      UNION ALL SELECT 'Cải ngọt', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Xà lách xoong', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Rau dền', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Mồng tơi', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Rau lang', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Bưởi da xanh', 'Thick-skinned fruit', 'room', 7
+      UNION ALL SELECT 'Cam sành', 'Thick-skinned fruit', 'room', 7
+      UNION ALL SELECT 'Xoài cát Hoà Lộc', 'Soft fruit', 'room', 2
+      UNION ALL SELECT 'Chuối sứ', 'Soft fruit', 'room', 2
+      UNION ALL SELECT 'Ổi nữ hoàng', 'Soft fruit', 'chilled', 5
+      UNION ALL SELECT 'Đu đủ', 'Soft fruit', 'room', 2
+      UNION ALL SELECT 'Sữa tươi thanh trùng', 'Fresh milk and yogurt', 'chilled', 5
+      UNION ALL SELECT 'Sữa chua nhà làm', 'Fresh milk and yogurt', 'chilled', 5
+      UNION ALL SELECT 'Phô mai tươi', 'Fresh milk and yogurt', 'chilled', 5
+      UNION ALL SELECT 'Bơ lạt', 'Fresh milk and yogurt', 'chilled', 5
+      UNION ALL SELECT 'Khoai lang mật', 'Roots and bulbs', 'room', 14
+      UNION ALL SELECT 'Cà rốt', 'Roots and bulbs', 'chilled', 21
+      UNION ALL SELECT 'Củ dền', 'Roots and bulbs', 'chilled', 21
+      UNION ALL SELECT 'Khoai môn', 'Roots and bulbs', 'room', 14
+      UNION ALL SELECT 'Củ cải trắng', 'Roots and bulbs', 'chilled', 21
+      UNION ALL SELECT 'Gừng tươi', 'Roots and bulbs', 'room', 14
+      UNION ALL SELECT 'Húng quế', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Rau răm', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Ngò gai', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Sả cây', 'Roots and bulbs', 'room', 14
+      UNION ALL SELECT 'Tía tô', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Diếp cá', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Bánh mì men tự nhiên', 'Fresh bakery', 'room', 2
+      UNION ALL SELECT 'Bánh chuối nướng', 'Fresh bakery', 'room', 2
+      UNION ALL SELECT 'Bánh quy bơ', 'Fresh bakery', 'room', 2
+      UNION ALL SELECT 'Bánh bông lan trứng muối', 'Fresh bakery', 'chilled', 4
+      UNION ALL SELECT 'Bánh mì đen', 'Fresh bakery', 'room', 2
+      UNION ALL SELECT 'Xà lách lô lô', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Cải kale', 'Leafy greens', 'chilled', 3
+      UNION ALL SELECT 'Cà chua bi', 'Soft fruit', 'chilled', 5
+      UNION ALL SELECT 'Bông cải xanh', 'Fruiting vegetables', 'chilled', 7
+      UNION ALL SELECT 'Ớt chuông', 'Soft fruit', 'chilled', 5
+      UNION ALL SELECT 'Trứng gà thả vườn', 'Eggs', 'room', 10
+      UNION ALL SELECT 'Trứng vịt', 'Eggs', 'room', 10
+      UNION ALL SELECT 'Trứng cút', 'Eggs', 'room', 10
+      UNION ALL SELECT 'Trứng gà ác', 'Eggs', 'room', 10
+      UNION ALL SELECT 'Nấm bào ngư', 'Fresh mushrooms', 'chilled', 5
+      UNION ALL SELECT 'Nấm mối đen', 'Fresh mushrooms', 'chilled', 5
+      UNION ALL SELECT 'Nấm rơm', 'Fresh mushrooms', 'chilled', 5
+      UNION ALL SELECT 'Nấm đông cô tươi', 'Fresh mushrooms', 'chilled', 5
+      UNION ALL SELECT 'Nấm kim châm', 'Fresh mushrooms', 'chilled', 5
+      UNION ALL SELECT 'Mật ong rừng tràm', 'Dry grains, beans and nuts', 'room', 90
+      UNION ALL SELECT 'Phấn hoa', 'Dry grains, beans and nuts', 'room', 90
+      UNION ALL SELECT 'Sáp ong nguyên chất', 'Dry grains, beans and nuts', 'room', 90
+      UNION ALL SELECT 'Mật ong hoa nhãn', 'Dry grains, beans and nuts', 'room', 90
+     ) x ON x.name = p.name
+JOIN shelf_life_guides g
+  ON g.category_id = p.category_id AND g.group_name = x.group_name AND g.storage_mode = x.storage_mode
+SET p.shelf_life_guide_id = g.id,
+    p.storage_mode = x.storage_mode,
+    p.suggested_shelf_life_days = g.suggested_days,
+    p.shelf_life_days = x.days,
+    p.shelf_life_extended = (x.days > g.suggested_days),
+    p.shelf_life_ack_at = IF(x.days > g.suggested_days, UTC_TIMESTAMP(), NULL);
 
 -- ---- Pickup slots (FR-032, FR-067): next 4 weeks, 60-minute windows, 5 orders per slot ----
 -- Plain SQL, no backend needed: date = today in Vietnam time + 0…27 (MySQL runs UTC), only days

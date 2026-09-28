@@ -270,6 +270,7 @@ tạo hoặc sửa sản phẩm trả **403** kèm message "Your stall is pendin
 |---|---|---|---|
 | GET | `/api/v1/categories` | Public | |
 | POST/PUT/DELETE | `/api/v1/admin/categories/{id}?` | Admin | master data |
+| GET | `/api/v1/shelf-life-guides?categoryId=` | Farmer, Admin | FR-120: nhóm bảo quản đang bật của danh mục: `[{ groupName, examples, modes: [{ guideId, storageMode, suggestedDays, peerMedianDays, peerCount }] }]`; `peerMedianDays` là trung vị số ngày các sạp khác đặt, `null` khi chưa đủ 3 sản phẩm |
 | GET | `/api/v1/products` | Public | query: `q, categoryId, marketId, farmerId, day, minPrice, maxPrice, sort, page, pageSize` |
 | GET | `/api/v1/products/{id}` | Public | kèm `farmer`, `reviewsSummary` |
 | GET | `/api/v1/farmer/products` | Farmer | sản phẩm của chính mình, query `status, page, pageSize`; mỗi dòng thêm `nextDate` (ISO, ngày gần nhất khách còn đặt được, `null` nếu không có), `nextDateAvailable` (còn lại cho ngày đó) và `nextDateReserved` (số đơn placed/accepted/ready đang giữ cho ngày đó); hai số là `null` khi `nextDate` là `null` |
@@ -293,6 +294,12 @@ sinh tự động từ template tuần), không còn một con số chung. Vì v
 
 > Giá trị enum trong JSON giữ nguyên `snake_case` (`sold_out`), vì chúng là giá trị lưu thẳng
 > xuống cột ENUM của database. Chỉ **tên field** mới là camelCase.
+
+**Hạn dùng khi tạo sản phẩm (FR-121, đề xuất).** `POST /api/v1/farmer/products` nhận thêm trong body:
+`shelfLifeGuideId` (bắt buộc khi danh mục có nhóm), `storageMode` (`room`/`chilled`),
+`acknowledgeLongerShelfLife` (bắt buộc `true` khi dài hơn gợi ý); lỗi 400 field `shelfLifeDays` /
+`acknowledgeLongerShelfLife` / `storageMode` / `shelfLifeGuideId`. `GET/POST/PUT` một sản phẩm của Farmer
+và `GET /api/v1/products/{id}` trả thêm `shelfLife: { guideId, groupName, storageMode, days, suggestedDays, extended }`.
 
 ### Template tồn kho tuần — FR-063
 
@@ -343,6 +350,9 @@ Giỏ hàng giữ ở **client** (localStorage). Server chỉ nhận lúc checko
 
 Giá trị `status` giữ nguyên dạng lưu trong DB: `placed`, `accepted`, `ready`, `completed`,
 `declined`, `cancelled`.
+
+**Hạn dùng của món trong đơn (FR-121, đề xuất).** Mỗi món (`items[]`) trong `GET /api/v1/orders/{id}` thêm
+`bestBefore` (`yyyy-MM-dd`, `null` với đơn cũ), `storageMode`, `listPrice` (`null` khi không giảm giá).
 
 ---
 
@@ -446,6 +456,8 @@ trả 404/410 → subscription bị xoá. Web Push chỉ chạy trên HTTPS (loc
 | PUT | `/api/v1/admin/announcements/{id}` | **Đã có** — cùng body; chỉ sửa banner, **không** sửa thông báo đã gửi |
 | DELETE | `/api/v1/admin/announcements/{id}` | **Đã có** — gỡ banner (`active = false`); thông báo đã gửi vẫn giữ |
 | GET | `/api/v1/announcements/active` | **Đã có**, **Public** — banner đang hiệu lực mới nhất **mà người xem thuộc audience**, `null` nếu không có. Gửi kèm access token thì lọc theo role của phiên (customer: `all` + `customers`, farmer: `all` + `farmers`); khách vãng lai và admin chỉ thấy `all` |
+| GET/POST | `/api/v1/admin/shelf-life-guides` | FR-120: GET nhận `?categoryId=` (có cả nhóm đã tắt); body `{ categoryId, groupName, examples, storageMode, suggestedDays, active? }`; 409 `DUPLICATE_SHELF_LIFE_GUIDE` |
+| PUT/DELETE | `/api/v1/admin/shelf-life-guides/{id}` | FR-120: sửa, hoặc tắt (xoá mềm); 404 `SHELF_LIFE_GUIDE_NOT_FOUND` |
 
 `AnnouncementResource`: `{ id, title, content, audience, active, startsAt, endsAt, createdAt }`. `endsAt` phải sau
 `startsAt` (400). Banner hiện khi `active` và `startsAt ≤ now < endsAt` (null = không giới hạn phía đó).
