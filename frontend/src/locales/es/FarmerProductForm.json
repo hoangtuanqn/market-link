@@ -36,6 +36,7 @@
   "shelfLife": {
     "label": "Vida útil",
     "group": "Grupo de almacenamiento",
+    "pickGroup": "Elige un grupo",
     "examples": "Por ejemplo: {{examples}}",
     "storage": "Cómo se conserva",
     "suggested_one": "sugerido {{count}} día",
@@ -54,6 +55,8 @@
     "tooLong_one": "Como máximo {{count}} día para este grupo.",
     "tooLong_other": "Como máximo {{count}} días para este grupo.",
     "saveBlocked": "Marca la promesa de arriba para guardar.",
+    "saveNeedsGroup": "Elige un grupo de almacenamiento arriba para guardar.",
+    "saveNeedsGroups": "Vuelve a cargar los grupos de almacenamiento arriba para guardar.",
     "loading": "Cargando los grupos de almacenamiento",
     "fallback": "Esta categoría aún no tiene grupos de almacenamiento. Suele durar {{min}}–{{max}} días.",
     "groupGone": "El grupo que usaba este producto ya no está disponible. Elige otro.",

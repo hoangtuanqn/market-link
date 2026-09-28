@@ -36,6 +36,7 @@
   "shelfLife": {
     "label": "Masa simpan",
     "group": "Kelompok penyimpanan",
+    "pickGroup": "Pilih kelompok",
     "examples": "Contoh: {{examples}}",
     "storage": "Cara penyimpanan",
     "suggested_one": "disarankan {{count}} hari",
@@ -54,6 +55,8 @@
     "tooLong_one": "Paling lama {{count}} hari untuk kelompok ini.",
     "tooLong_other": "Paling lama {{count}} hari untuk kelompok ini.",
     "saveBlocked": "Centang janji di atas untuk menyimpan.",
+    "saveNeedsGroup": "Pilih kelompok penyimpanan di atas untuk menyimpan.",
+    "saveNeedsGroups": "Muat ulang kelompok penyimpanan di atas untuk menyimpan.",
     "loading": "Memuat kelompok penyimpanan",
     "fallback": "Kategori ini belum memiliki kelompok penyimpanan. Biasanya bertahan {{min}}–{{max}} hari.",
     "groupGone": "Kelompok yang digunakan produk ini sudah tidak tersedia. Pilih kelompok lain.",

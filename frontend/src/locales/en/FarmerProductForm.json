@@ -36,6 +36,7 @@
   "shelfLife": {
     "label": "Shelf life",
     "group": "Storage group",
+    "pickGroup": "Choose a group",
     "examples": "For example: {{examples}}",
     "storage": "How it is kept",
     "suggested_one": "suggested {{count}} day",
@@ -54,6 +55,8 @@
     "tooLong_one": "At most {{count}} day for this group.",
     "tooLong_other": "At most {{count}} days for this group.",
     "saveBlocked": "Tick the promise above to save.",
+    "saveNeedsGroup": "Pick a storage group above to save.",
+    "saveNeedsGroups": "Reload the storage groups above to save.",
     "loading": "Loading the storage groups",
     "fallback": "This category has no storage groups yet. It usually keeps {{min}}–{{max}} days.",
     "groupGone": "The group this product used is no longer offered. Pick another.",

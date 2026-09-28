@@ -19,7 +19,7 @@ export type ShelfLifeFieldProps = {
   peerMedianDays: number | null;
   days: number;
   acknowledged: boolean;
-  /** The saved group is no longer offered: ask for another one. */
+  /** The saved group is no longer offered: only the group select shows, empty, until the Farmer picks one. */
   groupGone: boolean;
   errors: { group?: string; mode?: string; days?: string; ack?: string };
   onGroup: (groupName: string) => void;
@@ -71,6 +71,25 @@ const ShelfLifeField = ({
     );
   }
 
+  const groupOptions = groups.map((g) => ({ value: g.groupName, label: g.groupName }));
+  if (groupGone) {
+    // Spec §8: the saved group is no longer offered. The select starts empty, so picking any group is a change the
+    // Farmer makes (the one the name matches included), and the rest of the block waits for that pick.
+    return (
+      <div className="md:col-span-2">
+        <SelectField
+          id="shelf-group"
+          label={t('shelfLife.group')}
+          required
+          value=""
+          onChange={(e) => e.target.value && onGroup(e.target.value)}
+          options={[{ value: '', label: t('shelfLife.pickGroup') }, ...groupOptions]}
+          error={errors.group ?? t('shelfLife.groupGone')}
+        />
+      </div>
+    );
+  }
+
   const group = groups.find((g) => g.groupName === groupName);
   // No groups: both ways of keeping are offered with the category's upper bound as the suggestion.
   const modes = group
@@ -89,9 +108,9 @@ const ShelfLifeField = ({
           required
           value={groupName ?? ''}
           onChange={(e) => onGroup(e.target.value)}
-          options={groups.map((g) => ({ value: g.groupName, label: g.groupName }))}
+          options={groupOptions}
           hint={group?.examples ? t('shelfLife.examples', { examples: group.examples }) : undefined}
-          error={errors.group ?? (groupGone ? t('shelfLife.groupGone') : undefined)}
+          error={errors.group}
         />
       ) : (
         categoryRange && (
@@ -132,7 +151,7 @@ const ShelfLifeField = ({
               aria-label={t('shelfLife.decrease')}
               disabled={days <= 1}
               onClick={() => onDays(days - 1)}
-              className="disabled:text-line-strong grid size-10 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
+              className="disabled:text-line-strong grid size-11 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
             >
               −
             </button>
@@ -148,7 +167,7 @@ const ShelfLifeField = ({
               aria-label={t('shelfLife.increase')}
               disabled={days >= max}
               onClick={() => onDays(days + 1)}
-              className="disabled:text-line-strong grid size-10 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
+              className="disabled:text-line-strong grid size-11 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
             >
               +
             </button>

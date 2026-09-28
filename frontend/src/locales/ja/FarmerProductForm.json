@@ -36,6 +36,7 @@
   "shelfLife": {
     "label": "賞味期限",
     "group": "保存グループ",
+    "pickGroup": "グループを選択",
     "examples": "例:{{examples}}",
     "storage": "保存方法",
     "suggested_one": "推奨{{count}}日",
@@ -54,6 +55,8 @@
     "tooLong_one": "このグループでは最大{{count}}日までです。",
     "tooLong_other": "このグループでは最大{{count}}日までです。",
     "saveBlocked": "保存するには上の誓約にチェックを入れてください。",
+    "saveNeedsGroup": "保存するには、上で保存グループを選んでください。",
+    "saveNeedsGroups": "保存するには、上で保存グループを読み込み直してください。",
     "loading": "保存グループを読み込み中",
     "fallback": "このカテゴリーにはまだ保存グループがありません。通常{{min}}〜{{max}}日保存できます。",
     "groupGone": "この商品が使用していたグループは提供終了しました。別のグループを選んでください。",

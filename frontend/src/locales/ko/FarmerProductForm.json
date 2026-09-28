@@ -36,6 +36,7 @@
   "shelfLife": {
     "label": "유통기한",
     "group": "보관 그룹",
+    "pickGroup": "그룹 선택",
     "examples": "예: {{examples}}",
     "storage": "보관 방법",
     "suggested_one": "권장 {{count}}일",
@@ -54,6 +55,8 @@
     "tooLong_one": "이 그룹은 최대 {{count}}일까지입니다.",
     "tooLong_other": "이 그룹은 최대 {{count}}일까지입니다.",
     "saveBlocked": "저장하려면 위의 약속 항목에 체크하세요.",
+    "saveNeedsGroup": "저장하려면 위에서 보관 그룹을 선택하세요.",
+    "saveNeedsGroups": "저장하려면 위에서 보관 그룹을 다시 불러오세요.",
     "loading": "보관 그룹 불러오는 중",
     "fallback": "이 카테고리에는 아직 보관 그룹이 없습니다. 보통 {{min}}~{{max}}일 신선합니다.",
     "groupGone": "이 상품이 사용하던 그룹은 더 이상 제공되지 않습니다. 다른 그룹을 선택하세요.",

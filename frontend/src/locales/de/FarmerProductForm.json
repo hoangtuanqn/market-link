@@ -36,6 +36,7 @@
   "shelfLife": {
     "label": "Haltbarkeit",
     "group": "Lagerungsgruppe",
+    "pickGroup": "Gruppe wählen",
     "examples": "Zum Beispiel: {{examples}}",
     "storage": "Art der Lagerung",
     "suggested_one": "empfohlen {{count}} Tag",
@@ -54,6 +55,8 @@
     "tooLong_one": "Höchstens {{count}} Tag für diese Gruppe.",
     "tooLong_other": "Höchstens {{count}} Tage für diese Gruppe.",
     "saveBlocked": "Kreuzen Sie das Versprechen oben an, um zu speichern.",
+    "saveNeedsGroup": "Wählen Sie oben eine Lagerungsgruppe, um zu speichern.",
+    "saveNeedsGroups": "Laden Sie die Lagerungsgruppen oben neu, um zu speichern.",
     "loading": "Lagerungsgruppen werden geladen",
     "fallback": "Diese Kategorie hat noch keine Lagerungsgruppen. Sie hält sich meist {{min}}–{{max}} Tage.",
     "groupGone": "Die bisherige Gruppe dieses Produkts wird nicht mehr angeboten. Wählen Sie eine andere.",
