@@ -179,6 +179,11 @@
     "mapDataFrom": "Kartendaten {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Guten Morgen",
+      "afternoon": "Guten Tag",
+      "evening": "Guten Abend"
+    },
     "cart": "Warenkorb",
     "cartItems_one": "Warenkorb, {{count}} Artikel",
     "cartItems_other": "Warenkorb, {{count}} Artikel",

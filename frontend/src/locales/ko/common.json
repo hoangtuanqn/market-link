@@ -179,6 +179,11 @@
     "mapDataFrom": "지도 데이터 {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "좋은 아침입니다",
+      "afternoon": "좋은 오후입니다",
+      "evening": "좋은 저녁입니다"
+    },
     "cart": "장바구니",
     "cartItems_one": "장바구니, {{count}}개",
     "cartItems_other": "장바구니, {{count}}개",

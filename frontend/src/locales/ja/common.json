@@ -179,6 +179,11 @@
     "mapDataFrom": "地図データ {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "おはようございます",
+      "afternoon": "こんにちは",
+      "evening": "こんばんは"
+    },
     "cart": "カート",
     "cartItems_one": "カート、{{count}} 点",
     "cartItems_other": "カート、{{count}} 点",

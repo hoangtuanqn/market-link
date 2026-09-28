@@ -179,6 +179,11 @@
     "mapDataFrom": "Map data {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
     "cart": "Cart",
     "cartItems_one": "Cart, {{count}} item",
     "cartItems_other": "Cart, {{count}} items",

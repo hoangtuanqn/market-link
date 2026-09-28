@@ -179,6 +179,11 @@
     "mapDataFrom": "ข้อมูลแผนที่ {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "สวัสดีตอนเช้า",
+      "afternoon": "สวัสดีตอนบ่าย",
+      "evening": "สวัสดีตอนเย็น"
+    },
     "cart": "ตะกร้า",
     "cartItems_one": "ตะกร้า {{count}} รายการ",
     "cartItems_other": "ตะกร้า {{count}} รายการ",

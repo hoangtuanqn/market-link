@@ -179,6 +179,11 @@
     "mapDataFrom": "Dữ liệu bản đồ {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Chào buổi sáng",
+      "afternoon": "Chào buổi chiều",
+      "evening": "Chào buổi tối"
+    },
     "cart": "Giỏ hàng",
     "cartItems_one": "Giỏ hàng, {{count}} món",
     "cartItems_other": "Giỏ hàng, {{count}} món",

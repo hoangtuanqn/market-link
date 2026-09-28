@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import {
   ChevronLeftIcon,
   FoldIcon,
+  HandWaveIcon,
   LogOutIcon,
   LogoMark,
   MenuIcon,
@@ -12,6 +13,7 @@ import {
   type IconProps,
 } from '@/components/icons';
 import Helper from '@/utils/helper';
+import { useGreetingPeriod } from './greeting';
 
 export type ShellNavItem = { to: string; label: string; icon: ComponentType<IconProps>; count?: number };
 export type ShellNavGroup = { heading: string; items: ShellNavItem[] };
@@ -27,7 +29,7 @@ type DashboardShellProps = {
   nav: ShellNavGroup[];
   /** The stall or platform card under the logo. */
   context: { mono: string; name: string; sub: string };
-  user: { mono: string; email: string; line: string };
+  user: { mono: string; email: string; line: string; name?: string };
   /** Real sign-out (admin); without it the link just goes to `signOutTo`. */
   onSignOut?: () => void;
   signOutTo?: string;
@@ -65,6 +67,7 @@ const DashboardShell = ({
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const period = useGreetingPeriod();
   const [folded, setFolded] = useState(() => {
     try {
       return localStorage.getItem(FOLD_KEY) === 'folded';
@@ -307,6 +310,19 @@ const DashboardShell = ({
               <ChevronLeftIcon />
             </button>
           )}
+          <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
+            <HandWaveIcon
+              size={20}
+              className="text-accent-strong shrink-0 transition-transform duration-300 hover:rotate-12"
+              aria-hidden="true"
+            />
+            <div className="min-w-0">
+              <p className="text-ink truncate text-[18px] leading-tight sm:text-[20px]">
+                <span className="font-normal">{t(`header.greeting.${period}`)}</span>
+                {user.name && <span className="font-bold">, {user.name}</span>}
+              </p>
+            </div>
+          </div>
           <div className="ml-auto flex items-center gap-2">
             <div className="border-line-strong bg-surface-raised text-ink-muted focus-within:outline-focus hidden min-h-10 items-center gap-2 rounded-sm border-[1.5px] px-3 focus-within:outline-2 focus-within:outline-offset-1 sm:flex">
               <SearchIcon />
