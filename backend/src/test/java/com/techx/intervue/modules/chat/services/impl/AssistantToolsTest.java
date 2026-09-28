@@ -18,6 +18,7 @@ import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest.PageContext;
 import com.techx.intervue.modules.chat.resources.AdminRows.MarketActivityRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.PendingFarmerRow;
 import com.techx.intervue.modules.chat.resources.AdminRows.PlatformTotalsRow;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
@@ -485,6 +486,32 @@ class AssistantToolsTest {
                             assertThat(line.productId()).isEqualTo(11L);
                             assertThat(line.quantity()).isEqualTo(2);
                         });
+    }
+
+    // ------------------------------------------------ FR-094 approving from the queue
+
+    /**
+     * propose_farmer_decision takes a farmer_id and tells the model to get it from
+     * get_farmer_applications. Without the id in that result the model guessed one, and with real
+     * data it proposed a decision on the wrong stall.
+     */
+    @Test
+    void theApplicationQueueCarriesTheIdADecisionNeeds() {
+        when(adminKnowledge.farmerApplications("pending"))
+                .thenReturn(
+                        List.of(
+                                new PendingFarmerRow(
+                                        16L,
+                                        "Rau sạch Cô Bảy",
+                                        "Trần Thị Bảy",
+                                        "cobay.garden@example.test",
+                                        LocalDate.of(2026, 9, 27),
+                                        "pending")));
+
+        ToolOutcome out =
+                tools.run(ADMIN, AssistantTools.FARMER_APPLICATIONS, Map.of("status", "pending"));
+
+        assertThat(out.content()).contains("\"farmer_id\":16");
     }
 
     // ---------------------------------------- amounts reach the model as US dollars (27/09)

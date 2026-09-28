@@ -965,6 +965,8 @@ public class AssistantTools {
         List<ChatResultItem> cards = new ArrayList<>();
         for (PendingFarmerRow r : rows) {
             Map<String, Object> row = new LinkedHashMap<>();
+            // The id propose_farmer_decision asks for; without it the model has to guess one
+            row.put("farmer_id", r.farmerId());
             row.put("stall", r.stallName());
             row.put("contact", r.contactPerson());
             row.put("email", r.email());
