@@ -476,15 +476,24 @@ trả 404/410 → subscription bị xoá. Web Push chỉ chạy trên HTTPS (loc
 |---|---|---|---|---|---|
 | POST | `/api/v1/feedbacks` | Public | Chưa làm | `{ type: "bug" \| "suggestion" \| "query", message }` | `null` |
 | GET | `/api/v1/admin/feedbacks` | Admin | Chưa làm | | |
-| POST | `/api/v1/chat` | Public | **Đã có** | `{ sessionKey, message }` | `{ reply, intent, results[] }` |
+| POST | `/api/v1/chat` | Public | **Đã có** | `{ sessionKey, message, context? }` | `{ reply, intent, results[], actions[] }` |
 | GET | `/api/v1/chat/history` | Public | **Đã có** | query `sessionKey` | `[{ role, message, intent, createdAt }]` |
+| GET | `/api/v1/chat/farmer-briefing` | Farmer | **Đã có** | | `{ marketsToday[], ordersToday, waitingToBeAccepted, cutoffAlreadyPassed, soldOutProducts, lowStockProducts }` |
 
 - `sessionKey` do FE sinh (UUID) và giữ trong localStorage, 8–64 ký tự `[A-Za-z0-9_-]`.
   `message` dài 1–500 ký tự.
-- `results[]` có dạng `{ type: "product" | "market" | "farmer", id, title, subtitle }`.
+- `context` (FR-093, FR-094) cho trợ lý biết màn đang mở, chỉ nhận giá trị có khuôn: `page` là route pattern
+  1–64 ký tự `[a-z/:-]` (bỏ trống ở trang chủ), `recordType` một trong `order` `review` `farmer` `product` `market`,
+  `recordRef` 1–32 ký tự `[A-Za-z0-9_-]`, `cart` tối đa 30 dòng `{ productId, quantity 1–999 }`. Sai khuôn → 400.
+- `results[]` có dạng `{ type: "product" | "market" | "farmer" | "order", id, title, subtitle }`.
+- `actions[]` (FR-093, FR-094) là nút trợ lý **đề xuất**, `{ action, id, label, detail }` với `action` một trong
+  `accept_order` `decline_order` `ready_order` `complete_order` `approve_farmer` `reject_farmer` `suspend_farmer`.
+  Không có gì được ghi cho tới khi người dùng bấm; nút gọi endpoint thường của hành động đó.
 - Intent được phân loại bằng luật từ khoá rồi map sang **câu SQL viết sẵn có tham số**.
   **LLM không bao giờ sinh SQL** (R-04). Chi tiết trong `docs/chatbot-design.md`.
 - Có token thì backend gắn `user_id` vào lịch sử; khách vãng lai vẫn hỏi được.
+- Ai được Claude trả lời lấy từ JWT, không từ body: Customer, Farmer, Admin mỗi vai một bộ tool. Khách vãng lai và
+  admin chưa cài xong 2FA (FR-008) nhận luật từ khoá, như khi thiếu `ANTHROPIC_API_KEY`.
 
 ---
 
