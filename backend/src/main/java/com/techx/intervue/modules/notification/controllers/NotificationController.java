@@ -10,6 +10,7 @@ import com.techx.intervue.modules.notification.resources.NotificationPreferences
 import com.techx.intervue.modules.notification.resources.NotificationResource;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPreferenceServiceInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -18,8 +19,11 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -89,8 +93,23 @@ public class NotificationController extends BaseController {
 
     @PostMapping("/test")
     public ResponseEntity<ApiResource<Void>> test(@AuthenticationPrincipal CustomUserDetails me) {
-        notifications.sendTest(me.getId());
+        notifications.sendTest(me.getId(), roleOf(me));
         return ok(null, "Test notification sent.");
+    }
+
+    /** The most privileged role on the token: an approved Farmer also holds CUSTOMER. */
+    private static RoleType roleOf(CustomUserDetails me) {
+        Set<String> authorities =
+                me.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toSet());
+        if (authorities.contains("ROLE_" + RoleType.ADMIN)) {
+            return RoleType.ADMIN;
+        }
+        if (authorities.contains("ROLE_" + RoleType.FARMER)) {
+            return RoleType.FARMER;
+        }
+        return RoleType.CUSTOMER;
     }
 
     /**

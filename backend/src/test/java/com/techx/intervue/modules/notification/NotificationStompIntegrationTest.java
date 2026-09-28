@@ -149,7 +149,7 @@ class NotificationStompIntegrationTest {
         BlockingQueue<String> q = subscribe(connectAs(owner));
         Thread.sleep(300);
 
-        notificationService.sendTest(owner.getId());
+        notificationService.sendTest(owner.getId(), RoleType.CUSTOMER);
 
         assertThat(q.poll(5, TimeUnit.SECONDS))
                 .isNotNull()
@@ -157,6 +157,27 @@ class NotificationStompIntegrationTest {
                 .contains("\"inApp\":true")
                 .contains("\"browser\":true")
                 .contains("\"persistent\":false");
+    }
+
+    @Test
+    void aFarmersTestButtonLinksToTheFarmerSettingsPage() throws Exception {
+        User farmer = support.user(RoleType.FARMER);
+        BlockingQueue<String> q = subscribe(connectAs(farmer));
+        Thread.sleep(300);
+
+        try {
+            assertThat(
+                            support.send("POST", "/api/v1/notifications/test", farmer, null)
+                                    .statusCode())
+                    .isEqualTo(200);
+
+            assertThat(q.poll(5, TimeUnit.SECONDS))
+                    .isNotNull()
+                    .contains("\"kind\":\"test\"")
+                    .contains("\"link\":\"/farmer/settings\"");
+        } finally {
+            redis.delete("notif:test:" + farmer.getId());
+        }
     }
 
     @Test

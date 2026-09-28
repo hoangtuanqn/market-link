@@ -16,6 +16,7 @@ import com.techx.intervue.modules.notification.services.interfaces.NotificationD
 import com.techx.intervue.modules.notification.services.interfaces.NotificationPreferenceServiceInterface;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.user.entities.UserSettings;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.repositories.UserSettingsRepository;
 import com.techx.intervue.resources.PageResource;
 import jakarta.persistence.EntityNotFoundException;
@@ -188,14 +189,23 @@ public class NotificationService implements NotificationServiceInterface {
     }
 
     @Override
-    public void sendTest(Long userId) {
+    public void sendTest(Long userId, RoleType role) {
         Boolean first = redis.opsForValue().setIfAbsent(TEST_KEY + userId, "1", TEST_COOLDOWN);
         if (!Boolean.TRUE.equals(first)) {
             throw new TestNotificationTooSoonException();
         }
         dispatch(
                 List.of(userId),
-                NotificationEvent.of(NotificationKind.TEST, "/settings", Map.of()));
+                NotificationEvent.of(NotificationKind.TEST, settingsLink(role), Map.of()));
+    }
+
+    /** Each role has its own Settings page in the frontend (App.tsx routes). */
+    static String settingsLink(RoleType role) {
+        return switch (role) {
+            case ADMIN -> "/admin/settings";
+            case FARMER -> "/farmer/settings";
+            case CUSTOMER -> "/settings";
+        };
     }
 
     private void push(
