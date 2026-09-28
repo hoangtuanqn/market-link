@@ -52,12 +52,16 @@ class Helper {
     return Number.isFinite(seconds) && seconds > 0 ? seconds : undefined;
   }
 
-  /** Resolves an uploaded media path with the backend API origin if it is relative. */
+  /**
+   * Resolves an uploaded media path with the backend API origin if it is relative. The backend only serves files under
+   * "/uploads/"; any other root path (e.g. "/images/markets/…") is the frontend's own public file.
+   */
   static mediaUrl(path?: string | null): string {
     if (!path) return '';
     if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
       return path;
     }
+    if (path.startsWith('/') && !path.startsWith('/uploads/')) return path;
     const base = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
     return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
   }

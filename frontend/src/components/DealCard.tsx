@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import type { DealDto } from '@/api-requests/deal.requests';
 import useAddDeal from '@/hooks/useAddDeal';
 import { units } from '@/lib/format';
+import Helper from '@/utils/helper';
 import PriceTag from './PriceTag';
 import { stockDay } from './stockDay';
 import { Button } from './ui/button';
@@ -21,7 +22,7 @@ const DealCard = ({ deal }: { deal: DealDto }) => {
   return (
     <Card as="article" className="flex flex-col overflow-hidden">
       <div className="border-line bg-surface-sunken relative mx-3 mt-3 aspect-4/3 overflow-hidden rounded-sm border">
-        {deal.imageUrl && <img src={deal.imageUrl} alt="" className="size-full object-cover" />}
+        {deal.imageUrl && <img src={Helper.mediaUrl(deal.imageUrl)} alt="" className="size-full object-cover" />}
         <span className="font-hand bg-danger text-on-danger absolute top-3 right-3 rounded-sm px-2 py-1 text-[19px] leading-none">
           {t('deal.off', { percent: deal.discountPercent })}
         </span>
