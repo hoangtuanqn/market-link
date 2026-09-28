@@ -47,6 +47,12 @@
     "title_other": "{{count}} pesanan menunggu Anda. {{closing}} di antaranya ditutup pukul {{time}} besok.",
     "text": "Pesanan yang belum disetujui tetap menahan stok. Terima atau tolak sebelum batas waktu agar pelanggan bisa merencanakan."
   },
+  "strikes": {
+    "title": "Pelanggaran masa simpan: {{count}}/{{limit}} dalam {{days}} hari",
+    "text": "Laporan kerusakan yang dikonfirmasi pada masa simpan yang diperpanjang dihitung sebagai satu pelanggaran. 3 pelanggaran mengunci masa simpan yang lebih lama.",
+    "locked": "Masa simpan yang lebih lama dikunci hingga {{date}}.",
+    "link": "Lihat laporan kerusakan"
+  },
   "kpi": {
     "noun": "your numbers",
     "orders": "Total pesanan",

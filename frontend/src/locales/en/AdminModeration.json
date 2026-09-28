@@ -6,7 +6,8 @@
     "reviews": "Reviews",
     "products": "Product listings",
     "hidden": "Hidden items",
-    "messages": "Reported messages"
+    "messages": "Reported messages",
+    "quality": "Spoiled reports"
   },
   "reviewFilterLabel": "Filter reviews",
   "reviewFilter": {
@@ -105,5 +106,37 @@
     "reviews": "Hidden reviews",
     "noListings": "No hidden listings",
     "noListingsText": "Listings you hide appear here with the reason, so you can put them back."
+  },
+  "quality": {
+    "boundary": "Only a confirmed report on an extended shelf life that spoiled before its date records a strike. Nothing happens to a stall just because a customer reported.",
+    "filterLabel": "Filter spoiled reports",
+    "filter": {
+      "needs": "Needs a decision",
+      "open": "All open",
+      "decided": "Decided"
+    },
+    "noun": "spoiled reports",
+    "emptyTitle": "Nothing to decide",
+    "emptyText": "Spoiled reports from customers wait here for you.",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "Customer: {{customer}} · picked up {{pickup}} · good until {{bestBefore}} · spoiled {{spoiled}} ({{when}})",
+    "photoAlt": "The customer's photo of the spoiled produce",
+    "reply": "Stall reply: “{{text}}”",
+    "noReply": "The stall has not replied.",
+    "dismiss": "Not the stall's fault",
+    "confirm": "Confirm violation",
+    "dismissTitle": "Not the stall's fault?",
+    "dismissText": "The report closes without a strike. The customer and the stall are told.",
+    "confirmTitle": "Confirm the violation?",
+    "confirmText": "The report closes as confirmed. The customer and the stall are told.",
+    "confirmStrike": "The stall extended this shelf life and it spoiled before its date, so a strike is recorded and the product goes back to the suggested shelf life.",
+    "noteLabel": "Why it is not the stall's fault",
+    "noteOptional": "Note for the stall and other admins (optional)",
+    "noteRequired": "Say why this is not the stall's fault.",
+    "decisionNote": "Note: {{text}}",
+    "done": "Decision saved. The customer and the stall have been told.",
+    "alreadyDecided": "Another admin has already decided on this report.",
+    "suspend": "Suspend stall",
+    "suspendLabel": "Suspend stall: {{stall}}"
   }
 }

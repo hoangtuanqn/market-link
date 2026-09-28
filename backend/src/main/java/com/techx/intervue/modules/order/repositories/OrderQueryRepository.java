@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.order.repositories;
 
 import com.techx.intervue.modules.order.enums.OrderStatus;
+import com.techx.intervue.modules.order.resources.ItemQualityReportResource;
 import com.techx.intervue.modules.order.resources.OrderHistoryResource;
 import com.techx.intervue.modules.order.resources.OrderItemResource;
 import com.techx.intervue.modules.order.resources.OrderListItemResource;
@@ -121,11 +122,14 @@ public class OrderQueryRepository {
 
     public static final String ITEMS_SQL =
             """
-            SELECT product_id, product_name, unit, unit_price, quantity, subtotal,
-                   best_before, storage_mode, list_price
-            FROM order_items
-            WHERE order_id = :orderId
-            ORDER BY id
+            SELECT oi.id, oi.product_id, oi.product_name, oi.unit, oi.unit_price, oi.quantity,
+                   oi.subtotal, oi.best_before, oi.storage_mode, oi.list_price,
+                   qr.id AS report_id, qr.status AS report_status,
+                   qr.spoiled_on AS report_spoiled_on, qr.problem AS report_problem
+            FROM order_items oi
+            LEFT JOIN quality_reports qr ON qr.order_item_id = oi.id
+            WHERE oi.order_id = :orderId
+            ORDER BY oi.id
             """;
 
     public static final String HISTORY_SQL =
@@ -199,8 +203,23 @@ public class OrderQueryRepository {
                             rs.getBigDecimal("subtotal"),
                             bestBefore == null ? null : bestBefore.toString(),
                             rs.getString("storage_mode"),
-                            rs.getBigDecimal("list_price"));
+                            rs.getBigDecimal("list_price"),
+                            qualityReportOf(rs),
+                            rs.getLong("id"));
                 });
+    }
+
+    /** FR-122: the line's spoilage report, null until the customer reports it (LEFT JOIN). */
+    private static ItemQualityReportResource qualityReportOf(ResultSet rs) throws SQLException {
+        long id = rs.getLong("report_id");
+        if (rs.wasNull()) {
+            return null;
+        }
+        return new ItemQualityReportResource(
+                id,
+                rs.getString("report_status"),
+                rs.getObject("report_spoiled_on", LocalDate.class).toString(),
+                rs.getString("report_problem"));
     }
 
     public List<OrderHistoryResource> history(long orderId) {

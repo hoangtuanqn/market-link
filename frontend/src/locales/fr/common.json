@@ -485,6 +485,10 @@
         "farmerApplications": {
           "title": "Demandes Farmer",
           "note": "Quand quelqu’un demande à vendre sur MarketLink"
+        },
+        "qualityReports": {
+          "title": "Signalements de produits abîmés",
+          "note": "Quand on signale qu’un produit à la durée de conservation prolongée est abîmé avant sa date"
         }
       },
       "sound": "Jouer un son",
@@ -750,7 +754,8 @@
       "notAsDescribed": "Produits non conformes à l’annonce",
       "missedPickups": "Stand absent à l’heure du retrait",
       "rulesBroken": "Règles de la plateforme non respectées",
-      "ownerRequest": "À la demande du responsable du stand"
+      "ownerRequest": "À la demande du responsable du stand",
+      "shelfLifeViolations": "Infractions de conservation"
     },
     "deactivate": {
       "noShows": "Commandes répétées jamais retirées",
@@ -794,5 +799,25 @@
   },
   "bestBefore": {
     "line": "Bon jusqu’à la fin de {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Meurtri ou écrasé",
+      "mold": "Moisissure",
+      "smell": "Sent mauvais",
+      "wilted": "Flétri ou desséché",
+      "other": "Autre chose"
+    },
+    "problemWithNote": "{{problem}} · « {{note}} »",
+    "status": {
+      "open": "En attente d’une décision",
+      "confirmed": "Confirmé par un admin",
+      "dismissed": "Ce n’est pas la faute de l’étal"
+    },
+    "extended_one": "Prolongé +{{count}} jour",
+    "extended_other": "Prolongé +{{count}} jours",
+    "beforePromise": "avant sa date",
+    "afterPromise": "après sa date",
+    "strikes": "Infractions de conservation : {{count}}/{{limit}} en {{days}} jours"
   }
 }

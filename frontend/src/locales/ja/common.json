@@ -485,6 +485,10 @@
         "farmerApplications": {
           "title": "Farmer の申請",
           "note": "誰かが MarketLink での販売を申請したとき"
+        },
+        "qualityReports": {
+          "title": "傷んだ商品の報告",
+          "note": "賞味期限を延長した商品が、期限前に傷んでいると報告されたとき"
         }
       },
       "sound": "音を鳴らす",
@@ -750,7 +754,8 @@
       "notAsDescribed": "商品が掲載内容と違いました",
       "missedPickups": "受け取り時間に出店がいませんでした",
       "rulesBroken": "プラットフォームの規約違反",
-      "ownerRequest": "出店者本人の希望による"
+      "ownerRequest": "出店者本人の希望による",
+      "shelfLifeViolations": "賞味期限違反"
     },
     "deactivate": {
       "noShows": "注文して受け取らないことが続いています",
@@ -794,5 +799,25 @@
   },
   "bestBefore": {
     "line": "賞味期限は{{day}}まで · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "傷みや潰れ",
+      "mold": "カビ",
+      "smell": "におう",
+      "wilted": "しなびている・乾燥している",
+      "other": "その他"
+    },
+    "problemWithNote": "{{problem}} · 「{{note}}」",
+    "status": {
+      "open": "判定待ち",
+      "confirmed": "管理者が確認済み",
+      "dismissed": "店舗の落ち度ではない"
+    },
+    "extended_one": "+{{count}}日延長",
+    "extended_other": "+{{count}}日延長",
+    "beforePromise": "期限前",
+    "afterPromise": "期限後",
+    "strikes": "賞味期限違反：{{count}}/{{limit}}（{{days}}日以内）"
   }
 }

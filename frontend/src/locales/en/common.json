@@ -499,6 +499,10 @@
         "farmerApplications": {
           "title": "Farmer applications",
           "note": "When someone applies to sell on MarketLink"
+        },
+        "qualityReports": {
+          "title": "Spoiled produce reports",
+          "note": "When produce with an extended shelf life is reported spoiled before its date"
         }
       },
       "sound": "Play a sound",
@@ -764,7 +768,8 @@
       "notAsDescribed": "Produce did not match its listing",
       "missedPickups": "The stall was not there at pickup time",
       "rulesBroken": "The platform rules were broken",
-      "ownerRequest": "At the stall owner’s request"
+      "ownerRequest": "At the stall owner’s request",
+      "shelfLifeViolations": "Shelf-life violations"
     },
     "deactivate": {
       "noShows": "Repeatedly ordered and did not collect",
@@ -794,5 +799,25 @@
   },
   "bestBefore": {
     "line": "Good until end of {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Bruised or crushed",
+      "mold": "Mold",
+      "smell": "Smells off",
+      "wilted": "Wilted or dried out",
+      "other": "Something else"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "Waiting for a decision",
+      "confirmed": "Confirmed by an admin",
+      "dismissed": "Not the stall's fault"
+    },
+    "extended_one": "Extended +{{count}} day",
+    "extended_other": "Extended +{{count}} days",
+    "beforePromise": "before its date",
+    "afterPromise": "after its date",
+    "strikes": "Shelf-life strikes: {{count}} of {{limit}} in {{days}} days"
   }
 }

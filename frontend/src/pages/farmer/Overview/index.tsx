@@ -22,6 +22,7 @@ import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import LiveClock from './LiveClock';
+import ShelfLifeStrikes from './ShelfLifeStrikes';
 
 const TABS = [
   { id: 'new', label: 'tabs.new', status: 'placed' as OrderStatus },
@@ -223,6 +224,8 @@ const FarmerOverviewPage = () => {
           {t('banner.text')}
         </Banner>
       )}
+
+      <ShelfLifeStrikes />
 
       {kpiLoad.kind === 'loading' ? (
         <MarketCardSkeleton count={4} />

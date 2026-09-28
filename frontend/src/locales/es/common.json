@@ -485,6 +485,10 @@
         "farmerApplications": {
           "title": "Solicitudes de Farmer",
           "note": "Cuando alguien solicita vender en MarketLink"
+        },
+        "qualityReports": {
+          "title": "Informes de producto dañado",
+          "note": "Cuando se informa que un producto con vida útil ampliada se echó a perder antes de su fecha"
         }
       },
       "sound": "Reproducir un sonido",
@@ -750,7 +754,8 @@
       "notAsDescribed": "El producto no coincidía con el anuncio",
       "missedPickups": "El puesto no estaba a la hora de recogida",
       "rulesBroken": "Se incumplieron las normas de la plataforma",
-      "ownerRequest": "A petición del responsable del puesto"
+      "ownerRequest": "A petición del responsable del puesto",
+      "shelfLifeViolations": "Infracciones de vida útil"
     },
     "deactivate": {
       "noShows": "Pidió varias veces y no recogió",
@@ -794,5 +799,25 @@
   },
   "bestBefore": {
     "line": "Bueno hasta el final de {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Magullado o aplastado",
+      "mold": "Moho",
+      "smell": "Huele mal",
+      "wilted": "Marchito o reseco",
+      "other": "Otra cosa"
+    },
+    "problemWithNote": "{{problem}} · «{{note}}»",
+    "status": {
+      "open": "Esperando una decisión",
+      "confirmed": "Confirmado por un admin",
+      "dismissed": "No es culpa del puesto"
+    },
+    "extended_one": "Ampliado +{{count}} día",
+    "extended_other": "Ampliado +{{count}} días",
+    "beforePromise": "antes de su fecha",
+    "afterPromise": "después de su fecha",
+    "strikes": "Infracciones de vida útil: {{count}}/{{limit}} en {{days}} días"
   }
 }

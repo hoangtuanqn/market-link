@@ -53,5 +53,29 @@
     "title": "Huỷ đơn này?",
     "text": "{{stall}} được báo ngay và hàng được mở bán lại.",
     "keep": "Giữ đơn"
+  },
+  "spoilage": {
+    "report": "Báo hàng hư",
+    "reportLabel": "Báo hàng hư: {{name}}",
+    "reported": "Đã báo hàng hư · {{status}}",
+    "title": "Báo hàng hư",
+    "intro": "Cho {{stall}} biết {{name}} bị làm sao. Mỗi món chỉ báo một lần, chậm nhất 2 ngày sau hạn dùng.",
+    "day": "Hàng hư ngày",
+    "problem": "Bị làm sao",
+    "note": "Mô tả (không bắt buộc)",
+    "notePlaceholder": "Lá úng đen sau 2 ngày để ngăn mát.",
+    "noteCount": "{{used}}/500 ký tự.",
+    "photo": "Thêm ảnh (không bắt buộc)",
+    "photoReplace": "Đổi ảnh",
+    "photoRemove": "Bỏ ảnh",
+    "photoAlt": "Ảnh hàng bị hư",
+    "photoHint": "JPG, PNG hoặc WebP, tối đa 5 MB.",
+    "photoTooBig": "Ảnh phải nhỏ hơn hoặc bằng 5 MB.",
+    "photoType": "Hãy gửi ảnh JPG, PNG hoặc WebP.",
+    "uploading": "Đang tải ảnh lên",
+    "send": "Gửi báo cáo",
+    "needProblem": "Chọn hàng bị làm sao trước.",
+    "sent": "Đã gửi báo cáo. Sạp có thể phản hồi và admin sẽ xem xét.",
+    "failed": "Chưa gửi được báo cáo."
   }
 }

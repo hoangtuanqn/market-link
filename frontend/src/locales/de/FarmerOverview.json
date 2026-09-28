@@ -47,6 +47,12 @@
     "title_other": "{{count}} Bestellungen warten auf Sie. {{closing}} davon schließen morgen um {{time}}.",
     "text": "Nicht freigegebene Bestellungen halten weiterhin Bestand. Nehmen Sie sie vor dem Bestellschluss an oder lehnen Sie sie ab, damit Kunden planen können."
   },
+  "strikes": {
+    "title": "Haltbarkeitsverstöße: {{count}}/{{limit}} in {{days}} Tagen",
+    "text": "Eine bestätigte Verderb-Meldung zu einer verlängerten Haltbarkeit zählt als Verstoß. 3 Verstöße sperren längere Haltbarkeiten.",
+    "locked": "Längere Haltbarkeiten sind bis {{date}} gesperrt.",
+    "link": "Verderb-Meldungen ansehen"
+  },
   "kpi": {
     "noun": "your numbers",
     "orders": "Bestellungen gesamt",

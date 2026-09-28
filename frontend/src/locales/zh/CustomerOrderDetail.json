@@ -53,5 +53,29 @@
     "title": "取消此订单？",
     "text": "{{stall}} 会立即收到通知，商品将重新开售。",
     "keep": "保留订单"
+  },
+  "spoilage": {
+    "report": "举报变质",
+    "reportLabel": "举报变质：{{name}}",
+    "reported": "已举报变质 · {{status}}",
+    "title": "举报变质农产品",
+    "intro": "告诉{{stall}}，{{name}}出了什么问题。每件商品只能举报一次，最晚在到期后 2 天内。",
+    "day": "变质日期",
+    "problem": "哪里出了问题",
+    "note": "描述一下（可选）",
+    "notePlaceholder": "放进冷藏后 2 天，叶子变黑了。",
+    "noteCount": "{{used}}/500 个字符。",
+    "photo": "添加照片（可选）",
+    "photoReplace": "更换照片",
+    "photoRemove": "移除照片",
+    "photoAlt": "变质农产品的照片",
+    "photoHint": "JPG、PNG 或 WebP，最多 5 MB。",
+    "photoTooBig": "照片必须在 5 MB 以内。",
+    "photoType": "请发送 JPG、PNG 或 WebP 格式的照片。",
+    "uploading": "正在上传照片",
+    "send": "发送举报",
+    "needProblem": "请先选择哪里出了问题。",
+    "sent": "举报已发送。摊位可以回复，管理员也可能会审核。",
+    "failed": "举报未能发送。"
   }
 }

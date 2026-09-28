@@ -6,7 +6,8 @@
     "reviews": "Reseñas",
     "products": "Fichas de producto",
     "hidden": "Elementos ocultos",
-    "messages": "Mensajes denunciados"
+    "messages": "Mensajes denunciados",
+    "quality": "Reportes de deterioro"
   },
   "reviewFilterLabel": "Filtrar reseñas",
   "reviewFilter": {
@@ -105,5 +106,37 @@
     "reviews": "Reseñas ocultas",
     "noListings": "No hay productos ocultos",
     "noListingsText": "Los productos que ocultes aparecen aquí con el motivo, para que puedas volver a mostrarlos."
+  },
+  "quality": {
+    "boundary": "Solo un reporte confirmado sobre una vida útil ampliada que se deterioró antes de su fecha registra una infracción. No le pasa nada a un puesto solo porque un cliente haya reportado algo.",
+    "filterLabel": "Filtrar reportes de deterioro",
+    "filter": {
+      "needs": "Necesita una decisión",
+      "open": "Todos abiertos",
+      "decided": "Decididos"
+    },
+    "noun": "reportes de deterioro",
+    "emptyTitle": "Nada que decidir",
+    "emptyText": "Aquí esperan los reportes de deterioro de los clientes.",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "Cliente: {{customer}} · recogido {{pickup}} · bueno hasta {{bestBefore}} · deteriorado {{spoiled}} ({{when}})",
+    "photoAlt": "La foto del cliente del producto deteriorado",
+    "reply": "Respuesta del puesto: «{{text}}»",
+    "noReply": "El puesto no ha respondido.",
+    "dismiss": "No es culpa del puesto",
+    "confirm": "Confirmar infracción",
+    "dismissTitle": "¿No es culpa del puesto?",
+    "dismissText": "El reporte se cierra sin infracción. Se avisa al cliente y al puesto.",
+    "confirmTitle": "¿Confirmar la infracción?",
+    "confirmText": "El reporte se cierra como confirmado. Se avisa al cliente y al puesto.",
+    "confirmStrike": "El puesto amplió esta vida útil y el producto se deterioró antes de su fecha, así que se registra una infracción y el producto vuelve a la vida útil sugerida.",
+    "noteLabel": "Por qué no es culpa del puesto",
+    "noteOptional": "Nota para el puesto y otros administradores (opcional)",
+    "noteRequired": "Indica por qué no es culpa del puesto.",
+    "decisionNote": "Nota: {{text}}",
+    "done": "Decisión guardada. Se avisó al cliente y al puesto.",
+    "alreadyDecided": "Otro admin ya decidió sobre este reporte.",
+    "suspend": "Suspender puesto",
+    "suspendLabel": "Suspender puesto: {{stall}}"
   }
 }

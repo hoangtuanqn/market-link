@@ -485,6 +485,10 @@
         "farmerApplications": {
           "title": "Farmer 신청",
           "note": "누군가 MarketLink 판매를 신청했을 때"
+        },
+        "qualityReports": {
+          "title": "상한 상품 신고",
+          "note": "유통기한을 연장한 상품이 기한 전에 상했다고 신고되었을 때"
         }
       },
       "sound": "소리 재생",
@@ -750,7 +754,8 @@
       "notAsDescribed": "상품이 설명과 달랐습니다",
       "missedPickups": "수령 시간에 가판이 없었습니다",
       "rulesBroken": "플랫폼 규정을 위반했습니다",
-      "ownerRequest": "가판 운영자의 요청"
+      "ownerRequest": "가판 운영자의 요청",
+      "shelfLifeViolations": "유통기한 위반"
     },
     "deactivate": {
       "noShows": "주문 후 수령하지 않은 일이 반복되었습니다",
@@ -794,5 +799,25 @@
   },
   "bestBefore": {
     "line": "{{day}}까지 신선 · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "멍들거나 으깨짐",
+      "mold": "곰팡이",
+      "smell": "냄새가 남",
+      "wilted": "시들거나 말라붙음",
+      "other": "기타"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "판정 대기 중",
+      "confirmed": "관리자가 확인함",
+      "dismissed": "매대의 잘못이 아님"
+    },
+    "extended_one": "+{{count}}일 연장",
+    "extended_other": "+{{count}}일 연장",
+    "beforePromise": "기한 전",
+    "afterPromise": "기한 후",
+    "strikes": "유통기한 위반: {{count}}/{{limit}} ({{days}}일 이내)"
   }
 }

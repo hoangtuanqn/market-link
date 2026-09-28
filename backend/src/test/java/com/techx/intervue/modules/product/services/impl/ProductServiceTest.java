@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,6 +30,8 @@ import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
+import com.techx.intervue.modules.quality.exceptions.ShelfLifeExtensionLockedException;
+import com.techx.intervue.modules.quality.services.interfaces.ShelfLifeStandingServiceInterface;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -35,6 +39,7 @@ import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -62,6 +67,7 @@ class ProductServiceTest {
     private RestockNotifier restock;
     private WeeklyStockTemplateRepository templates;
     private ShelfLifeGuideRepository shelfLifeGuides;
+    private ShelfLifeStandingServiceInterface shelfLifeStanding;
 
     @BeforeEach
     void setUp() {
@@ -72,6 +78,7 @@ class ProductServiceTest {
         restock = mock(RestockNotifier.class);
         templates = mock(WeeklyStockTemplateRepository.class);
         shelfLifeGuides = mock(ShelfLifeGuideRepository.class);
+        shelfLifeStanding = mock(ShelfLifeStandingServiceInterface.class);
         service =
                 new ProductService(
                         products,
@@ -82,7 +89,8 @@ class ProductServiceTest {
                         mock(ProductAvailabilityResolver.class),
                         templates,
                         shelfLifeGuides,
-                        CLOCK);
+                        CLOCK,
+                        shelfLifeStanding);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -634,5 +642,37 @@ class ProductServiceTest {
                 .isInstanceOf(InvalidFieldException.class)
                 .extracting("field")
                 .isEqualTo("acknowledgeLongerShelfLife");
+    }
+
+    // ---------- extension lock (FR-123) ----------
+
+    /** Review Focus #2: 3 strikes in 90 days — nothing above the suggestion is saved. */
+    @Test
+    void aLockedStallCannotSaveLongerThanSuggested() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+        doThrow(new ShelfLifeExtensionLockedException(LocalDate.of(2026, 11, 30)))
+                .when(shelfLifeStanding)
+                .requireCanExtend(FARMER_ID);
+
+        assertThatThrownBy(() -> service.create(USER_ID, shelf(7L, "chilled", 5, true)))
+                .isInstanceOf(ShelfLifeExtensionLockedException.class)
+                .hasMessageContaining("2026-11-30");
+        verify(products, never()).save(any());
+    }
+
+    /** The lock only stops going longer: the suggestion (or less) still saves, unchecked. */
+    @Test
+    void aLockedStallCanStillSaveAtTheSuggestion() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+        doThrow(new ShelfLifeExtensionLockedException(LocalDate.of(2026, 11, 30)))
+                .when(shelfLifeStanding)
+                .requireCanExtend(FARMER_ID);
+
+        FarmerProductResource saved = service.create(USER_ID, shelf(7L, "chilled", 3, null));
+
+        assertThat(saved.shelfLife().days()).isEqualTo(3);
+        verify(shelfLifeStanding, never()).requireCanExtend(anyLong());
     }
 }

@@ -876,3 +876,135 @@ FROM (
      ) x
 LEFT JOIN users u ON u.email = x.email
 WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = x.message);
+
+-- ---- Spoilage reports and shelf-life strikes (FR-122, FR-123, proposed) ----
+-- The demo story: 'Vườn Út Hiền' (farmer@marketlink.vn) sold leafy greens kept in the fridge for 5
+-- days against a suggestion of 3. Two reports on order 0010 were confirmed two days after pickup,
+-- so the stall already has 2 strikes (those products are back at 3 days, as the shelf-life block
+-- above leaves them). The report on 'Rau muống' of order 0007 is still open: it is what the admin
+-- finds under "Needs a decision", and confirming it is the third strike — the stall is locked out
+-- of longer shelf lives and the card offers "Suspend stall". Order 0013 was completed yesterday,
+-- so customer@marketlink.vn can press "Report spoiled" on it.
+-- Seed orders skip OrderItem.snapshot, so the promise of the lines used here is written by hand.
+-- Re-running `make seed` puts all of this back: the reports of the three orders are deleted and
+-- written again (their strikes go with them through ON DELETE CASCADE), like the reviews block.
+
+-- Order 0013: completed yesterday at 'Chợ Bà Chiểu'; times follow the past-orders block (M-4).
+INSERT INTO orders (order_code, customer_id, farmer_id, market_id, slot_id, pickup_date, pickup_start,
+                    pickup_end, cutoff_at, total_amount, status, customer_note, farmer_note, created_at)
+SELECT 'ML-20260920-0013', cust.id, f.id, m.id, NULL,
+       DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL 1 DAY, '08:00:00', '09:00:00',
+       TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL 1 DAY, '08:00:00')
+         - INTERVAL f.order_cutoff_hours HOUR,
+       0, 'completed', NULL, NULL,
+       TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL 3 DAY, '08:00:00') - INTERVAL 7 HOUR
+FROM users cust
+JOIN users u ON u.email = 'farmer@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = u.id
+JOIN farmer_markets fm ON fm.farmer_id = f.id
+JOIN markets m ON m.id = fm.market_id AND m.market_name = 'Chợ Bà Chiểu'
+WHERE cust.email = 'customer@marketlink.vn'
+ON DUPLICATE KEY UPDATE customer_id = cust.id, farmer_id = f.id, market_id = m.id, slot_id = NULL,
+                        pickup_date = DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL 1 DAY,
+                        pickup_start = '08:00:00', pickup_end = '09:00:00',
+                        cutoff_at = TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL 1 DAY, '08:00:00')
+                                     - INTERVAL f.order_cutoff_hours HOUR,
+                        status = 'completed', customer_note = NULL, farmer_note = NULL,
+                        created_at = TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL 3 DAY, '08:00:00')
+                                     - INTERVAL 7 HOUR;
+
+-- Its two lines with the promise they were sold with: 'Rau muống' 5 days in the fridge (the extended
+-- product, +2 days), 'Rau dền' the suggested 3 days.
+INSERT INTO order_items (order_id, product_id, product_name, unit_price, unit, quantity, subtotal,
+                         shelf_life_days, storage_mode, best_before, shelf_life_extended, extended_by_days)
+SELECT o.id, p.id, p.name, p.price, p.unit, x.quantity, p.price * x.quantity,
+       x.days, 'chilled', o.pickup_date + INTERVAL (x.days - 1) DAY, x.days > 3, GREATEST(x.days - 3, 0)
+FROM (SELECT 'Rau muống' AS product_name, 2 AS quantity, 5 AS days
+      UNION ALL SELECT 'Rau dền', 2, 3) x
+JOIN orders o ON o.order_code = 'ML-20260920-0013'
+JOIN products p ON p.farmer_id = o.farmer_id AND p.name = x.product_name
+ON DUPLICATE KEY UPDATE product_name = p.name, unit_price = p.price, unit = p.unit,
+                        quantity = x.quantity, subtotal = p.price * x.quantity,
+                        shelf_life_days = x.days, storage_mode = 'chilled',
+                        best_before = o.pickup_date + INTERVAL (x.days - 1) DAY,
+                        shelf_life_extended = x.days > 3, extended_by_days = GREATEST(x.days - 3, 0);
+
+UPDATE orders o
+JOIN (SELECT order_id, SUM(subtotal) AS total FROM order_items GROUP BY order_id) t ON t.order_id = o.id
+SET o.total_amount = t.total
+WHERE o.order_code = 'ML-20260920-0013';
+
+-- Its status chain, written again on every run (no natural key), like the other seed orders.
+DELETE h FROM order_status_history h
+JOIN orders o ON o.id = h.order_id
+WHERE o.order_code = 'ML-20260920-0013';
+
+INSERT INTO order_status_history (order_id, from_status, to_status, changed_by, note, changed_at)
+SELECT o.id, spec.from_status, spec.to_status,
+       CASE spec.actor WHEN 'customer' THEN o.customer_id ELSE fu.id END,
+       NULL, TIMESTAMP(o.pickup_date + INTERVAL spec.day_delta DAY, spec.time_of_day) - INTERVAL 7 HOUR
+FROM (
+      SELECT NULL AS from_status, 'placed' AS to_status, 'customer' AS actor, -2 AS day_delta, '08:00:00' AS time_of_day
+      UNION ALL SELECT 'placed', 'accepted', 'farmer', -1, '09:00:00'
+      UNION ALL SELECT 'accepted', 'ready', 'farmer', 0, '07:30:00'
+      UNION ALL SELECT 'ready', 'completed', 'farmer', 0, '08:30:00'
+     ) spec
+JOIN orders o ON o.order_code = 'ML-20260920-0013'
+JOIN farmer_profiles f ON f.id = o.farmer_id
+JOIN users fu ON fu.id = f.user_id;
+
+-- The lines the reports are about: sold as 5 days in the fridge against 3, good until pickup + 4.
+UPDATE order_items oi
+JOIN orders o ON o.id = oi.order_id
+JOIN (SELECT 'ML-20260920-0007' AS order_code, 'Rau muống' AS product_name
+      UNION ALL SELECT 'ML-20260920-0010', 'Cải ngọt'
+      UNION ALL SELECT 'ML-20260920-0010', 'Mồng tơi') x
+  ON x.order_code = o.order_code AND x.product_name = oi.product_name
+SET oi.shelf_life_days = 5, oi.storage_mode = 'chilled', oi.best_before = o.pickup_date + INTERVAL 4 DAY,
+    oi.shelf_life_extended = TRUE, oi.extended_by_days = 2;
+
+-- Whatever a demo added (a customer's report on 0013, a strike from confirming 0007) goes too.
+DELETE r FROM quality_reports r
+JOIN orders o ON o.id = r.order_id
+WHERE o.order_code IN ('ML-20260920-0007', 'ML-20260920-0010', 'ML-20260920-0013');
+
+-- created_at: the evening of the day it spoiled; the reply and the decision the next morning.
+-- TIMESTAMP columns are session UTC, so Vietnam times are shifted by -7 hours (M-4).
+INSERT INTO quality_reports (order_item_id, order_id, customer_id, farmer_id, product_id, spoiled_on,
+                             problem, note, photo_url, before_promise, shelf_life_extended,
+                             extended_by_days, status, farmer_response, farmer_responded_at,
+                             decided_by, decided_at, decision_note, created_at)
+SELECT oi.id, o.id, o.customer_id, o.farmer_id, oi.product_id,
+       o.pickup_date + INTERVAL x.spoiled_after DAY,
+       x.problem, x.note, NULL,
+       (o.pickup_date + INTERVAL x.spoiled_after DAY) <= oi.best_before,
+       oi.shelf_life_extended, oi.extended_by_days, x.status, x.response,
+       IF(x.response IS NULL, NULL,
+          TIMESTAMP(o.pickup_date + INTERVAL (x.spoiled_after + 1) DAY, '09:00:00') - INTERVAL 7 HOUR),
+       IF(x.status = 'open', NULL, adm.id),
+       IF(x.status = 'open', NULL,
+          TIMESTAMP(o.pickup_date + INTERVAL (x.spoiled_after + 1) DAY, x.decided_time) - INTERVAL 7 HOUR),
+       x.decision_note,
+       TIMESTAMP(o.pickup_date + INTERVAL x.spoiled_after DAY, '20:00:00') - INTERVAL 7 HOUR
+FROM (
+      SELECT 'ML-20260920-0007' AS order_code, 'Rau muống' AS product_name, 2 AS spoiled_after,
+             'mold' AS problem, 'Lá úng đen sau 2 ngày để ngăn mát.' AS note, 'open' AS status,
+             'Khách để nhiệt độ thường, lúc giao hàng vẫn tươi.' AS response,
+             NULL AS decision_note, '10:00:00' AS decided_time
+      UNION ALL SELECT 'ML-20260920-0010', 'Cải ngọt', 1, 'wilted', 'Lá vàng, héo ngay hôm sau.',
+             'confirmed', NULL, 'Hư sau 1 ngày, sớm hơn nhiều so với 5 ngày sạp cam kết.', '10:00:00'
+      UNION ALL SELECT 'ML-20260920-0010', 'Mồng tơi', 1, 'smell', 'Có mùi chua khi mở túi.',
+             'confirmed', 'Hôm đó xe giao tới trễ.', 'Hư trước hạn; sạp nhận là giao trễ.', '10:10:00'
+     ) x
+JOIN orders o ON o.order_code = x.order_code
+JOIN order_items oi ON oi.order_id = o.id AND oi.product_name = x.product_name
+JOIN users adm ON adm.email = 'admin@marketlink.vn';
+
+-- The two strikes behind the confirmed reports, recorded when the admin decided: they count until
+-- 90 days after that.
+INSERT INTO farmer_violations (farmer_id, quality_report_id, product_id, extended_by_days, note,
+                               created_by, created_at)
+SELECT r.farmer_id, r.id, r.product_id, r.extended_by_days, r.decision_note, r.decided_by, r.decided_at
+FROM quality_reports r
+JOIN orders o ON o.id = r.order_id
+WHERE o.order_code = 'ML-20260920-0010' AND r.status = 'confirmed';

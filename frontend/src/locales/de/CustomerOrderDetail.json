@@ -53,5 +53,29 @@
     "title": "Diese Bestellung stornieren?",
     "text": "{{stall}} wird sofort benachrichtigt und die Waren gehen wieder in den Verkauf.",
     "keep": "Bestellung behalten"
+  },
+  "spoilage": {
+    "report": "Verderb melden",
+    "reportLabel": "Verderb melden: {{name}}",
+    "reported": "Verderb gemeldet · {{status}}",
+    "title": "Verdorbene Ware melden",
+    "intro": "Sagen Sie {{stall}}, was mit {{name}} nicht stimmte. Jeder Artikel kann nur einmal gemeldet werden, bis 2 Tage nach seinem Mindesthaltbarkeitsdatum.",
+    "day": "Verdorben am",
+    "problem": "Was war das Problem",
+    "note": "Beschreiben Sie es (optional)",
+    "notePlaceholder": "Die Blätter wurden nach 2 Tagen im Kühlschrank schwarz.",
+    "noteCount": "{{used}} von 500 Zeichen.",
+    "photo": "Foto hinzufügen (optional)",
+    "photoReplace": "Foto ersetzen",
+    "photoRemove": "Foto entfernen",
+    "photoAlt": "Foto der verdorbenen Ware",
+    "photoHint": "JPG, PNG oder WebP, bis zu 5 MB.",
+    "photoTooBig": "Das Foto darf höchstens 5 MB groß sein.",
+    "photoType": "Senden Sie ein JPG-, PNG- oder WebP-Foto.",
+    "uploading": "Foto wird hochgeladen",
+    "send": "Meldung senden",
+    "needProblem": "Wählen Sie zuerst, was das Problem war.",
+    "sent": "Meldung gesendet. Der Stand kann antworten, und ein Admin kann sie prüfen.",
+    "failed": "Die Meldung konnte nicht gesendet werden."
   }
 }

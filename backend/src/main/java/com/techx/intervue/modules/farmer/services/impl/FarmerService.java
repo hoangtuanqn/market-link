@@ -22,6 +22,8 @@ import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterf
 import com.techx.intervue.modules.notification.enums.NotificationKind;
 import com.techx.intervue.modules.notification.resources.NotificationEvent;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
+import com.techx.intervue.modules.quality.resources.ShelfLifeStandingResource;
+import com.techx.intervue.modules.quality.services.interfaces.ShelfLifeStandingServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -82,6 +84,7 @@ public class FarmerService implements FarmerServiceInterface {
     private final UserRepository userRepository;
     private final UserSessionCache userSessionCache;
     private final NotificationServiceInterface notifications;
+    private final ShelfLifeStandingServiceInterface shelfLifeStanding;
     private final FarmerStatusHistoryWriter statusHistory;
     private final JobQueueInterface jobQueue;
     private final AdminFarmerStatusHistoryQueryRepository statusHistoryQueries;
@@ -462,6 +465,7 @@ public class FarmerService implements FarmerServiceInterface {
     }
 
     private AdminFarmerDetailResource toDetailResource(FarmerProfile profile, User owner) {
+        ShelfLifeStandingResource strikes = shelfLifeStanding.standing(profile.getId());
         return AdminFarmerDetailResource.builder()
                 .id(profile.getId())
                 .userId(owner.getId())
@@ -482,6 +486,8 @@ public class FarmerService implements FarmerServiceInterface {
                 .history(historyOf(profile.getUserId()))
                 .customerSince(owner.getCreatedAt())
                 .accountStatus(owner.getStatus())
+                .activeViolations(strikes.activeViolations())
+                .extensionLockedUntil(strikes.extensionLockedUntil())
                 .build();
     }
 

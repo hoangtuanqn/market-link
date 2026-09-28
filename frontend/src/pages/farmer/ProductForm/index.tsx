@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router';
 import AskAssistant from '@/components/assistant/AskAssistant';
 import CatalogApi from '@/api-requests/catalog.requests';
 import ProductApi, { type ProductInput } from '@/api-requests/product.requests';
+import QualityReportApi from '@/api-requests/quality-report.requests';
 import ShelfLifeApi, { type ShelfLifeGroupDto, type StorageMode } from '@/api-requests/shelf-life.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import { Banner } from '@/components/ui/banner';
@@ -126,6 +127,9 @@ const FarmerProductFormPage = () => {
     categoryId == null ? Promise.resolve(NO_GROUPS) : ShelfLifeApi.forCategory(categoryId),
   );
   const guideGroups = guidesLoad.kind === 'ready' ? guidesLoad.data : NO_GROUPS;
+  // FR-123: 3 shelf-life strikes in 90 days lock longer shelf lives until this moment (null = not locked)
+  const { state: standingLoad } = useRequest('shelf-life-standing', () => QualityReportApi.standing());
+  const lockedUntil = standingLoad.kind === 'ready' ? standingLoad.data.extensionLockedUntil : null;
   const [errors, setErrors] = useState<FormErrors>({});
   const [saving, setSaving] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -219,6 +223,10 @@ const FarmerProductFormPage = () => {
     if (groupGone) next.shelfGroup = t('shelfLife.groupGone');
     if (days > maxShelfLifeDays(suggestedDays)) {
       next.shelfLife = t('shelfLife.tooLong', { count: maxShelfLifeDays(suggestedDays) });
+    }
+    // The server refuses it too (409 SHELF_LIFE_EXTENSION_LOCKED); say so before sending (Ruling 12)
+    if (!next.shelfLife && lockedUntil && days > suggestedDays) {
+      next.shelfLife = t('shelfLife.overLock', { count: suggestedDays });
     }
     if (needsAck) next.ackLonger = t('shelfLife.ackRequired');
     return next;
@@ -442,6 +450,7 @@ const FarmerProductFormPage = () => {
               setForm({ shelfGroup: group?.groupName ?? null, storageMode, shelfLife: n, ackLonger: false })
             }
             onAcknowledge={(value) => setForm({ ackLonger: value })}
+            lockedUntil={lockedUntil}
           />
 
           <div className="flex flex-col gap-1.5 md:col-span-2">

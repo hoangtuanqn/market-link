@@ -47,6 +47,12 @@
     "title_other": "Tienes {{count}} pedidos esperando. {{closing}} de ellos cierran mañana a las {{time}}.",
     "text": "Los pedidos sin aprobar siguen reservando stock. Acepta o rechaza antes del cierre para que los clientes puedan organizarse."
   },
+  "strikes": {
+    "title": "Infracciones de vida útil: {{count}}/{{limit}} en {{days}} días",
+    "text": "Un reporte de deterioro confirmado sobre una vida útil ampliada cuenta como una infracción. 3 infracciones bloquean las vidas útiles más largas.",
+    "locked": "Fijar una vida útil más larga queda bloqueado hasta el {{date}}.",
+    "link": "Ver los reportes"
+  },
   "kpi": {
     "noun": "your numbers",
     "orders": "Pedidos totales",
