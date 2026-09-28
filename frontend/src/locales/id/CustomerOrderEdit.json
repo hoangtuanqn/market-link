@@ -17,7 +17,7 @@
     "title": "Setelah disimpan, pesanan kembali ke status Dipesan dan {{stall}} menyetujuinya lagi.",
     "text": "Stok Anda tetap dipesan selama mereka meninjau. Anda akan mendapat notifikasi saat pesanan diterima."
   },
-  "help": "Di sini Anda bisa mengurangi jumlah atau menghapus item. Untuk menambah barang lain dari {{stall}}, buat pesanan baru. Jumlah dibatasi sisa stok lapak hari ini.",
+  "help": "Di sini Anda bisa mengubah jumlah atau menghapus item sampai batas waktu. Jumlah item hanya bisa ditambah sebanyak sisa stok {{stall}} untuk hari pengambilan ini. Untuk menambah barang lain, buat pesanan baru.",
   "submit": "Kirim perubahan untuk disetujui",
   "discard": "Buang perubahan",
   "toast": {
