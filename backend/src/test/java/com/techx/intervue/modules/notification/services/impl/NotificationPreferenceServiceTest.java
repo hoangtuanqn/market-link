@@ -153,7 +153,9 @@ class NotificationPreferenceServiceTest {
         NotificationPreferencesResource got = service.get(1L);
 
         assertThat(got.categories())
-                .containsExactly(new CategoryPreference("farmerApplications", true, true));
+                .containsExactly(
+                        new CategoryPreference("farmerApplications", true, true),
+                        new CategoryPreference("qualityReports", true, true));
         assertThat(got.sound()).isTrue();
         assertThat(got.quietOn()).isFalse();
         assertThat(got.quietFrom()).isEqualTo("22:00");
