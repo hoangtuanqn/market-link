@@ -22,7 +22,7 @@ import Notification from '@/utils/notification';
 import ShelfLifeField from './ShelfLifeField';
 
 const STATUS_OPTIONS: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
-/** Category ids with no shelf-life guides yet, and while they are still loading. */
+/** An empty group list, used when the category has no groups yet and while they are loading or failed to load. */
 const NO_GROUPS: ShelfLifeGroupDto[] = [];
 
 type FormState = {

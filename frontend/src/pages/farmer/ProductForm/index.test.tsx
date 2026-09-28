@@ -242,4 +242,90 @@ describe('FarmerProductFormPage', () => {
       await screen.findByText('The group this product used is no longer offered. Pick another.'),
     ).toBeInTheDocument();
   });
+
+  /**
+   * Controller ruling: a product saved before this feature (guideId null) gets matched to a group by name once its
+   * category has one, and its saved days are checked against that group's suggestion — the Farmer may have to tick the
+   * promise or change the days before saving, because the server requires a group and recomputes everything.
+   */
+  it('gives a pre-feature product a matched group and re-checks its saved days against it', async () => {
+    vi.mocked(ProductApi.getMine).mockResolvedValue({
+      id: 5,
+      name: 'Rau muống',
+      categoryId: 1,
+      unit: 'bunch',
+      price: 0.5,
+      stock: 10,
+      status: 'available',
+      shelfLife: { guideId: null, groupName: null, storageMode: 'room', days: 3, suggestedDays: null, extended: false },
+    } as never);
+    vi.mocked(ProductApi.update).mockResolvedValue({ id: 5, name: 'Rau muống', status: 'available' } as never);
+    renderEdit();
+
+    expect(await screen.findByDisplayValue('Leafy greens')).toBeInTheDocument();
+    expect(screen.getByRole('status', { name: /shelf life/i })).toHaveTextContent('3 days');
+    expect(screen.getByText(/2 days longer than suggested/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save product' })).toBeDisabled();
+    expect(screen.getByText('Tick the promise above to save.')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByLabelText(/Fridge 0–5 °C · suggested 3 days/));
+
+    expect(screen.getByRole('status', { name: /shelf life/i })).toHaveTextContent('3 days');
+    expect(screen.queryByText(/longer than suggested/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save product' })).toBeEnabled();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Save product' }));
+
+    expect(ProductApi.update).toHaveBeenCalledWith(
+      5,
+      expect.objectContaining({
+        shelfLifeGuideId: 12,
+        storageMode: 'chilled',
+        shelfLifeDays: 3,
+        acknowledgeLongerShelfLife: false,
+      }),
+    );
+  });
+
+  /**
+   * Controller ruling: nudging an already-extended, already-acknowledged product's days touches the form, so the saved
+   * product's blanket promise no longer covers it — the Farmer must tick it again, until the days are back at (or
+   * below) the suggestion.
+   */
+  it("asks for the promise again once an extended product's days are pulled down, and drops it at the suggestion", async () => {
+    vi.mocked(ProductApi.getMine).mockResolvedValue({
+      id: 5,
+      name: 'Rau muống',
+      categoryId: 1,
+      unit: 'bunch',
+      price: 0.5,
+      stock: 10,
+      status: 'available',
+      shelfLife: {
+        guideId: 12,
+        groupName: 'Leafy greens',
+        storageMode: 'chilled',
+        days: 5,
+        suggestedDays: 3,
+        extended: true,
+      },
+    } as never);
+    renderEdit();
+
+    expect(await screen.findByLabelText(/I promise this still keeps well for 5 days/)).toBeChecked();
+    const less = screen.getByRole('button', { name: 'One day less' });
+
+    await userEvent.click(less);
+
+    expect(screen.getByRole('status', { name: /shelf life/i })).toHaveTextContent('4 days');
+    expect(screen.getByLabelText(/I promise this still keeps well for 4 days/)).not.toBeChecked();
+    expect(screen.getByRole('button', { name: 'Save product' })).toBeDisabled();
+    expect(screen.getByText('Tick the promise above to save.')).toBeInTheDocument();
+
+    await userEvent.click(less);
+
+    expect(screen.getByRole('status', { name: /shelf life/i })).toHaveTextContent('3 days');
+    expect(screen.queryByText(/longer than suggested/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save product' })).toBeEnabled();
+  });
 });
