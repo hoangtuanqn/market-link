@@ -1,6 +1,7 @@
 import { AxiosError, AxiosHeaders, type InternalAxiosRequestConfig } from 'axios';
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import AuthApi from '@/api-requests/auth.requests';
+import { Cart } from '@/lib/cart';
 import { privateApi, watchForAccountDeactivated, watchForStallSuspended } from './axiosInstance';
 import Session from './session';
 import BlockedNotice from './blockedNotice';
@@ -17,6 +18,7 @@ describe('watchForAccountDeactivated', () => {
     // shown now) before it can paint. Stashing across the reload, instead of toasting here, is what
     // lets AccountDeactivatedToastSync show it once the new page has actually mounted.
     Session.save({ accessToken: 'stale-token', user: { id: 1 } as never }, false);
+    Cart.add({ productId: 1, name: 'Tomato', unit: 'kg', price: 1.5, max: 5, farmerId: 7, stallName: 'Cô Tư' }, 1);
     const assignSpy = vi.fn();
     vi.stubGlobal('location', { ...window.location, assign: assignSpy });
     const error = new AxiosError('Unauthorized');
@@ -37,6 +39,8 @@ describe('watchForAccountDeactivated', () => {
     await expect(watchForAccountDeactivated(error)).rejects.toBe(error);
 
     expect(Session.getAccessToken()).toBeNull();
+    // FR-006: signed out for good, so the cart does not wait for the next person on this browser
+    expect(Cart.lines()).toEqual([]);
     expect(BlockedNotice.peek()).toEqual({
       kind: 'account',
       message: 'Your account has been deactivated. Reason: No-shows.',

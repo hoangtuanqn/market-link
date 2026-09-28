@@ -1,5 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import AuthApi from '@/api-requests/auth.requests';
+import { Cart } from '@/lib/cart';
 import PlatformStatus from '@/lib/platformStatus';
 import BlockedNotice from './blockedNotice';
 import Session from './session';
@@ -40,6 +41,8 @@ privateApi.interceptors.response.use((res) => res, watchForMaintenanceMode);
 export const watchForAccountDeactivated = (error: unknown) => {
   if (error instanceof AxiosError && error.response?.data?.error?.code === 'ACCOUNT_DEACTIVATED') {
     Session.clear();
+    // signed out for good: the cart in localStorage must not wait for whoever uses this browser next (FR-006)
+    Cart.clear();
     // The reason sits on the envelope root (`message`); ErrorResource only carries `code` +
     // `details`. An empty stash means the screen falls back to its own generic wording rather than
     // showing the word "undefined" to someone who has just been locked out.
