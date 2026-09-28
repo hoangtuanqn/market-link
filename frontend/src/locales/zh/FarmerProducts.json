@@ -31,7 +31,8 @@
       "unavailable": "商品已对顾客隐藏，直到你重新开启。"
     },
     "deleted": "已删除",
-    "deletedText": "已删除 {{name}}。"
+    "deletedText": "已删除 {{name}}。",
+    "stockAdjusted": "已更新 {{day}} 的库存。"
   },
   "dialog": {
     "title": "删除 {{name}}？",
@@ -47,5 +48,18 @@
   "empty": {
     "title": "还没有商品",
     "text": "添加第一件商品后，它会立刻出现在您的摊位页面。"
+  },
+  "adjust": "调整",
+  "adjustDialog": {
+    "title": "调整 {{day}} 的库存",
+    "quantity": "可用数量",
+    "price": "当天价格（可选）",
+    "priceHint": "留空以保留当前价格。",
+    "cancel": "取消",
+    "confirm": "保存",
+    "error": {
+      "quantity": "请输入0或以上的整数。",
+      "price": "请输入0或以上的价格。"
+    }
   }
 }

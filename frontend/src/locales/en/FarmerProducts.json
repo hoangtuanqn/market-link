@@ -21,6 +21,7 @@
   "nextLeft": "{{day}} · {{qty}} left",
   "statusOf": "Status of {{name}}",
   "edit": "Edit",
+  "adjust": "Adjust",
   "delete": "Delete",
   "footNote": "Deleting a product removes it from the catalogue; past orders keep their lines. Photos: 4:3, natural light, on wood or paper.",
   "toast": {
@@ -31,7 +32,8 @@
       "unavailable": "The product is hidden from customers until you set it back."
     },
     "deleted": "Deleted",
-    "deletedText": "{{name}} deleted."
+    "deletedText": "{{name}} deleted.",
+    "stockAdjusted": "Stock updated for {{day}}."
   },
   "dialog": {
     "title": "Delete {{name}}?",
@@ -39,6 +41,18 @@
     "confirm": "Delete product",
     "text": "It disappears from the catalogue and from your template. Orders that already include it are not changed.",
     "pauseHint": "To stop selling it for a while, choose Paused instead."
+  },
+  "adjustDialog": {
+    "title": "Adjust stock for {{day}}",
+    "quantity": "Units available",
+    "price": "Price for this day (optional)",
+    "priceHint": "Leave blank to keep the current price.",
+    "cancel": "Cancel",
+    "confirm": "Save",
+    "error": {
+      "quantity": "Enter a whole number of 0 or more.",
+      "price": "Enter a price of 0 or more."
+    }
   },
   "error": {
     "noun": "your products"
