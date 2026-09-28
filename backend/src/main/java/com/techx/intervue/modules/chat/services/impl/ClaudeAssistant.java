@@ -95,8 +95,9 @@ public class ClaudeAssistant {
             (06:30). Dates as dd/MM/yyyy, taken from the day list below, never computed.
             - Units in Vietnamese: bunch = bó, kg = kg, jar = hũ, litre = lít, loaf = ổ, \
             piece = cái, bag = túi.
-            - Days in Vietnamese: Sunday = Chủ nhật, Monday = Thứ Hai, Tuesday = Thứ Ba, \
-            Wednesday = Thứ Tư, Thursday = Thứ Năm, Friday = Thứ Sáu, Saturday = Thứ Bảy.
+            - Only when the answer is in Vietnamese, write the days as: Sunday = Chủ nhật, \
+            Monday = Thứ Hai, Tuesday = Thứ Ba, Wednesday = Thứ Tư, Thursday = Thứ Năm, \
+            Friday = Thứ Sáu, Saturday = Thứ Bảy. An English answer keeps the English day names.
             - Result cards with links are shown under your reply, so do not paste URLs.
             """;
 
