@@ -354,6 +354,8 @@ Giá trị `status` giữ nguyên dạng lưu trong DB: `placed`, `accepted`, `r
 **Hạn dùng của món trong đơn (FR-121, đề xuất).** Mỗi món (`items[]`) trong `GET /api/v1/orders/{id}` thêm
 `bestBefore` (`yyyy-MM-dd`, `null` với đơn cũ), `storageMode`, `listPrice` (`null` khi không giảm giá).
 
+- FR-122: mỗi món trong `GET /api/v1/orders/{id}` thêm `itemId` (`order_items.id`) và `qualityReport: { id, status, spoiledOn, problem } | null`.
+
 ---
 
 ## 8. Reviews — FR-050…053
@@ -367,6 +369,30 @@ Giá trị `status` giữ nguyên dạng lưu trong DB: `placed`, `accepted`, `r
 | POST | `/api/v1/reviews` | Customer | `{ orderId, targetType: "product" \| "farmer", productId?, farmerId?, rating, comment }` — **403 nếu đơn chưa `completed` hoặc không thuộc về mình**, 409 nếu đã review |
 | POST | `/api/v1/farmer/reviews/{id}/response` | Farmer | `{ responseText }` |
 | PATCH | `/api/v1/admin/reviews/{id}/hide` | Admin | kiểm duyệt |
+
+---
+
+## 8a. Báo hàng hư và lỗi hạn dùng — FR-122, FR-123 ⚑
+
+> Đề xuất (FR-122, FR-123 chưa có trong `.ai/REQUIREMENTS.md`). Spec
+> `docs/superpowers/specs/2026-09-27-shelf-life-deals-design.md` §4.4, §4.6; LEAD duyệt các dòng này ở spec §6 ngày
+> 27/09/2026.
+
+| Method | Path | Role | Ghi chú |
+|---|---|---|---|
+| POST | `/api/v1/quality-reports/photos` | Customer | multipart `file`, JPG/PNG/WebP ≤ 5 MB → 201 `{ url }`; sai loại hoặc quá cỡ → 400 field `file`. JPEG/PNG được mã hoá lại (bỏ EXIF) |
+| POST | `/api/v1/orders/{id}/items/{itemId}/quality-report` | Customer | `itemId` = field `itemId` của món. `{ spoiledOn (yyyy-MM-dd, từ ngày nhận tới hôm nay), problem: "bruised" \| "mold" \| "smell" \| "wilted" \| "other", note? (≤ 500), photoUrl? }` → 201 `{ id, status, spoiledOn, problem }`. Đơn của người khác → 403; món không thuộc đơn → 404; đơn chưa `completed` → 409 `ORDER_NOT_COMPLETED`; món không có `bestBefore` hoặc quá `bestBefore + 2 ngày` → 409 `REPORT_WINDOW_CLOSED`; báo lần hai → 409 `ALREADY_REPORTED`; `spoiledOn` ngoài khoảng hoặc ảnh không phải của mình → 400 field `spoiledOn` / `photoUrl` |
+| GET | `/api/v1/farmer/quality-reports` | Farmer | query `page, pageSize` → `{ standing: { activeViolations, limit, windowDays, extensionLockedUntil }, reports: { items: QualityReport[], page, pageSize, total } }`, mới nhất trước, chỉ báo cáo về sạp mình |
+| PUT | `/api/v1/farmer/quality-reports/{id}/response` | Farmer | `{ response (1–500) }` → `QualityReport`; sửa được tới khi admin quyết định, sau đó 409 `REPORT_ALREADY_DECIDED`; báo cáo của sạp khác → 403. Sạp bị đình chỉ vẫn phản hồi được |
+| GET | `/api/v1/admin/quality-reports` | Admin | query `status` (`open` \| `confirmed` \| `dismissed` \| `decided` = đã xử lý), `escalated` (`true` = món kéo dài hạn và hư trước hạn), `page, pageSize` → trang `QualityReport`, mới nhất trước. "Cần xử lý" = `status=open&escalated=true` |
+| PATCH | `/api/v1/admin/quality-reports/{id}/confirm` | Admin | `{ note? (≤ 255) }` → `QualityReport`. Món kéo dài hạn và hư trước hạn: ghi một lỗi hạn dùng, hạn dùng của sản phẩm về mốc gợi ý. Đã xử lý → 409 `REPORT_ALREADY_DECIDED` |
+| PATCH | `/api/v1/admin/quality-reports/{id}/dismiss` | Admin | `{ note (bắt buộc, ≤ 255) }` → `QualityReport`; thiếu ghi chú → 400 field `note`; đã xử lý → 409 `REPORT_ALREADY_DECIDED` |
+
+`QualityReport`: `{ id, orderId, orderCode, farmerId, stallName, stallStatus, customerName, productId, productName, pickupDate, bestBefore, storageMode, spoiledOn, beforePromise, problem, note, photoUrl, shelfLifeExtended, extendedByDays, status: "open" | "confirmed" | "dismissed", farmerResponse, farmerRespondedAt, decisionNote, decidedAt, createdAt, stallActiveStrikes }`.
+
+Lỗi hạn dùng còn hiệu lực 90 ngày. Từ 3 lỗi còn hiệu lực, `POST/PUT /api/v1/farmer/products` với `shelfLifeDays` lớn
+hơn mốc gợi ý → **409 `SHELF_LIFE_EXTENSION_LOCKED`** (detail field `shelfLifeDays`). Khoá tự hết khi lỗi mới thứ ba
+đủ 90 ngày; không có trạng thái khoá lưu riêng.
 
 ---
 
@@ -397,6 +423,9 @@ ngôn ngữ người nhận (`user_settings.language`) lúc tạo.
 `farmer_reinstated` — đều được lưu. `message` (tin nhắn chat) và `test` chỉ đẩy realtime, **không lưu**.
 Các mốc đơn hàng của D-11 sẽ thêm kind mới khi có module orders.
 
+FR-122, FR-123 thêm: `quality_reported` (tới sạp), `quality_escalated` (tới mọi admin), `quality_decided` (tới khách và
+sạp), `shelf_life_violation`, `shelf_life_locked` (tới sạp) — đều được lưu.
+
 `NotificationPreferences`:
 
 ```json
@@ -405,6 +434,7 @@ Các mốc đơn hàng của D-11 sẽ thêm kind mới khi có module orders.
 ```
 
 - Nhóm: `messages`, `announcements`, `account` (customer, farmer); `farmerApplications` (admin).
+- Nhóm `qualityReports` (admin, FR-122): báo hư món kéo dài hạn và hư trước hạn; chưa lưu = bật.
 - Chưa lưu = bật cả hai kênh, âm thanh bật, không giờ yên tĩnh.
 - Giờ yên tĩnh theo `Asia/Ho_Chi_Minh`, khoảng `[from, to)`, qua nửa đêm được, `from == to` = tắt. Trong giờ yên
   tĩnh không popup, không âm thanh, không Web Push; vẫn lưu và vẫn tăng số chưa đọc.
@@ -440,6 +470,7 @@ trả 404/410 → subscription bị xoá. Web Push chỉ chạy trên HTTPS (loc
 |---|---|---|
 | GET | `/api/v1/admin/dashboard` | `{ totalFarmers, totalCustomers, totalMarkets, totalOrders, revenueTotal, pendingFarmers }` |
 | GET | `/api/v1/admin/farmers` | query `approvalStatus` |
+| GET | `/api/v1/admin/farmers/{id}` | chi tiết sạp; FR-123 thêm `activeViolations` (số lỗi hạn dùng trong 90 ngày) và `extensionLockedUntil` (ISO 8601, `null` khi không bị khoá) |
 | PATCH | `/api/v1/admin/farmers/{id}/approve` | |
 | PATCH | `/api/v1/admin/farmers/{id}/reject` | `{ reason }` |
 | PATCH | `/api/v1/admin/farmers/{id}/suspend` | D-09: ẩn sản phẩm, đơn đang chạy vẫn chạy |

@@ -15,9 +15,9 @@ docker compose exec -T mysql sh -c 'mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$
 
 | Vai | Email | Đăng nhập ở | Dùng để xem |
 |---|---|---|---|
-| Admin | `admin@marketlink.vn` | `/admin/login` | Dashboard tổng (`/admin`), duyệt Farmer, chợ, danh mục, kiểm duyệt sản phẩm và review, báo cáo doanh thu theo chợ / Farmer bán chạy, quản tài khoản Customer, hàng đợi góp ý, thông báo toàn nền tảng |
-| Customer | `customer@marketlink.vn` | `/login` | Duyệt chợ và sản phẩm, giỏ hàng tách theo sạp, 12 đơn đủ 6 trạng thái (4 đơn `completed` để viết review), yêu thích + restock alert, đặt lại nhanh, chatbot, nhắn tin với sạp, thông báo |
-| Farmer | `farmer@marketlink.vn` | `/login` | Hồ sơ sạp "Vườn Út Hiền", sản phẩm, chợ bán và khung giờ nhận hàng, slot, đơn đến (accept/decline/ready/complete), template tồn kho tuần, dashboard doanh thu + best-seller, trả lời review |
+| Admin | `admin@marketlink.vn` | `/admin/login` | Dashboard tổng (`/admin`), duyệt Farmer, chợ, danh mục, kiểm duyệt sản phẩm và review, báo cáo doanh thu theo chợ / Farmer bán chạy, quản tài khoản Customer, hàng đợi góp ý, thông báo toàn nền tảng, tab Báo hàng hư trong Moderation |
+| Customer | `customer@marketlink.vn` | `/login` | Duyệt chợ và sản phẩm, giỏ hàng tách theo sạp, 13 đơn đủ 6 trạng thái (5 đơn `completed` để viết review), báo hàng hư trên đơn `ML-20260920-0013`, yêu thích + restock alert, đặt lại nhanh, chatbot, nhắn tin với sạp, thông báo |
+| Farmer | `farmer@marketlink.vn` | `/login` | Hồ sơ sạp "Vườn Út Hiền", sản phẩm, chợ bán và khung giờ nhận hàng, slot, đơn đến (accept/decline/ready/complete), template tồn kho tuần, dashboard doanh thu + best-seller, trả lời review, tab Báo hàng hư trong Reviews (2/3 lỗi hạn dùng) |
 | Farmer (thứ 2) | `farmer2@marketlink.vn` | `/login` | Sạp "Trái cây Ba Tơ" — giỏ có hàng của 2 Farmer tách thành 2 đơn (D-01) |
 
 Customer demo: Nguyễn Văn An · `0900000002`.
@@ -74,9 +74,10 @@ Lần đăng nhập kế tiếp sẽ quay lại bước 1.
 ## Dữ liệu demo đi kèm (FR-100, FR-101)
 
 Sau `make seed` trên database trống: 4 chợ TP.HCM toạ độ thật · 10 sạp đã duyệt · 51 sản phẩm (1 bị admin ẩn để demo
-kiểm duyệt) · slot nhận hàng 4 tuần · 12 đơn của `customer@marketlink.vn` (`ML-20260920-0001…0012`) đủ 6 trạng thái
+kiểm duyệt) · slot nhận hàng 4 tuần · 13 đơn của `customer@marketlink.vn` (`ML-20260920-0001…0013`) đủ 6 trạng thái
 placed / accepted / ready / completed / declined / cancelled · 8 review (1 bị ẩn, 1 có phản hồi của sạp) · 6 yêu thích ·
-48 dòng template tồn kho tuần · 3 góp ý (bug / suggestion / query). Seed chạy lại được, không nhân đôi.
+48 dòng template tồn kho tuần · 3 báo hàng hư (1 chờ admin, 2 đã xác nhận) và 2 lỗi hạn dùng của Vườn Út Hiền · 3 góp ý
+(bug / suggestion / query). Seed chạy lại được, không nhân đôi.
 
 ## 10 sạp Farmer đã duyệt (FR-100)
 
@@ -99,6 +100,9 @@ Dữ liệu dựng sẵn cho vài kịch bản:
 
 - Sản phẩm hết hàng (`sold_out`) và tạm ngưng (`unavailable`) rải ở nhiều sạp (FR-064).
 - "Sáp ong nguyên chất" của `farmer10@` đã bị admin ẩn, có lý do (FR-074) — dùng để xem màn kiểm duyệt.
+- Báo hàng hư (FR-122, FR-123): xác nhận báo cáo "Rau muống" của đơn `ML-20260920-0007` là lỗi thứ 3 trong 90 ngày của
+  `farmer@` → sạp bị khoá kéo dài hạn dùng và thẻ báo cáo hiện nút "Suspend stall". `make seed` đưa về trạng thái ban
+  đầu.
 
 ## Lưu ý
 
