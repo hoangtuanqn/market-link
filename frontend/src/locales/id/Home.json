@@ -118,14 +118,9 @@
     "grower": "Petani",
     "at": "Di",
     "visit": "Kunjungi kios →",
-    "empty": "Belum ada petani yang tersedia saat ini."
-  },
-  "reviews": {
-    "eyebrow": "SUARA KOMUNITAS",
-    "title": "Disukai pelanggan pasar",
-    "desc": "Lebih dari 140+ ulasan bintang 5 dari pencinta makanan sehat di seluruh Ho Chi Minh",
-    "score": "⭐ 4.8 / 5 skor komunitas",
-    "verified": "Pembelian terverifikasi"
+    "empty": "Belum ada petani yang tersedia saat ini.",
+    "noun": "lapak",
+    "emptyText": "Jelajahi pasar untuk melihat siapa yang berjualan di sana."
   },
   "banner": {
     "badge": "UNTUK PETANI & PENGRAJIN LOKAL",

@@ -1,13 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import CatalogApi, { type CategoryType } from '@/api-requests/catalog.requests';
 import ProductApi from '@/api-requests/product.requests';
-import StallApi, { type StallSummaryDto } from '@/api-requests/stall.requests';
+import StallApi, { type StallDetailDto } from '@/api-requests/stall.requests';
 import { LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 import CategoryBrowse from './CategoryBrowse';
-import CommunityReviews from './CommunityReviews';
 import DealsStrip from './DealsStrip';
 import FarmerCtaBanner from './FarmerCtaBanner';
 import FeaturedFarmers from './FeaturedFarmers';
@@ -24,7 +23,7 @@ const FRESH_COUNT = 6;
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
 const NO_CATEGORIES: CategoryType[] = [];
-const NO_STALLS: StallSummaryDto[] = [];
+const NO_STALLS: StallDetailDto[] = [];
 
 /** FR-010 FR-020 FR-077 — markets, categories, freshest produce, and grower stalls. */
 const HomePage = () => {
@@ -37,8 +36,12 @@ const HomePage = () => {
     ProductApi.list({ pageSize: FRESH_COUNT, sort: 'newest' }).then((result) => result.items),
   );
   const { state: categoriesLoad } = useRequest('categories', () => CatalogApi.listCategories());
-  const { state: stallsLoad } = useRequest('featured-stalls', () =>
-    StallApi.list({ pageSize: 3 }).then((result) => result.items),
+  // The list has no bio or markets, so each featured stall's own profile is read too (three small calls). A stall
+  // that went away in between (suspended → 404) is just left out.
+  const { state: stallsLoad, retry: retryStalls } = useRequest('featured-stalls', () =>
+    StallApi.list({ pageSize: 3 })
+      .then((result) => Promise.all(result.items.map((s) => StallApi.get(s.farmerId).catch(() => null))))
+      .then((details) => details.filter((d): d is StallDetailDto => d !== null)),
   );
 
   const markets = marketsLoad.kind === 'ready' ? marketsLoad.data : NO_MARKETS;
@@ -70,9 +73,11 @@ const HomePage = () => {
 
       <HowItWorks />
 
-      <FeaturedFarmers stalls={stalls} loading={stallsLoad.kind === 'loading'} />
-
-      <CommunityReviews />
+      {stallsLoad.kind === 'error' ? (
+        <LoadError noun={t('farmers.noun')} onRetry={retryStalls} />
+      ) : (
+        <FeaturedFarmers stalls={stalls} loading={stallsLoad.kind === 'loading'} />
+      )}
 
       <FarmerCtaBanner />
     </div>

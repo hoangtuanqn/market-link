@@ -118,14 +118,9 @@
     "grower": "Producteur",
     "at": "À",
     "visit": "Visiter le stand →",
-    "empty": "Aucun producteur disponible pour l'instant."
-  },
-  "reviews": {
-    "eyebrow": "AVIS DE LA COMMUNAUTÉ",
-    "title": "Apprécié des clients du marché",
-    "desc": "Plus de 140 avis 5 étoiles de gourmets passionnés à Hô Chi Minh-Ville",
-    "score": "⭐ 4.8 / 5 note de la communauté",
-    "verified": "Achat vérifié"
+    "empty": "Aucun producteur disponible pour l'instant.",
+    "noun": "stands",
+    "emptyText": "Parcourez les marchés pour voir qui y vend."
   },
   "banner": {
     "badge": "POUR LES PRODUCTEURS ET ARTISANS LOCAUX",

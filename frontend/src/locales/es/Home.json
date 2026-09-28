@@ -118,14 +118,9 @@
     "grower": "Productor",
     "at": "En",
     "visit": "Visitar puesto →",
-    "empty": "No hay productores disponibles por el momento."
-  },
-  "reviews": {
-    "eyebrow": "VOCES DE LA COMUNIDAD",
-    "title": "Apreciado por compradores del mercado",
-    "desc": "Más de 140 opiniones de 5 estrellas de amantes de la comida consciente en Ciudad Ho Chi Minh",
-    "score": "⭐ 4.8 / 5 puntuación comunitaria",
-    "verified": "Compra verificada"
+    "empty": "No hay productores disponibles por el momento.",
+    "noun": "puestos",
+    "emptyText": "Explora los mercados para ver quién vende allí."
   },
   "banner": {
     "badge": "PARA PRODUCTORES Y ARTESANOS LOCALES",
