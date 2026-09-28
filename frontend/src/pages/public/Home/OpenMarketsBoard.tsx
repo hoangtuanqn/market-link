@@ -13,7 +13,7 @@ const OpenMarketsBoard = ({ markets }: { markets: MarketType[] }) => {
     >
       <div className="flex items-center justify-between border-b border-dashed border-[rgba(188,202,169,0.35)] pb-3">
         <span className="text-overline text-board-muted tracking-wider uppercase">{t('board.overline')}</span>
-        <span className="border-status-ready-ink/40 bg-status-ready-ink/20 text-on-board inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-bold">
+        <span className="border-status-ready-ink/40 bg-status-ready-ink/20 text-on-board inline-flex items-center rounded-full border px-2.5 py-0.5 text-[12px] font-bold">
           {t('board.takingOrders')}
         </span>
       </div>

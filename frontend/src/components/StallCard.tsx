@@ -25,7 +25,7 @@ type StallCardFarmer = {
 const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: ReactNode }) => {
   const { t } = useTranslation();
   return (
-    <Card as="article" className="grid grid-cols-[56px_1fr] gap-x-4 gap-y-3 p-4">
+    <Card as="article" className="relative grid grid-cols-[56px_1fr] gap-x-4 gap-y-3 p-4">
       <span
         aria-hidden="true"
         className="bg-brand text-on-brand font-hand grid size-14 place-items-center rounded-full text-[28px] uppercase"
@@ -34,9 +34,11 @@ const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: R
       </span>
       <div>
         <h3 className="text-[17px] leading-tight font-bold">
+          {/* after:inset-0 stretches the hit area over the whole card (the Card is relative), so a
+              finger anywhere on it opens the page. The button below sits above it with z-2. */}
           <Link
             to={`/stalls/${farmer.id}`}
-            className="text-inherit no-underline hover:underline hover:underline-offset-3"
+            className="text-inherit no-underline after:absolute after:inset-0 hover:underline hover:underline-offset-3"
           >
             {farmer.stall}
           </Link>
@@ -67,7 +69,7 @@ const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: R
       {children}
 
       <div className="col-span-full flex flex-wrap gap-2">
-        <ButtonLink to={`/stalls/${farmer.id}`} size="sm">
+        <ButtonLink to={`/stalls/${farmer.id}`} size="sm" className="relative z-2">
           {t('stall.see')}
         </ButtonLink>
         {farmer.lat != null && farmer.lng != null && (

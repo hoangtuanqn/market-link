@@ -58,13 +58,19 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
           targetId={product.id}
           labelOff={t('product.addFavorite', { name: product.name })}
           labelOn={t('product.removeFavorite', { name: product.name })}
-          className="absolute top-2 right-2"
+          className="absolute top-2 right-2 z-2"
         />
       </div>
 
       <div className="flex flex-col gap-2 p-4">
         <h3 className={Helper.cn('text-[17px] leading-tight font-bold', soldOut && 'text-ink-muted')}>
-          <Link to={href} className="text-inherit no-underline hover:underline hover:underline-offset-3">
+          {/* after:inset-0 stretches the hit area over the whole card (the Card is relative), so a
+              finger landing on the photo or the price opens the product too. The two buttons sit
+              above it with z-2 — wrapping the card in an <a> instead would nest them inside a link. */}
+          <Link
+            to={href}
+            className="text-inherit no-underline after:absolute after:inset-0 hover:underline hover:underline-offset-3"
+          >
             {product.name}
           </Link>
         </h3>
@@ -87,6 +93,7 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
         {soldOut ? null : (
           <Button
             size="sm"
+            className="relative z-2"
             onClick={() =>
               Cart.add({
                 productId: product.id,

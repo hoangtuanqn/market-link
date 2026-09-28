@@ -31,10 +31,15 @@ const MarketCard = ({ market, distanceKm, favoriteId, onFavoriteChange }: Market
   const away = distanceKm != null ? formatDistance(distanceKm) : market.distance;
 
   return (
-    <Card as="article" className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 p-4">
+    <Card as="article" className="relative grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 p-4">
       <div>
         <h3 className="font-hand text-[28px] leading-[1.1]">
-          <Link to={href} className="text-inherit no-underline hover:underline hover:underline-offset-3">
+          {/* after:inset-0 stretches the hit area over the whole card (the Card is relative), so a
+              finger anywhere on it opens the page. The button below sits above it with z-2. */}
+          <Link
+            to={href}
+            className="text-inherit no-underline after:absolute after:inset-0 hover:underline hover:underline-offset-3"
+          >
             {market.name}
           </Link>
         </h3>
@@ -90,7 +95,7 @@ const MarketCard = ({ market, distanceKm, favoriteId, onFavoriteChange }: Market
       </p>
 
       <div className="col-span-full mt-1 flex flex-wrap gap-2">
-        <ButtonLink to={href} size="sm">
+        <ButtonLink to={href} size="sm" className="relative z-2">
           {t('marketCard.seeStalls')}
         </ButtonLink>
         <DirectionsButton to={{ lat: market.lat, lng: market.lng }} name={market.name} />

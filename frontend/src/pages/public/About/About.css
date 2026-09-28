@@ -340,7 +340,7 @@
   box-shadow: 0 8px 22px rgba(78, 56, 30, 0.08);
 }
 .about-dilemma-tag {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -467,7 +467,7 @@
   box-shadow: 0 4px 14px rgba(47, 74, 42, 0.25);
 }
 .journey-tab-step {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -583,25 +583,29 @@
 }
 .journey-dot {
   width: 24px;
+  /* The dot itself stays 6px; the box around it is 44px so a finger can land on it
+     (Apple HIG, WCAG 2.5.5). background-clip keeps the paint on the content box. */
   height: 6px;
+  box-sizing: content-box;
+  padding: 19px 0;
+  background-clip: content-box;
   border-radius: 3px;
-  background: #d8cabe;
+  background-color: #d8cabe;
   cursor: pointer;
   transition: all 0.25s ease;
   border: none;
-  padding: 0;
 }
 .journey-dot.active {
   width: 44px;
-  background: #2f4a2a;
+  background-color: #2f4a2a;
 }
 .journey-nav-arrows {
   display: flex;
   gap: 8px;
 }
 .journey-arrow-btn {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--card-surface-subtle);
   border: 1.5px solid var(--card-border);
@@ -795,7 +799,7 @@
   background: rgba(42, 32, 22, 0.85);
   backdrop-filter: blur(4px);
   color: #f1e5cb;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   padding: 3px 8px;
   border-radius: var(--radius-pill);
@@ -935,7 +939,7 @@
   backdrop-filter: blur(4px);
   border: 1px solid rgba(241, 229, 203, 0.38);
   color: #f1e5cb;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   padding: 4px 10px;
   border-radius: var(--radius-pill);
@@ -946,7 +950,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 12px;
   color: #a3e635;
   font-weight: 600;
   background: rgba(0, 0, 0, 0.4);
@@ -1017,8 +1021,8 @@
   margin-bottom: 6px;
 }
 .about-dev-social-btn {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: var(--card-surface-subtle);
   border: 1px solid var(--card-border);
@@ -1101,7 +1105,7 @@
   background: #eaf0e6;
   color: var(--brand-strong);
   border: 1px solid #d1dfc8;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: var(--radius-pill);

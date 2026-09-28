@@ -24,7 +24,7 @@ const FarmerCtaBanner = () => {
         </ButtonLink>
         <Link
           to="/about"
-          className="text-board-muted hover:text-on-board text-small underline-offset-4 hover:underline"
+          className="text-board-muted hover:text-on-board text-small inline-flex min-h-11 items-center underline-offset-4 hover:underline"
         >
           {t('banner.guidelines')}
         </Link>

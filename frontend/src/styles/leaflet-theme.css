@@ -55,6 +55,11 @@
   background: var(--surface-raised);
   color: var(--ink);
   border-color: var(--line-strong);
+  /* Leaflet ships 30px zoom controls; 44px is the floor for a finger (Apple HIG, WCAG 2.5.5).
+     line-height keeps the +/- glyph centred at the new size. */
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
 }
 .ml-map .leaflet-div-icon {
   background: transparent;

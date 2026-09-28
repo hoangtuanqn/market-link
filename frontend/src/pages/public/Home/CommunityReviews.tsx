@@ -58,7 +58,7 @@ const CommunityReviews = () => {
                 <b className="text-ink text-[16px]">{r.author}</b>
                 <div className="text-ink-muted text-[13px]">{r.role}</div>
               </div>
-              <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-bold">
+              <span className="bg-status-ready-bg text-status-ready-ink inline-flex items-center rounded-full px-2 py-0.5 text-[12px] font-bold">
                 ✓ {t('reviews.verified')}
               </span>
             </div>

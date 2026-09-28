@@ -64,7 +64,10 @@ const FeaturedFarmers = ({ stalls = [], loading = false }: FeaturedFarmersProps)
           <h2 className="text-h2 mt-1">{t('farmers.title')}</h2>
           <p className="text-ink-muted text-small mt-0.5">{t('farmers.desc')}</p>
         </div>
-        <Link to="/search?scope=farmer" className="text-brand font-semibold hover:underline">
+        <Link
+          to="/search?scope=farmer"
+          className="text-brand inline-flex min-h-11 items-center font-semibold hover:underline"
+        >
           {t('farmers.all')}
         </Link>
       </div>
@@ -88,7 +91,7 @@ const FeaturedFarmers = ({ stalls = [], loading = false }: FeaturedFarmersProps)
               <Card
                 key={stall.farmerId}
                 as="article"
-                className="hover:border-brand/40 flex flex-col gap-4 rounded-xl p-6 shadow-xs transition-transform duration-150 hover:-translate-y-0.5"
+                className="hover:border-brand/40 relative flex flex-col gap-4 rounded-xl p-6 shadow-xs transition-transform duration-150 hover:-translate-y-0.5"
               >
                 <div className="flex items-center gap-4">
                   <div
@@ -99,7 +102,12 @@ const FeaturedFarmers = ({ stalls = [], loading = false }: FeaturedFarmersProps)
                   </div>
                   <div className="min-w-0 flex-1">
                     <h3 className="text-[18px] leading-tight font-bold">
-                      <Link to={`/stalls/${stall.farmerId}`} className="text-inherit hover:underline">
+                      {/* after:inset-0 stretches the hit area over the whole card; the button below
+                          sits above it with z-2. */}
+                      <Link
+                        to={`/stalls/${stall.farmerId}`}
+                        className="text-inherit after:absolute after:inset-0 hover:underline"
+                      >
                         {stall.stallName}
                       </Link>
                     </h3>
@@ -123,7 +131,7 @@ const FeaturedFarmers = ({ stalls = [], loading = false }: FeaturedFarmersProps)
                   <span className="text-ink-muted text-[13px]">
                     {t('farmers.at')}: <b>Thảo Điền Market</b>
                   </span>
-                  <ButtonLink to={`/stalls/${stall.farmerId}`} variant="secondary" size="sm">
+                  <ButtonLink to={`/stalls/${stall.farmerId}`} variant="secondary" size="sm" className="relative z-2">
                     {t('farmers.visit')}
                   </ButtonLink>
                 </div>

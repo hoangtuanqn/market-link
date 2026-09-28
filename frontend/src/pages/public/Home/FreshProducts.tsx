@@ -20,7 +20,7 @@ const FreshProducts = ({ products, loading = false }: FreshProductsProps) => {
           <h2 className="text-h2 mt-1">{t('fresh.title')}</h2>
           <p className="text-ink-muted text-small mt-0.5">{t('fresh.cutoff')}</p>
         </div>
-        <Link to="/products" className="text-brand font-semibold hover:underline">
+        <Link to="/products" className="text-brand inline-flex min-h-11 items-center font-semibold hover:underline">
           {t('fresh.filterLink')}
         </Link>
       </div>

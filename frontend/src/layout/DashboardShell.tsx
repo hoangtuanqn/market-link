@@ -97,7 +97,7 @@ const DashboardShell = ({
   const showBack = !topLevel.has(pathname);
 
   const signOutClass = Helper.cn(
-    'text-board-muted hover:text-on-board hover:bg-brand-strong col-span-2 inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-sm bg-transparent px-3 text-[14px] font-bold no-underline',
+    'text-board-muted hover:text-on-board hover:bg-brand-strong col-span-2 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-sm bg-transparent px-3 text-[14px] font-bold no-underline',
     folded && 'lg:col-span-1 lg:size-9 lg:justify-center lg:p-0',
   );
 
@@ -151,7 +151,7 @@ const DashboardShell = ({
           </Link>
           <span
             className={Helper.cn(
-              'bg-accent text-on-accent rounded-sm px-2 py-0.5 text-[11px] font-bold tracking-[0.08em] uppercase',
+              'bg-accent text-on-accent rounded-sm px-2 py-0.5 text-[12px] font-bold tracking-[0.08em] uppercase',
               folded && 'lg:hidden',
             )}
           >
@@ -163,7 +163,7 @@ const DashboardShell = ({
             aria-label={folded ? t('farmerNav.expand') : t('farmerNav.collapse')}
             title={folded ? t('farmerNav.expand') : t('farmerNav.collapse')}
             className={Helper.cn(
-              'text-board-muted hover:text-on-board hover:bg-brand-strong size-8 flex-none place-items-center rounded-sm transition-colors duration-200 lg:grid',
+              'text-board-muted hover:text-on-board hover:bg-brand-strong size-11 flex-none place-items-center rounded-sm transition-colors duration-200 lg:grid',
               folded ? 'ml-auto hidden lg:ml-0 lg:grid' : 'ml-auto hidden lg:grid',
             )}
           >
@@ -193,7 +193,7 @@ const DashboardShell = ({
             type="button"
             aria-label={t('farmerNav.changeMarket')}
             className={Helper.cn(
-              'text-on-board hover:bg-board grid size-8 place-items-center rounded-sm',
+              'text-on-board hover:bg-board grid size-11 place-items-center rounded-sm',
               folded && 'lg:hidden',
             )}
           >
@@ -219,7 +219,7 @@ const DashboardShell = ({
                   title={it.label}
                   className={({ isActive }) =>
                     Helper.cn(
-                      'text-board-muted relative flex min-h-10 shrink-0 items-center gap-3 rounded-sm text-[15px] font-medium no-underline',
+                      'text-board-muted relative flex min-h-11 shrink-0 items-center gap-3 rounded-sm text-[15px] font-medium no-underline',
                       isActive
                         ? 'text-on-board bg-brand-strong font-bold shadow-[inset_3px_0_0_var(--accent)]'
                         : 'hover:text-on-board hover:bg-brand-strong',
@@ -232,7 +232,7 @@ const DashboardShell = ({
                   {it.count ? (
                     <span
                       className={Helper.cn(
-                        'bg-accent text-on-accent ml-auto grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] font-bold tabular-nums',
+                        'bg-accent text-on-accent ml-auto grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[12px] font-bold tabular-nums',
                         folded &&
                           'lg:absolute lg:top-0.5 lg:right-0.5 lg:ml-0 lg:h-4 lg:min-w-4 lg:px-1 lg:text-[10px]',
                       )}
@@ -296,7 +296,7 @@ const DashboardShell = ({
             onClick={() => setMobileOpen(true)}
             aria-label={t('farmerNav.openNavigation')}
             data-tour="shell:menu"
-            className="border-line-strong bg-surface-raised text-ink grid size-10 flex-none place-items-center rounded-sm border-[1.5px] lg:hidden"
+            className="border-line-strong bg-surface-raised text-ink grid size-11 flex-none place-items-center rounded-sm border-[1.5px] lg:hidden"
           >
             <MenuIcon />
           </button>
@@ -305,7 +305,7 @@ const DashboardShell = ({
               type="button"
               onClick={() => navigate(-1)}
               aria-label={t('actions.back')}
-              className="border-line-strong bg-surface-raised text-ink hover:border-ink hidden size-10 flex-none place-items-center rounded-sm border-[1.5px] sm:grid"
+              className="border-line-strong bg-surface-raised text-ink hover:border-ink hidden size-11 flex-none place-items-center rounded-sm border-[1.5px] sm:grid"
             >
               <ChevronLeftIcon />
             </button>
@@ -343,7 +343,7 @@ const DashboardShell = ({
             <Link
               to={accountTo}
               aria-label={t('nav.yourAccount')}
-              className="bg-brand text-on-brand grid size-10 flex-none place-items-center rounded-full text-[13px] font-bold no-underline"
+              className="bg-brand text-on-brand grid size-11 flex-none place-items-center rounded-full text-[13px] font-bold no-underline"
             >
               {user.mono}
             </Link>

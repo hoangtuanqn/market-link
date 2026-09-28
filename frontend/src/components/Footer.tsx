@@ -66,7 +66,7 @@ const Footer = () => {
                 <li key={link.label}>
                   <Link
                     to={link.to}
-                    className="text-on-board text-[15px] no-underline hover:underline hover:underline-offset-3"
+                    className="text-on-board inline-flex min-h-11 items-center text-[15px] no-underline hover:underline hover:underline-offset-3"
                   >
                     {t(`footer.${link.label}`)}
                   </Link>

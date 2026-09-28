@@ -120,7 +120,7 @@ const FarmerProductsPage = () => {
         <>
           <Link
             to={`/farmer/products/${p.id}/edit`}
-            className="text-brand font-bold underline-offset-2 hover:underline"
+            className="text-brand inline-flex min-h-11 items-center font-bold underline-offset-2 hover:underline"
           >
             {p.name}
           </Link>
@@ -176,7 +176,7 @@ const FarmerProductsPage = () => {
           aria-label={t('statusOf', { name: p.name })}
           disabled={busyId === p.id}
           onChange={(e) => void changeStatus(p, e.target.value as ProductStatus)}
-          className="border-line-strong bg-surface-raised min-h-9 rounded-sm border-[1.5px] px-2 text-[14px]"
+          className="border-line-strong bg-surface-raised min-h-11 rounded-sm border-[1.5px] px-2 text-[14px]"
         >
           {STATUSES.map((s) => (
             <option key={s} value={s}>

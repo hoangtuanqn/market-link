@@ -172,7 +172,7 @@ const AdminCategoriesPage = () => {
           value={drafts[c.id] ?? c.name}
           onChange={(e) => setDrafts((d) => ({ ...d, [c.id]: e.target.value }))}
           aria-label={t('col.nameOf', { name: c.name })}
-          className="border-line-strong bg-surface-raised focus:outline-focus min-h-9 w-full max-w-50 rounded-sm border-[1.5px] px-2 focus:outline-2"
+          className="border-line-strong bg-surface-raised focus:outline-focus min-h-11 w-full max-w-50 rounded-sm border-[1.5px] px-2 focus:outline-2"
         />
       ),
     },
