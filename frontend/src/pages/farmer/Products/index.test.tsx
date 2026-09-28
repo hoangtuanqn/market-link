@@ -131,3 +131,16 @@ describe('FarmerProductsPage — not orderable yet', () => {
     expect(screen.getByRole('link', { name: 'Set weekly stock' })).toHaveAttribute('href', '/farmer/stock');
   });
 });
+
+describe('FarmerProductsPage — restore from trash', () => {
+  /** #214 clears the weekly stock on delete, so a restored product cannot be ordered until it is set again. */
+  it('warns that a restored product needs its weekly stock again', async () => {
+    vi.mocked(ProductApi.mineDeleted).mockResolvedValue([product(9, 'Trứng cút')]);
+    renderPage();
+
+    await userEvent.click(await screen.findByRole('button', { name: /^Deleted/ }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Restore' }));
+
+    expect(await screen.findByText(/Its weekly stock was cleared when it was deleted/)).toBeInTheDocument();
+  });
+});

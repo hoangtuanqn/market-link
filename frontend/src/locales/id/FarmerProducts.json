@@ -36,7 +36,7 @@
     "deleted": "Dihapus",
     "deletedText": "{{name}} dihapus.",
     "restored": "Dipulihkan",
-    "restoredText": "{{name}} dipulihkan ke daftar Dijeda.",
+    "restoredText": "{{name}} dipulihkan sebagai dijeda. Atur lagi stok mingguannya sebelum dijual kembali.",
     "stockAdjusted": "Stok untuk {{day}} telah diperbarui."
   },
   "dialog": {
@@ -50,7 +50,8 @@
     "title": "Pulihkan {{name}}?",
     "cancel": "Tetap di tempat sampah",
     "confirm": "Pulihkan produk",
-    "text": "Produk akan dipulihkan dalam status “Dijeda” sehingga Anda dapat meninjau stok dan harganya sebelum mulai menjualnya lagi."
+    "text": "Produk akan dipulihkan dalam status “Dijeda” sehingga Anda dapat meninjau stok dan harganya sebelum mulai menjualnya lagi.",
+    "stockHint": "Stok mingguannya terhapus saat produk dihapus, jadi pelanggan belum bisa memesan sampai Anda mengaturnya lagi."
   },
   "error": {
     "noun": "produk Anda"

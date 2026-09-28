@@ -37,7 +37,7 @@
     "deleted": "Deleted",
     "deletedText": "{{name}} deleted.",
     "restored": "Restored",
-    "restoredText": "Restored {{name}} to Paused list.",
+    "restoredText": "Restored {{name}} to Paused. Set its weekly stock again before putting it back on sale.",
     "stockAdjusted": "Stock updated for {{day}}."
   },
   "dialog": {
@@ -51,7 +51,8 @@
     "title": "Restore {{name}}?",
     "cancel": "Keep in trash",
     "confirm": "Restore product",
-    "text": "The product will be restored in “Paused” status so you can review its stock and price before putting it back on sale."
+    "text": "The product will be restored in “Paused” status so you can review its stock and price before putting it back on sale.",
+    "stockHint": "Its weekly stock was cleared when it was deleted, so customers cannot order it until you set it again."
   },
   "emptyDeleted": {
     "title": "Trash is empty",

@@ -416,6 +416,7 @@ const FarmerProductsPage = () => {
         }
       >
         <p>{t('restoreDialog.text')}</p>
+        <p className="text-ink-muted text-[14px]">{t('restoreDialog.stockHint')}</p>
       </Dialog>
 
       <Dialog

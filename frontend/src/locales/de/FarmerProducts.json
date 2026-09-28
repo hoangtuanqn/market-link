@@ -36,7 +36,7 @@
     "deleted": "Gelöscht",
     "deletedText": "{{name}} gelöscht.",
     "restored": "Wiederhergestellt",
-    "restoredText": "{{name}} in die Liste „Pausiert“ wiederhergestellt.",
+    "restoredText": "{{name}} als pausiert wiederhergestellt. Legen Sie den Wochenbestand erneut fest, bevor Sie es wieder verkaufen.",
     "stockAdjusted": "Bestand für {{day}} aktualisiert."
   },
   "dialog": {
@@ -50,7 +50,8 @@
     "title": "{{name}} wiederherstellen?",
     "cancel": "Im Papierkorb behalten",
     "confirm": "Produkt wiederherstellen",
-    "text": "Das Produkt wird im Status „Pausiert“ wiederhergestellt, sodass Sie Bestand und Preis überprüfen können, bevor Sie es wieder zum Verkauf anbieten."
+    "text": "Das Produkt wird im Status „Pausiert“ wiederhergestellt, sodass Sie Bestand und Preis überprüfen können, bevor Sie es wieder zum Verkauf anbieten.",
+    "stockHint": "Der Wochenbestand wurde beim Löschen entfernt. Kunden können erst bestellen, wenn Sie ihn erneut festlegen."
   },
   "error": {
     "noun": "deine Produkte"

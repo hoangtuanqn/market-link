@@ -36,7 +36,7 @@
     "deleted": "Đã xoá",
     "deletedText": "Đã xoá {{name}}.",
     "restored": "Đã khôi phục",
-    "restoredText": "Đã khôi phục {{name}} về danh sách Tạm dừng.",
+    "restoredText": "Đã khôi phục {{name}} về Tạm dừng. Hãy đặt lại tồn kho hàng tuần trước khi bày bán lại.",
     "stockAdjusted": "Đã cập nhật tồn kho cho {{day}}."
   },
   "dialog": {
@@ -50,7 +50,8 @@
     "title": "Khôi phục {{name}}?",
     "cancel": "Giữ trong thùng rác",
     "confirm": "Khôi phục sản phẩm",
-    "text": "Sản phẩm sẽ được khôi phục về trạng thái “Tạm dừng” để bạn cập nhật tồn kho và giá bán trước khi bày bán lại."
+    "text": "Sản phẩm sẽ được khôi phục về trạng thái “Tạm dừng” để bạn cập nhật tồn kho và giá bán trước khi bày bán lại.",
+    "stockHint": "Tồn kho hàng tuần của sản phẩm đã bị xoá khi xoá sản phẩm, nên khách chưa đặt được cho tới khi bạn đặt lại."
   },
   "error": {
     "noun": "sản phẩm của bạn"

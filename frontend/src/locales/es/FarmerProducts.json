@@ -36,7 +36,7 @@
     "deleted": "Eliminado",
     "deletedText": "{{name}} eliminado.",
     "restored": "Restaurado",
-    "restoredText": "{{name}} restaurado a la lista de pausados.",
+    "restoredText": "{{name}} restaurado en pausa. Vuelve a configurar su stock semanal antes de ponerlo a la venta.",
     "stockAdjusted": "Existencias actualizadas para {{day}}."
   },
   "dialog": {
@@ -50,7 +50,8 @@
     "title": "¿Restaurar {{name}}?",
     "cancel": "Mantener en papelera",
     "confirm": "Restaurar producto",
-    "text": "El producto se restaurará en estado “Pausado” para que puedas revisar su stock y precio antes de ponerlo a la venta."
+    "text": "El producto se restaurará en estado “Pausado” para que puedas revisar su stock y precio antes de ponerlo a la venta.",
+    "stockHint": "Su stock semanal se borró al eliminarlo, así que los clientes no pueden pedirlo hasta que lo configures de nuevo."
   },
   "error": {
     "noun": "tus productos"
