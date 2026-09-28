@@ -130,7 +130,7 @@
     "confirmText": "Laporan ditutup sebagai dikonfirmasi. Pelanggan dan lapak diberi tahu.",
     "confirmStrike": "Lapak memperpanjang masa simpan ini dan produknya rusak sebelum tanggalnya, jadi satu pelanggaran dicatat dan produk kembali ke masa simpan yang disarankan.",
     "noteLabel": "Alasan ini bukan kesalahan lapak",
-    "noteOptional": "Catatan untuk pelanggan dan lapak (opsional)",
+    "noteOptional": "Catatan untuk lapak dan admin lain (opsional)",
     "noteRequired": "Sebutkan alasan ini bukan kesalahan lapak.",
     "decisionNote": "Catatan: {{text}}",
     "done": "Keputusan disimpan. Pelanggan dan lapak sudah diberi tahu.",

@@ -130,7 +130,7 @@
     "confirmText": "The report closes as confirmed. The customer and the stall are told.",
     "confirmStrike": "The stall extended this shelf life and it spoiled before its date, so a strike is recorded and the product goes back to the suggested shelf life.",
     "noteLabel": "Why it is not the stall's fault",
-    "noteOptional": "Note for the customer and the stall (optional)",
+    "noteOptional": "Note for the stall and other admins (optional)",
     "noteRequired": "Say why this is not the stall's fault.",
     "decisionNote": "Note: {{text}}",
     "done": "Decision saved. The customer and the stall have been told.",

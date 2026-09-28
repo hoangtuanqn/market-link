@@ -130,7 +130,7 @@
     "confirmText": "Die Meldung wird als bestätigt geschlossen. Kunde und Stand werden informiert.",
     "confirmStrike": "Der Stand hat diese Haltbarkeit verlängert, und sie ist vor ihrem Datum verdorben, daher wird ein Verstoß erfasst und das Produkt kehrt zur vorgeschlagenen Haltbarkeit zurück.",
     "noteLabel": "Warum es nicht die Schuld des Standes ist",
-    "noteOptional": "Hinweis für Kunde und Stand (optional)",
+    "noteOptional": "Hinweis für den Stand und andere Admins (optional)",
     "noteRequired": "Geben Sie an, warum es nicht die Schuld des Standes ist.",
     "decisionNote": "Hinweis: {{text}}",
     "done": "Entscheidung gespeichert. Kunde und Stand wurden informiert.",

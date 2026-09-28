@@ -130,7 +130,7 @@
     "confirmText": "El reporte se cierra como confirmado. Se avisa al cliente y al puesto.",
     "confirmStrike": "El puesto amplió esta vida útil y el producto se deterioró antes de su fecha, así que se registra una infracción y el producto vuelve a la vida útil sugerida.",
     "noteLabel": "Por qué no es culpa del puesto",
-    "noteOptional": "Nota para el cliente y el puesto (opcional)",
+    "noteOptional": "Nota para el puesto y otros administradores (opcional)",
     "noteRequired": "Indica por qué no es culpa del puesto.",
     "decisionNote": "Nota: {{text}}",
     "done": "Decisión guardada. Se avisó al cliente y al puesto.",

@@ -130,7 +130,7 @@
     "confirmText": "Báo cáo đóng lại ở trạng thái đã xác nhận. Khách và sạp được báo.",
     "confirmStrike": "Sạp đã kéo dài hạn dùng của món này và hàng hư trước hạn, nên sạp bị ghi một lỗi và hạn dùng của sản phẩm về lại mốc gợi ý.",
     "noteLabel": "Vì sao không phải lỗi sạp",
-    "noteOptional": "Ghi chú cho khách và sạp (không bắt buộc)",
+    "noteOptional": "Ghi chú cho sạp và các admin khác (không bắt buộc)",
     "noteRequired": "Hãy ghi vì sao không phải lỗi sạp.",
     "decisionNote": "Ghi chú: {{text}}",
     "done": "Đã lưu quyết định. Khách và sạp đã được báo.",

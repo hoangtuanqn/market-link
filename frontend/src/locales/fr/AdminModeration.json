@@ -130,7 +130,7 @@
     "confirmText": "Le signalement se ferme comme confirmé. Le client et l’étal sont informés.",
     "confirmStrike": "L’étal a prolongé cette durée de conservation et le produit s’est altéré avant sa date, donc une infraction est enregistrée et le produit revient à la durée de conservation suggérée.",
     "noteLabel": "Pourquoi ce n’est pas la faute de l’étal",
-    "noteOptional": "Note pour le client et l’étal (facultatif)",
+    "noteOptional": "Note pour l’étal et les autres administrateurs (facultative)",
     "noteRequired": "Indiquez pourquoi ce n’est pas la faute de l’étal.",
     "decisionNote": "Note : {{text}}",
     "done": "Décision enregistrée. Le client et l’étal ont été informés.",
