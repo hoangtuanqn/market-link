@@ -3,10 +3,12 @@
   "intro": "Semua yang bisa Anda jual. Tandai produk habis saat habis pada hari pasar, atau jeda saat sedang tidak musim.",
   "add": "Tambah produk",
   "filterAll": "Semua",
+  "filterDeleted": "Dihapus",
   "status": {
     "available": "Tersedia",
     "sold_out": "Habis",
-    "unavailable": "Dijeda"
+    "unavailable": "Dijeda",
+    "deleted": "Dihapus"
   },
   "caption_one": "{{count}} produk",
   "caption_other": "{{count}} produk",
@@ -22,6 +24,7 @@
   "statusOf": "Status {{name}}",
   "edit": "Ubah",
   "delete": "Hapus",
+  "restore": "Pulihkan",
   "footNote": "Menghapus produk akan mengeluarkannya dari katalog; pesanan lama tetap menyimpan barisnya. Foto: 4:3, cahaya alami, di atas kayu atau kertas.",
   "toast": {
     "statusSaved": "Status disimpan",
@@ -32,6 +35,8 @@
     },
     "deleted": "Dihapus",
     "deletedText": "{{name}} dihapus.",
+    "restored": "Dipulihkan",
+    "restoredText": "{{name}} dipulihkan ke daftar Dijeda.",
     "stockAdjusted": "Stok untuk {{day}} telah diperbarui."
   },
   "dialog": {
@@ -41,6 +46,12 @@
     "text": "Produk hilang dari katalog dan dari template Anda. Pesanan yang sudah memuatnya tidak berubah.",
     "pauseHint": "Untuk berhenti menjualnya sementara, pilih Dijeda saja."
   },
+  "restoreDialog": {
+    "title": "Pulihkan {{name}}?",
+    "cancel": "Tetap di tempat sampah",
+    "confirm": "Pulihkan produk",
+    "text": "Produk akan dipulihkan dalam status “Dijeda” sehingga Anda dapat meninjau stok dan harganya sebelum mulai menjualnya lagi."
+  },
   "error": {
     "noun": "produk Anda"
   },
@@ -48,6 +59,10 @@
   "empty": {
     "title": "Belum ada produk",
     "text": "Tambahkan produk pertama Anda dan langsung muncul di halaman kios Anda."
+  },
+  "emptyDeleted": {
+    "title": "Tempat sampah kosong",
+    "text": "Tidak ada produk yang dihapus."
   },
   "adjust": "Sesuaikan",
   "adjustDialog": {

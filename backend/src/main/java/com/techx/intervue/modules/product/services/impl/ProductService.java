@@ -13,6 +13,7 @@ import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
@@ -40,6 +41,7 @@ public class ProductService implements ProductServiceInterface {
     private final ProductQueryRepository query;
     private final RestockNotifier restock;
     private final ProductAvailabilityResolver availability;
+    private final WeeklyStockTemplateRepository templates;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -140,6 +142,7 @@ public class ProductService implements ProductServiceInterface {
         Product product = owned(profile, productId);
         product.setDeleted(true);
         products.save(product);
+        templates.deleteByProductId(productId);
     }
 
     /**
@@ -185,6 +188,29 @@ public class ProductService implements ProductServiceInterface {
         product.setHiddenReason(null);
         Product saved = products.save(product);
         restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
+    }
+
+    @Override
+    public PageResource<FarmerProductResource> mineDeleted(long userId, int page, int pageSize) {
+        FarmerProfile profile = mine(userId);
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return query.mineDeleted(profile.getId(), (safePage - 1) * safeSize, safeSize);
+    }
+
+    @Override
+    @Transactional
+    public FarmerProductResource restore(long userId, long productId) {
+        FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
+        Product product = requireOwner(profile, locked(productId));
+        if (product.isDeleted()) {
+            product.setDeleted(false);
+            product.setStatus(ProductStatus.UNAVAILABLE);
+            products.save(product);
+        }
+        Category category = categories.findById(product.getCategoryId()).orElse(null);
+        return toResource(product, profile, category);
     }
 
     /**

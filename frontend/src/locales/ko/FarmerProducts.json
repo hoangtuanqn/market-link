@@ -3,10 +3,12 @@
   "intro": "판매할 수 있는 모든 상품이에요. 장날에 다 팔리면 품절로, 제철이 아니면 일시 중지로 표시하세요.",
   "add": "상품 추가",
   "filterAll": "전체",
+  "filterDeleted": "삭제됨",
   "status": {
     "available": "판매 중",
     "sold_out": "품절",
-    "unavailable": "일시 중지"
+    "unavailable": "일시 중지",
+    "deleted": "삭제됨"
   },
   "caption_one": "상품 {{count}}개",
   "caption_other": "상품 {{count}}개",
@@ -22,6 +24,7 @@
   "statusOf": "{{name}} 상태",
   "edit": "수정",
   "delete": "삭제",
+  "restore": "복원",
   "footNote": "상품을 삭제하면 카탈로그에서 빠지지만 지난 주문의 항목은 그대로 남아요. 사진: 4:3, 자연광, 나무나 종이 위에서.",
   "toast": {
     "statusSaved": "상태를 저장했어요",
@@ -32,6 +35,8 @@
     },
     "deleted": "삭제했어요",
     "deletedText": "{{name}}을(를) 삭제했어요.",
+    "restored": "복원됨",
+    "restoredText": "{{name}} 상품을 일시 중지 목록으로 복원했습니다.",
     "stockAdjusted": "{{day}} 재고가 업데이트되었습니다."
   },
   "dialog": {
@@ -41,6 +46,12 @@
     "text": "카탈로그와 템플릿에서 사라져요. 이미 이 상품이 들어간 주문은 바뀌지 않아요.",
     "pauseHint": "잠시 판매를 멈추려면 일시 중지를 선택하세요."
   },
+  "restoreDialog": {
+    "title": "{{name}} 상품을 복원할까요?",
+    "cancel": "휴지통에 보관",
+    "confirm": "상품 복원",
+    "text": "상품이 “일시 중지” 상태로 복원되므로 다시 판매하기 전에 재고와 가격을 검토할 수 있습니다."
+  },
   "error": {
     "noun": "내 상품"
   },
@@ -48,6 +59,10 @@
   "empty": {
     "title": "아직 상품이 없습니다",
     "text": "첫 상품을 추가하면 매장 페이지에 바로 표시됩니다."
+  },
+  "emptyDeleted": {
+    "title": "휴지통이 비어 있습니다",
+    "text": "삭제된 상품이 없습니다."
   },
   "adjust": "조정",
   "adjustDialog": {

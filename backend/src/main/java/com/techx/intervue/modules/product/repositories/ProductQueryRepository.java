@@ -124,9 +124,33 @@ public class ProductQueryRepository {
               AND (:status IS NULL OR p.status = :status)
             """;
 
+    public static final String MINE_DELETED_SQL =
+            """
+            SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
+                   p.rating_avg, p.rating_count, p.description, p.shelf_life_days, p.is_hidden,
+                   p.hidden_reason,
+                   f.id AS farmer_id, f.stall_name,
+                   c.id AS category_id, c.name AS category_name,
+                   NULL AS market_id, NULL AS market_name
+            FROM products p
+            JOIN farmer_profiles f ON f.id = p.farmer_id
+            JOIN categories c ON c.id = p.category_id
+            WHERE p.farmer_id = :farmerId
+              AND p.is_deleted = TRUE
+            ORDER BY p.updated_at DESC, p.id
+            LIMIT :limit OFFSET :offset
+            """;
+
+    private static final String MINE_DELETED_COUNT_SQL =
+            """
+            SELECT COUNT(*) FROM products p
+            WHERE p.farmer_id = :farmerId
+              AND p.is_deleted = TRUE
+            """;
+
     /**
      * FR-074: every listing the Admin has hidden, newest change first, so a hidden listing can be
-     * found again and unhidden. Soft-deleted products are left out: nobody can restore them.
+     * found again and unhidden.
      */
     public static final String HIDDEN_SQL =
             """
@@ -224,6 +248,23 @@ public class ProductQueryRepository {
         List<FarmerProductResource> items =
                 jdbc.query(
                         HIDDEN_SQL,
+                        params,
+                        (rs, i) ->
+                                new FarmerProductResource(
+                                        item(rs),
+                                        rs.getString("description"),
+                                        rs.getBoolean("is_hidden"),
+                                        rs.getString("hidden_reason")));
+        return new PageResource<>(items, offset / limit + 1, limit, total == null ? 0 : total);
+    }
+
+    public PageResource<FarmerProductResource> mineDeleted(long farmerId, int offset, int limit) {
+        MapSqlParameterSource params = new MapSqlParameterSource("farmerId", farmerId);
+        Long total = jdbc.queryForObject(MINE_DELETED_COUNT_SQL, params, Long.class);
+        params.addValue("limit", limit).addValue("offset", offset);
+        List<FarmerProductResource> items =
+                jdbc.query(
+                        MINE_DELETED_SQL,
                         params,
                         (rs, i) ->
                                 new FarmerProductResource(

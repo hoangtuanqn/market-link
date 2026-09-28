@@ -22,7 +22,9 @@ import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
+import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -46,6 +48,7 @@ class ProductServiceTest {
     private ProductQueryRepository query;
     private ProductService service;
     private RestockNotifier restock;
+    private WeeklyStockTemplateRepository templates;
 
     @BeforeEach
     void setUp() {
@@ -54,6 +57,7 @@ class ProductServiceTest {
         categories = mock(CategoryRepository.class);
         query = mock(ProductQueryRepository.class);
         restock = mock(RestockNotifier.class);
+        templates = mock(WeeklyStockTemplateRepository.class);
         service =
                 new ProductService(
                         products,
@@ -61,7 +65,8 @@ class ProductServiceTest {
                         categories,
                         query,
                         restock,
-                        mock(ProductAvailabilityResolver.class));
+                        mock(ProductAvailabilityResolver.class),
+                        templates);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -148,6 +153,7 @@ class ProductServiceTest {
         verify(products).save(p);
         verify(products, never()).delete(any());
         verify(products, never()).deleteById(any());
+        verify(templates).deleteByProductId(PRODUCT_ID);
     }
 
     /** FR-064: "sold out" is a status, not stock — two different concepts. */
@@ -245,6 +251,45 @@ class ProductServiceTest {
         service.mine(USER_ID, null, 1, 12);
 
         verify(query).mine(FARMER_ID, null, 0, 12);
+    }
+
+    @Test
+    void mineDeletedDelegatesToQuery() {
+        approvedStall();
+        when(query.mineDeleted(FARMER_ID, 0, 10))
+                .thenReturn(new PageResource<>(List.of(), 1, 10, 0));
+
+        PageResource<FarmerProductResource> page = service.mineDeleted(USER_ID, 1, 10);
+
+        assertThat(page.items()).isEmpty();
+        verify(query).mineDeleted(FARMER_ID, 0, 10);
+    }
+
+    @Test
+    void restoreUnsetsDeletedAndSetsUnavailable() {
+        approvedStall();
+        Product p = product(FARMER_ID);
+        p.setDeleted(true);
+        p.setStatus(ProductStatus.AVAILABLE);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        FarmerProductResource res = service.restore(USER_ID, PRODUCT_ID);
+
+        assertThat(p.isDeleted()).isFalse();
+        assertThat(p.getStatus()).isEqualTo(ProductStatus.UNAVAILABLE);
+        assertThat(res.item().status()).isEqualTo("unavailable");
+        verify(products).save(p);
+    }
+
+    @Test
+    void restoreOnOtherFarmersProductIs403() {
+        approvedStall();
+        Product p = product(OTHER_FARMER_ID);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        assertThatThrownBy(() -> service.restore(USER_ID, PRODUCT_ID))
+                .isInstanceOf(ProductNotYoursException.class);
+        verify(products, never()).save(any());
     }
 
     // ---------- Task 5.3b (D-02, Review Focus #1 by another path): every write path must lock
