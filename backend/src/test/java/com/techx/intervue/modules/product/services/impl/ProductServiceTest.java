@@ -22,6 +22,7 @@ import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
@@ -46,6 +47,7 @@ class ProductServiceTest {
     private ProductQueryRepository query;
     private ProductService service;
     private RestockNotifier restock;
+    private WeeklyStockTemplateRepository templates;
 
     @BeforeEach
     void setUp() {
@@ -54,6 +56,7 @@ class ProductServiceTest {
         categories = mock(CategoryRepository.class);
         query = mock(ProductQueryRepository.class);
         restock = mock(RestockNotifier.class);
+        templates = mock(WeeklyStockTemplateRepository.class);
         service =
                 new ProductService(
                         products,
@@ -61,7 +64,8 @@ class ProductServiceTest {
                         categories,
                         query,
                         restock,
-                        mock(ProductAvailabilityResolver.class));
+                        mock(ProductAvailabilityResolver.class),
+                        templates);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -148,6 +152,7 @@ class ProductServiceTest {
         verify(products).save(p);
         verify(products, never()).delete(any());
         verify(products, never()).deleteById(any());
+        verify(templates).deleteByProductId(PRODUCT_ID);
     }
 
     /** FR-064: "sold out" is a status, not stock — two different concepts. */

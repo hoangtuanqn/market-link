@@ -31,7 +31,7 @@ public interface ProductDailyStockRepository extends JpaRepository<ProductDailyS
                     INSERT INTO product_daily_stock (product_id, stock_date, quantity_available, unit_price)
                     SELECT :productId, :stockDate, t.default_quantity, COALESCE(t.default_price, p.price)
                     FROM weekly_stock_templates t JOIN products p ON p.id = t.product_id
-                    WHERE t.product_id = :productId AND t.day_of_week = :dayOfWeek AND t.is_active = TRUE
+                    WHERE t.product_id = :productId AND t.day_of_week = :dayOfWeek AND t.is_active = TRUE AND p.is_deleted = FALSE
                     ON DUPLICATE KEY UPDATE product_daily_stock.id = product_daily_stock.id
                     """,
             nativeQuery = true)

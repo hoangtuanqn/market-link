@@ -13,6 +13,7 @@ import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
@@ -40,6 +41,7 @@ public class ProductService implements ProductServiceInterface {
     private final ProductQueryRepository query;
     private final RestockNotifier restock;
     private final ProductAvailabilityResolver availability;
+    private final WeeklyStockTemplateRepository templates;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -140,6 +142,7 @@ public class ProductService implements ProductServiceInterface {
         Product product = owned(profile, productId);
         product.setDeleted(true);
         products.save(product);
+        templates.deleteByProductId(productId);
     }
 
     /**
