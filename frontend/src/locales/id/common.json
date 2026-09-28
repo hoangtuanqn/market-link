@@ -386,16 +386,6 @@
     "userLine": "Admin · seluruh platform",
     "searchPlaceholder": "Lapak, pelanggan, atau pasar"
   },
-  "carousel": {
-    "roleCarousel": "korsel",
-    "roleSlide": "slide",
-    "slideOf": "{{n}} dari {{total}}: {{topic}}",
-    "previous": "Slide sebelumnya",
-    "next": "Slide berikutnya",
-    "show": "Tampilkan slide {{n}}: {{topic}}",
-    "pause": "Jeda tayangan slide",
-    "play": "Putar tayangan slide"
-  },
   "geo": {
     "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda, atau gunakan alamat.",
     "insecure": "Browser Anda hanya membagikan lokasi melalui koneksi aman (https).",

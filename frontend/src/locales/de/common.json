@@ -386,16 +386,6 @@
     "userLine": "Admin · gesamte Plattform",
     "searchPlaceholder": "Stand, Kunde oder Markt"
   },
-  "carousel": {
-    "roleCarousel": "Karussell",
-    "roleSlide": "Folie",
-    "slideOf": "{{n}} von {{total}}: {{topic}}",
-    "previous": "Vorherige Folie",
-    "next": "Nächste Folie",
-    "show": "Folie {{n}} anzeigen: {{topic}}",
-    "pause": "Diashow anhalten",
-    "play": "Diashow abspielen"
-  },
   "geo": {
     "denied": "Sie haben den Standort für diese Website deaktiviert. Ändern Sie das in den Website-Einstellungen Ihres Browsers oder nutzen Sie eine Adresse.",
     "insecure": "Ihr Browser teilt Ihren Standort nur über eine sichere Verbindung (https).",

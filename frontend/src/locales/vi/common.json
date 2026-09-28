@@ -386,16 +386,6 @@
     "userLine": "Quản trị viên · toàn nền tảng",
     "searchPlaceholder": "Sạp, khách hàng hoặc chợ"
   },
-  "carousel": {
-    "roleCarousel": "băng trình chiếu",
-    "roleSlide": "trang chiếu",
-    "slideOf": "{{n}} / {{total}}: {{topic}}",
-    "previous": "Trang trước",
-    "next": "Trang sau",
-    "show": "Xem trang {{n}}: {{topic}}",
-    "pause": "Tạm dừng trình chiếu",
-    "play": "Phát trình chiếu"
-  },
   "geo": {
     "denied": "Bạn đã tắt vị trí cho trang này. Hãy bật lại trong cài đặt trang web của trình duyệt, hoặc dùng một địa chỉ.",
     "insecure": "Trình duyệt chỉ chia sẻ vị trí qua kết nối bảo mật (https).",

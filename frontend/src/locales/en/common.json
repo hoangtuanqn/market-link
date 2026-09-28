@@ -386,16 +386,6 @@
     "userLine": "Admin · whole platform",
     "searchPlaceholder": "Stall, customer or market"
   },
-  "carousel": {
-    "roleCarousel": "carousel",
-    "roleSlide": "slide",
-    "slideOf": "{{n}} of {{total}}: {{topic}}",
-    "previous": "Previous slide",
-    "next": "Next slide",
-    "show": "Show slide {{n}}: {{topic}}",
-    "pause": "Pause the slideshow",
-    "play": "Play the slideshow"
-  },
   "geo": {
     "denied": "You turned location off for this site. Change it in your browser’s site settings, or use an address instead.",
     "insecure": "Your browser only shares your location over a secure (https) connection.",
