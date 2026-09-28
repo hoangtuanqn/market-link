@@ -752,5 +752,13 @@
     "text": "MarketLink dùng cookie thiết yếu để giữ bạn đăng nhập và giỏ hàng hoạt động. Không có cookie quảng cáo hay theo dõi nào. <a>Chính sách quyền riêng tư</a>.",
     "decline": "Từ chối",
     "accept": "Đồng ý"
+  },
+  "banDuration": {
+    "label": "Thời hạn",
+    "permanent": "Vĩnh viễn",
+    "temporary": "Tạm thời",
+    "days_one": "{{count}} ngày",
+    "days_other": "{{count}} ngày",
+    "specificTime": "Hoặc chọn một thời điểm cụ thể"
   }
 }

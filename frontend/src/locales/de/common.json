@@ -752,5 +752,13 @@
     "text": "Wir verwenden nur technisch notwendige Cookies, damit Sie angemeldet bleiben und Ihr Warenkorb funktioniert. Es gibt keine Werbe- oder Analyse-Cookies. <a>Datenschutzerklärung</a>.",
     "decline": "Ablehnen",
     "accept": "Akzeptieren"
+  },
+  "banDuration": {
+    "label": "Dauer",
+    "permanent": "Dauerhaft",
+    "temporary": "Vorübergehend",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage",
+    "specificTime": "Oder ein genaues Enddatum wählen"
   }
 }

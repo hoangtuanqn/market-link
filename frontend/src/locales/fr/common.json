@@ -752,5 +752,13 @@
     "text": "Nous utilisons uniquement des cookies essentiels pour vous garder connecté et faire fonctionner votre panier. Aucun cookie publicitaire ou d'analyse. <a>Politique de confidentialité</a>.",
     "decline": "Refuser",
     "accept": "Accepter"
+  },
+  "banDuration": {
+    "label": "Durée",
+    "permanent": "Permanente",
+    "temporary": "Temporaire",
+    "days_one": "{{count}} jour",
+    "days_other": "{{count}} jours",
+    "specificTime": "Ou choisir une heure de fin précise"
   }
 }

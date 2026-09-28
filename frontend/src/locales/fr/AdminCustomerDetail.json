@@ -43,13 +43,13 @@
   },
   "whatItDoes": {
     "title": "Ce que fait la désactivation",
-    "text": "La personne ne peut plus se connecter ni passer de nouvelle commande. Les commandes déjà passées ne sont pas touchées : l'étal remet ce qu'il a mis de côté et personne ne perd des produits cueillis pour lui."
+    "text": "La personne ne peut plus se connecter ni passer de nouvelle commande, et est déconnectée partout immédiatement. Une désactivation temporaire ne touche pas aux commandes déjà passées ; une désactivation permanente annule aussi toute commande encore en attente ou acceptée et restitue le stock."
   },
   "deactivate": {
     "title": "Désactiver {{name}} ?",
     "text": "Elle ne pourra plus se connecter ni commander tant qu'un administrateur ne réactive pas le compte. Les commandes déjà passées vont à leur terme, aucun étal ne reste avec des produits que personne ne vient chercher.",
-    "reason": "Motif conservé sur le compte",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "reason": "Motif",
+    "reasonRequired": "Choisissez au moins un motif ou ajoutez une note.",
     "keep": "Pas maintenant",
     "confirm": "Désactiver"
   },
@@ -71,5 +71,25 @@
     "items": "Articles",
     "total": "Total",
     "status": "Statut"
+  },
+  "history": {
+    "title": "Historique du compte",
+    "noun": "historique du compte",
+    "system": "Système (auto)",
+    "col": {
+      "when": "Quand",
+      "action": "Action",
+      "reason": "Motif",
+      "until": "Jusqu'à",
+      "by": "Par"
+    },
+    "action": {
+      "active": "Réactivé",
+      "inactive": "Désactivé"
+    },
+    "empty": {
+      "title": "Pas encore d'historique",
+      "text": "Chaque désactivation ou réactivation de ce compte apparaîtra ici."
+    }
   }
 }

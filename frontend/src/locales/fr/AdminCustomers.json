@@ -36,8 +36,8 @@
   "deactivate": {
     "title": "Désactiver {{name}} ?",
     "text": "La personne est déconnectée partout et ne peut plus se connecter ni commander. Les commandes déjà passées restent chez les étals.",
-    "reason": "Motif, conservé sur le compte",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "reason": "Motif",
+    "reasonRequired": "Choisissez au moins un motif ou ajoutez une note.",
     "keep": "Laisser actif",
     "confirm": "Désactiver le compte"
   },

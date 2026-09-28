@@ -752,5 +752,13 @@
     "text": "Kami hanya menggunakan cookie esensial agar Anda tetap masuk dan keranjang belanja berfungsi. Tidak ada cookie iklan atau analitik. <a>Kebijakan privasi</a>.",
     "decline": "Tolak",
     "accept": "Terima"
+  },
+  "banDuration": {
+    "label": "Durasi",
+    "permanent": "Permanen",
+    "temporary": "Sementara",
+    "days_one": "{{count}} hari",
+    "days_other": "{{count}} hari",
+    "specificTime": "Atau pilih waktu berakhir yang pasti"
   }
 }

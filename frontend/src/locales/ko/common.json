@@ -752,5 +752,13 @@
     "text": "로그인 상태 유지와 장바구니 작동을 위한 필수 쿠키만 사용해요. 광고나 분석용 쿠키는 없어요. <a>개인정보 처리방침</a>.",
     "decline": "거부",
     "accept": "동의"
+  },
+  "banDuration": {
+    "label": "기간",
+    "permanent": "영구",
+    "temporary": "일시적",
+    "days_one": "{{count}}일",
+    "days_other": "{{count}}일",
+    "specificTime": "또는 정확한 종료 시각 선택"
   }
 }

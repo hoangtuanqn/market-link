@@ -36,8 +36,8 @@
   "deactivate": {
     "title": "{{name}} を停止しますか？",
     "text": "すべての端末からログアウトされ、ログインも注文もできなくなります。すでに入っている注文は店舗側にそのまま残ります。",
-    "reason": "理由（アカウントに記録されます）",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "reason": "理由",
+    "reasonRequired": "理由を1つ選ぶか、メモを入力してください。",
     "keep": "有効のままにする",
     "confirm": "アカウントを停止"
   },

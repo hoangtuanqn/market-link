@@ -36,8 +36,8 @@
   "deactivate": {
     "title": "ระงับบัญชี {{name}} ไหม",
     "text": "ระบบจะออกจากระบบทุกอุปกรณ์ และเข้าสู่ระบบหรือสั่งซื้อไม่ได้อีก คำสั่งซื้อที่ทำไปแล้วยังอยู่กับร้านค้า",
-    "reason": "เหตุผล จะบันทึกไว้กับบัญชี",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "reason": "เหตุผล",
+    "reasonRequired": "เลือกอย่างน้อยหนึ่งเหตุผล หรือเพิ่มบันทึกช่วยจำ",
     "keep": "คงสถานะใช้งาน",
     "confirm": "ระงับบัญชี"
   },

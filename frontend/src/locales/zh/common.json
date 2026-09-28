@@ -752,5 +752,13 @@
     "text": "我们仅使用必要的 Cookie 来保持您的登录状态和购物车正常运作，不使用任何广告或分析类 Cookie。<a>隐私政策</a>。",
     "decline": "拒绝",
     "accept": "接受"
+  },
+  "banDuration": {
+    "label": "时长",
+    "permanent": "永久",
+    "temporary": "临时",
+    "days_one": "{{count}} 天",
+    "days_other": "{{count}} 天",
+    "specificTime": "或选择具体的结束时间"
   }
 }

@@ -36,8 +36,8 @@
   "deactivate": {
     "title": "Nonaktifkan {{name}}?",
     "text": "Dia keluar dari semua perangkat dan tidak bisa masuk atau memesan. Pesanan yang sudah dibuat tetap ada pada lapak.",
-    "reason": "Alasan, tersimpan pada akun",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "reason": "Alasan",
+    "reasonRequired": "Pilih minimal satu alasan atau tambahkan catatan.",
     "keep": "Biarkan aktif",
     "confirm": "Nonaktifkan akun"
   },

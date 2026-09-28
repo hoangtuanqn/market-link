@@ -36,8 +36,8 @@
   "deactivate": {
     "title": "Vô hiệu hoá {{name}}?",
     "text": "Tài khoản bị đăng xuất ở mọi nơi và không thể đăng nhập hay đặt hàng. Đơn hàng đã đặt vẫn giữ nguyên với các sạp.",
-    "reason": "Lý do (chỉ hiện trong thông báo này, chưa lưu vào tài khoản)",
-    "reasonHint": "Máy chủ chưa lưu lý do — nội dung này không được gửi kèm yêu cầu.",
+    "reason": "Lý do",
+    "reasonRequired": "Chọn ít nhất một lý do hoặc thêm ghi chú.",
     "keep": "Giữ hoạt động",
     "confirm": "Vô hiệu hoá tài khoản"
   },

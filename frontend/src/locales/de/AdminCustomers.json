@@ -36,8 +36,8 @@
   "deactivate": {
     "title": "{{name}} sperren?",
     "text": "Die Person wird überall abgemeldet und kann sich weder anmelden noch bestellen. Bereits aufgegebene Bestellungen bleiben bei den Ständen.",
-    "reason": "Grund, bleibt am Konto vermerkt",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "reason": "Grund",
+    "reasonRequired": "Wähle mindestens einen Grund oder füge eine Notiz hinzu.",
     "keep": "Aktiv lassen",
     "confirm": "Konto sperren"
   },

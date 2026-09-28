@@ -36,8 +36,8 @@
   "deactivate": {
     "title": "停用 {{name}}？",
     "text": "他们会在所有设备上退出登录，无法再登录或下单。已经下过的订单仍留在摊位那里。",
-    "reason": "原因，会记在账号上",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "reason": "原因",
+    "reasonRequired": "至少选择一个原因，或填写备注。",
     "keep": "保持正常",
     "confirm": "停用账号"
   },
