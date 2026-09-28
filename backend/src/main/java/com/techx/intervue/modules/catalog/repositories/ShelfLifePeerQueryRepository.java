@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.catalog.repositories;
 
+import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,7 +13,9 @@ import org.springframework.stereotype.Repository;
 
 /**
  * FR-120: the shelf lives other stalls set, per guide — the "other stalls usually set N days" hint.
- * Only products a customer can see count: not deleted, not hidden, stall approved.
+ * Only products on sale count (spec §4.1): the same filter as the public pages, {@link
+ * ProductQueryRepository#VISIBILITY_FILTER} (not deleted, not hidden, stall approved, an active
+ * weekly stock template).
  */
 @Repository
 @RequiredArgsConstructor
@@ -24,11 +27,9 @@ public class ShelfLifePeerQueryRepository {
             FROM products p
             JOIN farmer_profiles f ON f.id = p.farmer_id
             WHERE p.shelf_life_guide_id IN (:guideIds)
-              AND p.is_deleted = FALSE
-              AND p.is_hidden = FALSE
-              AND f.approval_status = 'approved'
               AND (:excludeFarmerId IS NULL OR p.farmer_id <> :excludeFarmerId)
-            """;
+            """
+                    + ProductQueryRepository.VISIBILITY_FILTER;
 
     private final NamedParameterJdbcTemplate jdbc;
 

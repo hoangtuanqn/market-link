@@ -146,7 +146,7 @@ const TemplateGrid = ({
                           onChange={(e) => setCell(p.id, day, { quantity: e.target.value })}
                           aria-label={t('aria.quantity', { product: p.name, day: dayName(day, 'long') })}
                           placeholder="0"
-                          className="border-line-strong bg-surface-raised min-h-9 w-20 rounded-sm border-[1.5px] px-2 text-right text-[14px] tabular-nums"
+                          className="border-line-strong bg-surface-raised min-h-11 w-20 rounded-sm border-[1.5px] px-2 text-right text-[14px] tabular-nums"
                         />
                         <input
                           type="number"
@@ -156,7 +156,7 @@ const TemplateGrid = ({
                           onChange={(e) => setCell(p.id, day, { price: e.target.value })}
                           aria-label={t('aria.price', { product: p.name, day: dayName(day, 'long') })}
                           placeholder={t('defaultPricePlaceholder')}
-                          className="border-line text-ink-muted min-h-8 w-20 rounded-sm border px-2 text-right text-[12px] tabular-nums"
+                          className="border-line text-ink-muted min-h-11 w-20 rounded-sm border px-2 text-right text-[12px] tabular-nums"
                         />
                       </div>
                     </td>

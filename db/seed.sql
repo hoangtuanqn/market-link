@@ -311,12 +311,11 @@ SET p.is_hidden = TRUE, p.hidden_reason = 'Ảnh và mô tả không đúng sả
 WHERE u.email = 'farmer10@marketlink.vn' AND p.name = 'Sáp ong nguyên chất';
 
 -- ---- Shelf life of the demo products (FR-121, proposed) ----
--- Every demo product gets its storage group and way of keeping; days = the suggestion, except
--- 'Rau muống' of 'farmer@marketlink.vn', which the stall set longer (5 days against 3) with the
--- promise ticked — the one extended product the spoilage demo (phase 2) builds on.
+-- Every demo product gets its storage group and way of keeping, with days = the suggestion. The rows
+-- match by product name, so the one extended product is set apart below, by its stall.
 UPDATE products p
 JOIN (
-      SELECT 'Rau muống' AS name, 'Leafy greens' AS group_name, 'chilled' AS storage_mode, 5 AS days
+      SELECT 'Rau muống' AS name, 'Leafy greens' AS group_name, 'chilled' AS storage_mode, 3 AS days
       UNION ALL SELECT 'Cải ngọt', 'Leafy greens', 'chilled', 3
       UNION ALL SELECT 'Xà lách xoong', 'Leafy greens', 'chilled', 3
       UNION ALL SELECT 'Rau dền', 'Leafy greens', 'chilled', 3
@@ -376,6 +375,17 @@ SET p.shelf_life_guide_id = g.id,
     p.shelf_life_days = x.days,
     p.shelf_life_extended = (x.days > g.suggested_days),
     p.shelf_life_ack_at = IF(x.days > g.suggested_days, UTC_TIMESTAMP(), NULL);
+
+-- 'Rau muống' of 'farmer@marketlink.vn' is set longer (5 days against 3) with the promise ticked:
+-- the one extended product the spoilage demo (phase 2) builds on. Matched by the stall's email, so
+-- another stall selling 'Rau muống' keeps the suggestion.
+UPDATE products p
+JOIN farmer_profiles f ON f.id = p.farmer_id
+JOIN users u ON u.id = f.user_id
+SET p.shelf_life_days = 5,
+    p.shelf_life_extended = TRUE,
+    p.shelf_life_ack_at = UTC_TIMESTAMP()
+WHERE u.email = 'farmer@marketlink.vn' AND p.name = 'Rau muống';
 
 -- ---- Pickup slots (FR-032, FR-067): next 4 weeks, 60-minute windows, 5 orders per slot ----
 -- Plain SQL, no backend needed: date = today in Vietnam time + 0…27 (MySQL runs UTC), only days

@@ -77,14 +77,11 @@
     "category": "Danh mục",
     "col": {
       "group": "Nhóm",
-      "examples": "Ví dụ",
       "storage": "Bảo quản",
-      "days": "Số ngày gợi ý",
-      "daysFor": "Số ngày cho {{group}} ({{storage}})",
-      "status": "Trạng thái"
+      "days": "Số ngày",
+      "daysFor": "Số ngày cho {{group}} ({{storage}})"
     },
     "status": {
-      "on": "Đang bật",
       "off": "Đã tắt"
     },
     "action": {

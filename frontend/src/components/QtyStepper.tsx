@@ -30,7 +30,7 @@ const QtyStepper = ({ value, max, unit, plural, min = 1, onChange }: QtyStepperP
           aria-label={t('qty.decrease')}
           disabled={value <= min}
           onClick={() => onChange(value - 1)}
-          className="disabled:text-line-strong grid size-10 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
+          className="disabled:text-line-strong grid size-11 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
         >
           −
         </button>
@@ -42,7 +42,7 @@ const QtyStepper = ({ value, max, unit, plural, min = 1, onChange }: QtyStepperP
           aria-label={t('qty.increase')}
           disabled={value >= max}
           onClick={() => onChange(value + 1)}
-          className="disabled:text-line-strong grid size-10 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
+          className="disabled:text-line-strong grid size-11 cursor-pointer place-items-center rounded-sm bg-transparent text-[20px] leading-none disabled:cursor-not-allowed"
         >
           +
         </button>

@@ -56,8 +56,8 @@ public class Product {
     private String imageUrl;
 
     /**
-     * Number of days the product stays fresh — shown to the Customer for transparency. No official
-     * FR yet.
+     * FR-121: number of days the product stays good from pickup — shown to the Customer for
+     * transparency, compared with the storage group's suggestion when saved.
      */
     @Column(name = "shelf_life_days", nullable = false)
     private int shelfLifeDays;

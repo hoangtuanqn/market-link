@@ -24,7 +24,10 @@ const variants: Record<Variant, string> = {
 
 const sizes: Record<Size, string> = {
   md: 'min-h-11 text-[15px]',
-  sm: 'min-h-9 text-small',
+  // 44px on a touch screen (Apple HIG, WCAG 2.5.5), back to the compact 36px from md up where a
+  // pointer does the aiming. "Add to cart" on a product card is a `sm` button, so this is the size
+  // a shopper hits most often on a phone.
+  sm: 'min-h-11 text-small md:min-h-9',
 };
 
 type StyleProps = { variant?: Variant; size?: Size; className?: string };

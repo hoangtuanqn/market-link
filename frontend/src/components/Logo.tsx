@@ -10,7 +10,7 @@ const Logo = ({ to, size = 30, variant }: { to?: string; size?: number; variant?
       <span className="font-hand text-2xl leading-none md:text-[28px]">MarketLink</span>
     </>
   );
-  const className = 'inline-flex items-center gap-2.5 text-inherit no-underline';
+  const className = 'inline-flex min-h-11 items-center gap-2.5 text-inherit no-underline';
 
   return to ? (
     <Link to={to} className={className} aria-label={t('logo.home')}>

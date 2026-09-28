@@ -77,14 +77,11 @@
     "category": "Category",
     "col": {
       "group": "Group",
-      "examples": "Examples",
       "storage": "Kept",
-      "days": "Suggested days",
-      "daysFor": "Days for {{group}} ({{storage}})",
-      "status": "Status"
+      "days": "Days",
+      "daysFor": "Days for {{group}} ({{storage}})"
     },
     "status": {
-      "on": "On",
       "off": "Off"
     },
     "action": {

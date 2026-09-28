@@ -38,7 +38,7 @@ const LanguageSwitcher = ({ variant = 'dark' }: LanguageSwitcherProps) => {
         value={language}
         onChange={(e) => change(e.target.value as Language)}
         className={Helper.cn(
-          'min-h-9 cursor-pointer rounded-sm border-[1.5px] px-2 text-[13px] focus-visible:outline-2 focus-visible:outline-offset-1',
+          'min-h-11 cursor-pointer rounded-sm border-[1.5px] px-2 text-[13px] focus-visible:outline-2 focus-visible:outline-offset-1',
           isLight
             ? 'border-line bg-surface-raised text-ink focus-visible:outline-ink'
             : 'border-board-muted bg-board text-on-board focus-visible:outline-on-board',

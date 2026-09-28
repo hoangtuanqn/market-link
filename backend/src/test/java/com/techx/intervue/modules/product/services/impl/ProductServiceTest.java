@@ -482,6 +482,44 @@ class ProductServiceTest {
         assertThat(saved.shelfLife().suggestedDays()).isEqualTo(3);
     }
 
+    /** Twice the suggestion is the cap itself: still allowed, with the promise. */
+    @Test
+    void createAllowsTwiceTheSuggestionWithThePromise() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+
+        FarmerProductResource saved = service.create(USER_ID, shelf(7L, "chilled", 6, true));
+
+        assertThat(saved.shelfLife().days()).isEqualTo(6);
+        assertThat(saved.shelfLife().suggestedDays()).isEqualTo(3);
+        assertThat(saved.shelfLife().extended()).isTrue();
+    }
+
+    /**
+     * Spec §4.2: shelf_life_ack_at is when the Farmer ticked the promise. Saving the same promise
+     * again, as a price change does, keeps that time; another number is a new promise.
+     */
+    @Test
+    void updateKeepsThePromiseTimeUntilThePromiseChanges() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+        LocalDateTime ticked = LocalDateTime.of(2026, 9, 20, 8, 30);
+        Product p = product(FARMER_ID);
+        p.setShelfLifeGuideId(7L);
+        p.setStorageMode(StorageMode.CHILLED);
+        p.setShelfLifeDays(5);
+        p.setSuggestedShelfLifeDays(3);
+        p.setShelfLifeExtended(true);
+        p.setShelfLifeAckAt(ticked);
+        when(products.lockAllById(List.of(PRODUCT_ID))).thenReturn(List.of(p));
+
+        service.update(USER_ID, PRODUCT_ID, shelf(7L, "chilled", 5, true));
+        assertThat(p.getShelfLifeAckAt()).isEqualTo(ticked);
+
+        service.update(USER_ID, PRODUCT_ID, shelf(7L, "chilled", 6, true));
+        assertThat(p.getShelfLifeAckAt()).isEqualTo(LocalDateTime.of(2026, 9, 27, 10, 0));
+    }
+
     @Test
     void createRefusesMoreThanTwiceTheSuggestion() {
         approvedStall();

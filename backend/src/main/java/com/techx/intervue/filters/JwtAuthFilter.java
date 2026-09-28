@@ -1,9 +1,11 @@
 package com.techx.intervue.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
@@ -40,8 +42,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final BlacklistServiceInterface blacklistService;
     private final ObjectMapper objectMapper;
     private final UserSessionCache userSessionCache;
+    private final MfaServiceInterface mfaService;
 
     public static final String TOKEN_ATTRIBUTE = "jwt_token";
+
+    /**
+     * FR-008: marks a session belonging to an admin who has never set up two-step verification.
+     * Sign-in still hands them a working session — the setup screen needs one to call
+     * /auth/mfa/setup — but SecurityConfig refuses /api/v1/admin/** while this is present, so the
+     * mandatory step cannot be walked around by calling the API directly.
+     */
+    public static final String MFA_SETUP_PENDING = "MFA_SETUP_PENDING";
 
     private static final Map<Class<? extends JwtException>, String> JWT_ERRORS_MESSAGES =
             Map.of(
@@ -105,6 +116,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 Set<GrantedAuthority> authorities = new HashSet<>();
                 session.roles()
                         .forEach(r -> authorities.add(new SimpleGrantedAuthority("ROLE_" + r)));
+                // Only admins have a row in admin_mfa; for anyone else the question does not apply.
+                if (session.roles().contains(RoleType.ADMIN)
+                        && mfaService.isSetupRequired(userId)) {
+                    authorities.add(new SimpleGrantedAuthority(MFA_SETUP_PENDING));
+                }
 
                 // Build principal
                 CustomUserDetails userDetails =

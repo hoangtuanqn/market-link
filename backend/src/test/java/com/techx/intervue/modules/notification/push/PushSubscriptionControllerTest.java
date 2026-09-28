@@ -6,6 +6,7 @@ import com.techx.intervue.modules.notification.NotificationTestSupport;
 import com.techx.intervue.modules.notification.repositories.PushSubscriptionRepository;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.repositories.AdminMfaRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -26,6 +27,7 @@ class PushSubscriptionControllerTest {
 
     @LocalServerPort int port;
     @Autowired UserRepository users;
+    @Autowired AdminMfaRepository adminMfa;
     @Autowired UserSessionCache sessions;
     @Autowired JwtServiceInterface jwt;
     @Autowired PushSubscriptionRepository subscriptions;
@@ -37,7 +39,7 @@ class PushSubscriptionControllerTest {
 
     @BeforeEach
     void setUp() {
-        api = new NotificationTestSupport(users, sessions, jwt, port);
+        api = new NotificationTestSupport(users, sessions, jwt, adminMfa, port);
         me = api.user(RoleType.CUSTOMER);
         other = api.user(RoleType.CUSTOMER);
         endpoint = "https://push.example.test/send/" + UUID.randomUUID();

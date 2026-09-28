@@ -1,7 +1,9 @@
 package com.techx.intervue.modules.platform;
 
+import com.techx.intervue.modules.user.entities.AdminMfa;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.repositories.AdminMfaRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -10,6 +12,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,15 +27,21 @@ public class PlatformTestSupport {
     private final UserRepository users;
     private final UserSessionCache sessions;
     private final JwtServiceInterface jwt;
+    private final AdminMfaRepository adminMfa;
     private final int port;
     private final HttpClient http = HttpClient.newHttpClient();
     private final List<User> created = new ArrayList<>();
 
     public PlatformTestSupport(
-            UserRepository users, UserSessionCache sessions, JwtServiceInterface jwt, int port) {
+            UserRepository users,
+            UserSessionCache sessions,
+            JwtServiceInterface jwt,
+            AdminMfaRepository adminMfa,
+            int port) {
         this.users = users;
         this.sessions = sessions;
         this.jwt = jwt;
+        this.adminMfa = adminMfa;
         this.port = port;
     }
 
@@ -47,6 +56,16 @@ public class PlatformTestSupport {
                         .role(role)
                         .build();
         u = users.save(u);
+        if (role == RoleType.ADMIN) {
+            // FR-008: SecurityConfig refuses /api/v1/admin/** to an admin whose two-step
+            // verification is not set up, so a test admin has to be one that finished it.
+            adminMfa.save(
+                    AdminMfa.builder()
+                            .userId(u.getId())
+                            .secretEncrypted("test-secret")
+                            .enabledAt(Instant.now())
+                            .build());
+        }
         sessions.set(u.getId(), u.getEmail(), Set.of(role), Duration.ofMinutes(5));
         created.add(u);
         return u;

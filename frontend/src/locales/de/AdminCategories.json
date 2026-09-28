@@ -77,14 +77,11 @@
     "category": "Kategorie",
     "col": {
       "group": "Gruppe",
-      "examples": "Beispiele",
       "storage": "Aufbewahrung",
-      "days": "Empfohlene Tage",
-      "daysFor": "Tage für {{group}} ({{storage}})",
-      "status": "Status"
+      "days": "Tage",
+      "daysFor": "Tage für {{group}} ({{storage}})"
     },
     "status": {
-      "on": "Aktiv",
       "off": "Inaktiv"
     },
     "action": {
