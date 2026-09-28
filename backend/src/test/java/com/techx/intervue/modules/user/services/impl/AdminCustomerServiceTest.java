@@ -4,13 +4,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.techx.intervue.modules.report.services.impl.ReportFixture;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.CustomerNotFoundException;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AdminCustomerResource;
 import com.techx.intervue.modules.user.services.interfaces.AdminCustomerServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.PageResource;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +28,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * FR-072 on MySQL: deactivating a customer must block their next sign-in through the real {@code
- * UserService.authenticate}, and must not touch their orders.
+ * UserService.authenticate}, cut off any live session immediately, record why, and must not touch
+ * an already-`placed` order that stays `placed` after a temporary ban (permanent-ban cancellation
+ * is Task 5's own tests).
  */
 @SpringBootTest
 class AdminCustomerServiceTest {
@@ -33,9 +41,11 @@ class AdminCustomerServiceTest {
     @Autowired private UserServiceInterface users;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private JdbcTemplate jdbc;
+    @Autowired private UserSessionCache sessionCache;
 
     private ReportFixture fx;
     private long customerId;
+    private long adminUserId;
     private String email;
     private long orderId;
     private long farmerUserId;
@@ -46,6 +56,7 @@ class AdminCustomerServiceTest {
         long category = fx.category();
         long market = fx.market("Market");
         customerId = fx.user("customer", "Locked customer", passwordEncoder.encode(PASSWORD));
+        adminUserId = fx.user("admin", "Admin", "x");
         email =
                 jdbc.queryForObject(
                         "SELECT email FROM users WHERE id = ?", String.class, customerId);
@@ -62,22 +73,124 @@ class AdminCustomerServiceTest {
     }
 
     @Test
-    void deactivatingACustomerBlocksTheirLogin() {
+    void deactivatingACustomerBlocksTheirLoginWithTheReason() {
         assertThat(users.authenticate(new LoginRequest(email, PASSWORD, false, null))).isNotNull();
 
-        AdminCustomerResource updated = customers.setStatus(customerId, "inactive");
+        AdminCustomerResource updated =
+                customers.setStatus(
+                        customerId, "inactive", "No-shows repeatedly", null, adminUserId);
 
         assertThat(updated.status()).isEqualTo("inactive");
         assertThatThrownBy(() -> users.authenticate(new LoginRequest(email, PASSWORD, false, null)))
-                .isInstanceOf(DisabledException.class);
+                .isInstanceOf(DisabledException.class)
+                .hasMessageContaining("No-shows repeatedly")
+                .hasMessageContaining("deactivated");
 
-        customers.setStatus(customerId, "active");
+        customers.setStatus(customerId, "active", null, null, adminUserId);
         assertThat(users.authenticate(new LoginRequest(email, PASSWORD, false, null))).isNotNull();
     }
 
     @Test
-    void deactivatingACustomerLeavesTheirOrdersAlone() {
-        customers.setStatus(customerId, "inactive");
+    void temporaryBanMessageNamesTheReturnTime() {
+        Instant until = Instant.now().plus(Duration.ofDays(3)).truncatedTo(ChronoUnit.SECONDS);
+
+        customers.setStatus(customerId, "inactive", "Abusive messages", until, adminUserId);
+
+        assertThatThrownBy(() -> users.authenticate(new LoginRequest(email, PASSWORD, false, null)))
+                .hasMessageContaining("temporarily suspended")
+                .hasMessageContaining("Abusive messages");
+    }
+
+    @Test
+    void deactivatingCutsOffALiveSessionRightAway() {
+        sessionCache.set(customerId, email, Set.of(RoleType.CUSTOMER), Duration.ofMinutes(15));
+        assertThat(sessionCache.get(customerId)).isNotNull();
+
+        customers.setStatus(customerId, "inactive", "Fake account", null, adminUserId);
+
+        assertThat(sessionCache.get(customerId)).isNull();
+    }
+
+    @Test
+    void deactivatingACustomerWithNoLiveSessionDoesNotThrow() {
+        assertThat(sessionCache.get(customerId)).isNull();
+
+        assertThat(
+                        customers
+                                .setStatus(
+                                        customerId, "inactive", "Fake reviews", null, adminUserId)
+                                .status())
+                .isEqualTo("inactive");
+    }
+
+    @Test
+    void reasonIsRequiredToDeactivate() {
+        assertThatThrownBy(
+                        () -> customers.setStatus(customerId, "inactive", " ", null, adminUserId))
+                .isInstanceOf(InvalidFieldException.class);
+        assertThatThrownBy(
+                        () -> customers.setStatus(customerId, "inactive", null, null, adminUserId))
+                .isInstanceOf(InvalidFieldException.class);
+    }
+
+    @Test
+    void untilMustBeInTheFuture() {
+        Instant past = Instant.now().minus(Duration.ofMinutes(1));
+
+        assertThatThrownBy(
+                        () ->
+                                customers.setStatus(
+                                        customerId, "inactive", "No-shows", past, adminUserId))
+                .isInstanceOf(InvalidFieldException.class);
+    }
+
+    @Test
+    void reactivatingClearsTheReasonAndExpiryEvenAfterAnEarlierBan() {
+        customers.setStatus(
+                customerId,
+                "inactive",
+                "Owner request",
+                Instant.now().plusSeconds(3600),
+                adminUserId);
+
+        AdminCustomerResource reactivated =
+                customers.setStatus(customerId, "active", null, null, adminUserId);
+
+        assertThat(reactivated.status()).isEqualTo("active");
+        String reason =
+                jdbc.queryForObject(
+                        "SELECT deactivation_reason FROM users WHERE id = ?",
+                        String.class,
+                        customerId);
+        assertThat(reason).isNull();
+        // A later, unrelated deactivation must not see the earlier ban's expiry.
+        customers.setStatus(customerId, "inactive", "New violation", null, adminUserId);
+        assertThatThrownBy(() -> users.authenticate(new LoginRequest(email, PASSWORD, false, null)))
+                .hasMessageContaining(
+                        "deactivated") // permanent wording, not "temporarily suspended"
+                .hasMessageNotContaining("temporarily");
+    }
+
+    @Test
+    void deactivatingTwiceInARowDoesNotThrow() {
+        customers.setStatus(customerId, "inactive", "No-shows", null, adminUserId);
+
+        assertThat(
+                        customers
+                                .setStatus(
+                                        customerId, "inactive", "No-shows again", null, adminUserId)
+                                .status())
+                .isEqualTo("inactive");
+    }
+
+    @Test
+    void temporaryBanLeavesOpenOrdersAlone() {
+        customers.setStatus(
+                customerId,
+                "inactive",
+                "Owner request",
+                Instant.now().plusSeconds(3600),
+                adminUserId);
 
         String status =
                 jdbc.queryForObject(
@@ -86,8 +199,27 @@ class AdminCustomerServiceTest {
     }
 
     @Test
+    void everyStatusChangeIsRecordedInHistory() {
+        customers.setStatus(customerId, "inactive", "No-shows", null, adminUserId);
+        customers.setStatus(customerId, "active", null, null, adminUserId);
+
+        Integer rows =
+                jdbc.queryForObject(
+                        "SELECT COUNT(*) FROM user_status_history WHERE user_id = ?",
+                        Integer.class,
+                        customerId);
+        assertThat(rows).isEqualTo(2);
+        String lastChangedBy =
+                jdbc.queryForObject(
+                        "SELECT changed_by FROM user_status_history WHERE user_id = ? ORDER BY id DESC LIMIT 1",
+                        String.class,
+                        customerId);
+        assertThat(lastChangedBy).isEqualTo(String.valueOf(adminUserId));
+    }
+
+    @Test
     void listShowsStatusAndOrderCount() {
-        customers.setStatus(customerId, "inactive");
+        customers.setStatus(customerId, "inactive", "No-shows", null, adminUserId);
 
         PageResource<AdminCustomerResource> page = customers.list("inactive", fx.tag, 1, 20);
 
@@ -114,9 +246,15 @@ class AdminCustomerServiceTest {
                         Long.class,
                         "Stall " + fx.tag);
 
-        assertThatThrownBy(() -> customers.setStatus(farmerUserId, "inactive"))
+        assertThatThrownBy(
+                        () ->
+                                customers.setStatus(
+                                        farmerUserId, "inactive", "No-shows", null, adminUserId))
                 .isInstanceOf(IllegalArgumentException.class);
-        assertThatThrownBy(() -> customers.setStatus(customerId, "suspended"))
+        assertThatThrownBy(
+                        () ->
+                                customers.setStatus(
+                                        customerId, "suspended", "No-shows", null, adminUserId))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

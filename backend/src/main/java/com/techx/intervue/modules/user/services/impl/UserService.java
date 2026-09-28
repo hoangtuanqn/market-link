@@ -189,6 +189,9 @@ public class UserService extends BaseService implements UserServiceInterface {
                                 () ->
                                         new BadCredentialsException(
                                                 "Email or password is incorrect."));
+        if (user.getStatus() == UserStatus.INACTIVE) {
+            throw new DisabledException(DeactivationMessage.of(user));
+        }
         if (user.getStatus() != UserStatus.ACTIVE) {
             throw new DisabledException(
                     "Your account has been locked. Please contact an administrator.");

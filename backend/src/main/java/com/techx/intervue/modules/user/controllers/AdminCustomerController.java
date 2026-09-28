@@ -3,6 +3,7 @@ package com.techx.intervue.modules.user.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.user.requests.CustomerStatusRequest;
 import com.techx.intervue.modules.user.resources.AdminCustomerResource;
+import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.AdminCustomerServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.PageResource;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,8 +47,12 @@ public class AdminCustomerController extends BaseController {
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<ApiResource<AdminCustomerResource>> setStatus(
-            @PathVariable long id, @Valid @RequestBody CustomerStatusRequest request) {
-        AdminCustomerResource updated = customers.setStatus(id, request.status());
+            @PathVariable long id,
+            @Valid @RequestBody CustomerStatusRequest request,
+            @AuthenticationPrincipal CustomUserDetails admin) {
+        AdminCustomerResource updated =
+                customers.setStatus(
+                        id, request.status(), request.reason(), request.until(), admin.getId());
         return ok(
                 updated,
                 "inactive".equals(updated.status())
