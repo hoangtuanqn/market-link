@@ -192,6 +192,8 @@ class CatalogApi {
     const response = await privateApi.post<ApiResponse<{ url: string }>>('/admin/markets/images', form, {
       // Drop the default application/json header so the browser sets multipart/form-data with the boundary itself.
       headers: { 'Content-Type': undefined },
+      // No timeout, like the chat upload: the instance's 10 s cuts a photo off on a slow connection.
+      timeout: 0,
     });
     return response.data.data.url;
   };
