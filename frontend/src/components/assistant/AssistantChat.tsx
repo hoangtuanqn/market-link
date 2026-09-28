@@ -8,6 +8,7 @@ import ChatMessage from '@/components/ChatMessage';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState } from '@/components/ui/data-state';
+import { USER_ROLE } from '@/constants/enums';
 import useSession from '@/hooks/useSession';
 import { useAssistant } from './assistantContext';
 import { formatTime } from '@/lib/format';
@@ -58,7 +59,8 @@ const ACTIONS: Record<
   ready_order: { run: (id) => OrderApi.markReady(id) },
   complete_order: { run: (id) => OrderApi.complete(id) },
   approve_farmer: { run: (id) => AdminFarmerApi.approve(id) },
-  decline_order: { href: (a) => `/farmer/orders/${a.label}` },
+  // The order page reads a numeric id; the label is the order code, which it cannot open
+  decline_order: { href: (a) => `/farmer/orders/${a.id}` },
   reject_farmer: { href: (a) => `/admin/farmers/${a.id}` },
   suspend_farmer: { href: (a) => `/admin/farmers/${a.id}` },
 };
@@ -67,7 +69,15 @@ const RESULT_PATH: Record<ChatResultDto['type'], string> = {
   product: '/products',
   market: '/markets',
   farmer: '/stalls',
+  order: '/farmer/orders',
 };
+
+/**
+ * Where a result card leads. A stall card takes an admin to the admin stall page: the stalls in the approval queue are
+ * pending, and a pending or suspended stall has no public page.
+ */
+const resultPath = (r: ChatResultDto, role: string | undefined) =>
+  r.type === 'farmer' && role === USER_ROLE.ADMIN ? `/admin/farmers/${r.id}` : `${RESULT_PATH[r.type]}/${r.id}`;
 
 /** One conversation per account and browser; "New conversation" swaps the key (the server keeps the old rows). */
 const storageKey = (userId: number) => `ml-assistant:${userId}`;
@@ -220,7 +230,8 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
     setSending(true);
     try {
       const context: PageContextDto = {
-        page: routePattern(pathname),
+        // The home page has an empty pattern, which the server rejects; no page is a valid answer
+        page: routePattern(pathname) || undefined,
         recordType: record?.type,
         recordRef: record?.ref,
         cart: cart.length > 0 ? cart : undefined,
@@ -345,7 +356,7 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
                 {m.results.map((r) => (
                   <li key={`${r.type}:${r.id}`}>
                     <Link
-                      to={`${RESULT_PATH[r.type]}/${r.id}`}
+                      to={resultPath(r, user?.role)}
                       className="bg-surface-sunken text-ink hover:border-ink block rounded-sm border-[1.5px] border-transparent p-2 px-3 text-[14px] no-underline"
                     >
                       <span className="text-ink-muted block text-[12px] font-bold">

@@ -527,7 +527,8 @@
     "result": {
       "product": "Produit",
       "market": "Marché",
-      "farmer": "Stand"
+      "farmer": "Stand",
+      "order": "Commande"
     },
     "suggest": {
       "find": "Où acheter des tomates ce week-end ?",
