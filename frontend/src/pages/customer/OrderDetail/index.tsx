@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
-import OrderApi, { type OrderDetailDto } from '@/api-requests/order.requests';
+import OrderApi, { type OrderDetailDto, type OrderItemDto } from '@/api-requests/order.requests';
 import StallApi from '@/api-requests/stall.requests';
 import BestBeforeLine from '@/components/BestBeforeLine';
 import MessageStallButton from '@/components/chat/MessageStallButton';
@@ -17,8 +17,10 @@ import { Dialog } from '@/components/ui/dialog';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useRequest from '@/hooks/useRequest';
 import { formatClock, formatDate, formatTime, money } from '@/lib/format';
+import { todayInVietnam } from '@/lib/spoilage';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
+import { SpoilageAction, SpoilageReportDialog } from './SpoilageReport';
 
 const STEPS: OrderStatus[] = ['placed', 'accepted', 'ready', 'completed'];
 
@@ -65,6 +67,9 @@ const CustomerOrderDetailPage = () => {
   const [confirming, setConfirming] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelFailed, setCancelFailed] = useState(false);
+  // FR-122: the line whose report dialog is open; today on the Vietnam calendar, read once so the render stays pure
+  const [reporting, setReporting] = useState<OrderItemDto | null>(null);
+  const [today] = useState(() => todayInVietnam());
 
   if (state.kind === 'loading' && id !== null) {
     return (
@@ -172,6 +177,7 @@ const CustomerOrderDetailPage = () => {
                       {t('items.line', { qty: item.quantity, unit: item.unit, price: money(item.unitPrice) })}
                     </span>
                     <BestBeforeLine bestBefore={item.bestBefore} storageMode={item.storageMode} />
+                    <SpoilageAction item={item} status={s.status} today={today} onReport={() => setReporting(item)} />
                   </span>
                   <span className="font-hand text-price shrink-0">{money(item.subtotal)}</span>
                 </li>
@@ -319,6 +325,26 @@ const CustomerOrderDetailPage = () => {
       >
         <p>{t('cancelDialog.text', { stall: s.stallName })}</p>
       </Dialog>
+
+      {reporting?.itemId != null && (
+        <SpoilageReportDialog
+          orderId={s.orderId}
+          itemId={reporting.itemId}
+          productName={reporting.productName}
+          stallName={s.stallName}
+          pickupDate={s.pickupDate}
+          today={today}
+          onClose={() => setReporting(null)}
+          onSent={(report) => {
+            const itemId = reporting.itemId;
+            mutate((current) => ({
+              ...current,
+              items: current.items.map((i) => (i.itemId === itemId ? { ...i, qualityReport: report } : i)),
+            }));
+            setReporting(null);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -53,5 +53,29 @@
     "title": "この注文をキャンセルしますか？",
     "text": "{{stall}} にすぐ通知され、商品は再び販売されます。",
     "keep": "注文を残す"
+  },
+  "spoilage": {
+    "report": "傷みを報告",
+    "reportLabel": "傷みを報告：{{name}}",
+    "reported": "傷みを報告済み · {{status}}",
+    "title": "傷んだ農産物を報告",
+    "intro": "{{name}}のどこが問題だったか{{stall}}に伝えてください。1点につき1回まで、期限から2日後まで報告できます。",
+    "day": "傷んだ日",
+    "problem": "どこが問題でしたか",
+    "note": "詳しく（任意）",
+    "notePlaceholder": "冷蔵で2日置いたら葉が黒くなりました。",
+    "noteCount": "{{used}}/500 文字。",
+    "photo": "写真を追加（任意）",
+    "photoReplace": "写真を変更",
+    "photoRemove": "写真を削除",
+    "photoAlt": "傷んだ農産物の写真",
+    "photoHint": "JPG、PNG、WebP、5 MB まで。",
+    "photoTooBig": "写真は 5 MB 以下にしてください。",
+    "photoType": "JPG、PNG、WebP のいずれかの写真を送ってください。",
+    "uploading": "写真をアップロード中",
+    "send": "報告を送信",
+    "needProblem": "先にどこが問題か選んでください。",
+    "sent": "報告を送信しました。お店が返信でき、管理者が確認することもあります。",
+    "failed": "報告を送信できませんでした。"
   }
 }

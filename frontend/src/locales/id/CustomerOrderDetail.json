@@ -53,5 +53,29 @@
     "title": "Batalkan pesanan ini?",
     "text": "{{stall}} langsung diberi tahu dan barang dijual kembali.",
     "keep": "Simpan pesanan"
+  },
+  "spoilage": {
+    "report": "Laporkan busuk",
+    "reportLabel": "Laporkan busuk: {{name}}",
+    "reported": "Kerusakan dilaporkan · {{status}}",
+    "title": "Laporkan produk busuk",
+    "intro": "Beri tahu {{stall}} apa yang salah dengan {{name}}. Setiap barang hanya bisa dilaporkan sekali, hingga 2 hari setelah tanggalnya.",
+    "day": "Busuk pada",
+    "problem": "Apa yang salah",
+    "note": "Jelaskan (opsional)",
+    "notePlaceholder": "Daunnya menghitam setelah 2 hari di kulkas.",
+    "noteCount": "{{used}} dari 500 karakter.",
+    "photo": "Tambahkan foto (opsional)",
+    "photoReplace": "Ganti foto",
+    "photoRemove": "Hapus foto",
+    "photoAlt": "Foto produk yang busuk",
+    "photoHint": "JPG, PNG, atau WebP, hingga 5 MB.",
+    "photoTooBig": "Foto harus berukuran 5 MB atau lebih kecil.",
+    "photoType": "Kirim foto JPG, PNG, atau WebP.",
+    "uploading": "Mengunggah foto",
+    "send": "Kirim laporan",
+    "needProblem": "Pilih dulu apa yang salah.",
+    "sent": "Laporan terkirim. Lapak dapat membalas, dan admin mungkin akan meninjaunya.",
+    "failed": "Laporan tidak dapat dikirim."
   }
 }
