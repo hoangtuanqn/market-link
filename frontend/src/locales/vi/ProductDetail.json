@@ -19,6 +19,13 @@
   },
   "addToCart": "Thêm vào giỏ",
   "payNote": "Hàng được giữ cho bạn khi bạn đặt đơn. Bạn trả {{price}} tại sạp khi nhận hàng.",
+  "deals": {
+    "title": "Đang giảm giá theo ngày nhận",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, giá gốc {{was}} · dùng tốt đến hết {{until}} · còn {{qty}}",
+    "add": "Thêm cho {{day}}",
+    "noun": "hàng giảm giá"
+  },
   "fromStall": "Từ sạp",
   "stats": {
     "reviews_one": "{{count}} đánh giá",

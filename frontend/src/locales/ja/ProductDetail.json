@@ -19,6 +19,13 @@
   },
   "addToCart": "カートに追加",
   "payNote": "注文した時点で在庫が確保されます。受け取り時に店で {{price}} をお支払いください。",
+  "deals": {
+    "title": "受け取り日ごとのセール",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}、元の価格{{was}} · 賞味期限は{{until}}まで · 残り {{qty}}",
+    "add": "{{day}}に追加",
+    "noun": "セール"
+  },
   "fromStall": "店から",
   "stats": {
     "reviews_one": "{{count}} 件のレビュー",

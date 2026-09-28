@@ -48,6 +48,11 @@
     "filterLink": "Lọc theo giá & danh mục →",
     "empty": "Hiện chưa có nông sản mở đặt trước."
   },
+  "deals": {
+    "title": "Giảm giá sắp hết hạn",
+    "note": "Rẻ hơn vì đã qua nửa hạn dùng. Mỗi thẻ ghi rõ hàng còn dùng tốt đến ngày nào.",
+    "all": "Xem tất cả"
+  },
   "how": {
     "title": "Đặt trước hoạt động thế nào",
     "steps": {

@@ -48,6 +48,11 @@
     "filterLink": "Saring menurut harga & kategori →",
     "empty": "Belum ada produk segar yang tersedia saat ini."
   },
+  "deals": {
+    "title": "Diskon hampir kedaluwarsa",
+    "note": "Lebih murah karena sudah melewati setengah masa simpannya. Setiap kartu menyebutkan sampai kapan produk masih baik.",
+    "all": "Semua diskon"
+  },
   "how": {
     "title": "Cara kerja pesan dulu",
     "steps": {

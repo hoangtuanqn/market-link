@@ -19,6 +19,13 @@
   },
   "addToCart": "Tambah ke keranjang",
   "payNote": "Stok disisihkan untuk Anda saat memesan. Anda membayar {{price}} di lapak saat pengambilan.",
+  "deals": {
+    "title": "Diskon untuk hari pengambilan berikut",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, sebelumnya {{was}} · baik hingga akhir {{until}} · sisa {{qty}}",
+    "add": "Tambah untuk {{day}}",
+    "noun": "diskon"
+  },
   "fromStall": "Dari lapak",
   "stats": {
     "reviews_one": "{{count}} ulasan",

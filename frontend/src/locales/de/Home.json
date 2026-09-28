@@ -48,6 +48,11 @@
     "filterLink": "Nach Preis & Kategorie filtern →",
     "empty": "Derzeit sind keine frischen Produkte verfügbar."
   },
+  "deals": {
+    "title": "Angebote: kurze Haltbarkeit",
+    "note": "Günstiger, weil sie schon über die Hälfte ihrer Haltbarkeit hinaus sind. Jede Karte nennt, bis wann sie noch gut bleiben.",
+    "all": "Alle Angebote"
+  },
   "how": {
     "title": "So funktioniert die Vorbestellung",
     "steps": {

@@ -19,6 +19,13 @@
   },
   "addToCart": "장바구니에 담기",
   "payNote": "주문하면 재고가 확보돼요. 픽업할 때 가게에서 {{price}}을(를) 결제해요.",
+  "deals": {
+    "title": "픽업일별 할인",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, 원래 가격 {{was}} · {{until}}까지 신선 · {{qty}} 남음",
+    "add": "{{day}}에 담기",
+    "noun": "할인"
+  },
   "fromStall": "가게 소개",
   "stats": {
     "reviews_one": "리뷰 {{count}}개",

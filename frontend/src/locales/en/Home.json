@@ -48,6 +48,11 @@
     "filterLink": "Filter by price & category →",
     "empty": "No fresh produce available right now."
   },
+  "deals": {
+    "title": "Near-expiry deals",
+    "note": "Cheaper because they are past half their shelf life. Each card says until when they stay good.",
+    "all": "All deals"
+  },
   "how": {
     "title": "How pre-ordering works",
     "steps": {

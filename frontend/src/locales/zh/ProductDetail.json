@@ -19,6 +19,13 @@
   },
   "addToCart": "加入购物车",
   "payNote": "下单后即为你保留库存。取货时在摊位支付 {{price}}。",
+  "deals": {
+    "title": "这些取货日有优惠",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}，原价 {{was}} · 最佳食用期至 {{until}} 结束 · 剩余 {{qty}}",
+    "add": "为{{day}}加入",
+    "noun": "优惠"
+  },
   "fromStall": "来自摊位",
   "stats": {
     "reviews_one": "{{count}} 条评价",

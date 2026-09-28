@@ -48,6 +48,11 @@
     "filterLink": "Filtrer par prix et catégorie →",
     "empty": "Aucun produit frais disponible pour le moment."
   },
+  "deals": {
+    "title": "Promos date proche",
+    "note": "Moins cher parce qu'ils ont dépassé la moitié de leur durée de conservation. Chaque fiche indique jusqu'à quand ils restent bons.",
+    "all": "Toutes les promos"
+  },
   "how": {
     "title": "Comment fonctionne la précommande",
     "steps": {

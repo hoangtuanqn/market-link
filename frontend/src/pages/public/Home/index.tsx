@@ -8,6 +8,7 @@ import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 import CategoryBrowse from './CategoryBrowse';
 import CommunityReviews from './CommunityReviews';
+import DealsStrip from './DealsStrip';
 import FarmerCtaBanner from './FarmerCtaBanner';
 import FeaturedFarmers from './FeaturedFarmers';
 import FreshProducts from './FreshProducts';
@@ -58,6 +59,8 @@ const HomePage = () => {
       ) : (
         <NearbyMarkets markets={markets} loading={marketsLoad.kind === 'loading'} />
       )}
+
+      <DealsStrip />
 
       {freshLoad.kind === 'error' ? (
         <LoadError noun={t('fresh.noun')} onRetry={retryFresh} />
