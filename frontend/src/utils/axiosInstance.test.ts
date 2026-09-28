@@ -12,7 +12,7 @@ describe('watchForAccountDeactivated', () => {
 
   it('clears the session, toasts the server message, and redirects home', async () => {
     Session.save({ accessToken: 'stale-token', user: { id: 1 } as never }, false);
-    const toastSpy = vi.spyOn(Notification, 'error').mockImplementation(() => {});
+    const toastSpy = vi.spyOn(Notification, 'error').mockImplementation(() => '');
     const assignSpy = vi.fn();
     vi.stubGlobal('location', { ...window.location, assign: assignSpy });
     const error = new AxiosError('Unauthorized');
@@ -38,7 +38,7 @@ describe('watchForAccountDeactivated', () => {
 
   it('leaves every other error alone', async () => {
     Session.save({ accessToken: 'still-valid', user: { id: 1 } as never }, false);
-    const toastSpy = vi.spyOn(Notification, 'error').mockImplementation(() => {});
+    const toastSpy = vi.spyOn(Notification, 'error').mockImplementation(() => '');
     const error = new AxiosError('Server error');
     error.response = {
       status: 500,
