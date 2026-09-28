@@ -51,5 +51,15 @@ class Helper {
     const seconds = Number(error.response?.headers?.['retry-after']);
     return Number.isFinite(seconds) && seconds > 0 ? seconds : undefined;
   }
+
+  /** Resolves an uploaded media path with the backend API origin if it is relative. */
+  static mediaUrl(path?: string | null): string {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+      return path;
+    }
+    const base = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+    return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
+  }
 }
 export default Helper;

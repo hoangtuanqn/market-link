@@ -157,7 +157,7 @@ const ProductDetailPage = () => {
 
       <div className="grid items-stretch gap-6 lg:grid-cols-2">
         {p.imageUrl ? (
-          <img src={p.imageUrl} alt={p.name} className="min-h-60 w-full rounded-md object-cover" />
+          <img src={Helper.mediaUrl(p.imageUrl)} alt={p.name} className="min-h-60 w-full rounded-md object-cover" />
         ) : (
           <div className="bg-surface-sunken font-hand text-ink-muted grid min-h-60 place-items-center rounded-md">
             {p.categoryName}

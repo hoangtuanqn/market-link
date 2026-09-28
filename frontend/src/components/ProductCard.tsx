@@ -42,7 +42,16 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
           soldOut && 'grayscale',
         )}
       >
-        <span className="font-hand relative text-[19px] leading-[1.2]">{product.category}</span>
+        {product.imageUrl ? (
+          <img
+            src={Helper.mediaUrl(product.imageUrl)}
+            alt=""
+            className="absolute inset-0 size-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <span className="font-hand relative text-[19px] leading-[1.2]">{product.category}</span>
+        )}
         {(soldOut || product.flag) && (
           <span
             className={Helper.cn(
