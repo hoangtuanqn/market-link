@@ -77,8 +77,12 @@ public class StockTemplateService implements StockTemplateServiceInterface {
     }
 
     /** R-06: hồ sơ luôn tra theo userId của token; không có đường nào nhận farmerId từ request. */
+    /** D-09: the weekly stock screen, read or written, closes while the stall is suspended. */
     private FarmerProfile mine(long userId) {
-        return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
+        FarmerProfile profile =
+                farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
+        StallSuspensionMessage.assertUsable(profile);
+        return profile;
     }
 
     /** D-09 / contract §4: chưa duyệt hoặc bị đình chỉ thì mọi thao tác ghi lịch tuần bị chặn. */

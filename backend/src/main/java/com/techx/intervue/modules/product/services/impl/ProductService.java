@@ -191,11 +191,16 @@ public class ProductService implements ProductServiceInterface {
      * R-06: the profile is always looked up by the token's userId; there is no path that takes a
      * farmerId from the request.
      */
+    /**
+     * D-09: every product screen — the list and the detail as much as the writes — goes through
+     * here, so a suspended stall sees none of them. Orders are deliberately not routed this way.
+     */
     private FarmerProfile mine(long userId) {
-        return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
+        FarmerProfile profile =
+                farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
+        StallSuspensionMessage.assertUsable(profile);
+        return profile;
     }
-
-    /** D-09 / contract §4: when not approved or suspended, every product write is blocked. */
 
     /**
      * D-02 / Review Focus #1 by another path (Task 5.3b, Ruling C5-14): a Farmer/Admin editing a

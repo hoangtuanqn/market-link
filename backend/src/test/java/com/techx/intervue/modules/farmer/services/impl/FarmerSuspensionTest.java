@@ -7,7 +7,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.techx.intervue.modules.farmer.requests.SuspendFarmerRequest;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
+import com.techx.intervue.modules.product.services.interfaces.ProductServiceInterface;
+import com.techx.intervue.modules.product.services.interfaces.StockTemplateServiceInterface;
+import com.techx.intervue.modules.report.services.impl.FarmerReportService;
 import com.techx.intervue.modules.report.services.impl.ReportFixture;
+import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
+import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
@@ -33,6 +38,10 @@ class FarmerSuspensionTest {
     @Autowired private FarmerServiceInterface farmers;
     @Autowired private OrderServiceInterface orders;
     @Autowired private UserSessionCache sessionCache;
+    @Autowired private ProductServiceInterface products;
+    @Autowired private StockTemplateServiceInterface stockTemplates;
+    @Autowired private FarmerReportService farmerReports;
+    @Autowired private StallServiceInterface stalls;
     @Autowired private JdbcTemplate jdbc;
 
     private ReportFixture fx;
@@ -163,6 +172,32 @@ class FarmerSuspensionTest {
                                 Integer.class,
                                 farmerId))
                 .isEqualTo(2);
+    }
+
+    /** D-09: "chỉ thấy đơn cũ" — the selling screens close while the suspension lasts. */
+    @Test
+    void aSuspendedStallCannotReadItsSellingScreens() {
+        farmers.suspend(farmerId, permanent("Complaints"), adminUserId);
+
+        assertThatThrownBy(() -> products.mine(farmerUserId, null, 1, 20))
+                .isInstanceOf(StallSuspendedException.class)
+                .hasMessageContaining("Complaints");
+        assertThatThrownBy(() -> stockTemplates.list(farmerUserId))
+                .isInstanceOf(StallSuspendedException.class);
+        assertThatThrownBy(() -> farmerReports.dashboard(farmerUserId))
+                .isInstanceOf(StallSuspendedException.class);
+    }
+
+    /**
+     * …but never the screen that explains the suspension. FarmerPendingPage and FarmerLayout both
+     * read the stall profile to learn the status and the reason; blocking it would leave a
+     * suspended Farmer with no way to find out why.
+     */
+    @Test
+    void aSuspendedStallCanStillReadItsOwnProfileAndReason() {
+        farmers.suspend(farmerId, permanent("Complaints"), adminUserId);
+
+        assertThatCode(() -> stalls.myProfile(farmerUserId)).doesNotThrowAnyException();
     }
 
     /**
