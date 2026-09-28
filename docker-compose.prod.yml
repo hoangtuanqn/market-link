@@ -34,6 +34,8 @@ services:
     image: market-link-backend:prod
     environment:
       SPRING_PROFILES_ACTIVE: prod
+      # docker-compose.yml turns this on for dev; prod keeps Flyway's strict version order
+      SPRING_FLYWAY_OUT_OF_ORDER: "false"
       JWT_SECRET: ${JWT_SECRET:?Thiếu JWT_SECRET trong .env.production}
       MFA_ENCRYPTION_KEY: ${MFA_ENCRYPTION_KEY:?Thiếu MFA_ENCRYPTION_KEY trong .env.production}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?Thiếu CORS_ALLOWED_ORIGINS trong .env.production}
