@@ -68,7 +68,7 @@
       "examples": "Ví dụ",
       "storage": "Bảo quản",
       "days": "Số ngày gợi ý",
-      "daysFor": "Số ngày cho {{group}}",
+      "daysFor": "Số ngày cho {{group}} ({{storage}})",
       "status": "Trạng thái"
     },
     "status": {

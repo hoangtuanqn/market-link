@@ -68,7 +68,7 @@
       "examples": "Beispiele",
       "storage": "Aufbewahrung",
       "days": "Empfohlene Tage",
-      "daysFor": "Tage für {{group}}",
+      "daysFor": "Tage für {{group}} ({{storage}})",
       "status": "Status"
     },
     "status": {
@@ -92,7 +92,7 @@
     },
     "empty": {
       "title": "Noch keine Lagergruppen",
-      "text": "Erzeuger sehen in dieser Kategorie die Spanne der Kategorie, bis du eine Gruppe hinzufügst."
+      "text": "Erzeuger sehen hier die Spanne der Kategorie, bis du eine Gruppe hinzufügst."
     },
     "noun": "Lagergruppen",
     "error": {

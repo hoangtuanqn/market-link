@@ -68,7 +68,7 @@
       "examples": "示例",
       "storage": "保存方式",
       "days": "建议天数",
-      "daysFor": "{{group}} 的天数",
+      "daysFor": "{{group}} 的天数 ({{storage}})",
       "status": "状态"
     },
     "status": {

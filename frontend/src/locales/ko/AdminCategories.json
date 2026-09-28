@@ -68,11 +68,11 @@
       "examples": "예시",
       "storage": "보관",
       "days": "권장 일수",
-      "daysFor": "{{group}}의 일수",
+      "daysFor": "{{group}}의 일수 ({{storage}})",
       "status": "상태"
     },
     "status": {
-      "on": "사용 중",
+      "on": "켜짐",
       "off": "꺼짐"
     },
     "action": {

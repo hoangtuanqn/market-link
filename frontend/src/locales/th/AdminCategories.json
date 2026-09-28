@@ -68,7 +68,7 @@
       "examples": "ตัวอย่าง",
       "storage": "การเก็บรักษา",
       "days": "จำนวนวันที่แนะนำ",
-      "daysFor": "จำนวนวันสำหรับ {{group}}",
+      "daysFor": "จำนวนวันสำหรับ {{group}} ({{storage}})",
       "status": "สถานะ"
     },
     "status": {

@@ -68,7 +68,7 @@
       "examples": "Exemples",
       "storage": "Conservation",
       "days": "Jours suggérés",
-      "daysFor": "Jours pour {{group}}",
+      "daysFor": "Jours pour {{group}} ({{storage}})",
       "status": "Statut"
     },
     "status": {

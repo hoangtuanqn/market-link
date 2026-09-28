@@ -68,7 +68,7 @@
       "examples": "例",
       "storage": "保存方法",
       "days": "推奨日数",
-      "daysFor": "{{group}} の日数",
+      "daysFor": "{{group}} の日数 ({{storage}})",
       "status": "状態"
     },
     "status": {

@@ -68,7 +68,7 @@
       "examples": "Contoh",
       "storage": "Penyimpanan",
       "days": "Hari yang disarankan",
-      "daysFor": "Hari untuk {{group}}",
+      "daysFor": "Hari untuk {{group}} ({{storage}})",
       "status": "Status"
     },
     "status": {

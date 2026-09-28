@@ -124,7 +124,7 @@ const ShelfLifeGuides = ({ categories }: { categories: CategoryType[] }) => {
       render: (g) => (
         <Field
           id={`guide-days-${g.id}`}
-          label={t('guides.col.daysFor', { group: g.groupName })}
+          label={t('guides.col.daysFor', { group: g.groupName, storage: tc(`storageMode.${g.storageMode}`) })}
           hideLabel
           type="number"
           value={drafts[g.id] ?? String(g.suggestedDays)}

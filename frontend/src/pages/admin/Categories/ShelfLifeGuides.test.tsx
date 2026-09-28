@@ -34,6 +34,7 @@ const leafy = {
 beforeEach(() => {
   vi.mocked(ShelfLifeApi.adminList).mockResolvedValue([leafy]);
   vi.mocked(ShelfLifeApi.adminCreate).mockReset();
+  vi.mocked(ShelfLifeApi.adminUpdate).mockReset();
   vi.mocked(ShelfLifeApi.adminDeactivate).mockReset();
 });
 
@@ -43,6 +44,16 @@ describe('ShelfLifeGuides', () => {
     expect(await screen.findByText('Leafy greens')).toBeInTheDocument();
     // Scoped to the table: the add form's "How it is kept" select also has a 'Fridge 0–5 °C' option.
     expect(within(screen.getByRole('table')).getByText('Fridge 0–5 °C')).toBeInTheDocument();
+  });
+
+  it('names each row of the same group by its own way of keeping', async () => {
+    const leafyRoom = { ...leafy, id: 14, storageMode: 'room' as const, suggestedDays: 5 };
+    vi.mocked(ShelfLifeApi.adminList).mockResolvedValue([leafy, leafyRoom]);
+    render(<ShelfLifeGuides categories={categories} />);
+
+    // Both rows share the group name, so wait on one of the two distinct labels rather than the ambiguous group text.
+    expect(await screen.findByLabelText('Days for Leafy greens (Fridge 0–5 °C)')).toBeInTheDocument();
+    expect(screen.getByLabelText('Days for Leafy greens (Room temperature)')).toBeInTheDocument();
   });
 
   it('adds a group', async () => {
@@ -107,5 +118,77 @@ describe('ShelfLifeGuides', () => {
     vi.mocked(ShelfLifeApi.adminList).mockResolvedValue([]);
     render(<ShelfLifeGuides categories={categories} />);
     expect(await screen.findByText('No storage groups yet')).toBeInTheDocument();
+  });
+
+  it("saves a row's days", async () => {
+    vi.mocked(ShelfLifeApi.adminUpdate).mockResolvedValue({ ...leafy, suggestedDays: 5 });
+    render(<ShelfLifeGuides categories={categories} />);
+    const row = (await screen.findByText('Leafy greens')).closest('tr')!;
+
+    const daysInput = within(row).getByLabelText('Days for Leafy greens (Fridge 0–5 °C)');
+    await userEvent.clear(daysInput);
+    await userEvent.type(daysInput, '5');
+    await userEvent.click(within(row).getByRole('button', { name: 'Save' }));
+
+    expect(ShelfLifeApi.adminUpdate).toHaveBeenCalledWith(12, {
+      categoryId: 1,
+      groupName: 'Leafy greens',
+      examples: 'rau muống, lettuce',
+      storageMode: 'chilled',
+      suggestedDays: 5,
+    });
+  });
+
+  it('turns a row back on using its saved days, not an unsaved draft', async () => {
+    const off = { ...leafy, isActive: false };
+    vi.mocked(ShelfLifeApi.adminList).mockResolvedValue([off]);
+    vi.mocked(ShelfLifeApi.adminUpdate).mockResolvedValue({ ...off, isActive: true });
+    render(<ShelfLifeGuides categories={categories} />);
+    const row = (await screen.findByText('Leafy greens')).closest('tr')!;
+
+    const daysInput = within(row).getByLabelText('Days for Leafy greens (Fridge 0–5 °C)');
+    await userEvent.clear(daysInput);
+    await userEvent.type(daysInput, '9');
+    await userEvent.click(within(row).getByRole('button', { name: 'Turn on' }));
+
+    expect(ShelfLifeApi.adminUpdate).toHaveBeenCalledWith(12, {
+      categoryId: 1,
+      groupName: 'Leafy greens',
+      examples: 'rau muống, lettuce',
+      storageMode: 'chilled',
+      suggestedDays: 3,
+      active: true,
+    });
+    expect(await within(row).findByText('On')).toBeInTheDocument();
+  });
+
+  it('switches category and reloads its groups', async () => {
+    const categoryTwo = {
+      id: 2,
+      name: 'Fruits',
+      slug: 'fruits',
+      sortOrder: 2,
+      isActive: true,
+      count: 0,
+      minShelfLifeDays: 1,
+      maxShelfLifeDays: 10,
+    };
+    const citrus = {
+      id: 20,
+      categoryId: 2,
+      groupName: 'Citrus',
+      examples: 'cam, orange',
+      storageMode: 'room' as const,
+      suggestedDays: 10,
+      isActive: true,
+    };
+    vi.mocked(ShelfLifeApi.adminList).mockResolvedValueOnce([leafy]).mockResolvedValueOnce([citrus]);
+    render(<ShelfLifeGuides categories={[...categories, categoryTwo]} />);
+    await screen.findByText('Leafy greens');
+
+    await userEvent.selectOptions(screen.getByLabelText('Category'), '2');
+
+    expect(await screen.findByText('Citrus')).toBeInTheDocument();
+    expect(ShelfLifeApi.adminList).toHaveBeenCalledWith(2);
   });
 });
