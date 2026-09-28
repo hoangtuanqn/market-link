@@ -33,9 +33,8 @@ type ConfirmKind = 'deactivate' | 'reactivate';
 
 /**
  * FR-072 — one customer: their orders across every stall, the reviews they wrote, and the account itself. Orders are
- * read-only (D-04); the only action here is deactivating or reactivating the account. There is no account-history
- * endpoint, so the page shows what the server actually has: when the account was created and a count of their orders by
- * state, from the orders already loaded below.
+ * read-only (D-04); deactivating or reactivating the account is the only action here, and every past deactivate/
+ * reactivate (reason, duration, who did it) is listed in the "Account history" section below.
  */
 const AdminCustomerDetailPage = () => {
   const { t } = useTranslation('AdminCustomerDetail');
@@ -55,6 +54,9 @@ const AdminCustomerDetailPage = () => {
   );
   const { state: reviewsLoad, retry: retryReviews } = useRequest(`admin-customer-reviews:${id}`, () =>
     Number.isFinite(id) ? ReviewApi.adminList({ customerId: id, pageSize: 10 }) : Promise.reject(new Error('n/a')),
+  );
+  const { state: historyLoad, retry: retryHistory } = useRequest(`admin-customer-history:${id}`, () =>
+    Number.isFinite(id) ? AdminReportApi.customerStatusHistory(id, 1, 20) : Promise.reject(new Error('n/a')),
   );
 
   const [confirmKind, setConfirmKind] = useState<ConfirmKind | null>(null);
@@ -267,6 +269,49 @@ const AdminCustomerDetailPage = () => {
                 title={t('reviews.empty.title')}
                 text={t('reviews.empty.text')}
                 className="min-h-[160px] w-full max-w-none flex-1 py-8"
+              />
+            )}
+          </section>
+
+          <section className="flex flex-col gap-3">
+            <h2 className="text-h2">{t('history.title')}</h2>
+            {historyLoad.kind === 'loading' ? (
+              <div className="border-line-strong bg-surface-raised min-h-[140px] w-full animate-pulse rounded-md border-[1.5px] p-6" />
+            ) : historyLoad.kind === 'error' ? (
+              <LoadError noun={t('history.noun')} onRetry={retryHistory} />
+            ) : historyLoad.data.items.length ? (
+              <Table
+                columns={[
+                  {
+                    key: 'when',
+                    label: t('history.col.when'),
+                    render: (h) => formatDate(new Date(h.changedAt)),
+                  },
+                  {
+                    key: 'action',
+                    label: t('history.col.action'),
+                    render: (h) => t(`history.action.${h.toStatus}` as never),
+                  },
+                  { key: 'reason', label: t('history.col.reason'), render: (h) => h.reason ?? '—' },
+                  {
+                    key: 'until',
+                    label: t('history.col.until'),
+                    render: (h) => (h.until ? formatDate(new Date(h.until)) : '—'),
+                  },
+                  {
+                    key: 'by',
+                    label: t('history.col.by'),
+                    render: (h) => h.changedByName ?? t('history.system'),
+                  },
+                ]}
+                rows={historyLoad.data.items}
+              />
+            ) : (
+              <DataState
+                center
+                title={t('history.empty.title')}
+                text={t('history.empty.text')}
+                className="min-h-[140px] w-full max-w-none py-6"
               />
             )}
           </section>

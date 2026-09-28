@@ -43,7 +43,7 @@
   },
   "whatItDoes": {
     "title": "What deactivating does",
-    "text": "They cannot sign in or place a new order. Orders already placed are not touched, so a stall still hands over what it has set aside and nobody loses food that was picked for them."
+    "text": "They cannot sign in or place a new order, and are signed out everywhere right away. A temporary ban leaves their orders alone; a permanent one also cancels any order still placed or accepted and returns the stock."
   },
   "deactivate": {
     "title": "Deactivate {{name}}?",
@@ -71,5 +71,25 @@
     "items": "Items",
     "total": "Total",
     "status": "Status"
+  },
+  "history": {
+    "title": "Account history",
+    "noun": "account history",
+    "system": "System (auto)",
+    "col": {
+      "when": "When",
+      "action": "Action",
+      "reason": "Reason",
+      "until": "Until",
+      "by": "By"
+    },
+    "action": {
+      "active": "Reactivated",
+      "inactive": "Deactivated"
+    },
+    "empty": {
+      "title": "No history yet",
+      "text": "Every deactivate or reactivate on this account will show up here."
+    }
   }
 }
