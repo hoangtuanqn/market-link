@@ -14,6 +14,7 @@ import com.techx.intervue.modules.notification.services.interfaces.AnnouncementS
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.repositories.AdminMfaRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -49,6 +50,7 @@ class NotificationStompIntegrationTest {
 
     @LocalServerPort int port;
     @Autowired UserRepository users;
+    @Autowired AdminMfaRepository adminMfa;
     @Autowired UserSessionCache sessions;
     @Autowired JwtServiceInterface jwt;
     @Autowired FarmerServiceInterface farmerService;
@@ -67,7 +69,7 @@ class NotificationStompIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        support = new NotificationTestSupport(users, sessions, jwt, port);
+        support = new NotificationTestSupport(users, sessions, jwt, adminMfa, port);
         owner = support.user(RoleType.CUSTOMER);
         other = support.user(RoleType.CUSTOMER);
         admin = support.user(RoleType.ADMIN);
