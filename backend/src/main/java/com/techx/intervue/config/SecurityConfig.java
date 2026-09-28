@@ -199,6 +199,11 @@ public class SecurityConfig {
                                         // not
                                         .requestMatchers(HttpMethod.GET, "/api/v1/platform/status")
                                         .permitAll()
+                                        // FR-115: a video element cannot send the token; the
+                                        // signed link is checked in AttachmentService.stream
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/api/v1/attachments/*/stream")
+                                        .permitAll()
                                         .anyRequest()
                                         .authenticated())
                 .sessionManagement(

@@ -8,6 +8,9 @@ vi.mock('@/api-requests/moderation.requests', () => ({
   default: { reports: vi.fn(), report: vi.fn(), hide: vi.fn(), dismiss: vi.fn() },
 }));
 vi.mock('@/components/chat/ChatPhoto', () => ({ default: () => <span>photo</span> }));
+vi.mock('@/components/chat/ChatVideo', () => ({
+  default: ({ attachmentId }: { attachmentId: number }) => <span>video {attachmentId}</span>,
+}));
 
 const ok = <T,>(data: T) => ({ success: true, message: 'OK', data, timestamp: '' }) as never;
 const row = {
@@ -31,6 +34,7 @@ const detail = {
       kind: 'text',
       body: 'Còn rau không?',
       hasPhoto: false,
+      hasVideo: false,
       reported: false,
       hidden: false,
       createdAt: '2026-09-26T08:58:00Z',
@@ -42,6 +46,7 @@ const detail = {
       kind: 'text',
       body: 'Chuyển khoản trước 500k',
       hasPhoto: false,
+      hasVideo: false,
       reported: true,
       hidden: false,
       createdAt: '2026-09-26T08:59:00Z',
@@ -84,6 +89,22 @@ describe('ReportedMessages', () => {
     const context = await screen.findByRole('list', { name: /messages around/i });
     expect(within(context).getAllByRole('listitem')).toHaveLength(2);
     expect(within(context).getByText('Chuyển khoản trước 500k').closest('li')).toHaveAttribute('aria-current', 'true');
+  });
+
+  /** FR-115: the admin can play the video of the reported message, through the same narrow path as photos. */
+  it('shows the video of a reported video message', async () => {
+    vi.mocked(ModerationApi.report).mockResolvedValue(
+      ok({
+        ...detail,
+        context: [{ ...detail.context[1], kind: 'video', body: undefined, hasVideo: true, attachmentId: 77 }],
+      }),
+    );
+    render(<ReportedMessages />);
+
+    await userEvent.click(await screen.findByRole('button', { name: /review/i }));
+
+    const context = await screen.findByRole('list', { name: /messages around/i });
+    expect(within(context).getByText('video 77')).toBeInTheDocument();
   });
 
   it('hides the message after confirming, and drops the row from the queue', async () => {

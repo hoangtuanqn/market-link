@@ -14,6 +14,7 @@ import com.techx.intervue.modules.conversation.exceptions.OrderNotInConversation
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
+import com.techx.intervue.modules.conversation.exceptions.StreamLinkInvalidException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -142,6 +143,12 @@ public class ConversationExceptionHandler {
     @ExceptionHandler(AttachmentNotYoursException.class)
     ResponseEntity<ApiResource<Void>> notYourAttachment(AttachmentNotYoursException e) {
         return error(HttpStatus.FORBIDDEN, "ATTACHMENT_NOT_YOURS", e.getMessage(), List.of());
+    }
+
+    /** FR-115 §5: a forged, expired or incomplete video link → 403. */
+    @ExceptionHandler(StreamLinkInvalidException.class)
+    ResponseEntity<ApiResource<Void>> streamLinkInvalid(StreamLinkInvalidException e) {
+        return error(HttpStatus.FORBIDDEN, "STREAM_LINK_INVALID", e.getMessage(), List.of());
     }
 
     /** An image attaches to exactly one message → 409. */

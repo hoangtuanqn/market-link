@@ -98,7 +98,9 @@ public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
     private static String reasonFor(Action action) {
         return switch (action) {
             case MESSAGE -> "You are sending messages too quickly. Wait a moment and try again.";
-            case IMAGE -> "You are sending photos too quickly. Wait a moment and try again.";
+            // FR-115: photos and videos share this limit
+            case IMAGE ->
+                    "You are sending photos or videos too quickly. Wait a moment and try again.";
             case CONVERSATION ->
                     "You have started too many conversations in the last hour. Try again later.";
             // Never reaches the user: a typing frame is dropped silently because STOMP has no HTTP
