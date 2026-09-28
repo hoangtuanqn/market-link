@@ -50,6 +50,14 @@ public class FarmerProductController extends BaseController {
         return ok(products.mine(user.getId(), status, page, pageSize), "");
     }
 
+    @GetMapping("/deleted")
+    public ResponseEntity<ApiResource<PageResource<FarmerProductResource>>> mineDeleted(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "50") int pageSize) {
+        return ok(products.mineDeleted(user.getId(), page, pageSize), "");
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResource<FarmerProductResource>> mineOne(
             @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
@@ -76,6 +84,12 @@ public class FarmerProductController extends BaseController {
             @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
         products.softDelete(user.getId(), id);
         return ok(null, "Product removed.");
+    }
+
+    @PostMapping("/{id}/restore")
+    public ResponseEntity<ApiResource<FarmerProductResource>> restore(
+            @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
+        return ok(products.restore(user.getId(), id), "Product restored.");
     }
 
     @PatchMapping("/{id}/status")

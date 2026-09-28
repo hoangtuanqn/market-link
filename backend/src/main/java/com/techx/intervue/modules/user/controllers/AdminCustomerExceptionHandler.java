@@ -1,10 +1,12 @@
 package com.techx.intervue.modules.user.controllers;
 
 import com.techx.intervue.modules.user.exceptions.CustomerNotFoundException;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -50,6 +52,28 @@ public class AdminCustomerExceptionHandler {
                                 .field("status")
                                 .message(e.getMessage())
                                 .build()));
+    }
+
+    /** FR-072: blank reason / past `until` from {@code AdminCustomerService.deactivate}. */
+    @ExceptionHandler(InvalidFieldException.class)
+    ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                e.getMessage(),
+                List.of(
+                        FieldErrorResource.builder()
+                                .field(e.getField())
+                                .message(e.getMessage())
+                                .build()));
+    }
+
+    /**
+     * Last safety net: a reason longer than the column (255 chars) slipping past bean validation.
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
     @ExceptionHandler(CustomerNotFoundException.class)

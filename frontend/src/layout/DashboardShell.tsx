@@ -1,8 +1,7 @@
-import { useMemo, useState, type ComponentType, type ReactNode } from 'react';
+import { useState, type ComponentType, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
+import { Link, NavLink, Outlet, useLocation } from 'react-router';
 import {
-  ChevronLeftIcon,
   FoldIcon,
   HandWaveIcon,
   LogOutIcon,
@@ -66,7 +65,6 @@ const DashboardShell = ({
 }: DashboardShellProps) => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const navigate = useNavigate();
   const period = useGreetingPeriod();
   const [folded, setFolded] = useState(() => {
     try {
@@ -91,10 +89,6 @@ const DashboardShell = ({
       return next;
     });
   };
-
-  // A back arrow only makes sense on screens opened from a list, not on the sidebar's own destinations.
-  const topLevel = useMemo(() => new Set(nav.flatMap((g) => g.items.map((i) => i.to))), [nav]);
-  const showBack = !topLevel.has(pathname);
 
   const signOutClass = Helper.cn(
     'text-board-muted hover:text-on-board hover:bg-brand-strong col-span-2 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-sm bg-transparent px-3 text-[14px] font-bold no-underline',
@@ -300,16 +294,6 @@ const DashboardShell = ({
           >
             <MenuIcon />
           </button>
-          {showBack && (
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              aria-label={t('actions.back')}
-              className="border-line-strong bg-surface-raised text-ink hover:border-ink hidden size-11 flex-none place-items-center rounded-sm border-[1.5px] sm:grid"
-            >
-              <ChevronLeftIcon />
-            </button>
-          )}
           <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
             <HandWaveIcon
               size={20}
@@ -317,7 +301,7 @@ const DashboardShell = ({
               aria-hidden="true"
             />
             <div className="min-w-0">
-              <p className="text-ink truncate text-[18px] leading-tight sm:text-[20px]">
+              <p className="text-ink truncate text-[16px] leading-tight sm:text-[18px]">
                 <span className="font-normal">{t(`header.greeting.${period}`)}</span>
                 {user.name && <span className="font-bold">, {user.name}</span>}
               </p>
@@ -350,7 +334,7 @@ const DashboardShell = ({
           </div>
         </header>
 
-        <main className="box-border flex w-full flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
+        <main className="box-border flex w-full flex-1 flex-col gap-6 px-4 pt-6 pb-6 md:px-6 md:pt-6 md:pb-8">
           <Outlet />
         </main>
 

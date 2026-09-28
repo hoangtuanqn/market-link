@@ -6,4 +6,7 @@ public interface MailServiceInterface {
      * JobQueueInterface.
      */
     void sendHtml(String to, String subject, String html);
+
+    /** Same, with a plain-text alternative for mail apps that do not show HTML (FR-009). */
+    void send(String to, String subject, String html, String text);
 }

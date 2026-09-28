@@ -1,0 +1,16 @@
+{{title}}
+
+{{greeting}}
+{{intro}}
+
+{{codeLabel}}:
+
+    {{code}}
+
+{{expiry}}
+
+{{ignore}}
+
+--
+{{tagline}}
+{{reason}}

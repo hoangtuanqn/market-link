@@ -8,12 +8,17 @@
   },
   "tabsLabel": "Farmers by status",
   "status": {
+    "all": "All",
     "pending": "Waiting for approval",
     "approved": "Approved",
     "suspended": "Suspended",
     "rejected": "Rejected"
   },
   "empty": {
+    "all": {
+      "title": "No farmers yet",
+      "text": "Farmer registrations will appear here."
+    },
     "pending": {
       "title": "No registrations waiting",
       "text": "New Farmer applications arrive here for review before they can list products."

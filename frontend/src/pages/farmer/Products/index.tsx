@@ -19,7 +19,8 @@ import ActiveDeals from './ActiveDeals';
 import DealDialog from './DealDialog';
 
 const STATUSES: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
-const FILTERS: ('all' | ProductStatus)[] = ['all', ...STATUSES];
+type ProductFilter = 'all' | ProductStatus | 'deleted';
+const FILTERS: ProductFilter[] = ['all', ...STATUSES, 'deleted'];
 const NO_PRODUCTS: ProductType[] = [];
 
 /** FR-062 FR-064 — everything this stall can list: price, what is left and reserved for the next pickup day, status. */
@@ -27,9 +28,16 @@ const FarmerProductsPage = () => {
   const { t } = useTranslation('FarmerProducts');
   const { t: tc } = useTranslation();
   const { state: load, retry, mutate } = useRequest('my-products', () => ProductApi.mine());
+  const {
+    state: loadDeleted,
+    retry: retryDeleted,
+    mutate: mutateDeleted,
+  } = useRequest('my-deleted-products', () => ProductApi.mineDeleted());
   const all = load.kind === 'ready' ? load.data : NO_PRODUCTS;
-  const [filter, setFilter] = useState<'all' | ProductStatus>('all');
+  const deletedProducts = loadDeleted.kind === 'ready' ? loadDeleted.data : NO_PRODUCTS;
+  const [filter, setFilter] = useState<ProductFilter>('all');
   const [deleteTarget, setDeleteTarget] = useState<ProductType | null>(null);
+  const [restoreTarget, setRestoreTarget] = useState<ProductType | null>(null);
   const [adjustTarget, setAdjustTarget] = useState<ProductType | null>(null);
   const [adjustQuantity, setAdjustQuantity] = useState('');
   const [adjustPrice, setAdjustPrice] = useState('');
@@ -39,13 +47,16 @@ const FarmerProductsPage = () => {
   const [dealTarget, setDealTarget] = useState<ProductType | null>(null);
   const [dealsVersion, setDealsVersion] = useState(0);
 
-  const counts: Record<'all' | ProductStatus, number> = {
+  const counts: Record<ProductFilter, number> = {
     all: all.length,
     available: all.filter((p) => p.status === 'available').length,
     sold_out: all.filter((p) => p.status === 'sold_out').length,
     unavailable: all.filter((p) => p.status === 'unavailable').length,
+    deleted: deletedProducts.length,
   };
-  const rows = filter === 'all' ? all : all.filter((p) => p.status === filter);
+  const rows = filter === 'deleted' ? deletedProducts : filter === 'all' ? all : all.filter((p) => p.status === filter);
+  const currentLoad = filter === 'deleted' ? loadDeleted : load;
+  const currentRetry = filter === 'deleted' ? retryDeleted : retry;
 
   const changeStatus = async (p: ProductType, value: ProductStatus) => {
     setBusyId(p.id);
@@ -110,8 +121,28 @@ const FarmerProductsPage = () => {
     try {
       await ProductApi.remove(deleteTarget.id);
       mutate((list) => list.filter((row) => row.id !== deleteTarget.id));
+      mutateDeleted((list) => [{ ...deleteTarget, status: 'unavailable' }, ...list]);
       Notification.success({ title: t('toast.deleted'), text: t('toast.deletedText', { name: deleteTarget.name }) });
       setDeleteTarget(null);
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const confirmRestore = async () => {
+    if (!restoreTarget) return;
+    setBusyId(restoreTarget.id);
+    try {
+      const restored = await ProductApi.restore(restoreTarget.id);
+      mutateDeleted((list) => list.filter((p) => p.id !== restoreTarget.id));
+      mutate((list) => [restored, ...list]);
+      Notification.success({
+        title: t('toast.restored'),
+        text: t('toast.restoredText', { name: restoreTarget.name }),
+      });
+      setRestoreTarget(null);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
@@ -230,6 +261,54 @@ const FarmerProductsPage = () => {
     },
   ];
 
+  const deletedColumns: TableColumn<ProductType>[] = [
+    {
+      key: 'n',
+      label: t('col.product'),
+      render: (p) => (
+        <>
+          <span className="text-ink inline-flex min-h-11 items-center font-bold">{p.name}</span>
+          <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">{p.category}</span>
+        </>
+      ),
+    },
+    {
+      key: 'p',
+      label: t('col.price'),
+      align: 'num',
+      render: (p) => {
+        const price = unitPrice(p.price, p.unit);
+        return (
+          <>
+            {money(price.amount)}{' '}
+            <span className="text-ink-muted font-normal">{t('perUnit', { unit: price.unit ?? p.unit })}</span>
+          </>
+        );
+      },
+    },
+    {
+      key: 'st',
+      label: t('col.status'),
+      render: () => (
+        <span className="bg-surface-sunken text-ink-muted inline-flex items-center rounded px-2.5 py-1 text-[13px] font-medium">
+          {t('status.deleted')}
+        </span>
+      ),
+    },
+    {
+      key: 'a',
+      label: '',
+      align: 'actions',
+      render: (p) => (
+        <div className="flex justify-end gap-2">
+          <Button variant="secondary" size="sm" onClick={() => setRestoreTarget(p)} disabled={busyId === p.id}>
+            {t('restore')}
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -245,26 +324,31 @@ const FarmerProductsPage = () => {
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
           <Chip key={f} pressed={filter === f} onClick={() => setFilter(f)}>
-            {f === 'all' ? t('filterAll') : t(`status.${f}`)}{' '}
+            {f === 'all' ? t('filterAll') : f === 'deleted' ? t('filterDeleted') : t(`status.${f}`)}{' '}
             <span className="text-[12px] tabular-nums opacity-80">{counts[f]}</span>
           </Chip>
         ))}
       </div>
 
       <div className="flex min-h-[440px] flex-1 flex-col">
-        {load.kind === 'loading' ? (
+        {currentLoad.kind === 'loading' ? (
           <MarketCardSkeleton count={3} />
-        ) : load.kind === 'error' ? (
-          <LoadError noun={t('error.noun')} onRetry={retry} />
+        ) : currentLoad.kind === 'error' ? (
+          <LoadError noun={t('error.noun')} onRetry={currentRetry} />
         ) : rows.length ? (
           <Table
             className="h-full flex-1"
-            caption={t('caption', { count: all.length })}
-            columns={columns}
+            caption={t('caption', { count: rows.length })}
+            columns={filter === 'deleted' ? deletedColumns : columns}
             rows={rows}
           />
         ) : (
-          <DataState fill title={t('empty.title')} text={t('empty.text')} className="h-full min-h-[440px] w-full" />
+          <DataState
+            fill
+            title={filter === 'deleted' ? t('emptyDeleted.title') : t('empty.title')}
+            text={filter === 'deleted' ? t('emptyDeleted.text') : t('empty.text')}
+            className="h-full min-h-[440px] w-full"
+          />
         )}
       </div>
 
@@ -304,6 +388,24 @@ const FarmerProductsPage = () => {
       >
         <p>{t('dialog.text')}</p>
         <p className="text-ink-muted text-[14px]">{t('dialog.pauseHint')}</p>
+      </Dialog>
+
+      <Dialog
+        open={restoreTarget !== null}
+        title={t('restoreDialog.title', { name: restoreTarget?.name ?? '' })}
+        onClose={() => setRestoreTarget(null)}
+        actions={
+          <>
+            <Button variant="secondary" onClick={() => setRestoreTarget(null)}>
+              {t('restoreDialog.cancel')}
+            </Button>
+            <Button onClick={() => void confirmRestore()} disabled={busyId !== null}>
+              {t('restoreDialog.confirm')}
+            </Button>
+          </>
+        }
+      >
+        <p>{t('restoreDialog.text')}</p>
       </Dialog>
 
       <Dialog

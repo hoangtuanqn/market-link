@@ -27,6 +27,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -170,6 +172,47 @@ class AttachmentDownloadControllerTest {
         messages.save(imageMessage);
 
         assertThat(download(url(), recipient).statusCode()).isEqualTo(404);
+    }
+
+    /**
+     * FR-115 §5 through the real filter chain: a video element sends no Authorization header, so
+     * the signed link alone must be enough — and a link edited to name someone else must not be.
+     */
+    @Test
+    void aSignedStreamLinkPlaysWithoutATokenAndSeeks() throws Exception {
+        HttpResponse<String> issued = download(url() + "/stream-url", recipient);
+        assertThat(issued.statusCode()).isEqualTo(200);
+        Matcher found = Pattern.compile("\"url\":\"([^\"]+)\"").matcher(issued.body());
+        assertThat(found.find()).isTrue();
+        String link = found.group(1);
+
+        HttpResponse<byte[]> played =
+                HttpClient.newHttpClient()
+                        .send(
+                                HttpRequest.newBuilder(URI.create(base() + link))
+                                        .header("Range", "bytes=1-2")
+                                        .GET()
+                                        .build(),
+                                HttpResponse.BodyHandlers.ofByteArray());
+        assertThat(played.statusCode()).isEqualTo(206);
+        assertThat(played.body()).containsExactly(2, 3);
+
+        String someoneElse =
+                link.replace("u=" + recipient.getId() + "&", "u=" + outsider.getId() + "&");
+        HttpResponse<String> refused =
+                HttpClient.newHttpClient()
+                        .send(
+                                HttpRequest.newBuilder(URI.create(base() + someoneElse))
+                                        .GET()
+                                        .build(),
+                                HttpResponse.BodyHandlers.ofString());
+        assertThat(refused.statusCode()).isEqualTo(403);
+        assertThat(refused.body()).contains("STREAM_LINK_INVALID");
+    }
+
+    @Test
+    void someoneOutsideTheThreadGetsNoStreamLink() throws Exception {
+        assertThat(download(url() + "/stream-url", outsider).statusCode()).isEqualTo(403);
     }
 
     private String base() {

@@ -1,0 +1,43 @@
+{
+  "title": "Periksa email Anda",
+  "sentTo": "Kami mengirim kode 6 digit ke <b>{{email}}</b>. Masukkan di sini untuk menyelesaikan pembuatan akun.",
+  "codeLabel": "Kode 6 digit",
+  "expiresIn": "Kode kedaluwarsa dalam {{time}}.",
+  "expired": "Kode ini sudah kedaluwarsa. Minta kode baru.",
+  "submit": "Verifikasi dan buat akun",
+  "submitting": "Memeriksa kode…",
+  "enterAll": "Masukkan semua 6 digit untuk lanjut.",
+  "help": "Belum masuk setelah satu menit? Periksa folder spam, atau minta kode baru.",
+  "resend": "Kirim kode baru",
+  "resendIn_one": "Kirim kode baru dalam {{count}} detik",
+  "resendIn_other": "Kirim kode baru dalam {{count}} detik",
+  "resending": "Mengirim…",
+  "resendReady": "Anda sekarang bisa meminta kode baru.",
+  "changeEmail": "Email salah? Ubah",
+  "fillAgain": "Isi formulir lagi",
+  "haveAccount": "Saya sudah punya akun",
+  "wrong": {
+    "title": "Kode itu salah",
+    "text_one": "Periksa email lalu coba lagi. Kesempatan Anda tinggal {{count}} kali.",
+    "text_other": "Periksa email lalu coba lagi. Kesempatan Anda tinggal {{count}} kali."
+  },
+  "usedUp": {
+    "title": "Kode ini tidak bisa dipakai lagi",
+    "text": "Minta kode baru dan masukkan kode dari email terbaru."
+  },
+  "signupExpired": {
+    "title": "Pendaftaran Anda sudah kedaluwarsa",
+    "text": "Pendaftaran yang belum selesai kami simpan selama 30 menit. Isi formulir lagi untuk mendapat kode baru."
+  },
+  "duplicate": {
+    "title": "Email atau nomor telepon ini sudah dipakai",
+    "text": "Seseorang sudah lebih dulu menyelesaikan pendaftaran dengannya. Kembali dan gunakan yang lain."
+  },
+  "toast": {
+    "created": "Akun dibuat.",
+    "resent": "Kami mengirim kode baru.",
+    "tooMany_one": "Terlalu banyak permintaan kode. Coba lagi dalam {{count}} menit.",
+    "tooMany_other": "Terlalu banyak permintaan kode. Coba lagi dalam {{count}} menit.",
+    "failed": "Kode tidak dapat diperiksa. Silakan coba lagi."
+  }
+}

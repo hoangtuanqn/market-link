@@ -3,10 +3,12 @@
   "intro": "出品できるすべての商品です。市場の日に売り切れたら売り切れに、季節外れのときは一時停止にしてください。",
   "add": "商品を追加",
   "filterAll": "すべて",
+  "filterDeleted": "削除済み",
   "status": {
     "available": "販売中",
     "sold_out": "売り切れ",
-    "unavailable": "一時停止"
+    "unavailable": "一時停止",
+    "deleted": "削除済み"
   },
   "caption_one": "{{count}} 件の商品",
   "caption_other": "{{count}} 件の商品",
@@ -22,6 +24,7 @@
   "statusOf": "{{name}} のステータス",
   "edit": "編集",
   "delete": "削除",
+  "restore": "復元",
   "footNote": "商品を削除するとカタログから外れますが、過去の注文の明細は残ります。写真：4:3、自然光、木や紙の上で。",
   "toast": {
     "statusSaved": "ステータスを保存しました",
@@ -32,6 +35,8 @@
     },
     "deleted": "削除しました",
     "deletedText": "{{name}} を削除しました。",
+    "restored": "復元完了",
+    "restoredText": "{{name}} を一時停止リストに復元しました。",
     "stockAdjusted": "{{day}} の在庫を更新しました。"
   },
   "dialog": {
@@ -41,6 +46,12 @@
     "text": "カタログとテンプレートから消えます。すでにこの商品を含む注文は変わりません。",
     "pauseHint": "しばらく販売を止めたいだけなら、一時停止を選んでください。"
   },
+  "restoreDialog": {
+    "title": "{{name}} を復元しますか？",
+    "cancel": "ゴミ箱に残す",
+    "confirm": "商品を復元",
+    "text": "商品は「一時停止」の状態で復元されます。再販する前に在庫や価格を確認できます。"
+  },
   "error": {
     "noun": "あなたの商品"
   },
@@ -48,6 +59,10 @@
   "empty": {
     "title": "商品はまだありません",
     "text": "最初の商品を追加すると、すぐに出店ページに表示されます。"
+  },
+  "emptyDeleted": {
+    "title": "ゴミ箱は空です",
+    "text": "削除された商品はありません。"
   },
   "adjust": "調整",
   "adjustDialog": {

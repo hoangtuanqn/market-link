@@ -51,6 +51,12 @@
     "intent": "Intent: {{intent}}",
     "photoUnavailable": "This photo is not available.",
     "photoFrom": "Photo from {{name}}",
+    "videoFrom": "Video from {{name}}",
+    "playVideo": "Play video",
+    "loadingVideo": "Loading the video…",
+    "videoUnavailable": "This video is not available.",
+    "videoCantPlay": "This video cannot be played in this browser.",
+    "downloadVideo": "Download the video",
     "seen": "Seen",
     "loadingThreads": "Loading conversations…",
     "threadsErrorTitle": "We could not load your conversations",
@@ -61,8 +67,8 @@
     "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} unread messages",
     "sendFailed": "Your message was not sent. Try again.",
-    "photoFailed": "The photo was not sent. Choose a JPEG, PNG or WebP under 5 MB.",
-    "attachPhoto": "Add a photo",
+    "mediaFailed": "The file was not sent. Choose a photo or a video under 50 MB.",
+    "attachMedia": "Add a photo or video",
     "draftLabel": "Write a message",
     "draftPlaceholder": "Write a message",
     "send": "Send",
@@ -90,8 +96,14 @@
     "unpin": "Remove",
     "productGone": "This product is no longer listed.",
     "tooFast": "You are sending too fast. Wait a moment and try again.",
-    "photoTooBig": "That photo is over 5 MB. Choose a smaller one.",
-    "photoType": "Choose a JPEG, PNG or WebP photo.",
+    "mediaTooBig": "That file is over 50 MB. Choose a smaller one.",
+    "mediaTooBigForServer": "That file is larger than the server accepts right now. Choose a smaller one.",
+    "mediaType": "Choose a photo (JPEG, PNG, WebP, GIF, AVIF or HEIC) or a video (MP4, MOV or WebM).",
+    "converting": "Converting the photo…",
+    "convertFailed": "This photo could not be converted. Save it as a JPEG and try again.",
+    "uploading": "Sending… {{percent}}%",
+    "uploadProgress": "Upload progress",
+    "cancelUpload": "Cancel",
     "moreThreads": "Load more conversations",
     "reportTitle": "Report this message",
     "reportWhy": "Why are you reporting it?",
@@ -120,6 +132,20 @@
   },
   "errors": {
     "network": "Could not reach the server. Check your connection and try again."
+  },
+  "accountDeactivated": {
+    "title": "Your account has been deactivated",
+    "generic": "An administrator deactivated this account, so you have been signed out.",
+    "whatNow": "You can still browse markets and produce as a visitor, but you cannot sign in or place orders while this is in effect.",
+    "contactIntro": "If you believe this is a mistake, contact us at",
+    "acknowledge": "I understand"
+  },
+  "stallSuspended": {
+    "title": "Your stall is suspended",
+    "generic": "An administrator suspended this stall, so it is hidden from customers for now.",
+    "whatNow": "Orders customers already placed still run to the end — please complete them. You cannot list produce, change stock or take new orders until the suspension is lifted.",
+    "contactIntro": "If you believe this is a mistake, contact us at",
+    "acknowledge": "I understand"
   },
   "farmerNav": {
     "sections": "Sections",
@@ -539,7 +565,8 @@
     "result": {
       "product": "Product",
       "market": "Market",
-      "farmer": "Stall"
+      "farmer": "Stall",
+      "order": "Order"
     },
     "suggest": {
       "find": "Where can I buy tomatoes this weekend?",
@@ -762,6 +789,14 @@
     "text": "We use essential cookies to keep you signed in and your cart working. We set no advertising or analytics cookies. <a>Privacy policy</a>.",
     "decline": "Decline",
     "accept": "Accept"
+  },
+  "banDuration": {
+    "label": "Duration",
+    "permanent": "Permanent",
+    "temporary": "Temporary",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "specificTime": "Or pick an exact end time"
   },
   "storageMode": {
     "room": "Room temperature",

@@ -7,8 +7,8 @@ enable Web Push, or when something fails.
 **Contents:** [Prerequisites](#1-prerequisites) · [Option A — Docker](#2-option-a--run-everything-in-docker) ·
 [Option B — on your machine](#3-option-b--run-the-backend-and-frontend-on-your-machine) ·
 [Useful commands](#4-useful-commands) · [Web Push](#5-web-push-notifications-after-the-tab-is-closed) ·
-[Shopping assistant](#6-shopping-assistant-answered-by-claude) ·
-[Chat check](#7-chat--manual-two-browser-check-fr-111-fr-115-fr-116) · [Troubleshooting](#8-troubleshooting)
+[Shopping assistant](#6-shopping-assistant-answered-by-claude) · [Email](#7-email-smtp--sign-up-codes-and-password-reset) ·
+[Chat check](#8-chat--manual-two-browser-check-fr-111-fr-115-fr-116) · [Troubleshooting](#9-troubleshooting)
 
 ## 1. Prerequisites
 
@@ -218,15 +218,25 @@ curl http://localhost:8080/ping
 # {"status":true,"message":"Pong!"}
 ```
 
-Optionally, test the register API:
+Optionally, try sign-up through the API (FR-009: the account is only created once the emailed code is entered):
 
 ```bash
 curl -i -X POST http://localhost:8080/api/v1/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","address":"12 Le Loi, Q1","password":"123456","confirmPassword":"123456"}'
+  -d '{"fullName":"Test User","email":"test@example.com","phone":"0912345678","addressParts":{"countryCode":"VN","provinceCode":"79","wardCode":"26743","streetName":"Lê Lợi","addressLine":"12"},"password":"123456","confirmPassword":"123456","language":"en"}'
 ```
 
-A successful response (`201`) returns an `accessToken` and the user in the body, plus a refresh token in the `Set-Cookie` header.
+It answers `202` with `{ email, codeExpiresInSeconds, resendAvailableInSeconds, signupToken }` and sends the code by
+mail — or, without SMTP, writes it to the backend log (§7). Finish with the code and the token:
+
+```bash
+curl -i -X POST http://localhost:8080/api/v1/auth/register/verify \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","code":"<code>","signupToken":"<signupToken>"}'
+```
+
+A successful response (`201`) returns an `accessToken` and the user in the body, plus a refresh token in the
+`Set-Cookie` header.
 
 #### API docs (Swagger UI)
 
@@ -319,7 +329,35 @@ SQL (CLAUDE.md R-04). How it works: [`chatbot-design.md`](chatbot-design.md).
 With no key, over the hourly limit, or when the API fails, the keyword engine answers instead, so the assistant
 never stops replying.
 
-## 7. Chat — manual two-browser check (FR-111, FR-115, FR-116)
+## 7. Email (SMTP) — sign-up codes and password reset
+
+Signing up with an email sends a 6-digit code to that address (FR-009, `docs/decisions.md` D-14), and "Forgot
+password" sends a reset link (FR-007). Both go through one SMTP account.
+
+1. With Gmail: turn on 2-Step Verification for the sending account, then create an **App Password**
+   (Google Account → Security → App passwords). Use that 16-character password, not the account password.
+2. Put it in `.env` (production: `.env.production`):
+
+   ```env
+   MAIL_HOST=smtp.gmail.com
+   MAIL_PORT=587
+   MAIL_USERNAME=<sending address>
+   MAIL_PASSWORD=<app password>
+   ```
+
+3. Run `make up` again (or restart the backend with the variables exported, for option B).
+
+**No SMTP yet?** Leave `MAIL_USERNAME` empty. Nothing is sent; the backend writes each mail to its log instead, so
+a sign-up can still be finished locally:
+
+```bash
+docker logs -f intervue-backend 2>&1 | grep -A14 'Mail is not configured'
+```
+
+The code is on its own line under "Your code". Limits (spec §5): one code a minute, 5 per address and 20 per IP an
+hour, 5 wrong tries per code, 10 minutes per code.
+
+## 8. Chat — manual two-browser check (FR-111, FR-115, FR-116)
 
 Spec §13 asks for the realtime path to be checked by hand, because unit tests mock the broker.
 Run this once before a demo.
@@ -339,8 +377,15 @@ Run this once before a demo.
 7. Admin hides the message → it disappears from **both** windows without a reload.
 8. Still as admin, open the photo URL of the **reported** message → **200**. Open the photo URL of a
    **neighbouring** message → **403**.
+9. Photos and videos (spec `2026-09-28-chat-media-design.md`): send each of these and check the other
+   window shows it — a large phone JPEG (over 4096 px, it arrives scaled down), an iPhone HEIC photo
+   (the composer shows "Converting the photo…" first), an animated GIF (it still moves), an MP4 and a
+   MOV video under 50 MB. Press play on the video, drag the seek bar → it jumps without downloading
+   the whole file. A file over 50 MB is refused in the composer before any upload.
+10. Copy a video's stream link from the browser's network tab and open it after five minutes →
+    **403 `STREAM_LINK_INVALID`**. Change the `u=` number in a fresh link → **403** as well.
 
-## 8. Troubleshooting
+## 9. Troubleshooting
 
 | Error | Cause | Fix |
 |---|---|---|
@@ -363,5 +408,7 @@ Run this once before a demo.
 | An admin sees 403 opening a photo they can see in the report context | Only the **reported** message's photo is open to admins; the five messages either side are context, not the thing being reported | Working as designed. Every admin photo view is logged |
 | Backend logs `N account(s) have role=farmer but no farmer_profiles row` at startup | Seed data or a manual DB edit created a farmer without a stall profile | Chat is closed for those accounts. Add an approved `farmer_profiles` row for each |
 | Chat photos return 404 after rebuilding containers | The `chat-uploads` volume was removed; the database rows survive but the files are gone | Stop with `docker compose down` (**without** `-v`) to keep volumes. Photos live on `chat-uploads`, separate from `uploads-data` |
-| `POST /api/v1/attachments` returns 415 for a photo that opens fine on your machine | The file is not JPEG/PNG/WebP — the server reads magic bytes and ignores the file extension and `Content-Type` | Re-save it as JPEG or PNG |
+| `POST /api/v1/attachments` returns 415 for a file that opens fine on your machine | The server reads the file's bytes and ignores its extension and `Content-Type`: it takes JPEG, PNG, WebP, GIF, AVIF, MP4, MOV and WebM. HEIC must be converted first (the web app does it for you), and an MKV is not a WebM even though they share a header | Re-save it as JPEG, or export the video as MP4 |
+| Chat uploads over 5 MB return 413 "The file must be 5 MB or smaller." after pulling the 50 MB change | Your `.env` still has the old `CHAT_MAX_UPLOAD_BYTES=5242880` | Set `CHAT_MAX_UPLOAD_BYTES=52428800` in `.env`, then `docker compose up -d backend` |
+| A chat video shows "This video cannot be played in this browser." | The browser has no decoder for that file (for example HEVC video from an iPhone in a browser without HEVC support). The server stores videos as uploaded and does not convert them | Use the **Download** button under the message, or record/export the video as H.264 MP4 |
 | `<img src="/api/v1/attachments/5">` shows a broken image | That endpoint checks the JWT in the `Authorization` header, and `<img>` does not send it | `fetch` the URL with the header, then render `URL.createObjectURL(blob)` |

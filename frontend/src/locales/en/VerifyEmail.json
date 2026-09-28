@@ -1,0 +1,43 @@
+{
+  "title": "Check your email",
+  "sentTo": "We sent a 6-digit code to <b>{{email}}</b>. Enter it here to finish creating your account.",
+  "codeLabel": "Six-digit code",
+  "expiresIn": "The code expires in {{time}}.",
+  "expired": "This code has expired. Send a new one.",
+  "submit": "Verify and create account",
+  "submitting": "Checking the code…",
+  "enterAll": "Enter all 6 digits to continue.",
+  "help": "Nothing after a minute? Look in spam, or send a new code.",
+  "resend": "Send a new code",
+  "resendIn_one": "Send a new code in {{count}} second",
+  "resendIn_other": "Send a new code in {{count}} seconds",
+  "resending": "Sending…",
+  "resendReady": "You can send a new code now.",
+  "changeEmail": "Wrong email? Change it",
+  "fillAgain": "Fill in the form again",
+  "haveAccount": "I already have an account",
+  "wrong": {
+    "title": "That code is not right",
+    "text_one": "Check the email and try again. You have {{count}} try left.",
+    "text_other": "Check the email and try again. You have {{count}} tries left."
+  },
+  "usedUp": {
+    "title": "This code can no longer be used",
+    "text": "Send a new code and enter the one from the newest email."
+  },
+  "signupExpired": {
+    "title": "Your sign-up has expired",
+    "text": "We keep an unfinished sign-up for 30 minutes. Fill in the form again to get a new code."
+  },
+  "duplicate": {
+    "title": "This email or phone number is taken",
+    "text": "Someone finished signing up with it first. Go back and use another one."
+  },
+  "toast": {
+    "created": "Account created.",
+    "resent": "We sent a new code.",
+    "tooMany_one": "Too many codes requested. Try again in {{count}} minute.",
+    "tooMany_other": "Too many codes requested. Try again in {{count}} minutes.",
+    "failed": "Could not check the code. Please try again."
+  }
+}

@@ -11,6 +11,8 @@ import type {
   ResetPasswordInput,
   ResetTokenType,
   SetPasswordInput,
+  SignupStartedType,
+  SignupVerifyInput,
   UpdateProfileInput,
   SocialProvider,
 } from '@/types/auth.types';
@@ -32,12 +34,24 @@ class AuthApi {
     return response.data;
   };
 
-  /**
-   * FR-001. Returns the shared response as is; on success the backend signs in right away (accessToken + refresh
-   * cookie).
-   */
+  /** FR-001 + FR-009: 202, no session yet — the account is created by verifySignup. */
   static register = async (input: RegisterInput) => {
-    const response = await publicApi.post<ApiResponse<AuthResultType>>('/auth/register', input);
+    const response = await publicApi.post<ApiResponse<SignupStartedType>>('/auth/register', input);
+    return response.data;
+  };
+
+  /** FR-009: the right code creates the account; the backend signs in (accessToken + refresh cookie). */
+  static verifySignup = async (input: SignupVerifyInput) => {
+    const response = await publicApi.post<ApiResponse<AuthResultType>>('/auth/register/verify', input);
+    return response.data;
+  };
+
+  /** FR-009: a new code; 429 RATE_LIMITED carries Retry-After. */
+  static resendSignupCode = async (email: string, signupToken: string) => {
+    const response = await publicApi.post<ApiResponse<SignupStartedType>>('/auth/register/resend', {
+      email,
+      signupToken,
+    });
     return response.data;
   };
 

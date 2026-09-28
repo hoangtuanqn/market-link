@@ -22,6 +22,7 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 | FR-005 | RBAC: mỗi role chỉ truy cập được chức năng của mình; gọi API sai quyền trả 403 | MUST | All | BE1 | STAGING |
 | FR-006 | Đăng xuất | MUST | All | BE1 | STAGING |
 | FR-007 | Quên mật khẩu / đặt lại qua token link | SHOULD | All | BE1 | STAGING |
+| FR-009 | Xác thực email bằng mã 6 số khi Customer đăng ký bằng email; chống spam gửi mã (chờ 60s, 5 lần/email/giờ, 20 lần/IP/giờ, sai tối đa 5 lần) | SHOULD | Guest | BE1/FE2 | WIP |
 
 ## B · Chợ, Farmer, bản đồ
 

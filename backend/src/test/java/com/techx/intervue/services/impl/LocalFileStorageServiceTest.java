@@ -49,4 +49,24 @@ class LocalFileStorageServiceTest {
         assertThatThrownBy(() -> storage.store("../etc", "a.jpg", new byte[] {1}))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    /** FR-115: a video is copied from the upload's temp file, never read into memory. */
+    @Test
+    void storeFileCopiesAFileIntoPlace(@TempDir Path elsewhere) throws Exception {
+        Path source = Files.write(elsewhere.resolve("upload.part"), new byte[] {4, 5, 6});
+
+        storage.storeFile("images", "v1.mp4", source);
+
+        assertThat(storage.find("images", "v1.mp4").orElseThrow())
+                .startsWith(root)
+                .hasBinaryContent(new byte[] {4, 5, 6});
+    }
+
+    @Test
+    void storeFileRefusesANameThatCouldLeaveTheFolder(@TempDir Path elsewhere) throws Exception {
+        Path source = Files.write(elsewhere.resolve("upload.part"), new byte[] {1});
+
+        assertThatThrownBy(() -> storage.storeFile("images", "../v1.mp4", source))
+                .isInstanceOf(RuntimeException.class);
+    }
 }

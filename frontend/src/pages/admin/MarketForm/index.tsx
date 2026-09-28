@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
 import CatalogApi, {
@@ -10,7 +10,7 @@ import CatalogApi, {
 import AddressFields from '@/components/address/AddressFields';
 import { CheckIcon } from '@/components/icons';
 import LocationPicker from '@/components/LocationPicker';
-import MarketCardSkeleton from '@/components/MarketCardSkeleton';
+import MarketFormSkeleton from './MarketFormSkeleton';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
@@ -154,9 +154,18 @@ const AdminMarketFormPage = () => {
   // Latitude / longitude exactly as typed, until the field is left: re-formatting to 6 decimals on every keystroke made
   // the fields impossible to type in or clear (QA E2E v2 MARKET-ADMIN-002). Absent = show the form's number.
   const [coordText, setCoordText] = useState<Partial<Record<'lat' | 'lng', string>>>({});
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
 
-  if (load.kind === 'loading') {
-    return <MarketCardSkeleton count={1} />;
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isNew && (load.kind === 'loading' || initialLoading)) {
+    return <MarketFormSkeleton />;
   }
 
   if (load.kind === 'error' && !missing) {

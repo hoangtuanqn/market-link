@@ -8,12 +8,17 @@
   },
   "tabsLabel": "상태별 농가",
   "status": {
+    "all": "전체",
     "pending": "승인 대기",
     "approved": "승인됨",
     "suspended": "정지됨",
     "rejected": "거절됨"
   },
   "empty": {
+    "all": {
+      "title": "등록된 농가가 없습니다",
+      "text": "농가 등록 신청이 여기에 표시됩니다."
+    },
     "pending": {
       "title": "대기 중인 신청이 없어요",
       "text": "새 농가 신청은 상품을 올리기 전에 이곳에서 검토돼요."

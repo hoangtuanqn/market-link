@@ -23,6 +23,7 @@ import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultIte
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ProposedAction;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.FarmerReviewRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.OrderItemRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.ProductStockRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.SalesRow;
@@ -38,7 +39,10 @@ import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterfac
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver.Availability;
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -96,6 +100,7 @@ public class AssistantTools {
     private final ProductAvailabilityResolver availability;
     private final UserGuideIndex guide;
     private final OrderServiceInterface orders;
+    private final Clock clock;
 
     /**
      * What one tool call produced.
@@ -131,7 +136,7 @@ public class AssistantTools {
                     tool(
                             SEARCH_PRODUCTS,
                             "Search products that approved stalls sell, across all markets or one"
-                                    + " market. Returns price in Vietnamese dong per unit, how much is left for the"
+                                    + " market. Returns price in US dollars per unit, how much is left for the"
                                     + " nearest pickup date, the stall and its markets. Use it for"
                                     + " finding a product, its price, or whether it is in stock.",
                             Map.of(
@@ -221,10 +226,23 @@ public class AssistantTools {
                             MY_ORDERS,
                             "The signed-in Farmer's own orders: customer, market, pickup date and"
                                     + " window, cutoff, total and status. Use it for 'my orders',"
-                                    + " 'orders waiting for me' (status placed), or a given day.",
+                                    + " 'orders waiting for me' (status placed), or a given day."
+                                    + " Give order_code to read one order together with what is in"
+                                    + " it. Every order names its customer, so an order asked for by"
+                                    + " the customer's name is found by listing them and picking it"
+                                    + " out; there is no need to ask for the code.",
                             Map.of(
-                                    "status", property("string", ORDER_STATUS_HINT),
-                                    "pickup_date", property("string", DATE_HINT)),
+                                    "status",
+                                    property("string", ORDER_STATUS_HINT),
+                                    "pickup_date",
+                                    property("string", DATE_HINT),
+                                    "order_code",
+                                    property(
+                                            "string",
+                                            "One order's code exactly as it appears, e.g."
+                                                    + " 'ML-20260920-0001'. The date inside a code"
+                                                    + " is the day the order was placed, not its"
+                                                    + " pickup date: never use it as pickup_date.")),
                             List.of()),
                     tool(
                             CUTOFF_STATUS,
@@ -727,6 +745,32 @@ public class AssistantTools {
 
     // ---------------------------------------------------------------- output
 
+    /**
+     * {days: 3, hours: 22}. Worked out here rather than by the model, which called a cutoff four
+     * days ahead "tomorrow evening", then "6 days away". Numbers, not words, so the reply can put
+     * them in its own language.
+     */
+    private static Map<String, Long> timeUntil(LocalDateTime now, LocalDateTime then) {
+        Duration left = Duration.between(now, then);
+        Map<String, Long> out = new LinkedHashMap<>();
+        if (left.toHours() < 1) {
+            out.put("minutes", left.toMinutes());
+            return out;
+        }
+        if (left.toDays() > 0) {
+            out.put("days", left.toDays());
+        }
+        if (left.toHours() % 24 > 0) {
+            out.put("hours", left.toHours() % 24);
+        }
+        return out;
+    }
+
+    /** "Friday": the model got the weekday of a date wrong when left to work it out. */
+    private static String dayName(LocalDate date) {
+        return DAY_NAMES[date.getDayOfWeek().getValue() % 7];
+    }
+
     private static String time(LocalTime value) {
         return value == null ? null : TIME.format(value);
     }
@@ -769,12 +813,36 @@ public class AssistantTools {
         return context.farmerId();
     }
 
+    /**
+     * Every Farmer result starts with the stall it was read from. Without it, a Farmer who claimed
+     * another stall got their own numbers reported under that stall's name (test run 28/09): the
+     * model had nothing to contradict the claim with.
+     */
+    private Map<String, Object> ownStall(long farmerId) {
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("your_stall", farmerKnowledge.stallName(farmerId).orElse(null));
+        return out;
+    }
+
     private ToolOutcome myOrders(AssistantContext context, Map<String, Object> input) {
         long farmerId = requireFarmer(context);
+        String code = text(input, "order_code");
+        if (code != null) {
+            // One order by its code, whatever other filters came with it: the model tends to read
+            // the date inside a code as a pickup date
+            List<OrderRow> one = farmerKnowledge.myOrderByCode(farmerId, code).stream().toList();
+            Map<Long, List<OrderItemRow>> lines = new LinkedHashMap<>();
+            one.forEach(
+                    o ->
+                            lines.put(
+                                    o.orderId(),
+                                    farmerKnowledge.myOrderItems(farmerId, o.orderId())));
+            return orders(farmerId, one, ChatIntent.PICKUP_WINDOW, lines);
+        }
         String status = text(input, "status");
         LocalDate pickupDate = date(input, "pickup_date");
         List<OrderRow> rows = farmerKnowledge.myOrders(farmerId, status, pickupDate);
-        return orders(rows, ChatIntent.PICKUP_WINDOW);
+        return orders(farmerId, rows, ChatIntent.PICKUP_WINDOW);
     }
 
     private ToolOutcome cutoffStatus(AssistantContext context, Map<String, Object> input) {
@@ -783,10 +851,23 @@ public class AssistantTools {
                 input.get("within_hours") instanceof Number n && n.intValue() > 0
                         ? n.intValue()
                         : DEFAULT_CUTOFF_HOURS;
-        return orders(farmerKnowledge.cutoffSoon(farmerId, hours), ChatIntent.PICKUP_WINDOW);
+        return orders(
+                farmerId, farmerKnowledge.cutoffSoon(farmerId, hours), ChatIntent.PICKUP_WINDOW);
     }
 
-    private ToolOutcome orders(List<OrderRow> rows, ChatIntent intent) {
+    private ToolOutcome orders(long farmerId, List<OrderRow> rows, ChatIntent intent) {
+        return orders(farmerId, rows, intent, Map.of());
+    }
+
+    /**
+     * @param lines what is in each order, by order id, when the question was about one order
+     */
+    private ToolOutcome orders(
+            long farmerId,
+            List<OrderRow> rows,
+            ChatIntent intent,
+            Map<Long, List<OrderItemRow>> lines) {
+        LocalDateTime now = LocalDateTime.now(clock);
         List<Map<String, Object>> out = new ArrayList<>();
         List<ChatResultItem> cards = new ArrayList<>();
         for (OrderRow r : rows) {
@@ -795,13 +876,38 @@ public class AssistantTools {
             row.put("customer", r.customerName());
             row.put("market", r.marketName());
             row.put("pickup_date", String.valueOf(r.pickupDate()));
+            if (r.pickupDate() != null) {
+                row.put("pickup_day", dayName(r.pickupDate()));
+            }
             row.put(
                     "pickup_window",
                     TIME.format(r.pickupStart()) + "-" + TIME.format(r.pickupEnd()));
             row.put("cutoff_at", String.valueOf(r.cutoffAt()));
+            if (r.cutoffAt() != null) {
+                row.put("cutoff_day", dayName(r.cutoffAt().toLocalDate()));
+                boolean passed = !r.cutoffAt().isAfter(now);
+                row.put("cutoff_passed", passed);
+                if (!passed) {
+                    row.put("time_to_cutoff", timeUntil(now, r.cutoffAt()));
+                }
+            }
             row.put("items", r.itemCount());
-            row.put("total_vnd", r.total());
+            row.put("total_usd", r.total());
             row.put("status", r.status());
+            if (lines.containsKey(r.orderId())) {
+                row.put(
+                        "contents",
+                        lines.get(r.orderId()).stream()
+                                .map(
+                                        l -> {
+                                            Map<String, Object> line = new LinkedHashMap<>();
+                                            line.put("product", l.productName());
+                                            line.put("quantity", l.quantity() + " " + l.unit());
+                                            line.put("subtotal_usd", l.subtotal());
+                                            return line;
+                                        })
+                                .toList());
+            }
             out.add(row);
             cards.add(
                     new ChatResultItem(
@@ -810,7 +916,9 @@ public class AssistantTools {
                             r.orderCode(),
                             r.customerName() + " · " + r.marketName() + " · " + r.status()));
         }
-        return ok(intent, Map.of("orders", out), cards);
+        Map<String, Object> result = ownStall(farmerId);
+        result.put("orders", out);
+        return ok(intent, result, cards);
     }
 
     private ToolOutcome myProducts(AssistantContext context, Map<String, Object> input) {
@@ -824,7 +932,7 @@ public class AssistantTools {
         for (ProductStockRow r : rows) {
             Map<String, Object> row = new LinkedHashMap<>();
             row.put("name", r.name());
-            row.put("price_vnd", r.price());
+            row.put("price_usd", r.price());
             row.put("unit", r.unit());
             row.put("stock", r.stockQuantity());
             row.put("reserved_by_orders", r.reserved());
@@ -837,7 +945,9 @@ public class AssistantTools {
                             r.name(),
                             r.stockQuantity() + " " + r.unit() + " · " + r.status()));
         }
-        return ok(ChatIntent.PRODUCT_DETAIL, Map.of("products", out), cards);
+        Map<String, Object> result = ownStall(farmerId);
+        result.put("products", out);
+        return ok(ChatIntent.PRODUCT_DETAIL, result, cards);
     }
 
     private ToolOutcome mySales(AssistantContext context, Map<String, Object> input) {
@@ -853,11 +963,11 @@ public class AssistantTools {
         }
         SalesRow totals = farmerKnowledge.mySales(farmerId, from, to);
         List<BestSellerRow> best = farmerKnowledge.bestSellers(farmerId, from, to);
-        Map<String, Object> out = new LinkedHashMap<>();
+        Map<String, Object> out = ownStall(farmerId);
         out.put("from", String.valueOf(from));
         out.put("to", String.valueOf(to));
         out.put("completed_orders", totals.orderCount());
-        out.put("revenue_vnd", totals.revenue());
+        out.put("revenue_usd", totals.revenue());
         out.put(
                 "best_sellers",
                 best.stream()
@@ -866,7 +976,7 @@ public class AssistantTools {
                                     Map<String, Object> row = new LinkedHashMap<>();
                                     row.put("product", b.productName());
                                     row.put("sold", b.quantitySold() + " " + b.unit());
-                                    row.put("revenue_vnd", b.revenue());
+                                    row.put("revenue_usd", b.revenue());
                                     return row;
                                 })
                         .toList());
@@ -888,7 +998,9 @@ public class AssistantTools {
             row.put("comment", r.comment());
             out.add(row);
         }
-        return ok(ChatIntent.HELP, Map.of("reviews", out), List.of());
+        Map<String, Object> result = ownStall(farmerId);
+        result.put("reviews", out);
+        return ok(ChatIntent.HELP, result, List.of());
     }
 
     private ToolOutcome mySchedule(AssistantContext context) {
@@ -903,7 +1015,9 @@ public class AssistantTools {
             row.put("pickup", TIME.format(r.pickupStart()) + "-" + TIME.format(r.pickupEnd()));
             out.add(row);
         }
-        return ok(ChatIntent.FARMER_AVAILABILITY, Map.of("days", out), List.of());
+        Map<String, Object> result = ownStall(farmerId);
+        result.put("days", out);
+        return ok(ChatIntent.FARMER_AVAILABILITY, result, List.of());
     }
 
     private static String text(Map<String, Object> input, String key) {
@@ -945,13 +1059,13 @@ public class AssistantTools {
         out.put("customers", totals.customers());
         out.put("active_markets", totals.markets());
         out.put("orders_in_period", totals.orders());
-        out.put("completed_revenue_vnd", totals.revenue());
+        out.put("completed_revenue_usd", totals.revenue());
         List<Map<String, Object>> markets = new ArrayList<>();
         for (MarketActivityRow m : adminKnowledge.marketActivity(from, to)) {
             Map<String, Object> row = new LinkedHashMap<>();
             row.put("market", m.marketName());
             row.put("orders", m.orderCount());
-            row.put("completed_revenue_vnd", m.revenue());
+            row.put("completed_revenue_usd", m.revenue());
             row.put("stalls_with_orders", m.activeStalls());
             markets.add(row);
         }
@@ -965,6 +1079,8 @@ public class AssistantTools {
         List<ChatResultItem> cards = new ArrayList<>();
         for (PendingFarmerRow r : rows) {
             Map<String, Object> row = new LinkedHashMap<>();
+            // The id propose_farmer_decision asks for; without it the model has to guess one
+            row.put("farmer_id", r.farmerId());
             row.put("stall", r.stallName());
             row.put("contact", r.contactPerson());
             row.put("email", r.email());
@@ -1078,7 +1194,7 @@ public class AssistantTools {
         out.put("order_code", order.orderCode());
         out.put("customer", order.customerName());
         out.put("pickup_date", String.valueOf(order.pickupDate()));
-        out.put("total_vnd", order.total());
+        out.put("total_usd", order.total());
         out.put("nothing_changed_yet", true);
         String detail =
                 order.customerName()
@@ -1189,7 +1305,7 @@ public class AssistantTools {
                         g.markets().stream().map(m -> m.marketName()).toList());
             }
             row.put("closes_hours_before_pickup", g.orderCutoffHours());
-            row.put("subtotal_vnd", g.subtotal());
+            row.put("subtotal_usd", g.subtotal());
             row.put(
                     "items",
                     g.items().stream()
@@ -1198,7 +1314,7 @@ public class AssistantTools {
                                         Map<String, Object> line = new LinkedHashMap<>();
                                         line.put("name", i.name());
                                         line.put("quantity", i.quantity() + " " + i.unit());
-                                        line.put("price_vnd", i.unitPrice());
+                                        line.put("price_usd", i.unitPrice());
                                         line.put("left", i.stockQuantity());
                                         line.put("status", i.status());
                                         return line;
@@ -1212,7 +1328,7 @@ public class AssistantTools {
         }
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("orders_it_will_become", groups.size());
-        result.put("total_vnd", total);
+        result.put("total_usd", total);
         result.put("paid_at_the_stall", true);
         result.put("groups", out);
         return ok(ChatIntent.PRODUCT_DETAIL, result, List.of());

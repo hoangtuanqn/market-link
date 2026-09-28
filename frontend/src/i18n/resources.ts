@@ -49,6 +49,7 @@ import resetPassword from '@/locales/en/ResetPassword.json';
 import search from '@/locales/en/Search.json';
 import setPassword from '@/locales/en/SetPassword.json';
 import stallProfile from '@/locales/en/StallProfile.json';
+import verifyEmail from '@/locales/en/VerifyEmail.json';
 import farmerSettings from '@/locales/en/FarmerSettings.json';
 import adminSettings from '@/locales/en/AdminSettings.json';
 import farmerMessages from '@/locales/en/FarmerMessages.json';
@@ -123,6 +124,7 @@ export const en = {
   Search: search,
   SetPassword: setPassword,
   StallProfile: stallProfile,
+  VerifyEmail: verifyEmail,
   FarmerSettings: farmerSettings,
   AdminSettings: adminSettings,
   FarmerMessages: farmerMessages,

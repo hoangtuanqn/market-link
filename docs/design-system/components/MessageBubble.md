@@ -12,6 +12,12 @@ One message in a conversation between two people (FR-110, FR-115). **Not the sam
   token and shown from a blob URL — the attachment endpoint checks that the reader is in the
   conversation, so a plain `<img src>` would get a 401. The space is reserved from the width and
   height the server returned, so the thread does not jump when the picture arrives.
+- A video message (FR-115, 28/09/2026) renders `ChatVideo`: a frame that keeps a 16:9 space (at
+  most 280 px wide) with a play button. Pressing play asks the server for a short-lived signed link
+  and only then mounts `<video controls playsInline preload="metadata">` on it — a `<video src>`
+  cannot send the token either, and nothing is downloaded until the reader asks. If the browser
+  cannot decode the file, the frame says so and offers a **Download** link instead; an expired link
+  is renewed once.
 - The meta line under the bubble is the time, and on your own messages a "Seen" mark once the other
   person has read that far.
 - Composed from the existing `ml-msg`, `ml-msg-bot`, `ml-msg-user`, `ml-msg-bubble` and

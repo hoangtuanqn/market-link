@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import ChatPhoto from './ChatPhoto';
+import ChatVideo from './ChatVideo';
 import OrderPin from './OrderPin';
 import ProductPin from './ProductPin';
 import { formatTime } from '@/lib/format';
@@ -47,6 +48,12 @@ export default function MessageBubble({ message, mine, senderName, seen, onRepor
             key={message.attachment.attachmentId}
             attachment={message.attachment}
             alt={t('chat.photoFrom', { name: senderName })}
+          />
+        ) : message.kind === 'video' && message.attachment ? (
+          <ChatVideo
+            key={message.attachment.attachmentId}
+            attachmentId={message.attachment.attachmentId}
+            label={t('chat.videoFrom', { name: senderName })}
           />
         ) : (
           <span className="break-words whitespace-pre-wrap">{message.body}</span>

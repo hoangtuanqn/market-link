@@ -17,22 +17,36 @@ import com.techx.intervue.modules.chat.repositories.AdminKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest.PageContext;
+import com.techx.intervue.modules.chat.resources.AdminRows.MarketActivityRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.PendingFarmerRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.PlatformTotalsRow;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
+import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.OrderItemRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.ProductStockRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.SalesRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ScheduleRow;
 import com.techx.intervue.modules.chat.services.impl.AssistantTools.ToolOutcome;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
+import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
+import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver.Availability;
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -60,6 +74,10 @@ class AssistantToolsTest {
                     LocalTime.of(20, 0),
                     List.of(0, 6));
 
+    /** 21:00 on Monday 28/09/2026 in Ho Chi Minh City. */
+    private static final Clock MONDAY_9PM_IN_VIETNAM =
+            Clock.fixed(Instant.parse("2026-09-28T14:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
+
     private ChatKnowledgeRepository knowledge;
     private ProductAvailabilityResolver availability;
     private FarmerKnowledgeRepository farmerKnowledge;
@@ -81,7 +99,8 @@ class AssistantToolsTest {
                         adminKnowledge,
                         availability,
                         new UserGuideIndex(),
-                        orders);
+                        orders,
+                        MONDAY_9PM_IN_VIETNAM);
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH, THAO_DIEN));
     }
 
@@ -352,6 +371,10 @@ class AssistantToolsTest {
     // ----------------------------------------------------- FR-093 proposals never write
 
     private static OrderRow order(String code, String status) {
+        return order(code, status, java.time.LocalDateTime.of(2026, 9, 25, 19, 0));
+    }
+
+    private static OrderRow order(String code, String status, LocalDateTime cutoffAt) {
         return new OrderRow(
                 77L,
                 code,
@@ -360,7 +383,7 @@ class AssistantToolsTest {
                 java.time.LocalDate.of(2026, 9, 26),
                 java.time.LocalTime.of(6, 0),
                 java.time.LocalTime.of(9, 30),
-                java.time.LocalDateTime.of(2026, 9, 25, 19, 0),
+                cutoffAt,
                 new java.math.BigDecimal("120000"),
                 status,
                 3);
@@ -477,6 +500,255 @@ class AssistantToolsTest {
                             assertThat(line.productId()).isEqualTo(11L);
                             assertThat(line.quantity()).isEqualTo(2);
                         });
+    }
+
+    // ------------------------------------------ FR-093 a result says which stall it is about
+
+    /**
+     * A Farmer who claimed another stall got their own numbers reported under that stall's name
+     * (test run 28/09): nothing in the result said whose stall it was read from.
+     */
+    @Test
+    void farmerResultsNameTheStallTheyWereReadFrom() {
+        LocalDate from = LocalDate.of(2026, 9, 1);
+        LocalDate to = LocalDate.of(2026, 9, 30);
+        when(farmerKnowledge.stallName(9L)).thenReturn(Optional.of("Vườn Út Hiền"));
+        when(farmerKnowledge.mySales(9L, from, to))
+                .thenReturn(new SalesRow(2, new BigDecimal("4.60")));
+        when(farmerKnowledge.bestSellers(9L, from, to)).thenReturn(List.of());
+        when(farmerKnowledge.myOrders(9L, null, null)).thenReturn(List.of(order("ML-1", "placed")));
+
+        assertThat(
+                        tools.run(
+                                        FARMER_9,
+                                        AssistantTools.MY_SALES,
+                                        Map.of("from_date", "2026-09-01", "to_date", "2026-09-30"))
+                                .content())
+                .contains("\"your_stall\":\"Vườn Út Hiền\"");
+        assertThat(tools.run(FARMER_9, AssistantTools.MY_ORDERS, Map.of()).content())
+                .contains("\"your_stall\":\"Vườn Út Hiền\"");
+    }
+
+    /**
+     * The "Ask the assistant" button on an order asks what is in it. The model read the date inside
+     * "ML-20260920-0001" as a pickup date, filtered by it and reported the order as not found; the
+     * code alone now finds the order, whatever pickup date comes with it, together with its lines.
+     */
+    @Test
+    void oneOrderIsReadByItsCodeWithWhatIsInIt() {
+        when(farmerKnowledge.myOrderByCode(9L, "ML-20260920-0001"))
+                .thenReturn(Optional.of(order("ML-20260920-0001", "placed")));
+        when(farmerKnowledge.myOrderItems(9L, 77L))
+                .thenReturn(
+                        List.of(new OrderItemRow("Rau muống", 2, "bunch", new BigDecimal("1.00"))));
+
+        ToolOutcome out =
+                tools.run(
+                        FARMER_9,
+                        AssistantTools.MY_ORDERS,
+                        Map.of("order_code", "ML-20260920-0001", "pickup_date", "2026-09-20"));
+
+        assertThat(out.error()).isFalse();
+        assertThat(out.content())
+                .contains("\"order_code\":\"ML-20260920-0001\"")
+                .contains("\"product\":\"Rau muống\"");
+        verify(farmerKnowledge, never()).myOrders(eq(9L), any(), any());
+    }
+
+    /**
+     * Asked whether an order was still before its cutoff, four days ahead, the model answered
+     * "tomorrow evening", then "6 days away", then "2 days away". How far away the cutoff is, and
+     * whether it has passed, is worked out here instead.
+     */
+    @Test
+    void eachOrderSaysHowLongIsLeftBeforeItsCutoffOrThatItHasPassed() {
+        when(farmerKnowledge.myOrders(9L, null, null))
+                .thenReturn(
+                        List.of(
+                                order("ML-FRI", "placed", LocalDateTime.of(2026, 10, 2, 19, 0)),
+                                order("ML-TUE", "placed", LocalDateTime.of(2026, 9, 29, 22, 0)),
+                                order("ML-NIGHT", "placed", LocalDateTime.of(2026, 9, 29, 2, 0)),
+                                order("ML-SOON", "placed", LocalDateTime.of(2026, 9, 28, 21, 40)),
+                                order("ML-GONE", "placed", LocalDateTime.of(2026, 9, 28, 19, 0))));
+
+        // The clock reads 21:00 on Monday 28/09/2026
+        String content = tools.run(FARMER_9, AssistantTools.MY_ORDERS, Map.of()).content();
+
+        // Numbers rather than words, so the reply puts them in its own language
+        assertThat(content)
+                .contains("\"cutoff_passed\":false,\"time_to_cutoff\":{\"days\":3,\"hours\":22}")
+                .contains("\"cutoff_passed\":false,\"time_to_cutoff\":{\"days\":1,\"hours\":1}")
+                .contains("\"cutoff_passed\":false,\"time_to_cutoff\":{\"hours\":5}")
+                .contains("\"cutoff_passed\":false,\"time_to_cutoff\":{\"minutes\":40}")
+                .contains("\"cutoff_passed\":true");
+        // Nothing is left to count down to once the cutoff has gone
+        assertThat(content.split("time_to_cutoff", -1)).hasSize(5);
+    }
+
+    /** The model wrote "Thứ Năm 02/10/2026" for a Friday: the weekday now comes with the date. */
+    @Test
+    void eachOrderNamesTheWeekdayOfItsPickupAndItsCutoff() {
+        when(farmerKnowledge.myOrders(9L, null, null))
+                .thenReturn(
+                        List.of(order("ML-FRI", "placed", LocalDateTime.of(2026, 10, 2, 19, 0))));
+
+        assertThat(tools.run(FARMER_9, AssistantTools.MY_ORDERS, Map.of()).content())
+                .contains("\"pickup_date\":\"2026-09-26\",\"pickup_day\":\"Saturday\"")
+                .contains("\"cutoff_at\":\"2026-10-02T19:00\",\"cutoff_day\":\"Friday\"");
+    }
+
+    // ------------------------------------------------ FR-094 approving from the queue
+
+    /**
+     * propose_farmer_decision takes a farmer_id and tells the model to get it from
+     * get_farmer_applications. Without the id in that result the model guessed one, and with real
+     * data it proposed a decision on the wrong stall.
+     */
+    @Test
+    void theApplicationQueueCarriesTheIdADecisionNeeds() {
+        when(adminKnowledge.farmerApplications("pending"))
+                .thenReturn(
+                        List.of(
+                                new PendingFarmerRow(
+                                        16L,
+                                        "Rau sạch Cô Bảy",
+                                        "Trần Thị Bảy",
+                                        "cobay.garden@example.test",
+                                        LocalDate.of(2026, 9, 27),
+                                        "pending")));
+
+        ToolOutcome out =
+                tools.run(ADMIN, AssistantTools.FARMER_APPLICATIONS, Map.of("status", "pending"));
+
+        assertThat(out.content()).contains("\"farmer_id\":16");
+    }
+
+    // ---------------------------------------- amounts reach the model as US dollars (27/09)
+
+    private static final AssistantContext ADMIN =
+            new AssistantContext(AssistantAudience.ADMIN, 1L, null);
+
+    /**
+     * Every amount in the app is US dollars (docs/decisions.md). Fields named *_vnd told the model
+     * otherwise, and it wrote "4.60 VND" and "24.000 ₫" back to Farmers.
+     */
+    @Test
+    void salesRevenueIsLabelledInUsDollars() {
+        LocalDate from = LocalDate.of(2026, 9, 1);
+        LocalDate to = LocalDate.of(2026, 9, 30);
+        when(farmerKnowledge.mySales(9L, from, to))
+                .thenReturn(new SalesRow(2, new BigDecimal("4.60")));
+        when(farmerKnowledge.bestSellers(9L, from, to))
+                .thenReturn(
+                        List.of(new BestSellerRow("Cải ngọt", "bunch", 3, new BigDecimal("1.80"))));
+
+        ToolOutcome out =
+                tools.run(
+                        FARMER_9,
+                        AssistantTools.MY_SALES,
+                        Map.of("from_date", "2026-09-01", "to_date", "2026-09-30"));
+
+        assertThat(out.content())
+                .contains("\"revenue_usd\":4.60")
+                .contains("\"revenue_usd\":1.80")
+                .doesNotContainIgnoringCase("vnd");
+    }
+
+    @Test
+    void orderTotalsAndProductPricesAreLabelledInUsDollars() {
+        when(farmerKnowledge.myOrders(9L, null, null)).thenReturn(List.of(order("ML-1", "placed")));
+        when(farmerKnowledge.myOrderByCode(9L, "ML-1"))
+                .thenReturn(Optional.of(order("ML-1", "placed")));
+        when(farmerKnowledge.myProducts(9L, null, false, 5))
+                .thenReturn(
+                        List.of(
+                                new ProductStockRow(
+                                        3L,
+                                        "Xà lách xoong",
+                                        new BigDecimal("0.70"),
+                                        "bunch",
+                                        0,
+                                        0,
+                                        "sold_out")));
+
+        assertThat(tools.run(FARMER_9, AssistantTools.MY_ORDERS, Map.of()).content())
+                .contains("\"total_usd\":")
+                .doesNotContainIgnoringCase("vnd");
+        assertThat(tools.run(FARMER_9, AssistantTools.MY_PRODUCTS, Map.of()).content())
+                .contains("\"price_usd\":0.70")
+                .doesNotContainIgnoringCase("vnd");
+        assertThat(
+                        tools.run(
+                                        FARMER_9,
+                                        AssistantTools.PROPOSE_ORDER_ACTION,
+                                        Map.of("order_code", "ML-1", "action", "accept"))
+                                .content())
+                .contains("\"total_usd\":")
+                .doesNotContainIgnoringCase("vnd");
+    }
+
+    @Test
+    void platformRevenueIsLabelledInUsDollars() {
+        LocalDate from = LocalDate.of(2026, 9, 1);
+        LocalDate to = LocalDate.of(2026, 9, 30);
+        when(adminKnowledge.platformTotals(from, to))
+                .thenReturn(new PlatformTotalsRow(10, 0, 4, 4, 10, new BigDecimal("17.00")));
+        when(adminKnowledge.marketActivity(from, to))
+                .thenReturn(
+                        List.of(
+                                new MarketActivityRow(
+                                        "Chợ Bà Chiểu", 6, new BigDecimal("9.40"), 2)));
+
+        ToolOutcome out =
+                tools.run(
+                        ADMIN,
+                        AssistantTools.PLATFORM_STATS,
+                        Map.of("from_date", "2026-09-01", "to_date", "2026-09-30"));
+
+        assertThat(out.content())
+                .contains("\"completed_revenue_usd\":17.00")
+                .contains("\"completed_revenue_usd\":9.40")
+                .doesNotContainIgnoringCase("vnd");
+    }
+
+    @Test
+    void theCartIsLabelledInUsDollars() {
+        AssistantContext withCart =
+                new AssistantContext(
+                        AssistantAudience.CUSTOMER,
+                        7L,
+                        null,
+                        List.of(new PageContext.CartLine(1L, 2)));
+        when(orders.preview(eq(7L), any()))
+                .thenReturn(
+                        List.of(
+                                new OrderGroupPreviewResource(
+                                        4L,
+                                        "Vườn Út Hiền",
+                                        1L,
+                                        "Chợ Bà Chiểu",
+                                        12,
+                                        List.of(
+                                                new PreviewItemResource(
+                                                        1L,
+                                                        "Rau muống",
+                                                        "bunch",
+                                                        new BigDecimal("0.50"),
+                                                        2,
+                                                        new BigDecimal("1.00"),
+                                                        25,
+                                                        "available")),
+                                        new BigDecimal("1.00"),
+                                        List.of(),
+                                        List.of())));
+
+        ToolOutcome out = tools.run(withCart, AssistantTools.CART_PREVIEW, Map.of());
+
+        assertThat(out.content())
+                .contains("\"subtotal_usd\":1.00")
+                .contains("\"price_usd\":0.50")
+                .contains("\"total_usd\":1.00")
+                .doesNotContainIgnoringCase("vnd");
     }
 
     // ------------------------------------------- FR-094 the feedback inbox is quoted, not obeyed

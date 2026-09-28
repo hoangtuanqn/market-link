@@ -7,7 +7,7 @@ COMPOSE_PROD := docker compose -p market-link-prod --env-file .env.production -f
 
 .DEFAULT_GOAL := help
 .PHONY: help vapid-keys check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
-        format lint be-format be-test fe-install seed mysql redis clean submission
+        format lint be-format be-test fe-install seed seed-images mysql redis clean submission
 
 help: ## Show the command list
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n",$$1,$$2}'
@@ -89,9 +89,14 @@ be-test: ## Run backend tests in the container
 fe-install: ## Reinstall frontend packages in the container (after changing package.json)
 	$(COMPOSE) exec frontend npm install
 
-seed: ## Load the demo data db/seed.sql (FR-100…102) — safe to run repeatedly
+seed: seed-images ## Load the demo data db/seed.sql (FR-100…102) — safe to run repeatedly
 	$(COMPOSE) exec -T mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"' < db/seed.sql
 	@echo "Seed xong."
+
+seed-images: ## Copy demo photos from db/seed-images/ into the uploads volume (see db/seed-images/PROMPTS.md)
+	@mkdir -p backend/uploads/product-images backend/uploads/market-images
+	@cp db/seed-images/products/*.jpg backend/uploads/product-images/ 2>/dev/null || true
+	@cp db/seed-images/markets/*.jpg backend/uploads/market-images/ 2>/dev/null || true
 
 mysql: ## Open a MySQL shell
 	$(COMPOSE) exec mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"'

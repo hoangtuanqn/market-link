@@ -6,6 +6,7 @@
   "caption": "{{count}} feedback messages",
   "filterLabel": "의견 거르기",
   "filter": {
+    "all": "전체",
     "new": "New",
     "reviewed": "Reviewed",
     "resolved": "Resolved",

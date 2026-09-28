@@ -1,0 +1,43 @@
+{
+  "title": "Prüfen Sie Ihre E-Mails",
+  "sentTo": "Wir haben einen 6-stelligen Code an <b>{{email}}</b> geschickt. Geben Sie ihn hier ein, um Ihr Konto fertig anzulegen.",
+  "codeLabel": "6-stelliger Code",
+  "expiresIn": "Der Code läuft in {{time}} ab.",
+  "expired": "Dieser Code ist abgelaufen. Fordern Sie einen neuen an.",
+  "submit": "Bestätigen und Konto anlegen",
+  "submitting": "Code wird geprüft…",
+  "enterAll": "Geben Sie alle 6 Ziffern ein, um fortzufahren.",
+  "help": "Nach einer Minute noch nichts da? Sehen Sie im Spam nach oder fordern Sie einen neuen Code an.",
+  "resend": "Neuen Code senden",
+  "resendIn_one": "Neuer Code in {{count}} Sekunde",
+  "resendIn_other": "Neuer Code in {{count}} Sekunden",
+  "resending": "Wird gesendet…",
+  "resendReady": "Sie können jetzt einen neuen Code anfordern.",
+  "changeEmail": "Falsche E-Mail? Ändern",
+  "fillAgain": "Formular neu ausfüllen",
+  "haveAccount": "Ich habe schon ein Konto",
+  "wrong": {
+    "title": "Der Code stimmt nicht",
+    "text_one": "Prüfen Sie die E-Mail und versuchen Sie es noch einmal. Sie haben noch {{count}} Versuch.",
+    "text_other": "Prüfen Sie die E-Mail und versuchen Sie es noch einmal. Sie haben noch {{count}} Versuche."
+  },
+  "usedUp": {
+    "title": "Dieser Code kann nicht mehr verwendet werden",
+    "text": "Fordern Sie einen neuen Code an und geben Sie den aus der neuesten E-Mail ein."
+  },
+  "signupExpired": {
+    "title": "Ihre Registrierung ist abgelaufen",
+    "text": "Eine unvollständige Registrierung bewahren wir 30 Minuten auf. Füllen Sie das Formular neu aus, um einen neuen Code zu bekommen."
+  },
+  "duplicate": {
+    "title": "Diese E-Mail oder Telefonnummer ist vergeben",
+    "text": "Jemand hat die Registrierung damit zuerst abgeschlossen. Gehen Sie zurück und verwenden Sie eine andere."
+  },
+  "toast": {
+    "created": "Konto angelegt.",
+    "resent": "Wir haben einen neuen Code geschickt.",
+    "tooMany_one": "Zu viele Codes angefordert. Versuchen Sie es in {{count}} Minute noch einmal.",
+    "tooMany_other": "Zu viele Codes angefordert. Versuchen Sie es in {{count}} Minuten noch einmal.",
+    "failed": "Der Code konnte nicht geprüft werden. Bitte versuchen Sie es noch einmal."
+  }
+}

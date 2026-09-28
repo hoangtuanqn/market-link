@@ -47,6 +47,8 @@ public class ModerationService implements ModerationServiceInterface {
 
     static final String IMAGE_PREVIEW = "Photo";
 
+    static final String VIDEO_PREVIEW = "Video";
+
     static final String UNKNOWN_USER = "Unknown user";
 
     /** Spec §8.3: "at most 5 messages immediately before and 5 immediately after". */
@@ -172,6 +174,7 @@ public class ModerationService implements ModerationServiceInterface {
      */
     private ModeratedMessageResource toModerated(Message m, boolean isCentre) {
         boolean photo = m.getKind() == MessageKind.IMAGE;
+        boolean video = m.getKind() == MessageKind.VIDEO;
         boolean reported = isCentre || reports.existsByMessageId(m.getId());
         return new ModeratedMessageResource(
                 m.getId(),
@@ -180,7 +183,8 @@ public class ModerationService implements ModerationServiceInterface {
                 m.getKind(),
                 m.getBody(),
                 photo,
-                photo && reported ? attachmentIdOf(m.getId()) : null,
+                video,
+                (photo || video) && reported ? attachmentIdOf(m.getId()) : null,
                 reported,
                 m.isHidden(),
                 m.getCreatedAt());
@@ -223,6 +227,9 @@ public class ModerationService implements ModerationServiceInterface {
         }
         if (message.getKind() == MessageKind.IMAGE) {
             return IMAGE_PREVIEW;
+        }
+        if (message.getKind() == MessageKind.VIDEO) {
+            return VIDEO_PREVIEW;
         }
         String body = message.getBody() == null ? "" : message.getBody();
         return body.length() <= PREVIEW_LENGTH ? body : body.substring(0, PREVIEW_LENGTH);

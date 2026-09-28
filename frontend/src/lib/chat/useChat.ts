@@ -327,12 +327,14 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     [conversationId],
   );
 
-  const sendPhoto = useCallback(
-    async (file: File) => {
+  /** FR-115: the message kind follows the type the server read from the file, not the file name. */
+  const sendMedia = useCallback(
+    async (file: File, options: { onProgress?: (percent: number) => void; signal?: AbortSignal } = {}) => {
       if (conversationId === null) return;
       const id = conversationId;
-      const uploaded = await ConversationApi.uploadPhoto(file);
-      const response = await ConversationApi.send(id, { kind: 'image', attachmentId: uploaded.data.attachmentId });
+      const uploaded = await ConversationApi.uploadMedia(file, options);
+      const kind = uploaded.data.mime.startsWith('video/') ? 'video' : 'image';
+      const response = await ConversationApi.send(id, { kind, attachmentId: uploaded.data.attachmentId });
       if (openRef.current === id) setMessages((current) => mergeMessage(current, response.data));
     },
     [conversationId],
@@ -363,7 +365,7 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     loadOlder,
     olderError,
     send,
-    sendPhoto,
+    sendMedia,
     typing,
     otherTyping,
     otherReadAt,

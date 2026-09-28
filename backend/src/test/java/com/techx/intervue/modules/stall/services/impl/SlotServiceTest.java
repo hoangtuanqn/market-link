@@ -359,4 +359,55 @@ class SlotServiceTest {
                 .isInstanceOf(FarmerProfileNotFoundException.class);
         verify(queryRepository, never()).publicSlots(anyLong(), any(), any(), any(), any());
     }
+
+    @Test
+    void farmerSlotsReturnsBothActiveAndInactiveSlots() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID))
+                .thenReturn(Optional.of(link(FARMER_ID, true)));
+
+        PickupSlot activeSlot = new PickupSlot();
+        activeSlot.setId(101L);
+        activeSlot.setFarmerMarketId(FARMER_MARKET_ID);
+        activeSlot.setSlotDate(TODAY);
+        activeSlot.setStartTime(LocalTime.of(7, 0));
+        activeSlot.setEndTime(LocalTime.of(8, 0));
+        activeSlot.setMaxOrders(5);
+        activeSlot.setBookedCount(1);
+        activeSlot.setActive(true);
+
+        PickupSlot inactiveSlot = new PickupSlot();
+        inactiveSlot.setId(102L);
+        inactiveSlot.setFarmerMarketId(FARMER_MARKET_ID);
+        inactiveSlot.setSlotDate(TODAY);
+        inactiveSlot.setStartTime(LocalTime.of(8, 0));
+        inactiveSlot.setEndTime(LocalTime.of(9, 0));
+        inactiveSlot.setMaxOrders(5);
+        inactiveSlot.setBookedCount(0);
+        inactiveSlot.setActive(false);
+
+        when(slotRepository.findByFarmerMarketIdAndSlotDateBetween(FARMER_MARKET_ID, TODAY, TODAY))
+                .thenReturn(List.of(activeSlot, inactiveSlot));
+
+        List<SlotResource> result = service.farmerSlots(USER_ID, FARMER_MARKET_ID, TODAY);
+
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).slotId()).isEqualTo(101L);
+        assertThat(result.get(0).isActive()).isTrue();
+        assertThat(result.get(1).slotId()).isEqualTo(102L);
+        assertThat(result.get(1).isActive()).isFalse();
+    }
+
+    @Test
+    void farmerSlotsRejectsNonOwnedMarket() {
+        FarmerMarket otherMarket = link(999L, true);
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID))
+                .thenReturn(Optional.of(otherMarket));
+
+        assertThatThrownBy(() -> service.farmerSlots(USER_ID, FARMER_MARKET_ID, TODAY))
+                .isInstanceOf(FarmerMarketNotYoursException.class);
+    }
 }

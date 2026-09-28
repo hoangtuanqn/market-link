@@ -51,6 +51,12 @@
     "intent": "의도: {{intent}}",
     "photoUnavailable": "이 사진을 볼 수 없습니다.",
     "photoFrom": "{{name}} 님의 사진",
+    "videoFrom": "{{name}}님이 보낸 동영상",
+    "playVideo": "동영상 재생",
+    "loadingVideo": "동영상 불러오는 중…",
+    "videoUnavailable": "이 동영상은 볼 수 없습니다.",
+    "videoCantPlay": "이 브라우저에서는 이 동영상을 재생할 수 없습니다.",
+    "downloadVideo": "동영상 다운로드",
     "seen": "읽음",
     "loadingThreads": "대화를 불러오는 중…",
     "threadsErrorTitle": "대화 목록을 불러오지 못했습니다",
@@ -61,8 +67,8 @@
     "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "읽지 않은 메시지 {{count}}개",
     "sendFailed": "메시지를 보내지 못했습니다. 다시 시도하세요.",
-    "photoFailed": "사진을 보내지 못했습니다. 5 MB 이하의 JPEG, PNG, WebP를 선택하세요.",
-    "attachPhoto": "사진 추가",
+    "mediaFailed": "파일을 보내지 못했습니다. 50MB 미만의 사진이나 동영상을 선택하세요.",
+    "attachMedia": "사진 또는 동영상 추가",
     "draftLabel": "메시지 입력",
     "draftPlaceholder": "메시지 입력",
     "send": "보내기",
@@ -90,8 +96,14 @@
     "unpin": "빼기",
     "productGone": "더 이상 판매하지 않는 상품입니다.",
     "tooFast": "너무 빨리 보내고 있습니다. 잠시 후 다시 시도하세요.",
-    "photoTooBig": "사진이 5 MB를 넘습니다. 더 작은 사진을 선택하세요.",
-    "photoType": "JPEG, PNG, WebP 사진을 선택하세요.",
+    "mediaTooBig": "파일이 50MB를 넘습니다. 더 작은 파일을 선택하세요.",
+    "mediaTooBigForServer": "파일이 서버가 현재 허용하는 크기보다 큽니다. 더 작은 파일을 선택하세요.",
+    "mediaType": "사진(JPEG, PNG, WebP, GIF, AVIF, HEIC) 또는 동영상(MP4, MOV, WebM)을 선택하세요.",
+    "converting": "사진 변환 중…",
+    "convertFailed": "이 사진을 변환할 수 없습니다. JPEG로 저장한 뒤 다시 시도하세요.",
+    "uploading": "보내는 중… {{percent}}%",
+    "uploadProgress": "업로드 진행률",
+    "cancelUpload": "취소",
     "moreThreads": "대화 더 불러오기",
     "reportTitle": "이 메시지 신고",
     "reportWhy": "신고하는 이유가 무엇인가요?",
@@ -539,7 +551,8 @@
     "result": {
       "product": "상품",
       "market": "시장",
-      "farmer": "가판대"
+      "farmer": "가판대",
+      "order": "주문"
     },
     "suggest": {
       "find": "이번 주말 토마토는 어디서 살 수 있나요?",
@@ -762,6 +775,28 @@
     "text": "로그인 상태 유지와 장바구니 작동을 위한 필수 쿠키만 사용해요. 광고나 분석용 쿠키는 없어요. <a>개인정보 처리방침</a>.",
     "decline": "거부",
     "accept": "동의"
+  },
+  "banDuration": {
+    "label": "기간",
+    "permanent": "영구",
+    "temporary": "일시적",
+    "days_one": "{{count}}일",
+    "days_other": "{{count}}일",
+    "specificTime": "또는 정확한 종료 시각 선택"
+  },
+  "accountDeactivated": {
+    "title": "계정이 정지되었습니다",
+    "generic": "관리자가 이 계정을 정지하여 로그아웃되었습니다.",
+    "whatNow": "방문자로 시장과 농산물을 둘러볼 수는 있지만, 이 기간에는 로그인하거나 주문할 수 없습니다.",
+    "contactIntro": "착오라고 생각되시면 다음으로 연락 주세요:",
+    "acknowledge": "확인했습니다"
+  },
+  "stallSuspended": {
+    "title": "매대가 정지되었습니다",
+    "generic": "관리자가 이 매대를 정지하여 현재 고객에게 보이지 않습니다.",
+    "whatNow": "고객이 이미 주문한 건은 끝까지 처리해 주세요. 정지가 해제될 때까지 상품 등록, 재고 변경, 신규 주문 접수는 할 수 없습니다.",
+    "contactIntro": "착오라고 생각되시면 다음으로 연락 주세요:",
+    "acknowledge": "확인했습니다"
   },
   "storageMode": {
     "room": "실온",

@@ -73,6 +73,7 @@
     "emptyTitle": "没有被举报的消息",
     "emptyText": "顾客或摊位举报消息后，它会在这里等你处理。",
     "photo": "照片",
+    "video": "视频",
     "reason": {
       "spam": "垃圾信息或广告",
       "abuse": "粗鲁或辱骂",

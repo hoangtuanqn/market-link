@@ -21,6 +21,10 @@ export const CUSTOMER_NAV: NavItem[] = [
   { label: 'favorites', to: '/favorites' },
 ];
 
+/** FR-001 / FR-009: the sign-up form and the screen that takes the emailed code. */
+export const REGISTER_PATH = '/register/customer';
+export const VERIFY_EMAIL_PATH = '/register/verify';
+
 /** FR-004: the admin area is separate from the Customer/Farmer layout. */
 export const ADMIN_LOGIN_PATH = '/admin/login';
 export const ADMIN_HOME_PATH = '/admin';

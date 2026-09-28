@@ -51,6 +51,12 @@
     "intent": "Maksud: {{intent}}",
     "photoUnavailable": "Foto ini tidak tersedia.",
     "photoFrom": "Foto dari {{name}}",
+    "videoFrom": "Video dari {{name}}",
+    "playVideo": "Putar video",
+    "loadingVideo": "Memuat video…",
+    "videoUnavailable": "Video ini tidak tersedia.",
+    "videoCantPlay": "Browser ini tidak dapat memutar video ini.",
+    "downloadVideo": "Unduh video",
     "seen": "Dilihat",
     "loadingThreads": "Memuat percakapan…",
     "threadsErrorTitle": "Percakapan Anda tidak dapat dimuat",
@@ -61,8 +67,8 @@
     "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} pesan belum dibaca",
     "sendFailed": "Pesan Anda tidak terkirim. Coba lagi.",
-    "photoFailed": "Foto tidak terkirim. Pilih JPEG, PNG, atau WebP di bawah 5 MB.",
-    "attachPhoto": "Tambah foto",
+    "mediaFailed": "File tidak terkirim. Pilih foto atau video di bawah 50 MB.",
+    "attachMedia": "Tambahkan foto atau video",
     "draftLabel": "Tulis pesan",
     "draftPlaceholder": "Tulis pesan",
     "send": "Kirim",
@@ -90,8 +96,14 @@
     "unpin": "Hapus",
     "productGone": "Produk ini sudah tidak dijual.",
     "tooFast": "Anda mengirim terlalu cepat. Tunggu sebentar lalu coba lagi.",
-    "photoTooBig": "Foto lebih dari 5 MB. Pilih foto yang lebih kecil.",
-    "photoType": "Pilih foto JPEG, PNG, atau WebP.",
+    "mediaTooBig": "File itu lebih dari 50 MB. Pilih yang lebih kecil.",
+    "mediaTooBigForServer": "File itu lebih besar dari yang diterima server saat ini. Pilih yang lebih kecil.",
+    "mediaType": "Pilih foto (JPEG, PNG, WebP, GIF, AVIF, atau HEIC) atau video (MP4, MOV, atau WebM).",
+    "converting": "Mengonversi foto…",
+    "convertFailed": "Foto ini tidak dapat dikonversi. Simpan sebagai JPEG lalu coba lagi.",
+    "uploading": "Mengirim… {{percent}}%",
+    "uploadProgress": "Progres unggahan",
+    "cancelUpload": "Batal",
     "moreThreads": "Muat percakapan lainnya",
     "reportTitle": "Laporkan pesan ini",
     "reportWhy": "Mengapa Anda melaporkannya?",
@@ -539,7 +551,8 @@
     "result": {
       "product": "Produk",
       "market": "Pasar",
-      "farmer": "Lapak"
+      "farmer": "Lapak",
+      "order": "Pesanan"
     },
     "suggest": {
       "find": "Di mana beli tomat akhir pekan ini?",
@@ -762,6 +775,28 @@
     "text": "Kami hanya menggunakan cookie esensial agar Anda tetap masuk dan keranjang belanja berfungsi. Tidak ada cookie iklan atau analitik. <a>Kebijakan privasi</a>.",
     "decline": "Tolak",
     "accept": "Terima"
+  },
+  "banDuration": {
+    "label": "Durasi",
+    "permanent": "Permanen",
+    "temporary": "Sementara",
+    "days_one": "{{count}} hari",
+    "days_other": "{{count}} hari",
+    "specificTime": "Atau pilih waktu berakhir yang pasti"
+  },
+  "accountDeactivated": {
+    "title": "Akun Anda telah dinonaktifkan",
+    "generic": "Administrator telah menonaktifkan akun ini, sehingga Anda telah keluar.",
+    "whatNow": "Anda tetap bisa menjelajahi pasar dan produk sebagai pengunjung, tetapi tidak bisa masuk atau memesan selama masa ini.",
+    "contactIntro": "Jika Anda merasa ini keliru, hubungi kami di",
+    "acknowledge": "Saya mengerti"
+  },
+  "stallSuspended": {
+    "title": "Lapak Anda ditangguhkan",
+    "generic": "Administrator telah menangguhkan lapak ini, sehingga saat ini tidak terlihat oleh pelanggan.",
+    "whatNow": "Pesanan yang sudah dibuat pelanggan tetap harus diselesaikan — mohon selesaikan pesanan tersebut. Anda tidak dapat menambahkan produk, mengubah stok, atau menerima pesanan baru sampai penangguhan dicabut.",
+    "contactIntro": "Jika Anda merasa ini keliru, hubungi kami di",
+    "acknowledge": "Saya mengerti"
   },
   "storageMode": {
     "room": "Suhu ruang",

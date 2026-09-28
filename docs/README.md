@@ -24,11 +24,12 @@ Every document in the repository, grouped by what you want to do. Language: **EN
 
 | Document | Lang | What it covers |
 |---|---|---|
-| [`decisions.md`](decisions.md) | VI | Product decisions D-01…D-13: one order per farmer, stock reservation, order lifecycle, cutoff, pickup slots… |
+| [`decisions.md`](decisions.md) | VI | Product decisions D-01…D-14: one order per farmer, stock reservation, order lifecycle, cutoff, pickup slots, email verification at sign-up… |
 | [`api-contract.md`](api-contract.md) | VI | Every REST and realtime endpoint: path, request, response, error codes |
 | [`../db/`](../db/README.md) | EN | Target schema, dump of the live tables, demo seed data |
 | [`MarketLink-Farmer-Profile-and-Approval.md`](MarketLink-Farmer-Profile-and-Approval.md) | VI | Backend design: farmer profile, application and approval |
 | [`MarketLink-Product-and-Category.md`](MarketLink-Product-and-Category.md) | VI | Backend design: products, categories, images, moderation |
+| [`market-removal-gaps.md`](market-removal-gaps.md) | VI | Kiểm tra 29/09/2026: xoá Market (FR-073) còn thiếu gì — lỗ cho đặt đơn ở chợ đã xoá, sạp không được báo, giỏ hàng chết lặng; việc tồn đọng, chưa sửa |
 | [`chatbot-design.md`](chatbot-design.md) | VI | Shopping assistant (FR-090…092): Claude with read-only tools for signed-in users, keyword engine as fallback — never LLM-written SQL |
 | [`proposals/`](proposals) | EN | API proposals waiting for the contract: profile photo, user settings |
 

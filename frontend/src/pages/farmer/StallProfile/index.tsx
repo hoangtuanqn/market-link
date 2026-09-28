@@ -146,14 +146,12 @@ const FarmerStallProfilePage = () => {
         const base = settingsFrom(sm, marketById(sm.marketId));
         let id = sm.farmerMarketId;
         if (s.code !== base.code || s.lat !== base.lat || s.lng !== base.lng) {
-          await StallApi.leaveMarket(id);
-          const rejoined = await StallApi.joinMarket({
-            marketId: sm.marketId,
+          const updatedMarket = await StallApi.updateMarket(id, {
             stallCode: s.code.trim() || undefined,
             stallLatitude: s.lat,
             stallLongitude: s.lng,
           });
-          id = rejoined.farmerMarketId;
+          id = updatedMarket.farmerMarketId;
         }
         updated.push(
           await StallApi.setDays(

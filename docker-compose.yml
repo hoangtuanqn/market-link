@@ -99,9 +99,9 @@ services:
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:${FRONTEND_PORT:-3000}}
       TZ: ${TZ:-Asia/Ho_Chi_Minh}
       STORAGE_DIR: /app/uploads
-      # FR-115: chat images live separate from /app/uploads (that directory is served publicly through /uploads)
+      # FR-115: chat photos and videos live separate from /app/uploads (that directory is served publicly through /uploads)
       CHAT_UPLOAD_DIR: ${CHAT_UPLOAD_DIR:-/var/lib/marketlink/chat}
-      CHAT_MAX_UPLOAD_BYTES: ${CHAT_MAX_UPLOAD_BYTES:-5242880}
+      CHAT_MAX_UPLOAD_BYTES: ${CHAT_MAX_UPLOAD_BYTES:-52428800}
       CHAT_MESSAGES_PER_MINUTE: ${CHAT_MESSAGES_PER_MINUTE:-30}
       CHAT_IMAGES_PER_HOUR: ${CHAT_IMAGES_PER_HOUR:-10}
       CHAT_CONVERSATIONS_PER_HOUR: ${CHAT_CONVERSATIONS_PER_HOUR:-20}
@@ -112,6 +112,11 @@ services:
       CHATBOT_AI_MESSAGES_PER_HOUR: ${CHATBOT_AI_MESSAGES_PER_HOUR:-30}
       CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR: ${CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR:-60}
       CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY: ${CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY:-1500}
+      # FR-009 / FR-007: SMTP for the sign-up code and password emails; empty user → mails go to the log
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
     ports:
       - "${BACKEND_PORT:-8080}:8080"
       - "${BACKEND_DEBUG_PORT:-5005}:5005" # remote debug (IntelliJ / VS Code attach)
