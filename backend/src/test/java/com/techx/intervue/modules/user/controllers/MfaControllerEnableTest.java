@@ -33,6 +33,7 @@ class MfaControllerEnableTest {
         UserServiceInterface userService = mock(UserServiceInterface.class);
         AuthConfig authConfig = mock(AuthConfig.class);
         when(authConfig.getRefreshTokenTTLDays()).thenReturn(14);
+        when(authConfig.isCookieSecure()).thenReturn(true);
         when(mfaService.enable(1L, "123456")).thenReturn(List.of("aaaa-bbbb-cccc"));
         UserResource admin = UserResource.builder().id(1L).role(RoleType.ADMIN).build();
         when(userService.restartSession(1L))
@@ -50,6 +51,7 @@ class MfaControllerEnableTest {
         assertThat(response.getBody().getData().accessToken()).isEqualTo("new-access");
         assertThat(response.getHeaders().getFirst(HttpHeaders.SET_COOKIE))
                 .contains("refresh_token=new-refresh")
+                .contains("Secure")
                 .doesNotContain("Max-Age");
     }
 }

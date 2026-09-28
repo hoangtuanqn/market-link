@@ -70,7 +70,8 @@ public class MfaController extends BaseController {
                 CookieHelper.buildRefreshTokenCookie(
                         session.refreshToken(),
                         Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
-                        session.rememberMe());
+                        session.rememberMe(),
+                        authConfig.isCookieSecure());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
                 .body(
