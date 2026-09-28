@@ -82,8 +82,7 @@ services:
       args:
         VITE_API_URL: ${VITE_API_URL:?Thiếu VITE_API_URL trong .env.production}
         # Not required: left empty the map runs on OpenStreetMap tiles
-        VITE_MAP_TILE_URL: ${VITE_MAP_TILE_URL:-}
-        VITE_MAP_ATTRIBUTION: ${VITE_MAP_ATTRIBUTION:-}
+        VITE_GOOGLE_MAPS_KEY: ${VITE_GOOGLE_MAPS_KEY:-}
     image: market-link-frontend:prod
     environment: !reset [] # nginx serves the static files, the API URL is embedded at build time
     ports: !override

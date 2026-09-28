@@ -62,7 +62,7 @@
       "title": "Warum wir es speichern",
       "blocks": [
         {
-          "p": "Dein Name und deine Telefonnummer gibt es, damit der Stand weiß, wer abholt, und dich am Marktmorgen erreichen kann. Deine Adresse gibt es, um zu zeigen, wie weit ein Markt entfernt ist, und um die Route vorauszufüllen. Deine E-Mail ist dein Anmeldeweg und der Weg, auf dem du von einer Bestellung erfährst."
+          "p": "Dein Name und deine Telefonnummer gibt es, damit der Stand weiß, wer abholt, und dich am Marktmorgen erreichen kann. Deine Adresse gibt es, um zu zeigen, wie weit ein Markt entfernt ist. Deine E-Mail ist dein Anmeldeweg und der Weg, auf dem du von einer Bestellung erfährst."
         },
         {
           "p": "Bestellungen und ihren Verlauf gibt es, damit beide Seiten sehen, was vereinbart wurde und wann es sich geändert hat. Bewertungen gibt es, damit andere Käufer einen Stand einschätzen können. Favoriten gibt es, damit dir Bescheid gegeben werden kann, wenn etwas, das du wolltest, wieder da ist."
@@ -138,8 +138,8 @@
           "facts": {
             "items": [
               [
-                "OpenStreetMap",
-                "Die Kartenkacheln kommen von OpenStreetMap-Servern, die deine IP-Adresse sehen und ungefähr, welchen Teil der Karte du ansiehst. Die Kartendaten sind © OpenStreetMap-Mitwirkende. Der Routenlink öffnet OpenStreetMap in einem neuen Tab."
+                "Google Maps und OpenStreetMap",
+                "Die Kartenkacheln kommen von Google-Maps-Servern, die deine IP-Adresse sehen und ungefähr, welchen Teil der Karte du ansiehst. Ist Google Maps nicht verfügbar, kommen sie von OpenStreetMap-Servern, die dasselbe sehen. Die Kartendaten sind © Google oder © OpenStreetMap-Mitwirkende. Der Routenlink öffnet Google Maps in einem neuen Tab, wo die Datenschutzerklärung von Google gilt."
               ],
               [
                 "Google Fonts",

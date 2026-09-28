@@ -15,7 +15,7 @@
     "close": "Đóng cửa",
     "lat": "Vĩ độ",
     "lng": "Kinh độ",
-    "lngHint": "Hoặc kéo ghim trên bản đồ. Dữ liệu bản đồ lấy từ OpenStreetMap.",
+    "lngHint": "Hoặc kéo ghim trên bản đồ.",
     "notes": "Ghi chú cho các sạp",
     "images": "Ảnh"
   },

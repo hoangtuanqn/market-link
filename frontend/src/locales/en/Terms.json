@@ -45,7 +45,7 @@
           "p": "One account may be shared at home. MarketLink does not tell people apart inside a single account, so anything done with your sign-in counts as done by you. Keep your password to yourself and tell us if you think someone else has it."
         },
         {
-          "p": "The address you give is used to show distances to markets and to pre-fill directions. Your phone number is given to the stall you order from, so they can reach you on market morning."
+          "p": "The address you give is used to show distances to markets. Your phone number is given to the stall you order from, so they can reach you on market morning."
         }
       ]
     },
@@ -155,7 +155,7 @@
       "title": "Maps and other sources",
       "blocks": [
         {
-          "p": "Market and stall locations are drawn on OpenStreetMap. Map data is © OpenStreetMap contributors, and the directions link opens OpenStreetMap in a new tab. A pin is placed by the market or the stall and is as accurate as they made it."
+          "p": "Market and stall locations are drawn on Google Maps, or on OpenStreetMap when Google Maps is not available. Map data is © Google or © OpenStreetMap contributors, and the directions link opens Google Maps in a new tab. A pin is placed by the market or the stall and is as accurate as they made it."
         },
         {
           "p": "Product photos belong to the stall that uploaded them. Photos used on the platform's own pages are credited in the project ReadMe."

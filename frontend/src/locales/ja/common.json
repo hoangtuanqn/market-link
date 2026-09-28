@@ -393,21 +393,7 @@
     "finding": "現在地を取得中…"
   },
   "directions": {
-    "title": "{{name}} への経路",
-    "question": "どこから出発しますか？",
-    "current": "現在地",
-    "currentShared": "共有済み",
-    "currentAsk": "最初にブラウザが確認します",
-    "address": "住所",
-    "addressNote": "ホーチミン市内の通りや目印。",
-    "addressLabel": "出発地の住所",
-    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
-    "addressHint": "通り名と坊（区）を入れるのが確実です。地図には番地がないことが多く、見つからないときは OpenStreetMap が場所を選ぶよう求めます。",
-    "useSaved": "保存した住所を使う",
-    "none": "地図上で入力する",
-    "noneNote": "目的地だけを入力した状態で OpenStreetMap を開きます。",
-    "privacy": "経路は新しいタブの openstreetmap.org で開きます。MarketLink はあなたの居場所を追跡しません。",
-    "open": "経路を開く"
+    "title": "{{name}} への経路"
   },
   "tier": {
     "bronze": "ブロンズ",
@@ -585,7 +571,7 @@
       },
       "customerMap": {
         "title": "市場マップ",
-        "body": "近くの市場を探し、OpenStreetMap で道順を確認できます。"
+        "body": "近くの市場を探し、Google マップ で道順を確認できます。"
       },
       "customerSearch": {
         "title": "検索",

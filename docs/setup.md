@@ -8,7 +8,8 @@ enable Web Push, or when something fails.
 [Option B — on your machine](#3-option-b--run-the-backend-and-frontend-on-your-machine) ·
 [Useful commands](#4-useful-commands) · [Web Push](#5-web-push-notifications-after-the-tab-is-closed) ·
 [Shopping assistant](#6-shopping-assistant-answered-by-claude) · [Email](#7-email-smtp--sign-up-codes-and-password-reset) ·
-[Chat check](#8-chat--manual-two-browser-check-fr-111-fr-115-fr-116) · [Troubleshooting](#9-troubleshooting)
+[Google Maps](#8-google-maps-map-tiles) · [Chat check](#9-chat--manual-two-browser-check-fr-111-fr-115-fr-116) ·
+[Troubleshooting](#10-troubleshooting)
 
 ## 1. Prerequisites
 
@@ -357,7 +358,44 @@ docker logs -f intervue-backend 2>&1 | grep -A14 'Mail is not configured'
 The code is on its own line under "Your code". Limits (spec §5): one code a minute, 5 per address and 20 per IP an
 hour, 5 wrong tries per code, 10 minutes per code.
 
-## 8. Chat — manual two-browser check (FR-111, FR-115, FR-116)
+## 8. Google Maps (map tiles)
+
+With a key the maps draw Google Maps tiles (Map Tiles API); without one they draw OpenStreetMap, and the app works the
+same (`docs/decisions.md` D-12). The **Directions** buttons open Google Maps either way: that is a plain link and
+needs no key.
+
+The Map Tiles API needs a billing account, and Google counts every tile: a map view loads a few dozen, and each pan
+or zoom loads more. The first **100,000 tiles a month are free**. Step 4 caps the daily tiles so a demo account stays
+inside that allowance.
+
+1. In the [Google Cloud console](https://console.cloud.google.com), create a project and link a billing account to
+   it (Billing → Link a billing account).
+2. APIs & Services → Library → **Map Tiles API** → Enable.
+3. APIs & Services → Credentials → Create credentials → **API key**, then edit the key:
+   - *Application restrictions* → Websites: `http://localhost:3000/*`, plus your demo domain if there is one
+     (`https://<domain>/*`).
+   - *API restrictions* → Restrict key → **Map Tiles API** only.
+
+   The key ships inside the JavaScript bundle, so anyone can read it; these two restrictions are what protect it.
+4. Keep it free: APIs & Services → Enabled APIs & services → Map Tiles API → **Quotas & System Limits**, select
+   **2D Tiles requests per day** → Edit quota → `3000` (3,000 × 31 days stays under 100,000). Also add a budget alert
+   under Billing → Budgets & alerts.
+   When the daily cap runs out, the map switches to OpenStreetMap by itself until the next day.
+5. Put the key in `.env` (production: `.env.production`) and run `make up` again:
+
+   ```env
+   VITE_GOOGLE_MAPS_KEY=<your-key>
+   ```
+
+   Running the frontend with `npm run dev` (option B)? Put the same line in `frontend/.env.development.local` and
+   restart it. Under Docker that file is ignored for this key: the container always gets the value from `.env`.
+6. Open `/map`: the tiles are Google's, the Google Maps logo sits bottom left and "Map data ©… Google" bottom right.
+
+Still OpenStreetMap? The browser console says why (`Google Maps tiles are unavailable…`). `HTTP 400` from
+`createSession` means the key itself is wrong (a typo, or a deleted key). `HTTP 403` means the Map Tiles API is not
+enabled, billing is not linked, or the page's address is not in the key's website list.
+
+## 9. Chat — manual two-browser check (FR-111, FR-115, FR-116)
 
 Spec §13 asks for the realtime path to be checked by hand, because unit tests mock the broker.
 Run this once before a demo.
@@ -378,7 +416,7 @@ Run this once before a demo.
 8. Still as admin, open the photo URL of the **reported** message → **200**. Open the photo URL of a
    **neighbouring** message → **403**.
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 
 | Error | Cause | Fix |
 |---|---|---|

@@ -393,21 +393,7 @@
     "finding": "위치 찾는 중…"
   },
   "directions": {
-    "title": "{{name}}까지 길찾기",
-    "question": "어디에서 출발하나요?",
-    "current": "내 현재 위치",
-    "currentShared": "이미 공유함",
-    "currentAsk": "브라우저가 먼저 물어봅니다",
-    "address": "주소",
-    "addressNote": "호찌민시의 거리나 랜드마크.",
-    "addressLabel": "출발 주소",
-    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
-    "addressHint": "거리와 방(동)을 입력하는 것이 가장 좋습니다. 지도에 번지가 없는 경우가 많고, 찾지 못하면 OpenStreetMap이 장소를 고르라고 합니다.",
-    "useSaved": "저장된 주소 사용",
-    "none": "지도에서 직접 입력할게요",
-    "noneNote": "목적지만 채운 상태로 OpenStreetMap을 엽니다.",
-    "privacy": "길찾기는 새 탭의 openstreetmap.org에서 열립니다. MarketLink는 위치를 추적하지 않습니다.",
-    "open": "길찾기 열기"
+    "title": "{{name}}까지 길찾기"
   },
   "tier": {
     "bronze": "브론즈",
@@ -585,7 +571,7 @@
       },
       "customerMap": {
         "title": "시장 지도",
-        "body": "가장 가까운 시장을 찾고 OpenStreetMap에서 길 안내를 받으세요."
+        "body": "가장 가까운 시장을 찾고 Google 지도에서 길 안내를 받으세요."
       },
       "customerSearch": {
         "title": "검색",
