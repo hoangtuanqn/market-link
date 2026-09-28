@@ -3,6 +3,7 @@ import type { StallSummaryDto } from '@/api-requests/stall.requests';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
+import Session from '@/utils/session';
 
 /** One product in the list (contract §5). The `status` value keeps snake_case like the ENUM column. */
 export type ProductDto = {
@@ -129,18 +130,24 @@ const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
   shelfLife: dto.shelfLife ?? undefined,
 });
 
+/**
+ * FR-078: these reads are public, but an admin still browses them from the admin screens while maintenance mode is on,
+ * and MaintenanceModeFilter only lets an authenticated admin through. Signed in → `privateApi` (token + refresh).
+ */
+const readApi = () => (Session.getRawUser() ? privateApi : publicApi);
+
 /** FR-020…023, FR-062, FR-064, FR-074 — products (docs/api-contract.md §5, §10). */
 class ProductApi {
   /** Public. `page` from 1, at most 50 per page; `sort` goes through a whitelist on the server. */
   static list = async (params: ProductListParams = {}) => {
-    const response = await publicApi.get<ApiResponse<PageType<ProductDto>>>('/products', { params });
+    const response = await readApi().get<ApiResponse<PageType<ProductDto>>>('/products', { params });
     const page = response.data.data;
     return { ...page, items: page.items.map((p) => toProduct(p)) };
   };
 
   /** Public. 404 `PRODUCT_NOT_FOUND` when missing, removed, hidden or the stall is not approved. */
   static get = async (id: number) => {
-    const response = await publicApi.get<ApiResponse<ProductDetailDto>>(`/products/${id}`);
+    const response = await readApi().get<ApiResponse<ProductDetailDto>>(`/products/${id}`);
     return response.data.data;
   };
 

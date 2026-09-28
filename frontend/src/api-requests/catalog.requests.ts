@@ -2,6 +2,7 @@ import type { AddressParts } from '@/types/address.types';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { ClosureHandling, ClosureType, MarketType } from '@/types/market.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
+import Session from '@/utils/session';
 import { dayName, formatDate } from '@/lib/format';
 
 /** A market exactly as contract §3 returns it: camelCase, times "HH:mm", operating days 0…6 (0 = Sunday). */
@@ -161,18 +162,24 @@ export type MarketListParams = {
   pageSize?: number;
 };
 
+/**
+ * FR-078: these reads are public, but an admin still browses them from the admin screens while maintenance mode is on,
+ * and MaintenanceModeFilter only lets an authenticated admin through. Signed in → `privateApi` (token + refresh).
+ */
+const readApi = () => (Session.getRawUser() ? privateApi : publicApi);
+
 /** FR-010, FR-012, FR-073, FR-076 — markets and categories (docs/api-contract.md §3, §5). */
 class CatalogApi {
   /** Public. At most 50 markets per page; `page` counts from 1. */
   static listMarkets = async (params: MarketListParams = {}) => {
-    const response = await publicApi.get<ApiResponse<PageType<MarketDto>>>('/markets', { params });
+    const response = await readApi().get<ApiResponse<PageType<MarketDto>>>('/markets', { params });
     const page = response.data.data;
     return { ...page, items: page.items.map(toMarket) };
   };
 
   /** Public. 404 `MARKET_NOT_FOUND` when the market does not exist or was removed. */
   static getMarket = async (id: number) => {
-    const response = await publicApi.get<ApiResponse<{ market: MarketDto; farmers: StallSummaryDto[] }>>(
+    const response = await readApi().get<ApiResponse<{ market: MarketDto; farmers: StallSummaryDto[] }>>(
       `/markets/${id}`,
     );
     return { market: toMarket(response.data.data.market), farmers: response.data.data.farmers };
