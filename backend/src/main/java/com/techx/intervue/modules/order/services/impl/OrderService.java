@@ -381,7 +381,7 @@ public class OrderService implements OrderServiceInterface {
             row.setQuantityAvailable(row.getQuantityAvailable() - qty);
             BigDecimal subtotal = row.getUnitPrice().multiply(BigDecimal.valueOf(qty));
             total = total.add(subtotal);
-            items.add(OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal));
+            items.add(OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal, group.pickupDate()));
         }
 
         Order order = new Order();

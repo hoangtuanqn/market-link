@@ -121,7 +121,8 @@ public class OrderQueryRepository {
 
     public static final String ITEMS_SQL =
             """
-            SELECT product_id, product_name, unit, unit_price, quantity, subtotal
+            SELECT product_id, product_name, unit, unit_price, quantity, subtotal,
+                   best_before, storage_mode, list_price
             FROM order_items
             WHERE order_id = :orderId
             ORDER BY id
@@ -187,14 +188,19 @@ public class OrderQueryRepository {
         return jdbc.query(
                 ITEMS_SQL,
                 new MapSqlParameterSource("orderId", orderId),
-                (rs, i) ->
-                        new OrderItemResource(
-                                rs.getLong("product_id"),
-                                rs.getString("product_name"),
-                                rs.getString("unit"),
-                                rs.getBigDecimal("unit_price"),
-                                rs.getInt("quantity"),
-                                rs.getBigDecimal("subtotal")));
+                (rs, i) -> {
+                    LocalDate bestBefore = rs.getObject("best_before", LocalDate.class);
+                    return new OrderItemResource(
+                            rs.getLong("product_id"),
+                            rs.getString("product_name"),
+                            rs.getString("unit"),
+                            rs.getBigDecimal("unit_price"),
+                            rs.getInt("quantity"),
+                            rs.getBigDecimal("subtotal"),
+                            bestBefore == null ? null : bestBefore.toString(),
+                            rs.getString("storage_mode"),
+                            rs.getBigDecimal("list_price"));
+                });
     }
 
     public List<OrderHistoryResource> history(long orderId) {
