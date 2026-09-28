@@ -29,5 +29,29 @@
     "title": "No reviews yet",
     "text": "A customer can review your stall and what they bought once their order is completed (D-10)."
   },
-  "note": "Reviews cannot be removed or edited by the stall. Reply once — it stays with the review."
+  "note": "Reviews cannot be removed or edited by the stall. Reply once — it stays with the review.",
+  "tabs": {
+    "label": "Reviews and spoiled reports",
+    "reviews": "Reviews",
+    "spoiled": "Spoiled reports"
+  },
+  "spoiled": {
+    "intro": "Customers can report produce that spoiled soon after pickup. Reply with what you know; an admin decides.",
+    "noun": "spoiled reports",
+    "emptyTitle": "No spoiled reports",
+    "emptyText": "When a customer reports produce from one of your orders, it shows here for you to reply.",
+    "line": "Order {{code}} · {{customer}}",
+    "dates": "Picked up {{pickup}} · good until {{bestBefore}} · spoiled {{spoiled}} ({{when}})",
+    "photoAlt": "The customer's photo",
+    "replyLabel": "Your reply, for the admin",
+    "replyPlaceholder": "How it was kept, what you saw when you packed it.",
+    "save": "Save reply",
+    "saved": "Reply saved.",
+    "yourReply": "Your reply: {{text}}",
+    "decisionNote": "Admin note: {{text}}",
+    "alreadyDecided": "An admin has already decided on this report.",
+    "strikesText": "A confirmed report on an extended shelf life is a strike. 3 strikes in 90 days lock longer shelf lives.",
+    "lockTitle": "Longer shelf lives are locked until {{date}}",
+    "lockText": "Until then your products can only use the suggested shelf life."
+  }
 }
