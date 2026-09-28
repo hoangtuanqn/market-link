@@ -381,7 +381,15 @@ public class OrderService implements OrderServiceInterface {
             row.setQuantityAvailable(row.getQuantityAvailable() - qty);
             BigDecimal subtotal = row.getUnitPrice().multiply(BigDecimal.valueOf(qty));
             total = total.add(subtotal);
-            items.add(OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal, group.pickupDate()));
+            OrderItem item =
+                    OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal, group.pickupDate());
+            if (row.hasDeal()) {
+                // FR-124: a deal day sells an older batch — keep the price it replaced and that
+                // batch's own last good day, earlier than a fresh batch's
+                item.setListPrice(row.getListPrice());
+                item.setBestBefore(row.getBestBefore());
+            }
+            items.add(item);
         }
 
         Order order = new Order();

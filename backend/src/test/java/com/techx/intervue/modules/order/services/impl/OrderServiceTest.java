@@ -726,6 +726,30 @@ class OrderServiceTest {
         assertThat(line.getListPrice()).isNull();
     }
 
+    /**
+     * FR-124 (spec §4.3, §4.5.5): a line bought on a deal day pays the deal price and keeps the
+     * price it replaced and that batch's own best-before, which is earlier than a fresh batch's.
+     */
+    @Test
+    void placeOnADealDayKeepsTheListPriceAndTheBatchBestBefore() {
+        products.get(RAU_MUONG).setShelfLifeDays(3);
+        dailyStock
+                .get(RAU_MUONG + "@" + PICKUP)
+                .startDeal(
+                        new BigDecimal("7200"),
+                        40,
+                        LocalDate.of(2026, 9, 26),
+                        LocalDate.of(2026, 9, 30));
+
+        service.place(CUSTOMER_ID, aValidRequest());
+
+        OrderItem line = items.getFirst();
+        assertThat(line.getUnitPrice()).isEqualByComparingTo("7200");
+        assertThat(line.getListPrice()).isEqualByComparingTo("12000");
+        assertThat(line.getBestBefore()).isEqualTo(LocalDate.of(2026, 9, 30));
+        assertThat(orders.getFirst().getTotalAmount()).isEqualByComparingTo("14400");
+    }
+
     /** D-13 — hiding the button is not a control. The admin role must be blocked on the server. */
     @Test
     void placeRefusesAnAdminAccount() {
