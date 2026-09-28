@@ -5,18 +5,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IpHelper {
-    private static final String[] HEADERS = {
-        "CF-Connecting-IP", "X-Forwarded-For", "X-Real-IP", "Proxy-Client-IP", "WL-Proxy-Client-IP"
-    };
 
+    /**
+     * The client address the per-IP limits key on (sign-up codes, forgot password, sign-in). Never
+     * read CF-Connecting-IP / X-Forwarded-For / X-Real-IP here: any client can send them, and a new
+     * value on every request walked around those limits. {@code server.forward-headers-strategy:
+     * native} makes Tomcat rewrite {@code getRemoteAddr()} from X-Forwarded-For only when the
+     * request comes from a trusted proxy ({@code server.tomcat.remoteip.internal-proxies}, private
+     * ranges by default), so the same code is right with and without a reverse proxy in front —
+     * like FeedbackController.clientKey.
+     */
     public static String getClientIp(HttpServletRequest request) {
-
-        for (String header : HEADERS) {
-            String ip = request.getHeader(header);
-            if (ip != null && !ip.isBlank() && !"unknown".equalsIgnoreCase(ip)) {
-                return ip.split(",")[0].trim();
-            }
-        }
-        return request.getRemoteAddr();
+        String address = request.getRemoteAddr();
+        return address == null || address.isBlank() ? "unknown" : address;
     }
 }
