@@ -1,13 +1,13 @@
 {
-  "title": "Sieh in dein E-Mail-Postfach",
-  "sentTo": "Wir haben einen 6-stelligen Code an <b>{{email}}</b> geschickt. Gib ihn hier ein, um dein Konto fertig anzulegen.",
+  "title": "Prüfen Sie Ihre E-Mails",
+  "sentTo": "Wir haben einen 6-stelligen Code an <b>{{email}}</b> geschickt. Geben Sie ihn hier ein, um Ihr Konto fertig anzulegen.",
   "codeLabel": "6-stelliger Code",
   "expiresIn": "Der Code läuft in {{time}} ab.",
-  "expired": "Dieser Code ist abgelaufen. Fordere einen neuen an.",
+  "expired": "Dieser Code ist abgelaufen. Fordern Sie einen neuen an.",
   "submit": "Bestätigen und Konto anlegen",
   "submitting": "Code wird geprüft…",
-  "enterAll": "Gib alle 6 Ziffern ein, um fortzufahren.",
-  "help": "Nach einer Minute noch nichts da? Sieh im Spam nach oder fordere einen neuen Code an.",
+  "enterAll": "Geben Sie alle 6 Ziffern ein, um fortzufahren.",
+  "help": "Nach einer Minute noch nichts da? Sehen Sie im Spam nach oder fordern Sie einen neuen Code an.",
   "resend": "Neuen Code senden",
   "resendIn_one": "Neuer Code in {{count}} Sekunde",
   "resendIn_other": "Neuer Code in {{count}} Sekunden",
@@ -17,26 +17,26 @@
   "haveAccount": "Ich habe schon ein Konto",
   "wrong": {
     "title": "Der Code stimmt nicht",
-    "text_one": "Prüfe die E-Mail und versuche es noch einmal. Du hast noch {{count}} Versuch.",
-    "text_other": "Prüfe die E-Mail und versuche es noch einmal. Du hast noch {{count}} Versuche."
+    "text_one": "Prüfen Sie die E-Mail und versuchen Sie es noch einmal. Sie haben noch {{count}} Versuch.",
+    "text_other": "Prüfen Sie die E-Mail und versuchen Sie es noch einmal. Sie haben noch {{count}} Versuche."
   },
   "usedUp": {
     "title": "Dieser Code kann nicht mehr verwendet werden",
-    "text": "Fordere einen neuen Code an und gib den aus der neuesten E-Mail ein."
+    "text": "Fordern Sie einen neuen Code an und geben Sie den aus der neuesten E-Mail ein."
   },
   "signupExpired": {
-    "title": "Deine Registrierung ist abgelaufen",
-    "text": "Eine unvollständige Registrierung bewahren wir 30 Minuten auf. Fülle das Formular neu aus, um einen neuen Code zu bekommen."
+    "title": "Ihre Registrierung ist abgelaufen",
+    "text": "Eine unvollständige Registrierung bewahren wir 30 Minuten auf. Füllen Sie das Formular neu aus, um einen neuen Code zu bekommen."
   },
   "duplicate": {
     "title": "Diese E-Mail oder Telefonnummer ist vergeben",
-    "text": "Jemand hat die Registrierung damit zuerst abgeschlossen. Geh zurück und nimm eine andere."
+    "text": "Jemand hat die Registrierung damit zuerst abgeschlossen. Gehen Sie zurück und verwenden Sie eine andere."
   },
   "toast": {
     "created": "Konto angelegt.",
     "resent": "Wir haben einen neuen Code geschickt.",
-    "tooMany_one": "Zu viele Codes angefordert. Versuche es in {{count}} Minute noch einmal.",
-    "tooMany_other": "Zu viele Codes angefordert. Versuche es in {{count}} Minuten noch einmal.",
-    "failed": "Der Code konnte nicht geprüft werden. Bitte versuche es noch einmal."
+    "tooMany_one": "Zu viele Codes angefordert. Versuchen Sie es in {{count}} Minute noch einmal.",
+    "tooMany_other": "Zu viele Codes angefordert. Versuchen Sie es in {{count}} Minuten noch einmal.",
+    "failed": "Der Code konnte nicht geprüft werden. Bitte versuchen Sie es noch einmal."
   }
 }

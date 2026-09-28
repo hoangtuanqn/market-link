@@ -5,7 +5,7 @@
     "fullName": "姓名",
     "phone": "手机号",
     "email": "邮箱",
-    "emailHint": "用于登录和接收订单通知。",
+    "emailHint": "用于登录和接收订单通知。我们会向它发送验证码，确认它属于你。",
     "password": "密码",
     "passwordHint": "{{min}} 至 {{max}} 个字符。",
     "confirmPassword": "再次输入密码"
@@ -19,8 +19,8 @@
   "haveAccount": "我已有账户",
   "acceptFirst": "接受条款后才能创建账户。",
   "sharedAccount": "一个账户可以全家共用；系统不会区分同一账户中的不同人。",
+  "honeypot": "此栏请留空",
   "toast": {
-    "created": "账户已创建。",
     "failed": "无法创建账户，请重试。"
   },
   "errors": {

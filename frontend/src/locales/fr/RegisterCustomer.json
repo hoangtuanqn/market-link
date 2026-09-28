@@ -5,7 +5,7 @@
     "fullName": "Nom complet",
     "phone": "Numéro de téléphone",
     "email": "E-mail",
-    "emailHint": "Pour vous connecter et recevoir les notifications de commande.",
+    "emailHint": "Pour vous connecter et recevoir les notifications de commande. Nous y envoyons un code pour confirmer qu’elle est bien à vous.",
     "password": "Mot de passe",
     "passwordHint": "De {{min}} à {{max}} caractères.",
     "confirmPassword": "Confirmer le mot de passe"
@@ -19,8 +19,8 @@
   "haveAccount": "J’ai déjà un compte",
   "acceptFirst": "Acceptez les conditions pour créer votre compte.",
   "sharedAccount": "Un compte peut être partagé en famille ; le système ne distingue pas les personnes au sein d’un compte.",
+  "honeypot": "Laissez ce champ vide",
   "toast": {
-    "created": "Compte créé.",
     "failed": "Impossible de créer votre compte. Veuillez réessayer."
   },
   "errors": {
