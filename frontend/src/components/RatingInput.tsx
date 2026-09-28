@@ -31,7 +31,7 @@ const RatingInput = ({ legend, name, value, onChange }: RatingInputProps) => {
               title={word(n)}
               onMouseEnter={() => setHover(n)}
               className={Helper.cn(
-                'grid size-10 cursor-pointer place-items-center',
+                'grid size-11 cursor-pointer place-items-center',
                 shown >= n ? 'text-brand' : 'text-line-strong',
               )}
             >

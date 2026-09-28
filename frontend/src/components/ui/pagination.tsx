@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 const pageBtn =
-  'text-ink hover:bg-surface-sunken aria-[current=page]:bg-brand aria-[current=page]:text-on-brand min-h-10 min-w-10 cursor-pointer rounded-sm bg-transparent px-2.5 font-bold disabled:cursor-not-allowed disabled:text-line-strong';
+  'text-ink hover:bg-surface-sunken aria-[current=page]:bg-brand aria-[current=page]:text-on-brand min-h-11 min-w-11 cursor-pointer rounded-sm bg-transparent px-2.5 font-bold disabled:cursor-not-allowed disabled:text-line-strong';
 
 /** Numbered page list with an ellipsis for long runs (design system `.ml-pages`). */
 export function Pagination({

@@ -12,7 +12,7 @@ const NotificationBell = ({ to }: { to: string }) => {
     <Popover
       label={unread ? t('header.notificationsUnread', { count: unread }) : t('header.notifications')}
       to={to}
-      buttonClassName="border-line-strong bg-surface-raised text-ink relative grid size-10 flex-none place-items-center rounded-sm border-[1.5px] no-underline"
+      buttonClassName="border-line-strong bg-surface-raised text-ink relative grid size-11 flex-none place-items-center rounded-sm border-[1.5px] no-underline"
       trigger={
         <>
           <BellIcon />

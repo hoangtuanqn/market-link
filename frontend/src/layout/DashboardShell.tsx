@@ -296,7 +296,7 @@ const DashboardShell = ({
             onClick={() => setMobileOpen(true)}
             aria-label={t('farmerNav.openNavigation')}
             data-tour="shell:menu"
-            className="border-line-strong bg-surface-raised text-ink grid size-10 flex-none place-items-center rounded-sm border-[1.5px] lg:hidden"
+            className="border-line-strong bg-surface-raised text-ink grid size-11 flex-none place-items-center rounded-sm border-[1.5px] lg:hidden"
           >
             <MenuIcon />
           </button>
@@ -305,7 +305,7 @@ const DashboardShell = ({
               type="button"
               onClick={() => navigate(-1)}
               aria-label={t('actions.back')}
-              className="border-line-strong bg-surface-raised text-ink hover:border-ink hidden size-10 flex-none place-items-center rounded-sm border-[1.5px] sm:grid"
+              className="border-line-strong bg-surface-raised text-ink hover:border-ink hidden size-11 flex-none place-items-center rounded-sm border-[1.5px] sm:grid"
             >
               <ChevronLeftIcon />
             </button>
@@ -343,7 +343,7 @@ const DashboardShell = ({
             <Link
               to={accountTo}
               aria-label={t('nav.yourAccount')}
-              className="bg-brand text-on-brand grid size-10 flex-none place-items-center rounded-full text-[13px] font-bold no-underline"
+              className="bg-brand text-on-brand grid size-11 flex-none place-items-center rounded-full text-[13px] font-bold no-underline"
             >
               {user.mono}
             </Link>

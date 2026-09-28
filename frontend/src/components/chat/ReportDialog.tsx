@@ -57,7 +57,7 @@ export default function ReportDialog({ messageId, onClose, onReported }: Props) 
       <fieldset className="flex flex-col gap-2 border-0 p-0">
         <legend className="text-small text-ink-muted mb-2">{t('chat.reportWhy')}</legend>
         {REASONS.map((r) => (
-          <label key={r} htmlFor={r} className="flex items-center gap-2 font-sans">
+          <label key={r} htmlFor={r} className="flex min-h-11 items-center gap-2 font-sans">
             <input
               id={r}
               type="radio"
