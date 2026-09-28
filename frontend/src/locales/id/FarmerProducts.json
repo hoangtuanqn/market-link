@@ -66,6 +66,7 @@
   "deals": {
     "title_one": "Sedang diskon ({{count}})",
     "title_other": "Sedang diskon ({{count}})",
+    "loading": "Memuat diskon Anda…",
     "col": {
       "product": "Produk",
       "day": "Hari ambil",

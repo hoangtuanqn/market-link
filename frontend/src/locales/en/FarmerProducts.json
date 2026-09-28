@@ -66,6 +66,7 @@
   "deals": {
     "title_one": "On sale ({{count}})",
     "title_other": "On sale ({{count}})",
+    "loading": "Loading your deals",
     "col": {
       "product": "Product",
       "day": "Pickup day",

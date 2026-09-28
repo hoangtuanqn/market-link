@@ -66,6 +66,7 @@
   "deals": {
     "title_one": "할인 중 ({{count}})",
     "title_other": "할인 중 ({{count}})",
+    "loading": "내 할인을 불러오는 중…",
     "col": {
       "product": "상품",
       "day": "픽업일",

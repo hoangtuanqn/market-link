@@ -66,6 +66,7 @@
   "deals": {
     "title_one": "En oferta ({{count}})",
     "title_other": "En oferta ({{count}})",
+    "loading": "Cargando tus ofertas…",
     "col": {
       "product": "Producto",
       "day": "Día de recogida",

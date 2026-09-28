@@ -66,6 +66,7 @@
   "deals": {
     "title_one": "Đang giảm giá ({{count}})",
     "title_other": "Đang giảm giá ({{count}})",
+    "loading": "Đang tải hàng đang giảm giá",
     "col": {
       "product": "Sản phẩm",
       "day": "Ngày nhận",

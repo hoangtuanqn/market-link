@@ -66,6 +66,7 @@
   "deals": {
     "title_one": "特价中 ({{count}})",
     "title_other": "特价中 ({{count}})",
+    "loading": "正在加载您的优惠…",
     "col": {
       "product": "商品",
       "day": "取货日",

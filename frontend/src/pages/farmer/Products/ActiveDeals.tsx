@@ -45,6 +45,15 @@ const ActiveDeals = ({ version }: ActiveDealsProps) => {
     }
   };
 
+  // Only the first load (no "last" list yet) shows this; a re-read after posting or removing a deal keeps
+  // showing the old list instead, so the block does not blink to a loading line and back.
+  if (state.kind === 'loading' && last === null) {
+    return (
+      <p role="status" className="text-ink-muted">
+        {t('deals.loading')}
+      </p>
+    );
+  }
   if (state.kind === 'error') return <LoadError noun={t('deals.noun')} onRetry={retry} />;
   const deals = state.kind === 'ready' ? state.data : (last ?? []);
   if (deals.length === 0) return null;

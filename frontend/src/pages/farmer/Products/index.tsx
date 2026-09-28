@@ -200,7 +200,7 @@ const FarmerProductsPage = () => {
       render: (p) => (
         <div className="flex justify-end gap-2">
           {p.status === 'available' && !p.hidden && p.nextDate && (
-            <Button variant="secondary" size="sm" onClick={() => setDealTarget(p)}>
+            <Button variant="secondary" size="sm" onClick={() => setDealTarget(p)} disabled={busyId === p.id}>
               {t('dealAction')}
             </Button>
           )}
