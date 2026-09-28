@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder, removeMessage } from './merge';
 import ConversationApi from '@/api-requests/conversation.requests';
+import { ChatUnreadStore } from '@/lib/chat/unreadStore';
 import { realtime } from '@/lib/realtime/stompClient';
 import type {
   ChatMessageItem,
@@ -35,7 +36,12 @@ const parse = <T>(body: string): T | null => {
  * screen being read.
  */
 const markRead = (conversationId: number) => {
-  ConversationApi.markRead(conversationId).catch(() => {});
+  ConversationApi.markRead(conversationId)
+    // FR-111: the backend tells only the other member about this read, so the header and sidebar badges would keep
+    // counting this thread until some later event. Refresh the count once the read is saved.
+    .then(() => ConversationApi.unreadCount())
+    .then((response) => ChatUnreadStore.setUnread(response.data.count))
+    .catch(() => {});
 };
 
 /** An open thread's badge is 0: the backend only reports "read" to the other person, not to the one who just read. */

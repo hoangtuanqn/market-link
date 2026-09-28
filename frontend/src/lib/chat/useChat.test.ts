@@ -2,6 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useConversation, useThreadList } from './useChat';
 import ConversationApi from '@/api-requests/conversation.requests';
+import { ChatUnreadStore } from '@/lib/chat/unreadStore';
 import { realtime } from '@/lib/realtime/stompClient';
 
 vi.mock('@/api-requests/conversation.requests', () => ({
@@ -10,6 +11,7 @@ vi.mock('@/api-requests/conversation.requests', () => ({
     messages: vi.fn(),
     send: vi.fn(),
     markRead: vi.fn(),
+    unreadCount: vi.fn(),
     uploadMedia: vi.fn(),
   },
 }));
@@ -70,6 +72,7 @@ describe('useConversation', () => {
     connectListeners.clear();
     vi.mocked(ConversationApi.messages).mockResolvedValue(ok([msg(3), msg(2), msg(1)]));
     vi.mocked(ConversationApi.markRead).mockResolvedValue(ok(null));
+    vi.mocked(ConversationApi.unreadCount).mockResolvedValue(ok({ count: 0 }));
   });
 
   it('loads the newest page oldest-first', async () => {
@@ -85,6 +88,16 @@ describe('useConversation', () => {
   });
 
   /** Messages loaded fine but only the mark-as-read step failed: the thread must still show, not an error screen. */
+  /** FR-111: nobody pushes "read" to the reader, so the header badge must refresh itself after the read is saved. */
+  it('refreshes the unread badge once the thread is marked read', async () => {
+    ChatUnreadStore.setUnread(5);
+    vi.mocked(ConversationApi.unreadCount).mockResolvedValue(ok({ count: 2 }));
+    renderHook(() => useConversation(42));
+
+    await waitFor(() => expect(ChatUnreadStore.getUnread()).toBe(2));
+    expect(ConversationApi.markRead).toHaveBeenCalledWith(42);
+  });
+
   it('still shows the thread when marking it read fails', async () => {
     vi.mocked(ConversationApi.markRead).mockRejectedValue(new Error('429'));
     const { result } = renderHook(() => useConversation(42));
