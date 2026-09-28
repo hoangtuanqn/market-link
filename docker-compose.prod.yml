@@ -59,6 +59,10 @@ services:
       MAIL_PORT: ${MAIL_PORT:-587}
       MAIL_USERNAME: ${MAIL_USERNAME:-}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      # Links and addresses inside those emails; the application.yaml defaults point at localhost
+      PASSWORD_RESET_URL: ${PASSWORD_RESET_URL:?Thiếu PASSWORD_RESET_URL trong .env.production}
+      SIGN_IN_URL: ${SIGN_IN_URL:?Thiếu SIGN_IN_URL trong .env.production}
+      SUPPORT_EMAIL: ${SUPPORT_EMAIL:?Thiếu SUPPORT_EMAIL trong .env.production}
       APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
       # Do not publish the API docs in production. If they need to be on (e.g. for the examiner) set SWAGGER_ENABLED=true
       SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
