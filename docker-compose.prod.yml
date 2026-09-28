@@ -89,3 +89,9 @@ services:
     ports: !override
       - "${FRONTEND_PORT:-80}:3000"
     volumes: !reset []
+
+# Dev bind-mounts ./backend/uploads instead, so only prod declares this volume. Both upload settings resolve to
+# /app/uploads: app.storage.dir (STORAGE_DIR, inherited from docker-compose.yml) for avatars and product, market and
+# quality-report photos, and app.uploads.dir ("uploads" under WORKDIR /app) for farmer-application files.
+volumes:
+  uploads-data:
