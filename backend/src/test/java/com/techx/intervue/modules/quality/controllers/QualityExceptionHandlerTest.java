@@ -8,6 +8,8 @@ import com.techx.intervue.resources.ApiResource;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /** The spoilage module's error codes (spec §4.4, §8): 400 input, 403 owner, 404, 409 state. */
 class QualityExceptionHandlerTest {
@@ -40,6 +42,34 @@ class QualityExceptionHandlerTest {
         assertThat(r.getBody().getError().getDetails())
                 .extracting("message")
                 .containsExactly("The photo must be 5 MB or smaller.");
+    }
+
+    /**
+     * Same guard as AuthExceptionHandler#badUpload (AvatarController): a missing/misnamed "file"
+     * part, or a multipart body Spring could not parse at all, is the same 400 the service itself
+     * gives for an empty file — not a raw Tomcat/Spring error that bypasses ApiResource.
+     */
+    @Test
+    void aMissingOrBrokenUploadIs400OnTheFileField() {
+        ResponseEntity<ApiResource<Void>> missingPart =
+                handler.badUpload(new MissingServletRequestPartException("file"));
+
+        assertError(missingPart, 400, "VALIDATION_ERROR");
+        assertThat(missingPart.getBody().getError().getDetails())
+                .extracting("field")
+                .containsExactly("file");
+        assertThat(missingPart.getBody().getError().getDetails())
+                .extracting("message")
+                .containsExactly("Choose a photo to upload.");
+
+        ResponseEntity<ApiResource<Void>> brokenBody =
+                handler.badUpload(
+                        new MultipartException("Could not parse multipart servlet request"));
+
+        assertError(brokenBody, 400, "VALIDATION_ERROR");
+        assertThat(brokenBody.getBody().getError().getDetails())
+                .extracting("field")
+                .containsExactly("file");
     }
 
     @Test

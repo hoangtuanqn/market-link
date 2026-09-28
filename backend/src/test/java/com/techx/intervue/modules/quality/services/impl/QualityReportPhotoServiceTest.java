@@ -117,6 +117,8 @@ class QualityReportPhotoServiceTest {
         assertThat(service.isOwnedBy("https://example.com/" + NAME, 7L)).isFalse();
         assertThat(service.isOwnedBy("/uploads/quality-report-photos/../avatars/" + NAME, 7L))
                 .isFalse();
+        assertThat(service.isOwnedBy("/uploads/quality-report-photos/" + NAME + "?x=1", 7L))
+                .isFalse();
         assertThat(service.isOwnedBy(null, 7L)).isFalse();
     }
 

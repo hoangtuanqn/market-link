@@ -14,6 +14,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * 400/403/404/409 for the spoilage module (FR-122, FR-123), same envelope as the review and product
@@ -60,6 +62,20 @@ public class QualityExceptionHandler {
                 "VALIDATION_ERROR",
                 INVALID_MESSAGE,
                 List.of(field("file", e.getMessage())));
+    }
+
+    /**
+     * The "file" part is missing or misnamed, or the multipart body itself is broken — same message
+     * QualityReportPhotoService uses for an empty file, same shape as
+     * AuthExceptionHandler#badUpload (AvatarController).
+     */
+    @ExceptionHandler({MissingServletRequestPartException.class, MultipartException.class})
+    ResponseEntity<ApiResource<Void>> badUpload(Exception e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(field("file", "Choose a photo to upload.")));
     }
 
     /** {@code @PreAuthorize} wrong role, or an account without a stall → 403. */
