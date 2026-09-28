@@ -494,14 +494,6 @@
           "title": "Votre demande de stand",
           "note": "Quand elle est approuvée, refusée, suspendue ou rouverte"
         },
-        "orders": {
-          "title": "Commandes",
-          "note": "Quand une commande est passée, acceptée, refusée, prête ou annulée"
-        },
-        "favorites": {
-          "title": "Favoris",
-          "note": "Quand un produit enregistré est de nouveau en stock"
-        },
         "farmerApplications": {
           "title": "Demandes Farmer",
           "note": "Quand quelqu’un demande à vendre sur MarketLink"

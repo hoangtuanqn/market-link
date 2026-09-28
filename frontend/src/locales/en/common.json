@@ -508,14 +508,6 @@
           "title": "Your stall application",
           "note": "When it is approved, declined, suspended or reopened"
         },
-        "orders": {
-          "title": "Orders",
-          "note": "When an order is placed, accepted, declined, ready or cancelled"
-        },
-        "favorites": {
-          "title": "Favorites",
-          "note": "When a product you saved is back in stock"
-        },
         "farmerApplications": {
           "title": "Farmer applications",
           "note": "When someone applies to sell on MarketLink"
