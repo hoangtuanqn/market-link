@@ -31,7 +31,8 @@
   },
   "qty": {
     "label": "Jumlah tersedia minggu ini",
-    "error": "Jumlah harus 0 atau lebih. Gunakan Habis jika tidak tersisa."
+    "error": "Jumlah harus 0 atau lebih. Gunakan Habis jika tidak tersisa.",
+    "hint": "Hanya angka awal. Pelanggan memesan dari stok mingguan Anda, yang diatur setelah menyimpan."
   },
   "shelfLife": {
     "label": "Masa simpan",
@@ -102,7 +103,8 @@
     "saved": "Disimpan",
     "savedText": "{{name}} disimpan.",
     "product": "Produk",
-    "deletedText": "{{name}} dihapus."
+    "deletedText": "{{name}} dihapus.",
+    "createdText": "{{name}} disimpan. Atur berapa banyak yang Anda bawa tiap hari agar pelanggan bisa memesan."
   },
   "error": {
     "noun": "produk"

@@ -131,5 +131,7 @@
       "notNearExpiry": "An diesem Tag ist noch mehr als die Hälfte der {{shelfLife}}-tägigen Haltbarkeit übrig. Angebote sind nur für Ware, deren Haltbarkeit schon zur Hälfte abgelaufen ist.",
       "expiredBeforePickup": "Diese Charge ist an diesem Tag nicht mehr gut und kann dafür nicht verkauft werden."
     }
-  }
+  },
+  "noNextDate": "Kein Tag für Bestellungen offen",
+  "checkWeeklyStock": "Wochenbestand festlegen"
 }

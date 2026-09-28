@@ -131,5 +131,7 @@
       "notNearExpiry": "Ese día todavía queda más de la mitad de su vida útil de {{shelfLife}} días. Las ofertas son solo para productos que ya pasaron la mitad de su vida útil.",
       "expiredBeforePickup": "Este lote ya no está en buen estado ese día, así que no se puede vender para esa fecha."
     }
-  }
+  },
+  "noNextDate": "Ningún día abierto a pedidos",
+  "checkWeeklyStock": "Configurar stock semanal"
 }

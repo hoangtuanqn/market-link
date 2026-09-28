@@ -120,3 +120,14 @@ describe('FarmerProductsPage — near-expiry deals', () => {
     expect(await screen.findByRole('dialog', { name: 'Near-expiry deal · Trứng vịt' })).toBeInTheDocument();
   });
 });
+
+describe('FarmerProductsPage — not orderable yet', () => {
+  /** FR-062/FR-063: a product on sale with no pickup day open (no weekly stock yet) says so and links to the fix. */
+  it('points a product with no open pickup day to the weekly stock', async () => {
+    renderPage();
+
+    await screen.findByRole('link', { name: 'Trứng gà ác' });
+    expect(screen.getByText('No day open to order')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Set weekly stock' })).toHaveAttribute('href', '/farmer/stock');
+  });
+});

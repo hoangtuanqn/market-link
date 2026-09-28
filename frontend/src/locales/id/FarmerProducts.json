@@ -131,5 +131,7 @@
       "notNearExpiry": "Pada hari itu, lebih dari separuh masa simpan {{shelfLife}} hari masih tersisa. Diskon hanya untuk produk yang sudah melewati separuh masa simpannya.",
       "expiredBeforePickup": "Batch ini sudah tidak baik lagi pada hari itu, jadi tidak dapat dijual untuk hari tersebut."
     }
-  }
+  },
+  "noNextDate": "Belum ada hari yang bisa dipesan",
+  "checkWeeklyStock": "Atur stok mingguan"
 }

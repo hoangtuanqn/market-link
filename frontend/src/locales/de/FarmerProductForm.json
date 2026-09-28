@@ -31,7 +31,8 @@
   },
   "qty": {
     "label": "Verfügbare Menge diese Woche",
-    "error": "Die Menge muss 0 oder mehr sein. Nutzen Sie Ausverkauft, wenn nichts mehr da ist."
+    "error": "Die Menge muss 0 oder mehr sein. Nutzen Sie Ausverkauft, wenn nichts mehr da ist.",
+    "hint": "Nur ein Richtwert. Kunden bestellen aus Ihrem Wochenbestand, den Sie nach dem Speichern festlegen."
   },
   "shelfLife": {
     "label": "Haltbarkeit",
@@ -102,7 +103,8 @@
     "saved": "Gespeichert",
     "savedText": "{{name}} gespeichert.",
     "product": "Produkt",
-    "deletedText": "{{name}} gelöscht."
+    "deletedText": "{{name}} gelöscht.",
+    "createdText": "{{name}} gespeichert. Legen Sie fest, wie viel Sie an jedem Wochentag mitbringen, damit Kunden bestellen können."
   },
   "error": {
     "noun": "das Produkt"

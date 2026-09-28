@@ -131,5 +131,7 @@
       "notNearExpiry": "More than half of its {{shelfLife}}-day shelf life is left on that day. Deals are only for produce past half its shelf life.",
       "expiredBeforePickup": "This batch is no longer good on that day, so it cannot be sold for it."
     }
-  }
+  },
+  "noNextDate": "No day open to order",
+  "checkWeeklyStock": "Set weekly stock"
 }

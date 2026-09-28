@@ -164,6 +164,26 @@ describe('FarmerProductFormPage', () => {
     );
   });
 
+  /** FR-062/FR-063: a new product sells from the weekly stock, so the Farmer is sent there to set it. */
+  it('sends the Farmer to the weekly stock after adding a product', async () => {
+    render(
+      <MemoryRouter initialEntries={['/farmer/products/new']}>
+        <Routes>
+          <Route path="/farmer/products/new" element={<FarmerProductFormPage />} />
+          <Route path="/farmer/stock" element={<p>Weekly stock page</p>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+    await userEvent.type(await screen.findByLabelText(/^Product name/), 'Rau muống');
+    await userEvent.type(screen.getByLabelText(/^Price/), '0.5');
+    await userEvent.type(screen.getByLabelText(/^Quantity/), '10');
+    expect(screen.getByText(/Customers order from your weekly stock/)).toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText(/Fridge 0–5 °C · suggested 3 days/));
+    await userEvent.click(screen.getByRole('button', { name: /Add product/ }));
+
+    expect(await screen.findByText('Weekly stock page')).toBeInTheDocument();
+  });
+
   /** A one-day suggestion reads "1 day", not "1 days". */
   it('names a one-day suggestion in the singular', async () => {
     renderNew();

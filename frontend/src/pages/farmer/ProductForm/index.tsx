@@ -285,8 +285,14 @@ const FarmerProductFormPage = () => {
       const saved = existing ? await ProductApi.update(existing.id, input) : await ProductApi.create(input);
       // Status is its own endpoint (FR-064); only call it when the chips changed it.
       if (saved.status !== form.status) await ProductApi.setStatus(saved.id, form.status);
-      Notification.success({ title: t('toast.saved'), text: t('toast.savedText', { name: saved.name }) });
-      navigate('/farmer/products');
+      if (existing) {
+        Notification.success({ title: t('toast.saved'), text: t('toast.savedText', { name: saved.name }) });
+        navigate('/farmer/products');
+      } else {
+        // FR-062/FR-063: a new product has no weekly stock yet, so no customer can order it until that is set
+        Notification.success({ title: t('toast.saved'), text: t('toast.createdText', { name: saved.name }) });
+        navigate('/farmer/stock');
+      }
     } catch (error) {
       const mapped: FormErrors = {};
       Object.entries(Helper.getFieldErrors(error)).forEach(([field, message]) => {
@@ -415,6 +421,7 @@ const FarmerProductFormPage = () => {
             inputMode="numeric"
             value={form.qty}
             onChange={(e) => setForm({ qty: e.target.value })}
+            hint={t('qty.hint')}
             error={errors.qty}
           />
 

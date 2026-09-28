@@ -31,7 +31,8 @@
   },
   "qty": {
     "label": "Số lượng có trong tuần này",
-    "error": "Số lượng phải từ 0 trở lên. Dùng Hết hàng khi không còn gì."
+    "error": "Số lượng phải từ 0 trở lên. Dùng Hết hàng khi không còn gì.",
+    "hint": "Chỉ là số tham khảo. Khách đặt hàng theo tồn kho hàng tuần, bạn thiết lập sau khi lưu."
   },
   "shelfLife": {
     "label": "Hạn dùng",
@@ -102,7 +103,8 @@
     "saved": "Đã lưu",
     "savedText": "Đã lưu {{name}}.",
     "product": "Sản phẩm",
-    "deletedText": "Đã xoá {{name}}."
+    "deletedText": "Đã xoá {{name}}.",
+    "createdText": "Đã lưu {{name}}. Hãy đặt số lượng mang đến mỗi ngày trong tuần để khách đặt được."
   },
   "error": {
     "noun": "sản phẩm"

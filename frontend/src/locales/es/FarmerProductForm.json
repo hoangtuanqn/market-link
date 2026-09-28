@@ -31,7 +31,8 @@
   },
   "qty": {
     "label": "Cantidad disponible esta semana",
-    "error": "La cantidad debe ser 0 o más. Usa Agotado si no queda nada."
+    "error": "La cantidad debe ser 0 o más. Usa Agotado si no queda nada.",
+    "hint": "Solo es una cifra de partida. Los clientes piden de tu stock semanal, que configuras después de guardar."
   },
   "shelfLife": {
     "label": "Vida útil",
@@ -102,7 +103,8 @@
     "saved": "Guardado",
     "savedText": "{{name}} guardado.",
     "product": "Producto",
-    "deletedText": "{{name}} eliminado."
+    "deletedText": "{{name}} eliminado.",
+    "createdText": "{{name}} guardado. Indica cuántos traes cada día de la semana para que los clientes puedan pedirlo."
   },
   "error": {
     "noun": "el producto"

@@ -131,5 +131,7 @@
       "notNearExpiry": "到那天为止，商品的{{shelfLife}}天保鲜期还剩一半以上。优惠仅适用于已过保鲜期一半的商品。",
       "expiredBeforePickup": "这批货到那天已不新鲜，无法在该日期出售。"
     }
-  }
+  },
+  "noNextDate": "暂无可下单的日子",
+  "checkWeeklyStock": "设置每周库存"
 }

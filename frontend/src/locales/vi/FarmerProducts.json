@@ -131,5 +131,7 @@
       "notNearExpiry": "Tới ngày đó hàng vẫn còn hơn nửa hạn dùng {{shelfLife}} ngày. Mục này chỉ dành cho hàng đã qua nửa hạn.",
       "expiredBeforePickup": "Hàng hết hạn trước ngày nhận, nên không bán được cho ngày đó."
     }
-  }
+  },
+  "noNextDate": "Chưa có ngày nào đặt được",
+  "checkWeeklyStock": "Đặt tồn kho hàng tuần"
 }

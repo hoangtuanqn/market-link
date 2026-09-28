@@ -193,9 +193,19 @@ const FarmerProductsPage = () => {
       align: 'num',
       render: (p) => {
         const day = stockDay(p.nextDate);
-        return p.status === 'available' && day
-          ? t('nextLeft', { day, qty: units(p.nextLeft ?? 0, p.unit, p.plural) })
-          : '—';
+        if (p.status === 'available' && day)
+          return t('nextLeft', { day, qty: units(p.nextLeft ?? 0, p.unit, p.plural) });
+        // FR-062/FR-063: on sale but no customer can order it — usually no weekly stock yet
+        if (p.status === 'available' && !p.hidden)
+          return (
+            <span className="text-small inline-flex flex-col items-end">
+              <span className="text-ink-muted">{t('noNextDate')}</span>
+              <Link to="/farmer/stock" className="text-brand underline-offset-2 hover:underline">
+                {t('checkWeeklyStock')}
+              </Link>
+            </span>
+          );
+        return '—';
       },
     },
     {

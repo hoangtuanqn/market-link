@@ -131,5 +131,7 @@
       "notNearExpiry": "Plus de la moitié de sa durée de conservation de {{shelfLife}} jours reste ce jour-là. Les promos sont réservées aux produits ayant dépassé la moitié de leur durée de conservation.",
       "expiredBeforePickup": "Ce lot n'est plus bon ce jour-là, il ne peut donc pas être vendu pour cette date."
     }
-  }
+  },
+  "noNextDate": "Aucun jour ouvert à la commande",
+  "checkWeeklyStock": "Définir le stock hebdomadaire"
 }

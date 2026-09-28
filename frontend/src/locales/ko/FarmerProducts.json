@@ -131,5 +131,7 @@
       "notNearExpiry": "그날 기준으로 {{shelfLife}}일 유통기한의 절반 이상이 남아 있어요. 할인은 유통기한의 절반이 지난 상품에만 적용돼요.",
       "expiredBeforePickup": "이 상품은 그날 더 이상 신선하지 않아 판매할 수 없어요."
     }
-  }
+  },
+  "noNextDate": "주문 가능한 날이 없어요",
+  "checkWeeklyStock": "주간 재고 설정"
 }

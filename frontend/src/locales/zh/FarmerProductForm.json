@@ -31,7 +31,8 @@
   },
   "qty": {
     "label": "本周可售数量",
-    "error": "数量必须为 0 或以上。没有剩余时请用“售罄”。"
+    "error": "数量必须为 0 或以上。没有剩余时请用“售罄”。",
+    "hint": "仅作参考。顾客按每周库存下单，保存后再设置每周库存。"
   },
   "shelfLife": {
     "label": "保鲜期",
@@ -102,7 +103,8 @@
     "saved": "已保存",
     "savedText": "{{name}} 已保存。",
     "product": "商品",
-    "deletedText": "已删除{{name}}。"
+    "deletedText": "已删除{{name}}。",
+    "createdText": "{{name}} 已保存。请设置每周各天带来的数量，顾客才能下单。"
   },
   "error": {
     "noun": "商品"

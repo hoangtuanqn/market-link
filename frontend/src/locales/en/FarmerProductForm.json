@@ -31,7 +31,8 @@
   },
   "qty": {
     "label": "Quantity available this week",
-    "error": "Quantity must be 0 or more. Use Sold out for none left."
+    "error": "Quantity must be 0 or more. Use Sold out for none left.",
+    "hint": "A starting number only. Customers order from your weekly stock, which you set after saving."
   },
   "shelfLife": {
     "label": "Shelf life",
@@ -102,7 +103,8 @@
     "saved": "Saved",
     "savedText": "{{name}} saved.",
     "product": "Product",
-    "deletedText": "{{name}} deleted."
+    "deletedText": "{{name}} deleted.",
+    "createdText": "{{name}} saved. Set how many you bring on each weekday so customers can order it."
   },
   "error": {
     "noun": "the product"

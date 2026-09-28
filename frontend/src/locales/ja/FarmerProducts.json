@@ -131,5 +131,7 @@
       "notNearExpiry": "その日の時点で{{shelfLife}}日の賞味期限の半分以上が残っています。セールは賞味期限の半分を過ぎた商品のみが対象です。",
       "expiredBeforePickup": "この商品はその日にはもう鮮度が保てないため、販売できません。"
     }
-  }
+  },
+  "noNextDate": "注文できる日がありません",
+  "checkWeeklyStock": "週間在庫を設定"
 }
