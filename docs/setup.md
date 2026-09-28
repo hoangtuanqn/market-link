@@ -52,7 +52,7 @@ Demo accounts for every role (shared password `Demo@1234`) are listed in
 | `make infra` | Only MySQL + Redis + RabbitMQ (same as `docker compose up -d`) |
 | `make tools` | Adminer at http://localhost:8081, RedisInsight at http://localhost:5540 |
 | RabbitMQ UI | http://localhost:15672 (user/password from `RABBITMQ_USER` / `RABBITMQ_PASSWORD` in `.env`) — realtime broker for chat and notifications (`/user/topic/notifications`, see `docs/api-contract.md` §9), runs with the stack |
-| Chat photos | Stored on the `chat-uploads` volume at `CHAT_UPLOAD_DIR` (default `/var/lib/marketlink/chat`), **not** under `/uploads`. They are only served through `GET /api/v1/attachments/{id}`, which checks that you are in the conversation. Limits: `CHAT_MAX_UPLOAD_BYTES` (5 MB), `CHAT_MESSAGES_PER_MINUTE` (30), `CHAT_IMAGES_PER_HOUR` (10), `CHAT_CONVERSATIONS_PER_HOUR` (20) |
+| Chat photos | Stored on the `chat-uploads` volume at `CHAT_UPLOAD_DIR` (default `/var/lib/marketlink/chat`), **not** under `/uploads`. They are only served through `GET /api/v1/attachments/{id}`, which checks that you are in the conversation. Limits: `CHAT_MAX_UPLOAD_BYTES` (50 MB), `CHAT_MESSAGES_PER_MINUTE` (30), `CHAT_IMAGES_PER_HOUR` (10), `CHAT_CONVERSATIONS_PER_HOUR` (20) |
 | `make logs s=backend` | Follow the logs of one service |
 | `make be-test` | Run backend tests in the container |
 | `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
