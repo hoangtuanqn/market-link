@@ -47,6 +47,12 @@
     "title_other": "{{count}} orders are waiting for you.",
     "text": "Unapproved orders still hold stock. Accept or decline before the cutoff so customers can plan."
   },
+  "strikes": {
+    "title": "Shelf-life strikes: {{count}} of {{limit}} in {{days}} days",
+    "text": "A confirmed spoiled report on an extended shelf life counts as a strike. 3 strikes lock longer shelf lives.",
+    "locked": "Longer shelf lives are locked until {{date}}.",
+    "link": "See the reports"
+  },
   "kpi": {
     "noun": "your numbers",
     "orders": "Total orders",

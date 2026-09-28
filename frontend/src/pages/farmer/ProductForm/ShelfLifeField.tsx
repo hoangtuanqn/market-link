@@ -4,6 +4,7 @@ import { Banner } from '@/components/ui/banner';
 import { Checkbox } from '@/components/ui/checkbox';
 import { LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
+import { formatDate } from '@/lib/format';
 import { extendedBy, maxShelfLifeDays } from '@/lib/shelfLife';
 
 export type ShelfLifeFieldProps = {
@@ -26,6 +27,8 @@ export type ShelfLifeFieldProps = {
   onMode: (mode: StorageMode, suggestedDays: number) => void;
   onDays: (days: number) => void;
   onAcknowledge: (value: boolean) => void;
+  /** FR-123: while the stall has 3 strikes in 90 days, when the lock ends (ISO 8601); + then stops at the suggestion. */
+  lockedUntil?: string | null;
 };
 
 const MODES: StorageMode[] = ['room', 'chilled'];
@@ -52,6 +55,7 @@ const ShelfLifeField = ({
   onMode,
   onDays,
   onAcknowledge,
+  lockedUntil,
 }: ShelfLifeFieldProps) => {
   const { t } = useTranslation('FarmerProductForm');
   const { t: tc } = useTranslation();
@@ -95,7 +99,8 @@ const ShelfLifeField = ({
   const modes = group
     ? group.modes.map((m) => ({ mode: m.storageMode, suggested: m.suggestedDays }))
     : MODES.map((mode) => ({ mode, suggested: suggestedDays }));
-  const max = maxShelfLifeDays(suggestedDays);
+  // FR-123 (spec §4.2): a locked stall cannot go above the suggestion, so the + button stops there
+  const max = lockedUntil ? suggestedDays : maxShelfLifeDays(suggestedDays);
   const longer = extendedBy(days, suggestedDays);
   const storageLabel = tc(`storageMode.${storageMode}`);
 
@@ -177,6 +182,11 @@ const ShelfLifeField = ({
           )}
         </div>
         {errors.days && <span className="text-danger text-[13px] font-bold">{errors.days}</span>}
+        {lockedUntil && (
+          <span className="text-warning-ink text-[13px] font-bold">
+            {t('shelfLife.locked', { date: formatDate(new Date(lockedUntil)) })}
+          </span>
+        )}
         {days < suggestedDays && <span className="text-ink-muted text-[13px]">{t('shelfLife.shorter')}</span>}
       </div>
 

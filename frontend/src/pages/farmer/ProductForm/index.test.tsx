@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import FarmerProductFormPage from './index';
 import CatalogApi from '@/api-requests/catalog.requests';
 import ProductApi from '@/api-requests/product.requests';
+import QualityReportApi from '@/api-requests/quality-report.requests';
 import ShelfLifeApi from '@/api-requests/shelf-life.requests';
 
 vi.mock('@/api-requests/catalog.requests', () => ({ default: { listCategories: vi.fn() } }));
@@ -18,6 +19,7 @@ vi.mock('@/api-requests/product.requests', () => ({
     uploadProductImage: vi.fn(),
   },
 }));
+vi.mock('@/api-requests/quality-report.requests', () => ({ default: { standing: vi.fn() } }));
 vi.mock('@/api-requests/shelf-life.requests', () => ({ default: { forCategory: vi.fn() } }));
 
 const renderNew = () =>
@@ -59,9 +61,24 @@ beforeEach(() => {
     },
   ] as never);
   vi.mocked(ProductApi.create).mockResolvedValue({ id: 5, name: 'Rau muống', status: 'available' } as never);
+  vi.mocked(QualityReportApi.standing).mockResolvedValue({
+    activeViolations: 0,
+    limit: 3,
+    windowDays: 90,
+    extensionLockedUntil: null,
+  });
+  vi.mocked(ProductApi.update).mockReset();
 });
 
 describe('FarmerProductFormPage', () => {
+  const locked = () =>
+    vi.mocked(QualityReportApi.standing).mockResolvedValue({
+      activeViolations: 3,
+      limit: 3,
+      windowDays: 90,
+      extensionLockedUntil: '2026-11-15T03:00:00Z',
+    });
+
   /** Prices are in USD (money() is locked to USD), so a Farmer has to be able to type cents. */
   it('keeps the decimal point while the price is typed', async () => {
     renderNew();
@@ -460,5 +477,46 @@ describe('FarmerProductFormPage', () => {
     expect(screen.getByRole('status', { name: /shelf life/i })).toHaveTextContent('3 days');
     expect(screen.queryByText(/longer than suggested/)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Save product' })).toBeEnabled();
+  });
+
+  /** Spec §4.2: while locked, the + button stops at the suggestion, with the reason next to it. */
+  it('stops at the suggestion while the stall is locked, and says until when', async () => {
+    locked();
+    renderNew();
+    await userEvent.click(await screen.findByLabelText(/Fridge 0–5 °C · suggested 3 days/));
+
+    expect(await screen.findByText(/can't go above the suggestion until 15\/11\/2026/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'One day more' })).toBeDisabled();
+  });
+
+  /** Review Focus #2: an old extended product of a locked stall has to come back to the suggestion first. */
+  it('asks a locked stall to lower an extended product before saving', async () => {
+    locked();
+    vi.mocked(ProductApi.getMine).mockResolvedValue({
+      id: 5,
+      name: 'Rau muống',
+      categoryId: 1,
+      unit: 'bunch',
+      price: 0.5,
+      stock: 10,
+      status: 'available',
+      shelfLife: {
+        guideId: 12,
+        groupName: 'Leafy greens',
+        storageMode: 'chilled',
+        days: 5,
+        suggestedDays: 3,
+        extended: true,
+      },
+    } as never);
+    renderEdit();
+
+    await screen.findByText(/can't go above the suggestion until/);
+    await userEvent.click(screen.getByRole('button', { name: 'Save product' }));
+
+    expect(
+      await screen.findByText("Your stall can't go above the suggestion for now. Lower it to 3 days."),
+    ).toBeInTheDocument();
+    expect(ProductApi.update).not.toHaveBeenCalled();
   });
 });

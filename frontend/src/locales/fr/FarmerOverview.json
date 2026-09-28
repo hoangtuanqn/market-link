@@ -47,6 +47,12 @@
     "title_other": "{{count}} commandes vous attendent. {{closing}} d'entre elles se ferment demain à {{time}}.",
     "text": "Les commandes non validées bloquent toujours du stock. Acceptez ou refusez avant la clôture pour que les clients puissent s'organiser."
   },
+  "strikes": {
+    "title": "Infractions de conservation : {{count}}/{{limit}} en {{days}} jours",
+    "text": "Un signalement d’altération confirmé sur une durée de conservation prolongée compte comme une infraction. 3 infractions verrouillent les durées de conservation plus longues.",
+    "locked": "Les durées de conservation plus longues sont bloquées jusqu’au {{date}}.",
+    "link": "Voir les signalements"
+  },
   "kpi": {
     "noun": "your numbers",
     "orders": "Commandes au total",
