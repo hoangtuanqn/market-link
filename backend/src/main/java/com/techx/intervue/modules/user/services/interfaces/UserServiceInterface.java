@@ -36,6 +36,12 @@ public interface UserServiceInterface {
     /** Change the password (needs the current password), then sign out of every device. */
     void changePassword(Long userId, ChangePasswordRequest request);
 
+    /**
+     * FR-008: sign out of every device, then hand the caller a fresh session — used right after
+     * two-step verification is turned on.
+     */
+    AuthResult restartSession(Long userId);
+
     /** Information about the signed-in user themself (GET /auth/me). */
     UserResource getProfile(Long userId);
 

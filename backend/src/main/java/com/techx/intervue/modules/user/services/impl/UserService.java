@@ -462,6 +462,24 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
+     * FR-008: right after two-step verification is turned on. A session opened earlier with only
+     * the password (JwtAuthFilter recomputes the MFA_SETUP_PENDING mark on every request) would
+     * otherwise get full admin access the moment the code is confirmed, so every refresh token is
+     * revoked and every access token issued before now rejected, like a password change. The caller
+     * — who just proved they hold the code — gets a new session so the setup screen can go on to
+     * the dashboard. Admin sign-in never remembers the session, so neither does this one.
+     */
+    @Override
+    @Transactional
+    public AuthResult restartSession(Long userId) {
+        User user = findActiveUser(userId);
+        refreshTokenService.revokeAllTokens(userId);
+        // writes the revoked-before marker first: the token issued below is not older than it
+        userSessionCache.revokeAll(userId);
+        return issueTokens(user, false);
+    }
+
+    /**
      * Set a password for the first time for an account created through Google. Only when there is
      * no password yet — if there is one, use change / forgot password (409). userId comes from the
      * access token (R-06). The current session is kept.

@@ -1,15 +1,24 @@
 package com.techx.intervue.modules.user.controllers;
 
+import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.controllers.BaseController;
+import com.techx.intervue.helpers.CookieHelper;
 import com.techx.intervue.modules.user.requests.MfaCodeRequest;
+import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
+import com.techx.intervue.modules.user.resources.MfaEnabledResource;
 import com.techx.intervue.modules.user.resources.MfaRecoveryCodesResource;
 import com.techx.intervue.modules.user.resources.MfaSetupResource;
 import com.techx.intervue.modules.user.resources.MfaStatusResource;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import jakarta.validation.Valid;
+import java.time.Duration;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MfaController extends BaseController {
 
     private final MfaServiceInterface mfaService;
+    private final UserServiceInterface userService;
+    private final AuthConfig authConfig;
 
     @GetMapping
     public ResponseEntity<ApiResource<MfaStatusResource>> status(
@@ -45,13 +56,27 @@ public class MfaController extends BaseController {
                 "Scan the code with your authenticator.");
     }
 
+    /**
+     * Once on, every session opened with only the password is signed out (restartSession); the
+     * caller gets a new access token in the body and a new refresh_token cookie.
+     */
     @PostMapping("/enable")
-    public ResponseEntity<ApiResource<MfaRecoveryCodesResource>> enable(
+    public ResponseEntity<ApiResource<MfaEnabledResource>> enable(
             @AuthenticationPrincipal CustomUserDetails user,
             @Valid @RequestBody MfaCodeRequest request) {
-        return ok(
-                new MfaRecoveryCodesResource(mfaService.enable(user.getId(), request.code())),
-                "Two-step verification is on.");
+        List<String> codes = mfaService.enable(user.getId(), request.code());
+        AuthResult session = userService.restartSession(user.getId());
+        ResponseCookie refreshCookie =
+                CookieHelper.buildRefreshTokenCookie(
+                        session.refreshToken(),
+                        Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
+                        session.rememberMe());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
+                .body(
+                        ApiResource.success(
+                                new MfaEnabledResource(codes, session.accessToken()),
+                                "Two-step verification is on."));
     }
 
     /** The old codes become invalid immediately; the new codes are returned only once. */

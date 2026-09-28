@@ -1,5 +1,5 @@
 import type { ApiResponse } from '@/types/api.types';
-import type { MfaRecoveryCodesType, MfaSetupType, MfaStatusType } from '@/types/auth.types';
+import type { MfaEnabledType, MfaRecoveryCodesType, MfaSetupType, MfaStatusType } from '@/types/auth.types';
 import { privateApi } from '@/utils/axiosInstance';
 
 /** FR-008: an admin turns two-step verification on / off for themself (the backend only allows the admin role). */
@@ -15,9 +15,9 @@ class MfaApi {
     return response.data;
   };
 
-  /** Returns 10 recovery codes, only once. */
+  /** Returns 10 recovery codes, only once, and a new access token (every earlier session is signed out). */
   static enable = async (code: string) => {
-    const response = await privateApi.post<ApiResponse<MfaRecoveryCodesType>>('/auth/mfa/enable', { code });
+    const response = await privateApi.post<ApiResponse<MfaEnabledType>>('/auth/mfa/enable', { code });
     return response.data;
   };
 

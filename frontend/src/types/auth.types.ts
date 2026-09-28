@@ -116,3 +116,11 @@ export type MfaSetupType = {
 export type MfaRecoveryCodesType = {
   codes: string[];
 };
+
+/**
+ * FR-008: turning two-step verification on signs out every earlier session, this one included; the new access token
+ * comes back here (the refresh cookie is replaced too).
+ */
+export type MfaEnabledType = MfaRecoveryCodesType & {
+  accessToken: string;
+};

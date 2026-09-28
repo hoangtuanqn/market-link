@@ -2,8 +2,11 @@ package com.techx.intervue.modules.user.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -28,6 +31,7 @@ import com.techx.intervue.services.interfaces.JobQueueInterface;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -149,6 +153,29 @@ class UserServiceMfaTest {
 
         assertThatThrownBy(() -> service.completeMfaLogin("pending-token", "123456", null))
                 .isInstanceOf(DisabledException.class);
+    }
+
+    /**
+     * FR-008: a session opened with only the password before 2FA was turned on must not become a
+     * full admin session afterwards — every earlier session is signed out, like a password change,
+     * and only the caller gets a new one (not remembered, like the admin sign-in).
+     */
+    @Test
+    void turningTwoStepOnSignsOutEveryEarlierSession() {
+        user(1L, RoleType.ADMIN);
+
+        AuthResult result = service.restartSession(1L);
+
+        InOrder order = inOrder(refreshTokenService, userSessionCache, jwtService);
+        order.verify(refreshTokenService).revokeAllTokens(1L);
+        // the revoked-before marker must be written before the new token is signed
+        order.verify(userSessionCache).revokeAll(1L);
+        order.verify(jwtService).generateToken(1L);
+        order.verify(userSessionCache).set(eq(1L), any(), any(), any());
+        verify(refreshTokenService).issueRefreshToken(1L, false);
+        assertThat(result.accessToken()).isEqualTo("access");
+        assertThat(result.refreshToken()).isEqualTo("refresh");
+        assertThat(result.rememberMe()).isFalse();
     }
 
     private User user(Long id, RoleType role) {

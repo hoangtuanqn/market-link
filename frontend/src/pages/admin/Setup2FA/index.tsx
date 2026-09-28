@@ -13,6 +13,7 @@ import useSession from '@/hooks/useSession';
 import AdminAuthSplitShell, { AdminAuthCardHeader } from '@/layout/AdminAuthSplitShell';
 import type { MfaSetupType, MfaStatusType } from '@/types/auth.types';
 import Notification from '@/utils/notification';
+import Session from '@/utils/session';
 import { CODE_REGEX, codeError, codeInputClass } from '../Security/mfaCode';
 import RecoveryCodes from '../Security/RecoveryCodes';
 
@@ -93,6 +94,8 @@ const AdminSetup2FAPage = () => {
     setBusy(true);
     try {
       const response = await MfaApi.enable(confirmCode);
+      // Every session opened before this was signed out, this one included: keep going on the new token
+      if (response.data.accessToken && user) Session.refreshed({ accessToken: response.data.accessToken, user });
       setNewCodes(response.data.codes);
       setConfirmError(undefined);
       Notification.success({ text: t('toast.accepted') });
