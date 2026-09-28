@@ -377,8 +377,9 @@ inside that allowance.
    - *API restrictions* → Restrict key → **Map Tiles API** only.
 
    The key ships inside the JavaScript bundle, so anyone can read it; these two restrictions are what protect it.
-4. Keep it free: under IAM & Admin → Quotas, filter by Map Tiles API and lower the per-day **2D tile requests**
-   limit to `3000` (3,000 × 31 days stays under 100,000). Also add a budget alert under Billing → Budgets & alerts.
+4. Keep it free: APIs & Services → Enabled APIs & services → Map Tiles API → **Quotas & System Limits**, select
+   **2D Tiles requests per day** → Edit quota → `3000` (3,000 × 31 days stays under 100,000). Also add a budget alert
+   under Billing → Budgets & alerts.
    When the daily cap runs out, the map switches to OpenStreetMap by itself until the next day.
 5. Put the key in `.env` (production: `.env.production`) and run `make up` again:
 
