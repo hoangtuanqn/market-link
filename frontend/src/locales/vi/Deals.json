@@ -1,0 +1,26 @@
+{
+  "title": "Giảm giá sắp hết hạn",
+  "intro": "Nông sản đã qua nửa hạn dùng, được sạp bán rẻ hơn. Mỗi mục giảm giá dành cho một ngày nhận, và mỗi thẻ ghi rõ hàng còn dùng tốt đến ngày nào.",
+  "filters": {
+    "category": "Danh mục",
+    "allCategories": "Tất cả",
+    "market": "Chợ",
+    "allMarkets": "Tất cả các chợ"
+  },
+  "clear": "Xoá bộ lọc",
+  "noun": "hàng giảm giá",
+  "empty": {
+    "title": "Hôm nay chưa có hàng giảm giá",
+    "text": "Sạp đăng giảm giá khi một lô hàng đã qua nửa hạn dùng. Hãy xem lại vào ngày mai, hoặc xem tất cả sản phẩm.",
+    "browse": "Xem sản phẩm"
+  },
+  "emptyFiltered": {
+    "title": "Không có mục giảm giá nào khớp bộ lọc",
+    "text": "Thử danh mục hoặc chợ khác."
+  },
+  "pager": {
+    "showing": "Đang hiện {{from}}–{{to}} trong {{total}}",
+    "count_one": "{{count}} mục giảm giá",
+    "count_other": "{{count}} mục giảm giá"
+  }
+}

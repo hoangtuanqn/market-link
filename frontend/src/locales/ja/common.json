@@ -160,6 +160,7 @@
     "shop": "買う",
     "marketsNearYou": "近くのマーケット",
     "inSeason": "旬のもの",
+    "deals": "賞味期限間近セール",
     "marketMap": "マーケットマップ",
     "favoriteStalls": "お気に入りの屋台",
     "sell": "売る",
@@ -237,6 +238,7 @@
   "nav": {
     "markets": "マーケット",
     "products": "商品",
+    "deals": "セール",
     "map": "地図",
     "aboutUs": "私たちについて",
     "myOrders": "注文履歴",
@@ -295,6 +297,14 @@
   },
   "price": {
     "was": "通常価格"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "{{day}}受け取り · 賞味期限は{{until}}まで · 残り {{qty}}",
+    "added": {
+      "title": "カートに追加しました",
+      "text": "{{name}}はセール価格で、{{day}}に受け取ります。"
+    }
   },
   "product": {
     "notThisWeek": "今週はお休み",

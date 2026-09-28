@@ -1,0 +1,26 @@
+{
+  "title": "临期优惠",
+  "intro": "已过保质期一半的农产品，摊位以更低价格出售。每个优惠对应一个取货日，每张卡片都会注明可以保存到什么时候。",
+  "filters": {
+    "category": "类别",
+    "allCategories": "全部",
+    "market": "市集",
+    "allMarkets": "所有市集"
+  },
+  "clear": "清除筛选",
+  "noun": "优惠",
+  "empty": {
+    "title": "今天没有优惠",
+    "text": "当一批货过了保质期的一半，摊位就会发布优惠。明天再来看看，或浏览全部商品。",
+    "browse": "浏览商品"
+  },
+  "emptyFiltered": {
+    "title": "没有符合这些筛选条件的优惠",
+    "text": "试试其他类别或市集。"
+  },
+  "pager": {
+    "showing": "显示第 {{from}}–{{to}} 件，共 {{total}} 件",
+    "count_one": "{{count}} 项优惠",
+    "count_other": "{{count}} 项优惠"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "title": "Near-expiry deals",
+  "intro": "Produce past half its shelf life, sold cheaper by the stall. Each deal is for one pickup day, and each card says until when it stays good.",
+  "filters": {
+    "category": "Category",
+    "allCategories": "All",
+    "market": "Market",
+    "allMarkets": "All markets"
+  },
+  "clear": "Clear filters",
+  "noun": "deals",
+  "empty": {
+    "title": "No deals today",
+    "text": "Stalls post a deal when a batch is past half its shelf life. Check again tomorrow, or browse all products.",
+    "browse": "Browse products"
+  },
+  "emptyFiltered": {
+    "title": "No deals match these filters",
+    "text": "Try another category or market."
+  },
+  "pager": {
+    "showing": "Showing {{from}}–{{to}} of {{total}}",
+    "count_one": "{{count}} deal",
+    "count_other": "{{count}} deals"
+  }
+}

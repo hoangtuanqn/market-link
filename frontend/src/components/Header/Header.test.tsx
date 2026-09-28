@@ -28,6 +28,13 @@ describe('Header', () => {
     expect(screen.getByRole('button', { name: 'Messages, 3 unread' })).toBeInTheDocument();
   });
 
+  /** FR-125: the near-expiry deals page is one click from every page. */
+  it('links the deals page from the main menu', () => {
+    renderHeader();
+
+    expect(screen.getByRole('link', { name: 'Deals' })).toHaveAttribute('href', '/deals');
+  });
+
   /** A language's singular ≠ plural: let i18next choose the form by `count`, do not hardcode the `_one` key. */
   it('lets the language pick the plural form of the unread labels', async () => {
     i18n.addResources('fr', 'common', {

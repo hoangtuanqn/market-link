@@ -47,6 +47,7 @@ import CustomerAssistantPage from './pages/customer/Assistant';
 import MarketsPage from './pages/public/Markets';
 import MarketDetailPage from './pages/public/MarketDetail';
 import ProductsPage from './pages/public/Products';
+import DealsPage from './pages/public/Deals';
 import ProductDetailPage from './pages/public/ProductDetail';
 import StallProfilePage from './pages/public/StallProfile';
 import SearchPage from './pages/public/Search';
@@ -124,6 +125,7 @@ const AppRoutes = () => {
               }
             />
             <Route path="products" element={<ProductsPage />} />
+            <Route path="deals" element={<DealsPage />} />
             <Route
               path="products/:id"
               element={

@@ -160,6 +160,7 @@
     "shop": "Belanja",
     "marketsNearYou": "Pasar di dekat Anda",
     "inSeason": "Sedang musim",
+    "deals": "Diskon hampir kedaluwarsa",
     "marketMap": "Peta pasar",
     "favoriteStalls": "Lapak favorit",
     "sell": "Jual",
@@ -237,6 +238,7 @@
   "nav": {
     "markets": "Pasar",
     "products": "Produk",
+    "deals": "Diskon",
     "map": "Peta",
     "aboutUs": "Tentang kami",
     "myOrders": "Pesanan saya",
@@ -295,6 +297,14 @@
   },
   "price": {
     "was": "Sebelumnya"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Ambil {{day}} · baik hingga akhir {{until}} · sisa {{qty}}",
+    "added": {
+      "title": "Ditambahkan ke keranjang",
+      "text": "{{name}} dengan harga diskon, untuk diambil pada {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "Tidak ada minggu ini",

@@ -160,6 +160,7 @@
     "shop": "购物",
     "marketsNearYou": "附近的市集",
     "inSeason": "当季",
+    "deals": "临期优惠",
     "marketMap": "市集地图",
     "favoriteStalls": "收藏的摊位",
     "sell": "出售",
@@ -237,6 +238,7 @@
   "nav": {
     "markets": "市集",
     "products": "商品",
+    "deals": "优惠",
     "map": "地图",
     "aboutUs": "关于我们",
     "myOrders": "我的订单",
@@ -295,6 +297,14 @@
   },
   "price": {
     "was": "原价"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "{{day}} 取货 · 最佳食用期至 {{until}} 结束 · 剩余 {{qty}}",
+    "added": {
+      "title": "已加入购物车",
+      "text": "{{name}} 以优惠价，{{day}} 取货。"
+    }
   },
   "product": {
     "notThisWeek": "本周不供应",

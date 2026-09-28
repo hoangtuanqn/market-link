@@ -43,6 +43,7 @@ import markets from '@/locales/en/Markets.json';
 import notFound from '@/locales/en/NotFound.json';
 import productDetail from '@/locales/en/ProductDetail.json';
 import products from '@/locales/en/Products.json';
+import deals from '@/locales/en/Deals.json';
 import registerCustomer from '@/locales/en/RegisterCustomer.json';
 import resetPassword from '@/locales/en/ResetPassword.json';
 import search from '@/locales/en/Search.json';
@@ -116,6 +117,7 @@ export const en = {
   NotFound: notFound,
   ProductDetail: productDetail,
   Products: products,
+  Deals: deals,
   RegisterCustomer: registerCustomer,
   ResetPassword: resetPassword,
   Search: search,

@@ -1,0 +1,26 @@
+{
+  "title": "Ofertas por vencer",
+  "intro": "Productos que ya pasaron la mitad de su vida útil, vendidos más baratos por el puesto. Cada oferta es para un día de recogida, y cada tarjeta indica hasta cuándo se mantiene bueno.",
+  "filters": {
+    "category": "Categoría",
+    "allCategories": "Todos",
+    "market": "Mercado",
+    "allMarkets": "Todos los mercados"
+  },
+  "clear": "Borrar filtros",
+  "noun": "ofertas",
+  "empty": {
+    "title": "Hoy no hay ofertas",
+    "text": "Un puesto publica una oferta cuando un lote pasa la mitad de su vida útil. Vuelve a mirar mañana, o explora todos los productos.",
+    "browse": "Ver productos"
+  },
+  "emptyFiltered": {
+    "title": "Ninguna oferta coincide con estos filtros",
+    "text": "Prueba otra categoría o mercado."
+  },
+  "pager": {
+    "showing": "Mostrando {{from}}–{{to}} de {{total}}",
+    "count_one": "{{count}} oferta",
+    "count_other": "{{count}} ofertas"
+  }
+}
