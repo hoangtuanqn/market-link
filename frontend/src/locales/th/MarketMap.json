@@ -13,7 +13,7 @@
     "selected": "วงแหวน: ที่เลือก"
   },
   "mapLabel": "แผนที่ตลาดและแผงทั้งหมด",
-  "directions": "เส้นทางจะเปิดใน OpenStreetMap ในแท็บใหม่",
+  "directions": "เส้นทางจะเปิดใน Google Maps ในแท็บใหม่",
   "openOn": "เปิด{{day}}",
   "empty": {
     "title": "ไม่มีตลาดให้แสดง",

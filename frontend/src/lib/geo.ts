@@ -1,4 +1,4 @@
-/** Geography helpers. Distances are straight-line; the road distance is whatever OSM directions says. */
+/** Geography helpers. Distances are straight-line; the road distance is whatever Google Maps directions says. */
 
 export type LatLng = { lat: number; lng: number };
 

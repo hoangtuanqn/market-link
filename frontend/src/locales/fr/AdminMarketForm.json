@@ -15,7 +15,7 @@
     "close": "Fermeture",
     "lat": "Latitude",
     "lng": "Longitude",
-    "lngHint": "Ou déplacez le repère. Les données cartographiques viennent d'OpenStreetMap.",
+    "lngHint": "Ou déplacez le repère.",
     "notes": "Notes pour les étals",
     "images": "Photos"
   },

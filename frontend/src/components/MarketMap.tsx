@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import '@/styles/leaflet-theme.css';
-import { CITY, MAX_ZOOM, TILE_URL, tileAttribution } from '@/config/map';
-import { directionsUrl, resolveRemembered } from '@/lib/directions';
-import Geolocation from '@/utils/geolocation';
+import { CITY } from '@/config/map';
+import { addBaseLayer } from '@/lib/baseLayer';
+import { directionsUrl } from '@/lib/directions';
 import Helper from '@/utils/helper';
 
 export type MapMarker = {
@@ -47,28 +47,22 @@ const pinHtml = ({ kind, label, text, selected }: MapMarker) =>
   (label ? `<span class="ml-pin-label">${esc(label)}</span>` : '') +
   '</span>';
 
-/**
- * Built when the popup opens rather than when the marker is drawn, so "Directions" picks up whatever start point the
- * visitor last chose — including a location they shared after this map was rendered. A popup is plain HTML inside
- * Leaflet and cannot open the React dialog, so it silently uses that remembered choice.
- */
+/** Plain HTML inside Leaflet, so "Directions" is the same Google Maps link the React button renders. */
 const popupHtml = (m: MapMarker, t: TFunction) => {
   const p = m.popup;
   if (!p) return '';
-  const geo = Geolocation.get();
-  const from = resolveRemembered(geo.status === 'ready' ? geo.at : null);
   return (
     `<b>${esc(p.title)}</b>` +
     p.lines.map((l) => `<span>${esc(l)}</span><br>`).join('') +
     (p.href ? `<a href="${esc(p.href)}" data-route>${esc(t('map.open'))}</a>` : '') +
-    `<a href="${esc(directionsUrl({ lat: m.lat, lng: m.lng }, from))}" target="_blank" rel="noopener">${esc(t('actions.directions'))}</a>`
+    `<a href="${esc(directionsUrl({ lat: m.lat, lng: m.lng }))}" target="_blank" rel="noopener noreferrer">${esc(t('actions.directions'))}</a>`
   );
 };
 
 /**
- * Leaflet + OpenStreetMap frame (D-12, FR-012). Pins use the design system's `.ml-pin`, so a market on the map and a
- * market in a list read as the same thing. Markers follow whatever the screen is filtered to; `selected` marks the ones
- * currently on screen in the list beside it.
+ * Leaflet map frame (D-12, FR-012) over Google Maps tiles, or OpenStreetMap without a key (`lib/baseLayer.ts`). Pins
+ * use the design system's `.ml-pin`, so a market on the map and a market in a list read as the same thing. Markers
+ * follow whatever the screen is filtered to; `selected` marks the ones currently on screen in the list beside it.
  */
 const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = true }: MarketMapProps) => {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -77,7 +71,8 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
   const navigate = useNavigate();
   /** Tiles come over the network, so losing them is a state this frame has to be able to show (FR-084). */
   const [tilesFailed, setTilesFailed] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n.language;
 
   useEffect(() => {
     const host = hostRef.current;
@@ -87,11 +82,9 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     const inner = document.createElement('div');
     host.appendChild(inner);
     const map = L.map(inner, { scrollWheelZoom, zoomControl: true, attributionControl: true });
-    const tiles = L.tileLayer(TILE_URL, { maxZoom: MAX_ZOOM, attribution: tileAttribution(t) }).addTo(map);
     // A tile 404s at the edge of the world as well, so the note goes up on failure and comes down as soon as
     // any tile arrives, rather than latching on the first error.
-    tiles.on('tileerror', () => setTilesFailed(true));
-    tiles.on('load', () => setTilesFailed(false));
+    const detachBase = addBaseLayer(map, { t, language, onTiles: setTilesFailed });
 
     // "Open" points into the app, so it navigates instead of reloading the whole page.
     map.on('popupopen', (e: L.PopupEvent) => {
@@ -110,12 +103,13 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
 
     return () => {
       window.clearTimeout(resize);
+      detachBase();
       map.remove();
       inner.remove();
       mapRef.current = null;
       layerRef.current = null;
     };
-  }, [navigate, scrollWheelZoom, t]);
+  }, [navigate, scrollWheelZoom, t, language]);
 
   useEffect(() => {
     const map = mapRef.current;
