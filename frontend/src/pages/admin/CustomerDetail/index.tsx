@@ -5,6 +5,7 @@ import { Link, useParams } from 'react-router';
 import { AdminReportApi } from '@/api-requests/report.requests';
 import ReviewApi from '@/api-requests/review.requests';
 import Avatar from '@/components/Avatar';
+import BanDurationPicker, { type BanDuration } from '@/components/BanDurationPicker';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import ReviewCard from '@/components/ReviewCard';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -58,6 +59,7 @@ const AdminCustomerDetailPage = () => {
 
   const [confirmKind, setConfirmKind] = useState<ConfirmKind | null>(null);
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
+  const [duration, setDuration] = useState<BanDuration>({ kind: 'permanent' });
   const [busy, setBusy] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
@@ -96,17 +98,24 @@ const AdminCustomerDetailPage = () => {
 
   const openConfirm = (kind: ConfirmKind) => {
     setReason(emptyReason());
+    setDuration({ kind: 'permanent' });
     setConfirmKind(kind);
   };
 
   const runConfirmedAction = async () => {
     if (!confirmKind) return;
     const status = confirmKind === 'deactivate' ? 'inactive' : 'active';
+    const trimmedReason = composeReason('deactivate', reason);
+    const until = confirmKind === 'deactivate' && duration.kind === 'temporary' ? duration.until : null;
     setBusy(true);
     try {
-      const updated = await AdminReportApi.setCustomerStatus(customer.userId, status);
+      const updated = await AdminReportApi.setCustomerStatus(
+        customer.userId,
+        status,
+        confirmKind === 'deactivate' ? trimmedReason : null,
+        until,
+      );
       mutateCustomer(() => updated);
-      const trimmedReason = composeReason('deactivate', reason);
       const toastKey =
         confirmKind === 'deactivate'
           ? trimmedReason
@@ -312,7 +321,7 @@ const AdminCustomerDetailPage = () => {
             </Button>
             <Button
               variant={confirmKind === 'deactivate' ? 'danger' : 'primary'}
-              disabled={busy}
+              disabled={busy || (confirmKind === 'deactivate' && !composeReason('deactivate', reason))}
               onClick={() => void runConfirmedAction()}
             >
               {confirmKind ? t(`${confirmKind}.confirm`) : ''}
@@ -323,15 +332,17 @@ const AdminCustomerDetailPage = () => {
         <div className="flex flex-col gap-3">
           <p>{confirmKind ? t(`${confirmKind}.text`) : ''}</p>
           {confirmKind === 'deactivate' && (
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-3">
+              <BanDurationPicker value={duration} onChange={setDuration} />
               <ReasonPicker
                 id="deactivate-reason"
                 kind="deactivate"
                 label={t('deactivate.reason')}
                 value={reason}
                 onChange={setReason}
+                required
+                error={!composeReason('deactivate', reason) ? t('deactivate.reasonRequired') : undefined}
               />
-              <span className="text-ink-muted text-[13px]">{t('deactivate.reasonHint')}</span>
             </div>
           )}
         </div>

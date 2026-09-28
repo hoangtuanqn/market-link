@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { AdminReportApi, type AdminCustomerDto } from '@/api-requests/report.requests';
 import Avatar from '@/components/Avatar';
+import BanDurationPicker, { type BanDuration } from '@/components/BanDurationPicker';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { DataState, LoadError } from '@/components/ui/data-state';
@@ -45,9 +46,9 @@ type ConfirmKind = 'deactivate' | 'reactivate';
 type ConfirmAction = { kind: ConfirmKind; item: AdminCustomerDto } | null;
 
 /**
- * FR-072 — deactivate an account for a policy violation; it can no longer sign in or order. Reactivate when it is
- * resolved. Past orders stay with the stalls either way. The server does not store a reason (`AdminReportApi.
- * setCustomerStatus` takes only the new status) — the reason box here is echoed in the toast only, not sent.
+ * FR-072 — deactivate an account for a policy violation; it can no longer sign in or order, and every session is
+ * revoked right away. Permanent or temporary (auto-reactivates); a permanent ban also cancels open orders. Reactivate
+ * when it is resolved. Past orders otherwise stay with the stalls.
  */
 const AdminCustomersPage = () => {
   const { t } = useTranslation('AdminCustomers');
@@ -59,6 +60,7 @@ const AdminCustomersPage = () => {
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
+  const [duration, setDuration] = useState<BanDuration>({ kind: 'permanent' });
   const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
@@ -114,6 +116,7 @@ const AdminCustomersPage = () => {
 
   const openConfirm = (kind: ConfirmKind, item: AdminCustomerDto) => {
     setReason(emptyReason());
+    setDuration({ kind: 'permanent' });
     setConfirmAction({ kind, item });
   };
 
@@ -121,13 +124,19 @@ const AdminCustomersPage = () => {
     if (!confirmAction) return;
     const { kind, item } = confirmAction;
     const status = kind === 'deactivate' ? 'inactive' : 'active';
+    const trimmedReason = composeReason('deactivate', reason);
+    const until = kind === 'deactivate' && duration.kind === 'temporary' ? duration.until : null;
     setBusyId(item.userId);
     setConfirmAction(null);
     try {
-      const updated = await AdminReportApi.setCustomerStatus(item.userId, status);
+      const updated = await AdminReportApi.setCustomerStatus(
+        item.userId,
+        status,
+        kind === 'deactivate' ? trimmedReason : null,
+        until,
+      );
       mutate((data) => ({ ...data, items: data.items.map((c) => (c.userId === item.userId ? updated : c)) }));
       retryCounts();
-      const trimmedReason = composeReason('deactivate', reason);
       const toastKey =
         kind === 'deactivate'
           ? trimmedReason
@@ -256,7 +265,9 @@ const AdminCustomersPage = () => {
             </Button>
             <Button
               variant={confirmAction?.kind === 'deactivate' ? 'danger' : 'primary'}
-              disabled={busyId !== null}
+              disabled={
+                busyId !== null || (confirmAction?.kind === 'deactivate' && !composeReason('deactivate', reason))
+              }
               onClick={() => void runConfirmedAction()}
             >
               {confirmAction ? t(`${confirmAction.kind}.confirm`) : ''}
@@ -267,16 +278,18 @@ const AdminCustomersPage = () => {
         <div className="flex flex-col gap-3">
           <p>{confirmAction ? t(`${confirmAction.kind}.text`) : ''}</p>
           {confirmAction?.kind === 'deactivate' && (
-            <div className="flex flex-col gap-1.5">
+            <>
+              <BanDurationPicker value={duration} onChange={setDuration} />
               <ReasonPicker
                 id="deactivate-reason"
                 kind="deactivate"
                 label={t('deactivate.reason')}
                 value={reason}
                 onChange={setReason}
+                required
+                error={!composeReason('deactivate', reason) ? t('deactivate.reasonRequired') : undefined}
               />
-              <span className="text-ink-muted text-[13px]">{t('deactivate.reasonHint')}</span>
-            </div>
+            </>
           )}
         </div>
       </Dialog>

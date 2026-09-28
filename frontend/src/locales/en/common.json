@@ -752,5 +752,13 @@
     "text": "We use essential cookies to keep you signed in and your cart working. We set no advertising or analytics cookies. <a>Privacy policy</a>.",
     "decline": "Decline",
     "accept": "Accept"
+  },
+  "banDuration": {
+    "label": "Duration",
+    "permanent": "Permanent",
+    "temporary": "Temporary",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "specificTime": "Or pick an exact end time"
   }
 }
