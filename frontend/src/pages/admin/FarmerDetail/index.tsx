@@ -46,7 +46,7 @@ const AdminFarmerDetailPage = () => {
   /** One reason used for both reject and suspend — only one dialog can be open at a time. */
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   // FR-123: the spoiled-report queue links here with ?suspend=<reason> to open the suspend dialog pre-filled, once
   const presetSuspend = useRef(searchParams.get('suspend'));
 
@@ -57,14 +57,26 @@ const AdminFarmerDetailPage = () => {
         setStatus({ kind: 'ready', data: response.data });
         const code = presetSuspend.current;
         presetSuspend.current = null;
-        if (code && isReasonCode('suspend', code) && response.data.approvalStatus === 'approved') {
-          setReason({ codes: [code], note: '' });
-          setReasonError(undefined);
-          setDialog('suspend');
+        if (code && isReasonCode('suspend', code)) {
+          // Consumed: drop it from the address (keeping any other params) so a reload, or opening the same link
+          // again, does not reopen the dialog (FR-123 fix round 1).
+          setSearchParams(
+            (prev) => {
+              const next = new URLSearchParams(prev);
+              next.delete('suspend');
+              return next;
+            },
+            { replace: true },
+          );
+          if (response.data.approvalStatus === 'approved') {
+            setReason({ codes: [code], note: '' });
+            setReasonError(undefined);
+            setDialog('suspend');
+          }
         }
       })
       .catch(() => setStatus({ kind: 'error' }));
-  }, [id]);
+  }, [id, setSearchParams]);
 
   useEffect(fetchDetail, [fetchDetail]);
 

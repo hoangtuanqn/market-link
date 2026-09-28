@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import AdminFarmerDetailPage from './index';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
@@ -36,9 +36,16 @@ const farmer = (patch: Record<string, unknown> = {}) => ({
 
 const ok = (data: unknown) => ({ success: true, message: '', data, timestamp: '' }) as never;
 
+/** Fix round 1: exposes the router's current address so a test can check `?suspend=` was dropped after use. */
+const LocationProbe = () => {
+  const location = useLocation();
+  return <div data-testid="location">{location.pathname + location.search}</div>;
+};
+
 const renderAt = (path: string) =>
   render(
     <MemoryRouter initialEntries={[path]}>
+      <LocationProbe />
       <Routes>
         <Route path="/admin/farmers/:id" element={<AdminFarmerDetailPage />} />
       </Routes>
@@ -77,6 +84,14 @@ describe('AdminFarmerDetailPage — shelf-life strikes (FR-123)', () => {
     await userEvent.click(within(dialog).getByRole('button', { name: 'Suspend stall' }));
 
     expect(AdminFarmerApi.suspend).toHaveBeenCalledWith(15, 'Shelf-life violations');
+  });
+
+  it('drops the suspend trigger from the address once it has opened the dialog', async () => {
+    renderAt('/admin/farmers/15?suspend=shelfLifeViolations');
+
+    await screen.findByRole('alertdialog');
+
+    expect(screen.getByTestId('location').textContent).toBe('/admin/farmers/15');
   });
 
   it('does not open it for a stall that is not approved any more', async () => {
