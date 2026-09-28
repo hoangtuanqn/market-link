@@ -42,6 +42,16 @@ public class SecurityConfig {
      */
     static final String ADMIN_ACCESS = "hasRole('ADMIN') and !hasAuthority('MFA_SETUP_PENDING')";
 
+    /**
+     * Who may reach any other signed-in route: anyone signed in, except a session still marked
+     * MFA_SETUP_PENDING (FR-008). Such a session exists only so the setup screen can call the
+     * /api/v1/auth/** routes listed below (me, settings, mfa, logout); letting it read orders,
+     * conversations or attachments would hand customer data to anyone holding the admin password.
+     * An anonymous caller still fails isAuthenticated() and gets the 401 from signInRequired().
+     */
+    static final String SIGNED_IN_ACCESS =
+            "isAuthenticated() and !hasAuthority('MFA_SETUP_PENDING')";
+
     static final String SIGN_IN_MESSAGE = "Please sign in to continue.";
 
     private final ObjectMapper objectMapper;
@@ -208,8 +218,11 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 HttpMethod.GET, "/api/v1/attachments/*/stream")
                                         .permitAll()
+                                        // FR-008: a session still owing 2FA setup stops here
                                         .anyRequest()
-                                        .authenticated())
+                                        .access(
+                                                new WebExpressionAuthorizationManager(
+                                                        SIGNED_IN_ACCESS)))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(signInRequired()))
