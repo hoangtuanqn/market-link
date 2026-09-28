@@ -4,6 +4,9 @@ import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeEx
 import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
 import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.quality.exceptions.ItemAlreadyReportedException;
+import com.techx.intervue.modules.quality.exceptions.QualityReportNotFoundException;
+import com.techx.intervue.modules.quality.exceptions.QualityReportNotYoursException;
+import com.techx.intervue.modules.quality.exceptions.ReportAlreadyDecidedException;
 import com.techx.intervue.modules.quality.exceptions.ReportNeedsCompletedOrderException;
 import com.techx.intervue.modules.quality.exceptions.ReportWindowClosedException;
 import com.techx.intervue.modules.quality.exceptions.ReportedItemNotFoundException;
@@ -30,7 +33,11 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
  * (QualityExceptionHandlerScopeTest).
  */
 @RestControllerAdvice(
-        assignableTypes = {QualityReportPhotoController.class, QualityReportController.class})
+        assignableTypes = {
+            QualityReportPhotoController.class,
+            QualityReportController.class,
+            FarmerQualityReportController.class
+        })
 public class QualityExceptionHandler {
 
     private static final String INVALID_MESSAGE = "Some of the information you sent is not valid.";
@@ -87,13 +94,17 @@ public class QualityExceptionHandler {
     }
 
     /** The order or the line is not there → 404, without saying which. */
-    @ExceptionHandler({OrderNotFoundException.class, ReportedItemNotFoundException.class})
+    @ExceptionHandler({
+        OrderNotFoundException.class,
+        ReportedItemNotFoundException.class,
+        QualityReportNotFoundException.class
+    })
     ResponseEntity<ApiResource<Void>> notFound(RuntimeException e) {
         return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
     }
 
     /** R-06: someone else's order → 403, never 404 (the order is real). */
-    @ExceptionHandler(OrderNotYoursException.class)
+    @ExceptionHandler({OrderNotYoursException.class, QualityReportNotYoursException.class})
     ResponseEntity<ApiResource<Void>> notYours(RuntimeException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
     }
@@ -112,6 +123,12 @@ public class QualityExceptionHandler {
     @ExceptionHandler(ItemAlreadyReportedException.class)
     ResponseEntity<ApiResource<Void>> alreadyReported(ItemAlreadyReportedException e) {
         return error(HttpStatus.CONFLICT, "ALREADY_REPORTED", e.getMessage(), List.of());
+    }
+
+    /** Spec §4.4.2, §4.4.3: a decided report is final. */
+    @ExceptionHandler(ReportAlreadyDecidedException.class)
+    ResponseEntity<ApiResource<Void>> alreadyDecided(ReportAlreadyDecidedException e) {
+        return error(HttpStatus.CONFLICT, "REPORT_ALREADY_DECIDED", e.getMessage(), List.of());
     }
 
     /** {@code @PreAuthorize} wrong role, or an account without a stall → 403. */

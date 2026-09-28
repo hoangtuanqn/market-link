@@ -6,6 +6,9 @@ import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeEx
 import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
 import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
 import com.techx.intervue.modules.quality.exceptions.ItemAlreadyReportedException;
+import com.techx.intervue.modules.quality.exceptions.QualityReportNotFoundException;
+import com.techx.intervue.modules.quality.exceptions.QualityReportNotYoursException;
+import com.techx.intervue.modules.quality.exceptions.ReportAlreadyDecidedException;
 import com.techx.intervue.modules.quality.exceptions.ReportNeedsCompletedOrderException;
 import com.techx.intervue.modules.quality.exceptions.ReportWindowClosedException;
 import com.techx.intervue.modules.quality.exceptions.ReportedItemNotFoundException;
@@ -123,5 +126,19 @@ class QualityExceptionHandlerTest {
 
     private static DataIntegrityViolationException violation(String message) {
         return new DataIntegrityViolationException("x", new SQLException(message));
+    }
+
+    @Test
+    void aReportOfAnotherStallIs403AndAMissingOneIs404() {
+        assertError(handler.notYours(new QualityReportNotYoursException()), 403, "FORBIDDEN");
+        assertError(handler.notFound(new QualityReportNotFoundException()), 404, "NOT_FOUND");
+    }
+
+    @Test
+    void aDecidedReportIs409() {
+        assertError(
+                handler.alreadyDecided(new ReportAlreadyDecidedException()),
+                409,
+                "REPORT_ALREADY_DECIDED");
     }
 }
