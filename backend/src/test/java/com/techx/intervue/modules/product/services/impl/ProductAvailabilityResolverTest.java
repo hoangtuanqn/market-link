@@ -299,7 +299,7 @@ class ProductAvailabilityResolverTest {
                 .thenReturn(Optional.of(onDeal));
 
         ProductAvailabilityResolver.Availability a =
-                resolver.onDate(Map.of(PRODUCT_ID, new BigDecimal("0.60")), saturday)
+                resolver.onDate(FARMER_ID, Map.of(PRODUCT_ID, new BigDecimal("0.60")), saturday)
                         .get(PRODUCT_ID);
 
         assertThat(a.date()).isEqualTo(saturday);
@@ -316,7 +316,7 @@ class ProductAvailabilityResolverTest {
         when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.empty());
 
         ProductAvailabilityResolver.Availability a =
-                resolver.onDate(Map.of(PRODUCT_ID, new BigDecimal("12000")), monday)
+                resolver.onDate(FARMER_ID, Map.of(PRODUCT_ID, new BigDecimal("12000")), monday)
                         .get(PRODUCT_ID);
 
         assertThat(a.quantity()).isEqualTo(20);
@@ -333,8 +333,41 @@ class ProductAvailabilityResolverTest {
 
         assertThat(
                         resolver.onDate(
+                                FARMER_ID,
                                 Map.of(PRODUCT_ID, new BigDecimal("12000")),
                                 LocalDate.of(2026, 9, 29)))
+                .isEmpty();
+    }
+
+    /**
+     * FR-125 fix round 1: the picked day itself may not be orderable (full, closed, past its
+     * cutoff) even though it is inside the window and the product has a template for it — onDate
+     * must apply the same "orderable" gate resolve() does, not just look up the row/template.
+     */
+    @Test
+    void onDateReturnsNothingWhenTheDayHasNoOrderableSlot() {
+        LocalDate monday = LocalDate.of(2026, 9, 28);
+        openDates(Set.of()); // no farmer has an orderable date at all
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(1, 20, null)));
+
+        assertThat(resolver.onDate(FARMER_ID, Map.of(PRODUCT_ID, new BigDecimal("12000")), monday))
+                .isEmpty();
+    }
+
+    /**
+     * Even a day the stall could in principle open a slot for is not one resolve() would ever offer
+     * once it falls outside the 14-day lookahead — onDate must refuse it the same way, before even
+     * asking slots (the open set here would say yes if onDate asked).
+     */
+    @Test
+    void onDateReturnsNothingForADayBeyondTheLookaheadWindow() {
+        LocalDate beyond = TODAY.plusDays(ProductAvailabilityResolver.LOOKAHEAD_DAYS);
+        openDates(Set.of(beyond));
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(beyond.getDayOfWeek().getValue() % 7, 20, null)));
+
+        assertThat(resolver.onDate(FARMER_ID, Map.of(PRODUCT_ID, new BigDecimal("12000")), beyond))
                 .isEmpty();
     }
 }

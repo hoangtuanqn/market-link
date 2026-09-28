@@ -121,13 +121,26 @@ public class ProductAvailabilityResolver {
     }
 
     /**
-     * FR-125: one given pickup day's numbers for each product — what the cart previews once the
-     * customer has picked that day. Read-only like {@link #resolve}; a product not sold that day
-     * (no row, no active template for its weekday) is left out.
+     * FR-125: one given pickup day's numbers for each product of one stall — what the cart previews
+     * once the customer has picked that day. Read-only like {@link #resolve}; empty when the day
+     * itself is not one {@link #resolve} would ever offer — outside the lookahead window, or the
+     * stall has no orderable slot that day (full, closed, or past its cutoff) — so the cart never
+     * shows a price for a day nobody could actually book. Otherwise a product not sold that day (no
+     * row, no active template for its weekday) is left out, same as {@link #resolve}.
      */
     public Map<Long, Availability> onDate(
-            Map<Long, BigDecimal> basePriceByProductId, LocalDate date) {
+            long farmerId, Map<Long, BigDecimal> basePriceByProductId, LocalDate date) {
         Map<Long, Availability> result = new HashMap<>();
+        LocalDate today = LocalDate.now(clock);
+        if (date.isBefore(today) || date.isAfter(today.plusDays(LOOKAHEAD_DAYS - 1))) {
+            return result; // outside the window resolve() ever looks at
+        }
+        Set<LocalDate> open =
+                slots.orderableDates(Set.of(farmerId), date, date, LocalDateTime.now(clock))
+                        .getOrDefault(farmerId, Set.of());
+        if (!open.contains(date)) {
+            return result; // no slot left before its cutoff: nobody can order for this date
+        }
         basePriceByProductId.forEach(
                 (productId, basePrice) ->
                         lookup(

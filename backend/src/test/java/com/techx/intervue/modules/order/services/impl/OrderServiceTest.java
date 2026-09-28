@@ -561,7 +561,7 @@ class OrderServiceTest {
                                                 LocalDate.of(2026, 9, 30),
                                                 LocalDate.of(2026, 10, 4)))))
                 .when(availability)
-                .onDate(any(), eq(SATURDAY));
+                .onDate(eq(FARMER_A), any(), eq(SATURDAY));
 
         List<OrderGroupPreviewResource> groups =
                 service.preview(
@@ -585,7 +585,7 @@ class OrderServiceTest {
     /** The picked day has nothing of this product: 0 left, out of stock, base price. */
     @Test
     void previewFlagsAProductNotSoldOnThePickedDay() {
-        doReturn(Map.of()).when(availability).onDate(any(), eq(SATURDAY));
+        doReturn(Map.of()).when(availability).onDate(eq(FARMER_A), any(), eq(SATURDAY));
 
         List<OrderGroupPreviewResource> groups =
                 service.preview(
@@ -612,7 +612,7 @@ class OrderServiceTest {
                                 new ProductAvailabilityResolver.Availability(
                                         SATURDAY, 40, new BigDecimal("12000"))))
                 .when(availability)
-                .onDate(any(), eq(SATURDAY));
+                .onDate(eq(FARMER_A), any(), eq(SATURDAY));
 
         PreviewItemResource item =
                 service.preview(
@@ -644,7 +644,7 @@ class OrderServiceTest {
         assertThat(item.unitPrice()).isEqualByComparingTo("12000");
         assertThat(item.listPrice()).isNull();
         assertThat(item.bestBefore()).isEqualTo(PICKUP.plusDays(2).toString());
-        verify(availability, never()).onDate(any(), any());
+        verify(availability, never()).onDate(anyLong(), any(), any());
     }
 
     /** A day for a stall that is not in the cart changes nothing. */
@@ -656,7 +656,34 @@ class OrderServiceTest {
                         List.of(line(RAU_MUONG, 1)),
                         List.of(new PickupDateInput(FARMER_B, SATURDAY))));
 
-        verify(availability, never()).onDate(any(), any());
+        verify(availability, never()).onDate(anyLong(), any(), any());
+    }
+
+    /**
+     * FR-125 fix round 1: the picked day itself cannot be booked (full, closed, past cutoff, or
+     * outside the lookahead — {@link ProductAvailabilityResolver#onDate} decides that; see
+     * ProductAvailabilityResolverTest). The resolver reports it the same way it reports "nothing of
+     * this product that day": an empty map. previewGroup must not invent a price for it — same "not
+     * available" problem as previewFlagsAProductNotSoldOnThePickedDay, never a silent price.
+     */
+    @Test
+    void previewFlagsALineWhosePickedDayIsNotOrderable() {
+        doReturn(Map.of()).when(availability).onDate(eq(FARMER_A), any(), eq(SATURDAY));
+
+        List<OrderGroupPreviewResource> groups =
+                service.preview(
+                        CUSTOMER_ID,
+                        new PreviewRequest(
+                                List.of(line(RAU_MUONG, 1)),
+                                List.of(new PickupDateInput(FARMER_A, SATURDAY))));
+
+        PreviewItemResource item = groups.getFirst().items().getFirst();
+        assertThat(item.stockQuantity()).isZero();
+        assertThat(item.unitPrice()).isEqualByComparingTo("12000");
+        assertThat(item.listPrice()).isNull();
+        assertThat(item.discountPercent()).isNull();
+        assertThat(item.bestBefore()).isNull();
+        assertThat(groups.getFirst().problems()).containsExactly("out_of_stock");
     }
 
     // ---------- place ----------

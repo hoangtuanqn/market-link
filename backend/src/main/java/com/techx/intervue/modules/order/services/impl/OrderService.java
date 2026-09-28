@@ -112,7 +112,8 @@ public class OrderService implements OrderServiceInterface {
     /**
      * Read-only, no locking, changes nothing: groups the cart by farmer_id and writes each group's
      * issues into {@code problems} instead of throwing. A product id that does not exist is a
-     * malformed request → 400 (C5-12).
+     * malformed request → 400 (C5-12). A stall listed in {@code request.pickupDates()} is priced
+     * for that day (FR-125), the others for their nearest orderable day.
      */
     @Override
     @Transactional(readOnly = true)
@@ -141,21 +142,26 @@ public class OrderService implements OrderServiceInterface {
                         .collect(Collectors.toMap(FarmerProfile::getId, Function.identity()));
         Map<Long, List<MarketOption>> markets = checkoutQueries.marketsOf(byFarmer.keySet());
         // FR-125: a stall the customer has picked a day for is priced for that day; the others
-        // for their nearest orderable day, as before
+        // for their nearest orderable day, as before. Grouped by farmer, not by date, because
+        // onDate needs to know whose slots to check — a date alone is not enough.
         Map<Long, LocalDate> pickupDates = request.pickupDateByFarmer();
         Map<Long, BigDecimal> undated = new HashMap<>();
-        Map<LocalDate, Map<Long, BigDecimal>> dated = new HashMap<>();
+        Map<Long, Map<Long, BigDecimal>> datedByFarmer = new HashMap<>();
         for (Product p : products.values()) {
-            LocalDate day = pickupDates.get(p.getFarmerId());
-            if (day == null) {
-                undated.put(p.getId(), p.getPrice());
+            if (pickupDates.containsKey(p.getFarmerId())) {
+                datedByFarmer
+                        .computeIfAbsent(p.getFarmerId(), f -> new HashMap<>())
+                        .put(p.getId(), p.getPrice());
             } else {
-                dated.computeIfAbsent(day, d -> new HashMap<>()).put(p.getId(), p.getPrice());
+                undated.put(p.getId(), p.getPrice());
             }
         }
         Map<Long, ProductAvailabilityResolver.Availability> resolved =
                 new HashMap<>(availability.resolve(undated));
-        dated.forEach((day, prices) -> resolved.putAll(availability.onDate(prices, day)));
+        datedByFarmer.forEach(
+                (farmerId, prices) ->
+                        resolved.putAll(
+                                availability.onDate(farmerId, prices, pickupDates.get(farmerId))));
 
         List<OrderGroupPreviewResource> groups = new ArrayList<>();
         byFarmer.forEach(
