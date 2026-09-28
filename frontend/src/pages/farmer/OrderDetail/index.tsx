@@ -77,6 +77,8 @@ const FarmerOrderDetailPage = () => {
       Notification.success({ title: successTitle, text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      // 409 (D-04): the order moved on elsewhere — read it again so the status and buttons are the current ones
+      if (isAxiosError(error) && error.response?.status === 409) retry();
     } finally {
       setBusy(false);
     }
