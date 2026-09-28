@@ -213,11 +213,20 @@ const CustomerCartPage = () => {
   const groups = answer ?? lastPreview ?? [];
   // Quantities follow the cart right away; the server's figures catch up when the preview answers
   const qtyOf = (productId: number, fallback: number) => lines.find((l) => l.productId === productId)?.qty ?? fallback;
-  // A stall can be ordered once a time is picked on the day it is priced for
+  // A stall can be ordered once a time is picked on the day it is priced for, and that time still has room: after a
+  // 409 the slots load again, and a time taken meanwhile must not be sent a second time
+  const slotStillFree = (farmerId: number, slotId: string) => {
+    const s = slotsOf(farmerId);
+    return s.kind === 'ready' && s.slots.some((x) => String(x.slotId) === slotId && !x.isFull);
+  };
   const canPlace = (g: OrderGroupPreviewDto) => {
     const c = choiceOf(g.farmerId);
     return (
-      c.slotId != null && c.date != null && c.date === pickups.get(g.farmerId)?.pricedDay && g.problems.length === 0
+      c.slotId != null &&
+      c.date != null &&
+      c.date === pickups.get(g.farmerId)?.pricedDay &&
+      slotStillFree(g.farmerId, c.slotId) &&
+      g.problems.length === 0
     );
   };
 
@@ -243,7 +252,9 @@ const CustomerCartPage = () => {
       navigate('/orders/placed', { state: { orders } });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
-      retry(); // stock or slot changed under us (409): show the fresh preview, keep the cart
+      // Stock or a slot changed under us (409): show the fresh preview and the fresh slots, keep the cart
+      retry();
+      retrySlots();
     } finally {
       setPlacing(false);
     }
@@ -418,6 +429,8 @@ const CustomerCartPage = () => {
               <textarea
                 id="note"
                 value={note}
+                // The server keeps at most 255 characters (400 beyond)
+                maxLength={255}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder={t('note.placeholder')}
                 className="border-line-strong bg-surface-raised text-body min-h-16 rounded-sm border-[1.5px] p-3"

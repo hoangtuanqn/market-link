@@ -111,6 +111,39 @@ describe('CustomerCartPage', () => {
       expect.objectContaining({ farmerId: 1, marketId: 1, slotId: 11, pickupDate: '2026-10-03' }),
     ]);
   });
+
+  /** FR-031: the server keeps at most 255 characters of the note (400 beyond), so the box stops there too. */
+  it('stops the note at 255 characters, the most the server keeps', async () => {
+    renderCart();
+
+    expect(await screen.findByLabelText('Note to the stalls')).toHaveAttribute('maxLength', '255');
+  });
+
+  /**
+   * FR-031/032: placing answered 409 because the time was taken meanwhile. The slots are loaded again with the preview,
+   * and the time that is now full can no longer be sent.
+   */
+  it('reloads the slots after placing fails and does not place a time that is now full', async () => {
+    vi.mocked(StallApi.slots).mockResolvedValue([
+      slot(11, '2026-10-03', '07:00', '08:00'),
+      slot(13, '2026-10-03', '08:00', '09:00'),
+    ]);
+    vi.mocked(OrderApi.place).mockRejectedValueOnce(new Error('SLOT_FULL'));
+    renderCart();
+    await userEvent.click(await screen.findByRole('radio', { name: /07:00/ }));
+    const place = screen.getByRole('button', { name: 'Place 1 order' });
+    await waitFor(() => expect(place).toBeEnabled());
+
+    vi.mocked(StallApi.slots).mockResolvedValue([
+      slot(11, '2026-10-03', '07:00', '08:00', FULL),
+      slot(13, '2026-10-03', '08:00', '09:00'),
+    ]);
+    await userEvent.click(place);
+
+    await waitFor(() => expect(StallApi.slots).toHaveBeenCalledTimes(2));
+    expect(await screen.findByText('Choose a pickup time at Vườn Út Hiền to place your orders.')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /07:00/ })).toBeDisabled();
+  });
 });
 
 const renderCart = () =>
