@@ -2,12 +2,13 @@ import { useState, type FormEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
+import { ShieldIcon } from '@/components/icons';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/input';
 import { ADMIN_HOME_PATH, ADMIN_LOGIN_PATH } from '@/constants/nav';
 import useTotpCountdown from '@/hooks/useTotpCountdown';
-import AdminAuthShell from '@/layout/AdminAuthShell';
+import AdminAuthSplitShell, { AdminAuthCardHeader } from '@/layout/AdminAuthSplitShell';
 import Helper from '@/utils/helper';
 import type { PendingMfa } from '@/utils/mfa';
 import Notification from '@/utils/notification';
@@ -98,22 +99,18 @@ const AdminVerifyPage = () => {
   };
 
   return (
-    <AdminAuthShell>
-      <div className="flex flex-col gap-2">
-        <p className="text-overline text-ink-muted uppercase">{t('overline')}</p>
-        <h1 className="font-hand text-h1">{t('title')}</h1>
-        <p className="text-small text-ink-muted">
-          <Trans
-            t={t}
-            i18nKey="signedInAs"
-            values={{ email: pending.email }}
-            components={{ b: <b className="text-ink" /> }}
-          />{' '}
-          <Link to={ADMIN_LOGIN_PATH} replace className="text-brand underline">
-            {t('notYou')}
-          </Link>
-        </p>
-      </div>
+    <AdminAuthSplitShell>
+      <AdminAuthCardHeader icon={<ShieldIcon size={20} />} eyebrow={t('overline')} heading={t('title')}>
+        <Trans
+          t={t}
+          i18nKey="signedInAs"
+          values={{ email: pending.email }}
+          components={{ b: <b className="text-ink" /> }}
+        />{' '}
+        <Link to={ADMIN_LOGIN_PATH} replace className="text-brand underline">
+          {t('notYou')}
+        </Link>
+      </AdminAuthCardHeader>
 
       <form noValidate autoComplete="off" onSubmit={handleSubmit} className="flex flex-col gap-4">
         {alert && (
@@ -182,7 +179,7 @@ const AdminVerifyPage = () => {
           </button>
         </p>
       </form>
-    </AdminAuthShell>
+    </AdminAuthSplitShell>
   );
 };
 

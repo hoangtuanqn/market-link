@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router';
 import {
   ChevronLeftIcon,
   FoldIcon,
+  HandWaveIcon,
   LogOutIcon,
   LogoMark,
   MenuIcon,
@@ -12,6 +13,7 @@ import {
   type IconProps,
 } from '@/components/icons';
 import Helper from '@/utils/helper';
+import { useGreetingPeriod } from './greeting';
 
 export type ShellNavItem = { to: string; label: string; icon: ComponentType<IconProps>; count?: number };
 export type ShellNavGroup = { heading: string; items: ShellNavItem[] };
@@ -27,7 +29,7 @@ type DashboardShellProps = {
   nav: ShellNavGroup[];
   /** The stall or platform card under the logo. */
   context: { mono: string; name: string; sub: string };
-  user: { mono: string; email: string; line: string };
+  user: { mono: string; email: string; line: string; name?: string };
   /** Real sign-out (admin); without it the link just goes to `signOutTo`. */
   onSignOut?: () => void;
   signOutTo?: string;
@@ -65,6 +67,7 @@ const DashboardShell = ({
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const period = useGreetingPeriod();
   const [folded, setFolded] = useState(() => {
     try {
       return localStorage.getItem(FOLD_KEY) === 'folded';
@@ -95,14 +98,14 @@ const DashboardShell = ({
 
   const signOutClass = Helper.cn(
     'text-board-muted hover:text-on-board hover:bg-brand-strong col-span-2 inline-flex min-h-9 cursor-pointer items-center gap-2 rounded-sm bg-transparent px-3 text-[14px] font-bold no-underline',
-    folded && 'lg:col-span-1 lg:justify-center lg:px-0',
+    folded && 'lg:col-span-1 lg:size-9 lg:justify-center lg:p-0',
   );
 
   return (
     <div
       className={Helper.cn(
-        'grid min-h-screen flex-1 grid-cols-1 lg:grid-cols-[284px_minmax(0,1fr)]',
-        folded && 'lg:grid-cols-[68px_minmax(0,1fr)]',
+        'grid min-h-screen flex-1 grid-cols-1 transition-[grid-template-columns] duration-300 ease-in-out',
+        folded ? 'lg:grid-cols-[68px_minmax(0,1fr)]' : 'lg:grid-cols-[284px_minmax(0,1fr)]',
         className,
       )}
     >
@@ -117,12 +120,17 @@ const DashboardShell = ({
       <aside
         aria-label={navLabel}
         className={Helper.cn(
-          'bg-board text-on-board fixed inset-y-0 left-0 z-100 flex w-71 -translate-x-full flex-col gap-4 overflow-y-auto p-3 transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0',
+          'bg-board text-on-board fixed inset-y-0 left-0 z-100 flex -translate-x-full flex-col gap-4 overflow-hidden p-3 transition-[width,padding,transform] duration-300 ease-in-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0',
           mobileOpen && 'translate-x-0',
-          folded && 'lg:w-17 lg:items-center lg:px-2',
+          folded ? 'w-71 lg:w-17 lg:px-2' : 'w-71 lg:w-71 lg:px-3',
         )}
       >
-        <div className="flex items-center gap-2 px-2">
+        <div
+          className={Helper.cn(
+            'flex shrink-0 items-center transition-all duration-300 ease-in-out',
+            folded ? 'gap-2 px-2 lg:flex-col lg:justify-center lg:gap-2 lg:px-0' : 'gap-2 px-2',
+          )}
+        >
           <Link
             to={home}
             aria-label={homeLabel}
@@ -134,61 +142,72 @@ const DashboardShell = ({
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className="text-on-board inline-flex items-center gap-2 no-underline"
+            title={homeLabel}
           >
-            <LogoMark size={26} variant="light" />
-            {!folded && <span className="font-hand text-xl leading-none">MarketLink</span>}
-          </Link>
-          {!folded && (
-            <span className="bg-accent text-on-accent rounded-sm px-2 py-0.5 text-[11px] font-bold tracking-[0.08em] uppercase">
-              {badge}
+            <span className="flex-none">
+              <LogoMark size={26} variant="light" />
             </span>
-          )}
+            <span className={Helper.cn('font-hand text-xl leading-none', folded && 'lg:hidden')}>MarketLink</span>
+          </Link>
+          <span
+            className={Helper.cn(
+              'bg-accent text-on-accent rounded-sm px-2 py-0.5 text-[11px] font-bold tracking-[0.08em] uppercase',
+              folded && 'lg:hidden',
+            )}
+          >
+            {badge}
+          </span>
           <button
             type="button"
             onClick={toggleFold}
             aria-label={folded ? t('farmerNav.expand') : t('farmerNav.collapse')}
             title={folded ? t('farmerNav.expand') : t('farmerNav.collapse')}
-            className="text-board-muted hover:text-on-board hover:bg-brand-strong ml-auto hidden size-8 flex-none place-items-center rounded-sm lg:grid"
+            className={Helper.cn(
+              'text-board-muted hover:text-on-board hover:bg-brand-strong size-8 flex-none place-items-center rounded-sm transition-colors duration-200 lg:grid',
+              folded ? 'ml-auto hidden lg:ml-0 lg:grid' : 'ml-auto hidden lg:grid',
+            )}
           >
-            <FoldIcon />
+            <FoldIcon className={Helper.cn('transition-transform duration-300', folded && 'rotate-180')} />
           </button>
         </div>
 
         <div
           className={Helper.cn(
-            'bg-brand-strong grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 rounded-md p-3 shadow-[inset_0_0_0_1.5px_var(--accent)]',
-            folded && 'lg:grid-cols-1 lg:justify-items-center lg:p-2',
+            'bg-brand-strong shrink-0 rounded-md shadow-[inset_0_0_0_1.5px_var(--accent)] transition-all duration-300 ease-in-out',
+            folded
+              ? 'grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 p-3 lg:flex lg:items-center lg:justify-center lg:p-2'
+              : 'grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 p-3',
           )}
         >
-          <span className="bg-accent text-on-accent font-hand grid size-9 place-items-center rounded-full text-[20px]">
+          <span
+            className="bg-accent text-on-accent font-hand grid size-9 shrink-0 place-items-center rounded-full text-[20px]"
+            title={context.name}
+          >
             {context.mono}
           </span>
-          {!folded && (
-            <span className="min-w-0">
-              <b className="font-hand block truncate text-[21px] leading-tight font-normal">{context.name}</b>
-              <span className="text-board-muted block text-[12px]">{context.sub}</span>
-            </span>
-          )}
-          {!folded && (
-            <button
-              type="button"
-              aria-label={t('farmerNav.changeMarket')}
-              className="text-on-board hover:bg-board grid size-8 place-items-center rounded-sm"
-            >
-              <SwapIcon />
-            </button>
-          )}
+          <span className={Helper.cn('min-w-0', folded && 'lg:hidden')}>
+            <b className="font-hand block truncate text-[21px] leading-tight font-normal">{context.name}</b>
+            <span className="text-board-muted block text-[12px]">{context.sub}</span>
+          </span>
+          <button
+            type="button"
+            aria-label={t('farmerNav.changeMarket')}
+            className={Helper.cn(
+              'text-on-board hover:bg-board grid size-8 place-items-center rounded-sm',
+              folded && 'lg:hidden',
+            )}
+          >
+            <SwapIcon />
+          </button>
         </div>
 
-        <nav aria-label={t('farmerNav.sections')} className="flex flex-1 flex-col gap-4">
+        <nav
+          aria-label={t('farmerNav.sections')}
+          className="flex min-h-0 flex-1 flex-col gap-4 overflow-x-hidden overflow-y-auto"
+        >
           {nav.map((g) => (
             <div key={g.heading} className="flex flex-col gap-0.5">
-              <h2
-                className={Helper.cn(
-                  'text-board-muted text-overline m-0 px-3',
-                  folded && 'sr-only lg:not-sr-only lg:px-3',
-                )}
-              >
+              <h2 className={Helper.cn('text-board-muted text-overline m-0 px-3', folded && 'lg:sr-only')}>
                 {g.heading}
               </h2>
               {g.items.map((it) => (
@@ -200,16 +219,16 @@ const DashboardShell = ({
                   title={it.label}
                   className={({ isActive }) =>
                     Helper.cn(
-                      'text-board-muted relative flex min-h-10 items-center gap-3 rounded-sm px-3 text-[15px] font-medium no-underline',
+                      'text-board-muted relative flex min-h-10 shrink-0 items-center gap-3 rounded-sm text-[15px] font-medium no-underline',
                       isActive
                         ? 'text-on-board bg-brand-strong font-bold shadow-[inset_3px_0_0_var(--accent)]'
                         : 'hover:text-on-board hover:bg-brand-strong',
-                      folded && 'lg:justify-center lg:px-0',
+                      folded ? 'px-3 lg:justify-center lg:px-0' : 'px-3',
                     )
                   }
                 >
                   <it.icon size={18} className="flex-none" />
-                  <span className={folded ? 'lg:hidden' : undefined}>{it.label}</span>
+                  <span className={folded ? 'truncate lg:hidden' : 'truncate'}>{it.label}</span>
                   {it.count ? (
                     <span
                       className={Helper.cn(
@@ -227,31 +246,50 @@ const DashboardShell = ({
           ))}
         </nav>
 
-        <div className="border-board-muted grid grid-cols-[36px_minmax(0,1fr)] items-center gap-x-3 gap-y-2 border-t pt-3">
-          <span className="bg-board-muted text-board grid size-9 place-items-center rounded-full text-[13px] font-bold">
+        <div
+          className={Helper.cn(
+            'border-board-muted shrink-0 border-t pt-3 transition-all duration-300 ease-in-out',
+            folded
+              ? 'grid grid-cols-[36px_minmax(0,1fr)] items-center gap-x-3 gap-y-2 lg:flex lg:flex-col lg:items-center lg:gap-2'
+              : 'grid grid-cols-[36px_minmax(0,1fr)] items-center gap-x-3 gap-y-2',
+          )}
+        >
+          <span
+            className="bg-board-muted text-board grid size-9 shrink-0 place-items-center rounded-full text-[13px] font-bold"
+            title={user.email}
+          >
             {user.mono}
           </span>
-          {!folded && (
-            <span className="min-w-0">
-              <b className="block truncate text-[13px] font-medium">{user.email}</b>
-              <span className="text-board-muted block text-[12px]">{user.line}</span>
-            </span>
-          )}
+          <span className={Helper.cn('min-w-0', folded && 'lg:hidden')}>
+            <b className="block truncate text-[13px] font-medium">{user.email}</b>
+            <span className="text-board-muted block text-[12px]">{user.line}</span>
+          </span>
           {onSignOut ? (
-            <button type="button" onClick={onSignOut} className={signOutClass}>
+            <button
+              type="button"
+              onClick={onSignOut}
+              aria-label={folded ? t('nav.signOut') : undefined}
+              title={folded ? t('nav.signOut') : undefined}
+              className={signOutClass}
+            >
               <LogOutIcon />
-              {!folded && t('nav.signOut')}
+              <span className={folded ? 'lg:hidden' : undefined}>{t('nav.signOut')}</span>
             </button>
           ) : (
-            <Link to={signOutTo} className={signOutClass}>
+            <Link
+              to={signOutTo}
+              aria-label={folded ? t('nav.signOut') : undefined}
+              title={folded ? t('nav.signOut') : undefined}
+              className={signOutClass}
+            >
               <LogOutIcon />
-              {!folded && t('nav.signOut')}
+              <span className={folded ? 'lg:hidden' : undefined}>{t('nav.signOut')}</span>
             </Link>
           )}
         </div>
       </aside>
 
-      <div className="flex min-w-0 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <header className="border-line-strong bg-surface-quiet sticky top-0 z-40 flex items-center gap-3 border-b-[1.5px] px-4 py-3 md:px-5">
           <button
             type="button"
@@ -272,6 +310,19 @@ const DashboardShell = ({
               <ChevronLeftIcon />
             </button>
           )}
+          <div className="flex min-w-0 items-center gap-2 sm:gap-2.5">
+            <HandWaveIcon
+              size={20}
+              className="text-accent-strong shrink-0 transition-transform duration-300 hover:rotate-12"
+              aria-hidden="true"
+            />
+            <div className="min-w-0">
+              <p className="text-ink truncate text-[18px] leading-tight sm:text-[20px]">
+                <span className="font-normal">{t(`header.greeting.${period}`)}</span>
+                {user.name && <span className="font-bold">, {user.name}</span>}
+              </p>
+            </div>
+          </div>
           <div className="ml-auto flex items-center gap-2">
             <div className="border-line-strong bg-surface-raised text-ink-muted focus-within:outline-focus hidden min-h-10 items-center gap-2 rounded-sm border-[1.5px] px-3 focus-within:outline-2 focus-within:outline-offset-1 sm:flex">
               <SearchIcon />
@@ -299,7 +350,7 @@ const DashboardShell = ({
           </div>
         </header>
 
-        <main className="mx-auto box-border flex w-full max-w-(--size-container) flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
+        <main className="box-border flex w-full flex-1 flex-col gap-6 px-4 pt-6 pb-8 md:px-6 md:pt-8 md:pb-12">
           <Outlet />
         </main>
 

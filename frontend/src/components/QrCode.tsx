@@ -18,7 +18,7 @@ const QrCode = ({ value, label }: { value: string; label: string }) => {
     <div
       role="img"
       aria-label={label}
-      className="border-line-strong bg-surface-raised box-border size-45 flex-none rounded-sm border-[1.5px] p-3 [&_svg]:block [&_svg]:size-full"
+      className="border-line-strong bg-surface-raised box-border size-40 flex-none rounded-sm border-[1.5px] p-3 [&_svg]:block [&_svg]:size-full"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );

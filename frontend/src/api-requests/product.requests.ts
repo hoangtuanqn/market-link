@@ -29,6 +29,14 @@ export type ProductDto = {
 
 export type ReviewSummaryDto = { ratingAvg: number; ratingCount: number; histogram: number[] };
 
+/** PATCH /farmer/products/{id}/daily-stock/{date} response — one product_daily_stock row (FR-063). */
+export type DailyStockDto = {
+  productId: number;
+  stockDate: string;
+  quantityAvailable: number;
+  unitPrice: number;
+};
+
 /** GET /products/{id}: a product with its stall and review summary (real numbers from C8). */
 export type ProductDetailDto = {
   product: ProductDto;
@@ -103,7 +111,7 @@ export const toProduct = (dto: ProductDto, description?: string | null): Product
   availableDate: dto.availableDate ?? undefined,
 });
 
-export const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
+const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
   ...toProduct(dto.item, dto.description),
   hidden: dto.hidden,
   hiddenReason: dto.hiddenReason ?? undefined,
@@ -182,6 +190,18 @@ class ProductApi {
       status,
     });
     return toFarmerProduct(response.data.data);
+  };
+
+  /**
+   * FR-063 — adjusts one pickup date without touching the recurring weekly template. `unitPrice` null keeps that date's
+   * existing price. 400 if no template covers that weekday yet.
+   */
+  static overrideDailyStock = async (id: number, date: string, quantityAvailable: number, unitPrice: number | null) => {
+    const response = await privateApi.patch<ApiResponse<DailyStockDto>>(`/farmer/products/${id}/daily-stock/${date}`, {
+      quantityAvailable,
+      unitPrice,
+    });
+    return response.data.data;
   };
 
   /** Admin — FR-074. The reason is shown to the Farmer in their list. */

@@ -2,7 +2,10 @@
   "error": {
     "noun": "your registration"
   },
-  "overline": "{{stall}} · registered {{date}}",
+  "overline": {
+    "suspended": "{{stall}} · suspended on {{date}}",
+    "registered": "{{stall}} · registered {{date}}"
+  },
   "title": {
     "pending": "Your stall is waiting for approval",
     "rejected": "Your stall registration was declined",
@@ -14,7 +17,7 @@
   },
   "now": {
     "title": "What you can do now",
-    "details": "Fill in your <link>stall details</link>, the markets you sell at, your days and pickup windows.",
+    "details": "Fill in your <a>stall details</a>, the markets you sell at, your days and pickup windows.",
     "pin": "Pin your stall on the map so customers can find you on day one.",
     "products": "Products can be added once the stall is approved. Prepare names, prices and photos in the meantime."
   },
@@ -45,6 +48,6 @@
   },
   "reinstate": {
     "title": "To be reinstated",
-    "text": "Contact the team through <link>Contact us</link>."
+    "text": "Contact the team through <a>Contact us</a>."
   }
 }

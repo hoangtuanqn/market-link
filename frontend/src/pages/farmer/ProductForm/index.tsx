@@ -22,6 +22,9 @@ import Notification from '@/utils/notification';
 import ShelfLifeField from './ShelfLifeField';
 
 const STATUS_OPTIONS: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
+/** Matches ProductImageUploadService's IMAGE_TYPES/MAX_BYTES. */
+const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 /** An empty group list, used when the category has no groups yet and while they are loading or failed to load. */
 const NO_GROUPS: ShelfLifeGroupDto[] = [];
 
@@ -191,7 +194,7 @@ const FarmerProductFormPage = () => {
     const next: FormErrors = {};
     if (!form.name.trim()) next.name = t('errors.required');
     if (categoryId == null) next.cat = t('errors.required');
-    if (!Number.isFinite(price) || price < 0) next.price = t('errors.price');
+    if (!Number.isFinite(price) || price <= 0) next.price = t('errors.price');
     if (!Number.isInteger(qty) || qty < 0) next.qty = t('qty.error');
     if (days > maxShelfLifeDays(suggestedDays)) {
       next.shelfLife = t('shelfLife.tooLong', { count: maxShelfLifeDays(suggestedDays) });
@@ -205,6 +208,17 @@ const FarmerProductFormPage = () => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
+    // Same limits as ProductImageUploadService — reject before spending an upload on a file the
+    // server would refuse anyway.
+    if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+      setErrors((current) => ({ ...current, image: t('photo.error.type') }));
+      return;
+    }
+    if (file.size > MAX_IMAGE_BYTES) {
+      setErrors((current) => ({ ...current, image: t('photo.error.tooLarge') }));
+      return;
+    }
+    setErrors((current) => ({ ...current, image: undefined }));
     setUploadingImage(true);
     try {
       const url = await ProductApi.uploadProductImage(file);
@@ -281,7 +295,7 @@ const FarmerProductFormPage = () => {
       </p>
 
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="font-hand text-h1">{existing ? existing.name : t('addTitle')}</h1>
+        <h1 className="text-h1 text-ink font-bold">{existing ? existing.name : t('addTitle')}</h1>
         <AskAssistant question={tAssistant('assistant.ask.product', { name: form.name || t('addTitle') })} />
       </div>
 

@@ -25,19 +25,21 @@ const DEFAULTS = [
 const FarmerSettingsPage = () => {
   const { t } = useTranslation('FarmerSettings');
   return (
-    <div className="flex w-full max-w-180 flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('title')}</h1>
-        <p className="text-body-lg">{t('intro')}</p>
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
+        <p className="text-body-lg text-ink-muted">{t('intro')}</p>
       </div>
 
       <SettingsPanel role="farmer">
         {(draft, set) => (
           <Card as="section" aria-labelledby="set-selling" className="flex flex-col gap-4 p-6">
-            <h2 id="set-selling" className="text-h3">
-              {t('selling')}
-            </h2>
-            <p className="text-small text-ink-muted">{t('sellingNote')}</p>
+            <div className="flex flex-col gap-1">
+              <h2 id="set-selling" className="text-h3 text-ink font-bold">
+                {t('selling')}
+              </h2>
+              <p className="text-small text-ink-muted">{t('sellingNote')}</p>
+            </div>
             <ul className="m-0 flex flex-col p-0">
               {DEFAULTS.map((d) => (
                 <SettingsRow key={d.key} title={t(d.label)} note={d.note && t(d.note)}>

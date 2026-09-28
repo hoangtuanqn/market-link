@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "{{stall}} 픽업 시간 변경",
-  "pickupDay": "픽업 날짜",
   "pickupDayAt": "{{stall}} 픽업 날짜",
   "pickupTime": "픽업 시간 · {{day}} {{date}} · 운영 {{from}} – {{to}}",
   "summary": {

@@ -15,7 +15,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH, ADMIN_MODERATION_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
 import type { OrderListItemDto } from '@/api-requests/order.requests';
 import useRequest from '@/hooks/useRequest';
-import { formatDate, pickupLabel, vnd } from '@/lib/format';
+import { formatDate, pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import Helper from '@/utils/helper';
@@ -142,7 +142,7 @@ const AdminCustomerDetailPage = () => {
       render: (o) => pickupLabel(o.pickupDate, `${o.pickupStart}–${o.pickupEnd}`),
     },
     { key: 'items', label: t('col.items'), align: 'num', render: (o) => o.itemCount },
-    { key: 'total', label: t('col.total'), align: 'num', render: (o) => vnd(o.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (o) => money(o.totalAmount) },
     { key: 'status', label: t('col.status'), render: (o) => <OrderStatusBadge status={o.status} /> },
   ];
 
@@ -160,7 +160,7 @@ const AdminCustomerDetailPage = () => {
           <p className="text-overline text-ink-muted uppercase">
             {t('since', { joined: formatDate(new Date(customer.createdAt)) })}
           </p>
-          <h1 className="text-h2">{customer.fullName}</h1>
+          <h1 className="text-h2 text-ink font-bold">{customer.fullName}</h1>
           <div>
             <CustomerStatusPill active={active} />
           </div>

@@ -39,7 +39,7 @@
     "complete": "Marquer terminée",
     "view": "Voir"
   },
-  "greeting": "Bonjour, {{name}}",
+  "title": "Vue d'ensemble",
   "applyTemplate": "Appliquer le modèle hebdomadaire",
   "addProduct": "Ajouter un produit",
   "banner": {

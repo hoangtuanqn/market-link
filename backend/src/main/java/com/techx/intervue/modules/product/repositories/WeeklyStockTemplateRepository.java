@@ -13,8 +13,6 @@ public interface WeeklyStockTemplateRepository extends JpaRepository<WeeklyStock
 
     void deleteByFarmerId(Long farmerId);
 
-    List<WeeklyStockTemplate> findByFarmerIdAndDayOfWeekAndActiveTrue(Long farmerId, int dayOfWeek);
-
     List<WeeklyStockTemplate> findByProductIdAndActiveTrue(Long productId);
 
     @Query(

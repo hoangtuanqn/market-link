@@ -2,11 +2,12 @@ import { useState, type FormEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
+import { ChevronRightIcon } from '@/components/icons';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/input';
 import { USER_ROLE } from '@/constants/enums';
-import { ADMIN_HOME_PATH, ADMIN_VERIFY_PATH } from '@/constants/nav';
+import { ADMIN_HOME_PATH, ADMIN_SETUP_2FA_PATH, ADMIN_VERIFY_PATH } from '@/constants/nav';
 import validateLogin, { type LoginFieldErrors } from '@/pages/auth/Login/validateLogin';
 import Helper from '@/utils/helper';
 import { splitLoginResult } from '@/utils/mfa';
@@ -51,6 +52,11 @@ const FormAdminLogin = () => {
         return;
       }
       Session.save(session, false);
+      if (response.data.mfaSetupRequired) {
+        Notification.info({ text: t('form.setupRequired') });
+        navigate(ADMIN_SETUP_2FA_PATH, { replace: true });
+        return;
+      }
       Notification.success({ text: response.message || t('form.signedIn') });
       navigate(ADMIN_HOME_PATH, { replace: true });
     } catch (error) {
@@ -72,7 +78,7 @@ const FormAdminLogin = () => {
           <Trans
             t={t}
             i18nKey="notAdmin.text"
-            components={{ link: <Link to="/login" className="text-danger underline" /> }}
+            components={{ a: <Link to="/login" className="text-danger underline" /> }}
           />
         </Banner>
       )}
@@ -82,6 +88,7 @@ const FormAdminLogin = () => {
         type="email"
         required
         autoComplete="username"
+        placeholder={t('form.emailPlaceholder')}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         error={errors.email}
@@ -93,14 +100,27 @@ const FormAdminLogin = () => {
         type="password"
         required
         autoComplete="current-password"
+        placeholder={t('form.passwordPlaceholder')}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         error={errors.password}
         disabled={isSubmitting}
       />
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? t('form.submitting') : t('form.submit')}
-      </Button>
+
+      <div>
+        <Button type="submit" disabled={isSubmitting} className="w-full">
+          {isSubmitting ? t('form.submitting') : t('form.submit')}
+        </Button>
+        <p className="text-ink-muted text-caption mt-2 text-center">{t('form.note')}</p>
+      </div>
+
+      <p className="border-line text-small text-ink-muted flex items-center justify-center gap-1 border-t pt-4">
+        <span>{t('switchRole.question')}</span>
+        <Link to="/" className="text-brand inline-flex items-center gap-0.5 font-bold no-underline hover:underline">
+          {t('switchRole.cta')}
+          <ChevronRightIcon />
+        </Link>
+      </p>
     </form>
   );
 };

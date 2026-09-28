@@ -5,9 +5,6 @@
     "all": "Todas",
     "unread": "Sin leer"
   },
-  "unreadCount_one": "{{count}} sin leer",
-  "unreadCount_other": "{{count}} sin leer",
   "unread": "sin leer",
-  "markAllRead": "Marcar todas como leídas",
   "note": "Por ahora solo dentro de la app. Los correos de confirmación y de pedido listo llegarán más adelante."
 }

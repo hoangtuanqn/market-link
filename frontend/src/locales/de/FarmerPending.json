@@ -17,7 +17,7 @@
   },
   "now": {
     "title": "Was Sie jetzt tun können",
-    "details": "Füllen Sie die <link>Standangaben</link> aus: die Märkte, auf denen Sie verkaufen, Ihre Tage und Abholzeitfenster.",
+    "details": "Füllen Sie die <a>Standangaben</a> aus: die Märkte, auf denen Sie verkaufen, Ihre Tage und Abholzeitfenster.",
     "pin": "Markieren Sie Ihren Stand auf der Karte, damit Kunden Sie ab dem ersten Tag finden.",
     "products": "Produkte können Sie hinzufügen, sobald der Stand freigegeben ist. Bereiten Sie bis dahin Namen, Preise und Fotos vor."
   },
@@ -48,6 +48,6 @@
   },
   "reinstate": {
     "title": "Zur Wiederfreigabe",
-    "text": "Kontaktieren Sie das Team über <link>Kontakt</link>."
+    "text": "Kontaktieren Sie das Team über <a>Kontakt</a>."
   }
 }

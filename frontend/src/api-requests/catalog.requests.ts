@@ -46,6 +46,8 @@ export type CategoryDto = {
   /** The standard shelf-life range — no official FR yet, see migration V20260926015. */
   minShelfLifeDays: number;
   maxShelfLifeDays: number;
+  /** Live products pointing at this category. Always 0 on the public `/categories` list. */
+  productCount: number;
 };
 
 /** Body of POST/PUT /admin/markets. The address must be in Vietnam; the server composes `address` from it. */
@@ -86,10 +88,7 @@ export type CategoryInput = {
   maxShelfLifeDays: number;
 };
 
-/**
- * The shape the Admin → Categories screen uses. `count` is the number of products — real from cluster C3, 0 before
- * that.
- */
+/** The shape the Admin → Categories screen uses. `count` is the number of live products in the category. */
 export type CategoryType = {
   id: number;
   name: string;
@@ -142,13 +141,13 @@ export const toClosure = (dto: MarketClosureDto): ClosureType => {
   };
 };
 
-export const toCategory = (dto: CategoryDto): CategoryType => ({
+const toCategory = (dto: CategoryDto): CategoryType => ({
   id: dto.id,
   name: dto.name,
   slug: dto.slug,
   sortOrder: dto.sortOrder,
   isActive: dto.isActive,
-  count: 0,
+  count: dto.productCount,
   minShelfLifeDays: dto.minShelfLifeDays,
   maxShelfLifeDays: dto.maxShelfLifeDays,
 });
@@ -226,6 +225,12 @@ class CatalogApi {
     return response.data.data.map(toCategory);
   };
 
+  /** Admin — every category, active or not, so a disabled one can be found and turned back on. */
+  static listAllCategoriesAdmin = async () => {
+    const response = await privateApi.get<ApiResponse<CategoryDto[]>>('/admin/categories');
+    return response.data.data.map(toCategory);
+  };
+
   static createCategory = async (input: CategoryInput) => {
     const response = await privateApi.post<ApiResponse<CategoryDto>>('/admin/categories', input);
     return toCategory(response.data.data);
@@ -236,8 +241,14 @@ class CatalogApi {
     return toCategory(response.data.data);
   };
 
-  static deactivateCategory = async (id: number) => {
-    await privateApi.delete<ApiResponse<null>>(`/admin/categories/${id}`);
+  /** `moveToCategoryId`, when given, reassigns this category's live products before turning it off. */
+  static deactivateCategory = async (id: number, moveToCategoryId?: number) => {
+    await privateApi.delete<ApiResponse<null>>(`/admin/categories/${id}`, { params: { moveToCategoryId } });
+  };
+
+  static activateCategory = async (id: number) => {
+    const response = await privateApi.patch<ApiResponse<CategoryDto>>(`/admin/categories/${id}/activate`);
+    return toCategory(response.data.data);
   };
 }
 

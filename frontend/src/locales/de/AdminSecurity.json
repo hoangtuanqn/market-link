@@ -32,21 +32,13 @@
     "title": "Scannen Sie dies mit Ihrer Authenticator-App",
     "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password – jede davon. Es wird nichts gesendet: Der Code unten wird von Ihrem eigenen Browser gezeichnet.",
     "qr": "QR-Code für Ihre Authenticator-App",
-    "manual": "<b>Scannen klappt nicht?</b> Geben Sie diesen Schlüssel von Hand ein:",
-    "type": "Typ",
-    "typeValue": "Zeitbasiert (TOTP)",
-    "algorithm": "Algorithmus",
-    "digits": "Ziffern",
-    "period": "Intervall",
-    "seconds_one": "{{count}} Sekunde",
-    "seconds_other": "{{count}} Sekunden"
+    "manual": "<b>Scannen klappt nicht?</b> Geben Sie diesen Schlüssel von Hand ein:"
   },
   "step2": {
     "title": "Geben Sie den angezeigten Code ein",
     "text": "So wird geprüft, dass Handy und Server bei der Uhrzeit übereinstimmen, bevor etwas aktiviert wird.",
     "code": "Sechsstelliger Code",
-    "confirm": "Bestätigen",
-    "confirmed": "Bestätigt"
+    "confirm": "Bestätigen"
   },
   "step3": {
     "title": "Speichern Sie Ihre Wiederherstellungscodes",
@@ -80,5 +72,19 @@
     "copyFailed": "Kopieren nicht möglich. Markieren Sie die Codes und kopieren Sie sie von Hand.",
     "downloaded": "Als {{file}} heruntergeladen.",
     "fileHeading": "MarketLink Admin-Wiederherstellungscodes"
+  },
+  "setup": {
+    "overline": "Admin-Sicherheit",
+    "title": "Zwei-Faktor-Authentifizierung einrichten",
+    "copySecret": "Schlüssel kopieren",
+    "secretCopied": "Schlüssel in die Zwischenablage kopiert.",
+    "completeTitle": "Zwei-Faktor-Authentifizierung ist jetzt aktiv!",
+    "completeText": "Ihr Admin-Konto ist jetzt geschützt. Speichern Sie Ihre Wiederherstellungscodes unten und gehen Sie dann zum Dashboard.",
+    "goToDashboard": "Zum Admin-Dashboard",
+    "alreadyActive": "Die Zwei-Faktor-Authentifizierung ist für Ihr Konto bereits aktiviert.",
+    "backToDashboard": "Zurück zum Dashboard",
+    "manageSecurity": "Sicherheitseinstellungen",
+    "notYou": "Nicht Sie?",
+    "signOut": "Abmelden"
   }
 }

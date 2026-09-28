@@ -63,10 +63,6 @@
     "label": "Descripción",
     "hint": "Se muestra en la página del producto. Cuenta cómo se cultiva y cómo conservarlo."
   },
-  "flag": {
-    "label": "Etiqueta corta en la tarjeta",
-    "hint": "Opcional, escrita a mano en la etiqueta: “Fresco de hoy”, “Horneado a las 5”."
-  },
   "status": {
     "label": "Estado",
     "available": "Disponible",
@@ -81,7 +77,11 @@
     "uploading": "Subiendo",
     "uploadInProgress": "Espera a que termine de subirse la foto antes de guardar.",
     "alt": "Foto del producto",
-    "hint": "JPEG, PNG o WEBP, hasta 8 MB. De cerca, con luz natural, sobre madera o papel."
+    "hint": "JPEG, PNG o WEBP, hasta 8 MB. De cerca, con luz natural, sobre madera o papel.",
+    "error": {
+      "tooLarge": "La foto debe ser de 8 MB o menos.",
+      "type": "Las fotos deben ser JPEG, PNG o WEBP."
+    }
   },
   "save": "Guardar producto",
   "add": "Añadir producto",
@@ -107,6 +107,6 @@
   },
   "errors": {
     "required": "Este campo es obligatorio.",
-    "price": "El precio debe ser 0 o más."
+    "price": "El precio debe ser mayor que 0."
   }
 }

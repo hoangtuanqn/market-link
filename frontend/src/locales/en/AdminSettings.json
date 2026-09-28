@@ -10,5 +10,26 @@
   "hours_one": "{{count}} hour",
   "hours_other": "{{count}} hours",
   "orders_one": "{{count}} order",
-  "orders_other": "{{count}} orders"
+  "orders_other": "{{count}} orders",
+  "website": {
+    "title": "Website status",
+    "intro": "Turn the whole site off temporarily while you fix something, then switch it back on when you're done.",
+    "loading": "Loading website status",
+    "loadErrorTitle": "Could not load the website status",
+    "loadErrorText": "Check your connection and try again.",
+    "retry": "Retry",
+    "pillActive": "Live",
+    "pillMaintenance": "Under maintenance",
+    "activeText": "MarketLink is open to everyone.",
+    "maintenanceText": "Only admins can sign in right now. Everyone else sees a maintenance notice.",
+    "enable": "Turn on maintenance mode",
+    "disable": "Turn off maintenance mode",
+    "confirmTitle": "Turn on maintenance mode?",
+    "confirmText": "Every visitor except admins is redirected to a maintenance notice right away. You can turn it off again whenever you're ready.",
+    "confirmButton": "Turn it on",
+    "cancelButton": "Not yet",
+    "toastOn": "Maintenance mode is on. Everyone but admins is locked out.",
+    "toastOff": "Maintenance mode is off. MarketLink is open again.",
+    "error": "Could not update the website status. Please try again."
+  }
 }

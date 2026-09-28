@@ -13,7 +13,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import { ADMIN_CUSTOMERS_PATH } from '@/constants/nav';
 import useRequest from '@/hooks/useRequest';
-import { vnd } from '@/lib/format';
+import { money } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -185,7 +185,7 @@ const AdminModerationPage = () => {
       align: 'num',
       render: (p) => (
         <>
-          {vnd(p.price)} <span className="text-ink-muted font-normal">/ {p.unit}</span>
+          {money(p.price)} <span className="text-ink-muted font-normal">/ {p.unit}</span>
         </>
       ),
     },
@@ -210,7 +210,7 @@ const AdminModerationPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('title')}</h1>
+        <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
         <p className="text-body max-w-160">{t('intro')}</p>
       </div>
 

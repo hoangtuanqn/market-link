@@ -7,7 +7,7 @@ COMPOSE_PROD := docker compose -p market-link-prod --env-file .env.production -f
 
 .DEFAULT_GOAL := help
 .PHONY: help vapid-keys check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
-        format lint be-format be-test fe-install seed mysql redis clean
+        format lint be-format be-test fe-install seed mysql redis clean submission
 
 help: ## Show the command list
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n",$$1,$$2}'
@@ -101,3 +101,7 @@ redis: ## Open redis-cli
 
 clean: ## Remove containers + volumes (DB DATA IS LOST)
 	$(COMPOSE_APP) --profile tools down -v
+
+submission: ## Build the archive handed to the judges (dist/MarketLink-TechWiz7.zip)
+	./scripts/make-submission.sh
+	./scripts/make-submission.test.sh

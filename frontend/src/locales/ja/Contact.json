@@ -7,11 +7,10 @@
     "phone": "電話",
     "address": "住所",
     "hours": "対応時間",
-    "emailValue": "contact@marketlink.vn",
-    "phoneValue": "+84 90 123 4567",
-    "addressValue": "追って掲載します。地図のピンは 1 区にある仮の位置です。",
-    "hoursValue": "月 – 金、09:00 – 17:00",
-    "toAdd": "追って掲載"
+    "emailValue": "admin@marketlink.vn",
+    "phoneValue": "0900000001",
+    "addressValue": "3 Lê Duẩn, Phường Sài Gòn, Thành phố Hồ Chí Minh",
+    "hoursValue": "月 – 金、09:00 – 17:00"
   },
   "feedback": {
     "title": "不具合やアイデアがありますか",
@@ -22,7 +21,7 @@
     "label": "チームの所在地の地図",
     "markerLabel": "MarketLink チーム（仮）",
     "popupTitle": "MarketLink チーム",
-    "popupLine": "仮のピン、1 区",
+    "popupLine": "3 Lê Duẩn, Phường Sài Gòn",
     "directions": "チームへの経路"
   }
 }

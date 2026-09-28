@@ -13,7 +13,6 @@
   "left": "Il reste <b>{{qty}}</b>",
   "leftOn": "Il reste <b>{{qty}}</b> pour {{day}}",
   "stockUpdated": "Stock mis à jour aujourd'hui, avant les commandes de ce week-end.",
-  "notifyMe": "Me prévenir du retour",
   "added": {
     "title": "Ajouté au panier",
     "text": "Vous avez ajouté {{qty}} de {{name}} au panier."
@@ -21,7 +20,6 @@
   "addToCart": "Ajouter au panier",
   "payNote": "Le stock vous est réservé dès la commande. Vous payez {{price}} au stand au moment du retrait.",
   "fromStall": "Du stand",
-  "sellingSince": "vend ici depuis le {{date}}",
   "stats": {
     "reviews_one": "{{count}} avis",
     "reviews_other": "{{count}} avis",
@@ -32,7 +30,6 @@
     "cutoff": "clôture des commandes"
   },
   "seeStall": "Voir le stand",
-  "messageStall": "Écrire au stand",
   "details": {
     "title": "Détails du produit",
     "soldPer": "Vendu au",
@@ -76,7 +73,6 @@
   "similar": {
     "title": "{{name}} dans d'autres stands ce week-end",
     "note": "Même légume, autre parcelle, autre prix",
-    "here": "Vous êtes ici",
     "view": "Voir"
   },
   "also": {

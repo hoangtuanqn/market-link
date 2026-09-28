@@ -11,14 +11,6 @@
     "language": "Idioma",
     "languageNote": "El idioma de los menús, botones y mensajes. Los nombres de puestos, productos y lugares se quedan como los escribió el puesto.",
     "format": "Dinero, fechas y unidades",
-    "currency": "Mostrar precios en",
-    "currencyNote": "En el puesto siempre pagas en dong vietnamita. Otra moneda se muestra al lado solo como referencia, con tipos fijos del {{date}}.",
-    "currencies": {
-      "VND": "Solo ₫ dong vietnamita",
-      "USD": "₫ y $ dólar estadounidense",
-      "EUR": "₫ y € euro",
-      "JPY": "₫ y ¥ yen japonés"
-    },
     "units": "Pesos y volúmenes",
     "unitsNote": "Solo convierte unidades que miden algo. Un puesto que vende por manojo, por cabeza o por bandeja conserva su propia palabra.",
     "metric": "Métrico · kg, g, litro",
@@ -52,9 +44,6 @@
   "cart": {
     "orderOf": "Pedido {{index}} de {{of}}",
     "payAtPickup": "Paga en el puesto al recoger"
-  },
-  "chart": {
-    "showNumbers": "Ver los números"
   },
   "chat": {
     "assistant": "Asistente de MarketLink",
@@ -187,6 +176,11 @@
     "mapDataFrom": "Datos del mapa {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Buenos días",
+      "afternoon": "Buenas tardes",
+      "evening": "Buenas noches"
+    },
     "cart": "Carrito",
     "cartItems_one": "Carrito, {{count}} artículo",
     "cartItems_other": "Carrito, {{count}} artículos",
@@ -210,8 +204,8 @@
   "loadError": {
     "title": "No pudimos cargar los {{noun}}",
     "text": "Esta vez la lista no llegó. Lo que guardaste o pediste no se ve afectado.",
-    "help": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <link>cuéntanos qué pasó</link> y lo revisaremos.",
-    "helpAlt": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <alt />, o <link>cuéntanos qué pasó</link> y lo revisaremos."
+    "help": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <a>cuéntanos qué pasó</a> y lo revisaremos.",
+    "helpAlt": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <alt />, o <a>cuéntanos qué pasó</a> y lo revisaremos."
   },
   "loading": {
     "markets": "Cargando mercados"
@@ -299,22 +293,6 @@
     "show": "Mostrar contraseña",
     "hide": "Ocultar contraseña"
   },
-  "period": {
-    "length": "Duración del periodo",
-    "day": "Día",
-    "week": "Semana",
-    "month": "Mes",
-    "quarter": "Trimestre",
-    "year": "Año",
-    "custom": "Personalizado",
-    "from": "Desde",
-    "to": "Hasta",
-    "compareWith": "Comparar con",
-    "cmpBefore": "El periodo anterior, misma duración",
-    "cmpLastYear": "El mismo periodo del año pasado",
-    "cmpNone": "Sin comparación",
-    "comparedWith": "comparado con <b>{{compare}}</b>, misma duración"
-  },
   "price": {
     "was": "Antes"
   },
@@ -385,7 +363,6 @@
     "phoneInvalid": "Escribe un número de móvil vietnamita válido (10 dígitos)."
   },
   "adminNav": {
-    "sections": "Secciones de administración",
     "overview": "Resumen",
     "farmers": "Productores",
     "customers": "Clientes",
@@ -396,6 +373,7 @@
     "categories": "Categorías",
     "announcements": "Anuncios",
     "feedback": "Comentarios",
+    "notifications": "Notificaciones",
     "settings": "Ajustes",
     "account": "Tu cuenta",
     "analytics": "Analítica",
@@ -407,16 +385,6 @@
     "contextSub": "Plataforma · todo el mercado",
     "userLine": "Admin · toda la plataforma",
     "searchPlaceholder": "Puesto, cliente o mercado"
-  },
-  "carousel": {
-    "roleCarousel": "carrusel",
-    "roleSlide": "diapositiva",
-    "slideOf": "{{n}} de {{total}}: {{topic}}",
-    "previous": "Diapositiva anterior",
-    "next": "Diapositiva siguiente",
-    "show": "Mostrar la diapositiva {{n}}: {{topic}}",
-    "pause": "Pausar la presentación",
-    "play": "Reproducir la presentación"
   },
   "geo": {
     "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador o usa una dirección.",
@@ -778,6 +746,12 @@
       "fakeReviews": "Reseñas falsas",
       "ownerRequest": "A petición del titular de la cuenta"
     }
+  },
+  "cookieConsent": {
+    "label": "Aviso de cookies",
+    "text": "Usamos solo cookies esenciales para mantener tu sesión iniciada y tu carrito funcionando. No usamos cookies de publicidad ni de análisis. <a>Política de privacidad</a>.",
+    "decline": "Rechazar",
+    "accept": "Aceptar"
   },
   "storageMode": {
     "room": "Temperatura ambiente",

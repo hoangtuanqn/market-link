@@ -137,11 +137,13 @@ const FarmerLayout = () => {
           mono: initials(user?.fullName, user?.email),
           email: user?.email ?? '',
           line: t('farmerNav.roleStall', { stall: stallName }),
+          name: user?.fullName,
         }}
         searchId="farmer-appq"
         searchPlaceholder={t('farmerNav.searchPlaceholder')}
         accountTo="/account"
         headerActions={<NotificationBell to="/farmer/notifications" />}
+        className="bg-surface-quiet"
       />
       {/* FR-093: without this the Farmer tools exist on the server and nothing in this panel can reach them. */}
       <AssistantLauncher />

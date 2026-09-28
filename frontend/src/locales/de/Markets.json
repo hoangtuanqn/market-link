@@ -33,7 +33,7 @@
   },
   "error": {
     "noun": "Märkte",
-    "alt": "die <link>Marktkarte</link> öffnet sich auf einer eigenen Seite"
+    "alt": "die <a>Marktkarte</a> öffnet sich auf einer eigenen Seite"
   },
   "pager": {
     "showing": "{{from}}–{{to}} von {{total}}",
@@ -53,15 +53,6 @@
   "map": {
     "label": "Karte der passenden Märkte",
     "note": "Die Karte folgt den Filtern und zeigt nur die Märkte aus der Liste."
-  },
-  "demo": {
-    "title": "Weitere Zustände dieser Liste (FR-084)",
-    "views": {
-      "loaded": "Mit Daten",
-      "loading": "Wird geladen",
-      "error": "Fehler"
-    },
-    "note": "Der leere Zustand lässt sich wirklich erreichen: Wählen Sie <b>{{day}}</b> und die Gegend <b>{{area}}</b>. Er nennt Ihre Auswahl und bietet einen Ausweg."
   },
   "location": {
     "measured": "Entfernungen werden von Ihrem Standort aus gemessen.",

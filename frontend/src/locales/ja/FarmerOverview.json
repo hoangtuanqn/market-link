@@ -39,7 +39,7 @@
     "complete": "完了にする",
     "view": "見る"
   },
-  "greeting": "おはようございます、{{name}}さん",
+  "title": "概要",
   "applyTemplate": "週間テンプレートを適用",
   "addProduct": "商品を追加",
   "banner": {

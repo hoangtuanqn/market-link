@@ -11,14 +11,6 @@
     "language": "Ngôn ngữ",
     "languageNote": "Ngôn ngữ của menu, nút và thông báo. Tên sạp, sản phẩm và địa điểm giữ nguyên như sạp đã viết.",
     "format": "Tiền, ngày và đơn vị",
-    "currency": "Hiển thị giá bằng",
-    "currencyNote": "Bạn luôn trả bằng đồng Việt Nam tại sạp. Tiền tệ khác chỉ hiện bên cạnh để tham khảo, theo tỷ giá cố định ngày {{date}}.",
-    "currencies": {
-      "VND": "Chỉ ₫ đồng Việt Nam",
-      "USD": "₫ và $ đô la Mỹ",
-      "EUR": "₫ và € euro",
-      "JPY": "₫ và ¥ yên Nhật"
-    },
     "units": "Khối lượng và thể tích",
     "unitsNote": "Chỉ đổi những đơn vị đo lường. Sạp bán theo bó, theo củ hay theo khay thì giữ nguyên cách gọi của sạp.",
     "metric": "Hệ mét · kg, g, lít",
@@ -52,9 +44,6 @@
   "cart": {
     "orderOf": "Đơn {{index}} / {{of}}",
     "payAtPickup": "Trả tiền tại sạp khi nhận hàng"
-  },
-  "chart": {
-    "showNumbers": "Xem số liệu"
   },
   "chat": {
     "assistant": "Trợ lý MarketLink",
@@ -187,6 +176,11 @@
     "mapDataFrom": "Dữ liệu bản đồ {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Chào buổi sáng",
+      "afternoon": "Chào buổi chiều",
+      "evening": "Chào buổi tối"
+    },
     "cart": "Giỏ hàng",
     "cartItems_one": "Giỏ hàng, {{count}} món",
     "cartItems_other": "Giỏ hàng, {{count}} món",
@@ -210,8 +204,8 @@
   "loadError": {
     "title": "Chưa tải được {{noun}}",
     "text": "Lần này danh sách chưa về. Những gì bạn đã lưu hoặc đã đặt không bị ảnh hưởng.",
-    "help": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <link>hãy cho chúng tôi biết chuyện gì xảy ra</link> và chúng tôi sẽ xem xét.",
-    "helpAlt": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <alt />, hoặc <link>cho chúng tôi biết chuyện gì xảy ra</link> và chúng tôi sẽ xem xét."
+    "help": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <a>hãy cho chúng tôi biết chuyện gì xảy ra</a> và chúng tôi sẽ xem xét.",
+    "helpAlt": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <alt />, hoặc <a>cho chúng tôi biết chuyện gì xảy ra</a> và chúng tôi sẽ xem xét."
   },
   "loading": {
     "markets": "Đang tải danh sách chợ"
@@ -299,22 +293,6 @@
     "show": "Hiện mật khẩu",
     "hide": "Ẩn mật khẩu"
   },
-  "period": {
-    "length": "Độ dài kỳ",
-    "day": "Ngày",
-    "week": "Tuần",
-    "month": "Tháng",
-    "quarter": "Quý",
-    "year": "Năm",
-    "custom": "Tuỳ chọn",
-    "from": "Từ",
-    "to": "Đến",
-    "compareWith": "So sánh với",
-    "cmpBefore": "Kỳ trước, cùng độ dài",
-    "cmpLastYear": "Cùng kỳ năm ngoái",
-    "cmpNone": "Không so sánh",
-    "comparedWith": "so với <b>{{compare}}</b>, cùng độ dài"
-  },
   "price": {
     "was": "Giá cũ"
   },
@@ -385,7 +363,6 @@
     "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số)."
   },
   "adminNav": {
-    "sections": "Các mục quản trị",
     "overview": "Tổng quan",
     "farmers": "Nhà vườn",
     "customers": "Khách hàng",
@@ -396,6 +373,7 @@
     "categories": "Danh mục",
     "announcements": "Thông báo",
     "feedback": "Góp ý",
+    "notifications": "Thông báo",
     "settings": "Cài đặt",
     "account": "Tài khoản của bạn",
     "analytics": "Phân tích",
@@ -407,16 +385,6 @@
     "contextSub": "Nền tảng · toàn bộ chợ",
     "userLine": "Quản trị viên · toàn nền tảng",
     "searchPlaceholder": "Sạp, khách hàng hoặc chợ"
-  },
-  "carousel": {
-    "roleCarousel": "băng trình chiếu",
-    "roleSlide": "trang chiếu",
-    "slideOf": "{{n}} / {{total}}: {{topic}}",
-    "previous": "Trang trước",
-    "next": "Trang sau",
-    "show": "Xem trang {{n}}: {{topic}}",
-    "pause": "Tạm dừng trình chiếu",
-    "play": "Phát trình chiếu"
   },
   "geo": {
     "denied": "Bạn đã tắt vị trí cho trang này. Hãy bật lại trong cài đặt trang web của trình duyệt, hoặc dùng một địa chỉ.",
@@ -778,6 +746,12 @@
       "fakeReviews": "Đánh giá gian lận",
       "ownerRequest": "Theo yêu cầu của chủ tài khoản"
     }
+  },
+  "cookieConsent": {
+    "label": "Thông báo cookie",
+    "text": "MarketLink dùng cookie thiết yếu để giữ bạn đăng nhập và giỏ hàng hoạt động. Không có cookie quảng cáo hay theo dõi nào. <a>Chính sách quyền riêng tư</a>.",
+    "decline": "Từ chối",
+    "accept": "Đồng ý"
   },
   "storageMode": {
     "room": "Nhiệt độ thường",

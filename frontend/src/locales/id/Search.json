@@ -12,6 +12,21 @@
     "submit": "Cari"
   },
   "day": "Hari pasar",
+  "filters": {
+    "category": "Kategori",
+    "allCategories": "Semua kategori",
+    "market": "Pasar",
+    "allMarkets": "Semua pasar",
+    "price": "Harga per satuan",
+    "clear": "Hapus filter"
+  },
+  "price": {
+    "any": "Semua harga",
+    "low": "Di bawah {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Di atas {{high}}"
+  },
+  "stallsNotByCategory": "Kategori tidak menyaring lapak — lapak tidak termasuk kategori mana pun. Ini berlaku untuk produk di bawah.",
   "sort": "Urutkan",
   "sorts": {
     "best": "Paling cocok",

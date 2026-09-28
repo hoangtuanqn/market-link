@@ -31,7 +31,8 @@
       "unavailable": "Sản phẩm bị ẩn với khách cho đến khi bạn bật lại."
     },
     "deleted": "Đã xoá",
-    "deletedText": "Đã xoá {{name}}."
+    "deletedText": "Đã xoá {{name}}.",
+    "stockAdjusted": "Đã cập nhật tồn kho cho {{day}}."
   },
   "dialog": {
     "title": "Xoá {{name}}?",
@@ -47,5 +48,18 @@
   "empty": {
     "title": "Chưa có sản phẩm nào",
     "text": "Thêm sản phẩm đầu tiên là nó hiện ngay trên trang gian hàng của bạn."
+  },
+  "adjust": "Điều chỉnh",
+  "adjustDialog": {
+    "title": "Điều chỉnh tồn kho cho {{day}}",
+    "quantity": "Số lượng còn lại",
+    "price": "Giá cho ngày này (không bắt buộc)",
+    "priceHint": "Để trống để giữ nguyên giá hiện tại.",
+    "cancel": "Hủy",
+    "confirm": "Lưu",
+    "error": {
+      "quantity": "Nhập số nguyên từ 0 trở lên.",
+      "price": "Nhập giá từ 0 trở lên."
+    }
   }
 }

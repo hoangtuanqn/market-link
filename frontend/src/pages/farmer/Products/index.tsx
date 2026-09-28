@@ -8,9 +8,10 @@ import { stockDay } from '@/components/stockDay';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
+import { Field } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
-import { unitPrice, units, vnd } from '@/lib/format';
+import { unitPrice, units, money } from '@/lib/format';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -27,6 +28,10 @@ const FarmerProductsPage = () => {
   const all = load.kind === 'ready' ? load.data : NO_PRODUCTS;
   const [filter, setFilter] = useState<'all' | ProductStatus>('all');
   const [deleteTarget, setDeleteTarget] = useState<ProductType | null>(null);
+  const [adjustTarget, setAdjustTarget] = useState<ProductType | null>(null);
+  const [adjustQuantity, setAdjustQuantity] = useState('');
+  const [adjustPrice, setAdjustPrice] = useState('');
+  const [adjustError, setAdjustError] = useState<string | undefined>();
   const [busyId, setBusyId] = useState<number | null>(null);
 
   const counts: Record<'all' | ProductStatus, number> = {
@@ -50,6 +55,41 @@ const FarmerProductsPage = () => {
         ),
       );
       Notification.success({ title: t('toast.statusSaved'), text: t(`toast.status.${value}`) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const openAdjust = (p: ProductType) => {
+    setAdjustTarget(p);
+    setAdjustQuantity(String(p.nextLeft ?? 0));
+    setAdjustPrice('');
+    setAdjustError(undefined);
+  };
+
+  const confirmAdjust = async () => {
+    if (!adjustTarget?.nextDate) return;
+    const quantity = Number(adjustQuantity);
+    if (!Number.isInteger(quantity) || quantity < 0) {
+      setAdjustError(t('adjustDialog.error.quantity'));
+      return;
+    }
+    const price = adjustPrice.trim() === '' ? null : Number(adjustPrice);
+    if (price !== null && (!Number.isFinite(price) || price < 0)) {
+      setAdjustError(t('adjustDialog.error.price'));
+      return;
+    }
+    setAdjustError(undefined);
+    setBusyId(adjustTarget.id);
+    try {
+      await ProductApi.overrideDailyStock(adjustTarget.id, adjustTarget.nextDate, quantity, price);
+      // The new number can change which date is "next" (e.g. dropping to 0), so reload the list
+      // instead of hand-patching nextLeft.
+      retry();
+      Notification.success({ text: t('toast.stockAdjusted', { day: stockDay(adjustTarget.nextDate) }) });
+      setAdjustTarget(null);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
@@ -101,7 +141,7 @@ const FarmerProductsPage = () => {
         const price = unitPrice(p.price, p.unit);
         return (
           <>
-            {vnd(price.amount)}{' '}
+            {money(price.amount)}{' '}
             <span className="text-ink-muted font-normal">{t('perUnit', { unit: price.unit ?? p.unit })}</span>
           </>
         );
@@ -152,6 +192,11 @@ const FarmerProductsPage = () => {
       align: 'actions',
       render: (p) => (
         <div className="flex justify-end gap-2">
+          {p.nextDate && (
+            <Button variant="secondary" size="sm" onClick={() => openAdjust(p)} disabled={busyId === p.id}>
+              {t('adjust')}
+            </Button>
+          )}
           <ButtonLink variant="secondary" size="sm" to={`/farmer/products/${p.id}/edit`}>
             {t('edit')}
           </ButtonLink>
@@ -167,7 +212,7 @@ const FarmerProductsPage = () => {
     <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         <ButtonLink to="/farmer/products/new">{t('add')}</ButtonLink>
@@ -219,6 +264,46 @@ const FarmerProductsPage = () => {
       >
         <p>{t('dialog.text')}</p>
         <p className="text-ink-muted text-[14px]">{t('dialog.pauseHint')}</p>
+      </Dialog>
+
+      <Dialog
+        open={adjustTarget !== null}
+        title={adjustTarget ? t('adjustDialog.title', { day: stockDay(adjustTarget.nextDate) }) : ''}
+        onClose={() => setAdjustTarget(null)}
+        actions={
+          <>
+            <Button variant="secondary" onClick={() => setAdjustTarget(null)}>
+              {t('adjustDialog.cancel')}
+            </Button>
+            <Button onClick={() => void confirmAdjust()} disabled={busyId !== null}>
+              {t('adjustDialog.confirm')}
+            </Button>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-4">
+          <Field
+            id="adjust-quantity"
+            label={t('adjustDialog.quantity')}
+            type="number"
+            min={0}
+            required
+            value={adjustQuantity}
+            onChange={(e) => setAdjustQuantity(e.target.value)}
+            error={adjustError}
+          />
+          <Field
+            id="adjust-price"
+            label={t('adjustDialog.price')}
+            type="number"
+            min={0}
+            step={0.01}
+            placeholder={adjustTarget ? String(adjustTarget.price) : ''}
+            hint={t('adjustDialog.priceHint')}
+            value={adjustPrice}
+            onChange={(e) => setAdjustPrice(e.target.value)}
+          />
+        </div>
       </Dialog>
     </div>
   );

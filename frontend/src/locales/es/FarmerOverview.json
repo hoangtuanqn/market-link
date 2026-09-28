@@ -39,7 +39,7 @@
     "complete": "Marcar como completado",
     "view": "Ver"
   },
-  "greeting": "Buenos días, {{name}}",
+  "title": "Resumen",
   "applyTemplate": "Aplicar plantilla semanal",
   "addProduct": "Añadir producto",
   "banner": {

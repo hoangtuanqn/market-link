@@ -133,7 +133,7 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
     <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{title}</h1>
+          <h1 className="text-h1 text-ink font-bold">{title}</h1>
           <p className="text-body">{intro}</p>
         </div>
         <div className="flex flex-wrap gap-2">

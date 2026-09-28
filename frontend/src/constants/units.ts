@@ -31,7 +31,5 @@ export const UNITS: UnitOption[] = [
   { one: 'box', many: 'boxes', kind: 'pack' },
 ];
 
-export const UNIT_KINDS: UnitKind[] = ['weight', 'volume', 'count', 'pack'];
-
 /** The plural form of a known unit; an unknown unit returns itself. */
 export const pluralOf = (one: string) => UNITS.find((u) => u.one === one)?.many ?? one;

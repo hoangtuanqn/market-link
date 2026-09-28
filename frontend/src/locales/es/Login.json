@@ -1,6 +1,6 @@
 {
   "title": "Iniciar sesión",
-  "intro": "Clientes y productores inician sesión aquí. Los administradores usan el <link>acceso de administración aparte</link>.",
+  "intro": "Clientes y productores inician sesión aquí. Los administradores usan el <a>acceso de administración aparte</a>.",
   "fields": {
     "email": "Correo electrónico",
     "password": "Contraseña"

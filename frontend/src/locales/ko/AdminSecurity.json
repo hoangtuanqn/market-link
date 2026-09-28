@@ -32,21 +32,13 @@
     "title": "인증 앱으로 스캔하세요",
     "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password 등 무엇이든 괜찮아요. 아무것도 전송되지 않아요. 아래 코드는 내 브라우저가 직접 그려요.",
     "qr": "인증 앱용 QR 코드",
-    "manual": "<b>스캔이 안 되나요?</b> 이 키를 직접 입력하세요:",
-    "type": "유형",
-    "typeValue": "시간 기반(TOTP)",
-    "algorithm": "알고리즘",
-    "digits": "자릿수",
-    "period": "주기",
-    "seconds_one": "{{count}}초",
-    "seconds_other": "{{count}}초"
+    "manual": "<b>스캔이 안 되나요?</b> 이 키를 직접 입력하세요:"
   },
   "step2": {
     "title": "표시된 코드를 입력하세요",
     "text": "무엇이든 켜기 전에 휴대폰과 서버의 시간이 맞는지 확인하는 단계예요.",
     "code": "6자리 코드",
-    "confirm": "확인",
-    "confirmed": "확인됨"
+    "confirm": "확인"
   },
   "step3": {
     "title": "복구 코드를 저장하세요",
@@ -80,5 +72,19 @@
     "copyFailed": "복사할 수 없어요. 코드를 선택해서 직접 복사하세요.",
     "downloaded": "{{file}}(으)로 다운로드했어요.",
     "fileHeading": "MarketLink 관리자 복구 코드"
+  },
+  "setup": {
+    "overline": "관리자 보안",
+    "title": "2단계 인증 설정",
+    "copySecret": "키 복사",
+    "secretCopied": "키를 클립보드에 복사했어요.",
+    "completeTitle": "2단계 인증이 켜졌어요!",
+    "completeText": "관리자 계정이 이제 보호돼요. 아래 복구 코드를 저장한 다음 대시보드로 이동하세요.",
+    "goToDashboard": "관리자 대시보드로 이동",
+    "alreadyActive": "이 계정은 이미 2단계 인증이 켜져 있어요.",
+    "backToDashboard": "대시보드로 돌아가기",
+    "manageSecurity": "보안 설정",
+    "notYou": "본인이 아니신가요?",
+    "signOut": "로그아웃"
   }
 }

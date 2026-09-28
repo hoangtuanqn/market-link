@@ -121,55 +121,59 @@ const NotificationSettingsCard = () => {
 
       {state.status === 'ready' && (
         <>
-          <table className="w-full border-collapse text-left">
-            <thead>
-              <tr className="text-ink-muted text-[13px]">
-                <th scope="col" className="pb-2 font-medium">
-                  {t('notify.settings.group')}
-                </th>
-                <th scope="col" className="w-24 pb-2 text-center font-medium">
-                  {t('notify.settings.inApp')}
-                </th>
-                <th scope="col" className="w-24 pb-2 text-center font-medium">
-                  {t('notify.settings.inBrowser')}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {state.data.categories.map((c) => (
-                <tr key={c.category} className="border-line border-t">
-                  <th scope="row" className="py-2 pr-3 font-normal">
-                    <b className="block text-[15px]">{t(`notify.settings.groups.${c.category}.title`)}</b>
-                    <span className="text-ink-muted block text-[13px]">
-                      {t(`notify.settings.groups.${c.category}.note`)}
-                    </span>
+          {/* The three columns cannot shrink below their content, so on a phone the table would push
+              the page sideways. Scroll it inside the card instead. */}
+          <div className="w-full overflow-x-auto">
+            <table className="w-full border-collapse text-left">
+              <thead>
+                <tr className="text-ink-muted text-[13px]">
+                  <th scope="col" className="pb-2 font-medium">
+                    {t('notify.settings.group')}
                   </th>
-                  <td className="text-center">
-                    <Checkbox
-                      id={`notify-${c.category}-inapp`}
-                      checked={c.inApp}
-                      onChange={(e) => setChannel(c.category, 'inApp', e.target.checked)}
-                    >
-                      <span className="sr-only">
-                        {t(`notify.settings.groups.${c.category}.title`)} · {t('notify.settings.inApp')}
-                      </span>
-                    </Checkbox>
-                  </td>
-                  <td className="text-center">
-                    <Checkbox
-                      id={`notify-${c.category}-browser`}
-                      checked={c.browser}
-                      onChange={(e) => setChannel(c.category, 'browser', e.target.checked)}
-                    >
-                      <span className="sr-only">
-                        {t(`notify.settings.groups.${c.category}.title`)} · {t('notify.settings.inBrowser')}
-                      </span>
-                    </Checkbox>
-                  </td>
+                  <th scope="col" className="w-24 pb-2 text-center font-medium">
+                    {t('notify.settings.inApp')}
+                  </th>
+                  <th scope="col" className="w-24 pb-2 text-center font-medium">
+                    {t('notify.settings.inBrowser')}
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {state.data.categories.map((c) => (
+                  <tr key={c.category} className="border-line border-t">
+                    <th scope="row" className="py-2 pr-3 font-normal">
+                      <b className="block text-[15px]">{t(`notify.settings.groups.${c.category}.title`)}</b>
+                      <span className="text-ink-muted block text-[13px]">
+                        {t(`notify.settings.groups.${c.category}.note`)}
+                      </span>
+                    </th>
+                    <td className="text-center">
+                      <Checkbox
+                        id={`notify-${c.category}-inapp`}
+                        checked={c.inApp}
+                        onChange={(e) => setChannel(c.category, 'inApp', e.target.checked)}
+                      >
+                        <span className="sr-only">
+                          {t(`notify.settings.groups.${c.category}.title`)} · {t('notify.settings.inApp')}
+                        </span>
+                      </Checkbox>
+                    </td>
+                    <td className="text-center">
+                      <Checkbox
+                        id={`notify-${c.category}-browser`}
+                        checked={c.browser}
+                        onChange={(e) => setChannel(c.category, 'browser', e.target.checked)}
+                      >
+                        <span className="sr-only">
+                          {t(`notify.settings.groups.${c.category}.title`)} · {t('notify.settings.inBrowser')}
+                        </span>
+                      </Checkbox>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           <div className="border-line flex flex-col gap-3 border-t pt-4">
             <Checkbox
@@ -187,7 +191,9 @@ const NotificationSettingsCard = () => {
               {t('notify.settings.quiet')}
             </Checkbox>
             <p className="text-ink-muted -mt-2 pl-7 text-[13px]">{t('notify.settings.quietNote')}</p>
-            <div className="grid grid-cols-2 gap-3 pl-7 sm:max-w-80">
+            {/* The time fields carry a min width for flex rows; here the grid sets the width, so let them
+                shrink — two 220px fields do not fit a 375px screen and push the page sideways. */}
+            <div className="grid grid-cols-2 gap-3 pl-7 sm:max-w-80 [&>*]:min-w-0">
               <Field
                 id="notify-quiet-from"
                 type="time"

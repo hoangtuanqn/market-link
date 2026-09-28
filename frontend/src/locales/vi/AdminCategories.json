@@ -3,7 +3,6 @@
   "title": "Danh mục",
   "intro": "Danh sách duy nhất mà mọi sạp chọn khi thêm sản phẩm. Đơn vị bán là danh sách cố định, đi kèm sẵn trong ứng dụng.",
   "link": {
-    "announcements": "Thông báo",
     "feedback": "Hộp thư góp ý"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "Danh mục",
     "products": "Sản phẩm",
     "stalls": "Sạp",
-    "nameOf": "Tên của {{name}}"
+    "nameOf": "Tên của {{name}}",
+    "status": "Trạng thái",
+    "shelfLife": "Hạn sử dụng",
+    "shelfLifeRange": "{{min}}–{{max}} ngày",
+    "shelfLifeDays_one": "{{count}} ngày",
+    "shelfLifeDays_other": "{{count}} ngày"
   },
   "action": {
     "save": "Lưu",
-    "remove": "Xoá"
+    "remove": "Xoá",
+    "enable": "Kích hoạt"
   },
   "categoryForm": {
     "title": "Thêm danh mục",
@@ -38,7 +43,9 @@
     "textUnused": "Không sản phẩm nào đang dùng danh mục này.",
     "moveTo": "Chuyển sản phẩm sang",
     "keep": "Giữ danh mục",
-    "confirm": "Xoá danh mục"
+    "confirm": "Xoá danh mục",
+    "moveToHint": "Các sản phẩm thuộc danh mục này sẽ được chuyển sang danh mục mới.",
+    "moveToNone": "Không (sản phẩm vẫn giữ danh mục này)"
   },
   "empty": {
     "categories": {
@@ -49,7 +56,8 @@
   "toast": {
     "categorySaved": "Đã lưu {{name}}.",
     "categoryAdded": "Đã thêm danh mục. Các sạp chọn được ngay.",
-    "categoryRemoved": "Đã xoá {{name}}."
+    "categoryRemoved": "Đã xoá {{name}}.",
+    "categoryEnabled": "Đã kích hoạt {{name}}."
   },
   "error": {
     "noun": "danh mục",
@@ -58,6 +66,10 @@
     "shelfLifeRange": "Tối đa phải lớn hơn hoặc bằng tối thiểu.",
     "nameTooLong": "Tên danh mục tối đa {{max}} ký tự.",
     "nameTaken": "Đã có danh mục trùng tên này."
+  },
+  "status": {
+    "active": "Hoạt động",
+    "inactive": "Ngừng hoạt động"
   },
   "guides": {
     "title": "Nhóm bảo quản",

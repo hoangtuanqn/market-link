@@ -13,7 +13,6 @@
   "left": "Noch <b>{{qty}}</b>",
   "leftOn": "Noch <b>{{qty}}</b> für {{day}}",
   "stockUpdated": "Bestand heute aktualisiert, vor den Bestellungen dieses Wochenendes.",
-  "notifyMe": "Benachrichtigen, wenn wieder da",
   "added": {
     "title": "In den Warenkorb gelegt",
     "text": "{{qty}} {{name}} in Ihren Warenkorb gelegt."
@@ -21,7 +20,6 @@
   "addToCart": "In den Warenkorb",
   "payNote": "Die Ware wird bei der Bestellung für Sie zurückgelegt. Sie zahlen {{price}} bei der Abholung am Stand.",
   "fromStall": "Vom Stand",
-  "sellingSince": "verkauft hier seit {{date}}",
   "stats": {
     "reviews_one": "{{count}} Bewertung",
     "reviews_other": "{{count}} Bewertungen",
@@ -32,7 +30,6 @@
     "cutoff": "Bestellschluss"
   },
   "seeStall": "Stand ansehen",
-  "messageStall": "Stand anschreiben",
   "details": {
     "title": "Produktdetails",
     "soldPer": "Verkauft pro",
@@ -76,7 +73,6 @@
   "similar": {
     "title": "{{name}} an anderen Ständen an diesem Wochenende",
     "note": "Gleiches Gemüse, anderes Feld und anderer Preis",
-    "here": "Sie sind hier",
     "view": "Ansehen"
   },
   "also": {

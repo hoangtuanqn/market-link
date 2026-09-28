@@ -32,21 +32,13 @@
     "title": "Scan this with your authenticator",
     "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password — any of them. Nothing is sent anywhere: the code below is drawn by your own browser.",
     "qr": "QR code for your authenticator app",
-    "manual": "<b>Cannot scan?</b> Type this key in by hand:",
-    "type": "Type",
-    "typeValue": "Time-based (TOTP)",
-    "algorithm": "Algorithm",
-    "digits": "Digits",
-    "period": "Period",
-    "seconds_one": "{{count}} second",
-    "seconds_other": "{{count}} seconds"
+    "manual": "<b>Cannot scan?</b> Type this key in by hand:"
   },
   "step2": {
     "title": "Type the code it shows",
     "text": "This proves the phone and the server agree on the time before anything is switched on.",
     "code": "Six-digit code",
-    "confirm": "Confirm",
-    "confirmed": "Confirmed"
+    "confirm": "Confirm"
   },
   "step3": {
     "title": "Save your recovery codes",
@@ -80,5 +72,19 @@
     "copyFailed": "Could not copy. Select the codes and copy them by hand.",
     "downloaded": "Downloaded as {{file}}.",
     "fileHeading": "MarketLink admin recovery codes"
+  },
+  "setup": {
+    "overline": "Admin security",
+    "title": "Set up two-step verification",
+    "copySecret": "Copy key",
+    "secretCopied": "Key copied to clipboard.",
+    "completeTitle": "Two-step verification is now on!",
+    "completeText": "Your administrator account is now protected. Save your backup recovery codes below, then proceed to the dashboard.",
+    "goToDashboard": "Go to Admin Dashboard",
+    "alreadyActive": "Two-step verification is already enabled for your account.",
+    "backToDashboard": "Back to dashboard",
+    "manageSecurity": "Security settings",
+    "notYou": "Not you?",
+    "signOut": "Sign out"
   }
 }

@@ -13,8 +13,8 @@ const settings = () => SettingsStore.get();
 const locale = () => settings().language;
 
 /**
- * Locked to USD (user decision 2026-09-26) — no per-reader currency choice any more. `amount` is a plain number of
- * dollars, not cents. Kept a new name (not the old `vnd`) so nobody misreads what a call site formats.
+ * Locked to USD (user decision 2026-09-26) — no per-reader currency choice. `amount` is a plain number of dollars, not
+ * cents.
  */
 export function money(amount: number): string {
   return new Intl.NumberFormat(locale(), {
@@ -23,11 +23,6 @@ export function money(amount: number): string {
     maximumFractionDigits: 2,
   }).format(amount);
 }
-
-/** Alias to money() locked to USD across the entire application. */
-export const vnd = money;
-export const usd = money;
-export const RATES_DATE = '26/09/2026';
 
 /* ---------- units ---------- */
 
@@ -44,7 +39,7 @@ const IMPERIAL: Record<string, { unit: string; factor: number }> = {
 const imperialFor = (unit?: string) => (unit && settings().units === 'imperial' ? IMPERIAL[unit] : undefined);
 
 /** A measured quantity in the reader's units: (2, 'kg') → { count: 4.4, unit: 'lb' }. Count units pass through. */
-export function measure(count: number, unit?: string): { count: number; unit?: string } {
+function measure(count: number, unit?: string): { count: number; unit?: string } {
   const to = imperialFor(unit);
   if (!to) return { count, unit };
   return { count: Math.round(count * to.factor * 10) / 10, unit: to.unit };
@@ -71,7 +66,7 @@ export function unitPrice(price: number, unit?: string): { amount: number; unit?
  * English cannot derive the plural of an arbitrary unit phrase ("tray of 30" → "trays of 30"), so this is only the
  * guess a form offers by default; a stall can override it (see `units`' third argument).
  */
-export function guessPlural(unit: string): string {
+function guessPlural(unit: string): string {
   if (UNIT_SAME.has(unit)) return unit;
   if (unit === 'loaf') return 'loaves';
   if (/(ch|sh|s|x)$/.test(unit)) return `${unit}es`;

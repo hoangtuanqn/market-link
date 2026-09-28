@@ -70,6 +70,7 @@ export type LoginResultType = Omit<AuthResultType, 'accessToken'> & {
   accessToken: string | null;
   mfaRequired?: boolean;
   mfaToken?: string | null;
+  mfaSetupRequired?: boolean;
 };
 
 /** Send `code` (6 digits) or `recoveryCode` (xxxx-xxxx-xxxx). */
@@ -81,6 +82,7 @@ export type MfaVerifyInput = {
 
 export type MfaStatusType = {
   enabled: boolean;
+  setupRequired?: boolean;
   recoveryCodesLeft: number;
 };
 

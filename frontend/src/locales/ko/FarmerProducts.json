@@ -31,7 +31,8 @@
       "unavailable": "다시 켤 때까지 고객에게 상품이 보이지 않아요."
     },
     "deleted": "삭제했어요",
-    "deletedText": "{{name}}을(를) 삭제했어요."
+    "deletedText": "{{name}}을(를) 삭제했어요.",
+    "stockAdjusted": "{{day}} 재고가 업데이트되었습니다."
   },
   "dialog": {
     "title": "{{name}}을(를) 삭제할까요?",
@@ -47,5 +48,18 @@
   "empty": {
     "title": "아직 상품이 없습니다",
     "text": "첫 상품을 추가하면 매장 페이지에 바로 표시됩니다."
+  },
+  "adjust": "조정",
+  "adjustDialog": {
+    "title": "{{day}} 재고 조정",
+    "quantity": "이용 가능한 수량",
+    "price": "해당 날짜 가격(선택 사항)",
+    "priceHint": "비워두면 현재 가격이 유지됩니다.",
+    "cancel": "취소",
+    "confirm": "저장",
+    "error": {
+      "quantity": "0 이상의 정수를 입력하세요.",
+      "price": "0 이상의 가격을 입력하세요."
+    }
   }
 }

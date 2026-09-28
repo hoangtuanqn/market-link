@@ -17,8 +17,7 @@ import { Kpi } from '@/components/ui/kpi';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
-import useSession from '@/hooks/useSession';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -42,7 +41,6 @@ const BEST_SELLER_LIMIT = 5;
 const FarmerOverviewPage = () => {
   const { t } = useTranslation('FarmerOverview');
   const { t: tc } = useTranslation();
-  const { user } = useSession();
   const [tab, setTab] = useState<TabId>('new');
   const [declineOrder, setDeclineOrder] = useState<{ orderId: number; orderCode: string } | null>(null);
   const [reason, setReason] = useState<DeclineReason>(DECLINE_REASONS[0]);
@@ -97,7 +95,7 @@ const FarmerOverviewPage = () => {
       render: (r) => pickupLabel(r.pickupDate, `${r.pickupStart}–${r.pickupEnd}`),
     },
     { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
-    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => money(r.totalAmount) },
     { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
@@ -187,7 +185,7 @@ const FarmerOverviewPage = () => {
           <p className="text-overline text-ink-muted m-0">
             <LiveClock />
           </p>
-          <h1 className="font-hand text-h1">{t('greeting', { name: user?.fullName ?? '' })}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <ButtonLink variant="secondary" to="/farmer/stock">
@@ -248,13 +246,13 @@ const FarmerOverviewPage = () => {
             />
             <Kpi
               label={t('kpi.revenue')}
-              value={vnd(dashboard.revenueTotal)}
+              value={money(dashboard.revenueTotal)}
               href="/farmer/history"
               linkLabel={t('kpi.openHistory')}
             />
             <Kpi
               label={t('kpi.revenueMonth')}
-              value={vnd(dashboard.revenueThisMonth)}
+              value={money(dashboard.revenueThisMonth)}
               href="/farmer/history"
               linkLabel={t('kpi.openHistory')}
             />

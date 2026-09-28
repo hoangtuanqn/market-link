@@ -39,7 +39,7 @@
     "complete": "Als abgeschlossen markieren",
     "view": "Ansehen"
   },
-  "greeting": "Guten Morgen, {{name}}",
+  "title": "Übersicht",
   "applyTemplate": "Wochenvorlage anwenden",
   "addProduct": "Produkt hinzufügen",
   "banner": {

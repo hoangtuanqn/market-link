@@ -1,6 +1,11 @@
 {
   "overline": "Página no encontrada",
-  "title": "No encontramos esa página",
-  "text": "Puede que el enlace sea antiguo o que esta parte de MarketLink aún no esté disponible.",
-  "home": "Volver al inicio"
+  "title": "No pudimos encontrar esa página",
+  "text": "Es posible que el enlace esté roto o que esta sección aún no esté disponible.",
+  "home": "Volver al inicio",
+  "exploreMarkets": "Explorar mercados",
+  "quickLinks": "Enlaces populares",
+  "products": "Productos frescos",
+  "marketMap": "Mapa de mercados",
+  "contact": "Contactar soporte"
 }

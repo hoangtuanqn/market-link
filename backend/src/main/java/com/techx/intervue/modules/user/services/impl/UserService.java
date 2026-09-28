@@ -331,15 +331,22 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
-     * FR-008: an admin with 2FA on → only return the pending token; otherwise issue the session as
-     * before.
+     * FR-008: an admin with 2FA on → only return the pending token; an admin who has never set up
+     * 2FA → issue session with mfaSetupRequired = true; otherwise issue the session as before.
      */
     private AuthResult issueTokensOrChallenge(User user, boolean rememberMe) {
-        if (user.getRole() == RoleType.ADMIN && mfaService.isEnabled(user.getId())) {
-            return AuthResult.mfaPending(
-                    toResource(user),
-                    rememberMe,
-                    mfaService.startChallenge(user.getId(), rememberMe));
+        if (user.getRole() == RoleType.ADMIN) {
+            if (mfaService.isEnabled(user.getId())) {
+                return AuthResult.mfaPending(
+                        toResource(user),
+                        rememberMe,
+                        mfaService.startChallenge(user.getId(), rememberMe));
+            }
+            if (mfaService.isSetupRequired(user.getId())) {
+                AuthResult session = issueTokens(user, rememberMe);
+                return AuthResult.mfaSetupPending(
+                        session.accessToken(), session.refreshToken(), session.user(), rememberMe);
+            }
         }
         return issueTokens(user, rememberMe);
     }

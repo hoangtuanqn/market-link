@@ -11,7 +11,6 @@
     "reviews_other": "{{count}} reviews",
     "markets_one": "market",
     "markets_other": "markets",
-    "since": "selling here since",
     "cutoff": "hours before pickup orders close"
   },
   "tabs": {

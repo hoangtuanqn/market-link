@@ -63,10 +63,6 @@
     "label": "Deskripsi",
     "hint": "Ditampilkan di halaman produk. Ceritakan cara menanam dan cara menyimpannya."
   },
-  "flag": {
-    "label": "Tag pendek di kartu",
-    "hint": "Opsional, ditulis tangan di label: “Segar hari ini”, “Dipanggang jam 5 pagi”."
-  },
   "status": {
     "label": "Status",
     "available": "Tersedia",
@@ -81,7 +77,11 @@
     "uploading": "Uploading",
     "uploadInProgress": "Wait for the photo to finish uploading, then save.",
     "alt": "Product photo",
-    "hint": "JPG atau PNG, 4:3, maks. 5 MB. Dari dekat, cahaya alami, di atas kayu atau kertas."
+    "hint": "JPG atau PNG, 4:3, maks. 5 MB. Dari dekat, cahaya alami, di atas kayu atau kertas.",
+    "error": {
+      "tooLarge": "Foto harus berukuran 8 MB atau kurang.",
+      "type": "Foto harus berformat JPEG, PNG, atau WEBP."
+    }
   },
   "save": "Simpan produk",
   "add": "Tambah produk",
@@ -107,6 +107,6 @@
   },
   "errors": {
     "required": "Kolom ini wajib diisi.",
-    "price": "Harga harus 0 atau lebih."
+    "price": "Harga harus lebih besar dari 0."
   }
 }

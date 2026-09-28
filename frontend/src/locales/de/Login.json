@@ -1,6 +1,6 @@
 {
   "title": "Anmelden",
-  "intro": "Kunden und Erzeuger melden sich hier an. Admins nutzen die <link>separate Admin-Anmeldung</link>.",
+  "intro": "Kunden und Erzeuger melden sich hier an. Admins nutzen die <a>separate Admin-Anmeldung</a>.",
   "fields": {
     "email": "E-Mail",
     "password": "Passwort"

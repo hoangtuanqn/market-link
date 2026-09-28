@@ -11,14 +11,6 @@
     "language": "语言",
     "languageNote": "菜单、按钮和消息使用的语言。摊位、商品和地点名称保持摊位填写的原样。",
     "format": "金额、日期和单位",
-    "currency": "价格显示方式",
-    "currencyNote": "在摊位上你始终用越南盾付款。其他货币仅显示在旁边供参考，按 {{date}} 的固定汇率换算。",
-    "currencies": {
-      "VND": "仅显示 ₫ 越南盾",
-      "USD": "₫ 和 $ 美元",
-      "EUR": "₫ 和 € 欧元",
-      "JPY": "₫ 和 ¥ 日元"
-    },
     "units": "重量和容量",
     "unitsNote": "只换算计量单位。按把、按头或按盒出售的摊位保留自己的叫法。",
     "metric": "公制 · kg、g、升",
@@ -52,9 +44,6 @@
   "cart": {
     "orderOf": "第 {{index}} 单，共 {{of}} 单",
     "payAtPickup": "取货时在摊位付款"
-  },
-  "chart": {
-    "showNumbers": "查看数据"
   },
   "chat": {
     "assistant": "MarketLink 助手",
@@ -187,6 +176,11 @@
     "mapDataFrom": "地图数据 {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "早上好",
+      "afternoon": "下午好",
+      "evening": "晚上好"
+    },
     "cart": "购物车",
     "cartItems_one": "购物车，{{count}} 件商品",
     "cartItems_other": "购物车，{{count}} 件商品",
@@ -210,8 +204,8 @@
   "loadError": {
     "title": "无法加载{{noun}}",
     "text": "这次列表没有返回。你收藏或下单的内容不受影响。",
-    "help": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<link>请告诉我们发生了什么</link>，我们会跟进处理。",
-    "helpAlt": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<alt />，或<link>告诉我们发生了什么</link>，我们会跟进处理。"
+    "help": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<a>请告诉我们发生了什么</a>，我们会跟进处理。",
+    "helpAlt": "这通常是网络问题，而不是你的操作所致。如果重试仍无效，<alt />，或<a>告诉我们发生了什么</a>，我们会跟进处理。"
   },
   "loading": {
     "markets": "正在加载市集"
@@ -299,22 +293,6 @@
     "show": "显示密码",
     "hide": "隐藏密码"
   },
-  "period": {
-    "length": "周期长度",
-    "day": "日",
-    "week": "周",
-    "month": "月",
-    "quarter": "季度",
-    "year": "年",
-    "custom": "自定义",
-    "from": "开始",
-    "to": "结束",
-    "compareWith": "对比",
-    "cmpBefore": "上一周期，长度相同",
-    "cmpLastYear": "去年同期",
-    "cmpNone": "不对比",
-    "comparedWith": "对比 <b>{{compare}}</b>，长度相同"
-  },
   "price": {
     "was": "原价"
   },
@@ -385,7 +363,6 @@
     "phoneInvalid": "请输入有效的越南手机号码（10 位数字）。"
   },
   "adminNav": {
-    "sections": "管理区域",
     "overview": "概览",
     "farmers": "农户",
     "customers": "顾客",
@@ -396,6 +373,7 @@
     "categories": "分类",
     "announcements": "公告",
     "feedback": "反馈",
+    "notifications": "通知",
     "settings": "设置",
     "account": "你的账户",
     "analytics": "分析",
@@ -407,16 +385,6 @@
     "contextSub": "平台 · 整个市场",
     "userLine": "管理员 · 整个平台",
     "searchPlaceholder": "摊位、顾客或市场"
-  },
-  "carousel": {
-    "roleCarousel": "轮播",
-    "roleSlide": "幻灯片",
-    "slideOf": "第 {{n}} 张，共 {{total}} 张：{{topic}}",
-    "previous": "上一张",
-    "next": "下一张",
-    "show": "显示第 {{n}} 张：{{topic}}",
-    "pause": "暂停轮播",
-    "play": "播放轮播"
   },
   "geo": {
     "denied": "你已为本站关闭位置权限。请在浏览器的网站设置中更改，或改用地址。",
@@ -778,6 +746,12 @@
       "fakeReviews": "虚假评价",
       "ownerRequest": "应账户持有人要求"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie 提示",
+    "text": "我们仅使用必要的 Cookie 来保持您的登录状态和购物车正常运作，不使用任何广告或分析类 Cookie。<a>隐私政策</a>。",
+    "decline": "拒绝",
+    "accept": "接受"
   },
   "storageMode": {
     "room": "常温",

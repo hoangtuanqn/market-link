@@ -11,14 +11,6 @@
     "language": "Bahasa",
     "languageNote": "Bahasa untuk menu, tombol, dan pesan. Nama lapak, produk, dan tempat tetap seperti yang ditulis lapak.",
     "format": "Uang, tanggal, dan satuan",
-    "currency": "Tampilkan harga dalam",
-    "currencyNote": "Anda selalu membayar dengan dong Vietnam di lapak. Mata uang lain ditampilkan di sebelahnya hanya sebagai acuan, dengan kurs tetap per {{date}}.",
-    "currencies": {
-      "VND": "Hanya ₫ dong Vietnam",
-      "USD": "₫ dan $ dolar AS",
-      "EUR": "₫ dan € euro",
-      "JPY": "₫ dan ¥ yen Jepang"
-    },
     "units": "Berat dan volume",
     "unitsNote": "Hanya satuan ukur yang dikonversi. Lapak yang menjual per ikat, per umbi, atau per nampan tetap memakai istilahnya sendiri.",
     "metric": "Metrik · kg, g, liter",
@@ -52,9 +44,6 @@
   "cart": {
     "orderOf": "Pesanan {{index}} dari {{of}}",
     "payAtPickup": "Bayar di lapak saat mengambil"
-  },
-  "chart": {
-    "showNumbers": "Lihat angkanya"
   },
   "chat": {
     "assistant": "Asisten MarketLink",
@@ -187,6 +176,11 @@
     "mapDataFrom": "Data peta {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Selamat pagi",
+      "afternoon": "Selamat siang",
+      "evening": "Selamat malam"
+    },
     "cart": "Keranjang",
     "cartItems_one": "Keranjang, {{count}} barang",
     "cartItems_other": "Keranjang, {{count}} barang",
@@ -210,8 +204,8 @@
   "loadError": {
     "title": "Kami tidak dapat memuat {{noun}}",
     "text": "Daftarnya tidak kembali kali ini. Apa pun yang Anda simpan atau pesan tidak terpengaruh.",
-    "help": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <link>ceritakan apa yang terjadi</link> dan kami akan memeriksanya.",
-    "helpAlt": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <alt />, atau <link>ceritakan apa yang terjadi</link> dan kami akan memeriksanya."
+    "help": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <a>ceritakan apa yang terjadi</a> dan kami akan memeriksanya.",
+    "helpAlt": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <alt />, atau <a>ceritakan apa yang terjadi</a> dan kami akan memeriksanya."
   },
   "loading": {
     "markets": "Memuat pasar"
@@ -299,22 +293,6 @@
     "show": "Tampilkan kata sandi",
     "hide": "Sembunyikan kata sandi"
   },
-  "period": {
-    "length": "Panjang periode",
-    "day": "Hari",
-    "week": "Minggu",
-    "month": "Bulan",
-    "quarter": "Kuartal",
-    "year": "Tahun",
-    "custom": "Kustom",
-    "from": "Dari",
-    "to": "Sampai",
-    "compareWith": "Bandingkan dengan",
-    "cmpBefore": "Periode sebelumnya, panjang sama",
-    "cmpLastYear": "Periode yang sama tahun lalu",
-    "cmpNone": "Tanpa perbandingan",
-    "comparedWith": "dibanding <b>{{compare}}</b>, panjang sama"
-  },
   "price": {
     "was": "Sebelumnya"
   },
@@ -385,7 +363,6 @@
     "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit)."
   },
   "adminNav": {
-    "sections": "Bagian admin",
     "overview": "Ringkasan",
     "farmers": "Petani",
     "customers": "Pelanggan",
@@ -396,6 +373,7 @@
     "categories": "Kategori",
     "announcements": "Pengumuman",
     "feedback": "Masukan",
+    "notifications": "Notifikasi",
     "settings": "Pengaturan",
     "account": "Akun Anda",
     "analytics": "Analitik",
@@ -407,16 +385,6 @@
     "contextSub": "Platform · seluruh pasar",
     "userLine": "Admin · seluruh platform",
     "searchPlaceholder": "Lapak, pelanggan, atau pasar"
-  },
-  "carousel": {
-    "roleCarousel": "korsel",
-    "roleSlide": "slide",
-    "slideOf": "{{n}} dari {{total}}: {{topic}}",
-    "previous": "Slide sebelumnya",
-    "next": "Slide berikutnya",
-    "show": "Tampilkan slide {{n}}: {{topic}}",
-    "pause": "Jeda tayangan slide",
-    "play": "Putar tayangan slide"
   },
   "geo": {
     "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda, atau gunakan alamat.",
@@ -778,6 +746,12 @@
       "fakeReviews": "Ulasan palsu",
       "ownerRequest": "Atas permintaan pemilik akun"
     }
+  },
+  "cookieConsent": {
+    "label": "Pemberitahuan cookie",
+    "text": "Kami hanya menggunakan cookie esensial agar Anda tetap masuk dan keranjang belanja berfungsi. Tidak ada cookie iklan atau analitik. <a>Kebijakan privasi</a>.",
+    "decline": "Tolak",
+    "accept": "Terima"
   },
   "storageMode": {
     "room": "Suhu ruang",

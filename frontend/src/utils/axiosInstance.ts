@@ -1,5 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import AuthApi from '@/api-requests/auth.requests';
+import PlatformStatus from '@/lib/platformStatus';
 import Session from './session';
 
 const options = {
@@ -14,6 +15,20 @@ const options = {
 
 export const publicApi = axios.create(options);
 export const privateApi = axios.create(options);
+
+/**
+ * An admin can turn maintenance mode on while other people are already browsing (MaintenanceModeFilter) — the next API
+ * call any of them makes should show the notice right away, no reload needed.
+ */
+const watchForMaintenanceMode = (error: unknown) => {
+  if (error instanceof AxiosError && error.response?.data?.error?.code === 'MAINTENANCE_MODE') {
+    PlatformStatus.set(true);
+  }
+  return Promise.reject(error);
+};
+
+publicApi.interceptors.response.use((res) => res, watchForMaintenanceMode);
+privateApi.interceptors.response.use((res) => res, watchForMaintenanceMode);
 
 privateApi.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {

@@ -9,7 +9,7 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog } from '@/components/ui/dialog';
 import { Cart } from '@/lib/cart';
-import { cutoffLabel, pickupLabel, vnd } from '@/lib/format';
+import { cutoffLabel, pickupLabel, money } from '@/lib/format';
 import type { OrderType } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -30,7 +30,8 @@ const OrderTicket = ({ order, fluid, hideActions, onChanged }: OrderTicketProps)
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const editable = !order.locked && (order.status === 'placed' || order.status === 'accepted');
-  const href = `/orders/${order.code.replace('#', '')}`;
+  // By id, never by code: the detail, edit and review pages all read the route param as a number.
+  const href = `/orders/${order.id}`;
 
   const cancel = async () => {
     if (order.id == null) return;
@@ -113,7 +114,7 @@ const OrderTicket = ({ order, fluid, hideActions, onChanged }: OrderTicketProps)
                 <span className="text-ink-muted mr-1.5 tabular-nums">{line.qty}×</span>
                 {line.name}
               </span>
-              <span className="whitespace-nowrap tabular-nums">{vnd(line.qty * (line.price ?? 0))}</span>
+              <span className="whitespace-nowrap tabular-nums">{money(line.qty * (line.price ?? 0))}</span>
             </li>
           ))
         ) : (
@@ -125,7 +126,7 @@ const OrderTicket = ({ order, fluid, hideActions, onChanged }: OrderTicketProps)
 
       <div className="flex items-baseline justify-between gap-3 font-bold">
         <span>{t('order.payOnPickup')}</span>
-        <span className="font-hand text-price text-[28px] tabular-nums">{vnd(total(order))}</span>
+        <span className="font-hand text-price text-[28px] tabular-nums">{money(total(order))}</span>
       </div>
 
       <div className="mt-auto flex flex-col gap-3">

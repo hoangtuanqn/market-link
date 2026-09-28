@@ -11,14 +11,6 @@
     "language": "Language",
     "languageNote": "The language of menus, buttons and messages. Stall, product and place names stay as the stall wrote them.",
     "format": "Money, dates and units",
-    "currency": "Show prices in",
-    "currencyNote": "You always pay in Vietnamese đồng at the stall. Another currency is shown next to it for reading only, at fixed rates from {{date}}.",
-    "currencies": {
-      "VND": "₫ Vietnamese đồng only",
-      "USD": "₫ and $ US dollar",
-      "EUR": "₫ and € euro",
-      "JPY": "₫ and ¥ Japanese yen"
-    },
     "units": "Weights and volumes",
     "unitsNote": "Only converts units that measure something. A stall that sells by the bunch, the bulb or the tray keeps its own word.",
     "metric": "Metric · kg, g, litre",
@@ -52,9 +44,6 @@
   "cart": {
     "orderOf": "Order {{index}} of {{of}}",
     "payAtPickup": "Pay at the stall on pickup"
-  },
-  "chart": {
-    "showNumbers": "Show the numbers"
   },
   "chat": {
     "assistant": "MarketLink assistant",
@@ -187,6 +176,11 @@
     "mapDataFrom": "Map data {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
     "cart": "Cart",
     "cartItems_one": "Cart, {{count}} item",
     "cartItems_other": "Cart, {{count}} items",
@@ -210,8 +204,8 @@
   "loadError": {
     "title": "We could not load the {{noun}}",
     "text": "The list did not come back this time. Nothing you saved or ordered is affected.",
-    "help": "This is usually the connection rather than anything you did. If trying again does not help, <link>tell us what happened</link> and we will look into it.",
-    "helpAlt": "This is usually the connection rather than anything you did. If trying again does not help, <alt />, or <link>tell us what happened</link> and we will look into it."
+    "help": "This is usually the connection rather than anything you did. If trying again does not help, <a>tell us what happened</a> and we will look into it.",
+    "helpAlt": "This is usually the connection rather than anything you did. If trying again does not help, <alt />, or <a>tell us what happened</a> and we will look into it."
   },
   "loading": {
     "markets": "Loading markets"
@@ -299,22 +293,6 @@
     "show": "Show password",
     "hide": "Hide password"
   },
-  "period": {
-    "length": "Period length",
-    "day": "Day",
-    "week": "Week",
-    "month": "Month",
-    "quarter": "Quarter",
-    "year": "Year",
-    "custom": "Custom",
-    "from": "From",
-    "to": "To",
-    "compareWith": "Compare with",
-    "cmpBefore": "The period before, same length",
-    "cmpLastYear": "The same period last year",
-    "cmpNone": "No comparison",
-    "comparedWith": "compared with <b>{{compare}}</b>, the same length"
-  },
   "price": {
     "was": "Was"
   },
@@ -385,7 +363,6 @@
     "phoneInvalid": "Enter a valid Vietnamese mobile number (10 digits)."
   },
   "adminNav": {
-    "sections": "Admin sections",
     "overview": "Overview",
     "farmers": "Farmers",
     "customers": "Customers",
@@ -396,6 +373,7 @@
     "categories": "Categories",
     "announcements": "Announcements",
     "feedback": "Feedback",
+    "notifications": "Notifications",
     "settings": "Settings",
     "account": "Your account",
     "analytics": "Analytics",
@@ -407,16 +385,6 @@
     "contextSub": "Platform · whole marketplace",
     "userLine": "Admin · whole platform",
     "searchPlaceholder": "Stall, customer or market"
-  },
-  "carousel": {
-    "roleCarousel": "carousel",
-    "roleSlide": "slide",
-    "slideOf": "{{n}} of {{total}}: {{topic}}",
-    "previous": "Previous slide",
-    "next": "Next slide",
-    "show": "Show slide {{n}}: {{topic}}",
-    "pause": "Pause the slideshow",
-    "play": "Play the slideshow"
   },
   "geo": {
     "denied": "You turned location off for this site. Change it in your browser’s site settings, or use an address instead.",
@@ -778,6 +746,12 @@
       "fakeReviews": "Fake reviews",
       "ownerRequest": "At the account owner’s request"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie notice",
+    "text": "We use essential cookies to keep you signed in and your cart working. We set no advertising or analytics cookies. <a>Privacy policy</a>.",
+    "decline": "Decline",
+    "accept": "Accept"
   },
   "storageMode": {
     "room": "Room temperature",

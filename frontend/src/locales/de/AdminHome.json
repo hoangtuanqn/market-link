@@ -1,6 +1,6 @@
 {
   "overline": "Plattform · {{year}}",
-  "title": "MarketLink heute",
+  "title": "Übersicht",
   "noun": "dashboard",
   "kpi": {
     "farmers": "Erzeuger",
@@ -48,5 +48,12 @@
     "pickup": "Abholung",
     "total": "Summe",
     "status": "Status"
+  },
+  "maintenance": {
+    "title": "Wartungsmodus ist aktiv",
+    "badge": "Aktiv",
+    "text": "Die gesamte Plattform ist derzeit nur für Administratoren zugänglich. Alle Besucher und Landwirte sehen den Wartungshinweis.",
+    "reminder": "Bitte denken Sie daran, den Wartungsmodus so bald wie möglich nach Abschluss der Arbeiten zu deaktivieren, damit Benutzer wieder auf MarketLink zugreifen können.",
+    "action": "Zu den Einstellungen"
   }
 }

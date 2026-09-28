@@ -7,11 +7,10 @@
     "phone": "电话",
     "address": "地址",
     "hours": "服务时间",
-    "emailValue": "contact@marketlink.vn",
-    "phoneValue": "+84 90 123 4567",
-    "addressValue": "待补充。地图上的标记是第一郡的临时位置。",
-    "hoursValue": "周一至周五，09:00 – 17:00",
-    "toAdd": "待补充"
+    "emailValue": "admin@marketlink.vn",
+    "phoneValue": "0900000001",
+    "addressValue": "3 Lê Duẩn, Phường Sài Gòn, Thành phố Hồ Chí Minh",
+    "hoursValue": "周一至周五，09:00 – 17:00"
   },
   "feedback": {
     "title": "发现问题或有好点子？",
@@ -22,7 +21,7 @@
     "label": "团队位置地图",
     "markerLabel": "MarketLink 团队（临时位置）",
     "popupTitle": "MarketLink 团队",
-    "popupLine": "临时标记，第一郡",
+    "popupLine": "3 Lê Duẩn, Phường Sài Gòn",
     "directions": "前往团队的路线"
   }
 }

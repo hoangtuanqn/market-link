@@ -100,7 +100,7 @@ class FarmerDailyStockServiceTest {
     @Test
     void overrideRejectsADateWithNoTemplate() {
         approvedStall();
-        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.empty());
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.empty());
 
         assertThatThrownBy(
                         () ->
@@ -121,7 +121,7 @@ class FarmerDailyStockServiceTest {
         row.setStockDate(DATE);
         row.setQuantityAvailable(40);
         row.setUnitPrice(new BigDecimal("12000"));
-        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
         when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
 
         DailyStockResource result =
@@ -147,7 +147,7 @@ class FarmerDailyStockServiceTest {
         row.setId(500L);
         row.setQuantityAvailable(40);
         row.setUnitPrice(new BigDecimal("12000"));
-        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
         when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
 
         DailyStockResource result =
@@ -167,7 +167,7 @@ class FarmerDailyStockServiceTest {
         row.setId(500L);
         row.setQuantityAvailable(0);
         row.setUnitPrice(new BigDecimal("12000"));
-        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
         when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
         when(restock.isOrderable(any())).thenReturn(false, true);
 

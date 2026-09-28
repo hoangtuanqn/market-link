@@ -4,8 +4,10 @@ import { AdminReportApi } from '@/api-requests/report.requests';
 import FeedbackApi from '@/api-requests/feedback.requests';
 import ModerationApi from '@/api-requests/moderation.requests';
 import type { OrderListItemDto } from '@/api-requests/order.requests';
+import { InfoIcon } from '@/components/icons';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { BarList } from '@/components/ui/bar-list';
+import { ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Kpi } from '@/components/ui/kpi';
@@ -17,9 +19,11 @@ import {
   ADMIN_MARKETS_PATH,
   ADMIN_MODERATION_PATH,
   ADMIN_ORDERS_PATH,
+  ADMIN_SETTINGS_PATH,
 } from '@/constants/nav';
+import usePlatformStatus from '@/hooks/usePlatformStatus';
 import useRequest from '@/hooks/useRequest';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 
 /** Docs/prototype/admin/overview.html — the six most recent orders across the whole platform. */
 const LATEST = 6;
@@ -33,6 +37,7 @@ const NO_ORDERS: OrderListItemDto[] = [];
 const AdminHomePage = () => {
   const { t } = useTranslation('AdminHome');
   const { t: tc } = useTranslation();
+  const maintenanceMode = usePlatformStatus();
 
   const { state: homeLoad, retry: retryHome } = useRequest('admin-home', () =>
     Promise.all([
@@ -73,16 +78,45 @@ const AdminHomePage = () => {
       label: t('col.pickup'),
       render: (o) => pickupLabel(o.pickupDate, `${o.pickupStart}–${o.pickupEnd}`),
     },
-    { key: 'total', label: t('col.total'), align: 'num', render: (o) => vnd(o.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (o) => money(o.totalAmount) },
     { key: 'status', label: t('col.status'), render: (o) => <OrderStatusBadge status={o.status} /> },
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-2">
         <p className="text-overline text-ink-muted uppercase">{t('overline')}</p>
-        <h1 className="font-hand text-h1">{t('title')}</h1>
+        <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
       </div>
+
+      {maintenanceMode && (
+        <Card
+          as="aside"
+          aria-label={t('maintenance.title')}
+          className="border-warning-ink/30 bg-warning-bg/40 text-ink shadow-tag flex flex-col justify-between gap-4 p-5 sm:flex-row sm:items-center"
+        >
+          <div className="flex items-start gap-3.5">
+            <div className="bg-warning-bg text-warning-ink border-warning-ink/20 grid size-10 flex-none place-items-center rounded-lg border shadow-xs">
+              <InfoIcon size={20} />
+            </div>
+            <div className="flex max-w-3xl flex-col gap-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-body text-ink font-bold">{t('maintenance.title')}</span>
+                <span className="bg-warning-bg text-warning-ink inline-flex items-center rounded-full px-2 py-0.5 text-[12px] font-bold">
+                  {t('maintenance.badge')}
+                </span>
+              </div>
+              <p className="text-small text-ink/90">{t('maintenance.text')}</p>
+              <p className="text-small text-ink-muted mt-0.5 font-medium">{t('maintenance.reminder')}</p>
+            </div>
+          </div>
+          <div className="shrink-0 sm:self-center">
+            <ButtonLink to={ADMIN_SETTINGS_PATH} variant="secondary" size="sm">
+              {t('maintenance.action')}
+            </ButtonLink>
+          </div>
+        </Card>
+      )}
 
       {homeLoad.kind === 'loading' ? (
         <p role="status" className="text-ink-muted">
@@ -115,7 +149,7 @@ const AdminHomePage = () => {
             <Kpi
               label={t('kpi.orders')}
               value={homeLoad.data.dashboard.totalOrders}
-              note={t('kpi.ordersNote', { revenue: vnd(homeLoad.data.dashboard.revenueTotal) })}
+              note={t('kpi.ordersNote', { revenue: money(homeLoad.data.dashboard.revenueTotal) })}
               href={ADMIN_ORDERS_PATH}
               linkLabel={t('kpi.ordersLink')}
             />
@@ -167,7 +201,7 @@ const AdminHomePage = () => {
         ) : revenueLoad.kind === 'error' ? (
           <LoadError noun={t('byMarket.noun')} onRetry={retryRevenue} />
         ) : revenueLoad.data.length ? (
-          <BarList rows={revenueLoad.data.map((r) => ({ label: r.marketName, value: r.revenue }))} format={vnd} />
+          <BarList rows={revenueLoad.data.map((r) => ({ label: r.marketName, value: r.revenue }))} format={money} />
         ) : (
           <DataState title={t('byMarket.empty.title')} text={t('byMarket.empty.text')} />
         )}

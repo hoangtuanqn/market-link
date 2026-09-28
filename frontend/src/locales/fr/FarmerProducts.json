@@ -31,7 +31,8 @@
       "unavailable": "Le produit est masqué aux clients jusqu’à ce que vous le réactiviez."
     },
     "deleted": "Supprimé",
-    "deletedText": "{{name}} supprimé."
+    "deletedText": "{{name}} supprimé.",
+    "stockAdjusted": "Stock mis à jour pour {{day}}."
   },
   "dialog": {
     "title": "Supprimer {{name}} ?",
@@ -47,5 +48,18 @@
   "empty": {
     "title": "Aucun produit pour l’instant",
     "text": "Ajoutez votre premier produit et il apparaît aussitôt sur votre page de stand."
+  },
+  "adjust": "Ajuster",
+  "adjustDialog": {
+    "title": "Ajuster le stock pour {{day}}",
+    "quantity": "Unités disponibles",
+    "price": "Prix pour ce jour (facultatif)",
+    "priceHint": "Laissez vide pour conserver le prix actuel.",
+    "cancel": "Annuler",
+    "confirm": "Enregistrer",
+    "error": {
+      "quantity": "Entrez un nombre entier de 0 ou plus.",
+      "price": "Entrez un prix de 0 ou plus."
+    }
   }
 }

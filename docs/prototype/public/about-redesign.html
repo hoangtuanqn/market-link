@@ -1,0 +1,2212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About Us — MarketLink</title>
+<link rel="icon" href="../../../frontend/public/brand/marketlink-mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chivo:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-theme.css">
+<link rel="stylesheet" href="../../../frontend/src/styles/marketlink-components.css">
+<link rel="stylesheet" href="../prototype.css">
+<style>
+  /* ============================================================
+     MarketLink About Us Redesign v4 (English Default)
+     Warm Harmonious Palette: Soft Eggshell Linen (#FFFDF8) over Warm Quiet (#FAF6F0)
+     Magazine Editorial Hero, Interactive Farm-to-Table Carousel & Elite Dev Cards
+     ============================================================ */
+  :root {
+    --card-surface: #FFFDF8;
+    --card-surface-subtle: #F9F5EC;
+    --card-border: #E8DCC9;
+    --card-border-hover: #2F4A2A;
+    --card-shadow: 0 4px 18px rgba(78, 56, 30, 0.05);
+    --card-shadow-hover: 0 14px 32px rgba(47, 74, 42, 0.15);
+  }
+
+  body {
+    background-color: var(--surface-quiet) !important;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  main.pt-main {
+    max-width: 1220px;
+    padding: var(--space-5) var(--space-5) var(--space-8);
+    gap: 0;
+  }
+
+  /* ---------------- SCROLL REVEAL ANIMATIONS ---------------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-stagger.revealed > *:nth-child(1) { transition-delay: 0.04s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.revealed > *:nth-child(2) { transition-delay: 0.10s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.revealed > *:nth-child(3) { transition-delay: 0.16s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.revealed > *:nth-child(4) { transition-delay: 0.22s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.revealed > *:nth-child(5) { transition-delay: 0.28s; opacity: 1; transform: translateY(0); }
+  .reveal-stagger.revealed > *:nth-child(6) { transition-delay: 0.34s; opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-stagger > * {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* Version Compare Banner */
+  .about-compare-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 12px 18px;
+    margin-bottom: 28px;
+    font-size: 14px;
+    color: var(--ink);
+    box-shadow: var(--card-shadow);
+    flex-wrap: wrap;
+  }
+  .about-compare-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .about-compare-tag {
+    background: var(--brand);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Section Rhythm */
+  .about-section {
+    margin-top: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .about-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    border-bottom: 1.5px dashed var(--card-border);
+    padding-bottom: var(--space-3);
+  }
+  .about-section-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 760px;
+  }
+  .about-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .about-section-title {
+    font-size: 30px;
+    line-height: 38px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+  }
+  .about-section-desc {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--ink-muted);
+    margin: 4px 0 0;
+  }
+
+  /* ---------------- 1. EDITORIAL BRAND HERO ---------------- */
+  .about-hero-editorial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+    padding: var(--space-3) 0 var(--space-5);
+  }
+
+  .about-hero-eyebrow-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: #EAF0E6;
+    border: 1px solid #C4D6BD;
+    border-radius: var(--radius-pill);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--brand-strong);
+    letter-spacing: 0.05em;
+  }
+
+  .about-hero-display-title {
+    font-family: var(--font-hand);
+    font-size: 56px;
+    line-height: 1.1;
+    color: var(--ink);
+    margin: 0;
+    max-width: 900px;
+    letter-spacing: -0.01em;
+  }
+  .about-hero-display-highlight {
+    color: var(--brand);
+    position: relative;
+    display: inline-block;
+  }
+  .about-hero-display-highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: #E8B33C;
+    opacity: 0.28;
+    border-radius: 4px;
+    z-index: -1;
+  }
+
+  .about-hero-lead-text {
+    font-size: 17px;
+    line-height: 27px;
+    color: var(--ink-muted);
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .about-hero-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+  .about-hero-cta-row .ml-btn {
+    min-height: 48px;
+    padding: 0 24px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* Asymmetric 3-Frame Editorial Montage */
+  .about-hero-montage {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr) minmax(0, 0.85fr);
+    gap: 20px;
+    width: 100%;
+    margin-top: 8px;
+    align-items: center;
+  }
+  @media (max-width: 860px) {
+    .about-hero-montage {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .about-montage-frame {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--card-surface);
+    border: 2px solid var(--card-border);
+    box-shadow: 0 10px 26px rgba(78, 56, 30, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .about-montage-frame:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(47, 74, 42, 0.15);
+  }
+
+  .about-montage-left {
+    height: 300px;
+    transform: rotate(-1.5deg);
+  }
+  .about-montage-center {
+    height: 380px;
+    z-index: 2;
+    border-color: #2F4A2A;
+  }
+  .about-montage-right {
+    height: 300px;
+    transform: rotate(1.5deg);
+  }
+  @media (max-width: 860px) {
+    .about-montage-left, .about-montage-center, .about-montage-right {
+      height: 240px;
+      transform: none;
+    }
+  }
+
+  .about-montage-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .about-montage-pill {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    background: rgba(47, 74, 42, 0.92);
+    backdrop-filter: blur(6px);
+    color: #F1E5CB;
+    padding: 6px 14px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  }
+
+  /* Under-hero 4-Pill Ticker */
+  .about-hero-ticker {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .about-ticker-pill {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-pill);
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    box-shadow: var(--card-shadow);
+  }
+
+  /* ---------------- 2. IMPACT STATS ---------------- */
+  .about-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+  }
+  @media (max-width: 900px) {
+    .about-stats-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 520px) {
+    .about-stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .about-stat-card {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 22px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .about-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--card-border-hover);
+  }
+  .about-stat-number {
+    font-family: var(--font-hand);
+    font-size: 42px;
+    line-height: 1;
+    color: var(--brand);
+    font-weight: 700;
+  }
+  .about-stat-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .about-stat-sub {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--ink-muted);
+  }
+
+  /* ---------------- 3. ORIGIN STORY ---------------- */
+  .about-origin-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: 32px;
+    align-items: stretch;
+  }
+  @media (max-width: 960px) {
+    .about-origin-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .about-origin-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .about-dilemma-card {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .about-dilemma-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(78, 56, 30, 0.08);
+  }
+  .about-dilemma-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+  }
+  .tag-farmer {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FCD34D;
+  }
+  .tag-customer {
+    background: #E0E7FF;
+    color: #3730A3;
+    border: 1px solid #C7D2FE;
+  }
+  .tag-solution {
+    background: #DCFCE7;
+    color: #166534;
+    border: 1px solid #BBF7D0;
+  }
+  .about-dilemma-h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+  }
+  .about-dilemma-p {
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  .about-origin-visual-card {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--card-shadow);
+  }
+  .about-origin-visual-img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+  }
+  .about-origin-quote-box {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--card-surface-subtle);
+    border-top: 1.5px solid var(--card-border);
+    flex: 1;
+    justify-content: center;
+  }
+  .about-origin-quote-text {
+    font-family: var(--font-hand);
+    font-size: 22px;
+    line-height: 30px;
+    color: var(--ink);
+    margin: 0;
+  }
+  .about-origin-author {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ---------------- 4. INTERACTIVE JOURNEY CAROUSEL ---------------- */
+  .journey-carousel-container {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+  }
+
+  /* Carousel Step Nav Tabs */
+  .journey-tabs-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 768px) {
+    .journey-tabs-nav {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .journey-tab-btn {
+    background: var(--card-surface-subtle);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+    transition: all 0.2s ease;
+    outline: none;
+  }
+  .journey-tab-btn:hover {
+    border-color: var(--brand);
+    background: #F2EFE7;
+  }
+  .journey-tab-btn.active {
+    background: #2F4A2A;
+    border-color: #2F4A2A;
+    box-shadow: 0 4px 14px rgba(47, 74, 42, 0.25);
+  }
+  .journey-tab-step {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand);
+  }
+  .journey-tab-btn.active .journey-tab-step {
+    color: #A3E635;
+  }
+  .journey-tab-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .journey-tab-btn.active .journey-tab-title {
+    color: #F1E5CB;
+  }
+
+  /* Carousel Slide Stage */
+  .journey-slide-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 32px;
+    align-items: center;
+    min-height: 340px;
+  }
+  @media (max-width: 860px) {
+    .journey-slide-stage {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  .journey-slide-img-wrap {
+    position: relative;
+    height: 340px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 2px solid var(--card-border);
+    box-shadow: 0 8px 24px rgba(78, 56, 30, 0.1);
+  }
+  .journey-slide-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .journey-slide-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(47, 74, 42, 0.95);
+    color: #F1E5CB;
+    font-family: var(--font-hand);
+    font-size: 20px;
+    font-weight: 700;
+    padding: 3px 14px;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  .journey-slide-content {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .journey-slide-timing {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .journey-slide-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 34px;
+    color: var(--ink);
+    margin: 0;
+  }
+  .journey-slide-desc {
+    font-size: 15px;
+    line-height: 25px;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+  .journey-slide-tip {
+    background: var(--card-surface-subtle);
+    border: 1px dashed var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--brand-strong);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+  }
+
+  /* Carousel Bottom Controls */
+  .journey-controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    border-top: 1px dashed var(--card-border);
+  }
+  .journey-dots {
+    display: flex;
+    gap: 8px;
+  }
+  .journey-dot {
+    width: 24px;
+    height: 6px;
+    border-radius: 3px;
+    background: #D8CABE;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .journey-dot.active {
+    width: 44px;
+    background: #2F4A2A;
+  }
+  .journey-nav-arrows {
+    display: flex;
+    gap: 8px;
+  }
+  .journey-arrow-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--card-surface-subtle);
+    border: 1.5px solid var(--card-border);
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+  }
+  .journey-arrow-btn:hover {
+    background: #2F4A2A;
+    color: #F1E5CB;
+    border-color: #2F4A2A;
+  }
+
+  /* ---------------- 5. FOUR CORE VALUES ---------------- */
+  .about-values-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 980px) {
+    .about-values-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 540px) {
+    .about-values-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .about-value-card {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .about-value-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--card-border-hover);
+  }
+  .about-value-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    background: #EAF0E6;
+    color: var(--brand);
+    border: 1px solid #C4D6BD;
+  }
+  .about-value-h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+  }
+  .about-value-p {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  /* ---------------- 6. PHILOSOPHY & PRINCIPLES ---------------- */
+  .about-principles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 860px) {
+    .about-principles-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .about-principle-card {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .about-principle-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(78, 56, 30, 0.08);
+  }
+  .about-principle-tag-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-pill);
+    background: #FEE2E2;
+    color: #DC2626;
+    font-size: 17px;
+    font-weight: 700;
+    flex-shrink: 0;
+    border: 1px solid #FCA5A5;
+  }
+  .about-principle-body {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .about-principle-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+  }
+  .about-principle-why {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+
+  /* ---------------- 7. FOUR LOCAL GROWING REGIONS ---------------- */
+  .about-regions-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 1024px) {
+    .about-regions-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 580px) {
+    .about-regions-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .about-region-card {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .about-region-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--card-border-hover);
+  }
+  .about-region-img-wrap {
+    height: 140px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-region-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+  }
+  .about-region-card:hover .about-region-img {
+    transform: scale(1.06);
+  }
+  .about-region-distance-pill {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(42, 32, 22, 0.85);
+    backdrop-filter: blur(4px);
+    color: #F1E5CB;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+  }
+  .about-region-body {
+    padding: 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+  .about-region-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+  }
+  .about-region-soil {
+    font-size: 12px;
+    color: var(--brand);
+    font-weight: 600;
+  }
+  .about-region-desc {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--ink-muted);
+    margin: 0;
+  }
+  .about-region-specialty {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--card-surface-subtle);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--brand-strong);
+    border: 1px solid var(--card-border);
+  }
+
+  /* ---------------- 8. ELITE ENGINEERING TEAM SHOWCASE ---------------- */
+  .about-team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+  @media (max-width: 1024px) {
+    .about-team-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 640px) {
+    .about-team-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .about-dev-card {
+    background: var(--card-surface);
+    border: 1.5px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease;
+    position: relative;
+    cursor: default;
+  }
+  .about-dev-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--brand), #A3E635, transparent);
+    opacity: 0;
+    transform: scaleX(0.6);
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 10;
+  }
+  .about-dev-card:hover {
+    transform: translateY(-9px);
+    box-shadow: 0 24px 48px -12px rgba(47, 74, 42, 0.22), 0 0 0 1.5px var(--brand);
+    border-color: var(--brand);
+  }
+  .about-dev-card:hover::before {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  /* High-Impact Cover Header */
+  .about-dev-cover {
+    height: 86px;
+    position: relative;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: filter 0.35s ease;
+  }
+  .about-dev-card:hover .about-dev-cover {
+    filter: brightness(1.08) saturate(1.15);
+  }
+  .cover-lead { background: linear-gradient(135deg, #1A3418 0%, #2A4F26 50%, #152613 100%); }
+  .cover-be1  { background: linear-gradient(135deg, #142C3D 0%, #214863 50%, #0F202B 100%); }
+  .cover-be2  { background: linear-gradient(135deg, #382414 0%, #563720 50%, #24160B 100%); }
+  .cover-fe1  { background: linear-gradient(135deg, #3D1C27 0%, #5C2B3C 50%, #281119 100%); }
+  .cover-fe2  { background: linear-gradient(135deg, #1B293A 0%, #2B415C 50%, #121C27 100%); }
+  .cover-qa   { background: linear-gradient(135deg, #243521 0%, #3B5336 50%, #172415 100%); }
+
+  .about-dev-role-badge {
+    background: rgba(241, 229, 203, 0.22);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(241, 229, 203, 0.38);
+    color: #F1E5CB;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .about-dev-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #A3E635;
+    font-weight: 600;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    border: 1px solid rgba(163, 230, 53, 0.25);
+  }
+  .about-dev-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #A3E635;
+    box-shadow: 0 0 6px #A3E635;
+    animation: pulseDevDot 2.2s infinite ease-in-out;
+  }
+  @keyframes pulseDevDot {
+    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px #A3E635; }
+    50% { opacity: 0.5; transform: scale(0.85); box-shadow: 0 0 2px #A3E635; }
+  }
+
+  /* Profile Overview Header Row */
+  .about-dev-profile-wrap {
+    padding: 0 20px;
+    margin-top: -38px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    position: relative;
+    z-index: 3;
+  }
+  .about-dev-avatar {
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 15%;
+    border: 3.5px solid var(--card-surface);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
+    background: #fff;
+    flex-shrink: 0;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease;
+  }
+  .about-dev-card:hover .about-dev-avatar {
+    transform: scale(1.08) translateY(-2px);
+    box-shadow: 0 10px 24px rgba(47, 74, 42, 0.28), 0 0 0 3px var(--brand);
+  }
+
+  /* Refined Social Icons */
+  .about-dev-socials {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .about-dev-social-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--card-surface-subtle);
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .about-dev-social-btn svg {
+    transition: transform 0.2s ease;
+  }
+  .about-dev-social-btn:hover {
+    background: var(--brand);
+    color: #F1E5CB;
+    border-color: var(--brand);
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 4px 12px rgba(47, 74, 42, 0.25);
+  }
+  .about-dev-social-btn:hover svg {
+    transform: scale(1.1);
+  }
+
+  /* Card Content Structure */
+  .about-dev-body {
+    padding: 14px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .about-dev-name-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .about-dev-name {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+    transition: color 0.25s ease;
+  }
+  .about-dev-card:hover .about-dev-name {
+    color: var(--brand-strong);
+  }
+  .about-dev-title {
+    font-size: 13px;
+    color: var(--brand);
+    font-weight: 600;
+  }
+
+  /* Dev Highlight Box */
+  .about-dev-impact {
+    background: var(--card-surface-subtle);
+    border: 1px solid var(--card-border);
+    border-left: 3.5px solid var(--brand);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    font-size: 12px;
+    line-height: 18px;
+    color: var(--ink);
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  .about-dev-card:hover .about-dev-impact {
+    background: #F4EFE5;
+    border-left-color: var(--brand-strong);
+    box-shadow: 0 2px 8px rgba(47, 74, 42, 0.06);
+  }
+
+  /* Tech Badges */
+  .about-dev-tech-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .about-dev-tech-chip {
+    background: #EAF0E6;
+    color: var(--brand-strong);
+    border: 1px solid #D1DFC8;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .about-dev-card:hover .about-dev-tech-chip {
+    background: #DCE7D4;
+    border-color: #B1C8A3;
+    transform: translateY(-1.5px);
+    box-shadow: 0 2px 5px rgba(47, 74, 42, 0.1);
+  }
+
+  /* Dev Quote */
+  .about-dev-motto {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--ink-muted);
+    margin: 0;
+    font-style: italic;
+  }
+
+  /* Favorite Farm Pick */
+  .about-dev-fav {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px dashed var(--card-border);
+    font-size: 12px;
+    color: var(--ink-muted);
+    transition: color 0.2s ease;
+  }
+  .about-dev-fav b {
+    color: var(--brand-strong);
+    transition: color 0.2s ease;
+  }
+  .about-dev-card:hover .about-dev-fav b {
+    color: #172D14;
+  }
+
+  /* ---------------- 9. DUAL CTA ---------------- */
+  .about-cta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    margin-top: 56px;
+  }
+  @media (max-width: 768px) {
+    .about-cta-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .about-cta-box {
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .cta-shopper {
+    background: var(--card-surface);
+    border: 2px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+  }
+  .cta-farmer {
+    background: var(--board);
+    color: var(--on-board);
+    border: 2px solid #1f331c;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+  }
+  .about-cta-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .about-cta-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+  }
+  .cta-farmer .about-cta-title {
+    color: #fff;
+  }
+  .about-cta-desc {
+    font-size: 14px;
+    line-height: 22px;
+    margin: 0;
+    color: var(--ink-muted);
+  }
+  .cta-farmer .about-cta-desc {
+    color: #c9d8c5;
+  }
+  .about-cta-btn {
+    align-self: flex-start;
+  }
+</style>
+</head>
+<body data-role="guest">
+<div id="pt-top"></div>
+
+<main class="pt-main">
+
+  <!-- Version Comparison Switcher -->
+  <div class="about-compare-banner reveal">
+    <div class="about-compare-left">
+      <span class="about-compare-tag">Redesign v4</span>
+      <span><b>About Us (English Default):</b> Editorial magazine hero, interactive farm-to-table carousel, 4 local growing regions &amp; elite developer cards.</span>
+    </div>
+    <div>
+      <a class="ml-btn ml-btn-secondary" href="about.html" style="font-size:13px; padding:6px 14px; min-height:34px;">
+        ← View Original Page
+      </a>
+    </div>
+  </div>
+
+  <!-- 1. EDITORIAL BRAND HERO (DISCRETE MAGAZINE STYLE) -->
+  <section class="about-hero-editorial reveal">
+    <div class="about-hero-eyebrow-pill">
+      <span>🌾</span> BRAND STORY · ABOUT MARKETLINK
+    </div>
+
+    <h1 class="about-hero-display-title">
+      Where Vietnamese Farmers Entrust Living Soil,<br>
+      <span class="about-hero-display-highlight">Where City Families Rediscover True Harvest.</span>
+    </h1>
+
+    <p class="about-hero-lead-text">
+      No industrial cold warehouses. No exploitative middlemen. MarketLink was created to bridge fresh dawn-harvested family plots in Củ Chi and Đà Lạt directly with conscious Saigon tables every weekend.
+    </p>
+
+    <div class="about-hero-cta-row">
+      <a class="ml-btn ml-btn-primary" href="markets.html">
+        Explore Weekend Markets →
+      </a>
+      <a class="ml-btn ml-btn-secondary" href="#journey">
+        See The 4-Step Harvest Journey
+      </a>
+    </div>
+
+    <!-- Asymmetric 3-Frame Visual Showcase -->
+    <div class="about-hero-montage">
+      <!-- Frame Left: Morning Dew Harvest -->
+      <div class="about-montage-frame about-montage-left">
+        <img
+          class="about-montage-img"
+          src="https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=600&q=80&auto=format&fit=crop"
+          alt="Morning dew vegetable field"
+        />
+        <div class="about-montage-pill">
+          <span>🌅</span> 05:00 AM · Harvested at dawn
+        </div>
+      </div>
+
+      <!-- Frame Center: Fresh Organic Harvest -->
+      <div class="about-montage-frame about-montage-center">
+        <img
+          class="about-montage-img"
+          src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=1000&q=80&auto=format&fit=crop"
+          alt="Crates of freshly picked vegetables"
+        />
+        <div class="about-montage-pill" style="background: rgba(31, 51, 27, 0.95); font-size: 13px;">
+          <span>🌱</span> 100% Pre-reserved · Zero farm waste
+        </div>
+      </div>
+
+      <!-- Frame Right: Market Reunion -->
+      <div class="about-montage-frame about-montage-right">
+        <img
+          class="about-montage-img"
+          src="https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&q=80&auto=format&fit=crop"
+          alt="Weekend market stall interaction"
+        />
+        <div class="about-montage-pill">
+          <span>🧺</span> 07:30 AM · Picked up at stall
+        </div>
+      </div>
+    </div>
+
+    <!-- Highlight Badges Ticker -->
+    <div class="about-hero-ticker">
+      <span class="about-ticker-pill">✨ Dawn-harvested produce</span>
+      <span class="about-ticker-pill">🤝 100% Direct stall payment</span>
+      <span class="about-ticker-pill">📍 4 Saigon market hubs</span>
+      <span class="about-ticker-pill">🌱 0% Middleman cut</span>
+    </div>
+  </section>
+
+  <!-- 2. IMPACT STATS STRIP -->
+  <section class="about-stats-grid reveal-stagger">
+    <div class="about-stat-card">
+      <div class="about-stat-number">15+</div>
+      <div class="about-stat-label">Partner Family Farms</div>
+      <div class="about-stat-sub">Natural growers across Củ Chi, Long An, and Đà Lạt.</div>
+    </div>
+    <div class="about-stat-card">
+      <div class="about-stat-number">4</div>
+      <div class="about-stat-label">Weekend Market Hubs</div>
+      <div class="about-stat-sub">Every Saturday morning at Thảo Điền, Phú Mỹ Hưng, Bình Thạnh.</div>
+    </div>
+    <div class="about-stat-card">
+      <div class="about-stat-number">12,500+</div>
+      <div class="about-stat-label">Baskets Handed Over</div>
+      <div class="about-stat-sub">Harvested strictly to order, preserving crisp morning freshness.</div>
+    </div>
+    <div class="about-stat-card">
+      <div class="about-stat-number">0 VNĐ</div>
+      <div class="about-stat-label">Platform Commission</div>
+      <div class="about-stat-sub">Shoppers pay growers directly in cash. No cuts, no held funds.</div>
+    </div>
+  </section>
+
+  <!-- 3. ORIGIN STORY -->
+  <section class="about-section reveal" id="origin">
+    <div class="about-section-header">
+      <div class="about-section-title-wrap">
+        <span class="about-eyebrow">🌱 HOW IT BEGAN</span>
+        <h2 class="about-section-title">The Dilemma Behind Early Market Mornings</h2>
+        <p class="about-section-desc">
+          Traditional morning markets run on word of mouth. That works until you travel across the city only to find an empty table.
+        </p>
+      </div>
+    </div>
+
+    <div class="about-origin-grid">
+      <div class="about-origin-cards">
+        <div class="about-dilemma-card">
+          <span class="about-dilemma-tag tag-farmer">The Farmer's Burden</span>
+          <h3 class="about-dilemma-h3">Harvest too much and crops spoil; harvest too little and regulars leave</h3>
+          <p class="about-dilemma-p">
+            Waking at 03:00 AM without knowing what will sell. Unsold produce wilts in tropical heat or gets squeezed below cost by wholesale middlemen.
+          </p>
+        </div>
+
+        <div class="about-dilemma-card">
+          <span class="about-dilemma-tag tag-customer">The City Family's Search</span>
+          <h3 class="about-dilemma-h3">Searching for clean food for children, but arriving late means missing out</h3>
+          <p class="about-dilemma-p">
+            Authentic chemical-free produce vanishes before 07:00 AM. Arriving late leaves only wilted leftovers or untraceable commercial greens.
+          </p>
+        </div>
+
+        <div class="about-dilemma-card" style="border-left: 4px solid var(--brand); border-color: #c2dec0;">
+          <span class="about-dilemma-tag tag-solution">The MarketLink Solution</span>
+          <h3 class="about-dilemma-h3">Reserve Thursday · Dawn Harvest Friday · Pick Up Saturday</h3>
+          <p class="about-dilemma-p">
+            Farmers cut strictly what has been pre-ordered. Families secure prime dew-kissed produce with zero wasted labor or unsold crops.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-origin-visual-card">
+        <img
+          class="about-origin-visual-img"
+          src="https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?w=800&q=80&auto=format&fit=crop"
+          alt="Hands holding fresh harvested vegetables with soil"
+        />
+        <div class="about-origin-quote-box">
+          <p class="about-origin-quote-text">
+            “When a grower knows their harvest has a guaranteed home, they can nurture the soil with complete peace of mind, free from chemical pesticides.”
+          </p>
+          <div class="about-origin-author">
+            <span>🌿</span> <b>Uncle Năm Tuấn</b> · Củ Chi Eco-farm Owner (3-year partner)
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. INTERACTIVE FARM-TO-TABLE CAROUSEL -->
+  <section class="about-section reveal" id="journey">
+    <div class="about-section-header">
+      <div class="about-section-title-wrap">
+        <span class="about-eyebrow">🔄 SEED TO TABLE</span>
+        <h2 class="about-section-title">The 4-Step Harvest Journey</h2>
+        <p class="about-section-desc">
+          An interactive look at our weekly cycle, directly linking rural family plots to urban dining tables.
+        </p>
+      </div>
+      <div class="journey-nav-arrows">
+        <button class="journey-arrow-btn" id="journeyPrev" aria-label="Previous step">‹</button>
+        <button class="journey-arrow-btn" id="journeyNext" aria-label="Next step">›</button>
+      </div>
+    </div>
+
+    <!-- Carousel Container -->
+    <div class="journey-carousel-container">
+      <!-- Top Step Tabs -->
+      <div class="journey-tabs-nav">
+        <button class="journey-tab-btn active" data-step="0">
+          <span class="journey-tab-step">Step 01</span>
+          <span class="journey-tab-title">Thursday · Crop Listing</span>
+        </button>
+        <button class="journey-tab-btn" data-step="1">
+          <span class="journey-tab-step">Step 02</span>
+          <span class="journey-tab-title">Friday · Dawn Harvest</span>
+        </button>
+        <button class="journey-tab-btn" data-step="2">
+          <span class="journey-tab-step">Step 03</span>
+          <span class="journey-tab-title">Saturday · Market Hub</span>
+        </button>
+        <button class="journey-tab-btn" data-step="3">
+          <span class="journey-tab-step">Step 04</span>
+          <span class="journey-tab-title">06:00 - 10:30 · Handshake</span>
+        </button>
+      </div>
+
+      <!-- Slide Display Stage -->
+      <div class="journey-slide-stage" id="journeyStage">
+        <div class="journey-slide-img-wrap">
+          <img
+            class="journey-slide-img"
+            id="journeyImg"
+            src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80&auto=format&fit=crop"
+            alt="Step visual"
+          />
+          <div class="journey-slide-badge" id="journeyBadge">01</div>
+        </div>
+
+        <div class="journey-slide-content">
+          <span class="journey-slide-timing" id="journeyTiming">
+            <span>📅</span> Thursday Evening · Listing Opens
+          </span>
+          <h3 class="journey-slide-title" id="journeyTitle">
+            Farmers Publish Their Weekend Harvest
+          </h3>
+          <p class="journey-slide-desc" id="journeyDesc">
+            Growers walk their plots in Củ Chi and Long An to inspect peak ripeness. They post exact available quantities on their MarketLink stall for shoppers to reserve in advance.
+          </p>
+          <div class="journey-slide-tip" id="journeyTip">
+            <span>💡</span> <b>Why it matters:</b> No guesswork. You reserve what you need, and stalls know exactly how much to prepare.
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Dots and Arrow Row -->
+      <div class="journey-controls-row">
+        <div class="journey-dots" id="journeyDots">
+          <div class="journey-dot active" data-step="0"></div>
+          <div class="journey-dot" data-step="1"></div>
+          <div class="journey-dot" data-step="2"></div>
+          <div class="journey-dot" data-step="3"></div>
+        </div>
+        <span class="ml-muted" style="font-size:12px; font-weight:600;" id="journeyCounter">
+          Step 1 of 4 · Auto-advances every 7s
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. FOUR CORE VALUES -->
+  <section class="about-section reveal">
+    <div class="about-section-header">
+      <div class="about-section-title-wrap">
+        <span class="about-eyebrow">🌿 CORE VALUES</span>
+        <h2 class="about-section-title">Four Pillars Defining MarketLink</h2>
+        <p class="about-section-desc">
+          We remain faithful to the unhurried, authentic essence of sustainable community agriculture.
+        </p>
+      </div>
+    </div>
+
+    <div class="about-values-grid reveal-stagger">
+      <div class="about-value-card">
+        <div class="about-value-icon">🌱</div>
+        <h3 class="about-value-h3">Soil-First Integrity</h3>
+        <p class="about-value-p">
+          Natural growing practices with zero chemical pesticides, nurturing rich soil biology for future generations.
+        </p>
+      </div>
+
+      <div class="about-value-card">
+        <div class="about-value-icon">⚖️</div>
+        <h3 class="about-value-h3">Fair Grower Economy</h3>
+        <p class="about-value-p">
+          Farmers price their own hard work. 100% of sales go to the grower without middleman markups or fees.
+        </p>
+      </div>
+
+      <div class="about-value-card">
+        <div class="about-value-icon">♻️</div>
+        <h3 class="about-value-h3">90% Less Crop Waste</h3>
+        <p class="about-value-p">
+          Cutting strictly to pre-orders eliminates post-market produce dumping and unsold harvest degradation.
+        </p>
+      </div>
+
+      <div class="about-value-card">
+        <div class="about-value-icon">🤝</div>
+        <h3 class="about-value-h3">Warm Human Bonds</h3>
+        <p class="about-value-p">
+          Transforming grocery runs into a lively cultural gathering between city families and local growers.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. PHILOSOPHY & DELIBERATE CHOICES -->
+  <section class="about-section reveal">
+    <div class="about-section-header">
+      <div class="about-section-title-wrap">
+        <span class="about-eyebrow">🎯 TRANSPARENT PRINCIPLES</span>
+        <h2 class="about-section-title">Deliberate Architectural Decisions</h2>
+        <p class="about-section-desc">
+          Knowing what we <b>do not do</b> is just as critical to protecting the true spirit of the morning market.
+        </p>
+      </div>
+    </div>
+
+    <div class="about-principles-grid reveal-stagger">
+      <div class="about-principle-card">
+        <div class="about-principle-tag-box">✕</div>
+        <div class="about-principle-body">
+          <h3 class="about-principle-title">No online payments or digital wallets</h3>
+          <p class="about-principle-why">
+            Pay cash directly at the stall after inspecting your greens. Money lands straight in the farmer’s pocket with zero gateway holdbacks or fees.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-principle-card">
+        <div class="about-principle-tag-box">✕</div>
+        <div class="about-principle-body">
+          <h3 class="about-principle-title">No motorbike courier delivery</h3>
+          <p class="about-principle-why">
+            We encourage morning walks in the cool early breeze to inspect produce in person and connect face-to-face with the people who grow it.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-principle-card">
+        <div class="about-principle-tag-box">✕</div>
+        <div class="about-principle-body">
+          <h3 class="about-principle-title">No central storage warehouses</h3>
+          <p class="about-principle-why">
+            Produce travels directly from farm soil to market stalls within 18 hours of dawn picking, locking in peak natural vitamins and crunch.
+          </p>
+        </div>
+      </div>
+
+      <div class="about-principle-card">
+        <div class="about-principle-tag-box">✕</div>
+        <div class="about-principle-body">
+          <h3 class="about-principle-title">No complex multi-account permissions</h3>
+          <p class="about-principle-why">
+            A single household account can be freely shared among family members so everyone can reserve their favorite weekend ingredients together.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FOUR LOCAL GROWING REGIONS -->
+  <section class="about-section reveal">
+    <div class="about-section-header">
+      <div class="about-section-title-wrap">
+        <span class="about-eyebrow">📍 OUR GROWING REGIONS</span>
+        <h2 class="about-section-title">Four Fertile Soils Nurturing MarketLink Produce</h2>
+        <p class="about-section-desc">
+          Every bunch of greens has identifiable soil, a proud grower, and a local story — never nameless bulk stock.
+        </p>
+      </div>
+      <span class="ml-muted" style="font-size:13px; font-weight:600;">100% Direct Family Partnerships</span>
+    </div>
+
+    <div class="about-regions-grid reveal-stagger">
+      <!-- Region 1: Củ Chi -->
+      <div class="about-region-card">
+        <div class="about-region-img-wrap">
+          <img
+            class="about-region-img"
+            src="https://images.unsplash.com/photo-1595855759920-86582396756a?w=600&q=80&auto=format&fit=crop"
+            alt="Củ Chi vegetable garden"
+          />
+          <span class="about-region-distance-pill">~35km · Under 2h to market</span>
+        </div>
+        <div class="about-region-body">
+          <h3 class="about-region-name">Củ Chi, HCMC</h3>
+          <span class="about-region-soil">Saigon River Alluvial Soil</span>
+          <p class="about-region-desc">
+            Harvested at 04:30 AM, arriving at Thảo Điền stalls by 06:30 AM. Crisp leafy greens, sweet gourds, and baby cucumbers.
+          </p>
+          <div class="about-region-specialty">
+            <span>🥬</span> Baby bok choy, Ceylon spinach, cucumber
+          </div>
+        </div>
+      </div>
+
+      <!-- Region 2: Long An -->
+      <div class="about-region-card">
+        <div class="about-region-img-wrap">
+          <img
+            class="about-region-img"
+            src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=600&q=80&auto=format&fit=crop"
+            alt="Long An fresh fruit harvest"
+          />
+          <span class="about-region-distance-pill">~50km · Alluvial Delta</span>
+        </div>
+        <div class="about-region-body">
+          <h3 class="about-region-name">Châu Thành, Long An</h3>
+          <span class="about-region-soil">Vàm Cỏ River Silt Delta</span>
+          <p class="about-region-desc">
+            Sun-ripened orchard fruits and seasonal heirloom rice. Naturally tree-ripened without artificial chemicals.
+          </p>
+          <div class="about-region-specialty">
+            <span>🍉</span> Red dragon fruit, cantaloupe, guava
+          </div>
+        </div>
+      </div>
+
+      <!-- Region 3: Đà Lạt -->
+      <div class="about-region-card">
+        <div class="about-region-img-wrap">
+          <img
+            class="about-region-img"
+            src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600&q=80&auto=format&fit=crop"
+            alt="Dalat misty plateau"
+          />
+          <span class="about-region-distance-pill">1,500m Altitude · Temperate</span>
+        </div>
+        <div class="about-region-body">
+          <h3 class="about-region-name">Đà Lạt &amp; Đơn Dương</h3>
+          <span class="about-region-soil">Misty Red Basalt Highlands</span>
+          <p class="about-region-desc">
+            Cool mountain air creates natural sweetness and snap. Crisp butterhead lettuces and dew-kissed strawberries.
+          </p>
+          <div class="about-region-specialty">
+            <span>🍓</span> Butterhead lettuce, strawberries, cherry tomatoes
+          </div>
+        </div>
+      </div>
+
+      <!-- Region 4: Đồng Nai -->
+      <div class="about-region-card">
+        <div class="about-region-img-wrap">
+          <img
+            class="about-region-img"
+            src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600&q=80&auto=format&fit=crop"
+            alt="Dong Nai clean crops"
+          />
+          <span class="about-region-distance-pill">~45km · Basalt Hill Country</span>
+        </div>
+        <div class="about-region-body">
+          <h3 class="about-region-name">Long Khánh, Đồng Nai</h3>
+          <span class="about-region-soil">Fertile Basalt Red Earth</span>
+          <p class="about-region-desc">
+            Specialized in clean oyster mushrooms, sweet milk corn, and fresh organic microgreens harvested early.
+          </p>
+          <div class="about-region-specialty">
+            <span>🌽</span> Sweet corn, grey oyster mushrooms, sprouts
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. ELITE ARCHITECTURE & ENGINEERING TEAM -->
+  <section class="about-section reveal">
+    <div class="about-section-header">
+      <div class="about-section-title-wrap">
+        <span class="about-eyebrow">🚀 TECHWIZ 7 · THE BUILDERS BEHIND MARKETLINK</span>
+        <h2 class="about-section-title">The Architecture &amp; Engineering Team</h2>
+        <p class="about-section-desc">
+          Six engineers uniting agricultural stewardship with modern software craftsmanship to eliminate harvest waste through human-centered tech.
+        </p>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span class="about-dev-status-dot" style="display:inline-block;"></span>
+        <span class="ml-muted" style="font-size:13px; font-weight:700; color:var(--brand-strong);">Team eGreen Basket · 100% In-house</span>
+      </div>
+    </div>
+
+    <div class="about-team-grid reveal-stagger">
+      <!-- Member 1: Lead -->
+      <div class="about-dev-card">
+        <div class="about-dev-cover cover-lead">
+          <span class="about-dev-role-badge">LEAD · Architecture</span>
+          <div class="about-dev-status">
+            <span class="about-dev-status-dot"></span> Core System
+          </div>
+        </div>
+        <div class="about-dev-profile-wrap">
+          <img
+            class="about-dev-avatar"
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&h=320&fit=crop&crop=faces&q=85"
+            alt="Hoàng Tuấn"
+          />
+          <div class="about-dev-socials">
+            <a class="about-dev-social-btn" href="#" aria-label="GitHub Profile" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+            <a class="about-dev-social-btn" href="#" aria-label="LinkedIn Profile" title="LinkedIn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="about-dev-body">
+          <div class="about-dev-name-wrap">
+            <h3 class="about-dev-name">Hoàng Tuấn</h3>
+            <span class="about-dev-title">System Architect &amp; Tech Lead</span>
+          </div>
+          <div class="about-dev-impact">
+            ⭐️ <b>Key Milestone:</b> Designed the 12 core architectural decisions &amp; unified API contract.
+          </div>
+          <div class="about-dev-tech-chips">
+            <span class="about-dev-tech-chip">Java 25</span>
+            <span class="about-dev-tech-chip">Spring Boot</span>
+            <span class="about-dev-tech-chip">React 19</span>
+            <span class="about-dev-tech-chip">Docker</span>
+          </div>
+          <p class="about-dev-motto">
+            “Software exists to elevate and celebrate honest human labor, not commoditize it.”
+          </p>
+          <div class="about-dev-fav">
+            <span>Favorite Crop:</span> <b>🥗 Củ Chi Baby Bok Choy</b>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member 2: Backend 1 -->
+      <div class="about-dev-card">
+        <div class="about-dev-cover cover-be1">
+          <span class="about-dev-role-badge">BE1 · Core Orders</span>
+          <div class="about-dev-status">
+            <span class="about-dev-status-dot"></span> Real-time Engine
+          </div>
+        </div>
+        <div class="about-dev-profile-wrap">
+          <img
+            class="about-dev-avatar"
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=320&h=320&fit=crop&crop=faces&q=85"
+            alt="Mai Linh"
+          />
+          <div class="about-dev-socials">
+            <a class="about-dev-social-btn" href="#" aria-label="GitHub Profile" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+            <a class="about-dev-social-btn" href="#" aria-label="LinkedIn Profile" title="LinkedIn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="about-dev-body">
+          <div class="about-dev-name-wrap">
+            <h3 class="about-dev-name">Mai Linh</h3>
+            <span class="about-dev-title">Backend &amp; Order Lifecycle</span>
+          </div>
+          <div class="about-dev-impact">
+            ⚡️ <b>Key Milestone:</b> Zero-conflict distributed locking for concurrent reservation orders.
+          </div>
+          <div class="about-dev-tech-chips">
+            <span class="about-dev-tech-chip">Spring Security</span>
+            <span class="about-dev-tech-chip">JWT Auth</span>
+            <span class="about-dev-tech-chip">Flyway</span>
+            <span class="about-dev-tech-chip">Redis</span>
+          </div>
+          <p class="about-dev-motto">
+            “Ensuring two shoppers can never accidentally book the exact same last crate.”
+          </p>
+          <div class="about-dev-fav">
+            <span>Favorite Crop:</span> <b>🍓 Đà Lạt Natural Strawberries</b>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member 3: Backend 2 -->
+      <div class="about-dev-card">
+        <div class="about-dev-cover cover-be2">
+          <span class="about-dev-role-badge">BE2 · Data &amp; Inventory</span>
+          <div class="about-dev-status">
+            <span class="about-dev-status-dot"></span> Inventory Sync
+          </div>
+        </div>
+        <div class="about-dev-profile-wrap">
+          <img
+            class="about-dev-avatar"
+            src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=320&h=320&fit=crop&crop=faces&q=85"
+            alt="Bảo Long"
+          />
+          <div class="about-dev-socials">
+            <a class="about-dev-social-btn" href="#" aria-label="GitHub Profile" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+            <a class="about-dev-social-btn" href="#" aria-label="LinkedIn Profile" title="LinkedIn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="about-dev-body">
+          <div class="about-dev-name-wrap">
+            <h3 class="about-dev-name">Bảo Long</h3>
+            <span class="about-dev-title">Data Architect &amp; Analytics</span>
+          </div>
+          <div class="about-dev-impact">
+            📊 <b>Key Milestone:</b> High-throughput MySQL 8 indexes &amp; harvest forecasting models.
+          </div>
+          <div class="about-dev-tech-chips">
+            <span class="about-dev-tech-chip">MySQL 8</span>
+            <span class="about-dev-tech-chip">JPA Hibernate</span>
+            <span class="about-dev-tech-chip">Redis Cache</span>
+            <span class="about-dev-tech-chip">Analytics</span>
+          </div>
+          <p class="about-dev-motto">
+            “Accurate counts let growers check their phones at 4 AM and know exactly what to cut.”
+          </p>
+          <div class="about-dev-fav">
+            <span>Favorite Crop:</span> <b>🥑 Lâm Đồng 034 Avocados</b>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member 4: Frontend 1 -->
+      <div class="about-dev-card">
+        <div class="about-dev-cover cover-fe1">
+          <span class="about-dev-role-badge">FE1 · Design System</span>
+          <div class="about-dev-status">
+            <span class="about-dev-status-dot"></span> UI/UX Tokens
+          </div>
+        </div>
+        <div class="about-dev-profile-wrap">
+          <img
+            class="about-dev-avatar"
+            src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=320&h=320&fit=crop&crop=faces&q=85"
+            alt="Hà My"
+          />
+          <div class="about-dev-socials">
+            <a class="about-dev-social-btn" href="#" aria-label="GitHub Profile" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+            <a class="about-dev-social-btn" href="#" aria-label="LinkedIn Profile" title="LinkedIn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="about-dev-body">
+          <div class="about-dev-name-wrap">
+            <h3 class="about-dev-name">Hà My</h3>
+            <span class="about-dev-title">Lead UI/UX &amp; Design System</span>
+          </div>
+          <div class="about-dev-impact">
+            🎨 <b>Key Milestone:</b> Created the Hang Tag Design Tokens &amp; WCAG AAA accessible components.
+          </div>
+          <div class="about-dev-tech-chips">
+            <span class="about-dev-tech-chip">Figma</span>
+            <span class="about-dev-tech-chip">Tailwind 4</span>
+            <span class="about-dev-tech-chip">TypeScript</span>
+            <span class="about-dev-tech-chip">Leaflet Maps</span>
+          </div>
+          <p class="about-dev-motto">
+            “Tactile design that captures the warmth and honesty of walking a morning village market.”
+          </p>
+          <div class="about-dev-fav">
+            <span>Favorite Crop:</span> <b>🍅 Organic Heirloom Tomatoes</b>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member 5: Frontend 2 -->
+      <div class="about-dev-card">
+        <div class="about-dev-cover cover-fe2">
+          <span class="about-dev-role-badge">FE2 · Farmer Portal</span>
+          <div class="about-dev-status">
+            <span class="about-dev-status-dot"></span> Field Forms
+          </div>
+        </div>
+        <div class="about-dev-profile-wrap">
+          <img
+            class="about-dev-avatar"
+            src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=320&h=320&fit=crop&crop=faces&q=85"
+            alt="Minh Đức"
+          />
+          <div class="about-dev-socials">
+            <a class="about-dev-social-btn" href="#" aria-label="GitHub Profile" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+            <a class="about-dev-social-btn" href="#" aria-label="LinkedIn Profile" title="LinkedIn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="about-dev-body">
+          <div class="about-dev-name-wrap">
+            <h3 class="about-dev-name">Minh Đức</h3>
+            <span class="about-dev-title">Frontend &amp; Farmer Dashboard</span>
+          </div>
+          <div class="about-dev-impact">
+            📱 <b>Key Milestone:</b> Built high-contrast outdoor forms with frictionless 3-tap verification.
+          </div>
+          <div class="about-dev-tech-chips">
+            <span class="about-dev-tech-chip">React 19</span>
+            <span class="about-dev-tech-chip">Responsive UX</span>
+            <span class="about-dev-tech-chip">Mobile Web</span>
+            <span class="about-dev-tech-chip">Vite</span>
+          </div>
+          <p class="about-dev-motto">
+            “Workflows that work effortlessly under direct morning sunlight on a crowded table.”
+          </p>
+          <div class="about-dev-fav">
+            <span>Favorite Crop:</span> <b>🌽 Đồng Nai Sweet Milk Corn</b>
+          </div>
+        </div>
+      </div>
+
+      <!-- Member 6: QA / Community -->
+      <div class="about-dev-card">
+        <div class="about-dev-cover cover-qa">
+          <span class="about-dev-role-badge">QA · Community Lead</span>
+          <div class="about-dev-status">
+            <span class="about-dev-status-dot"></span> Field Verification
+          </div>
+        </div>
+        <div class="about-dev-profile-wrap">
+          <img
+            class="about-dev-avatar"
+            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=320&h=320&fit=crop&crop=faces&q=85"
+            alt="Khánh Vy"
+          />
+          <div class="about-dev-socials">
+            <a class="about-dev-social-btn" href="#" aria-label="GitHub Profile" title="GitHub">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              </svg>
+            </a>
+            <a class="about-dev-social-btn" href="#" aria-label="LinkedIn Profile" title="LinkedIn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="about-dev-body">
+          <div class="about-dev-name-wrap">
+            <h3 class="about-dev-name">Khánh Vy</h3>
+            <span class="about-dev-title">QA &amp; Grower Partnerships</span>
+          </div>
+          <div class="about-dev-impact">
+            🌿 <b>Key Milestone:</b> 54 automated test suites &amp; field auditing across 15+ partner farms.
+          </div>
+          <div class="about-dev-tech-chips">
+            <span class="about-dev-tech-chip">JUnit 5</span>
+            <span class="about-dev-tech-chip">E2E Tests</span>
+            <span class="about-dev-tech-chip">SRS Compliance</span>
+            <span class="about-dev-tech-chip">Field Audit</span>
+          </div>
+          <p class="about-dev-motto">
+            “Connecting with growers in person every week to anchor our codebase in real soil.”
+          </p>
+          <div class="about-dev-fav">
+            <span>Favorite Crop:</span> <b>🥬 Đà Lạt Highland Watercress</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. DUAL CALL TO ACTION -->
+  <section class="about-cta-grid reveal-stagger">
+    <!-- Shopper Box -->
+    <div class="about-cta-box cta-shopper">
+      <div class="about-cta-content">
+        <span class="about-eyebrow" style="color:var(--brand);">🛒 FOR WEEKEND SHOPPERS</span>
+        <h3 class="about-cta-title" style="color:var(--ink);">Visiting this Saturday morning market?</h3>
+        <p class="about-cta-desc">
+          Pre-reserve fresh dew-kissed greens, clean mushrooms, and tree-ripened orchard fruits from our partner farms in Củ Chi &amp; Đà Lạt.
+        </p>
+      </div>
+      <a class="ml-btn ml-btn-primary about-cta-btn" href="markets.html">
+        Find your nearest market →
+      </a>
+    </div>
+
+    <!-- Farmer Box -->
+    <div class="about-cta-box cta-farmer">
+      <div class="about-cta-content">
+        <span class="about-eyebrow" style="color:#a3e635;">🌱 FOR LOCAL GROWERS</span>
+        <h3 class="about-cta-title">Do you practice honest, clean farming?</h3>
+        <p class="about-cta-desc">
+          Partner with MarketLink to directly connect with thousands of conscious city regulars and keep 100% of your well-deserved earnings.
+        </p>
+      </div>
+      <a class="ml-btn ml-btn-accent about-cta-btn" href="register-farmer.html">
+        Apply for a market stall →
+      </a>
+    </div>
+  </section>
+
+  <!-- 10. CONTACT & FEEDBACK STRIP -->
+  <section class="about-section reveal" style="margin-top: 40px;">
+    <div class="ml-card pt-panel pt-between-c" style="padding: 22px 26px; background: var(--card-surface); border: 1.5px solid var(--card-border); box-shadow: var(--card-shadow);">
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <h3 class="pt-h3" style="margin:0; font-size:17px;">Have questions or feedback for us?</h3>
+        <p class="pt-small ml-muted" style="margin:0; font-size:13px;">
+          Questions about specific stalls go to growers directly. Platform ideas and community feedback are always welcome.
+        </p>
+      </div>
+      <div class="pt-row-2">
+        <a class="ml-btn ml-btn-secondary" href="contact.html">Contact Us</a>
+        <a class="ml-btn ml-btn-secondary" href="feedback.html">Send Feedback</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="pt-foot"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../data.js"></script>
+<script src="../prototype.js"></script>
+<script>
+  // Initialize prototype header, footer, and active navigation
+  PT.boot({ active: 'about' });
+
+  // ---------------- INTERACTIVE JOURNEY CAROUSEL ----------------
+  (function initJourneyCarousel() {
+    var slides = [
+      {
+        stepNum: '01',
+        timing: '📅 Thursday Evening · Listing Opens',
+        title: 'Farmers Publish Their Weekend Harvest',
+        desc: 'Growers walk their plots in Củ Chi and Long An to inspect peak ripeness. They post exact available quantities on their MarketLink stall for shoppers to reserve in advance.',
+        tip: '💡 <b>Why it matters:</b> No guesswork. You reserve what you need, and stalls know exactly how much to prepare.',
+        img: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=800&q=80&auto=format&fit=crop'
+      },
+      {
+        stepNum: '02',
+        timing: '🌅 Friday 05:00 AM · Dawn Harvest to Order',
+        title: 'Cutting Strictly to Pre-Reserved Quantities',
+        desc: 'At 05:00 AM, farmers harvest only the pre-reserved amounts. Greens are washed with clean water and packed gently into breathable wooden crates with zero crop waste.',
+        tip: '💡 <b>Why it matters:</b> Nothing is harvested speculatively. Less than 2% produce loss compared to 35% in wholesale supply chains.',
+        img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&q=80&auto=format&fit=crop'
+      },
+      {
+        stepNum: '03',
+        timing: '🚚 Saturday 06:00 AM · Community Market Gathering',
+        title: 'Fresh Baskets Arrive at Neighborhood Hubs',
+        desc: 'Produce arrives directly at Thảo Điền, Phú Mỹ Hưng, and Bình Thạnh. Your pre-reserved basket is labeled with your name and kept cool in an allocated pickup stall.',
+        tip: '💡 <b>Why it matters:</b> No long transit through industrial depots. Food travels from farm soil to your neighborhood in under 18 hours.',
+        img: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800&q=80&auto=format&fit=crop'
+      },
+      {
+        stepNum: '04',
+        timing: '🤝 Saturday 06:00 - 10:30 AM · Stall Pickup',
+        title: 'Inspect In Person & Pay Cash Directly',
+        desc: 'Smell the soil, inspect crisp freshness with your own hands, chat with the grower about their crops, and pay cash directly into the farmer\'s hands at the stall.',
+        tip: '💡 <b>Why it matters:</b> Total peace of mind. You inspect quality before paying, and 100% of money stays with the hardworking grower.',
+        img: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80&auto=format&fit=crop'
+      }
+    ];
+
+    var currentStep = 0;
+    var timer = null;
+
+    var tabBtns = document.querySelectorAll('.journey-tab-btn');
+    var dots = document.querySelectorAll('.journey-dot');
+    var imgEl = document.getElementById('journeyImg');
+    var badgeEl = document.getElementById('journeyBadge');
+    var timingEl = document.getElementById('journeyTiming');
+    var titleEl = document.getElementById('journeyTitle');
+    var descEl = document.getElementById('journeyDesc');
+    var tipEl = document.getElementById('journeyTip');
+    var counterEl = document.getElementById('journeyCounter');
+
+    function renderStep(idx) {
+      currentStep = (idx + slides.length) % slides.length;
+      var data = slides[currentStep];
+
+      // Update tabs
+      tabBtns.forEach(function(btn, i) {
+        btn.classList.toggle('active', i === currentStep);
+      });
+
+      // Update dots
+      dots.forEach(function(dot, i) {
+        dot.classList.toggle('active', i === currentStep);
+      });
+
+      // Fade content smoothly
+      var stage = document.getElementById('journeyStage');
+      stage.style.opacity = '0.3';
+      stage.style.transform = 'translateY(4px)';
+      stage.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+
+      setTimeout(function() {
+        imgEl.src = data.img;
+        badgeEl.textContent = data.stepNum;
+        timingEl.innerHTML = '<span>📅</span> ' + data.timing;
+        titleEl.textContent = data.title;
+        descEl.textContent = data.desc;
+        tipEl.innerHTML = data.tip;
+        counterEl.textContent = 'Step ' + (currentStep + 1) + ' of ' + slides.length + ' · Auto-advances every 7s';
+
+        stage.style.opacity = '1';
+        stage.style.transform = 'translateY(0)';
+      }, 150);
+    }
+
+    function startTimer() {
+      stopTimer();
+      timer = setInterval(function() {
+        renderStep(currentStep + 1);
+      }, 7000);
+    }
+
+    function stopTimer() {
+      if (timer) clearInterval(timer);
+    }
+
+    // Attach click events
+    tabBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var step = parseInt(this.getAttribute('data-step'), 10);
+        renderStep(step);
+        startTimer();
+      });
+    });
+
+    dots.forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        var step = parseInt(this.getAttribute('data-step'), 10);
+        renderStep(step);
+        startTimer();
+      });
+    });
+
+    document.getElementById('journeyPrev').addEventListener('click', function() {
+      renderStep(currentStep - 1);
+      startTimer();
+    });
+
+    document.getElementById('journeyNext').addEventListener('click', function() {
+      renderStep(currentStep + 1);
+      startTimer();
+    });
+
+    // Start auto timer
+    startTimer();
+  })();
+
+  // ---------------- SCROLL REVEAL OBSERVER ----------------
+  (function initScrollReveal() {
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -30px 0px'
+      });
+
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach(function(el) {
+        observer.observe(el);
+      });
+    } else {
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach(function(el) {
+        el.classList.add('revealed');
+      });
+    }
+  })();
+</script>
+</body>
+</html>

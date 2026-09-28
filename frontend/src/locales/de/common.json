@@ -11,14 +11,6 @@
     "language": "Sprache",
     "languageNote": "Die Sprache von Menüs, Schaltflächen und Meldungen. Namen von Ständen, Produkten und Orten bleiben so, wie der Stand sie geschrieben hat.",
     "format": "Geld, Datum und Einheiten",
-    "currency": "Preise anzeigen in",
-    "currencyNote": "Am Stand zahlen Sie immer in Vietnamesischen Đồng. Eine andere Währung wird nur zur Orientierung daneben angezeigt, zu festen Kursen vom {{date}}.",
-    "currencies": {
-      "VND": "Nur ₫ Vietnamesischer Đồng",
-      "USD": "₫ und $ US-Dollar",
-      "EUR": "₫ und € Euro",
-      "JPY": "₫ und ¥ Japanischer Yen"
-    },
     "units": "Gewichte und Volumen",
     "unitsNote": "Umgerechnet werden nur Maßeinheiten. Ein Stand, der pro Bund, Knolle oder Schale verkauft, behält seine eigene Bezeichnung.",
     "metric": "Metrisch · kg, g, Liter",
@@ -52,9 +44,6 @@
   "cart": {
     "orderOf": "Bestellung {{index}} von {{of}}",
     "payAtPickup": "Bezahlung am Stand bei Abholung"
-  },
-  "chart": {
-    "showNumbers": "Zahlen anzeigen"
   },
   "chat": {
     "assistant": "MarketLink-Assistent",
@@ -187,6 +176,11 @@
     "mapDataFrom": "Kartendaten {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Guten Morgen",
+      "afternoon": "Guten Tag",
+      "evening": "Guten Abend"
+    },
     "cart": "Warenkorb",
     "cartItems_one": "Warenkorb, {{count}} Artikel",
     "cartItems_other": "Warenkorb, {{count}} Artikel",
@@ -210,8 +204,8 @@
   "loadError": {
     "title": "Die {{noun}} konnten nicht geladen werden",
     "text": "Die Liste ist diesmal nicht angekommen. Was Sie gespeichert oder bestellt haben, ist nicht betroffen.",
-    "help": "Das liegt meist an der Verbindung, nicht an Ihnen. Wenn ein erneuter Versuch nicht hilft, <link>sagen Sie uns, was passiert ist</link>, und wir sehen uns das an.",
-    "helpAlt": "Das liegt meist an der Verbindung, nicht an Ihnen. Wenn ein erneuter Versuch nicht hilft, <alt />, oder <link>sagen Sie uns, was passiert ist</link>, und wir sehen uns das an."
+    "help": "Das liegt meist an der Verbindung, nicht an Ihnen. Wenn ein erneuter Versuch nicht hilft, <a>sagen Sie uns, was passiert ist</a>, und wir sehen uns das an.",
+    "helpAlt": "Das liegt meist an der Verbindung, nicht an Ihnen. Wenn ein erneuter Versuch nicht hilft, <alt />, oder <a>sagen Sie uns, was passiert ist</a>, und wir sehen uns das an."
   },
   "loading": {
     "markets": "Märkte werden geladen"
@@ -299,22 +293,6 @@
     "show": "Passwort anzeigen",
     "hide": "Passwort verbergen"
   },
-  "period": {
-    "length": "Zeitraumlänge",
-    "day": "Tag",
-    "week": "Woche",
-    "month": "Monat",
-    "quarter": "Quartal",
-    "year": "Jahr",
-    "custom": "Benutzerdefiniert",
-    "from": "Von",
-    "to": "Bis",
-    "compareWith": "Vergleichen mit",
-    "cmpBefore": "Dem Vorzeitraum, gleiche Länge",
-    "cmpLastYear": "Dem gleichen Zeitraum im Vorjahr",
-    "cmpNone": "Kein Vergleich",
-    "comparedWith": "verglichen mit <b>{{compare}}</b>, gleiche Länge"
-  },
   "price": {
     "was": "Vorher"
   },
@@ -385,7 +363,6 @@
     "phoneInvalid": "Geben Sie eine gültige vietnamesische Mobilnummer ein (10 Ziffern)."
   },
   "adminNav": {
-    "sections": "Admin-Bereiche",
     "overview": "Übersicht",
     "farmers": "Erzeuger",
     "customers": "Kunden",
@@ -396,6 +373,7 @@
     "categories": "Kategorien",
     "announcements": "Ankündigungen",
     "feedback": "Feedback",
+    "notifications": "Benachrichtigungen",
     "settings": "Einstellungen",
     "account": "Dein Konto",
     "analytics": "Analysen",
@@ -407,16 +385,6 @@
     "contextSub": "Plattform · gesamter Marktplatz",
     "userLine": "Admin · gesamte Plattform",
     "searchPlaceholder": "Stand, Kunde oder Markt"
-  },
-  "carousel": {
-    "roleCarousel": "Karussell",
-    "roleSlide": "Folie",
-    "slideOf": "{{n}} von {{total}}: {{topic}}",
-    "previous": "Vorherige Folie",
-    "next": "Nächste Folie",
-    "show": "Folie {{n}} anzeigen: {{topic}}",
-    "pause": "Diashow anhalten",
-    "play": "Diashow abspielen"
   },
   "geo": {
     "denied": "Sie haben den Standort für diese Website deaktiviert. Ändern Sie das in den Website-Einstellungen Ihres Browsers oder nutzen Sie eine Adresse.",
@@ -778,6 +746,12 @@
       "fakeReviews": "Gefälschte Bewertungen",
       "ownerRequest": "Auf Wunsch der Kontoinhaber"
     }
+  },
+  "cookieConsent": {
+    "label": "Cookie-Hinweis",
+    "text": "Wir verwenden nur technisch notwendige Cookies, damit Sie angemeldet bleiben und Ihr Warenkorb funktioniert. Es gibt keine Werbe- oder Analyse-Cookies. <a>Datenschutzerklärung</a>.",
+    "decline": "Ablehnen",
+    "accept": "Akzeptieren"
   },
   "storageMode": {
     "room": "Raumtemperatur",

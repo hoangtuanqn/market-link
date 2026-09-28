@@ -11,7 +11,6 @@
     "reviews_other": "리뷰 {{count}}개",
     "markets_one": "장터",
     "markets_other": "장터",
-    "since": "판매 시작일",
     "cutoff": "픽업 전 주문 마감(시간)"
   },
   "tabs": {

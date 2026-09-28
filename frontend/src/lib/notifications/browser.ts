@@ -31,7 +31,7 @@ export const requestPermission = async (): Promise<BrowserPermission> => {
   return result;
 };
 
-export const tagOf = (f: NotificationFrame) => `${f.kind}:${f.id ?? f.conversationId ?? f.createdAt}`;
+const tagOf = (f: NotificationFrame) => `${f.kind}:${f.id ?? f.conversationId ?? f.createdAt}`;
 
 export const showOsNotification = async (f: NotificationFrame) => {
   if (permission() !== 'granted') return;

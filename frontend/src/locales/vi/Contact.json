@@ -7,11 +7,10 @@
     "phone": "Điện thoại",
     "address": "Địa chỉ",
     "hours": "Giờ làm việc",
-    "emailValue": "contact@marketlink.vn",
-    "phoneValue": "090 123 4567",
-    "addressValue": "123 Lê Lợi, Phường Bến Nghé, Quận 1, TP.HCM",
-    "hoursValue": "Thứ Hai – Thứ Sáu, 09:00 – 17:00",
-    "toAdd": "Sẽ bổ sung"
+    "emailValue": "admin@marketlink.vn",
+    "phoneValue": "0900000001",
+    "addressValue": "3 Lê Duẩn, Phường Sài Gòn, Thành phố Hồ Chí Minh",
+    "hoursValue": "Thứ Hai – Thứ Sáu, 09:00 – 17:00"
   },
   "feedback": {
     "title": "Có lỗi hay có ý tưởng?",
@@ -22,7 +21,7 @@
     "label": "Bản đồ vị trí đội ngũ",
     "markerLabel": "Đội ngũ MarketLink",
     "popupTitle": "Đội ngũ MarketLink",
-    "popupLine": "123 Lê Lợi, Quận 1",
+    "popupLine": "3 Lê Duẩn, Phường Sài Gòn",
     "directions": "Chỉ đường tới đội ngũ"
   }
 }

@@ -38,7 +38,7 @@ export type Settings = {
   extras: Record<string, string>;
 };
 
-export const DEFAULT_SETTINGS: Settings = {
+const DEFAULT_SETTINGS: Settings = {
   theme: 'light',
   language: 'en',
   currency: 'USD',
@@ -50,7 +50,7 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 /** Same key as the anti-flash script in index.html. */
-export const STORAGE_KEY = 'ml-settings';
+const STORAGE_KEY = 'ml-settings';
 
 const THEMES: readonly Theme[] = ['light', 'dark', 'system'];
 const CURRENCIES: readonly Currency[] = ['VND', 'USD', 'EUR', 'JPY'];
@@ -110,7 +110,7 @@ const persist = () => {
 const darkQuery = () => window.matchMedia('(prefers-color-scheme: dark)');
 
 /** Set data-theme on <html>; "system" follows the operating system. */
-export const applyTheme = (theme: Theme = current.theme) => {
+const applyTheme = (theme: Theme = current.theme) => {
   const dark = theme === 'dark' || (theme === 'system' && darkQuery().matches);
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   document.documentElement.style.colorScheme = dark ? 'dark' : 'light';

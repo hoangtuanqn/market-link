@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CatalogApi, { type CategoryType } from '@/api-requests/catalog.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
+import { CheckIcon, CloseIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
@@ -24,6 +25,19 @@ const bySortThenName = (a: CategoryRow, b: CategoryRow) => a.sortOrder - b.sortO
 
 type NewCategoryErrors = Partial<Record<'name' | 'min' | 'max', string>>;
 
+/** Pill for is_active. Colour never carries the meaning alone — each state has its own word and glyph. */
+const CategoryStatusPill = ({ active, label }: { active: boolean; label: string }) => (
+  <span
+    className={Helper.cn(
+      'inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold',
+      active ? 'bg-status-ready-bg text-status-ready-ink' : 'bg-status-declined-bg text-status-declined-ink',
+    )}
+  >
+    {active ? <CheckIcon size={14} /> : <CloseIcon size={14} />}
+    {label}
+  </span>
+);
+
 /**
  * FR-076 — the one list every stall picks from when it adds a product. Sale units are not here: the SRS gives the admin
  * "product categories" and nothing else as master data, so units ship as a fixed list in `constants/units.ts`. Reads
@@ -33,7 +47,7 @@ const AdminCategoriesPage = () => {
   const { t } = useTranslation('AdminCategories');
   const { t: tc } = useTranslation();
 
-  const { state: load, retry, mutate } = useRequest('categories', () => CatalogApi.listCategories());
+  const { state: load, retry, mutate } = useRequest('categories', () => CatalogApi.listAllCategoriesAdmin());
   const categories = load.kind === 'ready' ? load.data : NO_CATEGORIES;
   const replaceCategories = (next: (current: CategoryRow[]) => CategoryRow[]) =>
     mutate((current) => next(current).sort(bySortThenName));
@@ -121,10 +135,27 @@ const AdminCategoriesPage = () => {
     if (!removing) return;
     setBusyId(removing.id);
     try {
-      await CatalogApi.deactivateCategory(removing.id);
-      replaceCategories((list) => list.filter((row) => row.id !== removing.id));
+      const moveToCategoryId = moveTo ? Number(moveTo) : undefined;
+      await CatalogApi.deactivateCategory(removing.id, moveToCategoryId);
+      // Reassigning products changes another category's count too — a full reload is simpler and
+      // correct than hand-patching every row's count locally.
+      retry();
       Notification.success({ text: t('toast.categoryRemoved', { name: removing.name }) });
       setRemoving(null);
+      setMoveTo('');
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const enableCategory = async (c: CategoryRow) => {
+    setBusyId(c.id);
+    try {
+      const enabled = await CatalogApi.activateCategory(c.id);
+      replaceCategories((list) => list.map((row) => (row.id === c.id ? enabled : row)));
+      Notification.success({ text: t('toast.categoryEnabled', { name: enabled.name }) });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
@@ -145,9 +176,24 @@ const AdminCategoriesPage = () => {
         />
       ),
     },
+    {
+      key: 'shelfLife',
+      label: t('col.shelfLife'),
+      render: (c) =>
+        c.minShelfLifeDays === c.maxShelfLifeDays
+          ? t('col.shelfLifeDays', { count: c.minShelfLifeDays })
+          : t('col.shelfLifeRange', { min: c.minShelfLifeDays, max: c.maxShelfLifeDays }),
+    },
     { key: 'count', label: t('col.products'), align: 'num' },
     // Products and stalls per category arrive with reports (C9); until then the column shows a dash.
     { key: 'stalls', label: t('col.stalls'), align: 'num', render: () => '—' },
+    {
+      key: 'status',
+      label: t('col.status'),
+      render: (c) => (
+        <CategoryStatusPill active={c.isActive} label={t(c.isActive ? 'status.active' : 'status.inactive')} />
+      ),
+    },
     {
       key: 'action',
       label: '',
@@ -157,9 +203,23 @@ const AdminCategoriesPage = () => {
           <Button variant="secondary" size="sm" onClick={() => void saveCategory(c)} disabled={busyId === c.id}>
             {t('action.save')}
           </Button>
-          <Button variant="danger" size="sm" onClick={() => setRemoving(c)} disabled={busyId === c.id}>
-            {t('action.remove')}
-          </Button>
+          {c.isActive ? (
+            <Button
+              variant="danger"
+              size="sm"
+              onClick={() => {
+                setRemoving(c);
+                setMoveTo('');
+              }}
+              disabled={busyId === c.id}
+            >
+              {t('action.remove')}
+            </Button>
+          ) : (
+            <Button variant="secondary" size="sm" onClick={() => void enableCategory(c)} disabled={busyId === c.id}>
+              {t('action.enable')}
+            </Button>
+          )}
         </div>
       ),
     },
@@ -169,13 +229,15 @@ const AdminCategoriesPage = () => {
     <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
       </div>
 
       <div className="grid flex-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="flex h-full min-h-[440px] flex-1 flex-col">
+        {/* min-w-0: a flex item defaults to min-width:auto, so without it this column grows to the table's
+            natural width and the table's own overflow-x-auto never gets a chance to scroll. */}
+        <div className="flex h-full min-h-[440px] min-w-0 flex-1 flex-col">
           {load.kind === 'loading' ? (
             <MarketCardSkeleton count={3} />
           ) : load.kind === 'error' ? (
@@ -232,7 +294,9 @@ const AdminCategoriesPage = () => {
             value={newCategory.position}
             onChange={(e) => setNewCategory({ ...newCategory, position: e.target.value })}
           />
-          <div className="grid grid-cols-2 gap-3">
+          {/* The fields carry a min width for flex rows; inside this grid the columns set the width, so let
+              them shrink — two 220px fields do not fit the 380px sidebar and push the page sideways. */}
+          <div className="grid grid-cols-2 gap-3 [&>*]:min-w-0">
             <Field
               id="new-category-min-shelf-life"
               label={t('categoryForm.minShelfLife')}
@@ -265,10 +329,19 @@ const AdminCategoriesPage = () => {
         open={removing !== null}
         tone="danger"
         title={removing ? t('removeCategory.title', { name: removing.name }) : ''}
-        onClose={() => setRemoving(null)}
+        onClose={() => {
+          setRemoving(null);
+          setMoveTo('');
+        }}
         actions={
           <>
-            <Button variant="secondary" onClick={() => setRemoving(null)}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setRemoving(null);
+                setMoveTo('');
+              }}
+            >
               {t('removeCategory.keep')}
             </Button>
             <Button variant="danger" onClick={() => void removeCategory()} disabled={busyId !== null}>
@@ -285,9 +358,15 @@ const AdminCategoriesPage = () => {
             <SelectField
               id="move-products-to"
               label={t('removeCategory.moveTo')}
+              hint={t('removeCategory.moveToHint')}
               value={moveTo}
               onChange={(e) => setMoveTo(e.target.value)}
-              options={categories.filter((c) => c.id !== removing?.id).map((c) => c.name)}
+              options={[
+                { value: '', label: t('removeCategory.moveToNone') },
+                ...categories
+                  .filter((c) => c.isActive && c.id !== removing?.id)
+                  .map((c) => ({ value: String(c.id), label: c.name })),
+              ]}
             />
           )}
         </div>

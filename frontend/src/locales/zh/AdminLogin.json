@@ -1,17 +1,33 @@
 {
-  "overline": "管理后台",
-  "title": "登录以管理 MarketLink",
-  "intro": "此登录仅供平台管理员使用，会进入单独的后台。顾客和农户请<link>在这里登录</link>。",
-  "notAdmin": {
-    "title": "此账户不是管理员",
-    "text": "此登录仅供平台管理员使用。<link>顾客和农户请在这里登录</link>。"
+  "brand": {
+    "headline": "登录以管理整个平台",
+    "intro": "此登录仅供平台管理员使用，会进入与顾客和农户分开的独立后台。",
+    "bullet1": "审批农户的摊位申请",
+    "bullet2": "审核商品信息和评价",
+    "bullet3": "查看各个市场的平台报告",
+    "foot": "MarketLink 管理后台"
   },
   "form": {
+    "eyebrow": "管理员入口",
+    "heading": "欢迎回来",
+    "subheading": "登录以管理 MarketLink",
     "email": "管理员邮箱",
+    "emailPlaceholder": "admin@marketlink.com",
     "password": "密码",
+    "passwordPlaceholder": "请输入密码",
     "submit": "登录",
     "submitting": "正在登录…",
     "signedIn": "已登录。",
-    "error": "无法登录，请重试。"
+    "error": "无法登录，请重试。",
+    "note": "出于安全考虑，管理员登录不会被记住。",
+    "setupRequired": "请先设置两步验证以完成登录。"
+  },
+  "switchRole": {
+    "question": "不是管理员？",
+    "cta": "前往 MarketLink"
+  },
+  "notAdmin": {
+    "title": "此账户不是管理员",
+    "text": "此登录仅供平台管理员使用。<a>顾客和农户请在这里登录</a>。"
   }
 }

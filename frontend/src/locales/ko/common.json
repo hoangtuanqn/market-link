@@ -11,14 +11,6 @@
     "language": "언어",
     "languageNote": "메뉴, 버튼, 메시지에 쓰이는 언어예요. 매대, 상품, 장소 이름은 매대가 쓴 그대로 표시돼요.",
     "format": "금액, 날짜, 단위",
-    "currency": "가격 표시",
-    "currencyNote": "매대에서는 항상 베트남 동으로 결제해요. 다른 통화는 참고용으로만 옆에 표시되며, {{date}} 기준 고정 환율을 사용해요.",
-    "currencies": {
-      "VND": "₫ 베트남 동만",
-      "USD": "₫와 $ 미국 달러",
-      "EUR": "₫와 € 유로",
-      "JPY": "₫와 ¥ 일본 엔"
-    },
     "units": "무게와 부피",
     "unitsNote": "측정 단위만 바꿔요. 묶음, 통, 판 단위로 파는 매대는 원래 표현을 그대로 써요.",
     "metric": "미터법 · kg, g, 리터",
@@ -52,9 +44,6 @@
   "cart": {
     "orderOf": "주문 {{index}}/{{of}}",
     "payAtPickup": "픽업할 때 매대에서 결제"
-  },
-  "chart": {
-    "showNumbers": "수치 보기"
   },
   "chat": {
     "assistant": "MarketLink 도우미",
@@ -187,6 +176,11 @@
     "mapDataFrom": "지도 데이터 {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "좋은 아침입니다",
+      "afternoon": "좋은 오후입니다",
+      "evening": "좋은 저녁입니다"
+    },
     "cart": "장바구니",
     "cartItems_one": "장바구니, {{count}}개",
     "cartItems_other": "장바구니, {{count}}개",
@@ -210,8 +204,8 @@
   "loadError": {
     "title": "{{noun}}을(를) 불러오지 못했어요",
     "text": "이번에는 목록이 도착하지 않았어요. 저장하거나 주문한 내용에는 영향이 없어요.",
-    "help": "보통은 사용자 잘못이 아니라 연결 문제예요. 다시 시도해도 안 되면 <link>무슨 일이 있었는지 알려 주세요</link>. 저희가 확인할게요.",
-    "helpAlt": "보통은 사용자 잘못이 아니라 연결 문제예요. 다시 시도해도 안 되면 <alt />, 또는 <link>무슨 일이 있었는지 알려 주세요</link>. 저희가 확인할게요."
+    "help": "보통은 사용자 잘못이 아니라 연결 문제예요. 다시 시도해도 안 되면 <a>무슨 일이 있었는지 알려 주세요</a>. 저희가 확인할게요.",
+    "helpAlt": "보통은 사용자 잘못이 아니라 연결 문제예요. 다시 시도해도 안 되면 <alt />, 또는 <a>무슨 일이 있었는지 알려 주세요</a>. 저희가 확인할게요."
   },
   "loading": {
     "markets": "시장 불러오는 중"
@@ -299,22 +293,6 @@
     "show": "비밀번호 보기",
     "hide": "비밀번호 숨기기"
   },
-  "period": {
-    "length": "기간 단위",
-    "day": "일",
-    "week": "주",
-    "month": "월",
-    "quarter": "분기",
-    "year": "연",
-    "custom": "직접 설정",
-    "from": "시작",
-    "to": "종료",
-    "compareWith": "비교 대상",
-    "cmpBefore": "같은 길이의 이전 기간",
-    "cmpLastYear": "작년 같은 기간",
-    "cmpNone": "비교 안 함",
-    "comparedWith": "<b>{{compare}}</b>(같은 길이)와 비교"
-  },
   "price": {
     "was": "이전 가격"
   },
@@ -385,7 +363,6 @@
     "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요."
   },
   "adminNav": {
-    "sections": "관리 메뉴",
     "overview": "개요",
     "farmers": "농가",
     "customers": "고객",
@@ -396,6 +373,7 @@
     "categories": "카테고리",
     "announcements": "공지",
     "feedback": "의견",
+    "notifications": "알림",
     "settings": "설정",
     "account": "내 계정",
     "analytics": "분석",
@@ -407,16 +385,6 @@
     "contextSub": "플랫폼 · 전체 마켓",
     "userLine": "관리자 · 전체 플랫폼",
     "searchPlaceholder": "매장, 고객 또는 시장"
-  },
-  "carousel": {
-    "roleCarousel": "캐러셀",
-    "roleSlide": "슬라이드",
-    "slideOf": "{{total}}개 중 {{n}}번째: {{topic}}",
-    "previous": "이전 슬라이드",
-    "next": "다음 슬라이드",
-    "show": "{{n}}번 슬라이드 보기: {{topic}}",
-    "pause": "슬라이드쇼 일시 정지",
-    "play": "슬라이드쇼 재생"
   },
   "geo": {
     "denied": "이 사이트의 위치 권한을 껐습니다. 브라우저의 사이트 설정에서 변경하거나 주소를 대신 사용하세요.",
@@ -778,6 +746,12 @@
       "fakeReviews": "조작된 리뷰",
       "ownerRequest": "계정 소유자의 요청"
     }
+  },
+  "cookieConsent": {
+    "label": "쿠키 안내",
+    "text": "로그인 상태 유지와 장바구니 작동을 위한 필수 쿠키만 사용해요. 광고나 분석용 쿠키는 없어요. <a>개인정보 처리방침</a>.",
+    "decline": "거부",
+    "accept": "동의"
   },
   "storageMode": {
     "room": "실온",

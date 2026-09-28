@@ -39,7 +39,7 @@
     "complete": "완료로 표시",
     "view": "보기"
   },
-  "greeting": "좋은 아침이에요, {{name}}님",
+  "title": "개요",
   "applyTemplate": "주간 템플릿 적용",
   "addProduct": "상품 추가",
   "banner": {

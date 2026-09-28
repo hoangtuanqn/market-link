@@ -7,11 +7,10 @@
     "phone": "Telepon",
     "address": "Alamat",
     "hours": "Jam kerja",
-    "emailValue": "contact@marketlink.vn",
-    "phoneValue": "+84 90 123 4567",
-    "addressValue": "Menyusul. Penanda di peta hanya sementara di Distrik 1.",
-    "hoursValue": "Sen – Jum, 09:00 – 17:00",
-    "toAdd": "Menyusul"
+    "emailValue": "admin@marketlink.vn",
+    "phoneValue": "0900000001",
+    "addressValue": "3 Lê Duẩn, Phường Sài Gòn, Thành phố Hồ Chí Minh",
+    "hoursValue": "Sen – Jum, 09:00 – 17:00"
   },
   "feedback": {
     "title": "Ada yang rusak atau punya ide?",
@@ -22,7 +21,7 @@
     "label": "Peta lokasi tim",
     "markerLabel": "Tim MarketLink (sementara)",
     "popupTitle": "Tim MarketLink",
-    "popupLine": "Penanda sementara, Distrik 1",
+    "popupLine": "3 Lê Duẩn, Phường Sài Gòn",
     "directions": "Rute ke tim"
   }
 }

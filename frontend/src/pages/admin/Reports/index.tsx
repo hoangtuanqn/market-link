@@ -11,7 +11,7 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { Kpi } from '@/components/ui/kpi';
 import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
-import { perUnit, units, vnd } from '@/lib/format';
+import { perUnit, units, money } from '@/lib/format';
 import { clampRange } from './reports.helpers';
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -55,14 +55,14 @@ const AdminReportsPage = () => {
   const marketColumns: TableColumn<RevenueByMarketDto>[] = [
     { key: 'market', label: t('col.market'), render: (r) => r.marketName },
     { key: 'orders', label: t('col.orders'), align: 'num', render: (r) => r.orderCount },
-    { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => vnd(r.revenue) },
+    { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => money(r.revenue) },
   ];
 
   const farmerColumns: TableColumn<TopFarmerDto & { rank: number }>[] = [
     { key: 'rank', label: '#', align: 'num', render: (r) => r.rank },
     { key: 'stall', label: t('col.stall'), render: (r) => r.stallName },
     { key: 'orders', label: t('col.completedOrders'), align: 'num', render: (r) => r.orderCount },
-    { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => vnd(r.revenue) },
+    { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => money(r.revenue) },
     { key: 'rating', label: t('col.rating'), align: 'num', render: (r) => r.ratingAvg.toFixed(1) },
   ];
   const rankedFarmers = farmerLoad.kind === 'ready' ? farmerLoad.data.map((r, i) => ({ ...r, rank: i + 1 })) : [];
@@ -81,14 +81,14 @@ const AdminReportsPage = () => {
     { key: 'unit', label: t('col.soldPer'), render: (r) => r.unit },
     { key: 'price', label: t('col.price'), align: 'num', render: (r) => perUnit(r.unitPrice, r.unit) },
     { key: 'qty', label: t('col.sold'), align: 'num', render: (r) => units(r.quantitySold, r.unit) },
-    { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => vnd(r.revenue) },
+    { key: 'revenue', label: t('col.revenue'), align: 'num', render: (r) => money(r.revenue) },
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <AskAssistant question={tAssistant('assistant.ask.reports', { from, to })} />
         </div>
         <p className="text-body max-w-160">{t('intro')}</p>
@@ -140,7 +140,7 @@ const AdminReportsPage = () => {
       ) : (
         <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
           <Kpi label={t('kpi.orders')} value={dashboardLoad.data.totalOrders} note={t('kpi.ordersNote')} />
-          <Kpi label={t('kpi.revenue')} value={vnd(dashboardLoad.data.revenueTotal)} note={t('kpi.revenueNote')} />
+          <Kpi label={t('kpi.revenue')} value={money(dashboardLoad.data.revenueTotal)} note={t('kpi.revenueNote')} />
         </div>
       )}
 

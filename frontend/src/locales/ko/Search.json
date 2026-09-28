@@ -12,6 +12,21 @@
     "submit": "검색"
   },
   "day": "장날",
+  "filters": {
+    "category": "카테고리",
+    "allCategories": "모든 카테고리",
+    "market": "장터",
+    "allMarkets": "모든 장터",
+    "price": "단위당 가격",
+    "clear": "필터 지우기"
+  },
+  "price": {
+    "any": "모든 가격",
+    "low": "{{low}} 미만",
+    "mid": "{{low}} – {{high}}",
+    "high": "{{high}} 초과"
+  },
+  "stallsNotByCategory": "카테고리로는 매대를 좁힐 수 없습니다 — 매대에는 카테고리가 없습니다. 아래 상품에 적용됩니다.",
   "sort": "정렬",
   "sorts": {
     "best": "관련도순",

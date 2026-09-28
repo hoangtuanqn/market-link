@@ -33,7 +33,7 @@
   },
   "error": {
     "noun": "marchés",
-    "alt": "la <link>carte des marchés</link> s'ouvre sur sa propre page"
+    "alt": "la <a>carte des marchés</a> s'ouvre sur sa propre page"
   },
   "pager": {
     "showing": "{{from}}–{{to}} sur {{total}}",
@@ -53,15 +53,6 @@
   "map": {
     "label": "Carte des marchés correspondants",
     "note": "La carte suit les filtres et n'affiche que les marchés de la liste."
-  },
-  "demo": {
-    "title": "Autres états de cette liste (FR-084)",
-    "views": {
-      "loaded": "Avec données",
-      "loading": "Chargement",
-      "error": "Erreur"
-    },
-    "note": "L'état vide existe pour de vrai : choisissez <b>{{day}}</b> et le quartier <b>{{area}}</b>. Il rappelle votre choix et propose une issue."
   },
   "location": {
     "measured": "Les distances sont mesurées depuis votre position.",

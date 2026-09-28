@@ -47,5 +47,5 @@ Every document in the repository, grouped by what you want to do. Language: **EN
 | [`../CONTRIBUTING.md`](../CONTRIBUTING.md) | VI | Hard rules H-1…H-10, `dev` / `main` branches, commits, pull requests, releases |
 | [`../CLAUDE.md`](../CLAUDE.md), [`../AGENTS.md`](../AGENTS.md) | VI | Rules every AI assistant follows in this repository (R-01…R-10) |
 | [`ai-tooling.md`](ai-tooling.md) | VI | Shared Claude Code plugins and how to install them |
-| [`superpowers/`](superpowers) | EN/VI | AI-assisted design specs, implementation plans and handoffs, dated, one per feature |
+| [`superpowers/`](superpowers) | EN/VI | AI-assisted design specs and implementation plans, dated, one per feature |
 | [`archive/`](archive) | VI | Early roadmap and handoff notes, kept for history; the code has moved past them |

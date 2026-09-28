@@ -3,7 +3,6 @@
   "title": "Catégories",
   "intro": "La seule liste dans laquelle chaque stand choisit quand il ajoute un produit. Les unités de vente sont fixes et livrées avec l'application.",
   "link": {
-    "announcements": "Annonces",
     "feedback": "Boîte de retours"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "Catégorie",
     "products": "Produits",
     "stalls": "Étals",
-    "nameOf": "Nom de {{name}}"
+    "nameOf": "Nom de {{name}}",
+    "status": "Statut",
+    "shelfLife": "Durée de conservation",
+    "shelfLifeRange": "{{min}}–{{max}} jours",
+    "shelfLifeDays_one": "{{count}} jour",
+    "shelfLifeDays_other": "{{count}} jours"
   },
   "action": {
     "save": "Enregistrer",
-    "remove": "Supprimer"
+    "remove": "Supprimer",
+    "enable": "Activer"
   },
   "categoryForm": {
     "title": "Ajouter une catégorie",
@@ -38,7 +43,9 @@
     "textUnused": "Aucun produit ne l'utilise.",
     "moveTo": "Déplacer les produits vers",
     "keep": "Garder la catégorie",
-    "confirm": "Supprimer la catégorie"
+    "confirm": "Supprimer la catégorie",
+    "moveToHint": "Les produits attribués à cette catégorie seront réassignés.",
+    "moveToNone": "Aucune (les produits gardent cette catégorie)"
   },
   "empty": {
     "categories": {
@@ -49,7 +56,8 @@
   "toast": {
     "categorySaved": "{{name}} enregistrée.",
     "categoryAdded": "Catégorie ajoutée. Les étals peuvent la choisir dès maintenant.",
-    "categoryRemoved": "{{name}} supprimée."
+    "categoryRemoved": "{{name}} supprimée.",
+    "categoryEnabled": "{{name}} activé."
   },
   "error": {
     "noun": "catégories",
@@ -58,6 +66,10 @@
     "shelfLifeRange": "Max must be at least the minimum.",
     "nameTooLong": "Le nom doit faire {{max}} caractères au plus.",
     "nameTaken": "Une catégorie porte déjà ce nom."
+  },
+  "status": {
+    "active": "Actif",
+    "inactive": "Inactif"
   },
   "guides": {
     "title": "Groupes de conservation",

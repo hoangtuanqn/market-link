@@ -10,5 +10,26 @@
   "hours_one": "{{count}} giờ",
   "hours_other": "{{count}} giờ",
   "orders_one": "{{count}} đơn",
-  "orders_other": "{{count}} đơn"
+  "orders_other": "{{count}} đơn",
+  "website": {
+    "title": "Trạng thái website",
+    "intro": "Tạm tắt toàn bộ website khi bạn cần sửa gì đó, rồi bật lại khi xong.",
+    "loading": "Đang tải trạng thái website",
+    "loadErrorTitle": "Không tải được trạng thái website",
+    "loadErrorText": "Kiểm tra kết nối mạng rồi thử lại.",
+    "retry": "Thử lại",
+    "pillActive": "Đang hoạt động",
+    "pillMaintenance": "Đang bảo trì",
+    "activeText": "MarketLink đang mở cho tất cả mọi người.",
+    "maintenanceText": "Hiện chỉ admin mới đăng nhập được. Mọi người khác sẽ thấy thông báo bảo trì.",
+    "enable": "Bật chế độ bảo trì",
+    "disable": "Tắt chế độ bảo trì",
+    "confirmTitle": "Bật chế độ bảo trì?",
+    "confirmText": "Mọi người dùng trừ admin sẽ bị chuyển đến trang thông báo bảo trì ngay lập tức. Bạn có thể tắt lại bất cứ lúc nào.",
+    "confirmButton": "Bật ngay",
+    "cancelButton": "Chưa vội",
+    "toastOn": "Đã bật chế độ bảo trì. Mọi người trừ admin đều bị khoá truy cập.",
+    "toastOff": "Đã tắt chế độ bảo trì. MarketLink đang mở lại.",
+    "error": "Không cập nhật được trạng thái website. Vui lòng thử lại."
+  }
 }

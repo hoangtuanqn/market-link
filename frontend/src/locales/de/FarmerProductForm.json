@@ -63,10 +63,6 @@
     "label": "Beschreibung",
     "hint": "Wird auf der Produktseite angezeigt. Beschreiben Sie, wie es angebaut wird und wie man es lagert."
   },
-  "flag": {
-    "label": "Kurzer Hinweis auf der Karte",
-    "hint": "Optional, handgeschrieben auf dem Etikett: „Heute frisch“, „Um 5 Uhr gebacken“."
-  },
   "status": {
     "label": "Status",
     "available": "Verfügbar",
@@ -81,7 +77,11 @@
     "uploading": "Wird hochgeladen",
     "uploadInProgress": "Warten Sie, bis das Foto hochgeladen ist, bevor Sie speichern.",
     "alt": "Produktfoto",
-    "hint": "JPEG, PNG oder WEBP, bis 8 MB. Nah, bei Tageslicht, auf Holz oder Papier."
+    "hint": "JPEG, PNG oder WEBP, bis 8 MB. Nah, bei Tageslicht, auf Holz oder Papier.",
+    "error": {
+      "tooLarge": "Das Foto darf höchstens 8 MB groß sein.",
+      "type": "Fotos müssen JPEG, PNG oder WEBP sein."
+    }
   },
   "save": "Produkt speichern",
   "add": "Produkt hinzufügen",
@@ -107,6 +107,6 @@
   },
   "errors": {
     "required": "Dieses Feld ist erforderlich.",
-    "price": "Der Preis muss 0 oder höher sein."
+    "price": "Der Preis muss größer als 0 sein."
   }
 }

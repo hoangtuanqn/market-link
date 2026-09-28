@@ -10,5 +10,26 @@
   "hours_one": "{{count}}시간",
   "hours_other": "{{count}}시간",
   "orders_one": "주문 {{count}}건",
-  "orders_other": "주문 {{count}}건"
+  "orders_other": "주문 {{count}}건",
+  "website": {
+    "title": "웹사이트 상태",
+    "intro": "문제를 고치는 동안 사이트 전체를 잠시 꺼두었다가, 끝나면 다시 켤 수 있어요.",
+    "loading": "웹사이트 상태를 불러오는 중",
+    "loadErrorTitle": "웹사이트 상태를 불러오지 못했어요",
+    "loadErrorText": "연결을 확인한 뒤 다시 시도해 주세요.",
+    "retry": "다시 시도",
+    "pillActive": "정상 운영 중",
+    "pillMaintenance": "점검 중",
+    "activeText": "MarketLink는 모두에게 열려 있어요.",
+    "maintenanceText": "지금은 관리자만 로그인할 수 있어요. 다른 사람들은 점검 안내를 보게 돼요.",
+    "enable": "점검 모드 켜기",
+    "disable": "점검 모드 끄기",
+    "confirmTitle": "점검 모드를 켤까요?",
+    "confirmText": "관리자를 제외한 모든 방문자가 즉시 점검 안내로 이동해요. 언제든 다시 끌 수 있어요.",
+    "confirmButton": "지금 켜기",
+    "cancelButton": "아직이요",
+    "toastOn": "점검 모드가 켜졌어요. 관리자를 제외한 모두가 접근할 수 없어요.",
+    "toastOff": "점검 모드가 꺼졌어요. MarketLink가 다시 열렸어요.",
+    "error": "웹사이트 상태를 업데이트하지 못했어요. 다시 시도해 주세요."
+  }
 }
