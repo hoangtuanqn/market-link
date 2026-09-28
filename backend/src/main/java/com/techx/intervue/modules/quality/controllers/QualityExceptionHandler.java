@@ -36,7 +36,8 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
         assignableTypes = {
             QualityReportPhotoController.class,
             QualityReportController.class,
-            FarmerQualityReportController.class
+            FarmerQualityReportController.class,
+            AdminQualityReportController.class
         })
 public class QualityExceptionHandler {
 
@@ -150,6 +151,13 @@ public class QualityExceptionHandler {
                     HttpStatus.CONFLICT,
                     "ALREADY_REPORTED",
                     "You have already reported this item.",
+                    List.of());
+        }
+        if (cause.contains("uq_farmer_violation_report")) {
+            return error(
+                    HttpStatus.CONFLICT,
+                    "REPORT_ALREADY_DECIDED",
+                    "An admin has already decided on this report.",
                     List.of());
         }
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());

@@ -141,4 +141,16 @@ class QualityExceptionHandlerTest {
                 409,
                 "REPORT_ALREADY_DECIDED");
     }
+
+    /** Review Focus #1: a second strike for the same report hits UNIQUE — 409, not 500. */
+    @Test
+    void aSecondStrikeForTheSameReportIs409() {
+        assertError(
+                handler.dataIntegrity(
+                        violation(
+                                "Duplicate entry '9' for key"
+                                        + " 'farmer_violations.uq_farmer_violation_report'")),
+                409,
+                "REPORT_ALREADY_DECIDED");
+    }
 }

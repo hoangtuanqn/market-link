@@ -21,6 +21,7 @@ class QualityExceptionHandlerScopeTest {
                 .containsExactlyInAnyOrder(
                         QualityReportPhotoController.class,
                         QualityReportController.class,
-                        FarmerQualityReportController.class);
+                        FarmerQualityReportController.class,
+                        AdminQualityReportController.class);
     }
 }

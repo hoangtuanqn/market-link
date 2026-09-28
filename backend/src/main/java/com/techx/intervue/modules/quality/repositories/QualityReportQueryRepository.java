@@ -42,6 +42,15 @@ public class QualityReportQueryRepository {
 
     static final String STALL_FILTER = "WHERE qr.farmer_id = :farmerId\n";
 
+    /** {@code :status} null = any; {@code :decided} = confirmed or dismissed (Ruling 6). */
+    static final String ADMIN_FILTER =
+            """
+            WHERE (:status IS NULL OR qr.status = :status)
+              AND (:decided = FALSE OR qr.status <> 'open')
+              AND (:escalated IS NULL
+                   OR (qr.shelf_life_extended = TRUE AND qr.before_promise = TRUE) = :escalated)
+            """;
+
     static final String NEWEST_FIRST =
             "ORDER BY qr.created_at DESC, qr.id DESC\nLIMIT :limit OFFSET :offset";
 
@@ -56,6 +65,22 @@ public class QualityReportQueryRepository {
                 since,
                 offset,
                 limit);
+    }
+
+    /** The admin queue (spec §4.4.3), newest first. */
+    public PageResource<QualityReportResource> forAdmin(
+            String status,
+            boolean decided,
+            Boolean escalated,
+            Instant since,
+            int offset,
+            int limit) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("status", status)
+                        .addValue("decided", decided)
+                        .addValue("escalated", escalated);
+        return page(ADMIN_FILTER, params, since, offset, limit);
     }
 
     public Optional<QualityReportResource> findById(long reportId, Instant since) {

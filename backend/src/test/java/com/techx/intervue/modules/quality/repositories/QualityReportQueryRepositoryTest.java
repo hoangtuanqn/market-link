@@ -96,4 +96,25 @@ class QualityReportQueryRepositoryTest {
                 .map(QualityReportResource::stallActiveStrikes)
                 .contains(1);
     }
+
+    /** Ruling 6: "Needs a decision", "All open" and "Decided". */
+    @Test
+    void theAdminQueueFiltersNeedsADecisionAllOpenAndDecided() {
+        long needs = reportAt(stallA, "Rau muống", "open", true, 3);
+        long open = reportAt(stallA, "Cải ngọt", "open", false, 2);
+        long decided = reportAt(stallB, "Xoài", "dismissed", true, 1);
+
+        assertThat(queries.forAdmin("open", false, true, since(), 0, 200).items())
+                .extracting(QualityReportResource::id)
+                .contains(needs)
+                .doesNotContain(open, decided);
+        assertThat(queries.forAdmin("open", false, null, since(), 0, 200).items())
+                .extracting(QualityReportResource::id)
+                .contains(needs, open)
+                .doesNotContain(decided);
+        assertThat(queries.forAdmin(null, true, null, since(), 0, 200).items())
+                .extracting(QualityReportResource::id)
+                .contains(decided)
+                .doesNotContain(needs, open);
+    }
 }
