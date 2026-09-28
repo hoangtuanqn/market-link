@@ -245,15 +245,27 @@ public final class ImageProbe {
         }
     }
 
+    /** The size a photo of width×height is stored at: unchanged, or scaled to fit MAX_SIDE. */
+    static int[] storedSize(int width, int height) {
+        if (width <= MAX_SIDE && height <= MAX_SIDE) {
+            return new int[] {width, height};
+        }
+        double scale = (double) MAX_SIDE / Math.max(width, height);
+        return new int[] {
+            Math.max(1, (int) Math.round(width * scale)),
+            Math.max(1, (int) Math.round(height * scale))
+        };
+    }
+
     private static BufferedImage fitWithin(BufferedImage source, int maxSide) {
         int width = source.getWidth();
         int height = source.getHeight();
         if (width <= maxSide && height <= maxSide) {
             return source;
         }
-        double scale = (double) maxSide / Math.max(width, height);
-        int targetWidth = Math.max(1, (int) Math.round(width * scale));
-        int targetHeight = Math.max(1, (int) Math.round(height * scale));
+        int[] target = storedSize(width, height);
+        int targetWidth = target[0];
+        int targetHeight = target[1];
         BufferedImage scaled =
                 new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = scaled.createGraphics();

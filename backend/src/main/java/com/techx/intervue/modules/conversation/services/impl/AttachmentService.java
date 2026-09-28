@@ -15,7 +15,12 @@ import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimit
 import com.techx.intervue.services.interfaces.FileStorageServiceInterface;
 import jakarta.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +49,7 @@ public class AttachmentService implements AttachmentServiceInterface {
     private final MessageRepository messages;
     private final ConversationLookup lookup;
     private final MessageReportRepository reports;
+    private final Path tempDir;
 
     public AttachmentService(
             MessageAttachmentRepository attachments,
@@ -52,7 +58,8 @@ public class AttachmentService implements AttachmentServiceInterface {
             @Value("${app.chat.max-upload-bytes}") long maxBytes,
             MessageRepository messages,
             ConversationLookup lookup,
-            MessageReportRepository reports) {
+            MessageReportRepository reports,
+            @Value("${app.chat.temp-dir}") String tempDir) {
         this.attachments = attachments;
         this.storage = storage;
         this.rateLimiter = rateLimiter;
@@ -60,36 +67,54 @@ public class AttachmentService implements AttachmentServiceInterface {
         this.messages = messages;
         this.lookup = lookup;
         this.reports = reports;
+        this.tempDir = Paths.get(tempDir);
     }
 
+    /**
+     * FR-115: the upload is copied to a temp file and recognised from its bytes (MediaProbe). JPEG/
+     * PNG are re-encoded (EXIF goes, big photos are scaled to 4096 px); WebP, GIF, AVIF and videos
+     * are copied as uploaded. Nothing larger than a photo is ever held in memory.
+     */
     @Override
     @Transactional
     public AttachmentResource upload(Long meId, MultipartFile file) {
-        byte[] bytes = readWithinLimit(file);
-        ImageProbe.Probed probed = ImageProbe.probe(bytes);
-        // The limit counts images ACCEPTED, not attempts: an iPhone sending HEIC that gets 415 ten
-        // times
-        // must not lose the right to send images for a whole hour. The checks above are all cheap
-        // and have not touched the disk yet.
-        rateLimiter.check(meId, ChatRateLimiterInterface.Action.IMAGE);
-        byte[] stored = ImageProbe.normalize(bytes, probed.mime());
-        // WebP is kept as is; JPEG/PNG were re-encoded to JPEG so the stored mime follows the real
-        // file
-        String mime = ImageProbe.WEBP.equals(probed.mime()) ? ImageProbe.WEBP : ImageProbe.JPEG;
-        String storageKey = UUID.randomUUID().toString().toLowerCase(Locale.ROOT) + extension(mime);
-
-        storage.store(FOLDER, storageKey, stored);
-        MessageAttachment saved =
-                attachments.save(
-                        MessageAttachment.builder()
-                                .uploaderId(meId)
-                                .storageKey(storageKey)
-                                .mime(mime)
-                                .sizeBytes(stored.length)
-                                .width(probed.width())
-                                .height(probed.height())
-                                .build());
-        return AttachmentResource.of(saved.getId(), saved.getWidth(), saved.getHeight());
+        requireWithinLimit(file);
+        Path temp = copyToTemp(file);
+        try {
+            MediaProbe.Probed probed = MediaProbe.probe(temp);
+            // The limit counts files ACCEPTED, not attempts: an iPhone sending HEIC that gets 415
+            // ten times must not lose the right to send photos for a whole hour. The checks above
+            // are all cheap and have not touched the store yet.
+            rateLimiter.check(meId, ChatRateLimiterInterface.Action.IMAGE);
+            MessageAttachment.MessageAttachmentBuilder record =
+                    MessageAttachment.builder().uploaderId(meId);
+            if (probed.handling() == MediaProbe.Handling.REENCODE) {
+                byte[] stored = ImageProbe.normalize(Files.readAllBytes(temp), probed.mime());
+                String storageKey = newStorageKey(ImageProbe.JPEG);
+                storage.store(FOLDER, storageKey, stored);
+                int[] size = ImageProbe.storedSize(probed.width(), probed.height());
+                record.storageKey(storageKey)
+                        .mime(ImageProbe.JPEG)
+                        .sizeBytes(stored.length)
+                        .width(size[0])
+                        .height(size[1]);
+            } else {
+                String storageKey = newStorageKey(probed.mime());
+                storage.storeFile(FOLDER, storageKey, temp);
+                record.storageKey(storageKey)
+                        .mime(probed.mime())
+                        .sizeBytes((int) Files.size(temp))
+                        .width(probed.width())
+                        .height(probed.height());
+            }
+            MessageAttachment saved = attachments.save(record.build());
+            return AttachmentResource.of(
+                    saved.getId(), saved.getMime(), saved.getWidth(), saved.getHeight());
+        } catch (IOException e) {
+            throw new UnsupportedImageTypeException();
+        } finally {
+            deleteQuietly(temp);
+        }
     }
 
     @Override
@@ -165,21 +190,40 @@ public class AttachmentService implements AttachmentServiceInterface {
                 new FileSystemResource(file), attachment.getMime(), attachment.getSizeBytes());
     }
 
-    private byte[] readWithinLimit(MultipartFile file) {
+    private void requireWithinLimit(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new UnsupportedImageTypeException();
         }
         if (file.getSize() > maxBytes) {
             throw new AttachmentTooLargeException(maxBytes);
         }
+    }
+
+    private Path copyToTemp(MultipartFile file) {
         try {
-            return file.getBytes();
+            Files.createDirectories(tempDir);
+            Path temp = Files.createTempFile(tempDir, "chat-upload-", ".part");
+            try (InputStream in = file.getInputStream()) {
+                Files.copy(in, temp, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                deleteQuietly(temp);
+                throw e;
+            }
+            return temp;
         } catch (IOException e) {
-            throw new UnsupportedImageTypeException();
+            throw new UncheckedIOException("Could not read the upload", e);
         }
     }
 
-    private static String extension(String mime) {
-        return ImageProbe.WEBP.equals(mime) ? ".webp" : ".jpg";
+    private static void deleteQuietly(Path temp) {
+        try {
+            Files.deleteIfExists(temp);
+        } catch (IOException e) {
+            log.warn("Could not delete the upload temp file {}", temp, e);
+        }
+    }
+
+    private static String newStorageKey(String mime) {
+        return UUID.randomUUID().toString().toLowerCase(Locale.ROOT) + MediaProbe.extension(mime);
     }
 }

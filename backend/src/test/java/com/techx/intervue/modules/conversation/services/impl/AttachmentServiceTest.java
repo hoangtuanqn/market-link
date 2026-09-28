@@ -2,8 +2,10 @@ package com.techx.intervue.modules.conversation.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -54,6 +56,7 @@ class AttachmentServiceTest {
     AttachmentService service;
 
     @TempDir Path tmp;
+    @TempDir Path uploads;
     Path fileOnDisk;
 
     @BeforeEach
@@ -77,7 +80,14 @@ class AttachmentServiceTest {
         // reports
         service =
                 new AttachmentService(
-                        attachments, storage, rateLimiter, MAX_BYTES, messages, lookup, reports);
+                        attachments,
+                        storage,
+                        rateLimiter,
+                        MAX_BYTES,
+                        messages,
+                        lookup,
+                        reports,
+                        uploads.toString());
     }
 
     @Test
@@ -406,5 +416,134 @@ class AttachmentServiceTest {
 
         assertThatThrownBy(() -> service.read(99L, 55L))
                 .isInstanceOf(ConversationAccessDeniedException.class);
+    }
+
+    // ---------- FR-115: more formats, videos, 50 MB through a temp file ----------
+
+    @Test
+    void storesAVideoExactlyAsUploaded() throws Exception {
+        byte[] mp4 = mp4(200);
+
+        AttachmentResource resource =
+                service.upload(7L, new MockMultipartFile("file", "clip.mp4", "video/mp4", mp4));
+
+        assertThat(resource.mime()).isEqualTo("video/mp4");
+        assertThat(resource.width()).isNull();
+        ArgumentCaptor<String> name = ArgumentCaptor.forClass(String.class);
+        verify(storage).storeFile(eq(AttachmentService.FOLDER), name.capture(), any(Path.class));
+        assertThat(name.getValue()).matches("[0-9a-f-]{36}\\.mp4");
+        verify(storage, never()).store(anyString(), anyString(), any(byte[].class));
+        ArgumentCaptor<MessageAttachment> saved = ArgumentCaptor.forClass(MessageAttachment.class);
+        verify(attachments).save(saved.capture());
+        assertThat(saved.getValue().getMime()).isEqualTo("video/mp4");
+        assertThat(saved.getValue().getSizeBytes()).isEqualTo(mp4.length);
+    }
+
+    @Test
+    void storesAGifAsUploadedSoItKeepsMoving() throws Exception {
+        AttachmentResource resource =
+                service.upload(
+                        7L,
+                        new MockMultipartFile("file", "hi.gif", "image/gif", image("gif", 12, 6)));
+
+        assertThat(resource.mime()).isEqualTo("image/gif");
+        assertThat(resource.width()).isEqualTo(12);
+        verify(storage).storeFile(eq(AttachmentService.FOLDER), anyString(), any(Path.class));
+    }
+
+    @Test
+    void aPhotoStillComesBackAsJpeg() throws Exception {
+        AttachmentResource resource =
+                service.upload(
+                        7L, new MockMultipartFile("file", "a.png", "image/png", png(30, 20)));
+
+        assertThat(resource.mime()).isEqualTo("image/jpeg");
+    }
+
+    @Test
+    void heicIsRefusedWithAHintAndSpendsNoToken() {
+        byte[] heic =
+                concat(
+                        box("ftyp", concat(ascii("heic"), new byte[4], ascii("mif1"))),
+                        box("mdat", new byte[8]));
+
+        assertThatThrownBy(
+                        () ->
+                                service.upload(
+                                        7L,
+                                        new MockMultipartFile(
+                                                "file", "IMG_1.HEIC", "image/heic", heic)))
+                .isInstanceOf(UnsupportedImageTypeException.class)
+                .hasMessageContaining("HEIC");
+        Mockito.verifyNoInteractions(rateLimiter, storage);
+    }
+
+    @Test
+    void acceptsAFileOfExactlyTheLimit() throws Exception {
+        byte[] exactly = mp4((int) MAX_BYTES);
+
+        assertThat(exactly).hasSize((int) MAX_BYTES);
+        assertThat(
+                        service.upload(
+                                        7L,
+                                        new MockMultipartFile(
+                                                "file", "big.mp4", "video/mp4", exactly))
+                                .mime())
+                .isEqualTo("video/mp4");
+    }
+
+    @Test
+    void theTempCopyIsGoneWhetherTheFileIsKeptOrRefused() throws Exception {
+        service.upload(7L, new MockMultipartFile("file", "clip.mp4", "video/mp4", mp4(100)));
+        byte[] pdf = "%PDF-1.7 not a photo".getBytes(StandardCharsets.ISO_8859_1);
+        catchThrowable(
+                () ->
+                        service.upload(
+                                7L, new MockMultipartFile("file", "x.jpg", "image/jpeg", pdf)));
+
+        try (var left = Files.list(uploads)) {
+            assertThat(left).isEmpty();
+        }
+    }
+
+    private static byte[] image(String format, int w, int h) throws Exception {
+        java.awt.image.BufferedImage image =
+                new java.awt.image.BufferedImage(w, h, java.awt.image.BufferedImage.TYPE_INT_RGB);
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        javax.imageio.ImageIO.write(image, format, out);
+        return out.toByteArray();
+    }
+
+    /** ftyp isom + moov + an mdat padded so the whole file is exactly `total` bytes. */
+    private static byte[] mp4(int total) {
+        byte[] head =
+                concat(
+                        box("ftyp", concat(ascii("isom"), new byte[4], ascii("mp41"))),
+                        box("moov", new byte[8]));
+        return concat(head, box("mdat", new byte[total - head.length - 8]));
+    }
+
+    private static byte[] box(String type, byte[] payload) {
+        java.nio.ByteBuffer b = java.nio.ByteBuffer.allocate(8 + payload.length);
+        b.putInt(8 + payload.length);
+        b.put(ascii(type));
+        b.put(payload);
+        return b.array();
+    }
+
+    private static byte[] ascii(String text) {
+        return text.getBytes(StandardCharsets.US_ASCII);
+    }
+
+    private static byte[] concat(byte[]... parts) {
+        int length = 0;
+        for (byte[] p : parts) length += p.length;
+        byte[] out = new byte[length];
+        int at = 0;
+        for (byte[] p : parts) {
+            System.arraycopy(p, 0, out, at, p.length);
+            at += p.length;
+        }
+        return out;
     }
 }

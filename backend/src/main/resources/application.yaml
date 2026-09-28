@@ -21,7 +21,8 @@ spring:
   # FarmerUploadService; avatars are still capped by the service at 2 MB with a clear message.
   servlet:
     multipart:
-      max-file-size: 40MB
+      # FR-115: chat photos and videos up to 50 MB; every other upload keeps its own, smaller cap
+      max-file-size: 50MB
       max-request-size: 60MB
 
   flyway:
@@ -170,7 +171,12 @@ app:
     # Spec §8.2: chat images live SEPARATE from app.storage.dir (that directory is served publicly through /uploads).
     # Docker: the chat-uploads volume at /var/lib/marketlink/chat.
     upload-dir: ${CHAT_UPLOAD_DIR:./chat-uploads}
-    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:5242880}
+    # FR-115: 50 MB for photos and videos
+    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:52428800}
+    # Where an upload waits while it is checked (default: the JVM temp dir)
+    temp-dir: ${CHAT_TEMP_DIR:${java.io.tmpdir}}
+    # FR-115: lifetime of a signed video link
+    stream-url-ttl-seconds: 300
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}

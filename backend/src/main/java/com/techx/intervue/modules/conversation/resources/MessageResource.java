@@ -34,6 +34,7 @@ public record MessageResource(
                                 ? null
                                 : AttachmentResource.of(
                                         attachment.getId(),
+                                        attachment.getMime(),
                                         attachment.getWidth(),
                                         attachment.getHeight()))
                 .createdAt(m.getCreatedAt())
