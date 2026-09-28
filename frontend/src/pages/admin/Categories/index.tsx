@@ -121,7 +121,12 @@ const AdminCategoriesPage = () => {
         minShelfLifeDays: min,
         maxShelfLifeDays: max,
       });
-      replaceCategories((list) => [...list, created]);
+      // Re-adding a removed name brings that same row back (same id), so swap it in instead of listing it twice.
+      replaceCategories((list) =>
+        list.some((c) => c.id === created.id)
+          ? list.map((c) => (c.id === created.id ? created : c))
+          : [...list, created],
+      );
       Notification.success({ text: t('toast.categoryAdded') });
       setNewCategory({ name: '', position: '', minShelfLife: '', maxShelfLife: '' });
     } catch (error) {

@@ -68,7 +68,10 @@ public class CategoryService implements CategoryServiceInterface {
     @Transactional
     public CategoryResource create(CategoryRequest request) {
         String slug = slugify(request.name());
-        Optional<Category> existing = repository.findBySlug(slug);
+        // Seeded rows carry slugs slugify would not produce (e.g. "eggs_and_dairy"), so a removed
+        // one is also looked up by its name; otherwise the insert hits the unique name.
+        Optional<Category> existing =
+                repository.findBySlug(slug).or(() -> repository.findByName(request.name()));
         if (existing.isPresent() && existing.get().isActive()) {
             throw new DuplicateCategoryException(slug);
         }
@@ -76,7 +79,7 @@ public class CategoryService implements CategoryServiceInterface {
         // admin cannot see removed ones, so they could never add it again (QA E2E v2
         // CATEGORY-004). Old products that still point to it resolve again.
         Category category = existing.orElseGet(Category::new);
-        apply(category, request, slug);
+        apply(category, request, existing.map(Category::getSlug).orElse(slug));
         category.setActive(true);
         Category saved = repository.save(category);
         return toResource(saved, productRepository.countByCategoryIdAndDeletedFalse(saved.getId()));
@@ -87,7 +90,12 @@ public class CategoryService implements CategoryServiceInterface {
     public CategoryResource update(long id, CategoryRequest request) {
         Category category =
                 repository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
-        String slug = slugify(request.name());
+        // Keep the stored slug unless the name really changed: links and the Home page's icons key
+        // on it, and seeded slugs (e.g. "eggs_and_dairy") are not what slugify gives back.
+        String slug =
+                slugify(request.name()).equals(slugify(category.getName()))
+                        ? category.getSlug()
+                        : slugify(request.name());
         if (!slug.equals(category.getSlug()) && repository.existsBySlug(slug)) {
             throw new DuplicateCategoryException(slug);
         }
