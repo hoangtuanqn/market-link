@@ -77,14 +77,11 @@
     "category": "Categoría",
     "col": {
       "group": "Grupo",
-      "examples": "Ejemplos",
       "storage": "Conservación",
-      "days": "Días sugeridos",
-      "daysFor": "Días para {{group}} ({{storage}})",
-      "status": "Estado"
+      "days": "Días",
+      "daysFor": "Días para {{group}} ({{storage}})"
     },
     "status": {
-      "on": "Activo",
       "off": "Inactivo"
     },
     "action": {

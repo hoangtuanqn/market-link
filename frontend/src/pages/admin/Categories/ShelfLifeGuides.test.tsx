@@ -43,7 +43,11 @@ describe('ShelfLifeGuides', () => {
     render(<ShelfLifeGuides categories={categories} />);
     expect(await screen.findByText('Leafy greens')).toBeInTheDocument();
     // Scoped to the table: the add form's "How it is kept" select also has a 'Fridge 0–5 °C' option.
-    expect(within(screen.getByRole('table')).getByText('Fridge 0–5 °C')).toBeInTheDocument();
+    const table = within(screen.getByRole('table'));
+    expect(table.getByText('Fridge 0–5 °C')).toBeInTheDocument();
+    // The examples are the second line of the group cell, not a column of their own
+    expect(table.getByText('rau muống, lettuce').closest('td')).toBe(table.getByText('Leafy greens').closest('td'));
+    expect(table.queryByRole('columnheader', { name: 'Status' })).not.toBeInTheDocument();
   });
 
   it('names each row of the same group by its own way of keeping', async () => {
@@ -107,11 +111,15 @@ describe('ShelfLifeGuides', () => {
     vi.mocked(ShelfLifeApi.adminDeactivate).mockResolvedValue(undefined);
     render(<ShelfLifeGuides categories={categories} />);
     const row = (await screen.findByText('Leafy greens')).closest('tr')!;
+    expect(within(row).queryByText('Off')).not.toBeInTheDocument();
 
     await userEvent.click(within(row).getByRole('button', { name: 'Turn off' }));
 
     expect(ShelfLifeApi.adminDeactivate).toHaveBeenCalledWith(12);
+    // The "Off" badge after the group name, and the row's action flips
     expect(await within(row).findByText('Off')).toBeInTheDocument();
+    expect(within(row).getByRole('button', { name: 'Turn on' })).toBeInTheDocument();
+    expect(row).toHaveClass('text-ink-muted');
   });
 
   it('shows the empty state for a category without groups', async () => {
@@ -159,7 +167,8 @@ describe('ShelfLifeGuides', () => {
       suggestedDays: 3,
       active: true,
     });
-    expect(await within(row).findByText('On')).toBeInTheDocument();
+    expect(await within(row).findByRole('button', { name: 'Turn off' })).toBeInTheDocument();
+    expect(within(row).queryByText('Off')).not.toBeInTheDocument();
   });
 
   it('switches category and reloads its groups', async () => {

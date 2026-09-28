@@ -109,12 +109,26 @@ const ShelfLifeGuides = ({ categories }: { categories: CategoryType[] }) => {
     }
   };
 
+  // Kept narrow enough for the admin content column at 1024 px (FR-080): the examples sit under the group name, a
+  // turned-off row is muted with an "Off" badge instead of a status column, and the days input is the compact one of
+  // the weekly stock grid, named per row for screen readers.
   const columns: TableColumn<ShelfLifeGuideDto>[] = [
-    { key: 'group', label: t('guides.col.group'), render: (g) => <b>{g.groupName}</b> },
     {
-      key: 'examples',
-      label: t('guides.col.examples'),
-      render: (g) => <span className="text-small">{g.examples}</span>,
+      key: 'group',
+      label: t('guides.col.group'),
+      render: (g) => (
+        <span className="flex flex-col gap-1">
+          <span className="flex flex-wrap items-center gap-2">
+            <b>{g.groupName}</b>
+            {!g.isActive && (
+              <span className="bg-status-cancelled-bg text-status-cancelled-ink inline-flex items-center rounded-full px-2 py-0.5 text-[12px] font-bold">
+                {t('guides.status.off')}
+              </span>
+            )}
+          </span>
+          {g.examples && <span className="text-small text-ink-muted">{g.examples}</span>}
+        </span>
+      ),
     },
     { key: 'storage', label: t('guides.col.storage'), render: (g) => tc(`storageMode.${g.storageMode}`) },
     {
@@ -122,20 +136,16 @@ const ShelfLifeGuides = ({ categories }: { categories: CategoryType[] }) => {
       label: t('guides.col.days'),
       align: 'num',
       render: (g) => (
-        <Field
-          id={`guide-days-${g.id}`}
-          label={t('guides.col.daysFor', { group: g.groupName, storage: tc(`storageMode.${g.storageMode}`) })}
-          hideLabel
+        <input
           type="number"
+          min={1}
+          max={365}
           value={drafts[g.id] ?? String(g.suggestedDays)}
           onChange={(e) => setDrafts({ ...drafts, [g.id]: e.target.value })}
+          aria-label={t('guides.col.daysFor', { group: g.groupName, storage: tc(`storageMode.${g.storageMode}`) })}
+          className="border-line-strong bg-surface-raised focus:outline-focus min-h-11 w-20 rounded-sm border-[1.5px] px-2 text-right tabular-nums focus:outline-2"
         />
       ),
-    },
-    {
-      key: 'status',
-      label: t('guides.col.status'),
-      render: (g) => (g.isActive ? t('guides.status.on') : t('guides.status.off')),
     },
     {
       key: 'action',
@@ -180,20 +190,26 @@ const ShelfLifeGuides = ({ categories }: { categories: CategoryType[] }) => {
         />
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+      {/* The add form sits under the table, not beside it: side by side, the table had 288 px at 1024. */}
+      <div className="flex flex-col gap-6">
         {state.kind === 'loading' ? (
           <MarketCardSkeleton count={2} />
         ) : state.kind === 'error' ? (
           <LoadError noun={t('guides.noun')} onRetry={retry} />
         ) : guides.length ? (
-          <Table caption={t('guides.title')} columns={columns} rows={guides} />
+          <Table
+            caption={t('guides.title')}
+            columns={columns}
+            rows={guides}
+            rowClassName={(g) => (g.isActive ? undefined : 'text-ink-muted')}
+          />
         ) : (
           <DataState title={t('guides.empty.title')} text={t('guides.empty.text')} />
         )}
 
         <Card
           as="form"
-          className="flex flex-col gap-4 self-start p-6"
+          className="flex w-full max-w-120 flex-col gap-4 p-6"
           noValidate
           onSubmit={(e) => {
             e.preventDefault();
