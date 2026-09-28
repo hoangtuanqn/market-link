@@ -49,6 +49,9 @@ Cột **Đã quay** để QA tick khi quay video (đề mục 1.9: video phải 
 
 ## Admin
 
+> **Trước khi quay:** admin chưa cài 2FA sẽ bị chặn ở `/admin/setup-2fa` (FR-008, không có nút bỏ qua).
+> Cài trước theo `docs/DEMO_CREDENTIALS.md`, hoặc tắt ở `/admin/security` để quay một mạch không bị ngắt.
+
 | SRS §1.6 | FR | URL | Backend | Màn hình | Đã quay |
 |---|---|---|---|---|---|
 | Dedicated admin login, separate dashboard | 004 | `/admin/login`, `/admin` | ✓ | nối API | ☐ |
