@@ -57,9 +57,12 @@ const AdminOrdersPage = () => {
     AdminReportApi.orders({ status: FILTER_STATUS[filter], marketId: market || undefined, page, pageSize: PAGE_SIZE }),
   );
 
-  const { state: countsLoad } = useRequest('admin-order-counts', () =>
+  // The chip counts follow the market picker too, so they match the list under them (FR-075).
+  const { state: countsLoad } = useRequest(`admin-order-counts:${market}`, () =>
     Promise.all(
-      STATUS_FILTERS.map((f) => AdminReportApi.orders({ status: FILTER_STATUS[f], page: 1, pageSize: 1 })),
+      STATUS_FILTERS.map((f) =>
+        AdminReportApi.orders({ status: FILTER_STATUS[f], marketId: market || undefined, page: 1, pageSize: 1 }),
+      ),
     ).then((responses) => {
       const next: Partial<Record<Filter, number>> = {};
       STATUS_FILTERS.forEach((f, i) => {
