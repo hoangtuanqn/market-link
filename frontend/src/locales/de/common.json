@@ -498,6 +498,10 @@
           "title": "Farmer-Anträge",
           "note": "Wenn jemand auf MarketLink verkaufen möchte"
         },
+        "feedback": {
+          "title": "Rückmeldungen",
+          "note": "Wenn jemand einen Fehler meldet, einen Vorschlag macht oder eine Frage stellt"
+        },
         "qualityReports": {
           "title": "Meldungen über verdorbene Ware",
           "note": "Wenn bei Ware mit verlängerter Haltbarkeit vor ihrem Datum Verderb gemeldet wird"

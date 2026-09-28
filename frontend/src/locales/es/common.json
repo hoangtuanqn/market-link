@@ -498,6 +498,10 @@
           "title": "Solicitudes de Farmer",
           "note": "Cuando alguien solicita vender en MarketLink"
         },
+        "feedback": {
+          "title": "Comentarios",
+          "note": "Cuando alguien envía un informe de fallo, una sugerencia o una pregunta"
+        },
         "qualityReports": {
           "title": "Informes de producto dañado",
           "note": "Cuando se informa que un producto con vida útil ampliada se echó a perder antes de su fecha"

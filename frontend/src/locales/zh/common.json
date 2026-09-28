@@ -498,6 +498,10 @@
           "title": "农户申请",
           "note": "有人申请在 MarketLink 上销售时"
         },
+        "feedback": {
+          "title": "反馈",
+          "note": "有人提交缺陷报告、建议或问题时"
+        },
         "qualityReports": {
           "title": "变质商品报告",
           "note": "当延长保鲜期的商品在到期前被反映变质时"

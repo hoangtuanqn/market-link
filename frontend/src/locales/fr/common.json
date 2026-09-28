@@ -498,6 +498,10 @@
           "title": "Demandes Farmer",
           "note": "Quand quelqu’un demande à vendre sur MarketLink"
         },
+        "feedback": {
+          "title": "Retours",
+          "note": "Quand quelqu’un envoie un signalement de bug, une suggestion ou une question"
+        },
         "qualityReports": {
           "title": "Signalements de produits abîmés",
           "note": "Quand on signale qu’un produit à la durée de conservation prolongée est abîmé avant sa date"

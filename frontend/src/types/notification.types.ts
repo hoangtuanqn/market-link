@@ -42,7 +42,7 @@ export type NotificationFrame = {
 };
 
 export type NotificationCategoryCode =
-  'messages' | 'announcements' | 'account' | 'farmerApplications' | 'qualityReports';
+  'messages' | 'announcements' | 'account' | 'farmerApplications' | 'feedback' | 'qualityReports';
 
 export type NotificationCategoryPreference = {
   category: NotificationCategoryCode;

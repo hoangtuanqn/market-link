@@ -498,6 +498,10 @@
           "title": "Farmer 신청",
           "note": "누군가 MarketLink 판매를 신청했을 때"
         },
+        "feedback": {
+          "title": "의견",
+          "note": "누군가 버그 신고, 제안, 문의를 보냈을 때"
+        },
         "qualityReports": {
           "title": "상한 상품 신고",
           "note": "유통기한을 연장한 상품이 기한 전에 상했다고 신고되었을 때"

@@ -498,6 +498,10 @@
           "title": "Farmer の申請",
           "note": "誰かが MarketLink での販売を申請したとき"
         },
+        "feedback": {
+          "title": "フィードバック",
+          "note": "誰かが不具合報告、ご提案、ご質問を送ったとき"
+        },
         "qualityReports": {
           "title": "傷んだ商品の報告",
           "note": "賞味期限を延長した商品が、期限前に傷んでいると報告されたとき"

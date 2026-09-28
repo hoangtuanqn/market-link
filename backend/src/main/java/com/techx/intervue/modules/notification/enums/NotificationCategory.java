@@ -22,6 +22,8 @@ public enum NotificationCategory {
     /** FR-041: a favourite product is back in stock — both roles keep favourites (D-13). */
     FAVORITES("favorites", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     FARMER_APPLICATIONS("farmerApplications", EnumSet.of(RoleType.ADMIN)),
+    /** FR-081: someone sent the feedback form — admins only, its own row in Settings. */
+    FEEDBACK("feedback", EnumSet.of(RoleType.ADMIN)),
     /**
      * FR-122: spoiled produce on an extended shelf life (spec §4.6) — admins only, on by default.
      */

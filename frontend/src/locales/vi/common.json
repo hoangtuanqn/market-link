@@ -498,6 +498,10 @@
           "title": "Đơn đăng ký nhà vườn",
           "note": "Khi có người đăng ký bán hàng trên MarketLink"
         },
+        "feedback": {
+          "title": "Góp ý",
+          "note": "Khi có người gửi báo lỗi, đề xuất hoặc câu hỏi"
+        },
         "qualityReports": {
           "title": "Báo hàng hư",
           "note": "Khi khách báo hư món có hạn dùng do sạp kéo dài, trước hạn đã hứa"

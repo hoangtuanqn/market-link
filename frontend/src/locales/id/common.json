@@ -498,6 +498,10 @@
           "title": "Pendaftaran Farmer",
           "note": "Saat seseorang mendaftar berjualan di MarketLink"
         },
+        "feedback": {
+          "title": "Masukan",
+          "note": "Saat seseorang mengirim laporan bug, saran, atau pertanyaan"
+        },
         "qualityReports": {
           "title": "Laporan produk rusak",
           "note": "Saat produk dengan masa simpan yang diperpanjang dilaporkan rusak sebelum tanggalnya"

@@ -512,6 +512,10 @@
           "title": "Farmer applications",
           "note": "When someone applies to sell on MarketLink"
         },
+        "feedback": {
+          "title": "Feedback",
+          "note": "When someone sends a bug report, a suggestion or a question"
+        },
         "qualityReports": {
           "title": "Spoiled produce reports",
           "note": "When produce with an extended shelf life is reported spoiled before its date"
