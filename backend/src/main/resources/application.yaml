@@ -113,6 +113,15 @@ app:
     # Block one IP from sending many different emails
     max-requests-per-ip: 20
     window-seconds: 3600
+  # FR-009: 6-digit email code at sign-up (docs/superpowers/specs/2026-09-28-email-verification-design.md)
+  email-verification:
+    code-ttl-seconds: 600
+    pending-ttl-seconds: 1800
+    resend-cooldown-seconds: 60
+    max-attempts: 5
+    max-sends-per-email: 5
+    max-sends-per-ip: 20
+    window-seconds: 3600
   # FR-008: TOTP two-step verification for admins. encryption-key = 32 bytes Base64 that encrypts the TOTP key in the DB
   # (openssl rand -base64 32). The default value is for dev only; prod requires MFA_ENCRYPTION_KEY.
   mfa:
