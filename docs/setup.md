@@ -65,6 +65,9 @@ Demo accounts for every role (shared password `Demo@1234`) are listed in
 
 1. `make prod-init`, then replace **every** `<...>` value in `.env.production`. `make prod` refuses to start while
    one is left, so the API URL, the SMTP account and the email links cannot fall back to localhost or the log.
+   `COOKIE_SECURE` is `true` behind HTTPS. Set it to `false` **only** when the site is served over plain `http://`
+   on a host other than localhost: browsers drop the `Secure` refresh cookie there, so everyone would be signed out
+   when the 15-minute access token expires.
 2. `make prod` (from `main` or a release tag).
 3. Once the backend is up, run `make prod-seed` once. The admin seeder only runs in the `dev` and `local` profiles,
    so a fresh production database has **no admin** until this seed creates `admin@marketlink.vn` and the demo

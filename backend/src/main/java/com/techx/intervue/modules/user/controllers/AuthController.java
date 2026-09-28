@@ -91,7 +91,8 @@ public class AuthController extends BaseController {
                 CookieHelper.buildRefreshTokenCookie(
                         auth.refreshToken(),
                         Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
-                        auth.rememberMe());
+                        auth.rememberMe(),
+                        authConfig.isCookieSecure());
         RegisterResource body = new RegisterResource(auth.accessToken(), auth.user());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.toString())
@@ -165,7 +166,8 @@ public class AuthController extends BaseController {
                 CookieHelper.buildRefreshTokenCookie(
                         auth.refreshToken(),
                         Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
-                        auth.rememberMe());
+                        auth.rememberMe(),
+                        authConfig.isCookieSecure());
 
         LoginResource body =
                 new LoginResource(
@@ -187,7 +189,9 @@ public class AuthController extends BaseController {
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
                     String refreshToken) {
         userService.logout(user.getId(), accessToken, refreshToken);
-        ResponseCookie clearCookie = CookieHelper.buildRefreshTokenCookie("", Duration.ZERO);
+        ResponseCookie clearCookie =
+                CookieHelper.buildRefreshTokenCookie(
+                        "", Duration.ZERO, authConfig.isCookieSecure());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
                 .body(ApiResource.success(null, "Signed out."));
@@ -215,7 +219,9 @@ public class AuthController extends BaseController {
             @AuthenticationPrincipal CustomUserDetails user,
             @Valid @RequestBody ChangePasswordRequest request) {
         userService.changePassword(user.getId(), request);
-        ResponseCookie clearCookie = CookieHelper.buildRefreshTokenCookie("", Duration.ZERO);
+        ResponseCookie clearCookie =
+                CookieHelper.buildRefreshTokenCookie(
+                        "", Duration.ZERO, authConfig.isCookieSecure());
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
                 .body(
@@ -240,7 +246,8 @@ public class AuthController extends BaseController {
                 CookieHelper.buildRefreshTokenCookie(
                         auth.refreshToken(),
                         Duration.ofDays(authConfig.getRefreshTokenTTLDays()),
-                        auth.rememberMe());
+                        auth.rememberMe(),
+                        authConfig.isCookieSecure());
 
         RefreshResource body = new RefreshResource(auth.accessToken(), auth.user());
         return ResponseEntity.ok()
