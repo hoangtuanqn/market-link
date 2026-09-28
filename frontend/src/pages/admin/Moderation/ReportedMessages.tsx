@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ModerationApi from '@/api-requests/moderation.requests';
 import ChatPhoto from '@/components/chat/ChatPhoto';
+import ChatVideo from '@/components/chat/ChatVideo';
 import { Button } from '@/components/ui/button';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
@@ -131,6 +132,9 @@ function ReportDetailDialog({
                 attachment={{ attachmentId: m.attachmentId, width: null, height: null }}
                 alt={t('messages.photo')}
               />
+            ) : null}
+            {m.hasVideo && m.attachmentId ? (
+              <ChatVideo key={m.attachmentId} attachmentId={m.attachmentId} label={t('messages.video')} />
             ) : null}
             {m.body ? <div className="whitespace-pre-wrap">{m.body}</div> : null}
           </li>

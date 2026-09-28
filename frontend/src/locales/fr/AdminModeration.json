@@ -73,6 +73,7 @@
     "emptyTitle": "Aucun message signalé",
     "emptyText": "Quand un client ou un stand signale un message, il vous attend ici.",
     "photo": "Photo",
+    "video": "Vidéo",
     "reason": {
       "spam": "Spam ou publicité",
       "abuse": "Grossier ou injurieux",

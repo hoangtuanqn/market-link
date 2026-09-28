@@ -73,6 +73,7 @@
     "emptyTitle": "Không có tin nhắn bị báo cáo",
     "emptyText": "Khi khách hoặc sạp báo cáo một tin nhắn, nó sẽ chờ bạn ở đây.",
     "photo": "Ảnh",
+    "video": "Video",
     "reason": {
       "spam": "Spam hoặc quảng cáo",
       "abuse": "Thô lỗ hoặc xúc phạm",
