@@ -4,11 +4,11 @@ import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.exceptions.FarmerMarketNotFoundException;
 import com.techx.intervue.modules.stall.exceptions.FarmerMarketNotYoursException;
 import com.techx.intervue.modules.stall.exceptions.MarketAlreadyJoinedException;
-import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
 import com.techx.intervue.modules.stall.repositories.FarmerOperatingDayRepository;
 import com.techx.intervue.modules.stall.repositories.StallQueryRepository;
@@ -84,6 +84,7 @@ public class StallService implements StallServiceInterface {
     @Transactional
     public StallDetailResource updateProfile(long userId, StallProfileRequest request) {
         FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
         int cutoff = request.orderCutoffHours();
         if (cutoff < MIN_CUTOFF_HOURS || cutoff > MAX_CUTOFF_HOURS) {
             throw new IllegalArgumentException("Order cutoff must be between 1 and 72 hours.");
@@ -100,7 +101,7 @@ public class StallService implements StallServiceInterface {
     @Transactional
     public StallMarketResource joinMarket(long userId, JoinMarketRequest request) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         if (!queryRepository.marketExists(request.marketId())) {
             throw new IllegalArgumentException("Unknown market.");
         }
@@ -131,6 +132,7 @@ public class StallService implements StallServiceInterface {
     @Transactional
     public void leaveMarket(long userId, long farmerMarketId) {
         FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
         FarmerMarket link = owned(profile, farmerMarketId);
         link.setActive(false);
         farmerMarketRepository.save(link);
@@ -141,7 +143,7 @@ public class StallService implements StallServiceInterface {
     public StallMarketResource setDays(
             long userId, long farmerMarketId, OperatingDaysRequest request) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         FarmerMarket link = owned(profile, farmerMarketId);
 
         Set<Integer> seen = new HashSet<>();
@@ -172,12 +174,6 @@ public class StallService implements StallServiceInterface {
         return farmerProfileRepository
                 .findByUserId(userId)
                 .orElseThrow(FarmerProfileNotFoundException::new);
-    }
-
-    private static void requireApproved(FarmerProfile profile) {
-        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new StallNotApprovedException();
-        }
     }
 
     private FarmerMarket owned(FarmerProfile profile, long farmerMarketId) {

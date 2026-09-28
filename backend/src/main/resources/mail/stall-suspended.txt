@@ -1,0 +1,19 @@
+{{title}}
+
+{{greeting}}
+{{intro}}
+{{stallName}}
+
+{{detailsTitle}}
+{{reasonLabel}}: {{reason}}
+{{durationLabel}}: {{duration}}
+
+{{whatNow}}
+
+{{ordersNote}}
+
+{{contact}}
+
+--
+{{tagline}}
+{{footerNote}}

@@ -36,6 +36,26 @@
     "customer": "Akun dibuat sebagai pelanggan",
     "byAdmin": "Admin"
   },
+  "statusHistory": {
+    "title": "Riwayat lapak",
+    "noun": "riwayat lapak",
+    "system": "Sistem (otomatis)",
+    "col": {
+      "when": "Kapan",
+      "action": "Tindakan",
+      "reason": "Alasan",
+      "until": "Sampai",
+      "by": "Oleh"
+    },
+    "action": {
+      "approved": "Dibuka kembali",
+      "suspended": "Ditangguhkan"
+    },
+    "empty": {
+      "title": "Belum ada riwayat",
+      "text": "Setiap penangguhan atau pembukaan kembali lapak ini akan tampil di sini."
+    }
+  },
   "applicant": {
     "title": "Pemohon",
     "name": "Nama",

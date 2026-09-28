@@ -8,12 +8,17 @@
   },
   "tabsLabel": "Producteurs par statut",
   "status": {
+    "all": "Tous",
     "pending": "En attente de validation",
     "approved": "Validés",
     "suspended": "Suspendus",
     "rejected": "Refusés"
   },
   "empty": {
+    "all": {
+      "title": "Aucun agriculteur",
+      "text": "Les inscriptions d'agriculteurs apparaîtront ici."
+    },
     "pending": {
       "title": "Aucune candidature en attente",
       "text": "Les nouvelles candidatures de producteurs arrivent ici pour examen avant de pouvoir proposer des produits."

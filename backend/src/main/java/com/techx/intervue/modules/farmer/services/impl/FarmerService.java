@@ -1,11 +1,13 @@
 package com.techx.intervue.modules.farmer.services.impl;
 
+import com.techx.intervue.helpers.TransactionHelper;
 import com.techx.intervue.modules.farmer.entities.FarmerApplicationHistory;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerApplicationExistsException;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.exceptions.InvalidApprovalTransitionException;
+import com.techx.intervue.modules.farmer.repositories.AdminFarmerStatusHistoryQueryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerApplicationHistoryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.farmer.requests.FarmerApplicationRequest;
@@ -13,6 +15,7 @@ import com.techx.intervue.modules.farmer.requests.RejectFarmerRequest;
 import com.techx.intervue.modules.farmer.requests.SuspendFarmerRequest;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource;
+import com.techx.intervue.modules.farmer.resources.AdminFarmerStatusHistoryResource;
 import com.techx.intervue.modules.farmer.resources.FarmerApplicationHistoryResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.farmer.services.interfaces.FarmerServiceInterface;
@@ -25,6 +28,7 @@ import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.resources.PageResource;
+import com.techx.intervue.services.interfaces.JobQueueInterface;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
@@ -60,7 +64,11 @@ import org.springframework.util.StringUtils;
 @AllArgsConstructor
 public class FarmerService implements FarmerServiceInterface {
 
+    public static final String JOB_NOTIFY_SUSPENDED = "farmer.notify-suspended";
+    public static final String JOB_NOTIFY_REINSTATED = "farmer.notify-reinstated";
+
     private static final String LIST_SEPARATOR = ";";
+    private static final int MAX_PAGE_SIZE = 50;
 
     /**
      * A freshly uploaded image that has not yet been sent with an application is not garbage — only
@@ -74,6 +82,9 @@ public class FarmerService implements FarmerServiceInterface {
     private final UserRepository userRepository;
     private final UserSessionCache userSessionCache;
     private final NotificationServiceInterface notifications;
+    private final FarmerStatusHistoryWriter statusHistory;
+    private final JobQueueInterface jobQueue;
+    private final AdminFarmerStatusHistoryQueryRepository statusHistoryQueries;
 
     /**
      * §4: create a PENDING profile, does not accept approval_status from the client.
@@ -318,13 +329,44 @@ public class FarmerService implements FarmerServiceInterface {
             throw new InvalidApprovalTransitionException(
                     "Only an approved farmer can be suspended.");
         }
+        if (request.until() != null && !request.until().isAfter(Instant.now())) {
+            throw new InvalidFieldException(
+                    "until", "The suspension end time must be in the future.");
+        }
+        ApprovalStatus from = profile.getApprovalStatus();
+        String reason = request.reason().trim();
         profile.setApprovalStatus(ApprovalStatus.SUSPENDED);
-        profile.setSuspendReason(request.reason().trim());
+        profile.setSuspendReason(reason);
         profile.setSuspendedBy(adminUserId);
         profile.setSuspendedAt(Instant.now());
+        profile.setSuspendedUntil(request.until());
         farmerProfileRepository.save(profile);
+        statusHistory.record(
+                profile.getId(),
+                from,
+                ApprovalStatus.SUSPENDED,
+                reason,
+                request.until(),
+                adminUserId);
         tellOwner(profile, NotificationKind.FARMER_SUSPENDED, "/farmer/pending", Map.of());
-        return toDetailResource(profile, findOwnerOrThrow(profile));
+
+        // The Redis kick and the email only run once the transaction commits: a rollback must not
+        // leave the Farmer signed out and emailed about a suspension that never took effect.
+        User owner = findOwnerOrThrow(profile);
+        Long ownerId = owner.getId();
+        Map<String, String> payload = new HashMap<>();
+        payload.put("userId", String.valueOf(ownerId));
+        payload.put("email", owner.getEmail());
+        payload.put("fullName", owner.getFullName());
+        payload.put("stallName", profile.getStallName());
+        payload.put("reason", reason);
+        payload.put("until", request.until() == null ? "" : request.until().toString());
+        TransactionHelper.afterCommit(
+                () -> {
+                    userSessionCache.revokeAll(ownerId);
+                    jobQueue.enqueue(JOB_NOTIFY_SUSPENDED, payload);
+                });
+        return toDetailResource(profile, owner);
     }
 
     /**
@@ -334,22 +376,41 @@ public class FarmerService implements FarmerServiceInterface {
      */
     @Override
     @Transactional
-    public AdminFarmerDetailResource reinstate(Long farmerId) {
+    public AdminFarmerDetailResource reinstate(Long farmerId, Long actorId) {
         FarmerProfile profile = findProfileOrThrow(farmerId);
         if (profile.getApprovalStatus() != ApprovalStatus.SUSPENDED) {
             throw new InvalidApprovalTransitionException(
                     "Only a suspended farmer can be reinstated.");
         }
+        ApprovalStatus from = profile.getApprovalStatus();
         profile.setApprovalStatus(ApprovalStatus.APPROVED);
         // Once a suspension is lifted the old reason is no longer true: the Farmer should not see
-        // the red banner from the
-        // last time.
+        // the red banner from the last time, and a later suspension must not inherit this expiry.
         profile.setSuspendReason(null);
         profile.setSuspendedBy(null);
         profile.setSuspendedAt(null);
+        profile.setSuspendedUntil(null);
         farmerProfileRepository.save(profile);
+        statusHistory.record(profile.getId(), from, ApprovalStatus.APPROVED, null, null, actorId);
         tellOwner(profile, NotificationKind.FARMER_REINSTATED, "/farmer", Map.of());
-        return toDetailResource(profile, findOwnerOrThrow(profile));
+
+        User owner = findOwnerOrThrow(profile);
+        Map<String, String> payload = new HashMap<>();
+        payload.put("userId", String.valueOf(owner.getId()));
+        payload.put("email", owner.getEmail());
+        payload.put("fullName", owner.getFullName());
+        payload.put("stallName", profile.getStallName());
+        TransactionHelper.afterCommit(() -> jobQueue.enqueue(JOB_NOTIFY_REINSTATED, payload));
+        return toDetailResource(profile, owner);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<AdminFarmerStatusHistoryResource> statusHistory(
+            long farmerId, int page, int pageSize) {
+        findProfileOrThrow(farmerId); // 404s for an id that is not a farmer, same rule as detail
+        return statusHistoryQueries.search(
+                farmerId, Math.max(1, page), Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize)));
     }
 
     /**

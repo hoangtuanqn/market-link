@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import CatalogApi, { type CategoryType } from '@/api-requests/catalog.requests';
-import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -13,6 +12,7 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import CategoryTableSkeleton from './CategoryTableSkeleton';
 
 type CategoryRow = CategoryType;
 const NO_CATEGORIES: CategoryRow[] = [];
@@ -59,6 +59,15 @@ const AdminCategoriesPage = () => {
   const [moveTo, setMoveTo] = useState('');
   const [busyId, setBusyId] = useState<number | null>(null);
   const [page, setPage] = useState(1);
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const totalPages = Math.max(1, Math.ceil(categories.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -237,8 +246,8 @@ const AdminCategoriesPage = () => {
         {/* min-w-0: a flex item defaults to min-width:auto, so without it this column grows to the table's
             natural width and the table's own overflow-x-auto never gets a chance to scroll. */}
         <div className="flex h-full min-h-[440px] min-w-0 flex-1 flex-col">
-          {load.kind === 'loading' ? (
-            <MarketCardSkeleton count={3} />
+          {load.kind === 'loading' || initialLoading ? (
+            <CategoryTableSkeleton />
           ) : load.kind === 'error' ? (
             <LoadError noun={t('error.noun')} onRetry={retry} />
           ) : categories.length ? (

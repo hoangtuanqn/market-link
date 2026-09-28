@@ -44,7 +44,7 @@ describe('Rejecting a Farmer application with reason chips (FR-071)', () => {
       this.removeAttribute('open');
     };
     vi.spyOn(AdminFarmerApi, 'list').mockImplementation(async (params) =>
-      page(params.status === 'pending' ? [pending] : []),
+      page(!params.status || params.status === 'all' || params.status === 'pending' ? [pending] : []),
     );
   });
 
