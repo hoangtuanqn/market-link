@@ -89,6 +89,27 @@ class UserServiceMfaTest {
         verify(refreshTokenService, never()).issueRefreshToken(anyLong(), anyBoolean());
     }
 
+    /** FR-008: before the code is checked the answer must not hand out the admin's profile. */
+    @Test
+    void pendingAnswerCarriesOnlyTheEmail() {
+        User admin = user(1L, RoleType.ADMIN);
+        admin.setPhone("0900000001");
+        admin.setAddress("3 Le Duan");
+        when(mfaService.isEnabled(1L)).thenReturn(true);
+        when(mfaService.startChallenge(1L, false)).thenReturn("pending-token");
+
+        AuthResult result =
+                service.authenticate(new LoginRequest(admin.getEmail(), "secret", false, null));
+
+        assertThat(result.user().email()).isEqualTo(admin.getEmail());
+        assertThat(result.user().id()).isNull();
+        assertThat(result.user().fullName()).isNull();
+        assertThat(result.user().phone()).isNull();
+        assertThat(result.user().address()).isNull();
+        assertThat(result.user().addressParts()).isNull();
+        assertThat(result.user().role()).isNull();
+    }
+
     @Test
     void adminWithoutMfaSignsInAsBefore() {
         user(1L, RoleType.ADMIN);

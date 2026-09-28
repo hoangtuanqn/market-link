@@ -368,13 +368,15 @@ public class UserService extends BaseService implements UserServiceInterface {
 
     /**
      * FR-008: an admin with 2FA on → only return the pending token; an admin who has never set up
-     * 2FA → issue session with mfaSetupRequired = true; otherwise issue the session as before.
+     * 2FA → issue session with mfaSetupRequired = true; otherwise issue the session as before. The
+     * pending answer carries only the email (the code screen shows it): the profile — phone,
+     * address — waits until the code is right.
      */
     private AuthResult issueTokensOrChallenge(User user, boolean rememberMe) {
         if (user.getRole() == RoleType.ADMIN) {
             if (mfaService.isEnabled(user.getId())) {
                 return AuthResult.mfaPending(
-                        toResource(user),
+                        UserResource.builder().email(user.getEmail()).build(),
                         rememberMe,
                         mfaService.startChallenge(user.getId(), rememberMe));
             }
