@@ -31,7 +31,8 @@
       "unavailable": "Produk disembunyikan dari pelanggan sampai Anda mengaktifkannya lagi."
     },
     "deleted": "Dihapus",
-    "deletedText": "{{name}} dihapus."
+    "deletedText": "{{name}} dihapus.",
+    "stockAdjusted": "Stok untuk {{day}} telah diperbarui."
   },
   "dialog": {
     "title": "Hapus {{name}}?",
@@ -47,5 +48,18 @@
   "empty": {
     "title": "Belum ada produk",
     "text": "Tambahkan produk pertama Anda dan langsung muncul di halaman kios Anda."
+  },
+  "adjust": "Sesuaikan",
+  "adjustDialog": {
+    "title": "Sesuaikan stok untuk {{day}}",
+    "quantity": "Unit yang tersedia",
+    "price": "Harga untuk hari ini (opsional)",
+    "priceHint": "Biarkan kosong untuk mempertahankan harga saat ini.",
+    "cancel": "Batal",
+    "confirm": "Simpan",
+    "error": {
+      "quantity": "Masukkan bilangan bulat 0 atau lebih.",
+      "price": "Masukkan harga 0 atau lebih."
+    }
   }
 }

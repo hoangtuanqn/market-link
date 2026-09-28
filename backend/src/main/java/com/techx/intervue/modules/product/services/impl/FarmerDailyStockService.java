@@ -51,9 +51,12 @@ public class FarmerDailyStockService implements FarmerDailyStockServiceInterface
 
         int dayOfWeek = date.getDayOfWeek().getValue() % 7;
         dailyStock.materialize(productId, date, dayOfWeek);
+        // Locked read, not a plain find: a concurrent order placing on this same (product, date)
+        // row
+        // must not lost-update this write, or vice versa (same hazard OrderService guards against).
         ProductDailyStock row =
                 dailyStock
-                        .findByProductIdAndStockDate(productId, date)
+                        .lockByProductIdAndStockDate(productId, date)
                         .orElseThrow(
                                 () ->
                                         new IllegalArgumentException(

@@ -31,7 +31,8 @@
       "unavailable": "元に戻すまで、商品はお客様に表示されません。"
     },
     "deleted": "削除しました",
-    "deletedText": "{{name}} を削除しました。"
+    "deletedText": "{{name}} を削除しました。",
+    "stockAdjusted": "{{day}} の在庫を更新しました。"
   },
   "dialog": {
     "title": "{{name}} を削除しますか？",
@@ -47,5 +48,18 @@
   "empty": {
     "title": "商品はまだありません",
     "text": "最初の商品を追加すると、すぐに出店ページに表示されます。"
+  },
+  "adjust": "調整",
+  "adjustDialog": {
+    "title": "{{day}} の在庫を調整",
+    "quantity": "利用可能な数量",
+    "price": "この日の価格（任意）",
+    "priceHint": "空欄のままにすると現在の価格を維持します。",
+    "cancel": "キャンセル",
+    "confirm": "保存",
+    "error": {
+      "quantity": "0以上の整数を入力してください。",
+      "price": "0以上の価格を入力してください。"
+    }
   }
 }

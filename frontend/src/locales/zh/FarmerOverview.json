@@ -39,7 +39,7 @@
     "complete": "标记为完成",
     "view": "查看"
   },
-  "greeting": "早上好，{{name}}",
+  "title": "概览",
   "applyTemplate": "套用每周模板",
   "addProduct": "添加商品",
   "banner": {

@@ -39,7 +39,7 @@
     "complete": "Đánh dấu hoàn tất",
     "view": "Xem"
   },
-  "greeting": "Chào buổi sáng, {{name}}",
+  "title": "Tổng quan",
   "applyTemplate": "Áp dụng mẫu tuần",
   "addProduct": "Thêm sản phẩm",
   "banner": {

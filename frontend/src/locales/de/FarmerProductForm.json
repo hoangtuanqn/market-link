@@ -62,7 +62,11 @@
     "uploading": "Wird hochgeladen",
     "uploadInProgress": "Warten Sie, bis das Foto hochgeladen ist, bevor Sie speichern.",
     "alt": "Produktfoto",
-    "hint": "JPEG, PNG oder WEBP, bis 8 MB. Nah, bei Tageslicht, auf Holz oder Papier."
+    "hint": "JPEG, PNG oder WEBP, bis 8 MB. Nah, bei Tageslicht, auf Holz oder Papier.",
+    "error": {
+      "tooLarge": "Das Foto darf höchstens 8 MB groß sein.",
+      "type": "Fotos müssen JPEG, PNG oder WEBP sein."
+    }
   },
   "save": "Produkt speichern",
   "add": "Produkt hinzufügen",
@@ -88,6 +92,6 @@
   },
   "errors": {
     "required": "Dieses Feld ist erforderlich.",
-    "price": "Der Preis muss 0 oder höher sein."
+    "price": "Der Preis muss größer als 0 sein."
   }
 }

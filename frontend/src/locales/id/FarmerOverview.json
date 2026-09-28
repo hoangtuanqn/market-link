@@ -39,7 +39,7 @@
     "complete": "Tandai selesai",
     "view": "Lihat"
   },
-  "greeting": "Selamat pagi, {{name}}",
+  "title": "Ringkasan",
   "applyTemplate": "Terapkan templat mingguan",
   "addProduct": "Tambah produk",
   "banner": {

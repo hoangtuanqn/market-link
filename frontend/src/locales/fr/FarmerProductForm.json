@@ -62,7 +62,11 @@
     "uploading": "Envoi en cours",
     "uploadInProgress": "Attendez la fin de l'envoi de la photo avant d'enregistrer.",
     "alt": "Photo du produit",
-    "hint": "JPEG, PNG ou WEBP, 8 Mo maximum. En gros plan, à la lumière naturelle, sur du bois ou du papier."
+    "hint": "JPEG, PNG ou WEBP, 8 Mo maximum. En gros plan, à la lumière naturelle, sur du bois ou du papier.",
+    "error": {
+      "tooLarge": "La photo doit faire 8 Mo ou moins.",
+      "type": "Les photos doivent être au format JPEG, PNG ou WEBP."
+    }
   },
   "save": "Enregistrer le produit",
   "add": "Ajouter le produit",
@@ -88,6 +92,6 @@
   },
   "errors": {
     "required": "Ce champ est obligatoire.",
-    "price": "Le prix doit être supérieur ou égal à 0."
+    "price": "Le prix doit être supérieur à 0."
   }
 }

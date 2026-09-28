@@ -62,7 +62,11 @@
     "uploading": "上传中",
     "uploadInProgress": "请等照片上传完成后再保存。",
     "alt": "产品照片",
-    "hint": "JPEG、PNG 或 WEBP，最大 8 MB。近距离、自然光，放在木板或纸上拍摄。"
+    "hint": "JPEG、PNG 或 WEBP，最大 8 MB。近距离、自然光，放在木板或纸上拍摄。",
+    "error": {
+      "tooLarge": "照片必须小于或等于 8 MB。",
+      "type": "照片必须是 JPEG、PNG 或 WEBP 格式。"
+    }
   },
   "save": "保存商品",
   "add": "添加商品",
@@ -88,6 +92,6 @@
   },
   "errors": {
     "required": "此项为必填。",
-    "price": "价格必须大于或等于 0。"
+    "price": "价格必须大于 0。"
   }
 }

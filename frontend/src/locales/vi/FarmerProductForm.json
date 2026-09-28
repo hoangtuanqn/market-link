@@ -62,7 +62,11 @@
     "uploading": "Đang tải lên",
     "uploadInProgress": "Đợi ảnh tải xong rồi hãy lưu.",
     "alt": "Ảnh sản phẩm",
-    "hint": "JPEG, PNG hoặc WEBP, tối đa 8 MB. Chụp cận, ánh sáng tự nhiên, trên nền gỗ hoặc giấy."
+    "hint": "JPEG, PNG hoặc WEBP, tối đa 8 MB. Chụp cận, ánh sáng tự nhiên, trên nền gỗ hoặc giấy.",
+    "error": {
+      "tooLarge": "Ảnh phải nhỏ hơn hoặc bằng 8 MB.",
+      "type": "Ảnh phải ở định dạng JPEG, PNG hoặc WEBP."
+    }
   },
   "save": "Lưu sản phẩm",
   "add": "Thêm sản phẩm",
@@ -88,6 +92,6 @@
   },
   "errors": {
     "required": "Trường này là bắt buộc.",
-    "price": "Giá phải từ 0 trở lên."
+    "price": "Giá phải lớn hơn 0."
   }
 }

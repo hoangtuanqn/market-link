@@ -31,7 +31,8 @@
       "unavailable": "El producto queda oculto para los clientes hasta que lo vuelvas a activar."
     },
     "deleted": "Eliminado",
-    "deletedText": "{{name}} eliminado."
+    "deletedText": "{{name}} eliminado.",
+    "stockAdjusted": "Existencias actualizadas para {{day}}."
   },
   "dialog": {
     "title": "¿Eliminar {{name}}?",
@@ -47,5 +48,18 @@
   "empty": {
     "title": "Todavía no hay productos",
     "text": "Añade tu primer producto y aparecerá de inmediato en la página de tu puesto."
+  },
+  "adjust": "Ajustar",
+  "adjustDialog": {
+    "title": "Ajustar existencias para {{day}}",
+    "quantity": "Unidades disponibles",
+    "price": "Precio para este día (opcional)",
+    "priceHint": "Déjelo en blanco para mantener el precio actual.",
+    "cancel": "Cancelar",
+    "confirm": "Guardar",
+    "error": {
+      "quantity": "Ingrese un número entero de 0 o más.",
+      "price": "Ingrese un precio de 0 o más."
+    }
   }
 }

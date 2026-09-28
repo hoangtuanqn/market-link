@@ -62,7 +62,11 @@
     "uploading": "Uploading",
     "uploadInProgress": "Wait for the photo to finish uploading, then save.",
     "alt": "Product photo",
-    "hint": "JPEG, PNG or WEBP, up to 8 MB. Close up, natural light, on wood or paper."
+    "hint": "JPEG, PNG or WEBP, up to 8 MB. Close up, natural light, on wood or paper.",
+    "error": {
+      "tooLarge": "The photo must be 8 MB or smaller.",
+      "type": "Photos must be JPEG, PNG or WEBP."
+    }
   },
   "save": "Save product",
   "add": "Add product",
@@ -88,6 +92,6 @@
   },
   "errors": {
     "required": "This field is required.",
-    "price": "Price must be 0 or more."
+    "price": "Price must be greater than 0."
   }
 }

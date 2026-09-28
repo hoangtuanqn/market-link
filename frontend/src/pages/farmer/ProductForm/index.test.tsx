@@ -65,7 +65,7 @@ describe('FarmerProductFormPage', () => {
     expect(qty).toHaveValue('-1');
 
     await userEvent.click(screen.getByRole('button', { name: /Add product/ }));
-    expect(screen.getByText('Price must be 0 or more.')).toBeInTheDocument();
+    expect(screen.getByText('Price must be greater than 0.')).toBeInTheDocument();
     expect(screen.getByText(/Quantity must be 0 or more/)).toBeInTheDocument();
     expect(ProductApi.create).not.toHaveBeenCalled();
   });

@@ -39,7 +39,7 @@
     "complete": "Mark completed",
     "view": "View"
   },
-  "greeting": "Morning, {{name}}",
+  "title": "Overview",
   "applyTemplate": "Apply weekly template",
   "addProduct": "Add product",
   "banner": {
