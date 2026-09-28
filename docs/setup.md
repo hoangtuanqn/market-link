@@ -7,8 +7,8 @@ enable Web Push, or when something fails.
 **Contents:** [Prerequisites](#1-prerequisites) · [Option A — Docker](#2-option-a--run-everything-in-docker) ·
 [Option B — on your machine](#3-option-b--run-the-backend-and-frontend-on-your-machine) ·
 [Useful commands](#4-useful-commands) · [Web Push](#5-web-push-notifications-after-the-tab-is-closed) ·
-[Shopping assistant](#6-shopping-assistant-answered-by-claude) ·
-[Chat check](#7-chat--manual-two-browser-check-fr-111-fr-115-fr-116) · [Troubleshooting](#8-troubleshooting)
+[Shopping assistant](#6-shopping-assistant-answered-by-claude) · [Email](#7-email-smtp--sign-up-codes-and-password-reset) ·
+[Chat check](#8-chat--manual-two-browser-check-fr-111-fr-115-fr-116) · [Troubleshooting](#9-troubleshooting)
 
 ## 1. Prerequisites
 
@@ -319,7 +319,35 @@ SQL (CLAUDE.md R-04). How it works: [`chatbot-design.md`](chatbot-design.md).
 With no key, over the hourly limit, or when the API fails, the keyword engine answers instead, so the assistant
 never stops replying.
 
-## 7. Chat — manual two-browser check (FR-111, FR-115, FR-116)
+## 7. Email (SMTP) — sign-up codes and password reset
+
+Signing up with an email sends a 6-digit code to that address (FR-009, `docs/decisions.md` D-14), and "Forgot
+password" sends a reset link (FR-007). Both go through one SMTP account.
+
+1. With Gmail: turn on 2-Step Verification for the sending account, then create an **App Password**
+   (Google Account → Security → App passwords). Use that 16-character password, not the account password.
+2. Put it in `.env` (production: `.env.production`):
+
+   ```env
+   MAIL_HOST=smtp.gmail.com
+   MAIL_PORT=587
+   MAIL_USERNAME=<sending address>
+   MAIL_PASSWORD=<app password>
+   ```
+
+3. Run `make up` again (or restart the backend with the variables exported, for option B).
+
+**No SMTP yet?** Leave `MAIL_USERNAME` empty. Nothing is sent; the backend writes each mail to its log instead, so
+a sign-up can still be finished locally:
+
+```bash
+docker logs -f intervue-backend 2>&1 | grep -A14 'Mail is not configured'
+```
+
+The code is on its own line under "Your code". Limits (spec §5): one code a minute, 5 per address and 20 per IP an
+hour, 5 wrong tries per code, 10 minutes per code.
+
+## 8. Chat — manual two-browser check (FR-111, FR-115, FR-116)
 
 Spec §13 asks for the realtime path to be checked by hand, because unit tests mock the broker.
 Run this once before a demo.
@@ -340,7 +368,7 @@ Run this once before a demo.
 8. Still as admin, open the photo URL of the **reported** message → **200**. Open the photo URL of a
    **neighbouring** message → **403**.
 
-## 8. Troubleshooting
+## 9. Troubleshooting
 
 | Error | Cause | Fix |
 |---|---|---|

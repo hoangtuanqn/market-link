@@ -65,12 +65,13 @@ Mọi response, kể cả lỗi, đều là hình dạng này. Sinh ra từ `Api
 - `traceId` lấy từ `TraceIdFilter`, cũng được trả trong header `X-Trace-Id`. Báo lỗi thì đính kèm mã này.
 - FE đọc lỗi qua `Helper.getErrorMessage`, `Helper.getErrorCode` và `Helper.getFieldErrors`.
 
-HTTP: 200 đọc · 201 tạo · 400 validation · 401 chưa đăng nhập · 403 sai quyền · 404 không thấy
-· 409 xung đột trạng thái (hết hàng, slot đầy, quá cutoff) · 429 quá số lần cho phép.
+HTTP: 200 đọc · 201 tạo · 202 đã nhận, chưa tạo (đăng ký chờ mã, FR-009) · 400 validation · 401 chưa đăng nhập
+· 403 sai quyền · 404 không thấy · 409 xung đột trạng thái (hết hàng, slot đầy, quá cutoff)
+· 410 không còn nữa (đăng ký chờ mã đã hết hạn) · 429 quá số lần cho phép, kèm header `Retry-After` (giây).
 
 ---
 
-## 1. Auth — FR-001…008
+## 1. Auth — FR-001…009
 
 **Toàn bộ mục này đã chạy trong code.** Endpoint nào có dấu ⚑ là nhóm tự thêm, đề không yêu cầu.
 
@@ -78,17 +79,32 @@ HTTP: 200 đọc · 201 tạo · 400 validation · 401 chưa đăng nhập · 40
 
 | Method | Path | Role | Request | data trả về |
 |---|---|---|---|---|
-| POST | `/api/v1/auth/register` | Guest | `{ fullName, phone, email, addressParts, password, confirmPassword }` | `{ accessToken, user }` · 201 |
+| POST | `/api/v1/auth/register` | Guest | `{ fullName, phone, email, addressParts, password, confirmPassword, language?, website? }` | `{ email, codeExpiresInSeconds, resendAvailableInSeconds }` · **202** |
+| POST | `/api/v1/auth/register/verify` | Guest | `{ email, code }` | `{ accessToken, user }` · 201 |
+| POST | `/api/v1/auth/register/resend` | Guest | `{ email }` | `{ email, codeExpiresInSeconds, resendAvailableInSeconds }` |
 | POST | `/api/v1/auth/login` | Guest | `{ email, password, rememberMe?, requiredRole? }` | `{ accessToken, user, mfaRequired, mfaToken }` |
 | POST | `/api/v1/auth/refresh` ⚑ | Guest | — (đọc cookie `refresh_token`) | `{ accessToken, user }` |
 | POST | `/api/v1/auth/logout` | All | — | `null` |
 
-- Đăng ký và đăng nhập thành công đều trả kèm header `Set-Cookie: refresh_token=…; HttpOnly`.
+- `register/verify` và đăng nhập thành công đều trả kèm header `Set-Cookie: refresh_token=…; HttpOnly`.
 - `rememberMe` không gửi thì coi như `true`. `false` thì cookie là cookie phiên, đóng trình duyệt là mất.
 - `requiredRole` để trang đăng nhập admin gửi `"admin"` (FR-004). Sai vai thì **403**, và
   **không** cấp token hay cookie, để không ghi đè phiên đang có trong trình duyệt.
 - `mfaRequired = true` nghĩa là chưa có phiên: `accessToken` là `null`, FE chuyển sang màn nhập mã.
 - `addressParts` là địa chỉ có cấu trúc, xem §3a. Bắt buộc khi đăng ký; server tự ghép chuỗi `user.address`.
+- **FR-009 (D-14):** `register` **chưa tạo tài khoản**. Server kiểm tra form (400, 409 `DUPLICATE_ACCOUNT` như cũ),
+  lưu tạm 30 phút trong Redis và gửi mã 6 số tới email. `register/verify` với mã đúng mới tạo tài khoản và đăng
+  nhập. `language` (một trong `en vi zh ja ko fr es de th id`, khác → `en`) là ngôn ngữ của mail. `website` là ô
+  bẫy bot: form thật luôn gửi rỗng; có nội dung thì server vẫn trả 202 nhưng không làm gì.
+- Gửi lại `register` cùng email trong 60 giây chờ: cập nhật thông tin đã lưu tạm, **không** gửi mã mới, trả số giây
+  chờ còn lại trong `resendAvailableInSeconds`.
+
+| Mã lỗi (FR-009) | HTTP | Khi nào | `details` |
+|---|---|---|---|
+| `SIGNUP_CODE_INVALID` | 400 | sai mã | `[{field:"code"}, {field:"attemptsLeft", message:"3"}]` — số lần còn lại của mã này |
+| `SIGNUP_CODE_EXPIRED` | 400 | mã hết hạn (10 phút) hoặc sai đủ 5 lần | — |
+| `SIGNUP_EXPIRED` | 410 | bản lưu tạm hết hạn (30 phút) → điền form lại | — |
+| `RATE_LIMITED` | 429 | gửi lại trong 60 giây, quá 5 mã/email/giờ hoặc 20 mã/IP/giờ | header `Retry-After` |
 
 ### 1.2 Mật khẩu
 
