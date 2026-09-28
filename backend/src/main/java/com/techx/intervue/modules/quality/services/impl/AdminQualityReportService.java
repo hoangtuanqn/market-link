@@ -174,7 +174,7 @@ public class AdminQualityReportService implements AdminQualityReportServiceInter
 
     /**
      * Back to the suggestion recorded when the stall saved it (Ruling 8: only while it is still
-     * extended). Locked like OrderService.place, since Hibernate rewrites every column.
+     * extended). Locked like {@code ProductService.locked}, since Hibernate rewrites every column.
      */
     private Product resetShelfLife(long productId) {
         Product product =
