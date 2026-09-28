@@ -28,5 +28,5 @@ public interface FarmerServiceInterface {
     AdminFarmerDetailResource suspend(
             Long farmerId, SuspendFarmerRequest request, Long adminUserId);
 
-    AdminFarmerDetailResource reinstate(Long farmerId);
+    AdminFarmerDetailResource reinstate(Long farmerId, Long actorId);
 }

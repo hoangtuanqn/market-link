@@ -31,6 +31,7 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
+import com.techx.intervue.services.interfaces.JobQueueInterface;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -50,6 +51,8 @@ class FarmerServiceTest {
     private UserRepository userRepository;
     private UserSessionCache userSessionCache;
     private NotificationServiceInterface notifications;
+    private FarmerStatusHistoryWriter statusHistory;
+    private JobQueueInterface jobQueue;
     private FarmerService service;
 
     @BeforeEach
@@ -65,6 +68,8 @@ class FarmerServiceTest {
         userRepository = mock(UserRepository.class);
         userSessionCache = mock(UserSessionCache.class);
         notifications = mock(NotificationServiceInterface.class);
+        statusHistory = mock(FarmerStatusHistoryWriter.class);
+        jobQueue = mock(JobQueueInterface.class);
         service =
                 new FarmerService(
                         farmerProfileRepository,
@@ -72,7 +77,9 @@ class FarmerServiceTest {
                         uploadService,
                         userRepository,
                         userSessionCache,
-                        notifications);
+                        notifications,
+                        statusHistory,
+                        jobQueue);
     }
 
     private static FarmerProfile pendingProfile() {
@@ -286,7 +293,7 @@ class FarmerServiceTest {
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows"), ADMIN_ID);
+        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows", null), ADMIN_ID);
 
         verify(userSessionCache, never()).updateRoles(any(), any());
     }
@@ -321,7 +328,8 @@ class FarmerServiceTest {
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         AdminFarmerDetailResource result =
-                service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows"), ADMIN_ID);
+                service.suspend(
+                        FARMER_ID, new SuspendFarmerRequest("Repeated no-shows", null), ADMIN_ID);
 
         assertThat(result.approvalStatus()).isEqualTo(ApprovalStatus.SUSPENDED);
         assertThat(owner.getRole()).isEqualTo(RoleType.FARMER);
@@ -337,7 +345,7 @@ class FarmerServiceTest {
                         () ->
                                 service.suspend(
                                         FARMER_ID,
-                                        new SuspendFarmerRequest("Repeated no-shows"),
+                                        new SuspendFarmerRequest("Repeated no-shows", null),
                                         ADMIN_ID))
                 .isInstanceOf(InvalidApprovalTransitionException.class);
     }
@@ -380,7 +388,7 @@ class FarmerServiceTest {
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        AdminFarmerDetailResource result = service.reinstate(FARMER_ID);
+        AdminFarmerDetailResource result = service.reinstate(FARMER_ID, ADMIN_ID);
 
         assertThat(result.approvalStatus()).isEqualTo(ApprovalStatus.APPROVED);
         assertThat(owner.getRole()).isEqualTo(RoleType.FARMER);
@@ -391,7 +399,7 @@ class FarmerServiceTest {
         FarmerProfile profile = pendingProfile();
         when(farmerProfileRepository.findById(FARMER_ID)).thenReturn(Optional.of(profile));
 
-        assertThatThrownBy(() -> service.reinstate(FARMER_ID))
+        assertThatThrownBy(() -> service.reinstate(FARMER_ID, ADMIN_ID))
                 .isInstanceOf(InvalidApprovalTransitionException.class);
     }
 
@@ -471,7 +479,7 @@ class FarmerServiceTest {
     void suspendingTellsTheOwner() {
         withStatus(ApprovalStatus.APPROVED);
 
-        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows"), ADMIN_ID);
+        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows", null), ADMIN_ID);
 
         verify(notifications)
                 .dispatch(
@@ -486,7 +494,7 @@ class FarmerServiceTest {
     void reinstatingTellsTheOwner() {
         withStatus(ApprovalStatus.SUSPENDED);
 
-        service.reinstate(FARMER_ID);
+        service.reinstate(FARMER_ID, ADMIN_ID);
 
         verify(notifications)
                 .dispatch(

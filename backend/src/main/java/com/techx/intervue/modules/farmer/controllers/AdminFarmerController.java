@@ -77,8 +77,9 @@ public class AdminFarmerController extends BaseController {
     }
 
     @PatchMapping("/{id}/reinstate")
-    public ResponseEntity<ApiResource<AdminFarmerDetailResource>> reinstate(@PathVariable Long id) {
-        return ok(farmerService.reinstate(id), "Farmer reinstated.");
+    public ResponseEntity<ApiResource<AdminFarmerDetailResource>> reinstate(
+            @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails admin) {
+        return ok(farmerService.reinstate(id, admin.getId()), "Farmer reinstated.");
     }
 
     private static ApprovalStatus parseStatus(String raw) {
