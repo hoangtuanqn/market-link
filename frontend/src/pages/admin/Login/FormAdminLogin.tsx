@@ -64,6 +64,12 @@ const FormAdminLogin = () => {
         setNotAdmin(true);
         return;
       }
+      if (Helper.getErrorCode(error) === 'LOGIN_LOCKED') {
+        // FR-003: too many wrong passwords — say in the reader's language how long to wait
+        const minutes = Math.max(1, Math.ceil((Helper.getRetryAfterSeconds(error) ?? 900) / 60));
+        Notification.error({ text: t('form.tooMany', { count: minutes }) });
+        return;
+      }
       setErrors(Helper.getFieldErrors(error));
       Notification.error({ text: Helper.getErrorMessage(error, t('form.error')) });
     } finally {

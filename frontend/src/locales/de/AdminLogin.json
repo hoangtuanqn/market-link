@@ -20,7 +20,9 @@
     "signedIn": "Angemeldet.",
     "error": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "note": "Aus Sicherheitsgründen werden Admin-Sitzungen nicht gespeichert.",
-    "setupRequired": "Richten Sie die Zwei-Faktor-Authentifizierung ein, um die Anmeldung abzuschließen."
+    "setupRequired": "Richten Sie die Zwei-Faktor-Authentifizierung ein, um die Anmeldung abzuschließen.",
+    "tooMany_one": "Zu viele fehlgeschlagene Anmeldeversuche. Versuchen Sie es in {{count}} Minute erneut.",
+    "tooMany_other": "Zu viele fehlgeschlagene Anmeldeversuche. Versuchen Sie es in {{count}} Minuten erneut."
   },
   "switchRole": {
     "question": "Kein Admin?",

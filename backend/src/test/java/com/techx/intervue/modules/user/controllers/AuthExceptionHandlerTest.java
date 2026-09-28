@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
+import com.techx.intervue.modules.user.exceptions.LoginRateLimitedException;
 import com.techx.intervue.modules.user.exceptions.OAuthNotConfiguredException;
 import com.techx.intervue.modules.user.exceptions.SignupCodeExpiredException;
 import com.techx.intervue.modules.user.exceptions.SignupCodeInvalidException;
@@ -111,5 +112,17 @@ class AuthExceptionHandlerTest {
         assertThat(response.getStatusCode().value()).isEqualTo(429);
         assertThat(code(response)).isEqualTo("RATE_LIMITED");
         assertThat(response.getHeaders().getFirst(HttpHeaders.RETRY_AFTER)).isEqualTo("42");
+    }
+
+    /** FR-003: too many wrong passwords → 429 with Retry-After and a readable wait. */
+    @Test
+    void tooManyWrongPasswordsSaysWhenToTryAgain() {
+        ResponseEntity<ApiResource<Void>> response =
+                handler.loginRateLimited(new LoginRateLimitedException(600));
+
+        assertThat(response.getStatusCode().value()).isEqualTo(429);
+        assertThat(code(response)).isEqualTo("LOGIN_LOCKED");
+        assertThat(response.getHeaders().getFirst(HttpHeaders.RETRY_AFTER)).isEqualTo("600");
+        assertThat(response.getBody().getMessage()).contains("10 minutes");
     }
 }

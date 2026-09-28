@@ -19,7 +19,9 @@
   "newHere": "Chưa có tài khoản? <customer>Đăng ký</customer>",
   "toast": {
     "signedIn": "Đã đăng nhập.",
-    "failed": "Không đăng nhập được. Vui lòng thử lại."
+    "failed": "Không đăng nhập được. Vui lòng thử lại.",
+    "tooMany_one": "Bạn đã đăng nhập sai quá nhiều lần. Thử lại sau {{count}} phút.",
+    "tooMany_other": "Bạn đã đăng nhập sai quá nhiều lần. Thử lại sau {{count}} phút."
   },
   "errors": {
     "emailRequired": "Nhập email.",

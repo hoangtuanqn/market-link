@@ -20,7 +20,9 @@
     "signedIn": "Berhasil masuk.",
     "error": "Tidak dapat memasukkan Anda. Silakan coba lagi.",
     "note": "Demi keamanan, sesi admin tidak diingat.",
-    "setupRequired": "Siapkan verifikasi dua langkah untuk menyelesaikan proses masuk."
+    "setupRequired": "Siapkan verifikasi dua langkah untuk menyelesaikan proses masuk.",
+    "tooMany_one": "Terlalu banyak percobaan masuk yang gagal. Coba lagi dalam {{count}} menit.",
+    "tooMany_other": "Terlalu banyak percobaan masuk yang gagal. Coba lagi dalam {{count}} menit."
   },
   "switchRole": {
     "question": "Bukan admin?",

@@ -121,6 +121,12 @@ app:
     # Block one IP from sending many different emails
     max-requests-per-ip: 20
     window-seconds: 3600
+  # FR-003: wrong passwords on POST /auth/login → 429 LOGIN_LOCKED with Retry-After until the window ends
+  login-rate-limit:
+    max-failures: 10
+    # Blocks one IP from trying passwords against many accounts
+    max-failures-per-ip: 50
+    window-seconds: 900
   # FR-009: 6-digit email code at sign-up (docs/superpowers/specs/2026-09-28-email-verification-design.md)
   email-verification:
     code-ttl-seconds: 600
