@@ -39,7 +39,10 @@ import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterfac
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver.Availability;
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -97,6 +100,7 @@ public class AssistantTools {
     private final ProductAvailabilityResolver availability;
     private final UserGuideIndex guide;
     private final OrderServiceInterface orders;
+    private final Clock clock;
 
     /**
      * What one tool call produced.
@@ -224,7 +228,9 @@ public class AssistantTools {
                                     + " window, cutoff, total and status. Use it for 'my orders',"
                                     + " 'orders waiting for me' (status placed), or a given day."
                                     + " Give order_code to read one order together with what is in"
-                                    + " it.",
+                                    + " it. Every order names its customer, so an order asked for by"
+                                    + " the customer's name is found by listing them and picking it"
+                                    + " out; there is no need to ask for the code.",
                             Map.of(
                                     "status",
                                     property("string", ORDER_STATUS_HINT),
@@ -739,6 +745,32 @@ public class AssistantTools {
 
     // ---------------------------------------------------------------- output
 
+    /**
+     * {days: 3, hours: 22}. Worked out here rather than by the model, which called a cutoff four
+     * days ahead "tomorrow evening", then "6 days away". Numbers, not words, so the reply can put
+     * them in its own language.
+     */
+    private static Map<String, Long> timeUntil(LocalDateTime now, LocalDateTime then) {
+        Duration left = Duration.between(now, then);
+        Map<String, Long> out = new LinkedHashMap<>();
+        if (left.toHours() < 1) {
+            out.put("minutes", left.toMinutes());
+            return out;
+        }
+        if (left.toDays() > 0) {
+            out.put("days", left.toDays());
+        }
+        if (left.toHours() % 24 > 0) {
+            out.put("hours", left.toHours() % 24);
+        }
+        return out;
+    }
+
+    /** "Friday": the model got the weekday of a date wrong when left to work it out. */
+    private static String dayName(LocalDate date) {
+        return DAY_NAMES[date.getDayOfWeek().getValue() % 7];
+    }
+
     private static String time(LocalTime value) {
         return value == null ? null : TIME.format(value);
     }
@@ -835,6 +867,7 @@ public class AssistantTools {
             List<OrderRow> rows,
             ChatIntent intent,
             Map<Long, List<OrderItemRow>> lines) {
+        LocalDateTime now = LocalDateTime.now(clock);
         List<Map<String, Object>> out = new ArrayList<>();
         List<ChatResultItem> cards = new ArrayList<>();
         for (OrderRow r : rows) {
@@ -843,10 +876,21 @@ public class AssistantTools {
             row.put("customer", r.customerName());
             row.put("market", r.marketName());
             row.put("pickup_date", String.valueOf(r.pickupDate()));
+            if (r.pickupDate() != null) {
+                row.put("pickup_day", dayName(r.pickupDate()));
+            }
             row.put(
                     "pickup_window",
                     TIME.format(r.pickupStart()) + "-" + TIME.format(r.pickupEnd()));
             row.put("cutoff_at", String.valueOf(r.cutoffAt()));
+            if (r.cutoffAt() != null) {
+                row.put("cutoff_day", dayName(r.cutoffAt().toLocalDate()));
+                boolean passed = !r.cutoffAt().isAfter(now);
+                row.put("cutoff_passed", passed);
+                if (!passed) {
+                    row.put("time_to_cutoff", timeUntil(now, r.cutoffAt()));
+                }
+            }
             row.put("items", r.itemCount());
             row.put("total_usd", r.total());
             row.put("status", r.status());

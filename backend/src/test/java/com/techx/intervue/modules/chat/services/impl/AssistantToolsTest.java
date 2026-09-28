@@ -38,8 +38,12 @@ import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterfac
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver.Availability;
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,6 +74,10 @@ class AssistantToolsTest {
                     LocalTime.of(20, 0),
                     List.of(0, 6));
 
+    /** 21:00 on Monday 28/09/2026 in Ho Chi Minh City. */
+    private static final Clock MONDAY_9PM_IN_VIETNAM =
+            Clock.fixed(Instant.parse("2026-09-28T14:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
+
     private ChatKnowledgeRepository knowledge;
     private ProductAvailabilityResolver availability;
     private FarmerKnowledgeRepository farmerKnowledge;
@@ -91,7 +99,8 @@ class AssistantToolsTest {
                         adminKnowledge,
                         availability,
                         new UserGuideIndex(),
-                        orders);
+                        orders,
+                        MONDAY_9PM_IN_VIETNAM);
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH, THAO_DIEN));
     }
 
@@ -362,6 +371,10 @@ class AssistantToolsTest {
     // ----------------------------------------------------- FR-093 proposals never write
 
     private static OrderRow order(String code, String status) {
+        return order(code, status, java.time.LocalDateTime.of(2026, 9, 25, 19, 0));
+    }
+
+    private static OrderRow order(String code, String status, LocalDateTime cutoffAt) {
         return new OrderRow(
                 77L,
                 code,
@@ -370,7 +383,7 @@ class AssistantToolsTest {
                 java.time.LocalDate.of(2026, 9, 26),
                 java.time.LocalTime.of(6, 0),
                 java.time.LocalTime.of(9, 30),
-                java.time.LocalDateTime.of(2026, 9, 25, 19, 0),
+                cutoffAt,
                 new java.math.BigDecimal("120000"),
                 status,
                 3);
@@ -540,6 +553,48 @@ class AssistantToolsTest {
                 .contains("\"order_code\":\"ML-20260920-0001\"")
                 .contains("\"product\":\"Rau muống\"");
         verify(farmerKnowledge, never()).myOrders(eq(9L), any(), any());
+    }
+
+    /**
+     * Asked whether an order was still before its cutoff, four days ahead, the model answered
+     * "tomorrow evening", then "6 days away", then "2 days away". How far away the cutoff is, and
+     * whether it has passed, is worked out here instead.
+     */
+    @Test
+    void eachOrderSaysHowLongIsLeftBeforeItsCutoffOrThatItHasPassed() {
+        when(farmerKnowledge.myOrders(9L, null, null))
+                .thenReturn(
+                        List.of(
+                                order("ML-FRI", "placed", LocalDateTime.of(2026, 10, 2, 19, 0)),
+                                order("ML-TUE", "placed", LocalDateTime.of(2026, 9, 29, 22, 0)),
+                                order("ML-NIGHT", "placed", LocalDateTime.of(2026, 9, 29, 2, 0)),
+                                order("ML-SOON", "placed", LocalDateTime.of(2026, 9, 28, 21, 40)),
+                                order("ML-GONE", "placed", LocalDateTime.of(2026, 9, 28, 19, 0))));
+
+        // The clock reads 21:00 on Monday 28/09/2026
+        String content = tools.run(FARMER_9, AssistantTools.MY_ORDERS, Map.of()).content();
+
+        // Numbers rather than words, so the reply puts them in its own language
+        assertThat(content)
+                .contains("\"cutoff_passed\":false,\"time_to_cutoff\":{\"days\":3,\"hours\":22}")
+                .contains("\"cutoff_passed\":false,\"time_to_cutoff\":{\"days\":1,\"hours\":1}")
+                .contains("\"cutoff_passed\":false,\"time_to_cutoff\":{\"hours\":5}")
+                .contains("\"cutoff_passed\":false,\"time_to_cutoff\":{\"minutes\":40}")
+                .contains("\"cutoff_passed\":true");
+        // Nothing is left to count down to once the cutoff has gone
+        assertThat(content.split("time_to_cutoff", -1)).hasSize(5);
+    }
+
+    /** The model wrote "Thứ Năm 02/10/2026" for a Friday: the weekday now comes with the date. */
+    @Test
+    void eachOrderNamesTheWeekdayOfItsPickupAndItsCutoff() {
+        when(farmerKnowledge.myOrders(9L, null, null))
+                .thenReturn(
+                        List.of(order("ML-FRI", "placed", LocalDateTime.of(2026, 10, 2, 19, 0))));
+
+        assertThat(tools.run(FARMER_9, AssistantTools.MY_ORDERS, Map.of()).content())
+                .contains("\"pickup_date\":\"2026-09-26\",\"pickup_day\":\"Saturday\"")
+                .contains("\"cutoff_at\":\"2026-10-02T19:00\",\"cutoff_day\":\"Friday\"");
     }
 
     // ------------------------------------------------ FR-094 approving from the queue

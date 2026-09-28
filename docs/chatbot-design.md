@@ -27,7 +27,8 @@ POST /api/v1/chat (có token Customer / Farmer / Admin đã cài 2FA)
   ├─ AssistantRateLimiter   1500 tin/ngày toàn nền tảng (Redis lỗi → không gọi Claude), rồi
   │                         30 tin/giờ/tài khoản, Admin 60 (Redis bucket4j) — vượt → luật từ khoá
   ├─ ClaudeAssistant        vòng lặp tool use thủ công, model claude-haiku-4-5
-  │     ├─ system prompt cố định (cache) + "hôm nay là …" + 10 tin gần nhất của phiên
+  │     ├─ system prompt cố định (cache) + "hôm nay là …, bây giờ là HH:mm, ngày mai là …"
+  │     │     + 10 tin gần nhất của phiên
   │     ├─ Claude chọn tool ─► AssistantTools (chỉ đọc)
   │     │     search_products · list_markets · find_stalls · get_pickup_times
   │     │        └─ ChatKnowledgeRepository: vẫn là các câu SQL viết sẵn có tham số (R-04)
