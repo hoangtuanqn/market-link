@@ -190,6 +190,29 @@ public class ProductService implements ProductServiceInterface {
         restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
     }
 
+    @Override
+    public PageResource<FarmerProductResource> mineDeleted(long userId, int page, int pageSize) {
+        FarmerProfile profile = mine(userId);
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return query.mineDeleted(profile.getId(), (safePage - 1) * safeSize, safeSize);
+    }
+
+    @Override
+    @Transactional
+    public FarmerProductResource restore(long userId, long productId) {
+        FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
+        Product product = requireOwner(profile, locked(productId));
+        if (product.isDeleted()) {
+            product.setDeleted(false);
+            product.setStatus(ProductStatus.UNAVAILABLE);
+            products.save(product);
+        }
+        Category category = categories.findById(product.getCategoryId()).orElse(null);
+        return toResource(product, profile, category);
+    }
+
     /**
      * R-06: the profile is always looked up by the token's userId; there is no path that takes a
      * farmerId from the request.
