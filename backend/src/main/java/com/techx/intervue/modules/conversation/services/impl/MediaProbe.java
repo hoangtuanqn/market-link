@@ -87,7 +87,7 @@ public final class MediaProbe {
     }
 
     /** The file name the stored copy gets, after its real type. */
-    static String extension(String mime) {
+    public static String extension(String mime) {
         return switch (mime) {
             case ImageProbe.WEBP -> ".webp";
             case GIF -> ".gif";

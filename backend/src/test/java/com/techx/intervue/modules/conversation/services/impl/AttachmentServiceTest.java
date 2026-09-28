@@ -19,11 +19,13 @@ import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeExce
 import com.techx.intervue.modules.conversation.exceptions.ConversationAccessDeniedException;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
+import com.techx.intervue.modules.conversation.exceptions.StreamLinkInvalidException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
 import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AttachmentResource;
+import com.techx.intervue.modules.conversation.resources.StreamUrlResource;
 import com.techx.intervue.modules.conversation.services.interfaces.AttachmentServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.services.interfaces.FileStorageServiceInterface;
@@ -33,7 +35,9 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Clock;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import javax.imageio.ImageIO;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,6 +50,9 @@ import org.springframework.mock.web.MockMultipartFile;
 class AttachmentServiceTest {
 
     static final long MAX_BYTES = 5L * 1024 * 1024;
+    static final Instant NOW = Instant.parse("2026-09-28T03:00:00Z");
+
+    final StreamLinkSigner signer = new StreamLinkSigner("test-jwt-secret");
 
     MessageAttachmentRepository attachments;
     FileStorageServiceInterface storage;
@@ -76,8 +83,7 @@ class AttachmentServiceTest {
                             return a;
                         });
         // The order matches the constructor: attachments, storage, rateLimiter, maxBytes, messages,
-        // lookup,
-        // reports
+        // lookup, reports, tempDir, signer, clock, stream link TTL
         service =
                 new AttachmentService(
                         attachments,
@@ -87,7 +93,10 @@ class AttachmentServiceTest {
                         messages,
                         lookup,
                         reports,
-                        uploads.toString());
+                        uploads.toString(),
+                        signer,
+                        Clock.fixed(NOW, ZoneOffset.UTC),
+                        300);
     }
 
     @Test
@@ -266,6 +275,113 @@ class AttachmentServiceTest {
         when(attachments.findById(55L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.read(7L, 55L)).isInstanceOf(EntityNotFoundException.class);
+    }
+
+    // ---------- FR-115 §5: signed stream links ----------
+
+    @Test
+    void aMemberGetsALinkForAVideoInTheirConversation() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+
+        StreamUrlResource link = service.streamUrl(3L, false, 55L);
+
+        verify(lookup).requireMember(3L, 42L);
+        assertThat(link.expiresAt()).isEqualTo(NOW.plusSeconds(300));
+        long exp = NOW.getEpochSecond() + 300;
+        assertThat(link.url())
+                .isEqualTo(
+                        "/api/v1/attachments/55/stream?u=3&s=u&e="
+                                + exp
+                                + "&t="
+                                + signer.sign(55L, 3L, 'u', exp));
+    }
+
+    @Test
+    void aStrangerGetsNoLink() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+        Mockito.doThrow(new ConversationAccessDeniedException())
+                .when(lookup)
+                .requireMember(99L, 42L);
+
+        assertThatThrownBy(() -> service.streamUrl(99L, false, 55L))
+                .isInstanceOf(ConversationAccessDeniedException.class);
+    }
+
+    @Test
+    void anAdminLinkOnlyForAReportedMessageAndItIsLogged() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+
+        assertThatThrownBy(() -> service.streamUrl(1L, true, 55L))
+                .isInstanceOf(ModerationOutOfScopeException.class);
+
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        assertThat(service.streamUrl(1L, true, 55L).url()).contains("u=1&s=a&");
+        verify(lookup, never()).requireMember(any(), any());
+    }
+
+    @Test
+    void streamServesTheFileForAValidLink() {
+        MessageAttachment upload = stored(55L, 7L, 101L);
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+        when(storage.find(AttachmentService.FOLDER, upload.getStorageKey()))
+                .thenReturn(Optional.of(fileOnDisk));
+        long exp = NOW.getEpochSecond() + 300;
+
+        AttachmentServiceInterface.StoredFile file =
+                service.stream(55L, 3L, 'u', exp, signer.sign(55L, 3L, 'u', exp));
+
+        assertThat(file.mime()).isEqualTo("image/jpeg");
+        verify(lookup).requireMember(3L, 42L);
+    }
+
+    @Test
+    void streamRefusesAnExpiredLink() {
+        long exp = NOW.getEpochSecond() - 1;
+
+        assertThatThrownBy(() -> service.stream(55L, 3L, 'u', exp, signer.sign(55L, 3L, 'u', exp)))
+                .isInstanceOf(StreamLinkInvalidException.class);
+        verify(attachments, never()).findById(any());
+    }
+
+    @Test
+    void streamRefusesALinkSignedForSomeoneElse() {
+        long exp = NOW.getEpochSecond() + 300;
+
+        assertThatThrownBy(() -> service.stream(55L, 99L, 'u', exp, signer.sign(55L, 3L, 'u', exp)))
+                .isInstanceOf(StreamLinkInvalidException.class);
+    }
+
+    /** The link is only a ticket: the rights behind it are checked again on every request. */
+    @Test
+    void streamHidesAMessageHiddenAfterTheLinkWasIssued() {
+        when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
+        when(messages.findById(101L))
+                .thenReturn(Optional.of(messageIn(101L, 42L, NOW.minusSeconds(10))));
+        long exp = NOW.getEpochSecond() + 300;
+
+        assertThatThrownBy(() -> service.stream(55L, 3L, 'u', exp, signer.sign(55L, 3L, 'u', exp)))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void anAdminStreamStillNeedsTheReport() {
+        MessageAttachment upload = stored(55L, 7L, 101L);
+        when(attachments.findById(55L)).thenReturn(Optional.of(upload));
+        when(messages.findById(101L)).thenReturn(Optional.of(messageIn(101L, 42L, null)));
+        when(storage.find(AttachmentService.FOLDER, upload.getStorageKey()))
+                .thenReturn(Optional.of(fileOnDisk));
+        long exp = NOW.getEpochSecond() + 300;
+        String sig = signer.sign(55L, 1L, 'a', exp);
+
+        assertThatThrownBy(() -> service.stream(55L, 1L, 'a', exp, sig))
+                .isInstanceOf(ModerationOutOfScopeException.class);
+
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        assertThat(service.stream(55L, 1L, 'a', exp, sig).mime()).isEqualTo("image/jpeg");
     }
 
     private static MessageAttachment stored(Long id, Long uploaderId, Long messageId) {

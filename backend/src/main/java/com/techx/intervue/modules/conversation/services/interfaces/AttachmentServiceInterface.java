@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.conversation.services.interfaces;
 
 import com.techx.intervue.modules.conversation.resources.AttachmentResource;
+import com.techx.intervue.modules.conversation.resources.StreamUrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,20 @@ public interface AttachmentServiceInterface {
      * path, and it is logged.
      */
     StoredFile readAsAdmin(Long adminId, Long attachmentId);
+
+    /**
+     * FR-115 §5: a short-lived signed link to play a video. The same rules as {@link #read} (or
+     * {@link #readAsAdmin} when {@code admin}) decide whether the link is given; an admin's link is
+     * logged here, once.
+     */
+    StreamUrlResource streamUrl(Long meId, boolean admin, Long attachmentId);
+
+    /**
+     * FR-115 §5: the file behind a signed link. The signature and expiry are checked first, then
+     * the rights of the user the link was issued to — again on every request, so a message hidden
+     * after the link was issued stops playing.
+     */
+    StoredFile stream(Long attachmentId, long userId, char scope, long exp, String signature);
 
     record StoredFile(Resource body, String mime, long sizeBytes) {}
 }

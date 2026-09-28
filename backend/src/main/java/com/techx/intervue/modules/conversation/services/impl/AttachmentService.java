@@ -5,11 +5,13 @@ import com.techx.intervue.modules.conversation.entities.MessageAttachment;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentNotYoursException;
 import com.techx.intervue.modules.conversation.exceptions.AttachmentTooLargeException;
 import com.techx.intervue.modules.conversation.exceptions.ModerationOutOfScopeException;
+import com.techx.intervue.modules.conversation.exceptions.StreamLinkInvalidException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
 import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.resources.AttachmentResource;
+import com.techx.intervue.modules.conversation.resources.StreamUrlResource;
 import com.techx.intervue.modules.conversation.services.interfaces.AttachmentServiceInterface;
 import com.techx.intervue.modules.conversation.services.interfaces.ChatRateLimiterInterface;
 import com.techx.intervue.services.interfaces.FileStorageServiceInterface;
@@ -21,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +54,9 @@ public class AttachmentService implements AttachmentServiceInterface {
     private final ConversationLookup lookup;
     private final MessageReportRepository reports;
     private final Path tempDir;
+    private final StreamLinkSigner signer;
+    private final Clock clock;
+    private final long streamTtlSeconds;
 
     public AttachmentService(
             MessageAttachmentRepository attachments,
@@ -59,7 +66,10 @@ public class AttachmentService implements AttachmentServiceInterface {
             MessageRepository messages,
             ConversationLookup lookup,
             MessageReportRepository reports,
-            @Value("${app.chat.temp-dir}") String tempDir) {
+            @Value("${app.chat.temp-dir}") String tempDir,
+            StreamLinkSigner signer,
+            Clock clock,
+            @Value("${app.chat.stream-url-ttl-seconds}") long streamTtlSeconds) {
         this.attachments = attachments;
         this.storage = storage;
         this.rateLimiter = rateLimiter;
@@ -68,6 +78,9 @@ public class AttachmentService implements AttachmentServiceInterface {
         this.lookup = lookup;
         this.reports = reports;
         this.tempDir = Paths.get(tempDir);
+        this.signer = signer;
+        this.clock = clock;
+        this.streamTtlSeconds = streamTtlSeconds;
     }
 
     /**
@@ -120,6 +133,68 @@ public class AttachmentService implements AttachmentServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public StoredFile read(Long meId, Long attachmentId) {
+        return fileOf(requireReadable(meId, attachmentId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public StoredFile readAsAdmin(Long adminId, Long attachmentId) {
+        MessageAttachment attachment = requireReadableByAdmin(attachmentId);
+        StoredFile file = fileOf(attachment);
+        // Every time an admin opens a private photo it leaves a trace
+        log.info(
+                "Admin {} opened photo {} on reported message {}",
+                adminId,
+                attachmentId,
+                attachment.getMessageId());
+        return file;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public StreamUrlResource streamUrl(Long meId, boolean admin, Long attachmentId) {
+        if (admin) {
+            MessageAttachment attachment = requireReadableByAdmin(attachmentId);
+            // Logged when the link is issued, not on each of the many range requests that follow
+            log.info(
+                    "Admin {} opened video {} on reported message {}",
+                    meId,
+                    attachmentId,
+                    attachment.getMessageId());
+        } else {
+            requireReadable(meId, attachmentId);
+        }
+        char scope = admin ? 'a' : 'u';
+        long exp = clock.instant().getEpochSecond() + streamTtlSeconds;
+        String url =
+                "/api/v1/attachments/"
+                        + attachmentId
+                        + "/stream?u="
+                        + meId
+                        + "&s="
+                        + scope
+                        + "&e="
+                        + exp
+                        + "&t="
+                        + signer.sign(attachmentId, meId, scope, exp);
+        return new StreamUrlResource(url, Instant.ofEpochSecond(exp));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public StoredFile stream(
+            Long attachmentId, long userId, char scope, long exp, String signature) {
+        if (!signer.verify(attachmentId, userId, scope, exp, signature, clock.instant())) {
+            throw new StreamLinkInvalidException();
+        }
+        return fileOf(
+                scope == 'a'
+                        ? requireReadableByAdmin(attachmentId)
+                        : requireReadable(userId, attachmentId));
+    }
+
+    /** Spec §8.2: who may see a chat file. */
+    private MessageAttachment requireReadable(Long meId, Long attachmentId) {
         MessageAttachment attachment =
                 attachments
                         .findById(attachmentId)
@@ -144,17 +219,11 @@ public class AttachmentService implements AttachmentServiceInterface {
             }
             lookup.requireMember(meId, message.getConversationId());
         }
-
-        Path file =
-                storage.find(FOLDER, attachment.getStorageKey())
-                        .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
-        return new StoredFile(
-                new FileSystemResource(file), attachment.getMime(), attachment.getSizeBytes());
+        return attachment;
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public StoredFile readAsAdmin(Long adminId, Long attachmentId) {
+    /** Spec §8.3: the admin's narrower path, opened by a report and nothing else. */
+    private MessageAttachment requireReadableByAdmin(Long attachmentId) {
         MessageAttachment attachment =
                 attachments
                         .findById(attachmentId)
@@ -176,16 +245,13 @@ public class AttachmentService implements AttachmentServiceInterface {
         // Unlike ordinary users: a hidden message does NOT block an admin — they must be able to
         // re-check
         // their own decision.
+        return attachment;
+    }
 
+    private StoredFile fileOf(MessageAttachment attachment) {
         Path file =
                 storage.find(FOLDER, attachment.getStorageKey())
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
-        // Every time an admin opens a private photo it leaves a trace
-        log.info(
-                "Admin {} opened photo {} on reported message {}",
-                adminId,
-                attachmentId,
-                message.getId());
         return new StoredFile(
                 new FileSystemResource(file), attachment.getMime(), attachment.getSizeBytes());
     }
