@@ -45,6 +45,12 @@ server {
         try_files $uri $uri/ /index.html;
     }
 
+    # The SPA fallback and "/" both end here. no-cache makes the browser revalidate the shell on every visit,
+    # otherwise a cached index.html from before a redeploy asks for hashed /assets/* files that no longer exist.
+    location = /index.html {
+        add_header Cache-Control "no-cache";
+    }
+
     location /assets/ {
         expires 1y;
         add_header Cache-Control "public, immutable";
