@@ -58,7 +58,18 @@ Demo accounts for every role (shared password `Demo@1234`) are listed in
 | `make lint` / `make format` | ESLint + Spotless check / Prettier + Spotless apply |
 | `make mysql` / `make redis` | Open a MySQL / Redis shell |
 | `make prod-init` / `make prod` | Create `.env.production` from the template / build and run production (separate containers and data) |
+| `make prod-seed` | Load `db/seed.sql` and the demo photos into the production stack (see below) |
 | `make down` / `make clean` | Stop the stack / stop and **delete** DB + Redis data |
+
+### Production stack
+
+1. `make prod-init`, then replace **every** `<...>` value in `.env.production`. `make prod` refuses to start while
+   one is left, so the API URL, the SMTP account and the email links cannot fall back to localhost or the log.
+2. `make prod` (from `main` or a release tag).
+3. Once the backend is up, run `make prod-seed` once. The admin seeder only runs in the `dev` and `local` profiles,
+   so a fresh production database has **no admin** until this seed creates `admin@marketlink.vn` and the demo
+   accounts (password `Demo@1234`, see [`DEMO_CREDENTIALS.md`](DEMO_CREDENTIALS.md)). Change the admin password
+   right after the first sign-in. The seed is safe to re-run.
 
 ## 3. Option B — Run the Backend and Frontend on Your Machine
 
