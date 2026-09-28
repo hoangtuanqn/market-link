@@ -697,7 +697,7 @@ const AdminMarketFormPage = () => {
           <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
             <legend className="text-small mb-1 p-0 font-bold">{t('closures.field.handling')}</legend>
             {CLOSURE_HANDLINGS.map((key) => (
-              <label key={key} className="flex cursor-pointer items-start gap-2">
+              <label key={key} className="flex min-h-11 cursor-pointer items-start gap-2">
                 <input
                   type="radio"
                   name="closure-handling"

@@ -89,7 +89,8 @@ const FavoriteButton = ({
       disabled={busy}
       onClick={() => void toggle()}
       className={Helper.cn(
-        'bg-surface-raised text-ink aria-pressed:text-danger grid size-10 cursor-pointer place-items-center rounded-full disabled:opacity-60',
+        // size-11 = 44px, the floor for a touch target (Apple HIG, WCAG 2.5.5).
+        'bg-surface-raised text-ink aria-pressed:text-danger grid size-11 cursor-pointer place-items-center rounded-full disabled:opacity-60',
         className,
       )}
     >
