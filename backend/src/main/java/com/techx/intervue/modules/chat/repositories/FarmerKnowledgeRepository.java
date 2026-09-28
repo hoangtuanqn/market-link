@@ -3,6 +3,7 @@ package com.techx.intervue.modules.chat.repositories;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BriefingRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.FarmerReviewRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.OrderItemRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.ProductStockRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.SalesRow;
@@ -33,6 +34,20 @@ public class FarmerKnowledgeRepository {
 
     private static final String FARMER_ID_OF_USER =
             "SELECT id FROM farmer_profiles WHERE user_id = :userId";
+
+    private static final String STALL_NAME =
+            "SELECT stall_name FROM farmer_profiles WHERE id = :farmerId";
+
+    /** What is in one order of this stall; another stall's order id finds nothing. */
+    private static final String MY_ORDER_ITEMS =
+            """
+            SELECT i.product_name, i.quantity, i.unit, i.subtotal
+            FROM order_items i
+            JOIN orders o ON o.id = i.order_id
+            WHERE o.farmer_id = :farmerId
+              AND o.id = :orderId
+            ORDER BY i.id
+            """;
 
     private static final String MY_ORDERS =
             """
@@ -215,6 +230,31 @@ public class FarmerKnowledgeRepository {
                                         rs.getLong("sold_out"),
                                         rs.getLong("low_stock")));
         return row == null ? new BriefingRow(0, 0, 0, 0, 0) : row;
+    }
+
+    public List<OrderItemRow> myOrderItems(long farmerId, long orderId) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("farmerId", farmerId)
+                        .addValue("orderId", orderId);
+        return jdbc.query(
+                MY_ORDER_ITEMS,
+                params,
+                (rs, i) ->
+                        new OrderItemRow(
+                                rs.getString("product_name"),
+                                rs.getInt("quantity"),
+                                rs.getString("unit"),
+                                rs.getBigDecimal("subtotal")));
+    }
+
+    /** The name of a stall, so a Farmer tool result can say whose numbers it holds. */
+    public Optional<String> stallName(long farmerId) {
+        return jdbc
+                .queryForList(
+                        STALL_NAME, new MapSqlParameterSource("farmerId", farmerId), String.class)
+                .stream()
+                .findFirst();
     }
 
     /** The stall this account owns, or empty when it owns none. Resolved from the JWT's user id. */

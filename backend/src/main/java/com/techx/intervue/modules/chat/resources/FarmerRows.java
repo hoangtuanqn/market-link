@@ -23,6 +23,10 @@ public final class FarmerRows {
             String status,
             int itemCount) {}
 
+    /** One line of an order, as it was priced when the order was placed. */
+    public record OrderItemRow(
+            String productName, int quantity, String unit, BigDecimal subtotal) {}
+
     public record ProductStockRow(
             long productId,
             String name,

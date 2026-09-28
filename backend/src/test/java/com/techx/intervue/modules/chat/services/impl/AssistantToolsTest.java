@@ -22,6 +22,7 @@ import com.techx.intervue.modules.chat.resources.AdminRows.PendingFarmerRow;
 import com.techx.intervue.modules.chat.resources.AdminRows.PlatformTotalsRow;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.OrderItemRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.ProductStockRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.SalesRow;
@@ -486,6 +487,59 @@ class AssistantToolsTest {
                             assertThat(line.productId()).isEqualTo(11L);
                             assertThat(line.quantity()).isEqualTo(2);
                         });
+    }
+
+    // ------------------------------------------ FR-093 a result says which stall it is about
+
+    /**
+     * A Farmer who claimed another stall got their own numbers reported under that stall's name
+     * (test run 28/09): nothing in the result said whose stall it was read from.
+     */
+    @Test
+    void farmerResultsNameTheStallTheyWereReadFrom() {
+        LocalDate from = LocalDate.of(2026, 9, 1);
+        LocalDate to = LocalDate.of(2026, 9, 30);
+        when(farmerKnowledge.stallName(9L)).thenReturn(Optional.of("Vườn Út Hiền"));
+        when(farmerKnowledge.mySales(9L, from, to))
+                .thenReturn(new SalesRow(2, new BigDecimal("4.60")));
+        when(farmerKnowledge.bestSellers(9L, from, to)).thenReturn(List.of());
+        when(farmerKnowledge.myOrders(9L, null, null)).thenReturn(List.of(order("ML-1", "placed")));
+
+        assertThat(
+                        tools.run(
+                                        FARMER_9,
+                                        AssistantTools.MY_SALES,
+                                        Map.of("from_date", "2026-09-01", "to_date", "2026-09-30"))
+                                .content())
+                .contains("\"your_stall\":\"Vườn Út Hiền\"");
+        assertThat(tools.run(FARMER_9, AssistantTools.MY_ORDERS, Map.of()).content())
+                .contains("\"your_stall\":\"Vườn Út Hiền\"");
+    }
+
+    /**
+     * The "Ask the assistant" button on an order asks what is in it. The model read the date inside
+     * "ML-20260920-0001" as a pickup date, filtered by it and reported the order as not found; the
+     * code alone now finds the order, whatever pickup date comes with it, together with its lines.
+     */
+    @Test
+    void oneOrderIsReadByItsCodeWithWhatIsInIt() {
+        when(farmerKnowledge.myOrderByCode(9L, "ML-20260920-0001"))
+                .thenReturn(Optional.of(order("ML-20260920-0001", "placed")));
+        when(farmerKnowledge.myOrderItems(9L, 77L))
+                .thenReturn(
+                        List.of(new OrderItemRow("Rau muống", 2, "bunch", new BigDecimal("1.00"))));
+
+        ToolOutcome out =
+                tools.run(
+                        FARMER_9,
+                        AssistantTools.MY_ORDERS,
+                        Map.of("order_code", "ML-20260920-0001", "pickup_date", "2026-09-20"));
+
+        assertThat(out.error()).isFalse();
+        assertThat(out.content())
+                .contains("\"order_code\":\"ML-20260920-0001\"")
+                .contains("\"product\":\"Rau muống\"");
+        verify(farmerKnowledge, never()).myOrders(eq(9L), any(), any());
     }
 
     // ------------------------------------------------ FR-094 approving from the queue

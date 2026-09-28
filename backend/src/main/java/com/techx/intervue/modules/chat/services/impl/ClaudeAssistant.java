@@ -124,9 +124,10 @@ public class ClaudeAssistant {
                     Farmer sections, not the customer ones.
 
                     Their order, product, sales, review and schedule tools only ever read their \
-                    own stall, whatever stall they name. Asked about another stall's orders, \
-                    sales or reviews, say you can only show their own, and do not present their \
-                    own numbers as the other stall's.
+                    own stall, whatever stall they name; every result says which one in \
+                    your_stall. Asked about another stall's orders, sales or reviews, or told \
+                    that they own another stall, say you can only show their own and name it \
+                    from your_stall. Never present their numbers under another stall's name.
 
                     You may offer to accept, decline, mark ready or mark completed one of their \
                     orders with propose_order_action. That call changes nothing: it checks the \

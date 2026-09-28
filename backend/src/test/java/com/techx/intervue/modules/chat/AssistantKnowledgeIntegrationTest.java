@@ -46,6 +46,7 @@ class AssistantKnowledgeIntegrationTest {
     private long market;
     private long customer;
     private String orderCode;
+    private long orderId;
 
     @BeforeEach
     void setUp() {
@@ -84,17 +85,53 @@ class AssistantKnowledgeIntegrationTest {
         // Still waiting to be accepted and already past its cutoff: part of the order list and of
         // the "close to cutoff" list whatever the clock says
         orderCode = "IT-" + tag;
+        orderId =
+                track(
+                        "orders",
+                        insert(
+                                "INSERT INTO orders (order_code, customer_id, farmer_id, market_id,"
+                                        + " pickup_date, pickup_start, pickup_end, cutoff_at, total_amount,"
+                                        + " status) VALUES (?, ?, ?, ?, '2026-01-10', '07:00:00',"
+                                        + " '08:00:00', '2026-01-09 19:00:00', 2.70, 'placed')",
+                                orderCode,
+                                customer,
+                                farmer,
+                                market));
+    }
+
+    @Test
+    void oneOrderListsWhatIsInItForItsOwnStallOnly() {
+        long category =
+                track(
+                        "categories",
+                        insert(
+                                "INSERT INTO categories (name, slug) VALUES (?, ?)",
+                                "It " + tag,
+                                "it-" + tag));
+        long product =
+                track(
+                        "products",
+                        insert(
+                                "INSERT INTO products (farmer_id, category_id, name, price, unit,"
+                                        + " stock_quantity) VALUES (?, ?, ?, 0.50, 'bunch', 10)",
+                                farmer,
+                                category,
+                                "Rau " + tag));
         track(
-                "orders",
+                "order_items",
                 insert(
-                        "INSERT INTO orders (order_code, customer_id, farmer_id, market_id,"
-                                + " pickup_date, pickup_start, pickup_end, cutoff_at, total_amount,"
-                                + " status) VALUES (?, ?, ?, ?, '2026-01-10', '07:00:00',"
-                                + " '08:00:00', '2026-01-09 19:00:00', 2.70, 'placed')",
-                        orderCode,
-                        customer,
-                        farmer,
-                        market));
+                        "INSERT INTO order_items (order_id, product_id, product_name, unit_price,"
+                                + " unit, quantity, subtotal) VALUES (?, ?, ?, 0.50, 'bunch', 2,"
+                                + " 1.00)",
+                        orderId,
+                        product,
+                        "Rau " + tag));
+
+        assertThat(farmerKnowledge.myOrderItems(farmer, orderId))
+                .extracting(r -> r.productName(), r -> r.quantity())
+                .containsExactly(org.assertj.core.groups.Tuple.tuple("Rau " + tag, 2));
+        // The same order id asked for by another stall reads nothing
+        assertThat(farmerKnowledge.myOrderItems(farmer + 1_000_000, orderId)).isEmpty();
     }
 
     @AfterEach
@@ -173,6 +210,7 @@ class AssistantKnowledgeIntegrationTest {
     @Test
     void everyOtherFarmerQueryRunsAgainstTheRealSchema() {
         assertThat(farmerKnowledge.farmerIdOf(farmerUser)).contains(farmer);
+        assertThat(farmerKnowledge.stallName(farmer)).contains("Vuon " + tag);
         assertThat(farmerKnowledge.myOrderByCode(farmer, orderCode)).isPresent();
         assertThatCode(
                         () -> {
