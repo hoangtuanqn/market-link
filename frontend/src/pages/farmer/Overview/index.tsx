@@ -17,7 +17,6 @@ import { Kpi } from '@/components/ui/kpi';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
-import useSession from '@/hooks/useSession';
 import { pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
@@ -42,7 +41,6 @@ const BEST_SELLER_LIMIT = 5;
 const FarmerOverviewPage = () => {
   const { t } = useTranslation('FarmerOverview');
   const { t: tc } = useTranslation();
-  const { user } = useSession();
   const [tab, setTab] = useState<TabId>('new');
   const [declineOrder, setDeclineOrder] = useState<{ orderId: number; orderCode: string } | null>(null);
   const [reason, setReason] = useState<DeclineReason>(DECLINE_REASONS[0]);
@@ -187,7 +185,7 @@ const FarmerOverviewPage = () => {
           <p className="text-overline text-ink-muted m-0">
             <LiveClock />
           </p>
-          <h1 className="text-h1 text-ink font-bold">{t('greeting', { name: user?.fullName ?? '' })}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <ButtonLink variant="secondary" to="/farmer/stock">
