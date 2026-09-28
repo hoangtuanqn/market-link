@@ -701,7 +701,7 @@
       },
       "farmerSettings": {
         "title": "Réglages",
-        "body": "Changez la langue, la devise et vos paramètres de vente par défaut."
+        "body": "Changez le thème, la langue, les formats de date et d’unités, et vos notifications."
       },
       "farmerDone": {
         "title": "Votre stand est prêt",

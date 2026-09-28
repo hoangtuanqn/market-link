@@ -701,7 +701,7 @@
       },
       "farmerSettings": {
         "title": "Pengaturan",
-        "body": "Ubah bahasa, mata uang, dan pengaturan default penjualan."
+        "body": "Ubah tema, bahasa, format tanggal dan satuan, serta notifikasi Anda."
       },
       "farmerDone": {
         "title": "Lapak Anda siap",

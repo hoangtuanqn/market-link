@@ -701,7 +701,7 @@
       },
       "farmerSettings": {
         "title": "Ajustes",
-        "body": "Cambia el idioma, la moneda y tus opciones de venta predeterminadas."
+        "body": "Cambia el tema, el idioma, los formatos de fecha y unidades, y tus notificaciones."
       },
       "farmerDone": {
         "title": "Tu puesto está listo",

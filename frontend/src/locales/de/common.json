@@ -701,7 +701,7 @@
       },
       "farmerSettings": {
         "title": "Einstellungen",
-        "body": "Ändere Sprache, Währung und deine Standardwerte für den Verkauf."
+        "body": "Ändere Design, Sprache, Datums- und Einheitenformat sowie deine Benachrichtigungen."
       },
       "farmerDone": {
         "title": "Dein Stand ist bereit",

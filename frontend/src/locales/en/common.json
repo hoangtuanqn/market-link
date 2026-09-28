@@ -715,7 +715,7 @@
       },
       "farmerSettings": {
         "title": "Settings",
-        "body": "Change language, currency and your selling defaults."
+        "body": "Change the theme, language, date and unit formats, and your notifications."
       },
       "farmerDone": {
         "title": "Your stall is ready",

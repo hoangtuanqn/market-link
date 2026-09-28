@@ -701,7 +701,7 @@
       },
       "farmerSettings": {
         "title": "Cài đặt",
-        "body": "Đổi ngôn ngữ, tiền tệ và các mặc định bán hàng."
+        "body": "Đổi giao diện, ngôn ngữ, định dạng ngày và đơn vị, cùng các thông báo."
       },
       "farmerDone": {
         "title": "Gian hàng đã sẵn sàng",
