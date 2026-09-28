@@ -131,7 +131,7 @@ public class AssistantTools {
                     tool(
                             SEARCH_PRODUCTS,
                             "Search products that approved stalls sell, across all markets or one"
-                                    + " market. Returns price in Vietnamese dong per unit, how much is left for the"
+                                    + " market. Returns price in US dollars per unit, how much is left for the"
                                     + " nearest pickup date, the stall and its markets. Use it for"
                                     + " finding a product, its price, or whether it is in stock.",
                             Map.of(
@@ -800,7 +800,7 @@ public class AssistantTools {
                     TIME.format(r.pickupStart()) + "-" + TIME.format(r.pickupEnd()));
             row.put("cutoff_at", String.valueOf(r.cutoffAt()));
             row.put("items", r.itemCount());
-            row.put("total_vnd", r.total());
+            row.put("total_usd", r.total());
             row.put("status", r.status());
             out.add(row);
             cards.add(
@@ -824,7 +824,7 @@ public class AssistantTools {
         for (ProductStockRow r : rows) {
             Map<String, Object> row = new LinkedHashMap<>();
             row.put("name", r.name());
-            row.put("price_vnd", r.price());
+            row.put("price_usd", r.price());
             row.put("unit", r.unit());
             row.put("stock", r.stockQuantity());
             row.put("reserved_by_orders", r.reserved());
@@ -857,7 +857,7 @@ public class AssistantTools {
         out.put("from", String.valueOf(from));
         out.put("to", String.valueOf(to));
         out.put("completed_orders", totals.orderCount());
-        out.put("revenue_vnd", totals.revenue());
+        out.put("revenue_usd", totals.revenue());
         out.put(
                 "best_sellers",
                 best.stream()
@@ -866,7 +866,7 @@ public class AssistantTools {
                                     Map<String, Object> row = new LinkedHashMap<>();
                                     row.put("product", b.productName());
                                     row.put("sold", b.quantitySold() + " " + b.unit());
-                                    row.put("revenue_vnd", b.revenue());
+                                    row.put("revenue_usd", b.revenue());
                                     return row;
                                 })
                         .toList());
@@ -945,13 +945,13 @@ public class AssistantTools {
         out.put("customers", totals.customers());
         out.put("active_markets", totals.markets());
         out.put("orders_in_period", totals.orders());
-        out.put("completed_revenue_vnd", totals.revenue());
+        out.put("completed_revenue_usd", totals.revenue());
         List<Map<String, Object>> markets = new ArrayList<>();
         for (MarketActivityRow m : adminKnowledge.marketActivity(from, to)) {
             Map<String, Object> row = new LinkedHashMap<>();
             row.put("market", m.marketName());
             row.put("orders", m.orderCount());
-            row.put("completed_revenue_vnd", m.revenue());
+            row.put("completed_revenue_usd", m.revenue());
             row.put("stalls_with_orders", m.activeStalls());
             markets.add(row);
         }
@@ -1078,7 +1078,7 @@ public class AssistantTools {
         out.put("order_code", order.orderCode());
         out.put("customer", order.customerName());
         out.put("pickup_date", String.valueOf(order.pickupDate()));
-        out.put("total_vnd", order.total());
+        out.put("total_usd", order.total());
         out.put("nothing_changed_yet", true);
         String detail =
                 order.customerName()
@@ -1187,7 +1187,7 @@ public class AssistantTools {
                         g.markets().stream().map(m -> m.marketName()).toList());
             }
             row.put("closes_hours_before_pickup", g.orderCutoffHours());
-            row.put("subtotal_vnd", g.subtotal());
+            row.put("subtotal_usd", g.subtotal());
             row.put(
                     "items",
                     g.items().stream()
@@ -1196,7 +1196,7 @@ public class AssistantTools {
                                         Map<String, Object> line = new LinkedHashMap<>();
                                         line.put("name", i.name());
                                         line.put("quantity", i.quantity() + " " + i.unit());
-                                        line.put("price_vnd", i.unitPrice());
+                                        line.put("price_usd", i.unitPrice());
                                         line.put("left", i.stockQuantity());
                                         line.put("status", i.status());
                                         return line;
@@ -1210,7 +1210,7 @@ public class AssistantTools {
         }
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("orders_it_will_become", groups.size());
-        result.put("total_vnd", total);
+        result.put("total_usd", total);
         result.put("paid_at_the_stall", true);
         result.put("groups", out);
         return ok(ChatIntent.PRODUCT_DETAIL, result, List.of());

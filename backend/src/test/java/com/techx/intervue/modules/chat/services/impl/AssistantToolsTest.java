@@ -17,14 +17,21 @@ import com.techx.intervue.modules.chat.repositories.AdminKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest.PageContext;
+import com.techx.intervue.modules.chat.resources.AdminRows.MarketActivityRow;
+import com.techx.intervue.modules.chat.resources.AdminRows.PlatformTotalsRow;
 import com.techx.intervue.modules.chat.resources.AssistantContext;
+import com.techx.intervue.modules.chat.resources.FarmerRows.BestSellerRow;
 import com.techx.intervue.modules.chat.resources.FarmerRows.OrderRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.ProductStockRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.SalesRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ScheduleRow;
 import com.techx.intervue.modules.chat.services.impl.AssistantTools.ToolOutcome;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
+import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
+import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver;
 import com.techx.intervue.modules.product.services.impl.ProductAvailabilityResolver.Availability;
@@ -33,6 +40,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -477,6 +485,134 @@ class AssistantToolsTest {
                             assertThat(line.productId()).isEqualTo(11L);
                             assertThat(line.quantity()).isEqualTo(2);
                         });
+    }
+
+    // ---------------------------------------- amounts reach the model as US dollars (27/09)
+
+    private static final AssistantContext ADMIN =
+            new AssistantContext(AssistantAudience.ADMIN, 1L, null);
+
+    /**
+     * Every amount in the app is US dollars (docs/decisions.md). Fields named *_vnd told the model
+     * otherwise, and it wrote "4.60 VND" and "24.000 ₫" back to Farmers.
+     */
+    @Test
+    void salesRevenueIsLabelledInUsDollars() {
+        LocalDate from = LocalDate.of(2026, 9, 1);
+        LocalDate to = LocalDate.of(2026, 9, 30);
+        when(farmerKnowledge.mySales(9L, from, to))
+                .thenReturn(new SalesRow(2, new BigDecimal("4.60")));
+        when(farmerKnowledge.bestSellers(9L, from, to))
+                .thenReturn(
+                        List.of(new BestSellerRow("Cải ngọt", "bunch", 3, new BigDecimal("1.80"))));
+
+        ToolOutcome out =
+                tools.run(
+                        FARMER_9,
+                        AssistantTools.MY_SALES,
+                        Map.of("from_date", "2026-09-01", "to_date", "2026-09-30"));
+
+        assertThat(out.content())
+                .contains("\"revenue_usd\":4.60")
+                .contains("\"revenue_usd\":1.80")
+                .doesNotContainIgnoringCase("vnd");
+    }
+
+    @Test
+    void orderTotalsAndProductPricesAreLabelledInUsDollars() {
+        when(farmerKnowledge.myOrders(9L, null, null)).thenReturn(List.of(order("ML-1", "placed")));
+        when(farmerKnowledge.myOrderByCode(9L, "ML-1"))
+                .thenReturn(Optional.of(order("ML-1", "placed")));
+        when(farmerKnowledge.myProducts(9L, null, false, 5))
+                .thenReturn(
+                        List.of(
+                                new ProductStockRow(
+                                        3L,
+                                        "Xà lách xoong",
+                                        new BigDecimal("0.70"),
+                                        "bunch",
+                                        0,
+                                        0,
+                                        "sold_out")));
+
+        assertThat(tools.run(FARMER_9, AssistantTools.MY_ORDERS, Map.of()).content())
+                .contains("\"total_usd\":")
+                .doesNotContainIgnoringCase("vnd");
+        assertThat(tools.run(FARMER_9, AssistantTools.MY_PRODUCTS, Map.of()).content())
+                .contains("\"price_usd\":0.70")
+                .doesNotContainIgnoringCase("vnd");
+        assertThat(
+                        tools.run(
+                                        FARMER_9,
+                                        AssistantTools.PROPOSE_ORDER_ACTION,
+                                        Map.of("order_code", "ML-1", "action", "accept"))
+                                .content())
+                .contains("\"total_usd\":")
+                .doesNotContainIgnoringCase("vnd");
+    }
+
+    @Test
+    void platformRevenueIsLabelledInUsDollars() {
+        LocalDate from = LocalDate.of(2026, 9, 1);
+        LocalDate to = LocalDate.of(2026, 9, 30);
+        when(adminKnowledge.platformTotals(from, to))
+                .thenReturn(new PlatformTotalsRow(10, 0, 4, 4, 10, new BigDecimal("17.00")));
+        when(adminKnowledge.marketActivity(from, to))
+                .thenReturn(
+                        List.of(
+                                new MarketActivityRow(
+                                        "Chợ Bà Chiểu", 6, new BigDecimal("9.40"), 2)));
+
+        ToolOutcome out =
+                tools.run(
+                        ADMIN,
+                        AssistantTools.PLATFORM_STATS,
+                        Map.of("from_date", "2026-09-01", "to_date", "2026-09-30"));
+
+        assertThat(out.content())
+                .contains("\"completed_revenue_usd\":17.00")
+                .contains("\"completed_revenue_usd\":9.40")
+                .doesNotContainIgnoringCase("vnd");
+    }
+
+    @Test
+    void theCartIsLabelledInUsDollars() {
+        AssistantContext withCart =
+                new AssistantContext(
+                        AssistantAudience.CUSTOMER,
+                        7L,
+                        null,
+                        List.of(new PageContext.CartLine(1L, 2)));
+        when(orders.preview(eq(7L), any()))
+                .thenReturn(
+                        List.of(
+                                new OrderGroupPreviewResource(
+                                        4L,
+                                        "Vườn Út Hiền",
+                                        1L,
+                                        "Chợ Bà Chiểu",
+                                        12,
+                                        List.of(
+                                                new PreviewItemResource(
+                                                        1L,
+                                                        "Rau muống",
+                                                        "bunch",
+                                                        new BigDecimal("0.50"),
+                                                        2,
+                                                        new BigDecimal("1.00"),
+                                                        25,
+                                                        "available")),
+                                        new BigDecimal("1.00"),
+                                        List.of(),
+                                        List.of())));
+
+        ToolOutcome out = tools.run(withCart, AssistantTools.CART_PREVIEW, Map.of());
+
+        assertThat(out.content())
+                .contains("\"subtotal_usd\":1.00")
+                .contains("\"price_usd\":0.50")
+                .contains("\"total_usd\":1.00")
+                .doesNotContainIgnoringCase("vnd");
     }
 
     // ------------------------------------------- FR-094 the feedback inbox is quoted, not obeyed
