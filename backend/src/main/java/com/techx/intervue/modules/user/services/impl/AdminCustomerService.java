@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.user.services.impl;
 
+import com.techx.intervue.modules.order.services.interfaces.OrderServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
@@ -43,6 +44,7 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
     private final UserStatusHistoryWriter history;
     private final JobQueueInterface jobQueue;
     private final Clock clock;
+    private final OrderServiceInterface orders;
 
     @Override
     @Transactional(readOnly = true)
@@ -97,6 +99,10 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
         payload.put("reason", reason);
         payload.put("until", until == null ? "" : until.toString());
         jobQueue.enqueue(JOB_NOTIFY_DEACTIVATED, payload);
+
+        if (until == null) {
+            orders.cancelAllForDeactivatedCustomer(user.getId(), actorId);
+        }
     }
 
     private void reactivate(User user, Long actorId, UserStatus from) {

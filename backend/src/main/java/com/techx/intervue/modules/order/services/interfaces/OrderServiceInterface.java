@@ -95,4 +95,11 @@ public interface OrderServiceInterface {
      * Returns false when the order is gone or no longer ready.
      */
     boolean autoComplete(long orderId);
+
+    /**
+     * FR-072: an admin permanently deactivated this customer — cancel every order of theirs still
+     * {@code placed}/{@code accepted} (D-02 restores stock through the same door every other
+     * cancellation uses), and tell each Farmer why so they do not think the customer cancelled it.
+     */
+    void cancelAllForDeactivatedCustomer(long customerId, Long adminActorId);
 }

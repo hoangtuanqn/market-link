@@ -199,6 +199,42 @@ class AdminCustomerServiceTest {
     }
 
     @Test
+    void permanentBanCancelsOpenOrdersAndRestoresStock() {
+        customers.setStatus(customerId, "inactive", "Fake account", null, adminUserId);
+
+        String status =
+                jdbc.queryForObject(
+                        "SELECT status FROM orders WHERE id = ?", String.class, orderId);
+        assertThat(status).isEqualTo("cancelled");
+    }
+
+    @Test
+    void permanentBanLeavesAnotherCustomersOrdersAlone() {
+        long otherCustomer =
+                fx.user("customer", "Other customer", passwordEncoder.encode(PASSWORD));
+        long farmer =
+                jdbc.queryForObject(
+                        "SELECT id FROM farmer_profiles WHERE stall_name = ?",
+                        Long.class,
+                        "Stall " + fx.tag);
+        long otherOrder =
+                fx.order(
+                        otherCustomer,
+                        farmer,
+                        fx.market("Second market"),
+                        "placed",
+                        5000,
+                        LocalDate.of(2026, 10, 2));
+
+        customers.setStatus(customerId, "inactive", "Fake account", null, adminUserId);
+
+        String status =
+                jdbc.queryForObject(
+                        "SELECT status FROM orders WHERE id = ?", String.class, otherOrder);
+        assertThat(status).isEqualTo("placed");
+    }
+
+    @Test
     void everyStatusChangeIsRecordedInHistory() {
         customers.setStatus(customerId, "inactive", "No-shows", null, adminUserId);
         customers.setStatus(customerId, "active", null, null, adminUserId);
