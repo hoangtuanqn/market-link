@@ -1,6 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import AuthApi from '@/api-requests/auth.requests';
 import OrderApi from '@/api-requests/order.requests';
 import StallApi, { type StallDetailDto } from '@/api-requests/stall.requests';
 import { USER_ROLE } from '@/constants/enums';
@@ -75,5 +77,31 @@ describe('FarmerLayout menu while suspended (FR-071, D-09)', () => {
     expect(screen.queryByRole('link', { name: 'Pickup slots' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Stall & pickup' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Overview' })).not.toBeInTheDocument();
+  });
+});
+
+describe('FarmerLayout sign out (FR-006)', () => {
+  beforeEach(() => {
+    Session.save({ accessToken: 'token', user: farmer });
+    vi.spyOn(OrderApi, 'farmerList').mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 1 });
+    vi.spyOn(StallApi, 'myProfile').mockResolvedValue(stallProfile('approved'));
+  });
+
+  afterEach(() => {
+    Session.clear();
+    vi.restoreAllMocks();
+  });
+
+  /** A plain link to /login bounces a signed-in Farmer back, so the sidebar must really end the session. */
+  it('signs out from the sidebar instead of linking to the sign-in page', async () => {
+    const logout = vi
+      .spyOn(AuthApi, 'logout')
+      .mockResolvedValue({ message: 'Signed out.' } as Awaited<ReturnType<typeof AuthApi.logout>>);
+    renderFarmerArea();
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Sign out' }));
+
+    await waitFor(() => expect(Session.getUser()).toBeNull());
+    expect(logout).toHaveBeenCalledTimes(1);
   });
 });
