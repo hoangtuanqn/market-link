@@ -8,4 +8,5 @@ public record AdminCustomerResource(
         String phone,
         String status,
         long orderCount,
-        String createdAt) {}
+        String createdAt,
+        String avatarUrl) {}

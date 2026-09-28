@@ -1,11 +1,12 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { AdminReportApi, type AdminCustomerDto } from '@/api-requests/report.requests';
+import Avatar from '@/components/Avatar';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
+import Tabs from '@/components/ui/tabs';
 import ReasonPicker from '@/components/ReasonPicker';
 import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/input';
@@ -17,10 +18,11 @@ import { formatDate } from '@/lib/format';
 import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import CustomerTableSkeleton from './CustomerTableSkeleton';
 
 const FILTERS = ['all', 'active', 'inactive'] as const;
 type Filter = (typeof FILTERS)[number];
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 const NO_ROWS: AdminCustomerDto[] = [];
 
 /** Pill for the account state. Colour never carries the meaning alone — each state has its own word and glyph. */
@@ -57,6 +59,14 @@ const AdminCustomersPage = () => {
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const {
     state: load,
@@ -88,6 +98,7 @@ const AdminCustomersPage = () => {
 
   const rows = load.kind === 'ready' ? load.data.items : NO_ROWS;
   const total = load.kind === 'ready' ? load.data.total : 0;
+  const showSkeleton = load.kind === 'loading' || initialLoading;
 
   const changeFilter = (f: Filter) => {
     if (f === filter) return;
@@ -136,14 +147,20 @@ const AdminCustomersPage = () => {
       key: 'name',
       label: t('col.customer'),
       render: (c) => (
-        <>
-          <Link to={`${ADMIN_CUSTOMERS_PATH}/${c.userId}`} className="text-brand underline">
-            <b>{c.fullName}</b>
-          </Link>
-          <span className="text-ink-muted block text-[13px]">
-            {c.email} {c.phone ? `· ${c.phone}` : ''}
-          </span>
-        </>
+        <div className="flex items-center gap-3">
+          <Avatar name={c.fullName} email={c.email} url={c.avatarUrl ?? undefined} size={36} className="shrink-0" />
+          <div className="min-w-0">
+            <Link
+              to={`${ADMIN_CUSTOMERS_PATH}/${c.userId}`}
+              className="text-brand block truncate font-bold underline hover:opacity-85"
+            >
+              {c.fullName}
+            </Link>
+            <span className="text-ink-muted block truncate text-[13px]">
+              {c.email} {c.phone ? `· ${c.phone}` : ''}
+            </span>
+          </div>
+        </div>
       ),
     },
     { key: 'joined', label: t('col.joined'), render: (c) => formatDate(new Date(c.createdAt)) },
@@ -169,7 +186,7 @@ const AdminCustomersPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
@@ -191,26 +208,31 @@ const AdminCustomersPage = () => {
         </form>
       </div>
 
-      <div role="group" aria-label={t('filterLabel')} className="flex flex-wrap gap-2">
-        {FILTERS.map((f) => (
-          <Chip key={f} pressed={filter === f} onClick={() => changeFilter(f)}>
-            {t(`filter.${f}`)}
-            {counts[f] !== undefined && <span className="text-ink-muted ml-1">({counts[f]})</span>}
-          </Chip>
-        ))}
-      </div>
+      <Tabs
+        label={t('filterLabel')}
+        value={filter}
+        onChange={(id) => changeFilter(id as Filter)}
+        tabs={FILTERS.map((f) => ({
+          id: f,
+          label: t(`filter.${f}`),
+          count: counts[f],
+        }))}
+      />
 
-      {load.kind === 'loading' ? (
-        <p role="status" className="text-ink-muted">
-          {tc('notify.list.loading')}
-        </p>
+      {showSkeleton ? (
+        <CustomerTableSkeleton />
       ) : load.kind === 'error' ? (
-        <LoadError noun={t('noun')} onRetry={retry} />
+        <LoadError noun={t('noun')} onRetry={retry} className="w-full flex-1" />
       ) : rows.length ? (
-        <div className="flex flex-col gap-4">
-          <Table caption={t('caption', { count: total })} columns={columns} rows={rows} />
+        <div className="flex flex-1 flex-col justify-between gap-4">
+          <Table
+            caption={t('caption', { count: total })}
+            columns={columns}
+            rows={rows}
+            className="min-h-[380px] w-full flex-1"
+          />
           {total > PAGE_SIZE && (
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
               <span className="text-small text-ink-muted">
                 {t('showing', { from: (page - 1) * PAGE_SIZE + 1, to: (page - 1) * PAGE_SIZE + rows.length, total })}
               </span>
@@ -219,7 +241,7 @@ const AdminCustomersPage = () => {
           )}
         </div>
       ) : (
-        <DataState fill title={t('empty.title')} text={t('empty.text')} />
+        <DataState fill title={t('empty.title')} text={t('empty.text')} className="min-h-[380px] w-full flex-1" />
       )}
 
       <Dialog

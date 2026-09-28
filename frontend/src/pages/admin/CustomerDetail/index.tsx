@@ -1,9 +1,10 @@
 import { isAxiosError } from 'axios';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import { AdminReportApi } from '@/api-requests/report.requests';
 import ReviewApi from '@/api-requests/review.requests';
+import Avatar from '@/components/Avatar';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import ReviewCard from '@/components/ReviewCard';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -21,6 +22,7 @@ import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import { CustomerStatusPill } from '@/pages/admin/Customers';
+import CustomerDetailSkeleton from './CustomerDetailSkeleton';
 
 const isNotFound = (error: unknown) => isAxiosError(error) && error.response?.status === 404;
 
@@ -57,13 +59,17 @@ const AdminCustomerDetailPage = () => {
   const [confirmKind, setConfirmKind] = useState<ConfirmKind | null>(null);
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [busy, setBusy] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
-  if (customerLoad.kind === 'loading') {
-    return (
-      <p role="status" className="text-ink-muted">
-        {tc('notify.list.loading')}
-      </p>
-    );
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (customerLoad.kind === 'loading' || initialLoading) {
+    return <CustomerDetailSkeleton />;
   }
 
   if (!Number.isFinite(id) || (customerLoad.kind === 'error' && isNotFound(customerLoad.error))) {
@@ -147,7 +153,7 @@ const AdminCustomerDetailPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <p className="text-small text-ink-muted">
         <Link to={ADMIN_CUSTOMERS_PATH} className="text-brand underline">
           {t('allCustomers')}
@@ -155,14 +161,23 @@ const AdminCustomerDetailPage = () => {
         · {customer.fullName}
       </p>
 
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <p className="text-overline text-ink-muted uppercase">
-            {t('since', { joined: formatDate(new Date(customer.createdAt)) })}
-          </p>
-          <h1 className="text-h2 text-ink font-bold">{customer.fullName}</h1>
-          <div>
-            <CustomerStatusPill active={active} />
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <Avatar
+            name={customer.fullName}
+            email={customer.email}
+            url={customer.avatarUrl ?? undefined}
+            size={64}
+            className="shrink-0 text-xl font-bold shadow-sm"
+          />
+          <div className="flex flex-col gap-1.5">
+            <p className="text-overline text-ink-muted uppercase">
+              {t('since', { joined: formatDate(new Date(customer.createdAt)) })}
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <h1 className="text-h2 text-ink leading-tight font-bold">{customer.fullName}</h1>
+              <CustomerStatusPill active={active} />
+            </div>
           </div>
         </div>
         {active ? (
@@ -174,8 +189,8 @@ const AdminCustomerDetailPage = () => {
         )}
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <div className="flex flex-col gap-8">
+      <div className="grid flex-1 items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <div className="flex flex-1 flex-col gap-6">
           <section className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-h2">{t('orders.title')}</h2>
@@ -184,9 +199,7 @@ const AdminCustomerDetailPage = () => {
               </Link>
             </div>
             {ordersLoad.kind === 'loading' ? (
-              <p role="status" className="text-ink-muted">
-                {tc('notify.list.loading')}
-              </p>
+              <div className="border-line-strong bg-surface-raised min-h-[140px] w-full animate-pulse rounded-md border-[1.5px] p-6" />
             ) : ordersLoad.kind === 'error' ? (
               <LoadError noun={t('orders.noun')} onRetry={retryOrders} />
             ) : orders.length ? (
@@ -195,20 +208,23 @@ const AdminCustomerDetailPage = () => {
                 <p className="text-small text-ink-muted">{t('orders.note')}</p>
               </>
             ) : (
-              <DataState title={t('orders.empty.title')} text={t('orders.empty.text')} />
+              <DataState
+                center
+                title={t('orders.empty.title')}
+                text={t('orders.empty.text')}
+                className="min-h-[140px] w-full max-w-none py-6"
+              />
             )}
           </section>
 
-          <section className="flex flex-col gap-3">
+          <section className="flex flex-1 flex-col gap-3">
             <h2 className="text-h2">{t('reviews.title')}</h2>
             {reviewsLoad.kind === 'loading' ? (
-              <p role="status" className="text-ink-muted">
-                {tc('notify.list.loading')}
-              </p>
+              <div className="border-line-strong bg-surface-raised min-h-[160px] w-full flex-1 animate-pulse rounded-md border-[1.5px] p-6" />
             ) : reviewsLoad.kind === 'error' ? (
               <LoadError noun={t('reviews.noun')} onRetry={retryReviews} />
             ) : reviewsLoad.data.items.length ? (
-              <>
+              <div className="flex flex-1 flex-col gap-3">
                 {reviewsLoad.data.items.map((r) => (
                   <ReviewCard
                     key={r.id}
@@ -235,15 +251,20 @@ const AdminCustomerDetailPage = () => {
                   />
                 ))}
                 <p className="text-small text-ink-muted">{t('reviews.note')}</p>
-              </>
+              </div>
             ) : (
-              <DataState title={t('reviews.empty.title')} text={t('reviews.empty.text')} />
+              <DataState
+                center
+                title={t('reviews.empty.title')}
+                text={t('reviews.empty.text')}
+                className="min-h-[160px] w-full max-w-none flex-1 py-8"
+              />
             )}
           </section>
         </div>
 
-        <aside className="sticky top-20 flex flex-col gap-4">
-          <Card className="flex flex-col gap-3 p-6">
+        <aside className="flex flex-1 flex-col gap-4">
+          <Card className="flex shrink-0 flex-col gap-3 p-6">
             <h2 className="text-h3">{t('contact.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
               <dt className="text-ink-muted">{t('contact.email')}</dt>
@@ -255,7 +276,7 @@ const AdminCustomerDetailPage = () => {
             </dl>
           </Card>
 
-          <Card className="flex flex-col gap-3 p-6">
+          <Card className="flex shrink-0 flex-col gap-3 p-6">
             <h2 className="text-h3">{t('habits.title')}</h2>
             <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[15px]">
               <dt className="text-ink-muted">{t('habits.orders')}</dt>
@@ -272,9 +293,9 @@ const AdminCustomerDetailPage = () => {
             )}
           </Card>
 
-          <Card className="bg-surface-sunken flex flex-col gap-2 p-4">
-            <h3 className="text-h3">{t('whatItDoes.title')}</h3>
-            <p className="text-small">{t('whatItDoes.text')}</p>
+          <Card className="bg-surface-sunken flex flex-1 flex-col justify-start gap-2.5 p-5">
+            <h3 className="text-h3 text-ink font-bold">{t('whatItDoes.title')}</h3>
+            <p className="text-small text-ink-muted leading-relaxed">{t('whatItDoes.text')}</p>
           </Card>
         </aside>
       </div>

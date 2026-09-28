@@ -55,6 +55,7 @@ export type AdminCustomerDto = {
   status: 'active' | 'inactive' | 'suspended';
   orderCount: number;
   createdAt: string;
+  avatarUrl?: string | null;
 };
 
 /** `GET /admin/reports/top-products` (FR-075): the best-selling products platform-wide, completed orders only. */
