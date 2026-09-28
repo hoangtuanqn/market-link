@@ -28,6 +28,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,6 +84,28 @@ public class SlotService implements SlotServiceInterface {
         return LocalTime.of(m / 60, m % 60);
     }
 
+    /**
+     * FR-067: whether the window [w0, w1) overlaps a slot of that day still inside the day's time
+     * window — generating again with another slot length must not lay new slots over those. A slot
+     * outside the window is no longer offered or bookable ({@link PickupSlotRepository#OPEN_DAYS}),
+     * so it does not block the window's new slots.
+     */
+    static boolean overlapsAnOfferedSlot(
+            List<PickupSlot> sameDay, FarmerOperatingDay day, LocalTime[] w) {
+        if (sameDay == null) {
+            return false;
+        }
+        for (PickupSlot s : sameDay) {
+            boolean offered =
+                    !s.getStartTime().isBefore(day.getPickupStartTime())
+                            && !s.getEndTime().isAfter(day.getPickupEndTime());
+            if (offered && s.getStartTime().isBefore(w[1]) && w[0].isBefore(s.getEndTime())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     @Transactional
     public List<SlotResource> generateSlots(long userId, GenerateSlotsRequest request) {
@@ -115,11 +138,13 @@ public class SlotService implements SlotServiceInterface {
         List<PickupSlot> existing =
                 slotRepository.findByFarmerMarketIdAndSlotDateBetween(link.getId(), from, to);
         // Idempotent: an existing slot (even a disabled one, or one whose capacity was already
-        // edited) is left unchanged; uq_slot also blocks
+        // edited) is left unchanged, and no new window is laid over it; uq_slot also blocks
         // two simultaneous requests
         Set<String> taken = new HashSet<>();
+        Map<LocalDate, List<PickupSlot>> existingByDate = new HashMap<>();
         for (PickupSlot s : existing) {
             taken.add(s.getSlotDate() + "@" + s.getStartTime());
+            existingByDate.computeIfAbsent(s.getSlotDate(), k -> new ArrayList<>()).add(s);
         }
 
         List<PickupSlot> fresh = new ArrayList<>();
@@ -133,7 +158,8 @@ public class SlotService implements SlotServiceInterface {
                             day.getPickupStartTime(),
                             day.getPickupEndTime(),
                             request.slotMinutes())) {
-                if (taken.contains(d + "@" + w[0])) {
+                if (taken.contains(d + "@" + w[0])
+                        || overlapsAnOfferedSlot(existingByDate.get(d), day, w)) {
                     continue;
                 }
                 PickupSlot slot = new PickupSlot();

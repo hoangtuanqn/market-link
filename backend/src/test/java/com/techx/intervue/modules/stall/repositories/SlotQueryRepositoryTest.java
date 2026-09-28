@@ -264,6 +264,36 @@ class SlotQueryRepositoryTest {
     }
 
     /**
+     * FR-067: the stall shortened DAY's time window after its slots were generated. A slot that no
+     * longer fits inside the window is neither offered nor bookable, like a dropped weekday.
+     */
+    @Test
+    void aSlotOutsideTheStallsCurrentTimeWindowIsNotOfferedNorBookable() {
+        FarmerProfile f = approvedFarmer();
+        FarmerMarket fm = link(f, market());
+        PickupSlot early = slot(fm, DAY, 7, 0, true);
+        PickupSlot inside = slot(fm, DAY, 8, 0, true);
+        PickupSlot late = slot(fm, DAY, 10, 0, true);
+        farmerDays.replaceDays(
+                fm.getId(),
+                everyDay().stream()
+                        .map(
+                                d ->
+                                        d.dayOfWeek() == weekdayOf(DAY)
+                                                ? new OperatingDaysRequest.Day(
+                                                        d.dayOfWeek(), "08:00", "10:00")
+                                                : d)
+                        .toList());
+
+        assertThat(query.publicSlots(f.getId(), null, DAY, DAY, EARLY))
+                .extracting(SlotResource::startTime)
+                .containsExactly("08:00");
+        assertThat(slots.isOnOpenDay(early.getId())).isFalse();
+        assertThat(slots.isOnOpenDay(inside.getId())).isTrue();
+        assertThat(slots.isOnOpenDay(late.getId())).isFalse();
+    }
+
+    /**
      * A date counts as orderable only when a slot still has room, is switched on and is before its
      * cutoff — the dates the availability resolver may show stock for.
      */
