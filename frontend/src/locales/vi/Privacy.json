@@ -56,7 +56,7 @@
       "title": "Vì sao chúng tôi lưu",
       "blocks": [
         {
-          "p": "Tên và số điện thoại của bạn tồn tại để sạp biết ai tới nhận và liên lạc được vào sáng ngày họp chợ. Địa chỉ của bạn tồn tại để hiện chợ cách bao xa. Email là cách bạn đăng nhập và là cách bạn được báo về đơn hàng."
+          "p": "Tên và số điện thoại của bạn tồn tại để sạp biết ai tới nhận và liên lạc được vào sáng ngày họp chợ. Địa chỉ của bạn tồn tại để hiện chợ cách bao xa và điền sẵn chỉ đường. Email là cách bạn đăng nhập và là cách bạn được báo về đơn hàng."
         },
         {
           "p": "Đơn hàng và lịch sử của chúng tồn tại để hai bên cùng thấy đã thoả thuận gì và đổi lúc nào. Đánh giá tồn tại để người mua khác có cơ sở nhìn nhận một sạp. Yêu thích tồn tại để bạn được báo khi thứ bạn muốn có hàng trở lại."
@@ -132,8 +132,8 @@
           "facts": {
             "items": [
               [
-                "Google Maps và OpenStreetMap",
-                "Các ô bản đồ đến từ máy chủ Google Maps, nơi thấy địa chỉ IP của bạn và đại khái bạn đang xem vùng nào trên bản đồ. Khi Google Maps không dùng được, các ô bản đồ đến từ máy chủ OpenStreetMap, nơi cũng thấy những điều đó. Dữ liệu bản đồ thuộc © Google, hoặc © những người đóng góp cho OpenStreetMap. Liên kết chỉ đường mở Google Maps trong tab mới, nơi áp dụng chính sách quyền riêng tư của Google."
+                "OpenStreetMap",
+                "Các ô bản đồ đến từ máy chủ OpenStreetMap, nơi thấy địa chỉ IP của bạn và đại khái bạn đang xem vùng nào trên bản đồ. Dữ liệu bản đồ thuộc © những người đóng góp cho OpenStreetMap. Liên kết chỉ đường mở OpenStreetMap trong tab mới."
               ],
               ["Google Fonts", "Hai bộ chữ được tải từ Google Fonts, nơi thấy địa chỉ IP của bạn khi trang mở."]
             ]

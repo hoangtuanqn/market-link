@@ -59,7 +59,7 @@
       "title": "Pourquoi nous le conservons",
       "blocks": [
         {
-          "p": "Votre nom et votre téléphone existent pour que le stand sache qui vient retirer et puisse vous joindre le matin du marché. Votre adresse existe pour montrer la distance jusqu'à un marché. Votre e-mail est la façon dont vous vous connectez et dont vous êtes informé d'une commande."
+          "p": "Votre nom et votre téléphone existent pour que le stand sache qui vient retirer et puisse vous joindre le matin du marché. Votre adresse existe pour montrer la distance jusqu'à un marché et pré-remplir l'itinéraire. Votre e-mail est la façon dont vous vous connectez et dont vous êtes informé d'une commande."
         },
         {
           "p": "Les commandes et leur historique existent pour que les deux parties voient ce qui a été convenu et quand cela a changé. Les avis existent pour que d'autres acheteurs puissent juger un stand. Les favoris existent pour qu'on puisse vous prévenir quand ce que vous vouliez est de nouveau disponible."
@@ -135,8 +135,8 @@
           "facts": {
             "items": [
               [
-                "Google Maps et OpenStreetMap",
-                "Les tuiles de carte viennent des serveurs de Google Maps, qui voient votre adresse IP et à peu près quelle partie de la carte vous regardez. Si Google Maps n'est pas disponible, elles viennent des serveurs d'OpenStreetMap, qui voient la même chose. Les données cartographiques sont © Google, ou © les contributeurs d'OpenStreetMap. Le lien d'itinéraire ouvre Google Maps dans un nouvel onglet, où s'applique la politique de confidentialité de Google."
+                "OpenStreetMap",
+                "Les tuiles de carte viennent des serveurs d'OpenStreetMap, qui voient votre adresse IP et à peu près quelle partie de la carte vous regardez. Les données cartographiques sont © les contributeurs d'OpenStreetMap. Le lien d'itinéraire ouvre OpenStreetMap dans un nouvel onglet."
               ],
               [
                 "Google Fonts",

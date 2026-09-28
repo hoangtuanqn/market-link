@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { ButtonLink } from '@/components/ui/button';
-import { MAP_CREDIT } from '@/config/map';
 
 const AboutCta = () => {
   const { t } = useTranslation('About');
@@ -86,8 +85,7 @@ const AboutCta = () => {
             })}
           </span>
           <span>·</span>
-          {/* Follows the tile provider, like the footer's credit. */}
-          <span>{MAP_CREDIT ?? t('credits.mapDataValue', '© OpenStreetMap contributors')}</span>
+          <span>{t('credits.mapDataValue', '© OpenStreetMap contributors')}</span>
         </div>
       </section>
     </>

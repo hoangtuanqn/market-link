@@ -15,7 +15,7 @@
     "close": "Schließt",
     "lat": "Breitengrad",
     "lng": "Längengrad",
-    "lngHint": "Oder zieh die Markierung.",
+    "lngHint": "Oder zieh die Markierung. Die Kartendaten stammen von OpenStreetMap.",
     "notes": "Hinweise für die Stände",
     "images": "Fotos"
   },

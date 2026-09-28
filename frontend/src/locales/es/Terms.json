@@ -45,7 +45,7 @@
           "p": "Una cuenta puede compartirse en casa. MarketLink no distingue a las personas dentro de una misma cuenta, así que todo lo hecho con tu acceso cuenta como hecho por ti. Guarda tu contraseña y avísanos si crees que alguien más la tiene."
         },
         {
-          "p": "La dirección que das se usa para mostrar la distancia a los mercados. Tu teléfono se le da al puesto en el que pides, para que puedan localizarte la mañana del mercado."
+          "p": "La dirección que das se usa para mostrar la distancia a los mercados y para rellenar la ruta de antemano. Tu teléfono se le da al puesto en el que pides, para que puedan localizarte la mañana del mercado."
         }
       ]
     },
@@ -155,7 +155,7 @@
       "title": "Mapas y otras fuentes",
       "blocks": [
         {
-          "p": "Las ubicaciones de mercados y puestos se dibujan sobre Google Maps, o sobre OpenStreetMap cuando Google Maps no está disponible. Los datos del mapa son © Google o © colaboradores de OpenStreetMap, y el enlace de indicaciones abre Google Maps en una pestaña nueva. El marcador lo coloca el mercado o el puesto y es tan preciso como ellos lo hayan puesto."
+          "p": "Las ubicaciones de mercados y puestos se dibujan sobre OpenStreetMap. Los datos del mapa son © colaboradores de OpenStreetMap, y el enlace de indicaciones abre OpenStreetMap en una pestaña nueva. El marcador lo coloca el mercado o el puesto y es tan preciso como ellos lo hayan puesto."
         },
         {
           "p": "Las fotos de producto pertenecen al puesto que las subió. Las fotos usadas en las páginas propias de la plataforma se acreditan en el ReadMe del proyecto."

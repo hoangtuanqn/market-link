@@ -15,7 +15,7 @@
     "close": "收市时间",
     "lat": "纬度",
     "lng": "经度",
-    "lngHint": "也可以直接拖动图钉。",
+    "lngHint": "也可以直接拖动图钉。地图数据来自 OpenStreetMap。",
     "notes": "给摊位的说明",
     "images": "照片"
   },

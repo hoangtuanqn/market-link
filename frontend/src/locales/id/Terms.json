@@ -45,7 +45,7 @@
           "p": "Satu akun boleh dipakai bersama di rumah. MarketLink tidak membedakan orang di dalam satu akun, jadi apa pun yang dilakukan dengan login Anda dianggap dilakukan oleh Anda. Simpan kata sandi untuk diri sendiri dan beri tahu kami jika Anda merasa orang lain mengetahuinya."
         },
         {
-          "p": "Alamat yang Anda isi dipakai untuk menampilkan jarak ke pasar. Nomor telepon Anda diberikan kepada lapak tempat Anda memesan, agar mereka bisa menghubungi Anda pada pagi hari pasar."
+          "p": "Alamat yang Anda isi dipakai untuk menampilkan jarak ke pasar dan mengisi rute terlebih dahulu. Nomor telepon Anda diberikan kepada lapak tempat Anda memesan, agar mereka bisa menghubungi Anda pada pagi hari pasar."
         }
       ]
     },
@@ -155,7 +155,7 @@
       "title": "Peta dan sumber lain",
       "blocks": [
         {
-          "p": "Lokasi pasar dan lapak digambar di atas Google Maps, atau di atas OpenStreetMap saat Google Maps tidak tersedia. Data peta adalah © Google atau © kontributor OpenStreetMap, dan tautan rute membuka Google Maps di tab baru. Penanda dipasang oleh pasar atau lapak sendiri dan seakurat cara mereka memasangnya."
+          "p": "Lokasi pasar dan lapak digambar di atas OpenStreetMap. Data peta adalah © kontributor OpenStreetMap, dan tautan rute membuka OpenStreetMap di tab baru. Penanda dipasang oleh pasar atau lapak sendiri dan seakurat cara mereka memasangnya."
         },
         {
           "p": "Foto produk adalah milik lapak yang mengunggahnya. Foto yang dipakai di halaman platform sendiri dicantumkan sumbernya di ReadMe proyek."

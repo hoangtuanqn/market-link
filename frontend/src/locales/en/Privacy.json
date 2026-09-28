@@ -56,7 +56,7 @@
       "title": "Why we hold it",
       "blocks": [
         {
-          "p": "Your name and phone number exist so the stall knows who is collecting and can reach you on market morning. Your address exists to show how far a market is. Your email is how you sign in and how you are told about an order."
+          "p": "Your name and phone number exist so the stall knows who is collecting and can reach you on market morning. Your address exists to show how far a market is and to pre-fill directions. Your email is how you sign in and how you are told about an order."
         },
         {
           "p": "Orders and their history exist so both sides can see what was agreed and when it changed. Reviews exist so other shoppers can judge a stall. Favorites exist so you can be told when something you wanted is back in stock."
@@ -132,8 +132,8 @@
           "facts": {
             "items": [
               [
-                "Google Maps and OpenStreetMap",
-                "Map tiles come from Google Maps servers, which see your IP address and roughly which part of the map you are looking at. If Google Maps is not available the tiles come from OpenStreetMap servers instead, which see the same. Map data is © Google, or © OpenStreetMap contributors. The directions link opens Google Maps in a new tab, where Google's own privacy policy applies."
+                "OpenStreetMap",
+                "Map tiles come from OpenStreetMap servers, which see your IP address and roughly which part of the map you are looking at. Map data is © OpenStreetMap contributors. The directions link opens OpenStreetMap in a new tab."
               ],
               [
                 "Google Fonts",

@@ -13,7 +13,7 @@
     "selected": "테두리: 선택됨"
   },
   "mapLabel": "모든 시장과 매대 지도",
-  "directions": "길찾기는 새 탭의 Google 지도에서 열려요.",
+  "directions": "길찾기는 새 탭의 OpenStreetMap에서 열려요.",
   "openOn": "{{day}} 운영",
   "empty": {
     "title": "표시할 시장이 없어요",

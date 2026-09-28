@@ -148,7 +148,8 @@ services:
     environment:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
       # Empty → the map uses OpenStreetMap tiles (see .env.example)
-      VITE_GOOGLE_MAPS_KEY: ${VITE_GOOGLE_MAPS_KEY:-}
+      VITE_MAP_TILE_URL: ${VITE_MAP_TILE_URL:-}
+      VITE_MAP_ATTRIBUTION: ${VITE_MAP_ATTRIBUTION:-}
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     volumes:

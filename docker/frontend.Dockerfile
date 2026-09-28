@@ -24,9 +24,11 @@ FROM deps AS build
 # Vite embeds the VITE_* variables into the bundle at build time, so they must be passed as build args
 ARG VITE_API_URL=http://localhost:8080
 ENV VITE_API_URL=${VITE_API_URL}
-# Map: Google Maps tiles with a key; when empty src/config/map.ts uses OpenStreetMap tiles by itself
-ARG VITE_GOOGLE_MAPS_KEY=""
-ENV VITE_GOOGLE_MAPS_KEY=${VITE_GOOGLE_MAPS_KEY}
+# Map: when empty src/config/map.ts uses OpenStreetMap tiles by itself
+ARG VITE_MAP_TILE_URL=""
+ENV VITE_MAP_TILE_URL=${VITE_MAP_TILE_URL}
+ARG VITE_MAP_ATTRIBUTION=""
+ENV VITE_MAP_ATTRIBUTION=${VITE_MAP_ATTRIBUTION}
 COPY . .
 RUN npm run build
 

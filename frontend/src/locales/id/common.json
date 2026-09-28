@@ -405,7 +405,21 @@
     "finding": "Mencari lokasi Anda…"
   },
   "directions": {
-    "title": "Petunjuk arah ke {{name}}"
+    "title": "Petunjuk arah ke {{name}}",
+    "question": "Anda berangkat dari mana?",
+    "current": "Lokasi saya saat ini",
+    "currentShared": "Sudah dibagikan",
+    "currentAsk": "Browser Anda akan bertanya dulu",
+    "address": "Sebuah alamat",
+    "addressNote": "Jalan atau landmark di Kota Ho Chi Minh.",
+    "addressLabel": "Alamat awal",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "Nama jalan dan kelurahan paling efektif. Nomor rumah sering tidak ada di peta, dan OpenStreetMap akan meminta Anda memilih tempat jika tidak menemukannya.",
+    "useSaved": "Gunakan alamat tersimpan",
+    "none": "Saya akan mengetiknya di peta",
+    "noneNote": "Membuka OpenStreetMap dengan tujuan saja yang terisi.",
+    "privacy": "Petunjuk arah dibuka di openstreetmap.org di tab baru. MarketLink tidak melacak lokasi Anda.",
+    "open": "Buka petunjuk arah"
   },
   "tier": {
     "bronze": "Perunggu",
@@ -584,7 +598,7 @@
       },
       "customerMap": {
         "title": "Peta pasar",
-        "body": "Temukan pasar terdekat dan dapatkan petunjuk arah di Google Maps."
+        "body": "Temukan pasar terdekat dan dapatkan petunjuk arah di OpenStreetMap."
       },
       "customerSearch": {
         "title": "Pencarian",
