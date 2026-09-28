@@ -134,6 +134,7 @@
     "noteRequired": "Say why this is not the stall's fault.",
     "decisionNote": "Note: {{text}}",
     "done": "Decision saved. The customer and the stall have been told.",
+    "alreadyDecided": "Another admin has already decided on this report.",
     "suspend": "Suspend stall",
     "suspendLabel": "Suspend stall: {{stall}}"
   }

@@ -134,6 +134,7 @@
     "noteRequired": "Sebutkan alasan ini bukan kesalahan lapak.",
     "decisionNote": "Catatan: {{text}}",
     "done": "Keputusan disimpan. Pelanggan dan lapak sudah diberi tahu.",
+    "alreadyDecided": "Admin lain sudah memutuskan laporan ini.",
     "suspend": "Tangguhkan lapak",
     "suspendLabel": "Tangguhkan lapak: {{stall}}"
   }

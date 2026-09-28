@@ -134,6 +134,7 @@
     "noteRequired": "Hãy ghi vì sao không phải lỗi sạp.",
     "decisionNote": "Ghi chú: {{text}}",
     "done": "Đã lưu quyết định. Khách và sạp đã được báo.",
+    "alreadyDecided": "Một admin khác đã quyết định báo cáo này rồi.",
     "suspend": "Đình chỉ sạp",
     "suspendLabel": "Đình chỉ sạp: {{stall}}"
   }

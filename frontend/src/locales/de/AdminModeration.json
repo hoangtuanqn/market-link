@@ -134,6 +134,7 @@
     "noteRequired": "Geben Sie an, warum es nicht die Schuld des Standes ist.",
     "decisionNote": "Hinweis: {{text}}",
     "done": "Entscheidung gespeichert. Kunde und Stand wurden informiert.",
+    "alreadyDecided": "Ein anderer Admin hat über diese Meldung bereits entschieden.",
     "suspend": "Stand sperren",
     "suspendLabel": "Stand sperren: {{stall}}"
   }

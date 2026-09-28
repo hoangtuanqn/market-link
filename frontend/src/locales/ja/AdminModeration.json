@@ -134,6 +134,7 @@
     "noteRequired": "店舗の落ち度ではない理由を記入してください。",
     "decisionNote": "メモ：{{text}}",
     "done": "判定を保存しました。お客さまと店舗の両方に知らされました。",
+    "alreadyDecided": "別の管理者がこの報告をすでに判断しました。",
     "suspend": "屋台を停止",
     "suspendLabel": "屋台を停止：{{stall}}"
   }

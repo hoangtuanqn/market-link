@@ -134,6 +134,7 @@
     "noteRequired": "매대의 잘못이 아닌 이유를 적어 주세요.",
     "decisionNote": "메모: {{text}}",
     "done": "결정을 저장했어요. 고객과 매대 모두에게 알렸어요.",
+    "alreadyDecided": "다른 관리자가 이 신고를 이미 판단했어요.",
     "suspend": "매대 정지",
     "suspendLabel": "매대 정지: {{stall}}"
   }

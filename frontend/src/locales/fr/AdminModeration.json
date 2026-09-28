@@ -134,6 +134,7 @@
     "noteRequired": "Indiquez pourquoi ce n’est pas la faute de l’étal.",
     "decisionNote": "Note : {{text}}",
     "done": "Décision enregistrée. Le client et l’étal ont été informés.",
+    "alreadyDecided": "Un autre admin a déjà statué sur ce signalement.",
     "suspend": "Suspendre le stand",
     "suspendLabel": "Suspendre le stand : {{stall}}"
   }

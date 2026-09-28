@@ -134,6 +134,7 @@
     "noteRequired": "请说明为什么不是摊位的责任。",
     "decisionNote": "备注：{{text}}",
     "done": "决定已保存。顾客和摊位都已收到通知。",
+    "alreadyDecided": "另一位管理员已经处理了这份报告。",
     "suspend": "暂停摊位",
     "suspendLabel": "暂停摊位：{{stall}}"
   }

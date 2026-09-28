@@ -134,6 +134,7 @@
     "noteRequired": "Indica por qué no es culpa del puesto.",
     "decisionNote": "Nota: {{text}}",
     "done": "Decisión guardada. Se avisó al cliente y al puesto.",
+    "alreadyDecided": "Otro admin ya decidió sobre este reporte.",
     "suspend": "Suspender puesto",
     "suspendLabel": "Suspender puesto: {{stall}}"
   }

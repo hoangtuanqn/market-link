@@ -1,9 +1,11 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { AxiosError } from 'axios';
 import { MemoryRouter } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import QualityReports from './QualityReports';
 import QualityReportApi, { type QualityReportDto } from '@/api-requests/quality-report.requests';
+import Notification from '@/utils/notification';
 
 vi.mock('@/api-requests/quality-report.requests', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/api-requests/quality-report.requests')>();
@@ -122,6 +124,23 @@ describe('QualityReports (admin, FR-123)', () => {
       'href',
       '/admin/farmers/15?suspend=shelfLifeViolations',
     );
+  });
+
+  it('tells the admin when another admin already decided, and reloads the queue', async () => {
+    vi.mocked(QualityReportApi.confirm).mockRejectedValue(
+      new AxiosError('conflict', 'ERR_BAD_REQUEST', undefined, undefined, {
+        status: 409,
+        data: { success: false, message: 'x', error: { code: 'REPORT_ALREADY_DECIDED', details: [] } },
+      } as never),
+    );
+    const info = vi.spyOn(Notification, 'info');
+    renderQueue();
+    await userEvent.click(await screen.findByRole('button', { name: 'Confirm violation' }));
+    await userEvent.click(within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Confirm violation' }));
+
+    expect(info).toHaveBeenCalledWith({ text: 'Another admin has already decided on this report.' });
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+    await waitFor(() => expect(QualityReportApi.adminList).toHaveBeenCalledTimes(2));
   });
 
   it('does not offer to suspend below 3 strikes or a stall already suspended', async () => {

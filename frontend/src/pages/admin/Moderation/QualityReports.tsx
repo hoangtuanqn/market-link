@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import QualityReportApi, {
@@ -72,9 +73,16 @@ export default function QualityReports() {
       Notification.success({ text: t('quality.done') });
       setDeciding(null);
     } catch (error) {
-      const fields = Helper.getFieldErrors(error);
-      if (fields.note) setNoteError(fields.note);
-      else Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      // Another admin decided this report first: the queue is stale, not the note. Reload it instead of a field error.
+      if (isAxiosError(error) && error.response?.status === 409) {
+        Notification.info({ text: t('quality.alreadyDecided') });
+        setDeciding(null);
+        retry();
+      } else {
+        const fields = Helper.getFieldErrors(error);
+        if (fields.note) setNoteError(fields.note);
+        else Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      }
     } finally {
       setBusy(false);
     }
