@@ -8,12 +8,17 @@
   },
   "tabsLabel": "Erzeuger nach Status",
   "status": {
+    "all": "Alle",
     "pending": "Warten auf Freigabe",
     "approved": "Freigegeben",
     "suspended": "Gesperrt",
     "rejected": "Abgelehnt"
   },
   "empty": {
+    "all": {
+      "title": "Noch keine Landwirte",
+      "text": "Landwirt-Registrierungen werden hier angezeigt."
+    },
     "pending": {
       "title": "Keine wartenden Anträge",
       "text": "Neue Erzeuger-Anträge landen hier zur Prüfung, bevor Produkte eingestellt werden können."

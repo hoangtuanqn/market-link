@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
+import Avatar from '@/components/Avatar';
 import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
 import { Field } from '@/components/ui/input';
@@ -12,11 +13,19 @@ import { REASON_MAX } from '@/constants/approvalStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
 import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
-import type { AdminFarmerListItemType, FarmerApproval } from '@/types/farmer.types';
+import type { AdminFarmerListItemType } from '@/types/farmer.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import ConfirmActionDialog from './ConfirmActionDialog';
-import { DONE_TOAST, PAGE_SIZE, TABS, type ConfirmAction, type ConfirmKind, type Status } from './constants';
+import {
+  DONE_TOAST,
+  PAGE_SIZE,
+  TABS,
+  type ConfirmAction,
+  type ConfirmKind,
+  type FarmerTab,
+  type Status,
+} from './constants';
 import FarmerActions from './FarmerActions';
 import FarmerTableSkeleton from './FarmerTableSkeleton';
 import RejectDialog from './RejectDialog';
@@ -24,9 +33,9 @@ import RejectDialog from './RejectDialog';
 /** §6, §7, §8 — an Admin views, approves, rejects, suspends, reinstates a Farmer (FR-071/D-09). */
 const AdminFarmersPage = () => {
   const { t } = useTranslation('AdminFarmers');
-  const [activeTab, setActiveTab] = useState<FarmerApproval>('pending');
+  const [activeTab, setActiveTab] = useState<FarmerTab>('all');
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
-  const [counts, setCounts] = useState<Partial<Record<FarmerApproval, number>>>({});
+  const [counts, setCounts] = useState<Partial<Record<FarmerTab, number>>>({});
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [rejectTarget, setRejectTarget] = useState<AdminFarmerListItemType | null>(null);
@@ -49,7 +58,7 @@ const AdminFarmersPage = () => {
   const fetchCounts = useCallback(() => {
     Promise.all(TABS.map((tab) => AdminFarmerApi.list({ status: tab, q: query || undefined, page: 1, pageSize: 1 })))
       .then((responses) => {
-        const next: Partial<Record<FarmerApproval, number>> = {};
+        const next: Partial<Record<FarmerTab, number>> = {};
         TABS.forEach((tab, i) => {
           next[tab] = responses[i]?.data.total;
         });
@@ -63,7 +72,7 @@ const AdminFarmersPage = () => {
 
   // Changing tab, searching or going to another page is a fresh fetch each time: build the skeleton right away so the screen
   // does not sit still with old data while waiting.
-  const changeTab = (tab: FarmerApproval) => {
+  const changeTab = (tab: FarmerTab) => {
     if (tab === activeTab) return;
     setStatus({ kind: 'loading' });
     setActiveTab(tab);
@@ -173,7 +182,22 @@ const AdminFarmersPage = () => {
         </div>
       ),
     },
-    { key: 'email', label: t('col.email') },
+    {
+      key: 'email',
+      label: t('col.email'),
+      render: (f) => (
+        <div className="flex items-center gap-3">
+          <Avatar
+            name={f.contactPerson || f.stallName}
+            email={f.email}
+            url={f.avatarUrl ?? undefined}
+            size={36}
+            className="shrink-0"
+          />
+          <span className="truncate">{f.email}</span>
+        </div>
+      ),
+    },
     { key: 'createdAt', label: t('col.registered'), render: (f) => formatDate(new Date(f.createdAt)) },
     {
       key: 'action',
@@ -214,7 +238,7 @@ const AdminFarmersPage = () => {
       <Tabs
         label={t('tabsLabel')}
         value={activeTab}
-        onChange={(id) => changeTab(id as FarmerApproval)}
+        onChange={(id) => changeTab(id as FarmerTab)}
         tabs={TABS.map((tab) => ({ id: tab, label: t(`status.${tab}`), count: counts[tab] }))}
       />
 

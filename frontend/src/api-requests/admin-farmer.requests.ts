@@ -4,9 +4,13 @@ import { privateApi } from '@/utils/axiosInstance';
 
 /** §6, §7, §8 — Admin views, approves, suspends a Farmer. */
 class AdminFarmerApi {
-  static list = async (params: { status?: FarmerApproval; q?: string; page?: number; pageSize?: number }) => {
+  static list = async (params: { status?: FarmerApproval | 'all'; q?: string; page?: number; pageSize?: number }) => {
+    const queryParams = {
+      ...params,
+      status: params.status === 'all' ? undefined : params.status,
+    };
     const response = await privateApi.get<ApiResponse<PageType<AdminFarmerListItemType>>>('/admin/farmers', {
-      params,
+      params: queryParams,
     });
     return response.data;
   };

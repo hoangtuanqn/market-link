@@ -38,7 +38,7 @@ public interface FarmerProfileRepository extends JpaRepository<FarmerProfile, Lo
             value =
                     "select new com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource("
                             + "p.id, p.stallName, p.contactPerson, u.email, u.phone, p.approvalStatus,"
-                            + " p.createdAt)"
+                            + " p.createdAt, u.image)"
                             + " from FarmerProfile p join User u on u.id = p.userId"
                             + " where (:status is null or p.approvalStatus = :status)"
                             + " and (:q is null or lower(p.stallName) like :q"

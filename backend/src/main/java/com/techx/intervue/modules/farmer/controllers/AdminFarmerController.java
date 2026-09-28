@@ -82,7 +82,7 @@ public class AdminFarmerController extends BaseController {
     }
 
     private static ApprovalStatus parseStatus(String raw) {
-        if (raw == null || raw.isBlank()) {
+        if (raw == null || raw.isBlank() || raw.equalsIgnoreCase("all")) {
             return null;
         }
         try {
