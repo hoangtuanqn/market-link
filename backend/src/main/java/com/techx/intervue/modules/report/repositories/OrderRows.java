@@ -28,7 +28,8 @@ public class OrderRows {
             SELECT o.id, o.order_code, o.status, o.farmer_id, f.stall_name, o.market_id, m.market_name,
                    o.pickup_date, o.pickup_start, o.pickup_end, o.cutoff_at, o.total_amount, o.created_at,
                    (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS item_count,
-                   o.customer_id, cu.full_name AS customer_name
+                   o.customer_id, cu.full_name AS customer_name,
+                   EXISTS(SELECT 1 FROM reviews r WHERE r.order_id = o.id) AS reviewed
             """;
 
     public static final String LIST_FROM =
@@ -68,7 +69,8 @@ public class OrderRows {
                 rs.getInt("item_count"),
                 rs.getTimestamp("created_at").toInstant().toString(),
                 rs.getLong("customer_id"),
-                rs.getString("customer_name"));
+                rs.getString("customer_name"),
+                rs.getBoolean("reviewed"));
     }
 
     /** Whitelist for a {@code status} query parameter: unknown text is a 400, never SQL. */

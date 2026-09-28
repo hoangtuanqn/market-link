@@ -41,7 +41,8 @@ public class OrderQueryRepository {
             SELECT o.id, o.order_code, o.status, o.farmer_id, f.stall_name, o.market_id, m.market_name,
                    o.pickup_date, o.pickup_start, o.pickup_end, o.cutoff_at, o.total_amount, o.created_at,
                    (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS item_count,
-                   o.customer_id, cu.full_name AS customer_name
+                   o.customer_id, cu.full_name AS customer_name,
+                   EXISTS(SELECT 1 FROM reviews r WHERE r.order_id = o.id) AS reviewed
             """;
 
     private static final String MY_ORDERS_FROM =
@@ -108,7 +109,8 @@ public class OrderQueryRepository {
                    o.market_id, m.market_name,
                    o.pickup_date, o.pickup_start, o.pickup_end, o.cutoff_at, o.total_amount,
                    (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS item_count,
-                   o.created_at, o.customer_note, o.farmer_note
+                   o.created_at, o.customer_note, o.farmer_note,
+                   EXISTS(SELECT 1 FROM reviews r WHERE r.order_id = o.id) AS reviewed
             FROM orders o
             JOIN users cu ON cu.id = o.customer_id
             JOIN farmer_profiles f ON f.id = o.farmer_id
@@ -253,7 +255,8 @@ public class OrderQueryRepository {
                 rs.getInt("item_count"),
                 readInstant(rs, "created_at"),
                 rs.getLong("customer_id"),
-                rs.getString("customer_name"));
+                rs.getString("customer_name"),
+                rs.getBoolean("reviewed"));
     }
 
     private OrderDetailRow detailRow(ResultSet rs) throws SQLException {
