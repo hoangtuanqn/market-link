@@ -14,7 +14,7 @@
   },
   "aria": {
     "quantity": "{{product}} quantity on {{day}}",
-    "price": "Harga {{product}}"
+    "price": "Harga {{product}} pada {{day}}"
   },
   "table": {
     "caption": "Weekly stock template, one row per product and one column per weekday"

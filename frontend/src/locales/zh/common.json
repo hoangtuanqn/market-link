@@ -837,5 +837,13 @@
     "beforePromise": "到期前",
     "afterPromise": "到期后",
     "strikes": "保鲜期违规：{{count}}/{{limit}}（{{days}} 天内）"
+  },
+  "gallery": {
+    "label": "{{name}} 的照片",
+    "previous": "上一张",
+    "next": "下一张",
+    "goTo": "查看第 {{n}} 张",
+    "slide": "第 {{n}} 张，共 {{total}} 张",
+    "photoAlt": "{{name}}，第 {{n}} 张照片"
   }
 }

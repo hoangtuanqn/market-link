@@ -3,7 +3,7 @@
   "intro": "Semua pesanan di MarketLink, mencakup empat pasar. Admin membacanya; hanya lapak yang memindahkan pesanan dari satu status ke status berikutnya.",
   "noun": "orders",
   "list": {
-    "inPeriod": "{{count}} pada {{month}}",
+    "inPeriod": "{{count}} pesanan",
     "filterLabel": "Saring pesanan menurut status",
     "market": "Pasar",
     "allMarkets": "Semua pasar",

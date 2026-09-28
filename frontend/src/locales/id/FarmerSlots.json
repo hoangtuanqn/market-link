@@ -57,7 +57,7 @@
   },
   "generate": {
     "open": "Buat slot untuk minggu depan",
-    "title": "Buat slot untuk {{from}} – {{to}}?",
+    "title": "Buat slot di {{market}}",
     "from": "From",
     "to": "To",
     "rangeError": "Pick an end date on or after the start date.",

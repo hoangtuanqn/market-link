@@ -837,5 +837,13 @@
     "beforePromise": "sebelum tanggalnya",
     "afterPromise": "setelah tanggalnya",
     "strikes": "Pelanggaran masa simpan: {{count}}/{{limit}} dalam {{days}} hari"
+  },
+  "gallery": {
+    "label": "Foto {{name}}",
+    "previous": "Foto sebelumnya",
+    "next": "Foto berikutnya",
+    "goTo": "Buka foto {{n}}",
+    "slide": "{{n}} dari {{total}}",
+    "photoAlt": "{{name}}, foto {{n}}"
   }
 }

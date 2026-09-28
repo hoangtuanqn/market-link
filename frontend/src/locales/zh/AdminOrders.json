@@ -3,7 +3,7 @@
   "intro": "MarketLink 上四个集市的全部订单。管理员只读；只有摊位能推进订单状态。",
   "noun": "orders",
   "list": {
-    "inPeriod": "{{month}} 共 {{count}} 单",
+    "inPeriod": "{{count}} 个订单",
     "filterLabel": "按状态筛选订单",
     "market": "集市",
     "allMarkets": "全部集市",

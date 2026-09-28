@@ -22,6 +22,7 @@
   },
   "day": "Ngày họp chợ",
   "all": "Tất cả",
+  "category": "Loại",
   "inStock": "Còn hàng",
   "available": "Có bán vào {{day}}",
   "productsFrom": "{{products}} từ {{stalls}}",

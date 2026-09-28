@@ -43,8 +43,8 @@
   "applyTemplate": "Wochenvorlage anwenden",
   "addProduct": "Produkt hinzufügen",
   "banner": {
-    "title_one": "{{count}} Bestellung wartet auf Sie. {{closing}} davon schließen morgen um {{time}}.",
-    "title_other": "{{count}} Bestellungen warten auf Sie. {{closing}} davon schließen morgen um {{time}}.",
+    "title_one": "{{count}} Bestellung wartet auf Sie.",
+    "title_other": "{{count}} Bestellungen warten auf Sie.",
     "text": "Nicht freigegebene Bestellungen halten weiterhin Bestand. Nehmen Sie sie vor dem Bestellschluss an oder lehnen Sie sie ab, damit Kunden planen können."
   },
   "strikes": {
@@ -72,7 +72,7 @@
     }
   },
   "stock": {
-    "title": "Bestand für {{day}}",
+    "title": "Aktueller Bestand",
     "link": "Bestand dieser Woche",
     "noun": "stock",
     "empty": {

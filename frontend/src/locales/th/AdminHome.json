@@ -1,17 +1,17 @@
 {
-  "overline": "แพลตฟอร์ม · {{year}}",
+  "overline": "แพลตฟอร์ม",
   "title": "ภาพรวม",
   "noun": "dashboard",
   "kpi": {
     "farmers": "เกษตรกร",
-    "farmersNote": "รออนุมัติ {{waiting}} ราย · ระงับ {{suspended}} ราย",
+    "farmersNote": "รออนุมัติ {{waiting}} ราย",
     "farmersLink": "ตรวจใบสมัคร",
     "customers": "ลูกค้า",
     "customersLink": "เปิดรายชื่อลูกค้า",
     "markets": "ตลาด",
     "marketsLink": "เปิดรายชื่อตลาด",
     "orders": "คำสั่งซื้อ",
-    "ordersNote": "สัปดาห์นี้ {{week}} รายการ · เสร็จสิ้น {{total}}",
+    "ordersNote": "{{revenue}} จากคำสั่งซื้อที่เสร็จสิ้น",
     "ordersLink": "เปิดรายการคำสั่งซื้อ"
   },
   "attention": {

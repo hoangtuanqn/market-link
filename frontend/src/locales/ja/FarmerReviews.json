@@ -1,7 +1,7 @@
 {
   "title": "レビュー",
   "intro": "注文を受け取ったお客さまの声です。短い返信でも効果は大きく、特に低い評価には返信しましょう。",
-  "summary": "屋台 {{stall}} · 商品 {{products}} · {{reviews}}",
+  "summary": "屋台 {{stall}} · {{reviews}}",
   "reviewCount_one": "レビュー {{count}}件",
   "reviewCount_other": "レビュー {{count}}件",
   "noun": "reviews",

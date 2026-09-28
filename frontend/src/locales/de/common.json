@@ -837,5 +837,13 @@
     "beforePromise": "vor dem Datum",
     "afterPromise": "nach dem Datum",
     "strikes": "Haltbarkeitsverstöße: {{count}}/{{limit}} in {{days}} Tagen"
+  },
+  "gallery": {
+    "label": "Fotos von {{name}}",
+    "previous": "Vorheriges Foto",
+    "next": "Nächstes Foto",
+    "goTo": "Zu Foto {{n}}",
+    "slide": "{{n}} von {{total}}",
+    "photoAlt": "{{name}}, Foto {{n}}"
   }
 }

@@ -57,7 +57,7 @@
   },
   "generate": {
     "open": "Générer les créneaux de la semaine prochaine",
-    "title": "Générer les créneaux du {{from}} au {{to}} ?",
+    "title": "Générer les créneaux à {{market}}",
     "from": "From",
     "to": "To",
     "rangeError": "Pick an end date on or after the start date.",

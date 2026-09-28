@@ -43,8 +43,8 @@
   "applyTemplate": "Terapkan templat mingguan",
   "addProduct": "Tambah produk",
   "banner": {
-    "title_one": "{{count}} pesanan menunggu Anda. {{closing}} di antaranya ditutup pukul {{time}} besok.",
-    "title_other": "{{count}} pesanan menunggu Anda. {{closing}} di antaranya ditutup pukul {{time}} besok.",
+    "title_one": "{{count}} pesanan menunggu Anda.",
+    "title_other": "{{count}} pesanan menunggu Anda.",
     "text": "Pesanan yang belum disetujui tetap menahan stok. Terima atau tolak sebelum batas waktu agar pelanggan bisa merencanakan."
   },
   "strikes": {
@@ -72,7 +72,7 @@
     }
   },
   "stock": {
-    "title": "Stok untuk {{day}}",
+    "title": "Stok saat ini",
     "link": "Stok minggu ini",
     "noun": "stock",
     "empty": {

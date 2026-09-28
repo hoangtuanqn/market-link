@@ -43,8 +43,8 @@
   "applyTemplate": "套用每周模板",
   "addProduct": "添加商品",
   "banner": {
-    "title_one": "有 {{count}} 个订单在等你处理，其中 {{closing}} 个将于明天 {{time}} 截止。",
-    "title_other": "有 {{count}} 个订单在等你处理，其中 {{closing}} 个将于明天 {{time}} 截止。",
+    "title_one": "有 {{count}} 个订单在等你处理。",
+    "title_other": "有 {{count}} 个订单在等你处理。",
     "text": "未确认的订单仍占用库存。请在截止前接受或拒绝，方便顾客安排。"
   },
   "strikes": {
@@ -72,7 +72,7 @@
     }
   },
   "stock": {
-    "title": "{{day}}的库存",
+    "title": "当前库存",
     "link": "本周库存",
     "noun": "stock",
     "empty": {

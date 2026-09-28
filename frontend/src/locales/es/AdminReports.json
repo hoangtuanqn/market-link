@@ -8,7 +8,7 @@
   "kpi": {
     "noun": "dashboard totals",
     "orders": "Pedidos",
-    "ordersNote": "{{month}}, todos los mercados",
+    "ordersNote": "Todo el periodo, todos los estados",
     "revenue": "Ingresos completados",
     "revenueNote": "$, pagados en los puestos"
   },

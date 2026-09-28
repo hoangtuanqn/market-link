@@ -837,5 +837,13 @@
     "beforePromise": "avant sa date",
     "afterPromise": "après sa date",
     "strikes": "Infractions de conservation : {{count}}/{{limit}} en {{days}} jours"
+  },
+  "gallery": {
+    "label": "Photos de {{name}}",
+    "previous": "Photo précédente",
+    "next": "Photo suivante",
+    "goTo": "Aller à la photo {{n}}",
+    "slide": "{{n}} sur {{total}}",
+    "photoAlt": "{{name}}, photo {{n}}"
   }
 }

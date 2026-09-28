@@ -22,6 +22,7 @@
   },
   "day": "Markttag",
   "all": "Alle",
+  "category": "Kategorie",
   "inStock": "Vorrätig",
   "available": "Erhältlich am {{day}}",
   "productsFrom": "{{products}} von {{stalls}}",

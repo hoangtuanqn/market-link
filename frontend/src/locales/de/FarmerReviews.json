@@ -1,7 +1,7 @@
 {
   "title": "Bewertungen",
   "intro": "Was Kunden nach dem Abholen ihrer Bestellung gesagt haben. Eine kurze Antwort bewirkt viel, besonders bei einer schlechten Bewertung.",
-  "summary": "Stand {{stall}} · Produkte {{products}} · {{reviews}}",
+  "summary": "Stand {{stall}} · {{reviews}}",
   "reviewCount_one": "{{count}} Bewertung",
   "reviewCount_other": "{{count}} Bewertungen",
   "noun": "reviews",

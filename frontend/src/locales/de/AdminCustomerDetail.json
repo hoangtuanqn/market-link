@@ -1,7 +1,7 @@
 {
   "allCustomers": "Kundschaft",
   "noun": "customer",
-  "since": "Kundschaft seit {{joined}} · letzte Bestellung {{last}}",
+  "since": "Kundschaft seit {{joined}}",
   "missing": {
     "title": "Diese Person gibt es nicht mehr",
     "text": "Das Konto wurde vielleicht gelöscht. Öffne es erneut über die Kundenliste."

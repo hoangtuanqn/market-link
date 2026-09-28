@@ -43,8 +43,8 @@
   "applyTemplate": "Aplicar plantilla semanal",
   "addProduct": "Añadir producto",
   "banner": {
-    "title_one": "Tienes {{count}} pedido esperando. {{closing}} de ellos cierran mañana a las {{time}}.",
-    "title_other": "Tienes {{count}} pedidos esperando. {{closing}} de ellos cierran mañana a las {{time}}.",
+    "title_one": "Tienes {{count}} pedido esperando.",
+    "title_other": "Tienes {{count}} pedidos esperando.",
     "text": "Los pedidos sin aprobar siguen reservando stock. Acepta o rechaza antes del cierre para que los clientes puedan organizarse."
   },
   "strikes": {
@@ -72,7 +72,7 @@
     }
   },
   "stock": {
-    "title": "Stock para el {{day}}",
+    "title": "Stock actual",
     "link": "Stock de esta semana",
     "noun": "stock",
     "empty": {

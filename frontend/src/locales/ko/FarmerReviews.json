@@ -1,7 +1,7 @@
 {
   "title": "리뷰",
   "intro": "주문을 받아 간 고객들이 남긴 말이에요. 짧은 답글도 큰 도움이 돼요. 특히 낮은 평점에는 꼭 답해 주세요.",
-  "summary": "매대 {{stall}} · 상품 {{products}} · {{reviews}}",
+  "summary": "매대 {{stall}} · {{reviews}}",
   "reviewCount_one": "리뷰 {{count}}개",
   "reviewCount_other": "리뷰 {{count}}개",
   "noun": "reviews",

@@ -8,7 +8,7 @@
   "kpi": {
     "noun": "dashboard totals",
     "orders": "주문",
-    "ordersNote": "{{month}}, 모든 장터",
+    "ordersNote": "전체 기간, 모든 상태",
     "revenue": "완료된 매출",
     "revenueNote": "$, 가게에서 받은 돈"
   },

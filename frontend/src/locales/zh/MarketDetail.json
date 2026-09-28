@@ -22,6 +22,7 @@
   },
   "day": "市集日",
   "all": "全部",
+  "category": "类别",
   "inStock": "有货",
   "available": "{{day}}可买",
   "productsFrom": "来自 {{stalls}} 的 {{products}}",

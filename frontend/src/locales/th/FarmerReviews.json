@@ -1,7 +1,7 @@
 {
   "title": "รีวิว",
   "intro": "สิ่งที่ลูกค้าพูดหลังรับคำสั่งซื้อ การตอบสั้น ๆ ช่วยได้มาก โดยเฉพาะกับคะแนนต่ำ",
-  "summary": "แผง {{stall}} · สินค้า {{products}} · {{reviews}}",
+  "summary": "แผง {{stall}} · {{reviews}}",
   "reviewCount_one": "{{count}} รีวิว",
   "reviewCount_other": "{{count}} รีวิว",
   "noun": "reviews",

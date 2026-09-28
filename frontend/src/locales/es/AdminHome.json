@@ -1,17 +1,17 @@
 {
-  "overline": "Plataforma · {{year}}",
+  "overline": "Plataforma",
   "title": "Resumen",
   "noun": "dashboard",
   "kpi": {
     "farmers": "Productores",
-    "farmersNote": "{{waiting}} pendientes de aprobación · {{suspended}} suspendidos",
+    "farmersNote": "{{waiting}} pendientes de aprobación",
     "farmersLink": "Revisar solicitudes",
     "customers": "Clientes",
     "customersLink": "Abrir clientes",
     "markets": "Mercados",
     "marketsLink": "Abrir mercados",
     "orders": "Pedidos",
-    "ordersNote": "{{week}} esta semana · {{total}} completados",
+    "ordersNote": "{{revenue}} de pedidos completados",
     "ordersLink": "Abrir pedidos"
   },
   "attention": {

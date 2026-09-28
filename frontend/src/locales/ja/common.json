@@ -837,5 +837,13 @@
     "beforePromise": "期限前",
     "afterPromise": "期限後",
     "strikes": "賞味期限違反：{{count}}/{{limit}}（{{days}}日以内）"
+  },
+  "gallery": {
+    "label": "{{name}}の写真",
+    "previous": "前の写真",
+    "next": "次の写真",
+    "goTo": "{{n}}枚目の写真へ",
+    "slide": "{{total}}枚中{{n}}枚目",
+    "photoAlt": "{{name}}、写真{{n}}"
   }
 }

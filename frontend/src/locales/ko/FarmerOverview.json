@@ -43,8 +43,8 @@
   "applyTemplate": "주간 템플릿 적용",
   "addProduct": "상품 추가",
   "banner": {
-    "title_one": "주문 {{count}}건이 기다리고 있어요. 그중 {{closing}}건은 내일 {{time}}에 마감돼요.",
-    "title_other": "주문 {{count}}건이 기다리고 있어요. 그중 {{closing}}건은 내일 {{time}}에 마감돼요.",
+    "title_one": "주문 {{count}}건이 기다리고 있어요.",
+    "title_other": "주문 {{count}}건이 기다리고 있어요.",
     "text": "승인하지 않은 주문도 재고를 잡고 있어요. 고객이 계획을 세울 수 있도록 마감 전에 수락하거나 거절하세요."
   },
   "strikes": {
@@ -72,7 +72,7 @@
     }
   },
   "stock": {
-    "title": "{{day}} 재고",
+    "title": "현재 재고",
     "link": "이번 주 재고",
     "noun": "stock",
     "empty": {

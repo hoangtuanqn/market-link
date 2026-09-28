@@ -837,5 +837,13 @@
     "beforePromise": "trước hạn",
     "afterPromise": "sau hạn",
     "strikes": "Lỗi hạn dùng: {{count}}/{{limit}} trong {{days}} ngày"
+  },
+  "gallery": {
+    "label": "Ảnh {{name}}",
+    "previous": "Ảnh trước",
+    "next": "Ảnh sau",
+    "goTo": "Xem ảnh {{n}}",
+    "slide": "{{n}} / {{total}}",
+    "photoAlt": "{{name}}, ảnh {{n}}"
   }
 }

@@ -43,8 +43,8 @@
   "applyTemplate": "週間テンプレートを適用",
   "addProduct": "商品を追加",
   "banner": {
-    "title_one": "{{count}} 件の注文があなたを待っています。そのうち {{closing}} 件は明日 {{time}} に締め切られます。",
-    "title_other": "{{count}} 件の注文があなたを待っています。そのうち {{closing}} 件は明日 {{time}} に締め切られます。",
+    "title_one": "{{count}} 件の注文があなたを待っています。",
+    "title_other": "{{count}} 件の注文があなたを待っています。",
     "text": "未承認の注文も在庫を確保しています。お客さまが予定を立てられるよう、締め切り前に受け付けるかお断りしてください。"
   },
   "strikes": {
@@ -72,7 +72,7 @@
     }
   },
   "stock": {
-    "title": "{{day}}の在庫",
+    "title": "現在の在庫",
     "link": "今週の在庫",
     "noun": "stock",
     "empty": {

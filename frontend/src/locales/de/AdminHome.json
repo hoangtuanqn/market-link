@@ -1,17 +1,17 @@
 {
-  "overline": "Plattform · {{year}}",
+  "overline": "Plattform",
   "title": "Übersicht",
   "noun": "dashboard",
   "kpi": {
     "farmers": "Erzeuger",
-    "farmersNote": "{{waiting}} warten auf Freigabe · {{suspended}} gesperrt",
+    "farmersNote": "{{waiting}} warten auf Freigabe",
     "farmersLink": "Anträge prüfen",
     "customers": "Kundinnen und Kunden",
     "customersLink": "Kundenliste öffnen",
     "markets": "Märkte",
     "marketsLink": "Marktliste öffnen",
     "orders": "Bestellungen",
-    "ordersNote": "{{week}} diese Woche · {{total}} abgeschlossen",
+    "ordersNote": "{{revenue}} aus abgeschlossenen Bestellungen",
     "ordersLink": "Bestellungen öffnen"
   },
   "attention": {

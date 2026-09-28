@@ -1,7 +1,7 @@
 {
   "title": "Ulasan",
   "intro": "Apa kata pelanggan setelah mengambil pesanan mereka. Balasan singkat sangat berarti, terutama untuk rating rendah.",
-  "summary": "Lapak {{stall}} · produk {{products}} · {{reviews}}",
+  "summary": "Lapak {{stall}} · {{reviews}}",
   "reviewCount_one": "{{count}} ulasan",
   "reviewCount_other": "{{count}} ulasan",
   "noun": "reviews",

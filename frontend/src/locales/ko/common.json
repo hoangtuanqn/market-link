@@ -837,5 +837,13 @@
     "beforePromise": "기한 전",
     "afterPromise": "기한 후",
     "strikes": "유통기한 위반: {{count}}/{{limit}} ({{days}}일 이내)"
+  },
+  "gallery": {
+    "label": "{{name}} 사진",
+    "previous": "이전 사진",
+    "next": "다음 사진",
+    "goTo": "{{n}}번째 사진으로 이동",
+    "slide": "{{total}}장 중 {{n}}번째",
+    "photoAlt": "{{name}}, 사진 {{n}}"
   }
 }

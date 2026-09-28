@@ -837,5 +837,13 @@
     "beforePromise": "ก่อนวันที่กำหนด",
     "afterPromise": "หลังวันที่กำหนด",
     "strikes": "การละเมิดอายุการเก็บรักษา: {{count}}/{{limit}} ภายใน {{days}} วัน"
+  },
+  "gallery": {
+    "label": "รูปภาพของ {{name}}",
+    "previous": "รูปก่อนหน้า",
+    "next": "รูปถัดไป",
+    "goTo": "ไปที่รูปที่ {{n}}",
+    "slide": "{{n}} จาก {{total}}",
+    "photoAlt": "{{name}} รูปที่ {{n}}"
   }
 }

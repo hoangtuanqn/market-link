@@ -57,7 +57,7 @@
   },
   "generate": {
     "open": "สร้างช่วงเวลาสำหรับสัปดาห์หน้า",
-    "title": "สร้างช่วงเวลาสำหรับ {{from}} – {{to}} ไหม",
+    "title": "สร้างช่วงเวลาที่ {{market}}",
     "from": "From",
     "to": "To",
     "rangeError": "Pick an end date on or after the start date.",

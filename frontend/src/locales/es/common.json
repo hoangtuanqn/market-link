@@ -837,5 +837,13 @@
     "beforePromise": "antes de su fecha",
     "afterPromise": "después de su fecha",
     "strikes": "Infracciones de vida útil: {{count}}/{{limit}} en {{days}} días"
+  },
+  "gallery": {
+    "label": "Fotos de {{name}}",
+    "previous": "Foto anterior",
+    "next": "Foto siguiente",
+    "goTo": "Ir a la foto {{n}}",
+    "slide": "{{n}} de {{total}}",
+    "photoAlt": "{{name}}, foto {{n}}"
   }
 }

@@ -837,5 +837,13 @@
     "beforePromise": "before its date",
     "afterPromise": "after its date",
     "strikes": "Shelf-life strikes: {{count}} of {{limit}} in {{days}} days"
+  },
+  "gallery": {
+    "label": "Photos of {{name}}",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "goTo": "Go to photo {{n}}",
+    "slide": "{{n}} of {{total}}",
+    "photoAlt": "{{name}}, photo {{n}}"
   }
 }
