@@ -195,6 +195,15 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     setOtherReadAt(opts.otherReadAt ?? null);
   }
 
+  // A reload or a deep link opens the thread before the thread list (which carries the read marker) has loaded: take
+  // the marker when it arrives, unless a live "read" frame has already moved "Seen" further.
+  const seed = opts.otherReadAt ?? null;
+  const [seededFrom, setSeededFrom] = useState(seed);
+  if (seed !== seededFrom) {
+    setSeededFrom(seed);
+    if (seed && (!otherReadAt || Date.parse(seed) > Date.parse(otherReadAt))) setOtherReadAt(seed);
+  }
+
   // A REST response arriving late for a thread already left is dropped. Effects run in declaration order: this one before any request.
   useEffect(() => {
     openRef.current = conversationId;

@@ -308,6 +308,34 @@ describe('useConversation', () => {
     expect(realtime.publish).toHaveBeenLastCalledWith('/app/typing', { conversationId: 42, typing: false });
   });
 
+  /** FR-112 "seen" after a reload or a deep link: the thread list, and its read marker, can arrive after the thread. */
+  it('takes the read marker when the thread list arrives after the thread opened', () => {
+    const { result, rerender } = renderHook(({ readAt }) => useConversation(42, { otherReadAt: readAt }), {
+      initialProps: { readAt: undefined as string | undefined },
+    });
+    expect(result.current.otherReadAt).toBeNull();
+
+    rerender({ readAt: '2026-09-26T10:05:00Z' });
+
+    expect(result.current.otherReadAt).toBe('2026-09-26T10:05:00Z');
+  });
+
+  it('keeps a newer live "read" over an older marker from the thread list', () => {
+    const { result, rerender } = renderHook(({ readAt }) => useConversation(42, { otherReadAt: readAt }), {
+      initialProps: { readAt: undefined as string | undefined },
+    });
+    emit('/user/topic/conversations', {
+      type: 'read',
+      conversationId: 42,
+      readerId: 3,
+      readAt: '2026-09-26T10:09:00Z',
+    });
+
+    rerender({ readAt: '2026-09-26T10:05:00Z' });
+
+    expect(result.current.otherReadAt).toBe('2026-09-26T10:09:00Z');
+  });
+
   /** FR-112 "seen": the backend sends "read" to the sender when the other person reads. */
   it('remembers when the other person read the thread', async () => {
     const { result } = renderHook(() => useConversation(42));
