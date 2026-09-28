@@ -96,10 +96,6 @@ public class FarmerProfile {
     @Column(name = "suspended_at")
     private Instant suspendedAt;
 
-    /** FR-071: null while suspended = until an admin lifts it; otherwise the cron lifts it. */
-    @Column(name = "suspended_until")
-    private Instant suspendedUntil;
-
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 

@@ -8,17 +8,12 @@
   },
   "tabsLabel": "Petani menurut status",
   "status": {
-    "all": "Semua",
     "pending": "Menunggu persetujuan",
     "approved": "Disetujui",
     "suspended": "Ditangguhkan",
     "rejected": "Ditolak"
   },
   "empty": {
-    "all": {
-      "title": "Belum ada petani",
-      "text": "Pendaftaran petani akan muncul di sini."
-    },
     "pending": {
       "title": "Tidak ada pendaftaran yang menunggu",
       "text": "Pendaftaran petani baru masuk ke sini untuk ditinjau sebelum mereka bisa memasang produk."

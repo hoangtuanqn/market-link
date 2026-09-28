@@ -12,7 +12,6 @@ import useSession from '@/hooks/useSession';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
-import AccountSkeleton from './AccountSkeleton';
 
 /** Same password rules as register / reset (backend RegisterRules). */
 const PASSWORD_MIN = 6;
@@ -29,15 +28,6 @@ const AdminAccountPage = () => {
   const { t } = useTranslation('AdminAccount');
   const navigate = useNavigate();
   const { user } = useSession();
-  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
-
-  useEffect(() => {
-    if (import.meta.env.MODE === 'test') return;
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   const [profile, setProfile] = useState({
     fullName: user?.fullName ?? '',
@@ -58,10 +48,6 @@ const AdminAccountPage = () => {
       .then((response) => setMfaOn(response.data.enabled))
       .catch(() => setMfaOn(null));
   }, []);
-
-  if (initialLoading) {
-    return <AccountSkeleton />;
-  }
 
   const saveProfile = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();

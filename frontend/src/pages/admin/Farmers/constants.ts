@@ -3,10 +3,8 @@ import type { AdminFarmerListItemType, FarmerApproval } from '@/types/farmer.typ
 export type Status =
   { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; items: AdminFarmerListItemType[]; total: number };
 
-export type FarmerTab = 'all' | FarmerApproval;
-
 /** Docs/prototype/admin/farmers.html — tabs by approval status, each tab has its own empty content (`empty.<tab>`). */
-export const TABS: FarmerTab[] = ['all', 'pending', 'approved', 'suspended', 'rejected'];
+export const TABS: FarmerApproval[] = ['pending', 'approved', 'suspended', 'rejected'];
 
 export type ConfirmKind = 'approve' | 'suspend' | 'reinstate';
 export type ConfirmAction = { kind: ConfirmKind; item: AdminFarmerListItemType } | null;

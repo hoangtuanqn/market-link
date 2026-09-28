@@ -1,7 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import AuthApi from '@/api-requests/auth.requests';
 import PlatformStatus from '@/lib/platformStatus';
-import BlockedNotice from './blockedNotice';
+import AccountDeactivatedNotice from './accountDeactivatedNotice';
 import Session from './session';
 
 const options = {
@@ -44,7 +44,7 @@ export const watchForAccountDeactivated = (error: unknown) => {
     // `details`. An empty stash means the screen falls back to its own generic wording rather than
     // showing the word "undefined" to someone who has just been locked out.
     const reason = error.response.data?.message;
-    BlockedNotice.stash('account', typeof reason === 'string' ? reason : '');
+    AccountDeactivatedNotice.stash(typeof reason === 'string' ? reason : '');
     window.location.assign('/');
   }
   return Promise.reject(error);
@@ -52,23 +52,6 @@ export const watchForAccountDeactivated = (error: unknown) => {
 
 publicApi.interceptors.response.use((res) => res, watchForAccountDeactivated);
 privateApi.interceptors.response.use((res) => res, watchForAccountDeactivated);
-
-/**
- * FR-071: a suspended stall stays signed in (D-09 — they can still finish orders already accepted), so unlike
- * `watchForAccountDeactivated` this does not clear the session or leave the app. It only explains why the write (or
- * locked read) the Farmer just tried was refused, on the one screen that stays open to them.
- */
-export const watchForStallSuspended = (error: unknown) => {
-  if (error instanceof AxiosError && error.response?.data?.error?.code === 'STALL_SUSPENDED') {
-    const reason = error.response.data?.message;
-    BlockedNotice.stash('stall', typeof reason === 'string' ? reason : '');
-    window.location.assign('/farmer/pending');
-  }
-  return Promise.reject(error);
-};
-
-publicApi.interceptors.response.use((res) => res, watchForStallSuspended);
-privateApi.interceptors.response.use((res) => res, watchForStallSuspended);
 
 privateApi.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {

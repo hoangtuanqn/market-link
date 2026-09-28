@@ -2,14 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
 import AskAssistant from '@/components/assistant/AskAssistant';
-import AdminFarmerApi, { type AdminFarmerStatusHistoryDto } from '@/api-requests/admin-farmer.requests';
+import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import { Banner } from '@/components/ui/banner';
-import BanDurationPicker, { type BanDuration } from '@/components/BanDurationPicker';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { DataState, LoadError } from '@/components/ui/data-state';
+import { DataState } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
-import { Table, type TableColumn } from '@/components/ui/table';
 import { ApplicationHistory } from '@/components/ApplicationHistory';
 import { ReasonField } from '@/components/ReasonField';
 import { VideoThumb } from '@/components/VideoThumb';
@@ -17,13 +15,11 @@ import { APPROVAL_STATUS_META, REASON_MAX } from '@/constants/approvalStatus';
 import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
-import { cutoffLabel, formatDate } from '@/lib/format';
-import useRequest from '@/hooks/useRequest';
+import { formatDate } from '@/lib/format';
 import type { AdminFarmerDetailType } from '@/types/farmer.types';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
-import FarmerDetailSkeleton from './FarmerDetailSkeleton';
 
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; data: AdminFarmerDetailType };
 type DialogKind = 'approve' | 'reject' | 'suspend' | 'reinstate';
@@ -49,20 +45,6 @@ const AdminFarmerDetailPage = () => {
   /** One reason used for both reject and suspend — only one dialog can be open at a time. */
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
-  const [duration, setDuration] = useState<BanDuration>({ kind: 'permanent' });
-  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
-
-  const { state: historyLoad, retry: retryHistory } = useRequest(`admin-farmer-history:${id}`, () =>
-    id ? AdminFarmerApi.statusHistory(Number(id), 1, 20) : Promise.reject(new Error('not a farmer id')),
-  );
-
-  useEffect(() => {
-    if (import.meta.env.MODE === 'test') return;
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   // only setState in a promise callback (the initial state is already loading)
   const fetchDetail = useCallback(() => {
@@ -81,7 +63,6 @@ const AdminFarmerDetailPage = () => {
   const openDialog = (kind: DialogKind) => {
     setReason(emptyReason());
     setReasonError(undefined);
-    setDuration({ kind: 'permanent' });
     setDialog(kind);
   };
 
@@ -111,7 +92,6 @@ const AdminFarmerDetailPage = () => {
       if (written.length > REASON_MAX) return setReasonError(tf(`${dialog}.tooLong`, { max: REASON_MAX }));
       setReasonError(undefined);
     }
-    const until = dialog === 'suspend' && duration.kind === 'temporary' ? duration.until : null;
     setBusy(true);
     try {
       const response =
@@ -120,11 +100,10 @@ const AdminFarmerDetailPage = () => {
           : dialog === 'reject'
             ? await AdminFarmerApi.reject(Number(id), written)
             : dialog === 'suspend'
-              ? await AdminFarmerApi.suspend(Number(id), written, until)
+              ? await AdminFarmerApi.suspend(Number(id), written)
               : await AdminFarmerApi.reinstate(Number(id));
       setStatus({ kind: 'ready', data: response.data });
       setDialog(null);
-      if (dialog === 'suspend' || dialog === 'reinstate') retryHistory();
       Notification.success({ text: tf(`toast.${DONE_TOAST[dialog]}`, { stall: response.data.stallName }) });
     } catch (error) {
       Notification.error({
@@ -144,9 +123,15 @@ const AdminFarmerDetailPage = () => {
         · {t('breadcrumb')}
       </p>
 
-      {(status.kind === 'loading' || initialLoading) && <FarmerDetailSkeleton />}
+      {status.kind === 'loading' && (
+        <Card aria-busy="true" className="flex flex-col gap-3 p-6">
+          <span className="sr-only">{t('loading')}</span>
+          <div className="bg-surface-sunken h-6 w-60 max-w-full rounded-sm" />
+          <div className="bg-surface-sunken h-32 w-full rounded-sm" />
+        </Card>
+      )}
 
-      {!(status.kind === 'loading' || initialLoading) && status.kind === 'error' && (
+      {status.kind === 'error' && (
         <DataState
           variant="error"
           title={t('loadError.title')}
@@ -159,8 +144,7 @@ const AdminFarmerDetailPage = () => {
         />
       )}
 
-      {!(status.kind === 'loading' || initialLoading) &&
-        status.kind === 'ready' &&
+      {status.kind === 'ready' &&
         (() => {
           const f = status.data;
           const meta = APPROVAL_STATUS_META[f.approvalStatus];
@@ -307,55 +291,6 @@ const AdminFarmerDetailPage = () => {
                       })}
                     </ol>
                   </section>
-
-                  <section className="flex flex-col gap-3">
-                    <h2 className="text-h2">{t('statusHistory.title')}</h2>
-                    {historyLoad.kind === 'loading' ? (
-                      <div className="border-line-strong bg-surface-raised min-h-[140px] w-full animate-pulse rounded-md border-[1.5px] p-6" />
-                    ) : historyLoad.kind === 'error' ? (
-                      <LoadError noun={t('statusHistory.noun')} onRetry={retryHistory} />
-                    ) : historyLoad.data.items.length ? (
-                      <Table
-                        columns={
-                          [
-                            {
-                              key: 'when',
-                              label: t('statusHistory.col.when'),
-                              render: (h) => cutoffLabel(h.changedAt),
-                            },
-                            {
-                              key: 'action',
-                              label: t('statusHistory.col.action'),
-                              render: (h) => t(`statusHistory.action.${h.toStatus}` as never),
-                            },
-                            {
-                              key: 'reason',
-                              label: t('statusHistory.col.reason'),
-                              render: (h) => h.reason ?? '—',
-                            },
-                            {
-                              key: 'until',
-                              label: t('statusHistory.col.until'),
-                              render: (h) => (h.until ? cutoffLabel(h.until) : '—'),
-                            },
-                            {
-                              key: 'by',
-                              label: t('statusHistory.col.by'),
-                              render: (h) => h.changedByName ?? t('statusHistory.system'),
-                            },
-                          ] satisfies TableColumn<AdminFarmerStatusHistoryDto>[]
-                        }
-                        rows={historyLoad.data.items}
-                      />
-                    ) : (
-                      <DataState
-                        center
-                        title={t('statusHistory.empty.title')}
-                        text={t('statusHistory.empty.text')}
-                        className="min-h-[140px] w-full max-w-none py-6"
-                      />
-                    )}
-                  </section>
                 </div>
 
                 <aside className="flex flex-col gap-4">
@@ -404,7 +339,6 @@ const AdminFarmerDetailPage = () => {
         <div className="flex flex-col gap-3">
           {/* approving from the detail page says it more clearly: the role becomes Farmer, everything of the Customer is kept */}
           <p>{dialog === 'approve' ? t('approveText') : dialog ? tf(`${dialog}.text`) : ''}</p>
-          {dialog === 'suspend' && <BanDurationPicker value={duration} onChange={setDuration} />}
           {(dialog === 'reject' || dialog === 'suspend') && (
             <ReasonField
               kind={dialog}

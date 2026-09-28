@@ -48,17 +48,6 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
   const [page, setPage] = useState(1);
   const [state, setState] = useState<Load>({ status: 'loading' });
   const [loadingMore, setLoadingMore] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
-
-  useEffect(() => {
-    if (import.meta.env.MODE === 'test') return;
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const showSkeleton = state.status === 'loading' || initialLoading;
 
   const fetchPage = (which: 'all' | 'unread', n: number) =>
     NotificationApi.list({ isRead: which === 'unread' ? false : undefined, page: n, size: PAGE_SIZE }).then(
@@ -185,7 +174,7 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
           </Chip>
         </div>
 
-        {showSkeleton && (
+        {state.status === 'loading' && (
           <div className="flex flex-col">
             <NotificationItemSkeleton />
             <NotificationItemSkeleton />
@@ -194,7 +183,7 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
           </div>
         )}
 
-        {!showSkeleton && state.status === 'error' && (
+        {state.status === 'error' && (
           <div className="p-6">
             <DataState
               variant="error"
@@ -209,7 +198,7 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
           </div>
         )}
 
-        {!showSkeleton && state.status === 'ready' && state.items.length === 0 && (
+        {state.status === 'ready' && state.items.length === 0 && (
           <div className="p-6">
             <DataState
               center
@@ -220,7 +209,7 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
           </div>
         )}
 
-        {!showSkeleton && state.status === 'ready' && state.items.length > 0 && (
+        {state.status === 'ready' && state.items.length > 0 && (
           <ul className="m-0 flex flex-col p-0">
             {state.items.map((n) => {
               const { Icon, className } = iconOf(n.kind);

@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.product.services.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -17,8 +18,8 @@ import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.StockTemplateRequest;
+import com.techx.intervue.modules.product.resources.StockTemplateResource;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
-import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -76,17 +77,18 @@ class StockTemplateServiceTest {
 
     // ---- list ----
 
-    /**
-     * FR-071: reading the weekly plan used to be allowed while suspended. D-09 is stricter — a
-     * suspended Farmer sees only their old orders — so this screen closes with the rest of the
-     * selling panel.
-     */
+    /** Đọc lịch không cần stall đã duyệt, giống {@code ProductService.mineOne}. */
     @Test
-    void listIsRefusedWhileTheStallIsSuspended() {
+    void listReturnsTemplatesEvenWhenStallSuspended() {
         when(farmers.findByUserId(USER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
+        StockTemplateResource resource =
+                new StockTemplateResource(PRODUCT_ID, "Rau muống", 1, 50, new BigDecimal("2.00"));
+        when(templates.findResourcesByFarmerId(FARMER_ID)).thenReturn(List.of(resource));
 
-        assertThatThrownBy(() -> service.list(USER_ID)).isInstanceOf(StallSuspendedException.class);
+        List<StockTemplateResource> result = service.list(USER_ID);
+
+        assertThat(result).containsExactly(resource);
     }
 
     // ---- replace ----

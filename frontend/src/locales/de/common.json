@@ -765,12 +765,5 @@
     "whatNow": "Sie können Märkte und Produkte weiterhin als Gast ansehen, sich aber währenddessen nicht anmelden oder bestellen.",
     "contactIntro": "Wenn Sie glauben, dass dies ein Fehler ist, schreiben Sie an",
     "acknowledge": "Verstanden"
-  },
-  "stallSuspended": {
-    "title": "Ihr Stand ist gesperrt",
-    "generic": "Ein Administrator hat diesen Stand gesperrt, er ist für Kunden vorerst nicht mehr sichtbar.",
-    "whatNow": "Bereits von Kunden aufgegebene Bestellungen müssen trotzdem abgeschlossen werden — bitte erledigen Sie diese. Bis die Sperre aufgehoben ist, können Sie keine Produkte einstellen, Ihren Bestand nicht ändern und keine neuen Bestellungen annehmen.",
-    "contactIntro": "Wenn Sie glauben, dass dies ein Fehler ist, schreiben Sie an",
-    "acknowledge": "Verstanden"
   }
 }

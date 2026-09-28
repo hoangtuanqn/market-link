@@ -36,26 +36,6 @@
     "customer": "Compte créé en tant que client",
     "byAdmin": "Un admin"
   },
-  "statusHistory": {
-    "title": "Historique du stand",
-    "noun": "historique du stand",
-    "system": "Système (auto)",
-    "col": {
-      "when": "Quand",
-      "action": "Action",
-      "reason": "Motif",
-      "until": "Jusqu'à",
-      "by": "Par"
-    },
-    "action": {
-      "approved": "Rétabli",
-      "suspended": "Suspendu"
-    },
-    "empty": {
-      "title": "Pas encore d'historique",
-      "text": "Chaque suspension ou rétablissement de ce stand apparaîtra ici."
-    }
-  },
   "applicant": {
     "title": "Demandeur",
     "name": "Nom",

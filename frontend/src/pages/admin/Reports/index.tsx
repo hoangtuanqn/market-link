@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   AdminReportApi,
@@ -13,7 +13,6 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
 import { perUnit, units, money } from '@/lib/format';
 import { clampRange } from './reports.helpers';
-import ReportsSkeleton from './ReportsSkeleton';
 
 const pad = (n: number) => String(n).padStart(2, '0');
 /** A Date → "yyyy-MM-dd" for the `from`/`to` query params (contract's date-only format, not the reader's Settings). */
@@ -33,17 +32,9 @@ const TOP_LIMIT = 10;
 const AdminReportsPage = () => {
   const { t } = useTranslation('AdminReports');
   const { t: tAssistant } = useTranslation('common');
+  const { t: tc } = useTranslation();
   const [from, setFrom] = useState(DEFAULT_FROM);
   const [to, setTo] = useState(DEFAULT_TO);
-  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
-
-  useEffect(() => {
-    if (import.meta.env.MODE === 'test') return;
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   const { state: dashboardLoad, retry: retryDashboard } = useRequest('admin-reports-dashboard', () =>
     AdminReportApi.dashboard(),
@@ -60,13 +51,6 @@ const AdminReportsPage = () => {
   const { state: productLoad, retry: retryProduct } = useRequest(`admin-reports-products:${from}:${to}`, () =>
     AdminReportApi.topProducts({ from, to, limit: TOP_LIMIT }),
   );
-
-  const showSkeleton =
-    dashboardLoad.kind === 'loading' ||
-    marketLoad.kind === 'loading' ||
-    farmerLoad.kind === 'loading' ||
-    productLoad.kind === 'loading' ||
-    initialLoading;
 
   const marketColumns: TableColumn<RevenueByMarketDto>[] = [
     { key: 'market', label: t('col.market'), render: (r) => r.marketName },
@@ -147,66 +131,72 @@ const AdminReportsPage = () => {
         </div>
       </form>
 
-      {showSkeleton ? (
-        <ReportsSkeleton />
+      {dashboardLoad.kind === 'loading' ? (
+        <p role="status" className="text-ink-muted">
+          {tc('notify.list.loading')}
+        </p>
+      ) : dashboardLoad.kind === 'error' ? (
+        <LoadError noun={t('kpi.noun')} onRetry={retryDashboard} />
       ) : (
-        <>
-          {dashboardLoad.kind === 'error' ? (
-            <LoadError noun={t('kpi.noun')} onRetry={retryDashboard} />
-          ) : (
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-              <Kpi label={t('kpi.orders')} value={dashboardLoad.data.totalOrders} note={t('kpi.ordersNote')} />
-              <Kpi
-                label={t('kpi.revenue')}
-                value={money(dashboardLoad.data.revenueTotal)}
-                note={t('kpi.revenueNote')}
-              />
-            </div>
-          )}
-
-          <section className="flex flex-col gap-3">
-            <h2 className="text-h2">{t('byMarket.title')}</h2>
-            {marketLoad.kind === 'error' ? (
-              <LoadError noun={t('byMarket.noun')} onRetry={retryMarket} />
-            ) : marketLoad.data?.length ? (
-              <Table columns={marketColumns} rows={marketLoad.data} />
-            ) : (
-              <DataState title={t('byMarket.empty.title')} text={t('byMarket.empty.text')} />
-            )}
-          </section>
-
-          <section className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-h2">{t('topFarmers.title')}</h2>
-              <span className="text-small text-ink-muted">{t('topFarmers.note')}</span>
-            </div>
-            {farmerLoad.kind === 'error' ? (
-              <LoadError noun={t('topFarmers.noun')} onRetry={retryFarmer} />
-            ) : rankedFarmers.length ? (
-              <Table columns={farmerColumns} rows={rankedFarmers} />
-            ) : (
-              <DataState title={t('topFarmers.empty.title')} text={t('topFarmers.empty.text')} />
-            )}
-          </section>
-
-          <section className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-h2">{t('topProducts.title')}</h2>
-              <span className="text-small text-ink-muted">{t('topProducts.note')}</span>
-            </div>
-            {productLoad.kind === 'error' ? (
-              <LoadError noun={t('topProducts.noun')} onRetry={retryProduct} />
-            ) : productLoad.data?.length ? (
-              <>
-                <Table columns={productColumns} rows={productLoad.data} />
-                <p className="text-small text-ink-muted">{t('topProducts.unitsNote')}</p>
-              </>
-            ) : (
-              <DataState title={t('topProducts.empty.title')} text={t('topProducts.empty.text')} />
-            )}
-          </section>
-        </>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+          <Kpi label={t('kpi.orders')} value={dashboardLoad.data.totalOrders} note={t('kpi.ordersNote')} />
+          <Kpi label={t('kpi.revenue')} value={money(dashboardLoad.data.revenueTotal)} note={t('kpi.revenueNote')} />
+        </div>
       )}
+
+      <section className="flex flex-col gap-3">
+        <h2 className="text-h2">{t('byMarket.title')}</h2>
+        {marketLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : marketLoad.kind === 'error' ? (
+          <LoadError noun={t('byMarket.noun')} onRetry={retryMarket} />
+        ) : marketLoad.data.length ? (
+          <Table columns={marketColumns} rows={marketLoad.data} />
+        ) : (
+          <DataState title={t('byMarket.empty.title')} text={t('byMarket.empty.text')} />
+        )}
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-h2">{t('topFarmers.title')}</h2>
+          <span className="text-small text-ink-muted">{t('topFarmers.note')}</span>
+        </div>
+        {farmerLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : farmerLoad.kind === 'error' ? (
+          <LoadError noun={t('topFarmers.noun')} onRetry={retryFarmer} />
+        ) : rankedFarmers.length ? (
+          <Table columns={farmerColumns} rows={rankedFarmers} />
+        ) : (
+          <DataState title={t('topFarmers.empty.title')} text={t('topFarmers.empty.text')} />
+        )}
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-h2">{t('topProducts.title')}</h2>
+          <span className="text-small text-ink-muted">{t('topProducts.note')}</span>
+        </div>
+        {productLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : productLoad.kind === 'error' ? (
+          <LoadError noun={t('topProducts.noun')} onRetry={retryProduct} />
+        ) : productLoad.data.length ? (
+          <>
+            <Table columns={productColumns} rows={productLoad.data} />
+            <p className="text-small text-ink-muted">{t('topProducts.unitsNote')}</p>
+          </>
+        ) : (
+          <DataState title={t('topProducts.empty.title')} text={t('topProducts.empty.text')} />
+        )}
+      </section>
     </div>
   );
 };

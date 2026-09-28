@@ -4,7 +4,6 @@ import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundExcepti
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
-import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
@@ -143,12 +142,6 @@ public class ProductExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ApiResource<Void>> unreadableBody(HttpMessageNotReadableException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
-    }
-
-    /** FR-071/D-09: approved once, suspended now — carries the admin's reason. */
-    @ExceptionHandler(StallSuspendedException.class)
-    ResponseEntity<ApiResource<Void>> suspended(StallSuspendedException e) {
-        return error(HttpStatus.FORBIDDEN, "STALL_SUSPENDED", e.getMessage(), List.of());
     }
 
     private static ResponseEntity<ApiResource<Void>> error(

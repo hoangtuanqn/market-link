@@ -8,17 +8,12 @@
   },
   "tabsLabel": "Productores por estado",
   "status": {
-    "all": "Todos",
     "pending": "Pendientes de aprobación",
     "approved": "Aprobados",
     "suspended": "Suspendidos",
     "rejected": "Rechazados"
   },
   "empty": {
-    "all": {
-      "title": "No hay agricultores aún",
-      "text": "Las solicitudes de registro de agricultores aparecerán aquí."
-    },
     "pending": {
       "title": "No hay solicitudes pendientes",
       "text": "Las nuevas solicitudes de productores llegan aquí para revisarse antes de que puedan publicar productos."

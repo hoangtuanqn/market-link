@@ -3,9 +3,9 @@ package com.techx.intervue.modules.product.services.impl;
 import com.techx.intervue.modules.catalog.entities.Category;
 import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
-import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
@@ -17,6 +17,7 @@ import com.techx.intervue.modules.product.requests.ProductRequest;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
 import com.techx.intervue.modules.product.services.interfaces.ProductServiceInterface;
+import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
@@ -106,7 +107,7 @@ public class ProductService implements ProductServiceInterface {
     @Transactional
     public FarmerProductResource create(long userId, ProductRequest request) {
         FarmerProfile profile = mine(userId);
-        StallSuspensionMessage.assertUsable(profile);
+        requireApproved(profile);
         Category category = activeCategory(request.categoryId());
         Product product = new Product();
         product.setFarmerId(profile.getId());
@@ -124,7 +125,7 @@ public class ProductService implements ProductServiceInterface {
     @Transactional
     public FarmerProductResource update(long userId, long productId, ProductRequest request) {
         FarmerProfile profile = mine(userId);
-        StallSuspensionMessage.assertUsable(profile);
+        requireApproved(profile);
         Product product = owned(profile, productId);
         Category category = activeCategory(request.categoryId());
         apply(product, request, category);
@@ -136,7 +137,7 @@ public class ProductService implements ProductServiceInterface {
     @Transactional
     public void softDelete(long userId, long productId) {
         FarmerProfile profile = mine(userId);
-        StallSuspensionMessage.assertUsable(profile);
+        requireApproved(profile);
         Product product = owned(profile, productId);
         product.setDeleted(true);
         products.save(product);
@@ -150,7 +151,7 @@ public class ProductService implements ProductServiceInterface {
     @Transactional
     public FarmerProductResource setStatus(long userId, long productId, ProductStatus status) {
         FarmerProfile profile = mine(userId);
-        StallSuspensionMessage.assertUsable(profile);
+        requireApproved(profile);
         Product product = owned(profile, productId);
         boolean wasOrderable = restock.isOrderable(product);
         product.setStatus(status);
@@ -191,15 +192,15 @@ public class ProductService implements ProductServiceInterface {
      * R-06: the profile is always looked up by the token's userId; there is no path that takes a
      * farmerId from the request.
      */
-    /**
-     * D-09: every product screen — the list and the detail as much as the writes — goes through
-     * here, so a suspended stall sees none of them. Orders are deliberately not routed this way.
-     */
     private FarmerProfile mine(long userId) {
-        FarmerProfile profile =
-                farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
-        StallSuspensionMessage.assertUsable(profile);
-        return profile;
+        return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
+    }
+
+    /** D-09 / contract §4: when not approved or suspended, every product write is blocked. */
+    private static void requireApproved(FarmerProfile profile) {
+        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
+            throw new StallNotApprovedException();
+        }
     }
 
     /**

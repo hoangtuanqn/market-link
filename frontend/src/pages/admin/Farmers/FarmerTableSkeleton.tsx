@@ -17,8 +17,8 @@ const FarmerTableSkeleton = () => {
         <div className="bg-surface-sunken h-5 w-28 rounded-sm" />
       </div>
       <div className="bg-surface-sunken/60 border-line-strong flex gap-4 border-b-[1.5px] px-4 py-2.5">
-        {['w-24', 'w-20', 'w-24', 'w-16'].map((w, idx) => (
-          <div key={`${w}-${idx}`} className={`bg-surface-sunken h-3 rounded-sm ${w}`} />
+        {['w-24', 'w-20', 'w-24', 'w-16'].map((w) => (
+          <div key={w} className={`bg-surface-sunken h-3 rounded-sm ${w}`} />
         ))}
       </div>
       {Array.from({ length: SKELETON_ROWS }, (_, i) => (

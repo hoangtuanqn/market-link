@@ -36,26 +36,6 @@
     "customer": "Account created as a customer",
     "byAdmin": "An admin"
   },
-  "statusHistory": {
-    "title": "Stall history",
-    "noun": "stall history",
-    "system": "System (auto)",
-    "col": {
-      "when": "When",
-      "action": "Action",
-      "reason": "Reason",
-      "until": "Until",
-      "by": "By"
-    },
-    "action": {
-      "approved": "Reinstated",
-      "suspended": "Suspended"
-    },
-    "empty": {
-      "title": "No history yet",
-      "text": "Every suspend or reinstate on this stall will show up here."
-    }
-  },
   "applicant": {
     "title": "Applicant",
     "name": "Name",

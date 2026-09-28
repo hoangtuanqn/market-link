@@ -36,26 +36,6 @@
     "customer": "Konto als Kunde erstellt",
     "byAdmin": "Ein Admin"
   },
-  "statusHistory": {
-    "title": "Standverlauf",
-    "noun": "Standverlauf",
-    "system": "System (automatisch)",
-    "col": {
-      "when": "Wann",
-      "action": "Aktion",
-      "reason": "Grund",
-      "until": "Bis",
-      "by": "Von"
-    },
-    "action": {
-      "approved": "Wiederhergestellt",
-      "suspended": "Gesperrt"
-    },
-    "empty": {
-      "title": "Noch kein Verlauf",
-      "text": "Jede Sperrung oder Wiederherstellung dieses Stands erscheint hier."
-    }
-  },
   "applicant": {
     "title": "Antragsteller",
     "name": "Name",

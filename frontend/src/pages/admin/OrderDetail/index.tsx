@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
@@ -14,7 +13,6 @@ import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useRequest from '@/hooks/useRequest';
 import { cutoffLabel, formatDate, formatTime, pickupLabel, units, money } from '@/lib/format';
 import Helper from '@/utils/helper';
-import OrderDetailSkeleton from './OrderDetailSkeleton';
 
 /** 403 (should not happen for an admin, Task 1.4) and 404 read the same: the order is not here to show. */
 const isGone = (error: unknown) =>
@@ -32,25 +30,21 @@ const when = (iso: string) => {
  */
 const AdminOrderDetailPage = () => {
   const { t } = useTranslation('AdminOrderDetail');
+  const { t: tc } = useTranslation();
   const { code } = useParams<{ code: string }>();
   const id = /^\d+$/.test(code ?? '') ? Number(code) : null;
-  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
-
-  useEffect(() => {
-    if (import.meta.env.MODE === 'test') return;
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   const { state, retry } = useRequest(`admin-order:${id ?? 'none'}`, () =>
     id === null ? Promise.reject(new Error('not an order id')) : OrderApi.get(id),
   );
   const order = state.kind === 'ready' ? state.data : null;
 
-  if ((state.kind === 'loading' || initialLoading) && id !== null) {
-    return <OrderDetailSkeleton />;
+  if (state.kind === 'loading' && id !== null) {
+    return (
+      <p role="status" className="text-ink-muted">
+        {tc('notify.list.loading')}
+      </p>
+    );
   }
 
   if (id === null || (state.kind === 'error' && isGone(state.error))) {

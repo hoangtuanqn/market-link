@@ -1,6 +1,5 @@
 package com.techx.intervue.modules.report.controllers;
 
-import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import java.util.List;
@@ -28,14 +27,6 @@ public class ReportExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage());
-    }
-
-    /**
-     * FR-071/D-09: FarmerReportService.dashboard is guarded the same as the other selling screens.
-     */
-    @ExceptionHandler(StallSuspendedException.class)
-    ResponseEntity<ApiResource<Void>> suspended(StallSuspendedException e) {
-        return error(HttpStatus.FORBIDDEN, "STALL_SUSPENDED", e.getMessage());
     }
 
     private static ResponseEntity<ApiResource<Void>> error(

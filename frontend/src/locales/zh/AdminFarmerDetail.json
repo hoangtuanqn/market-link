@@ -36,26 +36,6 @@
     "customer": "以顾客身份创建账户",
     "byAdmin": "管理员"
   },
-  "statusHistory": {
-    "title": "摊位历史",
-    "noun": "摊位历史",
-    "system": "系统（自动）",
-    "col": {
-      "when": "时间",
-      "action": "操作",
-      "reason": "原因",
-      "until": "至",
-      "by": "操作人"
-    },
-    "action": {
-      "approved": "已重新开放",
-      "suspended": "已暂停"
-    },
-    "empty": {
-      "title": "暂无历史记录",
-      "text": "这个摊位每一次暂停或重新开放都会显示在这里。"
-    }
-  },
   "applicant": {
     "title": "申请人",
     "name": "姓名",

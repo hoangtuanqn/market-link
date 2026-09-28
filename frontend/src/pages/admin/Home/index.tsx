@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { AdminReportApi } from '@/api-requests/report.requests';
@@ -25,7 +24,6 @@ import {
 import usePlatformStatus from '@/hooks/usePlatformStatus';
 import useRequest from '@/hooks/useRequest';
 import { pickupLabel, money } from '@/lib/format';
-import HomeSkeleton from './HomeSkeleton';
 
 /** Docs/prototype/admin/overview.html — the six most recent orders across the whole platform. */
 const LATEST = 6;
@@ -38,16 +36,8 @@ const NO_ORDERS: OrderListItemDto[] = [];
  */
 const AdminHomePage = () => {
   const { t } = useTranslation('AdminHome');
+  const { t: tc } = useTranslation();
   const maintenanceMode = usePlatformStatus();
-  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
-
-  useEffect(() => {
-    if (import.meta.env.MODE === 'test') return;
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   const { state: homeLoad, retry: retryHome } = useRequest('admin-home', () =>
     Promise.all([
@@ -69,8 +59,6 @@ const AdminHomePage = () => {
     AdminReportApi.orders({ pageSize: LATEST }).then((r) => r.items),
   );
   const latestOrders = ordersLoad.kind === 'ready' ? ordersLoad.data : NO_ORDERS;
-  const showSkeleton =
-    homeLoad.kind === 'loading' || revenueLoad.kind === 'loading' || ordersLoad.kind === 'loading' || initialLoading;
 
   const columns: TableColumn<OrderListItemDto>[] = [
     {
@@ -130,110 +118,112 @@ const AdminHomePage = () => {
         </Card>
       )}
 
-      {showSkeleton ? (
-        <HomeSkeleton />
+      {homeLoad.kind === 'loading' ? (
+        <p role="status" className="text-ink-muted">
+          {tc('notify.list.loading')}
+        </p>
+      ) : homeLoad.kind === 'error' ? (
+        <LoadError noun={t('noun')} onRetry={retryHome} />
       ) : (
         <>
-          {homeLoad.kind === 'error' ? (
-            <LoadError noun={t('noun')} onRetry={retryHome} />
-          ) : (
-            <>
-              <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
-                <Kpi
-                  label={t('kpi.farmers')}
-                  value={homeLoad.data.dashboard.totalFarmers}
-                  note={t('kpi.farmersNote', { waiting: homeLoad.data.dashboard.pendingFarmers })}
-                  href={ADMIN_FARMERS_PATH}
-                  linkLabel={t('kpi.farmersLink')}
-                />
-                <Kpi
-                  label={t('kpi.customers')}
-                  value={homeLoad.data.dashboard.totalCustomers}
-                  href={ADMIN_CUSTOMERS_PATH}
-                  linkLabel={t('kpi.customersLink')}
-                />
-                <Kpi
-                  label={t('kpi.markets')}
-                  value={homeLoad.data.dashboard.totalMarkets}
-                  href={ADMIN_MARKETS_PATH}
-                  linkLabel={t('kpi.marketsLink')}
-                />
-                <Kpi
-                  label={t('kpi.orders')}
-                  value={homeLoad.data.dashboard.totalOrders}
-                  note={t('kpi.ordersNote', { revenue: money(homeLoad.data.dashboard.revenueTotal) })}
-                  href={ADMIN_ORDERS_PATH}
-                  linkLabel={t('kpi.ordersLink')}
-                />
-              </div>
-
-              <Card className="flex flex-col gap-3 p-6">
-                <h2 className="text-h3">{t('attention.title')}</h2>
-                <ul className="m-0 flex flex-col gap-2 p-0">
-                  <li>
-                    <Link
-                      to={ADMIN_FARMERS_PATH}
-                      className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
-                    >
-                      <b className="font-hand text-h3 text-brand">{homeLoad.data.dashboard.pendingFarmers}</b>
-                      <span className="text-[15px]">
-                        {t('attention.farmers', { count: homeLoad.data.dashboard.pendingFarmers })}
-                      </span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to={ADMIN_MODERATION_PATH}
-                      className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
-                    >
-                      <b className="font-hand text-h3 text-brand">{homeLoad.data.reportedCount}</b>
-                      <span className="text-[15px]">
-                        {t('attention.reported', { count: homeLoad.data.reportedCount })}
-                      </span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to={ADMIN_FEEDBACK_PATH}
-                      className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
-                    >
-                      <b className="font-hand text-h3 text-brand">{homeLoad.data.feedbackCount}</b>
-                      <span className="text-[15px]">
-                        {t('attention.feedback', { count: homeLoad.data.feedbackCount })}
-                      </span>
-                    </Link>
-                  </li>
-                </ul>
-              </Card>
-            </>
-          )}
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4">
+            <Kpi
+              label={t('kpi.farmers')}
+              value={homeLoad.data.dashboard.totalFarmers}
+              note={t('kpi.farmersNote', { waiting: homeLoad.data.dashboard.pendingFarmers })}
+              href={ADMIN_FARMERS_PATH}
+              linkLabel={t('kpi.farmersLink')}
+            />
+            <Kpi
+              label={t('kpi.customers')}
+              value={homeLoad.data.dashboard.totalCustomers}
+              href={ADMIN_CUSTOMERS_PATH}
+              linkLabel={t('kpi.customersLink')}
+            />
+            <Kpi
+              label={t('kpi.markets')}
+              value={homeLoad.data.dashboard.totalMarkets}
+              href={ADMIN_MARKETS_PATH}
+              linkLabel={t('kpi.marketsLink')}
+            />
+            <Kpi
+              label={t('kpi.orders')}
+              value={homeLoad.data.dashboard.totalOrders}
+              note={t('kpi.ordersNote', { revenue: money(homeLoad.data.dashboard.revenueTotal) })}
+              href={ADMIN_ORDERS_PATH}
+              linkLabel={t('kpi.ordersLink')}
+            />
+          </div>
 
           <Card className="flex flex-col gap-3 p-6">
-            <h2 className="text-h3">{t('byMarket.title')}</h2>
-            {revenueLoad.kind === 'error' ? (
-              <LoadError noun={t('byMarket.noun')} onRetry={retryRevenue} />
-            ) : revenueLoad.data?.length ? (
-              <BarList rows={revenueLoad.data.map((r) => ({ label: r.marketName, value: r.revenue }))} format={money} />
-            ) : (
-              <DataState title={t('byMarket.empty.title')} text={t('byMarket.empty.text')} />
-            )}
+            <h2 className="text-h3">{t('attention.title')}</h2>
+            <ul className="m-0 flex flex-col gap-2 p-0">
+              <li>
+                <Link
+                  to={ADMIN_FARMERS_PATH}
+                  className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
+                >
+                  <b className="font-hand text-h3 text-brand">{homeLoad.data.dashboard.pendingFarmers}</b>
+                  <span className="text-[15px]">
+                    {t('attention.farmers', { count: homeLoad.data.dashboard.pendingFarmers })}
+                  </span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={ADMIN_MODERATION_PATH}
+                  className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
+                >
+                  <b className="font-hand text-h3 text-brand">{homeLoad.data.reportedCount}</b>
+                  <span className="text-[15px]">{t('attention.reported', { count: homeLoad.data.reportedCount })}</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={ADMIN_FEEDBACK_PATH}
+                  className="hover:bg-surface-sunken flex items-baseline gap-3 rounded-sm py-1"
+                >
+                  <b className="font-hand text-h3 text-brand">{homeLoad.data.feedbackCount}</b>
+                  <span className="text-[15px]">{t('attention.feedback', { count: homeLoad.data.feedbackCount })}</span>
+                </Link>
+              </li>
+            </ul>
           </Card>
-
-          <section className="flex flex-col gap-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-h2">{t('latest.title')}</h2>
-              <span className="text-small text-ink-muted">{t('latest.readOnly')}</span>
-            </div>
-            {ordersLoad.kind === 'error' ? (
-              <LoadError noun={t('latest.noun')} onRetry={retryOrders} />
-            ) : latestOrders.length ? (
-              <Table columns={columns} rows={latestOrders} />
-            ) : (
-              <DataState title={t('latest.empty.title')} text={t('latest.empty.text')} />
-            )}
-          </section>
         </>
       )}
+
+      <Card className="flex flex-col gap-3 p-6">
+        <h2 className="text-h3">{t('byMarket.title')}</h2>
+        {revenueLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : revenueLoad.kind === 'error' ? (
+          <LoadError noun={t('byMarket.noun')} onRetry={retryRevenue} />
+        ) : revenueLoad.data.length ? (
+          <BarList rows={revenueLoad.data.map((r) => ({ label: r.marketName, value: r.revenue }))} format={money} />
+        ) : (
+          <DataState title={t('byMarket.empty.title')} text={t('byMarket.empty.text')} />
+        )}
+      </Card>
+
+      <section className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-h2">{t('latest.title')}</h2>
+          <span className="text-small text-ink-muted">{t('latest.readOnly')}</span>
+        </div>
+        {ordersLoad.kind === 'loading' ? (
+          <p role="status" className="text-ink-muted">
+            {tc('notify.list.loading')}
+          </p>
+        ) : ordersLoad.kind === 'error' ? (
+          <LoadError noun={t('latest.noun')} onRetry={retryOrders} />
+        ) : latestOrders.length ? (
+          <Table columns={columns} rows={latestOrders} />
+        ) : (
+          <DataState title={t('latest.empty.title')} text={t('latest.empty.text')} />
+        )}
+      </section>
     </div>
   );
 };

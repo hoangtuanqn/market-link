@@ -3,7 +3,6 @@ import AppToaster from './components/AppToaster';
 import CookieConsentBar from './components/CookieConsentBar';
 import PlatformStatusSync from './components/PlatformStatusSync';
 import AccountDeactivatedDialog from './components/AccountDeactivatedDialog';
-import StallSuspendedDialog from './components/StallSuspendedDialog';
 import ScrollToTop from './components/ScrollToTop';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import { USER_ROLE } from './constants/enums';
@@ -333,7 +332,6 @@ const App = () => (
   <BrowserRouter>
     <PlatformStatusSync />
     <AccountDeactivatedDialog />
-    <StallSuspendedDialog />
     <AppRoutes />
   </BrowserRouter>
 );

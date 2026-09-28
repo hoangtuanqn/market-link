@@ -765,12 +765,5 @@
     "whatNow": "Bạn vẫn có thể xem chợ và nông sản với tư cách khách, nhưng không thể đăng nhập hay đặt hàng trong thời gian này.",
     "contactIntro": "Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ",
     "acknowledge": "Tôi đã hiểu"
-  },
-  "stallSuspended": {
-    "title": "Sạp của bạn đã bị tạm ngừng",
-    "generic": "Quản trị viên đã tạm ngừng sạp này, nên hiện khách hàng không nhìn thấy sạp nữa.",
-    "whatNow": "Những đơn khách đã đặt vẫn phải hoàn tất — vui lòng hoàn thành các đơn đó. Bạn không thể đăng sản phẩm, thay đổi tồn kho hay nhận đơn mới cho đến khi lệnh tạm ngừng được gỡ bỏ.",
-    "contactIntro": "Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ",
-    "acknowledge": "Tôi đã hiểu"
   }
 }

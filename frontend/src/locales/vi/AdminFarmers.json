@@ -8,17 +8,12 @@
   },
   "tabsLabel": "Nhà vườn theo trạng thái",
   "status": {
-    "all": "Tất cả",
     "pending": "Chờ duyệt",
     "approved": "Đã duyệt",
     "suspended": "Tạm ngưng",
     "rejected": "Đã từ chối"
   },
   "empty": {
-    "all": {
-      "title": "Chưa có nông dân nào",
-      "text": "Các đơn đăng ký của nông dân sẽ xuất hiện tại đây."
-    },
     "pending": {
       "title": "Không có đơn đăng ký nào đang chờ",
       "text": "Đơn đăng ký nhà vườn mới sẽ đến đây để xét duyệt trước khi họ được đăng sản phẩm."

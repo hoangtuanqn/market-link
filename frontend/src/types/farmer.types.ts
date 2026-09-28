@@ -79,7 +79,6 @@ export type AdminFarmerListItemType = {
   phone: string;
   approvalStatus: FarmerApproval;
   createdAt: string;
-  avatarUrl?: string | null;
 };
 
 /** §6.2 — full detail so the Admin can approve or suspend. */

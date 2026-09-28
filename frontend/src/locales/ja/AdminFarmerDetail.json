@@ -36,26 +36,6 @@
     "customer": "顧客としてアカウントを作成",
     "byAdmin": "管理者"
   },
-  "statusHistory": {
-    "title": "屋台履歴",
-    "noun": "屋台履歴",
-    "system": "システム（自動）",
-    "col": {
-      "when": "日時",
-      "action": "操作",
-      "reason": "理由",
-      "until": "期限",
-      "by": "実行者"
-    },
-    "action": {
-      "approved": "再開",
-      "suspended": "停止"
-    },
-    "empty": {
-      "title": "履歴はまだありません",
-      "text": "この屋台の停止・再開の記録はここに表示されます。"
-    }
-  },
   "applicant": {
     "title": "申請者",
     "name": "名前",

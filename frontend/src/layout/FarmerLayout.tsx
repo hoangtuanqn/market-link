@@ -37,20 +37,6 @@ type FarmerNavKey = keyof (typeof common)['farmerNav'];
 type NavItem = { to: string; label: FarmerNavKey; icon: ComponentType<IconProps>; count?: number };
 type NavGroup = { heading: FarmerNavKey; items: NavItem[] };
 
-/**
- * D-09: while a stall is suspended it "chỉ thấy đơn cũ" (only sees old orders) — the server backs this with
- * StallSuspensionMessage.assertUsable on the product, stock and dashboard reads (FR-071 Task 3), so these are exactly
- * the screens that would now fail with STALL_SUSPENDED. Reviews and sales history stay: neither is guarded server-side,
- * since responding to a past review or reading completed-order history is not "selling".
- */
-const LOCKED_WHILE_SUSPENDED = new Set([
-  '/farmer',
-  '/farmer/products',
-  '/farmer/stock',
-  '/farmer/slots',
-  '/farmer/stall',
-]);
-
 const NAV: NavGroup[] = [
   {
     heading: 'today',
@@ -113,25 +99,22 @@ const FarmerLayout = () => {
     OrderApi.farmerList({ status: 'placed', pageSize: 1 }),
   );
   const awaiting = placedLoad.kind === 'ready' ? placedLoad.data.total : undefined;
-  const suspended = profile?.approvalStatus === 'suspended';
 
   const nav: ShellNavGroup[] = NAV.map((g) => ({
     heading: t(`farmerNav.${g.heading}`),
-    items: g.items
-      .filter((it) => !suspended || !LOCKED_WHILE_SUSPENDED.has(it.to))
-      .map((it) => ({
-        ...it,
-        label: t(`farmerNav.${it.label}`),
-        count:
-          it.to === '/farmer/notifications'
-            ? unread || undefined
-            : it.to === '/farmer/messages'
-              ? chatUnread || undefined
-              : it.to === '/farmer/orders'
-                ? awaiting || undefined
-                : it.count,
-      })),
-  })).filter((g) => g.items.length > 0);
+    items: g.items.map((it) => ({
+      ...it,
+      label: t(`farmerNav.${it.label}`),
+      count:
+        it.to === '/farmer/notifications'
+          ? unread || undefined
+          : it.to === '/farmer/messages'
+            ? chatUnread || undefined
+            : it.to === '/farmer/orders'
+              ? awaiting || undefined
+              : it.count,
+    })),
+  }));
 
   return (
     <AssistantProvider>
